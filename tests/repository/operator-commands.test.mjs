@@ -277,6 +277,56 @@ test("setup uses the canonical root environment instead of an inherited unsafe d
   }
 });
 
+test("setup passes canonical root environment to the real final doctor", async () => {
+  const rootDirectory = await mkdtemp(
+    join(tmpdir(), "safrs-setup-final-doctor-"),
+  );
+  const inheritedUnsafeUrl =
+    "postgresql://attacker:external@db.example.com:5432/production";
+  const originalDatabaseUrl = process.env.DATABASE_URL;
+  try {
+    await mkdir(
+      join(rootDirectory, "packages", "database", "src", "generated", "prisma"),
+      { recursive: true },
+    );
+    await writeFile(
+      join(
+        rootDirectory,
+        "packages",
+        "database",
+        "src",
+        "generated",
+        "prisma",
+        "client.ts",
+      ),
+      "export {};\n",
+    );
+    await writeFile(
+      join(rootDirectory, ".env.example"),
+      `DATABASE_URL=${localUrl}\n`,
+    );
+    await writeFile(join(rootDirectory, ".env"), `DATABASE_URL=${localUrl}\n`);
+    process.env.DATABASE_URL = inheritedUnsafeUrl;
+
+    const result = await runSetup({
+      rootDirectory,
+      nodeVersion: "v24.18.0",
+      command: successfulCommand([]),
+      doctorOptions: { command: successfulCommand([]) },
+    });
+
+    assert.equal(result.exitCode, 0);
+    assert.match(result.human, /\[DATABASE\] SIAP/u);
+  } finally {
+    if (originalDatabaseUrl === undefined) {
+      delete process.env.DATABASE_URL;
+    } else {
+      process.env.DATABASE_URL = originalDatabaseUrl;
+    }
+    await rm(rootDirectory, { recursive: true, force: true });
+  }
+});
+
 test("development stops before side effects when Docker engine is not ready", async () => {
   const calls = [];
   const report = {

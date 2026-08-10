@@ -249,7 +249,11 @@ export async function runSetup(options = {}) {
     }
   }
 
-  const report = await doctor({ rootDirectory });
+  const report = await doctor({
+    ...options.doctorOptions,
+    rootDirectory,
+    environment: canonicalEnvironment,
+  });
   return { exitCode: report.exitCode, human: report.human };
 }
 
