@@ -2,9 +2,16 @@ import { loadCanonicalEnvironment } from "../tools/doctor/src/checks.mjs";
 import { packageManagerCommand, runCommand } from "./lib/process.mjs";
 
 const rootDirectory = process.cwd();
+const canonicalEnvironment = process.env.DATABASE_URL
+  ? {
+      APP_URL: process.env.APP_URL ?? "http://127.0.0.1:3000",
+      DATABASE_URL: process.env.DATABASE_URL,
+      NODE_ENV: process.env.NODE_ENV ?? "test",
+    }
+  : loadCanonicalEnvironment({ rootDirectory });
 const environment = {
   ...process.env,
-  ...loadCanonicalEnvironment({ rootDirectory }),
+  ...canonicalEnvironment,
   DATABASE_INTEGRATION_TESTS: "1",
 };
 

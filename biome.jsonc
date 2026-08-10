@@ -7,6 +7,8 @@
       "!!**/.turbo",
       "!!**/.next",
       "!!**/next-env.d.ts",
+      "!!**/playwright-report",
+      "!!**/test-results",
       "!!packages/database/src/generated/prisma"
     ],
     "ignoreUnknown": true

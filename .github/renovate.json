@@ -1,0 +1,22 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "dependencyDashboard": true,
+  "automerge": false,
+  "schedule": ["before 6am on monday"],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "description": "Use stable package releases only.",
+      "matchPackageNames": ["/.*/"],
+      "allowedVersions": "!/-(alpha|beta|canary|next|rc)/"
+    },
+    {
+      "description": "Keep major upgrades visible and separately reviewed.",
+      "groupName": "major dependency updates",
+      "matchUpdateTypes": ["major"]
+    }
+  ]
+}
