@@ -9,8 +9,6 @@
 
 <img src="https://i.ibb.co.com/Z1G4v477/SAFRS.png" alt="SAFRS" border="0">
 
-### SAFRS v1.1
-
 ### Repository Governance for AI-Native Software Engineering
 
 **Sentra Artificial Intelligence**
