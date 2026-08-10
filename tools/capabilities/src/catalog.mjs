@@ -12,6 +12,7 @@ import {
   safeProjectSlug,
   validateCapabilities,
   validateManifest,
+  validateText,
 } from "./schema.mjs";
 
 const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));
@@ -113,6 +114,7 @@ export async function capabilityPreview({
     `Capability: ${manifest.label} (${manifest.id})`,
     `Project: ${project}`,
     `Risk: ${manifest.risk}`,
+    `Files that will change: projects/${project}/capabilities.json`,
     `Dependencies: ${manifest.dependencies.join(", ") || "none"}`,
     `Environment: ${manifest.environment.join(", ") || "none"}`,
     `Commands: ${manifest.commands.join(", ") || "none"}`,
@@ -139,14 +141,10 @@ export async function applyCapability({
       `Confirmation must exactly equal ENABLE ${manifest.id} FOR ${slug}. No files were written.`,
     );
   }
-  if (
-    manifest.id === "python" &&
-    (typeof justification !== "string" || justification.trim() === "")
-  ) {
-    throw new Error(
-      "Python capability requires a recorded technical justification.",
-    );
-  }
+  const pythonJustification =
+    manifest.id === "python"
+      ? validateText(justification, "technical justification")
+      : undefined;
   const target = await projectDirectory(repoRoot, slug);
   const current = await selectedCapabilities(target);
   const retained = current.capabilities.map((selected) => ({ ...selected }));
@@ -154,7 +152,7 @@ export async function applyCapability({
     (selected) => selected.id === manifest.id,
   );
   const next = { id: manifest.id, risk: manifest.risk };
-  if (manifest.id === "python") next.justification = justification.trim();
+  if (manifest.id === "python") next.justification = pythonJustification;
   if (existingIndex === -1) retained.push(next);
   else
     retained[existingIndex] = {

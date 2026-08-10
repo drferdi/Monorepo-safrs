@@ -91,6 +91,32 @@ test("preview is write-free and lists the complete capability contract", async (
     assert.match(preview, /Environment:/u);
     assert.match(preview, /Commands:/u);
     assert.match(preview, /Risk: R2/u);
+    assert.match(
+      preview,
+      /Files that will change: projects\/golden-path\/capabilities\.json/u,
+    );
+    await assert.rejects(
+      readFile(join(root, "projects", "golden-path", "capabilities.json")),
+      { code: "ENOENT" },
+    );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("Python rejects a control-character justification before writing the capsule", async () => {
+  const root = await fixtureRoot();
+  try {
+    await assert.rejects(
+      applyCapability({
+        capabilityId: "python",
+        project: "golden-path",
+        repoRoot: root,
+        confirmation: "ENABLE python FOR golden-path",
+        justification: "requires native bridge\nwithout Node equivalent",
+      }),
+      /technical justification must not contain control characters/u,
+    );
     await assert.rejects(
       readFile(join(root, "projects", "golden-path", "capabilities.json")),
       { code: "ENOENT" },

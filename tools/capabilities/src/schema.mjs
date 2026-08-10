@@ -13,7 +13,7 @@ const REQUIRED_FIELDS = [
   "removal",
 ];
 
-function nonEmptyText(value, field) {
+export function validateText(value, field) {
   if (typeof value !== "string" || value.trim() === "") {
     throw new TypeError(`${field} must be non-empty text.`);
   }
@@ -35,7 +35,7 @@ function textList(value, field) {
   ) {
     throw new TypeError(`${field} must be a list of non-empty text.`);
   }
-  return [...new Set(value.map((item) => nonEmptyText(item, field)))].sort();
+  return [...new Set(value.map((item) => validateText(item, field)))].sort();
 }
 
 export function validateManifest(value) {
@@ -46,17 +46,17 @@ export function validateManifest(value) {
     if (!(field in value))
       throw new TypeError(`Capability manifest needs ${field}.`);
   }
-  const id = nonEmptyText(value.id, "id");
+  const id = validateText(value.id, "id");
   if (!/^[a-z][a-z0-9-]*$/u.test(id))
     throw new TypeError("id must be a safe capability id.");
-  const risk = nonEmptyText(value.risk, "risk").toUpperCase();
+  const risk = validateText(value.risk, "risk").toUpperCase();
   if (!(risk in RISK_ORDER) || RISK_ORDER[risk] < RISK_ORDER.R1) {
     throw new TypeError("Capability risk must be R1, R2, or R3.");
   }
   return {
     id,
-    label: nonEmptyText(value.label, "label"),
-    description: nonEmptyText(value.description, "description"),
+    label: validateText(value.label, "label"),
+    description: validateText(value.description, "description"),
     risk,
     dependencies: textList(value.dependencies, "dependencies"),
     environment: textList(value.environment, "environment"),
@@ -64,7 +64,7 @@ export function validateManifest(value) {
     tests: textList(value.tests, "tests"),
     sensitivePaths: textList(value.sensitivePaths, "sensitivePaths"),
     sideEffects: textList(value.sideEffects, "sideEffects"),
-    removal: nonEmptyText(value.removal, "removal"),
+    removal: validateText(value.removal, "removal"),
   };
 }
 
@@ -91,8 +91,8 @@ export function validateCapabilities(value) {
     if (!item || typeof item !== "object" || Array.isArray(item)) {
       throw new TypeError("Each selected capability must be an object.");
     }
-    const id = nonEmptyText(item.id, "selected capability id");
-    const risk = nonEmptyText(
+    const id = validateText(item.id, "selected capability id");
+    const risk = validateText(
       item.risk,
       "selected capability risk",
     ).toUpperCase();
@@ -101,7 +101,7 @@ export function validateCapabilities(value) {
     }
     const selected = { id, risk };
     if (item.justification !== undefined)
-      selected.justification = nonEmptyText(
+      selected.justification = validateText(
         item.justification,
         "technical justification",
       );
