@@ -1,0 +1,103 @@
+# CODEOWNERS — SAFRS v1.1 R2/R3 review enforcement
+#
+# PLACEHOLDER OWNER — MUST BE REPLACED BY A HUMAN BEFORE THIS FILE PROVIDES ANY
+# REAL CONTROL. `@sentra/safrs-maintainers` is a stand-in, not a verified GitHub
+# team. Until a real team (or user) that actually exists in this organization is
+# substituted, GitHub silently treats every rule below as having no valid owner
+# and "Require review from Code Owners" will not block anything.
+# Replacement is a governance action: it is itself an R2 change to this file.
+#
+# Derivation: every pattern in this file is derived from `.safrs/sensitive-paths.json`
+# (`patterns`, `verification_control_patterns`, and `risk_overrides`). No pattern
+# here is invented. Patterns are reproduced verbatim from that file, with a leading
+# `/` added where the source pattern is root-anchored, so the mapping stays
+# auditable line by line.
+#
+# Precedence warning: in CODEOWNERS the LAST matching pattern wins — it does not
+# accumulate. Today every rule resolves to the same placeholder, so precedence is
+# harmless. The moment a human assigns different owners per section, the ordering
+# below becomes load-bearing: a broad rule placed after a narrow one will silently
+# strip the narrow rule's owner. Re-verify ordering after any owner split.
+#
+# Related human-only setup that this file cannot perform on its own:
+# see docs/governance/PLATFORM_ACTIVATION.md.
+
+# ---------------------------------------------------------------------------
+# R2 — sensitive paths (source: sensitive-paths.json -> patterns, minimum_risk R2)
+# ---------------------------------------------------------------------------
+
+# Governance and security surfaces
+/AGENTS.md                                      @sentra/safrs-maintainers
+/SECURITY.md                                    @sentra/safrs-maintainers
+/SAFRS_SPEC.md                                  @sentra/safrs-maintainers
+/.safrs/**                                      @sentra/safrs-maintainers
+/.github/workflows/**                           @sentra/safrs-maintainers
+/.github/CODEOWNERS                             @sentra/safrs-maintainers
+
+# Vendor instruction adapters
+/.github/copilot-instructions.md                @sentra/safrs-maintainers
+/.cursor/rules/**                               @sentra/safrs-maintainers
+
+# Project capsule routing
+/projects/**/AGENTS.md                          @sentra/safrs-maintainers
+
+# Shared boundaries
+/packages/**                                    @sentra/safrs-maintainers
+/infrastructure/**                              @sentra/safrs-maintainers
+
+# Root build and dependency manifests
+/package.json                                   @sentra/safrs-maintainers
+/pnpm-lock.yaml                                 @sentra/safrs-maintainers
+/pnpm-workspace.yaml                            @sentra/safrs-maintainers
+/turbo.json                                     @sentra/safrs-maintainers
+/.github/renovate.json                          @sentra/safrs-maintainers
+
+# Verification scripts and release evidence
+/scripts/safrs-verify.mjs                       @sentra/safrs-maintainers
+/scripts/safrs-verify.ps1                       @sentra/safrs-maintainers
+/scripts/safrs-verify.sh                        @sentra/safrs-maintainers
+/tests/repository/automation-policy.test.mjs    @sentra/safrs-maintainers
+/MANIFEST.txt                                   @sentra/safrs-maintainers
+/SHA256SUMS.txt                                 @sentra/safrs-maintainers
+
+# Security- and data-boundary directories at any depth
+**/migrations/**                                @sentra/safrs-maintainers
+**/auth/**                                      @sentra/safrs-maintainers
+**/authorization/**                             @sentra/safrs-maintainers
+**/security/**                                  @sentra/safrs-maintainers
+
+# Dependency manifests at any depth
+**/package.json                                 @sentra/safrs-maintainers
+**/package-lock.json                            @sentra/safrs-maintainers
+**/pnpm-lock.yaml                               @sentra/safrs-maintainers
+**/yarn.lock                                    @sentra/safrs-maintainers
+**/requirements*.txt                            @sentra/safrs-maintainers
+**/pyproject.toml                               @sentra/safrs-maintainers
+**/poetry.lock                                  @sentra/safrs-maintainers
+**/Cargo.toml                                   @sentra/safrs-maintainers
+**/Cargo.lock                                   @sentra/safrs-maintainers
+**/go.mod                                       @sentra/safrs-maintainers
+**/go.sum                                       @sentra/safrs-maintainers
+
+# ---------------------------------------------------------------------------
+# Verification-control surfaces
+# (source: sensitive-paths.json -> verification_control_patterns)
+# SAFRS-07: a change here receives equal or greater scrutiny than implementation.
+# Entries already covered above are not repeated.
+# ---------------------------------------------------------------------------
+
+/tools/safrs/**                                 @sentra/safrs-maintainers
+**/tests/security/**                            @sentra/safrs-maintainers
+**/tests/architecture/**                        @sentra/safrs-maintainers
+
+# ---------------------------------------------------------------------------
+# R3 — high impact (source: sensitive-paths.json -> risk_overrides)
+# These must NOT keep the same owner as the R2 block once real teams exist.
+# R3 requires explicit human execution authorization on top of review; assign a
+# narrower, higher-authority owner set here.
+# Placed last deliberately so these rules win over any broader R2 rule above.
+# ---------------------------------------------------------------------------
+
+/projects/**/safety-critical/**                 @sentra/safrs-maintainers
+/projects/**/production/**                      @sentra/safrs-maintainers
+/infrastructure/production/**                   @sentra/safrs-maintainers
