@@ -1,0 +1,7 @@
+{
+  "name": "Atlas Demo",
+  "problem": "Membantu tim sekolah mengelola kegiatan belajar.",
+  "kind": "web",
+  "capabilities": ["ai", "file storage"],
+  "sensitiveDomains": ["education"]
+}

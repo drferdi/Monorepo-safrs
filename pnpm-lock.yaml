@@ -276,6 +276,8 @@ importers:
 
   tools/doctor: {}
 
+  tools/project-wizard: {}
+
 packages:
 
   '@alloc/quick-lru@5.2.0':
