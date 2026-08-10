@@ -1,8 +1,12 @@
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { runDoctor } from "../tools/doctor/src/checks.mjs";
 import {
+  loadCanonicalEnvironment,
+  runDoctor,
+} from "../tools/doctor/src/checks.mjs";
+import {
+  createAllowlistedEnvironment,
   installSignalCleanup,
   packageManagerCommand,
   runCommand,
@@ -17,12 +21,13 @@ function developmentFailure(summary, recovery) {
   };
 }
 
-async function startTurboDevelopment(rootDirectory) {
+async function startTurboDevelopment(rootDirectory, environment) {
   const child = startManagedProcess(
     packageManagerCommand,
     ["turbo", "run", "dev", "--parallel"],
     {
       cwd: rootDirectory,
+      env: environment,
       stdio: "inherit",
     },
   );
@@ -41,7 +46,23 @@ export async function runDevelopment(options = {}) {
   const rootDirectory = options.rootDirectory ?? process.cwd();
   const command = options.command ?? runCommand;
   const doctor = options.runDoctor ?? runDoctor;
-  const report = await doctor({ rootDirectory });
+  const loadEnvironment =
+    options.loadCanonicalEnvironment ?? loadCanonicalEnvironment;
+  let canonicalEnvironment;
+  try {
+    canonicalEnvironment = loadEnvironment({ rootDirectory });
+  } catch {
+    return developmentFailure(
+      "File .env lokal belum aman atau belum tersedia.",
+      "Jalankan pnpm run setup, lalu jalankan pnpm dev.",
+    );
+  }
+  const developmentEnvironment =
+    createAllowlistedEnvironment(canonicalEnvironment);
+  const report = await doctor({
+    rootDirectory,
+    environment: canonicalEnvironment,
+  });
   const blockingChecks = (report.checks ?? []).filter(
     (check) =>
       !check.ok && !["postgres-ready", "prisma-client"].includes(check.id),
@@ -53,7 +74,7 @@ export async function runDevelopment(options = {}) {
   const databaseStart = await command(
     "docker",
     ["compose", "up", "-d", "--wait", "postgres"],
-    { cwd: rootDirectory },
+    { cwd: rootDirectory, env: developmentEnvironment },
   );
   if (databaseStart.exitCode !== 0) {
     return developmentFailure(
@@ -64,7 +85,7 @@ export async function runDevelopment(options = {}) {
   const generate = await command(
     packageManagerCommand,
     ["--filter", "@safrs/database", "generate"],
-    { cwd: rootDirectory },
+    { cwd: rootDirectory, env: developmentEnvironment },
   );
   if (generate.exitCode !== 0) {
     return developmentFailure(
@@ -74,8 +95,9 @@ export async function runDevelopment(options = {}) {
   }
 
   const startTurbo =
-    options.startTurbo ?? (() => startTurboDevelopment(rootDirectory));
-  const exitCode = await startTurbo();
+    options.startTurbo ??
+    ((environment) => startTurboDevelopment(rootDirectory, environment));
+  const exitCode = await startTurbo(developmentEnvironment);
   return { exitCode, human: "" };
 }
 

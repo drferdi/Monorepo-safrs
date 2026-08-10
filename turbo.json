@@ -22,7 +22,8 @@
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": ["DATABASE_URL", "APP_URL", "NODE_ENV"]
     }
   }
 }

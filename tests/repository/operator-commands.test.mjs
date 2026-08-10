@@ -1,6 +1,14 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import {
+  lstat,
+  mkdir,
+  mkdtemp,
+  readFile,
+  rm,
+  symlink,
+  writeFile,
+} from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -30,6 +38,20 @@ test("uses pnpm run for doctor because bare pnpm doctor is reserved by pnpm", ()
 
   assert.equal(result.status, 0);
   assert.match(result.stdout, /Run diagnostics on the pnpm installation/u);
+});
+
+test("declares only canonical development environment values for strict Turbo execution", async () => {
+  const turbo = JSON.parse(await readFile("turbo.json", "utf8"));
+
+  assert.deepEqual(turbo.tasks.dev.env, [
+    "DATABASE_URL",
+    "APP_URL",
+    "NODE_ENV",
+  ]);
+  assert.doesNotMatch(
+    await readFile("scripts/dev.mjs", "utf8"),
+    /--env-mode=loose/u,
+  );
 });
 
 test("setup creates a missing environment file once and runs the safe local sequence", async () => {
@@ -74,14 +96,113 @@ test("setup never overwrites an existing environment file", async () => {
       exists: () => true,
       copyFile: async () => {
         copied += 1;
+        const error = new Error("destination exists");
+        error.code = "EEXIST";
+        throw error;
       },
       readFile: async () => `DATABASE_URL=${localUrl}\n`,
     },
     runDoctor: async () => ({ ok: true, exitCode: 0, human: "[DOCTOR] SIAP" }),
   });
 
-  assert.equal(copied, 0);
+  assert.equal(copied, 1);
   assert.ok(calls.includes("pnpm --filter @safrs/database seed"));
+});
+
+test("setup preserves a concurrently-created environment file", async () => {
+  const calls = [];
+  let copied = 0;
+  const result = await runSetup({
+    rootDirectory: "/fixture",
+    nodeVersion: "v24.18.0",
+    command: successfulCommand(calls),
+    fileSystem: {
+      exists: (file) => file.endsWith(".env.example"),
+      copyFile: async () => {
+        copied += 1;
+        const error = new Error("destination exists");
+        error.code = "EEXIST";
+        throw error;
+      },
+      readFile: async () => `DATABASE_URL=${localUrl}\n`,
+    },
+    runDoctor: async () => ({ ok: true, exitCode: 0, human: "[DOCTOR] SIAP" }),
+  });
+
+  assert.equal(result.exitCode, 0);
+  assert.equal(copied, 1);
+  assert.ok(calls.includes("pnpm --filter @safrs/database seed"));
+});
+
+test("setup rejects a dangling environment symlink without changing it", async () => {
+  const rootDirectory = await mkdtemp(join(tmpdir(), "safrs-setup-link-"));
+  const environmentFile = join(rootDirectory, ".env");
+  try {
+    await writeFile(
+      join(rootDirectory, ".env.example"),
+      `DATABASE_URL=${localUrl}\n`,
+    );
+    await symlink(join(rootDirectory, "missing-target"), environmentFile);
+    const result = await runSetup({
+      rootDirectory,
+      nodeVersion: "v24.18.0",
+      command: successfulCommand([]),
+      runDoctor: async () => ({
+        ok: true,
+        exitCode: 0,
+        human: "[DOCTOR] SIAP",
+      }),
+    });
+
+    assert.equal(result.exitCode, 1);
+    assert.match(result.human, /File \.env tidak dapat dibuat/u);
+    assert.equal((await lstat(environmentFile)).isSymbolicLink(), true);
+  } finally {
+    await rm(rootDirectory, { recursive: true, force: true });
+  }
+});
+
+test("development passes canonical root environment values over malicious app-local values", async () => {
+  const rootDirectory = await mkdtemp(join(tmpdir(), "safrs-dev-env-"));
+  const applicationDirectory = join(
+    rootDirectory,
+    "projects",
+    "golden-path",
+    "apps",
+    "web",
+  );
+  let turboEnvironment;
+  try {
+    await mkdir(applicationDirectory, { recursive: true });
+    await writeFile(
+      join(rootDirectory, ".env"),
+      `DATABASE_URL=${localUrl}\nAPP_URL=http://localhost:3000\nNODE_ENV=development\n`,
+    );
+    await writeFile(
+      join(applicationDirectory, ".env"),
+      "DATABASE_URL=postgresql://attacker:external@db.example.com:5432/production\n",
+    );
+    const result = await runDevelopment({
+      rootDirectory,
+      command: successfulCommand([]),
+      runDoctor: async () => ({
+        ok: true,
+        exitCode: 0,
+        checks: [],
+        human: "[DOCTOR] SIAP",
+      }),
+      startTurbo: async (environment) => {
+        turboEnvironment = environment;
+        return 0;
+      },
+    });
+
+    assert.equal(result.exitCode, 0);
+    assert.equal(turboEnvironment.DATABASE_URL, localUrl);
+    assert.doesNotMatch(turboEnvironment.DATABASE_URL, /db\.example/u);
+  } finally {
+    await rm(rootDirectory, { recursive: true, force: true });
+  }
 });
 
 test("setup creates an environment file in a temporary fixture with its default filesystem", async () => {
@@ -114,6 +235,48 @@ test("setup creates an environment file in a temporary fixture with its default 
   }
 });
 
+test("setup uses the canonical root environment instead of an inherited unsafe database URL", async () => {
+  const rootDirectory = await mkdtemp(join(tmpdir(), "safrs-setup-canonical-"));
+  const unsafeUrl =
+    "postgresql://attacker:external@db.example.com:5432/production";
+  const commandEnvironments = [];
+  try {
+    await writeFile(
+      join(rootDirectory, ".env.example"),
+      `DATABASE_URL=${localUrl}\n`,
+    );
+    await writeFile(join(rootDirectory, ".env"), `DATABASE_URL=${localUrl}\n`);
+    process.env.DATABASE_URL = unsafeUrl;
+    const result = await runSetup({
+      rootDirectory,
+      nodeVersion: "v24.18.0",
+      command: async (program, argumentsList, options) => {
+        commandEnvironments.push(options.env);
+        return successfulCommand([])(program, argumentsList);
+      },
+      runDoctor: async () => ({
+        ok: true,
+        exitCode: 0,
+        human: "[DOCTOR] SIAP",
+      }),
+    });
+
+    assert.equal(result.exitCode, 0);
+    const databaseCommandEnvironments = commandEnvironments.filter(
+      (environment) => environment.DATABASE_URL !== undefined,
+    );
+    assert.ok(databaseCommandEnvironments.length > 0);
+    assert.ok(
+      databaseCommandEnvironments.every(
+        (environment) => environment.DATABASE_URL === localUrl,
+      ),
+    );
+  } finally {
+    delete process.env.DATABASE_URL;
+    await rm(rootDirectory, { recursive: true, force: true });
+  }
+});
+
 test("development stops before side effects when Docker engine is not ready", async () => {
   const calls = [];
   const report = {
@@ -126,6 +289,7 @@ test("development stops before side effects when Docker engine is not ready", as
 
   const result = await runDevelopment({
     command: successfulCommand(calls),
+    loadCanonicalEnvironment: () => ({ DATABASE_URL: localUrl }),
     runDoctor: async () => report,
   });
 
@@ -140,6 +304,7 @@ test("development repairs local PostgreSQL and Prisma before handing off to Turb
   const result = await runDevelopment({
     rootDirectory: "/fixture",
     command: successfulCommand(calls),
+    loadCanonicalEnvironment: () => ({ DATABASE_URL: localUrl }),
     runDoctor: async () => ({
       ok: false,
       exitCode: 1,

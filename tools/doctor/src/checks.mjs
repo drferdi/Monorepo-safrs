@@ -14,6 +14,8 @@ import {
 
 const nodePolicy = { major: 24, minimumMinor: 18 };
 const generatedClientFile = "packages/database/src/generated/prisma/client.ts";
+const sensitiveEnvironmentName =
+  /(?:TOKEN|KEY|SECRET|PASSWORD|CREDENTIAL|AUTH)/iu;
 
 function result(
   ok,
@@ -67,6 +69,25 @@ function parseEnvironmentDatabaseUrl(source) {
     : rawValue;
 }
 
+function parseEnvironmentValue(source, name) {
+  const escapedName = name.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+  const expression = new RegExp(
+    `^\\s*(?:export\\s+)?${escapedName}\\s*=\\s*(.*)$`,
+    "mu",
+  );
+  const line = String(source)
+    .split(/\r?\n/u)
+    .find((entry) => expression.test(entry));
+  if (!line) {
+    return undefined;
+  }
+  const rawValue = line.replace(expression, "$1").trim();
+  const quote = rawValue.at(0);
+  return (quote === '"' || quote === "'") && rawValue.endsWith(quote)
+    ? rawValue.slice(1, -1)
+    : rawValue;
+}
+
 export function nodeCompatible(version) {
   const match = /^v?(\d+)\.(\d+)\.(\d+)/u.exec(version ?? "");
   if (!match) {
@@ -81,12 +102,42 @@ function defaultFileSystem() {
   return { exists: existsSync, readFile: readFileSync };
 }
 
+function sensitiveEnvironmentSnapshot(environment) {
+  return Object.fromEntries(
+    Object.entries(environment).filter(
+      ([name, value]) =>
+        (name === "DATABASE_URL" || sensitiveEnvironmentName.test(name)) &&
+        typeof value === "string",
+    ),
+  );
+}
+
+export function loadCanonicalEnvironment(options = {}) {
+  const rootDirectory = options.rootDirectory ?? process.cwd();
+  const fileSystem = options.fileSystem ?? defaultFileSystem();
+  const environmentFile = join(rootDirectory, ".env");
+  if (!fileSystem.exists(environmentFile)) {
+    throw new Error("File .env belum tersedia.");
+  }
+  const source = fileSystem.readFile(environmentFile, "utf8");
+  const environment = Object.fromEntries(
+    ["DATABASE_URL", "APP_URL", "NODE_ENV"]
+      .map((name) => [name, parseEnvironmentValue(source, name)])
+      .filter(([, value]) => value !== undefined),
+  );
+  assertDisposableDatabase(environment.DATABASE_URL ?? "");
+  return environment;
+}
+
 export async function runDoctor(options = {}) {
   const rootDirectory = options.rootDirectory ?? process.cwd();
   const environment = {
     DATABASE_URL: options.environment?.DATABASE_URL ?? process.env.DATABASE_URL,
   };
-  const suppliedEnvironment = options.environment ?? environment;
+  const suppliedEnvironment = {
+    ...sensitiveEnvironmentSnapshot(process.env),
+    ...(options.environment ?? {}),
+  };
   const fileSystem = options.fileSystem ?? defaultFileSystem();
   const command = options.command ?? runCommand;
   const environmentFile = join(rootDirectory, ".env");

@@ -1,8 +1,34 @@
 import { spawn } from "node:child_process";
-import { once } from "node:events";
 
 export const packageManagerCommand =
   process.platform === "win32" ? "pnpm.cmd" : "pnpm";
+
+const sensitiveEnvironmentName =
+  /(?:TOKEN|KEY|SECRET|PASSWORD|CREDENTIAL|AUTH)/iu;
+
+function containsCredentialedUrl(value) {
+  try {
+    const parsed = new URL(value);
+    return Boolean(parsed.username || parsed.password);
+  } catch {
+    return false;
+  }
+}
+
+export function createAllowlistedEnvironment(
+  canonicalEnvironment,
+  inheritedEnvironment = process.env,
+) {
+  const inherited = Object.fromEntries(
+    Object.entries(inheritedEnvironment).filter(
+      ([name, value]) =>
+        typeof value === "string" &&
+        !sensitiveEnvironmentName.test(name) &&
+        !containsCredentialedUrl(value),
+    ),
+  );
+  return { ...inherited, ...canonicalEnvironment };
+}
 
 export function startManagedProcess(command, argumentsList = [], options = {}) {
   const windowsBatch =
@@ -15,6 +41,7 @@ export function startManagedProcess(command, argumentsList = [], options = {}) {
     : argumentsList;
   return spawn(executable, argumentsForExecutable, {
     ...options,
+    detached: options.detached ?? process.platform !== "win32",
     shell: false,
     windowsHide: true,
   });
@@ -45,18 +72,58 @@ export async function runCommand(command, argumentsList = [], options = {}) {
   });
 }
 
+function waitForExit(child, timeoutMs) {
+  if (child.exitCode !== null || child.signalCode !== null) {
+    return Promise.resolve(true);
+  }
+  return new Promise((resolve) => {
+    const timeout = setTimeout(() => {
+      child.off("exit", onExit);
+      resolve(false);
+    }, timeoutMs);
+    const onExit = () => {
+      clearTimeout(timeout);
+      resolve(true);
+    };
+    child.once("exit", onExit);
+  });
+}
+
+function terminatePosixProcessGroup(child, signal) {
+  if (!child.pid) {
+    return;
+  }
+  try {
+    process.kill(-child.pid, signal);
+  } catch (error) {
+    if (error?.code !== "ESRCH") {
+      throw error;
+    }
+  }
+}
+
 export async function stopManagedProcess(child) {
   if (!child || child.exitCode !== null || child.signalCode !== null) {
     return;
   }
 
-  const exited = once(child, "exit");
   if (process.platform === "win32" && child.pid) {
     await runCommand("taskkill", ["/pid", String(child.pid), "/T", "/F"]);
   } else {
-    child.kill("SIGTERM");
+    terminatePosixProcessGroup(child, "SIGTERM");
   }
-  await exited;
+  if (await waitForExit(child, 1000)) {
+    return;
+  }
+
+  if (process.platform === "win32" && child.pid) {
+    await runCommand("taskkill", ["/pid", String(child.pid), "/T", "/F"]);
+  } else {
+    terminatePosixProcessGroup(child, "SIGKILL");
+  }
+  if (!(await waitForExit(child, 1000))) {
+    throw new Error("Process tree did not stop in time.");
+  }
 }
 
 export function installSignalCleanup(cleanup, processObject = process) {

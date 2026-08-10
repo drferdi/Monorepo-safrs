@@ -1,11 +1,15 @@
-import { existsSync } from "node:fs";
-import { copyFile, readFile } from "node:fs/promises";
+import { constants, existsSync } from "node:fs";
+import { copyFile, lstat, readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { assertDisposableDatabase } from "../packages/database/src/reset-guard.ts";
 import { nodeCompatible, runDoctor } from "../tools/doctor/src/checks.mjs";
-import { packageManagerCommand, runCommand } from "./lib/process.mjs";
+import {
+  createAllowlistedEnvironment,
+  packageManagerCommand,
+  runCommand,
+} from "./lib/process.mjs";
 
 function readDatabaseUrl(source) {
   const line = String(source)
@@ -23,6 +27,25 @@ function readDatabaseUrl(source) {
     : value;
 }
 
+function readEnvironmentValue(source, name) {
+  const escapedName = name.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
+  const expression = new RegExp(
+    `^\\s*(?:export\\s+)?${escapedName}\\s*=\\s*(.*)$`,
+    "mu",
+  );
+  const line = String(source)
+    .split(/\r?\n/u)
+    .find((entry) => expression.test(entry));
+  if (!line) {
+    return undefined;
+  }
+  const rawValue = line.replace(expression, "$1").trim();
+  const quote = rawValue.at(0);
+  return (quote === '"' || quote === "'") && rawValue.endsWith(quote)
+    ? rawValue.slice(1, -1)
+    : rawValue;
+}
+
 function setupFailure(summary, recovery) {
   return {
     exitCode: 1,
@@ -35,15 +58,55 @@ async function commandIsAvailable(
   command,
   argumentsList,
   rootDirectory,
+  environment,
 ) {
   return (
-    (await commandRunner(command, argumentsList, { cwd: rootDirectory }))
-      .exitCode === 0
+    (
+      await commandRunner(command, argumentsList, {
+        cwd: rootDirectory,
+        env: environment,
+      })
+    ).exitCode === 0
   );
 }
 
 function defaultFileSystem() {
-  return { exists: existsSync, copyFile, readFile };
+  return { exists: existsSync, copyFile, lstat, readFile };
+}
+
+async function ensureEnvironmentFile(fileSystem, exampleFile, environmentFile) {
+  if (!fileSystem.exists(exampleFile)) {
+    return false;
+  }
+  if (fileSystem.lstat) {
+    try {
+      if ((await fileSystem.lstat(environmentFile)).isSymbolicLink()) {
+        return false;
+      }
+    } catch (error) {
+      if (error?.code !== "ENOENT") {
+        return false;
+      }
+    }
+  }
+  try {
+    await fileSystem.copyFile(
+      exampleFile,
+      environmentFile,
+      constants.COPYFILE_EXCL,
+    );
+    return true;
+  } catch (error) {
+    if (error?.code !== "EEXIST") {
+      return false;
+    }
+    try {
+      await fileSystem.readFile(environmentFile, "utf8");
+      return true;
+    } catch {
+      return false;
+    }
+  }
 }
 
 export async function runSetup(options = {}) {
@@ -53,6 +116,7 @@ export async function runSetup(options = {}) {
   const doctor = options.runDoctor ?? runDoctor;
   const environmentFile = resolve(rootDirectory, ".env");
   const exampleFile = resolve(rootDirectory, ".env.example");
+  const hostEnvironment = createAllowlistedEnvironment({});
 
   if (!nodeCompatible(options.nodeVersion ?? process.version)) {
     return setupFailure(
@@ -66,6 +130,7 @@ export async function runSetup(options = {}) {
       packageManagerCommand,
       ["--version"],
       rootDirectory,
+      hostEnvironment,
     ))
   ) {
     return setupFailure(
@@ -74,7 +139,13 @@ export async function runSetup(options = {}) {
     );
   }
   if (
-    !(await commandIsAvailable(command, "git", ["--version"], rootDirectory))
+    !(await commandIsAvailable(
+      command,
+      "git",
+      ["--version"],
+      rootDirectory,
+      hostEnvironment,
+    ))
   ) {
     return setupFailure(
       "Git belum tersedia.",
@@ -82,22 +153,32 @@ export async function runSetup(options = {}) {
     );
   }
 
-  if (!fileSystem.exists(environmentFile)) {
-    if (!fileSystem.exists(exampleFile)) {
-      return setupFailure(
-        "Template .env.example tidak ditemukan.",
-        "Pulihkan .env.example, lalu jalankan pnpm run setup.",
-      );
-    }
-    await fileSystem.copyFile(exampleFile, environmentFile);
+  if (
+    !(await ensureEnvironmentFile(fileSystem, exampleFile, environmentFile))
+  ) {
+    return setupFailure(
+      "File .env tidak dapat dibuat dengan aman.",
+      "Periksa .env dan .env.example, lalu jalankan pnpm run setup.",
+    );
   }
 
-  const databaseUrl =
-    options.environment?.DATABASE_URL ??
-    process.env.DATABASE_URL ??
-    readDatabaseUrl(await fileSystem.readFile(environmentFile, "utf8"));
+  let canonicalEnvironment;
   try {
-    assertDisposableDatabase(databaseUrl ?? "");
+    const source = await fileSystem.readFile(environmentFile, "utf8");
+    canonicalEnvironment = {
+      DATABASE_URL:
+        options.environment?.DATABASE_URL ?? readDatabaseUrl(source),
+      APP_URL: readEnvironmentValue(source, "APP_URL"),
+      NODE_ENV: readEnvironmentValue(source, "NODE_ENV"),
+    };
+  } catch {
+    return setupFailure(
+      "File .env tidak dapat dibaca dengan aman.",
+      "Periksa .env, lalu jalankan pnpm run setup.",
+    );
+  }
+  try {
+    assertDisposableDatabase(canonicalEnvironment.DATABASE_URL ?? "");
   } catch {
     return {
       exitCode: 2,
@@ -105,6 +186,7 @@ export async function runSetup(options = {}) {
         "[DATABASE] DITOLAK: DATABASE_URL harus berupa PostgreSQL lokal disposable.\n  Solusi: Gunakan nilai dari .env.example, lalu jalankan pnpm run setup.",
     };
   }
+  const setupEnvironment = createAllowlistedEnvironment(canonicalEnvironment);
 
   if (
     !(await commandIsAvailable(
@@ -112,6 +194,7 @@ export async function runSetup(options = {}) {
       packageManagerCommand,
       ["install", "--frozen-lockfile=false"],
       rootDirectory,
+      setupEnvironment,
     ))
   ) {
     return setupFailure(
@@ -121,7 +204,13 @@ export async function runSetup(options = {}) {
   }
 
   if (
-    !(await commandIsAvailable(command, "docker", ["--version"], rootDirectory))
+    !(await commandIsAvailable(
+      command,
+      "docker",
+      ["--version"],
+      rootDirectory,
+      setupEnvironment,
+    ))
   ) {
     return setupFailure(
       "Docker belum tersedia.",
@@ -134,6 +223,7 @@ export async function runSetup(options = {}) {
       "docker",
       ["compose", "up", "-d", "--wait", "postgres"],
       rootDirectory,
+      setupEnvironment,
     ))
   ) {
     return setupFailure(
@@ -149,6 +239,7 @@ export async function runSetup(options = {}) {
         packageManagerCommand,
         ["--filter", "@safrs/database", databaseCommand],
         rootDirectory,
+        setupEnvironment,
       ))
     ) {
       return setupFailure(

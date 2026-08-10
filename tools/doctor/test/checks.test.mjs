@@ -152,6 +152,29 @@ test("rejects an unsafe supplied database URL even when the root environment fil
   );
 });
 
+test("redacts sensitive values from the default process environment in technical output", async () => {
+  const sentinel = "runtime-token-sentinel";
+  process.env.DOCTOR_TEST_TOKEN = sentinel;
+  try {
+    const { options } = healthyOptions({
+      commands: {
+        "git --version": {
+          exitCode: 1,
+          stderr: `credential failure: ${sentinel}`,
+        },
+      },
+    });
+    delete options.environment;
+
+    const report = await runDoctor(options);
+
+    assert.equal(report.exitCode, 1);
+    assert.doesNotMatch(report.technical, /runtime-token-sentinel/u);
+  } finally {
+    delete process.env.DOCTOR_TEST_TOKEN;
+  }
+});
+
 test("reports a healthy local development machine using read-only boundaries", async () => {
   const { command, options } = healthyOptions();
 
