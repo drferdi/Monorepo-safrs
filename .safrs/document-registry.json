@@ -204,6 +204,12 @@
       "path": "docs/evidence/SAFRS_GOLDEN_PATH_VERIFICATION.md",
       "type": "historical",
       "status": "HISTORICAL"
+    },
+    {
+      "id": "safrs-governance-remediation-plan",
+      "path": "docs/plans/active/SAFRS_GOVERNANCE_REMEDIATION_PLAN.md",
+      "type": "plan",
+      "status": "ACTIVE"
     }
   ],
   "allowed_status": [
