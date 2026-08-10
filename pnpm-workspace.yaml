@@ -15,6 +15,7 @@ catalog:
   "@hono/zod-validator": 0.9.0
   "@prisma/adapter-pg": 7.9.1
   "@prisma/client": 7.9.1
+  "@react-email/components": 1.0.12
   "@tailwindcss/postcss": 4.3.3
   "@t3-oss/env-core": 0.13.8
   "@t3-oss/env-nextjs": 0.13.8
@@ -32,6 +33,9 @@ catalog:
   prisma: 7.9.1
   react: 19.2.8
   react-dom: 19.2.8
+  react-email: 6.9.2
+  resend: 6.19.0
+  stripe: 22.5.0
   tailwindcss: 4.3.3
   turbo: 2.10.9
   typescript: 7.0.2
