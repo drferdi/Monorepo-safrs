@@ -25,7 +25,7 @@ Adopt the contents and behavior defined by this bootstrap while preserving all c
 - `.safrs/sensitive-paths.json`
 - `.safrs/document-registry.json`
 - `docs/governance/*`
-- `docs/plans/active/SAFRS_BOOTSTRAP_IMPLEMENTATION.md`
+- `docs/plans/completed/SAFRS_BOOTSTRAP_IMPLEMENTATION.md` as the completed adoption record; create a new active plan for repository-specific follow-up work.
 - `tools/safrs/*`
 - `scripts/safrs-verify.sh`
 - `.github/workflows/safrs-governance.yml`

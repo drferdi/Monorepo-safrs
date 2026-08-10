@@ -55,7 +55,7 @@ test("hook declares staged-only Biome repair, partial-stage protection, and no f
   );
   assert.match(hook, /sudah di-stage sebagian/u);
   assert.match(hook, /git diff --cached --name-only -z/u);
-  assert.match(hook, /git add --pathspec-from-file=/u);
+  assert.match(hook, /git add -f --pathspec-from-file=/u);
   assert.doesNotMatch(hook, /pnpm (run )?build|turbo run build/u);
 });
 
@@ -130,6 +130,37 @@ test("hook fails closed when a staged file has unstaged changes", async () => {
     assert.match(
       `${error.stdout}\n${error.stderr}`,
       /sudah di-stage sebagian/u,
+    );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("hook preserves a staged tracked file inside an ignored ledger directory", async () => {
+  const root = await mkdtemp(join(tmpdir(), "safrs-precommit-ignored-ledger-"));
+  try {
+    command(root, ["init", "--quiet"]);
+    command(root, ["config", "user.email", "chief@example.test"]);
+    command(root, ["config", "user.name", "Chief"]);
+    const environment = await hookEnvironment(root);
+    await mkdir(join(root, ".state"));
+    await writeFile(join(root, ".gitignore"), ".state/\n");
+    await writeFile(join(root, ".state", "progress.md"), "awal\n");
+    command(root, ["add", ".gitignore"]);
+    command(root, ["add", "-f", ".state/progress.md"]);
+    command(root, ["commit", "-qm", "baseline"]);
+    await writeFile(join(root, ".state", "progress.md"), "lanjut\n");
+    command(root, ["add", "-f", ".state/progress.md"]);
+
+    execFileSync(bashExecutable, ["-c", `exec '${shellPath(hookPath)}'`], {
+      cwd: root,
+      encoding: "utf8",
+      env: environment,
+    });
+
+    assert.equal(
+      command(root, ["diff", "--cached", "--name-only"]).trim(),
+      ".state/progress.md",
     );
   } finally {
     await rm(root, { recursive: true, force: true });

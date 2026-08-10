@@ -13,7 +13,7 @@
 7. Configure repository ruleset/branch protection to require PR + SAFRS Governance + code-owner review on sensitive paths.
 8. Enable secret scanning/push protection and dependency security features available to the repository.
 9. Audit all existing GitHub Actions: least-privilege `permissions`, full-SHA pinning, no production secret inheritance for coding agents.
-10. Proceed through `docs/plans/active/SAFRS_BOOTSTRAP_IMPLEMENTATION.md` without mixing unrelated product refactors into the adoption PRs.
+10. Use `docs/plans/completed/SAFRS_BOOTSTRAP_IMPLEMENTATION.md` as the completed bootstrap record; create a new active plan before any repository-specific follow-up without mixing unrelated product refactors into the adoption PRs.
 
 ## Important
 The supplied package intentionally keeps the current Sentra governance documents at their existing root paths. Moving them under `docs/` is optional future cleanup and is **not required** for SAFRS adoption.

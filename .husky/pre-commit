@@ -31,4 +31,4 @@ if [ "$partially_staged" = true ]; then
 fi
 
 pnpm exec biome check --write --staged --no-errors-on-unmatched
-git add --pathspec-from-file="$staged_paths_file" --pathspec-file-nul
+git add -f --pathspec-from-file="$staged_paths_file" --pathspec-file-nul

@@ -100,6 +100,17 @@
       "network_endpoints": ["github.com", "api.github.com", "registry.npmjs.org", "registry-1.docker.io"],
       "provenance": ".github/workflows/ci.yml",
       "review_status": "APPROVED"
+    },
+    {
+      "id": "renovate-pr-automation",
+      "owner": "repository-maintainers",
+      "purpose": "Create reviewable dependency-update pull requests without auto-merge or deployment authority",
+      "allowed_operations": ["read-dependency-metadata", "update-lockfiles-in-pull-request", "create-pull-request"],
+      "data_scope": "repository-dependency-manifests-lockfiles-and-public-package-metadata",
+      "authentication": "repository-scoped-renovate-app-or-bot-token",
+      "network_endpoints": ["github.com", "api.github.com", "registry.npmjs.org"],
+      "provenance": ".github/renovate.json",
+      "review_status": "APPROVED"
     }
   ]
 }

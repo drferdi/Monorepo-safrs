@@ -46,11 +46,11 @@ All commands below ran on 2026-08-10 against the integrated local tree, using on
 | `bash scripts/safrs-verify.sh` | 0 | Git Bash SAFRS entry point passed after portable Python resolution was added and regression-tested. |
 | `python tests/architecture/test_safrs_topology.py` | 0 | 5 routing/topology assertions passed, including nearest agent routers and portable shell verification. |
 
-The final `MANIFEST.txt` lists 208 non-ignored repository files (excluding Git metadata and `SHA256SUMS.txt`). `sha256sum -c SHA256SUMS.txt` verified every listed file, and `git diff --check` returned exit 0 after regeneration.
+The final `MANIFEST.txt` is regenerated from the intended tracked repository tree only (excluding Git metadata and `SHA256SUMS.txt`). A clean checkout must validate every listed hash before this evidence can be accepted.
 
 ## Review status
 
-The accumulated change is R2 because it includes shared contracts, database/migration tooling, dependencies, CI, agent routing, and governing verification. Task-level independent reviews and their remediations are recorded in `.superpowers/sdd/2026-08-10-solo-dev-golden-path-implementation/progress.md`. A fresh consolidated final review of the complete committed diff remains the acceptance gate before a completion claim.
+The accumulated change is R2 because it includes shared contracts, database/migration tooling, dependencies, CI, agent routing, and governing verification. The consolidated final Sol review returned `fix-first` for ledger references, root R2 classification coverage, Renovate inventory, lifecycle links, and tracked-tree checksum scope. This remediation is pending a fresh final Sol re-review; no completion claim is valid until that reviewer returns `ship`.
 
 ## Conformance and gaps
 

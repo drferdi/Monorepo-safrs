@@ -26,7 +26,7 @@ This file maps every major capability from the design discussion to an implement
 | Documentation lifecycle | spec §13; document lifecycle doc; document registry check |
 | Canonical/Active/Historical/Superseded/Archived classes | document lifecycle + registry |
 | ADR and execution-plan lifecycles | spec §13; lifecycle doc |
-| Active implementation plan | `docs/plans/active/SAFRS_BOOTSTRAP_IMPLEMENTATION.md` |
+| Completed bootstrap implementation record | `docs/plans/completed/SAFRS_BOOTSTRAP_IMPLEMENTATION.md` |
 | Prompt/context injection boundary | `AGENTS.md`, `SECURITY.md`, spec §14 |
 | Tool/MCP poisoning controls | spec §15; `.safrs/tool-inventory.json`; tool inventory check |
 | Network + data exfiltration considerations | spec §8/§15; deny-unless-authorized inventory policy |
@@ -56,6 +56,6 @@ This file maps every major capability from the design discussion to an implement
 | Fast staged code hygiene | `.husky/pre-commit`, Biome, and `tests/repository/precommit.test.mjs` |
 | Browser golden journey | Playwright configuration and `projects/golden-path/apps/web/e2e/` |
 | Optional capability selection without baseline bloat | `tools/capabilities/` manifests for email, Stripe, AI, Electron, WXT, and Python |
-| PR-only dependency updates | `.github/renovate.json` and `tests/repository/automation-policy.test.mjs` |
+| PR-only dependency updates | `.github/renovate.json`, `.safrs/tool-inventory.json`, and `tests/repository/automation-policy.test.mjs` |
 | Non-deploying full CI | `.github/workflows/ci.yml` with immutable action SHAs |
 | Reusable AI implementation context | `AGENTS.md`, nearest boundary routers, and `CODEX_IMPLEMENT_GOLDEN_PATH.md` |
