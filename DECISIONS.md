@@ -6,6 +6,16 @@ Jangan menghapus entri lama — keputusan yang dibatalkan dicatat sebagai entri 
 
 ---
 
+## 2026-08-11 - Routing memori: registry-driven, HANDOFF machine-enforced
+
+Lima file memori terdaftar di `.safrs/document-registry.json` dengan `normativity`/`scope`/`read_order`;
+blok Read order `AGENTS.md` di-generate dari registry (`tools/safrs/generate_routing.py`).
+MUST-always (±2k token): 00_READ_FIRST → HANDOFF → 02 → 03 → 04 → 12_LESSONS.
+`SAFRS_SPEC.md` turun ke SHOULD (token budget; aturan operatif dicermin `AGENTS.md`).
+`check_handoff.py` di `safrs-verify.sh` mewajibkan update `HANDOFF.md` pada change set non-trivial.
+Duplikasi router di `00_READ_FIRST`/`CONTEXT.md` dihapus — satu sumber urutan baca.
+Referensi pola: Cline Memory Bank, standar AGENTS.md 2026.
+
 ## 2026-08-11 - File operasional agent: CONTEXT / DECISIONS / HANDOFF / PROGRESS / 12_LESSONS
 
 Repo mengadopsi lima file memori agent: `CONTEXT.md` (identitas), `DECISIONS.md` (file ini),

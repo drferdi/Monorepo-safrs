@@ -21,11 +21,11 @@ Last updated: 2026-08-11 | Branch: `main`
 
 ## 🟡 Fase 1 — DX Solo-Developer
 
-- [~] Knowledge base re-route → `.agents/knowledge/` (**staged, belum commit** — Chief/Claude)
+- [x] Knowledge base re-route → `.agents/knowledge/` (commit `de1410f`, pushed)
 - [~] DX friction fixes (9 item) — **sedang dikerjakan Claude**
       (`docs/superpowers/plans/2026-08-11-solo-dev-dx-friction-fixes.md`)
-- [ ] Lima file memori agent (CONTEXT/DECISIONS/HANDOFF/PROGRESS/12_LESSONS) — file fisik dibuat
-      hari ini; integrasi ke read-order `AGENTS.md` menunggu persetujuan Chief
+- [x] Lima file memori agent (CONTEXT/DECISIONS/HANDOFF/PROGRESS/12_LESSONS) — terdaftar di
+      registry, masuk read-order generated `AGENTS.md`, HANDOFF machine-enforced (Chief GO 2026-08-11)
 - [ ] `.env.example` lengkap + dokumentasi capability variables
 - [ ] Python prerequisite terdokumentasi (INSTALL.md) + deteksi di setup
 

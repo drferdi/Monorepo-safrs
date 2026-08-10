@@ -18,18 +18,7 @@ Read these documents before performing any significant task.
 
 ## Guidelines
 
-Read documents in the following order:
-
-1. Collaboration
-2. Objectives
-3. Architecture
-4. Context
-5. Engineering
-6. Coding
-7. Documentation
-8. Decisions
-9. Products
-10. Glossary
+The single source of truth for read order is the generated routing block in the root `AGENTS.md` (derived from `.safrs/document-registry.json`). Do not maintain a separate reading list here.
 
 Use only the documents relevant to the current task. Avoid introducing concepts that are not already defined unless explicitly requested.
 

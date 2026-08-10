@@ -13,18 +13,20 @@ Read only the context required for the task.
 **Always (MUST), in order:**
 
 1. `.agents/knowledge/00_READ_FIRST.md`
-2. `.agents/knowledge/02_OBJECTIVES.md`
-3. `.agents/knowledge/03_ARCHITECTURE.md`
-4. `.agents/knowledge/04_CONTEXT.md`
-5. `SAFRS_SPEC.md`
+2. `HANDOFF.md`
+3. `.agents/knowledge/02_OBJECTIVES.md`
+4. `.agents/knowledge/03_ARCHITECTURE.md`
+5. `.agents/knowledge/04_CONTEXT.md`
+6. `.agents/knowledge/12_LESSONS.md`
 
-**Always (SHOULD):** `.agents/knowledge/01_COLLABORATION.md`, `.agents/knowledge/11_RESPONSE_STANDARDS.md`
+**Always (SHOULD):** `.agents/knowledge/01_COLLABORATION.md`, `.agents/knowledge/11_RESPONSE_STANDARDS.md`, `SAFRS_SPEC.md`, `CONTEXT.md`
 
 **Task-scoped (SHOULD):**
 
-- `task:decision` → `.agents/knowledge/08_DECISIONS.md`
+- `task:decision` → `.agents/knowledge/08_DECISIONS.md`, `DECISIONS.md`
 - `task:documentation` → `.agents/knowledge/07_DOCUMENTATION.md`
 - `task:implementation` → `.agents/knowledge/05_ENGINEERING.md`, `.agents/knowledge/06_CODING.md`
+- `task:planning` → `PROGRESS.md`
 - `task:product` → `.agents/knowledge/09_PRODUCTS.md`
 - `task:review` → `.agents/knowledge/99_SELF_AUDIT.md`
 
@@ -44,6 +46,14 @@ Then read the nearest nested `AGENTS.md` for the project/module being modified.
 8. Use isolated worktrees/environments for parallel mutation work.
 9. Respect task scope. Do not modify paths outside the assigned scope unless required to complete the task; document any expansion.
 10. Run `scripts/safrs-verify.sh` before declaring work complete.
+
+## Session protocol
+**Start of every working session (MUST):** follow the Read order block above. It is token-budgeted: the MUST list is small and cheap; load task-scoped documents only for the matching task type.
+
+**End of every working session (MUST):**
+1. Overwrite `HANDOFF.md` with current state, work in flight, blockers, and next actions (keep under ~1k tokens). Machine-enforced: `scripts/safrs-verify.sh` fails if a non-trivial change set does not touch `HANDOFF.md`.
+2. Append to `.agents/knowledge/12_LESSONS.md` only per its own rules (real, repeated mistakes — not aspirational rules).
+3. Record durable decisions in `DECISIONS.md` (append-only) and update `PROGRESS.md` if an area status changed.
 
 ## Risk handling
 Classify work using `.safrs/policy.json`:

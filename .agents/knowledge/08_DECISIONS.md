@@ -31,6 +31,12 @@ Do not optimize solely for short-term speed or convenience.
 
 Recommendations should be transparent, logically justified, and aligned with the project's long-term objectives.
 
+## Where decisions live
+
+- Lightweight durable decisions: append-only log in root `DECISIONS.md`.
+- Architectural decisions: `docs/adrs/` (one ADR per decision).
+- This document defines *how* to decide; the log and ADRs record *what* was decided.
+
 ## Accepted baseline decisions
 
 - [ADR 0001](docs/adrs/0001-solo-developer-golden-path.md) establishes the Next.js + Hono + Zod + PostgreSQL + Prisma solo-developer golden path and its optional-capability boundary.

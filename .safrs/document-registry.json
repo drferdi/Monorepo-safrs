@@ -24,7 +24,7 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "MUST",
-      "read_order": 2,
+      "read_order": 3,
       "scope": "always"
     },
     {
@@ -33,7 +33,7 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "MUST",
-      "read_order": 3,
+      "read_order": 4,
       "scope": "always"
     },
     {
@@ -42,7 +42,7 @@
       "type": "canonical",
       "status": "CANONICAL",
       "normativity": "MUST",
-      "read_order": 4,
+      "read_order": 5,
       "scope": "always"
     },
     {
@@ -114,8 +114,7 @@
       "path": "SAFRS_SPEC.md",
       "type": "canonical",
       "status": "CANONICAL",
-      "normativity": "MUST",
-      "read_order": 5,
+      "normativity": "SHOULD",
       "scope": "always"
     },
     {
@@ -243,6 +242,48 @@
       "path": "docs/plans/active/SAFRS_GOVERNANCE_REMEDIATION_PLAN.md",
       "type": "plan",
       "status": "ACTIVE"
+    },
+    {
+      "id": "handoff",
+      "path": "HANDOFF.md",
+      "type": "reference",
+      "status": "ACTIVE",
+      "normativity": "MUST",
+      "read_order": 2,
+      "scope": "always"
+    },
+    {
+      "id": "lessons",
+      "path": ".agents/knowledge/12_LESSONS.md",
+      "type": "canonical",
+      "status": "CANONICAL",
+      "normativity": "MUST",
+      "read_order": 6,
+      "scope": "always"
+    },
+    {
+      "id": "context-identity",
+      "path": "CONTEXT.md",
+      "type": "reference",
+      "status": "ACTIVE",
+      "normativity": "SHOULD",
+      "scope": "always"
+    },
+    {
+      "id": "decision-log",
+      "path": "DECISIONS.md",
+      "type": "reference",
+      "status": "ACTIVE",
+      "normativity": "SHOULD",
+      "scope": "task:decision"
+    },
+    {
+      "id": "progress-board",
+      "path": "PROGRESS.md",
+      "type": "reference",
+      "status": "ACTIVE",
+      "normativity": "SHOULD",
+      "scope": "task:planning"
     }
   ],
   "allowed_status": [
@@ -277,6 +318,7 @@
     "task:decision",
     "task:product",
     "task:review",
-    "task:governance"
+    "task:governance",
+    "task:planning"
   ]
 }

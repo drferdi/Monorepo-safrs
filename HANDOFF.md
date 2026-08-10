@@ -4,41 +4,35 @@
 > Detail durable: `DECISIONS.md`. Tracker area: `PROGRESS.md`. Sejarah keputusan: `docs/adrs/`.
 > Aturan: **overwrite** tiap pergantian sesi — file ini state terkini, bukan log.
 
-Last updated: 2026-08-11 (inisialisasi lima file memori agent oleh Codex, Chief GO)
+Last updated: 2026-08-11 (Claude — integrasi lima file memori ke routing + enforcement HANDOFF)
 
 ## State saat ini
 
-Repo SAFRS baru sudah melewati tahap scaffold: golden-path demonstrator aktif, capability
-pack email + Stripe terpasang, struktur `projects/packages/tools` siap, knowledge base
-ter-routing ke `.agents/knowledge/`.
+- Re-routing KB **sudah commit & push** (`de1410f` governance, `28da52b` design tokens) ke `origin/main`.
+- Lima file memori (CONTEXT/DECISIONS/HANDOFF/PROGRESS/12_LESSONS) **terdaftar di registry** dengan normativity+scope; blok Read order `AGENTS.md` ter-generate dari registry.
+- Duplikasi router dihapus: `00_READ_FIRST` dan `CONTEXT.md` kini menunjuk ke `AGENTS.md`, bukan mendefinisikan urutan sendiri.
+- `check_handoff.py` aktif di `safrs-verify.sh`: change set non-trivial tanpa update `HANDOFF.md` = FAIL.
+- `SAFRS_SPEC.md` diturunkan MUST→SHOULD di routing (alasan token; aturan operatifnya dicermin `AGENTS.md`). **Revert satu baris di registry jika Chief tidak setuju.**
 
 ## Pekerjaan yang sedang berjalan (jangan ditabrak)
 
-- **Re-routing knowledge base sudah STAGED, belum commit** — 13 file pindah
-  `docs/knowledge-base/` → `.agents/knowledge/` + perubahan `.github/CODEOWNERS` dan
-  hapus `.github/copilot-instructions.md`. Ada di index, bukan kerja saya.
-  **Jangan `git add -A`, jangan reset, jangan commit ulang** — biar Chief/Claude yang commit.
-- **Claude sedang mengerjakan** plan DX friction fixes
-  (`docs/superpowers/plans/2026-08-11-solo-dev-dx-friction-fixes.md`): `pnpm verify`,
-  `check:quick`, deteksi Python di setup, INSTALL.md, husky Windows-native, `.env.example`.
-  Jangan duplikasi perubahan itu di `package.json`/`scripts/` sampai selesai.
+- **Claude lain sedang mengerjakan** DX friction fixes (`docs/superpowers/plans/2026-08-11-solo-dev-dx-friction-fixes.md`): `pnpm verify`, `check:quick`, deteksi Python, INSTALL.md, husky Windows-native, `.env.example`. Jangan sentuh `package.json`/`scripts/` terkait sampai selesai.
 
 ## Blockers
 
-- Tidak ada blocker aktif saat ini.
+- Tidak ada.
 
 ## Next actions
 
 | Area | Aksi |
 | --- | --- |
-| Re-routing docs | Commit staged changes (Chief/Claude) |
-| DX friction fixes | Tunggu Claude selesai; verifikasi dengan `pnpm check` |
-| Migrasi project | Pilot: `ferdiiskandar` → `projects/` (pola: salin selektif, bukan copy-paste) |
-| Lessons | Seed `.agents/knowledge/12_LESSONS.md` berjalan — tambah entri hanya dari kesalahan nyata |
+| Integrasi memori | Commit + push perubahan sesi ini (slice governance saja, jangan `git add -A`) |
+| DX friction fixes | Tunggu selesai; verifikasi `pnpm check` |
+| Migrasi project | Pilot `ferdiiskandar` → `projects/` (salin selektif) |
+| SAFRS_SPEC routing | Chief konfirmasi demosi MUST→SHOULD atau revert |
 
 ## Guardrails sesi ini
 
-- Jangan baca `.env` di `D:\Devops\abyss-monorepo` (credential live).
-- Jangan salin `node_modules`, `.env`, `.next`, lockfile dari repo lama.
-- `.agents/knowledge/` = hasil re-routing — jangan diubah tanpa persetujuan Chief.
-- Semua perintah PowerShell; diagnostik Bahasa Indonesia; kode English.
+- Jangan baca `.env` `D:\Devops\abyss-monorepo`; jangan salin `node_modules`/`.env`/`.next`/lockfile lama.
+- `.agents/knowledge/` jangan diubah tanpa persetujuan Chief.
+- PowerShell untuk perintah; diagnostik Bahasa Indonesia; kode English.

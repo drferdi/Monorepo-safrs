@@ -21,13 +21,7 @@ Last updated: 2026-08-11
 
 ## Authority Chain
 
-1. `SAFRS_SPEC.md` + Constitution SAFRS — aturan tertinggi, tidak boleh diubah agent.
-2. Root `AGENTS.md` — router dan aturan operasional repo.
-3. `HANDOFF.md` — state sesi terkini (baca pertama setiap sesi).
-4. `.agents/knowledge/` — knowledge base bernomor (routing ada di `AGENTS.md`; **jangan ganggu hasil re-routing ini**).
-5. `DECISIONS.md` + `docs/adrs/` — keputusan durable.
-6. `PROGRESS.md` — tracker area dan milestone.
-7. Nested `AGENTS.md` per project/package — detail lokal.
+Urutan otoritas dan urutan baca **tidak didefinisikan di sini** — sumber tunggalnya adalah section Priority dan blok Read order (generated) di root `AGENTS.md`, yang diturunkan dari `.safrs/document-registry.json`. File ini hanya identitas repo.
 
 ## Repository Shape
 
@@ -50,29 +44,13 @@ docs/
 .safrs/                ← kebijakan machine-readable (policy.json, roles)
 ```
 
-## Protected Areas
+## Protected Areas & Risk Tiers
 
-| Area | Aturan |
-|---|---|
-| `SAFRS_SPEC.md`, `.safrs/` | Constitution & kebijakan — modifikasi hanya oleh manusia |
-| `.agents/knowledge/` | Hasil re-routing docs — **jangan diubah/diganggu** tanpa persetujuan Chief |
-| `.github/` workflows & CODEOWNERS | R2 — tidak boleh dilemahkan agar task lulus |
-| `packages/**` (shared) | Perubahan = R2, butuh review |
-| Database schema/migrations | R2 — review eksplisit |
-| `.env` / secrets | Tidak boleh dibaca, diprint, di-commit, atau dikirim |
-
-## Risk Tiers (ringkas)
-
-- **R0** — baca/analisis. Langsung jalan.
-- **R1** — perubahan lokal reversibel dalam scope task.
-- **R2** — boundary: shared packages, schema DB, dependency, CI, auth. Wajib review manusia.
-- **R3** — produksi, credentials, deploy, logika healthcare-kritis. Wajib otorisasi eksplisit.
+Sumber tunggal: `.safrs/sensitive-paths.json` (pola R2/R3, machine-enforced) dan section Risk handling di `AGENTS.md`. Jangan duplikasi tabelnya di sini. Pengingat non-mesin yang tetap berlaku: `.env` tidak boleh dibaca/diprint/di-commit/dikirim; `.agents/knowledge/` jangan diubah tanpa persetujuan Chief.
 
 ## Golden-Path Baseline
 
-- Stack default produk: **Next.js + Hono RPC + Zod + PostgreSQL + Prisma**.
-- `projects/golden-path/apps/web` mount Hono API di bawah `/api`.
-- Electron, WXT, Stripe, email, AI, Python = **capability pack opsional**, bukan dependency baseline. Aktifkan lewat workflow `pnpm capability:add` + review risiko.
+Sumber tunggal: section Golden-path baseline di `AGENTS.md` dan [ADR 0001](docs/adrs/0001-solo-developer-golden-path.md).
 
 ## Environment & Conventions
 
@@ -83,6 +61,6 @@ docs/
 
 ## AI Agent Knowledge
 
-**Read order:** `AGENTS.md` → `HANDOFF.md` → `.agents/knowledge/00_READ_FIRST.md` → nested `AGENTS.md` terdekat untuk task.
+Read order: ikuti blok Read order (generated) di `AGENTS.md` — jangan definisikan urutan di sini.
 
 Jangan gunakan ChatGPT Memory atau percakapan lama sebagai SSOT repo — kebenaran ada di file repo.
