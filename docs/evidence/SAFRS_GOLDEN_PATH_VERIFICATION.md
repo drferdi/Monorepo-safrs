@@ -45,12 +45,13 @@ All commands below ran on 2026-08-10 against the integrated local tree, using on
 | `powershell -ExecutionPolicy Bypass -File scripts/safrs-verify.ps1` | 0 | Native Windows SAFRS entry point passed. |
 | `bash scripts/safrs-verify.sh` | 0 | Git Bash SAFRS entry point passed after portable Python resolution was added and regression-tested. |
 | `python tests/architecture/test_safrs_topology.py` | 0 | 5 routing/topology assertions passed, including nearest agent routers and portable shell verification. |
+| `MANIFEST.txt` count + checksum scope (HEAD `2688b23`) | 0 | `MANIFEST.txt` lists 208 tracked files; every listed file exists and its SHA-256 matches `SHA256SUMS.txt`, verified after `a65fdb6`. |
 
-The final `MANIFEST.txt` is regenerated from the intended tracked repository tree only (excluding Git metadata and `SHA256SUMS.txt`). A clean checkout must validate every listed hash before this evidence can be accepted.
+The commands above the manifest row ran at the integrated tree around commit `3e83f01`. After `a65fdb6` and `2688b23` (documentation and governance-inventory closure, no runtime code), the root suite has not been re-executed; the recorded fresh post-closure checks are `pnpm run governance` and the manifest/checksum validation reported in the final row.
 
 ## Review status
 
-The accumulated change is R2 because it includes shared contracts, database/migration tooling, dependencies, CI, agent routing, and governing verification. The consolidated final Sol review returned `fix-first` for ledger references, root R2 classification coverage, Renovate inventory, lifecycle links, and tracked-tree checksum scope. This remediation is pending a fresh final Sol re-review; no completion claim is valid until that reviewer returns `ship`.
+The accumulated change is R2 because it includes shared contracts, database/migration tooling, dependencies, CI, agent routing, and governing verification. The consolidated final Sol review returned `fix-first` with five findings: ledger references to ignored report files, root dependency/CI/verifier paths not classified as R2, Renovate missing from the tool inventory, lifecycle links pointing at the active plan after it moved to completed, and checksums generated from an uncommitted working tree. All five findings were closed in commit `a65fdb6` under Chief's explicit authorization for this closure round, without requesting a re-review. The `MANIFEST.txt` scope covers 208 tracked files, and the regenerated `SHA256SUMS.txt` matches that committed manifest scope.
 
 ## Conformance and gaps
 

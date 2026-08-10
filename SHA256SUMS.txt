@@ -12,9 +12,9 @@ db7f61cf066f6bcb81709b0f68f4d0e4cfcfad5ac0f5bb9d14d0422a9bb39f4f *./.husky/pre-c
 a6b535050ffed7bf041c71335beb770abb893edc91eb663b0e54955cf9170758 *./.npmrc
 823074c6454b05dcab5faa9a3eaadc0aa9a9979188c3337856161087c39f66f6 *./.safrs/document-registry.json
 7da9b232781bc590d1720ef2da89ff97b2a9cb71a0402e75577378d0c721a89d *./.safrs/policy.json
-4f5b3e99ee3c878454f0328bb90b6322608d93409c458e8590d3de7a2fc015bc *./.safrs/sensitive-paths.json
+a479ee3a3a67bfc156bb2750cc7a65cc739048f674df3997786601d377658f47 *./.safrs/sensitive-paths.json
 b36d7249649a8f0663909dd0aba416f43df9eb86db9134bf764402a82b954e68 *./.safrs/tool-inventory.json
-c623a4013816c7e10f753d7b92931646f2f8ec5cbf9058af6c4726d4a4997c8d *./.superpowers/sdd/2026-08-10-solo-dev-golden-path-implementation/progress.md
+5fe3afc5115d6fd851f10331f73ca1e1e3db1193d80653bf7538f75dbf5cb2b2 *./.superpowers/sdd/2026-08-10-solo-dev-golden-path-implementation/progress.md
 8d8fce671804ac095ed0c538d3d7423b11ed7c9548cbc7181cfa42d61dc5af83 *./.superpowers/sdd/2026-08-10-solo-dev-golden-path-implementation/task-4-report.md
 ddce49d93b129b57f5b095a2e01a927bdb4dbe89918db738a0ac60d0a601e2e6 *./.superpowers/sdd/2026-08-10-solo-dev-golden-path-implementation/task-5-report.md
 598676f9c91e5069ef119e5db03b4658f9e49e1db4941e581b35ca72bb4f03a1 *./.superpowers/sdd/2026-08-10-solo-dev-golden-path-implementation/task-6-report.md
@@ -47,7 +47,7 @@ e06f4edc0fb8fea5fde2f6495b4cefbb4e4af68d05cddf369459e25b4fafb99b *./biome.jsonc
 ff6801c94c9f04fc181d95bfef84516e4ad2cf0e4bf485fb42cde826d31405e5 *./docs/adrs/README.md
 451342b1aab91f46dd832f23405936399a862246702592790955e02a1fff15aa *./docs/evidence/README.md
 5d2f96b06107ac78b78d2de4d2f5966551b6d0a82a2012833d652f36be0c2d18 *./docs/evidence/SAFRS_BOOTSTRAP_VERIFICATION.md
-39d50d0832251c9a7baabb61fd588e6ae7944f5e462de6974e0372982a585f9b *./docs/evidence/SAFRS_GOLDEN_PATH_VERIFICATION.md
+67ca305c22e5c50de06fa68c1c33a9531fe69b6dfc6600b3cc7612de583deced *./docs/evidence/SAFRS_GOLDEN_PATH_VERIFICATION.md
 7e97982a0300f4ce74c20b9e40eaa6530b852d26113877e9787c71f23d92dd44 *./docs/governance/SAFRS_AGENT_PERMISSIONS.md
 9ecdddba8287b1848dbbc166790453a87bfbad856dea811becd621d52d09ad1a *./docs/governance/SAFRS_CONFORMANCE.md
 f931e14fc56a9ad5eb3aba2f544860f83e2b6a6cf43fc5e8d46c447f1e188297 *./docs/governance/SAFRS_CONTROL_MATRIX.md
@@ -58,7 +58,7 @@ f931e14fc56a9ad5eb3aba2f544860f83e2b6a6cf43fc5e8d46c447f1e188297 *./docs/governa
 923ee9b29c5c7f6fa55b4244379dab11444ad1954f3962355d1e13cb7c8a8a63 *./docs/plans/archived/README.md
 6fd68969b63c2be69bda0f097147d199399a77bb5bfd595f8b1193a4ed6d7dc2 *./docs/plans/completed/README.md
 030fb7ef3101dc636fa769e0fd39fb9a8a2aeafb33a2bd75ab5258eea4780688 *./docs/plans/completed/SAFRS_BOOTSTRAP_IMPLEMENTATION.md
-23fb431a0d24eb3578187d195f51aef9c88bf86a192faec99f2a8d899db2f626 *./docs/superpowers/plans/2026-08-10-solo-dev-golden-path-implementation.md
+b2c484e1d5233d1aa7b88a28468ad9838cab4737f1de09963e7fe5acb27d72c1 *./docs/superpowers/plans/2026-08-10-solo-dev-golden-path-implementation.md
 cf3603f772cc33ab6ff126b05038d302f2624f55bb5f848b93864b451daeae4a *./docs/superpowers/specs/2026-08-10-solo-dev-golden-path-design.md
 289f43a9cfca55a29bf4ae6a2311ecb259639bfa87067067872e7a9afaf2c485 *./package.json
 753c81c53be5ced2ddc6d138cb31237bab54e44660c80b225cb779acb7cf5540 *./packages/README.md

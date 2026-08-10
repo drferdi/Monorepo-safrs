@@ -85,7 +85,7 @@
 - Consumes: SAFRS root topology and Node.js 24.18.0/pnpm 11.21.0 machine baseline.
 - Produces: root scripts `setup`, `doctor`, `dev`, `build`, `lint`, `format`, `fix`, `typecheck`, `test`, `test:e2e`, `check`, `db:*`, `project:new`, and `capability:add`.
 
-- [ ] **Step 1: Write the workspace configuration test**
+- [x] **Step 1: Write the workspace configuration test**
 
 ~~~js
 import assert from "node:assert/strict";
@@ -106,12 +106,12 @@ test("root exposes the solo-developer command contract", () => {
 });
 ~~~
 
-- [ ] **Step 2: Run the test and confirm the missing root contract**
+- [x] **Step 2: Run the test and confirm the missing root contract**
 
 Run: `node --test tests/repository/workspace-config.test.mjs`
 Expected: FAIL because `package.json` does not exist.
 
-- [ ] **Step 3: Add root workspace configuration**
+- [x] **Step 3: Add root workspace configuration**
 
 Use private workspace metadata, `packageManager: pnpm@11.21.0`, `engines.node: >=24.18.0 <25`, workspaces under `projects/*/apps/*`, `packages/*`, and `tools/*`, and a pnpm catalog containing the compatibility-tested stable versions.
 
@@ -150,7 +150,7 @@ Root command wiring:
 
 The Compose service is named `postgres`, binds only to `127.0.0.1:54329`, uses database `safrs_local`, and has a health check.
 
-- [ ] **Step 4: Resolve and install the stable dependency set**
+- [x] **Step 4: Resolve and install the stable dependency set**
 
 Run: `pnpm install`
 Expected: `pnpm-lock.yaml` is created without prerelease packages.
@@ -158,12 +158,12 @@ Expected: `pnpm-lock.yaml` is created without prerelease packages.
 Run: `pnpm list --depth 0`
 Expected: selected versions resolve and no peer-dependency error remains.
 
-- [ ] **Step 5: Verify the root contract**
+- [x] **Step 5: Verify the root contract**
 
 Run: `node --test tests/repository/workspace-config.test.mjs`
 Expected: PASS.
 
-- [ ] **Step 6: Commit the workspace**
+- [x] **Step 6: Commit the workspace**
 
 ~~~bash
 git add package.json pnpm-workspace.yaml pnpm-lock.yaml turbo.json tsconfig.json biome.jsonc .node-version .npmrc .env.example compose.yaml .gitignore scripts/safrs-verify.mjs tests/repository/workspace-config.test.mjs
@@ -193,7 +193,7 @@ git commit -m "chore: establish golden-path workspace"
 - Produces: `createDemoInputSchema`, `demoSchema`, `apiErrorSchema`, `serverEnv`, and `clientEnv`.
 - Consumes: root TypeScript and Vitest tasks.
 
-- [ ] **Step 1: Write schema and environment failure tests**
+- [x] **Step 1: Write schema and environment failure tests**
 
 ~~~ts
 import { describe, expect, it } from "vitest";
@@ -211,12 +211,12 @@ describe("createDemoInputSchema", () => {
 
 The environment test imports a factory with an explicit environment object and asserts that a missing `DATABASE_URL` returns a Zod issue naming only the variable, never a value.
 
-- [ ] **Step 2: Run focused tests**
+- [x] **Step 2: Run focused tests**
 
 Run: `pnpm --filter @safrs/schemas test`
 Expected: FAIL because schema modules are missing.
 
-- [ ] **Step 3: Implement canonical Zod schemas**
+- [x] **Step 3: Implement canonical Zod schemas**
 
 ~~~ts
 import { z } from "zod";
@@ -239,16 +239,16 @@ export const apiErrorSchema = z.object({
 });
 ~~~
 
-- [ ] **Step 4: Implement T3 Env boundaries**
+- [x] **Step 4: Implement T3 Env boundaries**
 
 `serverEnv` uses `@t3-oss/env-core` for `DATABASE_URL`, `NODE_ENV`, and `APP_URL`. `clientEnv` uses `@t3-oss/env-nextjs` and permits only explicitly declared `NEXT_PUBLIC_*` variables. Export factories for tests and validated singletons for runtime use.
 
-- [ ] **Step 5: Run tests and type checking**
+- [x] **Step 5: Run tests and type checking**
 
 Run: `pnpm --filter @safrs/schemas test && pnpm --filter @safrs/env test && pnpm typecheck`
 Expected: PASS.
 
-- [ ] **Step 6: Commit shared contracts**
+- [x] **Step 6: Commit shared contracts**
 
 ~~~bash
 git add packages/config packages/schemas packages/env
@@ -276,7 +276,7 @@ git commit -m "feat: add shared schemas and validated environment"
 - Produces: `database` Prisma client, `assertDisposableDatabase(url: string): URL`, deterministic seed command.
 - Consumes: `serverEnv.DATABASE_URL` and Zod schemas.
 
-- [ ] **Step 1: Write destructive-operation guard tests**
+- [x] **Step 1: Write destructive-operation guard tests**
 
 ~~~ts
 import { describe, expect, it } from "vitest";
@@ -297,20 +297,20 @@ describe("assertDisposableDatabase", () => {
 });
 ~~~
 
-- [ ] **Step 2: Verify the guard test fails**
+- [x] **Step 2: Verify the guard test fails**
 
 Run: `pnpm --filter @safrs/database test -- reset-guard`
 Expected: FAIL because `assertDisposableDatabase` is missing.
 
-- [ ] **Step 3: Implement the fail-closed guard**
+- [x] **Step 3: Implement the fail-closed guard**
 
 Allow only hosts `127.0.0.1` or `localhost`, port `54329`, and database names ending in `_local` or `_test`. Reject missing passwords, unknown protocols, and query parameter `sslmode=require`. Error messages begin with `[DATABASE] RESET DITOLAK`.
 
-- [ ] **Step 4: Add Prisma 7 configuration**
+- [x] **Step 4: Add Prisma 7 configuration**
 
 Use PostgreSQL, the `prisma-client` generator with explicit output `../src/generated/prisma`, ESM, `@prisma/adapter-pg`, and models `Demo` and `TransactionSample`. Seed data uses fixed identifiers and values so tests are repeatable.
 
-- [ ] **Step 5: Start PostgreSQL and apply the migration**
+- [x] **Step 5: Start PostgreSQL and apply the migration**
 
 Run: `pnpm db:start`
 Expected: PostgreSQL health check becomes healthy.
@@ -318,7 +318,7 @@ Expected: PostgreSQL health check becomes healthy.
 Run: `pnpm db:generate && pnpm db:migrate && pnpm db:seed`
 Expected: client generation, migration, and seed complete.
 
-- [ ] **Step 6: Verify Studio and reset safety**
+- [x] **Step 6: Verify Studio and reset safety**
 
 Run: `pnpm --filter @safrs/database test`
 Expected: PASS.
@@ -326,7 +326,7 @@ Expected: PASS.
 Run with an intentionally unsafe URL: `DATABASE_URL=postgresql://x:x@db.example.com/prod pnpm db:reset`
 Expected: non-zero exit with `RESET DITOLAK` and no database operation.
 
-- [ ] **Step 7: Commit the database package**
+- [x] **Step 7: Commit the database package**
 
 ~~~bash
 git add packages/database compose.yaml pnpm-lock.yaml
@@ -350,7 +350,7 @@ git commit -m "feat: add safe local database workflow"
 - Produces: `app`, `AppType`, `createApiClient(baseUrl: string)`, typed `GET /api/health`, `GET /api/demos`, and `POST /api/demos`.
 - Consumes: `database`, `createDemoInputSchema`, `demoSchema`, `apiErrorSchema`.
 
-- [ ] **Step 1: Write API behavior tests**
+- [x] **Step 1: Write API behavior tests**
 
 ~~~ts
 import { describe, expect, it } from "vitest";
@@ -374,16 +374,16 @@ describe("Hono API", () => {
 });
 ~~~
 
-- [ ] **Step 2: Verify tests fail**
+- [x] **Step 2: Verify tests fail**
 
 Run: `pnpm --filter @safrs/api test`
 Expected: FAIL because `app` is missing.
 
-- [ ] **Step 3: Implement Hono routes and error envelope**
+- [x] **Step 3: Implement Hono routes and error envelope**
 
 Create `new Hono().basePath("/api")`, attach a correlation ID middleware, validate JSON with `@hono/zod-validator`, return explicit status codes, and ensure unexpected errors return `INTERNAL_ERROR` without stack traces.
 
-- [ ] **Step 4: Export a precomputed client type**
+- [x] **Step 4: Export a precomputed client type**
 
 ~~~ts
 import { hc } from "hono/client";
@@ -394,12 +394,12 @@ export const createApiClient = (...args: Parameters<typeof hc>): ApiClient =>
   hc<AppType>(...args);
 ~~~
 
-- [ ] **Step 5: Run focused verification**
+- [x] **Step 5: Run focused verification**
 
 Run: `pnpm --filter @safrs/api test && pnpm --filter @safrs/api typecheck`
 Expected: PASS.
 
-- [ ] **Step 6: Commit the API**
+- [x] **Step 6: Commit the API**
 
 ~~~bash
 git add packages/api
@@ -442,20 +442,20 @@ git commit -m "feat: add typed Hono RPC API"
 - Produces: one deployable Next.js application, Hono adapter, server-rendered status page, interactive typed demo form.
 - Consumes: `app`, `createApiClient`, `database`, `clientEnv`, and shared UI.
 
-- [ ] **Step 1: Write the page behavior test**
+- [x] **Step 1: Write the page behavior test**
 
 Test that the heading explains the monorepo is ready, the page displays database/API status, and the interactive form contains an accessible name input and submit button.
 
-- [ ] **Step 2: Confirm the page test fails**
+- [x] **Step 2: Confirm the page test fails**
 
 Run: `pnpm --filter @safrs/web test`
 Expected: FAIL because the app does not exist.
 
-- [ ] **Step 3: Configure stable Next.js features**
+- [x] **Step 3: Configure stable Next.js features**
 
 Set `cacheComponents: true`, `typedRoutes: true`, and `reactCompiler: true` only when the resolved Active LTS build accepts the configuration. Keep the default Node.js runtime. Use Tailwind CSS 4 and no inline styles.
 
-- [ ] **Step 4: Mount Hono**
+- [x] **Step 4: Mount Hono**
 
 ~~~ts
 import { app } from "@safrs/api";
@@ -466,20 +466,20 @@ const handler = handle(app);
 export { handler as DELETE, handler as GET, handler as PATCH, handler as POST, handler as PUT };
 ~~~
 
-- [ ] **Step 5: Implement server-first rendering**
+- [x] **Step 5: Implement server-first rendering**
 
 The project begins as a complete SAFRS capsule with objective, owner, boundaries, non-goals, exact commands, runtime/data dependencies, sensitive surfaces, and links to canonical root policy. The page is a Server Component. It performs independent reads in parallel, uses Suspense for dynamic status, marks reusable public status reads with explicit cache policy, and passes only serializable values into `DemoForm`. The form is the smallest possible Client Component and uses the typed Hono client.
 
-- [ ] **Step 6: Add recovery UI and framework optimizations**
+- [x] **Step 6: Add recovery UI and framework optimizations**
 
 Use `next/font`, metadata, semantic HTML, visible focus styles, `loading.tsx` skeleton, Indonesian error recovery copy, and `not-found.tsx`. Do not add product-specific branding.
 
-- [ ] **Step 7: Verify the web application**
+- [x] **Step 7: Verify the web application**
 
 Run: `pnpm --filter @safrs/web test && pnpm --filter @safrs/web typecheck && pnpm --filter @safrs/web build`
 Expected: PASS with no environment secret printed.
 
-- [ ] **Step 8: Commit the application**
+- [x] **Step 8: Commit the application**
 
 ~~~bash
 git add projects/golden-path packages/ui pnpm-lock.yaml
@@ -505,7 +505,7 @@ git commit -m "feat: add Next.js golden-path application"
 - Produces: `runDoctor(): Promise<DoctorReport>` and exit codes 0 healthy, 1 recoverable setup issue, 2 unsafe configuration.
 - Consumes: Node, pnpm, Git, Docker, environment, database, and generated-client checks.
 
-- [ ] **Step 1: Write diagnostic tests**
+- [x] **Step 1: Write diagnostic tests**
 
 ~~~js
 test("Docker installed but engine stopped has a human recovery message", async () => {
@@ -520,24 +520,24 @@ test("Docker installed but engine stopped has a human recovery message", async (
 
 Also test missing Node, missing environment file, unsafe production-like URL, healthy prerequisites, and secret redaction.
 
-- [ ] **Step 2: Confirm tests fail**
+- [x] **Step 2: Confirm tests fail**
 
 Run: `node --test tools/doctor/test/*.test.mjs scripts/lib/*.test.mjs`
 Expected: FAIL because diagnostics are missing.
 
-- [ ] **Step 3: Implement read-only checks and redaction**
+- [x] **Step 3: Implement read-only checks and redaction**
 
 Every check returns `{ id, ok, severity, summary, recovery, technical }`. Redact URL passwords, tokens, keys, and environment values before rendering. The first output line uses `[AREA] SIAP`, `[AREA] BELUM SIAP`, or `[AREA] DITOLAK`.
 
-- [ ] **Step 4: Implement setup**
+- [x] **Step 4: Implement setup**
 
 `setup.mjs` checks Node/Git/pnpm, creates `.env` from `.env.example` only if absent, runs `pnpm install --frozen-lockfile=false`, starts local PostgreSQL when Docker is available, generates Prisma Client, applies committed migrations, seeds deterministic data, and ends with `pnpm doctor`. It never overwrites an existing `.env`.
 
-- [ ] **Step 5: Implement single-command development**
+- [x] **Step 5: Implement single-command development**
 
 `dev.mjs` runs doctor preflight, starts PostgreSQL, generates Prisma Client, then replaces itself with `pnpm turbo run dev --parallel`. A stopped Docker engine produces the exact recovery message without a raw stack trace.
 
-- [ ] **Step 6: Verify current-machine behavior**
+- [x] **Step 6: Verify current-machine behavior**
 
 With Docker stopped, run `pnpm doctor` and `pnpm dev`.
 Expected: both identify the stopped engine correctly; `doctor` remains read-only.
@@ -545,7 +545,7 @@ Expected: both identify the stopped engine correctly; `doctor` remains read-only
 Start Docker Desktop, then run `pnpm setup`.
 Expected: database becomes healthy, generation/migration/seed succeed, and doctor reports healthy.
 
-- [ ] **Step 7: Commit operator tooling**
+- [x] **Step 7: Commit operator tooling**
 
 ~~~bash
 git add tools/doctor scripts/setup.mjs scripts/dev.mjs scripts/lib
@@ -568,29 +568,29 @@ git commit -m "feat: add human-readable setup and diagnostics"
 - Produces: `normalizeProjectAnswers(input)`, `renderProjectCapsule(model)`, preview/apply CLI.
 - Consumes: `projects/_template` and SAFRS risk classification.
 
-- [ ] **Step 1: Write input and rendering tests**
+- [x] **Step 1: Write input and rendering tests**
 
 Test slug normalization, rejection of path traversal, sensitive-domain risk elevation, complete capsule files, no unresolved template markers, and preview mode performing no writes.
 
-- [ ] **Step 2: Verify tests fail**
+- [x] **Step 2: Verify tests fail**
 
 Run: `node --test tools/project-wizard/test/*.test.mjs`
 Expected: FAIL because wizard functions do not exist.
 
-- [ ] **Step 3: Implement the product-language model**
+- [x] **Step 3: Implement the product-language model**
 
 The model contains `name`, `slug`, `problem`, `kind`, `capabilities`, `sensitiveDomains`, `risk`, and `appBinding`. Allowed kinds are `web`, `desktop`, and `extension`. Default risk is R1; healthcare, financial, government, auth, payments, migrations, or shared-package impact raises it to at least R2.
 
-- [ ] **Step 4: Implement preview-before-write**
+- [x] **Step 4: Implement preview-before-write**
 
 The CLI asks one question at a time, prints exact destination files and risk, then requires the literal confirmation `CREATE <slug>`. Non-interactive tests use a JSON input file and `--preview` or `--apply`.
 
-- [ ] **Step 5: Verify a temporary capsule**
+- [x] **Step 5: Verify a temporary capsule**
 
 Run the wizard against a temporary repository directory with a web project named `Atlas Demo`.
 Expected: a complete capsule passes `tools/safrs/check_topology.py` and does not modify the real `projects/` directory during preview.
 
-- [ ] **Step 6: Commit the wizard**
+- [x] **Step 6: Commit the wizard**
 
 ~~~bash
 git add tools/project-wizard
@@ -618,29 +618,29 @@ git commit -m "feat: add SAFRS project creation wizard"
 - Produces: `CapabilityManifest` validation and `pnpm capability:add` preview/selection.
 - Consumes: project capsule `capabilities.json` and SAFRS risk rules.
 
-- [ ] **Step 1: Write catalog completeness tests**
+- [x] **Step 1: Write catalog completeness tests**
 
 For every manifest, require `id`, `label`, `description`, `risk`, `dependencies`, `environment`, `commands`, `tests`, `sensitivePaths`, `sideEffects`, and `removal`. Assert no optional runtime package is present in the root dependency graph.
 
-- [ ] **Step 2: Verify tests fail**
+- [x] **Step 2: Verify tests fail**
 
 Run: `node --test tools/capabilities/test/*.test.mjs`
 Expected: FAIL because the catalog is absent.
 
-- [ ] **Step 3: Implement manifests**
+- [x] **Step 3: Implement manifests**
 
 Email declares React Email/Resend and local recipient restrictions. Stripe declares CLI forwarding, signature verification, idempotency, and sandbox-only defaults. AI declares provider-neutral SDK boundary, Zod structured output, resource bounds, and test doubles. Electron, WXT, and Python declare their runtime boundaries and tests. Python requires a recorded technical justification.
 
-- [ ] **Step 4: Implement selector safety**
+- [x] **Step 4: Implement selector safety**
 
 The selector previews dependencies, files, environment names, commands, and risk. It requires `ENABLE <capability> FOR <project>` before writing only the project's `capabilities.json`. Runtime integration remains a later project-scoped R2 task.
 
-- [ ] **Step 5: Verify absence and selection**
+- [x] **Step 5: Verify absence and selection**
 
 Run: `node --test tools/capabilities/test/*.test.mjs`
 Expected: PASS and prove unselected packages are not installed.
 
-- [ ] **Step 6: Commit capability framework**
+- [x] **Step 6: Commit capability framework**
 
 ~~~bash
 git add tools/capabilities
@@ -661,24 +661,24 @@ git commit -m "feat: add optional capability catalog"
 - Produces: staged-file-only Biome repair before commit and full CI check separately.
 - Consumes: Biome VCS integration and Git index.
 
-- [ ] **Step 1: Write the hook contract test**
+- [x] **Step 1: Write the hook contract test**
 
 Assert that the hook rejects partially staged files with a human recovery message, invokes `pnpm exec biome check --write --staged --no-errors-on-unmatched` for fully staged files, re-stages only the previously staged path list, and does not run the full build.
 
-- [ ] **Step 2: Verify the test fails**
+- [x] **Step 2: Verify the test fails**
 
 Run: `node --test tests/repository/precommit.test.mjs`
 Expected: FAIL because the hook is absent.
 
-- [ ] **Step 3: Implement the hook**
+- [x] **Step 3: Implement the hook**
 
 Use Biome's native staged-file support. Before repair, compare working-tree and index path lists. If a path is both staged and unstaged, stop with an Indonesian message asking Chief to stage the complete file or commit its staged portion first. For fully staged files, capture the path list, repair, and re-stage only that list. Fail closed when Biome cannot safely complete.
 
-- [ ] **Step 4: Exercise the hook in a temporary Git repository**
+- [x] **Step 4: Exercise the hook in a temporary Git repository**
 
 Create a malformed staged TypeScript fixture, invoke the hook with the repository's Biome binary, and assert formatting is corrected and an unstaged unrelated file remains unstaged.
 
-- [ ] **Step 5: Commit hygiene**
+- [x] **Step 5: Commit hygiene**
 
 ~~~bash
 git add .husky/pre-commit biome.jsonc package.json tests/repository/precommit.test.mjs
@@ -702,19 +702,19 @@ git commit -m "chore: add fast staged-file hygiene"
 - Produces: proof of inferred API types, environment failure, database behavior, and the human-visible golden journey.
 - Consumes: all runtime packages and local PostgreSQL.
 
-- [ ] **Step 1: Write the RPC type proof**
+- [x] **Step 1: Write the RPC type proof**
 
 Use `expectTypeOf` to prove the POST input is inferred from Zod through Hono and that the successful response contains `id`, `name`, and ISO `createdAt`. Add a `@ts-expect-error` call with an invalid field and require TypeScript to consume that expected error.
 
-- [ ] **Step 2: Write environment negative proof**
+- [x] **Step 2: Write environment negative proof**
 
 Spawn a clean Node process without `DATABASE_URL`, import the server environment entry, and assert a non-zero exit naming `DATABASE_URL` while excluding every supplied sentinel secret value.
 
-- [ ] **Step 3: Write database integration proof**
+- [x] **Step 3: Write database integration proof**
 
 Seed, list, create, and remove a transaction inside the isolated `safrs_test` database. Never point the test at `safrs_local` or an external host.
 
-- [ ] **Step 4: Write Playwright golden path**
+- [x] **Step 4: Write Playwright golden path**
 
 ~~~ts
 test("Chief can see health and create a demo record", async ({ page }) => {
@@ -726,7 +726,7 @@ test("Chief can see health and create a demo record", async ({ page }) => {
 });
 ~~~
 
-- [ ] **Step 5: Run all test layers**
+- [x] **Step 5: Run all test layers**
 
 Run: `pnpm test`
 Expected: unit, contract, and integration tests PASS.
@@ -734,11 +734,11 @@ Expected: unit, contract, and integration tests PASS.
 Run: `pnpm test:e2e`
 Expected: Playwright golden path PASS.
 
-- [ ] **Step 6: Demonstrate contract drift**
+- [x] **Step 6: Demonstrate contract drift**
 
 In a temporary worktree copy, rename `name` to `title` in the POST schema and run web type checking. Record the expected compile failure, then discard only the temporary copy. This evidence proves backend contract changes reach the frontend.
 
-- [ ] **Step 7: Commit tests**
+- [x] **Step 7: Commit tests**
 
 ~~~bash
 git add tests projects/golden-path/apps/web/playwright.config.ts projects/golden-path/apps/web/e2e vitest.workspace.ts
@@ -760,20 +760,20 @@ git commit -m "test: prove golden-path behavior"
 - Produces: non-deploying CI and Renovate pull requests without auto-merge.
 - Consumes: every verification command and SAFRS immutable-action pinning.
 
-- [ ] **Step 1: Write automation policy tests**
+- [x] **Step 1: Write automation policy tests**
 
 Assert `automerge` is false, Dependency Dashboard is enabled, no workflow has `deploy` or write permissions, every action uses a 40-character SHA, and CI runs governance, install, lint, typecheck, tests, build, and browser smoke.
 
-- [ ] **Step 2: Verify tests fail**
+- [x] **Step 2: Verify tests fail**
 
 Run: `node --test tests/repository/automation-policy.test.mjs`
 Expected: FAIL because CI and Renovate files are absent.
 
-- [ ] **Step 3: Add Renovate PR-only configuration**
+- [x] **Step 3: Add Renovate PR-only configuration**
 
 Use `$schema`, `extends: ["config:recommended"]`, `dependencyDashboard: true`, `automerge: false`, a controlled schedule, lockfile maintenance, stable-version rules, and separate major-update grouping.
 
-- [ ] **Step 4: Add immutable CI**
+- [x] **Step 4: Add immutable CI**
 
 Use:
 
@@ -784,18 +784,18 @@ Use:
 
 Run PostgreSQL as a service, use non-secret test environment values, install with `--frozen-lockfile`, and never deploy.
 
-- [ ] **Step 5: Update SAFRS inventories**
+- [x] **Step 5: Update SAFRS inventories**
 
 Register Docker Hub or package registries only where the existing tool inventory requires them. Do not broaden network scope beyond installation, local services, GitHub Actions, and documented optional tools.
 
-- [ ] **Step 6: Verify automation**
+- [x] **Step 6: Verify automation**
 
 Run: `node --test tests/repository/automation-policy.test.mjs`
 Run: `python tools/safrs/check_actions_pinning.py`
 Run: `powershell -ExecutionPolicy Bypass -File scripts/safrs-verify.ps1`
 Expected: PASS.
 
-- [ ] **Step 7: Commit automation**
+- [x] **Step 7: Commit automation**
 
 ~~~bash
 git add .github/renovate.json .github/workflows/ci.yml tests/repository/automation-policy.test.mjs .safrs
@@ -828,24 +828,24 @@ git commit -m "ci: add PR-only updates and full verification"
 - Produces: minimal AI routing, canonical architecture decision, reusable Codex prompt, final requirement-to-evidence matrix.
 - Consumes: the complete implemented tree and actual command output.
 
-- [ ] **Step 1: Write routing tests before changing instructions**
+- [x] **Step 1: Write routing tests before changing instructions**
 
 Extend routing/topology tests to require nearest-agent files, exact project commands, no deprecated `.cursorrules`, and canonical links rather than duplicated SAFRS policy.
 
-- [ ] **Step 2: Verify routing tests fail**
+- [x] **Step 2: Verify routing tests fail**
 
 Run: `python tools/safrs/check_routing.py && python tools/safrs/check_topology.py`
 Expected: FAIL on newly required runtime routing until files are added.
 
-- [ ] **Step 3: Add focused agent instructions and canonical architecture**
+- [x] **Step 3: Add focused agent instructions and canonical architecture**
 
 Record the single-deployment Next.js/Hono decision, package boundaries, human-facing commands, optional capability rule, Active LTS policy, and R2/R3 boundaries. Keep root numeric documents in the root; project applications remain inside `projects/<project>/apps/*`, reusable capabilities in `packages/*`, and repository tooling in `tools/*`.
 
-- [ ] **Step 4: Create the reusable Codex prompt**
+- [x] **Step 4: Create the reusable Codex prompt**
 
 The prompt orders Codex to create/use a goal, read SAFRS in canonical order, read the approved spec and this plan, preserve uncommitted user work, classify each phase, use Sol Advisor only after its exact preflight passes, execute every task, rerun primary verification, request a fresh read-only final review, avoid commit/push/deploy without authorization beyond the plan, and produce exact evidence.
 
-- [ ] **Step 5: Run complete local verification**
+- [x] **Step 5: Run complete local verification**
 
 Normalize the known Markdown hard-break trailing spaces inherited from the uncommitted bootstrap before regenerating checksums, so the complete first baseline passes Git whitespace validation.
 
@@ -865,21 +865,21 @@ git diff --check
 
 Expected: every command PASS. `pnpm doctor` may report Docker stopped only before the documented recovery; final evidence requires a healthy rerun.
 
-- [ ] **Step 6: Perform requirement-by-requirement audit**
+- [x] **Step 6: Perform requirement-by-requirement audit**
 
 For every acceptance criterion in `docs/superpowers/specs/2026-08-10-solo-dev-golden-path-design.md`, record the proving file, command, exit status, and observation. Missing or indirect evidence remains incomplete.
 
-- [ ] **Step 7: Obtain independent review**
+- [x] **Step 7: Obtain independent review**
 
 Use the exact Sol Advisor reviewer lane only after its preflight passes. The reviewer must inspect the actual diff and evidence without editing and return exactly `ship`, `fix-first`, or `rethink`. A `fix-first` or `rethink` verdict prevents completion.
 
-- [ ] **Step 8: Commit final integration**
+- [x] **Step 8: Commit final integration**
 
 ~~~bash
 git add AGENTS.md projects packages tools README.md 03_ARCHITECTURE.md 08_DECISIONS.md docs .safrs MANIFEST.txt SHA256SUMS.txt CODEX_IMPLEMENT_GOLDEN_PATH.md
 git commit -m "docs: complete SAFRS golden-path integration"
 ~~~
 
-- [ ] **Step 9: Report without pushing**
+- [x] **Step 9: Report without pushing**
 
 Report goal, assumptions, exact commits and files, all verification results, achieved conformance, gaps, and next actions. Do not add a GitHub remote, push, create a PR, merge, or deploy unless Chief separately authorizes it.
