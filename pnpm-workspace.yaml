@@ -7,20 +7,24 @@ allowBuilds:
   '@prisma/engines': true
   esbuild: true
   prisma: true
+  sharp: true
 
 catalog:
   "@biomejs/biome": 2.5.7
   "@hono/zod-validator": 0.9.0
   "@prisma/adapter-pg": 7.9.1
   "@prisma/client": 7.9.1
+  "@tailwindcss/postcss": 4.3.3
   "@t3-oss/env-core": 0.13.8
   "@t3-oss/env-nextjs": 0.13.8
   "@types/node": 24.10.13
   "@types/pg": 8.15.6
+  "@types/react": 19.2.7
+  "@types/react-dom": 19.2.3
   "@vitest/coverage-v8": 4.1.10
   husky: 9.1.7
   hono: 4.13.1
-  next: 16.2.11
+  next: 16.2.12
   pg: 8.16.3
   playwright: 1.62.1
   postcss: 8.5.6
