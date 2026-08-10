@@ -33,6 +33,9 @@ test("root exposes the solo-developer command contract", () => {
 
 test("root follows canonical SAFRS topology and excludes protected paths from Biome", () => {
   const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+  const webPackage = JSON.parse(
+    fs.readFileSync("projects/golden-path/apps/web/package.json", "utf8"),
+  );
   const workspace = fs.readFileSync("pnpm-workspace.yaml", "utf8");
   const biome = JSON.parse(fs.readFileSync("biome.jsonc", "utf8"));
 
@@ -52,4 +55,8 @@ test("root follows canonical SAFRS topology and excludes protected paths from Bi
   );
   assert.ok(biome.files.includes.includes("!!**/.safrs"));
   assert.ok(biome.files.includes.includes("!!**/.turbo"));
+  assert.ok(biome.files.includes.includes("!!**/.next"));
+  assert.ok(biome.files.includes.includes("!!**/next-env.d.ts"));
+  assert.equal(webPackage.scripts.dev, "next dev");
+  assert.equal(webPackage.scripts.start, "next start");
 });

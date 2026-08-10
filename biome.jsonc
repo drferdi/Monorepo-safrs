@@ -5,6 +5,8 @@
       "**",
       "!!**/.safrs",
       "!!**/.turbo",
+      "!!**/.next",
+      "!!**/next-env.d.ts",
       "!!packages/database/src/generated/prisma"
     ],
     "ignoreUnknown": true
