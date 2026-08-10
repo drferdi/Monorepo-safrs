@@ -1,6 +1,6 @@
 # CONTEXT — SAFRS Monorepo Identity
 
-Update jarang. Menjawab: repo ini apa, apa yang penting, apa yang tidak boleh diubah sembarangan.
+Rarely updated. Answers: what this repo is, what matters, what must not be changed casually.
 
 Last updated: 2026-08-11
 
@@ -8,59 +8,51 @@ Last updated: 2026-08-11
 
 ## Project
 
-- **Nama:** SAFRS Monorepo (`safrs-monorepo`, private)
+- **Name:** SAFRS Monorepo (`safrs-monorepo`, private)
 - **Root:** `D:\DEV\Monorepo`
 - **Owner:** Dr. Ferdi Iskandar (solo developer, non-coding operator)
-- **Postur:** Repository agent-first — manusia memberi intent, agent mengeksekusi, mesin memverifikasi. Fokus utama: kenyamanan operator solo non-coding.
-- **Standar:** SAFRS v1.1 — `SAFRS_SPEC.md` adalah rujukan normatif tertinggi di dalam repo.
-- **Package manager:** `pnpm@11.21.0` (selalu — jangan npm/yarn)
-- **Runtime baseline:** Windows 11, PowerShell 7, Node >= 24.18 (< 25), TypeScript strict, Turborepo, Biome
-- **Database:** PostgreSQL via Docker Compose (`pnpm db:start`). Prisma di `packages/database`.
-- **Branch utama:** `main`
-- **GitHub remote:** repo lama (`abyss-monorepo`) berbeda — jangan pernah mencampur keduanya. Repo lama read-only untuk migrasi.
+- **Posture:** Agent-first — human sets intent, agents execute, machines verify.
+- **Standard:** SAFRS v1.1 — `SAFRS_SPEC.md` is the highest normative reference.
+- **Package manager:** `pnpm@11.21.0` only (never npm/yarn)
+- **Runtime:** Windows 11, PowerShell 7, Node >= 24.18 < 25, TypeScript strict, Turborepo, Biome
+- **Database:** PostgreSQL via Docker Compose (`pnpm db:start`); Prisma in `packages/database`
+- **Main branch:** `main`
+- **Legacy repo:** `abyss-monorepo` is a separate, read-only migration source. Never mix the two.
 
 ## Authority Chain
 
-Urutan otoritas dan urutan baca **tidak didefinisikan di sini** — sumber tunggalnya adalah section Priority dan blok Read order (generated) di root `AGENTS.md`, yang diturunkan dari `.safrs/document-registry.json`. File ini hanya identitas repo.
+Authority and read order are **not defined here** — the single source is the Priority section and the generated Read order block in root `AGENTS.md`, derived from `.safrs/document-registry.json`. This file is identity only.
 
 ## Repository Shape
 
 ```
-projects/
-  golden-path/         ← Demonstrator baseline (Next.js + Hono API + Prisma)
-  _template/           ← Kerangka project baru (via pnpm project:new)
-  <product>/           ← (akan datang) hasil migrasi dari abyss-monorepo
-packages/
-  api/ schemas/ env/ database/ ui/ config/ design-tokens/
-  ← shared boundaries; jangan impor kode server/db ke komponen browser
-tools/
-  safrs/ doctor/ project-wizard/ capabilities/
-  ← tooling dev murni, tidak di-deploy
-scripts/               ← setup, dev, test, safrs-verify
-tests/                 ← cross-cutting contract tests
-docs/
-  adrs/ evidence/ governance/ plans/ superpowers/ bootstrap/
-.agents/knowledge/     ← knowledge base bernomor 00–11 + 99 (hasil re-routing docs)
-.safrs/                ← kebijakan machine-readable (policy.json, roles)
+projects/     golden-path (Next.js + Hono + Prisma demonstrator), _template, future products
+packages/     api schemas env database ui config design-tokens — shared boundaries;
+              never import server/db code into browser components
+tools/        safrs doctor project-wizard capabilities — dev tooling, not deployed
+scripts/      setup, dev, test, safrs-verify
+tests/        cross-cutting contract tests
+docs/         adrs evidence governance plans superpowers bootstrap design-system
+.agents/      memory files + knowledge/ (numbered KB 00–12, 99)
+.safrs/       machine-readable policy (registry, policy.json, sensitive-paths)
 ```
 
 ## Protected Areas & Risk Tiers
 
-Sumber tunggal: `.safrs/sensitive-paths.json` (pola R2/R3, machine-enforced) dan section Risk handling di `AGENTS.md`. Jangan duplikasi tabelnya di sini. Pengingat non-mesin yang tetap berlaku: `.env` tidak boleh dibaca/diprint/di-commit/dikirim; `.agents/knowledge/` jangan diubah tanpa persetujuan Chief.
+Single source: `.safrs/sensitive-paths.json` (R2/R3 patterns, machine-enforced) and the Risk handling section in `AGENTS.md`. Standing non-machine reminders: never read/print/commit/transmit `.env`; never modify `.agents/knowledge/` without Chief's approval.
 
 ## Golden-Path Baseline
 
-Sumber tunggal: section Golden-path baseline di `AGENTS.md` dan [ADR 0001](docs/adrs/0001-solo-developer-golden-path.md).
+Single source: Golden-path baseline section in `AGENTS.md` and [ADR 0001](docs/adrs/0001-solo-developer-golden-path.md).
 
 ## Environment & Conventions
 
-- Shell: PowerShell di Windows.
-- Line endings: git menyimpan LF (`.gitattributes`: `* text=auto eol=lf`); `.ps1/.bat/.cmd` tetap CRLF. Jangan ubah `.gitattributes` sembarangan.
-- Diagnostik agent berbahasa Indonesia; nama command, kode, dan identifier dalam English.
-- Repo lama (`D:\Devops\abyss-monorepo`): sumber migrasi saja. **Jangan baca `.env`-nya** (berisi credential live), jangan copy `node_modules`, `.env`, `.next`, atau lockfile-nya ke sini.
+- Shell: PowerShell on Windows.
+- Line endings: git stores LF (`.gitattributes`); `.ps1/.bat/.cmd` stay CRLF. Do not change `.gitattributes` casually.
+- Language: agent chat diagnostics in Bahasa Indonesia; all repo docs, code, commands, and identifiers in English — concise, no filler.
+- Legacy repo (`D:\Devops\abyss-monorepo`): migration source only. **Never read its `.env`** (live credentials); never copy its `node_modules`, `.env`, `.next`, or lockfiles.
 
 ## AI Agent Knowledge
 
-Read order: ikuti blok Read order (generated) di `AGENTS.md` — jangan definisikan urutan di sini.
-
-Jangan gunakan ChatGPT Memory atau percakapan lama sebagai SSOT repo — kebenaran ada di file repo.
+Read order: follow the generated block in `AGENTS.md` — never define an order here.
+ChatGPT Memory and past conversations are not repo SSOT — truth lives in repo files.

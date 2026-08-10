@@ -1,38 +1,41 @@
 # HANDOFF — Current State and Next Action
 
-> Baca pertama setiap sesi. Jaga di bawah ~1k token.
-> Detail durable: `DECISIONS.md`. Tracker area: `PROGRESS.md`. Sejarah keputusan: `docs/adrs/`.
-> Aturan: **overwrite** tiap pergantian sesi — file ini state terkini, bukan log.
+> Read first every session. Keep under ~1k tokens.
+> Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
+> Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-11 (Claude — relokasi 4 file memori ke .agents/ atas instruksi Chief; semua referensi & registry ter-update)
+Last updated: 2026-08-11 (Claude — docs converted to concise English per Chief's preference)
 
-## State saat ini
+## Current state
 
-- Re-routing KB **sudah commit & push** (`de1410f` governance, `28da52b` design tokens) ke `origin/main`.
-- Lima file memori (CONTEXT/DECISIONS/HANDOFF/PROGRESS/12_LESSONS) **terdaftar di registry** dengan normativity+scope; blok Read order `AGENTS.md` ter-generate dari registry.
-- Duplikasi router dihapus: `00_READ_FIRST` dan `CONTEXT.md` kini menunjuk ke `AGENTS.md`, bukan mendefinisikan urutan sendiri.
-- `check_handoff.py` aktif di `safrs-verify.sh`: change set non-trivial tanpa update `HANDOFF.md` = FAIL.
-- `SAFRS_SPEC.md` diturunkan MUST→SHOULD di routing (alasan token; aturan operatifnya dicermin `AGENTS.md`). **Revert satu baris di registry jika Chief tidak setuju.**
+- KB re-routing, memory-file integration, and `.agents/` relocation all committed & pushed
+  (`de1410f`, `6d62b83`, `3509cb2`).
+- Routing is registry-driven; `check_handoff.py` enforces HANDOFF updates; all governance checks green.
+- Active docs converted to English and compressed (memory files, bootstrap README, remediation plan).
+  Historical archives keep original text.
 
-## Pekerjaan yang sedang berjalan (jangan ditabrak)
+## Work in flight (do not clobber)
 
-- **Claude lain sedang mengerjakan** DX friction fixes (`docs/superpowers/plans/2026-08-11-solo-dev-dx-friction-fixes.md`): `pnpm verify`, `check:quick`, deteksi Python, INSTALL.md, husky Windows-native, `.env.example`. Jangan sentuh `package.json`/`scripts/` terkait sampai selesai.
+- **Another Claude is executing** DX friction fixes
+  (`docs/superpowers/plans/2026-08-11-solo-dev-dx-friction-fixes.md`): `pnpm verify`, `check:quick`,
+  Python detection, INSTALL.md, Windows-native husky, `.env.example`. That plan file is still in
+  Bahasa Indonesia by design (in-flight). Do not touch related `package.json`/`scripts/` until done.
 
 ## Blockers
 
-- Tidak ada.
+- None.
 
 ## Next actions
 
-| Area | Aksi |
+| Area | Action |
 | --- | --- |
-| Integrasi memori | Commit + push perubahan sesi ini (slice governance saja, jangan `git add -A`) |
-| DX friction fixes | Tunggu selesai; verifikasi `pnpm check` |
-| Migrasi project | Pilot `ferdiiskandar` → `projects/` (salin selektif) |
-| SAFRS_SPEC routing | Chief konfirmasi demosi MUST→SHOULD atau revert |
+| DX friction fixes | Wait for completion; verify with `pnpm check` |
+| Governance remediation | Execute `docs/plans/active/SAFRS_GOVERNANCE_REMEDIATION_PLAN.md` — Phase 1 (CODEOWNERS/branch protection) needs Chief on GitHub |
+| Project migration | Pilot `ferdiiskandar` → `projects/` (selective copy) |
+| SAFRS_SPEC routing | Chief to confirm MUST→SHOULD demotion or revert (one line in registry) |
 
-## Guardrails sesi ini
+## Session guardrails
 
-- Jangan baca `.env` `D:\Devops\abyss-monorepo`; jangan salin `node_modules`/`.env`/`.next`/lockfile lama.
-- `.agents/knowledge/` jangan diubah tanpa persetujuan Chief.
-- PowerShell untuk perintah; diagnostik Bahasa Indonesia; kode English.
+- Never read `.env` in `D:\Devops\abyss-monorepo`; never copy old `node_modules`/`.env`/`.next`/lockfiles.
+- `.agents/knowledge/` — no changes without Chief's approval.
+- PowerShell for commands; chat diagnostics in Bahasa Indonesia; docs/code in English.

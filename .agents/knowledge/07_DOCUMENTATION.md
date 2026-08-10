@@ -16,6 +16,8 @@ This document defines how project knowledge should be documented and maintained 
 
 ## Guidelines
 
+* Write all repository documentation in English, as concisely as possible without losing meaning. Agent chat diagnostics remain in Bahasa Indonesia.
+
 Documentation should explain:
 
 * Why something exists.

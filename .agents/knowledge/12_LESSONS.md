@@ -1,37 +1,33 @@
 # 12_LESSONS.md
 
-Koreksi reusable — lahir dari kesalahan nyata, bukan aturan yang dibuat di awal.
+Reusable corrections — born from real mistakes, not rules invented up front.
 
-Aturan pengisian:
+Entry rules:
 
-- One-liner saja; satu pelajaran per baris.
-- Tambah entri hanya jika: kesalahan yang sama terjadi **dua kali**, review menemukan konteks
-  yang hilang, atau Chief mengoreksi hal yang sama lintas sesi.
-- Setiap entri punya tanggal dan konteks singkat.
-- Pelajaran yang tidak lagi berlaku **dihapus**, bukan ditumpuk.
-- Jangan duplikasi — perketat entri yang ada.
-- Pelajaran spesifik project hidup di `projects/<name>/AGENTS.md`, bukan di sini.
+- One-liners only; one lesson per line, each with date and brief context.
+- Add only when: the same mistake happened **twice**, review found missing context,
+  or Chief corrected the same thing across sessions.
+- Delete lessons that no longer apply — don't pile them up. No duplicates; tighten existing entries.
+- Project-specific lessons live in `projects/<name>/AGENTS.md`, not here.
 
 ---
 
 ## Repo & Tooling
 
-- Selalu gunakan `pnpm` — jangan pernah `npm` atau `yarn` (2026-08-11, warisan abyss-monorepo).
-- Jangan klaim test/lint/build pass tanpa benar-benar menjalankannya — evidence before assertions
+- Always `pnpm` — never `npm` or `yarn` (2026-08-11, abyss-monorepo legacy).
+- Never claim test/lint/build passes without running it — evidence before assertions (2026-08-11).
+- After adding/removing workspace packages, refresh the lockfile before `--frozen-lockfile`
+  validation (2026-08-11).
+
+## Source of Truth
+
+- Never quote archived files or old conversations as current truth — verify paths on disk first
   (2026-08-11).
-- Saat menambah/menghapus package di workspace, refresh lockfile sebelum validasi
-  `--frozen-lockfile` (2026-08-11).
+- ChatGPT Memory and conversation context are not repo SSOT — truth lives in repo files (2026-08-11).
 
-## Sumber Kebenaran
+## Migration & Safety
 
-- Jangan kutip file arsip atau percakapan lama sebagai kebenaran terkini — verifikasi path di
-  disk dulu (2026-08-11).
-- ChatGPT Memory dan konteks percakapan bukan SSOT repo — kebenaran ada di file repo
+- From `abyss-monorepo`: never read `.env` (live credentials); never copy `node_modules`, `.env`,
+  `.next`, or lockfiles (2026-08-11).
+- Never `git add -A` while someone else's work is staged — stage only your own task's slice
   (2026-08-11).
-
-## Migrasi & Keamanan
-
-- Dari `abyss-monorepo`: jangan baca `.env` (credential live), jangan salin `node_modules`,
-  `.env`, `.next`, atau lockfile (2026-08-11).
-- Jangan `git add -A` saat ada kerja orang lain yang masih staged — stage hanya slice milik task
-  sendiri (2026-08-11).

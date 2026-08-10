@@ -1,108 +1,142 @@
 # SAFRS Governance Remediation Plan
 
-**Goal:** Menutup gap governance yang ditemukan pada audit SAFRS v1.1 tanggal 2026-08-11 (Phase 1 struktur, Phase 2 perbandingan vs dokumen SEN-001, Phase 3 pemetaan 8 fitur golden-path) tanpa melemahkan kontrol yang sudah berfungsi.
+**Goal:** Close governance gaps found in the 2026-08-11 SAFRS v1.1 audit (Phase 1 structure,
+Phase 2 comparison vs SEN-001, Phase 3 mapping of 8 golden-path features) without weakening
+working controls.
 
-**Current state:** ACTIVE (baru dibuat, 0 dari 19 item selesai)
+**State:** ACTIVE
 **Repository:** `D:\DEV\Monorepo`
-**Risk:** Campuran R0–R2, dirinci per fase di bawah.
-**Declared conformance saat ini:** SAFRS Core (dokumen rencana ini sendiri tidak mengubah level; Fase 1–2 di bawah adalah prasyarat untuk mengklaim Controlled).
-**Sumber:** Audit SAFRS v1.1 2026-08-11 (Phase 1 struktur repo, Phase 2 perbandingan terhadap SEN-001 "SAFRS v1.1 — Strategic Introduction", Phase 3 verifikasi 8 fitur golden-path).
+**Risk:** Mixed R0–R2, per phase below.
+**Declared conformance:** SAFRS Core (Phases 1–2 are prerequisites for claiming Controlled).
+**Source:** SAFRS v1.1 audit 2026-08-11.
 
-## Relasi dengan rencana lain
+## Relation to other plans
 
-`docs/superpowers/plans/2026-08-11-solo-dev-dx-friction-fixes.md` sudah ada (belum dieksekusi, 0/10 task selesai) dan menutup 9 titik friksi DX secara terpisah — seluruhnya R1, dan secara eksplisit **tidak menyentuh** `packages/`, `projects/`, `.safrs/`, atau `.github/workflows/`. Rencana itu sudah mencakup perluasan `.env.example` per capability pack (Task 9) — **jangan duplikasi item itu di sini**; jalankan rencana DX tersebut secara terpisah/paralel bila Chief setuju.
+`docs/superpowers/plans/2026-08-11-solo-dev-dx-friction-fixes.md` covers 9 DX friction points
+separately — all R1, explicitly not touching `packages/`, `projects/`, `.safrs/`, or
+`.github/workflows/`. It already covers `.env.example` expansion (its Task 9) — **do not duplicate
+it here**; run that plan in parallel with Chief's approval.
 
-Rencana ini (governance remediation) mengambil bagian yang sengaja **di luar** cakupan rencana DX: L5/CODEOWNERS/branch-protection, enforcement mekanis single-mutation-owner, dan tiga keputusan yang butuh konfirmasi eksplisit Chief (Fitur #7 auto-merge, Fitur #5 capability pack, housekeeping file sisa audit).
-
----
-
-## Fase 0 — Housekeeping (R0, aksi Chief di mesin asli — sandbox audit tidak punya izin unlink)
-
-- [ ] Hapus `packages/env/src/__audit_test.mjs` dan 8 file `_tmp_17_*`/`_tmp_18_*`/`_tmp_3_*`/`_tmp_73_*` di root (sisa dari sesi verifikasi Phase 3, semua 0 byte, untracked, tidak berbahaya).
-- [ ] Baca dan putuskan status `.github/CODEOWNERS` dan `docs/governance/PLATFORM_ACTIVATION.md` — keduanya untracked. `PLATFORM_ACTIVATION.md` belum pernah saya baca isinya di audit ini; sebelum commit, pastikan isinya bukan draft yang belum siap.
-- [ ] Konfirmasi 2 commit yang sudah *ahead of* `origin/main` memang sengaja belum di-push, atau push jika sudah siap.
-
-**Exit:** `git status --porcelain` bersih (tidak ada untracked file selain yang sengaja belum di-commit dengan alasan jelas).
+This plan takes what is deliberately **outside** the DX plan: L5/CODEOWNERS/branch protection,
+mechanical single-mutation-owner enforcement, and three decisions needing explicit Chief
+confirmation (Feature #7 auto-merge, Feature #5 capability packs, audit-leftover housekeeping).
 
 ---
 
-## Fase 1 — L5 Human Authority: CODEOWNERS & Branch Protection (Prioritas tertinggi, R2)
+## Phase 0 — Housekeeping (R0)
 
-Ini gap paling material dari Phase 2: model R2/R3 di `SAFRS_SPEC.md` mengasumsikan review manusia wajib sebelum merge, tapi mekanisme yang memaksanya (GitHub CODEOWNERS + branch protection) belum hidup. **Saya tidak punya akses GitHub API tersambung di sesi ini** (plugin GitHub belum diautentikasi) — Fase ini didominasi aksi manual Chief. Saya bisa membantu menyusun konten/perintah, tapi eksekusi di GitHub admin settings harus Chief.
+- [x] Delete `packages/env/src/__audit_test.mjs` and the 8 zero-byte `_tmp_*` root files
+      (done 2026-08-11 by Claude during root re-routing).
+- [x] Decide status of `.github/CODEOWNERS` and `docs/governance/PLATFORM_ACTIVATION.md`
+      (both committed 2026-08-11; CODEOWNERS now carries real R2/R3 patterns).
+- [x] Confirm/push commits ahead of `origin/main` (pushed 2026-08-11: `de1410f`…`3509cb2`).
 
-- [ ] Buat tim GitHub sungguhan yang menggantikan placeholder `@sentra/safrs-maintainers` di `.github/CODEOWNERS` (atau ganti ke username individu Chief bila belum ada tim).
-- [ ] Update `.github/CODEOWNERS` dengan handle nyata (file ini sudah berisi pattern R2/verification-control/R3 yang benar dari `sensitive-paths.json` — hanya ownernya yang placeholder).
-- [ ] Nyalakan branch protection pada `main`: require pull request before merge, require status check `SAFRS Governance` (dari `safrs-governance.yml`) dan `CI` (dari `ci.yml`), require review from Code Owners, disable force-push.
-- [ ] Jalankan `bash scripts/safrs-verify.sh` setelah `.github/CODEOWNERS` di-commit — script ini akan mengklasifikasikan ulang perubahan CODEOWNERS sebagai R2 secara otomatis (sudah terverifikasi di audit).
-- [ ] Update `docs/governance/SAFRS_CONFORMANCE.md` untuk menaikkan klaim dari Core ke Controlled **hanya setelah** branch protection benar-benar aktif dan terverifikasi (screenshot/`gh api` output sebagai bukti, bukan asumsi).
-
-**Exit:** PR yang menyentuh path R2/R3 benar-benar diblokir GitHub sampai code owner approve — dibuktikan dengan PR uji coba nyata, bukan hanya konfigurasi.
+**Exit:** clean `git status --porcelain`. ✅ Met 2026-08-11.
 
 ---
 
-## Fase 2 — Single-Mutation-Owner: dari Kebijakan ke Mekanisme (R1–R2)
+## Phase 1 — L5 Human Authority: CODEOWNERS & Branch Protection (top priority, R2)
 
-PDF SEN-001 menyebut aturan ini sebagai satu dari lima mekanisme inti SAFRS, tapi di repo baru berupa prosa di `SAFRS_MULTI_AGENT_PROTOCOL.md`. Usulan implementasi minimal, sesuai prinsip P10 "simplicity is a control" (jangan bangun sistem lock terdistribusi yang rumit untuk repo solo-dev):
+Most material Phase-2 gap: R2/R3 assumes mandatory human review before merge, but the enforcing
+mechanism (GitHub CODEOWNERS + branch protection) is not live. GitHub admin actions must be done
+by Chief; agents can only draft content/commands.
 
-- [ ] Tambahkan file penanda task aktif yang mekanis-dicek, mis. `.safrs/active-tasks.json` (daftar task_id, scope glob, status, owner) — **ini file governance baru**, klasifikasi R2 karena masuk kategori `.safrs/**`, butuh review Chief sebelum merge.
-- [ ] Tambahkan checker `tools/safrs/check_task_ownership.py` yang menolak commit/PR bila dua task berstatus `EXECUTING` memiliki scope glob yang tumpang tindih.
-- [ ] Daftarkan checker baru ini ke `scripts/safrs-verify.sh` dan `safrs-governance.yml` (perubahan pada verification-control file — otomatis R2 per aturan `check_sensitive_changes.py`, review wajib).
-- [ ] Tambahkan test governance baru di `tests/governance/` yang menguji checker ini (pola sama seperti `test_sensitive_classification.py`).
+- [ ] Create a real GitHub team to replace the `@sentra/safrs-maintainers` placeholder in
+      `.github/CODEOWNERS` (or use Chief's username).
+- [ ] Update `.github/CODEOWNERS` with real handles (patterns are already correct).
+- [ ] Enable branch protection on `main`: require PR before merge, require status checks
+      `SAFRS Governance` + `CI`, require Code Owner review, disable force-push.
+- [ ] Run `bash scripts/safrs-verify.sh` after committing CODEOWNERS (auto-classifies as R2).
+- [ ] Raise `docs/governance/SAFRS_CONFORMANCE.md` from Core to Controlled **only after**
+      branch protection is verified with real evidence (screenshot / `gh api` output).
 
-**Catatan:** untuk repo solo-developer dengan satu agent aktif pada satu waktu, urgensi Fase ini lebih rendah daripada Fase 1 — relevan terutama jika Chief berencana menjalankan >1 agent AI paralel di repo yang sama. Saya sarankan Chief konfirmasi prioritas ini sebelum saya implementasikan, karena ini menambah file baru ke `.safrs/**` (R2).
-
-**Exit:** dua task tiruan dengan scope tumpang tindih gagal lulus `pnpm governance` sampai salah satu ditutup.
-
----
-
-## Fase 3 — Verifikasi Live yang Tidak Bisa Dilakukan dari Sandbox Audit (R0, aksi Chief di mesin sendiri)
-
-Fitur golden-path #1, #3, #4 terklasifikasi `EXISTS_BUT_INCOMPLETE` murni karena sandbox audit ini tidak punya toolchain Linux native yang cocok dan tidak punya Docker — bukan karena kode bermasalah (lihat bukti pembacaan kode di audit §10).
-
-- [ ] Jalankan `pnpm check` penuh (`governance && lint && typecheck && test && build`) di mesin Windows Chief. Kirim/simpan output sebagai bukti Fitur #1.
-- [ ] Jalankan `git commit` kecil untuk mengukur waktu nyata pre-commit hook Biome (klaim "<100ms"). Bukti Fitur #3.
-- [ ] Jalankan `pnpm dev` (menyalakan Docker Postgres via `compose.yaml`), lalu `pnpm db:seed` dan `pnpm db:studio`. Bukti Fitur #4.
-
-**Exit:** ketiga fitur naik status dari `EXISTS_BUT_INCOMPLETE` ke `EXISTS_AND_VERIFIED` dengan bukti command nyata dari mesin Chief.
+**Exit:** a PR touching R2/R3 paths is actually blocked by GitHub until a code owner approves —
+proven with a real test PR, not just configuration.
 
 ---
 
-## Fase 4 — Keputusan: Fitur #7 Auto-Merge Renovate (R2, blocked menunggu keputusan Chief)
+## Phase 2 — Single-Mutation-Owner: from Policy to Mechanism (R1–R2)
 
-Konflik langsung antara permintaan Fitur #7 dan (a) Aturan Penting Chief sendiri di awal tugas ini, (b) invariant SAFRS-02, (c) `renovate.json` yang sengaja `automerge: false`. **Saya tidak akan mengubah `renovate.json` tanpa pilihan eksplisit Chief.**
+SEN-001 names this a core SAFRS mechanism; today it is prose in `SAFRS_MULTI_AGENT_PROTOCOL.md`.
+Minimal implementation per P10 "simplicity is a control" (no distributed locks for a solo repo):
 
-- [ ] Chief pilih satu: (a) automerge terbatas ke patch/minor non-sensitif, (b) automerge penuh sesuai permintaan literal, (c) pertahankan `automerge: false`.
-- [ ] Jika (a) atau (b) dipilih: saya tambahkan `packageRules` yang sesuai di `renovate.json` — ini R2 (verification-control file), butuh review Chief sebelum merge meski saya yang menulis diff-nya.
+- [ ] Add a machine-checked active-task file, e.g. `.safrs/active-tasks.json`
+      (task_id, scope glob, status, owner) — new governance file, R2, Chief review required.
+- [ ] Add `tools/safrs/check_task_ownership.py`: reject when two `EXECUTING` tasks have
+      overlapping scope globs.
+- [ ] Register the checker in `scripts/safrs-verify.sh` + `safrs-governance.yml`
+      (verification-control change — automatic R2).
+- [ ] Add a governance test in `tests/governance/` (pattern: `test_sensitive_classification.py`).
 
-**Exit:** `renovate.json` mencerminkan keputusan eksplisit Chief, bukan asumsi saya.
+**Note:** low urgency for one-agent-at-a-time solo use; relevant when Chief runs multiple parallel
+agents. Confirm priority before implementing (adds a file to `.safrs/**`, R2).
 
----
-
-## Fase 5 — Keputusan: Fitur #5 Email/Stripe Dev Server (R1–R2, blocked menunggu keputusan Chief)
-
-Saat ini `MISSING` — hanya manifest `tools/capabilities/manifests/email.json` dan `stripe.json` yang mendeklarasikan capability pack, belum diinstal.
-
-- [ ] Chief konfirmasi: aktifkan sekarang (instal `react-email`/`resend` dan `stripe`, tambah script `dev:email`/`stripe:listen`) atau biarkan sebagai capability pack opsional untuk nanti.
-- [ ] Jika diaktifkan: ini penambahan dependency baru → R2 per `SAFRS_SPEC.md` §7 ("new dependency" masuk contoh R2) — akan saya tandai untuk review meski dependency-nya kecil.
-
-**Exit:** status Fitur #5 berubah dari `MISSING` menjadi `EXISTS_AND_VERIFIED` (jika diaktifkan) atau tetap `MISSING` dengan alasan tercatat sebagai keputusan sadar, bukan kelalaian.
+**Exit:** two dummy tasks with overlapping scopes fail `pnpm governance` until one closes.
 
 ---
 
-## Fase 6 — Nuansa Dokumentasi (R1, prioritas rendah, `REQUIRES_SPECIFICATION_REVIEW`)
+## Phase 3 — Live Verification Impossible from the Audit Sandbox (R0, Chief's machine)
 
-- [ ] Putuskan apakah `SAFRS_SPEC.md` §13 (Document classes: Canonical/Active/Historical/Superseded/Archived) perlu diselaraskan dengan lifecycle dokumen umum di SEN-001 (`DRAFT → ACTIVE → CANONICAL → SUPERSEDED → ARCHIVED`) — khususnya status `DRAFT` yang tidak ada di repo, dan kelas "Historical" yang tidak ada di SEN-001. Ini butuh spesifikasi normatif 5-Paper yang belum tersedia untuk diputuskan secara otoritatif — tandai `REQUIRES_SPECIFICATION_REVIEW` sampai dokumen itu ada.
-- [ ] Pertimbangkan apakah 12 file `0X_*.md` root sebaiknya dipisah mana yang benar-benar L1 Constitution (non-negotiable) vs L2 Context (panduan/filosofi) — SEN-001 menekankan konstitusi harus pendek ("under two pages").
-- [ ] Tambahkan aturan eksplisit "Tailwind-only, no inline style" ke `AGENTS.md` root jika itu memang konvensi yang berlaku (saat ini hanya tersirat di `projects/golden-path/docs/architecture.md`).
+Golden-path features #1, #3, #4 are `EXISTS_BUT_INCOMPLETE` only because the audit sandbox lacked
+a native toolchain and Docker — not because the code is wrong (audit §10).
 
-**Exit:** tidak mendesak — bisa dikerjakan kapan saja tanpa risiko fungsional.
+- [ ] Run full `pnpm check` (`governance && lint && typecheck && test && build`) on Windows;
+      keep output as Feature #1 evidence.
+- [ ] Run a small `git commit` to time the Biome pre-commit hook (claim: "<100ms"). Feature #3.
+- [ ] Run `pnpm dev` (Docker Postgres via `compose.yaml`), then `pnpm db:seed` and
+      `pnpm db:studio`. Feature #4.
+
+**Exit:** all three move to `EXISTS_AND_VERIFIED` with real command evidence.
+
+---
+
+## Phase 4 — Decision: Feature #7 Renovate Auto-Merge (R2, blocked on Chief)
+
+Direct conflict between Feature #7 and (a) Chief's own standing rule, (b) invariant SAFRS-02,
+(c) the deliberate `automerge: false` in `renovate.json`. **No change without Chief's explicit choice.**
+
+- [ ] Chief picks one: (a) automerge limited to non-sensitive patch/minor, (b) full automerge,
+      (c) keep `automerge: false`.
+- [ ] If (a) or (b): add matching `packageRules` — R2, Chief review before merge.
+
+**Exit:** `renovate.json` reflects Chief's explicit decision, not an agent assumption.
+
+---
+
+## Phase 5 — Decision: Feature #5 Email/Stripe Dev Server (R1–R2, blocked on Chief)
+
+Currently `MISSING` — only capability manifests exist (`tools/capabilities/manifests/email.json`,
+`stripe.json`), nothing installed.
+
+- [ ] Chief confirms: activate now (install `react-email`/`resend` + `stripe`, add
+      `dev:email`/`stripe:listen` scripts) or keep as optional pack for later.
+- [ ] If activated: new dependencies → R2 per `SAFRS_SPEC.md` §7; flag for review.
+
+**Exit:** Feature #5 becomes `EXISTS_AND_VERIFIED`, or stays `MISSING` as a recorded conscious
+decision.
+
+---
+
+## Phase 6 — Documentation Nuances (R1, low priority, `REQUIRES_SPECIFICATION_REVIEW`)
+
+- [ ] Decide whether `SAFRS_SPEC.md` §13 document classes should align with SEN-001's lifecycle
+      (`DRAFT → ACTIVE → CANONICAL → SUPERSEDED → ARCHIVED`) — notably the missing `DRAFT` status
+      and the extra "Historical" class. Needs the 5-Paper normative spec; keep flagged until it exists.
+- [ ] Consider splitting the numbered KB files into true L1 Constitution (non-negotiable) vs
+      L2 Context (guidance) — SEN-001 wants the constitution "under two pages".
+- [ ] Add an explicit "Tailwind-only, no inline style" rule to root `AGENTS.md` if that is the
+      real convention (currently implicit in `projects/golden-path/docs/architecture.md`).
+
+**Exit:** not urgent — safe to do anytime.
 
 ---
 
 ## Acceptance criteria
 
-- Tidak ada kontrol yang sudah berfungsi (governance checker, CI, pre-commit, reset-guard) yang dilemahkan oleh rencana ini.
-- Fase 1 selesai sebelum repo mengklaim conformance level di atas Core.
-- Fase 4 dan 5 tidak dieksekusi tanpa keputusan eksplisit Chief yang tercatat (bukan diasumsikan agent).
-- Setiap item yang menyentuh `.safrs/**`, `.github/workflows/**`, atau `renovate.json` diperlakukan R2 minimum sesuai `SAFRS_SPEC.md` §12, terlepas dari seberapa kecil diff-nya.
-- Rencana ini dipindah ke `docs/plans/completed/` hanya setelah seluruh checkbox di atas selesai atau secara eksplisit di-drop dengan alasan tercatat.
+- No working control (governance checkers, CI, pre-commit, reset-guard) is weakened by this plan.
+- Phase 1 completes before claiming any conformance level above Core.
+- Phases 4 and 5 execute only on recorded, explicit Chief decisions.
+- Anything touching `.safrs/**`, `.github/workflows/**`, or `renovate.json` is treated as R2
+  minimum per `SAFRS_SPEC.md` §12, regardless of diff size.
+- Move this plan to `docs/plans/completed/` only when every box is checked or explicitly dropped
+  with a recorded reason.
