@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "default_network_policy": "deny-unless-task-authorized",
+  "tools": [
+    {
+      "id": "local-filesystem",
+      "owner": "repository-maintainers",
+      "purpose": "Scoped repository inspection and mutation",
+      "allowed_operations": ["read", "search", "modify-scoped"],
+      "data_scope": "repository-only",
+      "authentication": "os-user",
+      "network_endpoints": [],
+      "provenance": "host-operating-system",
+      "review_status": "APPROVED"
+    },
+    {
+      "id": "git",
+      "owner": "repository-maintainers",
+      "purpose": "Local version control, diff, branches, and review evidence",
+      "allowed_operations": ["status", "diff", "add", "commit", "branch", "worktree"],
+      "data_scope": "repository-only",
+      "authentication": "none-for-local-operations",
+      "network_endpoints": [],
+      "provenance": "system-installation",
+      "review_status": "APPROVED"
+    },
+    {
+      "id": "python3",
+      "owner": "repository-maintainers",
+      "purpose": "Run deterministic SAFRS checks and repository tests",
+      "allowed_operations": ["execute-repository-checks", "execute-tests"],
+      "data_scope": "repository-only",
+      "authentication": "none",
+      "network_endpoints": [],
+      "provenance": "system-installation",
+      "review_status": "APPROVED"
+    },
+    {
+      "id": "bash",
+      "owner": "repository-maintainers",
+      "purpose": "Run the canonical local verification entry point",
+      "allowed_operations": ["execute-repository-scripts"],
+      "data_scope": "repository-only",
+      "authentication": "none",
+      "network_endpoints": [],
+      "provenance": "system-installation",
+      "review_status": "APPROVED"
+    },
+    {
+      "id": "github-actions-checkout",
+      "owner": "repository-maintainers",
+      "purpose": "Read repository content in SAFRS Governance CI",
+      "allowed_operations": ["checkout-read-only"],
+      "data_scope": "repository-only",
+      "authentication": "github-actions-token-with-contents-read",
+      "network_endpoints": ["github.com", "api.github.com"],
+      "provenance": "actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8",
+      "review_status": "APPROVED"
+    },
+    {
+      "id": "pnpm-npm-registry",
+      "owner": "repository-maintainers",
+      "purpose": "Install exact lockfile dependencies and run approved workspace commands",
+      "allowed_operations": ["frozen-install", "run-declared-scripts"],
+      "data_scope": "public-package-metadata-and-repository-workspace",
+      "authentication": "none",
+      "network_endpoints": ["registry.npmjs.org"],
+      "provenance": "pnpm-lock.yaml and package.json",
+      "review_status": "APPROVED"
+    },
+    {
+      "id": "docker-local-postgres",
+      "owner": "repository-maintainers",
+      "purpose": "Run the isolated local PostgreSQL service used by setup and tests",
+      "allowed_operations": ["start-local-service", "stop-local-service", "pull-declared-image"],
+      "data_scope": "local-development-data-only",
+      "authentication": "none",
+      "network_endpoints": ["registry-1.docker.io"],
+      "provenance": "compose.yaml",
+      "review_status": "APPROVED"
+    },
+    {
+      "id": "playwright-local-browser",
+      "owner": "repository-maintainers",
+      "purpose": "Exercise the local golden-path browser journey",
+      "allowed_operations": ["run-local-browser-tests"],
+      "data_scope": "localhost-test-application-only",
+      "authentication": "none",
+      "network_endpoints": ["127.0.0.1"],
+      "provenance": "@playwright/test in pnpm-lock.yaml",
+      "review_status": "APPROVED"
+    },
+    {
+      "id": "github-actions-ci",
+      "owner": "repository-maintainers",
+      "purpose": "Run non-deploying pull-request verification with immutable action references",
+      "allowed_operations": ["checkout-read-only", "run-ci-verification", "upload-test-artifacts"],
+      "data_scope": "repository-and-non-secret-test-data",
+      "authentication": "github-actions-ephemeral-token-with-contents-read",
+      "network_endpoints": ["github.com", "api.github.com", "registry.npmjs.org", "registry-1.docker.io"],
+      "provenance": ".github/workflows/ci.yml",
+      "review_status": "APPROVED"
+    }
+  ]
+}

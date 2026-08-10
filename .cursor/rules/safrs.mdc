@@ -1,0 +1,6 @@
+---
+description: Route Cursor to canonical SAFRS policy
+alwaysApply: true
+---
+
+Read and follow the repository root `AGENTS.md` and the nearest nested `AGENTS.md`. Canonical SAFRS, security, risk, and permission policy remains in repository-owned documents; this adapter must not duplicate or weaken it.

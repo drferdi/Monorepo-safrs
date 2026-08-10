@@ -1,0 +1,228 @@
+{
+  "version": 1,
+  "documents": [
+    {
+      "id": "read-first",
+      "path": "00_READ_FIRST.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "collaboration",
+      "path": "01_COLLABORATION.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "objectives",
+      "path": "02_OBJECTIVES.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "architecture",
+      "path": "03_ARCHITECTURE.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "context",
+      "path": "04_CONTEXT.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "engineering",
+      "path": "05_ENGINEERING.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "coding",
+      "path": "06_CODING.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "documentation",
+      "path": "07_DOCUMENTATION.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "decisions",
+      "path": "08_DECISIONS.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "products",
+      "path": "09_PRODUCTS.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "glossary",
+      "path": "10_GLOSSARY.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "response-standards",
+      "path": "11_RESPONSE_STANDARDS.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "self-audit",
+      "path": "99_SELF_AUDIT.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "safrs-spec",
+      "path": "SAFRS_SPEC.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "security-policy",
+      "path": "SECURITY.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "repository-readme",
+      "path": "README.md",
+      "type": "reference",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "safrs-agent-permissions",
+      "path": "docs/governance/SAFRS_AGENT_PERMISSIONS.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "safrs-control-matrix",
+      "path": "docs/governance/SAFRS_CONTROL_MATRIX.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "safrs-document-lifecycle",
+      "path": "docs/governance/SAFRS_DOCUMENT_LIFECYCLE.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "safrs-multi-agent-protocol",
+      "path": "docs/governance/SAFRS_MULTI_AGENT_PROTOCOL.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "safrs-conformance",
+      "path": "docs/governance/SAFRS_CONFORMANCE.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "safrs-project-capsules",
+      "path": "docs/governance/SAFRS_PROJECT_CAPSULES.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "safrs-tool-inventory-policy",
+      "path": "docs/governance/SAFRS_TOOL_INVENTORY.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "safrs-tool-inventory",
+      "path": ".safrs/tool-inventory.json",
+      "type": "reference",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "gemini-adapter",
+      "path": "GEMINI.md",
+      "type": "reference",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "copilot-adapter",
+      "path": ".github/copilot-instructions.md",
+      "type": "reference",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "cursor-adapter",
+      "path": ".cursor/rules/safrs.mdc",
+      "type": "reference",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "adr-index",
+      "path": "docs/adrs/README.md",
+      "type": "reference",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "golden-path-adr-0001",
+      "path": "docs/adrs/0001-solo-developer-golden-path.md",
+      "type": "adr",
+      "status": "ACCEPTED"
+    },
+    {
+      "id": "evidence-index",
+      "path": "docs/evidence/README.md",
+      "type": "reference",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "safrs-bootstrap-verification-2026-08-09",
+      "path": "docs/evidence/SAFRS_BOOTSTRAP_VERIFICATION.md",
+      "type": "historical",
+      "status": "HISTORICAL"
+    },
+    {
+      "id": "safrs-bootstrap-plan",
+      "path": "docs/plans/completed/SAFRS_BOOTSTRAP_IMPLEMENTATION.md",
+      "type": "plan",
+      "status": "COMPLETED"
+    },
+    {
+      "id": "golden-path-execution-prompt",
+      "path": "CODEX_IMPLEMENT_GOLDEN_PATH.md",
+      "type": "reference",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "golden-path-verification-2026-08-10",
+      "path": "docs/evidence/SAFRS_GOLDEN_PATH_VERIFICATION.md",
+      "type": "historical",
+      "status": "HISTORICAL"
+    }
+  ],
+  "allowed_status": [
+    "DRAFT",
+    "ACTIVE",
+    "CANONICAL",
+    "HISTORICAL",
+    "SUPERSEDED",
+    "ARCHIVED",
+    "COMPLETED",
+    "PROPOSED",
+    "ACCEPTED",
+    "REJECTED"
+  ],
+  "allowed_type": [
+    "canonical",
+    "plan",
+    "adr",
+    "reference",
+    "historical"
+  ]
+}

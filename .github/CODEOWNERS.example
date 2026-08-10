@@ -1,0 +1,14 @@
+# Replace placeholders with real GitHub users/teams, then rename to CODEOWNERS.
+# SAFRS governance/security surfaces
+/AGENTS.md                         @ORG/platform-owners
+/SAFRS_SPEC.md                     @ORG/platform-owners
+/SECURITY.md                       @ORG/security
+/.safrs/                           @ORG/platform-owners @ORG/security
+/.github/workflows/                @ORG/platform-owners @ORG/security
+/tools/safrs/                      @ORG/platform-owners @ORG/security
+/scripts/safrs-verify.sh           @ORG/platform-owners @ORG/security
+
+# Example high-risk surfaces — adjust to actual repository paths
+/**/auth/                          @ORG/security
+/**/authorization/                 @ORG/security
+/**/migrations/                    @ORG/data-owners

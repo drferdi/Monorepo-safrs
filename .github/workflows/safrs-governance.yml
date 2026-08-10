@@ -1,0 +1,53 @@
+name: SAFRS Governance
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  governance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0, immutable SHA
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Determine diff base
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "SAFRS_BASE_REF=${{ github.event.pull_request.base.sha }}" >> "$GITHUB_ENV"
+          echo "SAFRS_HEAD_REF=${{ github.event.pull_request.head.sha }}" >> "$GITHUB_ENV"
+
+      - name: Validate SAFRS policy
+        run: python3 tools/safrs/check_policy.py
+
+      - name: Validate document registry
+        run: python3 tools/safrs/check_docs.py
+
+      - name: Validate agent routing
+        run: python3 tools/safrs/check_routing.py
+
+      - name: Validate tool and network inventory
+        run: python3 tools/safrs/check_tool_inventory.py
+
+      - name: Validate monorepo topology and project capsules
+        run: python3 tools/safrs/check_topology.py
+
+      - name: Enforce immutable GitHub Action pins
+        run: python3 tools/safrs/check_actions_pinning.py
+
+      - name: Classify sensitive and verification-control changes
+        run: python3 tools/safrs/check_sensitive_changes.py
+
+      - name: Test architecture invariants
+        run: python3 tests/architecture/test_safrs_topology.py
+
+      - name: Test risk classification invariants
+        run: python3 tests/governance/test_sensitive_classification.py

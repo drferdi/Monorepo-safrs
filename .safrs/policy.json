@@ -1,0 +1,51 @@
+{
+  "version": "1.1",
+  "operating_model": "human-governed-agent-executed-machine-enforced",
+  "default_risk": "R1",
+  "repository": {
+    "type": "monorepo",
+    "default_branch": "main",
+    "project_capsule_root": "projects",
+    "shared_package_root": "packages",
+    "shared_test_root": "tests",
+    "tool_root": "tools"
+  },
+  "risk_tiers": {
+    "R0": {"mutation": false, "human_review": false, "human_authorization": false},
+    "R1": {"mutation": true, "human_review": false, "human_authorization": false},
+    "R2": {"mutation": true, "human_review": true, "human_authorization": false},
+    "R3": {"mutation": "prepare-only", "human_review": true, "human_authorization": true}
+  },
+  "roles": {
+    "observer": ["read", "search"],
+    "analyst": ["read", "search", "plan"],
+    "implementer": ["read", "search", "plan", "modify-scoped", "test", "create-branch", "create-pr"],
+    "reviewer": ["read", "search", "review", "test"],
+    "maintainer": ["read", "search", "plan", "modify-scoped", "test", "create-branch", "create-pr", "merge-policy-permitting"],
+    "release-agent": ["read", "prepare-release", "test", "create-pr"],
+    "security-agent": ["read", "search", "security-analyze", "modify-scoped", "test", "create-pr"]
+  },
+  "forbidden_by_default": [
+    "read-production-secrets",
+    "write-production-data",
+    "direct-production-deploy",
+    "self-authorize-R3",
+    "disable-governance-to-pass",
+    "transmit-repository-data-to-unapproved-endpoint"
+  ],
+  "verification": {
+    "command": "bash scripts/safrs-verify.sh",
+    "windows_command": "powershell -ExecutionPolicy Bypass -File scripts/safrs-verify.ps1",
+    "verification_change_minimum_risk": "R2"
+  },
+  "execution_isolation": {
+    "parallel_mutation": "dedicated-worktree",
+    "shared_mutable_state": "isolate-or-serialize",
+    "handoff_protocol": "docs/governance/SAFRS_MULTI_AGENT_PROTOCOL.md"
+  },
+  "tool_inventory": ".safrs/tool-inventory.json",
+  "resource_bounds": {
+    "require_for_autonomous_workflows": true,
+    "dimensions": ["runtime", "retries", "tool_scope", "network_scope", "cost_or_compute_where_supported"]
+  }
+}

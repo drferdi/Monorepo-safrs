@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "minimum_risk": "R2",
+  "patterns": [
+    "AGENTS.md",
+    "SECURITY.md",
+    "SAFRS_SPEC.md",
+    ".safrs/**",
+    ".github/workflows/**",
+    ".github/CODEOWNERS",
+    ".github/copilot-instructions.md",
+    ".cursor/rules/**",
+    "projects/**/AGENTS.md",
+    "projects/**/safety-critical/**",
+    "projects/**/production/**",
+    "packages/**",
+    "infrastructure/**",
+    "**/migrations/**",
+    "**/auth/**",
+    "**/authorization/**",
+    "**/security/**",
+    "**/package.json",
+    "**/package-lock.json",
+    "**/pnpm-lock.yaml",
+    "**/yarn.lock",
+    "**/requirements*.txt",
+    "**/pyproject.toml",
+    "**/poetry.lock",
+    "**/Cargo.toml",
+    "**/Cargo.lock",
+    "**/go.mod",
+    "**/go.sum"
+  ],
+  "verification_control_patterns": [
+    ".safrs/**",
+    ".github/workflows/**",
+    "AGENTS.md",
+    "SECURITY.md",
+    ".github/copilot-instructions.md",
+    ".cursor/rules/**",
+    "projects/**/AGENTS.md",
+    "tools/safrs/**",
+    "scripts/safrs-verify.sh",
+    "**/tests/security/**",
+    "**/tests/architecture/**"
+  ],
+  "risk_overrides": [
+    {
+      "risk": "R3",
+      "patterns": [
+        "projects/**/safety-critical/**",
+        "projects/**/production/**",
+        "infrastructure/production/**"
+      ]
+    }
+  ]
+}

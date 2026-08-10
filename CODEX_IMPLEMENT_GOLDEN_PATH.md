@@ -59,8 +59,8 @@ If the exact Sol Advisor compatibility lane is observable:
 
 ## Non-negotiable outcomes
 
-- `pnpm setup` safely prepares the repository.
-- `pnpm doctor` diagnoses prerequisites and prints plain Indonesian recovery steps without secrets.
+- `pnpm run setup` safely prepares the repository.
+- `pnpm run doctor` diagnoses prerequisites and prints plain Indonesian recovery steps without secrets.
 - `pnpm dev` starts the local database and default development application without manually coordinating terminals.
 - Hono RPC types flow from Zod-validated backend contracts into the frontend.
 - Missing required environment variables fail locally and in CI with readable errors.
@@ -78,8 +78,8 @@ If the exact Sol Advisor compatibility lane is observable:
 Do not claim completion until all relevant commands have actually passed:
 
 ~~~text
-pnpm doctor
-pnpm governance
+pnpm run doctor
+pnpm run governance
 pnpm lint
 pnpm typecheck
 pnpm test
