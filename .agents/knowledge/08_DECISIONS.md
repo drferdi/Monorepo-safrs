@@ -33,7 +33,7 @@ Recommendations should be transparent, logically justified, and aligned with the
 
 ## Where decisions live
 
-- Lightweight durable decisions: append-only log in root `DECISIONS.md`.
+- Lightweight durable decisions: append-only log in `.agents/DECISIONS.md`.
 - Architectural decisions: `docs/adrs/` (one ADR per decision).
 - This document defines *how* to decide; the log and ADRs record *what* was decided.
 

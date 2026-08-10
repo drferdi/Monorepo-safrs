@@ -245,7 +245,7 @@
     },
     {
       "id": "handoff",
-      "path": "HANDOFF.md",
+      "path": ".agents/HANDOFF.md",
       "type": "reference",
       "status": "ACTIVE",
       "normativity": "MUST",
@@ -263,7 +263,7 @@
     },
     {
       "id": "context-identity",
-      "path": "CONTEXT.md",
+      "path": ".agents/CONTEXT.md",
       "type": "reference",
       "status": "ACTIVE",
       "normativity": "SHOULD",
@@ -271,7 +271,7 @@
     },
     {
       "id": "decision-log",
-      "path": "DECISIONS.md",
+      "path": ".agents/DECISIONS.md",
       "type": "reference",
       "status": "ACTIVE",
       "normativity": "SHOULD",
@@ -279,7 +279,7 @@
     },
     {
       "id": "progress-board",
-      "path": "PROGRESS.md",
+      "path": ".agents/PROGRESS.md",
       "type": "reference",
       "status": "ACTIVE",
       "normativity": "SHOULD",

@@ -4,7 +4,7 @@
 > Detail durable: `DECISIONS.md`. Tracker area: `PROGRESS.md`. Sejarah keputusan: `docs/adrs/`.
 > Aturan: **overwrite** tiap pergantian sesi — file ini state terkini, bukan log.
 
-Last updated: 2026-08-11 (Claude — integrasi lima file memori ke routing + enforcement HANDOFF)
+Last updated: 2026-08-11 (Claude — relokasi 4 file memori ke .agents/ atas instruksi Chief; semua referensi & registry ter-update)
 
 ## State saat ini
 

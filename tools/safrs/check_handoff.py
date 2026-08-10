@@ -12,9 +12,10 @@ ROOT = Path(__file__).resolve().parents[2]
 
 # Changes to these files alone do not require a handoff update.
 MEMORY_FILES = {
-    'HANDOFF.md', 'PROGRESS.md', 'DECISIONS.md', 'CONTEXT.md',
-    '.agents/knowledge/12_LESSONS.md',
+    '.agents/HANDOFF.md', '.agents/PROGRESS.md', '.agents/DECISIONS.md',
+    '.agents/CONTEXT.md', '.agents/knowledge/12_LESSONS.md',
 }
+HANDOFF = '.agents/HANDOFF.md'
 
 
 def changed_files() -> set:
@@ -34,10 +35,10 @@ def changed_files() -> set:
 def main() -> None:
     files = changed_files()
     substantive = files - MEMORY_FILES
-    if substantive and 'HANDOFF.md' not in files:
+    if substantive and HANDOFF not in files:
         raise SystemExit(
-            'SAFRS session handoff failed: change set contains work but HANDOFF.md '
-            'was not updated.\nOverwrite HANDOFF.md with current state, work in '
+            'SAFRS session handoff failed: change set contains work but '
+            f'{HANDOFF} was not updated.\nOverwrite it with current state, work in '
             'flight, blockers, and next actions (see AGENTS.md — Session protocol).')
     print('SAFRS session handoff: OK')
 
