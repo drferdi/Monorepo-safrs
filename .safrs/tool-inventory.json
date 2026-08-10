@@ -110,6 +110,7 @@
       "authentication": "repository-scoped-renovate-app-or-bot-token",
       "network_endpoints": ["github.com", "api.github.com", "registry.npmjs.org"],
       "provenance": ".github/renovate.json",
+      "activation_status": "PR_ONLY",
       "review_status": "APPROVED"
     }
   ]

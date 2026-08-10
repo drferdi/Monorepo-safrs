@@ -12,9 +12,9 @@ db7f61cf066f6bcb81709b0f68f4d0e4cfcfad5ac0f5bb9d14d0422a9bb39f4f *./.husky/pre-c
 a6b535050ffed7bf041c71335beb770abb893edc91eb663b0e54955cf9170758 *./.npmrc
 823074c6454b05dcab5faa9a3eaadc0aa9a9979188c3337856161087c39f66f6 *./.safrs/document-registry.json
 7da9b232781bc590d1720ef2da89ff97b2a9cb71a0402e75577378d0c721a89d *./.safrs/policy.json
-e9d15921b30b6bfe4a2af9061c339337b5c68fee630a27d102578a647784ec23 *./.safrs/sensitive-paths.json
-f928a397854b8c507207e845522f61523346f517ae3e3752c028a8bebf278931 *./.safrs/tool-inventory.json
-59084036ce7010fce4de389cb29a607c2082764816a58be69baf675152f30477 *./.superpowers/sdd/2026-08-10-solo-dev-golden-path-implementation/progress.md
+4f5b3e99ee3c878454f0328bb90b6322608d93409c458e8590d3de7a2fc015bc *./.safrs/sensitive-paths.json
+b36d7249649a8f0663909dd0aba416f43df9eb86db9134bf764402a82b954e68 *./.safrs/tool-inventory.json
+c623a4013816c7e10f753d7b92931646f2f8ec5cbf9058af6c4726d4a4997c8d *./.superpowers/sdd/2026-08-10-solo-dev-golden-path-implementation/progress.md
 8d8fce671804ac095ed0c538d3d7423b11ed7c9548cbc7181cfa42d61dc5af83 *./.superpowers/sdd/2026-08-10-solo-dev-golden-path-implementation/task-4-report.md
 ddce49d93b129b57f5b095a2e01a927bdb4dbe89918db738a0ac60d0a601e2e6 *./.superpowers/sdd/2026-08-10-solo-dev-golden-path-implementation/task-5-report.md
 598676f9c91e5069ef119e5db03b4658f9e49e1db4941e581b35ca72bb4f03a1 *./.superpowers/sdd/2026-08-10-solo-dev-golden-path-implementation/task-6-report.md

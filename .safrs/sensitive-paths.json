@@ -34,7 +34,13 @@
     "**/Cargo.toml",
     "**/Cargo.lock",
     "**/go.mod",
-    "**/go.sum"
+    "**/go.sum",
+    "scripts/safrs-verify.mjs",
+    "scripts/safrs-verify.ps1",
+    "scripts/safrs-verify.sh",
+    "tests/repository/automation-policy.test.mjs",
+    "MANIFEST.txt",
+    "SHA256SUMS.txt"
   ],
   "verification_control_patterns": [
     ".safrs/**",
