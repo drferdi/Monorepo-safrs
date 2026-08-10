@@ -164,15 +164,29 @@ async function acquireSlugLock(projectsRoot, slug, hooks) {
   let identity;
   try {
     handle = await open(lockPath, "wx");
-    identity = await handle.stat();
     if (hooks?.afterLockOpen)
-      await hooks.afterLockOpen({ handle, identity, lockPath, marker });
+      await hooks.afterLockOpen({ handle, lockPath, marker });
+    identity = await handle.stat();
+    if (hooks?.afterLockStat)
+      await hooks.afterLockStat({ handle, identity, lockPath, marker });
     await handle.writeFile(marker, "utf8");
     if (hooks?.afterLockWrite)
       await hooks.afterLockWrite({ handle, identity, lockPath, marker });
     return { handle, identity, lockPath, marker };
   } catch (error) {
-    await handle?.close();
+    const cleanupErrors = [];
+    if (!identity && handle) {
+      try {
+        identity = await handle.stat();
+      } catch (cleanupError) {
+        cleanupErrors.push(cleanupError);
+      }
+    }
+    try {
+      await handle?.close();
+    } catch (cleanupError) {
+      cleanupErrors.push(cleanupError);
+    }
     if (identity) {
       const quarantine = path.join(
         path.dirname(lockPath),
@@ -186,12 +200,14 @@ async function acquireSlugLock(projectsRoot, slug, hooks) {
             await unlink(quarantine);
         }
       } catch (cleanupError) {
-        if (cleanupError?.code !== "ENOENT")
-          throw new AggregateError(
-            [error, cleanupError],
-            "Lock initialization failed with cleanup failure.",
-          );
+        if (cleanupError?.code !== "ENOENT") cleanupErrors.push(cleanupError);
       }
+    }
+    if (cleanupErrors.length) {
+      throw new AggregateError(
+        [error, ...cleanupErrors],
+        "Lock initialization failed with cleanup failure.",
+      );
     }
     if (error?.code === "EEXIST") {
       throw new Error(`Project creation is already in progress for ${slug}.`);
@@ -269,11 +285,21 @@ async function createOwnedDirectory(parent, prefix, markerName, hooks) {
         marker,
         markerPath,
       });
+    const markerIdentity = await lstat(markerPath);
+    if (hooks?.afterMarkerStat) {
+      await hooks.afterMarkerStat({
+        directory,
+        directoryIdentity,
+        marker,
+        markerPath,
+        markerIdentity,
+      });
+    }
     return {
       directory,
       directoryIdentity,
       marker,
-      markerIdentity: await lstat(markerPath),
+      markerIdentity,
       markerName,
     };
   } catch (error) {
@@ -327,7 +353,6 @@ async function cleanupOwnedDirectory(state, hooks) {
       "Owned cleanup candidate changed while quarantining; quarantine preserved.",
     );
   }
-  if (hooks?.afterQuarantine) await hooks.afterQuarantine(state, quarantine);
   await rm(quarantine, { recursive: true, force: true });
   return true;
 }
@@ -400,11 +425,21 @@ async function reserveDestination(projectsRoot, slug, hooks) {
         marker,
         markerPath,
       });
+    const markerIdentity = await lstat(markerPath);
+    if (hooks?.afterDestinationMarkerStat) {
+      await hooks.afterDestinationMarkerStat({
+        directory: destination,
+        directoryIdentity,
+        marker,
+        markerPath,
+        markerIdentity,
+      });
+    }
     return {
       directory: destination,
       directoryIdentity,
       marker,
-      markerIdentity: await lstat(markerPath),
+      markerIdentity,
       markerName,
     };
   } catch (error) {
@@ -457,6 +492,8 @@ export async function applyProjectCapsule(files, projectsRoot, slug, hooks) {
   const lock = await acquireSlugLock(canonicalProjectsRoot, slug, hooks);
   let stage;
   let published = false;
+  let primaryError;
+  const cleanupErrors = [];
   try {
     const destination = path.join(canonicalProjectsRoot, slug);
     if (!isWithin(destination, canonicalProjectsRoot)) {
@@ -515,30 +552,38 @@ export async function applyProjectCapsule(files, projectsRoot, slug, hooks) {
       throw new Error("Project destination reservation failed.");
     }
     published = true;
+  } catch (error) {
+    primaryError = error;
   } finally {
-    let cleanupError;
     if (stage && !published) {
       try {
         await cleanupOwnedDirectory(stage, hooks);
       } catch (error) {
-        cleanupError = error;
+        cleanupErrors.push(error);
       }
     }
     if (stage && published && process.platform !== "win32") {
       try {
         await cleanupOwnedDirectory(stage, hooks);
       } catch (error) {
-        cleanupError ??= error;
+        cleanupErrors.push(error);
       }
     }
     try {
       await releaseSlugLock(lock);
     } catch (error) {
-      cleanupError ??= error;
+      cleanupErrors.push(error);
     }
-    // biome-ignore lint/correctness/noUnsafeFinally: cleanup failure must fail closed after lock release.
-    if (cleanupError) throw cleanupError;
   }
+  if (primaryError && cleanupErrors?.length) {
+    throw new AggregateError(
+      [primaryError, ...cleanupErrors],
+      "Project capsule failed with cleanup errors.",
+    );
+  }
+  if (primaryError) throw primaryError;
+  if (cleanupErrors?.length)
+    throw new AggregateError(cleanupErrors, "Project capsule cleanup failed.");
 }
 
 async function interactiveConfirmation(slug) {

@@ -6,6 +6,7 @@ import {
   lstat,
   mkdir,
   mkdtemp,
+  readdir,
   readFile,
   rename,
   rm,
@@ -52,6 +53,38 @@ async function createTemporaryRepo() {
     recursive: true,
   });
   return root;
+}
+
+async function assertNoOwnedWizardResidue(projectsRoot, slug) {
+  const entries = await readdir(projectsRoot);
+  assert.equal(entries.includes(slug), false, `destination ${slug} remains`);
+  assert.equal(
+    entries.some(
+      (entry) =>
+        entry.startsWith(`.${slug}-stage-`) ||
+        entry.startsWith(`..${slug}-stage-`),
+    ),
+    false,
+    `owned stage for ${slug} remains`,
+  );
+  assert.equal(
+    entries.some(
+      (entry) =>
+        entry.startsWith(`.${slug}.lock`) || entry.startsWith(`..${slug}.lock`),
+    ),
+    false,
+    `owned lock for ${slug} remains`,
+  );
+}
+
+async function withPosixPublish(callback) {
+  const platform = Object.getOwnPropertyDescriptor(process, "platform");
+  Object.defineProperty(process, "platform", { ...platform, value: "linux" });
+  try {
+    return await callback();
+  } finally {
+    Object.defineProperty(process, "platform", platform);
+  }
 }
 
 function runCli(root, args) {
@@ -470,6 +503,192 @@ test("refuses an existing destination without modifying it", async () => {
     assert.equal(result.status, 1);
     assert.equal(
       await readFile(path.join(destination, "sentinel.txt"), "utf8"),
+      "preserve",
+    );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+for (const { name, hook, verify } of [
+  {
+    name: "lock open",
+    hook: "afterLockOpen",
+    verify: async ({ lockPath }) => {
+      assert.equal(await readFile(lockPath, "utf8"), "");
+    },
+  },
+  {
+    name: "lock write",
+    hook: "afterLockWrite",
+    verify: async ({ lockPath, marker }) => {
+      assert.equal(await readFile(lockPath, "utf8"), marker);
+    },
+  },
+  {
+    name: "lock stat",
+    hook: "afterLockStat",
+    verify: async ({ identity }) => {
+      assert.equal(identity.isFile(), true);
+    },
+  },
+]) {
+  test(`cleans owned state when ${name} hook fails`, async () => {
+    const root = await createTemporaryRepo();
+    const slug = `failure-${hook.toLowerCase()}`;
+    const projectsRoot = path.join(root, "projects");
+    try {
+      await assert.rejects(
+        applyProjectCapsule([], projectsRoot, slug, {
+          [hook]: async (state) => {
+            await verify(state);
+            throw new Error(`${hook} injected failure`);
+          },
+        }),
+        new RegExp(`${hook} injected failure`),
+      );
+      await assertNoOwnedWizardResidue(projectsRoot, slug);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+}
+
+for (const { name, hook, verify } of [
+  {
+    name: "stage directory creation",
+    hook: "afterMkdtemp",
+    verify: async ({ directory }) => {
+      await assert.rejects(
+        lstat(path.join(directory, ".safrs-project-wizard-stage.json")),
+      );
+    },
+  },
+  {
+    name: "stage marker write",
+    hook: "afterMarkerWrite",
+    verify: async ({ marker, markerPath }) => {
+      assert.equal(await readFile(markerPath, "utf8"), marker);
+    },
+  },
+  {
+    name: "stage marker stat",
+    hook: "afterMarkerStat",
+    verify: async ({ markerIdentity }) => {
+      assert.equal(markerIdentity.isFile(), true);
+    },
+  },
+]) {
+  test(`cleans owned state when ${name} hook fails`, async () => {
+    const root = await createTemporaryRepo();
+    const slug = `failure-${hook.toLowerCase()}`;
+    const projectsRoot = path.join(root, "projects");
+    try {
+      await assert.rejects(
+        applyProjectCapsule([], projectsRoot, slug, {
+          [hook]: async (state) => {
+            await verify(state);
+            throw new Error(`${hook} injected failure`);
+          },
+        }),
+        new RegExp(`${hook} injected failure`),
+      );
+      await assertNoOwnedWizardResidue(projectsRoot, slug);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+}
+
+for (const { name, hook, verify } of [
+  {
+    name: "destination directory creation",
+    hook: "afterDestinationMkdir",
+    verify: async ({ directory }) => {
+      await assert.rejects(
+        lstat(path.join(directory, ".safrs-project-wizard-incomplete")),
+      );
+    },
+  },
+  {
+    name: "destination marker write",
+    hook: "afterDestinationMarkerWrite",
+    verify: async ({ marker, markerPath }) => {
+      assert.equal(await readFile(markerPath, "utf8"), marker);
+    },
+  },
+  {
+    name: "destination marker stat",
+    hook: "afterDestinationMarkerStat",
+    verify: async ({ markerIdentity }) => {
+      assert.equal(markerIdentity.isFile(), true);
+    },
+  },
+]) {
+  test(`cleans owned state when ${name} hook fails`, async () => {
+    const root = await createTemporaryRepo();
+    const slug = `failure-${hook.toLowerCase()}`;
+    const projectsRoot = path.join(root, "projects");
+    try {
+      await withPosixPublish(async () => {
+        await assert.rejects(
+          applyProjectCapsule([], projectsRoot, slug, {
+            [hook]: async (state) => {
+              await verify(state);
+              throw new Error(`${hook} injected failure`);
+            },
+          }),
+          new RegExp(`${hook} injected failure`),
+        );
+      });
+      await assertNoOwnedWizardResidue(projectsRoot, slug);
+    } finally {
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+}
+
+test("keeps the primary error first, retains cleanup errors, and attempts lock release", async () => {
+  const root = await createTemporaryRepo();
+  const projectsRoot = path.join(root, "projects");
+  const slug = "aggregate-cleanup-demo";
+  const lockPath = path.join(projectsRoot, `.${slug}.lock`);
+  try {
+    await assert.rejects(
+      applyProjectCapsule([], projectsRoot, slug, {
+        afterLockWrite: async ({ handle }) => {
+          await handle.close();
+          await rm(lockPath);
+          await mkdir(lockPath);
+          await writeFile(path.join(lockPath, "replacement.txt"), "preserve");
+        },
+        afterStageReady: async () => {
+          throw new Error("primary stage failure");
+        },
+        beforeQuarantineRename: async (state) => {
+          await rm(state.directory, { recursive: true, force: true });
+          throw new Error("stage cleanup failure");
+        },
+      }),
+      (error) => {
+        assert.equal(error instanceof AggregateError, true);
+        assert.equal(error.errors[0].message, "primary stage failure");
+        assert.equal(error.errors[1].message, "stage cleanup failure");
+        assert.match(
+          String(error.errors[2].code ?? error.errors[2].message),
+          /EISDIR|EPERM/i,
+        );
+        return true;
+      },
+    );
+    const entries = await readdir(projectsRoot);
+    assert.equal(entries.includes(slug), false);
+    assert.equal(
+      entries.some((entry) => entry.startsWith(`.${slug}-stage-`)),
+      false,
+    );
+    assert.equal(
+      await readFile(path.join(lockPath, "replacement.txt"), "utf8"),
       "preserve",
     );
   } finally {
