@@ -7,9 +7,7 @@
   It does not replace the normative SAFRS Specification.
 -->
 
-<div align="center">
-
-# Sentra Agent-First Repository Standard
+<img src="https://i.ibb.co.com/Z1G4v477/SAFRS.png" alt="SAFRS" border="0">
 
 ### SAFRS v1.1
 
