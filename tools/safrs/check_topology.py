@@ -23,7 +23,6 @@ required = [
     'docs/plans/completed/README.md',
     'docs/plans/archived/README.md',
     'docs/evidence/README.md',
-    '.github/copilot-instructions.md',
     '.cursor/rules/safrs.mdc',
 ]
 errors = [f'missing required topology path: {item}' for item in required if not (ROOT / item).exists()]

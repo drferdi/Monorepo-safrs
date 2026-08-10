@@ -35,7 +35,9 @@
 /.github/CODEOWNERS                             @sentra/safrs-maintainers
 
 # Vendor instruction adapters
-/.github/copilot-instructions.md                @sentra/safrs-maintainers
+/CLAUDE.md                                      @sentra/safrs-maintainers
+/GEMINI.md                                      @sentra/safrs-maintainers
+/.agents/**                                     @sentra/safrs-maintainers
 /.cursor/rules/**                               @sentra/safrs-maintainers
 
 # Project capsule routing
@@ -57,8 +59,7 @@
 /scripts/safrs-verify.ps1                       @sentra/safrs-maintainers
 /scripts/safrs-verify.sh                        @sentra/safrs-maintainers
 /tests/repository/automation-policy.test.mjs    @sentra/safrs-maintainers
-/MANIFEST.txt                                   @sentra/safrs-maintainers
-/SHA256SUMS.txt                                 @sentra/safrs-maintainers
+/docs/bootstrap/**                              @sentra/safrs-maintainers
 
 # Security- and data-boundary directories at any depth
 **/migrations/**                                @sentra/safrs-maintainers

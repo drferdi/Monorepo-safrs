@@ -4,14 +4,34 @@
 Operate this repository under SAFRS v1.1: **Human-Governed · Agent-Executed · Machine-Enforced**.
 
 ## Read order
-Before significant work, read only the context required for the task:
-1. `00_READ_FIRST.md`
-2. `02_OBJECTIVES.md`
-3. `03_ARCHITECTURE.md`
-4. `04_CONTEXT.md`
-5. Task-relevant standards: `05_ENGINEERING.md`, `06_CODING.md`, `07_DOCUMENTATION.md`, `08_DECISIONS.md`, `09_PRODUCTS.md`, `11_RESPONSE_STANDARDS.md`
-6. `SAFRS_SPEC.md`
-7. Any nearest nested `AGENTS.md` for the project/module being modified.
+<!-- SAFRS:ROUTING:BEGIN -->
+_Generated from `.safrs/document-registry.json`. Do not edit by hand;
+edit the registry, then run `python tools/safrs/generate_routing.py`._
+
+Read only the context required for the task.
+
+**Always (MUST), in order:**
+
+1. `.agents/knowledge/00_READ_FIRST.md`
+2. `.agents/knowledge/02_OBJECTIVES.md`
+3. `.agents/knowledge/03_ARCHITECTURE.md`
+4. `.agents/knowledge/04_CONTEXT.md`
+5. `SAFRS_SPEC.md`
+
+**Always (SHOULD):** `.agents/knowledge/01_COLLABORATION.md`, `.agents/knowledge/11_RESPONSE_STANDARDS.md`
+
+**Task-scoped (SHOULD):**
+
+- `task:decision` → `.agents/knowledge/08_DECISIONS.md`
+- `task:documentation` → `.agents/knowledge/07_DOCUMENTATION.md`
+- `task:implementation` → `.agents/knowledge/05_ENGINEERING.md`, `.agents/knowledge/06_CODING.md`
+- `task:product` → `.agents/knowledge/09_PRODUCTS.md`
+- `task:review` → `.agents/knowledge/99_SELF_AUDIT.md`
+
+**Reference (MAY):** `.agents/knowledge/10_GLOSSARY.md`
+
+Then read the nearest nested `AGENTS.md` for the project/module being modified.
+<!-- SAFRS:ROUTING:END -->
 
 ## Non-negotiable rules
 1. Preserve existing behavior and scope unless the task explicitly requires change.
@@ -51,6 +71,12 @@ Exceptional states: `BLOCKED`, `CONFLICT`, `FAILED`, `ABORTED`, `SUPERSEDED`.
 - Repository-wide developer tooling belongs in `tools/`; cross-project tests belong in `tests/`.
 - New projects must begin from the conventions in `docs/governance/SAFRS_PROJECT_CAPSULES.md`.
 - A project capsule may narrow commands and scope, but may not weaken root SAFRS or security controls.
+
+## Design tokens (mandatory for all UI work)
+- Any agent building UI — website, landing page, dashboard, email, any rendered surface — MUST use Sentra design tokens from `packages/design-tokens` (`@sentra/design-tokens`). Read `packages/design-tokens/AGENTS.md` and `packages/design-tokens/UI-RULES.md` before writing UI code.
+- Raw colour or radius values are forbidden outside `packages/design-tokens/src/tokens.css`. Enforced by `node scripts/check-tokens.mjs` (raw-value scan + WCAG 2.2 AA contrast recomputation) as part of `pnpm check`.
+- Worked reference screens live in `docs/design-system/reference/`; match the closest reference rather than inventing a composition.
+- Token value changes are R2 (shared boundary + governance control).
 
 ## Golden-path baseline
 - The default demonstrator is `projects/golden-path/apps/web`: one Next.js deployment unit that mounts the package-owned typed Hono API under `/api`.

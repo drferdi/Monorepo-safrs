@@ -31,3 +31,4 @@ Thumbs.db
 
 
 .worktrees/
+.pnpm-store/

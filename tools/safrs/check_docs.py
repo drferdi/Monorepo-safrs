@@ -34,6 +34,24 @@ for d in registry.get('documents', []):
     if target and target not in ids:
         errors.append(f'{d.get("id")}: unknown superseded_by target {target}')
 
+allowed_norm = set(registry.get('allowed_normativity', []))
+allowed_scope = set(registry.get('allowed_scope', []))
+orders = {}
+for d in registry.get('documents', []):
+    n, s, o = d.get('normativity'), d.get('scope'), d.get('read_order')
+    if n is not None and n not in allowed_norm:
+        errors.append(f"{d.get('id')}: invalid normativity {n}")
+    if s is not None and s not in allowed_scope:
+        errors.append(f"{d.get('id')}: invalid scope {s}")
+    if (n is None) != (s is None):
+        errors.append(f"{d.get('id')}: normativity and scope must be set together")
+    if o is not None:
+        if n != 'MUST':
+            errors.append(f"{d.get('id')}: read_order requires normativity MUST")
+        if o in orders:
+            errors.append(f"{d.get('id')}: duplicate read_order {o} (also {orders[o]})")
+        orders[o] = d.get('id')
+
 if errors:
     raise SystemExit('SAFRS document registry failed:\n- ' + '\n- '.join(errors))
 print('SAFRS document registry: OK')
