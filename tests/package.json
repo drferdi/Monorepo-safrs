@@ -1,0 +1,5 @@
+{
+  "name": "@safrs/repository-tests",
+  "private": true,
+  "type": "module"
+}

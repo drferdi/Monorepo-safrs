@@ -2,6 +2,7 @@
   "name": "safrs-monorepo",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "packageManager": "pnpm@11.21.0",
   "engines": {
     "node": ">=24.18.0 <25"
@@ -15,7 +16,8 @@
     "format": "biome format --write .",
     "fix": "biome check --write .",
     "typecheck": "turbo run typecheck",
-    "test": "turbo run test",
+    "test": "node scripts/test.mjs",
+    "test:contracts": "tsc --project tests/tsconfig.json && vitest run --config vitest.workspace.ts",
     "test:e2e": "turbo run test:e2e",
     "check": "pnpm governance && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "governance": "node scripts/safrs-verify.mjs",
@@ -31,9 +33,14 @@
     "prepare": "husky"
   },
   "devDependencies": {
+    "@playwright/test": "catalog:",
     "@biomejs/biome": "catalog:",
+    "@types/node": "catalog:",
+    "@types/pg": "catalog:",
     "husky": "catalog:",
+    "pg": "catalog:",
     "turbo": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }
