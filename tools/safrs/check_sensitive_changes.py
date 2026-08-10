@@ -1,14 +1,46 @@
 #!/usr/bin/env python3
+"""Classify changed files by SAFRS risk and reject unreviewable change sets.
+
+Exit codes:
+  0 - no violation
+  1 - policy violation: verification controls and implementation changed together
+  2 - classification could not be determined (git could not answer)
+
+There is no bypass. If the changed-file set cannot be established with
+certainty, this checker refuses rather than assuming the lowest risk.
+"""
 import fnmatch
 import json
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 config = json.loads((ROOT/'.safrs/sensitive-paths.json').read_text(encoding='utf-8'))
 base = os.environ.get('SAFRS_BASE_REF')
 head = os.environ.get('SAFRS_HEAD_REF', 'HEAD')
+
+
+def unavailable(command, returncode, stderr):
+    """Refuse: no risk level is printed, because a guessed value would mislead."""
+    print('SAFRS_CLASSIFICATION_UNAVAILABLE', file=sys.stderr)
+    print(f'  command: {" ".join(command)}', file=sys.stderr)
+    print(f'  returncode: {returncode}', file=sys.stderr)
+    print(f'  stderr: {stderr.strip()}', file=sys.stderr)
+    print(
+        'The changed-file set could not be determined; refusing to guess a risk level.',
+        file=sys.stderr,
+    )
+    raise SystemExit(2)
+
+
+def git_names(command):
+    p=subprocess.run(command,cwd=ROOT,text=True,capture_output=True)
+    if p.returncode != 0:
+        unavailable(command, p.returncode, p.stderr)
+    return set(x.strip() for x in p.stdout.splitlines() if x.strip())
+
 
 if not base:
     # Local fallback: staged + unstaged + untracked names.
@@ -19,12 +51,9 @@ if not base:
     ]
     names=set()
     for cmd in cmds:
-        p=subprocess.run(cmd,cwd=ROOT,text=True,capture_output=True)
-        if p.returncode == 0:
-            names.update(x.strip() for x in p.stdout.splitlines() if x.strip())
+        names.update(git_names(cmd))
 else:
-    p=subprocess.run(['git','diff','--name-only',f'{base}...{head}'],cwd=ROOT,text=True,capture_output=True,check=True)
-    names=set(x.strip() for x in p.stdout.splitlines() if x.strip())
+    names=git_names(['git','diff','--name-only',f'{base}...{head}'])
 
 patterns=config['patterns']
 verification=config['verification_control_patterns']
@@ -67,3 +96,8 @@ if verification_changed:
 if verification_changed and implementation_changed:
     print('SAFRS_VERIFICATION_INTEGRITY_REVIEW=required')
     print('Implementation and governing verification changed together; independent review required.')
+    raise SystemExit(
+        'SAFRS sensitive change classification failed: verification controls and '
+        'implementation changed in the same change set; split them into separate '
+        'changes or obtain independent review.'
+    )
