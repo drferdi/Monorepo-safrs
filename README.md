@@ -1,3 +1,5 @@
+<img src="https://i.ibb.co.com/Z1G4v477/SAFRS.png" alt="SAFRS" border="0">
+
 <!--
   Sentra Agent-First Repository Standard (SAFRS) v1.1
   Sentra Artificial Intelligence
