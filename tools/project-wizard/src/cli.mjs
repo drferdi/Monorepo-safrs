@@ -157,21 +157,69 @@ async function destinationExists(destination) {
   }
 }
 
-async function acquireSlugLock(projectsRoot, slug) {
+async function acquireSlugLock(projectsRoot, slug, hooks) {
   const lockPath = path.join(projectsRoot, `.${slug}.lock`);
   const marker = randomUUID();
   let handle;
+  let identity;
   try {
     handle = await open(lockPath, "wx");
+    identity = await handle.stat();
+    if (hooks?.afterLockOpen)
+      await hooks.afterLockOpen({ handle, identity, lockPath, marker });
     await handle.writeFile(marker, "utf8");
-    return { handle, identity: await handle.stat(), lockPath, marker };
+    if (hooks?.afterLockWrite)
+      await hooks.afterLockWrite({ handle, identity, lockPath, marker });
+    return { handle, identity, lockPath, marker };
   } catch (error) {
     await handle?.close();
+    if (identity) {
+      const quarantine = path.join(
+        path.dirname(lockPath),
+        `.${path.basename(lockPath)}.quarantine-${randomUUID()}`,
+      );
+      try {
+        const current = await lstat(lockPath);
+        if (sameIdentity(current, identity)) {
+          await rename(lockPath, quarantine);
+          if (sameIdentity(await lstat(quarantine), identity))
+            await unlink(quarantine);
+        }
+      } catch (cleanupError) {
+        if (cleanupError?.code !== "ENOENT")
+          throw new AggregateError(
+            [error, cleanupError],
+            "Lock initialization failed with cleanup failure.",
+          );
+      }
+    }
     if (error?.code === "EEXIST") {
       throw new Error(`Project creation is already in progress for ${slug}.`);
     }
     throw error;
   }
+}
+
+async function cleanupBareDirectory(directory, directoryIdentity) {
+  const quarantine = path.join(
+    path.dirname(directory),
+    `.${path.basename(directory)}.quarantine-${randomUUID()}`,
+  );
+  const current = await lstat(directory);
+  if (
+    !current.isDirectory() ||
+    current.isSymbolicLink() ||
+    !sameIdentity(current, directoryIdentity)
+  )
+    return false;
+  await rename(directory, quarantine);
+  const moved = await lstat(quarantine);
+  if (!sameIdentity(moved, directoryIdentity))
+    throw new Error(
+      "Directory changed while quarantining; quarantine preserved.",
+    );
+  await rm(quarantine, { recursive: true, force: true });
+  return true;
 }
 
 async function releaseSlugLock(lock) {
@@ -205,19 +253,40 @@ async function releaseSlugLock(lock) {
   }
 }
 
-async function createOwnedDirectory(parent, prefix, markerName) {
+async function createOwnedDirectory(parent, prefix, markerName, hooks) {
   const directory = await mkdtemp(path.join(parent, prefix));
-  const marker = randomUUID();
   const directoryIdentity = await lstat(directory);
-  const markerPath = path.join(directory, markerName);
-  await writeFile(markerPath, marker, { encoding: "utf8", flag: "wx" });
-  return {
-    directory,
-    directoryIdentity,
-    marker,
-    markerIdentity: await lstat(markerPath),
-    markerName,
-  };
+  try {
+    if (hooks?.afterMkdtemp)
+      await hooks.afterMkdtemp({ directory, directoryIdentity });
+    const marker = randomUUID();
+    const markerPath = path.join(directory, markerName);
+    await writeFile(markerPath, marker, { encoding: "utf8", flag: "wx" });
+    if (hooks?.afterMarkerWrite)
+      await hooks.afterMarkerWrite({
+        directory,
+        directoryIdentity,
+        marker,
+        markerPath,
+      });
+    return {
+      directory,
+      directoryIdentity,
+      marker,
+      markerIdentity: await lstat(markerPath),
+      markerName,
+    };
+  } catch (error) {
+    try {
+      await cleanupBareDirectory(directory, directoryIdentity);
+    } catch (cleanupError) {
+      throw new AggregateError(
+        [error, cleanupError],
+        "Stage initialization failed with cleanup failure.",
+      );
+    }
+    throw error;
+  }
 }
 
 async function ownsDirectory(state) {
@@ -303,7 +372,7 @@ async function writeCapsuleFiles(files, root) {
   }
 }
 
-async function reserveDestination(projectsRoot, slug) {
+async function reserveDestination(projectsRoot, slug, hooks) {
   const destination = path.join(projectsRoot, slug);
   try {
     await mkdir(destination);
@@ -313,18 +382,42 @@ async function reserveDestination(projectsRoot, slug) {
     }
     throw error;
   }
-  const markerName = ".safrs-project-wizard-incomplete";
-  const marker = randomUUID();
   const directoryIdentity = await lstat(destination);
-  const markerPath = path.join(destination, markerName);
-  await writeFile(markerPath, marker, { encoding: "utf8", flag: "wx" });
-  return {
-    directory: destination,
-    directoryIdentity,
-    marker,
-    markerIdentity: await lstat(markerPath),
-    markerName,
-  };
+  try {
+    if (hooks?.afterDestinationMkdir)
+      await hooks.afterDestinationMkdir({
+        directory: destination,
+        directoryIdentity,
+      });
+    const markerName = ".safrs-project-wizard-incomplete";
+    const marker = randomUUID();
+    const markerPath = path.join(destination, markerName);
+    await writeFile(markerPath, marker, { encoding: "utf8", flag: "wx" });
+    if (hooks?.afterDestinationMarkerWrite)
+      await hooks.afterDestinationMarkerWrite({
+        directory: destination,
+        directoryIdentity,
+        marker,
+        markerPath,
+      });
+    return {
+      directory: destination,
+      directoryIdentity,
+      marker,
+      markerIdentity: await lstat(markerPath),
+      markerName,
+    };
+  } catch (error) {
+    try {
+      await cleanupBareDirectory(destination, directoryIdentity);
+    } catch (cleanupError) {
+      throw new AggregateError(
+        [error, cleanupError],
+        "Destination reservation failed with cleanup failure.",
+      );
+    }
+    throw error;
+  }
 }
 
 async function publishWithoutClobber(files, projectsRoot, slug, hooks) {
@@ -341,7 +434,7 @@ async function publishWithoutClobber(files, projectsRoot, slug, hooks) {
     return null;
   }
 
-  const reservation = await reserveDestination(projectsRoot, slug);
+  const reservation = await reserveDestination(projectsRoot, slug, hooks);
   try {
     await writeCapsuleFiles(files, reservation.directory);
     await removeCompletionMarker(reservation);
@@ -361,7 +454,7 @@ export async function applyProjectCapsule(files, projectsRoot, slug, hooks) {
     projectsRoot,
     "projects directory",
   );
-  const lock = await acquireSlugLock(canonicalProjectsRoot, slug);
+  const lock = await acquireSlugLock(canonicalProjectsRoot, slug, hooks);
   let stage;
   let published = false;
   try {
@@ -377,6 +470,7 @@ export async function applyProjectCapsule(files, projectsRoot, slug, hooks) {
       canonicalProjectsRoot,
       `.${slug}-stage-`,
       ".safrs-project-wizard-stage.json",
+      hooks,
     );
     if (hooks?.afterStageReady) await hooks.afterStageReady(stage.directory);
     if (!(await ownsDirectory(stage))) {
