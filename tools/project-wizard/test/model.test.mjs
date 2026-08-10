@@ -67,6 +67,31 @@ test("elevates sensitive project choices to R2 and never lowers supplied risk", 
   assert.equal(explicitHigherRisk.risk, "R3");
 });
 
+test("computes R2 from every relevant project field and shared package impact", () => {
+  for (const answers of [
+    { ...baseInput, name: "Healthcare Atlas", risk: "R0" },
+    { ...baseInput, problem: "Memproses payment sekolah", risk: "R0" },
+    { ...baseInput, appBinding: "apps/auth-console", risk: "R0" },
+    { ...baseInput, sharedPackageImpact: true, risk: "R0" },
+  ]) {
+    assert.equal(normalizeProjectAnswers(answers).risk, "R2");
+  }
+});
+
+test("rejects line breaks and control characters in rendered answers", () => {
+  for (const answers of [
+    { ...baseInput, name: "Atlas\nInjected" },
+    { ...baseInput, problem: "Aman\rTidak" },
+    { ...baseInput, capabilities: ["ai\u0000hidden"] },
+    { ...baseInput, sensitiveDomains: ["government\tdata"] },
+  ]) {
+    assert.throws(
+      () => normalizeProjectAnswers(answers),
+      /control characters/i,
+    );
+  }
+});
+
 test("uses only bounded app bindings", () => {
   assert.equal(
     normalizeProjectAnswers({ ...baseInput, kind: "desktop" }).appBinding,

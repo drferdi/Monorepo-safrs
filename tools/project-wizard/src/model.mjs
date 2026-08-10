@@ -27,11 +27,24 @@ const RISK_ORDER = { R0: 0, R1: 1, R2: 2, R3: 3 };
 const R2_TERMS =
   /\b(healthcare|health|financial|finance|government|auth|authentication|payments?|migrations?|shared[- ]?package)\b/i;
 
+function assertNoControlCharacters(value, field) {
+  if (
+    [...value].some((character) => {
+      const code = character.codePointAt(0);
+      return code !== undefined && (code < 32 || code === 127);
+    })
+  ) {
+    throw new TypeError(`${field} must not contain control characters.`);
+  }
+}
+
 function asNonEmptyText(value, field) {
   if (typeof value !== "string" || value.trim() === "") {
     throw new TypeError(`${field} must be a non-empty string.`);
   }
-  return value.trim();
+  const text = value.trim();
+  assertNoControlCharacters(text, field);
+  return text;
 }
 
 function decodeForSafety(value) {
@@ -116,10 +129,8 @@ function normalizeAppBinding(value, kind) {
   return parts.join("/");
 }
 
-function computedRisk(capabilities, sensitiveDomains) {
-  return R2_TERMS.test([...capabilities, ...sensitiveDomains].join(" "))
-    ? "R2"
-    : "R1";
+function computedRisk(fields, sharedPackageImpact) {
+  return sharedPackageImpact || R2_TERMS.test(fields.join(" ")) ? "R2" : "R1";
 }
 
 /**
@@ -146,8 +157,18 @@ export function normalizeProjectAnswers(input) {
     input.sensitiveDomains,
     "sensitiveDomains",
   );
+  if (
+    input.sharedPackageImpact !== undefined &&
+    typeof input.sharedPackageImpact !== "boolean"
+  ) {
+    throw new TypeError("sharedPackageImpact must be a boolean.");
+  }
   const suppliedRisk = normalizeRisk(input.risk);
-  const minimumRisk = computedRisk(capabilities, sensitiveDomains);
+  const appBinding = normalizeAppBinding(input.appBinding, kind);
+  const minimumRisk = computedRisk(
+    [name, problem, kind, appBinding, ...capabilities, ...sensitiveDomains],
+    input.sharedPackageImpact === true,
+  );
   const risk =
     RISK_ORDER[suppliedRisk] >= RISK_ORDER[minimumRisk]
       ? suppliedRisk
@@ -161,6 +182,6 @@ export function normalizeProjectAnswers(input) {
     capabilities,
     sensitiveDomains,
     risk,
-    appBinding: normalizeAppBinding(input.appBinding, kind),
+    appBinding,
   };
 }

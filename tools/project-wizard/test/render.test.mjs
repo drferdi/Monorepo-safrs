@@ -1,11 +1,13 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { renameSync, writeFileSync } from "node:fs";
 import {
   cp,
   lstat,
   mkdir,
   mkdtemp,
   readFile,
+  rename,
   rm,
   symlink,
   writeFile,
@@ -107,6 +109,85 @@ test("rejects a symlinked template file instead of following it", async () => {
   } finally {
     await rm(root, { recursive: true, force: true });
   }
+});
+
+test("rejects a symlinked intermediate template directory", async () => {
+  const root = await createTemporaryRepo();
+  try {
+    const template = path.join(root, "projects", "_template");
+    const outsideDocs = path.join(root, "outside-docs");
+    await rename(path.join(template, "docs"), outsideDocs);
+    await symlink(
+      outsideDocs,
+      path.join(template, "docs"),
+      process.platform === "win32" ? "junction" : "dir",
+    );
+
+    assert.throws(
+      () => renderProjectCapsule(normalizeProjectAnswers(input), template),
+      /symbolic link/i,
+    );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("rejects a template file swapped after it is opened", async () => {
+  const root = await createTemporaryRepo();
+  try {
+    const template = path.join(root, "projects", "_template");
+    assert.throws(
+      () =>
+        renderProjectCapsule(normalizeProjectAnswers(input), template, {
+          afterOpen(sourcePath) {
+            if (sourcePath.endsWith("README.md")) {
+              const displaced = `${sourcePath}.original`;
+              renameSync(sourcePath, displaced);
+              writeFileSync(sourcePath, "# swapped");
+            }
+          },
+        }),
+      /changed while being read/i,
+    );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("fails closed for any unresolved template marker", async () => {
+  const root = await createTemporaryRepo();
+  try {
+    const template = path.join(root, "projects", "_template");
+    await writeFile(
+      path.join(template, "docs", "architecture.md"),
+      "# Architecture\n\n{{FUTURE_MARKER}}\n",
+    );
+
+    assert.throws(
+      () => renderProjectCapsule(normalizeProjectAnswers(input), template),
+      /marker remains/i,
+    );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("escapes user Markdown before placing it in a capsule", () => {
+  const model = normalizeProjectAnswers({
+    ...input,
+    name: "Atlas [Demo](unsafe)",
+    problem: "**Tidak** menjalankan [tautan](unsafe).",
+  });
+  const files = renderProjectCapsule(model, templateRoot);
+  const readme = files.find((file) => file.relativePath === "README.md");
+
+  assert.equal(readme.content.includes("Atlas \\[Demo\\]\\(unsafe\\)"), true);
+  assert.equal(
+    readme.content.includes(
+      "\\*\\*Tidak\\*\\* menjalankan \\[tautan\\]\\(unsafe\\)\\.",
+    ),
+    true,
+  );
 });
 
 test("preview prints exact capsule files and performs no writes", async () => {
@@ -230,6 +311,98 @@ test("cleans only its staging directory when a capsule write fails", async () =>
       false,
     );
     await assert.rejects(lstat(path.join(projectsRoot, "failure-demo")));
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("refuses a destination created after preview before it can be published", async () => {
+  const root = await createTemporaryRepo();
+  try {
+    const projectsRoot = path.join(root, "projects");
+    const destination = path.join(projectsRoot, "race-demo");
+    await assert.rejects(
+      applyProjectCapsule(
+        renderProjectCapsule(
+          normalizeProjectAnswers(input),
+          path.join(projectsRoot, "_template"),
+        ),
+        projectsRoot,
+        "race-demo",
+        { beforePublish: async () => mkdir(destination) },
+      ),
+      /already exists/i,
+    );
+    await lstat(destination);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("rejects an empty pre-existing destination without replacing it", async () => {
+  const root = await createTemporaryRepo();
+  try {
+    const projectsRoot = path.join(root, "projects");
+    const destination = path.join(projectsRoot, "empty-demo");
+    await mkdir(destination);
+    await assert.rejects(
+      applyProjectCapsule([], projectsRoot, "empty-demo"),
+      /already exists/i,
+    );
+    assert.deepEqual(
+      await (await import("node:fs/promises")).readdir(destination),
+      [],
+    );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("rejects a swapped projects boundary before writing through it", async () => {
+  const root = await createTemporaryRepo();
+  try {
+    const projectsRoot = path.join(root, "projects");
+    const outside = path.join(root, "outside-projects");
+    await mkdir(outside);
+    await rm(projectsRoot, { recursive: true, force: true });
+    await symlink(
+      outside,
+      projectsRoot,
+      process.platform === "win32" ? "junction" : "dir",
+    );
+
+    await assert.rejects(
+      applyProjectCapsule([], projectsRoot, "boundary-demo"),
+      /symbolic link/i,
+    );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("preserves a swapped staging path during cleanup", async () => {
+  const root = await createTemporaryRepo();
+  try {
+    const projectsRoot = path.join(root, "projects");
+    let replacement;
+    await assert.rejects(
+      applyProjectCapsule(
+        [{ relativePath: "README.md", content: "capsule" }],
+        projectsRoot,
+        "swap-demo",
+        {
+          afterStageReady: async (stage) => {
+            const displaced = `${stage}-displaced`;
+            await rename(stage, displaced);
+            await mkdir(stage);
+            replacement = path.join(stage, "keep.txt");
+            await writeFile(replacement, "do not delete");
+          },
+        },
+      ),
+      /changed while being prepared/i,
+    );
+    assert.equal(await readFile(replacement, "utf8"), "do not delete");
   } finally {
     await rm(root, { recursive: true, force: true });
   }

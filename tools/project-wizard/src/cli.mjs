@@ -1,11 +1,15 @@
 #!/usr/bin/env node
+import { randomUUID } from "node:crypto";
 import {
   lstat,
   mkdir,
   mkdtemp,
+  open,
   readFile,
+  realpath,
   rename,
   rm,
+  unlink,
   writeFile,
 } from "node:fs/promises";
 import path from "node:path";
@@ -44,12 +48,47 @@ function parseArgs(args) {
   return options;
 }
 
-async function realDirectory(directory, label) {
-  const info = await lstat(directory);
-  if (!info.isDirectory() || info.isSymbolicLink()) {
-    throw new Error(`${label} must be a real directory, not a symbolic link.`);
+function sameIdentity(first, second) {
+  return first.dev === second.dev && first.ino === second.ino;
+}
+
+function isWithin(candidate, root) {
+  const relative = path.relative(root, candidate);
+  return (
+    relative === "" ||
+    (!relative.startsWith("..") && !path.isAbsolute(relative))
+  );
+}
+
+async function canonicalDirectory(directory, label) {
+  const resolved = path.resolve(directory);
+  const root = path.parse(resolved).root;
+  const segments = [];
+  for (
+    let current = resolved;
+    current !== root;
+    current = path.dirname(current)
+  ) {
+    segments.unshift(path.basename(current));
   }
-  return path.resolve(directory);
+
+  let current = root;
+  let canonicalParent = await realpath(root);
+  for (const segment of segments) {
+    current = path.join(current, segment);
+    const info = await lstat(current);
+    if (!info.isDirectory() || info.isSymbolicLink()) {
+      throw new Error(
+        `${label} must be a real directory, not a symbolic link.`,
+      );
+    }
+    const canonical = await realpath(current);
+    if (!isWithin(canonical, canonicalParent)) {
+      throw new Error(`${label} contains a symbolic link or junction.`);
+    }
+    canonicalParent = canonical;
+  }
+  return canonicalParent;
 }
 
 async function loadInput(inputPath) {
@@ -118,29 +157,250 @@ async function destinationExists(destination) {
   }
 }
 
-export async function applyProjectCapsule(files, projectsRoot, slug) {
-  const destination = path.resolve(projectsRoot, slug);
-  if (!destination.startsWith(`${projectsRoot}${path.sep}`)) {
+async function acquireSlugLock(projectsRoot, slug) {
+  const lockPath = path.join(projectsRoot, `.${slug}.lock`);
+  const marker = randomUUID();
+  let handle;
+  try {
+    handle = await open(lockPath, "wx");
+    await handle.writeFile(marker, "utf8");
+    return { handle, identity: await handle.stat(), lockPath, marker };
+  } catch (error) {
+    await handle?.close();
+    if (error?.code === "EEXIST") {
+      throw new Error(`Project creation is already in progress for ${slug}.`);
+    }
+    throw error;
+  }
+}
+
+async function releaseSlugLock(lock) {
+  try {
+    const current = await lstat(lock.lockPath);
+    const content = await readFile(lock.lockPath, "utf8");
+    if (
+      !current.isSymbolicLink() &&
+      sameIdentity(current, lock.identity) &&
+      content === lock.marker
+    ) {
+      await unlink(lock.lockPath);
+    }
+  } catch (error) {
+    if (error?.code !== "ENOENT") throw error;
+  } finally {
+    await lock.handle.close();
+  }
+}
+
+async function createOwnedDirectory(parent, prefix, markerName) {
+  const directory = await mkdtemp(path.join(parent, prefix));
+  const marker = randomUUID();
+  const directoryIdentity = await lstat(directory);
+  const markerPath = path.join(directory, markerName);
+  await writeFile(markerPath, marker, { encoding: "utf8", flag: "wx" });
+  return {
+    directory,
+    directoryIdentity,
+    marker,
+    markerIdentity: await lstat(markerPath),
+    markerName,
+  };
+}
+
+async function ownsDirectory(state) {
+  try {
+    const directory = await lstat(state.directory);
+    const markerPath = path.join(state.directory, state.markerName);
+    const marker = await lstat(markerPath);
+    if (
+      !directory.isDirectory() ||
+      directory.isSymbolicLink() ||
+      marker.isSymbolicLink() ||
+      !marker.isFile() ||
+      !sameIdentity(directory, state.directoryIdentity) ||
+      !sameIdentity(marker, state.markerIdentity)
+    ) {
+      return false;
+    }
+    return (await readFile(markerPath, "utf8")) === state.marker;
+  } catch (error) {
+    if (error?.code === "ENOENT") return false;
+    throw error;
+  }
+}
+
+async function cleanupOwnedDirectory(state) {
+  if (await ownsDirectory(state)) {
+    await rm(state.directory, { recursive: true, force: true });
+    return true;
+  }
+  return false;
+}
+
+async function removeCompletionMarker(state) {
+  if (!(await ownsDirectory(state))) {
+    throw new Error("Published project changed before completion.");
+  }
+  await unlink(path.join(state.directory, state.markerName));
+}
+
+async function ensureOwnedDirectoryTree(root, target) {
+  const relative = path.relative(root, path.dirname(target));
+  let current = root;
+  for (const segment of relative === "" ? [] : relative.split(path.sep)) {
+    current = path.join(current, segment);
+    const info = await lstat(current);
+    if (!info.isDirectory() || info.isSymbolicLink()) {
+      throw new Error("Project write path contains a symbolic link.");
+    }
+  }
+}
+
+async function writeCapsuleFiles(files, root) {
+  for (const file of files) {
+    if (
+      !file ||
+      typeof file.relativePath !== "string" ||
+      typeof file.content !== "string"
+    ) {
+      throw new TypeError(
+        "Rendered capsule files must contain paths and text.",
+      );
+    }
+    const target = path.resolve(root, ...file.relativePath.split("/"));
+    if (!isWithin(target, root) || target === root) {
+      throw new Error("Rendered file escapes its owned directory.");
+    }
+    await mkdir(path.dirname(target), { recursive: true });
+    await ensureOwnedDirectoryTree(root, target);
+    await writeFile(target, file.content, { encoding: "utf8", flag: "wx" });
+  }
+}
+
+async function reserveDestination(projectsRoot, slug) {
+  const destination = path.join(projectsRoot, slug);
+  try {
+    await mkdir(destination);
+  } catch (error) {
+    if (error?.code === "EEXIST") {
+      throw new Error(`Destination already exists: projects/${slug}`);
+    }
+    throw error;
+  }
+  const markerName = ".safrs-project-wizard-incomplete";
+  const marker = randomUUID();
+  const directoryIdentity = await lstat(destination);
+  const markerPath = path.join(destination, markerName);
+  await writeFile(markerPath, marker, { encoding: "utf8", flag: "wx" });
+  return {
+    directory: destination,
+    directoryIdentity,
+    marker,
+    markerIdentity: await lstat(markerPath),
+    markerName,
+  };
+}
+
+async function publishWithoutClobber(files, projectsRoot, slug, hooks) {
+  if (hooks?.beforePublish) await hooks.beforePublish();
+  const destination = path.join(projectsRoot, slug);
+  if (!isWithin(destination, projectsRoot)) {
     throw new Error("Project destination escapes the projects directory.");
   }
-  if (await destinationExists(destination)) {
-    throw new Error(`Destination already exists: projects/${slug}`);
+
+  if (process.platform === "win32") {
+    if (await destinationExists(destination)) {
+      throw new Error(`Destination already exists: projects/${slug}`);
+    }
+    return null;
   }
 
-  const staging = await mkdtemp(path.join(projectsRoot, `.${slug}-stage-`));
-  let moved = false;
+  const reservation = await reserveDestination(projectsRoot, slug);
   try {
-    for (const file of files) {
-      const target = path.resolve(staging, file.relativePath);
-      if (!target.startsWith(`${staging}${path.sep}`))
-        throw new Error("Rendered file escapes staging.");
-      await mkdir(path.dirname(target), { recursive: true });
-      await writeFile(target, file.content, { encoding: "utf8", flag: "wx" });
+    await writeCapsuleFiles(files, reservation.directory);
+    await removeCompletionMarker(reservation);
+    return reservation;
+  } catch (error) {
+    await cleanupOwnedDirectory(reservation);
+    throw error;
+  }
+}
+
+/**
+ * Apply a complete capsule with one exclusive per-slug lock and no replacement.
+ * The optional fourth argument provides deterministic race hooks for tests only.
+ */
+export async function applyProjectCapsule(files, projectsRoot, slug, hooks) {
+  const canonicalProjectsRoot = await canonicalDirectory(
+    projectsRoot,
+    "projects directory",
+  );
+  const lock = await acquireSlugLock(canonicalProjectsRoot, slug);
+  let stage;
+  let published = false;
+  try {
+    const destination = path.join(canonicalProjectsRoot, slug);
+    if (!isWithin(destination, canonicalProjectsRoot)) {
+      throw new Error("Project destination escapes the projects directory.");
     }
-    await rename(staging, destination);
-    moved = true;
+    if (await destinationExists(destination)) {
+      throw new Error(`Destination already exists: projects/${slug}`);
+    }
+
+    stage = await createOwnedDirectory(
+      canonicalProjectsRoot,
+      `.${slug}-stage-`,
+      ".safrs-project-wizard-stage.json",
+    );
+    if (hooks?.afterStageReady) await hooks.afterStageReady(stage.directory);
+    if (!(await ownsDirectory(stage))) {
+      throw new Error(
+        "Project staging directory changed while being prepared.",
+      );
+    }
+    await writeCapsuleFiles(files, stage.directory);
+    if (!(await ownsDirectory(stage))) {
+      throw new Error(
+        "Project staging directory changed while being prepared.",
+      );
+    }
+
+    const revalidatedProjectsRoot = await canonicalDirectory(
+      projectsRoot,
+      "projects directory",
+    );
+    if (revalidatedProjectsRoot !== canonicalProjectsRoot) {
+      throw new Error("projects directory changed while being prepared.");
+    }
+
+    const reservation = await publishWithoutClobber(
+      files,
+      canonicalProjectsRoot,
+      slug,
+      hooks,
+    );
+    if (process.platform === "win32") {
+      const destination = path.join(canonicalProjectsRoot, slug);
+      try {
+        await rename(stage.directory, destination);
+      } catch (error) {
+        if (error?.code === "EEXIST" || error?.code === "ENOTEMPTY") {
+          throw new Error(`Destination already exists: projects/${slug}`);
+        }
+        throw error;
+      }
+      stage.directory = destination;
+      await removeCompletionMarker(stage);
+    } else if (!reservation) {
+      throw new Error("Project destination reservation failed.");
+    }
+    published = true;
   } finally {
-    if (!moved) await rm(staging, { recursive: true, force: true });
+    if (stage && !published) await cleanupOwnedDirectory(stage);
+    if (stage && published && process.platform !== "win32") {
+      await cleanupOwnedDirectory(stage);
+    }
+    await releaseSlugLock(lock);
   }
 }
 
@@ -156,8 +416,11 @@ async function interactiveConfirmation(slug) {
 }
 
 export async function run(options) {
-  const repoRoot = await realDirectory(options.repoRoot, "Repository root");
-  const projectsRoot = await realDirectory(
+  const repoRoot = await canonicalDirectory(
+    options.repoRoot,
+    "Repository root",
+  );
+  const projectsRoot = await canonicalDirectory(
     path.join(repoRoot, "projects"),
     "projects directory",
   );
