@@ -408,6 +408,48 @@ test("preserves a swapped staging path during cleanup", async () => {
   }
 });
 
+test("quarantines a swapped cleanup candidate and still releases the slug lock", async () => {
+  const root = await createTemporaryRepo();
+  try {
+    const projectsRoot = path.join(root, "projects");
+    await assert.rejects(
+      applyProjectCapsule(
+        [{ relativePath: "README.md", content: "capsule" }],
+        projectsRoot,
+        "quarantine-demo",
+        {
+          afterStageReady: async () => {
+            throw new Error("injected stage failure");
+          },
+          beforeQuarantineRename: async (state) => {
+            if (!state.directory.includes(".quarantine-demo-stage-")) return;
+            const displaced = `${state.directory}-owned`;
+            await rename(state.directory, displaced);
+            await mkdir(state.directory);
+            await writeFile(
+              path.join(state.directory, "replacement.txt"),
+              "preserve",
+            );
+          },
+        },
+      ),
+    );
+    const quarantined = (
+      await (await import("node:fs/promises")).readdir(projectsRoot)
+    ).find((entry) => entry.includes(".quarantine-"));
+    assert.equal(
+      await readFile(
+        path.join(projectsRoot, quarantined, "replacement.txt"),
+        "utf8",
+      ),
+      "preserve",
+    );
+    await applyProjectCapsule([], projectsRoot, "quarantine-demo");
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("refuses an existing destination without modifying it", async () => {
   const root = await createTemporaryRepo();
   try {

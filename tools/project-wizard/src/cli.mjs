@@ -175,6 +175,11 @@ async function acquireSlugLock(projectsRoot, slug) {
 }
 
 async function releaseSlugLock(lock) {
+  await lock.handle.close();
+  const quarantine = path.join(
+    path.dirname(lock.lockPath),
+    `.${path.basename(lock.lockPath)}.quarantine-${randomUUID()}`,
+  );
   try {
     const current = await lstat(lock.lockPath);
     const content = await readFile(lock.lockPath, "utf8");
@@ -183,12 +188,20 @@ async function releaseSlugLock(lock) {
       sameIdentity(current, lock.identity) &&
       content === lock.marker
     ) {
-      await unlink(lock.lockPath);
+      await rename(lock.lockPath, quarantine);
+      const moved = await lstat(quarantine);
+      if (
+        !sameIdentity(moved, lock.identity) ||
+        (await readFile(quarantine, "utf8")) !== lock.marker
+      ) {
+        throw new Error(
+          "Slug lock changed while being released; quarantine preserved.",
+        );
+      }
+      await unlink(quarantine);
     }
   } catch (error) {
     if (error?.code !== "ENOENT") throw error;
-  } finally {
-    await lock.handle.close();
   }
 }
 
@@ -229,12 +242,25 @@ async function ownsDirectory(state) {
   }
 }
 
-async function cleanupOwnedDirectory(state) {
-  if (await ownsDirectory(state)) {
-    await rm(state.directory, { recursive: true, force: true });
-    return true;
+async function cleanupOwnedDirectory(state, hooks) {
+  if (!(await ownsDirectory(state))) return false;
+  if (hooks?.beforeQuarantineRename) {
+    await hooks.beforeQuarantineRename(state);
   }
-  return false;
+  const quarantine = path.join(
+    path.dirname(state.directory),
+    `.${path.basename(state.directory)}.quarantine-${randomUUID()}`,
+  );
+  await rename(state.directory, quarantine);
+  const moved = { ...state, directory: quarantine };
+  if (!(await ownsDirectory(moved))) {
+    throw new Error(
+      "Owned cleanup candidate changed while quarantining; quarantine preserved.",
+    );
+  }
+  if (hooks?.afterQuarantine) await hooks.afterQuarantine(state, quarantine);
+  await rm(quarantine, { recursive: true, force: true });
+  return true;
 }
 
 async function removeCompletionMarker(state) {
@@ -321,7 +347,7 @@ async function publishWithoutClobber(files, projectsRoot, slug, hooks) {
     await removeCompletionMarker(reservation);
     return reservation;
   } catch (error) {
-    await cleanupOwnedDirectory(reservation);
+    await cleanupOwnedDirectory(reservation, hooks);
     throw error;
   }
 }
@@ -396,11 +422,28 @@ export async function applyProjectCapsule(files, projectsRoot, slug, hooks) {
     }
     published = true;
   } finally {
-    if (stage && !published) await cleanupOwnedDirectory(stage);
-    if (stage && published && process.platform !== "win32") {
-      await cleanupOwnedDirectory(stage);
+    let cleanupError;
+    if (stage && !published) {
+      try {
+        await cleanupOwnedDirectory(stage, hooks);
+      } catch (error) {
+        cleanupError = error;
+      }
     }
-    await releaseSlugLock(lock);
+    if (stage && published && process.platform !== "win32") {
+      try {
+        await cleanupOwnedDirectory(stage, hooks);
+      } catch (error) {
+        cleanupError ??= error;
+      }
+    }
+    try {
+      await releaseSlugLock(lock);
+    } catch (error) {
+      cleanupError ??= error;
+    }
+    // biome-ignore lint/correctness/noUnsafeFinally: cleanup failure must fail closed after lock release.
+    if (cleanupError) throw cleanupError;
   }
 }
 
