@@ -1,0 +1,28 @@
+# Normalisasi akhir baris.
+# Semua file teks disimpan di git dengan LF, apa pun OS penulisnya.
+* text=auto eol=lf
+
+# Skrip yang HARUS CRLF di Windows
+*.bat  text eol=crlf
+*.cmd  text eol=crlf
+*.ps1  text eol=crlf
+
+# Skrip yang HARUS LF
+*.sh   text eol=lf
+
+# File biner - jangan disentuh sama sekali
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.pdf  binary
+*.zip  binary
+*.woff binary
+*.woff2 binary
+*.ttf  binary
+*.otf  binary
+
+# Lockfile - biar diff-nya bersih
+pnpm-lock.yaml text eol=lf -diff
