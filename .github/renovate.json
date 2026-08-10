@@ -17,6 +17,13 @@
       "description": "Keep major upgrades visible and separately reviewed.",
       "groupName": "major dependency updates",
       "matchUpdateTypes": ["major"]
+    },
+    {
+      "description": "Chief decision 2026-08-11 (SAFRS_GOVERNANCE_REMEDIATION_PLAN.md Fase 4, option a): automerge patch/minor updates only, and only once CI is green. Major updates are excluded by the rule above and always require manual review. This does NOT replace GitHub branch protection / CODEOWNERS review (see docs/governance/PLATFORM_ACTIVATION.md Step 1) — until that is active, this rule is the only gate on these PRs, so it intentionally stays scoped to patch/minor rather than matching the Fitur #7 request literally.",
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": false
     }
   ]
 }
