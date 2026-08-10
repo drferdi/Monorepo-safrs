@@ -1,0 +1,17 @@
+{
+  "name": "@sentra/design-tokens",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sentraverse design tokens. The only place a raw colour value may appear. Ported verbatim from abyss-monorepo (Foundation Tokens v1.0).",
+  "sideEffects": ["*.css"],
+  "exports": {
+    "./tokens.css": "./src/tokens.css",
+    "./tokens.json": "./src/tokens.json",
+    "./tailwind.css": "./src/tailwind.css"
+  },
+  "files": ["src"],
+  "scripts": {
+    "lint": "biome check src",
+    "test": "node ../../scripts/check-tokens.mjs"
+  }
+}

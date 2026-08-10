@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Runs — Dataset Foundry — Sentraverse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p-ink-900:#101312; --p-ink-500:#5A5F5C; --p-ink-300:#8B918D;
+  --p-neutral-200:#DCDCD6; --p-neutral-100:#E9E9E4; --p-neutral-050:#F7F5F1;
+  --p-white:#FFFFFF;
+  --p-vermilion:#DE4526; --p-vermilion-text:#B8351A;
+  --p-crimson:#A11208; --p-amber:#8F5A00; --p-teal:#17554E;
+  --p-tint-accent:#FDF3F0; --p-tint-critical:#FBEEEC;
+
+  --color-background-canvas:var(--p-white);
+  --color-background-surface:var(--p-neutral-050);
+  --color-text-primary:var(--p-ink-900);
+  --color-text-secondary:var(--p-ink-500);
+  --color-text-muted:var(--p-ink-300);
+  --color-text-inverse:var(--p-white);
+  --color-border-subtle:var(--p-neutral-200);
+  --color-border-strong:var(--p-ink-900);
+  --color-mark-corner:var(--p-ink-300);
+  --color-accent:var(--p-vermilion);
+  --color-accent-text:var(--p-vermilion-text);
+  --color-action-primary:var(--p-ink-900);
+  --color-status-critical:var(--p-crimson);
+  --color-status-warning:var(--p-amber);
+  --color-status-success:var(--p-teal);
+  --color-surface-critical:var(--p-tint-critical);
+  --color-focus-ring:var(--p-ink-900);
+
+  --radius-control:2px;
+  --font-family-sans:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --font-family-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
+  --space-5:24px; --space-6:32px; --space-7:48px; --space-8:64px;
+  --layout-gutter:24px; --layout-margin:40px; --layout-container-wide:1440px;
+  --layout-rail-width:232px;
+  --motion-fast:90ms; --motion-default:160ms; --ease:cubic-bezier(.2,0,0,1);
+}
+@media (prefers-reduced-motion: reduce){ :root{--motion-fast:0ms;--motion-default:0ms} }
+
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--color-background-canvas);color:var(--color-text-primary);
+  font-family:var(--font-family-sans);font-variation-settings:"wdth" 100;
+  font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p,dl,dd,fieldset{margin:0}
+fieldset{border:0;padding:0;min-width:0}
+ul{margin:0;padding:0;list-style:none}
+table{border-collapse:collapse;width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--color-focus-ring);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.t-display{font-size:40px;line-height:1.06;font-weight:600;letter-spacing:-.022em;
+  font-variation-settings:"wdth" 112}
+.t-section{font-size:12px;font-weight:600;letter-spacing:.09em;text-transform:uppercase}
+.t-compact{font-size:13px;line-height:1.45}
+.t-label{font-family:var(--font-family-mono);font-size:11px;line-height:1.2;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-secondary)}
+.t-data{font-family:var(--font-family-mono);font-size:13px;font-variant-numeric:tabular-nums}
+.muted{color:var(--color-text-secondary)}
+.seq{font-family:var(--font-family-mono);font-size:11px;font-weight:500;letter-spacing:.06em;
+  color:var(--color-accent-text)}
+.rulelabel{display:inline-flex;align-items:center;gap:var(--space-3);
+  font-family:var(--font-family-mono);font-size:11px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--color-text-secondary)}
+.rulelabel::before{content:"";width:28px;height:1px;background:var(--color-border-subtle);flex:none}
+
+/* mark */
+.mark{display:block;width:20px;height:20px;flex:none;
+  --mark-neutral:var(--p-white);--mark-accent:var(--p-white)}
+.mark .mk-accent{fill:var(--mark-accent)}
+.mark .mk-body{fill:var(--mark-neutral)}
+.tile{background:var(--p-ink-900);display:grid;place-items:center;flex:none;width:40px;height:40px}
+
+.chrome{display:flex;align-items:center;gap:var(--space-4);
+  padding:var(--space-3) var(--layout-margin);border-bottom:1px solid var(--color-border-subtle)}
+.chrome__sep{width:1px;height:16px;background:var(--color-border-subtle)}
+.chrome__path{font-family:var(--font-family-mono);font-size:11px;font-weight:500;
+  letter-spacing:.13em;text-transform:uppercase}
+.chrome__path b{font-weight:500;color:var(--color-accent-text)}
+.chrome__right{margin-left:auto}
+
+.shell{display:grid;grid-template-columns:var(--layout-rail-width) minmax(0,1fr);min-height:100vh}
+.rail{border-right:1px solid var(--color-border-subtle);position:sticky;top:0;height:100vh;
+  display:flex;flex-direction:column;background:var(--color-background-canvas)}
+.rail__mark{padding:var(--space-5);border-bottom:1px solid var(--color-border-subtle)}
+.wordmark{font-size:14px;font-weight:600;letter-spacing:.16em;font-variation-settings:"wdth" 108}
+.rail nav{padding:var(--space-5) 0;flex:1}
+.rail__group{padding:0 var(--space-5) var(--space-2)}
+.rail a{display:flex;gap:var(--space-3);align-items:baseline;padding:var(--space-2) var(--space-5);
+  font-size:14px;text-decoration:none;border-left:2px solid transparent;
+  transition:background var(--motion-fast) var(--ease)}
+.rail a .seq{color:var(--color-text-muted);font-size:10px}
+.rail a:hover{background:var(--color-background-surface)}
+.rail a[aria-current="page"]{border-left-color:var(--color-accent);font-weight:600;
+  background:var(--color-background-surface)}
+.rail a[aria-current="page"] .seq{color:var(--color-accent-text)}
+.rail__foot{padding:var(--space-5);border-top:1px solid var(--color-border-subtle)}
+
+main{padding:0 var(--layout-margin) var(--space-8);max-width:var(--layout-container-wide);margin-inline:auto}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--layout-gutter)}
+.pagehead{padding:var(--space-7) 0 var(--space-5);border-bottom:2px solid var(--color-border-strong);
+  display:flex;align-items:flex-end;gap:var(--space-5);flex-wrap:wrap}
+.pagehead__id{flex:1 1 380px}
+.pagehead .actions{display:flex;gap:var(--space-3);flex-wrap:wrap}
+
+.btn{font-family:inherit;font-size:14px;font-weight:500;padding:var(--space-3) var(--space-4);
+  min-height:44px;border:1px solid var(--color-border-strong);border-radius:var(--radius-control);
+  background:var(--color-background-canvas);color:var(--color-text-primary);cursor:pointer;
+  display:inline-flex;align-items:center;gap:var(--space-2);
+  transition:background var(--motion-fast) var(--ease)}
+.btn:hover{background:var(--color-background-surface)}
+.btn--primary{background:var(--color-action-primary);color:var(--color-text-inverse);
+  border-color:var(--color-action-primary)}
+.btn--primary:hover{background:#000}
+.btn--sm{min-height:36px;padding:var(--space-2) var(--space-3);font-size:13px}
+.btn:disabled{border-color:var(--color-border-subtle);color:var(--color-text-muted);cursor:not-allowed}
+svg.icon{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;
+  stroke-linecap:butt;stroke-linejoin:miter;flex:none}
+
+/* filter bar */
+.filters{display:flex;gap:var(--space-4);align-items:flex-end;flex-wrap:wrap;
+  padding:var(--space-5) 0;border-bottom:1px solid var(--color-border-subtle)}
+.search{position:relative;flex:1 1 280px;max-width:360px}
+.search input{width:100%;font-family:inherit;font-size:14px;min-height:40px;
+  padding:var(--space-2) var(--space-3) var(--space-2) 38px;
+  border:1px solid var(--color-border-strong);border-radius:var(--radius-control);
+  background:var(--color-background-canvas);color:var(--color-text-primary)}
+.search svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  color:var(--color-text-secondary)}
+.chips{display:flex;gap:var(--space-2);flex-wrap:wrap}
+.chip{font-family:var(--font-family-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+  padding:var(--space-2) var(--space-3);min-height:36px;display:inline-flex;align-items:center;gap:var(--space-2);
+  border:1px solid var(--color-border-subtle);border-radius:var(--radius-control);
+  background:var(--color-background-canvas);cursor:pointer;color:var(--color-text-secondary);
+  transition:background var(--motion-fast) var(--ease)}
+.chip:hover{background:var(--color-background-surface)}
+.chip[aria-pressed="true"]{border-color:var(--color-border-strong);color:var(--color-text-primary);
+  font-weight:500;background:var(--color-background-surface)}
+.chip[aria-pressed="true"]::before{content:"";width:8px;height:8px;background:currentColor;flex:none}
+.filters__right{margin-left:auto;display:flex;gap:var(--space-3);align-items:center}
+
+/* summary line */
+.summary{display:flex;align-items:baseline;gap:var(--space-4);padding:var(--space-4) 0;flex-wrap:wrap}
+.summary__count{font-family:var(--font-family-mono);font-size:13px;font-variant-numeric:tabular-nums}
+.bulk{margin-left:auto;display:none;gap:var(--space-3);align-items:center}
+.bulk[data-on="true"]{display:flex}
+
+/* table */
+.tablewrap{overflow-x:auto}
+th,td{text-align:left;vertical-align:middle;font-weight:400;
+  padding:var(--space-3) var(--space-4) var(--space-3) 0;
+  border-bottom:1px solid var(--color-border-subtle)}
+thead th{border-bottom:1px solid var(--color-border-strong);font-weight:500;font-size:13px;
+  white-space:nowrap;vertical-align:bottom}
+tbody tr:hover{background:var(--color-background-surface)}
+tbody tr[data-sel="true"]{background:var(--color-background-surface)}
+tbody tr.fail{background:var(--color-surface-critical)}
+tbody tr.fail:hover{background:#F7E3DF}
+td.num{font-family:var(--font-family-mono);font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.pick,th.pick{width:36px;padding-right:var(--space-2)}
+input[type=checkbox]{width:17px;height:17px;accent-color:var(--color-action-primary);cursor:pointer}
+.runid{font-family:var(--font-family-mono);font-size:13px;font-weight:500;text-decoration:none}
+.runid:hover{text-decoration:underline}
+.srcline{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.sortbtn{background:none;border:0;padding:0;font:inherit;font-weight:500;font-size:13px;
+  cursor:pointer;display:inline-flex;align-items:center;gap:var(--space-2);color:inherit}
+.sortbtn .car{opacity:0}
+th[aria-sort] .car{opacity:1}
+th[aria-sort="descending"] .car{transform:rotate(180deg)}
+
+.status{display:inline-flex;align-items:center;gap:var(--space-2);white-space:nowrap;
+  font-family:var(--font-family-mono);font-size:11px;letter-spacing:.07em;
+  text-transform:uppercase;font-weight:500}
+.status::before{content:"";width:9px;height:9px;flex:none;border:1px solid currentColor}
+.status--fail{color:var(--color-status-critical)}
+.status--fail::before{background:currentColor}
+.status--warn{color:var(--color-status-warning)}
+.status--warn::before{background:linear-gradient(135deg,currentColor 0 50%,transparent 50% 100%)}
+.status--pass{color:var(--color-status-success)}
+.status--idle{color:var(--color-text-secondary)}
+.status--idle::before{border-style:dashed}
+
+/* eight-gate strip */
+.gates{display:flex;gap:3px}
+.gates i{width:9px;height:14px;display:block;border:1px solid var(--color-text-muted)}
+.gates i.f{background:var(--color-status-critical);border-color:var(--color-status-critical)}
+.gates i.w{border-color:var(--color-status-warning);
+  background:linear-gradient(180deg,var(--color-status-warning) 0 50%,transparent 50% 100%)}
+.gates i.p{border-color:var(--color-status-success)}
+.gates i.n{border-style:dashed}
+
+/* states */
+.state{border:1px solid var(--color-border-subtle);padding:var(--space-8) var(--space-5);
+  display:grid;justify-items:center;gap:var(--space-3);text-align:center;margin-top:var(--space-5)}
+.state h2{font-size:18px;font-weight:600}
+.state p{font-size:13px;color:var(--color-text-secondary);max-width:42ch}
+.state .mark{width:88px;height:88px;--mark-neutral:var(--color-border-subtle);--mark-accent:var(--color-text-muted)}
+.skel{display:grid;gap:var(--space-3);padding:var(--space-5) 0}
+.skel i{display:block;height:14px;background:var(--p-neutral-100)}
+@media (prefers-reduced-motion: no-preference){
+  .skel i{animation:pulse 1.4s var(--ease) infinite}
+  .skel i:nth-child(2){animation-delay:.1s}.skel i:nth-child(3){animation-delay:.2s}
+  .skel i:nth-child(4){animation-delay:.3s}.skel i:nth-child(5){animation-delay:.4s}
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+.alert{border-left:2px solid var(--color-status-critical);background:var(--color-surface-critical);
+  padding:var(--space-4);margin-top:var(--space-5)}
+.alert h2{font-size:15px;font-weight:600;display:flex;gap:var(--space-3);align-items:center}
+.alert p{font-size:13px;color:var(--color-text-secondary);margin-top:var(--space-2);max-width:60ch}
+
+.pager{display:flex;align-items:center;gap:var(--space-4);padding:var(--space-5) 0;flex-wrap:wrap}
+.pager__info{font-family:var(--font-family-mono);font-size:12px;color:var(--color-text-secondary);
+  font-variant-numeric:tabular-nums}
+.pager__nav{margin-left:auto;display:flex;gap:var(--space-2)}
+
+/* specimen control */
+.spec{position:sticky;top:0;z-index:500;background:var(--p-ink-900);color:var(--p-white);
+  padding:var(--space-2) var(--layout-margin);display:flex;gap:var(--space-4);align-items:center;flex-wrap:wrap}
+.spec span{font-family:var(--font-family-mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:#9AA09C}
+.spec button{font-family:var(--font-family-mono);font-size:11px;padding:5px 9px;cursor:pointer;
+  background:transparent;color:#C6CAC7;border:1px solid rgba(255,255,255,.28)}
+.spec button:hover{background:rgba(255,255,255,.1)}
+.spec button[aria-pressed="true"]{background:var(--p-white);color:var(--p-ink-900);font-weight:500}
+
+@media (max-width:1023px){
+  :root{--layout-margin:32px;--layout-gutter:20px}
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .rail{position:static;height:auto;border-right:0;border-bottom:1px solid var(--color-border-subtle);
+    flex-direction:row;align-items:center;overflow-x:auto}
+  .rail__mark{border-bottom:0;border-right:1px solid var(--color-border-subtle);
+    padding:var(--space-4) var(--space-5);white-space:nowrap}
+  .rail nav{display:flex;padding:0}
+  .rail__group,.rail__foot{display:none}
+  .rail a{border-left:0;border-bottom:2px solid transparent;padding:var(--space-4);white-space:nowrap}
+  .rail a[aria-current="page"]{border-bottom-color:var(--color-accent)}
+  .hide-md{display:none}
+}
+@media (max-width:639px){
+  :root{--layout-margin:20px;--layout-gutter:16px}
+  .t-display{font-size:30px}
+  .chrome{flex-wrap:wrap}.chrome__right{margin-left:0;width:100%}
+  .filters__right{margin-left:0;width:100%}
+  .hide-sm{display:none}
+}
+
+/* ---------- logomark (v1.0) ---------- */
+.mark{display:block;width:20px;height:20px;flex:none;
+  --mark-neutral:var(--p-white);--mark-accent:var(--p-white)}
+.mark .mk-accent{fill:var(--mark-accent)}
+.mark .mk-body{fill:var(--mark-neutral)}
+.tile{background:var(--p-ink-900);display:grid;place-items:center;flex:none;width:28px;height:28px}
+/* ---------- button: treatment C, hard ledge (EXC-01) ---------- */
+.btn{box-shadow:var(--button-ledge,3px) var(--button-ledge,3px) 0 0 var(--p-ink-900);
+  transition:background var(--motion-fast,90ms) var(--ease,cubic-bezier(.2,0,0,1)),
+             transform var(--motion-fast,90ms) var(--ease,cubic-bezier(.2,0,0,1)),
+             box-shadow var(--motion-fast,90ms) var(--ease,cubic-bezier(.2,0,0,1))}
+.btn--primary{box-shadow:3px 3px 0 0 var(--p-ink-300)}
+.btn:active:not(:disabled){transform:translate(3px,3px);box-shadow:0 0 0 0 rgba(0,0,0,0)}
+.btn:disabled{box-shadow:none;transform:none}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="sentra-mark" viewBox="0 0 1000 1000">
+    <g transform="translate(106.54 60.00) scale(1.08241) translate(-270 -227)">
+      <path class="mk-accent" d="M890.70 227.38 L766.99 226.87 L262.40 626.09 L386.11 626.60 Z"/>
+      <path class="mk-body" d="M262.23 869.92 L754.48 480.46 L753.02 478.60 A146.02 146.02 0 0 1 934.22 707.63 L932.76 705.78 L509.10 1040.97 L385.39 1040.45 L884.88 645.26 L880.54 639.78 A59.50 59.50 0 0 0 806.71 546.46 L802.36 540.97 L385.94 870.44 Z"/>
+    </g>
+  </symbol>
+</svg>
+
+<div class="spec">
+  <span>Specimen · states you cannot reach by filtering</span>
+  <button type="button" id="sNormal" aria-pressed="true">Normal</button>
+  <button type="button" id="sFirst" aria-pressed="false">Never run</button>
+  <button type="button" id="sErr" aria-pressed="false">Load failure</button>
+</div>
+
+<div class="chrome">
+  <span class="tile" style="width:28px;height:28px"><svg class="mark" aria-hidden="true"><use href="#sentra-mark"/></svg></span>
+  <span class="chrome__sep" aria-hidden="true"></span>
+  <span class="chrome__path">SENTRA / <b>DATASET-FOUNDRY</b></span>
+  <span class="rulelabel chrome__right">Internal tool</span>
+</div>
+
+<div class="shell">
+  <div class="rail">
+    <div class="rail__mark">
+      <div class="wordmark">SENTRAVERSE</div>
+      <div class="t-label" style="margin-top:var(--space-2)">Dataset Foundry</div>
+    </div>
+    <nav aria-label="Dataset Foundry">
+      <p class="t-label rail__group">Pipeline</p>
+      <ul>
+        <li><a href="#" aria-current="page"><span class="seq">01</span>Runs</a></li>
+        <li><a href="#"><span class="seq">02</span>Sources</a></li>
+        <li><a href="#"><span class="seq">03</span>Extractors</a></li>
+        <li><a href="#"><span class="seq">04</span>Quality gates</a></li>
+      </ul>
+      <p class="t-label rail__group" style="padding-top:var(--space-5)">Output</p>
+      <ul>
+        <li><a href="#"><span class="seq">05</span>Datasets</a></li>
+        <li><a href="#"><span class="seq">06</span>Exports</a></li>
+        <li><a href="#"><span class="seq">07</span>Audit log</a></li>
+      </ul>
+    </nav>
+    <div class="rail__foot">
+      <p class="t-label">Environment</p>
+      <p class="t-data" style="margin-top:var(--space-2)">internal · abyss</p>
+    </div>
+  </div>
+
+  <div>
+    <main>
+      <header class="pagehead">
+        <div class="pagehead__id">
+          <p class="t-label">Pipeline</p>
+          <h1 class="t-display" style="margin-top:var(--space-2)">Runs</h1>
+        </div>
+        <div class="actions">
+          <button class="btn" type="button" id="refresh">
+            <svg class="icon" aria-hidden="true" viewBox="0 0 20 20"><path d="M16.5 10a6.5 6.5 0 1 1-1.9-4.6"/><path d="M16.5 3v3.2h-3.2"/></svg>
+            Refresh
+          </button>
+          <button class="btn btn--primary" type="button">New run</button>
+        </div>
+      </header>
+
+      <div class="filters" id="filterbar">
+        <label class="search">
+          <span class="sr-only">Search runs by id or source</span>
+          <svg class="icon" aria-hidden="true" viewBox="0 0 20 20"><circle cx="8.5" cy="8.5" r="5.25"/><path d="M12.4 12.4 17 17"/></svg>
+          <input type="search" id="q" placeholder="Search id or source">
+        </label>
+        <fieldset>
+          <legend class="sr-only">Filter by verdict</legend>
+          <div class="chips" id="chips">
+            <button class="chip" type="button" aria-pressed="false" data-v="fail">Not fit</button>
+            <button class="chip" type="button" aria-pressed="false" data-v="warn">Needs review</button>
+            <button class="chip" type="button" aria-pressed="false" data-v="pass">Approved</button>
+            <button class="chip" type="button" aria-pressed="false" data-v="idle">Queued</button>
+          </div>
+        </fieldset>
+        <div class="filters__right">
+          <button class="btn btn--sm" type="button" id="clear" disabled>Clear filters</button>
+        </div>
+      </div>
+
+      <div class="summary">
+        <p class="summary__count" id="count">—</p>
+        <p class="t-compact muted hide-sm" id="scope">All runs, newest first</p>
+        <div class="bulk" id="bulk" data-on="false">
+          <p class="t-data" id="nsel">0 selected</p>
+          <button class="btn btn--sm" type="button">Re-run</button>
+          <button class="btn btn--sm" type="button">Export</button>
+          <button class="btn btn--sm" type="button">Archive</button>
+        </div>
+      </div>
+
+      <div id="region" aria-live="polite">
+        <div class="tablewrap" id="tablewrap">
+          <table>
+            <caption class="sr-only">Dataset runs</caption>
+            <thead>
+              <tr>
+                <th class="pick"><input type="checkbox" id="all" aria-label="Select all runs on this page"></th>
+                <th scope="col" aria-sort="descending"><button class="sortbtn" data-k="date" type="button">Completed <svg class="icon car" aria-hidden="true" viewBox="0 0 20 20"><path d="M5 8 10 13 15 8"/></svg></button></th>
+                <th scope="col"><button class="sortbtn" data-k="id" type="button">Run <svg class="icon car" aria-hidden="true" viewBox="0 0 20 20"><path d="M5 8 10 13 15 8"/></svg></button></th>
+                <th scope="col" class="hide-md">Gates</th>
+                <th scope="col"><button class="sortbtn" data-k="rec" type="button">Records <svg class="icon car" aria-hidden="true" viewBox="0 0 20 20"><path d="M5 8 10 13 15 8"/></svg></button></th>
+                <th scope="col" class="hide-sm">Yield</th>
+                <th scope="col">Verdict</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="pager" id="pager">
+        <p class="pager__info" id="pinfo">—</p>
+        <div class="pager__nav">
+          <button class="btn btn--sm" type="button" id="prev" disabled>Previous</button>
+          <button class="btn btn--sm" type="button" id="next">Next</button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+(function(){
+  var V={fail:["Not fit to train","fail"],warn:["Needs review","warn"],
+         pass:["Approved","pass"],idle:["Queued","idle"]};
+  function g(f,w,p){var a=[];for(var i=0;i<f;i++)a.push("f");for(i=0;i<w;i++)a.push("w");
+    for(i=0;i<p;i++)a.push("p");while(a.length<8)a.push("n");return a;}
+  var DATA=[
+   {id:"sentra-agent-dataset-2026-swiss",src:"swissthemes.design/insights",v:"fail",rec:1,yield:0.59,date:"2026-07-25 11:09",gates:g(4,2,2)},
+   {id:"medlink-fhir-spec-2026-07",src:"hl7.org/fhir/R5",v:"pass",rec:1840,yield:11.4,date:"2026-07-24 22:41",gates:g(0,1,7)},
+   {id:"formulary-nasional-2026-r2",src:"kemkes.go.id/formularium",v:"warn",rec:612,yield:4.2,date:"2026-07-24 16:03",gates:g(0,3,5)},
+   {id:"icd11-browser-id-2026",src:"icd.who.int/browse11",v:"pass",rec:2971,yield:14.8,date:"2026-07-24 09:18",gates:g(0,0,8)},
+   {id:"bpjs-klaim-panduan-2026",src:"bpjs-kesehatan.go.id/panduan",v:"warn",rec:388,yield:3.1,date:"2026-07-23 19:55",gates:g(0,2,6)},
+   {id:"asisten-medis-help-2026-07",src:"docs.sentra.id/asisten-medis",v:"pass",rec:964,yield:9.7,date:"2026-07-23 14:22",gates:g(0,1,7)},
+   {id:"pedoman-antibiotik-2026",src:"pdpi.or.id/pedoman",v:"fail",rec:23,yield:0.9,date:"2026-07-23 08:40",gates:g(3,1,4)},
+   {id:"smartboard-changelog-2026",src:"docs.sentra.id/smartboard",v:"pass",rec:1204,yield:12.9,date:"2026-07-22 21:07",gates:g(0,0,8)},
+   {id:"snomed-id-subset-2026-q3",src:"browser.ihtsdotools.org",v:"warn",rec:1533,yield:6.6,date:"2026-07-22 15:31",gates:g(0,2,6)},
+   {id:"permenkes-rekam-medis",src:"peraturan.go.id/permenkes",v:"pass",rec:455,yield:8.3,date:"2026-07-22 10:12",gates:g(0,1,7)},
+   {id:"mantra-policy-corpus-2026",src:"internal://mantra/policies",v:"pass",rec:3388,yield:22.1,date:"2026-07-21 23:44",gates:g(0,0,8)},
+   {id:"jurnal-kardiologi-abstrak",src:"inajc.org/archive",v:"fail",rec:87,yield:1.4,date:"2026-07-21 17:26",gates:g(2,2,4)},
+   {id:"lab-reference-ranges-2026",src:"labs.sentra.id/reference",v:"idle",rec:0,yield:0,date:"2026-07-26 06:00",gates:g(0,0,0)},
+   {id:"pedoman-gizi-seimbang",src:"kemkes.go.id/gizi",v:"idle",rec:0,yield:0,date:"2026-07-26 06:00",gates:g(0,0,0)}
+  ];
+  var TOTAL=412, PAGE=1, sortK="date", sortD=-1, sel={}, state="normal";
+  var $=function(i){return document.getElementById(i);};
+
+  function active(){
+    var q=$("q").value.trim().toLowerCase();
+    var vs=[].slice.call(document.querySelectorAll('.chip[aria-pressed="true"]')).map(function(c){return c.dataset.v;});
+    return DATA.filter(function(r){
+      if(q && r.id.toLowerCase().indexOf(q)<0 && r.src.toLowerCase().indexOf(q)<0) return false;
+      if(vs.length && vs.indexOf(r.v)<0) return false;
+      return true;
+    }).sort(function(a,b){
+      var x=a[sortK], y=b[sortK];
+      return (x<y?-1:x>y?1:0)*sortD;
+    });
+  }
+  function filtered(){
+    return $("q").value.trim()!=="" || document.querySelectorAll('.chip[aria-pressed="true"]').length>0;
+  }
+
+  function render(){
+    var region=$("region"), pager=$("pager");
+    $("clear").disabled=!filtered();
+    region.querySelectorAll(".state,.alert,.skel").forEach(function(n){n.remove();});
+    $("tablewrap").style.display="";
+    pager.style.display="";
+
+    if(state==="loading"){
+      $("tablewrap").style.display="none"; pager.style.display="none";
+      var s=document.createElement("div"); s.className="skel"; s.setAttribute("aria-hidden","true");
+      s.innerHTML='<i style="width:34%"></i><i></i><i style="width:92%"></i><i style="width:78%"></i><i style="width:88%"></i>';
+      region.appendChild(s);
+      $("count").textContent="Loading runs";
+      return;
+    }
+    if(state==="error"){
+      $("tablewrap").style.display="none"; pager.style.display="none";
+      var a=document.createElement("div"); a.className="alert"; a.setAttribute("role","alert");
+      a.innerHTML='<h2><svg class="icon" aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3 17.5 16.5h-15Z"/><path d="M10 8.5v3.5"/><rect x="9.25" y="13.5" width="1.5" height="1.5" fill="currentColor" stroke="none"/></svg>Runs could not be loaded</h2>'+
+        '<p>The pipeline API returned 503 at 11:12:04. Runs already in progress are unaffected and will finish. Nothing has been lost.</p>'+
+        '<div style="margin-top:var(--space-4)"><button class="btn btn--sm" type="button" onclick="location.reload()">Try again</button></div>';
+      region.appendChild(a);
+      $("count").textContent="Unavailable";
+      return;
+    }
+    if(state==="first"){
+      $("tablewrap").style.display="none"; pager.style.display="none";
+      region.appendChild(emptyEl("No runs yet",
+        "A run pairs a source with an extractor and produces a dataset shard. Start by adding the source you want to crawl.",
+        "Add source"));
+      $("count").textContent="0 runs";
+      return;
+    }
+
+    var rows=active();
+    if(rows.length===0){
+      $("tablewrap").style.display="none"; pager.style.display="none";
+      region.appendChild(emptyEl("No runs match these filters",
+        TOTAL.toLocaleString()+" runs exist. None of them match every filter you have set.",
+        "Clear filters", function(){reset();}));
+      $("count").textContent="0 of "+TOTAL.toLocaleString();
+      return;
+    }
+
+    var tb=$("rows"); tb.innerHTML="";
+    rows.forEach(function(r){
+      var tr=document.createElement("tr");
+      if(r.v==="fail") tr.className="fail";
+      if(sel[r.id]) tr.dataset.sel="true";
+      tr.innerHTML=
+        '<td class="pick"><input type="checkbox" '+(sel[r.id]?"checked":"")+' aria-label="Select '+r.id+'"></td>'+
+        '<td class="num">'+r.date+'</td>'+
+        '<td><a class="runid" href="#">'+r.id+'</a><div class="srcline">'+r.src+'</div></td>'+
+        '<td class="hide-md"><div class="gates" role="img" aria-label="'+gateLabel(r)+'">'+
+          r.gates.map(function(c){return '<i class="'+c+'"></i>';}).join("")+'</div></td>'+
+        '<td class="num">'+(r.rec?r.rec.toLocaleString():"—")+'</td>'+
+        '<td class="num hide-sm">'+(r.yield?r.yield.toFixed(1)+"%":"—")+'</td>'+
+        '<td><span class="status status--'+V[r.v][1]+'">'+V[r.v][0]+'</span></td>';
+      tr.querySelector("input").addEventListener("change",function(e){
+        sel[r.id]=e.target.checked; tr.dataset.sel=e.target.checked?"true":"false"; bulk();
+      });
+      tb.appendChild(tr);
+    });
+    $("count").textContent=filtered()
+      ? rows.length+" of "+TOTAL.toLocaleString()+" runs"
+      : rows.length+" of "+TOTAL.toLocaleString()+" runs";
+    $("scope").textContent=filtered()?"Filtered":"All runs, newest first";
+    $("pinfo").textContent="Showing 1–"+rows.length+" of "+TOTAL.toLocaleString();
+    bulk();
+  }
+  function gateLabel(r){
+    var f=r.gates.filter(function(c){return c==="f";}).length,
+        w=r.gates.filter(function(c){return c==="w";}).length,
+        p=r.gates.filter(function(c){return c==="p";}).length,
+        n=r.gates.filter(function(c){return c==="n";}).length;
+    return n===8?"8 gates not yet run":f+" failed, "+w+" warned, "+p+" passed";
+  }
+  function emptyEl(h,p,btn,fn){
+    var d=document.createElement("div"); d.className="state";
+    d.innerHTML='<svg class="mark" aria-hidden="true"><use href="#sentra-mark"/></svg>'+
+      '<h2>'+h+'</h2><p>'+p+'</p>';
+    if(btn){var b=document.createElement("button");b.className="btn"+(fn?"":" btn--primary");
+      b.type="button";b.textContent=btn;b.style.marginTop="var(--space-3)";
+      if(fn)b.addEventListener("click",fn); d.appendChild(b);}
+    return d;
+  }
+  function bulk(){
+    var n=Object.keys(sel).filter(function(k){return sel[k];}).length;
+    $("bulk").dataset.on=n>0?"true":"false";
+    $("nsel").textContent=n+" selected";
+  }
+  function reset(){
+    $("q").value=""; document.querySelectorAll(".chip").forEach(function(c){c.setAttribute("aria-pressed","false");});
+    render();
+  }
+
+  $("q").addEventListener("input",render);
+  document.querySelectorAll(".chip").forEach(function(c){
+    c.addEventListener("click",function(){
+      c.setAttribute("aria-pressed", c.getAttribute("aria-pressed")==="true"?"false":"true"); render();
+    });
+  });
+  $("clear").addEventListener("click",reset);
+  $("all").addEventListener("change",function(e){
+    active().forEach(function(r){sel[r.id]=e.target.checked;}); render();
+  });
+  document.querySelectorAll(".sortbtn").forEach(function(b){
+    b.addEventListener("click",function(){
+      var k=b.dataset.k;
+      if(sortK===k) sortD=-sortD; else {sortK=k; sortD=-1;}
+      document.querySelectorAll("thead th").forEach(function(th){th.removeAttribute("aria-sort");});
+      b.closest("th").setAttribute("aria-sort", sortD===-1?"descending":"ascending");
+      render();
+    });
+  });
+  $("refresh").addEventListener("click",function(){
+    state="loading"; render();
+    setTimeout(function(){state="normal"; render();},900);
+  });
+  function specimen(mode,btn){
+    ["sNormal","sFirst","sErr"].forEach(function(i){$(i).setAttribute("aria-pressed","false");});
+    btn.setAttribute("aria-pressed","true"); state=mode; render();
+  }
+  $("sNormal").addEventListener("click",function(){specimen("normal",this);});
+  $("sFirst").addEventListener("click",function(){specimen("first",this);});
+  $("sErr").addEventListener("click",function(){specimen("error",this);});
+
+  render();
+})();
+</script>
+</body>
+</html>

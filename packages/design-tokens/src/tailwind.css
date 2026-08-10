@@ -1,0 +1,68 @@
+/* =========================================================================
+   Sentraverse — Tailwind v4 bridge
+
+   Maps SEMANTIC tokens into Tailwind's @theme namespaces so utilities are
+   generated from tokens instead of Tailwind defaults. `inline` keeps each
+   utility pointing at the runtime var, so the dark theme
+   ([data-theme="dark"]) re-resolves without extra Tailwind config.
+
+   Import order in an app's global stylesheet:
+     @import "tailwindcss";
+     @import "@sentra/design-tokens/tokens.css";
+     @import "@sentra/design-tokens/tailwind.css";
+
+   Raw values never appear in this file. Edit tokens.css, not this bridge.
+   ========================================================================= */
+
+@theme inline {
+  /* ----- colour: surfaces → bg-canvas, bg-surface, bg-inverse, bg-emphasis */
+  --color-canvas: var(--color-background-canvas);
+  --color-surface: var(--color-background-surface);
+  --color-inverse: var(--color-background-inverse);
+  --color-emphasis: var(--color-surface-emphasis);
+
+  /* ----- colour: text → text-primary, text-secondary, text-muted … ----- */
+  --color-primary: var(--color-text-primary);
+  --color-secondary: var(--color-text-secondary);
+  --color-muted: var(--color-text-muted);
+  --color-on-inverse: var(--color-text-inverse);
+  --color-on-emphasis: var(--color-text-on-emphasis);
+
+  /* ----- colour: chrome zone (never inside content) ----- */
+  --color-accent: var(--color-accent);
+  --color-accent-text: var(--color-accent-text);
+
+  /* ----- colour: content zone (never inside chrome) ----- */
+  --color-critical: var(--color-status-critical);
+  --color-warning: var(--color-status-warning);
+  --color-success: var(--color-status-success);
+  --color-neutral: var(--color-status-neutral);
+
+  /* ----- colour: action, line, tints, data ----- */
+  --color-action: var(--color-action-primary);
+  --color-action-hover: var(--color-action-primary-hover);
+  --color-action-text: var(--color-action-primary-text);
+  --color-line-subtle: var(--color-border-subtle);
+  --color-line-strong: var(--color-border-strong);
+  --color-tint-accent: var(--color-surface-accent);
+  --color-tint-critical: var(--color-surface-critical);
+  --color-skeleton: var(--color-surface-skeleton);
+  --color-data-1: var(--color-data-1);
+  --color-data-2: var(--color-data-2);
+  --color-data-3: var(--color-data-3);
+  --color-data-4: var(--color-data-4);
+
+  /* ----- typography → font-sans, font-mono ----- */
+  --font-sans: var(--font-family-sans);
+  --font-mono: var(--font-family-mono);
+
+  /* ----- shape → rounded-structure (0), rounded-control (2px) -----
+     There is no third radius. rounded-md/lg/xl are intentionally absent. */
+  --radius-*: initial;
+  --radius-structure: var(--radius-structure);
+  --radius-control: var(--radius-control);
+
+  /* ----- elevation → shadow-overlay; stable content uses hairlines ----- */
+  --shadow-*: initial;
+  --shadow-overlay: var(--elevation-overlay);
+}

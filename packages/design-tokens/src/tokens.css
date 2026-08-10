@@ -1,0 +1,313 @@
+/* =========================================================================
+   Sentraverse UI — Foundation Tokens v1.0
+   Sentra Artificial Intelligence
+
+   Components consume SEMANTIC tokens only. Primitives are private to this
+   file so the theme can change without touching component code.
+
+   Contrast figures are measured against the canvas the token is used on.
+   ========================================================================= */
+
+:root {
+  color-scheme: light;
+
+  /* ===== 1. PRIMITIVES — never referenced directly by a component ===== */
+  --p-ink-900:      #101312;   /* 18.68:1 on white */
+  --p-ink-700:      #3A403D;
+  --p-ink-500:      #5A5F5C;   /*  6.51:1 */
+  --p-ink-300:      #8B918D;   /*  3.21:1 — non-text only */
+  --p-neutral-200:  #DCDCD6;
+  --p-neutral-100:  #E9E9E4;
+  --p-neutral-050:  #F7F5F1;   /* warmed surface */
+  --p-white:        #FFFFFF;
+  --p-black:        #000000;   /* 21.00:1 — pressed state of the filled action */
+  --p-oxford-900:   #002147;   /* 16.05:1 under white — filled emphasis surface */
+
+  --p-vermilion:      #DE4526; /*  4.21:1 — graphic marks and large type only */
+  --p-vermilion-text: #B8351A; /*  5.90:1 — small text, AA */
+  --p-crimson:        #A11208; /*  8.06:1 */
+  --p-amber:          #8F5A00; /*  5.78:1 */
+  --p-teal:           #17554E; /*  8.59:1 */
+  --p-plum:           #4C3245; /* 11.35:1 */
+  --p-slate:          #5A7480; /*  4.95:1 */
+  --p-sand:           #D3B57E; /*  1.97:1 — fills only, never text */
+  --p-tint-accent:    #FDF3F0;
+  --p-tint-critical:  #FBEEEC;
+  --p-tint-critical-h: #F7E3DF; /* 15.62:1 with ink-900 — hover on a failing row */
+
+  /* Product identity. Authored values, used only inside the logomark's
+     accent stroke, always with the product name in text beside it.       */
+  --p-brand-mantra:     #8B8CF0;
+  --p-brand-medlink:    #5BC0D6;
+  --p-brand-asisten:    #52C68C;
+  --p-brand-smartboard: #E5836B;
+  --p-brand-ferdi:      #E0A85C;
+
+
+  /* ===== 2. SEMANTIC COLOUR ===== */
+
+  /* Surfaces */
+  --color-background-canvas:  var(--p-white);
+  --color-background-surface: var(--p-neutral-050);
+  --color-background-inverse: var(--p-ink-900);
+  /* A filled block that outranks the others around it. It is a surface, not a
+     status and not the accent, so it says "read this first" without claiming a
+     verdict. One per screen — a second one cancels the first.               */
+  --color-surface-emphasis:   var(--p-oxford-900);
+
+  /* Text */
+  --color-text-primary:   var(--p-ink-900);
+  --color-text-secondary: var(--p-ink-500);
+  --color-text-muted:     var(--p-ink-300);
+  --color-text-inverse:   var(--p-white);
+  /* Not --color-text-inverse: that one flips to near-black in the dark theme,
+     which would put dark text on a dark tile. Emphasis carries its own pair. */
+  --color-text-on-emphasis: var(--p-white);
+
+  /* Line */
+  --color-border-subtle: var(--p-neutral-200);
+  --color-border-strong: var(--p-ink-900);
+  --color-mark-corner:   var(--p-ink-300);
+
+  /* CHROME ZONE — wordmark, sequence numbers, active navigation,
+     panel corner marks, logomark tile. Never inside content.            */
+  --color-accent:      var(--p-vermilion);
+  --color-accent-text: var(--p-vermilion-text);
+
+  /* Action */
+  --color-action-primary:       var(--p-ink-900);
+  --color-action-primary-hover: var(--p-black);
+  --color-action-primary-text:  var(--p-white);
+  --color-action-ledge:        var(--p-ink-300);  /* under a filled button */
+  --color-action-ledge-ghost:  var(--p-ink-900);  /* under an outlined one */
+
+  /* CONTENT ZONE — verdicts, gate results, defect marks.
+     Never inside chrome. Vermilion and crimson sit 1.91 apart; they are
+     kept apart by location, not by hue.                                  */
+  --color-status-critical: var(--p-crimson);
+  --color-status-warning:  var(--p-amber);
+  --color-status-success:  var(--p-teal);
+  --color-status-neutral:  var(--p-ink-500);
+
+  /* State tints — second signal behind the glyph and the word.
+     Applied to the worst state only. Warnings are never tinted.          */
+  --color-surface-accent:         var(--p-tint-accent);
+  --color-surface-critical:       var(--p-tint-critical);
+  --color-surface-critical-hover: var(--p-tint-critical-h);
+
+  /* Skeleton bars. Not text, not a border — a placeholder shape, so it is
+     held to no contrast minimum and must never carry meaning.             */
+  --color-surface-skeleton: var(--p-neutral-100);
+
+  /* Data marks — stepped in lightness, adjacent steps >= 1.6:1 apart, so
+     series survive greyscale and print. Four is the ceiling; beyond four,
+     label marks directly rather than adding a hue.                       */
+  --color-data-1: var(--p-ink-900);
+  --color-data-2: var(--p-plum);
+  --color-data-3: var(--p-slate);
+  --color-data-4: var(--p-sand);
+
+  --color-focus-ring: var(--p-ink-900);
+  --color-scrim:      rgba(16, 19, 18, 0.44);
+
+
+  /* ===== 3. TYPOGRAPHY ===== */
+  --font-family-sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-family-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* One family, two voices. The width axis carries the display role. */
+  --font-width-display: 112;
+  --font-width-text:    100;
+
+  --font-size-display:       40px;
+  --font-size-title-page:    28px;
+  --font-size-title-section: 12px;
+  --font-size-body:          15px;
+  --font-size-body-compact:  13px;
+  --font-size-label:         12px;
+  --font-size-caption:       11px;
+  --font-size-data:          13px;
+  --font-size-data-large:    22px;
+
+  --line-height-tight:   1.06;
+  --line-height-snug:    1.30;
+  --line-height-default: 1.50;
+
+  --letter-spacing-display: -0.022em;
+  --letter-spacing-default: 0;
+  --letter-spacing-label:   0.09em;
+  --letter-spacing-mono:    0.07em;
+
+  --font-weight-regular:  400;
+  --font-weight-medium:   500;
+  --font-weight-semibold: 600;
+
+
+  /* ===== 4. SPACE — 4px base ===== */
+  --space-1: 4px;   --space-2: 8px;   --space-3: 12px;
+  --space-4: 16px;  --space-5: 24px;  --space-6: 32px;
+  --space-7: 48px;  --space-8: 64px;  --space-9: 96px;
+
+
+  /* ===== 5. LAYOUT GRID =====
+     Content anchors on columns 1–7. Summary and side context on 9–12.
+     Column 8 is left empty on purpose. That gap is the system's
+     asymmetry; it is structural and is not to be filled.                 */
+  --layout-columns:         12;
+  --layout-gutter:          24px;
+  --layout-margin:          40px;
+  --layout-container-wide:  1440px;
+  --layout-container-text:  68ch;
+  --layout-rail-width:      232px;
+
+
+  /* ===== 6. LINE, SHAPE, ELEVATION ===== */
+  --border-width-hairline: 1px;
+  --border-width-strong:   2px;
+
+  --radius-structure: 0px;   /* tables, panels, dividers, surfaces */
+  --radius-control:   2px;   /* buttons, inputs — the curve means touchable */
+
+  --mark-corner-length: 10px;    /* the four brackets that imply a panel */
+  --button-ledge:       3px;     /* solid offset slab, no blur */
+  --elevation-overlay:  0 24px 48px -16px rgba(16, 19, 18, 0.34);
+
+  /* Shadow is reserved for temporary overlays and for control affordance.
+     Amended from "overlays only" by EXC-01.                              */
+
+
+  /* ===== 7. ICONS ===== */
+  --icon-size-sm: 16px;
+  --icon-size-md: 20px;
+  --icon-size-lg: 24px;
+  --icon-stroke:  1.5;
+  /* stroke-linecap: butt; stroke-linejoin: miter — no rounded terminals.
+     The logomark is exempt: it is filled outline with horizontal end
+     cuts, and is never redrawn to match this spec.                       */
+
+
+  /* ===== 8. INTERACTION ===== */
+  --focus-ring-width:  2px;
+  --focus-ring-offset: 2px;
+  --target-min:        44px;
+
+  --motion-duration-fast:    90ms;
+  --motion-duration-default: 160ms;
+  --motion-easing-standard:  cubic-bezier(0.2, 0, 0, 1);
+
+  --z-base: 0;
+  --z-sticky: 100;
+  --z-drawer: 300;
+  --z-modal: 400;
+  --z-toast: 600;
+}
+
+/* =========================================================================
+   DARK THEME
+
+   Not a filter over the light palette. Every semantic token is re-authored
+   and re-measured against the dark canvas, because the light values invert
+   into contrast that does not hold.
+
+   Two things change structurally rather than tonally:
+     - the filled action becomes a light slab with dark text, so
+       --color-background-inverse and --color-text-inverse swap roles;
+     - the data ramp steps DOWN in lightness from the text colour instead of
+       up from the ink, and every step was re-measured to stay >= 1.6 apart.
+
+   The zone rule is unchanged. Vermilion still lives only in chrome and
+   crimson only in content; on this canvas they sit closer in contrast than
+   they do on white, which makes location the only thing keeping them apart.
+   ========================================================================= */
+[data-theme="dark"] {
+  /* Tells the UA to render form controls and scrollbars dark too, so the
+     chrome the browser owns matches the chrome we own. */
+  color-scheme: dark;
+
+  /* ----- dark primitives — private, same rule as the light set ----- */
+  --p-d-canvas:      #0C0E0D;
+  --p-d-surface:     #181B1A;   /* 15.35:1 under primary text */
+  --p-d-text-hi:     #F2F1ED;   /* 17.14:1 on canvas */
+  --p-d-text-mid:    #A8ADA9;   /*  8.50:1 */
+  --p-d-text-low:    #767C78;   /*  4.54:1 — non-text and muted labels */
+  --p-d-border:      #2E3230;   /*  1.49:1 — a line, never a text colour */
+  --p-d-skeleton:    #222624;
+
+  --p-d-vermilion:      #EF6A4A; /*  6.30:1 — graphic marks and large type */
+  --p-d-vermilion-text: #F58E75; /*  8.31:1 — small text, AA */
+  --p-d-crimson:        #F5776A; /*  7.13:1 */
+  --p-d-amber:          #E0A54A; /*  8.90:1 */
+  --p-d-teal:           #58C0B0; /*  8.84:1 */
+  --p-d-plum:           #CCB0C4; /*  9.75:1 */
+  --p-d-slate:          #7594A2; /*  6.01:1 */
+  --p-d-sand:           #7A6A46; /*  3.67:1 — fills only, never text */
+  --p-d-tint-accent:    #241611;
+  --p-d-tint-critical:  #2B1512;
+  --p-d-tint-critical-h: #3A1C18;
+  /* Oxford lifted off the dark canvas. #002147 unchanged would sit at 1.28:1
+     against it — the tile would stop being a tile. 10.33:1 under d-text-hi. */
+  --p-d-oxford:          #163963;
+
+  /* ----- surfaces ----- */
+  --color-background-canvas:  var(--p-d-canvas);
+  --color-background-surface: var(--p-d-surface);
+  --color-background-inverse: var(--p-d-text-hi);
+  --color-surface-emphasis:   var(--p-d-oxford);
+
+  /* ----- text ----- */
+  --color-text-primary:   var(--p-d-text-hi);
+  --color-text-secondary: var(--p-d-text-mid);
+  --color-text-muted:     var(--p-d-text-low);
+  --color-text-inverse:   var(--p-d-canvas);
+  --color-text-on-emphasis: var(--p-d-text-hi);
+
+  /* ----- line ----- */
+  --color-border-subtle: var(--p-d-border);
+  --color-border-strong: var(--p-d-text-hi);
+  --color-mark-corner:   var(--p-d-text-low);
+
+  /* ----- chrome zone ----- */
+  --color-accent:      var(--p-d-vermilion);
+  --color-accent-text: var(--p-d-vermilion-text);
+
+  /* ----- action ----- */
+  --color-action-primary:       var(--p-d-text-hi);
+  --color-action-primary-hover: var(--p-white);
+  --color-action-primary-text:  var(--p-d-canvas);
+  --color-action-ledge:         var(--p-d-text-low);
+  --color-action-ledge-ghost:   var(--p-d-text-hi);
+
+  /* ----- content zone ----- */
+  --color-status-critical: var(--p-d-crimson);
+  --color-status-warning:  var(--p-d-amber);
+  --color-status-success:  var(--p-d-teal);
+  --color-status-neutral:  var(--p-d-text-mid);
+
+  /* ----- tints ----- */
+  --color-surface-accent:         var(--p-d-tint-accent);
+  --color-surface-critical:       var(--p-d-tint-critical);
+  --color-surface-critical-hover: var(--p-d-tint-critical-h);
+  --color-surface-skeleton:       var(--p-d-skeleton);
+
+  /* ----- data ramp — steps down from the text colour ----- */
+  --color-data-1: var(--p-d-text-hi);
+  --color-data-2: var(--p-d-plum);
+  --color-data-3: var(--p-d-slate);
+  --color-data-4: var(--p-d-sand);
+
+  --color-focus-ring: var(--p-d-text-hi);
+  --color-scrim:      rgba(0, 0, 0, 0.62);
+}
+
+/* Breakpoints — documented here, media queries live in layout code.
+   sm  <  640px    4 columns, margin 20px, gutter 16px
+   md  >= 640px    8 columns, margin 32px, gutter 20px
+   lg  >= 1024px  12 columns, margin 40px, gutter 24px
+   xl  >= 1440px  12 columns, centred at --layout-container-wide          */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-duration-fast:    0ms;
+    --motion-duration-default: 0ms;
+  }
+}
