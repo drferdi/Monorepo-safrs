@@ -18,7 +18,7 @@
     "typecheck": "turbo run typecheck",
     "test": "node scripts/test.mjs",
     "test:contracts": "tsc --project tests/tsconfig.json && vitest run --config vitest.workspace.ts",
-    "test:e2e": "turbo run test:e2e",
+    "test:e2e": "node scripts/test-e2e.mjs",
     "check": "pnpm governance && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "governance": "node scripts/safrs-verify.mjs",
     "db:start": "docker compose up -d --wait postgres",

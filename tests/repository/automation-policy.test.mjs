@@ -14,6 +14,46 @@ function workflowFiles() {
     .map((file) => join(workflowsDirectory, file));
 }
 
+function assertWorkflowPolicy(workflow) {
+  const actions = [
+    ...workflow.matchAll(/^\s*(?:-\s*)?uses:\s*([^\s#]+)\s*(?:#.*)?$/gmu),
+  ].map((match) => match[1]);
+  const lines = workflow.split(/\r?\n/u);
+  let permissionsIndentation;
+
+  for (const line of lines) {
+    const permissions = /^(\s*)permissions:\s*(.*?)\s*$/u.exec(line);
+    if (permissions) {
+      if (
+        permissions[2] === "write-all" ||
+        /\b[a-z0-9-]+\s*:\s*write\b/iu.test(permissions[2])
+      ) {
+        throw new Error("Workflow permissions write-all tidak diizinkan.");
+      }
+      permissionsIndentation = permissions[1].length;
+      continue;
+    }
+
+    if (permissionsIndentation !== undefined) {
+      const indentation = /^\s*/u.exec(line)?.[0].length ?? 0;
+      if (line.trim() && indentation <= permissionsIndentation) {
+        permissionsIndentation = undefined;
+      } else if (/^\s*[a-z0-9-]+:\s*write\s*(?:#.*)?$/iu.test(line)) {
+        throw new Error("Workflow permission write tidak diizinkan.");
+      }
+    }
+  }
+
+  if (/\bdeploy(?:ment|ed|ing)?\b/iu.test(workflow)) {
+    throw new Error("Workflow deploy tidak diizinkan.");
+  }
+  for (const action of actions) {
+    if (!immutableAction.test(action)) {
+      throw new Error("Action harus memakai SHA immutable.");
+    }
+  }
+}
+
 test("Renovate remains PR-only and keeps a dependency dashboard", () => {
   const renovate = JSON.parse(readFileSync(renovateFile, "utf8"));
 
@@ -30,20 +70,7 @@ test("every repository workflow is non-deploying, least-privileged, and SHA-pinn
 
   for (const workflowFile of files) {
     const workflow = readFileSync(workflowFile, "utf8");
-    const actions = [...workflow.matchAll(/^\s*uses:\s*([^\s#]+)\s*$/gmu)].map(
-      (match) => match[1],
-    );
-
-    assert.doesNotMatch(workflow, /^\s*deploy(?:\s|:|$)/imu, workflowFile);
-    assert.doesNotMatch(workflow, /^\s*contents:\s*write\s*$/imu, workflowFile);
-    assert.doesNotMatch(
-      workflow,
-      /^\s*permissions:\s*write-all\s*$/imu,
-      workflowFile,
-    );
-    for (const action of actions) {
-      assert.match(action, immutableAction, `${workflowFile}: ${action}`);
-    }
+    assert.doesNotThrow(() => assertWorkflowPolicy(workflow), workflowFile);
   }
 });
 
@@ -68,4 +95,17 @@ test("CI proves the full safe verification path without deployment", () => {
   assert.match(workflow, /services:\s*\n\s+postgres:/u);
   assert.match(workflow, /DATABASE_URL:/u);
   assert.doesNotMatch(workflow, /\bdeploy\b/iu);
+});
+
+test("workflow policy rejects YAML bypasses for action pins, write permissions, and deployment", () => {
+  for (const workflow of [
+    "- uses: actions/checkout@v4\n",
+    "permissions:\n  id-token: write\n",
+    "permissions:\n  packages: write\n",
+    "permissions: write-all\n",
+    "permissions: { actions: write }\n",
+    "jobs:\n  publish:\n    steps:\n      - run: npm run deploy\n",
+  ]) {
+    assert.throws(() => assertWorkflowPolicy(workflow), /SHA|write|deploy/iu);
+  }
 });
