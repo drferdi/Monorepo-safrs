@@ -1,0 +1,19 @@
+{
+  "id": "ai",
+  "label": "Bounded AI capability",
+  "description": "Provider-neutral AI boundary with structured Zod output and deterministic test doubles.",
+  "risk": "R2",
+  "dependencies": ["ai", "@ai-sdk/provider"],
+  "environment": ["AI_PROVIDER_API_KEY", "AI_MODEL"],
+  "commands": ["pnpm test:ai"],
+  "tests": [
+    "validate structured Zod output",
+    "use provider test doubles",
+    "enforce request and token bounds"
+  ],
+  "sensitivePaths": ["projects/<project>/src/ai/**"],
+  "sideEffects": [
+    "External model calls require a project-scoped R2 implementation and explicit resource limits."
+  ],
+  "removal": "Remove the provider adapter, environment entries, test doubles, and the project capability record."
+}

@@ -1,0 +1,19 @@
+{
+  "id": "electron",
+  "label": "Desktop application shell",
+  "description": "Electron desktop boundary with explicit preload and IPC verification.",
+  "risk": "R2",
+  "dependencies": ["electron"],
+  "environment": [],
+  "commands": ["pnpm dev:desktop"],
+  "tests": [
+    "test preload allowlist",
+    "test IPC validation",
+    "test packaged startup"
+  ],
+  "sensitivePaths": ["projects/<project>/apps/desktop/**"],
+  "sideEffects": [
+    "Desktop privileges require a project-scoped threat model before runtime integration."
+  ],
+  "removal": "Remove desktop application files, build configuration, and the project capability record."
+}

@@ -1,0 +1,19 @@
+{
+  "id": "python",
+  "label": "Python technical boundary",
+  "description": "Python is available only when a recorded technical justification proves Node.js is unsuitable.",
+  "risk": "R2",
+  "dependencies": ["python"],
+  "environment": [],
+  "commands": ["pnpm test:python"],
+  "tests": [
+    "test isolated Python environment",
+    "test typed boundary contract",
+    "test deterministic fixture execution"
+  ],
+  "sensitivePaths": ["projects/<project>/python/**"],
+  "sideEffects": [
+    "A recorded technical justification is required before a Python runtime may be integrated."
+  ],
+  "removal": "Remove the Python boundary, lockfile or environment, and the project capability record after migration or retirement."
+}

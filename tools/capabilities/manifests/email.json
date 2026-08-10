@@ -1,0 +1,21 @@
+{
+  "id": "email",
+  "label": "Local email development",
+  "description": "React Email preview and provider delivery boundary for a project that explicitly needs email.",
+  "risk": "R2",
+  "dependencies": ["@react-email/components", "react-email", "resend"],
+  "environment": ["EMAIL_FROM", "RESEND_API_KEY"],
+  "commands": ["pnpm dev:email"],
+  "tests": [
+    "render email templates",
+    "block non-local recipients in development"
+  ],
+  "sensitivePaths": [
+    "projects/<project>/emails/**",
+    "projects/<project>/src/email/**"
+  ],
+  "sideEffects": [
+    "Provider delivery is disabled by default in local development."
+  ],
+  "removal": "Remove project email code, environment entries, and the project capability record after the project owner approves."
+}

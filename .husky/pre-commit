@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+set -eu
+
+staged_paths_file="$(mktemp "${TMPDIR:-/tmp}/safrs-precommit-staged.XXXXXX")"
+unstaged_paths_file="$(mktemp "${TMPDIR:-/tmp}/safrs-precommit-unstaged.XXXXXX")"
+cleanup() {
+  rm -f "$staged_paths_file" "$unstaged_paths_file"
+}
+trap cleanup EXIT HUP INT TERM
+
+git diff --cached --name-only -z --diff-filter=ACMR > "$staged_paths_file"
+if [ ! -s "$staged_paths_file" ]; then
+  exit 0
+fi
+git diff --name-only -z --diff-filter=ACMR > "$unstaged_paths_file"
+
+partially_staged=false
+while IFS= read -r -d '' staged_path; do
+  while IFS= read -r -d '' unstaged_path; do
+    if [ "$staged_path" = "$unstaged_path" ]; then
+      partially_staged=true
+      break 2
+    fi
+  done < "$unstaged_paths_file"
+done < "$staged_paths_file"
+
+if [ "$partially_staged" = true ]; then
+  printf '%s\n' "Commit dihentikan: ada file yang sudah di-stage sebagian dan juga memiliki perubahan belum di-stage." >&2
+  printf '%s\n' "Stage seluruh file tersebut, atau commit bagian yang sudah di-stage terlebih dahulu, lalu coba lagi." >&2
+  exit 1
+fi
+
+pnpm exec biome check --write --staged --no-errors-on-unmatched
+git add --pathspec-from-file="$staged_paths_file" --pathspec-file-nul

@@ -1,0 +1,19 @@
+{
+  "id": "wxt",
+  "label": "Browser extension shell",
+  "description": "WXT browser extension boundary with permission-minimized manifest review.",
+  "risk": "R2",
+  "dependencies": ["wxt"],
+  "environment": [],
+  "commands": ["pnpm dev:extension"],
+  "tests": [
+    "test extension permissions",
+    "test content-script isolation",
+    "test manifest build"
+  ],
+  "sensitivePaths": ["projects/<project>/apps/extension/**"],
+  "sideEffects": [
+    "Browser permissions must be minimized and approved in the project-scoped R2 implementation."
+  ],
+  "removal": "Remove extension application files, browser manifest, and the project capability record."
+}

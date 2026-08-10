@@ -1,0 +1,22 @@
+{
+  "id": "stripe",
+  "label": "Stripe sandbox webhooks",
+  "description": "Sandbox-only payment integration boundary with local webhook forwarding.",
+  "risk": "R2",
+  "dependencies": ["stripe"],
+  "environment": ["STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET"],
+  "commands": ["pnpm stripe:listen"],
+  "tests": [
+    "verify webhook signature",
+    "verify idempotent event handling",
+    "reject live keys in local defaults"
+  ],
+  "sensitivePaths": [
+    "projects/<project>/src/payments/**",
+    "projects/<project>/src/webhooks/**"
+  ],
+  "sideEffects": [
+    "Stripe CLI forwards sandbox events only; no live charge is permitted by this capability declaration."
+  ],
+  "removal": "Remove project payment code, webhook configuration, and the project capability record after retaining required audit evidence."
+}
