@@ -695,3 +695,85 @@ test("keeps the primary error first, retains cleanup errors, and attempts lock r
     await rm(root, { recursive: true, force: true });
   }
 });
+
+test("cleans a bare stage when its initial stat fails", async () => {
+  const root = await createTemporaryRepo();
+  const projectsRoot = path.join(root, "projects");
+  const slug = "stage-stat-failure";
+  try {
+    await assert.rejects(
+      applyProjectCapsule([], projectsRoot, slug, {
+        beforeStageStat: async ({ directory }) => {
+          await lstat(directory);
+          throw new Error("stage lstat injected failure");
+        },
+      }),
+      /stage lstat injected failure/,
+    );
+    await assertNoOwnedWizardResidue(projectsRoot, slug);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("cleans a bare destination when its initial stat fails", async () => {
+  const root = await createTemporaryRepo();
+  const projectsRoot = path.join(root, "projects");
+  const slug = "destination-stat-failure";
+  try {
+    await withPosixPublish(async () => {
+      await assert.rejects(
+        applyProjectCapsule([], projectsRoot, slug, {
+          beforeDestinationStat: async ({ directory }) => {
+            await lstat(directory);
+            throw new Error("destination lstat injected failure");
+          },
+        }),
+        /destination lstat injected failure/,
+      );
+    });
+    await assertNoOwnedWizardResidue(projectsRoot, slug);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("keeps the original publish error before destination cleanup failure", async () => {
+  const root = await createTemporaryRepo();
+  const projectsRoot = path.join(root, "projects");
+  const slug = "publish-cleanup-order";
+  const destination = path.join(projectsRoot, slug);
+  try {
+    await withPosixPublish(async () => {
+      await assert.rejects(
+        applyProjectCapsule(
+          [{ relativePath: "README.md", content: "capsule" }],
+          projectsRoot,
+          slug,
+          {
+            afterDestinationMarkerWrite: async () => {
+              await writeFile(path.join(destination, "README.md"), "external");
+            },
+            beforeQuarantineRename: async (state) => {
+              if (state.directory !== destination) return;
+              await rm(state.directory, { recursive: true, force: true });
+              throw new Error("destination cleanup injected failure");
+            },
+          },
+        ),
+        (error) => {
+          assert.equal(error instanceof AggregateError, true);
+          assert.equal(error.errors[0].code, "EEXIST");
+          assert.equal(
+            error.errors[1].message,
+            "destination cleanup injected failure",
+          );
+          return true;
+        },
+      );
+    });
+    await assertNoOwnedWizardResidue(projectsRoot, slug);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});

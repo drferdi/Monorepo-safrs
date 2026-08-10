@@ -5,6 +5,7 @@ import {
   mkdir,
   mkdtemp,
   open,
+  readdir,
   readFile,
   realpath,
   rename,
@@ -225,15 +226,21 @@ async function cleanupBareDirectory(directory, directoryIdentity) {
   if (
     !current.isDirectory() ||
     current.isSymbolicLink() ||
-    !sameIdentity(current, directoryIdentity)
+    (directoryIdentity && !sameIdentity(current, directoryIdentity))
   )
     return false;
+  if (!directoryIdentity && (await readdir(directory)).length) return false;
   await rename(directory, quarantine);
   const moved = await lstat(quarantine);
-  if (!sameIdentity(moved, directoryIdentity))
+  if (
+    !moved.isDirectory() ||
+    moved.isSymbolicLink() ||
+    (directoryIdentity && !sameIdentity(moved, directoryIdentity))
+  )
     throw new Error(
       "Directory changed while quarantining; quarantine preserved.",
     );
+  if (!directoryIdentity && (await readdir(quarantine)).length) return false;
   await rm(quarantine, { recursive: true, force: true });
   return true;
 }
@@ -271,8 +278,10 @@ async function releaseSlugLock(lock) {
 
 async function createOwnedDirectory(parent, prefix, markerName, hooks) {
   const directory = await mkdtemp(path.join(parent, prefix));
-  const directoryIdentity = await lstat(directory);
+  let directoryIdentity;
   try {
+    if (hooks?.beforeStageStat) await hooks.beforeStageStat({ directory });
+    directoryIdentity = await lstat(directory);
     if (hooks?.afterMkdtemp)
       await hooks.afterMkdtemp({ directory, directoryIdentity });
     const marker = randomUUID();
@@ -407,8 +416,11 @@ async function reserveDestination(projectsRoot, slug, hooks) {
     }
     throw error;
   }
-  const directoryIdentity = await lstat(destination);
+  let directoryIdentity;
   try {
+    if (hooks?.beforeDestinationStat)
+      await hooks.beforeDestinationStat({ directory: destination });
+    directoryIdentity = await lstat(destination);
     if (hooks?.afterDestinationMkdir)
       await hooks.afterDestinationMkdir({
         directory: destination,
@@ -475,7 +487,14 @@ async function publishWithoutClobber(files, projectsRoot, slug, hooks) {
     await removeCompletionMarker(reservation);
     return reservation;
   } catch (error) {
-    await cleanupOwnedDirectory(reservation, hooks);
+    try {
+      await cleanupOwnedDirectory(reservation, hooks);
+    } catch (cleanupError) {
+      throw new AggregateError(
+        [error, cleanupError],
+        "Project publication failed with cleanup failure.",
+      );
+    }
     throw error;
   }
 }
