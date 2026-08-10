@@ -929,6 +929,40 @@ authoritative SAFRS repository.
 
 ---
 
+## Repository Capabilities
+
+This section describes the concrete, current state of *this* repository —
+not the abstract standard above. It is repo-state, not normative SAFRS
+content, and is expected to drift; treat `.safrs/document-registry.json`
+and the plans under `docs/plans/active/` as the source of truth if this
+falls out of date.
+
+| Capability | Status | Command | Requires |
+| --- | --- | --- | --- |
+| Local email development (`golden-path`) | Wired 2026-08-11; dependencies not yet installed | `pnpm dev:email` | `EMAIL_FROM`, `RESEND_API_KEY` |
+| Stripe sandbox webhooks (`golden-path`) | Wired 2026-08-11; dependencies not yet installed | `pnpm stripe:listen` | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, local Stripe CLI |
+| CODEOWNERS R2/R3 enforcement | Declared, not yet enforced | — | Real GitHub team + branch protection ([Fase 1](docs/plans/active/SAFRS_GOVERNANCE_REMEDIATION_PLAN.md), checklist in [`docs/governance/PLATFORM_ACTIVATION.md`](docs/governance/PLATFORM_ACTIVATION.md)) |
+| Renovate automerge | Active | — | Patch/minor auto-merges once CI is green; major updates stay manual |
+| Single-command local bootstrap | Verified | `pnpm dev` | Docker (Postgres) |
+
+"Wired" means the dependency, catalog pin, and script exist in the
+repository; it does not mean `pnpm install` has been run or the command has
+been executed successfully. Run `pnpm install` after pulling this change,
+then verify with the command in the table before relying on a capability.
+
+Additional optional capabilities (see `tools/capabilities/manifests/` for
+the full catalog) can be previewed and recorded per project with:
+
+```bash
+pnpm capability:add --capability <id> --project <project> --preview
+pnpm capability:add --capability <id> --project <project> --apply --confirm "ENABLE <id> FOR <project>"
+```
+
+Recording a capability does not install its runtime integration — see the
+manifest's `sideEffects` and `removal` fields for what that entails.
+
+---
+
 ## ── OPEN CHANNEL
 
 <p align="center">
