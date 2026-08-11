@@ -1,0 +1,14 @@
+---
+description: Plan Mode and human gates for R2/R3 sensitive work
+alwaysApply: false
+---
+
+# Plan R2/R3 (Cursor adapter)
+
+Use for auth, migrations, dependencies, CI/CD, shared APIs/packages, architecture boundaries, credentials, production, or financial/healthcare-critical work.
+
+1. Prefer Plan Mode before mutating; classify risk via `.safrs/policy.json` and `AGENTS.md`.
+2. R2: designated review required — do not self-approve.
+3. R3: prepare evidence/plan only; wait for explicit human authorization before execution.
+4. Never deploy to production or merge a protected branch unless policy + human auth allow it.
+5. Use isolated worktrees/environments for parallel mutation work.

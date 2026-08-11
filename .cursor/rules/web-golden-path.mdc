@@ -1,0 +1,13 @@
+---
+description: Golden-path Next.js web app boundary
+globs: projects/golden-path/**/*
+alwaysApply: false
+---
+
+# Golden-path web (Cursor adapter)
+
+1. Read `projects/golden-path/AGENTS.md` and `projects/golden-path/apps/web/AGENTS.md`.
+2. Server-first pages; smallest client boundary; browser code uses the typed client only.
+3. Prisma / `DATABASE_URL` are server-only — never `NEXT_PUBLIC_*` secrets.
+4. Do not add auth, payment, email, AI, or new capability packs without an approved capability task.
+5. Verify: `pnpm --filter @safrs/web` lint/typecheck/test/build; `pnpm test:e2e` when journeys change.

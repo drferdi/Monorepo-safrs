@@ -1,0 +1,13 @@
+---
+description: Local database / Prisma boundary (@safrs/database)
+globs: packages/database/**/*
+alwaysApply: false
+---
+
+# Database (Cursor adapter)
+
+1. Read `packages/database/AGENTS.md` (and root `AGENTS.md` / `SECURITY.md`).
+2. Migrations and schema changes are R2; production/destructive ops are R3 — prepare only until Chief authorizes.
+3. Never print or commit `DATABASE_URL`; never bypass the reset guard.
+4. Prefer `pnpm db:generate`, `pnpm db:migrate`, `pnpm db:seed`, `pnpm --filter @safrs/database test`.
+5. `pnpm db:reset` is local-only and requires explicit reset authorization.

@@ -1,0 +1,13 @@
+---
+description: Typed API and Zod schema boundary (@safrs/api, @safrs/schemas)
+globs: packages/api/**/*,packages/schemas/**/*
+alwaysApply: false
+---
+
+# API / schemas (Cursor adapter)
+
+1. Read `packages/api/AGENTS.md` (and root `AGENTS.md` / `SECURITY.md`).
+2. Zod contracts live in `@safrs/schemas`; DB access stays in `@safrs/database`.
+3. Preserve correlation-ID error envelopes; no stacks, DB URLs, or secrets in responses.
+4. Shared API/schema/dependency changes are R2.
+5. Verify: `pnpm --filter @safrs/api test` and `pnpm --filter @safrs/api typecheck`.

@@ -1,0 +1,14 @@
+---
+description: Run verification before declaring work complete
+alwaysApply: false
+---
+
+# Verify before done (Cursor adapter)
+
+Use when finishing a task, opening a PR, or claiming green gates.
+
+1. Run `bash scripts/safrs-verify.sh` (or the repo’s documented Windows-equivalent invocation).
+2. Run project-specific tests for touched packages (`pnpm --filter … test` / `typecheck`).
+3. Ensure `.agents/HANDOFF.md` reflects current state, blockers, and next actions.
+4. Do not weaken tests, token gates, or governance to force a pass.
+5. Flag elevated review when implementation and its governing verification change together.

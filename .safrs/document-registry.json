@@ -196,6 +196,18 @@
       "status": "ACTIVE"
     },
     {
+      "id": "cursor-setup",
+      "path": "docs/bootstrap/CURSOR_SETUP.md",
+      "type": "reference",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "claude-setup",
+      "path": "docs/bootstrap/CLAUDE_SETUP.md",
+      "type": "reference",
+      "status": "ACTIVE"
+    },
+    {
       "id": "adr-index",
       "path": "docs/adrs/README.md",
       "type": "reference",

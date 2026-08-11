@@ -27,8 +27,29 @@ pnpm-debug.log*
 .DS_Store
 Thumbs.db
 .superpowers
-.cursor
+# Local Cursor state; shared Project Rules / hooks / MCP / skills / agents are tracked
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**
+!.cursor/hooks.json
+!.cursor/hooks/
+!.cursor/hooks/**
+!.cursor/mcp.json
+!.cursor/skills/
+!.cursor/skills/**
+!.cursor/agents/
+!.cursor/agents/**
 
+# Local Claude Code state; shared settings, hooks, agents, and skills are tracked
+.claude/*
+!.claude/settings.json
+!.claude/hooks/
+!.claude/hooks/**
+!.claude/agents/
+!.claude/agents/**
+!.claude/skills/
+!.claude/skills/**
+.claude/settings.local.json
 
 .worktrees/
 .pnpm-store/

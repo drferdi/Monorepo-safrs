@@ -1,0 +1,14 @@
+---
+description: Sentra design tokens — UI surfaces must use @sentra/token
+globs: **/*.tsx,**/*.jsx,**/*.css,packages/ui/**/*,packages/token/**/*,docs/design-system/**/*
+alwaysApply: false
+---
+
+# UI / tokens (Cursor adapter)
+
+Do not invent colours, radii, or parallel token systems.
+
+1. Read `packages/token/AGENTS.md` and `packages/token/UI-RULES.md` before UI work.
+2. Match the closest screen under `docs/design-system/reference/`.
+3. Token value changes are R2 (shared boundary + governance gate).
+4. Enforcement: `node scripts/check-tokens.mjs` via `pnpm check` / governance.
