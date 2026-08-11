@@ -1,6 +1,6 @@
 # Paths under token enforcement. One path per line, repo-root relative.
 # A path enters when it is migrated to @sentra/design-tokens and never leaves.
 # Comments start with #.
-packages/design-tokens
+packages/token
 packages/ui
 projects/golden-path/apps/web/src

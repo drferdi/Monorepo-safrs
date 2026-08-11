@@ -1,6 +1,6 @@
 /**
  * Sentra fonts — Geist Sans + Geist Mono, self-hosted variable fonts (OFL).
- * Single source for font binaries: packages/design-tokens/assets/fonts/.
+ * Single source for font binaries: packages/token/assets/fonts/.
  * Never load fonts from a CDN at runtime (determinism, privacy).
  *
  * Usage (Next.js app):

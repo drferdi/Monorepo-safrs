@@ -6,7 +6,7 @@ reference examples live in `docs/design-system/reference/`.
 
 ## The one-line rule
 
-Raw values do not appear outside `packages/design-tokens`. Not in a component,
+Raw values do not appear outside `packages/token`. Not in a component,
 not in a style block, not "just this once for a demo".
 `node scripts/check-tokens.mjs` runs in the governance gate and will fail the
 build.
@@ -14,10 +14,10 @@ build.
 ## Where things live
 
 ```
-packages/design-tokens/src/tokens.css     the only file with a hex value in it
-packages/design-tokens/src/tokens.json    same values, machine readable
-packages/design-tokens/src/tailwind.css   Tailwind v4 @theme bridge (utilities)
-packages/design-tokens/scope.txt          paths under enforcement. Add one when
+packages/token/src/tokens.css     the only file with a hex value in it
+packages/token/src/tokens.json    same values, machine readable
+packages/token/src/tailwind.css   Tailwind v4 @theme bridge (utilities)
+packages/token/scope.txt          paths under enforcement. Add one when
                                           it is migrated; never remove one.
 docs/design-system/reference/             six worked HTML examples — the system
                                           built, not described

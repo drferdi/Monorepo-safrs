@@ -1,4 +1,4 @@
-# AGENTS.md — packages/design-tokens (@sentra/design-tokens)
+# AGENTS.md — packages/token (@sentra/design-tokens)
 
 ## Mandate
 
@@ -10,7 +10,7 @@ recomputation), which runs as part of the governance gate.
 
 ## Rules
 
-1. Read `packages/design-tokens/UI-RULES.md` before writing any UI code.
+1. Read `packages/token/UI-RULES.md` before writing any UI code.
 2. Raw colour or radius values are forbidden outside `src/tokens.css`.
    Use `var(--color-*)`, `var(--radius-*)`, or the Tailwind utilities generated
    by `src/tailwind.css`.
@@ -41,7 +41,7 @@ reference; do not invent a composition from the token list.
 
 ## Provenance
 
-Ported verbatim from `abyss-monorepo/packages/design-tokens` (Sentraverse
+Ported verbatim from `abyss-monorepo/packages/token` (Sentraverse
 Foundation Tokens v1.0, Sentra Artificial Intelligence). The token values and
 their measured contrast annotations are the source of truth; do not
 re-derive them.

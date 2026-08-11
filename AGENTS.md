@@ -83,8 +83,8 @@ Exceptional states: `BLOCKED`, `CONFLICT`, `FAILED`, `ABORTED`, `SUPERSEDED`.
 - A project capsule may narrow commands and scope, but may not weaken root SAFRS or security controls.
 
 ## Design tokens (mandatory for all UI work)
-- Any agent building UI — website, landing page, dashboard, email, any rendered surface — MUST use Sentra design tokens from `packages/design-tokens` (`@sentra/design-tokens`). Read `packages/design-tokens/AGENTS.md` and `packages/design-tokens/UI-RULES.md` before writing UI code.
-- Raw colour or radius values are forbidden outside `packages/design-tokens/src/tokens.css`. Enforced by `node scripts/check-tokens.mjs` (raw-value scan + WCAG 2.2 AA contrast recomputation) as part of `pnpm check`.
+- Any agent building UI — website, landing page, dashboard, email, any rendered surface — MUST use Sentra design tokens from `packages/token` (`@sentra/design-tokens`). Read `packages/token/AGENTS.md` and `packages/token/UI-RULES.md` before writing UI code.
+- Raw colour or radius values are forbidden outside `packages/token/src/tokens.css`. Enforced by `node scripts/check-tokens.mjs` (raw-value scan + WCAG 2.2 AA contrast recomputation) as part of `pnpm check`.
 - Worked reference screens live in `docs/design-system/reference/`; match the closest reference rather than inventing a composition.
 - Token value changes are R2 (shared boundary + governance control).
 

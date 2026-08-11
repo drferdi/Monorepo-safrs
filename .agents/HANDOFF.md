@@ -4,7 +4,7 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-11 (Claude — Geist fonts vendored into design-tokens, golden-path + reference screens wired; Archivo/JetBrains Mono and font CDNs removed. Display voice now size+weight, width tokens neutral at 100. Verify pnpm dev/build on Chief's machine.)
+Last updated: 2026-08-11 (Claude — folder packages/design-tokens renamed to packages/token; npm name @sentra/design-tokens unchanged; run pnpm install after pull to relink workspace)
 
 ## Current state
 

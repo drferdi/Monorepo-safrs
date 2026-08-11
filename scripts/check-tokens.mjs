@@ -16,7 +16,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { extname, join, relative } from "node:path";
 
 const ROOT = process.cwd();
-const TOKEN_PKG = "packages/design-tokens";
+const TOKEN_PKG = "packages/token";
 const SCAN = ["projects", "packages", "tools"];
 const EXT = new Set([".css", ".scss", ".ts", ".tsx", ".js", ".jsx", ".vue", ".svelte"]);
 
@@ -69,7 +69,7 @@ function walk(dir, out = []) {
    enters scope.txt when it has been migrated, and from that moment it can
    never regress. Legacy code is out of scope loudly rather than silently —
    `--audit` reports what is still outstanding. */
-const SCOPE_FILE = "packages/design-tokens/scope.txt";
+const SCOPE_FILE = "packages/token/scope.txt";
 const AUDIT = process.argv.includes("--audit");
 
 let scope = [];
