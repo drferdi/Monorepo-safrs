@@ -6,6 +6,17 @@ Never delete entries — reversals are new entries ("supersedes ...").
 
 ---
 
+## 2026-08-11 - Codex repository automation pack: native adapters + Context7 only
+
+Codex uses a repository-scoped `.codex/config.toml`, tested PreToolUse/PostToolUse hooks,
+two read-only-by-default reviewers, and repository skills under `.agents/skills`. Model and
+reasoning remain session/user-owned. Context7 MCP is pinned to 4.0.0 and inventoried for
+public documentation only; Prisma/PostgreSQL, Playwright, deployment, and scheduled MCP or
+automation remain deferred. Hooks resolve nested project cwd to the repository root. The
+control/test coupling requires designated integrity review.
+
+---
+
 ## 2026-08-11 - Bugbot follow-ups: adapter R2 parity + force-with-lease allow
 
 After `/review-bugbot` on the agent-automation packs: (1) Cursor `guard-shell.mjs`

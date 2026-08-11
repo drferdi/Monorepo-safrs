@@ -2,7 +2,7 @@
 
 Legend: [x] done, [~] in progress, [ ] not started, [!] blocked
 
-Last updated: 2026-08-11 | Branch: `main`
+Last updated: 2026-08-11 | Branch: `feat/codex-repository-automation`
 
 > Area status board. Detailed work logs: `docs/plans/active/` → `completed/`.
 > Durable decisions: `DECISIONS.md`. Session state: `HANDOFF.md`.
@@ -29,6 +29,7 @@ Last updated: 2026-08-11 | Branch: `main`
 - [x] Active docs converted to concise English (2026-08-11)
 - [~] Claude Code automation pack (`.claude/` hooks, subagents, skills) — implemented,
       awaiting Chief review (`docs/bootstrap/CLAUDE_SETUP.md`); Postgres MCP deferred
+- [x] Codex repository automation pack (`.codex/` hooks/config/agents + `.agents/skills`) — implemented; R2 designated review required
 - [ ] Complete `.env.example` + capability variable docs
 - [ ] Python prerequisite documented (INSTALL.md) + setup detection
 
