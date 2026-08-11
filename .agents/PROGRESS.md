@@ -34,7 +34,9 @@ Last updated: 2026-08-11 | Branch: `main`
 
 - [x] Project mapping done (22 → 14 active) + per-project stack decisions
 - [x] Multi-tenant + demo pattern design (smartboard as reference)
-- [ ] Repo prep: policy.json, pnpm-workspace, AGENTS.md accepting product `projects/`
+- [x] Repo prep verified (2026-08-11): policy.json capsule root, workspace glob
+      `projects/*/apps/*`, `pnpm project:new` wizard (preview tested), template capsule,
+      topology enforcement for every new `projects/*`
 - [ ] Pilot: `ferdiiskandar` → `projects/ferdiiskandar/`
 - [ ] Smartboard rewrite (FastAPI+Mongo+CRA → Next+Hono+Postgres)
 - [ ] Tier 1 Next.js: assistverse, medboard, sentraverse

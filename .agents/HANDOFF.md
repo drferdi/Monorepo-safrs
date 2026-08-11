@@ -31,7 +31,7 @@ Last updated: 2026-08-11 (Claude — docs converted to concise English per Chief
 | --- | --- |
 | DX friction fixes | Wait for completion; verify with `pnpm check` |
 | Governance remediation | Execute `docs/plans/active/SAFRS_GOVERNANCE_REMEDIATION_PLAN.md` — Phase 1 (CODEOWNERS/branch protection) needs Chief on GitHub |
-| Project migration | Pilot `ferdiiskandar` → `projects/` (selective copy) |
+| Project migration | READY — repo prep verified 2026-08-11. Pilot `ferdiiskandar` via `pnpm project:new` (selective copy). Hold R2/R3 projects (med-assist) until branch protection is live |
 | SAFRS_SPEC routing | Chief to confirm MUST→SHOULD demotion or revert (one line in registry) |
 
 ## Session guardrails
