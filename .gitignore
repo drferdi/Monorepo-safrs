@@ -61,5 +61,14 @@ Thumbs.db
 !.cline/skills/
 !.cline/skills/**
 
+# Local Codex state; shared project config, hooks, agents, and skills are tracked
+.codex/*
+!.codex/config.toml
+!.codex/hooks.json
+!.codex/hooks/
+!.codex/hooks/**
+!.codex/agents/
+!.codex/agents/**
+
 .worktrees/
 .pnpm-store/

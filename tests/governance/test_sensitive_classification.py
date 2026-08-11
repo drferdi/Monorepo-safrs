@@ -87,6 +87,8 @@ class SensitiveClassificationTests(unittest.TestCase):
                 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', 'turbo.json',
                 '.github/renovate.json', 'scripts/safrs-verify.mjs',
                 'scripts/safrs-verify.ps1', 'scripts/safrs-verify.sh',
+                '.codex/config.toml', '.codex/hooks.json',
+                '.codex/hooks/guard-tool-use.mjs',
                 'tests/repository/automation-policy.test.mjs',
             ]
             for path in paths:

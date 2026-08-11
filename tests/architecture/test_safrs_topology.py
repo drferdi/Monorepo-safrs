@@ -40,6 +40,22 @@ class SafrsTopologyTests(unittest.TestCase):
     def test_no_deprecated_cursor_rules_file_exists(self):
         self.assertFalse((ROOT / '.cursorrules').exists())
 
+    def test_codex_repository_adapter_is_complete(self):
+        paths = [
+            '.codex/config.toml',
+            '.codex/hooks.json',
+            '.codex/hooks/guard-tool-use.mjs',
+            '.codex/hooks/format-edited-files.mjs',
+            '.codex/agents/safrs-reviewer.toml',
+            '.codex/agents/security-reviewer.toml',
+            '.agents/skills/verify/SKILL.md',
+            '.agents/skills/prisma-migration/SKILL.md',
+            'docs/bootstrap/CODEX_SETUP.md',
+        ]
+        for path in paths:
+            with self.subTest(path=path):
+                self.assertTrue((ROOT / path).is_file())
+
     def test_shell_verifier_resolves_a_portable_python_command(self):
         verifier = (ROOT / 'scripts/safrs-verify.sh').read_text(encoding='utf-8')
         self.assertIn('PYTHON=', verifier)

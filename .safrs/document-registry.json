@@ -208,6 +208,12 @@
       "status": "ACTIVE"
     },
     {
+      "id": "codex-setup",
+      "path": "docs/bootstrap/CODEX_SETUP.md",
+      "type": "reference",
+      "status": "ACTIVE"
+    },
+    {
       "id": "adr-index",
       "path": "docs/adrs/README.md",
       "type": "reference",

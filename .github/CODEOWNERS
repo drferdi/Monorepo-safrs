@@ -86,6 +86,7 @@
 # ---------------------------------------------------------------------------
 
 /tools/safrs/**                                 @drferdii
+/.codex/**                                      @drferdii
 **/tests/security/**                            @drferdii
 **/tests/architecture/**                        @drferdii
 
