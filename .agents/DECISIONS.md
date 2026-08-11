@@ -6,6 +6,32 @@ Never delete entries — reversals are new entries ("supersedes ...").
 
 ---
 
+## 2026-08-11 - Cursor MCP: Context7 only; Prisma/Postgres MCP still deferred
+
+Cursor automations may ship `.cursor/mcp.json` with Context7 for docs lookup. They must **not**
+enable `prisma mcp` / Prisma-Local or Postgres MCP servers — same deferral as the Claude Code pack
+entry above (`migrate-dev` / Studio bypass `run-local-prisma.mjs`). Supersedes any interim Cursor
+recommendation that proposed Prisma-Local.
+
+---
+
+## 2026-08-11 - Claude Code automation pack: adapters under `.claude/`, R2 governed
+
+Claude Code gets the same adapter treatment as Cursor: no policy duplication, everything points at
+`AGENTS.md`. Shipped: two Node hooks (`guard-sensitive-paths.mjs` blocks credential writes and warns
+on registry-classified R2 paths; `format-edited-file.mjs` runs Biome at edit time), two read-only
+subagents (`safrs-auditor`, `token-guard`), two skills (`verify` user-only, `new-capability`), and a
+read-deny permission list for `.env`/key material. Hooks are invoked as `node .claude/hooks/<name>.mjs`
+— relative path, no shell expansion — because this workstation is Windows.
+`.claude/**` and `.mcp.json` added to `.safrs/sensitive-paths.json` patterns; `.claude/settings.json`
+and `.claude/hooks/**` added to `verification_control_patterns`. Guide: `docs/bootstrap/CLAUDE_SETUP.md`
+(registry id `claude-setup`).
+
+PostgreSQL MCP deferred, not shipped: `@modelcontextprotocol/server-postgres` is npm-deprecated,
+third-party forks are unvetted against `.safrs/tool-inventory.json`, and `prisma mcp` exposes
+mutating tools that bypass the `run-local-prisma.mjs` command allowlist. Enabling any of them is a
+separate R2 change with a tool-inventory record.
+
 ## 2026-08-11 - All repo docs in English, maximally concise
 
 Chief's standing preference: every doc in this repo is written in English and kept as short as

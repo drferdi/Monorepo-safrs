@@ -1,0 +1,26 @@
+# Secrets and credential-shaped paths — blocked from Agent / Tab / Inline Edit.
+# Not a hard security boundary (terminal/MCP can still reach files). Prefer vaults.
+# Index noise belongs in `.cursorindexingignore`, not here.
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Credential / key material
+**/credentials.json
+**/secrets.json
+**/*.pem
+**/*.key
+**/id_rsa
+**/id_ed25519
+**/*service-account*.json
+**/*-sa.json
+
+# Local auth / session dumps (if ever present)
+**/.netrc
+**/auth.json
+

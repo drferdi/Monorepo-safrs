@@ -1,0 +1,34 @@
+# Exclude from Cursor semantic index only — Agent can still open via explicit @ path.
+# Complements defaults (node_modules, lockfiles, .next, images, etc.).
+
+# Build / cache / reports (also in .gitignore; listed for explicit index hygiene)
+coverage/
+playwright-report/
+test-results/
+.turbo/
+.pnpm-store/
+.worktrees/
+*.tsbuildinfo
+
+# Generated / large vendor-ish trees
+**/generated/**
+packages/database/prisma/generated/**
+**/*.min.js
+**/*.min.css
+
+# Agent / tooling noise
+.superpowers/
+agent-transcripts/
+**/agent-transcripts/**
+
+# Duplicate vendor instruction wrappers (canonical policy is AGENTS.md)
+CLAUDE.md
+**/CLAUDE.md
+GEMINI.md
+**/GEMINI.md
+
+# Heavy design reference binaries if reintroduced
+docs/design-system/reference/**/*.png
+docs/design-system/reference/**/*.jpg
+docs/design-system/reference/**/*.webp
+docs/design-system/reference/**/*.pdf

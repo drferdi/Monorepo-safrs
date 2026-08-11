@@ -27,6 +27,8 @@ Last updated: 2026-08-11 | Branch: `main`
 - [x] Five agent memory files — registered in registry, in generated `AGENTS.md` read order,
       HANDOFF machine-enforced (Chief GO 2026-08-11)
 - [x] Active docs converted to concise English (2026-08-11)
+- [~] Claude Code automation pack (`.claude/` hooks, subagents, skills) — implemented,
+      awaiting Chief review (`docs/bootstrap/CLAUDE_SETUP.md`); Postgres MCP deferred
 - [ ] Complete `.env.example` + capability variable docs
 - [ ] Python prerequisite documented (INSTALL.md) + setup detection
 
