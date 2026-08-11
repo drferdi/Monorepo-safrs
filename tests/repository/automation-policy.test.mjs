@@ -213,3 +213,36 @@ test("Codex guard resolves the repository registry from a nested project cwd", (
     /verification.*R2/i,
   );
 });
+
+test("Codex formatter extracts unique apply_patch paths", async () => {
+  const formatterUrl = pathToFileURL(
+    join(repositoryRoot, ".codex/hooks/format-edited-files.mjs"),
+  ).href;
+  const formatter = await import(formatterUrl);
+  const paths = formatter.extractEditedPaths({
+    tool_name: "apply_patch",
+    tool_input: {
+      command: [
+        "*** Begin Patch",
+        "*** Update File: src/a.ts",
+        "*** Add File: src/b.json",
+        "*** Update File: src/a.ts",
+        "*** End Patch",
+      ].join("\n"),
+    },
+  });
+  assert.deepEqual(paths, ["src/a.ts", "src/b.json"]);
+  assert.equal(formatter.shouldFormat("src/a.ts"), true);
+  assert.equal(formatter.shouldFormat(".next/cache/a.js"), false);
+  assert.equal(
+    formatter.shouldFormat("packages/database/src/generated/a.ts"),
+    false,
+  );
+  assert.equal(formatter.shouldFormat("README.md"), false);
+  assert.equal(
+    formatter.findRepositoryRoot(
+      join(repositoryRoot, "projects/golden-path/apps/web"),
+    ),
+    repositoryRoot,
+  );
+});
