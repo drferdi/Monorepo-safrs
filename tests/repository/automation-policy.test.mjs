@@ -28,6 +28,33 @@ function runHook(script, payload, inputOverride, cwd = repositoryRoot) {
   });
 }
 
+function pythonCommand() {
+  for (const candidate of ["python", "python3"]) {
+    const result = spawnSync(candidate, ["--version"], { encoding: "utf8" });
+    if (
+      result.status === 0 &&
+      /Python 3\./u.test(result.stdout + result.stderr)
+    ) {
+      return candidate;
+    }
+  }
+  throw new Error("Python 3 is required for TOML contract tests.");
+}
+
+function parseToml(file) {
+  const result = spawnSync(
+    pythonCommand(),
+    [
+      "-c",
+      "import json,sys,tomllib; print(json.dumps(tomllib.load(open(sys.argv[1], 'rb'))))",
+      file,
+    ],
+    { cwd: repositoryRoot, encoding: "utf8" },
+  );
+  assert.equal(result.status, 0, result.stderr);
+  return JSON.parse(result.stdout);
+}
+
 function workflowFiles() {
   return readdirSync(workflowsDirectory)
     .filter((file) => file.endsWith(".yml") || file.endsWith(".yaml"))
@@ -245,4 +272,75 @@ test("Codex formatter extracts unique apply_patch paths", async () => {
     ),
     repositoryRoot,
   );
+});
+
+test("Codex project config wires only pinned Context7 and three child threads", () => {
+  const config = parseToml(".codex/config.toml");
+  assert.equal(config.agents.enabled, true);
+  assert.equal(config.agents.max_concurrent_threads_per_session, 3);
+  assert.deepEqual(Object.keys(config.mcp_servers), ["context7"]);
+  assert.equal(config.mcp_servers.context7.command, "pnpm");
+  assert.deepEqual(config.mcp_servers.context7.args, [
+    "dlx",
+    "@upstash/context7-mcp@4.0.0",
+  ]);
+  for (const forbidden of [
+    "model",
+    "model_reasoning_effort",
+    "approval_policy",
+    "sandbox_mode",
+  ]) {
+    assert.equal(Object.hasOwn(config, forbidden), false);
+  }
+});
+
+test("Codex hooks use repository root discovery for Windows and POSIX", () => {
+  const config = JSON.parse(readFileSync(".codex/hooks.json", "utf8"));
+  assert.equal(
+    config.hooks.PreToolUse[0].matcher,
+    "Bash|apply_patch|Edit|Write",
+  );
+  assert.equal(config.hooks.PostToolUse[0].matcher, "apply_patch|Edit|Write");
+  for (const group of [
+    config.hooks.PreToolUse[0],
+    config.hooks.PostToolUse[0],
+  ]) {
+    assert.match(group.hooks[0].command, /git rev-parse --show-toplevel/u);
+    assert.match(
+      group.hooks[0].commandWindows,
+      /git rev-parse --show-toplevel/u,
+    );
+  }
+});
+
+test("Codex custom reviewers are instruction-level read-only without model overrides", () => {
+  for (const file of [
+    ".codex/agents/safrs-reviewer.toml",
+    ".codex/agents/security-reviewer.toml",
+  ]) {
+    const agent = parseToml(file);
+    assert.equal(typeof agent.name, "string");
+    assert.equal(typeof agent.description, "string");
+    assert.match(
+      agent.developer_instructions,
+      /do not\s+(?:modify|mutate|edit)/iu,
+    );
+    assert.equal(agent.sandbox_mode, "read-only");
+    assert.equal(Object.hasOwn(agent, "model"), false);
+    assert.equal(Object.hasOwn(agent, "model_reasoning_effort"), false);
+  }
+});
+
+test("Context7 MCP has a matching approved SAFRS inventory record", () => {
+  const inventory = JSON.parse(
+    readFileSync(".safrs/tool-inventory.json", "utf8"),
+  );
+  const context7 = inventory.tools.find((tool) => tool.id === "context7-mcp");
+  assert.ok(context7);
+  assert.equal(context7.review_status, "APPROVED");
+  assert.match(context7.provenance, /@upstash\/context7-mcp@4\.0\.0/u);
+  assert.deepEqual(context7.network_endpoints, [
+    "registry.npmjs.org",
+    "mcp.context7.com",
+  ]);
 });

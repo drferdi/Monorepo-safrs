@@ -1,0 +1,10 @@
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 3
+
+[mcp_servers.context7]
+command = "pnpm"
+args = ["dlx", "@upstash/context7-mcp@4.0.0"]
+startup_timeout_sec = 40
+tool_timeout_sec = 45
+enabled = true

@@ -112,6 +112,17 @@
       "provenance": ".github/renovate.json",
       "activation_status": "PR_ONLY",
       "review_status": "APPROVED"
+    },
+    {
+      "id": "context7-mcp",
+      "owner": "repository-maintainers",
+      "purpose": "Read current public library documentation for repository development",
+      "allowed_operations": ["resolve-public-library", "read-public-library-documentation"],
+      "data_scope": "public-library-identifiers-and-task-scoped-documentation-queries-only",
+      "authentication": "none",
+      "network_endpoints": ["registry.npmjs.org", "mcp.context7.com"],
+      "provenance": "@upstash/context7-mcp@4.0.0 via pnpm dlx",
+      "review_status": "APPROVED"
     }
   ]
 }
