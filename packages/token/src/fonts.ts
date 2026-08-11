@@ -4,9 +4,9 @@
  * Never load fonts from a CDN at runtime (determinism, privacy).
  *
  * Usage (Next.js app):
- *   import { fontSans, fontMono } from "@sentra/design-tokens/fonts";
+ *   import { fontSans, fontMono } from "@sentra/token/fonts";
  *   <body className={`${fontSans.variable} ${fontMono.variable}`}>
- * Requires "@sentra/design-tokens" in next.config transpilePackages.
+ * Requires "@sentra/token" in next.config transpilePackages.
  */
 import localFont from "next/font/local";
 

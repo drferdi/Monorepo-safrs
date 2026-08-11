@@ -8,8 +8,8 @@
 
    Import order in an app's global stylesheet:
      @import "tailwindcss";
-     @import "@sentra/design-tokens/tokens.css";
-     @import "@sentra/design-tokens/tailwind.css";
+     @import "@sentra/token/tokens.css";
+     @import "@sentra/token/tailwind.css";
 
    Raw values never appear in this file. Edit tokens.css, not this bridge.
    ========================================================================= */

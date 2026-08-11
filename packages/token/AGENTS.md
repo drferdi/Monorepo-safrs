@@ -1,4 +1,4 @@
-# AGENTS.md — packages/token (@sentra/design-tokens)
+# AGENTS.md — packages/token (@sentra/token)
 
 ## Mandate
 
@@ -32,8 +32,8 @@ recomputation), which runs as part of the governance gate.
 
 ```css
 @import "tailwindcss";
-@import "@sentra/design-tokens/tokens.css";
-@import "@sentra/design-tokens/tailwind.css";
+@import "@sentra/token/tokens.css";
+@import "@sentra/token/tailwind.css";
 ```
 
 Worked reference screens: `docs/design-system/reference/`. Match the closest

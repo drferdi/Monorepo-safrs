@@ -26,13 +26,13 @@ docs/design-system/assets/sentra-mark.svg the logomark. Use as is; never redraw.
 
 ## Getting the tokens into an app
 
-A workspace member depends on `@sentra/design-tokens` and imports, once, in its
+A workspace member depends on `@sentra/token` and imports, once, in its
 root stylesheet:
 
 ```css
 @import "tailwindcss";
-@import "@sentra/design-tokens/tokens.css";
-@import "@sentra/design-tokens/tailwind.css";
+@import "@sentra/token/tokens.css";
+@import "@sentra/token/tailwind.css";
 ```
 
 Import semantic tokens only. Anything named `--p-*` is a private primitive; if
@@ -91,7 +91,7 @@ failed.
 ## Type
 
 Geist, one family (+ Geist Mono). Self-hosted variable fonts only, vendored in
-`assets/fonts/` (OFL) and loaded via `@sentra/design-tokens/fonts` — never from
+`assets/fonts/` (OFL) and loaded via `@sentra/token/fonts` — never from
 a font CDN at runtime. The display voice comes from size + weight (Geist has no
 width axis; `--font-width-*` stay at neutral 100). Three weights: 400, 500,
 600. Left aligned. Tabular figures in every numeric column. Mono means

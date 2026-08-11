@@ -1,5 +1,5 @@
 # Paths under token enforcement. One path per line, repo-root relative.
-# A path enters when it is migrated to @sentra/design-tokens and never leaves.
+# A path enters when it is migrated to @sentra/token and never leaves.
 # Comments start with #.
 packages/token
 packages/ui

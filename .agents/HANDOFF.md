@@ -4,7 +4,7 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-11 (Claude — folder packages/design-tokens renamed to packages/token; npm name @sentra/design-tokens unchanged; run pnpm install after pull to relink workspace)
+Last updated: 2026-08-11 (Claude — package renamed @sentra/design-tokens → @sentra/token, folder packages/token; run pnpm install after pull to relink and refresh lockfile)
 
 ## Current state
 

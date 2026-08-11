@@ -16,7 +16,7 @@
     "react": "^19.2.8"
   },
   "dependencies": {
-    "@sentra/design-tokens": "workspace:*"
+    "@sentra/token": "workspace:*"
   },
   "devDependencies": {
     "@safrs/config": "workspace:*",

@@ -1,5 +1,5 @@
 {
-  "name": "@sentra/design-tokens",
+  "name": "@sentra/token",
   "version": "1.0.0",
   "private": true,
   "description": "Sentraverse design tokens. The only place a raw colour value may appear. Ported verbatim from abyss-monorepo (Foundation Tokens v1.0).",
