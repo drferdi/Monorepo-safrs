@@ -4,51 +4,51 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-11 (Codex repository automation)
+Last updated: 2026-08-11 (Cursor — DBCode/SpecStory/Quick Presets setup; Claude — repo hygiene fixes, uncommitted)
 
 ## Current state
 
-- **Branch:** `feat/codex-repository-automation` in the dedicated Codex worktree.
-- **Commits:** `bf3c8a3` guard, `1163f04` formatter, `28d1f05` config/reviewers/Context7,
-  `30b8ec5` skills, `6eccc85` governance/docs, plus this handoff commit.
-- **Context7:** `@upstash/context7-mcp@4.0.0` inventoried; project trust smoke check remains pending.
-- **Integrity:** adapter controls and tests changed together; designated review is required
-  (`SAFRS_VERIFICATION_INTEGRITY_REVIEW=required`).
-- **Prisma/Postgres MCP:** still deferred.
+- **Repo hygiene (Claude session, uncommitted):**
+  - `scripts/safrs-verify.ps1` now runs `check_handoff.py` (was silently skipped on Windows; `.sh` already had it)
+  - `.github/CODEOWNERS.example` deleted — superseded by real `CODEOWNERS`
+  - `docs/bootstrap/README.md` retitled: archive vs active setup guides made explicit
+  - `README.md` orphan `</div>` removed
+  - Deferred until in-flight branches land: moving setup guides out of `docs/bootstrap/`, registering `docs/superpowers/{plans,specs}` in the document registry
+- **Incident fixed:** main `.git/config` contained `core.worktree = .worktrees/solo-noncoding-agents` (set by a Codex session) — every git command in the main checkout silently operated on that worktree's files. Unset 2026-08-11. Any git output observed while it was active is suspect.
+- **Known red gates (pre-existing, owned by the in-flight renumbering change set):** `check_docs`/`check_topology`/topology test fail because `.cursor/rules/*.mdc` were renamed to numbered files on disk but `.safrs/document-registry.json` still lists old paths, and `projects/_template/AGENTS.md` + `tools/AGENTS.md` are deleted uncommitted. `check_sensitive_changes` demands independent review (controls + implementation mixed in the working tree).
+
+- **Extensions (local Cursor):**
+  - `dbcode.dbcode` + SpecStory installed by Chief
+  - `EnginCannot.cursor-quick-presets` v0.1.5 installed via CLI (search by ID if missing)
+  - Local workspace config in `.vscode/settings.json` (gitignored): SpecStory local-only; DBCode pinned to Docker Postgres `127.0.0.1:54329` / `safrs_local`; `.env` zero-config discovery **disabled** (avoids Neon)
+- **Postgres:** `pnpm db:start` healthy on `:54329`
+- **Gitignore:** `.specstory/history/` + `statistics.json` ignored (chat dumps may contain secrets)
+- Prior: Bugbot follow-ups on `main`; Prisma/Postgres MCP still deferred (`DECISIONS.md`) — DBCode is the interim DB agent surface
 
 ## Work in flight (do not clobber)
 
-- DX friction plan owns `scripts/`, root `package.json`, and `INSTALL.md`.
-- Cursor non-coding-agent work remains in its sibling worktree and is out of scope.
+- DX friction plan owned elsewhere — `scripts/`, root `package.json`, INSTALL.md stay out of scope.
 
-## Verification evidence
+## Blockers
 
-- `pnpm install --frozen-lockfile` — PASS.
-- `pnpm governance` baseline — PASS before Codex changes.
-- `node --test tests/repository/automation-policy.test.mjs` — PASS, 16/16.
-- `python tests/architecture/test_safrs_topology.py` — PASS, 6/6.
-- `python tests/governance/test_sensitive_classification.py` — PASS, 5/5.
-- `python tools/safrs/check_tool_inventory.py` — PASS.
-- `python tools/safrs/check_docs.py` — PASS.
-- `python tools/safrs/check_routing.py` — PASS.
-- `git diff --check` — PASS.
-- `pnpm governance` — PASS (`SAFRS_RISK=R2`).
-- `pnpm check` — FAIL at existing Biome lint findings in design-system/token files; no Codex paths were reported.
-- `pnpm typecheck` — FAIL because generated Prisma client is absent at
-  `packages/database/src/generated/prisma/client.ts`.
-- `pnpm test` — FAIL before tests because repository `.env` is not present.
-- `pnpm build` — FAIL because `APP_URL` and `DATABASE_URL` are not configured.
-- `scripts/safrs-verify.sh` via Git Bash — PASS.
-- `codex mcp list` — global `node_repl` and `hindsight` only; project Context7 remains **PENDING HUMAN TRUST CHECK**.
+- Pre-existing red token/lint gates; Stripe CLI missing.
+
+## Done this session (env)
+
+- `.env`: Neon `DATABASE_URL` commented; only local `127.0.0.1:54329/safrs_local` remains active.
 
 ## Next actions
 
-1. Review/trust project hooks in a fresh Codex session; confirm Context7 under `/mcp` and skills/reviewers under `/skills`.
-2. Obtain designated R2/integrity review before integration.
-3. Push/merge only under repository policy after review; do not remediate unrelated baseline lint/env failures in this branch.
+| Area | Action |
+| --- | --- |
+| DBCode | Reload Window → open DBCode sidebar → connect `SAFRS local`; confirm MCP tools in chat picker |
+| SpecStory | Cmd/Ctrl+Shift+P → `SpecStory:` commands appear; history under `.specstory/history/` |
+| Quick Presets | Explorer → “Cursor Quick Presets” panel (or Command: Show in Explorer) |
+| Tool inventory | `.cursor/mcp.json` still lacks `.safrs/tool-inventory.json` entries |
 
 ## Session guardrails
 
 - Never read `.env` in `D:\Devops\abyss-monorepo`; never copy old `node_modules`/`.env`/`.next`/lockfiles.
-- `.agents/knowledge/` — no changes without Chief approval.
+- `.agents/knowledge/` — no changes without Chief's approval.
+- Do not point DBCode/agent at Neon/cloud DBs from this workspace.
 - PowerShell for commands; chat diagnostics in Bahasa Indonesia; docs/code in English.

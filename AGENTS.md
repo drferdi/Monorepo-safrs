@@ -43,7 +43,7 @@ Then read the nearest nested `AGENTS.md` for the project/module being modified.
 5. Never directly deploy to production or merge a protected branch unless an explicit repository policy and human authorization allow it.
 6. Never weaken tests, security gates, architecture checks, or governance controls merely to make a task pass.
 7. If implementation and its governing verification are modified together, flag the change for elevated review.
-8. Use isolated worktrees/environments for parallel mutation work.
+8. Use isolated worktrees/environments for parallel mutation work. Create worktrees outside the repository working tree, in the sibling directory `../Monorepo.worktrees/<branch-name>` (e.g. `git worktree add ../Monorepo.worktrees/feat-x feat/x`). Never create worktrees inside the repository root; `.worktrees/` is legacy and stays gitignored only as a safety net.
 9. Respect task scope. Do not modify paths outside the assigned scope unless required to complete the task; document any expansion.
 10. Run `scripts/safrs-verify.sh` before declaring work complete.
 
