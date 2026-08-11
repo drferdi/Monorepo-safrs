@@ -3,19 +3,26 @@
   "version": "1.0.0",
   "private": true,
   "description": "Sentraverse design tokens. The only place a raw colour value may appear. Ported verbatim from abyss-monorepo (Foundation Tokens v1.0).",
-  "sideEffects": ["*.css"],
+  "sideEffects": [
+    "*.css"
+  ],
   "exports": {
     "./tokens.css": "./src/tokens.css",
     "./tokens.json": "./src/tokens.json",
     "./tailwind.css": "./src/tailwind.css",
     "./fonts": "./src/fonts.ts"
   },
-  "files": ["src", "assets"],
+  "files": [
+    "src",
+    "assets"
+  ],
   "peerDependencies": {
     "next": ">=15"
   },
   "peerDependenciesMeta": {
-    "next": { "optional": true }
+    "next": {
+      "optional": true
+    }
   },
   "scripts": {
     "lint": "biome check src",

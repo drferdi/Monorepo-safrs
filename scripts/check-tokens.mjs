@@ -12,13 +12,22 @@
  *   node scripts/check-tokens.mjs           gate (CI / governance)
  *   node scripts/check-tokens.mjs --audit   report unmigrated raw values
  */
-import { readFileSync, readdirSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { extname, join, relative } from "node:path";
 
 const ROOT = process.cwd();
 const TOKEN_PKG = "packages/token";
 const SCAN = ["projects", "packages", "tools"];
-const EXT = new Set([".css", ".scss", ".ts", ".tsx", ".js", ".jsx", ".vue", ".svelte"]);
+const EXT = new Set([
+  ".css",
+  ".scss",
+  ".ts",
+  ".tsx",
+  ".js",
+  ".jsx",
+  ".vue",
+  ".svelte",
+]);
 
 /* Allowed to hold literal values: the token package, and swatch demos which
    must show the real hex. Anything else uses var(--token). */
@@ -79,11 +88,14 @@ try {
     .map((l) => l.replace(/#.*$/, "").trim().replaceAll("\\", "/"))
     .filter(Boolean);
 } catch {
-  console.error(`Missing ${SCOPE_FILE}. Create it, even empty, so scope is explicit.`);
+  console.error(
+    `Missing ${SCOPE_FILE}. Create it, even empty, so scope is explicit.`,
+  );
   process.exit(1);
 }
 
-const inScope = (rel) => scope.some((s) => rel === s || rel.startsWith(s.replace(/\/?$/, "/")));
+const inScope = (rel) =>
+  scope.some((s) => rel === s || rel.startsWith(s.replace(/\/?$/, "/")));
 
 const violations = [];
 const legacy = new Map();
@@ -97,7 +109,8 @@ for (const base of SCAN) {
     if (!inScope(rel)) {
       if (AUDIT) {
         const src = readFileSync(file, "utf8");
-        const n = (src.match(HEX)?.length ?? 0) + (src.match(RADIUS)?.length ?? 0);
+        const n =
+          (src.match(HEX)?.length ?? 0) + (src.match(RADIUS)?.length ?? 0);
         if (n) {
           const owner = rel.split("/").slice(0, 3).join("/");
           legacy.set(owner, (legacy.get(owner) ?? 0) + n);
@@ -107,9 +120,15 @@ for (const base of SCAN) {
     }
     const src = readFileSync(file, "utf8");
     src.split("\n").forEach((line, i) => {
-      if (line.trimStart().startsWith("//") || line.trimStart().startsWith("*")) return;
+      if (line.trimStart().startsWith("//") || line.trimStart().startsWith("*"))
+        return;
       for (const m of line.matchAll(HEX))
-        violations.push({ rel, line: i + 1, found: m[0], why: "raw colour — use var(--color-*)" });
+        violations.push({
+          rel,
+          line: i + 1,
+          found: m[0],
+          why: "raw colour — use var(--color-*)",
+        });
       for (const _ of line.matchAll(RADIUS))
         violations.push({
           rel,
@@ -122,7 +141,9 @@ for (const base of SCAN) {
 }
 
 /* ---- contrast ---- */
-const tokens = JSON.parse(readFileSync(join(ROOT, TOKEN_PKG, "src/tokens.json"), "utf8"));
+const tokens = JSON.parse(
+  readFileSync(join(ROOT, TOKEN_PKG, "src/tokens.json"), "utf8"),
+);
 const THEMES = [
   { name: "light", map: tokens.color },
   { name: "dark", map: tokens.colorDark },
@@ -147,25 +168,70 @@ const ratio = (a, b) => {
 /* fg, bg, minimum, note */
 const PAIRS = [
   ["--color-text-primary", "--color-background-canvas", 4.5, "body text"],
-  ["--color-text-secondary", "--color-background-canvas", 4.5, "secondary text"],
-  ["--color-text-primary", "--color-background-surface", 4.5, "text on surface"],
+  [
+    "--color-text-secondary",
+    "--color-background-canvas",
+    4.5,
+    "secondary text",
+  ],
+  [
+    "--color-text-primary",
+    "--color-background-surface",
+    4.5,
+    "text on surface",
+  ],
   ["--color-accent-text", "--color-background-canvas", 4.5, "accent text"],
   ["--color-status-critical", "--color-background-canvas", 4.5, "critical"],
   ["--color-status-warning", "--color-background-canvas", 4.5, "warning"],
   ["--color-status-success", "--color-background-canvas", 4.5, "success"],
-  ["--color-text-inverse", "--color-action-primary", 4.5, "primary button label"],
-  ["--color-text-on-emphasis", "--color-surface-emphasis", 4.5, "emphasis tile label"],
-  ["--color-text-inverse", "--color-status-critical", 4.5, "unread count on critical badge"],
-  ["--color-text-primary", "--color-surface-critical", 4.5, "text on failing row"],
-  ["--color-accent", "--color-background-canvas", 3.0, "accent as graphic mark"],
-  ["--color-border-strong", "--color-background-canvas", 3.0, "control boundary"],
+  [
+    "--color-text-inverse",
+    "--color-action-primary",
+    4.5,
+    "primary button label",
+  ],
+  [
+    "--color-text-on-emphasis",
+    "--color-surface-emphasis",
+    4.5,
+    "emphasis tile label",
+  ],
+  [
+    "--color-text-inverse",
+    "--color-status-critical",
+    4.5,
+    "unread count on critical badge",
+  ],
+  [
+    "--color-text-primary",
+    "--color-surface-critical",
+    4.5,
+    "text on failing row",
+  ],
+  [
+    "--color-accent",
+    "--color-background-canvas",
+    3.0,
+    "accent as graphic mark",
+  ],
+  [
+    "--color-border-strong",
+    "--color-background-canvas",
+    3.0,
+    "control boundary",
+  ],
   ["--color-data-1", "--color-background-canvas", 3.0, "data series 1"],
   ["--color-data-2", "--color-background-canvas", 3.0, "data series 2"],
   ["--color-data-3", "--color-background-canvas", 3.0, "data series 3"],
 ];
 
 /* data ramp must stay separable in greyscale */
-const ramp = ["--color-data-1", "--color-data-2", "--color-data-3", "--color-data-4"];
+const ramp = [
+  "--color-data-1",
+  "--color-data-2",
+  "--color-data-3",
+  "--color-data-4",
+];
 
 const contrastFails = [];
 let checks = 0;
@@ -184,7 +250,13 @@ for (const theme of THEMES) {
     checks++;
     const r = ratio(valIn(theme.map, fg), valIn(theme.map, bg));
     if (r < min)
-      contrastFails.push({ note: `${theme.name} · ${note}`, fg, bg, got: r.toFixed(2), min });
+      contrastFails.push({
+        note: `${theme.name} · ${note}`,
+        fg,
+        bg,
+        got: r.toFixed(2),
+        min,
+      });
   }
   for (let i = 0; i < ramp.length - 1; i++) {
     checks++;
@@ -204,35 +276,45 @@ for (const theme of THEMES) {
 if (AUDIT) {
   const rows = [...legacy.entries()].sort((a, b) => b[1] - a[1]);
   const total = rows.reduce((s, [, n]) => s + n, 0);
-  console.log(`\nUnmigrated raw values, by area — ${total} across ${rows.length} areas:\n`);
-  for (const [owner, n] of rows) console.log(`  ${String(n).padStart(6)}  ${owner}`);
+  console.log(
+    `\nUnmigrated raw values, by area — ${total} across ${rows.length} areas:\n`,
+  );
+  for (const [owner, n] of rows)
+    console.log(`  ${String(n).padStart(6)}  ${owner}`);
   console.log(`\n${scope.length} path(s) already in ${SCOPE_FILE}.`);
 }
 
 let bad = false;
 if (violations.length) {
   bad = true;
-  console.error(`\n${violations.length} raw value(s) in Sentraverse-scoped code:\n`);
+  console.error(
+    `\n${violations.length} raw value(s) in Sentraverse-scoped code:\n`,
+  );
   for (const v of violations.slice(0, 40))
     console.error(`  ${v.rel}:${v.line}  ${v.found}  — ${v.why}`);
-  if (violations.length > 40) console.error(`  ... and ${violations.length - 40} more`);
+  if (violations.length > 40)
+    console.error(`  ... and ${violations.length - 40} more`);
 }
 if (contrastFails.length) {
   bad = true;
   console.error(`\n${contrastFails.length} contrast failure(s):\n`);
   for (const c of contrastFails)
-    console.error(`  ${c.note}: ${c.fg} on ${c.bg} = ${c.got}:1, needs ${c.min}:1`);
+    console.error(
+      `  ${c.note}: ${c.fg} on ${c.bg} = ${c.got}:1, needs ${c.min}:1`,
+    );
 }
 if (bad) {
-  console.error("\nToken gate failed. Fix the values, or change the token and re-measure.\n");
+  console.error(
+    "\nToken gate failed. Fix the values, or change the token and re-measure.\n",
+  );
   process.exit(1);
 }
 console.log(
   `Token gate passed. ${checks} contrast checks across ${THEMES.length} themes, ` +
-    `0 raw values in ${scope.length} scoped path(s). Scanned ${scanned.join(", ")}.`
+    `0 raw values in ${scope.length} scoped path(s). Scanned ${scanned.join(", ")}.`,
 );
 if (!scope.length)
   console.log(
     `Note: ${SCOPE_FILE} is empty, so only contrast was checked. ` +
-      `Add a path there as soon as a screen is migrated, or the gate guards nothing.`
+      `Add a path there as soon as a screen is migrated, or the gate guards nothing.`,
   );
