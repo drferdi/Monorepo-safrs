@@ -4,35 +4,59 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-11 (Claude — CODEOWNERS owner set to @drferdii; branch-protection command drafted in remediation plan Phase 1, awaiting Chief on GitHub. Reminder: pnpm install after pull)
+Last updated: 2026-08-11 (Claude — SAFRS 8-feature audit + fixes for #2/#5/#4; uncommitted, awaiting Chief review)
 
 ## Current state
 
-- KB re-routing, memory-file integration, and `.agents/` relocation all committed & pushed
-  (`de1410f`, `6d62b83`, `3509cb2`).
-- Routing is registry-driven; `check_handoff.py` enforces HANDOFF updates; all governance checks green.
-- Active docs converted to English and compressed (memory files, bootstrap README, remediation plan).
-  Historical archives keep original text.
+- Full SAFRS v1.1 audit of the 8 golden-path features completed with command evidence.
+  Verdict: #1/#3/#6/#7/#8 verified; #2 and #5 were incomplete and are now fixed (below);
+  #4 reset blocked (see Blockers).
+- **Uncommitted working-tree changes (R2, need Chief review before commit):**
+  - `next.config.ts` (web) imports `@safrs/env/server` → `next build` now fails fast on
+    missing env (verified both directions **through `turbo run build`**). New contract
+    test `tests/contracts/build-time-environment.test.ts`. Required companion:
+    `turbo.json` build task now declares `env: [DATABASE_URL, APP_URL, NODE_ENV]` —
+    without it Turbo strict mode strips env and CI build fails.
+  - `packages/env/src/server.ts`: optional `STRIPE_SECRET_KEY`/`STRIPE_WEBHOOK_SECRET`.
+  - New `src/email/welcome.tsx` (tokens from `@sentra/token/tokens.json`, no raw values;
+    `pnpm dev:email` verified HTTP 200, template renders). New `@react-email/ui` devDep
+    (catalog + web package.json).
+  - New `/api/webhooks/stripe` route in web app (signature verification; 4 tests incl.
+    signed event). Static route wins over the `[[...route]]` catch-all.
+  - `pnpm-lock.yaml` + `pnpm-workspace.yaml` regenerated (fixes stale-lockfile CI break
+    from the `@sentra/token` rename; adds `minimumReleaseAgeExclude` for resend/stripe).
+- Verified green: typecheck, env/web/contracts tests, token gate, `pnpm governance`,
+  biome on touched files. Prisma Studio verified (HTTP 200). Pre-commit hook measured:
+  777 ms total, Biome portion 89 ms.
 
 ## Work in flight (do not clobber)
 
-- **Another Claude is executing** DX friction fixes
-  (`docs/superpowers/plans/2026-08-11-solo-dev-dx-friction-fixes.md`): `pnpm verify`, `check:quick`,
-  Python detection, INSTALL.md, Windows-native husky, `.env.example`. That plan file is still in
-  Bahasa Indonesia by design (in-flight). Do not touch related `package.json`/`scripts/` until done.
+- **Another Claude owns** DX friction fixes
+  (`docs/superpowers/plans/2026-08-11-solo-dev-dx-friction-fixes.md`) — checkboxes still
+  empty, so `scripts/`, root `package.json`, INSTALL.md remain its scope. This session
+  did not touch them.
 
 ## Blockers
 
-- None.
+- `pnpm db:reset`: Prisma 7 AI guard + harness classifier both block agent execution.
+  Chief must run it manually once (local `safrs_local` only; reset-guard verified to
+  reject remote URLs) or add a permission rule.
+- Pre-existing red gates NOT in this session's scope: `@sentra/token#test` fails under
+  Turbo (`check-tokens.mjs` uses `process.cwd()`), `pnpm lint` 32 errors (design-system
+  reference HTML + `packages/token/src/tailwind.css` parse error). From rename commits
+  `172c6a4`…`96c48be`.
+- Stripe CLI not installed on this machine → `stripe:listen` unverified end-to-end
+  (webhook route itself is test-verified).
 
 ## Next actions
 
 | Area | Action |
 | --- | --- |
-| DX friction fixes | Wait for completion; verify with `pnpm check` |
-| Governance remediation | Execute `docs/plans/active/SAFRS_GOVERNANCE_REMEDIATION_PLAN.md` — Phase 1 (CODEOWNERS/branch protection) needs Chief on GitHub |
-| Project migration | READY — repo prep verified 2026-08-11. Pilot `ferdiiskandar` via `pnpm project:new` (selective copy). Hold R2/R3 projects (med-assist) until branch protection is live |
-| SAFRS_SPEC routing | Chief to confirm MUST→SHOULD demotion or revert (one line in registry) |
+| This session's diff | Chief review → commit (R2: env package, lockfile, workspace) |
+| Red gates | Fix `check-tokens.mjs` ROOT + lint errors (waits on DX-plan scope release) |
+| Governance remediation | Phase 1 branch protection — needs Chief on GitHub |
+| Project migration | READY — pilot `ferdiiskandar` via `pnpm project:new`; hold R2/R3 projects until branch protection live |
+| SAFRS_SPEC routing | Chief to confirm MUST→SHOULD demotion or revert |
 
 ## Session guardrails
 
