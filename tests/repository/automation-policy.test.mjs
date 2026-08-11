@@ -1,12 +1,32 @@
 import assert from "node:assert/strict";
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import {
+  existsSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
+import { pathToFileURL } from "node:url";
 
 const workflowsDirectory = ".github/workflows";
 const ciFile = join(workflowsDirectory, "ci.yml");
 const renovateFile = ".github/renovate.json";
 const immutableAction = /^[a-z0-9][a-z0-9_.-]*\/[a-z0-9_.-]+@[a-f0-9]{40}$/u;
+const repositoryRoot = process.cwd();
+const codexGuard = join(repositoryRoot, ".codex/hooks/guard-tool-use.mjs");
+
+function runHook(script, payload, inputOverride, cwd = repositoryRoot) {
+  return spawnSync(process.execPath, [script], {
+    cwd,
+    encoding: "utf8",
+    input: inputOverride ?? JSON.stringify(payload),
+  });
+}
 
 function workflowFiles() {
   return readdirSync(workflowsDirectory)
@@ -108,4 +128,88 @@ test("workflow policy rejects YAML bypasses for action pins, write permissions, 
   ]) {
     assert.throws(() => assertWorkflowPolicy(workflow), /SHA|write|deploy/iu);
   }
+});
+
+test("Codex guard blocks credential edits and allows env templates", () => {
+  const denied = runHook(codexGuard, {
+    tool_name: "apply_patch",
+    tool_input: {
+      command: "*** Begin Patch\n*** Update File: .env\n*** End Patch",
+    },
+  });
+  assert.equal(denied.status, 2);
+  assert.match(denied.stderr, /credential/i);
+
+  const allowed = runHook(codexGuard, {
+    tool_name: "apply_patch",
+    tool_input: {
+      command: "*** Begin Patch\n*** Update File: .env.example\n*** End Patch",
+    },
+  });
+  assert.equal(allowed.status, 0, allowed.stderr);
+});
+
+test("Codex guard blocks force push and direct database destruction", () => {
+  for (const command of [
+    "git push origin main --force",
+    "git push origin main -f",
+    "pnpm exec prisma migrate reset",
+    "dropdb production",
+  ]) {
+    const result = runHook(codexGuard, {
+      tool_name: "Bash",
+      tool_input: { command },
+    });
+    assert.equal(result.status, 2, `${command}\n${result.stderr}`);
+  }
+
+  const lease = runHook(codexGuard, {
+    tool_name: "Bash",
+    tool_input: { command: "git push origin main --force-with-lease" },
+  });
+  assert.equal(lease.status, 0, lease.stderr);
+});
+
+test("Codex guard reports verification-control context without blocking", () => {
+  const result = runHook(codexGuard, {
+    tool_name: "apply_patch",
+    tool_input: {
+      command:
+        "*** Begin Patch\n*** Update File: .safrs/policy.json\n*** End Patch",
+    },
+  });
+  assert.equal(result.status, 0, result.stderr);
+  const output = JSON.parse(result.stdout);
+  assert.match(
+    output.hookSpecificOutput.additionalContext,
+    /verification.*R2/i,
+  );
+});
+
+test("Codex guard handles malformed payloads without inventing a target", () => {
+  const result = runHook(codexGuard, {}, "not-json");
+  assert.equal(result.status, 0);
+  assert.match(result.stderr, /could not be parsed/i);
+});
+
+test("Codex guard resolves the repository registry from a nested project cwd", () => {
+  const nested = join(repositoryRoot, "projects/golden-path/apps/web");
+  const result = runHook(
+    codexGuard,
+    {
+      tool_name: "apply_patch",
+      cwd: nested,
+      tool_input: {
+        command:
+          "*** Begin Patch\n*** Update File: .safrs/policy.json\n*** End Patch",
+      },
+    },
+    undefined,
+    nested,
+  );
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(
+    JSON.parse(result.stdout).hookSpecificOutput.additionalContext,
+    /verification.*R2/i,
+  );
 });
