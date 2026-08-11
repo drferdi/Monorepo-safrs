@@ -14,7 +14,11 @@ import test from "node:test";
 
 const repositoryRoot = resolve(import.meta.dirname, "../..");
 const hookPath = join(repositoryRoot, ".husky", "pre-commit");
-const bashExecutable = "C:\\Program Files\\Git\\bin\\bash.exe";
+const bashExecutable =
+  process.platform === "win32"
+    ? "C:\\Program Files\\Git\\bin\\bash.exe"
+    : "bash";
+const lineEnding = process.platform === "win32" ? "\r\n" : "\n";
 
 function shellPath(file) {
   const normalized = file.replaceAll("\\", "/");
@@ -88,7 +92,7 @@ test("hook repairs a fully staged TypeScript file and leaves unrelated unstaged 
 
     assert.equal(
       await readFile(join(root, "staged.ts"), "utf8"),
-      "export const answer = 42;\n",
+      `export const answer = 42;${lineEnding}`,
     );
     assert.equal(
       command(root, ["diff", "--cached", "--name-only"]).trim(),

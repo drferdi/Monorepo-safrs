@@ -13,6 +13,8 @@ Last updated: 2026-08-12 (CI lint baseline remediation)
 - Design reference errors were corrected without redesign: accessible SVG title, valid links, block-scoped declarations, and formatter-safe script markup.
 - Token values are semantically unchanged; their CSS and package manifest were formatted. The token gate script received formatter-only changes.
 - Fresh Windows checkout evidence: `pnpm lint` checked 146 files with 0 errors (19 warnings, 11 infos); `pnpm check:tokens` passed 38 contrast checks.
+- GitHub then reached `pnpm test`; the pre-commit fixture now selects Git Bash on Windows and native `bash` on Linux instead of hard-coding a Windows executable on Ubuntu.
+- `scripts/check-tokens.mjs` and `tests/repository/precommit.test.mjs` are now explicit verification-control patterns, with classifier regression coverage, so mixed implementation/control changes require matching independent evidence.
 - Isolated worktree: `D:/DEV/Monorepo.worktrees/fix-lint-baseline` on `fix/lint-baseline`.
 - Primary `main` worktree still holds unrelated alignment-pack changes — do not clobber.
 
