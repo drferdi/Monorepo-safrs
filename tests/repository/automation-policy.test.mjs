@@ -142,6 +142,15 @@ test("CI proves the full safe verification path without deployment", () => {
   }
   assert.match(workflow, /services:\s*\n\s+postgres:/u);
   assert.match(workflow, /DATABASE_URL:/u);
+  assert.match(workflow, /fetch-depth:\s*0/u);
+  assert.match(
+    workflow,
+    /SAFRS_BASE_REF:\s*\$\{\{ github\.event\.pull_request\.base\.sha \|\| 'origin\/main' \}\}/u,
+  );
+  assert.match(
+    workflow,
+    /SAFRS_HEAD_REF:\s*\$\{\{ github\.event\.pull_request\.head\.sha \|\| github\.sha \}\}/u,
+  );
   assert.doesNotMatch(workflow, /\bdeploy\b/iu);
 });
 

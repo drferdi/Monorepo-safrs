@@ -11,7 +11,7 @@ Last updated: 2026-08-12 (Control Plane v1 — CI portability follow-up)
 - **Control Plane Increment A remediation (R2, this branch):** shared Git-common task leases, locked atomic writes, changed-path ownership, strict validation/redaction, owner-worktree mutation binding, recovery, `pnpm status`, `pnpm task`, CI/verify wiring, tests, protocol, and design.
 - The original snapshot received independent spec, SAFRS boundary, and verification-integrity approval; the CI follow-up is being re-reviewed after its trusted-base correction.
 - Integrity review evidence is fail-closed and bound to the exact changed-file content fingerprint; stale or malformed evidence is rejected.
-- PR #3 exposed a Windows/Linux byte-representation mismatch. The follow-up uses canonical Git blob identities and `origin/main` as the trusted fetched local base, with regression coverage for CRLF worktrees, historical LF blobs in CI, and a stale local `main` branch.
+- PR #3 exposed a Windows/Linux byte-representation mismatch. The follow-up uses canonical Git blob identities and `origin/main` as the trusted fetched local base, with regression coverage for CRLF worktrees, historical LF blobs in CI, a stale local `main` branch, and manual feature-branch dispatch. CI now fetches history and passes immutable PR base/head SHAs to `pnpm governance`; manual dispatch compares `origin/main` to `github.sha`, while classifier subprocess tests strip inherited CI refs before entering disposable repositories.
 - Isolated worktree: `D:/DEV/Monorepo.worktrees/feat-safrs-control-plane-v1` on `fix/safrs-integrity-fingerprint`.
 - Primary `main` working tree still holds unrelated Cursor alignment pack — do not clobber.
 

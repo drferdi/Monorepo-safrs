@@ -51,12 +51,17 @@ def write(repository, relative, content='changed\n'):
 
 
 def run_checker(repository, environment=None):
+    clean_environment = dict(os.environ)
+    clean_environment.pop('SAFRS_BASE_REF', None)
+    clean_environment.pop('SAFRS_HEAD_REF', None)
+    if environment:
+        clean_environment.update(environment)
     return subprocess.run(
         [sys.executable, repository / CHECKER],
         cwd=repository,
         text=True,
         capture_output=True,
-        env=environment,
+        env=clean_environment,
     )
 
 
@@ -139,7 +144,10 @@ class SensitiveClassificationTests(unittest.TestCase):
             git(repository, 'add', '.')
             git(repository, 'commit', '-qm', 'automation controls')
 
-            result = run_checker(repository, {**os.environ, 'SAFRS_BASE_REF': 'HEAD~1'})
+            result = run_checker(
+                repository,
+                {'SAFRS_BASE_REF': 'HEAD~1', 'SAFRS_HEAD_REF': 'HEAD'},
+            )
 
             # Verification controls and implementation moved together: this diff
             # must be rejected, not merely annotated.
@@ -216,11 +224,7 @@ class SensitiveClassificationTests(unittest.TestCase):
 
             result = run_checker(
                 repository,
-                {
-                    **os.environ,
-                    'SAFRS_BASE_REF': 'HEAD~1',
-                    'SAFRS_HEAD_REF': 'HEAD',
-                },
+                {'SAFRS_BASE_REF': 'HEAD~1', 'SAFRS_HEAD_REF': 'HEAD'},
             )
 
             self.assertEqual(result.returncode, 0, result.stderr)
@@ -253,11 +257,7 @@ class SensitiveClassificationTests(unittest.TestCase):
             git(repository, 'commit', '-qm', 'reviewed followup')
             historical_result = run_checker(
                 repository,
-                {
-                    **os.environ,
-                    'SAFRS_BASE_REF': base_sha,
-                    'SAFRS_HEAD_REF': 'HEAD',
-                },
+                {'SAFRS_BASE_REF': base_sha, 'SAFRS_HEAD_REF': 'HEAD'},
             )
             self.assertEqual(historical_result.returncode, 0, historical_result.stderr)
 
@@ -319,6 +319,37 @@ class SensitiveClassificationTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn('Changed files: 2', result.stdout)
             self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=approved', result.stdout)
+
+    def test_manual_dispatch_refs_keep_complete_feature_diff(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['tools/safrs/**'],
+                'verification_control_patterns': ['tools/safrs/**'],
+                'review_base_ref': 'origin/main',
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            commit_baseline(repository)
+            base_sha = git(repository, 'rev-parse', 'HEAD').stdout.strip()
+            git(repository, 'update-ref', 'refs/remotes/origin/main', base_sha)
+            git(repository, 'checkout', '-qb', 'feature')
+            write(repository, 'src/app.py', '# implementation\n')
+            git(repository, 'add', '.')
+            git(repository, 'commit', '-qm', 'implementation')
+            write(repository, 'tools/safrs/check_extra.py', '# control\n')
+            git(repository, 'add', '.')
+            git(repository, 'commit', '-qm', 'verification control')
+
+            result = run_checker(
+                repository,
+                {'SAFRS_BASE_REF': 'origin/main', 'SAFRS_HEAD_REF': 'HEAD'},
+            )
+
+            self.assertNotEqual(result.returncode, 0, result.stdout)
+            self.assertIn('Changed files: 2', result.stdout)
+            self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=required', result.stdout)
 
     def test_stale_review_evidence_is_rejected(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
