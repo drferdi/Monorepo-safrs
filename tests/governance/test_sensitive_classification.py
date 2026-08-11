@@ -285,6 +285,41 @@ class SensitiveClassificationTests(unittest.TestCase):
             self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=required', result.stdout)
             self.assertIn('Changed files: 2', result.stdout)
 
+    def test_remote_base_is_used_when_local_main_is_stale(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['tools/safrs/**'],
+                'verification_control_patterns': ['tools/safrs/**'],
+                'review_base_ref': 'origin/main',
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            commit_baseline(repository)
+            stale_main_sha = git(repository, 'rev-parse', 'main').stdout.strip()
+            git(repository, 'checkout', '-qb', 'remote-main')
+            write(repository, 'src/merged.py', '# already merged upstream\n')
+            git(repository, 'add', '.')
+            git(repository, 'commit', '-qm', 'advance remote main')
+            base_sha = git(repository, 'rev-parse', 'HEAD').stdout.strip()
+            git(repository, 'update-ref', 'refs/remotes/origin/main', base_sha)
+            git(repository, 'checkout', '-qb', 'feature')
+            changed = ['src/app.py', 'tools/safrs/check_extra.py']
+            write(repository, changed[0], '# implementation\n')
+            write(repository, changed[1], '# control\n')
+            write_review_evidence(repository, changed, base_sha=base_sha)
+
+            result = run_checker(repository)
+
+            self.assertEqual(
+                git(repository, 'rev-parse', 'main').stdout.strip(),
+                stale_main_sha,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn('Changed files: 2', result.stdout)
+            self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=approved', result.stdout)
+
     def test_stale_review_evidence_is_rejected(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             repository = Path(temporary_directory)
