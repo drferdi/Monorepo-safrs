@@ -8,7 +8,7 @@ Last updated: 2026-08-11 (Cursor — DBCode/SpecStory/Quick Presets setup; Claud
 
 ## Current state
 
-- **Repo hygiene (Claude session, uncommitted):**
+- **Repo hygiene (Claude session — committed & pushed):**
   - `scripts/safrs-verify.ps1` now runs `check_handoff.py` (was silently skipped on Windows; `.sh` already had it)
   - `.github/CODEOWNERS.example` deleted — superseded by real `CODEOWNERS`
   - `docs/bootstrap/README.md` retitled: archive vs active setup guides made explicit

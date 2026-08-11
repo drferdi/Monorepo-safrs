@@ -31,8 +31,6 @@
   <a href="#adoption-path"><strong>Adoption</strong></a>
 </p>
 
-</div>
-
 ---
 
 > [!IMPORTANT]

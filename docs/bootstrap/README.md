@@ -1,6 +1,9 @@
-# Bootstrap Archive (Historical)
+# Bootstrap — Archive and Setup Guides
 
-Completed SAFRS v1.1 adoption artifacts, kept as audit trail.
+Two kinds of content live here:
+
+1. **Historical archive** — completed SAFRS v1.1 adoption artifacts, kept as audit trail (`MANIFEST.txt`, `SHA256SUMS.txt`, the Codex prompts, and the verification evidence they reference).
+2. **Active companion guides** — the editor setup adapters listed below; these are living documents, not archive.
 
 Note: paths inside `MANIFEST.txt` and `SHA256SUMS.txt` reflect the bootstrap-era layout
 (numbered docs at root). Since 2026-08-11 the canonical knowledge base lives in
