@@ -1,6 +1,7 @@
 # Normalisasi akhir baris.
-# Semua file teks disimpan di git dengan LF, apa pun OS penulisnya.
-* text=auto eol=lf
+# Git menyimpan teks sebagai LF; checkout mengikuti platform pengguna.
+# Windows memakai core.autocrlf=true (CRLF), runner Linux tetap LF.
+* text=auto
 
 # Skrip yang HARUS CRLF di Windows
 *.bat  text eol=crlf

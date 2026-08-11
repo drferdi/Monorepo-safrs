@@ -304,16 +304,16 @@ th[aria-sort="descending"] .car{transform:rotate(180deg)}
     <nav aria-label="Dataset Foundry">
       <p class="t-label rail__group">Pipeline</p>
       <ul>
-        <li><a href="#" aria-current="page"><span class="seq">01</span>Runs</a></li>
-        <li><a href="#"><span class="seq">02</span>Sources</a></li>
-        <li><a href="#"><span class="seq">03</span>Extractors</a></li>
-        <li><a href="#"><span class="seq">04</span>Quality gates</a></li>
+        <li><a href="#runs" aria-current="page"><span class="seq">01</span>Runs</a></li>
+        <li><a href="#filterbar"><span class="seq">02</span>Sources</a></li>
+        <li><a href="#region"><span class="seq">03</span>Extractors</a></li>
+        <li><a href="#tablewrap"><span class="seq">04</span>Quality gates</a></li>
       </ul>
       <p class="t-label rail__group" style="padding-top:var(--space-5)">Output</p>
       <ul>
-        <li><a href="#"><span class="seq">05</span>Datasets</a></li>
-        <li><a href="#"><span class="seq">06</span>Exports</a></li>
-        <li><a href="#"><span class="seq">07</span>Audit log</a></li>
+        <li><a href="#rows"><span class="seq">05</span>Datasets</a></li>
+        <li><a href="#bulk"><span class="seq">06</span>Exports</a></li>
+        <li><a href="#pager"><span class="seq">07</span>Audit log</a></li>
       </ul>
     </nav>
     <div class="rail__foot">
@@ -323,7 +323,7 @@ th[aria-sort="descending"] .car{transform:rotate(180deg)}
   </div>
 
   <div>
-    <main>
+    <main id="runs">
       <header class="pagehead">
         <div class="pagehead__id">
           <p class="t-label">Pipeline</p>
@@ -401,11 +401,11 @@ th[aria-sort="descending"] .car{transform:rotate(180deg)}
 </div>
 
 <script>
-(function(){
+(()=> {
   var V={fail:["Not fit to train","fail"],warn:["Needs review","warn"],
          pass:["Approved","pass"],idle:["Queued","idle"]};
-  function g(f,w,p){var a=[];for(var i=0;i<f;i++)a.push("f");for(i=0;i<w;i++)a.push("w");
-    for(i=0;i<p;i++)a.push("p");while(a.length<8)a.push("n");return a;}
+  var g=(f,w,p)=> {var a=[],i;for(i=0;i<f;i++)a.push("f");for(i=0;i<w;i++)a.push("w");
+    for(i=0;i<p;i++)a.push("p");while(a.length<8)a.push("n");return a;};
   var DATA=[
    {id:"sentra-agent-dataset-2026-swiss",src:"swissthemes.design/insights",v:"fail",rec:1,yield:0.59,date:"2026-07-25 11:09",gates:g(4,2,2)},
    {id:"medlink-fhir-spec-2026-07",src:"hl7.org/fhir/R5",v:"pass",rec:1840,yield:11.4,date:"2026-07-24 22:41",gates:g(0,1,7)},
@@ -423,16 +423,16 @@ th[aria-sort="descending"] .car{transform:rotate(180deg)}
    {id:"pedoman-gizi-seimbang",src:"kemkes.go.id/gizi",v:"idle",rec:0,yield:0,date:"2026-07-26 06:00",gates:g(0,0,0)}
   ];
   var TOTAL=412, PAGE=1, sortK="date", sortD=-1, sel={}, state="normal";
-  var $=function(i){return document.getElementById(i);};
+  var $=(i)=> document.getElementById(i);
 
   function active(){
     var q=$("q").value.trim().toLowerCase();
-    var vs=[].slice.call(document.querySelectorAll('.chip[aria-pressed="true"]')).map(function(c){return c.dataset.v;});
-    return DATA.filter(function(r){
+    var vs=[].slice.call(document.querySelectorAll('.chip[aria-pressed="true"]')).map((c)=> c.dataset.v);
+    return DATA.filter((r)=> {
       if(q && r.id.toLowerCase().indexOf(q)<0 && r.src.toLowerCase().indexOf(q)<0) return false;
       if(vs.length && vs.indexOf(r.v)<0) return false;
       return true;
-    }).sort(function(a,b){
+    }).sort((a,b)=> {
       var x=a[sortK], y=b[sortK];
       return (x<y?-1:x>y?1:0)*sortD;
     });
@@ -444,13 +444,13 @@ th[aria-sort="descending"] .car{transform:rotate(180deg)}
   function render(){
     var region=$("region"), pager=$("pager");
     $("clear").disabled=!filtered();
-    region.querySelectorAll(".state,.alert,.skel").forEach(function(n){n.remove();});
+    region.querySelectorAll(".state,.alert,.skel").forEach((n)=> {n.remove();});
     $("tablewrap").style.display="";
     pager.style.display="";
 
     if(state==="loading"){
       $("tablewrap").style.display="none"; pager.style.display="none";
-      var s=document.createElement("div"); s.className="skel"; s.setAttribute("aria-hidden","true");
+      const s=document.createElement("div"); s.className="skel"; s.setAttribute("aria-hidden","true");
       s.innerHTML='<i style="width:34%"></i><i></i><i style="width:92%"></i><i style="width:78%"></i><i style="width:88%"></i>';
       region.appendChild(s);
       $("count").textContent="Loading runs";
@@ -458,7 +458,7 @@ th[aria-sort="descending"] .car{transform:rotate(180deg)}
     }
     if(state==="error"){
       $("tablewrap").style.display="none"; pager.style.display="none";
-      var a=document.createElement("div"); a.className="alert"; a.setAttribute("role","alert");
+      const a=document.createElement("div"); a.className="alert"; a.setAttribute("role","alert");
       a.innerHTML='<h2><svg class="icon" aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 3 17.5 16.5h-15Z"/><path d="M10 8.5v3.5"/><rect x="9.25" y="13.5" width="1.5" height="1.5" fill="currentColor" stroke="none"/></svg>Runs could not be loaded</h2>'+
         '<p>The pipeline API returned 503 at 11:12:04. Runs already in progress are unaffected and will finish. Nothing has been lost.</p>'+
         '<div style="margin-top:var(--space-4)"><button class="btn btn--sm" type="button" onclick="location.reload()">Try again</button></div>';
@@ -480,13 +480,13 @@ th[aria-sort="descending"] .car{transform:rotate(180deg)}
       $("tablewrap").style.display="none"; pager.style.display="none";
       region.appendChild(emptyEl("No runs match these filters",
         TOTAL.toLocaleString()+" runs exist. None of them match every filter you have set.",
-        "Clear filters", function(){reset();}));
+        "Clear filters", ()=> {reset();}));
       $("count").textContent="0 of "+TOTAL.toLocaleString();
       return;
     }
 
     var tb=$("rows"); tb.innerHTML="";
-    rows.forEach(function(r){
+    rows.forEach((r)=> {
       var tr=document.createElement("tr");
       if(r.v==="fail") tr.className="fail";
       if(sel[r.id]) tr.dataset.sel="true";
@@ -495,11 +495,11 @@ th[aria-sort="descending"] .car{transform:rotate(180deg)}
         '<td class="num">'+r.date+'</td>'+
         '<td><a class="runid" href="#">'+r.id+'</a><div class="srcline">'+r.src+'</div></td>'+
         '<td class="hide-md"><div class="gates" role="img" aria-label="'+gateLabel(r)+'">'+
-          r.gates.map(function(c){return '<i class="'+c+'"></i>';}).join("")+'</div></td>'+
+          r.gates.map((c)=> '<i class="'+c+'"></i>').join("")+'</div></td>'+
         '<td class="num">'+(r.rec?r.rec.toLocaleString():"—")+'</td>'+
         '<td class="num hide-sm">'+(r.yield?r.yield.toFixed(1)+"%":"—")+'</td>'+
         '<td><span class="status status--'+V[r.v][1]+'">'+V[r.v][0]+'</span></td>';
-      tr.querySelector("input").addEventListener("change",function(e){
+      tr.querySelector("input").addEventListener("change",(e)=> {
         sel[r.id]=e.target.checked; tr.dataset.sel=e.target.checked?"true":"false"; bulk();
       });
       tb.appendChild(tr);
@@ -512,56 +512,56 @@ th[aria-sort="descending"] .car{transform:rotate(180deg)}
     bulk();
   }
   function gateLabel(r){
-    var f=r.gates.filter(function(c){return c==="f";}).length,
-        w=r.gates.filter(function(c){return c==="w";}).length,
-        p=r.gates.filter(function(c){return c==="p";}).length,
-        n=r.gates.filter(function(c){return c==="n";}).length;
+    var f=r.gates.filter((c)=> c==="f").length,
+        w=r.gates.filter((c)=> c==="w").length,
+        p=r.gates.filter((c)=> c==="p").length,
+        n=r.gates.filter((c)=> c==="n").length;
     return n===8?"8 gates not yet run":f+" failed, "+w+" warned, "+p+" passed";
   }
   function emptyEl(h,p,btn,fn){
     var d=document.createElement("div"); d.className="state";
     d.innerHTML='<svg class="mark" aria-hidden="true"><use href="#sentra-mark"/></svg>'+
       '<h2>'+h+'</h2><p>'+p+'</p>';
-    if(btn){var b=document.createElement("button");b.className="btn"+(fn?"":" btn--primary");
+    if(btn){const b=document.createElement("button");b.className="btn"+(fn?"":" btn--primary");
       b.type="button";b.textContent=btn;b.style.marginTop="var(--space-3)";
       if(fn)b.addEventListener("click",fn); d.appendChild(b);}
     return d;
   }
   function bulk(){
-    var n=Object.keys(sel).filter(function(k){return sel[k];}).length;
+    var n=Object.keys(sel).filter((k)=> sel[k]).length;
     $("bulk").dataset.on=n>0?"true":"false";
     $("nsel").textContent=n+" selected";
   }
   function reset(){
-    $("q").value=""; document.querySelectorAll(".chip").forEach(function(c){c.setAttribute("aria-pressed","false");});
+    $("q").value=""; document.querySelectorAll(".chip").forEach((c)=> {c.setAttribute("aria-pressed","false");});
     render();
   }
 
   $("q").addEventListener("input",render);
-  document.querySelectorAll(".chip").forEach(function(c){
-    c.addEventListener("click",function(){
+  document.querySelectorAll(".chip").forEach((c)=> {
+    c.addEventListener("click",()=> {
       c.setAttribute("aria-pressed", c.getAttribute("aria-pressed")==="true"?"false":"true"); render();
     });
   });
   $("clear").addEventListener("click",reset);
-  $("all").addEventListener("change",function(e){
-    active().forEach(function(r){sel[r.id]=e.target.checked;}); render();
+  $("all").addEventListener("change",(e)=> {
+    active().forEach((r)=> {sel[r.id]=e.target.checked;}); render();
   });
-  document.querySelectorAll(".sortbtn").forEach(function(b){
-    b.addEventListener("click",function(){
+  document.querySelectorAll(".sortbtn").forEach((b)=> {
+    b.addEventListener("click",()=> {
       var k=b.dataset.k;
       if(sortK===k) sortD=-sortD; else {sortK=k; sortD=-1;}
-      document.querySelectorAll("thead th").forEach(function(th){th.removeAttribute("aria-sort");});
+      document.querySelectorAll("thead th").forEach((th)=> {th.removeAttribute("aria-sort");});
       b.closest("th").setAttribute("aria-sort", sortD===-1?"descending":"ascending");
       render();
     });
   });
-  $("refresh").addEventListener("click",function(){
+  $("refresh").addEventListener("click",()=> {
     state="loading"; render();
-    setTimeout(function(){state="normal"; render();},900);
+    setTimeout(()=> {state="normal"; render();},900);
   });
   function specimen(mode,btn){
-    ["sNormal","sFirst","sErr"].forEach(function(i){$(i).setAttribute("aria-pressed","false");});
+    ["sNormal","sFirst","sErr"].forEach((i)=> {$(i).setAttribute("aria-pressed","false");});
     btn.setAttribute("aria-pressed","true"); state=mode; render();
   }
   $("sNormal").addEventListener("click",function(){specimen("normal",this);});

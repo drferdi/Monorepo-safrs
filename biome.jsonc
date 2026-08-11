@@ -16,7 +16,8 @@
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
-    "indentWidth": 2
+    "indentWidth": 2,
+    "lineEnding": "auto"
   },
   "linter": {
     "enabled": true,
@@ -29,6 +30,11 @@
       "quoteStyle": "double",
       "semicolons": "always",
       "trailingCommas": "all"
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
     }
   }
 }

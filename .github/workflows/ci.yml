@@ -31,6 +31,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        with:
+          fetch-depth: 0
       - name: Set up pnpm
         uses: pnpm/action-setup@7088e561eb65bb68695d245aa206f005ef30921d
         with:
@@ -51,6 +53,9 @@ jobs:
         run: pnpm exec playwright install --with-deps chromium
       - name: Verify SAFRS governance
         run: pnpm governance
+        env:
+          SAFRS_BASE_REF: ${{ github.event.pull_request.base.sha || 'origin/main' }}
+          SAFRS_HEAD_REF: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Verify automation policy
         run: node --test tests/repository/automation-policy.test.mjs
       - name: Lint

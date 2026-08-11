@@ -4,42 +4,40 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-12 (Control Plane v1 — CI portability follow-up)
+Last updated: 2026-08-12 (CI lint baseline remediation)
 
 ## Current state
 
-- **Control Plane Increment A remediation (R2, this branch):** shared Git-common task leases, locked atomic writes, changed-path ownership, strict validation/redaction, owner-worktree mutation binding, recovery, `pnpm status`, `pnpm task`, CI/verify wiring, tests, protocol, and design.
-- The original snapshot received independent spec, SAFRS boundary, and verification-integrity approval; the CI follow-up is being re-reviewed after its trusted-base correction.
-- Integrity review evidence is fail-closed and bound to the exact changed-file content fingerprint; stale or malformed evidence is rejected.
-- PR #3 exposed a Windows/Linux byte-representation mismatch. The follow-up uses canonical Git blob identities and `origin/main` as the trusted fetched local base, with regression coverage for CRLF worktrees, historical LF blobs in CI, and a stale local `main` branch.
-- Isolated worktree: `D:/DEV/Monorepo.worktrees/feat-safrs-control-plane-v1` on `fix/safrs-integrity-fingerprint`.
-- Primary `main` working tree still holds unrelated Cursor alignment pack — do not clobber.
+- **Lint baseline remediation (R2, this branch):** the pre-existing Biome errors exposed by PR #3 are corrected in an isolated worktree.
+- Biome now parses Tailwind directives and follows the checked-out platform line ending. Git stores normalized text while fresh Windows checkouts use CRLF; shell scripts remain LF and PowerShell scripts remain CRLF.
+- Design reference errors were corrected without redesign: accessible SVG title, valid links, block-scoped declarations, and formatter-safe script markup.
+- Token values are semantically unchanged; their CSS and package manifest were formatted. The token gate script received formatter-only changes.
+- Fresh Windows checkout evidence: `pnpm lint` checked 146 files with 0 errors (19 warnings, 11 infos); `pnpm check:tokens` passed 38 contrast checks.
+- GitHub then reached `pnpm test`; the pre-commit fixture now selects Git Bash on Windows and native `bash` on Linux instead of hard-coding a Windows executable on Ubuntu.
+- `scripts/check-tokens.mjs` and `tests/repository/precommit.test.mjs` are now explicit verification-control patterns, with classifier regression coverage, so mixed implementation/control changes require matching independent evidence.
+- Isolated worktree: `D:/DEV/Monorepo.worktrees/fix-lint-baseline` on `fix/lint-baseline`.
+- Primary `main` worktree still holds unrelated alignment-pack changes — do not clobber.
 
-## Work in flight (do not clobber)
+## Work in flight
 
-- This Control Plane branch owns paths listed in the design file map only.
-- Cursor alignment pack remains in the primary worktree (uncommitted) — out of scope here.
-- DX friction ownership of unrelated `scripts/` / INSTALL.md — do not expand into those.
+- PR #5 carries the separate SAFRS CI diff-context correction; this lint branch is stacked on it so CI receives the fixed diff context without mixing commits.
+- This branch owns `.gitattributes`, `biome.jsonc`, the affected design references, `packages/token/`, the app layout import, `scripts/check-tokens.mjs`, and this HANDOFF.
 
 ## Blockers
 
-- PR #3 was merged externally at `7788735`; the CI portability fix now requires a follow-up PR.
-- Separate worktree `fix/lint-baseline` owns unrelated pre-existing Biome failures so they are not mixed into the Control Plane commit.
-- Full repo lint/typecheck/test/build retain unrelated baseline/environment failures: design-reference Biome findings, missing generated Prisma client, and absent local `.env` / app environment.
-- Bash adapter under WSL cannot resolve this Windows-created worktree Git metadata; native PowerShell governance is the authoritative local adapter here.
-- Do not merge until Chief review; primary WT conflicts are separate.
+- After PR #5 merges, rebase this branch onto updated `origin/main` before final merge.
+- R2 designated boundary and verification-integrity reviews are approved for this lint delta.
 
 ## Next actions
 
 | Area | Action |
 | --- | --- |
-| **This branch** | Complete re-review → refresh integrity evidence → push follow-up PR |
-| Lint baseline | Rebase the separate lint fix onto merged Control Plane, then verify and publish its own PR |
-| Primary WT | Keep alignment pack review separate |
+| **This branch** | Push stacked branch → open PR against PR #5 branch → confirm full CI |
+| PR #5 | Merge CI diff-context correction before this lint PR |
+| Primary WT | Keep alignment-pack work separate |
 
 ## Session guardrails
 
-- Never read `.env` in `D:\Devops\abyss-monorepo`; never copy old `node_modules`/`.env`/`.next`/lockfiles.
-- `.agents/knowledge/` — no changes without Chief's approval.
-- Worktrees: sibling `../Monorepo.worktrees/<branch>` only.
-- PowerShell for commands; chat diagnostics in Bahasa Indonesia; docs/code in English.
+- No dependency additions, deployment, secret access, or production mutation.
+- `.agents/knowledge/` remains untouched.
+- PowerShell commands on Windows; explicit staging only, never `git add -A`.
