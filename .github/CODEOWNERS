@@ -1,11 +1,9 @@
 # CODEOWNERS — SAFRS v1.1 R2/R3 review enforcement
 #
-# PLACEHOLDER OWNER — MUST BE REPLACED BY A HUMAN BEFORE THIS FILE PROVIDES ANY
-# REAL CONTROL. `@sentra/safrs-maintainers` is a stand-in, not a verified GitHub
-# team. Until a real team (or user) that actually exists in this organization is
-# substituted, GitHub silently treats every rule below as having no valid owner
-# and "Require review from Code Owners" will not block anything.
-# Replacement is a governance action: it is itself an R2 change to this file.
+# Owner: @drferdii (repository owner, set 2026-08-11 replacing the
+# @sentra/safrs-maintainers placeholder). This file only enforces anything once
+# branch protection on `main` enables "Require review from Code Owners".
+# Changing owners here is itself an R2 governance action.
 #
 # Derivation: every pattern in this file is derived from `.safrs/sensitive-paths.json`
 # (`patterns`, `verification_control_patterns`, and `risk_overrides`). No pattern
@@ -27,58 +25,58 @@
 # ---------------------------------------------------------------------------
 
 # Governance and security surfaces
-/AGENTS.md                                      @sentra/safrs-maintainers
-/SECURITY.md                                    @sentra/safrs-maintainers
-/SAFRS_SPEC.md                                  @sentra/safrs-maintainers
-/.safrs/**                                      @sentra/safrs-maintainers
-/.github/workflows/**                           @sentra/safrs-maintainers
-/.github/CODEOWNERS                             @sentra/safrs-maintainers
+/AGENTS.md                                      @drferdii
+/SECURITY.md                                    @drferdii
+/SAFRS_SPEC.md                                  @drferdii
+/.safrs/**                                      @drferdii
+/.github/workflows/**                           @drferdii
+/.github/CODEOWNERS                             @drferdii
 
 # Vendor instruction adapters
-/CLAUDE.md                                      @sentra/safrs-maintainers
-/GEMINI.md                                      @sentra/safrs-maintainers
-/.agents/**                                     @sentra/safrs-maintainers
-/.cursor/rules/**                               @sentra/safrs-maintainers
+/CLAUDE.md                                      @drferdii
+/GEMINI.md                                      @drferdii
+/.agents/**                                     @drferdii
+/.cursor/rules/**                               @drferdii
 
 # Project capsule routing
-/projects/**/AGENTS.md                          @sentra/safrs-maintainers
+/projects/**/AGENTS.md                          @drferdii
 
 # Shared boundaries
-/packages/**                                    @sentra/safrs-maintainers
-/infrastructure/**                              @sentra/safrs-maintainers
+/packages/**                                    @drferdii
+/infrastructure/**                              @drferdii
 
 # Root build and dependency manifests
-/package.json                                   @sentra/safrs-maintainers
-/pnpm-lock.yaml                                 @sentra/safrs-maintainers
-/pnpm-workspace.yaml                            @sentra/safrs-maintainers
-/turbo.json                                     @sentra/safrs-maintainers
-/.github/renovate.json                          @sentra/safrs-maintainers
+/package.json                                   @drferdii
+/pnpm-lock.yaml                                 @drferdii
+/pnpm-workspace.yaml                            @drferdii
+/turbo.json                                     @drferdii
+/.github/renovate.json                          @drferdii
 
 # Verification scripts and release evidence
-/scripts/safrs-verify.mjs                       @sentra/safrs-maintainers
-/scripts/safrs-verify.ps1                       @sentra/safrs-maintainers
-/scripts/safrs-verify.sh                        @sentra/safrs-maintainers
-/tests/repository/automation-policy.test.mjs    @sentra/safrs-maintainers
-/docs/bootstrap/**                              @sentra/safrs-maintainers
+/scripts/safrs-verify.mjs                       @drferdii
+/scripts/safrs-verify.ps1                       @drferdii
+/scripts/safrs-verify.sh                        @drferdii
+/tests/repository/automation-policy.test.mjs    @drferdii
+/docs/bootstrap/**                              @drferdii
 
 # Security- and data-boundary directories at any depth
-**/migrations/**                                @sentra/safrs-maintainers
-**/auth/**                                      @sentra/safrs-maintainers
-**/authorization/**                             @sentra/safrs-maintainers
-**/security/**                                  @sentra/safrs-maintainers
+**/migrations/**                                @drferdii
+**/auth/**                                      @drferdii
+**/authorization/**                             @drferdii
+**/security/**                                  @drferdii
 
 # Dependency manifests at any depth
-**/package.json                                 @sentra/safrs-maintainers
-**/package-lock.json                            @sentra/safrs-maintainers
-**/pnpm-lock.yaml                               @sentra/safrs-maintainers
-**/yarn.lock                                    @sentra/safrs-maintainers
-**/requirements*.txt                            @sentra/safrs-maintainers
-**/pyproject.toml                               @sentra/safrs-maintainers
-**/poetry.lock                                  @sentra/safrs-maintainers
-**/Cargo.toml                                   @sentra/safrs-maintainers
-**/Cargo.lock                                   @sentra/safrs-maintainers
-**/go.mod                                       @sentra/safrs-maintainers
-**/go.sum                                       @sentra/safrs-maintainers
+**/package.json                                 @drferdii
+**/package-lock.json                            @drferdii
+**/pnpm-lock.yaml                               @drferdii
+**/yarn.lock                                    @drferdii
+**/requirements*.txt                            @drferdii
+**/pyproject.toml                               @drferdii
+**/poetry.lock                                  @drferdii
+**/Cargo.toml                                   @drferdii
+**/Cargo.lock                                   @drferdii
+**/go.mod                                       @drferdii
+**/go.sum                                       @drferdii
 
 # ---------------------------------------------------------------------------
 # Verification-control surfaces
@@ -87,9 +85,9 @@
 # Entries already covered above are not repeated.
 # ---------------------------------------------------------------------------
 
-/tools/safrs/**                                 @sentra/safrs-maintainers
-**/tests/security/**                            @sentra/safrs-maintainers
-**/tests/architecture/**                        @sentra/safrs-maintainers
+/tools/safrs/**                                 @drferdii
+**/tests/security/**                            @drferdii
+**/tests/architecture/**                        @drferdii
 
 # ---------------------------------------------------------------------------
 # R3 — high impact (source: sensitive-paths.json -> risk_overrides)
@@ -99,6 +97,6 @@
 # Placed last deliberately so these rules win over any broader R2 rule above.
 # ---------------------------------------------------------------------------
 
-/projects/**/safety-critical/**                 @sentra/safrs-maintainers
-/projects/**/production/**                      @sentra/safrs-maintainers
-/infrastructure/production/**                   @sentra/safrs-maintainers
+/projects/**/safety-critical/**                 @drferdii
+/projects/**/production/**                      @drferdii
+/infrastructure/production/**                   @drferdii

@@ -41,12 +41,25 @@ Most material Phase-2 gap: R2/R3 assumes mandatory human review before merge, bu
 mechanism (GitHub CODEOWNERS + branch protection) is not live. GitHub admin actions must be done
 by Chief; agents can only draft content/commands.
 
-- [ ] Create a real GitHub team to replace the `@sentra/safrs-maintainers` placeholder in
-      `.github/CODEOWNERS` (or use Chief's username).
-- [ ] Update `.github/CODEOWNERS` with real handles (patterns are already correct).
-- [ ] Enable branch protection on `main`: require PR before merge, require status checks
-      `SAFRS Governance` + `CI`, require Code Owner review, disable force-push.
-- [ ] Run `bash scripts/safrs-verify.sh` after committing CODEOWNERS (auto-classifies as R2).
+- [x] Owner set: `@drferdii` (Chief's username) replaces the placeholder — done 2026-08-11.
+- [x] `.github/CODEOWNERS` updated with the real handle (patterns unchanged).
+- [ ] Enable branch protection on `main` (Chief, on GitHub — Settings → Branches → Add rule,
+      or with an admin-scoped token):
+
+      ```bash
+      gh api -X PUT repos/drferdii/Monorepo-safrs/branches/main/protection \
+        -f 'required_status_checks[strict]=true' \
+        -f 'required_status_checks[contexts][]=SAFRS Governance' \
+        -f 'required_status_checks[contexts][]=CI' \
+        -F 'enforce_admins=true' \
+        -f 'required_pull_request_reviews[require_code_owner_reviews]=true' \
+        -F 'required_pull_request_reviews[required_approving_review_count]=1' \
+        -F 'restrictions=null' -F 'allow_force_pushes=false' -F 'allow_deletions=false'
+      ```
+
+      **Consequence to accept first:** direct pushes to `main` stop working — every change,
+      including agent sessions like today's, must go through a PR that Chief approves.
+- [x] `bash scripts/safrs-verify.sh` run after the CODEOWNERS change (R2 auto-classified, green).
 - [ ] Raise `docs/governance/SAFRS_CONFORMANCE.md` from Core to Controlled **only after**
       branch protection is verified with real evidence (screenshot / `gh api` output).
 

@@ -4,7 +4,7 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-11 (Claude — package renamed @sentra/design-tokens → @sentra/token, folder packages/token; run pnpm install after pull to relink and refresh lockfile)
+Last updated: 2026-08-11 (Claude — CODEOWNERS owner set to @drferdii; branch-protection command drafted in remediation plan Phase 1, awaiting Chief on GitHub. Reminder: pnpm install after pull)
 
 ## Current state
 
