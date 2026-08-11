@@ -39,7 +39,7 @@ def git(repository, *arguments, check=True):
 
 
 def commit_baseline(repository):
-    git(repository, 'init', '-q')
+    git(repository, 'init', '-q', '--initial-branch=main')
     git(repository, 'add', '.')
     git(repository, 'commit', '-qm', 'baseline')
 
@@ -65,7 +65,13 @@ def change_set_digest(repository, paths):
     for relative in sorted(paths):
         target = repository / relative
         content_digest = (
-            hashlib.sha256(target.read_bytes()).hexdigest()
+            git(
+                repository,
+                'hash-object',
+                '--path',
+                relative,
+                str(target),
+            ).stdout.strip()
             if target.is_file()
             else '<deleted>'
         )
@@ -73,7 +79,8 @@ def change_set_digest(repository, paths):
     return digest.hexdigest()
 
 
-def write_review_evidence(repository, paths, *, digest=None):
+def write_review_evidence(repository, paths, *, base_sha=None, digest=None):
+    resolved_base = base_sha or git(repository, 'rev-parse', 'HEAD').stdout.strip()
     write(
         repository,
         REVIEW_EVIDENCE,
@@ -83,6 +90,7 @@ def write_review_evidence(repository, paths, *, digest=None):
                 'verdict': 'approved',
                 'reviewer_id': 'agent:independent-integrity-reviewer',
                 'reviewed_at': '2026-08-11T15:30:00Z',
+                'base_sha': resolved_base,
                 'change_set_sha256': digest or change_set_digest(repository, paths),
             },
             indent=2,
@@ -179,6 +187,137 @@ class SensitiveClassificationTests(unittest.TestCase):
             result = run_checker(repository)
 
             self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=approved', result.stdout)
+
+    def test_review_fingerprint_matches_windows_crlf_and_historical_git_blobs(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['tools/safrs/**'],
+                'verification_control_patterns': ['tools/safrs/**'],
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            write(repository, '.gitattributes', '* text=auto eol=lf\n')
+            commit_baseline(repository)
+            base_sha = git(repository, 'rev-parse', 'HEAD').stdout.strip()
+            changed = ['src/app.py', 'tools/safrs/check_extra.py']
+            for relative, content in (
+                (changed[0], b'# implementation\r\n'),
+                (changed[1], b'# control\r\n'),
+            ):
+                target = repository / relative
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(content)
+            write_review_evidence(repository, changed, base_sha=base_sha)
+            git(repository, 'add', '.')
+            git(repository, 'commit', '-qm', 'reviewed change')
+
+            result = run_checker(
+                repository,
+                {
+                    **os.environ,
+                    'SAFRS_BASE_REF': 'HEAD~1',
+                    'SAFRS_HEAD_REF': 'HEAD',
+                },
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=approved', result.stdout)
+
+    def test_review_evidence_covers_prior_commit_and_local_followup(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['tools/safrs/**'],
+                'verification_control_patterns': ['tools/safrs/**'],
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            write(repository, '.gitattributes', '* text=auto eol=lf\n')
+            commit_baseline(repository)
+            base_sha = git(repository, 'rev-parse', 'HEAD').stdout.strip()
+            changed = ['src/app.py', 'tools/safrs/check_extra.py']
+            write(repository, changed[0], '# first commit\r\n')
+            git(repository, 'add', '.')
+            git(repository, 'commit', '-qm', 'first change')
+            write(repository, changed[1], '# local followup\r\n')
+            write_review_evidence(repository, changed, base_sha=base_sha)
+
+            local_result = run_checker(repository)
+
+            self.assertEqual(local_result.returncode, 0, local_result.stderr)
+            git(repository, 'add', '.')
+            git(repository, 'commit', '-qm', 'reviewed followup')
+            historical_result = run_checker(
+                repository,
+                {
+                    **os.environ,
+                    'SAFRS_BASE_REF': base_sha,
+                    'SAFRS_HEAD_REF': 'HEAD',
+                },
+            )
+            self.assertEqual(historical_result.returncode, 0, historical_result.stderr)
+
+    def test_missing_evidence_sees_prior_implementation_commit(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['tools/safrs/**'],
+                'verification_control_patterns': ['tools/safrs/**'],
+                'review_base_ref': 'main',
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            commit_baseline(repository)
+            git(repository, 'checkout', '-qb', 'feature')
+            write(repository, 'src/app.py', '# prior implementation\n')
+            git(repository, 'add', '.')
+            git(repository, 'commit', '-qm', 'implementation')
+            write(repository, 'tools/safrs/check_extra.py', '# local control\n')
+
+            result = run_checker(repository)
+
+            self.assertNotEqual(result.returncode, 0, result.stdout)
+            self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=required', result.stdout)
+            self.assertIn('Changed files: 2', result.stdout)
+
+    def test_remote_base_is_used_when_local_main_is_stale(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['tools/safrs/**'],
+                'verification_control_patterns': ['tools/safrs/**'],
+                'review_base_ref': 'origin/main',
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            commit_baseline(repository)
+            stale_main_sha = git(repository, 'rev-parse', 'main').stdout.strip()
+            git(repository, 'checkout', '-qb', 'remote-main')
+            write(repository, 'src/merged.py', '# already merged upstream\n')
+            git(repository, 'add', '.')
+            git(repository, 'commit', '-qm', 'advance remote main')
+            base_sha = git(repository, 'rev-parse', 'HEAD').stdout.strip()
+            git(repository, 'update-ref', 'refs/remotes/origin/main', base_sha)
+            git(repository, 'checkout', '-qb', 'feature')
+            changed = ['src/app.py', 'tools/safrs/check_extra.py']
+            write(repository, changed[0], '# implementation\n')
+            write(repository, changed[1], '# control\n')
+            write_review_evidence(repository, changed, base_sha=base_sha)
+
+            result = run_checker(repository)
+
+            self.assertEqual(
+                git(repository, 'rev-parse', 'main').stdout.strip(),
+                stale_main_sha,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn('Changed files: 2', result.stdout)
             self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=approved', result.stdout)
 
     def test_stale_review_evidence_is_rejected(self):

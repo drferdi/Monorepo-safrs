@@ -1,6 +1,7 @@
 {
   "version": 1,
   "minimum_risk": "R2",
+  "review_base_ref": "origin/main",
   "patterns": [
     "AGENTS.md",
     "SECURITY.md",
