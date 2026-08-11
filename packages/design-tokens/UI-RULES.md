@@ -90,8 +90,10 @@ failed.
 
 ## Type
 
-Archivo, one family. The display voice comes from the width axis at 112
-(`--font-width-display`), not from a second typeface. Three weights: 400, 500,
+Geist, one family (+ Geist Mono). Self-hosted variable fonts only, vendored in
+`assets/fonts/` (OFL) and loaded via `@sentra/design-tokens/fonts` — never from
+a font CDN at runtime. The display voice comes from size + weight (Geist has no
+width axis; `--font-width-*` stay at neutral 100). Three weights: 400, 500,
 600. Left aligned. Tabular figures in every numeric column. Mono means
 machine-produced: identifiers, paths, measurements, raw capture.
 

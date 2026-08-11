@@ -112,11 +112,13 @@
 
 
   /* ===== 3. TYPOGRAPHY ===== */
-  --font-family-sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --font-family-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-family-sans: "Geist", "Helvetica Neue", Arial, sans-serif;
+  --font-family-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
-  /* One family, two voices. The width axis carries the display role. */
-  --font-width-display: 112;
+  /* One family, two voices. Geist has no width axis (unlike the former
+     Archivo spec) — the display role is carried by size + weight instead.
+     Width tokens are kept at neutral 100 for compatibility. */
+  --font-width-display: 100;
   --font-width-text:    100;
 
   --font-size-display:       40px;

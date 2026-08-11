@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<style>
+@font-face{font-family:"Geist";src:url("../../../packages/design-tokens/assets/fonts/geist-sans/Geist-Variable.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Geist";src:url("../../../packages/design-tokens/assets/fonts/geist-sans/Geist-Variable-Italic.woff2") format("woff2");font-weight:100 900;font-style:italic;font-display:swap}
+@font-face{font-family:"Geist Mono";src:url("../../../packages/design-tokens/assets/fonts/geist-mono/GeistMono-Variable.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+</style>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Design System v1.0 — Sentraverse</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
   --p-ink-900:#101312; --p-ink-500:#5A5F5C; --p-ink-300:#8B918D;
@@ -39,8 +41,8 @@
   --color-focus-ring:var(--p-ink-900);
 
   --radius-structure:0px; --radius-control:2px;
-  --font-family-sans:"Archivo","Helvetica Neue",Arial,sans-serif;
-  --font-family-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --font-family-sans:"Geist","Helvetica Neue",Arial,sans-serif;
+  --font-family-mono:"Geist Mono",ui-monospace,Menlo,monospace;
 
   --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
   --space-5:24px; --space-6:32px; --space-7:48px; --space-8:64px;
@@ -373,7 +375,7 @@ tbody tr.row--fail:hover{background:#F7E3DF}
             <dl style="margin-top:var(--space-3)">
               <div><dt>Colour role</dt><dd>Brand + status</dd></div>
               <div><dt>Canvas</dt><dd>Pure white</dd></div>
-              <div><dt>Typeface</dt><dd>Archivo</dd></div>
+              <div><dt>Typeface</dt><dd>Geist</dd></div>
               <div><dt>Radius</dt><dd>2px controls</dd></div>
               <div><dt>Density</dt><dd>Comfortable</dd></div>
               <div><dt>Button</dt><dd>C · hard ledge</dd></div>
@@ -470,7 +472,7 @@ tbody tr.row--fail:hover{background:#F7E3DF}
         <div class="section__head">
           <span class="seq">03</span>
           <h2 class="t-section" id="h3">Typography</h2>
-          <span class="rulelabel">Archivo variable · JetBrains Mono</span>
+          <span class="rulelabel">Geist variable · Geist Mono</span>
         </div>
         <div class="grid">
           <div class="col-7">
@@ -502,7 +504,7 @@ tbody tr.row--fail:hover{background:#F7E3DF}
           <div class="col-4">
             <p class="t-label">Why one family</p>
             <p class="t-compact muted" style="margin-top:var(--space-3);max-width:44ch">
-              Archivo carries a width axis. The display voice comes from widening to 112,
+              Geist carries a width axis. The display voice comes from widening to 112,
               not from adding a second typeface. One family, two voices, one font payload.
             </p>
             <p class="t-label" style="margin-top:var(--space-6)">Rules</p>

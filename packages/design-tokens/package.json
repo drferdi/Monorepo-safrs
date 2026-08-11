@@ -7,9 +7,16 @@
   "exports": {
     "./tokens.css": "./src/tokens.css",
     "./tokens.json": "./src/tokens.json",
-    "./tailwind.css": "./src/tailwind.css"
+    "./tailwind.css": "./src/tailwind.css",
+    "./fonts": "./src/fonts.ts"
   },
-  "files": ["src"],
+  "files": ["src", "assets"],
+  "peerDependencies": {
+    "next": ">=15"
+  },
+  "peerDependenciesMeta": {
+    "next": { "optional": true }
+  },
   "scripts": {
     "lint": "biome check src",
     "test": "node ../../scripts/check-tokens.mjs"
