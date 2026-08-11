@@ -4,37 +4,38 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-11 (Cursor — removed Prisma-Local MCP; aligned with deferral)
+Last updated: 2026-08-11 (Cursor — Bugbot findings addressed, uncommitted)
 
 ## Current state
 
-- **Cursor automations implemented (uncommitted):**
-  - MCP: `.cursor/mcp.json` → **Context7 only** (Prisma-Local **removed** — matches
-    DECISIONS.md / CLAUDE_SETUP deferral: `prisma mcp` bypasses `run-local-prisma.mjs`)
-  - Hooks: Biome after edit, shell gate, secret read deny
-  - Skills: `safrs-session`, `create-migration`, `verify`; Agents: boundary + security reviewers
-  - Guide: `docs/bootstrap/CURSOR_SETUP.md`
-- **Claude Code pack** (R2, uncommitted) unchanged; Postgres/`prisma mcp` still deferred.
-- Prior Cursor rules/ignores + golden-path R2 product diff still await Chief review
-  (prefer separate commits).
+- **Prior on `origin/main`**: Claude/Cursor/Cline agent automation packs (governance + docs).
+- **This session (uncommitted)**: Fixed five Bugbot findings from `/review-bugbot`:
+  1. `.cursor/hooks/guard-shell.mjs` — allow `--force-with-lease`; deny bare `--force`/`-f`
+  2. `.cline/skills/prisma-migration/SKILL.md` — path to skill-local `scripts/validate-migration.mjs`
+  3. `.safrs/sensitive-paths.json` — R2: `.cursor/**`, `.cline/**`, `**/.mcp.json`;
+     verification controls: `.cursor/hooks.json`, `.cursor/hooks/**`, `.cline/hooks/**`
+  4. `.claude/hooks/guard-sensitive-paths.mjs` + `.claude/settings.json` — credential parity
+     with Cursor (`id_ed25519*`, `credentials.json`, `secrets.json`, `*.p12`, `*.pfx`)
+- **Integrity**: `SAFRS_VERIFICATION_INTEGRITY_REVIEW` likely required (controls + adapters).
+- Prisma/Postgres MCP still deferred (`DECISIONS.md`).
 
 ## Work in flight (do not clobber)
 
-- DX friction plan still owned elsewhere — do not touch `scripts/` / root `package.json` /
-  INSTALL.md unless that scope is released.
+- DX friction plan owned elsewhere — `scripts/`, root `package.json`, INSTALL.md stay out of scope.
 
 ## Blockers
 
-- Pre-existing red token/lint gates; Stripe CLI missing; plugins need UI install.
+- Pre-existing red token/lint gates; Stripe CLI missing; Cursor plugins need UI install.
 
 ## Next actions
 
 | Area | Action |
 | --- | --- |
-| Cursor pack | Chief review → commit |
-| Claude pack | Split verification-controls commit vs adapters/docs |
+| Commit | Commit Bugbot fixes when Chief asks (not yet requested) |
+| Tool inventory | `.cursor/mcp.json` / `.cline/mcp.json` still lack `.safrs/tool-inventory.json` entries |
+| CI coverage | CI on `pull_request` only; direct `main` pushes ungated — decide policy |
+| Security | Dependabot: 5 vulns on `main` (3 high, 2 moderate) |
 | Plugins | Install frontend-design + commit-commands in Cursor UI |
-| MCP | Enable Context7 only; do **not** add Prisma/Postgres MCP without new R2 decision |
 
 ## Session guardrails
 
