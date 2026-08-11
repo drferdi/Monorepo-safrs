@@ -344,3 +344,43 @@ test("Context7 MCP has a matching approved SAFRS inventory record", () => {
     "mcp.context7.com",
   ]);
 });
+
+test("Codex repository skills have valid minimal metadata", () => {
+  for (const [name, file] of [
+    ["verify", ".agents/skills/verify/SKILL.md"],
+    ["prisma-migration", ".agents/skills/prisma-migration/SKILL.md"],
+  ]) {
+    const skill = readFileSync(file, "utf8");
+    assert.match(skill, new RegExp(`^---\\r?\\nname: ${name}\\r?$`, "mu"));
+    assert.match(skill, /^description: .+/mu);
+    assert.doesNotMatch(skill, /disable-model-invocation|user-invocable/iu);
+  }
+});
+
+test("Prisma migration validator accepts safe DDL and rejects destructive SQL", (t) => {
+  const directory = mkdtempSync(join(tmpdir(), "safrs-codex-migration-"));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  const script =
+    ".agents/skills/prisma-migration/scripts/validate-migration.mjs";
+
+  writeFileSync(
+    join(directory, "migration.sql"),
+    'CREATE TABLE "demo" ("id" UUID PRIMARY KEY);\n',
+  );
+  const safe = spawnSync(process.execPath, [script, directory], {
+    cwd: repositoryRoot,
+    encoding: "utf8",
+  });
+  assert.equal(safe.status, 0, safe.stderr);
+
+  writeFileSync(
+    join(directory, "migration.sql"),
+    "DROP DATABASE production;\n",
+  );
+  const destructive = spawnSync(process.execPath, [script, directory], {
+    cwd: repositoryRoot,
+    encoding: "utf8",
+  });
+  assert.equal(destructive.status, 1);
+  assert.match(destructive.stderr, /Destructive statement/iu);
+});
