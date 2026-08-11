@@ -29,10 +29,12 @@ $checks = @(
     'tools/safrs/check_tool_inventory.py',
     'tools/safrs/check_topology.py',
     'tools/safrs/check_actions_pinning.py',
+    'tools/safrs/check_task_ownership.py',
     'tools/safrs/check_sensitive_changes.py',
     'tools/safrs/check_handoff.py',
     'tests/architecture/test_safrs_topology.py',
-    'tests/governance/test_sensitive_classification.py'
+    'tests/governance/test_sensitive_classification.py',
+    'tests/governance/test_task_ownership.py'
 )
 
 foreach ($check in $checks) {

@@ -15,6 +15,7 @@ import { pathToFileURL } from "node:url";
 
 const workflowsDirectory = ".github/workflows";
 const ciFile = join(workflowsDirectory, "ci.yml");
+const governanceFile = join(workflowsDirectory, "safrs-governance.yml");
 const renovateFile = ".github/renovate.json";
 const immutableAction = /^[a-z0-9][a-z0-9_.-]*\/[a-z0-9_.-]+@[a-f0-9]{40}$/u;
 const repositoryRoot = process.cwd();
@@ -142,6 +143,34 @@ test("CI proves the full safe verification path without deployment", () => {
   assert.match(workflow, /services:\s*\n\s+postgres:/u);
   assert.match(workflow, /DATABASE_URL:/u);
   assert.doesNotMatch(workflow, /\bdeploy\b/iu);
+});
+
+test("Control Plane ownership checks and tests are wired into repository gates", () => {
+  const governance = readFileSync(governanceFile, "utf8");
+  assert.match(governance, /python3 tools\/safrs\/check_task_ownership\.py/u);
+  assert.match(
+    governance,
+    /python3 tests\/governance\/test_task_ownership\.py/u,
+  );
+
+  const rootTestRunner = readFileSync("scripts/test.mjs", "utf8");
+  assert.match(rootTestRunner, /tests\/repository\/\*\.test\.mjs/u);
+
+  const sensitive = JSON.parse(
+    readFileSync(".safrs/sensitive-paths.json", "utf8"),
+  );
+  for (const pattern of [
+    "tools/task/**",
+    "tools/status/**",
+    "tests/repository/task-command.test.mjs",
+    "tests/repository/status-command.test.mjs",
+    "tests/governance/test_task_ownership.py",
+  ]) {
+    assert.ok(
+      sensitive.verification_control_patterns.includes(pattern),
+      `missing verification control pattern: ${pattern}`,
+    );
+  }
 });
 
 test("workflow policy rejects YAML bypasses for action pins, write permissions, and deployment", () => {

@@ -2,7 +2,7 @@
 
 Legend: [x] done, [~] in progress, [ ] not started, [!] blocked
 
-Last updated: 2026-08-11 | Branch: `feat/codex-repository-automation`
+Last updated: 2026-08-11 | Branch: `feat/safrs-control-plane-v1`
 
 > Area status board. Detailed work logs: `docs/plans/active/` → `completed/`.
 > Durable decisions: `DECISIONS.md`. Session state: `HANDOFF.md`.
@@ -30,6 +30,8 @@ Last updated: 2026-08-11 | Branch: `feat/codex-repository-automation`
 - [~] Claude Code automation pack (`.claude/` hooks, subagents, skills) — implemented,
       awaiting Chief review (`docs/bootstrap/CLAUDE_SETUP.md`); Postgres MCP deferred
 - [x] Codex repository automation pack (`.codex/` hooks/config/agents + `.agents/skills`) — implemented; R2 designated review required
+- [~] SAFRS Control Plane v1 Increment A — implemented in an isolated worktree; final
+      designated R2 and verification-integrity review pending before Chief approval
 - [ ] Complete `.env.example` + capability variable docs
 - [ ] Python prerequisite documented (INSTALL.md) + setup detection
 

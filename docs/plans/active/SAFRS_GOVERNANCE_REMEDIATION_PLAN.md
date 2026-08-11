@@ -71,20 +71,20 @@ proven with a real test PR, not just configuration.
 ## Phase 2 — Single-Mutation-Owner: from Policy to Mechanism (R1–R2)
 
 SEN-001 names this a core SAFRS mechanism; today it is prose in `SAFRS_MULTI_AGENT_PROTOCOL.md`.
-Minimal implementation per P10 "simplicity is a control" (no distributed locks for a solo repo):
+Implementation is in `feat/safrs-control-plane-v1` and awaits designated R2 review:
 
-- [ ] Add a machine-checked active-task file, e.g. `.safrs/active-tasks.json`
-      (task_id, scope glob, status, owner) — new governance file, R2, Chief review required.
-- [ ] Add `tools/safrs/check_task_ownership.py`: reject when two `EXECUTING` tasks have
-      overlapping scope globs.
-- [ ] Register the checker in `scripts/safrs-verify.sh` + `safrs-governance.yml`
-      (verification-control change — automatic R2).
-- [ ] Add a governance test in `tests/governance/` (pattern: `test_sensitive_classification.py`).
+- [x] Store runtime task leases at `<git-common-dir>/safrs-control-plane/active-tasks.json`,
+      shared by sibling worktrees and never committed.
+- [x] Serialize registry mutations with an exclusive lock, reread under lock, and atomic replace.
+- [x] Enforce normalized path-prefix ownership for every mutation-active lifecycle state; every
+      staged, unstaged, and untracked path must have exactly one active owner for its worktree.
+- [x] Register `tools/safrs/check_task_ownership.py` and isolated regression tests in local,
+      root-test, and CI governance gates.
+- [x] Provide `pnpm task` lifecycle helpers and read-only `pnpm status` for the solo operator.
+- [ ] Obtain final designated R2 and verification-integrity approval, then merge with Chief approval.
 
-**Note:** low urgency for one-agent-at-a-time solo use; relevant when Chief runs multiple parallel
-agents. Confirm priority before implementing (adds a file to `.safrs/**`, R2).
-
-**Exit:** two dummy tasks with overlapping scopes fail `pnpm governance` until one closes.
+**Exit:** sibling worktrees see the same leases; overlap, unowned changes, stale review evidence,
+and cross-worktree task mutation fail closed.
 
 ---
 

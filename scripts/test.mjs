@@ -15,8 +15,14 @@ const environment = {
   DATABASE_INTEGRATION_TESTS: "1",
 };
 
-for (const argumentsList of [["test:contracts"], ["turbo", "run", "test"]]) {
-  const result = await runCommand(packageManagerCommand, argumentsList, {
+const commands = [
+  [process.execPath, ["--test", "tests/repository/*.test.mjs"]],
+  [packageManagerCommand, ["test:contracts"]],
+  [packageManagerCommand, ["turbo", "run", "test"]],
+];
+
+for (const [command, argumentsList] of commands) {
+  const result = await runCommand(command, argumentsList, {
     cwd: rootDirectory,
     env: environment,
   });

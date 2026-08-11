@@ -5,6 +5,22 @@
 
 Exceptional states: `BLOCKED`, `CONFLICT`, `FAILED`, `ABORTED`, `SUPERSEDED`.
 
+## Machine ownership registry (Control Plane v1)
+
+Canonical local machine state for mutation ownership lives under the Git common directory at `safrs-control-plane/active-tasks.json`, shared by every sibling worktree. It is runtime lease state, not a committed file.
+
+- Scopes are normalized repository-relative **path prefixes** (not globs). Directories end with `/`.
+- Two mutation-active tasks conflict when prefixes are identical or one is an ancestor of the other.
+- Every staged, unstaged, or untracked path must be covered by exactly one active task for the current worktree.
+- Task writes use an exclusive shared lock and atomic replacement.
+- Only the recorded worktree may mutate a task with `state` or `close`; sibling worktrees are read-only observers of that lease.
+- Observe with `pnpm status` (read-only). Mutate claims with `pnpm task claim|state|close|list`.
+- `pnpm governance` runs `tools/safrs/check_task_ownership.py` against the current registry snapshot.
+- When implementation and verification controls change together, matching review evidence in `.safrs/reviews/verification-integrity.json` is required; stale evidence fails closed.
+- HANDOFF remains the session narrative; do not duplicate long scope lists there — reference `task_id`.
+
+Design: `docs/superpowers/specs/2026-08-11-safrs-control-plane-v1-design.md`.
+
 ## Ownership rules
 1. A bounded mutation scope has one active mutation owner by default.
 2. Analysis/review may occur in parallel.
