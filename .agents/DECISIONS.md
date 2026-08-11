@@ -6,6 +6,17 @@ Never delete entries — reversals are new entries ("supersedes ...").
 
 ---
 
+## 2026-08-11 - Bugbot follow-ups: adapter R2 parity + force-with-lease allow
+
+After `/review-bugbot` on the agent-automation packs: (1) Cursor `guard-shell.mjs`
+allows `git push --force-with-lease` while still denying `--force`/`-f`; (2) Cline
+prisma-migration skill points at its local `scripts/validate-migration.mjs`;
+(3) `.safrs/sensitive-paths.json` classifies `.cursor/**` / `.cline/**` / `**/.mcp.json`
+as R2 and registers Cursor/Cline hooks under `verification_control_patterns`;
+(4) Claude credential write/read denials align with Cursor (`id_ed25519*`,
+`credentials.json`, `secrets.json`, `*.p12`, `*.pfx`). Integrity review flagged:
+controls + adapter docs changed together.
+
 ## 2026-08-11 - Cursor MCP: Context7 only; Prisma/Postgres MCP still deferred
 
 Cursor automations may ship `.cursor/mcp.json` with Context7 for docs lookup. They must **not**

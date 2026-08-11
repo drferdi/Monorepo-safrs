@@ -34,16 +34,18 @@ if (!command.trim()) {
 
 const denyPatterns = [
   {
-    re: /\bgit\s+push\s+[^\n]*--force\b/i,
+    // Deny --force but allow --force-with-lease (safer alternative).
+    re: /\bgit\s+push\s+[^\n]*--force(?!-with-lease)\b/i,
     user: "Force-push blocked by project hook.",
     agent:
-      "Do not force-push. Use a normal push or ask Chief for an explicit override.",
+      "Do not force-push. Use a normal push, --force-with-lease, or ask Chief for an explicit override.",
   },
   {
-    re: /\bgit\s+push\s+[^\n]*-f\b/i,
+    // Match short -f only when not part of a long option (--force*).
+    re: /\bgit\s+push\s+[^\n]*(?<![\w-])-f(?![\w-])\b/i,
     user: "Force-push (-f) blocked by project hook.",
     agent:
-      "Do not force-push. Use a normal push or ask Chief for an explicit override.",
+      "Do not force-push. Use a normal push, --force-with-lease, or ask Chief for an explicit override.",
   },
 ];
 

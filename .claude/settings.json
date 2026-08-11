@@ -7,7 +7,13 @@
       "Read(./**/.env)",
       "Read(./**/.env.*)",
       "Read(./**/*.pem)",
-      "Read(./**/*.key)"
+      "Read(./**/*.p12)",
+      "Read(./**/*.pfx)",
+      "Read(./**/*.key)",
+      "Read(./**/id_rsa*)",
+      "Read(./**/id_ed25519*)",
+      "Read(./**/credentials.json)",
+      "Read(./**/secrets.json)"
     ],
     "allow": [
       "Bash(pnpm lint)",

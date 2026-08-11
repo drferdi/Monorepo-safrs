@@ -25,6 +25,9 @@ const CREDENTIAL_PATTERNS = [
   "**/*.pfx",
   "**/*.key",
   "**/id_rsa*",
+  "**/id_ed25519*",
+  "**/credentials.json",
+  "**/secrets.json",
 ];
 
 const CREDENTIAL_EXCEPTIONS = [".env.example", "**/.env.example"];
