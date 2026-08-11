@@ -16,8 +16,10 @@ fi
 "$PYTHON" tools/safrs/check_tool_inventory.py
 "$PYTHON" tools/safrs/check_topology.py
 "$PYTHON" tools/safrs/check_actions_pinning.py
+"$PYTHON" tools/safrs/check_task_ownership.py
 "$PYTHON" tools/safrs/check_sensitive_changes.py
 "$PYTHON" tools/safrs/check_handoff.py
 "$PYTHON" tests/architecture/test_safrs_topology.py
 "$PYTHON" tests/governance/test_sensitive_classification.py
+"$PYTHON" tests/governance/test_task_ownership.py
 printf 'SAFRS local governance verification: PASS\n'

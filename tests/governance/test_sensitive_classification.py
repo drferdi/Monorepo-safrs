@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import hashlib
 import os
 import shutil
 import subprocess
@@ -10,6 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 CHECKER = 'tools/safrs/check_sensitive_changes.py'
+REVIEW_EVIDENCE = '.safrs/reviews/verification-integrity.json'
 
 
 def install_checker(repository, config=None):
@@ -55,6 +57,36 @@ def run_checker(repository, environment=None):
         text=True,
         capture_output=True,
         env=environment,
+    )
+
+
+def change_set_digest(repository, paths):
+    digest = hashlib.sha256()
+    for relative in sorted(paths):
+        target = repository / relative
+        content_digest = (
+            hashlib.sha256(target.read_bytes()).hexdigest()
+            if target.is_file()
+            else '<deleted>'
+        )
+        digest.update(f'{relative}\0{content_digest}\n'.encode())
+    return digest.hexdigest()
+
+
+def write_review_evidence(repository, paths, *, digest=None):
+    write(
+        repository,
+        REVIEW_EVIDENCE,
+        json.dumps(
+            {
+                'version': 1,
+                'verdict': 'approved',
+                'reviewer_id': 'agent:independent-integrity-reviewer',
+                'reviewed_at': '2026-08-11T15:30:00Z',
+                'change_set_sha256': digest or change_set_digest(repository, paths),
+            },
+            indent=2,
+        ) + '\n',
     )
 
 
@@ -127,6 +159,48 @@ class SensitiveClassificationTests(unittest.TestCase):
 
             self.assertNotEqual(result.returncode, 0, result.stdout)
             self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=required', result.stdout)
+
+    def test_matching_independent_review_evidence_satisfies_integrity_gate(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['tools/safrs/**'],
+                'verification_control_patterns': ['tools/safrs/**'],
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            commit_baseline(repository)
+            changed = ['src/app.py', 'tools/safrs/check_extra.py']
+            write(repository, changed[0], '# implementation\n')
+            write(repository, changed[1], '# control\n')
+            write_review_evidence(repository, changed)
+
+            result = run_checker(repository)
+
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=approved', result.stdout)
+
+    def test_stale_review_evidence_is_rejected(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['tools/safrs/**'],
+                'verification_control_patterns': ['tools/safrs/**'],
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            commit_baseline(repository)
+            changed = ['src/app.py', 'tools/safrs/check_extra.py']
+            write(repository, changed[0], '# implementation\n')
+            write(repository, changed[1], '# control\n')
+            write_review_evidence(repository, changed, digest='0' * 64)
+
+            result = run_checker(repository)
+
+            self.assertNotEqual(result.returncode, 0, result.stdout)
+            self.assertIn('review evidence does not match', result.stderr.lower())
 
     def test_undeterminable_change_set_is_rejected(self):
         with tempfile.TemporaryDirectory() as temporary_directory:

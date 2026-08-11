@@ -43,6 +43,12 @@ jobs:
       - name: Enforce immutable GitHub Action pins
         run: python3 tools/safrs/check_actions_pinning.py
 
+      - name: Validate active task ownership
+        run: python3 tools/safrs/check_task_ownership.py
+
+      - name: Test task ownership invariants
+        run: python3 tests/governance/test_task_ownership.py
+
       - name: Classify sensitive and verification-control changes
         run: python3 tools/safrs/check_sensitive_changes.py
 
