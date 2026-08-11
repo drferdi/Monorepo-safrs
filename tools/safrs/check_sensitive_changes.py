@@ -46,9 +46,36 @@ def git_names(command):
     return set(x.strip() for x in p.stdout.splitlines() if x.strip())
 
 
+def read_review_evidence():
+    evidence_file = ROOT / review_evidence_path
+    if not evidence_file.is_file():
+        return None
+    try:
+        return json.loads(evidence_file.read_text(encoding='utf-8'))
+    except (OSError, json.JSONDecodeError) as error:
+        raise SystemExit(f'SAFRS integrity review evidence is invalid: {error}')
+
+
+review_evidence = read_review_evidence()
+configured_base_ref = config.get('review_base_ref', 'main')
+if not isinstance(configured_base_ref, str) or not configured_base_ref.strip():
+    raise SystemExit('SAFRS sensitive-path config requires review_base_ref')
+diff_base_ref = base or configured_base_ref
+diff_base_result = subprocess.run(
+    ['git', 'rev-parse', f'{diff_base_ref}^{{commit}}'],
+    cwd=ROOT,
+    text=True,
+    capture_output=True,
+)
+if diff_base_result.returncode != 0:
+    unavailable(diff_base_result.args, diff_base_result.returncode, diff_base_result.stderr)
+diff_base_sha = diff_base_result.stdout.strip()
+
 if not base:
-    # Local fallback: staged + unstaged + untracked names.
+    # Local fallback: the reviewed branch diff plus staged, unstaged, and
+    # untracked names. This keeps follow-up commits aligned with PR CI.
     cmds = [
+        ['git','diff','--name-only',f'{diff_base_sha}...HEAD'],
         ['git','diff','--name-only','HEAD'],
         ['git','diff','--cached','--name-only'],
         ['git','ls-files','--others','--exclude-standard']
@@ -57,7 +84,7 @@ if not base:
     for cmd in cmds:
         names.update(git_names(cmd))
 else:
-    names=git_names(['git','diff','--name-only',f'{base}...{head}'])
+    names=git_names(['git','diff','--name-only',f'{diff_base_sha}...{head}'])
 
 # The attestation describes the other changed files. Excluding it avoids a
 # circular fingerprint while still validating its exact schema and content.
@@ -83,41 +110,45 @@ override_matches = {
 }
 
 
-def content_sha256(path):
+def content_identity(path):
     if base:
         result = subprocess.run(
-            ['git', 'show', f'{head}:{path}'],
+            ['git', 'rev-parse', f'{head}:{path}'],
             cwd=ROOT,
+            text=True,
             capture_output=True,
         )
         if result.returncode != 0:
             return '<deleted>'
-        content = result.stdout
-    else:
-        target = ROOT / path
-        if not target.is_file():
-            return '<deleted>'
-        content = target.read_bytes()
-    return hashlib.sha256(content).hexdigest()
+        return result.stdout.strip()
+    target = ROOT / path
+    if not target.is_file():
+        return '<deleted>'
+    result = subprocess.run(
+        ['git', 'hash-object', '--path', path, str(target)],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if result.returncode != 0:
+        unavailable(result.args, result.returncode, result.stderr)
+    return result.stdout.strip()
 
 
 def change_set_sha256(paths):
     digest = hashlib.sha256()
     for path in sorted(paths):
-        digest.update(f'{path}\0{content_sha256(path)}\n'.encode())
+        digest.update(f'{path}\0{content_identity(path)}\n'.encode())
     return digest.hexdigest()
 
 
 def integrity_review_approved(paths):
-    evidence_file = ROOT / review_evidence_path
-    if not evidence_file.is_file():
+    if review_evidence is None:
         return False
-    try:
-        evidence = json.loads(evidence_file.read_text(encoding='utf-8'))
-    except (OSError, json.JSONDecodeError) as error:
-        raise SystemExit(f'SAFRS integrity review evidence is invalid: {error}')
+    evidence = review_evidence
     required = {
-        'version', 'verdict', 'reviewer_id', 'reviewed_at', 'change_set_sha256'
+        'version', 'verdict', 'reviewer_id', 'reviewed_at', 'base_sha',
+        'change_set_sha256'
     }
     if set(evidence) != required:
         raise SystemExit(
@@ -128,6 +159,27 @@ def integrity_review_approved(paths):
         raise SystemExit('SAFRS integrity review evidence is not an approved v1 review')
     if not isinstance(evidence['reviewer_id'], str) or not evidence['reviewer_id'].strip():
         raise SystemExit('SAFRS integrity review evidence requires reviewer_id')
+    if (
+        not isinstance(evidence['base_sha'], str)
+        or len(evidence['base_sha']) not in (40, 64)
+        or any(
+            character not in '0123456789abcdef'
+            for character in evidence['base_sha']
+        )
+    ):
+        raise SystemExit('SAFRS integrity review evidence requires a full base_sha')
+    evidence_base = subprocess.run(
+        ['git', 'rev-parse', f'{evidence["base_sha"]}^{{commit}}'],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if evidence_base.returncode != 0:
+        raise SystemExit('SAFRS integrity review evidence base_sha is unavailable')
+    if evidence_base.stdout.strip() != diff_base_sha:
+        raise SystemExit(
+            'SAFRS integrity review evidence base_sha does not match the configured diff base'
+        )
     if not isinstance(evidence['reviewed_at'], str) or not evidence['reviewed_at'].endswith('Z'):
         raise SystemExit('SAFRS integrity review evidence requires UTC reviewed_at')
     try:
