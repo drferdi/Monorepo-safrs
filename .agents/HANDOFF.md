@@ -15,6 +15,7 @@ Last updated: 2026-08-12 (Windows CI database remediation)
 - Fresh Windows checkout evidence: `pnpm lint` checked 146 files with 0 errors (19 warnings, 11 infos); `pnpm check:tokens` passed 38 contrast checks.
 - GitHub then reached `pnpm test`; the pre-commit fixture now selects Git Bash on Windows and native `bash` on Linux instead of hard-coding a Windows executable on Ubuntu.
 - `scripts/check-tokens.mjs` and `tests/repository/precommit.test.mjs` are now explicit verification-control patterns, with classifier regression coverage, so mixed implementation/control changes require matching independent evidence.
+- The token gate resolves the repository root from its module path, so `pnpm check:tokens` and the `@sentra/token` package test use the same `scope.txt` from any working directory.
 - GitHub Actions is intentionally Windows-native now: both workflows use `windows-2025`, CI configures the preinstalled PostgreSQL 17 Windows service on the repository's disposable port `54329`, grants the disposable test role `CREATEDB` for isolated integration fixtures, and governance uses PowerShell plus the Windows Python command.
 - PR #8's checks exposed the remaining mismatch: the native service was healthy, but CI used port `5432`, which the repository reset guard rejects.
 - Isolated worktree: `D:/DEV/Monorepo.worktrees/fix-lint-baseline` on `fix/ci-windows-postmerge`.

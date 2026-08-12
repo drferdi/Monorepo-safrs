@@ -14,8 +14,9 @@
  */
 import { readdirSync, readFileSync } from "node:fs";
 import { extname, join, relative } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const ROOT = process.cwd();
+const ROOT = fileURLToPath(new URL("../", import.meta.url));
 const TOKEN_PKG = "packages/token";
 const SCAN = ["projects", "packages", "tools"];
 const EXT = new Set([
