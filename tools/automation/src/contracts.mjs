@@ -273,6 +273,15 @@ function rejectSecretLike(value, field) {
   ) {
     reject(`secret-like content in ${field}`);
   }
+  if (Array.isArray(value)) {
+    for (const [index, entry] of value.entries()) {
+      rejectSecretLike(entry, `${field}[${index}]`);
+    }
+  } else if (typeof value === "object" && value !== null) {
+    for (const [key, entry] of Object.entries(value)) {
+      rejectSecretLike(entry, `${field}.${key}`);
+    }
+  }
 }
 
 function classifyPathRisk(writeScopes, sensitivePaths) {
@@ -306,9 +315,9 @@ export function compileTaskContract(input, context) {
     reject("input must be an object");
   }
 
-  for (const field of ["objective", "requester", "accountable_human"]) {
-    rejectSecretLike(input[field], field);
-  }
+  // Deep scan: every requester-controlled string in the input, not just the
+  // headline fields — rollback text, evidence URLs, tool lists, all of it.
+  rejectSecretLike(input, "input");
 
   const created = Date.parse(input.created_at ?? "");
   const expires = Date.parse(input.expires_at ?? "");
