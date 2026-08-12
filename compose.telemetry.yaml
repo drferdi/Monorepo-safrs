@@ -1,0 +1,13 @@
+# Optional local OpenTelemetry collector for distributed-trace inspection.
+# Start with:
+#   docker compose -f compose.telemetry.yaml up -d jaeger
+# Then open the UI at http://localhost:16686 and point the app at
+# OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318/v1/traces.
+services:
+  jaeger:
+    image: jaegertracing/all-in-one:1.62
+    container_name: safrs-jaeger
+    ports:
+      - "127.0.0.1:16686:16686" # UI
+      - "127.0.0.1:4317:4317" # OTLP/gRPC
+      - "127.0.0.1:4318:4318" # OTLP/HTTP

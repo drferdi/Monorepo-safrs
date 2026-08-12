@@ -32,3 +32,5 @@ docs/design-system/reference/**/*.png
 docs/design-system/reference/**/*.jpg
 docs/design-system/reference/**/*.webp
 docs/design-system/reference/**/*.pdf
+# Don't index SpecStory auto-save files, but allow explicit context inclusion via @ references
+.specstory/**
