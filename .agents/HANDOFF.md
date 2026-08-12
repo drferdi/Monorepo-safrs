@@ -15,6 +15,7 @@ Last updated: 2026-08-12 (CI lint baseline remediation)
 - Fresh Windows checkout evidence: `pnpm lint` checked 146 files with 0 errors (19 warnings, 11 infos); `pnpm check:tokens` passed 38 contrast checks.
 - GitHub then reached `pnpm test`; the pre-commit fixture now selects Git Bash on Windows and native `bash` on Linux instead of hard-coding a Windows executable on Ubuntu.
 - `scripts/check-tokens.mjs` and `tests/repository/precommit.test.mjs` are now explicit verification-control patterns, with classifier regression coverage, so mixed implementation/control changes require matching independent evidence.
+- GitHub Actions is intentionally Windows-native now: both workflows use `windows-2025`, CI starts the preinstalled PostgreSQL 17 Windows service, and governance uses PowerShell plus the Windows Python command.
 - Isolated worktree: `D:/DEV/Monorepo.worktrees/fix-lint-baseline` on `fix/lint-baseline`.
 - Primary `main` worktree still holds unrelated alignment-pack changes — do not clobber.
 

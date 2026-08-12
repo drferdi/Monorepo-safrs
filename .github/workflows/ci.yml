@@ -9,25 +9,11 @@ permissions:
 
 jobs:
   verify:
-    runs-on: ubuntu-24.04
+    runs-on: windows-2025
     env:
       APP_URL: http://127.0.0.1:3000
-      DATABASE_URL: postgresql://safrs:safrs@127.0.0.1:54329/safrs_test
+      DATABASE_URL: postgresql://safrs:safrs@127.0.0.1:5432/safrs_test
       NODE_ENV: test
-    services:
-      postgres:
-        image: postgres:17-alpine
-        env:
-          POSTGRES_DB: safrs_test
-          POSTGRES_PASSWORD: safrs
-          POSTGRES_USER: safrs
-        ports:
-          - 54329:5432
-        options: >-
-          --health-cmd "pg_isready -U safrs -d safrs_test"
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 20
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
@@ -45,12 +31,40 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Prepare disposable test database
+        shell: pwsh
         run: |
+          $ErrorActionPreference = "Stop"
+          $pgBin = "C:\Program Files\PostgreSQL\17\bin"
+          $env:Path = "$pgBin;$env:Path"
+          Set-Service -Name "postgresql-x64-17" -StartupType Manual
+          Start-Service -Name "postgresql-x64-17"
+          $ready = $false
+          for ($attempt = 0; $attempt -lt 30; $attempt++) {
+            & pg_isready --host 127.0.0.1 --port 5432 --username postgres
+            if ($LASTEXITCODE -eq 0) {
+              $ready = $true
+              break
+            }
+            Start-Sleep -Seconds 1
+          }
+          if (-not $ready) {
+            throw "PostgreSQL Windows service did not become ready."
+          }
+          $env:PGPASSWORD = "root"
+          & psql --host 127.0.0.1 --port 5432 --username postgres --dbname postgres --command "CREATE ROLE safrs LOGIN PASSWORD 'safrs';"
+          if ($LASTEXITCODE -ne 0) {
+            throw "Could not create disposable PostgreSQL role."
+          }
+          & createdb --host 127.0.0.1 --port 5432 --username postgres --owner safrs safrs_test
+          if ($LASTEXITCODE -ne 0) {
+            throw "Could not create disposable PostgreSQL database."
+          }
+          Remove-Item Env:PGPASSWORD
           pnpm db:generate
           pnpm db:migrate
           pnpm db:seed
       - name: Install browser engine
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm exec playwright install chromium
       - name: Verify SAFRS governance
         run: pnpm governance
         env:

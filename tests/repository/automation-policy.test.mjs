@@ -140,7 +140,14 @@ test("CI proves the full safe verification path without deployment", () => {
       new RegExp(command.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&")),
     );
   }
-  assert.match(workflow, /services:\s*\n\s+postgres:/u);
+  assert.match(workflow, /runs-on:\s*windows-2025/u);
+  assert.doesNotMatch(workflow, /services:\s*\n\s+postgres:/u);
+  assert.match(workflow, /postgresql-x64-17/u);
+  assert.match(
+    workflow,
+    /Set-Service\s+-Name\s+"postgresql-x64-17"\s+-StartupType\s+Manual/u,
+  );
+  assert.match(workflow, /Start-Service/u);
   assert.match(workflow, /DATABASE_URL:/u);
   assert.match(workflow, /fetch-depth:\s*0/u);
   assert.match(
@@ -156,10 +163,10 @@ test("CI proves the full safe verification path without deployment", () => {
 
 test("Control Plane ownership checks and tests are wired into repository gates", () => {
   const governance = readFileSync(governanceFile, "utf8");
-  assert.match(governance, /python3 tools\/safrs\/check_task_ownership\.py/u);
+  assert.match(governance, /python tools\/safrs\/check_task_ownership\.py/u);
   assert.match(
     governance,
-    /python3 tests\/governance\/test_task_ownership\.py/u,
+    /python tests\/governance\/test_task_ownership\.py/u,
   );
 
   const rootTestRunner = readFileSync("scripts/test.mjs", "utf8");
