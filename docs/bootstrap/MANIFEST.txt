@@ -1,4 +1,4 @@
-./.cursor/rules/safrs.mdc
+./.cursor/rules/01-safrs.mdc
 ./.env.example
 ./.github/CODEOWNERS.example
 ./.github/copilot-instructions.md

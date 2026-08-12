@@ -21,6 +21,7 @@
     "projects/**/safety-critical/**",
     "projects/**/production/**",
     "packages/**",
+    "tools/codegen/**",
     "package.json",
     "pnpm-lock.yaml",
     "pnpm-workspace.yaml",

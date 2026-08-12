@@ -2,7 +2,7 @@
 
 Legend: [x] done, [~] in progress, [ ] not started, [!] blocked
 
-Last updated: 2026-08-11 | Branch: `feat/safrs-control-plane-v1`
+Last updated: 2026-08-12 | Branch: sota-enhancements
 
 > Area status board. Detailed work logs: `docs/plans/active/` → `completed/`.
 > Durable decisions: `DECISIONS.md`. Session state: `HANDOFF.md`.
@@ -21,6 +21,7 @@ Last updated: 2026-08-11 | Branch: `feat/safrs-control-plane-v1`
 
 ## 🟡 Phase 1 — Solo-Developer DX
 
+- [x] SOTA enhancements v1+v2 (deps-graph, visual regression, telemetry, codegen, OpenAPI endpoint, property tests, supply-chain scan) implemented + verified (2026-08-12)
 - [x] KB re-route → `.agents/knowledge/` (commit `de1410f`, pushed)
 - [~] DX friction fixes (9 items) — **in progress by Claude**
       (`docs/superpowers/plans/2026-08-11-solo-dev-dx-friction-fixes.md`)
@@ -30,8 +31,6 @@ Last updated: 2026-08-11 | Branch: `feat/safrs-control-plane-v1`
 - [~] Claude Code automation pack (`.claude/` hooks, subagents, skills) — implemented,
       awaiting Chief review (`docs/bootstrap/CLAUDE_SETUP.md`); Postgres MCP deferred
 - [x] Codex repository automation pack (`.codex/` hooks/config/agents + `.agents/skills`) — implemented; R2 designated review required
-- [~] SAFRS Control Plane v1 Increment A — implemented in an isolated worktree; final
-      designated R2 and verification-integrity review pending before Chief approval
 - [ ] Complete `.env.example` + capability variable docs
 - [ ] Python prerequisite documented (INSTALL.md) + setup detection
 

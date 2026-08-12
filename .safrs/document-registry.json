@@ -191,7 +191,7 @@
     },
     {
       "id": "cursor-adapter",
-      "path": ".cursor/rules/safrs.mdc",
+      "path": ".cursor/rules/01-safrs.mdc",
       "type": "reference",
       "status": "ACTIVE"
     },

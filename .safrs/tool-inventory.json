@@ -121,7 +121,73 @@
       "data_scope": "public-library-identifiers-and-task-scoped-documentation-queries-only",
       "authentication": "none",
       "network_endpoints": ["registry.npmjs.org", "mcp.context7.com"],
-      "provenance": "@upstash/context7-mcp@4.0.0 via pnpm dlx",
+      "provenance": ".cursor/mcp.json → @upstash/context7-mcp@latest via npx",
+      "review_status": "APPROVED"
+    },
+    {
+      "id": "playwright-mcp",
+      "owner": "repository-maintainers",
+      "purpose": "Browser automation assist for local UI verification via MCP",
+      "allowed_operations": ["navigate", "snapshot", "interact-local-pages"],
+      "data_scope": "task-scoped-browser-targets-prefer-localhost",
+      "authentication": "none",
+      "network_endpoints": ["registry.npmjs.org"],
+      "provenance": ".cursor/mcp.json → @playwright/mcp@latest via npx",
+      "review_status": "APPROVED"
+    },
+    {
+      "id": "firecrawl-mcp",
+      "owner": "repository-maintainers",
+      "purpose": "Web scrape and search for SOTA/docs research; output is untrusted data",
+      "allowed_operations": ["scrape", "search", "map", "extract"],
+      "data_scope": "public-web-content-task-scoped",
+      "authentication": "FIRECRAWL_API_KEY from user environment",
+      "network_endpoints": ["registry.npmjs.org", "api.firecrawl.dev"],
+      "provenance": ".cursor/mcp.json → firecrawl-mcp via npx; env FIRECRAWL_API_KEY",
+      "review_status": "APPROVED"
+    },
+    {
+      "id": "sequential-thinking-mcp",
+      "owner": "repository-maintainers",
+      "purpose": "Structured multi-step reasoning assist for complex local tasks",
+      "allowed_operations": ["sequential-think"],
+      "data_scope": "in-session-reasoning-only",
+      "authentication": "none",
+      "network_endpoints": ["registry.npmjs.org"],
+      "provenance": ".cursor/mcp.json → @modelcontextprotocol/server-sequential-thinking via npx",
+      "review_status": "APPROVED"
+    },
+    {
+      "id": "filesystem-mcp",
+      "owner": "repository-maintainers",
+      "purpose": "Scoped filesystem tools under D:/DEV for monorepo agent workflows",
+      "allowed_operations": ["read", "list", "search", "write-scoped"],
+      "data_scope": "D:/DEV only as configured in .cursor/mcp.json",
+      "authentication": "os-user",
+      "network_endpoints": ["registry.npmjs.org"],
+      "provenance": ".cursor/mcp.json → @modelcontextprotocol/server-filesystem with D:/DEV root",
+      "review_status": "APPROVED"
+    },
+    {
+      "id": "deps-graph",
+      "owner": "repository-maintainers",
+      "purpose": "Render the monorepo inter-package dependency graph (read-only, manual/CI-optional aid)",
+      "allowed_operations": ["read-workspace-manifests", "render-graph"],
+      "data_scope": "repository-only",
+      "authentication": "none",
+      "network_endpoints": [],
+      "provenance": "tools/deps-graph/src/cli.mjs",
+      "review_status": "APPROVED"
+    },
+    {
+      "id": "jaeger-otlp-collector",
+      "owner": "repository-maintainers",
+      "purpose": "Local OpenTelemetry trace collector (Jaeger all-in-one) for dev-time distributed tracing",
+      "allowed_operations": ["read-local-traces", "serve-local-ui"],
+      "data_scope": "local-development-traces-only",
+      "authentication": "none",
+      "network_endpoints": ["127.0.0.1:16686", "127.0.0.1:4317", "127.0.0.1:4318"],
+      "provenance": "compose.telemetry.yaml → jaegertracing/all-in-one:1.62",
       "review_status": "APPROVED"
     }
   ]

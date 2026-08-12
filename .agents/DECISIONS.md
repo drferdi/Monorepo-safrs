@@ -6,6 +6,33 @@ Never delete entries — reversals are new entries ("supersedes ...").
 
 ---
 
+## 2026-08-12 - SOTA enhancements v2: OpenAPI live endpoint, property tests, supply-chain scan
+
+Three additional low-cost, key-free improvements on top of v1:
+(5) live OpenAPI 3.1 endpoint (`GET /api/openapi.json` + Swagger UI at
+`/api/docs`) built from Zod schemas via `z.toJSONSchema`; (6) property-based
+testing with `fast-check` (deterministic seed) asserting schema invariants;
+(7) supply-chain scan `pnpm check:security` (npm audit + optional osv-scanner).
+Also removed the unused `@opentelemetry/sdk-trace-node` dep whose
+`propagator-jaeger` child carried a high advisory. R1 except supply-chain gate
+(R2). Verified: api 11 tests, schemas 6 tests, telemetry 7 tests, dev server
+serves both OpenAPI routes.
+
+---
+
+## 2026-08-12 - SOTA enhancements v1: deps-graph, visual regression, telemetry, codegen
+
+Four additive features adopted to raise the golden-path to current practice:
+(1) monorepo dependency graph tool (`@safrs/deps-graph`, R1, standalone);
+(2) Playwright visual regression with Git LFS baselines;
+(3) shared OpenTelemetry tracing (`@safrs/telemetry`, OTLP/HTTP to local Jaeger)
+wired into api/web; (4) schema-first codegen (`@safrs/codegen`) emitting
+OpenAPI 3.1 (via Zod 4 `z.toJSONSchema`), mock factories (faker), and a typed
+fetch wrapper. All four are additive and individually verified; R2 items
+(telemetry, codegen, LFS, compose, registry/inventory/ci) await designated review.
+
+---
+
 ## 2026-08-11 - Codex repository automation pack: native adapters + Context7 only
 
 Codex uses a repository-scoped `.codex/config.toml`, tested PreToolUse/PostToolUse hooks,

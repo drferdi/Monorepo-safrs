@@ -1,4 +1,4 @@
-b8d2c18920a6cd5e6a5737016a60cf8f57ce9b574638c48e27ba3d7d229cd818 *./.cursor/rules/safrs.mdc
+07d1efaa5b52a4fdb3ad79e9a1f12d9a4970856953417286681ef5334abe8d35 *./.cursor/rules/01-safrs.mdc
 067f5639448c6d13690cd7fd55759385c0d69055ca0f4a32e123c5dbbe897d8a *./.env.example
 ae724c2cb305365eb4b7e44f509d66bf795f6f290734f5a58d54c35af6d2d12c *./.github/CODEOWNERS.example
 ee6626b5c14aad9541cf51258d56cfd4a473ac65d616a14a84cb749413104721 *./.github/copilot-instructions.md

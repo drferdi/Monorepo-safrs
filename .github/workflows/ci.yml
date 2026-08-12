@@ -9,16 +9,30 @@ permissions:
 
 jobs:
   verify:
-    runs-on: windows-2025
+    runs-on: ubuntu-24.04
     env:
       APP_URL: http://127.0.0.1:3000
       DATABASE_URL: postgresql://safrs:safrs@127.0.0.1:54329/safrs_test
       NODE_ENV: test
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_DB: safrs_test
+          POSTGRES_PASSWORD: safrs
+          POSTGRES_USER: safrs
+        ports:
+          - 54329:5432
+        options: >-
+          --health-cmd "pg_isready -U safrs -d safrs_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
     steps:
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
         with:
-          fetch-depth: 0
+          lfs: true
       - name: Set up pnpm
         uses: pnpm/action-setup@7088e561eb65bb68695d245aa206f005ef30921d
         with:
@@ -31,53 +45,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Prepare disposable test database
-        shell: pwsh
         run: |
-          $ErrorActionPreference = "Stop"
-          $pgBin = "C:\Program Files\PostgreSQL\17\bin"
-          $env:Path = "$pgBin;$env:Path"
-          $pgConfig = "C:\PostgreSQL\17\data\postgresql.conf"
-          $pgConfigText = Get-Content -LiteralPath $pgConfig -Raw
-          if ($pgConfigText -match "(?m)^\s*#?\s*port\s*=") {
-            $pgConfigText = [regex]::Replace($pgConfigText, "(?m)^\s*#?\s*port\s*=.*$", "port = 54329")
-          } else {
-            $pgConfigText = "$pgConfigText`r`nport = 54329`r`n"
-          }
-          Set-Content -LiteralPath $pgConfig -Value $pgConfigText -NoNewline
-          Set-Service -Name "postgresql-x64-17" -StartupType Manual
-          Start-Service -Name "postgresql-x64-17"
-          $ready = $false
-          for ($attempt = 0; $attempt -lt 30; $attempt++) {
-            & pg_isready --host 127.0.0.1 --port 54329 --username postgres
-            if ($LASTEXITCODE -eq 0) {
-              $ready = $true
-              break
-            }
-            Start-Sleep -Seconds 1
-          }
-          if (-not $ready) {
-            throw "PostgreSQL Windows service did not become ready."
-          }
-          $env:PGPASSWORD = "root"
-          & psql --host 127.0.0.1 --port 54329 --username postgres --dbname postgres --command "CREATE ROLE safrs LOGIN CREATEDB PASSWORD 'safrs';"
-          if ($LASTEXITCODE -ne 0) {
-            throw "Could not create disposable PostgreSQL role."
-          }
-          & createdb --host 127.0.0.1 --port 54329 --username postgres --owner safrs safrs_test
-          if ($LASTEXITCODE -ne 0) {
-            throw "Could not create disposable PostgreSQL database."
-          }
-          Remove-Item Env:PGPASSWORD
           pnpm db:generate
           pnpm db:migrate
           pnpm db:seed
       - name: Install browser engine
-        run: pnpm exec playwright install chromium
+        run: pnpm exec playwright install --with-deps chromium
       - name: Verify SAFRS governance
         run: pnpm governance
-        env:
-          SAFRS_BASE_REF: ${{ github.event.pull_request.base.sha || 'origin/main' }}
-          SAFRS_HEAD_REF: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Verify automation policy
         run: node --test tests/repository/automation-policy.test.mjs
       - name: Lint
