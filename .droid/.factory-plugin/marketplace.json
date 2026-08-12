@@ -1,0 +1,14 @@
+{
+  "name": "sentra-engineering",
+  "description": "Engineering workflow capabilities for Sentra Droid: repository archaeology, security review, testing, documentation, dependencies, and governance.",
+  "owner": {
+    "name": "Sentra Engineering"
+  },
+  "plugins": [
+    {
+      "name": "sentra-engineering-factory-plugin",
+      "description": "Reusable engineering skills, commands, droids, and safety hooks for Droid.",
+      "source": "./sentra-engineering-factory-plugin"
+    }
+  ]
+}

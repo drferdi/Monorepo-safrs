@@ -1,0 +1,20 @@
+{
+  "name": "sentra-engineering-factory-plugin",
+  "description": "Reusable engineering skills, slash commands, custom droids, and safety hooks for Droid across repositories.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Sentra Engineering"
+  },
+  "homepage": "",
+  "repository": "",
+  "license": "UNLICENSED",
+  "keywords": [
+    "engineering",
+    "security",
+    "testing",
+    "documentation",
+    "governance",
+    "solo-developer",
+    "workflow"
+  ]
+}

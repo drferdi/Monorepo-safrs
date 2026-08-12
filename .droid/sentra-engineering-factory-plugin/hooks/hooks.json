@@ -1,0 +1,36 @@
+{
+  "PreToolUse": [
+    {
+      "matcher": "Read",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"${DROID_PLUGIN_ROOT}/hooks/block-secret-output.ps1\"",
+          "timeout": 30
+        }
+      ]
+    }
+  ],
+  "UserPromptSubmit": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"${DROID_PLUGIN_ROOT}/hooks/validate-context.ps1\"",
+          "timeout": 30
+        }
+      ]
+    }
+  ],
+  "Stop": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"${DROID_PLUGIN_ROOT}/hooks/verify-before-finish.ps1\"",
+          "timeout": 30
+        }
+      ]
+    }
+  ]
+}

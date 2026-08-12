@@ -1,0 +1,6 @@
+{
+  // SpecStory autosaves chat transcripts as Markdown. Those files are not
+  // documentation and flood Problems with thousands of false positives
+  // (MD013/MD033/MD010/…). Exclude the whole tree from markdownlint.
+  "ignores": [".specstory/**"]
+}
