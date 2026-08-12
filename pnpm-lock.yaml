@@ -79,8 +79,8 @@ catalogs:
       specifier: 9.1.7
       version: 9.1.7
     next:
-      specifier: 16.2.12
-      version: 16.2.12
+      specifier: 16.3.0
+      version: 16.3.0
     pg:
       specifier: 8.16.3
       version: 8.16.3
@@ -360,7 +360,7 @@ importers:
         version: 4.13.1
       next:
         specifier: 'catalog:'
-        version: 16.2.12(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+        version: 16.3.0(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.10.13)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react:
         specifier: 'catalog:'
         version: 19.2.8

@@ -53,7 +53,9 @@ catalog:
   vitest: 4.1.10
   zod: 4.4.3
 
-minimumReleaseAge: "1 day"
+# Minutes (pnpm unit): 1440 = 1 day. A quoted duration string crashes pnpm
+# with "Invalid time value" during install and implicit deps checks.
+minimumReleaseAge: 1440
 
 minimumReleaseAgeExclude:
   - resend@6.19.0
