@@ -1,0 +1,81 @@
+{
+  "accountable_human": "chief@sentrahai.com",
+  "approval_policy": {
+    "R0": "none",
+    "R1": "automatic_gates_only",
+    "R2": "independent_or_code_owner",
+    "R3": "protected_environment_human"
+  },
+  "base_ref": "refs/heads/main",
+  "base_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "budgets": {
+    "attempts": 2,
+    "changed_files": 20,
+    "concurrent_children": 1,
+    "diff_lines": 1000,
+    "model_calls": 200,
+    "network_requests": 1,
+    "retries": 3,
+    "runtime_minutes": 120,
+    "spend": "unmetered",
+    "tool_calls": 500
+  },
+  "computed_risk": "R3",
+  "contract_digest": "60fd7ccac0d3273d342a7ed39c8fe5b0ccf5a7e160c4c2c17cc1e468719733e1",
+  "created_at": "2026-08-13T00:00:00Z",
+  "data_classification": "confidential",
+  "declared_risk": "R3",
+  "effective_risk": "R3",
+  "expires_at": "2026-08-14T00:00:00Z",
+  "isolation_profile": {
+    "disposable_resources": ["simulation-target"],
+    "egress": "denied",
+    "requires_worktree": true,
+    "runner_class": "disposable-ci"
+  },
+  "network": "denied",
+  "objective": "Prepare a deterministic simulated operation with dry-run and rollback evidence.",
+  "operations": [
+    "pr.open",
+    "r3.prepare_operation",
+    "repo.branch",
+    "repo.modify_scoped"
+  ],
+  "read_scopes": ["tools/automation/"],
+  "requested_by_evidence": {
+    "event_id": "issue-4",
+    "url": "https://github.com/drferdii/Monorepo-safrs/issues/4"
+  },
+  "requester": "chief@sentrahai.com",
+  "risk_reasons": [
+    "path: write scopes grant reversible mutation (R1)",
+    "operation: operations require R3 (R3)",
+    "data: data classification confidential (R2)"
+  ],
+  "rollback": {
+    "cleanup": "delete-branch-after-close",
+    "preservation": "preserve-branch-and-artifacts",
+    "revert": "git-revert-merge-commit",
+    "target_contract_ids": ["rollback.simulation.reset"]
+  },
+  "schema_version": 1,
+  "task_id": "TASK-20260813-DEMO-R3",
+  "tools": [
+    {
+      "id": "git",
+      "subcommands": ["add", "branch", "commit", "diff", "status"]
+    },
+    { "id": "local-filesystem", "subcommands": [] }
+  ],
+  "verification_profile": [
+    "safrs.contract",
+    "safrs.lease",
+    "safrs.risk",
+    "safrs.budgets",
+    "safrs.verification",
+    "safrs.review",
+    "safrs.evidence",
+    "safrs.platform"
+  ],
+  "write_scopes": ["tools/automation/simulation/"]
+}

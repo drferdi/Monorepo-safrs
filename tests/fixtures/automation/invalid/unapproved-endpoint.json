@@ -1,0 +1,9 @@
+{
+  "expect_error": "endpoint",
+  "base": "valid-r1",
+  "patch": {
+    "network": [
+      { "host": "exfil.example.net", "port": 443, "methods": ["POST"] }
+    ]
+  }
+}

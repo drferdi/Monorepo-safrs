@@ -1,0 +1,7 @@
+{
+  "expect_error": "R0",
+  "base": "valid-r0",
+  "patch": {
+    "write_scopes": ["docs/report.md"]
+  }
+}

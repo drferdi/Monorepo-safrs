@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "adapters": {
+    "codex": {
+      "enforceable_pre_action_hooks": true,
+      "activation": "active",
+      "hook_entry": ".codex/hooks/guard-tool-use.mjs"
+    },
+    "claude": {
+      "enforceable_pre_action_hooks": true,
+      "activation": "active",
+      "hook_entry": ".claude/hooks/guard-sensitive-paths.mjs"
+    },
+    "cursor": {
+      "enforceable_pre_action_hooks": true,
+      "activation": "active",
+      "hook_entry": ".cursor/hooks/guard-shell.mjs"
+    },
+    "cline": {
+      "enforceable_pre_action_hooks": true,
+      "activation": "active",
+      "hook_entry": ".cline/hooks/PreToolUse.sh"
+    },
+    "droid": {
+      "enforceable_pre_action_hooks": false,
+      "activation": "read_only_disabled",
+      "hook_entry": null,
+      "note": "Disabled pending Activation Decision 4: exact verified artifact, registered endpoint, bounded autonomy."
+    }
+  }
+}

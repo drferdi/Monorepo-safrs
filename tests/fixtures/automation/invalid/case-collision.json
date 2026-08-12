@@ -1,0 +1,10 @@
+{
+  "expect_error": "case",
+  "base": "valid-r1",
+  "patch": {
+    "write_scopes": [
+      "projects/golden-path/apps/web/src/app/Page.tsx",
+      "projects/golden-path/apps/web/src/app/page.tsx"
+    ]
+  }
+}

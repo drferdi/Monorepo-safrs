@@ -86,6 +86,11 @@
 # ---------------------------------------------------------------------------
 
 /tools/safrs/**                                 @drferdii
+/tools/automation/**                            @drferdii
+/tests/fixtures/automation/**                   @drferdii
+/tests/governance/test_automation_contracts.py  @drferdii
+/tests/repository/precommit.test.mjs            @drferdii
+/.husky/**                                      @drferdii
 /.codex/**                                      @drferdii
 **/tests/security/**                            @drferdii
 **/tests/architecture/**                        @drferdii

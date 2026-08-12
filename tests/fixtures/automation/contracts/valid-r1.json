@@ -1,0 +1,76 @@
+{
+  "accountable_human": "chief@sentrahai.com",
+  "approval_policy": {
+    "R0": "none",
+    "R1": "automatic_gates_only",
+    "R2": "independent_or_code_owner",
+    "R3": "protected_environment_human"
+  },
+  "base_ref": "refs/heads/main",
+  "base_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "budgets": {
+    "attempts": 2,
+    "changed_files": 10,
+    "concurrent_children": 1,
+    "diff_lines": 500,
+    "model_calls": 200,
+    "network_requests": 1,
+    "retries": 3,
+    "runtime_minutes": 60,
+    "spend": "unmetered",
+    "tool_calls": 500
+  },
+  "computed_risk": "R1",
+  "contract_digest": "2d4097479979422507c9ec357d1b17f269a5b5993b44d2ce97765f94825edb64",
+  "created_at": "2026-08-13T00:00:00Z",
+  "data_classification": "internal",
+  "declared_risk": "R1",
+  "effective_risk": "R1",
+  "expires_at": "2026-08-14T00:00:00Z",
+  "isolation_profile": {
+    "disposable_resources": ["postgres-test"],
+    "egress": "denied",
+    "requires_worktree": true,
+    "runner_class": "disposable-ci"
+  },
+  "network": "denied",
+  "objective": "Update demo page copy inside the granted write scope.",
+  "operations": ["pr.open", "repo.branch", "repo.modify_scoped"],
+  "read_scopes": ["projects/golden-path/"],
+  "requested_by_evidence": {
+    "event_id": "issue-1",
+    "url": "https://github.com/drferdii/Monorepo-safrs/issues/1"
+  },
+  "requester": "chief@sentrahai.com",
+  "risk_reasons": [
+    "path: write scopes grant reversible mutation (R1)",
+    "operation: operations require R1 (R1)",
+    "data: data classification internal (R1)"
+  ],
+  "rollback": {
+    "cleanup": "delete-branch-after-close",
+    "preservation": "preserve-branch-and-artifacts",
+    "revert": "git-revert-merge-commit",
+    "target_contract_ids": []
+  },
+  "schema_version": 1,
+  "task_id": "TASK-20260813-DEMO-R1",
+  "tools": [
+    {
+      "id": "git",
+      "subcommands": ["add", "branch", "commit", "diff", "status"]
+    },
+    { "id": "local-filesystem", "subcommands": [] }
+  ],
+  "verification_profile": [
+    "safrs.contract",
+    "safrs.lease",
+    "safrs.risk",
+    "safrs.budgets",
+    "safrs.verification",
+    "safrs.review",
+    "safrs.evidence",
+    "safrs.platform"
+  ],
+  "write_scopes": ["projects/golden-path/apps/web/src/app/page.tsx"]
+}

@@ -47,5 +47,19 @@
   "resource_bounds": {
     "require_for_autonomous_workflows": true,
     "dimensions": ["runtime", "retries", "tool_scope", "network_scope", "cost_or_compute_where_supported"]
+  },
+  "automation": {
+    "policy": ".safrs/automation-policy.json",
+    "adapter_capabilities": ".safrs/adapter-capabilities.json",
+    "schemas": ".safrs/schemas/",
+    "invariants": [
+      "authority-flows-only-from-a-digested-task-contract",
+      "effective-risk-is-monotonic-max-of-all-dimensions",
+      "remote-lease-authority-is-serialized-and-fencing-token-guarded",
+      "coding-agent-never-holds-merge-or-production-execution-authority",
+      "publisher-may-only-enable-auto-merge-for-an-exact-verified-head",
+      "r3-execution-requires-exact-protected-environment-human-approval",
+      "evidence-is-content-addressed-redacted-and-durable-before-terminal"
+    ]
   }
 }

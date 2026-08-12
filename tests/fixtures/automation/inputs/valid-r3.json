@@ -1,0 +1,56 @@
+{
+  "task_id": "TASK-20260813-DEMO-R3",
+  "objective": "Prepare a deterministic simulated operation with dry-run and rollback evidence.",
+  "requester": "chief@sentrahai.com",
+  "accountable_human": "chief@sentrahai.com",
+  "created_at": "2026-08-13T00:00:00Z",
+  "expires_at": "2026-08-14T00:00:00Z",
+  "base_ref": "refs/heads/main",
+  "base_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "declared_risk": "R3",
+  "read_scopes": ["tools/automation/"],
+  "write_scopes": ["tools/automation/simulation/"],
+  "operations": [
+    "repo.branch",
+    "repo.modify_scoped",
+    "pr.open",
+    "r3.prepare_operation"
+  ],
+  "tools": [
+    {
+      "id": "git",
+      "subcommands": ["status", "diff", "add", "commit", "branch"]
+    },
+    { "id": "local-filesystem", "subcommands": [] }
+  ],
+  "network": "denied",
+  "data_classification": "confidential",
+  "isolation_profile": {
+    "runner_class": "disposable-ci",
+    "requires_worktree": true,
+    "disposable_resources": ["simulation-target"],
+    "egress": "denied"
+  },
+  "budgets": {
+    "runtime_minutes": 120,
+    "attempts": 2,
+    "retries": 3,
+    "tool_calls": 500,
+    "model_calls": 200,
+    "network_requests": 1,
+    "changed_files": 20,
+    "diff_lines": 1000,
+    "concurrent_children": 1,
+    "spend": "unmetered"
+  },
+  "rollback": {
+    "preservation": "preserve-branch-and-artifacts",
+    "revert": "git-revert-merge-commit",
+    "cleanup": "delete-branch-after-close",
+    "target_contract_ids": ["rollback.simulation.reset"]
+  },
+  "requested_by_evidence": {
+    "url": "https://github.com/drferdii/Monorepo-safrs/issues/4",
+    "event_id": "issue-4"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "task_id": "TASK-20260813-DEMO-R2",
+  "objective": "Register a new approved tool in the SAFRS tool inventory.",
+  "requester": "chief@sentrahai.com",
+  "accountable_human": "chief@sentrahai.com",
+  "created_at": "2026-08-13T00:00:00Z",
+  "expires_at": "2026-08-14T00:00:00Z",
+  "base_ref": "refs/heads/main",
+  "base_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "declared_risk": "R1",
+  "read_scopes": [".safrs/"],
+  "write_scopes": [".safrs/tool-inventory.json"],
+  "operations": [
+    "repo.branch",
+    "repo.modify_scoped",
+    "pr.open",
+    "pr.request_review"
+  ],
+  "tools": [
+    {
+      "id": "git",
+      "subcommands": ["status", "diff", "add", "commit", "branch"]
+    },
+    { "id": "local-filesystem", "subcommands": [] }
+  ],
+  "network": "denied",
+  "data_classification": "internal",
+  "isolation_profile": {
+    "runner_class": "disposable-ci",
+    "requires_worktree": true,
+    "disposable_resources": [],
+    "egress": "denied"
+  },
+  "budgets": {
+    "runtime_minutes": 60,
+    "attempts": 2,
+    "retries": 3,
+    "tool_calls": 300,
+    "model_calls": 150,
+    "network_requests": 1,
+    "changed_files": 3,
+    "diff_lines": 200,
+    "concurrent_children": 1,
+    "spend": "unmetered"
+  },
+  "rollback": {
+    "preservation": "preserve-branch-and-artifacts",
+    "revert": "git-revert-merge-commit",
+    "cleanup": "delete-branch-after-close",
+    "target_contract_ids": []
+  },
+  "requested_by_evidence": {
+    "url": "https://github.com/drferdii/Monorepo-safrs/issues/3",
+    "event_id": "issue-3"
+  }
+}

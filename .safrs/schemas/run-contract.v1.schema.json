@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "safrs:run-contract.v1",
+  "title": "RunContractV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "task_id",
+    "contract_digest",
+    "attempt_id",
+    "provider",
+    "adapter_version",
+    "actor_identity",
+    "base_sha",
+    "head_sha",
+    "branch",
+    "worktree_id",
+    "lease_id",
+    "fencing_token",
+    "runner_class",
+    "started_at",
+    "deadline_at",
+    "budget_snapshot",
+    "grants_digest",
+    "heartbeat_at",
+    "state",
+    "stop_reason",
+    "evidence_uri",
+    "evidence_digest"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "run_id": { "type": "string", "pattern": "^RUN-[A-Z0-9-]+$" },
+    "task_id": { "type": "string", "pattern": "^TASK-[0-9]{8}-[A-Z0-9-]+$" },
+    "contract_digest": { "$ref": "#/$defs/sha256" },
+    "attempt_id": { "type": "integer", "minimum": 1 },
+    "provider": { "type": "string", "minLength": 1 },
+    "adapter_version": { "type": "string", "minLength": 1 },
+    "actor_identity": { "type": "string", "minLength": 1 },
+    "base_sha": { "$ref": "#/$defs/gitSha" },
+    "head_sha": {
+      "anyOf": [{ "$ref": "#/$defs/gitSha" }, { "const": null }]
+    },
+    "branch": { "type": "string", "minLength": 1 },
+    "worktree_id": { "type": "string", "minLength": 1 },
+    "lease_id": { "type": "string", "minLength": 1 },
+    "fencing_token": { "type": "integer", "minimum": 1 },
+    "runner_class": { "type": "string", "minLength": 1 },
+    "started_at": { "$ref": "#/$defs/utcTimestamp" },
+    "deadline_at": { "$ref": "#/$defs/utcTimestamp" },
+    "budget_snapshot": {
+      "type": "object",
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    },
+    "grants_digest": { "$ref": "#/$defs/sha256" },
+    "heartbeat_at": { "$ref": "#/$defs/utcTimestamp" },
+    "state": {
+      "enum": [
+        "PROVISIONING",
+        "EXECUTING",
+        "VERIFYING",
+        "AWAITING_REVIEW",
+        "PUBLISHING",
+        "COMPLETED",
+        "STOPPED",
+        "FAILED",
+        "RECOVERY_REQUIRED"
+      ]
+    },
+    "stop_reason": {
+      "anyOf": [{ "type": "string", "minLength": 1 }, { "const": null }]
+    },
+    "evidence_uri": {
+      "anyOf": [{ "type": "string", "minLength": 1 }, { "const": null }]
+    },
+    "evidence_digest": {
+      "anyOf": [{ "$ref": "#/$defs/sha256" }, { "const": null }]
+    }
+  },
+  "$defs": {
+    "gitSha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "utcTimestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$"
+    }
+  }
+}

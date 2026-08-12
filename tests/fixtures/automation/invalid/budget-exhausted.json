@@ -1,0 +1,17 @@
+{
+  "expect_error": "budget",
+  "base": "valid-r1",
+  "patch": {
+    "budgets": {
+      "runtime_minutes": 60,
+      "attempts": 2,
+      "retries": 3,
+      "tool_calls": 500,
+      "model_calls": 200,
+      "network_requests": 1,
+      "changed_files": 10,
+      "diff_lines": 500,
+      "concurrent_children": 1
+    }
+  }
+}

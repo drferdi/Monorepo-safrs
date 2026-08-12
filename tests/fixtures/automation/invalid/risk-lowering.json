@@ -1,0 +1,7 @@
+{
+  "expect_error": "lower",
+  "base": "valid-r2",
+  "patch": {
+    "effective_risk": "R1"
+  }
+}

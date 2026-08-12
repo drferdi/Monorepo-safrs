@@ -1,0 +1,51 @@
+{
+  "task_id": "TASK-20260813-DEMO-R1",
+  "objective": "Update demo page copy inside the granted write scope.",
+  "requester": "chief@sentrahai.com",
+  "accountable_human": "chief@sentrahai.com",
+  "created_at": "2026-08-13T00:00:00Z",
+  "expires_at": "2026-08-14T00:00:00Z",
+  "base_ref": "refs/heads/main",
+  "base_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "declared_risk": "R1",
+  "read_scopes": ["projects/golden-path/"],
+  "write_scopes": ["projects/golden-path/apps/web/src/app/page.tsx"],
+  "operations": ["repo.branch", "repo.modify_scoped", "pr.open"],
+  "tools": [
+    {
+      "id": "git",
+      "subcommands": ["status", "diff", "add", "commit", "branch"]
+    },
+    { "id": "local-filesystem", "subcommands": [] }
+  ],
+  "network": "denied",
+  "data_classification": "internal",
+  "isolation_profile": {
+    "runner_class": "disposable-ci",
+    "requires_worktree": true,
+    "disposable_resources": ["postgres-test"],
+    "egress": "denied"
+  },
+  "budgets": {
+    "runtime_minutes": 60,
+    "attempts": 2,
+    "retries": 3,
+    "tool_calls": 500,
+    "model_calls": 200,
+    "network_requests": 1,
+    "changed_files": 10,
+    "diff_lines": 500,
+    "concurrent_children": 1,
+    "spend": "unmetered"
+  },
+  "rollback": {
+    "preservation": "preserve-branch-and-artifacts",
+    "revert": "git-revert-merge-commit",
+    "cleanup": "delete-branch-after-close",
+    "target_contract_ids": []
+  },
+  "requested_by_evidence": {
+    "url": "https://github.com/drferdii/Monorepo-safrs/issues/1",
+    "event_id": "issue-1"
+  }
+}

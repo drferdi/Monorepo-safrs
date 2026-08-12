@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "safrs:approval-record.v1",
+  "title": "ApprovalRecordV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "approval_id",
+    "kind",
+    "task_id",
+    "contract_digest",
+    "subject_sha",
+    "diff_digest",
+    "operation_digest",
+    "target_environment",
+    "reviewer_identity",
+    "reviewer_authority",
+    "author_identity",
+    "issued_at",
+    "expires_at",
+    "source_event_url",
+    "source_event_id",
+    "revoked_at",
+    "approval_digest"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "approval_id": { "type": "string", "minLength": 1 },
+    "kind": {
+      "enum": [
+        "R2_CODE_OWNER",
+        "R2_INDEPENDENT",
+        "VERIFICATION_INTEGRITY",
+        "R3_EXECUTION"
+      ]
+    },
+    "task_id": { "type": "string", "pattern": "^TASK-[0-9]{8}-[A-Z0-9-]+$" },
+    "contract_digest": { "$ref": "#/$defs/sha256" },
+    "subject_sha": { "$ref": "#/$defs/gitSha" },
+    "diff_digest": {
+      "anyOf": [{ "$ref": "#/$defs/sha256" }, { "const": null }]
+    },
+    "operation_digest": {
+      "anyOf": [{ "$ref": "#/$defs/sha256" }, { "const": null }]
+    },
+    "target_environment": {
+      "anyOf": [{ "type": "string", "minLength": 1 }, { "const": null }]
+    },
+    "reviewer_identity": { "type": "string", "minLength": 1 },
+    "reviewer_authority": { "type": "string", "minLength": 1 },
+    "author_identity": { "type": "string", "minLength": 1 },
+    "issued_at": { "$ref": "#/$defs/utcTimestamp" },
+    "expires_at": { "$ref": "#/$defs/utcTimestamp" },
+    "source_event_url": { "type": "string", "pattern": "^https://" },
+    "source_event_id": { "type": "string", "minLength": 1 },
+    "revoked_at": {
+      "anyOf": [{ "$ref": "#/$defs/utcTimestamp" }, { "const": null }]
+    },
+    "approval_digest": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "gitSha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "utcTimestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$"
+    }
+  }
+}

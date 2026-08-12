@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "safrs:evidence-manifest.v1",
+  "title": "EvidenceManifestV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "task_id",
+    "run_id",
+    "attempt_ids",
+    "contract_digest",
+    "lease_event_digests",
+    "base_sha",
+    "head_sha",
+    "diff_digest",
+    "effective_risk",
+    "risk_reasons",
+    "tool_events",
+    "network_events",
+    "budget_usage",
+    "check_verdicts",
+    "approval_ids",
+    "publication",
+    "execution",
+    "recovery_events",
+    "artifact_hashes",
+    "redaction_version",
+    "created_at",
+    "manifest_digest"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "manifest_id": { "type": "string", "minLength": 1 },
+    "task_id": { "type": "string", "pattern": "^TASK-[0-9]{8}-[A-Z0-9-]+$" },
+    "run_id": { "type": "string", "pattern": "^RUN-[A-Z0-9-]+$" },
+    "attempt_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "integer", "minimum": 1 }
+    },
+    "contract_digest": { "$ref": "#/$defs/sha256" },
+    "lease_event_digests": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/sha256" }
+    },
+    "base_sha": { "$ref": "#/$defs/gitSha" },
+    "head_sha": {
+      "anyOf": [{ "$ref": "#/$defs/gitSha" }, { "const": null }]
+    },
+    "diff_digest": {
+      "anyOf": [{ "$ref": "#/$defs/sha256" }, { "const": null }]
+    },
+    "effective_risk": { "enum": ["R0", "R1", "R2", "R3"] },
+    "risk_reasons": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "tool_events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["sequence", "tool", "decision", "reason_code", "duration_ms"],
+        "properties": {
+          "sequence": { "type": "integer", "minimum": 1 },
+          "tool": { "type": "string", "minLength": 1 },
+          "decision": { "enum": ["allow", "deny", "stop"] },
+          "reason_code": { "type": "string", "minLength": 1 },
+          "duration_ms": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "network_events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["sequence", "host", "method", "decision"],
+        "properties": {
+          "sequence": { "type": "integer", "minimum": 1 },
+          "host": { "type": "string", "minLength": 1 },
+          "method": { "type": "string", "minLength": 1 },
+          "decision": { "enum": ["allow", "deny"] }
+        }
+      }
+    },
+    "budget_usage": {
+      "type": "object",
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    },
+    "check_verdicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["check_id", "verdict", "duration_ms"],
+        "properties": {
+          "check_id": { "type": "string", "minLength": 1 },
+          "verdict": { "enum": ["PASS", "FAIL", "SKIPPED"] },
+          "duration_ms": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "approval_ids": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "publication": {
+      "anyOf": [
+        { "const": null },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["pr_url", "merge_commit"],
+          "properties": {
+            "pr_url": { "type": "string", "pattern": "^https://" },
+            "merge_commit": {
+              "anyOf": [{ "$ref": "#/$defs/gitSha" }, { "const": null }]
+            }
+          }
+        }
+      ]
+    },
+    "execution": {
+      "anyOf": [
+        { "const": null },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["operation_digest", "outcome", "postcondition_verdict"],
+          "properties": {
+            "operation_digest": { "$ref": "#/$defs/sha256" },
+            "outcome": { "enum": ["EXECUTED", "STOPPED", "FAILED", "ROLLED_BACK"] },
+            "postcondition_verdict": { "enum": ["PASS", "FAIL", "NOT_RUN"] }
+          }
+        }
+      ]
+    },
+    "recovery_events": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "artifact_hashes": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/sha256" }
+    },
+    "redaction_version": { "type": "integer", "minimum": 1 },
+    "created_at": { "$ref": "#/$defs/utcTimestamp" },
+    "manifest_digest": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "gitSha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "utcTimestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$"
+    }
+  }
+}

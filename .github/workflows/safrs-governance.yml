@@ -50,6 +50,15 @@ jobs:
       - name: Test task ownership invariants
         run: python tests/governance/test_task_ownership.py
 
+      - name: Validate automation policy, adapters, and schemas
+        run: python tools/safrs/check_automation_policy.py
+
+      - name: Validate stored task contracts and digest parity
+        run: python tools/safrs/check_task_contract.py
+
+      - name: Test automation contract invariants
+        run: python tests/governance/test_automation_contracts.py
+
       - name: Classify sensitive and verification-control changes
         run: python tools/safrs/check_sensitive_changes.py
 

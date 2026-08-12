@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "risk_reference": ".safrs/policy.json",
+  "risk_order": ["R0", "R1", "R2", "R3"],
+  "max_expiry_hours": 72,
+  "operations": {
+    "repo.report": { "min_risk": "R0", "description": "Read, search, and report without mutation" },
+    "repo.modify_scoped": { "min_risk": "R1", "description": "Modify files inside granted write scopes" },
+    "repo.branch": { "min_risk": "R1", "description": "Create a task branch from the recorded base SHA" },
+    "pr.open": { "min_risk": "R1", "description": "Open or update one pull request for the task branch" },
+    "pr.request_review": { "min_risk": "R2", "description": "Request designated review on the task pull request" },
+    "r3.prepare_operation": { "min_risk": "R3", "description": "Prepare an operation contract, dry-run, and rollback evidence; never execute" }
+  },
+  "data_classification_risk": {
+    "public": "R0",
+    "internal": "R1",
+    "confidential": "R2",
+    "restricted": "R3"
+  },
+  "capability_risk": {
+    "network_egress": "R1",
+    "disposable_resources": "R1",
+    "sensitive_write_scope": "R2"
+  },
+  "budgets": {
+    "required_dimensions": [
+      "runtime_minutes",
+      "attempts",
+      "retries",
+      "tool_calls",
+      "model_calls",
+      "network_requests",
+      "changed_files",
+      "diff_lines",
+      "concurrent_children",
+      "spend"
+    ],
+    "maximums": {
+      "runtime_minutes": 720,
+      "attempts": 5,
+      "retries": 10,
+      "tool_calls": 5000,
+      "model_calls": 2000,
+      "network_requests": 2000,
+      "changed_files": 500,
+      "diff_lines": 20000,
+      "concurrent_children": 4
+    },
+    "spend_unmetered_allowed": true
+  },
+  "approval_defaults": {
+    "R0": "none",
+    "R1": "automatic_gates_only",
+    "R2": "independent_or_code_owner",
+    "R3": "protected_environment_human"
+  },
+  "verification_checks": [
+    "safrs.contract",
+    "safrs.lease",
+    "safrs.risk",
+    "safrs.budgets",
+    "safrs.verification",
+    "safrs.review",
+    "safrs.evidence",
+    "safrs.platform"
+  ],
+  "publisher": {
+    "identity_class": "publisher",
+    "may": ["enable_auto_merge_exact_head"],
+    "may_not": [
+      "push_source",
+      "approve_review",
+      "bypass_branch_rules",
+      "deploy",
+      "execute_r3_operation"
+    ]
+  },
+  "r3": {
+    "prepare_only": true,
+    "execution_authority": "protected_environment_human",
+    "production_adapters_enabled": false,
+    "free_form_shell_forbidden": true
+  },
+  "evidence": {
+    "redaction_version": 1,
+    "retention_days": 365,
+    "content_addressed": true
+  },
+  "network": {
+    "default": "denied",
+    "registered_endpoint_source": ".safrs/tool-inventory.json"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "expect_error": "scope",
+  "base": "valid-r1",
+  "patch": {
+    "write_scopes": ["projects/**"]
+  }
+}
