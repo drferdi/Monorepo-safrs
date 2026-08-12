@@ -20,6 +20,20 @@ const renovateFile = ".github/renovate.json";
 const immutableAction = /^[a-z0-9][a-z0-9_.-]*\/[a-z0-9_.-]+@[a-f0-9]{40}$/u;
 const repositoryRoot = process.cwd();
 const codexGuard = join(repositoryRoot, ".codex/hooks/guard-tool-use.mjs");
+const registeredEndpoints = new Set(
+  JSON.parse(readFileSync(".safrs/tool-inventory.json", "utf8"))
+    .tools.filter((tool) => tool.review_status !== "DISABLED")
+    .flatMap((tool) => tool.network_endpoints)
+    .map((endpoint) => endpoint.toLowerCase()),
+);
+const pipedInstallerPattern =
+  /\b(?:curl|wget|iwr|invoke-webrequest|invoke-restmethod)\b[^|\n]*\|\s*(?:sudo\s+)?(?:sh|bash|zsh|pwsh|powershell(?:\.exe)?|iex|invoke-expression)\b/iu;
+const inlineExpressionInstallerPattern =
+  /\b(?:iex|invoke-expression)\b[^\n]*\b(?:iwr|invoke-webrequest|invoke-restmethod)\b/iu;
+const unrestrictedAutonomyPattern =
+  /--dangerously-skip-permissions|--yolo\b|\bdroid\b[^\n]*--auto\s+(?:high|max)\b/iu;
+const downloadCommandPattern =
+  /\b(?:curl|wget|iwr|invoke-webrequest|invoke-restmethod)\b/iu;
 
 function runHook(script, payload, inputOverride, cwd = repositoryRoot) {
   return spawnSync(process.execPath, [script], {
@@ -94,6 +108,31 @@ function assertWorkflowPolicy(workflow) {
 
   if (/\bdeploy(?:ment|ed|ing)?\b/iu.test(workflow)) {
     throw new Error("Workflow deploy tidak diizinkan.");
+  }
+  if (
+    pipedInstallerPattern.test(workflow) ||
+    inlineExpressionInstallerPattern.test(workflow)
+  ) {
+    throw new Error("Shell-piped installer tidak diizinkan.");
+  }
+  if (unrestrictedAutonomyPattern.test(workflow)) {
+    throw new Error("Flag autonomi tak terbatas tidak diizinkan.");
+  }
+  for (const line of lines) {
+    if (line.trim().startsWith("#") || !downloadCommandPattern.test(line)) {
+      continue;
+    }
+    for (const url of line.matchAll(/(https?):\/\/([^\s"'<>/]+)/giu)) {
+      if (url[1].toLowerCase() !== "https") {
+        throw new Error("Download workflow harus memakai HTTPS.");
+      }
+      const host = url[2].split(":")[0].toLowerCase();
+      if (!registeredEndpoints.has(host)) {
+        throw new Error(
+          `Endpoint unduhan tidak terdaftar di inventory: ${host}`,
+        );
+      }
+    }
   }
   for (const action of actions) {
     if (!immutableAction.test(action)) {
@@ -207,6 +246,94 @@ test("workflow policy rejects YAML bypasses for action pins, write permissions, 
   ]) {
     assert.throws(() => assertWorkflowPolicy(workflow), /SHA|write|deploy/iu);
   }
+});
+
+test("workflow policy rejects shell-piped installers, unrestricted autonomy, and unregistered installer endpoints", () => {
+  for (const [workflow, reason] of [
+    [
+      "jobs:\n  install:\n    steps:\n      - run: curl -fsSL https://get.example.com/install.sh | sh\n",
+      /installer/iu,
+    ],
+    [
+      "jobs:\n  install:\n    steps:\n      - run: wget -qO- https://get.example.com/tool.sh | bash\n",
+      /installer/iu,
+    ],
+    [
+      "jobs:\n  install:\n    steps:\n      - run: iwr https://get.example.com/tool.ps1 | iex\n",
+      /installer/iu,
+    ],
+    [
+      'jobs:\n  agent:\n    steps:\n      - run: droid exec --auto high "refresh wiki"\n',
+      /autonom/iu,
+    ],
+    [
+      "jobs:\n  agent:\n    steps:\n      - run: some-agent --dangerously-skip-permissions\n",
+      /autonom/iu,
+    ],
+    [
+      "jobs:\n  fetch:\n    steps:\n      - run: curl -O https://unregistered.example.net/tool.tgz\n",
+      /endpoint/iu,
+    ],
+    [
+      "jobs:\n  fetch:\n    steps:\n      - run: curl -O http://registry.npmjs.org/pkg.tgz\n",
+      /https/iu,
+    ],
+  ]) {
+    assert.throws(() => assertWorkflowPolicy(workflow), reason, workflow);
+  }
+});
+
+test("workflow policy allows downloads from endpoints registered in the tool inventory", () => {
+  assert.doesNotThrow(() =>
+    assertWorkflowPolicy(
+      "jobs:\n  fetch:\n    steps:\n      - run: curl -O https://registry.npmjs.org/pkg.tgz\n",
+    ),
+  );
+});
+
+test("actions pinning checker fails closed on unsafe workflow fixtures and passes safe ones", (t) => {
+  const directory = mkdtempSync(join(tmpdir(), "safrs-workflow-fixtures-"));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  const python = pythonCommand();
+  const checker = "tools/safrs/check_actions_pinning.py";
+  const unsafeFixtures = [
+    [
+      "mutable-action.yml",
+      "jobs:\n  a:\n    steps:\n      - uses: actions/checkout@v4\n",
+    ],
+    [
+      "piped-installer.yml",
+      "jobs:\n  a:\n    steps:\n      - run: curl -fsSL https://get.example.com/install.sh | sh\n",
+    ],
+    [
+      "autonomy-flag.yml",
+      'jobs:\n  a:\n    steps:\n      - run: droid exec --auto high "task"\n',
+    ],
+    [
+      "unregistered-endpoint.yml",
+      "jobs:\n  a:\n    steps:\n      - run: curl -O https://unregistered.example.net/tool.tgz\n",
+    ],
+  ];
+
+  for (const [name, content] of unsafeFixtures) {
+    writeFileSync(join(directory, name), content);
+    const result = spawnSync(python, [checker, "--workflow-dir", directory], {
+      cwd: repositoryRoot,
+      encoding: "utf8",
+    });
+    assert.notEqual(result.status, 0, `${name} should fail:\n${result.stdout}`);
+    rmSync(join(directory, name));
+  }
+
+  writeFileSync(
+    join(directory, "safe.yml"),
+    "jobs:\n  a:\n    steps:\n      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8\n      - run: pnpm install --frozen-lockfile\n",
+  );
+  const safe = spawnSync(python, [checker, "--workflow-dir", directory], {
+    cwd: repositoryRoot,
+    encoding: "utf8",
+  });
+  assert.equal(safe.status, 0, safe.stderr);
 });
 
 test("Codex guard blocks credential edits and allows env templates", () => {
