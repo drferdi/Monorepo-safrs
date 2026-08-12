@@ -72,6 +72,13 @@ test("non-JSON values fail closed", () => {
   }
 });
 
+test("only safe integers are canonical — float spelling diverges across engines", () => {
+  assert.doesNotThrow(() => canonicalize({ a: 9007199254740991 }));
+  for (const bad of [12.5, 1.2e-7, 1e21, 9007199254740992]) {
+    assert.throws(() => canonicalize({ a: bad }), /integer/iu, String(bad));
+  }
+});
+
 test("sparse arrays and non-plain objects fail closed", () => {
   const sparse = [1, 2, 3];
   delete sparse[1];

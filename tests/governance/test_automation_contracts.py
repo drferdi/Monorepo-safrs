@@ -46,13 +46,24 @@ class CanonicalDigestParity(unittest.TestCase):
         )
 
     def test_numeric_canonicalization_matches_node(self):
-        """Integral floats collapse to int; non-finite numbers fail closed."""
+        """Only safe integers are canonical: engine float spellings diverge
+        (Python 1.2e-07 vs Node 1.2e-7), so floats fail closed."""
         self.assertEqual(checker.canonicalize({'a': 1.0}), '{"a":1}')
         self.assertEqual(checker.canonicalize({'a': -0.0}), '{"a":0}')
-        self.assertEqual(checker.canonicalize({'a': 12.5}), '{"a":12.5}')
-        for bad in [float('nan'), float('inf'), float('-inf')]:
+        self.assertEqual(checker.canonicalize({'a': 9007199254740991}), '{"a":9007199254740991}')
+        for bad in [12.5, 1.2e-7, 1e21, 9007199254740992, float('nan'), float('inf')]:
             with self.assertRaises(ValueError):
                 checker.canonicalize({'a': bad})
+
+    def test_malformed_contract_files_report_errors_without_crashing(self):
+        import tempfile, pathlib
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp)
+            (root / 'array.json').write_text('[1,2,3]\n', encoding='utf-8')
+            (root / 'nan.json').write_text('{"a": NaN}\n', encoding='utf-8')
+            for name in ['array.json', 'nan.json']:
+                errors = checker.check_contract_file(root / name, SCHEMA)
+                self.assertTrue(errors, name)
 
     def test_impossible_calendar_dates_fail(self):
         base = load_contract('valid-r1')

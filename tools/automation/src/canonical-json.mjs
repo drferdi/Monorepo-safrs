@@ -20,9 +20,11 @@ function serialize(value, seen) {
     return value ? "true" : "false";
   }
   if (type === "number") {
-    if (!Number.isFinite(value)) {
+    // Engines spell floats differently (Python 1.2e-07 vs Node 1.2e-7),
+    // which would fork digests — only safe integers are canonical.
+    if (!Number.isSafeInteger(value)) {
       throw new TypeError(
-        `canonical JSON rejects non-finite number: ${String(value)}`,
+        `canonical JSON accepts only safe integers, got: ${String(value)}`,
       );
     }
     return JSON.stringify(value);

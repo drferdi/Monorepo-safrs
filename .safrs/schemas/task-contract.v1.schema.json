@@ -250,7 +250,7 @@
         "spend": {
           "anyOf": [
             {
-              "type": "number",
+              "type": "integer",
               "minimum": 0
             },
             {

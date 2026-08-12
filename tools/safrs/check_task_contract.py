@@ -23,14 +23,22 @@ CONTRACT_DIRECTORIES = [
 ]
 
 
+MAX_SAFE_INTEGER = 2**53 - 1
+
+
 def _normalize_numbers(value):
     """Match Node semantics: integral floats collapse to int (JSON.parse("1.0")
-    yields 1 there), and non-finite numbers are rejected outright."""
+    yields 1 there). Engines spell floats differently (Python 1.2e-07 vs Node
+    1.2e-7), so anything that is not a safe integer fails closed."""
     if isinstance(value, float):
         if value != value or value in (float('inf'), float('-inf')):
             raise ValueError('canonical JSON rejects non-finite numbers')
-        if value.is_integer():
-            return int(value)
+        if not value.is_integer():
+            raise ValueError('canonical JSON accepts only safe integers')
+        value = int(value)
+    if isinstance(value, int) and not isinstance(value, bool):
+        if abs(value) > MAX_SAFE_INTEGER:
+            raise ValueError('canonical JSON accepts only safe integers')
         return value
     if isinstance(value, dict):
         return {key: _normalize_numbers(entry) for key, entry in value.items()}
@@ -175,12 +183,23 @@ def validate_against_schema(schema, value):
 
 
 def check_contract_file(path: Path, schema) -> list[str]:
+    """Every failure is returned as an error — a malformed fixture must not
+    terminate the scan of the remaining contracts."""
     raw = path.read_text(encoding='utf-8')
-    contract = json.loads(raw, parse_constant=_reject_constant)
+    try:
+        contract = json.loads(raw, parse_constant=_reject_constant)
+    except ValueError as error:
+        return [f'{path.name}: unparseable contract: {error}']
+    if not isinstance(contract, dict):
+        return [f'{path.name}: contract root must be an object']
     errors = [f'{path.name}: {error}' for error in validate_against_schema(schema, contract)]
     stored_digest = contract.get('contract_digest')
     without_digest = {k: v for k, v in contract.items() if k != 'contract_digest'}
-    recomputed = digest_canonical(without_digest)
+    try:
+        recomputed = digest_canonical(without_digest)
+    except ValueError as error:
+        errors.append(f'{path.name}: cannot canonicalize: {error}')
+        return errors
     if stored_digest != recomputed:
         errors.append(
             f'{path.name}: contract_digest mismatch (stored {stored_digest}, recomputed {recomputed})'
