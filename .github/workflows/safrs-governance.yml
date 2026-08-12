@@ -59,6 +59,9 @@ jobs:
       - name: Test automation contract invariants
         run: python tests/governance/test_automation_contracts.py
 
+      - name: Validate lifecycle agreement between registry and lease ledger
+        run: python tools/safrs/check_lifecycle.py
+
       - name: Classify sensitive and verification-control changes
         run: python tools/safrs/check_sensitive_changes.py
 

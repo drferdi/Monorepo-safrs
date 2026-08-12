@@ -45,6 +45,12 @@ function createTwoWorktreeFixture() {
   cpSync(join(repoRoot, "tools/task"), join(repository, "tools/task"), {
     recursive: true,
   });
+  // The task CLI records lease events through the shared automation modules.
+  cpSync(
+    join(repoRoot, "tools/automation/src"),
+    join(repository, "tools/automation/src"),
+    { recursive: true },
+  );
   mkdirSync(join(repository, ".safrs"), { recursive: true });
   writeFileSync(
     join(repository, ".safrs/active-tasks.json"),

@@ -3,7 +3,7 @@ import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-
+import { replayState, verifyEventChain } from "../../automation/src/leases.mjs";
 import {
   findOverlapConflicts,
   MUTATION_ACTIVE,
@@ -14,6 +14,7 @@ import {
   validateRegistry,
 } from "../../task/src/ownership.mjs";
 import {
+  readLeaseEvents,
   readSharedRegistry,
   resolveControlPlanePaths,
 } from "../../task/src/storage.mjs";
@@ -258,6 +259,39 @@ function buildReport() {
     warnings.push(...unknownToolWarnings(loaded.registry));
   }
 
+  const leases = [];
+  if (loaded.ok) {
+    for (const task of ownership.active_tasks) {
+      try {
+        const chain = readLeaseEvents(controlPlanePaths, task.id);
+        if (chain.length === 0) {
+          continue;
+        }
+        const verdict = verifyEventChain(chain);
+        const snapshot = replayState(chain);
+        leases.push({
+          task_id: task.id,
+          events: chain.length,
+          chain_valid: verdict.valid,
+          fencing_token: snapshot.fencing_token,
+          last_event: chain[chain.length - 1].event_type,
+          reconciled_remotely: chain.some(
+            (event) => event.authority_run_url !== null,
+          ),
+        });
+        if (!verdict.valid) {
+          warnings.push(
+            `lease chain ${task.id} tidak valid: ${verdict.errors[0]}`,
+          );
+        }
+      } catch (error) {
+        warnings.push(
+          `lease chain ${task.id} tidak terbaca: ${error instanceof Error ? error.message : String(error)}`,
+        );
+      }
+    }
+  }
+
   let status = "PASS";
   if (!loaded.ok || !ownership.ok || verification.governance === "FAIL") {
     status = "FAIL";
@@ -278,6 +312,7 @@ function buildReport() {
       governance: verification.governance,
       failed_checks: verification.failed_checks,
     },
+    leases,
     platform: { state: "not_in_scope" },
     next_action: nextAction({
       status,
@@ -305,6 +340,15 @@ function renderHuman(report) {
     for (const task of active) {
       lines.push(
         `- ${task.id} | ${task.owner_label} | ${task.state} | ${task.risk} | ${task.scope_prefixes.join(", ")}`,
+      );
+    }
+  }
+  if ((report.leases ?? []).length > 0) {
+    lines.push("");
+    lines.push("Lease:");
+    for (const lease of report.leases) {
+      lines.push(
+        `- ${lease.task_id} | events ${lease.events} | token ${lease.fencing_token} | ${lease.last_event} | chain ${lease.chain_valid ? "OK" : "RUSAK"} | remote ${lease.reconciled_remotely ? "ya" : "belum"}`,
       );
     }
   }

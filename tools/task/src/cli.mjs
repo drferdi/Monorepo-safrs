@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-
+import { canonicalize } from "../../automation/src/canonical-json.mjs";
+import { nextEvent } from "../../automation/src/leases.mjs";
 import {
   canTransition,
   closeTargetState,
@@ -16,7 +17,9 @@ import {
   validateTaskShape,
 } from "./ownership.mjs";
 import {
+  appendLeaseEvent,
   mutateSharedRegistry,
+  readLeaseEvents,
   readSharedRegistry,
   resolveControlPlanePaths,
   resolveWorktreeId,
@@ -85,6 +88,41 @@ function loadRegistry({ enforceOperational = true } = {}) {
   return validate(readSharedRegistry(controlPlanePaths), {
     enforceOperational,
   });
+}
+
+/**
+ * Record a local lease event mirroring a registry mutation. Local events
+ * carry authority_run_url null; remote reconciliation is required before
+ * push. A failure here is loud but does not roll back the registry —
+ * check_lifecycle flags registry/ledger drift.
+ */
+function recordLeaseEvent(action, task, extras = {}) {
+  const chain = readLeaseEvents(controlPlanePaths, task.id);
+  const outcome = nextEvent(
+    chain,
+    {
+      action,
+      task_id: task.id,
+      lease_id: `LEASE-${task.id}`,
+      actor: task.owner_id,
+      worktree_id: task.worktree_id,
+      scope_prefixes: task.scope_prefixes,
+      expires_at: task.expires_at ?? null,
+      fencing_token:
+        chain.length > 0 ? chain[chain.length - 1].fencing_token : undefined,
+      ...extras,
+    },
+    { occurred_at: nowIso(), authority_run_url: null },
+  );
+  if (outcome.denied) {
+    console.error(
+      redactText(
+        `WARNING: local lease event ${action} for ${task.id} denied: ${outcome.denied}`,
+      ),
+    );
+    return;
+  }
+  appendLeaseEvent(controlPlanePaths, canonicalize(outcome.event));
 }
 
 function preview(message, registry) {
@@ -163,11 +201,13 @@ function claim(args) {
   if (!args.flags.yes) {
     return 0;
   }
-  mutateSharedRegistry(
+  const written = mutateSharedRegistry(
     controlPlanePaths,
     (registry) => buildClaim(validate(registry), args).next,
     validate,
   );
+  const task = written.tasks.find((entry) => entry.id === id);
+  recordLeaseEvent("CLAIM", task);
   console.log(redactText(`Wrote shared claim ${id}`));
   return 0;
 }
@@ -214,10 +254,15 @@ function stateCommand(args) {
   if (!args.flags.yes) {
     return 0;
   }
-  mutateSharedRegistry(
+  const written = mutateSharedRegistry(
     controlPlanePaths,
     (registry) => buildState(registry, id, to).next,
     validate,
+  );
+  recordLeaseEvent(
+    "TRANSITION",
+    written.tasks.find((entry) => entry.id === id),
+    { next_state: to },
   );
   console.log(redactText(`Updated ${id} to ${to}`));
   return 0;
@@ -273,10 +318,15 @@ function closeCommand(args) {
   if (!args.flags.yes) {
     return 0;
   }
-  mutateSharedRegistry(
+  const written = mutateSharedRegistry(
     controlPlanePaths,
     (registry) => buildClose(registry, id).next,
     validate,
+  );
+  recordLeaseEvent(
+    "RELEASE",
+    written.tasks.find((entry) => entry.id === id),
+    { next_state: to },
   );
   console.log(redactText(`Closed ${id} as ${to}`));
   return 0;

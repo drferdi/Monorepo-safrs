@@ -48,6 +48,11 @@ function createStatusFixture() {
   cpSync(join(repoRoot, "tools/status"), join(repository, "tools/status"), {
     recursive: true,
   });
+  cpSync(
+    join(repoRoot, "tools/automation/src"),
+    join(repository, "tools/automation/src"),
+    { recursive: true },
+  );
   git(["init", "--initial-branch=main"], repository);
   const rawCommon = git(["rev-parse", "--git-common-dir"], repository);
   const commonDirectory = isAbsolute(rawCommon)
