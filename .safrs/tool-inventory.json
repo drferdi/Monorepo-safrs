@@ -121,7 +121,7 @@
       "data_scope": "public-library-identifiers-and-task-scoped-documentation-queries-only",
       "authentication": "none",
       "network_endpoints": ["registry.npmjs.org", "mcp.context7.com"],
-      "provenance": ".cursor/mcp.json → @upstash/context7-mcp@latest via npx",
+      "provenance": "@upstash/context7-mcp@4.0.0 via pnpm dlx (.codex/config.toml); @upstash/context7-mcp@4.0.2 via npx (.cursor/mcp.json)",
       "review_status": "APPROVED"
     },
     {
@@ -132,7 +132,7 @@
       "data_scope": "task-scoped-browser-targets-prefer-localhost",
       "authentication": "none",
       "network_endpoints": ["registry.npmjs.org"],
-      "provenance": ".cursor/mcp.json → @playwright/mcp@latest via npx",
+      "provenance": "@playwright/mcp@0.0.79 via npx (.cursor/mcp.json)",
       "review_status": "APPROVED"
     },
     {
