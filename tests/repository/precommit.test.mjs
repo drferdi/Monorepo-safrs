@@ -84,7 +84,7 @@ test("hook repairs a fully staged TypeScript file and leaves unrelated unstaged 
     await writeFile(join(root, "unrelated.txt"), "jangan disentuh\n");
     command(root, ["add", "staged.ts"]);
 
-    execFileSync(bashExecutable, ["-c", `exec '${shellPath(hookPath)}'`], {
+    execFileSync(bashExecutable, [shellPath(hookPath)], {
       cwd: root,
       encoding: "utf8",
       env: environment,
@@ -119,16 +119,12 @@ test("hook fails closed when a staged file has unstaged changes", async () => {
     command(root, ["add", "partial.ts"]);
     await writeFile(join(root, "partial.ts"), "export const answer = 43;\n");
 
-    const result = execFileSync(
-      bashExecutable,
-      ["-c", `exec '${shellPath(hookPath)}'`],
-      {
-        cwd: root,
-        encoding: "utf8",
-        stdio: "pipe",
-        env: environment,
-      },
-    );
+    const result = execFileSync(bashExecutable, [shellPath(hookPath)], {
+      cwd: root,
+      encoding: "utf8",
+      stdio: "pipe",
+      env: environment,
+    });
     assert.fail(`hook unexpectedly passed: ${result}`);
   } catch (error) {
     assert.match(
@@ -156,7 +152,7 @@ test("hook preserves a staged tracked file inside an ignored ledger directory", 
     await writeFile(join(root, ".state", "progress.md"), "lanjut\n");
     command(root, ["add", "-f", ".state/progress.md"]);
 
-    execFileSync(bashExecutable, ["-c", `exec '${shellPath(hookPath)}'`], {
+    execFileSync(bashExecutable, [shellPath(hookPath)], {
       cwd: root,
       encoding: "utf8",
       env: environment,
