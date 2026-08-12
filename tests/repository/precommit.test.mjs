@@ -36,7 +36,7 @@ async function hookEnvironment(root) {
   await mkdir(bin);
   await writeFile(
     join(bin, "pnpm"),
-    `#!/usr/bin/env bash\n[ "$1" = exec ] && [ "$2" = biome ] || exit 64\nshift 2\nexec '${shellPath(process.execPath)}' '${biome}' "$@"\n`,
+    `#!/usr/bin/env bash\n[ "$1" = --config.verify-deps-before-run=false ] && [ "$2" = exec ] && [ "$3" = biome ] || exit 64\nshift 3\nexec '${shellPath(process.execPath)}' '${biome}' "$@"\n`,
     { mode: 0o755 },
   );
   return { ...process.env, PATH: `${shellPath(bin)}:/usr/bin:/bin` };
@@ -55,7 +55,7 @@ test("hook declares staged-only Biome repair, partial-stage protection, and no f
 
   assert.match(
     hook,
-    /pnpm exec biome check --write --staged --no-errors-on-unmatched/u,
+    /pnpm --config\.verify-deps-before-run=false exec biome check --write --staged --no-errors-on-unmatched/u,
   );
   assert.match(hook, /sudah di-stage sebagian/u);
   assert.match(hook, /git diff --cached --name-only -z/u);

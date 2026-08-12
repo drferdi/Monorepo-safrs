@@ -30,5 +30,8 @@ if [ "$partially_staged" = true ]; then
   exit 1
 fi
 
-pnpm exec biome check --write --staged --no-errors-on-unmatched
+# The format hook must not trigger pnpm's implicit dependency install:
+# deps verification belongs to install/CI, and an out-of-sync lockfile
+# would otherwise block every commit in every worktree.
+pnpm --config.verify-deps-before-run=false exec biome check --write --staged --no-errors-on-unmatched
 git add -f --pathspec-from-file="$staged_paths_file" --pathspec-file-nul
