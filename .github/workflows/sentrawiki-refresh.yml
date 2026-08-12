@@ -1,0 +1,49 @@
+name: Sentrawiki Refresh
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  wiki-refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0, immutable SHA
+        with:
+          persist-credentials: false
+
+      # Direct binary install: pinned version + pinned SHA256 (replaces curl | sh).
+      # Version and checksum come from the official installer (https://app.factory.ai/cli),
+      # which pins the same version internally. To upgrade: bump DROID_VERSION and set
+      # DROID_SHA256 from the release's published .sha256 file. linux/x64 assumes AVX2,
+      # which holds for GitHub-hosted ubuntu-latest runners.
+      - name: Install Factory Droid (pinned, checksum-verified)
+        env:
+          DROID_VERSION: "0.194.0"
+          DROID_SHA256: "59570a66026d354b6a015fe51db7a800d8dcf83ced90b5539d4d65630e810c63"
+        run: |
+          set -euo pipefail
+          url="https://downloads.factory.ai/factory-cli/releases/${DROID_VERSION}/linux/x64/droid"
+          curl -fsSL -o /tmp/droid "$url"
+          echo "${DROID_SHA256}  /tmp/droid" | sha256sum -c -
+          chmod +x /tmp/droid
+          mkdir -p "$HOME/.local/bin"
+          mv /tmp/droid "$HOME/.local/bin/droid"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Generate wiki
+        run: droid exec --auto high "/wiki"
+        env:
+          FACTORY_API_KEY: ${{ secrets.FACTORY_API_KEY }}
+
+      # The /wiki generator hardcodes `droid-wiki/` as its output directory.
+      # Rename it so the repository keeps the canonical `sentrawiki/` name.
+      - name: Normalize wiki output directory
+        run: |
+          if [ -d droid-wiki ]; then
+            rm -rf sentrawiki
+            mv droid-wiki sentrawiki
+          fi

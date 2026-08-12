@@ -9,6 +9,9 @@
       "!!**/next-env.d.ts",
       "!!**/playwright-report",
       "!!**/test-results",
+      "!!**/.specstory",
+      "!!database",
+      "!!docs/design-system",
       "!!packages/database/src/generated/prisma"
     ],
     "ignoreUnknown": true

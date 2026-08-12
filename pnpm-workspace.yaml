@@ -7,14 +7,23 @@ allowBuilds:
   '@prisma/engines': true
   esbuild: true
   prisma: true
+  protobufjs: true
   sharp: true
 
 catalog:
   "@playwright/test": 1.62.1
   "@biomejs/biome": 2.5.7
+  "@faker-js/faker": 10.5.0
   "@hono/zod-validator": 0.9.0
+  "@opentelemetry/api": 1.9.1
+  "@opentelemetry/exporter-trace-otlp-http": 0.221.0
+  "@opentelemetry/instrumentation-http": 0.221.0
+  "@opentelemetry/resources": 2.10.0
+  "@opentelemetry/sdk-node": 0.221.0
+  "@opentelemetry/semantic-conventions": 1.30.0
   "@prisma/adapter-pg": 7.9.1
   "@prisma/client": 7.9.1
+  "@prisma/instrumentation": 7.9.1
   "@react-email/components": 1.0.12
   "@react-email/ui": 6.9.2
   "@tailwindcss/postcss": 4.3.3
@@ -26,6 +35,7 @@ catalog:
   "@types/react-dom": 19.2.3
   "@vitest/coverage-v8": 4.1.10
   husky: 9.1.7
+  fast-check: 4.9.0
   hono: 4.13.1
   next: 16.3.0
   pg: 8.16.3
@@ -42,6 +52,8 @@ catalog:
   typescript: 7.0.2
   vitest: 4.1.10
   zod: 4.4.3
+
+minimumReleaseAge: "1 day"
 
 minimumReleaseAgeExclude:
   - resend@6.19.0
