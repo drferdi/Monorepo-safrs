@@ -686,7 +686,7 @@ td.num{font-family:var(--font-family-mono);font-size:12px;font-variant-numeric:t
 <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
 
 <script>
-(function(){
+(()=> {
   var FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
   var lastTrigger = null, activeOverlay = null;
 
@@ -703,7 +703,7 @@ td.num{font-family:var(--font-family-mono);font-size:12px;font-variant-numeric:t
     activeOverlay = null;
     if (lastTrigger) { lastTrigger.focus(); lastTrigger = null; }
   }
-  document.addEventListener('keydown', function(e){
+  document.addEventListener('keydown', (e)=> {
     if (!activeOverlay) return;
     if (e.key === 'Escape') { closeOverlay(); return; }
     if (e.key !== 'Tab') return;
@@ -719,8 +719,8 @@ td.num{font-family:var(--font-family-mono);font-size:12px;font-variant-numeric:t
   document.getElementById('openModal').addEventListener('click', function(){ openOverlay(scrim, this); });
   document.getElementById('openDrawer').addEventListener('click', function(){ openOverlay(drawer, this); });
   document.getElementById('closeDrawer').addEventListener('click', closeOverlay);
-  scrim.addEventListener('click', function(e){ if (e.target === scrim) closeOverlay(); });
-  document.querySelectorAll('[data-close-modal],[data-close-drawer]').forEach(function(b){
+  scrim.addEventListener('click', (e)=> { if (e.target === scrim) closeOverlay(); });
+  document.querySelectorAll('[data-close-modal],[data-close-drawer]').forEach((b)=> {
     b.addEventListener('click', closeOverlay);
   });
 
@@ -736,15 +736,15 @@ td.num{font-family:var(--font-family-mono);font-size:12px;font-variant-numeric:t
     x.className = 'btn btn--icon'; x.type = 'button';
     x.setAttribute('aria-label', 'Dismiss notification');
     x.innerHTML = '<svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="butt"><path d="M4.5 4.5 15.5 15.5M15.5 4.5 4.5 15.5"/></svg>';
-    x.addEventListener('click', function(){ t.remove(); });
+    x.addEventListener('click', ()=> { t.remove(); });
     t.appendChild(x);
     host.appendChild(t);
-    if (!critical) setTimeout(function(){ t.remove(); }, 6000);  // failures persist
+    if (!critical) setTimeout(()=> { t.remove(); }, 6000);  // failures persist
   }
-  document.getElementById('toastOk').addEventListener('click', function(){
+  document.getElementById('toastOk').addEventListener('click', ()=> {
     toast('Source added', 'swissthemes.design will be crawled on the next scheduled pass.', false);
   });
-  document.getElementById('toastBad').addEventListener('click', function(){
+  document.getElementById('toastBad').addEventListener('click', ()=> {
     toast('Export blocked', '4 gates failed. Nothing was written. This notice stays until dismissed.', true);
   });
 
@@ -755,9 +755,9 @@ td.num{font-family:var(--font-family-mono);font-size:12px;font-variant-numeric:t
     url.setAttribute('aria-invalid', bad ? 'true' : 'false');
     return !bad;
   }
-  url.addEventListener('blur', function(){ validate(); url.dataset.touched = '1'; });
-  url.addEventListener('input', function(){ if (url.dataset.touched) validate(); });
-  document.getElementById('demoForm').addEventListener('submit', function(e){
+  url.addEventListener('blur', ()=> { validate(); url.dataset.touched = '1'; });
+  url.addEventListener('input', ()=> { if (url.dataset.touched) validate(); });
+  document.getElementById('demoForm').addEventListener('submit', (e)=> {
     e.preventDefault();
     url.dataset.touched = '1';
     if (!validate()) { url.focus(); return; }

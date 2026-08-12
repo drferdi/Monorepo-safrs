@@ -12,7 +12,7 @@
 *.sh   text eol=lf
 
 # File biner - jangan disentuh sama sekali
-*.png  binary
+*.png  filter=lfs diff=lfs merge=lfs -text
 *.jpg  binary
 *.jpeg binary
 *.gif  binary

@@ -11,4 +11,4 @@ Use for auth, migrations, dependencies, CI/CD, shared APIs/packages, architectur
 2. R2: designated review required — do not self-approve.
 3. R3: prepare evidence/plan only; wait for explicit human authorization before execution.
 4. Never deploy to production or merge a protected branch unless policy + human auth allow it.
-5. Use isolated worktrees/environments for parallel mutation work.
+5. Use isolated worktrees/environments for parallel mutation work. Create worktrees outside the repository root in the sibling directory `../Monorepo.worktrees/<branch-name>` (never inside `.worktrees/`).

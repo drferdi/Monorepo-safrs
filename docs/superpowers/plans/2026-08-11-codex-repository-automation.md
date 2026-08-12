@@ -18,7 +18,6 @@
 - Use PowerShell for local commands; repository docs, code, commands, and identifiers stay in concise English.
 - Risk is **R2**. Codex config/hooks and their governing tests require designated review and `SAFRS_VERIFICATION_INTEGRITY_REVIEW=required` handling.
 - Execute in a dedicated `feat/codex-repository-automation` worktree because another mutation worktree is active. Before any Git mutation, verify `git rev-parse --show-toplevel` equals the current worktree path; abort if Git resolves to another checkout.
-- Hooks must work when Codex is launched from the repository root or any nested project directory; resolve the nearest repository root from the hook payload's `cwd`.
 - Stage only task-owned paths; never use `git add -A` or disturb unrelated untracked/staged work.
 - Spec: `docs/superpowers/specs/2026-08-11-codex-repository-automation-design.md`.
 
@@ -82,11 +81,11 @@ Add these helpers after the constants:
 
 ```js
 const repositoryRoot = process.cwd();
-const codexGuard = join(repositoryRoot, ".codex/hooks/guard-tool-use.mjs");
+const codexGuard = ".codex/hooks/guard-tool-use.mjs";
 
-function runHook(script, payload, inputOverride, cwd = repositoryRoot) {
+function runHook(script, payload, inputOverride) {
   return spawnSync(process.execPath, [script], {
-    cwd,
+    cwd: repositoryRoot,
     encoding: "utf8",
     input: inputOverride ?? JSON.stringify(payload),
   });
@@ -152,28 +151,6 @@ test("Codex guard handles malformed payloads without inventing a target", () => 
   assert.equal(result.status, 0);
   assert.match(result.stderr, /could not be parsed/i);
 });
-
-test("Codex guard resolves the repository registry from a nested project cwd", () => {
-  const nested = join(repositoryRoot, "projects/golden-path/apps/web");
-  const result = runHook(
-    codexGuard,
-    {
-      tool_name: "apply_patch",
-      cwd: nested,
-      tool_input: {
-        command:
-          "*** Begin Patch\n*** Update File: .safrs/policy.json\n*** End Patch",
-      },
-    },
-    undefined,
-    nested,
-  );
-  assert.equal(result.status, 0, result.stderr);
-  assert.match(
-    JSON.parse(result.stdout).hookSpecificOutput.additionalContext,
-    /verification.*R2/i,
-  );
-});
 ```
 
 - [ ] **Step 2: Run the tests and confirm the missing hook fails**
@@ -192,9 +169,10 @@ Create `.codex/hooks/guard-tool-use.mjs` with these responsibilities and exact p
 
 ```js
 #!/usr/bin/env node
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 
+const REGISTRY_PATH = ".safrs/sensitive-paths.json";
 const CREDENTIAL_PATTERNS = [
   ".env",
   ".env.*",
@@ -240,21 +218,9 @@ function credentialPath(candidate) {
   );
 }
 
-function findRepositoryRoot(start) {
-  let current = path.resolve(start);
-  while (true) {
-    if (existsSync(path.join(current, ".git"))) return current;
-    const parent = path.dirname(current);
-    if (parent === current) return path.resolve(start);
-    current = parent;
-  }
-}
-
-function loadRegistry(root) {
+function loadRegistry() {
   try {
-    return JSON.parse(
-      readFileSync(path.join(root, ".safrs/sensitive-paths.json"), "utf8"),
-    );
+    return JSON.parse(readFileSync(REGISTRY_PATH, "utf8"));
   } catch {
     return { patterns: [], verification_control_patterns: [] };
   }
@@ -271,7 +237,7 @@ try {
 
 const toolName = String(payload.tool_name ?? "");
 const command = String(payload.tool_input?.command ?? "");
-const cwd = findRepositoryRoot(String(payload.cwd ?? process.cwd()));
+const cwd = path.resolve(String(payload.cwd ?? process.cwd()));
 
 if (toolName === "Bash") {
   if (/\bgit\s+push\s+[^\n]*--force(?!-with-lease)\b/iu.test(command)) {
@@ -301,7 +267,7 @@ for (const target of targets) {
   if (credentialPath(target)) deny(`refusing to modify credential file ${target}.`);
 }
 
-const registry = loadRegistry(cwd);
+const registry = loadRegistry();
 const verification = targets.filter((target) =>
   matchesAny(target, registry.verification_control_patterns ?? []),
 );
@@ -381,10 +347,6 @@ test("Codex formatter extracts unique apply_patch paths", async () => {
   assert.equal(formatter.shouldFormat(".next/cache/a.js"), false);
   assert.equal(formatter.shouldFormat("packages/database/src/generated/a.ts"), false);
   assert.equal(formatter.shouldFormat("README.md"), false);
-  assert.equal(
-    formatter.findRepositoryRoot(join(repositoryRoot, "projects/golden-path/apps/web")),
-    repositoryRoot,
-  );
 });
 ```
 
@@ -405,7 +367,7 @@ import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-const BIOME_RELATIVE = "node_modules/@biomejs/biome/bin/biome";
+const BIOME_BIN = "node_modules/@biomejs/biome/bin/biome";
 const FORMATTABLE = new Set([
   ".ts", ".tsx", ".mts", ".cts", ".js", ".jsx", ".mjs", ".cjs",
   ".json", ".jsonc", ".css",
@@ -435,16 +397,6 @@ export function shouldFormat(relative) {
   );
 }
 
-export function findRepositoryRoot(start) {
-  let current = path.resolve(start);
-  while (true) {
-    if (existsSync(path.join(current, ".git"))) return current;
-    const parent = path.dirname(current);
-    if (parent === current) return path.resolve(start);
-    current = parent;
-  }
-}
-
 function readPayload() {
   try {
     const raw = readFileSync(0, "utf8").trim();
@@ -457,9 +409,8 @@ function readPayload() {
 
 export function main() {
   const payload = readPayload();
-  const cwd = findRepositoryRoot(String(payload.cwd ?? process.cwd()));
-  const biomeBin = path.join(cwd, BIOME_RELATIVE);
-  if (!existsSync(biomeBin)) return;
+  const cwd = path.resolve(String(payload.cwd ?? process.cwd()));
+  if (!existsSync(path.join(cwd, BIOME_BIN))) return;
 
   for (const target of extractEditedPaths(payload)) {
     const absolute = path.resolve(cwd, target);
@@ -467,7 +418,7 @@ export function main() {
     if (!existsSync(absolute) || !shouldFormat(relative)) continue;
     const result = spawnSync(
       process.execPath,
-      [biomeBin, "check", "--write", "--no-errors-on-unmatched", relative],
+      [BIOME_BIN, "check", "--write", "--no-errors-on-unmatched", relative],
       { cwd, encoding: "utf8" },
     );
     if (result.status !== 0) {
@@ -568,8 +519,8 @@ test("Codex hooks use repository Node adapters for Windows and POSIX", () => {
   assert.equal(config.hooks.PreToolUse[0].matcher, "Bash|apply_patch|Edit|Write");
   assert.equal(config.hooks.PostToolUse[0].matcher, "apply_patch|Edit|Write");
   for (const group of [config.hooks.PreToolUse[0], config.hooks.PostToolUse[0]]) {
-    assert.match(group.hooks[0].command, /git rev-parse --show-toplevel/u);
-    assert.match(group.hooks[0].commandWindows, /git rev-parse --show-toplevel/u);
+    assert.match(group.hooks[0].command, /^node \.codex\/hooks\//u);
+    assert.match(group.hooks[0].commandWindows, /^node \.codex\\hooks\\/u);
   }
 });
 
@@ -634,8 +585,8 @@ enabled = true
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$(git rev-parse --show-toplevel)/.codex/hooks/guard-tool-use.mjs\"",
-            "commandWindows": "node \"$(git rev-parse --show-toplevel)\\.codex\\hooks\\guard-tool-use.mjs\"",
+            "command": "node .codex/hooks/guard-tool-use.mjs",
+            "commandWindows": "node .codex\\hooks\\guard-tool-use.mjs",
             "timeout": 10,
             "statusMessage": "Checking SAFRS policy"
           }
@@ -648,8 +599,8 @@ enabled = true
         "hooks": [
           {
             "type": "command",
-            "command": "node \"$(git rev-parse --show-toplevel)/.codex/hooks/format-edited-files.mjs\"",
-            "commandWindows": "node \"$(git rev-parse --show-toplevel)\\.codex\\hooks\\format-edited-files.mjs\"",
+            "command": "node .codex/hooks/format-edited-files.mjs",
+            "commandWindows": "node .codex\\hooks\\format-edited-files.mjs",
             "timeout": 30,
             "statusMessage": "Formatting edited files"
           }
@@ -1065,10 +1016,9 @@ hooks, restart Codex, open `/hooks`, review the exact hook definitions, and trus
 ## Guardrails
 
 The PreToolUse hook blocks credential-shaped files, force-push, direct Prisma reset, and
-direct database-drop commands. Both hooks resolve the nearest repository root, so they work
-when Codex starts in the root or a nested project directory. The guard reads R2 paths from
-`.safrs/sensitive-paths.json`; the formatter uses the repository Biome binary and never
-replaces final verification.
+direct database-drop commands. It reads R2 paths from `.safrs/sensitive-paths.json`. The
+PostToolUse hook formats supported edited files through the repository Biome binary and
+never replaces final verification.
 
 ## Skills and reviewers
 
