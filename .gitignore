@@ -91,3 +91,7 @@ database/state/
 !database/inbox/.gitkeep
 !database/logs/.gitkeep
 !database/state/.gitkeep
+
+# SpecStory session state — local tool state, not repo content
+.specstory/cli/
+.specstory/history/
