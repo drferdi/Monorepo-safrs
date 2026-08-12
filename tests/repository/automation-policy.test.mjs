@@ -145,6 +145,7 @@ test("CI proves the full safe verification path without deployment", () => {
   assert.match(workflow, /postgresql-x64-17/u);
   assert.match(workflow, /postgresql\.conf/u);
   assert.match(workflow, /port = 54329/u);
+  assert.match(workflow, /CREATE ROLE safrs LOGIN CREATEDB PASSWORD 'safrs'/u);
   assert.match(
     workflow,
     /DATABASE_URL: postgresql:\/\/safrs:safrs@127\.0\.0\.1:54329\/safrs_test/u,

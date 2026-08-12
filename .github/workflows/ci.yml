@@ -59,7 +59,7 @@ jobs:
             throw "PostgreSQL Windows service did not become ready."
           }
           $env:PGPASSWORD = "root"
-          & psql --host 127.0.0.1 --port 54329 --username postgres --dbname postgres --command "CREATE ROLE safrs LOGIN PASSWORD 'safrs';"
+          & psql --host 127.0.0.1 --port 54329 --username postgres --dbname postgres --command "CREATE ROLE safrs LOGIN CREATEDB PASSWORD 'safrs';"
           if ($LASTEXITCODE -ne 0) {
             throw "Could not create disposable PostgreSQL role."
           }
