@@ -143,6 +143,13 @@ test("CI proves the full safe verification path without deployment", () => {
   assert.match(workflow, /runs-on:\s*windows-2025/u);
   assert.doesNotMatch(workflow, /services:\s*\n\s+postgres:/u);
   assert.match(workflow, /postgresql-x64-17/u);
+  assert.match(workflow, /postgresql\.conf/u);
+  assert.match(workflow, /port = 54329/u);
+  assert.match(workflow, /CREATE ROLE safrs LOGIN CREATEDB PASSWORD 'safrs'/u);
+  assert.match(
+    workflow,
+    /DATABASE_URL: postgresql:\/\/safrs:safrs@127\.0\.0\.1:54329\/safrs_test/u,
+  );
   assert.match(
     workflow,
     /Set-Service\s+-Name\s+"postgresql-x64-17"\s+-StartupType\s+Manual/u,
