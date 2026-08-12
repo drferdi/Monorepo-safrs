@@ -8,6 +8,7 @@ import {
   mkdtemp,
   readdir,
   readFile,
+  realpath,
   rename,
   rm,
   symlink,
@@ -742,7 +743,7 @@ test("keeps the original publish error before destination cleanup failure", asyn
   const root = await createTemporaryRepo();
   const projectsRoot = path.join(root, "projects");
   const slug = "publish-cleanup-order";
-  const destination = path.join(projectsRoot, slug);
+  const destination = path.join(await realpath(projectsRoot), slug);
   try {
     await withPosixPublish(async () => {
       await assert.rejects(
