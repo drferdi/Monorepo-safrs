@@ -72,3 +72,22 @@ Thumbs.db
 
 .worktrees/
 .pnpm-store/
+
+# Database corpus — keep directories, ignore content
+# Medical guideline docs (large JSON files) are not tracked in git.
+database/canonical/*.json
+database/canonical/*.jsonl
+database/artifacts/
+database/sources/
+database/inbox/
+database/logs/
+database/state/
+
+# Keep database README and directory structure
+!database/README.md
+!database/canonical/.gitkeep
+!database/artifacts/.gitkeep
+!database/sources/.gitkeep
+!database/inbox/.gitkeep
+!database/logs/.gitkeep
+!database/state/.gitkeep
