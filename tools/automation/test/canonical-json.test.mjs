@@ -72,6 +72,17 @@ test("non-JSON values fail closed", () => {
   }
 });
 
+test("sparse arrays and non-plain objects fail closed", () => {
+  const sparse = [1, 2, 3];
+  delete sparse[1];
+  assert.throws(() => canonicalize(sparse), /sparse/iu);
+  assert.throws(() => canonicalize({ a: Array(2) }), /sparse/iu);
+  assert.throws(() => canonicalize(new Date(0)), /plain/iu);
+  assert.throws(() => canonicalize(new Map()), /plain/iu);
+  assert.throws(() => canonicalize({ nested: new Set() }), /plain/iu);
+  assert.doesNotThrow(() => canonicalize(Object.create(null)));
+});
+
 test("circular references fail closed instead of recursing forever", () => {
   const value = { a: 1 };
   value.self = value;

@@ -16,7 +16,8 @@ export function normalizeScope(raw) {
   while (value.includes("//")) {
     value = value.replaceAll("//", "/");
   }
-  if (value.startsWith("/") || /^[A-Za-z]:\//u.test(value)) {
+  if (value.startsWith("/") || /^[A-Za-z]:/u.test(value)) {
+    // Covers absolute, drive-absolute (C:/x), and drive-relative (C:x) forms.
     throw new TypeError(`scope must be repository-relative: ${raw}`);
   }
   if (WILDCARD.test(value) || value.includes("!")) {

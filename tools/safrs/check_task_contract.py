@@ -79,6 +79,14 @@ def validate_node(schema, value, path, root_schema, errors):
                 return
         errors.append(f'{path}: no anyOf branch matched')
         return
+    if 'allOf' in schema:
+        for sub_schema in schema['allOf']:
+            validate_node(sub_schema, value, path, root_schema, errors)
+    if 'if' in schema:
+        condition_errors: list[str] = []
+        validate_node(schema['if'], value, path, root_schema, condition_errors)
+        if not condition_errors and 'then' in schema:
+            validate_node(schema['then'], value, path, root_schema, errors)
     expected_type = schema.get('type')
     if expected_type and not type_matches(expected_type, value):
         errors.append(f'{path}: expected type {expected_type}')

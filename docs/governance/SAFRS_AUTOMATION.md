@@ -17,7 +17,8 @@ durable evidence`.
 - Contracts are canonical JSON (UTF-8, sorted keys, no insignificant
   whitespace) digested with SHA-256. The digest binds claims, runs,
   approvals, and evidence to one immutable grant.
-- The compiler (`tools/automation/src/contracts.mjs`) fails closed on:
+- The compiler (`tools/automation/src/contracts.mjs`; CLI entry
+  `node tools/automation/src/cli.mjs contract compile <input>`) fails closed on:
   path escape, absolute or wildcard scopes, Windows case collisions,
   unknown tools or operations, unregistered network endpoints, missing or
   over-policy budgets, expiry beyond policy, secret-like content, and any

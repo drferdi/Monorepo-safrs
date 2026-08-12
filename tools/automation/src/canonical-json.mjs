@@ -34,8 +34,19 @@ function serialize(value, seen) {
     seen.add(value);
     let result;
     if (Array.isArray(value)) {
+      for (let index = 0; index < value.length; index += 1) {
+        if (!Object.hasOwn(value, index)) {
+          throw new TypeError("canonical JSON rejects sparse arrays");
+        }
+      }
       result = `[${value.map((entry) => serialize(entry, seen)).join(",")}]`;
     } else {
+      const prototype = Object.getPrototypeOf(value);
+      if (prototype !== Object.prototype && prototype !== null) {
+        // Date, Map, Set, class instances would silently serialize as "{}"
+        // and collide digests; only plain objects carry canonical meaning.
+        throw new TypeError("canonical JSON rejects non-plain objects");
+      }
       const keys = Object.keys(value).sort();
       result = `{${keys
         .map((key) => `${JSON.stringify(key)}:${serialize(value[key], seen)}`)

@@ -42,11 +42,12 @@ def load(path: Path):
 policy = load(ROOT / '.safrs' / 'automation-policy.json')
 adapters = load(ROOT / '.safrs' / 'adapter-capabilities.json')
 
-if policy.get('version') != 1:
+if type(policy.get('version')) is not int or policy['version'] != 1:
     errors.append('automation-policy version must be 1')
 if policy.get('risk_order') != ['R0', 'R1', 'R2', 'R3']:
     errors.append('risk_order must be R0..R3')
-if not isinstance(policy.get('max_expiry_hours'), int) or policy['max_expiry_hours'] < 1:
+# type() rather than isinstance(): bool is an int subclass and must not pass.
+if type(policy.get('max_expiry_hours')) is not int or policy['max_expiry_hours'] < 1:
     errors.append('max_expiry_hours must be a positive integer')
 
 for operation_id, record in policy.get('operations', {}).items():
@@ -111,7 +112,7 @@ if task_contract_schema is not None:
         if dimension not in schema_budget_keys:
             errors.append(f'budget maximum for unknown dimension: {dimension}')
 
-if adapters.get('version') != 1:
+if type(adapters.get('version')) is not int or adapters['version'] != 1:
     errors.append('adapter-capabilities version must be 1')
 for adapter_id, record in adapters.get('adapters', {}).items():
     if not isinstance(record.get('enforceable_pre_action_hooks'), bool):

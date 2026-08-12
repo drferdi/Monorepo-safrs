@@ -14,6 +14,7 @@
     "diff_digest",
     "operation_digest",
     "target_environment",
+    "idempotency_key",
     "reviewer_identity",
     "reviewer_authority",
     "author_identity",
@@ -47,6 +48,9 @@
     "target_environment": {
       "anyOf": [{ "type": "string", "minLength": 1 }, { "const": null }]
     },
+    "idempotency_key": {
+      "anyOf": [{ "type": "string", "minLength": 1 }, { "const": null }]
+    },
     "reviewer_identity": { "type": "string", "minLength": 1 },
     "reviewer_authority": { "type": "string", "minLength": 1 },
     "author_identity": { "type": "string", "minLength": 1 },
@@ -59,12 +63,40 @@
     },
     "approval_digest": { "$ref": "#/$defs/sha256" }
   },
+  "allOf": [
+    {
+      "if": {
+        "required": ["kind"],
+        "properties": {
+          "kind": { "enum": ["R2_CODE_OWNER", "R2_INDEPENDENT"] }
+        }
+      },
+      "then": {
+        "properties": {
+          "diff_digest": { "$ref": "#/$defs/sha256" }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["kind"],
+        "properties": { "kind": { "const": "R3_EXECUTION" } }
+      },
+      "then": {
+        "properties": {
+          "operation_digest": { "$ref": "#/$defs/sha256" },
+          "target_environment": { "type": "string", "minLength": 1 },
+          "idempotency_key": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  ],
   "$defs": {
     "gitSha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
     "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
     "utcTimestamp": {
       "type": "string",
-      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?Z$"
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?Z$"
     }
   }
 }

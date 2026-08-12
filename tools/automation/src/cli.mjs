@@ -33,17 +33,15 @@ function main(argv) {
   const input = JSON.parse(readFileSync(resolve(inputPath), "utf8"));
   const context = loadCompileContext(repositoryRoot);
   const { contract, contractDigest } = compileTaskContract(input, context);
-  const writeIndex = rest.indexOf("--write");
-  if (writeIndex !== -1) {
-    const outputPath = rest[writeIndex + 1];
-    if (!outputPath) {
-      return usage();
-    }
-    writeFileSync(resolve(outputPath), writeForm(contract), "utf8");
-    console.log(`${contractDigest}  ${outputPath}`);
-  } else {
+  if (rest.length === 0) {
     console.log(JSON.stringify(contract, null, 2));
+    return 0;
   }
+  if (rest.length !== 2 || rest[0] !== "--write" || !rest[1]) {
+    return usage();
+  }
+  writeFileSync(resolve(rest[1]), writeForm(contract), "utf8");
+  console.log(`${contractDigest}  ${rest[1]}`);
   return 0;
 }
 

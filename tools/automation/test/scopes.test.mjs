@@ -17,6 +17,8 @@ test("rejects absolute paths, drive letters, UNC, parent escapes, wildcards, neg
   for (const bad of [
     "/etc/passwd",
     "C:/secrets",
+    "C:secrets.txt",
+    "C:../outside",
     "//server/share",
     "../outside",
     "a/../../b",

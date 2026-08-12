@@ -27,9 +27,10 @@ export function maxRisk(levels) {
 }
 
 /**
- * dimensions: { [name]: { risk, reason } }. Every dimension above R0 must
- * carry a non-empty reason — an unexplained escalation is unauditable, and
- * an unexplained non-escalation is unreviewable.
+ * dimensions: { [name]: { risk, reason } }. Every provided dimension —
+ * including R0 — must carry a non-empty reason: an unexplained escalation
+ * is unauditable, and an unexplained non-escalation is unreviewable.
+ * Callers that have nothing to say about a dimension omit it entirely.
  */
 export function computeEffectiveRisk({ declared, dimensions = {} }) {
   assertRisk(declared);
