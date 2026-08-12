@@ -179,32 +179,30 @@ test("CI proves the full safe verification path without deployment", () => {
       new RegExp(command.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&")),
     );
   }
-  assert.match(workflow, /runs-on:\s*windows-2025/u);
-  assert.doesNotMatch(workflow, /services:\s*\n\s+postgres:/u);
-  assert.match(workflow, /postgresql-x64-17/u);
-  assert.match(workflow, /postgresql\.conf/u);
-  assert.match(workflow, /port = 54329/u);
-  assert.match(workflow, /CREATE ROLE safrs LOGIN CREATEDB PASSWORD 'safrs'/u);
+  assert.match(workflow, /runs-on:\s*ubuntu-24\.04/u);
+  assert.match(workflow, /image:\s*postgres:17-alpine/u);
+  assert.match(workflow, /pg_isready -U safrs -d safrs_test/u);
   assert.match(
     workflow,
     /DATABASE_URL: postgresql:\/\/safrs:safrs@127\.0\.0\.1:54329\/safrs_test/u,
   );
+  assert.match(workflow, /NODE_ENV:\s*test/u);
   assert.match(
     workflow,
-    /Set-Service\s+-Name\s+"postgresql-x64-17"\s+-StartupType\s+Manual/u,
-  );
-  assert.match(workflow, /Start-Service/u);
-  assert.match(workflow, /DATABASE_URL:/u);
-  assert.match(workflow, /fetch-depth:\s*0/u);
-  assert.match(
-    workflow,
-    /SAFRS_BASE_REF:\s*\$\{\{ github\.event\.pull_request\.base\.sha \|\| 'origin\/main' \}\}/u,
-  );
-  assert.match(
-    workflow,
-    /SAFRS_HEAD_REF:\s*\$\{\{ github\.event\.pull_request\.head\.sha \|\| github\.sha \}\}/u,
+    /node --test tests\/repository\/automation-policy\.test\.mjs/u,
   );
   assert.doesNotMatch(workflow, /\bdeploy\b/iu);
+
+  const governance = readFileSync(governanceFile, "utf8");
+  assert.match(governance, /fetch-depth:\s*0/u);
+  assert.match(
+    governance,
+    /SAFRS_BASE_REF=\$\{\{ github\.event\.pull_request\.base\.sha \}\}/u,
+  );
+  assert.match(
+    governance,
+    /SAFRS_HEAD_REF=\$\{\{ github\.event\.pull_request\.head\.sha \}\}/u,
+  );
 });
 
 test("Control Plane ownership checks and tests are wired into repository gates", () => {
