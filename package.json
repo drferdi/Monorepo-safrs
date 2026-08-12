@@ -23,6 +23,7 @@
     "test:e2e": "node scripts/test-e2e.mjs",
     "check": "pnpm governance && pnpm check:tokens && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "check:tokens": "node scripts/check-tokens.mjs",
+    "check:security": "node scripts/check-supply-chain.mjs",
     "governance": "node scripts/safrs-verify.mjs",
     "db:start": "docker compose up -d --wait postgres",
     "db:stop": "docker compose stop postgres",
@@ -35,6 +36,8 @@
     "stripe:listen": "pnpm --filter @safrs/web stripe:listen",
     "project:new": "node tools/project-wizard/src/cli.mjs",
     "capability:add": "node tools/capabilities/src/cli.mjs",
+    "deps:graph": "node tools/deps-graph/src/cli.mjs",
+    "codegen": "node tools/codegen/src/cli.mjs",
     "prepare": "husky"
   },
   "devDependencies": {

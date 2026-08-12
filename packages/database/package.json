@@ -21,6 +21,7 @@
     "@prisma/adapter-pg": "catalog:",
     "@prisma/client": "catalog:",
     "@safrs/env": "workspace:*",
+    "@safrs/telemetry": "workspace:*",
     "pg": "catalog:"
   },
   "devDependencies": {

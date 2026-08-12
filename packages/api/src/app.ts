@@ -1,8 +1,10 @@
 import { zValidator } from "@hono/zod-validator";
 import { createDemoInputSchema, demoSchema } from "@safrs/schemas";
+import { telemetryMiddleware } from "@safrs/telemetry";
 import { type Context, Hono } from "hono";
 import type { ApplyGlobalResponse } from "hono/client";
 import { type ApiError, internalError, validationError } from "./error.ts";
+import { buildOpenApiDocument, openApiDocsHtml } from "./openapi.ts";
 
 type DemoRecord = {
   createdAt: Date;
@@ -57,7 +59,10 @@ function createRoutes({ getStore = defaultStore }: CreateAppOptions = {}) {
       await next();
       context.header("x-correlation-id", correlationId);
     })
+    .use("*", telemetryMiddleware())
     .get("/health", (context) => context.json({ status: "ok" as const }, 200))
+    .get("/openapi.json", (context) => context.json(buildOpenApiDocument()))
+    .get("/docs", (context) => context.html(openApiDocsHtml()))
     .get("/demos", async (context) => {
       const store = await getStore();
       const demos = await store.demo.findMany();

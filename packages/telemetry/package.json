@@ -1,5 +1,5 @@
 {
-  "name": "@safrs/schemas",
+  "name": "@safrs/telemetry",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -12,11 +12,16 @@
     "typecheck": "tsc --project tsconfig.json"
   },
   "dependencies": {
-    "zod": "catalog:"
+    "@opentelemetry/api": "catalog:",
+    "@opentelemetry/exporter-trace-otlp-http": "catalog:",
+    "@opentelemetry/instrumentation-http": "catalog:",
+    "@opentelemetry/sdk-node": "catalog:",
+    "@opentelemetry/semantic-conventions": "catalog:",
+    "@prisma/instrumentation": "catalog:",
+    "hono": "catalog:"
   },
   "devDependencies": {
     "@safrs/config": "workspace:*",
-    "fast-check": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
   }

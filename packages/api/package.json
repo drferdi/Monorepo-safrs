@@ -16,6 +16,7 @@
     "@hono/zod-validator": "catalog:",
     "@safrs/database": "workspace:*",
     "@safrs/schemas": "workspace:*",
+    "@safrs/telemetry": "workspace:*",
     "hono": "catalog:",
     "zod": "catalog:"
   },
