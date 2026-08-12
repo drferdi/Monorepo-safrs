@@ -59,6 +59,14 @@ test("reasons are mandatory above R0 and invalid risks fail closed", () => {
   assert.throws(
     () =>
       computeEffectiveRisk({
+        declared: "R1",
+        dimensions: { data: { risk: "R0" } },
+      }),
+    /reason/iu,
+  );
+  assert.throws(
+    () =>
+      computeEffectiveRisk({
         declared: "R9",
         dimensions: {},
       }),
