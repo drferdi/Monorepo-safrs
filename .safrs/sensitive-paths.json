@@ -48,6 +48,8 @@
     "scripts/safrs-verify.ps1",
     "scripts/safrs-verify.sh",
     "tests/repository/automation-policy.test.mjs",
+    "tools/automation/**",
+    "tests/fixtures/automation/**",
     "docs/bootstrap/**"
   ],
   "verification_control_patterns": [
@@ -71,6 +73,9 @@
     "tools/safrs/**",
     "tools/task/**",
     "tools/status/**",
+    "tools/automation/**",
+    "tests/fixtures/automation/**",
+    "tests/governance/test_automation_contracts.py",
     "scripts/safrs-verify.mjs",
     "scripts/safrs-verify.ps1",
     "scripts/safrs-verify.sh",

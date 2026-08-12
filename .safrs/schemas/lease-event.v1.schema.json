@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "safrs:lease-event.v1",
+  "title": "LeaseEventV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "event_id",
+    "sequence",
+    "event_type",
+    "task_id",
+    "lease_id",
+    "fencing_token",
+    "actor",
+    "worktree_id",
+    "scope_digest",
+    "scope_prefixes",
+    "previous_state",
+    "next_state",
+    "occurred_at",
+    "expires_at",
+    "authority_run_url",
+    "event_digest"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "event_type": {
+      "enum": [
+        "CLAIM",
+        "RENEW",
+        "TRANSITION",
+        "RELEASE",
+        "EXPIRE",
+        "RECLAIM"
+      ]
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^TASK-[0-9]{8}-[A-Z0-9-]+$"
+    },
+    "lease_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fencing_token": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "actor": {
+      "type": "string",
+      "minLength": 1
+    },
+    "worktree_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "scope_prefixes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "previous_state": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/taskState"
+        },
+        {
+          "const": null
+        }
+      ]
+    },
+    "next_state": {
+      "$ref": "#/$defs/taskState"
+    },
+    "occurred_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "expires_at": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/utcTimestamp"
+        },
+        {
+          "const": null
+        }
+      ]
+    },
+    "authority_run_url": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^https://"
+        },
+        {
+          "const": null
+        }
+      ]
+    },
+    "event_digest": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "utcTimestamp": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?Z$",
+      "format": "date-time"
+    },
+    "taskState": {
+      "enum": [
+        "PROPOSED",
+        "CLAIMED",
+        "PLANNED",
+        "EXECUTING",
+        "VERIFYING",
+        "REVIEW",
+        "MERGED",
+        "CLOSED",
+        "BLOCKED",
+        "CONFLICT",
+        "FAILED",
+        "ABORTED",
+        "SUPERSEDED"
+      ]
+    }
+  }
+}

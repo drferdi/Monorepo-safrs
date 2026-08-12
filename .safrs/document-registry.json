@@ -172,6 +172,30 @@
       "status": "CANONICAL"
     },
     {
+      "id": "safrs-automation",
+      "path": "docs/governance/SAFRS_AUTOMATION.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "safrs-approvals",
+      "path": "docs/governance/SAFRS_APPROVALS.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "safrs-evidence",
+      "path": "docs/governance/SAFRS_EVIDENCE.md",
+      "type": "canonical",
+      "status": "CANONICAL"
+    },
+    {
+      "id": "safrs-automation-adr-0002",
+      "path": "docs/adrs/0002-safrs-automation-control-plane.md",
+      "type": "adr",
+      "status": "ACCEPTED"
+    },
+    {
       "id": "safrs-tool-inventory",
       "path": ".safrs/tool-inventory.json",
       "type": "reference",

@@ -1,0 +1,7 @@
+{
+  "expect_error": "verification_profile",
+  "base": "valid-r1",
+  "patch": {
+    "verification_profile": ["safrs.contract"]
+  }
+}

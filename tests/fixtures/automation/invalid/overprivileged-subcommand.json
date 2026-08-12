@@ -1,0 +1,7 @@
+{
+  "expect_error": "subcommand",
+  "base": "valid-r1",
+  "patch": {
+    "tools": [{ "id": "git", "subcommands": ["status", "push", "commit"] }]
+  }
+}

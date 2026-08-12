@@ -1,0 +1,13 @@
+{
+  "expect_error": "443",
+  "base": "valid-r1",
+  "patch": {
+    "tools": [
+      { "id": "git", "subcommands": ["status"] },
+      { "id": "pnpm-npm-registry", "subcommands": [] }
+    ],
+    "network": [
+      { "host": "registry.npmjs.org", "port": 8080, "methods": ["GET"] }
+    ]
+  }
+}

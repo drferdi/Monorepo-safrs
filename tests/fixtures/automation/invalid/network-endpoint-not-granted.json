@@ -1,0 +1,9 @@
+{
+  "expect_error": "granted",
+  "base": "valid-r1",
+  "patch": {
+    "network": [
+      { "host": "registry.npmjs.org", "port": 443, "methods": ["GET"] }
+    ]
+  }
+}

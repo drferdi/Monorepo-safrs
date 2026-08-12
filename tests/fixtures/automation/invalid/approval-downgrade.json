@@ -1,0 +1,12 @@
+{
+  "expect_error": "approval_policy",
+  "base": "valid-r2",
+  "patch": {
+    "approval_policy": {
+      "R0": "none",
+      "R1": "automatic_gates_only",
+      "R2": "none",
+      "R3": "protected_environment_human"
+    }
+  }
+}

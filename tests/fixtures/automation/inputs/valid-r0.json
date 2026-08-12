@@ -1,0 +1,45 @@
+{
+  "task_id": "TASK-20260813-DEMO-R0",
+  "objective": "Inspect repository state and produce a read-only report.",
+  "requester": "chief@sentrahai.com",
+  "accountable_human": "chief@sentrahai.com",
+  "created_at": "2026-08-13T00:00:00Z",
+  "expires_at": "2026-08-13T12:00:00Z",
+  "base_ref": "refs/heads/main",
+  "base_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "declared_risk": "R0",
+  "read_scopes": ["docs/", "packages/"],
+  "write_scopes": [],
+  "operations": ["repo.report"],
+  "tools": [{ "id": "local-filesystem", "subcommands": [] }],
+  "network": "denied",
+  "data_classification": "public",
+  "isolation_profile": {
+    "runner_class": "disposable-ci",
+    "requires_worktree": false,
+    "disposable_resources": [],
+    "egress": "denied"
+  },
+  "budgets": {
+    "runtime_minutes": 30,
+    "attempts": 1,
+    "retries": 1,
+    "tool_calls": 200,
+    "model_calls": 100,
+    "network_requests": 1,
+    "changed_files": 1,
+    "diff_lines": 1,
+    "concurrent_children": 1,
+    "spend": "unmetered"
+  },
+  "rollback": {
+    "preservation": "none-required-read-only",
+    "revert": "none-required-read-only",
+    "cleanup": "discard-workspace",
+    "target_contract_ids": []
+  },
+  "requested_by_evidence": {
+    "url": "https://github.com/drferdii/Monorepo-safrs/issues/2",
+    "event_id": "issue-2"
+  }
+}
