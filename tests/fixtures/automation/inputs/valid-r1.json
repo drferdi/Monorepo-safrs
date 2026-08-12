@@ -26,6 +26,7 @@
     "disposable_resources": ["postgres-test"],
     "egress": "denied"
   },
+  "_comment": "verification_profile and approval_policy are omitted: the compiler applies policy defaults and rejects any downgrade.",
   "budgets": {
     "runtime_minutes": 60,
     "attempts": 2,
