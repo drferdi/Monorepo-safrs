@@ -120,6 +120,9 @@ test("timestamp pattern rejects impossible calendar and clock values", () => {
     "2026-01-32T00:00:00Z",
     "2026-01-01T24:00:00Z",
     "2026-01-01T00:60:00Z",
+    "2026-02-29T00:00:00Z",
+    "2026-02-31T00:00:00Z",
+    "2026-04-31T00:00:00Z",
   ]) {
     const mutated = { ...valid, created_at: bad };
     assert.equal(
@@ -128,6 +131,8 @@ test("timestamp pattern rejects impossible calendar and clock values", () => {
       bad,
     );
   }
+  const leapDay = { ...valid, created_at: "2028-02-29T00:00:00Z" };
+  assert.deepEqual(validateAgainstSchema(schema, leapDay).errors, []);
 });
 
 test("approval-record schema binds required fields per kind", () => {

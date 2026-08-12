@@ -45,6 +45,28 @@ class CanonicalDigestParity(unittest.TestCase):
             '{"a":["x",{"c":3,"d":2}],"b":1}',
         )
 
+    def test_numeric_canonicalization_matches_node(self):
+        """Integral floats collapse to int; non-finite numbers fail closed."""
+        self.assertEqual(checker.canonicalize({'a': 1.0}), '{"a":1}')
+        self.assertEqual(checker.canonicalize({'a': -0.0}), '{"a":0}')
+        self.assertEqual(checker.canonicalize({'a': 12.5}), '{"a":12.5}')
+        for bad in [float('nan'), float('inf'), float('-inf')]:
+            with self.assertRaises(ValueError):
+                checker.canonicalize({'a': bad})
+
+    def test_impossible_calendar_dates_fail(self):
+        base = load_contract('valid-r1')
+        for bad in ['2026-02-29T00:00:00Z', '2026-02-31T00:00:00Z', '2026-04-31T00:00:00Z']:
+            mutated = dict(base)
+            mutated['created_at'] = bad
+            self.assertTrue(checker.validate_against_schema(SCHEMA, mutated), bad)
+        leap = dict(base)
+        leap['created_at'] = '2028-02-29T00:00:00Z'
+        self.assertEqual(
+            [e for e in checker.validate_against_schema(SCHEMA, leap) if 'created_at' in e],
+            [],
+        )
+
 
 class SchemaValidation(unittest.TestCase):
     def test_valid_contracts_pass(self):

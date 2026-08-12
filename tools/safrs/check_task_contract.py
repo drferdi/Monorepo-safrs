@@ -23,9 +23,35 @@ CONTRACT_DIRECTORIES = [
 ]
 
 
+def _normalize_numbers(value):
+    """Match Node semantics: integral floats collapse to int (JSON.parse("1.0")
+    yields 1 there), and non-finite numbers are rejected outright."""
+    if isinstance(value, float):
+        if value != value or value in (float('inf'), float('-inf')):
+            raise ValueError('canonical JSON rejects non-finite numbers')
+        if value.is_integer():
+            return int(value)
+        return value
+    if isinstance(value, dict):
+        return {key: _normalize_numbers(entry) for key, entry in value.items()}
+    if isinstance(value, list):
+        return [_normalize_numbers(entry) for entry in value]
+    return value
+
+
+def _reject_constant(constant: str):
+    raise ValueError(f'canonical JSON rejects non-finite constant: {constant}')
+
+
 def canonicalize(value) -> str:
     """Canonical JSON: sorted keys, no insignificant whitespace, raw UTF-8."""
-    return json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False)
+    return json.dumps(
+        _normalize_numbers(value),
+        sort_keys=True,
+        separators=(',', ':'),
+        ensure_ascii=False,
+        allow_nan=False,
+    )
 
 
 def digest_canonical(value) -> str:
@@ -59,7 +85,27 @@ def type_matches(expected: str, value) -> bool:
     raise SystemExit(f'unsupported schema type: {expected}')
 
 
+def has_valid_calendar_date(value: str) -> bool:
+    """The regex bounds clock fields; the calendar needs a real check."""
+    match = re.match(r'^(\d{4})-(\d{2})-(\d{2})T', value)
+    if not match:
+        return False
+    year, month, day = int(match[1]), int(match[2]), int(match[3])
+    leap = (year % 4 == 0 and year % 100 != 0) or year % 400 == 0
+    days = [31, 29 if leap else 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    return 1 <= month <= 12 and 1 <= day <= days[month - 1]
+
+
 def validate_node(schema, value, path, root_schema, errors):
+    # Composition keywords first: they must apply even beside $ref/const/enum.
+    if 'allOf' in schema:
+        for sub_schema in schema['allOf']:
+            validate_node(sub_schema, value, path, root_schema, errors)
+    if 'if' in schema:
+        condition_errors: list[str] = []
+        validate_node(schema['if'], value, path, root_schema, condition_errors)
+        if not condition_errors and 'then' in schema:
+            validate_node(schema['then'], value, path, root_schema, errors)
     if '$ref' in schema:
         validate_node(resolve_ref(schema['$ref'], root_schema), value, path, root_schema, errors)
         return
@@ -79,14 +125,6 @@ def validate_node(schema, value, path, root_schema, errors):
                 return
         errors.append(f'{path}: no anyOf branch matched')
         return
-    if 'allOf' in schema:
-        for sub_schema in schema['allOf']:
-            validate_node(sub_schema, value, path, root_schema, errors)
-    if 'if' in schema:
-        condition_errors: list[str] = []
-        validate_node(schema['if'], value, path, root_schema, condition_errors)
-        if not condition_errors and 'then' in schema:
-            validate_node(schema['then'], value, path, root_schema, errors)
     expected_type = schema.get('type')
     if expected_type and not type_matches(expected_type, value):
         errors.append(f'{path}: expected type {expected_type}')
@@ -95,6 +133,8 @@ def validate_node(schema, value, path, root_schema, errors):
         pattern = schema.get('pattern')
         if pattern and not re.search(pattern, value):
             errors.append(f'{path}: pattern mismatch')
+        if schema.get('format') == 'date-time' and not has_valid_calendar_date(value):
+            errors.append(f'{path}: impossible calendar date')
         if 'minLength' in schema and len(value) < schema['minLength']:
             errors.append(f'{path}: shorter than minLength')
         if 'maxLength' in schema and len(value) > schema['maxLength']:
@@ -136,7 +176,7 @@ def validate_against_schema(schema, value):
 
 def check_contract_file(path: Path, schema) -> list[str]:
     raw = path.read_text(encoding='utf-8')
-    contract = json.loads(raw)
+    contract = json.loads(raw, parse_constant=_reject_constant)
     errors = [f'{path.name}: {error}' for error in validate_against_schema(schema, contract)]
     stored_digest = contract.get('contract_digest')
     without_digest = {k: v for k, v in contract.items() if k != 'contract_digest'}

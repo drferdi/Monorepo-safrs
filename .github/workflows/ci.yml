@@ -36,6 +36,8 @@ jobs:
           # check_sensitive_changes.py resolves origin/main for its local
           # diff fallback; a shallow clone makes classification unavailable.
           fetch-depth: 0
+          # No later step performs authenticated git operations.
+          persist-credentials: false
       - name: Set up pnpm
         uses: pnpm/action-setup@7088e561eb65bb68695d245aa206f005ef30921d
         with:

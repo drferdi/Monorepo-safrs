@@ -33,60 +33,131 @@
     "contract_digest"
   ],
   "properties": {
-    "schema_version": { "const": 1 },
-    "task_id": { "type": "string", "pattern": "^TASK-[0-9]{8}-[A-Z0-9-]+$" },
-    "objective": { "type": "string", "minLength": 1, "maxLength": 2000 },
-    "requester": { "type": "string", "minLength": 1 },
-    "accountable_human": { "type": "string", "minLength": 1 },
-    "created_at": { "$ref": "#/$defs/utcTimestamp" },
-    "expires_at": { "$ref": "#/$defs/utcTimestamp" },
-    "base_ref": { "type": "string", "minLength": 1 },
-    "base_sha": { "$ref": "#/$defs/gitSha" },
-    "declared_risk": { "$ref": "#/$defs/risk" },
-    "computed_risk": { "$ref": "#/$defs/risk" },
-    "effective_risk": { "$ref": "#/$defs/risk" },
+    "schema_version": {
+      "const": 1
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^TASK-[0-9]{8}-[A-Z0-9-]+$"
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "requester": {
+      "type": "string",
+      "minLength": 1
+    },
+    "accountable_human": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "expires_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "base_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "base_sha": {
+      "$ref": "#/$defs/gitSha"
+    },
+    "declared_risk": {
+      "$ref": "#/$defs/risk"
+    },
+    "computed_risk": {
+      "$ref": "#/$defs/risk"
+    },
+    "effective_risk": {
+      "$ref": "#/$defs/risk"
+    },
     "risk_reasons": {
       "type": "array",
-      "items": { "type": "string", "minLength": 1 }
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     },
-    "read_scopes": { "$ref": "#/$defs/scopeList" },
-    "write_scopes": { "$ref": "#/$defs/scopeList" },
+    "read_scopes": {
+      "$ref": "#/$defs/scopeList"
+    },
+    "write_scopes": {
+      "$ref": "#/$defs/scopeList"
+    },
     "operations": {
       "type": "array",
-      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$" }
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9._-]*$"
+      }
     },
     "tools": {
       "type": "array",
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "subcommands"],
+        "required": [
+          "id",
+          "subcommands"
+        ],
         "properties": {
-          "id": { "type": "string", "minLength": 1 },
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
           "subcommands": {
             "type": "array",
-            "items": { "type": "string", "minLength": 1 }
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
           }
         }
       }
     },
     "network": {
       "anyOf": [
-        { "const": "denied" },
+        {
+          "const": "denied"
+        },
         {
           "type": "array",
           "minItems": 1,
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["host", "port", "methods"],
+            "required": [
+              "host",
+              "port",
+              "methods"
+            ],
             "properties": {
-              "host": { "type": "string", "minLength": 1 },
-              "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+              "host": {
+                "type": "string",
+                "minLength": 1
+              },
+              "port": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 65535
+              },
               "methods": {
                 "type": "array",
                 "minItems": 1,
-                "items": { "enum": ["GET", "HEAD", "POST", "PUT", "PATCH", "DELETE"] }
+                "items": {
+                  "enum": [
+                    "GET",
+                    "HEAD",
+                    "POST",
+                    "PUT",
+                    "PATCH",
+                    "DELETE"
+                  ]
+                }
               }
             }
           }
@@ -94,20 +165,43 @@
       ]
     },
     "data_classification": {
-      "enum": ["public", "internal", "confidential", "restricted"]
+      "enum": [
+        "public",
+        "internal",
+        "confidential",
+        "restricted"
+      ]
     },
     "isolation_profile": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["runner_class", "requires_worktree", "disposable_resources", "egress"],
+      "required": [
+        "runner_class",
+        "requires_worktree",
+        "disposable_resources",
+        "egress"
+      ],
       "properties": {
-        "runner_class": { "type": "string", "minLength": 1 },
-        "requires_worktree": { "type": "boolean" },
+        "runner_class": {
+          "type": "string",
+          "minLength": 1
+        },
+        "requires_worktree": {
+          "type": "boolean"
+        },
         "disposable_resources": {
           "type": "array",
-          "items": { "type": "string", "minLength": 1 }
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
-        "egress": { "enum": ["denied", "allowlist-only"] }
+        "egress": {
+          "enum": [
+            "denied",
+            "allowlist-only"
+          ]
+        }
       }
     },
     "budgets": {
@@ -126,19 +220,42 @@
         "spend"
       ],
       "properties": {
-        "runtime_minutes": { "$ref": "#/$defs/budgetValue" },
-        "attempts": { "$ref": "#/$defs/budgetValue" },
-        "retries": { "$ref": "#/$defs/budgetValue" },
-        "tool_calls": { "$ref": "#/$defs/budgetValue" },
-        "model_calls": { "$ref": "#/$defs/budgetValue" },
-        "network_requests": { "$ref": "#/$defs/budgetValue" },
-        "changed_files": { "$ref": "#/$defs/budgetValue" },
-        "diff_lines": { "$ref": "#/$defs/budgetValue" },
-        "concurrent_children": { "$ref": "#/$defs/budgetValue" },
+        "runtime_minutes": {
+          "$ref": "#/$defs/budgetValue"
+        },
+        "attempts": {
+          "$ref": "#/$defs/budgetValue"
+        },
+        "retries": {
+          "$ref": "#/$defs/budgetValue"
+        },
+        "tool_calls": {
+          "$ref": "#/$defs/budgetValue"
+        },
+        "model_calls": {
+          "$ref": "#/$defs/budgetValue"
+        },
+        "network_requests": {
+          "$ref": "#/$defs/budgetValue"
+        },
+        "changed_files": {
+          "$ref": "#/$defs/budgetValue"
+        },
+        "diff_lines": {
+          "$ref": "#/$defs/budgetValue"
+        },
+        "concurrent_children": {
+          "$ref": "#/$defs/budgetValue"
+        },
         "spend": {
           "anyOf": [
-            { "type": "number", "minimum": 0 },
-            { "const": "unmetered" }
+            {
+              "type": "number",
+              "minimum": 0
+            },
+            {
+              "const": "unmetered"
+            }
           ]
         }
       }
@@ -146,57 +263,121 @@
     "verification_profile": {
       "type": "array",
       "minItems": 1,
-      "items": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$" }
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9][a-z0-9._-]*$"
+      }
     },
     "approval_policy": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["R0", "R1", "R2", "R3"],
+      "required": [
+        "R0",
+        "R1",
+        "R2",
+        "R3"
+      ],
       "properties": {
-        "R0": { "$ref": "#/$defs/approvalRequirement" },
-        "R1": { "$ref": "#/$defs/approvalRequirement" },
-        "R2": { "$ref": "#/$defs/approvalRequirement" },
-        "R3": { "$ref": "#/$defs/approvalRequirement" }
+        "R0": {
+          "$ref": "#/$defs/approvalRequirement"
+        },
+        "R1": {
+          "$ref": "#/$defs/approvalRequirement"
+        },
+        "R2": {
+          "$ref": "#/$defs/approvalRequirement"
+        },
+        "R3": {
+          "$ref": "#/$defs/approvalRequirement"
+        }
       }
     },
     "rollback": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["preservation", "revert", "cleanup", "target_contract_ids"],
+      "required": [
+        "preservation",
+        "revert",
+        "cleanup",
+        "target_contract_ids"
+      ],
       "properties": {
-        "preservation": { "type": "string", "minLength": 1 },
-        "revert": { "type": "string", "minLength": 1 },
-        "cleanup": { "type": "string", "minLength": 1 },
+        "preservation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revert": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cleanup": {
+          "type": "string",
+          "minLength": 1
+        },
         "target_contract_ids": {
           "type": "array",
-          "items": { "type": "string", "minLength": 1 }
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       }
     },
     "requested_by_evidence": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["url", "event_id"],
+      "required": [
+        "url",
+        "event_id"
+      ],
       "properties": {
-        "url": { "type": "string", "pattern": "^https://" },
-        "event_id": { "type": "string", "minLength": 1 }
+        "url": {
+          "type": "string",
+          "pattern": "^https://"
+        },
+        "event_id": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
-    "contract_digest": { "$ref": "#/$defs/sha256" }
+    "contract_digest": {
+      "$ref": "#/$defs/sha256"
+    }
   },
   "$defs": {
-    "risk": { "enum": ["R0", "R1", "R2", "R3"] },
-    "gitSha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
-    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "risk": {
+      "enum": [
+        "R0",
+        "R1",
+        "R2",
+        "R3"
+      ]
+    },
+    "gitSha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
     "utcTimestamp": {
       "type": "string",
-      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?Z$"
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?Z$",
+      "format": "date-time"
     },
     "scopeList": {
       "type": "array",
-      "items": { "type": "string", "minLength": 1 }
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     },
-    "budgetValue": { "type": "integer", "minimum": 1 },
+    "budgetValue": {
+      "type": "integer",
+      "minimum": 1
+    },
     "approvalRequirement": {
       "enum": [
         "none",

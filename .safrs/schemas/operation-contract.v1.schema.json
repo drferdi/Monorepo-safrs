@@ -25,31 +25,73 @@
     "status"
   ],
   "properties": {
-    "schema_version": { "const": 1 },
-    "operation_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$" },
-    "adapter_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9._-]*$" },
-    "task_id": { "type": "string", "pattern": "^TASK-[0-9]{8}-[A-Z0-9-]+$" },
-    "contract_digest": { "$ref": "#/$defs/sha256" },
-    "subject_sha": { "$ref": "#/$defs/gitSha" },
-    "target_environment": { "type": "string", "minLength": 1 },
-    "parameters": { "type": "object" },
-    "parameters_digest": { "$ref": "#/$defs/sha256" },
-    "operation_digest": { "$ref": "#/$defs/sha256" },
-    "dry_run_artifact_digest": { "$ref": "#/$defs/sha256" },
+    "schema_version": {
+      "const": 1
+    },
+    "operation_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "adapter_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^TASK-[0-9]{8}-[A-Z0-9-]+$"
+    },
+    "contract_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "subject_sha": {
+      "$ref": "#/$defs/gitSha"
+    },
+    "target_environment": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parameters": {
+      "type": "object"
+    },
+    "parameters_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "operation_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "dry_run_artifact_digest": {
+      "$ref": "#/$defs/sha256"
+    },
     "preconditions": {
       "type": "array",
       "minItems": 1,
-      "items": { "type": "string", "minLength": 1 }
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     },
     "postconditions": {
       "type": "array",
       "minItems": 1,
-      "items": { "type": "string", "minLength": 1 }
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     },
-    "idempotency_key": { "type": "string", "minLength": 1 },
-    "rollback_contract_id": { "type": "string", "minLength": 1 },
-    "requested_at": { "$ref": "#/$defs/utcTimestamp" },
-    "expires_at": { "$ref": "#/$defs/utcTimestamp" },
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rollback_contract_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "requested_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
+    "expires_at": {
+      "$ref": "#/$defs/utcTimestamp"
+    },
     "status": {
       "enum": [
         "PREPARED",
@@ -63,11 +105,18 @@
     }
   },
   "$defs": {
-    "gitSha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
-    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "gitSha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
     "utcTimestamp": {
       "type": "string",
-      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?Z$"
+      "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?Z$",
+      "format": "date-time"
     }
   }
 }
