@@ -174,12 +174,23 @@ def integrity_review_approved(paths):
         text=True,
         capture_output=True,
     )
+    # Staleness is not tampering. An approval bound to an older base or to a
+    # different change set is simply not an approval for *this* change set, so
+    # it fails through to "review required" with an actionable message rather
+    # than aborting with an error that looks like a broken checker.
     if evidence_base.returncode != 0:
-        raise SystemExit('SAFRS integrity review evidence base_sha is unavailable')
-    if evidence_base.stdout.strip() != diff_base_sha:
-        raise SystemExit(
-            'SAFRS integrity review evidence base_sha does not match the configured diff base'
+        print(
+            'Integrity review evidence references an unavailable base_sha; '
+            'treating it as no approval.'
         )
+        return False
+    if evidence_base.stdout.strip() != diff_base_sha:
+        print(
+            'Integrity review evidence is stale (bound to '
+            f'{evidence["base_sha"][:12]}, current diff base is '
+            f'{diff_base_sha[:12]}); treating it as no approval.'
+        )
+        return False
     if not isinstance(evidence['reviewed_at'], str) or not evidence['reviewed_at'].endswith('Z'):
         raise SystemExit('SAFRS integrity review evidence requires UTC reviewed_at')
     try:
@@ -188,9 +199,11 @@ def integrity_review_approved(paths):
         raise SystemExit('SAFRS integrity review evidence has invalid reviewed_at') from error
     expected = change_set_sha256(paths)
     if evidence['change_set_sha256'] != expected:
-        raise SystemExit(
-            'SAFRS integrity review evidence does not match the current change set'
+        print(
+            'Integrity review evidence was issued for a different change set; '
+            'treating it as no approval.'
         )
+        return False
     return True
 
 risk = 'R2' if sensitive else 'R1'
