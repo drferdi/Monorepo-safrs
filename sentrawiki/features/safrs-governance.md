@@ -1,126 +1,172 @@
 # SAFRS governance
 
-The Sentra Agent-First Repository Standard governance model.
+## What it is
 
-## Purpose
+SAFRS (**S**afe **A**gent **F**irst **R**epository **S**tandard) v1.1 is this
+repository's control architecture for working with agents. Its mission is
+**Human-Governed · Agent-Executed · Machine-Enforced**: humans set intent,
+agents execute within it, and machines verify compliance automatically. The
+canonical specification is `SAFRS_SPEC.md`.
 
-SAFRS v1.1 defines how the repository is structured, governed, and enforced when autonomous AI agents perform a substantial share of engineering work. Its operating model is **Human-Governed, Agent-Executed, Machine-Enforced**: humans set intent and own architecture, agents execute within explicit boundaries, and machines verify deterministically. This page explains the six-layer architecture, the R0–R3 risk tiers, agent roles, sensitive paths, the document registry, the verification pipeline, and the conformance levels.
+## Six-layer control architecture
+
+SAFRS structures control across six layers:
+
+| Layer | Purpose |
+|-------|---------|
+| **L0 — Trust Boundary** | Identity, repository access, data classification, allowed tools, network access, credentials, and maximum authority. |
+| **L1 — Constitution** | Stable principles: objectives, architecture, engineering, coding, security, product, decision standards. |
+| **L2 — Context & Navigation** | `AGENTS.md`, canonical docs, ADRs, active plans, project-local instructions, indexes, references. |
+| **L3 — Execution Isolation** | Worktrees, isolated dependencies, test databases/schemas, ports, caches, queues, sandboxes, ephemeral environments — based on risk. |
+| **L4 — Executable Governance** | CI, linters, type checks, tests, architecture checks, dependency checks, secret controls, sensitive-path detection, protected-branch rules. |
+| **L5 — Human Authority** | Humans define intent, own invariants, approve high-impact actions, and remain accountable for production outcomes. |
+
+## Risk model: R0–R3
+
+Risk is determined by impact, reversibility, privilege, blast radius, and data
+sensitivity:
+
+| Tier | Class | Example | Control |
+|------|-------|---------|---------|
+| **R0** | Observe | Search, explain, inspect logs, summarize code | Read-only identity/tooling |
+| **R1** | Reversible local change | Local refactor, unit test, doc fix, isolated UI correction | Scoped mutation + standard verification + CI |
+| **R2** | Boundary-affecting change | Auth, DB migration, new dependency, shared API/package, CI/CD, architecture, security/governance test | R1 + enhanced tests + sensitive-change gate + design/code-owner review |
+| **R3** | High impact | Production data/infra, credentials, destructive migration, financial, healthcare-critical | R2 + explicit human authorization + isolated execution + audit trail |
+
+`policy.json` records the tiers: `R0` blocks mutation, `R1` allows mutation,
+`R2` requires `human_review`, and `R3` is **prepare-only** with
+`human_authorization` required. Agent authority is the intersection:
+`identity ∩ role ∩ task scope ∩ repo policy ∩ environment ∩ risk tier`.
+
+## Agent roles
+
+Roles are independent of model/vendor identity (`SAFRS_SPEC` §6):
+
+- **Observer** — read/search only.
+- **Analyst** — read, analyze, propose plans; no mutation.
+- **Implementer** — scoped code/docs mutation, tests, branch/PR creation.
+- **Reviewer** — inspect diffs/tests/policy; no self-approval of own R2/R3 work.
+- **Maintainer** — broader repository mutation and merge subject to branch policy.
+- **Release Agent** — prepares release artifacts; production execution requires explicit policy.
+- **Security Agent** — security analysis/remediation within granted scope.
+
+### Automation identities (Phase 5)
+
+Three machine identities, each deliberately narrow and none able to do the
+others' job (`docs/governance/SAFRS_AGENT_PERMISSIONS.md`):
+
+| Identity | May | May never |
+| --- | --- | --- |
+| **Coding agent** | Read/write in contracted scopes, branch, open/update one PR, request review | Merge, enable auto-merge, approve, bypass rules, release, R3, read production credentials |
+| **Publisher** | Enable auto-merge for one exact, fully verified head | Push source, approve, bypass rules, release, R3 |
+| **Control auditor** (Phase 6) | Read live control state, write signed platform attestation | Mutate content, approve, merge |
+| **R3 executor** (Phase 8) | Execute one allowlisted deterministic operation after exact human approval | Accept free-form commands, self-approve, run without a fresh protected-environment approval |
+
+## Sensitive paths
+
+`.safrs/sensitive-paths.json` declares the repository's sensitive and
+verification-control surfaces. Touching any of them is **minimum R2**. Key
+patterns include:
+
+- Governance/security surfaces: `AGENTS.md`, `SECURITY.md`, `SAFRS_SPEC.md`, `.safrs/**`, `.github/workflows/**`, `.github/CODEOWNERS`.
+- Vendor instruction adapters: `CLAUDE.md`, `GEMINI.md`, `.agents/**`, `.cursor/**`, `.claude/**`, `.cline/**`, `.codex/**`, `.husky/**`.
+- Shared boundaries: `packages/**`, `projects/**/AGENTS.md`, `infrastructure/**`.
+- Dependency manifests: root and nested `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `Cargo.toml`, `go.mod`, `pyproject.toml`, etc.
+- Security/data-boundary dirs: `**/migrations/**`, `**/auth/**`, `**/authorization/**`, `**/security/**`.
+- Verification controls: `tools/safrs/**`, `tools/automation/**`, `.safrs/approvals/**`, `tests/architecture/**`, `tests/security/**`, `scripts/safrs-verify*.mjs|ps1|sh`, and automation governance tests.
+- R3 overrides: `projects/**/safety-critical/**`, `projects/**/production/**`, `infrastructure/production/**`.
+
+Per **SAFRS-07**, a change to a verification control receives equal or greater
+scrutiny than an implementation change, and modifying implementation and its
+governing verification together is classified at least R2.
+
+## Document registry & routing
+
+`.safrs/document-registry.json` lists every canonical document, its type,
+status, normativity, and read scope. It drives the generated `SAFRS:ROUTING`
+block in `AGENTS.md`. CI validates duplicate canonical IDs, missing files,
+invalid status/type, and missing supersession targets. Routing is regenerated
+with:
+
+```bash
+python tools/safrs/generate_routing.py
+```
+
+Document lifecycle (`docs/governance/SAFRS_DOCUMENT_LIFECYCLE.md`): `CANONICAL`,
+`ACTIVE`, `HISTORICAL`, `SUPERSEDED`, `ARCHIVED`. ADRs run
+`PROPOSED → ACCEPTED → SUPERSEDED|REJECTED`; plans run
+`ACTIVE → COMPLETED → ARCHIVED`.
+
+## Verification pipeline (16 checkers)
+
+`scripts/safrs-verify.sh` (and `.ps1`/`.mjs` on Windows) runs the machine
+enforcement. It drives a battery of **16 governance checkers**, primarily in
+`tools/safrs/` plus supporting repository tests:
+
+- `check_policy.py`, `check_topology.py`, `check_routing.py`, `check_docs.py`,
+  `check_handoff.py`, `check_tool_inventory.py`
+- `check_actions_pinning.py`, `check_automation_policy.py`,
+  `check_task_contract.py`, `check_task_ownership.py`, `check_lifecycle.py`,
+  `check_approval_evidence.py`, `check_sensitive_changes.py`
+- Supporting architecture/governance/security test suites in `tests/`
+
+The checkers enforce policy shape, routing integrity, tool inventory, task
+leases, lifecycle state, approval evidence, sensitive-change review, and
+automation contracts. The design-token contrast gate
+(`scripts/check-tokens.mjs`) runs as part of the same governance gate.
+
+## Conformance levels
+
+`docs/governance/SAFRS_CONFORMANCE.md` (SAFRS_SPEC §19) defines four levels:
+
+- **SAFRS Core** — canonical routing, policy, risk tiers, local verification.
+  *Currently declared level of this repository.*
+- **SAFRS Controlled** — Core + CI enforcement + sensitive-path gates + review rules.
+- **SAFRS Secure** — Controlled + execution isolation + credential/network controls + supply-chain protections.
+- **SAFRS Regulated** — Secure + auditable approvals, domain invariants, controlled production access, evidence retention.
+
+Controlled/Secure/Regulated are **not yet claimed**; they require platform
+evidence from the actual GitHub repository (branch protection, enforced checks,
+CODEOWNERS resolving, secret scanning). The human-only checklist lives in
+`docs/governance/PLATFORM_ACTIVATION.md`.
+
+## CODEOWNERS
+
+`.github/CODEOWNERS` implements R2/R3 review enforcement. Every pattern is
+**derived verbatim** from `.safrs/sensitive-paths.json` (patterns,
+verification-control patterns, and R3 overrides), with a leading `/` added
+where the source is root-anchored so the mapping is auditable line by line.
+
+All rules currently resolve to owner `@drferdii`. Because **the last matching
+pattern wins** in CODEOWNERS, ordering matters: the R3 block is placed last so
+it wins over broader R2 rules. The file only enforces anything once branch
+protection on `main` enables "Require review from Code Owners" — see
+`docs/governance/PLATFORM_ACTIVATION.md`. Changing owners here is itself an R2
+governance action.
 
 ## Key source files
 
-| File | Role |
-| --- | --- |
-| `SAFRS_SPEC.md` | Normative specification (sections 3, 6, 7, 8, 10, 12, 19) |
-| `AGENTS.md` | Root repository router and non-negotiable rules |
-| `.safrs/policy.json` | Policy: risk tiers, roles, verification command |
-| `.safrs/sensitive-paths.json` | Path patterns that escalate review (min R2) |
-| `.safrs/document-registry.json` | Machine-readable document index |
-| `.safrs/tool-inventory.json` | Approved tool/network inventory |
-| `scripts/safrs-verify.sh` | Canonical verification entry point (plus `.mjs`/`.ps1`) |
-| `docs/governance/SAFRS_AGENT_PERMISSIONS.md` | Role permission envelopes |
-| `docs/governance/SAFRS_CONTROL_MATRIX.md` | Control × risk-tier matrix |
-| `docs/governance/SAFRS_CONFORMANCE.md` | Conformance levels and declaration |
-| `docs/governance/SAFRS_MULTI_AGENT_PROTOCOL.md` | Task state machine, handoff record |
-| `docs/governance/SAFRS_DOCUMENT_LIFECYCLE.md` | Document classes and ADR/plan lifecycles |
-| `docs/governance/SAFRS_PROJECT_CAPSULES.md` | Project capsule convention |
-| `docs/governance/SAFRS_TOOL_INVENTORY.md` | Tool inventory policy |
-| `docs/governance/PLATFORM_ACTIVATION.md` | Human-only GitHub enforcement checklist |
+- `SAFRS_SPEC.md`
+- `.safrs/policy.json`
+- `.safrs/sensitive-paths.json`
+- `.safrs/document-registry.json`
+- `.safrs/tool-inventory.json`
+- `.safrs/automation-policy.json`
+- `.safrs/adapter-capabilities.json`
+- `docs/governance/SAFRS_AGENT_PERMISSIONS.md`
+- `docs/governance/SAFRS_CONTROL_MATRIX.md`
+- `docs/governance/SAFRS_CONFORMANCE.md`
+- `docs/governance/SAFRS_MULTI_AGENT_PROTOCOL.md`
+- `docs/governance/SAFRS_DOCUMENT_LIFECYCLE.md`
+- `docs/governance/SAFRS_PROJECT_CAPSULES.md`
+- `docs/governance/SAFRS_TOOL_INVENTORY.md`
+- `docs/governance/PLATFORM_ACTIVATION.md`
+- `.github/CODEOWNERS`
+- `tools/safrs/` (checkers), `scripts/safrs-verify.*`
 
-## How it works
+## Related
 
-### Six-layer control architecture
-
-SAFRS is a six-layer architecture, from the trust boundary at the bottom to human authority at the top (`SAFRS_SPEC.md` §3). Each layer adds enforcement on top of the layer below.
-
-```mermaid
-graph TD
-    L5["L5 — Human Authority<br/>intent, architecture, R3 approval"]
-    L4["L4 — Executable Governance<br/>CI, linters, tests, secret controls,<br/>sensitive-path gates"]
-    L3["L3 — Execution Isolation<br/>worktrees, isolated databases,<br/>ports, caches, containers"]
-    L2["L2 — Context & Navigation<br/>AGENTS.md, canonical docs,<br/>ADRs, active plans, capsules"]
-    L1["L1 — Constitution<br/>objectives, architecture, engineering,<br/>coding, security, product standards"]
-    L0["L0 — Trust Boundary<br/>identity, access, data classification,<br/>credentials, network scope"]
-
-    L5 --> L4 --> L3 --> L2 --> L1 --> L0
-```
-
-- **L0 Trust Boundary** — identity, repository access, data classification, allowed tools/network, credentials. Agents never hold production credentials (SAFRS-01).
-- **L1 Constitution** — stable principles in `.agents/knowledge/`.
-- **L2 Context & Navigation** — `AGENTS.md` routes agents; the document registry is the machine-readable index.
-- **L3 Execution Isolation** — parallel mutation uses separate worktrees; shared mutable state is isolated or serialized.
-- **L4 Executable Governance** — CI, Biome, TypeScript, SAFRS verify, token enforcement, supply-chain scanning, architecture checks.
-- **L5 Human Authority** — the Chief defines intent, owns architecture, and authorizes R3 actions. Approval is risk-based, not universal.
-
-### Risk tiers R0–R3
-
-Risk is set by impact, reversibility, privilege, blast radius, and data sensitivity (`SAFRS_SPEC.md` §7; configuration in `.safrs/policy.json`).
-
-| Tier | Mutation | Human review | Human authorization | Examples |
-| --- | --- | --- | --- | --- |
-| **R0** | No | No | No | Read, search, summarize, inspect |
-| **R1** | Yes | No (policy-based) | No | Local refactor, unit test, doc fix |
-| **R2** | Yes | Required | No | Auth, DB migration, new dependency, shared API/package, CI/CD, architecture change |
-| **R3** | Prepare-only | Required | Required | Production data/infra, credential policy, deployment auth, destructive migrations, financial actions |
-
-The default risk is R1. Sensitive-path matches and verification-control changes are minimum R2.
-
-### Agent roles
-
-Roles are independent of model/vendor (`SAFRS_SPEC.md` §6; permission envelopes in `docs/governance/SAFRS_AGENT_PERMISSIONS.md` and `.safrs/policy.json`): Observer (read/search), Analyst (read + plan), Implementer (scoped modify + test + branch/PR), Reviewer (review, no self-approval of own R2/R3), Maintainer (broader modify + policy-permitting merge), Release Agent (prepare releases), Security Agent (scoped security analysis/remediation).
-
-Effective authority is the intersection:
-
-```
-identity ∩ assigned role ∩ task scope ∩ environment ∩ repository policy ∩ risk tier
-```
-
-Tool availability never implies permission.
-
-### Sensitive paths
-
-`.safrs/sensitive-paths.json` lists patterns whose changes are at least R2, plus a `verification_control_patterns` list (`.safrs/**`, `AGENTS.md`, security/architecture tests, governance scripts, CI workflows) whose modification is minimum R2 even if the textual change looks small. An `risk_overrides` section forces `projects/**/safety-critical/**`, `projects/**/production/**`, and `infrastructure/production/**` to R3.
-
-### Document registry
-
-`.safrs/document-registry.json` is the machine-readable index of every canonical, reference, plan, and ADR document, tracking path, type, status, normativity (MUST/SHOULD/MAY), read order, and task scope. `AGENTS.md`'s Read order block and its routing are generated from this registry. Document classes and ADR/plan lifecycles are defined in `SAFRS_SPEC.md` §13 and `docs/governance/SAFRS_DOCUMENT_LIFECYCLE.md`.
-
-### Verification pipeline
-
-```mermaid
-graph LR
-    W["Change set"] --> R["Risk classification<br/>.safrs/policy.json"]
-    R --> S["Sensitive-path scan<br/>.safrs/sensitive-paths.json"]
-    S --> T["safrs-verify<br/>scripts/safrs-verify.sh"]
-    T --> C["CI / SAFRS Governance<br/>.github/workflows/"]
-    C --> CH["Tool + token + doc checks<br/>.safrs/tool-inventory.json, check-tokens.mjs"]
-```
-
-The canonical local entry point is `bash scripts/safrs-verify.sh` (`powershell ... safrs-verify.ps1` on Windows), which must pass before work is declared complete. It wires in the governance checkers under `tools/safrs/` (see [tools/safrs.md](../tools/safrs.md)), the token gate `scripts/check-tokens.mjs` (see [design tokens](design-tokens.md)), and architecture/security checks. Verification-integrity escalation: changing `.safrs/**`, `AGENTS.md`, security/architecture tests, governance scripts, or CI is minimum R2.
-
-### Conformance levels
-
-`SAFRS_SPEC.md` §19 and `docs/governance/SAFRS_CONFORMANCE.md` define four levels:
-
-- **SAFRS Core** — canonical routing, policy, risk tiers, local verification. **Currently declared** (assessed 2026-08-10).
-- **SAFRS Controlled** — Core + CI governance checks + protected default branch + R2 review.
-- **SAFRS Secure** — Controlled + execution isolation + credential/network/supply-chain controls.
-- **SAFRS Regulated** — Secure + auditable approvals + domain invariants + controlled production access + evidence retention.
-
-The repository claims only Core; Controlled and above require platform evidence that only a human administrator can gather and verify (see `docs/governance/PLATFORM_ACTIVATION.md`).
-
-## Integration points
-
-- **Routing**: `AGENTS.md` consumes the document registry to route every session's reads.
-- **Workspace**: packages and projects follow the capsule convention in `docs/governance/SAFRS_PROJECT_CAPSULES.md`.
-- **Tooling**: the governance checkers live in `tools/safrs/` — see [tools/safrs.md](../tools/safrs.md).
-- **Tokens**: `scripts/check-tokens.mjs` runs inside the governance gate — see [design tokens](design-tokens.md).
-- **Apps**: the golden-path capsule declares its risk posture and non-goals in `projects/golden-path/AGENTS.md`.
-- **Platform**: enforcement lives in GitHub settings via `docs/governance/PLATFORM_ACTIVATION.md`.
-
-## Related pages
-
-- [Architecture](../overview/architecture.md) and [glossary](../overview/glossary.md)
-- [Governance tooling](../tools/safrs.md)
-- [Security](../security.md)
+- [Automation control plane](automation-control-plane.md)
 - [Design tokens](design-tokens.md)
 - [Capability packs](capability-packs.md)
+- [API overview](../api/index.md)

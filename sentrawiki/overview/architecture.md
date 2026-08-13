@@ -1,14 +1,14 @@
 # Architecture
 
-The SAFRS Monorepo follows a six-layer control architecture defined in `SAFRS_SPEC.md`. Each layer adds enforcement from trust boundaries at the bottom to human authority at the top. The repository topology separates product work, shared capabilities, tooling, and governance.
+The SAFRS Monorepo follows a six-layer control architecture defined in `SAFRS_SPEC.md`. Each layer adds enforcement from trust boundaries at the bottom to human authority at the top. On top of this, an automation control plane (ADR 0002) adds machine-checked task contracts, lease chains, PR gates, evidence manifests, and a separated publisher identity.
 
 ## Six-layer control architecture
 
 ```mermaid
 graph TD
     L5["L5 — Human Authority<br/>Defines intent, owns architecture,<br/>approves high-impact actions"]
-    L4["L4 — Executable Governance<br/>CI, linters, tests, architecture checks,<br/>secret detection, sensitive-path gates"]
-    L3["L3 — Execution Isolation<br/>Worktrees, isolated dependencies,<br/>test databases, containers"]
+    L4["L4 — Executable Governance<br/>CI, linters, tests, architecture checks,<br/>PR gates, secret detection, evidence"]
+    L3["L3 — Execution Isolation<br/>Worktrees, isolated dependencies,<br/>test databases, budget ledgers"]
     L2["L2 — Context and Navigation<br/>AGENTS.md, canonical docs, ADRs,<br/>active plans, project capsules"]
     L1["L1 — Constitution<br/>Objectives, architecture, engineering,<br/>coding, security, product standards"]
     L0["L0 — Trust Boundary<br/>Identity, repository access,<br/>data classification, credentials"]
@@ -16,12 +16,32 @@ graph TD
     L5 --> L4 --> L3 --> L2 --> L1 --> L0
 ```
 
-- **L0 (Trust Boundary)**: Defines who can access the repository, what data classification applies, and which credentials are allowed. Agents never hold production credentials (SAFRS-01).
-- **L1 (Constitution)**: Stable principles in `.agents/knowledge/` covering objectives, architecture, engineering, coding, security, and product decisions.
-- **L2 (Context and Navigation)**: `AGENTS.md` routes agents to the right documents. The document registry in `.safrs/document-registry.json` is the machine-readable index.
-- **L3 (Execution Isolation)**: Parallel mutation work uses separate worktrees in `../Monorepo.worktrees/<branch>`. Shared mutable state (databases, ports, caches) is isolated per task.
-- **L4 (Executable Governance)**: CI workflows, Biome linting, TypeScript checking, SAFRS verify scripts, token enforcement, supply-chain scanning, and architecture tests.
-- **L5 (Human Authority)**: The Chief (Dr. Ferdi Iskandar) defines intent, owns architecture, and authorizes R3 actions. Human approval is risk-based, not universal.
+## Automation control plane
+
+The automation control plane extends L4 (Executable Governance) with machine-checked enforcement. It was introduced in ADR 0002 and implemented across 5 phases.
+
+```mermaid
+graph TD
+    subgraph Control Plane
+        CT["Canonical Contracts<br/>Task, Run, Operation, Lease,<br/>Approval, Evidence, Platform<br/>(JSON Schema 2020-12)"]
+        RK["Monotonic Risk<br/>effective = max(declared, path,<br/>operation, data, capability, diff)"]
+        LS["Lease Chains<br/>CLAIM → RENEW → TRANSITION<br/>→ RELEASE, fencing tokens"]
+        GT["PR Gates<br/>8 gates: contract, lease, risk,<br/>budgets, verification, review,<br/>evidence, platform"]
+        EV["Evidence Manifests<br/>Content-addressed, redacted,<br/>reconstructable lifecycle"]
+        AP["Approvals<br/>Content-bound, time-limited,<br/>no self-review"]
+        PB["Publisher<br/>enable_auto_merge only,<br/>never merge or push"]
+        GD["Shared Guard<br/>Vendor-neutral decision for<br/>every adapter"]
+    end
+
+    CT --> RK
+    CT --> LS
+    RK --> GT
+    LS --> GT
+    GT --> EV
+    EV --> AP
+    AP --> PB
+    GD --> GT
+```
 
 ## Repository topology
 
@@ -44,19 +64,25 @@ graph LR
     end
 
     subgraph Tools
-        SAFRS["safrs checkers"]
+        SAFRS["safrs checkers<br/>(16 Python)"]
+        AUTO["automation<br/>control plane"]
         DOC["doctor"]
         WIZ["project-wizard"]
         CAP["capabilities"]
         CG["codegen"]
         DG["deps-graph"]
+        TSK["task CLI"]
+        STS["status CLI"]
     end
 
     subgraph Governance
         POL[".safrs/policy.json"]
+        APOL[".safrs/automation-policy.json"]
         REG["document-registry.json"]
         SENS["sensitive-paths.json"]
         INV["tool-inventory.json"]
+        SCHM[".safrs/schemas/<br/>(7 JSON Schemas)"]
+        ADAP["adapter-capabilities.json"]
     end
 
     GP --> API
@@ -70,7 +96,11 @@ graph LR
     API --> TEL
     DB --> ENV
     UI --> TOK
-    GP --> SCH
+    AUTO --> SCHM
+    AUTO --> APOL
+    AUTO --> SENS
+    AUTO --> INV
+    GD["5 agent adapters<br/>Claude, Cursor, Codex, Cline"] --> ADAP
 ```
 
 ## Golden-path data flow
@@ -106,40 +136,24 @@ sequenceDiagram
     N-->>B: DemoForm result
 ```
 
-The Hono API is mounted inside Next.js via a catch-all route at `projects/golden-path/apps/web/src/app/api/[[...route]]/route.ts`. The browser never imports Prisma or `DATABASE_URL` directly. The typed Hono RPC client (`hc<AppType>`) provides compile-time drift detection between frontend and backend.
+## CI pipeline
 
-## Package dependency graph
+The repository runs 5 GitHub Actions workflows:
 
 ```mermaid
-graph TD
-    token["@sentra/token"]
-    config["@safrs/config"]
-    schemas["@safrs/schemas"]
-    env["@safrs/env"]
-    database["@safrs/database"]
-    api["@safrs/api"]
-    telemetry["@safrs/telemetry"]
-    ui["@safrs/ui"]
-    web["@safrs/web (golden-path)"]
-
-    web --> api
-    web --> database
-    web --> env
-    web --> ui
-    web --> token
-    web --> telemetry
-    api --> schemas
-    api --> database
-    api --> telemetry
-    database --> env
-    database --> telemetry
-    ui --> token
-    env --> config
-    schemas --> config
-    api --> config
-    database --> config
-    telemetry --> config
-    ui --> config
+graph LR
+    PR["Pull Request"] --> CI["ci.yml<br/>lint, typecheck, test, build, e2e"]
+    PR --> GOV["safrs-governance.yml<br/>16 Python checkers"]
+    PR --> GATES["safrs-pr-gates.yml<br/>8 PR gates (matrix)"]
+    PR --> TASK["safrs-task-control.yml<br/>lease authority (dispatch)"]
+    PUBLISH["safrs-publish.yml<br/>publication eligibility (dispatch)"]
+    GATES --> PUBLISH
 ```
 
-All packages depend on `@safrs/config` for shared tsconfig presets. `@safrs/schemas` owns the Zod contracts that both the API and the web app consume. `@sentra/token` is the only package allowed to contain raw colour values.
+| Workflow | Trigger | Purpose |
+| --- | --- | --- |
+| `ci.yml` | pull_request | Full verification: governance, lint, typecheck, test, build, e2e |
+| `safrs-governance.yml` | pull_request, push to main | 16 Python governance checkers |
+| `safrs-pr-gates.yml` | pull_request, push to main | 8 PR gates as matrix jobs |
+| `safrs-task-control.yml` | workflow_dispatch | Serialized remote lease authority |
+| `safrs-publish.yml` | workflow_dispatch | Publication eligibility evaluation |

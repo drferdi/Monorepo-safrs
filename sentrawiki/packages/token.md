@@ -1,32 +1,27 @@
-# @sentra/token
+# Token (`@sentra/token`)
 
 ## Purpose
 
-`@sentra/token` is the Sentra design-token package — the only place in the repository where a raw colour or radius value may appear. Every agent building UI (website, landing page, dashboard, email) must consume these tokens, and raw values anywhere else fail the governance gate. The package ships the token CSS, a machine-readable JSON mirror, a Tailwind v4 bridge, and self-hosted Geist fonts, with dark-theme values authored (never derived) and every contrast ratio measured against WCAG 2.2 AA.
+The Sentra design token package and the enforced source of visual truth for every rendered surface in the repository. **Any agent building UI must consume these tokens** — raw colour or radius values are forbidden outside `packages/token/src/tokens.css`. This is machine-enforced by `node scripts/check-tokens.mjs` (raw-value scan + WCAG 2.2 AA contrast recomputation), which runs as part of the governance gate.
+
+The package was ported verbatim from `abyss-monorepo/packages/token` (Sentraverse Foundation Tokens v1.0). Token values and their measured contrast annotations are the source of truth; do not re-derive them.
 
 ## Key source files
 
-| File | Role |
+| File | Purpose |
 | --- | --- |
-| `packages/token/src/tokens.css` | The only file with raw hex/radius values; light + dark themes |
-| `packages/token/src/tokens.json` | Machine-readable mirror read by the contrast gate |
-| `packages/token/src/tailwind.css` | Tailwind v4 `@theme inline` bridge (utilities from tokens) |
-| `packages/token/src/fonts.ts` | `fontSans` / `fontMono` via `next/font/local` (self-hosted) |
-| `packages/token/assets/fonts/` | Geist Sans + Geist Mono variable fonts (OFL) |
+| `packages/token/src/tokens.css` | **The only file that may contain a hex value** (`:root` + `[data-theme="dark"]` blocks) |
+| `packages/token/src/tokens.json` | Same values, machine-readable; the contrast gate reads this |
+| `packages/token/src/tailwind.css` | Tailwind v4 `@theme` bridge exposing token utilities |
+| `packages/token/src/fonts.ts` | Self-hosted Geist / Geist Mono font loading |
+| `packages/token/scope.txt` | Paths under enforcement; added when migrated, never removed |
 | `packages/token/AGENTS.md` | Package mandate and rules |
-| `packages/token/UI-RULES.md` | Rules every agent reads before writing any UI |
-| `packages/token/package.json` | Manifest; `test` runs `node ../../scripts/check-tokens.mjs` |
+| `packages/token/UI-RULES.md` | Full UI ruleset (colour zones, layout, type, states, a11y) |
+| `docs/design-system/reference/` | Six worked reference screens to match, not invent |
 
-## Token structure
+## Consumption (app root stylesheet)
 
-`packages/token/src/tokens.css` defines four layers:
-
-1. **Primitives** (`--p-*`) — private raw values with measured contrast annotations. Never referenced directly by components.
-2. **Semantic colour** (`--color-*`) — surfaces, text, line, chrome/accent, content/status, action, data ramp, focus ring. The only layer components may import.
-3. **Typography / space / layout / shape / icons / interaction** — fonts, a 4px space scale, a 12-column grid, radius, motion, z-index, and a 44px minimum target.
-4. **Dark theme** — a full `[data-theme="dark"]` block where every semantic token is re-authored and re-measured (never a filter over the light palette).
-
-Consumption in an app's root stylesheet (see `packages/token/AGENTS.md`):
+A workspace member depends on `@sentra/token` and imports it once:
 
 ```css
 @import "tailwindcss";
@@ -34,39 +29,40 @@ Consumption in an app's root stylesheet (see `packages/token/AGENTS.md`):
 @import "@sentra/token/tailwind.css";
 ```
 
-## Enforcement
+Import **semantic** tokens only. Anything named `--p-*` is a private primitive; if a semantic token is missing, add it to the package with its measured contrast ratio — never bypass with a primitive or a literal.
 
-`node scripts/check-tokens.mjs` runs in the governance gate as `pnpm check:tokens`:
+## Non-negotiable rules (from `AGENTS.md`)
 
-- Scans `.css`, `.ts`, `.tsx`, `.js`, `.jsx` files under `projects/`, `packages/`, and `tools/` for hex values and bare `border-radius` declarations, failing on anything not in `packages/token/src/tokens.css`.
-- Recomputes WCAG 2.2 AA contrast from `packages/token/src/tokens.json`.
+1. Read `packages/token/UI-RULES.md` before writing UI code.
+2. Raw colour/radius values are forbidden outside `src/tokens.css`; use `var(--color-*)`, `var(--radius-*)`, or Tailwind utilities.
+3. Import semantic tokens only; `--p-*` primitives are private.
+4. `src/tokens.json` is generated from `src/tokens.css` — keep them in sync in the same change.
+5. Changing a token value is **R2**: re-measure affected WCAG pairs and obtain designated review.
+6. Dark theme values are **authored, never derived** — a new semantic token goes into both `:root` and `[data-theme="dark"]`, and into both `color` and `colorDark` maps in `tokens.json`.
+7. Migrated paths are added to `scope.txt` and never removed.
 
-`packages/token/scope.txt` lists paths under this enforcement; paths are added when migrated and never removed. See [design tokens](../features/design-tokens.md). Changing a token value is an R2 change requiring re-measurement and designated review.
+## Design-language highlights (from `UI-RULES.md`)
 
-## Integration points
+- **Zone rule** — vermilion `--color-accent*` is for chrome (wordmark, navigation, corner marks); crimson `--color-status-*` is for content verdicts (failing rows, gates). A block carrying both is a defect.
+- **Colour never carries meaning alone** — every status has a distinct glyph and a word beside it; the UI must survive greyscale.
+- **Tint the worst state only** — failing rows get `--color-surface-critical`; warnings get nothing.
+- **Four data series is the ceiling** — `--color-data-1..4` step in lightness.
+- **Layout** — 12 columns, gutter 24, margin 40, max width 1440; column 8 stays empty; body text ≤ 68 chars/line.
+- **Shape** — `--radius-structure` 0 (tables, panels); `--radius-control` 2px (buttons/inputs only). No third radius. Buttons carry a 3px solid ledge, no blur.
+- **Type** — Geist + Geist Mono, self-hosted variable fonts (OFL), weights 400/500/600, left-aligned, tabular figures in numeric columns.
+- **States are part of the component** — default, hover, focus-visible, active, disabled, loading, error, and empty (three distinct empty states) must all be defined.
+- **Accessibility floor** — WCAG 2.2 AA as a build condition: contrast measured (`check-tokens.mjs` recomputes every semantic pair), keyboard reachable, 44px minimum target, `prefers-reduced-motion` honoured, live regions on async content.
 
-- **UI**: `@safrs/ui`'s `StatusCard` is styled with `status-card` classes backed by token variables.
-- **Web app**: the golden-path web app imports `@sentra/token/tokens.css` + `tailwind.css` in its root layout and `fontSans`/`fontMono` from `@sentra/token/fonts` (requires `@sentra/token` in `next.config` `transpilePackages`).
-- **Distribution**: `@sentra/token` re-exports `./tokens.css`, `./tokens.json`, `./tailwind.css`, and `./fonts` subpaths and has an optional `next` peer dependency.
+## Verification
 
-```mermaid
-graph LR
-    CSS["src/tokens.css<br/>raw values (light+dark)"]
-    JSON["src/tokens.json<br/>machine-readable"]
-    TW["src/tailwind.css<br/>@theme bridge"]
-    APP["App root stylesheet"]
-    UI["@safrs/ui<br/>StatusCard"]
-    GATE["scripts/check-tokens.mjs<br/>WCAG recompute"]
-
-    CSS --> JSON
-    CSS --> TW
-    TW --> APP
-    APP --> UI
-    JSON --> GATE
+```bash
+pnpm --filter @sentra/token lint
+node scripts/check-tokens.mjs     # raw-value scan + WCAG 2.2 AA recomputation
 ```
 
 ## Related pages
 
-- [Sentra design token system and WCAG enforcement](../features/design-tokens.md)
-- [@safrs/ui](./ui.md)
-- [Coding patterns and conventions](../how-to-contribute/patterns-and-conventions.md)
+- [UI package](ui.md) — React primitives built on the tokens
+- [UI rules](../../packages/token/UI-RULES.md) — the full UI convention document
+- [Reference screens](../../docs/design-system/reference/) — worked examples to match
+- [Shared packages](index.md)

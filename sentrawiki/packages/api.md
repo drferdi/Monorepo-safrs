@@ -1,77 +1,81 @@
-# @safrs/api
+# API (`@safrs/api`)
 
 ## Purpose
 
-`@safrs/api` provides the typed Hono REST API: routes validated against `@safrs/schemas`, a correlation-ID error envelope on every response, a re-exported OpenAPI 3.1 document and Swagger UI page, and a typed RPC client for the frontend. Mounting the Hono app inside Next.js gives the golden-path app a single typed boundary where the browser consumes `hc<AppType>` and schema changes become compile-time errors.
+The single typed HTTP boundary of the monorepo. `@safrs/api` owns the Hono application mounted by the golden-path web app under `/api`, the typed RPC client (`hc` from `hono/client`), the error envelope, and a schema-driven OpenAPI endpoint. It imports validation contracts from `@safrs/schemas` and database access from `@safrs/database` — never the other way around.
 
 ## Key source files
 
-| File | Role |
+| File | Purpose |
 | --- | --- |
-| `packages/api/src/index.ts` | Barrel: exports `AppType`, `app`, `createApp`, `DemoStore`, `ApiClient`, errors, OpenAPI |
-| `packages/api/src/app.ts` | `createRoutes`/`createApp`, the Hono app and `AppType` |
-| `packages/api/src/client.ts` | `createApiClient` factory around `hc<AppType>` |
-| `packages/api/src/error.ts` | `ApiError`, `internalError`, `validationError` |
-| `packages/api/src/openapi.ts` | `buildOpenApiDocument`, `openApiDocsHtml` (Swagger UI) |
-| `packages/api/package.json` | Manifest with `.` and `./client` subpath exports |
+| `packages/api/src/app.ts` | Hono app: routes, correlation-ID middleware, telemetry middleware, store injection |
+| `packages/api/src/client.ts` | Typed RPC client factory (`createApiClient`) over `AppType` |
+| `packages/api/src/error.ts` | `ApiError` envelope builders (`internalError`, `validationError`) |
+| `packages/api/src/openapi.ts` | `buildOpenApiDocument` + embedded Swagger UI HTML |
+| `packages/api/src/index.ts` | Public barrel |
+| `packages/api/package.json` | Depends on `@safrs/database`, `@safrs/schemas`, `@safrs/telemetry`, `hono`, `zod` |
 
-## Routes and contract
+## How it works
 
-Built in `packages/api/src/app.ts` with a base path of `/api`:
+`packages/api/src/app.ts` builds the app from `createRoutes`:
 
-| Route | Method | Behavior |
-| --- | --- | --- |
-| `/api/health` | GET | Returns `{ status: "ok" }` |
-| `/api/openapi.json` | GET | Returns the generated OpenAPI 3.1 document |
-| `/api/docs` | GET | Returns a Swagger UI HTML page |
-| `/api/demos` | GET | Lists demos via `DemoStore.demo.findMany` |
-| `/api/demos` | POST | Validates with `zValidator("json", createDemoInputSchema)` and creates a demo (201) |
+- base path `/api`
+- per request: `crypto.randomUUID()` correlation ID stored in Hono `Variables` and returned as the `x-correlation-id` header
+- `telemetryMiddleware()` from `@safrs/telemetry` starts an OpenTelemetry span per request and attaches the correlation ID to it
+- `GET /api/health` → `{ status: "ok" }`
+- `GET /api/openapi.json` → the generated OpenAPI 3.1 document
+- `GET /api/docs` → Swagger UI (CDN assets) pointing at the local document
+- `GET /api/demos` → all demo records, serialized through `demoSchema`
+- `POST /api/demos` → validated with `zValidator("json", createDemoInputSchema, ...)`; on success creates a record via the injected `DemoStore` and returns `201`
+- `.onError` → a `500` with the correlation-ID-bearing `internalError` envelope
 
-Two global middlewares run on every request: the first generates a UUID per request, stores it as `correlationId` on the Hono context, and returns it in the `x-correlation-id` response header; the second is `telemetryMiddleware()` from `@safrs/telemetry`. The `.onError` handler returns `internalError` (500) for unexpected exceptions.
-
-A `DemoStore` interface (`demo.create` / `demo.findMany`) decouples the routes from Prisma; the default store lazily imports `@safrs/database`. Tests inject a fake store through `createApp({ getStore })`.
+The `DemoStore` interface (`{ demo: { create, findMany } }`) is injected, so tests can pass a fake store; `createApp()` defaults to the live `@safrs/database` client.
 
 ## Error envelope
 
-`packages/api/src/error.ts` builds every error with `apiErrorSchema.parse()` from `@safrs/schemas`:
+`packages/api/src/error.ts` implements `apiErrorSchema`:
 
-- `validationError(...)` → `{ code: "VALIDATION_ERROR", message, correlationId, fieldErrors? }` with a 400 status.
-- `internalError(correlationId)` → `{ code: "INTERNAL_ERROR", message, correlationId }` with a 500 status.
+- `INTERNAL_ERROR` — generic 500 ("Terjadi kesalahan internal."), carries only the correlation ID.
+- `VALIDATION_ERROR` — 400 with `fieldErrors` derived from `z.flattenError`, message "Permintaan tidak valid.".
 
-Every response (success or error) carries the `x-correlation-id` header, and the same ID is set on the telemetry span (see [telemetry](./telemetry.md)).
+No stacks, no database URLs, no server secrets are ever exposed.
 
-## Operation
+## Typed client
 
-The web app mounts the Hono app through the catch-all route at `projects/golden-path/apps/web/src/app/api/[[...route]]/route.ts` using `app.request(...)`. The typed client is created in the browser via `createApiClient(...)` from `@safrs/api/client` (see `projects/golden-path/apps/web/src/lib/api-client.ts`). The web app never imports Prisma or `DATABASE_URL`.
+`packages/api/src/client.ts` wraps `hc<AppType>(...)` so every consumer gets fully typed request/response contracts:
 
-```mermaid
-graph LR
-    WEB["Web (Next.js)<br/>catch-all route"]
-    API["@safrs/api<br/>Hono app"]
-    SCH["@safrs/schemas<br/>zValidator + serialize"]
-    DB["@safrs/database<br/>DemoStore create/findMany"]
-    TEL["@safrs/telemetry<br/>telemetryMiddleware"]
-    CLI["Web client<br/>hc<AppType>"]
+```ts
+import { createApiClient } from "@safrs/api/client";
 
-    WEB --> API
-    API --> SCH
-    API --> DB
-    API --> TEL
-    CLI --> API
+const client = createApiClient("http://localhost:3000");
+const res = await client.api.demos.$post({ json: { name: "Example" } });
 ```
+
+`GlobalErrorResponses` adds the `500` envelope to the inferred `AppType`.
+
+## OpenAPI
+
+`packages/api/src/openapi.ts` builds an OpenAPI 3.1 document whose components are derived from the Zod schemas via Zod 4's `z.toJSONSchema(...)` (draft 2020-12), stripping the non-OpenAPI `$schema` key. Paths cover health, demos listing, and demo creation with proper `$ref`s to `ApiError`, `Demo`, and `CreateDemoInput`.
 
 ## Integration points
 
-- **Schemas**: request validation and response/error serialization via `@safrs/schemas`.
-- **Database**: lazy `import("@safrs/database")` provides the default `DemoStore`.
-- **Telemetry**: `telemetryMiddleware()` opens a root span per request and sets `safrs.correlation_id`.
-- **Frontend**: the exported `AppType` and `@safrs/api/client` give the browser a typed client, enabling compile-time drift detection.
-- **OpenAPI**: the document is derived from the Zod schemas so it cannot drift from validation.
+- **`@safrs/web`** mounts the app on the Node runtime and rides the typed client (see [the web app](../apps/golden-path-web.md)).
+- **`@safrs/schemas`** supplies all validation contracts; drift is structurally impossible.
+- **`tools/codegen`** generates an OpenAPI document and a typed fetch wrapper (`createTypedClient`) layered over `@safrs/api/client` with timeout and retry-on-network-error (`tools/codegen/src/client.mjs`).
+- **`@safrs/telemetry`** provides the request middleware used by the app.
+
+## Verification
+
+```bash
+pnpm --filter @safrs/api test
+pnpm --filter @safrs/api typecheck
+pnpm --filter @safrs/api lint
+```
 
 ## Related pages
 
-- [Hono API REST endpoints](../api/rest-endpoints.md)
-- [@safrs/schemas](./schemas.md)
-- [@safrs/database](./database.md)
-- [@safrs/telemetry](./telemetry.md)
-- [Coding patterns and conventions](../how-to-contribute/patterns-and-conventions.md)
+- [Schemas](schemas.md) — the contracts this API validates against
+- [Database](database.md) — default demo store
+- [Telemetry](telemetry.md) — request instrumentation
+- [Codegen tool](../tools/codegen.md) — generated OpenAPI/client artifacts
+- [Shared packages](index.md)

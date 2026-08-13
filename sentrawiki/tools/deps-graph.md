@@ -1,53 +1,54 @@
-# Dependency graph visualizer
-
-`tools/deps-graph/` is a standalone, read-only dependency-graph visualizer for the monorepo, run as `pnpm deps:graph`. It parses `pnpm-workspace.yaml`, and every `package.json` to build the inter-package dependency graph, detects circular dependencies, and renders it as DOT, Mermaid, ASCII, or SVG.
+# Deps-graph
 
 ## Purpose
 
-The tool gives a quick, dependency-free view of how packages depend on one another, and it detects cycles — important in a pnpm workspace where circular dependencies break builds. It is explicitly a manual/CI-optional aid, not a governance gate: it never mutates packages, manifests, or lockfiles.
+`pnpm deps:graph` (implemented in `tools/deps-graph/src/cli.mjs`) is a standalone, read-only dependency-graph visualizer for the monorepo. It parses `pnpm-workspace.yaml`, `turbo.json`-style members, and every `package.json` to build the inter-package dependency graph and render it as **DOT**, **Mermaid**, **ASCII**, or **SVG**. It is a manual/CI-optional aid — **not** a governance gate — and never mutates packages, manifests, or lockfiles. It has zero runtime dependencies (manual YAML parsing, no external CLI libraries).
 
 ## Key source files
 
-| File | Responsibility |
+| File | Purpose |
 | --- | --- |
-| `tools/deps-graph/src/cli.mjs` | CLI entry: parses flags, builds the graph, detects cycles, renders output |
-| `tools/deps-graph/src/workspace.mjs` | Minimal YAML parser for `pnpm-workspace.yaml` and glob resolution |
-| `tools/deps-graph/src/packages.mjs` | Reads package metadata and builds nodes/edges |
-| `tools/deps-graph/src/graph.mjs` | DFS cycle detection and reverse-edge lookup |
-| `tools/deps-graph/src/render.mjs` | DOT, Mermaid, ASCII, and SVG renderers |
-| `tools/deps-graph/AGENTS.md` | Scope and rules for the tool |
+| `tools/deps-graph/src/cli.mjs` | CLI: format/output/cycle detection |
+| `tools/deps-graph/src/workspace.mjs` | Manual `pnpm-workspace.yaml` parsing + glob resolution |
+| `tools/deps-graph/src/packages.mjs` | Reads package metadata, builds nodes/edges |
+| `tools/deps-graph/src/graph.mjs` | Cycle detection (DFS) and reverse-edge (`dependentsOf`) |
+| `tools/deps-graph/src/render.mjs` | DOT, Mermaid, ASCII, and (via Graphviz `dot`) SVG renderers |
+| `tools/deps-graph/package.json` | Package metadata (`@safrs/deps-graph`) |
 
 ## How it works
 
-The pipeline has distinct, separable stages: workspace membership, graph construction, cycle detection, and rendering.
+- `tools/deps-graph/src/workspace.mjs` parses the `packages:` glob list from `pnpm-workspace.yaml` (a minimal YAML reader that only extracts that key), then resolves the leading-`*` segments to concrete package directories.
+- `tools/deps-graph/src/packages.mjs` reads each member's `package.json` and collects workspace-only edges across `dependencies`, `devDependencies`, `peerDependencies`, and `optionalDependencies` that point at known workspace package names.
+- `tools/deps-graph/src/graph.mjs` `detectCycle` runs a DFS with white/grey/black colouring and returns the first cycle path; `dependentsOf` lists reverse dependents.
+- `tools/deps-graph/src/render.mjs` renders DOT, Mermaid (`flowchart LR`), a deterministic ASCII edge list, or SVG by shelling out to the Graphviz `dot` binary when available (falling back to Mermaid if `dot` is missing).
 
-```mermaid
-graph TD
-    A["cli.mjs"] --> B["workspace.mjs: loadWorkspaceMembers"]
-    B --> C["parse pnpm-workspace.yaml"]
-    C --> D["resolve globs -> member dirs"]
-    D --> E["packages.mjs: buildPackageGraph"]
-    E --> F["read package.json for each member"]
-    F --> G["nodes + workspace-only edges"]
-    G --> H["graph.mjs: detectCycle"]
-    H --> I{"cycle?"}
-    I -- yes --> J["warn / exit non-zero with --cycles"]
-    I -- no --> K
-    G --> K["render.mjs (dot|mermaid|ascii|svg)"]
-    K --> L["stdout or --output file"]
+## CLI usage
+
+```bash
+pnpm deps:graph                              # ASCII to stdout
+pnpm deps:graph --format mermaid             # Mermaid flowchart
+pnpm deps:graph --format dot --output deps.dot
+pnpm deps:graph --format svg --output deps.svg
+pnpm deps:graph --cycles                     # print cycles; exit non-zero if found
+pnpm deps:graph --repo-root /abs/path
+pnpm deps:graph --help
 ```
 
-Notable behaviors:
-
-- **Zero runtime dependencies** — `workspace.mjs` hand-parses the simple `pnpm-workspace.yaml` structure (extracting only the `packages:` list) and expands only trailing `*` glob segments, matching the `projects/*/apps/*`, `packages/*` patterns in this repo.
-- **Graph construction** (`packages.mjs`) reads `name` and the dependency sections (`dependencies`, `devDependencies`, `peerDependencies`, `optionalDependencies`) of each member's `package.json`, keeping only edges to other workspace members.
-- **Cycle detection** (`graph.mjs`) runs a standard depth-first search with WHITE/GRAY/BLACK coloring and returns the first back-edge cycle as a node path. `dependentsOf()` returns reverse edges.
-- **Rendering** (`render.mjs`) produces deterministic DOT, Mermaid (`flowchart LR`), and ASCII output. SVG rendering shells out to the Graphviz `dot` binary when available and falls back to Mermaid if `dot` is missing.
-- The CLI prints the detected cycle and, with `--cycles`, exits non-zero when a cycle exists.
+With `--cycles`, the tool prints circular dependencies and exits non-zero when a cycle exists; otherwise it reports `No circular dependencies detected`.
 
 ## Integration points
 
-- Runs as `pnpm deps:graph`; supports `--format dot|mermaid|ascii|svg`, `--output <path>`, `--repo-root`, `--cycles`, and `--help`.
-- Reads `pnpm-workspace.yaml` and `turbo.json`/`package.json` manifests as data only — it never writes or changes them.
-- Read-only and **not** a governance gate by design; wiring it into CI or governance would raise it to R2 (see `tools/deps-graph/AGENTS.md`).
-- Works alongside the other repo-wide tools; see the [tool overview](index.md) and [Architecture](../overview/architecture.md) for the package dependency layout.
+- **`tools/AGENTS.md`** classifies it: read-only, zero runtime dependencies, and *not* a governance gate. Changes are R1; wiring it into CI or governance would make that R2 and require review.
+- **`.safrs/tool-inventory.json`** registers the `deps-graph` tool (read-only, approved), which lets `check_actions_pinning.py` treat its endpoints correctly.
+
+## Verification
+
+```bash
+node --test tools/deps-graph/test/*.test.mjs
+```
+
+## Related pages
+
+- [Tools overview](index.md)
+- [Shared packages](../packages/index.md) — the packages and dependency graph it renders
+- [SAFRS governance checkers](safrs.md) — the governance gate (of which this tool is deliberately *not* part)

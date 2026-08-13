@@ -1,50 +1,69 @@
-# Schema-first codegen
-
-`tools/codegen/` reads Zod schemas from `@safrs/schemas` — the single source of truth for API contracts — and generates three artifacts: an OpenAPI 3.1 document, mock data factories, and a typed fetch wrapper over the Hono client. It is run as `pnpm codegen`.
+# Codegen
 
 ## Purpose
 
-Codegen keeps generated contracts honest and deterministic: the same schema input always produces the same bytes, and generated files are never hand-maintained. It turns the Zod schemas in `packages/schemas/src/` into an OpenAPI document for external documentation/tooling, standalone mock factories for testing, and a typed client wrapper that layers timeout/retry/resilience over the Hono RPC client.
+`pnpm codegen` (implemented in `tools/codegen/src/cli.mjs`) is a schema-driven generation tool. It imports the Zod schemas from `@safrs/schemas` at runtime — treating them as the single source of truth — and produces:
+
+- an **OpenAPI 3.1 document** (`--openapi`),
+- **mock data factories** (`--mock`),
+- a **typed fetch wrapper** over the Hono client (`--client`).
+
+Output is deterministic: same schema in, same bytes out. Generated files are declared in the consuming project's `AGENTS.md`/`.gitignore` as needed and are not forced into the golden-path build (`tools/codegen/AGENTS.md`).
 
 ## Key source files
 
-| File | Responsibility |
+| File | Purpose |
 | --- | --- |
-| `tools/codegen/src/cli.mjs` | CLI entry: parses options, imports schemas, writes artifacts |
-| `tools/codegen/src/schemas.mjs` | Schema introspection, type-name inference, mock value walker |
-| `tools/codegen/src/openapi.mjs` | Builds the OpenAPI 3.1 document via `z.toJSONSchema` |
-| `tools/codegen/src/mock.mjs` | Renders the standalone mock-data module |
-| `tools/codegen/src/client.mjs` | Renders the typed fetch-wrapper module |
-| `tools/codegen/AGENTS.md` | Scope and rules for the codegen tool |
-| `packages/schemas/src/` | The Zod schema source of truth |
+| `tools/codegen/src/cli.mjs` | CLI entrypoint and flag parsing |
+| `tools/codegen/src/schemas.mjs` | Schema import, introspection (`isZodSchema`), type-name inference, mock walker |
+| `tools/codegen/src/openapi.mjs` | `buildOpenApiDocument` via Zod 4 `z.toJSONSchema` (draft 2020-12) |
+| `tools/codegen/src/mock.mjs` | Deterministic mock factories (`renderMockModule`, `generateMock`) using `@faker-js/faker` |
+| `tools/codegen/src/client.mjs` | Typed fetch-wrapper module (`renderClientModule`) |
+| `tools/codegen/package.json` | `@safrs/codegen`; depends on `zod` + `@faker-js/faker` |
 
 ## How it works
 
-The CLI imports the entry module at runtime, collects every exported Zod schema, and dispatches to the generators. If no `--openapi`/`--mock`/`--client` flag is given, all three are produced.
+### OpenAPI
 
-```mermaid
-graph TD
-    A["cli.mjs"] --> B["schemas.mjs: importSchemas"]
-    B --> C["collect Zod schemas from @safrs/schemas"]
-    C --> D{flags}
-    D -- "--openapi" --> E["openapi.mjs: buildOpenApiDocument"]
-    D -- "--mock" --> F["mock.mjs: renderMockModule"]
-    D -- "--client" --> G["client.mjs: renderClientModule"]
-    E --> H["out/openapi.json"]
-    F --> I["out/mock.js"]
-    G --> J["out/client.ts"]
+`buildOpenApiDocument(schemas, meta)` iterates every exported Zod schema, converts it with `z.toJSONSchema(...)`, and drops the non-OpenAPI `$schema` key. Each schema becomes a `#/components/schemas/<name>` component; `refFor(name)` produces `$ref`s. `paths` start empty — the API package's own `openapi.ts` is the runtime counterpart that also defines the golden-path paths.
+
+### Mocks
+
+`tools/codegen/src/schemas.mjs` provides `mockForSchema`, a deterministic faker walker over the Zod `_def` shape (strings, numbers, booleans, dates, enums, literals, objects, arrays, optionals/nullables, unions, records — guarded at depth 6). `renderMockModule` emits a standalone `mock.js` that re-imports the live schemas and exports one factory per schema (`mock<Name>(overrides)`), so the generated file stays correct as schemas evolve.
+
+### Typed client
+
+`renderClientModule` emits `client.ts` that wraps `createApiClient` from `@safrs/api/client` with an `AbortController` timeout (default 10s), a single retry-on-network-error, and a normalized `ApiResult<T>` envelope — static request/response types still come from the Hono RPC client.
+
+## CLI usage
+
+```bash
+pnpm codegen --schema packages/schemas/src/index.ts --out codegen
+pnpm codegen --openapi                      # openapi.json only
+pnpm codegen --mock                         # mock.js only
+pnpm codegen --client                       # client.ts only
+pnpm codegen --title "My API" --version 1.0.0 --out build/codegen
+pnpm codegen --help
 ```
 
-Notable behaviors:
-
-- **Schema introspection** (`schemas.mjs`) detects Zod schemas without importing the full Zod type surface (checking the `_def` marker and `safeParse`), infers the type name from the Zod 4 `_def.type` discriminator, and walks a schema tree to produce deterministic `@faker-js/faker` mock values with a recursion depth guard.
-- **OpenAPI generation** (`openapi.mjs`) uses Zod 4's native, dependency-free `z.toJSONSchema(...)` (draft 2020-12) to produce an OpenAPI 3.1 document with a `paths` placeholder and each schema under `components.schemas`.
-- **Mock module** (`mock.mjs`) emits a standalone `mock.js` that imports the live schema objects and walks them at runtime, so the generated file stays correct as schemas evolve. Each schema gets a `mock<Name>(overrides = {})` factory and a `mockableSchemas` list.
-- **Client module** (`client.mjs`) emits `client.ts` — a typed wrapper around `createApiClient` from `@safrs/api/client` that adds a configurable timeout (`AbortController`) and retry-on-network-error, normalizing results into a `{ ok, value } | { ok, error }` envelope.
+Default entry is `packages/schemas/src/index.ts`; without any artifact flag, all three artifacts are written. Exit code is non-zero if no Zod schemas are exported.
 
 ## Integration points
 
-- Runs as `pnpm codegen`; supports `--schema`, `--out`, `--openapi`, `--mock`, `--client`, `--title`, and `--version` flags.
-- Reads the canonical Zod contracts from `packages/schemas/src/` and targets the Hono client at `@safrs/api/client` — it never hand-maintains a second copy of the schemas.
-- Generated output is determinant and declared in the consuming project's `AGENTS.md`/`.gitignore` as needed; it is not forced into the golden-path build.
-- Codegen, dependency, and generated-output changes are R2. See [Patterns and conventions](../how-to-contribute/patterns-and-conventions.md) for the schema-first contract approach and [Tooling](../how-to-contribute/tooling.md) for how generated code fits the build.
+- **`@safrs/schemas`** is the schema entry module — the tool imports it at runtime and never maintains a second copy.
+- **`@safrs/api/client`** is the import target of the generated typed client.
+- **`packages/api/src/openapi.ts`** mirrors the same `z.toJSONSchema` approach for the served `/api/openapi.json`.
+
+## Verification
+
+```bash
+node --test tools/codegen/test/*.test.mjs
+```
+
+Tool, dependency, and generated-output changes are R2 and need review.
+
+## Related pages
+
+- [Schemas](../packages/schemas.md) — the source of truth for generation
+- [API](../packages/api.md) — the typed client and runtime OpenAPI endpoint
+- [Tools overview](index.md)

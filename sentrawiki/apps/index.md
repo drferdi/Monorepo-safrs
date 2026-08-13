@@ -1,35 +1,62 @@
-# Apps
-
-Deployable application units in the SAFRS Monorepo.
+# Apps — deployable units
 
 ## Purpose
 
-This section documents the deployable application units in the monorepo. The SAFRS Monorepo currently ships exactly one baseline deployment unit — the golden-path web application at `projects/golden-path/apps/web` — which proves the typed Database to API to Web flow. Optional capability packs can add additional application shells (a desktop shell, a browser extension) on request, but none is part of the runtime baseline.
+This section documents the deployable application units in the SAFRS Monorepo. A
+*deployable unit* is a runnable artifact that can be built and served; everything
+that is not a deployable app (shared packages, governance tooling, capability
+manifests) lives elsewhere and is consumed by these units.
 
-## Deployable units
+The monorepo intentionally keeps **one** deployable application. SAFRS is
+product-neutral and does not mandate a fixed set of apps; new units are added by
+creating a project capsule under `projects/<project>/` following
+`docs/governance/SAFRS_PROJECT_CAPSULES.md`.
 
-| Unit | Path | Runtime | Status |
-| --- | --- | --- | --- |
-| Golden-path web | `projects/golden-path/apps/web` | Next.js 16 (Node) | Baseline, active |
-| Desktop shell (optional) | `projects/<project>/apps/desktop/**` | Electron | Capability pack, opt-in |
-| Browser extension (optional) | `projects/<project>/apps/extension/**` | WXT | Capability pack, opt-in |
+## The one deployable app
 
-The golden-path web app is the default demonstrator and the only deployment unit the repository verifies end to end. Desktop and extension shells are declared in the capability catalog but only become real application code inside a project when the matching capability is activated.
+| App | Path | Framework | Runtime | Status |
+| --- | --- | --- | --- | --- |
+| Golden-path web | `projects/golden-path/apps/web/` | Next.js (App Router) | Node.js | Baseline demonstrator |
 
-## How it works
+Golden-path web is the default and only deployable unit. It mounts the
+package-owned typed Hono API under `/api` and renders a server-first "readiness
+desk" that proves the typed Database → API → Web flow with one safe demo record.
+See [Golden-path web](golden-path-web.md).
 
-Each application lives under `projects/<project>/apps/<app>` and is owned by its project capsule (`projects/<project>/AGENTS.md`). The golden-path app mounts the package-owned Hono API below `/api` and renders its readiness desk server-first with a single small client component. Application code consumes shared packages (`@safrs/api`, `@safrs/database`, `@safrs/ui`, `@sentra/token`) and never imports the database/server environment into the browser.
+## "App-like" surfaces that are not deployable units
+
+The optional capability packs define *shell* manifests for desktop and browser
+extension applications, but none is a runtime deployable in this repo today:
+
+- **Electron** (`tools/capabilities/manifests/electron.json`) and **WXT**
+  (`tools/capabilities/manifests/wxt.json`) describe a `projects/<project>/apps/desktop/`
+  and `projects/<project>/apps/extension/` boundary that a project must opt into
+  and implement. No project currently activates them.
+
+These are activated through the capability workflow, not bundled into the baseline
+runtime. See [Capability packs](../features/capability-packs.md).
+
+## Key source files
+
+- `projects/golden-path/apps/web/src/app/page.tsx` — the server-first page
+- `projects/golden-path/apps/web/src/app/api/[[...route]]/route.ts` — mounts the Hono API
+- `projects/golden-path/apps/web/src/app/api/webhooks/stripe/route.ts` — Stripe webhook bound to static scope
+- `projects/golden-path/apps/web/src/components/demo-form.tsx` — the smallest client leaf
+- `projects/golden-path/apps/web/AGENTS.md` — the web boundary contract
 
 ## Integration points
 
-- The golden-path app is one Next.js deployment unit; see [golden-path-web.md](golden-path-web.md).
-- All rendered surfaces must consume Sentra design tokens from `@sentra/token` — see [design tokens](../features/design-tokens.md).
-- Application shells produced by capability packs follow the strictures in [capability packs](../features/capability-packs.md).
-- Package boundaries the app depends on are documented under [packages](../packages/index.md).
-- Repository topology and the six-layer model: [architecture](../overview/architecture.md).
+- **Shared packages** consumed: `@safrs/api`, `@safrs/database`, `@safrs/env`,
+  `@safrs/ui`, `@safrs/telemetry`, `@safrs/config`, `@sentra/token`, and
+  `@safrs/schemas` (transitively).
+- **API**: mounts `@safrs/api` under `/api` — see [API overview](../api/index.md).
+- **Design tokens**: every rendered surface consumes `@sentra/token` — see
+  [Design tokens](../features/design-tokens.md).
+- **Governance**: the app's packages and config are sensitive/shared paths — see
+  [SAFRS governance](../features/safrs-governance.md).
 
-## Related pages
+## Related
 
-- [Golden-path web application](golden-path-web.md)
-- [Capability packs](../features/capability-packs.md)
-- [Architecture](../overview/architecture.md)
+- [Golden-path web](golden-path-web.md)
+- [API overview](../api/index.md)
+- [Packages overview](../packages/index.md)

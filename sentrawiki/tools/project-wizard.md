@@ -1,50 +1,73 @@
 # Project wizard
 
-`tools/project-wizard/` scaffolds a new SAFRS project capsule, run as `pnpm project:new`. It renders the capsule files from the template at `projects/_template/`, interpolating the wizard's answers, with no-clobber, owner-checked file publication protected by a per-slug lock.
-
 ## Purpose
 
-The wizard creates a governance capsule (not application code): it produces the `AGENTS.md`, `README.md`, and `docs/*` files for a new project so the capsule conforms to SAFRS and passes topology checks. It parses untrusted answers into a bounded project model, computes the minimum risk tier including R2-triggering terms, and treats all inputs as data — validating paths and rejecting symbolic-link escapes throughout.
+`pnpm project:new` (implemented in `tools/project-wizard/src/cli.mjs`) scaffolds a new SAFRS project capsule under `projects/<slug>/` from the repository template `projects/_template/`. A capsule is the governance contract for a project — `AGENTS.md`, `README.md`, `docs/architecture.md`, `docs/data.md`, `docs/testing.md`, `src/README.md`, `tests/README.md` — with placeholders resolved to the wizard's answers. It creates **no application code**: implementation is a separate, authorized task.
 
 ## Key source files
 
-| File | Responsibility |
+| File | Purpose |
 | --- | --- |
-| `tools/project-wizard/src/cli.mjs` | CLI entry: arg parsing, interactive prompts, confirmation, capsule application |
-| `tools/project-wizard/src/model.mjs` | Normalizes answers into a bounded, validated project model with slugging and risk computation |
-| `tools/project-wizard/src/render.mjs` | Renders capsule files from the `projects/_template/` template |
-| `tools/project-wizard/package.json` | Defines the `test` script |
-| `projects/_template/` | Template capsule files (the rendering source) |
+| `tools/project-wizard/src/cli.mjs` | CLI: argument parsing, prompting, preview/apply, locked publication |
+| `tools/project-wizard/src/model.mjs` | Normalizes untrusted answers into the bounded SAFRS project model |
+| `tools/project-wizard/src/render.mjs` | Renders the capsule files deterministically from the template |
+| `tools/project-wizard/package.json` | Package metadata (`@safrs/project-wizard`); tests via `node --test` |
+| `projects/_template/` | The template capsule every new project is rendered from |
 
 ## How it works
 
-The wizard has two distinct pipeline stages: a pure normalization/rendering stage and a file publication stage with strict ownership.
+### Model normalization (`tools/project-wizard/src/model.mjs`)
 
-```mermaid
-graph TD
-    A["--input JSON / interactive prompts"] --> B["model.mjs: normalizeProjectAnswers"]
-    B --> C["model: name, slug, kind, risk, appBinding"]
-    C --> D["render.mjs: renderProjectCapsule (template)"]
-    D --> E["preview output"]
-    E --> F{"confirm == CREATE <slug>?"}
-    F -- no --> X["abort, nothing written"]
-    F -- yes --> G["acquire slug lock (.<slug>.lock)"]
-    G --> H["stage capsule in temp stage dir"]
-    H --> I["validate ownership + no symlink escape"]
-    I --> J["rename stage -> projects/<slug>"]
-    J --> K["release slug lock"]
+Untrusted wizard answers are normalized into a bounded model. `normalizeProjectAnswers`:
+
+- validates `name` (non-empty, no control characters), `problem`, and `kind` (`web` | `desktop` | `extension`);
+- slugifies the name (NFKD → lowercase → `[a-z0-9-]`), rejects reserved Windows device names (`con`, `prn`, …) and unsafe slug sources (paths, `..`, control/URL-decoded tricks);
+- normalizes `capabilities` and `sensitiveDomains` choice lists (deduped, slugified, sorted);
+- validates `appBinding` as a bounded path below `apps/` (default `apps/<kind>`);
+- computes the minimum risk from declared fields — any term matching healthcare/finance/auth/payments/migrations/shared-package keywords, or a shared-package impact, forces at least **R2**; the declared risk can only raise it further.
+
+### Rendering (`tools/project-wizard/src/render.mjs`)
+
+`renderProjectCapsule` copies each template file through `safeTemplateText` — a symlink- and TOCTOU-hardened read that rejects any template path that is a symlink or escapes the template root — substitutes the model values, appends generated capsule context to the docs (app binding, capabilities, sensitive domains, computed risk, topology check command), and fails if any template placeholder marker remains.
+
+### Applying (`tools/project-wizard/src/cli.mjs`)
+
+`applyProjectCapsule` publishes with **one exclusive per-slug lock** and **no replacement**:
+
+1. acquires a per-slug `wx` lock with a UUID marker in `projects/`,
+2. writes the rendered files into an owned staging directory (with random-UUID ownership markers),
+3. re-validates the `projects/` root and the staging identity before publishing,
+4. moves the staged capsule into `projects/<slug>/` without clobbering an existing directory, and
+5. quarantines anything that changed identity mid-operation instead of deleting it.
+
+## CLI usage
+
+```bash
+pnpm project:new                     # interactive prompts (Nama proyek, masalah, jenis, kemampuan, domain sensitif)
+pnpm project:new --preview           # render + print preview without writing
+pnpm project:new --apply             # render, confirm, and write
+pnpm project:new --input answers.json --apply
+pnpm project:new --input answers.json --preview --confirm "CREATE <slug>"
 ```
 
-Notable behaviors:
-
-- **Model normalization** (`model.mjs`) slugifies the project name, rejects control characters and path traversal, guards against reserved Windows names, restricts `kind` to `web`/`desktop`/`extension`, and bounds `appBinding` below `apps/`. It computes the minimum risk from the answers — any R2-triggering term (healthcare, finance, payments, auth, shared-package, migrations) or a shared-package impact upgrades the risk to at least R2.
-- **Template rendering** (`render.mjs`) reads only the required template files (`AGENTS.md`, `README.md`, `docs/architecture.md`, `docs/data.md`, `docs/testing.md`, `src/README.md`, `tests/README.md`), refuses symbolic-link paths that escape the template root, and fails if any `{{...}}`/`<...>`/`${...}` marker remains.
-- **Locked, no-clobber publication** reserves the destination with a per-slug lock and an incompletion marker, verifies ownership by inode + UUID marker before any rename or delete, and quarantines rather than blindly deleting on cleanup. On Windows it renames the staged directory into place because of platform rename semantics.
-- **Interactive confirmation** is required — the user must type exactly `CREATE <slug>` to write anything.
+Confirmation must exactly equal `CREATE <slug>` before anything is written.
 
 ## Integration points
 
-- Runs as `pnpm project:new`; supports `--preview`, `--apply`, `--input`, `--repo-root`, and `--confirm` flags.
-- Reads the canonical template from `projects/_template/`, which is also enforced by `tools/safrs/check_topology.py`.
-- Generated project capsules are validated by the SAFRS governance gate; see [SAFRS governance](../features/safrs-governance.md).
-- See [Getting started](../overview/getting-started.md) for the daily workflow and [Patterns and conventions](../how-to-contribute/patterns-and-conventions.md) for project conventions.
+- **`projects/_template/`** is the single template source; `check_topology.py` verifies every created capsule still satisfies the required capsule layout.
+- **`tools/capabilities`** operates on the capsule's `capabilities.json` afterwards.
+- **`tools/safrs/check_topology.py`** validates the produced capsules (required files, no unresolved `<replace-…>` placeholders).
+
+## Verification
+
+```bash
+node --test tools/project-wizard/test/*.test.mjs
+pnpm run doctor          # read-only diagnostics before running the wizard
+```
+
+## Related pages
+
+- [Tools overview](index.md)
+- [Capabilities](capabilities.md) — add optional capabilities to a generated capsule
+- [SAFRS governance checkers](safrs.md) — `check_topology.py` validates capsules
+- [Project capsules](../../docs/governance/SAFRS_PROJECT_CAPSULES.md) — the capsule convention

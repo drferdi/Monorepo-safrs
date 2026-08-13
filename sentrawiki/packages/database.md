@@ -1,77 +1,71 @@
-# @safrs/database
+# Database (`@safrs/database`)
 
 ## Purpose
 
-`@safrs/database` owns the persistence boundary: the Prisma schema, migrations, generated client, local seed data, and the destructive-operation guards that keep database work local-only. It connects to PostgreSQL through a `PrismaPg` driver adapter and exposes a singleton Prisma client that the API resolves for reads and writes. Safety is enforced by the reset guard, which rejects any database URL that is not a disposable local or test database.
+The single database boundary: Prisma 7 + PostgreSQL with a generated client, a hardened **reset guard**, and a deterministic local seed. It is the only place `DATABASE_URL` is turned into a live client, and it is the only package allowed to touch the Prisma schema and migrations.
+
+Because the database is a shared boundary, migrations and schema changes are R2; production data and destructive production operations are R3 and may only be *prepared* until the Chief explicitly authorizes execution (`packages/database/AGENTS.md`).
 
 ## Key source files
 
-| File | Role |
+| File | Purpose |
 | --- | --- |
-| `packages/database/prisma/schema.prisma` | The Prisma data model (`Demo`, `TransactionSample`) |
-| `packages/database/src/client.ts` | Singleton `database` export using `PrismaPg` + `@safrs/env/server` |
-| `packages/database/src/index.ts` | Barrel: exports `database` and `assertDisposableDatabase` |
-| `packages/database/src/reset-guard.ts` | `assertDisposableDatabase` / `assertDisposableTestDatabase` |
-| `packages/database/src/local-tooling.ts` | `resolveLocalToolingDatabaseUrl` for CLI tooling |
-| `packages/database/src/seed.ts` | Safe demo + transaction seed records |
-| `packages/database/src/reset.ts` | Local-only reset entry point |
-| `packages/database/package.json` | Scripts: generate, migrate, seed, reset, studio |
+| `packages/database/prisma/schema.prisma` | Data model (`Demo`, `TransactionSample`) |
+| `packages/database/prisma.config.ts` | Prisma config: schema path, migrations dir, seed command |
+| `packages/database/src/client.ts` | Prisma client singleton over `@prisma/adapter-pg`, connection pool from `serverEnv.DATABASE_URL` |
+| `packages/database/src/index.ts` | Barrel: `database` + `assertDisposableDatabase` |
+| `packages/database/src/reset-guard.ts` | Destructive-operation guard (see below) |
+| `packages/database/src/local-tooling.ts` | Resolves a local disposable `DATABASE_URL` for local tooling, falling back to `.env` / `.env.example` |
+| `packages/database/src/seed.ts` | Idempotent seed of one demo + one transaction sample |
+| `packages/database/scripts/run-local-prisma.mjs` | Runs Prisma CLI with local-tooling URL resolution |
 
-## The data model
+## Data model
 
-Defined in `packages/database/prisma/schema.prisma`:
+`packages/database/prisma/schema.prisma` uses the `prisma-client` generator (`engineType = "client"`, ESM output into `src/generated/prisma`) and a PostgreSQL datasource:
 
-- **`Demo`** — `id` (UUID), `name`, `createdAt`, mapped to table `demos`. Has many `TransactionSample`s.
-- **`TransactionSample`** — `id` (BigInt autoincrement), `demoId` (FK to `Demo`, cascading delete), `amount` (Decimal 14,2), `currency` (Char 3), `occurredAt`, `createdAt`, mapped to table `transaction_samples` with an index on `demo_id`.
+- **`Demo`** — `id` (uuid PK), `name`, `createdAt` (timestamptz, default now). Maps to table `demos`.
+- **`TransactionSample`** — `id` (BigInt identity), `demoId` (uuid FK to `Demo`, `onDelete: Cascade`), `amount` (`Decimal(14,2)`), `currency` (`Char(3)`), `occurredAt`, `createdAt`. Indexed on `demoId`. Maps to table `transaction_samples`.
 
-The generator uses Prisma's new `prisma-client` provider, emits ESM into `packages/database/src/generated/prisma`, and uses the `client` engine type. The generated client is committed and imported directly (e.g. `packages/database/src/client.ts` and `packages/database/src/seed.ts`).
+## The reset guard
 
-## Scripts and safety
+`packages/database/src/reset-guard.ts` is the enforcement point for destructive operations. `assertDisposableDatabase(connectionUrl)` rejects a connection unless **every** condition holds:
 
-There are commands from the repository root (see `packages/database/package.json` and the root `package.json`):
+- protocol is `postgresql:`
+- a password is present
+- host is `127.0.0.1` or `localhost`
+- port is `54329`
+- exactly one path segment, ending in `_local` or `_test`
+- no query string
 
-| Command | Package script | Purpose |
-| --- | --- | --- |
-| `pnpm db:generate` | `generate` | Generate the Prisma client via `scripts/run-local-prisma.mjs` |
-| `pnpm db:migrate` | `migrate` | Create/apply migrations (R2) |
-| `pnpm db:seed` | `seed` | Upsert a fixed safe demo + transaction record |
-| `pnpm db:reset` | `reset` | Local-only reset, gated by explicit reset authorization |
-| `pnpm db:studio` | `studio` | Open Prisma Studio against the local database |
+`assertDisposableTestDatabase` additionally requires the `_test` suffix. `pnpm db:reset` refuses anything else, so a production or remote `DATABASE_URL` can never be reset by mistake. The guard is shared with `tools/doctor` and `packages/database/src/local-tooling.ts`.
 
-Start PostgreSQL with `pnpm db:start` (`docker compose up -d --wait postgres`) and stop it with `pnpm db:stop`.
+## Seed
 
-**Reset guard** (`packages/database/src/reset-guard.ts`): `assertDisposableDatabase()` rejects any URL that is not `postgresql://` on `127.0.0.1`/`localhost` port `54329` with a single path segment ending in `_local` or `_test` and no query string. `assertDisposableTestDatabase()` additionally requires the `_test` suffix. `resolveLocalToolingDatabaseUrl()` in `packages/database/src/local-tooling.ts` applies this guard to URLs read from the environment or from `.env`/`.env.example`.
-
-**Seed** (`packages/database/src/seed.ts`): upserts a demo with the fixed UUID `00000000-0000-4000-8000-000000000001` named "Sentra Demo" and one `TransactionSample`, then re-syncs the serial sequence so future inserts continue correctly.
+`packages/database/src/seed.ts` runs idempotent upserts for one demo (`Sentra Demo`) and one `TransactionSample` (125000.00 IDR), then resynchronizes the `transaction_samples` sequence. It requires `DATABASE_URL` and is wired into `prisma.config.ts` (`node --experimental-strip-types src/seed.ts`).
 
 ## Integration points
 
-- **Env**: `packages/database/src/client.ts` reads `serverEnv.DATABASE_URL` from `@safrs/env/server`.
-- **API**: `packages/api/src/app.ts` imports the store lazily via `await import("@safrs/database")` and uses `database.demo.create` / `findMany` (through its `DemoStore` interface).
-- **Telemetry**: `@safrs/database` depends on `@safrs/telemetry`, whose `PrismaInstrumentation` traces Prisma queries.
-- **Server-only boundary**: the web app imports `@safrs/database` only in server contexts; `DATABASE_URL` is never exposed to the browser.
+- **`@safrs/api`** defaults its `DemoStore` to the live `database` client (`packages/api/src/app.ts`).
+- **`@safrs/web`** consumes `@safrs/database` on the server; Prisma and `DATABASE_URL` never reach the browser.
+- **`tools/doctor`** runs the same `assertDisposableDatabase` check against the local `.env` to report environment safety.
+- **Local PostgreSQL** runs in Docker Compose on `localhost:54329`; see `compose.yaml` and `pnpm db:start`.
 
-```mermaid
-graph TD
-    ENV["@safrs/env/server<br/>DATABASE_URL"]
-    DB["@safrs/database<br/>Prisma client"]
-    API["@safrs/api<br/>DemoStore"]
-    PG["PostgreSQL<br/>127.0.0.1:54329"]
-    TEL["@safrs/telemetry<br/>PrismaInstrumentation"]
-    GUARD["reset-guard.ts<br/>assertDisposableDatabase"]
+## Commands
 
-    DB --> ENV
-    API --> DB
-    DB --> PG
-    TEL --> DB
-    GUARD -. guards .-> DB
-    DB --> TEL
+From repository root:
+
+```bash
+pnpm db:generate      # generate Prisma client
+pnpm db:migrate       # apply migrations
+pnpm db:seed          # seed local data
+pnpm db:studio        # Prisma Studio
+pnpm db:reset         # local reset (guard enforced; requires explicit reset authorization)
+pnpm --filter @safrs/database test
 ```
 
 ## Related pages
 
-- [Hono API REST endpoints](../api/rest-endpoints.md)
-- [@safrs/api](./api.md)
-- [@safrs/env](./env.md)
-- [@safrs/telemetry](./telemetry.md)
-- [Risk model, roles, and verification](../features/safrs-governance.md)
+- [API](api.md) — the consumer of the demo store
+- [Environment](env.md) — validated `DATABASE_URL`
+- [Doctor tool](../tools/doctor.md) — local database diagnostics
+- [Shared packages](index.md)

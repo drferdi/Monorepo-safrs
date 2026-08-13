@@ -1,51 +1,55 @@
-# Doctor environment diagnosis
-
-`tools/doctor/` is the environment-readiness CLI, run as `pnpm doctor`. It checks whether the local development environment can run the monorepo and reports a human-readable readiness report in Bahasa Indonesia, optionally with technical details, plus redacted diagnostic output.
+# Doctor
 
 ## Purpose
 
-Doctor validates the local environment before development begins: Node.js version, pnpm, Git, Docker, the `.env` file, the disposable Postgres database, and the generated Prisma client. It is strictly read-only — it runs commands and reads files but never mutates them. Its exit code reflects readiness (`0` ready, `1` recoverable issue, `2` unsafe configuration), which lets scripts and agents react to the result.
+`pnpm doctor` (implemented in `tools/doctor/src/cli.mjs`) is a read-only environment diagnosis that runs before setup and development. It checks the Node toolchain, package manager, Git, Docker, the local `.env`, the disposable-database contract, PostgreSQL readiness, and the generated Prisma client, then prints a human report (Bahasa Indonesia) with a recovery hint for every failing check. It never mutates anything.
 
 ## Key source files
 
-| File | Responsibility |
+| File | Purpose |
 | --- | --- |
-| `tools/doctor/src/cli.mjs` | Entry point; runs `runDoctor()` and maps the report to an exit code |
-| `tools/doctor/src/checks.mjs` | Runs all readiness checks and builds the report |
-| `tools/doctor/src/messages.mjs` | Renders human/technical reports and redacts secrets |
-| `tools/doctor/test/checks.test.mjs` | Unit tests for the checks |
-| `packages/database/src/reset-guard.ts` | Rejects non-disposable `DATABASE_URL` (imported by Doctor) |
+| `tools/doctor/src/cli.mjs` | CLI entrypoint: runs the report, supports `--technical` |
+| `tools/doctor/src/checks.mjs` | The check implementations (`runDoctor`) and env parsing |
+| `tools/doctor/src/messages.mjs` | Report rendering + deterministic secret redaction |
+| `tools/doctor/package.json` | Package metadata (`@safrs/doctor`) |
 
 ## How it works
 
-Doctor composes a list of checks, each producing a `{ ok, severity, area, summary, recovery, technical }` result. Checks run sequentially, with later database checks depending on earlier ones (for example, the Postgres readiness check only runs when `DATABASE_URL` is safe and Docker is up).
+`runDoctor()` in `tools/doctor/src/checks.mjs` runs nine checks and renders a verdict for each (`SIAP` / `BELUM SIAP` / `DITOLAK`):
 
-```mermaid
-graph TD
-    CLI["cli.mjs"] --> RUN["checks.mjs: runDoctor"]
-    RUN --> N["Node.js version"]
-    RUN --> P["pnpm"]
-    RUN --> G["Git"]
-    RUN --> D["Docker installed"]
-    D --> E["Docker engine running"]
-    RUN --> F[".env file exists"]
-    F --> U["parse DATABASE_URL"]
-    U --> RG["reset-guard: assertDisposableDatabase"]
-    RG --> DB["Postgres pg_isready"]
-    RUN --> PC["Prisma client generated"]
-    RUN --> MSG["messages.mjs: render report"]
+- **NODE** — Node.js 24 LTS compatible (major 24, minor >= 18).
+- **PNPM** — `pnpm --version` succeeds.
+- **GIT** — `git --version` succeeds.
+- **DOCKER** — Docker CLI installed and the engine (`docker info`) running.
+- **ENV** — `.env` exists; otherwise the recovery is `pnpm run setup`.
+- **DATABASE** — `DATABASE_URL` (from env or parsed from `.env`) passes `assertDisposableDatabase` from `packages/database/src/reset-guard.ts`. An unsafe URL is `DITOLAK` and exits with code `2`.
+- **POSTGRES** — `docker compose exec postgres pg_isready` against the local service.
+- **PRISMA** — the generated client exists at `packages/database/src/generated/prisma/client.ts`; otherwise recovery is `pnpm db:generate`.
+- **`.env` canonical parsing** — `loadCanonicalEnvironment` validates `DATABASE_URL`/`APP_URL`/`NODE_ENV` from `.env` for tooling consumers.
+
+Exit codes: `0` all good, `1` recoverable failures, `2` unsafe (e.g. non-disposable `DATABASE_URL`).
+
+### Redaction
+
+Every line of output runs through `redactText` (`tools/doctor/src/messages.mjs`): URL-embedded credentials become `[URL DISEMBUNYIKAN]`, `NAME=secret` assignments become `$1=[RAHASIA DISEMBUNYIKAN]`, and any value present in the supplied environment is replaced with `[NILAI ENV DISEMBUNYIKAN]`. A `--technical` flag adds a redacted technical report of failing checks.
+
+## CLI usage
+
+```bash
+pnpm doctor          # human report (redacted, Bahasa Indonesia)
+pnpm doctor --technical
 ```
-
-Key behaviors:
-
-- **Node version** is validated against `{ major: 24, minimumMinor: 18 }` via `nodeCompatible()`.
-- **Database safety** runs the URL through `assertDisposableDatabase()` from `packages/database/src/reset-guard.ts`. A non-disposable `DATABASE_URL` is flagged with severity `unsafe`, which sets exit code `2` and blocks proceeding.
-- **Secret redaction** (`messages.mjs`) replaces URL credentials, `*PASSWORD*`/`*TOKEN*`/`*KEY*`/`*SECRET*` assignments, and known environment values with placeholder text before printing, so diagnostics never leak secrets.
-- The canonical environment is loaded from `.env`, and only `DATABASE_URL`, `APP_URL`, and `NODE_ENV` are read.
 
 ## Integration points
 
-- Wired into the daily workflow and the golden-path baseline as `pnpm doctor` (see [Getting started](../overview/getting-started.md)).
-- Reuses the shared disposable-database guard from `packages/database/src/reset-guard.ts` without duplicating the rule.
-- Runs via the process helper in `scripts/lib/process.mjs` (`runCommand`, `packageManagerCommand`).
-- Doctor is a diagnostic aid, not a governance gate; see [Tooling](../how-to-contribute/tooling.md) for how it fits with the broader toolchain.
+- **`pnpm run setup`** — doctor is the recommended first step before setup/dev (root `AGENTS.md`, golden-path capsule).
+- **`packages/database/src/reset-guard.ts`** — shared disposable-database assertion reused verbatim.
+- **`tools/AGENTS.md`** — the boundary rules: run focused tool tests first, then `pnpm run doctor` for read-only diagnostics.
+- **`scripts/lib/process.mjs`** — shared command runner and package-manager command resolution.
+
+## Related pages
+
+- [Tools overview](index.md)
+- [SAFRS governance checkers](safrs.md) — `check_sensitive_changes` is the read-only governance gate counterpart
+- [Packages / Database](../packages/database.md) — the reset guard doctor relies on
+- [Getting started](../overview/getting-started.md) — setup flow

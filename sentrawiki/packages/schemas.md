@@ -1,50 +1,51 @@
-# @safrs/schemas
+# Schemas (`@safrs/schemas`)
 
 ## Purpose
 
-`@safrs/schemas` is the single source of truth for the API's Zod contracts. It defines the request input, the response payload, and the error envelope that both the Hono API and the web client share, so a change to a contract is caught by the type-checker everywhere it is used. Keeping Zod schemas here — rather than inside `@safrs/api` — avoids duplicating contracts across packages and lets the OpenAPI document be derived from the same source.
+The shared Zod contract package. `@safrs/schemas` is the single source of truth for data shapes across the typed `Database → API → Web` flow. Because the OpenAPI document, the Hono validation, and the typed client are all derived from (or validated against) these schemas, a shape change lands here once and propagates everywhere.
+
+The package deliberately exports only the schemas and their inferred types; validation logic lives in consumers (notably `@safrs/api` and `@safrs/env`).
 
 ## Key source files
 
-| File | Role |
+| File | Purpose |
 | --- | --- |
-| `packages/schemas/src/index.ts` | Barrel that re-exports the three schemas |
-| `packages/schemas/src/demo.ts` | Defines `createDemoInputSchema`, `demoSchema`, `apiErrorSchema` |
-| `packages/schemas/package.json` | Package manifest (Zod 4 dependency, lint/test/typecheck scripts) |
+| `packages/schemas/src/index.ts` | Public barrel; re-exports the demo and error schemas |
+| `packages/schemas/src/demo.ts` | The three current Zod contracts |
+| `packages/schemas/package.json` | Package metadata; depends only on `zod` |
 
 ## The contracts
 
-Defined in `packages/schemas/src/demo.ts` using Zod 4:
+`packages/schemas/src/demo.ts` defines three schemas:
 
-- **`createDemoInputSchema`** — request body for creating a demo. Example: `{ name: z.string().trim().min(1).max(80) }`.
-- **`demoSchema`** — the serialized response shape. Example: `{ id: z.string().uuid(), name: z.string(), createdAt: z.string().datetime() }`.
-- **`apiErrorSchema`** — the correlation-ID error envelope. Example: `{ code, message, correlationId, fieldErrors? }`.
+- **`createDemoInputSchema`** — `{ name: string }` where the name is trimmed, length 1–80. The request body for `POST /api/demos`.
+- **`demoSchema`** — the serialized `Demo` record: `{ id: uuid, name: string, createdAt: datetime }`. The response shape for demo read/write endpoints.
+- **`apiErrorSchema`** — the standard error envelope: `{ code, message, correlationId, fieldErrors? }`. Produced and consumed by the API error module.
 
-Property-based tests using `fast-check` (with a deterministic seed) live alongside the schemas to verify Zod invariants, matching the testing patterns in [patterns-and-conventions](../how-to-contribute/patterns-and-conventions.md).
+Consumers reference these via barrel imports:
+
+```ts
+import { apiErrorSchema, createDemoInputSchema, demoSchema } from "@safrs/schemas";
+```
 
 ## Integration points
 
-- **API validation**: `@safrs/api` feeds `createDemoInputSchema` to `@hono/zod-validator` in `packages/api/src/app.ts` and serializes responses through `demoSchema.parse()`.
-- **Error envelope**: `packages/api/src/error.ts` builds every error with `apiErrorSchema.parse()`, producing `VALIDATION_ERROR` and `INTERNAL_ERROR` shapes.
-- **OpenAPI**: `packages/api/src/openapi.ts` calls `z.toJSONSchema(...)` on these schemas to build the OpenAPI 3.1 document, guaranteeing docs stay in sync with validation.
-- **Typed client**: the response type inferred from these schemas flows through `@safrs/api`'s `AppType` into the typed Hono RPC client (`hc<AppType>`), so the web app sees compile-time drift if a contract changes.
+- **`@safrs/api`** uses `createDemoInputSchema` in `@hono/zod-validator` for request validation and `demoSchema` for serializing responses (`packages/api/src/app.ts`), plus `apiErrorSchema` for the error envelope (`packages/api/src/error.ts`).
+- **`@safrs/api`** derives the OpenAPI components from these schemas with Zod 4's native `z.toJSONSchema(...)` (`packages/api/src/openapi.ts`), so the documentation cannot drift from the validation contracts.
+- **`tools/codegen`** imports the schema entry module at runtime and introspects each exported Zod value to generate an OpenAPI document, mock factories, and a typed client wrapper (`tools/codegen/src/schemas.mjs`).
 
-```mermaid
-graph LR
-    SCH["@safrs/schemas<br/>Zod contracts"]
-    API["@safrs/api<br/>zValidator + serialize"]
-    OAS["OpenAPI 3.1<br/>(derive via z.toJSONSchema)"]
-    WEB["web app<br/>typed client"]
+## Verification
 
-    SCH --> API
-    API --> OAS
-    API --> WEB
-    SCH --> OAS
+```bash
+pnpm --filter @safrs/schemas lint
+pnpm --filter @safrs/schemas typecheck
+pnpm --filter @safrs/schemas test
 ```
+
+The package uses TypeScript strict, Biome, and Vitest, matching every other package.
 
 ## Related pages
 
-- [Hono API REST endpoints](../api/rest-endpoints.md)
-- [@safrs/api](./api.md)
-- [System architecture and data flow](../overview/architecture.md)
-- [Coding patterns and conventions](../how-to-contribute/patterns-and-conventions.md)
+- [API](api.md) — Hono routes and OpenAPI derived from these schemas
+- [Codegen tool](../tools/codegen.md) — schema-driven generation
+- [Shared packages](index.md)

@@ -1,109 +1,101 @@
-# Packages
-
-The SAFRS Monorepo ships eight shared workspace packages under `packages/`. They are the reusable, product-neutral capabilities consumed by the golden-path application (`projects/golden-path/apps/web`) and by future projects. Each package follows the same baseline: TypeScript strict, Biome for linting, Vitest for testing, and the shared tsconfig base from `@safrs/config`.
+# Shared packages
 
 ## Purpose
 
-This index maps every package, what it owns, and how the pieces connect into the typed Database → API → Web flow. It is the navigation hub for all package-specific pages; each package page below describes its own contracts, source files, and integration points in detail.
+`packages/<package>/` holds only reusable, product-neutral capabilities with a clear owner and real consumers. These are the shared boundaries that projects (and the golden-path application) build against. Because a change can affect multiple project capsules, every package change is at minimum R2 and requires designated review (see root `AGENTS.md`).
 
-## The eight packages
+There are eight shared packages:
 
-| Package | Directory | Owns |
+| Package | Directory | Role |
 | --- | --- | --- |
-| `@safrs/schemas` | `packages/schemas` | Zod contracts shared by API and web |
-| `@safrs/env` | `packages/env` | Server and client environment validation |
-| `@safrs/database` | `packages/database` | Prisma schema, migrations, seed, reset guard, generated client |
-| `@safrs/api` | `packages/api` | Hono routes, typed RPC client, error envelopes, OpenAPI |
-| `@safrs/ui` | `packages/ui` | Reusable presentation primitives (e.g. `StatusCard`) |
-| `@safrs/telemetry` | `packages/telemetry` | OpenTelemetry instrumentation |
-| `@sentra/token` | `packages/token` | Sentra design tokens, the only raw-colour source |
-| `@safrs/config` | `packages/config` | Shared tsconfig presets |
+| `@safrs/config` | `packages/config/` | Shared strict TypeScript `tsconfig` presets (`base.json`, `nextjs.json`) |
+| `@safrs/schemas` | `packages/schemas/` | Zod contracts — the single source of truth for data shapes |
+| `@safrs/env` | `packages/env/` | Runtime environment validation, split client vs server |
+| `@safrs/telemetry` | `packages/telemetry/` | OpenTelemetry SDK init + Hono request middleware |
+| `@sentra/token` | `packages/token/` | Sentra design tokens — the only place raw colour/radius values may appear |
+| `@safrs/ui` | `packages/ui/` | React primitives built on the design tokens (`StatusCard`) |
+| `@safrs/database` | `packages/database/` | Prisma + PostgreSQL client, reset guard, local seed |
+| `@safrs/api` | `packages/api/` | Hono routes, typed RPC client, OpenAPI endpoint |
 
-## Key source files
+## Dependency graph
 
-| File | Role |
-| --- | --- |
-| `packages/README.md` | One-line description of every package |
-| `packages/config/tsconfig/base.json` | Shared TypeScript strict base for all packages |
-| `packages/database/prisma/schema.prisma` | Source of the Prisma data model |
-| `packages/api/src/app.ts` | The Hono app (`AppType`), the single typed API surface |
-
-## Package relationships
-
-Every package depends on `@safrs/config` for its tsconfig preset. `@safrs/schemas` owns the Zod contracts that both the API and the web app consume. `@sentra/token` is the only package allowed to contain raw colour values, and it is consumed by `@safrs/ui` and the web app.
+Packages are deliberately layered so the lower primitives carry no workspace dependencies:
 
 ```mermaid
 graph TD
-    token["@sentra/token"]
-    config["@safrs/config"]
-    schemas["@safrs/schemas"]
-    env["@safrs/env"]
-    database["@safrs/database"]
-    api["@safrs/api"]
-    telemetry["@safrs/telemetry"]
-    ui["@safrs/ui"]
-    web["@safrs/web (golden-path)"]
-
-    web --> api
-    web --> database
-    web --> env
-    web --> ui
-    web --> token
-    web --> telemetry
-    api --> schemas
-    api --> database
-    api --> telemetry
-    database --> env
-    database --> telemetry
-    ui --> token
-
-    schemas -.-> config
-    env -.-> config
-    api -.-> config
-    database -.-> config
-    telemetry -.-> config
-    ui -.-> config
+    subgraph leaf["Leaf primitives (no workspace deps)"]
+        CONFIG["@safrs/config"]
+        SCHEMAS["@safrs/schemas"]
+        ENV["@safrs/env"]
+        TELE["@safrs/telemetry"]
+        TOKEN["@sentra/token"]
+    end
+    subgraph composite["Composite packages"]
+        DB["@safrs/database"]
+        UI["@safrs/ui"]
+        API["@safrs/api"]
+    end
+    DB --> ENV
+    DB --> TELE
+    UI --> TOKEN
+    API --> DB
+    API --> SCHEMAS
+    API --> TELE
+    subgraph app["Application"]
+        WEB["@safrs/web (golden-path)"]
+    end
+    WEB --> API
+    WEB --> DB
+    WEB --> ENV
+    WEB --> TELE
+    WEB --> UI
+    WEB --> TOKEN
 ```
 
-## How the packages connect
+The golden-path web app (`projects/golden-path/apps/web/package.json`) consumes `@safrs/api`, `@safrs/database`, `@safrs/env`, `@safrs/telemetry`, `@safrs/ui`, and `@sentra/token`. `@safrs/config` is a dev-only dependency used by every package's `typecheck`.
+
+## Data flow
+
+A request to the golden-path app flows through exactly one package-owned API boundary and one database boundary:
 
 ```mermaid
-sequenceDiagram
-    participant B as Browser
-    participant W as Web (Next.js)
-    participant A as api (Hono)
-    participant DB as database (Prisma)
-    participant PG as PostgreSQL
-
-    B->>W: GET / or POST /api/demos
-    W->>W: validate env (@safrs/env)
-    W->>A: mounted Hono app (catch-all route)
-    A->>A: validate body via schemas (zValidator)
-    A->>A: open span via telemetry
-    A->>DB: demo.create / findMany
-    DB->>PG: SQL
-    PG-->>DB: rows
-    DB-->>A: DemoRecord
-    A->>A: serialize via demoSchema.parse
-    A-->>W: typed json response
-    W-->>B: rendered UI (ui + token)
+flowchart LR
+    WEB["@safrs/web (Next.js, Node runtime)"]
+    API["@safrs/api (Hono)"]
+    DB["@safrs/database (Prisma)"]
+    PG[("PostgreSQL<br/>localhost:54329")]
+    SCHEMA["@safrs/schemas (Zod)"]
+    TELE["@safrs/telemetry (OTel)"]
+    WEB --> API
+    API --> SCHEMA
+    API --> DB
+    API --> TELE
+    DB --> PG
 ```
 
-The Hono API is mounted inside Next.js through a catch-all route at `projects/golden-path/apps/web/src/app/api/[[...route]]/route.ts`. The browser never imports Prisma or `DATABASE_URL`; it only consumes the typed RPC client from `@safrs/api`. This keeps `@safrs/env`/`@safrs/database` server-only while `@safrs/api` provides compile-time drift detection between frontend and backend.
+The browser only ever rides the public typed client from `@safrs/api/client`; Prisma and `DATABASE_URL` stay server-only. This is enforced by the boundary rules in each package's `AGENTS.md` and by the repository's `check_topology.py` gate.
 
 ## Integration points
 
-- **Schemas → API**: `@safrs/api` imports `createDemoInputSchema`, `demoSchema`, and `apiErrorSchema` from `@safrs/schemas` to validate requests, serialize responses, and shape errors (`packages/api/src/app.ts`).
-- **Schemas → OpenAPI**: `buildOpenApiDocument()` in `packages/api/src/openapi.ts` derives the OpenAPI 3.1 document from the same Zod schemas, so docs cannot drift from validation.
-- **Env → Database**: `packages/database/src/client.ts` reads `serverEnv.DATABASE_URL` from `@safrs/env/server` to construct the Prisma client.
-- **Env → Web**: `next.config.ts` imports `@safrs/env/server` for build-time validation; the browser imports `@safrs/env/client`.
-- **Database → API → Telemetry**: the API resolves its store from `@safrs/database` and both the web layer and the API route spans through `@safrs/telemetry`.
-- **Token → UI → Web**: `@safrs/ui`'s `StatusCard` is styled with semantic token classes, and the web app imports `@sentra/token` stylesheet in its root layout.
-- **Config → all**: every package's `tsconfig.json` extends `@safrs/config/tsconfig/base.json` (and `nextjs.json` for the web app).
+- **Golden-path web app** (`projects/golden-path/apps/web`) is the primary consumer and the reference integration (see [the web app](../apps/golden-path-web.md)).
+- **`@safrs/api`** is the single typed HTTP boundary exposed under `/api`; the OpenAPI document is generated from `@safrs/schemas` so validation and documentation cannot drift.
+- **`@sentra/token`** is mandatory for all UI work — raw colour or radius values outside `packages/token/src/tokens.css` fail the governance gate (`node scripts/check-tokens.mjs`).
+- **`@safrs/database`** owns the Prisma schema and migrations; destructive operations are guarded by the reset guard (`src/reset-guard.ts`) so only disposable local/test databases can be reset.
+
+## Governance note
+
+`packages/*/AGENTS.md` files declare each boundary's scope, safety rules, and exact commands. Shared schema, dependency, package, or architecture changes are R2; anything touching credentials, payment, healthcare-critical logic, or production execution is R3 and requires explicit human authorization.
 
 ## Related pages
 
-- [System architecture and data flow](../overview/architecture.md)
-- [Sentra design token system and WCAG enforcement](../features/design-tokens.md)
-- [Risk model, roles, and verification](../features/safrs-governance.md)
-- [Coding patterns and conventions](../how-to-contribute/patterns-and-conventions.md)
+- [Schemas](schemas.md) — Zod contracts
+- [Environment](env.md) — validated env, client/server split
+- [Database](database.md) — Prisma, reset guard, seed
+- [API](api.md) — Hono, typed client, OpenAPI
+- [UI](ui.md) — StatusCard primitive
+- [Telemetry](telemetry.md) — OpenTelemetry instrumentation
+- [Token](token.md) — design tokens and WCAG enforcement
+- [Config](config.md) — shared tsconfig presets
+- [Shared packages (root README)](../../packages/README.md)
+- [Tools](../tools/index.md) — developer tooling that operates on these packages (e.g. `codegen`, `deps-graph`)
+- [Architecture](../overview/architecture.md)

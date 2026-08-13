@@ -1,99 +1,118 @@
 # Development workflow
 
-**Purpose**: This page describes the end-to-end cycle for contributing code: creating the isolated environment, writing and testing changes, opening a pull request, and merging. It covers worktree usage, the `pnpm` scripts you will use, the `pnpm check` gate, and the `pnpm governance` command.
+This page describes the day-to-day cycle of contributing to the Monorepo: how to branch and worktree, which pnpm scripts to run, and how the gates (`pnpm check`, `pnpm governance`) enforce SAFRS. Start from [How to contribute](index.md) and [Getting started](../overview/getting-started.md).
 
-## The cycle
+## Purpose
+
+- Document the branch/worktree cycle for parallel mutation under SAFRS execution isolation.
+- Map the root `package.json` scripts to their intent.
+- Explain the `pnpm check` gate, `pnpm governance`, `pnpm task`, and `pnpm saf` commands.
+
+## Branch and worktree cycle
+
+`SAFRS_SPEC.md` section 10 requires dedicated branches/worktrees for mutation. Parallel mutation work must use isolated worktrees placed **outside** the repository working tree, in the sibling directory:
+
+```text
+../Monorepo.worktrees/<branch-name>
+```
+
+For example:
+
+```bash
+git worktree add ../Monorepo.worktrees/feat/x feat/x
+```
+
+Never create worktrees inside the repository root: `.worktrees/` is legacy and stays gitignored only as a safety net.
+
+Typical cycle:
 
 ```mermaid
 graph LR
-    A[Doctor: pnpm run doctor] --> B[Branch + worktree]
-    B --> C[Implement]
-    C --> D[Test: pnpm test / test:e2e]
-    D --> E[Governance: pnpm governance]
-    E --> F[Full gate: pnpm check]
-    F --> G[PR + review]
-    G --> H[Merge + close task]
+    A["pnpm status"] --> B["pnpm task claim<br/>(risk + scope)"]
+    B --> C["worktree: ../Monorepo.worktrees/branch"]
+    C --> D["edit + pnpm test"]
+    D --> E["pnpm governance + pnpm check"]
+    E --> F["pnpm task state VERIFYING/REVIEW"]
+    F --> G["CI + PR gates"]
+    G --> H["pnpm task close"]
 ```
 
-## Branch and isolated worktree
+## pnpm scripts
 
-Follow-up to the task lifecycle, the mutation phase must be isolated. Per `AGENTS.md` and `SAFRS_SPEC.md` section 10:
+The root `package.json` defines all contributor-facing commands. Key ones:
 
-- Create worktrees **outside** the repository working tree, in the sibling directory `../Monorepo.worktrees/<branch>`, for example:
-  ```bash
-  git worktree add ../Monorepo.worktrees/feat/x feat/x
-  ```
-- Never create worktrees inside the repository root (`.worktrees/` is legacy and only a gitignored safety net).
-- Parallel implementers each use a dedicated worktree. Shared mutable state (databases, ports, caches) is isolated per task or serialized.
-- The default branch is `main`. Never push or merge a protected branch without explicit policy and human authorization.
+| Command | Script | Purpose |
+| --- | --- | --- |
+| `pnpm dev` | `node scripts/dev.mjs` | Start the Next.js dev server (auto-starts Postgres if needed) |
+| `pnpm doctor` | `node tools/doctor/src/cli.mjs` | Diagnose environment readiness |
+| `pnpm status` | `node tools/status/src/cli.mjs` | Show task registry, lease state, ownership, live governance probe |
+| `pnpm task` | `node tools/task/src/cli.mjs` | Claim/transition/close tasks, list registry |
+| `pnpm saf` | `node tools/automation/src/cli.mjs` | Automation control-plane CLI |
+| `pnpm saf:status` | `node tools/status/src/cli.mjs` | Status CLI alias |
+| `pnpm saf:verify` | `node scripts/safrs-verify.mjs` | Run the SAFRS verification suite |
+| `pnpm governance` | `node scripts/safrs-verify.mjs` | Same as above — SAFRS local verification |
+| `pnpm check` | `pnpm governance && check:tokens && lint && typecheck && test && build` | Full merge gate |
+| `pnpm check:tokens` | `node scripts/check-tokens.mjs` | Design-token raw-value + WCAG 2.2 AA scan |
+| `pnpm check:security` | `node scripts/check-supply-chain.mjs` | Supply-chain scan (npm audit + optional osv-scanner) |
+| `pnpm test` | `node scripts/test.mjs` | Repository + contract + unit tests |
+| `pnpm test:e2e` | `node scripts/test-e2e.mjs` | Playwright browser smoke with disposable test database |
+| `pnpm typecheck` | `turbo run typecheck` | TypeScript across the monorepo |
+| `pnpm lint` / `pnpm format` / `pnpm fix` | `biome ...` | Biome lint / format / auto-fix |
+| `pnpm build` | `turbo run build` | Build all packages |
 
-## Code
+Database, scaffolding, and capability commands are covered in [Getting started](../overview/getting-started.md).
 
-- Follow the style rules and patterns in [patterns-and-conventions](patterns-and-conventions.md): TypeScript strict, Biome formatting, named exports, schema-first contracts.
-- Keep changes small and scoped to the task. Prefer the smallest viable change.
-- Raw colour or radius values outside `packages/token/src/tokens.css` are forbidden; the token gate enforces this.
-
-## Test
-
-Run the narrowest relevant test first, then the broader suite. See [testing](testing.md) for details:
+### pnpm task — task management
 
 ```bash
-pnpm test        # contract + unit tests (governance-aware runner)
-pnpm test:e2e    # Playwright browser smoke against a disposable test DB
+pnpm task claim --id TASK-YYYYMMDD-XXX --title "Title" --owner-id <id> --owner-label "<agent>" --risk R0|R1|R2|R3 --scope <path> [--scope <path>...] [--yes]
+pnpm task state --id TASK-YYYYMMDD-XXX --to STATE [--yes]
+pnpm task close --id TASK-YYYYMMDD-XXX [--yes]
+pnpm task list [--json] [--active]
 ```
 
-`pnpm test` runs `scripts/test.mjs`, which sets `DATABASE_INTEGRATION_TESTS=1` and runs contract tests followed by `turbo run test` across the workspace.
+- `claim` validates risk, scope prefixes, and ownership overlap before writing the shared registry.
+- `state` only allows legal lifecycle transitions and verifies the task belongs to the current worktree.
+- Commands are preview-only unless `--yes` is passed; each mutation is mirrored by a local lease event.
+- The shared registry is read/written under an atomic lock; a claim that overlaps another active task's scope is refused.
 
-## Verify with governance
+### pnpm saf — automation CLI
 
-`pnpm governance` runs `scripts/safrs-verify.mjs`, which invokes `scripts/safrs-verify.sh` (or `.ps1` on Windows). It checks policy, docs, routing, tool inventory, topology, GitHub Action pinning, sensitive-change classification, handoff, and the architecture/governance Python tests. Run it before opening a PR.
+```bash
+pnpm saf contract compile task.json [--write .safrs/contracts/task.json]
+pnpm saf lease verify events.ndjson
+pnpm saf lease replay events.ndjson
+pnpm saf lease reconcile events.ndjson local.json
+pnpm saf gate <gate-id|--all>
+pnpm saf evidence verify manifest.json
+pnpm saf publish evaluate pr.json evidence.json [platform.json]
+```
 
-## The `pnpm check` gate
+`lease authority-apply` runs only inside the serialized `safrs-task-control` workflow. See [automation tool](../tools/automation.md).
 
-`pnpm check` is the full gate that CI runs. From `package.json`, it chains:
+## pnpm governance
+
+`pnpm governance` runs the local SAFRS verification suite (the same `safrs-verify` described in [index.md](index.md)). It must pass before work is considered complete. A non-trivial change set that does not update `.agents/HANDOFF.md` will fail here.
+
+## pnpm check — the gate
+
+`pnpm check` is the full pre-merge gate:
 
 ```text
-pnpm governance -> pnpm check:tokens -> pnpm lint -> pnpm typecheck -> pnpm test -> pnpm build
+governance → check:tokens → lint → typecheck → test → build
 ```
 
-Each stage must pass:
+It enforces the design-token rule (no raw colours/radius outside `packages/token/src/tokens.css`, with WCAG 2.2 AA recomputation), Biome formatting/linting, strict type checking, all tests, and a clean build. CI runs the same steps plus `pnpm test:e2e` against a disposable PostgreSQL database.
 
-| Stage | Command | What it verifies |
-| --- | --- | --- |
-| Governance | `pnpm governance` | SAFRS policy, docs, routing, topology, sensitive changes |
-| Tokens | `pnpm check:tokens` | No raw colours/radii outside `packages/token` |
-| Lint | `pnpm lint` | Biome `recommended` on the whole tree |
-| Typecheck | `pnpm typecheck` | `turbo run typecheck`, strict TypeScript |
-| Tests | `pnpm test` | Contract + unit + integration tests |
-| Build | `pnpm build` | `turbo run build` across the workspace |
+## Verification integrity
 
-## Open a PR and merge
-
-1. Push the feature branch (from its worktree) and open a pull request against `main`.
-2. CI runs the `CI` and `SAFRS Governance` workflows (see [tooling](tooling.md)).
-3. Required review completes per the risk tier (R2+/R3 require designated review; R3 requires human authorization before execution).
-4. After merge, move the task to `MERGED`, then `CLOSED`, and update `.agents/HANDOFF.md`.
-
-## Useful pnpm scripts
-
-From the root `package.json`:
-
-```bash
-pnpm run setup      # validate env, start Postgres, generate Prisma, migrate, seed
-pnpm dev            # start Next.js dev server (auto-starts Postgres if needed)
-pnpm run doctor     # diagnose environment readiness
-pnpm db:start       # docker compose up -d --wait postgres
-pnpm db:reset       # reset local DB (requires disposable guard)
-pnpm project:new    # interactive project wizard
-pnpm capability:add # add an optional capability pack
-pnpm deps:graph     # render the inter-package dependency graph
-pnpm codegen        # generate OpenAPI, mocks, and typed client from Zod schemas
-```
+Do not weaken gates to get a pass. Changes to `.github/workflows/**`, `.safrs/**`, `AGENTS.md`, governance scripts, or `tools/automation/**` are minimum R2 and need review. See [index.md](index.md).
 
 ## Related pages
 
-- [How to contribute](index.md) — task lifecycle, review, definition of done
-- [Testing](testing.md) — how and what to test
-- [Debugging](debugging.md) — when things go wrong
-- [Tooling](tooling.md) — build system, linters, generators, CI
-- [Getting started](../overview/getting-started.md) — setup and daily commands
+- [How to contribute](index.md)
+- [Testing](testing.md)
+- [Debugging](debugging.md)
+- [Tooling](tooling.md)
+- [SAFRS governance](../features/safrs-governance.md)
+- [Automation control plane](../features/automation-control-plane.md)

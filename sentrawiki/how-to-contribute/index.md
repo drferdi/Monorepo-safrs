@@ -1,12 +1,19 @@
 # How to contribute
 
-**Purpose**: This page explains how to pick up, work on, and land changes in the SAFRS Monorepo. It covers the SAFRS task lifecycle, risk-tiered review requirements, the mandatory verification step, and the session protocol every contributor (human or agent) must follow.
+This section explains the SAFRS contribution workflow in the Monorepo: how work is claimed, executed, verified, and merged under governance. Pages here assume you have completed [Getting started](../overview/getting-started.md) and understand the [Architecture](../overview/architecture.md) and the [SAFRS governance model](../features/safrs-governance.md).
 
-All contributions operate under the **Human-Governed, Agent-Executed, Machine-Enforced** model defined in `SAFRS_SPEC.md`. Humans set intent and approve high-impact actions; agents execute; machines verify. See [SAFRS governance](../features/safrs-governance.md) for the full risk model.
+Under SAFRS v1.1 the repository is **Human-Governed · Agent-Executed · Machine-Enforced**. Contributing means operating inside that contract — every mutation task follows a state machine, is owned by exactly one actor, and must pass the verification pipeline before it is merged.
 
-## The SAFRS task lifecycle
+## Purpose
 
-Every piece of work moves through a fixed state machine from `SAFRS_SPEC.md` section 9. This lifecycle is the contract for picking up and delivering work:
+- Explain the SAFRS task lifecycle and how tasks are claimed and tracked.
+- Define risk tiers, the R2 review requirement, and when human authorization is needed.
+- Document the session protocol (`HANDOFF.md`, `DECISIONS.md`, `LESSONS.md`).
+- Describe `safrs-verify` and the definition of done for a contribution.
+
+## Task lifecycle
+
+Every mutation task moves through a governed state machine. The lifecycle is defined in `SAFRS_SPEC.md` section 9 and enforced by the task CLI and the control plane.
 
 ```mermaid
 stateDiagram-v2
@@ -18,86 +25,109 @@ stateDiagram-v2
     VERIFYING --> REVIEW
     REVIEW --> MERGED
     MERGED --> CLOSED
-    REVIEW --> PROPOSED: rejected / changes needed
+    CLOSED --> [*]
+
+    PROPOSED --> ABORTED
+    CLAIMED --> BLOCKED
+    EXECUTING --> FAILED
     EXECUTING --> BLOCKED
     EXECUTING --> CONFLICT
     VERIFYING --> FAILED
-    PROPOSED --> ABORTED
-    PROPOSED --> SUPERSEDED
+    REVIEW --> SUPERSEDED
 ```
 
-- **PROPOSED** — an issue or task is described with an objective, scope, and risk tier.
-- **CLAIMED** — one active mutation owner picks up the bounded scope. Analysis and review may happen in parallel, but a single mutation scope has one owner by default.
-- **PLANNED** — the approach, owned paths, and verification are defined before code changes start.
-- **EXECUTING** — bounded mutation happens, isolated from other parallel work.
-- **VERIFYING** — the change passes the repository's machine-enforced verification.
-- **REVIEW** — a designated human or code-owner reviews the change.
-- **MERGED** — the reviewed change lands on the target branch.
-- **CLOSED** — the task is done and recorded.
+Required states: `PROPOSED → CLAIMED → PLANNED → EXECUTING → VERIFYING → REVIEW → MERGED → CLOSED`.
 
-Exceptional states are `BLOCKED`, `CONFLICT`, `FAILED`, `ABORTED`, and `SUPERSEDED`. If a task hits one of these, record it and escalate the blocker rather than silently choosing a competing interpretation.
+Exceptional states: `BLOCKED`, `CONFLICT`, `FAILED`, `ABORTED`, `SUPERSEDED`.
 
-## Work pickup
+Only one actor owns mutation authority for the same bounded task scope at a time. Tasks are recorded in the shared task registry, and each transition is mirrored by a lease event. See [Task management](#task-management) and the [automation control plane](../features/automation-control-plane.md).
 
-1. Find a proposed task in `docs/plans/active/` or an issue and read the owning capsule's `AGENTS.md`.
-2. Confirm the task's risk tier (R0–R3) against `.safrs/policy.json`. The default is **R1**.
-3. Claim the task (single mutation owner), then produce a plan covering the owned paths and verification before editing code.
-4. Create the dedicated branch/worktree (see [development workflow](development-workflow.md)) before mutating anything.
+## Risk handling
 
-## Risk tiers and review expectations
+Classify every task and every change using `.safrs/policy.json` and the risk model in `SAFRS_SPEC.md` section 7:
 
-The four risk tiers from `SAFRS_SPEC.md` section 7 decide when review and authorization are required:
+| Tier | Meaning | Enforcement |
+| --- | --- | --- |
+| **R0** | Read-only analysis | Read-only workspace |
+| **R1** | Reversible local change | Dedicated branch/worktree |
+| **R2** | Boundary-affecting change | Worktree + isolated test resources where shared state exists |
+| **R3** | High-impact change | Ephemeral/controlled env; no inherited prod credentials; explicit human authorization before side effects |
 
-| Tier | Mutation | Designated review | Human authorization |
-| --- | :---: | :---: | :---: |
-| R0 | No | No | No |
-| R1 | Yes | Policy-based | No |
-| R2 | Yes | **Required** | No |
-| R3 | Prepare only | Required | **Required** |
+Rules:
 
-- **R2** changes cross architecture boundaries: authentication, migrations, dependencies, CI/CD, shared APIs/packages, verification controls, or `.safrs/**`. These always need designated review, per `docs/governance/SAFRS_CONTROL_MATRIX.md`.
-- **R3** changes affect production infrastructure/data, credentials, security boundaries, or deployment. Agents may prepare them but **cannot execute them without explicit human authorization**.
-- Changing verification controls themselves (`.safrs/**`, `AGENTS.md`, CI workflows, governance or security tests) is **minimum R2**, even if the textual change looks small.
-
-Verification-integrity is a hard rule: never delete assertions, widen ignores, skip tests, lower thresholds, or disable gates to make a task pass.
-
-## Review expectations
-
-- Review verifies the change against its originating task: does it match the spec, and does it follow the repository's documented standards?
-- A change may not merge before its required review (R2+/R3) has approved it.
-- Merge the foundational contracts/migrations before downstream consumers when tasks are dependent — see the integration order in `docs/governance/SAFRS_MULTI_AGENT_PROTOCOL.md`.
-- If implementation and its governing verification are changed together, flag the change for **elevated** review.
-
-## Definition of done
-
-Before declaring a task complete, all of the following must hold:
-
-1. **Scope respected** — no unrelated files changed; any necessary scope expansion is recorded.
-2. **Verification passed** — `scripts/safrs-verify.sh` (or `pnpm governance`) passes, plus every affected project test.
-3. **Diff reviewed** — the final diff is inspected and contains no unintended changes.
-4. **Session protocol satisfied** — `.agents/HANDOFF.md` is updated.
-5. **Decisions recorded** — durable decisions are appended to `.agents/DECISIONS.md`.
+- Risk is **monotonic** — agents may raise risk, never lower it.
+- Every dimension (`declared`, `path`, `operation`, `data`, `capability`, `actual_diff`) must carry a non-empty reason.
+- **R2 requires designated review.** Changes to `.safrs/**`, `AGENTS.md`, CI workflows (`.github/workflows/**`), governance scripts, `tools/automation/**`, and security tests are **minimum R2** even when the textual change looks small (`SAFRS_SPEC.md` section 12).
+- **R3 may be prepared by an agent but requires explicit human authorization before execution.**
 
 ## Session protocol
 
-Every working session **starts** by following the Read order in `AGENTS.md` (the MUST list is small and cheap; load task-scoped documents only for the matching task type).
+`AGENTS.md` mandates what agents must read and write at session boundaries, all under the `SAFRS_SPEC.md` v1.1 multi-agent protocol (section 9).
 
-Every working session **ends** with:
+At the **start** of a working session, follow the routing Read order:
 
-1. Overwriting `.agents/HANDOFF.md` with current state, work in flight, blockers, and next actions (keep under ~1k tokens). Machine-enforced: `scripts/safrs-verify.sh` fails if a non-trivial change set does not touch `.agents/HANDOFF.md`.
-2. Appending to `.agents/knowledge/12_LESSONS.md` only per its own rules (real, repeated mistakes, not aspirational rules).
-3. Appending durable decisions to `.agents/DECISIONS.md` and updating `.agents/PROGRESS.md` if an area status changed.
+1. `.agents/knowledge/00_READ_FIRST.md`
+2. `.agents/HANDOFF.md`
+3. `.agents/knowledge/02_OBJECTIVES.md`
+4. `.agents/knowledge/03_ARCHITECTURE.md`
+5. `.agents/knowledge/04_CONTEXT.md`
+6. `.agents/knowledge/12_LESSONS.md`
 
-## Verification step
+Plus task-scoped docs (engineering/coding for implementation, decisions for planning, etc.) and the nearest nested `AGENTS.md`.
 
-`scripts/safrs-verify.sh` runs the full local governance check: policy, docs, routing, tool inventory, topology, action pinning, sensitive changes, handoff, and the architecture/governance Python tests. Run it (or `pnpm governance`) before declaring work complete. Windows users can run `powershell -ExecutionPolicy Bypass -File scripts/safrs-verify.ps1`.
+At the **end** of a working session:
+
+1. Overwrite `.agents/HANDOFF.md` with current state, work in flight, blockers, and next actions (keep under ~1k tokens). This is **machine-enforced**: `safrs-verify` fails if a non-trivial change set does not touch it.
+2. Append to `.agents/knowledge/12_LESSONS.md` only per its own rules (real, repeated mistakes — not aspirational rules).
+3. Record durable decisions in `.agents/DECISIONS.md` (append-only) and update `.agents/PROGRESS.md` if an area status changed.
+
+A handoff must preserve: task ID and objective; current state; risk tier; owned scope; modified files; tests run/results; unresolved decisions/blockers; next permitted action.
+
+## safrs-verify
+
+`scripts/safrs-verify.sh` (bash) and `scripts/safrs-verify.ps1` (PowerShell) run the local SAFRS governance suite — a pipeline of Python checkers in `tools/safrs/` plus Python governance tests in `tests/architecture/` and `tests/governance/`. It is invoked as:
+
+```bash
+pnpm governance
+```
+
+The suite enforces policy validity, document-registry and routing integrity, tool inventory, repository topology, immutable Action pins, automation policy, task-contract digests, lifecycle agreement, approval/evidence integrity, HANDOFF freshness, and sensitive-change classification. A `PASS` is required before any work is declared complete.
+
+See [tooling.md](tooling.md) and [debugging.md](debugging.md) for what runs and how to fix failures.
+
+## Task management
+
+Mutations are claimed and tracked with the task CLI (see [development-workflow.md](development-workflow.md)):
+
+```bash
+pnpm task claim --id TASK-YYYYMMDD-XXX --title "..." --owner-id <id> --owner-label "<agent>" --risk R1 --scope <path>
+pnpm task state --id TASK-YYYYMMDD-XXX --to EXECUTING
+pnpm task list --active
+pnpm task close --id TASK-YYYYMMDD-XXX
+```
+
+`pnpm status` reports registry, lease state, ownership conflicts, and a live governance probe.
+
+## Definition of done
+
+A contribution is done when all of the following hold:
+
+1. The task, if a mutation, is claimed and its registry state reflects reality.
+2. The smallest viable change fully solves the task within its declared scope prefixes.
+3. Verification passes: `pnpm governance` (PASS), plus lint, typecheck, and the affected tests/builds.
+4. Verification controls were not weakened to obtain a pass (no deleted assertions, widened ignores, skipped tests, lowered thresholds, or disabled gates).
+5. `.agents/HANDOFF.md` is updated, and durable decisions/lessons are recorded where applicable.
+6. R2 changes have designated review; R3 changes have explicit human authorization.
+7. The final diff contains no unrelated files.
 
 ## Related pages
 
-- [Development workflow](development-workflow.md) — branch, code, test, PR, merge cycle
-- [Testing](testing.md) — frameworks, patterns, and how to run tests
-- [Debugging](debugging.md) — common errors and troubleshooting
-- [Tooling](tooling.md) — build system, linters, generators, CI
-- [Patterns and conventions](patterns-and-conventions.md) — coding style rules
-- [Getting started](../overview/getting-started.md) — setup, build, test, run
-- [SAFRS governance](../features/safrs-governance.md) — risk model, roles, verification
+- [Development workflow](development-workflow.md)
+- [Testing](testing.md)
+- [Debugging](debugging.md)
+- [Tooling](tooling.md)
+- [Patterns and conventions](patterns-and-conventions.md)
+- [SAFRS governance](../features/safrs-governance.md)
+- [Automation control plane](../features/automation-control-plane.md)
+- [safrs tool](../tools/safrs.md)
+- [automation tool](../tools/automation.md)
