@@ -2,7 +2,7 @@
 
 Legend: [x] done, [~] in progress, [ ] not started, [!] blocked
 
-Last updated: 2026-08-12 | Branch: sota-enhancements
+Last updated: 2026-08-13 | Branch: safrs/automation-03-leases-lifecycle
 
 > Area status board. Detailed work logs: `docs/plans/active/` → `completed/`.
 > Durable decisions: `DECISIONS.md`. Session state: `HANDOFF.md`.
@@ -33,6 +33,18 @@ Last updated: 2026-08-12 | Branch: sota-enhancements
 - [x] Codex repository automation pack (`.codex/` hooks/config/agents + `.agents/skills`) — implemented; R2 designated review required
 - [ ] Complete `.env.example` + capability variable docs
 - [ ] Python prerequisite documented (INSTALL.md) + setup detection
+
+## 🟡 SAFRS Full Automation (plan: `docs/plans/active/SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md`)
+
+- [x] Phase 1 — baseline safety: unsafe-workflow gates, droid exclusion (PR #12, merged)
+- [x] Interim — lockfile/catalogs repair + LFS push (PR #13, merged)
+- [x] Phase 2 — contracts, 7 schemas, monotonic risk, Node↔Python digest parity (PR #14, merged; 6 bot-review rounds addressed)
+- [~] Phase 3 — remote leases, fencing, lifecycle (PR #15, awaiting R2 + attestation)
+- [~] Phase 4 — shared guard, adapter parity, hard budgets (PR #17, stacked on #15)
+- [~] Phase 5 — PR gates, evidence, approvals, publisher separation (PR #18, stacked on #17)
+- [ ] Phase 6 — GitHub platform controls + drift audit (needs Activation Decision 2)
+- [ ] Phase 7 — autonomous R0/R1/R2 executor (needs Activation Decision 1)
+- [ ] Phase 8 — inert R3, recovery drills, cutover (needs Activation Decision 3)
 
 ## ⚪ Phase 2 — Project Migration from abyss-monorepo
 

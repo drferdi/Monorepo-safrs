@@ -100,7 +100,20 @@ def match(path, pattern):
 
 sensitive=sorted(p for p in classified_names if any(match(p, pat) for pat in patterns))
 verification_changed=sorted(p for p in classified_names if any(match(p, pat) for pat in verification))
-implementation_changed=sorted(p for p in classified_names if p not in verification_changed and not p.startswith('docs/'))
+# Session memory is neither implementation nor verification. The handoff gate
+# *requires* .agents/HANDOFF.md in every non-trivial change set, so counting it
+# as implementation made every pure verification-control change look coupled
+# and demanded an integrity review that nothing had actually earned.
+MEMORY_FILES = {
+    '.agents/HANDOFF.md', '.agents/PROGRESS.md', '.agents/DECISIONS.md',
+    '.agents/CONTEXT.md', '.agents/knowledge/12_LESSONS.md',
+}
+implementation_changed=sorted(
+    p for p in classified_names
+    if p not in verification_changed
+    and not p.startswith('docs/')
+    and p not in MEMORY_FILES
+)
 override_matches = {
     rule['risk']: sorted(
         p for p in classified_names

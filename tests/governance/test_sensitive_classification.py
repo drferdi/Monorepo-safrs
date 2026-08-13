@@ -178,6 +178,48 @@ class SensitiveClassificationTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0, result.stdout)
             self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=required', result.stdout)
 
+    def test_memory_files_do_not_count_as_implementation(self):
+        """The handoff gate forces HANDOFF.md into every change set; counting
+        it as implementation made pure control changes look coupled."""
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['tools/safrs/**', '.agents/**'],
+                'verification_control_patterns': ['tools/safrs/**'],
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            commit_baseline(repository)
+            write(repository, 'tools/safrs/check_extra.py', '# control\n')
+            write(repository, '.agents/HANDOFF.md', '# handoff\n')
+            write(repository, '.agents/PROGRESS.md', '# progress\n')
+
+            result = run_checker(repository)
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertNotIn('INTEGRITY_REVIEW=required', result.stdout)
+
+    def test_memory_files_alongside_real_implementation_still_couple(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['tools/safrs/**', '.agents/**'],
+                'verification_control_patterns': ['tools/safrs/**'],
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            commit_baseline(repository)
+            write(repository, 'tools/safrs/check_extra.py', '# control\n')
+            write(repository, '.agents/HANDOFF.md', '# handoff\n')
+            write(repository, 'src/app.py', '# implementation\n')
+
+            result = run_checker(repository)
+
+            self.assertNotEqual(result.returncode, 0, result.stdout)
+            self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=required', result.stdout)
+
     def test_matching_independent_review_evidence_satisfies_integrity_gate(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             repository = Path(temporary_directory)

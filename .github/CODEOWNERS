@@ -95,6 +95,10 @@
 /tests/repository/precommit.test.mjs            @drferdii
 /.husky/**                                      @drferdii
 /.codex/**                                      @drferdii
+# Root-level suites need their own entries: the `**/` forms below only match
+# nested paths, so tests/architecture/** and tests/security/** were uncovered.
+/tests/architecture/**                          @drferdii
+/tests/security/**                              @drferdii
 **/tests/security/**                            @drferdii
 **/tests/architecture/**                        @drferdii
 
