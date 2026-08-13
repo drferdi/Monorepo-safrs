@@ -39,9 +39,12 @@ Last updated: 2026-08-13 | Branch: safrs/automation-03-leases-lifecycle
 - [x] Phase 1 — baseline safety: unsafe-workflow gates, droid exclusion (PR #12, merged)
 - [x] Interim — lockfile/catalogs repair + LFS push (PR #13, merged)
 - [x] Phase 2 — contracts, 7 schemas, monotonic risk, Node↔Python digest parity (PR #14, merged; 6 bot-review rounds addressed)
-- [~] Phase 3 — remote leases, fencing, lifecycle (PR #15, awaiting R2 + attestation)
-- [~] Phase 4 — shared guard, adapter parity, hard budgets (PR #17, stacked on #15)
-- [~] Phase 5 — PR gates, evidence, approvals, publisher separation (PR #18, stacked on #17)
+- [x] Phase 3 — remote leases, fencing, lifecycle (PR #15, merged)
+- [x] Phase 4 — shared guard, adapter parity, hard budgets (PR #17, merged)
+- [x] Phase 5 — PR gates, evidence, approvals, publisher separation (PR #18, merged)
+- [x] Gate repairs — stale-evidence handling, memory-file exemption, classification gaps,
+      sibling-worktree guard (PRs #19, #20, #21, merged)
+- [!] CI `verify` red on `main` at browser smoke — pre-existing, unmasked once governance passed
 - [ ] Phase 6 — GitHub platform controls + drift audit (needs Activation Decision 2)
 - [ ] Phase 7 — autonomous R0/R1/R2 executor (needs Activation Decision 1)
 - [ ] Phase 8 — inert R3, recovery drills, cutover (needs Activation Decision 3)
