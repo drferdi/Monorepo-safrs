@@ -45,3 +45,29 @@ Next allowed action:
 
 ## Integration order
 For dependent tasks, merge foundational contracts/migrations before downstream consumers unless the execution plan explicitly defines a compatible alternative.
+
+## Remote lease authority (Phase 3)
+
+Local claims in the Git-common registry remain authoritative for worktrees
+that share one machine. Across machines and runners, the serialized
+`safrs-task-control` workflow is the single lease authority:
+
+- **Ledger.** One GitHub issue per task (`SAFRS-LEASE: <task_id>`, label
+  `safrs-lease`). Every granted event is one immutable comment containing
+  canonical `LeaseEventV1` JSON. Comments are never edited or deleted.
+- **Fencing.** The token increments only on granted `CLAIM`/`RECLAIM`. A
+  writer holding an older token must stop before mutating or pushing.
+- **Dispatch is not a grant.** GitHub cancels queued duplicate dispatches
+  silently; a client must read the ledger back and treat a missing event
+  as deny. `pnpm saf lease reconcile <events.ndjson> <local.json>` returns
+  `allow` only when the remote chain confirms the local claim (same task,
+  owner, worktree, fencing token, scope digest; not expired, not terminal).
+- **Reconcile before push.** Offline work is permitted, but pushing or any
+  autonomous mutation requires a fresh `allow` from reconciliation.
+- **Recovery.** `RECLAIM` is granted only after expiry (or on a terminal
+  chain) and always issues a new fencing token; nothing ever deletes
+  another worktree's events.
+- **Local mirror.** `pnpm task claim|state|close` appends matching events
+  to `safrs-control-plane/lease-events.ndjson` (append-only);
+  `tools/safrs/check_lifecycle.py` fails governance when registry state,
+  lease chain, or scope digests drift apart.

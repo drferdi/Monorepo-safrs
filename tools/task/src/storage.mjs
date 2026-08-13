@@ -32,7 +32,32 @@ export function resolveControlPlanePaths(repositoryRoot) {
     controlDirectory,
     registryPath: join(controlDirectory, "active-tasks.json"),
     lockPath: join(controlDirectory, "active-tasks.lock"),
+    leaseEventsPath: join(controlDirectory, "lease-events.ndjson"),
   };
+}
+
+/**
+ * Append-only local lease ledger (LeaseEventV1, one canonical JSON per
+ * line). Events are never rewritten; the remote authority chain remains
+ * the source of truth and reconciliation happens before any push.
+ */
+export function appendLeaseEvent(paths, canonicalLine) {
+  mkdirSync(paths.controlDirectory, { recursive: true });
+  writeFileSync(paths.leaseEventsPath, `${canonicalLine}\n`, {
+    encoding: "utf8",
+    flag: "a",
+  });
+}
+
+export function readLeaseEvents(paths, taskId) {
+  if (!existsSync(paths.leaseEventsPath)) {
+    return [];
+  }
+  const events = readFileSync(paths.leaseEventsPath, "utf8")
+    .split(/\r?\n/u)
+    .filter((line) => line.trim())
+    .map((line) => JSON.parse(line));
+  return taskId ? events.filter((event) => event.task_id === taskId) : events;
 }
 
 export function resolveWorktreeId(repositoryRoot) {

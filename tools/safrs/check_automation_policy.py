@@ -127,6 +127,24 @@ droid = adapters.get('adapters', {}).get('droid')
 if droid is None or droid.get('activation') != 'read_only_disabled':
     errors.append('droid adapter must stay read_only_disabled pending Activation Decision 4')
 
+write_grants = policy.get('workflow_write_permissions', {})
+if not isinstance(write_grants, dict):
+    errors.append('workflow_write_permissions must be an object')
+else:
+    for workflow_path, grants in write_grants.items():
+        if not (ROOT / workflow_path).is_file():
+            errors.append(f'workflow_write_permissions: dangling grant {workflow_path}')
+        if not workflow_path.startswith('.github/workflows/'):
+            errors.append(f'workflow_write_permissions: not a workflow path {workflow_path}')
+        if not isinstance(grants, dict) or not grants:
+            errors.append(f'workflow_write_permissions[{workflow_path}] must be a non-empty object')
+            continue
+        for scope, level in grants.items():
+            if level != 'write':
+                errors.append(f'{workflow_path}: grant level must be "write" ({scope})')
+            if scope == 'contents':
+                errors.append(f'{workflow_path}: contents:write is never grantable')
+
 if errors:
     raise SystemExit('SAFRS automation policy check failed:\n- ' + '\n- '.join(errors))
 print('SAFRS automation policy: OK')

@@ -76,7 +76,18 @@ function workflowFiles() {
     .map((file) => join(workflowsDirectory, file));
 }
 
-function assertWorkflowPolicy(workflow) {
+const workflowWritePermissions =
+  JSON.parse(readFileSync(".safrs/automation-policy.json", "utf8"))
+    .workflow_write_permissions ?? {};
+
+function assertWorkflowPolicy(workflow, workflowPath, allowlistOverride) {
+  const allowlist = allowlistOverride ?? workflowWritePermissions;
+  const normalizedPath = workflowPath?.replaceAll("\\", "/");
+  const allowedWrites = new Set(
+    Object.entries(allowlist[normalizedPath] ?? {})
+      .filter(([, level]) => level === "write")
+      .map(([permissionScope]) => permissionScope),
+  );
   const actions = [
     ...workflow.matchAll(/^\s*(?:-\s*)?uses:\s*([^\s#]+)\s*(?:#.*)?$/gmu),
   ].map((match) => match[1]);
@@ -100,8 +111,13 @@ function assertWorkflowPolicy(workflow) {
       const indentation = /^\s*/u.exec(line)?.[0].length ?? 0;
       if (line.trim() && indentation <= permissionsIndentation) {
         permissionsIndentation = undefined;
-      } else if (/^\s*[a-z0-9-]+:\s*write\s*(?:#.*)?$/iu.test(line)) {
-        throw new Error("Workflow permission write tidak diizinkan.");
+      } else {
+        const write = /^\s*([a-z0-9-]+):\s*write\s*(?:#.*)?$/iu.exec(line);
+        if (write && !allowedWrites.has(write[1].toLowerCase())) {
+          throw new Error(
+            `Workflow permission write tidak diizinkan: ${write[1]} (tidak ada di workflow_write_permissions).`,
+          );
+        }
       }
     }
   }
@@ -157,7 +173,59 @@ test("every repository workflow is non-deploying, least-privileged, and SHA-pinn
 
   for (const workflowFile of files) {
     const workflow = readFileSync(workflowFile, "utf8");
-    assert.doesNotThrow(() => assertWorkflowPolicy(workflow), workflowFile);
+    assert.doesNotThrow(
+      () => assertWorkflowPolicy(workflow, workflowFile),
+      workflowFile,
+    );
+  }
+});
+
+test("write permissions are allowed only through the policy allowlist", () => {
+  const ledger = "permissions:\n  contents: read\n  issues: write\n";
+  const allowlist = {
+    ".github/workflows/safrs-task-control.yml": { issues: "write" },
+  };
+
+  assert.doesNotThrow(() =>
+    assertWorkflowPolicy(
+      ledger,
+      ".github/workflows/safrs-task-control.yml",
+      allowlist,
+    ),
+  );
+  assert.throws(
+    () =>
+      assertWorkflowPolicy(ledger, ".github/workflows/other.yml", allowlist),
+    /write/iu,
+  );
+  assert.throws(
+    () =>
+      assertWorkflowPolicy(
+        "permissions:\n  contents: write\n",
+        ".github/workflows/safrs-task-control.yml",
+        allowlist,
+      ),
+    /write/iu,
+  );
+  assert.throws(
+    () => assertWorkflowPolicy(ledger, undefined, allowlist),
+    /write/iu,
+  );
+});
+
+test("every workflow_write_permissions entry points at an existing workflow", () => {
+  for (const [workflowPath, grants] of Object.entries(
+    workflowWritePermissions,
+  )) {
+    assert.equal(
+      existsSync(workflowPath),
+      true,
+      `dangling grant: ${workflowPath}`,
+    );
+    for (const [scope, level] of Object.entries(grants)) {
+      assert.equal(level, "write", `${workflowPath}:${scope}`);
+      assert.notEqual(scope, "contents", "contents:write is never grantable");
+    }
   }
 });
 

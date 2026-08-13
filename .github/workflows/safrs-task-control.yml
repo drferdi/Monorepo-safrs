@@ -1,0 +1,55 @@
+name: SAFRS Task Control
+
+# Serialized remote lease authority. The ledger is one GitHub issue per task
+# (title "SAFRS-LEASE: <task_id>", label "safrs-lease"); every granted event
+# is an immutable issue comment holding canonical LeaseEventV1 JSON.
+#
+# Concurrency note: GitHub keeps at most one in-progress and one pending run
+# per group — additional dispatches are cancelled silently. Clients must
+# never infer success from dispatching: read the ledger back and treat a
+# missing event as deny (tools/automation reconcileLease enforces this).
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: Lease action
+        required: true
+        type: choice
+        options: [CLAIM, RENEW, TRANSITION, RELEASE, EXPIRE, RECLAIM]
+      task_id:
+        description: Task ID (TASK-YYYYMMDD-...)
+        required: true
+        type: string
+      payload:
+        description: JSON request (lease_id, actor, worktree_id, scope_prefixes, expires_at, fencing_token, next_state)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: safrs-task-control
+
+jobs:
+  authority:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Apply lease event under serialized authority
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          SAFRS_LEASE_ACTION: ${{ inputs.action }}
+          SAFRS_TASK_ID: ${{ inputs.task_id }}
+          SAFRS_LEASE_PAYLOAD: ${{ inputs.payload }}
+          SAFRS_AUTHORITY_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: node tools/automation/src/cli.mjs lease authority-apply
