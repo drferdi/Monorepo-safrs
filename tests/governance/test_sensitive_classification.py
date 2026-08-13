@@ -371,8 +371,64 @@ class SensitiveClassificationTests(unittest.TestCase):
 
             result = run_checker(repository)
 
+            # Stale evidence is not tampering: the change set is still
+            # rejected, but through the actionable "review required" path
+            # rather than an error that reads like a broken checker.
             self.assertNotEqual(result.returncode, 0, result.stdout)
-            self.assertIn('review evidence does not match', result.stderr.lower())
+            self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=required', result.stdout)
+            self.assertIn('different change set', result.stdout)
+            self.assertIn('independent review', result.stderr.lower())
+
+    def test_review_evidence_bound_to_an_older_base_is_treated_as_absent(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['tools/safrs/**'],
+                'verification_control_patterns': ['tools/safrs/**'],
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            commit_baseline(repository)
+            stale_base = git(repository, 'rev-parse', 'HEAD').stdout.strip()
+            write(repository, 'unrelated.md', '# later commit\n')
+            git(repository, 'add', '.')
+            git(repository, 'commit', '-m', 'move the base forward')
+            changed = ['src/app.py', 'tools/safrs/check_extra.py']
+            write(repository, changed[0], '# implementation\n')
+            write(repository, changed[1], '# control\n')
+            write_review_evidence(repository, changed, base_sha=stale_base)
+
+            result = run_checker(repository)
+
+            self.assertNotEqual(result.returncode, 0, result.stdout)
+            self.assertIn('stale', result.stdout.lower())
+            self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=required', result.stdout)
+
+    def test_malformed_review_evidence_still_aborts(self):
+        """Staleness is tolerated; a tampered or non-approved record is not."""
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['tools/safrs/**'],
+                'verification_control_patterns': ['tools/safrs/**'],
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            commit_baseline(repository)
+            write(repository, 'src/app.py', '# implementation\n')
+            write(repository, 'tools/safrs/check_extra.py', '# control\n')
+            write(
+                repository,
+                REVIEW_EVIDENCE,
+                json.dumps({'version': 1, 'verdict': 'rejected'}, indent=2) + '\n',
+            )
+
+            result = run_checker(repository)
+
+            self.assertNotEqual(result.returncode, 0, result.stdout)
+            self.assertIn('invalid schema', result.stderr.lower())
 
     def test_undeterminable_change_set_is_rejected(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
