@@ -1,0 +1,69 @@
+name: SAFRS Publish
+
+# Publication eligibility for one exact pull-request head.
+#
+# The publisher may do exactly one thing: ask GitHub to enable auto-merge
+# for a head whose every gate is green. It never merges directly, never
+# pushes source, never approves a review, never bypasses branch rules, and
+# has no release authority. GitHub still enforces branch protection, so a
+# new commit or a red check keeps the pull request unmerged.
+#
+# Until Chief approves the separate publisher identity (Activation
+# Decision 2) this workflow is evaluation-only: it computes and reports the
+# verdict and never requests auto-merge. Flip the repository variable
+# SAFRS_PUBLISHER_ENABLED to "true" only once that identity exists.
+
+on:
+  workflow_dispatch:
+    inputs:
+      pull_request:
+        description: Pull request number to evaluate
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: safrs-publish-${{ inputs.pull_request }}
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24.18.0
+
+      - name: Collect exact pull-request facts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          SAFRS_PR_NUMBER: ${{ inputs.pull_request }}
+        run: |
+          gh api "repos/${GH_REPO}/pulls/${SAFRS_PR_NUMBER}" > pr.json
+          gh api "repos/${GH_REPO}/pulls/${SAFRS_PR_NUMBER}/reviews" > reviews.json
+
+      - name: Evaluate publication eligibility
+        env:
+          SAFRS_PR_NUMBER: ${{ inputs.pull_request }}
+        run: node tools/automation/src/cli.mjs gate --all
+
+      - name: Report publisher state
+        run: |
+          if [ "${SAFRS_PUBLISHER_ENABLED}" = "true" ]; then
+            echo "Publisher identity is active; auto-merge requests are permitted."
+          else
+            echo "Evaluation-only: publisher identity is not activated (Activation Decision 2)."
+          fi
+        env:
+          SAFRS_PUBLISHER_ENABLED: ${{ vars.SAFRS_PUBLISHER_ENABLED }}

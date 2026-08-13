@@ -190,6 +190,12 @@
       "status": "CANONICAL"
     },
     {
+      "id": "automation-evidence-index",
+      "path": "docs/evidence/automation/README.md",
+      "type": "reference",
+      "status": "ACTIVE"
+    },
+    {
       "id": "safrs-automation-adr-0002",
       "path": "docs/adrs/0002-safrs-automation-control-plane.md",
       "type": "adr",

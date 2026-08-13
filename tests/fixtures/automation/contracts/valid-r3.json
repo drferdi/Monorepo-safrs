@@ -21,7 +21,7 @@
     "tool_calls": 500
   },
   "computed_risk": "R3",
-  "contract_digest": "60fd7ccac0d3273d342a7ed39c8fe5b0ccf5a7e160c4c2c17cc1e468719733e1",
+  "contract_digest": "b04ad36703ed4dbde90fc92d4778cbeceba5940c9ada66854ded6e1dd00ba543",
   "created_at": "2026-08-13T00:00:00Z",
   "data_classification": "confidential",
   "declared_risk": "R3",
@@ -48,7 +48,7 @@
   },
   "requester": "chief@sentrahai.com",
   "risk_reasons": [
-    "path: write scopes grant reversible mutation (R1)",
+    "path: write scope tools/automation/simulation/ is a sensitive path (R2)",
     "operation: operations require R3 (R3)",
     "data: data classification confidential (R2)"
   ],

@@ -91,6 +91,7 @@
     "registered_endpoint_source": ".safrs/tool-inventory.json"
   },
   "workflow_write_permissions": {
-    ".github/workflows/safrs-task-control.yml": { "issues": "write" }
+    ".github/workflows/safrs-task-control.yml": { "issues": "write" },
+    ".github/workflows/safrs-publish.yml": { "pull-requests": "write" }
   }
 }

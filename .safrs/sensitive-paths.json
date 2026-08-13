@@ -50,7 +50,9 @@
     "tests/repository/automation-policy.test.mjs",
     "tools/automation/**",
     "tests/fixtures/automation/**",
-    "docs/bootstrap/**"
+    "docs/bootstrap/**",
+    ".safrs/approvals/**",
+    ".safrs/evidence/**"
   ],
   "verification_control_patterns": [
     ".safrs/**",
@@ -86,7 +88,10 @@
     "tests/repository/status-command.test.mjs",
     "tests/governance/test_task_ownership.py",
     "**/tests/security/**",
-    "**/tests/architecture/**"
+    "**/tests/architecture/**",
+    ".safrs/approvals/**",
+    ".safrs/evidence/**",
+    "tests/governance/test_automation_approvals.py"
   ],
   "risk_overrides": [
     {

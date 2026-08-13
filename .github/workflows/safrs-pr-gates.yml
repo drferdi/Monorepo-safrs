@@ -1,0 +1,55 @@
+name: SAFRS PR Gates
+
+# Stable, individually named verdicts that branch protection can require.
+# Each gate validates the artifacts present in the change set and fails
+# closed when they are invalid; a gate whose artifacts do not exist yet
+# reports "not_applicable" and passes. All decision logic lives in
+# tools/automation/src/gates.mjs, never in this file.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    name: ${{ matrix.label }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: safrs.contract
+            label: SAFRS Contract
+          - id: safrs.lease
+            label: SAFRS Lease
+          - id: safrs.risk
+            label: SAFRS Risk
+          - id: safrs.budgets
+            label: SAFRS Budgets
+          - id: safrs.verification
+            label: SAFRS Verification
+          - id: safrs.review
+            label: SAFRS Review
+          - id: safrs.evidence
+            label: SAFRS Evidence
+          - id: safrs.platform
+            label: SAFRS Platform
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24.18.0
+
+      - name: Evaluate gate
+        run: node tools/automation/src/cli.mjs gate ${{ matrix.id }}
