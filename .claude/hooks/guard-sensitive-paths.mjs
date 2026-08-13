@@ -5,6 +5,7 @@
  * reason or an R2 notice. Writes outside the repository are now denied
  * (previously warn-only) to match the canonical verdict set.
  */
+import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -20,7 +21,65 @@ try {
   process.exit(0);
 }
 
-const root = process.cwd();
+/**
+ * Git worktrees of one repository share a common git directory, and
+ * AGENTS.md rule 8 *requires* mutation work to happen in a sibling worktree.
+ * Resolving targets only against process.cwd() therefore denied legitimate
+ * writes as "outside the repository". A target is in-repository when its
+ * enclosing worktree shares our common git directory.
+ */
+function commonGitDirectory(directory) {
+  try {
+    const raw = execFileSync(
+      "git",
+      ["-C", directory, "rev-parse", "--git-common-dir"],
+      {
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
+      },
+    ).trim();
+    return path.resolve(directory, raw);
+  } catch {
+    return null;
+  }
+}
+
+function repositoryRootFor(target) {
+  const directory = path.dirname(path.resolve(process.cwd(), target));
+  const ours = commonGitDirectory(process.cwd());
+  if (!ours) {
+    return process.cwd();
+  }
+  let probe = directory;
+  while (true) {
+    if (commonGitDirectory(probe) === ours) {
+      try {
+        return execFileSync(
+          "git",
+          ["-C", probe, "rev-parse", "--show-toplevel"],
+          {
+            encoding: "utf8",
+            stdio: ["ignore", "pipe", "ignore"],
+          },
+        ).trim();
+      } catch {
+        return process.cwd();
+      }
+    }
+    const parent = path.dirname(probe);
+    if (parent === probe) {
+      return process.cwd();
+    }
+    probe = parent;
+  }
+}
+
+const target =
+  payload?.tool_input?.file_path ??
+  payload?.tool_input?.notebook_path ??
+  payload?.tool_input?.path ??
+  null;
+const root = target ? repositoryRootFor(String(target)) : process.cwd();
 const [{ authorize }, claude] = await Promise.all([
   import(pathToFileURL(path.join(root, "tools/automation/src/guard.mjs")).href),
   import(
