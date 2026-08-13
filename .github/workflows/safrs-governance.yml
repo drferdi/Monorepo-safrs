@@ -62,6 +62,12 @@ jobs:
       - name: Validate lifecycle agreement between registry and lease ledger
         run: python tools/safrs/check_lifecycle.py
 
+      - name: Validate approval bindings and evidence integrity
+        run: python tools/safrs/check_approval_evidence.py
+
+      - name: Test approval and evidence invariants
+        run: python tests/governance/test_automation_approvals.py
+
       - name: Classify sensitive and verification-control changes
         run: python tools/safrs/check_sensitive_changes.py
 

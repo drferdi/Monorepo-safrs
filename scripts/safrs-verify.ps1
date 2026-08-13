@@ -33,12 +33,14 @@ $checks = @(
     'tools/safrs/check_task_contract.py',
     'tools/safrs/check_task_ownership.py',
     'tools/safrs/check_lifecycle.py',
+    'tools/safrs/check_approval_evidence.py',
     'tools/safrs/check_sensitive_changes.py',
     'tools/safrs/check_handoff.py',
     'tests/architecture/test_safrs_topology.py',
     'tests/governance/test_sensitive_classification.py',
     'tests/governance/test_task_ownership.py',
-    'tests/governance/test_automation_contracts.py'
+    'tests/governance/test_automation_contracts.py',
+    'tests/governance/test_automation_approvals.py'
 )
 
 foreach ($check in $checks) {

@@ -20,10 +20,12 @@ fi
 "$PYTHON" tools/safrs/check_task_contract.py
 "$PYTHON" tools/safrs/check_task_ownership.py
 "$PYTHON" tools/safrs/check_lifecycle.py
+"$PYTHON" tools/safrs/check_approval_evidence.py
 "$PYTHON" tools/safrs/check_sensitive_changes.py
 "$PYTHON" tools/safrs/check_handoff.py
 "$PYTHON" tests/architecture/test_safrs_topology.py
 "$PYTHON" tests/governance/test_sensitive_classification.py
 "$PYTHON" tests/governance/test_task_ownership.py
 "$PYTHON" tests/governance/test_automation_contracts.py
+"$PYTHON" tests/governance/test_automation_approvals.py
 printf 'SAFRS local governance verification: PASS\n'

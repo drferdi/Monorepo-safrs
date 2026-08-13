@@ -87,6 +87,9 @@
 
 /tools/safrs/**                                 @drferdii
 /tools/automation/**                            @drferdii
+/.safrs/approvals/**                            @drferdii
+/.safrs/evidence/**                             @drferdii
+/tests/governance/test_automation_approvals.py  @drferdii
 /tests/fixtures/automation/**                   @drferdii
 /tests/governance/test_automation_contracts.py  @drferdii
 /tests/repository/precommit.test.mjs            @drferdii

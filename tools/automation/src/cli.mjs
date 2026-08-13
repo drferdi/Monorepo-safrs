@@ -6,6 +6,8 @@ import { fileURLToPath } from "node:url";
 
 import { canonicalize, writeForm } from "./canonical-json.mjs";
 import { compileTaskContract, loadCompileContext } from "./contracts.mjs";
+import { verifyManifest } from "./evidence.mjs";
+import { GATES, runGate } from "./gates.mjs";
 import {
   nextEvent,
   parseLedgerComment,
@@ -13,6 +15,7 @@ import {
   replayState,
   verifyEventChain,
 } from "./leases.mjs";
+import { evaluatePublication } from "./publisher.mjs";
 
 /**
  * `saf` entry point. Phase 2: contract compilation. Phase 3: lease chain
@@ -31,9 +34,56 @@ function usage() {
       "  node tools/automation/src/cli.mjs lease replay <events.ndjson>",
       "  node tools/automation/src/cli.mjs lease reconcile <events.ndjson> <local.json>",
       "  node tools/automation/src/cli.mjs lease authority-apply   (workflow only, env-driven)",
+      "  node tools/automation/src/cli.mjs gate <gate-id|--all>",
+      "  node tools/automation/src/cli.mjs evidence verify <manifest.json>",
+      "  node tools/automation/src/cli.mjs publish evaluate <pull-request.json> <evidence.json> [platform.json]",
     ].join("\n"),
   );
   return 2;
+}
+
+function controlDirectory() {
+  try {
+    const raw = execFileSync("git", ["rev-parse", "--git-common-dir"], {
+      cwd: repositoryRoot,
+      encoding: "utf8",
+    }).trim();
+    const common = resolve(repositoryRoot, raw);
+    return resolve(common, "safrs-control-plane");
+  } catch {
+    return null;
+  }
+}
+
+function gateCommand(argument) {
+  const options = {
+    root: repositoryRoot,
+    controlDirectory: controlDirectory(),
+  };
+  const ids = argument === "--all" ? GATES : [argument];
+  let failed = false;
+  const results = [];
+  for (const id of ids) {
+    const result = runGate(id, options);
+    results.push({ check_id: id, ...result });
+    if (result.verdict !== "PASS") {
+      failed = true;
+    }
+  }
+  console.log(
+    JSON.stringify(results.length === 1 ? results[0] : results, null, 2),
+  );
+  const summary = process.env.GITHUB_STEP_SUMMARY;
+  if (summary) {
+    for (const result of results) {
+      appendFileSync(
+        summary,
+        `- \`${result.check_id}\`: **${result.verdict}** — ${result.reason}\n`,
+        "utf8",
+      );
+    }
+  }
+  return failed ? 1 : 0;
 }
 
 function readChain(path) {
@@ -191,6 +241,30 @@ function main(argv) {
       console.log(JSON.stringify(verdict, null, 2));
       return verdict.decision === "allow" ? 0 : 1;
     }
+  }
+  if (domain === "gate" && action && rest.length === 0) {
+    return gateCommand(action);
+  }
+  if (domain === "evidence" && action === "verify" && rest.length === 1) {
+    const manifest = JSON.parse(readFileSync(resolve(rest[0]), "utf8"));
+    const verdict = verifyManifest(manifest);
+    console.log(JSON.stringify(verdict, null, 2));
+    return verdict.valid ? 0 : 1;
+  }
+  if (domain === "publish" && action === "evaluate" && rest.length >= 2) {
+    const pullRequest = JSON.parse(readFileSync(resolve(rest[0]), "utf8"));
+    const evidence = JSON.parse(readFileSync(resolve(rest[1]), "utf8"));
+    const platform = rest[2]
+      ? JSON.parse(readFileSync(resolve(rest[2]), "utf8"))
+      : null;
+    const verdict = evaluatePublication(pullRequest, evidence, {
+      platform,
+      now: new Date().toISOString(),
+      approvals: pullRequest.approvals ?? [],
+      authorizedReviewers: pullRequest.authorized_reviewers ?? [],
+    });
+    console.log(JSON.stringify(verdict, null, 2));
+    return verdict.eligible ? 0 : 1;
   }
   return usage();
 }
