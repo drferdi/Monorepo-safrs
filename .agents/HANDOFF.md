@@ -25,6 +25,12 @@ Last updated: 2026-08-13 (automation phases 1-5 merged to main; repository clean
   mandates them — Phase 4 had broken that).
 - Hygiene: no open PRs, `origin` has only `main`, every task claim CLOSED, stale branches and
   worktrees pruned.
+- **README repository-state section refreshed** to match reality: quick start, the governance and
+  `pnpm saf` command table, what phases 1-5 actually delivered (with links to the canonical docs
+  rather than duplicated prose), gate semantics, and honest capability statuses. Fixed a factual
+  error it carried — Renovate was described as auto-merging while `renovate.json` sets
+  `automerge: false` — and flagged that `main` has no branch protection, so the eight gates are
+  published but not required.
 
 ## Blockers
 

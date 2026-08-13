@@ -927,29 +927,90 @@ authoritative SAFRS repository.
 
 ---
 
-## Repository Capabilities
+## Repository State
 
-This section describes the concrete, current state of *this* repository —
+Everything below describes the concrete, current state of *this* repository —
 not the abstract standard above. It is repo-state, not normative SAFRS
-content, and is expected to drift; treat `.safrs/document-registry.json`
-and the plans under `docs/plans/active/` as the source of truth if this
-falls out of date.
+content, and is expected to drift; treat `.safrs/document-registry.json` and
+the plans under `docs/plans/active/` as the source of truth if it falls out of
+date.
+
+### Quick start
+
+```bash
+pnpm install          # Node 24.18.x, pnpm 11
+pnpm setup            # .env from template + local Postgres (Docker) + migrate + seed
+pnpm dev              # golden-path app on http://localhost:3000
+pnpm check            # governance + tokens + lint + typecheck + test + build
+```
+
+Working on this repository as an agent (or with one) starts at
+[`AGENTS.md`](AGENTS.md), which routes to everything else.
+
+### Governance and automation commands
+
+| Command | What it does |
+| --- | --- |
+| `pnpm governance` | All deterministic SAFRS checks (policy, registry, routing, inventory, topology, action pins, ownership, lifecycle, contracts, approvals/evidence, sensitive-change classification) |
+| `pnpm saf:status` | Plain-language repository status and the single next action |
+| `pnpm task claim \| state \| close \| list` | Task lifecycle and exclusive scope ownership |
+| `pnpm saf gate --all` | The eight publication gates, locally |
+| `pnpm saf contract compile <input.json>` | Compile and digest a `TaskContractV1` |
+| `pnpm saf lease verify \| replay \| reconcile` | Inspect and reconcile lease event chains |
+| `pnpm saf evidence verify <manifest.json>` | Verify a sealed evidence manifest |
+
+### Automation control plane
+
+Phases 1–5 of
+[`SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md`](docs/plans/active/SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md)
+are implemented and merged. Canonical behavior lives in
+[`SAFRS_AUTOMATION.md`](docs/governance/SAFRS_AUTOMATION.md),
+[`SAFRS_APPROVALS.md`](docs/governance/SAFRS_APPROVALS.md), and
+[`SAFRS_EVIDENCE.md`](docs/governance/SAFRS_EVIDENCE.md); the architecture
+decision is [ADR 0002](docs/adrs/0002-safrs-automation-control-plane.md).
+
+| Layer | Delivered | Where |
+| --- | --- | --- |
+| Contracts and risk | `TaskContractV1` plus six sibling schemas, canonical JSON digests, monotonic risk (agents may raise it, never lower it) | `.safrs/schemas/`, `tools/automation/src/` |
+| Leases | Serialized remote lease authority with fencing tokens; one GitHub issue per task as an append-only ledger | `.github/workflows/safrs-task-control.yml` |
+| Guard and budgets | One vendor-neutral `authorize()` shared by every adapter, plus a task-wide budget ledger with a circuit breaker | `tools/automation/src/{guard,budgets}.mjs` |
+| Publication gates | Eight stable checks — `SAFRS Contract · Lease · Risk · Budgets · Verification · Review · Evidence · Platform` | `.github/workflows/safrs-pr-gates.yml` |
+| Evidence and approvals | Sealed, redacted, content-addressed manifests; approvals bound to exact head SHA, diff digest, and reviewer authority | `docs/evidence/automation/` |
+
+Two properties are worth knowing before relying on it:
+
+- **A gate validates the artifacts that exist.** When a gate's artifacts are
+  genuinely absent — a human-authored pull request carries no run evidence —
+  it reports `not_applicable` and passes. The same code becomes enforcing once
+  Phases 6–7 produce those artifacts.
+- **Digests must agree across languages.** Every contract and manifest is
+  verified by both Node and Python; disagreement fails governance. Canonical
+  JSON therefore accepts only safe integers, because engines spell floats
+  differently.
+
+Vendor adapters (Codex, Claude, Cursor, Cline) are thin translators into the
+shared guard, so all four reach the same verdict for the same behavior. Droid
+stays `read_only_disabled` pending an activation decision.
+
+### Capability status
 
 | Capability | Status | Command | Requires |
 | --- | --- | --- | --- |
-| Local email development (`golden-path`) | Wired 2026-08-11; dependencies not yet installed | `pnpm dev:email` | `EMAIL_FROM`, `RESEND_API_KEY` |
-| Stripe sandbox webhooks (`golden-path`) | Wired 2026-08-11; dependencies not yet installed | `pnpm stripe:listen` | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, local Stripe CLI |
-| CODEOWNERS R2/R3 enforcement | Declared, not yet enforced | — | Real GitHub team + branch protection ([Fase 1](docs/plans/active/SAFRS_GOVERNANCE_REMEDIATION_PLAN.md), checklist in [`docs/governance/PLATFORM_ACTIVATION.md`](docs/governance/PLATFORM_ACTIVATION.md)) |
-| Renovate automerge | Active | — | Patch/minor auto-merges once CI is green; major updates stay manual |
 | Single-command local bootstrap | Verified | `pnpm dev` | Docker (Postgres) |
+| Local email development (`golden-path`) | Installed; needs credentials | `pnpm dev:email` | `EMAIL_FROM`, `RESEND_API_KEY` |
+| Stripe sandbox webhooks (`golden-path`) | Installed; needs credentials | `pnpm stripe:listen` | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, local Stripe CLI |
+| Renovate | Pull requests only — `automerge` is `false` | — | Dependency dashboard on; major updates grouped and reviewed separately |
+| CODEOWNERS R2/R3 enforcement | Declared, **not yet enforced** | — | Branch protection on `main` (checklist in [`PLATFORM_ACTIVATION.md`](docs/governance/PLATFORM_ACTIVATION.md)) |
+| Publisher auto-merge | Evaluation-only | — | A separate publisher identity; the workflow requests nothing until then |
 
-"Wired" means the dependency, catalog pin, and script exist in the
-repository; it does not mean `pnpm install` has been run or the command has
-been executed successfully. Run `pnpm install` after pulling this change,
-then verify with the command in the table before relying on a capability.
+> [!IMPORTANT]
+> `main` currently has **no branch protection**, so the eight gates above are
+> published but not required. Requiring them, together with creating the
+> auditor and publisher identities, is Phase 6 work and needs an explicit human
+> activation decision.
 
-Additional optional capabilities (see `tools/capabilities/manifests/` for
-the full catalog) can be previewed and recorded per project with:
+Additional optional capabilities (see `tools/capabilities/manifests/` for the
+full catalog) can be previewed and recorded per project with:
 
 ```bash
 pnpm capability:add --capability <id> --project <project> --preview
@@ -958,6 +1019,12 @@ pnpm capability:add --capability <id> --project <project> --apply --confirm "ENA
 
 Recording a capability does not install its runtime integration — see the
 manifest's `sideEffects` and `removal` fields for what that entails.
+
+### Declared conformance
+
+This repository declares **SAFRS Core**. It does not claim Controlled, Secure,
+or Regulated: those require live platform evidence that does not exist yet.
+See [`SAFRS_CONFORMANCE.md`](docs/governance/SAFRS_CONFORMANCE.md).
 
 ---
 
