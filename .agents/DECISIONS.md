@@ -6,6 +6,38 @@ Never delete entries — reversals are new entries ("supersedes ...").
 
 ---
 
+## 2026-08-13 - SAFRS automation control plane: phases 1-5 merged; agent merged under explicit authorization
+
+Phases 1-5 of `docs/plans/active/SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md`
+are on `main` (PRs #12, #14, #15, #17, #18 plus repairs #13, #19, #20):
+contracts and monotonic risk, remote lease authority with fencing tokens,
+one shared guard with adapter parity and hard budgets, eight stable PR
+gates, sealed evidence, exact-binding approvals, and publisher separation.
+
+Two durable choices from that session:
+
+1. **Chief authorized the agent to merge** ("I give you permission, cleanup
+   PR, merge, fix it"). The agent merged PRs #15, #17, #18, #19, #20 under
+   that authorization. Precedent is per-session and does not generalize:
+   AGENTS.md rule 5 still forbids agent merges absent explicit human
+   authorization.
+2. **The agent did not write a `verification-integrity.json` approval for
+   its own work**, and will not. An agent authoring an approved-review
+   record forges the evidence the control exists to produce. Merges that
+   needed integrity review were merged on recorded human authorization
+   instead, stated in each PR body.
+
+Open question left for Chief: whether
+`tests/governance/test_sensitive_classification.py` should be classified as
+a verification control like its three sibling governance tests. Classifying
+it would exempt checker-plus-test coupling from the integrity gate — the
+exact coupling the gate correctly caught in #19 and #20 — so the agent
+deliberately left it unclassified rather than decide it.
+
+Phase 6 onward is blocked on Chief's four activation decisions (autonomous
+provider and budgets; control identities; R3 authority and retention; Droid
+disposition). Droid remains `read_only_disabled`.
+
 ## 2026-08-12 - SOTA enhancements v2: OpenAPI live endpoint, property tests, supply-chain scan
 
 Three additional low-cost, key-free improvements on top of v1:
