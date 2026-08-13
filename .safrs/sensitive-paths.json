@@ -52,7 +52,9 @@
     "tests/fixtures/automation/**",
     "docs/bootstrap/**",
     ".safrs/approvals/**",
-    ".safrs/evidence/**"
+    ".safrs/evidence/**",
+    "tests/architecture/**",
+    "tests/security/**"
   ],
   "verification_control_patterns": [
     ".safrs/**",
@@ -91,7 +93,11 @@
     "**/tests/architecture/**",
     ".safrs/approvals/**",
     ".safrs/evidence/**",
-    "tests/governance/test_automation_approvals.py"
+    "tests/governance/test_automation_approvals.py",
+    "tests/architecture/**",
+    "tests/security/**",
+    ".github/CODEOWNERS",
+    ".github/pull_request_template.md"
   ],
   "risk_overrides": [
     {
