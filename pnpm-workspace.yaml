@@ -60,3 +60,8 @@ minimumReleaseAge: 1440
 minimumReleaseAgeExclude:
   - resend@6.19.0
   - stripe@22.5.0
+
+# Force transitive copies onto patched releases (Dependabot GHSA remediation).
+overrides:
+  postcss: "catalog:"
+  sharp: ">=0.35.1"
