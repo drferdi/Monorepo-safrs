@@ -10,7 +10,9 @@
     "./tokens.css": "./src/tokens.css",
     "./tokens.json": "./src/tokens.json",
     "./tailwind.css": "./src/tailwind.css",
-    "./fonts": "./src/fonts.ts"
+    "./fonts": "./src/fonts.ts",
+    "./fonts-archivo": "./src/fonts-archivo.ts",
+    "./archivo.css": "./src/archivo.css"
   },
   "files": [
     "src",
