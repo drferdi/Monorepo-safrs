@@ -4,66 +4,87 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-14 (control-center capsule built on `feat/control-center`; Chief stopped the session)
+Last updated: 2026-08-15 (Task 11 rebase complete; PR #25 merged; PR #26 pending merge decision)
 
 ## Current state
 
-- **`main` is untouched.** All 20 commits sit on `feat/control-center`
-  (worktree `../Monorepo.worktrees/feat-control-center`). Both working trees are clean.
-- **New capsule `projects/control-center`** — a local Node-runtime Next.js operator board that reads
-  this repository directly. What genuinely works, each verified by running it:
-  - Feature registry: status derived from evidence paths on disk, never hand-authored. Branch-aware,
-    so `corpus-engine` resolves to "requires human action" with its branch named.
-  - Workspace map + blast radius (`@safrs/config` reaches 8 members).
-  - Change flow from git (172 commits/30 days; 146 by agent identities, 26 by people).
-  - Machine readiness via a new `--json` mode on `tools/doctor` (text mode unchanged).
-  - Allowlisted command executor: fixed argv, no shell, confirmation phrase compared server-side,
-    audit line per attempt. Proven by generating Prisma Client from the board (exit 0), after which
-    the step removed itself from the derived next-steps list.
-- **`packages/token` gained Archivo + JetBrains Mono** as an opt-in typeface (`@sentra/token/fonts-archivo`,
-  `archivo.css`). Geist remains the default; Golden Path unchanged. R2, scope expansion recorded in commit.
-- `sentrawiki` refresh committed to `main` earlier in the session (governance PASS at that point).
+- **PR #25 merged into `main`** (commit `afc6d43`, 2026-08-15): the capsule `AGENTS.md`, with the
+  path-reference and sequencing-note fixes CodeRabbit flagged.
+- **`feat/control-center` rebased onto `main` (Task 11), clean, no conflicts.** 12 commits, force-pushed.
+  Full local verification re-run on the rebased tree: 24/24 tests, typecheck clean, lint clean (34
+  files), token gate clean (38 checks), `pnpm governance` **PASS** (no independent-review gate
+  triggered — this branch's diff has no verification-control + implementation coupling).
+- PR #26 (https://github.com/drferdii/Monorepo-safrs/pull/26) still **draft**, still needs someone to
+  undraft and merge now that its blockers (PR #25, Task 11) are both cleared.
+- **Allowlist grown from 11 to 19 commands**, with invariant tests: every mutating command carries a
+  confirmation phrase, R3 never appears, ids are unique, every recovery entry points at a real command.
+- **`root.ts` path containment is tested**: absolute-path rejection, traversal rejection, valid relative
+  paths, existence checks — `repoRoot`/`repoPath`/`repoPathExists`.
+- **Dev server binds `127.0.0.1` only** (was previously reachable on all interfaces).
+- **Action status is derived from the allowlist** via `actionStatus(id)`. The old hardcoded `status`
+  field and the dishonest `SITE.honesty` copy claiming actions were static are gone.
+- **Gates, agents, and knowledge sections now read live data**, replacing static catalog text:
+  - Gates: `saf gate --all`, parsed and tested (`parseGates` — accepts a verdict array, rejects
+    non-array shapes).
+  - Agents: role authority read from `.safrs/policy.json`, falling back to catalog prose only when a
+    role has no policy entry (tested); automation identities stay flagged as catalog-derived.
+  - Knowledge: `.safrs/document-registry.json`, documents with `read_order` sorted first (tested).
+- **`readyToUse` is honest on data-absent checkouts**: reports `null` with a stated reason (no corpus
+  data, or manifest stale vs. disk census) instead of a misleading number derived from the manifest.
+- Library-derive, gates-parse, agents-view, and knowledge tests all exist and pass (24/24 total, see
+  Verification below).
+
+## Verification (this session, on the rebased tree)
+
+- `pnpm lint` (app dir): plain command false-fails on a shell-hook JSON-parse bug in this environment;
+  true result via `biome check src` — **PASS**, 34 files, no issues.
+- `pnpm typecheck` (app dir): **PASS**, clean `tsc`.
+- `pnpm test` (app dir): **PASS**, 24/24.
+- `node scripts/check-tokens.mjs` (root): **PASS**, 38 contrast checks, 0 raw values.
+- `pnpm governance` (root): **PASS** — task ownership OK, R2 classification (HANDOFF.md +
+  package.json), no verification-control coupling, all SAFRS checks green.
 
 ## Blockers
 
-- **`check_sensitive_changes.py` refuses this change set**: `projects/control-center/AGENTS.md` is a
-  verification control created alongside its implementation. Needs Chief's independent review, or the
-  capsule AGENTS.md split into its own change. Do not weaken the gate.
-- **`TASK-20260813-CONTROL-CENTER` (R2) is still open** in the registry.
-- **Medical library counts are unknowable from disk**: `database/canonical/manifest.jsonl` records 4
-  entries against 82 canonical documents; canonical files carry no quality verdict. Only the pgvector
-  projection can answer "ready to use", and Docker is down. The board reports this as unknown by design.
-- Docker engine down → 4 readiness checks blocked, 1 Vitest suite fails. Pre-existing.
+- **None left for the merge chain.** PR #25 merged, Task 11 done, governance passes clean.
+- The Next.js dev-server-autogenerated `apps/web/AGENTS.md`/`CLAUDE.md` risk noted last session is
+  still real but **latent**: those files only appear after running `next dev`, they are not gitignored,
+  and neither file is present in this checkout right now. A `.gitignore` fix for them is out of this
+  task's `scope_prefixes` (root `.gitignore` isn't under `projects/control-center/`) — needs either a
+  scope-prefix amendment to `TASK-20260813-CONTROL-CENTER` or a separate task before anyone runs
+  `next dev` locally and then `pnpm governance` in the same tree.
 
-## Not done — do not assume otherwise
+## Not done — carried forward unchanged
 
-- Agents, Tasks, Governance, Knowledge sections still render **static catalog data**.
-- Long-running processes (`pnpm dev`, corpus pipeline) cannot be started from the board; needs a
-  supervisor with start/stop/status/log, and the pipeline must honour `database/corpus.lock`.
-- **No automated tests for the registry.** Coverage owed is listed in
-  `projects/control-center/docs/testing.md`.
-- Command output still carries raw ANSI escapes.
+- Long-running process supervisor (`pnpm dev`, `db:studio`, corpus pipeline, `dev:email`,
+  `stripe:listen`) — not implemented.
+- Parameterized command forms (`task claim/state/close`, `project:new`, `capability:add`, `db:reset`)
+  — not implemented.
+- GitHub-side integration (PR list, workflow status, branch protection) — not implemented.
+- `feat/corpus-engine-poc` has not been merged.
+- ANSI stripping of command output — not implemented (nice-to-have, not planned).
+
+## Minor, deferred, non-blocking findings
+
+- `gates.ts`'s non-zero-exit path (a real gate FAIL) is tested only against a synthetic fixture, never
+  against the live CLI actually failing — all 8 gates currently pass in this repo.
+- Document registry's `normativity`/`scope` fields are typed as required strings but ~29/48 real
+  documents omit them, rendering blank cells. Honest, not a bug — a latent type-honesty gap.
 
 ## Next actions
 
 | Area | Action |
 | --- | --- |
-| **Review** | Chief decides: review the R2 change set, or split the capsule AGENTS.md out |
-| **Library** | Bring Docker + database up, then rebuild the manifest over the 82 canonical documents |
-| **Tests** | Path containment and status derivation, before extending the board further |
-| **Sections** | Wire the four remaining sections to real readings |
-| **Disposition** | If the branch is not wanted: `git worktree remove` + `git branch -D feat/control-center` leaves `main` exactly as it was |
+| **Merge** | Chief decides on PR #26 (undraft + merge; CI and governance both green) |
+| **Cleanup** | Gitignore the `apps/web/AGENTS.md`/`CLAUDE.md` Next.js artifacts (needs its own task claim — root `.gitignore` is outside this task's scope) |
+| **Supervisor** | Design start/stop/status/log for long-running processes |
+| **Forms** | Parameterized command execution (claim/state/close, project:new, etc.) |
 
 ## Session guardrails
 
-- PowerShell for commands; explicit staging only, never `git add -A`.
-- Sentra design tokens only. `.panel` corner marks are for a genuinely bounded object — a card around
-  every section is a prohibition. Reference: `docs/design-system/reference/`, notes in
-  `projects/control-center/docs/design-brief.md`.
+- PowerShell/Bash for commands; explicit staging only, never `git add -A`.
+- Sentra design tokens only.
 - Worktrees: sibling `../Monorepo.worktrees/<branch>` only.
 - Chat diagnostics in Bahasa Indonesia; docs/code in English.
-- **Verify before reporting.** This session repeatedly claimed work verified when it was not — a font
-  said to be applied that rendered as Times New Roman, buttons called runnable while every visible one
-  was disabled, and a "ready to use" figure taken from a manifest the same code had just proved
-  damaged. Measure the thing itself, and where the source is unsound report unknown rather than a
-  number.
+- **Verify before reporting.** Measure the thing itself; where the source is unsound, report unknown
+  rather than a number.
