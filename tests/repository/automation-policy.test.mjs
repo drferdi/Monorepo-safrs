@@ -247,6 +247,8 @@ test("CI proves the full safe verification path without deployment", () => {
       new RegExp(command.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&")),
     );
   }
+  assert.match(workflow, /^on:\s*$/mu);
+  assert.match(workflow, /push:\s*\n\s*branches:\s*\[main\]/u);
   assert.match(workflow, /runs-on:\s*ubuntu-24\.04/u);
   assert.match(workflow, /image:\s*postgres:17-alpine/u);
   assert.match(workflow, /pg_isready -U safrs -d safrs_test/u);

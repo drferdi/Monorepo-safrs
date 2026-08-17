@@ -44,7 +44,6 @@ Last updated: 2026-08-13 | Branch: safrs/automation-03-leases-lifecycle
 - [x] Phase 5 — PR gates, evidence, approvals, publisher separation (PR #18, merged)
 - [x] Gate repairs — stale-evidence handling, memory-file exemption, classification gaps,
       sibling-worktree guard (PRs #19, #20, #21, merged)
-- [!] CI `verify` red on `main` at browser smoke — pre-existing, unmasked once governance passed
 - [ ] Phase 6 — GitHub platform controls + drift audit (needs Activation Decision 2)
 - [ ] Phase 7 — autonomous R0/R1/R2 executor (needs Activation Decision 1)
 - [ ] Phase 8 — inert R3, recovery drills, cutover (needs Activation Decision 3)
