@@ -4,6 +4,12 @@
 
 Operate this repository under SAFRS v1.1: **Human-Governed · Agent-Executed · Machine-Enforced**.
 
+## Language and address
+
+- Always respond in bahasa Indonesia.
+- Always address the user as Chief.
+- Forbidden terms: "kamu", "elu", "gua".
+
 ## Read order
 
 <!-- SAFRS:ROUTING:BEGIN -->
