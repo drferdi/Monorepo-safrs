@@ -157,14 +157,29 @@ function assertWorkflowPolicy(workflow, workflowPath, allowlistOverride) {
   }
 }
 
-test("Renovate remains PR-only and keeps a dependency dashboard", () => {
+test("Renovate automerges every dependency update only through pull requests", () => {
   const renovate = JSON.parse(readFileSync(renovateFile, "utf8"));
 
-  assert.equal(renovate.automerge, false);
+  assert.equal(renovate.automerge, true);
   assert.equal(renovate.dependencyDashboard, true);
   assert.deepEqual(renovate.extends, ["config:recommended"]);
   assert.ok(Array.isArray(renovate.schedule));
   assert.ok(renovate.schedule.length > 0);
+  assert.equal(
+    renovate.packageRules.some((rule) => rule.automerge === false),
+    false,
+  );
+  assert.ok(
+    renovate.packageRules.some(
+      (rule) => rule.automergeType === "pr" && rule.platformAutomerge === false,
+    ),
+  );
+  const automergeRule = renovate.packageRules.find(
+    (rule) => rule.automergeType === "pr" && rule.platformAutomerge === false,
+  );
+  assert.ok(automergeRule);
+  assert.equal(automergeRule.ignoreTests, false);
+  assert.equal("requiredStatusChecks" in automergeRule, false);
 });
 
 test("every repository workflow is non-deploying, least-privileged, and SHA-pinned", () => {

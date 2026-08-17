@@ -2,7 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
   "dependencyDashboard": true,
-  "automerge": false,
+  "automerge": true,
   "schedule": ["before 6am on monday"],
   "lockFileMaintenance": {
     "enabled": true
@@ -14,14 +14,13 @@
       "allowedVersions": "!/-(alpha|beta|canary|next|rc)/"
     },
     {
-      "description": "Keep major upgrades visible and separately reviewed.",
+      "description": "Keep major upgrades visible as a separate update group.",
       "groupName": "major dependency updates",
       "matchUpdateTypes": ["major"]
     },
     {
-      "description": "Chief decision 2026-08-11 (SAFRS_GOVERNANCE_REMEDIATION_PLAN.md Fase 4, option a): automerge patch/minor updates only, and only once CI is green. Major updates are excluded by the rule above and always require manual review. This does NOT replace GitHub branch protection / CODEOWNERS review (see docs/governance/PLATFORM_ACTIVATION.md Step 1) — until that is active, this rule is the only gate on these PRs, so it intentionally stays scoped to patch/minor rather than matching the Fitur #7 request literally.",
-      "matchUpdateTypes": ["patch", "minor"],
-      "automerge": true,
+      "description": "Chief decision 2026-08-17: all dependency updates may automerge as pull requests after required CI checks pass.",
+      "ignoreTests": false,
       "automergeType": "pr",
       "platformAutomerge": false
     }
