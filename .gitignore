@@ -95,3 +95,7 @@ database/state/
 # SpecStory session state — local tool state, not repo content
 .specstory/cli/
 .specstory/history/
+
+# Next.js dev-server generated local agent files
+projects/*/apps/*/AGENTS.md
+projects/*/apps/*/CLAUDE.md
