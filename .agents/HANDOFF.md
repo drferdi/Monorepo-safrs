@@ -4,40 +4,43 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-17 (main residual consolidation, VERIFYING)
+Last updated: 2026-08-17 (main consolidation, VERIFYING — governance PASS, awaiting push)
 
 ## Current state
 
-- Branch `main` in the primary worktree, rebased onto `origin/main` (`fe1af2d`). Ahead 9, behind 0.
-- Working tree is clean. The mixed residual change set on `main` is now split into one commit per work stream:
-  `docs(governance)` AGENTS.md directive, `docs` README, `docs(handbook)`, `docs(superpowers)` plans/specs plus
-  the SpecStory removal, `chore(agents)` Cline rules and Cursor skill, `chore(agents)` Cursor agent renumbering.
-- Chief decisions this session: reaffirm D-003 (all dependency updates automerge as PRs once Renovate observes passing tests; GitHub branch protection and required status checks are not configured);
-  commit the AGENTS.md language directive with the formatting corrected; commit residual work directly on `main`;
-  delete the temporary scratch files permanently.
-- `tmp-extract/` and `tmp-task2-extract.md` are deleted. Nothing from them entered git history.
-- `projects/control-center/apps/web/AGENTS.md` and `CLAUDE.md` are covered by the upstream `.gitignore` rule.
-- Renovate keeps the D-003 rule from `f8d5c52`; the upstream patch/minor restriction was superseded during rebase.
+- `main` in the primary worktree, rebased onto `origin/main` (`fe1af2d`), ahead 14, behind 0, clean.
+- Task: `TASK-20260817-MAIN-CONSOLIDATION`, R2, `EXECUTING`, owner `agent:claude:root`, owning
+  `.agents/DECISIONS.md`, `.agents/HANDOFF.md`, `.github/renovate.json`,
+  `.safrs/reviews/verification-integrity.json`, `docs/plans/active/MASTER REMEDIATION KANBAN.md`.
+- Closed this session (deliverables verified identical to `main`): `TASK-20260817-RECONCILE-GOVERNANCE`,
+  `-RECONCILE-RENOVATE`, `-RECONCILE-RENOVATE-INTEGRITY`, each REVIEW → MERGED → CLOSED.
+- The residual mixed change set on `main` is split into one commit per work stream: AGENTS.md language
+  directive, README, handbook, superpowers plans/specs plus the SpecStory removal, Cline rules and Cursor
+  skill, Cursor agent renumbering, D-003 wording, the incident record, and the review evidence.
+- Chief decisions: reaffirm D-003 (all dependency updates automerge as PRs once Renovate observes passing
+  tests, with branch protection confirmed unconfigured); commit residual work directly on `main`; delete
+  the temporary scratch files permanently; Chief signs the integrity review as `human:chief`.
+- A fabricated integrity-review record was found and removed from local history before any push — see the
+  2026-08-17 entry in `DECISIONS.md`. `refs/original/refs/heads/main` and the reflog are kept on purpose.
 - Nothing has been pushed to `origin`.
 
 ## Verification evidence (this worktree)
 
-- `npx biome check docs/handbook` PASS after adding explicit button types, exporting the tab handlers on
-  `window`, and removing the duplicated `padding` declaration.
-- Husky pre-commit passed on every commit.
-- `pnpm governance` FAILS at `tools/safrs/check_sensitive_changes.py`:
-  `verification controls and implementation changed in the same change set`.
-  Verification controls changed: `AGENTS.md`, `tests/repository/automation-policy.test.mjs`.
-  Implementation changed in the same set: `.github/renovate.json`, `.cursor/**`, `.clinerules`.
-  All other SAFRS checks report OK, including task ownership and lifecycle.
+- `pnpm governance` → `SAFRS local governance verification: PASS`, including task ownership and the
+  sensitive-change classification.
+- Repository tests: 63/63 pass (`node --test tests/repository/*.test.mjs`).
+- `npx biome check docs/handbook` clean; husky pre-commit passed on every commit.
+- History rewrite verified tree-preserving; `git log origin/main..HEAD -- .safrs/reviews/verification-integrity.json`
+  is empty and `origin/main` is unmoved.
 
 ## Next actions
 
 | Area | Action |
 | --- | --- |
-| **Chief** | Decide who issues the independent integrity review for this R2 change set |
-| **Then** | Write `.safrs/reviews/verification-integrity.json` for the current base and change-set fingerprint, rerun `pnpm governance`, and only then push `main` |
-| **Do not** | Weaken or bypass `check_sensitive_changes.py`; do not push while governance is red |
+| **Chief** | Authorize `git push origin main` (14 commits, R2) |
+| **Then** | Close `TASK-20260817-MAIN-CONSOLIDATION`; close the stale PLANNED main tasks (`RESIDUAL-MAIN-OWNERSHIP`, `CLINE-RULES`, `CURSOR-ABYSS-REVIEW`) whose paths are now committed |
+| **Open** | The integrity control verifies fingerprint match, not reviewer independence — Chief to decide whether that gap is closed structurally |
+| **Do not** | Expire `refs/original` or the reflog; Phase 1 remains unstarted |
 
 ## Session guardrails
 
