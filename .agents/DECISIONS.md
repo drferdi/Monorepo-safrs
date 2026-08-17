@@ -6,6 +6,46 @@ Never delete entries — reversals are new entries ("supersedes ...").
 
 ---
 
+## 2026-08-17 - RECONCILE-GOVERNANCE claimed as isolated R2 work
+
+Chief approved option B and Approach 1. `TASK-20260813-CONTROL-CENTER` is CLOSED. `TASK-20260817-RECONCILE-GOVERNANCE` owns six exact files in `worktrees/reconcile-governance`. Residual dirty paths on `main` stay out of scope. The ownership checker is unchanged. `RECONCILE-RENOVATE` and Phase 1 remain unopened.
+
+## 2026-08-17 - TASK-20260813-CONTROL-CENTER MERGED and CLOSED
+
+Chief authorized `REVIEW → MERGED → CLOSED`. Executed via `tools/task/src/cli.mjs state --to MERGED --yes` then `close --yes`, both from the owning worktree. Final record confirmed `state: CLOSED`, `updated_at: 2026-08-17T10:18:41Z`. `docs/` is no longer owned by any active task — `RECONCILE-GOVERNANCE` may now claim it. (`close` emitted a non-fatal warning: no local lease-ledger RELEASE event existed for this task, since it predates this session's lease ledger; state file itself updated correctly.)
+
+## 2026-08-17 - TASK-20260813-CONTROL-CENTER reconciled to REVIEW
+
+Checked the task against the control plane and its owning worktree instead of assuming staleness:
+
+- Control-plane record showed `EXECUTING`, `updated_at` unchanged since claim (2026-08-13T15:33:54Z) — looked stale but code delivery had actually landed.
+- Worktree `worktrees/feat-control-center` @ `4e07ddf` is clean (no uncommitted changes) and `git merge-base --is-ancestor` confirms it is an ancestor of `main` — the work shipped via PR #26 (merge commit `9565b48`), outside the task's own lifecycle bookkeeping.
+- Ran `scripts/safrs-verify.ps1` fresh inside the owning worktree: PASS, 0 changed files, all governance and test suites green.
+- Advanced state through the legal chain `EXECUTING → VERIFYING → REVIEW` via `tools/task/src/cli.mjs state` (ownership guard requires running from the owning worktree, not `main`).
+- Did not advance to `MERGED`/`CLOSED`: that is Chief's call (R2, designated review) even though the code is already on `main` — the task record and the git reality should agree before closing.
+- Consequence: `REVIEW` is still `MUTATION_ACTIVE`, so `docs/` stays owned by this task and `RECONCILE-GOVERNANCE` remains blocked until Chief authorizes the close.
+
+## 2026-08-17 - Master remediation authorization decisions
+
+Chief approved the Master Remediation Plan and resolved its initial decision gate:
+
+- **D-001 Repository visibility:** `PUBLIC`. Current GitHub visibility matches this decision.
+- **D-002 Solo-developer platform authority:** approved as proposed — R0 read-only, R1 machine verification, R2 explicit Chief authorization, R3 explicit human authorization.
+- **D-003 Renovate policy:** superseded by Chief's later decision: all dependency updates may automerge after CI passes. Major, minor, patch, and lockfile updates are in scope unless a later decision narrows this. Current `renovate.json` does not yet implement this broad policy.
+- **D-004 R2 authorization:** approved as proposed — implementation, fresh verification, R2 evidence package, Chief review, explicit authorization, then merge.
+
+Phase 0A is authorized only as read-only ground-truth collection. No remediation implementation is authorized until its baseline and decision evidence are recorded.
+
+## 2026-08-17 - D-003 dependency automerge expanded
+
+Chief approved dependency automerge for **all dependency updates after CI passes**. This supersedes the earlier D-003 Option A entry. Implementation remains a separate R2 work package because Renovate configuration and dependency automation are governance-sensitive paths.
+
+## 2026-08-17 - Recommended next actions after Phase 0A
+
+Chief approved the Ground Truth Baseline and opening of R2 reconciliation tasks. Recommended sequence: (1) review `docs/evidence/MONOREPO GROUND TRUTH BASELINE v1.md`; (2) reconcile active `TASK-20260813-CONTROL-CENTER` ownership of `docs/`; (3) create a dedicated R2 worktree and claim `RECONCILE-GOVERNANCE`; (4) create a separate dedicated R2 worktree and claim `RECONCILE-RENOVATE`; (5) do not modify Renovate, governance checkers, GitHub, or start Phase 1 until each task has valid scope, claim, evidence, and authorization; (6) rerun `scripts/safrs-verify.ps1` and resolve ownership failure without weakening governance.
+
+---
+
 ## 2026-08-13 - SAFRS automation control plane: phases 1-5 merged; agent merged under explicit authorization
 
 Phases 1-5 of `docs/plans/active/SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md`

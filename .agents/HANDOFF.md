@@ -1,39 +1,39 @@
-# HANDOFF — Current State and Next Action
+﻿# HANDOFF — Current State and Next Action
 
 > Read first every session. Keep under ~1k tokens.
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-17 (Operator Copilot spec + implementation plan written, not executed)
+Last updated: 2026-08-17 (TASK-20260817-RECONCILE-GOVERNANCE REVIEW)
 
 ## Current state
 
-- Checkout: `main` @ `9565b48`. Working tree still has unrelated dirty files plus new Copilot docs.
-- Golden-path database 100% ready plan remains unexecuted: `docs/superpowers/plans/2026-08-16-database-monorepo-100-ready.md`.
-- New design: `docs/superpowers/specs/2026-08-17-control-center-operator-copilot-design.md`.
-- New plan: `docs/superpowers/plans/2026-08-17-control-center-operator-copilot.md`.
-- Chief approved an explicit Local / OpenAI switch. No silent fallback. AI SDK 6 is an adapter over the existing Control Center allowlist.
-- Capability `ai` is still manifesto-only. No Copilot code has been written.
+- Worktree: `D:\DEV\Monorepo.worktrees\reconcile-governance` on `feat/reconcile-governance`.
+- Task: `TASK-20260817-RECONCILE-GOVERNANCE`, R2, `REVIEW`, owner `agent:codex:root`.
+- Owned paths: the six authorized Master Remediation / session files only.
+- `TASK-20260813-CONTROL-CENTER` is `CLOSED`. `docs/` is no longer blocked by that task.
+- Residual dirty files on `main` remain out of scope.
+- `renovate.json` unchanged. `RECONCILE-RENOVATE` not started. Phase 1 not started.
+- Ownership checker unchanged.
 
-## Proven blockers (do not rediscover)
+## Verification evidence (FRESH, this worktree)
 
-1. Visual e2e baseline is still a Git LFS pointer, not a PNG.
-2. Golden-path page creates demos but does not list stored rows.
-3. `TransactionSample` is schema/seed-only.
-4. Ollama is not installed on this machine; local Copilot will refuse until it is.
-5. Do not treat this plan as proof that Copilot exists.
+- `pnpm governance` PASS, including `SAFRS task ownership: OK`.
+- `powershell -ExecutionPolicy Bypass -File scripts/safrs-verify.ps1` PASS.
+- `git diff --check` working tree exit 0.
+- `git diff --check 124e9e0..HEAD` exit 0 after header-padding repair; HANDOFF SHA aligned to HEAD.
+- `git status --short --branch` is clean on `feat/reconcile-governance`.
+- Commits: `dd1bee7` six-file reconcile; `b770e80` header-padding repair; HANDOFF SHA aligned to HEAD.
 
 ## Next actions
 
 | Area | Action |
 | --- | --- |
-| **Copilot** | Execute the 8-task plan in `../Monorepo.worktrees/feat-operator-copilot` after Chief chooses subagent-driven or inline execution |
-| **Do not** | Merge Corpus Engine, auto-fallback Local to OpenAI, print `.env`, or implement on dirty `main` |
-| **Done only if** | Task 8 gate is green and manual Copilot checks in the plan pass |
+| **Chief** | Review this R2 task. Do not merge unless authorized. |
+| **Do not** | Start `RECONCILE-RENOVATE` or Phase 1 |
 
 ## Session guardrails
 
 - PowerShell; explicit staging only; never `git add -A`.
-- Schema/CI/AI-capability changes are R2.
-- Chat diagnostics in Bahasa Indonesia; docs/code in English.
-- Verify before reporting.
+- Evidence before assertions.
+
