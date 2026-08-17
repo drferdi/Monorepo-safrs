@@ -69,7 +69,7 @@ graph TD
     WEB --> TELE
     API --> SCHEMAS
     API --> TELE
-    DB --> SCHEMAS
+    DB --> TELE
     ENV --> CONF
     TELE --> CONF
     UI --> TOKEN
@@ -77,7 +77,7 @@ graph TD
 
 - **`projects/golden-path/apps/web`** is the deployable unit. It mounts `@safrs/api`, and uses `@safrs/env`, `@safrs/ui`, and `@safrs/telemetry`.
 - **`@safrs/api`** owns the typed Hono API; it consumes `@safrs/schemas` for Zod contracts, applies `@safrs/telemetry` middleware, and talks to `@safrs/database`.
-- **`@safrs/database`** wraps Prisma + PostgreSQL and depends on `@safrs/schemas` for shared types.
+- **`@safrs/database`** wraps Prisma + PostgreSQL and depends on `@safrs/env` and `@safrs/telemetry`. It does **not** depend on `@safrs/schemas`.
 - **`@safrs/env`** validates environment with `@t3-oss/env-core`/`@t3-oss/env-nextjs` and extends `@safrs/config` presets.
 - **`@safrs/telemetry`** extends the `@safrs/config` presets and stays server-only.
 - **`@safrs/ui`** is built on the `@safrs/token` design tokens.

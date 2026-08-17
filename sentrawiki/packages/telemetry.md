@@ -46,7 +46,7 @@ flowchart LR
 ## Integration points
 
 - **`@safrs/api`** applies `telemetryMiddleware()` to every API route (`packages/api/src/app.ts`).
-- **`@safrs/database`** records Prisma query spans via `PrismaInstrumentation` (`packages/database/src/client.ts`).
+- **`PrismaInstrumentation`** is started by `@safrs/telemetry`'s `initTelemetry`, invoked from `projects/golden-path/apps/web/src/instrumentation.ts` — not from `packages/database/src/client.ts`, which only builds the Prisma client.
 - **`@safrs/web`** initializes telemetry at startup and consumes the package server-side.
 - **Local collector**: `docker compose -f compose.telemetry.yaml up -d jaeger` starts the Jaeger UI (localhost:16686).
 
