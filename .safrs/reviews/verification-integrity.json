@@ -1,8 +1,8 @@
 {
   "version": 1,
   "verdict": "approved",
-  "reviewer_id": "agent:codex:verification-integrity-reviewer",
-  "reviewed_at": "2026-08-12T00:50:49Z",
-  "base_sha": "e7d0405efc6d4d475433324a309e5cbc2c8f72b6",
-  "change_set_sha256": "11ca04b905898dcaafc2824eb4c000c9a02ccf7da0ae3a2c360bb3abc6766f97"
+  "reviewer_id": "agent:cursor:claude-fable-independent-reviewer",
+  "reviewed_at": "2026-08-17T09:41:58Z",
+  "base_sha": "9565b48a421ecebe4deb94df076776bb182e21c5",
+  "change_set_sha256": "9eb0a88e4063da516a150ccb0cb8c1a1012952cf7fde1c3c0e58fe99b337e0d4"
 }

@@ -99,28 +99,18 @@ integrationDescribe("isolated PostgreSQL behavior", () => {
     );
     expect(seeded.rows).toEqual([{ name: "Sentra Demo" }]);
 
-    const demoId = randomUUID();
-    const createdAt = new Date("2026-08-10T00:00:00.000Z");
-    await database.query(
-      "INSERT INTO demos (id, name, created_at) VALUES ($1, $2, $3)",
-      [demoId, "Contract Demo", createdAt],
+    const uniqueName = `Contract Demo ${randomUUID()}`;
+    await database.query("INSERT INTO demos (name) VALUES ($1) RETURNING id", [
+      uniqueName,
+    ]);
+    const created = await database.query<{ id: string; name: string }>(
+      "SELECT id, name FROM demos WHERE name = $1",
+      [uniqueName],
     );
-    const transaction = await database.query<{ id: string }>(
-      "INSERT INTO transaction_samples (demo_id, amount, currency, occurred_at) VALUES ($1, $2, $3, $4) RETURNING id",
-      [demoId, "125000.00", "IDR", createdAt],
+    expect(created.rows[0]?.name).toBe(uniqueName);
+    expect(created.rows[0]?.id).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
     );
-    const transactionId = transaction.rows[0]?.id;
-
-    expect(transactionId).toMatch(/^\d+$/u);
-    const removed = await database.query(
-      "DELETE FROM transaction_samples WHERE id = $1",
-      [transactionId],
-    );
-    expect(removed.rowCount).toBe(1);
-    const remaining = await database.query(
-      "SELECT COUNT(*)::int AS count FROM transaction_samples WHERE id = $1",
-      [transactionId],
-    );
-    expect(remaining.rows[0]?.count).toBe(0);
+    await database.query("DELETE FROM demos WHERE name = $1", [uniqueName]);
   });
 });

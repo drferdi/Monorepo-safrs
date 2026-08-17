@@ -15,7 +15,9 @@ type DemoRecord = {
 export type DemoStore = {
   demo: {
     create: (args: { data: { name: string } }) => Promise<DemoRecord>;
-    findMany: () => Promise<DemoRecord[]>;
+    findMany: (args?: {
+      orderBy?: { createdAt: "desc" };
+    }) => Promise<DemoRecord[]>;
   };
 };
 
@@ -65,7 +67,9 @@ function createRoutes({ getStore = defaultStore }: CreateAppOptions = {}) {
     .get("/docs", (context) => context.html(openApiDocsHtml()))
     .get("/demos", async (context) => {
       const store = await getStore();
-      const demos = await store.demo.findMany();
+      const demos = await store.demo.findMany({
+        orderBy: { createdAt: "desc" },
+      });
 
       return context.json(demos.map(serializeDemo), 200);
     })

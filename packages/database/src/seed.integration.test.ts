@@ -93,14 +93,14 @@ integrationDescribe("deterministic seed sequence", () => {
     expect(result.rows[0]?.database).toBe(testDatabaseName);
   });
 
-  it("leaves the next generated ID above the fixed seed ID after repeated seeds", async () => {
+  it("leaves a single demo row after repeated seeds", async () => {
     runDatabaseCommand("seed");
     runDatabaseCommand("seed");
 
-    const result = await connection.query<{ id: string }>(
-      "SELECT nextval(pg_get_serial_sequence('transaction_samples', 'id')) AS id",
+    const result = await connection.query<{ count: number }>(
+      "SELECT COUNT(*)::int AS count FROM demos",
     );
 
-    expect(BigInt(result.rows[0]?.id ?? "0")).toBe(2n);
+    expect(result.rows[0]?.count).toBe(1);
   });
 });

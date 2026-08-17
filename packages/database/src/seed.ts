@@ -17,39 +17,12 @@ const demo = {
   name: "Sentra Demo",
 };
 
-const transaction = {
-  amount: "125000.00",
-  createdAt: new Date("2026-01-01T00:00:00.000Z"),
-  currency: "IDR",
-  demoId: demo.id,
-  id: 1n,
-  occurredAt: new Date("2026-01-02T00:00:00.000Z"),
-};
-
-const transactionSequenceSyncQuery = `
-  SELECT setval(
-    pg_get_serial_sequence('transaction_samples', 'id'),
-    GREATEST(
-      (SELECT COALESCE(MAX("id"), 1) FROM "transaction_samples"),
-      (SELECT last_value FROM "transaction_samples_id_seq")
-    ),
-    true
-  )
-`;
-
 async function main() {
   await database.demo.upsert({
     where: { id: demo.id },
     create: demo,
     update: demo,
   });
-
-  await database.transactionSample.upsert({
-    where: { id: transaction.id },
-    create: transaction,
-    update: transaction,
-  });
-  await database.$executeRawUnsafe(transactionSequenceSyncQuery);
 }
 
 try {

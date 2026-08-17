@@ -10,21 +10,20 @@ Because the database is a shared boundary, migrations and schema changes are R2;
 
 | File | Purpose |
 | --- | --- |
-| `packages/database/prisma/schema.prisma` | Data model (`Demo`, `TransactionSample`) |
+| `packages/database/prisma/schema.prisma` | Data model (`Demo`) |
 | `packages/database/prisma.config.ts` | Prisma config: schema path, migrations dir, seed command |
 | `packages/database/src/client.ts` | Prisma client singleton over `@prisma/adapter-pg`, connection pool from `serverEnv.DATABASE_URL` |
 | `packages/database/src/index.ts` | Barrel: `database` + `assertDisposableDatabase` |
 | `packages/database/src/reset-guard.ts` | Destructive-operation guard (see below) |
 | `packages/database/src/local-tooling.ts` | Resolves a local disposable `DATABASE_URL` for local tooling, falling back to `.env` / `.env.example` |
-| `packages/database/src/seed.ts` | Idempotent seed of one demo + one transaction sample |
+| `packages/database/src/seed.ts` | Idempotent seed of one demo |
 | `packages/database/scripts/run-local-prisma.mjs` | Runs Prisma CLI with local-tooling URL resolution |
 
 ## Data model
 
 `packages/database/prisma/schema.prisma` uses the `prisma-client` generator (`engineType = "client"`, ESM output into `src/generated/prisma`) and a PostgreSQL datasource:
 
-- **`Demo`** — `id` (uuid PK), `name`, `createdAt` (timestamptz, default now). Maps to table `demos`.
-- **`TransactionSample`** — `id` (BigInt identity), `demoId` (uuid FK to `Demo`, `onDelete: Cascade`), `amount` (`Decimal(14,2)`), `currency` (`Char(3)`), `occurredAt`, `createdAt`. Indexed on `demoId`. Maps to table `transaction_samples`.
+- **`Demo`** — `id` (uuid PK, DB-generated default), `name` (unique), `createdAt` (timestamptz, default now). Maps to table `demos`.
 
 ## The reset guard
 
@@ -41,7 +40,7 @@ Because the database is a shared boundary, migrations and schema changes are R2;
 
 ## Seed
 
-`packages/database/src/seed.ts` runs idempotent upserts for one demo (`Sentra Demo`) and one `TransactionSample` (125000.00 IDR), then resynchronizes the `transaction_samples` sequence. It requires `DATABASE_URL` and is wired into `prisma.config.ts` (`node --experimental-strip-types src/seed.ts`).
+`packages/database/src/seed.ts` runs an idempotent upsert for one demo (`Sentra Demo`). It requires `DATABASE_URL` and is wired into `prisma.config.ts` (`node --experimental-strip-types src/seed.ts`).
 
 ## Integration points
 

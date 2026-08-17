@@ -127,7 +127,7 @@ The largest capability in the repository and the one most at risk of being invis
 
 | Feature | Location | Impl | Status | Dashboard | Risk |
 | --- | --- | --- | --- | --- | --- |
-| `ci.yml` | `.github/workflows/` | Shipped | **RED on `main`** — browser-smoke step: `next dev` never comes up on 127.0.0.1:3001; `APP_URL` points at 3000 while Playwright serves 3001 | Connected (must display the failure) | R2 |
+| `ci.yml` | `.github/workflows/` | Shipped | Required on pull requests **and** `push` to `main`; depends on Git LFS for visual snapshots and a disposable PostgreSQL service on port 54329 | Connected | R2 |
 | `safrs-governance.yml` | `.github/workflows/` | Shipped | Green | Connected | R2 |
 | `safrs-pr-gates.yml` | `.github/workflows/` | Shipped | Published, **not required** (no branch protection) | Connected | R2 |
 | `safrs-publish.yml` | `.github/workflows/` | Shipped | Evaluation-only | Requires Human Action | R3 |
