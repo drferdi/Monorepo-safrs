@@ -1,0 +1,1089 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Codex QRH</title>
+<style>
+:root {
+  --bg: #181A1D;
+  --card: #202226;
+  --card2: #1D2024;
+  --ink: #BCBEC4;
+  --muted: #7A7E85;
+  --accent: #548AF7;
+  --orange: #E08A5C;
+  --line: #34383F;
+  --mono: 'JetBrainsMono Nerd Font', 'JetBrains Mono', Consolas, 'Courier New', monospace;
+  --sans: 'IBM Plex Sans', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 12px/1.45 var(--sans);
+  max-width: 380px;
+  margin: 0 auto;
+  padding: 12px 10px 36px;
+  position: relative;
+}
+body:before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  z-index: 100;
+}
+.eyebrow {
+  color: var(--accent);
+  font: 700 10px/1 var(--mono);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: 4px;
+}
+h1 {
+  font: 800 15px/1.2 var(--sans);
+  color: #fff;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.subtitle {
+  color: var(--muted);
+  font: 11px/1.35 var(--mono);
+  margin-bottom: 10px;
+}
+.signature {
+  font: 22px/1 'Segoe Script', 'Bradley Hand', 'Comic Sans MS', cursive;
+  color: var(--accent);
+}
+.pill {
+  border: 1px solid rgba(224, 138, 92, .45);
+  color: var(--orange);
+  background: rgba(224, 138, 92, .06);
+  padding: 6px 9px;
+  margin-bottom: 12px;
+  font: 700 11px var(--mono);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tabs {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  overflow-x: visible;
+  background: var(--bg);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 12px;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+.tab {
+  flex: 0 0 auto;
+  border: none;
+  background: var(--card2);
+  color: var(--muted);
+  padding: 7px 10px;
+  font: 700 10px/1 var(--mono);
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: box-shadow .15s ease, color .15s ease;
+  box-shadow:
+    5px 5px 9px rgba(0, 0, 0, .5),
+    -4px -4px 9px rgba(255, 255, 255, .035),
+    inset 0 0 0 rgba(0, 0, 0, 0);
+}
+.tab:hover {
+  color: #fff;
+  box-shadow:
+    2px 2px 4px rgba(0, 0, 0, .5),
+    -2px -2px 4px rgba(255, 255, 255, .035);
+}
+.tab.active {
+  color: #fff;
+  background: var(--accent);
+  box-shadow:
+    inset 3px 3px 6px rgba(0, 15, 60, .55),
+    inset -3px -3px 6px rgba(255, 255, 255, .12);
+}
+.panel {
+  display: none;
+}
+.panel.active {
+  display: block;
+}
+.section {
+  margin-top: 14px;
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+.section:first-child {
+  margin-top: 0;
+  border-top: none;
+  padding-top: 0;
+}
+.section h2 {
+  font: 700 12px/1.2 var(--mono);
+  color: var(--accent);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.small, .desc {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+.section-desc {
+  margin-bottom: 10px;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 3px solid rgba(224, 138, 92, .6);
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 3px;
+}
+.card.accent-border {
+  border-left-color: var(--accent);
+}
+.step {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.num {
+  font: 800 13px var(--mono);
+  color: var(--accent);
+  min-width: 20px;
+  padding-top: 1px;
+}
+.card h3 {
+  font: 700 12px/1.3 var(--sans);
+  color: #fff;
+  margin-bottom: 3px;
+}
+.skill-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.skill-title b {
+  font: 700 12px var(--sans);
+  color: #fff;
+}
+.when {
+  color: var(--orange);
+  font: 700 10px var(--mono);
+  background: rgba(224, 138, 92, .1);
+  padding: 2px 5px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.prompt, .cmd {
+  position: relative;
+  background: var(--card2);
+  border: 1px solid rgba(84, 138, 247, .25);
+  padding: 9px;
+  margin-top: 8px;
+  border-radius: 3px;
+}
+.code-text {
+  font: 11px/1.5 var(--mono);
+  color: #d5d7dc;
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding-right: 50px;
+}
+.btn {
+  border: 1px solid var(--accent);
+  background: rgba(84, 138, 247, .12);
+  color: var(--accent);
+  font: 700 10px var(--mono);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all .15s ease;
+  display: inline-block;
+  margin: 6px 0;
+  padding: 6px 10px;
+}
+.btn:hover {
+  background: var(--accent);
+  color: #fff;
+}
+.copy {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  border: none;
+  background: #fff;
+  color: var(--bg);
+  font: 700 10px var(--mono);
+  cursor: pointer;
+  border-radius: 3px;
+  transition: box-shadow .15s ease, color .15s ease;
+  box-shadow:
+    3px 3px 6px rgba(0, 0, 0, .55),
+    -2px -2px 5px rgba(255, 255, 255, .06);
+}
+.copy:hover {
+  color: var(--accent);
+  box-shadow:
+    1px 1px 3px rgba(0, 0, 0, .55),
+    -1px -1px 3px rgba(255, 255, 255, .06);
+}
+.copy:active {
+  box-shadow:
+    inset 2px 2px 4px rgba(0, 0, 0, .4),
+    inset -2px -2px 4px rgba(255, 255, 255, .6);
+}
+.filter {
+  width: 100%;
+  background: var(--card2);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  color: var(--ink);
+  padding: 8px 10px;
+  font: 11px var(--sans);
+  margin: 8px 0 10px;
+  outline: none;
+  transition: border-color .15s;
+}
+.filter:focus {
+  border-color: var(--accent);
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.table th {
+  text-align: left;
+  font: 700 10px var(--mono);
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(84, 138, 247, .1);
+  padding: 6px 6px;
+  border-bottom: 1px solid var(--line);
+}
+.table td {
+  border-bottom: 1px solid var(--line);
+  padding: 7px 6px;
+  vertical-align: top;
+  line-height: 1.4;
+}
+.table td:first-child {
+  color: var(--accent);
+  font: 700 11px var(--mono);
+  width: 32%;
+}
+.table tr:hover td {
+  background: rgba(255, 255, 255, .02);
+}
+ul {
+  padding-left: 16px;
+  color: var(--ink);
+  font-size: 11px;
+  line-height: 1.5;
+}
+li {
+  margin: 4px 0;
+}
+.source {
+  font: 10px var(--mono);
+  color: var(--muted);
+  word-break: break-all;
+  margin-top: 10px;
+}
+.toast {
+  position: fixed;
+  right: 12px;
+  bottom: 14px;
+  z-index: 100;
+  background: var(--card2);
+  color: #fff;
+  font: 700 11px var(--mono);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--orange);
+  padding: 8px 12px;
+  border-radius: 3px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .6);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all .2s ease;
+  pointer-events: none;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+<a class="eyebrow" href="index.html" style="display:inline-block; text-decoration:none;">← HUB</a>
+<h1>Codex QRH</h1>
+<div class="signature">drferdiiskandar</div>
+<div class="pill"><span>● READY</span><span>Explore → Plan → Implement → Verify → Ship</span></div>
+
+<nav class="tabs" aria-label="Handbook sections">
+  <button type="button" class="tab active" onclick="openTab('workflow',this)">01 WORKFLOW</button>
+  <button type="button" class="tab" onclick="openTab('superpowers',this)">02 SUPERPOWERS</button>
+  <button type="button" class="tab" onclick="openTab('builtin',this)">03 BUILT-IN</button>
+  <button type="button" class="tab" onclick="openTab('plugins',this)">04 PLUGINS</button>
+  <button type="button" class="tab" onclick="openTab('commands',this)">05 COMMANDS</button>
+  <button type="button" class="tab" onclick="openTab('performance',this)">06 PERFORMANCE</button>
+</nav>
+
+<!-- TAB 01: WORKFLOW -->
+<div id="workflow" class="panel active">
+  <section class="section">
+    <h2>01 · Daily 5-Step Loop</h2>
+    <p class="small section-desc">Urutan Codex Agustus 2026 untuk setiap pekerjaan coding. Jangan minta Codex mengedit sebelum dia memahami repo, merencanakan tugas, dan punya kriteria “selesai” yang bisa dicek.</p>
+
+    <div class="card step accent-border">
+      <span class="num">01</span>
+      <div>
+        <h3>ORIENT — Pahami Project &amp; Context</h3>
+        <p class="desc">Buka repository yang benar. Baca <code>AGENTS.md</code>, HANDOFF, dan cek status Git tanpa mengedit file.</p>
+        <div class="prompt" style="margin-top:6px;">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Orient yourself in this repository. Read AGENTS.md, relevant nested AGENTS.md, HANDOFF, project structure, and git status. Do not edit any files. Summarize architecture, canonical patterns, test commands, risk class (R0–R3), and key risks.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card step accent-border">
+      <span class="num">02</span>
+      <div>
+        <h3>PLAN — Buat Rencana &amp; Acceptance Criteria</h3>
+        <p class="desc">Tekan <code>Shift+Tab</code> atau ketik <code>/plan</code>. Untuk perubahan multi-file atau berisiko, minta rencana dan review dulu — tidak ada file yang diedit selama Plan Mode aktif.</p>
+        <div class="prompt" style="margin-top:6px;">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">/plan Enter plan mode for [TASK]. Formulate a minimal implementation plan. List exact files to change, symbols, data flow, edge cases, tests, and verification commands. Do not edit files until approved.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card step accent-border">
+      <span class="num">03</span>
+      <div>
+        <h3>IMPLEMENT — Kerjakan Slice Terukur</h3>
+        <p class="desc">Minta Codex mengubah hanya file yang diperlukan dalam langkah kecil yang mudah direview. Isolasi dulu lewat worktree kalau kerjaan bisa mengotori checkout utama.</p>
+        <div class="prompt" style="margin-top:6px;">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Implement step [N] of the approved plan. Change only the necessary files in scope. Reuse canonical abstractions, write clean single-purpose functions, and pause after this slice for review.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card step accent-border">
+      <span class="num">04</span>
+      <div>
+        <h3>VERIFY — Periksa Hasil Nyata</h3>
+        <p class="desc">Jalankan test, lint, typecheck, build, lalu <code>/review</code> dan <code>/diff</code>. Klaim “selesai” hanya kalau ada output command yang baru dijalankan.</p>
+        <div class="prompt" style="margin-top:6px;">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Run relevant tests, linter, typecheck, and build commands. Use /diff and /review against acceptance criteria. Report exact command outputs, passing checks, and any residual risks.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card step accent-border">
+      <span class="num">05</span>
+      <div>
+        <h3>SHIP — Siapkan Rilis &amp; Commit</h3>
+        <p class="desc">Review diff secara detail. Commit, push, atau buat PR hanya setelah mendapat persetujuan eksplisit.</p>
+        <div class="prompt" style="margin-top:6px;">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">/review the current diff. Check for bugs, secret leaks, performance, and scope creep. If clean, propose a conventional commit message (type(scope): description) with evidence summary. Do not commit, push, or open a PR until I approve.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- TAB 02: SUPERPOWERS -->
+<div id="superpowers" class="panel">
+  <section class="section">
+    <h2>02 · Superpowers — Urutan Pemakaian</h2>
+    <p class="small section-desc">Plugin <code>superpowers</code> (v6.2.0 di cache Codex Agustus 2026) berisi skill proses yang wajib dicek sebelum bertindak — bukan menu pilihan, tapi gate. Urutan di bawah adalah alur nyata dari yang paling awal (sebelum sentuh kode) sampai paling akhir (beres-beres branch).</p>
+
+    <div class="card">
+      <div class="skill-title"><b>0. using-superpowers</b><span class="when">awal percakapan</span></div>
+      <p class="desc">Gate sesi. Kalau ada 1% kemungkinan skill relevan, skill itu harus dibaca dulu sebelum jawab, tanya, atau eksplor. Proses dulu, implementasi belakangan.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Use using-superpowers first. Check which process skill applies before exploring or editing. Announce the skill you are using and follow it exactly.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="skill-title"><b>1. brainstorming</b><span class="when">sebelum fitur baru</span></div>
+      <p class="desc">Wajib dipakai sebelum kerja kreatif apa pun — bikin fitur, komponen, atau ubah perilaku. Menggali intent, requirement, dan opsi desain sebelum Plan Mode dibuka.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Brainstorm this problem before coding. Identify constraints, unknowns, and 2–3 implementation options with trade-offs. Recommend one option, but do not edit files.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="skill-title"><b>2. writing-plans</b><span class="when">spec sudah jelas</span></div>
+      <p class="desc">Begitu requirement dari brainstorming disepakati, ubah jadi rencana implementasi tertulis multi-step — sebelum file kode disentuh.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Write an implementation plan from the agreed spec. List files to change, exact symbols, edge cases, tests, and verification commands. Do not modify files until I approve the plan.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="skill-title"><b>3. using-git-worktrees</b><span class="when">kerja butuh isolasi</span></div>
+      <p class="desc">Sebelum eksekusi plan atau mulai fitur berisiko, siapkan workspace terpisah (native worktree Codex atau <code>git worktree</code>) agar checkout utama tidak ikut kotor kalau gagal.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">/worktree Set up an isolated workspace for this task before starting. Confirm the workspace is separate from my current branch before making any changes.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="skill-title"><b>4. test-driven-development</b><span class="when">sebelum tulis kode</span></div>
+      <p class="desc">Untuk setiap fitur atau bugfix, tulis test yang gagal dulu (red), baru implementasi (green). Ini gate wajib sebelum baris kode implementasi pertama ditulis.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Implement this using test-driven development. Write a failing test that captures the expected behavior first, show me it fails, then write the minimal code to make it pass. Do not write implementation code before the test exists.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="skill-title"><b>5. systematic-debugging</b><span class="when">ada bug / test gagal</span></div>
+      <p class="desc">Dipakai begitu ada bug, test gagal, atau perilaku aneh — sebelum mengusulkan fix apa pun. Reproduksi dulu dengan test tersempit, baru telusuri akar masalah.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Investigate this bug: [BUG / ERROR]. Write or run the narrowest reproducing test to confirm the failure. Trace to root cause, propose minimal fix, and wait for approval.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="skill-title"><b>6. dispatching-parallel-agents</b><span class="when">riset banyak area</span></div>
+      <p class="desc">Ketika perlu menjelajah beberapa bagian repo yang independen sekaligus, sebar beberapa subagent paralel supaya context utama tetap bersih dari hasil eksplorasi mentah. Butuh <code>features.multi_agent = true</code>.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Dispatch parallel subagents to investigate these independent areas: [LIST AREAS]. Each subagent reports back a concise summary only — raw exploration output should not enter the main context. Do not edit files.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="skill-title"><b>7. subagent-driven-development</b><span class="when">eksekusi plan di sesi ini</span></div>
+      <p class="desc">Untuk plan dengan task-task independen, delegasikan tiap task ke subagent dalam sesi yang sama, lalu review hasilnya satu per satu. Juga butuh multi-agent.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Execute the approved plan using subagent-driven development. Break independent tasks out to separate subagents in this session, review each result before moving to the next, and stop if scope expands beyond the plan.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="skill-title"><b>8. executing-plans</b><span class="when">plan besar, sesi terpisah</span></div>
+      <p class="desc">Alternatif untuk plan besar: jalankan di sesi terpisah dengan checkpoint review manual di tiap tahap, bukan sekali jalan tanpa henti.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Execute this written plan in a fresh session. Pause at each major checkpoint for my review before continuing to the next step. Do not proceed past a checkpoint without explicit approval.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="skill-title"><b>9. requesting-code-review + receiving-code-review</b><span class="when">selesai implement</span></div>
+      <p class="desc">Setelah slice implementasi selesai, minta review terstruktur, lalu proses feedback-nya secara sistematis — jangan langsung apply tanpa evaluasi tiap poin.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">/review Review the current diff as a senior engineer. Return findings ordered by severity with file paths and line ranges. Do not rewrite code yet.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="skill-title"><b>10. verification-before-completion</b><span class="when">sebelum bilang "selesai"</span></div>
+      <p class="desc">Gate terakhir sebelum task diklaim beres — paksa jalankan test/lint/build nyata dan cek terhadap acceptance criteria, bukan sekadar “kelihatan sudah benar”.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Run relevant tests, linter, typecheck, and build commands. Use /diff and /review against acceptance criteria. Report exact command outputs, passing checks, and any residual risks.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="skill-title"><b>11. finishing-a-development-branch</b><span class="when">selesai, mau merge</span></div>
+      <p class="desc">Beres-beres branch di penghujung kerja — cek diff akhir, commit message, dan siapkan PR sebelum minta approval eksplisit untuk push.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">This branch is ready to finish. Review the final diff end to end, confirm nothing unrelated is included, propose a conventional commit message, and prepare the PR description. Do not push or open the PR until I approve.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="skill-title"><b>12. writing-skills</b><span class="when">bikin skill baru</span></div>
+      <p class="desc">Kalau satu alur kerja terus berulang manual, tulis jadi skill baru di <code>~/.agents/skills</code> atau <code>.agents/skills</code> supaya sesi berikutnya tidak perlu dijelaskan ulang.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Write this recurring workflow as a reusable skill under ~/.agents/skills. Include a clear description of when to trigger it, the exact steps, and any checklist items. Keep it self-contained so a future session can follow it without extra context.</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- TAB 03: BUILT-IN -->
+<div id="builtin" class="panel">
+  <section class="section">
+    <h2>03 · Built-in Commands &amp; Infra</h2>
+    <p class="small section-desc">Perintah bawaan Codex CLI / IDE Agustus 2026. Bukan perintah Claude (<code>/batch</code>, <code>/run</code>, <code>/verify</code>, <code>/cost</code>). Gunakan filter untuk mencari:</p>
+
+    <input id="filter-codex" class="filter" oninput="filterRows('filter-codex','skills-list')" placeholder="Filter: plan, review, worktree, compact, skills, mcp, hooks...">
+
+    <div id="skills-list">
+      <div class="card">
+        <div class="skill-title"><b>/plan</b><span class="when">task sulit</span></div>
+        <p class="desc">Masuk Plan Mode. Codex kumpulkan context, tanya klarifikasi, dan susun rencana sebelum mengedit. Toggle juga dengan <code>Shift+Tab</code>.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">/plan Propose a minimal implementation plan for [TASK]. List files, edge cases, tests, and verification commands. Do not edit files until I approve.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>/review</b><span class="when">sebelum ship</span></div>
+        <p class="desc">Review working tree: uncommitted changes, commit, atau bandingkan ke base branch. Bisa pakai instruksi review custom.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">/review Review the current working tree as a senior engineer. Order findings by severity with file paths and line ranges. Do not rewrite code yet.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>/diff</b><span class="when">cek perubahan</span></div>
+        <p class="desc">Tampilkan Git diff, termasuk file yang belum di-track. Wajib sebelum commit atau tes.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">/diff</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>/worktree</b><span class="when">isolasi</span></div>
+        <p class="desc">Jalankan chat di Git worktree baru supaya checkout lokal tidak kotor. Di desktop app, worktree + Handoff memisahkan foreground dan background.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">/worktree Set up an isolated workspace for this task before making any changes. Confirm it is separate from my current branch.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>/status</b><span class="when">cek sesi</span></div>
+        <p class="desc">Model aktif, approval policy, writable roots, dan sisa context. Pakai sebelum menyimpulkan sesi “sehat”.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">/status</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>/usage</b><span class="when">cek kuota</span></div>
+        <p class="desc">Token harian/mingguan akun ChatGPT dari dalam TUI. Ini pengganti <code>/cost</code> Claude.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">/usage</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>/compact</b><span class="when">sesi panjang</span></div>
+        <p class="desc">Ringkas transcript supaya context tidak meledak. Codex juga compact otomatis; perintah ini untuk kontrol manual.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">/compact Focus on the current task, keep decisions, file paths, and remaining acceptance criteria.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>/fork · /new · /clear</b><span class="when">ganti task</span></div>
+        <p class="desc"><code>/fork</code> cabangkan chat tanpa kehilangan transcript lama. <code>/new</code> mulai chat baru di sesi CLI yang sama. <code>/clear</code> reset UI + context.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">/fork Explore this alternative without losing the current transcript.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>/init + AGENTS.md</b><span class="when">setup awal</span></div>
+        <p class="desc">Scaffold <code>AGENTS.md</code> di direktori aktif. File ini README untuk agent — layout repo, cara build/test, konvensi, dan arti “selesai”. Yang lebih spesifik (nested) menang.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">/init then edit AGENTS.md so it matches how this repo actually builds, tests, reviews, and ships. Keep it short and accurate.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>/skills</b><span class="when">pilih skill</span></div>
+        <p class="desc">Browse skill lokal lalu sisipkan ke prompt berikutnya. Pakai kalau Codex belum memuat skill yang jelas relevan.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">/skills</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>/plugins</b><span class="when">kelola plugin</span></div>
+        <p class="desc">Lihat plugin terpasang vs yang hanya discoverable. Jangan anggap “ada di marketplace” sama dengan “aktif di sesi ini”.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">/plugins List installed versus discoverable plugins and say which skills are actually available in this session.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>/mcp</b><span class="when">integrasi</span></div>
+        <p class="desc">Daftar MCP yang terhubung. Pakai MCP hanya kalau context-nya hidup di luar repo dan sering berubah.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">/mcp List configured MCP servers and what each one can do in this session. Add verbose if server details are needed.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>/hooks</b><span class="when">lifecycle</span></div>
+        <p class="desc">Lihat dan kelola lifecycle hooks Codex — bukan folder <code>.claude/hooks</code>.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">/hooks List configured lifecycle hooks and explain when each one runs.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>/goal</b><span class="when">task besar</span></div>
+        <p class="desc">Pasang target persisten di chat. Bisa <code>edit</code>, <code>pause</code>, <code>resume</code>, atau <code>clear</code>.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">/goal Finish [TASK] and keep tests green. Pause if scope expands beyond the approved plan.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>/model · /fast</b><span class="when">bobot task</span></div>
+        <p class="desc">Pilih model dan reasoning effort. Low untuk task sempit; High / Extra High untuk debug atau kerja agentic panjang. <code>/fast</code> hanya muncul jika model punya Fast tier.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">/model Choose the model and reasoning effort that match this task's difficulty. Confirm with /status.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>/permissions</b><span class="when">approval</span></div>
+        <p class="desc">Longgarkan atau ketatkan approval di tengah sesi. Mulai ketat; longgarkan hanya untuk repo yang sudah dipercaya.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">/permissions</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>/agent · Subagents</b><span class="when">delegasi</span></div>
+        <p class="desc">Pindah thread subagent. Eksplorasi paralel butuh <code>features.multi_agent = true</code> di <code>config.toml</code> — flag ini belum aktif di setup saat handbook ini ditulis.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Use a subagent to investigate [TOPIC] and return a concise summary only. Do not edit files. If multi-agent is disabled, say so and investigate in this thread instead.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>Worktrees</b><span class="when">kerja paralel</span></div>
+        <p class="desc">Satu chat = satu outcome. Kerja hidup di file yang sama tanpa worktree adalah kesalahan resmi Agustus 2026.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Do not edit the current checkout. Create or use an isolated git worktree first, then implement only inside that workspace.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>codex doctor</b><span class="when">diagnostic</span></div>
+        <p class="desc">Cek instalasi dan environment dari CLI — bukan slash command <code>/doctor</code> ala Claude.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">codex doctor --summary</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- TAB 04: PLUGINS -->
+<div id="plugins" class="panel">
+  <section class="section">
+    <h2>04 · Skill &amp; Plugin Sesi Ini</h2>
+    <p class="small section-desc">Kartu di bawah = skill yang benar-benar muncul di katalog sesi Codex ini (Agustus 2026). Plugin curated yang hanya “discoverable / not installed” tidak diklaim aktif. Filter untuk cari:</p>
+
+    <input id="filter-plugins" class="filter" oninput="filterRows('filter-plugins','plugins-list')" placeholder="Filter: review, security, frontend, sites, playwright, caveman...">
+
+    <div id="plugins-list">
+      <div class="card">
+        <div class="skill-title"><b>superpowers 6.2.0</b><span class="when">proses</span></div>
+        <p class="desc">Gate proses: using-superpowers → brainstorm → plan → worktree → TDD → debug → review → verify. Lihat tab 02. Bukan menu opsional.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Use using-superpowers first. If this is new work, start with brainstorming. Do not edit files until the relevant process skill has been followed.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>openai-docs</b><span class="when">cek resmi</span></div>
+        <p class="desc">Lookup dokumentasi Codex / OpenAI terbaru. Pakai sebelum mengarang slash command atau klaim best practice.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Use openai-docs to confirm the current Codex slash commands and August 2026 best practices before answering. Cite the official wording, not memory.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>code-review</b><span class="when">sebelum ship</span></div>
+        <p class="desc">Audit diff/PR untuk bug, scope creep, dan cleanup. Pasangkan dengan <code>/review</code> dan Superpowers requesting/receiving-code-review.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Use the code-review skill on the current diff. Return findings by severity with file paths. Do not rewrite code until I choose which findings to fix.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>security-review + codex-security</b><span class="when">risiko keamanan</span></div>
+        <p class="desc">Review keamanan, threat model, scan, triage, dan writeup. Jangan tulis exploit/PoC. Bedakan observasi, enforcement, dan asumsi.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Use security-review on this change. Report observations vs executable risks, skip exploit payloads, and propose the smallest safe fix only after I approve the findings.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>frontend-design</b><span class="when">sebelum UI</span></div>
+        <p class="desc">Tentukan arah visual &amp; tipografi sebelum menulis komponen. Jangan langsung generate markup.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Use the frontend-design skill to decide the visual direction and typography before writing this component. Do not edit files until the direction is approved.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>product-design</b><span class="when">riset / ideate / screenshot</span></div>
+        <p class="desc"><code>audit</code>, <code>ideate</code>, <code>image-to-code</code>, <code>url-to-code</code>. Pakai saat ada referensi visual atau perlu audit UX, bukan untuk patch backend.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Use product-design:ideate (or image-to-code if a screenshot is attached) before implementing this UI. Return options and a recommended direction. Do not code yet.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>playwright</b><span class="when">uji browser</span></div>
+        <p class="desc"><code>playwright-best-practices</code> + <code>playwright-cli</code>. Untuk tes E2E atau verifikasi UI yang benar-benar dibuka di browser.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Use playwright-best-practices, then playwright-cli, to verify [ACCEPTANCE CRITERIA] in the running app. Report exact steps and results. Do not invent a passing result.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>browser · chrome · computer-use</b><span class="when">operasikan UI</span></div>
+        <p class="desc">Kontrol browser in-app, Chrome, atau desktop. Prefer Chrome connector untuk web kecuali Chief minta computer-use.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Open the running app and verify [FLOW] in the browser. Prefer the Chrome connector. Report what you actually saw, not what the code implies.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>sites</b><span class="when">bikin / deploy site</span></div>
+        <p class="desc">Landing, dashboard, portal. Baca <code>.openai/hosting.json</code> dulu. Jangan panggil <code>create_site</code> dua kali untuk site yang sama.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Use the Sites skill and connector. Read .openai/hosting.json first. Reuse project_id if present. Do not invent IDs or create a second site.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>vercel</b><span class="when">docs / hosting Vercel</span></div>
+        <p class="desc">Cari dokumentasi Vercel, cek project/deployment, atau alur Next.js di platform itu. Bukan pengganti <code>sites</code>.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Search Vercel docs for [TOPIC] and apply only the current official guidance. Do not invent CLI flags.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>github</b><span class="when">repo / PR / issue</span></div>
+        <p class="desc">Cari repo, issue, PR. Jangan push atau buka PR tanpa approval eksplisit.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Use GitHub tools to inspect [REPO / PR]. Summarize status only. Do not push, comment, or open a PR until I approve.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>gmail · google-calendar</b><span class="when">email / jadwal</span></div>
+        <p class="desc">Baca atau tulis email/event hanya kalau Chief meminta aksi itu. Jangan kirim tanpa konfirmasi.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Search Gmail or Google Calendar for [QUERY]. Summarize only. Do not send mail or create events until I approve the draft.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>mintlify</b><span class="when">docs site</span></div>
+        <p class="desc">Baca/cari halaman docs Mintlify. Pakai saat kerja di situs dokumentasi, bukan handbook HTML lokal ini.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Use Mintlify to read [PATH] and report the current page content before editing docs.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>documents · pdf · spreadsheets · presentations</b><span class="when">file Office</span></div>
+        <p class="desc">Kerja di dokumen, PDF, spreadsheet, atau slide yang terhubung. Bukan untuk edit kode.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Use the documents/pdf/spreadsheets/presentations skill only if a connected session exists. Inspect the session first. Do not invent sheet or slide IDs.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>imagegen</b><span class="when">gambar baru / edit</span></div>
+        <p class="desc">Generate atau edit gambar dari deskripsi. Jangan pakai tool lain untuk edit image kecuali Chief minta.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Generate an image for [DESCRIPTION]. If editing, inspect the source image first and change only what I specified.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>remotion</b><span class="when">video / motion</span></div>
+        <p class="desc">Keluarga skill Remotion: create, markup, captions, render, studio. Pakai hanya untuk proyek Remotion.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Use the relevant remotion skill for this video task. Follow remotion-best-practices and do not invent APIs.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>supabase-postgres-best-practices</b><span class="when">schema / RLS</span></div>
+        <p class="desc">Pola Postgres/Supabase: RLS, tenant isolation, migrasi aman. Wajib sebelum menulis SQL di product multi-tenant.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Use supabase-postgres-best-practices before changing this schema. Derive tenant context server-side. Do not weaken RLS.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>find-skills · skill-creator</b><span class="when">cari / bikin skill</span></div>
+        <p class="desc"><code>find-skills</code> untuk menemukan skill yang sudah ada. <code>skill-creator</code> untuk scaffold skill baru. Ulangi prompt yang sama? Jadikan skill.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Use find-skills to locate an existing skill for [TASK]. If none exists and this workflow will repeat, use skill-creator to draft a local SKILL.md.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>caveman · caveman-commit · caveman-review</b><span class="when">gaya / commit / review ringkas</span></div>
+        <p class="desc">Gaya chat hemat token, commit message, atau review pendek. Tidak berlaku untuk file yang dipersist kecuali skill commit/review memang sedang dipakai.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Use caveman for chat replies only. Use caveman-commit only when drafting a commit message after I approve the diff.</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="skill-title"><b>plugin-management</b><span class="when">izin plugin</span></div>
+        <p class="desc">Cek atau ubah permission plugin. Uninstall hanya kalau Chief bilang uninstall/remove/disconnect secara eksplisit.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Inspect permissions for [PLUGIN]. Do not uninstall or change access unless I explicitly ask.</div>
+        </div>
+      </div>
+    </div>
+
+    <h3>UI micro-skill — kapan dipanggil</h3>
+    <p class="small section-desc">Puluhan skill UI ada di katalog sesi. Jangan muat semuanya. Panggil hanya yang cocok dengan permukaan yang sedang dikerjakan.</p>
+    <table class="table">
+      <thead>
+        <tr><th>Kapan</th><th>Skill</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Arah visual</td><td>frontend-design, generate-ui-from-brand, extract-design, brand-visual-language, authentic-product-representation</td></tr>
+        <tr><td>Warna / tipe</td><td>algorithmic-color-palette, color-mode-and-theme, modular-scale-typography, elevation-and-depth</td></tr>
+        <tr><td>Komponen</td><td>button-states, form-design, modal-and-overlay-patterns, global-toolbar-controls, data-display-and-selection, coordinated-data-views, component-family-consistency, repeated-component-alignment</td></tr>
+        <tr><td>Layout</td><td>gestalt-ui-organisation, information-architecture, layout-paradigms-and-consistency, responsive-paradigms, ui-density, sticky-and-fixed-elements, scroll-areas</td></tr>
+        <tr><td>Motion / state</td><td>design-motion-principles, motion-and-storytelling, micro-interactions, loading-states-and-perceived-performance, status-colors-and-errors, notifications-and-recovery</td></tr>
+        <tr><td>Kualitas UX</td><td>nielsen-usability-heuristics, semantic-html-and-seo, performance-and-web-vitals, real-world-metaphors, operational-expert-tool-ui, domain-expert-configuration, hyperframes, dembrandt</td></tr>
+      </tbody>
+    </table>
+  </section>
+</div>
+
+<!-- TAB 05: COMMANDS -->
+<div id="commands" class="panel">
+  <section class="section">
+    <h2>05 · Quick Commands · PowerShell</h2>
+    <div class="cmd">
+      <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+      <div class="code-text"># Codex CLI
+codex --version
+codex doctor --summary
+/status
+/usage
+/plan
+/review
+/diff
+/worktree
+/compact Focus on the current task
+/skills
+/plugins
+/mcp
+/hooks
+/new
+
+# Headless / scripting
+codex exec "Audit src/auth for potential security issues. Do not edit files."
+
+# Git &amp; repository state
+git status
+git diff
+Get-ChildItem
+Get-Content .\AGENTS.md -TotalCount 120
+
+# Test &amp; verification
+pnpm test
+pnpm run lint
+pnpm run build
+pytest tests/ -q
+dotnet test</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Master Agent Prompt Template</h2>
+    <p class="small section-desc">Bentuk resmi Agustus 2026: Goal / Context / Constraints / Done when. Jangan tumpuk aturan tahan lama di prompt — pindahkan ke <code>AGENTS.md</code> atau skill.</p>
+    <div class="prompt">
+      <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+      <div class="code-text">Goal: Selesaikan [TASK] di [PROJECT].
+Context: Baca AGENTS.md, nested AGENTS.md, HANDOFF, pola canonical, dan error terkait. @ sebut file yang penting.
+Constraints: Perubahan minimal. Jangan sentuh secret, generated, atau file di luar scope. Hormati R0–R3.
+Done when:
+1. [Hasil observable 1]
+2. [Hasil observable 2]
+3. Test/lint/typecheck yang relevan baru saja dijalankan dan outputnya dilampirkan.
+Workflow: inspect → /plan → implement slice → /diff + /review → verify.
+Guardrails: Berhenti jika scope melebar atau requirement ambigu. Jangan commit/push tanpa approval.</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Guardrails untuk Codex</h2>
+    <ul>
+      <li>Satu chat = satu outcome. Ganti task yang tidak berhubungan? <code>/new</code> atau <code>/clear</code>.</li>
+      <li>Task sulit: <code>/plan</code> atau <code>Shift+Tab</code> dulu. Jangan langsung edit.</li>
+      <li>Kerja paralel di file yang sama? Isolasi dengan <code>/worktree</code> atau <code>git worktree</code>.</li>
+      <li>Review diff sebelum menerima perubahan. Jangan commit, push, atau delete tanpa approval.</li>
+      <li>Aturan tahan lama tinggal di <code>AGENTS.md</code> yang pendek, bukan di setiap prompt.</li>
+      <li>Multi-agent butuh <code>features.multi_agent = true</code>. Kalau flag itu belum ada, jangan pura-pura dispatch subagent.</li>
+    </ul>
+    <p class="source">Handbook Codex · August 2026 Best Practices · Windows 11 / PowerShell Edition</p>
+  </section>
+</div>
+
+<!-- TAB 06: PERFORMANCE -->
+<div id="performance" class="panel">
+  <section class="section">
+    <h2>06 · Menjaga Performa Codex</h2>
+    <p class="small section-desc">Checklist resmi Agustus 2026: Codex lemah bukan karena modelnya, tapi karena context kotor, <code>AGENTS.md</code> gemuk, satu chat dipakai untuk seluruh project, atau kerja hidup tanpa worktree.</p>
+
+    <div class="card accent-border">
+      <h3>1. Prompt = Goal / Context / Constraints / Done when</h3>
+      <p class="desc">Empat field ini membuat Codex tetap scoped. Jangan tumpuk aturan tahan lama di prompt; pindahkan ke <code>AGENTS.md</code> atau skill.</p>
+    </div>
+
+    <div class="card accent-border">
+      <h3>2. Plan dulu untuk task sulit</h3>
+      <p class="desc">Pakai <code>/plan</code> atau <code>Shift+Tab</code>. Atau minta Codex mewawancarai Chief dulu sampai ide kabur jadi konkret. Jangan skip planning di task multi-file.</p>
+    </div>
+
+    <div class="card accent-border">
+      <h3>3. AGENTS.md tetap ramping</h3>
+      <p class="desc">Isi: layout repo, cara run/build/test, konvensi, do-not rules, arti “selesai”. Kalau gemuk, pecah ke file markdown spesifik dan tinggal di-referensikan. Nested <code>AGENTS.md</code> menang atas yang lebih umum.</p>
+    </div>
+
+    <div class="card accent-border">
+      <h3>4. Satu chat = satu outcome</h3>
+      <p class="desc">Satu chat untuk seluruh project membuat context meledak. Tetap di chat yang sama hanya kalau masih satu masalah. Cabang sejati? <code>/fork</code>. Task baru? <code>/new</code> atau <code>/clear</code>.</p>
+    </div>
+
+    <div class="card accent-border">
+      <h3>5. Compact dan delegasikan eksplorasi</h3>
+      <p class="desc"><code>/compact</code> untuk sesi panjang yang masih satu task. Subagent untuk riset bounded supaya log mentah tidak masuk context utama — hanya jika multi-agent aktif.</p>
+    </div>
+
+    <div class="card accent-border">
+      <h3>6. Worktree untuk kerja paralel</h3>
+      <p class="desc">Kesalahan resmi: menjalankan beberapa task hidup di file yang sama tanpa Git worktree. Pakai <code>/worktree</code> atau worktree desktop + Handoff.</p>
+    </div>
+
+    <div class="card accent-border">
+      <h3>7. Reasoning sesuai bobot</h3>
+      <p class="desc">Low untuk task sempit. Medium/High untuk perubahan kompleks atau debug. Extra High untuk kerja agentic panjang. <code>/fast</code> hanya jika model punya Fast tier.</p>
+    </div>
+
+    <div class="card accent-border">
+      <h3>8. Test + /review sebelum “selesai”</h3>
+      <p class="desc">Minta Codex menulis tes bila perlu, jalankan check yang relevan, lalu <code>/diff</code> dan <code>/review</code>. Klaim selesai tanpa output command adalah bug yang paling sering lolos.</p>
+    </div>
+
+    <div class="card accent-border">
+      <h3>9. MCP dan skill hanya yang membuka loop nyata</h3>
+      <p class="desc">Jangan pasang semua connector. Mulai dari satu-dua yang menghapus kerja manual berulang. Workflow yang sudah stabil baru dijadwalkan; yang masih perlu dikemudikan jadikan skill dulu.</p>
+    </div>
+
+    <div class="card accent-border">
+      <h3>10. Jangan bypass safety demi kecepatan</h3>
+      <p class="desc">Jangan kasih full permission ke seluruh komputer sebelum workflow dipahami. Hindari <code>git push --force</code> ke branch utama, <code>git reset --hard</code>, dan hapus rekursif luas.</p>
+    </div>
+
+    <div class="cmd">
+      <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+      <div class="code-text"># Rutin kebersihan sesi
+/new                       # task baru, tak berhubungan
+/fork                      # cabang pendekatan, transcript lama tetap
+/compact Focus on the current task
+/status                    # model, approval, sisa context
+/usage                     # kuota akun
+codex doctor --summary     # instalasi &amp; environment
+
+# Hindari (kecuali benar-benar perlu &amp; sudah paham risikonya)
+git push --force
+git reset --hard
+rm -rf &lt;path&gt;
+--no-verify</div>
+    </div>
+
+    <p class="source">Checklist berdasarkan Best practices Codex Agustus 2026 + katalog skill sesi ini (superpowers 6.2.0). Plugin marketplace yang “not installed” tidak diklaim aktif.</p>
+  </section>
+</div>
+
+<div id="toast" class="toast">COPIED</div>
+
+<script>
+window.openTab = function openTab(id, btn) {
+  document.querySelectorAll('.panel').forEach((p) => { p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach((t) => { t.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+window.copyPrompt = function copyPrompt(btn) {
+  const container = btn.parentElement;
+  const codeEl = container.querySelector('.code-text') || container;
+  const text = codeEl.innerText.replace(/^COPY\s*/, '').trim();
+  navigator.clipboard.writeText(text).then(showToast);
+}
+
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1400);
+}
+
+window.filterRows = function filterRows(inputId, containerId) {
+  const query = document.getElementById(inputId).value.toLowerCase();
+  const container = document.getElementById(containerId);
+  const rows = container.querySelectorAll('tbody tr');
+  const cards = container.querySelectorAll(':scope > .card');
+  (rows.length ? rows : cards).forEach(row => {
+    row.style.display = row.innerText.toLowerCase().includes(query) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>

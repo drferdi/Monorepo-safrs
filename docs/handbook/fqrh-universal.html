@@ -1,0 +1,1309 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Universal QRH</title>
+<style>
+:root {
+  --bg: #181A1D;
+  --card: #202226;
+  --card2: #1D2024;
+  --ink: #BCBEC4;
+  --muted: #7A7E85;
+  --accent: #548AF7;
+  --orange: #E08A5C;
+  --line: #34383F;
+  --mono: 'JetBrainsMono Nerd Font', 'JetBrains Mono', Consolas, 'Courier New', monospace;
+  --sans: 'IBM Plex Sans', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 12px/1.45 var(--sans);
+  max-width: 380px;
+  margin: 0 auto;
+  padding: 12px 10px 36px;
+  position: relative;
+}
+body:before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  z-index: 100;
+}
+.eyebrow {
+  color: var(--accent);
+  font: 700 10px/1 var(--mono);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: 4px;
+}
+h1 {
+  font: 800 15px/1.2 var(--sans);
+  color: #fff;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.subtitle {
+  color: var(--muted);
+  font: 11px/1.35 var(--mono);
+  margin-bottom: 10px;
+}
+.signature {
+  font: 22px/1 'Segoe Script', 'Bradley Hand', 'Comic Sans MS', cursive;
+  color: var(--accent);
+}
+.pill {
+  border: 1px solid rgba(224, 138, 92, .45);
+  color: var(--orange);
+  background: rgba(224, 138, 92, .06);
+  padding: 6px 9px;
+  margin-bottom: 12px;
+  font: 700 11px var(--mono);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tabs {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  overflow-x: visible;
+  background: var(--bg);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 12px;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+.tab {
+  flex: 0 0 auto;
+  border: none;
+  background: var(--card2);
+  color: var(--muted);
+  padding: 7px 10px;
+  font: 700 10px/1 var(--mono);
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: box-shadow .15s ease, color .15s ease;
+  box-shadow:
+    5px 5px 9px rgba(0, 0, 0, .5),
+    -4px -4px 9px rgba(255, 255, 255, .035),
+    inset 0 0 0 rgba(0, 0, 0, 0);
+}
+.tab:hover {
+  color: #fff;
+  box-shadow:
+    2px 2px 4px rgba(0, 0, 0, .5),
+    -2px -2px 4px rgba(255, 255, 255, .035);
+}
+.tab.active {
+  color: #fff;
+  background: var(--accent);
+  box-shadow:
+    inset 3px 3px 6px rgba(0, 15, 60, .55),
+    inset -3px -3px 6px rgba(255, 255, 255, .12);
+}
+.panel {
+  display: none;
+}
+.panel.active {
+  display: block;
+}
+.section {
+  margin-top: 14px;
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+.section:first-child {
+  margin-top: 0;
+  border-top: none;
+  padding-top: 0;
+}
+.section h2 {
+  font: 700 12px/1.2 var(--mono);
+  color: var(--accent);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.small, .desc {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+.section-desc {
+  margin-bottom: 10px;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 3px solid rgba(224, 138, 92, .6);
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 3px;
+}
+.card.accent-border {
+  border-left-color: var(--accent);
+}
+.step {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.num {
+  font: 800 13px var(--mono);
+  color: var(--accent);
+  min-width: 20px;
+  padding-top: 1px;
+}
+.card h3 {
+  font: 700 12px/1.3 var(--sans);
+  color: #fff;
+  margin-bottom: 3px;
+}
+.skill-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.skill-title b {
+  font: 700 12px var(--sans);
+  color: #fff;
+}
+.when {
+  color: var(--orange);
+  font: 700 10px var(--mono);
+  background: rgba(224, 138, 92, .1);
+  padding: 2px 5px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.prompt, .cmd {
+  position: relative;
+  background: var(--card2);
+  border: 1px solid rgba(84, 138, 247, .25);
+  padding: 9px;
+  margin-top: 8px;
+  border-radius: 3px;
+}
+.code-text {
+  font: 11px/1.5 var(--mono);
+  color: #d5d7dc;
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding-right: 50px;
+}
+.btn {
+  border: 1px solid var(--accent);
+  background: rgba(84, 138, 247, .12);
+  color: var(--accent);
+  font: 700 10px var(--mono);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all .15s ease;
+  display: inline-block;
+  margin: 6px 0;
+  padding: 6px 10px;
+}
+.btn:hover {
+  background: var(--accent);
+  color: #fff;
+}
+.copy {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  border: none;
+  background: #fff;
+  color: var(--bg);
+  font: 700 10px var(--mono);
+  cursor: pointer;
+  border-radius: 3px;
+  transition: box-shadow .15s ease, color .15s ease;
+  box-shadow:
+    3px 3px 6px rgba(0, 0, 0, .55),
+    -2px -2px 5px rgba(255, 255, 255, .06);
+}
+.copy:hover {
+  color: var(--accent);
+  box-shadow:
+    1px 1px 3px rgba(0, 0, 0, .55),
+    -1px -1px 3px rgba(255, 255, 255, .06);
+}
+.copy:active {
+  box-shadow:
+    inset 2px 2px 4px rgba(0, 0, 0, .4),
+    inset -2px -2px 4px rgba(255, 255, 255, .6);
+}
+.filter {
+  width: 100%;
+  background: var(--card2);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  color: var(--ink);
+  padding: 8px 10px;
+  font: 11px var(--sans);
+  margin: 8px 0 10px;
+  outline: none;
+  transition: border-color .15s;
+}
+.filter:focus {
+  border-color: var(--accent);
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.table th {
+  text-align: left;
+  font: 700 10px var(--mono);
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(84, 138, 247, .1);
+  padding: 6px 6px;
+  border-bottom: 1px solid var(--line);
+}
+.table td {
+  border-bottom: 1px solid var(--line);
+  padding: 7px 6px;
+  vertical-align: top;
+  line-height: 1.4;
+}
+.table td:first-child {
+  color: var(--accent);
+  font: 700 11px var(--mono);
+  width: 32%;
+}
+.table tr:hover td {
+  background: rgba(255, 255, 255, .02);
+}
+ul {
+  padding-left: 16px;
+  color: var(--ink);
+  font-size: 11px;
+  line-height: 1.5;
+}
+li {
+  margin: 4px 0;
+}
+.source {
+  font: 10px var(--mono);
+  color: var(--muted);
+  word-break: break-all;
+  margin-top: 10px;
+}
+.toast {
+  position: fixed;
+  right: 12px;
+  bottom: 14px;
+  z-index: 100;
+  background: var(--card2);
+  color: #fff;
+  font: 700 11px var(--mono);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--orange);
+  padding: 8px 12px;
+  border-radius: 3px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .6);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all .2s ease;
+  pointer-events: none;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+<a class="eyebrow" href="index.html" style="display:inline-block; text-decoration:none;">← HUB</a>
+<h1>Universal QRH</h1>
+<div class="signature">drferdiiskandar</div>
+<div class="pill"><span>● READY</span><span>Deep Dive → Plan → Prove → Ship</span></div>
+
+<nav class="tabs" aria-label="Handbook sections">
+  <button type="button" class="tab active" onclick="openTab('workflow',this)">01 WORKFLOW</button>
+  <button type="button" class="tab" onclick="openTab('superpowers',this)">02 SUPERPOWERS</button>
+  <button type="button" class="tab" onclick="openTab('builtin',this)">03 BUILT-IN</button>
+  <button type="button" class="tab" onclick="openTab('plugins',this)">04 PLUGINS</button>
+  <button type="button" class="tab" onclick="openTab('commands',this)">05 COMMANDS</button>
+  <button type="button" class="tab" onclick="openTab('performance',this)">06 PERFORMANCE</button>
+</nav>
+
+<!-- TAB 01: WORKFLOW -->
+<div id="workflow" class="panel active">
+  <section class="section">
+    <h2>01 · Daily Pipeline</h2>
+    <p class="small section-desc">Urutan slash command SDLC. Jangan lompat ke <code>/ship</code> sebelum ide, spec, plan, tes, keamanan, dan perf selesai.</p>
+    <div class="card step accent-border">
+      <span class="num">01</span>
+      <div>
+        <h3>IDEASI — /grill-me</h3>
+        <p class="desc">Interview terstruktur 1 per 1 untuk mengekstraksi 95% intent awal tanpa tebak-tebakan.</p>
+              <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">/grill-me</div>
+      </div>
+      </div>
+    </div>
+    <div class="card step accent-border">
+      <span class="num">02</span>
+      <div>
+        <h3>SPEC — /spec</h3>
+        <p class="desc">Kunci arsitektur data, skema API, dan spesifikasi sistem sebelum penulisan kode.</p>
+              <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">/spec</div>
+      </div>
+      </div>
+    </div>
+    <div class="card step accent-border">
+      <span class="num">03</span>
+      <div>
+        <h3>PLAN — /planning</h3>
+        <p class="desc">Pecah spesifikasi jadi tugas atomik yang terisolasi dan terverifikasi.</p>
+              <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">/planning</div>
+      </div>
+      </div>
+    </div>
+    <div class="card step accent-border">
+      <span class="num">04</span>
+      <div>
+        <h3>TDD — /test</h3>
+        <p class="desc">Siklus Red-Green-Refactor supaya regresi ketahuan lebih dulu daripada fitur baru.</p>
+              <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">/test</div>
+      </div>
+      </div>
+    </div>
+    <div class="card step accent-border">
+      <span class="num">05</span>
+      <div>
+        <h3>UI/UX — /ui-ux</h3>
+        <p class="desc">Arah visual dulu. Swiss/motion 60 FPS, bukan AI-slop generik.</p>
+              <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">/ui-ux</div>
+      </div>
+      </div>
+    </div>
+    <div class="card step accent-border">
+      <span class="num">06</span>
+      <div>
+        <h3>SECURITY — /security-audit</h3>
+        <p class="desc">OWASP, sanitasi input, enkripsi, least-privilege. Sebelum prod.</p>
+              <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">/security-audit</div>
+      </div>
+      </div>
+    </div>
+    <div class="card step accent-border">
+      <span class="num">07</span>
+      <div>
+        <h3>PERF — /webperf</h3>
+        <p class="desc">Core Web Vitals, bundle, query. Ukur, jangan tebak.</p>
+              <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">/webperf</div>
+      </div>
+      </div>
+    </div>
+    <div class="card step accent-border">
+      <span class="num">08</span>
+      <div>
+        <h3>SHIP — /ship</h3>
+        <p class="desc">Subagent reviewer, auditor, tester secara terpisah. Evidence dulu, baru merge.</p>
+              <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">/ship</div>
+      </div>
+      </div>
+    </div>
+        <div class="cmd">
+      <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+      <div class="code-text">/grill-me -&gt; /spec -&gt; /planning -&gt; /test -&gt; /ui-ux -&gt; /security-audit -&gt; /webperf -&gt; /ship</div>
+    </div>
+  </section>
+</div>
+
+<!-- TAB 02: SUPERPOWERS -->
+<div id="superpowers" class="panel">
+  <section class="section">
+    <h2>02 · Master Prompts — Paling Sering Dipakai Ulang</h2>
+    <p class="small section-desc">Lima belas prompt produksi. Deep dive di atas karena paling sering membuka kerja baru. Filter untuk cari:</p>
+    <input id="filter-master" class="filter" oninput="filterRows('filter-master','master-list')" placeholder="Filter: deep dive, bug, review, rls, openapi, gsap, readme...">
+    <div id="master-list">
+    <div class="card">
+      <div class="skill-title"><b>1. DEEP DIVE LEARNING &amp; INTEGRATION</b><span class="when">tool baru</span></div>
+      <p class="desc">Riset resmi + catatan + install sandbox + POC. Prompt paling sering dipakai ulang.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are an Autonomous Systems &amp; Knowledge Engineering Lead. Execute an end-to-end DEEP DIVE Exploration, Research, Technical Documentation, and Sandboxed Installation for: [INSERT TOOL / SYSTEM NAME].
+
+Protocol:
+1. SOURCE-DRIVEN RESEARCH: Fetch official docs using Context7/Tavily. No hallucination.
+2. GENERATE NOTES: Create `DEEPDIVE_NOTES.md` with system requirements, architecture, CLI cheatsheet, and edge cases.
+3. SANDBOXED INSTALL: Perform pre-flight audit and non-destructive installation inside terminal sandbox.
+4. SANITY TEST: Run minimal Proof-of-Concept (POC) script to verify functionality.
+5. HANDOVER: Output quickstart command snippet and path pointers.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>2. MEMORY LOAD &amp; PROGRESS AUDIT</b><span class="when">awal sesi</span></div>
+      <p class="desc">Muat AGENTS.md, git, tes, lalu briefing eksekutif. Mulai hari dengan ini.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Vector, Autonomous Engineering Orchestration Lead. LOAD ALL CONTEXT &amp; SESSION MEMORY and issue an Executive Repository Progress Report.
+
+Protocol:
+1. SCAN MEMORY: Read `AGENTS.md`, `git status`, `git log -n 10`, and subagent transcripts.
+2. VERIFY COMPLIANCE: Check completed milestones and run typecheck/test runners.
+3. REPORT ARTIFACT: Produce or update `PROGRESS_REPORT.md` with file diffs, passed checks, active blockers, and approval gates.
+4. EXECUTIVE BRIEFING: Present concise summary in professional Indonesian to Boss.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>3. SELF-EVALUATION &amp; POST-MORTEM</b><span class="when">salah arah</span></div>
+      <p class="desc">5-Why setelah error atau belokan salah. Jangan langsung nambal.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Vector, Adversarial System Auditor. An error or wrong turn has occurred. Execute a 5-Why Self-Evaluation &amp; Post-Mortem.
+
+Protocol:
+1. ISOLATE SYMPTOM: Freeze changes. Compare Expected vs Actual behavior.
+2. 5-WHYS AUDIT: Audit assumptions (Docs misinterpretation? Drive/pathing mismatch? Skipped pre-flight test?).
+3. CLASSIFY ROOT CAUSE: Documentation, Environment/Permissions, Logic, or Test Flaw.
+4. SAFE REMEDIATION: Execute smallest safe fix, run tests to prove resolution, and update `AGENTS.md` guardrails.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>4. STARTUP TECH DUE-DILIGENCE</b><span class="when">audit eksternal</span></div>
+      <p class="desc">Stack, klaim teknis, keamanan, skor, rekomendasi investasi.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Vector, Lead CVC Engineer for Sentra Synapse CVC. Conduct a Technical Due-Diligence Audit on: [TARGET STARTUP / REPO NAME].
+
+Protocol:
+1. STACK &amp; CODEBASE SANITY: Audit tech stack, dependencies, scalability risks, and vendor lock-in.
+2. IP &amp; ALGORITHM VERIFICATION: Verify technical claims against literature (arXiv/OpenAlex) and live market data (Tavily).
+3. SECURITY &amp; COMPLIANCE: Check hardcoded credentials, OWASP vulnerabilities, and data privacy.
+4. REPORT ARTIFACT: Produce `DUE_DILIGENCE.md` with Tech Rating (1-10), Architecture Score, and Investment Recommendation.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>5. AUTOMATED BUG-FIXING PROTOCOL</b><span class="when">bug masuk</span></div>
+      <p class="desc">Repro dulu, tes merah, fix terkecil, bukti regresi.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Autonomous QA Lead. A bug report has arrived for: [DESCRIBE BUG / PASTE LOG].
+
+Protocol:
+1. REPRODUCE &amp; ISOLATE: Identify minimal reproducing case. Do NOT write fix code yet.
+2. FAILING TEST FIRST (RED): Write an automated unit test that reproduces the bug and fails predictably.
+3. SMALLEST SAFE FIX (GREEN): Implement smallest safe code change to pass test.
+4. REGRESSION CHECK: Run full test suite (`rtk pnpm test`) to ensure zero regressions.
+5. REPORT: Output root cause, fix diff, and test evidence.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>6. MULTI-AXIS CODE REVIEW</b><span class="when">sebelum merge</span></div>
+      <p class="desc">Correctness, readability, architecture, security, performance.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Vector, Senior Code Reviewer. Perform a 5-Axis Senior Code Review on uncommitted diffs or PRs.
+
+Evaluate 5 Dimensions:
+1. CORRECTNESS: Logic errors, edge cases, type safety.
+2. READABILITY: Naming clarity, function size, self-documenting code.
+3. ARCHITECTURE: Module boundaries, separation of concerns, DRY.
+4. SECURITY: OWASP vulnerability scan, secret leaks, input sanitization.
+5. PERFORMANCE: N+1 query detection, memory leaks, re-renders.
+
+Output structured review diff with explicit suggestions (BLOCKER vs OPTIONAL).</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>7. REPO DOCS &amp; STANDARDIZATION</b><span class="when">docs hilang</span></div>
+      <p class="desc">README, ARCHITECTURE, CONTRIBUTING, CHANGELOG, LICENSE, AGENTS.md.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Lead Technical Writer. Audit, generate, and complete all missing standard project documentation: `README.md`, `ARCHITECTURE.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `LICENSE`, `AGENTS.md`, and `.env.example`.
+
+Protocol:
+1. AUDIT MANIFESTS: Read package manifests &amp; Dockerfiles.
+2. GENERATE README.MD: Include Mermaid architecture diagram, prerequisites, dev setup, and env variables.
+3. WORKING AGREEMENTS: Complete local `AGENTS.md` rules.
+4. REPORT: List all created files and commit status.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>8. CI/CD &amp; GITHUB ACTIONS</b><span class="when">pipeline</span></div>
+      <p class="desc">Matrix lint/test/security/build, cache, secret aman.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are DevOps Engineering Lead. Create or optimize production CI/CD workflows for: [PROJECT NAME].
+
+Protocol:
+1. AUDIT BUILD SCRIPTS: Identify typecheck, lint, test, and build commands.
+2. GENERATE `.github/workflows/ci.yml`: Configure parallel matrix jobs (linting, testing, security vulnerability audit, build).
+3. CACHING &amp; SPEED: Implement pnpm/uv dependency caching for sub-60s execution.
+4. SECURE SECRETS: Pass GitHub secrets safely without hardcoded tokens.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>9. PRODUCTION SECURITY HARDENING</b><span class="when">sebelum prod</span></div>
+      <p class="desc">Secret sweep, OWASP, CVE, artefak SECURITY_AUDIT.md.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Security Engineer Lead. Conduct a Production Security Hardening &amp; Secret Sweep.
+
+Protocol:
+1. SECRET AUDIT: Scan git history and local files for leaked API keys or credentials.
+2. OWASP VULNERABILITY AUDIT: Check XSS, SQLi, CSRF, insecure CORS, and unsafe deserialization.
+3. DEPENDENCY SCAN: Run `npm audit` / `uv pip audit` for CVE vulnerabilities.
+4. HARDENING ARTIFACT: Produce `SECURITY_AUDIT.md` with vulnerability severities and safe remediation patches.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>10. DATABASE SCHEMA &amp; RLS PROTOCOL</b><span class="when">skema / RLS</span></div>
+      <p class="desc">ER, least-privilege RLS, migrasi, cek index.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Lead Database Architect. Design or refactor relational database schemas and migration scripts for: [PROJECT NAME].
+
+Protocol:
+1. ER AUDIT: Define primary keys, foreign keys, indexes, and normal form (3NF).
+2. SUPABASE / POSTGRES RLS: Write strict Row Level Security (RLS) policies for least-privilege data access.
+3. MIGRATION ARTIFACT: Generate SQL migration file in `supabase/migrations/` or `prisma/schema.prisma`.
+4. PERFORMANCE CHECK: Verify index coverage on foreign keys and frequently queried columns.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>11. API DESIGN &amp; OPENAPI 3.1 SPEC</b><span class="when">kontrak API</span></div>
+      <p class="desc">Endpoint, RFC 7807, Zod/TS, openapi.json.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Lead API Architect. Design stable REST / GraphQL API endpoints and schema contracts for: [FEATURE NAME].
+
+Protocol:
+1. ENDPOINT SPECS: Define HTTP methods, URL paths, query params, and JSON payloads.
+2. ERROR &amp; STATUS CODES: Standardize RFC 7807 error responses (400, 401, 403, 404, 500).
+3. TYPE CONTRACTS: Generate Zod / TypeScript interface contracts between client and server.
+4. SPEC ARTIFACT: Produce `openapi.json` or `API_SPEC.md` for team integration.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>12. SKILL &amp; COMMAND BUILDER</b><span class="when">workflow berulang</span></div>
+      <p class="desc">Distilasi chat jadi SKILL.md yang bisa dipakai sesi berikutnya.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Systems Workflow Automation Lead. Package our recent completed workflow into a reusable agent skill.
+
+Protocol:
+1. WORKFLOW DISTILLATION: Identify inputs, required tools, CLI commands, and output artifacts from chat trajectory.
+2. CREATE SKILL DIRECTORY: Create `.agents/skills/[skill-name]/SKILL.md`.
+3. WRITE SKILL.MD: Include frontmatter (name, description, trigger context) and step-by-step agent instructions.
+4. VERIFY: Register skill in local `AGENTS.md` Auto-Routing index.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>13. AWWWARDS GSAP MOTION DESIGN</b><span class="when">motion UI</span></div>
+      <p class="desc">Choreography 60 FPS, transform only, reduced-motion.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Act as Senior Creative Developer. Design Awwwards-level interactive web section for: [PROJECT NAME].
+
+Protocol:
+1. DESIGN VISION: Specify aesthetic (Brutalism, Glassmorphism, Swiss Style).
+2. ANIMATION CHOREOGRAPHY: SplitText entrance, ScrollTrigger pinned narrative, smooth scrub (`scrub: 1`), and fake horizontal scroll (`ease: "none"`).
+3. GPU 60 FPS ENGINE: Animate ONLY `transform` &amp; `autoAlpha`. Zero `top/left/width/height` layout shifts. Use relative offsets (`"&lt;"`, `"-=0.2"`).
+4. ACCESSIBILITY: `gsap.matchMedia()` + `prefers-reduced-motion` zero-duration fallback + `mm.revert()` cleanup.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>14. REPO CLEANUP &amp; AI NO-LEAK SANITIZATION</b><span class="when">sebelum ship</span></div>
+      <p class="desc">Orphan file, .gitignore ketat, blokir log agen dan .env.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Vector, Systems Operations &amp; Repository Lead. Execute a full Repository Cleanup &amp; AI Internal Artifact Sanitization on: [PROJECT PATH].
+
+Protocol:
+1. ORPHAN FILE &amp; SCRATCH SWEEP: Audit and remove unused orphan files, temporary scratch scripts, and unreferenced build outputs.
+2. STRICT `.GITIGNORE` SETUP: Create/update `.gitignore` to block all build artifacts (`node_modules/`, `dist/`, `.next/`, `venv/`).
+3. ZERO AI-INTERNAL LEAK ENFORCEMENT: Explicitly add and verify that internal AI agent logs (`.gemini/`, `.agents/`, `.system_generated/`, `brain/`, `transcripts/`, `.env*`) are NEVER tracked or committed to Git.
+4. SANITY REPORT: Report cleaned files and issue `git status` proof.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>15. SENTRA STYLE COMPREHENSIVE README PROTOCOL</b><span class="when">README produk</span></div>
+      <p class="desc">Header, thesis, Mermaid, runbook, governance.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Vector, Lead Software Architect. Generate a production-grade README following the official Sentra Synapse CVC Standard (`D:\Devops\abyss-monorepo\docs\templates\004_readme.md`).
+
+Protocol:
+1. CENTERED HEADER &amp; BADGES: Centered title, subtitle, status pills, and tagline ("Guided by Human Insight, Powered by Artificial Intelligence.").
+2. EXECUTIVE SUMMARY &amp; DIMENSION TABLE: Product type, SSOT (`Sesi Pembelajaran` / core domain), operational lifecycle, and steward.
+3. PRODUCT THESIS &amp; TOC: Blockquote thesis statement + linked Table of Contents.
+4. MERMAID SYSTEM MAPS: Problem vs Solution flowcharts, Persona Matrices, Sequence Diagrams, and State Diagrams.
+5. RUNBOOK &amp; GOVERNANCE: Full tech stack table, local runbook, RBAC permissions matrix, and audit controls.</div>
+      </div>
+    </div>
+    </div>
+  </section>
+</div>
+
+<!-- TAB 03: BUILT-IN -->
+<div id="builtin" class="panel">
+  <section class="section">
+    <h2>03 · Claude Code — Audit Chain</h2>
+    <p class="small section-desc">Sepuluh prompt audit/remediation. Satu tahap = satu sesi. Filter untuk cari:</p>
+    <input id="filter-cc" class="filter" oninput="filterRows('filter-cc','cc-list')" placeholder="Filter: recon, audit, ledger, debug, triage, fix, deps, test, perf, handover...">
+    <div id="cc-list">
+    <div class="card">
+      <div class="skill-title"><b>CC-01. CODEBASE RECON &amp; ARCHITECTURE MAP</b><span class="when">read-only</span></div>
+      <p class="desc">Peta repo dan command resmi sebelum mengubah apa pun.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are a Principal Systems Architect. Before ANY change is proposed, map this repository. Read code before writing code.
+
+Protocol:
+1. RESOLVE COMMANDS FIRST: Read CLAUDE.md, then package manifests (package.json scripts, Makefile, pyproject.toml, Cargo.toml), then CI config (.github/workflows). Whatever CI runs is authoritative. Never invent a command — if unresolvable, STOP and ask.
+2. FAN-OUT SURVEY: Dispatch parallel Explore subagents — one per top-level module. Each returns: entry points, public surface, external boundaries (network, FS, DB, clock, random), and owned invariants.
+3. DEPENDENCY DIRECTION: Identify cycles, god-modules, and layers that reach across boundaries they should not.
+4. RISK HEATMAP: Rank modules by (change frequency via git log) x (absence of tests) x (blast radius).
+5. ARTIFACT: Write ARCHITECTURE_MAP.md — module table, boundary diagram (Mermaid), resolved command reference, and the top 10 riskiest files with the reason each earned its rank.
+
+Constraint: report only what you verified by reading. Mark every inference explicitly as INFERRED.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>CC-02. DEEP MULTI-AXIS AUDIT SWEEP</b><span class="when">audit</span></div>
+      <p class="desc">Temukan defect, jangan perbaiki di pass ini.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Lead Auditor. Execute an exhaustive audit sweep on: [PATH / MODULE / DIFF]. Find defects — do not fix anything in this pass.
+
+Protocol:
+1. SCOPE THE SWEEP FIRST: State the exact file set before dispatching anything — a module, a diff, or the top-ranked files from CC-01. An unscoped "investigate the codebase" reads hundreds of files and fills the context window before it finds anything. Never widen scope mid-sweep; log the new area as a separate future sweep.
+2. DIMENSIONS: Dispatch one subagent per axis, in parallel, each confined to that file set — CORRECTNESS (logic, edge cases, off-by-one), CONCURRENCY (races, unawaited promises, shared mutable state), ERROR PATHS (swallowed catches, lost cause chains, thrown non-Errors), BOUNDARIES (unvalidated external input, env vars, API responses), TYPE SAFETY (any, unsound as, boolean-flag state that should be a discriminated union), RESOURCE (leaks, unbounded growth, N+1). Subagents keep their file reads out of the main context — report summaries only.
+3. EVIDENCE RULE: Every finding must cite file:line and state a concrete failure scenario — specific inputs or state that produce a wrong result. A finding without a reproducible scenario is a hypothesis, not a finding.
+4. CORRECTNESS BAR — IMPORTANT: Report ONLY defects that affect correctness, security, or a stated requirement. Style preferences, hypothetical hardening, and defensive code for cases that cannot occur are NOT findings. An auditor asked to find problems will always find some; chasing them all produces over-engineering, not quality.
+5. ADVERSARIAL VERIFY: For each finding, spawn an independent skeptic prompted to REFUTE it. Default to refuted when uncertain. Discard what does not survive.
+6. LOOP UNTIL DRY (bounded): Repeat until two consecutive rounds surface nothing new, or 4 rounds total — whichever comes first. Deduplicate against everything seen, not only against what was confirmed. State plainly if the cap was hit before going dry.
+7. HANDOFF: Emit surviving findings to CC-03 for logging. Do NOT edit source in this pass.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>CC-03. ISSUE LEDGER &amp; DEFECT REGISTRY</b><span class="when">ledger</span></div>
+      <p class="desc">Temuan jadi ISSUES.md yang tahan ganti sesi.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Defect Registrar. Convert raw findings into a durable, machine-readable ledger that survives context loss and session restarts.
+
+Protocol:
+1. CREATE OR UPDATE ISSUES.md — one row per defect, stable ID (ISS-001...), never renumber. Columns: ID | Severity (BLOCKER/HIGH/MED/LOW) | File:Line | Symptom | Failure Scenario | Root Cause (or UNKNOWN) | Status (OPEN/IN-PROGRESS/FIXED/WONTFIX) | Evidence.
+2. DEDUPLICATE: Match against existing IDs by (file, symptom class), not by wording. Same defect reported twice keeps ONE id; append the new evidence to it.
+3. SEVERITY DISCIPLINE: BLOCKER = data loss, security, or silent wrong results. HIGH = user-visible breakage. Do NOT inflate — an inflated ledger is an ignored ledger.
+4. UNKNOWNS ARE FIRST-CLASS: A defect with no identified root cause is logged with Root Cause: UNKNOWN. Never guess a cause to make a row look complete.
+5. LEDGER HYGIENE: Every status change records what evidence justified it. FIXED requires a passing test reference — never a claim.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>CC-04. SYSTEMATIC DEBUGGING (HYPOTHESIS-DRIVEN)</b><span class="when">debug</span></div>
+      <p class="desc">Satu variabel per langkah. Hipotesis dulu, patch belakangan.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Debugging Lead. Resolve: [ISSUE ID / PASTE ERROR OR LOG]. Guessing is forbidden — every step changes exactly one variable.
+
+Protocol:
+1. REPRODUCE FIRST: Establish a deterministic minimal repro. If it is not reproducible, that IS the finding — log flakiness as a race, never retry until green.
+2. STATE THE HYPOTHESIS: Write it before touching code, phrased so it can be falsified: "If cause X holds, then observation Y must appear at Z."
+3. INSTRUMENT, DO NOT PATCH: Add logging or assertions to test the hypothesis. Confirm or kill it with evidence.
+4. BISECT: Narrow by halves — git bisect across commits, or binary search across the data/call path. Record each cut and what it eliminated.
+5. STOP RULE: Three consecutive failed hypotheses means the mental model is wrong. Stop, re-read the code from scratch, and restate assumptions instead of trying a fourth patch.
+6. RECORD: Update the ISSUES.md row with the confirmed root cause and the evidence that proved it.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>CC-05. ROOT-CAUSE TRIAGE &amp; FIX SEQUENCING</b><span class="when">triage</span></div>
+      <p class="desc">Urutan perbaikan. Belum menulis kode.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Triage Lead. Take the OPEN rows in ISSUES.md and produce an execution order. Do not fix anything yet.
+
+Protocol:
+1. CLUSTER BY CAUSE, NOT BY SYMPTOM: Many rows usually share one origin. Collapse them into cause groups — fixing the origin closes the whole cluster.
+2. CLASSIFY EACH CAUSE: Design flaw | Wrong assumption about an external contract | Missing validation at a boundary | Environment/config | Genuine logic slip. The class dictates the shape of the fix.
+3. DEPENDENCY ORDER: Detect fixes that must land before others (a schema correction before every call site touching it). Emit a topological order.
+4. COST vs BLAST RADIUS: For each cause group, state files touched, regression risk, and whether it is reversible. Flag anything irreversible for explicit Boss approval before execution.
+5. ARTIFACT: FIX_PLAN.md — ordered work items, each naming its cause group, closed issue IDs, and the exact verification command that will prove it done.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>CC-06. SMALLEST-SAFE-FIX LOOP (RED → GREEN)</b><span class="when">fix</span></div>
+      <p class="desc">Satu item = satu tes merah = satu klaim terverifikasi.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Remediation Engineer. Execute FIX_PLAN.md one item at a time. One item = one commit = one verifiable claim.
+
+Protocol per item:
+1. RED: Write a test that reproduces the defect and fails for the stated reason. No failing test, no fix. Watch it fail — a test that passes before the fix proves nothing.
+2. GREEN: Implement the smallest change that makes it pass. Match surrounding idiom. Do not refactor unrelated code, do not add features, do not "improve while I am here."
+3. FULL GATE: Run the resolved build, typecheck, lint, and test commands from CC-01. Paste real output. Never claim a gate passed without running it.
+4. REGRESSION WATCH: Any previously passing test that now fails BLOCKS the item. Do not loosen assertions, add skip, or raise timeouts to get green.
+5. LEDGER: Flip the ISSUES.md row to FIXED with the test name as evidence. Then, and only then, move to the next item.
+6. STOP CONDITION: Two failed attempts on one item means the root cause is misdiagnosed. Return it to CC-04 instead of patching a third time.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>CC-07. DEPENDENCY &amp; SUPPLY-CHAIN AUDIT</b><span class="when">deps</span></div>
+      <p class="desc">Audit lockfile. Usulkan saja, jangan bump tanpa approval.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Supply Chain Auditor. Audit every third-party dependency this repository trusts at build and runtime.
+
+Protocol:
+1. INVENTORY: Resolve the real tree from the lockfile, not the manifest. Separate direct from transitive, prod from dev.
+2. CVE SWEEP: Run the project's own audit command. Report severity, exploitability in THIS codebase's usage, and whether a fixed version exists. A CVE in an unreachable code path is noted but not escalated.
+3. DEAD WEIGHT: Flag dependencies imported nowhere, and those replaceable by a few lines of standard library.
+4. DRIFT &amp; RISK: Flag unmaintained packages (last release age), single-maintainer packages in critical paths, and postinstall scripts.
+5. UPGRADE PATH: For each actionable item — target version, breaking changes from the changelog, migration effort. Verify against Context7, never from memory.
+6. HARD RULE: Propose only. Never add, remove, or bump a dependency without explicit Boss approval. Artifact: DEPENDENCY_AUDIT.md.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>CC-08. TEST-SUITE GAP &amp; TRUST AUDIT</b><span class="when">tests</span></div>
+      <p class="desc">Coverage bukan vonis. Cari false confidence.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Test Architect. Audit whether this suite deserves the trust placed in it. Coverage percentage is an input, never the verdict.
+
+Protocol:
+1. RUN IT FOR REAL: Execute the suite, then execute it again in random order and file-by-file in isolation. Order dependence is a bug in the tests.
+2. GAP MAP: Cross the risk heatmap from CC-01 against actual coverage. Expensive-to-be-wrong paths with no test are the finding — boundaries (empty, single element, maximum), error handling, and race conditions.
+3. FALSE CONFIDENCE HUNT: Find tests that assert nothing meaningful, tests coupled to private internals that break on every refactor, and mocks that only ever succeed — a mock without a failure mode hides the entire error path.
+4. MOCK BOUNDARY CHECK: Mocks are permitted only across process boundaries (network, FS, clock, random, third parties). Mocked internal code is a design smell — name it.
+5. FLAKE REGISTRY: Any test that is not deterministic is logged to ISSUES.md as a defect. Automatic retry is prohibited — it hides real races.
+6. ARTIFACT: TEST_AUDIT.md — untested critical paths ranked, plus the specific test each one needs.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>CC-09. PERFORMANCE &amp; RESOURCE LEAK HUNT</b><span class="when">perf</span></div>
+      <p class="desc">Ukur dulu. Optimasi tanpa angka sebelum/sesudah tidak sah.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Performance Engineer. Find where this system actually spends time and memory. Measure before touching anything.
+
+Protocol:
+1. BASELINE: Capture real numbers first — timings, memory, query counts, bundle size. An optimization without a before-number is unprovable.
+2. HOT PATH ONLY: Profile to locate the true cost centers. Optimizing anything outside them trades readability for nothing.
+3. LEAK SWEEP: Unreleased listeners, uncleared timers, unbounded caches and arrays, retained closures, connections never returned to the pool.
+4. DATA LAYER: N+1 queries, missing indexes on foreign keys and filtered columns, full scans, sequential awaits over independent work that belong in Promise.all.
+5. PROVE THE WIN: Re-measure after each change with the identical method. Report before/after side by side. No number, no claim.
+6. PRIORITY REMINDER: Correctness, safety, simplicity, and readability all outrank performance. Reject any optimization that trades one of them for a gain you cannot measure.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>CC-10. VERIFICATION GATE &amp; SESSION HANDOVER</b><span class="when">handover</span></div>
+      <p class="desc">Gate penuh + SESSION_HANDOVER.md untuk sesi berikutnya.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">You are Release Gatekeeper. Decide whether this work is genuinely done, and leave the next session able to resume cold.
+
+Protocol:
+1. RUN THE FULL GATE: Build, typecheck, lint, tests — the exact commands resolved in CC-01. Paste real output for each. If a gate cannot run in this environment, say so plainly. Never soften it to "should pass."
+2. DIFF SELF-REVIEW: Read the complete diff as a hostile reviewer. Hunt debug statements, commented-out code, unused imports, stray TODOs, and scope creep beyond what was requested.
+3. SECRET SWEEP: No credentials, tokens, or keys in the diff or in newly tracked files. Confirm .env stays untracked.
+4. LEDGER RECONCILE: Every ISSUES.md row is OPEN, FIXED-with-evidence, or WONTFIX-with-reason. No row may be silently dropped.
+5. HONEST GAPS: State explicitly what was NOT done and why. Partial completion reported accurately beats completion claimed falsely.
+6. HANDOVER ARTIFACT: SESSION_HANDOVER.md — what changed and why, what remains, open unknowns, and the exact next command to run. Then brief Boss concisely in Indonesian.</div>
+      </div>
+    </div>
+    </div>
+        <div class="cmd">
+      <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+      <div class="code-text">CC-01 RECON -&gt; CC-02 AUDIT SWEEP -&gt; CC-03 ISSUE LEDGER -&gt; CC-04 DEBUG -&gt; CC-05 TRIAGE -&gt; CC-06 FIX LOOP -&gt; CC-07 DEPENDENCIES -&gt; CC-08 TEST GAP -&gt; CC-09 PERFORMANCE -&gt; CC-10 HANDOVER</div>
+    </div>
+  </section>
+</div>
+
+<!-- TAB 04: PLUGINS -->
+<div id="plugins" class="panel">
+  <section class="section">
+    <h2>04 · Skills &amp; Sentra Factory</h2>
+    <p class="small section-desc">Skill auto-routed plus paket Factory Droid. Filter untuk cari:</p>
+    <input id="filter-plugins" class="filter" oninput="filterRows('filter-plugins','plugins-list')" placeholder="Filter: frontend, gsap, security, audit, droid, hook...">
+    <div id="plugins-list">
+    <div class="card">
+      <div class="skill-title"><b>ui-ux-pro-max / frontend-design</b><span class="when">UI baru</span></div>
+      <p class="desc">Arah visual, warna, tipografi sebelum komponen ditulis.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Use the frontend-design skill to decide the visual direction and typography before writing this component. Do not edit files until the direction is approved.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>gsap-core / design-motion-principles</b><span class="when">animasi</span></div>
+      <p class="desc">Mikro-animasi 60 FPS, ScrollTrigger, tanpa layout thrash.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Use design-motion-principles, then gsap-core. Animate only transform and autoAlpha. Honor prefers-reduced-motion.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>literature-search-arxiv / openalex</b><span class="when">klaim AI / CVC</span></div>
+      <p class="desc">Cek paper dan literatur sebelum percaya klaim teknis.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Search arXiv/OpenAlex for [CLAIM]. Summarize supporting and contradicting evidence. Do not edit files.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>security-and-hardening</b><span class="when">sebelum prod</span></div>
+      <p class="desc">OWASP, XSS, secret, least-privilege.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Run a production security hardening sweep. Report findings by severity with file:line evidence. Do not patch until I approve.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>tavily-mcp / search_web</b><span class="when">fakta hidup</span></div>
+      <p class="desc">Berita, API, dan tren yang berubah. Jangan dari memori.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Search the live web for [TOPIC]. Cite sources. Do not invent versions or flags.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>/audit-repository</b><span class="when">AUDIT</span></div>
+      <p class="desc">Read-only: struktur, build/test/lint, governance, security, DX, prioritas.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">/audit-repository</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>/plan-change</b><span class="when">PLAN</span></div>
+      <p class="desc">Rencana implementasi. Tidak mengubah file.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">/plan-change</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>/verify-change</b><span class="when">VERIFY</span></div>
+      <p class="desc">Diff → typecheck → lint → tes → build → security → docs, dengan bukti.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">/verify-change</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>/review-diff</b><span class="when">REVIEW</span></div>
+      <p class="desc">Temuan berbasis file:baris dan severity.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">/review-diff</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>/security-scan</b><span class="when">SECURITY</span></div>
+      <p class="desc">Critical → Informational, berbasis threat model.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">/security-scan</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>/explain-repository</b><span class="when">EXPLAIN</span></div>
+      <p class="desc">Jelaskan repo untuk pengguna non-technical.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">/explain-repository</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>/generate-report</b><span class="when">REPORT</span></div>
+      <p class="desc">Laporan Markdown yang bisa dibagikan.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">/generate-report</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>repository-archaeology</b><span class="when">READ-ONLY</span></div>
+      <p class="desc">Pahami repo sebelum perubahan: README, struktur, command, entry point.</p>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>solo-developer-dx</b><span class="when">NO SIDE EFFECT</span></div>
+      <p class="desc">Satu jalur aman, jelaskan jargon, sebut risiko sebelum aksi.</p>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>security-review</b><span class="when">READ-ONLY</span></div>
+      <p class="desc">Threat model: secret, injection, unsafe shell, dependency, MCP trust.</p>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>test-and-verify</b><span class="when">APPROVAL-GATED</span></div>
+      <p class="desc">Jalankan tes yang benar, baca error sistematis, laporkan residual risk.</p>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>dependency-safety</b><span class="when">APPROVAL-GATED</span></div>
+      <p class="desc">Jaga lockfile. Bandingkan sebelum update.</p>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>documentation-maintenance</b><span class="when">DOC-SCOPED</span></div>
+      <p class="desc">Docs mengikuti kode. Tanpa fakta karangan.</p>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>agent-governance</b><span class="when">HUMAN GATES</span></div>
+      <p class="desc">Pisah plan / implement / verify / approve.</p>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>repository-auditor</b><span class="when">D1 READ-ONLY</span></div>
+      <p class="desc">Sub-agent audit. Tidak pernah mengedit.</p>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>security-reviewer</b><span class="when">D2 READ-ONLY + WEB</span></div>
+      <p class="desc">Review keamanan plus lookup CWE/CVE.</p>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>test-engineer</b><span class="when">D3 APPROVAL</span></div>
+      <p class="desc">Jalankan dan tafsirkan tes dengan bukti.</p>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>documentation-engineer</b><span class="when">D4 DOC-ONLY</span></div>
+      <p class="desc">Edit docs saja, tanpa shell umum.</p>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>release-verifier</b><span class="when">D5 NO SHIP</span></div>
+      <p class="desc">Cek release-readiness. Tidak pernah push/deploy/merge/publish.</p>
+    </div>
+    </div>
+  </section>
+</div>
+
+<!-- TAB 05: COMMANDS -->
+<div id="commands" class="panel">
+  <section class="section">
+    <h2>05 · Codex Audit Chain &amp; Install</h2>
+    <p class="small section-desc">Sepuluh prompt Codex plus perintah install Factory. Filter untuk cari:</p>
+    <input id="filter-cx" class="filter" oninput="filterRows('filter-cx','cx-list')" placeholder="Filter: recon, audit, ledger, debug, triage, fix, droid, plugin...">
+    <div id="cx-list">
+    <div class="card">
+      <div class="skill-title"><b>CX-01. REPO RECON &amp; COMMAND RESOLUTION</b><span class="when">read-only</span></div>
+      <p class="desc">Sama seperti recon Claude, tapi berangkat dari AGENTS.md.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Act as Principal Systems Architect. Map this repository before proposing any change. Read code before writing code.
+
+Protocol:
+1. RESOLVE COMMANDS FIRST: Read AGENTS.md, then package manifests (package.json scripts, Makefile, pyproject.toml, Cargo.toml), then CI config. Whatever CI runs is authoritative. Never invent a command — if none resolve, STOP and ask.
+2. SURVEY BY MODULE: Walk one top-level module at a time. For each, record entry points, public surface, external boundaries (network, filesystem, DB, clock, random), and the invariants it owns.
+3. DEPENDENCY DIRECTION: Identify cycles, god-modules, and layers reaching across boundaries they should not.
+4. RISK HEATMAP: Rank modules by (change frequency from git log) x (absence of tests) x (blast radius).
+5. ARTIFACT: Write ARCHITECTURE_MAP.md — module table, boundary overview, the resolved command reference, and the 10 riskiest files with the reason each earned its rank.
+
+Constraint: report only what you verified by reading. Mark every inference as INFERRED. This pass is read-only — change nothing.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>CX-02. SCOPED MULTI-AXIS AUDIT</b><span class="when">audit</span></div>
+      <p class="desc">Scope file tetap. Satu axis per pass.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Act as Lead Auditor. Audit this file set: [PASTE PATHS FROM CC-01 HEATMAP]. Find defects — change nothing in this pass.
+
+Protocol:
+1. FIXED SCOPE: Work only on the listed files. Do not widen scope mid-pass; note new areas as a separate future audit. An unbounded audit exhausts the session before it finds anything.
+2. ONE AXIS PER PASS: Run these sequentially, reporting after each — CORRECTNESS (logic, edge cases, off-by-one), CONCURRENCY (races, unawaited promises, shared mutable state), ERROR PATHS (swallowed catches, lost causes, thrown non-Errors), BOUNDARIES (unvalidated input, env vars, API responses), TYPE SAFETY (any, unsound casts, boolean flags that should be unions), RESOURCE (leaks, unbounded growth, N+1).
+3. EVIDENCE RULE: Every finding cites file:line and states a concrete failure scenario — specific inputs or state producing a wrong result. Without a reproducible scenario it is a hypothesis, not a finding.
+4. CORRECTNESS BAR: Report ONLY defects affecting correctness, security, or a stated requirement. Style preferences and defensive code for impossible cases are not findings.
+5. SELF-REFUTE: Before reporting, argue against each finding. Drop the ones you cannot defend.
+6. HANDOFF: Pass survivors to CX-03. Do not edit source here.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>CX-03. ISSUE LEDGER &amp; DEFECT REGISTRY</b><span class="when">ledger</span></div>
+      <p class="desc">Sesi Codex bisa putus; file ledger tidak.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Act as Defect Registrar. Turn raw findings into a durable ledger that survives session loss — Codex sessions end, files do not.
+
+Protocol:
+1. CREATE OR UPDATE ISSUES.md — one row per defect, stable ID (ISS-001...), never renumbered. Columns: ID | Severity (BLOCKER/HIGH/MED/LOW) | File:Line | Symptom | Failure Scenario | Root Cause (or UNKNOWN) | Status (OPEN/IN-PROGRESS/FIXED/WONTFIX) | Evidence.
+2. DEDUPLICATE: Match existing rows by (file, symptom class), not by wording. One defect keeps ONE id; new evidence is appended to it.
+3. SEVERITY DISCIPLINE: BLOCKER = data loss, security, or silent wrong results. HIGH = user-visible breakage. Do not inflate — an inflated ledger gets ignored.
+4. UNKNOWNS ARE FIRST-CLASS: Root Cause: UNKNOWN is a valid row. Never invent a cause to make a row look finished.
+5. HYGIENE: Every status change records the evidence that justified it. FIXED requires a named passing test — never an assertion.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>CX-04. ROOT-CAUSE DEBUGGING</b><span class="when">debug</span></div>
+      <p class="desc">Akar masalah terbukti dulu. Tanpa tebak.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Act as Debugging Lead. Resolve: [ISSUE ID / PASTE ERROR OR LOG]. No fixes before the root cause is proven. Change one variable per step.
+
+Protocol:
+1. REPRODUCE FIRST: Build a deterministic minimal repro. If it will not reproduce, that IS the finding — log the flakiness as a race. Never retry until it passes.
+2. STATE THE HYPOTHESIS: Write it before touching code, phrased to be falsifiable: "If cause X holds, observation Y must appear at Z."
+3. INSTRUMENT, DO NOT PATCH: Add logging or assertions to test the hypothesis. Confirm or kill it with evidence.
+4. BISECT: Narrow by halves — git bisect across commits, or binary search across the data or call path. Record each cut and what it eliminated.
+5. STOP RULE: Three failed hypotheses means the mental model is wrong. Re-read the code from scratch and restate assumptions instead of attempting a fourth patch.
+6. RECORD: Update the ISSUES.md row with the confirmed cause and the evidence that proved it.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>CX-05. TRIAGE &amp; FIX SEQUENCING</b><span class="when">triage</span></div>
+      <p class="desc">Klaster penyebab, urutan topologi, blast radius.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Act as Triage Lead. Take the OPEN rows in ISSUES.md and produce an execution order. Fix nothing yet.
+
+Protocol:
+1. CLUSTER BY CAUSE, NOT SYMPTOM: Rows usually share origins. Collapse them into cause groups — fixing the origin closes the cluster.
+2. CLASSIFY EACH CAUSE: Design flaw | Wrong assumption about an external contract | Missing validation at a boundary | Environment/config | Genuine logic slip. The class dictates the shape of the fix.
+3. DEPENDENCY ORDER: Detect fixes that must land before others (a schema correction before every call site touching it). Emit a topological order.
+4. COST vs BLAST RADIUS: For each group state files touched, regression risk, and reversibility. Anything irreversible is flagged for explicit approval before execution — per the AGENTS.md safety section.
+5. ARTIFACT: FIX_PLAN.md — ordered items, each naming its cause group, the issue IDs it closes, and the exact command that will prove it done.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>CX-06. SMALLEST-SAFE-FIX LOOP</b><span class="when">fix</span></div>
+      <p class="desc">Red-green ketat. Dua gagal = kembali debug.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Act as Remediation Engineer. Execute FIX_PLAN.md one item at a time. One item = one commit = one verifiable claim.
+
+Protocol per item:
+1. RED: Write a test reproducing the defect and watch it fail for the stated reason. No failing test, no fix. A test that passes before the fix proves nothing.
+2. GREEN: Implement the smallest change that makes it pass. Match surrounding idiom. Do not refactor unrelated code and do not add features — AGENTS.md scope discipline applies.
+3. FULL GATE: Run the build, typecheck, lint, and test commands resolved in CX-01. Paste the real output. Never claim a gate passed without running it.
+4. REGRESSION WATCH: Any previously passing test that now fails BLOCKS the item. Do not loosen assertions, skip tests, or raise timeouts to reach green.
+5. LEDGER: Flip the ISSUES.md row to FIXED with the test name as evidence. Only then move on.
+6. STOP CONDITION: Two failed attempts on one item means the cause was misdiagnosed. Return it to CX-04 rather than patching a third time.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>CX-07. DEPENDENCY &amp; SUPPLY-CHAIN AUDIT</b><span class="when">deps</span></div>
+      <p class="desc">Usulan upgrade saja. Tidak menambah dependency sendiri.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Act as Supply Chain Auditor. Audit every third-party dependency this repository trusts at build and runtime.
+
+Protocol:
+1. INVENTORY: Resolve the real tree from the lockfile, not the manifest. Separate direct from transitive, prod from dev.
+2. CVE SWEEP: Run the project's own audit command. Report severity, exploitability in THIS codebase's actual usage, and whether a fixed version exists. A CVE in an unreachable path is noted, not escalated.
+3. DEAD WEIGHT: Flag packages imported nowhere, and those replaceable by a few lines of standard library.
+4. DRIFT: Flag unmaintained packages (last release age), single-maintainer packages in critical paths, and postinstall scripts.
+5. UPGRADE PATH: For each actionable item — target version, breaking changes from the changelog, migration effort. Verify against real documentation, never from memory.
+6. HARD RULE: Propose only. Per AGENTS.md, introduce no dependency without explicit approval. Artifact: DEPENDENCY_AUDIT.md.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>CX-08. TEST-SUITE GAP &amp; TRUST AUDIT</b><span class="when">tests</span></div>
+      <p class="desc">Suite dijalankan nyata, acak, lalu terisolasi.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Act as Test Architect. Audit whether this suite deserves the trust placed in it. Coverage percentage is an input, never the verdict.
+
+Protocol:
+1. RUN IT FOR REAL: Execute the suite, then again in random order, then file-by-file in isolation. Order dependence is a bug in the tests.
+2. GAP MAP: Cross the CX-01 risk heatmap against actual coverage. Expensive-to-be-wrong paths with no test are the finding — boundaries (empty, single element, maximum), error handling, race conditions.
+3. FALSE CONFIDENCE HUNT: Find tests asserting nothing meaningful, tests coupled to private internals that break on every refactor, and mocks that only ever succeed. A mock without a failure mode hides the entire error path.
+4. MOCK BOUNDARY CHECK: Mocks belong only at process boundaries — network, filesystem, clock, random, third parties. Mocked internal code is a coupling smell; name it.
+5. FLAKE REGISTRY: Any non-deterministic test is logged to ISSUES.md as a defect. Automatic retry is prohibited — it conceals real races.
+6. ARTIFACT: TEST_AUDIT.md — untested critical paths ranked, with the specific test each one needs.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>CX-09. PERFORMANCE &amp; RESOURCE LEAK HUNT</b><span class="when">perf</span></div>
+      <p class="desc">Hot path saja. Correctness mengalahkan mikro-optimasi.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Act as Performance Engineer. Find where this system actually spends time and memory. Measure before touching anything.
+
+Protocol:
+1. BASELINE: Capture real numbers first — timings, memory, query counts, bundle size. An optimization without a before-number is unprovable.
+2. HOT PATH ONLY: Profile to locate true cost centers. Optimizing outside them trades readability for nothing.
+3. LEAK SWEEP: Unreleased listeners, uncleared timers, unbounded caches and arrays, retained closures, connections never returned to the pool.
+4. DATA LAYER: N+1 queries, missing indexes on foreign keys and filtered columns, full scans, sequential awaits over independent work.
+5. PROVE THE WIN: Re-measure after each change using the identical method. Report before and after side by side. No number, no claim.
+6. PRIORITY: Per AGENTS.md, correctness, safety, simplicity, and readability all outrank performance. Reject any optimization trading one of them for a gain you cannot measure.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>CX-10. VERIFICATION GATE &amp; HANDOVER</b><span class="when">handover</span></div>
+      <p class="desc">Gate + laporan AGENTS.md + next command.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Act as Release Gatekeeper. Decide whether this work is genuinely done, and leave the next session able to resume cold.
+
+Protocol:
+1. RUN THE FULL GATE: Build, typecheck, lint, tests — the exact commands resolved in CX-01. Paste real output for each. If a gate cannot run here, say so plainly. Never soften it to "should pass."
+2. DIFF SELF-REVIEW: Read the complete diff as a hostile reviewer. Hunt debug statements, commented-out code, unused imports, stray TODOs, and any change outside the requested scope.
+3. SECRET SWEEP: No credentials, tokens, or keys in the diff or in newly tracked files. Confirm .env stays untracked.
+4. LEDGER RECONCILE: Every ISSUES.md row is OPEN, FIXED-with-evidence, or WONTFIX-with-reason. No row silently dropped.
+5. HONEST GAPS: State explicitly what was NOT done and why. Partial completion reported accurately beats completion claimed falsely.
+6. CLOSING REPORT: Follow the AGENTS.md format — summary of changes, files modified, verification performed, remaining risks, suggested next step. Then write SESSION_HANDOVER.md with the exact next command to run.</div>
+      </div>
+    </div>
+    </div>
+        <div class="cmd">
+      <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+      <div class="code-text">CX-01 RECON -&gt; CX-02 AUDIT -&gt; CX-03 ISSUE LEDGER -&gt; CX-04 DEBUG -&gt; CX-05 TRIAGE -&gt; CX-06 FIX LOOP -&gt; CX-07 DEPENDENCIES -&gt; CX-08 TEST GAP -&gt; CX-09 PERFORMANCE -&gt; CX-10 HANDOVER</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Factory install · PowerShell</h2>
+        <div class="cmd">
+      <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+      <div class="code-text"># Install (run from repository root where .droid/ lives)
+droid plugin marketplace add .droid
+droid plugin install sentra-engineering-factory-plugin@.droid --scope user
+
+# Verify
+droid plugin list --scope user
+
+# Update / Uninstall
+droid plugin update sentra-engineering-factory-plugin@.droid
+droid plugin uninstall sentra-engineering-factory-plugin@.droid
+
+# After install, start a new Droid session, then:
+/skills
+/commands
+/droids
+/hooks</div>
+    </div>
+  </section>
+</div>
+
+<!-- TAB 06: PERFORMANCE -->
+<div id="performance" class="panel">
+  <section class="section">
+    <h2>06 · Disiplin Sesi &amp; Safety</h2>
+    <p class="small section-desc">Prompt bagus tetap rusak kalau satu chat menampung seluruh rantai, artefak tidak ditulis, atau safety dibypass.</p>
+    <div class="card accent-border">
+      <h3>1. Satu prompt = satu sesi</h3>
+      <p class="desc">CC-01 sampai CC-10 dalam satu chat adalah kitchen-sink session. <code>/clear</code> di antara tahap.</p>
+    </div>
+    <div class="card accent-border">
+      <h3>2. Plan mode untuk eksplorasi &amp; triage</h3>
+      <p class="desc">CC-01 dan CC-05 tidak boleh menyentuh file. Plan mode menjamin itu secara mekanis.</p>
+    </div>
+    <div class="card accent-border">
+      <h3>3. Artefak = memori lintas sesi</h3>
+      <p class="desc"><code>ARCHITECTURE_MAP.md</code>, <code>ISSUES.md</code>, <code>FIX_PLAN.md</code>, <code>SESSION_HANDOVER.md</code> adalah alasan rantai ini tetap utuh setelah context dibersihkan.</p>
+    </div>
+    <div class="card accent-border">
+      <h3>4. Gate wajib → jadikan hook</h3>
+      <p class="desc">Instruksi di prompt bisa terlewat. Hook bersifat deterministik. Stop hook menahan klaim selesai.</p>
+    </div>
+    <div class="card accent-border">
+      <h3>5. Dua koreksi = restart</h3>
+      <p class="desc">Setelah dua koreksi gagal pada isu yang sama, context sudah tercemar. Sesi bersih dengan prompt lebih tajam hampir selalu menang.</p>
+    </div>
+    <div class="card accent-border">
+      <h3>6. Least privilege</h3>
+      <p class="desc">Read-only default. Write, terminal, browser, MCP, push, deploy, merge, publish tetap minta manusia.</p>
+    </div>
+    <div class="card accent-border">
+      <h3>7. Secret handling</h3>
+      <p class="desc">Zero secret di prompt dan plugin. Hook <code>block-secret-output</code> menolak <code>.env*</code>, <code>*.pem</code>, <code>*.key</code>.</p>
+    </div>
+    <div class="card accent-border">
+      <h3>8. Evidence sebelum “selesai”</h3>
+      <p class="desc">Command resmi dijalankan, output ditempel, residual risk ditulis. Klaim tanpa bukti adalah bug.</p>
+    </div>
+        <div class="cmd">
+      <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+      <div class="code-text"># Session hygiene
+/clear                         # tahap baru, context bersih
+/compact Focus on current task # sesi panjang, task sama
+@ISSUES.md @FIX_PLAN.md        # muat artefak sebelum lanjut
+SENTRA_HOOKS_DISABLE=1         # kill-switch hook, jangan dipakai rutin
+
+# Hooks
+block-secret-output            # BLOCK  PreToolUse / Read
+validate-context               # WARN   UserPromptSubmit
+verify-before-finish           # NON-BLOCKING Stop
+
+# Hindari
+git push --force
+git reset --hard
+commit .env / secret / agent logs
+YOLO mode di repo produksi</div>
+    </div>
+    <p class="source">Handbook Universal · rewrite of agent_command.html · style lock: Claude QRH</p>
+  </section>
+</div>
+
+<div id="toast" class="toast">COPIED</div>
+
+<script>
+window.openTab = function openTab(id, btn) {
+  document.querySelectorAll('.panel').forEach((p) => { p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach((t) => { t.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+window.copyPrompt = function copyPrompt(btn) {
+  const container = btn.parentElement;
+  const codeEl = container.querySelector('.code-text') || container;
+  const text = codeEl.innerText.replace(/^COPY\s*/, '').trim();
+  navigator.clipboard.writeText(text).then(showToast);
+}
+
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1400);
+}
+
+window.filterRows = function filterRows(inputId, containerId) {
+  const query = document.getElementById(inputId).value.toLowerCase();
+  const container = document.getElementById(containerId);
+  const rows = container.querySelectorAll('tbody tr');
+  const cards = container.querySelectorAll(':scope > .card');
+  (rows.length ? rows : cards).forEach(row => {
+    row.style.display = row.innerText.toLowerCase().includes(query) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>
+

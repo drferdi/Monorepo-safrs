@@ -1,0 +1,834 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cursor QRH</title>
+<style>
+:root {
+  --bg: #181A1D;
+  --card: #202226;
+  --card2: #1D2024;
+  --ink: #BCBEC4;
+  --muted: #7A7E85;
+  --accent: #548AF7;
+  --orange: #E08A5C;
+  --line: #34383F;
+  --mono: 'JetBrainsMono Nerd Font', 'JetBrains Mono', Consolas, 'Courier New', monospace;
+  --sans: 'IBM Plex Sans', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font: 12px/1.45 var(--sans);
+  max-width: 380px;
+  margin: 0 auto;
+  padding: 12px 10px 36px;
+  position: relative;
+}
+body:before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  z-index: 100;
+}
+.eyebrow {
+  color: var(--accent);
+  font: 700 10px/1 var(--mono);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: 4px;
+}
+h1 {
+  font: 800 15px/1.2 var(--sans);
+  color: #fff;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.subtitle {
+  color: var(--muted);
+  font: 11px/1.35 var(--mono);
+  margin-bottom: 10px;
+}
+.signature {
+  font: 22px/1 'Segoe Script', 'Bradley Hand', 'Comic Sans MS', cursive;
+  color: var(--accent);
+}
+.pill {
+  border: 1px solid rgba(224, 138, 92, .45);
+  color: var(--orange);
+  background: rgba(224, 138, 92, .06);
+  padding: 6px 9px;
+  margin-bottom: 12px;
+  font: 700 11px var(--mono);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tabs {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  overflow-x: visible;
+  background: var(--bg);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 12px;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+.tab {
+  flex: 0 0 auto;
+  border: none;
+  background: var(--card2);
+  color: var(--muted);
+  padding: 7px 10px;
+  font: 700 10px/1 var(--mono);
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: box-shadow .15s ease, color .15s ease;
+  box-shadow:
+    5px 5px 9px rgba(0, 0, 0, .5),
+    -4px -4px 9px rgba(255, 255, 255, .035),
+    inset 0 0 0 rgba(0, 0, 0, 0);
+}
+.tab:hover {
+  color: #fff;
+  box-shadow:
+    2px 2px 4px rgba(0, 0, 0, .5),
+    -2px -2px 4px rgba(255, 255, 255, .035);
+}
+.tab.active {
+  color: #fff;
+  background: var(--accent);
+  box-shadow:
+    inset 3px 3px 6px rgba(0, 15, 60, .55),
+    inset -3px -3px 6px rgba(255, 255, 255, .12);
+}
+.panel {
+  display: none;
+}
+.panel.active {
+  display: block;
+}
+.section {
+  margin-top: 14px;
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+.section:first-child {
+  margin-top: 0;
+  border-top: none;
+  padding-top: 0;
+}
+.section h2 {
+  font: 700 12px/1.2 var(--mono);
+  color: var(--accent);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.small, .desc {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+.section-desc {
+  margin-bottom: 10px;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 3px solid rgba(224, 138, 92, .6);
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 3px;
+}
+.card.accent-border {
+  border-left-color: var(--accent);
+}
+.step {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.num {
+  font: 800 13px var(--mono);
+  color: var(--accent);
+  min-width: 20px;
+  padding-top: 1px;
+}
+.card h3 {
+  font: 700 12px/1.3 var(--sans);
+  color: #fff;
+  margin-bottom: 3px;
+}
+.skill-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.skill-title b {
+  font: 700 12px var(--sans);
+  color: #fff;
+}
+.when {
+  color: var(--orange);
+  font: 700 10px var(--mono);
+  background: rgba(224, 138, 92, .1);
+  padding: 2px 5px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.prompt, .cmd {
+  position: relative;
+  background: var(--card2);
+  border: 1px solid rgba(84, 138, 247, .25);
+  padding: 9px;
+  margin-top: 8px;
+  border-radius: 3px;
+}
+.code-text {
+  font: 11px/1.5 var(--mono);
+  color: #d5d7dc;
+  white-space: pre-wrap;
+  word-break: break-word;
+  padding-right: 50px;
+}
+.btn {
+  border: 1px solid var(--accent);
+  background: rgba(84, 138, 247, .12);
+  color: var(--accent);
+  font: 700 10px var(--mono);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all .15s ease;
+  display: inline-block;
+  margin: 6px 0;
+  padding: 6px 10px;
+}
+.btn:hover {
+  background: var(--accent);
+  color: #fff;
+}
+.copy {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  border: none;
+  background: #fff;
+  color: var(--bg);
+  font: 700 10px var(--mono);
+  cursor: pointer;
+  border-radius: 3px;
+  transition: box-shadow .15s ease, color .15s ease;
+  box-shadow:
+    3px 3px 6px rgba(0, 0, 0, .55),
+    -2px -2px 5px rgba(255, 255, 255, .06);
+}
+.copy:hover {
+  color: var(--accent);
+  box-shadow:
+    1px 1px 3px rgba(0, 0, 0, .55),
+    -1px -1px 3px rgba(255, 255, 255, .06);
+}
+.copy:active {
+  box-shadow:
+    inset 2px 2px 4px rgba(0, 0, 0, .4),
+    inset -2px -2px 4px rgba(255, 255, 255, .6);
+}
+.filter {
+  width: 100%;
+  background: var(--card2);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  color: var(--ink);
+  padding: 8px 10px;
+  font: 11px var(--sans);
+  margin: 8px 0 10px;
+  outline: none;
+  transition: border-color .15s;
+}
+.filter:focus {
+  border-color: var(--accent);
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+.table th {
+  text-align: left;
+  font: 700 10px var(--mono);
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(84, 138, 247, .1);
+  padding: 6px 6px;
+  border-bottom: 1px solid var(--line);
+}
+.table td {
+  border-bottom: 1px solid var(--line);
+  padding: 7px 6px;
+  vertical-align: top;
+  line-height: 1.4;
+}
+.table td:first-child {
+  color: var(--accent);
+  font: 700 11px var(--mono);
+  width: 32%;
+}
+.table tr:hover td {
+  background: rgba(255, 255, 255, .02);
+}
+ul {
+  padding-left: 16px;
+  color: var(--ink);
+  font-size: 11px;
+  line-height: 1.5;
+}
+li {
+  margin: 4px 0;
+}
+.source {
+  font: 10px var(--mono);
+  color: var(--muted);
+  word-break: break-all;
+  margin-top: 10px;
+}
+.toast {
+  position: fixed;
+  right: 12px;
+  bottom: 14px;
+  z-index: 100;
+  background: var(--card2);
+  color: #fff;
+  font: 700 11px var(--mono);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--orange);
+  padding: 8px 12px;
+  border-radius: 3px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .6);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all .2s ease;
+  pointer-events: none;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+<a class="eyebrow" href="index.html" style="display:inline-block; text-decoration:none;">← HUB</a>
+<h1>Cursor QRH</h1>
+<div class="signature">drferdiiskandar</div>
+<div class="pill"><span>● READY</span><span>Open → Plan → Implement → Verify → Ship</span></div>
+
+<nav class="tabs" aria-label="Handbook sections">
+  <button type="button" class="tab active" onclick="openTab('workflow',this)">01 WORKFLOW</button>
+  <button type="button" class="tab" onclick="openTab('superpowers',this)">02 SUPERPOWERS</button>
+  <button type="button" class="tab" onclick="openTab('builtin',this)">03 BUILT-IN</button>
+  <button type="button" class="tab" onclick="openTab('plugins',this)">04 PLUGINS</button>
+  <button type="button" class="tab" onclick="openTab('commands',this)">05 COMMANDS</button>
+  <button type="button" class="tab" onclick="openTab('performance',this)">06 PERFORMANCE</button>
+</nav>
+
+<!-- TAB 01: WORKFLOW -->
+<div id="workflow" class="panel active">
+  <section class="section">
+    <h2>01 · Daily 5-Step Loop</h2>
+    <p class="small section-desc">Urutan Cursor setiap hari. Jangan minta Agent/Composer mengedit sebelum orientasi dan rencana terverifikasi.</p>
+    <div class="card step accent-border">
+      <span class="num">01</span>
+      <div>
+        <h3>ORIENT — Buka Root &amp; Baca Aturan</h3>
+        <p class="desc">Buka folder root workspace. Cek branch, working tree, <code>.cursor/rules/*.mdc</code>, dan task aktif. Belum mengedit.</p>
+        <div class="prompt" style="margin-top:6px;">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Orient yourself in this codebase as a senior teammate. Read .cursor/rules/*.mdc, package manifests, main entry points, and git status. Trace canonical patterns, active tests, and architecture. Do not edit any files.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card step accent-border">
+      <span class="num">02</span>
+      <div>
+        <h3>PLAN — Slice Kecil + Acceptance</h3>
+        <p class="desc">Pecah jadi perubahan atomik: acceptance criteria, file terdampak, dan command verifikasi. Tunggu approval untuk task berisiko.</p>
+        <div class="prompt" style="margin-top:6px;">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Create a minimal step-by-step implementation plan for [TASK]. Define acceptance criteria, exact files to modify, edge cases, tests to write, and verification commands. Wait for my approval.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card step accent-border">
+      <span class="num">03</span>
+      <div>
+        <h3>IMPLEMENT — Eksekusi Slice</h3>
+        <p class="desc">Kerjakan satu bagian kecil di Composer/Agent. Reuse abstraction yang ada. Jangan tambah dependency atau refactor yang tidak diminta.</p>
+        <div class="prompt" style="margin-top:6px;">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Implement step [N] of the approved plan. Follow existing codebase conventions, keep changes atomic, reuse abstractions, and do not modify unrelated files.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card step accent-border">
+      <span class="num">04</span>
+      <div>
+        <h3>VERIFY — Runtime + Test + Diff</h3>
+        <p class="desc">Nyalakan server lokal bila perlu, jalankan test/lint/typecheck terdekat, lalu review setiap baris <code>git diff</code>.</p>
+        <div class="prompt" style="margin-top:6px;">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Run the local development recipe if needed, then the narrowest relevant test suite, linter, and typecheck. Check the git diff for unintended changes. Report exact command outputs and manual verification evidence.</div>
+        </div>
+      </div>
+    </div>
+    <div class="card step accent-border">
+      <span class="num">05</span>
+      <div>
+        <h3>SHIP — Commit Terstruktur</h3>
+        <p class="desc">Pastikan tidak ada secret atau file sementara. Conventional commit, evidence tercatat, push hanya setelah approval.</p>
+        <div class="prompt" style="margin-top:6px;">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">Review the final diff. Ensure no secrets, temp files, or console logs are included. Format a conventional commit (feat/fix/refactor) and list verified acceptance criteria. Do not commit or push until I approve.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- TAB 02: SUPERPOWERS -->
+<div id="superpowers" class="panel">
+  <section class="section">
+    <h2>02 · Superpowers — Urutan Pemakaian</h2>
+    <p class="small section-desc">Disiplin proses di Cursor: ikuti urutan ini supaya Agent tidak meloncat ke edit sebelum masalahnya jelas.</p>
+    <div class="card">
+      <div class="skill-title"><b>1. Brainstorm</b><span class="when">masalah masih kabur</span></div>
+      <p class="desc">Bandingkan opsi, asumsi, dan trade-off. Belum mengedit file.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Brainstorm this problem before coding. Identify constraints, unknowns, and 2–3 implementation options with trade-offs. Recommend one option, but do not edit files.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>2. Spec / requirements</b><span class="when">definisi</span></div>
+      <p class="desc">Ubah outcome jadi acceptance criteria yang terukur dan bisa dicek objektif.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Turn [TASK] into observable acceptance criteria, edge cases, and a definition of done. Do not edit files.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>3. Plan</b><span class="when">arsitektur</span></div>
+      <p class="desc">Task atomik: file, simbol, dependensi, risiko, verification command.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Write a minimal implementation plan for [TASK]. List exact files, symbols, risks, tests, and verification commands. Wait for approval.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>4. Execute</b><span class="when">implementasi</span></div>
+      <p class="desc">Slice demi slice di Composer/Agent, patuhi pola yang sudah ada di repo.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Implement only the approved slice. Reuse existing abstractions. Pause after this step for review.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>5. Test</b><span class="when">validasi</span></div>
+      <p class="desc">Happy path, boundary, error handling, dan failure behavior. Jangan lemahkan tes supaya hijau.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Run or write the narrowest tests for happy path, boundary, and failure behavior. Report the actual output.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>6. Review</b><span class="when">audit diff</span></div>
+      <p class="desc">Review seperti senior engineer: correctness, security, data integrity, performa, scope creep.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Review the current diff as a skeptical senior reviewer. Report findings by severity with file:line evidence. Do not rewrite code yet.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>7. Finish</b><span class="when">evidence &amp; ship</span></div>
+      <p class="desc">Lint, typecheck, final test, catatan singkat, commit bersih setelah approval.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Finish with summary, files changed, commands run, remaining risks, and a conventional commit message. Do not push until I approve.</div>
+      </div>
+    </div>
+    <div class="card accent-border">
+      <h3>Decision rule</h3>
+      <p class="desc"><b>Kecil:</b> Orient → Implement → Test → Diff.<br><b>Besar / berisiko:</b> Brainstorm → Spec → Plan → Approval → Execute → Review.<br><b>Bug:</b> Reproduce → Isolate fail 1 → Root cause → Regression test → Fix.</p>
+    </div>
+  </section>
+</div>
+
+<!-- TAB 03: BUILT-IN -->
+<div id="builtin" class="panel">
+  <section class="section">
+    <h2>03 · Built-in Commands &amp; Infra</h2>
+    <p class="small section-desc">Aturan Cursor 2.0, mention, dan runtime editor. Filter untuk mencari:</p>
+    <input id="filter-cursor" class="filter" oninput="filterRows('filter-cursor','skills-list')" placeholder="Filter: rules, mdc, codebase, git, docs, debug...">
+    <div id="skills-list">
+    <div class="card">
+      <div class="skill-title"><b>.cursor/rules/*.mdc</b><span class="when">konfigurasi</span></div>
+      <p class="desc">Rules modular dengan glob. Jangan satu file <code>.cursorrules</code> raksasa. <code>alwaysApply: false</code> kecuali aturan itu memang selalu relevan.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Inspect .cursor/rules/*.mdc and summarize which rules apply to [PATH]. Do not edit files.</div>
+      </div>
+    </div>
+      <div class="card">
+        <div class="skill-title"><b>MDC template</b><span class="when">rule baru</span></div>
+        <p class="desc">Satu file = satu permukaan. Description + glob + aturan pendek.</p>
+        <div class="prompt">
+          <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+          <div class="code-text">---
+description: Standards and patterns for API routes
+globs: ["src/api/**/*.ts", "app/api/**/*.ts"]
+alwaysApply: false
+---
+- Use Zod for request validation.
+- Return consistent error response envelope.
+- Never log raw authorization tokens.</div>
+        </div>
+      </div>
+    <div class="card">
+      <div class="skill-title"><b>@Files / @Folders</b><span class="when">context presisi</span></div>
+      <p class="desc">Sematkan file atau folder yang benar-benar relevan. Lebih hemat daripada @Codebase untuk task sempit.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Using @Files for [PATH], explain the current behavior and the smallest change needed. Do not edit yet.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>@Codebase</b><span class="when">semantic search</span></div>
+      <p class="desc">Indeks repo untuk pertanyaan lintas modul. Jangan dipakai sebagai pengganti path yang sudah diketahui.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Using @Codebase, find the canonical implementation of [CONCEPT] and list the exact files involved.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>@Git</b><span class="when">diff / history</span></div>
+      <p class="desc">Context diff, PR, dan commit. Wajib sebelum review atau ship.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Using @Git, review the current diff for scope creep, secrets, and missing tests.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>@Docs / @Web</b><span class="when">referensi</span></div>
+      <p class="desc">@Docs untuk dokumentasi framework yang sudah diindeks. @Web untuk bug/fix yang baru muncul.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Using @Docs, confirm the current official API for [TOPIC] before changing code.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>Composer / Agent</b><span class="when">eksekusi</span></div>
+      <p class="desc">Composer untuk perubahan multi-file. Chat untuk tanya-jawab. Jangan campur dua outcome di satu thread.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">In Agent/Composer, implement only the approved plan slice. Stop after the slice for review.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>Run and Debug</b><span class="when">F5</span></div>
+      <p class="desc">Breakpoint di gutter, <code>Ctrl+Shift+D</code>, Step Over <code>F10</code>, Step Into <code>F11</code>. Isolasi first failure, jangan tebak.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Set a breakpoint at the first failure and inspect Variables, Call Stack, and Watch before proposing a fix.</div>
+      </div>
+    </div>
+    </div>
+  </section>
+</div>
+
+<!-- TAB 04: PLUGINS -->
+<div id="plugins" class="panel">
+  <section class="section">
+    <h2>04 · Skills &amp; Capabilities</h2>
+    <p class="small section-desc">Capability Cursor yang dipakai on-demand. Filter untuk cari:</p>
+    <input id="filter-plugins" class="filter" oninput="filterRows('filter-plugins','plugins-list')" placeholder="Filter: plan, tdd, debug, review, git, composer...">
+    <div id="plugins-list">
+    <div class="card">
+      <div class="skill-title"><b>Brainstorming</b><span class="when">goal belum jelas</span></div>
+      <p class="desc">Banyak alternatif. Hasilnya opsi + trade-off + rekomendasi, bukan kode.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Brainstorm options for [GOAL]. Compare trade-offs and recommend one. Do not edit files.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>Writing plans</b><span class="when">multi-file / refactor</span></div>
+      <p class="desc">Implementation plan berurutan dengan file dan simbol eksplisit.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Write an implementation plan for [TASK] with exact files, symbols, tests, and verification commands.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>Agent Composer</b><span class="when">eksekusi tool</span></div>
+      <p class="desc">Perubahan file terisolasi plus laporan verifikasi. Satu thread = satu outcome.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Use Agent/Composer to implement only the approved slice and report verification evidence.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>Test-driven</b><span class="when">behavior presisi</span></div>
+      <p class="desc">Tes dulu, implementasi minimal kemudian. Jangan tulis implementasi sebelum tes merah terlihat.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Implement [BEHAVIOR] using TDD. Write the failing test first, show it fail, then make the smallest change that passes.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>Systematic debug</b><span class="when">error / tes gagal</span></div>
+      <p class="desc">Reproduksi tersempit, isolasi failure pertama, root cause, fix minimal.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Investigate [ERROR]. Reproduce with the narrowest test, isolate the first failure, and propose a minimal fix. Do not patch symptoms.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>Code review</b><span class="when">sebelum commit</span></div>
+      <p class="desc">Temuan berurut severity dengan bukti file:line.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Review the current diff as a skeptical senior engineer. Report findings by severity with file:line evidence.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>Verification</b><span class="when">setelah batch</span></div>
+      <p class="desc">Command + log aktual, bukan “kelihatan benar”.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Run the relevant lint, typecheck, and tests. Paste the exact outputs. Do not claim success without them.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="skill-title"><b>Git hygiene</b><span class="when">sebelum ship</span></div>
+      <p class="desc">Diff bersih, commit atomik, tanpa secret.</p>
+      <div class="prompt">
+        <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+        <div class="code-text">Inspect git status and git diff. List unrelated files and any secret risk. Propose a conventional commit message. Do not commit yet.</div>
+      </div>
+    </div>
+    </div>
+  </section>
+</div>
+
+<!-- TAB 05: COMMANDS -->
+<div id="commands" class="panel">
+  <section class="section">
+    <h2>05 · Quick Commands · PowerShell</h2>
+    <div class="cmd">
+      <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+      <div class="code-text"># Cursor / terminal
+git status
+git diff
+Get-ChildItem .\.cursor\rules
+Get-Content .\.cursor\rules\*.mdc -TotalCount 40
+
+# Python
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+
+# Node
+node --version
+pnpm install
+pnpm run dev
+pnpm run build
+
+# .NET / Go
+dotnet restore; dotnet build; dotnet run
+go mod download; go run .
+
+# Port bentrok
+Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue | Select-Object OwningProcess
+Stop-Process -Id &lt;PID&gt; -Force</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Master Agent Prompt Template</h2>
+    <div class="prompt">
+      <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+      <div class="code-text">You are my senior software-engineering agent inside Cursor.
+
+TASK: [Describe one outcome, not a vague activity]
+
+CONTEXT:
+- Repository / module: [path or feature]
+- User-visible behavior: [expected behavior]
+- Constraints: [API, performance, security, compatibility]
+- Acceptance criteria:
+  1. [observable result 1]
+  2. [observable result 2]
+
+PROTOCOL:
+1. Inspect the repository and identify canonical patterns, entry points, tests, and relevant rules. Do not edit yet.
+2. If requirements are ambiguous or risk is high, ask focused clarifying questions. Otherwise write a concise plan with exact files, symbols, data flow, risks, and verification commands.
+3. Wait for approval before implementing when the change is architectural, destructive, or touches public APIs.
+4. Implement the smallest coherent change. Reuse existing abstractions; do not invent parallel patterns.
+5. Inspect the diff. Run the narrowest relevant formatter, typecheck, lint, and tests.
+6. If a check fails, diagnose the first failure, fix the root cause, and rerun. Never hide failures by weakening tests.
+7. Finish with: summary, files changed, commands run, remaining risks, and manual verification steps.
+
+GUARDRAILS:
+- Do not modify secrets, generated files, lockfiles, or unrelated code.
+- Preserve existing behavior outside the task.
+- Do not claim success without evidence from actual command output.</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Prompt library</h2>
+    <div class="prompt">
+      <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+      <div class="code-text">Orient yourself in this repository. Inspect the directory structure, .cursor/rules/, package manifests, and entry points. Trace the architecture, active test suites, and data flow. Summarize canonical patterns and key risks without editing any files.</div>
+    </div>
+    <div class="prompt">
+      <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+      <div class="code-text">Explore the existing implementation and tests for [FEATURE]. Propose the smallest design that fits current conventions. Include exact files/symbols, acceptance criteria, edge cases, migration impact, and verification commands. Do not edit until I approve the plan.</div>
+    </div>
+    <div class="prompt">
+      <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+      <div class="code-text">Investigate this bug: [BUG + REPRO STEPS]. First reproduce it with the narrowest relevant test or command. Trace the first failure to its root cause. Do not guess or make broad refactors. Propose a minimal fix and regression test, then implement only after showing the plan.</div>
+    </div>
+    <div class="prompt">
+      <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+      <div class="code-text">Implement [BEHAVIOR] using TDD. First inspect existing test patterns, then write focused tests for happy path, boundary cases, and failure behavior. Run them and confirm they fail for the intended reason. Make the smallest implementation pass, then run the full relevant suite.</div>
+    </div>
+    <div class="prompt">
+      <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+      <div class="code-text">Refactor [MODULE] without changing externally observable behavior. Map callers, public interfaces, side effects, and tests first. State invariants that must remain true. Work in small steps, run tests after each logical step, and show the final diff with performance trade-offs.</div>
+    </div>
+    <div class="prompt">
+      <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+      <div class="code-text">Review the current diff as a skeptical senior reviewer. Prioritize correctness, security, data loss, concurrency, performance, API compatibility, observability, and missing tests. Report findings by severity with file:line evidence and a concrete fix.</div>
+    </div>
+  </section>
+</div>
+
+<!-- TAB 06: PERFORMANCE -->
+<div id="performance" class="panel">
+  <section class="section">
+    <h2>06 · Menjaga Performa Cursor</h2>
+    <p class="small section-desc">Cursor lemah biasanya karena rules gemuk, @Codebase dipakai untuk task sempit, satu chat menampung seluruh project, atau runtime tidak pernah dibuktikan.</p>
+    <div class="card accent-border">
+      <h3>1. Buka root, bukan file acak</h3>
+      <p class="desc">Workspace = folder root. Baca README, manifest, <code>.env.example</code>, lalu install dependency di terminal Cursor.</p>
+    </div>
+    <div class="card accent-border">
+      <h3>2. Rules modular, bukan satu file raksasa</h3>
+      <p class="desc"><code>.cursor/rules/*.mdc</code> dengan glob. <code>alwaysApply</code> hanya untuk aturan yang benar-benar selalu relevan.</p>
+    </div>
+    <div class="card accent-border">
+      <h3>3. Mention yang tepat</h3>
+      <p class="desc">@Files/@Folders untuk task sempit. @Codebase hanya kalau lokasi belum diketahui. @Git sebelum review.</p>
+    </div>
+    <div class="card accent-border">
+      <h3>4. Satu chat = satu outcome</h3>
+      <p class="desc">Jangan pakai satu Composer thread untuk seluruh project. Task baru, thread baru.</p>
+    </div>
+    <div class="card accent-border">
+      <h3>5. Dual terminal, cek port</h3>
+      <p class="desc">Frontend dan backend di terminal terpisah. Port bentrok diselesaikan per-PID, bukan matikan semua proses.</p>
+    </div>
+    <div class="card accent-border">
+      <h3>6. Debug first failure</h3>
+      <p class="desc">Breakpoint, Variables, Call Stack. Jangan tebak. Test gagal diisolasi dulu, baru difix.</p>
+    </div>
+    <div class="card accent-border">
+      <h3>7. Evidence sebelum “selesai”</h3>
+      <p class="desc">Command resmi jalan, UI/API sesuai acceptance, lint/typecheck/test lolos, diff tanpa secret.</p>
+    </div>
+    <div class="card accent-border">
+      <h3>8. Jangan bypass safety</h3>
+      <p class="desc">Jangan tempel API key ke prompt. Jangan commit <code>.env</code>. Jangan force-push ke branch utama.</p>
+    </div>
+    <div class="cmd">
+      <button type="button" class="copy" onclick="copyPrompt(this)">COPY</button>
+      <div class="code-text"># Git daily loop
+git status
+git checkout -b feature/nama-fitur
+git diff
+git add &lt;specific-files&gt;
+git commit -m "feat(scope): add verified capability"
+
+# Hindari
+git push --force
+git reset --hard
+commit .env / secret / generated files</div>
+    </div>
+    <p class="source">Handbook Cursor · Windows 11 / PowerShell Edition · style lock: Claude QRH</p>
+  </section>
+</div>
+
+<div id="toast" class="toast">COPIED</div>
+
+<script>
+window.openTab = function openTab(id, btn) {
+  document.querySelectorAll('.panel').forEach((p) => { p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach((t) => { t.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+window.copyPrompt = function copyPrompt(btn) {
+  const container = btn.parentElement;
+  const codeEl = container.querySelector('.code-text') || container;
+  const text = codeEl.innerText.replace(/^COPY\s*/, '').trim();
+  navigator.clipboard.writeText(text).then(showToast);
+}
+
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1400);
+}
+
+window.filterRows = function filterRows(inputId, containerId) {
+  const query = document.getElementById(inputId).value.toLowerCase();
+  const container = document.getElementById(containerId);
+  const rows = container.querySelectorAll('tbody tr');
+  const cards = container.querySelectorAll(':scope > .card');
+  (rows.length ? rows : cards).forEach(row => {
+    row.style.display = row.innerText.toLowerCase().includes(query) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>
+
