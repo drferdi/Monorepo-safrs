@@ -22,14 +22,14 @@
 | DECISION-GATE | Approve Master Plan v0.2 | Chief | R2 | APPROVED |
 | D-001 | Repository visibility | Chief | R2 | `PUBLIC` |
 | D-002 | Solo-developer platform authority | Chief | R2 | Proposed R0/R1/R2/R3 model APPROVED |
-| D-003 | Renovate policy | Chief | R2 | All dependency updates may automerge after CI passes |
+| D-003 | Renovate policy | Chief | R2 | All dependency updates may automerge as PRs after Renovate observes passing tests; GitHub branch protection is not configured |
 | D-004 | R2 authorization model | Chief | R2 | Proposed explicit authorization flow APPROVED |
 
 ## BLOCKED — Evidence reconciliation before implementation
 
 | ID | Work package | Owner | Risk | Blocker |
 | --- | --- | --- | --- | --- |
-| RECONCILE-RENOVATE | Align Renovate with approved all-dependency automerge policy | Codex | R2 | Current `renovate.json` only automerges patch/minor; task contract/worktree claim still required |
+| RECONCILE-RENOVATE | Align Renovate with approved all-dependency automerge policy | Codex | R2 | Policy implemented; GitHub branch protection and required status checks remain unconfigured |
 
 `RECONCILE-RENOVATE` remains blocked until `RECONCILE-GOVERNANCE` is reviewed. Do not claim or implement Renovate yet.
 

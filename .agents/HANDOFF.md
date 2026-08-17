@@ -12,7 +12,7 @@ Last updated: 2026-08-17 (main residual consolidation, VERIFYING)
 - Working tree is clean. The mixed residual change set on `main` is now split into one commit per work stream:
   `docs(governance)` AGENTS.md directive, `docs` README, `docs(handbook)`, `docs(superpowers)` plans/specs plus
   the SpecStory removal, `chore(agents)` Cline rules and Cursor skill, `chore(agents)` Cursor agent renumbering.
-- Chief decisions this session: reaffirm D-003 (all dependency updates automerge as PRs once CI passes);
+- Chief decisions this session: reaffirm D-003 (all dependency updates automerge as PRs once Renovate observes passing tests; GitHub branch protection and required status checks are not configured);
   commit the AGENTS.md language directive with the formatting corrected; commit residual work directly on `main`;
   delete the temporary scratch files permanently.
 - `tmp-extract/` and `tmp-task2-extract.md` are deleted. Nothing from them entered git history.

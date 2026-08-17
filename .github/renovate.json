@@ -19,7 +19,7 @@
       "matchUpdateTypes": ["major"]
     },
     {
-      "description": "Chief decision 2026-08-17: all dependency updates may automerge as pull requests after required CI checks pass.",
+      "description": "Chief decision 2026-08-17: all dependency updates may automerge as pull requests after Renovate observes passing tests; GitHub branch protection is not configured.",
       "ignoreTests": false,
       "automergeType": "pr",
       "platformAutomerge": false

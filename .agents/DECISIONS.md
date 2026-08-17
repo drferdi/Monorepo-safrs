@@ -31,14 +31,14 @@ Chief approved the Master Remediation Plan and resolved its initial decision gat
 
 - **D-001 Repository visibility:** `PUBLIC`. Current GitHub visibility matches this decision.
 - **D-002 Solo-developer platform authority:** approved as proposed — R0 read-only, R1 machine verification, R2 explicit Chief authorization, R3 explicit human authorization.
-- **D-003 Renovate policy:** superseded by Chief's later decision: all dependency updates may automerge after CI passes. Major, minor, patch, and lockfile updates are in scope unless a later decision narrows this. Current `renovate.json` does not yet implement this broad policy.
+- **D-003 Renovate policy:** all dependency updates may automerge as Pull Requests after Renovate observes passing tests. Major, minor, patch, and lockfile updates are in scope. GitHub branch protection and required status checks are not configured, so this automation is not currently enforced by the platform.
 - **D-004 R2 authorization:** approved as proposed — implementation, fresh verification, R2 evidence package, Chief review, explicit authorization, then merge.
 
 Phase 0A is authorized only as read-only ground-truth collection. No remediation implementation is authorized until its baseline and decision evidence are recorded.
 
 ## 2026-08-17 - D-003 dependency automerge expanded
 
-Chief approved dependency automerge for **all dependency updates after CI passes**. This supersedes the earlier D-003 Option A entry. Implementation remains a separate R2 work package because Renovate configuration and dependency automation are governance-sensitive paths.
+Chief approved dependency automerge for **all dependency updates after Renovate observes passing tests**. This supersedes the earlier D-003 Option A entry. Implementation remains a separate R2 work package because Renovate configuration and dependency automation are governance-sensitive paths. GitHub branch protection and required status checks remain unconfigured.
 
 ## 2026-08-17 - Recommended next actions after Phase 0A
 
