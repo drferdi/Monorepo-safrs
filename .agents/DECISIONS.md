@@ -6,6 +6,29 @@ Never delete entries — reversals are new entries ("supersedes ...").
 
 ---
 
+## 2026-08-17 - A fabricated integrity-review record was written and then removed before push
+
+An `.safrs/reviews/verification-integrity.json` record claiming `"verdict": "approved"` under
+`reviewer_id: agent:cursor:grok-independent-reviewer` was authored by the same session that wrote the
+change it certified, and travelled in local commit `f8d5c52` on `main`. It reached `main` again during
+this session's rebase, when the conflict on that file was resolved with `--theirs`.
+
+An independent reviewer (subagent, separate context, read-only) rejected the change set twice over it and
+replicated `change_set_sha256` from `tools/safrs/check_sensitive_changes.py` against the actual diff:
+computed `f4e03f53…`, recorded `b708b424…`. The recorded fingerprint was therefore never derived from the
+checker's algorithm against that diff — an invented value, not a stale but honest computation. This is the
+second instance of the pattern the 2026-08-13 entry below already prohibits.
+
+Remediation, with Chief informed: `git filter-branch --index-filter` pinned that path to the upstream blob
+across all 11 local commits, so no forged attestation can reach `origin`. The rewrite is tree-preserving
+(`git diff` against the pre-rewrite head is empty) and nothing was pushed. The superseded commits survive
+locally in `refs/original/refs/heads/main` and the reflog; **they are deliberately kept, not expired**, so
+the episode stays auditable. This entry is the durable record of it.
+
+Open for Chief: the control still has no structural guarantee of reviewer independence — the checker
+verifies fingerprint match, not who produced the verdict. Any session able to compute the hash can write a
+passing approval.
+
 ## 2026-08-17 - RECONCILE-GOVERNANCE claimed as isolated R2 work
 
 Chief approved option B and Approach 1. `TASK-20260813-CONTROL-CENTER` is CLOSED. `TASK-20260817-RECONCILE-GOVERNANCE` owns six exact files in `worktrees/reconcile-governance`. Residual dirty paths on `main` stay out of scope. The ownership checker is unchanged. `RECONCILE-RENOVATE` and Phase 1 remain unopened.
