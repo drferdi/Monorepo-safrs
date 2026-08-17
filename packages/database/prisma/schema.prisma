@@ -10,23 +10,9 @@ datasource db {
 }
 
 model Demo {
-  id           String              @id @default(uuid()) @db.Uuid
-  name         String
-  createdAt    DateTime            @default(now()) @map("created_at") @db.Timestamptz(3)
-  transactions TransactionSample[]
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @unique
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
 
   @@map("demos")
-}
-
-model TransactionSample {
-  id         BigInt   @id @default(autoincrement())
-  demoId     String   @map("demo_id") @db.Uuid
-  amount     Decimal  @db.Decimal(14, 2)
-  currency   String   @db.Char(3)
-  occurredAt DateTime @map("occurred_at") @db.Timestamptz(3)
-  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
-  demo       Demo     @relation(fields: [demoId], references: [id], onDelete: Cascade)
-
-  @@index([demoId], map: "transaction_samples_demo_id_idx")
-  @@map("transaction_samples")
 }
