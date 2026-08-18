@@ -27,6 +27,7 @@ confirmation (Feature #7 auto-merge, Feature #5 capability packs, audit-leftover
 
 ## Phase 0 — Housekeeping (R0)
 
+<!-- status-claims: ignore — the work was a deletion, so the cited path is absent by design -->
 - [x] Delete `packages/env/src/__audit_test.mjs` and the 8 zero-byte `_tmp_*` root files
       (done 2026-08-11 by Claude during root re-routing).
 - [x] Decide status of `.github/CODEOWNERS` and `docs/governance/PLATFORM_ACTIVATION.md`
@@ -105,16 +106,19 @@ a native toolchain and Docker — not because the code is wrong (audit §10).
 
 ---
 
-## Phase 4 — Decision: Feature #7 Renovate Auto-Merge (R2, blocked on Chief)
+## Phase 4 — Decision: Feature #7 Renovate Auto-Merge (R2) — DONE 2026-08-18
 
 Direct conflict between Feature #7 and (a) Chief's own standing rule, (b) invariant SAFRS-02,
 (c) the deliberate `automerge: false` in `renovate.json`. **No change without Chief's explicit choice.**
 
-- [ ] Chief picks one: (a) automerge limited to non-sensitive patch/minor, (b) full automerge,
-      (c) keep `automerge: false`.
-- [ ] If (a) or (b): add matching `packageRules` — R2, Chief review before merge.
+- [x] Chief picks one — Chief delegated the choice on 2026-08-18 and option (a) was taken:
+      patch, minor, pin, digest, and lock file maintenance automerge once tests pass; majors
+      never do. Recorded as D-003 in the master remediation plan.
+- [x] Matching `packageRules` added in `b19845f`, together with the policy test that asserts
+      no rule matching a major carries automerge. The config had drifted the other way — a
+      blanket `automerge: true` that covered majors too.
 
-**Exit:** `renovate.json` reflects Chief's explicit decision, not an agent assumption.
+**Exit:** met. `.github/renovate.json` reflects Chief's explicit decision.
 
 ---
 

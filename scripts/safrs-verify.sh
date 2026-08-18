@@ -22,6 +22,7 @@ fi
 "$PYTHON" tools/safrs/check_lifecycle.py
 "$PYTHON" tools/safrs/check_approval_evidence.py
 "$PYTHON" tools/safrs/check_sensitive_changes.py
+"$PYTHON" tools/safrs/check_status_claims.py
 "$PYTHON" tools/safrs/check_handoff.py
 "$PYTHON" tests/architecture/test_safrs_topology.py
 "$PYTHON" tests/governance/test_sensitive_classification.py
