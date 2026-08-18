@@ -109,10 +109,12 @@ These choices are activation gates, not implementation blockers for contracts, t
    Chief is the only human in this repository, so naming anyone else would be fiction. Two years covers
    an audit window without unbounded storage. R3 stays inert regardless until a target-specific adapter,
    dry-run, idempotency rule, postcondition, and tested rollback exist.
-4. **Droid — stays removed, adapter `read_only_disabled`.** No tracked Droid workflow exists on this
-   baseline and no verified artifact or installer has been produced. Adding an agent surface nobody is
-   using would enlarge the attack surface for nothing. Reversing this needs an exact version and
-   installer reviewed in its own pull request.
+4. **Droid — nothing changes.** To be exact about what this gate is and is not: Chief's Factory
+   plugin under `.droid/` is present and tracked, and this decision does not touch it. The gate is
+   only about running Droid unattended in GitHub Actions, which has never existed here — there is no
+   `droid-*.yml` workflow, and `.safrs/adapter-capabilities.json` already carried
+   `"activation": "read_only_disabled"` before this decision. That stays as it is. Introducing a CI
+   workflow for Droid would need an exact version and installer reviewed in its own pull request.
 
 What this unblocks: Phases 6 to 8 are no longer waiting on a decision. They are deliberately parked —
 the contracts, tests, inert workflows, and dry-run simulations may proceed, and only the act of naming

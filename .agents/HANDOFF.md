@@ -58,7 +58,7 @@ choice. What was decided:
 | Activation gate 1 — provider and budgets | No runner named. Autonomy is capped at R1 for whenever one is; R2 always stops for Chief |
 | Activation gate 2 — control identities | Not created. Chief's own account is the publisher until Phase 6 actually starts |
 | Activation gate 3 — R3 authority and retention | Chief is the approver. Evidence kept two years. R3 stays inert until its adapter, dry-run, rollback, and postcondition exist |
-| Activation gate 4 — Droid | Stays removed, adapter `read_only_disabled` |
+| Activation gate 4 — Droid | Nothing changed. `.droid/` is present and untouched; the gate was only about running Droid unattended in GitHub Actions, which never existed here |
 | Sentra wiki plan | Approved, now `ACTIVE` |
 | `.claude/` and `.codex/` packs | Accepted. Chief built them; they were never an open question |
 | `hindsight` MCP server | Removed from `~/.claude.json`, and the dead recall rule dropped from the global `CLAUDE.md` |

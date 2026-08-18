@@ -69,7 +69,7 @@ Baseline evidence: `docs/evidence/MONOREPO GROUND TRUTH BASELINE v1.md`.
       sibling-worktree guard (PRs #19, #20, #21, merged)
 - [ ] Phases 6-8 — GitHub platform controls + drift audit, autonomous executor, inert R3 and cutover.
       Activation gates resolved 2026-08-18: no runner named, autonomy capped at R1, Chief is the R3
-      approver with two-year evidence retention, Droid stays removed. Deliberately parked, not blocked.
+      approver with two-year evidence retention, no Droid CI workflow. Deliberately parked, not blocked.
 
 ## ⚪ Phase 2 — Project Migration from abyss-monorepo
 
