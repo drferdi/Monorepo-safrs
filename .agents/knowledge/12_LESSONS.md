@@ -14,6 +14,8 @@ Entry rules:
 
 ## Repo & Tooling
 
+- Read root `AGENTS.md` before the first reply of a session, not after several turns — its language and address rules bind from turn one (2026-08-18, Chief corrected forbidden-term use twice).
+- Rehydrate = Always (MUST) only, one parallel batch; Always (SHOULD) is not a second mandatory pass (2026-08-18, Chief: rehydrate too slow).
 - Always `pnpm` — never `npm` or `yarn` (2026-08-11, abyss-monorepo legacy).
 - Never claim test/lint/build passes without running it — evidence before assertions (2026-08-11).
 - After adding/removing workspace packages, refresh the lockfile before `--frozen-lockfile`

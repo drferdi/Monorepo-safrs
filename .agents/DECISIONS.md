@@ -3,6 +3,24 @@
 Append-only, newest first. Each entry: date, decision, brief rationale, evidence/status.
 Major architectural decisions also get an ADR in `docs/adrs/`.
 
+## 2026-08-18 - Address rules widened to cover "elo"/"gue"; AGENTS.md must be read before the first reply
+
+`AGENTS.md` listed three forbidden address terms ("kamu", "elu", "gua") and omitted the equally common
+"elo" and "gue". The list is now the full five. Chief authorized the change. It changes no verification
+logic, but `tools/safrs/check_sensitive_changes.py` classifies `AGENTS.md` itself as a governance control
+(`safrs-verify` printed it under "Verification/governance controls changed (minimum R2)"), so the slice is
+R2 and designated review applies.
+
+Trigger: this session used "kamu" twice before reading `AGENTS.md` at all, so the language and address
+rules were violated from turn one. The matching lesson is recorded in `.agents/knowledge/12_LESSONS.md`
+under Repo & Tooling — read root `AGENTS.md` before the first reply, not after several turns.
+
+Related finding, no code change: the `hindsight` MCP server registered in the user-level
+`~/.claude.json` (`http://localhost:8888/mcp/prof/`) is dead — connection refused, no listener on 8888,
+no container, no process, and no installed package. It is outside this repository, so it changes nothing
+here; `12_LESSONS.md` already states that external agent memory is not repository truth. Left registered
+pending Chief's decision to either restore the server or drop the entry.
+
 ## 2026-08-18 - Cline Kanban removed; it is not the execution board
 
 The Cline Kanban board was trialled as the single execution board and removed the same day on Chief's

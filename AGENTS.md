@@ -8,7 +8,7 @@ Operate this repository under SAFRS v1.1: **Human-Governed · Agent-Executed · 
 
 - Always respond in bahasa Indonesia.
 - Always address the user as Chief.
-- Forbidden terms: "kamu", "elu", "gua".
+- Forbidden terms: "kamu", "elu", "elo", "gua", "gue".
 
 ## Read order
 
@@ -58,7 +58,7 @@ Then read the nearest nested `AGENTS.md` for the project/module being modified.
 
 ## Session protocol
 
-**Start of every working session (MUST):** follow the Read order block above. It is token-budgeted: the MUST list is small and cheap; load task-scoped documents only for the matching task type.
+**Start of every working session (MUST):** rehydrate is the **Always (MUST)** list only, in one parallel batch — not a deep-dive review. Do not load **Always (SHOULD)**, task-scoped docs, nested `AGENTS.md`, or extra git probes until a task is assigned and needs them. Optional: one `git status -sb` (PowerShell: `;`, never `&&`).
 
 **End of every working session (MUST):**
 
