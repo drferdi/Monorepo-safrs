@@ -23,12 +23,10 @@ const AUDIT_LEVEL = PEDANTIC ? "low" : "high";
 async function main() {
   let failed = false;
 
-  console.log(
-    "[SUPPLY-CHAIN] Running npm audit (level: " + AUDIT_LEVEL + ")...",
-  );
+  console.log(`[SUPPLY-CHAIN] Running npm audit (level: ${AUDIT_LEVEL})...`);
   const audit = await runCommand(packageManagerCommand, [
     "audit",
-    "--audit-level=" + AUDIT_LEVEL,
+    `--audit-level=${AUDIT_LEVEL}`,
     "--json",
   ]);
   if (audit.stdout) {
