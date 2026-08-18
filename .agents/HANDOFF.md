@@ -4,38 +4,36 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-18 (Dependabot alert 6 remediated locally — not yet committed or pushed)
+Last updated: 2026-08-18 (README restored — staged, not yet committed)
 
 ## Current state
 
-- Work in flight on `main`: the fix for Dependabot alert 6,
-  GHSA-ggr8-5vv4-36mx / CVE-2026-40345 (high, CWE-674 uncontrolled recursion) in `deepmerge-ts < 8.0.0`.
-- The package is a transitive runtime dependency, pulled in only by `@prisma/config@7.9.1`.
-  Upstream still pins `deepmerge-ts@7.1.5` in its latest release, so there is no version of
-  `@prisma/config` to upgrade to — the remediation has to be a pnpm override.
-- Change set (2 files, uncommitted): `pnpm-workspace.yaml` gains `deepmerge-ts: ">=8.0.1"` in the existing
-  `overrides:` block; `pnpm-lock.yaml` re-resolves `7.1.5` → `8.0.1` with `@prisma/config` as the dependent.
-- `8.0.1` was published 2026-08-16, so it clears the `minimumReleaseAge: 1440` gate without an exclude entry.
-  Engines (`node >=16`) and the dual CJS/ESM export map are unchanged from `7.1.5`.
-- The v8 breaking changes are deep Map merging, two type renames, and `deepmergeInto` no longer
-  leak-mutating its inputs. `@prisma/config` merges plain records, so none of them apply.
-- Tasks: `TASK-20260818-DEPENDABOT-DEEPMERGE`, R2, owns the two dependency files;
-  `TASK-20260818-DEPENDABOT-HANDOFF`, R1, owns this file. Both `EXECUTING`, owner `agent:claude:root`.
+- Work in flight on `main`: restoring `README.md` to the SAFRS repository entrypoint.
+  Commit `e746969` (2026-08-17, `docs: refresh the README for the current monorepo layout`)
+  had replaced the whole file with the "SENTRA / THE ORIGIN" brand README — a company profile
+  page, not a repository entrypoint. Chief confirmed the replacement was wrong.
+- `README.md` is restored byte-identical to the pre-overwrite version (`3ac2a85`, last edited by
+  `f2756c1`): 1073 lines, `Executive Summary` through the SAFRS controls. Staged, uncommitted.
+- The brand README is not lost: `git show e746969:README.md` still has all 1300 lines. Chief has
+  not decided whether it belongs elsewhere in the repo.
+- Task: `TASK-20260818-README-RESTORE`, R1, `EXECUTING`, owner `agent:claude:root`, owns
+  `README.md` and this file.
 
-## Verification evidence (this worktree)
+## Shipped earlier this session
 
-- `pnpm install` clean; `grep deepmerge-ts pnpm-lock.yaml` shows only `8.0.1` — `7.1.5` is gone.
-- `pnpm check:security` → `no advisories found`, `OK: no blocking advisories`.
-- `pnpm db:generate` → `Loaded Prisma config from prisma.config.ts.` then
-  `Generated Prisma Client (7.9.1)` — the `@prisma/config` consumer path works on the forced major.
-- `pnpm governance` → PASS after both task claims.
+- Dependabot alert 6 (GHSA-ggr8-5vv4-36mx, `deepmerge-ts`) remediated via a pnpm override to
+  `>=8.0.1`, pushed as `134c032..49edf4f`. GitHub reports the alert `fixed`. `SAFRS Governance`
+  and `SAFRS PR Gates` green on that push. Tasks `TASK-20260818-DEPENDABOT-DEEPMERGE` and
+  `-DEPENDABOT-HANDOFF` are CLOSED.
+- Sentry: the connected org `sentra-synapse-corporate-ventu` has zero projects and zero issues,
+  and the repo carries no `@sentry/*` instrumentation, so there was nothing to debug.
 
 ## Next actions
 
 | Area | Action |
 | --- | --- |
-| **Chief** | Authorize the commit of the two dependency files on `main` and the push; Dependabot closes alert 6 once the lockfile lands on the default branch |
-| **After push** | Drive both tasks VERIFYING → REVIEW → MERGED → CLOSED |
+| **Chief** | Authorize the README restore commit and the push |
+| **Chief** | Decide whether the "THE ORIGIN" brand README gets a home (e.g. `docs/brand/`) or stays only in history |
 | **Next task** | Fix the E2E test-database bring-up in CI (`@safrs/web#test:e2e`); red on `main` since `fe1af2d` |
 | **Open** | The integrity control verifies fingerprint match, not reviewer independence — Chief to decide whether that gap is closed structurally |
 | **Do not** | Expire `refs/original` or the reflog; Phase 1 remains unstarted |
