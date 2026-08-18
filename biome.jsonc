@@ -25,6 +25,7 @@
       // Skema/migrasi database dan dokumentasi impor: format asing.
       "!!database",
       "!!docs/design-system",
+      "!!docs/brand",
       // Klien Prisma hasil generate.
       "!!packages/database/src/generated/prisma"
     ],

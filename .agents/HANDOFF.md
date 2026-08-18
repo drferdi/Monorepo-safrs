@@ -4,23 +4,22 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-18 (stability repair committed on Chief's yes)
+Last updated: 2026-08-18 (brand kit added; paths lowercase)
 
 ## Current state
 
-- Branch `main`. Stability slice: production `next build` wrapper, Postgres host-port doctor check, `--force-recreate` on local compose, Control Center port 3100, Golden Path bind `127.0.0.1`.
-- Local `safrs_local` already has migration `0002_align_demo_schema` (applied on this machine; not a schema-file change).
-- Debug instrumentation from session `49373b` is gone. `debug-*.log` is gitignored.
+- Branch `main`. Last stability commit: `a18e21b`. Brand kit lives in `docs/brand/` with lowercase folder and file names.
+- Favicon source already in `docs/brand/04-favicon-browser/` (`sentra-favicon.ico`, `.svg`, PNG sizes). Wiring into the Next apps was requested earlier and is not in this commit.
 
 ## Work in flight
 
-Nothing.
+Nothing for the brand-folder rename/commit.
 
 ## Waiting on Chief
 
-Nothing for this slice. Do not claim 100% feature reliability: Stripe optional 503, `/favicon.ico` 404, Next 16 one-lock-per-app-dir remain known limits.
+Nothing for this slice. Push of `docs/brand` is in this session if the remote accepts it.
 
 ## Next actions
 
-1. `pnpm test:e2e` only when Golden Path `next dev` is not holding the app lock.
-2. Push only if Chief asks.
+1. If still wanted: copy the brand favicon into Golden Path and Control Center `app/` / `public/` so `/favicon.ico` stops 404.
+2. Do not claim 100% feature reliability.

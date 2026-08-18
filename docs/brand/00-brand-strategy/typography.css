@@ -1,0 +1,4 @@
+/* Sentra typography. Install/load the official Geist package separately. */
+:root { --font-sans: "Geist", "Inter", ui-sans-serif, system-ui, sans-serif; --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace; }
+body { font-family: var(--font-sans); }
+code, pre, kbd, samp { font-family: var(--font-mono); }

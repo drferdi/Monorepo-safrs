@@ -1,0 +1,21 @@
+:root {
+  --sentra-dark: #0D1117;
+  --sentra-surface-1: #121821;
+  --sentra-surface-2: #18212C;
+  --sentra-border: #263241;
+  --sentra-text-primary: #F5F7FA;
+  --sentra-text-secondary: #A8B3C2;
+  --sentra-text-muted: #8B96A5;
+  --sentra-white: #FFFFFF;
+  --sentra-black: #000000;
+  --sentra-blue-50: #EEF4FF;
+  --sentra-blue-100: #DCE8FF;
+  --sentra-blue-200: #B8CEFF;
+  --sentra-blue-300: #8FB0FF;
+  --sentra-blue-400: #6C92FF;
+  --sentra-blue-500: #5B8CFF;
+  --sentra-blue-600: #315FD6;
+  --sentra-blue-700: #244CB2;
+  --sentra-blue-800: #1D3E8F;
+  --sentra-blue-900: #172F6D;
+}
