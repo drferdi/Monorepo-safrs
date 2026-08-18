@@ -3,6 +3,45 @@
 Append-only, newest first. Each entry: date, decision, brief rationale, evidence/status.
 Major architectural decisions also get an ADR in `docs/adrs/`.
 
+## 2026-08-18 - Status documents realigned with the repository's actual state
+
+Chief ordered every status surface made uniform and true to the repository as it stands today, so that
+future sessions are not misled. What was wrong and what it now says:
+
+- `.agents/PROGRESS.md` still showed Master Remediation Phase 1 as `[~]` with "unreviewed work sits on
+  branch `fix/phase-1-verification-integrity`". That branch was merged as `3e05005` and reviewed in
+  `8e22025`, so the item is `[x]` with those two SHAs as its evidence.
+- The same board claimed the DX friction fixes were `[~]` in progress. They are not started: every step
+  in the plan is unchecked and none of `pnpm verify`, `pnpm check:quick`, `INSTALL.md`, or
+  `.husky/pre-commit.ps1` exists. The item is now `[ ]` with that evidence inline.
+- Phase 2 project migration read as a list of pending projects with no indication of how little exists.
+  A note now states the only three capsules present: `_template`, `golden-path`, `control-center`.
+- `docs/plans/active/README.md` claimed the directory "currently holds no open execution plan" while
+  holding five. It now lists each plan with the status that plan's own header declares.
+- `2026-08-12-sota-enhancements.md` declared `Status: ACTIVE` while the board recorded it verified on
+  2026-08-12. Per the document lifecycle it moved to `docs/plans/completed/` as `COMPLETED`.
+- `.agents/CONTEXT.md` Repository Shape listed a `design-tokens` package that does not exist, omitted
+  `telemetry` and `control-center`, and named four of the nine directories under `tools/`. It now matches
+  `git ls-files`, and it names `sentrawiki/`.
+- `.agents/HANDOFF.md` pinned "`main` and `origin/main` are both at `8e22025`", which was already false
+  and is structurally guaranteed to go stale, since committing that file moves HEAD past the SHA it
+  names. The file now states the branch is level with its remote and forbids pinning a HEAD SHA there.
+
+Deliberately left alone: `2026-08-12-wiki-setup-plan.md` stays `PROPOSED` even though `sentrawiki/`
+already holds content, because `PROPOSED` to `ACTIVE` carries Chief's approval and is not an agent's call.
+The anomaly is recorded on the board as `[!]` awaiting that decision. The `.claude/` automation pack stays
+`[~]` awaiting Chief review, which is still accurate.
+
+Two findings raised, no change made: `packages/token` publishes as `@sentra/token` while every other
+workspace package is `@safrs/*`, and `stripLineComments` is still duplicated byte-for-byte in
+`tests/repository/lint-baseline.test.mjs` and `tests/repository/jsonc.mjs`. Both are code changes, outside
+a documentation realignment.
+
+Tooling note for future sessions: the shell's `ls` output in this environment lowercases filenames and can
+omit entries — it showed `safrs_bootstrap_implementation.md` for a file git tracks as
+`SAFRS_BOOTSTRAP_IMPLEMENTATION.md`, and hid `packages/env/` entirely. Use `git ls-files` when a path's
+exact case or a directory's full contents matter.
+
 ## 2026-08-18 - Address rules widened to cover "elo"/"gue"; AGENTS.md must be read before the first reply
 
 `AGENTS.md` listed three forbidden address terms ("kamu", "elu", "gua") and omitted the equally common

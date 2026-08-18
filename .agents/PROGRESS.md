@@ -21,9 +21,10 @@ Last updated: 2026-08-18 | Branch: main
 
 ## 🟡 Phase 1 — Solo-Developer DX
 
-- [x] SOTA enhancements v1+v2 (deps-graph, visual regression, telemetry, codegen, OpenAPI endpoint, property tests, supply-chain scan) implemented + verified (2026-08-12)
+- [x] SOTA enhancements v1+v2 (deps-graph, visual regression, telemetry, codegen, OpenAPI endpoint, property tests, supply-chain scan) implemented + verified (2026-08-12); plan moved to `docs/plans/completed/`
 - [x] KB re-route → `.agents/knowledge/` (commit `de1410f`, pushed)
-- [~] DX friction fixes (9 items) — **in progress by Claude**
+- [ ] DX friction fixes (9 items) — not started; every step in the plan is still unchecked and
+      `pnpm verify`, `pnpm check:quick`, `INSTALL.md`, and `.husky/pre-commit.ps1` do not exist
       (`docs/superpowers/plans/2026-08-11-solo-dev-dx-friction-fixes.md`)
 - [x] Five agent memory files — registered in registry, in generated `AGENTS.md` read order,
       HANDOFF machine-enforced (Chief GO 2026-08-11)
@@ -39,8 +40,8 @@ Last updated: 2026-08-18 | Branch: main
 Assignments: `docs/plans/active/MASTER REMEDIATION AGENT ASSIGNMENTS.md`.
 Baseline evidence: `docs/evidence/MONOREPO GROUND TRUTH BASELINE v1.md`.
 
-- [~] Phase 1 — verification integrity. Unreviewed work sits on branch `fix/phase-1-verification-integrity`
-      (commit `3ecc116`, deterministic lint baseline). Review or drop it before restarting the phase.
+- [x] Phase 1 — verification integrity. `fix/phase-1-verification-integrity` (`3ecc116`, deterministic
+      lint baseline) merged as `3e05005`; independent review evidence recorded in `8e22025`.
 - [ ] Phase 2 — platform enforcement (exact main SHA CI, `main` ruleset, R2 merge bridge, negative tests)
 - [ ] Phase 3 — operational Control Center (evidence ladder, verification semantics, lifecycle,
       bounded local process supervisor)
@@ -64,6 +65,9 @@ Baseline evidence: `docs/evidence/MONOREPO GROUND TRUTH BASELINE v1.md`.
 
 ## ⚪ Phase 2 — Project Migration from abyss-monorepo
 
+> Capsules that exist today: `projects/_template/`, `projects/golden-path/`, `projects/control-center/`.
+> Every project listed below is still unbuilt — no directory, no code.
+
 - [x] Project mapping done (22 → 14 active) + per-project stack decisions
 - [x] Multi-tenant + demo pattern design (smartboard as reference)
 - [x] Repo prep verified (2026-08-11): policy.json capsule root, workspace glob
@@ -80,6 +84,9 @@ Baseline evidence: `docs/evidence/MONOREPO GROUND TRUTH BASELINE v1.md`.
 
 - [!] Smartboard Phase B/C — awaiting Chief GO (backup + migration dry-run first)
 - [~] semayot — deferred (delete or relocate)
+- [!] sentrawiki — content already lives in `sentrawiki/` while its plan is still `PROPOSED`
+      (`docs/plans/active/2026-08-12-wiki-setup-plan.md`, Owner: Chief). Chief decides: approve the
+      plan or record the wiki as ad-hoc. Do not flip the status without that decision.
 - [ ] 8 skeleton projects (skripsipintar, smartboard-docs-only, clinical-copilot,
       healthsphere, hoamanagement, mantra, melinda, rag-dashboard) — skip
 

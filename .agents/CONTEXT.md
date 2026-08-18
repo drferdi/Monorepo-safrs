@@ -2,7 +2,7 @@
 
 Rarely updated. Answers: what this repo is, what matters, what must not be changed casually.
 
-Last updated: 2026-08-11
+Last updated: 2026-08-18
 
 ---
 
@@ -26,15 +26,18 @@ Authority and read order are **not defined here** — the single source is the P
 ## Repository Shape
 
 ```
-projects/     golden-path (Next.js + Hono + Prisma demonstrator), _template, future products
-packages/     api schemas env database ui config design-tokens — shared boundaries;
+projects/     golden-path (Next.js + Hono + Prisma demonstrator), control-center (operator UI),
+              _template — the only three capsules that exist; every other product is unbuilt
+packages/     api config database env schemas telemetry token ui — shared boundaries;
               never import server/db code into browser components
-tools/        safrs doctor project-wizard capabilities — dev tooling, not deployed
+tools/        automation capabilities codegen deps-graph doctor project-wizard safrs status task
+              — dev tooling, not deployed
 scripts/      setup, dev, test, safrs-verify
 tests/        cross-cutting contract tests
-docs/         adrs evidence governance plans superpowers bootstrap design-system
+docs/         adrs bootstrap design-system evidence governance handbook plans superpowers
 .agents/      memory files + knowledge/ (numbered KB 00–12, 99)
 .safrs/       machine-readable policy (registry, policy.json, sensitive-paths)
+sentrawiki/   documentation surface; its setup plan is still PROPOSED
 ```
 
 ## Protected Areas & Risk Tiers

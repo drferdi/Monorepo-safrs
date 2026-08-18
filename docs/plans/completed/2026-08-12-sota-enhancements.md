@@ -1,6 +1,6 @@
 # SOTA Enhancements v1 — Implementation Plan
 
-**Status:** ACTIVE
+**Status:** COMPLETED
 **Date:** 2026-08-12
 **Type:** plan
 **Risk:** R1 (visual, deps-graph) / R2 (telemetry, codegen, LFS)

@@ -4,7 +4,7 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-18 (merge reviewed, gate green, everything pushed)
+Last updated: 2026-08-18 (status documents realigned with the repository's actual state)
 
 ## Current state
 
@@ -14,8 +14,10 @@ Last updated: 2026-08-18 (merge reviewed, gate green, everything pushed)
 
 ## Work in flight
 
-Nothing. `main` and `origin/main` are both at `8e22025`; the working tree holds no
-content changes.
+Nothing. `main` is level with `origin/main` and the working tree holds no content changes
+(`git diff --name-only` is empty; the entries `git status` shows are stat-cache noise from the
+LF renormalisation). Never pin a HEAD SHA in this file — it goes stale the moment this file is
+committed. Read the SHA from `git log`.
 
 Shipped this session, in order:
 
@@ -23,6 +25,13 @@ Shipped this session, in order:
 - `3e05005` — merge of `fix/phase-1-verification-integrity` (`3ecc116`) on Chief's authorization. It pins `* text=auto eol=lf` and Biome `lineEnding: "lf"`, so line endings are now deterministic on every platform.
 - `74497c0` — the two tests that merge broke, realigned. `precommit.test.mjs` now asserts a literal LF instead of branching on platform; `workspace-config.test.mjs` reads `biome.jsonc` through the new JSONC parser in `tests/repository/jsonc.mjs`. Both expectations are stricter than what they replaced.
 - `8e22025` — integrity review evidence rebound to `base_sha 374e425dde71…`, `change_set_sha256 9da8491c7cea…`, recomputed from scratch by an independent read-only reviewer and approved by Chief.
+
+- The status documents themselves, realigned with what the repository actually contains: Master
+  Remediation Phase 1 marked done, the DX friction fixes corrected from "in progress" to not started,
+  the three real project capsules named, `docs/plans/active/README.md` rewritten to list the five plans
+  it actually holds, the completed SOTA plan moved to `docs/plans/completed/`, and
+  `.agents/CONTEXT.md` Repository Shape rebuilt from `git ls-files`. Rationale and the two findings
+  left untouched are in `DECISIONS.md`.
 
 Verified: `scripts/safrs-verify.sh` PASS, 67/67 repository tests, typecheck 8/8, `pnpm lint`
 clean after the worktree was renormalized to LF.
