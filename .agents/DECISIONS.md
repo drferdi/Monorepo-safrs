@@ -3,6 +3,27 @@
 Append-only, newest first. Each entry: date, decision, brief rationale, evidence/status.
 Major architectural decisions also get an ADR in `docs/adrs/`.
 
+## 2026-08-18 - The progress board no longer holds status
+
+Chief named the failure loop exactly: work finishes, the status is never changed, the next agent
+believes the stale document, declares a blocker, analyses it, writes a new document, commits it,
+and Chief is confused again. Every step after the second one is wasted, and the repository has
+been running that loop for a week.
+
+The break is at step three. There is no stale document to believe if the document holds no claims.
+`.agents/PROGRESS.md` is now a pointer: status lives in `docs/plans/active/`, where each plan owns
+its own checkboxes, and nowhere else. A board that copies them is a second copy to forget.
+
+What was rejected, and why it matters: the first fix proposed here was a generator plus a checker —
+`pnpm progress` would print the board from the plans, and a gate would fail on hand edits. That is
+steps six and seven of Chief's own loop: two new pieces of machinery to guard one document that did
+not need to exist. Deleting the claims is smaller than automating them.
+
+The file itself is kept because gates and the document registry reference it, and because its git
+history at `8f0f84d` holds the old area board and the 22-to-14 migration mapping. Nothing was lost;
+it is simply no longer maintained as a live claim. When a migration actually starts, its plan gets
+written then.
+
 ## 2026-08-18 - Status documents realigned with the repository's actual state
 
 Chief ordered every status surface made uniform and true to the repository as it stands today, so that

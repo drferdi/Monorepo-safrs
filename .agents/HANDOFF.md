@@ -81,7 +81,7 @@ and do not list something as pending when the thing itself does not exist here.
 - PowerShell; `;` not `&&`; explicit staging only; never `git add -A`.
 - Evidence before assertions.
 - **Close the loop in the same commit.** A change set that finishes a piece of work ticks its box
-  on `PROGRESS.md` or its plan in that same commit, with the commit or path as the citation. Do not
-  leave it for later — later never came, which is why the boards drifted for a week.
+  in its plan under `docs/plans/active/` in that same commit, with the commit or path as the
+  citation. Do not leave it for later — later never came, which is why the board drifted for a week.
   `tools/safrs/check_status_claims.py` catches the provable half: a done box citing a commit or a
   path that does not exist. It cannot catch a box you simply forgot, so that part is on you.
