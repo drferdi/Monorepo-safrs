@@ -1,17 +1,31 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
+  // Cakupan pemindaian mengikuti .gitignore: apa pun yang tidak dilacak Git
+  // (state editor lokal, artefak agen, cache) bukan sumber kanonik dan tidak
+  // boleh menentukan hasil `pnpm lint`.
+  "vcs": {
+    "clientKind": "git",
+    "enabled": true,
+    "useIgnoreFile": true
+  },
   "files": {
     "includes": [
       "**",
+      // Sisa pengecualian di bawah ini dilacak Git tetapi bukan sumber kanonik.
+      // Kontrol plane SAFRS dan cache Turbo: dihasilkan mesin.
       "!!**/.safrs",
       "!!**/.turbo",
+      // Keluaran build dan verifikasi Next.js/Playwright.
       "!!**/.next",
       "!!**/next-env.d.ts",
       "!!**/playwright-report",
       "!!**/test-results",
+      // Transkrip alat pihak ketiga.
       "!!**/.specstory",
+      // Skema/migrasi database dan dokumentasi impor: format asing.
       "!!database",
       "!!docs/design-system",
+      // Klien Prisma hasil generate.
       "!!packages/database/src/generated/prisma"
     ],
     "ignoreUnknown": true
@@ -20,7 +34,7 @@
     "enabled": true,
     "indentStyle": "space",
     "indentWidth": 2,
-    "lineEnding": "auto"
+    "lineEnding": "lf"
   },
   "linter": {
     "enabled": true,

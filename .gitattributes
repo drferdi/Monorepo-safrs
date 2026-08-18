@@ -1,7 +1,9 @@
 # Normalisasi akhir baris.
-# Git menyimpan teks sebagai LF; checkout mengikuti platform pengguna.
-# Windows memakai core.autocrlf=true (CRLF), runner Linux tetap LF.
-* text=auto
+# Git menyimpan teks sebagai LF dan checkout juga LF di semua platform,
+# supaya formatter (Biome lineEnding=lf) menghasilkan byte yang sama
+# di Windows, macOS, dan runner Linux. Atribut eol di sini menang atas
+# core.autocrlf, jadi tidak ada konfigurasi Git lokal yang perlu diseragamkan.
+* text=auto eol=lf
 
 # Skrip yang HARUS CRLF di Windows
 *.bat  text eol=crlf

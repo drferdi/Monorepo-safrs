@@ -83,7 +83,7 @@ function contractGate(root) {
       );
 }
 
-function leaseGate(root, controlDirectory) {
+function leaseGate(_root, controlDirectory) {
   const ledger = controlDirectory
     ? join(controlDirectory, "lease-events.ndjson")
     : null;
@@ -141,7 +141,7 @@ function riskGate(root) {
     : pass("risk is monotonic and explained", stored.length);
 }
 
-function budgetsGate(root, controlDirectory) {
+function budgetsGate(_root, controlDirectory) {
   const ledgerPath = controlDirectory
     ? join(controlDirectory, "budget-ledger.json")
     : null;
