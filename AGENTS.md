@@ -82,6 +82,24 @@ R2 requires designated review. R3 may be prepared by an agent but requires expli
 `PROPOSED → CLAIMED → PLANNED → EXECUTING → VERIFYING → REVIEW → MERGED → CLOSED`
 Exceptional states: `BLOCKED`, `CONFLICT`, `FAILED`, `ABORTED`, `SUPERSEDED`.
 
+## Execution board (Cline Kanban)
+
+**The rule: every unit of work is one Kanban card, and a card stops at `review` — only Chief moves it to `done`.**
+
+This is the single execution board. Nothing else tracks work status: `.agents/HANDOFF.md` holds session state,
+`.agents/DECISIONS.md` holds decisions, `docs/plans/` holds reference detail, and the SAFRS control plane holds the
+lifecycle record. A card carries a one-line prompt plus a pointer to the plan section; the detail stays in the plan.
+
+What the rule requires of agents:
+
+- Create every card with `--auto-review-enabled false`. Auto-review commits the worktree onto the card's `baseRef` and
+  moves the card to `done` unattended, which would merge to `main` with no human gate — forbidden by mandatory control 5.
+- Chain dependent cards with `kanban task link`. A prerequisite reaching `done` releases the card waiting on it, so
+  Chief's single approval is both the review sign-off and the GO for the next card.
+- Agents run the board (`kanban task list|create|update|link|start`). Chief only reviews the diff on a card and moves it.
+- A card in `review` is at lifecycle state `REVIEW`; moving it to `done` is the human authorization for `MERGED`.
+
+
 ## Documentation rules
 
 - Stable truth belongs in canonical documents.
