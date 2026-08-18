@@ -65,3 +65,6 @@ minimumReleaseAgeExclude:
 overrides:
   postcss: "catalog:"
   sharp: ">=0.35.1"
+  # GHSA-ggr8-5vv4-36mx / CVE-2026-40345: uncontrolled recursion in
+  # deepmerge-ts < 8.0.0, pulled in transitively by @prisma/config.
+  deepmerge-ts: ">=8.0.1"
