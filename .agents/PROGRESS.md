@@ -6,6 +6,7 @@ Last updated: 2026-08-18 | Branch: main
 
 > Area status board — this file is the execution board. Detailed work logs: `docs/plans/active/` → `completed/`.
 > Durable decisions: `DECISIONS.md`. Session state: `HANDOFF.md`.
+> **Everything waiting on Chief is collected in one place: `HANDOFF.md` — Waiting on Chief.**
 
 ---
 
@@ -29,9 +30,10 @@ Last updated: 2026-08-18 | Branch: main
 - [x] Five agent memory files — registered in registry, in generated `AGENTS.md` read order,
       HANDOFF machine-enforced (Chief GO 2026-08-11)
 - [x] Active docs converted to concise English (2026-08-11)
-- [~] Claude Code automation pack (`.claude/` hooks, subagents, skills) — implemented,
-      awaiting Chief review (`docs/bootstrap/CLAUDE_SETUP.md`); Postgres MCP deferred
-- [x] Codex repository automation pack (`.codex/` hooks/config/agents + `.agents/skills`) — implemented; R2 designated review required
+- [~] Claude Code automation pack (`.claude/` hooks, subagents, skills) — implemented;
+      Chief decision 2 (`docs/bootstrap/CLAUDE_SETUP.md`); Postgres MCP deferred
+- [~] Codex repository automation pack (`.codex/` hooks/config/agents + `.agents/skills`) — implemented;
+      Chief decision 3, and the R2 designated review is still outstanding
 - [ ] Complete `.env.example` + capability variable docs
 - [ ] Python prerequisite documented (INSTALL.md) + setup detection
 
@@ -42,6 +44,8 @@ Baseline evidence: `docs/evidence/MONOREPO GROUND TRUTH BASELINE v1.md`.
 
 - [x] Phase 1 — verification integrity. `fix/phase-1-verification-integrity` (`3ecc116`, deterministic
       lint baseline) merged as `3e05005`; independent review evidence recorded in `8e22025`.
+> Phase 2 onward cannot start until the four decision records in Chief decision 6 are settled.
+
 - [ ] Phase 2 — platform enforcement (exact main SHA CI, `main` ruleset, R2 merge bridge, negative tests)
 - [ ] Phase 3 — operational Control Center (evidence ladder, verification semantics, lifecycle,
       bounded local process supervisor)
@@ -59,9 +63,8 @@ Baseline evidence: `docs/evidence/MONOREPO GROUND TRUTH BASELINE v1.md`.
 - [x] Phase 5 — PR gates, evidence, approvals, publisher separation (PR #18, merged)
 - [x] Gate repairs — stale-evidence handling, memory-file exemption, classification gaps,
       sibling-worktree guard (PRs #19, #20, #21, merged)
-- [ ] Phase 6 — GitHub platform controls + drift audit (needs Activation Decision 2)
-- [ ] Phase 7 — autonomous R0/R1/R2 executor (needs Activation Decision 1)
-- [ ] Phase 8 — inert R3, recovery drills, cutover (needs Activation Decision 3)
+- [ ] Phases 6-8 — GitHub platform controls + drift audit, autonomous R0/R1/R2 executor, inert R3
+      and cutover. All three are held by the four activation gates in Chief decision 7.
 
 ## ⚪ Phase 2 — Project Migration from abyss-monorepo
 
@@ -82,11 +85,11 @@ Baseline evidence: `docs/evidence/MONOREPO GROUND TRUTH BASELINE v1.md`.
 
 ## 🔴 Blocked / Deferred
 
-- [!] Smartboard Phase B/C — awaiting Chief GO (backup + migration dry-run first)
-- [~] semayot — deferred (delete or relocate)
+- [!] Smartboard Phase B/C — Chief decision 4 (backup + migration dry-run first either way)
+- [~] semayot — deferred; delete or relocate is Chief decision 5
 - [!] sentrawiki — content already lives in `sentrawiki/` while its plan is still `PROPOSED`
-      (`docs/plans/active/2026-08-12-wiki-setup-plan.md`, Owner: Chief). Chief decides: approve the
-      plan or record the wiki as ad-hoc. Do not flip the status without that decision.
+      (`docs/plans/active/2026-08-12-wiki-setup-plan.md`). Chief decision 1. Do not flip the status
+      without it.
 - [ ] 8 skeleton projects (skripsipintar, smartboard-docs-only, clinical-copilot,
       healthsphere, hoamanagement, mantra, melinda, rag-dashboard) — skip
 

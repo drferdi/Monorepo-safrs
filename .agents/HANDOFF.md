@@ -44,14 +44,31 @@ Shipped this session, in order:
 Verified: `scripts/safrs-verify.sh` PASS, 67/67 repository tests, typecheck 8/8, `pnpm lint`
 clean after the worktree was renormalized to LF.
 
-## Next actions
+## Waiting on Chief
 
-| Area | Action |
-| --- | --- |
-| **Chief** | Decide the dead `hindsight` MCP server in `~/.claude.json` — restore it (`hindsight-local-mcp`, self-hosted, bank `prof`) or drop the entry — outside this repo; see `DECISIONS.md` |
-| Follow-up | `stripLineComments` is duplicated in `lint-baseline.test.mjs` and `jsonc.mjs`; dedupe in a separate change, not inside the flagged set |
-| Env | Docker is down, so `tests/integration/database.test.ts` cannot run (`ECONNREFUSED 127.0.0.1:54329`). Unrelated to the merge |
-| **Do not** | Reintroduce a Kanban board, app or markdown |
+Nothing else is blocked on an agent. Each row is a choice only Chief can make; the wording in
+parentheses is the whole decision.
+
+| # | Decision | Where it is recorded |
+| --- | --- | --- |
+| 1 | Sentra wiki plan — approve it, or record the wiki as ad-hoc and close the plan (`sentrawiki/` already holds content while the plan sits at `PROPOSED`) | `docs/plans/active/2026-08-12-wiki-setup-plan.md` |
+| 2 | Claude Code automation pack — accept as implemented, or send back | `docs/bootstrap/CLAUDE_SETUP.md` |
+| 3 | Codex automation pack — same, plus the R2 designated review it still needs | `docs/bootstrap/CODEX_SETUP.md` |
+| 4 | Smartboard Phase B/C — GO or hold (backup and migration dry-run come first either way) | `PROGRESS.md`, Blocked/Deferred |
+| 5 | `semayot` — delete it or relocate it | `PROGRESS.md`, Blocked/Deferred |
+| 6 | Repository visibility, platform authority model, Renovate policy, R2 authorization model — four decision records, all still open | `docs/plans/active/MASTER REMEDIATION PLAN — SENTRA MONOREPO.md`, D-001 to D-004 |
+| 7 | Autonomous provider and budgets, control identities, R3 authority and retention, Droid disposition — four activation gates holding SAFRS automation Phases 6 to 8 | `docs/plans/active/SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md`, section 3 |
+| 8 | The dead `hindsight` MCP server in `~/.claude.json` — restore it (self-hosted, bank `prof`) or drop the entry. Outside this repository | `DECISIONS.md`, 2026-08-18 |
+
+Rows 1 to 5 unblock work that is already scoped. Rows 6 and 7 gate whole phases: nothing in
+Master Remediation Phase 2 onward, or SAFRS automation Phase 6 onward, can start without them.
+
+## Notes, not decisions
+
+- `stripLineComments` is duplicated in `lint-baseline.test.mjs` and `jsonc.mjs`; dedupe in its own change.
+- `packages/token` publishes as `@sentra/token` while every other workspace package is `@safrs/*`.
+- Docker is down, so `tests/integration/database.test.ts` cannot run (`ECONNREFUSED 127.0.0.1:54329`).
+- Do not reintroduce a Kanban board, app or markdown.
 
 ## Session guardrails
 
