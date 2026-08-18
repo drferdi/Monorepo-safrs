@@ -930,8 +930,13 @@ When a reliable second human reviewer exists, selected sensitive R2 paths may ad
 ## Status
 
 ```text
-PROPOSED — AWAITING APPROVAL
+ACCEPTED — Chief, 2026-08-18
 ```
+
+Chief's explicit "yes" on a change is the R2 authorization. There is no second human in this
+repository and none is required. What still holds: verification runs first, the authorization is
+a distinct step after it, and it is recorded. What is dropped: any expectation that an agent or a
+second reviewer supplies the approval.
 
 ---
 

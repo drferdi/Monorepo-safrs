@@ -33,7 +33,7 @@ Last updated: 2026-08-18 | Branch: main
 - [~] Claude Code automation pack (`.claude/` hooks, subagents, skills) — implemented;
       Chief decision 2 (`docs/bootstrap/CLAUDE_SETUP.md`); Postgres MCP deferred
 - [~] Codex repository automation pack (`.codex/` hooks/config/agents + `.agents/skills`) — implemented;
-      Chief decision 3, and the R2 designated review is still outstanding
+      Chief decision 3 — a "yes" from Chief is the whole approval
 - [ ] Complete `.env.example` + capability variable docs
 - [ ] Python prerequisite documented (INSTALL.md) + setup detection
 - [~] Sentra wiki — plan approved by Chief 2026-08-18 and now `ACTIVE`; `sentrawiki/` already holds
@@ -47,8 +47,8 @@ Baseline evidence: `docs/evidence/MONOREPO GROUND TRUTH BASELINE v1.md`.
 
 - [x] Phase 1 — verification integrity. `fix/phase-1-verification-integrity` (`3ecc116`, deterministic
       lint baseline) merged as `3e05005`; independent review evidence recorded in `8e22025`.
-> Phase 2 onward cannot start until the open decision records D-001 to D-004 are settled
-> (Chief decisions 1 and 4).
+> Phase 2 onward cannot start until D-001, D-002, and D-003 are settled (Chief decisions 1 and 4).
+> D-004 is accepted: Chief's explicit "yes" is the R2 authorization.
 
 - [ ] Phase 2 — platform enforcement (exact main SHA CI, `main` ruleset, R2 merge bridge, negative tests)
 - [ ] Phase 3 — operational Control Center (evidence ladder, verification semantics, lifecycle,

@@ -4,6 +4,13 @@ Approval records use `ApprovalRecordV1`
 (`.safrs/schemas/approval-record.v1.schema.json`). An approval is data
 bound to exact content — never a standing permission.
 
+## Who approves
+
+Chief is the R2 authority for this repository. An explicit "yes" from Chief on a change,
+given after verification has run, is the approval — there is no second human reviewer here
+and none is required (D-004, accepted 2026-08-18). Agents never approve. The approval is still
+recorded and still bound to exact content, so it dies the moment the content changes.
+
 ## Kinds
 
 | Kind | Grants | Bound to |

@@ -52,8 +52,8 @@ Nothing else is blocked on an agent. Each row is a choice only Chief can make, s
 | --- | --- | --- |
 | 1 | **Repository visibility is PUBLIC while `.agents/CONTEXT.md` calls it private.** `gh repo view` returns `"visibility":"PUBLIC"`. No credential is exposed — `.env` is gitignored and has never been committed — but the trust boundary the documents assume is wrong. Keep it public and fix the documents, or make it private | `MASTER REMEDIATION PLAN`, D-001 |
 | 2 | Claude Code automation pack — accept as implemented, or send back. It is `.claude/`: two hooks (one blocks writes to credential files, one runs Biome after every edit), two read-only reviewer subagents, and two skills | `docs/bootstrap/CLAUDE_SETUP.md` |
-| 3 | Codex automation pack — same question. It also still needs an R2 designated review: a second reviewer who did not write the change, required because the pack touches governance controls | `docs/bootstrap/CODEX_SETUP.md` |
-| 4 | Platform authority model, Renovate dependency policy, R2 authorization model — three decision records, all open. They define who may approve what in a repository with one human | `MASTER REMEDIATION PLAN`, D-002 to D-004 |
+| 3 | Codex automation pack — same question. A "yes" from Chief is the whole R2 approval; no second reviewer is involved | `docs/bootstrap/CODEX_SETUP.md` |
+| 4 | Platform authority model and Renovate dependency policy — two decision records still open | `MASTER REMEDIATION PLAN`, D-002 and D-003 |
 | 5 | Autonomous provider and budgets, control identities, R3 authority and retention, Droid disposition — four activation gates holding SAFRS automation Phases 6 to 8 | `SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md`, section 3 |
 | 6 | The dead `hindsight` MCP server in `~/.claude.json` — restore it (self-hosted, bank `prof`) or drop the entry. Outside this repository | `DECISIONS.md`, 2026-08-18 |
 
@@ -61,7 +61,8 @@ Row 1 is a security-posture question and should go first. Rows 4 and 5 gate whol
 nothing in Master Remediation Phase 2 onward, or SAFRS automation Phase 6 onward, can start
 without them.
 
-Settled 2026-08-18: the Sentra wiki plan is approved and now `ACTIVE`. Two rows were removed as
+Settled 2026-08-18: the Sentra wiki plan is approved and now `ACTIVE`. D-004 is accepted — Chief's
+explicit "yes" is the R2 authorization, there is no second reviewer, and agents never approve. Two rows were removed as
 non-decisions — Smartboard Phase B/C has no code in this repository yet, and `semayot` appeared
 nowhere except the board itself.
 
