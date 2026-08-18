@@ -62,6 +62,8 @@ jobs:
         run: pnpm governance
       - name: Verify automation policy
         run: node --test tests/repository/automation-policy.test.mjs
+      - name: Verify supply chain
+        run: pnpm check:security
       - name: Lint
         run: pnpm lint
       - name: Type check

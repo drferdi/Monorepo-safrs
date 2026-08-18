@@ -86,6 +86,17 @@ to add something, and those matter more than the additions:
 Held by the environment, not by the repository: `pnpm dev`, `db:seed`, and `db:studio` cannot be
 verified while Docker is down.
 
+## Master remediation — in execution
+
+Chief's instruction 2026-08-18: run the remediation plan that already exists before any product is
+brought in. No new plans, no new governance, no new checkers.
+
+- **Phase 2.1 done.** CI already ran on every `main` push with install, database, browser smoke,
+  governance, lint, typecheck, tests, and build. Security verification was the one required item
+  missing — `pnpm check:security` existed in `package.json` and no workflow called it. It now runs
+  in `.github/workflows/ci.yml`. Local run: `critical=0 high=0 moderate=0 low=0`.
+- **Next: Phase 2.2** (`main` ruleset) and **Phase 2.3** (R2 enforcement bridge), then Phases 3 to 6.
+
 ## Notes, not decisions
 
 - `stripLineComments` is duplicated in `lint-baseline.test.mjs` and `jsonc.mjs`; dedupe in its own change.

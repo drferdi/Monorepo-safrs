@@ -1608,6 +1608,14 @@ The exact SHA that enters `main` must receive:
 
 Every actual `main` SHA has corresponding full verification evidence.
 
+## Status — DONE 2026-08-18
+
+`.github/workflows/ci.yml` already ran on `push: branches: [main]`, so every `main` SHA was
+already getting install, database, browser smoke, governance, lint, typecheck, tests, and build.
+One item from the required list was missing: security verification. `pnpm check:security` existed
+in `package.json` and was wired into no workflow at all. It now runs in CI beside the governance
+checks. Locally it reports `critical=0 high=0 moderate=0 low=0`.
+
 ---
 
 # 18. Phase 2.2 — `main` Ruleset
