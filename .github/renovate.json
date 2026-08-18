@@ -2,7 +2,6 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
   "dependencyDashboard": true,
-  "automerge": true,
   "schedule": ["before 6am on monday"],
   "lockFileMaintenance": {
     "enabled": true
@@ -14,15 +13,23 @@
       "allowedVersions": "!/-(alpha|beta|canary|next|rc)/"
     },
     {
-      "description": "Keep major upgrades visible as a separate update group.",
-      "groupName": "major dependency updates",
-      "matchUpdateTypes": ["major"]
-    },
-    {
-      "description": "Chief decision 2026-08-17: all dependency updates may automerge as pull requests after Renovate observes passing tests; GitHub branch protection is not configured.",
+      "description": "D-003, Chief 2026-08-18: patch and minor updates merge on their own once Renovate sees the tests pass. This is the routine path and needs no human.",
+      "matchUpdateTypes": ["patch", "minor", "pin", "digest"],
+      "automerge": true,
       "ignoreTests": false,
       "automergeType": "pr",
       "platformAutomerge": false
+    },
+    {
+      "description": "D-003, Chief 2026-08-18: major upgrades never merge on their own. They group into one pull request and wait for Chief, because a major is the only dependency change that routinely breaks a boundary.",
+      "matchUpdateTypes": ["major"],
+      "groupName": "major dependency updates",
+      "automerge": false
+    },
+    {
+      "description": "D-003, Chief 2026-08-18: lock file maintenance merges on its own; it moves no declared version.",
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "automerge": true
     }
   ]
 }

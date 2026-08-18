@@ -11,7 +11,7 @@ Last updated: 2026-08-18
 - **Name:** SAFRS Monorepo (`drferdii/Monorepo-safrs`)
 - **Visibility:** **PUBLIC** — verified 2026-08-18 with `gh repo view` (`"visibility":"PUBLIC"`).
   This file previously said private. No credential is exposed: `.env` is gitignored and has never
-  been committed. Whether it stays public is decision D-001, still open.
+  been committed. Chief confirmed on 2026-08-18 that it stays public (D-001, accepted).
 - **Root:** `D:\DEV\Monorepo`
 - **Owner:** Dr. Ferdi Iskandar (solo developer, non-coding operator)
 - **Posture:** Agent-first — human sets intent, agents execute, machines verify.

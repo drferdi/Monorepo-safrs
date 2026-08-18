@@ -707,8 +707,12 @@ If current visibility represents a verified unintended active exposure, Emergenc
 ## Status
 
 ```text
-OPEN
+ACCEPTED — PUBLIC, Chief, 2026-08-18
 ```
+
+Verified with `gh repo view`: the repository is already public. Chief chose to keep it that way, so
+the exposure is intentional and the Emergency Containment Exception does not apply. `.env` is
+gitignored and has never been committed. Documents that called the repository private are corrected.
 
 ---
 
@@ -854,8 +858,17 @@ No decision should be made before actual behavior is verified.
 ## Status
 
 ```text
-OPEN — VERIFICATION REQUIRED
+ACCEPTED — Option C, widened to minor, Chief delegated the choice 2026-08-18
 ```
+
+Behaviour was verified before deciding. `.github/renovate.json` carried a blanket `"automerge": true`
+with no update-type limit, so majors merged on their own too — the most permissive setting available,
+and the actual source of the contradiction with R2.
+
+The policy now: patch, minor, pin, digest, and lock file maintenance merge on their own once Renovate
+observes the tests pass. Major upgrades never do; they group into one pull request and wait for Chief.
+Majors are rare, so this asks almost nothing of Chief while removing the case that routinely breaks a
+boundary. Option A was rejected as pure burden, Option B as a SAFRS rewrite for no gain.
 
 ---
 

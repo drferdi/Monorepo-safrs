@@ -157,29 +157,44 @@ function assertWorkflowPolicy(workflow, workflowPath, allowlistOverride) {
   }
 }
 
-test("Renovate automerges every dependency update only through pull requests", () => {
+test("Renovate automerges routine updates through pull requests and holds majors for Chief", () => {
   const renovate = JSON.parse(readFileSync(renovateFile, "utf8"));
 
-  assert.equal(renovate.automerge, true);
   assert.equal(renovate.dependencyDashboard, true);
   assert.deepEqual(renovate.extends, ["config:recommended"]);
   assert.ok(Array.isArray(renovate.schedule));
   assert.ok(renovate.schedule.length > 0);
-  assert.equal(
-    renovate.packageRules.some((rule) => rule.automerge === false),
-    false,
-  );
-  assert.ok(
-    renovate.packageRules.some(
-      (rule) => rule.automergeType === "pr" && rule.platformAutomerge === false,
-    ),
-  );
-  const automergeRule = renovate.packageRules.find(
+
+  // D-003: no blanket automerge. Every automerge is scoped to an update type,
+  // so a major can never inherit permission meant for a patch.
+  assert.equal("automerge" in renovate, false);
+
+  const routine = renovate.packageRules.find(
     (rule) => rule.automergeType === "pr" && rule.platformAutomerge === false,
   );
-  assert.ok(automergeRule);
-  assert.equal(automergeRule.ignoreTests, false);
-  assert.equal("requiredStatusChecks" in automergeRule, false);
+  assert.ok(routine);
+  assert.equal(routine.automerge, true);
+  assert.equal(routine.ignoreTests, false);
+  assert.equal("requiredStatusChecks" in routine, false);
+  for (const updateType of ["patch", "minor"]) {
+    assert.ok(routine.matchUpdateTypes.includes(updateType));
+  }
+  assert.equal(routine.matchUpdateTypes.includes("major"), false);
+
+  // Majors wait for Chief. This is the rule that keeps dependency automation
+  // consistent with R2, so it is asserted by consequence, not by presence.
+  const major = renovate.packageRules.find((rule) =>
+    rule.matchUpdateTypes?.includes("major"),
+  );
+  assert.ok(major);
+  assert.equal(major.automerge, false);
+  assert.equal(
+    renovate.packageRules.some(
+      (rule) =>
+        rule.matchUpdateTypes?.includes("major") && rule.automerge === true,
+    ),
+    false,
+  );
 });
 
 test("every repository workflow is non-deploying, least-privileged, and SHA-pinned", () => {

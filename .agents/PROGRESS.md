@@ -31,9 +31,9 @@ Last updated: 2026-08-18 | Branch: main
       HANDOFF machine-enforced (Chief GO 2026-08-11)
 - [x] Active docs converted to concise English (2026-08-11)
 - [~] Claude Code automation pack (`.claude/` hooks, subagents, skills) — implemented;
-      Chief decision 2 (`docs/bootstrap/CLAUDE_SETUP.md`); Postgres MCP deferred
+      Chief decision 1 (`docs/bootstrap/CLAUDE_SETUP.md`); Postgres MCP deferred
 - [~] Codex repository automation pack (`.codex/` hooks/config/agents + `.agents/skills`) — implemented;
-      Chief decision 3 — a "yes" from Chief is the whole approval
+      Chief decision 2 — a "yes" from Chief is the whole approval
 - [ ] Complete `.env.example` + capability variable docs
 - [ ] Python prerequisite documented (INSTALL.md) + setup detection
 - [~] Sentra wiki — plan approved by Chief 2026-08-18 and now `ACTIVE`; `sentrawiki/` already holds
@@ -47,8 +47,8 @@ Baseline evidence: `docs/evidence/MONOREPO GROUND TRUTH BASELINE v1.md`.
 
 - [x] Phase 1 — verification integrity. `fix/phase-1-verification-integrity` (`3ecc116`, deterministic
       lint baseline) merged as `3e05005`; independent review evidence recorded in `8e22025`.
-> Phase 2 onward cannot start until D-001, D-002, and D-003 are settled (Chief decisions 1 and 4).
-> D-004 is accepted: Chief's explicit "yes" is the R2 authorization.
+> D-001, D-003, and D-004 are settled (public repository, Renovate policy, R2 authorization).
+> Phase 2 onward still waits on D-002, the platform authority model — Chief decision 3.
 
 - [ ] Phase 2 — platform enforcement (exact main SHA CI, `main` ruleset, R2 merge bridge, negative tests)
 - [ ] Phase 3 — operational Control Center (evidence ladder, verification semantics, lifecycle,
@@ -68,7 +68,7 @@ Baseline evidence: `docs/evidence/MONOREPO GROUND TRUTH BASELINE v1.md`.
 - [x] Gate repairs — stale-evidence handling, memory-file exemption, classification gaps,
       sibling-worktree guard (PRs #19, #20, #21, merged)
 - [ ] Phases 6-8 — GitHub platform controls + drift audit, autonomous R0/R1/R2 executor, inert R3
-      and cutover. All three are held by the four activation gates in Chief decision 5.
+      and cutover. All three are held by the four activation gates in Chief decision 4.
 
 ## ⚪ Phase 2 — Project Migration from abyss-monorepo
 
