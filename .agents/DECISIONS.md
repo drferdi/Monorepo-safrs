@@ -37,10 +37,13 @@ workspace package is `@safrs/*`, and `stripLineComments` is still duplicated byt
 `tests/repository/lint-baseline.test.mjs` and `tests/repository/jsonc.mjs`. Both are code changes, outside
 a documentation realignment.
 
-Tooling note for future sessions: the shell's `ls` output in this environment lowercases filenames and can
-omit entries — it showed `safrs_bootstrap_implementation.md` for a file git tracks as
-`SAFRS_BOOTSTRAP_IMPLEMENTATION.md`, and hid `packages/env/` entirely. Use `git ls-files` when a path's
-exact case or a directory's full contents matter.
+One real inconsistency was found underneath a misread: two files under `docs/plans/` carried a lowercase
+name on disk while git tracked them uppercase (`safrs_bootstrap_implementation.md` versus
+`SAFRS_BOOTSTRAP_IMPLEMENTATION.md`). Windows' case-insensitive filesystem hid the split, and every one of
+the seven inbound references in the repository uses the uppercase form, so the working copy was renamed to
+match the index rather than the other way round. Nothing changed in git's view — the index was already
+correct — but the two layers now agree. A separate `ls` quirk in this environment omits entries
+(`packages/env/` did not appear); `git ls-files` is the reference when a directory's full contents matter.
 
 ## 2026-08-18 - Address rules widened to cover "elo"/"gue"; AGENTS.md must be read before the first reply
 

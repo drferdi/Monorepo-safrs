@@ -14,7 +14,7 @@ Entry rules:
 
 ## Repo & Tooling
 
-- The shell's `ls` in this environment lowercases filenames and can omit entries; use `git ls-files` whenever a path's exact case or a directory's full contents matter (2026-08-18, a case-mismatch "finding" turned out to be an `ls` artifact).
+- On Windows a file's case on disk can differ from the case git tracks, and the case-insensitive filesystem hides it; `git ls-files` is the reference, and `ls` can also silently omit entries (2026-08-18, `docs/plans/` held two files whose disk name was lowercase while the index held uppercase, and `ls` did not list `packages/env/`).
 - Read root `AGENTS.md` before the first reply of a session, not after several turns — its language and address rules bind from turn one (2026-08-18, Chief corrected forbidden-term use twice).
 - Rehydrate = Always (MUST) only, one parallel batch; Always (SHOULD) is not a second mandatory pass (2026-08-18, Chief: rehydrate too slow).
 - Always `pnpm` — never `npm` or `yarn` (2026-08-11, abyss-monorepo legacy).

@@ -32,6 +32,10 @@ Shipped this session, in order:
   it actually holds, the completed SOTA plan moved to `docs/plans/completed/`, and
   `.agents/CONTEXT.md` Repository Shape rebuilt from `git ls-files`. Rationale and the two findings
   left untouched are in `DECISIONS.md`.
+- A follow-up correction: two files under `docs/plans/` were named lowercase on disk while git tracked
+  them uppercase, and the first draft of `docs/plans/active/README.md` copied the lowercase form. The
+  working copy was renamed to match the index, the README now cites the tracked name, and the lesson in
+  `12_LESSONS.md` was rewritten — the cause is a Windows case split, not an `ls` bug.
 
 Verified: `scripts/safrs-verify.sh` PASS, 67/67 repository tests, typecheck 8/8, `pnpm lint`
 clean after the worktree was renormalized to LF.
