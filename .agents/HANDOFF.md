@@ -17,6 +17,12 @@ Last updated: 2026-08-18 (Cline Kanban trialled and removed on Chief's order)
   deleted `MASTER REMEDIATION KANBAN.md` in `docs/superpowers/plans/`.
 - The globally installed npm package `kanban` was left alone (outside the repository).
 
+- Restored the three governance documents that `a70f0c7` deleted when it swapped the markdown board for
+  the Kanban app: `docs/plans/active/MASTER REMEDIATION KANBAN.md` (163 lines),
+  `docs/plans/active/MASTER REMEDIATION AGENT ASSIGNMENTS.md` (131), and
+  `docs/evidence/MONOREPO GROUND TRUTH BASELINE v1.md` (119). Their content had not been merged into the
+  master plan — it was simply gone. The markdown board is the execution board again.
+
 ## Work in flight
 
 - **Branch `fix/phase-1-verification-integrity` holds real, unreviewed work** — commit `3ecc116`
