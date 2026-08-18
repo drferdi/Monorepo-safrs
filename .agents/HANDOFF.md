@@ -4,7 +4,7 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-18 (fix/phase-1 merged as 3e05005; SAFRS gate red pending independent review)
+Last updated: 2026-08-18 (merge reviewed, gate green, everything pushed)
 
 ## Current state
 
@@ -14,18 +14,23 @@ Last updated: 2026-08-18 (fix/phase-1 merged as 3e05005; SAFRS gate red pending 
 
 ## Work in flight
 
-- `78c62f9` — both R2 policy slices (fast-rehydrate protocol + widened address rules).
-- `3e05005` — merge of `fix/phase-1-verification-integrity` (`3ecc116`), run by Chief, message authored by the agent. Never reviewed before the merge; Chief holds review responsibility.
-- The merge broke two pre-existing tests because it changed policy under them: `.gitattributes` now pins `eol=lf` and Biome formats with `lineEnding: "lf"`. `precommit.test.mjs` still expected CRLF on Windows, and `workspace-config.test.mjs` used `JSON.parse` on a `biome.jsonc` that now carries comments. Both expectations were tightened, not loosened: LF is now asserted on every platform, and the JSONC parser lives in `tests/repository/jsonc.mjs`.
-- **`scripts/safrs-verify.sh` is RED and cannot go green from this side.** The unpushed change set (base `374e425`) mixes implementation with verification controls, so the checker demands independent review evidence in `.safrs/reviews/verification-integrity.json`. The existing evidence is stale (bound to `fe1af2d6410b`). Nobody may author that approval from the session that wrote the change — see the 2026-08-17 entry in `DECISIONS.md`.
-- Nothing is pushed. `main` is ahead of `origin/main`.
+Nothing. `main` and `origin/main` are both at `8e22025`; the working tree holds no
+content changes.
+
+Shipped this session, in order:
+
+- `78c62f9` — two R2 policy slices: forbidden address terms widened to five, rehydrate narrowed to the Always (MUST) list.
+- `3e05005` — merge of `fix/phase-1-verification-integrity` (`3ecc116`) on Chief's authorization. It pins `* text=auto eol=lf` and Biome `lineEnding: "lf"`, so line endings are now deterministic on every platform.
+- `74497c0` — the two tests that merge broke, realigned. `precommit.test.mjs` now asserts a literal LF instead of branching on platform; `workspace-config.test.mjs` reads `biome.jsonc` through the new JSONC parser in `tests/repository/jsonc.mjs`. Both expectations are stricter than what they replaced.
+- `8e22025` — integrity review evidence rebound to `base_sha 374e425dde71…`, `change_set_sha256 9da8491c7cea…`, recomputed from scratch by an independent read-only reviewer and approved by Chief.
+
+Verified: `scripts/safrs-verify.sh` PASS, 67/67 repository tests, typecheck 8/8, `pnpm lint`
+clean after the worktree was renormalized to LF.
 
 ## Next actions
 
 | Area | Action |
 | --- | --- |
-| **Chief** | Choose the independent reviewer for the current change set: authorize the `safrs-auditor` subagent (read-only, separate context), or review it yourself and have the verdict recorded |
-| **Chief** | Decide whether the whole stack gets pushed to `origin` once the gate is green |
 | **Chief** | Decide the dead `hindsight` MCP server in `~/.claude.json` — restore it (`hindsight-local-mcp`, self-hosted, bank `prof`) or drop the entry — outside this repo; see `DECISIONS.md` |
 | Follow-up | `stripLineComments` is duplicated in `lint-baseline.test.mjs` and `jsonc.mjs`; dedupe in a separate change, not inside the flagged set |
 | Env | Docker is down, so `tests/integration/database.test.ts` cannot run (`ECONNREFUSED 127.0.0.1:54329`). Unrelated to the merge |
