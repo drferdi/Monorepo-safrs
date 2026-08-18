@@ -46,20 +46,28 @@ clean after the worktree was renormalized to LF.
 
 ## Waiting on Chief
 
-Nothing else is blocked on an agent. Each row is a choice only Chief can make, stated in full.
+Nothing. Every open decision was settled on 2026-08-18, the last two by Chief delegating the
+choice. What was decided:
 
-| # | Decision | Where it is recorded |
-| --- | --- | --- |
-| 1 | Platform authority model — who and what may act on GitHub in a one-human repository | `MASTER REMEDIATION PLAN`, D-002 |
-| 2 | Autonomous provider and budgets, control identities, R3 authority and retention, Droid disposition — four gates holding SAFRS automation Phases 6 to 8 | `SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md`, section 3 |
+| Decision | Outcome |
+| --- | --- |
+| D-001 repository visibility | Stays **public**. It already was; the documents that said private are corrected. `.env` is gitignored and has never been committed |
+| D-002 platform authority model | Adopted as recommended: R0 free, R1 on machine verification, R2 on Chief's explicit yes, R3 on explicit human authorization. GitHub enforces the machine gates and never demands a second human who does not exist |
+| D-003 Renovate policy | Patch, minor, pin, digest, and lock file maintenance merge on their own once tests pass. Majors group into one pull request and wait for Chief |
+| D-004 R2 authorization | Chief's explicit "yes" is the approval. No second reviewer exists or is required. Agents never approve |
+| Activation gate 1 — provider and budgets | No runner named. Autonomy is capped at R1 for whenever one is; R2 always stops for Chief |
+| Activation gate 2 — control identities | Not created. Chief's own account is the publisher until Phase 6 actually starts |
+| Activation gate 3 — R3 authority and retention | Chief is the approver. Evidence kept two years. R3 stays inert until its adapter, dry-run, rollback, and postcondition exist |
+| Activation gate 4 — Droid | Stays removed, adapter `read_only_disabled` |
+| Sentra wiki plan | Approved, now `ACTIVE` |
+| `.claude/` and `.codex/` packs | Accepted. Chief built them; they were never an open question |
+| `hindsight` MCP server | Removed from `~/.claude.json`, and the dead recall rule dropped from the global `CLAUDE.md` |
 
-Neither row blocks anything running today. Row 1 gates Master Remediation Phase 2 onward, row 2
-gates SAFRS automation Phase 6 onward.
+Removed as non-decisions: Smartboard Phase B/C has no code in this repository, and `semayot`
+appeared nowhere except the board itself.
 
-Settled 2026-08-18: the Sentra wiki plan is approved and now `ACTIVE`. D-004 is accepted — Chief's
-explicit "yes" is the R2 authorization, there is no second reviewer, and agents never approve. Two rows were removed as
-non-decisions — Smartboard Phase B/C has no code in this repository yet, and `semayot` appeared
-nowhere except the board itself.
+Standing rule: do not turn work Chief already directed into a decision Chief has to make again,
+and do not list something as pending when the thing itself does not exist here.
 
 ## Notes, not decisions
 

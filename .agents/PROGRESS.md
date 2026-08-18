@@ -6,7 +6,7 @@ Last updated: 2026-08-18 | Branch: main
 
 > Area status board — this file is the execution board. Detailed work logs: `docs/plans/active/` → `completed/`.
 > Durable decisions: `DECISIONS.md`. Session state: `HANDOFF.md`.
-> **Everything waiting on Chief is collected in one place: `HANDOFF.md` — Waiting on Chief.**
+> **Nothing is waiting on Chief. The decisions settled on 2026-08-18 are listed in `HANDOFF.md`.**
 
 ---
 
@@ -47,8 +47,8 @@ Baseline evidence: `docs/evidence/MONOREPO GROUND TRUTH BASELINE v1.md`.
 
 - [x] Phase 1 — verification integrity. `fix/phase-1-verification-integrity` (`3ecc116`, deterministic
       lint baseline) merged as `3e05005`; independent review evidence recorded in `8e22025`.
-> D-001, D-003, and D-004 are settled (public repository, Renovate policy, R2 authorization).
-> Phase 2 onward still waits on D-002, the platform authority model — Chief decision 1.
+> D-001 to D-004 are all settled (public repository, platform authority model, Renovate policy,
+> R2 authorization). Phase 2 onward is now open work, not a blocked decision.
 
 - [ ] Phase 2 — platform enforcement (exact main SHA CI, `main` ruleset, R2 merge bridge, negative tests)
 - [ ] Phase 3 — operational Control Center (evidence ladder, verification semantics, lifecycle,
@@ -67,8 +67,9 @@ Baseline evidence: `docs/evidence/MONOREPO GROUND TRUTH BASELINE v1.md`.
 - [x] Phase 5 — PR gates, evidence, approvals, publisher separation (PR #18, merged)
 - [x] Gate repairs — stale-evidence handling, memory-file exemption, classification gaps,
       sibling-worktree guard (PRs #19, #20, #21, merged)
-- [ ] Phases 6-8 — GitHub platform controls + drift audit, autonomous R0/R1/R2 executor, inert R3
-      and cutover. All three are held by the four activation gates in Chief decision 2.
+- [ ] Phases 6-8 — GitHub platform controls + drift audit, autonomous executor, inert R3 and cutover.
+      Activation gates resolved 2026-08-18: no runner named, autonomy capped at R1, Chief is the R3
+      approver with two-year evidence retention, Droid stays removed. Deliberately parked, not blocked.
 
 ## ⚪ Phase 2 — Project Migration from abyss-monorepo
 

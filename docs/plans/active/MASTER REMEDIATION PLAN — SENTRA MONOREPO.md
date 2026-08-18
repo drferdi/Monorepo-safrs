@@ -772,8 +772,14 @@ GitHub should strongly enforce machine gates without requiring fictional human r
 ## Status
 
 ```text
-RECOMMENDED — AWAITING APPROVAL
+ACCEPTED — Chief delegated the choice, 2026-08-18
 ```
+
+The recommended model is adopted unchanged, because it is the model already in force: R0 free, R1 on
+machine verification, R2 on Chief's explicit yes, R3 on explicit human authorization with agent
+execution restricted. D-004 settled what "Chief's yes" means; this record settles that GitHub must
+enforce the machine gates and must never demand a second human who does not exist. No fictional
+reviewer, no administrator bypass habit.
 
 ---
 

@@ -1,6 +1,6 @@
 # SAFRS Full Automation Implementation Plan
 
-**Status:** ACTIVE — Phases 1-5 merged; Phases 6-8 are blocked on Chief's Activation Decisions
+**Status:** ACTIVE — Phases 1-5 merged; Phases 6-8 deliberately parked (activation gates resolved 2026-08-18, no runner named)
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use `superpowers:subagent-driven-development` (recommended) or `superpowers:executing-plans` to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -91,6 +91,32 @@ Baseline inspected: `origin/main` at `2f1a1b05851257c66408d79e51ebaae6a3eb6a00` 
 4. **Droid disposition:** Approve an exact verified Droid CLI artifact/version/install method, or keep Droid removed and its adapter `read_only_disabled`.
 
 These choices are activation gates, not implementation blockers for contracts, tests, inert workflows, and dry-run simulations.
+
+### Resolution — Chief delegated the choice, 2026-08-18
+
+1. **Autonomous provider and budgets — no provider selected; autonomy is capped at R1.** Nothing runs
+   unattended today and nothing will until Chief names a runner. The standing limit is set now so it
+   cannot be widened by omission later: an autonomous run may carry R0 and R1 to completion and must
+   stop at R2 for Chief's explicit yes. That follows D-002 and D-004, which put R2 on Chief and only
+   Chief. Concrete spend limits are set in the pull request that introduces the runner, together with
+   runtime, model-call, tool-call, retry, and concurrency caps; `unmetered` is acceptable for the
+   monetary field only when the other caps are enforced.
+2. **Control identities — not created yet; Chief's own account is the publisher.** Two extra GitHub
+   identities are operational overhead with no benefit while no runner exists. They are created in the
+   pull request that starts Phase 6, with their exact permissions reviewed there, not approved in
+   advance here.
+3. **R3 authority and retention — Chief is the authorized approver; evidence is kept for two years.**
+   Chief is the only human in this repository, so naming anyone else would be fiction. Two years covers
+   an audit window without unbounded storage. R3 stays inert regardless until a target-specific adapter,
+   dry-run, idempotency rule, postcondition, and tested rollback exist.
+4. **Droid — stays removed, adapter `read_only_disabled`.** No tracked Droid workflow exists on this
+   baseline and no verified artifact or installer has been produced. Adding an agent surface nobody is
+   using would enlarge the attack surface for nothing. Reversing this needs an exact version and
+   installer reviewed in its own pull request.
+
+What this unblocks: Phases 6 to 8 are no longer waiting on a decision. They are deliberately parked —
+the contracts, tests, inert workflows, and dry-run simulations may proceed, and only the act of naming
+a runner is deferred.
 
 ## 4. Target Architecture
 
