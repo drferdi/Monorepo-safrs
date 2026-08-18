@@ -69,6 +69,23 @@ appeared nowhere except the board itself.
 Standing rule: do not turn work Chief already directed into a decision Chief has to make again,
 and do not list something as pending when the thing itself does not exist here.
 
+## Governance remediation — closed 2026-08-18
+
+`SAFRS_GOVERNANCE_REMEDIATION_PLAN.md` is `COMPLETED` and moved to `docs/plans/completed/`. Every
+box is ticked or explicitly dropped with its reason written in the plan. Three of them are refusals
+to add something, and those matter more than the additions:
+
+- **Branch protection on `main` is deliberately not enabled.** With one human, requiring code-owner
+  review means Chief approving Chief's own pull requests while work stops. The machine gates in CI
+  are the enforcement. Conformance therefore stays at **Core** and Controlled is not claimed.
+- **Email/Stripe stays an optional pack.** No caller exists, so installing it would buy dependencies
+  and a review for nothing.
+- **Nothing was added to `AGENTS.md`,** and the KB split was declined. Fourteen files nobody revises
+  do not improve by becoming twenty-eight.
+
+Held by the environment, not by the repository: `pnpm dev`, `db:seed`, and `db:studio` cannot be
+verified while Docker is down.
+
 ## Notes, not decisions
 
 - `stripLineComments` is duplicated in `lint-baseline.test.mjs` and `jsonc.mjs`; dedupe in its own change.

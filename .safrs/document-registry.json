@@ -287,9 +287,9 @@
     },
     {
       "id": "safrs-governance-remediation-plan",
-      "path": "docs/plans/active/SAFRS_GOVERNANCE_REMEDIATION_PLAN.md",
+      "path": "docs/plans/completed/SAFRS_GOVERNANCE_REMEDIATION_PLAN.md",
       "type": "plan",
-      "status": "ACTIVE"
+      "status": "COMPLETED"
     },
     {
       "id": "handoff",
