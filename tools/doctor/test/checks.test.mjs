@@ -15,6 +15,9 @@ function fakeCommand(overrides = {}) {
     "docker compose exec -T postgres pg_isready -U safrs -d safrs_local": {
       stdout: "localhost:5432 - accepting connections",
     },
+    "docker compose port postgres 5432": {
+      stdout: "127.0.0.1:54329",
+    },
     ...overrides,
   };
 

@@ -221,7 +221,7 @@ export async function runSetup(options = {}) {
     !(await commandIsAvailable(
       command,
       "docker",
-      ["compose", "up", "-d", "--wait", "postgres"],
+      ["compose", "up", "-d", "--force-recreate", "--wait", "postgres"],
       rootDirectory,
       setupEnvironment,
     ))

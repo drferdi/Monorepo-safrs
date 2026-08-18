@@ -3,6 +3,10 @@
 Append-only, newest first. Each entry: date, decision, brief rationale, evidence/status.
 Major architectural decisions also get an ADR in `docs/adrs/`.
 
+## 2026-08-18 - Next production builds ignore leaked NODE_ENV
+
+`next build` with inherited `NODE_ENV=development` fails on Next 16.3 (`/_global-error` `useContext` of null) for both Golden Path and Control Center. Both app `build` scripts now call `scripts/next-production-build.mjs`, which spawns `next build` with `NODE_ENV=production` and `detached: false`. Evidence: wrapper log `leakedNodeEnv: development` / `childNodeEnv: production`, both package builds exit 0.
+
 ## 2026-08-18 - The progress board no longer holds status
 
 Chief named the failure loop exactly: work finishes, the status is never changed, the next agent

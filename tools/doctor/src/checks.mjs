@@ -291,8 +291,17 @@ export async function runDoctor(options = {}) {
           { cwd: rootDirectory },
         )
       : { exitCode: 1, stderr: "prasyarat database belum siap" };
+  const hostPortPublished =
+    commandSucceeded(databaseReady) && commandSucceeded(dockerEngine)
+      ? await command("docker", ["compose", "port", "postgres", "5432"], {
+          cwd: rootDirectory,
+        })
+      : { exitCode: 1, stderr: "port host belum terpasang" };
+  const hostPortOutput = `${hostPortPublished.stdout ?? ""}${hostPortPublished.stderr ?? ""}`;
+  const hostReachable =
+    commandSucceeded(hostPortPublished) && hostPortOutput.includes("54329");
   checks.push(
-    commandSucceeded(databaseReady)
+    commandSucceeded(databaseReady) && hostReachable
       ? result(true, "POSTGRES", "postgres-ready", "PostgreSQL lokal siap.", "")
       : result(
           false,
@@ -300,7 +309,10 @@ export async function runDoctor(options = {}) {
           "postgres-ready",
           "PostgreSQL lokal belum siap.",
           "Buka Docker Desktop lalu jalankan pnpm run setup atau pnpm dev.",
-          compactFailure(databaseReady, suppliedEnvironment),
+          compactFailure(
+            hostReachable ? databaseReady : hostPortPublished,
+            suppliedEnvironment,
+          ),
         ),
   );
 

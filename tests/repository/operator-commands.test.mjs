@@ -20,8 +20,15 @@ const localUrl = "postgresql://safrs:safrs@127.0.0.1:54329/safrs_local";
 
 function successfulCommand(calls) {
   return async (program, argumentsList) => {
-    calls.push([program.replace(/\.cmd$/iu, ""), ...argumentsList].join(" "));
-    return { exitCode: 0, stdout: "ok", stderr: "" };
+    const rendered = [program.replace(/\.cmd$/iu, ""), ...argumentsList].join(
+      " ",
+    );
+    calls.push(rendered);
+    const stdout =
+      rendered === "docker compose port postgres 5432"
+        ? "127.0.0.1:54329"
+        : "ok";
+    return { exitCode: 0, stdout, stderr: "" };
   };
 }
 
@@ -78,7 +85,7 @@ test("setup creates a missing environment file once and runs the safe local sequ
     "git --version",
     "pnpm install --frozen-lockfile=false",
     "docker --version",
-    "docker compose up -d --wait postgres",
+    "docker compose up -d --force-recreate --wait postgres",
     "pnpm --filter @safrs/database generate",
     "pnpm --filter @safrs/database migrate",
     "pnpm --filter @safrs/database seed",
@@ -373,7 +380,7 @@ test("development repairs local PostgreSQL and Prisma before handing off to Turb
   assert.equal(result.exitCode, 0);
   assert.equal(spawned, 1);
   assert.deepEqual(calls, [
-    "docker compose up -d --wait postgres",
+    "docker compose up -d --force-recreate --wait postgres",
     "pnpm --filter @safrs/database generate",
   ]);
 });

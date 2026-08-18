@@ -59,6 +59,6 @@ test("root follows canonical SAFRS topology and excludes protected paths from Bi
   assert.ok(biome.files.includes.includes("!!**/.turbo"));
   assert.ok(biome.files.includes.includes("!!**/.next"));
   assert.ok(biome.files.includes.includes("!!**/next-env.d.ts"));
-  assert.equal(webPackage.scripts.dev, "next dev");
+  assert.equal(webPackage.scripts.dev, "next dev -H 127.0.0.1");
   assert.equal(webPackage.scripts.start, "next start");
 });

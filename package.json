@@ -28,7 +28,7 @@
     "check:tokens": "node scripts/check-tokens.mjs",
     "check:security": "node scripts/check-supply-chain.mjs",
     "governance": "node scripts/safrs-verify.mjs",
-    "db:start": "docker compose up -d --wait postgres",
+    "db:start": "docker compose up -d --force-recreate --wait postgres",
     "db:stop": "docker compose stop postgres",
     "db:studio": "pnpm --filter @safrs/database studio",
     "db:generate": "pnpm --filter @safrs/database generate",

@@ -23,7 +23,7 @@ Run `pnpm governance` to see exactly which checker failed.
 
 ### PostgreSQL
 
-- **Demo database won't start** — run `pnpm db:start` (`docker compose up -d --wait postgres`). Re-run `pnpm doctor` to confirm connectivity.
+- **Demo database won't start** — run `pnpm db:start` (`docker compose up -d --force-recreate --wait postgres`). Re-run `pnpm doctor` to confirm connectivity.
 - **Port conflict / wrong host** — the local databases must be reachable at `127.0.0.1:54329`; the reset guard rejects any other URL. Confirm `DATABASE_URL` uses that host.
 - **E2E rejects the URL** — `scripts/test-e2e.mjs` requires a local PostgreSQL URL ending in `_test`, or it will create a disposable one itself. A rejected variable raises `[E2E] DATABASE_URL DITOLAK`.
 

@@ -73,7 +73,7 @@ export async function runDevelopment(options = {}) {
 
   const databaseStart = await command(
     "docker",
-    ["compose", "up", "-d", "--wait", "postgres"],
+    ["compose", "up", "-d", "--force-recreate", "--wait", "postgres"],
     { cwd: rootDirectory, env: developmentEnvironment },
   );
   if (databaseStart.exitCode !== 0) {

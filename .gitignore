@@ -20,6 +20,7 @@ playwright-report/
 test-results/
 *.tsbuildinfo
 pnpm-debug.log*
+debug-*.log
 
 # Editors and operating systems
 .idea/
