@@ -36,6 +36,10 @@ Shipped this session, in order:
   them uppercase, and the first draft of `docs/plans/active/README.md` copied the lowercase form. The
   working copy was renamed to match the index, the README now cites the tracked name, and the lesson in
   `12_LESSONS.md` was rewritten — the cause is a Windows case split, not an `ls` bug.
+- A second follow-up: `SAFRS_GOVERNANCE_REMEDIATION_PLAN.md` and
+  `SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md` declared no status in their headers, so the
+  README's status column for them was sourced from `PROGRESS.md` rather than from the plan itself.
+  Both now carry a `**Status:**` line, and every plan under `docs/plans/active/` declares its own.
 
 Verified: `scripts/safrs-verify.sh` PASS, 67/67 repository tests, typecheck 8/8, `pnpm lint`
 clean after the worktree was renormalized to LF.

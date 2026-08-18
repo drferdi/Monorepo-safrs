@@ -1,5 +1,7 @@
 # SAFRS Governance Remediation Plan
 
+**Status:** ACTIVE
+
 **Goal:** Close governance gaps found in the 2026-08-11 SAFRS v1.1 audit (Phase 1 structure,
 Phase 2 comparison vs SEN-001, Phase 3 mapping of 8 golden-path features) without weakening
 working controls.
