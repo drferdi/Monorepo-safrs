@@ -36,6 +36,9 @@ Last updated: 2026-08-18 | Branch: main
       Chief decision 3, and the R2 designated review is still outstanding
 - [ ] Complete `.env.example` + capability variable docs
 - [ ] Python prerequisite documented (INSTALL.md) + setup detection
+- [~] Sentra wiki — plan approved by Chief 2026-08-18 and now `ACTIVE`; `sentrawiki/` already holds
+      content, so the plan's remaining sections are the work left
+      (`docs/plans/active/2026-08-12-wiki-setup-plan.md`)
 
 ## 🟡 Master Remediation (plan: `docs/plans/active/MASTER REMEDIATION PLAN — SENTRA MONOREPO.md`)
 
@@ -44,7 +47,8 @@ Baseline evidence: `docs/evidence/MONOREPO GROUND TRUTH BASELINE v1.md`.
 
 - [x] Phase 1 — verification integrity. `fix/phase-1-verification-integrity` (`3ecc116`, deterministic
       lint baseline) merged as `3e05005`; independent review evidence recorded in `8e22025`.
-> Phase 2 onward cannot start until the four decision records in Chief decision 6 are settled.
+> Phase 2 onward cannot start until the open decision records D-001 to D-004 are settled
+> (Chief decisions 1 and 4).
 
 - [ ] Phase 2 — platform enforcement (exact main SHA CI, `main` ruleset, R2 merge bridge, negative tests)
 - [ ] Phase 3 — operational Control Center (evidence ladder, verification semantics, lifecycle,
@@ -64,7 +68,7 @@ Baseline evidence: `docs/evidence/MONOREPO GROUND TRUTH BASELINE v1.md`.
 - [x] Gate repairs — stale-evidence handling, memory-file exemption, classification gaps,
       sibling-worktree guard (PRs #19, #20, #21, merged)
 - [ ] Phases 6-8 — GitHub platform controls + drift audit, autonomous R0/R1/R2 executor, inert R3
-      and cutover. All three are held by the four activation gates in Chief decision 7.
+      and cutover. All three are held by the four activation gates in Chief decision 5.
 
 ## ⚪ Phase 2 — Project Migration from abyss-monorepo
 
@@ -85,11 +89,9 @@ Baseline evidence: `docs/evidence/MONOREPO GROUND TRUTH BASELINE v1.md`.
 
 ## 🔴 Blocked / Deferred
 
-- [!] Smartboard Phase B/C — Chief decision 4 (backup + migration dry-run first either way)
-- [~] semayot — deferred; delete or relocate is Chief decision 5
-- [!] sentrawiki — content already lives in `sentrawiki/` while its plan is still `PROPOSED`
-      (`docs/plans/active/2026-08-12-wiki-setup-plan.md`). Chief decision 1. Do not flip the status
-      without it.
+- [!] Smartboard Phase B/C — blocked until the project is actually migrated into `projects/`;
+      it does not exist in this repository yet, so there is nothing to decide today
+
 - [ ] 8 skeleton projects (skripsipintar, smartboard-docs-only, clinical-copilot,
       healthsphere, hoamanagement, mantra, melinda, rag-dashboard) — skip
 

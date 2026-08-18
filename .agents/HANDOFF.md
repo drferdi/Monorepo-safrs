@@ -46,22 +46,24 @@ clean after the worktree was renormalized to LF.
 
 ## Waiting on Chief
 
-Nothing else is blocked on an agent. Each row is a choice only Chief can make; the wording in
-parentheses is the whole decision.
+Nothing else is blocked on an agent. Each row is a choice only Chief can make, stated in full.
 
 | # | Decision | Where it is recorded |
 | --- | --- | --- |
-| 1 | Sentra wiki plan — approve it, or record the wiki as ad-hoc and close the plan (`sentrawiki/` already holds content while the plan sits at `PROPOSED`) | `docs/plans/active/2026-08-12-wiki-setup-plan.md` |
-| 2 | Claude Code automation pack — accept as implemented, or send back | `docs/bootstrap/CLAUDE_SETUP.md` |
-| 3 | Codex automation pack — same, plus the R2 designated review it still needs | `docs/bootstrap/CODEX_SETUP.md` |
-| 4 | Smartboard Phase B/C — GO or hold (backup and migration dry-run come first either way) | `PROGRESS.md`, Blocked/Deferred |
-| 5 | `semayot` — delete it or relocate it | `PROGRESS.md`, Blocked/Deferred |
-| 6 | Repository visibility, platform authority model, Renovate policy, R2 authorization model — four decision records, all still open | `docs/plans/active/MASTER REMEDIATION PLAN — SENTRA MONOREPO.md`, D-001 to D-004 |
-| 7 | Autonomous provider and budgets, control identities, R3 authority and retention, Droid disposition — four activation gates holding SAFRS automation Phases 6 to 8 | `docs/plans/active/SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md`, section 3 |
-| 8 | The dead `hindsight` MCP server in `~/.claude.json` — restore it (self-hosted, bank `prof`) or drop the entry. Outside this repository | `DECISIONS.md`, 2026-08-18 |
+| 1 | **Repository visibility is PUBLIC while `.agents/CONTEXT.md` calls it private.** `gh repo view` returns `"visibility":"PUBLIC"`. No credential is exposed — `.env` is gitignored and has never been committed — but the trust boundary the documents assume is wrong. Keep it public and fix the documents, or make it private | `MASTER REMEDIATION PLAN`, D-001 |
+| 2 | Claude Code automation pack — accept as implemented, or send back. It is `.claude/`: two hooks (one blocks writes to credential files, one runs Biome after every edit), two read-only reviewer subagents, and two skills | `docs/bootstrap/CLAUDE_SETUP.md` |
+| 3 | Codex automation pack — same question. It also still needs an R2 designated review: a second reviewer who did not write the change, required because the pack touches governance controls | `docs/bootstrap/CODEX_SETUP.md` |
+| 4 | Platform authority model, Renovate dependency policy, R2 authorization model — three decision records, all open. They define who may approve what in a repository with one human | `MASTER REMEDIATION PLAN`, D-002 to D-004 |
+| 5 | Autonomous provider and budgets, control identities, R3 authority and retention, Droid disposition — four activation gates holding SAFRS automation Phases 6 to 8 | `SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md`, section 3 |
+| 6 | The dead `hindsight` MCP server in `~/.claude.json` — restore it (self-hosted, bank `prof`) or drop the entry. Outside this repository | `DECISIONS.md`, 2026-08-18 |
 
-Rows 1 to 5 unblock work that is already scoped. Rows 6 and 7 gate whole phases: nothing in
-Master Remediation Phase 2 onward, or SAFRS automation Phase 6 onward, can start without them.
+Row 1 is a security-posture question and should go first. Rows 4 and 5 gate whole phases:
+nothing in Master Remediation Phase 2 onward, or SAFRS automation Phase 6 onward, can start
+without them.
+
+Settled 2026-08-18: the Sentra wiki plan is approved and now `ACTIVE`. Two rows were removed as
+non-decisions — Smartboard Phase B/C has no code in this repository yet, and `semayot` appeared
+nowhere except the board itself.
 
 ## Notes, not decisions
 

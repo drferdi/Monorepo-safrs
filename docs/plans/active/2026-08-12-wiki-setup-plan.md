@@ -1,6 +1,6 @@
 # Implementation Plan: Comprehensive Wiki for SAFRS Monorepo
 
-**Status:** PROPOSED
+**Status:** ACTIVE — approved by Chief 2026-08-18
 **Risk:** R1 (documentation generation, no code mutation)
 **Date:** 2026-08-12
 **Owner:** Chief
