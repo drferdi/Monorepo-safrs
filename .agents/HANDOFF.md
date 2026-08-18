@@ -50,14 +50,11 @@ Nothing else is blocked on an agent. Each row is a choice only Chief can make, s
 
 | # | Decision | Where it is recorded |
 | --- | --- | --- |
-| 1 | Claude Code automation pack — accept as implemented, or send back | `docs/bootstrap/CLAUDE_SETUP.md` |
-| 2 | Codex automation pack — same question | `docs/bootstrap/CODEX_SETUP.md` |
-| 3 | Platform authority model — who and what may act on GitHub in a one-human repository | `MASTER REMEDIATION PLAN`, D-002 |
-| 4 | Autonomous provider and budgets, control identities, R3 authority and retention, Droid disposition — four gates holding SAFRS automation Phases 6 to 8 | `SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md`, section 3 |
+| 1 | Platform authority model — who and what may act on GitHub in a one-human repository | `MASTER REMEDIATION PLAN`, D-002 |
+| 2 | Autonomous provider and budgets, control identities, R3 authority and retention, Droid disposition — four gates holding SAFRS automation Phases 6 to 8 | `SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md`, section 3 |
 
-Row 1 is a security-posture question and should go first. Rows 4 and 5 gate whole phases:
-nothing in Master Remediation Phase 2 onward, or SAFRS automation Phase 6 onward, can start
-without them.
+Neither row blocks anything running today. Row 1 gates Master Remediation Phase 2 onward, row 2
+gates SAFRS automation Phase 6 onward.
 
 Settled 2026-08-18: the Sentra wiki plan is approved and now `ACTIVE`. D-004 is accepted — Chief's
 explicit "yes" is the R2 authorization, there is no second reviewer, and agents never approve. Two rows were removed as
