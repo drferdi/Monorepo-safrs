@@ -2,9 +2,9 @@
 
 Legend: [x] done, [~] in progress, [ ] not started, [!] blocked
 
-Last updated: 2026-08-13 | Branch: safrs/automation-03-leases-lifecycle
+Last updated: 2026-08-18 | Branch: main
 
-> Area status board. Detailed work logs: `docs/plans/active/` → `completed/`.
+> Area status board — this file is the execution board. Detailed work logs: `docs/plans/active/` → `completed/`.
 > Durable decisions: `DECISIONS.md`. Session state: `HANDOFF.md`.
 
 ---
@@ -33,6 +33,20 @@ Last updated: 2026-08-13 | Branch: safrs/automation-03-leases-lifecycle
 - [x] Codex repository automation pack (`.codex/` hooks/config/agents + `.agents/skills`) — implemented; R2 designated review required
 - [ ] Complete `.env.example` + capability variable docs
 - [ ] Python prerequisite documented (INSTALL.md) + setup detection
+
+## 🟡 Master Remediation (plan: `docs/plans/active/MASTER REMEDIATION PLAN — SENTRA MONOREPO.md`)
+
+Assignments: `docs/plans/active/MASTER REMEDIATION AGENT ASSIGNMENTS.md`.
+Baseline evidence: `docs/evidence/MONOREPO GROUND TRUTH BASELINE v1.md`.
+
+- [~] Phase 1 — verification integrity. Unreviewed work sits on branch `fix/phase-1-verification-integrity`
+      (commit `3ecc116`, deterministic lint baseline). Review or drop it before restarting the phase.
+- [ ] Phase 2 — platform enforcement (exact main SHA CI, `main` ruleset, R2 merge bridge, negative tests)
+- [ ] Phase 3 — operational Control Center (evidence ladder, verification semantics, lifecycle,
+      bounded local process supervisor)
+- [ ] Phase 4 — verification depth (coverage baseline, API compatibility, migration drift, Control Center E2E)
+- [ ] Phase 5 — supply-chain and platform security depth
+- [ ] Phase 6 — monorepo performance optimization
 
 ## 🟡 SAFRS Full Automation (plan: `docs/plans/active/SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md`)
 
