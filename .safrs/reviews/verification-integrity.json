@@ -2,7 +2,7 @@
   "version": 1,
   "verdict": "approved",
   "reviewer_id": "human:chief",
-  "reviewed_at": "2026-08-17T16:31:36Z",
-  "base_sha": "fe1af2d6410bb0e1cf7acf459c1251c3f7df84a2",
-  "change_set_sha256": "0730d28bdaaba39810fefd6ea547dee656138ad7d0c6d89487674b096a84fd0b"
+  "reviewed_at": "2026-08-18T12:41:00Z",
+  "base_sha": "374e425dde711005fd9a68de81d165455945caac",
+  "change_set_sha256": "9da8491c7ceaf3c75f85d99810c6807aabd1f8603541ae282d01803cbbb4f5b1"
 }
