@@ -21,7 +21,8 @@ Last updated: 2026-08-20 (smartboard capsule foundation executed)
 
 1. Independent review `feat/smartboard-capsule`: isi `.safrs/reviews/verification-integrity.json`
    (base_sha + change_set_sha256 disiapkan di laporan sesi) — tanpa ini `safrs-verify` merah.
-2. Merge order: `feat/safrs-ai-sensitive` dulu, lalu `feat/smartboard-capsule`.
+2. Merge order: `feat/smartboard-capsule` DULU (evidence terikat base main saat ini),
+   lalu `feat/safrs-ai-sensitive` (lolos verify mandiri, tanpa evidence).
 
 ## Next actions
 
