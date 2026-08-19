@@ -19,6 +19,7 @@
     ".husky/**",
     "**/.mcp.json",
     "projects/**/AGENTS.md",
+    "projects/**/ai/**",
     "projects/**/safety-critical/**",
     "projects/**/production/**",
     "packages/**",
