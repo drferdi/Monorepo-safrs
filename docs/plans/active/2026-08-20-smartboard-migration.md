@@ -31,6 +31,7 @@
 - Task 2: `docs/adrs/README.md` tidak punya tabel indeks — baris indeks tidak dibuat.
 - Task 4: dieksekusi di branch terpisah `feat/safrs-ai-sensitive` — gate `check_sensitive_changes` menolak kontrol verifikasi + implementasi dalam satu change set.
 - Task 6: `validate_agent_kayyisa.py` FAIL hanya pada entri `operations/*` + `docs/*` yang sengaja dikecualikan; fallback hash manual: 36/36 file cocok (HASH OK).
+- Pasca-plan: `capabilities.json` dibuat via `pnpm capability:add` (ai, R2) — ada di tree spec tapi terlewat dari task plan. `scripts/` capsule ditunda ke fase port (git tidak melacak folder kosong).
 - Task 8: `safrs-verify` menunggu bukti independent review dari Chief (`.safrs/reviews/verification-integrity.json`) karena capsule baru membawa `AGENTS.md` (kontrol) + implementasi bersamaan.
 
 ---
