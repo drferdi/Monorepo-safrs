@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-- **Status:** PROPOSED — belum disetujui untuk eksekusi
+- **Status:** ACTIVE — fase fondasi dieksekusi 2026-08-20; menunggu review integritas Chief
 - **Owner:** Chief
 
 **Goal:** Berdirikan capsule `projects/academic-smartboard/` yang lolos semua gate SAFRS, berisi aset statis (data kurikulum + knowledge package Kayyisa), siap menerima port `site`/`web`/`api`/`demo` di plan lanjutan.
@@ -24,6 +24,15 @@
 - Semua path pada task relatif terhadap root worktree.
 - `SRC=/d/Devops/abyss-monorepo/apps/academic/smartboard` — setiap task yang menyalin mendefinisikan variabel ini di awal shell-nya.
 
+
+## Catatan eksekusi (2026-08-20)
+
+- Task 1: claim tanpa scope `.agents/` (lease aktif TASK-20260818-FAST-REHYDRATE); tidak ada commit (storage task di luar repo).
+- Task 2: `docs/adrs/README.md` tidak punya tabel indeks — baris indeks tidak dibuat.
+- Task 4: dieksekusi di branch terpisah `feat/safrs-ai-sensitive` — gate `check_sensitive_changes` menolak kontrol verifikasi + implementasi dalam satu change set.
+- Task 6: `validate_agent_kayyisa.py` FAIL hanya pada entri `operations/*` + `docs/*` yang sengaja dikecualikan; fallback hash manual: 36/36 file cocok (HASH OK).
+- Task 8: `safrs-verify` menunggu bukti independent review dari Chief (`.safrs/reviews/verification-integrity.json`) karena capsule baru membawa `AGENTS.md` (kontrol) + implementasi bersamaan.
+
 ---
 
 ### Task 1: Claim task SAFRS + worktree
@@ -34,7 +43,7 @@
 **Interfaces:**
 - Produces: task id `TASK-20260820-SMARTBOARD-CAPSULE` state EXECUTING; worktree `../Monorepo.worktrees/feat-smartboard-capsule` di branch `feat/smartboard-capsule`. Semua task berikutnya berjalan di worktree ini.
 
-- [ ] **Step 1: Buat worktree**
+- [x] **Step 1: Buat worktree**
 
 ```bash
 git -C /d/DEV/Monorepo worktree add ../Monorepo.worktrees/feat-smartboard-capsule -b feat/smartboard-capsule
@@ -43,7 +52,7 @@ cd /d/DEV/Monorepo.worktrees/feat-smartboard-capsule
 
 Expected: worktree dibuat, branch `feat/smartboard-capsule` aktif.
 
-- [ ] **Step 2: Claim task**
+- [x] **Step 2: Claim task**
 
 ```bash
 pnpm task claim \
@@ -64,7 +73,7 @@ pnpm task claim \
 
 Expected: task tercatat, state EXECUTING. Risiko R2 karena menyentuh `.safrs/**` dan `.agents/**` (keduanya pola sensitif).
 
-- [ ] **Step 3: Verifikasi claim**
+- [x] **Step 3: Verifikasi claim**
 
 ```bash
 pnpm task list --active
@@ -72,7 +81,7 @@ pnpm task list --active
 
 Expected: `TASK-20260820-SMARTBOARD-CAPSULE` muncul dengan state EXECUTING.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add -A
@@ -91,7 +100,7 @@ git commit -m "chore(task): claim TASK-20260820-SMARTBOARD-CAPSULE"
 - Consumes: keputusan D1–D8 dari spec
 - Produces: ADR yang dirujuk `docs/architecture.md` capsule di Task 7
 
-- [ ] **Step 1: Tulis ADR**
+- [x] **Step 1: Tulis ADR**
 
 Isi lengkap `docs/adrs/0003-smartboard-migration.md`:
 
@@ -139,11 +148,11 @@ dan kontrak capsule.
   sumber; postur lanjutannya diputuskan pada plan fase demo.
 ```
 
-- [ ] **Step 2: Tambah baris indeks di `docs/adrs/README.md`**
+- [x] **Step 2: Tambah baris indeks di `docs/adrs/README.md`**
 
 Ikuti format baris yang dipakai ADR 0001 dan 0002 di file itu (baca dulu, samakan bentuknya), rujuk `0003-smartboard-migration.md`.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add docs/adrs/
@@ -162,7 +171,7 @@ git commit -m "docs(adr): record smartboard migration decisions (0003)"
 - Consumes: slug `academic-smartboard`
 - Produces: capsule yang lolos `check_topology.py`; Task 5–7 menulis ke dalamnya
 
-- [ ] **Step 1: Tulis input wizard** (file di scratchpad, JANGAN di dalam repo)
+- [x] **Step 1: Tulis input wizard** (file di scratchpad, JANGAN di dalam repo)
 
 ```json
 {
@@ -175,7 +184,7 @@ git commit -m "docs(adr): record smartboard migration decisions (0003)"
 }
 ```
 
-- [ ] **Step 2: Preview**
+- [x] **Step 2: Preview**
 
 ```bash
 pnpm project:new -- --input <path-scratchpad>/academic-smartboard.json --preview
@@ -183,7 +192,7 @@ pnpm project:new -- --input <path-scratchpad>/academic-smartboard.json --preview
 
 Expected: daftar file yang akan dibuat di `projects/academic-smartboard/`, tanpa error.
 
-- [ ] **Step 3: Apply**
+- [x] **Step 3: Apply**
 
 ```bash
 pnpm project:new -- --input <path-scratchpad>/academic-smartboard.json --apply --confirm "CREATE academic-smartboard"
@@ -191,7 +200,7 @@ pnpm project:new -- --input <path-scratchpad>/academic-smartboard.json --apply -
 
 Expected: capsule dibuat.
 
-- [ ] **Step 4: Verifikasi topology + placeholder**
+- [x] **Step 4: Verifikasi topology + placeholder**
 
 ```bash
 python tools/safrs/check_topology.py
@@ -200,7 +209,7 @@ grep -rn "<replace-" projects/academic-smartboard/ || echo "BERSIH"
 
 Expected: `SAFRS repository topology: OK` dan `BERSIH`. Kalau ada placeholder tersisa di AGENTS.md/README.md, isi sesuai konteks capsule (deskripsi produk, boundary) sebelum lanjut.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add projects/academic-smartboard/
@@ -217,7 +226,7 @@ git commit -m "feat(smartboard): scaffold academic-smartboard capsule"
 **Interfaces:**
 - Produces: perubahan pada `projects/academic-smartboard/ai/**` selalu terklasifikasi minimum R2 (integritas persona + knowledge Kayyisa)
 
-- [ ] **Step 1: Tambah pola**
+- [x] **Step 1: Tambah pola**
 
 Di `.safrs/sensitive-paths.json`, array `patterns`, tambahkan satu entri (pertahankan urutan/format entri lain):
 
@@ -225,7 +234,7 @@ Di `.safrs/sensitive-paths.json`, array `patterns`, tambahkan satu entri (pertah
 "projects/**/ai/**",
 ```
 
-- [ ] **Step 2: Verifikasi governance masih hijau**
+- [x] **Step 2: Verifikasi governance masih hijau**
 
 ```bash
 python tools/safrs/check_sensitive_changes.py
@@ -234,7 +243,7 @@ python tests/governance/test_sensitive_classification.py
 
 Expected: keduanya PASS (exit 0).
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add .safrs/sensitive-paths.json
@@ -252,7 +261,7 @@ git commit -m "chore(safrs): classify project ai assets as sensitive"
 - Consumes: `$SRC/data/`
 - Produces: path data yang dirujuk `docs/data.md` di Task 7 dan plan fase demo
 
-- [ ] **Step 1: Salin whitelist**
+- [x] **Step 1: Salin whitelist**
 
 ```bash
 SRC=/d/Devops/abyss-monorepo/apps/academic/smartboard
@@ -267,7 +276,7 @@ cp "$SRC/data/license_registry.csv" "$SRC/data/source_registry.csv" \
 
 Catatan: `$SRC/data/pipeline/` sengaja TIDAK disalin — itu artefak proses ingesti repo lama, bukan aset runtime.
 
-- [ ] **Step 2: Tulis `data/synthetic/README.md`**
+- [x] **Step 2: Tulis `data/synthetic/README.md`**
 
 ```markdown
 # Data Sintetis
@@ -281,7 +290,7 @@ Seed dummy untuk environment demo. Aturan:
 3. Skrip generator akan ditambahkan pada plan fase demo.
 ```
 
-- [ ] **Step 3: Pemeriksaan negatif**
+- [x] **Step 3: Pemeriksaan negatif**
 
 ```bash
 find projects/academic-smartboard -name "*.env*" -o -name "*.docx" -o -name "*.xlsx" | grep -v "Kurikulum_Merdeka" ; echo "exit=$?"
@@ -289,7 +298,7 @@ find projects/academic-smartboard -name "*.env*" -o -name "*.docx" -o -name "*.x
 
 Expected: tidak ada output file, `exit=1` (grep tidak menemukan apa pun).
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add projects/academic-smartboard/data/
@@ -307,7 +316,7 @@ git commit -m "feat(smartboard): import curriculum and reference data"
 - Consumes: `$SRC/agent/` (BUKAN `$SRC/backend/agent/` — itu duplikat)
 - Produces: `ai/kayyisa/manifest.json` + `runtime/knowledge/**/*.jsonl` yang dirujuk plan fase api
 
-- [ ] **Step 1: Salin whitelist**
+- [x] **Step 1: Salin whitelist**
 
 ```bash
 SRC=/d/Devops/abyss-monorepo/apps/academic/smartboard
@@ -321,7 +330,7 @@ cp -r "$SRC/agent/config" "$SRC/agent/runtime" "$SRC/agent/sources" \
 
 Catatan: `agent/operations/` dan `agent/docs/` sengaja TIDAK disalin — artefak proses repo lama (handoff, backlog ingesti, folder tree). Kalau Chief mau arsip xlsx knowledge pack ikut, tambah eksplisit belakangan.
 
-- [ ] **Step 2: Validasi integritas manifest**
+- [x] **Step 2: Validasi integritas manifest**
 
 ```bash
 python projects/academic-smartboard/ai/kayyisa/tools/validate_agent_kayyisa.py
@@ -342,7 +351,7 @@ EOF
 
 Expected: `HASH OK`.
 
-- [ ] **Step 3: Pemeriksaan negatif**
+- [x] **Step 3: Pemeriksaan negatif**
 
 ```bash
 find projects/academic-smartboard/ai -name "*.env*" -o -name "cloud_tokens*"; echo "kosong=$?"
@@ -351,7 +360,7 @@ find projects/academic-smartboard/ai -name "*.git" -type d; echo "kosong=$?"
 
 Expected: tidak ada output file pada keduanya.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add projects/academic-smartboard/ai/
@@ -372,7 +381,7 @@ git commit -m "feat(smartboard): import kayyisa knowledge package v3.0.0"
 - Consumes: ADR 0003 (Task 2), struktur hasil Task 3/5/6
 - Produces: dokumen yang dibaca eksekutor plan fase site/web/api/demo
 
-- [ ] **Step 1: `docs/architecture.md`** — pertahankan struktur heading hasil wizard, isi dengan:
+- [x] **Step 1: `docs/architecture.md`** — pertahankan struktur heading hasil wizard, isi dengan:
 
 Inti yang wajib termuat (tulis sebagai prosa/daftar di bawah heading yang cocok):
 
@@ -393,7 +402,7 @@ Urutan port: site → web → api (per modul di belakang facade) → demo.
 Sumber arsip read-only: D:\Devops\abyss-monorepo\apps\academic\smartboard.
 ```
 
-- [ ] **Step 2: `docs/data.md`** — inti yang wajib termuat:
+- [x] **Step 2: `docs/data.md`** — inti yang wajib termuat:
 
 ```markdown
 ## Data yang ada di capsule
@@ -415,7 +424,7 @@ Postgres via Prisma 7 (packages/database) — menggantikan MongoDB multi-tenant
 repo arsip. Skema per modul dirancang di plan fase api.
 ```
 
-- [ ] **Step 3: `docs/testing.md`** — inti yang wajib termuat:
+- [x] **Step 3: `docs/testing.md`** — inti yang wajib termuat:
 
 ```markdown
 - Validasi knowledge pack: python ai/kayyisa/tools/validate_agent_kayyisa.py
@@ -425,9 +434,9 @@ repo arsip. Skema per modul dirancang di plan fase api.
   (Playwright) untuk app yang sudah ada.
 ```
 
-- [ ] **Step 4: `README.md`** — pastikan memuat: deskripsi produk satu paragraf, tabel app (sama dengan architecture.md), pointer ke ADR 0003 dan spec migrasi.
+- [x] **Step 4: `README.md`** — pastikan memuat: deskripsi produk satu paragraf, tabel app (sama dengan architecture.md), pointer ke ADR 0003 dan spec migrasi.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add projects/academic-smartboard/
@@ -447,7 +456,7 @@ git commit -m "docs(smartboard): fill capsule docs with migration state"
 - Consumes: semua task sebelumnya
 - Produces: branch siap review; task state REVIEW
 
-- [ ] **Step 1: Jalankan verifikasi**
+- [x] **Step 1: Jalankan verifikasi**
 
 ```bash
 bash scripts/safrs-verify.sh
@@ -456,7 +465,7 @@ pnpm check
 
 Expected: keduanya PASS. Kalau gagal: baca error, perbaiki penyebabnya di task terkait, JANGAN melemahkan gate.
 
-- [ ] **Step 2: Pemeriksaan negatif final**
+- [x] **Step 2: Pemeriksaan negatif final**
 
 ```bash
 find projects/academic-smartboard -name "*.env*"
@@ -466,22 +475,22 @@ git diff main..HEAD --stat | tail -5
 
 Expected: find kosong; commit hanya dari task plan ini; tidak ada file di luar scope task.
 
-- [ ] **Step 3: Update `.agents/PROGRESS.md` + `.agents/HANDOFF.md`**
+- [x] **Step 3: Update `.agents/PROGRESS.md` + `.agents/HANDOFF.md`**
 
 PROGRESS: tambah baris fase fondasi smartboard = selesai, fase site/web/api/demo = belum. HANDOFF: state terkini, path capsule, plan lanjutan berikutnya (`apps/site`).
 
-- [ ] **Step 4: Update tabel `docs/plans/active/README.md`**
+- [x] **Step 4: Update tabel `docs/plans/active/README.md`**
 
 Baris plan ini: status `ACTIVE — fase fondasi selesai, menunggu plan fase site`.
 
-- [ ] **Step 5: Lifecycle ke REVIEW**
+- [x] **Step 5: Lifecycle ke REVIEW**
 
 ```bash
 pnpm task state --id TASK-20260820-SMARTBOARD-CAPSULE --to VERIFYING --yes
 pnpm task state --id TASK-20260820-SMARTBOARD-CAPSULE --to REVIEW --yes
 ```
 
-- [ ] **Step 6: Commit + serahkan ke Chief**
+- [x] **Step 6: Commit + serahkan ke Chief**
 
 ```bash
 git add .agents/ docs/plans/active/README.md
