@@ -22,6 +22,9 @@
       "!!**/test-results",
       // Transkrip alat pihak ketiga.
       "!!**/.specstory",
+      // Knowledge package impor (integritas dijaga sha256 manifest, ADR 0003):
+      // reformat = hash pecah. Bukan sumber kanonik formatter.
+      "!!projects/academic-smartboard/ai/kayyisa",
       // Skema/migrasi database dan dokumentasi impor: format asing.
       "!!database",
       "!!docs/design-system",
