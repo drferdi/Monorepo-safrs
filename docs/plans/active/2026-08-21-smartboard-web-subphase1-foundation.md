@@ -664,9 +664,9 @@ for (const route of ROUTES) {
 - Modify: `projects/academic-smartboard/{README.md,docs/architecture.md,docs/data.md,docs/testing.md}` (status `apps/web`: `di-port (sub-fase 1/5)`; JANGAN sentuh `AGENTS.md` — itu Task 11)
 - Modify: `docs/plans/active/2026-08-21-smartboard-web-subphase1-foundation.md` (centang task; catatan eksekusi), `docs/plans/active/2026-08-21-smartboard-web-roadmap.md` (baris 1 status → COMPLETED sub-fase)
 
-- [ ] **Step 1**: Update 4 dokumen capsule — arsitektur (static export client-only, alasan Keputusan terbuka #1), data (apps/web sub-fase 1 belum menyentuh data pribadi nyata; panggil backend arsip dev-only), testing (vitest unit-logic + test:build; RTL belum ada, lihat Keputusan terbuka #5).
-- [ ] **Step 2**: Verifikasi penuh di worktree: `pnpm lint && pnpm typecheck && pnpm test && pnpm build` lalu `bash scripts/safrs-verify.sh`. Semua PASS — tunjukkan output.
-- [ ] **Step 3**: Commit `docs(smartboard): document apps/web foundation in capsule docs`.
+- [x] **Step 1**: Update 4 dokumen capsule — arsitektur (static export client-only, alasan Keputusan terbuka #1), data (apps/web sub-fase 1 belum menyentuh data pribadi nyata; panggil backend arsip dev-only), testing (vitest unit-logic + test:build; RTL belum ada, lihat Keputusan terbuka #5).
+- [x] **Step 2**: Verifikasi penuh di worktree: `pnpm lint && pnpm typecheck && pnpm test && pnpm build` lalu `bash scripts/safrs-verify.sh`. Semua PASS — tunjukkan output.
+- [x] **Step 3**: Commit `docs(smartboard): document apps/web foundation in capsule docs`.
 - [ ] **Step 4**: Review Chief (R2 designated review) atas branch `feat/smartboard-web-foundation`; merge no-ff ke main; `bash scripts/safrs-verify.sh` di main.
 - [ ] **Step 5**: **Chief push main.** Blocking untuk Task 11.
 
