@@ -4,7 +4,13 @@
     "build": {
       "dependsOn": ["^build"],
       "env": ["DATABASE_URL", "APP_URL", "NODE_ENV"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**", "build/**"]
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**",
+        "dist/**",
+        "build/**",
+        "out/**"
+      ]
     },
     "lint": {
       "outputs": []
