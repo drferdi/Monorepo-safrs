@@ -568,7 +568,7 @@ export function useAuth() {
 - Consumes: `useAuth()` dari Task 6
 - Produces: `NAV_ITEMS: {label, href, roles}[]`, `filterByRole(items, role)`, `<ProtectedRoute roles={[...]}>`, `<AppShell>`
 
-- [ ] **Step 1: Test gagal** — `src/lib/nav.test.ts`:
+- [x] **Step 1: Test gagal** — `src/lib/nav.test.ts`:
 
 ```ts
 import { describe, expect, it } from "vitest";
@@ -585,7 +585,7 @@ describe("filterByRole", () => {
 });
 ```
 
-- [ ] **Step 2**: FAIL → implementasi `src/lib/nav.ts`:
+- [x] **Step 2**: FAIL → implementasi `src/lib/nav.ts`:
 
 ```ts
 export type Role = "owner" | "admin_akademik" | "tentor" | "murid_ortu" | "finance" | "content_manager";
@@ -600,12 +600,12 @@ export function filterByRole(items: NavItem[], role: Role): NavItem[] {
 }
 ```
 
-- [ ] **Step 3**: Test PASS.
-- [ ] **Step 4**: `ProtectedRoute.tsx` — client component, port perilaku `frontend/src/App.js` `<ProtectedRoute roles={[...]}>` (baris 139/171/267 arsip): saat `status === "loading"` render skeleton/null; `"unauthenticated"` → `router.replace("/login")`; `"authenticated"` dengan `role` tidak termasuk `roles` prop → render pesan "Akses ditolak" (bukan redirect diam-diam, sesuai backend yang juga balas 403 eksplisit).
-- [ ] **Step 5**: `AppShell.tsx` — sidebar dari `filterByRole(NAV_ITEMS, user.role)`, header dengan `DropdownMenu` (nama user + tombol logout memanggil `useAuth().logout()` lalu redirect `/login`).
-- [ ] **Step 6**: `layout.tsx` bungkus `children` dengan `QueryClientProvider` (instance `new QueryClient()` di client component terpisah `src/app/providers.tsx`) lalu `AuthProvider`. `page.tsx` (`"/"`): client component, `useAuth()`, redirect ke `/master/murid` kalau authenticated, ke `/login` kalau tidak.
-- [ ] **Step 7**: `pnpm --filter @sentra/smartboard-web typecheck && build` → hijau.
-- [ ] **Step 8**: Commit `feat(web): role-aware shell and protected route`.
+- [x] **Step 3**: Test PASS.
+- [x] **Step 4**: `ProtectedRoute.tsx` — client component, port perilaku `frontend/src/App.js` `<ProtectedRoute roles={[...]}>` (baris 139/171/267 arsip): saat `status === "loading"` render skeleton/null; `"unauthenticated"` → `router.replace("/login")`; `"authenticated"` dengan `role` tidak termasuk `roles` prop → render pesan "Akses ditolak" (bukan redirect diam-diam, sesuai backend yang juga balas 403 eksplisit).
+- [x] **Step 5**: `AppShell.tsx` — sidebar dari `filterByRole(NAV_ITEMS, user.role)`, header dengan `DropdownMenu` (nama user + tombol logout memanggil `useAuth().logout()` lalu redirect `/login`).
+- [x] **Step 6**: `layout.tsx` bungkus `children` dengan `QueryClientProvider` (instance `new QueryClient()` di client component terpisah `src/app/providers.tsx`) lalu `AuthProvider`. `page.tsx` (`"/"`): client component, `useAuth()`, redirect ke `/master/murid` kalau authenticated, ke `/login` kalau tidak.
+- [x] **Step 7**: `pnpm --filter @sentra/smartboard-web typecheck && build` → hijau.
+- [x] **Step 8**: Commit `feat(web): role-aware shell and protected route`.
 
 ### Task 8: Halaman Master › Murid (vertical proof)
 
