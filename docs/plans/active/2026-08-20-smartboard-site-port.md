@@ -228,7 +228,7 @@ const nextConfig: NextConfig = {
 export default nextConfig;
 ```
 
-- [x] **Step 3: tsconfig.json** — salin verbatim dari `projects/control-center/apps/web/tsconfig.json` (extends `../../../../packages/config/tsconfig/nextjs.json`; includes `next-env.d.ts`, `.next/types/**/*.ts`, `src/**/*.{ts,tsx}`).
+- [x] **Step 3: tsconfig.json** — salin verbatim dari `projects/control-center/apps/web/tsconfig.json` (extends `packages/config/tsconfig/nextjs.json`; includes next-env.d.ts, `.next/types/**/*.ts`, `src/**/*.{ts,tsx}`).
 
 - [x] **Step 4: postcss.config.mjs**
 
@@ -300,7 +300,7 @@ git commit -m "feat(site): scaffold apps/site next static export"
 **Interfaces:**
 - Produces: `PageContent`, `ProgramContent`, `allPages: PageContent[]`, `NAV_ITEMS` — dipakai semua task halaman
 
-- [x] **Step 1: Tulis test gagal** — `src/content/content.test.ts`:
+- [x] **Step 1: Tulis test gagal** — `projects/academic-smartboard/apps/site/src/content/content.test.ts`:
 
 ```ts
 import { describe, expect, it } from "vitest";
@@ -335,9 +335,9 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({ test: { include: ["src/**/*.test.ts"] } });
 ```
 
-- [x] **Step 2: Jalankan, pastikan GAGAL** — `pnpm --filter @sentra/smartboard-site test` → FAIL (`./index.ts` belum ada).
+- [x] **Step 2: Jalankan, pastikan GAGAL** — `pnpm --filter @sentra/smartboard-site test` → FAIL (index.ts belum ada).
 
-- [x] **Step 3: Implementasi minimal** — `src/content/types.ts`:
+- [x] **Step 3: Implementasi minimal** — `projects/academic-smartboard/apps/site/src/content/types.ts`:
 
 ```ts
 export type Cta = { label: string; href: string };
@@ -420,8 +420,8 @@ Aturan (referensi `01-design-system.html` + `02-patterns.html`):
 **Files:**
 - Modify: `src/content/index.ts` (entri beranda penuh → `src/content/beranda.ts`), `src/app/page.tsx`
 
-- [x] Step 1: Baca `D:/Devops/abyss-monorepo/apps/academic/smartboard/landing/source-pages/beranda.html`. Ekstrak VERBATIM: heading hero, subcopy, CTA, tiap section (heading + paragraf + bullet) ke `src/content/beranda.ts` sebagai `PageContent` (`slug: ""`). Abaikan markup vendor, footer scrape, form.
-- [x] Step 2: `src/app/page.tsx` render `Hero` + map `SectionBlock`; export `metadata` dari `title`/`description` konten.
+- [x] Step 1: Baca `D:/Devops/abyss-monorepo/apps/academic/smartboard/landing/source-pages/beranda.html`. Ekstrak VERBATIM: heading hero, subcopy, CTA, tiap section (heading + paragraf + bullet) ke `projects/academic-smartboard/apps/site/src/content/beranda.ts` sebagai `PageContent` (`slug: ""`). Abaikan markup vendor, footer scrape, form.
+- [x] Step 2: `projects/academic-smartboard/apps/site/src/app/page.tsx` render `Hero` + map `SectionBlock`; export `metadata` dari `title`/`description` konten.
 - [x] Step 3: `pnpm --filter @sentra/smartboard-site test && pnpm --filter @sentra/smartboard-site build` → hijau; buka `out/index.html`, cek heading hero muncul.
 - [x] Step 4: Commit `feat(site): beranda page from extracted content`.
 - [x] Step 5: **Checkpoint Chief** — screenshot/preview beranda = validasi kalibrasi komposisi landing (keputusan terbuka #2). Lanjut task berikut sambil menunggu; revisi komposisi masuk sebagai perubahan terisolasi.
@@ -435,9 +435,9 @@ Aturan (referensi `01-design-system.html` + `02-patterns.html`):
 - Consumes: `ProgramContent`, `Hero`, `SectionBlock`
 - Produces: `<ProgramPage content={ProgramContent} />`
 
-- [x] Step 1: `ProgramPage.tsx` — hero + daftar `benefits` (list token-styled) + `steps` (urutan bernomor) + sections. Satu komponen, tiga halaman datanya.
+- [x] Step 1: `projects/academic-smartboard/apps/site/src/components/ProgramPage.tsx` — hero + daftar `benefits` (list token-styled) + `steps` (urutan bernomor) + sections. Satu komponen, tiga halaman datanya.
 - [x] Step 2: Ekstrak verbatim tiap `source-pages/program-*.html` ke modul `ProgramContent` masing-masing. Testimoni placeholder ("Testimoni menunggu persetujuan") TIDAK di-port — bagian testimoni dihilangkan sampai ada testimoni riil disetujui.
-- [x] Step 3: 3 file `page.tsx` tipis: import konten, render `ProgramPage`, export `metadata`.
+- [x] Step 3: 3 file page.tsx tipis: import konten, render `ProgramPage`, export `metadata`.
 - [x] Step 4: `test` + `build` hijau (test link-integrity kini memvalidasi CTA program).
 - [x] Step 5: Commit `feat(site): three program pages via shared template`.
 
@@ -447,7 +447,7 @@ Aturan (referensi `01-design-system.html` + `02-patterns.html`):
 - Create: `src/content/{cara-belajar,tentang,wawasan}.ts`, `src/app/{cara-belajar,tentang,wawasan}/page.tsx`
 
 - [x] Step 1: Ekstrak verbatim `cara-belajar.html`, `tentang.html`, `wawasan.html` → `PageContent`. Halaman wawasan: daftar artikel jadi `sections` (satu section per artikel: judul + ringkasan); gambar artikel menunggu Task 10.
-- [x] Step 2: 3 `page.tsx` render `Hero` + `SectionBlock`.
+- [x] Step 2: 3 page.tsx render `Hero` + `SectionBlock`.
 - [x] Step 3: `test` + `build` hijau.
 - [x] Step 4: Commit `feat(site): cara-belajar, tentang, wawasan pages`.
 
@@ -456,8 +456,8 @@ Aturan (referensi `01-design-system.html` + `02-patterns.html`):
 **Files:**
 - Create: `src/content/smartboard.ts`, `src/app/smartboard/page.tsx`, (opsional) `src/components/SmartboardShowcase.tsx`
 
-- [x] Step 1: Baca `landing/src/components/SmartboardPage.tsx` (517 baris) di arsip. Ekstrak seluruh copy (Sentra AI, Sentra Smartboard System, Sentra Artificial Intelligence) ke `smartboard.ts`.
-- [x] Step 2: Port visual TANPA framer-motion/gsap: transisi CSS + `@media (prefers-reduced-motion)` saja. Interpolasi warna JS dari `palette.ts` arsip TIDAK di-port (hex mentah, kalah lawan token gate). Grafik SVG inline boleh, warna via `var(--color-data-1..3)` (maks 4 seri, UI-RULES).
+- [x] Step 1: Baca landing/src/components/SmartboardPage.tsx (517 baris) di arsip. Ekstrak seluruh copy (Sentra AI, Sentra Smartboard System, Sentra Artificial Intelligence) ke `projects/academic-smartboard/apps/site/src/content/smartboard.ts`.
+- [x] Step 2: Port visual TANPA framer-motion/gsap: transisi CSS + `@media (prefers-reduced-motion)` saja. Interpolasi warna JS dari palette.ts arsip TIDAK di-port (hex mentah, kalah lawan token gate). Grafik SVG inline boleh, warna via `var(--color-data-1..3)` (maks 4 seri, UI-RULES).
 - [x] Step 3: `test` + `build` + grep hex kosong.
 - [x] Step 4: Commit `feat(site): smartboard flagship page, css-only motion`.
 
@@ -466,7 +466,7 @@ Aturan (referensi `01-design-system.html` + `02-patterns.html`):
 **Files:**
 - Create: `src/components/PolicyPage.tsx`, `src/content/legal.ts`, `src/app/{kebijakan-privasi,ketentuan-layanan}/page.tsx`
 
-- [x] Step 1: Ekstrak verbatim `PrivacyPolicyPage.tsx` (126 baris) + `TermsOfServicePage.tsx` (142 baris) arsip → `legal.ts` (dua `PageContent`).
+- [x] Step 1: Ekstrak verbatim PrivacyPolicyPage.tsx (126 baris) + TermsOfServicePage.tsx (142 baris) arsip → `projects/academic-smartboard/apps/site/src/content/legal.ts` (dua `PageContent`).
 - [x] Step 2: **Audit isi privasi vs realita:** sumber menyebut pengumpulan newsletter yang tidak pernah terjadi; form tidak di-port (keputusan #8), jadi hapus klausul pengumpulan email newsletter kalau ada — catat penghapusan di pesan commit untuk review Chief.
 - [x] Step 3: `PolicyPage` = layout prosa ≤68ch. `test` + `build` hijau.
 - [x] Step 4: Commit `feat(site): privacy and terms pages`.
