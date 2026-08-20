@@ -53,6 +53,8 @@ test("declares only canonical development environment values for strict Turbo ex
   assert.deepEqual(turbo.tasks.dev.env, [
     "DATABASE_URL",
     "APP_URL",
+    "NEXT_PUBLIC_BACKEND_URL",
+    "NEXT_PUBLIC_DEV_TENANT_SLUG",
     "NODE_ENV",
   ]);
   assert.doesNotMatch(
