@@ -12,7 +12,7 @@ Open plans in this directory, with the status each one declares in its own heade
 | `MASTER REMEDIATION AGENT ASSIGNMENTS.md` | Assignment map; execution gated by claimed work packages | Chief |
 | `SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md` | ACTIVE — Phases 1–5 merged; 6–8 need Activation Decisions | — |
 | `2026-08-12-wiki-setup-plan.md` | PROPOSED — not approved for execution | Chief |
-| `2026-08-20-smartboard-site-port.md` | PROPOSED — menunggu push main (prasyarat evidence) + persetujuan Chief | Chief |
+| `2026-08-20-smartboard-site-port.md` | ACTIVE — Task 1–12 selesai di feat/smartboard-site; menunggu review R2 + merge | Chief |
 
 Phase-level progress for these plans is tracked in `.agents/PROGRESS.md`, not here.
 Completed plans: `docs/plans/completed/`.

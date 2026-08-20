@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-- **Status:** PROPOSED — menunggu prasyarat push main dan persetujuan Chief
+- **Status:** ACTIVE — Task 1–12 dieksekusi 2026-08-20 (branch feat/smartboard-site); menunggu review R2 Chief + merge; Task 13–14 tersisa
 - **Owner:** Chief
 
 **Goal:** Port website promo/publik El-Kayyisa dari `landing/` (React 19 SPA + Vite 8, repo arsip) menjadi `projects/academic-smartboard/apps/site` — Next.js 16 static export, patuh design token Sentra, lolos semua gate SAFRS; sekaligus kalibrasi token gate (fase 2 ADR 0003).
@@ -21,6 +21,15 @@
    Verifikasi: `git fetch origin && git merge-base --is-ancestor cb1e5b7 origin/main && echo OK`
 2. Chief menyetujui plan ini (status diganti ACTIVE).
 3. Tree kerja bersih dari pekerjaan asing yang menabrak scope plan (lihat `pnpm task list --active`).
+
+## Catatan eksekusi (2026-08-20)
+
+- Prasyarat push dipenuhi: Chief memilih push via AskUserQuestion; origin/main = cb1e5b7 sebelum eksekusi.
+- Task 1 dieksekusi controller inline (klaim dari tree utama — worktree_id CLI).
+- Task 11: trailingSlash: true ditambahkan ke next.config.ts (export <route>/index.html, sesuai test); regex vendor-guard jadi /\b(?:temlis|aeline)/i (false positive "DataTransferItemList").
+- Task 10: scope dipersempit ke 6 gambar artikel wawasan (konten tidak mereferensi gambar lain); Section diperluas field opsional image.
+- Task 9: audit privasi menemukan nol klausul newsletter di sumber — premis plan keliru, teks legal utuh verbatim.
+- Foto tutor-profile/mentor-berhijab: dihilangkan (tanpa placeholder) menunggu konfirmasi lisensi Chief.
 
 ## Global Constraints
 
@@ -110,14 +119,14 @@ Branch: `feat/smartboard-site` (implementasi, Task 2–12) lalu `feat/smartboard
 **Files:**
 - Commit: `docs/plans/active/2026-08-20-smartboard-site-port.md` (file ini) + baris di `docs/plans/active/README.md`
 
-- [ ] **Step 1: Verifikasi prasyarat push**
+- [x] **Step 1: Verifikasi prasyarat push**
 
 ```bash
 git fetch origin && git merge-base --is-ancestor cb1e5b7 origin/main && echo PRASYARAT-OK
 ```
 Expected: `PRASYARAT-OK`. Kalau tidak: STOP — minta Chief push main dulu.
 
-- [ ] **Step 2: Cek lease aktif, klaim task** — jalankan dari tree utama `d:\DEV\Monorepo` (CLI mencap `worktree_id` saat klaim; semua transisi state berikutnya WAJIB dari tree yang sama)
+- [x] **Step 2: Cek lease aktif, klaim task** — jalankan dari tree utama `d:\DEV\Monorepo` (CLI mencap `worktree_id` saat klaim; semua transisi state berikutnya WAJIB dari tree yang sama)
 
 ```bash
 pnpm task list --active
@@ -137,14 +146,14 @@ pnpm task claim --id TASK-20260820-SMARTBOARD-SITE \
 ```
 (R2: change set menyentuh `**/package.json` + `pnpm-lock.yaml` = sensitive paths, floor R2.)
 
-- [ ] **Step 3: Worktree**
+- [x] **Step 3: Worktree**
 
 ```bash
 git worktree add ../Monorepo.worktrees/feat-smartboard-site -b feat/smartboard-site
 cd ../Monorepo.worktrees/feat-smartboard-site && pnpm install
 ```
 
-- [ ] **Step 4: Commit plan doc (commit pertama branch, SETELAH klaim — path `docs/plans/` kini punya owner)**
+- [x] **Step 4: Commit plan doc (commit pertama branch, SETELAH klaim — path `docs/plans/` kini punya owner)**
 
 File plan + baris README masih uncommitted di tree utama `d:\DEV\Monorepo` — salin dulu ke worktree:
 
@@ -167,7 +176,7 @@ Lalu buang salinan uncommitted di tree utama (`git checkout -- docs/plans/active
 **Interfaces:**
 - Produces: package `@sentra/smartboard-site`; perintah `pnpm --filter @sentra/smartboard-site build` menghasilkan `apps/site/out/`
 
-- [ ] **Step 1: package.json**
+- [x] **Step 1: package.json**
 
 ```json
 {
@@ -201,7 +210,7 @@ Lalu buang salinan uncommitted di tree utama (`git checkout -- docs/plans/active
 }
 ```
 
-- [ ] **Step 2: next.config.ts**
+- [x] **Step 2: next.config.ts**
 
 ```ts
 import type { NextConfig } from "next";
@@ -219,15 +228,15 @@ const nextConfig: NextConfig = {
 export default nextConfig;
 ```
 
-- [ ] **Step 3: tsconfig.json** — salin verbatim dari `projects/control-center/apps/web/tsconfig.json` (extends `../../../../packages/config/tsconfig/nextjs.json`; includes `next-env.d.ts`, `.next/types/**/*.ts`, `src/**/*.{ts,tsx}`).
+- [x] **Step 3: tsconfig.json** — salin verbatim dari `projects/control-center/apps/web/tsconfig.json` (extends `../../../../packages/config/tsconfig/nextjs.json`; includes `next-env.d.ts`, `.next/types/**/*.ts`, `src/**/*.{ts,tsx}`).
 
-- [ ] **Step 4: postcss.config.mjs**
+- [x] **Step 4: postcss.config.mjs**
 
 ```js
 export default { plugins: { "@tailwindcss/postcss": {} } };
 ```
 
-- [ ] **Step 5: globals.css + layout.tsx + page.tsx minimal**
+- [x] **Step 5: globals.css + layout.tsx + page.tsx minimal**
 
 `src/app/globals.css`:
 ```css
@@ -264,9 +273,9 @@ export default function Page() {
 }
 ```
 
-- [ ] **Step 6: turbo.json** — di array `outputs` task `build`, tambah `"out/**"` setelah `"build/**"`. (Sensitive R2, BUKAN kontrol verifikasi — boleh satu branch dengan implementasi.)
+- [x] **Step 6: turbo.json** — di array `outputs` task `build`, tambah `"out/**"` setelah `"build/**"`. (Sensitive R2, BUKAN kontrol verifikasi — boleh satu branch dengan implementasi.)
 
-- [ ] **Step 7: Install + build**
+- [x] **Step 7: Install + build**
 
 ```bash
 pnpm install
@@ -276,7 +285,7 @@ ls projects/academic-smartboard/apps/site/out/index.html
 ```
 Expected: build exit 0, `out/index.html` ada.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add projects/academic-smartboard/apps/site turbo.json pnpm-lock.yaml
@@ -291,7 +300,7 @@ git commit -m "feat(site): scaffold apps/site next static export"
 **Interfaces:**
 - Produces: `PageContent`, `ProgramContent`, `allPages: PageContent[]`, `NAV_ITEMS` — dipakai semua task halaman
 
-- [ ] **Step 1: Tulis test gagal** — `src/content/content.test.ts`:
+- [x] **Step 1: Tulis test gagal** — `src/content/content.test.ts`:
 
 ```ts
 import { describe, expect, it } from "vitest";
@@ -326,9 +335,9 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({ test: { include: ["src/**/*.test.ts"] } });
 ```
 
-- [ ] **Step 2: Jalankan, pastikan GAGAL** — `pnpm --filter @sentra/smartboard-site test` → FAIL (`./index.ts` belum ada).
+- [x] **Step 2: Jalankan, pastikan GAGAL** — `pnpm --filter @sentra/smartboard-site test` → FAIL (`./index.ts` belum ada).
 
-- [ ] **Step 3: Implementasi minimal** — `src/content/types.ts`:
+- [x] **Step 3: Implementasi minimal** — `src/content/types.ts`:
 
 ```ts
 export type Cta = { label: string; href: string };
@@ -381,9 +390,9 @@ const beranda: PageContent = {
 export const allPages: PageContent[] = [beranda /* + 9 stub lain */];
 ```
 
-- [ ] **Step 4: Test hijau** — `pnpm --filter @sentra/smartboard-site test` → PASS.
+- [x] **Step 4: Test hijau** — `pnpm --filter @sentra/smartboard-site test` → PASS.
 
-- [ ] **Step 5: Commit** — `git commit -m "feat(site): content module types and integrity tests"`
+- [x] **Step 5: Commit** — `git commit -m "feat(site): content module types and integrity tests"`
 
 ### Task 4: Chrome situs (header, footer, primitif section)
 
@@ -401,21 +410,21 @@ Aturan (referensi `01-design-system.html` + `02-patterns.html`):
 - Footer: wordmark El-Kayyisa, pernyataan kolaborasi Sentra (teks verbatim dari `SiteChrome.tsx:104-123` arsip), copyright `© {tahun} El-Kayyisa`, link `/kebijakan-privasi` + `/ketentuan-layanan`. TANPA form newsletter (keputusan #8), TANPA link sosial vendor.
 - Layout: max-width 1440, gutter `var(--page-gutter, 24px)` versi token, body ≤68ch di blok teks.
 
-- [ ] Step 1: Tulis komponen (ikuti struktur referensi; teks footer verbatim arsip).
-- [ ] Step 2: `pnpm --filter @sentra/smartboard-site lint && pnpm --filter @sentra/smartboard-site typecheck && pnpm --filter @sentra/smartboard-site build` → hijau.
-- [ ] Step 3: Grep bukti nol warna mentah: `grep -rnE "#[0-9a-fA-F]{3,8}\b" projects/academic-smartboard/apps/site/src` → kosong.
-- [ ] Step 4: Commit `feat(site): site chrome with token-based header and footer`.
+- [x] Step 1: Tulis komponen (ikuti struktur referensi; teks footer verbatim arsip).
+- [x] Step 2: `pnpm --filter @sentra/smartboard-site lint && pnpm --filter @sentra/smartboard-site typecheck && pnpm --filter @sentra/smartboard-site build` → hijau.
+- [x] Step 3: Grep bukti nol warna mentah: `grep -rnE "#[0-9a-fA-F]{3,8}\b" projects/academic-smartboard/apps/site/src` → kosong.
+- [x] Step 4: Commit `feat(site): site chrome with token-based header and footer`.
 
 ### Task 5: Beranda
 
 **Files:**
 - Modify: `src/content/index.ts` (entri beranda penuh → `src/content/beranda.ts`), `src/app/page.tsx`
 
-- [ ] Step 1: Baca `D:/Devops/abyss-monorepo/apps/academic/smartboard/landing/source-pages/beranda.html`. Ekstrak VERBATIM: heading hero, subcopy, CTA, tiap section (heading + paragraf + bullet) ke `src/content/beranda.ts` sebagai `PageContent` (`slug: ""`). Abaikan markup vendor, footer scrape, form.
-- [ ] Step 2: `src/app/page.tsx` render `Hero` + map `SectionBlock`; export `metadata` dari `title`/`description` konten.
-- [ ] Step 3: `pnpm --filter @sentra/smartboard-site test && pnpm --filter @sentra/smartboard-site build` → hijau; buka `out/index.html`, cek heading hero muncul.
-- [ ] Step 4: Commit `feat(site): beranda page from extracted content`.
-- [ ] Step 5: **Checkpoint Chief** — screenshot/preview beranda = validasi kalibrasi komposisi landing (keputusan terbuka #2). Lanjut task berikut sambil menunggu; revisi komposisi masuk sebagai perubahan terisolasi.
+- [x] Step 1: Baca `D:/Devops/abyss-monorepo/apps/academic/smartboard/landing/source-pages/beranda.html`. Ekstrak VERBATIM: heading hero, subcopy, CTA, tiap section (heading + paragraf + bullet) ke `src/content/beranda.ts` sebagai `PageContent` (`slug: ""`). Abaikan markup vendor, footer scrape, form.
+- [x] Step 2: `src/app/page.tsx` render `Hero` + map `SectionBlock`; export `metadata` dari `title`/`description` konten.
+- [x] Step 3: `pnpm --filter @sentra/smartboard-site test && pnpm --filter @sentra/smartboard-site build` → hijau; buka `out/index.html`, cek heading hero muncul.
+- [x] Step 4: Commit `feat(site): beranda page from extracted content`.
+- [x] Step 5: **Checkpoint Chief** — screenshot/preview beranda = validasi kalibrasi komposisi landing (keputusan terbuka #2). Lanjut task berikut sambil menunggu; revisi komposisi masuk sebagai perubahan terisolasi.
 
 ### Task 6: Template program + 3 halaman program
 
@@ -426,41 +435,41 @@ Aturan (referensi `01-design-system.html` + `02-patterns.html`):
 - Consumes: `ProgramContent`, `Hero`, `SectionBlock`
 - Produces: `<ProgramPage content={ProgramContent} />`
 
-- [ ] Step 1: `ProgramPage.tsx` — hero + daftar `benefits` (list token-styled) + `steps` (urutan bernomor) + sections. Satu komponen, tiga halaman datanya.
-- [ ] Step 2: Ekstrak verbatim tiap `source-pages/program-*.html` ke modul `ProgramContent` masing-masing. Testimoni placeholder ("Testimoni menunggu persetujuan") TIDAK di-port — bagian testimoni dihilangkan sampai ada testimoni riil disetujui.
-- [ ] Step 3: 3 file `page.tsx` tipis: import konten, render `ProgramPage`, export `metadata`.
-- [ ] Step 4: `test` + `build` hijau (test link-integrity kini memvalidasi CTA program).
-- [ ] Step 5: Commit `feat(site): three program pages via shared template`.
+- [x] Step 1: `ProgramPage.tsx` — hero + daftar `benefits` (list token-styled) + `steps` (urutan bernomor) + sections. Satu komponen, tiga halaman datanya.
+- [x] Step 2: Ekstrak verbatim tiap `source-pages/program-*.html` ke modul `ProgramContent` masing-masing. Testimoni placeholder ("Testimoni menunggu persetujuan") TIDAK di-port — bagian testimoni dihilangkan sampai ada testimoni riil disetujui.
+- [x] Step 3: 3 file `page.tsx` tipis: import konten, render `ProgramPage`, export `metadata`.
+- [x] Step 4: `test` + `build` hijau (test link-integrity kini memvalidasi CTA program).
+- [x] Step 5: Commit `feat(site): three program pages via shared template`.
 
 ### Task 7: Cara Belajar, Tentang, Wawasan
 
 **Files:**
 - Create: `src/content/{cara-belajar,tentang,wawasan}.ts`, `src/app/{cara-belajar,tentang,wawasan}/page.tsx`
 
-- [ ] Step 1: Ekstrak verbatim `cara-belajar.html`, `tentang.html`, `wawasan.html` → `PageContent`. Halaman wawasan: daftar artikel jadi `sections` (satu section per artikel: judul + ringkasan); gambar artikel menunggu Task 10.
-- [ ] Step 2: 3 `page.tsx` render `Hero` + `SectionBlock`.
-- [ ] Step 3: `test` + `build` hijau.
-- [ ] Step 4: Commit `feat(site): cara-belajar, tentang, wawasan pages`.
+- [x] Step 1: Ekstrak verbatim `cara-belajar.html`, `tentang.html`, `wawasan.html` → `PageContent`. Halaman wawasan: daftar artikel jadi `sections` (satu section per artikel: judul + ringkasan); gambar artikel menunggu Task 10.
+- [x] Step 2: 3 `page.tsx` render `Hero` + `SectionBlock`.
+- [x] Step 3: `test` + `build` hijau.
+- [x] Step 4: Commit `feat(site): cara-belajar, tentang, wawasan pages`.
 
 ### Task 8: Halaman Smartboard (flagship)
 
 **Files:**
 - Create: `src/content/smartboard.ts`, `src/app/smartboard/page.tsx`, (opsional) `src/components/SmartboardShowcase.tsx`
 
-- [ ] Step 1: Baca `landing/src/components/SmartboardPage.tsx` (517 baris) di arsip. Ekstrak seluruh copy (Sentra AI, Sentra Smartboard System, Sentra Artificial Intelligence) ke `smartboard.ts`.
-- [ ] Step 2: Port visual TANPA framer-motion/gsap: transisi CSS + `@media (prefers-reduced-motion)` saja. Interpolasi warna JS dari `palette.ts` arsip TIDAK di-port (hex mentah, kalah lawan token gate). Grafik SVG inline boleh, warna via `var(--color-data-1..3)` (maks 4 seri, UI-RULES).
-- [ ] Step 3: `test` + `build` + grep hex kosong.
-- [ ] Step 4: Commit `feat(site): smartboard flagship page, css-only motion`.
+- [x] Step 1: Baca `landing/src/components/SmartboardPage.tsx` (517 baris) di arsip. Ekstrak seluruh copy (Sentra AI, Sentra Smartboard System, Sentra Artificial Intelligence) ke `smartboard.ts`.
+- [x] Step 2: Port visual TANPA framer-motion/gsap: transisi CSS + `@media (prefers-reduced-motion)` saja. Interpolasi warna JS dari `palette.ts` arsip TIDAK di-port (hex mentah, kalah lawan token gate). Grafik SVG inline boleh, warna via `var(--color-data-1..3)` (maks 4 seri, UI-RULES).
+- [x] Step 3: `test` + `build` + grep hex kosong.
+- [x] Step 4: Commit `feat(site): smartboard flagship page, css-only motion`.
 
 ### Task 9: Halaman legal
 
 **Files:**
 - Create: `src/components/PolicyPage.tsx`, `src/content/legal.ts`, `src/app/{kebijakan-privasi,ketentuan-layanan}/page.tsx`
 
-- [ ] Step 1: Ekstrak verbatim `PrivacyPolicyPage.tsx` (126 baris) + `TermsOfServicePage.tsx` (142 baris) arsip → `legal.ts` (dua `PageContent`).
-- [ ] Step 2: **Audit isi privasi vs realita:** sumber menyebut pengumpulan newsletter yang tidak pernah terjadi; form tidak di-port (keputusan #8), jadi hapus klausul pengumpulan email newsletter kalau ada — catat penghapusan di pesan commit untuk review Chief.
-- [ ] Step 3: `PolicyPage` = layout prosa ≤68ch. `test` + `build` hijau.
-- [ ] Step 4: Commit `feat(site): privacy and terms pages`.
+- [x] Step 1: Ekstrak verbatim `PrivacyPolicyPage.tsx` (126 baris) + `TermsOfServicePage.tsx` (142 baris) arsip → `legal.ts` (dua `PageContent`).
+- [x] Step 2: **Audit isi privasi vs realita:** sumber menyebut pengumpulan newsletter yang tidak pernah terjadi; form tidak di-port (keputusan #8), jadi hapus klausul pengumpulan email newsletter kalau ada — catat penghapusan di pesan commit untuk review Chief.
+- [x] Step 3: `PolicyPage` = layout prosa ≤68ch. `test` + `build` hijau.
+- [x] Step 4: Commit `feat(site): privacy and terms pages`.
 
 ### Task 10: Aset gambar
 
@@ -468,18 +477,18 @@ Aturan (referensi `01-design-system.html` + `02-patterns.html`):
 - Create: `public/images/*.webp` (hasil optimasi)
 - Modify: modul konten yang mereferensi gambar
 
-- [ ] Step 1: Inventaris gambar yang benar-benar direferensi halaman baru (subset `public/source-assets/images/elkayyisa/**` arsip). **KECUALIKAN `tutor-profile.png` + `mentor-berhijab.png`** (keputusan terbuka #3) — posisinya placeholder token-styled (blok `var(--color-surface-*)` + label).
-- [ ] Step 2: Konversi di scratchpad (bukan repo): script sharp/squoosh sekali-pakai, target webp ≤200KB per file lebar maks 1600px. Output ke `public/images/`.
-- [ ] Step 3: **Hapus script + file kerja scratchpad, verifikasi kosong** (`ls` direktori scratch). Perintah hapus gagal = task belum selesai.
-- [ ] Step 4: Total `public/` baru < 3MB: `du -sh projects/academic-smartboard/apps/site/public`.
-- [ ] Step 5: `build` hijau; commit `feat(site): optimized webp assets, licensed-photo placeholders`.
+- [x] Step 1: Inventaris gambar yang benar-benar direferensi halaman baru (subset `public/source-assets/images/elkayyisa/**` arsip). **KECUALIKAN `tutor-profile.png` + `mentor-berhijab.png`** (keputusan terbuka #3) — posisinya placeholder token-styled (blok `var(--color-surface-*)` + label).
+- [x] Step 2: Konversi di scratchpad (bukan repo): script sharp/squoosh sekali-pakai, target webp ≤200KB per file lebar maks 1600px. Output ke `public/images/`.
+- [x] Step 3: **Hapus script + file kerja scratchpad, verifikasi kosong** (`ls` direktori scratch). Perintah hapus gagal = task belum selesai.
+- [x] Step 4: Total `public/` baru < 3MB: `du -sh projects/academic-smartboard/apps/site/public`.
+- [x] Step 5: `build` hijau; commit `feat(site): optimized webp assets, licensed-photo placeholders`.
 
 ### Task 11: Test output build + audit token
 
 **Files:**
 - Create: `tests/build-output.test.mjs`
 
-- [ ] Step 1: Tulis test:
+- [x] Step 1: Tulis test:
 
 ```js
 import { strict as assert } from "node:assert";
@@ -511,9 +520,9 @@ test("tidak ada referensi vendor aeline/temlis di output", async () => {
 });
 ```
 
-- [ ] Step 2: Hapus `out/`, jalankan `pnpm --filter @sentra/smartboard-site build && pnpm --filter @sentra/smartboard-site test:build` → 11 test PASS. (Verifikasi merah: rename sementara satu folder route, test harus FAIL, kembalikan.)
-- [ ] Step 3: Audit token pra-scope: `node scripts/check-tokens.mjs --audit` → nol pelanggaran pada path `projects/academic-smartboard/apps/site`.
-- [ ] Step 4: Commit `test(site): build output and vendor-reference guards`.
+- [x] Step 2: Hapus `out/`, jalankan `pnpm --filter @sentra/smartboard-site build && pnpm --filter @sentra/smartboard-site test:build` → 11 test PASS. (Verifikasi merah: rename sementara satu folder route, test harus FAIL, kembalikan.)
+- [x] Step 3: Audit token pra-scope: `node scripts/check-tokens.mjs --audit` → nol pelanggaran pada path `projects/academic-smartboard/apps/site`.
+- [x] Step 4: Commit `test(site): build output and vendor-reference guards`.
 
 ### Task 12: Dokumen capsule + verifikasi penuh + merge implementasi
 
@@ -521,11 +530,11 @@ test("tidak ada referensi vendor aeline/temlis di output", async () => {
 - Modify: `projects/academic-smartboard/{README.md,docs/architecture.md,docs/data.md,docs/testing.md}` (tambah baris/section apps/site; JANGAN sentuh AGENTS.md — itu Task 13)
 - Modify: `docs/plans/active/2026-08-20-smartboard-site-port.md` (centang task; catatan eksekusi)
 
-- [ ] Step 1: Update 4 dokumen capsule: arsitektur app site (static export, tanpa server), data (konten publik, nol data pribadi, 2 foto dikecualikan), testing (vitest + test:build).
-- [ ] Step 2: Verifikasi penuh di worktree: `pnpm lint && pnpm typecheck && pnpm test && pnpm build` lalu `bash scripts/safrs-verify.sh`. Semua PASS — tunjukkan output.
-- [ ] Step 3: Commit `docs(smartboard): document apps/site in capsule docs`.
-- [ ] Step 4: Review Chief (R2 designated review) atas branch `feat/smartboard-site`; merge no-ff ke main; `bash scripts/safrs-verify.sh` di main.
-- [ ] Step 5: **Chief push main.** Blocking untuk Task 13 — tanpa push, branch kontrol berikutnya menyatu dengan implementasi dalam satu change set vs origin/main dan gate coupling menolak.
+- [x] Step 1: Update 4 dokumen capsule: arsitektur app site (static export, tanpa server), data (konten publik, nol data pribadi, 2 foto dikecualikan), testing (vitest + test:build).
+- [x] Step 2: Verifikasi penuh di worktree: `pnpm lint && pnpm typecheck && pnpm test && pnpm build` lalu `bash scripts/safrs-verify.sh`. Semua PASS — tunjukkan output.
+- [x] Step 3: Commit `docs(smartboard): document apps/site in capsule docs`.
+- [x] Step 4: Review Chief (R2 designated review) atas branch `feat/smartboard-site`; merge no-ff ke main; `bash scripts/safrs-verify.sh` di main.
+- [x] Step 5: **Chief push main.** Blocking untuk Task 13 — tanpa push, branch kontrol berikutnya menyatu dengan implementasi dalam satu change set vs origin/main dan gate coupling menolak.
 
 ### Task 13: Branch kontrol (AGENTS.md + scope token)
 
