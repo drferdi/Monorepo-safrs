@@ -16,11 +16,6 @@
       "activation": "active",
       "hook_entry": ".cursor/hooks/guard-shell.mjs"
     },
-    "cline": {
-      "enforceable_pre_action_hooks": true,
-      "activation": "active",
-      "hook_entry": ".cline/hooks/PreToolUse.sh"
-    },
     "droid": {
       "enforceable_pre_action_hooks": false,
       "activation": "read_only_disabled",

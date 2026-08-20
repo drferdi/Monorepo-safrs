@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import * as claude from "../src/adapters/claude.mjs";
-import * as cline from "../src/adapters/cline.mjs";
 import * as codex from "../src/adapters/codex.mjs";
 import * as cursor from "../src/adapters/cursor.mjs";
 import * as droid from "../src/adapters/droid.mjs";
@@ -15,7 +14,7 @@ const SENSITIVE = {
 };
 
 /**
- * One behavior, four native payload shapes. Every enforceable adapter must
+ * One behavior, three native payload shapes. Every enforceable adapter must
  * reach the same canonical verdict + reason for the same behavior.
  */
 const MATRIX = [
@@ -31,10 +30,6 @@ const MATRIX = [
       tool_input: { command: "git push origin main --force" },
     },
     cursor: { command: "git push origin main --force" },
-    cline: {
-      tool: "execute_command",
-      params: { command: "git push origin main --force" },
-    },
   },
   {
     name: "force with lease allowed",
@@ -48,10 +43,6 @@ const MATRIX = [
       tool_input: { command: "git push origin main --force-with-lease" },
     },
     cursor: { command: "git push origin main --force-with-lease" },
-    cline: {
-      tool: "execute_command",
-      params: { command: "git push origin main --force-with-lease" },
-    },
   },
   {
     name: "destructive database",
@@ -59,10 +50,6 @@ const MATRIX = [
     codex: { tool_name: "Bash", tool_input: { command: "dropdb production" } },
     claude: { tool_name: "Bash", tool_input: { command: "dropdb production" } },
     cursor: { command: "dropdb production" },
-    cline: {
-      tool: "execute_command",
-      params: { command: "dropdb production" },
-    },
   },
   {
     name: "credential print",
@@ -70,7 +57,6 @@ const MATRIX = [
     codex: { tool_name: "Bash", tool_input: { command: "cat .env" } },
     claude: { tool_name: "Bash", tool_input: { command: "cat .env" } },
     cursor: { command: "cat .env" },
-    cline: { tool: "execute_command", params: { command: "cat .env" } },
   },
   {
     name: "credential write",
@@ -83,7 +69,6 @@ const MATRIX = [
     },
     claude: { tool_name: "Write", tool_input: { file_path: ".env" } },
     cursor: null, // cursor write hook is read/shell only today
-    cline: { tool: "write_to_file", params: { path: ".env" } },
   },
   {
     name: "template write allowed",
@@ -97,7 +82,6 @@ const MATRIX = [
     },
     claude: { tool_name: "Write", tool_input: { file_path: ".env.example" } },
     cursor: null,
-    cline: { tool: "write_to_file", params: { path: ".env.example" } },
   },
   {
     name: "verification control context",
@@ -114,11 +98,10 @@ const MATRIX = [
       tool_input: { file_path: ".safrs/policy.json" },
     },
     cursor: null,
-    cline: { tool: "write_to_file", params: { path: ".safrs/policy.json" } },
   },
 ];
 
-const ADAPTERS = { codex, claude, cursor, cline };
+const ADAPTERS = { codex, claude, cursor };
 
 test("all enforceable adapters produce identical verdicts for the shared matrix", () => {
   for (const entry of MATRIX) {
@@ -148,7 +131,6 @@ test("adapters without an ask channel render ask as a block", () => {
   const ask = { decision: "ask", reasonCode: "DB_DESTRUCTIVE", message: "x" };
   assert.equal(codex.render(ask).exitCode, 2);
   assert.equal(claude.render(ask).exitCode, 2);
-  assert.equal(cline.render(ask).exitCode, 2);
   assert.equal(cursor.render(ask).permission, "ask");
 });
 
