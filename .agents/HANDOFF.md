@@ -4,27 +4,24 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-20 (smartboard capsule foundation executed)
+Last updated: 2026-08-20 (smartboard capsule merged to main)
 
 ## Current state
 
-- Branch `feat/smartboard-capsule`: capsule `projects/academic-smartboard/` berdiri —
-  scaffold wizard, ADR 0003, spec + plan migrasi, data kurikulum/referensi,
-  knowledge package Kayyisa v3.0.0 (hash 36/36 verified).
-- Branch `feat/safrs-ai-sensitive`: pola `projects/**/ai/**` masuk sensitive paths
-  (dipisah karena gate melarang kontrol + implementasi satu change set).
-- Task: TASK-20260820-SMARTBOARD-CAPSULE (REVIEW), TASK-20260820-SMARTBOARD-MIGRATION-PLAN (R1).
-- Favicon note lama: sumber di `docs/brand/04-favicon-browser/`; salinan uncommitted
-  di main working tree milik sesi sebelumnya.
-
-## Waiting on Chief
-
-1. Independent review `feat/smartboard-capsule`: isi `.safrs/reviews/verification-integrity.json`
-   (base_sha + change_set_sha256 disiapkan di laporan sesi) — tanpa ini `safrs-verify` merah.
-2. Merge order: `feat/smartboard-capsule` DULU (evidence terikat base main saat ini),
-   lalu `feat/safrs-ai-sensitive` (lolos verify mandiri, tanpa evidence).
+- Capsule `projects/academic-smartboard/` MERGED ke main (ADR 0003): scaffold,
+  data kurikulum/referensi, knowledge package Kayyisa v3.0.0 (hash 36/36 verified).
+- `projects/**/ai/**` masuk sensitive paths (merge `feat/safrs-ai-sensitive`).
+- Plan `2026-08-20-smartboard-migration.md` COMPLETED → `docs/plans/completed/`.
+- Evidence integrity review dicatat di `.safrs/reviews/verification-integrity.json`
+  (persetujuan Chief in-chat atas fingerprint change set merge).
+- Task TASK-20260820-SMARTBOARD-CAPSULE + TASK-20260820-SMARTBOARD-MIGRATION-PLAN:
+  lifecycle menuju CLOSED; worktrees smartboard dihapus setelahnya.
+- Stash utama menyimpan pekerjaan asing sesi lain (favicon copies, HANDOFF mod,
+  `.agents/tmp_*.py`) — pop kembali setelah verifikasi; lihat catatan sesi.
+- Favicon note lama: sumber di `docs/brand/04-favicon-browser/`.
 
 ## Next actions
 
-1. Setelah merge: task state MERGED lalu CLOSED; hapus worktrees.
-2. Plan berikutnya: port `apps/site` (landing Vite → Next.js static export).
+1. Plan berikutnya: port `apps/site` (landing Vite → Next.js static export,
+   kalibrasi token gate). Lalu `web`, `api` (per modul di belakang facade), `demo`.
+2. Push ke origin = keputusan Chief (CI checker menilai tree committed; evidence ikut).

@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-- **Status:** ACTIVE — fase fondasi dieksekusi 2026-08-20; menunggu review integritas Chief
+- **Status:** COMPLETED — fase fondasi dieksekusi dan di-merge ke main 2026-08-20; review integritas disetujui Chief
 - **Owner:** Chief
 
 **Goal:** Berdirikan capsule `projects/academic-smartboard/` yang lolos semua gate SAFRS, berisi aset statis (data kurikulum + knowledge package Kayyisa), siap menerima port `site`/`web`/`api`/`demo` di plan lanjutan.
