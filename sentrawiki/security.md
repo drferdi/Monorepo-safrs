@@ -44,7 +44,7 @@ Per `SAFRS_SPEC.md` section 16:
 - Enable secret scanning/push protection where available.
 - **Treat any exposed secret as compromised and rotate/revoke it.**
 
-`SECURITY.md` adds: never commit or echo secrets, and if exposure is suspected, stop using the credential and follow the owning system's rotation/revocation procedure. Agent hooks in `.claude/`, `.cursor/`, `.cline/`, and `.codex/` are configured to deny credential writes and block reads of `.env`-style secret files.
+`SECURITY.md` adds: never commit or echo secrets, and if exposure is suspected, stop using the credential and follow the owning system's rotation/revocation procedure. Agent hooks in `.claude/`, `.cursor/`, and `.codex/` are configured to deny credential writes and block reads of `.env`-style secret files.
 
 ## Prompt/tool injection boundary
 

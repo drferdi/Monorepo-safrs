@@ -23,7 +23,7 @@ The package is a **verification control** (classified in `.safrs/sensitive-paths
 | `tools/automation/src/publisher.mjs` | Publication eligibility (`enable_auto_merge` only) |
 | `tools/automation/src/redaction.mjs` | Deterministic evidence redaction |
 | `tools/automation/src/cli.mjs` | `publish`-agnostic `saf` command-line entry point (`pnpm saf`) |
-| `tools/automation/src/adapters/claude.mjs`, `cline.mjs`, `codex.mjs`, `cursor.mjs`, `droid.mjs` | Native hook payload → guard event translators |
+| `tools/automation/src/adapters/claude.mjs`, `codex.mjs`, `cursor.mjs`, `droid.mjs` | Native hook payload → guard event translators |
 | `tools/automation/AGENTS.md` | Package boundary rules and local verification commands |
 | `tools/automation/package.json` | Package metadata; zero runtime dependencies |
 | `.safrs/automation-policy.json` | Machine policy: operations, budgets, approvals, verification profile |
@@ -114,7 +114,7 @@ The `gate` and `authority-apply` commands write to `GITHUB_STEP_SUMMARY` when pr
 
 ### Adapter parity
 
-`tools/automation/src/adapters/` contains one translator per agent: `claude.mjs`, `cline.mjs`, `codex.mjs`, `cursor.mjs`, `droid.mjs`. Each maps a native hook payload to guard events (`{type: "command"|"read"|"write"}`) and renders a verdict back to the native protocol. Canonical verdicts are identical across adapters; an adapter without an "ask" channel renders ask as deny (fail closed), and one without any enforceable pre-action hook must stay read-only. Per `.safrs/adapter-capabilities.json`, Droid is `read_only_disabled` pending Activation Decision 4 because it exposes no enforceable pre-action hook.
+`tools/automation/src/adapters/` contains one translator per agent: `claude.mjs`, `codex.mjs`, `cursor.mjs`, `droid.mjs`. Each maps a native hook payload to guard events (`{type: "command"|"read"|"write"}`) and renders a verdict back to the native protocol. Canonical verdicts are identical across adapters; an adapter without an "ask" channel renders ask as deny (fail closed), and one without any enforceable pre-action hook must stay read-only. Per `.safrs/adapter-capabilities.json`, Droid is `read_only_disabled` pending Activation Decision 4 because it exposes no enforceable pre-action hook.
 
 ```mermaid
 graph LR
@@ -122,14 +122,12 @@ graph LR
         A1["Claude .claude/hooks"]
         A2["Cursor .cursor/hooks"]
         A3["Codex .codex/hooks"]
-        A4["Cline .cline/hooks"]
-        A5["Droid (disabled)"]
+        A4["Droid (disabled)"]
     end
     A1 --> G["guard.mjs<br/>authorize()<br/>allow|ask|deny|stop"]
     A2 --> G
     A3 --> G
-    A4 --> G
-    A5 -.-> G
+    A4 -.-> G
     G --> CT["contracts.mjs"]
     G --> LS["leases.mjs"]
     G --> BD["budgets.mjs"]
@@ -141,7 +139,7 @@ graph LR
 
 ## Integration points
 
-- **Agent adapters** wire the shared guard into Claude, Cursor, Codex, and Cline pre-action hooks (see [Adapter parity](#adapter-parity)).
+- **Agent adapters** wire the shared guard into Claude, Cursor, and Codex pre-action hooks (see [Adapter parity](#adapter-parity)).
 - **CI workflows** drive it: `.github/workflows/safrs-pr-gates.yml` runs all eight gates as a matrix; `.github/workflows/safrs-task-control.yml` is the serialized remote lease authority; `.github/workflows/safrs-publish.yml` evaluates publication eligibility.
 - **Python governance mirror** in `tools/safrs/check_task_contract.py` and `check_automation_policy.py` must stay byte-identical with the Node canon (see [Automation](automation.md) verification commands in `tools/automation/AGENTS.md`).
 - **Status and task CLIs** reuse the lease and control-plane primitives from this package — see [tools/status](status.md) and [tools/task](task.md).

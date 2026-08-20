@@ -49,7 +49,7 @@ Source (`.ts`/`.tsx`/`.mjs`/`.py`/`.css`/`.prisma`) totals roughly 14,600 lines 
 Activity clustered in three waves matching the repo's eras (see [Lore](lore.md)):
 
 - **Aug 10 — Bootstrap & golden path**: SAFRS scaffold, shared packages, typed Hono API, local database, project wizard.
-- **Aug 11 — Agent automation & DX**: agent adapters (Claude Code, Cursor, Codex, Cline), memory routing, design tokens, email/Stripe capability.
+- **Aug 11 — Agent automation & DX**: agent adapters, memory routing, design tokens, email/Stripe capability.
 - **Aug 12 — SOTA enhancements & corpus engine**: telemetry, codegen, dependency graph, OpenAPI endpoint, property tests, supply-chain scan, and the medical-PDF corpus engine.
 
 ## Bot-attributed commits

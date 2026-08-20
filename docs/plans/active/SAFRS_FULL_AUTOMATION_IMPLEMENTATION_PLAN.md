@@ -152,7 +152,7 @@ flowchart LR
 4. **Lease authority:** A serialized GitHub workflow owns remote claims. Local worktrees retain the existing Git-common registry but must reconcile to a remote fencing token before push.
 5. **Isolated executor:** Creates a fresh branch/worktree from the recorded base SHA, provisions disposable resources, and enforces task grants and budgets.
 6. **Shared guard:** Returns one vendor-neutral allow/deny/stop decision for filesystem, command, tool, endpoint, environment, and risk checks.
-7. **Thin adapters:** Codex, Claude, Cursor, Cline, and Droid translate native events to the shared guard. An adapter without enforceable pre-action hooks remains read-only.
+7. **Thin adapters:** Codex, Claude, Cursor, and Droid translate native events to the shared guard. An adapter without enforceable pre-action hooks remains read-only.
 8. **Verification plane:** Produces stable named verdicts for governance, tests, build, security, lifecycle, lease, budgets, approvals, platform state, and evidence integrity.
 9. **Approval plane:** Verifies R2 reviews and unlocks a separate R3 protected-environment job only after exact human approval.
 10. **Publisher:** A non-agent identity may enable auto-merge only for an exact eligible PR head. It cannot modify source, bypass rules, or deploy.
@@ -258,7 +258,7 @@ Publication fails when the latest attestation is missing, expired, reports drift
 | --- | --- |
 | `.safrs/automation-policy.json` | Machine policy for risk derivation, limits, approval rules, publisher rules, R3 rules, and evidence retention |
 | `.safrs/github-controls.json` | Desired GitHub rules, checks, identities, environments, and attestation freshness |
-| `.safrs/adapter-capabilities.json` | Enforceable capabilities and activation state for Codex, Claude, Cursor, Cline, and Droid |
+| `.safrs/adapter-capabilities.json` | Enforceable capabilities and activation state for Codex, Claude, Cursor, and Droid |
 | `.safrs/schemas/task-contract.v1.schema.json` | Task contract schema |
 | `.safrs/schemas/run-contract.v1.schema.json` | Run contract schema |
 | `.safrs/schemas/lease-event.v1.schema.json` | Lease event schema |
@@ -292,7 +292,7 @@ Publication fails when the latest attestation is missing, expired, reports drift
 | `tools/automation/src/publisher.mjs` | Exact-head publication eligibility and auto-merge request |
 | `tools/automation/src/executor.mjs` | Isolated attempt orchestration and stop handling |
 | `tools/automation/src/r3.mjs` | Operation validation, approval recheck, idempotency, and postconditions |
-| `tools/automation/src/adapters/{codex,claude,cursor,cline,droid}.mjs` | Native-event translators into the shared guard |
+| `tools/automation/src/adapters/{codex,claude,cursor,droid}.mjs` | Native-event translators into the shared guard |
 | `tools/automation/src/providers/provider.mjs` | Provider interface |
 | `tools/automation/src/providers/selected-provider.mjs` | First provider driver selected by Activation Decision 1 |
 | `tools/automation/test/*.test.mjs` | Focused contract, risk, scope, lease, budget, guard, approval, evidence, publisher, executor, and R3 tests |
@@ -339,7 +339,6 @@ Publication fails when the latest attestation is missing, expired, reports drift
 | `.codex/hooks/guard-tool-use.mjs` | Translate Codex events to the shared guard |
 | `.claude/hooks/guard-sensitive-paths.mjs` | Translate Claude events to the shared guard |
 | `.cursor/hooks/guard-read-secrets.mjs`, `.cursor/hooks/guard-shell.mjs` | Translate Cursor read/shell events to the shared guard |
-| `.cline/hooks/PreToolUse.sh`, `.cline/hooks/PostToolUse.sh` | Replace shell-only enforcement with a pinned Node bridge to the shared guard |
 | `.codex/hooks.json`, `.claude/settings.json`, `.cursor/hooks.json` | Route supported native pre/post events through adapter entry points |
 | `.safrs/reviews/verification-integrity.json` | Replace the singleton example with the versioned review-record format and exact-change evidence location |
 | `docs/governance/SAFRS_AGENT_PERMISSIONS.md` | Document publisher, auditor, and R3 executor identities |
@@ -476,7 +475,7 @@ Publication fails when the latest attestation is missing, expired, reports drift
 **Files:**
 
 - Create: guard, budget, adapter, provider-interface modules and parity tests
-- Modify: Codex, Claude, Cursor, and Cline hooks/configuration
+- Modify: Codex, Claude, and Cursor hooks/configuration
 - Modify: adapter capability and tool inventory records
 - Keep: Droid adapter `read_only_disabled` until Activation Decision 4
 

@@ -20,7 +20,7 @@ Project-specific terms used throughout the SAFRS Monorepo.
 | **Verification control** | Files that enforce governance: `.safrs/**`, `AGENTS.md`, CI workflows, security tests, architecture checks, `tools/automation/**`. Changes to these are minimum R2. |
 | **Disposable database** | A local or test database that can be safely reset. Must be on `127.0.0.1:54329` with a name ending in `_local` or `_test`. Enforced by `packages/database/src/reset-guard.ts`. |
 | **Correlation ID** | A UUID generated per request and attached to both the response header (`x-correlation-id`) and error envelopes for tracing. |
-| **Agent adapter** | A vendor-specific file (`.cursor/rules/`, `CLAUDE.md`, `.codex/config.toml`, `.cline/hooks/`) that points at root `AGENTS.md` without duplicating policy. |
+| **Agent adapter** | A vendor-specific file (`.cursor/rules/`, `CLAUDE.md`, `.codex/config.toml`) that points at root `AGENTS.md` without duplicating policy. |
 | **HANDOFF** | `.agents/HANDOFF.md`, overwritten each session with current state, work in flight, blockers, and next actions. Machine-enforced by `check_handoff.py`. |
 | **Automation control plane** | The machine-checked enforcement layer (ADR 0002): canonical contracts, monotonic risk, lease chains, PR gates, evidence manifests, approvals, and a publisher identity. Implemented in `tools/automation/`. |
 | **Canonical JSON** | UTF-8, lexicographically sorted keys, preserved array order, no insignificant whitespace, safe integers only. Digests must be byte-identical across Node and Python. Defined in `tools/automation/src/canonical-json.mjs`. |

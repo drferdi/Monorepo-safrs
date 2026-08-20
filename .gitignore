@@ -52,16 +52,6 @@ Thumbs.db
 !.claude/skills/**
 .claude/settings.local.json
 
-# Local Cline state; shared hooks, MCP, skills, and agents are tracked
-.cline/*
-!.cline/mcp.json
-!.cline/hooks/
-!.cline/hooks/**
-!.cline/agents/
-!.cline/agents/**
-!.cline/skills/
-!.cline/skills/**
-
 # Local Codex state; shared project config, hooks, agents, and skills are tracked
 .codex/*
 !.codex/config.toml

@@ -69,7 +69,7 @@ verification-control surfaces. Touching any of them is **minimum R2**. Key
 patterns include:
 
 - Governance/security surfaces: `AGENTS.md`, `SECURITY.md`, `SAFRS_SPEC.md`, `.safrs/**`, `.github/workflows/**`, `.github/CODEOWNERS`.
-- Vendor instruction adapters: `CLAUDE.md`, `GEMINI.md`, `.agents/**`, `.cursor/**`, `.claude/**`, `.cline/**`, `.codex/**`, `.husky/**`.
+- Vendor instruction adapters: `CLAUDE.md`, `GEMINI.md`, `.agents/**`, `.cursor/**`, `.claude/**`, `.codex/**`, `.husky/**`.
 - Shared boundaries: `packages/**`, `projects/**/AGENTS.md`, `infrastructure/**`.
 - Dependency manifests: root and nested `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, `Cargo.toml`, `go.mod`, `pyproject.toml`, etc.
 - Security/data-boundary dirs: `**/migrations/**`, `**/auth/**`, `**/authorization/**`, `**/security/**`.

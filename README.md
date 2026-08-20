@@ -1029,8 +1029,8 @@ Two properties are worth knowing before relying on it:
   JSON therefore accepts only safe integers, because engines spell floats
   differently.
 
-Vendor adapters (Codex, Claude, Cursor, Cline) are thin translators into the
-shared guard, so all four reach the same verdict for the same behavior. Droid
+Vendor adapters (Codex, Claude, Cursor) are thin translators into the shared
+guard, so all three reach the same verdict for the same behavior. Droid
 remains `read_only_disabled`; Chief resolved on 2026-08-18 that no unattended
 Droid workflow will be introduced without a separately reviewed artifact and
 installer.
@@ -1119,4 +1119,3 @@ See [`SAFRS_CONFORMANCE.md`](docs/governance/SAFRS_CONFORMANCE.md).
   <sub>Sentra Artificial Intelligence · Built in the depth, deployed at the bedside.</sub><br />
   <sub><code>// the surface is documentation. the depth is running.</code></sub>
 </p>
-

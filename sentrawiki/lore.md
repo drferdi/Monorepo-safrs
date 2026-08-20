@@ -17,7 +17,7 @@ By Aug 10 the flush of commits (51) built the whole baseline: golden-path app, c
 The busiest day (65 commits) focused on agent-first developer experience:
 
 - Agent memory files were created under `.agents/` (_Agent memory files: CONTEXT / DECISIONS / HANDOFF / PROGRESS / 12_LESSONS_, Aug 11) and wired into registry-driven routing (_Memory routing_, Aug 11).
-- Vendor agent adapters were added for Claude Code, Cursor, Codex, and Cline (all Aug 11), each pointing at `AGENTS.md` without duplicating policy, with hooks and verification controls registered as R2.
+- Vendor agent adapters were added for Claude Code, Cursor, and Codex, each pointing at `AGENTS.md` without duplicating policy, with hooks and verification controls registered as R2.
 - Sentra design tokens shipped and the `@sentra/design-tokens` package was renamed to `@sentra/token` (Aug 11).
 - The email and Stripe capability packs were activated (Aug 11).
 - Docs were converted to concise English (Aug 11).

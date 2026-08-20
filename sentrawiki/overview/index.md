@@ -11,7 +11,7 @@ The repo's operating model is **Human-Governed, Agent-Executed, Machine-Enforced
 - **Nine developer tools**: SAFRS governance checkers, automation control plane, environment doctor, project wizard, capability catalog, schema-first codegen, dependency graph visualizer, task CLI, and status CLI.
 - **Automation control plane**: canonical JSON contracts, monotonic risk computation, lease event chains, PR gates, budget ledgers, evidence manifests, approval verification, a publisher identity, and vendor-neutral adapter guard. Defined in ADR 0002, implemented in `tools/automation/`.
 - **Cross-cutting governance**: a six-layer control architecture (L0 through L5), four-tier risk model (R0 through R3), agent roles, sensitive-path detection, document registry, tool inventory, automation policy, and machine-enforced verification with 16 governance checkers.
-- **Agent adapters**: vendor-neutral adapters for Claude Code, Cursor, Codex, and Cline that point at root `AGENTS.md` without duplicating policy. Each adapter has a pre-action guard hook that enforces the shared automation guard.
+- **Agent adapters**: vendor-neutral adapters for Claude Code, Cursor, and Codex that point at root `AGENTS.md` without duplicating policy. Each adapter has a pre-action guard hook that enforces the shared automation guard.
 
 ## Tech stack
 

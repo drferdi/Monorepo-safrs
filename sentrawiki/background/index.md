@@ -17,7 +17,7 @@ Electron, WXT, Stripe, email, AI, and Python remain optional capability packs ra
 ## Key decisions from `.agents/DECISIONS.md`
 
 - **Memory routing (Aug 11)**: five memory files in `.agents/` registered in `.safrs/document-registry.json` with `normativity`/`scope`/`read_order`; the `AGENTS.md` Read order is generated from the registry, and committed changes must update `HANDOFF.md`.
-- **Agent adapters (Aug 11)**: Claude Code, Cursor, Codex, and Cline each get vendor-neutral adapters under their own `.claude/`, `.cursor/`, `.codex/`, `.cline/` directories that point at root `AGENTS.md` without duplicating policy. Hooks, subagents, and skills are governed under R2 verification controls.
+- **Agent adapters (Aug 11)**: Claude Code, Cursor, and Codex use vendor-neutral adapters under their own directories that point at root `AGENTS.md` without duplicating policy. Hooks, subagents, and skills are governed under R2 verification controls.
 - **Token enforcement (Aug 11)**: the `@sentra/design-tokens` package was renamed to `@sentra/token`, and raw colour/radius values are forbidden outside `packages/token/src/tokens.css`, enforced by `scripts/check-tokens.mjs` as part of `pnpm check`. The design-token boundary is a shared governance control.
 
 ## Why the migration from abyss-monorepo

@@ -100,7 +100,7 @@ graph LR
     AUTO --> APOL
     AUTO --> SENS
     AUTO --> INV
-    GD["5 agent adapters<br/>Claude, Cursor, Codex, Cline"] --> ADAP
+    GD["Agent adapters<br/>Claude, Cursor, Codex"] --> ADAP
 ```
 
 ## Golden-path data flow

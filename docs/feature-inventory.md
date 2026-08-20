@@ -118,7 +118,7 @@ The largest capability in the repository and the one most at risk of being invis
 | --- | --- | --- | --- | --- | --- | --- |
 | Design token system | `packages/token` | Shipped | Covered (WCAG contrast recomputation) | Canonical + Wiki | Connected | R2 |
 | Capability packs (6: ai, electron, email, python, stripe, wxt) | `tools/capabilities/manifests/` | Shipped as manifests; runtime installs are separate | Covered | Wiki | Partially Connected | R2 |
-| Agent adapters (Claude, Cursor, Codex, Cline, Droid, Qodo) | `.claude/`, `.cursor/`, `.codex/`, `.cline/`, `.droid/`, `.qodo/` | Shipped | Partial | Canonical (`docs/bootstrap/`) | Not Yet Connected | R2 |
+| Agent adapters (Claude, Cursor, Codex, Droid, Qodo) | `.claude/`, `.cursor/`, `.codex/`, `.droid/`, `.qodo/` | Shipped | Partial | Canonical (`docs/bootstrap/`) | Not Yet Connected | R2 |
 | Repository wiki (46 pages) | `sentrawiki/` | Shipped | n/a | self | Not Yet Connected | R1 |
 | Observability (OTLP → Jaeger) | `packages/telemetry`, `compose.telemetry.yaml` | Shipped | Partial | Wiki | Requires Configuration | R2 |
 | Solo non-coding agent set (7 Cursor agents) | **branch `feat/solo-noncoding-agents`** | Shipped (branch only) | None | Design spec + plan | Not Yet Connected | R2 |
