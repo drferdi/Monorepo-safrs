@@ -45,18 +45,26 @@ function commonGitDirectory(directory) {
 }
 
 /**
- * Windows and macOS filesystems are case-insensitive, but `git -C <dir>
- * rev-parse --git-common-dir` echoes back a path whose drive-letter/casing
- * matches whatever was passed into `-C`. Two calls against the identical
- * physical repository can therefore return strings that differ only by
- * drive-letter case (e.g. a hook process with cwd `d:\...` vs a worktree
- * target resolved from a payload path cased `D:\...`), which a plain `===`
- * treats as different repositories — silently falling back to the wrong
- * root and misclassifying legitimate in-worktree writes as "outside the
- * repository". Compare case-insensitively on win32/darwin; POSIX stays
- * case-sensitive since ext4 etc. genuinely are. Null/undefined never match,
- * including against themselves — an unresolved directory is never "the
- * same" as anything.
+ * `git rev-parse --git-common-dir` is asymmetric: from a repository's own
+ * toplevel it prints a RELATIVE path (`.git`), but from a linked worktree
+ * it prints the ABSOLUTE, canonically-cased path (e.g. `D:/DEV/Monorepo/.git`).
+ * `commonGitDirectory()` runs `path.resolve(directory, raw)` — when `raw` is
+ * relative, `path.resolve` stamps whatever drive-letter CASE the caller's
+ * own `directory` argument happens to have onto the result; when `raw` is
+ * already absolute, `path.resolve` ignores `directory` entirely and returns
+ * git's own canonical casing untouched. So a hook process invoked with a
+ * lowercase-drive cwd at the repo toplevel (`d:\DEV\Monorepo`) computes
+ * `ours = "d:\DEV\Monorepo\.git"`, while probing a linked worktree returns
+ * git's canonical `"D:\DEV\Monorepo\.git"` — identical physical directory,
+ * different string. A plain `===` never matched, so the walk in
+ * `repositoryRootFor()` fell through every parent and silently fell back to
+ * the hook's own `process.cwd()` (the MAIN tree) as the resolved root, which
+ * then made a legitimate worktree target look like it escaped outside the
+ * repository. Compare case-insensitively on win32/darwin (their default
+ * filesystems, NTFS/APFS, are case-insensitive); POSIX stays case-sensitive
+ * since ext4 etc. genuinely are. Null/undefined never match, including
+ * against themselves — an unresolved directory is never "the same" as
+ * anything.
  */
 function sameDirectory(a, b) {
   if (a == null || b == null) {
