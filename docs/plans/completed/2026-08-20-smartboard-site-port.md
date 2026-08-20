@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-- **Status:** ACTIVE — Task 1–12 dieksekusi 2026-08-20 (branch feat/smartboard-site); menunggu review R2 Chief + merge; Task 13–14 tersisa
+- **Status:** COMPLETED — seluruh 14 task dieksekusi dan di-merge ke main 2026-08-20; review R2 Chief in-chat; site masuk token gate scope
 - **Owner:** Chief
 
 **Goal:** Port website promo/publik El-Kayyisa dari `landing/` (React 19 SPA + Vite 8, repo arsip) menjadi `projects/academic-smartboard/apps/site` — Next.js 16 static export, patuh design token Sentra, lolos semua gate SAFRS; sekaligus kalibrasi token gate (fase 2 ADR 0003).
