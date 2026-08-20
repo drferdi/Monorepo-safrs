@@ -947,6 +947,15 @@ pnpm check            # governance + tokens + lint + typecheck + test + build
 Working on this repository as an agent (or with one) starts at
 [`AGENTS.md`](AGENTS.md), which routes to everything else.
 
+### Current capsules
+
+| Capsule | Current state | Entry point |
+| --- | --- | --- |
+| `golden-path` | Implemented reference flow: Next.js → typed Hono API → Prisma → local PostgreSQL | `projects/golden-path/apps/web` |
+| `control-center` | Implemented local, read-only operator dashboard; remains usable when Docker or the database is unavailable | `projects/control-center/apps/web` |
+| `academic-smartboard` | Governance, curriculum/reference data, and Kayyisa knowledge package migrated; application surfaces are not yet ported | `projects/academic-smartboard` |
+| `_template` | Governance scaffold for new capsules; not an active product | `projects/_template` |
+
 ### Governance and automation commands
 
 | Command | What it does |
@@ -963,7 +972,9 @@ Working on this repository as an agent (or with one) starts at
 
 Phases 1–5 of
 [`SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md`](docs/plans/active/SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md)
-are implemented and merged. Canonical behavior lives in
+are implemented and merged. Phases 6–8 are deliberately parked: Chief resolved
+the activation decisions on 2026-08-18, but no autonomous runner has been named.
+Canonical behavior lives in
 [`SAFRS_AUTOMATION.md`](docs/governance/SAFRS_AUTOMATION.md),
 [`SAFRS_APPROVALS.md`](docs/governance/SAFRS_APPROVALS.md), and
 [`SAFRS_EVIDENCE.md`](docs/governance/SAFRS_EVIDENCE.md); the architecture
@@ -990,7 +1001,9 @@ Two properties are worth knowing before relying on it:
 
 Vendor adapters (Codex, Claude, Cursor, Cline) are thin translators into the
 shared guard, so all four reach the same verdict for the same behavior. Droid
-stays `read_only_disabled` pending an activation decision.
+remains `read_only_disabled`; Chief resolved on 2026-08-18 that no unattended
+Droid workflow will be introduced without a separately reviewed artifact and
+installer.
 
 ### Capability status
 
@@ -999,15 +1012,17 @@ stays `read_only_disabled` pending an activation decision.
 | Single-command local bootstrap | Verified | `pnpm dev` | Docker (Postgres) |
 | Local email development (`golden-path`) | Installed; needs credentials | `pnpm dev:email` | `EMAIL_FROM`, `RESEND_API_KEY` |
 | Stripe sandbox webhooks (`golden-path`) | Installed; needs credentials | `pnpm stripe:listen` | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, local Stripe CLI |
-| Renovate | Pull requests only — `automerge` is `false` | — | Dependency dashboard on; major updates grouped and reviewed separately |
+| Renovate | Patch, minor, pin, digest, and lockfile updates auto-merge only after tests pass; major updates wait for Chief | — | Dependency dashboard enabled; GitHub-native auto-merge is disabled |
+| GitHub security | Secret scanning, push protection, Dependabot alerts and security updates, and dependency graph enabled | — | Live GitHub API check on 2026-08-20; continuous drift audit is not implemented |
 | CODEOWNERS R2/R3 enforcement | Declared, **not yet enforced** | — | Branch protection on `main` (checklist in [`PLATFORM_ACTIVATION.md`](docs/governance/PLATFORM_ACTIVATION.md)) |
-| Publisher auto-merge | Evaluation-only | — | A separate publisher identity; the workflow requests nothing until then |
+| Publisher auto-merge | Evaluation-only | — | `SAFRS_PUBLISHER_ENABLED` stays false until Phase 6 activates the required identity and controls |
 
 > [!IMPORTANT]
 > `main` currently has **no branch protection**, so the eight gates above are
 > published but not required. Requiring them, together with creating the
-> auditor and publisher identities, is Phase 6 work and needs an explicit human
-> activation decision.
+> auditor and publisher identities, is parked Phase 6 work. Chief resolved the
+> activation policy on 2026-08-18; activation waits for a named runner and the
+> Phase 6 reviewed change.
 
 Additional optional capabilities (see `tools/capabilities/manifests/` for the
 full catalog) can be previewed and recorded per project with:
@@ -1043,24 +1058,28 @@ See [`SAFRS_CONFORMANCE.md`](docs/governance/SAFRS_CONFORMANCE.md).
 
 ---
 
-## ── INSTRUMENTATION
+## ── TECHNOLOGY
 
 <p align="center">
   <img src="https://img.shields.io/badge/PowerShell-5391FE?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell" />
   <img src="https://img.shields.io/badge/Python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54" alt="Python" />
+  <img src="https://img.shields.io/badge/pnpm-F69220?style=for-the-badge&logo=pnpm&logoColor=white" alt="pnpm" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Turborepo-EF4444?style=for-the-badge&logo=turborepo&logoColor=white" alt="Turborepo" />
+  <img src="https://img.shields.io/badge/Biome-60A5FA?style=for-the-badge&logo=biome&logoColor=white" alt="Biome" />
   <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
   <img src="https://img.shields.io/badge/Node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js" />
+  <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=000000" alt="React" />
+  <img src="https://img.shields.io/badge/Hono-E36002?style=for-the-badge&logo=hono&logoColor=white" alt="Hono" />
   <img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="TailwindCSS" />
   <img src="https://img.shields.io/badge/Postgres-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="Postgres" />
   <img src="https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma" />
-  <img src="https://img.shields.io/badge/TensorFlow-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white" alt="TensorFlow" />
-  <img src="https://img.shields.io/badge/Kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white" alt="Kubernetes" />
-  <img src="https://img.shields.io/badge/Terraform-5835CC?style=for-the-badge&logo=terraform&logoColor=white" alt="Terraform" />
-  <img src="https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi" alt="FastAPI" />
-  <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
+  <img src="https://img.shields.io/badge/Vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white" alt="Vitest" />
+  <img src="https://img.shields.io/badge/Playwright-2EAD33?style=for-the-badge&logo=playwright&logoColor=white" alt="Playwright" />
+  <img src="https://img.shields.io/badge/OpenTelemetry-000000?style=for-the-badge&logo=opentelemetry&logoColor=white" alt="OpenTelemetry" />
   <img src="https://img.shields.io/badge/Git-F05033?style=for-the-badge&logo=git&logoColor=white" alt="Git" />
+  <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white" alt="GitHub Actions" />
   <img src="https://img.shields.io/badge/Docker-0DB7ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
-  <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel" />
 </p>
 
 ---

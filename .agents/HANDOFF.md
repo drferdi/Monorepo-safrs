@@ -4,7 +4,7 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-20 (smartboard capsule merged to main)
+Last updated: 2026-08-20 (README repository-state audit)
 
 ## Current state
 
@@ -14,11 +14,17 @@ Last updated: 2026-08-20 (smartboard capsule merged to main)
 - Plan `2026-08-20-smartboard-migration.md` COMPLETED → `docs/plans/completed/`.
 - Evidence integrity review dicatat di `.safrs/reviews/verification-integrity.json`
   (persetujuan Chief in-chat atas fingerprint change set merge).
-- Task TASK-20260820-SMARTBOARD-CAPSULE + TASK-20260820-SMARTBOARD-MIGRATION-PLAN:
-  lifecycle menuju CLOSED; worktrees smartboard dihapus setelahnya.
+- Task TASK-20260820-SMARTBOARD-CAPSULE + TASK-20260820-SMARTBOARD-MIGRATION-PLAN
+  sudah CLOSED; worktree smartboard sudah dihapus.
 - Stash utama menyimpan pekerjaan asing sesi lain (favicon copies, HANDOFF mod,
   `.agents/tmp_*.py`) — pop kembali setelah verifikasi; lihat catatan sesi.
 - Favicon note lama: sumber di `docs/brand/04-favicon-browser/`.
+- Root `README.md` diaudit terhadap manifest, plan automation, dan GitHub live state:
+  status Renovate, GitHub security, serta parkir Phase 6–8 diperbarui; branch
+  protection tetap belum aktif dan conformance tetap SAFRS Core.
+- Verifikasi README: token gate, lint, typecheck, dan build PASS. Governance/SAFRS
+  diblokir penghapusan paralel `.cline/**` tanpa active owner; test ikut gagal pada
+  parser EOL karena file `.cline/**` tersebut absent dari working tree.
 
 ## Next actions
 
