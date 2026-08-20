@@ -8,7 +8,7 @@
 
 | # | Sub-fase | Halaman arsip tercakup | Plan | Status |
 | --- | --- | --- | --- | --- |
-| 1 | Fondasi: scaffold, auth, shell, 1 modul master data (vertical proof) | Login, TutorActivation, OwnerActivation, shell/nav, Master › Murid | `docs/plans/active/2026-08-21-smartboard-web-subphase1-foundation.md` | ACTIVE (draft, menunggu approve Chief) |
+| 1 | Fondasi: scaffold, auth, shell, 1 modul master data (vertical proof) | Login, TutorActivation, OwnerActivation, shell/nav, Master › Murid | `docs/plans/active/2026-08-21-smartboard-web-subphase1-foundation.md` | COMPLETED (Task 1–9 selesai, review bersih; Task 10 dokumentasi + merge; TutorActivation/OwnerActivation ditunda ke sub-fase 4 per plan) |
 | 2 | Penjadwalan + akademik | Jadwal, Sesi(List/Detail), Evaluasi, Kurikulum, KurikulumSelaras, KurikulumCakupan, PerkembanganMurid | belum ditulis | belum dimulai |
 | 3 | Payroll + finance | RekapHonor, Payroll, Pembayaran, Tarif, Lembur, Finance (tuition) | belum ditulis | belum dimulai |
 | 4 | Komunikasi + operasional | Komunikasi, Pengumuman, JournalEntry (di dalam Perkembangan), Tasks, Laporan, sisa 6 halaman Master (`tim`, `orang-tua`, `sekolah`, `mata-pelajaran`, `jenjang`, `tahun-ajaran`) | belum ditulis | belum dimulai |

@@ -16,6 +16,15 @@
 
 **Sumber:** `D:/Devops/abyss-monorepo/apps/academic/smartboard/frontend/` (read-only; snapshot whitelist, tanpa graft riwayat git). Referensi backend (read-only, TIDAK di-port sub-fase ini): `.../backend/auth.py`, `.../backend/routes_master.py`, `.../backend/models.py`.
 
+## Catatan eksekusi (2026-08-21)
+
+- Task 1–9 dieksekusi via subagent-driven-development (implementer + task reviewer per task); Task 1 (klaim + worktree + commit plan) dieksekusi controller inline, pola sama seperti plan `apps/site`.
+- Task 4: 1 fix round — varian `size="sm"` tombol awalnya `min-h-[var(--space-6)]` (32px), melanggar `packages/token/UI-RULES.md` (44px minimum target, build condition). Diperbaiki ke `var(--target-min)`.
+- Task 6: 2 ruling controller — bump katalog `@hookform/resolvers` 5.0.1→5.9.1 (zod v4 di catalog butuh `.issues` bukan `.errors`, konsumen tunggal diverifikasi); sentuhan `vitest.config.ts` (fix `oxc.jsx.runtime`, konsisten dengan 3 app lain) diratifikasi eksplisit.
+- Task 9: ruling controller — finding "urutan import beda dari brief" ditolak; itu hasil auto-sort biome pre-commit hook, bukan pilihan implementer (preseden sama di Task 3).
+- Di antara Task 7 dan Task 8: ditemukan bug drive-letter case di `.claude/hooks/guard-sensitive-paths.mjs` yang menolak Write/Edit sah di git worktree manapun di mesin ini (dikonfirmasi 3 subagent independen). Diperbaiki + di-merge ke main terpisah (commit `3272ed3`, `87e61cf` di branch `fix/guard-hook-worktree-case`, TASK-20260821-GUARD-HOOK-WORKTREE-CASE-FIX) sebelum Task 8 lanjut. Root cause: `git rev-parse --git-common-dir` asimetris (relatif dari toplevel repo, absolut-canonical dari worktree tertaut) — lihat commit `87e61cf` untuk detail lengkap.
+- Task 10: `pnpm-workspace.yaml`/`turbo.json` Task 3 menambah 2 env var baru, membuat `tests/repository/operator-commands.test.mjs` gagal (assert array env lama) — diperbaiki via task terpisah TASK-20260821-SMARTBOARD-WEB-TURBOENV-TEST-FIX (commit `eb1c641`, branch sama). Sitasi checkbox Task 3–8 (nama file bare/app-relative, mis. `` `nav.ts` ``) gagal `check_status_claims.py` (path harus repo-root-relative) — diperbaiki ke path penuh; checkbox Task 1–9 dicentang sekaligus di Task 10 (belum dicentang progresif per-commit — catatan proses untuk sub-fase berikutnya: centang box di commit yang sama dengan task-nya, bukan ditunda).
+
 ## Prasyarat (blocking — jangan mulai sebelum terpenuhi)
 
 1. Roadmap dan plan ini disetujui Chief (status ACTIVE).
@@ -98,7 +107,7 @@ Branch: `feat/smartboard-web-foundation` (Task 2–10) lalu `feat/smartboard-web
 **Files:**
 - Commit: `docs/plans/active/2026-08-21-smartboard-web-roadmap.md`, `docs/plans/active/2026-08-21-smartboard-web-subphase1-foundation.md`, baris di `docs/plans/active/README.md`
 
-- [ ] **Step 1: Cek lease aktif, klaim task** — jalankan dari tree utama `d:\DEV\Monorepo` (CLI mencap `worktree_id` saat klaim; semua transisi state berikutnya WAJIB dari tree yang sama)
+- [x] **Step 1: Cek lease aktif, klaim task** — jalankan dari tree utama `d:\DEV\Monorepo` (CLI mencap `worktree_id` saat klaim; semua transisi state berikutnya WAJIB dari tree yang sama)
 
 ```bash
 pnpm task list --active
@@ -118,14 +127,14 @@ pnpm task claim --id TASK-20260821-SMARTBOARD-WEB-FOUNDATION \
 ```
 (R2: menyentuh `pnpm-workspace.yaml` (katalog baru) + `**/package.json` + `pnpm-lock.yaml` = sensitive paths, floor R2.)
 
-- [ ] **Step 2: Worktree**
+- [x] **Step 2: Worktree**
 
 ```bash
 git worktree add ../Monorepo.worktrees/feat-smartboard-web-foundation -b feat/smartboard-web-foundation
 cd ../Monorepo.worktrees/feat-smartboard-web-foundation && pnpm install
 ```
 
-- [ ] **Step 3: Commit plan doc** (salin dari tree utama, commit pertama branch)
+- [x] **Step 3: Commit plan doc** (salin dari tree utama, commit pertama branch)
 
 ```bash
 cp d:/DEV/Monorepo/docs/plans/active/2026-08-21-smartboard-web-roadmap.md docs/plans/active/
@@ -141,7 +150,7 @@ Buang salinan uncommitted di tree utama setelahnya (gate ownership tree utama be
 **Files:**
 - Modify: `pnpm-workspace.yaml`
 
-- [ ] **Step 1**: Tambah ke blok `catalog:` (urut alfabetis mengikuti gaya file, versi PERSIS sesuai audit arsip di atas):
+- [x] **Step 1**: Tambah ke blok `catalog:` (urut alfabetis mengikuti gaya file, versi PERSIS sesuai audit arsip di atas):
 
 ```yaml
   "@hookform/resolvers": 5.0.1
@@ -160,8 +169,8 @@ Buang salinan uncommitted di tree utama setelahnya (gate ownership tree utama be
 
 (`zod` SUDAH ada di catalog di `4.4.3` — TIDAK ditambah ulang, lihat Keputusan terbuka #2.)
 
-- [ ] **Step 2**: `pnpm install` dari root — verifikasi `pnpm-lock.yaml` update tanpa error, tidak ada workspace lain terpengaruh (belum ada consumer, jadi lockfile diff harus HANYA metadata catalog).
-- [ ] **Step 3**: Commit
+- [x] **Step 2**: `pnpm install` dari root — verifikasi `pnpm-lock.yaml` update tanpa error, tidak ada workspace lain terpengaruh (belum ada consumer, jadi lockfile diff harus HANYA metadata catalog).
+- [x] **Step 3**: Commit
 
 ```bash
 git add pnpm-workspace.yaml pnpm-lock.yaml
@@ -178,7 +187,7 @@ git commit -m "chore(catalog): add smartboard web foundation dependencies"
 **Interfaces:**
 - Produces: package `@sentra/smartboard-web`; `pnpm --filter @sentra/smartboard-web build` menghasilkan `apps/web/out/`
 
-- [ ] **Step 1: package.json**
+- [x] **Step 1: package.json**
 
 ```json
 {
@@ -225,7 +234,7 @@ git commit -m "chore(catalog): add smartboard web foundation dependencies"
 }
 ```
 
-- [ ] **Step 2: next.config.ts**
+- [x] **Step 2: next.config.ts**
 
 ```ts
 import type { NextConfig } from "next";
@@ -244,9 +253,9 @@ const nextConfig: NextConfig = {
 export default nextConfig;
 ```
 
-- [ ] **Step 3: tsconfig.json** — identik `apps/site/tsconfig.json` (extends `packages/config/tsconfig/nextjs.json`).
-- [ ] **Step 4: postcss.config.mjs** — identik `apps/site`.
-- [ ] **Step 5: globals.css + layout.tsx + page.tsx minimal**
+- [x] **Step 3: tsconfig.json** — identik `projects/academic-smartboard/apps/site/tsconfig.json` (extends `packages/config/tsconfig/nextjs.json`).
+- [x] **Step 4: postcss.config.mjs** — identik `apps/site`.
+- [x] **Step 5: globals.css + layout.tsx + page.tsx minimal**
 
 `src/app/globals.css`:
 ```css
@@ -283,8 +292,8 @@ export default function Page() {
 }
 ```
 
-- [ ] **Step 6: turbo.json** — di array `env` task `build` dan `dev`, tambah `"NEXT_PUBLIC_BACKEND_URL"` dan `"NEXT_PUBLIC_DEV_TENANT_SLUG"` setelah `"APP_URL"`.
-- [ ] **Step 7: Install + build**
+- [x] **Step 6: turbo.json** — di array `env` task `build` dan `dev`, tambah `"NEXT_PUBLIC_BACKEND_URL"` dan `"NEXT_PUBLIC_DEV_TENANT_SLUG"` setelah `"APP_URL"`.
+- [x] **Step 7: Install + build**
 
 ```bash
 pnpm install
@@ -294,7 +303,7 @@ ls projects/academic-smartboard/apps/web/out/index.html
 ```
 Expected: exit 0, `out/index.html` ada.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add projects/academic-smartboard/apps/web turbo.json pnpm-lock.yaml
@@ -309,7 +318,7 @@ git commit -m "feat(web): scaffold apps/web next static export"
 **Interfaces:**
 - Produces: `cn(...classes)`, `<Button variant="default"|"outline"|"ghost" size="default"|"sm">`, `<Label>`, `<Input>` — dipakai semua task berikutnya
 
-- [ ] **Step 1: Test gagal** — `src/lib/cn.test.ts`:
+- [x] **Step 1: Test gagal** — `projects/academic-smartboard/apps/web/src/lib/cn.test.ts`:
 
 ```ts
 import { describe, expect, it } from "vitest";
@@ -325,8 +334,8 @@ describe("cn", () => {
 });
 ```
 
-- [ ] **Step 2**: `pnpm --filter @sentra/smartboard-web test` → FAIL (`cn` belum ada).
-- [ ] **Step 3: Implementasi**
+- [x] **Step 2**: `pnpm --filter @sentra/smartboard-web test` → FAIL (`cn` belum ada).
+- [x] **Step 3: Implementasi**
 
 ```ts
 import { type ClassValue, clsx } from "clsx";
@@ -337,10 +346,10 @@ export function cn(...inputs: ClassValue[]) {
 }
 ```
 
-- [ ] **Step 4**: Test PASS.
-- [ ] **Step 5**: `button.tsx` (varian via `class-variance-authority`, warna via token semantik `var(--color-*)` — bukan Tailwind palette default), `label.tsx` (bungkus `@radix-ui/react-label`), `input.tsx` (native `<input>` + kelas token border/radius). Semua tanpa hex mentah.
-- [ ] **Step 6**: `pnpm --filter @sentra/smartboard-web lint && pnpm --filter @sentra/smartboard-web typecheck && pnpm --filter @sentra/smartboard-web build` → hijau. Grep bukti nol hex: `grep -rnE "#[0-9a-fA-F]{3,8}\b" projects/academic-smartboard/apps/web/src` → kosong.
-- [ ] **Step 7**: Commit `feat(web): token-based ui primitives (button, label, input)`.
+- [x] **Step 4**: Test PASS.
+- [x] **Step 5**: `projects/academic-smartboard/apps/web/src/components/ui/button.tsx` (varian via `class-variance-authority`, warna via token semantik `var(--color-*)` — bukan Tailwind palette default), `projects/academic-smartboard/apps/web/src/components/ui/label.tsx` (bungkus `@radix-ui/react-label`), `projects/academic-smartboard/apps/web/src/components/ui/input.tsx` (native `<input>` + kelas token border/radius). Semua tanpa hex mentah.
+- [x] **Step 6**: `pnpm --filter @sentra/smartboard-web lint && pnpm --filter @sentra/smartboard-web typecheck && pnpm --filter @sentra/smartboard-web build` → hijau. Grep bukti nol hex: `grep -rnE "#[0-9a-fA-F]{3,8}\b" projects/academic-smartboard/apps/web/src` → kosong.
+- [x] **Step 7**: Commit `feat(web): token-based ui primitives (button, label, input)`.
 
 ### Task 5: API client (TDD)
 
@@ -350,7 +359,7 @@ export function cn(...inputs: ClassValue[]) {
 **Interfaces:**
 - Produces: `apiClient` (axios instance), `type User = { user_id, tenant_id, email, name, role, tutor_id, student_ids, parent_id, active }`, `login(email, password): Promise<{user: User}>`, `getMe(): Promise<User>`, `logout(): Promise<void>`
 
-- [ ] **Step 1: Test gagal** — `src/lib/api.test.ts` (unit murni, mock axios, tanpa network/DOM):
+- [x] **Step 1: Test gagal** — `projects/academic-smartboard/apps/web/src/lib/api.test.ts` (unit murni, mock axios, tanpa network/DOM):
 
 ```ts
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -395,8 +404,8 @@ describe("api client", () => {
 });
 ```
 
-- [ ] **Step 2**: `pnpm --filter @sentra/smartboard-web test` → FAIL (`./api` belum ada).
-- [ ] **Step 3: Implementasi** — `src/lib/api.ts`:
+- [x] **Step 2**: `pnpm --filter @sentra/smartboard-web test` → FAIL (modul api belum ada).
+- [x] **Step 3: Implementasi** — `projects/academic-smartboard/apps/web/src/lib/api.ts`:
 
 ```ts
 import axios from "axios";
@@ -451,8 +460,8 @@ export async function listStudents(): Promise<Student[]> {
 }
 ```
 
-- [ ] **Step 4**: Test PASS.
-- [ ] **Step 5**: Commit `feat(web): typed api client for auth and students`.
+- [x] **Step 4**: Test PASS.
+- [x] **Step 5**: Commit `feat(web): typed api client for auth and students`.
 
 ### Task 6: Auth context + halaman login (TDD logic, UI manual-verified)
 
@@ -463,7 +472,7 @@ export async function listStudents(): Promise<Student[]> {
 - Consumes: `login`, `getMe`, `logout`, `User` dari Task 5
 - Produces: `<AuthProvider>`, `useAuth(): { user: User | null, status: "loading"|"authenticated"|"unauthenticated", login, logout }` — dipakai `ProtectedRoute` (Task 7) dan semua halaman terproteksi
 
-- [ ] **Step 1: Test gagal** — `src/lib/auth.test.ts` (test reducer/state machine murni, tanpa render React):
+- [x] **Step 1: Test gagal** — `projects/academic-smartboard/apps/web/src/lib/auth.test.ts` (test reducer/state machine murni, tanpa render React):
 
 ```ts
 import { describe, expect, it } from "vitest";
@@ -491,8 +500,8 @@ describe("authReducer", () => {
 });
 ```
 
-- [ ] **Step 2**: `pnpm --filter @sentra/smartboard-web test` → FAIL.
-- [ ] **Step 3: Implementasi** — `src/lib/auth.tsx`:
+- [x] **Step 2**: `pnpm --filter @sentra/smartboard-web test` → FAIL.
+- [x] **Step 3: Implementasi** — `projects/academic-smartboard/apps/web/src/lib/auth.tsx`:
 
 ```tsx
 "use client";
@@ -553,10 +562,10 @@ export function useAuth() {
 }
 ```
 
-- [ ] **Step 4**: Test PASS.
-- [ ] **Step 5**: `src/app/login/page.tsx` — form `react-hook-form` + `zod` (skema v4: `z.object({ email: z.email(), password: z.string().min(1) })`), pesan error Bahasa Indonesia verbatim dari `frontend/src/pages/Login.jsx` ("Email atau kata sandi salah" cocok balasan backend 401). Sukses login → `router.push("/master/murid")`.
-- [ ] **Step 6**: `pnpm --filter @sentra/smartboard-web build` → hijau. Verifikasi manual dev server (`pnpm --filter @sentra/smartboard-web dev`, buka `/login`, cek form render — TANPA backend hidup, cukup pastikan tidak crash).
-- [ ] **Step 7**: Commit `feat(web): auth context and login page`.
+- [x] **Step 4**: Test PASS.
+- [x] **Step 5**: `projects/academic-smartboard/apps/web/src/app/login/page.tsx` — form `react-hook-form` + `zod` (skema v4: `z.object({ email: z.email(), password: z.string().min(1) })`), pesan error Bahasa Indonesia verbatim dari `frontend/src/pages/Login.jsx` ("Email atau kata sandi salah" cocok balasan backend 401). Sukses login → `router.push("/master/murid")`.
+- [x] **Step 6**: `pnpm --filter @sentra/smartboard-web build` → hijau. Verifikasi manual dev server (`pnpm --filter @sentra/smartboard-web dev`, buka `/login`, cek form render — TANPA backend hidup, cukup pastikan tidak crash).
+- [x] **Step 7**: Commit `feat(web): auth context and login page`.
 
 ### Task 7: Shell (nav role-aware) + ProtectedRoute
 
@@ -568,7 +577,7 @@ export function useAuth() {
 - Consumes: `useAuth()` dari Task 6
 - Produces: `NAV_ITEMS: {label, href, roles}[]`, `filterByRole(items, role)`, `<ProtectedRoute roles={[...]}>`, `<AppShell>`
 
-- [x] **Step 1: Test gagal** — `src/lib/nav.test.ts`:
+- [x] **Step 1: Test gagal** — `projects/academic-smartboard/apps/web/src/lib/nav.test.ts`:
 
 ```ts
 import { describe, expect, it } from "vitest";
@@ -585,7 +594,7 @@ describe("filterByRole", () => {
 });
 ```
 
-- [x] **Step 2**: FAIL → implementasi `src/lib/nav.ts`:
+- [x] **Step 2**: FAIL → implementasi `projects/academic-smartboard/apps/web/src/lib/nav.ts`:
 
 ```ts
 export type Role = "owner" | "admin_akademik" | "tentor" | "murid_ortu" | "finance" | "content_manager";
@@ -601,9 +610,9 @@ export function filterByRole(items: NavItem[], role: Role): NavItem[] {
 ```
 
 - [x] **Step 3**: Test PASS.
-- [x] **Step 4**: `ProtectedRoute.tsx` — client component, port perilaku `frontend/src/App.js` `<ProtectedRoute roles={[...]}>` (baris 139/171/267 arsip): saat `status === "loading"` render skeleton/null; `"unauthenticated"` → `router.replace("/login")`; `"authenticated"` dengan `role` tidak termasuk `roles` prop → render pesan "Akses ditolak" (bukan redirect diam-diam, sesuai backend yang juga balas 403 eksplisit).
-- [x] **Step 5**: `AppShell.tsx` — sidebar dari `filterByRole(NAV_ITEMS, user.role)`, header dengan `DropdownMenu` (nama user + tombol logout memanggil `useAuth().logout()` lalu redirect `/login`).
-- [x] **Step 6**: `layout.tsx` bungkus `children` dengan `QueryClientProvider` (instance `new QueryClient()` di client component terpisah `src/app/providers.tsx`) lalu `AuthProvider`. `page.tsx` (`"/"`): client component, `useAuth()`, redirect ke `/master/murid` kalau authenticated, ke `/login` kalau tidak.
+- [x] **Step 4**: `projects/academic-smartboard/apps/web/src/components/ProtectedRoute.tsx` — client component, port perilaku frontend/src/App.js `<ProtectedRoute roles={[...]}>` (referensi arsip, baris 139/171/267, di luar repo ini) (baris 139/171/267 arsip): saat `status === "loading"` render skeleton/null; `"unauthenticated"` → `router.replace("/login")`; `"authenticated"` dengan `role` tidak termasuk `roles` prop → render pesan "Akses ditolak" (bukan redirect diam-diam, sesuai backend yang juga balas 403 eksplisit).
+- [x] **Step 5**: `projects/academic-smartboard/apps/web/src/components/AppShell.tsx` — sidebar dari `filterByRole(NAV_ITEMS, user.role)`, header dengan `DropdownMenu` (nama user + tombol logout memanggil `useAuth().logout()` lalu redirect `/login`).
+- [x] **Step 6**: `projects/academic-smartboard/apps/web/src/app/layout.tsx` bungkus `children` dengan `QueryClientProvider` (instance `new QueryClient()` di client component terpisah `projects/academic-smartboard/apps/web/src/app/providers.tsx`) lalu `AuthProvider`. `projects/academic-smartboard/apps/web/src/app/page.tsx` (`"/"`): client component, `useAuth()`, redirect ke `/master/murid` kalau authenticated, ke `/login` kalau tidak.
 - [x] **Step 7**: `pnpm --filter @sentra/smartboard-web typecheck && build` → hijau.
 - [x] **Step 8**: Commit `feat(web): role-aware shell and protected route`.
 
@@ -615,18 +624,18 @@ export function filterByRole(items: NavItem[], role: Role): NavItem[] {
 **Interfaces:**
 - Consumes: `listStudents`, `Student` (Task 5), `ProtectedRoute`, `AppShell` (Task 7), `@tanstack/react-query`
 
-- [ ] **Step 1**: Baca `frontend/src/pages/master/` di arsip, konfirmasi nama file persis halaman daftar murid dan kolom yang ditampilkan (referensi model `Student` sudah dikonfirmasi: `student_id, name, nis, gender, school_id, grade_id, active`).
-- [ ] **Step 2**: `DataTable.tsx` — tabel generik minimal (`columns: {key, header}[]`, `rows: Record<string, unknown>[]`), token-styled (`var(--color-border)`, dst.), TANPA fitur sort/filter/paginasi (YAGNI — nambah kalau halaman sub-fase 2-5 butuh).
-- [ ] **Step 3**: `src/app/master/murid/page.tsx` — client component: `<ProtectedRoute roles={["owner","admin_akademik","tentor","murid_ortu"]}>`, `useQuery({ queryKey: ["students"], queryFn: listStudents })`, render `<AppShell>` + `<DataTable columns=... rows=data ?? []>` kolom: Nama, NIS, Jenis Kelamin, Status. Loading state dan error state (pesan "Gagal memuat data murid" + tombol retry `refetch()`).
-- [ ] **Step 4**: `pnpm --filter @sentra/smartboard-web typecheck && build` → hijau.
-- [ ] **Step 5**: Commit `feat(web): master murid list page (vertical proof)`.
+- [x] **Step 1**: Baca `frontend/src/pages/master/` di arsip, konfirmasi nama file persis halaman daftar murid dan kolom yang ditampilkan (referensi model `Student` sudah dikonfirmasi: `student_id, name, nis, gender, school_id, grade_id, active`).
+- [x] **Step 2**: `projects/academic-smartboard/apps/web/src/components/DataTable.tsx` — tabel generik minimal (`columns: {key, header}[]`, `rows: Record<string, unknown>[]`), token-styled (`var(--color-border)`, dst.), TANPA fitur sort/filter/paginasi (YAGNI — nambah kalau halaman sub-fase 2-5 butuh).
+- [x] **Step 3**: `projects/academic-smartboard/apps/web/src/app/master/murid/page.tsx` — client component: `<ProtectedRoute roles={["owner","admin_akademik","tentor","murid_ortu"]}>`, `useQuery({ queryKey: ["students"], queryFn: listStudents })`, render `<AppShell>` + `<DataTable columns=... rows=data ?? []>` kolom: Nama, NIS, Jenis Kelamin, Status. Loading state dan error state (pesan "Gagal memuat data murid" + tombol retry `refetch()`).
+- [x] **Step 4**: `pnpm --filter @sentra/smartboard-web typecheck && build` → hijau.
+- [x] **Step 5**: Commit `feat(web): master murid list page (vertical proof)`.
 
 ### Task 9: Test output build
 
 **Files:**
 - Create: `tests/build-output.test.mjs`
 
-- [ ] **Step 1: Tulis test** (pola sama `apps/site`, route sub-fase 1 saja):
+- [x] **Step 1: Tulis test** (pola sama `apps/site`, route sub-fase 1 saja):
 
 ```js
 import { strict as assert } from "node:assert";
@@ -645,9 +654,9 @@ for (const route of ROUTES) {
 }
 ```
 
-- [ ] **Step 2**: Hapus `out/`, jalankan `pnpm --filter @sentra/smartboard-web build && pnpm --filter @sentra/smartboard-web test:build` → 3 test PASS. Verifikasi merah: rename sementara satu folder route, test harus FAIL, kembalikan.
-- [ ] **Step 3**: Audit token: `node scripts/check-tokens.mjs --audit` → nol pelanggaran pada `projects/academic-smartboard/apps/web`.
-- [ ] **Step 4**: Commit `test(web): build output guard for sub-phase 1 routes`.
+- [x] **Step 2**: Hapus `out/`, jalankan `pnpm --filter @sentra/smartboard-web build && pnpm --filter @sentra/smartboard-web test:build` → 3 test PASS. Verifikasi merah: rename sementara satu folder route, test harus FAIL, kembalikan.
+- [x] **Step 3**: Audit token: `node scripts/check-tokens.mjs --audit` → nol pelanggaran pada `projects/academic-smartboard/apps/web`.
+- [x] **Step 4**: Commit `test(web): build output guard for sub-phase 1 routes`.
 
 ### Task 10: Dokumen capsule + verifikasi penuh + merge implementasi
 
