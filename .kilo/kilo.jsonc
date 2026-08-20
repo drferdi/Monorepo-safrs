@@ -1,0 +1,112 @@
+{
+  "$schema": "https://app.kilo.ai/config.json",
+  "compaction": {
+    "auto": true,
+    "threshold_percent": 80,
+    "prune": true,
+    "tail_turns": 2,
+    "preserve_recent_tokens": 8000,
+    "reserved": 20000
+  },
+  "skills": {
+    "paths": ["./.agents/skills"]
+  },
+  "command": {
+    "verify-change": {
+      "description": "Run the repository verification sequence and report evidence",
+      "agent": "code",
+      "template": "Load the `verify` skill and execute its sequence for the current change set. Inspect the diff first, run focused checks before repository-wide gates, and update `.agents/HANDOFF.md` with current evidence. Separate failures caused by this change from pre-existing or parallel-work blockers. Never weaken a gate to obtain a pass."
+    },
+    "investigate-bug": {
+      "description": "Reproduce and isolate a bug before implementing the smallest fix",
+      "agent": "code",
+      "template": "Investigate this bug: $ARGUMENTS\n\nReproduce it when feasible, identify the failing boundary, and distinguish root cause from symptoms. Read the nearest `AGENTS.md`, inspect existing tests and patterns, then implement the smallest correct fix. Add a regression test when the behavior is testable and run focused verification before broader gates."
+    },
+    "prepare-pr": {
+      "description": "Prepare a verified pull-request summary without pushing or creating it",
+      "agent": "code",
+      "template": "Prepare the current branch for review. Inspect status, diff, recent commits, base branch, and repository PR template. Run the `verify` skill, summarize intent and behavioral impact, list verification evidence and known limitations, and flag all R2/R3 review requirements. Do not commit, push, create a PR, merge, or enable auto-merge unless Chief explicitly requests that separate action."
+    },
+    "sync-parent": {
+      "description": "Merge the latest parent branch into a worktree without using stash",
+      "agent": "code",
+      "template": "Inspect the current branch and its parent, fetch only when network access is authorized, then merge the latest parent branch into this worktree. Never use `git stash` or autostash. Preserve both branches' intent while resolving conflicts, run the affected checks, and report unresolved semantic conflicts instead of guessing. Parent override, when supplied: $ARGUMENTS"
+    },
+    "indexing-readiness": {
+      "description": "Audit whether semantic codebase indexing can be enabled safely",
+      "agent": "brainstorm",
+      "template": "Audit this workspace for Kilo Codebase Indexing readiness without changing files. Check whether an approved embedding provider and vector store are available, whether repository data may leave the machine, and which paths should be excluded. Report an exact recommended indexing configuration or [FILL: approved_embedding_provider] and [FILL: data_governance_approval] placeholders when prerequisites are missing."
+    }
+  },
+  "permission": {
+    "read": "allow",
+    "glob": "allow",
+    "grep": "allow",
+    "todowrite": "allow",
+    "todoread": "allow",
+    "skill": "allow",
+    "edit": "ask",
+    "write": "ask",
+    "apply_patch": "ask",
+    "bash": {
+      "*": "ask",
+      "git status *": "allow",
+      "git diff *": "allow",
+      "git log *": "allow"
+    },
+    "external_directory": "deny"
+  },
+  "agent": {
+    "brainstorm": {
+      "description": "Explore and refine ideas, alternatives, trade-offs, and plans without modifying the workspace",
+      "mode": "primary",
+      "model": "kilo/openai/gpt-5.6-sol-discounted",
+      "variant": "high",
+      "permission": {
+        "edit": "deny",
+        "write": "deny",
+        "apply_patch": "deny",
+        "bash": "deny",
+        "task": "deny"
+      },
+      "prompt": "You are a brainstorming partner. Clarify the objective, generate realistic alternatives, challenge assumptions, compare trade-offs, and recommend a concrete direction. Stay read-only: discuss, research, and plan, but do not modify the workspace."
+    },
+    "code": {
+      "model": "kilo/openai/gpt-5.6-luna",
+      "steps": 50
+    },
+    "reviewer": {
+      "description": "Review diffs for correctness, regressions, repository standards, and missing tests without modifying files",
+      "mode": "subagent",
+      "model": "kilo/openai/gpt-5.6-luna",
+      "steps": 25,
+      "permission": {
+        "edit": "deny",
+        "write": "deny",
+        "apply_patch": "deny",
+        "task": "deny",
+        "bash": {
+          "*": "deny",
+          "git status *": "allow",
+          "git diff *": "allow",
+          "git log *": "allow"
+        }
+      },
+      "prompt": "Review the requested change as an independent, read-only reviewer. Prioritize behavioral bugs, security or governance regressions, mismatches with the task, and missing verification. Report findings by severity with exact file references; state explicitly when no findings are present."
+    },
+    "security-reviewer": {
+      "description": "Perform read-only security and trust-boundary reviews of sensitive changes",
+      "mode": "subagent",
+      "model": "kilo/openai/gpt-5.6-luna",
+      "steps": 25,
+      "permission": {
+        "edit": "deny",
+        "write": "deny",
+        "apply_patch": "deny",
+        "task": "deny",
+        "bash": "deny"
+      },
+      "prompt": "Review security-sensitive changes without modifying the workspace. Check trust boundaries, authorization, secrets, injection, external data handling, destructive operations, and SAFRS risk controls. Report only evidence-backed findings with file references and practical remediation."
+    }
+  }
+}
