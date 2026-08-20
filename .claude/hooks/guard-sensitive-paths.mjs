@@ -44,6 +44,33 @@ function commonGitDirectory(directory) {
   }
 }
 
+/**
+ * Windows and macOS filesystems are case-insensitive, but `git -C <dir>
+ * rev-parse --git-common-dir` echoes back a path whose drive-letter/casing
+ * matches whatever was passed into `-C`. Two calls against the identical
+ * physical repository can therefore return strings that differ only by
+ * drive-letter case (e.g. a hook process with cwd `d:\...` vs a worktree
+ * target resolved from a payload path cased `D:\...`), which a plain `===`
+ * treats as different repositories — silently falling back to the wrong
+ * root and misclassifying legitimate in-worktree writes as "outside the
+ * repository". Compare case-insensitively on win32/darwin; POSIX stays
+ * case-sensitive since ext4 etc. genuinely are. Null/undefined never match,
+ * including against themselves — an unresolved directory is never "the
+ * same" as anything.
+ */
+function sameDirectory(a, b) {
+  if (a == null || b == null) {
+    return false;
+  }
+  if (a === b) {
+    return true;
+  }
+  if (process.platform === "win32" || process.platform === "darwin") {
+    return a.toLowerCase() === b.toLowerCase();
+  }
+  return false;
+}
+
 function repositoryRootFor(target) {
   const directory = path.dirname(path.resolve(process.cwd(), target));
   const ours = commonGitDirectory(process.cwd());
@@ -52,7 +79,7 @@ function repositoryRootFor(target) {
   }
   let probe = directory;
   while (true) {
-    if (commonGitDirectory(probe) === ours) {
+    if (sameDirectory(commonGitDirectory(probe), ours)) {
       try {
         return execFileSync(
           "git",
