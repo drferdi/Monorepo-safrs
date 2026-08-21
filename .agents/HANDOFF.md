@@ -17,7 +17,7 @@ Last updated: 2026-08-21 (Portfolio unified to portfolio-drnovia; 3D card deck s
 - **Portfolio migration:** Unified into `projects/portfolio-drnovia/` (single capsule with complete docs, tests, and interactive React 18 site).
 - **Interactive & Visual features:**
   - Hero 2-column layout: text shifted to left column with high-contrast Mona Sans typography & profile badge; right column equipped with realistic native macOS Terminal UI (`novia@Novia-MBP ~/sentra %`).
-  - Native macOS Terminal UI features realistic window styling, solid grounded positioning (no artificial hover jump/float), and instant stdout logging streaming an authentic SAFRS Multi-Stack Autonomous Agent orchestration scenario.
+  - Native macOS Terminal UI features realistic window styling, strict fixed height (310px — zero layout expansion/resizing), solid grounded positioning (no hover float/jumping), and instant stdout logging streaming an authentic SAFRS Multi-Stack Autonomous Agent orchestration scenario.
   - 3D Card Deck Switcher installed in hero section.
   - Hero background updated to deepsea ocean with dolphins (`assets/hero-dolphin.jpg` - 3420x2565) with dark ocean gradient overlay and enhanced contrast for maximum text legibility.
   - 2nd section (Project Showcase) background updated to 4K dramatic sunset beach with rolling ocean surf (`assets/bg-beach-dramatic.jpg` - 3840x2560).
