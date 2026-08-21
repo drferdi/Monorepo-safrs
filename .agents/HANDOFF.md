@@ -17,7 +17,7 @@ Last updated: 2026-08-21 (Portfolio unified to portfolio-drnovia; 3D card deck s
 - **Portfolio migration:** Unified into `projects/portfolio-drnovia/` (single capsule with complete docs, tests, and interactive React 18 site).
 - **Interactive & Visual features:**
   - 3D Card Deck Switcher installed in hero section.
-  - Hero background updated to deepsea ocean with dolphins (`assets/hero-dolphin.jpg` - 3420x2565).
+  - Hero background updated to deepsea ocean with dolphins (`assets/hero-dolphin.jpg` - 3420x2565) with dark ocean gradient overlay and enhanced contrast for maximum text legibility.
   - 2nd section (Project Showcase) background updated to 4K dramatic sunset beach with rolling ocean surf (`assets/bg-beach-dramatic.jpg` - 3840x2560).
 - **Portfolio tests:** 32/32 tests PASS (`capsule-paths` + `lenis-contract`). Static server active on `http://127.0.0.1:4173`.
 
