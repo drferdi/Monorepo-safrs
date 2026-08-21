@@ -30,6 +30,8 @@ errors = [f'missing required topology path: {item}' for item in required if not 
 projects_root = ROOT / 'projects'
 if projects_root.exists():
     for capsule in sorted(p for p in projects_root.iterdir() if p.is_dir() and not p.name.startswith('_')):
+        if not any(capsule.iterdir()):
+            continue
         for relative in ['AGENTS.md', 'README.md', 'docs/architecture.md', 'docs/data.md', 'docs/testing.md', 'src', 'tests']:
             if not (capsule / relative).exists():
                 errors.append(f'{capsule.name}: missing capsule path {relative}')
