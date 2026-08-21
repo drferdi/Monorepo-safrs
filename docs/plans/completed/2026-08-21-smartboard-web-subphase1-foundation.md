@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-- **Status:** ACTIVE — Chief approve eksekusi via `/superpowers:subagent-driven-development` 2026-08-21
+- **Status:** COMPLETED — Task 1-10 + final-review fix round selesai, di-merge & push ke main (`06c92be`, `68f5a5d`); TutorActivation/OwnerActivation ditunda ke sub-fase 4 sesuai roadmap. Task 11 (token-gate/AGENTS.md enrollment) tertunda sebagian — lihat catatan eksekusi.
 - **Owner:** Chief
 - **Roadmap:** `docs/plans/active/2026-08-21-smartboard-web-roadmap.md` (baris 1/5)
 
@@ -698,6 +698,12 @@ for (const route of ROUTES) {
 - [ ] **Step 2**: `git mv docs/plans/active/2026-08-21-smartboard-web-subphase1-foundation.md docs/plans/completed/`; status header → COMPLETED; update baris roadmap (sub-fase 1 COMPLETED, sub-fase 2 jadi kandidat berikut); hapus baris dari `docs/plans/active/README.md`; update `.agents/PROGRESS.md` + `.agents/HANDOFF.md` — **satu commit** dengan penutupan.
 - [ ] **Step 3**: Hapus worktree: `git worktree remove ../Monorepo.worktrees/feat-smartboard-web-foundation` (kalau gagal: `rm -rf` + `git worktree prune`). Hapus branch. Verifikasi scratchpad kosong.
 - [ ] **Step 4**: Lapor Chief: commit list, output verifikasi, keputusan terbuka yang masih menggantung (RTL testing, tenant switcher UI, 2 halaman aktivasi ditunda), dan reminder `backend/scripts/cloud_tokens.env` untuk karantina di fase `api`.
+
+## Catatan eksekusi (ditulis controller — bukan bagian task asli)
+
+- Task 11 Step 4-6 (baris `packages/token/scope.txt`, `check-tokens.mjs` mode penuh, `safrs-verify.sh`, commit+merge token-gate) **belum landed**: `packages/token/scope.txt` dipegang lease konkuren `TASK-20260821-SENTRABOT-RELEASE-CLOSEOUT` (Kilo GPT-5.6 Luna, VERIFYING, live/aktif — bukan lease basi). Bagian AGENTS.md dari Task 11 (kedua file capsule) sudah landed terpisah, commit `d3eeda9` pada branch `feat/smartboard-web-foundation-control` — branch ini BELUM di-merge, menunggu sisa Task 11 supaya satu merge saja.
+- Step 2 di atas dipecah dua: bagian dokumen (plan move + roadmap + README aktif) dieksekusi sekarang di bawah lease terpisah `TASK-20260821-SMARTBOARD-WEB-LIFECYCLE-CLOSE`. Bagian `.agents/PROGRESS.md` + `.agents/HANDOFF.md` **ditunda** — kedua file itu dipegang lease basi `TASK-20260818-FAST-REHYDRATE` (Cursor Grok, VERIFYING sejak 2026-08-18, tanpa `expires_at`) DAN sedang punya modifikasi uncommitted milik Kilocode di tree utama saat ini. Force-close lease agent lain bukan wewenang controller ini — perlu keputusan Chief.
+- Final whole-branch review (post-merge, dispatch terpisah) menemukan 1 Critical + 2 Important; sudah diperbaiki lewat lease terpisah `TASK-20260821-SMARTBOARD-WEB-REVIEW-FIXES`, commit `dd75d87`, merge `68f5a5d`, sudah push. Detail lengkap di ledger SDD (`.superpowers/sdd/2026-08-21-smartboard-web-subphase1-foundation/progress.md`).
 
 ## Verifikasi akhir (bukti wajib sebelum klaim selesai)
 
