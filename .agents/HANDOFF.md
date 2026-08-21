@@ -4,7 +4,7 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-21 (Portfolio unified to portfolio-drnovia; 3D card deck switcher & HD deepsea hero background installed)
+Last updated: 2026-08-21 (Portfolio unified to portfolio-drnovia; 3D card deck switcher, Deepsea Dolphins hero background, and dramatic beach 2nd background installed)
 
 ## Current state
 
@@ -15,8 +15,11 @@ Last updated: 2026-08-21 (Portfolio unified to portfolio-drnovia; 3D card deck s
 - **Sentra Bot lifecycle:** `TASK-20260821-SENTRABOT-RELEASE-CLOSEOUT`, `TASK-20260821-SENTRABOT-BIOME-MARKETING`, `TASK-20260821-BRAND-BASELINE-OWNERSHIP`, `TASK-20260821-SENTRABOT-LOCKFILE-OWNERSHIP`, and `TASK-20260821-SENTRABOT-WORKSPACE-CATALOG-OWNERSHIP` are all `VERIFYING`.
 - **Sentra Bot release blockers:** valid machine-readable integrity manifest/approval is missing for current diff base `b5e064c1b98ee828527dbd7e508f37f3df65da40`; required intake pin `d17a138` remains unavailable and must not be substituted.
 - **Portfolio migration:** Unified into `projects/portfolio-drnovia/` (single capsule with complete docs, tests, and interactive React 18 site).
-- **Interactive features:** 3D Card Deck Switcher installed in hero section; full 4K HD deepsea abyss theme hero background image (`assets/hero-deepsea.jpg`) wired.
-- **Portfolio tests:** 30/30 tests PASS (`capsule-paths` + `lenis-contract`). Static server active on `http://127.0.0.1:4173`.
+- **Interactive & Visual features:**
+  - 3D Card Deck Switcher installed in hero section.
+  - Hero background updated to deepsea ocean with dolphins (`assets/hero-dolphin.jpg` - 3420x2565).
+  - 2nd section (Project Showcase) background updated to 4K dramatic sunset beach with rolling ocean surf (`assets/bg-beach-dramatic.jpg` - 3840x2560).
+- **Portfolio tests:** 32/32 tests PASS (`capsule-paths` + `lenis-contract`). Static server active on `http://127.0.0.1:4173`.
 
 ## Next actions
 
