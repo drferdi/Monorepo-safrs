@@ -25,6 +25,16 @@
       // Knowledge package impor (integritas dijaga sha256 manifest, ADR 0003):
       // reformat = hash pecah. Bukan sumber kanonik formatter.
       "!!projects/academic-smartboard/ai/kayyisa",
+      // Snapshot HTML Webflow marketing (Sentra Bot): fidelity desain 100%;
+      // JS/CSS inline minified tidak boleh di-lint/reformat Biome.
+      "!!projects/sentrabot/apps/web/src/content/marketing",
+      // Vendor third-party minified (GSAP/ScrollTrigger) — bukan sumber kanonik.
+      "!!projects/sentrabot/apps/site/src/vendor",
+      // Portfolio capture + vendored Lenis/React — bukan sumber kanonik formatter.
+      "!!projects/portfolio*/**/vendor",
+      "!!projects/portfolio*/**/assets",
+      "!!projects/portfolio*/**/styles",
+      "!!projects/portfolio*/**/src/portfolio-markup.js",
       // Skema/migrasi database dan dokumentasi impor: format asing.
       "!!database",
       "!!docs/design-system",
