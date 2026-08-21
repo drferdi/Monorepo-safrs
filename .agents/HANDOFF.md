@@ -19,6 +19,7 @@ Last updated: 2026-08-21 (Portfolio unified to portfolio-drnovia; 3D card deck s
   - 3D Card Deck Switcher installed in hero section.
   - Hero background updated to deepsea ocean with dolphins (`assets/hero-dolphin.jpg` - 3420x2565) with dark ocean gradient overlay and enhanced contrast for maximum text legibility.
   - 2nd section (Project Showcase) background updated to 4K dramatic sunset beach with rolling ocean surf (`assets/bg-beach-dramatic.jpg` - 3840x2560).
+  - Floating Bottom Dock upgraded with macOS magnification physics, bounce launch animations, unread message counter badge, dynamic email tooltip, clipboard copy, and direct `mailto:noviaanggraini054@gmail.com` integration.
 - **Portfolio tests:** 32/32 tests PASS (`capsule-paths` + `lenis-contract`). Static server active on `http://127.0.0.1:4173`.
 
 ## Next actions
