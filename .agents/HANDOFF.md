@@ -19,10 +19,10 @@ Last updated: 2026-08-21 (Portfolio unified to portfolio-drnovia; 3D card deck s
   - Hero 2-column layout: Left column features personalized greeting (*"Hi! Welcome, saya Novia."*) with high-impact typography and subtitle (*"Saya merancang arsitektur kecerdasan buatan, sistem otonom & produk digital yang berpikir dan bekerja."*) paired with 3 interactive pill badges (*Arsitektur Kecerdasan Buatan*, *Desain Situs Web*, *Otomasi Cerdas*) in natural flex flow; right column equipped with realistic native macOS Terminal UI (`novia@Novia-MBP ~/sentra %`).
   - Native macOS Terminal UI features realistic window styling, strict fixed height (310px — zero layout expansion/resizing), solid grounded positioning (no hover float/jumping), and instant stdout logging streaming an authentic SAFRS Multi-Stack Autonomous Agent orchestration scenario.
   - Bottom hero card stack removed per design directive.
-  - Hero background updated to deepsea ocean with dolphins (`assets/hero-dolphin.jpg` - 3420x2565) with dark ocean gradient overlay and enhanced contrast for maximum text legibility.
+  - Hero background upgraded to a lightweight full-bleed looping underwater dolphin video (`assets/hero-dolphin.webm` - 720p 4.1MB with `assets/hero-dolphin.jpg` poster fallback) with zero white margins/leaks across all viewports.
   - 2nd section (Project Showcase) background updated to 4K dramatic sunset beach with rolling ocean surf (`assets/bg-beach-dramatic.jpg` - 3840x2560).
   - Floating Bottom Dock upgraded with macOS magnification physics, bounce launch animations, unread message counter badge, dynamic email tooltip, clipboard copy, and direct `mailto:noviaanggraini054@gmail.com` integration.
-- **Portfolio tests:** 32/32 tests PASS (`capsule-paths` + `lenis-contract`). Static server active on `http://127.0.0.1:4173`.
+- **Portfolio tests:** 33/33 tests PASS (`capsule-paths` + `lenis-contract`). Static server active on `http://127.0.0.1:4173`.
 
 ## Next actions
 
