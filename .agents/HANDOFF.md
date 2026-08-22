@@ -4,25 +4,18 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-21 (Portfolio unified to portfolio-drnovia; 3D card deck switcher, Deepsea Dolphins hero background, and dramatic beach 2nd background installed)
+Last updated: 2026-08-22 (Smartboard web sub-phase 1 Task 11-12 closed; markdownlint clean on completed Smartboard plan)
 
 ## Current state
 
-- **Task:** `TASK-20260821-PORTFOLIO-LATE-SCAFFOLD` — `VERIFYING` — R1/R2 — scope `projects/portfolio-drnovia/`.
-- **Sentra Bot phase:** disposable runtime is complete and currently running; release/closure is not complete.
-- **Sentra Bot runtime:** Compose project `sentrabot-disposable` is up. PostgreSQL is `healthy`; worker is `healthy`; supervisor is running; web is available at `http://localhost:3000`; all 7 Prisma migrations are applied to disposable `sentrabot_test`.
-- **Sentra Bot runtime evidence:** `/api/sentrabot/health/` is `200`; `/workspace/` and `/api/auth/get-session/` are `200`; anonymous bots access is `401`; closed-signup check is `403 SIGNUP_CLOSED`; Better Auth tables exist.
-- **Sentra Bot lifecycle:** `TASK-20260821-SENTRABOT-RELEASE-CLOSEOUT`, `TASK-20260821-SENTRABOT-BIOME-MARKETING`, `TASK-20260821-BRAND-BASELINE-OWNERSHIP`, `TASK-20260821-SENTRABOT-LOCKFILE-OWNERSHIP`, and `TASK-20260821-SENTRABOT-WORKSPACE-CATALOG-OWNERSHIP` are all `VERIFYING`.
-- **Sentra Bot release blockers:** valid machine-readable integrity manifest/approval is missing for current diff base `b5e064c1b98ee828527dbd7e508f37f3df65da40`; required intake pin `d17a138` remains unavailable and must not be substituted.
-- **Portfolio migration:** Unified into `projects/portfolio-drnovia/` (single capsule with complete docs, tests, and interactive React 18 site).
-- **Interactive & Visual features:**
-  - Hero 2-column layout: Left column features personalized greeting (*"Hi! Welcome, saya Novia."*) with high-impact typography and subtitle (*"Saya merancang arsitektur kecerdasan buatan, sistem otonom & produk digital yang berpikir dan bekerja."*) paired with 3 interactive pill badges (*Arsitektur Kecerdasan Buatan*, *Desain Situs Web*, *Otomasi Cerdas*) in natural flex flow; right column equipped with realistic native macOS Terminal UI (`novia@Novia-MBP ~/sentra %`).
-  - Native macOS Terminal UI features realistic window styling, strict fixed height (310px — zero layout expansion/resizing), solid grounded positioning (no hover float/jumping), and instant stdout logging streaming an authentic SAFRS Multi-Stack Autonomous Agent orchestration scenario.
-  - Bottom hero card stack removed per design directive.
-  - Hero background upgraded to a lightweight full-bleed looping underwater dolphin video (`assets/hero-dolphin.webm` - 720p 4.1MB with `assets/hero-dolphin.jpg` poster fallback) with zero white margins/leaks across all viewports.
-  - 2nd section (Project Showcase) background updated to 4K dramatic sunset beach with rolling ocean surf (`assets/bg-beach-dramatic.jpg` - 3840x2560).
-  - Floating Bottom Dock upgraded with macOS magnification physics, bounce launch animations, unread message counter badge, dynamic email tooltip, clipboard copy, and direct `mailto:noviaanggraini054@gmail.com` integration.
-- **Portfolio tests:** 33/33 tests PASS (`capsule-paths` + `lenis-contract`). Static server active on `http://127.0.0.1:4173`.
+- **Smartboard web sub-phase 1:** `apps/web` foundation done — Task 1-11 merged/pushed (`06c92be`, `68f5a5d`, `e06fdcc`, `a4467a4`), plan moved to `docs/plans/completed/`. Task 12 closed: `TASK-20260821-SMARTBOARD-WEB-FOUNDATION` lease `CLOSED`, worktrees/branches removed. `.agents/` sync (this file, `DECISIONS.md`) was blocked most of the session by the stale `TASK-20260818-FAST-REHYDRATE` lease (4+ days, no `expires_at`) — force-closed with explicit Chief confirmation, now landing here. Sub-phase 2-5 plans not yet written — see `docs/plans/active/2026-08-21-smartboard-web-roadmap.md`.
+- **This session (Cursor, concurrent):** `TASK-20260822-SMARTBOARD-PLAN-MDLINT` — `VERIFYING` — R1 — `docs/plans/completed/2026-08-21-smartboard-web-subphase1-foundation.md`.
+- **Fix:** MD031 auto-fixed (blank lines around fences). MD013 left disabled on this file via `markdownlint-configure-file` — 104 remaining hits were line-length 80, including tables and 800-char archive paragraphs that cannot wrap without breaking the completed plan.
+- **Sentra Bot phase:** disposable runtime complete; release/closure not complete.
+- **Sentra Bot runtime:** Compose `sentrabot-disposable` up. PostgreSQL `healthy`; worker `healthy`; supervisor running; web `http://localhost:3000`; 7 Prisma migrations on disposable `sentrabot_test`.
+- **Sentra Bot token release:** `packages/token/scope.txt` was committed alone as `90a8ebb`; old closeout is `SUPERSEDED`. Replacement `TASK-20260822-SENTRABOT-RELEASE-CLOSEOUT` is `VERIFYING` and excludes the token scope.
+- **Sentra Bot blockers:** integrity manifest/approval missing for diff base `b5e064c1b98ee828527dbd7e508f37f3df65da40`; intake pin `d17a138` unavailable — do not substitute.
+- **Portfolio:** Unified into `projects/portfolio-drnovia/`. 33/33 tests PASS. Static server `:4173`.
 
 ## Next actions
 
@@ -34,6 +27,7 @@ Last updated: 2026-08-21 (Portfolio unified to portfolio-drnovia; 3D card deck s
 ## Verify
 
 ```bash
-node --test projects/portfolio-drnovia/tests/capsule-paths.test.mjs projects/portfolio-drnovia/tests/lenis-contract.test.mjs
 bash scripts/safrs-verify.sh
 ```
+
+This session's markdownlint change is R1. `safrs-verify` may still fail on **pre-existing** Sentra Bot integrity review, not introduced by this docs fix.

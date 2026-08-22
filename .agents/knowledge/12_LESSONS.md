@@ -24,8 +24,7 @@ Entry rules:
 
 ## Source of Truth
 
-- Never quote archived files or old conversations as current truth — verify paths on disk first
-  (2026-08-11).
+- Capsule CURRENT is implementation, not the foundation-scaffold docs — Sentra Bot already had Better Auth, `/api/sentrabot` on web, Electron IPC tests, and Playwright while `AGENTS.md` still said they were off (2026-08-21, docs audit).
 - ChatGPT Memory and conversation context are not repo SSOT — truth lives in repo files (2026-08-11).
 
 ## Migration & Safety
