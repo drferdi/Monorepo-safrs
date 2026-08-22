@@ -32,7 +32,16 @@
       // Snapshot HTML Webflow marketing (Sentra Bot): fidelity desain 100%;
       // JS/CSS inline minified tidak boleh di-lint/reformat Biome.
       "!!projects/product/sentrabot/apps/web/src/content/marketing",
+      // Potongan markup Webflow situs Sentra Bot: fidelity desain 100%,
+      // sejajar dengan apps/web/src/content/marketing.
+      "!!projects/product/sentrabot/apps/site/src/html",
       // Vendor third-party minified (GSAP/ScrollTrigger) — bukan sumber kanonik.
+      // Snapshot mentah situs asal (HTML Webflow, aset, dataset): arsip
+      // provenance, bukan kode yang dirawat.
+      "!!projects/product/sentrabot/apps/site/original",
+      // Aset situs Sentra Bot hasil capture Webflow: berkas ber-nama hash
+      // (js/css/webp/woff2 minified), keluaran bundler, bukan sumber kanonik.
+      "!!projects/product/sentrabot/apps/site/**/assets",
       "!!projects/product/sentrabot/apps/site/src/vendor",
       // Portfolio capture + vendored Lenis/React — bukan sumber kanonik formatter.
       // Halaman portfolio memuat widget pihak ketiga (OpenWidget) minified
