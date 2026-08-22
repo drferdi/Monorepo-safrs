@@ -74,7 +74,7 @@ export function SiteFooter() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="hover:text-[var(--color-text-primary)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus-ring)]"
+                    className="hover:text-(--color-text-primary) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-focus-ring)"
                     style={{
                       fontSize: "var(--font-size-body-compact)",
                       color: "var(--color-text-secondary)",

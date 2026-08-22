@@ -31,10 +31,10 @@ export function ProtectedRoute({
 
   if (!roles.includes(user.role)) {
     return (
-      <main className="flex min-h-screen items-center justify-center px-[var(--space-4)]">
+      <main className="flex min-h-screen items-center justify-center px-(--space-4)">
         <p
           role="alert"
-          className="text-[length:var(--font-size-body)] text-[var(--color-status-critical)]"
+          className="text-[length:var(--font-size-body)] text-(--color-status-critical)"
         >
           Akses ditolak
         </p>

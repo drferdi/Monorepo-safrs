@@ -40,15 +40,15 @@ export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen">
       <aside
-        className="hidden w-[var(--layout-rail-width)] shrink-0 border-r border-[var(--color-border-subtle)] bg-[var(--color-background-surface)] md:block"
+        className="hidden w-(--layout-rail-width) shrink-0 border-r border-(--color-border-subtle) bg-(--color-background-surface) md:block"
         aria-label="Navigasi utama"
       >
-        <div className="px-[var(--space-4)] py-[var(--space-5)]">
-          <span className="text-[length:var(--font-size-title-section)] font-[var(--font-weight-semibold)] uppercase tracking-[var(--letter-spacing-label)] text-[var(--color-text-secondary)]">
+        <div className="px-(--space-4) py-(--space-5)">
+          <span className="text-[length:var(--font-size-title-section)] font-(--font-weight-semibold) uppercase tracking-(--letter-spacing-label) text-(--color-text-secondary)">
             Sentra Smartboard
           </span>
         </div>
-        <nav className="flex flex-col gap-[var(--space-1)] px-[var(--space-2)]">
+        <nav className="flex flex-col gap-(--space-1) px-(--space-2)">
           {items.map((item) => {
             const active = normalizedPathname === stripTrailingSlash(item.href);
             return (
@@ -57,9 +57,9 @@ export function AppShell({ children }: { children: ReactNode }) {
                 href={item.href as Route}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex min-h-[var(--target-min)] items-center rounded-[var(--radius-control)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--font-size-body)] text-[var(--color-text-primary)] transition-colors duration-[var(--motion-duration-fast)] ease-[var(--motion-easing-standard)] hover:bg-[var(--color-background-canvas)]",
+                  "flex min-h-(--target-min) items-center rounded-(--radius-control) px-(--space-3) py-(--space-2) text-[length:var(--font-size-body)] text-(--color-text-primary) transition-colors duration-(--motion-duration-fast) ease-(--motion-easing-standard) hover:bg-(--color-background-canvas)",
                   active &&
-                    "bg-[var(--color-background-canvas)] font-[var(--font-weight-medium)] text-[var(--color-accent-text)]",
+                    "bg-(--color-background-canvas) font-(--font-weight-medium) text-(--color-accent-text)",
                 )}
               >
                 {item.label}
@@ -70,12 +70,12 @@ export function AppShell({ children }: { children: ReactNode }) {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex min-h-[var(--target-min)] items-center justify-end border-b border-[var(--color-border-subtle)] bg-[var(--color-background-canvas)] px-[var(--space-4)] py-[var(--space-2)]">
+        <header className="flex min-h-(--target-min) items-center justify-end border-b border-(--color-border-subtle) bg-(--color-background-canvas) px-(--space-4) py-(--space-2)">
           <DropdownMenu.Root>
             <DropdownMenu.Trigger asChild>
               <button
                 type="button"
-                className="inline-flex min-h-[var(--target-min)] items-center gap-[var(--space-2)] rounded-[var(--radius-control)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--font-size-body)] text-[var(--color-text-primary)] hover:bg-[var(--color-background-surface)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus-ring)]"
+                className="inline-flex min-h-(--target-min) items-center gap-(--space-2) rounded-(--radius-control) px-(--space-3) py-(--space-2) text-[length:var(--font-size-body)] text-(--color-text-primary) hover:bg-(--color-background-surface) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-focus-ring)"
               >
                 {user.name}
                 <ChevronDown size={16} strokeWidth={1.5} aria-hidden="true" />
@@ -85,13 +85,13 @@ export function AppShell({ children }: { children: ReactNode }) {
               <DropdownMenu.Content
                 align="end"
                 sideOffset={8}
-                className="z-[var(--z-drawer)] min-w-40 rounded-[var(--radius-control)] border border-[var(--color-border-subtle)] bg-[var(--color-background-canvas)] p-[var(--space-1)] shadow-[var(--elevation-overlay)]"
+                className="z-(--z-drawer) min-w-40 rounded-(--radius-control) border border-(--color-border-subtle) bg-(--color-background-canvas) p-(--space-1) shadow-(--elevation-overlay)"
               >
                 <DropdownMenu.Item
                   onSelect={() => {
                     void handleLogout();
                   }}
-                  className="flex min-h-[var(--target-min)] cursor-pointer items-center gap-[var(--space-2)] rounded-[var(--radius-control)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--font-size-body)] text-[var(--color-text-primary)] outline-none data-[highlighted]:bg-[var(--color-background-surface)]"
+                  className="flex min-h-(--target-min) cursor-pointer items-center gap-(--space-2) rounded-(--radius-control) px-(--space-3) py-(--space-2) text-[length:var(--font-size-body)] text-(--color-text-primary) outline-none data-[highlighted]:bg-(--color-background-surface)"
                 >
                   <LogOut size={16} strokeWidth={1.5} aria-hidden="true" />
                   Keluar
@@ -101,9 +101,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </DropdownMenu.Root>
         </header>
 
-        <main className="flex-1 px-[var(--space-4)] py-[var(--space-5)]">
-          {children}
-        </main>
+        <main className="flex-1 px-(--space-4) py-(--space-5)">{children}</main>
       </div>
     </div>
   );
