@@ -1,0 +1,41 @@
+{
+  "name": "@sentra/sentrabot-web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "start": "next start -H 0.0.0.0",
+    "e2e": "playwright test",
+    "lint": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "import:marketing": "node scripts/import-marketing-html.mjs",
+    "rebrand:marketing": "node scripts/rebrand-sentrabot.mjs --wave=1",
+    "rebrand:marketing:full": "node scripts/rebrand-sentrabot.mjs --all && node scripts/repair-marketing-html.mjs",
+    "rebrand:landing": "node scripts/rebrand-sentrabot.mjs --all",
+    "repair:marketing": "node scripts/repair-marketing-html.mjs",
+    "sync:marketing": "node scripts/import-marketing-html.mjs && node scripts/rebrand-sentrabot.mjs --all"
+  },
+  "dependencies": {
+    "@safrs/api": "workspace:*",
+    "@safrs/auth": "workspace:*",
+    "@safrs/database": "workspace:*",
+    "better-auth": "catalog:",
+    "@safrs/schemas": "workspace:*",
+    "@sentra/token": "workspace:*",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@playwright/test": "catalog:",
+    "@tailwindcss/postcss": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

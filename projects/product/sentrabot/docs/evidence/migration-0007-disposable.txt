@@ -1,0 +1,14 @@
+Evidence: Better Auth migration 0007
+Environment: disposable PostgreSQL only
+Database: sentrabot_test
+Host: 127.0.0.1:54329
+Credential material: intentionally omitted
+
+Observed from _prisma_migrations after prisma migrate deploy:
+0007_better_auth_account_issuer|2026-08-21 00:01:34.935299+00
+
+Observed from information_schema.columns:
+account|issuer
+
+The disposable container was removed after verification and the root
+PostgreSQL container was restored to healthy state.

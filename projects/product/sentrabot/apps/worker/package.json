@@ -1,0 +1,26 @@
+{
+  "name": "@sentra/sentrabot-worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --project tsconfig.runtime.json",
+    "dev": "node --watch --experimental-strip-types src/server.ts",
+    "start": "node dist/src/server.js",
+    "lint": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@safrs/database": "workspace:*",
+    "@safrs/env": "workspace:*",
+    "@safrs/schemas": "workspace:*",
+    "hono": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
