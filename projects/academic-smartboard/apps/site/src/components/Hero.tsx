@@ -66,7 +66,7 @@ export function Hero({ content }: { content: PageContent["hero"] }) {
               // :active variant below can win the cascade and override it —
               // UI-RULES: the button-ledge "travels" on press (06-button-lab
               // treatment C — translate by the ledge offset, shadow to none).
-              className="shadow-[var(--button-ledge)_var(--button-ledge)_0_0_var(--color-action-ledge)] transition-[background-color,translate,box-shadow] duration-[var(--motion-duration-fast)] ease-[var(--motion-easing-standard)] hover:bg-[var(--color-action-primary-hover)] active:shadow-none active:[translate:var(--button-ledge)_var(--button-ledge)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus-ring)]"
+              className="shadow-[var(--button-ledge)_var(--button-ledge)_0_0_var(--color-action-ledge)] transition-[background-color,translate,box-shadow] duration-(--motion-duration-fast) ease-(--motion-easing-standard) hover:bg-(--color-action-primary-hover) active:shadow-none active:[translate:var(--button-ledge)_var(--button-ledge)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-focus-ring)"
               style={{
                 marginTop: "var(--space-6)",
                 display: "inline-flex",

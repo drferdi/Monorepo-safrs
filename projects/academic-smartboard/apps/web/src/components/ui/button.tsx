@@ -8,21 +8,21 @@ import { cn } from "../../lib/cn.ts";
 // the control travels onto it on press. `--color-action-ledge` sits under a
 // filled button, `--color-action-ledge-ghost` under an outlined one.
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius-control)] font-[var(--font-weight-medium)] transition-[background-color,color,border-color,translate,box-shadow] duration-[var(--motion-duration-fast)] ease-[var(--motion-easing-standard)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus-ring)] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none disabled:[translate:0_0]",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-(--radius-control) font-(--font-weight-medium) transition-[background-color,color,border-color,translate,box-shadow] duration-(--motion-duration-fast) ease-(--motion-easing-standard) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-focus-ring) disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none disabled:[translate:0_0]",
   {
     variants: {
       variant: {
         default:
-          "bg-[var(--color-action-primary)] text-[var(--color-action-primary-text)] shadow-[var(--button-ledge)_var(--button-ledge)_0_0_var(--color-action-ledge)] hover:bg-[var(--color-action-primary-hover)] active:shadow-none active:[translate:var(--button-ledge)_var(--button-ledge)]",
+          "bg-(--color-action-primary) text-(--color-action-primary-text) shadow-[var(--button-ledge)_var(--button-ledge)_0_0_var(--color-action-ledge)] hover:bg-(--color-action-primary-hover) active:shadow-none active:[translate:var(--button-ledge)_var(--button-ledge)]",
         outline:
-          "border border-[var(--color-border-strong)] bg-[var(--color-background-canvas)] text-[var(--color-text-primary)] shadow-[var(--button-ledge)_var(--button-ledge)_0_0_var(--color-action-ledge-ghost)] hover:bg-[var(--color-background-surface)] active:shadow-none active:[translate:var(--button-ledge)_var(--button-ledge)]",
+          "border border-(--color-border-strong) bg-(--color-background-canvas) text-(--color-text-primary) shadow-[var(--button-ledge)_var(--button-ledge)_0_0_var(--color-action-ledge-ghost)] hover:bg-(--color-background-surface) active:shadow-none active:[translate:var(--button-ledge)_var(--button-ledge)]",
         ghost:
-          "bg-transparent text-[var(--color-text-primary)] hover:bg-[var(--color-background-surface)]",
+          "bg-transparent text-(--color-text-primary) hover:bg-(--color-background-surface)",
       },
       size: {
         default:
-          "min-h-[var(--target-min)] px-[var(--space-4)] text-[length:var(--font-size-body)]",
-        sm: "min-h-[var(--target-min)] px-[var(--space-3)] text-[length:var(--font-size-body-compact)]",
+          "min-h-(--target-min) px-(--space-4) text-[length:var(--font-size-body)]",
+        sm: "min-h-(--target-min) px-(--space-3) text-[length:var(--font-size-body-compact)]",
       },
     },
     defaultVariants: {

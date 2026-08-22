@@ -25,7 +25,7 @@ function MuridList() {
 
   if (status === "pending") {
     return (
-      <p className="text-[length:var(--font-size-body)] text-[var(--color-text-secondary)]">
+      <p className="text-[length:var(--font-size-body)] text-(--color-text-secondary)">
         Memuat data murid…
       </p>
     );
@@ -33,10 +33,10 @@ function MuridList() {
 
   if (status === "error") {
     return (
-      <div className="space-y-[var(--space-3)]">
+      <div className="space-y-(--space-3)">
         <p
           role="alert"
-          className="text-[length:var(--font-size-body)] text-[var(--color-status-critical)]"
+          className="text-[length:var(--font-size-body)] text-(--color-status-critical)"
         >
           Gagal memuat data murid
         </p>
@@ -56,8 +56,8 @@ function MuridList() {
   }));
 
   return (
-    <div className="space-y-[var(--space-5)]">
-      <h1 className="text-[length:var(--font-size-title-page)] font-[var(--font-weight-semibold)] text-[var(--color-text-primary)]">
+    <div className="space-y-(--space-5)">
+      <h1 className="text-[length:var(--font-size-title-page)] font-(--font-weight-semibold) text-(--color-text-primary)">
         Murid
       </h1>
       <DataTable columns={columns} rows={rows} />

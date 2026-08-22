@@ -21,7 +21,7 @@ export function SiteHeader() {
         <Link
           href="/"
           aria-label="El-Kayyisa, beranda"
-          className="focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus-ring)]"
+          className="focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-focus-ring)"
           style={{
             fontSize: "var(--font-size-body)",
             fontWeight: "var(--font-weight-semibold)",
@@ -47,7 +47,7 @@ export function SiteHeader() {
               <li key={item.href}>
                 <Link
                   href={item.href as Route}
-                  className="inline-flex items-center hover:text-[var(--color-accent-text)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus-ring)]"
+                  className="inline-flex items-center hover:text-(--color-accent-text) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-focus-ring)"
                   style={{
                     minHeight: "var(--target-min)",
                     fontSize: "var(--font-size-body)",

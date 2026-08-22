@@ -40,17 +40,17 @@ function LoginForm() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-[var(--space-4)]">
+    <main className="flex min-h-screen items-center justify-center px-(--space-4)">
       <form
         onSubmit={handleSubmit(onSubmit)}
         noValidate
-        className="w-full max-w-sm space-y-[var(--space-4)]"
+        className="w-full max-w-sm space-y-(--space-4)"
       >
-        <h1 className="text-[length:var(--font-size-title-page)] font-[var(--font-weight-semibold)] text-[var(--color-text-primary)]">
+        <h1 className="text-[length:var(--font-size-title-page)] font-(--font-weight-semibold) text-(--color-text-primary)">
           Masuk
         </h1>
 
-        <div className="space-y-[var(--space-2)]">
+        <div className="space-y-(--space-2)">
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
@@ -60,13 +60,13 @@ function LoginForm() {
             {...register("email")}
           />
           {errors.email && (
-            <p className="text-[length:var(--font-size-body-compact)] text-[var(--color-status-critical)]">
+            <p className="text-[length:var(--font-size-body-compact)] text-(--color-status-critical)">
               Email tidak valid
             </p>
           )}
         </div>
 
-        <div className="space-y-[var(--space-2)]">
+        <div className="space-y-(--space-2)">
           <Label htmlFor="password">Kata sandi</Label>
           <Input
             id="password"
@@ -76,7 +76,7 @@ function LoginForm() {
             {...register("password")}
           />
           {errors.password && (
-            <p className="text-[length:var(--font-size-body-compact)] text-[var(--color-status-critical)]">
+            <p className="text-[length:var(--font-size-body-compact)] text-(--color-status-critical)">
               Kata sandi wajib diisi
             </p>
           )}
@@ -85,7 +85,7 @@ function LoginForm() {
         {formError && (
           <p
             role="alert"
-            className="text-[length:var(--font-size-body-compact)] text-[var(--color-status-critical)]"
+            className="text-[length:var(--font-size-body-compact)] text-(--color-status-critical)"
           >
             {formError}
           </p>

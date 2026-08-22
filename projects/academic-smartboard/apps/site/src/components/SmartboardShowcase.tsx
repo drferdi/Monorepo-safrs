@@ -199,7 +199,7 @@ export function SmartboardShowcase({ content }: { content: PageContent }) {
             {modules.map((card) => (
               <div
                 key={card.title}
-                className="transition-colors duration-[var(--motion-duration-fast)] ease-[var(--motion-easing-standard)] hover:border-[var(--color-border-strong)]"
+                className="transition-colors duration-(--motion-duration-fast) ease-(--motion-easing-standard) hover:border-(--color-border-strong)"
                 style={{
                   padding: "var(--space-5)",
                   border: "1px solid var(--color-border-subtle)",
@@ -568,7 +568,7 @@ export function SmartboardShowcase({ content }: { content: PageContent }) {
             {content.hero.cta ? (
               <Link
                 href={content.hero.cta.href as Route}
-                className="shadow-[var(--button-ledge)_var(--button-ledge)_0_0_var(--color-action-ledge)] transition-[background-color,translate,box-shadow] duration-[var(--motion-duration-fast)] ease-[var(--motion-easing-standard)] hover:bg-[var(--color-action-primary-hover)] active:shadow-none active:[translate:var(--button-ledge)_var(--button-ledge)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus-ring)]"
+                className="shadow-[var(--button-ledge)_var(--button-ledge)_0_0_var(--color-action-ledge)] transition-[background-color,translate,box-shadow] duration-(--motion-duration-fast) ease-(--motion-easing-standard) hover:bg-(--color-action-primary-hover) active:shadow-none active:[translate:var(--button-ledge)_var(--button-ledge)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-focus-ring)"
                 style={{
                   marginTop: "var(--space-6)",
                   display: "inline-flex",
