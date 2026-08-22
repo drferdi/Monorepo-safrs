@@ -4,7 +4,7 @@
 
 ## Base path
 
-The Hono app uses `.basePath("/api")`, so all routes below are served under `/api`. In the Next.js golden-path app, the Hono app is mounted via the catch-all route at `projects/golden-path/apps/web/src/app/api/[[...route]]/route.ts`.
+The Hono app uses `.basePath("/api")`, so all routes below are served under `/api`. In the Next.js golden-path app, the Hono app is mounted via the catch-all route at `projects/internal/golden-path/apps/web/src/app/api/[[...route]]/route.ts`.
 
 ## Endpoint summary
 

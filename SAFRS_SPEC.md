@@ -76,15 +76,22 @@ repo/
     └── pull_request_template.md
 ```
 
-For multi-project repositories:
+For multi-project repositories, capsules are grouped by domain:
 ```text
-projects/<project>/
+projects/<domain>/          domain folder — routing only, holds no code
 ├── AGENTS.md
 ├── README.md
-├── docs/
-├── src/
-└── tests/
+└── <capsule>/              the project capsule itself
+    ├── AGENTS.md
+    ├── README.md
+    ├── docs/
+    ├── src/
+    └── tests/
 ```
+A domain folder groups capsules that share a compliance and data-handling
+context; it owns no code, so it carries only the routing pair. No capsule sits
+directly at the root of `projects/`.
+
 Each project capsule may narrow implementation guidance but may not weaken root safety controls.
 
 ## 5. Vendor-neutral instruction model

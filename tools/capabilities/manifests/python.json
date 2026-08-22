@@ -11,7 +11,7 @@
     "test typed boundary contract",
     "test deterministic fixture execution"
   ],
-  "sensitivePaths": ["projects/<project>/python/**"],
+  "sensitivePaths": ["projects/<domain>/<capsule>/python/**"],
   "sideEffects": [
     "A recorded technical justification is required before a Python runtime may be integrated."
   ],

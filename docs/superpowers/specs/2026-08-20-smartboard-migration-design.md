@@ -2,16 +2,16 @@
 
 - **Status:** APPROVED (Chief, 2026-08-20, in-session)
 - **Sumber:** `D:\Devops\abyss-monorepo\apps\academic\smartboard` (arsip, read-only)
-- **Tujuan:** `projects/academic-smartboard/` di monorepo SAFRS ini
+- **Tujuan:** `projects/academic/academic-smartboard/` di monorepo SAFRS ini
 - **Plan implementasi:** `docs/plans/active/2026-08-20-smartboard-migration.md`
 
 ## 1. Keputusan yang sudah disetujui
 
 | # | Keputusan | Alasan |
 |---|---|---|
-| D1 | Capsule tunggal `projects/academic-smartboard/` — domain jadi prefix nama, bukan folder perantara | `pnpm-workspace.yaml` (`projects/*/apps/*`), `tools/safrs/check_topology.py`, dan `scripts/check-tokens.mjs` semuanya mengasumsikan capsule tepat satu level di bawah `projects/`. Folder domain (`projects/academic/smartboard/`) memaksa edit tiga kontrol governance sekaligus. Ditunda sampai ada 4–5 produk dan ADR tersendiri. |
+| D1 | ~~Capsule tunggal `projects/academic-smartboard/` — domain jadi prefix nama, bukan folder perantara~~ **DIGANTIKAN 2026-08-22 (ADR 0005).** Capsule kini `projects/academic/academic-smartboard/` dengan `academic` sebagai folder domain sungguhan. | Alasan penundaan semula: `pnpm-workspace.yaml` (`projects/*/apps/*`), `tools/safrs/check_topology.py`, dan `scripts/check-tokens.mjs` mengasumsikan capsule tepat satu level di bawah `projects/`. Analisis itu tepat — ketiganya memang patah saat pemindahan, dan ketiganya sudah disesuaikan. Chief memutuskan lapis domain diberlakukan seragam untuk seluruh `projects/`, tanpa menunggu 4–5 produk. Lihat `docs/adrs/0005-projects-domain-layering.md`. |
 | D2 | Semua permukaan produk smartboard dalam satu capsule: `apps/web` (aplikasi utama), `apps/site` (website promo/publik), `apps/api` (backend), `apps/demo` (konfigurasi demo) | Permintaan Chief: satu produk = satu folder, semua urusan smartboard berkumpul. |
-| D3 | Kayyisa di `projects/academic-smartboard/ai/kayyisa/`, bukan capsule/package terpisah | Aturan capsule (`docs/governance/safrs_project_capsules.md` Rule 3): naik ke `packages/` hanya setelah konsumen kedua nyata. Saat ini hanya smartboard yang memakai. |
+| D3 | Kayyisa di `projects/academic/academic-smartboard/ai/kayyisa/`, bukan capsule/package terpisah | Aturan capsule (`docs/governance/safrs_project_capsules.md` Rule 3): naik ke `packages/` hanya setelah konsumen kedua nyata. Saat ini hanya smartboard yang memakai. |
 | D4 | Port bertahap ke stack golden-path, bukan lift-and-shift | Frontend sumber (CRA + craco + yarn + ~50 `resolutions` CVE manual) dan backend (FastAPI + MongoDB) tidak bisa masuk katalog pnpm tanpa melubangi gate supply-chain, token, dan `pnpm check`. |
 | D5 | `apps/api` di-port ke Hono 4 + Prisma 7 + Postgres, per modul di belakang facade | 24 modul `routes_*.py` tidak jatuh bersamaan; skema bertipe menggantikan dokumen Mongo bebas bentuk; `pip` dan MongoDB tidak masuk boundary repo. |
 | D6 | Demo = environment, bukan fork kode | Kode sama + flag runtime + seed sintetis + target deploy dan kredensial terpisah. Repo publik `smartboard-demo` / `smartboard-landing` berhenti jadi sumber; kalau tetap publik, isinya output CI satu arah. |
@@ -21,7 +21,7 @@
 ## 2. Struktur target
 
 ```text
-projects/academic-smartboard/
+projects/academic/academic-smartboard/
 ├── AGENTS.md  README.md  capabilities.json
 ├── apps/
 │   ├── web/          Next.js 16 + catalog:        ← port dari frontend/ (146 file, ~30,6k LOC, 37 halaman)
@@ -68,6 +68,6 @@ projects/academic-smartboard/
 
 - `bash scripts/safrs-verify.sh` PASS
 - `pnpm check` PASS
-- `find projects/academic-smartboard -name "*.env*"` kosong
+- `find projects/academic/academic-smartboard -name "*.env*"` kosong
 - Tidak ada file dari `raw_data/` di repo (nama file dicek eksplisit)
 - Capsule lolos `check_topology.py` tanpa placeholder tersisa

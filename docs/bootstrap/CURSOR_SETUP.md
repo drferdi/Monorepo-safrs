@@ -33,7 +33,7 @@ Verified against [Cursor Rules](https://cursor.com/docs/rules) and [Ignore files
 | `06-tools-governance.mdc` | tools / `.safrs` / scripts | `tools/AGENTS.md` |
 | `07-ui-tokens.mdc` | Globs (UI/CSS/email) | `packages/token/AGENTS.md` |
 | `08-verify-before-done.mdc` | Agent-requested | `scripts/safrs-verify.sh` |
-| `09-web-golden-path.mdc` | `projects/golden-path` | Capsule + web `AGENTS.md` |
+| `09-web-golden-path.mdc` | `projects/internal/golden-path` | Capsule + web `AGENTS.md` |
 
 `@`-mention agent-requested rules when relevant (e.g. `@08-verify-before-done` or `@verify-before-done`).
 

@@ -9,10 +9,10 @@ Bahasa Indonesia, checks that PostgreSQL and the typed Hono API are reachable,
 and lets the user store a single validated demo record end to end.
 
 It is the golden-path baseline from the root `AGENTS.md`: "the default
-demonstrator is `projects/golden-path/apps/web`: one Next.js deployment unit
+demonstrator is `projects/internal/golden-path/apps/web`: one Next.js deployment unit
 that mounts the package-owned typed Hono API under `/api`."
 
-Owner: Chief (human). Boundary: `projects/golden-path/apps/web/**`. Default risk
+Owner: Chief (human). Boundary: `projects/internal/golden-path/apps/web/**`. Default risk
 R1; API, dependency, environment, database, architecture, test-control, and CI
 changes are R2.
 
@@ -139,19 +139,19 @@ unset and a collector is reachable (local Jaeger via
 
 ## Key source files
 
-- `projects/golden-path/apps/web/src/app/page.tsx`
-- `projects/golden-path/apps/web/src/app/layout.tsx`
-- `projects/golden-path/apps/web/src/app/api/[[...route]]/route.ts`
-- `projects/golden-path/apps/web/src/app/api/webhooks/stripe/route.ts`
-- `projects/golden-path/apps/web/src/components/demo-form.tsx`
-- `projects/golden-path/apps/web/src/lib/api-client.ts`
-- `projects/golden-path/apps/web/src/lib/server-data.ts`
-- `projects/golden-path/apps/web/src/instrumentation.ts`
-- `projects/golden-path/apps/web/src/email/welcome.tsx`
-- `projects/golden-path/apps/web/AGENTS.md`
-- `projects/golden-path/AGENTS.md`
-- `projects/golden-path/apps/web/package.json`
-- `projects/golden-path/capabilities.json` (declares `email` and `stripe` as R2 for this project)
+- `projects/internal/golden-path/apps/web/src/app/page.tsx`
+- `projects/internal/golden-path/apps/web/src/app/layout.tsx`
+- `projects/internal/golden-path/apps/web/src/app/api/[[...route]]/route.ts`
+- `projects/internal/golden-path/apps/web/src/app/api/webhooks/stripe/route.ts`
+- `projects/internal/golden-path/apps/web/src/components/demo-form.tsx`
+- `projects/internal/golden-path/apps/web/src/lib/api-client.ts`
+- `projects/internal/golden-path/apps/web/src/lib/server-data.ts`
+- `projects/internal/golden-path/apps/web/src/instrumentation.ts`
+- `projects/internal/golden-path/apps/web/src/email/welcome.tsx`
+- `projects/internal/golden-path/apps/web/AGENTS.md`
+- `projects/internal/golden-path/AGENTS.md`
+- `projects/internal/golden-path/apps/web/package.json`
+- `projects/internal/golden-path/capabilities.json` (declares `email` and `stripe` as R2 for this project)
 
 ## Integration points
 

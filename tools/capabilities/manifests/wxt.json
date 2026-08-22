@@ -11,7 +11,7 @@
     "test content-script isolation",
     "test manifest build"
   ],
-  "sensitivePaths": ["projects/<project>/apps/extension/**"],
+  "sensitivePaths": ["projects/<domain>/<capsule>/apps/extension/**"],
   "sideEffects": [
     "Browser permissions must be minimized and approved in the project-scoped R2 implementation."
   ],

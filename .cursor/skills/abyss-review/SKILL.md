@@ -63,8 +63,8 @@ Untuk setiap tool (`codegen`, `project-wizard`, `deps-graph`, `doctor`, `capabil
 - Laporkan: subcommand/flag, real vs stub, file I/O, integrasi repo
 
 **Subagent C — Projects + Capabilities**
-- `projects/golden-path/apps/web`: glob `src/**/*.{ts,tsx}` + `e2e/**`, baca page/layout/route/demo-form/server-data/instrumentation/next.config/e2e spec. Laporkan route, form behavior, capability pack wiring, telemetry, e2e assertions.
-- `projects/control-center/apps/web`: glob `src/**/*.{ts,tsx}`, baca control-center.ts/page.ts/registry.ts/catalog.ts/library.ts/git.ts/root.ts/exec/*. Laporkan section dashboard, evidence algorithm, allowlist command, read-only vs mutating.
+- `projects/internal/golden-path/apps/web`: glob `src/**/*.{ts,tsx}` + `e2e/**`, baca page/layout/route/demo-form/server-data/instrumentation/next.config/e2e spec. Laporkan route, form behavior, capability pack wiring, telemetry, e2e assertions.
+- `projects/internal/control-center/apps/web`: glob `src/**/*.{ts,tsx}`, baca control-center.ts/page.ts/registry.ts/catalog.ts/library.ts/git.ts/root.ts/exec/*. Laporkan section dashboard, evidence algorithm, allowlist command, read-only vs mutating.
 - Capability packs: baca `tools/capabilities/manifests/*.json` + `tools/capabilities/src/cli.mjs`. Laporkan manifest mana yang active (ada di `projects/*/capabilities.json`) vs available.
 
 **Subagent D — Governance + Docs + Plans**
@@ -122,7 +122,7 @@ Chief, mau saya jadikan plan detail yang mana?
 - Mengajukan "Corpus merge" tanpa cek `docs/superpowers/plans/2026-08-11-corpus-engine-poc.md` sudah ada
 - Mengajukan "MCP untuk Prisma/Postgres" — DECISIONS 2026-08-11: defer
 - Mengajukan "second design system" — feature-inventory §8 melarang
-- Mengajukan "auth di golden-path" — non-goal di `projects/golden-path/AGENTS.md`
+- Mengajukan "auth di golden-path" — non-goal di `projects/internal/golden-path/AGENTS.md`
 - Klaim "sudah ada" tanpa baca file (cukup `package.json` tidak cukup)
 - Klaim "belum ada" tanpa cek `docs/plans/active/` + `docs/superpowers/plans/`
 - Print `DATABASE_URL` / `.env` / kunci API

@@ -5,6 +5,7 @@ import { type Context, Hono } from "hono";
 import type { ApplyGlobalResponse } from "hono/client";
 import { type ApiError, internalError, validationError } from "./error.ts";
 import { buildOpenApiDocument, openApiDocsHtml } from "./openapi.ts";
+import { createSentraBotApi } from "./sentrabot.ts";
 
 type DemoRecord = {
   createdAt: Date;
@@ -29,6 +30,19 @@ type ApiEnvironment = {
 
 type CreateAppOptions = {
   getStore?: () => Promise<DemoStore>;
+  getSentraBotActor?: (request: Request) =>
+    | Promise<{
+        workspaceId: string;
+        userId: string;
+      } | null>
+    | {
+        workspaceId: string;
+        userId: string;
+      }
+    | null;
+  getSentraBotBotRepository?: () => Promise<
+    import("./sentrabot.ts").SentraBotBotRepository
+  >;
 };
 
 type GlobalErrorResponses = {
@@ -51,7 +65,11 @@ function serializeDemo(demo: DemoRecord) {
   });
 }
 
-function createRoutes({ getStore = defaultStore }: CreateAppOptions = {}) {
+function createRoutes({
+  getStore = defaultStore,
+  getSentraBotActor,
+  getSentraBotBotRepository,
+}: CreateAppOptions = {}) {
   return new Hono<ApiEnvironment>()
     .basePath("/api")
     .use("*", async (context, next) => {
@@ -65,6 +83,13 @@ function createRoutes({ getStore = defaultStore }: CreateAppOptions = {}) {
     .get("/health", (context) => context.json({ status: "ok" as const }, 200))
     .get("/openapi.json", (context) => context.json(buildOpenApiDocument()))
     .get("/docs", (context) => context.html(openApiDocsHtml()))
+    .route(
+      "/sentrabot",
+      createSentraBotApi({
+        getActor: getSentraBotActor,
+        getBotRepository: getSentraBotBotRepository,
+      }),
+    )
     .get("/demos", async (context) => {
       const store = await getStore();
       const demos = await store.demo.findMany({

@@ -2,7 +2,7 @@
 
 ## Scope and decision record
 
-Implemented the SAFRS readiness desk in `projects/golden-path/apps/web` and the reusable `@safrs/ui` StatusCard. The page is server-first, presents the operational rail **Database → API bertipe → Web → Siap**, and leaves only the demo form interactive on the client.
+Implemented the SAFRS readiness desk in `projects/internal/golden-path/apps/web` and the reusable `@safrs/ui` StatusCard. The page is server-first, presents the operational rail **Database → API bertipe → Web → Siap**, and leaves only the demo form interactive on the client.
 
 The form uses the typed Hono client through the new `@safrs/api/client` subpath. This is intentional: importing the root API package in a Client Component also exported the Hono app and pulled Prisma/`pg` into the browser graph. The client subpath keeps API/database runtime code server-only; a web test fails if the browser entry loads `@safrs/database`.
 
@@ -24,7 +24,7 @@ The App Router route mounts the package-owned Hono app at `/api`. It has no expl
 
 ## Files added or changed
 
-- `projects/golden-path/**`: complete capsule, documentation, web application, tests, Tailwind/PostCSS config, recovery views, and generated-artifact ignores.
+- `projects/internal/golden-path/**`: complete capsule, documentation, web application, tests, Tailwind/PostCSS config, recovery views, and generated-artifact ignores.
 - `packages/ui/**`: StatusCard, public export, type/test configuration, and component test.
 - `packages/api/**`, `packages/database/**`, `packages/schemas/**`: approved source-export compatibility changes from internal `.js` specifiers to explicit `.ts` specifiers, plus `@safrs/api/client` public browser entry. No route, schema, database, or guard behavior changed.
 - `pnpm-workspace.yaml`, `pnpm-lock.yaml`: web/UI dependency graph, Tailwind PostCSS, React type packages, Next 16.2.12, and audited `sharp` build approval. pnpm inserted a duplicate placeholder approval while resolving `sharp`; it was normalized to the existing audited `sharp: true` entry only.

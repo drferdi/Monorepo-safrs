@@ -60,7 +60,7 @@ onboarding agents alike.
 | --- | --- |
 | **Monorepo topology** | `AGENTS.md` topology section, SAFRS_SPEC.md §4, `pnpm-workspace.yaml` |
 | **Six-layer control architecture** | SAFRS_SPEC.md §3 (L0–L5 deep dive) |
-| **Golden-path baseline** | `.agents/knowledge/03_ARCHITECTURE.md`, ADR 0001, `projects/golden-path/` |
+| **Golden-path baseline** | `.agents/knowledge/03_ARCHITECTURE.md`, ADR 0001, `projects/internal/golden-path/` |
 | **Package boundaries** | `.agents/knowledge/03_ARCHITECTURE.md`, `packages/README.md` |
 | **Project capsules** | `docs/governance/SAFRS_PROJECT_CAPSULES.md`, `projects/_template/` |
 

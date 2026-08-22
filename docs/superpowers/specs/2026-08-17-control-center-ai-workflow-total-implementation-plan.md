@@ -841,18 +841,18 @@ Exact paths may be adjusted surgically to match current repository conventions.
 
 | File | Responsibility |
 | --- | --- |
-| `projects/control-center/apps/web/src/lib/copilot/provider.ts` | Resolve Local/OpenAI or typed refusal |
-| `projects/control-center/apps/web/src/lib/copilot/tools.ts` | Allowlisted AI tools over existing executor |
-| `projects/control-center/apps/web/src/lib/copilot/agent.ts` | Bounded AI SDK 7 `ToolLoopAgent` |
-| `projects/control-center/apps/web/src/lib/copilot/schema.ts` | Structured answer/tool schemas |
-| `projects/control-center/apps/web/src/lib/copilot/sanitize.ts` | Central server-side evidence sanitization |
-| `projects/control-center/apps/web/src/app/api/copilot/route.ts` | Copilot POST handler |
-| `projects/control-center/apps/web/src/app/copilot-panel.tsx` | Chat, tool, approval, evidence, workflow status UI |
-| `projects/control-center/apps/web/src/lib/exec/commands.ts` | Add/normalize machine-readable command arguments only where needed |
-| `projects/control-center/apps/web/src/workflows/repository-readiness.ts` | Phase-2 deterministic readiness workflow |
-| `projects/control-center/apps/web/src/workflows/steps/run-read-command.ts` | Workflow step wrapper over allowlisted read commands |
-| `projects/control-center/apps/web/src/workflows/schema.ts` | Workflow input/output contracts |
-| `projects/control-center/capabilities.json` | Record `ai` and later `workflow` capabilities |
+| `projects/internal/control-center/apps/web/src/lib/copilot/provider.ts` | Resolve Local/OpenAI or typed refusal |
+| `projects/internal/control-center/apps/web/src/lib/copilot/tools.ts` | Allowlisted AI tools over existing executor |
+| `projects/internal/control-center/apps/web/src/lib/copilot/agent.ts` | Bounded AI SDK 7 `ToolLoopAgent` |
+| `projects/internal/control-center/apps/web/src/lib/copilot/schema.ts` | Structured answer/tool schemas |
+| `projects/internal/control-center/apps/web/src/lib/copilot/sanitize.ts` | Central server-side evidence sanitization |
+| `projects/internal/control-center/apps/web/src/app/api/copilot/route.ts` | Copilot POST handler |
+| `projects/internal/control-center/apps/web/src/app/copilot-panel.tsx` | Chat, tool, approval, evidence, workflow status UI |
+| `projects/internal/control-center/apps/web/src/lib/exec/commands.ts` | Add/normalize machine-readable command arguments only where needed |
+| `projects/internal/control-center/apps/web/src/workflows/repository-readiness.ts` | Phase-2 deterministic readiness workflow |
+| `projects/internal/control-center/apps/web/src/workflows/steps/run-read-command.ts` | Workflow step wrapper over allowlisted read commands |
+| `projects/internal/control-center/apps/web/src/workflows/schema.ts` | Workflow input/output contracts |
+| `projects/internal/control-center/capabilities.json` | Record `ai` and later `workflow` capabilities |
 | `.env.example` | AI configuration placeholders |
 | `pnpm-workspace.yaml` | Pin approved dependency versions/catalog entries |
 
