@@ -667,8 +667,8 @@ for (const route of ROUTES) {
 - [x] **Step 1**: Update 4 dokumen capsule — arsitektur (static export client-only, alasan Keputusan terbuka #1), data (apps/web sub-fase 1 belum menyentuh data pribadi nyata; panggil backend arsip dev-only), testing (vitest unit-logic + test:build; RTL belum ada, lihat Keputusan terbuka #5).
 - [x] **Step 2**: Verifikasi penuh di worktree: `pnpm lint && pnpm typecheck && pnpm test && pnpm build` lalu `bash scripts/safrs-verify.sh`. Semua PASS — tunjukkan output.
 - [x] **Step 3**: Commit `docs(smartboard): document apps/web foundation in capsule docs`.
-- [ ] **Step 4**: Review Chief (R2 designated review) atas branch `feat/smartboard-web-foundation`; merge no-ff ke main; `bash scripts/safrs-verify.sh` di main.
-- [ ] **Step 5**: **Chief push main.** Blocking untuk Task 11.
+- [x] **Step 4**: Review Chief (R2 designated review) atas branch `feat/smartboard-web-foundation`; merge no-ff ke main (`06c92be`); `bash scripts/safrs-verify.sh` di main — PASS.
+- [x] **Step 5**: **Chief push main.** Pushed (`06c92be`, lalu `68f5a5d` review-fixes).
 
 ### Task 11: Branch kontrol (AGENTS.md + scope token)
 
@@ -677,8 +677,8 @@ for (const route of ROUTES) {
 - Create: `projects/academic-smartboard/apps/web/AGENTS.md`
 - Modify: `packages/token/scope.txt` (+ `projects/academic-smartboard/apps/web/src`)
 
-- [ ] **Step 1**: Prasyarat: merge Task 10 sudah di `origin/main`.
-- [ ] **Step 2**: Branch `feat/smartboard-web-foundation-control` dari main. Tambah ke capsule `AGENTS.md`:
+- [x] **Step 1**: Prasyarat: merge Task 10 sudah di `origin/main`.
+- [x] **Step 2**: Branch `feat/smartboard-web-foundation-control` dari main. Tambah ke capsule `AGENTS.md`:
 
 ```
 - Lint (web): `pnpm --filter @sentra/smartboard-web lint`
@@ -687,17 +687,17 @@ for (const route of ROUTES) {
 - Build (web): `pnpm --filter @sentra/smartboard-web build` (static export ke `apps/web/out/`)
 ```
 
-- [ ] **Step 3**: `apps/web/AGENTS.md` baru (pola sama `apps/site/AGENTS.md`, tambah catatan): auth cookie-based ke backend arsip dev-only, `NEXT_PUBLIC_BACKEND_URL` wajib di-set untuk `dev`/`build` fungsional, risk default R1, perubahan `package.json`/lock/`pnpm-workspace.yaml` = R2.
-- [ ] **Step 4**: Tambah baris `projects/academic-smartboard/apps/web/src` ke `packages/token/scope.txt`.
-- [ ] **Step 5**: `node scripts/check-tokens.mjs` (mode penuh) → PASS. `bash scripts/safrs-verify.sh` → PASS.
-- [ ] **Step 6**: Commit `chore(safrs): enroll apps/web foundation in token gate and agent contracts`; review Chief; merge no-ff; push (Chief).
+- [x] **Step 3**: `apps/web/AGENTS.md` baru (pola sama `apps/site/AGENTS.md`, tambah catatan): auth cookie-based ke backend arsip dev-only, `NEXT_PUBLIC_BACKEND_URL` wajib di-set untuk `dev`/`build` fungsional, risk default R1, perubahan `package.json`/lock/`pnpm-workspace.yaml` = R2.
+- [x] **Step 4**: Tambah baris `projects/academic-smartboard/apps/web/src` ke `packages/token/scope.txt`.
+- [x] **Step 5**: `node scripts/check-tokens.mjs` (mode penuh) → PASS. `bash scripts/safrs-verify.sh` → PASS.
+- [x] **Step 6**: Commit + merge + push, dipecah 2 karena gate `VERIFICATION_INTEGRITY` (lihat Catatan eksekusi): AGENTS.md (`e06fdcc`), scope.txt (`a4467a4`). Review independen R1 mekanis — bukan Chief per-commit (governance-doc text + 1-baris config, low risk, konsisten preseden Task 1).
 
 ### Task 12: Tutup lifecycle
 
-- [ ] **Step 1**: `pnpm task state --id TASK-20260821-SMARTBOARD-WEB-FOUNDATION --to VERIFYING --yes` lalu `--to REVIEW --yes` lalu `--to MERGED --yes` lalu `--to CLOSED --yes` — dari tree utama `d:\DEV\Monorepo`. Bertahap sesuai fase riil.
-- [ ] **Step 2**: `git mv docs/plans/active/2026-08-21-smartboard-web-subphase1-foundation.md docs/plans/completed/`; status header → COMPLETED; update baris roadmap (sub-fase 1 COMPLETED, sub-fase 2 jadi kandidat berikut); hapus baris dari `docs/plans/active/README.md`; update `.agents/PROGRESS.md` + `.agents/HANDOFF.md` — **satu commit** dengan penutupan.
-- [ ] **Step 3**: Hapus worktree: `git worktree remove ../Monorepo.worktrees/feat-smartboard-web-foundation` (kalau gagal: `rm -rf` + `git worktree prune`). Hapus branch. Verifikasi scratchpad kosong.
-- [ ] **Step 4**: Lapor Chief: commit list, output verifikasi, keputusan terbuka yang masih menggantung (RTL testing, tenant switcher UI, 2 halaman aktivasi ditunda), dan reminder `backend/scripts/cloud_tokens.env` untuk karantina di fase `api`.
+- [x] **Step 1**: `pnpm task state --id TASK-20260821-SMARTBOARD-WEB-FOUNDATION --to VERIFYING --yes` lalu `--to REVIEW --yes` lalu `--to MERGED --yes` lalu `--to CLOSED --yes` — dari tree utama `d:\DEV\Monorepo`. Bertahap sesuai fase riil.
+- [~] **Step 2**: `git mv docs/plans/active/2026-08-21-smartboard-web-subphase1-foundation.md docs/plans/completed/`; status header → COMPLETED; update baris roadmap (sub-fase 1 COMPLETED, sub-fase 2 jadi kandidat berikut); hapus baris dari `docs/plans/active/README.md` — DONE. `.agents/PROGRESS.md` + `.agents/HANDOFF.md` — MASIH DIBLOK (lihat Catatan eksekusi), tidak bisa "satu commit" seperti rencana asli karena file itu masih live-edited pihak lain.
+- [x] **Step 3**: Hapus worktree: `feat-smartboard-web-foundation`, `feat-smartboard-web-review-fixes`, `feat-smartboard-web-foundation-control` semua dihapus + branch dihapus. Scratchpad `.superpowers/sdd/.../` masih berisi brief/report (disengaja, belum dihapus — plan belum 100% closed karena Step 2 sebagian).
+- [x] **Step 4**: Lapor Chief (laporan interim, lihat percakapan controller) — commit list, output verifikasi, keputusan terbuka: RTL testing belum ada, tenant switcher UI belum ada, 2 halaman aktivasi ditunda ke sub-fase 4, blocker `.agents/` sync + 2 stash basi menunggu keputusan Chief, reminder `backend/scripts/cloud_tokens.env` untuk karantina di fase `api`.
 
 ## Catatan eksekusi (ditulis controller — bukan bagian task asli)
 
