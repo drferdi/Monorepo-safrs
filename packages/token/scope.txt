@@ -6,3 +6,4 @@ packages/ui
 projects/golden-path/apps/web/src
 projects/academic-smartboard/apps/site/src
 projects/academic-smartboard/apps/web/src
+projects/sentrabot/apps/web/src
