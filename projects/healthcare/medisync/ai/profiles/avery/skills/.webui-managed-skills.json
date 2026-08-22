@@ -1,0 +1,32 @@
+{
+  "apikey-image-gen": {
+    "owner": "hermes-web-ui",
+    "source_hash": "28e0829bee5f81f69b8b68dc8a25fabe152ad9500c0b911ae0934cd2029a123d",
+    "installed_hash": "28e0829bee5f81f69b8b68dc8a25fabe152ad9500c0b911ae0934cd2029a123d"
+  },
+  "grok-image-to-video": {
+    "owner": "hermes-web-ui",
+    "source_hash": "c0a25c79c166369a81654cf2a018fb595c9a7c490bccdcfba90519708f20d21e",
+    "installed_hash": "c0a25c79c166369a81654cf2a018fb595c9a7c490bccdcfba90519708f20d21e"
+  },
+  "hyperframes": {
+    "owner": "hermes-web-ui",
+    "source_hash": "a16fa526c170cf9d8371f32af416989e62cd1ea35c4d6cc1d8d2ac0f66c8bfa2",
+    "installed_hash": "a16fa526c170cf9d8371f32af416989e62cd1ea35c4d6cc1d8d2ac0f66c8bfa2"
+  },
+  "markdown-viewer": {
+    "owner": "hermes-web-ui",
+    "source_hash": "b50284bf43d3099464f28458b9d116851c147d04ec0e4b203e1bee597aa590a0",
+    "installed_hash": "b50284bf43d3099464f28458b9d116851c147d04ec0e4b203e1bee597aa590a0"
+  },
+  "minimax-image-to-video": {
+    "owner": "hermes-web-ui",
+    "source_hash": "563d9bc74047c5551c6c4cdf22d22a76fbd9cbdc3b53f8d7d17aa292f95fc815",
+    "installed_hash": "563d9bc74047c5551c6c4cdf22d22a76fbd9cbdc3b53f8d7d17aa292f95fc815"
+  },
+  "remotion": {
+    "owner": "hermes-web-ui",
+    "source_hash": "09dc2206d2d6695fb70713f0ae53869a784ee6ea8b66bfee7981e05259f86361",
+    "installed_hash": "09dc2206d2d6695fb70713f0ae53869a784ee6ea8b66bfee7981e05259f86361"
+  }
+}

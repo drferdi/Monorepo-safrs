@@ -16,3 +16,162 @@ model Demo {
 
   @@map("demos")
 }
+
+model User {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false) @map("email_verified")
+  image         String?
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+  sessions      Session[]
+  accounts      Account[]
+  @@map("user")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime @map("expires_at") @db.Timestamptz(3)
+  token     String   @unique
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  ipAddress String?  @map("ip_address")
+  userAgent String?  @map("user_agent")
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String    @map("account_id")
+  providerId            String    @map("provider_id")
+  issuer                String?
+  userId                String    @map("user_id")
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?   @map("access_token")
+  refreshToken          String?   @map("refresh_token")
+  idToken               String?   @map("id_token")
+  accessTokenExpiresAt  DateTime? @map("access_token_expires_at") @db.Timestamptz(3)
+  refreshTokenExpiresAt DateTime? @map("refresh_token_expires_at") @db.Timestamptz(3)
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt             DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime @map("expires_at") @db.Timestamptz(3)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt  DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+  @@index([identifier])
+  @@map("verification")
+}
+
+model SentraBotDeploymentSettings {
+  id                          String   @id @default("default")
+  ownerUserId                 String?  @map("owner_user_id") @db.Uuid
+  signupMode                  String   @default("closed") @map("signup_mode")
+  signupAllowlist             Json     @default("[]") @map("signup_allowlist")
+  hasDeploymentModelCredential Boolean  @default(false) @map("has_deployment_model_credential")
+  defaultProvider             String?  @map("default_provider")
+  defaultModel                String?  @map("default_model")
+  createdAt                   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt                   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([ownerUserId])
+  @@map("sentrabot_deployment_settings")
+}
+
+model SentraBotBot {
+  id             String    @id @default(uuid()) @db.Uuid
+  workspaceId    String    @map("workspace_id")
+  userId         String    @map("user_id")
+  name           String
+  title          String    @default("")
+  description    String    @default("")
+  instructions   String    @default("")
+  notifyOnFinish Boolean   @default(true) @map("notify_on_finish")
+  pinned         Boolean   @default(false)
+  archivedAt     DateTime? @map("archived_at") @db.Timestamptz(3)
+  threadId       String    @default("") @map("thread_id")
+  computerMode   String    @default("team") @map("computer_mode")
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([workspaceId, userId, archivedAt])
+  @@map("sentrabot_bots")
+}
+
+model SentraBotThread {
+  id        String   @id @default(uuid()) @db.Uuid
+  workspaceId String @map("workspace_id")
+  userId    String   @map("user_id")
+  botId     String   @map("bot_id")
+  unread    Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([workspaceId, userId, botId])
+  @@map("sentrabot_threads")
+}
+
+model SentraBotThreadMessage {
+  id        String   @id @default(uuid()) @db.Uuid
+  workspaceId String @map("workspace_id")
+  userId    String   @map("user_id")
+  threadId String   @map("thread_id")
+  seq       Int
+  role      String
+  blocks    Json
+  runId     String?  @map("run_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+
+  @@unique([threadId, seq])
+  @@index([workspaceId, userId, threadId, seq])
+  @@map("sentrabot_thread_messages")
+}
+
+model SentraBotMemoryDocument {
+  id          String   @id @default(uuid()) @db.Uuid
+  workspaceId String   @map("workspace_id")
+  userId      String   @map("user_id")
+  botId       String?  @map("bot_id")
+  scope       String
+  path        String
+  content     String
+  revision    Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@unique([workspaceId, userId, botId, scope, path])
+  @@index([workspaceId, userId, botId, scope])
+  @@map("sentrabot_memory_documents")
+}
+
+model SentraBotRoutine {
+  id          String    @id @default(uuid()) @db.Uuid
+  workspaceId String    @map("workspace_id")
+  userId      String    @map("user_id")
+  botId       String    @map("bot_id")
+  name        String
+  prompt      String
+  cron        String
+  timezone    String
+  active      Boolean   @default(true)
+  notify      Boolean   @default(true)
+  lastRunAt   DateTime? @map("last_run_at") @db.Timestamptz(3)
+  nextRunAt   DateTime? @map("next_run_at") @db.Timestamptz(3)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime  @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  @@index([workspaceId, userId, botId, active])
+  @@map("sentrabot_routines")
+}

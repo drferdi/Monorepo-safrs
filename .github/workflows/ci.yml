@@ -81,5 +81,5 @@ jobs:
           if-no-files-found: ignore
           name: playwright-results
           path: |
-            projects/golden-path/apps/web/playwright-report
-            projects/golden-path/apps/web/test-results
+            projects/internal/golden-path/apps/web/playwright-report
+            projects/internal/golden-path/apps/web/test-results

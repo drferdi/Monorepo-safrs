@@ -63,14 +63,14 @@ Corpus Engine has its own plan: `docs/superpowers/plans/2026-08-11-corpus-engine
 | `tests/integration/database.test.ts` | Same. |
 | `packages/schemas/src/demo.ts` | Keep create/list contracts. |
 | `packages/api/src/app.ts` | Keep `GET/POST /api/demos`. Order list by `createdAt` desc. |
-| `projects/golden-path/apps/web/src/lib/server-data.ts` | Load demos for the page. |
-| `projects/golden-path/apps/web/src/app/page.tsx` | Render the stored demo list. |
-| `projects/golden-path/apps/web/src/components/demo-form.tsx` | Refresh the list after a successful save. |
-| `projects/golden-path/apps/web/e2e/golden-path.spec.ts` | Assert the created row appears in the list. |
-| `projects/golden-path/apps/web/e2e/screenshots/visual.spec.ts-snapshots/readiness-desk.png` | Real PNG baseline. |
+| `projects/internal/golden-path/apps/web/src/lib/server-data.ts` | Load demos for the page. |
+| `projects/internal/golden-path/apps/web/src/app/page.tsx` | Render the stored demo list. |
+| `projects/internal/golden-path/apps/web/src/components/demo-form.tsx` | Refresh the list after a successful save. |
+| `projects/internal/golden-path/apps/web/e2e/golden-path.spec.ts` | Assert the created row appears in the list. |
+| `projects/internal/golden-path/apps/web/e2e/screenshots/visual.spec.ts-snapshots/readiness-desk.png` | Real PNG baseline. |
 | `tests/repository/lfs-snapshots.test.mjs` | Fail closed if the baseline is still an LFS pointer. |
 | `.github/workflows/ci.yml` | Also run verify on `push` to `main`. |
-| `projects/control-center/apps/web/src/lib/repo/catalog.ts` | Honest CI + corpus caveats. |
+| `projects/internal/control-center/apps/web/src/lib/repo/catalog.ts` | Honest CI + corpus caveats. |
 | `docs/feature-inventory.md`, `sentrawiki/packages/database.md`, `sentrawiki/packages/telemetry.md`, `sentrawiki/reference/dependencies.md` | Match the code. |
 | `.env.example` | Complete non-secret template. |
 | `.gitignore` | Ignore Next-generated `AGENTS.md` / `CLAUDE.md` under app dirs. |
@@ -133,7 +133,7 @@ Expected starting evidence from the 2026-08-16 audit: 1 demo, 1 transaction samp
 ### Task 2: Make the visual e2e baseline a real PNG
 
 **Files:**
-- Modify: `projects/golden-path/apps/web/e2e/screenshots/visual.spec.ts-snapshots/readiness-desk.png`
+- Modify: `projects/internal/golden-path/apps/web/e2e/screenshots/visual.spec.ts-snapshots/readiness-desk.png`
 - Create: `tests/repository/lfs-snapshots.test.mjs`
 - Test: `tests/repository/lfs-snapshots.test.mjs`, `pnpm test:e2e`
 
@@ -189,7 +189,7 @@ Expected: FAIL with the LFS pointer message if the working tree still has the 13
 ```powershell
 git lfs install
 git lfs pull
-git lfs checkout -- projects/golden-path/apps/web/e2e/screenshots/visual.spec.ts-snapshots/readiness-desk.png
+git lfs checkout -- projects/internal/golden-path/apps/web/e2e/screenshots/visual.spec.ts-snapshots/readiness-desk.png
 ```
 
 Expected: file length about 86303 bytes, not 130. First bytes are PNG, not `version https://git-lfs`.
@@ -222,13 +222,13 @@ Do not commit the smudged PNG unless `git status` shows it as a real content cha
 ### Task 3: Close the demo loop on the golden-path page
 
 **Files:**
-- Modify: `projects/golden-path/apps/web/src/lib/server-data.ts`
-- Modify: `projects/golden-path/apps/web/src/app/page.tsx`
-- Modify: `projects/golden-path/apps/web/src/app/page.test.tsx`
-- Modify: `projects/golden-path/apps/web/src/components/demo-form.tsx`
+- Modify: `projects/internal/golden-path/apps/web/src/lib/server-data.ts`
+- Modify: `projects/internal/golden-path/apps/web/src/app/page.tsx`
+- Modify: `projects/internal/golden-path/apps/web/src/app/page.test.tsx`
+- Modify: `projects/internal/golden-path/apps/web/src/components/demo-form.tsx`
 - Modify: `packages/api/src/app.ts`
 - Modify: `packages/api/src/app.test.ts`
-- Modify: `projects/golden-path/apps/web/e2e/golden-path.spec.ts`
+- Modify: `projects/internal/golden-path/apps/web/e2e/golden-path.spec.ts`
 - Test: `pnpm --filter @safrs/api test`, `pnpm --filter @safrs/web test`
 
 **Interfaces:**
@@ -237,7 +237,7 @@ Do not commit the smudged PNG unless `git status` shows it as a real content cha
 
 - [ ] **Step 1: Write the failing page test**
 
-In `projects/golden-path/apps/web/src/app/page.test.tsx`, extend `ReadinessDesk` so it accepts `demos` and assert the names render:
+In `projects/internal/golden-path/apps/web/src/app/page.test.tsx`, extend `ReadinessDesk` so it accepts `demos` and assert the names render:
 
 ```tsx
 createElement(ReadinessDesk, {
@@ -267,7 +267,7 @@ Expected: FAIL because `ReadinessDesk` does not take `demos` and the markup has 
 
 - [ ] **Step 3: Load demos on the server**
 
-Add to `projects/golden-path/apps/web/src/lib/server-data.ts`:
+Add to `projects/internal/golden-path/apps/web/src/lib/server-data.ts`:
 
 ```ts
 export type DemoView = {
@@ -348,7 +348,7 @@ Expected: PASS.
 - [ ] **Step 8: Commit**
 
 ```powershell
-git add packages/api/src/app.ts packages/api/src/app.test.ts projects/golden-path/apps/web/src/lib/server-data.ts projects/golden-path/apps/web/src/app/page.tsx projects/golden-path/apps/web/src/app/page.test.tsx projects/golden-path/apps/web/src/components/demo-form.tsx projects/golden-path/apps/web/e2e/golden-path.spec.ts
+git add packages/api/src/app.ts packages/api/src/app.test.ts projects/internal/golden-path/apps/web/src/lib/server-data.ts projects/internal/golden-path/apps/web/src/app/page.tsx projects/internal/golden-path/apps/web/src/app/page.test.tsx projects/internal/golden-path/apps/web/src/components/demo-form.tsx projects/internal/golden-path/apps/web/e2e/golden-path.spec.ts
 git commit -m "feat(web): show stored demos from PostgreSQL on the readiness desk"
 ```
 
@@ -498,7 +498,7 @@ git commit -m "fix(database): drop unused transaction_samples and align Demo def
 **Files:**
 - Modify: `.github/workflows/ci.yml`
 - Modify: `tests/repository/automation-policy.test.mjs`
-- Modify: `projects/control-center/apps/web/src/lib/repo/catalog.ts`
+- Modify: `projects/internal/control-center/apps/web/src/lib/repo/catalog.ts`
 - Modify: `docs/feature-inventory.md`
 - Modify: `.agents/PROGRESS.md`
 - Test: `node --test tests/repository/automation-policy.test.mjs`, `pnpm --filter @sentra/control-center test`
@@ -540,7 +540,7 @@ Do not add deploy steps. Do not broaden permissions.
 
 - [ ] **Step 4: Replace stale CI copy**
 
-In `projects/control-center/apps/web/src/lib/repo/catalog.ts`, replace the `ci-workflows` caveat with:
+In `projects/internal/control-center/apps/web/src/lib/repo/catalog.ts`, replace the `ci-workflows` caveat with:
 
 ```ts
 caveat:
@@ -563,7 +563,7 @@ Expected: PASS.
 - [ ] **Step 6: Commit**
 
 ```powershell
-git add .github/workflows/ci.yml tests/repository/automation-policy.test.mjs projects/control-center/apps/web/src/lib/repo/catalog.ts docs/feature-inventory.md .agents/PROGRESS.md
+git add .github/workflows/ci.yml tests/repository/automation-policy.test.mjs projects/internal/control-center/apps/web/src/lib/repo/catalog.ts docs/feature-inventory.md .agents/PROGRESS.md
 git commit -m "fix(ci): run verify on push to main and correct stale red-smoke copy"
 ```
 
@@ -572,7 +572,7 @@ git commit -m "fix(ci): run verify on push to main and correct stale red-smoke c
 ### Task 6: Make corpus and telemetry claims honest
 
 **Files:**
-- Modify: `projects/control-center/apps/web/src/lib/repo/catalog.ts` if it still implies a live pgvector store on `main`
+- Modify: `projects/internal/control-center/apps/web/src/lib/repo/catalog.ts` if it still implies a live pgvector store on `main`
 - Modify: `docs/feature-inventory.md` corpus row
 - Modify: `sentrawiki/packages/telemetry.md`
 - Modify: `sentrawiki/reference/dependencies.md`
@@ -589,7 +589,7 @@ Required facts to write, verbatim in meaning:
 - `database/` on disk is a gitignored file corpus, not a Prisma schema.
 - `corpus_local` on the shared `:54329` instance is an empty leftover database: no `vector` extension, no `corpus_engine` schema, no tables.
 - `@safrs/database` does **not** depend on `@safrs/schemas`.
-- `PrismaInstrumentation` is started from `@safrs/telemetry` via `projects/golden-path/apps/web/src/instrumentation.ts`, not from `packages/database/src/client.ts`.
+- `PrismaInstrumentation` is started from `@safrs/telemetry` via `projects/internal/golden-path/apps/web/src/instrumentation.ts`, not from `packages/database/src/client.ts`.
 
 - [ ] **Step 1: Patch the wiki and inventory sentences that contradict those facts**
 
@@ -606,7 +606,7 @@ Expected: PASS, including the honest `readyToUse = null` cases.
 - [ ] **Step 3: Commit**
 
 ```powershell
-git add docs/feature-inventory.md sentrawiki/packages/telemetry.md sentrawiki/reference/dependencies.md sentrawiki/packages/database.md projects/control-center/apps/web/src/lib/repo/catalog.ts
+git add docs/feature-inventory.md sentrawiki/packages/telemetry.md sentrawiki/reference/dependencies.md sentrawiki/packages/database.md projects/internal/control-center/apps/web/src/lib/repo/catalog.ts
 git commit -m "docs: stop claiming a live corpus database or Prisma schema dependency that does not exist"
 ```
 
@@ -633,7 +633,7 @@ projects/*/apps/*/AGENTS.md
 projects/*/apps/*/CLAUDE.md
 ```
 
-Do not ignore the checked-in capsule `projects/golden-path/AGENTS.md` or `projects/control-center/AGENTS.md`.
+Do not ignore the checked-in capsule `projects/internal/golden-path/AGENTS.md` or `projects/internal/control-center/AGENTS.md`.
 
 - [ ] **Step 2: Complete `.env.example` with empty placeholders only**
 

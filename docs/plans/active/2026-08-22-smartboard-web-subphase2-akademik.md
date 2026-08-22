@@ -8,7 +8,7 @@
 - **Roadmap:** `docs/plans/active/2026-08-21-smartboard-web-roadmap.md` (baris 2/5)
 - **Pendahulu:** `docs/plans/completed/2026-08-21-smartboard-web-subphase1-foundation.md` (COMPLETED — scaffold, auth, shell, Master › Murid)
 
-**Goal:** Port 8 halaman penjadwalan + akademik dari `frontend/` arsip (~5.219 baris halaman + ~880 baris komponen/lib pendukung) ke `projects/academic-smartboard/apps/web`, memakai fondasi sub-fase 1 (axios cookie-session, `ProtectedRoute`, `AppShell`, `DataTable`, primitif token) — sampai seorang pengajar bisa: melihat jadwal mingguan, membuka daftar sesi, membuka satu sesi, mengisi absensi + evaluasi, lalu melihat perkembangan murid dan peta kurikulum, semuanya terhadap backend FastAPI arsip.
+**Goal:** Port 8 halaman penjadwalan + akademik dari `frontend/` arsip (~5.219 baris halaman + ~880 baris komponen/lib pendukung) ke `projects/academic/academic-smartboard/apps/web`, memakai fondasi sub-fase 1 (axios cookie-session, `ProtectedRoute`, `AppShell`, `DataTable`, primitif token) — sampai seorang pengajar bisa: melihat jadwal mingguan, membuka daftar sesi, membuka satu sesi, mengisi absensi + evaluasi, lalu melihat perkembangan murid dan peta kurikulum, semuanya terhadap backend FastAPI arsip.
 
 **Architecture:** Tidak ada perubahan arsitektur dari sub-fase 1. Tetap Next.js 16 `output: "export"`, client-only, semua halaman `"use client"`, data lewat `@tanstack/react-query` + `apiClient` (axios `withCredentials`). Route dinamis `/sesi/[id]` dan `/akademik/perkembangan/[studentId]` di static export TIDAK bisa di-prerender per-id (id datang dari backend runtime) — dipakai `generateStaticParams()` kosong + `dynamicParams` tidak berlaku pada `output: "export"`, jadi pola yang dipakai adalah **satu route statis dengan id di query string** ATAU shell route yang membaca id dari `useParams()` hasil `generateStaticParams` placeholder. Keputusan terbuka #1 di bawah menetapkan default: **query string** (`/sesi?id=...`) DITOLAK demi kesetiaan URL arsip — dipakai `generateStaticParams()` yang mengembalikan satu segmen sentinel dan client-side fetch by `useParams()`; lihat Task 3 Step 1 yang memverifikasi ini secara empiris SEBELUM halaman apa pun ditulis.
 
@@ -67,13 +67,13 @@ Bentuk data (dari `backend/models.py`, read-only): `Schedule` (`schedule_id, stu
 2. **`KayyisaTrajectoryPanel` di `PerkembanganMurid.jsx`** (baris ~118–330 arsip: efek typewriter, `POST /students/{id}/progression/summary-draft`, label model AI). Roadmap baris 5 memiliki "widget chat Kayyisa". Sama: penanda komentar, tidak dirender.
 3. **`TemplateEvaluasi`** (sub-fase 5). Halaman `Evaluasi.jsx` arsip TIDAK mereferensi template sama sekali (diverifikasi: file 114 baris, hanya `GET /sessions|students|subjects|tutors` + link ke `/sesi/{id}`), jadi tidak ada dependensi terputus.
 4. **`Dashboard.jsx`**, **`Pengajar.jsx`**, **`TutorialPenggunaan.jsx`** — lihat Keputusan terbuka #5 (tidak tercantum di baris roadmap mana pun).
-5. Perubahan `packages/token/scope.txt`, `projects/academic-smartboard/AGENTS.md`, `.github/workflows/**` — tidak diperlukan: `projects/academic-smartboard/apps/web/src` **sudah** terdaftar di `packages/token/scope.txt` dan perintah `apps/web` sudah ada di capsule `AGENTS.md` (keduanya diselesaikan di Task 11 sub-fase 1). Sub-fase 2 karena itu TIDAK punya branch kontrol terpisah.
+5. Perubahan `packages/token/scope.txt`, `projects/academic/academic-smartboard/AGENTS.md`, `.github/workflows/**` — tidak diperlukan: `projects/academic/academic-smartboard/apps/web/src` **sudah** terdaftar di `packages/token/scope.txt` dan perintah `apps/web` sudah ada di capsule `AGENTS.md` (keduanya diselesaikan di Task 11 sub-fase 1). Sub-fase 2 karena itu TIDAK punya branch kontrol terpisah.
 
 ## Prasyarat (blocking — jangan mulai sebelum terpenuhi)
 
 1. Plan ini disetujui Chief (status `PROPOSED` → `ACTIVE`).
-2. **Tree kerja bersih dari pekerjaan asing.** Per audit 2026-08-22 tree utama KOTOR: perubahan uncommitted milik sesi/agent lain di `packages/api/**`, `packages/database/**`, `packages/schemas/**`, `packages/auth/**` (baru), `projects/sentrabot/**` (baru), `projects/academic-smartboard/apps/site/src/components/*.tsx`, dan **8 file di `projects/academic-smartboard/apps/web/src/`** (konversi utilitas Tailwind `[var(--x)]` → `(--x)`). Delapan file terakhir menabrak langsung scope plan ini. Harus di-commit/di-stash/di-buang oleh pemiliknya sebelum Task 1.
-3. `pnpm task list --active` bersih dari lease yang overlap `projects/academic-smartboard/apps/web/`. Verifikasi ulang di Task 1 (per sub-fase 1 pernah ada bentrok lease `TASK-20260821-SENTRABOT-*` di `packages/token/scope.txt`; sub-fase ini tidak menyentuh file itu, jadi risiko bentrok lebih kecil).
+2. **Tree kerja bersih dari pekerjaan asing.** Per audit 2026-08-22 tree utama KOTOR: perubahan uncommitted milik sesi/agent lain di `packages/api/**`, `packages/database/**`, `packages/schemas/**`, `packages/auth/**` (baru), `projects/product/sentrabot/**` (baru), `projects/academic/academic-smartboard/apps/site/src/components/*.tsx`, dan **8 file di `projects/academic/academic-smartboard/apps/web/src/`** (konversi utilitas Tailwind `[var(--x)]` → `(--x)`). Delapan file terakhir menabrak langsung scope plan ini. Harus di-commit/di-stash/di-buang oleh pemiliknya sebelum Task 1.
+3. `pnpm task list --active` bersih dari lease yang overlap `projects/academic/academic-smartboard/apps/web/`. Verifikasi ulang di Task 1 (per sub-fase 1 pernah ada bentrok lease `TASK-20260821-SENTRABOT-*` di `packages/token/scope.txt`; sub-fase ini tidak menyentuh file itu, jadi risiko bentrok lebih kecil).
 4. Backend FastAPI arsip TIDAK dibutuhkan untuk Task 1–15 (semua build-time/unit). Dibutuhkan (dijalankan manual Chief di luar monorepo) hanya untuk verifikasi manual Task 16.
 
 ## Global Constraints
@@ -83,11 +83,11 @@ Bentuk data (dari `backend/models.py`, read-only): `Schedule` (`schedule_id, stu
 - Copy UI Indonesia diambil **verbatim** dari arsip (judul `PageHead`, label kolom tabel, teks empty state, teks toast). Jangan menulis ulang copy tanpa arahan Chief.
 - `ProtectedRoute` dipakai persis seperti arsip (lihat tabel roles di atas — termasuk 3 route tanpa daftar role).
 - Kerja di worktree `../Monorepo.worktrees/<branch>`; Conventional Commits; `bash scripts/safrs-verify.sh` sebelum klaim selesai.
-- **Centang checkbox task di commit yang sama dengan pekerjaan task itu** — bukan ditunda ke task terakhir (pelajaran proses sub-fase 1 Task 10). Sitasi di dalam checkbox pakai path repo-root-relative penuh (`projects/academic-smartboard/apps/web/src/lib/labels.ts`), bukan nama file telanjang — `check_status_claims.py` menolak nama bare.
+- **Centang checkbox task di commit yang sama dengan pekerjaan task itu** — bukan ditunda ke task terakhir (pelajaran proses sub-fase 1 Task 10). Sitasi di dalam checkbox pakai path repo-root-relative penuh (`projects/academic/academic-smartboard/apps/web/src/lib/labels.ts`), bukan nama file telanjang — `check_status_claims.py` menolak nama bare.
 - Karantina permanen, tidak pernah dibaca/disalin: `raw_data/**`, semua `.env*`, `backend/scripts/cloud_tokens.env` (grep eksplisit nama file — TIDAK cocok glob `.env*`), `node_modules/`, `build/`, `.venv/`.
 - Kalau ada PII nyata ditemukan di `frontend/src/**` atau `backend/*.py` (bukan `raw_data/`), STOP task itu dan lapor Chief (roadmap keputusan #6).
 - **Setiap endpoint baru yang dipanggil sub-fase ini wajib dicek otorisasinya di server.** `ProtectedRoute` hanya menyembunyikan UI; siapa pun bisa memanggil backend langsung. Sebelum sebuah halaman dianggap selesai, buka `routes_*.py` yang melayani endpoint-nya dan pastikan ada dependency role/tenant di sana. 24 endpoint sub-fase ini terdaftar di Temuan audit sumber; kalau ada satu saja yang tidak punya pemeriksaan role sisi server, STOP task itu dan lapor Chief — jangan port halaman yang mengekspos data tanpa penjaga.
-- Batas keamanan deploy (security header di host, `COOKIE_SECURE`, `COOKIE_SAMESITE`, `CORS_ORIGINS`) didokumentasikan di `projects/academic-smartboard/apps/web/AGENTS.md` § "Batas keamanan". Sub-fase ini tidak boleh melemahkannya, dan Task 16 memverifikasinya ulang.
+- Batas keamanan deploy (security header di host, `COOKIE_SECURE`, `COOKIE_SAMESITE`, `CORS_ORIGINS`) didokumentasikan di `projects/academic/academic-smartboard/apps/web/AGENTS.md` § "Batas keamanan". Sub-fase ini tidak boleh melemahkannya, dan Task 16 memverifikasinya ulang.
 
 ## Keputusan terbuka (milik Chief — default plan berjalan tanpa memblokir)
 
@@ -117,7 +117,7 @@ Bentuk data (dari `backend/models.py`, read-only): `Schedule` (`schedule_id, stu
 ## Struktur file target (tambahan di atas sub-fase 1)
 
 ```text
-projects/academic-smartboard/apps/web/src/
+projects/academic/academic-smartboard/apps/web/src/
 ├── app/
 │   ├── jadwal/page.tsx
 │   ├── sesi/page.tsx
@@ -164,14 +164,14 @@ pnpm task list --active
 git status -sb
 ```
 
-Pastikan tidak ada lease yang overlap `projects/academic-smartboard/apps/web/` dan Prasyarat #2 (tree bersih) sudah terpenuhi. Kalau 8 file `apps/web/src` masih dirty milik sesi lain — STOP, lapor Chief.
+Pastikan tidak ada lease yang overlap `projects/academic/academic-smartboard/apps/web/` dan Prasyarat #2 (tree bersih) sudah terpenuhi. Kalau 8 file `apps/web/src` masih dirty milik sesi lain — STOP, lapor Chief.
 
 - [ ] **Step 2**: Klaim task:
 
 ```bash
 pnpm task claim --id TASK-20260822-SMARTBOARD-WEB-AKADEMIK \
   --title "Port apps/web sub-fase 2: penjadwalan + akademik" \
-  --scope projects/academic-smartboard/apps/web --scope pnpm-workspace.yaml
+  --scope projects/academic/academic-smartboard/apps/web --scope pnpm-workspace.yaml
 ```
 
 - [ ] **Step 3**: Update baris 2 roadmap (`docs/plans/active/2026-08-21-smartboard-web-roadmap.md`) → kolom Plan diisi path plan ini, Status `ACTIVE`. Tambah baris catatan di roadmap tentang 3 halaman tak tercakup (Keputusan terbuka #5). Tambah baris plan ini ke tabel `docs/plans/active/README.md`.
@@ -180,7 +180,7 @@ pnpm task claim --id TASK-20260822-SMARTBOARD-WEB-AKADEMIK \
 
 ### Task 2: Katalog dependensi + toast provider
 
-**Files:** Modify: `pnpm-workspace.yaml`, `projects/academic-smartboard/apps/web/package.json`, `projects/academic-smartboard/apps/web/src/app/providers.tsx`, `pnpm-lock.yaml`
+**Files:** Modify: `pnpm-workspace.yaml`, `projects/academic/academic-smartboard/apps/web/package.json`, `projects/academic/academic-smartboard/apps/web/src/app/providers.tsx`, `pnpm-lock.yaml`
 
 - [ ] **Step 1**: Tambah ke `catalog:` (urut alfabetis): `recharts: 3.6.0`, `sonner: 2.0.3`.
 - [ ] **Step 2**: Tambah `"recharts": "catalog:"` dan `"sonner": "catalog:"` ke `dependencies` `@sentra/smartboard-web`. `pnpm install`.
@@ -190,7 +190,7 @@ pnpm task claim --id TASK-20260822-SMARTBOARD-WEB-AKADEMIK \
 
 ### Task 3: Verifikasi route dinamis pada static export (spike, memblokir Task 8 & 15)
 
-**Files:** Create sementara lalu jadikan permanen: `projects/academic-smartboard/apps/web/src/app/sesi/[id]/page.tsx`
+**Files:** Create sementara lalu jadikan permanen: `projects/academic/academic-smartboard/apps/web/src/app/sesi/[id]/page.tsx`
 
 - [ ] **Step 1**: Tulis stub `/sesi/[id]/page.tsx` minimal: `"use client"`, baca `useParams()`, render id. Tambah `export function generateStaticParams() { return [{ id: "placeholder" }] }` di file server wrapper kalau perlu (client component tidak boleh mengekspor `generateStaticParams`; pola yang dipakai: `page.tsx` server tipis yang mengekspor `generateStaticParams` + merender komponen client `SesiDetailClient`).
 - [ ] **Step 2**: `pnpm --filter @sentra/smartboard-web build`. Catat hasilnya: apakah `out/sesi/placeholder/index.html` terbentuk, dan apakah membuka `/sesi/<id-nyata>/` dari server statis menghasilkan 404. Sekalian buktikan di spike yang sama apakah `useParams()` dan `useSearchParams()` menuntut `<Suspense>` saat prerender — hasilnya mengikat Task 9, 10, dan 15.
@@ -199,7 +199,7 @@ pnpm task claim --id TASK-20260822-SMARTBOARD-WEB-AKADEMIK \
 
 ### Task 4: Port `lib/labels.ts` + `lib/curriculumPhase.ts`
 
-**Files:** Create: `projects/academic-smartboard/apps/web/src/lib/labels.ts`, `projects/academic-smartboard/apps/web/src/lib/labels.test.ts`, `projects/academic-smartboard/apps/web/src/lib/curriculumPhase.ts`, `projects/academic-smartboard/apps/web/src/lib/curriculumPhase.test.ts`
+**Files:** Create: `projects/academic/academic-smartboard/apps/web/src/lib/labels.ts`, `projects/academic/academic-smartboard/apps/web/src/lib/labels.test.ts`, `projects/academic/academic-smartboard/apps/web/src/lib/curriculumPhase.ts`, `projects/academic/academic-smartboard/apps/web/src/lib/curriculumPhase.test.ts`
 
 - [ ] **Step 1**: Port `frontend/src/lib/labels.js` → TypeScript: `ROLE_LABEL`, `FORMAT_LABEL`, `MODE_LABEL`, `SESSION_STATUS_LABEL`, `ATTEND_LABEL`, `COMPETENCE_LABEL`, `rupiah()`, `fmtDate()`, `fmtDateShort()` — nilai string **verbatim**. `STATUS_BADGE` arsip memetakan status ke class warna (`badge-blue`/`badge-yellow`/`badge-green`/`badge-red`/`badge-gray`); ganti nilainya menjadi tipe union semantik (`"info" | "warning" | "success" | "critical" | "neutral"`) yang dikonsumsi `StatusBadge` (Task 6) — pemetaan status→severity tetap identik dengan arsip, hanya namanya yang jadi token-friendly.
 - [ ] **Step 2**: `fmtDate`/`fmtDateShort` arsip pakai `Date#toLocaleDateString('id-ID', …)`. Monorepo punya `dayjs` di catalog dan sudah terpasang di `apps/web`. Tulis ulang dengan `dayjs` + locale `id` supaya output deterministik lintas mesin/CI, dan tulis test yang mengunci format keluaran persis ("Sen, 04 Agu 2026" / "04 Agu"). Kalau `dayjs/locale/id` menghasilkan string berbeda dari `toLocaleDateString`, pertahankan output arsip dan catat.
@@ -209,7 +209,7 @@ pnpm task claim --id TASK-20260822-SMARTBOARD-WEB-AKADEMIK \
 
 ### Task 5: Perluas `lib/api.ts` (tipe + helper terketik)
 
-**Files:** Modify: `projects/academic-smartboard/apps/web/src/lib/api.ts`, `projects/academic-smartboard/apps/web/src/lib/api.test.ts`
+**Files:** Modify: `projects/academic/academic-smartboard/apps/web/src/lib/api.ts`, `projects/academic/academic-smartboard/apps/web/src/lib/api.test.ts`
 
 - [ ] **Step 1**: Tambah tipe dari `backend/models.py` (read-only): `Schedule`, `ScheduleCreate`, `LearningSession`, `StudentAttendance`, `Tutor`, `Subject`, `School`, `GradeLevel`, `CurriculumStatus`, `CurriculumStructure`, `CurriculumOutcome`, `CurriculumAlignment`, `CurriculumCoverage`, `ProgressionData`. Field opsional ditandai `?`/`| null` sesuai `Optional[...]` di Pydantic — jangan menebak; buka `models.py` per tipe.
 - [ ] **Step 2**: Tambah helper: `listSchedules`, `createSchedule`, `updateSchedule`, `deleteSchedule`, `listSessions(query?)`, `getSession(id)`, `saveAttendance(id, rows)`, `verifySession(id)`, `cancelSession(id, reason)`, `rescheduleSession(id, payload)`, `submitEvaluation(id, payload)`, `draftEvaluation(id, payload)`, `tutorCheckIn`, `tutorCheckOut`, `attendanceCatchUp`, `listTutors`, `listSubjects`, `listSchools`, `listGradeLevels`, `getCurriculumStatus`, `getCurriculumStructure`, `listCurriculumOutcomes(query?)`, `getCurriculumAlignment`, `getCurriculumCoverage(query?)`, `getStudentProgression(studentId, query?)`.
@@ -219,7 +219,7 @@ pnpm task claim --id TASK-20260822-SMARTBOARD-WEB-AKADEMIK \
 
 ### Task 6: Primitif UI bersama (PageHead, StatusBadge, Panel, ChipTabs, EmptyState)
 
-**Files:** Create: `projects/academic-smartboard/apps/web/src/components/PageHead.tsx`, `.../StatusBadge.tsx`, `.../Panel.tsx`, `.../ChipTabs.tsx`, `.../EmptyState.tsx`
+**Files:** Create: `projects/academic/academic-smartboard/apps/web/src/components/PageHead.tsx`, `.../StatusBadge.tsx`, `.../Panel.tsx`, `.../ChipTabs.tsx`, `.../EmptyState.tsx`
 
 - [ ] **Step 1**: Port `frontend/src/components/PageHead.jsx` (props `seq`, `eyebrow`, `title`, `lede`, `actions`) — layout dan copy sama, styling ditulis ulang dengan token.
 - [ ] **Step 2**: SEBELUM menulis `StatusBadge`, verifikasi token status yang benar-benar ada: `grep -n "color-status" packages/token/src/tokens.css`. Kalau salah satu dari `--color-status-info` / `--color-status-warning` / `--color-status-success` / `--color-status-neutral` absen, pakai token terdekat yang ada dan catat di Catatan eksekusi — **jangan** menambah token baru (perubahan token = R2 milik Chief). Perlakuan sama seperti `--color-data-4` di Task 15 Step 2.
@@ -231,7 +231,7 @@ pnpm task claim --id TASK-20260822-SMARTBOARD-WEB-AKADEMIK \
 
 ### Task 7: Navigasi bergrup (nav.ts + AppShell)
 
-**Files:** Modify: `projects/academic-smartboard/apps/web/src/lib/nav.ts`, `projects/academic-smartboard/apps/web/src/lib/nav.test.ts`, `projects/academic-smartboard/apps/web/src/components/AppShell.tsx`
+**Files:** Modify: `projects/academic/academic-smartboard/apps/web/src/lib/nav.ts`, `projects/academic/academic-smartboard/apps/web/src/lib/nav.test.ts`, `projects/academic/academic-smartboard/apps/web/src/components/AppShell.tsx`
 
 - [ ] **Step 1**: Ubah `NAV_ITEMS` datar menjadi `NAV_GROUPS: { title: string; items: NavItem[] }[]` mengikuti `frontend/src/components/Layout.jsx` baris 70–132: grup `Utama` (Smartboard/Pengumuman — **belum ada di sub-fase ini**, jangan tambahkan entri ke halaman yang belum diport), `Operasional` (Kalender & Jadwal; Sesi Pembelajaran), `Akademik` (Evaluasi Murid; Perkembangan Murid; Kurikulum Nasional; Keselarasan Kurikulum; Cakupan Kurikulum), plus `Master` (Murid — dari sub-fase 1). Label dan daftar `roles` **verbatim** dari `Layout.jsx`.
 - [ ] **Step 2**: `filterByRole` menjadi `filterGroupsByRole` yang membuang item tak berizin dan membuang grup yang jadi kosong. Test: tiap dari 6 role menghasilkan daftar yang tepat; `content_manager` misalnya hanya melihat Kurikulum + Keselarasan.
@@ -241,7 +241,7 @@ pnpm task claim --id TASK-20260822-SMARTBOARD-WEB-AKADEMIK \
 
 ### Task 8: Halaman `/jadwal`
 
-**Files:** Create: `projects/academic-smartboard/apps/web/src/app/jadwal/page.tsx`, `projects/academic-smartboard/apps/web/src/components/ScheduleForm.tsx`, `projects/academic-smartboard/apps/web/src/lib/week.ts`, `projects/academic-smartboard/apps/web/src/lib/week.test.ts`
+**Files:** Create: `projects/academic/academic-smartboard/apps/web/src/app/jadwal/page.tsx`, `projects/academic/academic-smartboard/apps/web/src/components/ScheduleForm.tsx`, `projects/academic/academic-smartboard/apps/web/src/lib/week.ts`, `projects/academic/academic-smartboard/apps/web/src/lib/week.test.ts`
 
 Sumber: `frontend/src/pages/Jadwal.jsx` (605 baris).
 
@@ -255,7 +255,7 @@ Sumber: `frontend/src/pages/Jadwal.jsx` (605 baris).
 
 ### Task 9: Halaman `/sesi` (daftar sesi)
 
-**Files:** Create: `projects/academic-smartboard/apps/web/src/app/sesi/page.tsx`
+**Files:** Create: `projects/academic/academic-smartboard/apps/web/src/app/sesi/page.tsx`
 
 Sumber: `frontend/src/pages/SesiList.jsx` (271 baris).
 
@@ -268,7 +268,7 @@ Sumber: `frontend/src/pages/SesiList.jsx` (271 baris).
 
 ### Task 10: `/sesi/[id]` bagian A — informasi, absensi, aksi status
 
-**Files:** Create: `projects/academic-smartboard/apps/web/src/app/sesi/[id]/page.tsx` (isi penuh menggantikan stub Task 3), `projects/academic-smartboard/apps/web/src/components/AttendanceCatchUp.tsx`
+**Files:** Create: `projects/academic/academic-smartboard/apps/web/src/app/sesi/[id]/page.tsx` (isi penuh menggantikan stub Task 3), `projects/academic/academic-smartboard/apps/web/src/components/AttendanceCatchUp.tsx`
 
 Sumber: `frontend/src/pages/SesiDetail.jsx` baris ~1–605 + `components/AttendanceCatchUp.jsx`.
 
@@ -281,7 +281,7 @@ Sumber: `frontend/src/pages/SesiDetail.jsx` baris ~1–605 + `components/Attenda
 
 ### Task 11: `/sesi/[id]` bagian B — evaluasi, CP picker, panel honor
 
-**Files:** Modify: `projects/academic-smartboard/apps/web/src/app/sesi/[id]/page.tsx`; Create: `projects/academic-smartboard/apps/web/src/components/CpPickerModal.tsx`
+**Files:** Modify: `projects/academic/academic-smartboard/apps/web/src/app/sesi/[id]/page.tsx`; Create: `projects/academic/academic-smartboard/apps/web/src/components/CpPickerModal.tsx`
 
 Sumber: `frontend/src/pages/SesiDetail.jsx` baris ~606–1128 + `components/CpPickerModal.jsx` (260 baris).
 
@@ -293,7 +293,7 @@ Sumber: `frontend/src/pages/SesiDetail.jsx` baris ~606–1128 + `components/CpPi
 
 ### Task 12: Halaman `/evaluasi`
 
-**Files:** Create: `projects/academic-smartboard/apps/web/src/app/evaluasi/page.tsx`
+**Files:** Create: `projects/academic/academic-smartboard/apps/web/src/app/evaluasi/page.tsx`
 
 Sumber: `frontend/src/pages/Evaluasi.jsx` (114 baris — seluruh isinya sudah dibaca dan dipetakan).
 
@@ -304,7 +304,7 @@ Sumber: `frontend/src/pages/Evaluasi.jsx` (114 baris — seluruh isinya sudah di
 
 ### Task 13: Trio kurikulum — `/akademik/kurikulum`, `/akademik/keselarasan`, `/akademik/cakupan`
 
-**Files:** Create: `projects/academic-smartboard/apps/web/src/app/akademik/kurikulum/page.tsx`, `.../keselarasan/page.tsx`, `.../cakupan/page.tsx`, `projects/academic-smartboard/apps/web/src/components/CurriculumReadingPane.tsx`
+**Files:** Create: `projects/academic/academic-smartboard/apps/web/src/app/akademik/kurikulum/page.tsx`, `.../keselarasan/page.tsx`, `.../cakupan/page.tsx`, `projects/academic/academic-smartboard/apps/web/src/components/CurriculumReadingPane.tsx`
 
 Sumber: `Kurikulum.jsx` (420), `KurikulumSelaras.jsx` (424), `KurikulumCakupan.jsx` (542), `components/CurriculumReadingPane.jsx` (232).
 
@@ -317,7 +317,7 @@ Sumber: `Kurikulum.jsx` (420), `KurikulumSelaras.jsx` (424), `KurikulumCakupan.j
 
 ### Task 14: `/akademik/perkembangan` (daftar murid)
 
-**Files:** Create: `projects/academic-smartboard/apps/web/src/app/akademik/perkembangan/page.tsx`, `projects/academic-smartboard/apps/web/src/components/CurriculumPhaseBanner.tsx`
+**Files:** Create: `projects/academic/academic-smartboard/apps/web/src/app/akademik/perkembangan/page.tsx`, `projects/academic/academic-smartboard/apps/web/src/components/CurriculumPhaseBanner.tsx`
 
 Sumber: `PerkembanganMurid.jsx` baris ~340–880 + `components/CurriculumPhaseBanner.jsx`.
 
@@ -328,7 +328,7 @@ Sumber: `PerkembanganMurid.jsx` baris ~340–880 + `components/CurriculumPhaseBa
 
 ### Task 15: `/akademik/perkembangan/[studentId]` (grafik + kalender kehadiran)
 
-**Files:** Create: `projects/academic-smartboard/apps/web/src/app/akademik/perkembangan/[studentId]/page.tsx`, `projects/academic-smartboard/apps/web/src/lib/progression.ts`, `projects/academic-smartboard/apps/web/src/lib/progression.test.ts`
+**Files:** Create: `projects/academic/academic-smartboard/apps/web/src/app/akademik/perkembangan/[studentId]/page.tsx`, `projects/academic/academic-smartboard/apps/web/src/lib/progression.ts`, `projects/academic/academic-smartboard/apps/web/src/lib/progression.test.ts`
 
 Sumber: `PerkembanganMurid.jsx` baris ~880–1715 **dikurangi** panel Jurnal dan panel Kayyisa (Non-goals #1 dan #2).
 
@@ -341,7 +341,7 @@ Sumber: `PerkembanganMurid.jsx` baris ~880–1715 **dikurangi** panel Jurnal dan
 
 ### Task 16: Guard build output, verifikasi penuh, dokumen, merge, tutup lifecycle
 
-**Files:** Modify: `projects/academic-smartboard/apps/web/tests/build-output.test.mjs`, `projects/academic-smartboard/{README.md,docs/architecture.md,docs/data.md,docs/testing.md}`, `docs/plans/active/2026-08-22-smartboard-web-subphase2-akademik.md`, `docs/plans/active/2026-08-21-smartboard-web-roadmap.md`, `docs/plans/active/README.md`, `.agents/HANDOFF.md`, `.agents/DECISIONS.md`
+**Files:** Modify: `projects/academic/academic-smartboard/apps/web/tests/build-output.test.mjs`, `projects/academic/academic-smartboard/{README.md,docs/architecture.md,docs/data.md,docs/testing.md}`, `docs/plans/active/2026-08-22-smartboard-web-subphase2-akademik.md`, `docs/plans/active/2026-08-21-smartboard-web-roadmap.md`, `docs/plans/active/README.md`, `.agents/HANDOFF.md`, `.agents/DECISIONS.md`
 
 - [ ] **Step 1**: Perluas `tests/build-output.test.mjs` — assert semua route sub-fase 2 ada di `out/` (bentuk path mengikuti keputusan Task 3). Verifikasi merah: rename sementara satu folder route, test FAIL, kembalikan.
 - [ ] **Step 2**: Update 4 dokumen capsule: status `apps/web` → `di-port (sub-fase 2/5)`; `docs/data.md` mencatat endpoint baru yang dipanggil + bahwa jurnal/AI belum dipanggil; `docs/testing.md` mencatat RTL masih absen (Keputusan terbuka #4).
@@ -361,8 +361,8 @@ pnpm check
 - [ ] **Step 4**: Audit keamanan change set — bukan opsional, tunjukkan output:
 
 ```bash
-grep -rnE "dangerouslySetInnerHTML|innerHTML|eval\(|new Function|localStorage|sessionStorage|document\.cookie" projects/academic-smartboard/apps/web/src   # harus nol hasil
-grep -rn "process.env" projects/academic-smartboard/apps/web/src                                                                                        # hanya NEXT_PUBLIC_BACKEND_URL + NEXT_PUBLIC_DEV_TENANT_SLUG
+grep -rnE "dangerouslySetInnerHTML|innerHTML|eval\(|new Function|localStorage|sessionStorage|document\.cookie" projects/academic/academic-smartboard/apps/web/src   # harus nol hasil
+grep -rn "process.env" projects/academic/academic-smartboard/apps/web/src                                                                                        # hanya NEXT_PUBLIC_BACKEND_URL + NEXT_PUBLIC_DEV_TENANT_SLUG
 pnpm audit --prod                                                                                                                                       # nol vulnerability
 ```
 

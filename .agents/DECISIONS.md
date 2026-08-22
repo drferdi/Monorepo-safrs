@@ -3,6 +3,24 @@
 Append-only, newest first. Each entry: date, decision, brief rationale, evidence/status.
 Major architectural decisions also get an ADR in `docs/adrs/`.
 
+## 2026-08-22 - Project capsules are grouped by domain: projects/<domain>/<capsule>/
+
+Chief ruled that domain layering applies to the whole of `projects/`, uniformly — a structure
+where some capsules are grouped and others sit loose at the root was rejected explicitly.
+Domains: `academic`, `corporate`, `healthcare`, `internal`, `product`. A domain folder carries
+only `AGENTS.md` + `README.md`; it holds no code, and a domain with no capsule inside is a
+topology error.
+
+Supersedes the flat `projects/<project>/` half of the 2026-08-10 topology entry below, and
+supersedes decision D1 in `docs/superpowers/specs/2026-08-20-smartboard-migration-design.md`,
+which had deferred domain folders until 4-5 products existed. That deferral named the real
+cost accurately: three governance controls assume one-level capsules, and all three broke.
+`tools/safrs/check_topology.py` (now two-level), `tools/safrs/check_routing.py`, and
+`pnpm-workspace.yaml` (`projects/*/*/apps/*` — the flat pattern had silently dropped all nine
+apps from the workspace). Recorded in [ADR 0005](docs/adrs/0005-projects-domain-layering.md);
+status Proposed pending designated R2 review, since implementation and verification controls
+changed in one change set.
+
 ## 2026-08-22 - Stale FAST-REHYDRATE lease force-closed with explicit Chief confirmation
 
 `TASK-20260818-FAST-REHYDRATE` (Cursor Grok, scope `AGENTS.md`, `.cursor/`, `.agents/`) sat

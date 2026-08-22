@@ -35,13 +35,16 @@ test("root exposes the solo-developer command contract", () => {
 test("root follows canonical SAFRS topology and excludes protected paths from Biome", () => {
   const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
   const webPackage = JSON.parse(
-    fs.readFileSync("projects/golden-path/apps/web/package.json", "utf8"),
+    fs.readFileSync(
+      "projects/internal/golden-path/apps/web/package.json",
+      "utf8",
+    ),
   );
   const workspace = fs.readFileSync("pnpm-workspace.yaml", "utf8");
   // biome.jsonc carries // comments, so it needs the JSONC parser, not JSON.parse.
   const biome = parseJsonc(fs.readFileSync("biome.jsonc", "utf8"));
 
-  assert.match(workspace, /- projects\/\*\/apps\/\*/);
+  assert.match(workspace, /- projects\/\*\/\*\/apps\/\*/);
   assert.match(workspace, /- packages\/\*/);
   assert.match(workspace, /- tools\/\*/);
   assert.doesNotMatch(workspace, /- apps\/\*/);

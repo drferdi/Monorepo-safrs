@@ -6,7 +6,7 @@ Project-specific terms used throughout the SAFRS Monorepo.
 | --- | --- |
 | **SAFRS** | Sentra Agent-First Repository Standard. The governance specification defining how a repository should be structured when AI agents participate in engineering. Current version: v1.1. |
 | **Chief** | Dr. Ferdi Iskandar, the solo developer and human authority for the repository. |
-| **Golden path** | The default reference application proving the typed Database to API to Web flow with one safe demo record. Lives at `projects/golden-path/apps/web`. |
+| **Golden path** | The default reference application proving the typed Database to API to Web flow with one safe demo record. Lives at `projects/internal/golden-path/apps/web`. |
 | **R0** | Read-only analysis. No mutation allowed. |
 | **R1** | Reversible local change. Scoped mutation with standard verification. |
 | **R2** | Boundary-affecting change. Requires designated human or code-owner review. |

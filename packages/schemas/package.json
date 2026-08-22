@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./sentrabot": "./src/sentrabot/index.ts"
   },
   "scripts": {
     "lint": "biome check src",

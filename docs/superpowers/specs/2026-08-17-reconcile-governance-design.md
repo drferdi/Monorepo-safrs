@@ -106,7 +106,7 @@ Do not touch:
 
 - `tmp-*`
 - `docs/handbook/`
-- `projects/control-center/apps/web/next-env.d.ts`
+- `projects/internal/control-center/apps/web/next-env.d.ts`
 - Copilot files
 - `AGENTS.md`
 - deleted `.specstory` files

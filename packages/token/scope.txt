@@ -3,7 +3,7 @@
 # Comments start with #.
 packages/token
 packages/ui
-projects/golden-path/apps/web/src
-projects/academic-smartboard/apps/site/src
-projects/academic-smartboard/apps/web/src
-projects/sentrabot/apps/web/src
+projects/internal/golden-path/apps/web/src
+projects/academic/academic-smartboard/apps/site/src
+projects/academic/academic-smartboard/apps/web/src
+projects/product/sentrabot/apps/web/src

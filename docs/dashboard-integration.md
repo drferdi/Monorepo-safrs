@@ -20,7 +20,7 @@ Nothing below invents capability. Each surface drives machinery that is already 
 | Control plane | `tools/automation/src/{gates,leases,evidence,approvals}.mjs` | complete |
 | Task registry | `tools/task/src/cli.mjs` | complete, `list --json` |
 | Status report | `tools/status/src/cli.mjs` | complete, `--json` |
-| Golden Path app | `projects/golden-path/apps/web` | complete |
+| Golden Path app | `projects/internal/golden-path/apps/web` | complete |
 | Capability packs | `tools/capabilities/manifests/*.json` (6) | complete |
 | Codegen | `tools/codegen/src/cli.mjs` | complete |
 | Dependency graph | `tools/deps-graph/src/cli.mjs` | complete |

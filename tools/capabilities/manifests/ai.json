@@ -11,7 +11,7 @@
     "use provider test doubles",
     "enforce request and token bounds"
   ],
-  "sensitivePaths": ["projects/<project>/src/ai/**"],
+  "sensitivePaths": ["projects/<domain>/<capsule>/src/ai/**"],
   "sideEffects": [
     "External model calls require a project-scoped R2 implementation and explicit resource limits."
   ],

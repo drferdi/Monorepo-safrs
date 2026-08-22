@@ -92,7 +92,7 @@ Exceptional states: `BLOCKED`, `CONFLICT`, `FAILED`, `ABORTED`, `SUPERSEDED`.
 
 ## Monorepo topology
 
-- Product and service work belongs in `projects/<project>/` and follows the nearest nested `AGENTS.md`.
+- Product and service work belongs in `projects/<domain>/<capsule>/` and follows the nearest nested `AGENTS.md`. Domain folders (`healthcare`, `academic`, `corporate`, `internal`, `product`) carry only `AGENTS.md` + `README.md`; they hold no code.
 - Reusable product-neutral capabilities belong in `packages/<package>/`.
 - Repository-wide developer tooling belongs in `tools/`; cross-project tests belong in `tests/`.
 - New projects must begin from the conventions in `docs/governance/SAFRS_PROJECT_CAPSULES.md`.
@@ -107,7 +107,7 @@ Exceptional states: `BLOCKED`, `CONFLICT`, `FAILED`, `ABORTED`, `SUPERSEDED`.
 
 ## Golden-path baseline
 
-- The default demonstrator is `projects/golden-path/apps/web`: one Next.js deployment unit that mounts the package-owned typed Hono API under `/api`.
+- The default demonstrator is `projects/internal/golden-path/apps/web`: one Next.js deployment unit that mounts the package-owned typed Hono API under `/api`.
 - `packages/schemas`, `packages/env`, `packages/database`, `packages/api`, and `packages/ui` are shared boundaries; do not import database/server environment code into browser components.
 - Start safely with `pnpm run doctor`, prepare the local environment with `pnpm run setup`, then use `pnpm dev`. Run `pnpm run governance` before repository review.
 - Electron, WXT, Stripe, email, AI, and Python are optional capability packs, not baseline runtime dependencies. Activate them only through the documented capability workflow and its risk review.
