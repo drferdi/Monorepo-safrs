@@ -1,8 +1,9 @@
+<!-- markdownlint-configure-file { "MD013": false } -->
 # Smartboard `apps/web` Sub-fase 1: Fondasi (scaffold, auth, shell, vertical proof) Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-- **Status:** COMPLETED — Task 1-11 + final-review fix round selesai, di-merge & push ke main (`06c92be`, `68f5a5d`, `e06fdcc`, `a4467a4`); TutorActivation/OwnerActivation ditunda ke sub-fase 4 sesuai roadmap. Task 12 (`.agents/PROGRESS.md`/`HANDOFF.md` sync) tertunda sebagian — lihat catatan eksekusi.
+- **Status:** COMPLETED — Task 1-12 selesai penuh, di-merge & push ke main (`06c92be`, `68f5a5d`, `e06fdcc`, `a4467a4`, `e51bda9`); TutorActivation/OwnerActivation ditunda ke sub-fase 4 sesuai roadmap.
 - **Owner:** Chief
 - **Roadmap:** `docs/plans/active/2026-08-21-smartboard-web-roadmap.md` (baris 1/5)
 
@@ -67,7 +68,7 @@
 
 ## Struktur file target
 
-```
+```text
 projects/academic-smartboard/apps/web/
 ├── package.json                  @sentra/smartboard-web
 ├── next.config.ts                output: "export"
@@ -105,6 +106,7 @@ Branch: `feat/smartboard-web-foundation` (Task 2–10) lalu `feat/smartboard-web
 ### Task 1: Prasyarat, commit plan, klaim task, worktree
 
 **Files:**
+
 - Commit: `docs/plans/active/2026-08-21-smartboard-web-roadmap.md`, `docs/plans/active/2026-08-21-smartboard-web-subphase1-foundation.md`, baris di `docs/plans/active/README.md`
 
 - [x] **Step 1: Cek lease aktif, klaim task** — jalankan dari tree utama `d:\DEV\Monorepo` (CLI mencap `worktree_id` saat klaim; semua transisi state berikutnya WAJIB dari tree yang sama)
@@ -112,6 +114,7 @@ Branch: `feat/smartboard-web-foundation` (Task 2–10) lalu `feat/smartboard-web
 ```bash
 pnpm task list --active
 ```
+
 Pastikan tidak ada lease baru yang menabrak `projects/academic-smartboard/` sejak audit 2026-08-21 di atas.
 
 ```bash
@@ -125,6 +128,7 @@ pnpm task claim --id TASK-20260821-SMARTBOARD-WEB-FOUNDATION \
   --scope pnpm-workspace.yaml \
   --state EXECUTING --yes
 ```
+
 (R2: menyentuh `pnpm-workspace.yaml` (katalog baru) + `**/package.json` + `pnpm-lock.yaml` = sensitive paths, floor R2.)
 
 - [x] **Step 2: Worktree**
@@ -148,6 +152,7 @@ Buang salinan uncommitted di tree utama setelahnya (gate ownership tree utama be
 ### Task 2: Catalog entries
 
 **Files:**
+
 - Modify: `pnpm-workspace.yaml`
 
 - [x] **Step 1**: Tambah ke blok `catalog:` (urut alfabetis mengikuti gaya file, versi PERSIS sesuai audit arsip di atas):
@@ -180,11 +185,13 @@ git commit -m "chore(catalog): add smartboard web foundation dependencies"
 ### Task 3: Scaffold app + static export build hijau
 
 **Files:**
+
 - Create: `projects/academic-smartboard/apps/web/{package.json,next.config.ts,tsconfig.json,postcss.config.mjs}`
 - Create: `projects/academic-smartboard/apps/web/src/app/{layout.tsx,page.tsx,globals.css}`
 - Modify: `turbo.json` (tambah `NEXT_PUBLIC_BACKEND_URL`, `NEXT_PUBLIC_DEV_TENANT_SLUG` ke array `env` task `build` dan `dev`)
 
 **Interfaces:**
+
 - Produces: package `@sentra/smartboard-web`; `pnpm --filter @sentra/smartboard-web build` menghasilkan `apps/web/out/`
 
 - [x] **Step 1: package.json**
@@ -258,6 +265,7 @@ export default nextConfig;
 - [x] **Step 5: globals.css + layout.tsx + page.tsx minimal**
 
 `src/app/globals.css`:
+
 ```css
 @import "tailwindcss";
 @import "@sentra/token/tokens.css";
@@ -265,6 +273,7 @@ export default nextConfig;
 ```
 
 `src/app/layout.tsx`:
+
 ```tsx
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
@@ -286,6 +295,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 ```
 
 `src/app/page.tsx` sementara (diganti Task 7 dengan redirect berbasis auth):
+
 ```tsx
 export default function Page() {
   return <main>Sentra Smartboard</main>;
@@ -301,6 +311,7 @@ pnpm --filter @sentra/smartboard-web typecheck
 pnpm --filter @sentra/smartboard-web build
 ls projects/academic-smartboard/apps/web/out/index.html
 ```
+
 Expected: exit 0, `out/index.html` ada.
 
 - [x] **Step 8: Commit**
@@ -313,9 +324,11 @@ git commit -m "feat(web): scaffold apps/web next static export"
 ### Task 4: Primitif UI token-based (TDD util `cn`)
 
 **Files:**
+
 - Create: `src/lib/{cn.ts,cn.test.ts}`, `src/components/ui/{button.tsx,label.tsx,input.tsx}`
 
 **Interfaces:**
+
 - Produces: `cn(...classes)`, `<Button variant="default"|"outline"|"ghost" size="default"|"sm">`, `<Label>`, `<Input>` — dipakai semua task berikutnya
 
 - [x] **Step 1: Test gagal** — `projects/academic-smartboard/apps/web/src/lib/cn.test.ts`:
@@ -354,9 +367,11 @@ export function cn(...inputs: ClassValue[]) {
 ### Task 5: API client (TDD)
 
 **Files:**
+
 - Create: `src/lib/{api.ts,api.test.ts}`
 
 **Interfaces:**
+
 - Produces: `apiClient` (axios instance), `type User = { user_id, tenant_id, email, name, role, tutor_id, student_ids, parent_id, active }`, `login(email, password): Promise<{user: User}>`, `getMe(): Promise<User>`, `logout(): Promise<void>`
 
 - [x] **Step 1: Test gagal** — `projects/academic-smartboard/apps/web/src/lib/api.test.ts` (unit murni, mock axios, tanpa network/DOM):
@@ -466,9 +481,11 @@ export async function listStudents(): Promise<Student[]> {
 ### Task 6: Auth context + halaman login (TDD logic, UI manual-verified)
 
 **Files:**
+
 - Create: `src/lib/{auth.tsx,auth.test.ts}`, `src/app/login/page.tsx`
 
 **Interfaces:**
+
 - Consumes: `login`, `getMe`, `logout`, `User` dari Task 5
 - Produces: `<AuthProvider>`, `useAuth(): { user: User | null, status: "loading"|"authenticated"|"unauthenticated", login, logout }` — dipakai `ProtectedRoute` (Task 7) dan semua halaman terproteksi
 
@@ -570,10 +587,12 @@ export function useAuth() {
 ### Task 7: Shell (nav role-aware) + ProtectedRoute
 
 **Files:**
+
 - Create: `src/lib/{nav.ts,nav.test.ts}`, `src/components/{ProtectedRoute.tsx,AppShell.tsx}`
 - Modify: `src/app/layout.tsx` (pasang `AuthProvider` + `QueryClientProvider`), `src/app/page.tsx` (redirect client berbasis auth)
 
 **Interfaces:**
+
 - Consumes: `useAuth()` dari Task 6
 - Produces: `NAV_ITEMS: {label, href, roles}[]`, `filterByRole(items, role)`, `<ProtectedRoute roles={[...]}>`, `<AppShell>`
 
@@ -619,9 +638,11 @@ export function filterByRole(items: NavItem[], role: Role): NavItem[] {
 ### Task 8: Halaman Master › Murid (vertical proof)
 
 **Files:**
+
 - Create: `src/components/DataTable.tsx`, `src/app/master/murid/page.tsx`
 
 **Interfaces:**
+
 - Consumes: `listStudents`, `Student` (Task 5), `ProtectedRoute`, `AppShell` (Task 7), `@tanstack/react-query`
 
 - [x] **Step 1**: Baca `frontend/src/pages/master/` di arsip, konfirmasi nama file persis halaman daftar murid dan kolom yang ditampilkan (referensi model `Student` sudah dikonfirmasi: `student_id, name, nis, gender, school_id, grade_id, active`).
@@ -633,6 +654,7 @@ export function filterByRole(items: NavItem[], role: Role): NavItem[] {
 ### Task 9: Test output build
 
 **Files:**
+
 - Create: `tests/build-output.test.mjs`
 
 - [x] **Step 1: Tulis test** (pola sama `apps/site`, route sub-fase 1 saja):
@@ -661,6 +683,7 @@ for (const route of ROUTES) {
 ### Task 10: Dokumen capsule + verifikasi penuh + merge implementasi
 
 **Files:**
+
 - Modify: `projects/academic-smartboard/{README.md,docs/architecture.md,docs/data.md,docs/testing.md}` (status `apps/web`: `di-port (sub-fase 1/5)`; JANGAN sentuh `AGENTS.md` — itu Task 11)
 - Modify: `docs/plans/active/2026-08-21-smartboard-web-subphase1-foundation.md` (centang task; catatan eksekusi), `docs/plans/active/2026-08-21-smartboard-web-roadmap.md` (baris 1 status → COMPLETED sub-fase)
 
@@ -673,6 +696,7 @@ for (const route of ROUTES) {
 ### Task 11: Branch kontrol (AGENTS.md + scope token)
 
 **Files (SEMUA kontrol verifikasi):**
+
 - Modify: `projects/academic-smartboard/AGENTS.md` (tambah perintah `apps/web` di section Commands, di samping `apps/site` yang sudah ada)
 - Create: `projects/academic-smartboard/apps/web/AGENTS.md`
 - Modify: `packages/token/scope.txt` (+ `projects/academic-smartboard/apps/web/src`)
@@ -680,7 +704,7 @@ for (const route of ROUTES) {
 - [x] **Step 1**: Prasyarat: merge Task 10 sudah di `origin/main`.
 - [x] **Step 2**: Branch `feat/smartboard-web-foundation-control` dari main. Tambah ke capsule `AGENTS.md`:
 
-```
+```markdown
 - Lint (web): `pnpm --filter @sentra/smartboard-web lint`
 - Typecheck (web): `pnpm --filter @sentra/smartboard-web typecheck`
 - Test (web): `pnpm --filter @sentra/smartboard-web test`
@@ -695,14 +719,14 @@ for (const route of ROUTES) {
 ### Task 12: Tutup lifecycle
 
 - [x] **Step 1**: `pnpm task state --id TASK-20260821-SMARTBOARD-WEB-FOUNDATION --to VERIFYING --yes` lalu `--to REVIEW --yes` lalu `--to MERGED --yes` lalu `--to CLOSED --yes` — dari tree utama `d:\DEV\Monorepo`. Bertahap sesuai fase riil.
-- [~] **Step 2**: `git mv docs/plans/active/2026-08-21-smartboard-web-subphase1-foundation.md docs/plans/completed/`; status header → COMPLETED; update baris roadmap (sub-fase 1 COMPLETED, sub-fase 2 jadi kandidat berikut); hapus baris dari `docs/plans/active/README.md` — DONE. `.agents/PROGRESS.md` + `.agents/HANDOFF.md` — MASIH DIBLOK (lihat Catatan eksekusi), tidak bisa "satu commit" seperti rencana asli karena file itu masih live-edited pihak lain.
+- [x] **Step 2**: `git mv docs/plans/active/2026-08-21-smartboard-web-subphase1-foundation.md docs/plans/completed/`; status header → COMPLETED; update baris roadmap (sub-fase 1 COMPLETED, sub-fase 2 jadi kandidat berikut); hapus baris dari `docs/plans/active/README.md`. `.agents/HANDOFF.md` + `.agents/DECISIONS.md` sync — sempat blocked, selesai commit `e51bda9` setelah lease basi `TASK-20260818-FAST-REHYDRATE` di-force-close atas konfirmasi eksplisit Chief (`.agents/PROGRESS.md` sengaja tidak disentuh — filenya sendiri menyatakan "jangan tulis status di sini").
 - [x] **Step 3**: Hapus worktree: `feat-smartboard-web-foundation`, `feat-smartboard-web-review-fixes`, `feat-smartboard-web-foundation-control` semua dihapus + branch dihapus. Scratchpad `.superpowers/sdd/.../` masih berisi brief/report (disengaja, belum dihapus — plan belum 100% closed karena Step 2 sebagian).
 - [x] **Step 4**: Lapor Chief (laporan interim, lihat percakapan controller) — commit list, output verifikasi, keputusan terbuka: RTL testing belum ada, tenant switcher UI belum ada, 2 halaman aktivasi ditunda ke sub-fase 4, blocker `.agents/` sync + 2 stash basi menunggu keputusan Chief, reminder `backend/scripts/cloud_tokens.env` untuk karantina di fase `api`.
 
 ## Catatan eksekusi (ditulis controller — bukan bagian task asli)
 
 - Task 11 selesai (session lanjutan, 2026-08-22): `packages/token/scope.txt` sempat diblok lease konkuren `TASK-20260821-SENTRABOT-RELEASE-CLOSEOUT` (Kilo, live, bukan basi) — ditunggu sampai Kilo commit file itu (`90a8ebb`) dan lepas dari scope lease-nya. Setelah bebas: `safrs-verify.sh` menolak satu merge gabungan AGENTS.md+scope.txt karena keduanya kena aturan `VERIFICATION_INTEGRITY` (governance-control + implementation berubah bersamaan) yang menurut `docs/governance/SAFRS_APPROVALS.md` cuma boleh disetujui Chief, bukan agent — jadi dipecah jadi 2 merge independen: AGENTS.md sendirian (`e06fdcc`, push), lalu `scope.txt` menyusul (`a4467a4`, push, dengan resolusi konflik 1-baris trivial melawan baris `projects/sentrabot/apps/web/src` yang ditambahkan Kilo bersamaan). Kedua langkah pakai `check-tokens.mjs` + `safrs-verify.sh` PASS penuh sebagai bukti. Detail lengkap di ledger SDD.
-- Bagian `.agents/PROGRESS.md` + `.agents/HANDOFF.md` **masih tertunda** — kedua file itu dipegang lease basi `TASK-20260818-FAST-REHYDRATE` (Cursor Grok, VERIFYING sejak 2026-08-18, tanpa `expires_at`, masih terdaftar aktif per 2026-08-22) DAN masih punya modifikasi uncommitted milik Kilocode di tree utama saat ini (dicek ulang berkali-kali, belum berubah). Force-close lease agent lain bukan wewenang controller ini — perlu keputusan Chief.
+- Bagian `.agents/HANDOFF.md` + `.agents/DECISIONS.md` **selesai** (commit `e51bda9`, push). Sempat tertunda cukup lama: lease basi `TASK-20260818-FAST-REHYDRATE` (Cursor Grok, VERIFYING sejak 2026-08-18, tanpa `expires_at`) menahan seluruh scope `.agents/`, ditambah modifikasi uncommitted live pihak lain di file yang sama. Force-close lease agent lain bukan wewenang controller sendirian — Chief diminta konfirmasi eksplisit ("force-close TASK-20260818-FAST-REHYDRATE") sebelum dieksekusi. Konten live yang sedang berjalan (Sentra Bot state, status portfolio, pass markdownlint Cursor di plan ini, rotasi entri knowledge log) tidak dihapus — digabung ke commit yang sama, bukan ditimpa. `.agents/PROGRESS.md` sengaja tidak disentuh: filenya sendiri menyatakan "jangan tulis status di sini".
 - Ditemukan (belum ditangani, bukan wewenang controller): dua git stash basi dari sesi sebelumnya (`pre-smartboard-merge`, `pre-smartboard-merge-2`, label "foreign HANDOFF mod") masih tersisa di `git stash list`, tidak pernah di-pop. Tidak disentuh karena `.agents/HANDOFF.md` sudah berubah berkali-kali sejak stash itu dibuat — pop sekarang beresiko menimpa konten baru dengan yang lama. Perlu Chief putuskan apakah stash itu masih relevan atau aman dibuang.
 - Final whole-branch review (post-merge, dispatch terpisah) menemukan 1 Critical + 2 Important; sudah diperbaiki lewat lease terpisah `TASK-20260821-SMARTBOARD-WEB-REVIEW-FIXES`, commit `dd75d87`, merge `68f5a5d`, sudah push. Detail lengkap di ledger SDD (`.superpowers/sdd/2026-08-21-smartboard-web-subphase1-foundation/progress.md`).
 
