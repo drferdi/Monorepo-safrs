@@ -5,7 +5,7 @@
 - **Status:** COMPLETED — fase fondasi dieksekusi dan di-merge ke main 2026-08-20; review integritas disetujui Chief
 - **Owner:** Chief
 
-**Goal:** Berdirikan capsule `projects/academic-smartboard/` yang lolos semua gate SAFRS, berisi aset statis (data kurikulum + knowledge package Kayyisa), siap menerima port `site`/`web`/`api`/`demo` di plan lanjutan.
+**Goal:** Berdirikan capsule `projects/academic/academic-smartboard/` yang lolos semua gate SAFRS, berisi aset statis (data kurikulum + knowledge package Kayyisa), siap menerima port `site`/`web`/`api`/`demo` di plan lanjutan.
 
 **Architecture:** Snapshot whitelist-copy dari repo arsip ke capsule SAFRS baru. Tidak ada graft riwayat git. Setiap impor diikuti pemeriksaan negatif (tidak ada `.env*`, tidak ada file `raw_data/`). Scaffold lewat `pnpm project:new`, bukan salin manual `_template`.
 
@@ -62,7 +62,7 @@ pnpm task claim \
   --owner-id agent:claude:main \
   --owner-label "Claude migration executor" \
   --risk R2 \
-  --scope projects/academic-smartboard/ \
+  --scope projects/academic/academic-smartboard/ \
   --scope docs/adrs/ \
   --scope docs/plans/active/ \
   --scope docs/superpowers/specs/ \
@@ -123,7 +123,7 @@ dan kontrak capsule.
 
 ## Keputusan
 
-1. Satu capsule `projects/academic-smartboard/` — domain sebagai prefix nama.
+1. Satu capsule `projects/academic/academic-smartboard/` — domain sebagai prefix nama.
    Folder domain perantara ditolak karena memaksa edit serentak pada
    `pnpm-workspace.yaml`, `tools/safrs/check_topology.py`, dan
    `scripts/check-tokens.mjs`.
@@ -165,7 +165,7 @@ git commit -m "docs(adr): record smartboard migration decisions (0003)"
 ### Task 3: Scaffold capsule via project wizard
 
 **Files:**
-- Create: `projects/academic-smartboard/{AGENTS.md,README.md,docs/architecture.md,docs/data.md,docs/testing.md,src/README.md,tests/README.md}` (via wizard)
+- Create: `projects/academic/academic-smartboard/{AGENTS.md,README.md,docs/architecture.md,docs/data.md,docs/testing.md,src/README.md,tests/README.md}` (via wizard)
 - Create: input wizard di scratchpad (di luar repo)
 
 **Interfaces:**
@@ -191,7 +191,7 @@ git commit -m "docs(adr): record smartboard migration decisions (0003)"
 pnpm project:new -- --input <path-scratchpad>/academic-smartboard.json --preview
 ```
 
-Expected: daftar file yang akan dibuat di `projects/academic-smartboard/`, tanpa error.
+Expected: daftar file yang akan dibuat di `projects/academic/academic-smartboard/`, tanpa error.
 
 - [x] **Step 3: Apply**
 
@@ -205,7 +205,7 @@ Expected: capsule dibuat.
 
 ```bash
 python tools/safrs/check_topology.py
-grep -rn "<replace-" projects/academic-smartboard/ || echo "BERSIH"
+grep -rn "<replace-" projects/academic/academic-smartboard/ || echo "BERSIH"
 ```
 
 Expected: `SAFRS repository topology: OK` dan `BERSIH`. Kalau ada placeholder tersisa di AGENTS.md/README.md, isi sesuai konteks capsule (deskripsi produk, boundary) sebelum lanjut.
@@ -213,7 +213,7 @@ Expected: `SAFRS repository topology: OK` dan `BERSIH`. Kalau ada placeholder te
 - [x] **Step 5: Commit**
 
 ```bash
-git add projects/academic-smartboard/
+git add projects/academic/academic-smartboard/
 git commit -m "feat(smartboard): scaffold academic-smartboard capsule"
 ```
 
@@ -225,7 +225,7 @@ git commit -m "feat(smartboard): scaffold academic-smartboard capsule"
 - Modify: `.safrs/sensitive-paths.json` (tambah satu pola ke array `patterns`)
 
 **Interfaces:**
-- Produces: perubahan pada `projects/academic-smartboard/ai/**` selalu terklasifikasi minimum R2 (integritas persona + knowledge Kayyisa)
+- Produces: perubahan pada `projects/academic/academic-smartboard/ai/**` selalu terklasifikasi minimum R2 (integritas persona + knowledge Kayyisa)
 
 - [x] **Step 1: Tambah pola**
 
@@ -256,7 +256,7 @@ git commit -m "chore(safrs): classify project ai assets as sensitive"
 ### Task 5: Impor data kurikulum + referensi
 
 **Files:**
-- Create: `projects/academic-smartboard/data/curriculum/` (6 file), `data/reference/` (4 file), `data/synthetic/README.md`
+- Create: `projects/academic/academic-smartboard/data/curriculum/` (6 file), `data/reference/` (4 file), `data/synthetic/README.md`
 
 **Interfaces:**
 - Consumes: `$SRC/data/`
@@ -266,7 +266,7 @@ git commit -m "chore(safrs): classify project ai assets as sensitive"
 
 ```bash
 SRC=/d/Devops/abyss-monorepo/apps/academic/smartboard
-DST=projects/academic-smartboard/data
+DST=projects/academic/academic-smartboard/data
 mkdir -p $DST/curriculum $DST/reference $DST/synthetic
 cp "$SRC/data/curriculum_master.csv" "$SRC/data/curriculum_master.json" \
    "$SRC/data/curriculum_hierarchy.json" "$SRC/data/learning_objectives.csv" \
@@ -294,7 +294,7 @@ Seed dummy untuk environment demo. Aturan:
 - [x] **Step 3: Pemeriksaan negatif**
 
 ```bash
-find projects/academic-smartboard -name "*.env*" -o -name "*.docx" -o -name "*.xlsx" | grep -v "Kurikulum_Merdeka" ; echo "exit=$?"
+find projects/academic/academic-smartboard -name "*.env*" -o -name "*.docx" -o -name "*.xlsx" | grep -v "Kurikulum_Merdeka" ; echo "exit=$?"
 ```
 
 Expected: tidak ada output file, `exit=1` (grep tidak menemukan apa pun).
@@ -302,7 +302,7 @@ Expected: tidak ada output file, `exit=1` (grep tidak menemukan apa pun).
 - [x] **Step 4: Commit**
 
 ```bash
-git add projects/academic-smartboard/data/
+git add projects/academic/academic-smartboard/data/
 git commit -m "feat(smartboard): import curriculum and reference data"
 ```
 
@@ -311,7 +311,7 @@ git commit -m "feat(smartboard): import curriculum and reference data"
 ### Task 6: Impor knowledge package Kayyisa
 
 **Files:**
-- Create: `projects/academic-smartboard/ai/kayyisa/` (whitelist dari `$SRC/agent/`)
+- Create: `projects/academic/academic-smartboard/ai/kayyisa/` (whitelist dari `$SRC/agent/`)
 
 **Interfaces:**
 - Consumes: `$SRC/agent/` (BUKAN `$SRC/backend/agent/` — itu duplikat)
@@ -321,7 +321,7 @@ git commit -m "feat(smartboard): import curriculum and reference data"
 
 ```bash
 SRC=/d/Devops/abyss-monorepo/apps/academic/smartboard
-DST=projects/academic-smartboard/ai/kayyisa
+DST=projects/academic/academic-smartboard/ai/kayyisa
 mkdir -p $DST
 cp "$SRC/agent/manifest.json" "$SRC/agent/.agent-ingest.json" \
    "$SRC/agent/CHANGELOG.md" "$SRC/agent/README.md" $DST/
@@ -334,13 +334,13 @@ Catatan: `agent/operations/` dan `agent/docs/` sengaja TIDAK disalin — artefak
 - [x] **Step 2: Validasi integritas manifest**
 
 ```bash
-python projects/academic-smartboard/ai/kayyisa/tools/validate_agent_kayyisa.py
+python projects/academic/academic-smartboard/ai/kayyisa/tools/validate_agent_kayyisa.py
 ```
 
 Expected: PASS. Kalau skrip memakai path relatif ke root lama dan gagal, jalankan dari dalam `$DST` (`cd` dulu); kalau tetap gagal karena file yang memang dikecualikan (operations/docs), catat di commit message file mana yang hilang dan pastikan hash file `runtime/knowledge/**` cocok dengan `manifest.json` secara manual:
 
 ```bash
-cd projects/academic-smartboard/ai/kayyisa && python - <<'EOF'
+cd projects/academic/academic-smartboard/ai/kayyisa && python - <<'EOF'
 import hashlib, json, pathlib
 m = json.load(open('manifest.json'))
 bad = [f['path'] for f in m.get('files', [])
@@ -355,8 +355,8 @@ Expected: `HASH OK`.
 - [x] **Step 3: Pemeriksaan negatif**
 
 ```bash
-find projects/academic-smartboard/ai -name "*.env*" -o -name "cloud_tokens*"; echo "kosong=$?"
-find projects/academic-smartboard/ai -name "*.git" -type d; echo "kosong=$?"
+find projects/academic/academic-smartboard/ai -name "*.env*" -o -name "cloud_tokens*"; echo "kosong=$?"
+find projects/academic/academic-smartboard/ai -name "*.git" -type d; echo "kosong=$?"
 ```
 
 Expected: tidak ada output file pada keduanya.
@@ -364,7 +364,7 @@ Expected: tidak ada output file pada keduanya.
 - [x] **Step 4: Commit**
 
 ```bash
-git add projects/academic-smartboard/ai/
+git add projects/academic/academic-smartboard/ai/
 git commit -m "feat(smartboard): import kayyisa knowledge package v3.0.0"
 ```
 
@@ -373,10 +373,10 @@ git commit -m "feat(smartboard): import kayyisa knowledge package v3.0.0"
 ### Task 7: Isi dokumen capsule dengan konten nyata
 
 **Files:**
-- Modify: `projects/academic-smartboard/docs/architecture.md`
-- Modify: `projects/academic-smartboard/docs/data.md`
-- Modify: `projects/academic-smartboard/docs/testing.md`
-- Modify: `projects/academic-smartboard/README.md`
+- Modify: `projects/academic/academic-smartboard/docs/architecture.md`
+- Modify: `projects/academic/academic-smartboard/docs/data.md`
+- Modify: `projects/academic/academic-smartboard/docs/testing.md`
+- Modify: `projects/academic/academic-smartboard/README.md`
 
 **Interfaces:**
 - Consumes: ADR 0003 (Task 2), struktur hasil Task 3/5/6
@@ -440,7 +440,7 @@ repo arsip. Skema per modul dirancang di plan fase api.
 - [x] **Step 5: Commit**
 
 ```bash
-git add projects/academic-smartboard/
+git add projects/academic/academic-smartboard/
 git commit -m "docs(smartboard): fill capsule docs with migration state"
 ```
 
@@ -469,7 +469,7 @@ Expected: keduanya PASS. Kalau gagal: baca error, perbaiki penyebabnya di task t
 - [x] **Step 2: Pemeriksaan negatif final**
 
 ```bash
-find projects/academic-smartboard -name "*.env*"
+find projects/academic/academic-smartboard -name "*.env*"
 git log --oneline main..HEAD
 git diff main..HEAD --stat | tail -5
 ```

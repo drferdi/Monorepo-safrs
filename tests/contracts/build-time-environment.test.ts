@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 
 const nextConfigEntry = fileURLToPath(
   new URL(
-    "../../projects/golden-path/apps/web/next.config.ts",
+    "../../projects/internal/golden-path/apps/web/next.config.ts",
     import.meta.url,
   ),
 );

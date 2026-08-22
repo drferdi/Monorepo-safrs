@@ -25,8 +25,8 @@ class SafrsTopologyTests(unittest.TestCase):
 
     def test_active_runtime_boundaries_have_concise_agent_routing(self):
         expected = {
-            'projects/golden-path/AGENTS.md': '../../AGENTS.md',
-            'projects/golden-path/apps/web/AGENTS.md': '../../../../AGENTS.md',
+            'projects/internal/golden-path/AGENTS.md': '../../../AGENTS.md',
+            'projects/internal/golden-path/apps/web/AGENTS.md': '../../../../../AGENTS.md',
             'packages/api/AGENTS.md': '../../AGENTS.md',
             'packages/database/AGENTS.md': '../../AGENTS.md',
             'tools/AGENTS.md': '../AGENTS.md',

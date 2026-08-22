@@ -148,7 +148,7 @@ Currently `MISSING` — only capability manifests exist (`tools/capabilities/man
       once and never revised since. Splitting them makes twenty-eight files with the same problem.
       If anything happens there it should be consolidation, and that is Chief's call because the
       folder is marked do-not-modify.
-- [x] Tailwind rule — **not added to `AGENTS.md`.** It is real (`projects/golden-path/docs/architecture.md`
+- [x] Tailwind rule — **not added to `AGENTS.md`.** It is real (`projects/internal/golden-path/docs/architecture.md`
       names Tailwind CSS 4), but it is a golden-path convention, and root `AGENTS.md` is the
       repository constitution. Promoting one project's styling choice to constitutional law is how
       that file grows until nobody reads it.

@@ -41,7 +41,7 @@
 ## 4. Task and lease state
 
 - `TASK-20260813-CONTROL-CENTER` is `EXECUTING`, risk `R2`, owner `agent:claude:root`, worktree `worktrees/feat-control-center`.
-- Its active scope includes `projects/control-center/`, `docs/`, `tools/doctor/`, `package.json`, and `pnpm-workspace.yaml`.
+- Its active scope includes `projects/internal/control-center/`, `docs/`, `tools/doctor/`, `package.json`, and `pnpm-workspace.yaml`.
 - This active `docs/` ownership blocks a new governance reconciliation claim over the untracked Master Plan until the existing task is reconciled by its owner or Chief-authorized lifecycle action.
 - Local lease chain for `TASK-20260813-CONTROL-CENTER` is valid with fencing token 1; remote reconciliation is not recorded.
 - `pnpm status --json` reports ownership structurally OK but governance `FAIL`.

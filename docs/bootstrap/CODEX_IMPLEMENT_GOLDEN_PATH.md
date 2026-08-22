@@ -71,7 +71,7 @@ If the exact Sol Advisor compatibility lane is observable:
 - Renovate never auto-merges.
 - CI uses immutable action SHAs and performs no production deployment.
 - Root and nested agent instructions remain concise routers to canonical policy.
-- Deployable applications live under `projects/<project>/apps/*`, product-neutral shared capabilities under `packages/*`, and repository-wide tooling under `tools/*`; do not introduce root `apps/*` or `tooling/*` trees.
+- Deployable applications live under `projects/<domain>/<capsule>/apps/*`, product-neutral shared capabilities under `packages/*`, and repository-wide tooling under `tools/*`; do not introduce root `apps/*` or `tooling/*` trees.
 
 ## Verification
 

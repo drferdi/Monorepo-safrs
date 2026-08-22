@@ -497,7 +497,7 @@ test("Codex guard handles malformed payloads without inventing a target", () => 
 });
 
 test("Codex guard resolves the repository registry from a nested project cwd", () => {
-  const nested = join(repositoryRoot, "projects/golden-path/apps/web");
+  const nested = join(repositoryRoot, "projects/internal/golden-path/apps/web");
   const result = runHook(
     codexGuard,
     {
@@ -545,7 +545,7 @@ test("Codex formatter extracts unique apply_patch paths", async () => {
   assert.equal(formatter.shouldFormat("README.md"), false);
   assert.equal(
     formatter.findRepositoryRoot(
-      join(repositoryRoot, "projects/golden-path/apps/web"),
+      join(repositoryRoot, "projects/internal/golden-path/apps/web"),
     ),
     repositoryRoot,
   );

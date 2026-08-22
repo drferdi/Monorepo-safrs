@@ -83,7 +83,7 @@ change for this integration. Text parsing is rejected — it breaks silently.
 
 | Feature | Location | Entry point | Impl | Tests | Docs | Dashboard | Risk |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Golden Path web | `projects/golden-path/apps/web` | `pnpm dev` | Shipped | Covered (unit + e2e + visual) | Canonical + Wiki | Requires Configuration (Docker) | R1 |
+| Golden Path web | `projects/internal/golden-path/apps/web` | `pnpm dev` | Shipped | Covered (unit + e2e + visual) | Canonical + Wiki | Requires Configuration (Docker) | R1 |
 | Golden Path typed API | mounted at `/api` from `@safrs/api` | HTTP | Shipped | Covered | Wiki | Requires Configuration | R2 |
 | Stripe webhook route | `apps/web/src/app/api/webhooks/stripe` | HTTP | Shipped (capability-gated) | Covered | Wiki | Requires Configuration | R2 |
 | Welcome email template | `apps/web/src/email/welcome.tsx` | `pnpm dev:email` | Shipped (capability-gated) | None | Wiki | Requires Configuration | R2 |
@@ -145,8 +145,8 @@ The largest capability in the repository and the one most at risk of being invis
 | Governance | `tests/governance/` | Python unittest | pass |
 | Architecture topology | `tests/architecture/` | Python unittest | pass |
 | Database integration | `tests/integration/database.test.ts` | Vitest | **FAIL without Docker** — `ECONNREFUSED 127.0.0.1:54329` |
-| Golden Path unit | `projects/golden-path/apps/web/src/**` | Vitest | pass |
-| Golden Path e2e + visual | `projects/golden-path/apps/web/e2e/` | Playwright | needs a running app |
+| Golden Path unit | `projects/internal/golden-path/apps/web/src/**` | Vitest | pass |
+| Golden Path e2e + visual | `projects/internal/golden-path/apps/web/e2e/` | Playwright | needs a running app |
 | Corpus engine | `projects/corpus-engine/tests/` (branch) | pytest | not run in this session |
 
 ## 8. Deliberately absent

@@ -27,7 +27,7 @@ pnpm capability:add --capability <id> --project <project> --apply \
   --confirm <confirmation> --justification "<why this capability is needed now>"
 ```
 
-Applying records the activation in `projects/<project>/capabilities.json`.
+Applying records the activation in `projects/<domain>/<capsule>/capabilities.json`.
 
 ## New project
 

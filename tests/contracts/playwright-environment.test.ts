@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolvePlaywrightEnvironment } from "../../projects/golden-path/apps/web/e2e/environment.js";
+import { resolvePlaywrightEnvironment } from "../../projects/internal/golden-path/apps/web/e2e/environment.js";
 
 const safeEnvironment = {
   APP_URL: "http://127.0.0.1:3001",

@@ -28,7 +28,7 @@ gate design token, dan kontrak capsule.
 
 ## Decision
 
-1. Satu capsule `projects/academic-smartboard/` — domain sebagai prefix nama.
+1. Satu capsule `projects/academic/academic-smartboard/` — domain sebagai prefix nama.
 2. Empat app dalam capsule: `web` (produk utama), `site` (promo/publik),
    `api` (backend), `demo` (konfigurasi environment demo — bukan fork kode).
 3. Knowledge package Kayyisa di `ai/kayyisa/` dalam capsule; naik ke

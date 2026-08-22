@@ -52,7 +52,7 @@ graph TD
     WEB --> TOKEN
 ```
 
-The golden-path web app (`projects/golden-path/apps/web/package.json`) consumes `@safrs/api`, `@safrs/database`, `@safrs/env`, `@safrs/telemetry`, `@safrs/ui`, and `@sentra/token`. `@safrs/config` is a dev-only dependency used by every package's `typecheck`.
+The golden-path web app (`projects/internal/golden-path/apps/web/package.json`) consumes `@safrs/api`, `@safrs/database`, `@safrs/env`, `@safrs/telemetry`, `@safrs/ui`, and `@sentra/token`. `@safrs/config` is a dev-only dependency used by every package's `typecheck`.
 
 ## Data flow
 
@@ -77,7 +77,7 @@ The browser only ever rides the public typed client from `@safrs/api/client`; Pr
 
 ## Integration points
 
-- **Golden-path web app** (`projects/golden-path/apps/web`) is the primary consumer and the reference integration (see [the web app](../apps/golden-path-web.md)).
+- **Golden-path web app** (`projects/internal/golden-path/apps/web`) is the primary consumer and the reference integration (see [the web app](../apps/golden-path-web.md)).
 - **`@safrs/api`** is the single typed HTTP boundary exposed under `/api`; the OpenAPI document is generated from `@safrs/schemas` so validation and documentation cannot drift.
 - **`@sentra/token`** is mandatory for all UI work — raw colour or radius values outside `packages/token/src/tokens.css` fail the governance gate (`node scripts/check-tokens.mjs`).
 - **`@safrs/database`** owns the Prisma schema and migrations; destructive operations are guarded by the reset guard (`src/reset-guard.ts`) so only disposable local/test databases can be reset.

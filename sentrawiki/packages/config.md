@@ -48,7 +48,7 @@ Shared TypeScript configuration presets so every workspace package gets identica
 ## Integration points
 
 - Every `packages/*` package lists `@safrs/config` as a dev dependency and runs `tsc --project tsconfig.json` for `typecheck`.
-- `projects/golden-path/apps/web` uses `@safrs/config/tsconfig/nextjs.json` for its App Router surface.
+- `projects/internal/golden-path/apps/web` uses `@safrs/config/tsconfig/nextjs.json` for its App Router surface.
 
 ## Verification
 

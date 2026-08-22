@@ -61,7 +61,7 @@ This page intentionally reports no individual contributor statistics.
 ## Complexity
 
 - **Average source file size**: roughly 100 lines (see table above).
-- **Dependency depth**: most flows stay two to three packages deep. The golden-path web app (`projects/golden-path/apps/web`) depends on `@safrs/api`, `@safrs/env`, `@safrs/ui`, and `@safrs/database`; `@safrs/telemetry` extends `@safrs/config` presets; most tools are standalone. The root `pnpm-workspace.yaml` catalog pins every version so the graph resolves against one version of each dependency (see [Dependencies](reference/dependencies.md)).
+- **Dependency depth**: most flows stay two to three packages deep. The golden-path web app (`projects/internal/golden-path/apps/web`) depends on `@safrs/api`, `@safrs/env`, `@safrs/ui`, and `@safrs/database`; `@safrs/telemetry` extends `@safrs/config` presets; most tools are standalone. The root `pnpm-workspace.yaml` catalog pins every version so the graph resolves against one version of each dependency (see [Dependencies](reference/dependencies.md)).
 
 ## Related pages
 

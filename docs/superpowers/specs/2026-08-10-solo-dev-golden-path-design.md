@@ -93,7 +93,7 @@ tools/
 ### 4.3 Dependency direction
 
 ```text
-projects/golden-path/apps/web
+projects/internal/golden-path/apps/web
   -> packages/api
   -> packages/database
   -> packages/env

@@ -5,3 +5,4 @@ export {
 } from "./client.ts";
 export type { ApiError } from "./error.ts";
 export { buildOpenApiDocument, openApiDocsHtml } from "./openapi.ts";
+export { createSentraBotApi } from "./sentrabot.ts";

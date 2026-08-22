@@ -34,7 +34,7 @@ import { StatusCard } from "@safrs/ui";
 
 ## Integration points
 
-- **`@safrs/web`** consumes `@safrs/ui` (declared in `projects/golden-path/apps/web/package.json`).
+- **`@safrs/web`** consumes `@safrs/ui` (declared in `projects/internal/golden-path/apps/web/package.json`).
 - **`@sentra/token`** provides the design tokens the component styles against; `check-tokens.mjs` enforces that no raw values leak into this package.
 
 ## Verification

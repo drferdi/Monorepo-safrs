@@ -30,21 +30,21 @@
 | File | Responsibility |
 | --- | --- |
 | `pnpm-workspace.yaml` | Catalog pins for the four AI packages |
-| `projects/control-center/apps/web/package.json` | Add AI dependencies |
-| `projects/control-center/capabilities.json` | Record capability `ai` |
+| `projects/internal/control-center/apps/web/package.json` | Add AI dependencies |
+| `projects/internal/control-center/capabilities.json` | Record capability `ai` |
 | `.env.example` | Empty `OPENAI_API_KEY` and local model placeholders |
-| `projects/control-center/apps/web/src/lib/exec/commands.ts` | Add `--json` to `doctor` and `task-list` |
-| `projects/control-center/apps/web/src/lib/copilot/types.ts` | Shared provider, request, and answer types |
-| `projects/control-center/apps/web/src/lib/copilot/provider.ts` | Resolve Local/OpenAI or typed refusal |
-| `projects/control-center/apps/web/src/lib/copilot/redact.ts` | Strip secret-shaped strings from outbound text |
-| `projects/control-center/apps/web/src/lib/copilot/tools.ts` | Allowlisted tools over `runCommand` |
-| `projects/control-center/apps/web/src/lib/copilot/agent.ts` | ToolLoopAgent, instructions, output schema |
-| `projects/control-center/apps/web/src/app/api/copilot/route.ts` | POST chat handler |
-| `projects/control-center/apps/web/src/app/api/copilot/status/route.ts` | GET availability, presence only |
-| `projects/control-center/apps/web/src/app/copilot-panel.tsx` | Chat, switch, approval UI |
-| `projects/control-center/apps/web/src/lib/control-center.ts` | Add `copilot` nav item |
-| `projects/control-center/apps/web/src/app/control-center.tsx` | Render Copilot section |
-| `projects/control-center/apps/web/src/lib/repo/catalog.ts` | Evidence-backed Copilot feature |
+| `projects/internal/control-center/apps/web/src/lib/exec/commands.ts` | Add `--json` to `doctor` and `task-list` |
+| `projects/internal/control-center/apps/web/src/lib/copilot/types.ts` | Shared provider, request, and answer types |
+| `projects/internal/control-center/apps/web/src/lib/copilot/provider.ts` | Resolve Local/OpenAI or typed refusal |
+| `projects/internal/control-center/apps/web/src/lib/copilot/redact.ts` | Strip secret-shaped strings from outbound text |
+| `projects/internal/control-center/apps/web/src/lib/copilot/tools.ts` | Allowlisted tools over `runCommand` |
+| `projects/internal/control-center/apps/web/src/lib/copilot/agent.ts` | ToolLoopAgent, instructions, output schema |
+| `projects/internal/control-center/apps/web/src/app/api/copilot/route.ts` | POST chat handler |
+| `projects/internal/control-center/apps/web/src/app/api/copilot/status/route.ts` | GET availability, presence only |
+| `projects/internal/control-center/apps/web/src/app/copilot-panel.tsx` | Chat, switch, approval UI |
+| `projects/internal/control-center/apps/web/src/lib/control-center.ts` | Add `copilot` nav item |
+| `projects/internal/control-center/apps/web/src/app/control-center.tsx` | Render Copilot section |
+| `projects/internal/control-center/apps/web/src/lib/repo/catalog.ts` | Evidence-backed Copilot feature |
 | `.agents/HANDOFF.md` | Current state after the work |
 
 ---
@@ -54,10 +54,10 @@
 **Files:**
 - Create worktree: `../Monorepo.worktrees/feat-operator-copilot`
 - Modify: `pnpm-workspace.yaml`
-- Modify: `projects/control-center/apps/web/package.json`
-- Modify: `projects/control-center/capabilities.json`
+- Modify: `projects/internal/control-center/apps/web/package.json`
+- Modify: `projects/internal/control-center/capabilities.json`
 - Modify: `.env.example`
-- Test: `projects/control-center/apps/web/src/lib/copilot/pins.test.ts`
+- Test: `projects/internal/control-center/apps/web/src/lib/copilot/pins.test.ts`
 
 **Interfaces:**
 - Consumes: current `main` at the worktree base commit
@@ -74,7 +74,7 @@ Expected: new branch from current `main`, clean worktree, no files inside `D:\DE
 
 - [ ] **Step 2: Write the failing pin test**
 
-Create `projects/control-center/apps/web/src/lib/copilot/pins.test.ts`:
+Create `projects/internal/control-center/apps/web/src/lib/copilot/pins.test.ts`:
 
 ```ts
 import assert from "node:assert/strict";
@@ -111,7 +111,7 @@ ai: 6.0.240
 "@ai-sdk/openai-compatible": 1.0.30
 ```
 
-In `projects/control-center/apps/web/package.json` dependencies add:
+In `projects/internal/control-center/apps/web/package.json` dependencies add:
 
 ```json
 "ai": "catalog:"
@@ -156,7 +156,7 @@ Test-Path node_modules/ai/docs
 - [ ] **Step 7: Commit**
 
 ```powershell
-git add pnpm-workspace.yaml pnpm-lock.yaml projects/control-center/apps/web/package.json projects/control-center/capabilities.json .env.example projects/control-center/apps/web/src/lib/copilot/pins.test.ts
+git add pnpm-workspace.yaml pnpm-lock.yaml projects/internal/control-center/apps/web/package.json projects/internal/control-center/capabilities.json .env.example projects/internal/control-center/apps/web/src/lib/copilot/pins.test.ts
 git commit -m "feat(control-center): pin AI SDK 6 and record the ai capability"
 ```
 
@@ -165,8 +165,8 @@ git commit -m "feat(control-center): pin AI SDK 6 and record the ai capability"
 ### Task 2: Make doctor and task-list machine-readable
 
 **Files:**
-- Modify: `projects/control-center/apps/web/src/lib/exec/commands.ts`
-- Test: `projects/control-center/apps/web/src/lib/exec/commands.test.ts`
+- Modify: `projects/internal/control-center/apps/web/src/lib/exec/commands.ts`
+- Test: `projects/internal/control-center/apps/web/src/lib/exec/commands.test.ts`
 
 **Interfaces:**
 - Consumes: `RUNNABLE_COMMANDS`
@@ -230,7 +230,7 @@ Expected: PASS.
 - [ ] **Step 5: Commit**
 
 ```powershell
-git add projects/control-center/apps/web/src/lib/exec/commands.ts projects/control-center/apps/web/src/lib/exec/commands.test.ts
+git add projects/internal/control-center/apps/web/src/lib/exec/commands.ts projects/internal/control-center/apps/web/src/lib/exec/commands.test.ts
 git commit -m "fix(control-center): request JSON from doctor and task-list"
 ```
 
@@ -239,11 +239,11 @@ git commit -m "fix(control-center): request JSON from doctor and task-list"
 ### Task 3: Provider resolver with no silent fallback
 
 **Files:**
-- Create: `projects/control-center/apps/web/src/lib/copilot/types.ts`
-- Create: `projects/control-center/apps/web/src/lib/copilot/provider.ts`
-- Create: `projects/control-center/apps/web/src/lib/copilot/redact.ts`
-- Test: `projects/control-center/apps/web/src/lib/copilot/provider.test.ts`
-- Test: `projects/control-center/apps/web/src/lib/copilot/redact.test.ts`
+- Create: `projects/internal/control-center/apps/web/src/lib/copilot/types.ts`
+- Create: `projects/internal/control-center/apps/web/src/lib/copilot/provider.ts`
+- Create: `projects/internal/control-center/apps/web/src/lib/copilot/redact.ts`
+- Test: `projects/internal/control-center/apps/web/src/lib/copilot/provider.test.ts`
+- Test: `projects/internal/control-center/apps/web/src/lib/copilot/redact.test.ts`
 
 **Interfaces:**
 - Consumes: `process.env.OPENAI_API_KEY`, `SAFRS_LOCAL_MODEL`, `SAFRS_OPENAI_MODEL`, `SAFRS_OLLAMA_BASE_URL`, and an injected `fetch`
@@ -345,7 +345,7 @@ Expected: PASS.
 - [ ] **Step 5: Commit**
 
 ```powershell
-git add projects/control-center/apps/web/src/lib/copilot/types.ts projects/control-center/apps/web/src/lib/copilot/provider.ts projects/control-center/apps/web/src/lib/copilot/provider.test.ts projects/control-center/apps/web/src/lib/copilot/redact.ts projects/control-center/apps/web/src/lib/copilot/redact.test.ts
+git add projects/internal/control-center/apps/web/src/lib/copilot/types.ts projects/internal/control-center/apps/web/src/lib/copilot/provider.ts projects/internal/control-center/apps/web/src/lib/copilot/provider.test.ts projects/internal/control-center/apps/web/src/lib/copilot/redact.ts projects/internal/control-center/apps/web/src/lib/copilot/redact.test.ts
 git commit -m "feat(control-center): resolve local and openai providers without fallback"
 ```
 
@@ -355,8 +355,8 @@ git commit -m "feat(control-center): resolve local and openai providers without 
 ### Task 4: Allowlisted Copilot tools
 
 **Files:**
-- Create: `projects/control-center/apps/web/src/lib/copilot/tools.ts`
-- Test: `projects/control-center/apps/web/src/lib/copilot/tools.test.ts`
+- Create: `projects/internal/control-center/apps/web/src/lib/copilot/tools.ts`
+- Test: `projects/internal/control-center/apps/web/src/lib/copilot/tools.test.ts`
 
 **Interfaces:**
 - Consumes: `runCommand(id: string, confirmation?: string)` and `runnableById`
@@ -447,7 +447,7 @@ Expected: PASS.
 - [ ] **Step 5: Commit**
 
 ```powershell
-git add projects/control-center/apps/web/src/lib/copilot/tools.ts projects/control-center/apps/web/src/lib/copilot/tools.test.ts
+git add projects/internal/control-center/apps/web/src/lib/copilot/tools.ts projects/internal/control-center/apps/web/src/lib/copilot/tools.test.ts
 git commit -m "feat(control-center): wrap allowlisted commands as Copilot tools"
 ```
 
@@ -456,8 +456,8 @@ git commit -m "feat(control-center): wrap allowlisted commands as Copilot tools"
 ### Task 5: ToolLoopAgent and structured output
 
 **Files:**
-- Create: `projects/control-center/apps/web/src/lib/copilot/agent.ts`
-- Test: `projects/control-center/apps/web/src/lib/copilot/agent.test.ts`
+- Create: `projects/internal/control-center/apps/web/src/lib/copilot/agent.ts`
+- Test: `projects/internal/control-center/apps/web/src/lib/copilot/agent.test.ts`
 
 **Interfaces:**
 - Consumes: `createCopilotTools`, `CopilotProviderId`
@@ -524,7 +524,7 @@ Expected: PASS.
 - [ ] **Step 5: Commit**
 
 ```powershell
-git add projects/control-center/apps/web/src/lib/copilot/agent.ts projects/control-center/apps/web/src/lib/copilot/agent.test.ts
+git add projects/internal/control-center/apps/web/src/lib/copilot/agent.ts projects/internal/control-center/apps/web/src/lib/copilot/agent.test.ts
 git commit -m "feat(control-center): add Copilot agent with structured readiness output"
 ```
 
@@ -534,9 +534,9 @@ git commit -m "feat(control-center): add Copilot agent with structured readiness
 ### Task 6: Local API routes
 
 **Files:**
-- Create: `projects/control-center/apps/web/src/app/api/copilot/route.ts`
-- Create: `projects/control-center/apps/web/src/app/api/copilot/status/route.ts`
-- Test: `projects/control-center/apps/web/src/lib/copilot/route-policy.test.ts`
+- Create: `projects/internal/control-center/apps/web/src/app/api/copilot/route.ts`
+- Create: `projects/internal/control-center/apps/web/src/app/api/copilot/status/route.ts`
+- Test: `projects/internal/control-center/apps/web/src/lib/copilot/route-policy.test.ts`
 
 **Interfaces:**
 - Consumes: `inspectProviders`, `resolveProvider`, `createOperatorCopilot`, `runCommand`
@@ -610,7 +610,7 @@ Expected: PASS.
 - [ ] **Step 6: Commit**
 
 ```powershell
-git add projects/control-center/apps/web/src/app/api/copilot/route.ts projects/control-center/apps/web/src/app/api/copilot/status/route.ts projects/control-center/apps/web/src/lib/copilot/route-policy.test.ts
+git add projects/internal/control-center/apps/web/src/app/api/copilot/route.ts projects/internal/control-center/apps/web/src/app/api/copilot/status/route.ts projects/internal/control-center/apps/web/src/lib/copilot/route-policy.test.ts
 git commit -m "feat(control-center): add local Copilot API routes"
 ```
 
@@ -619,11 +619,11 @@ git commit -m "feat(control-center): add local Copilot API routes"
 ### Task 7: Copilot panel and navigation
 
 **Files:**
-- Create: `projects/control-center/apps/web/src/app/copilot-panel.tsx`
-- Modify: `projects/control-center/apps/web/src/lib/control-center.ts`
-- Modify: `projects/control-center/apps/web/src/app/control-center.tsx`
-- Modify: `projects/control-center/apps/web/src/app/control-center.css` only if a layout class already used nearby must be reused; do not invent colours
-- Test: `projects/control-center/apps/web/src/lib/copilot/nav.test.ts`
+- Create: `projects/internal/control-center/apps/web/src/app/copilot-panel.tsx`
+- Modify: `projects/internal/control-center/apps/web/src/lib/control-center.ts`
+- Modify: `projects/internal/control-center/apps/web/src/app/control-center.tsx`
+- Modify: `projects/internal/control-center/apps/web/src/app/control-center.css` only if a layout class already used nearby must be reused; do not invent colours
+- Test: `projects/internal/control-center/apps/web/src/lib/copilot/nav.test.ts`
 
 **Interfaces:**
 - Consumes: `NAV`, `NavId`, `/api/copilot`, `/api/copilot/status`
@@ -688,7 +688,7 @@ Expected: PASS.
 - [ ] **Step 5: Commit**
 
 ```powershell
-git add projects/control-center/apps/web/src/app/copilot-panel.tsx projects/control-center/apps/web/src/lib/control-center.ts projects/control-center/apps/web/src/app/control-center.tsx projects/control-center/apps/web/src/lib/copilot/nav.test.ts
+git add projects/internal/control-center/apps/web/src/app/copilot-panel.tsx projects/internal/control-center/apps/web/src/lib/control-center.ts projects/internal/control-center/apps/web/src/app/control-center.tsx projects/internal/control-center/apps/web/src/lib/copilot/nav.test.ts
 git commit -m "feat(control-center): add Copilot panel with explicit provider switch"
 ```
 
@@ -698,8 +698,8 @@ git commit -m "feat(control-center): add Copilot panel with explicit provider sw
 ### Task 8: Catalog honesty, docs, and verification gate
 
 **Files:**
-- Modify: `projects/control-center/apps/web/src/lib/repo/catalog.ts`
-- Modify: `projects/control-center/docs/architecture.md`
+- Modify: `projects/internal/control-center/apps/web/src/lib/repo/catalog.ts`
+- Modify: `projects/internal/control-center/docs/architecture.md`
 - Modify: `.agents/HANDOFF.md`
 - Modify: `.agents/PROGRESS.md` only if the Control Center area status changes
 - Test: existing registry tests plus `pnpm --filter @sentra/control-center test`
@@ -723,9 +723,9 @@ git commit -m "feat(control-center): add Copilot panel with explicit provider sw
     "Saat memeriksa kesiapan, atau saat meminta perbaikan lokal yang masih membutuhkan konfirmasi.",
   entryPoint: "pnpm --filter @sentra/control-center dev → bagian Copilot",
   evidence: [
-    { path: "projects/control-center/apps/web/src/lib/copilot/agent.ts", proves: "Agen Copilot" },
-    { path: "projects/control-center/apps/web/src/app/api/copilot/route.ts", proves: "Rute chat" },
-    { path: "projects/control-center/capabilities.json", proves: "Capability ai tercatat" },
+    { path: "projects/internal/control-center/apps/web/src/lib/copilot/agent.ts", proves: "Agen Copilot" },
+    { path: "projects/internal/control-center/apps/web/src/app/api/copilot/route.ts", proves: "Rute chat" },
+    { path: "projects/internal/control-center/capabilities.json", proves: "Capability ai tercatat" },
   ],
   risk: "R2",
   actionIds: ["doctor", "status"],
@@ -737,7 +737,7 @@ git commit -m "feat(control-center): add Copilot panel with explicit provider sw
 
 - [ ] **Step 2: Update capsule architecture**
 
-In `projects/control-center/docs/architecture.md`, add a short Copilot paragraph: chat is local-only, tools are allowlisted ids, R3 remains absent, secrets are presence-only.
+In `projects/internal/control-center/docs/architecture.md`, add a short Copilot paragraph: chat is local-only, tools are allowlisted ids, R3 remains absent, secrets are presence-only.
 
 - [ ] **Step 3: Overwrite HANDOFF**
 
@@ -758,7 +758,7 @@ Expected: all green on the worktree. If `pnpm governance` fails only because HAN
 - [ ] **Step 5: Commit**
 
 ```powershell
-git add projects/control-center/apps/web/src/lib/repo/catalog.ts projects/control-center/docs/architecture.md .agents/HANDOFF.md
+git add projects/internal/control-center/apps/web/src/lib/repo/catalog.ts projects/internal/control-center/docs/architecture.md .agents/HANDOFF.md
 git commit -m "docs(control-center): register Copilot evidence and current handoff"
 ```
 
