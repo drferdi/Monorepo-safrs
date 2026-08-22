@@ -11,8 +11,8 @@
     "block non-local recipients in development"
   ],
   "sensitivePaths": [
-    "projects/<project>/emails/**",
-    "projects/<project>/src/email/**"
+    "projects/<domain>/<capsule>/emails/**",
+    "projects/<domain>/<capsule>/src/email/**"
   ],
   "sideEffects": [
     "Provider delivery is disabled by default in local development."

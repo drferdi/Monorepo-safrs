@@ -37,7 +37,7 @@
 
 ### Runtime units
 
-- `projects/golden-path/apps/web`: Next.js deployment, API adapter, pages, error boundaries, Playwright.
+- `projects/internal/golden-path/apps/web`: Next.js deployment, API adapter, pages, error boundaries, Playwright.
 - `packages/api`: Hono application, typed RPC client, error envelope.
 - `packages/schemas`: canonical Zod boundary schemas.
 - `packages/env`: T3 Env server/client validation.
@@ -411,28 +411,28 @@ git commit -m "feat: add typed Hono RPC API"
 ### Task 5: Create the Next.js application
 
 **Files:**
-- Create: `projects/golden-path/AGENTS.md`
-- Create: `projects/golden-path/README.md`
-- Create: `projects/golden-path/docs/architecture.md`
-- Create: `projects/golden-path/docs/data.md`
-- Create: `projects/golden-path/docs/testing.md`
-- Create: `projects/golden-path/tests/README.md`
-- Create: `projects/golden-path/apps/web/package.json`
-- Create: `projects/golden-path/apps/web/tsconfig.json`
-- Create: `projects/golden-path/apps/web/next.config.ts`
-- Create: `projects/golden-path/apps/web/postcss.config.mjs`
-- Create: `projects/golden-path/apps/web/src/app/globals.css`
-- Create: `projects/golden-path/apps/web/src/app/layout.tsx`
-- Create: `projects/golden-path/apps/web/src/app/page.tsx`
-- Create: `projects/golden-path/apps/web/src/app/loading.tsx`
-- Create: `projects/golden-path/apps/web/src/app/error.tsx`
-- Create: `projects/golden-path/apps/web/src/app/global-error.tsx`
-- Create: `projects/golden-path/apps/web/src/app/not-found.tsx`
-- Create: `projects/golden-path/apps/web/src/app/api/[[...route]]/route.ts`
-- Create: `projects/golden-path/apps/web/src/components/demo-form.tsx`
-- Create: `projects/golden-path/apps/web/src/lib/api-client.ts`
-- Create: `projects/golden-path/apps/web/src/lib/server-data.ts`
-- Create: `projects/golden-path/apps/web/src/app/page.test.tsx`
+- Create: `projects/internal/golden-path/AGENTS.md`
+- Create: `projects/internal/golden-path/README.md`
+- Create: `projects/internal/golden-path/docs/architecture.md`
+- Create: `projects/internal/golden-path/docs/data.md`
+- Create: `projects/internal/golden-path/docs/testing.md`
+- Create: `projects/internal/golden-path/tests/README.md`
+- Create: `projects/internal/golden-path/apps/web/package.json`
+- Create: `projects/internal/golden-path/apps/web/tsconfig.json`
+- Create: `projects/internal/golden-path/apps/web/next.config.ts`
+- Create: `projects/internal/golden-path/apps/web/postcss.config.mjs`
+- Create: `projects/internal/golden-path/apps/web/src/app/globals.css`
+- Create: `projects/internal/golden-path/apps/web/src/app/layout.tsx`
+- Create: `projects/internal/golden-path/apps/web/src/app/page.tsx`
+- Create: `projects/internal/golden-path/apps/web/src/app/loading.tsx`
+- Create: `projects/internal/golden-path/apps/web/src/app/error.tsx`
+- Create: `projects/internal/golden-path/apps/web/src/app/global-error.tsx`
+- Create: `projects/internal/golden-path/apps/web/src/app/not-found.tsx`
+- Create: `projects/internal/golden-path/apps/web/src/app/api/[[...route]]/route.ts`
+- Create: `projects/internal/golden-path/apps/web/src/components/demo-form.tsx`
+- Create: `projects/internal/golden-path/apps/web/src/lib/api-client.ts`
+- Create: `projects/internal/golden-path/apps/web/src/lib/server-data.ts`
+- Create: `projects/internal/golden-path/apps/web/src/app/page.test.tsx`
 - Create: `packages/ui/package.json`
 - Create: `packages/ui/tsconfig.json`
 - Create: `packages/ui/src/index.ts`
@@ -482,7 +482,7 @@ Expected: PASS with no environment secret printed.
 - [x] **Step 8: Commit the application**
 
 ~~~bash
-git add projects/golden-path packages/ui pnpm-lock.yaml
+git add projects/internal/golden-path packages/ui pnpm-lock.yaml
 git commit -m "feat: add Next.js golden-path application"
 ~~~
 
@@ -693,8 +693,8 @@ git commit -m "chore: add fast staged-file hygiene"
 - Create: `tests/contracts/hono-rpc-contract.test.ts`
 - Create: `tests/contracts/environment-boundary.test.ts`
 - Create: `tests/integration/database.test.ts`
-- Create: `projects/golden-path/apps/web/playwright.config.ts`
-- Create: `projects/golden-path/apps/web/e2e/golden-path.spec.ts`
+- Create: `projects/internal/golden-path/apps/web/playwright.config.ts`
+- Create: `projects/internal/golden-path/apps/web/e2e/golden-path.spec.ts`
 - Create: `vitest.workspace.ts`
 - Modify: package test configurations where needed.
 
@@ -741,7 +741,7 @@ In a temporary worktree copy, rename `name` to `title` in the POST schema and ru
 - [x] **Step 7: Commit tests**
 
 ~~~bash
-git add tests projects/golden-path/apps/web/playwright.config.ts projects/golden-path/apps/web/e2e vitest.workspace.ts
+git add tests projects/internal/golden-path/apps/web/playwright.config.ts projects/internal/golden-path/apps/web/e2e vitest.workspace.ts
 git commit -m "test: prove golden-path behavior"
 ~~~
 
@@ -808,8 +808,8 @@ git commit -m "ci: add PR-only updates and full verification"
 
 **Files:**
 - Modify: `AGENTS.md`
-- Modify: `projects/golden-path/AGENTS.md`
-- Create: `projects/golden-path/apps/web/AGENTS.md`
+- Modify: `projects/internal/golden-path/AGENTS.md`
+- Create: `projects/internal/golden-path/apps/web/AGENTS.md`
 - Create: `packages/api/AGENTS.md`
 - Create: `packages/database/AGENTS.md`
 - Create: `tools/AGENTS.md`

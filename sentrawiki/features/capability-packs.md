@@ -19,7 +19,7 @@ Capability packs are optional feature modules — **Stripe, email, Electron, WXT
 | `tools/capabilities/src/catalog.mjs` | Catalog loader + `applyCapability` logic |
 | `tools/capabilities/src/schema.mjs` | Manifest/capabilities validation |
 | `tools/capabilities/package.json` | Tool workspace manifest (`@safrs/capabilities`) |
-| `projects/golden-path/capabilities.json` | The golden-path project's active packs |
+| `projects/internal/golden-path/capabilities.json` | The golden-path project's active packs |
 | `docs/governance/SAFRS_PROJECT_CAPSULES.md` | Project capsule / capability convention |
 
 ## How it works
@@ -38,7 +38,7 @@ The catalog in `tools/capabilities/src/catalog.mjs` loads every `.json` file in 
   "environment": ["EMAIL_FROM", "RESEND_API_KEY"],
   "commands": ["pnpm dev:email"],
   "tests": ["render email templates", "block non-local recipients in development"],
-  "sensitivePaths": ["projects/<project>/emails/**", "projects/<project>/src/email/**"],
+  "sensitivePaths": ["projects/<domain>/<capsule>/emails/**", "projects/<domain>/<capsule>/src/email/**"],
   "sideEffects": ["Provider delivery is disabled by default in local development."],
   "removal": "Remove project email code, environment entries, and the project capability record ..."
 }
@@ -71,7 +71,7 @@ All six are R2: they cross the shared-package/dependency boundary and add new ru
 
 ### Risk classification
 
-Every pack is declared R2 in its manifest because activation touches dependencies, environment keys, and sensitive paths. The golden-path project currently activates exactly two: `email` and `stripe` (`projects/golden-path/capabilities.json`). Sensitive paths for each pack (for example `projects/<project>/src/payments/**`, `src/webhooks/**`, `emails/**`, `apps/desktop/**`, `apps/extension/**`, `src/ai/**`, `python/**`) map into `.safrs/sensitive-paths.json`'s R2 review posture.
+Every pack is declared R2 in its manifest because activation touches dependencies, environment keys, and sensitive paths. The golden-path project currently activates exactly two: `email` and `stripe` (`projects/internal/golden-path/capabilities.json`). Sensitive paths for each pack (for example `projects/<domain>/<capsule>/src/payments/**`, `src/webhooks/**`, `emails/**`, `apps/desktop/**`, `apps/extension/**`, `src/ai/**`, `python/**`) map into `.safrs/sensitive-paths.json`'s R2 review posture.
 
 ```mermaid
 graph LR
@@ -80,7 +80,7 @@ graph LR
     MF["stripe | email | electron | wxt | ai | python .json"]
     P["project directory check<br/>real dir under projects/"]
     CI["confirmation + capability record"]
-    CAP["projects/<project>/capabilities.json"]
+    CAP["projects/<domain>/<capsule>/capabilities.json"]
     RT["Runtime integration:<br/>project-scoped R2 task"]
 
     CLI --> CAT
@@ -93,7 +93,7 @@ graph LR
 
 ## Integration points
 
-- **Golden-path**: `projects/golden-path/capabilities.json` activates email + stripe; see [golden-path-web](../apps/golden-path-web.md) for the email template and Stripe webhook route.
+- **Golden-path**: `projects/internal/golden-path/capabilities.json` activates email + stripe; see [golden-path-web](../apps/golden-path-web.md) for the email template and Stripe webhook route.
 - **Project capsules**: capability selection is part of the capsule convention in `docs/governance/SAFRS_PROJECT_CAPSULES.md`.
 - **Tooling**: the catalog tool is documented in [tools/capabilities.md](../tools/capabilities.md).
 - **Governance**: activation and its sensitive paths are governed by the risk tiers in [SAFRS governance](safrs-governance.md).

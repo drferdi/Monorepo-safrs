@@ -30,7 +30,7 @@ Recommend architectures that remain maintainable, scalable, and adaptable as the
 
 ## Implemented solo-developer baseline
 
-The canonical baseline is a single deployable Next.js App Router application at `projects/golden-path/apps/web`. It runs on the Node.js runtime and mounts the package-owned Hono API at `/api`. The page is server-first; the interactive form is a small client boundary using the inferred Hono RPC client.
+The canonical baseline is a single deployable Next.js App Router application at `projects/internal/golden-path/apps/web`. It runs on the Node.js runtime and mounts the package-owned Hono API at `/api`. The page is server-first; the interactive form is a small client boundary using the inferred Hono RPC client.
 
 Reusable, product-neutral boundaries are deliberately small:
 
@@ -41,4 +41,4 @@ Reusable, product-neutral boundaries are deliberately small:
 - `packages/ui` owns reusable presentation primitives.
 - `tools` owns developer workflow, project capsules, optional-capability selection, and governance checks.
 
-Projects remain under `projects/<project>/apps/*`; packages remain reusable and product-neutral. Optional Electron, WXT, Stripe, email, AI, and Python capabilities stay absent until explicitly selected. Node.js/pnpm and framework dependencies must use active-LTS or stable releases; prereleases and the Edge runtime need an accepted ADR.
+Projects remain under `projects/<domain>/<capsule>/apps/*`; packages remain reusable and product-neutral. Optional Electron, WXT, Stripe, email, AI, and Python capabilities stay absent until explicitly selected. Node.js/pnpm and framework dependencies must use active-LTS or stable releases; prereleases and the Edge runtime need an accepted ADR.

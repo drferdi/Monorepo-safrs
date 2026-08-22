@@ -2,7 +2,7 @@
 
 ## Purpose
 
-`pnpm capability:add` (implemented in `tools/capabilities/src/cli.mjs`) lets a project capsule opt into an **optional** capability from a catalog of manifests. Enabling a capability records it in `projects/<project>/capabilities.json` with its risk level; it does **not** install runtime integration — actual integration remains a project-scoped R2 task.
+`pnpm capability:add` (implemented in `tools/capabilities/src/cli.mjs`) lets a project capsule opt into an **optional** capability from a catalog of manifests. Enabling a capability records it in `projects/<domain>/<capsule>/capabilities.json` with its risk level; it does **not** install runtime integration — actual integration remains a project-scoped R2 task.
 
 ## Key source files
 
@@ -32,7 +32,7 @@ Each manifest declares `label`, `description`, `risk`, `dependencies`, `environm
 `tools/capabilities/src/catalog.mjs`:
 
 - **`loadCatalog()`** reads `manifests/*.json`, validates each via `schema.mjs` (file basename must equal `manifest.id`, no duplicate ids), and returns a `Map`.
-- **`capabilityPreview()`** prints what the selection would do: risk, the single file that changes (`projects/<project>/capabilities.json`), dependencies, environment, commands, tests, sensitive paths, side effects, and removal guidance.
+- **`capabilityPreview()`** prints what the selection would do: risk, the single file that changes (`projects/<domain>/<capsule>/capabilities.json`), dependencies, environment, commands, tests, sensitive paths, side effects, and removal guidance.
 - **`applyCapability()`** requires the confirmation to exactly equal `ENABLE <id> FOR <slug>`. It reads the project's `capabilities.json`, appends (or updates) the capability — merging with `maximumRisk` so risk is never lowered — sorts entries by id, and writes `{ version: 1, capabilities: [...] }`. The `python` capability additionally requires a `--justification` text.
 - All project/repo paths are resolved through symlink-excluding canonical-directory checks and `safeProjectSlug`, so the tool cannot escape `projects/`.
 

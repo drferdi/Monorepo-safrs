@@ -16,7 +16,7 @@
   Table body: compact subscript sizing while headers remain full-size
 -->
 
-<img src="https://i.ibb.co.com/Z1G4v477/SAFRS.png" alt="SAFRS" border="0">
+![SAFRS](https://i.ibb.co.com/Z1G4v477/SAFRS.png)
 
 <p align="center">
   <img src="https://img.shields.io/badge/HUMAN-GOVERNED-F59E0B?style=flat-square" alt="Human Governed" />
@@ -981,9 +981,9 @@ Working on this repository as an agent (or with one) starts at
 
 | Capsule | Current state | Entry point |
 | --- | --- | --- |
-| <sub>`golden-path`</sub> | <sub>Implemented reference flow: Next.js → typed Hono API → Prisma → local PostgreSQL</sub> | <sub>`projects/golden-path/apps/web`</sub> |
-| <sub>`control-center`</sub> | <sub>Implemented local, read-only operator dashboard; remains usable when Docker or the database is unavailable</sub> | <sub>`projects/control-center/apps/web`</sub> |
-| <sub>`academic-smartboard`</sub> | <sub>Governance, curriculum/reference data, and Kayyisa knowledge package migrated; application surfaces are not yet ported</sub> | <sub>`projects/academic-smartboard`</sub> |
+| <sub>`golden-path`</sub> | <sub>Implemented reference flow: Next.js → typed Hono API → Prisma → local PostgreSQL</sub> | <sub>`projects/internal/golden-path/apps/web`</sub> |
+| <sub>`control-center`</sub> | <sub>Implemented local, read-only operator dashboard; remains usable when Docker or the database is unavailable</sub> | <sub>`projects/internal/control-center/apps/web`</sub> |
+| <sub>`academic-smartboard`</sub> | <sub>Governance, curriculum/reference data, and Kayyisa knowledge package migrated; application surfaces are not yet ported</sub> | <sub>`projects/academic/academic-smartboard`</sub> |
 | <sub>`_template`</sub> | <sub>Governance scaffold for new capsules; not an active product</sub> | <sub>`projects/_template`</sub> |
 
 ### Governance and automation commands

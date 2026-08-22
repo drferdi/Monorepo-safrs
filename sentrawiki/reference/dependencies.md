@@ -53,7 +53,7 @@ This page documents the external dependency landscape: the central catalog, key 
 
 ```mermaid
 graph TD
-    WEB["projects/golden-path/apps/web (Next.js)"]
+    WEB["projects/internal/golden-path/apps/web (Next.js)"]
     API["@safrs/api (Hono)"]
     SCHEMAS["@safrs/schemas (Zod)"]
     ENV["@safrs/env"]
@@ -75,7 +75,7 @@ graph TD
     UI --> TOKEN
 ```
 
-- **`projects/golden-path/apps/web`** is the deployable unit. It mounts `@safrs/api`, and uses `@safrs/env`, `@safrs/ui`, and `@safrs/telemetry`.
+- **`projects/internal/golden-path/apps/web`** is the deployable unit. It mounts `@safrs/api`, and uses `@safrs/env`, `@safrs/ui`, and `@safrs/telemetry`.
 - **`@safrs/api`** owns the typed Hono API; it consumes `@safrs/schemas` for Zod contracts, applies `@safrs/telemetry` middleware, and talks to `@safrs/database`.
 - **`@safrs/database`** wraps Prisma + PostgreSQL and depends on `@safrs/env` and `@safrs/telemetry`. It does **not** depend on `@safrs/schemas`.
 - **`@safrs/env`** validates environment with `@t3-oss/env-core`/`@t3-oss/env-nextjs` and extends `@safrs/config` presets.

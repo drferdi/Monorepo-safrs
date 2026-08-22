@@ -76,10 +76,10 @@ graph TD
 
 ## Integration points
 
-- **Golden-path app**: imported in `projects/golden-path/apps/web/src/app/globals.css`; fonts in `src/app/layout.tsx`. See [golden-path-web](../apps/golden-path-web.md).
+- **Golden-path app**: imported in `projects/internal/golden-path/apps/web/src/app/globals.css`; fonts in `src/app/layout.tsx`. See [golden-path-web](../apps/golden-path-web.md).
 - **`@safrs/ui`**: the shared UI package consumes tokens for its components (`StatusCard`, etc.).
-- **Email**: `projects/golden-path/apps/web/src/email/welcome.tsx` reads `tokens.json` for inline styles.
-- **`scope.txt`** currently lists `packages/token`, `packages/ui`, and `projects/golden-path/apps/web/src`.
+- **Email**: `projects/internal/golden-path/apps/web/src/email/welcome.tsx` reads `tokens.json` for inline styles.
+- **`scope.txt`** currently lists `packages/token`, `packages/ui`, and `projects/internal/golden-path/apps/web/src`.
 - **Governance**: the gate runs inside `pnpm check` / `pnpm run governance` — see [SAFRS governance](safrs-governance.md) and [tools/safrs.md](../tools/safrs.md).
 - Changing a token value is an **R2** change (shared package + governance control).
 

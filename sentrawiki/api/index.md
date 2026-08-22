@@ -21,7 +21,7 @@ graph LR
 
 ## Mount point: Hono under `/api`
 
-The Next.js app mounts the Hono app through a catch-all route at `projects/golden-path/apps/web/src/app/api/[[...route]]/route.ts`:
+The Next.js app mounts the Hono app through a catch-all route at `projects/internal/golden-path/apps/web/src/app/api/[[...route]]/route.ts`:
 
 ```ts
 import { app } from "@safrs/api";
@@ -37,7 +37,7 @@ Because the route is optional (`[[...route]]`), the Hono app handles every path 
 
 `packages/api/src/client.ts` exports `createApiClient`, a thin wrapper over Hono's `hc<AppType>` typed client. The `AppType` is inferred from the route definitions via `ApplyGlobalResponse` in `packages/api/src/app.ts`, so request and response shapes are checked at compile time. If the API changes, any caller that uses the typed client fails type-check — eliminating silent drift between frontend and backend.
 
-The browser client wrapper lives in `projects/golden-path/apps/web/src/lib/api-client.ts`. It resolves the base URL from `NEXT_PUBLIC_APP_URL` (falling back to the current origin) and exposes typed helpers such as `submitDemo`.
+The browser client wrapper lives in `projects/internal/golden-path/apps/web/src/lib/api-client.ts`. It resolves the base URL from `NEXT_PUBLIC_APP_URL` (falling back to the current origin) and exposes typed helpers such as `submitDemo`.
 
 ## OpenAPI and docs endpoints
 
@@ -62,7 +62,7 @@ See [REST endpoints](rest-endpoints.md) for request/response shapes, validation,
 
 - Every request gets a correlation ID generated in middleware, returned in the `x-correlation-id` response header and (for errors) in the response body. See `packages/api/src/error.ts` and [error handling](../how-to-contribute/patterns-and-conventions.md).
 - Unexpected errors are redacted to a generic `INTERNAL_ERROR` envelope so no stack traces or database URLs leak.
-- The static Stripe webhook route at `projects/golden-path/apps/web/src/app/api/webhooks/stripe/route.ts` takes precedence over the catch-all and is part of the optional Stripe capability pack.
+- The static Stripe webhook route at `projects/internal/golden-path/apps/web/src/app/api/webhooks/stripe/route.ts` takes precedence over the catch-all and is part of the optional Stripe capability pack.
 
 ## Related pages
 

@@ -6,6 +6,7 @@ import { test } from "node:test";
 test("Playwright visual baselines are real PNG files, not Git LFS pointers", () => {
   const snapshot = join(
     "projects",
+    "internal",
     "golden-path",
     "apps",
     "web",

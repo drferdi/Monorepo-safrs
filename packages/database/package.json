@@ -13,7 +13,7 @@
     "seed": "node --experimental-strip-types scripts/run-local-prisma.mjs seed",
     "reset": "node --experimental-strip-types src/reset.ts",
     "studio": "node --experimental-strip-types scripts/run-local-prisma.mjs studio",
-    "lint": "biome check src/client.ts src/index.ts src/local-tooling.ts src/local-tooling.test.ts src/reset-guard.ts src/reset-guard.test.ts src/reset.ts src/seed.ts src/seed.integration.test.ts prisma.config.ts scripts/run-local-prisma.mjs",
+    "lint": "biome check src prisma.config.ts scripts/run-local-prisma.mjs",
     "test": "vitest run",
     "typecheck": "tsc --project tsconfig.json"
   },
@@ -21,6 +21,7 @@
     "@prisma/adapter-pg": "catalog:",
     "@prisma/client": "catalog:",
     "@safrs/env": "workspace:*",
+    "@safrs/schemas": "workspace:*",
     "@safrs/telemetry": "workspace:*",
     "pg": "catalog:"
   },

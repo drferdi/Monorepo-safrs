@@ -12,8 +12,8 @@
     "reject live keys in local defaults"
   ],
   "sensitivePaths": [
-    "projects/<project>/src/payments/**",
-    "projects/<project>/src/webhooks/**"
+    "projects/<domain>/<capsule>/src/payments/**",
+    "projects/<domain>/<capsule>/src/webhooks/**"
   ],
   "sideEffects": [
     "Stripe CLI forwards sandbox events only; no live charge is permitted by this capability declaration."

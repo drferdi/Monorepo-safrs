@@ -29,7 +29,7 @@ elif gen.current_block(text) != gen.build_block(ROOT):
 required = [
     'SAFRS_SPEC.md', 'scripts/safrs-verify.sh',
     'docs/governance/SAFRS_PROJECT_CAPSULES.md',
-    'projects/golden-path/apps/web', 'pnpm run doctor', 'pnpm run setup',
+    'projects/internal/golden-path/apps/web', 'pnpm run doctor', 'pnpm run setup',
     'pnpm dev', 'pnpm run governance',
 ]
 missing = [x for x in required if x not in text]

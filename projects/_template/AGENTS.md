@@ -6,14 +6,14 @@ Read the repository root `AGENTS.md` first. This file narrows project-local cont
 
 ## Objective and ownership
 
-- Project: `<replace-with-project-name>`
+- Project: `<replace-with-project-name>` (domain: `<replace-with-domain>`)
 - Objective: `<replace-with-one-sentence-objective>`
 - Human owner: `<replace-with-accountable-owner>`
 - Default risk: `R1`; use root policy and sensitive-path registry for escalation.
 
 ## Owned scope
 
-- `projects/<replace-with-project-name>/**`
+- `projects/<replace-with-domain>/<replace-with-project-name>/**`
 - Explicitly approved shared packages only.
 
 ## Required context

@@ -50,11 +50,11 @@ This file maps every major capability from the design discussion to an implement
 | Capability | Implemented in |
 |---|---|
 | Single-command local workflow | `pnpm run doctor`, `pnpm run setup`, and `pnpm dev` via `tools/doctor/`, `scripts/setup.mjs`, and `scripts/dev.mjs` |
-| End-to-end typed Database → API → Web contract | `packages/schemas/`, `packages/api/`, `projects/golden-path/apps/web/`, and contract tests |
+| End-to-end typed Database → API → Web contract | `packages/schemas/`, `packages/api/`, `projects/internal/golden-path/apps/web/`, and contract tests |
 | Build-time environment validation | `packages/env/` using T3 Env and Zod |
 | Local PostgreSQL/Prisma seed, Studio, and reset guard | `packages/database/`, `compose.yaml`, and root `db:*` scripts |
 | Fast staged code hygiene | `.husky/pre-commit`, Biome, and `tests/repository/precommit.test.mjs` |
-| Browser golden journey | Playwright configuration and `projects/golden-path/apps/web/e2e/` |
+| Browser golden journey | Playwright configuration and `projects/internal/golden-path/apps/web/e2e/` |
 | Optional capability selection without baseline bloat | `tools/capabilities/` manifests for email, Stripe, AI, Electron, WXT, and Python |
 | PR-only dependency updates | `.github/renovate.json`, `.safrs/tool-inventory.json`, and `tests/repository/automation-policy.test.mjs` |
 | Non-deploying full CI | `.github/workflows/ci.yml` with immutable action SHAs |

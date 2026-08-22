@@ -1,0 +1,34 @@
+# Pagar pengaman. Berkas-berkas ini adalah keadaan runtime Hermes, bukan
+# konfigurasi. Beberapa di antaranya setara kredensial. Daftar ini mencegahnya
+# ikut ter-commit bila sewaktu-waktu tersalin ke dalam folder proyek.
+
+# Rahasia
+.env
+.env.*
+!.env.example
+auth.json
+*.pem
+*.key
+
+# Sesi WhatsApp — creds.json setara kunci akses nomor
+platforms/
+**/whatsapp/session/
+
+# Basis data runtime
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Catatan tentang orang sungguhan
+memories/
+
+# Antrean persetujuan dan keadaan sesi
+pending/
+sessions/
+state/
+logs/
+
+# Konfigurasi terisi — hanya contohnya yang dilacak
+ai/profiles/*/config.yaml

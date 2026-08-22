@@ -1,0 +1,83 @@
+# Medisync — contoh konfigurasi profil Avery
+#
+# Salin berkas ini ke <HERMES_HOME>/profiles/avery/config.yaml lalu sesuaikan
+# path dan nilai yang bertanda <...>. Rahasia (API key, token, kredensial)
+# TIDAK pernah ditulis di sini — tempatnya di .env, lihat deploy/.env.example.
+
+model:
+  default: google/gemini-2.5-flash
+  provider: openrouter
+
+display:
+  compact: true
+  memory_notifications: 'on'
+
+memory:
+  memory_enabled: true
+  user_profile_enabled: false
+  write_approval: true
+  memory_char_limit: 2200
+  # Dinaikkan dari default 1375 karena profil pengguna Medisync memuat
+  # protokol komunikasi yang panjang. Batas lama membuat penulisan memori
+  # gagal dengan galat konsolidasi.
+  user_char_limit: 2200
+
+skills:
+  guard_agent_created: true
+  write_approval: true
+
+discord:
+  require_mention: true
+  auto_thread: true
+  reactions: true
+
+whatsapp:
+  unauthorized_dm_behavior: ignore
+  require_mention: true
+  # Matikan notifikasi "Gateway shutting down / restarting / back online" yang
+  # dikirim ke chat WhatsApp. Dipatuhi oleh lima jalur notice di gateway.
+  gateway_restart_notification: false
+
+platforms:
+  whatsapp:
+    enabled: true
+    home_channel:
+      platform: whatsapp
+      chat_id: <nomor-atau-lid>@lid
+      name: <nama-tampilan>
+      user_id: <nomor-atau-lid>@lid
+
+gateway:
+  platforms:
+    whatsapp:
+      enabled: false
+      extra:
+        group_policy: allowlist
+        group_allow_from: <jid-grup>@g.us
+        require_mention: true
+        mention_patterns:
+          - (?i)\bavery\b
+        free_response_chats: ''
+        text_batch_delay_seconds: 5
+        text_batch_split_delay_seconds: 10
+        send_read_receipts: false
+
+# MCP server bawaan Hermes Studio. Path di bawah ini khas mesin Windows tempat
+# Studio terpasang; di server Linux sesuaikan atau hapus blok ini seluruhnya.
+mcp_servers:
+  hermes-studio-api:
+    command: <path-ke-node>/node.exe
+    args:
+      - <path-ke-hermes-studio>/resources/webui/bin/hermes-studio-mcp.mjs
+      - api
+    env:
+      HERMES_WEB_UI_URL: http://127.0.0.1:8748
+      HERMES_WEB_UI_HOME: <path-ke-hermes-web-ui>
+      HERMES_WEBUI_STATE_DIR: <path-ke-hermes-web-ui>
+      HERMES_WEB_UI_PROFILE: avery
+      HERMES_MCP_SERVER_NAME: hermes-studio-api
+      HERMES_MCP_TOOLSET: api
+      HERMES_WEB_UI_MANAGED_MCP: '1'
+    enabled: true
+  # Toolset lain mengikuti pola yang sama, hanya berbeda pada argumen terakhir
+  # dan HERMES_MCP_TOOLSET: browser, devices, use.

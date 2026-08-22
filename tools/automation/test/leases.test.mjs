@@ -11,7 +11,7 @@ import {
 } from "../src/leases.mjs";
 
 const TASK = "TASK-20260813-DEMO-R1";
-const SCOPES = ["projects/golden-path/"];
+const SCOPES = ["projects/internal/golden-path/"];
 const T0 = "2026-08-13T00:00:00Z";
 const T1 = "2026-08-13T01:00:00Z";
 const EXPIRY = "2026-08-13T12:00:00Z";

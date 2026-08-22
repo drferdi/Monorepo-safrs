@@ -4,31 +4,28 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-22 (Smartboard Tailwind 4 shorthand repair merged; sub-phase 2 plan drafted)
+Last updated: 2026-08-22 (projects/ relaid out by domain; integrity review approved by Chief)
 
 ## Current state
 
-- **Claude session — all merged to local `main`, NOT pushed.** `5b74cc2` Tailwind 4 shorthand repair (lease `TASK-20260822-SMARTBOARD-TAILWIND-SHORTHAND-FIX`, R1, CLOSED), `eba5ff1` web security boundary + sub-phase 2 plan, `444554e` roadmap index. An unclaimed shorthand conversion (`[var(--x)]` → `(--x)`) had been left uncommitted across 12 UI files of `apps/site`/`apps/web`; multi-value `shadow-(--button-ledge)_var(…)` never parsed, so the button ledge shadow was missing from built CSS in 4 places, and 9 files carried CRLF that broke `biome check` for all of `apps/web`. Equivalence proven by building HEAD in a throwaway worktree and diffing emitted CSS declaration by declaration (web 421/421, site 345/345 — only selector spellings differ).
-- **Smartboard web security boundary — written down, do not rediscover it.** `projects/academic-smartboard/apps/web/AGENTS.md` § "Batas keamanan". Code side is clean (no secrets, no `localStorage`/`document.cookie`, no XSS sinks, `pnpm audit --prod` 0/270). Nothing is deployed anywhere — repo has no hosting config at all — so nothing is exposed today. Four obligations apply the moment it is: `ProtectedRoute` is not authorisation, security headers must come from the host, `COOKIE_SECURE`/`COOKIE_SAMESITE` fail open in the archive backend, `CORS_ORIGINS` must stay explicit.
-- **Smartboard web sub-phase 2:** plan committed at `docs/plans/active/2026-08-22-smartboard-web-subphase2-akademik.md`, status `PROPOSED`, indexed in the roadmap and the active-plans table. 16 tasks, 8 archive pages + 6 shared components, security controls built into Task 16. Open decisions for Chief: adopt RTL now or keep deferring; where `Dashboard`/`Pengajar`/`TutorialPenggunaan` belong (in no roadmap row); two new catalog deps (`recharts`, `sonner`, R2).
-- **Cursor session:** `TASK-20260822-SMARTBOARD-PLAN-MD032` — `VERIFYING` — R1 — `docs/plans/completed/2026-08-21-smartboard-web-subphase1-foundation.md`.
-- **Fix pass 2:** MD032 at line 108 was `**Files:**` + bullet list. Blank lines were not enough for the IDE diagnostic. Folded every `**Files:**` / `**Interfaces:**` bullet block into a paragraph so line 108 is no longer a list. Checkbox step lists kept. `markdownlint-cli`: no MD032.
-- **Smartboard web sub-phase 1:** `apps/web` foundation done — Task 1-12 merged/pushed; plan in `docs/plans/completed/`. Sub-phase 2-5 plans not yet written — see `docs/plans/active/2026-08-21-smartboard-web-roadmap.md`.
-- **Sentra Bot phase:** disposable runtime complete; release/closure not complete.
-- **Sentra Bot runtime:** Compose `sentrabot-disposable` up. PostgreSQL `healthy`; worker `healthy`; supervisor running; web `http://localhost:3000`.
-- **Sentra Bot blockers:** integrity manifest/approval missing; intake pin `d17a138` unavailable — do not substitute.
-- **Portfolio:** Unified into `projects/portfolio-drnovia/`. 33/33 tests PASS. Static server `:4173`.
+- **Domain layering — done, uncommitted.** Chief ruled every capsule lives at `projects/<domain>/<capsule>/`, uniformly. Domains: `academic`, `corporate`, `healthcare`, `internal`, `product`; each carries only `AGENTS.md` + `README.md`. New capsule `healthcare/medisync` (Hermes/Avery config + deploy). Recorded in [ADR 0005](../docs/adrs/0005-projects-domain-layering.md) and `DECISIONS.md`; supersedes D1 of the smartboard migration design. Leases: `TASK-20260822-PROJECTS-DOMAIN-LAYERING` + `-REFS`, `-ROOT-DOCS`, `-PLANS`, `-OLDPATHS`, `-TOKEN-SCOPE`, `-DOCS`, and `-CURSOR-HTML-BUILD-SKILL-OWNERSHIP` (adopted an unowned path).
+- **Controls that silently broke and are now fixed — do not rediscover.** `pnpm-workspace.yaml` `projects/*/apps/*` → `projects/*/*/apps/*` (the flat pattern had dropped all 9 apps from the workspace with no error); `tools/safrs/check_topology.py` now two-level; `tools/safrs/check_routing.py`; `packages/token/scope.txt` (3 stale paths would have disabled token enforcement); `biome.jsonc` `projects/*/portfolio*/**`; four capsule `AGENTS.md` canonical links now `../../../AGENTS.md`; `tests/repository/lfs-snapshots.test.mjs` builds its path from fragments so text rewriting missed it.
+- **Integrity review APPROVED by Chief** for this change set (`.safrs/reviews/verification-integrity.json`, base `38a0f3a0b104`). It is fingerprint-bound: any further edit to a classified path invalidates it and Chief must re-sign.
+- **Damage repaired, worth knowing.** `robocopy /MOVE` on `projects/sentrabot` followed pnpm symlinks and emptied 8 `packages/*` directories. Restored via `git checkout -- packages/`, and the 7 uncommitted files belonging to `TASK-20260822-SENTRABOT-RELEASE-CLOSEOUT` recovered from the copies under `projects/product/sentrabot/apps/web/node_modules/@safrs/`. Never use `robocopy /MOVE` inside a pnpm workspace.
+- **Smartboard web security boundary — written down, do not rediscover it.** `projects/academic/academic-smartboard/apps/web/AGENTS.md` § "Batas keamanan". Code side clean; nothing deployed. Four obligations apply the moment it is: `ProtectedRoute` is not authorisation, security headers must come from the host, `COOKIE_SECURE`/`COOKIE_SAMESITE` fail open in the archive backend, `CORS_ORIGINS` must stay explicit.
+- **Smartboard web sub-phase 2:** `docs/plans/active/2026-08-22-smartboard-web-subphase2-akademik.md`, status `PROPOSED`. Open decisions for Chief: adopt RTL now or keep deferring; where `Dashboard`/`Pengajar`/`TutorialPenggunaan` belong; two new catalog deps (`recharts`, `sonner`, R2).
+- **Sentra Bot:** disposable runtime complete; release/closure not. Blockers unchanged — integrity manifest/approval missing; intake pin `d17a138` unavailable, do not substitute.
+- **Portfolio:** now `projects/corporate/portfolio-drnovia/`. 33/33 tests PASS.
+- **Unpushed:** `5b74cc2`, `eba5ff1`, `444554e` still local on `main`.
 
 ## Next actions
 
-1. Chief: feel-test Lenis (`node projects/portfolio-drnovia/server.js` → `:4173`).
-2. Delete `projects/portfolio/` once IDE workspace handle lock is released.
-3. Integrity review / split merges before claiming full `safrs-verify` green.
-4. Co-review `biome.jsonc` with `TASK-20260821-SENTRABOT-BIOME-MARKETING`.
-5. Chief: approve smartboard web sub-phase 2 plan (`PROPOSED` → `ACTIVE`) and answer its 3 open decisions.
-6. Owners: claim or clear the unowned untracked paths blocking `safrs-verify` task ownership — `.cursor/skills/html-build/`, `.kilo/plans/`, and anything else not covered by an active lease.
-7. Chief: push `main` (3 merges land locally, unpushed — `5b74cc2`, `eba5ff1`, `444554e`).
-8. Before any smartboard web deploy: read `apps/web/AGENTS.md` § "Batas keamanan" first. Host security headers are the open item; nothing is hosted yet.
+1. Commit the domain layering change set while the integrity signature is still valid.
+2. `pnpm install` — `vitest`/`tsc` are absent, so `pnpm test:contracts` could not be run against the new layout.
+3. Chief: push `main` (3 merges land locally, unpushed).
+4. Chief: approve smartboard web sub-phase 2 plan (`PROPOSED` → `ACTIVE`) and answer its 3 open decisions.
+5. Owners: claim or clear remaining unowned untracked paths (`.kilo/plans/` and anything outside an active lease).
+6. Before any smartboard web deploy: read `apps/web/AGENTS.md` § "Batas keamanan" first.
 
 ## Verify
 
@@ -36,4 +33,4 @@ Last updated: 2026-08-22 (Smartboard Tailwind 4 shorthand repair merged; sub-pha
 bash scripts/safrs-verify.sh
 ```
 
-This markdown change is R1. `safrs-verify` still fails on **pre-existing** Sentra Bot integrity review, not introduced by this docs fix.
+Passing as of this handoff: topology, task contracts, ownership, sensitive classification (review approved), status claims. Suites run green: `tests/governance` 32, `tests/architecture` 6, every file under `tests/repository`, `tools/capabilities` 7, `scripts/check-tokens.mjs`.
