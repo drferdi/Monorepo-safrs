@@ -9,7 +9,7 @@
 | # | Sub-fase | Halaman arsip tercakup | Plan | Status |
 | --- | --- | --- | --- | --- |
 | 1 | Fondasi: scaffold, auth, shell, 1 modul master data (vertical proof) | Login, TutorActivation, OwnerActivation, shell/nav, Master › Murid | `docs/plans/completed/2026-08-21-smartboard-web-subphase1-foundation.md` | COMPLETED (Task 1–12 selesai penuh, merge+push ke main; TutorActivation/OwnerActivation ditunda ke sub-fase 4 per plan) |
-| 2 | Penjadwalan + akademik | Jadwal, Sesi(List/Detail), Evaluasi, Kurikulum, KurikulumSelaras, KurikulumCakupan, PerkembanganMurid | belum ditulis | belum dimulai |
+| 2 | Penjadwalan + akademik | Jadwal, Sesi(List/Detail), Evaluasi, Kurikulum, KurikulumSelaras, KurikulumCakupan, PerkembanganMurid | `docs/plans/active/2026-08-22-smartboard-web-subphase2-akademik.md` | PROPOSED — plan ditulis 2026-08-22, menunggu persetujuan Chief |
 | 3 | Payroll + finance | RekapHonor, Payroll, Pembayaran, Tarif, Lembur, Finance (tuition) | belum ditulis | belum dimulai |
 | 4 | Komunikasi + operasional | TutorActivation, OwnerActivation, Komunikasi, Pengumuman, JournalEntry (di dalam Perkembangan), Tasks, Laporan, sisa 6 halaman Master (`tim`, `orang-tua`, `sekolah`, `mata-pelajaran`, `jenjang`, `tahun-ajaran`) | belum ditulis | belum dimulai |
 | 5 | Admin platform + Kayyisa AI | HakAkses, TutorDirectory, TemplateEvaluasi, AuditLog, Persetujuan, PlatformConsole (+AuditTab, PlansTab), widget chat Kayyisa | belum ditulis | belum dimulai |
@@ -22,6 +22,8 @@
 4. **TIDAK di-port** (redundan/tidak cocok stack target): `react-router-dom` (diganti App Router Next.js), `swr` (duplikat `@tanstack/react-query` — pakai react-query saja), `date-fns` (duplikat `dayjs` — pakai dayjs saja), `framer-motion` (preseden `apps/site`: motion CSS murni + `prefers-reduced-motion`), `react-scripts`/`craco`/`cra-template` (tooling CRA, tidak relevan).
 5. **Karantina** (selain daftar ADR 0003 / spec migrasi fondasi): `backend/scripts/cloud_tokens.env` (SUDAH terdaftar di spec baris 51 — dikonfirmasi ulang saat inventory 2026-08-21, TIDAK lolos filter naif `.env*` karena nama file tidak diawali `.env`, jadi task manapun yang menyentuh `backend/scripts/` wajib grep eksplisit nama file, bukan glob), `backend/.uvicorn-out.log`, `backend/_console_be.out`, `backend/_console_fe.out`, `backend/.venv/`.
 6. **Data pribadi nyata dikonfirmasi ADA** di arsip di luar `raw_data/` yang sudah dikarantina: tidak ditemukan tambahan per audit 2026-08-21 (seed/fixture di `backend/seed_data.py` tampak sintetis). Kalau task manapun menemukan PII nyata di `frontend/src/**` atau `backend/*.py` (bukan `raw_data/`), STOP task itu dan lapor Chief sebelum lanjut.
+
+7. **Tiga halaman arsip belum punya rumah** (ditemukan saat menulis plan sub-fase 2, 2026-08-22): `Dashboard.jsx`, `Pengajar.jsx`, `TutorialPenggunaan.jsx` tidak tercantum di baris 1–5 mana pun. `Dashboard.jsx` penting karena `App.js` arsip mengarahkan route `*` ke `/dashboard`. Menunggu Chief menentukan sub-fasenya — jangan diserap diam-diam ke sub-fase berjalan.
 
 ## Sizing acuan (audit 2026-08-21)
 
