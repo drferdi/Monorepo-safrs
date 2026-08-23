@@ -19,7 +19,7 @@ Karena itu isinya hanya dua berkas: `AGENTS.md` (berkas ini) dan `README.md`.
 
 | Capsule | Isi |
 | --- | --- |
-| [`medisync`](./medisync/AGENTS.md) | Konfigurasi dan penempatan Avery, agen Hermes milik Sentra |
+| [`avery`](./avery/AGENTS.md) | Konfigurasi dan penempatan Avery, agen Hermes milik Sentra |
 
 Buka `AGENTS.md` capsule yang sedang dikerjakan; berkas itu yang memuat perintah build, lint, type check, dan test yang sebenarnya.
 

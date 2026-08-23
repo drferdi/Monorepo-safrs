@@ -16,7 +16,7 @@
 | Sumber | `NousResearch/hermes-agent` v2026.8.3, commit `3c27eb6` | `resources/build/runtime-release.json` |
 | Desktop | Hermes Studio 0.6.46 (Electron) | `Hermes Studio.exe` ProductVersion |
 | Python | 3.12.13, SQLite 3.53.1 | `hermes doctor` |
-| Lokasi fisik | `projects/healthcare/medisync/runtime/` (3,6 GB) | migrasi 2026-08-23, lihat `whatsapp-group-fix.md` |
+| Lokasi fisik | `projects/healthcare/avery/runtime/` (3,6 GB) | migrasi 2026-08-23, lihat `whatsapp-group-fix.md` |
 | `HERMES_HOME` | `~/.hermes/profiles/avery` (junction ke `runtime/hermes-home`) | `gateway.log` — "Active profile: avery" |
 
 Lokasi lama di `C:` dan di `abyss-monorepo` adalah *directory junction*. Seluruh path absolut lama tetap bekerja.

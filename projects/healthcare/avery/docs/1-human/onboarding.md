@@ -9,7 +9,7 @@ Welcome to **Medisync**, the version-controlled configuration home for **Avery**
 Medisync does not compile custom application binaries; instead, it configures and version-controls the behavior, skills, and deployment blueprints of **Hermes Studio / Hermes Agent**.
 
 ```
-D:/DEV/Monorepo/projects/healthcare/medisync/
+D:/DEV/Monorepo/projects/healthcare/avery/
 ├── ai/profiles/avery/                 # Avery Configuration & Behavior
 │   ├── SOUL.md                        # Persona definition (Sentra's Home Agent)
 │   ├── config.example.yaml            # Sanitized gateway configuration template

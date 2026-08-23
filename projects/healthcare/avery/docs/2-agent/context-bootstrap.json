@@ -3,7 +3,7 @@
   "project_name": "Medisync (Avery / Hermes Home Agent)",
   "architecture_standard": "@safrs/v1.1",
   "domain": "healthcare",
-  "capsule_path": "projects/healthcare/medisync",
+  "capsule_path": "projects/healthcare/avery",
   "human_owner": "Chief (dr. Ferdi Iskandar)",
   "default_risk_level": "R1 (Local / Config) / R2 (Healthcare logic boundaries)",
   "runtime_stack": {

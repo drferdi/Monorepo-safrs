@@ -8,7 +8,7 @@ Sistem ranah kesehatan, berbagi konteks kepatuhan dan penanganan data pasien.
 
 | Capsule | Isi |
 | --- | --- |
-| [`medisync`](./medisync/README.md) | Konfigurasi dan penempatan Avery, agen Hermes milik Sentra |
+| [`avery`](./avery/README.md) | Konfigurasi dan penempatan Avery, agen Hermes milik Sentra |
 
 ## Susunan
 

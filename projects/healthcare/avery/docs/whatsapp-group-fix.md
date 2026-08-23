@@ -235,7 +235,7 @@ Jalankan skrip itu setiap kali agen tampak diam di suatu grup.
 
 ## Verifikasi Hermes Studio dan perbaikan skrip restart — 2026-08-23 10:47
 
-Studio dibuka Chief pukul 10:47 dan menaikkan gateway sendiri dari path ber-junction. Log memuat `Bridge found at D:\DEV\Monorepo\...\medisync\runtime\hermes-web-ui\...`, dan web UI naik di port 8748. Migrasi runtime lulus dari sisi aplikasi, bukan hanya dari CLI.
+Studio dibuka Chief pukul 10:47 dan menaikkan gateway sendiri dari path ber-junction. Log memuat `Bridge found at D:\DEV\Monorepo\...\avery\runtime\hermes-web-ui\...`, dan web UI naik di port 8748. Migrasi runtime lulus dari sisi aplikasi, bukan hanya dari CLI.
 
 Rantai proses akhir yang sehat:
 

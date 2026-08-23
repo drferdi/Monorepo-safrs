@@ -6,14 +6,14 @@ Read the repository root `AGENTS.md` first. This file narrows project-local cont
 
 ## Objective and ownership
 
-- Project: `medisync`
+- Project: `avery`
 - Objective: Menjalankan dan merawat Avery, agen Hermes milik Sentra, sebagai konfigurasi terversi — dari laptop sampai VPS — sehingga penambahan agen baru cukup lewat konfigurasi, bukan pemasangan ulang.
 - Human owner: Chief (dr. Ferdi Iskandar)
 - Default risk: `R1`; use root policy and sensitive-path registry for escalation.
 
 ## Owned scope
 
-- `projects/healthcare/medisync/**`
+- `projects/healthcare/avery/**`
 - Explicitly approved shared packages only.
 
 ## Required context
