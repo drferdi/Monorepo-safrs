@@ -6,6 +6,16 @@
 
 Last updated: 2026-08-24 (avery FIX-01…06 executed; FULL AUTO; tech-debt audit — see docs/tech-debt-2026-08-24.md)
 
+## Monorepo WP-A integration
+
+- Standalone foundation merged into `main` as `19165a0` and published to `origin/main` on
+  2026-08-24. The merge changes repository governance/tooling, the project template, and Portfolio
+  Dr. Novia as the reference capsule; it changes no path under `projects/healthcare/avery/**`.
+- Fresh evidence on the merge commit: project-standalone 14/14, Portfolio 44/44, architecture
+  22/22, repository 67/67, extracted lifecycle PASS, token gate PASS, and Biome exit 0.
+- Root `pnpm` commands remain blocked by the inherited missing `@safrs/auth` workspace package;
+  Bash SAFRS passes its first eight gates then reports the closed WP-A ownership metadata.
+
 ## Current state
 
 - **Avery FIX-01…06 applied to the live runtime and proven** — plan and per-step evidence in
