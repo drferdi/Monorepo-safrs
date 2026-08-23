@@ -144,19 +144,32 @@ function validateArgument(argument, field, errors) {
     errors.push(`${field} must be a string.`);
     return;
   }
-  const candidate =
-    argument.startsWith("-") && argument.includes("=")
-      ? argument.slice(argument.indexOf("=") + 1)
-      : argument;
-  if (credentialedUrl(candidate)) {
-    errors.push(`${field} must not embed URL credentials.`);
-    return;
+  const candidates = [argument];
+  if (argument.startsWith("-")) {
+    for (const separator of ["=", ":"]) {
+      const index = argument.indexOf(separator);
+      if (index >= 0 && index < argument.length - 1) {
+        candidates.push(argument.slice(index + 1));
+      }
+    }
+    const shortFlagValue = argument.match(/^-[A-Za-z](.+)$/u)?.[1];
+    if (shortFlagValue) candidates.push(shortFlagValue);
   }
-  if (isUrl(candidate)) return;
-  const pathLike =
-    candidate === "." || candidate === ".." || /[/\\]/u.test(candidate);
-  if (pathLike && !safeRelativePath(candidate)) {
-    errors.push(`${field} contains an absolute or parent-escaping path.`);
+  for (const candidate of candidates) {
+    if (credentialedUrl(candidate)) {
+      errors.push(`${field} must not embed URL credentials.`);
+      return;
+    }
+    if (isUrl(candidate)) continue;
+    const pathLike =
+      candidate === "." ||
+      candidate === ".." ||
+      /[/\\]/u.test(candidate) ||
+      /^[A-Za-z]:/u.test(candidate);
+    if (pathLike && !safeRelativePath(candidate)) {
+      errors.push(`${field} contains an absolute or parent-escaping path.`);
+      return;
+    }
   }
 }
 

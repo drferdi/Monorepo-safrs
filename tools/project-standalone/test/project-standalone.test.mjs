@@ -144,6 +144,19 @@ test("contract validation reports precise fields and rejects unsafe argv", async
   );
   assert.ok(errors.some((error) => error.includes("$.commands.test.args[0]")));
 
+  const attachedPaths = contract();
+  attachedPaths.commands.install.args = ["--root:/outside"];
+  attachedPaths.commands.test.args = ["-C../outside"];
+  attachedPaths.commands.build.args = ["--config:C:\\outside\\config.json"];
+  const attachedErrors = validateContract(attachedPaths);
+  assert.ok(
+    ["install", "test", "build"].every((name) =>
+      attachedErrors.some((error) =>
+        error.includes(`$.commands.${name}.args[0]`),
+      ),
+    ),
+  );
+
   const shellContract = contract();
   shellContract.commands.install = {
     program: "cmd.exe",
