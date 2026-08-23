@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import copy
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -131,6 +132,50 @@ class ProjectIndependenceTests(unittest.TestCase):
         self.assertEqual(result.returncode, 1)
         self.assertIn("turbo.json", result.stderr)
         self.assertIn("tsconfig.json [extends]", result.stderr)
+
+    def test_absolute_script_and_config_paths_cannot_escape(self):
+        package = self.read_json("package.json")
+        package["scripts"] = {"unsafe": "node /outside/tool.mjs"}
+        self.write_json("package.json", package)
+        (self.capsule / "tsconfig.absolute.json").write_text(
+            json.dumps({"extends": "C:\\outside\\tsconfig.json"}) + "\n",
+            encoding="utf-8",
+        )
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("scripts.unsafe", result.stderr)
+        self.assertIn("tsconfig.absolute.json [extends]", result.stderr)
+
+    def test_dangling_projects_symlink_is_rejected(self):
+        shutil.rmtree(self.fixture_root / "projects")
+        try:
+            os.symlink(
+                self.fixture_root / "missing-projects-target",
+                self.fixture_root / "projects",
+                target_is_directory=True,
+            )
+        except OSError as error:
+            self.skipTest(f"symlinks unavailable: {error}")
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("projects root must be a real directory", result.stderr)
+
+    def test_contract_and_package_manifests_must_be_json_objects(self):
+        self.write_json("project.contract.json", [])
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("contract must be a JSON object", result.stderr)
+
+        valid_contract = json.loads(
+            (FIXTURE / CAPSULE_RELATIVE / "project.contract.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.write_json("project.contract.json", valid_contract)
+        self.write_json("package.json", [])
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("package manifest must be a JSON object", result.stderr)
 
     def test_docker_build_context_cannot_escape_capsule(self):
         contract = self.read_json("project.contract.json")

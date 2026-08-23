@@ -229,8 +229,19 @@ def check_packages(capsule: Path, capsule_label: str, root: Path, findings: list
     manifests: list[tuple[Path, dict]] = []
     for manifest_path in iter_files(capsule, "package.json"):
         manifest = read_json(manifest_path, capsule_label, root, findings)
-        if isinstance(manifest, dict):
-            manifests.append((manifest_path, manifest))
+        if manifest is None:
+            continue
+        if not isinstance(manifest, dict):
+            findings.append(
+                Finding(
+                    capsule_label,
+                    repository_relative(manifest_path, root),
+                    "$",
+                    "package manifest must be a JSON object",
+                )
+            )
+            continue
+        manifests.append((manifest_path, manifest))
 
     local_names = {
         manifest.get("name")
@@ -284,8 +295,9 @@ def check_packages(capsule: Path, capsule_label: str, root: Path, findings: list
                     continue
                 for token in script.split():
                     candidate = token.strip("\"'(),;")
-                    escapes = ".." in candidate and path_escapes(
-                        candidate, manifest_path.parent, capsule
+                    escapes = is_windows_or_posix_absolute(candidate) or (
+                        ".." in candidate
+                        and path_escapes(candidate, manifest_path.parent, capsule)
                     )
                     missing_local = missing_capsule_owned_reference(
                         candidate, manifest_path.parent
@@ -337,7 +349,9 @@ def check_json_configs(capsule: Path, capsule_label: str, root: Path, findings: 
         for field, value in iter_string_values(config):
             if value.startswith(("http://", "https://")):
                 continue
-            if ".." in value and path_escapes(value, config_path.parent, capsule):
+            if (
+                is_windows_or_posix_absolute(value) or ".." in value
+            ) and path_escapes(value, config_path.parent, capsule):
                 findings.append(
                     Finding(
                         capsule_label,
@@ -420,7 +434,7 @@ def check_repository(root: Path) -> list[Finding]:
         raise UnsafeInputError("repository root must be a real directory")
     root = root.resolve(strict=False)
     projects = root / "projects"
-    if projects.exists() and (not projects.is_dir() or projects.is_symlink()):
+    if projects.is_symlink() or (projects.exists() and not projects.is_dir()):
         raise UnsafeInputError("projects root must be a real directory")
 
     contracts = [] if not projects.exists() else sorted(projects.glob("*/*/project.contract.json"))
@@ -439,7 +453,17 @@ def check_repository(root: Path) -> list[Finding]:
             continue
         fallback_label = contract_path.parent.relative_to(projects).as_posix()
         contract = read_json(contract_path, fallback_label, root, findings)
+        if contract is None:
+            continue
         if not isinstance(contract, dict):
+            findings.append(
+                Finding(
+                    fallback_label,
+                    repository_relative(contract_path, root),
+                    "$",
+                    "contract must be a JSON object",
+                )
+            )
             continue
         capsule_label = contract.get("id") if isinstance(contract.get("id"), str) else fallback_label
         check_contract_paths(contract, capsule, capsule_label, root, findings)
