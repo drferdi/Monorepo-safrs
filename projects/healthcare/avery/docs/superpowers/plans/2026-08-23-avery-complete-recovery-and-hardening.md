@@ -46,9 +46,9 @@
 
 **Files:** `scripts/member_watch.py`, `scripts/restart-gateway.ps1`, `scripts/health-check.ps1`, `scripts/restore-native-runtime-layout.ps1`, `scripts/verify-runtime-junctions.ps1`, `scripts/restart-gateway.bat`.
 
-- [ ] Implement snapshot comparison with empty first/no-change output and candidate-only new-member reports.
-- [ ] Implement dry-run restart and layout recovery with fail-closed path checks.
-- [ ] Verify health emits sanitized JSON and well-defined exit codes.
+- [x] Implement snapshot comparison with empty first/no-change output and candidate-only new-member reports.
+- [x] Implement dry-run restart and layout recovery with fail-closed path checks.
+- [x] Verify health emits sanitized JSON and well-defined exit codes.
 
 ### Task 5: Documentation and review gates
 
