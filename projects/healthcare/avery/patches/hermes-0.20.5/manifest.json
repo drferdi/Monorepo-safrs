@@ -1,0 +1,16 @@
+{
+  "patch": "0001-whatsapp-ingress-reason-codes.patch",
+  "hermes_version": "0.20.4",
+  "files": [
+    {
+      "path": "gateway/platforms/whatsapp_common.py",
+      "sha256_before": "2205d4b3287b18fb318fd066b792c4d9e2e0311b1e6ffd0bf948fc85471570ca",
+      "sha256_after": "e3f473aa214b09c16f7efb110a88b79c231630d743cc5ae6a77cbc3b937cc3f0"
+    },
+    {
+      "path": "plugins/platforms/whatsapp/adapter.py",
+      "sha256_before": "590dde75852bd197975a03c02cae71466ebaf581ae0235f436c5dde0181c0fac",
+      "sha256_after": "9c65890682f7d226250292ebaa7512e71c833c5452397c243117cbb23a8b1d0a"
+    }
+  ]
+}

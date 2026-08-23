@@ -1,0 +1,148 @@
+diff --git a/gateway/platforms/whatsapp_common.py b/gateway/platforms/whatsapp_common.py
+index 09e7b0b..aa3cccd 100644
+--- a/gateway/platforms/whatsapp_common.py
++++ b/gateway/platforms/whatsapp_common.py
+@@ -61,6 +61,22 @@ def _get_wsecret(name, default=None):
+ logger = logging.getLogger(__name__)
+ 
+ 
++def _redact_jid(value) -> str:
++    """Redact a WhatsApp JID for logging: last 4 chars before '@' + domain.
++
++    Never returns the full identifier. E.g. ``6281234556112@g.us`` becomes
++    ``…6112@g.us``. Falls back to a fixed placeholder for empty/malformed
++    input so log lines never leak an unredacted value.
++    """
++    text = str(value or "")
++    if "@" in text:
++        local, _, domain = text.partition("@")
++        tail = local[-4:] if local else ""
++        return f"…{tail}@{domain}" if tail else f"…@{domain}"
++    tail = text[-4:] if text else ""
++    return f"…{tail}" if tail else "…"
++
++
+ class WhatsAppBehaviorMixin:
+     """Shared behavior for all WhatsApp adapters (Baileys + Cloud API).
+ 
+@@ -308,12 +324,11 @@ class WhatsAppBehaviorMixin:
+         if isinstance(patterns, str):
+             patterns = [patterns]
+         if not isinstance(patterns, list):
+-            logger.warning(
+-                "[%s] whatsapp mention_patterns must be a list or string; got %s",
+-                self.name,
+-                type(patterns).__name__,
++            raise ValueError(
++                f"BOOT FAIL: invalid WhatsApp mention pattern {patterns!r}: "
++                f"mention_patterns must be a list or string, got "
++                f"{type(patterns).__name__}"
+             )
+-            return []
+ 
+         compiled = []
+         for pattern in patterns:
+@@ -322,12 +337,9 @@ class WhatsAppBehaviorMixin:
+             try:
+                 compiled.append(re.compile(pattern, re.IGNORECASE))
+             except re.error as exc:
+-                logger.warning(
+-                    "[%s] Invalid WhatsApp mention pattern %r: %s",
+-                    self.name,
+-                    pattern,
+-                    exc,
+-                )
++                raise ValueError(
++                    f"BOOT FAIL: invalid WhatsApp mention pattern {pattern!r}: {exc}"
++                ) from exc
+         if compiled:
+             logger.info(
+                 "[%s] Loaded %d WhatsApp mention pattern(s)", self.name, len(compiled)
+@@ -387,39 +399,63 @@ class WhatsAppBehaviorMixin:
+                 )
+         return cleaned.strip() or text
+ 
+-    def _should_process_message(self, data: Dict[str, Any]) -> bool:
++    def _should_process_message_inner(self, data: Dict[str, Any]) -> tuple[bool, str]:
+         chat_id_raw = str(data.get("chatId") or "")
+         # WhatsApp uses pseudo-chats for Status updates (Stories) and
+         # Channel/Newsletter broadcasts. These are not real conversations
+         # and the agent should never reply to them — even in self-chat mode
+         # where the bridge may surface them as "fromMe" events.
+         if self._is_broadcast_chat(chat_id_raw):
+-            return False
++            return False, "BROADCAST"
+         is_group = data.get("isGroup", False)
+         if is_group:
+             chat_id = chat_id_raw
+             if not self._is_group_allowed(chat_id):
+-                return False
++                return False, "GROUP_NOT_ALLOWED"
+         else:
+             sender_id = str(data.get("senderId") or data.get("from") or "")
+             if not self._is_dm_intake_allowed(sender_id):
+-                return False
++                return False, "USER_NOT_ALLOWED"
+             # DMs that pass the policy gate are always processed
+-            return True
++            return True, "PASSED"
+         # Group messages: check mention / free-response settings
+         chat_id = str(data.get("chatId") or "")
+         if chat_id in self._whatsapp_free_response_chats():
+-            return True
++            return True, "PASSED"
+         if not self._whatsapp_require_mention():
+-            return True
++            return True, "PASSED"
+         body = str(data.get("body") or "").strip()
+         if body.startswith("/"):
+-            return True
++            return True, "PASSED"
+         if self._message_is_reply_to_bot(data):
+-            return True
++            return True, "PASSED"
+         if self._message_mentions_bot(data):
+-            return True
+-        return self._message_matches_mention_patterns(data)
++            return True, "PASSED"
++        if self._message_matches_mention_patterns(data):
++            return True, "PASSED"
++        return False, "MENTION_MISMATCH"
++
++    def _should_process_message(self, data: Dict[str, Any]) -> bool:
++        chat_id = str(data.get("chatId") or "")
++        is_group = data.get("isGroup", False)
++        result, reason = self._should_process_message_inner(data)
++        if result:
++            logger.info(
++                "[%s] ingress accept reason=%s chat=%s group=%s",
++                self.name,
++                reason,
++                _redact_jid(chat_id),
++                is_group,
++            )
++        else:
++            logger.info(
++                "[%s] ingress drop reason=%s chat=%s group=%s",
++                self.name,
++                reason,
++                _redact_jid(chat_id),
++                is_group,
++            )
++        return result
+ 
+     # ------------------------------------------------------------------ formatting
+     def format_message(self, content: str) -> str:
+diff --git a/plugins/platforms/whatsapp/adapter.py b/plugins/platforms/whatsapp/adapter.py
+index fd21387..56bcf6d 100644
+--- a/plugins/platforms/whatsapp/adapter.py
++++ b/plugins/platforms/whatsapp/adapter.py
+@@ -1648,7 +1648,7 @@ class WhatsAppAdapter(WhatsAppBehaviorMixin, BasePlatformAdapter):
+                 reply_to_is_own_message=reply_to_is_own_message,
+             )
+         except Exception as e:
+-            print(f"[{self.name}] Error building event: {e}")
++            logger.warning("[%s] ingress drop reason=INVALID_MESSAGE error=%s", self.name, e)
+             return None
+ 
+ 
