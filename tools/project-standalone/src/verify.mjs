@@ -31,7 +31,8 @@ function absoluteOnAnyPlatform(value) {
   return (
     path.posix.isAbsolute(value.replaceAll("\\", "/")) ||
     path.win32.isAbsolute(value) ||
-    /^[A-Za-z]:/u.test(value)
+    /^[A-Za-z]:/u.test(value) ||
+    /^[A-Za-z][A-Za-z0-9+.-]*:/u.test(value)
   );
 }
 
