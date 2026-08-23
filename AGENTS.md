@@ -105,24 +105,26 @@ Exceptional states: `BLOCKED`, `CONFLICT`, `FAILED`, `ABORTED`, `SUPERSEDED`.
 
 ## Standalone project contract
 
-- Each capsule is an independently portable project. From the capsule root, its own contract must support install, build, test, run, and deploy (plus applicable lint and type-check stages) without the monorepo root.
+- Each active capsule is an independently portable project. From the capsule root, its own contract must provide executable `install`, `build`, `test`, `run`, and `deployDryRun` commands without the monorepo root. Those five required stages cannot be marked N/A; only `lint` and `typecheck` may be explicitly not applicable, each with a non-empty reason.
+- Lifecycle commands are executable argv (`program` plus `args`), never shell strings, and all command paths resolve from the capsule root. The required commands remain executable after extraction, including deploy dry-runs with no production side effects.
 - Project-local workspaces, lockfiles, packages, scripts, generated assets, and build/deploy configuration are allowed. Declared external APIs, databases, services, and pinned images are dependencies of the capsule, not dependencies on this repository.
 - A capsule must not consume the root workspace, catalog, lockfile, configuration, paths, scripts, tools, packages, or monorepo-owned runtime infrastructure; escape its directory; import or link to another capsule; or require another capsule at runtime, build, test, or deploy time.
-- Standalone proof has two halves: structural verification checks paths and dependencies, and empirical verification extracts only the capsule into a fresh directory and runs its applicable lifecycle commands there. The extraction is decisive; prose alone is not proof.
+- Standalone proof has two halves: structural verification checks paths and dependencies, and empirical verification extracts only the capsule into a fresh directory and runs its required lifecycle commands plus any applicable optional checks there. The extraction is decisive; prose alone is not proof.
 - Run lifecycle and standalone verification commands with the capsule root as the working directory. Root commands may orchestrate those commands but must not be required to execute them.
 
-## Design tokens (mandatory for all UI work)
+## Design tokens and shared-package transition
 
-- Any agent building UI — website, landing page, dashboard, email, any rendered surface — MUST use Sentra design tokens from `packages/token` (`@sentra/token`). Read `packages/token/AGENTS.md` and `packages/token/UI-RULES.md` before writing UI code.
-- Raw colour or radius values are forbidden outside `packages/token/src/tokens.css`. Enforced by `node scripts/check-tokens.mjs` (raw-value scan + WCAG 2.2 AA contrast recomputation) as part of `pnpm check`.
+- Any agent building UI — website, landing page, dashboard, email, any rendered surface — MUST use Sentra design tokens. Legacy root-integrated applications may consume the source package `packages/token` (`@sentra/token`), follow its `AGENTS.md`/`UI-RULES.md`, and use the root contrast gate during the transition; a standalone capsule must instead use a capsule-local token package copied or generated from the approved source, or an independently distributable version pinned in the capsule with equivalent local rules and checks.
+- Root token and shared packages are a temporary source/distribution path for legacy root-integrated applications. They are not standalone runtime, build, test, or deploy dependencies and are not the pattern for new capsules. The current `projects/internal/golden-path` root coupling is explicitly legacy pending its planned capsule migration, not a standalone counterexample or a new-project template.
+- A capsule-local or independently distributable token package must retain its version/provenance and its own applicable checks. Extraction must never resolve `packages/token`, another root package, or a root checker.
 - Worked reference screens live in `docs/design-system/reference/`; match the closest reference rather than inventing a composition.
 - Token value changes are R2 (shared boundary + governance control).
 
-## Golden-path baseline
+## Golden-path baseline (legacy transition)
 
-- The default demonstrator is `projects/internal/golden-path/apps/web`: one Next.js deployment unit that mounts the package-owned typed Hono API under `/api`.
-- `packages/schemas`, `packages/env`, `packages/database`, `packages/api`, and `packages/ui` are shared boundaries; do not import database/server environment code into browser components.
-- Start safely with `pnpm run doctor`, prepare the local environment with `pnpm run setup`, then use `pnpm dev`. Run `pnpm run governance` before repository review.
+- The current demonstrator is `projects/internal/golden-path/apps/web`: one legacy root-integrated Next.js deployment unit that mounts the package-owned typed Hono API under `/api`. It remains pending planned capsule migration and is not a standalone template or counterexample.
+- `packages/schemas`, `packages/env`, `packages/database`, `packages/api`, and `packages/ui` remain shared boundaries for that legacy demonstrator only. New capsules must keep required code local or consume an independently distributable package; root workspace reuse is not standalone proof.
+- For the legacy demonstrator, start safely with `pnpm run doctor`, prepare the local environment with `pnpm run setup`, then use `pnpm dev`. Run `pnpm run governance` before repository review. These root commands are not capsule lifecycle prerequisites.
 - Electron, WXT, Stripe, email, AI, and Python are optional capability packs, not baseline runtime dependencies. Activate them only through the documented capability workflow and its risk review.
 - Use Active LTS/stable releases. Prerelease dependencies or an Edge runtime require a written accepted decision.
 

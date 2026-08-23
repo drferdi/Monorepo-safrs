@@ -2,37 +2,46 @@
 
 ## Inheritance
 
-Read the repository root `AGENTS.md` first. This file narrows project-local context and never weakens root SAFRS or security controls.
+This file is sufficient capsule-local guidance after extraction. When nested in a governed
+repository, its contribution rules may add review or security requirements; those requirements
+must not become lifecycle or standalone-verification dependencies.
 
 ## Objective and ownership
 
 - Project: `<replace-with-project-name>` (domain: `<replace-with-domain>`)
 - Objective: `<replace-with-one-sentence-objective>`
 - Human owner: `<replace-with-accountable-owner>`
-- Default risk: `R1`; use root policy and sensitive-path registry for escalation.
+- Default risk: `R1`; record any higher-risk local action in the capsule's applicable governance.
 
 ## Standalone contract
 
-This capsule is an independently portable project. The repository root is an optional AI
-automation/control plane, never a capsule runtime, configuration, path, tooling, or
+This capsule is an independently portable project. An enclosing repository may provide optional
+AI automation and governance, but is never a capsule runtime, configuration, path, tooling, or
 infrastructure dependency.
 
-- Define install, build, lint, type-check, test, run, and deploy commands that work from this
-  capsule root. Mark a genuinely inapplicable stage with a reason.
+- Define executable argv commands for install, build, test, run, and deploy dry-run
+  (`deployDryRun`) that work from this capsule root. Those five required stages cannot be N/A;
+  only `lint` and `typecheck` may be N/A, each with a non-empty reason. Do not use shell command
+  strings.
 - Keep workspaces, lockfiles, packages, scripts, generated assets, and build/deploy configuration
   inside this capsule. Declare external APIs, databases, services, and pinned images here without
   embedding credentials.
-- Do not depend on the root workspace, catalog, lockfile, configuration, paths, scripts, tools,
+- Do not depend on an enclosing workspace, catalog, lockfile, configuration, paths, scripts, tools,
   packages, monorepo-owned runtime infrastructure, or another capsule. Do not use parent-escaping
   paths or cross-capsule imports/links.
-- Prove portability with both structural checks and empirical extraction. Copy only this capsule to
-  a fresh directory, then run applicable lifecycle and smoke commands from inside the extracted
-  capsule; root orchestration is not proof.
+- Root-owned shared packages and the Sentra token source are transition-only inputs for legacy
+  root-integrated applications. The legacy `projects/internal/golden-path` is pending planned
+  capsule migration and is not a template or standalone example. New capsules must carry required
+  shared code in a capsule-local package or use an independently distributable, pinned package with
+  provenance and local checks; extraction must not resolve a root package or checker.
+- Prove portability with both structural and empirical verification. The command slots below must
+  be runnable from this capsule root or accept this capsule directory as their only input; neither
+  may require an enclosing repository's files, registry, configuration, or checker.
 
 ## Owned scope
 
-- `projects/<replace-with-domain>/<replace-with-project-name>/**`
-- Declared external dependencies and capsule-local packages only; no root workspace packages.
+- This capsule directory and all descendants.
+- Declared external dependencies and capsule-local packages only; no parent or enclosing-workspace packages.
 
 ## Required context
 
@@ -45,16 +54,21 @@ infrastructure dependency.
 
 Replace these placeholders with commands that exist before activating the capsule:
 
-- Install: `<command-or-not-applicable-with-reason>`
-- Build: `<command-or-not-applicable-with-reason>`
-- Lint: `<command-or-not-applicable-with-reason>`
-- Type check: `<command-or-not-applicable-with-reason>`
-- Test: `<command-or-not-applicable-with-reason>`
-- Run: `<command-or-not-applicable-with-reason>`
-- Deploy: `<command-or-not-applicable-with-reason>`
+- All commands are executable argv (`program` plus `args`) and run from the capsule root; do not
+  document shell strings.
+- `install`: `program: <executable>`; `args: [<arguments>]`
+- `build`: `program: <executable>`; `args: [<arguments>]`
+- `lint`: `program: <executable>`; `args: [<arguments>]` — or N/A with a non-empty reason
+- `typecheck`: `program: <executable>`; `args: [<arguments>]` — or N/A with a non-empty reason
+- `test`: `program: <executable>`; `args: [<arguments>]`
+- `run`: `program: <executable>`; `args: [<arguments>]`
+- `deployDryRun`: `program: <executable>`; `args: [<arguments>]`
+- Structural independence verification: `program: <capsule-owned verifier>`; `args: [<arguments>]`
+- Empirical extraction verification: `program: <capsule-owned verifier>`; `args: [<capsule directory>, <arguments>]`
 
 ## Prohibited actions
 
 - Do not modify other projects or shared packages without recording scope expansion.
 - Do not use production credentials or production data.
-- Do not bypass root verification, risk classification, or human authorization requirements.
+- When nested in a governed repository, follow its contribution review and authorization rules;
+  never make this capsule's lifecycle or standalone proof depend on those repository controls.
