@@ -3,10 +3,27 @@
 # Salin berkas ini ke <HERMES_HOME>/profiles/avery/config.yaml lalu sesuaikan
 # path dan nilai yang bertanda <...>. Rahasia (API key, token, kredensial)
 # TIDAK pernah ditulis di sini — tempatnya di .env, lihat deploy/.env.example.
+#
+# Bentuk berkas ini mencerminkan konfigurasi produksi per 2026-08-23. Riwayat
+# perbaikan dan alasan tiap keputusan ada di docs/whatsapp-group-fix.md.
 
 model:
   default: google/gemini-2.5-flash
   provider: openrouter
+
+# SKU ":free" di OpenRouter berbagi kuota antar seluruh pengguna dan sering
+# menolak dengan 429. Untuk agen yang melayani percakapan sungguhan, pakai
+# model berbayar. Bila tetap ingin gratis, isi fallback_providers di bawah.
+#
+# fallback_providers:
+#   - provider: openrouter
+#     model: google/gemini-2.5-flash
+
+auxiliary:
+  # true membatasi fallback tugas auxiliary (ringkasan, judul sesi) ke model
+  # gratis. Hemat, tetapi bila seluruh SKU gratis sedang 429 tugas auxiliary
+  # gagal diam-diam. Produksi memakai false karena keandalan lebih penting.
+  free_only: false
 
 display:
   compact: true
@@ -31,12 +48,56 @@ discord:
   auto_thread: true
   reactions: true
 
+# PENTING — presedens konfigurasi WhatsApp.
+#
+# Blok `whatsapp:` tingkat atas ini MENIMPA `gateway.platforms.whatsapp.extra`
+# untuk semua kunci bridgeable (gateway/config.py menjalankan
+# `extra.update(bridged)`). Menaruh nilai di `extra` sementara kunci yang sama
+# ada di sini menghasilkan kegagalan senyap.
+#
+# Dua kunci TIDAK bridgeable dan hanya berlaku bila ditulis di `extra`:
+#   - group_allowed_chats  (hanya di-bridge untuk Telegram)
+#   - free_response_chats  (yang di-bridge bernama free_response_channels)
 whatsapp:
   unauthorized_dm_behavior: ignore
-  require_mention: true
   # Matikan notifikasi "Gateway shutting down / restarting / back online" yang
   # dikirim ke chat WhatsApp. Dipatuhi oleh lima jalur notice di gateway.
   gateway_restart_notification: false
+
+  # true  → di grup, agen hanya menanggapi bila dipanggil: teks cocok dengan
+  #         mention_patterns, di-reply, atau diawali "/".
+  # false → menanggapi setiap pesan di setiap grup yang lolos group_policy.
+  require_mention: true
+
+  # Regex WAJIB ditulis dalam kutip tunggal YAML. Dalam kutip ganda, penulis
+  # otomatis meng-escape backslash menjadi ganda sehingga "\b" berubah jadi
+  # backslash literal dan pola tidak pernah cocok dengan apa pun.
+  mention_patterns:
+    - '(?i)\b<nama-agen>\b'
+
+  # allowlist → hanya grup di group_allow_from; grup lain diam total tanpa log.
+  # disabled  → tidak ada grup yang diproses.
+  # pairing   → menolak semua grup (pairing hanya berlaku untuk DM).
+  # open      → semua grup diproses, TETAPI sejak Hermes 0.20.4 gateway menolak
+  #             start bila nilainya `open` tanpa WHATSAPP_ALLOW_ALL_USERS, dan
+  #             flag itu membuat `_is_user_authorized` mengembalikan True untuk
+  #             siapa pun — di grup maupun DM. Praktis tidak bisa dipakai bila
+  #             allowlist pengirim masih ingin dipertahankan.
+  #
+  # Nilai selain keempat itu — termasuk "none" — jatuh ke tolak-semua secara
+  # senyap. Itu penyebab bug grup-diam yang didokumentasikan di docs/.
+  #
+  # Karena `open` tertutup, grup baru harus didaftarkan manual. Jalankan
+  # scripts/check-unregistered-groups.ps1 untuk menemukan yang terlewat.
+  group_policy: allowlist
+
+  # Grup yang lolos gerbang intake. Wajib sinkron dengan group_allowed_chats
+  # di `extra` — mengisi salah satu saja membuat pesan lolos satu lapisan lalu
+  # dibuang di lapisan berikutnya.
+  group_allow_from:
+    - <jid-grup-kerja>@g.us
+
+  send_read_receipts: false
 
 platforms:
   whatsapp:
@@ -50,17 +111,25 @@ platforms:
 gateway:
   platforms:
     whatsapp:
-      enabled: false
+      enabled: true
       extra:
-        group_policy: allowlist
-        group_allow_from: <jid-grup>@g.us
-        require_mention: true
-        mention_patterns:
-          - (?i)\bavery\b
-        free_response_chats: ''
+        # Mengotorisasi SELURUH anggota grup terdaftar, tanpa memandang nomor.
+        # Ini kontrol per grup, bukan per orang: siapa pun yang ditambahkan ke
+        # grup ini langsung punya akses penuh ke agen. Kosongkan bila hanya
+        # nomor di WHATSAPP_ALLOWED_USERS yang boleh memakai agen.
+        group_allowed_chats:
+          - <jid-grup-kerja>@g.us
+
+        # Grup yang boleh berpercakapan tanpa menyebut nama agen sama sekali.
+        # Diperiksa sebelum gerbang mention. Tidak mendukung wildcard — tiap
+        # JID harus ditulis eksplisit.
+        free_response_chats:
+          - <jid-grup-kerja>@g.us
+
+        # Menunda pemrosesan beberapa detik agar pesan beruntun digabung jadi
+        # satu pemanggilan agen. Efeknya balasan grup terasa tertunda ~5 detik.
         text_batch_delay_seconds: 5
         text_batch_split_delay_seconds: 10
-        send_read_receipts: false
 
 # MCP server bawaan Hermes Studio. Path di bawah ini khas mesin Windows tempat
 # Studio terpasang; di server Linux sesuaikan atau hapus blok ini seluruhnya.
