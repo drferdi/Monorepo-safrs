@@ -77,6 +77,7 @@ function contract(overrides = {}) {
 const lifecycleSource = String.raw`
 import { appendFile, mkdir, symlink, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
+import { spawn } from "node:child_process";
 import http from "node:http";
 
 const stage = process.argv[2];
@@ -101,6 +102,19 @@ if (stage === "http") {
   });
   server.listen(Number(process.env.PORT), process.env.HOST);
 }
+if (stage === "http-tree") {
+  spawn(process.execPath, ["server-child.mjs"], { stdio: "ignore" });
+  setInterval(() => {}, 1000);
+}
+`;
+
+const serverChildSource = `
+import http from "node:http";
+const server = http.createServer((_request, response) => {
+  response.writeHead(204);
+  response.end();
+});
+server.listen(Number(process.env.PORT), process.env.HOST);
 `;
 
 async function unusedPort() {
@@ -125,6 +139,7 @@ async function createRepository(projectContract = contract()) {
     `${JSON.stringify(projectContract, null, 2)}\n`,
   );
   await writeFile(path.join(capsule, "lifecycle.mjs"), lifecycleSource);
+  await writeFile(path.join(capsule, "server-child.mjs"), serverChildSource);
   await writeFile(path.join(root, "root-sentinel.txt"), "root-only\n");
   return { root, capsule };
 }
@@ -368,7 +383,7 @@ test("verify runs the finite lifecycle in order inside an extracted capsule", as
 test("HTTP smoke starts run once, probes it, and terminates the process tree", async () => {
   const port = await unusedPort();
   const httpContract = contract({
-    commands: { ...contract().commands, run: command("http") },
+    commands: { ...contract().commands, run: command("http-tree") },
     smoke: {
       kind: "http",
       host: "127.0.0.1",
