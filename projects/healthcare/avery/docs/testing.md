@@ -1,6 +1,30 @@
 # Pengujian
 
-Belum ada berkas kode di `src/`, jadi tidak ada rangkaian uji otomatis. Yang diverifikasi adalah gateway yang sedang berjalan.
+Dua lapis: uji otomatis terhadap kode di repositori, dan verifikasi manual terhadap gateway yang sedang berjalan.
+
+## Uji otomatis
+
+Perintah kanonik, dijalankan dari akar monorepo:
+
+```bash
+pwsh -NoProfile -File projects/healthcare/avery/scripts/test.ps1
+```
+
+Runner mencari `py -3` lalu `python` (tidak pernah Python di `runtime/`), mengatur `PYTHONPATH=src`, dan menjalankan `unittest discover` — pustaka standar saja, tanpa dependensi. Kode keluarnya adalah kode keluar unittest. Bila `pwsh` belum terpasang, `powershell.exe` 5.1 bisa menjalankan skrip yang sama.
+
+Yang dicakup:
+
+| Berkas uji | Kontrak yang dijaga |
+| --- | --- |
+| `test_policy.py` | normalisasi nomor, penolakan draf yang menyapa Chief atau memuat perancah cron, validasi target tunggal, pembacaan allowlist read-only |
+| `test_store.py` | siklus pending → approved → sent, kedaluwarsa 15 menit (jam disuntikkan), sekali pakai, tulis atomik, ledger tanpa isi pesan |
+| `test_sender.py` | argv `hermes -p avery send ...` persis, pengikatan hash draf, penolakan pengiriman kedua |
+| `test_member_watch.py` | keluaran kosong pada jalankan pertama dan tanpa perubahan; anggota baru dilaporkan tersamar |
+| `test_powershell_dryrun.py` | `sync-profile-to-repo.ps1 -WhatIf` tidak menulis satu berkas pun |
+
+Uji tidak pernah menyentuh `runtime/`, `.env`, sesi WhatsApp, atau mengeksekusi Hermes.
+
+## Verifikasi gateway hidup
 
 ## Setelah mengubah konfigurasi
 

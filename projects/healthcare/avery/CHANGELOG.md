@@ -6,6 +6,27 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/), penomoran meng
 
 ---
 
+## [Unreleased]
+
+Pengerasan kapsul. Semua butir di bawah terverifikasi di repositori lewat uji otomatis atau dry-run; tidak ada yang mengklaim cutover runtime, pengiriman hidup, atau pemantauan berjalan.
+
+### Ditambahkan
+
+- **Manifest kepemilikan skill** `ai/profiles/avery/custom-skills.json` — tepat 18 pohon skill milik Avery. `sync-profile-to-repo.ps1` kini hanya menyalin pohon yang tercantum, mencadangkan berkas yang akan ditimpa ke `ai/profiles/avery.bak-<stempel>/`, dan memverifikasi SHA-256 tiap salinan. `-WhatIf` terbukti nol mutasi.
+- **Broker outbound terikat persetujuan** `src/avery_outbound/` — `prepare` memeriksa draf (menolak yang menyapa Chief atau memuat perancah cron), mengikat pada hash SHA-256, menyimpan metadata tanpa isi pesan di bawah `HERMES_HOME`; `approve` kedaluwarsa 15 menit; `status` mencetak argv `hermes -p avery send ...` sekali pakai tanpa mengeksekusinya — satu-satunya keluaran dengan nomor penuh, karena manusia menyalinnya ke terminal; keluaran lain disamarkan ke empat digit terakhir. Tidak pernah mengubah allowlist: penerima yang belum terdaftar menghasilkan kode keluar 3.
+- **Rangkaian uji** `tests/` (pustaka standar `unittest`) dan runner `scripts/test.ps1`.
+- **Alat pemulihan Windows** — `health-check.ps1` (JSON tersanitasi, kode keluar 0/1/2), `restart-gateway.ps1` (dry-run default, `-Execute` untuk bertindak), `restore-native-runtime-layout.ps1` (fail-closed, menolak bila proses Hermes masih berjalan), `member_watch.py` (pembanding snapshot anggota, pengenal disamarkan).
+
+### Dihapus
+
+- 20 pohon skill bundled/managed milik Hermes dan 5 berkas state pengelola skill dari `ai/profiles/avery/skills/` — bukan milik Avery dan berubah setiap sesi.
+- Prototipe `scripts/outreach.py`; logikanya berpindah ke `src/avery_outbound/policy.py` tanpa kemampuan `--authorize`.
+
+### Diubah
+
+- `docs/whatsapp-group-fix.md` disanitasi: JID dan nomor telepon diganti placeholder. Riwayat git sebelum commit ini masih memuat nilai aslinya.
+- Skill `contact-outreach` diperbarui ke alur broker.
+
 ## [0.1.0] — 2026-08-23
 
 Rilis fondasi. AVERY berjalan sebagai agen percakapan di WhatsApp dengan gerbang relevansi, pengetahuan lokal, dan jejak eksekusi yang dapat diaudit.

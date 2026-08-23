@@ -54,9 +54,9 @@
 
 **Files:** capsule docs, configuration templates, `.gitignore`, `CHANGELOG.md`, `.agents/HANDOFF.md`.
 
-- [ ] Record target versus verified repository behavior without asserting live cutover, elapsed monitoring, repository visibility, or MAESTRO operation.
-- [ ] Replace sensitive incident material with a sanitized baseline.
-- [ ] Run unit tests, SAFRS verification, diff checks, ownership scans, and sensitive-pattern scans before focused commits.
+- [x] Record target versus verified repository behavior without asserting live cutover, elapsed monitoring, repository visibility, or MAESTRO operation.
+- [x] Replace sensitive incident material with a sanitized baseline.
+- [x] Run unit tests, SAFRS verification, diff checks, ownership scans, and sensitive-pattern scans before focused commits.
 
 ## Execution Gates
 

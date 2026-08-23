@@ -1,8 +1,9 @@
 # Perbaikan grup WhatsApp — profil `avery`
 
-> Dokumen ini memuat JID grup dan nomor telepon sungguhan milik Chief. Isinya
-> data operasional, bukan kredensial, dan repositori ini privat. Jangan salin
-> nilainya ke `config.example.yaml` atau berkas contoh mana pun.
+> Seluruh JID grup, JID anggota, dan nomor telepon di dokumen ini adalah
+> placeholder (`<GROUP_n>@g.us`, `<LID_x>@lid`, `628xxxxxxxxxx`). Nilai
+> sebenarnya hanya ada di `config.yaml` runtime yang tidak pernah masuk git.
+> Riwayat git sebelum sanitasi 2026-08-23 masih memuat nilai aslinya.
 
 **2026-08-23 · Selesai dan terbukti.** Avery membalas di kedua grup WhatsApp sejak pukul 03:31.
 
@@ -25,12 +26,12 @@ Bridge Baileys tidak bersalah; pesan grup lolos di sana karena `WHATSAPP_DM_POLI
 
 | JID | Nama |
 |---|---|
-| `120363428439876112@g.us` | Founders Core |
-| `120363410191104704@g.us` | Decisions |
-| `120363428714713249@g.us` | Business Growth |
-| `120363429027122055@g.us` | Coding & Build |
+| `<GROUP_1>@g.us` | Founders Core |
+| `<GROUP_2>@g.us` | Decisions |
+| `<GROUP_3>@g.us` | Business Growth |
+| `<GROUP_4>@g.us` | Coding & Build |
 
-Anggota keempatnya sama: `21466380808233@lid` (Chief, telepon `6281330018882`) dan `90886625054917@lid` (bot Avery, telepon `6282339708330`).
+Anggota keempatnya sama: `<LID_A>@lid` (Chief, telepon `628xxxxxxxxxx`) dan `<LID_B>@lid` (bot Avery, telepon `628xxxxxxxxxx`).
 
 ### Aturan grup
 
@@ -68,10 +69,10 @@ whatsapp:
     - '(?i)\bave\s*!'
   group_policy: "allowlist"
   group_allow_from:
-    - "120363428439876112@g.us"
-    - "120363410191104704@g.us"
-    - "120363428714713249@g.us"
-    - "120363429027122055@g.us"
+    - "<GROUP_1>@g.us"
+    - "<GROUP_2>@g.us"
+    - "<GROUP_3>@g.us"
+    - "<GROUP_4>@g.us"
   send_read_receipts: false
 
 auxiliary:
@@ -83,15 +84,15 @@ gateway:
       enabled: true
       extra:
         group_allowed_chats:
-          - "120363428439876112@g.us"
-          - "120363410191104704@g.us"
-          - "120363428714713249@g.us"
-          - "120363429027122055@g.us"
+          - "<GROUP_1>@g.us"
+          - "<GROUP_2>@g.us"
+          - "<GROUP_3>@g.us"
+          - "<GROUP_4>@g.us"
         free_response_chats:
-          - "120363428439876112@g.us"
-          - "120363410191104704@g.us"
-          - "120363428714713249@g.us"
-          - "120363429027122055@g.us"
+          - "<GROUP_1>@g.us"
+          - "<GROUP_2>@g.us"
+          - "<GROUP_3>@g.us"
+          - "<GROUP_4>@g.us"
         text_batch_delay_seconds: 5
         text_batch_split_delay_seconds: 10
 ```

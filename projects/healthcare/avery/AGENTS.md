@@ -1,4 +1,4 @@
-# Project Capsule Router — Medisync
+# Project Capsule Router — Avery
 
 ## Inheritance
 
@@ -25,14 +25,12 @@ Read the repository root `AGENTS.md` first. This file narrows project-local cont
 
 ## Commands
 
-Proyek ini konfigurasi dan berkas pendukung, bukan paket yang dibangun. Runtime-nya adalah Hermes Studio yang terpasang terpisah.
+Proyek ini konfigurasi, skrip operasional, dan satu paket Python kecil (`src/avery_outbound`, pustaka standar saja). Runtime-nya adalah Hermes Studio yang terpasang terpisah.
 
 - Build: `not-applicable` — tidak ada artefak yang dikompilasi.
-- Lint: `not-applicable` — belum ada berkas kode di `src/`.
-- Type check: `not-applicable` — belum ada berkas kode di `src/`.
-- Test: `not-applicable` — verifikasi dilakukan terhadap gateway yang berjalan, lihat `docs/testing.md`.
-
-Perbarui bagian ini begitu ada berkas kode yang masuk ke `src/`.
+- Lint: `not-applicable` — belum ada linter yang dipasang untuk paket ini.
+- Type check: `not-applicable` — belum ada pemeriksa tipe yang dipasang.
+- Test: `pwsh -NoProfile -File projects/healthcare/avery/scripts/test.ps1` (dari akar monorepo; `unittest` pustaka standar). Verifikasi gateway hidup tetap manual, lihat `docs/testing.md`.
 
 ## Batas data — wajib
 
