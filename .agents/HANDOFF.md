@@ -15,6 +15,10 @@ Last updated: 2026-08-24 (avery FIX-01…06 executed; FULL AUTO; tech-debt audit
   22/22, repository 67/67, extracted lifecycle PASS, token gate PASS, and Biome exit 0.
 - Root `pnpm` commands remain blocked by the inherited missing `@safrs/auth` workspace package;
   Bash SAFRS passes its first eight gates then reports the closed WP-A ownership metadata.
+- Five domain-nested Next.js apps have a local tsconfig relocation fix pending commit: each shared
+  config path resolves to root `packages/config/tsconfig/nextjs.json` and `noEmit` enables
+  `allowImportingTsExtensions`. Config validation and targeted Biome pass; full local typecheck is
+  separately blocked by stale/missing workspace links, including the inherited absent `@safrs/auth`.
 
 ## Current state
 
