@@ -4,27 +4,27 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-23 (projects/ relaid out by domain and committed; Sentra Bot tracked)
+Last updated: 2026-08-23 (medisync WhatsApp group replies restored; Hermes runtime moved inside the capsule)
 
 ## Current state
 
-- **Domain layering — committed** (`2fa329a`, merged `0c8b02c`; review evidence `edea112`). Chief ruled every capsule lives at `projects/<domain>/<capsule>/`, uniformly. Domains: `academic`, `corporate`, `healthcare`, `internal`, `product`; each carries only `AGENTS.md` + `README.md`. New capsule `healthcare/medisync` (Hermes/Avery config + deploy). Recorded in [ADR 0005](../docs/adrs/0005-projects-domain-layering.md) and `DECISIONS.md`; supersedes D1 of the smartboard migration design. Leases: `TASK-20260822-PROJECTS-DOMAIN-LAYERING` + `-REFS`, `-ROOT-DOCS`, `-PLANS`, `-OLDPATHS`, `-TOKEN-SCOPE`, `-DOCS`, and `-CURSOR-HTML-BUILD-SKILL-OWNERSHIP` (adopted an unowned path).
-- **Controls that silently broke and are now fixed — do not rediscover.** `pnpm-workspace.yaml` `projects/*/apps/*` → `projects/*/*/apps/*` (the flat pattern had dropped all 9 apps from the workspace with no error); `tools/safrs/check_topology.py` now two-level; `tools/safrs/check_routing.py`; `packages/token/scope.txt` (3 stale paths would have disabled token enforcement); `biome.jsonc` `projects/*/portfolio*/**`; four capsule `AGENTS.md` canonical links now `../../../AGENTS.md`; `tests/repository/lfs-snapshots.test.mjs` builds its path from fragments so text rewriting missed it.
-- **Integrity review APPROVED by Chief** for this change set (`.safrs/reviews/verification-integrity.json`, base `38a0f3a0b104`). It is fingerprint-bound: any further edit to a classified path invalidates it and Chief must re-sign.
-- **Damage repaired, worth knowing.** `robocopy /MOVE` on `projects/sentrabot` followed pnpm symlinks and emptied 8 `packages/*` directories. Restored via `git checkout -- packages/`, and the 7 uncommitted files belonging to `TASK-20260822-SENTRABOT-RELEASE-CLOSEOUT` recovered from the copies under `projects/product/sentrabot/apps/web/node_modules/@safrs/`. Never use `robocopy /MOVE` inside a pnpm workspace.
-- **Smartboard web security boundary — written down, do not rediscover it.** `projects/academic/academic-smartboard/apps/web/AGENTS.md` § "Batas keamanan". Code side clean; nothing deployed. Four obligations apply the moment it is: `ProtectedRoute` is not authorisation, security headers must come from the host, `COOKIE_SECURE`/`COOKIE_SAMESITE` fail open in the archive backend, `CORS_ORIGINS` must stay explicit.
-- **Smartboard web sub-phase 2:** `docs/plans/active/2026-08-22-smartboard-web-subphase2-akademik.md`, status `PROPOSED`. Open decisions for Chief: adopt RTL now or keep deferring; where `Dashboard`/`Pengajar`/`TutorialPenggunaan` belong; two new catalog deps (`recharts`, `sonner`, R2).
-- **Sentra Bot is now tracked** at `projects/product/sentrabot/`, on Chief's instruction. It had never been committed, so its files met Biome for the first time: `apps/site/**/assets`, `apps/site/original`, and `apps/site/src/html` are excluded as build output, provenance snapshot, and verbatim Webflow markup; `App.jsx` carries one justified `biome-ignore` for `dangerouslySetInnerHTML` (PAGE_HTML is assembled at build time from static modules, no user input). Runtime blockers unchanged — integrity manifest/approval missing; intake pin `d17a138` unavailable, do not substitute.
-- **Portfolio:** now `projects/corporate/portfolio-drnovia/`. 33/33 tests PASS.
-- **Unpushed:** `5b74cc2`, `eba5ff1`, `444554e` still local on `main`.
+- **Medisync WhatsApp fix — committed** (`2a4355f` on `fix/medisync-whatsapp-group-replies`, 8 files). Avery never answered in WhatsApp groups because `group_policy: none` — an unreplaced template placeholder — is not a value `_is_group_allowed()` recognises, so every group message was dropped with no log line at all. Full account, including the live group JIDs, in `projects/healthcare/medisync/docs/whatsapp-group-fix.md`.
+- **Three config traps that cause silent failure — do not rediscover.** (1) The top-level `whatsapp:` block **overrides** `gateway.platforms.whatsapp.extra` for every bridgeable key; `group_allowed_chats` and `free_response_chats` are the exceptions and only work inside `extra`. (2) `mention_patterns` regexes must be single-quoted YAML — in double quotes the backslash is escaped twice and the pattern never matches. (3) `group_policy: open` refuses to start since Hermes 0.20.4 unless `WHATSAPP_ALLOW_ALL_USERS` is set, and that flag authorises **anyone** in groups and DMs alike, so `allowlist` plus `scripts/check-unregistered-groups.ps1` is the workable posture.
+- **Hermes runtime now lives inside the capsule**, on Chief's instruction: `projects/healthcare/medisync/runtime/` (3.6 GB) with directory junctions left at every original location, so all absolute paths — four `mcp_servers` entries, `HERMES_HOME`, the AppData symlink, the NSIS updater — keep working untouched. The whole directory is gitignored; `git status` stays clean. Chief's instruction overrides the capsule `AGENTS.md` location rule, not its no-commit rule.
+- **The NSIS installer ignores junctions.** Updating Hermes Studio empties the junction target, deletes the junction, and writes a real directory back at the old path — every update reverses the folder migration. Repair with `scripts/verify-runtime-junctions.ps1 -Fix` after each Studio update.
+- **Also done in this session:** Hermes Studio 0.6.46 installed (SQLite 3.50.4 → 3.53.1, WAL-reset bug gone); runtimes 0.19.0/0.20.0 removed; pre-migration backups deleted after verification (~3.5 GB reclaimed). Avery verified end-to-end after every step — real WhatsApp messages answered in DM and in groups.
+- **Integrity review APPROVED by Chief** for this change set (`.safrs/reviews/verification-integrity.json`, base `38a0f3a0b104`, fingerprint `38d9e195…`). Fingerprint-bound: any further edit to a classified path invalidates it and Chief must re-sign.
+- **Still open from the previous session** (unchanged): `pnpm install` never ran, so `pnpm test:contracts` is unverified against the domain layout; smartboard web sub-phase 2 plan is `PROPOSED` with 3 open decisions for Chief; the smartboard web security boundary is written in `projects/academic/academic-smartboard/apps/web/AGENTS.md` § "Batas keamanan" — read it before any deploy; never use `robocopy /MOVE` inside a pnpm workspace.
+- **Unpushed:** `5b74cc2`, `eba5ff1`, `444554e` on `main`, plus `2a4355f` on the fix branch.
 
 ## Next actions
 
-1. `pnpm install` — `vitest`/`tsc` are absent, so `pnpm test:contracts` could not be run against the new layout.
-2. Chief: push `main` (3 merges land locally, unpushed).
-3. Chief: approve smartboard web sub-phase 2 plan (`PROPOSED` → `ACTIVE`) and answer its 3 open decisions.
-4. Owners: claim or clear remaining unowned untracked paths (`.kilo/plans/` and anything outside an active lease).
-5. Before any smartboard web deploy: read `apps/web/AGENTS.md` § "Batas keamanan" first.
+1. Merge `fix/medisync-whatsapp-group-replies` into `main` (integrity evidence is in place).
+2. `pnpm install` — `vitest`/`tsc` are absent, so `pnpm test:contracts` could not be run.
+3. Chief: push `main` (merges land locally, unpushed).
+4. Chief: approve smartboard web sub-phase 2 plan (`PROPOSED` → `ACTIVE`) and answer its 3 open decisions.
+5. After any Hermes Studio update: run `projects/healthcare/medisync/scripts/verify-runtime-junctions.ps1 -Fix`.
+6. When Avery goes quiet in a group: run `projects/healthcare/medisync/scripts/check-unregistered-groups.ps1` — unregistered groups fail silently by design.
 
 ## Verify
 
@@ -32,4 +32,4 @@ Last updated: 2026-08-23 (projects/ relaid out by domain and committed; Sentra B
 bash scripts/safrs-verify.sh
 ```
 
-Passing as of this handoff: topology, task contracts, ownership, sensitive classification (review approved), status claims. Suites run green: `tests/governance` 32, `tests/architecture` 6, every file under `tests/repository`, `tools/capabilities` 7, `scripts/check-tokens.mjs`.
+Passing as of this handoff: topology, task contracts, ownership, sensitive classification (review approved), status claims.
