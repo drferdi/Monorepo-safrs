@@ -14,7 +14,7 @@ Status: TEMPLATE — not an active product.
 
 ## Interfaces
 
-- Consumes: `<declared capsule-local packages or external services, or none>`
+- Consumes: `<declared packages/services or none>`
 - Exposes: `<declared APIs/events/artifacts or none>`
 
 ## Standalone contract
@@ -44,20 +44,20 @@ infrastructure.
 Replace each placeholder with an executable argv command owned by this capsule and run it from the
 capsule root. Required stages must have a non-empty `program` and may not be marked N/A:
 
-- `install`: `program: <executable>`; `args: [<arguments>]`
-- `build`: `program: <executable>`; `args: [<arguments>]`
-- `lint`: `program: <executable>`; `args: [<arguments>]` — or N/A with a non-empty reason
-- `typecheck`: `program: <executable>`; `args: [<arguments>]` — or N/A with a non-empty reason
-- `test`: `program: <executable>`; `args: [<arguments>]`
-- `run`: `program: <executable>`; `args: [<arguments>]`
-- `deployDryRun`: `program: <executable>`; `args: [<arguments>]`
+- `install`: `program: REPLACE_WITH_CAPSULE_INSTALL_PROGRAM`; `args: [REPLACE_WITH_CAPSULE_INSTALL_ARGUMENTS]`
+- `build`: `program: REPLACE_WITH_CAPSULE_BUILD_PROGRAM`; `args: [REPLACE_WITH_CAPSULE_BUILD_ARGUMENTS]`
+- `lint`: `program: REPLACE_WITH_CAPSULE_LINT_PROGRAM`; `args: [REPLACE_WITH_CAPSULE_LINT_ARGUMENTS]` — or N/A with a non-empty reason
+- `typecheck`: `program: REPLACE_WITH_CAPSULE_TYPECHECK_PROGRAM`; `args: [REPLACE_WITH_CAPSULE_TYPECHECK_ARGUMENTS]` — or N/A with a non-empty reason
+- `test`: `program: REPLACE_WITH_CAPSULE_TEST_PROGRAM`; `args: [REPLACE_WITH_CAPSULE_TEST_ARGUMENTS]`
+- `run`: `program: REPLACE_WITH_CAPSULE_RUN_PROGRAM`; `args: [REPLACE_WITH_CAPSULE_RUN_ARGUMENTS]`
+- `deployDryRun`: `program: REPLACE_WITH_CAPSULE_DEPLOY_DRY_RUN_PROGRAM`; `args: [REPLACE_WITH_CAPSULE_DEPLOY_DRY_RUN_ARGUMENTS]`
 
 ## Local verification
 
 Replace the placeholders with commands that exist and have been run from the capsule root:
 
-- Structural independence verification: `<capsule-owned command run from this capsule root>`
-- Empirical extraction verification: `<capsule-owned command run from this capsule root or against this capsule directory>`
+- Structural independence verification: REPLACE_WITH_CAPSULE_STRUCTURAL_VERIFIER, run from this capsule root
+- Empirical extraction verification: REPLACE_WITH_CAPSULE_EMPIRICAL_VERIFIER, run from this capsule root or against CAPSULE_DIRECTORY
 
 Both checks must use only the capsule and declared external dependencies; neither may invoke parent
 paths, root registries, or the root verifier. When nested in a governed repository, contribution

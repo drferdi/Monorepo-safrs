@@ -56,15 +56,15 @@ Replace these placeholders with commands that exist before activating the capsul
 
 - All commands are executable argv (`program` plus `args`) and run from the capsule root; do not
   document shell strings.
-- `install`: `program: <executable>`; `args: [<arguments>]`
-- `build`: `program: <executable>`; `args: [<arguments>]`
-- `lint`: `program: <executable>`; `args: [<arguments>]` — or N/A with a non-empty reason
-- `typecheck`: `program: <executable>`; `args: [<arguments>]` — or N/A with a non-empty reason
-- `test`: `program: <executable>`; `args: [<arguments>]`
-- `run`: `program: <executable>`; `args: [<arguments>]`
-- `deployDryRun`: `program: <executable>`; `args: [<arguments>]`
-- Structural independence verification: `program: <capsule-owned verifier>`; `args: [<arguments>]`
-- Empirical extraction verification: `program: <capsule-owned verifier>`; `args: [<capsule directory>, <arguments>]`
+- `install`: `program: REPLACE_WITH_CAPSULE_INSTALL_PROGRAM`; `args: [REPLACE_WITH_CAPSULE_INSTALL_ARGUMENTS]`
+- `build`: `program: REPLACE_WITH_CAPSULE_BUILD_PROGRAM`; `args: [REPLACE_WITH_CAPSULE_BUILD_ARGUMENTS]`
+- `lint`: `program: REPLACE_WITH_CAPSULE_LINT_PROGRAM`; `args: [REPLACE_WITH_CAPSULE_LINT_ARGUMENTS]` — or N/A with a non-empty reason
+- `typecheck`: `program: REPLACE_WITH_CAPSULE_TYPECHECK_PROGRAM`; `args: [REPLACE_WITH_CAPSULE_TYPECHECK_ARGUMENTS]` — or N/A with a non-empty reason
+- `test`: `program: REPLACE_WITH_CAPSULE_TEST_PROGRAM`; `args: [REPLACE_WITH_CAPSULE_TEST_ARGUMENTS]`
+- `run`: `program: REPLACE_WITH_CAPSULE_RUN_PROGRAM`; `args: [REPLACE_WITH_CAPSULE_RUN_ARGUMENTS]`
+- `deployDryRun`: `program: REPLACE_WITH_CAPSULE_DEPLOY_DRY_RUN_PROGRAM`; `args: [REPLACE_WITH_CAPSULE_DEPLOY_DRY_RUN_ARGUMENTS]`
+- Structural independence verification: `program: REPLACE_WITH_CAPSULE_STRUCTURAL_VERIFIER`; `args: [REPLACE_WITH_CAPSULE_STRUCTURAL_VERIFIER_ARGUMENTS]`
+- Empirical extraction verification: `program: REPLACE_WITH_CAPSULE_EMPIRICAL_VERIFIER`; `args: [CAPSULE_DIRECTORY, REPLACE_WITH_CAPSULE_EMPIRICAL_VERIFIER_ARGUMENTS]`
 
 ## Prohibited actions
 
