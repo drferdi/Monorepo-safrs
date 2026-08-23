@@ -31,8 +31,11 @@ Last updated: 2026-08-24 — WP-A standalone project foundation closeout
   current default count is 1,191 including the fully explained 44-file WP-A slice.
 - Unfiltered `pnpm install` fails because `packages/api` references missing workspace package
   `@safrs/auth`; targeted install for `@safrs/project-standalone` passes.
+- Root `pnpm typecheck` fails on stale cross-root config paths under `projects/packages/` and
+  `projects/tsconfig.json`; `pnpm build` fails on `projects/scripts/next-production-build.mjs`.
 - Root `pnpm test` requires a missing `.env`; setup would start shared Docker/PostgreSQL and was not
-  run. These failures predate WP-A and are not hidden as WP-A regressions.
+  run. `pnpm check:tokens` passes; `pnpm lint` passes with four inherited Sentrabot CSS warnings.
+  These failures predate WP-A and are not hidden as WP-A regressions.
 
 ## Next action
 
