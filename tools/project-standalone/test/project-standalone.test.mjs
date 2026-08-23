@@ -380,6 +380,11 @@ test("HTTP smoke starts run once, probes it, and terminates the process tree", a
       result.stages.find((stage) => stage.name === "smoke")?.status,
       "PASS",
     );
+    await assert.rejects(
+      fetch(`http://127.0.0.1:${port}/ready`, {
+        signal: AbortSignal.timeout(500),
+      }),
+    );
   } finally {
     await rm(root, { recursive: true, force: true });
   }
@@ -434,7 +439,12 @@ test("a symlink created by a lifecycle command is rejected before the next stage
     );
     await assert.rejects(
       verifyCapsule({ root, selector: "internal/example", checkerPath }),
-      /symbolic link|reparse point/iu,
+      (error) => {
+        assert.match(error.message, /symbolic link|reparse point/iu);
+        assert.equal(error.result?.stages.at(-1)?.name, "cleanup");
+        assert.equal(error.result?.stages.at(-1)?.status, "PASS");
+        return true;
+      },
     );
   } finally {
     await rm(root, { recursive: true, force: true });
@@ -462,13 +472,21 @@ test("command timeout terminates the real child process", async () => {
 
 test("a lifecycle failure remains primary while extraction is cleaned", async () => {
   const failing = contract();
-  failing.commands.test = { program: "node", args: ["-e", "process.exit(7)"] };
+  failing.commands.test = {
+    program: "node",
+    args: [
+      "-e",
+      "console.log(process.env.PATH); console.error(process.env.HOME); process.exit(7)",
+    ],
+  };
   const { root } = await createRepository(failing);
   try {
     await assert.rejects(
       verifyCapsule({ root, selector: "internal/example", checkerPath }),
       (error) => {
         assert.match(error.message, /test.*exit code 7/iu);
+        assert.match(error.message, /<redacted-env>/u);
+        assert.ok(!error.message.includes(path.dirname(process.execPath)));
         assert.equal(error.result?.stages.at(-1)?.name, "cleanup");
         assert.equal(error.result?.stages.at(-1)?.status, "PASS");
         return true;

@@ -264,7 +264,7 @@ async function executeLifecycle(name, command, state) {
     );
   }
   if (result.exitCode !== 0) {
-    const evidence = boundedOutput(result);
+    const evidence = boundedOutput(result, state.environment);
     record(
       state.stages,
       name,
@@ -380,7 +380,7 @@ async function runAndSmoke(contract, state) {
       `${contract.smoke.path} -> ${contract.smoke.expectedStatus}`,
     );
   } catch (error) {
-    const evidence = boundedOutput(output);
+    const evidence = boundedOutput(output, state.environment);
     if (evidence) error.message = `${error.message}\n${evidence}`;
     record(state.stages, "smoke", "FAIL", error.message);
     throw error;
