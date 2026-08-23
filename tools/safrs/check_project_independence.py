@@ -31,6 +31,16 @@ SKIP_DIRECTORIES = {
     "__pycache__",
 }
 ROOT_COUPLING_PREFIXES = ("tools/", "scripts/", "packages/")
+ROOT_METADATA_NAMES = {
+    "biome.json",
+    "biome.jsonc",
+    "package-lock.json",
+    "pnpm-lock.yaml",
+    "pnpm-workspace.yaml",
+    "turbo.json",
+    "tsconfig.json",
+    "yarn.lock",
+}
 
 
 @dataclass(frozen=True, order=True)
@@ -82,7 +92,8 @@ def path_escapes(value: str, base: Path, capsule: Path) -> bool:
 
 def missing_capsule_owned_reference(value: str, base: Path) -> bool:
     normalized = value.replace("\\", "/").removeprefix("./")
-    if not normalized.startswith(ROOT_COUPLING_PREFIXES):
+    root_like = normalized.startswith(ROOT_COUPLING_PREFIXES) or Path(normalized).name in ROOT_METADATA_NAMES
+    if not root_like:
         return False
     return not (base / normalized).exists()
 
@@ -179,7 +190,7 @@ def check_contract_paths(
                 continue
             path_like = candidate in {".", ".."} or any(
                 marker in candidate for marker in ("/", "\\")
-            )
+            ) or Path(candidate).name in ROOT_METADATA_NAMES
             if path_like and path_escapes(candidate, capsule, capsule):
                 findings.append(
                     Finding(
@@ -296,6 +307,47 @@ def check_packages(capsule: Path, capsule_label: str, root: Path, findings: list
                         break
 
 
+def iter_string_values(value, field=""):
+    if isinstance(value, str):
+        yield field or "$", value
+    elif isinstance(value, list):
+        for index, item in enumerate(value):
+            yield from iter_string_values(item, f"{field}[{index}]")
+    elif isinstance(value, dict):
+        for key, item in sorted(value.items()):
+            child = f"{field}.{key}" if field else str(key)
+            yield from iter_string_values(item, child)
+
+
+def is_json_config(path: Path) -> bool:
+    name = path.name.lower()
+    return (
+        name in {"turbo.json", "biome.json", "biome.jsonc"}
+        or (name.startswith("tsconfig") and name.endswith(".json"))
+    )
+
+
+def check_json_configs(capsule: Path, capsule_label: str, root: Path, findings: list[Finding]):
+    for config_path in iter_files(capsule):
+        if not is_json_config(config_path):
+            continue
+        config = read_json(config_path, capsule_label, root, findings)
+        if config is None:
+            continue
+        for field, value in iter_string_values(config):
+            if value.startswith(("http://", "https://")):
+                continue
+            if ".." in value and path_escapes(value, config_path.parent, capsule):
+                findings.append(
+                    Finding(
+                        capsule_label,
+                        repository_relative(config_path, root),
+                        field,
+                        "configuration path escapes the capsule",
+                    )
+                )
+
+
 def logical_docker_lines(text: str):
     current = ""
     for raw_line in text.splitlines():
@@ -392,6 +444,7 @@ def check_repository(root: Path) -> list[Finding]:
         capsule_label = contract.get("id") if isinstance(contract.get("id"), str) else fallback_label
         check_contract_paths(contract, capsule, capsule_label, root, findings)
         check_packages(capsule, capsule_label, root, findings)
+        check_json_configs(capsule, capsule_label, root, findings)
         check_dockerfiles(capsule, capsule_label, root, findings)
     return sorted(set(findings))
 

@@ -115,6 +115,19 @@ class ProjectIndependenceTests(unittest.TestCase):
         self.assertIn("commands.test.program", result.stderr)
         self.assertIn("scripts.governance", result.stderr)
 
+    def test_root_config_names_and_config_extends_require_capsule_ownership(self):
+        contract = self.read_json("project.contract.json")
+        contract["commands"]["install"]["args"] = ["--config=turbo.json"]
+        self.write_json("project.contract.json", contract)
+        (self.capsule / "tsconfig.json").write_text(
+            json.dumps({"extends": "../../../../tsconfig.json"}) + "\n",
+            encoding="utf-8",
+        )
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("turbo.json", result.stderr)
+        self.assertIn("tsconfig.json [extends]", result.stderr)
+
     def test_docker_build_context_cannot_escape_capsule(self):
         contract = self.read_json("project.contract.json")
         contract["commands"]["deployDryRun"]["args"] = ["build", "--check", ".."]
