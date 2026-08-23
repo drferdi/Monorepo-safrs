@@ -413,3 +413,18 @@ Supersedes the legacy `apps/{healthcare,internal,academic,...}` topology.
 - Language: agent diagnostics in Bahasa Indonesia; docs/code/commands/identifiers in English.
 - Line endings: LF in git (`.gitattributes`); `.ps1/.bat/.cmd` CRLF.
 - Package manager: always `pnpm`. Node >= 24.18 < 25.
+
+## 2026-08-24 — Avery FIX-01…06 and FULL AUTO target
+
+- Hermes core is patched only where a native switch does not exist (WhatsApp ingress reason codes);
+  every vendored patch lives in `projects/healthcare/avery/patches/` with SHA-256 manifest and an
+  idempotent apply/revert script. Prose in `SOUL.md` is the last resort, after config and patch.
+- `agent.verify_on_stop` stays `false` for Avery: the nudge drives `hermes verify`, which walks to the
+  monorepo git root through the runtime junction and runs `pnpm install`. Mutation read-back is covered
+  by `agent.execution_guidance` (forced `true` — Hermes `auto` excludes gemini) and the SOUL Execution rule.
+- Target is FULL AUTO (Chief): learning loop at Hermes defaults (`write_approval` off, guard off);
+  freedom is reduced by Chief afterwards, not pre-emptively by agents. Group-wide response requires
+  `WHATSAPP_ALLOW_ALL_USERS`, which also opens DMs — decision reserved for Chief.
+- Subagent lanes are one-way pipes treated as the worst model in the world: 6-part spec, explicit
+  prohibitions, 10-minute budget, reports never trusted without the architect re-running verification.
+  Incidents and the fixes applied to lane definitions are tracked in Claude's memory ledger.
