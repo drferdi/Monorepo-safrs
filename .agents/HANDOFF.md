@@ -21,7 +21,7 @@ Last updated: 2026-08-24 — WP-A standalone project foundation closeout
 - Risk: R2 because architecture/governance boundaries and their tests changed together. Fresh
   independent review is required; no approval evidence was authored by the implementer.
 - Scoped PowerShell SAFRS verification (`SAFRS_BASE_REF=f1aeb75c349e`) passes its first 11 gates,
-  classifies exactly 44 WP-A files as R2, then stops at the expected independent integrity-review
+  classifies exactly 46 WP-A files as R2, then stops at the expected independent integrity-review
   requirement. The default verifier sees 1,191 files because `main` moved with unrelated work.
 
 ## Inherited baseline failures
