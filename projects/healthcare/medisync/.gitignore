@@ -2,6 +2,14 @@
 # konfigurasi. Beberapa di antaranya setara kredensial. Daftar ini mencegahnya
 # ikut ter-commit bila sewaktu-waktu tersalin ke dalam folder proyek.
 
+# --- Runtime Hermes yang tinggal di dalam folder proyek ----------------------
+# Sejak 2026-08-23 instalasi Hermes berada fisik di `runtime/`: HERMES_HOME,
+# state web UI, aplikasi Hermes Studio, cache Electron, dan berkas updater.
+# Lokasi lama di C: dipertahankan sebagai directory junction ke sini, sehingga
+# path absolut lama tetap bekerja. Ukurannya beberapa GB dan sebagian setara
+# kredensial — tidak satu byte pun boleh masuk git.
+runtime/
+
 # Rahasia
 .env
 .env.*
