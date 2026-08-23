@@ -364,10 +364,10 @@ def check_dockerfiles(capsule: Path, capsule_label: str, root: Path, findings: l
 
 
 def check_repository(root: Path) -> list[Finding]:
-    root = root.resolve(strict=False)
-    projects = root / "projects"
     if not root.is_dir() or root.is_symlink():
         raise UnsafeInputError("repository root must be a real directory")
+    root = root.resolve(strict=False)
+    projects = root / "projects"
     if projects.exists() and (not projects.is_dir() or projects.is_symlink()):
         raise UnsafeInputError("projects root must be a real directory")
 
