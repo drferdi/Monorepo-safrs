@@ -1,4 +1,29 @@
 {
-  "version": 1,
-  "capabilities": []
+  "version": "0.1.0",
+  "capabilities": [
+    "conversational-response",
+    "relevance-gating",
+    "group-participation",
+    "local-knowledge-kediri",
+    "task-store-kanban",
+    "execution-audit-runid",
+    "scheduling-cron",
+    "outbound-via-scheduler",
+    "memory-approval-gated",
+    "browser-use",
+    "web-search",
+    "terminal"
+  ],
+  "name": "avery",
+  "description": "Autonomous Virtual Executive Resource for Your-team - WhatsApp-native executive agent",
+  "surface": "whatsapp",
+  "runtime": "hermes-agent",
+  "not_yet": [
+    "maestro-control-plane",
+    "rate-limiting",
+    "action-approval-gate",
+    "result-validation",
+    "monitoring",
+    "multi-channel"
+  ]
 }
