@@ -322,7 +322,7 @@ def iter_string_values(value, field=""):
 def is_json_config(path: Path) -> bool:
     name = path.name.lower()
     return (
-        name in {"turbo.json", "biome.json", "biome.jsonc"}
+        name in {"turbo.json", "biome.json"}
         or (name.startswith("tsconfig") and name.endswith(".json"))
     )
 

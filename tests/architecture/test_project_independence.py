@@ -52,6 +52,10 @@ class ProjectIndependenceTests(unittest.TestCase):
         )
 
     def test_capsule_local_workspace_registry_and_external_dependencies_pass(self):
+        (self.capsule / "biome.jsonc").write_text(
+            '{\n  // Capsule-local JSONC is valid.\n  "files": {"includes": ["scripts/**"]}\n}\n',
+            encoding="utf-8",
+        )
         result = self.run_checker()
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("OK (1 active capsules)", result.stdout)
