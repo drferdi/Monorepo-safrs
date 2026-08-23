@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "id": "corporate/portfolio-drnovia",
+  "owner": "Chief (dr. Ferdi Iskandar)",
+  "risk": "R1",
+  "runtime": {
+    "name": "node",
+    "version": "24"
+  },
+  "packageManager": {
+    "name": "none",
+    "version": null,
+    "lockfile": null
+  },
+  "commands": {
+    "install": {
+      "program": "node",
+      "args": ["scripts/install.mjs"]
+    },
+    "lint": {
+      "program": null,
+      "args": [],
+      "notApplicableReason": "The capsule preserves generated Framer markup and vendored minified runtime files; no capsule-local linter is configured."
+    },
+    "typecheck": {
+      "program": null,
+      "args": [],
+      "notApplicableReason": "The dependency-free browser runtime is plain JavaScript and has no capsule-local type-checking toolchain."
+    },
+    "test": {
+      "program": "node",
+      "args": [
+        "--test",
+        "tests/capsule-paths.test.mjs",
+        "tests/lenis-contract.test.mjs",
+        "tests/standalone-contract.test.mjs"
+      ]
+    },
+    "build": {
+      "program": "node",
+      "args": ["scripts/build.mjs"]
+    },
+    "run": {
+      "program": "node",
+      "args": ["server.js"]
+    },
+    "deployDryRun": {
+      "program": "node",
+      "args": ["scripts/deploy-dry-run.mjs"]
+    }
+  },
+  "smoke": {
+    "kind": "http",
+    "host": "127.0.0.1",
+    "port": 4173,
+    "path": "/",
+    "expectedStatus": 200,
+    "startupTimeoutSeconds": 15
+  },
+  "artifacts": ["dist"],
+  "externalDependencies": [
+    {
+      "kind": "cdn",
+      "name": "Google Fonts",
+      "locator": "https://fonts.gstatic.com",
+      "required": false
+    },
+    {
+      "kind": "cdn",
+      "name": "Framer media",
+      "locator": "https://framerusercontent.com",
+      "required": false
+    },
+    {
+      "kind": "cdn",
+      "name": "GSAP visual enhancement",
+      "locator": "https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js",
+      "required": false
+    },
+    {
+      "kind": "service",
+      "name": "OpenWidget communication widget",
+      "locator": "https://cdn.openwidget.com/openwidget.js",
+      "required": false
+    }
+  ],
+  "mutableStatePaths": []
+}

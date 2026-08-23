@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "id": "template/project",
+  "owner": "REPLACE_BEFORE_ACTIVATION",
+  "risk": "R1",
+  "runtime": {
+    "name": "REPLACE_WITH_RUNTIME_NAME",
+    "version": "REPLACE_WITH_PINNED_RUNTIME_VERSION"
+  },
+  "packageManager": {
+    "name": "REPLACE_WITH_PACKAGE_MANAGER_OR_NONE",
+    "version": null,
+    "lockfile": null
+  },
+  "commands": {
+    "install": {
+      "program": "REPLACE_WITH_CAPSULE_INSTALL_PROGRAM",
+      "args": []
+    },
+    "lint": {
+      "program": null,
+      "args": [],
+      "notApplicableReason": "Inactive template; replace before capsule activation."
+    },
+    "typecheck": {
+      "program": null,
+      "args": [],
+      "notApplicableReason": "Inactive template; replace before capsule activation."
+    },
+    "test": {
+      "program": "REPLACE_WITH_CAPSULE_TEST_PROGRAM",
+      "args": []
+    },
+    "build": {
+      "program": "REPLACE_WITH_CAPSULE_BUILD_PROGRAM",
+      "args": []
+    },
+    "run": {
+      "program": "REPLACE_WITH_CAPSULE_RUN_PROGRAM",
+      "args": []
+    },
+    "deployDryRun": {
+      "program": "REPLACE_WITH_CAPSULE_DEPLOY_DRY_RUN_PROGRAM",
+      "args": []
+    }
+  },
+  "smoke": {
+    "kind": "none",
+    "notApplicableReason": "Inactive template; configure a real smoke probe before capsule activation."
+  },
+  "artifacts": ["REPLACE_WITH_CAPSULE_BUILD_ARTIFACT"],
+  "externalDependencies": [],
+  "mutableStatePaths": []
+}

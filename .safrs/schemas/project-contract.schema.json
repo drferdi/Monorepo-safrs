@@ -1,0 +1,320 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "safrs:project-contract.v1",
+  "title": "ProjectContractV1",
+  "description": "Standalone project-capsule lifecycle and portability contract.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "owner",
+    "risk",
+    "runtime",
+    "packageManager",
+    "commands",
+    "smoke",
+    "artifacts",
+    "externalDependencies",
+    "mutableStatePaths"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
+    },
+    "owner": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "risk": {
+      "enum": [
+        "R0",
+        "R1",
+        "R2",
+        "R3"
+      ]
+    },
+    "runtime": {
+      "$ref": "#/$defs/runtime"
+    },
+    "packageManager": {
+      "$ref": "#/$defs/packageManager"
+    },
+    "commands": {
+      "$ref": "#/$defs/commands"
+    },
+    "smoke": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/noSmoke"
+        },
+        {
+          "$ref": "#/$defs/httpSmoke"
+        }
+      ]
+    },
+    "artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/capsuleRelativePath"
+      }
+    },
+    "externalDependencies": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/externalDependency"
+      }
+    },
+    "mutableStatePaths": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/capsuleRelativePath"
+      }
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "nullableNonEmptyString": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        {
+          "const": null
+        }
+      ]
+    },
+    "capsuleRelativePath": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        {
+          "pattern": "^(?!(?:[\\\\/]|[A-Za-z][A-Za-z0-9+.-]*:|\\.\\.?$|\\.\\.[\\\\/]))(?!.*[\\\\/]\\.\\.(?:[\\\\/]|$)).+$"
+        }
+      ]
+    },
+    "nullableCapsuleRelativePath": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/capsuleRelativePath"
+        },
+        {
+          "const": null
+        }
+      ]
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "version": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "packageManager": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "lockfile"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "version": {
+          "$ref": "#/$defs/nullableNonEmptyString"
+        },
+        "lockfile": {
+          "$ref": "#/$defs/nullableCapsuleRelativePath"
+        }
+      }
+    },
+    "executableCommand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "program",
+        "args"
+      ],
+      "properties": {
+        "program": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "args": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "notApplicableCommand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "program",
+        "args",
+        "notApplicableReason"
+      ],
+      "properties": {
+        "program": {
+          "const": null
+        },
+        "args": {
+          "type": "array",
+          "maxItems": 0
+        },
+        "notApplicableReason": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "optionalCommand": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/executableCommand"
+        },
+        {
+          "$ref": "#/$defs/notApplicableCommand"
+        }
+      ]
+    },
+    "commands": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "install",
+        "lint",
+        "typecheck",
+        "test",
+        "build",
+        "run",
+        "deployDryRun"
+      ],
+      "properties": {
+        "install": {
+          "$ref": "#/$defs/executableCommand"
+        },
+        "lint": {
+          "$ref": "#/$defs/optionalCommand"
+        },
+        "typecheck": {
+          "$ref": "#/$defs/optionalCommand"
+        },
+        "test": {
+          "$ref": "#/$defs/executableCommand"
+        },
+        "build": {
+          "$ref": "#/$defs/executableCommand"
+        },
+        "run": {
+          "$ref": "#/$defs/executableCommand"
+        },
+        "deployDryRun": {
+          "$ref": "#/$defs/executableCommand"
+        }
+      }
+    },
+    "noSmoke": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "notApplicableReason"
+      ],
+      "properties": {
+        "kind": {
+          "const": "none"
+        },
+        "notApplicableReason": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "httpSmoke": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "host",
+        "port",
+        "path",
+        "expectedStatus",
+        "startupTimeoutSeconds"
+      ],
+      "properties": {
+        "kind": {
+          "const": "http"
+        },
+        "host": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "port": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^/"
+        },
+        "expectedStatus": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 599
+        },
+        "startupTimeoutSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 300
+        }
+      }
+    },
+    "externalDependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "name",
+        "locator",
+        "required"
+      ],
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "name": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "locator": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "required": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

@@ -3,6 +3,19 @@
 Append-only, newest first. Each entry: date, decision, brief rationale, evidence/status.
 Major architectural decisions also get an ADR in `docs/adrs/`.
 
+## 2026-08-24 - Project capsules are standalone products; the monorepo is their control plane
+
+Chief accepted the WP-A architecture: every active capsule owns an executable, machine-readable
+contract for install, build, test, run, and deployment dry-run. A capsule may own its workspace,
+lockfile, local packages, scripts, artifacts, and deploy configuration, but must not consume root
+workspace/catalog/configuration/tooling/infrastructure or another capsule. Standalone proof requires
+both structural checking and lifecycle execution after copying only the capsule to a fresh directory;
+root commands are optional orchestration. Portfolio Dr. Novia is the first verified reference.
+Evidence: [ADR 0006](../docs/adrs/0006-standalone-project-capsules.md),
+`.safrs/schemas/project-contract.schema.json`, `tools/safrs/check_project_independence.py`, and
+`tools/project-standalone/`. Enforcement remains advisory in WP-A; mandatory CI wiring belongs to
+Phase D.
+
 ## 2026-08-22 - Project capsules are grouped by domain: projects/<domain>/<capsule>/
 
 Chief ruled that domain layering applies to the whole of `projects/`, uniformly — a structure

@@ -1,21 +1,21 @@
 # Portfolio Dr. Novia — Capsule Agent Router
 
-This file is the machine README for `projects/corporate/portfolio-drnovia/`. Humans start at
-[README.md](README.md). Canonical governance remains root
-[AGENTS.md](../../../AGENTS.md), [SAFRS_SPEC.md](../../SAFRS_SPEC.md), and
-[SECURITY.md](../../SECURITY.md). Do not duplicate or weaken them here.
+This file is the machine README for the NOVIA STUDIO project. Humans start at
+[README.md](README.md). It is sufficient after this directory is extracted. When nested in a
+governed repository, enclosing contribution controls still apply, but no lifecycle command or
+standalone proof depends on them.
 
 ## Always
 
-- Stay inside `projects/corporate/portfolio-drnovia/**` unless Chief explicitly expands scope.
-- Treat this capsule as inner-source: it is not a standalone GitHub repository.
+- Stay inside this project directory unless Chief explicitly expands scope.
+- Treat this capsule as a fully standalone project that may be copied into its own repository.
 - Preserve the Framer visual composition (layout, CSS, class names, assets). Copy and image swaps only when Chief asks.
 - Attach Lenis to `.framer-bpy7lj` (Content-Wrapper). Never bind Lenis to
   `window` while that nested element is the real scroller.
 - State CURRENT vs TARGET. Do not claim a hosted production URL, a pnpm
   workspace package, or a Vite/Next rewrite.
-- Use the local Node static server. Do not add a nested lockfile, Turbo, or
-  Biome config.
+- Use the capsule-owned Node scripts and static server. This dependency-free project intentionally
+  has no lockfile, Turbo, or Biome config.
 - Link SSOT instead of copying architecture, security, or SAFRS prose.
 
 ## Ask First
@@ -27,10 +27,10 @@ This file is the machine README for `projects/corporate/portfolio-drnovia/`. Hum
 
 ## Never
 
-- Create nested packages, a nested lockfile, Turbo, or Biome config.
+- Add packages, a lockfile, Turbo, or Biome without a separately approved architecture change.
 - Redesign colors, type, spacing, or section order of the Novia site.
 - Intercept wheel/touch on `window` while `.framer-bpy7lj` owns overflow.
-- Weaken tests, token checks, or root SAFRS gates to make a slice pass.
+- Weaken tests or an enclosing repository's contribution gates to make a slice pass.
 - Invent auth, CMS, analytics pixels, or production URLs.
 - Commit unless Chief asks.
 
@@ -40,26 +40,24 @@ This file is the machine README for `projects/corporate/portfolio-drnovia/`. Hum
 - Capsule: `projects/corporate/portfolio-drnovia/**`.
 - CURRENT runnable site: React 18 + vendored Lenis at root.
 - Consumed, not owned: none of the `@safrs/*` runtime packages.
-- Durable notes: [.agents/DECISIONS.md](../../.agents/DECISIONS.md) (do not fork).
+- Durable local decisions: [docs/decisions.md](docs/decisions.md).
 
 ## Exact commands
 
-Run from the Monorepo root.
+Run from this project directory:
 
 ```bash
-node --test projects/corporate/portfolio-drnovia/tests/capsule-paths.test.mjs projects/corporate/portfolio-drnovia/tests/lenis-contract.test.mjs
-node projects/corporate/portfolio-drnovia/server.js
-bash scripts/safrs-verify.sh
-```
-
-From the site folder:
-
-```bash
+node scripts/install.mjs
+node --test tests/capsule-paths.test.mjs tests/lenis-contract.test.mjs tests/standalone-contract.test.mjs
+node scripts/build.mjs
+node scripts/deploy-dry-run.mjs
 node server.js
 ```
 
-CURRENT: static React 18 + vendored Lenis 1.3.26 on `http://127.0.0.1:4173`.
-There is no `lint` / `typecheck` / `build` script. Do not invent them.
+CURRENT: Node.js 24, static React 18 + vendored Lenis 1.3.26 on
+`http://127.0.0.1:4173`. Lint and typecheck are explicitly not applicable in
+`project.contract.json`; install, test, build, run, and deploy dry-run are real capsule-owned
+commands.
 
 ## Capsule topology
 
@@ -67,8 +65,11 @@ There is no `lint` / `typecheck` / `build` script. Do not invent them.
 flowchart LR
   subgraph Capsule["projects/corporate/portfolio-drnovia"]
     Site["React 18 static + Lenis"]
+    Build["deterministic dist/"]
+    Container["pinned Docker image"]
   end
   Visitor["local visitor"] --> Site
+  Site --> Build --> Container
   Site -->|"overflow auto"| Scroller[".framer-bpy7lj"]
   Scroller -->|"Lenis wrapper"| Lenis["vendor/lenis.min.js"]
 ```
@@ -88,6 +89,6 @@ flowchart LR
 
 ## Risk
 
-Default **R1** inside this capsule. Escalate: lockfile, CI, shared packages,
-root Biome/governance → **R2**. Hosted production, credentials, DNS → **R3**,
+Default **R1** inside this capsule. Escalate: dependencies, lockfile, CI, shared packages, or
+changes to an enclosing repository's governance → **R2**. Hosted production, credentials, DNS → **R3**,
 prepare only until Chief authorizes.

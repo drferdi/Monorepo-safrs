@@ -81,7 +81,7 @@ Original Framer structure, spacing, typography, imagery, section order, and port
 
 <b><code>LAYER II · RUNTIME</code></b>
 
-React 18 mounts the preserved portfolio markup without requiring a framework migration, package manager, or build step.
+React 18 mounts the preserved portfolio markup without requiring a framework migration or package manager. A capsule-owned deterministic build copies the deployable surface into `dist/`; it does not compile or reinterpret the visual composition.
 
 </td>
 <td width="33%" valign="top">
@@ -100,11 +100,15 @@ The operating rule is simple: **fix behavior without redesigning the work.**
 
 ### `02 / QUICKSTART`
 
-No install step is required.
+No dependency download is required. The standalone install stage only validates Node.js and the
+vendored runtime inventory.
 
 ```bash
 node server.js
 ```
+
+The complete standalone lifecycle, including deterministic build and deployment dry-run, is in
+[`docs/quickstart.md`](docs/quickstart.md).
 
 Open:
 
@@ -316,6 +320,10 @@ No runtime dependency that makes the portfolio fragile.
 │   └── original visual assets + Novia portfolio work
 ├── docs/
 │   └── quickstart.md
+├── scripts/
+│   ├── install.mjs
+│   ├── build.mjs
+│   └── deploy-dry-run.mjs
 ├── src/
 │   ├── app.js
 │   └── portfolio-markup.js
@@ -325,6 +333,8 @@ No runtime dependency that makes the portfolio fragile.
 │   └── novia.css
 ├── vendor/
 │   └── local React runtime + Lenis
+├── Dockerfile
+├── project.contract.json
 ├── README.md
 └── server.js
 ```
@@ -451,6 +461,8 @@ flowchart TB
 | GSAP | Optional, visual-only |
 | Reduced motion | Native / unsmoothed |
 | Package install | Not required |
+| Deployable build | `node scripts/build.mjs` → deterministic `dist/` |
+| Deployment dry-run | `node scripts/deploy-dry-run.mjs` — local validation only |
 | Primary run command | `node server.js` |
 
 ---
@@ -593,8 +605,9 @@ flowchart TB
 
 Capsule documentation:
 
-- [`../README.md`](../README.md)
-- [`../docs/quickstart.md`](../docs/quickstart.md)
+- [`docs/architecture.md`](docs/architecture.md)
+- [`docs/testing.md`](docs/testing.md)
+- [`docs/quickstart.md`](docs/quickstart.md)
 
 The repository README describes the runtime contract. The quickstart should remain the shortest path from clone to a working portfolio.
 
