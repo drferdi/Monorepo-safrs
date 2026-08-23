@@ -218,10 +218,33 @@ export async function runCommand(program, args, options) {
   return { ...result, stdout, stderr };
 }
 
-export function boundedOutput(result) {
+function redactEnvironment(text, environment) {
+  if (!text || !environment) return text;
+  const pathEntries = (environment.PATH ?? "").split(path.delimiter);
+  const isolatedParent = environment.HOME
+    ? path.dirname(environment.HOME)
+    : undefined;
+  const redactions = [
+    ...Object.values(environment),
+    ...pathEntries,
+    isolatedParent,
+  ]
+    .filter((value) => typeof value === "string" && value.length >= 4)
+    .sort((first, second) => second.length - first.length);
+  let sanitized = text;
+  for (const value of redactions) {
+    sanitized = sanitized.split(value).join("<redacted-env>");
+  }
+  return sanitized;
+}
+
+export function boundedOutput(result, environment) {
   const pieces = [];
-  if (result.stdout?.trim()) pieces.push(`stdout: ${result.stdout.trim()}`);
-  if (result.stderr?.trim()) pieces.push(`stderr: ${result.stderr.trim()}`);
-  if (result.error) pieces.push(`spawn: ${result.error.message}`);
+  const stdout = redactEnvironment(result.stdout?.trim(), environment);
+  const stderr = redactEnvironment(result.stderr?.trim(), environment);
+  const spawnError = redactEnvironment(result.error?.message, environment);
+  if (stdout) pieces.push(`stdout: ${stdout}`);
+  if (stderr) pieces.push(`stderr: ${stderr}`);
+  if (spawnError) pieces.push(`spawn: ${spawnError}`);
   return pieces.join("\n");
 }
