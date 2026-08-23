@@ -4,6 +4,11 @@
 
 Operate this repository under SAFRS v1.1: **Human-Governed · Agent-Executed · Machine-Enforced**.
 
+The repository root is the SAFRS AI automation/control plane. Root orchestration is an
+optional convenience for discovering, verifying, updating, and reporting on project
+capsules; it is never a capsule's runtime, configuration, path, tooling, or infrastructure
+dependency.
+
 ## Language and address
 
 - Always respond in bahasa Indonesia.
@@ -97,6 +102,14 @@ Exceptional states: `BLOCKED`, `CONFLICT`, `FAILED`, `ABORTED`, `SUPERSEDED`.
 - Repository-wide developer tooling belongs in `tools/`; cross-project tests belong in `tests/`.
 - New projects must begin from the conventions in `docs/governance/SAFRS_PROJECT_CAPSULES.md`.
 - A project capsule may narrow commands and scope, but may not weaken root SAFRS or security controls.
+
+## Standalone project contract
+
+- Each capsule is an independently portable project. From the capsule root, its own contract must support install, build, test, run, and deploy (plus applicable lint and type-check stages) without the monorepo root.
+- Project-local workspaces, lockfiles, packages, scripts, generated assets, and build/deploy configuration are allowed. Declared external APIs, databases, services, and pinned images are dependencies of the capsule, not dependencies on this repository.
+- A capsule must not consume the root workspace, catalog, lockfile, configuration, paths, scripts, tools, packages, or monorepo-owned runtime infrastructure; escape its directory; import or link to another capsule; or require another capsule at runtime, build, test, or deploy time.
+- Standalone proof has two halves: structural verification checks paths and dependencies, and empirical verification extracts only the capsule into a fresh directory and runs its applicable lifecycle commands there. The extraction is decisive; prose alone is not proof.
+- Run lifecycle and standalone verification commands with the capsule root as the working directory. Root commands may orchestrate those commands but must not be required to execute them.
 
 ## Design tokens (mandatory for all UI work)
 
