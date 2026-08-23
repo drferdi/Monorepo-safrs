@@ -790,6 +790,8 @@ importers:
 
   tools/doctor: {}
 
+  tools/project-standalone: {}
+
   tools/project-wizard: {}
 
 packages:

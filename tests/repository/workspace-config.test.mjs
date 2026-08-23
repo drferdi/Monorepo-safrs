@@ -25,6 +25,8 @@ test("root exposes the solo-developer command contract", () => {
     "db:seed",
     "db:reset",
     "project:new",
+    "project:status",
+    "project:verify",
     "capability:add",
   ]) {
     assert.equal(typeof pkg.scripts[command], "string", command);
@@ -53,6 +55,14 @@ test("root follows canonical SAFRS topology and excludes protected paths from Bi
   assert.equal(
     pkg.scripts["project:new"],
     "node tools/project-wizard/src/cli.mjs",
+  );
+  assert.equal(
+    pkg.scripts["project:status"],
+    "node tools/project-standalone/src/cli.mjs status",
+  );
+  assert.equal(
+    pkg.scripts["project:verify"],
+    "node tools/project-standalone/src/cli.mjs verify",
   );
   assert.equal(
     pkg.scripts["capability:add"],
