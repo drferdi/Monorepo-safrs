@@ -417,7 +417,7 @@ importers:
     dependencies:
       '@sentra/token':
         specifier: workspace:*
-        version: link:../../../../packages/token
+        version: link:../../../../../packages/token
       next:
         specifier: 'catalog:'
         version: 16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.10.13)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -466,7 +466,7 @@ importers:
         version: 1.2.0(@types/react@19.2.7)(react@19.2.8)
       '@sentra/token':
         specifier: workspace:*
-        version: link:../../../../packages/token
+        version: link:../../../../../packages/token
       '@tanstack/react-query':
         specifier: 'catalog:'
         version: 5.56.2(react@19.2.8)
@@ -530,7 +530,7 @@ importers:
     dependencies:
       '@sentra/token':
         specifier: workspace:*
-        version: link:../../../../packages/token
+        version: link:../../../../../packages/token
       next:
         specifier: 'catalog:'
         version: 16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.10.13)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -543,7 +543,7 @@ importers:
     devDependencies:
       '@safrs/config':
         specifier: workspace:*
-        version: link:../../../../packages/config
+        version: link:../../../../../packages/config
       '@tailwindcss/postcss':
         specifier: 'catalog:'
         version: 4.3.3
@@ -570,22 +570,22 @@ importers:
         version: 1.0.12(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@safrs/api':
         specifier: workspace:*
-        version: link:../../../../packages/api
+        version: link:../../../../../packages/api
       '@safrs/database':
         specifier: workspace:*
-        version: link:../../../../packages/database
+        version: link:../../../../../packages/database
       '@safrs/env':
         specifier: workspace:*
-        version: link:../../../../packages/env
+        version: link:../../../../../packages/env
       '@safrs/telemetry':
         specifier: workspace:*
-        version: link:../../../../packages/telemetry
+        version: link:../../../../../packages/telemetry
       '@safrs/ui':
         specifier: workspace:*
-        version: link:../../../../packages/ui
+        version: link:../../../../../packages/ui
       '@sentra/token':
         specifier: workspace:*
-        version: link:../../../../packages/token
+        version: link:../../../../../packages/token
       hono:
         specifier: 'catalog:'
         version: 4.13.1
@@ -613,7 +613,7 @@ importers:
         version: 6.9.2(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.10.13)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@safrs/config':
         specifier: workspace:*
-        version: link:../../../../packages/config
+        version: link:../../../../../packages/config
       '@tailwindcss/postcss':
         specifier: 'catalog:'
         version: 4.3.3
@@ -697,19 +697,19 @@ importers:
     dependencies:
       '@safrs/api':
         specifier: workspace:*
-        version: link:../../../../packages/api
+        version: link:../../../../../packages/api
       '@safrs/auth':
         specifier: workspace:*
-        version: link:../../../../packages/auth
+        version: link:../../../../../packages/auth
       '@safrs/database':
         specifier: workspace:*
-        version: link:../../../../packages/database
+        version: link:../../../../../packages/database
       '@safrs/schemas':
         specifier: workspace:*
-        version: link:../../../../packages/schemas
+        version: link:../../../../../packages/schemas
       '@sentra/token':
         specifier: workspace:*
-        version: link:../../../../packages/token
+        version: link:../../../../../packages/token
       better-auth:
         specifier: 'catalog:'
         version: 1.7.1(@opentelemetry/api@1.9.1)(@prisma/client@7.9.1(prisma@7.9.1(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@7.0.2))(typescript@7.0.2))(mysql2@3.15.3)(next@16.3.0(@babel/core@7.29.7)(@opentelemetry/api@1.9.1)(@playwright/test@1.62.1)(@types/node@24.10.13)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.16.3)(prisma@7.9.1(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@7.0.2))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@4.1.10(@opentelemetry/api@1.9.1)(@types/node@24.10.13)(vite@8.2.1(@types/node@24.10.13)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.9.0)))
@@ -749,13 +749,13 @@ importers:
     dependencies:
       '@safrs/database':
         specifier: workspace:*
-        version: link:../../../../packages/database
+        version: link:../../../../../packages/database
       '@safrs/env':
         specifier: workspace:*
-        version: link:../../../../packages/env
+        version: link:../../../../../packages/env
       '@safrs/schemas':
         specifier: workspace:*
-        version: link:../../../../packages/schemas
+        version: link:../../../../../packages/schemas
       hono:
         specifier: 'catalog:'
         version: 4.13.1

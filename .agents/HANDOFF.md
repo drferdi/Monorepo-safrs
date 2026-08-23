@@ -13,12 +13,14 @@ Last updated: 2026-08-24 (avery FIX-01…06 executed; FULL AUTO; tech-debt audit
   Dr. Novia as the reference capsule; it changes no path under `projects/healthcare/avery/**`.
 - Fresh evidence on the merge commit: project-standalone 14/14, Portfolio 44/44, architecture
   22/22, repository 67/67, extracted lifecycle PASS, token gate PASS, and Biome exit 0.
-- Root `pnpm` commands remain blocked by the inherited missing `@safrs/auth` workspace package;
-  Bash SAFRS passes its first eight gates then reports the closed WP-A ownership metadata.
-- Five domain-nested Next.js apps have a local tsconfig relocation fix pending commit: each shared
-  config path resolves to root `packages/config/tsconfig/nextjs.json` and `noEmit` enables
-  `allowImportingTsExtensions`. Config validation and targeted Biome pass; full local typecheck is
-  separately blocked by stale/missing workspace links, including the inherited absent `@safrs/auth`.
+- Commit `ab73ac1` is published to `origin/main`: five domain-nested Next.js configs now resolve the
+  intended root config and set `noEmit`; the original TS5083/TS5096 CI failures are cleared.
+- The resulting CI exposed more stale four-level paths from the same domain relocation. A follow-up
+  repairs all 19 affected workspace links, three SentraBot runtime tsconfigs, and two legacy build
+  scripts. Frozen install, six targeted typechecks, 61 targeted tests, and Biome pass locally.
+- Full root typecheck now reaches package compilation and stops on inherited absent database outputs
+  and SentraBot database sources. Bash SAFRS passes its first eight gates, then reports inherited
+  task-ownership metadata.
 
 ## Current state
 
@@ -53,9 +55,9 @@ Last updated: 2026-08-24 (avery FIX-01…06 executed; FULL AUTO; tech-debt audit
 
 ## Known-red gates (pre-existing, not from this change set)
 
-- Every `pnpm` script fails at deps-status: `packages/api` depends on `@safrs/auth@workspace:*` but
-  `packages/auth` has no `package.json` (since `2fa329a`). `pnpm governance/lint/check:tokens/...` cannot run.
-  Run `bash scripts/safrs-verify.sh` directly: all OK except task ownership of
+- `packages/auth` remains absent since `2fa329a`; database generated output and
+  `packages/database/src/sentrabot/**` are also absent. Root `pnpm typecheck` currently stops on the
+  database imports after other packages begin successfully. `bash scripts/safrs-verify.sh` is all OK except task ownership of
   `.safrs/reviews/verification-integrity.json` (Chief's own uncommitted edit, with root `AGENTS.md` and
   `.agents/CONTEXT.md` — leave them).
 - Capsule tests: `powershell -File projects/healthcare/avery/scripts/test.ps1` → 42/42 OK.
