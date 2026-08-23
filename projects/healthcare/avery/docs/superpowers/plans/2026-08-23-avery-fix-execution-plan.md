@@ -62,7 +62,7 @@ Prinsip: **config native dulu, patch minimal kedua, prosa terakhir.** Penyakit a
 - [x] 2.4 Validasi placeholder saat boot, di `restart-gateway.ps1` (bukan core): tolak restart bila `config.yaml` memuat `@g.us` yang tidak berbentuk `^\d{10,20}@g\.us$` atau string `PLACEHOLDER|CHANGEME|xxxx`.
 - [x] 2.5 Simpan patch: `patches/hermes-0.20.5/0001-whatsapp-ingress-reason-codes.patch` + `scripts/apply-hermes-patches.ps1` (cek SHA-256 berkas target sebelum/sesudah; idempoten; `-WhatIf`).
 - [x] 2.6 Restart gateway; `HERMES_DISPATCHED` dibuktikan dari baris `gateway.run` yang sudah ada setelah `PASSED` (agent run log) — tidak perlu kode baru.
-- [ ] 2.7 Acceptance (Chief mengirim 3 pesan dari WhatsApp, Avery boleh membalas hanya di grup allowlist): chatter biasa → `MENTION_MISMATCH`; `@Avery` di grup bukan allowlist → `GROUP_NOT_ALLOWED`; `@Avery` grup allowlist → `PASSED` + dispatch. Bukti: 3 baris `gateway.log` tersanitasi ke `docs/evidence/fix02-ingress-trace.txt`.
+- [ ] 2.7 Acceptance (Chief mengirim pesan dari WhatsApp): chatter biasa tanpa mention → `MENTION_MISMATCH`; `@Avery` di grup → `PASSED` + dispatch + balasan. **Revisi Chief 2026-08-24:** Avery wajib merespons setiap kali dipanggil di grup mana pun — harapan `GROUP_NOT_ALLOWED` dicabut. Jalur kode satu-satunya: `group_policy: open` + `WHATSAPP_ALLOW_ALL_USERS=1` (`gateway/run.py:2751` menolak start tanpa flag; flag juga mengotorisasi semua DM). Menunggu keputusan/trik Chief; sementara `allowlist`. Bukti ke `docs/evidence/fix02-ingress-trace.txt`.
 
 **Rollback:** `apply-hermes-patches.ps1 -Revert` (simpan salinan asli `.orig`), hapus `WHATSAPP_DEBUG`, restart.
 
@@ -149,3 +149,11 @@ FIX-01 → 02 → 03 → 04 → 05 → 06 → regresi; satu commit per FIX di ka
 - FIX-06: guardrails hard stop 3/5/3; format BLOCKED di SOUL (terbukti dipakai Avery saat `hermes verify` gagal). **Deviasi:** `verify_on_stop` dikembalikan ke `false` — nudge-nya memicu `hermes verify` yang naik ke akar git monorepo via junction dan menjalankan `pnpm install`; verifikasi read-back tetap terjadi via execution_guidance (bukti A1–A5, D). Tambahan: `terminal.cwd` → `workspace/` (cwd default bukan lagi direktori `auth.json`); shim `~/.local/bin/hermes` agar `hermes` ter-resolve di Git Bash (salinan di `patches/hermes-0.20.5/hermes-gitbash-shim.sh`).
 - Regresi: T3, T4, T6, T7 PASS (`docs/evidence/fix03-05-06-behavior.json`); T5 PASS (sesi `browser_exec` ×2, judul "Example Domain" — bukti di transkrip sesi, tidak masuk JSON); T1, T2, T8–T10 menunggu Chief.
 - Bukti live pertama (cron `member-watch` 23:33, persona+config baru): `execute_code` diblokir di cron (by design) → pulih via `terminal`, 5 grup diperiksa, snapshot ditulis `verified: true`, tidak ada anggota baru → `[SILENT]`, nol kiriman keluar.
+
+## 7. Revisi target (Chief, 2026-08-24): FULL AUTO
+
+Target: agen full-auto, sebebas manusia; Chief yang mencatat dan mengurangi kebebasan belakangan. Diterapkan ke runtime:
+- `memory.write_approval: false`, `skills.write_approval: false`, `skills.guard_agent_created: false` (= default resmi Hermes; learning loop tanpa staging). Gateway di-restart, efektif.
+- Grup: wajib merespons di grup mana pun saat dipanggil → perlu `group_policy: open` + `WHATSAPP_ALLOW_ALL_USERS=1`. Belum diterapkan karena flag yang sama membuka DM untuk semua pengirim (dengan akses terminal). Keputusan Chief.
+- DM tetap `pairing` + `unauthorized_dm_behavior: ignore`; `approvals.mode` tetap default `smart`.
+- Gerbang repo (`/verify`): uji kapsul 42/42 OK; SAFRS OK kecuali ownership berkas edit Chief; gerbang pnpm (lint/tokens/typecheck/test/build) merah pra-eksisting — `packages/auth` tanpa `package.json` sejak `2fa329a`, di luar lingkup avery.
