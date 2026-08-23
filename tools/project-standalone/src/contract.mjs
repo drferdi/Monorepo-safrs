@@ -313,9 +313,12 @@ function validateSmoke(value, errors) {
   }
   if (
     !Number.isInteger(value.startupTimeoutSeconds) ||
-    value.startupTimeoutSeconds < 1
+    value.startupTimeoutSeconds < 1 ||
+    value.startupTimeoutSeconds > 300
   ) {
-    errors.push("$.smoke.startupTimeoutSeconds must be a positive integer.");
+    errors.push(
+      "$.smoke.startupTimeoutSeconds must be a positive integer of at most 300 seconds.",
+    );
   }
 }
 

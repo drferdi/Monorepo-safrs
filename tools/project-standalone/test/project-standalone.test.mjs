@@ -186,7 +186,7 @@ test("contract validation reports precise fields and rejects unsafe argv", async
     port: 443,
     path: "/",
     expectedStatus: 200,
-    startupTimeoutSeconds: 1,
+    startupTimeoutSeconds: 301,
   };
   const shellErrors = validateContract(shellContract);
   assert.ok(shellErrors.some((error) => error.includes("shell interpreter")));
@@ -199,6 +199,13 @@ test("contract validation reports precise fields and rejects unsafe argv", async
     ),
   );
   assert.ok(shellErrors.some((error) => error.includes("loopback host")));
+  assert.ok(
+    shellErrors.some(
+      (error) =>
+        error.includes("$.smoke.startupTimeoutSeconds") &&
+        error.includes("at most 300"),
+    ),
+  );
 });
 
 test("contract loader rejects invalid JSON with an actionable path", async () => {
