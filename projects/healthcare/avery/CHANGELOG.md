@@ -8,6 +8,16 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/), penomoran meng
 
 ## [Unreleased]
 
+### FIX-01…06 — perbaikan perilaku Avery (2026-08-23)
+
+Diterapkan ke runtime profil `avery` dan dibuktikan (`docs/evidence/`). Rencana: `docs/superpowers/plans/2026-08-23-avery-fix-execution-plan.md`.
+
+- FIX-01 config: migrasi v38; satu blok WhatsApp; kunci mati `group_allowed_chats` dibuang; `scripts/restart-gateway.ps1` mencetak effective config 6 baris dan menolak placeholder/JID tidak valid (fail-closed).
+- FIX-02 ingress: `patches/hermes-0.20.5/0001-whatsapp-ingress-reason-codes.patch` (reason code `BROADCAST|GROUP_NOT_ALLOWED|USER_NOT_ALLOWED|MENTION_MISMATCH|PASSED|INVALID_MESSAGE` di INFO; regex mention invalid = BOOT FAIL) + `scripts/apply-hermes-patches.ps1` (idempoten, SHA-256, `-Revert`).
+- FIX-03 persona: `SOUL.md` — Execution rule, daftar 18 skill, pembuangan lapisan izin kedua; 5 `SKILL.md` dibersihkan dari rujukan hantu; `contact-outreach` v5.0.0 kanonik; `scripts/push-profile-to-runtime.ps1` (repo→runtime, SHA-256, dry-run default).
+- FIX-04 kapabilitas: `scripts/capability-smoke.ps1` + `scripts/smoke_evidence.py`; 6/6 instrumen yang dapat diuji di `-z` lolos, browser native lolos.
+- FIX-05/06: `agent.execution_guidance`/`tool_use_enforcement` dinyalakan (mode `auto` tidak mencakup gemini); `tool_loop_guardrails` hard stop 3/5/3; format BLOCKED; `terminal.cwd` → workspace; `verify_on_stop` tetap off (lihat catatan plan §6).
+
 Pengerasan kapsul. Semua butir di bawah terverifikasi di repositori lewat uji otomatis atau dry-run; tidak ada yang mengklaim cutover runtime, pengiriman hidup, atau pemantauan berjalan.
 
 ### Ditambahkan
