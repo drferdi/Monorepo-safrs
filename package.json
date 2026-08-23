@@ -38,6 +38,8 @@
     "dev:email": "pnpm --filter @safrs/web dev:email",
     "stripe:listen": "pnpm --filter @safrs/web stripe:listen",
     "project:new": "node tools/project-wizard/src/cli.mjs",
+    "project:status": "node tools/project-standalone/src/cli.mjs status",
+    "project:verify": "node tools/project-standalone/src/cli.mjs verify",
     "capability:add": "node tools/capabilities/src/cli.mjs",
     "deps:graph": "node tools/deps-graph/src/cli.mjs",
     "codegen": "node tools/codegen/src/cli.mjs",
