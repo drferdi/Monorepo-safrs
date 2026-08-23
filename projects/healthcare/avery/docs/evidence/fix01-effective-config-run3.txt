@@ -1,0 +1,6 @@
+profile=avery
+provider=openrouter
+model=google/gemini-2.5-flash
+toolset=🖥️  CLI  (22/28); 📱 WhatsApp  (22/28)
+config_source=C:\Users\drfer\.hermes\profiles\avery\config.yaml
+config_version=38
