@@ -1,0 +1,11 @@
+{
+  "name": "@portable/root",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "dependencies": {
+    "@portable/lib": "workspace:*",
+    "left-pad": "1.3.0"
+  }
+}

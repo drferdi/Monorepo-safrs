@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "id": "product/portable",
+  "owner": "Fixture owner",
+  "risk": "R1",
+  "runtime": {
+    "name": "node",
+    "version": "24.18.0"
+  },
+  "packageManager": {
+    "name": "pnpm",
+    "version": "11.21.0",
+    "lockfile": "pnpm-lock.yaml"
+  },
+  "commands": {
+    "install": {
+      "program": "node",
+      "args": ["scripts/install.mjs"]
+    },
+    "lint": {
+      "program": null,
+      "args": [],
+      "notApplicableReason": "Fixture has no lint surface."
+    },
+    "typecheck": {
+      "program": null,
+      "args": [],
+      "notApplicableReason": "Fixture contains plain JavaScript."
+    },
+    "test": {
+      "program": "node",
+      "args": ["scripts/test.mjs"]
+    },
+    "build": {
+      "program": "node",
+      "args": ["scripts/build.mjs"]
+    },
+    "run": {
+      "program": "node",
+      "args": ["scripts/run.mjs"]
+    },
+    "deployDryRun": {
+      "program": "docker",
+      "args": ["build", "--check", "."]
+    }
+  },
+  "smoke": {
+    "kind": "none",
+    "notApplicableReason": "Fixture run command exits after its check."
+  },
+  "artifacts": ["dist"],
+  "externalDependencies": [
+    {
+      "kind": "api",
+      "name": "example-api",
+      "locator": "https://example.invalid",
+      "required": false
+    },
+    {
+      "kind": "image",
+      "name": "node",
+      "locator": "node:24-alpine@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "required": true
+    }
+  ],
+  "mutableStatePaths": ["dist", ".cache"]
+}
