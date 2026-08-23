@@ -29,3 +29,7 @@ pwsh -File scripts/apply-hermes-patches.ps1 -Revert
 # Root Hermes non-default
 pwsh -File scripts/apply-hermes-patches.ps1 -HermesRoot "D:\path\ke\hermes\python"
 ```
+
+## Shim `hermes` untuk Git Bash
+
+`hermes-gitbash-shim.sh` dipasang sebagai `~/.local/bin/hermes`. Path interpreter di dalamnya hardcode `0.20.4/win-x64`; setelah `hermes update` yang mengganti direktori runtime, perbarui path itu.
