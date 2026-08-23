@@ -30,9 +30,9 @@
 
 **Files:** `ai/profiles/avery/custom-skills.json`, `scripts/sync-*.ps1`, `ai/profiles/avery/skills/`.
 
-- [ ] Define the exact manifest and preserve only its named skill trees.
-- [ ] Reconcile only `SOUL.md` and manifest-listed skills with backup, hash verification, and sensitive-content rejection.
-- [ ] Verify `-WhatIf` does not mutate a temporary profile.
+- [x] Define the exact manifest and preserve only its named skill trees.
+- [x] Reconcile only `SOUL.md` and manifest-listed skills with backup, hash verification, and sensitive-content rejection.
+- [x] Verify `-WhatIf` does not mutate a temporary profile.
 
 ### Task 3: Approval-bound outbound broker
 

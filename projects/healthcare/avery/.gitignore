@@ -40,3 +40,6 @@ logs/
 
 # Konfigurasi terisi — hanya contohnya yang dilacak
 ai/profiles/*/config.yaml
+
+# Cadangan otomatis sync-profile-to-repo.ps1
+ai/profiles/*.bak-*/

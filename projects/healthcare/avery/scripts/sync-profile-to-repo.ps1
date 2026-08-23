@@ -8,8 +8,13 @@
     persona yang hidup di sana tidak terversi — bila runtime hilang, semuanya hilang.
 
     Skrip ini menyalin yang layak diversi:
-      - skills/**/*    (instruksi, referensi, template)
-      - SOUL.md        (persona)
+      - skills/<nama>/**  hanya pohon yang tercantum di custom-skills.json
+      - SOUL.md           (persona)
+
+    Pohon skill di runtime yang tidak ada di manifest (payload bundled/managed
+    milik Hermes) dilaporkan lalu dilewati. Sebelum menimpa berkas yang sudah
+    ada, salinan lamanya disimpan ke `ai/profiles/<profil>.bak-<stempel>/`.
+    Setiap salinan diverifikasi hash SHA-256 terhadap sumbernya.
 
     Dan menolak apa pun yang tidak boleh masuk repositori, sesuai `AGENTS.md`
     proyek ini: kredensial, sesi WhatsApp, basis data runtime, catatan memori,
@@ -42,7 +47,16 @@ $runtimeDir = Join-Path $repoRoot "runtime\hermes-home\profiles\$Profile"
 $targetDir  = Join-Path $repoRoot "ai\profiles\$Profile"
 
 if (-not (Test-Path -LiteralPath $runtimeDir)) { throw "Profil runtime tidak ditemukan: $runtimeDir" }
-$null = New-Item -ItemType Directory -Path $targetDir -Force
+
+$manifestPath = Join-Path $targetDir 'custom-skills.json'
+if (-not (Test-Path -LiteralPath $manifestPath)) { throw "Manifest tidak ditemukan: $manifestPath" }
+$manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
+$skillManifest = @($manifest.skills)
+if ($skillManifest.Count -eq 0) { throw "Manifest $manifestPath tidak memuat satu pun skill" }
+
+$stamp     = Get-Date -Format 'yyyyMMdd-HHmmss'
+$backupDir = "$targetDir.bak-$stamp"
+if (-not $WhatIf) { $null = New-Item -ItemType Directory -Path $targetDir -Force }
 
 # Berkas yang tidak boleh masuk repositori apa pun isinya.
 $namaTerlarang = @(
@@ -98,8 +112,16 @@ function Sinkron-Sumber($namaSumber) {
 
         $dst = Join-Path $targetDir $rel
         if ($WhatIf) { Write-Host "  [WhatIf] $rel" -ForegroundColor DarkGray; $script:disalin++; continue }
+        if (Test-Path -LiteralPath $dst) {
+            $bak = Join-Path $backupDir $rel
+            $null = New-Item -ItemType Directory -Path (Split-Path $bak -Parent) -Force
+            Copy-Item -LiteralPath $dst -Destination $bak -Force
+        }
         $null = New-Item -ItemType Directory -Path (Split-Path $dst -Parent) -Force
         Copy-Item -LiteralPath $f.FullName -Destination $dst -Force
+        $hSrc = (Get-FileHash -LiteralPath $f.FullName -Algorithm SHA256).Hash
+        $hDst = (Get-FileHash -LiteralPath $dst -Algorithm SHA256).Hash
+        if ($hSrc -ne $hDst) { throw "Hash tidak cocok setelah salin: $rel" }
         $script:disalin++
     }
 }
@@ -110,12 +132,25 @@ Write-Host "  dari : $runtimeDir" -ForegroundColor DarkGray
 Write-Host "  ke   : $targetDir" -ForegroundColor DarkGray
 Write-Host ""
 
-Sinkron-Sumber 'skills'
+foreach ($nama in $skillManifest) { Sinkron-Sumber (Join-Path 'skills' $nama) }
 Sinkron-Sumber 'SOUL.md'
+
+$runtimeSkills = Join-Path $runtimeDir 'skills'
+if (Test-Path -LiteralPath $runtimeSkills) {
+    $luarManifest = Get-ChildItem -LiteralPath $runtimeSkills -Directory |
+        Where-Object { $skillManifest -notcontains $_.Name } | Select-Object -ExpandProperty Name
+    if ($luarManifest) {
+        Write-Host ""
+        Write-Host "Tidak dalam manifest, dilewati: $($luarManifest -join ', ')" -ForegroundColor DarkGray
+    }
+}
 
 Write-Host ""
 Write-Host "Disalin  : $disalin berkas" -ForegroundColor Green
 Write-Host "Dilewati : $dilewati berkas (kredensial, basis data, atau direktori runtime)" -ForegroundColor DarkGray
+if (-not $WhatIf -and (Test-Path -LiteralPath $backupDir)) {
+    Write-Host "Cadangan : $backupDir" -ForegroundColor DarkGray
+}
 
 if ($ditahan.Count -gt 0) {
     Write-Host ""
