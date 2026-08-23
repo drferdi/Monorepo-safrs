@@ -1,0 +1,10 @@
+source_id,name,class,base_url,refresh,trust
+S01,BPS Kota Kediri,official_statistics,https://kedirikota.bps.go.id/,annual/monthly,high
+S02,BPS Kabupaten Kediri,official_statistics,https://kedirikab.bps.go.id/,annual/monthly,high
+S03,Pemerintah Kota Kediri,official_government,https://kedirikota.go.id/,weekly,high
+S04,Pemerintah Kabupaten Kediri,official_government,https://kedirikab.go.id/,weekly,high
+S05,SIRS Kementerian Kesehatan,official_health_registry,https://sirs.kemkes.go.id/,monthly,high
+S06,RSUD Gambiran,official_hospital,https://rsudgambiran.kedirikota.go.id/,monthly,high
+S07,JDIH Kota Kediri,official_law,https://jdih.kedirikota.go.id/,weekly,high
+S08,JDIH Kabupaten Kediri,official_law,https://jdih.kedirikab.go.id/,weekly,high
+S09,Kemendikbud Data Kebudayaan,official_culture,https://budaya.data.kemdikbud.go.id/,quarterly,high
