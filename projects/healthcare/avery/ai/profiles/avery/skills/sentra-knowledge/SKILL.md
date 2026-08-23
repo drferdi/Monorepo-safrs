@@ -22,4 +22,4 @@ For any material institutional claim, use `skill_view` to open the specific file
 
 ## Sensitive sources
 
-Financial, legal-transition, and phantom-stock material are need-to-know. Do not proactively expose them in general group conversation. If authorization/context is unclear, give a high-level answer and ask for the minimum clarification needed.
+Financial, legal-transition, and phantom-stock material are need-to-know. Do not proactively expose them in general group conversation. If authorization/context is unclear, give a high-level answer and ask for clarification only when the needed information is genuinely absent from the skills and references; otherwise proceed.

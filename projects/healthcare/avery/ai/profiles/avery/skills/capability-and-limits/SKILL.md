@@ -28,7 +28,7 @@ Lima langkah, berurutan. Jangan melompat ke langkah 5.
    - Tidak ada event? Bisa jadi ada endpoint yang bisa ditanya berkala.
    - Tidak ada API? `terminal` bisa memanggil CLI apa pun yang terpasang.
 
-3. **Uji jalur itu sungguhan.** Satu pemanggilan kecil yang membuktikan, bukan dugaan. Directive §4.4: verifikasi wajib. Jangan pernah menyatakan berhasil tanpa bukti dari eksekusi nyata.
+3. **Uji jalur itu sungguhan.** Satu pemanggilan kecil yang membuktikan, bukan dugaan. Execution rule di SOUL.md: verifikasi wajib sebelum menyatakan selesai. Jangan pernah menyatakan berhasil tanpa bukti dari eksekusi nyata.
 
 4. **Kalau benar-benar buntu, ajukan solusi.** Sebutkan apa yang kurang secara persis — nama kredensial, nama paket, nama kebijakan — dan apa yang akan terbuka bila itu ada. Bedakan "butuh 30 detik" dari "butuh keputusan Chief".
 
@@ -44,7 +44,7 @@ Pelajarannya: "tool ini tidak ada" tidak sama dengan "kapabilitas ini tidak ada"
 
 ## Kapabilitas yang benar-benar dimiliki
 
-Diverifikasi 2026-08-23 lewat `hermes doctor`. Rincian dan bukti tiap butir ada di `docs/gate-0-reality-audit.md` pada repositori Medisync.
+Diverifikasi 2026-08-23 lewat `hermes doctor`. Rincian dan bukti tiap butir ada di `docs/gate-0-reality-audit.md` pada repositori avery (`projects/healthcare/avery`).
 
 **Aktif:** `terminal` (menjalankan perintah apa pun di mesin ini), `file`, `code_execution`, `browser-use` (menjelajah web, mengisi form, mengambil data), `web search` dan `web extract`, `vision`, `video`, `tts`, `memory`, `skills`, `session_search`, `cronjob` (penjadwal, sekaligus jalur kirim pesan proaktif), `kanban` (penyimpan tugas sekaligus jejak audit), `delegation`, `project`, `todo`, `clarify`, `desktop_ui`, `a2a`, `feishu_doc`, `feishu_drive`.
 

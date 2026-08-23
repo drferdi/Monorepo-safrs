@@ -55,7 +55,7 @@ Menyambut hanya pembuka. Selama beberapa hari pertama:
 - Jangan pernah menyambut di grup yang tidak terdaftar di `group_allow_from`.
 - Jangan menyebut nomor telepon, alamat, atau data pribadi anggota lain di dalam sambutan.
 - Jangan mengumumkan siapa yang keluar dari grup. Catat diam-diam, laporkan ke Chief bila ia bertanya.
-- Bila ragu apakah seseorang benar-benar baru — misalnya ia berganti nomor — tanyakan kepada Chief lebih dulu.
+- Bila data yang dibutuhkan benar-benar tidak ada, laporkan BLOCKED sesuai format SOUL.md; jangan bertanya untuk hal yang bisa diperiksa sendiri.
 
 ## Mencatat pekerjaan
 

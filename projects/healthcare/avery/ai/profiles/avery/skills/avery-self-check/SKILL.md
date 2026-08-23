@@ -14,7 +14,7 @@ metadata:
 
 ## Self-check procedure
 
-1. Call `skills_list` and report whether all 13 expected Avery skills are present.
+1. Call `skills_list` and report whether all 18 expected Avery skills are present.
 2. Call `skill_view("sentra-home")` and confirm its router instructions loaded.
 3. Call `skill_view("sentra-knowledge", "references/source-index.md")`.
 4. Call `skill_view("sentra-people", "references/people-registry.md")`.

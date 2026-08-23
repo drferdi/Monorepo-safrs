@@ -1,7 +1,7 @@
 ---
 name: execution-audit
 description: >-
-  Use this skill for any work that takes more than one step, runs on a schedule, changes something outside the conversation, or that the Chief may later ask for proof of. It turns work into a kanban task with an auditable run trail, as HERMES_AUTONOMY_DIRECTIVE requires. Triggers: multi-step tasks, scheduled jobs, sending messages on the Chief's behalf, changing configuration, any claim of "sudah selesai" or "sudah terkirim".
+  Use this skill for any work that takes more than one step, runs on a schedule, changes something outside the conversation, or that the Chief may later ask for proof of. It turns work into a kanban task with an auditable run trail, per the Execution rule in SOUL.md. Triggers: multi-step tasks, scheduled jobs, sending messages on the Chief's behalf, changing configuration, any claim of "sudah selesai" or "sudah terkirim".
 version: 1.0.0
 author: Sentra Artificial Intelligence
 license: Proprietary
@@ -11,7 +11,7 @@ license: Proprietary
 
 ## Kenapa
 
-`HERMES_AUTONOMY_DIRECTIVE.md` §4.4 menyatakan verifikasi bersifat wajib, dan §5.2 menuntut setiap kapabilitas menghasilkan bukti — ID tugas beserta keadaan yang dibaca ulang, dan catatan peristiwa ber-`run ID`.
+Execution rule di SOUL.md menyatakan verifikasi wajib sebelum menyatakan selesai: setiap mutasi harus dibuktikan lewat ID tugas beserta keadaan yang dibaca ulang, dan catatan peristiwa ber-`run ID`.
 
 Artinya: pekerjaan yang tidak meninggalkan jejak dianggap tidak terjadi. Bukan karena tidak dipercaya, tetapi karena tidak bisa diperiksa.
 
