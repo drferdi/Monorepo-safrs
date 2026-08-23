@@ -128,6 +128,7 @@ class ProjectIndependenceTests(unittest.TestCase):
             "/outside",
             "C:\\outside",
             "\\\\server\\share",
+            "file:///outside",
             "../outside",
             "nested/../../outside",
             ".",
