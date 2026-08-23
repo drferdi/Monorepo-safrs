@@ -80,6 +80,7 @@ def is_windows_or_posix_absolute(value: str) -> bool:
         or normalized.startswith("//")
         or PureWindowsPath(value).is_absolute()
         or bool(re.match(r"^[A-Za-z]:", value))
+        or bool(re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", value))
     )
 
 
@@ -96,6 +97,25 @@ def missing_capsule_owned_reference(value: str, base: Path) -> bool:
     if not root_like:
         return False
     return not (base / normalized).exists()
+
+
+def argument_path_candidates(argument: str):
+    candidates = [argument]
+    if argument.startswith("-"):
+        for separator in ("=", ":"):
+            index = argument.find(separator)
+            if 0 <= index < len(argument) - 1:
+                candidates.append(argument[index + 1 :])
+        short_flag = re.match(r"^-[A-Za-z](.+)$", argument)
+        if short_flag:
+            candidates.append(short_flag.group(1))
+
+    seen = set()
+    for candidate in candidates:
+        path_candidate = candidate[1:] if candidate.startswith("@") else candidate
+        if path_candidate not in seen:
+            seen.add(path_candidate)
+            yield path_candidate
 
 
 def iter_files(capsule: Path, filename: str | None = None):
@@ -185,30 +205,35 @@ def check_contract_paths(
         for index, argument in enumerate(args):
             if not isinstance(argument, str):
                 continue
-            candidate = argument.split("=", 1)[1] if argument.startswith("-") and "=" in argument else argument
-            if candidate.startswith(("http://", "https://")):
-                continue
-            path_like = candidate in {".", ".."} or any(
-                marker in candidate for marker in ("/", "\\")
-            ) or Path(candidate).name in ROOT_METADATA_NAMES
-            if path_like and path_escapes(candidate, capsule, capsule):
-                findings.append(
-                    Finding(
-                        capsule_label,
-                        relative_file,
-                        f"commands.{name}.args[{index}]",
-                        "command argument path escapes the capsule",
-                    )
+            for candidate in argument_path_candidates(argument):
+                if candidate.startswith(("http://", "https://")):
+                    continue
+                path_like = (
+                    candidate in {".", ".."}
+                    or any(marker in candidate for marker in ("/", "\\"))
+                    or bool(re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", candidate))
+                    or Path(candidate).name in ROOT_METADATA_NAMES
                 )
-            elif path_like and missing_capsule_owned_reference(candidate, capsule):
-                findings.append(
-                    Finding(
-                        capsule_label,
-                        relative_file,
-                        f"commands.{name}.args[{index}]",
-                        f"root-like reference {candidate} has no capsule-owned target",
+                if path_like and path_escapes(candidate, capsule, capsule):
+                    findings.append(
+                        Finding(
+                            capsule_label,
+                            relative_file,
+                            f"commands.{name}.args[{index}]",
+                            "command argument path escapes the capsule",
+                        )
                     )
-                )
+                    break
+                if path_like and missing_capsule_owned_reference(candidate, capsule):
+                    findings.append(
+                        Finding(
+                            capsule_label,
+                            relative_file,
+                            f"commands.{name}.args[{index}]",
+                            f"root-like reference {candidate} has no capsule-owned target",
+                        )
+                    )
+                    break
 
         if program == "docker" and "build" in args:
             positional = [item for item in args[args.index("build") + 1 :] if not item.startswith("-")]

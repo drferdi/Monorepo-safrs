@@ -62,7 +62,7 @@
       "minItems": 1,
       "uniqueItems": true,
       "items": {
-        "$ref": "#/$defs/nonEmptyString"
+        "$ref": "#/$defs/capsuleRelativePath"
       }
     },
     "externalDependencies": {
@@ -75,7 +75,7 @@
       "type": "array",
       "uniqueItems": true,
       "items": {
-        "$ref": "#/$defs/nonEmptyString"
+        "$ref": "#/$defs/capsuleRelativePath"
       }
     }
   },
@@ -89,6 +89,26 @@
       "oneOf": [
         {
           "$ref": "#/$defs/nonEmptyString"
+        },
+        {
+          "const": null
+        }
+      ]
+    },
+    "capsuleRelativePath": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        {
+          "pattern": "^(?!(?:[\\\\/]|[A-Za-z]:|\\.\\.?$|\\.\\.[\\\\/]))(?!.*[\\\\/]\\.\\.(?:[\\\\/]|$)).+$"
+        }
+      ]
+    },
+    "nullableCapsuleRelativePath": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/capsuleRelativePath"
         },
         {
           "const": null
@@ -127,7 +147,7 @@
           "$ref": "#/$defs/nullableNonEmptyString"
         },
         "lockfile": {
-          "$ref": "#/$defs/nullableNonEmptyString"
+          "$ref": "#/$defs/nullableCapsuleRelativePath"
         }
       }
     },

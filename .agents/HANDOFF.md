@@ -16,7 +16,7 @@ Last updated: 2026-08-24 — WP-A standalone project foundation closeout
   deterministic build, artifact validation, deploy dry-run, run, HTTP smoke, and cleanup without
   copying any root file. Visual composition and browser runtime behavior were not redesigned.
 - Focused evidence: project-standalone 14/14; Portfolio 44/44; repository 67/67; architecture
-  20/20; document registry, routing, topology, structural independence, targeted Biome, root
+  22/22; document registry, routing, topology, structural independence, targeted Biome, root
   `project:status`, root `project:verify`, and filtered frozen lockfile validation all pass.
 - Risk: R2 because architecture/governance boundaries and their tests changed together. Fresh
   independent review is required; no approval evidence was authored by the implementer.

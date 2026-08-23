@@ -2,6 +2,7 @@
 import copy
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -14,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 CHECKER = ROOT / "tools" / "safrs" / "check_project_independence.py"
 FIXTURE = ROOT / "tests" / "fixtures" / "project-independence" / "valid"
 CAPSULE_RELATIVE = Path("projects/product/portable")
+CONTRACT_SCHEMA = ROOT / ".safrs" / "schemas" / "project-contract.schema.json"
 
 
 class ProjectIndependenceTests(unittest.TestCase):
@@ -102,6 +104,48 @@ class ProjectIndependenceTests(unittest.TestCase):
         self.assertIn("artifacts[0]", result.stderr)
         self.assertIn("mutableStatePaths[0]", result.stderr)
         self.assertIn("commands.install.program", result.stderr)
+
+    def test_contract_schema_requires_capsule_relative_paths(self):
+        schema = json.loads(CONTRACT_SCHEMA.read_text(encoding="utf-8"))
+        relative_path = schema["$defs"]["capsuleRelativePath"]
+        pattern = next(item["pattern"] for item in relative_path["allOf"] if "pattern" in item)
+
+        self.assertEqual(
+            schema["properties"]["artifacts"]["items"],
+            {"$ref": "#/$defs/capsuleRelativePath"},
+        )
+        self.assertEqual(
+            schema["properties"]["mutableStatePaths"]["items"],
+            {"$ref": "#/$defs/capsuleRelativePath"},
+        )
+        self.assertEqual(
+            schema["$defs"]["packageManager"]["properties"]["lockfile"],
+            {"$ref": "#/$defs/nullableCapsuleRelativePath"},
+        )
+        for valid in ("dist", "dist/app.txt", ".cache/state", "pnpm-lock.yaml"):
+            self.assertIsNotNone(re.search(pattern, valid), valid)
+        for invalid in (
+            "/outside",
+            "C:\\outside",
+            "\\\\server\\share",
+            "../outside",
+            "nested/../../outside",
+            ".",
+            "..",
+        ):
+            self.assertIsNone(re.search(pattern, invalid), invalid)
+
+    def test_attached_command_argument_paths_cannot_escape(self):
+        contract = self.read_json("project.contract.json")
+        contract["commands"]["install"]["args"] = ["--config:C:\\outside"]
+        contract["commands"]["test"]["args"] = ["-C../outside"]
+        contract["commands"]["build"]["args"] = ["@C:\\outside\\build.json"]
+        self.write_json("project.contract.json", contract)
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("commands.install.args[0]", result.stderr)
+        self.assertIn("commands.test.args[0]", result.stderr)
+        self.assertIn("commands.build.args[0]", result.stderr)
 
     def test_root_tool_and_script_names_require_capsule_owned_targets(self):
         contract = self.read_json("project.contract.json")
