@@ -20,7 +20,7 @@ Jalur yang bekerja: bridge menyediakan `GET /chat/<jid>` yang mengembalikan daft
 Bridge berjalan di `http://127.0.0.1:3000`. Snapshot disimpan di
 `<HERMES_HOME>/state/group-members.json`.
 
-Langkah, dijalankan lewat tool `terminal`:
+Langkah, dijalankan lewat tool `terminal` **saja** — jangan memakai `execute_code`: tool itu diblokir di sesi cron oleh Hermes, setiap percobaan membuang satu giliran. Bacaan berkas boleh memakai `read_file`, penulisan snapshot memakai `write_file`.
 
 1. Baca daftar grup dari `config.yaml` — kunci `whatsapp.group_allow_from`.
 2. Untuk setiap grup: `curl -s http://127.0.0.1:3000/chat/<jid>` → objek berisi `name` dan `participants`.

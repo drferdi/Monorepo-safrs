@@ -54,6 +54,7 @@ $report = [ordered]@{
     config_found  = $false
     bridge_status = 'unknown'
     log_age_min   = $null
+    ingress_60m   = $null
     status        = 'fail'
     exit_code     = 2
 }
@@ -75,6 +76,19 @@ $log = Join-Path $profileHome 'logs\gateway.log'
 if (Test-Path -LiteralPath $log) {
     $age = (Get-Date) - (Get-Item -LiteralPath $log).LastWriteTime
     $report.log_age_min = [math]::Round($age.TotalMinutes, 1)
+
+    # Ringkasan reason code ingress WhatsApp 60 menit terakhir (patch FIX-02).
+    # Hanya menghitung kode; chat id di log sudah diredaksi dan tidak disalin.
+    $since = (Get-Date).AddMinutes(-60)
+    $counts = [ordered]@{}
+    foreach ($line in (Get-Content -LiteralPath $log -Tail 4000)) {
+        if ($line -notmatch '^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}),\d+ .* ingress (drop|accept) reason=([A-Z_]+)') { continue }
+        try { $ts = [datetime]::ParseExact($Matches[1], 'yyyy-MM-dd HH:mm:ss', $null) } catch { continue }
+        if ($ts -lt $since) { continue }
+        $code = $Matches[3]
+        if ($counts.Contains($code)) { $counts[$code] = $counts[$code] + 1 } else { $counts[$code] = 1 }
+    }
+    $report.ingress_60m = $counts
 }
 
 $healthy = ($report.bridge_status -eq 'connected') -and

@@ -1,4 +1,4 @@
-# Medisync — contoh konfigurasi profil Avery
+# Avery — contoh konfigurasi profil (kapsul projects/healthcare/avery)
 #
 # Salin berkas ini ke <HERMES_HOME>/profiles/avery/config.yaml lalu sesuaikan
 # path dan nilai yang bertanda <...>. Rahasia (API key, token, kredensial)
@@ -34,7 +34,7 @@ memory:
   user_profile_enabled: false
   write_approval: true
   memory_char_limit: 2200
-  # Dinaikkan dari default 1375 karena profil pengguna Medisync memuat
+  # Dinaikkan dari default 1375 karena profil pengguna Sentra memuat
   # protokol komunikasi yang panjang. Batas lama membuat penulisan memori
   # gagal dengan galat konsolidasi.
   user_char_limit: 2200

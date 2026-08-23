@@ -95,6 +95,7 @@ def main(argv):
     }
 
     if row is None:
+        con.close()
         print(json.dumps(result))
         return 0
 
@@ -111,6 +112,7 @@ def main(argv):
         (session_id,),
     )
     rows = cur.fetchall()
+    con.close()
 
     all_called_names = set()
     # assistant rows: (timestamp, set_of_function_names)
