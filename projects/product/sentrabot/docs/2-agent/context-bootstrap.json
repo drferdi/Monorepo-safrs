@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "project_name": "Sentra Bot",
+  "architecture_standard": "@safrs/v1.1",
+  "capsule_path": "projects/product/sentrabot",
+  "governance_mode": "Human-Governed · Agent-Executed · Machine-Enforced",
+  "technology_stack_manifesto": {
+    "language": "TypeScript (strict mode enabled)",
+    "runtime": "Node.js (Active LTS v22+)",
+    "frontend_framework": "React 19 / Next.js (App Router)",
+    "backend_framework": "Hono v4+",
+    "database_orm": "Prisma v6+ (PostgreSQL 17)",
+    "api_rpc_layer": "oRPC / Typed Hono RPC / Zod Contracts",
+    "styling_engine": "Tailwind CSS v4 with @sentra/token Design Tokens",
+    "linter_formatter": "Biome",
+    "test_runners": {
+      "unit_integration": "Vitest",
+      "end_to_end": "Playwright"
+    },
+    "monorepo_orchestrator": "Turborepo & pnpm workspace"
+  },
+  "approved_namespaces": {
+    "@safrs/api": "Canonical Hono API route factories, RPC bindings, middleware",
+    "@safrs/auth": "Better Auth integration, session token verification, actor resolution",
+    "@safrs/database": "Prisma Client singleton, database repositories, tenant query scopes",
+    "@safrs/env": "Environment variable validation via type-safe Zod schema",
+    "@safrs/schemas": "Zod domain schemas for bots, threads, memory, routines, permissions",
+    "@safrs/telemetry": "OpenTelemetry tracing, logging spans, sanitized performance metrics",
+    "@safrs/ui": "Accessible base UI components conforming to WCAG 2.2 AA",
+    "@sentra/token": "Mandatory design tokens (colors, typography, spacing, border radii)"
+  },
+  "capsule_topology": {
+    "apps/web": "Public-facing Next.js UI dashboard & mounted in-process API endpoints",
+    "apps/worker": "Private background execution agent, job runner, cognitive executor",
+    "apps/sandbox-supervisor": "Bounded container/browser supervisor with dropped Linux capabilities",
+    "apps/desktop": "Electron client main/preload IPC shell",
+    "src/personas": "Starter instruction packs and persona catalog in Bahasa Indonesia"
+  },
+  "agentic_constraints": {
+    "no_placeholders": "CRITICAL: Do not produce mock code, dummy stubs, or empty TODO comments. All written code must be complete, typed, and executable.",
+    "tenant_isolation": "CRITICAL: Every database query and cache lookup MUST include both workspaceId and userId. Cross-tenant leakage is a critical vulnerability.",
+    "credential_protection": "CRITICAL: Never return API keys, passwords, or raw session cookies in API responses, logs, or UI renders. Model keys must be decrypted in memory only during outbound HTTP execution.",
+    "fail_closed_policy": "Default to denying access or execution if permissions, actor identities, or verification proofs are missing or ambiguous.",
+    "tool_execution_safety": "All terminal commands and external network mutations must be routed through the Permission Broker and execute inside isolated sandboxes."
+  },
+  "risk_classification": {
+    "R0": "Read-only exploration, docs review, static analysis",
+    "R1": "Reversible local changes within projects/product/sentrabot/apps/*",
+    "R2": "Shared package modifications (@safrs/*), database schema migrations, auth flows",
+    "R3": "Production deployments, secret rotations, signed binary releases"
+  }
+}

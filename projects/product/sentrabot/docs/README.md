@@ -85,9 +85,43 @@ There is no fake end-to-end happy path that requires pin `d17a138`.
 | [supply-chain.md](supply-chain.md) | SBOM/SLSA TARGET vs CURRENT |
 | [provenance.md](provenance.md) | Pin `d17a138` vs baseline `7f08da5` |
 
+## Layered Cognitive & Governance Documentation
+
+```mermaid
+flowchart LR
+  subgraph L1["Layer 1: Human-Developer Cognitive"]
+    H1["1-human/onboarding.md"]
+    H2["1-human/cognitive-architecture.md"]
+    H3["1-human/self-hosting-docker.md"]
+  end
+  subgraph L2["Layer 2: Agentic & Machine-Readable"]
+    A1["2-agent/context-bootstrap.json"]
+    A2["2-agent/state-machines.md"]
+    A3["2-agent/api-contracts.md"]
+  end
+  subgraph L3["Layer 3: Governance, Safety & Audit"]
+    G1["3-governance/permission-broker.md"]
+    G2["3-governance/data-privacy-by-design.md"]
+    G3["3-governance/software-bill-of-materials.md"]
+  end
+```
+
+| Layer | Document | Focus & Purpose |
+|---|---|---|
+| **Layer 1: Human-Developer** | [1-human/onboarding.md](1-human/onboarding.md) | Developer onboarding guide, `@safrs` Monorepo map, local dev loop, Git & PR rules. |
+| | [1-human/cognitive-architecture.md](1-human/cognitive-architecture.md) | Memory OS (Working/Episodic/Semantic/Procedural), Reasoning Loop (Think-Inspect-Act-Verify), Demo Decoder. |
+| | [1-human/self-hosting-docker.md](1-human/self-hosting-docker.md) | Docker Compose topology, `.env` management & BYOK, backup/restore procedures for database and volumes. |
+| **Layer 2: Agentic & Machine** | [2-agent/context-bootstrap.json](2-agent/context-bootstrap.json) | Instant AI assistant context (Claude Projects/Custom GPT), tech stack manifesto, approved namespaces. |
+| | [2-agent/state-machines.md](2-agent/state-machines.md) | Task & sandbox state transition diagrams (Mermaid.js), mathematical invariants, fail-closed timeout policy. |
+| | [2-agent/api-contracts.md](2-agent/api-contracts.md) | Real-time Server-Sent Events (SSE) streaming specifications & type-safe oRPC procedure definitions. |
+| **Layer 3: Governance & Safety** | [3-governance/permission-broker.md](3-governance/permission-broker.md) | Execution permission broker, risk matrix (Low/Med/High), 300s timeout, cryptographic nonce audit trail. |
+| | [3-governance/data-privacy-by-design.md](3-governance/data-privacy-by-design.md) | Zero-Cloud local-first storage policy, AES-256-GCM credential encryption envelope, in-memory lifecycle. |
+| | [3-governance/software-bill-of-materials.md](3-governance/software-bill-of-materials.md) | Dependency provenance audit (SHA-256), license compliance ledger (MIT/Apache vs GPL copyleft), SLSA attestation. |
+
 ## Capsule root (community)
 
 [README.md](../README.md), [AGENTS.md](../AGENTS.md),
 [SECURITY.md](../SECURITY.md), [SUPPORT.md](../SUPPORT.md),
 [CHANGELOG.md](../CHANGELOG.md), [CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md),
 [ROADMAP.md](../ROADMAP.md), [LICENSE](../LICENSE), [NOTICE](../NOTICE).
+

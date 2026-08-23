@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "project_name": "Medisync (Avery / Hermes Home Agent)",
+  "architecture_standard": "@safrs/v1.1",
+  "domain": "healthcare",
+  "capsule_path": "projects/healthcare/medisync",
+  "human_owner": "Chief (dr. Ferdi Iskandar)",
+  "default_risk_level": "R1 (Local / Config) / R2 (Healthcare logic boundaries)",
+  "runtime_stack": {
+    "agent_engine": "Hermes Agent v0.20.4 (commit 3c27eb6)",
+    "desktop_app": "Hermes Studio v0.6.46 (Electron)",
+    "python_runtime": "Python 3.12.13 with SQLite 3.53.1 / 3.53.4",
+    "node_runtime": "Node.js v23+ (hermes-web-ui & Baileys bridge)",
+    "primary_model": "google/gemini-2.5-flash via OpenRouter",
+    "transport": "Baileys WhatsApp Bridge (Local Node.js, Port 3000)"
+  },
+  "approved_skill_namespaces": [
+    "sentra-home",
+    "sentra-knowledge",
+    "sentra-people",
+    "community-steward",
+    "member-onboarding",
+    "collaboration-orchestrator",
+    "client-brainstorm",
+    "decisions-actions",
+    "founder-briefing",
+    "meeting-prep-followup",
+    "knowledge-governance",
+    "research-router",
+    "avery-self-check"
+  ],
+  "agentic_constraints": {
+    "quiet_by_default": "In group contexts, speak only when called, delegated a task, or when material risks/decisions emerge.",
+    "human_authority_preservation": "Coordination is not authority. Never create pricing, clinical claims, legal commitments, or financial promises without human approval.",
+    "epistemic_discipline": "Enforce four fact states: CONFIRMED, IN REVIEW, WORKING ASSUMPTION, and GAP. Never fabricate missing knowledge.",
+    "memory_write_approval": "All persistent memory updates (MEMORY.md / USER.md) must be proposed through JSON files in pending/memory/ and require explicit human sign-off.",
+    "character_limits": {
+      "memory_char_limit": 2200,
+      "user_char_limit": 2200
+    },
+    "zero_leakage_policy": "Never output or persist session keys (creds.json), WhatsApp JIDs, personal health info, or provider tokens."
+  }
+}

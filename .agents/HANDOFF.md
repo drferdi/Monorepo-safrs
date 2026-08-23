@@ -4,7 +4,7 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-23 (medisync WhatsApp fix merged; Avery autonomy foundation started; profile skills now versioned)
+Last updated: 2026-08-23 (medisync WhatsApp fix merged; Avery autonomy foundation started; layered docs added by Grav)
 
 ## Current state
 
@@ -18,6 +18,9 @@ Last updated: 2026-08-23 (medisync WhatsApp fix merged; Avery autonomy foundatio
 - **Gate 0's two useful surprises.** (1) `browser` reporting "system dependency not met" is **not** a gap — `check_browser_requirements()` returns False because `browser-use` replaces the whole `browser_*` surface, and that is active. Do not report it as missing web capability. (2) Kanban already **is** the run-ID audit trail the directive asks for — `create` returns an ID, `show` lists timestamped Events, `complete` records `[run 1] completed`. Proven end-to-end on task `t_d24db445`. Nothing needed building.
 - **Five skills now versioned** under `projects/healthcare/medisync/ai/profiles/avery/skills/`: `capability-and-limits` (limits are a starting point, never an excuse), `execution-audit` (work that leaves no trace did not happen), `new-member-watch` (bridge does not forward join events; poll `GET /chat/<jid>` against a snapshot instead — cron runs every 2h), `contact-outreach`, and `kediri-knowledge` (24 verified Kediri Raya records with schema and source registry).
 - **`scripts/sync-profile-to-repo.ps1` closes the gap that caused this.** Everything under `runtime/` is gitignored, so skills written there were invisible to git. The script copies skills and `SOUL.md` out, refusing credentials, databases, runtime state, and — because **this repository is PUBLIC** — any file matching an Indonesian phone number, a WhatsApp JID, or an API-key pattern.
+- **Layered documentation added by Grav** to `medisync/docs/` and `sentrabot/docs/`: `1-human/` (onboarding, cognitive architecture, self-hosting), `2-agent/` (context bootstrap, state machines, API contracts), `3-governance/` (permission broker, data privacy, SBOM), each with a `README.md` map. The pre-existing flat docs — `architecture.md`, `data.md`, `testing.md`, `deploy-hostinger.md`, `whatsapp-group-fix.md`, `gate-0-reality-audit.md` — are untouched and still live alongside them. Scanned clean of phone numbers, JIDs, and key patterns before commit.
+- **Group names now resolve.** Avery used to see her own groups as raw IDs. `channel_aliases.json` in the runtime profile is Hermes' own friendly-name overlay, re-applied on every directory rebuild; it now carries all five group names. Runtime-only change, nothing versioned.
+
 - **The repository is public. Treat it as such.** `docs/whatsapp-group-fix.md` contains real phone numbers and group JIDs and is committed but **not yet pushed**. Chief has not decided: redact, make the repo private, or push as-is. Do not push `main` before that decision.
 
 - **Still open from the previous session** (unchanged): `pnpm install` never ran, so `pnpm test:contracts` is unverified against the domain layout; smartboard web sub-phase 2 plan is `PROPOSED` with 3 open decisions for Chief; the smartboard web security boundary is written in `projects/academic/academic-smartboard/apps/web/AGENTS.md` § "Batas keamanan" — read it before any deploy; never use `robocopy /MOVE` inside a pnpm workspace.
