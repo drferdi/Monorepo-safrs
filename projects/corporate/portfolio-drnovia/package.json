@@ -4,11 +4,14 @@
   "version": "1.0.0",
   "description": "NOVIA STUDIO portfolio — React 18 runtime with preserved Framer visual markup.",
   "scripts": {
+    "install": "node scripts/install.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/capsule-paths.test.mjs tests/lenis-contract.test.mjs tests/standalone-contract.test.mjs",
     "start": "node server.js",
     "dev": "node server.js",
-    "test": "node --test tests/capsule-paths.test.mjs tests/lenis-contract.test.mjs"
+    "deploy:dry-run": "node scripts/deploy-dry-run.mjs"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=24 <25"
   }
 }

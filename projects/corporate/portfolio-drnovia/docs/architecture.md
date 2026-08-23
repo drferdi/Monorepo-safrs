@@ -9,6 +9,8 @@ markup. There is no API, database, or shared-package runtime. Decision index:
 | Boundary | CURRENT | TARGET |
 | --- | --- | --- |
 | Site root | `index.html` + `src/app.js` + `server.js` | Same unless Chief asks |
+| Build | `scripts/build.mjs` creates deterministic `dist/` + hashes | Keep capsule-owned |
+| Deployment | Pinned multi-stage `Dockerfile`; local validation dry-run | No production side effect |
 | Scroll owner | `.framer-bpy7lj` (`overflow: auto`, `height: 100vh`) | Lenis stays on this node |
 | Lenis | Vendored `1.3.26`, `wrapper` = Content-Wrapper | Never `window` |
 | GSAP | Optional CDN visual fade on project cards | Visual-only; no ScrollTrigger |
@@ -50,7 +52,17 @@ Do not import `@safrs/api`, `@safrs/database`, `@sentra/token`, or Next.js.
 This is a captured marketing/portfolio surface. Token rules apply only if
 Chief asks for a new UI that is not the Framer original.
 
-Do not create nested packages.
+This project intentionally has no package dependencies or lockfile. Any future project-local
+workspace/package architecture must remain inside this capsule and requires an explicit decision;
+an enclosing workspace or package is forbidden.
+
+## Build and deployment
+
+`scripts/install.mjs` validates Node 24 and the vendored runtime inventory without network access.
+`scripts/build.mjs` copies only deployable capsule files into `dist/` and writes a deterministic
+SHA-256 manifest. `scripts/deploy-dry-run.mjs` verifies every artifact hash and the pinned,
+non-root Docker deployment contract without invoking a registry or production service. The
+Dockerfile runs the same install/build scripts and serves `dist/` as non-root user `node`.
 
 ## Failure modes
 
