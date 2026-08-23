@@ -4,7 +4,7 @@
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
 
-Last updated: 2026-08-24 (avery FIX-01…06 executed; FULL AUTO target; lane pipe contract)
+Last updated: 2026-08-24 (avery FIX-01…06 executed; FULL AUTO; tech-debt audit — see docs/tech-debt-2026-08-24.md)
 
 ## Current state
 
@@ -27,9 +27,13 @@ Last updated: 2026-08-24 (avery FIX-01…06 executed; FULL AUTO target; lane pip
   (push with `scripts/push-profile-to-runtime.ps1 -Execute`). `contact-outreach` v5.0.0 is canonical
   (broker procedure dropped as a second permission layer) — revert with
   `git checkout 247ff40 -- projects/healthcare/avery/ai/profiles/avery/skills/contact-outreach/SKILL.md`.
-- **Open decision for Chief — respond in any group when mentioned:** the only code path is
-  `group_policy: open` + `WHATSAPP_ALLOW_ALL_USERS=1` (`gateway/run.py:2751` refuses to start without the
-  flag, and the flag authorises every DM sender). Runtime stays `allowlist` until Chief decides.
+- **Respond in any group when mentioned — ready, one line from Chief:** config already has
+  `dm_policy: allowlist` + `allow_from` (DM gated at the adapter, before allow-all authz). Chief adds
+  `WHATSAPP_ALLOW_ALL_USERS=1` to the profile `.env` (Claude harness refuses to write it), flips
+  `group_policy: open`, restarts via `scripts/restart-gateway.ps1 -Execute`. Also added:
+  `fallback_providers` (gemini-2.0-flash on the same key), `health-check.ps1` ingress counts.
+- **Windows `hermes gateway restart` has a pid-file race** (two instances at 00:12, unclean exit at
+  00:27) — always use `scripts/restart-gateway.ps1`.
 - **Pending Chief-driven tests:** FIX-02 2.7, T1, T2, T8, T9, T10 need real WhatsApp messages; read
   `grep ingress profiles/avery/logs/gateway.log` and paste sanitised lines into `docs/evidence/`.
 
