@@ -73,7 +73,8 @@ function isAbsoluteOnAnyPlatform(value) {
   return (
     path.posix.isAbsolute(value.replaceAll("\\", "/")) ||
     path.win32.isAbsolute(value) ||
-    /^[A-Za-z]:/u.test(value)
+    /^[A-Za-z]:/u.test(value) ||
+    /^[A-Za-z][A-Za-z0-9+.-]*:/u.test(value)
   );
 }
 
@@ -161,12 +162,16 @@ function validateArgument(argument, field, errors) {
       return;
     }
     if (isUrl(candidate)) continue;
+    const pathCandidate = candidate.startsWith("@")
+      ? candidate.slice(1)
+      : candidate;
     const pathLike =
-      candidate === "." ||
-      candidate === ".." ||
-      /[/\\]/u.test(candidate) ||
-      /^[A-Za-z]:/u.test(candidate);
-    if (pathLike && !safeRelativePath(candidate)) {
+      pathCandidate === "." ||
+      pathCandidate === ".." ||
+      /[/\\]/u.test(pathCandidate) ||
+      /^[A-Za-z]:/u.test(pathCandidate) ||
+      /^[A-Za-z][A-Za-z0-9+.-]*:/u.test(pathCandidate);
+    if (pathLike && !safeRelativePath(pathCandidate)) {
       errors.push(`${field} contains an absolute or parent-escaping path.`);
       return;
     }
