@@ -17,7 +17,9 @@
     sesi WhatsApp) memakai anchor berbeda dengan alasan masing-masing.
 #>
 
-Set-StrictMode -Version Latest
+# Sengaja TANPA Set-StrictMode: berkas ini di-dot-source ke scope pemanggil,
+# sehingga mengeset mode di sini berarti mengubah semantik seluruh skrip
+# pemanggil yang tidak ditulis di bawah strict mode.
 
 function Get-AveryRuntimeLinks {
     param([Parameter(Mandatory)] [string] $RuntimeRoot)
