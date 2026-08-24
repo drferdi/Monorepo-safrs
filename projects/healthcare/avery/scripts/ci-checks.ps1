@@ -55,7 +55,8 @@ try {
         'scripts\rename-capsule.ps1',
         'scripts\rename-capsule.bat',
         'docs\tech-debt-2026-08-24.md',
-        'docs\superpowers'
+        'docs\superpowers',
+        'docs\5-superpowers'
     )
     $folderPindai = @('docs', 'deploy', 'ai', 'src', 'console')
     $kandidat = foreach ($t in $folderPindai) {
