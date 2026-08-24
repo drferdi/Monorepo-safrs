@@ -1,0 +1,977 @@
+{
+  "standard": "SPDS",
+  "version": "1.0.0",
+  "year": 2026,
+  "output_dir": "docs/spds",
+  "genome_file": "PROJECT_GENOME.yaml",
+  "entry_file": "read_first.md",
+  "filename_policy": {
+    "default": "lowercase_snake.md",
+    "keep_exact": ["README.md"],
+    "windows_reserved": [
+      "CON",
+      "PRN",
+      "AUX",
+      "NUL",
+      "COM1",
+      "COM2",
+      "COM3",
+      "COM4",
+      "COM5",
+      "COM6",
+      "COM7",
+      "COM8",
+      "COM9",
+      "LPT1",
+      "LPT2",
+      "LPT3",
+      "LPT4",
+      "LPT5",
+      "LPT6",
+      "LPT7",
+      "LPT8",
+      "LPT9"
+    ]
+  },
+  "layers": {
+    "CORE": "Required for every Sentra project.",
+    "CONDITIONAL": "Required when the project matches the condition.",
+    "DOMAIN": "Industry or capability overlay.",
+    "SENTRA": "Sentra originals; required with CORE for agent-readable projects."
+  },
+  "documents": [
+    {
+      "id": "S01",
+      "file": "PROJECT_GENOME.yaml",
+      "layer": "SENTRA",
+      "when": "always",
+      "function": "AUTHORIZE",
+      "location": "capsule_root"
+    },
+    {
+      "id": "01",
+      "file": "read_first.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "GUIDE"
+    },
+    {
+      "id": "00",
+      "file": "document_index.md",
+      "layer": "SENTRA",
+      "when": "always",
+      "function": "PRESERVE"
+    },
+    {
+      "id": "02",
+      "file": "project_charter.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "AUTHORIZE"
+    },
+    {
+      "id": "03",
+      "file": "purpose_and_outcomes.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "DEFINE"
+    },
+    {
+      "id": "04",
+      "file": "success_criteria.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "DEFINE"
+    },
+    {
+      "id": "05",
+      "file": "scope_and_boundaries.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "DEFINE"
+    },
+    {
+      "id": "06",
+      "file": "stakeholder_map.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "DEFINE"
+    },
+    {
+      "id": "07",
+      "file": "authority_and_decision_rights.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "AUTHORIZE"
+    },
+    {
+      "id": "08",
+      "file": "roles_and_responsibilities.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "DEFINE"
+    },
+    {
+      "id": "09",
+      "file": "glossary.md",
+      "layer": "CONDITIONAL",
+      "when": "shared_terminology",
+      "function": "PRESERVE"
+    },
+    {
+      "id": "10",
+      "file": "project_status.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "PRESERVE"
+    },
+    {
+      "id": "11",
+      "file": "product_brief.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "DEFINE"
+    },
+    {
+      "id": "12",
+      "file": "prd.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "DEFINE"
+    },
+    {
+      "id": "13",
+      "file": "system_requirements.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "DEFINE"
+    },
+    {
+      "id": "14",
+      "file": "functional_requirements.md",
+      "layer": "CONDITIONAL",
+      "when": "software_behavior",
+      "function": "DEFINE"
+    },
+    {
+      "id": "15",
+      "file": "quality_requirements.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "DEFINE"
+    },
+    {
+      "id": "16",
+      "file": "use_cases.md",
+      "layer": "CONDITIONAL",
+      "when": "user_or_system_cases",
+      "function": "DEFINE"
+    },
+    {
+      "id": "17",
+      "file": "user_journeys.md",
+      "layer": "CONDITIONAL",
+      "when": "end_to_end_ux",
+      "function": "DEFINE"
+    },
+    {
+      "id": "18",
+      "file": "acceptance_criteria.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "VERIFY"
+    },
+    {
+      "id": "19",
+      "file": "requirements_traceability_matrix.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "VERIFY"
+    },
+    {
+      "id": "20",
+      "file": "system_context.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "DEFINE"
+    },
+    {
+      "id": "21",
+      "file": "architecture.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "DECIDE"
+    },
+    {
+      "id": "22",
+      "file": "architecture_views.md",
+      "layer": "CONDITIONAL",
+      "when": "multi_view_architecture",
+      "function": "DEFINE"
+    },
+    {
+      "id": "23",
+      "file": "adr_index.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "DECIDE"
+    },
+    {
+      "id": "24",
+      "file": "adr/adr-0001.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "DECIDE",
+      "note": "At least one ADR; add adr-0002+ as decisions exist"
+    },
+    {
+      "id": "25",
+      "file": "data_architecture.md",
+      "layer": "CONDITIONAL",
+      "when": "stores_or_moves_data",
+      "function": "DEFINE"
+    },
+    {
+      "id": "26",
+      "file": "interface_contracts.md",
+      "layer": "CONDITIONAL",
+      "when": "internal_or_external_interfaces",
+      "function": "DEFINE"
+    },
+    {
+      "id": "27",
+      "file": "api_specification.md",
+      "layer": "CONDITIONAL",
+      "when": "exposes_or_consumes_apis",
+      "function": "DEFINE"
+    },
+    {
+      "id": "28",
+      "file": "deployment_architecture.md",
+      "layer": "CONDITIONAL",
+      "when": "runtime_topology",
+      "function": "DEFINE"
+    },
+    {
+      "id": "29",
+      "file": "dependency_architecture.md",
+      "layer": "CONDITIONAL",
+      "when": "critical_dependencies",
+      "function": "DEFINE"
+    },
+    {
+      "id": "30",
+      "file": "engineering_plan.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "GUIDE"
+    },
+    {
+      "id": "31",
+      "file": "implementation_plan.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "GUIDE"
+    },
+    {
+      "id": "32",
+      "file": "delivery_roadmap.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "GUIDE"
+    },
+    {
+      "id": "33",
+      "file": "release_strategy.md",
+      "layer": "CONDITIONAL",
+      "when": "releases_or_cutovers",
+      "function": "GUIDE"
+    },
+    {
+      "id": "34",
+      "file": "configuration_management.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "GUIDE"
+    },
+    {
+      "id": "35",
+      "file": "change_management.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "GUIDE"
+    },
+    {
+      "id": "36",
+      "file": "dependency_policy.md",
+      "layer": "CONDITIONAL",
+      "when": "third_party_deps",
+      "function": "GUIDE"
+    },
+    {
+      "id": "37",
+      "file": "build_and_release.md",
+      "layer": "CONDITIONAL",
+      "when": "build_or_release_pipeline",
+      "function": "GUIDE"
+    },
+    {
+      "id": "38",
+      "file": "definition_of_ready.md",
+      "layer": "CONDITIONAL",
+      "when": "managed_backlog",
+      "function": "GUIDE"
+    },
+    {
+      "id": "39",
+      "file": "definition_of_done.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "VERIFY"
+    },
+    {
+      "id": "40",
+      "file": "quality_plan.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "VERIFY"
+    },
+    {
+      "id": "41",
+      "file": "verification_and_validation_plan.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "VERIFY"
+    },
+    {
+      "id": "42",
+      "file": "test_strategy.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "VERIFY"
+    },
+    {
+      "id": "43",
+      "file": "test_specification.md",
+      "layer": "CONDITIONAL",
+      "when": "specified_tests",
+      "function": "VERIFY"
+    },
+    {
+      "id": "44",
+      "file": "test_cases.md",
+      "layer": "CONDITIONAL",
+      "when": "case_level_tests",
+      "function": "VERIFY"
+    },
+    {
+      "id": "45",
+      "file": "evaluation_plan.md",
+      "layer": "CONDITIONAL",
+      "when": "product_or_model_eval",
+      "function": "VERIFY"
+    },
+    {
+      "id": "46",
+      "file": "evaluation_report.md",
+      "layer": "CONDITIONAL",
+      "when": "eval_executed",
+      "function": "VERIFY"
+    },
+    {
+      "id": "47",
+      "file": "acceptance_report.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "VERIFY"
+    },
+    {
+      "id": "48",
+      "file": "verification_evidence_index.md",
+      "layer": "SENTRA",
+      "when": "always",
+      "function": "VERIFY"
+    },
+    {
+      "id": "50",
+      "file": "risk_management_plan.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "GUIDE"
+    },
+    {
+      "id": "51",
+      "file": "risk_register.md",
+      "layer": "CORE",
+      "when": "always",
+      "function": "PRESERVE"
+    },
+    {
+      "id": "52",
+      "file": "threat_model.md",
+      "layer": "CONDITIONAL",
+      "when": "networked_or_privileged",
+      "function": "DEFINE"
+    },
+    {
+      "id": "53",
+      "file": "security_architecture.md",
+      "layer": "CONDITIONAL",
+      "when": "security_relevant",
+      "function": "DECIDE"
+    },
+    {
+      "id": "54",
+      "file": "security_requirements.md",
+      "layer": "CONDITIONAL",
+      "when": "security_relevant",
+      "function": "DEFINE"
+    },
+    {
+      "id": "55",
+      "file": "secure_development_plan.md",
+      "layer": "CONDITIONAL",
+      "when": "software_delivery",
+      "function": "GUIDE"
+    },
+    {
+      "id": "56",
+      "file": "vulnerability_management.md",
+      "layer": "CONDITIONAL",
+      "when": "dependencies_or_runtime",
+      "function": "GUIDE"
+    },
+    {
+      "id": "57",
+      "file": "incident_response_plan.md",
+      "layer": "CONDITIONAL",
+      "when": "operated_system",
+      "function": "GUIDE"
+    },
+    {
+      "id": "58",
+      "file": "business_continuity_plan.md",
+      "layer": "CONDITIONAL",
+      "when": "availability_matters",
+      "function": "GUIDE"
+    },
+    {
+      "id": "59",
+      "file": "disaster_recovery_plan.md",
+      "layer": "CONDITIONAL",
+      "when": "availability_matters",
+      "function": "GUIDE"
+    },
+    {
+      "id": "60",
+      "file": "data_governance.md",
+      "layer": "CONDITIONAL",
+      "when": "stores_or_moves_data",
+      "function": "GUIDE"
+    },
+    {
+      "id": "61",
+      "file": "data_inventory.md",
+      "layer": "CONDITIONAL",
+      "when": "stores_or_moves_data",
+      "function": "PRESERVE"
+    },
+    {
+      "id": "62",
+      "file": "data_flow_map.md",
+      "layer": "CONDITIONAL",
+      "when": "stores_or_moves_data",
+      "function": "DEFINE"
+    },
+    {
+      "id": "63",
+      "file": "data_classification.md",
+      "layer": "CONDITIONAL",
+      "when": "stores_or_moves_data",
+      "function": "DEFINE"
+    },
+    {
+      "id": "64",
+      "file": "privacy_impact_assessment.md",
+      "layer": "CONDITIONAL",
+      "when": "personal_or_sensitive_data",
+      "function": "VERIFY"
+    },
+    {
+      "id": "65",
+      "file": "data_retention_policy.md",
+      "layer": "CONDITIONAL",
+      "when": "stores_or_moves_data",
+      "function": "GUIDE"
+    },
+    {
+      "id": "66",
+      "file": "data_processing_register.md",
+      "layer": "CONDITIONAL",
+      "when": "personal_or_sensitive_data",
+      "function": "PRESERVE"
+    },
+    {
+      "id": "67",
+      "file": "data_quality_plan.md",
+      "layer": "CONDITIONAL",
+      "when": "knowledge_or_records",
+      "function": "GUIDE"
+    },
+    {
+      "id": "70",
+      "file": "ai_system_card.md",
+      "layer": "DOMAIN",
+      "when": "material_ai",
+      "function": "DEFINE"
+    },
+    {
+      "id": "71",
+      "file": "ai_intended_use.md",
+      "layer": "DOMAIN",
+      "when": "material_ai",
+      "function": "DEFINE"
+    },
+    {
+      "id": "72",
+      "file": "ai_system_architecture.md",
+      "layer": "DOMAIN",
+      "when": "material_ai",
+      "function": "DEFINE"
+    },
+    {
+      "id": "73",
+      "file": "model_card.md",
+      "layer": "CONDITIONAL",
+      "when": "owned_or_pinned_model",
+      "function": "PRESERVE"
+    },
+    {
+      "id": "74",
+      "file": "dataset_datasheet.md",
+      "layer": "CONDITIONAL",
+      "when": "training_or_eval_dataset",
+      "function": "PRESERVE"
+    },
+    {
+      "id": "75",
+      "file": "ai_risk_assessment.md",
+      "layer": "DOMAIN",
+      "when": "material_ai",
+      "function": "VERIFY"
+    },
+    {
+      "id": "76",
+      "file": "ai_impact_assessment.md",
+      "layer": "DOMAIN",
+      "when": "material_ai",
+      "function": "VERIFY"
+    },
+    {
+      "id": "77",
+      "file": "ai_evaluation_plan.md",
+      "layer": "DOMAIN",
+      "when": "material_ai",
+      "function": "VERIFY"
+    },
+    {
+      "id": "78",
+      "file": "ai_evaluation_report.md",
+      "layer": "DOMAIN",
+      "when": "ai_eval_executed",
+      "function": "VERIFY"
+    },
+    {
+      "id": "79",
+      "file": "ai_limitations.md",
+      "layer": "DOMAIN",
+      "when": "material_ai",
+      "function": "DEFINE"
+    },
+    {
+      "id": "80",
+      "file": "human_oversight_plan.md",
+      "layer": "DOMAIN",
+      "when": "material_ai",
+      "function": "AUTHORIZE"
+    },
+    {
+      "id": "81",
+      "file": "model_change_management.md",
+      "layer": "CONDITIONAL",
+      "when": "model_may_change",
+      "function": "GUIDE"
+    },
+    {
+      "id": "82",
+      "file": "ai_monitoring_plan.md",
+      "layer": "DOMAIN",
+      "when": "material_ai",
+      "function": "GUIDE"
+    },
+    {
+      "id": "83",
+      "file": "ai_incident_plan.md",
+      "layer": "DOMAIN",
+      "when": "material_ai",
+      "function": "GUIDE"
+    },
+    {
+      "id": "84",
+      "file": "ai_decommissioning_plan.md",
+      "layer": "CONDITIONAL",
+      "when": "material_ai",
+      "function": "GUIDE"
+    },
+    {
+      "id": "90",
+      "file": "agent_charter.md",
+      "layer": "DOMAIN",
+      "when": "agentic",
+      "function": "AUTHORIZE"
+    },
+    {
+      "id": "91",
+      "file": "agent_capabilities.md",
+      "layer": "DOMAIN",
+      "when": "agentic",
+      "function": "DEFINE"
+    },
+    {
+      "id": "92",
+      "file": "agent_authority.md",
+      "layer": "DOMAIN",
+      "when": "agentic",
+      "function": "AUTHORIZE"
+    },
+    {
+      "id": "93",
+      "file": "autonomy_envelope.md",
+      "layer": "SENTRA",
+      "when": "agentic",
+      "function": "AUTHORIZE"
+    },
+    {
+      "id": "94",
+      "file": "tool_and_action_policy.md",
+      "layer": "DOMAIN",
+      "when": "agentic",
+      "function": "GUIDE"
+    },
+    {
+      "id": "95",
+      "file": "memory_architecture.md",
+      "layer": "CONDITIONAL",
+      "when": "agent_memory",
+      "function": "DEFINE"
+    },
+    {
+      "id": "96",
+      "file": "delegation_policy.md",
+      "layer": "CONDITIONAL",
+      "when": "delegates_tasks",
+      "function": "AUTHORIZE"
+    },
+    {
+      "id": "97",
+      "file": "multi_agent_protocol.md",
+      "layer": "CONDITIONAL",
+      "when": "multi_agent",
+      "function": "GUIDE"
+    },
+    {
+      "id": "98",
+      "file": "agent_evaluation.md",
+      "layer": "DOMAIN",
+      "when": "agentic",
+      "function": "VERIFY"
+    },
+    {
+      "id": "99",
+      "file": "agent_failure_modes.md",
+      "layer": "DOMAIN",
+      "when": "agentic",
+      "function": "DEFINE"
+    },
+    {
+      "id": "100",
+      "file": "agent_handoff_protocol.md",
+      "layer": "DOMAIN",
+      "when": "agentic",
+      "function": "GUIDE"
+    },
+    {
+      "id": "110",
+      "file": "operations_plan.md",
+      "layer": "CONDITIONAL",
+      "when": "operated_system",
+      "function": "GUIDE"
+    },
+    {
+      "id": "111",
+      "file": "runbook.md",
+      "layer": "CONDITIONAL",
+      "when": "operated_system",
+      "function": "GUIDE"
+    },
+    {
+      "id": "112",
+      "file": "observability_plan.md",
+      "layer": "CONDITIONAL",
+      "when": "operated_system",
+      "function": "GUIDE"
+    },
+    {
+      "id": "113",
+      "file": "sli_slo.md",
+      "layer": "CONDITIONAL",
+      "when": "service_objectives",
+      "function": "DEFINE"
+    },
+    {
+      "id": "114",
+      "file": "alerting_policy.md",
+      "layer": "CONDITIONAL",
+      "when": "operated_system",
+      "function": "GUIDE"
+    },
+    {
+      "id": "115",
+      "file": "backup_and_recovery.md",
+      "layer": "CONDITIONAL",
+      "when": "stateful",
+      "function": "GUIDE"
+    },
+    {
+      "id": "116",
+      "file": "incident_runbook.md",
+      "layer": "CONDITIONAL",
+      "when": "operated_system",
+      "function": "GUIDE"
+    },
+    {
+      "id": "117",
+      "file": "postmortem_template.md",
+      "layer": "CONDITIONAL",
+      "when": "operated_system",
+      "function": "PRESERVE"
+    },
+    {
+      "id": "118",
+      "file": "maintenance_plan.md",
+      "layer": "CONDITIONAL",
+      "when": "operated_system",
+      "function": "GUIDE"
+    },
+    {
+      "id": "119",
+      "file": "deprecation_plan.md",
+      "layer": "CONDITIONAL",
+      "when": "has_features_to_retire",
+      "function": "GUIDE"
+    },
+    {
+      "id": "120",
+      "file": "retirement_plan.md",
+      "layer": "CONDITIONAL",
+      "when": "end_of_life_foreseeable",
+      "function": "GUIDE"
+    },
+    {
+      "id": "130",
+      "file": "compliance_matrix.md",
+      "layer": "CONDITIONAL",
+      "when": "regulated_or_contracted",
+      "function": "VERIFY"
+    },
+    {
+      "id": "131",
+      "file": "regulatory_requirements.md",
+      "layer": "CONDITIONAL",
+      "when": "regulated_or_contracted",
+      "function": "DEFINE"
+    },
+    {
+      "id": "132",
+      "file": "license_register.md",
+      "layer": "CONDITIONAL",
+      "when": "third_party_deps",
+      "function": "PRESERVE"
+    },
+    {
+      "id": "133",
+      "file": "ip_register.md",
+      "layer": "CONDITIONAL",
+      "when": "ip_matters",
+      "function": "PRESERVE"
+    },
+    {
+      "id": "134",
+      "file": "third_party_register.md",
+      "layer": "CONDITIONAL",
+      "when": "third_party_deps",
+      "function": "PRESERVE"
+    },
+    {
+      "id": "135",
+      "file": "software_bill_of_materials.md",
+      "layer": "CONDITIONAL",
+      "when": "third_party_deps",
+      "function": "PRESERVE"
+    },
+    {
+      "id": "136",
+      "file": "vendor_risk_register.md",
+      "layer": "CONDITIONAL",
+      "when": "vendors",
+      "function": "PRESERVE"
+    },
+    {
+      "id": "137",
+      "file": "contractual_requirements.md",
+      "layer": "CONDITIONAL",
+      "when": "contracts",
+      "function": "DEFINE"
+    },
+    {
+      "id": "H01",
+      "file": "intended_medical_use.md",
+      "layer": "DOMAIN",
+      "when": "healthcare_overlay",
+      "function": "DEFINE"
+    },
+    {
+      "id": "H02",
+      "file": "clinical_requirements.md",
+      "layer": "DOMAIN",
+      "when": "healthcare_overlay",
+      "function": "DEFINE"
+    },
+    {
+      "id": "H03",
+      "file": "clinical_safety_plan.md",
+      "layer": "DOMAIN",
+      "when": "healthcare_overlay",
+      "function": "GUIDE"
+    },
+    {
+      "id": "H04",
+      "file": "medical_risk_management_file.md",
+      "layer": "DOMAIN",
+      "when": "healthcare_overlay",
+      "function": "PRESERVE"
+    },
+    {
+      "id": "H05",
+      "file": "software_safety_classification.md",
+      "layer": "DOMAIN",
+      "when": "healthcare_overlay",
+      "function": "DECIDE"
+    },
+    {
+      "id": "H06",
+      "file": "clinical_evaluation_plan.md",
+      "layer": "DOMAIN",
+      "when": "healthcare_overlay",
+      "function": "VERIFY"
+    },
+    {
+      "id": "H07",
+      "file": "clinical_evaluation_report.md",
+      "layer": "DOMAIN",
+      "when": "healthcare_overlay",
+      "function": "VERIFY"
+    },
+    {
+      "id": "H08",
+      "file": "usability_engineering_file.md",
+      "layer": "DOMAIN",
+      "when": "healthcare_overlay",
+      "function": "PRESERVE"
+    },
+    {
+      "id": "H09",
+      "file": "benefit_risk_analysis.md",
+      "layer": "DOMAIN",
+      "when": "healthcare_overlay",
+      "function": "VERIFY"
+    },
+    {
+      "id": "H10",
+      "file": "post_market_monitoring_plan.md",
+      "layer": "DOMAIN",
+      "when": "healthcare_overlay",
+      "function": "GUIDE"
+    },
+    {
+      "id": "S02",
+      "file": "purpose_contract.md",
+      "layer": "SENTRA",
+      "when": "always",
+      "function": "AUTHORIZE"
+    },
+    {
+      "id": "S03",
+      "file": "epistemic_ledger.md",
+      "layer": "SENTRA",
+      "when": "always",
+      "function": "PRESERVE"
+    },
+    {
+      "id": "S04",
+      "file": "current_state_snapshot.md",
+      "layer": "SENTRA",
+      "when": "always",
+      "function": "PRESERVE"
+    },
+    {
+      "id": "S05",
+      "file": "project_drift_ledger.md",
+      "layer": "SENTRA",
+      "when": "always",
+      "function": "VERIFY"
+    },
+    {
+      "id": "S06",
+      "file": "goal_to_evidence_matrix.md",
+      "layer": "SENTRA",
+      "when": "always",
+      "function": "VERIFY"
+    },
+    {
+      "id": "S07",
+      "file": "decision_provenance.md",
+      "layer": "SENTRA",
+      "when": "always",
+      "function": "DECIDE"
+    },
+    {
+      "id": "S09",
+      "file": "change_impact_packet.md",
+      "layer": "SENTRA",
+      "when": "always",
+      "function": "GUIDE"
+    },
+    {
+      "id": "S10",
+      "file": "context_handoff_packet.md",
+      "layer": "SENTRA",
+      "when": "always",
+      "function": "PRESERVE"
+    },
+    {
+      "id": "S11",
+      "file": "failure_boundary_map.md",
+      "layer": "SENTRA",
+      "when": "always",
+      "function": "DEFINE"
+    },
+    {
+      "id": "STD",
+      "file": "spds.md",
+      "layer": "SENTRA",
+      "when": "always",
+      "function": "PRESERVE"
+    }
+  ]
+}
