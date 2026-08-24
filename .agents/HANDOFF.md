@@ -25,6 +25,8 @@ Last updated: 2026-08-24 (avery FIX-01…06 executed; FULL AUTO; tech-debt audit
 
 ## Current state
 
+- **Avery architecture review (2026-08-24, sesi review):** `e32c0f7` dedup PowerShell ke `scripts/lib/common.ps1` + konstanta status + perbaikan `default_root()` (HERMES_HOME yang sudah menunjuk direktori profil); `cc1c9be` cabut Set-StrictMode dari lib (dot-source tidak boleh mengubah scope pemanggil). 48 tes hijau; dry-run identik baseline. CATATAN: kedua commit mendarat di `chore/smartboard-standalone` karena cabang itu sedang checked-out — pastikan ikut ke `main` saat merge. Laporan: artifact "Avery Architecture Review".
+
 - **Avery FIX-01…06 applied to the live runtime and proven** — plan and per-step evidence in
   `projects/healthcare/avery/docs/superpowers/plans/2026-08-23-avery-fix-execution-plan.md` and
   `projects/healthcare/avery/docs/evidence/`. Local commits on `main` after `f1aeb75`, not pushed.
