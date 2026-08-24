@@ -121,14 +121,7 @@ $viaLauncher = Test-Path -LiteralPath $launcher
 if ($viaLauncher) { Write-Host "Start   : login-item launcher $launcher" }
 else              { Write-Host "Start   : gateway run --replace (detached)" }
 
-# Bridge yatim: hanya node.exe yang menjalankan bridge.js, agar tidak pernah
-# mengenai PowerShell yang sedang memeriksa.
-function Get-OrphanBridge {
-    # Koma depan memaksa hasil tetap array meski nol atau satu elemen (PS 5.1).
-    , @(Get-CimInstance Win32_Process | Where-Object {
-        $_.Name -eq 'node.exe' -and $_.CommandLine -like '*whatsapp-bridge*bridge.js*'
-    })
-}
+. (Join-Path $PSScriptRoot 'lib\common.ps1')
 $orphans = Get-OrphanBridge
 Write-Host ("Bridge  : {0} proses whatsapp-bridge terdeteksi" -f $orphans.Count)
 

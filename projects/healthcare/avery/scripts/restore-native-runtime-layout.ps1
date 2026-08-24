@@ -36,13 +36,8 @@ $mode = if ($Execute) { 'EKSEKUSI' } else { 'DRY-RUN' }
 Write-Host "Mode: $mode" -ForegroundColor Cyan
 
 $runtimeRoot = Join-Path (Split-Path $PSScriptRoot -Parent) 'runtime'
-$links = @(
-    @{ Link = Join-Path $env:USERPROFILE '.hermes';                Target = Join-Path $runtimeRoot 'hermes-home' }
-    @{ Link = Join-Path $env:USERPROFILE '.hermes-web-ui';         Target = Join-Path $runtimeRoot 'hermes-web-ui' }
-    @{ Link = Join-Path $env:APPDATA     'hermes-studio';          Target = Join-Path $runtimeRoot 'appdata-roaming' }
-    @{ Link = Join-Path $env:LOCALAPPDATA 'hermes-studio-updater'; Target = Join-Path $runtimeRoot 'updater' }
-    @{ Link = 'D:\Devops\abyss-monorepo\apps\healthcare\hoamanagement\Hermes Studio'; Target = Join-Path $runtimeRoot 'hermes-studio' }
-)
+. (Join-Path $PSScriptRoot 'lib\common.ps1')
+$links = Get-AveryRuntimeLinks -RuntimeRoot $runtimeRoot
 
 # --- Prasyarat, semua harus lolos ---------------------------------------------
 $blockers = @()
@@ -50,10 +45,7 @@ if (-not (Test-Path -LiteralPath $runtimeRoot)) { $blockers += "runtime/ tidak d
 foreach ($l in $links) {
     if (-not (Test-Path -LiteralPath $l.Target)) { $blockers += "target tidak ada: $($l.Target)" }
 }
-$busy = @(Get-CimInstance Win32_Process | Where-Object {
-    $_.Name -eq 'Hermes Studio.exe' -or
-    ($_.CommandLine -match 'hermes-web-ui.desktop-runtime|whatsapp-bridge' -and $_.Name -notmatch 'powershell|pwsh|bash|conhost')
-})
+$busy = Get-HermesBusyProcess
 if ($busy.Count -gt 0) { $blockers += "$($busy.Count) proses Hermes masih berjalan" }
 
 $plan = @()

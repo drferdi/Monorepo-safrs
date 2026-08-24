@@ -10,7 +10,13 @@ from __future__ import annotations
 from dataclasses import dataclass, asdict
 
 
-STATUSES = ("pending", "approved", "sent", "cancelled", "expired")
+# Konstanta status -- satu-satunya sumber string status; jangan tulis literal.
+PENDING = "pending"
+APPROVED = "approved"
+SENT = "sent"
+CANCELLED = "cancelled"
+EXPIRED = "expired"
+STATUSES = (PENDING, APPROVED, SENT, CANCELLED, EXPIRED)
 
 
 @dataclass

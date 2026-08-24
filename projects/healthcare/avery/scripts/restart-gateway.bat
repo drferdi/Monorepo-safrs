@@ -4,6 +4,10 @@ setlocal enabledelayedexpansion
 rem ---------------------------------------------------------------------------
 rem Restart the Hermes gateway for the "avery" profile on Windows.
 rem
+rem CATATAN: jalur kanonik kini scripts/restart-gateway.ps1 (dry-run default,
+rem -Execute untuk bertindak). Berkas .bat ini dipertahankan untuk pemanggil
+rem lama; logikanya setara jalur -Execute tanpa dry-run.
+rem
 rem Why this script exists: the whatsapp-bridge child process can survive a
 rem gateway restart. The orphan keeps holding TCP port 3000 and the WhatsApp
 rem session directory. The next gateway then attaches to that stale bridge

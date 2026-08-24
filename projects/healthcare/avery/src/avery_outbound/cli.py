@@ -10,9 +10,14 @@ import argparse
 import sys
 from pathlib import Path
 
+from .models import APPROVED
 from .policy import PolicyError, check_draft, draft_hash, read_allowed, validate_target
 from .sender import build_command
 from .store import Store, StoreError
+
+
+def _store(args: argparse.Namespace) -> Store:
+    return Store(root=args.root) if args.root else Store()
 
 
 def _mask(number: str) -> str:
@@ -37,7 +42,7 @@ def cmd_prepare(args: argparse.Namespace) -> int:
             )
             return 3
 
-    store = Store(root=args.root) if args.root else Store()
+    store = _store(args)
     req = store.create(
         target=target,
         draft_sha256=draft_hash(text),
@@ -48,7 +53,7 @@ def cmd_prepare(args: argparse.Namespace) -> int:
 
 
 def cmd_approve(args: argparse.Namespace) -> int:
-    store = Store(root=args.root) if args.root else Store()
+    store = _store(args)
     try:
         req = store.approve(args.id)
     except StoreError as e:
@@ -59,7 +64,7 @@ def cmd_approve(args: argparse.Namespace) -> int:
 
 
 def cmd_cancel(args: argparse.Namespace) -> int:
-    store = Store(root=args.root) if args.root else Store()
+    store = _store(args)
     try:
         req = store.cancel(args.id)
     except StoreError as e:
@@ -70,7 +75,7 @@ def cmd_cancel(args: argparse.Namespace) -> int:
 
 
 def cmd_status(args: argparse.Namespace) -> int:
-    store = Store(root=args.root) if args.root else Store()
+    store = _store(args)
     if args.id:
         try:
             reqs = [store.get(args.id)]
@@ -81,7 +86,7 @@ def cmd_status(args: argparse.Namespace) -> int:
         reqs = store.list()
 
     for req in reqs:
-        if req.status == "approved":
+        if req.status == APPROVED:
             # Satu-satunya keluaran yang memuat nomor penuh: argv ini memang
             # harus disalin apa adanya oleh manusia ke terminal. Keluaran lain
             # selalu disamarkan.
@@ -97,7 +102,7 @@ def cmd_status(args: argparse.Namespace) -> int:
 
 
 def cmd_list(args: argparse.Namespace) -> int:
-    store = Store(root=args.root) if args.root else Store()
+    store = _store(args)
     for req in store.list():
         print(f"{req.id} status={req.status} target={_mask(req.target)}")
     return 0

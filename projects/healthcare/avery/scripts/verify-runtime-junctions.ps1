@@ -40,13 +40,8 @@ $ErrorActionPreference = 'Stop'
 $runtimeRoot = Join-Path (Split-Path $PSScriptRoot -Parent) 'runtime'
 if (-not (Test-Path -LiteralPath $runtimeRoot)) { throw "Direktori runtime tidak ditemukan: $runtimeRoot" }
 
-$links = @(
-    @{ Link = Join-Path $env:USERPROFILE '.hermes';                       Target = Join-Path $runtimeRoot 'hermes-home' }
-    @{ Link = Join-Path $env:USERPROFILE '.hermes-web-ui';                Target = Join-Path $runtimeRoot 'hermes-web-ui' }
-    @{ Link = Join-Path $env:APPDATA     'hermes-studio';                 Target = Join-Path $runtimeRoot 'appdata-roaming' }
-    @{ Link = Join-Path $env:LOCALAPPDATA 'hermes-studio-updater';        Target = Join-Path $runtimeRoot 'updater' }
-    @{ Link = 'D:\Devops\abyss-monorepo\apps\healthcare\hoamanagement\Hermes Studio'; Target = Join-Path $runtimeRoot 'hermes-studio' }
-)
+. (Join-Path $PSScriptRoot 'lib\common.ps1')
+$links = Get-AveryRuntimeLinks -RuntimeRoot $runtimeRoot
 
 $broken = @()
 
@@ -88,10 +83,7 @@ if (-not $Fix) {
 }
 
 # Pastikan tidak ada proses Hermes yang memegang berkas.
-$busy = Get-CimInstance Win32_Process | Where-Object {
-    $_.Name -eq 'Hermes Studio.exe' -or
-    ($_.CommandLine -match 'hermes-web-ui.desktop-runtime|whatsapp-bridge' -and $_.Name -notmatch 'powershell|bash|conhost')
-}
+$busy = Get-HermesBusyProcess
 if ($busy) {
     Write-Host ''
     Write-Host ("{0} proses Hermes masih berjalan. Tutup Hermes Studio dan hentikan gateway dulu." -f @($busy).Count) -ForegroundColor Red

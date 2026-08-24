@@ -152,3 +152,40 @@ class LedgerTests(StoreTestBase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DefaultRootTests(unittest.TestCase):
+    """Regresi: HERMES_HOME bisa akar .hermes ATAU langsung direktori profil."""
+
+    def _with_env(self, home, profile=None):
+        import os
+        from avery_outbound.store import default_root
+        old = {k: os.environ.get(k) for k in ("HERMES_HOME", "HERMES_PROFILE")}
+        try:
+            os.environ["HERMES_HOME"] = home
+            if profile is None:
+                os.environ.pop("HERMES_PROFILE", None)
+            else:
+                os.environ["HERMES_PROFILE"] = profile
+            return default_root()
+        finally:
+            for k, v in old.items():
+                if v is None:
+                    os.environ.pop(k, None)
+                else:
+                    os.environ[k] = v
+
+    def test_hermes_home_akar(self):
+        root = self._with_env(str(Path("C:/u/.hermes")))
+        self.assertEqual(
+            root.parts[-5:],
+            (".hermes", "profiles", "avery", "pending", "avery-outbound"),
+        )
+
+    def test_hermes_home_sudah_direktori_profil(self):
+        root = self._with_env(str(Path("C:/u/.hermes/profiles/avery")))
+        self.assertEqual(root.parts.count("avery"), 1)
+        self.assertEqual(
+            root.parts[-5:],
+            (".hermes", "profiles", "avery", "pending", "avery-outbound"),
+        )
