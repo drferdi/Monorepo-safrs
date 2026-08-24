@@ -6,11 +6,11 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/), penomoran meng
 
 ---
 
-## [Unreleased]
+## [0.2.0] — 2026-08-25
 
 ### FIX-01…06 — perbaikan perilaku Avery (2026-08-23)
 
-Diterapkan ke runtime profil `avery` dan dibuktikan (`docs/evidence/`). Rencana: `docs/superpowers/plans/2026-08-23-avery-fix-execution-plan.md`.
+Diterapkan ke runtime profil `avery` dan dibuktikan (`docs/6-evidence/`). Rencana: `docs/5-superpowers/plans/2026-08-23-avery-fix-execution-plan.md`.
 
 - FIX-01 config: migrasi v38; satu blok WhatsApp; kunci mati `group_allowed_chats` dibuang; `scripts/restart-gateway.ps1` mencetak effective config 6 baris dan menolak placeholder/JID tidak valid (fail-closed).
 - FIX-02 ingress: `patches/hermes-0.20.5/0001-whatsapp-ingress-reason-codes.patch` (reason code `BROADCAST|GROUP_NOT_ALLOWED|USER_NOT_ALLOWED|MENTION_MISMATCH|PASSED|INVALID_MESSAGE` di INFO; regex mention invalid = BOOT FAIL) + `scripts/apply-hermes-patches.ps1` (idempoten, SHA-256, `-Revert`).
@@ -26,6 +26,9 @@ Pengerasan kapsul. Semua butir di bawah terverifikasi di repositori lewat uji ot
 - **Broker outbound terikat persetujuan** `src/avery_outbound/` — `prepare` memeriksa draf (menolak yang menyapa Chief atau memuat perancah cron), mengikat pada hash SHA-256, menyimpan metadata tanpa isi pesan di bawah `HERMES_HOME`; `approve` kedaluwarsa 15 menit; `status` mencetak argv `hermes -p avery send ...` sekali pakai tanpa mengeksekusinya — satu-satunya keluaran dengan nomor penuh, karena manusia menyalinnya ke terminal; keluaran lain disamarkan ke empat digit terakhir. Tidak pernah mengubah allowlist: penerima yang belum terdaftar menghasilkan kode keluar 3.
 - **Rangkaian uji** `tests/` (pustaka standar `unittest`) dan runner `scripts/test.ps1`.
 - **Alat pemulihan Windows** — `health-check.ps1` (JSON tersanitasi, kode keluar 0/1/2), `restart-gateway.ps1` (dry-run default, `-Execute` untuk bertindak), `restore-native-runtime-layout.ps1` (fail-closed, menolak bila proses Hermes masih berjalan), `member_watch.py` (pembanding snapshot anggota, pengenal disamarkan).
+- **Living Console** — aplikasi desktop Electron (`console/`) dan padanan HTTP lokal `scripts/control_center.py` (port 8989, mitigasi CSRF Origin + header kustom, token opsional): streaming log, status gateway, dan dock peluncur skrip operasional.
+- **Gerbang CI lokal** `scripts/ci-checks.ps1` — unit test, scan data sensitif (nomor/JID/kunci API), dan grep anti-regrési rename dalam satu perintah.
+- **Housekeeping sesi otomatis** `scripts/session-housekeeping.ps1` + `scripts/lib/housekeeping.py` — rotasi sesi di atas ambang token (default 40.000) atau idle > 24 jam; memori kanonis tidak tersentuh; dry-run default.
 
 ### Dihapus
 
@@ -36,6 +39,11 @@ Pengerasan kapsul. Semua butir di bawah terverifikasi di repositori lewat uji ot
 
 - `docs/whatsapp-group-fix.md` disanitasi: JID dan nomor telepon diganti placeholder. Riwayat git sebelum commit ini masih memuat nilai aslinya.
 - Skill `contact-outreach` diperbarui ke alur broker.
+- **Broker outbound toleran berkas korup** — `store.list()` dan `expire_stale()` melewati JSON rusak dengan entri ledger `corrupt_file`; `get()` melempar `StoreError` yang jelas. Tiga uji baru.
+- **Lifecycle restart terkonsolidasi** — `restart-gateway.bat` mendelegasikan penuh ke `restart-gateway.ps1 -Execute` (satu logika, nol duplikasi); pra-cek junction + sinkronisasi profil + housekeeping kini bagian dari jalur restart; blok effective config menandai `[CLI-GAGAL:<key>]` alih-alih diam saat CLI tidak menjawab.
+- **`start-avery.bat` resolusi junction** — lokasi Hermes Studio dibaca dari `scripts/runtime-links.json`, bukan hardcode path legacy.
+- **Reorganisasi dokumentasi** — struktur baru: `docs/4-spds/` (SPDS lengkap), `docs/5-superpowers/`, `docs/6-evidence/`; `PROJECT_GENOME.yaml`; pagar `.gitignore` untuk `backups/` (memuat PII/kredensial runtime) dan `console/node_modules/`.
+- **Persona SOUL.md** — protokol identifikasi sender multi-user (call sign per anggota), aturan `NO_REPLY` ketat di grup, larangan narrasi tool ke WhatsApp.
 
 ## [0.1.0] — 2026-08-23
 
