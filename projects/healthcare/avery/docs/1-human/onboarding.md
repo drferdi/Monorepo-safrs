@@ -1,12 +1,12 @@
-# Developer & Operator Onboarding (Medisync / Avery)
+﻿# Developer & Operator Onboarding (Avery / Avery)
 
-Welcome to **Medisync**, the version-controlled configuration home for **Avery** — the institutional Home Agent of **Sentra Artificial Intelligence** and Healthcare domain systems.
+Welcome to **Avery**, the version-controlled configuration home for **Avery** — the institutional Home Agent of **Sentra Artificial Intelligence** and Healthcare domain systems.
 
 ---
 
 ## 1. Monorepo & Capsule Architecture
 
-Medisync does not compile custom application binaries; instead, it configures and version-controls the behavior, skills, and deployment blueprints of **Hermes Studio / Hermes Agent**.
+Avery does not compile custom application binaries; instead, it configures and version-controls the behavior, skills, and deployment blueprints of **Hermes Studio / Hermes Agent**.
 
 ```
 D:/DEV/Monorepo/projects/healthcare/avery/

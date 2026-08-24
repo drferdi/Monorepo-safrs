@@ -1,6 +1,6 @@
-# State Machines & Invariant Specifications (Avery)
+﻿# State Machines & Invariant Specifications (Avery)
 
-This document formalizes the runtime state transitions for message processing, memory proposals, and gateway lifecycles within the Medisync / Avery deployment.
+This document formalizes the runtime state transitions for message processing, memory proposals, and gateway lifecycles within the Avery / Avery deployment.
 
 ---
 

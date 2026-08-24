@@ -1,6 +1,6 @@
-{
+﻿{
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "project_name": "Medisync (Avery / Hermes Home Agent)",
+  "project_name": "Avery (Avery / Hermes Home Agent)",
   "architecture_standard": "@safrs/v1.1",
   "domain": "healthcare",
   "capsule_path": "projects/healthcare/avery",

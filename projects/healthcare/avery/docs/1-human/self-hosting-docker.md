@@ -1,6 +1,6 @@
-# Self-Hosting & Deployment Guide (Docker / VPS)
+﻿# Self-Hosting & Deployment Guide (Docker / VPS)
 
-This guide details how to deploy and operate the **Medisync / Avery** Hermes Agent stack on private Linux servers (KVM VPS such as Hostinger, DigitalOcean, or AWS) using Docker Compose.
+This guide details how to deploy and operate the **Avery / Avery** Hermes Agent stack on private Linux servers (KVM VPS such as Hostinger, DigitalOcean, or AWS) using Docker Compose.
 
 ---
 

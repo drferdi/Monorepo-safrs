@@ -1,12 +1,12 @@
-# Software Bill of Materials (Hermes Runtime & Provenance)
+﻿# Software Bill of Materials (Hermes Runtime & Provenance)
 
-This document formalizes the runtime dependency manifest, upstream provenance, and supply chain risk posture for **Medisync**.
+This document formalizes the runtime dependency manifest, upstream provenance, and supply chain risk posture for **Avery**.
 
 ---
 
 ## 1. Upstream Provenance & Baseline Pinning
 
-Medisync builds upon the open-source Hermes Agent runtime pinned to a verified upstream release commit:
+Avery builds upon the open-source Hermes Agent runtime pinned to a verified upstream release commit:
 
 | Component | Upstream Origin | Version / Pin | License |
 |---|---|---|---|

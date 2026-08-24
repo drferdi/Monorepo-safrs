@@ -1,8 +1,8 @@
-# Arsitektur
+﻿# Arsitektur
 
 ## Bentuk sistem
 
-Medisync tidak menjalankan kodenya sendiri. Ia mengonfigurasi **Hermes Studio**, yang terdiri atas tiga proses terpisah.
+Avery tidak menjalankan kodenya sendiri. Ia mengonfigurasi **Hermes Studio**, yang terdiri atas tiga proses terpisah.
 
 ```
                         ┌─────────────────────────┐
@@ -66,7 +66,7 @@ Di Windows `%LOCALAPPDATA%\hermes` adalah junction ke `%USERPROFILE%\.hermes`; k
 Memori agen dibatasi jumlah karakter, dipaksakan saat penulisan:
 
 - `memory_char_limit` — memori umum, bawaan 2200.
-- `user_char_limit` — profil pengguna, bawaan 1375, dinaikkan ke 2200 untuk Medisync.
+- `user_char_limit` — profil pengguna, bawaan 1375, dinaikkan ke 2200 untuk Avery.
 
 Operasi `replace` mencocokkan entri lewat substring persis. Bila teks acuan sudah berubah sejak usulan dibuat, penulisan gagal seluruhnya dengan galat "No entry matched". Ini bukan kerusakan, melainkan usulan yang basi.
 

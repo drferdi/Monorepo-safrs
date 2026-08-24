@@ -1,6 +1,10 @@
-# Medisync Documentation Map
+# Avery Documentation Map
 
-This directory contains the canonical architecture, operations, and governance documentation for **Medisync** (Avery / Hermes Agent).
+**Authoritative documentation standard (2026):** [SPDS 1.0](spds/spds.md) — start at [spds/read_first.md](spds/read_first.md). Machine identity: [`../PROJECT_GENOME.yaml`](../PROJECT_GENOME.yaml).
+
+The layered 1-human / 2-agent / 3-governance set below remains operational detail. If it conflicts with SPDS `current_state_snapshot.md` or `purpose_contract.md`, SPDS plus inspectable runtime evidence win; record the conflict in `spds/project_drift_ledger.md`.
+
+This directory contains architecture, operations, and governance documentation for **Avery**.
 
 ---
 

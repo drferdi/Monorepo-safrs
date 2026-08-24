@@ -1,4 +1,4 @@
-# Permission Broker & Clinical Boundary Specification
+﻿# Permission Broker & Clinical Boundary Specification
 
 This document specifies the authorization gates, approval brokers, and clinical boundaries governing **Avery** within the Sentra Healthcare domain.
 
@@ -6,7 +6,7 @@ This document specifies the authorization gates, approval brokers, and clinical 
 
 ## 1. Human Approval Gates (`write_approval`)
 
-To prevent unverified modification of permanent organizational knowledge, Medisync enforces human approval gates on all memory and skill mutations:
+To prevent unverified modification of permanent organizational knowledge, Avery enforces human approval gates on all memory and skill mutations:
 
 ```mermaid
 flowchart TD

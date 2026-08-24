@@ -1,6 +1,6 @@
-# Data Privacy by Design (Healthcare & Confidentiality)
+﻿# Data Privacy by Design (Healthcare & Confidentiality)
 
-This document formalizes the data classification, privacy boundaries, and automated sanitization controls applied to **Medisync**.
+This document formalizes the data classification, privacy boundaries, and automated sanitization controls applied to **Avery**.
 
 ---
 

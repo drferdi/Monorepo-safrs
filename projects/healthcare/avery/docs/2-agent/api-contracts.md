@@ -1,6 +1,6 @@
-# API & Process Interface Contracts (Hermes / Medisync)
+﻿# API & Process Interface Contracts (Hermes / Avery)
 
-This document formalizes the internal HTTP APIs, process interfaces, and authentication boundaries governing the Hermes Agent runtime in Medisync.
+This document formalizes the internal HTTP APIs, process interfaces, and authentication boundaries governing the Hermes Agent runtime in Avery.
 
 ---
 
