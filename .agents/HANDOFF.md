@@ -25,6 +25,21 @@ Last updated: 2026-08-24 (avery FIX-01…06 executed; FULL AUTO; tech-debt audit
 
 ## Current state
 
+- **Academic Smartboard standalone (2026-08-24, sesi migrasi):** capsule
+  `projects/academic/academic-smartboard` kini standalone penuh — verifier resmi
+  `node tools/project-standalone/src/cli.mjs verify academic/academic-smartboard`
+  RESULT PASS (11 stage, dua kali: pra dan pasca finalisasi). Workspace+lockfile
+  capsule sendiri (`nodeLinker: hoisted`), semua `catalog:` di-pin, tsconfig +
+  biome lokal, `@sentra/token` dikonsumsi sebagai tarball `vendor/` (source+gate
+  tetap `packages/token`, repack `pnpm run token:pack`), kontrak
+  `project.contract.json` + `scripts/{pnpm,serve,deploy-dry-run,pack-token}.mjs`.
+  Root `pnpm-workspace.yaml` meniadakan capsule ini via negation.
+  `check_project_independence`: OK (2 capsules aktif). Konteks penuh:
+  `projects/academic/academic-smartboard/docs/standalone-migration.md`.
+  Inherited & di luar scope (pra-sesi, tetap ada): root install gagal
+  (`@safrs/auth` tanpa package.json) dan governance ownership fail pada mod
+  asing `.safrs/reviews/verification-integrity.json`.
+
 - **Avery architecture review (2026-08-24, sesi review):** `e32c0f7` dedup PowerShell ke `scripts/lib/common.ps1` + konstanta status + perbaikan `default_root()` (HERMES_HOME yang sudah menunjuk direktori profil); `cc1c9be` cabut Set-StrictMode dari lib (dot-source tidak boleh mengubah scope pemanggil). 48 tes hijau; dry-run identik baseline. CATATAN: kedua commit mendarat di `chore/smartboard-standalone` karena cabang itu sedang checked-out — pastikan ikut ke `main` saat merge. Laporan: artifact "Avery Architecture Review".
 
 - **Avery FIX-01…06 applied to the live runtime and proven** — plan and per-step evidence in
