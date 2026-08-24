@@ -46,6 +46,40 @@ $ErrorActionPreference = 'Stop'
 $mode = if ($Execute) { 'EKSEKUSI' } else { 'DRY-RUN' }
 Write-Host "Mode: $mode (profil: $Profile)" -ForegroundColor Cyan
 
+# --- [Pra-cek] Pencegahan Deviasi: Verifikasi Junction & Sinkronisasi Profil --
+Write-Host ''
+Write-Host '=== [Pra-cek 1] Integritas junction runtime ==='
+$verifyJunctionsScript = Join-Path $PSScriptRoot 'verify-runtime-junctions.ps1'
+if (Test-Path -LiteralPath $verifyJunctionsScript) {
+    if ($Execute) {
+        & $verifyJunctionsScript -Fix
+    } else {
+        & $verifyJunctionsScript
+    }
+}
+
+Write-Host ''
+Write-Host '=== [Pra-cek 2] Sinkronisasi profil repo -> runtime ==='
+$pushProfileScript = Join-Path $PSScriptRoot 'push-profile-to-runtime.ps1'
+if (Test-Path -LiteralPath $pushProfileScript) {
+    if ($Execute) {
+        & $pushProfileScript -Execute
+    } else {
+        & $pushProfileScript
+    }
+}
+
+Write-Host ''
+Write-Host '=== [Pra-cek 3] Housekeeping sesi & batasan token ==='
+$housekeepingScript = Join-Path $PSScriptRoot 'session-housekeeping.ps1'
+if (Test-Path -LiteralPath $housekeepingScript) {
+    if ($Execute) {
+        & $housekeepingScript -Profile $Profile -Execute
+    } else {
+        & $housekeepingScript -Profile $Profile
+    }
+}
+
 # --- Pra-cek config fail-closed -----------------------------------------------
 # Berjalan pada mode DRY-RUN maupun EKSEKUSI, sebelum proses apa pun disentuh.
 # Tidak pernah mencetak nilai JID - hanya nomor baris dan jenis pelanggaran.
@@ -128,16 +162,36 @@ Write-Host ("Bridge  : {0} proses whatsapp-bridge terdeteksi" -f $orphans.Count)
 # --- Effective config: dibaca via hermes_cli, tidak pernah menyertakan JID ---
 function Get-CliValue {
     param([Parameter(Mandatory)] [string] $Key)
-    $out = & $pyexe -m hermes_cli.main --profile $Profile config get $Key 2>&1
-    $lastLine = $out | Where-Object { $_ -and ($_.ToString().Trim() -ne '') } | Select-Object -Last 1
-    if ($null -eq $lastLine) { '' } else { $lastLine.ToString().Trim() }
+    try {
+        $prevEAP = $ErrorActionPreference
+        $ErrorActionPreference = 'SilentlyContinue'
+        $out = & $pyexe -m hermes_cli.main --profile $Profile config get $Key 2>$null
+        # Bukti verifikasi harus jujur: kegagalan CLI ditandai eksplisit,
+        # tidak boleh tampak sebagai nilai kosong yang sah.
+        if ($LASTEXITCODE -ne 0) { return "[CLI-GAGAL:$Key]" }
+        $lastLine = $out | Where-Object { $_ -and ($_.ToString().Trim() -ne '') } | Select-Object -Last 1
+        if ($null -eq $lastLine) { '' } else { $lastLine.ToString().Trim() }
+    } catch {
+        "[CLI-GAGAL:$Key]"
+    } finally {
+        $ErrorActionPreference = $prevEAP
+    }
 }
 
 function Get-CliToolsetSummary {
-    $out = & $pyexe -m hermes_cli.main --profile $Profile tools --summary 2>&1
-    $lines = $out | Where-Object { $_ -match 'cli|whatsapp' }
-    $sanitized = $lines | ForEach-Object { ($_.ToString() -replace '\S*@\S+', '<ID>').Trim() }
-    $sanitized -join '; '
+    try {
+        $prevEAP = $ErrorActionPreference
+        $ErrorActionPreference = 'SilentlyContinue'
+        $out = & $pyexe -m hermes_cli.main --profile $Profile tools --summary 2>$null
+        if ($LASTEXITCODE -ne 0) { return '[CLI-GAGAL:tools]' }
+        $lines = $out | Where-Object { $_ -match 'cli|whatsapp' }
+        $sanitized = $lines | ForEach-Object { ($_.ToString() -replace '\S*@\S+', '<ID>').Trim() }
+        $sanitized -join '; '
+    } catch {
+        '[CLI-GAGAL:tools]'
+    } finally {
+        $ErrorActionPreference = $prevEAP
+    }
 }
 
 function Get-EffectiveConfigBlock {
@@ -194,7 +248,7 @@ foreach ($p in $orphans) {
 
 Write-Host ''; Write-Host '=== [3/4] Memulai gateway ==='
 if ($viaLauncher) {
-    wscript.exe $launcher
+    $null = ([wmiclass]'win32_process').Create("wscript.exe `"$launcher`"")
 } else {
     $env:HERMES_HOME = $profileHome
     Start-Process -FilePath $pyexe -ArgumentList @('-m', 'hermes_cli.main', '--profile', $Profile, 'gateway', 'run', '--replace') -WindowStyle Hidden
