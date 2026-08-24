@@ -1,0 +1,12 @@
+packages:
+  - apps/*
+
+allowBuilds:
+  esbuild: true
+  sharp: true
+
+# Verifier standalone (tools/project-standalone) menolak symlink/reparse point
+# di seluruh pohon capsule, termasuk node_modules hasil install. Linker hoisted
+# menghasilkan node_modules datar tanpa symlink; @sentra/token dikonsumsi
+# sebagai tarball vendor/ (bukan workspace link) untuk alasan yang sama.
+nodeLinker: hoisted

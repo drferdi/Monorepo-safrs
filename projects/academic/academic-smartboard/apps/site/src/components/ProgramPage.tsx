@@ -46,9 +46,9 @@ export function ProgramPage({ content }: { content: ProgramContent }) {
                   padding: 0,
                 }}
               >
-                {content.benefits.map((benefit, index) => (
+                {content.benefits.map((benefit) => (
                   <li
-                    key={`benefit-${index}`}
+                    key={`benefit-${benefit.slice(0, 40)}`}
                     style={{
                       maxWidth: "var(--layout-container-text)",
                       paddingLeft: "var(--space-4)",

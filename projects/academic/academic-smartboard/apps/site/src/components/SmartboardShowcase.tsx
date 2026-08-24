@@ -180,8 +180,8 @@ export function SmartboardShowcase({ content }: { content: PageContent }) {
           <div style={{ gridColumn: "1 / span 7" }}>
             <p style={eyebrowStyle}>{eyebrowOf(tampilan.bullets ?? [])}</p>
             <h2 style={headingStyle}>{tampilan.heading}</h2>
-            {tampilan.body.map((p, i) => (
-              <p key={`${tampilan.id}-p-${i}`} style={bodyStyle}>
+            {tampilan.body.map((p) => (
+              <p key={`${tampilan.id}-p-${p.slice(0, 40)}`} style={bodyStyle}>
                 {p}
               </p>
             ))}
@@ -237,8 +237,8 @@ export function SmartboardShowcase({ content }: { content: PageContent }) {
           <div style={{ gridColumn: "1 / span 7" }}>
             <p style={eyebrowStyle}>{eyebrowOf(alur.bullets ?? [])}</p>
             <h2 style={headingStyle}>{alur.heading}</h2>
-            {alur.body.map((p, i) => (
-              <p key={`${alur.id}-p-${i}`} style={bodyStyle}>
+            {alur.body.map((p) => (
+              <p key={`${alur.id}-p-${p.slice(0, 40)}`} style={bodyStyle}>
                 {p}
               </p>
             ))}
@@ -313,8 +313,8 @@ export function SmartboardShowcase({ content }: { content: PageContent }) {
           <div style={{ gridColumn: "1 / span 7" }}>
             <p style={eyebrowStyle}>{eyebrowOf(aiBullets)}</p>
             <h2 style={headingStyle}>{ai.heading}</h2>
-            {ai.body.map((p, i) => (
-              <p key={`${ai.id}-p-${i}`} style={bodyStyle}>
+            {ai.body.map((p) => (
+              <p key={`${ai.id}-p-${p.slice(0, 40)}`} style={bodyStyle}>
                 {p}
               </p>
             ))}
@@ -527,8 +527,8 @@ export function SmartboardShowcase({ content }: { content: PageContent }) {
               >
                 {/* Visible half: the real, once-only tag list for assistive tech. */}
                 <div style={{ display: "flex", gap: "var(--space-2)" }}>
-                  {aiTags.map((tag, index) => (
-                    <span key={`${tag}-${index}`} style={tagStyle}>
+                  {aiTags.map((tag) => (
+                    <span key={tag} style={tagStyle}>
                       {tag}
                     </span>
                   ))}
@@ -540,8 +540,8 @@ export function SmartboardShowcase({ content }: { content: PageContent }) {
                   aria-hidden="true"
                   style={{ display: "flex", gap: "var(--space-2)" }}
                 >
-                  {aiTags.map((tag, index) => (
-                    <span key={`dup-${tag}-${index}`} style={tagStyle}>
+                  {aiTags.map((tag) => (
+                    <span key={`dup-${tag}`} style={tagStyle}>
                       {tag}
                     </span>
                   ))}

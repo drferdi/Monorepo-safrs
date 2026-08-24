@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Section } from "../content/types.ts";
 
 export function SectionBlock({ section }: { section: Section }) {
@@ -16,7 +17,7 @@ export function SectionBlock({ section }: { section: Section }) {
         {/* Content anchors columns 1-7; column 8 stays empty by design. */}
         <div style={{ gridColumn: "1 / span 7" }}>
           {section.image ? (
-            <img
+            <Image
               src={section.image.src}
               alt={section.image.alt}
               width={1536}
@@ -47,7 +48,7 @@ export function SectionBlock({ section }: { section: Section }) {
           <div style={{ marginTop: "var(--space-5)" }}>
             {section.body.map((paragraph, index) => (
               <p
-                key={`${section.id}-p-${index}`}
+                key={`${section.id}-p-${paragraph.slice(0, 40)}`}
                 style={{
                   marginTop: index === 0 ? 0 : "var(--space-4)",
                   maxWidth: "var(--layout-container-text)",
@@ -71,9 +72,9 @@ export function SectionBlock({ section }: { section: Section }) {
                 padding: 0,
               }}
             >
-              {section.bullets.map((bullet, index) => (
+              {section.bullets.map((bullet) => (
                 <li
-                  key={`${section.id}-b-${index}`}
+                  key={`${section.id}-b-${bullet.slice(0, 40)}`}
                   style={{
                     paddingLeft: "var(--space-4)",
                     borderLeft: "2px solid var(--color-border-strong)",

@@ -1,0 +1,22 @@
+{
+  "name": "academic-smartboard",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Academic Smartboard \u2014 platform bimbingan belajar multi-tenant (capsule standalone).",
+  "packageManager": "pnpm@11.21.0",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "lint": "pnpm -r lint && biome check packages/token/src",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test && node scripts/check-tokens.mjs",
+    "build": "pnpm -r build",
+    "start": "node scripts/serve.mjs",
+    "deploy:dry-run": "node scripts/deploy-dry-run.mjs",
+    "token:pack": "node scripts/pack-token.mjs"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.7"
+  }
+}
