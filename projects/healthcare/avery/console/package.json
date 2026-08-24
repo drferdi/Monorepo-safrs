@@ -1,0 +1,21 @@
+{
+  "name": "avery-living-console",
+  "version": "1.0.0",
+  "description": "Avery Sentra Executive Living Console - Native Electron Desktop Application",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron ."
+  },
+  "keywords": [
+    "avery",
+    "sentra",
+    "living-console",
+    "electron"
+  ],
+  "author": "Sentra Artificial Intelligence",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "electron": "catalog:"
+  }
+}
