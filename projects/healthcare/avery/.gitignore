@@ -43,3 +43,12 @@ ai/profiles/*/config.yaml
 
 # Cadangan otomatis sync-profile-to-repo.ps1
 ai/profiles/*.bak-*/
+
+# Snapshot pra-update runtime: memuat memories/, platforms/ (setara kredensial
+# WhatsApp), pairing/, dan pending_messages/ — tidak boleh masuk git apa pun
+# alasannya. Backup tinggal di disk lokal saja.
+backups/
+
+# Dependensi lokal Living Console Electron
+console/node_modules/
+

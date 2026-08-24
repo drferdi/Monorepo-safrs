@@ -43,6 +43,8 @@ Rules:
 
 </div>
 
+> **Documentation (SPDS 1.0):** start at [`docs/spds/read_first.md`](docs/spds/read_first.md). Genome: [`PROJECT_GENOME.yaml`](PROJECT_GENOME.yaml).
+
 ---
 
 ## `00 / SYSTEM IDENTITY`

@@ -18,10 +18,11 @@ Read the repository root `AGENTS.md` first. This file narrows project-local cont
 
 ## Required context
 
-1. `README.md`
-2. `docs/architecture.md`
-3. `docs/data.md`
-4. `docs/testing.md`
+1. `docs/spds/read_first.md` (SPDS 1.0 entry) and `PROJECT_GENOME.yaml`
+2. `README.md`
+3. `docs/architecture.md`
+4. `docs/data.md`
+5. `docs/testing.md`
 
 ## Commands
 

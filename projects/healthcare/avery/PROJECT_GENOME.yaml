@@ -1,0 +1,117 @@
+# Avery — PROJECT_GENOME.yaml
+# SPDS 1.0 (2026) machine-readable identity. Humans start at docs/spds/read_first.md.
+schema: spds.sentra/v1.0
+document_id: S01
+title: Avery Project Genome
+status: active
+authority: Chief
+owner: dr. Ferdi Iskandar
+version: "1.0.0"
+created: "2026-08-25"
+last_verified: "2026-08-25"
+source_of_truth: true
+agent_readable: true
+agent_editable: false
+human_approval_required: true
+authority_level: chief
+
+identity:
+  project_id: avery
+  display_name: Avery
+  expansion: Autonomous Virtual Executive Resource for Your-team
+  capsule_path: projects/healthcare/avery
+  organization: Sentra Artificial Intelligence
+  domain_folder: healthcare
+  product_class: whatsapp_native_executive_agent
+  medical_device: false
+  samd: false
+  intended_medical_use: none
+  note: >
+    Placement under projects/healthcare does not make Avery a medical device.
+    Avery is an institutional executive agent. Clinical judgment remains human.
+
+purpose:
+  one_line: >
+    Operate a WhatsApp-native executive agent that turns authorized conversation
+    into verified, auditable work without replacing human institutional authority.
+  non_purpose:
+    - licensed clinical decision-making
+    - silent high-impact autonomy without trace
+    - general-purpose chatbot entertainment
+    - replacement for Hermes Studio as a product
+
+lifecycle:
+  state: operating
+  current_release: capsule-local (Hermes runtime externally installed)
+  environment: local Windows host; VPS Docker compose prepared, not assumed live
+
+owners:
+  human_authority: Chief (dr. Ferdi Iskandar)
+  technical_runtime: Hermes Studio / Hermes Agent (NousResearch lineage)
+  documentation_standard: SPDS 1.0 — 2026
+
+authority_hierarchy:
+  - PROJECT_GENOME.yaml
+  - docs/spds/purpose_contract.md
+  - docs/spds/authority_and_decision_rights.md
+  - docs/spds/prd.md
+  - docs/spds/architecture.md
+  - implementation (ai/profiles/avery, scripts, src)
+  - docs/spds/verification_evidence_index.md
+  - docs/spds/current_state_snapshot.md
+  - outcomes
+
+agent_entry_points:
+  - docs/spds/read_first.md
+  - docs/spds/context_handoff_packet.md
+  - docs/spds/autonomy_envelope.md
+  - AGENTS.md
+  - ai/profiles/avery/SOUL.md
+  - docs/2-agent/context-bootstrap.json
+
+authoritative_documents:
+  root:
+    - PROJECT_GENOME.yaml
+    - docs/spds/read_first.md
+    - docs/spds/purpose_contract.md
+    - docs/spds/project_charter.md
+  implementation_truth:
+    - ai/profiles/avery/SOUL.md
+    - ai/profiles/avery/config.example.yaml
+    - capabilities.json
+    - docs/architecture.md
+  evidence:
+    - docs/evidence/
+    - docs/gate-0-reality-audit.md
+    - scripts/test.ps1
+
+critical_constraints:
+  - No production credentials, WhatsApp session material, or PHI in git
+  - Human authority is final for institutional, legal, financial, and clinical claims
+  - Group silence unless mentioned or explicitly tasked
+  - Capability never implies permission
+  - Do not rewrite SOUL.md without Chief approval
+
+accepted_standards:
+  - SPDS 1.0
+  - SAFRS v1.1 (repository control plane)
+  - ISO/IEC/IEEE 29148 (requirements alignment)
+  - ISO/IEC 25010 (quality model alignment)
+  - ISO/IEC/IEEE 42010 (architecture description alignment)
+  - ISO/IEC 27001:2022 (security management alignment)
+  - NIST AI RMF / ISO/IEC 42001 (AI management alignment, non-certified)
+  - Healthcare overlay documents exist to classify Avery as non-SaMD and to bound clinical behavior
+
+active_risks:
+  - unofficial WhatsApp transport (Baileys) account and availability risk
+  - Hermes upstream drift vs capsule patches
+  - Windows gateway pid-file restart races
+  - documentation vs runtime config drift (approval gates)
+  - model provider rate limits / 429
+
+evidence_locations:
+  - docs/spds/verification_evidence_index.md
+  - docs/evidence/
+  - docs/testing.md
+
+related_spds_index: docs/spds/document_index.md
