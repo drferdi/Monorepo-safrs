@@ -127,6 +127,39 @@ class ExpireStaleTests(StoreTestBase):
         self.assertEqual(refreshed.status, "expired")
 
 
+class CorruptFileTests(StoreTestBase):
+    """Regresi: satu berkas JSON korup di pending/ tidak boleh menggagalkan list()/expire_stale()."""
+
+    def _korupkan(self):
+        korup = self.root / "pending" / "deadbeef.json"
+        korup.write_text("{ ini bukan json", encoding="utf-8")
+        return korup
+
+    def test_list_melewati_berkas_korup_dan_mencatat_ledger(self):
+        valid = self._create()
+        self._korupkan()
+        hasil = self.store.list()
+        self.assertEqual([r.id for r in hasil], [valid.id])
+        ledger_path = self.root / "ledger.jsonl"
+        entries = [
+            json.loads(line)
+            for line in ledger_path.read_text(encoding="utf-8").strip().splitlines()
+        ]
+        self.assertTrue(any(e["event"] == "corrupt_file" for e in entries))
+
+    def test_expire_stale_tidak_raise_pada_berkas_korup(self):
+        self._create()
+        self._korupkan()
+        self.clock.advance(minutes=16)
+        expired = self.store.expire_stale()  # tidak boleh raise
+        self.assertEqual(len(expired), 1)
+
+    def test_get_korup_melempar_store_error(self):
+        self._korupkan()
+        with self.assertRaises(store.StoreError):
+            self.store.get("deadbeef")
+
+
 class LedgerTests(StoreTestBase):
     def test_ledger_tidak_memuat_isi_draft(self):
         req = self.store.create(

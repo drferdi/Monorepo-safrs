@@ -196,7 +196,16 @@ class Store:
         return req
 
     def _load(self, path: Path) -> OutboundRequest:
-        return OutboundRequest.from_dict(json.loads(path.read_text(encoding="utf-8")))
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError) as exc:
+            # Berkas korup (mis. disk penuh saat tulis) tidak boleh menggagalkan
+            # operasi lain; dilempar sebagai StoreError agar pemanggil bisa
+            # memilih melewati atau melaporkan.
+            raise StoreError(
+                f"berkas permintaan korup/tidak terbaca: {path.name}"
+            ) from exc
+        return OutboundRequest.from_dict(data)
 
     def get(self, request_id: str) -> OutboundRequest:
         path = self._path_for(request_id)
@@ -258,7 +267,11 @@ class Store:
     def expire_stale(self) -> list[OutboundRequest]:
         expired = []
         for path in self.pending_dir.glob("*.json"):
-            req = self._load(path)
+            try:
+                req = self._load(path)
+            except StoreError as exc:
+                self._log(path.stem, "corrupt_file", str(exc))
+                continue  # berkas korup tidak bisa ditransisi; catat lalu lewati
             if req.status == PENDING and self._is_expired(req):
                 try:
                     with self._locked(req.id):
@@ -271,4 +284,10 @@ class Store:
         return expired
 
     def list(self) -> list[OutboundRequest]:
-        return [self._load(path) for path in sorted(self.pending_dir.glob("*.json"))]
+        hasil: list[OutboundRequest] = []
+        for path in sorted(self.pending_dir.glob("*.json")):
+            try:
+                hasil.append(self._load(path))
+            except StoreError as exc:
+                self._log(path.stem, "corrupt_file", str(exc))
+        return hasil
