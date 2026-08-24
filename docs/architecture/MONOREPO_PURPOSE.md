@@ -1,7 +1,6 @@
 ---
 title: SAFRS Monorepo Purpose
-status: PROPOSED
-intended_status: CANONICAL
+status: CANONICAL
 subject: safrs-monorepo-purpose
 authority: architecture
 ---

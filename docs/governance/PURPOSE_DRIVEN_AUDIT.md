@@ -1,6 +1,6 @@
 ---
 title: SAFRS Purpose-Driven Codebase Audit Protocol
-status: PROPOSED
+status: CANONICAL
 subject: purpose-driven-audit
 authority: engineering-governance
 ---

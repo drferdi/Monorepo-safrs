@@ -1,6 +1,6 @@
 ---
 title: SAFRS Capsule Sovereignty Standard
-status: PROPOSED
+status: CANONICAL
 subject: capsule-sovereignty
 authority: architecture-constraint
 ---

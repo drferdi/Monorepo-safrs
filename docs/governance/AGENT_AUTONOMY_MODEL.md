@@ -1,6 +1,6 @@
 ---
 title: SAFRS Agent Autonomy Model
-status: PROPOSED
+status: CANONICAL
 subject: agent-autonomy
 authority: governance
 ---
