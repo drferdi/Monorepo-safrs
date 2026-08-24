@@ -6,9 +6,11 @@
     Satu sumber untuk tiga hal yang sebelumnya terduplikasi antar skrip:
 
       Get-AveryRuntimeLinks   tabel junction lokasi-native -> runtime/
-                              (dipakai verify-runtime-junctions dan
-                              restore-native-runtime-layout; dua salinan tabel
-                              pernah berisiko saling menyimpang)
+                              (dipakai verify-runtime-junctions,
+                              restore-native-runtime-layout, dan rename-capsule).
+                              Datanya hidup di scripts/runtime-links.json --
+                              fungsi ini hanya membaca dan mengekspansi;
+                              tidak ada path mesin di kode.
       Get-OrphanBridge        proses whatsapp-bridge (node.exe + bridge.js)
       Get-HermesBusyProcess   proses Hermes apa pun yang memegang berkas runtime
 
@@ -22,14 +24,24 @@
 # pemanggil yang tidak ditulis di bawah strict mode.
 
 function Get-AveryRuntimeLinks {
+    # Membaca scripts/runtime-links.json (di samping runtime/, di bawah akar
+    # capsule) dan mengembalikan @{ Link; Target } yang sudah diekspansi.
+    # Fail-closed: JSON hilang, tabel kosong, atau entri tanpa link/target
+    # adalah kesalahan, bukan no-op -- pemanggilnya skrip pemulihan.
     param([Parameter(Mandatory)] [string] $RuntimeRoot)
-    @(
-        @{ Link = Join-Path $env:USERPROFILE '.hermes';                Target = Join-Path $RuntimeRoot 'hermes-home' }
-        @{ Link = Join-Path $env:USERPROFILE '.hermes-web-ui';         Target = Join-Path $RuntimeRoot 'hermes-web-ui' }
-        @{ Link = Join-Path $env:APPDATA     'hermes-studio';          Target = Join-Path $RuntimeRoot 'appdata-roaming' }
-        @{ Link = Join-Path $env:LOCALAPPDATA 'hermes-studio-updater'; Target = Join-Path $RuntimeRoot 'updater' }
-        @{ Link = 'D:\Devops\abyss-monorepo\apps\healthcare\hoamanagement\Hermes Studio'; Target = Join-Path $RuntimeRoot 'hermes-studio' }
-    )
+
+    $jsonPath = Join-Path (Split-Path $RuntimeRoot -Parent) 'scripts\runtime-links.json'
+    if (-not (Test-Path -LiteralPath $jsonPath)) { throw "Tabel junction tidak ditemukan: $jsonPath" }
+    $data = [IO.File]::ReadAllText($jsonPath) | ConvertFrom-Json
+    if (-not $data.links -or @($data.links).Count -eq 0) { throw "Tabel junction kosong: $jsonPath" }
+
+    @($data.links) | ForEach-Object {
+        if (-not $_.link -or -not $_.target) { throw "Entri tanpa link/target di $jsonPath" }
+        @{
+            Link   = [Environment]::ExpandEnvironmentVariables($_.link)
+            Target = Join-Path $RuntimeRoot $_.target
+        }
+    }
 }
 
 function Get-OrphanBridge {

@@ -10,6 +10,10 @@ from __future__ import annotations
 from dataclasses import dataclass, asdict
 
 
+# Versi skema berkas state di pending/<id>.json. Naikkan saat bentuk berkas
+# berubah; berkas lama tanpa field ini dibaca sebagai versi 1.
+SCHEMA_VERSION = 1
+
 # Konstanta status -- satu-satunya sumber string status; jangan tulis literal.
 PENDING = "pending"
 APPROVED = "approved"
@@ -30,10 +34,17 @@ class OutboundRequest:
     status: str
 
     def to_dict(self) -> dict:
-        return asdict(self)
+        data = asdict(self)
+        data["schema_version"] = SCHEMA_VERSION
+        return data
 
     @classmethod
     def from_dict(cls, data: dict) -> "OutboundRequest":
+        version = data.get("schema_version", 1)
+        if not isinstance(version, int) or version > SCHEMA_VERSION:
+            raise ValueError(
+                f"schema_version tidak dikenal: {version!r} (didukung sampai {SCHEMA_VERSION})"
+            )
         return cls(
             id=data["id"],
             target=data["target"],

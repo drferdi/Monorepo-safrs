@@ -1,5 +1,6 @@
 """Uji dry-run untuk skrip PowerShell (dilewati bila pwsh tidak tersedia)."""
 
+import json
 import shutil
 import subprocess
 import tempfile
@@ -15,6 +16,39 @@ PS = shutil.which("pwsh") or shutil.which("powershell")
 class TestScriptExists(unittest.TestCase):
     def test_test_ps1_ada(self):
         self.assertTrue((REPO_ROOT / "scripts" / "test.ps1").exists())
+
+
+class RuntimeLinksTableTests(unittest.TestCase):
+    """Tabel junction hidup di scripts/runtime-links.json, bukan di kode."""
+
+    def test_json_valid_dan_lengkap(self):
+        data = json.loads(
+            (REPO_ROOT / "scripts" / "runtime-links.json").read_text(encoding="utf-8")
+        )
+        links = data["links"]
+        self.assertEqual(len(links), 5)
+        for entry in links:
+            self.assertTrue(entry["link"])
+            self.assertTrue(entry["target"])
+            self.assertNotIn("\\", entry["target"])  # target relatif, satu segmen
+
+    @unittest.skipUnless(PS, "pwsh/powershell tidak tersedia di lingkungan ini")
+    def test_powershell_membaca_dan_mengekspansi(self):
+        cmd = (
+            f". '{REPO_ROOT / 'scripts' / 'lib' / 'common.ps1'}'; "
+            f"$l = @(Get-AveryRuntimeLinks -RuntimeRoot '{REPO_ROOT / 'runtime'}'); "
+            "$l.Count; $l | ForEach-Object { $_.Link }"
+        )
+        result = subprocess.run(
+            [PS, "-NoProfile", "-Command", cmd],
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        lines = result.stdout.strip().splitlines()
+        self.assertEqual(lines[0], "5")
+        for link in lines[1:]:
+            self.assertNotIn("%", link)  # semua %VAR% terekspansi
 
 
 @unittest.skipUnless(PS, "pwsh/powershell tidak tersedia di lingkungan ini")

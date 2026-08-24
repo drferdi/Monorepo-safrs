@@ -86,13 +86,10 @@ if ($kotor -and -not $WhatIf) {
 }
 
 # --- kandidat junction -------------------------------------------------------
-$kandidat = @(
-    'C:\Users\drfer\.hermes',
-    'C:\Users\drfer\.hermes-web-ui',
-    (Join-Path $env:APPDATA      'hermes-studio'),
-    (Join-Path $env:LOCALAPPDATA 'hermes-studio-updater'),
-    'D:\Devops\abyss-monorepo\apps\healthcare\hoamanagement\Hermes Studio'
-)
+# Sumber tunggal: scripts/runtime-links.json via common.ps1. Hanya sisi Link
+# yang dipakai; Target diambil dari junction nyata di bawah ini.
+. (Join-Path $PSScriptRoot 'lib\common.ps1')
+$kandidat = @(Get-AveryRuntimeLinks -RuntimeRoot (Join-Path $oldPath 'runtime') | ForEach-Object { $_.Link })
 
 $junction = @()
 foreach ($p in $kandidat) {

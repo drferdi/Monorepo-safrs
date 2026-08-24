@@ -1,7 +1,9 @@
 """Uji unit untuk avery_outbound.store."""
 
 import json
+import os
 import tempfile
+import time
 import unittest
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -29,6 +31,11 @@ class StoreTestBase(unittest.TestCase):
 
     def tearDown(self):
         self._tmp.cleanup()
+
+    def _create(self):
+        return self.store.create(
+            target="6281234567890", draft_sha256="a" * 64, draft_path="draft.txt"
+        )
 
 
 class CreateTests(StoreTestBase):
@@ -189,3 +196,111 @@ class DefaultRootTests(unittest.TestCase):
             root.parts[-5:],
             (".hermes", "profiles", "avery", "pending", "avery-outbound"),
         )
+
+
+class SchemaVersionTests(StoreTestBase):
+    def test_berkas_state_memuat_schema_version(self):
+        req = self._create()
+        path = self.root / "pending" / f"{req.id}.json"
+        data = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(data["schema_version"], models.SCHEMA_VERSION)
+
+    def test_berkas_legacy_tanpa_field_terbaca(self):
+        req = self._create()
+        path = self.root / "pending" / f"{req.id}.json"
+        data = json.loads(path.read_text(encoding="utf-8"))
+        del data["schema_version"]
+        path.write_text(json.dumps(data), encoding="utf-8")
+        self.assertEqual(self.store.get(req.id).id, req.id)
+
+    def test_versi_lebih_baru_ditolak(self):
+        req = self._create()
+        path = self.root / "pending" / f"{req.id}.json"
+        data = json.loads(path.read_text(encoding="utf-8"))
+        data["schema_version"] = models.SCHEMA_VERSION + 1
+        path.write_text(json.dumps(data), encoding="utf-8")
+        with self.assertRaises(ValueError):
+            self.store.get(req.id)
+
+
+class LockTests(StoreTestBase):
+    def test_transisi_ditolak_saat_lock_dipegang(self):
+        req = self._create()
+        lock = self.root / "pending" / f".{req.id}.lock"
+        lock.write_text("999", encoding="utf-8")
+        with self.assertRaises(store.StoreError):
+            self.store.approve(req.id)
+        self.assertEqual(self.store.get(req.id).status, "pending")
+
+    def test_lock_stale_dipecah(self):
+        req = self._create()
+        lock = self.root / "pending" / f".{req.id}.lock"
+        lock.write_text("999", encoding="utf-8")
+        kuno = time.time() - store.LOCK_STALE_SECONDS - 5
+        os.utime(lock, (kuno, kuno))
+        approved = self.store.approve(req.id)
+        self.assertEqual(approved.status, "approved")
+
+    def test_lock_dibersihkan_setelah_transisi(self):
+        req = self._create()
+        self.store.approve(req.id)
+        self.assertFalse((self.root / "pending" / f".{req.id}.lock").exists())
+
+
+class IdempotencyTests(StoreTestBase):
+    def _ledger_events(self):
+        lines = (
+            (self.root / "ledger.jsonl").read_text(encoding="utf-8").strip().splitlines()
+        )
+        return [json.loads(line)["event"] for line in lines]
+
+    def test_approve_kedua_kali_idempoten_tanpa_ledger_baru(self):
+        req = self._create()
+        self.store.approve(req.id)
+        lagi = self.store.approve(req.id)
+        self.assertEqual(lagi.status, "approved")
+        self.assertEqual(self._ledger_events().count("approved"), 1)
+
+    def test_cancel_kedua_kali_idempoten(self):
+        req = self._create()
+        self.store.cancel(req.id)
+        lagi = self.store.cancel(req.id)
+        self.assertEqual(lagi.status, "cancelled")
+        self.assertEqual(self._ledger_events().count("cancelled"), 1)
+
+    def test_cancel_setelah_sent_tetap_ditolak(self):
+        req = self._create()
+        self.store.approve(req.id)
+        self.store.mark_sent(req.id)
+        with self.assertRaises(store.StoreError):
+            self.store.cancel(req.id)
+
+
+class LedgerRotationTests(unittest.TestCase):
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self._tmp.name) / "avery-outbound"
+        self.clock = FakeClock(datetime(2026, 8, 24, 8, 0, 0, tzinfo=timezone.utc))
+        self.store = store.Store(root=self.root, now=self.clock, ledger_max_bytes=150)
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def test_rotasi_saat_ambang_tanpa_kehilangan_baris(self):
+        for i in range(10):
+            self.store.append_ledger(
+                models.LedgerEntry(
+                    ts=self.clock().isoformat(),
+                    request_id=f"req{i}",
+                    event="note",
+                    detail="x" * 40,
+                )
+            )
+        rotated = sorted(self.root.glob("ledger.*.jsonl"))
+        self.assertGreaterEqual(len(rotated), 1)
+        total = 0
+        for path in [self.root / "ledger.jsonl", *rotated]:
+            total += len(path.read_text(encoding="utf-8").strip().splitlines())
+        self.assertEqual(total, 10)
+        # Berkas berjalan selalu di bawah ambang + satu entri
+        self.assertLess((self.root / "ledger.jsonl").stat().st_size, 300)
