@@ -1,0 +1,20 @@
+{
+  "skill_name": "sentra-docs",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Run /sentra-docs for projects/healthcare/avery --refresh. Do not invent a medical device. Keep filenames lowercase except README.md.",
+      "expected_output": "SPDS files under docs/spds with read_first.md, purpose_contract.md, PROJECT_GENOME.yaml at capsule root; H01 states no intended medical use; no secrets copied from .env."
+    },
+    {
+      "id": 2,
+      "prompt": "/sentra-docs for a new internal tools capsule that is not healthcare and not agentic — only a Next.js dashboard.",
+      "expected_output": "CORE + SENTRA written; agent overlay omitted or marked not applicable; healthcare overlay omitted unless Chief forced it; no fake 62304 classification."
+    },
+    {
+      "id": 3,
+      "prompt": "/sentra-docs with no path while two capsules are in HANDOFF.",
+      "expected_output": "Agent asks Chief to pick a capsule instead of writing docs in the wrong tree."
+    }
+  ]
+}

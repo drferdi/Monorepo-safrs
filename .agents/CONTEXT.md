@@ -2,7 +2,7 @@
 
 Rarely updated. Answers: what this repo is, what matters, what must not be changed casually.
 
-Last updated: 2026-08-18
+Last updated: 2026-08-23
 
 ---
 
@@ -29,8 +29,9 @@ Authority and read order are **not defined here** — the single source is the P
 ## Repository Shape
 
 ```
-projects/     golden-path (Next.js + Hono + Prisma demonstrator), control-center (operator UI),
-              _template — the only three capsules that exist; every other product is unbuilt
+projects/     academic/academic-smartboard, corporate/portfolio-drnovia,
+              healthcare/avery, internal/{control-center,golden-path},
+              product/sentrabot — six active capsules plus _template
 packages/     api config database env schemas telemetry token ui — shared boundaries;
               never import server/db code into browser components
 tools/        automation capabilities codegen deps-graph doctor project-wizard safrs status task
