@@ -3,6 +3,7 @@
 > Read first every session. Keep under ~1k tokens.
 > Durable detail: `DECISIONS.md`. Area tracker: `PROGRESS.md`. Decision history: `docs/adrs/`.
 > Rule: **overwrite** each session — this is current state, not a log.
+> **BINDING: read `.agents/BOUNDARIES.md` first — no push/publish/visibility change without an explicit Chief order in YOUR session; other sessions' local commits are off-limits.**
 
 Last updated: 2026-08-24 (avery FIX-01…06 executed; FULL AUTO; tech-debt audit — see docs/tech-debt-2026-08-24.md)
 

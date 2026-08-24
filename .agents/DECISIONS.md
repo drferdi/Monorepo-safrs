@@ -441,3 +441,15 @@ Supersedes the legacy `apps/{healthcare,internal,academic,...}` topology.
 - Subagent lanes are one-way pipes treated as the worst model in the world: 6-part spec, explicit
   prohibitions, 10-minute budget, reports never trusted without the architect re-running verification.
   Incidents and the fixes applied to lane definitions are tracked in Claude's memory ledger.
+
+## 2026-08-24 — Session boundaries after the public-push incident
+
+- WP-A session pushed `main` (containing pre-`f1aeb75` history with real phone numbers) to a PUBLIC
+  remote; the no-push restriction existed only inside the Avery session's conversation. Repo made
+  PRIVATE the same morning; anonymous access verified 404; no forks retained.
+- `.agents/BOUNDARIES.md` created and made binding for all sessions: publish gate (push/PR/visibility
+  only on explicit Chief order in-session, preceded by a PII sanitation grep), scope fence (one
+  session one workstream; other sessions' local commits are off-limits), sensitive-data rule
+  (history contains real numbers until Chief orders a rewrite).
+- Root cause classified as process debt: restrictions must live in files every session reads
+  (HANDOFF/BOUNDARIES), never only in one session's chat.
