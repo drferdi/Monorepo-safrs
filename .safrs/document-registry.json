@@ -332,6 +332,39 @@
       "status": "ACTIVE",
       "normativity": "SHOULD",
       "scope": "task:planning"
+    },
+    {
+      "id": "monorepo-purpose",
+      "path": "docs/architecture/MONOREPO_PURPOSE.md",
+      "type": "canonical",
+      "status": "CANONICAL",
+      "normativity": "MUST",
+      "scope": "always",
+      "read_order": 7
+    },
+    {
+      "id": "agent-autonomy-model",
+      "path": "docs/governance/AGENT_AUTONOMY_MODEL.md",
+      "type": "canonical",
+      "status": "CANONICAL",
+      "normativity": "SHOULD",
+      "scope": "task:governance"
+    },
+    {
+      "id": "capsule-sovereignty",
+      "path": "docs/governance/CAPSULE_SOVEREIGNTY.md",
+      "type": "canonical",
+      "status": "CANONICAL",
+      "normativity": "SHOULD",
+      "scope": "task:implementation"
+    },
+    {
+      "id": "purpose-driven-audit",
+      "path": "docs/governance/PURPOSE_DRIVEN_AUDIT.md",
+      "type": "canonical",
+      "status": "CANONICAL",
+      "normativity": "SHOULD",
+      "scope": "task:review"
     }
   ],
   "allowed_status": [

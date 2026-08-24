@@ -172,6 +172,7 @@ Read only the context required for the task.
 4. `.agents/knowledge/03_ARCHITECTURE.md`
 5. `.agents/knowledge/04_CONTEXT.md`
 6. `.agents/knowledge/12_LESSONS.md`
+7. `docs/architecture/MONOREPO_PURPOSE.md`
 
 **Always (SHOULD):** `.agents/knowledge/01_COLLABORATION.md`, `.agents/knowledge/11_RESPONSE_STANDARDS.md`, `SAFRS_SPEC.md`, `.agents/CONTEXT.md`
 
@@ -179,10 +180,11 @@ Read only the context required for the task.
 
 - `task:decision` → `.agents/knowledge/08_DECISIONS.md`, `.agents/DECISIONS.md`
 - `task:documentation` → `.agents/knowledge/07_DOCUMENTATION.md`
-- `task:implementation` → `.agents/knowledge/05_ENGINEERING.md`, `.agents/knowledge/06_CODING.md`
+- `task:governance` → `docs/governance/AGENT_AUTONOMY_MODEL.md`
+- `task:implementation` → `.agents/knowledge/05_ENGINEERING.md`, `.agents/knowledge/06_CODING.md`, `docs/governance/CAPSULE_SOVEREIGNTY.md`
 - `task:planning` → `.agents/PROGRESS.md`
 - `task:product` → `.agents/knowledge/09_PRODUCTS.md`
-- `task:review` → `.agents/knowledge/99_SELF_AUDIT.md`
+- `task:review` → `.agents/knowledge/99_SELF_AUDIT.md`, `docs/governance/PURPOSE_DRIVEN_AUDIT.md`
 
 **Reference (MAY):** `.agents/knowledge/10_GLOSSARY.md`
 
@@ -214,6 +216,10 @@ Then read the nearest nested `AGENTS.md` for the project/module being modified.
 10. Project-scoped work must use project-local lifecycle and verification commands.
 11. Repository-level SAFRS verification applies to root/governance/integration changes and before
     repository integration where policy requires it.
+12. Every commit authored or co-authored by an agent MUST carry an attribution trailer naming
+    the acting agent lane/vendor (for example `Co-Authored-By: Claude <noreply@anthropic.com>`
+    or `Co-Authored-By: Codex <codex@local>`), so material agent actions remain attributable
+    (SAFRS-09). A shared committer identity alone is not sufficient attribution.
 
 ## Session protocol
 
@@ -303,7 +309,8 @@ when stale state can be safely reconciled mechanically.
 - If reusable first-party code is required by independent projects, either:
   - distribute it through an independently versioned/pinned dependency mechanism; or
   - localize the required implementation inside the owning capsule.
-- New projects begin from the approved capsule conventions and MUST satisfy the standalone
+- New projects begin from the approved capsule conventions in
+  `docs/governance/SAFRS_PROJECT_CAPSULES.md` and MUST satisfy the standalone
   contract from creation.
 - A project capsule may narrow task-specific commands and scope, but may not weaken applicable
   SAFRS or security controls.
@@ -392,6 +399,13 @@ Existing root-coupled projects or demonstrators are **current-state defects pend
 They are not normative exceptions, templates, precedents, or evidence that root coupling is allowed.
 
 Do not copy root-coupled legacy patterns into new work.
+
+The current demonstrator is `projects/internal/golden-path/apps/web`: one legacy
+root-integrated Next.js deployment unit pending planned capsule migration; it is not a
+standalone template or counterexample. For that legacy demonstrator only, start safely with
+`pnpm run doctor`, prepare the local environment with `pnpm run setup`, then use `pnpm dev`.
+Run `pnpm run governance` before repository review. These root commands are not capsule
+lifecycle prerequisites.
 
 When assigned to remediate such a capsule:
 
