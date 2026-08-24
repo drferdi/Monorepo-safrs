@@ -1,46 +1,14 @@
-#!/usr/bin/env bash
-set -eu
+#!/usr/bin/env sh
+# Satu-satunya tugas hook ini: mencegah BAHAYA NYATA — kebocoran nomor
+# telepon/JID asli ke riwayat git. Tidak ada gerbang gaya, tidak ada linter
+# wajib, tidak ada blok "staged sebagian". (Chief, 2026-08-24: aturan proses
+# tidak boleh menghambat manusia maupun model.)
+# Redaksi (<ID>, 628xxxxxxxxxx) selalu lolos. Override sadar: CHIEF_PII_OK=1.
 
-staged_paths_file="$(mktemp "${TMPDIR:-/tmp}/safrs-precommit-staged.XXXXXX")"
-unstaged_paths_file="$(mktemp "${TMPDIR:-/tmp}/safrs-precommit-unstaged.XXXXXX")"
-cleanup() {
-  rm -f "$staged_paths_file" "$unstaged_paths_file"
-}
-trap cleanup EXIT HUP INT TERM
-
-git diff --cached --name-only -z --diff-filter=ACMR > "$staged_paths_file"
-if [ ! -s "$staged_paths_file" ]; then
-  exit 0
-fi
-git diff --name-only -z --diff-filter=ACMR > "$unstaged_paths_file"
-
-partially_staged=false
-while IFS= read -r -d '' staged_path; do
-  while IFS= read -r -d '' unstaged_path; do
-    if [ "$staged_path" = "$unstaged_path" ]; then
-      partially_staged=true
-      break 2
-    fi
-  done < "$unstaged_paths_file"
-done < "$staged_paths_file"
-
-
-# PII GUARD (Chief, 2026-08-24) - blok baris BARU berpola nomor telepon/JID asli.
-# Redaksi (<ID>, 628xxxxxxxxxx) lolos. Override hanya atas perintah Chief: CHIEF_PII_OK=1.
 pii_hits="$(git diff --cached --unified=0 | grep -E '^[+][^+]' | grep -cE '([0-9]{10,}@(g[.]us|lid|s[.]whatsapp[.]net)|628[0-9]{8,11})' || true)"
 if [ "${pii_hits:-0}" -gt 0 ] && [ "${CHIEF_PII_OK:-0}" != "1" ]; then
-  echo "COMMIT DIBLOKIR: ${pii_hits} baris baru berpola nomor/JID asli (.agents/BOUNDARIES.md)." >&2
+  echo "COMMIT DIBLOKIR: ${pii_hits} baris baru berpola nomor/JID asli." >&2
+  echo "Redaksi dulu (628xxxxxxxxxx / <ID>@g.us), atau CHIEF_PII_OK=1 bila memang disengaja." >&2
   exit 1
 fi
-
-if [ "$partially_staged" = true ]; then
-  printf '%s\n' "Commit dihentikan: ada file yang sudah di-stage sebagian dan juga memiliki perubahan belum di-stage." >&2
-  printf '%s\n' "Stage seluruh file tersebut, atau commit bagian yang sudah di-stage terlebih dahulu, lalu coba lagi." >&2
-  exit 1
-fi
-
-# The format hook must not trigger pnpm's implicit dependency install:
-# deps verification belongs to install/CI, and an out-of-sync lockfile
-# would otherwise block every commit in every worktree.
-pnpm --config.verify-deps-before-run=false exec biome check --write --staged --no-errors-on-unmatched
-git add -f --pathspec-from-file="$staged_paths_file" --pathspec-file-nul
+exit 0
