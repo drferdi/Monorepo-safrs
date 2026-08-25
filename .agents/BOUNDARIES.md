@@ -22,8 +22,18 @@
   range touching `projects/**`; conscious exception only via
   `CHIEF_PUSH_PROJECTS_OK=1` together with `CHIEF_PUSH_OK=1`. Capsules publish
   through their own dedicated remotes (e.g. the `avery` remote), never `origin`.
-  Known fact: `origin/main` history already contains `projects/**` from before
-  this rule; removing it requires a Chief-ordered history rewrite/repo split.
+  **Executed 2026-08-25 (Chief-ordered):** `origin/main` was history-rewritten —
+  `projects/**` stripped from ALL public history and PII (JID/MSISDN) redacted —
+  then force-pushed (`main` @ `5b6b808`), stale remote branches deleted, branch
+  protection ruleset re-created (id 21369601). Full pre-rewrite mirror backup:
+  `d:\DEV\Monorepo-mirror-backup-20260825.git`.
+- **CRITICAL — local/remote histories are now UNRELATED.** Local `main` still
+  carries `projects/**` and pre-redaction content; `origin/main` is the cleaned
+  lineage. NEVER `git push` local branches to origin and NEVER `git fetch/pull`
+  origin into local work without a Chief-approved publish flow (a filtered
+  rewrite step is required for every future publish). Residual exposure:
+  GitHub `refs/pull/*` and cached objects still hold old history until a
+  GitHub Support purge is requested (Chief action).
 
 ## 2. Scope fence — one session, one workstream
 

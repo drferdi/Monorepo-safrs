@@ -27,10 +27,15 @@ Last updated: 2026-08-25 (audit SAFRS + remediasi + commit change-set atas perin
   aturan tercatat di `.agents/BOUNDARIES.md` §1. Fakta: `origin/main` lama sudah
   memuat `projects/**` — pembersihan butuh history rewrite atas perintah Chief.
 
+- **Origin di-rewrite (Chief, 2026-08-25):** repo public; riwayat origin dibersihkan
+  (projects/** dihapus total, PII diredaksi), force-push `main` @ `5b6b808`, branch basi
+  dihapus, ruleset aktif (21369601). Backup: `d:\DEV\Monorepo-mirror-backup-20260825.git`.
+  Riwayat lokal ≠ origin — JANGAN push/fetch tanpa alur publish terfilter (BOUNDARIES §1).
+
 ## Next action
 
-1. Chief putuskan GitHub Pro vs terima gap branch protection.
-2. Push ke origin hanya atas perintah eksplisit Chief; ingat capsule gate: push berikutnya
-   akan terblokir karena range memuat commit avery — butuh keputusan Chief (override sadar
-   atau strategi pemisahan riwayat capsule).
-3. Roadmap disetujui Chief: penegakan bertahap `roles` di `.safrs/policy.json` (belum dimulai).
+1. Chief: tiket GitHub Support untuk purge `refs/pull/*` + objek lama (PII residual).
+2. Rancang alur publish terfilter (lokal→origin) + upload tiap capsule ke repo-nya sendiri
+   (kebijakan Chief 2026-08-25; remote `avery` sudah ada, capsule lain belum).
+3. Chief: pasang allow rule permission (`/permissions`) supaya alur "approve A-B-C" jalan.
+4. Roadmap disetujui Chief: penegakan bertahap `roles` di `.safrs/policy.json` (belum dimulai).
