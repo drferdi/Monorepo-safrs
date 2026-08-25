@@ -22,8 +22,15 @@ Last updated: 2026-08-25 (audit SAFRS + remediasi + commit change-set atas perin
   (butuh Pro; public dilarang: PII di riwayat). Menunggu keputusan billing Chief.
 - Belum di-push (pre-push gate `CHIEF_PUSH_OK` tetap berlaku).
 
+- **Capsule gate baru (Chief, 2026-08-25):** pre-push kini memblokir push yang range
+  keluarnya menyentuh `projects/**` (override sadar `CHIEF_PUSH_PROJECTS_OK=1`);
+  aturan tercatat di `.agents/BOUNDARIES.md` §1. Fakta: `origin/main` lama sudah
+  memuat `projects/**` — pembersihan butuh history rewrite atas perintah Chief.
+
 ## Next action
 
 1. Chief putuskan GitHub Pro vs terima gap branch protection.
-2. Push ke origin hanya atas perintah eksplisit Chief (riwayat PII — pertimbangkan dulu).
+2. Push ke origin hanya atas perintah eksplisit Chief; ingat capsule gate: push berikutnya
+   akan terblokir karena range memuat commit avery — butuh keputusan Chief (override sadar
+   atau strategi pemisahan riwayat capsule).
 3. Roadmap disetujui Chief: penegakan bertahap `roles` di `.safrs/policy.json` (belum dimulai).

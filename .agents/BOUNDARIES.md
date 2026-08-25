@@ -17,6 +17,13 @@
 - Before any authorized push: run the sanitation check
   `git log --all -S"@g.us" --oneline` and grep staged history for phone-number
   patterns (`62\d{9,}`); a hit means stop and surface to Chief first.
+- **Capsule gate (Chief, 2026-08-25):** capsule code under `projects/**` is never
+  published through the monorepo remote. The pre-push hook blocks any outgoing
+  range touching `projects/**`; conscious exception only via
+  `CHIEF_PUSH_PROJECTS_OK=1` together with `CHIEF_PUSH_OK=1`. Capsules publish
+  through their own dedicated remotes (e.g. the `avery` remote), never `origin`.
+  Known fact: `origin/main` history already contains `projects/**` from before
+  this rule; removing it requires a Chief-ordered history rewrite/repo split.
 
 ## 2. Scope fence — one session, one workstream
 

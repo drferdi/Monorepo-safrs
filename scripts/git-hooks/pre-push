@@ -3,11 +3,36 @@
 # insiden 2026-08-24 mempublikasikannya ke remote publik. Push = keputusan
 # Chief, satu variabel untuk membuka:
 #   CHIEF_PUSH_OK=1 git push ...
-# Tidak ada aturan lain di sini.
+#
+# Capsule gate (Chief, 2026-08-25): isi projects/ (kode capsule) tidak boleh
+# dipublikasikan lewat remote monorepo. Push yang range keluarnya menyentuh
+# projects/** diblokir; pengecualian sadar:
+#   CHIEF_PUSH_PROJECTS_OK=1 CHIEF_PUSH_OK=1 git push ...
 
 if [ "${CHIEF_PUSH_OK:-0}" != "1" ]; then
   echo "PUSH DIBLOKIR (publish gate). Buka dengan: CHIEF_PUSH_OK=1 git push ..." >&2
   echo "Alasan: riwayat memuat nomor/JID asli; publikasi hanya atas keputusan Chief." >&2
   exit 1
+fi
+
+# stdin: <local_ref> <local_sha> <remote_ref> <remote_sha> per baris
+if [ "${CHIEF_PUSH_PROJECTS_OK:-0}" != "1" ]; then
+  zero=0000000000000000000000000000000000000000
+  while read -r local_ref local_sha remote_ref remote_sha; do
+    [ -z "$local_sha" ] && continue
+    [ "$local_sha" = "$zero" ] && continue # penghapusan ref: tidak membawa isi
+    if [ "$remote_sha" = "$zero" ]; then
+      range="$local_sha"        # ref baru: seluruh riwayat lokal ref itu
+    else
+      range="$remote_sha..$local_sha"
+    fi
+    touched=$(git rev-list "$range" -- projects/ 2>/dev/null | head -1)
+    if [ -n "$touched" ]; then
+      echo "PUSH DIBLOKIR (capsule gate): range keluar menyentuh projects/** (mis. commit $touched)." >&2
+      echo "Kode capsule tidak dipublikasikan lewat remote monorepo (perintah Chief 2026-08-25)." >&2
+      echo "Pengecualian sadar: CHIEF_PUSH_PROJECTS_OK=1 CHIEF_PUSH_OK=1 git push ..." >&2
+      exit 1
+    fi
+  done
 fi
 exit 0
