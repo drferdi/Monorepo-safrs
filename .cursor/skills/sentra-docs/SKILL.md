@@ -29,7 +29,7 @@ Load next:
 
 ## Parse
 
-```
+```text
 /sentra-docs
 /sentra-docs <capsule-path>
 /sentra-docs <capsule-path> --refresh
