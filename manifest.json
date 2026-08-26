@@ -1,0 +1,10 @@
+{
+  "name": "sentra-gsap-standard",
+  "version": "1.0.0",
+  "date": "2026-08-25",
+  "canonicalSkill": ".agents/skills/sentra-gsap/SKILL.md",
+  "verificationCommand": "node scripts/sentra-gsap/verify.mjs",
+  "browserQACommand": "node scripts/sentra-gsap/browser-qa.mjs",
+  "installation": "node scripts/sentra-gsap/install.mjs --repo <repo-root>",
+  "authority": "Human > repo routing > canonical skill > references > verifier > human-readable docs"
+}
