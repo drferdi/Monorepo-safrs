@@ -1,0 +1,41 @@
+{
+  "name": "@kediri/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -H 127.0.0.1 -p 4320",
+    "build": "next build --webpack",
+    "start": "next start -H 127.0.0.1 -p 4320",
+    "lint": "biome check src tests e2e",
+    "typecheck": "tsc --project tsconfig.json",
+    "test": "vitest run",
+    "e2e": "playwright test --config playwright.config.ts"
+  },
+  "dependencies": {
+    "@faceless-ui/modal": "3.0.0",
+    "@faceless-ui/scroll-info": "2.0.0",
+    "@gsap/react": "2.1.2",
+    "@payloadcms/db-postgres": "3.88.0",
+    "@payloadcms/next": "3.88.0",
+    "@payloadcms/richtext-lexical": "3.88.0",
+    "@payloadcms/storage-s3": "3.88.0",
+    "@t3-oss/env-nextjs": "0.13.8",
+    "graphql": "16.14.2",
+    "gsap": "3.15.0",
+    "next": "16.3.0",
+    "payload": "3.88.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "sharp": "0.35.3",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1",
+    "@types/node": "24.10.13",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "typescript": "7.0.2",
+    "vitest": "4.1.10"
+  }
+}

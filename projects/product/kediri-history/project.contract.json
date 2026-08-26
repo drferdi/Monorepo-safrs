@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "product/kediri-history",
+  "owner": "Chief (dr. Ferdi Iskandar)",
+  "risk": "R2",
+  "runtime": {
+    "name": "node",
+    "version": "24"
+  },
+  "packageManager": {
+    "name": "pnpm",
+    "version": "11.21.0",
+    "lockfile": "pnpm-lock.yaml"
+  },
+  "commands": {
+    "install": {
+      "program": "node",
+      "args": ["scripts/pnpm.mjs", "install"]
+    },
+    "lint": {
+      "program": "node",
+      "args": ["scripts/pnpm.mjs", "run", "lint"]
+    },
+    "typecheck": {
+      "program": "node",
+      "args": ["scripts/pnpm.mjs", "run", "typecheck"]
+    },
+    "test": {
+      "program": "node",
+      "args": ["scripts/pnpm.mjs", "run", "test"]
+    },
+    "build": {
+      "program": "node",
+      "args": ["scripts/pnpm.mjs", "run", "build"]
+    },
+    "run": {
+      "program": "node",
+      "args": ["scripts/serve.mjs"]
+    },
+    "deployDryRun": {
+      "program": "node",
+      "args": ["scripts/deploy-dry-run.mjs"]
+    }
+  },
+  "smoke": {
+    "kind": "http",
+    "host": "127.0.0.1",
+    "port": 4320,
+    "path": "/",
+    "expectedStatus": 200,
+    "startupTimeoutSeconds": 120
+  },
+  "artifacts": ["apps/web/.next"],
+  "externalDependencies": [],
+  "mutableStatePaths": [
+    "node_modules",
+    "apps/web/node_modules",
+    "apps/web/.next",
+    "apps/web/playwright-report",
+    "apps/web/test-results",
+    "apps/web/tsconfig.tsbuildinfo"
+  ]
+}

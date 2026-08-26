@@ -1,0 +1,122 @@
+/*
+ * Lapisan token Kediri.
+ *
+ * Sumber: docs/bibles/04-visual-design-art-direction-bible.md. Nilai di sini
+ * dicerminkan di kediri.json supaya scripts/check-tokens.mjs dapat MENGUKUR
+ * kontras setiap pasangan semantik, bukan mempercayainya.
+ *
+ * Dua dunia, bukan satu tema gelap dan satu terang:
+ *   - READING  : Arsip, Explore, Sumber. Terang, dokumenter, tenang.
+ *   - CINEMA   : Journey. Gelap, sinematik.
+ * Bible 04 bagian 13: kegelapan harus bermakna. Situs menjadi lebih terang
+ * saat mendekati 2026, dan permukaan dokumenter memang terang.
+ */
+
+:root {
+  /* Primitif — satu-satunya tempat nilai warna mentah Kediri muncul. */
+  --kediri-black: #0c0d0c;
+  --kediri-river-deep: #102429;
+  --kediri-civic-green: #405d43;
+  --kediri-civic-gold: #d5b45d;
+  --kediri-red: #9e302d;
+  --kediri-parchment: #e9e0cf;
+  --kediri-civic-white: #f5f2ea;
+  --kediri-stone: #817a6e;
+  --kediri-iron: #444846;
+  --kediri-copper: #8c6044;
+  --kediri-royal-indigo: #1b2140;
+  --kediri-burnished-gold: #c8a04c;
+  --kediri-conflict-crimson: #851f27;
+  --kediri-cane-green: #68714c;
+  --kediri-documentary-red: #9c2626;
+  --kediri-tobacco: #7b5036;
+  --kediri-steel: #59605e;
+  --kediri-industrial-red: #99362f;
+  --kediri-sky: #afc8d2;
+  --kediri-concrete: #d2d1cb;
+
+  /* Permukaan membaca — Arsip dan Explore. */
+  --reading-canvas: #f5f2ea;
+  --reading-surface: #e9e0cf;
+  --reading-ink: #161816;
+  --reading-ink-muted: #4f5a50;
+  --reading-rule: #c4bca8;
+  --reading-accent: #7e2523;
+  --reading-evidence: #5a4718;
+
+  /* Permukaan sinematik — Journey. */
+  --cinema-canvas: #0c0d0c;
+  --cinema-surface: #102429;
+  --cinema-ink: #f5f2ea;
+  --cinema-ink-muted: #a9a99f;
+  --cinema-rule: #33413e;
+  --cinema-accent: #d5b45d;
+  --cinema-evidence: #c8a04c;
+
+  /* Peran tipografi (Bible 04 bagian 7). */
+  --type-narrative: var(--font-source-serif), Georgia, "Times New Roman", serif;
+  --type-interface: var(--font-geist), "Helvetica Neue", Arial, sans-serif;
+  --type-archive:
+    var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+
+  /* Skala waktu monumental: tanggal berperilaku sebagai objek arsitektural. */
+  --type-size-monumental: clamp(4rem, 14vw, 12rem);
+  --type-size-era: clamp(2.5rem, 7vw, 6rem);
+  --type-size-scene: clamp(1.9rem, 4.5vw, 4rem);
+  --type-size-lead: clamp(1.125rem, 1.6vw, 1.4rem);
+  --type-size-body: 1.0625rem;
+  --type-size-label: 0.72rem;
+
+  /* Lebar baca naratif tetap sekitar 60 karakter walau layar sangat lebar. */
+  --measure-narrative: 62ch;
+}
+
+/*
+ * Dunia era. CMS memilih visualEraKey; nilai warnanya hidup di sini
+ * (Technical Bible bagian 16). Warna berubah karena kondisi historis berubah,
+ * bukan karena ada bagian baru.
+ */
+[data-era="present"] {
+  --era-ground: var(--cinema-canvas);
+  --era-accent: var(--kediri-sky);
+}
+[data-era="ancient"] {
+  --era-ground: var(--kediri-black);
+  --era-accent: var(--kediri-copper);
+}
+[data-era="panjalu"] {
+  --era-ground: var(--kediri-royal-indigo);
+  --era-accent: var(--kediri-burnished-gold);
+}
+[data-era="collapse"] {
+  --era-ground: var(--kediri-black);
+  --era-accent: var(--kediri-conflict-crimson);
+}
+[data-era="memory"] {
+  --era-ground: var(--kediri-black);
+  --era-accent: var(--kediri-stone);
+}
+[data-era="seventeenthCentury"] {
+  --era-ground: var(--kediri-iron);
+  --era-accent: var(--kediri-parchment);
+}
+[data-era="colonialIndustrial"] {
+  --era-ground: var(--kediri-iron);
+  --era-accent: var(--kediri-cane-green);
+}
+[data-era="occupationRevolution"] {
+  --era-ground: var(--kediri-black);
+  --era-accent: var(--kediri-documentary-red);
+}
+[data-era="industrialCity"] {
+  --era-ground: var(--kediri-tobacco);
+  --era-accent: var(--kediri-industrial-red);
+}
+[data-era="connectedModern"] {
+  --era-ground: var(--kediri-steel);
+  --era-accent: var(--kediri-sky);
+}
+[data-era="finale"] {
+  --era-ground: var(--cinema-surface);
+  --era-accent: var(--kediri-civic-green);
+}

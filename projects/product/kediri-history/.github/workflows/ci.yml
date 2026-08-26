@@ -1,0 +1,106 @@
+name: Kediri CI
+
+# INAKTIF SECARA SENGAJA (keputusan Chief G02, 2026-08-26).
+#
+# Berkas ini adalah kontrak CI capsule, bukan pipeline yang berjalan. GitHub
+# hanya mengeksekusi workflow dari .github/workflows di akar repositori, jadi
+# selama capsule ini bersarang di Monorepo, berkas ini inert. Ia menjadi CI
+# yang sesungguhnya ketika capsule dipindahkan ke repositorinya sendiri.
+#
+# Pemicu sengaja dibatasi pada workflow_dispatch. Menambahkan `push` atau
+# `pull_request` — dan membuat atau mengaktifkan remote, target deployment, atau
+# integrasi eksternal apa pun — memerlukan otorisasi eksplisit Chief.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://kediri:kediri@127.0.0.1:54330/kediri_history_ci
+      # Placeholder non-rahasia untuk build CI, bukan kredensial produksi.
+      PAYLOAD_SECRET: ci-placeholder-secret-not-a-real-credential-0001
+      NEXT_PUBLIC_SITE_URL: http://127.0.0.1:4320
+      SEED_PASSWORD: ci-placeholder-seed-password
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_DB: kediri_history_ci
+          POSTGRES_PASSWORD: kediri
+          POSTGRES_USER: kediri
+        ports:
+          - 54330:5432
+        options: >-
+          --health-cmd "pg_isready -U kediri -d kediri_history_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+        with:
+          persist-credentials: false
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@7088e561eb65bb68695d245aa206f005ef30921d
+        with:
+          version: 11.21.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24.18.0
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Type check
+        run: pnpm run typecheck
+
+      # Uji batas arsitektur, kontrak environment, gerbang integritas historis,
+      # dan gerbang token. Tidak memerlukan basis data.
+      - name: Test
+        run: pnpm run test
+
+      # Skema dikelola migrasi, bukan push otomatis: basis data CI harus
+      # menjalankan migrasi yang sama dengan yang dijalankan rilis.
+      - name: Migrate database
+        run: pnpm run db:migrate
+
+      - name: Seed reviewed content
+        run: pnpm run db:seed
+
+      - name: Build
+        run: pnpm run build
+
+      # Kegagalan integritas historis MEMBLOKIR rilis; ia bukan peringatan.
+      - name: Verify historical integrity
+        run: pnpm run verify:production
+
+      - name: Install browser engine
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Browser evidence
+        run: pnpm run test:e2e
+
+      - name: Deploy dry-run
+        run: node scripts/deploy-dry-run.mjs
+
+      - name: Preserve browser evidence on failure
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          if-no-files-found: ignore
+          name: playwright-results
+          path: |
+            apps/web/playwright-report
+            apps/web/test-results

@@ -1,0 +1,29 @@
+{
+  "name": "kediri-history",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Kediri — A Living Civilization: official cinematic historical web experience for Pemerintah Kota Kediri (sovereign standalone capsule).",
+  "packageManager": "pnpm@11.21.0",
+  "engines": {
+    "node": ">=24.18.0 <25"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @kediri/web dev",
+    "lint": "pnpm -r lint && biome check scripts",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test && node scripts/check-tokens.mjs",
+    "test:e2e": "pnpm --filter @kediri/web e2e",
+    "build": "pnpm -r build",
+    "start": "node scripts/serve.mjs",
+    "deploy:dry-run": "node scripts/deploy-dry-run.mjs",
+    "verify": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build && node scripts/payload-cli.mjs verify-production",
+    "db:migrate": "node scripts/payload-cli.mjs migrate",
+    "db:seed": "node scripts/payload-cli.mjs seed",
+    "cms:types": "node scripts/payload-cli.mjs types",
+    "verify:production": "node scripts/payload-cli.mjs verify-production"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.7"
+  }
+}

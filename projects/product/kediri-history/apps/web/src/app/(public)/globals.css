@@ -1,0 +1,753 @@
+/*
+ * Sistem visual Kediri.
+ *
+ * Snapshot token adalah satu-satunya tempat nilai warna dan radius mentah
+ * boleh muncul; semua yang di bawah memakai var(--token), dan
+ * scripts/check-tokens.mjs mengukur ulang kontras setiap pasangan semantik.
+ *
+ * Dua dunia, sesuai Bible 04 bagian 13: permukaan dokumenter (Arsip, Explore,
+ * Sumber) terang dan tenang; Journey gelap dan sinematik. Kegelapan harus
+ * bermakna, bukan sekadar tampak mahal.
+ */
+@import "../../modules/design-system/tokens/tokens.css";
+@import "../../modules/design-system/tokens/kediri.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--reading-canvas);
+  color: var(--reading-ink);
+  font-family: var(--type-interface);
+  font-size: var(--type-size-body);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/*
+ * Dunia sinematik dipasang per halaman, bukan per tema peramban: Journey
+ * gelap, permukaan dokumenter terang. Kegelapan harus bermakna (Bible 04
+ * bagian 13), jadi ia melekat pada rute yang memang sinematik.
+ */
+[data-journey="true"] {
+  background: var(--cinema-canvas);
+  color: var(--cinema-ink);
+  min-height: 100vh;
+}
+
+/* ---------- fondasi aksesibilitas ---------- */
+
+/*
+ * Skip link adalah kontrol pertama yang menerima fokus (UX Bible bagian 29).
+ * Tersembunyi secara visual sampai difokuskan, tidak pernah dari pohon
+ * aksesibilitas.
+ */
+.skip-link {
+  position: absolute;
+  left: var(--space-3);
+  top: var(--space-3);
+  z-index: 100;
+  transform: translateY(-250%);
+  padding: var(--space-2) var(--space-3);
+  background: var(--reading-canvas);
+  color: var(--reading-ink);
+  border: 1px solid var(--reading-ink);
+  border-radius: var(--radius-control);
+  font-family: var(--type-interface);
+  text-decoration: none;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+:focus-visible {
+  outline: 2px solid var(--reading-accent);
+  outline-offset: 3px;
+}
+
+[data-journey="true"] :focus-visible {
+  outline-color: var(--cinema-accent);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- tautan ---------- */
+
+a {
+  color: var(--reading-accent);
+  text-underline-offset: 3px;
+}
+
+[data-journey="true"] a {
+  color: var(--cinema-accent);
+}
+
+/* ---------- kerangka tata letak ---------- */
+
+.shell {
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 3.5rem);
+}
+
+.measure {
+  max-width: var(--measure-narrative);
+}
+
+/* ---------- navigasi global ---------- */
+
+.site-nav {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--reading-rule);
+  font-family: var(--type-interface);
+  flex-wrap: wrap;
+}
+
+[data-journey="true"] .site-nav {
+  border-bottom-color: var(--cinema-rule);
+}
+
+.site-nav a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.site-nav .wordmark {
+  font-family: var(--type-interface);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.site-nav ul {
+  display: flex;
+  gap: var(--space-4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 0.85rem;
+}
+
+.site-nav a:hover,
+.site-nav a:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ---------- tipografi ---------- */
+
+.eyebrow {
+  font-family: var(--type-archive);
+  font-size: var(--type-size-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--reading-ink-muted);
+  margin: 0 0 var(--space-2);
+}
+
+[data-journey="true"] .eyebrow {
+  color: var(--cinema-ink-muted);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--type-narrative);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.title-page {
+  font-size: var(--type-size-era);
+  line-height: 1.02;
+  margin: 0 0 var(--space-4);
+}
+
+.title-scene {
+  font-size: var(--type-size-scene);
+  line-height: 1.05;
+  margin: 0 0 var(--space-3);
+}
+
+.lead {
+  font-family: var(--type-narrative);
+  font-size: var(--type-size-lead);
+  line-height: 1.5;
+  margin: 0 0 var(--space-4);
+}
+
+p {
+  margin: 0 0 var(--space-3);
+}
+
+.prose {
+  font-family: var(--type-narrative);
+  line-height: 1.65;
+}
+
+/*
+ * Waktu monumental: tanggal berperilaku sebagai objek arsitektural, bukan
+ * sebagai label (Bible 04 bagian 8).
+ */
+.monumental {
+  font-family: var(--type-interface);
+  font-size: var(--type-size-monumental);
+  font-weight: 600;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+
+.archive-label {
+  font-family: var(--type-archive);
+  font-size: var(--type-size-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--reading-ink-muted);
+}
+
+/* ---------- badge evidence ---------- */
+
+/*
+ * Bentuk, label, lalu warna — dalam urutan itu (Bible 04 bagian 20). Warna
+ * bersifat pelengkap; labelnya selalu terlihat, sehingga tidak ada makna yang
+ * dibawa warna saja.
+ */
+.evidence-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  font-family: var(--type-archive);
+  font-size: var(--type-size-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--reading-evidence);
+  border: 1px solid currentColor;
+  border-radius: var(--radius-control);
+  padding: 0.25em 0.6em;
+  white-space: nowrap;
+}
+
+[data-journey="true"] .evidence-badge {
+  color: var(--cinema-evidence);
+}
+
+.evidence-badge .symbol {
+  font-size: 0.9em;
+  line-height: 1;
+}
+
+/* ---------- kartu dan daftar ---------- */
+
+.record-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--reading-rule);
+}
+
+.record-list > li {
+  border-bottom: 1px solid var(--reading-rule);
+  padding: var(--space-3) 0;
+}
+
+.record-list a {
+  color: inherit;
+  text-decoration: none;
+  display: grid;
+  gap: var(--space-1);
+}
+
+.record-list a:hover .record-title,
+.record-list a:focus-visible .record-title {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.record-title {
+  font-family: var(--type-narrative);
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.record-meta {
+  font-family: var(--type-archive);
+  font-size: var(--type-size-label);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--reading-ink-muted);
+}
+
+.card-grid {
+  display: grid;
+  gap: 1px;
+  background: var(--reading-rule);
+  border: 1px solid var(--reading-rule);
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+
+.card-grid > * {
+  background: var(--reading-canvas);
+  padding: var(--space-4);
+}
+
+/* ---------- tabel metadata arsip ---------- */
+
+.metadata {
+  display: grid;
+  grid-template-columns: minmax(9rem, 22%) 1fr;
+  gap: 0;
+  margin: 0;
+  border-top: 1px solid var(--reading-rule);
+}
+
+.metadata > div {
+  display: contents;
+}
+
+.metadata dt {
+  font-family: var(--type-archive);
+  font-size: var(--type-size-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--reading-ink-muted);
+  padding: var(--space-2) var(--space-3) var(--space-2) 0;
+  border-bottom: 1px solid var(--reading-rule);
+}
+
+.metadata dd {
+  margin: 0;
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--reading-rule);
+}
+
+@media (max-width: 40rem) {
+  .metadata {
+    grid-template-columns: 1fr;
+  }
+  .metadata dt {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+}
+
+/* ---------- Journey ---------- */
+
+.journey-act {
+  border-top: 1px solid var(--cinema-rule);
+  padding-top: var(--space-6);
+  margin-top: var(--space-7);
+}
+
+.scene {
+  /*
+   * Setiap scene adalah dokumen sejarah yang lengkap sebelum ada gerak apa pun.
+   * Kalau JavaScript gagal, bioskopnya hilang dan sejarahnya tetap ada.
+   */
+  padding: clamp(3rem, 10vh, 8rem) 0;
+  border-bottom: 1px solid var(--cinema-rule);
+  scroll-margin-top: var(--space-6);
+}
+
+.scene[data-scene-type="hero"] {
+  padding-block: clamp(4rem, 16vh, 12rem);
+}
+
+.scene time {
+  display: block;
+  font-family: var(--type-archive);
+  font-size: var(--type-size-label);
+  letter-spacing: 0.2em;
+  color: var(--cinema-ink-muted);
+  margin-bottom: var(--space-3);
+}
+
+.scene .narrative {
+  font-family: var(--type-narrative);
+  font-size: var(--type-size-lead);
+  line-height: 1.55;
+  max-width: var(--measure-narrative);
+  color: var(--cinema-ink);
+}
+
+.scene .scene-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  font-family: var(--type-interface);
+  font-size: 0.85rem;
+}
+
+.scene .scene-actions a,
+.scene .scene-actions button {
+  color: inherit;
+  background: none;
+  border: 1px solid var(--cinema-rule);
+  border-radius: var(--radius-control);
+  padding: 0.5em 0.9em;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.scene .scene-actions a:hover,
+.scene .scene-actions button:hover {
+  border-color: var(--cinema-accent);
+}
+
+/* ---------- reduced motion ---------- */
+
+/*
+ * Reduced motion bukan versi rusak, ia versi pameran digital (UX Bible bagian
+ * 28). Reset ini harus mengalahkan animasi scene mana pun yang ditambahkan
+ * kemudian.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    /* biome-ignore-start lint/complexity/noImportantStyles: reduced motion adalah
+       janji aksesibilitas, bukan preferensi gaya. Tanpa !important, jaminan ini
+       bocor pada scene pertama yang menetapkan animasinya sendiri dengan
+       spesifisitas lebih tinggi. */
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+    /* biome-ignore-end lint/complexity/noImportantStyles: lihat di atas */
+  }
+}
+
+/* ---------- beranda ---------- */
+
+.home-hero {
+  padding: clamp(3rem, 12vh, 8rem) 0 var(--space-7);
+  border-bottom: 1px solid var(--reading-rule);
+}
+
+.home-range {
+  font-size: 1rem;
+  letter-spacing: 0.24em;
+  margin: 0 0 var(--space-4);
+}
+
+.home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: baseline;
+  margin-top: var(--space-5);
+  font-family: var(--type-interface);
+}
+
+.action-primary {
+  border: 1px solid currentColor;
+  border-radius: var(--radius-control);
+  padding: 0.6em 1.2em;
+  text-decoration: none;
+}
+
+.home-modes {
+  padding: var(--space-7) 0;
+}
+
+.home-modes article {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+}
+
+/* ---------- footer ---------- */
+
+.site-footer {
+  margin-top: var(--space-8);
+  padding: var(--space-5) 0 var(--space-7);
+  border-top: 1px solid var(--reading-rule);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  font-family: var(--type-interface);
+  font-size: 0.85rem;
+}
+
+[data-journey="true"] .site-footer {
+  border-top-color: var(--cinema-rule);
+}
+
+.site-footer ul {
+  display: flex;
+  gap: var(--space-4);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+/* ---------- Journey: intro, timeline, bukti ---------- */
+
+.journey-intro {
+  padding: clamp(3rem, 14vh, 9rem) 0 var(--space-6);
+}
+
+.journey-timeline {
+  position: relative;
+  display: inline-block;
+}
+
+.journey-timeline > button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 1px solid var(--cinema-rule);
+  border-radius: var(--radius-control);
+  padding: 0.35em 0.8em;
+  cursor: pointer;
+}
+
+.timeline-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: var(--cinema-canvas);
+  color: var(--cinema-ink);
+  overflow-y: auto;
+  padding: clamp(1rem, 4vw, 3rem);
+}
+
+.timeline-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  border-bottom: 1px solid var(--cinema-rule);
+  padding-bottom: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.timeline-panel-head button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 1px solid var(--cinema-rule);
+  border-radius: var(--radius-control);
+  padding: 0.35em 0.8em;
+  cursor: pointer;
+}
+
+.timeline-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: 44rem;
+}
+
+.timeline-list a {
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  gap: 0 var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--cinema-rule);
+  text-decoration: none;
+  color: inherit;
+}
+
+.timeline-list [data-hero="true"] .timeline-title {
+  font-weight: 600;
+}
+
+.timeline-date {
+  font-family: var(--type-archive);
+  font-variant-numeric: tabular-nums;
+  color: var(--cinema-accent);
+}
+
+.timeline-title {
+  font-family: var(--type-narrative);
+}
+
+.timeline-act {
+  grid-column: 2;
+  font-family: var(--type-archive);
+  font-size: var(--type-size-label);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cinema-ink-muted);
+}
+
+/*
+ * Pengungkapan bukti memakai <details> asli: bekerja tanpa JavaScript, sudah
+ * dapat diakses keyboard dan pembaca layar, dan tidak merusak tombol Back.
+ */
+.evidence-disclosure {
+  margin-top: var(--space-4);
+  border-top: 1px solid var(--cinema-rule);
+  padding-top: var(--space-3);
+  max-width: var(--measure-narrative);
+}
+
+.evidence-disclosure > summary {
+  cursor: pointer;
+  font-family: var(--type-interface);
+  font-size: 0.9rem;
+}
+
+.claim {
+  border-top: 1px solid var(--reading-rule);
+  padding-top: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+[data-journey="true"] .claim {
+  border-top-color: var(--cinema-rule);
+}
+
+.claim-statement {
+  font-size: 1.05rem;
+  margin-bottom: var(--space-2);
+}
+
+/* ---------- media ---------- */
+
+.media-figure {
+  margin: var(--space-5) 0;
+}
+
+.media-figure img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.media-figure figcaption {
+  display: grid;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+  max-width: var(--measure-narrative);
+}
+
+/* ---------- arsip ---------- */
+
+.archive-header {
+  padding: var(--space-6) 0 var(--space-5);
+  border-bottom: 1px solid var(--reading-rule);
+  margin-bottom: var(--space-5);
+}
+
+.search-form {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin: var(--space-4) 0;
+  font-family: var(--type-interface);
+}
+
+.search-form input {
+  font: inherit;
+  padding: 0.55em 0.8em;
+  border: 1px solid var(--reading-rule);
+  border-radius: var(--radius-control);
+  background: var(--reading-canvas);
+  color: inherit;
+  min-width: min(22rem, 100%);
+}
+
+.search-form button {
+  font: inherit;
+  padding: 0.55em 1.1em;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-control);
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.section-stack > section {
+  margin-top: var(--space-6);
+}
+
+/* ---------- mobile ---------- */
+
+/*
+ * Mobile bukan desktop yang dikecilkan (UX Bible bagian 26). Ukuran tipografi
+ * monumental turun ke rentangnya sendiri, dan tidak ada kolom yang diperas.
+ */
+@media (max-width: 48rem) {
+  .timeline-list a {
+    grid-template-columns: 1fr;
+  }
+  .timeline-act {
+    grid-column: 1;
+  }
+  .metadata {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- geometri rekayasa 1869 ---------- */
+
+/*
+ * Gambar garis, bukan bukti. Strokenya sengaja tipis dan tidak berwarna
+ * dokumenter, supaya tidak pernah salah dibaca sebagai foto arsip.
+ */
+.bridge-geometry {
+  display: block;
+  width: 100%;
+  max-width: 46rem;
+  height: auto;
+  margin: var(--space-5) 0;
+  overflow: visible;
+}
+
+.bridge-geometry line,
+.bridge-geometry path {
+  fill: none;
+  stroke-linecap: square;
+  vector-effect: non-scaling-stroke;
+}
+
+.bridge-water {
+  stroke: var(--cinema-surface);
+  stroke-width: 6;
+}
+
+.bridge-truss {
+  stroke: var(--cinema-rule);
+  stroke-width: 1.5;
+}
+
+.bridge-deck {
+  stroke: var(--cinema-accent);
+  stroke-width: 2;
+}
+
+.bridge-pier {
+  stroke: var(--cinema-ink-muted);
+  stroke-width: 2;
+}

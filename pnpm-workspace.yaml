@@ -3,6 +3,11 @@ packages:
   # academic-smartboard adalah capsule standalone dengan workspace pnpm sendiri;
   # jangan di-resolve oleh workspace root (kontrak standalone, AGENTS.md §112).
   - '!projects/academic/academic-smartboard/**'
+  # kediri-history adalah capsule standalone berdaulat dengan workspace pnpm,
+  # lockfile, biome, dan tsconfig sendiri; glob projects/*/*/apps/* di atas akan
+  # menyerap apps/web-nya ke workspace root dan melanggar kontrak standalone
+  # (AGENTS.md "Standalone project contract"; keputusan Chief G01/G03 2026-08-26).
+  - '!projects/product/kediri-history/**'
   - packages/*
   - tools/*
 

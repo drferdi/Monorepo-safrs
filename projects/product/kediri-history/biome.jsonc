@@ -1,0 +1,50 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
+  // Salinan capsule-local dari biome.jsonc root Monorepo (2.5.7), dipangkas ke
+  // cakupan capsule. Tanpa integrasi VCS: capsule harus tetap lint-able saat
+  // diekstraksi ke direktori tanpa repo git (bukti standalone).
+  "files": {
+    "includes": [
+      "**",
+      "!!**/node_modules",
+      "!!**/.next",
+      "!!**/next-env.d.ts",
+      "!!**/out",
+      // Tipe hasil generate Payload (`payload generate:types`): bukan sumber
+      // kanonik, dan memformat/melint-nya hanya menghasilkan selisih semu.
+      "!!**/payload-types.ts",
+      // Migrasi hasil generate Payload/drizzle: isinya SQL apa adanya dan
+      // harus tetap identik dengan yang sudah dijalankan pada basis data.
+      "!!**/migrations/**",
+      "!!**/playwright-report",
+      "!!**/test-results",
+      // Kanon perencanaan yang dibekukan dan korpus riset yang dipertahankan
+      // apa adanya. Memformatnya = mengubah dokumen yang otoritatif.
+      "!!docs/bibles",
+      "!!docs/implementation",
+      "!!research",
+      // Snapshot rujukan Sentra-GSAP; standar kanonik tinggal di root Monorepo.
+      "!!resources"
+    ],
+    "ignoreUnknown": true
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf"
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended"
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "semicolons": "always",
+      "trailingCommas": "all"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+packages:
+  - apps/*
+
+allowBuilds:
+  esbuild: true
+  sharp: true
+
+# Kontrak standalone: tools/project-standalone/src/extraction.mjs menolak SETIAP
+# symlink / reparse point di seluruh pohon capsule, dan pemindaian itu berjalan
+# sebelum mutableStatePaths dikecualikan — jadi node_modules ikut dipindai.
+# Linker hoisted menghasilkan node_modules datar tanpa symlink. Ini syarat
+# kebenaran, bukan preferensi gaya.
+#
+# Konsekuensinya batas arsitektur Technical Bible §44 TIDAK diwujudkan sebagai
+# paket workspace (workspace:* menghasilkan symlink), melainkan sebagai modul
+# sumber terpisah di apps/web/src/modules/ dengan aturan dependensi yang
+# ditegakkan mekanis oleh apps/web/tests/architecture/module-boundaries.test.ts
+# (keputusan Chief G03, 2026-08-26).
+nodeLinker: hoisted

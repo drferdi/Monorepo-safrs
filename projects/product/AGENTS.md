@@ -20,6 +20,7 @@ Karena itu isinya hanya dua berkas: `AGENTS.md` (berkas ini) dan `README.md`.
 | Capsule | Isi |
 | --- | --- |
 | [`sentrabot`](./sentrabot/AGENTS.md) | Bot Sentra untuk rilis publik |
+| [`kediri-history`](./kediri-history/AGENTS.md) | Kediri — A Living Civilization: pengalaman web sejarah sinematik resmi untuk Pemerintah Kota Kediri; capsule standalone berdaulat |
 
 Buka `AGENTS.md` capsule yang sedang dikerjakan; berkas itu yang memuat perintah build, lint, type check, dan test yang sebenarnya.
 

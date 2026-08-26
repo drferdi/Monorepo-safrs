@@ -1,0 +1,17 @@
+node_modules/
+.next/
+out/
+dist/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+.turbo/
+
+# Dihasilkan ulang oleh `next dev` setiap kali dijalankan (lihat
+# node_modules/next/dist/server/lib/generate-agent-files.js) — bukan sumber kanonik.
+apps/*/AGENTS.md
+apps/*/CLAUDE.md
