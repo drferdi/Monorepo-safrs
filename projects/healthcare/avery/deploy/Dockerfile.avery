@@ -1,0 +1,155 @@
+# Dockerfile.avery — overlay patch di atas image Hermes resmi (pinned).
+#
+# Konteks build = root kapsul avery (bukan deploy/), karena RUN di bawah
+# perlu menyalin folder patches/hermes-0.20.5/ dari root kapsul:
+#   docker build -f deploy/Dockerfile.avery -t avery-hermes:v2026.8.19-fix02 .
+#
+# Base image resmi Hermes 0.20.4, dipin dengan digest supaya build selalu
+# memakai byte yang sama persis dengan runtime yang sudah diverifikasi.
+ARG HERMES_BASE=nousresearch/hermes-agent:v2026.8.19@sha256:3811ed13da874fba2ac99b6d492db9a203d34cb6dccf90d886948c00d0ccec09
+FROM ${HERMES_BASE}
+
+LABEL org.sentra.avery.patch="fix02-ingress-reason-codes" \
+      org.sentra.avery.base="v2026.8.19"
+
+# Salin materi patch (manifest.json + berkas .patch) ke lokasi tetap di
+# dalam image untuk jejak audit.
+COPY patches/hermes-0.20.5/ /opt/avery-patches/
+
+# Base image start sebagai root (lihat catatan di deploy/docker-compose.yml
+# lama soal s6-overlay yang meremap user belakangan) — aman menjalankan
+# apt-get dan menulis ke pohon paket Python di sini.
+#
+# Alur skrip Python inline di bawah:
+#   1. Baca /opt/avery-patches/manifest.json (field "files": list objek
+#      {path, sha256_before, sha256_after}; path relatif terhadap root
+#      paket Hermes di dalam image, lokasi absolutnya tidak diketahui).
+#   2. Untuk tiap file target, cari kandidat lewat `find / -path
+#      '*<path>'` (suffix match). Wajib tepat satu kandidat — 0 atau >1
+#      kandidat = build gagal dengan pesan jelas.
+#   3. Verifikasi sha256 file saat ini == sha256_before; mismatch = build
+#      gagal (jangan menambal file versi yang salah).
+#   4. Terapkan patch unified diff dengan `patch -p1` SATU KALI (berkas
+#      patch berisi hunk untuk kedua file sekaligus) di direktori root
+#      paket yang ditemukan (root paket = parent dari komponen path
+#      relatif, mis. untuk kandidat
+#      ".../site-packages/gateway/platforms/whatsapp_common.py" dengan
+#      suffix "gateway/platforms/whatsapp_common.py", root paket =
+#      ".../site-packages"). Berkas patch memakai prefiks git standar
+#      "a/gateway/..." dan "b/plugins/..." sehingga -p1 (strip 1 komponen)
+#      menghasilkan path relatif yang persis cocok dengan root paket ini.
+#      Kedua file target harus berbagi satu root paket yang sama; kalau
+#      tidak, build gagal.
+#   5. Verifikasi sha256 hasil == sha256_after; mismatch = build gagal.
+#   6. Tulis marker /opt/avery-patches/APPLIED berisi versi Hermes yang
+#      ditambal + tanggal build (UTC).
+RUN set -eu \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends patch \
+    && rm -rf /var/lib/apt/lists/* \
+    && python3 <<'PYEOF'
+import hashlib
+import json
+import subprocess
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+PATCH_DIR = Path("/opt/avery-patches")
+MANIFEST = PATCH_DIR / "manifest.json"
+
+manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+patch_file = PATCH_DIR / manifest["patch"]
+hermes_version = manifest["hermes_version"]
+
+
+def sha256_of(path: Path) -> str:
+    h = hashlib.sha256()
+    h.update(path.read_bytes())
+    return h.hexdigest()
+
+
+def find_one(suffix: str) -> Path:
+    result = subprocess.run(
+        ["find", "/", "-path", f"*{suffix}"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    candidates = [line for line in result.stdout.splitlines() if line.strip()]
+    if len(candidates) != 1:
+        sys.exit(
+            f"BOOT FAIL: expected exactly 1 candidate for '{suffix}' in image, "
+            f"found {len(candidates)}: {candidates}"
+        )
+    return Path(candidates[0])
+
+
+# Berkas patch berisi hunk untuk KEDUA file sekaligus, jadi verifikasi
+# sha256_before dan cari root paket untuk semua entri dulu, baru terapkan
+# `patch -p1` SATU KALI untuk seluruh berkas (menjalankannya per-entri akan
+# membuat entri kedua gagal karena berkas pertama sudah ikut ditambal).
+resolved = []
+for entry in manifest["files"]:
+    rel_path = entry["path"]
+    sha_before = entry["sha256_before"]
+
+    target = find_one(rel_path)
+
+    actual_before = sha256_of(target)
+    if actual_before != sha_before:
+        sys.exit(
+            f"BOOT FAIL: sha256 mismatch before patch for {target} "
+            f"(expected {sha_before}, got {actual_before}) — wrong Hermes "
+            f"version, refusing to patch"
+        )
+
+    # Root paket = target minus komponen relatif dari suffix yang dicari.
+    pkg_root = target
+    for _ in Path(rel_path).parts:
+        pkg_root = pkg_root.parent
+
+    resolved.append((entry, target, pkg_root))
+
+pkg_roots = {str(r[2]) for r in resolved}
+if len(pkg_roots) != 1:
+    sys.exit(
+        f"BOOT FAIL: expected all patched files under one package root, "
+        f"found multiple: {sorted(pkg_roots)}"
+    )
+common_root = resolved[0][2]
+
+apply_result = subprocess.run(
+    ["patch", "-p1", "--forward", "--input", str(patch_file)],
+    cwd=str(common_root),
+    capture_output=True,
+    text=True,
+    check=False,
+)
+if apply_result.returncode != 0:
+    sys.exit(
+        f"BOOT FAIL: patch -p1 failed in {common_root}\n"
+        f"stdout: {apply_result.stdout}\nstderr: {apply_result.stderr}"
+    )
+
+for entry, target, _pkg_root in resolved:
+    sha_after = entry["sha256_after"]
+    actual_after = sha256_of(target)
+    if actual_after != sha_after:
+        sys.exit(
+            f"BOOT FAIL: sha256 mismatch after patch for {target} "
+            f"(expected {sha_after}, got {actual_after})"
+        )
+
+marker = PATCH_DIR / "APPLIED"
+marker.write_text(
+    f"hermes_version={hermes_version}\n"
+    f"patch={manifest['patch']}\n"
+    f"built_at={datetime.now(timezone.utc).isoformat()}\n",
+    encoding="utf-8",
+)
+print(f"Patch applied and verified for hermes_version={hermes_version}")
+PYEOF
+
+# Base image sudah menentukan ENTRYPOINT/CMD/USER/VOLUME sendiri — tidak
+# diubah di sini.
