@@ -5,7 +5,7 @@
 > Rule: **overwrite** each session — this is current state, not a log.
 > **BINDING: read `.agents/BOUNDARIES.md` first — no push/publish/visibility change without an explicit Chief order in YOUR session; other sessions' local commits are off-limits.**
 
-Last updated: 2026-08-26 (Kediri: verifikasi ulang penuh di atas Postgres 18 + MinIO nyata)
+Last updated: 2026-08-26 (backlog untracked ter-commit; task ownership hijau)
 
 ## Current state
 
@@ -45,18 +45,20 @@ Last updated: 2026-08-26 (Kediri: verifikasi ulang penuh di atas Postgres 18 + M
   sesi lampau membuat standalone verify gagal karena symlink; `rm -rf apps/web/.next` sebelum
   verify adalah wajib (tercatat di `docs/testing.md`). PGlite tetap fallback sah bila Docker
   tidak tersedia, tetapi bukan lagi satu-satunya bukti.
-- **Gagal warisan yang memblokir `pnpm governance` (bukan dari sesi Kediri):**
-  (a) `check_task_ownership` — 49 path tak bertuan, seluruhnya instalasi Sentra-GSAP milik
-  Chief (`.agents/skills/sentra-gsap/`, `scripts/sentra-gsap/`, `tests/sentra-gsap/`,
-  `docs/standards/`, `integration/`, `templates/`, `manifest.json`, `INSTALL_FOR_AGENT.md`,
-  `PACKAGE_CONTENTS.txt`) dan berkas deploy Avery dari sesi lain; nol milik Kediri.
-  (b) `check_sensitive_changes` — riwayat lokal dan `origin/main` tak berkerabat sejak rewrite
-  2026-08-25, jadi basis diff melihat 2071 berkas berubah dan menuntut review integritas
-  independen. Keduanya mendahului tugas ini; 16 dari 18 check SAFRS lain PASS.
-- **Klaim basi yang tidak bisa direkonsiliasi sesi ini:**
-  `TASK-20260821-SENTRABOT-WORKSPACE-CATALOG-OWNERSHIP` (VERIFYING sejak 2026-08-21, tanpa
-  mutasi in-flight) memiliki scope `pnpm-workspace.yaml`, sehingga perubahan eksklusi Kediri
-  teratribusi ke task itu. Transisi ke SUPERSEDED diblokir classifier auto-mode.
+- **Backlog untracked sudah habis (Chief, 2026-08-26).** Tiga commit di `main` lokal:
+  `af60d9c` capsule Kediri + memori `.agents/` (192 berkas), `31027ea` instalasi Sentra-GSAP
+  (35), `3140872` deployment Avery (14). Working tree bersih. Chief menjalankan dua commit
+  terakhir sendiri karena classifier auto-mode menolak sesi agen menyentuh path itu.
+  Akibatnya **`check_task_ownership` kini OK** — 49 path tak bertuan itu hilang, dan klaim basi
+  `TASK-20260821-SENTRABOT-WORKSPACE-CATALOG-OWNERSHIP` tidak lagi menghalangi apa pun.
+- **Satu-satunya check SAFRS yang masih merah:** `check_sensitive_changes` (17 dari 18 PASS).
+  Sebabnya tidak berubah dan bukan dari commit hari ini: bukti review integritas terikat basis
+  lama `d92a246`, sedangkan basis diff kini `5b6b808` pasca-rewrite origin 2026-08-25. Karena
+  riwayat lokal dan origin tak berkerabat, seluruh riwayat terhitung satu change-set, sehingga
+  verification controls dan implementasi selalu tampak berubah bersamaan.
+  **Keputusan Chief yang dibutuhkan:** stempel ulang bukti review integritas terhadap basis
+  `5b6b808`, atau repoint `review_base_ref`. Agen yang menulis kodenya tidak boleh menstempel
+  reviewnya sendiri.
 
 - **Sesi audit (TASK-20260825-AUDIT-REMEDIATION, R2):** audit penuh vs SAFRS v1.1 selesai;
   remediasi keputusan Chief dieksekusi: precommit test yatim dihapus, 4 dokumen governance
@@ -83,20 +85,24 @@ Last updated: 2026-08-26 (Kediri: verifikasi ulang penuh di atas Postgres 18 + M
 
 ## Next action
 
-1. Chief: tiket GitHub Support untuk purge `refs/pull/*` + objek lama (PII residual).
-2. Rancang alur publish terfilter (lokal→origin) + upload tiap capsule ke repo-nya sendiri
+1. **Chief: `check_sensitive_changes` — satu-satunya check merah.** Stempel ulang bukti review
+   integritas terhadap basis `5b6b808`, atau repoint `review_base_ref`. Semua check lain PASS.
+2. Chief: tiket GitHub Support untuk purge `refs/pull/*` + objek lama (PII residual).
+3. Rancang alur publish terfilter (lokal→origin) + upload tiap capsule ke repo-nya sendiri
    (kebijakan Chief 2026-08-25; remote `avery` sudah ada, capsule lain belum).
-3. Chief: pasang allow rule permission (`/permissions`) supaya alur "approve A-B-C" jalan.
-4. Roadmap disetujui Chief: penegakan bertahap `roles` di `.safrs/policy.json` (belum dimulai).
-5. Chief: putuskan penanganan instalasi Sentra-GSAP yang belum dilacak (klaim task atau commit)
-   dan berkas deploy Avery — keduanya yang membuat `check_task_ownership` merah.
-6. Chief: putuskan basis review untuk `check_sensitive_changes` pasca-rewrite (repoint
-   `review_base_ref`, atau review integritas independen terikat basis saat ini).
-7. Kediri: akuisisi citra historis dari institusi penyimpan (Museum Nasional, Perpusnas,
+4. Chief: pasang allow rule permission supaya alur "approve A-B-C" jalan. Terbukti perlu:
+   sesi agen ditolak classifier saat mengklaim task dan meng-commit path milik Chief, sehingga
+   Chief harus menjalankan dua commit itu sendiri.
+5. Roadmap disetujui Chief: penegakan bertahap `roles` di `.safrs/policy.json` (belum dimulai).
+6. Kediri: akuisisi citra historis dari institusi penyimpan (Museum Nasional, Perpusnas,
    KITLV, Rijksmuseum, Wereldmuseum, Nationaal Archief) — Phase 16 tidak dapat maju tanpa itu.
-8. Kediri: konfirmasi arsip untuk klaim jembatan 1869 dan mekanisme pengangkatan 1912.
+7. Kediri: konfirmasi arsip untuk klaim jembatan 1869 dan mekanisme pengangkatan 1912.
+8. Kediri: gate Sentra-GSAP (`sentra:gsap:qa`, tinjauan visual independen, `sentra:gsap:verify`)
+   belum pernah dijalankan terhadap sumber capsule — status FAIL sampai dijalankan.
 9. Kediri: Phase 22 (deployment) menunggu otorisasi Chief; tidak ada remote yang dibuat.
-10. ~~Docker Desktop tidak mau start~~ **SELESAI 2026-08-26** — Docker hidup, compose capsule
-    diperbaiki (mount Postgres 18) dan seluruh verifikasi lulus di atasnya. Stack ditinggalkan
-    hidup; hentikan dengan `docker compose -f infra/docker-compose.yml down` (tanpa `-v` supaya
-    data semai bertahan).
+10. Belum di-push. Gate pre-push (`CHIEF_PUSH_OK`, `CHIEF_PUSH_PROJECTS_OK`) tetap berlaku, dan
+    riwayat lokal tak berkerabat dengan origin — jangan push/fetch tanpa alur publish terfilter.
+
+> Docker Desktop sudah beres (2026-08-26). Stack capsule Kediri ditinggalkan hidup; hentikan
+> dengan `docker compose -f infra/docker-compose.yml down` — tanpa `-v` supaya data semai
+> bertahan.
