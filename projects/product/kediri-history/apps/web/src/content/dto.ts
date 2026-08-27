@@ -138,7 +138,29 @@ export interface SceneDto {
   readonly dateDisplay: string;
   readonly sceneType: string;
   readonly narrativeShort?: string;
+  /** Naskah produksi penuh. Tetap milik lapisan editorial, bukan motion. */
+  readonly narrativeParagraphs?: readonly string[];
+  /**
+   * Beat editorial sinematik: pengelompokan kalimat kanon menjadi ketukan
+   * pendek yang hadir bergiliran di dalam shot. Isi kalimatnya TIDAK pernah
+   * berbeda dari narrativeParagraphs — ini keputusan penyuntingan ritme,
+   * bukan naskah baru. Tanpa beat, tiap paragraf menjadi satu beat.
+   */
+  readonly narrativeBeats?: readonly (readonly string[])[];
+  /** Kalimat yang memikul scene, disajikan dalam tipografi monumental. */
+  readonly masterLine?: string;
+  /** Status epistemik yang wajib tampak ketika sebuah scene belum final. */
+  readonly epistemicStatus?: string;
+  /** Kontrak satu slot visual dominan yang dapat diisi tanpa mengubah layout. */
+  readonly mediaSlot?: {
+    readonly key: string;
+    readonly expectedPath: string;
+    readonly ready: boolean;
+    readonly altText: string;
+    readonly label: string;
+  };
   readonly choreographyKey?: string;
+  readonly visualVariant?: string;
   readonly evidenceBadgeMode: string;
   readonly primaryEvent?: EventDto;
   readonly featuredClaims: readonly ClaimDto[];

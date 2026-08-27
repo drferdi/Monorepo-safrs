@@ -38,7 +38,12 @@ Last updated: 2026-08-26
 
 ## Rincian yang tidak boleh dibulatkan
 
-- **14–15:** 3 dari 11 `choreographyKey` diimplementasikan. Delapan sisanya belum.
+- **14–15:** 13 `choreographyKey` terimplementasi (11 kanon + `prologueReveal`
+  + `nameEndures`, 2026-08-27); timeline factory ada untuk semua kunci di
+  registry. Yang tersisa untuk DoD fase ini: koreografi khusus per scene bagi
+  ±14 scene yang masih memakai komposisi statis, dan transisi bertanda tangan
+  antar-act. Lima scene awal (00–04) sudah melewati pass refinemen beat
+  editorial + handoff kausal.
 - **16:** nol citra historis dikirim. Akuisisi dari Museum Nasional, Perpusnas, KITLV,
   Rijksmuseum, Wereldmuseum, dan Nationaal Archief adalah pekerjaan institusional, bukan kode.
 - **17:** empat varian motion responsif ada, tetapi koreografi mobile yang dirancang
@@ -49,10 +54,51 @@ Last updated: 2026-08-26
   performa yang boleh dibuat.
 - **22:** tidak ada remote, target deploy, atau integrasi eksternal yang dibuat.
 
+## Bahasa sinematik (2026-08-26)
+
+Lapisan yang sebelumnya kosong dan membuat Journey terbaca sebagai teks yang
+bergerak. Kini ada:
+
+- **Lapisan era hidup.** `visualEraKey` sudah mengalir dari CMS ke `data-era`
+  sejak awal, tetapi CSS tidak pernah memakainya - lapisan itu mati. Kini
+  `[data-era]` menimpa peran `--cinema-*` penuh, jadi setiap act benar-benar
+  berganti abad: arang 879-1042, obsidian-indigo Panjalu, dan gading kertas
+  yang TERANG untuk era kolonial-industri.
+- **Kanvas Historis** - lapisan 1 Scene Contract (UX Bible bagian 6) yang
+  sebelumnya tidak ada. Lima perlakuan: material, landscape, word, structure,
+  document. Semuanya abstrak, tanpa satu pun aksara atau wajah rekaan.
+- **`visualVariant`** - field spesifikasi Technical Bible bagian 17 yang belum
+  pernah diimplementasikan. Intent murni; komposisinya milik kode.
+- **`masterLine`** - satu kalimat yang memikul scene, tipografi monumental,
+  hidup di keadaan istirahat.
+- **Enam keadaan scene** (UX Bible bagian 39) termasuk dataran istirahat dan
+  transisi keluar. Pin di desktop dan tablet; mobile alur vertikal asli;
+  reduced motion tanpa pin sama sekali.
+- **Keadaan masuk lewat deep-link** - tiba di anchor mendarat pada keadaan baca
+  yang stabil, bukan awal rentang scrub. Dikunci uji e2e.
+
+Yang masih kurang: delapan choreography key, Scene 00 Prologue (butuh media
+kontemporer yang belum ada), dan transisi bertanda tangan antar-act.
+
+## Citra produksi (2026-08-27)
+
+27 hero image (Prolog + 26 scene; Finale memakai ulang citra Prolog) diperiksa
+visual, dipetakan di `docs/shots/image-manifest.md`, dikonversi ke WebP dua
+ukuran, dan diintegrasikan ke panggung sinematik melalui jalur pratinjau
+editorial — 25 slot siap, scene 1292 sengaja ditangguhkan (flag F1), publikasi
+CMS menunggu keputusan hak Chief. Prolog dan Finale kini bingkai sinematik penuh
+dengan citra 2026 yang sama. Pacing pin dibedakan per koreografi (§19 direktif).
+Lima flag integritas citra (F1–F5) menunggu keputusan Chief di manifest.
+
 ## Gate di luar papan fase
 
-- **Sentra-GSAP: FAIL** — `sentra:gsap:qa`, tinjauan visual independen, dan
-  `sentra:gsap:verify` belum dijalankan. Lihat `BOUNDARIES.md` §5.
+- **Sentra-GSAP: tetap FAIL**, kini karena SATU alasan: **tinjauan visual
+  independen belum dilakukan** — itu pekerjaan manusia. Dijalankan 2026-08-27
+  terhadap sumber capsule: GSAP Architecture PASS (0 error, 0 warning),
+  Typecheck PASS, Lint PASS, Test PASS, Build PASS, dan Browser QA **PASS
+  28/28** (naik dari 8/10; Firefox/WebKit terpasang penuh dan urutan
+  build → server segar → QA ditegakkan). Selama tinjauan visual manusia belum
+  ada, standarnya menghitung gate ini FAIL.
 
 ## Utang editorial yang terbuka
 

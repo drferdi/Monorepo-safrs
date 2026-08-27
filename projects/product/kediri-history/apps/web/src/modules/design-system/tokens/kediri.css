@@ -75,18 +75,42 @@
  * Dunia era. CMS memilih visualEraKey; nilai warnanya hidup di sini
  * (Technical Bible bagian 16). Warna berubah karena kondisi historis berubah,
  * bukan karena ada bagian baru.
+ *
+ * Era yang sudah punya act menimpa PERAN --cinema-* penuh, bukan hanya
+ * --era-ground/--era-accent. Itulah sambungan yang membuat abad benar-benar
+ * berganti di layar: setiap komponen sudah memakai peran itu, jadi tidak ada
+ * satu pun komponen yang perlu tahu tentang era. Nilainya dicerminkan di
+ * kediri.json dan diukur kontrasnya per era oleh scripts/check-tokens.mjs.
+ *
+ * Era yang belum punya act hanya membawa ground/accent sampai act-nya ada.
  */
 [data-era="present"] {
   --era-ground: var(--cinema-canvas);
   --era-accent: var(--kediri-sky);
 }
+/* 879-1042: arang, tembaga, batu, hijau tanah dalam, emas yang ditahan. Sekitar 70% kegelapan, 20% material, 10% iluminasi. */
 [data-era="ancient"] {
   --era-ground: var(--kediri-black);
   --era-accent: var(--kediri-copper);
+  --cinema-canvas: #0c0d0c;
+  --cinema-surface: #17140f;
+  --cinema-ink: #f5f2ea;
+  --cinema-ink-muted: #b3a894;
+  --cinema-rule: #3a342b;
+  --cinema-accent: #d39a5e;
+  --cinema-evidence: #c8a04c;
 }
+/* Panjalu: obsidian, indigo kerajaan, emas gosok, batu hangat. Kerajaan berarti simetri, skala, dan penahanan - bukan ornamen berlebih. */
 [data-era="panjalu"] {
   --era-ground: var(--kediri-royal-indigo);
   --era-accent: var(--kediri-burnished-gold);
+  --cinema-canvas: #0a0c14;
+  --cinema-surface: #1b2140;
+  --cinema-ink: #f2efe6;
+  --cinema-ink-muted: #aeb0c0;
+  --cinema-rule: #39406a;
+  --cinema-accent: #c8a04c;
+  --cinema-evidence: #c8a04c;
 }
 [data-era="collapse"] {
   --era-ground: var(--kediri-black);
@@ -100,9 +124,17 @@
   --era-ground: var(--kediri-iron);
   --era-accent: var(--kediri-parchment);
 }
+/* Kolonial/industrialisasi: gading kertas, besi, tembaga teroksidasi, hijau tebu, kelabu uap. Era pertama yang terang. */
 [data-era="colonialIndustrial"] {
   --era-ground: var(--kediri-iron);
   --era-accent: var(--kediri-cane-green);
+  --cinema-canvas: #dbd6c8;
+  --cinema-surface: #c7c1b1;
+  --cinema-ink: #1b1d1b;
+  --cinema-ink-muted: #4a4e48;
+  --cinema-rule: #a29b8b;
+  --cinema-accent: #7a3a24;
+  --cinema-evidence: #4b5220;
 }
 [data-era="occupationRevolution"] {
   --era-ground: var(--kediri-black);

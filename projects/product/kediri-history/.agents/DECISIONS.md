@@ -5,6 +5,117 @@ Keputusan lintas-repositori tetap dicatat di `.agents/DECISIONS.md` root.
 
 ---
 
+## 2026-08-27 — Pass refinemen lima scene awal: beat editorial, handoff kausal
+
+Direktif refinemen Chief dieksekusi pada Scene 00–04. (1) Paragraf kanon
+dikelompokkan menjadi BEAT sinematik (`beatGroups` di production-narrative —
+indeks ke paragraf, kalimat tidak pernah ditulis ulang), hadir bergiliran
+dengan JEDA HENING di antaranya; beat pertama tiap kelompok bersuara lebih
+besar. (2) Scene 03 (1015) mendapat kunci koreografi ke-12 `nameEndures` —
+kamera nyaris diam karena klaimnya Research Hold: dunia bergeser, nama
+bertahan; migrasi `20260827_120000_name_endures_key` menambah nilai enum
+(down: validasi lalu biarkan — enum PG tidak mendukung DROP VALUE). (3) Prolog
+mendapat `prologueReveal` + pin. (4) Handoff kausal antar-scene lewat
+`SCENE_HANDOFFS` (water→copper, groove→mark, name→world, record→territory,
+territory→centre) — elemen dekoratif murni, tanpa makna bukti. (5) Penempatan
+teks per komposisi citra (921 ruang negatif kanan). Bukti: e2e 50/8/0,
+tangkapan layar sekuens 00–04.
+
+## 2026-08-27 — Naskah bergiliran DI DALAM shot; tidak ada bagian bacaan kedua
+
+Menggantikan keputusan di bawahnya pada hari yang sama. Latar-ulang citra di
+bagian bacaan ditolak Chief — citra jadi tayang dua kali. Bentuk finalnya:
+paragraf naratif pindah ke DALAM panggung (`.stage-passages` di pelat), dan
+timeline shot yang sama menghadirkannya bergiliran selama dataran baca
+(0.60–0.82) — satu kalimat pada satu waktu di halaman citra, paragraf terakhir
+tidak pernah pergi. Pin diperpanjang (+70–80svh, tetap dibedakan per key) untuk
+memberi ruang baca. Varian mobile/reduced/tanpa-JS menampilkan seluruh paragraf
+statis menumpuk (dokumen selalu utuh; hanya opacity yang dianimasikan). Bagian
+setelah shot kini hanya strip arsip: status epistemik, bukti, navigasi.
+Bukti: `modules/motion/scenes.ts` (blok passages), `scene-section.tsx`,
+`globals.css` (`.stage-passages`), e2e 40/4/0.
+
+## 2026-08-27 — Bacaan hidup di dalam dunia visual scene, bukan di latar polos
+
+Chief menolak pola "panggung sinematik lalu blok teks di latar hitam" sebagai
+amatir, dan benar: struktur GSAP+citra | teks itu memutus scene jadi dua
+halaman. Kini `.scene-readout` memuat kelanjutan citra scene yang sama sebagai
+latar (`readout-backdrop`, kamera lebih dalam, crop lebih rendah), naskah tiba
+di atasnya lewat pelat gradien editorial (perlakuan sah Art Direction Bible §6),
+kalimat pembuka jadi lead besar, dan kedatangan paragraf dikoreografikan
+ScrollTrigger kedua di `attachScene` (opacity saja — naskah tidak pernah keluar
+dari pohon aksesibilitas; tanpa JS komposisinya sudah utuh). Sumber citranya
+satu fungsi (`sceneMediaSource`) supaya panggung dan bacaan tidak bisa berbeda
+dunia.
+
+## 2026-08-27 — 27 citra produksi masuk lewat jalur pratinjau editorial, bukan CMS
+
+Chief menetapkan 27 hero image (Prolog + 26 scene; Finale memakai ulang citra
+Prolog — bukan aset ke-28). Publikasi lewat `MediaAssets` menuntut record hak
+dan provenance (kelas V/R) yang hanya Chief dapat tetapkan; mengarangnya berarti
+memfabrikasi provenance. Karena itu citra hidup di `apps/web/editorial-preview/`
+(WebP 1536w+768w), disajikan `/api/editorial-preview/` yang 404 di produksi, dan
+`scripts/check-production-journey.mjs` menjaga tidak ada kebocoran ke build
+produksi. Pemetaan + flag integritas: `docs/shots/image-manifest.md`. Daftar
+putih route diturunkan dari naskah produksi, bukan daftar tangan.
+
+## 2026-08-27 — Citra 1292 ditangguhkan karena teks terbakar yang keliru
+
+Citra scene 10 memuat typo "JAYAKASTWANG" dan atribusi "pasukan Jayabaya
+(Raden Wijaya)" — yang benar pasukan Raden Wijaya. Pada produk sejarah resmi,
+slot kosong yang jujur menang atas teks salah: `ready=false`, kartu slot media
+tampil, dan uji mengunci keadaan ini sampai citranya direvisi (flag F1).
+
+## 2026-08-27 — Pacing per koreografi dicerminkan dua sisi
+
+Direktif §19 melarang durasi seragam. `PIN_DISTANCES` per `choreographyKey`
+hidup di `modules/motion/scenes.ts` dan DICERMINKAN `.scene-pin-space` per
+koreografi di `globals.css`, karena ruang pin dirender server (tanpa CLS).
+Mengubah satu sisi tanpa sisi lain memutus sinkron pin — periksa keduanya.
+
+## 2026-08-26 — Teks scene tidak pernah memakai autoAlpha
+
+`autoAlpha` GSAP menyetel `visibility: hidden`, yang mengeluarkan naskah
+sejarah dari pohon aksesibilitas sampai pengunjung menggulir ke sana. Ketika
+scene di-pin, judul scene 1135 benar-benar hilang — dan dua uji e2e
+menangkapnya. Teks kini hanya memakai `opacity`; `autoAlpha` disediakan untuk
+kanvas dekoratif yang memang `aria-hidden`. Kontraknya dikunci uji e2e yang
+memeriksa setiap heading Journey tetap terlihat tanpa menggulir.
+
+## 2026-08-26 — Lapisan era menimpa peran, bukan menambah peran baru
+
+`[data-era]` menimpa `--cinema-canvas`, `--cinema-ink`, dan saudaranya. Karena
+setiap komponen sudah memakai peran itu, tidak ada satu pun komponen yang perlu
+tahu tentang era — dan tidak ada satu pun nilai warna di luar direktori token.
+Blok era sebelumnya hanya mendefinisikan `--era-ground`/`--era-accent` yang
+tidak pernah dipakai selector mana pun, sehingga lapisan era efektif mati sejak
+awal.
+
+Palet era masuk `kediri.json` DENGAN pasangan kontras per era, dan
+`scripts/check-tokens.mjs` mengukurnya: 34 menjadi 52 pemeriksaan. Palet tanpa
+pasangan kontras adalah gate yang tidak menguji apa pun — dan justru di atas
+komposisi 70% gelap teks sekunder paling sering gagal.
+
+## 2026-08-26 — Enam keadaan scene, dengan dataran istirahat yang eksplisit
+
+Satu timeline dinormalkan ke total 1: reveal 0–0,55; dataran istirahat
+0,55–0,82; transisi keluar sisanya. Dataran itu bagian yang paling mudah
+dilupakan dan paling mahal bila hilang — tanpa ia, naskah penting hanya utuh
+pada satu instan progres gulir.
+
+Tiba lewat deep-link mencari titik tengah dataran itu, bukan awal rentang.
+Dengan scene yang di-pin, tanpa pencarian ini `/journey#1135-...` mendarat di
+komposisi separuh jadi — padahal tautan itu justru dibagikan supaya orang
+membaca scene-nya. Transisi keluar meredupkan KANVAS, tidak pernah teksnya.
+
+## 2026-08-26 — Pin adalah keputusan per varian
+
+Desktop 110% tinggi viewport, tablet 70%, mobile dan reduced motion nol.
+Mobile adalah novel grafis dengan alur vertikal asli (UX Bible bagian 26), dan
+menggulir ruang kosong bukan aksesibilitas. Setiap scene tetap menyediakan
+tautan "Lewati ke bab berikutnya" yang bekerja tanpa JavaScript, sesuai UX
+Bible bagian 10: tidak ada pengunjung yang terjebak di dalam rangkaian pin.
+
 ## 2026-08-26 — Mount volume Postgres 18 di compose capsule diperbaiki
 
 `infra/docker-compose.yml` memasang volume di `/var/lib/postgresql/data`. Image `postgres:18`

@@ -3,6 +3,8 @@ import type { CollectionConfig } from "payload";
 import {
   CHOREOGRAPHY_KEYS,
   isKnownChoreographyKey,
+  isKnownVisualVariant,
+  VISUAL_VARIANTS,
 } from "../../modules/motion/index";
 import { canAuthor, isAdmin, publishedOrAuthenticated } from "../access/index";
 import { slugField } from "../fields/slug";
@@ -52,6 +54,15 @@ export const Scenes: CollectionConfig = {
         ) {
           throw new Error(
             `Unknown choreography key "${data.choreographyKey}". The motion registry in code decides what exists.`,
+          );
+        }
+        if (
+          typeof data.visualVariant === "string" &&
+          data.visualVariant.length > 0 &&
+          !isKnownVisualVariant(data.visualVariant)
+        ) {
+          throw new Error(
+            `Unknown visual variant "${data.visualVariant}". The visual registry in code decides what exists.`,
           );
         }
         if (data._status === "published" && !data.primaryEvent) {
@@ -115,6 +126,14 @@ export const Scenes: CollectionConfig = {
       name: "narrativeLong",
       type: "richText",
       admin: { description: "Depth 2: the story. Context and interpretation." },
+    },
+    {
+      name: "masterLine",
+      type: "textarea",
+      admin: {
+        description:
+          "Satu kalimat yang memikul scene ini, disajikan dalam tipografi monumental. Naskah editorial adalah milik CMS (Technical Bible bagian 19); kode hanya memiliki tipografinya. Ia harus tetap terbaca pada keadaan istirahat, bukan hanya pada satu titik progres gulir (UX Bible bagian 39).",
+      },
     },
     {
       name: "featuredClaims",
@@ -194,6 +213,16 @@ export const Scenes: CollectionConfig = {
         { label: "Always show", value: "always" },
         { label: "Hidden (no factual claim on screen)", value: "hidden" },
       ],
+    },
+    {
+      name: "visualVariant",
+      type: "select",
+      admin: {
+        position: "sidebar",
+        description:
+          "Intent only, sama seperti choreographyKey: ia memilih perlakuan visual yang sudah teruji di kode, bukan menyimpan nilai gaya.",
+      },
+      options: VISUAL_VARIANTS.map((value) => ({ label: value, value })),
     },
     {
       name: "choreographyKey",

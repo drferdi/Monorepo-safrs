@@ -240,6 +240,39 @@ for (const [fg, bg, min, note] of kediri.contrastPairs) {
   }
 }
 
+/*
+ * Lapisan era. Setiap era menimpa peran --cinema-* yang sama, jadi namanya
+ * bertabrakan antar era dan tidak bisa ikut di peta datar di atas. Palet era
+ * tanpa pasangan kontras adalah gate yang tidak menguji apa pun: justru di
+ * atas komposisi 70% gelap itulah teks sekunder paling sering gagal.
+ */
+for (const [eraName, fg, bg, min, note] of kediri.eraContrastPairs ?? []) {
+  checks += 1;
+  const era = kediri.eras?.[eraName];
+  const foreground = (era?.[fg]?.resolved ?? "").trim();
+  const background = (era?.[bg]?.resolved ?? "").trim();
+  if (!foreground || !background) {
+    contrastFails.push({
+      note: `era ${eraName} · ${note}`,
+      fg,
+      bg,
+      got: "missing",
+      min,
+    });
+    continue;
+  }
+  const measured = ratio(foreground, background);
+  if (measured < min) {
+    contrastFails.push({
+      note: `era ${eraName} · ${note}`,
+      fg,
+      bg,
+      got: measured.toFixed(2),
+      min,
+    });
+  }
+}
+
 for (const theme of THEMES) {
   if (!theme.map) {
     contrastFails.push({

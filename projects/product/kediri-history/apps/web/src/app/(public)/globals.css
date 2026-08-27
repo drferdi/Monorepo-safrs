@@ -65,6 +65,16 @@ body {
   text-decoration: none;
 }
 
+/*
+ * Skip link tampil pada :focus, bukan hanya :focus-visible.
+ *
+ * WebKit tidak selalu menerapkan :focus-visible untuk fokus hasil Tab, dan
+ * gate Sentra-GSAP menangkapnya: di WebKit desktop dan mobile, Tab pertama
+ * tidak pernah mencapai elemen fokus yang TERLIHAT, sehingga jalan pintas ke
+ * konten praktis tidak ada di sana. Skip link adalah janji aksesibilitas, jadi
+ * ia tidak boleh bergantung pada satu selector yang dukungannya berbeda-beda.
+ */
+.skip-link:focus,
 .skip-link:focus-visible {
   transform: translateY(0);
 }
@@ -103,9 +113,12 @@ a {
 /* ---------- kerangka tata letak ---------- */
 
 .shell {
+  /* Talang dinamai supaya lapisan era dapat menembusnya ke tepi viewport. */
+  --shell-gutter: clamp(1rem, 4vw, 3.5rem);
+
   max-width: 78rem;
   margin: 0 auto;
-  padding: 0 clamp(1rem, 4vw, 3.5rem);
+  padding: 0 var(--shell-gutter);
 }
 
 .measure {
@@ -356,69 +369,1739 @@ p {
   }
 }
 
-/* ---------- Journey ---------- */
+/* ---------- Journey: panggung, bukan halaman ---------- */
 
-.journey-act {
-  border-top: 1px solid var(--cinema-rule);
-  padding-top: var(--space-6);
-  margin-top: var(--space-7);
+/*
+ * KELAS PRODUK.
+ *
+ * Sisa situs ini permukaan dokumenter: shell terukur, kolom baca, garis rambut.
+ * Journey BUKAN itu. Ia instalasi sinematik (UX Bible bagian 26), dan tata
+ * bahasanya berbeda sejak fondasi: tepi ke tepi, tipografi monumental, ruang
+ * kosong yang disengaja, satu subjek per bingkai.
+ *
+ * Karena itu Journey melepaskan lebar shell sepenuhnya, bukan menegosiasikannya.
+ */
+.shell[data-journey="true"] {
+  --shell-gutter: clamp(1.5rem, 5vw, 6rem);
+
+  max-width: none;
+  padding: 0;
+  overflow-x: clip;
 }
 
-.scene {
-  /*
-   * Setiap scene adalah dokumen sejarah yang lengkap sebelum ada gerak apa pun.
-   * Kalau JavaScript gagal, bioskopnya hilang dan sejarahnya tetap ada.
-   */
-  padding: clamp(3rem, 10vh, 8rem) 0;
-  border-bottom: 1px solid var(--cinema-rule);
-  scroll-margin-top: var(--space-6);
+[data-journey="true"] .journey-intro,
+[data-journey="true"] .journey-act > header,
+[data-journey="true"] .scene-readout,
+[data-journey="true"] .finale-readout,
+[data-journey="true"] .site-footer {
+  padding-inline: var(--shell-gutter);
 }
 
-.scene[data-scene-type="hero"] {
-  padding-block: clamp(4rem, 16vh, 12rem);
+/* Chrome instalasi: tipis, tetap, tidak pernah menjadi menu situs. */
+[data-journey="true"] .site-nav {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 40;
+  padding: var(--space-3) var(--shell-gutter);
+  border-bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--cinema-canvas) 82%, transparent),
+    transparent
+  );
 }
 
-.scene time {
-  display: block;
+[data-journey="true"] .site-nav a {
   font-family: var(--type-archive);
-  font-size: var(--type-size-label);
-  letter-spacing: 0.2em;
-  color: var(--cinema-ink-muted);
-  margin-bottom: var(--space-3);
+  font-size: 0.66rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
 }
 
-.scene .narrative {
-  font-family: var(--type-narrative);
-  font-size: var(--type-size-lead);
-  line-height: 1.55;
-  max-width: var(--measure-narrative);
+[data-journey="true"] .site-nav .wordmark {
+  font-size: 0.72rem;
+  letter-spacing: 0.42em;
+}
+
+/* ---------- kartu judul pembuka ---------- */
+
+.journey-intro {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  gap: var(--space-4);
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--cinema-canvas) 86%, transparent) 0%,
+      color-mix(in srgb, var(--cinema-canvas) 54%, transparent) 46%,
+      color-mix(in srgb, var(--cinema-canvas) 24%, transparent) 100%
+    ),
+    linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--cinema-canvas) 72%, transparent),
+      transparent 62%
+    ),
+    var(--cinema-canvas);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/*
+ * Bingkai Prolog dan Finale: SATU citra 2026 yang sama, dua perlakuan.
+ * Citranya elemen <img> (responsif, ber-alt, lazy untuk Finale), bukan
+ * background CSS — dan Finale mengunjungi kembali perspektif pembuka,
+ * bukan aset ke-28.
+ */
+.framing-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  /* Induknya isolate: -1 menempatkan citra di atas latar induk tetapi di
+     bawah seluruh naskah — elemen absolut tanpa ini melukis di atas teks. */
+  z-index: -1;
+}
+
+.framing-stage img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: 50% 46%;
+}
+
+/* Finale lebih tenang: kamera akhirnya berhenti, paletnya mereda. */
+.framing-stage[data-framing="finale"] img {
+  object-position: 50% 56%;
+  filter: saturate(0.82) brightness(0.92);
+}
+
+.journey-intro {
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.journey-visual-label {
+  position: absolute;
+  top: clamp(5.75rem, 12svh, 7.5rem);
+  right: var(--shell-gutter);
+  margin: 0;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--cinema-rule);
+  background: color-mix(in srgb, var(--cinema-canvas) 74%, transparent);
+  color: var(--cinema-ink-muted);
+  font-family: var(--type-archive);
+  font-size: 0.58rem;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  backdrop-filter: blur(0.35rem);
+}
+
+.journey-intro .eyebrow {
+  font-size: 0.66rem;
+  letter-spacing: 0.36em;
+}
+
+/*
+ * Rentangnya yang monumental, bukan kata "Perjalanan". Yang dijanjikan halaman
+ * ini sebelas abad, dan itu yang harus memenuhi bingkai.
+ */
+.journey-range {
+  font-family: var(--type-archive);
+  font-size: var(--type-size-monumental);
+  line-height: 0.84;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--cinema-ink);
+  margin: 0;
+}
+
+.journey-intro .title-page {
+  font-family: var(--type-archive);
+  font-size: 0.72rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--cinema-ink-muted);
+  margin: 0;
+}
+
+.journey-intro .lead {
+  max-width: 44ch;
+  color: var(--cinema-ink-muted);
+  font-size: 1rem;
+}
+
+.finale-readout {
+  min-height: 72svh;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: var(--space-5);
+  padding-block: clamp(5rem, 14svh, 10rem);
+  background: var(--cinema-canvas);
   color: var(--cinema-ink);
 }
 
-.scene .scene-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  margin-top: var(--space-4);
-  font-family: var(--type-interface);
-  font-size: 0.85rem;
+.journey-begin {
+  border-bottom: 1px solid var(--cinema-accent);
+  color: var(--cinema-ink);
+  font-family: var(--type-archive);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  padding-bottom: 0.4em;
+  text-decoration: none;
+  text-transform: uppercase;
 }
 
-.scene .scene-actions a,
-.scene .scene-actions button {
-  color: inherit;
-  background: none;
+.editorial-preview-banner {
+  max-width: var(--measure-narrative);
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border: 1px solid var(--cinema-accent);
+  background: var(--cinema-surface);
+  color: var(--cinema-ink-muted);
+  font-family: var(--type-archive);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  line-height: 1.6;
+}
+
+.editorial-preview-banner strong {
+  color: var(--cinema-accent);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* ---------- Scene 00: kota menjadi sungai ---------- */
+
+/*
+ * Prolog adalah satu dunia gambar. Tidak ada kartu hero yang disusul salinan
+ * narasi; stage, lead, beat, dan notice editorial berada dalam satu pelat.
+ */
+.prologue-scene {
+  background: var(--cinema-canvas);
+  color: var(--cinema-ink);
+}
+
+.prologue-stage {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  display: grid;
+  grid-template-areas: "frame";
+  align-items: center;
+  overflow: hidden;
+}
+
+.prologue-stage > * {
+  grid-area: frame;
+}
+
+.prologue-surface {
+  transform-origin: 54% 52%;
+}
+
+.prologue-water-line {
+  align-self: end;
+  justify-self: stretch;
+  width: 70%;
+  height: 1px;
+  margin: 0 auto clamp(5rem, 17svh, 11rem);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--cinema-accent) 24%,
+    var(--cinema-rule) 76%,
+    transparent
+  );
+  transform-origin: center;
+  opacity: 0.72;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.prologue-stage > .stage-visual-label {
+  align-self: start;
+  justify-self: end;
+  z-index: 1;
+  margin: clamp(5.75rem, 12svh, 7.5rem) var(--shell-gutter) 0;
+  padding: 0.45rem 0.65rem;
   border: 1px solid var(--cinema-rule);
-  border-radius: var(--radius-control);
-  padding: 0.5em 0.9em;
-  font: inherit;
-  cursor: pointer;
+  background: color-mix(in srgb, var(--cinema-canvas) 74%, transparent);
+  color: var(--cinema-ink-muted);
+  font-family: var(--type-archive);
+  font-size: 0.58rem;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.prologue-plate {
+  align-self: stretch;
+  justify-self: stretch;
+  width: 100%;
+  max-width: none;
+  padding: clamp(6rem, 13svh, 8rem) var(--shell-gutter) clamp(3rem, 8svh, 6rem);
+  grid-template-columns: minmax(0, 0.9fr) minmax(19rem, 0.72fr);
+  grid-template-rows: auto auto 1fr auto auto;
+  align-items: end;
+  column-gap: clamp(2rem, 7vw, 9rem);
+}
+
+.prologue-context {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--cinema-rule);
+  border-bottom: 1px solid var(--cinema-rule);
+  padding-block: var(--space-3);
+}
+
+.prologue-title {
+  font-family: var(--type-archive);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  color: var(--cinema-accent);
+  margin: 0;
+}
+
+.prologue-lead {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: center;
+  max-width: 15ch;
+  border-left: 1px solid var(--cinema-accent);
+  padding-left: clamp(1.25rem, 2.4vw, 2.5rem);
+  font-size: clamp(2rem, 3.7vw, 4.5rem);
+  line-height: 0.98;
+}
+
+.prologue-passages {
+  grid-column: 1;
+  grid-row: 3;
+  align-self: end;
+  margin: 0;
+  max-width: 48ch;
+}
+
+.prologue-notice {
+  grid-column: 1;
+  grid-row: 4;
+  align-self: end;
+  width: min(100%, 34rem);
+  margin-top: var(--space-4);
+}
+
+.prologue-actions {
+  grid-column: 2;
+  grid-row: 4 / span 2;
+  align-self: end;
+  justify-self: start;
+}
+
+.prologue-actions a {
+  color: inherit;
+  border-bottom: 1px solid var(--cinema-accent);
+  padding-bottom: 0.35em;
   text-decoration: none;
 }
 
-.scene .scene-actions a:hover,
-.scene .scene-actions button:hover {
+/* ---------- handoff: motif di dalam dunia shot, bukan rule antarsection ---------- */
+
+.scene-handoff {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(1.5rem, 1fr) minmax(0.8rem, 0.3fr) minmax(
+      1.5rem,
+      1fr
+    );
+  align-items: center;
+  width: min(31vw, 26rem);
+  height: clamp(1.5rem, 4vw, 3.5rem);
+  color: var(--cinema-rule);
+  pointer-events: none;
+}
+
+.scene-handoff[data-handoff-phase="incoming"] {
+  inset-block-start: clamp(5rem, 15svh, 9rem);
+  inset-inline-start: var(--shell-gutter);
+  transform-origin: left center;
+}
+
+.scene-handoff[data-handoff-phase="outgoing"] {
+  inset-block-end: clamp(5rem, 15svh, 9rem);
+  inset-inline-end: var(--shell-gutter);
+  transform-origin: right center;
+}
+
+.scene-handoff[data-handoff-phase="outgoing"] {
+  filter: drop-shadow(
+    0 0 0.35rem color-mix(in srgb, var(--cinema-accent) 48%, transparent)
+  );
+}
+
+.scene-handoff > span {
+  display: block;
+  height: 1px;
+  transform-origin: center;
+}
+
+.scene-handoff__outgoing {
+  width: 100%;
+  background: var(--cinema-surface);
+  transform-origin: right center;
+}
+
+.scene-handoff__transform {
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--cinema-surface),
+    var(--cinema-accent),
+    var(--cinema-rule)
+  );
+}
+
+.scene-handoff__incoming {
+  width: 100%;
+  background: var(--cinema-accent);
+  transform-origin: left center;
+}
+
+.scene-handoff[data-handoff="water-copper"] {
+  width: min(34vw, 30rem);
+  color: var(--cinema-accent);
+}
+
+.scene-handoff[data-handoff="water-copper"] .scene-handoff__outgoing {
+  height: 0.2rem;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--cinema-surface) 25%,
+    var(--cinema-accent) 78%,
+    transparent
+  );
+}
+
+.scene-handoff[data-handoff="water-copper"] .scene-handoff__transform {
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--cinema-accent),
+    transparent
+  );
+}
+
+.scene-handoff[data-handoff="water-copper"] .scene-handoff__incoming {
+  height: 0.2rem;
+  background: linear-gradient(
+    90deg,
+    var(--cinema-accent),
+    var(--cinema-surface) 72%,
+    transparent
+  );
+}
+
+.scene-handoff[data-handoff="inscription-mark"] {
+  width: min(24vw, 19rem);
+  color: var(--cinema-accent);
+}
+
+.scene-handoff[data-handoff="inscription-mark"] .scene-handoff__outgoing,
+.scene-handoff[data-handoff="inscription-mark"] .scene-handoff__incoming {
+  height: 0.3rem;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--cinema-accent) 0 0.08rem,
+    transparent 0.08rem 0.42rem
+  );
+}
+
+.scene-handoff[data-handoff="inscription-mark"] .scene-handoff__transform {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--cinema-accent),
+    transparent
+  );
+}
+
+.scene-handoff[data-handoff="name-world"] {
+  width: min(28vw, 22rem);
+  color: var(--cinema-ink-muted);
+}
+
+.scene-handoff[data-handoff="name-world"] .scene-handoff__outgoing,
+.scene-handoff[data-handoff="name-world"] .scene-handoff__incoming {
+  height: 0.14rem;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--cinema-ink-muted) 34%,
+    var(--cinema-rule) 66%,
+    transparent
+  );
+}
+
+.scene-handoff[data-handoff="name-world"] .scene-handoff__transform {
+  width: 0.7rem;
+  height: 0.7rem;
+  justify-self: center;
+  border: 1px solid var(--cinema-ink-muted);
+  border-radius: var(--radius-control);
+  background: var(--cinema-canvas);
+}
+
+.scene-handoff[data-handoff="record-territory"] {
+  width: min(32vw, 27rem);
+  color: var(--cinema-surface);
+}
+
+.scene-handoff[data-handoff="record-territory"] .scene-handoff__outgoing,
+.scene-handoff[data-handoff="record-territory"] .scene-handoff__incoming {
+  height: 0.2rem;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--cinema-surface) 0 1.5rem,
+    transparent 1.5rem 1.85rem
+  );
+}
+
+.scene-handoff[data-handoff="record-territory"] .scene-handoff__transform {
+  height: 100%;
+  background: repeating-linear-gradient(
+    180deg,
+    var(--cinema-surface) 0 1px,
+    transparent 1px 0.45rem
+  );
+}
+
+.scene-handoff[data-handoff="territory-centre"] {
+  width: min(26vw, 21rem);
+  color: var(--cinema-accent);
+}
+
+.scene-handoff[data-handoff="territory-centre"] .scene-handoff__outgoing,
+.scene-handoff[data-handoff="territory-centre"] .scene-handoff__incoming {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--cinema-accent) 42%,
+    transparent
+  );
+}
+
+.scene-handoff[data-handoff="territory-centre"] .scene-handoff__transform {
+  width: 1.5rem;
+  height: 1.5rem;
+  justify-self: center;
+  border: 1px solid var(--cinema-accent);
+  border-radius: var(--radius-control);
+  background: radial-gradient(
+    circle,
+    var(--cinema-accent) 0 0.15rem,
+    transparent 0.16rem
+  );
+}
+
+@media (min-width: 48rem) and (max-width: 63.999rem) and (
+    prefers-reduced-motion: no-preference
+  ) {
+  .prologue-pin-space {
+    display: block;
+    height: 210svh;
+  }
+
+  .prologue-stage {
+    position: sticky;
+    top: 0;
+  }
+}
+
+@media (min-width: 64rem) and (prefers-reduced-motion: no-preference) {
+  .prologue-pin-space {
+    display: block;
+    height: 330svh;
+  }
+
+  .prologue-stage {
+    position: sticky;
+    top: 0;
+  }
+}
+
+/* ---------- era ---------- */
+
+.journey-act {
+  background: var(--cinema-canvas);
+  color: var(--cinema-ink);
+}
+
+/* Kartu judul era: satu layar, hampir kosong. */
+.journey-act > header {
+  position: relative;
+  min-height: 74svh;
+  display: grid;
+  align-content: end;
+  gap: var(--space-3);
+  padding-block: var(--space-7) var(--space-6);
+}
+
+.journey-act > header::before {
+  content: "";
+  position: absolute;
+  inset: auto var(--shell-gutter) 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--cinema-accent),
+    var(--cinema-rule) 36%,
+    transparent
+  );
+}
+
+.journey-act > header .archive-label {
+  font-family: var(--type-archive);
+  font-size: 0.7rem;
+  letter-spacing: 0.34em;
+  color: var(--cinema-accent);
+}
+
+.journey-act > header .title-scene {
+  font-family: var(--type-interface);
+  font-size: var(--type-size-era);
+  line-height: 0.94;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+  max-width: 15ch;
+  text-wrap: balance;
+}
+
+.journey-act > header .lead {
+  max-width: 42ch;
+  color: var(--cinema-ink-muted);
+}
+
+/* ---------- panggung ---------- */
+
+.scene {
+  scroll-margin-top: 0;
+}
+
+.scene-pin-space {
+  display: none;
+}
+
+/*
+ * Peta pacing per koreografi (direktif §19: durasi tidak seragam).
+ * Nilai-nilai ini MENCERMINKAN `PIN_DISTANCES` di modules/motion/scenes.ts —
+ * ruang pin dirender server supaya tidak ada CLS, jadi tingginya harus
+ * disepakati kedua sisi. Shot kontemplatif menahan lebih lama; shot ritmis
+ * bergerak lebih cepat.
+ */
+@media (min-width: 48rem) and (max-width: 63.999rem) and (
+    prefers-reduced-motion: no-preference
+  ) {
+  .scene-pin-space {
+    display: block;
+    height: 240svh;
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .scene-pin-space,
+  .scene[data-choreography="bridgeConstruction"] .scene-pin-space {
+    height: 260svh;
+  }
+
+  .scene[data-choreography="royalConsolidation"] .scene-pin-space {
+    height: 250svh;
+  }
+
+  .scene[data-choreography="manuscriptWorld"] .scene-pin-space,
+  .scene[data-choreography="industrialExpansion"] .scene-pin-space {
+    height: 230svh;
+  }
+
+  .scene[data-choreography="nameEndures"] .scene-pin-space {
+    height: 190svh;
+  }
+
+  .scene[data-choreography="politicalFracture"] .scene-pin-space,
+  .scene[data-choreography="bridgeLift"] .scene-pin-space {
+    height: 215svh;
+  }
+
+  .scene[data-choreography="nameEmerges"] .scene-pin-space,
+  .scene[data-choreography="revolutionMachine"] .scene-pin-space {
+    height: 205svh;
+  }
+
+  .scene[data-choreography] .scene-stage {
+    position: sticky;
+    top: 0;
+  }
+}
+
+@media (min-width: 64rem) and (prefers-reduced-motion: no-preference) {
+  .scene-pin-space {
+    display: block;
+    height: 390svh;
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .scene-pin-space,
+  .scene[data-choreography="bridgeConstruction"] .scene-pin-space {
+    height: 420svh;
+  }
+
+  .scene[data-choreography="royalConsolidation"] .scene-pin-space {
+    height: 400svh;
+  }
+
+  .scene[data-choreography="manuscriptWorld"] .scene-pin-space,
+  .scene[data-choreography="industrialExpansion"] .scene-pin-space {
+    height: 370svh;
+  }
+
+  .scene[data-choreography="nameEndures"] .scene-pin-space {
+    height: 300svh;
+  }
+
+  .scene[data-choreography="politicalFracture"] .scene-pin-space,
+  .scene[data-choreography="bridgeLift"] .scene-pin-space {
+    height: 350svh;
+  }
+
+  .scene[data-choreography="nameEmerges"] .scene-pin-space,
+  .scene[data-choreography="revolutionMachine"] .scene-pin-space {
+    height: 330svh;
+  }
+
+  .scene[data-choreography] .scene-stage {
+    position: sticky;
+    top: 0;
+  }
+}
+
+/*
+ * PANGGUNG. Bingkai penuh layar. Gulir adalah kameranya.
+ */
+.scene-stage {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  display: grid;
+  grid-template-areas: "frame";
+  align-items: center;
+  overflow: hidden;
+}
+
+.scene-stage > * {
+  grid-area: frame;
+}
+
+.stage-void {
+  align-self: stretch;
+  justify-self: stretch;
+  background: var(--cinema-canvas);
+  z-index: -3;
+}
+
+/*
+ * Permukaan disingkap CAHAYA, bukan opacity.
+ *
+ * `--lit` berjalan 0 -> 1 di bawah kendali timeline, dan mask membuka bingkai
+ * pada sudut yang sama dengan pita cahaya. Yang tersingkap tetap tersingkap:
+ * keterbacaan adalah peristiwa, dan ia searah.
+ *
+ * `--dolly` adalah kamera. Yang membesar permukaannya, bukan halamannya.
+ */
+.stage-surface {
+  /* Static baseline harus utuh tanpa JavaScript. GSAP mengatur 0 saat shot mulai. */
+  --lit: 1;
+  --dolly: 1;
+
+  align-self: stretch;
+  justify-self: stretch;
+  position: relative;
+  z-index: -2;
+  color: var(--cinema-rule);
+  transform: scale(var(--dolly));
+  transform-origin: 62% 46%;
+  will-change: transform;
+  -webkit-mask-image: linear-gradient(
+    104deg,
+    /* Mask hanya membaca kanal alfa, jadi warna opak apa pun setara. */
+    currentcolor 0,
+    currentcolor calc(var(--lit) * 134%),
+    transparent calc(var(--lit) * 134% + 15%)
+  );
+  mask-image: linear-gradient(
+    104deg,
+    /* Mask hanya membaca kanal alfa, jadi warna opak apa pun setara. */
+    currentcolor 0,
+    currentcolor calc(var(--lit) * 134%),
+    transparent calc(var(--lit) * 134% + 15%)
+  );
+}
+
+.stage-media {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.stage-media img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: 50% 42%;
+}
+
+/*
+ * Titik fokus per scene (manifest: docs/shots/image-manifest.md, "Strategi
+ * crop"). Crop historis penting tidak diserahkan pada object-fit buta:
+ * aksara digeser agar tetap di bingkai; citra dengan tipografi terbakar di
+ * kiri-atas digeser agar pelat tipografi panggung mendapat ruang negatifnya.
+ */
+.scene[data-media-slot="879-first-mark"] .stage-media img,
+.scene[data-media-slot="1135-panjalu-jayati"] .stage-media img {
+  object-position: 45% 50%;
+}
+
+.scene[data-media-slot="1222-ganter"] .stage-media img,
+.scene[data-media-slot="1869-brantas-bridge"] .stage-media img,
+.scene[data-media-slot="1912-bridge-lift"] .stage-media img,
+.scene[data-media-slot="1950-city-republic"] .stage-media img,
+.scene[data-media-slot="1958-from-1000-square-metres"] .stage-media img {
+  object-position: 60% 55%;
+}
+
+.scene[data-media-slot="2024-2026-river-to-runway"] .stage-media img {
+  object-position: 60% 45%;
+}
+
+.stage-media-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--cinema-canvas) 78%, transparent),
+      color-mix(in srgb, var(--cinema-canvas) 14%, transparent) 58%,
+      color-mix(in srgb, var(--cinema-canvas) 42%, transparent)
+    ),
+    linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--cinema-canvas) 92%, transparent),
+      transparent 64%
+    );
+}
+
+.stage-media--pending {
+  display: grid;
+  place-items: start end;
+  box-sizing: border-box;
+  padding: clamp(6rem, 12svh, 8rem) var(--shell-gutter);
+  background:
+    radial-gradient(
+      circle at 68% 34%,
+      color-mix(in srgb, var(--cinema-accent) 10%, transparent),
+      transparent 34%
+    ),
+    linear-gradient(
+      112deg,
+      transparent 0 48%,
+      color-mix(in srgb, var(--cinema-rule) 52%, transparent) 48% 48.1%,
+      transparent 48.1% 100%
+    ),
+    var(--cinema-surface);
+}
+
+.media-slot-card {
+  width: min(34vw, 30rem);
+  display: grid;
+  gap: var(--space-2);
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  border: 1px solid var(--cinema-rule);
+  background: color-mix(in srgb, var(--cinema-canvas) 68%, transparent);
+  color: var(--cinema-ink-muted);
+  font-family: var(--type-archive);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  backdrop-filter: blur(0.5rem);
+}
+
+.media-slot-card span,
+.media-slot-card small {
+  font-size: 0.58rem;
+}
+
+.media-slot-card strong {
+  color: var(--cinema-ink);
+  font-size: clamp(1rem, 2.2vw, 1.6rem);
+  font-weight: 500;
+}
+
+.stage-surface svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/*
+ * Di atas citra produksi, Kanvas Historis berubah peran: dari subjek menjadi
+ * tekstur — garis geometri tipis di atas foto (blueprint di atas jembatan),
+ * bukan dua subjek yang bersaing dalam satu bingkai.
+ */
+.stage-media[data-media-state="ready"] ~ svg {
+  opacity: 0.32;
+  mix-blend-mode: screen;
+}
+
+.stage-surface path,
+.stage-surface line {
+  fill: none;
+  stroke: currentcolor;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.stage-surface circle {
+  fill: currentcolor;
+  opacity: 0.55;
+}
+
+.stage-surface .grain-fracture path {
+  stroke: var(--cinema-accent);
+  opacity: 0.45;
+}
+
+/* Cahaya menyudut: pita tipis yang melintasi bingkai. */
+.stage-light {
+  align-self: stretch;
+  justify-self: stretch;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    104deg,
+    transparent 43%,
+    color-mix(in srgb, var(--cinema-accent) 30%, transparent) 50%,
+    transparent 57%
+  );
+}
+
+/* Pelat teks: kiri bawah bingkai, seperti kartu judul film. */
+.stage-plate {
+  align-self: end;
+  justify-self: start;
+  max-width: min(94vw, 62rem);
+  padding: 0 var(--shell-gutter) clamp(3.5rem, 11svh, 8rem);
+  display: grid;
+  gap: var(--space-3);
+}
+
+/*
+ * Tarikh adalah subjek, bukan label. Ia memenuhi bingkai dan hadir bertahap,
+ * karena pengetahuan tentang tarikh itu pun sampai kepada kita bertahap.
+ */
+.stage-date {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.14em;
+  font-family: var(--type-archive);
+  font-size: var(--type-size-monumental);
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  text-transform: uppercase;
+  color: var(--cinema-ink);
+  margin: 0;
+}
+
+.stage-date .date-unit {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.14em;
+}
+
+.stage-date .date-sep {
+  color: var(--cinema-accent);
+  font-size: 0.3em;
+  transform: translateY(-1em);
+}
+
+.stage-context {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+}
+
+.scene-status {
+  margin: 0;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--cinema-rule);
+  color: var(--cinema-ink-muted);
+  font-family: var(--type-archive);
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.stage-sequence,
+.stage-object {
+  font-family: var(--type-archive);
+  font-size: 0.64rem;
+  line-height: 1.4;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cinema-ink-muted);
+  margin: 0;
+}
+
+.stage-sequence {
+  color: var(--cinema-accent);
+}
+
+.stage-object span {
+  color: var(--cinema-accent);
+  margin-right: 0.8em;
+}
+
+/* Judul turun menjadi label: kalimat master yang memikul bidikan. */
+.scene-stage .title-scene {
+  font-family: var(--type-archive);
+  font-size: 0.72rem;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--cinema-accent);
+  margin: 0;
+}
+
+.master-line {
+  font-family: var(--type-narrative);
+  font-size: var(--type-size-scene);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+  text-wrap: balance;
+  max-width: 21ch;
+  margin: 0;
+  color: var(--cinema-ink);
+}
+
+/* ---------- 879: epigraphic field ---------- */
+
+/*
+ * Satu scene, satu tesis: sebuah catatan mendahului kerajaan. Permukaan logam
+ * memenuhi bingkai tetapi tidak menyamar sebagai artefak asli; indeks museum
+ * dan kelas bukti tetap terlihat pada kedalaman Glance.
+ */
+.scene[data-choreography="inscriptionReveal"] .scene-stage {
+  background:
+    radial-gradient(
+      ellipse at 68% 38%,
+      color-mix(in srgb, var(--cinema-accent) 9%, transparent),
+      transparent 44%
+    ),
+    var(--cinema-canvas);
+}
+
+.scene[data-choreography="inscriptionReveal"] .stage-surface {
+  color: color-mix(in srgb, var(--cinema-accent) 42%, var(--cinema-rule));
+  background:
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--cinema-canvas) 78%, transparent) 0%,
+      color-mix(in srgb, var(--cinema-canvas) 18%, transparent) 44%,
+      color-mix(in srgb, var(--cinema-canvas) 42%, transparent) 100%
+    ),
+    linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--cinema-canvas) 88%, transparent) 0%,
+      transparent 54%
+    ),
+    radial-gradient(
+      ellipse at 24% 28%,
+      color-mix(in srgb, var(--cinema-accent) 11%, transparent),
+      transparent 38%
+    ),
+    radial-gradient(
+      ellipse at 76% 64%,
+      color-mix(in srgb, var(--cinema-surface) 82%, transparent),
+      transparent 56%
+    ),
+    var(--cinema-canvas);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transform-origin: 66% 44%;
+}
+
+.scene[data-choreography="inscriptionReveal"] .stage-surface svg {
+  mix-blend-mode: soft-light;
+  opacity: 0.22;
+}
+
+.scene .stage-visual-label {
+  z-index: 1;
+  align-self: start;
+  justify-self: end;
+  margin: clamp(5.75rem, 12svh, 7.5rem) var(--shell-gutter) 0;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--cinema-rule);
+  background: color-mix(in srgb, var(--cinema-canvas) 74%, transparent);
+  color: var(--cinema-ink-muted);
+  font-family: var(--type-archive);
+  font-size: 0.58rem;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  backdrop-filter: blur(0.35rem);
+}
+
+/* ---------- 1135: authority converges ---------- */
+
+.scene[data-choreography="royalConsolidation"] .scene-stage {
+  background: var(--cinema-canvas);
+}
+
+.scene[data-choreography="royalConsolidation"] .stage-surface {
+  color: color-mix(in srgb, var(--cinema-accent) 44%, var(--cinema-rule));
+  background:
+    linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--cinema-canvas) 92%, transparent) 0%,
+      transparent 54%
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--cinema-canvas) 54%, transparent),
+      transparent 36%,
+      transparent 64%,
+      color-mix(in srgb, var(--cinema-canvas) 54%, transparent)
+    ),
+    var(--cinema-canvas);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transform-origin: center 56%;
+}
+
+.scene[data-choreography="royalConsolidation"] .stage-surface svg {
+  mix-blend-mode: screen;
+  opacity: 0.18;
+}
+
+.scene[data-choreography="royalConsolidation"] .stage-plate {
+  width: 100%;
+  max-width: none;
+  grid-template-columns: minmax(0, 0.8fr) minmax(18rem, 0.65fr);
+  align-items: end;
+  column-gap: clamp(2rem, 8vw, 10rem);
+}
+
+.scene[data-choreography="royalConsolidation"] .stage-context {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--cinema-rule);
+  padding-top: var(--space-3);
+}
+
+.scene[data-choreography="royalConsolidation"] .stage-date {
+  grid-column: 1;
+  font-size: clamp(7rem, 21vw, 20rem);
+  line-height: 0.72;
+}
+
+.scene[data-choreography="royalConsolidation"] .master-line {
+  grid-column: 2;
+  border-left: 1px solid var(--cinema-accent);
+  padding-left: clamp(1.25rem, 2.4vw, 2.5rem);
+  font-size: clamp(2rem, 3.8vw, 4.6rem);
+  max-width: 16ch;
+}
+
+/* ---------- 1869: iron crosses water ---------- */
+
+.scene[data-choreography="bridgeConstruction"] .scene-stage {
+  background: var(--cinema-canvas);
+}
+
+/* Scene ini adalah malam industri di dalam era kolonial yang umumnya terang.
+ * Override-nya tetap memakai primitif token Kediri, bukan palet lokal baru. */
+.scene[data-choreography="bridgeConstruction"] {
+  --cinema-canvas: var(--kediri-black);
+  --cinema-surface: var(--kediri-river-deep);
+  --cinema-ink: var(--kediri-civic-white);
+  --cinema-ink-muted: var(--kediri-stone);
+  --cinema-rule: var(--kediri-iron);
+  --cinema-accent: var(--kediri-civic-gold);
+}
+
+.scene[data-choreography="bridgeConstruction"] .stage-surface {
+  color: color-mix(in srgb, var(--cinema-accent) 62%, var(--cinema-rule));
+  background:
+    linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--cinema-canvas) 90%, transparent) 0%,
+      transparent 58%
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--cinema-canvas) 66%, transparent) 0%,
+      transparent 50%,
+      color-mix(in srgb, var(--cinema-canvas) 34%, transparent) 100%
+    ),
+    var(--cinema-canvas);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  transform-origin: 60% 44%;
+}
+
+.scene[data-choreography="bridgeConstruction"] .stage-plate {
+  width: 100%;
+  max-width: none;
+  grid-template-columns: minmax(0, 1fr) minmax(19rem, 0.72fr);
+  align-items: end;
+  column-gap: clamp(2rem, 7vw, 9rem);
+}
+
+.scene[data-choreography="bridgeConstruction"] .stage-context {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--cinema-rule);
+  padding-top: var(--space-3);
+}
+
+.scene[data-choreography="bridgeConstruction"] .stage-date {
+  grid-column: 1;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: clamp(7rem, 20vw, 19rem);
+  line-height: 0.72;
+}
+
+/* "18 MARET" adalah presisi, bukan monumen: tahunnya yang memikul bingkai.
+   Tiga baris raksasa bertabrakan dengan tipografi yang terbakar di citra. */
+.scene[data-choreography="bridgeConstruction"]
+  .stage-date
+  .date-unit:nth-child(-n + 2) {
+  font-size: 0.075em;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  color: var(--cinema-ink-muted);
+}
+
+.scene[data-choreography="bridgeConstruction"]
+  .stage-date
+  .date-unit:last-child {
+  flex-basis: 100%;
+  color: var(--cinema-ink);
+}
+
+.scene[data-choreography="bridgeConstruction"]
+  .stage-date
+  .date-unit:last-child
+  .date-sep {
+  display: none;
+}
+
+.scene[data-choreography="bridgeConstruction"] .master-line {
+  grid-column: 2;
+  border-left: 1px solid var(--cinema-accent);
+  padding-left: clamp(1.25rem, 2.4vw, 2.5rem);
+  font-size: clamp(2rem, 3.7vw, 4.5rem);
+  max-width: 17ch;
+}
+
+.scene[data-choreography="inscriptionReveal"] .material-base {
+  fill: color-mix(in srgb, var(--cinema-surface) 76%, transparent);
+}
+
+.scene[data-choreography="inscriptionReveal"] .material-fields ellipse {
+  fill: color-mix(in srgb, var(--cinema-accent) 8%, transparent);
+}
+
+.scene[data-choreography="inscriptionReveal"] .grain-strata path {
+  opacity: 0.34;
+  stroke-width: 1.15;
+}
+
+.scene[data-choreography="inscriptionReveal"] .material-scores path {
+  opacity: 0.18;
+  stroke-width: 0.75;
+}
+
+.scene[data-choreography="inscriptionReveal"] .grain-pits {
+  opacity: 0.66;
+}
+
+.scene[data-choreography="inscriptionReveal"] .stage-plate {
+  align-self: stretch;
+  width: 100%;
+  max-width: none;
+  padding-top: clamp(6rem, 13svh, 8rem);
+  padding-bottom: clamp(3rem, 8svh, 6rem);
+  grid-template-columns: minmax(0, 1.15fr) minmax(21rem, 0.65fr);
+  grid-template-rows: auto 1fr;
+  column-gap: clamp(2rem, 6vw, 8rem);
+}
+
+.scene[data-choreography="inscriptionReveal"] .stage-context {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  display: grid;
+  grid-template-columns: auto auto minmax(12rem, 1fr) auto;
+  align-items: center;
+  border-top: 1px solid var(--cinema-rule);
+  border-bottom: 1px solid var(--cinema-rule);
+  padding-block: 0.8rem;
+}
+
+.scene[data-choreography="inscriptionReveal"] .stage-context .title-scene {
+  color: var(--cinema-ink);
+}
+
+.scene[data-choreography="inscriptionReveal"] .stage-object {
+  justify-self: end;
+  text-align: right;
+}
+
+.scene[data-choreography="inscriptionReveal"] .stage-context .evidence-badge {
+  font-size: 0.62rem;
+  border: 0;
+  padding-inline: 0;
+}
+
+.scene[data-choreography="inscriptionReveal"] .stage-date {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: end;
+  display: flex;
+  gap: 0.025em;
+  font-size: clamp(9rem, 27vw, 27rem);
+  line-height: 0.68;
+  letter-spacing: -0.085em;
+  max-width: 100%;
+}
+
+.scene[data-choreography="inscriptionReveal"]
+  .stage-date
+  .date-unit:nth-child(-n + 2) {
+  font-size: 0.075em;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  color: var(--cinema-ink-muted);
+}
+
+.scene[data-choreography="inscriptionReveal"]
+  .stage-date
+  .date-unit:last-child {
+  flex-basis: 100%;
+  color: var(--cinema-ink);
+}
+
+.scene[data-choreography="inscriptionReveal"]
+  .stage-date
+  .date-unit:last-child
+  .date-sep {
+  display: none;
+}
+
+.scene[data-choreography="inscriptionReveal"] .master-line {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: end;
+  max-width: 14ch;
+  border-left: 1px solid var(--cinema-accent);
+  padding-left: clamp(1.25rem, 2.4vw, 2.5rem);
+  font-size: clamp(2.25rem, 4.4vw, 5.2rem);
+  line-height: 0.98;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+
+/* ---------- bacaan: dokumennya, setelah bidikan ---------- */
+
+/*
+ * Strip arsip setelah shot: bukti, status, navigasi. Pendek dan fungsional —
+ * naskah naratifnya sudah selesai dibaca DI DALAM shot.
+ */
+.scene-readout {
+  padding-block: clamp(2.5rem, 7svh, 4.5rem);
+  display: grid;
+  gap: var(--space-4);
+  justify-items: start;
+  border-top: 1px solid var(--cinema-rule);
+}
+
+.narrative-stack {
+  display: grid;
+  gap: var(--space-4);
+  max-width: var(--measure-narrative);
+}
+
+.narrative-stack p {
+  font-family: var(--type-narrative);
+  font-size: var(--type-size-lead);
+  line-height: 1.55;
+  color: var(--cinema-ink);
+  margin: 0;
+}
+
+/*
+ * Pelat naskah DI ATAS CITRA.
+ *
+ * Baseline statis (tanpa JavaScript, mobile, reduced motion): seluruh
+ * paragraf menumpuk vertikal dan dokumen selalu utuh. Saat motion island
+ * hidup (data-motion-ready), paragraf saling menimpa pada satu sel grid dan
+ * timeline shot menghadirkannya bergiliran selama dataran baca.
+ */
+.stage-passages {
+  margin-top: var(--space-4);
+  display: grid;
+  gap: var(--space-3);
+  max-width: 52ch;
+}
+
+.stage-beat {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--cinema-canvas) 86%, transparent),
+    color-mix(in srgb, var(--cinema-canvas) 60%, transparent) 78%,
+    transparent
+  );
+}
+
+.stage-passages p {
+  margin: 0;
+  font-family: var(--type-narrative);
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  line-height: 1.5;
+  color: var(--cinema-ink);
+  text-wrap: pretty;
+}
+
+[data-motion-ready="true"] .stage-passages {
+  gap: 0;
+}
+
+[data-motion-ready="true"] .stage-passages .stage-beat {
+  grid-area: 1 / 1;
+  align-self: end;
+  max-width: 44ch;
+}
+
+/* Saat satu beat memikul bingkai sendirian, kalimat pertamanya bersuara. */
+[data-motion-ready="true"] .stage-beat p {
+  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+  line-height: 1.45;
+  font-weight: 500;
+}
+
+[data-motion-ready="true"] .stage-beat p:first-child {
+  font-size: clamp(1.25rem, 1.9vw, 1.7rem);
+  line-height: 1.36;
+}
+
+/*
+ * Teks merespons komposisi citranya (direktif §6): 921 — kata "kadhiri"
+ * hidup di tengah-kiri batu, maka naskah pindah ke ruang negatif kanan.
+ * 1015 — lempeng gelap memenuhi tengah; naskah tetap kiri tetapi lebih
+ * tinggi, di bidang bayang yang kosong.
+ */
+.scene[data-media-slot="921-kadhiri"] .stage-passages {
+  justify-self: end;
+  margin-right: clamp(0rem, 4vw, 4rem);
+}
+
+.scene[data-media-slot="921-kadhiri"] .stage-beat {
+  background: linear-gradient(
+    270deg,
+    color-mix(in srgb, var(--cinema-canvas) 86%, transparent),
+    color-mix(in srgb, var(--cinema-canvas) 60%, transparent) 78%,
+    transparent
+  );
+}
+
+/* Beat awal mendapat bidang baca yang sedikit lebih tegas: teks sekunder
+ * tetap tenang, tetapi tidak larut ke dalam tekstur prasasti atau peta. */
+.scene[data-choreography="nameEmerges"] .stage-beat,
+.scene[data-choreography="nameEndures"] .stage-beat,
+.scene[data-choreography="dividedKingdom"] .stage-beat {
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--cinema-canvas) 88%, transparent),
+    color-mix(in srgb, var(--cinema-canvas) 64%, transparent) 82%,
+    color-mix(in srgb, var(--cinema-canvas) 22%, transparent)
+  );
+}
+
+.scene[data-choreography="nameEmerges"] .stage-beat p,
+.scene[data-choreography="nameEndures"] .stage-beat p,
+.scene[data-choreography="dividedKingdom"] .stage-beat p {
+  color: var(--cinema-ink);
+  text-shadow: 0 0 0.02em var(--cinema-canvas);
+}
+
+.scene[data-media-slot="921-kadhiri"][data-choreography="nameEmerges"]
+  .stage-beat {
+  background: linear-gradient(
+    270deg,
+    color-mix(in srgb, var(--cinema-canvas) 88%, transparent),
+    color-mix(in srgb, var(--cinema-canvas) 64%, transparent) 82%,
+    color-mix(in srgb, var(--cinema-canvas) 22%, transparent)
+  );
+}
+
+.epistemic-note {
+  max-width: var(--measure-narrative);
+  margin: 0;
+  padding: var(--space-3);
+  border-left: 2px solid var(--cinema-accent);
+  color: var(--cinema-ink-muted);
+  font-family: var(--type-archive);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+}
+
+.epistemic-note span {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--cinema-accent);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.scene-readout .scene-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  font-family: var(--type-archive);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.scene-readout .scene-actions a {
+  color: inherit;
+  border-bottom: 1px solid var(--cinema-rule);
+  padding-bottom: 0.35em;
+  text-decoration: none;
+}
+
+.scene-readout .scene-actions a:hover,
+.scene-readout .scene-actions a:focus-visible {
   border-color: var(--cinema-accent);
+  color: var(--cinema-accent);
+}
+
+/* ---------- finale: kamera kembali ke 2026 ---------- */
+
+.journey-finale {
+  background: var(--cinema-canvas);
+  color: var(--cinema-ink);
+}
+
+.finale-frame {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-content: end;
+  gap: var(--space-4);
+  padding: clamp(7rem, 15svh, 11rem) var(--shell-gutter)
+    clamp(4rem, 11svh, 8rem);
+  background: var(--cinema-canvas);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.finale-frame .title-scene {
+  color: var(--cinema-accent);
+  font-family: var(--type-archive);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.36em;
+  text-transform: uppercase;
+}
+
+.finale-frame .master-line {
+  max-width: 18ch;
+}
+
+.finale-frame .journey-visual-label {
+  top: clamp(5.75rem, 12svh, 7.5rem);
+}
+
+.finale-coda {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: clamp(3rem, 10svh, 8rem);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--cinema-accent);
+  font-family: var(--type-archive);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.finale-coda p {
+  margin: 0;
+}
+
+.finale-coda p:last-child {
+  margin-top: var(--space-4);
+  color: var(--cinema-accent);
+  font-size: clamp(1.5rem, 4vw, 3.5rem);
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 47.999rem) {
+  /* Mobile: novel grafis. Pelat naik ke tengah, tarikh tetap monumental. */
+  .stage-plate {
+    align-self: center;
+    padding-bottom: var(--space-6);
+  }
+
+  .scene[data-scene-type="supporting"] .scene-stage,
+  .scene[data-scene-type="interlude"] .scene-stage,
+  .scene[data-scene-type="optional"] .scene-stage {
+    min-height: 82svh;
+  }
+
+  .media-slot-card {
+    width: min(62vw, 18rem);
+    gap: var(--space-1);
+    padding: var(--space-3);
+  }
+
+  .media-slot-card strong {
+    display: none;
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .scene-stage {
+    min-height: max(46rem, 100svh);
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .stage-plate {
+    align-self: stretch;
+    padding-top: clamp(5.5rem, 12svh, 7rem);
+    padding-bottom: clamp(2rem, 5svh, 3.5rem);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto;
+    row-gap: var(--space-4);
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .stage-surface {
+    background-position: 58% center;
+  }
+
+  .scene .stage-visual-label {
+    margin-top: clamp(4.5rem, 9svh, 6rem);
+  }
+
+  .scene[data-choreography="royalConsolidation"] .stage-surface {
+    background-position: 50% center;
+  }
+
+  .scene[data-choreography="bridgeConstruction"] .stage-surface {
+    background-position: 64% center;
+  }
+
+  .scene[data-choreography="royalConsolidation"] .stage-plate,
+  .scene[data-choreography="bridgeConstruction"] .stage-plate {
+    width: auto;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto;
+  }
+
+  .scene[data-choreography="royalConsolidation"] .stage-context,
+  .scene[data-choreography="bridgeConstruction"] .stage-context,
+  .scene[data-choreography="royalConsolidation"] .stage-date,
+  .scene[data-choreography="bridgeConstruction"] .stage-date,
+  .scene[data-choreography="royalConsolidation"] .master-line,
+  .scene[data-choreography="bridgeConstruction"] .master-line {
+    grid-column: 1;
+  }
+
+  .scene[data-choreography="royalConsolidation"] .stage-date,
+  .scene[data-choreography="bridgeConstruction"] .stage-date {
+    font-size: clamp(7rem, 37vw, 11rem);
+  }
+
+  .scene[data-choreography="royalConsolidation"] .master-line,
+  .scene[data-choreography="bridgeConstruction"] .master-line {
+    border-left: 0;
+    border-top: 1px solid var(--cinema-accent);
+    padding: var(--space-3) 0 0;
+    font-size: clamp(1.8rem, 7.5vw, 2.8rem);
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .stage-context {
+    grid-column: 1;
+    grid-row: 1;
+    grid-template-columns: auto 1fr;
+    gap: var(--space-2) var(--space-3);
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .stage-object {
+    grid-column: 1 / -1;
+    justify-self: start;
+    text-align: left;
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .stage-context .evidence-badge {
+    justify-self: end;
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .stage-date {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: end;
+    font-size: clamp(8rem, 42vw, 12rem);
+    line-height: 0.7;
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .master-line {
+    grid-column: 1;
+    grid-row: 3;
+    border-left: 0;
+    border-top: 1px solid var(--cinema-accent);
+    padding: var(--space-3) 0 0;
+    font-size: clamp(1.9rem, 8vw, 3rem);
+    line-height: 1.02;
+    max-width: 17ch;
+  }
+}
+
+.prologue-surface .stage-media img {
+  object-position: 50% 46%;
 }
 
 /* ---------- reduced motion ---------- */
@@ -652,6 +2335,13 @@ p {
   max-width: var(--measure-narrative);
 }
 
+.media-record {
+  display: grid;
+  gap: var(--space-1);
+  max-width: var(--measure-narrative);
+  margin: var(--space-5) 0;
+}
+
 /* ---------- arsip ---------- */
 
 .archive-header {
@@ -750,4 +2440,302 @@ p {
 .bridge-pier {
   stroke: var(--cinema-ink-muted);
   stroke-width: 2;
+}
+
+.scene[data-choreography="bridgeConstruction"] .stage-surface .bridge-geometry {
+  width: min(72vw, 70rem);
+  max-width: none;
+  margin: 0 auto;
+  opacity: 0.24;
+  mix-blend-mode: screen;
+}
+
+/* Diletakkan setelah seluruh kontrol dasar agar override mobile tidak membuat
+ * urutan spesifisitas menurun bagi tombol di permukaan lain. */
+@media (max-width: 47.999rem) {
+  [data-journey="true"] .site-nav {
+    align-items: center;
+    padding-block: var(--space-2);
+  }
+
+  [data-journey="true"] .site-nav > ul > li:not(:first-child) {
+    display: none;
+  }
+
+  [data-journey="true"] .journey-timeline > button {
+    border: 0;
+    padding-inline: 0;
+  }
+
+  /* Label ini sudah tersirat oleh alt text dan metadata media di mobile;
+   * menghilangkannya menjaga context/status tetap menjadi lapisan pertama. */
+  .scene .stage-visual-label,
+  .prologue-stage > .stage-visual-label {
+    display: none;
+  }
+}
+
+/* Prolog mobile: satu panel baca vertikal, bukan desktop yang diperas. */
+@media (max-width: 47.999rem) {
+  .prologue-pin-space {
+    display: none;
+  }
+
+  .prologue-stage {
+    min-height: max(52rem, 100svh);
+    align-items: stretch;
+  }
+
+  .prologue-plate {
+    align-self: stretch;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto auto;
+    row-gap: var(--space-4);
+    padding: clamp(5.5rem, 12svh, 7rem) var(--shell-gutter)
+      clamp(2.5rem, 6svh, 4rem);
+  }
+
+  .prologue-context,
+  .prologue-lead,
+  .prologue-passages,
+  .prologue-notice,
+  .prologue-actions {
+    grid-column: 1;
+  }
+
+  .prologue-context {
+    grid-row: 1;
+  }
+
+  .prologue-lead {
+    grid-row: 2;
+    max-width: 17ch;
+    border-left: 0;
+    border-top: 1px solid var(--cinema-accent);
+    padding: var(--space-3) 0 0;
+    font-size: clamp(2rem, 9vw, 3.1rem);
+  }
+
+  .prologue-passages {
+    grid-row: 3;
+  }
+
+  .prologue-notice {
+    grid-row: 4;
+  }
+
+  .prologue-actions {
+    grid-row: 5;
+  }
+
+  .prologue-stage > .stage-visual-label {
+    margin-top: clamp(4.5rem, 9svh, 6rem);
+  }
+}
+
+[data-journey="true"] .scene,
+[data-journey="true"] #prologue-2026 {
+  scroll-margin-top: calc(
+    clamp(4.75rem, 12svh, 7rem) +
+    env(safe-area-inset-top)
+  );
+}
+
+/* Early Act I mobile: each shot has its own vertical reading composition. */
+@media (max-width: 47.999rem) {
+  [data-journey="true"] .site-nav {
+    padding-block-start: calc(var(--space-2) + env(safe-area-inset-top));
+  }
+
+  [data-journey="true"] .scene,
+  [data-journey="true"] #prologue-2026 {
+    scroll-margin-top: calc(
+      clamp(5.5rem, 12svh, 7.5rem) +
+      env(safe-area-inset-top)
+    );
+  }
+
+  .scene-handoff {
+    width: min(44vw, 14rem);
+    height: clamp(1.25rem, 7vw, 2.25rem);
+  }
+
+  .scene-handoff[data-handoff-phase="incoming"] {
+    inset-block-start: max(5.5rem, calc(env(safe-area-inset-top) + 4.5rem));
+    inset-inline-start: var(--shell-gutter);
+  }
+
+  .scene-handoff[data-handoff-phase="outgoing"] {
+    inset-block-end: clamp(3rem, 9svh, 5.5rem);
+    inset-inline-end: var(--shell-gutter);
+  }
+
+  .scene-handoff[data-handoff="water-copper"] {
+    width: min(48vw, 15rem);
+  }
+
+  .scene-handoff[data-handoff="inscription-mark"] {
+    width: min(36vw, 11rem);
+  }
+
+  .scene-handoff[data-handoff="record-territory"] {
+    width: min(42vw, 13rem);
+  }
+
+  .scene-handoff[data-handoff="territory-centre"] {
+    width: min(34vw, 10rem);
+  }
+
+  .prologue-stage {
+    min-height: max(54rem, 110svh);
+  }
+
+  .prologue-plate {
+    padding-top: max(
+      clamp(5.75rem, 13svh, 8rem),
+      calc(env(safe-area-inset-top) + 4.5rem)
+    );
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .scene-stage {
+    min-height: max(50rem, 112svh);
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .stage-plate {
+    padding-top: max(
+      clamp(5.75rem, 13svh, 8rem),
+      calc(env(safe-area-inset-top) + 4.5rem)
+    );
+    overflow: visible;
+  }
+
+  .scene[data-choreography="inscriptionReveal"] .stage-date {
+    font-size: clamp(7rem, 36vw, 10rem);
+  }
+
+  .scene[data-choreography="nameEmerges"] .scene-stage {
+    min-height: max(48rem, 106svh);
+  }
+
+  .scene[data-choreography="nameEmerges"] .stage-plate {
+    align-self: stretch;
+    padding-top: max(
+      clamp(5.75rem, 13svh, 8rem),
+      calc(env(safe-area-inset-top) + 4.5rem)
+    );
+    padding-bottom: clamp(3rem, 8svh, 5rem);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto 1fr;
+    row-gap: var(--space-4);
+    overflow: visible;
+  }
+
+  .scene[data-choreography="nameEmerges"] .stage-context {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .scene[data-choreography="nameEmerges"] .stage-date {
+    grid-column: 1;
+    grid-row: 2;
+    font-size: clamp(5.5rem, 29vw, 8.5rem);
+  }
+
+  .scene[data-choreography="nameEmerges"] .master-line {
+    grid-column: 1;
+    grid-row: 3;
+    max-width: 16ch;
+    border-top: 1px solid var(--cinema-accent);
+    padding-top: var(--space-3);
+    font-size: clamp(1.9rem, 8vw, 3rem);
+  }
+
+  .scene[data-choreography="nameEmerges"] .stage-passages {
+    grid-column: 1;
+    grid-row: 4;
+  }
+
+  .scene[data-choreography="nameEndures"] .scene-stage {
+    min-height: max(44rem, 98svh);
+  }
+
+  .scene[data-choreography="nameEndures"] .stage-plate {
+    align-self: stretch;
+    padding-top: max(
+      clamp(5.75rem, 13svh, 8rem),
+      calc(env(safe-area-inset-top) + 4.5rem)
+    );
+    padding-bottom: clamp(3rem, 8svh, 5rem);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto 1fr;
+    row-gap: var(--space-4);
+    overflow: visible;
+  }
+
+  .scene[data-choreography="nameEndures"] .stage-context {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .scene[data-choreography="nameEndures"] .stage-date {
+    grid-column: 1;
+    grid-row: 2;
+    font-size: clamp(4.75rem, 25vw, 7.5rem);
+  }
+
+  .scene[data-choreography="nameEndures"] .master-line {
+    grid-column: 1;
+    grid-row: 3;
+    max-width: 17ch;
+    border-top: 1px solid var(--cinema-accent);
+    padding-top: var(--space-3);
+    font-size: clamp(1.85rem, 7.7vw, 2.8rem);
+  }
+
+  .scene[data-choreography="nameEndures"] .stage-passages {
+    grid-column: 1;
+    grid-row: 4;
+  }
+
+  .scene[data-choreography="dividedKingdom"] .scene-stage {
+    min-height: max(54rem, 112svh);
+  }
+
+  .scene[data-choreography="dividedKingdom"] .stage-plate {
+    align-self: stretch;
+    padding-top: max(
+      clamp(5.75rem, 13svh, 8rem),
+      calc(env(safe-area-inset-top) + 4.5rem)
+    );
+    padding-bottom: clamp(3rem, 8svh, 5rem);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto 1fr;
+    row-gap: var(--space-4);
+    overflow: visible;
+  }
+
+  .scene[data-choreography="dividedKingdom"] .stage-context {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .scene[data-choreography="dividedKingdom"] .stage-date {
+    grid-column: 1;
+    grid-row: 2;
+    font-size: clamp(5.75rem, 30vw, 9rem);
+  }
+
+  .scene[data-choreography="dividedKingdom"] .master-line {
+    grid-column: 1;
+    grid-row: 3;
+    max-width: 16ch;
+    border-top: 1px solid var(--cinema-accent);
+    padding-top: var(--space-3);
+    font-size: clamp(1.9rem, 8vw, 3rem);
+  }
+
+  .scene[data-choreography="dividedKingdom"] .stage-passages {
+    grid-column: 1;
+    grid-row: 4;
+  }
 }

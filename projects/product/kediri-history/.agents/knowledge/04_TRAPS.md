@@ -93,3 +93,35 @@ calon path; `generate:types` cocok dengan pola skema URI.
 paralel.
 
 **Hindari.** `push: false`, dan pakai Postgres sungguhan dari compose bila tersedia.
+
+---
+
+## Build menulis ulang `.next` di bawah server yang sedang berjalan — 2026-08-26
+
+**Gejala.** Browser QA melaporkan 500 di SETIAP viewport dan SETIAP engine,
+padahal seluruh subresource menjawab 200 saat diperiksa manual.
+
+**Sebab.** Gate menjalankan `pnpm run build` sementara `scripts/serve.mjs` masih
+menyajikan dari `.next` yang sama. Chunk lenyap sesaat, lalu kembali.
+
+**Hindari.** Urutannya wajib: build → server segar → QA. Jangan pernah
+menjalankan build saat server produksi lokal hidup.
+
+---
+
+## WebKit tidak memindahkan fokus dengan Tab — 2026-08-26
+
+**Gejala.** Gate Sentra-GSAP: "keyboard Tab did not reach a visible focusable
+element" di WebKit desktop dan mobile; Chromium dan Firefox lolos.
+
+**Sebab.** Bukan cacat halaman. Sonda langsung menunjukkan di WebKit
+`document.activeElement` tetap `BODY` setelah tiga kali Tab, sedangkan Chromium
+mencapai skip link (226x45, terlihat) lalu wordmark lalu tautan nav. Itu model
+navigasi Tab bawaan Safari, yang hanya menyertakan kontrol formulir kecuali
+"Full Keyboard Access" dinyalakan pengguna.
+
+**Hindari.** Tidak ada yang bisa diperbaiki di halaman. Skip link tetap
+dipertahankan tampil pada `:focus` DAN `:focus-visible`, karena dukungan
+`:focus-visible` berbeda-beda dan skip link adalah janji aksesibilitas yang
+tidak boleh bergantung pada satu selector. Gate tetap dihitung FAIL; jangan
+naikkan klaimnya.

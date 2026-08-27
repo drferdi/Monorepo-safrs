@@ -839,6 +839,10 @@ export interface Scene {
     [k: string]: unknown;
   } | null;
   /**
+   * Satu kalimat yang memikul scene ini, disajikan dalam tipografi monumental. Naskah editorial adalah milik CMS (Technical Bible bagian 19); kode hanya memiliki tipografinya. Ia harus tetap terbaca pada keadaan istirahat, bukan hanya pada satu titik progres gulir (UX Bible bagian 39).
+   */
+  masterLine?: string | null;
+  /**
    * Only published claims may appear here. Depth 3 opens from these.
    */
   featuredClaims?: (number | EvidenceClaim)[] | null;
@@ -856,12 +860,18 @@ export interface Scene {
    */
   evidenceBadgeMode: 'auto' | 'always' | 'hidden';
   /**
+   * Intent only, sama seperti choreographyKey: ia memilih perlakuan visual yang sudah teruji di kode, bukan menyimpan nilai gaya.
+   */
+  visualVariant?: ('material' | 'landscape' | 'word' | 'structure' | 'document') | null;
+  /**
    * Intent only. The code registry maps this to a tested timeline.
    */
   choreographyKey?:
     | (
+        | 'prologueReveal'
         | 'inscriptionReveal'
         | 'nameEmerges'
+        | 'nameEndures'
         | 'dividedKingdom'
         | 'royalConsolidation'
         | 'manuscriptWorld'
@@ -1364,6 +1374,7 @@ export interface ScenesSelect<T extends boolean = true> {
   supportingEvents?: T;
   narrativeShort?: T;
   narrativeLong?: T;
+  masterLine?: T;
   featuredClaims?: T;
   featuredPeople?: T;
   featuredPlaces?: T;
@@ -1372,6 +1383,7 @@ export interface ScenesSelect<T extends boolean = true> {
   heroMedia?: T;
   featuredMedia?: T;
   evidenceBadgeMode?: T;
+  visualVariant?: T;
   choreographyKey?: T;
   sceneType?: T;
   seo?:

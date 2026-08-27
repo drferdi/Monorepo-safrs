@@ -287,7 +287,9 @@ export function toSceneDto(
     dateDisplay: scene.dateDisplay,
     sceneType: scene.sceneType,
     narrativeShort: scene.narrativeShort ?? undefined,
+    masterLine: scene.masterLine ?? undefined,
     choreographyKey: scene.choreographyKey ?? undefined,
+    visualVariant: scene.visualVariant ?? undefined,
     evidenceBadgeMode: scene.evidenceBadgeMode,
     primaryEvent: toEventDto(
       resolve(scene.primaryEvent as Ref<HistoricalEvent>),

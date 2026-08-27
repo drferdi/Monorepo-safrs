@@ -56,7 +56,7 @@ export default function PublicLayout({
       className={`${narrative.variable} ${interfaceFont.variable} ${archive.variable}`}
     >
       <body>
-        <a className="skip-link" href="#historical-content">
+        <a className="skip-link" href="#historical-content" tabIndex={0}>
           Lompat ke konten sejarah
         </a>
         {children}

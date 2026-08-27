@@ -17,7 +17,10 @@
       "value": "#D5B45D",
       "note": "Hari Jadi, otoritas, iluminasi"
     },
-    "--kediri-red": { "value": "#9E302D", "note": "Merah sipil yang matang" },
+    "--kediri-red": {
+      "value": "#9E302D",
+      "note": "Merah sipil yang matang"
+    },
     "--kediri-parchment": {
       "value": "#E9E0CF",
       "note": "Permukaan arsip dan baca"
@@ -26,14 +29,26 @@
       "value": "#F5F2EA",
       "note": "Putih sinematik hangat"
     },
-    "--kediri-stone": { "value": "#817A6E", "note": "Netral arkeologis" },
+    "--kediri-stone": {
+      "value": "#817A6E",
+      "note": "Netral arkeologis"
+    },
     "--kediri-iron": {
       "value": "#444846",
       "note": "Jembatan dan struktur industri"
     },
-    "--kediri-copper": { "value": "#8C6044", "note": "Material prasasti" },
-    "--kediri-royal-indigo": { "value": "#1B2140", "note": "Panjalu" },
-    "--kediri-burnished-gold": { "value": "#C8A04C", "note": "Emas Panjalu" },
+    "--kediri-copper": {
+      "value": "#8C6044",
+      "note": "Material prasasti"
+    },
+    "--kediri-royal-indigo": {
+      "value": "#1B2140",
+      "note": "Panjalu"
+    },
+    "--kediri-burnished-gold": {
+      "value": "#C8A04C",
+      "note": "Emas Panjalu"
+    },
     "--kediri-conflict-crimson": {
       "value": "#851F27",
       "note": "Keruntuhan 1222-1293"
@@ -46,33 +61,73 @@
       "value": "#9C2626",
       "note": "Pendudukan dan revolusi"
     },
-    "--kediri-tobacco": { "value": "#7B5036", "note": "Kota industri" },
-    "--kediri-steel": { "value": "#59605E", "note": "Industri modern" },
+    "--kediri-tobacco": {
+      "value": "#7B5036",
+      "note": "Kota industri"
+    },
+    "--kediri-steel": {
+      "value": "#59605E",
+      "note": "Industri modern"
+    },
     "--kediri-industrial-red": {
       "value": "#99362F",
       "note": "Industri modern"
     },
-    "--kediri-sky": { "value": "#AFC8D2", "note": "Era terhubung" },
-    "--kediri-concrete": { "value": "#D2D1CB", "note": "Era terhubung" }
+    "--kediri-sky": {
+      "value": "#AFC8D2",
+      "note": "Era terhubung"
+    },
+    "--kediri-concrete": {
+      "value": "#D2D1CB",
+      "note": "Era terhubung"
+    }
   },
   "$comment2": "Pasangan semantik: teks pada latarnya. Rasio minimum mengikuti WCAG 2.2 AA. Citra sinematik besar tidak pernah menjadi alasan teks yang tidak terbaca (Bible 04 bagian 6).",
   "readingLight": {
-    "--reading-canvas": { "resolved": "#F5F2EA" },
-    "--reading-surface": { "resolved": "#E9E0CF" },
-    "--reading-ink": { "resolved": "#161816" },
-    "--reading-ink-muted": { "resolved": "#4F5A50" },
-    "--reading-rule": { "resolved": "#C4BCA8" },
-    "--reading-accent": { "resolved": "#7E2523" },
-    "--reading-evidence": { "resolved": "#5A4718" }
+    "--reading-canvas": {
+      "resolved": "#F5F2EA"
+    },
+    "--reading-surface": {
+      "resolved": "#E9E0CF"
+    },
+    "--reading-ink": {
+      "resolved": "#161816"
+    },
+    "--reading-ink-muted": {
+      "resolved": "#4F5A50"
+    },
+    "--reading-rule": {
+      "resolved": "#C4BCA8"
+    },
+    "--reading-accent": {
+      "resolved": "#7E2523"
+    },
+    "--reading-evidence": {
+      "resolved": "#5A4718"
+    }
   },
   "cinemaDark": {
-    "--cinema-canvas": { "resolved": "#0C0D0C" },
-    "--cinema-surface": { "resolved": "#102429" },
-    "--cinema-ink": { "resolved": "#F5F2EA" },
-    "--cinema-ink-muted": { "resolved": "#A9A99F" },
-    "--cinema-rule": { "resolved": "#33413E" },
-    "--cinema-accent": { "resolved": "#D5B45D" },
-    "--cinema-evidence": { "resolved": "#C8A04C" }
+    "--cinema-canvas": {
+      "resolved": "#0C0D0C"
+    },
+    "--cinema-surface": {
+      "resolved": "#102429"
+    },
+    "--cinema-ink": {
+      "resolved": "#F5F2EA"
+    },
+    "--cinema-ink-muted": {
+      "resolved": "#A9A99F"
+    },
+    "--cinema-rule": {
+      "resolved": "#33413E"
+    },
+    "--cinema-accent": {
+      "resolved": "#D5B45D"
+    },
+    "--cinema-evidence": {
+      "resolved": "#C8A04C"
+    }
   },
   "contrastPairs": [
     [
@@ -106,6 +161,197 @@
       "--cinema-surface",
       3.0,
       "gold as graphic mark on surface"
+    ]
+  ],
+  "eras": {
+    "$comment": "Lapisan era (Bible 04 bagian 5). Setiap act Journey menetapkan data-era, dan blok ini menimpa peran --cinema-* yang sama. Itulah sebabnya abad terasa berganti tanpa situsnya terasa berganti: perannya tetap, materialnya yang berubah. Era kolonial-industri SENGAJA terang - Bible 04 bagian 13: situs menjadi lebih terang saat mendekati 2026, dan kegelapan harus bermakna, bukan default.",
+    "ancient": {
+      "$note": "879-1042: arang, tembaga, batu, hijau tanah dalam, emas yang ditahan. Sekitar 70% kegelapan, 20% material, 10% iluminasi.",
+      "--cinema-canvas": {
+        "resolved": "#0C0D0C"
+      },
+      "--cinema-surface": {
+        "resolved": "#17140F"
+      },
+      "--cinema-ink": {
+        "resolved": "#F5F2EA"
+      },
+      "--cinema-ink-muted": {
+        "resolved": "#B3A894"
+      },
+      "--cinema-rule": {
+        "resolved": "#3A342B"
+      },
+      "--cinema-accent": {
+        "resolved": "#D39A5E"
+      },
+      "--cinema-evidence": {
+        "resolved": "#C8A04C"
+      }
+    },
+    "panjalu": {
+      "$note": "Panjalu: obsidian, indigo kerajaan, emas gosok, batu hangat. Kerajaan berarti simetri, skala, dan penahanan - bukan ornamen berlebih.",
+      "--cinema-canvas": {
+        "resolved": "#0A0C14"
+      },
+      "--cinema-surface": {
+        "resolved": "#1B2140"
+      },
+      "--cinema-ink": {
+        "resolved": "#F2EFE6"
+      },
+      "--cinema-ink-muted": {
+        "resolved": "#AEB0C0"
+      },
+      "--cinema-rule": {
+        "resolved": "#39406A"
+      },
+      "--cinema-accent": {
+        "resolved": "#C8A04C"
+      },
+      "--cinema-evidence": {
+        "resolved": "#C8A04C"
+      }
+    },
+    "colonialIndustrial": {
+      "$note": "Kolonial/industrialisasi: gading kertas, besi, tembaga teroksidasi, hijau tebu, kelabu uap. Era pertama yang terang.",
+      "--cinema-canvas": {
+        "resolved": "#DBD6C8"
+      },
+      "--cinema-surface": {
+        "resolved": "#C7C1B1"
+      },
+      "--cinema-ink": {
+        "resolved": "#1B1D1B"
+      },
+      "--cinema-ink-muted": {
+        "resolved": "#4A4E48"
+      },
+      "--cinema-rule": {
+        "resolved": "#A29B8B"
+      },
+      "--cinema-accent": {
+        "resolved": "#7A3A24"
+      },
+      "--cinema-evidence": {
+        "resolved": "#4B5220"
+      }
+    }
+  },
+  "eraContrastPairs": [
+    [
+      "ancient",
+      "--cinema-ink",
+      "--cinema-canvas",
+      4.5,
+      "narasi di atas kanvas era"
+    ],
+    [
+      "ancient",
+      "--cinema-ink-muted",
+      "--cinema-canvas",
+      4.5,
+      "teks sekunder era"
+    ],
+    [
+      "ancient",
+      "--cinema-ink",
+      "--cinema-surface",
+      4.5,
+      "teks di atas permukaan era"
+    ],
+    ["ancient", "--cinema-accent", "--cinema-canvas", 4.5, "aksen era"],
+    [
+      "ancient",
+      "--cinema-evidence",
+      "--cinema-canvas",
+      4.5,
+      "metadata bukti era"
+    ],
+    [
+      "ancient",
+      "--cinema-rule",
+      "--cinema-canvas",
+      1.2,
+      "garis rambut era terlihat"
+    ],
+    [
+      "panjalu",
+      "--cinema-ink",
+      "--cinema-canvas",
+      4.5,
+      "narasi di atas kanvas era"
+    ],
+    [
+      "panjalu",
+      "--cinema-ink-muted",
+      "--cinema-canvas",
+      4.5,
+      "teks sekunder era"
+    ],
+    [
+      "panjalu",
+      "--cinema-ink",
+      "--cinema-surface",
+      4.5,
+      "teks di atas permukaan era"
+    ],
+    ["panjalu", "--cinema-accent", "--cinema-canvas", 4.5, "aksen era"],
+    [
+      "panjalu",
+      "--cinema-evidence",
+      "--cinema-canvas",
+      4.5,
+      "metadata bukti era"
+    ],
+    [
+      "panjalu",
+      "--cinema-rule",
+      "--cinema-canvas",
+      1.2,
+      "garis rambut era terlihat"
+    ],
+    [
+      "colonialIndustrial",
+      "--cinema-ink",
+      "--cinema-canvas",
+      4.5,
+      "narasi di atas kanvas era"
+    ],
+    [
+      "colonialIndustrial",
+      "--cinema-ink-muted",
+      "--cinema-canvas",
+      4.5,
+      "teks sekunder era"
+    ],
+    [
+      "colonialIndustrial",
+      "--cinema-ink",
+      "--cinema-surface",
+      4.5,
+      "teks di atas permukaan era"
+    ],
+    [
+      "colonialIndustrial",
+      "--cinema-accent",
+      "--cinema-canvas",
+      4.5,
+      "aksen era"
+    ],
+    [
+      "colonialIndustrial",
+      "--cinema-evidence",
+      "--cinema-canvas",
+      4.5,
+      "metadata bukti era"
+    ],
+    [
+      "colonialIndustrial",
+      "--cinema-rule",
+      "--cinema-canvas",
+      1.2,
+      "garis rambut era terlihat"
     ]
   ]
 }

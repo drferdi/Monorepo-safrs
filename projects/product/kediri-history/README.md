@@ -64,6 +64,13 @@ master arsip menolak (403), dan menghapus record juga menghapus objeknya. Sebelu
 verifikasi berjalan di atas PGlite karena Docker tidak tersedia di mesin ini; PGlite tetap
 fallback yang sah, tetapi bukan lagi satu-satunya bukti.
 
+**Bahasa sinematik (2026-08-26).** Lapisan era kini hidup: menggulir dari satu act ke act
+berikutnya benar-benar berpindah abad — arang untuk 879-1042, obsidian dan indigo untuk
+Panjalu, dan gading kertas yang terang untuk era kolonial-industri, karena kegelapan harus
+bermakna dan bukan default. Setiap scene mendapat Kanvas Historis, master line dalam tipografi
+monumental, dan enam keadaan penuh termasuk keadaan masuk lewat tautan dalam. Tidak ada satu
+pun nilai warna di luar direktori token, dan setiap palet era diukur kontrasnya.
+
 **Fondasi, belum selesai.** Mobile dan aksesibilitas punya fondasinya — empat varian motion
 terpisah, reduced motion kelas satu, skip link, label bukti tertulis, dua proyek browser —
 tetapi Phase 17-18 menuntut lebih: koreografi mobile yang dirancang individual per scene, uji

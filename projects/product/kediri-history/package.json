@@ -17,7 +17,7 @@
     "build": "pnpm -r build",
     "start": "node scripts/serve.mjs",
     "deploy:dry-run": "node scripts/deploy-dry-run.mjs",
-    "verify": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build && node scripts/payload-cli.mjs verify-production",
+    "verify": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build && node scripts/check-production-journey.mjs && node scripts/payload-cli.mjs verify-production",
     "db:migrate": "node scripts/payload-cli.mjs migrate",
     "db:seed": "node scripts/payload-cli.mjs seed",
     "cms:types": "node scripts/payload-cli.mjs types",

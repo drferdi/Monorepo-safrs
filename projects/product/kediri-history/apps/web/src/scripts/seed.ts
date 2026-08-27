@@ -534,7 +534,10 @@ async function main() {
     featuredClaims: [kwakClaim, anniversaryClaim],
     featuredArtifacts: [kwakArtifact],
     themes: [themeId(themes, "kata-dan-cerita")],
+    masterLine:
+      "Sebelum ada kerajaan bernama Kediri, sudah ada sebuah catatan.",
     choreographyKey: "inscriptionReveal",
+    visualVariant: "material",
     sceneType: "hero",
     evidenceBadgeMode: "auto",
   });
@@ -552,7 +555,10 @@ async function main() {
     featuredArtifacts: [hantangArtifact],
     featuredPeople: [jayabhaya],
     themes: [themeId(themes, "raja-dan-kekuasaan")],
+    masterLine:
+      "Kerajaan yang pernah dibelah menemukan satu suara, dan menuliskannya dalam dua kata.",
     choreographyKey: "royalConsolidation",
+    visualVariant: "word",
     sceneType: "hero",
     evidenceBadgeMode: "auto",
   });
@@ -570,7 +576,9 @@ async function main() {
     // menautkan klaim draft. Gerbangnya bekerja, bukan dilewati.
     featuredPlaces: [jembatanLama],
     themes: [themeId(themes, "jembatan-dan-perpindahan")],
+    masterLine: "Sungai berhenti menjadi halangan dan menjadi soal rekayasa.",
     choreographyKey: "bridgeConstruction",
+    visualVariant: "structure",
     sceneType: "hero",
     evidenceBadgeMode: "hidden",
   });

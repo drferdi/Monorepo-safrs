@@ -1,9 +1,21 @@
 import Link from "next/link";
 import type { ReactElement } from "react";
-import type { TimelineEntry } from "../../../components/journey/journey-timeline";
-import { JourneyTimeline } from "../../../components/journey/journey-timeline";
+import { DeepLinkLanding } from "../../../components/journey/deep-link-landing";
+import {
+  JourneyTimeline,
+  type TimelineEntry,
+} from "../../../components/journey/journey-timeline";
+import {
+  FramingStage,
+  PrologueScene,
+} from "../../../components/journey/prologue-scene";
 import { SceneSection } from "../../../components/journey/scene-section";
 import { SiteFooter } from "../../../components/site-footer";
+import {
+  composeProductionJourney,
+  PRODUCTION_FINALE,
+  PRODUCTION_PROLOGUE,
+} from "../../../content/production-narrative";
 import { getJourneyManifest } from "../../../content/queries";
 
 /**
@@ -23,10 +35,27 @@ export const metadata = {
 };
 
 export default async function JourneyPage(): Promise<ReactElement> {
-  const manifest = await getJourneyManifest();
+  const publishedManifest = await getJourneyManifest();
+  // Naskah penuh adalah ruang kerja desain lokal, bukan shortcut publikasi.
+  // Build produksi hanya merender scene yang sudah lolos CMS beserta rantai
+  // bukti dan tata kelola medianya.
+  const editorialPreview = process.env.NODE_ENV !== "production";
+  const manifest = editorialPreview
+    ? composeProductionJourney(publishedManifest)
+    : publishedManifest;
   const orderedScenes = manifest.acts.flatMap((act) =>
     act.scenes.map((scene) => ({ scene, actTitle: act.title })),
   );
+  const nextSceneBySlug = new Map(
+    orderedScenes.map(({ scene }, index) => [
+      scene.slug,
+      orderedScenes[index + 1]?.scene.slug,
+    ]),
+  );
+  const publishedRange =
+    orderedScenes.length > 0
+      ? `${orderedScenes[0]?.scene.dateDisplay} — ${orderedScenes.at(-1)?.scene.dateDisplay}`
+      : "Arsip terbit";
 
   const timelineEntries: TimelineEntry[] = orderedScenes.map(
     ({ scene, actTitle }) => ({
@@ -40,6 +69,7 @@ export default async function JourneyPage(): Promise<ReactElement> {
 
   return (
     <div className="shell" data-journey="true">
+      <DeepLinkLanding />
       <nav className="site-nav" aria-label="Navigasi Journey">
         <Link href="/" className="wordmark">
           Kediri
@@ -58,22 +88,19 @@ export default async function JourneyPage(): Promise<ReactElement> {
       </nav>
 
       <main id="historical-content">
-        <header className="journey-intro">
-          <p className="eyebrow">Kediri · 879 → 2026</p>
-          <h1 className="title-page">Perjalanan</h1>
-          <p className="lead measure">
-            Sungai Brantas menyaksikan semuanya. Gulir untuk menyusurinya, atau
-            buka Timeline untuk langsung menuju satu masa.
-          </p>
-          {manifest.sceneCount === 0 ? (
-            <p className="measure prose">
-              Belum ada scene yang diterbitkan. Kronologi lengkap yang sudah
-              tersedia dapat dibaca di{" "}
-              <Link href="/explore/timeline">Explore</Link>, dan seluruh catatan
-              beserta buktinya ada di <Link href="/archive">Arsip</Link>.
+        {editorialPreview ? (
+          <PrologueScene narrative={PRODUCTION_PROLOGUE} editorialPreview />
+        ) : (
+          <header className="journey-intro">
+            <p className="eyebrow">Kediri · Kronologi terbit</p>
+            <h1 className="title-page">Perjalanan</h1>
+            <p className="journey-range">{publishedRange}</p>
+            <p className="lead measure">
+              Setiap scene di halaman ini telah diterbitkan melalui arsip dan
+              rantai bukti Kediri.
             </p>
-          ) : null}
-        </header>
+          </header>
+        )}
 
         {manifest.acts.map((act) => (
           <section
@@ -92,15 +119,48 @@ export default async function JourneyPage(): Promise<ReactElement> {
               ) : null}
             </header>
 
-            {act.scenes.map((scene, index) => (
+            {act.scenes.map((scene) => (
               <SceneSection
                 key={scene.id}
                 scene={scene}
-                nextSceneSlug={act.scenes[index + 1]?.slug}
+                nextSceneSlug={nextSceneBySlug.get(scene.slug)}
+                editorialPreview={editorialPreview}
               />
             ))}
           </section>
         ))}
+
+        {editorialPreview ? (
+          <section className="journey-finale" aria-labelledby="journey-finale">
+            <div className="finale-frame">
+              {PRODUCTION_FINALE.media ? (
+                <FramingStage
+                  media={PRODUCTION_FINALE.media}
+                  framing="finale"
+                />
+              ) : null}
+              <p className="eyebrow">{PRODUCTION_FINALE.eyebrow}</p>
+              <h2 id="journey-finale" className="title-scene">
+                {PRODUCTION_FINALE.title}
+              </h2>
+              <p className="master-line">{PRODUCTION_FINALE.masterLine}</p>
+              <p className="journey-visual-label">Visualisasi artistik</p>
+            </div>
+            <div className="finale-readout">
+              <div className="narrative-stack">
+                {PRODUCTION_FINALE.paragraphs.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </div>
+              <div className="finale-coda">
+                <p>Bab berikutnya belum memiliki tanggal.</p>
+                <p>Kediri</p>
+                <p>Djojo ing Bojo</p>
+                <p>Kota ini terus berlanjut.</p>
+              </div>
+            </div>
+          </section>
+        ) : null}
       </main>
 
       <SiteFooter />

@@ -2,6 +2,7 @@
 
 import type { ReactElement } from "react";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { announceJourneyNavigation } from "./deep-link-landing";
 
 /**
  * Timeline overlay: jalan keluar universal dari penceritaan linear
@@ -61,11 +62,10 @@ export function JourneyTimeline({
     setOpen(false);
     // getElementById, bukan querySelector: anchor scene dimulai dengan angka
     // (1135-panjalu-jayati) dan "#1135-..." bukan selector CSS yang sah.
-    const target = document.getElementById(slug);
-    if (!target) return;
+    if (!document.getElementById(slug)) return;
     // Riwayat asli, bukan alam semesta navigasi buatan sendiri.
     window.history.pushState(null, "", `#${slug}`);
-    target.scrollIntoView({ block: "start" });
+    announceJourneyNavigation(slug);
     const heading = document.getElementById(`${slug}-title`);
     if (heading) {
       heading.setAttribute("tabindex", "-1");
