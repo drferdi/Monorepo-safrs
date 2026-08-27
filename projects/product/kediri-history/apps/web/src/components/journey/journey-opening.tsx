@@ -1,6 +1,11 @@
 "use client";
 
-import { useEffect, useState, type CSSProperties, type ReactElement } from "react";
+import {
+  type CSSProperties,
+  type ReactElement,
+  useEffect,
+  useState,
+} from "react";
 
 export const JOURNEY_OPENING_TITLE =
   'Welcome to the "Kediri : A Century of Historic king & Industry"';
@@ -37,13 +42,12 @@ export function JourneyOpening(): ReactElement {
           id={JOURNEY_OPENING_TITLE_ID}
           aria-label={JOURNEY_OPENING_TITLE}
         >
-          <span className="journey-opening-copy">
-            {JOURNEY_OPENING_TITLE}
-          </span>
+          <span className="journey-opening-copy">{JOURNEY_OPENING_TITLE}</span>
           <span className="journey-opening-typing" aria-hidden="true">
             {titleCharacters.map((character, index) => (
               <span
                 className={`journey-opening-character${character === " " ? " journey-opening-character--space" : ""}`}
+                // biome-ignore lint/suspicious/noArrayIndexKey: daftar karakter statis dari konstanta modul — posisinya identitasnya, tidak pernah di-reorder.
                 key={`${index}-${character}`}
                 style={
                   {
