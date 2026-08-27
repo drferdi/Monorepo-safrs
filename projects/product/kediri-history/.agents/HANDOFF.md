@@ -103,6 +103,18 @@ verifikasi berat (dua kali menggigit sesi ini).
    belum berubah.
 6. **Phase 22 (deployment)** tetap menunggu otorisasi eksplisit Chief (G02).
 
+## Publikasi (2026-08-27, otorisasi eksplisit Chief)
+
+Commit `64bbadd` (lapisan sinematik penuh, hanya path capsule) dibuat atas
+perintah Chief, lalu capsule dipublikasikan sebagai subtree murni ke
+`https://github.com/drferdii/Kediri-Kings-Century` (remote `kediri`, branch
+`main`, HEAD `8f12785`) — riwayat 2 commit capsule saja, tanpa proyek Monorepo
+lain. Gate pre-push root menolak lebih dulu dan dibuka dengan override resmi
+`CHIEF_PUSH_OK=1` setelah Chief mengizinkan di sesi yang sama. Artefak sesi
+(`.playwright-cli/`, `.sentra-gsap/`, lock) dan `.env.local` dipastikan tidak
+ikut. Push berikutnya ke repo itu: `git subtree split` ulang lalu push dengan
+override yang sama — tetap hanya atas perintah Chief.
+
 ## Catatan lintas-repositori
 
 Dua check SAFRS root merah karena sebab warisan non-Kediri (lihat HANDOFF
