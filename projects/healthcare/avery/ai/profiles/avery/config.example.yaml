@@ -8,16 +8,19 @@
 # perbaikan dan alasan tiap keputusan ada di docs/whatsapp-group-fix.md.
 
 model:
-  default: google/gemini-2.5-flash
+  default: openai/gpt-5.6-luna
   provider: openrouter
 
+# Sementara (2026-08-27): Luna lebih murah dari Gemini 2.5 Flash di OpenRouter.
+# Flash tetap fallback. Kembalikan default ke Flash bila kualitas Luna tidak cukup.
+#
 # SKU ":free" di OpenRouter berbagi kuota antar seluruh pengguna dan sering
 # menolak dengan 429. Untuk agen yang melayani percakapan sungguhan, pakai
-# model berbayar. Bila tetap ingin gratis, isi fallback_providers di bawah.
-#
-# fallback_providers:
-#   - provider: openrouter
-#     model: google/gemini-2.5-flash
+# model berbayar.
+
+fallback_providers:
+  - provider: openrouter
+    model: google/gemini-2.5-flash
 
 auxiliary:
   # true membatasi fallback tugas auxiliary (ringkasan, judul sesi) ke model

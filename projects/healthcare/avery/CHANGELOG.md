@@ -37,6 +37,7 @@ Pengerasan kapsul. Semua butir di bawah terverifikasi di repositori lewat uji ot
 
 ### Diubah
 
+- **Model default sementara** `openai/gpt-5.6-luna` via OpenRouter; fallback `google/gemini-2.5-flash`. Keputusan biaya 2026-08-27; bukan ganti permanen.
 - `docs/whatsapp-group-fix.md` disanitasi: JID dan nomor telepon diganti placeholder. Riwayat git sebelum commit ini masih memuat nilai aslinya.
 - Skill `contact-outreach` diperbarui ke alur broker.
 - **Broker outbound toleran berkas korup** — `store.list()` dan `expire_stale()` melewati JSON rusak dengan entri ledger `corrupt_file`; `get()` melempar `StoreError` yang jelas. Tiga uji baru.
