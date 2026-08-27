@@ -1,6 +1,33 @@
-import type { ReactElement } from "react";
+import type { CSSProperties, ReactElement } from "react";
 
 import type { SceneDto } from "../../content/dto";
+import { frameVariables, sceneFraming } from "../../modules/motion/framing";
+
+/**
+ * Custom property jendela bingkai untuk kedua breakpoint sekaligus.
+ *
+ * Dirender server, jadi crop sudah benar pada cat pertama dan tidak ada
+ * pergeseran layout ketika JavaScript menyusul. CSS yang memilih varian mana
+ * yang dipakai; komponen ini tidak pernah menebak lebar viewport.
+ */
+function framingStyle(slug: string | undefined): CSSProperties | undefined {
+  const framing = sceneFraming(slug);
+  if (!framing) return undefined;
+
+  const desktop = frameVariables(framing, framing.desktop);
+  const mobile = frameVariables(framing, framing.mobile);
+
+  return {
+    "--frame-zoom-d": desktop["--frame-zoom"],
+    "--frame-x-d": desktop["--frame-x"],
+    "--frame-y-d": desktop["--frame-y"],
+    "--frame-zoom-m": mobile["--frame-zoom"],
+    "--frame-x-m": mobile["--frame-x"],
+    "--frame-y-m": mobile["--frame-y"],
+    "--frame-pos-d": framing.objectPositionDesktop,
+    "--frame-pos-m": framing.objectPositionMobile,
+  } as CSSProperties;
+}
 
 /**
  * Satu slot visual dominan per scene.
@@ -21,7 +48,11 @@ export function SceneMedia({
 
   if (media) {
     return (
-      <div className="stage-media" data-media-state="ready">
+      <div
+        className="stage-media"
+        data-media-state="ready"
+        style={framingStyle(scene.slug)}
+      >
         {/* biome-ignore lint/performance/noImgElement: URL media CMS bersifat dinamis dan tidak boleh dibatasi host build-time. */}
         <img
           src={media.url}
@@ -44,6 +75,7 @@ export function SceneMedia({
         className="stage-media"
         data-media-slot={slot.key}
         data-media-state="ready"
+        style={framingStyle(scene.slug)}
       >
         {/* biome-ignore lint/performance/noImgElement: slot statis harus menerima aset produksi tanpa konfigurasi loader tambahan. */}
         <img

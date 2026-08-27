@@ -1174,12 +1174,58 @@ p {
 }
 
 /*
+ * JENDELA BINGKAI (Authority Rule 1).
+ *
+ * Sebagian aset produksi membawa teks yang terbakar ke dalam raster — tarikh,
+ * nama wilayah, nama tempat. Informasi semacam itu harus hidup sebagai DOM
+ * supaya dapat dibaca teknologi bantu, dilokalkan, dan dikoreksi. Jendela di
+ * sini mengeluarkan teks tersebut dari bingkai, lalu maknanya dikembalikan
+ * sebagai lapisan DOM.
+ *
+ * Nilainya datang dari src/modules/motion/framing.ts, yang mencerminkan
+ * docs/production/01_SCENE_MANIFEST.yaml. Ia dirender server sebagai custom
+ * property, jadi crop sudah benar pada cat pertama — tidak ada lompatan ketika
+ * JavaScript menyusul, dan tidak ada CLS.
+ *
+ * Aset asli tidak pernah disentuh: `project-images/` tetap otoritas, dan
+ * seluruh pengarahan ini dapat dibatalkan dengan menghapus satu entri.
+ *
+ * Mobile lebih dulu, karena jendela mobile adalah komposisi tersendiri dan
+ * bukan desktop yang dikecilkan (UX Bible bagian 26).
+ */
+.stage-media img,
+.framing-stage img {
+  transform-origin: center center;
+}
+
+.stage-media[style*="--frame-zoom-m"] img,
+.framing-stage[style*="--frame-zoom-m"] img {
+  object-position: var(--frame-pos-m, 50% 42%);
+  transform: scale(var(--frame-zoom-m, 1))
+    translate(var(--frame-x-m, 0%), var(--frame-y-m, 0%));
+}
+
+@media (min-width: 48rem) {
+  .stage-media[style*="--frame-zoom-d"] img,
+  .framing-stage[style*="--frame-zoom-d"] img {
+    object-position: var(--frame-pos-d, 50% 42%);
+    transform: scale(var(--frame-zoom-d, 1))
+      translate(var(--frame-x-d, 0%), var(--frame-y-d, 0%));
+  }
+}
+
+/*
  * Titik fokus per scene (manifest: docs/shots/image-manifest.md, "Strategi
  * crop"). Crop historis penting tidak diserahkan pada object-fit buta:
  * aksara digeser agar tetap di bingkai; citra dengan tipografi terbakar di
  * kiri-atas digeser agar pelat tipografi panggung mendapat ruang negatifnya.
  */
-.scene[data-media-slot="879-first-mark"] .stage-media img,
+/*
+ * Scene Batch A (00–04) tidak lagi diarahkan di sini. Pengarahan bingkainya
+ * pindah ke jendela manifest di src/modules/motion/framing.ts, yang juga
+ * mengeluarkan teks terbakar dari bingkai. Aturan di bawah hanya berlaku bagi
+ * scene yang batch-nya belum dibuka.
+ */
 .scene[data-media-slot="1135-panjalu-jayati"] .stage-media img {
   object-position: 45% 50%;
 }
@@ -1194,6 +1240,125 @@ p {
 
 .scene[data-media-slot="2024-2026-river-to-runway"] .stage-media img {
   object-position: 60% 45%;
+}
+
+/*
+ * LAPISAN NAMA (Authority Rule 1).
+ *
+ * Nama tempat dan wilayah hidup di sini sebagai teks sungguhan, bukan sebagai
+ * piksel di dalam citra. Ia dapat dibaca pembaca layar, disalin, diterjemahkan,
+ * dan diperbaiki — tiga hal yang mustahil dilakukan pada teks yang terbakar ke
+ * dalam raster.
+ *
+ * Tipografinya monumental karena pada 921 nama itu memang subjek utamanya;
+ * pada 1042 ia lebih kecil, sebab di sana yang dominan adalah sungainya.
+ */
+.scene-nomenclature {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.scene-name {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+  align-items: center;
+  text-align: center;
+  color: var(--cinema-ink, #f4efe6);
+  text-shadow:
+    0 0.02em 0.14em rgb(0 0 0 / 68%),
+    0 0 0.6em rgb(0 0 0 / 34%);
+}
+
+.scene-name__word {
+  font-size: clamp(2rem, 6.4vw, 5.5rem);
+  letter-spacing: 0.16em;
+  line-height: 1;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.scene-name__gloss {
+  font-size: clamp(0.7rem, 1.1vw, 0.9rem);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  opacity: 0.72;
+}
+
+/*
+ * Tradisi tidak pernah tampil dengan otoritas yang sama seperti sejarah.
+ * 04_VISUAL_ACCEPTANCE: History dan Tradition harus dapat dibedakan. Perbedaan
+ * itu dibuat di sini secara teknis, bukan diserahkan pada tafsir pembaca.
+ */
+.scene-name[data-epistemic="tradition"] .scene-name__word {
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  opacity: 0.86;
+}
+
+/* 921 — satu nama, di tengah, memikul seluruh scene. */
+.scene[data-media-slot="921-kadhiri"] .scene-nomenclature {
+  place-items: center;
+}
+
+/*
+ * 1042 — nama beristirahat di tengah lalu terpisah ke tepiannya masing-masing
+ * di bawah kendali timeline. Posisi istirahatnya sengaja berimpit: kesatuan
+ * harus terbaca sebelum pemisahan berarti.
+ */
+.scene[data-media-slot="1042-river-divides-kingdom"] .scene-nomenclature {
+  place-items: center;
+  grid-template-areas: "stack";
+}
+
+.scene[data-media-slot="1042-river-divides-kingdom"] .scene-name {
+  grid-area: stack;
+}
+
+.scene[data-media-slot="1042-river-divides-kingdom"] .scene-name__word {
+  font-size: clamp(1.4rem, 3.2vw, 2.6rem);
+}
+
+.scene[data-media-slot="1042-river-divides-kingdom"]
+  .scene-name[data-anchor="river"] {
+  align-self: end;
+  padding-bottom: clamp(2rem, 8vh, 6rem);
+}
+
+.scene[data-media-slot="1042-river-divides-kingdom"]
+  .scene-name[data-anchor="river"]
+  .scene-name__word {
+  font-size: clamp(0.9rem, 1.6vw, 1.25rem);
+  letter-spacing: 0.42em;
+  opacity: 0.9;
+}
+
+/*
+ * Mobile adalah desain tersendiri, bukan desktop yang dikecilkan. Tanpa
+ * koreografi pemisahan, nama-nama 1042 tidak boleh menumpuk di satu titik:
+ * di sini mereka menjadi tumpukan vertikal yang terbaca.
+ */
+@media (max-width: 47.999rem) {
+  .scene[data-media-slot="1042-river-divides-kingdom"] .scene-nomenclature {
+    grid-template-areas: none;
+    align-content: center;
+    gap: clamp(1rem, 4vh, 2rem);
+  }
+
+  .scene[data-media-slot="1042-river-divides-kingdom"] .scene-name {
+    grid-area: auto;
+  }
+
+  .scene[data-media-slot="1042-river-divides-kingdom"]
+    .scene-name[data-anchor="river"] {
+    align-self: center;
+    padding-bottom: 0;
+  }
 }
 
 .stage-media-shade {
@@ -2100,7 +2265,13 @@ p {
   }
 }
 
-.prologue-surface .stage-media img {
+/*
+ * Prolog memakai object-position dari jendela pengarahan manifest ketika ada.
+ * Nilai di bawah hanyalah cadangan bila pengarahan itu dilepas — tanpa
+ * `:not()` aturan ini menang atas manifest semata-mata karena letaknya lebih
+ * bawah di berkas, dan pengarahan scene 00 diam-diam tidak berlaku.
+ */
+.prologue-surface .stage-media:not([style*="--frame-pos-d"]) img {
   object-position: 50% 46%;
 }
 

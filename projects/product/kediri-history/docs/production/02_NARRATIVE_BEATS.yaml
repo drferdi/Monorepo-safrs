@@ -1,0 +1,59 @@
+# 02 — NARRATIVE BEATS
+# Timing contract. Values are normalized scene progress, not fixed seconds.
+
+global_rules:
+  - "Do not dump the full paragraph at scene entry."
+  - "Lead line first only when the frame is ready."
+  - "Every major scene needs at least one readable hold."
+  - "Text appears as a consequence of visual state."
+  - "Production copy meaning must not be altered."
+  - "Silence is an authored state."
+
+scene_00:
+  structure:
+    - { at: 0.00, type: establish, intent: "Present-day Kediri breathes before history begins." }
+    - { at: 0.18, type: beat, intent: "Modern life establishes the living city." }
+    - { at: 0.34, type: transition, intent: "Urban sound/visual density recedes; Brantas takes over." }
+    - { at: 0.52, type: hold, intent: "The river becomes temporal continuity." }
+    - { at: 0.70, type: lead, text_key: "scene00.lead" }
+    - { at: 0.84, type: handoff, intent: "Present-day river world transforms toward the 879 record." }
+
+scene_01:
+  structure:
+    - { at: 0.00, type: silence, intent: "Dark material, no explanatory prose." }
+    - { at: 0.18, type: reveal, intent: "Raking light begins exposing the record." }
+    - { at: 0.32, type: lead, text_key: "scene01.lead" }
+    - { at: 0.46, type: hold, intent: "Allow the object to speak before explanation." }
+    - { at: 0.56, type: beat, text_key: "scene01.beat1" }
+    - { at: 0.68, type: beat, text_key: "scene01.beat2" }
+    - { at: 0.78, type: rest, intent: "Readable evidence state." }
+    - { at: 0.90, type: handoff, intent: "Inscription groove becomes written identity." }
+
+scene_02:
+  structure:
+    - { at: 0.00, type: incoming, intent: "Written mark resolves into KADHIRI." }
+    - { at: 0.22, type: lead, text_key: "scene02.lead" }
+    - { at: 0.40, type: beat, text_key: "scene02.beat1" }
+    - { at: 0.58, type: hold, intent: "Name remains visually dominant." }
+    - { at: 0.82, type: handoff, intent: "Name persists as chronology changes." }
+
+scene_03:
+  structure:
+    - { at: 0.00, type: incoming, intent: "Kadhiri remains while world/date changes." }
+    - { at: 0.26, type: beat, text_key: "scene03.beat1" }
+    - { at: 0.48, type: evidence, intent: "Research Hold status must be explicit." }
+    - { at: 0.68, type: hold, intent: "Uncertainty is allowed to remain unresolved." }
+    - { at: 0.86, type: handoff, intent: "Written continuity expands into geography." }
+
+scene_04:
+  structure:
+    - { at: 0.00, type: incoming, intent: "Written/geographic line becomes Brantas." }
+    - { at: 0.22, type: establish, intent: "Unified field before separation." }
+    - { at: 0.38, type: action, intent: "Political territory separates." }
+    - { at: 0.52, type: hold, intent: "Panjalu / Janggala readable." }
+    - { at: 0.66, type: tradition_layer, intent: "Tradition enters as visibly separate epistemic layer." }
+    - { at: 0.82, type: rest, intent: "History and tradition coexist without conflation." }
+    - { at: 0.92, type: handoff, intent: "One side begins gaining gravity toward Daha." }
+
+remaining_scenes:
+  rule: "Create scene-specific beat maps before implementation. Do not clone timings from earlier scenes."

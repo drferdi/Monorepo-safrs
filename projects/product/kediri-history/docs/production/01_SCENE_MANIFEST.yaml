@@ -1,0 +1,881 @@
+version: 2.1.0
+image_count: 27
+finale_reuses_scene: '00'
+canonical_source_directory: project-images/
+mapping_policy: Inspect actual assets. Never infer by alphabetical order alone. Do
+  not invent filenames.
+source_authority_note: project-images/ is the authoritative production image
+  directory per Chief decision 2026-08-28. apps/web/editorial-preview/journey/
+  contains webp derivatives of these same files and is NOT an independent source.
+  Verified perceptually - mean absolute pixel difference between each PNG and its
+  webp derivative is 3.1-4.0 at 768x512, i.e. compression noise only, not different
+  imagery.
+evidence_class_values: Follows the public media taxonomy implemented in
+  apps/web/src/components/journey/scene-media.tsx - V0_primary_object,
+  V1_documentary_historical_image, V2_verified_contemporary_documentation,
+  V3_evidence_constrained_reconstruction, V4_artistic_interpretation,
+  V5_folklore_visualization. Assigned from each asset's real provenance. The entire
+  set is generated imagery, so no asset qualifies as V0, V1, or V2.
+status_values:
+- UNMAPPED
+- MAPPED_READY_FOR_REVIEW
+- MAPPED_WITH_FLAG
+- APPROVED
+crop_verification: Batch A crop windows are enforced by
+  apps/web/tests/framing-baked-text.test.ts, which replays the browser's own
+  object-fit cover plus transform maths across every supported desktop and mobile
+  viewport and fails if any recorded baked-text box re-enters the visible rect.
+  Implementation lives in apps/web/src/modules/motion/framing.ts. Source assets are
+  never modified.
+baked_text_audit_policy: Records literal text burned into each raster. Under
+  Authority Rule 1 such text must live in the DOM when it carries factual,
+  chronological, geographical, evidentiary, or epistemic meaning. Recorded here so
+  the defect is visible and directable, per Chief instruction not to reopen image
+  production. See ASSET EPISTEMIC INTEGRITY in 05_REDO_REGISTER.md.
+scenes:
+- scene_id: '00'
+  act: PROLOG
+  year_or_marker: '2026'
+  title: Before We Go Back
+  image_file: project-images/2026 — Before We Go Back.png
+  source_filename: 2026 — Before We Go Back.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: Present-day Kediri at dusk from above the Brantas. A road bridge
+    carries light-trailed traffic left to right across the lower third; the living
+    city occupies both banks; the river recedes to a lit horizon.
+  evidence_class: V4_artistic_interpretation
+  baked_text_audit: NONE. Clean at full resolution. Passes Authority Rules 1-3.
+  crop_desktop: Full frame, no crop. Native 3:2 already composes wide - bridge span
+    across the lower third, reflections beneath, a clean sky band across the upper
+    third that serves as negative space for the editorial plate.
+  crop_mobile: Portrait 3:4, 768x1024 from source x=520..1288, full height.
+    Recomposed rather than scaled; stacks as sky, skyline, bridge deck, water.
+  object_position_desktop: 50% 56%
+  object_position_mobile: 55% 60%
+  visual_notes: The only Batch A asset with no baked text. Must not be captioned as
+    a photograph of a named Kediri bridge; no claim about a specific structure may
+    attach to it. Finale reuses this asset - total production hero images stays 27.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_READY_FOR_REVIEW
+- scene_id: '01'
+  act: ACT I
+  year_or_marker: '879'
+  title: The First Mark
+  image_file: project-images/01 — 879 — The First Mark.png
+  source_filename: 01 — 879 — The First Mark.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: A large inscribed stone block in raking light, filling most of the
+    frame, with a dark temple interior falling away behind it.
+  evidence_class: V4_artistic_interpretation
+  evidence_class_note: Composed as an authenticated artefact in situ. High Rule 2
+    risk - a visitor may read it as a photograph of a surviving inscription.
+  baked_text_audit: PRESENT. Three lines of decorative pseudo-script, plus a fourth
+    line reading "27 [pseudo-glyph] 879". Verified at 4x zoom - the middle glyph is
+    an invented character standing in for "Juli", not the numeral 1. Earlier reading
+    of "1879" was wrong and is corrected here.
+  canon_conflict: 08_MASTER_PRODUCTION_NARRATIVE Scene 01 states the record was
+    written on metal ("dituliskan pada logam"). The asset shows stone.
+  baked_text_box: (370,645)-(1240,765), measured from a coordinate grid over the
+    source asset.
+  crop_desktop: Source window x=0 y=0 w=1536 h=620 - the upper band of the stone
+    face. Verified to keep the date line outside the visible rect at 1280x720,
+    1366x768, 1440x900, 1680x1050, 1920x1080, 2560x1080, and 3440x1440.
+  crop_mobile: Source window x=0 y=0 w=1500 h=620. Verified at 360x780, 390x844,
+    412x915, 414x896, and 430x932.
+  object_position_desktop: 50% 50%
+  object_position_mobile: 50% 50%
+  visual_notes: Crop is damage limitation, not a fix. The chronological text is
+    removed from frame by the desktop crop; the pseudo-script cannot be cropped out
+    without destroying the subject. Year and date must be DOM regardless. See
+    REDO-ASSET-001.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: '02'
+  act: ACT I
+  year_or_marker: '921'
+  title: Kadhiri
+  image_file: project-images/02 — 921 — Kadhiri.png
+  source_filename: 02 — 921 — Kadhiri.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: A rounded inscribed stone face filling the frame, warmer and closer
+    than Scene 01 - visual continuity from 879 is perceptible, as the Batch A
+    checkpoint requires.
+  evidence_class: V4_artistic_interpretation
+  baked_text_audit: PRESENT. Four lines of pseudo-script with the word "kadhiri" set
+    in lowercase Latin type at mid-frame, flanked by vertical rule marks.
+  baked_text_box: (605,370)-(1065,455), measured from a coordinate grid.
+  crop_desktop: Source window x=0 y=480 w=1536 h=540 - the lower band, below the
+    Latin word. An upper band was tried first and rejected - after object-fit cover
+    expands vertically the word returns to frame. Caught by geometric verification,
+    not by estimate.
+  crop_mobile: Source window x=0 y=480 w=1500 h=540.
+  object_position_desktop: 50% 50%
+  object_position_mobile: 50% 50%
+  visual_notes: The crop removes the baked name, which is the correct outcome. The
+    name KADHIRI arrives as a DOM layer animated out of the Scene 01 groove - if the
+    name is in the raster it was always there and nothing happens; if it resolves on
+    scroll the visitor watches a record become an identity. See REDO-ASSET-002.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: '03'
+  act: ACT I
+  year_or_marker: '1015'
+  title: The Name Endures
+  image_file: project-images/03 — 1015 — The Name Endures.png
+  source_filename: 03 — 1015 — The Name Endures.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: A rectangular copper-alloy plate with two suspension holes, green
+    patina at the edges, shot flat against black - presented as a catalogued object.
+  evidence_class: V4_artistic_interpretation
+  evidence_class_note: Highest Rule 2 risk in Batch A. Flat-on, evenly lit,
+    full-object framing is museum catalogue presentation, which is exactly the
+    reading a Research Hold scene must not invite.
+  baked_text_audit: PRESENT. Seven lines of pseudo-script with "KADHIRI" in legible
+    Latin capitals at centre, set between vertical rules.
+  canon_conflict: Canon marks this scene Research Hold - the Prasasti Carama
+    attribution is explicitly unverified. The asset asserts the name as settled.
+    The image declares where the text withholds.
+  baked_text_box: (905,455)-(1085,515), measured from a coordinate grid.
+  crop_desktop: Source window x=0 y=0 w=860 h=1020 - the left portion of the plate.
+    KADHIRI sits right of centre and falls outside; the plate edge leaves frame, so
+    the object reads as partial rather than catalogued, which is what a Research
+    Hold scene requires.
+  crop_mobile: Source window x=0 y=0 w=1140 h=1020.
+  object_position_desktop: 50% 50%
+  object_position_mobile: 50% 50%
+  visual_notes: Crop is deliberately off-centre and incomplete. Under 04
+    VISUAL_ACCEPTANCE this scene must read as continuity under investigation, not
+    declaration, and an uncropped whole object cannot do that. Research Hold status
+    must be a DOM/evidence layer. See REDO-ASSET-003.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: '04'
+  act: ACT I
+  year_or_marker: '1042'
+  title: The River Divides a Kingdom
+  image_file: project-images/04 — 1042 — River Divides a Kingdom.png
+  source_filename: 04 — 1042 — River Divides a Kingdom.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: Night-blue aerial landscape. A river runs from the foreground toward
+    a volcanic horizon, dividing cultivated lowland; temple silhouettes sit on both
+    banks; moonlight breaks through cloud above the mountain.
+  evidence_class: V4_artistic_interpretation
+  baked_text_audit: PRESENT. Emblem plus "PANJALU / WEST KINGDOM" at left
+    (x~170..480, y~430..600); emblem plus "JENGGALA / EAST KINGDOM" at right
+    (x~1280..1590, y~430..600); "BRANTAS / THE DIVIDING RIVER" at centre
+    (x~700..1030, y~735..800).
+  canon_conflict: Canon 08 spells Janggala. The asset spells JENGGALA. All labels are
+    English inside an Indonesian-language production.
+  baked_text_boxes: PANJALU (160,370)-(410,600); JENGGALA (1120,370)-(1395,600);
+    BRANTAS (650,720)-(895,805). Measured from a coordinate grid - a first estimate
+    placed JENGGALA too far right and it leaked into frame.
+  crop_desktop: Source window x=440 y=0 w=660 h=980 - a vertical traverse of the
+    river corridor. All three label boxes verified outside the visible rect at every
+    supported desktop ratio including ultrawide.
+  crop_mobile: Source window x=0 y=0 w=1500 h=700 - the upper band carrying the
+    mountain and the river's upper course. A genuinely different composition from
+    desktop, not a reduction of it.
+  object_position_desktop: 50% 50%
+  object_position_mobile: 50% 50%
+  visual_notes: The only Batch A asset whose baked text can be fully cropped out at
+    both breakpoints - the labels sit in the outer thirds and the lower centre, and
+    the river survives the crop intact. All labelling becomes semantic DOM, which
+    also makes the Janggala spelling a text fix rather than an asset problem, and
+    lets the Mpu Bharada tradition layer stay a visibly separate claim. The asset
+    carries no supernatural imagery, so History and Tradition remain separable. See
+    REDO-ASSET-004.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: '05'
+  act: ACT II
+  year_or_marker: Daha
+  title: The Centre of Power
+  image_file: project-images/05 -- Daha — Centre of Power.png
+  source_filename: 05 -- Daha — Centre of Power.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: Aerial view at sunrise over a dense walled royal city - tiered
+    timber halls, a tall central spire, moated enclosures, a river threading toward
+    misted hills.
+  evidence_class: V4_artistic_interpretation
+  evidence_class_note: Canon Scene 05 states plainly that Daha cannot be
+    reconstructed street by street. A fully realised city therefore exceeds the
+    evidence and must carry a visible interpretive label.
+  baked_text_audit: NONE.
+  crop_desktop: TO_BE_ART_DIRECTED_AT_BATCH_B
+  crop_mobile: TO_BE_ART_DIRECTED_AT_BATCH_B
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_B
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_B
+  visual_notes: Text-free, but the confident completeness of the reconstruction sits
+    against a scene whose argument is absence. Flag for Batch B direction.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: '06'
+  act: ACT II
+  year_or_marker: '1135'
+  title: Panjalu Jayati
+  image_file: project-images/06 - 1135 — Panjalu Jayati.png
+  source_filename: 06 - 1135 — Panjalu Jayati.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: Raking-light macro of a dense inscribed stone face.
+  evidence_class: V4_artistic_interpretation
+  baked_text_audit: PRESENT. Dense pseudo-script across the whole face, with
+    "PANJALU JAYATI" in Latin capitals set between two horizontal rules at centre.
+  crop_desktop: TO_BE_ART_DIRECTED_AT_BATCH_B
+  crop_mobile: TO_BE_ART_DIRECTED_AT_BATCH_B
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_B
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_B
+  visual_notes: Same defect class as Scene 02. The declaration is the scene's entire
+    argument and must be a DOM layer so it can arrive as an event.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: '07'
+  act: ACT II
+  year_or_marker: '1157'
+  title: Words Become Monuments
+  image_file: project-images/07 - 1157 — Words Become Monuments.png
+  source_filename: 07 - 1157 — Words Become Monuments.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: An open illuminated manuscript on indigo cloth in low light, gold
+    script on one leaf and a painted battle scene on the other, metal objects at the
+    frame edges.
+  evidence_class: V4_artistic_interpretation
+  baked_text_audit: PRESENT but non-semantic - manuscript body text is pseudo-script
+    carrying no readable claim, name, or date.
+  crop_desktop: TO_BE_ART_DIRECTED_AT_BATCH_B
+  crop_mobile: TO_BE_ART_DIRECTED_AT_BATCH_B
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_B
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_B
+  visual_notes: Rule 3 still applies to the pseudo-script, but no factual claim is
+    encoded, so severity is materially lower than Scenes 01-04 and 06.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: 08
+  act: ACT II
+  year_or_marker: Panji
+  title: A Story That Left Kediri
+  image_file: project-images/08 - Panji — Story That Left Kediri.png
+  source_filename: 08 - Panji — Story That Left Kediri.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: Overhead arrangement of many open illustrated manuscripts in
+    differing regional styles, spread across indigo brocade - visual argument for a
+    story travelling between cultures.
+  evidence_class: V4_artistic_interpretation
+  baked_text_audit: PRESENT but non-semantic - pseudo-script only, no readable claim.
+  crop_desktop: TO_BE_ART_DIRECTED_AT_BATCH_B
+  crop_mobile: TO_BE_ART_DIRECTED_AT_BATCH_B
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_B
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_B
+  visual_notes: Composition genuinely serves the canon argument - many hands, many
+    styles, one story.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: 09
+  act: ACT III
+  year_or_marker: '1222'
+  title: Ganter
+  image_file: project-images/09 - 1222 — Ganter.png
+  source_filename: 09 - 1222 — Ganter.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: A designed infographic war map in red and black - not a photographic
+    scene. Territory fills, troop-movement arrows, crowned power centres, a compass
+    rose, a burning temple silhouette below.
+  evidence_class: V4_artistic_interpretation
+  evidence_class_note: Severe Rule 2 risk. The asset is built as a scholarly
+    reference map, which is a documentary genre, and will be read as sourced
+    cartography.
+  baked_text_audit: PRESENT AND EXTENSIVE. Title "1222 / GANTER" plus pseudo-script
+    subtitle; an Indonesian legend block (Pusat kekuasaan, Wilayah Panjalu, Wilayah
+    Jenggala, Wilayah Madiun, Wilayah Lumajang, Wilayah lain, Pergerakan pasukan,
+    Pengaruh politik, Batas wilayah); region labels PANJALU, JENGGALA, MADIUN,
+    LUMAJANG, BALI; compass letters U/S/B/T.
+  canon_conflict: JENGGALA again against canon Janggala. Territorial boundaries and
+    troop vectors are asserted as fact with no cited source.
+  crop_desktop: NOT_CROPPABLE - text and graphic content are inseparable across the
+    entire frame.
+  crop_mobile: NOT_CROPPABLE
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_C
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_C
+  visual_notes: Highest-severity asset in Act III. An unsourced map that looks
+    authoritative is the exact failure mode 04 VISUAL_ACCEPTANCE calls unlabeled
+    reconstruction. Escalated as REDO-ASSET-006.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: '10'
+  act: ACT III
+  year_or_marker: '1292'
+  title: The Return
+  image_file: project-images/10 - 1292 — The Return.png
+  source_filename: 10 - 1292 — The Return.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: Editorial poster composition - a crowned ruler in close portrait at
+    left, a campaign map at right with a marked route between named points.
+  evidence_class: V4_artistic_interpretation
+  baked_text_audit: PRESENT AND EXTENSIVE. "1292 / THE RETURN / PERGERAKAN
+    JAYAKATWANG MENUJU PUSAT KEKUASAAN"; map labels KADIRI, DAHA (PUSAT KEKUASAAN),
+    JAYAKATWANG; name plate "JAYAKASTWANG / RAJA KEDAHIRAN TERAKHIR / (MEMERINTAH
+    1292-1293)"; and a full paragraph of Indonesian historical prose.
+  canon_conflict: THREE FACTUAL DEFECTS INSIDE ONE FRAME. (1) The name plate reads
+    JAYAKASTWANG while the map in the same image reads JAYAKATWANG. (2) "RAJA
+    KEDAHIRAN" is not a canon form. (3) The prose states he was defeated by "pasukan
+    Jayabaya (Raden Wijaya)" - conflating Jayabaya, the 12th-century Panjalu king,
+    with Raden Wijaya, founder of Majapahit. Canon 08 Scene 11 and Scene 12 keep
+    these figures strictly separate, and Scene 12 exists precisely to prevent this
+    confusion.
+  crop_desktop: NOT_CROPPABLE - the prose block, name plate, and map labels occupy
+    three separate regions.
+  crop_mobile: NOT_CROPPABLE
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_C
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_C
+  visual_notes: The most serious factual defect found in the whole set. A wrong
+    historical claim is burned into a raster on a history site and cannot be
+    corrected by editing copy. Escalated as REDO-ASSET-007.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: '11'
+  act: ACT III
+  year_or_marker: '1293'
+  title: The Last Kingdom
+  image_file: project-images/11 - 1293 — The Last Kingdom.png
+  source_filename: 11 - 1293 — The Last Kingdom.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: Violet-toned convergence composition - a helmeted Yuan commander
+    upper left above a war fleet, a Javanese figure in regalia lower right, a relief
+    map of river country between them.
+  evidence_class: V4_artistic_interpretation
+  baked_text_audit: NONE.
+  crop_desktop: TO_BE_ART_DIRECTED_AT_BATCH_C
+  crop_mobile: TO_BE_ART_DIRECTED_AT_BATCH_C
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_C
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_C
+  visual_notes: Text-free and structurally well suited to the canon argument of three
+    powers meeting at one point.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_READY_FOR_REVIEW
+- scene_id: '12'
+  act: ACT IV
+  year_or_marker: Jayabaya
+  title: Jayabaya After Jayabaya
+  image_file: project-images/12 - Jayabaya After Jayabaya.png
+  source_filename: 12 - Jayabaya After Jayabaya.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  candidate_resolution: RESOLVED_OBJECTIVELY. Two candidates existed - "12 -
+    Jayabaya After Jayabaya.png" and "12 - Jayabaya After Jayabaya2.png". Resolved
+    by repository evidence, not filename. The webp derivative already carried into
+    the build pipeline, 12-jayabaya-after-jayabaya-w768.webp, matches candidate 1
+    with a mean absolute difference of 4.11 (compression noise) and candidate 2 with
+    46.12 (different image). A third legacy file, jayabaya.png, differs by 65.87 and
+    is not the scene asset. Candidate 1 is therefore the approved production version.
+  rejected_candidates:
+  - project-images/12 - Jayabaya After Jayabaya2.png
+  - project-images/jayabaya.png
+  hero_subject: A crowned ruler enthroned beneath a ceremonial parasol at left, a
+    vast acclaiming crowd and a tiered temple complex at right, petals in the air.
+  evidence_class: V4_artistic_interpretation
+  baked_text_audit: NONE in either candidate.
+  crop_desktop: TO_BE_ART_DIRECTED_AT_BATCH_C
+  crop_mobile: TO_BE_ART_DIRECTED_AT_BATCH_C
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_C
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_C
+  visual_notes: Both candidates show a triumphal enthronement. Neither expresses the
+    scene's actual argument - the separation between the 12th-century king and the
+    later prophetic figure. That is a direction problem to solve with DOM layering
+    and choreography, not an asset defect. Candidate 2 differs only in grade and
+    density (warmer, brighter flare, more petals); it is a colour variant, not a
+    different scene.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_READY_FOR_REVIEW
+- scene_id: '13'
+  act: ACT IV
+  year_or_marker: Shadow Archive
+  title: The Shadow Archive
+  image_file: project-images/13 - Shadow Archive.png
+  source_filename: 13 - Shadow Archive.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: Dark composite of folkloric figures around an erupting volcano - a
+    bull-headed figure at centre, a crowned female figure upper right, a masked
+    demonic face right, a wrathful figure left, a torchlit procession below.
+  evidence_class: V5_folklore_visualization
+  baked_text_audit: PRESENT but non-semantic - pseudo-script fragments in the upper
+    corners as texture.
+  crop_desktop: TO_BE_ART_DIRECTED_AT_BATCH_C
+  crop_mobile: TO_BE_ART_DIRECTED_AT_BATCH_C
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_C
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_C
+  visual_notes: The one asset whose overtly mythic register is correct, because canon
+    mandates the label TRADITION - FOLKLORE - URBAN LEGEND. Lembu Suro, Calon Arang,
+    and Kelud are legible as tradition rather than as record.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_READY_FOR_REVIEW
+- scene_id: '14'
+  act: ACT V
+  year_or_marker: '1678'
+  title: The River as Fortress
+  image_file: project-images/14 - 1678 — River as Fortress.png
+  source_filename: 14 - 1678 — River as Fortress.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: River battle at sunset seen over a palisade - war boats on the
+    current, timber watchtowers, a defensive stockade along the far bank, a
+    commander in the left foreground pointing across the water.
+  evidence_class: V4_artistic_interpretation
+  baked_text_audit: NONE.
+  crop_desktop: TO_BE_ART_DIRECTED_AT_BATCH_D
+  crop_mobile: TO_BE_ART_DIRECTED_AT_BATCH_D
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_D
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_D
+  visual_notes: Serves the canon argument directly - the same river, a different
+    function.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_READY_FOR_REVIEW
+- scene_id: '15'
+  act: ACT VI
+  year_or_marker: Sugar
+  title: Sugar Changes the Land
+  image_file: project-images/15 - Sugar Changes the Land.png
+  source_filename: 15 - Sugar Changes the Land.png
+  source_dimensions: 1370x1148
+  image_verified: true
+  hero_subject: Bright daylight view of a colonial sugar factory - chimneys, flywheels,
+    cane carts, ox teams, a narrow-gauge locomotive hauling loaded cane wagons, a
+    volcano on the horizon.
+  evidence_class: V4_artistic_interpretation
+  baked_text_audit: PRESENT. Factory signage "MERITJAN" twice on the building; a
+    foreground board reading "PABRIK GULA / MERITJAN / 1890".
+  canon_conflict: Canon states PG Meritjan opened in 1883. The asset asserts 1890.
+  crop_desktop: TO_BE_ART_DIRECTED_AT_BATCH_D
+  crop_mobile: TO_BE_ART_DIRECTED_AT_BATCH_D
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_D
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_D
+  visual_notes: The 1890 board sits lower left and is croppable. Escalated as
+    REDO-ASSET-008.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: '16'
+  act: ACT VI
+  year_or_marker: '1869'
+  title: Iron Across the Brantas
+  image_file: project-images/16 - 1869 — Iron Across Brantas.png
+  source_filename: 16 - 1869 — Iron Across Brantas.png
+  source_dimensions: 1389x1132
+  image_verified: true
+  hero_subject: A designed heritage panel, not a single photograph - an aged
+    monochrome truss bridge above, the same bridge in modern colour below,
+    engineering elevation drawings, and detail inset photographs.
+  evidence_class: V4_artistic_interpretation
+  evidence_class_note: Severe Rule 2 risk. Presented as an archival plate with
+    photo credits.
+  baked_text_audit: PRESENT AND EXTENSIVE. "1869 / IRON ACROSS BRANTAS / Warisan
+    Besi, Jejak Peradaban"; fabricated credit lines "Jembatan Brantas Lama / Foto
+    Arsip - 1880-an / (Kolonial Belanda)" and "Jembatan Brantas / Foto Modern 2025 /
+    Kediri, Jawa Timur"; drawing captions; a closing verse block.
+  canon_conflict: The credit lines assert archival photographic provenance for
+    generated imagery. This is the plainest Rule 2 breach in the set - not
+    interpretation resembling evidence, but interpretation labelled as evidence.
+  crop_desktop: NOT_CROPPABLE
+  crop_mobile: NOT_CROPPABLE
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_D
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_D
+  visual_notes: Fabricated provenance must not ship on a public history site.
+    Escalated as REDO-ASSET-009, highest severity in the set alongside Scene 22.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: '17'
+  act: ACT VI
+  year_or_marker: '1906'
+  title: A City on Paper
+  image_file: project-images/17 - 1906 — City on Paper.png
+  source_filename: 17 - 1906 — City on Paper.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: Four-panel colonial townscape - a main street with tram and
+    carriages, a railway station with a steam locomotive, a twin-spired brick
+    church, an arcaded shopping street with pedestrians.
+  evidence_class: V4_artistic_interpretation
+  baked_text_audit: NONE legible.
+  crop_desktop: TO_BE_ART_DIRECTED_AT_BATCH_D
+  crop_mobile: TO_BE_ART_DIRECTED_AT_BATCH_D
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_D
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_D
+  visual_notes: The multi-panel grid is a layout, not a shot. Under the shot-not-
+    section rule it needs directed treatment - most likely as a sequence the camera
+    moves through rather than a static contact sheet.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: '18'
+  act: ACT VI
+  year_or_marker: '1912'
+  title: Kediri Lifts a Bridge
+  image_file: project-images/18 - 1912 — Kediri Lifts a Bridge.png
+  source_filename: 18 - 1912 — Kediri Lifts a Bridge.png
+  source_dimensions: 1402x1122
+  image_verified: true
+  hero_subject: A designed technical plate - a hero view of the truss bridge above,
+    a strip of five engineering detail photographs below, two wider views beneath.
+  evidence_class: V4_artistic_interpretation
+  baked_text_audit: PRESENT AND EXTENSIVE. "1912 / KEDIRI LIFTS A BRIDGE"; caption
+    "Jembatan setelah ditinggikan beserta detail teknik"; detail labels SAMBUNGAN
+    RANGKA BAJA, TUMPUAN & ROLLER BEARING, MEKANISME PENGANGKATAN, PERKUATAN PIER
+    KAP, SISTEM GELAGAR BAJA.
+  canon_conflict: Canon Scene 18 is explicitly marked "Status - Detail teknis masih
+    memerlukan verifikasi arsip". The asset labels five specific mechanisms as
+    established fact, including a lifting mechanism. The image resolves precisely
+    what the text says is unresolved.
+  crop_desktop: NOT_CROPPABLE
+  crop_mobile: NOT_CROPPABLE
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_D
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_D
+  visual_notes: Same inversion as Scene 03 - a Research Hold scene whose asset
+    declares. Escalated as REDO-ASSET-010.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: '19'
+  act: ACT VI
+  year_or_marker: People
+  title: The People Between the Monuments
+  image_file: project-images/19 - People Between Monuments.png
+  source_filename: 19 - People Between Monuments.png
+  source_dimensions: 1467x1072
+  image_verified: true
+  hero_subject: Nine-panel mosaic of ordinary colonial-era life - town square and
+    monument, a family on a veranda, a market, bridge workers, a classroom, a church
+    interior, a street with becak, a river boat, an evening food stall.
+  evidence_class: V4_artistic_interpretation
+  baked_text_audit: NONE legible.
+  crop_desktop: TO_BE_ART_DIRECTED_AT_BATCH_D
+  crop_mobile: TO_BE_ART_DIRECTED_AT_BATCH_D
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_D
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_D
+  visual_notes: The mosaic serves the canon argument that a city lives through
+    people, but as with Scene 17 it is a layout rather than a shot and needs camera
+    direction through the panels.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: '20'
+  act: ACT VII
+  year_or_marker: '1942'
+  title: The World War Arrives
+  image_file: project-images/20 - 1942 — World War Arrives.png
+  source_filename: 20 - 1942 — World War Arrives.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: Six-panel occupation sequence - an armoured vehicle and troops before
+    the station and church, aircraft over the river bridge, a proclamation being
+    posted, a guard tower at dusk, civilians being registered, a burning street.
+  evidence_class: V4_artistic_interpretation
+  baked_text_audit: PRESENT. Station sign "KEDIRI"; a Japanese banner reading the
+    Greater East Asia Co-Prosperity Sphere; a wall notice in Japanese prohibiting use
+    of the enemy language.
+  crop_desktop: TO_BE_ART_DIRECTED_AT_BATCH_E
+  crop_mobile: TO_BE_ART_DIRECTED_AT_BATCH_E
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_E
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_E
+  visual_notes: Canon marks this scene as needing Kediri-specific archival
+    strengthening. The baked signage is period set-dressing rather than a chronology
+    or evidence claim, so severity is lower - but the Japanese text is unreadable to
+    the audience and untranslatable while baked in.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: '21'
+  act: ACT VII
+  year_or_marker: 1947–1948
+  title: From Sugar to Weapons
+  image_file: project-images/21 - 1947–1948 — From Sugar to Weapons.png
+  source_filename: 21 - 1947–1948 — From Sugar to Weapons.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: Six-panel revolution sequence - a factory hall converted to metalwork,
+    a flag raised from a truck, a field command group, a lamplit planning table,
+    machined components and rifles, and an archive spread of maps and photographs.
+  evidence_class: V4_artistic_interpretation
+  baked_text_audit: PRESENT AND EXTENSIVE. Board "P.G. MERITJAN / KEDIRI / GULA UNTUK
+    RAKYAT / KINI SENJATA UNTUK KEMERDEKAAN"; banner "MERDEKA ATAU MATI"; wall text
+    "KEDIRI / 8 NOPEMBER 1947"; "RAKJAT BERSATU / TENTARA BERDJUANG / MERDEKA";
+    document covers "KOMANDO TENTARA REPUBLIK INDONESIA SEKTOR KEDIRI / ARSIP
+    OPERASI 1948" and a map sheet "KEDIRI 1948".
+  canon_conflict: Canon marks this scene conditional - "Status - Klaim produksi mortir
+    belum terverifikasi final" - and states the scene stays conditional until the
+    production mechanism and weapon types are proven. The asset shows finished
+    weapons, a dated operations archive, and a factory board declaring the
+    conversion. Every caveat the text preserves is contradicted by the image.
+  crop_desktop: NOT_CROPPABLE
+  crop_mobile: NOT_CROPPABLE
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_E
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_E
+  visual_notes: Fabricated military archive documents with unit designations and
+    dates. Escalated as REDO-ASSET-011.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: '22'
+  act: ACT VII
+  year_or_marker: '1950'
+  title: City of the Republic
+  image_file: project-images/22 - 1950 — City of the Republic.png
+  source_filename: 22 - 1950 — City of the Republic.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: A desk of official papers under lamplight, a civic building with the
+    national flag behind, bound legal volumes at right.
+  evidence_class: V4_artistic_interpretation
+  evidence_class_note: The most severe Rule 2 breach in the set. These are fabricated
+    government records with numbers, dates, a signature, and an official seal.
+  baked_text_audit: PRESENT AND EXTENSIVE. "REPUBLIK INDONESIA / PERATURAN DAERAH
+    KABUPATEN KEDIRI / NOMOR 1 TAHUN 1950 / TENTANG PEMBENTUKAN DAN SUSUNAN
+    PEMERINTAH DAERAH KABUPATEN KEDIRI"; "KEPUTUSAN BUPATI KEDIRI / NOMOR 15 TAHUN
+    1950" with an ordered body, the signature "R. SOEDIRO", and a round Bupati Kediri
+    seal; "BERITA DAERAH KABUPATEN KEDIRI / TAHUN 1950 NOMOR 3" with a contents list;
+    "SURAT KEPUTUSAN DEWAN PERWAKILAN RAKJAT DAERAH / NOMOR 2/SK/DPRD/1950"; spine
+    titles including "UNDANG-UNDANG DASAR SEMENTARA REPUBLIK INDONESIA 1950".
+  canon_conflict: Two problems. First, fabricated statutory instruments with invented
+    numbers and a named signatory presented as archival record. Second, canon Scene
+    22 concerns the Kota - the city - entering the Republic framework, while every
+    document in the asset names Kabupaten Kediri, a different administrative entity.
+  crop_desktop: NOT_CROPPABLE
+  crop_mobile: NOT_CROPPABLE
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_E
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_E
+  visual_notes: Recommend this asset does not ship in any form. Invented legislation
+    bearing a named official's signature and a government seal is a different
+    category of risk from stylistic interpretation. Escalated as REDO-ASSET-012.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: '23'
+  act: ACT VIII
+  year_or_marker: '1958'
+  title: From 1,000 m²
+  image_file: project-images/23 - 1958 — From 1,000.png
+  source_filename: 23 - 1958 — From 1,000.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: Six-panel early-industry sequence - a hand-rolling workshop, a
+    warehouse frontage with a period truck, rows of workers at benches, a street
+    view, a group at a work table, and a product package with loose tobacco.
+  evidence_class: V4_artistic_interpretation
+  baked_text_audit: PRESENT AND EXTENSIVE. "GUDANG GARAM / MERITJAN - KEDIRI / 1958 /
+    LUAS - ± 1.000 M² / MUTU - TRADISI - KEBANGGAAN"; building signage "GUDANG GARAM
+    / MERITJAN - KEDIRI"; "KEDIRI / KOTA KECIL YANG TERUS MAJU DAN TUMBUH"; a wall
+    slogan; and a cigarette package reading "GUDANG GARAM / 12 SIGARET KRETEK /
+    MERITJAN - KEDIRI / INDONESIA".
+  canon_conflict: Canon states the company was founded on 26 June 1958 in Semampir on
+    a plot of 1,000 m². The asset places it at Meritjan, which canon identifies as
+    the sugar factory site, in five separate baked locations.
+  additional_risk: The asset reproduces a living company's trademark and depicts its
+    product packaging. That is a commercial-likeness question, separate from the
+    historical one, and outside my authority to settle.
+  crop_desktop: NOT_CROPPABLE
+  crop_mobile: NOT_CROPPABLE
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_E
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_E
+  visual_notes: Escalated as REDO-ASSET-013.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: '24'
+  act: ACT VIII
+  year_or_marker: 1990+
+  title: From Kediri to the Market
+  image_file: project-images/24 - 1990+ — Kediri to the Market.png
+  source_filename: 24 - 1990+ — Kediri to the Market.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: A busy commercial avenue at sunset - dense traffic, factory chimneys
+    at right, a volcano on the horizon, corporate signage along both sides.
+  evidence_class: V4_artistic_interpretation
+  baked_text_audit: PRESENT. Overhead board "KEDIRI / KOTA INDUSTRI / KOTA
+    PERDAGANGAN / BANGKIT BERSAMA MEMBANGUN EKONOMI"; multiple GUDANG GARAM and GG
+    signs and liveried trucks; "KARYA BANGSA UNTUK DUNIA"; a road sign for Surabaya,
+    Malang, and Tulungagung.
+  crop_desktop: TO_BE_ART_DIRECTED_AT_BATCH_E
+  crop_mobile: TO_BE_ART_DIRECTED_AT_BATCH_E
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_E
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_E
+  visual_notes: Baked text is civic and commercial signage rather than a chronology
+    or evidence claim, so severity is lower than Scene 23. The trademark question
+    still stands. Canon here is deliberately two-sided - prosperity and dependency -
+    and the asset reads as unqualified boosterism, so the DOM layer must carry the
+    counterweight.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: '25'
+  act: ACT IX
+  year_or_marker: Two Bridges
+  title: Two Bridges, Two Centuries
+  image_file: project-images/25 - Two Bridges, Two Centuries.png
+  source_filename: 25 - Two Bridges, Two Centuries.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: A split-time composition - the same river view rendered as aged
+    monochrome on the left, with a truss bridge and a rowed boat, dissolving into
+    present-day colour on the right, with a modern concrete bridge, traffic, and
+    people on the steps.
+  evidence_class: V4_artistic_interpretation
+  baked_text_audit: PRESENT. Title "Two Bridges, / Two Centuries"; caption
+    "Djembatan Brantas / Kediri, 1912"; a sign "JEMBATAN BRANTAS KEDIRI".
+  canon_conflict: The 1912 caption asserts a dated archival photograph. Canon Scene
+    18 marks the 1912 technical detail as awaiting verification, and the image is
+    generated, so the credit is fabricated provenance.
+  crop_desktop: PARTIAL. The title sits top centre and the 1912 credit bottom left;
+    a crop of source y=140..1024, x=210..1536 removes both while keeping the
+    left-to-right time dissolve intact. The right-hand sign remains.
+  crop_mobile: TO_BE_ART_DIRECTED_AT_BATCH_F
+  object_position_desktop: 55% 60%
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_F
+  visual_notes: The strongest conceptual asset in the set - the time dissolve is the
+    canon argument made visible, and the GSAP handoff can drive the seam. The baked
+    caption is the only real problem and it crops away. Escalated as REDO-ASSET-014.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_WITH_FLAG
+- scene_id: '26'
+  act: ACT IX
+  year_or_marker: 2024–2026
+  title: From River to Runway
+  image_file: project-images/26 - 2024–2026 — River to Runway.png
+  source_filename: 26 - 2024–2026 — River to Runway.png
+  source_dimensions: 1536x1024
+  image_verified: true
+  hero_subject: An airport at sunset - an aircraft climbing at left, a curved
+    terminal at right, an access highway with traffic through the centre, a river and
+    a bridge at far left, a volcano on the horizon.
+  evidence_class: V4_artistic_interpretation
+  baked_text_audit: PRESENT. Terminal facade "BANDAR UDARA / DHOHO KEDIRI"; a
+    wayfinding sign "KEBERANGKATAN / Departures", "KEDATANGAN / Arrivals", "PARKIR /
+    Parking".
+  crop_desktop: TO_BE_ART_DIRECTED_AT_BATCH_F
+  crop_mobile: TO_BE_ART_DIRECTED_AT_BATCH_F
+  object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_F
+  object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_F
+  visual_notes: Baked text is functional signage on a facility that genuinely bears
+    that name, not a historical claim, so severity is low. The composition holds the
+    river and the runway in one frame, which is exactly the canon argument that the
+    urge to connect persists through changing technology.
+  camera_intention: DEFINED_IN_SCENE_CONTRACT
+  light_behavior: DEFINED_IN_SCENE_CONTRACT
+  historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
+  transition_in: SEE_03_TRANSITION_MAP
+  transition_out: SEE_03_TRANSITION_MAP
+  status: MAPPED_READY_FOR_REVIEW
+non_scene_files:
+- file: project-images/12 - Jayabaya After Jayabaya2.png
+  disposition: Colour and density variant of the Scene 12 asset. Not carried into the
+    build pipeline. Retained, unmapped.
+- file: project-images/jayabaya.png
+  disposition: Legacy asset, 1376x768, distinct from both Scene 12 candidates. Not
+    part of the 27. Unmapped.
+- file: project-images/meritjan.png
+  disposition: Legacy asset, 1376x768. Not part of the 27. Unmapped.

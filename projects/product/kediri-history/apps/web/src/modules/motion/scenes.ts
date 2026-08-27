@@ -385,7 +385,19 @@ const bridgeConstruction: SceneTimelineFactory = ({ root, variant }) => {
   return timeline;
 };
 
-/** 921 — nama memperoleh bobot dan hadir dari kedalaman. */
+/**
+ * SHOT 921 — nama memperoleh bobot dan hadir dari kedalaman.
+ *
+ * Argumen historisnya: sebuah catatan menjadi sebuah nama. Karena itu KADHIRI
+ * tidak boleh sudah ada di bingkai sejak awal. Ia harus TIBA — terurai dari
+ * goresan yang ditinggalkan 879, lalu mengeras menjadi identitas yang dapat
+ * diwariskan.
+ *
+ * Namanya adalah teks DOM, bukan piksel di dalam citra (Authority Rule 1).
+ * Konsekuensi teknisnya penting: hanya opacity dan transform yang dipakai,
+ * tidak pernah autoAlpha, sehingga nama historis tidak pernah keluar dari
+ * pohon aksesibilitas hanya karena pengunjung belum menggulir sampai sana.
+ */
 const nameEmerges: SceneTimelineFactory = ({ root, variant }) => {
   const surface = one(root, ".stage-surface");
   const plate = one(root, ".stage-plate");
@@ -415,17 +427,26 @@ const nameEmerges: SceneTimelineFactory = ({ root, variant }) => {
     { opacity: 1, yPercent: 0, ease: MOTION.scrubEase, duration: 0.16 },
     0.3,
   );
+
+  /*
+   * Ketukan nama. Ia datang SEBELUM judul dan kalimat pemikul, karena di scene
+   * ini namanya adalah peristiwanya — bukan ilustrasi bagi kalimat yang
+   * menjelaskannya. Perjalanannya dari bawah dan sedikit membesar: nama itu
+   * naik keluar dari material, bukan meredup masuk dari ketiadaan.
+   */
+  revealNames(timeline, root, 0.34, 0.14);
+
   timeline.fromTo(
     context.length > 0 ? context : title,
     { opacity: 0, yPercent: 12 },
     { opacity: 1, yPercent: 0, ease: MOTION.scrubEase, duration: 0.12 },
-    0.45,
+    0.5,
   );
   timeline.fromTo(
     master,
     { opacity: 0, yPercent: 10 },
     { opacity: 1, yPercent: 0, ease: MOTION.scrubEase, duration: 0.1 },
-    0.52,
+    0.56,
   );
   addLosingScaleExit(timeline, surface, plate, variant);
   return timeline;
@@ -497,7 +518,20 @@ const nameEndures: SceneTimelineFactory = ({ root, variant }) => {
   return timeline;
 };
 
-/** 1042 — dua bidang menjauh sementara garis sungai tetap menjadi konstanta. */
+/**
+ * SHOT 1042 — dua bidang menjauh sementara garis sungai tetap menjadi konstanta.
+ *
+ * Argumen historisnya: identitas yang tercatat menjadi geografi politik. Maka
+ * pembagiannya harus terjadi SECARA SPASIAL, bukan diumumkan lewat kapsi —
+ * Panjalu bergerak ke barat, Janggala ke timur, dan Brantas tinggal di
+ * tengah sebagai satu-satunya yang tidak berpindah.
+ *
+ * Nama-namanya teks DOM dengan ejaan kanon (Janggala, bukan Jenggala), bukan
+ * label yang terbakar di dalam citra. Karena terpisah, lapisan Sejarah dapat
+ * dibedakan dari lapisan Tradisi — 04_VISUAL_ACCEPTANCE menuntut Mpu Bharada
+ * tidak pernah tampil sebagai fakta geologis, dan itu mustahil dijamin bila
+ * keduanya sudah menyatu di dalam raster.
+ */
 const dividedKingdom: SceneTimelineFactory = ({ root, variant }) => {
   const surface = one(root, ".stage-surface");
   const plate = one(root, ".stage-plate");
@@ -526,6 +560,10 @@ const dividedKingdom: SceneTimelineFactory = ({ root, variant }) => {
     );
   }
   revealStrokes(timeline, strokes, 0.12, 0.18, 0.06);
+  // Bidang bersatu lebih dulu, baru terbelah: pemisahan hanya berarti kalau
+  // kesatuan sebelumnya sempat terbaca (checkpoint 04: unified field readable
+  // before separation).
+  separateTerritories(timeline, root, 0.3, 0.2);
   revealEarlyReading(timeline, units, context, master);
   addLosingScaleExit(timeline, surface, plate, variant);
   return timeline;
@@ -728,6 +766,83 @@ const runwayTransition: SceneTimelineFactory = ({ root, variant }) => {
   addLosingScaleExit(timeline, surface, plate, variant);
   return timeline;
 };
+
+/**
+ * Nama tiba sebagai peristiwa.
+ *
+ * Dipakai 921, tempat satu nama adalah seluruh argumen scene. Namanya naik
+ * keluar dari material dan mengeras: yPercent turun ke nol sementara skalanya
+ * menyusut sedikit ke ukuran istirahat, sehingga geraknya terbaca sebagai
+ * sesuatu yang muncul ke permukaan, bukan sebagai teks yang di-fade.
+ *
+ * Hanya opacity dan transform. Tidak pernah autoAlpha: nama historis tidak
+ * boleh hilang dari pohon aksesibilitas.
+ */
+function revealNames(
+  timeline: gsap.core.Timeline,
+  root: HTMLElement,
+  at: number,
+  duration: number,
+): void {
+  const names = q(root, "scene-name");
+  if (names.length === 0) return;
+  timeline.fromTo(
+    names,
+    { opacity: 0, yPercent: 26, scale: 1.06 },
+    {
+      opacity: 1,
+      yPercent: 0,
+      scale: 1,
+      ease: MOTION.scrubEase,
+      duration,
+      stagger: names.length > 1 ? duration * 0.22 : 0,
+    },
+    at,
+  );
+}
+
+/**
+ * Pembagian wilayah dikerjakan oleh RUANG, bukan oleh kapsi.
+ *
+ * Dipakai 1042. Panjalu dan Janggala berangkat dari posisi yang berimpit lalu
+ * bergerak ke tepian masing-masing; Brantas tidak ikut bergerak sama sekali —
+ * satu-satunya konstanta di dalam shot, persis seperti argumen kanonnya.
+ * Perjalanan mengikuti varian, karena bingkai mobile jauh lebih sempit dan
+ * jarak desktop akan mendorong nama keluar bingkai.
+ */
+function separateTerritories(
+  timeline: gsap.core.Timeline,
+  root: HTMLElement,
+  at: number,
+  duration: number,
+): void {
+  const names = q(root, "scene-name");
+  if (names.length === 0) return;
+
+  timeline.fromTo(
+    names,
+    { opacity: 0 },
+    { opacity: 1, ease: MOTION.scrubEase, duration: duration * 0.4 },
+    at,
+  );
+
+  for (const name of names) {
+    const anchor = name.dataset.anchor;
+    // Sungai adalah konstanta: ia hadir, lalu diam.
+    if (anchor === "river") continue;
+    const direction = anchor === "west" ? -1 : 1;
+    timeline.fromTo(
+      name,
+      { xPercent: 0 },
+      {
+        xPercent: direction * 100,
+        ease: MOTION.scrubEase,
+        duration,
+      },
+      at,
+    );
+  }
+}
 
 /** Menyiapkan dan menggambar garis tanpa membuat fakta visual baru. */
 function revealStrokes(
@@ -1115,6 +1230,23 @@ function setReadableState(
     opacity: 1,
     xPercent: 0,
     yPercent: 0,
+  });
+  /*
+   * Nama tempat dan wilayah harus utuh dan terbaca di mobile, reduced motion,
+   * dan pendaratan tautan dalam. Ini bukan dekorasi yang boleh tertinggal
+   * setengah transparan: pada 921 namanya ADALAH scene-nya, dan pada 1042
+   * tanpa nama-nama ini tidak ada yang menjelaskan wilayah mana yang mana —
+   * sebab labelnya sudah tidak lagi ada di dalam citra.
+   *
+   * xPercent sengaja dikembalikan ke nol: pemisahan spasial adalah koreografi
+   * desktop. Di alur vertikal mobile, nama beristirahat pada posisi tata
+   * letaknya sendiri.
+   */
+  setIfPresent(q(root, "scene-name"), {
+    opacity: 1,
+    xPercent: 0,
+    yPercent: 0,
+    scale: 1,
   });
 
   for (const handoff of q(root, "handoff")) {

@@ -11,6 +11,7 @@ import { SceneCanvas } from "./scene-canvas";
 import { SceneHandoff, type SceneHandoffKind } from "./scene-handoff";
 import { SceneMedia, sceneMediaLabel } from "./scene-media";
 import { SceneMotion } from "./scene-motion";
+import { SceneNomenclature } from "./scene-nomenclature";
 
 /** Motif yang masuk ke masing-masing dunia awal. */
 const HANDOFF_BEFORE_SCENE: Readonly<
@@ -117,6 +118,15 @@ export function SceneSection({
 
           {/* Cahaya menyudut itu sendiri: pita yang melintasi bingkai. */}
           <div className="stage-light" data-motion="light" aria-hidden="true" />
+
+          {/*
+           * Nama tempat dan wilayah sebagai teks sungguhan di atas citra.
+           * Aset produksi 921 dan 1042 dahulu memikul namanya sendiri di dalam
+           * raster; jendela bingkai mengeluarkannya, dan lapisan inilah yang
+           * mengembalikan maknanya — kini dapat dibaca pembaca layar,
+           * diterjemahkan, dan dikoreksi (Authority Rule 1).
+           */}
+          <SceneNomenclature slug={scene.slug} />
 
           {mediaLabel ? (
             <p className="stage-visual-label">{mediaLabel}</p>

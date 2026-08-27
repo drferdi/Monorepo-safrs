@@ -1,11 +1,35 @@
-import type { ReactElement } from "react";
+import type { CSSProperties, ReactElement } from "react";
 
 import type {
   FramingMedia,
   FramingNarrative,
 } from "../../content/production-narrative";
+import { frameVariables, sceneFraming } from "../../modules/motion/framing";
 import { SceneHandoff } from "./scene-handoff";
 import { SceneMotion } from "./scene-motion";
+
+/**
+ * Prolog dan Finale memakai citra yang sama, jadi keduanya memakai pengarahan
+ * bingkai yang sama: manifest scene 00, tanpa crop, hanya object-position.
+ */
+const PROLOGUE_FRAMING_SLUG = "2026-prologue";
+
+function prologueFramingStyle(): CSSProperties | undefined {
+  const framing = sceneFraming(PROLOGUE_FRAMING_SLUG);
+  if (!framing) return undefined;
+  const desktop = frameVariables(framing, framing.desktop);
+  const mobile = frameVariables(framing, framing.mobile);
+  return {
+    "--frame-zoom-d": desktop["--frame-zoom"],
+    "--frame-x-d": desktop["--frame-x"],
+    "--frame-y-d": desktop["--frame-y"],
+    "--frame-zoom-m": mobile["--frame-zoom"],
+    "--frame-x-m": mobile["--frame-x"],
+    "--frame-y-m": mobile["--frame-y"],
+    "--frame-pos-d": framing.objectPositionDesktop,
+    "--frame-pos-m": framing.objectPositionMobile,
+  } as CSSProperties;
+}
 
 const FIRST_SCENE_SLUG = "879-first-mark";
 
@@ -27,6 +51,7 @@ export function FramingStage({
     <div
       className={surface ? "stage-media" : "framing-stage"}
       data-framing={framing}
+      style={prologueFramingStyle()}
     >
       {/* biome-ignore lint/performance/noImgElement: aset pratinjau lokal disajikan route sendiri tanpa loader tambahan. */}
       <img
