@@ -21,13 +21,27 @@ describe("production journey contract", () => {
     expect(new Set(scenes.map((scene) => scene.slug)).size).toBe(26);
   });
 
+  // Scene 01-04: crop lolos verifikasi Redo Register (REDO-ASSET-001..004,
+  // framing-baked-text.test.ts), sehingga dipromosikan ke aset statis publik
+  // (`/journey-approved/`) alih-alih rute pratinjau bergerbang (direktif
+  // runtime 2026-08-28). Sisanya tetap di belakang `/api/editorial-preview/`
+  // sampai crop masing-masing diverifikasi.
+  const STATIC_APPROVED_SLUGS = new Set([
+    "879-first-mark",
+    "921-kadhiri",
+    "1015-name-endures",
+    "1042-river-divides-kingdom",
+  ]);
+
   it("gives every scene complete copy and a stable media slot", () => {
     for (const scene of scenes) {
       expect(scene.narrativeParagraphs?.length).toBeGreaterThan(0);
       expect(scene.masterLine?.length).toBeGreaterThan(0);
       expect(scene.mediaSlot?.key).toBe(scene.slug);
       expect(scene.mediaSlot?.expectedPath).toMatch(
-        /^\/api\/editorial-preview\//u,
+        STATIC_APPROVED_SLUGS.has(scene.slug)
+          ? /^\/journey-approved\//u
+          : /^\/api\/editorial-preview\//u,
       );
       expect(scene.epistemicStatus).toContain("belum dipublikasikan");
     }
@@ -41,8 +55,11 @@ describe("production journey contract", () => {
     );
     for (const scene of ready) {
       expect(scene.mediaSlot?.altText.length).toBeGreaterThan(24);
+      const prefix = STATIC_APPROVED_SLUGS.has(scene.slug)
+        ? "/journey-approved/"
+        : "/api/editorial-preview/";
       expect(scene.mediaSlot?.expectedPath).toBe(
-        `/api/editorial-preview/${String(scene.order).padStart(2, "0")}-${scene.slug}.webp`,
+        `${prefix}${String(scene.order).padStart(2, "0")}-${scene.slug}.webp`,
       );
     }
     expect(scenes.find((scene) => scene.order === 16)?.dateDisplay).toBe(

@@ -80,6 +80,15 @@ export function SceneSection({
   const mediaLabel = sceneMediaLabel(scene, editorialPreview);
   const incomingHandoff = HANDOFF_BEFORE_SCENE[scene.slug];
   const outgoingHandoff = HANDOFF_AFTER_SCENE[scene.slug];
+  // Direktif runtime 2026-08-28: Scene 01-04 membuang chrome
+  // "SCENE n · judul · label review" dari PANGGUNG — bukan dari dokumen.
+  // Eyebrow dan judul tetap ada untuk pembaca layar (aria-labelledby, urutan
+  // DOM); yang berhenti adalah kotak visualnya. Kalimat pemikul (masterLine)
+  // membawa makna itu secara sinematik. Status pengetahuan tetap tampil utuh
+  // di strip bacaan (.scene-readout) di bawah panggung.
+  const stageChromeVisible = !(
+    typeof scene.order === "number" && scene.order <= 4
+  );
 
   const body = (
     <section
@@ -150,17 +159,23 @@ export function SceneSection({
             </time>
 
             <div className="stage-context" data-motion="context">
-              <p className="stage-sequence">
+              <p
+                className={
+                  stageChromeVisible ? "stage-sequence" : "visually-hidden"
+                }
+              >
                 Scene {String(scene.order).padStart(2, "0")}
               </p>
               <h2
-                className="title-scene"
+                className={
+                  stageChromeVisible ? "title-scene" : "visually-hidden"
+                }
                 id={`${scene.slug}-title`}
                 data-motion="title"
               >
                 {scene.title}
               </h2>
-              {featuredArtifact ? (
+              {featuredArtifact && stageChromeVisible ? (
                 <p className="stage-object">
                   <span>Objek</span>
                   {featuredArtifact.name}
@@ -169,10 +184,10 @@ export function SceneSection({
                     : ""}
                 </p>
               ) : null}
-              {badgeClass ? (
+              {badgeClass && stageChromeVisible ? (
                 <EvidenceClassBadge evidenceClass={badgeClass} />
               ) : null}
-              {scene.epistemicStatus ? (
+              {scene.epistemicStatus && stageChromeVisible ? (
                 <p className="scene-status">{scene.epistemicStatus}</p>
               ) : null}
             </div>
@@ -215,11 +230,23 @@ export function SceneSection({
                 ))}
               </div>
             ) : null}
-
-            {outgoingHandoff ? (
-              <SceneHandoff kind={outgoingHandoff} phase="outgoing" />
-            ) : null}
           </div>
+
+          {/*
+           * Sejajar dengan `.stage-plate`, BUKAN anaknya. GSAP memasang
+           * `transform` pada plate sepanjang timeline (termasuk transisi
+           * keluar `addLosingScaleExit`), dan elemen mana pun yang memiliki
+           * transform menjadi containing block bagi anak `position:absolute`
+           * — motif ini lalu terhitung relatif terhadap kotak plate yang
+           * sempit, bukan seluruh panggung, dan bisa menabrak naskah yang
+           * sedang tampil (terbukti pada tinjauan visual 2026-08-28 ronde
+           * ketiga, scene 921). Menjadi saudara `.scene-stage > *` (seperti
+           * handoff masuk) mengembalikannya ke posisi yang benar-benar
+           * relatif terhadap panggung.
+           */}
+          {outgoingHandoff ? (
+            <SceneHandoff kind={outgoingHandoff} phase="outgoing" />
+          ) : null}
         </div>
 
         {scene.choreographyKey ? (
@@ -237,6 +264,29 @@ export function SceneSection({
           <p className="epistemic-note">
             <span>Status pengetahuan</span>
             {scene.epistemicStatus}
+          </p>
+        ) : null}
+
+        {/*
+         * Scene 01-04: objek dan kelas bukti pindah ke sini dari panggung —
+         * metadata tidak boleh memimpin sebuah shot sinematik (direktif
+         * runtime 2026-08-28). Scene 05+ tetap menampilkannya di panggung
+         * seperti semula.
+         */}
+        {!stageChromeVisible && (featuredArtifact || badgeClass) ? (
+          <p className="readout-provenance">
+            {badgeClass ? (
+              <EvidenceClassBadge evidenceClass={badgeClass} />
+            ) : null}
+            {featuredArtifact ? (
+              <span className="stage-object">
+                <span>Objek</span>
+                {featuredArtifact.name}
+                {featuredArtifact.inventoryNumber
+                  ? ` · ${featuredArtifact.inventoryNumber}`
+                  : ""}
+              </span>
+            ) : null}
           </p>
         ) : null}
 

@@ -28,6 +28,15 @@ import { getJourneyManifest } from "../../../content/queries";
  * baris JavaScript berjalan; satu-satunya island klien adalah overlay Timeline,
  * dan bila ia gagal dimuat, /explore/timeline memuat kronologi yang sama.
  */
+/**
+ * Latar kartu judul act, mode pratinjau editorial saja (direktif Chief
+ * 2026-08-28): "Panjalu Rises" memakai citra yang semula milik scene Daha —
+ * scene Daha sendiri kini bergerak sebagai video dahanasada.
+ */
+const ACT_HEADER_MEDIA: Readonly<Record<string, string>> = {
+  "panjalu-rises": "/api/editorial-preview/05-daha-centre-of-power.webp",
+};
+
 export const metadata = {
   title: "Journey",
   description:
@@ -38,8 +47,12 @@ export default async function JourneyPage(): Promise<ReactElement> {
   const publishedManifest = await getJourneyManifest();
   // Naskah penuh adalah ruang kerja desain lokal, bukan shortcut publikasi.
   // Build produksi hanya merender scene yang sudah lolos CMS beserta rantai
-  // bukti dan tata kelola medianya.
-  const editorialPreview = process.env.NODE_ENV !== "production";
+  // bukti dan tata kelola medianya — kecuali `SHOW_EDITORIAL_PREVIEW=true`
+  // diset eksplisit, saklar yang hanya menyala atas otorisasi Chief
+  // in-session (lihat DECISIONS.md dan route editorial-preview).
+  const editorialPreview =
+    process.env.NODE_ENV !== "production" ||
+    process.env.SHOW_EDITORIAL_PREVIEW === "true";
   const manifest = editorialPreview
     ? composeProductionJourney(publishedManifest)
     : publishedManifest;
@@ -70,6 +83,13 @@ export default async function JourneyPage(): Promise<ReactElement> {
   return (
     <div className="shell" data-journey="true">
       <DeepLinkLanding />
+      {/*
+       * Nav journey adalah overlay `position: fixed` — ia dan panel Timeline
+       * WAJIB hidup di luar #smooth-wrapper: elemen fixed di dalam konten
+       * yang ditransformasikan ScrollSmoother menjadi relatif terhadap konten
+       * dan ikut tergulir (aturan resmi ScrollSmoother; terbukti oleh e2e
+       * "Timeline pushState lands on a readable early scene").
+       */}
       <nav className="site-nav" aria-label="Navigasi Journey">
         <Link href="/" className="wordmark">
           Kediri
@@ -87,83 +107,114 @@ export default async function JourneyPage(): Promise<ReactElement> {
         </ul>
       </nav>
 
-      <main id="historical-content">
-        {editorialPreview ? (
-          <PrologueScene narrative={PRODUCTION_PROLOGUE} editorialPreview />
-        ) : (
-          <header className="journey-intro">
-            <p className="eyebrow">Kediri · Kronologi terbit</p>
-            <h1 className="title-page">Perjalanan</h1>
-            <p className="journey-range">{publishedRange}</p>
-            <p className="lead measure">
-              Setiap scene di halaman ini telah diterbitkan melalui arsip dan
-              rantai bukti Kediri.
-            </p>
-          </header>
-        )}
+      {/*
+       * Kerangka ScrollSmoother (100% GSAP, direktif Chief 2026-08-28).
+       * Server hanya merender dua div ini; smoother-nya sendiri diciptakan
+       * ber-refcount oleh island motion pertama pada varian desktop/tablet
+       * (modules/motion/smooth.ts). Tanpa JavaScript atau pada mobile/reduced,
+       * keduanya div biasa dan halaman menggulir native.
+       */}
+      <div id="smooth-wrapper">
+        <div id="smooth-content">
+          <main id="historical-content">
+            {editorialPreview ? (
+              <PrologueScene narrative={PRODUCTION_PROLOGUE} editorialPreview />
+            ) : (
+              <header className="journey-intro">
+                <p className="eyebrow">Kediri · Kronologi terbit</p>
+                <h1 className="title-page">Perjalanan</h1>
+                <p className="journey-range">{publishedRange}</p>
+                <p className="lead measure">
+                  Setiap scene di halaman ini telah diterbitkan melalui arsip
+                  dan rantai bukti Kediri.
+                </p>
+              </header>
+            )}
 
-        {manifest.acts.map((act) => (
-          <section
-            key={act.id}
-            className="journey-act"
-            data-era={act.visualEraKey}
-            aria-labelledby={`act-${act.slug}`}
-          >
-            <header>
-              <p className="archive-label">{act.dateRangeDisplay}</p>
-              <h2 id={`act-${act.slug}`} className="title-scene">
-                {act.title}
-              </h2>
-              {act.introCopy ? (
-                <p className="lead measure">{act.introCopy}</p>
-              ) : null}
-            </header>
+            {manifest.acts.map((act) => (
+              <section
+                key={act.id}
+                className="journey-act"
+                data-era={act.visualEraKey}
+                aria-labelledby={`act-${act.slug}`}
+              >
+                <header
+                  data-header-media={
+                    editorialPreview && ACT_HEADER_MEDIA[act.slug]
+                      ? "true"
+                      : undefined
+                  }
+                >
+                  {editorialPreview && ACT_HEADER_MEDIA[act.slug] ? (
+                    <span className="act-header-media" aria-hidden="true">
+                      {/* biome-ignore lint/performance/noImgElement: aset pratinjau lokal disajikan route sendiri tanpa loader tambahan. */}
+                      <img
+                        src={ACT_HEADER_MEDIA[act.slug]}
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </span>
+                  ) : null}
+                  <p className="archive-label">{act.dateRangeDisplay}</p>
+                  <h2 id={`act-${act.slug}`} className="title-scene">
+                    {act.title}
+                  </h2>
+                  {act.introCopy ? (
+                    <p className="lead measure">{act.introCopy}</p>
+                  ) : null}
+                </header>
 
-            {act.scenes.map((scene) => (
-              <SceneSection
-                key={scene.id}
-                scene={scene}
-                nextSceneSlug={nextSceneBySlug.get(scene.slug)}
-                editorialPreview={editorialPreview}
-              />
-            ))}
-          </section>
-        ))}
-
-        {editorialPreview ? (
-          <section className="journey-finale" aria-labelledby="journey-finale">
-            <div className="finale-frame">
-              {PRODUCTION_FINALE.media ? (
-                <FramingStage
-                  media={PRODUCTION_FINALE.media}
-                  framing="finale"
-                />
-              ) : null}
-              <p className="eyebrow">{PRODUCTION_FINALE.eyebrow}</p>
-              <h2 id="journey-finale" className="title-scene">
-                {PRODUCTION_FINALE.title}
-              </h2>
-              <p className="master-line">{PRODUCTION_FINALE.masterLine}</p>
-              <p className="journey-visual-label">Visualisasi artistik</p>
-            </div>
-            <div className="finale-readout">
-              <div className="narrative-stack">
-                {PRODUCTION_FINALE.paragraphs.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
+                {act.scenes.map((scene) => (
+                  <SceneSection
+                    key={scene.id}
+                    scene={scene}
+                    nextSceneSlug={nextSceneBySlug.get(scene.slug)}
+                    editorialPreview={editorialPreview}
+                  />
                 ))}
-              </div>
-              <div className="finale-coda">
-                <p>Bab berikutnya belum memiliki tanggal.</p>
-                <p>Kediri</p>
-                <p>Djojo ing Bojo</p>
-                <p>Kota ini terus berlanjut.</p>
-              </div>
-            </div>
-          </section>
-        ) : null}
-      </main>
+              </section>
+            ))}
 
-      <SiteFooter />
+            {editorialPreview ? (
+              <section
+                className="journey-finale"
+                aria-labelledby="journey-finale"
+              >
+                <div className="finale-frame">
+                  {PRODUCTION_FINALE.media ? (
+                    <FramingStage
+                      media={PRODUCTION_FINALE.media}
+                      framing="finale"
+                    />
+                  ) : null}
+                  <p className="eyebrow">{PRODUCTION_FINALE.eyebrow}</p>
+                  <h2 id="journey-finale" className="title-scene">
+                    {PRODUCTION_FINALE.title}
+                  </h2>
+                  <p className="master-line">{PRODUCTION_FINALE.masterLine}</p>
+                  <p className="journey-visual-label">Visualisasi artistik</p>
+                </div>
+                <div className="finale-readout">
+                  <div className="narrative-stack">
+                    {PRODUCTION_FINALE.paragraphs.map((paragraph) => (
+                      <p key={paragraph}>{paragraph}</p>
+                    ))}
+                  </div>
+                  <div className="finale-coda">
+                    <p>Bab berikutnya belum memiliki tanggal.</p>
+                    <p>Kediri</p>
+                    <p>Djojo ing Bojo</p>
+                    <p>Kota ini terus berlanjut.</p>
+                  </div>
+                </div>
+              </section>
+            ) : null}
+          </main>
+
+          <SiteFooter />
+        </div>
+      </div>
     </div>
   );
 }

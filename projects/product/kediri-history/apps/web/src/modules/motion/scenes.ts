@@ -1,5 +1,7 @@
+import { createReadingDirector } from "./director";
 import { gsap, MOTION, ScrollTrigger } from "./gsap";
 import type { ChoreographyKey, MotionVariant } from "./registry";
+import { ensureSmoother, releaseSmoother } from "./smooth";
 
 /**
  * Penyutradaraan shot.
@@ -70,9 +72,6 @@ const REST_LEAVE = 0.84;
 const prologueReveal: SceneTimelineFactory = ({ root, variant }) => {
   const surface = one(root, ".prologue-surface");
   const waterLine = one(root, '[data-motion="water-line"]');
-  const context = q(root, "context");
-  const title = q(root, "title");
-  const master = q(root, "master");
   const metadata = q(root, "metadata");
   const plate = one(root, ".prologue-plate");
   const timeline = gsap.timeline({ paused: true });
@@ -105,18 +104,7 @@ const prologueReveal: SceneTimelineFactory = ({ root, variant }) => {
       0.16,
     );
   }
-  timeline.fromTo(
-    context.length > 0 ? context : title,
-    { opacity: 0, yPercent: 5 },
-    { opacity: 1, yPercent: 0, ease: MOTION.scrubEase, duration: 0.08 },
-    0.3,
-  );
-  timeline.fromTo(
-    master,
-    { opacity: 0, yPercent: 6 },
-    { opacity: 1, yPercent: 0, ease: MOTION.scrubEase, duration: 0.08 },
-    0.43,
-  );
+  // Naskah (konteks, kalimat pemikul, beat) milik Jam 2 — director.ts.
   if (variant === "desktop" || variant === "tablet") {
     timeline.fromTo(
       metadata,
@@ -148,16 +136,7 @@ const inscriptionReveal: SceneTimelineFactory = ({ root, variant }) => {
   const surface = one(root, ".stage-surface");
   const light = one(root, ".stage-light");
   const plate = one(root, ".stage-plate");
-  const units = q(root, "date-part");
-  const title = q(root, "title");
-  const context = q(root, "context");
-  const master = q(root, "master");
-  if (!surface || units.length === 0) return undefined;
-
-  // Tarikh hadir bertahap, dan TAHUNNYA lebih dulu: keberadaan sebelum presisi.
-  const year = units.at(-1);
-  const precision = units.slice(0, -1);
-  if (!year) return undefined;
+  if (!surface) return undefined;
 
   const timeline = gsap.timeline({ paused: true });
 
@@ -207,43 +186,9 @@ const inscriptionReveal: SceneTimelineFactory = ({ root, variant }) => {
     );
   }
 
-  // Ketukan 3 — 879 muncul di tempat cahaya baru saja lewat.
-  timeline.fromTo(
-    year,
-    { opacity: 0, yPercent: 14 },
-    { opacity: 1, yPercent: 0, ease: MOTION.scrubEase, duration: 0.1 },
-    0.34,
-  );
-
-  // Ketukan 4 — tahanan. Hanya kamera yang masih merayap.
-
-  // Ketukan 5 — presisi menyusul, lalu label dan kalimat yang memikul shot.
-  if (precision.length > 0) {
-    timeline.fromTo(
-      precision,
-      { opacity: 0, yPercent: 10 },
-      {
-        opacity: 1,
-        yPercent: 0,
-        ease: MOTION.scrubEase,
-        duration: 0.08,
-        stagger: 0.03,
-      },
-      0.52,
-    );
-  }
-  timeline.fromTo(
-    context.length > 0 ? context : title,
-    { opacity: 0 },
-    { opacity: 1, ease: MOTION.scrubEase, duration: 0.06 },
-    0.48,
-  );
-  timeline.fromTo(
-    master,
-    { opacity: 0, yPercent: 8 },
-    { opacity: 1, yPercent: 0, ease: MOTION.scrubEase, duration: 0.08 },
-    0.53,
-  );
+  // Ketukan 3–5 — tarikh (tahun lebih dulu), konteks, dan kalimat pemikul
+  // kini milik Jam 2: director.ts men-trigger-nya pada ambang progres, dengan
+  // ease ekspresif — bukan menumpang jam kamera ini.
 
   // Ketukan 6 — tahanan baca. Komposisi diam; tautan dalam mendarat di sini.
 
@@ -264,12 +209,8 @@ const inscriptionReveal: SceneTimelineFactory = ({ root, variant }) => {
 const royalConsolidation: SceneTimelineFactory = ({ root, variant }) => {
   const surface = one(root, ".stage-surface");
   const plate = one(root, ".stage-plate");
-  const units = q(root, "date-part");
-  const title = q(root, "title");
-  const master = q(root, "master");
-  if (units.length === 0 && title.length === 0) return undefined;
+  if (!surface) return undefined;
 
-  const travel = travelFor(variant);
   const timeline = gsap.timeline({ paused: true });
 
   if (surface) {
@@ -286,33 +227,8 @@ const royalConsolidation: SceneTimelineFactory = ({ root, variant }) => {
       0,
     );
   }
-  timeline.fromTo(
-    units,
-    {
-      opacity: 0,
-      xPercent: (index: number) => (index % 2 === 0 ? -travel : travel),
-    },
-    {
-      opacity: 1,
-      xPercent: 0,
-      ease: MOTION.scrubEase,
-      duration: 0.24,
-      stagger: 0.04,
-    },
-    0.26,
-  );
-  timeline.fromTo(
-    title,
-    { opacity: 0 },
-    { opacity: 1, ease: MOTION.scrubEase, duration: 0.06 },
-    0.54,
-  );
-  timeline.fromTo(
-    master,
-    { opacity: 0, yPercent: 8 },
-    { opacity: 1, yPercent: 0, ease: MOTION.scrubEase, duration: 0.08 },
-    0.58,
-  );
+  // Konsolidasi tarikh dari dua sisi kini Jam 2 (director.ts,
+  // gaya khusus royalConsolidation) — di-trigger, bukan di-scrub.
   addLosingScaleExit(timeline, surface, plate, variant);
   return timeline;
 };
@@ -336,9 +252,6 @@ const bridgeConstruction: SceneTimelineFactory = ({ root, variant }) => {
       "[data-motion-draw]",
     ),
   );
-  const units = q(root, "date-part");
-  const title = q(root, "title");
-  const master = q(root, "master");
 
   const timeline = gsap.timeline({ paused: true });
   if (surface) {
@@ -363,24 +276,7 @@ const bridgeConstruction: SceneTimelineFactory = ({ root, variant }) => {
     cursor += 0.05;
   }
 
-  timeline.fromTo(
-    units,
-    { opacity: 0, yPercent: 12 },
-    { opacity: 1, yPercent: 0, ease: MOTION.scrubEase, duration: 0.1 },
-    0.42,
-  );
-  timeline.fromTo(
-    title,
-    { opacity: 0 },
-    { opacity: 1, ease: MOTION.scrubEase, duration: 0.06 },
-    0.54,
-  );
-  timeline.fromTo(
-    master,
-    { opacity: 0, yPercent: 8 },
-    { opacity: 1, yPercent: 0, ease: MOTION.scrubEase, duration: 0.08 },
-    0.58,
-  );
+  // Tarikh, judul, dan kalimat pemikul: Jam 2 (director.ts).
   addLosingScaleExit(timeline, surface, plate, variant);
   return timeline;
 };
@@ -401,10 +297,6 @@ const bridgeConstruction: SceneTimelineFactory = ({ root, variant }) => {
 const nameEmerges: SceneTimelineFactory = ({ root, variant }) => {
   const surface = one(root, ".stage-surface");
   const plate = one(root, ".stage-plate");
-  const units = q(root, "date-part");
-  const context = q(root, "context");
-  const title = q(root, "title");
-  const master = q(root, "master");
   const timeline = gsap.timeline({ paused: true });
 
   if (surface) {
@@ -421,34 +313,30 @@ const nameEmerges: SceneTimelineFactory = ({ root, variant }) => {
       0,
     );
   }
-  timeline.fromTo(
-    units,
-    { opacity: 0, yPercent: 24 },
-    { opacity: 1, yPercent: 0, ease: MOTION.scrubEase, duration: 0.16 },
-    0.3,
-  );
-
   /*
-   * Ketukan nama. Ia datang SEBELUM judul dan kalimat pemikul, karena di scene
-   * ini namanya adalah peristiwanya — bukan ilustrasi bagi kalimat yang
-   * menjelaskannya. Perjalanannya dari bawah dan sedikit membesar: nama itu
-   * naik keluar dari material, bukan meredup masuk dari ketiadaan.
+   * Ketukan nama, tarikh, dan kalimat pemikul kini Jam 2 (director.ts).
+   * KADHIRI tiba sebagai peristiwa lewat SplitText per-huruf yang di-trigger
+   * pada ambang 0.34 — ia datang SEBELUM judul dan kalimat pemikul, karena
+   * di scene ini namanya adalah peristiwanya.
    */
-  revealNames(timeline, root, 0.34, 0.14);
-
-  timeline.fromTo(
-    context.length > 0 ? context : title,
-    { opacity: 0, yPercent: 12 },
-    { opacity: 1, yPercent: 0, ease: MOTION.scrubEase, duration: 0.12 },
-    0.5,
-  );
-  timeline.fromTo(
-    master,
-    { opacity: 0, yPercent: 10 },
-    { opacity: 1, yPercent: 0, ease: MOTION.scrubEase, duration: 0.1 },
-    0.56,
-  );
   addLosingScaleExit(timeline, surface, plate, variant);
+  /*
+   * KADHIRI sendiri tidak pernah dianimasikan keluar — ia menetap solid di
+   * tengah bingkai sepanjang timeline. Saat transisi keluar menggeser
+   * `.stage-plate` ke atas (addLosingScaleExit), kalimat pemikul dapat lewat
+   * tepat di baris nama yang diam itu dan bertabrakan — terbukti pada
+   * tinjauan visual 2026-08-28 ronde ketiga. Nama ikut meredup pada jendela
+   * keluar yang SAMA, sehingga teks yang lewat tidak pernah menabrak kata
+   * solid.
+   */
+  const names = q(root, "scene-name");
+  if (names.length > 0) {
+    timeline.to(
+      names,
+      { opacity: 0.12, ease: MOTION.scrubEase, duration: 1 - REST_LEAVE },
+      REST_LEAVE,
+    );
+  }
   return timeline;
 };
 
@@ -466,9 +354,6 @@ const nameEndures: SceneTimelineFactory = ({ root, variant }) => {
   const surface = one(root, ".stage-surface");
   const plate = one(root, ".stage-plate");
   const canvas = one(root, ".stage-surface svg");
-  const units = q(root, "date-part");
-  const context = q(root, "context");
-  const master = q(root, "master");
   const timeline = gsap.timeline({ paused: true });
 
   if (surface) {
@@ -495,25 +380,8 @@ const nameEndures: SceneTimelineFactory = ({ root, variant }) => {
       0,
     );
   }
-  // Tarikh menjadi ada tanpa perpindahan: keheningan adalah argumennya.
-  timeline.fromTo(
-    units,
-    { opacity: 0 },
-    { opacity: 1, ease: MOTION.scrubEase, duration: 0.14 },
-    0.34,
-  );
-  timeline.fromTo(
-    context,
-    { opacity: 0 },
-    { opacity: 1, ease: MOTION.scrubEase, duration: 0.08 },
-    0.5,
-  );
-  timeline.fromTo(
-    master,
-    { opacity: 0 },
-    { opacity: 1, ease: MOTION.scrubEase, duration: 0.1 },
-    0.56,
-  );
+  // Tarikh dan naskah menjadi ada tanpa perpindahan (Jam 2, gaya "still"
+  // Research Hold di director.ts): keheningan adalah argumennya.
   addLosingScaleExit(timeline, surface, plate, variant);
   return timeline;
 };
@@ -540,9 +408,6 @@ const dividedKingdom: SceneTimelineFactory = ({ root, variant }) => {
       "[data-motion-draw]",
     ),
   );
-  const units = q(root, "date-part");
-  const context = q(root, "context");
-  const master = q(root, "master");
   const timeline = gsap.timeline({ paused: true });
 
   if (surface) {
@@ -564,7 +429,7 @@ const dividedKingdom: SceneTimelineFactory = ({ root, variant }) => {
   // kesatuan sebelumnya sempat terbaca (checkpoint 04: unified field readable
   // before separation).
   separateTerritories(timeline, root, 0.3, 0.2);
-  revealEarlyReading(timeline, units, context, master);
+  // Tarikh dan naskah pembuka: Jam 2 (director.ts).
   addLosingScaleExit(timeline, surface, plate, variant);
   return timeline;
 };
@@ -578,9 +443,6 @@ const manuscriptWorld: SceneTimelineFactory = ({ root, variant }) => {
       "[data-motion-draw]",
     ),
   );
-  const units = q(root, "date-part");
-  const context = q(root, "context");
-  const master = q(root, "master");
   const timeline = gsap.timeline({ paused: true });
 
   if (surface) {
@@ -598,7 +460,6 @@ const manuscriptWorld: SceneTimelineFactory = ({ root, variant }) => {
     );
   }
   revealStrokes(timeline, strokes, 0.1, 0.16, 0.045);
-  revealReading(timeline, units, context, master);
   addLosingScaleExit(timeline, surface, plate, variant);
   return timeline;
 };
@@ -607,9 +468,6 @@ const manuscriptWorld: SceneTimelineFactory = ({ root, variant }) => {
 const politicalFracture: SceneTimelineFactory = ({ root, variant }) => {
   const surface = one(root, ".stage-surface");
   const plate = one(root, ".stage-plate");
-  const units = q(root, "date-part");
-  const context = q(root, "context");
-  const master = q(root, "master");
   const timeline = gsap.timeline({ paused: true });
 
   if (surface) {
@@ -626,7 +484,6 @@ const politicalFracture: SceneTimelineFactory = ({ root, variant }) => {
       0,
     );
   }
-  revealReading(timeline, units, context, master);
   addLosingScaleExit(timeline, surface, plate, variant);
   return timeline;
 };
@@ -640,9 +497,6 @@ const bridgeLift: SceneTimelineFactory = ({ root, variant }) => {
       "[data-motion-draw]",
     ),
   );
-  const units = q(root, "date-part");
-  const context = q(root, "context");
-  const master = q(root, "master");
   const timeline = gsap.timeline({ paused: true });
 
   if (surface) {
@@ -660,7 +514,6 @@ const bridgeLift: SceneTimelineFactory = ({ root, variant }) => {
     );
   }
   revealStrokes(timeline, strokes, 0.08, 0.16, 0.04);
-  revealReading(timeline, units, context, master);
   addLosingScaleExit(timeline, surface, plate, variant);
   return timeline;
 };
@@ -674,9 +527,6 @@ const revolutionMachine: SceneTimelineFactory = ({ root, variant }) => {
       "[data-motion-draw]",
     ),
   );
-  const units = q(root, "date-part");
-  const context = q(root, "context");
-  const master = q(root, "master");
   const timeline = gsap.timeline({ paused: true });
 
   if (surface) {
@@ -694,7 +544,6 @@ const revolutionMachine: SceneTimelineFactory = ({ root, variant }) => {
     );
   }
   revealStrokes(timeline, strokes, 0.08, 0.13, 0.035);
-  revealReading(timeline, units, context, master);
   addLosingScaleExit(timeline, surface, plate, variant);
   return timeline;
 };
@@ -708,9 +557,6 @@ const industrialExpansion: SceneTimelineFactory = ({ root, variant }) => {
       "[data-motion-draw]",
     ),
   );
-  const units = q(root, "date-part");
-  const context = q(root, "context");
-  const master = q(root, "master");
   const timeline = gsap.timeline({ paused: true });
 
   if (surface) {
@@ -728,7 +574,6 @@ const industrialExpansion: SceneTimelineFactory = ({ root, variant }) => {
     );
   }
   revealStrokes(timeline, strokes, 0.1, 0.15, 0.04);
-  revealReading(timeline, units, context, master);
   addLosingScaleExit(timeline, surface, plate, variant);
   return timeline;
 };
@@ -742,9 +587,6 @@ const runwayTransition: SceneTimelineFactory = ({ root, variant }) => {
       "[data-motion-draw]",
     ),
   );
-  const units = q(root, "date-part");
-  const context = q(root, "context");
-  const master = q(root, "master");
   const timeline = gsap.timeline({ paused: true });
 
   if (surface) {
@@ -762,44 +604,9 @@ const runwayTransition: SceneTimelineFactory = ({ root, variant }) => {
     );
   }
   revealStrokes(timeline, strokes, 0.08, 0.21, 0.055);
-  revealReading(timeline, units, context, master);
   addLosingScaleExit(timeline, surface, plate, variant);
   return timeline;
 };
-
-/**
- * Nama tiba sebagai peristiwa.
- *
- * Dipakai 921, tempat satu nama adalah seluruh argumen scene. Namanya naik
- * keluar dari material dan mengeras: yPercent turun ke nol sementara skalanya
- * menyusut sedikit ke ukuran istirahat, sehingga geraknya terbaca sebagai
- * sesuatu yang muncul ke permukaan, bukan sebagai teks yang di-fade.
- *
- * Hanya opacity dan transform. Tidak pernah autoAlpha: nama historis tidak
- * boleh hilang dari pohon aksesibilitas.
- */
-function revealNames(
-  timeline: gsap.core.Timeline,
-  root: HTMLElement,
-  at: number,
-  duration: number,
-): void {
-  const names = q(root, "scene-name");
-  if (names.length === 0) return;
-  timeline.fromTo(
-    names,
-    { opacity: 0, yPercent: 26, scale: 1.06 },
-    {
-      opacity: 1,
-      yPercent: 0,
-      scale: 1,
-      ease: MOTION.scrubEase,
-      duration,
-      stagger: names.length > 1 ? duration * 0.22 : 0,
-    },
-    at,
-  );
-}
 
 /**
  * Pembagian wilayah dikerjakan oleh RUANG, bukan oleh kapsi.
@@ -864,63 +671,6 @@ function revealStrokes(
     );
     cursor += step;
   }
-}
-
-/** Pola baca bersama; isi dan urutannya tetap milik HTML. */
-function revealReading(
-  timeline: gsap.core.Timeline,
-  units: readonly HTMLElement[],
-  context: readonly HTMLElement[],
-  master: readonly HTMLElement[],
-): void {
-  timeline.fromTo(
-    units,
-    { opacity: 0, yPercent: 12 },
-    { opacity: 1, yPercent: 0, ease: MOTION.scrubEase, duration: 0.11 },
-    0.42,
-  );
-  timeline.fromTo(
-    context,
-    { opacity: 0 },
-    { opacity: 1, ease: MOTION.scrubEase, duration: 0.07 },
-    0.52,
-  );
-  timeline.fromTo(
-    master,
-    { opacity: 0, yPercent: 8 },
-    { opacity: 1, yPercent: 0, ease: MOTION.scrubEase, duration: 0.09 },
-    0.58,
-  );
-}
-
-/**
- * Pacing khusus pembukaan 879–1042. Lead line mendapat ruang hening sebelum
- * beat naratif; scene setelah 1042 tetap memakai pacing historisnya sendiri.
- */
-function revealEarlyReading(
-  timeline: gsap.core.Timeline,
-  units: readonly HTMLElement[],
-  context: readonly HTMLElement[],
-  master: readonly HTMLElement[],
-): void {
-  timeline.fromTo(
-    units,
-    { opacity: 0, yPercent: 12 },
-    { opacity: 1, yPercent: 0, ease: MOTION.scrubEase, duration: 0.11 },
-    0.36,
-  );
-  timeline.fromTo(
-    context,
-    { opacity: 0 },
-    { opacity: 1, ease: MOTION.scrubEase, duration: 0.07 },
-    0.46,
-  );
-  timeline.fromTo(
-    master,
-    { opacity: 0, yPercent: 8 },
-    { opacity: 1, yPercent: 0, ease: MOTION.scrubEase, duration: 0.09 },
-    0.52,
-  );
 }
 
 /**
@@ -1028,19 +778,27 @@ export function attachScene(
   context: SceneMotionContext,
   key: string,
 ): () => void {
+  if (context.variant === "reduced" || context.variant === "mobile") {
+    /*
+     * Mobile adalah panel novel grafis dalam alur native, dan reduced adalah
+     * keadaan baca statis. KEADAAN BACA ADALAH DOM HASIL SERVER-RENDER:
+     * karena seluruh keadaan awal tween masuk lewat fromTo di timeline
+     * paused, tidak membangun timeline berarti tidak ada satu properti pun
+     * yang perlu direkonstruksi — dan tidak ada drift yang mungkin terjadi.
+     */
+    return () => undefined;
+  }
+
   const factory = sceneTimelineFactory(key);
   if (!factory) return () => undefined;
 
   const timeline = factory(context);
   if (!timeline) return () => undefined;
 
-  if (context.variant === "reduced" || context.variant === "mobile") {
-    // Mobile adalah panel novel grafis dalam alur native, sedangkan reduced
-    // langsung menjadi keadaan baca. Keduanya tidak boleh mendarat pada
-    // progres scrub parsial yang meninggalkan sebagian naskah transparan.
-    setReadableState(context.root, timeline);
-    return () => timeline.kill();
-  }
+  // Smoother lebih dulu, ScrollTrigger belakangan: keputusan pin-vs-sticky
+  // harus diambil sebelum trigger pertama dibuat. Null berarti degradasi ke
+  // scroll native + CSS sticky, bukan kegagalan.
+  const smoother = ensureSmoother();
 
   const pinDistance = pinDistanceFor(context.variant, key);
   const extended = pinDistance > 0;
@@ -1051,81 +809,49 @@ export function attachScene(
     ) ?? context.root;
 
   /*
-   * NASKAH TIBA DI ATAS CITRA, di dalam SATU timeline shot yang sama.
+   * NASKAH TIBA DI ATAS CITRA — tetapi di JAM-nya SENDIRI.
    *
-   * Selama dataran baca (0.60–0.82) paragraf hadir bergiliran di pelat
-   * editorial: satu kalimat pada satu waktu, di halaman citra itu sendiri —
-   * bukan halaman teks setelah shot, dan citra tidak pernah tayang dua kali.
-   * Paragraf terakhir tidak pernah pergi; transisi keluar hanya meredupkan
-   * kanvas. Hanya opacity yang dipakai — naskah historis tidak pernah keluar
-   * dari pohon aksesibilitas, dan varian mobile/reduced/tanpa-JS menampilkan
-   * seluruh paragraf secara statis (cabang ini tidak pernah mereka lalui).
+   * Model dua-jam (direktif Chief 2026-08-28, hasil teardown situs referensi):
+   * timeline shot ini hanya memegang KAMERA (permukaan, cahaya, goresan,
+   * handoff, transisi keluar) dan tetap di-scrub linear. Tarikh, kalimat
+   * pemikul, nama, dan beat editorial dipegang sutradara naskah
+   * (`director.ts`): DI-TRIGGER pada ambang progres, lalu bermain dengan ease
+   * ekspresif. Ritme editorial MASUK → TERBACA → PERGI → HENING tetap hidup —
+   * kini di mesin beat director, dengan jendela progres per koreografi yang
+   * sama seperti sebelumnya.
    */
-  /*
-   * Ritme editorial per beat: MASUK → TERBACA → PERGI → HENING.
-   *
-   * Jeda hening itu disengaja (direktif §18): di antara dua beat, citra
-   * dibiarkan berdiri sendiri tanpa satu pun naskah — informasi tidak pernah
-   * datang sekaligus, dan keheningan adalah bagian dari penyuntingan. Beat
-   * terakhir menetap: dataran baca yang dituju tautan dalam tetap punya
-   * naskah yang utuh.
-   */
-  const passages = q(context.root, "passage");
-  if (passages.length > 0) {
-    // Tautan dalam berhenti pada progres 0.74. Scene awal yang mempunyai
-    // tiga beat harus sudah memasuki beat terakhir di sana, bukan berhenti
-    // pada ambang opacity yang membuat kalimat penutup tampak redup.
-    const PASSAGE_START =
-      key === "prologueReveal"
-        ? 0.56
-        : key === "inscriptionReveal"
-          ? 0.56
-          : key === "nameEmerges"
-            ? 0.5
-            : 0.54;
-    // 879 dan 1015 memiliki stage yang sedikit lebih tinggi daripada viewport
-    // pada sebagian desktop viewport. Target landing tetap .74, sedangkan
-    // ScrollTrigger menormalisasi ke pin-space; mengakhiri staging di .74
-    // memastikan beat terakhir sudah settle sebelum handoff .80 dimulai.
-    const PASSAGE_END =
-      key === "inscriptionReveal" || key === "nameEndures" ? 0.74 : 0.82;
-    const slot = (PASSAGE_END - PASSAGE_START) / passages.length;
-    const fade = Math.min(0.035, slot * 0.22);
-    const silence = passages.length > 1 ? slot * 0.16 : 0;
-    passages.forEach((passage, index) => {
-      const at = PASSAGE_START + index * slot;
-      const entry = passageEntry(key, index);
-      const settle = passageSettle(key);
-      timeline.fromTo(
-        passage,
-        entry,
-        { ...settle, ease: MOTION.scrubEase, duration: fade },
-        at,
-      );
-      if (index < passages.length - 1) {
-        const exit = passageExit(key, index);
-        timeline.to(
-          passage,
-          { ...exit, ease: MOTION.scrubEase, duration: fade },
-          at + slot - fade - silence,
-        );
-      }
-    });
-  }
+  const director = createReadingDirector(context.root, key);
 
   addSceneHandoff(timeline, context.root);
 
+  const pinSpace = context.root.querySelector<HTMLElement>(".scene-pin-space");
   const trigger = ScrollTrigger.create({
     trigger: stage,
     start: extended ? "top top" : "top 82%",
-    end: extended ? `+=${pinDistance}%` : "bottom 40%",
+    /*
+     * Ruang gulir DIUKUR dari .scene-pin-space yang dirender server, bukan
+     * dihitung ulang dari peta: kontrak pacing dengan CSS menjadi tunggal
+     * secara harfiah, dan basis satuannya (svh) ikut terbawa.
+     */
+    end:
+      extended && pinSpace
+        ? () => `+=${pinSpace.offsetHeight}`
+        : extended
+          ? `+=${pinDistance}%`
+          : "bottom 40%",
+    invalidateOnRefresh: true,
     scrub: 0.55,
-    // CSS sticky menahan bingkai di ruang yang sudah ada sejak server render.
-    // ScrollTrigger hanya mengatur progres, sehingga tidak ada pin-spacer
-    // runtime yang menggeser dokumen dan menciptakan CLS.
-    pin: false,
-    anticipatePin: 0,
+    /*
+     * Dengan ScrollSmoother aktif, CSS sticky tidak dapat bekerja di dalam
+     * konten yang ditransformasikan — pin ScrollTrigger mengambil alih,
+     * sementara ruang pin server-rendered tetap menjadi spacer-nya
+     * (pinSpacing: false), sehingga tetap tidak ada CLS. Tanpa smoother,
+     * sticky CSS lama tetap menahan bingkai dan pin tidak dipakai.
+     */
+    pin: smoother && extended ? stage : false,
+    pinSpacing: false,
     animation: timeline,
+    onUpdate: (self) => director.onProgress(self.progress),
   });
 
   // Desktop memakai plate overlay sinematik. Tablet tetap menjalankan
@@ -1143,128 +869,11 @@ export function attachScene(
    */
   return () => {
     delete context.root.dataset.motionReady;
+    director.destroy();
     trigger.kill();
     timeline.kill();
+    releaseSmoother();
   };
-}
-
-function passageEntry(
-  key: string,
-  index: number,
-): { opacity: number; xPercent?: number; yPercent?: number } {
-  switch (key) {
-    case "prologueReveal":
-      return { opacity: 0, xPercent: index % 2 === 0 ? -3 : 3 };
-    case "inscriptionReveal":
-      return { opacity: 0, xPercent: -2 };
-    case "nameEmerges":
-      return { opacity: 0, xPercent: index % 2 === 0 ? -6 : 6 };
-    case "nameEndures":
-      // Research Hold harus terasa hening: tidak ada perjalanan dekoratif.
-      return { opacity: 0 };
-    case "dividedKingdom":
-      return { opacity: 0, xPercent: index % 2 === 0 ? -5 : 5 };
-    default:
-      return { opacity: 0, yPercent: 4 };
-  }
-}
-
-function passageSettle(key: string): {
-  opacity: number;
-  xPercent?: number;
-  yPercent?: number;
-} {
-  if (key === "nameEndures") return { opacity: 1 };
-  if (key === "prologueReveal" || key === "inscriptionReveal") {
-    return { opacity: 1, xPercent: 0 };
-  }
-  if (key === "nameEmerges" || key === "dividedKingdom") {
-    return { opacity: 1, xPercent: 0 };
-  }
-  return { opacity: 1, yPercent: 0 };
-}
-
-function passageExit(
-  key: string,
-  index: number,
-): { opacity: number; xPercent?: number; yPercent?: number } {
-  if (key === "nameEndures") return { opacity: 0 };
-  if (key === "prologueReveal" || key === "inscriptionReveal") {
-    return { opacity: 0, xPercent: index % 2 === 0 ? 2 : -2 };
-  }
-  if (key === "nameEmerges" || key === "dividedKingdom") {
-    return { opacity: 0, xPercent: index % 2 === 0 ? 4 : -4 };
-  }
-  return { opacity: 0, yPercent: -3 };
-}
-
-/**
- * Keadaan baca untuk mobile, reduced motion, dan deep-link tanpa pin.
- * Timeline tetap dibangun agar kontrak factory tunggal terjaga, lalu seluruh
- * naskah dan permukaan dikembalikan ke keadaan statis yang utuh.
- */
-function setReadableState(
-  root: HTMLElement,
-  timeline: gsap.core.Timeline,
-): void {
-  timeline.progress(1).pause();
-  setIfPresent(q(root, "surface"), {
-    opacity: 1,
-    "--dolly": 1,
-    "--lit": 1,
-  });
-  setIfPresent(q(root, "water-line"), {
-    opacity: 0.72,
-    scaleX: 1,
-    xPercent: 0,
-  });
-  setIfPresent(q(root, "context"), {
-    opacity: 1,
-    xPercent: 0,
-    yPercent: 0,
-  });
-  setIfPresent(q(root, "title"), { opacity: 1, xPercent: 0, yPercent: 0 });
-  setIfPresent(q(root, "master"), { opacity: 1, xPercent: 0, yPercent: 0 });
-  setIfPresent(q(root, "metadata"), { opacity: 1 });
-  setIfPresent(q(root, "passage"), {
-    opacity: 1,
-    xPercent: 0,
-    yPercent: 0,
-  });
-  /*
-   * Nama tempat dan wilayah harus utuh dan terbaca di mobile, reduced motion,
-   * dan pendaratan tautan dalam. Ini bukan dekorasi yang boleh tertinggal
-   * setengah transparan: pada 921 namanya ADALAH scene-nya, dan pada 1042
-   * tanpa nama-nama ini tidak ada yang menjelaskan wilayah mana yang mana —
-   * sebab labelnya sudah tidak lagi ada di dalam citra.
-   *
-   * xPercent sengaja dikembalikan ke nol: pemisahan spasial adalah koreografi
-   * desktop. Di alur vertikal mobile, nama beristirahat pada posisi tata
-   * letaknya sendiri.
-   */
-  setIfPresent(q(root, "scene-name"), {
-    opacity: 1,
-    xPercent: 0,
-    yPercent: 0,
-    scale: 1,
-  });
-
-  for (const handoff of q(root, "handoff")) {
-    setIfPresent([handoff], { opacity: 1, xPercent: 0, scaleX: 1 });
-    setIfPresent(
-      Array.from(
-        handoff.querySelectorAll<HTMLElement>("[data-handoff-element]"),
-      ),
-      { opacity: 1, scaleX: 1, xPercent: 0 },
-    );
-  }
-}
-
-function setIfPresent(
-  targets: readonly HTMLElement[],
-  vars: gsap.TweenVars,
-): void {
-  if (targets.length > 0) gsap.set(targets, vars);
 }
 
 /**

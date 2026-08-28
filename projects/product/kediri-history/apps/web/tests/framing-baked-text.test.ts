@@ -54,7 +54,12 @@ function overlaps(
 ): boolean {
   const bx1 = box.x + box.width;
   const by1 = box.y + box.height;
-  return !(bx1 < rect.x0 || box.x > rect.x1 || by1 < rect.y0 || box.y > rect.y1);
+  return !(
+    bx1 < rect.x0 ||
+    box.x > rect.x1 ||
+    by1 < rect.y0 ||
+    box.y > rect.y1
+  );
 }
 
 describe("Authority Rule 1 — teks terbakar tidak boleh masuk bingkai", () => {

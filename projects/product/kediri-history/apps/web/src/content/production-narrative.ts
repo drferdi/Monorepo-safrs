@@ -15,6 +15,8 @@ export interface FramingMedia {
   readonly path: string;
   readonly altText: string;
   readonly label: string;
+  /** Gerak hidup opsional; `path` tetap poster + fallback tanpa JavaScript. */
+  readonly videoPath?: string;
 }
 
 export interface FramingNarrative {
@@ -33,7 +35,12 @@ export interface FramingNarrative {
  * Total hero image produksi tetap 27.
  */
 const FRAMING_MEDIA_2026: FramingMedia = {
-  path: "/api/editorial-preview/00-prologue.webp",
+  // Scene 00 lolos verifikasi crop (Redo Register); disajikan statis, tanpa
+  // gerbang route pratinjau (direktif runtime 2026-08-28).
+  path: "/journey-approved/00-prologue.webp",
+  // Direktif Chief 2026-08-28: halaman gelap pembuka memakai video opening;
+  // citra 00-prologue tetap poster + fallback (Finale tetap citra statis).
+  videoPath: "/journey-approved/00-prologue.mp4",
   altText:
     "Visualisasi artistik Kediri kontemporer saat senja: jembatan di atas Brantas, lalu lintas menyala, dan kota yang hidup di kedua tepian sungai.",
   label: "Visualisasi artistik · pratinjau editorial",
@@ -103,6 +110,8 @@ type SceneInput = Pick<
   readonly beatGroups?: readonly (readonly number[])[];
   readonly imageReady?: boolean;
   readonly imagePath?: string;
+  /** Video pratinjau editorial; citra slot menjadi poster + fallback. */
+  readonly videoPath?: string;
   readonly previewAltText?: string;
 };
 
@@ -140,6 +149,7 @@ function scene(input: SceneInput): SceneDto {
       key: input.slug,
       expectedPath,
       ready: input.imageReady ?? false,
+      videoPath: input.videoPath,
       altText: input.previewAltText ?? "",
       label: input.imageReady
         ? "Visualisasi artistik · pratinjau editorial"
@@ -189,6 +199,9 @@ const ACT_1 = act(
       // makna tarikhnya bagi Kediri. Hening di antara tiap ketukan.
       beatGroups: [[0], [1, 2], [3, 4], [5, 6]],
       imageReady: true,
+      // Crop lolos verifikasi Redo Register (REDO-ASSET-001); disajikan
+      // statis, tanpa gerbang route pratinjau.
+      imagePath: "/journey-approved/01-879-first-mark.webp",
       previewAltText:
         "Visualisasi artistik permukaan batu prasasti dalam cahaya menyudut; relief aksara dan angka tahun 879 tampak timbul dari kegelapan.",
       masterLine:
@@ -214,6 +227,9 @@ const ACT_1 = act(
       // Tiga ketukan: tempat sebelum nama → nama itu muncul → arti sebuah nama.
       beatGroups: [[0, 1], [2, 3], [4]],
       imageReady: true,
+      // Crop lolos verifikasi Redo Register (REDO-ASSET-002); disajikan
+      // statis, tanpa gerbang route pratinjau.
+      imagePath: "/journey-approved/02-921-kadhiri.webp",
       previewAltText:
         "Visualisasi artistik bongkah batu prasasti dengan kata kadhiri terbaca di tengah barisan aksara kuno.",
       masterLine: "Kadhiri. Sebuah nama muncul dari dalam sejarah.",
@@ -237,6 +253,9 @@ const ACT_1 = act(
       // Tiga ketukan: keberlanjutan → kemungkinan Carama → disiplin bukti.
       beatGroups: [[0], [1, 2], [3, 4]],
       imageReady: true,
+      // Crop lolos verifikasi Redo Register (REDO-ASSET-003); disajikan
+      // statis, tanpa gerbang route pratinjau.
+      imagePath: "/journey-approved/03-1015-name-endures.webp",
       previewAltText:
         "Visualisasi artistik lempeng tembaga gelap dengan jejak tulisan samar; nama Kadhiri hampir tak terbaca, sengaja menyisakan ketidakpastian.",
       masterLine: "Kadhiri bukan nama yang muncul sekali, lalu lenyap.",
@@ -256,9 +275,10 @@ const ACT_1 = act(
       sceneType: "hero",
       visualVariant: "landscape",
       choreographyKey: "dividedKingdom",
-      // Tiga ketukan: pembagiannya → dua cara mengingat → sungai sebagai saksi.
-      beatGroups: [[0, 1], [2, 3], [4]],
       imageReady: true,
+      // Crop lolos verifikasi Redo Register (REDO-ASSET-004); disajikan
+      // statis, tanpa gerbang route pratinjau.
+      imagePath: "/journey-approved/04-1042-river-divides-kingdom.webp",
       previewAltText:
         "Visualisasi artistik pandangan udara malam: sungai Brantas membelah dataran menjadi wilayah Panjalu di barat dan Janggala di timur.",
       masterLine:
@@ -266,9 +286,6 @@ const ACT_1 = act(
       paragraphs: [
         "Pada 1042, sebuah warisan politik harus dibagi.",
         "Sejarah mencatat pembagian kekuasaan Airlangga menjadi dua wilayah: Panjalu dan Janggala.",
-        "Namun manusia jarang puas hanya dengan batas administratif. Generasi berikutnya mengingat peristiwa itu melalui kisah Mpu Bharada—seorang pendeta yang, menurut tradisi, membelah tanah dengan air suci.",
-        "Dua cara mengingat berdiri berdampingan. Sejarah berbicara tentang politik. Tradisi berbicara tentang makna.",
-        "Dan di antara keduanya mengalir Brantas—sungai yang kelak berulang kali menjadi batas, jalur, benteng, jembatan, dan saksi.",
       ],
     }),
   ],
@@ -290,6 +307,10 @@ const ACT_2 = act(
       sceneType: "supporting",
       visualVariant: "landscape",
       imageReady: true,
+      // Direktif Chief 2026-08-28: Daha bergerak sebagai video dahanasada;
+      // citra 05-daha tetap poster + fallback, dan citranya sendiri pindah
+      // menjadi latar kartu judul act "Panjalu Rises".
+      videoPath: "/journey-approved/05-daha-centre-of-power.mp4",
       previewAltText:
         "Visualisasi artistik imajiner kota kuno berkabut di lembah sungai saat fajar; bentuknya sengaja tidak pasti karena wujud fisik Daha tidak diketahui.",
       masterLine:

@@ -250,9 +250,12 @@ test("journey follows the approved 2026 to 879 to 2026 sequence", async ({
   // tersendiri di luar slot scene.
   await expect(page.locator('[data-media-state="ready"]')).toHaveCount(25);
   await expect(page.locator('[data-media-state="pending"]')).toHaveCount(1);
+  // Prolog bergerak sebagai video (direktif Chief 2026-08-28) dengan citra
+  // 00-prologue sebagai poster; Finale tetap mengunjungi citra yang sama.
   await expect(
-    page.locator('[data-framing="prologue"] img, [data-framing="finale"] img'),
-  ).toHaveCount(2);
+    page.locator('[data-framing="prologue"] video'),
+  ).toHaveCount(1);
+  await expect(page.locator('[data-framing="finale"] img')).toHaveCount(1);
   await expect(
     page.getByText("Sejak kapan sebuah kota mulai menjadi dirinya sendiri?"),
   ).toBeVisible();
@@ -275,7 +278,10 @@ test("prologue is one visual world with semantic editorial beats", async ({
 
   const prologue = page.locator('[data-scene="prologue"]');
   await expect(prologue).toHaveCount(1);
-  await expect(prologue.locator("img")).toHaveCount(1);
+  // Satu dunia visual: satu video pembuka (poster = citra prolog), tanpa
+  // citra kedua yang menduplikasinya.
+  await expect(prologue.locator("video")).toHaveCount(1);
+  await expect(prologue.locator("img")).toHaveCount(0);
   await expect(prologue.locator(".scene-readout")).toHaveCount(0);
   await expect(prologue.locator('[data-motion="master"]')).toHaveAttribute(
     "data-editorial-role",
@@ -436,9 +442,12 @@ test("early secondary beats remain readable on the desktop rest path", async ({
     "1042-river-divides-kingdom",
   ] as const) {
     await moveToSceneProgress(page, slug, 0.76);
+    // Beat TERAKHIR, bukan indeks tetap — jumlah beat per scene mengikuti
+    // naskah (1042 kini dua beat sejak pemangkasan paragraf 2026-08-28).
     const beat = page
       .locator(`[id="${slug}"]`)
-      .locator('[data-motion="passage"][data-beat-index="2"]');
+      .locator('[data-motion="passage"]')
+      .last();
     const state = await beat.evaluate((node) => {
       const paragraph = node.querySelector("p");
       const paragraphStyle = paragraph ? getComputedStyle(paragraph) : null;
@@ -534,7 +543,21 @@ test("mobile reduced early scenes keep metadata clear of the visual label", asyn
       slug === "prologue-2026" ? ".prologue-context" : ".stage-context",
     );
     await expect(label).toHaveCSS("display", "none");
+    // Direktif runtime 2026-08-28: chrome "SCENE n / Prolog · judul" berhenti
+    // dicat untuk lima scene ini — teksnya (eyebrow, judul) sengaja
+    // visually-hidden demi pembaca layar, jadi wadahnya sendiri boleh tetap
+    // "visible" secara teknis (kontrak sr-only: 1px, bukan 0) sementara
+    // tidak ada satu pun kata yang benar-benar tercat.
     await expect(contextBlock).toBeVisible();
+    const chromeText = contextBlock.locator("p, h1, h2");
+    await expect(chromeText).toHaveCount(2);
+    for (const className of await chromeText.evaluateAll((nodes) =>
+      nodes.map((node) => node.className),
+    )) {
+      expect(className, `${slug} eyebrow/title stays sr-only`).toContain(
+        "visually-hidden",
+      );
+    }
 
     const overlap = await scene.evaluate((root) => {
       const label = root.querySelector<HTMLElement>(".stage-visual-label");
@@ -585,7 +608,11 @@ test("early scenes render hero media once inside the scene world", async ({
     "1042-river-divides-kingdom",
   ] as const) {
     const scene = page.locator(`[id="${slug}"]`);
-    await expect(scene.locator(".stage-media img")).toHaveCount(1);
+    // Media hero tampil SEKALI — sebagai citra atau video (prolog memakai
+    // video sejak direktif Chief 2026-08-28).
+    await expect(
+      scene.locator(".stage-media img, .stage-media video"),
+    ).toHaveCount(1);
     await expect(scene.locator(".scene-readout img")).toHaveCount(0);
     await expect(scene.locator('[data-media-role="metadata"] img')).toHaveCount(
       0,

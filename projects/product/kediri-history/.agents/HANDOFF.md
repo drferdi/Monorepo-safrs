@@ -3,120 +3,90 @@
 > Baca lebih dulu setiap sesi. **Ditimpa**, bukan ditambah — ini keadaan sekarang, bukan log.
 > Status fase: `PROGRESS.md`. Keputusan durable: `DECISIONS.md`. Pagar: `BOUNDARIES.md`.
 
-Last updated: 2026-08-27
+Last updated: 2026-08-28
 
 ---
 
 ## Keadaan sekarang
 
-**27 citra produksi terintegrasi (2026-08-27).** Direktif sinematik final Chief
-dieksekusi melalui proses lima pass Sentra-GSAP: canon audit, manifest citra
-(`docs/shots/image-manifest.md` — gate keras §7, seluruh 30 berkas diinspeksi
-visual), integrasi lapisan media, dan dua putaran tinjauan desain tangkapan
-layar (desktop + mobile). Journey editorial-preview kini menampilkan seluruh 27
-hero image di panggung sinematiknya: Prolog dan Finale berbagi satu citra 2026
-(bukan aset ke-28), 25 slot scene siap, dan scene 1292 sengaja ditangguhkan
-karena teks terbakar yang keliru (flag F1). Lima flag integritas citra (F1–F5)
-menunggu keputusan Chief — semuanya terdokumentasi di manifest.
+**Model dua-jam hidup (direktif Chief 2026-08-28).** Setelah teardown empat
+situs referensi (bombon.rs, jasminadenner.com, lusion, whiteoutworks) dan
+prototype yang disetujui Chief, Journey memakai pemisahan struktural: KAMERA
+(permukaan, cahaya, goresan, handoff, transisi keluar) tetap di-scrub linear
+oleh factory `scenes.ts`; NASKAH (tarikh, kalimat pemikul, nama, beat
+editorial) di-TRIGGER pada ambang progres oleh sutradara naskah
+`modules/motion/director.ts` dan bermain dengan ease ekspresif (CustomEase
+"cine", topeng baris/huruf SplitText, aria "auto" menjaga pohon
+aksesibilitas). Stack 100% GSAP resmi: core + ScrollTrigger + ScrollSmoother +
+SplitText + CustomEase — tanpa Lenis/three.js.
 
-**Refinemen lima scene awal (direktif Chief ketiga, sesi yang sama).**
-Scene 00–04 kini sistem beat editorial penuh: kalimat kanon dikelompokkan jadi
-beat pendek yang hadir bergiliran dengan jeda hening, Prolog punya koreografi
-`prologueReveal`, 1015 punya kunci ke-12 `nameEndures` (kamera diam — Research
-Hold menolak dramatisasi; migrasi enum baru), handoff kausal antar-scene lewat
-`SCENE_HANDOFFS`, dan penempatan teks merespons komposisi citra. Bukti: gerbang
-penuh + e2e **50/8/0** + tangkapan layar sekuens. Lihat `DECISIONS.md`.
-Perhatian: Next 16 menolak dev server kedua utk direktori sama — matikan dev
-server 4320 sebelum e2e (webServer 4321 gagal start diam-diam kalau tidak).
+**ScrollSmoother opt-in Journey** (`modules/motion/smooth.ts`, refcount
+singleton; desktop/tablet, tanpa reduced): scrollbar tetap native sehingga
+restorasi scroll hidup. CSS sticky digantikan pin ScrollTrigger
+(`pinSpacing:false`) di atas `.scene-pin-space` server-rendered — tetap nol
+CLS, dan `end` DIUKUR dari tinggi pin-space nyata (kontrak pacing CSS↔JS kini
+tunggal). Nav journey (fixed) hidup DI LUAR `#smooth-wrapper` — elemen fixed
+di dalam konten transform ikut tergulir (terbukti e2e). `setReadableState`
+dihapus: keadaan baca = DOM server-render; mobile/reduced tidak membangun
+timeline sama sekali.
 
-**Naskah bergiliran di dalam shot (koreksi Chief kedua, sesi yang sama).**
-Paragraf naratif kini hidup DI DALAM panggung: timeline shot yang sama
-menghadirkannya satu per satu di atas citra selama dataran baca — citra tidak
-pernah tayang dua kali, tidak ada bagian teks setelah shot (tinggal strip
-arsip: status, bukti, navigasi). Pin diperpanjang untuk ruang baca. Varian
-mobile/reduced/tanpa-JS: seluruh paragraf statis, dokumen utuh. Lihat
-`DECISIONS.md`. Diverifikasi ulang: typecheck, lint, test+token gate, e2e
-40/4/0, bukti tangkapan layar multi-progres.
+**Media video + variasi arah (direktif Chief 2026-08-28, di-commit atas
+perintah "GIT COMMIT").** Prolog memakai `00-prologue.mp4`, scene Daha memakai
+`05-daha-centre-of-power.mp4` (poster = citra slot; fallback tanpa-JS
+identik); citra Daha pindah menjadi latar kartu judul act "Panjalu Rises".
+Teks dobel diperbaiki dua sisi: scene tanpa `choreographyKey` menumpuk beat
+statis via CSS `.scene:not([data-choreography])`, dan mesin beat director
+menyembunyikan beat lama dengan fade cepat deterministik. Arah gerak per
+koreografi berbeda-beda lewat `FLAVORS` (director.ts) — variasi yang tetap
+menjawab argumen historis scene. Sumber video: `project-video/`.
 
-Catatan gate saat dev server hidup: Next dev menulis ulang
-`src/app/(payload)/admin/importMap.js` (hasil generate) tanpa format, sehingga
-lint flake. Jalankan gate tanpa dev server, atau format ulang berkas itu.
+**Publikasi aset pratinjau kini terekam sebagai keputusan Chief** (route
+`SHOW_EDITORIAL_PREVIEW`, `public/journey-approved/` statis, kedua mp4).
+Catatan tetap terbuka: `check-production-journey.mjs` belum mencakup path
+statis (follow-up), dan record rights/provenance CMS tetap terutang sebelum
+rilis publik final.
 
-Naskah produksi (`production-narrative.ts`) tidak diubah prosanya; ia diperkaya
-alt text per scene, status siap slot, dan media pembingkai. Daftar putih route
-`/api/editorial-preview/` kini diturunkan dari naskah produksi. Pacing pin
-dibedakan per koreografi (TS + CSS harus sinkron — lihat `DECISIONS.md`).
+Catatan gate lama yang masih berlaku: Next 16 menolak dev server kedua —
+matikan dev 4320 sebelum e2e; Next dev menulis ulang `importMap.js` tanpa
+format (lint flake); `rm -rf apps/web/.next` sebelum `project-standalone
+verify`.
 
-**Publikasi CMS citra belum dilakukan dan memang tidak boleh** sampai Chief
-menetapkan record hak/provenance (kelas V/R). Build produksi menampilkan tiga
-scene CMS tanpa media preview — `check-production-journey.mjs` membuktikan nol
-kebocoran, dan itu perilaku benar, bukan kekurangan.
-
-## Bukti terakhir yang benar-benar dijalankan (2026-08-27)
-
-**Diulang penuh di PostgreSQL 18 + MinIO nyata** dari `infra/docker-compose.yml`
-(daemon Docker akhirnya pulih sore hari; putaran PGlite sebelumnya tetap sah
-sebagai bukti pengembangan, bukan bukti rilis):
+## Bukti terakhir yang benar-benar dijalankan (2026-08-28)
 
 | Perintah | Hasil |
 | --- | --- |
-| `db:migrate` | PASS — idempoten di volume semai 2026-08-26; 3 irisan, 1 `needs_review` |
-| `pnpm run verify` (rantai penuh) | PASS — lint, typecheck, test (55), build 20 rute, journey guard, verify:production 12 record 0 kritis |
-| `test:e2e` | PASS — 40 lulus, 4 dilewati (kontrak desktop-only), 0 gagal |
-| `check-production-journey` | PASS — 3 scene CMS, 0 marker preview bocor |
-| Sentra-GSAP mekanis | 5 gate PASS; **Browser QA PASS 28/28** (Chromium+Firefox+WebKit; naik dari 8/10) |
-| Sentra-GSAP agregat | **FAIL** — hanya karena tinjauan visual independen (manusia) belum ada |
+| `pnpm typecheck` | PASS |
+| `pnpm lint` (biome) | PASS — 14 warning pre-existing |
+| `pnpm test` (vitest) | PASS — 71 |
+| `pnpm e2e` | PASS — 56 lulus, 10 dilewati, 0 gagal (3 assertion media diadaptasi ke kontrak video — rule 7 dicatat di DECISIONS) |
+| `pnpm build` | PASS |
+| Runtime dev server | Dua-jam hidup (kamera scrub + naskah triggered, mundur jujur); deep-link `#921-kadhiri` mendarat di dataran baca; kedua video playing readyState 4; beat anti-dobel terverifikasi (maks 1 beat tampil di semua sampel); mobile/reduced statis utuh |
 
-Catatan laporan agregat: baris "Browser QA FAIL" di
-`.sentra-gsap/reports/sentra-gsap-report.md` adalah artefak urutan harness
-satu-proses — langkah build verify.mjs membatalkan server hidup sebelum langkah
-browser-nya berjalan. Bukti browser yang otoritatif adalah
-`.sentra-gsap/reports/browser-qa.json` (PASS 28/28), dihasilkan dengan urutan
-wajib build → server segar → QA. Pekerjaan lanjutan: verify.mjs butuh hook
-restart server di antara kedua langkah itu.
-
-Peringatan PGlite (bila dipakai lagi sebagai fallback): ia jenuh koneksi
-setelah build paralel / e2e panjang — restart servernya sebelum tiap putaran
-verifikasi berat (dua kali menggigit sesi ini).
-
-## Yang sedang hidup di mesin ini
-
-- Kontainer `postgres` (54330) dan `minio` (9010/9011) **hidup dan sehat**;
-  turunkan dengan `docker compose -f infra/docker-compose.yml down` tanpa `-v`.
-- **Server produksi** `scripts/serve.mjs` hidup di 4320 (untuk peninjauan
-  Chief); matikan bebas. PGlite sudah dimatikan; port 54330 kembali ke Postgres.
-- `apps/web/.next` berisi artefak dev Turbopack — `rm -rf apps/web/.next`
-  sebelum `project-standalone verify` (jebakan lama, tetap berlaku).
+**BELUM dijalankan sesi ini:** `pnpm run verify` penuh
+(check-production-journey + verify:production — butuh Postgres hidup);
+jalankan tanpa `SHOW_EDITORIAL_PREVIEW` sebelum rilis.
 
 ## Tindakan berikutnya
 
-1. **Keputusan Chief atas flag F1–F5** di `docs/shots/image-manifest.md`
-   (citra 1292 revisi; kapsi "Foto Arsip" pada render AI di citra 16/25;
-   panel mekanisme 1912; wajah pada scene 12 + duplikat versi).
-2. **Tinjauan visual independen Sentra-GSAP** — satu-satunya gate yang tersisa,
-   menuntut mata manusia (`.sentra-gsap/reviews/visual-review.json`).
-3. **Keputusan hak/provenance** untuk mempromosikan citra dari pratinjau
-   editorial ke `MediaAssets` CMS (kelas V/R, kredit, lisensi).
-4. Koreografi khusus untuk 15 scene yang kini statis + transisi kausal
-   antar-act (§17 direktif) — bahasa sinematiknya sudah terbukti di 11 scene.
-5. Phase 17–19 (mobile per scene, aksesibilitas manual, budget performa) —
-   belum berubah.
-6. **Phase 22 (deployment)** tetap menunggu otorisasi eksplisit Chief (G02).
+1. `pnpm run verify` penuh + perluas `check-production-journey.mjs` ke path
+   statis `public/journey-approved/`.
+2. Keputusan Chief atas flag F1–F5 di `docs/shots/image-manifest.md`.
+3. Record rights/provenance CMS untuk seluruh media pratinjau (termasuk dua
+   video) sebelum rilis publik final.
+4. Koreografi khusus untuk scene yang masih memakai flavor default + transisi
+   kausal antar-act; tinjauan visual independen Sentra-GSAP.
+5. Phase 17–19 (mobile per scene, aksesibilitas manual, budget performa);
+   Phase 22 (deployment) tetap menunggu otorisasi eksplisit Chief (G02).
 
 ## Publikasi (2026-08-27, otorisasi eksplisit Chief)
 
-Commit `64bbadd` (lapisan sinematik penuh, hanya path capsule) dibuat atas
-perintah Chief, lalu capsule dipublikasikan sebagai subtree murni ke
+Commit `64bbadd` dipublikasikan sebagai subtree murni ke
 `https://github.com/drferdii/Kediri-Kings-Century` (remote `kediri`, branch
-`main`, HEAD `8f12785`) — riwayat 2 commit capsule saja, tanpa proyek Monorepo
-lain. Gate pre-push root menolak lebih dulu dan dibuka dengan override resmi
-`CHIEF_PUSH_OK=1` setelah Chief mengizinkan di sesi yang sama. Artefak sesi
-(`.playwright-cli/`, `.sentra-gsap/`, lock) dan `.env.local` dipastikan tidak
-ikut. Push berikutnya ke repo itu: `git subtree split` ulang lalu push dengan
-override yang sama — tetap hanya atas perintah Chief.
+`main`). Push berikutnya: `git subtree split` ulang + `CHIEF_PUSH_OK=1` —
+tetap hanya atas perintah Chief.
 
 ## Catatan lintas-repositori
 
 Dua check SAFRS root merah karena sebab warisan non-Kediri (lihat HANDOFF
-root). Browser Firefox+WebKit Playwright kini terpasang di mesin ini untuk QA
-lintas-engine.
+root). Change set root Monorepo lain (avery, sentra-gsap teardown, dsb.) milik
+pekerjaan lain — jangan tercampur dalam commit capsule.

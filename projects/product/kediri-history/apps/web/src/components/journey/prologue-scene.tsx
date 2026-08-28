@@ -53,18 +53,38 @@ export function FramingStage({
       data-framing={framing}
       style={prologueFramingStyle()}
     >
-      {/* biome-ignore lint/performance/noImgElement: aset pratinjau lokal disajikan route sendiri tanpa loader tambahan. */}
-      <img
-        src={media.path}
-        srcSet={`${media.path.replace(/\.webp$/u, "-w768.webp")} 768w, ${media.path} 1536w`}
-        sizes="100vw"
-        alt={media.altText}
-        width="1536"
-        height="1024"
-        loading={framing === "prologue" ? "eager" : "lazy"}
-        fetchPriority={framing === "prologue" ? "high" : undefined}
-        decoding="async"
-      />
+      {media.videoPath && framing === "prologue" ? (
+        /*
+         * Video pembuka (direktif Chief 2026-08-28). Poster = citra prolog,
+         * jadi cat pertama dan fallback tanpa-JS identik dengan versi statis.
+         * Sentuhan GSAP-nya diwarisi dari timeline prologueReveal: video ini
+         * hidup di dalam .stage-surface, sehingga dolly, mask cahaya --lit,
+         * dan transisi keluar menyapunya persis seperti citra.
+         */
+        <video
+          src={media.videoPath}
+          poster={media.path}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-label={media.altText}
+        />
+      ) : (
+        /* biome-ignore lint/performance/noImgElement: aset pratinjau lokal disajikan route sendiri tanpa loader tambahan. */
+        <img
+          src={media.path}
+          srcSet={`${media.path.replace(/\.webp$/u, "-w768.webp")} 768w, ${media.path} 1536w`}
+          sizes="100vw"
+          alt={media.altText}
+          width="1536"
+          height="1024"
+          loading={framing === "prologue" ? "eager" : "lazy"}
+          fetchPriority={framing === "prologue" ? "high" : undefined}
+          decoding="async"
+        />
+      )}
       <span className="stage-media-shade" aria-hidden="true" />
     </div>
   );
@@ -123,10 +143,17 @@ export function PrologueScene({
           </p>
 
           <div className="stage-plate prologue-plate">
+            {/*
+             * Direktif runtime 2026-08-28: chrome "Prolog · 2026 · judul"
+             * berhenti tampil sebagai kotak visual di panggung — kalimat
+             * pemikul (masterLine) membawa maknanya secara sinematik. Eyebrow
+             * dan h1 tetap ada untuk pembaca layar (aria-labelledby, urutan
+             * DOM); yang berhenti hanyalah kotaknya.
+             */}
             <div className="prologue-context" data-motion="context">
-              <p className="stage-sequence">Prolog · 2026</p>
+              <p className="visually-hidden">Prolog · 2026</p>
               <h1
-                className="title-page prologue-title"
+                className="visually-hidden"
                 id="prologue-2026-title"
                 data-motion="title"
               >
@@ -157,11 +184,14 @@ export function PrologueScene({
               ))}
             </div>
 
+            {/*
+             * Disclosure tata kelola tetap ADA (tidak dihapus) tetapi tidak
+             * lagi mengambil ruang visual di panggung sinematik — pembaca
+             * layar dan pandangan sumber tetap melihatnya (direktif runtime
+             * 2026-08-28).
+             */}
             {editorialPreview ? (
-              <aside
-                className="editorial-preview-banner prologue-notice"
-                data-motion="metadata"
-              >
+              <aside className="visually-hidden" data-motion="metadata">
                 <strong>Pratinjau editorial lokal</strong>
                 <span>
                   Naskah dan media di stage ini adalah bahan komposisi; build

@@ -15,3 +15,6 @@ test-results/
 # node_modules/next/dist/server/lib/generate-agent-files.js) — bukan sumber kanonik.
 apps/*/AGENTS.md
 apps/*/CLAUDE.md
+
+.vercel
+.env*

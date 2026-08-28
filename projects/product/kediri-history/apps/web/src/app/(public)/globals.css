@@ -397,18 +397,40 @@ p {
   padding-inline: var(--shell-gutter);
 }
 
-/* Chrome instalasi: tipis, tetap, tidak pernah menjadi menu situs. */
+/*
+ * Chrome instalasi: tipis, tetap, tidak pernah menjadi menu situs.
+ *
+ * Latar SERAGAM di seluruh tinggi nav, bukan gradien yang meluruh ke
+ * transparan di dalam kotaknya sendiri. Nav ini `position:fixed` — apa pun
+ * di bawahnya akan lewat di baliknya saat gulir (perilaku normal untuk
+ * header melayang), dan gradien lama nyaris tembus pandang tepat di baris
+ * tempat wordmark/tautan berada, membuat teks yang lewat (mis. "Lewati ke
+ * bab berikutnya") terbaca menabrak KEDIRI (tinjauan visual 2026-08-28,
+ * mobile 1015/921). Peluruhan visual ke transparan sekarang terjadi
+ * DI LUAR kotak nav lewat pseudo-elemen, bukan menembus tempat teksnya.
+ */
 [data-journey="true"] .site-nav {
   position: fixed;
   inset: 0 0 auto;
   z-index: 40;
   padding: var(--space-3) var(--shell-gutter);
   border-bottom: 0;
+  background: var(--cinema-canvas);
+}
+
+[data-journey="true"] .site-nav::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: 1.5rem;
   background: linear-gradient(
     to bottom,
-    color-mix(in srgb, var(--cinema-canvas) 82%, transparent),
+    color-mix(in srgb, var(--cinema-canvas) 92%, transparent),
     transparent
   );
+  pointer-events: none;
 }
 
 [data-journey="true"] .site-nav a {
@@ -596,6 +618,17 @@ p {
   min-height: 100svh;
   display: grid;
   grid-template-areas: "frame";
+  /*
+   * Baris eksplisit `1fr`, bukan `auto` implisit. Track auto mengukur
+   * tingginya dari konten `.prologue-plate` (dengan `align-self: stretch`
+   * yang lingkar-balik ke ukuran itu sendiri); saat chrome eyebrow/judul
+   * disembunyikan (§ direktif runtime 2026-08-28) kontennya menyusut dan
+   * baris ikut menyusut sesaat sebelum GSAP mengukur ulang — CLS 0.163,
+   * terukur di Chromium 1024×768. `1fr` mengambil tinggi dari kontainer
+   * (min-height di atas), bukan dari konten, sehingga stabil sejak cat
+   * pertama tanpa bergantung pada apa yang terlihat di dalamnya.
+   */
+  grid-template-rows: 1fr;
   align-items: center;
   overflow: hidden;
 }
@@ -1106,6 +1139,8 @@ p {
   min-height: 100svh;
   display: grid;
   grid-template-areas: "frame";
+  /* Baris eksplisit — lihat catatan CLS di .prologue-stage. */
+  grid-template-rows: 1fr;
   align-items: center;
   overflow: hidden;
 }
@@ -1268,7 +1303,7 @@ p {
   gap: 0.35em;
   align-items: center;
   text-align: center;
-  color: var(--cinema-ink, #f4efe6);
+  color: var(--cinema-ink);
   text-shadow:
     0 0.02em 0.14em rgb(0 0 0 / 68%),
     0 0 0.6em rgb(0 0 0 / 34%);
@@ -1307,17 +1342,145 @@ p {
 }
 
 /*
+ * KADHIRI dipusatkan secara horizontal di seluruh viewport, sementara
+ * kalimat pemikul tetap di kolom kiri. 13ch masih membuat baris terakhirnya
+ * berhenti persis di ambang huruf K — jarak terukur hanya ~7px dan kotak
+ * `.scene-name` (termasuk letter-spacing setelah huruf terakhir) bahkan
+ * tumpang tindih 30px (tinjauan visual 2026-08-28 ronde keempat). Ini bukan
+ * lagi soal lolos-tidaknya satu ambang batas: bidang bacanya dipersempit
+ * lebih jauh DAN diberi margin kanan eksplisit, supaya jeda antara kalimat
+ * dan nama terasa jelas sebagai pemisahan hierarki, bukan kebetulan pas.
+ */
+/*
+ * Tarikh besar (154px) + kalimat pemikul enam-baris membuat total tinggi
+ * plat nyaris pas dengan satu viewport (2px sisa) setelah perbaikan di
+ * atas — terlalu tipis untuk aman lintas-peramban. Padding bawah dikurangi
+ * sedikit khusus di sini untuk margin nyata, bukan sekadar lolos.
+ */
+.scene[data-media-slot="921-kadhiri"] .stage-plate {
+  padding-bottom: clamp(2.5rem, 7svh, 5rem);
+}
+
+/*
+ * Kalimat pemikul 921 kembali ke lebar dan ukuran bawaannya. Penyempitan
+ * 11ch yang pernah di sini hanya ada untuk menghindar dari KADHIRI yang
+ * dulunya melayang di tengah viewport — sejak panggung 921 dipartisi
+ * (baris "name"/"plate", lihat blok di bawah), KADHIRI hidup di barisnya
+ * sendiri dan tidak lagi berbagi ruang dengan kalimat ini. Bidang sempit
+ * itu justru merugikan: membungkus 6 baris, membuat plat setinggi hampir
+ * satu viewport penuh dan mencekik baris nama sampai KADHIRI terpotong.
+ */
+
+/*
  * 1042 — nama beristirahat di tengah lalu terpisah ke tepiannya masing-masing
  * di bawah kendali timeline. Posisi istirahatnya sengaja berimpit: kesatuan
  * harus terbaca sebelum pemisahan berarti.
+ *
+ * Sumbu vertikal digeser turun dari true-center: kalimat pemikul empat-baris
+ * (lebar wajarnya, lihat catatan di `.master-line`) berbagi tinggi persis
+ * dengan sumbu tengah viewport, tempat PANJALU/JANGGALA beristirahat secara
+ * bawaan — tabrakan nyata, terbukti pada tinjauan visual dan e2e 2026-08-28
+ * ronde kelima. PANJALU dan JANGGALA (bukan BRANTAS, yang sudah punya
+ * `align-self: end` sendiri) turun secukupnya untuk berhenti setelah
+ * kalimat pemikul berakhir.
  */
 .scene[data-media-slot="1042-river-divides-kingdom"] .scene-nomenclature {
-  place-items: center;
+  justify-items: center;
+  align-items: center;
   grid-template-areas: "stack";
 }
 
 .scene[data-media-slot="1042-river-divides-kingdom"] .scene-name {
   grid-area: stack;
+}
+
+/*
+ * PARTISI STRUKTURAL PANGGUNG (desktop/tablet lebar) — 921 & 1042.
+ *
+ * Sebelumnya `.scene-nomenclature` adalah lapisan `absolute inset:0` yang
+ * memusatkan diri terhadap SELURUH viewport — berbagi ruang dengan teks
+ * `.stage-plate` tanpa mekanisme apa pun yang mencegah keduanya bersentuhan.
+ * Semua tabrakan (KADHIRI vs kalimat pemikul di 921, PANJALU/JANGGALA vs
+ * "Sejarah mengingat..." di 1042) lahir dari situ, dan tiap perbaikan angka
+ * piksel hanya memindahkan tabrakan, bukan menghilangkannya.
+ *
+ * Kini panggung kedua scene ini dibagi menjadi DUA BARIS NYATA: baris "name"
+ * (sisa ruang, 1fr) dan baris "plate" (auto, setinggi kontennya). Nama
+ * wilayah memusatkan diri DI DALAM baris miliknya sendiri — ia secara
+ * geometris tidak pernah bisa menyentuh teks di baris bawah, berapa pun
+ * panjang konten atau ukuran viewport. Ini pola yang sama dengan varian
+ * mobile+reduced-motion di bawah ("frame"/"name") — filosofinya kini
+ * konsisten di semua breakpoint. Lapisan latar (void, permukaan citra,
+ * motif handoff) tetap membentang penuh lewat span kedua baris.
+ */
+@media (min-width: 48rem) {
+  .scene[data-media-slot="921-kadhiri"] .scene-stage,
+  .scene[data-media-slot="1042-river-divides-kingdom"] .scene-stage {
+    grid-template-areas: "name" "plate";
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  .scene[data-media-slot="921-kadhiri"] .scene-stage > *,
+  .scene[data-media-slot="1042-river-divides-kingdom"] .scene-stage > * {
+    /* Latar & motif tetap satu bingkai penuh, membentang kedua baris. */
+    grid-area: 1 / 1 / -1 / -1;
+  }
+
+  .scene[data-media-slot="921-kadhiri"] .scene-nomenclature,
+  .scene[data-media-slot="1042-river-divides-kingdom"] .scene-nomenclature {
+    grid-area: name;
+    position: static;
+    inset: auto;
+    /*
+     * `align-self: stretch` WAJIB: `.scene-stage` punya `align-items:
+     * center`, yang tanpa ini memusatkan kotak nomenklatur di tengah baris
+     * dan mendorong nama naik ke zona nav (terukur: KADHIRI 43px dari atap
+     * pada 1440×900). Direntangkan penuh, lalu nama duduk di DASAR baris —
+     * tepat di atas blok teks, sejauh mungkin dari nav dan label pratinjau
+     * editorial di tepi atas. Padding bawah = jeda napas ke kalimat pemikul.
+     */
+    align-self: stretch;
+    align-items: end;
+    padding-bottom: clamp(1rem, 2.5svh, 1.5rem);
+  }
+
+  .scene[data-media-slot="921-kadhiri"] .stage-plate,
+  .scene[data-media-slot="1042-river-divides-kingdom"] .stage-plate {
+    grid-area: plate;
+    /*
+     * Padding kepala besar milik `.stage-plate` umum (hingga 7rem) ada
+     * untuk model tumpukan: mencegah tepi atas plat mencapai zona nav.
+     * Di model partisi, baris nama-lah yang memisahkan plat dari nav —
+     * padding itu hanya mencekik baris nama sampai nama terdesak ke bawah
+     * nav (terukur 1440×900 & 1024×768). Cukup jeda tipis di sini.
+     */
+    padding-top: clamp(1.5rem, 4svh, 2.5rem);
+    padding-bottom: clamp(1.75rem, 4svh, 2.5rem);
+  }
+
+  /*
+   * Ruang beat dipesan SETINGGI BEAT TERPANJANG YANG SEBENARNYA — diukur
+   * langsung (klona natural, lebar asli) per band viewport, bukan ditebak:
+   * 921 → 274px @1440, 187px @768-1024; 1042 → 135px @1440, 106px @768-1024.
+   * Nilai dasar (di bawah, untuk mobile) tetap berlaku di luar band ini.
+   */
+  .scene[data-choreography="nameEmerges"] .stage-passages {
+    min-height: 12rem;
+  }
+
+  .scene[data-choreography="dividedKingdom"] .stage-passages {
+    min-height: 7rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .scene[data-choreography="nameEmerges"] .stage-passages {
+    min-height: 17.5rem;
+  }
+
+  .scene[data-choreography="dividedKingdom"] .stage-passages {
+    min-height: 8.75rem;
+  }
 }
 
 .scene[data-media-slot="1042-river-divides-kingdom"] .scene-name__word {
@@ -1357,6 +1520,51 @@ p {
   .scene[data-media-slot="1042-river-divides-kingdom"]
     .scene-name[data-anchor="river"] {
     align-self: center;
+    padding-bottom: 0;
+  }
+}
+
+/*
+ * Mobile + beat menumpuk (tanpa-JavaScript ATAU reduced-motion): nama
+ * (KADHIRI; PANJALU/JANGGALA/BRANTAS) adalah satu-satunya isi 921 dan 1042
+ * yang masih melapis SELURUH panggung (`inset:0`). Selama beat tumpang
+ * tindih satu sel itu aman — footprint-nya kecil. Begitu beat menumpuk
+ * vertikal penuh (perbaikan CLS di atas), nama itu menutupi paragraf yang
+ * lewat di bawahnya — terbukti pada tinjauan visual 2026-08-28 ronde kedua.
+ * Panggung mendapat baris kedua eksplisit khusus nama; `1fr` untuk "frame"
+ * (bukan `auto`) menghindari sirkularitas ukuran yang sama seperti CLS di
+ * atas, dan "name" auto-size aman karena isinya teks biasa, bukan anak
+ * `align-self:stretch`.
+ */
+@media (max-width: 47.999rem) and (scripting: none),
+  (max-width: 47.999rem) and (prefers-reduced-motion: reduce) {
+  .scene[data-media-slot="921-kadhiri"] .scene-stage,
+  .scene[data-media-slot="1042-river-divides-kingdom"] .scene-stage {
+    grid-template-areas: "frame" "name";
+    grid-template-rows: 1fr auto;
+  }
+
+  .scene[data-media-slot="921-kadhiri"] .scene-nomenclature,
+  .scene[data-media-slot="1042-river-divides-kingdom"] .scene-nomenclature {
+    grid-area: name;
+    position: static;
+    inset: auto;
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-4) var(--shell-gutter);
+    background: var(--cinema-canvas);
+  }
+
+  .scene[data-media-slot="921-kadhiri"] .scene-name,
+  .scene[data-media-slot="1042-river-divides-kingdom"] .scene-name {
+    grid-area: auto;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .scene[data-media-slot="1042-river-divides-kingdom"]
+    .scene-name[data-anchor="river"] {
+    align-self: auto;
     padding-bottom: 0;
   }
 }
@@ -1479,7 +1687,18 @@ p {
   align-self: end;
   justify-self: start;
   max-width: min(94vw, 62rem);
-  padding: 0 var(--shell-gutter) clamp(3.5rem, 11svh, 8rem);
+  /*
+   * Lantai aman atas: plat ini rata-bawah, tetapi saat isinya cukup tinggi
+   * (mis. 1042 — tarikh monumental + tiga baris kalimat pemikul + nama
+   * wilayah), tepi atasnya bisa mencapai zona nav tetap dan terpotong oleh
+   * `overflow: hidden` panggung — terbukti pada tinjauan visual 2026-08-26
+   * (tarikh "1042" tertimpa wordmark). Padding ini tidak mengubah apa pun
+   * untuk scene berisi pendek — plat tetap rata-bawah, hanya kotaknya
+   * mendapat ruang kepala yang tak pernah terlihat sampai benar-benar
+   * dibutuhkan.
+   */
+  padding: clamp(4.5rem, 11svh, 7rem) var(--shell-gutter)
+    clamp(3.5rem, 11svh, 8rem);
   display: grid;
   gap: var(--space-3);
 }
@@ -1521,6 +1740,15 @@ p {
   align-items: center;
   flex-wrap: wrap;
   gap: var(--space-2) var(--space-3);
+  /*
+   * Scene 01-04: kedua anak (eyebrow, judul) menjadi visually-hidden
+   * (position: absolute), sehingga tanpa min-height ini flex container
+   * mengukur dirinya sendiri sebagai 0px tinggi — grid row `auto` di
+   * `.stage-plate` ikut menciut ke 0, dan kontainernya berhenti terhitung
+   * "visible" sama sekali (bukan cuma sr-only). 1px menyamai teknik
+   * `.visually-hidden` sendiri: tetap ada, tidak pernah nol.
+   */
+  min-height: 1px;
 }
 
 .scene-status {
@@ -1939,21 +2167,82 @@ p {
 /*
  * Pelat naskah DI ATAS CITRA.
  *
- * Baseline statis (tanpa JavaScript, mobile, reduced motion): seluruh
- * paragraf menumpuk vertikal dan dokumen selalu utuh. Saat motion island
- * hidup (data-motion-ready), paragraf saling menimpa pada satu sel grid dan
- * timeline shot menghadirkannya bergiliran selama dataran baca.
+ * Tumpuk-menimpa (satu sel grid, `grid-area: 1/1`) adalah DEFAULT — bukan
+ * lagi digerbang `[data-motion-ready="true"]`. Menunggu atribut yang ditulis
+ * JS setelah hidrasi berarti cat pertama merender tumpukan vertikal penuh
+ * (tinggi natural), lalu menyusut ke satu sel begitu GSAP mount — sebuah
+ * lompatan tata letak nyata (CLS terukur 0,163 di Chromium 1024×768,
+ * `.sentra-gsap/reports/browser-qa.json`) karena race antara cat dan JS.
+ * `@media (scripting: none)` di bawah mengevaluasi kemampuan peramban saat
+ * CSS diuraikan, tanpa race — baseline tanpa-JavaScript (UX Bible bagian 7)
+ * kini tercapai TANPA membuat pengguna berskrip menanggung lompatan.
  */
 .stage-passages {
+  /*
+   * `width` EKSPLISIT, bukan cuma `max-width`. Sejak `.stage-beat` menjadi
+   * `position:absolute` (lihat catatan di sana), tidak ada lagi konten
+   * flow-normal di sini yang bisa dijadikan induk dasar ukuran intrinsik —
+   * pada scene dengan `justify-self:end` (921), kotak ini kolaps ke ~32px
+   * dan satu beat merenggang jadi 956px tinggi karena teksnya terpaksa
+   * wrap ekstrem (tinjauan visual + e2e 2026-08-28 ronde kelima).
+   */
+  position: relative;
+  width: min(100%, 52ch);
   margin-top: var(--space-4);
   display: grid;
-  gap: var(--space-3);
+  gap: 0;
   max-width: 52ch;
 }
 
+/*
+ * `min-height` PER SCENE, bukan satu angka untuk semua — beat terpanjang
+ * tiap scene berbeda jauh (172px sampai 385px), dan angka seragam berarti
+ * memboroskan tinggi pada scene berbeat pendek, yang justru membangkitkan
+ * kembali overflow yang baru saja diperbaiki di atas. Nilainya diukur
+ * langsung dari tinggi natural (position:absolute, lebar 100%) beat
+ * terpanjang tiap scene, plus sedikit ruang.
+ */
+.scene[data-choreography="inscriptionReveal"] .stage-passages {
+  min-height: 15.5rem;
+}
+
+.scene[data-choreography="nameEmerges"] .stage-passages {
+  min-height: 11.25rem;
+}
+
+.scene[data-choreography="nameEndures"] .stage-passages {
+  min-height: 20rem;
+}
+
+.scene[data-choreography="dividedKingdom"] .stage-passages {
+  /*
+   * Cukup setinggi beat terpanjangnya (2 paragraf pendek, ±96px) — beat
+   * bersifat absolute sehingga ruangnya harus dipesan di sini. Dorongan
+   * margin ekstra yang pernah ada sudah tidak diperlukan: pemisahan dari
+   * PANJALU/JANGGALA kini dijamin partisi baris panggung, bukan jarak manual.
+   */
+  min-height: 6.5rem;
+}
+
 .stage-beat {
+  /*
+   * `position: absolute` yang benar-benar keluar dari alur — BUKAN
+   * `grid-area: 1/1` seperti sebelumnya. CSS Grid tetap mengikutkan SEMUA
+   * item bertumpuk (termasuk yang opacity:0) ke perhitungan tinggi track
+   * auto milik induknya, diambil dari yang TERTINGGI di antara mereka.
+   * Beat yang sedang terlihat di 1042 tingginya 172px, tetapi
+   * `.stage-passages` tetap terhitung 385px karena beat lain (tak
+   * terlihat) lebih panjang — 213px ruang terbuang yang PERSIS
+   * menyebabkan beat terakhir terpotong tepi bawah viewport yang di-pin
+   * (tinjauan visual 2026-08-28 ronde kelima). `position:absolute` benar-
+   * benar tidak berkontribusi ke ukuran induk, apa pun opacity-nya.
+   */
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
   display: grid;
   gap: var(--space-2);
+  max-width: 44ch;
   padding: var(--space-3) var(--space-4);
   background: linear-gradient(
     90deg,
@@ -1966,32 +2255,90 @@ p {
 .stage-passages p {
   margin: 0;
   font-family: var(--type-narrative);
-  font-size: clamp(1rem, 1.35vw, 1.2rem);
   line-height: 1.5;
   color: var(--cinema-ink);
   text-wrap: pretty;
 }
 
-[data-motion-ready="true"] .stage-passages {
-  gap: 0;
-}
-
-[data-motion-ready="true"] .stage-passages .stage-beat {
-  grid-area: 1 / 1;
-  align-self: end;
-  max-width: 44ch;
-}
-
 /* Saat satu beat memikul bingkai sendirian, kalimat pertamanya bersuara. */
-[data-motion-ready="true"] .stage-beat p {
+.stage-beat p {
   font-size: clamp(1.05rem, 1.5vw, 1.35rem);
   line-height: 1.45;
   font-weight: 500;
 }
 
-[data-motion-ready="true"] .stage-beat p:first-child {
+.stage-beat p:first-child {
   font-size: clamp(1.25rem, 1.9vw, 1.7rem);
   line-height: 1.36;
+}
+
+/*
+ * Tumpukan vertikal penuh, bukan tumpang tindih satu sel: dua kasus yang
+ * SAMA-SAMA tidak akan pernah mendapat timeline yang menyingkap beat
+ * bergiliran. (1) peramban tidak mengeksekusi skrip sama sekali. (2)
+ * `prefers-reduced-motion: reduce` — skrip tetap berjalan, tetapi janji
+ * aksesibilitas "seluruh perjalanan tanpa gerak" (UX Bible, terkunci
+ * `smoke.spec.ts` "reduced motion keeps the whole journey") berarti tidak
+ * boleh ada satu pun beat yang bersembunyi di baliknya — kalau tetap
+ * tumpang-tindih, sesi reduced-motion memaksa opacity semua beat menjadi 1
+ * SEKALIGUS di sel yang sama: bertumpuk ilegal, terbukti pada tangkapan
+ * layar tinjauan visual 2026-08-28 (879, 921, 1015, prologue).
+ */
+@media (scripting: none), (prefers-reduced-motion: reduce),
+  (max-width: 47.999rem) {
+  .stage-passages {
+    gap: var(--space-3);
+  }
+
+  .stage-beat {
+    /*
+     * `position: static` saja tidak cukup — item grid tetap memakai
+     * `grid-area` dari rule dasar (1/1) terlepas dari properti position-nya.
+     * `grid-area: auto` mengembalikannya ke penempatan otomatis satu baris
+     * per beat, sehingga benar-benar berhenti tumpang tindih (terbukti
+     * menumpuk ilegal pada tinjauan visual 2026-08-28 sebelum baris ini ada).
+     *
+     * `max-width: 47.999rem` ikut di sini: varian koreografi MOBILE memang
+     * menyalakan SEMUA beat sekaligus ("dokumennya selalu utuh", lihat
+     * scene-section.tsx) — dengan beat absolute mereka menumpuk di satu
+     * titik (terukur 375×812, ketiga beat 921 opacity 1 bertindihan).
+     * Aturan aliran-normal yang sama berlaku untuk ketiganya.
+     */
+    position: static;
+    grid-area: auto;
+    max-width: none;
+  }
+
+  .stage-beat p,
+  .stage-beat p:first-child {
+    font-size: clamp(1rem, 1.35vw, 1.2rem);
+    line-height: 1.5;
+    font-weight: normal;
+  }
+}
+
+/*
+ * Kasus keempat aliran-normal: scene TANPA koreografi. Ia tidak pernah punya
+ * island motion, jadi tidak ada mesin yang menggilirkan beat — dengan rule
+ * dasar absolute, seluruh beat menumpuk bertindihan di desktop (terbukti pada
+ * tinjauan Chief 2026-08-28, "teks dobel", scene Daha). Ia dokumen statis:
+ * beat mengalir vertikal seperti varian mobile/reduced/tanpa-JS.
+ */
+.scene:not([data-choreography]) .stage-passages {
+  gap: var(--space-3);
+}
+
+.scene:not([data-choreography]) .stage-beat {
+  position: static;
+  grid-area: auto;
+  max-width: none;
+}
+
+.scene:not([data-choreography]) .stage-beat p,
+.scene:not([data-choreography]) .stage-beat p:first-child {
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  line-height: 1.5;
+  font-weight: normal;
 }
 
 /*
@@ -2034,8 +2381,62 @@ p {
   text-shadow: 0 0 0.02em var(--cinema-canvas);
 }
 
+/*
+ * 1042 di layar lebar: tarikh monumental + kalimat pemikul 4 baris + satu
+ * beat adalah tumpukan konten terpanjang dari keempat scene ini. Panggung
+ * yang di-pin GSAP dipatok setinggi viewport — `min-height` pada
+ * `.scene-stage` tidak membantu di sini, karena ScrollTrigger menahannya
+ * pas satu layar berapa pun nilainya. Rata-bawah di tinggi tetap itu, tepi
+ * atas tumpukan mencapai zona motif handoff masuk dan menembus digit
+ * "1042" — terbukti pada tinjauan visual 2026-08-28 ronde kedua. Perbaikan
+ * yang benar: tarikh scene ini sendiri yang mengecil secukupnya, bukan
+ * panggungnya — pola yang sama dengan "18 MARET 1869" di bridgeConstruction.
+ */
+.scene[data-choreography="dividedKingdom"] .stage-date {
+  font-size: clamp(3rem, 9vw, 7rem);
+}
+
+/*
+ * Mempersempit atau mengecilkan kalimat pemikul untuk lolos dari PANJALU
+ * ternyata mustahil dicapai bersamaan dengan anggaran tinggi satu viewport
+ * — teks ini butuh empat baris LEBAR untuk tetap pendek secara tinggi;
+ * setiap upaya mempersempitnya menambah baris (dan tinggi) lebih dari yang
+ * dihemat (diverifikasi berulang, tinjauan visual 2026-08-28 ronde kelima).
+ * Kalimat pemikul dikembalikan ke lebar wajarnya (261px, muat nyaman);
+ * PANJALU/JANGGALA yang bergeser turun sedikit di bawah — lihat override
+ * `.scene-nomenclature` untuk 1042.
+ */
+
+/*
+ * Percobaan pertama menurunkan motif handoff masuk supaya lolos dari tarikh
+ * — itu justru memindahkannya tepat ke baris pertama kalimat pemikul
+ * ("Sejarah mengingat..."), bukan menghilangkan tabrakannya (tinjauan visual
+ * 2026-08-28 ronde keempat: tembus di kedua breakpoint desktop DAN laptop
+ * 1024×768). Perbaikan yang benar memakai DUA pengungkit sekaligus, diukur
+ * presisi di 1440×900 dan 1024×768 pada progres baca dan handoff:
+ *   1. Motif naik MENDEKATI nav (bukan menjauh) — nav berhenti di 57px di
+ *      semua breakpoint yang diuji, jadi motif tetap aman di atasnya.
+ *   2. Plat turun lebih jauh (di bawah) supaya kalimat pemikul dimulai jauh
+ *      di bawah motif.
+ * Hasilnya jeda vertikal ±80-90px di kedua breakpoint — bukan sekadar lolos
+ * ambang minimum, tetapi ruang napas yang terasa jelas.
+ */
+.scene[data-choreography="dividedKingdom"]
+.scene-handoff[data-handoff-phase="incoming"] {
+  inset-block-start: clamp(4rem, 9svh, 5.5rem);
+}
+
+/*
+ * Padding ekstra atas/bawah yang pernah menumpuk di plat 1042 (untuk
+ * menjauhkan kalimat pemikul dari motif handoff dan nama wilayah) sudah
+ * dicabut seluruhnya — sejak panggung 1042 dipartisi menjadi baris
+ * "name"/"plate", plat berdiri di barisnya sendiri dan jarak dari lapisan
+ * lain dijamin struktur, bukan padding manual. Padding dasar `.stage-plate`
+ * berlaku apa adanya.
+ */
+
 .scene[data-media-slot="921-kadhiri"][data-choreography="nameEmerges"]
-  .stage-beat {
+.stage-beat {
   background: linear-gradient(
     270deg,
     color-mix(in srgb, var(--cinema-canvas) 88%, transparent),
@@ -2063,6 +2464,19 @@ p {
   font-size: 0.58rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
+}
+
+/*
+ * Kelas bukti dan objek untuk Scene 01-04: kecil, tenang, di strip bacaan —
+ * bukan lagi memimpin panggung sinematik. `.evidence-badge`/`.stage-object`
+ * dipakai ulang apa adanya; baris ini hanya mengatur jaraknya.
+ */
+.readout-provenance {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin: 0;
 }
 
 .scene-readout .scene-actions {
@@ -2909,4 +3323,84 @@ p {
     grid-column: 1;
     grid-row: 4;
   }
+}
+
+/* ---------- ScrollSmoother (100% GSAP; direktif Chief 2026-08-28) ---------- */
+
+/*
+ * Saat ScrollSmoother aktif, konten hidup di dalam wadah yang
+ * ditransformasikan — CSS sticky tidak dapat bekerja di sana, jadi pin
+ * ScrollTrigger mengambil alih penahanan bingkai. Ruang gulirnya tetap
+ * `.scene-pin-space` hasil server render (pinSpacing: false), sehingga
+ * dokumen tidak pernah bergeser dan tidak ada CLS. Tanpa atribut ini
+ * (tanpa JS, mobile, reduced, atau smoother gagal dibuat), aturan sticky
+ * lama tetap berlaku utuh.
+ */
+html[data-smooth="true"] .scene[data-choreography] .scene-stage,
+html[data-smooth="true"] .prologue-stage {
+  position: relative;
+  top: auto;
+}
+
+/*
+ * Baris hasil SplitText (topeng baris Jam 2). Topengnya elemen wrapper
+ * dengan overflow:hidden yang dibuat plugin; baris di dalamnya bergerak
+ * dengan transform murni. Padding-block kecil menjaga descender tidak
+ * terpangkas topeng saat beristirahat.
+ */
+html[data-smooth="true"] .stage-beat,
+html[data-smooth="true"] .master-line {
+  backface-visibility: hidden;
+}
+
+/* ---------- media video slot (direktif Chief 2026-08-28) ---------- */
+
+/*
+ * Video diperlakukan persis seperti citra: memenuhi bingkai, disapu shade
+ * dan mask cahaya --lit yang sama, dan ikut dolly kamera karena hidup di
+ * dalam .stage-surface / .stage-media yang sudah ditransformasikan timeline.
+ */
+.stage-media video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: 50% 42%;
+  transform-origin: center center;
+}
+
+/* ---------- latar kartu judul act (pratinjau editorial) ---------- */
+
+.journey-act > header[data-header-media] {
+  isolation: isolate;
+  overflow: clip;
+}
+
+.act-header-media {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.act-header-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 38%;
+  /* Kartu judul tetap kartu judul: citra hadir sebagai kabut latar,
+     bukan sebagai bukti — naskah di atasnya harus tetap memimpin. */
+  opacity: 0.34;
+}
+
+.act-header-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    var(--cinema-canvas) 0%,
+    transparent 42%,
+    color-mix(in srgb, var(--cinema-canvas) 68%, transparent) 78%,
+    var(--cinema-canvas) 100%
+  );
 }

@@ -77,18 +77,37 @@ export function SceneMedia({
         data-media-state="ready"
         style={framingStyle(scene.slug)}
       >
-        {/* biome-ignore lint/performance/noImgElement: slot statis harus menerima aset produksi tanpa konfigurasi loader tambahan. */}
-        <img
-          src={slot.expectedPath}
-          srcSet={`${mobilePath} 768w, ${slot.expectedPath} 1536w`}
-          sizes="100vw"
-          alt={slot.altText}
-          width="1536"
-          height="1024"
-          loading={isOpeningScene ? "eager" : "lazy"}
-          fetchPriority={isOpeningScene ? "high" : undefined}
-          decoding="async"
-        />
+        {slot.videoPath ? (
+          /*
+           * Slot video (direktif Chief 2026-08-28). Poster = citra slot,
+           * sehingga cat pertama dan fallback identik dengan versi statis.
+           * Kamera GSAP (dolly, mask --lit, transisi keluar) menyapunya
+           * lewat .stage-surface persis seperti citra.
+           */
+          <video
+            src={slot.videoPath}
+            poster={slot.expectedPath}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-label={slot.altText}
+          />
+        ) : (
+          /* biome-ignore lint/performance/noImgElement: slot statis harus menerima aset produksi tanpa konfigurasi loader tambahan. */
+          <img
+            src={slot.expectedPath}
+            srcSet={`${mobilePath} 768w, ${slot.expectedPath} 1536w`}
+            sizes="100vw"
+            alt={slot.altText}
+            width="1536"
+            height="1024"
+            loading={isOpeningScene ? "eager" : "lazy"}
+            fetchPriority={isOpeningScene ? "high" : undefined}
+            decoding="async"
+          />
+        )}
         <span className="stage-media-shade" aria-hidden="true" />
       </div>
     );

@@ -158,6 +158,11 @@ export interface SceneDto {
     readonly ready: boolean;
     readonly altText: string;
     readonly label: string;
+    /**
+     * Gerak hidup untuk slot pratinjau editorial (direktif Chief 2026-08-28).
+     * Citra `expectedPath` tetap menjadi poster sekaligus fallback-nya.
+     */
+    readonly videoPath?: string;
   };
   readonly choreographyKey?: string;
   readonly visualVariant?: string;

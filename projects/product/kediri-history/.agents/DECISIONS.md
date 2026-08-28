@@ -5,6 +5,71 @@ Keputusan lintas-repositori tetap dicatat di `.agents/DECISIONS.md` root.
 
 ---
 
+## 2026-08-28 — Video pembuka & Daha, latar act Panjalu Rises, publikasi aset pratinjau (otorisasi Chief)
+
+Direktif Chief in-session (2026-08-28), ditutup perintah eksplisit "GIT COMMIT".
+
+(1) **Video sebagai media hero**: prolog (halaman gelap pembuka) memakai
+`00-prologue.mp4` (sumber `project-video/opening.mp4`); scene Daha memakai
+`05-daha-centre-of-power.mp4` (sumber `project-video/dahanasada.mp4`).
+Keduanya `autoplay muted loop playsinline`, dengan citra slot sebagai poster
++ fallback tanpa-JS — cat pertama identik dengan versi statis. Kamera GSAP
+(dolly, mask `--lit`, transisi keluar) menyapu video persis seperti citra.
+(2) **Citra Daha pindah** menjadi latar kartu judul act "Panjalu Rises"
+(`ACT_HEADER_MEDIA`, mode pratinjau editorial, opacity rendah + gradien —
+kartu judul tetap dipimpin naskah). (3) **Publikasi aset pratinjau** (route
+`SHOW_EDITORIAL_PREVIEW` + `public/journey-approved/` statis, termasuk kedua
+mp4) kini TEREKAM sebagai keputusan Chief; catatan tetap terbuka:
+`check-production-journey.mjs` belum mencakup path statis (follow-up), dan
+verifikasi Redo Register membuktikan crop, bukan rights — record rights CMS
+tetap terutang sebelum rilis publik final. (4) **Teks dobel** diperbaiki dua
+sisi: scene tanpa `choreographyKey` kini menumpuk beat secara statis via CSS
+(`.scene:not([data-choreography])`), dan mesin beat director menyembunyikan
+beat lama dengan fade cepat deterministik — tidak pernah reverse pelan.
+(5) **Variasi arah** per koreografi (`FLAVORS` di director.ts): arah masuk
+tarikh/beat berbeda antar-scene dan tetap menjawab argumen historisnya.
+Bukti: unit 71, e2e 56 (3 assertion media diadaptasi ke kontrak video —
+integrity review rule 7 dicatat di sini), typecheck, lint hijau.
+
+## 2026-08-28 — Model dua-jam + stack 100% GSAP; smooth scroll opt-in Journey
+
+Direktif Chief in-session (2026-08-28), setelah teardown empat situs referensi
+(bombon.rs, jasminadenner.com, exp-ion.lusion.co, whiteoutworks.com) dan
+prototype bukti yang disetujui Chief ("Yes I like that, now apply that").
+
+(1) **Model dua-jam.** Doktrin "gerak scrub = linear" dipersempit: ia tetap
+berlaku untuk KAMERA (permukaan, cahaya, goresan, handoff — timeline factory
+`scenes.ts`), tetapi NASKAH (tarikh, kalimat pemikul, nama, beat editorial)
+kini DI-TRIGGER pada ambang progres dan bermain di jamnya sendiri dengan ease
+ekspresif (`modules/motion/director.ts`, CustomEase "cine"). Alasan: naskah
+yang menumpang jam kamera terasa mekanis; seluruh situs referensi DOM-based
+memisahkan dua jam ini.
+
+(2) **Stack motion 100% GSAP resmi**: core + ScrollTrigger + ScrollSmoother +
+SplitText + CustomEase. Tanpa Lenis/Locomotive/three.js.
+
+(3) **ScrollSmoother opt-in di Journey** (revisi terbatas atas doktrin
+no-smooth-scroll UX Bible §17; terbuka untuk diveto Chief). Mitigasi: smoother
+mempertahankan scrollbar NATIVE sehingga restorasi scroll peramban tetap
+hidup; hanya desktop/tablet tanpa reduced-motion; mobile/reduced/tanpa-JS
+tetap scroll native + DOM statis. Konsekuensi teknis: CSS sticky tidak bekerja
+di dalam konten yang ditransformasikan → pin ScrollTrigger mengambil alih
+dengan `pinSpacing: false` di atas `.scene-pin-space` server-rendered (tetap
+nol CLS), dan `end` kini DIUKUR dari tinggi pin-space sungguhan (kontrak
+pacing CSS↔JS menjadi tunggal). Nav journey (fixed) hidup DI LUAR
+#smooth-wrapper — elemen fixed di dalam konten transform ikut tergulir
+(terbukti e2e "Timeline pushState lands on a readable early scene").
+
+(4) **SplitText + aria "auto"** memenuhi Authority Rule 1: induk menerima
+aria-label utuh, potongan aria-hidden — naskah historis tidak pernah keluar
+dari pohon aksesibilitas (dikunci e2e "no historical text is ever removed").
+
+(5) **Keadaan baca = DOM server-render.** Cabang mobile/reduced tidak lagi
+membangun timeline sama sekali; `setReadableState` (60 baris duplikasi nilai
+yang sudah terbukti drift) dihapus. Bukti: typecheck, lint, 71 unit test,
+56 e2e, build produksi hijau; verifikasi runtime dua-jam + deep-link
+`#921-kadhiri` di dev server.
+
 ## 2026-08-27 — Pass refinemen lima scene awal: beat editorial, handoff kausal
 
 Direktif refinemen Chief dieksekusi pada Scene 00–04. (1) Paragraf kanon

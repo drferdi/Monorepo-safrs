@@ -178,7 +178,9 @@ export function visibleSourceRect(
   };
 }
 
-export function sceneFraming(slug: string | undefined): SceneFraming | undefined {
+export function sceneFraming(
+  slug: string | undefined,
+): SceneFraming | undefined {
   return slug ? SCENE_FRAMING[slug] : undefined;
 }
 
@@ -195,7 +197,8 @@ export function frameVariables(
   framing: SceneFraming,
   window: SourceWindow | undefined,
 ): Record<string, string> {
-  if (!window) return { "--frame-zoom": "1", "--frame-x": "0%", "--frame-y": "0%" };
+  if (!window)
+    return { "--frame-zoom": "1", "--frame-x": "0%", "--frame-y": "0%" };
 
   const { source } = framing;
   const zoom = Math.max(
