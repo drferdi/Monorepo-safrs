@@ -1,19 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Source_Serif_4 } from "next/font/google";
+import { Cinzel, Geist, Geist_Mono, Newsreader } from "next/font/google";
 import type React from "react";
 
 import "./globals.css";
 
 /**
  * Tiga peran tipografi, bukan tiga selera (Bible 04 bagian 7):
- *   - Source Serif 4 membawa suara naratif dan pernyataan historis;
+ *   - Newsreader membawa suara naratif dan pernyataan historis dengan optical
+ *     sizing variable yang tenang di layar;
  *   - Geist membawa antarmuka kontemporer — situs ini dibuat tahun 2026 dan
  *     tidak berpura-pura menjadi manuskrip kuno;
  *   - Geist Mono membawa metadata arsip, nomor inventaris, dan label bukti.
  */
-const narrative = Source_Serif_4({
+const narrative = Newsreader({
   subsets: ["latin"],
-  variable: "--font-source-serif",
+  weight: "variable",
+  axes: ["opsz"],
+  variable: "--font-newsreader",
   display: "swap",
 });
 
@@ -26,6 +29,19 @@ const interfaceFont = Geist({
 const archive = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-geist-mono",
+  display: "swap",
+});
+
+/*
+ * Peran keempat, sempit dan disengaja (direktif Chief 2026-08-28): kapital
+ * inskripsi bergaya abad pertengahan untuk KARTU JUDUL sinematik saja —
+ * bukan untuk naskah. Cinzel diturunkan dari kapital monumental, bukan
+ * blackletter kitsch, sehingga tetap sejalan dengan suara prasasti situs.
+ */
+const royal = Cinzel({
+  subsets: ["latin"],
+  weight: ["500", "600"],
+  variable: "--font-cinzel",
   display: "swap",
 });
 
@@ -53,7 +69,8 @@ export default function PublicLayout({
   return (
     <html
       lang="id"
-      className={`${narrative.variable} ${interfaceFont.variable} ${archive.variable}`}
+      suppressHydrationWarning
+      className={`${narrative.variable} ${interfaceFont.variable} ${archive.variable} ${royal.variable}`}
     >
       <body>
         <a className="skip-link" href="#historical-content" tabIndex={0}>

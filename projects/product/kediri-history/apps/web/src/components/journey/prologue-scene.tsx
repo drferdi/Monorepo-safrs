@@ -137,6 +137,47 @@ export function PrologueScene({
             data-motion="water-line"
             aria-hidden="true"
           />
+          {/*
+           * Kredit pembuka (direktif Chief 2026-08-28) — hidup HANYA di dalam
+           * tahanan gelap intro bermotion (CSS menampilkannya saat
+           * html[data-smooth]); ia branding presentasi, bukan naskah sejarah,
+           * jadi varian statis tidak pernah melihatnya dan pembaca layar
+           * tidak diganggu olehnya.
+           */}
+          <div
+            className="prologue-credit"
+            data-motion="credit"
+            aria-hidden="true"
+          >
+            <span className="credit-logo" data-credit="logo" />
+            <span className="credit-vline" data-credit="vline" />
+            <span className="credit-hline" data-credit="hline" />
+            <p className="credit-line credit-line-primary" data-credit="line">
+              Sentra Artificial Intelligence
+            </p>
+            <p className="credit-line credit-line-secondary" data-credit="line">
+              Present
+            </p>
+          </div>
+          {/*
+           * Kartu judul resmi (direktif Chief 2026-08-28), menyusul kredit
+           * dalam sekuens intro yang sama. Lapisan presentasi bermotion —
+           * h1 dokumen tetap milik naskah; kartu ini gating html[data-smooth]
+           * dan aria-hidden seperti kredit.
+           */}
+          <p
+            className="prologue-title-card"
+            data-motion="title-card"
+            aria-hidden="true"
+          >
+            <span className="title-card-name" data-title-card="name">
+              Kediri
+            </span>
+            <span className="title-card-rule" data-title-card="rule" />
+            <span className="title-card-sub" data-title-card="sub">
+              A Century of History, Kings, and Industry
+            </span>
+          </p>
           <SceneHandoff kind="water-copper" phase="outgoing" />
           <p className="stage-visual-label">
             {narrative.media?.label ?? "Visualisasi artistik"}

@@ -16,6 +16,7 @@ export const CHOREOGRAPHY_KEYS = [
   "nameEmerges",
   "nameEndures",
   "dividedKingdom",
+  "dahaLiving",
   "royalConsolidation",
   "manuscriptWorld",
   "politicalFracture",

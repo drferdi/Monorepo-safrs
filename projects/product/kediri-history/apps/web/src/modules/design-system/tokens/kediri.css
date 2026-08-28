@@ -54,7 +54,7 @@
   --cinema-evidence: #c8a04c;
 
   /* Peran tipografi (Bible 04 bagian 7). */
-  --type-narrative: var(--font-source-serif), Georgia, "Times New Roman", serif;
+  --type-narrative: var(--font-newsreader), Georgia, "Times New Roman", serif;
   --type-interface: var(--font-geist), "Helvetica Neue", Arial, sans-serif;
   --type-archive:
     var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;

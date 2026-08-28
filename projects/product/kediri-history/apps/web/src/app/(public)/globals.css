@@ -1074,6 +1074,10 @@ p {
     height: 190svh;
   }
 
+  .scene[data-choreography="dahaLiving"] .scene-pin-space {
+    height: 200svh;
+  }
+
   .scene[data-choreography="politicalFracture"] .scene-pin-space,
   .scene[data-choreography="bridgeLift"] .scene-pin-space {
     height: 215svh;
@@ -1112,6 +1116,10 @@ p {
 
   .scene[data-choreography="nameEndures"] .scene-pin-space {
     height: 300svh;
+  }
+
+  .scene[data-choreography="dahaLiving"] .scene-pin-space {
+    height: 320svh;
   }
 
   .scene[data-choreography="politicalFracture"] .scene-pin-space,
@@ -1798,7 +1806,7 @@ p {
   font-size: var(--type-size-scene);
   line-height: 1.02;
   letter-spacing: -0.03em;
-  font-weight: 600;
+  font-weight: 500;
   text-wrap: balance;
   max-width: 21ch;
   margin: 0;
@@ -2160,6 +2168,7 @@ p {
   font-family: var(--type-narrative);
   font-size: var(--type-size-lead);
   line-height: 1.55;
+  font-weight: 400;
   color: var(--cinema-ink);
   margin: 0;
 }
@@ -2214,6 +2223,12 @@ p {
   min-height: 20rem;
 }
 
+.scene[data-choreography="dahaLiving"] .stage-passages {
+  /* Beat terpanjang: tiga kalimat generasi (±6 baris pada 44ch). Tanpa
+     reservasi ini beat absolute naik menimpa baris akhir master. */
+  min-height: 13rem;
+}
+
 .scene[data-choreography="dividedKingdom"] .stage-passages {
   /*
    * Cukup setinggi beat terpanjangnya (2 paragraf pendek, ±96px) — beat
@@ -2243,19 +2258,15 @@ p {
   display: grid;
   gap: var(--space-2);
   max-width: 44ch;
-  padding: var(--space-3) var(--space-4);
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--cinema-canvas) 86%, transparent),
-    color-mix(in srgb, var(--cinema-canvas) 60%, transparent) 78%,
-    transparent
-  );
+  padding: var(--space-3) 0;
+  background: none;
 }
 
 .stage-passages p {
   margin: 0;
   font-family: var(--type-narrative);
   line-height: 1.5;
+  font-weight: 400;
   color: var(--cinema-ink);
   text-wrap: pretty;
 }
@@ -2264,12 +2275,13 @@ p {
 .stage-beat p {
   font-size: clamp(1.05rem, 1.5vw, 1.35rem);
   line-height: 1.45;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .stage-beat p:first-child {
   font-size: clamp(1.25rem, 1.9vw, 1.7rem);
   line-height: 1.36;
+  font-weight: 500;
 }
 
 /*
@@ -2309,11 +2321,16 @@ p {
     max-width: none;
   }
 
-  .stage-beat p,
+  .stage-beat p {
+    font-size: clamp(1rem, 1.35vw, 1.2rem);
+    line-height: 1.5;
+    font-weight: 400;
+  }
+
   .stage-beat p:first-child {
     font-size: clamp(1rem, 1.35vw, 1.2rem);
     line-height: 1.5;
-    font-weight: normal;
+    font-weight: 500;
   }
 }
 
@@ -2334,11 +2351,16 @@ p {
   max-width: none;
 }
 
-.scene:not([data-choreography]) .stage-beat p,
+.scene:not([data-choreography]) .stage-beat p {
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  line-height: 1.5;
+  font-weight: 400;
+}
+
 .scene:not([data-choreography]) .stage-beat p:first-child {
   font-size: clamp(1rem, 1.35vw, 1.2rem);
   line-height: 1.5;
-  font-weight: normal;
+  font-weight: 500;
 }
 
 /*
@@ -2353,32 +2375,21 @@ p {
 }
 
 .scene[data-media-slot="921-kadhiri"] .stage-beat {
-  background: linear-gradient(
-    270deg,
-    color-mix(in srgb, var(--cinema-canvas) 86%, transparent),
-    color-mix(in srgb, var(--cinema-canvas) 60%, transparent) 78%,
-    transparent
-  );
+  background: none;
 }
 
-/* Beat awal mendapat bidang baca yang sedikit lebih tegas: teks sekunder
- * tetap tenang, tetapi tidak larut ke dalam tekstur prasasti atau peta. */
+/* Beat awal mempertahankan warna teksnya tanpa bidang latar atau panel. */
 .scene[data-choreography="nameEmerges"] .stage-beat,
 .scene[data-choreography="nameEndures"] .stage-beat,
 .scene[data-choreography="dividedKingdom"] .stage-beat {
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--cinema-canvas) 88%, transparent),
-    color-mix(in srgb, var(--cinema-canvas) 64%, transparent) 82%,
-    color-mix(in srgb, var(--cinema-canvas) 22%, transparent)
-  );
+  background: none;
 }
 
 .scene[data-choreography="nameEmerges"] .stage-beat p,
 .scene[data-choreography="nameEndures"] .stage-beat p,
 .scene[data-choreography="dividedKingdom"] .stage-beat p {
   color: var(--cinema-ink);
-  text-shadow: 0 0 0.02em var(--cinema-canvas);
+  text-shadow: none;
 }
 
 /*
@@ -2437,12 +2448,7 @@ p {
 
 .scene[data-media-slot="921-kadhiri"][data-choreography="nameEmerges"]
 .stage-beat {
-  background: linear-gradient(
-    270deg,
-    color-mix(in srgb, var(--cinema-canvas) 88%, transparent),
-    color-mix(in srgb, var(--cinema-canvas) 64%, transparent) 82%,
-    color-mix(in srgb, var(--cinema-canvas) 22%, transparent)
-  );
+  background: none;
 }
 
 .epistemic-note {
@@ -3369,6 +3375,12 @@ html[data-smooth="true"] .master-line {
   transform-origin: center center;
 }
 
+/* Prolog mempertahankan seluruh perspektif sumber 16:9 di dalam panggung. */
+.prologue-surface .stage-media video {
+  object-fit: contain;
+  object-position: center center;
+}
+
 /* ---------- latar kartu judul act (pratinjau editorial) ---------- */
 
 .journey-act > header[data-header-media] {
@@ -3403,4 +3415,165 @@ html[data-smooth="true"] .master-line {
     color-mix(in srgb, var(--cinema-canvas) 68%, transparent) 78%,
     var(--cinema-canvas) 100%
   );
+}
+
+/* ---------- kredit pembuka (direktif Chief 2026-08-28) ---------- */
+
+/*
+ * Lockup dua baris dengan logomark, garis vertikal, dan garis horisontal.
+ * Hanya hidup di dalam intro bermotion (html[data-smooth]); ia branding
+ * presentasi, bukan naskah sejarah — varian statis tidak pernah melihatnya.
+ */
+.prologue-credit {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  margin: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  text-align: center;
+  color: var(--cinema-ink);
+  pointer-events: none;
+}
+
+html[data-smooth="true"] .prologue-credit {
+  display: flex;
+}
+
+/*
+ * Logomark memakai mask sehingga warnanya milik token sinema, bukan milik
+ * berkas — satu aset untuk setiap era dan tema.
+ */
+.credit-logo {
+  width: clamp(3.2rem, 6vw, 4.6rem);
+  aspect-ratio: 1;
+  background: var(--cinema-ink);
+  mask: url("/static/sentra-logomark.svg") center / contain no-repeat;
+}
+
+.credit-vline {
+  width: 1px;
+  height: clamp(1.6rem, 3.5vh, 2.6rem);
+  background: linear-gradient(180deg, var(--cinema-accent), var(--cinema-rule));
+  transform-origin: top center;
+}
+
+.credit-hline {
+  width: min(24rem, 56vw);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--cinema-accent) 30%,
+    var(--cinema-accent) 70%,
+    transparent
+  );
+  transform-origin: center;
+}
+
+.credit-line {
+  margin: 0;
+  font-family: var(--type-archive);
+  text-transform: uppercase;
+  color: var(--cinema-ink);
+}
+
+.credit-line-primary {
+  font-size: clamp(0.72rem, 1.15vw, 0.95rem);
+  letter-spacing: 0.5em;
+  word-spacing: 1.05em;
+  text-indent: 0.5em;
+}
+
+.credit-line-secondary {
+  font-size: clamp(0.6rem, 0.85vw, 0.74rem);
+  letter-spacing: 0.72em;
+  text-indent: 0.72em;
+  color: var(--cinema-ink-muted);
+}
+
+/* ---------- kartu judul resmi (direktif Chief 2026-08-28) ---------- */
+
+.prologue-title-card {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  margin: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  text-align: center;
+  color: var(--cinema-ink);
+  pointer-events: none;
+}
+
+html[data-smooth="true"] .prologue-title-card {
+  display: flex;
+}
+
+.title-card-name {
+  /*
+   * Efek medieval (direktif Chief): kapital inskripsi Cinzel, dan kontras
+   * DITURUNKAN — bukan putih murni, melainkan gading yang dihangatkan bara
+   * accent, dengan bayang lembut agar duduk DI DALAM footage, bukan
+   * menempel di atasnya.
+   */
+  font-family: var(--font-cinzel), var(--type-narrative), serif;
+  font-weight: 600;
+  font-size: clamp(3.2rem, 9.4vw, 7.4rem);
+  line-height: 0.98;
+  letter-spacing: 0.14em;
+  text-indent: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--cinema-ink) 58%, var(--cinema-accent) 42%);
+  opacity: 0.94;
+  filter: drop-shadow(0 3px 22px rgba(8, 5, 2, 0.55));
+}
+
+.title-card-rule {
+  width: min(19rem, 46vw);
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--cinema-accent) 30%,
+    var(--cinema-accent) 70%,
+    transparent
+  );
+  transform-origin: center;
+}
+
+.title-card-sub {
+  max-width: 34rem;
+  font-family: var(--type-archive);
+  font-size: clamp(0.66rem, 1vw, 0.85rem);
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  word-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--cinema-ink-muted);
+}
+
+/* ---------- gerbang boot intro (direktif Chief 2026-08-28) ---------- */
+
+/*
+ * Selama atribut boot hidup (di-set skrip sinkron sebelum cat pertama,
+ * hanya varian bermotion), panggung prolog menahan diri: tidak ada poster,
+ * naskah, atau motif yang sempat tercat sebelum sekuens gelap→video milik
+ * director dimulai. Director melepas atribut ini begitu GSAP memegang
+ * kendali; failsafe 5 detik menjaga halaman bila island gagal dimuat.
+ */
+html[data-intro="pending"] .prologue-surface,
+html[data-intro="pending"] .prologue-plate,
+html[data-intro="pending"] .prologue-water-line,
+html[data-intro="pending"] .prologue-stage .scene-handoff,
+html[data-intro="pending"] .prologue-stage .stage-visual-label,
+html[data-intro="pending"] .prologue-credit,
+html[data-intro="pending"] .prologue-title-card {
+  opacity: 0;
 }

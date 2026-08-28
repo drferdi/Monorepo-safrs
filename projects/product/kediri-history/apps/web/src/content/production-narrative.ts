@@ -306,6 +306,7 @@ const ACT_2 = act(
       dateDisplay: "Daha",
       sceneType: "supporting",
       visualVariant: "landscape",
+      choreographyKey: "dahaLiving",
       imageReady: true,
       // Direktif Chief 2026-08-28: Daha bergerak sebagai video dahanasada;
       // citra 05-daha tetap poster + fallback, dan citranya sendiri pindah
@@ -315,12 +316,12 @@ const ACT_2 = act(
         "Visualisasi artistik imajiner kota kuno berkabut di lembah sungai saat fajar; bentuknya sengaja tidak pasti karena wujud fisik Daha tidak diketahui.",
       masterLine:
         "Sebagian kota bertahan sebagai reruntuhan. Daha bertahan dalam teks, tempat, dan ingatan.",
+      // Narasi Chief 2026-08-28; baris Jawa mendapat beat heningnya sendiri.
+      beatGroups: [[0], [1], [2]],
       paragraphs: [
-        "Kerajaan meninggalkan banyak jenis warisan. Ada yang meninggalkan candi, tembok, atau kota yang masih dapat kita telusuri jalannya.",
-        "Daha tidak memberi kita kemewahan itu. Kita mengenalnya melalui prasasti, sastra, nama tempat, dan ingatan.",
-        "Kita tahu ia pernah menjadi pusat kekuasaan. Tetapi kita tidak tahu cukup banyak untuk membangun kembali setiap jalan, istana, atau atapnya dengan kepastian.",
-        "Maka ketidakhadiran itu sendiri menjadi bagian dari cerita.",
-        "Daha mengajarkan bahwa sejarah tidak selalu hadir sebagai reruntuhan yang dapat disentuh. Kadang-kadang sebuah kota bertahan karena manusia terus menyebut namanya.",
+        "Tetapi pada abad ke-11 dan ke-12, Daha adalah pusat kekuasaan.",
+        "Kene tau ana sawijining nagara.",
+        "Di sinilah keputusan kerajaan dibuat. Di sinilah Panjalu memandang ke seberang dunia politiknya. Dan di sekitar bentang Sungai Brantas, sejarah Kediri bergerak dari satu generasi menuju generasi berikutnya.",
       ],
     }),
     scene({

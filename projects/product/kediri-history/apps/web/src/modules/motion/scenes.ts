@@ -77,18 +77,13 @@ const prologueReveal: SceneTimelineFactory = ({ root, variant }) => {
   const timeline = gsap.timeline({ paused: true });
 
   if (surface) {
-    timeline.fromTo(
-      surface,
-      { opacity: 0, "--dolly": 1.08, "--lit": 0 },
-      {
-        opacity: 1,
-        "--dolly": 1.02,
-        "--lit": 1,
-        ease: MOTION.scrubEase,
-        duration: 0.42,
-      },
-      0,
-    );
+    /*
+     * KEMUNCULAN permukaan (gelap 2 detik → video mulai → cahaya membuka)
+     * bukan milik jam kamera ini — ia intro berbasis WAKTU milik director
+     * (direktif Chief 2026-08-28). Scrub menjaga dolly tetap 1 sampai
+     * transisi keluar, supaya dua jam tidak berebut opacity maupun skala.
+     */
+    timeline.set(surface, { "--dolly": 1 }, 0);
   }
   if (waterLine) {
     timeline.fromTo(
@@ -193,6 +188,37 @@ const inscriptionReveal: SceneTimelineFactory = ({ root, variant }) => {
   // Ketukan 6 — tahanan baca. Komposisi diam; tautan dalam mendarat di sini.
 
   // Ketukan 7 — permukaan KEHILANGAN SKALA: material menjadi bentang.
+  addLosingScaleExit(timeline, surface, plate, variant);
+  return timeline;
+};
+
+/**
+ * SHOT Daha — pusat kekuasaan yang masih bernapas.
+ *
+ * Permukaannya video: kota yang hidup. Kamera hanya mendorong pelan dan
+ * membiarkan footage bekerja — dolly halus, cahaya membuka, tidak ada gerak
+ * dekoratif yang bersaing dengan gambar bergerak. Naskah (termasuk baris
+ * Jawa "Kene tau ana sawijining nagara") milik Jam 2 dan tampil lembut di
+ * dataran baca tanpa mengganggu visual.
+ */
+const dahaLiving: SceneTimelineFactory = ({ root, variant }) => {
+  const surface = one(root, ".stage-surface");
+  const plate = one(root, ".stage-plate");
+  if (!surface) return undefined;
+
+  const timeline = gsap.timeline({ paused: true });
+  timeline.fromTo(
+    surface,
+    { opacity: 0, "--dolly": 1.1, "--lit": 0 },
+    {
+      opacity: 1,
+      "--dolly": 1.02,
+      "--lit": 1,
+      ease: MOTION.scrubEase,
+      duration: 0.46,
+    },
+    0,
+  );
   addLosingScaleExit(timeline, surface, plate, variant);
   return timeline;
 };
@@ -712,6 +738,7 @@ const FACTORIES: Partial<Record<ChoreographyKey, SceneTimelineFactory>> = {
   nameEmerges,
   nameEndures,
   dividedKingdom,
+  dahaLiving,
   royalConsolidation,
   manuscriptWorld,
   politicalFracture,
@@ -750,6 +777,8 @@ const PIN_DISTANCES: Record<
   // Interlude paling hening di Act I: lebih pendek dari shot hero mana pun.
   nameEndures: { desktop: 300, tablet: 190 },
   dividedKingdom: { desktop: 390, tablet: 240 },
+  // Video yang hidup butuh waktu tayang, bukan drama gulir: tahan tenang.
+  dahaLiving: { desktop: 320, tablet: 200 },
   royalConsolidation: { desktop: 400, tablet: 250 },
   manuscriptWorld: { desktop: 370, tablet: 230 },
   politicalFracture: { desktop: 350, tablet: 215 },

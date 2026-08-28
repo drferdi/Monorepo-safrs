@@ -37,6 +37,19 @@ const ACT_HEADER_MEDIA: Readonly<Record<string, string>> = {
   "panjalu-rises": "/api/editorial-preview/05-daha-centre-of-power.webp",
 };
 
+/**
+ * Gerbang boot intro (direktif Chief 2026-08-28: tidak boleh ada citra yang
+ * sempat tercat sebelum sekuens gelap→video dimulai). Skrip sinkron ini
+ * berjalan SAAT PARSING, sebelum prolog sempat dicat, dan hanya pada varian
+ * yang memang menjalankan intro (bermotion, ≥48rem). CSS menahan panggung
+ * prolog gelap selama atribut hidup; director melepasnya begitu GSAP
+ * mengambil alih. Hash dilewati di gerbang parser; director tetap memeriksa
+ * hash dan scrollY aktual setelah scroll restoration. Tanpa JavaScript skrip
+ * tak pernah jalan — halaman statis utuh. Failsafe 5 detik menjamin halaman
+ * tidak pernah terkunci gelap bila island motion gagal dimuat.
+ */
+const INTRO_BOOT_SCRIPT = `(function(){try{if(location.hash)return;if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;if(!matchMedia("(min-width: 48rem)").matches)return;var d=document.documentElement;d.setAttribute("data-intro","pending");setTimeout(function(){d.removeAttribute("data-intro")},5000)}catch(e){}})()`;
+
 export const metadata = {
   title: "Journey",
   description:
@@ -82,6 +95,9 @@ export default async function JourneyPage(): Promise<ReactElement> {
 
   return (
     <div className="shell" data-journey="true">
+      {/* Harus PERTAMA: dieksekusi parser sebelum prolog di bawahnya dicat. */}
+      {/* biome-ignore lint/security/noDangerouslySetInnerHtml: skrip boot statis milik berkas ini sendiri, tanpa input dinamis. */}
+      <script dangerouslySetInnerHTML={{ __html: INTRO_BOOT_SCRIPT }} />
       <DeepLinkLanding />
       {/*
        * Nav journey adalah overlay `position: fixed` — ia dan panel Timeline

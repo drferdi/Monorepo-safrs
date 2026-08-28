@@ -929,3 +929,121 @@ test("leaving and returning does not leave motion behind", async ({
     page.getByRole("heading", { name: "Panjalu Jayati" }).first(),
   ).toBeVisible();
 });
+
+test("desktop journey boot does not emit a hydration attribute mismatch", async ({
+  page,
+}, testInfo) => {
+  test.skip(
+    testInfo.project.name !== "desktop",
+    "Atribut boot hanya menyimpang pada varian desktop; kontraknya diuji sekali.",
+  );
+
+  const hydrationWarnings: string[] = [];
+  page.on("console", (message) => {
+    const text = message.text();
+    if (/A tree hydrated but some attributes|Hydration failed/i.test(text)) {
+      hydrationWarnings.push(text);
+    }
+  });
+
+  const journeyUrl = process.env.KEDIRI_E2E_BASE_URL
+    ? new URL("/journey", process.env.KEDIRI_E2E_BASE_URL).toString()
+    : "/journey";
+  await page.goto(journeyUrl);
+  // React menghidrasi setelah `goto` menyelesaikan lifecycle dokumen.
+  await page.waitForTimeout(500);
+
+  expect(hydrationWarnings, hydrationWarnings.join("\n")).toEqual([]);
+});
+
+test("deep-linked journey skips the time-based prologue intro", async ({
+  page,
+}, testInfo) => {
+  test.skip(
+    testInfo.project.name !== "desktop",
+    "Intro time-based hanya dirender pada varian desktop; mobile tetap statis.",
+  );
+
+  await page.goto("/journey#879-first-mark");
+
+  await expect(page.locator(".prologue-credit")).toHaveCSS("opacity", "0");
+  await expect(page.locator(".prologue-title-card")).toHaveCSS("opacity", "0");
+  await expect
+    .poll(() =>
+      page.evaluate(() => document.documentElement.getAttribute("data-intro")),
+    )
+    .toBeNull();
+});
+
+test("journey reload at a restored scroll position skips the prologue intro", async ({
+  page,
+}, testInfo) => {
+  test.skip(
+    testInfo.project.name !== "desktop",
+    "Scroll restoration intro hanya diuji pada varian desktop.",
+  );
+
+  await page.goto("/journey");
+  await waitForStages(page);
+  await page.evaluate(() => {
+    window.scrollTo({ top: window.innerHeight * 2, behavior: "auto" });
+  });
+  await expect
+    .poll(() => page.evaluate(() => window.scrollY))
+    .toBeGreaterThan(0);
+
+  await page.reload();
+
+  await expect
+    .poll(() => page.evaluate(() => window.scrollY), { timeout: 10_000 })
+    .toBeGreaterThan(0);
+  await expect(page.locator(".prologue-credit")).toHaveCSS("opacity", "0");
+  await expect(page.locator(".prologue-title-card")).toHaveCSS("opacity", "0");
+});
+
+test("original video perspective preserves the full 16:9 frame", async ({
+  page,
+}, testInfo) => {
+  await page.goto("/journey");
+
+  // Catches the user-visible hero break where cover-cropping hides source
+  // edges and the camera starts already zoomed into the footage.
+  if (testInfo.project.name === "desktop") {
+    await waitForStages(page);
+    await page.evaluate(() => {
+      window.scrollTo({ top: 0, behavior: "auto" });
+    });
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+  }
+
+  const video = page.locator('[data-scene="prologue"] .prologue-surface video');
+  await expect(video).toHaveCount(1);
+  await expect
+    .poll(() =>
+      video.evaluate((element) => getComputedStyle(element).objectFit),
+    )
+    .toBe("contain");
+
+  if (testInfo.project.name === "desktop") {
+    const perspective = await page
+      .locator('[data-scene="prologue"] .prologue-surface')
+      .evaluate((element) => {
+        const transform = getComputedStyle(element).transform;
+        if (transform === "none") {
+          return { scale: 1, scrollY: window.scrollY };
+        }
+
+        const values = transform
+          .slice(transform.indexOf("(") + 1, -1)
+          .split(",")
+          .map(Number);
+        return {
+          scale: values[0],
+          scrollY: window.scrollY,
+        };
+      });
+
+    expect(perspective.scrollY).toBe(0);
+    expect(perspective.scale).toBeCloseTo(1, 2);
+  }
+});
