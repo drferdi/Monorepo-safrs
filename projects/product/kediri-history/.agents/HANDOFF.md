@@ -99,11 +99,25 @@ diperkeras timing terhadap lag smoother).
 5. Phase 17–19 (mobile per scene, aksesibilitas manual, budget performa);
    Phase 22 (deployment) tetap menunggu otorisasi eksplisit Chief (G02).
 
-## Publikasi (2026-08-27, otorisasi eksplisit Chief)
+## Publikasi (2026-08-29, otorisasi eksplisit Chief)
 
-Commit `64bbadd` dipublikasikan sebagai subtree murni ke
-`https://github.com/drferdii/Kediri-Kings-Century` (remote `kediri`, branch
-`main`). Push berikutnya: `git subtree split` ulang + `CHIEF_PUSH_OK=1` —
+Rantai commit kediri terbaru (termasuk `5feb6a1` — audit editorial museum +
+Scene 10) dipublikasikan lewat `git subtree split --prefix=projects/product/kediri-history
+-b <branch>` lalu `CHIEF_PUSH_PROJECTS_OK=1 CHIEF_PUSH_OK=1 git push kediri
+<branch>:main`, ke `https://github.com/drferdii/Kediri-Kings-Century`
+(remote `kediri`, branch `main`, HEAD `e1a6044`, fast-forward dari
+`8c36e88`). Branch split lokal dihapus setelah push. Sebelumnya salah
+tracking sempat menunjuk `main` lokal ke remote `avery` — dibetulkan ke
+`origin/main`, tetapi **origin adalah histori terpisah (rewrite Chief
+2026-08-25, `projects/**` dibuang) — JANGAN pernah push/merge/fetch main
+lokal dari/ke `origin`** (lihat `BOUNDARIES.md` root). Publikasi kediri
+SELALU lewat remote `kediri` via subtree, tidak pernah lewat `origin`.
+
+GitHub melaporkan 5 kerentanan dependabot (3 moderate, 2 low) di
+Kediri-Kings-Century pasca-push — belum ditinjau, follow-up terpisah.
+
+Push berikutnya: `git subtree split` ulang dari `main` lokal +
+`CHIEF_PUSH_PROJECTS_OK=1 CHIEF_PUSH_OK=1 git push kediri <branch>:main` —
 tetap hanya atas perintah Chief.
 
 ## Catatan lintas-repositori
