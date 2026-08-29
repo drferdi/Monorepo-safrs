@@ -422,9 +422,15 @@ const ACT_3 = act(
       dateDisplay: "1292",
       sceneType: "supporting",
       visualVariant: "word",
-      // Citra 1292 sengaja DITANGGUHKAN (flag F1, docs/shots/image-manifest.md):
-      // teks yang terbakar di dalamnya memuat typo nama dan atribusi pasukan
-      // yang keliru. Slot kosong yang jujur lebih murah daripada teks salah.
+      // Aset revisi dipasang atas perintah Chief 2026-08-29 (menutup
+      // penangguhan F1). CATATAN EPISTEMIK TERBUKA: teks terbakar pada aset
+      // revisi masih memuat "JAYAKASTWANG" (typo nama), "RAJA KEDAHIRAN
+      // TERAKHIR", dan kapsi "pasukan Jayabaya (Raden Wijaya)" — atribusi
+      // keliru. Dilaporkan ke Chief pada sesi pemasangan; revisi raster
+      // berikutnya diharapkan memperbaikinya.
+      imageReady: true,
+      previewAltText:
+        "Visualisasi artistik potret Jayakatwang menunduk berlatar peta pergerakan 1292 dari Kadiri menuju Daha sebagai pusat kekuasaan.",
       masterLine:
         "Sebuah kerajaan kembali. Namun waktu tidak pernah benar-benar berjalan mundur.",
       paragraphs: [

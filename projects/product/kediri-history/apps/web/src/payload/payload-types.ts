@@ -873,6 +873,7 @@ export interface Scene {
         | 'nameEmerges'
         | 'nameEndures'
         | 'dividedKingdom'
+        | 'dahaLiving'
         | 'royalConsolidation'
         | 'manuscriptWorld'
         | 'politicalFracture'

@@ -3,11 +3,31 @@
 > Baca lebih dulu setiap sesi. **Ditimpa**, bukan ditambah — ini keadaan sekarang, bukan log.
 > Status fase: `PROGRESS.md`. Keputusan durable: `DECISIONS.md`. Pagar: `BOUNDARIES.md`.
 
-Last updated: 2026-08-28
+Last updated: 2026-08-29
 
 ---
 
 ## Keadaan sekarang
+
+**Arah editorial museum terpasang (direktif Chief 2026-08-29).** Body copy
+sinematik = Plus Jakarta Sans kecil (token `--type-body`, `--cinema-body-ink`)
+dengan scrim gradient halus; judul era = Cinzel (`--type-display`); micro-label
+seragam (de-emphasis via color-mix, bukan opacity — kontrak a11y). Register
+BACA `MOTION.read` (y:16, power2.out, stagger .15) untuk beat/master/tarikh;
+parallax ambient `MOTION.parallax` pada KONTAINER `.stage-media` (jangan
+pernah pindahkan ke `img` — ia memegang transform crop anti-teks-terbakar).
+`min-height` passages sudah diukur ulang untuk skala tipe baru. Scene 10
+(1292) AKTIF atas perintah Chief — caveat teks terbakar TETAP TERBUKA di
+image-manifest F1 (JAYAKASTWANG / KEDAHIRAN / atribusi Jayabaya). Bukti sesi:
+e2e 61/13/0 dengan DB hidup + `pnpm run verify` penuh PASS (verify:production
+12 record 0 kritis). Detail: DECISIONS 2026-08-29. Belum di-commit.
+
+Jebakan verifikasi yang menggigit dua kali sesi ini: (a) tab Browser pane
+yang di-background membekukan rAF — GSAP/ScrollSmoother tampak "mati" padahal
+sehat; probe motion harus lewat Playwright headless atau tab yang di-front.
+(b) exit code pipeline `pnpm ... | tail` adalah milik tail — selalu tangkap
+exit `pnpm` sendiri.
+
 
 **Model dua-jam hidup (direktif Chief 2026-08-28).** Setelah teardown empat
 situs referensi (bombon.rs, jasminadenner.com, lusion, whiteoutworks) dan
@@ -62,14 +82,15 @@ verify`.
 | `pnpm build` | PASS |
 | Runtime dev server | Dua-jam hidup (kamera scrub + naskah triggered, mundur jujur); deep-link `#921-kadhiri` mendarat di dataran baca; kedua video playing readyState 4; beat anti-dobel terverifikasi (maks 1 beat tampil di semua sampel); mobile/reduced statis utuh |
 
-**BELUM dijalankan sesi ini:** `pnpm run verify` penuh
-(check-production-journey + verify:production — butuh Postgres hidup);
-jalankan tanpa `SHOW_EDITORIAL_PREVIEW` sebelum rilis.
+**Update 2026-08-29:** `pnpm run verify` penuh sudah PASS (lihat Keadaan
+sekarang); tabel di atas adalah bukti sesi 2026-08-28 dan tetap sah sebagai
+riwayat. E2e kini 61/13/0 (count media 26/0; dua tes interaksi 1135
+diperkeras timing terhadap lag smoother).
 
 ## Tindakan berikutnya
 
-1. `pnpm run verify` penuh + perluas `check-production-journey.mjs` ke path
-   statis `public/journey-approved/`.
+1. Perluas `check-production-journey.mjs` ke path statis
+   `public/journey-approved/`.
 2. Keputusan Chief atas flag F1–F5 di `docs/shots/image-manifest.md`.
 3. Record rights/provenance CMS untuk seluruh media pratinjau (termasuk dua
    video) sebelum rilis publik final.

@@ -1017,12 +1017,17 @@ p {
 }
 
 .journey-act > header .title-scene {
-  font-family: var(--type-interface);
-  font-size: var(--type-size-era);
-  line-height: 0.94;
-  letter-spacing: -0.035em;
-  font-weight: 600;
-  max-width: 15ch;
+  /*
+   * Judul era memakai kapital inskripsi (direktif editorial Chief
+   * 2026-08-29): serif bersejarah, bobot sedang, tracking terbuka — bukan
+   * sans tebal ber-tracking negatif.
+   */
+  font-family: var(--type-display);
+  font-size: calc(var(--type-size-era) * 0.84);
+  line-height: 1.04;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  max-width: 16ch;
   text-wrap: balance;
 }
 
@@ -1473,21 +1478,21 @@ p {
    * Nilai dasar (di bawah, untuk mobile) tetap berlaku di luar band ini.
    */
   .scene[data-choreography="nameEmerges"] .stage-passages {
-    min-height: 12rem;
+    min-height: 8rem;
   }
 
   .scene[data-choreography="dividedKingdom"] .stage-passages {
-    min-height: 7rem;
+    min-height: 5rem;
   }
 }
 
 @media (min-width: 64rem) {
   .scene[data-choreography="nameEmerges"] .stage-passages {
-    min-height: 17.5rem;
+    min-height: 11.5rem;
   }
 
   .scene[data-choreography="dividedKingdom"] .stage-passages {
-    min-height: 8.75rem;
+    min-height: 6rem;
   }
 }
 
@@ -1793,24 +1798,45 @@ p {
 /* Judul turun menjadi label: kalimat master yang memikul bidikan. */
 .scene-stage .title-scene {
   font-family: var(--type-archive);
-  font-size: 0.72rem;
-  letter-spacing: 0.36em;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   font-weight: 500;
-  color: var(--cinema-accent);
+  /* Kehadiran diturunkan lewat WARNA, bukan opacity — kontrak a11y
+     reduced-motion menuntut tidak ada elemen tertinggal transparan. */
+  color: color-mix(in srgb, var(--cinema-accent) 72%, transparent);
   margin: 0;
 }
 
 .master-line {
+  /*
+   * Headline scene (direktif editorial 2026-08-29): serif bersejarah dengan
+   * bobot sedang dan tracking tenang — bukan pernyataan tebal ber-tracking
+   * negatif. Ukurannya sedikit diturunkan agar tidak mendominasi citra.
+   */
   font-family: var(--type-narrative);
-  font-size: var(--type-size-scene);
-  line-height: 1.02;
-  letter-spacing: -0.03em;
-  font-weight: 500;
+  font-size: calc(var(--type-size-scene) * 0.88);
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+  font-weight: 400;
   text-wrap: balance;
-  max-width: 21ch;
+  max-width: 22ch;
   margin: 0;
   color: var(--cinema-ink);
+}
+
+/*
+ * Micro-label seragam di seluruh panggung Journey (direktif editorial
+ * 2026-08-29): kecil, uppercase, tracking 0.15em, kehadiran diturunkan.
+ */
+[data-journey="true"] .journey-act > header .archive-label,
+[data-journey="true"] .eyebrow,
+.scene-stage .stage-sequence,
+.stage-visual-label,
+.scene-stage .scene-status {
+  font-size: clamp(0.65rem, 0.8vw, 0.72rem);
+  letter-spacing: 0.15em;
+  color: color-mix(in srgb, currentcolor 68%, transparent);
 }
 
 /* ---------- 879: epigraphic field ---------- */
@@ -2212,21 +2238,21 @@ p {
  * terpanjang tiap scene, plus sedikit ruang.
  */
 .scene[data-choreography="inscriptionReveal"] .stage-passages {
-  min-height: 15.5rem;
+  min-height: 10rem;
 }
 
 .scene[data-choreography="nameEmerges"] .stage-passages {
-  min-height: 11.25rem;
+  min-height: 7.5rem;
 }
 
 .scene[data-choreography="nameEndures"] .stage-passages {
-  min-height: 20rem;
+  min-height: 13rem;
 }
 
 .scene[data-choreography="dahaLiving"] .stage-passages {
   /* Beat terpanjang: tiga kalimat generasi (±6 baris pada 44ch). Tanpa
      reservasi ini beat absolute naik menimpa baris akhir master. */
-  min-height: 13rem;
+  min-height: 8.5rem;
 }
 
 .scene[data-choreography="dividedKingdom"] .stage-passages {
@@ -2236,7 +2262,7 @@ p {
    * margin ekstra yang pernah ada sudah tidak diperlukan: pemisahan dari
    * PANJALU/JANGGALA kini dijamin partisi baris panggung, bukan jarak manual.
    */
-  min-height: 6.5rem;
+  min-height: 4.5rem;
 }
 
 .stage-beat {
@@ -2257,31 +2283,48 @@ p {
   inset-block-end: 0;
   display: grid;
   gap: var(--space-2);
-  max-width: 44ch;
-  padding: var(--space-3) 0;
-  background: none;
+  max-width: 42ch;
+  /*
+   * Scrim lokal (direktif editorial Chief 2026-08-29, membalikkan sebagian
+   * `background: none` dari commit 0d4b005 atas arahan yang lebih baru):
+   * gradient halus ke arah teks, bukan blur backdrop — blur me-repaint tiap
+   * frame gulir dan merusak tone citra. Gradiennya berhenti sebelum tengah
+   * bingkai sehingga titik fokus visual tidak pernah tertutup.
+   */
+  padding: var(--space-3) var(--space-4) var(--space-3) var(--space-3);
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.3) 55%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
 
+/*
+ * Body copy sinematik (direktif editorial Chief 2026-08-29): sans modern
+ * kecil, halus, terbaca — standar museum/arsip digital. Ukuran, warna, dan
+ * jarak barisnya token, bukan selera per scene.
+ */
 .stage-passages p {
   margin: 0;
-  font-family: var(--type-narrative);
-  line-height: 1.5;
+  font-family: var(--type-body);
+  font-size: clamp(0.8125rem, 0.9vw, 0.9rem);
+  line-height: 1.78;
+  letter-spacing: 0.025em;
   font-weight: 400;
-  color: var(--cinema-ink);
+  color: var(--cinema-body-ink);
   text-wrap: pretty;
 }
 
-/* Saat satu beat memikul bingkai sendirian, kalimat pertamanya bersuara. */
+/* Saat satu beat memikul bingkai sendirian, kalimat pertamanya bersuara —
+   lewat bobot, bukan ukuran. */
 .stage-beat p {
-  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
-  line-height: 1.45;
-  font-weight: 400;
+  max-width: 42ch;
 }
 
 .stage-beat p:first-child {
-  font-size: clamp(1.25rem, 1.9vw, 1.7rem);
-  line-height: 1.36;
   font-weight: 500;
+  color: var(--cinema-ink);
 }
 
 /*
@@ -2321,15 +2364,13 @@ p {
     max-width: none;
   }
 
+  /* Alur statis mewarisi token body copy yang sama; hanya bobot yang
+     membedakan kalimat pembuka. */
   .stage-beat p {
-    font-size: clamp(1rem, 1.35vw, 1.2rem);
-    line-height: 1.5;
     font-weight: 400;
   }
 
   .stage-beat p:first-child {
-    font-size: clamp(1rem, 1.35vw, 1.2rem);
-    line-height: 1.5;
     font-weight: 500;
   }
 }
@@ -2352,14 +2393,10 @@ p {
 }
 
 .scene:not([data-choreography]) .stage-beat p {
-  font-size: clamp(1rem, 1.35vw, 1.2rem);
-  line-height: 1.5;
   font-weight: 400;
 }
 
 .scene:not([data-choreography]) .stage-beat p:first-child {
-  font-size: clamp(1rem, 1.35vw, 1.2rem);
-  line-height: 1.5;
   font-weight: 500;
 }
 

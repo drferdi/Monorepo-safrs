@@ -45,13 +45,13 @@ describe("production journey contract", () => {
       );
       expect(scene.epistemicStatus).toContain("belum dipublikasikan");
     }
-    // 25 dari 26 slot siap. Scene 10 (1292) sengaja ditangguhkan: teks yang
-    // terbakar di citranya memuat kekeliruan faktual (flag F1 di
-    // docs/shots/image-manifest.md), dan slot kosong yang jujur menang.
+    // Seluruh 26 slot siap. Penangguhan 1292 (flag F1) ditutup perintah
+    // Chief 2026-08-29 dengan aset revisi; catatan epistemik teks terbakar
+    // yang tersisa tercatat pada scene-nya di production-narrative.
     const ready = scenes.filter((scene) => scene.mediaSlot?.ready);
-    expect(ready).toHaveLength(25);
+    expect(ready).toHaveLength(26);
     expect(scenes.find((scene) => scene.order === 10)?.mediaSlot?.ready).toBe(
-      false,
+      true,
     );
     for (const scene of ready) {
       expect(scene.mediaSlot?.altText.length).toBeGreaterThan(24);

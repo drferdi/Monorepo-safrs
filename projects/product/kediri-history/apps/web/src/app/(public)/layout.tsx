@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
-import { Cinzel, Geist, Geist_Mono, Newsreader } from "next/font/google";
+import {
+  Cinzel,
+  Geist,
+  Geist_Mono,
+  Newsreader,
+  Plus_Jakarta_Sans,
+} from "next/font/google";
 import type React from "react";
 
 import "./globals.css";
@@ -40,8 +46,20 @@ const archive = Geist_Mono({
  */
 const royal = Cinzel({
   subsets: ["latin"],
-  weight: ["500", "600"],
+  weight: ["400", "500", "600"],
   variable: "--font-cinzel",
+  display: "swap",
+});
+
+/*
+ * Peran kelima (direktif editorial Chief 2026-08-29): body copy sinematik di
+ * atas citra — sans modern kecil yang halus dan terbaca (museum/arsip
+ * digital). Naskah dokumen arsip di luar Journey tetap serif narrative.
+ */
+const body = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-plus-jakarta",
   display: "swap",
 });
 
@@ -70,7 +88,7 @@ export default function PublicLayout({
     <html
       lang="id"
       suppressHydrationWarning
-      className={`${narrative.variable} ${interfaceFont.variable} ${archive.variable} ${royal.variable}`}
+      className={`${narrative.variable} ${interfaceFont.variable} ${archive.variable} ${royal.variable} ${body.variable}`}
     >
       <body>
         <a className="skip-link" href="#historical-content" tabIndex={0}>

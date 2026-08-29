@@ -58,6 +58,18 @@
   --type-interface: var(--font-geist), "Helvetica Neue", Arial, sans-serif;
   --type-archive:
     var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+  /*
+   * Direktif editorial Chief 2026-08-29: body copy sinematik memakai sans
+   * modern yang halus (Plus Jakarta Sans), kecil dan terbaca; judul scene
+   * memakai kapital inskripsi (Cinzel). Naskah dokumen arsip di luar Journey
+   * tetap memakai peran narrative.
+   */
+  --type-body:
+    var(--font-plus-jakarta), var(--font-geist), "Helvetica Neue", sans-serif;
+  --type-display: var(--font-cinzel), var(--type-narrative);
+
+  /* Tinta body copy sinematik: off-white lembut di atas citra gelap. */
+  --cinema-body-ink: rgba(240, 240, 235, 0.82);
 
   /* Skala waktu monumental: tanggal berperilaku sebagai objek arsitektural. */
   --type-size-monumental: clamp(4rem, 14vw, 12rem);

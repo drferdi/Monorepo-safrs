@@ -851,6 +851,27 @@ export function attachScene(
    */
   const director = createReadingDirector(context.root, key);
 
+  /*
+   * Parallax latar ambient (direktif editorial Chief 2026-08-29): media
+   * bergeser halus (-10%) sepanjang shot. HANYA pada KONTAINER .stage-media —
+   * tidak pernah pada <img> di dalamnya, karena img memegang transform
+   * jendela crop anti-teks-terbakar (framing.ts) yang akan tertimpa inline
+   * transform GSAP.
+   */
+  const media = one(context.root, ".stage-media");
+  if (media) {
+    timeline.fromTo(
+      media,
+      { yPercent: MOTION.parallax.from },
+      {
+        yPercent: MOTION.parallax.to,
+        ease: MOTION.scrubEase,
+        duration: 1,
+      },
+      0,
+    );
+  }
+
   addSceneHandoff(timeline, context.root);
 
   const pinSpace = context.root.querySelector<HTMLElement>(".scene-pin-space");

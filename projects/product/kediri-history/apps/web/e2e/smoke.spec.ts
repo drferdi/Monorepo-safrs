@@ -248,13 +248,12 @@ test("journey follows the approved 2026 to 879 to 2026 sequence", async ({
   // 25 slot scene siap; scene 1292 sengaja ditangguhkan (flag F1 pada
   // docs/shots/image-manifest.md). Prolog dan Finale memakai bingkai
   // tersendiri di luar slot scene.
-  await expect(page.locator('[data-media-state="ready"]')).toHaveCount(25);
-  await expect(page.locator('[data-media-state="pending"]')).toHaveCount(1);
+  // Penangguhan 1292 ditutup perintah Chief 2026-08-29: 26 slot siap.
+  await expect(page.locator('[data-media-state="ready"]')).toHaveCount(26);
+  await expect(page.locator('[data-media-state="pending"]')).toHaveCount(0);
   // Prolog bergerak sebagai video (direktif Chief 2026-08-28) dengan citra
   // 00-prologue sebagai poster; Finale tetap mengunjungi citra yang sama.
-  await expect(
-    page.locator('[data-framing="prologue"] video'),
-  ).toHaveCount(1);
+  await expect(page.locator('[data-framing="prologue"] video')).toHaveCount(1);
   await expect(page.locator('[data-framing="finale"] img')).toHaveCount(1);
   await expect(
     page.getByText("Sejak kapan sebuah kota mulai menjadi dirinya sendiri?"),
@@ -715,11 +714,19 @@ test("evidence is one interaction away, and names its source", async ({
 }) => {
   await page.goto("/journey#1135-panjalu-jayati");
   const scene = page.locator(SCENE_1135);
-  await scene.locator("details > summary").click();
-  await expect(scene.getByText("Bukti yang menopang").first()).toBeVisible();
+  // ScrollSmoother butuh ±1,1 detik menyusul lompatan hash; interaksi dan
+  // asersinya menunggu geometri settle — kontraknya sendiri tidak berubah.
+  await page.waitForTimeout(1600);
+  const summary = scene.locator("details > summary");
+  await summary.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(1400);
+  await summary.click();
+  await expect(scene.getByText("Bukti yang menopang").first()).toBeVisible({
+    timeout: 10_000,
+  });
   await expect(
     scene.getByText("catatan katalog D.9", { exact: false }).first(),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 10_000 });
 });
 
 test("journey to archive and back restores the exact scene", async ({
@@ -727,11 +734,16 @@ test("journey to archive and back restores the exact scene", async ({
 }) => {
   // Alur yang UX Bible bagian 17 sebut sakral.
   await page.goto("/journey#1135-panjalu-jayati");
-  await page
+  await page.waitForTimeout(1600);
+  const archiveLink = page
     .locator(SCENE_1135)
-    .getByRole("link", { name: "Catatan arsip lengkap" })
-    .click();
-  await expect(page).toHaveURL(/\/archive\/events\/1135-panjalu-jayati$/);
+    .getByRole("link", { name: "Catatan arsip lengkap" });
+  await archiveLink.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(1400);
+  await archiveLink.click();
+  await expect(page).toHaveURL(/\/archive\/events\/1135-panjalu-jayati$/, {
+    timeout: 10_000,
+  });
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
     "Panjalu Jayati",
   );

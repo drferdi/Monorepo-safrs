@@ -5,6 +5,44 @@ Keputusan lintas-repositori tetap dicatat di `.agents/DECISIONS.md` root.
 
 ---
 
+## 2026-08-29 — Arah editorial museum: body sans kecil, judul inskripsi, scrim, register baca; 1292 dipasang
+
+Direktif editorial Chief 2026-08-29 ("Senior Creative Front-End Engineer &
+Editorial UI Architect"), diterapkan token-level agar seragam di 26 scene:
+
+(1) **Tipografi.** Peran kelima `--type-body` = Plus Jakarta Sans (400/500):
+body copy sinematik `clamp(0.8125rem, 0.9vw, 0.9rem)`, lh 1.78, ls 0.025em,
+tinta `--cinema-body-ink` rgba(240,240,235,0.82), ukur maksimal 42ch — di
+SEMUA varian termasuk mobile (±13px; catatan ukuran baca mobile diserahkan ke
+veto Chief). Judul era memakai `--type-display` (Cinzel 500, ls 0.05em, tanpa
+tracking negatif); master-line serif 400 dengan ukuran diturunkan; micro-label
+seragam 0.65–0.72rem ls 0.15em — de-emphasis lewat COLOR-MIX, bukan opacity
+(kontrak a11y reduced-motion "tidak ada elemen tertinggal transparan").
+
+(2) **Scrim beat** dikembalikan sebagai gradient halus kiri→transparan
+(membalikkan sebagian `background: none` commit 0d4b005 atas direktif yang
+lebih baru; blur backdrop ditolak — repaint per frame gulir).
+
+(3) **Register BACA** (`MOTION.read`): naskah masuk y:16 + fade, power2.out,
+stagger 0.15 — beat/master/tarikh; rotateX nama 921 diredam −55°→−20°.
+Register "cine" tetap milik kredit Sentra dan kartu judul. **Parallax latar**
+ambient (`MOTION.parallax` 4→−10%) pada KONTAINER `.stage-media` — tidak
+pernah pada `img` pemegang transform crop anti-teks-terbakar. Reservasi
+`min-height` passages diukur ulang untuk skala tipe baru; probe tabrakan
+kelima scene berkunci: nol overlap.
+
+(4) **Scene 10 (1292) dipasang** atas perintah Chief (menutup penangguhan F1;
+derivatif webp digenerate ulang dari project-images). CAVEAT TERBUKA di
+image-manifest F1: raster revisi masih memuat "JAYAKASTWANG", "RAJA KEDAHIRAN
+TERAKHIR", dan atribusi keliru "pasukan Jayabaya (Raden Wijaya)".
+
+(5) Dua tes interaksi 1135 diperkeras timing-nya terhadap lag ScrollSmoother
+(assertion tak berubah); count media 25/1 → 26/0.
+
+Bukti: typecheck, lint, unit 71, **e2e 61/13/0 dengan Postgres+MinIO hidup**,
+dan **`pnpm run verify` penuh PASS exit 0** (build produksi, journey guard,
+verify:production 12 record 0 kritis) — hutang verifikasi 2026-08-28 tertutup.
+
 ## 2026-08-28 — Video pembuka & Daha, latar act Panjalu Rises, publikasi aset pratinjau (otorisasi Chief)
 
 Direktif Chief in-session (2026-08-28), ditutup perintah eksplisit "GIT COMMIT".

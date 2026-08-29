@@ -61,6 +61,14 @@ export const MOTION = {
     char: { duration: 1.1, stagger: 0.05 },
     unit: { duration: 0.55, stagger: 0.1 },
   },
+  /**
+   * Register BACA (direktif editorial Chief 2026-08-29): naskah di atas citra
+   * muncul lembut — offset kecil, tanpa pantulan, tanpa rotasi. Register
+   * sinematik "cine" tetap milik kredit pembuka dan kartu judul.
+   */
+  read: { y: 16, duration: 1, stagger: 0.15, ease: "power2.out" },
+  /** Parallax latar ambient: halus, -8 sampai -12 persen. */
+  parallax: { from: 4, to: -10 },
   /** Kelembutan ScrollSmoother pada varian yang memakainya. */
   smooth: 1.1,
 } as const;

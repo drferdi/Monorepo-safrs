@@ -366,7 +366,7 @@ export function createReadingDirector(
             opacity: 1,
             yPercent: 0,
             duration: MOTION.text.unit.duration,
-            ease: MOTION.text.ease,
+            ease: MOTION.read.ease,
           }),
         });
         cues.push({
@@ -377,7 +377,7 @@ export function createReadingDirector(
             yPercent: 0,
             duration: MOTION.text.unit.duration,
             stagger: MOTION.text.unit.stagger,
-            ease: MOTION.text.ease,
+            ease: MOTION.read.ease,
           }),
         });
       } else if (key === "royalConsolidation") {
@@ -394,7 +394,7 @@ export function createReadingDirector(
             xPercent: 0,
             duration: 0.9,
             stagger: MOTION.text.unit.stagger,
-            ease: MOTION.text.ease,
+            ease: MOTION.read.ease,
           }),
         });
       } else {
@@ -413,7 +413,7 @@ export function createReadingDirector(
             yPercent: 0,
             duration: MOTION.text.unit.duration,
             stagger: MOTION.text.unit.stagger,
-            ease: MOTION.text.ease,
+            ease: MOTION.read.ease,
           }),
         });
       }
@@ -425,8 +425,8 @@ export function createReadingDirector(
       splits.push(nameSplit);
       gsap.set(nameSplit.chars, {
         opacity: 0,
-        yPercent: 55,
-        rotateX: -55,
+        yPercent: 24,
+        rotateX: -20,
         transformOrigin: "50% 100% -40px",
       });
       cues.push({
@@ -470,19 +470,19 @@ export function createReadingDirector(
         { opacity: 1, duration: 0.45, ease: "power1.out" },
         0.05,
       );
-      const masterSplit = SplitText.create(master, {
-        type: "lines",
-        mask: "lines",
-      });
+      // Register BACA (direktif editorial 2026-08-29): offset 16px + fade,
+      // per baris, tanpa topeng perjalanan besar.
+      const masterSplit = SplitText.create(master, { type: "lines" });
       splits.push(masterSplit);
-      gsap.set(masterSplit.lines, { yPercent: MOTION.text.line.travel });
+      gsap.set(masterSplit.lines, { opacity: 0, y: MOTION.read.y });
       masterTl.to(
         masterSplit.lines,
         {
-          yPercent: 0,
-          duration: MOTION.text.line.duration,
-          stagger: MOTION.text.line.stagger,
-          ease: MOTION.text.ease,
+          opacity: 1,
+          y: 0,
+          duration: MOTION.read.duration,
+          stagger: MOTION.read.stagger,
+          ease: MOTION.read.ease,
         },
         0.1,
       );
@@ -504,7 +504,7 @@ export function createReadingDirector(
       timeline.set(beat, { visibility: "visible" }, 0);
       timeline.to(
         beat,
-        { opacity: 1, xPercent: 0, duration: 0.5, ease: MOTION.text.ease },
+        { opacity: 1, xPercent: 0, duration: 0.6, ease: MOTION.read.ease },
         0,
       );
       if (still) {
@@ -512,17 +512,17 @@ export function createReadingDirector(
       } else {
         const lineSplit = SplitText.create(beat.querySelectorAll("p"), {
           type: "lines",
-          mask: "lines",
         });
         splits.push(lineSplit);
-        gsap.set(lineSplit.lines, { yPercent: MOTION.text.line.travel });
+        gsap.set(lineSplit.lines, { opacity: 0, y: MOTION.read.y });
         timeline.to(
           lineSplit.lines,
           {
-            yPercent: 0,
-            duration: MOTION.text.line.duration,
-            stagger: MOTION.text.line.stagger,
-            ease: MOTION.text.ease,
+            opacity: 1,
+            y: 0,
+            duration: MOTION.read.duration,
+            stagger: MOTION.read.stagger,
+            ease: MOTION.read.ease,
           },
           0.05,
         );
