@@ -5,6 +5,55 @@ Keputusan lintas-repositori tetap dicatat di `.agents/DECISIONS.md` root.
 
 ---
 
+## 2026-08-30 — Jeda "bukti prasasti" scroll-driven, video lanjutan sebagai reveal terakhir, revisi konten Act I, tiket tonggak sejarah
+
+Direktif Chief in-session (iteratif, ScrollTrigger skill dipakai eksplisit).
+
+(1) **Jeda bukti prasasti** — section baru `PrologueInscriptionInterlude`
+antara Prolog dan Act I: mula-mula timer-based (video `ended` event → jeda →
+lanjutan), lalu DIROMBAK jadi murni scroll-scrubbed atas permintaan Chief
+("pergerakannya tergantung scroll") — satu `gsap.timeline` di-scrub langsung
+oleh `ScrollTrigger` (pin, scrub 0.5), bukan trigger-lalu-bermain-sendiri
+seperti Jam 2 milik shot canonical. Bidikan ini SENGAJA di luar registry
+`scenes.ts`/`director.ts` karena kontennya bukan naskah CMS (lihat komentar
+di berkas). Video pembuka (Jam 1 prologueReveal) tetap pudar lewat
+`addLosingScaleExit` bawaan (0.16) — percobaan menambah nudge ke 0.02 di
+`scenes.ts` DIBATALKAN karena memicu 2 e2e goyang saat suite penuh jalan
+(`prologue stage beats have no local panel`, `prologue disclosure types...`).
+(2) **Video lanjutan (Daha) jadi target reveal TERAKHIR** di dalam section
+jeda itu sendiri — fade-in menggantikan kalimat penutup, full-bleed, tidak
+pernah fade-out (sama seperti perlakuan beat terakhir). Timing awal (bobot
+seragam, pin 550%) terlalu cepat dilalui gulir wajar — direvisi jadi bobot
+tidak seragam (beat terakhir 3× porsi dari totalWeight) + pin 700%.
+(3) **BG "The Land Remembers" dengan citra scene 879 — SALAH, DIBATALKAN.**
+Sempat dipasang menyamai pola "Panjalu Rises" (pinjam citra scene pertama
+act), tapi beda kasus: citra 879 MASIH dipakai scene "The First Mark" sendiri
+di bawahnya (Daha sudah pindah ke video, jadi nganggur — 879 belum). Direvert
+penuh ke BG polos atas komplain eksplisit Chief ("completely change the
+order... lost concept").
+(4) **Konten Act I diganti**: judul "The Land Remembers" → "1,100+ Years of
+Kediri"; `introCopy` jadi 3 paragraf (perlu extend tipe `ActDto.introCopy`
+ke `string | readonly string[]`, backward-compatible untuk 8 act lain +
+field textarea Payload).
+(5) **Tiket tonggak sejarah** (`ActMilestoneTicker`) di kepala Act I: 7 baris
+tanggal (1042–2024, melintasi SELURUH Journey) bergantian dengan efek typing
+per-karakter, loop tak berhenti, berbasis WAKTU (bukan scroll — satu layar
+hero yang belum digulir, sama seperti kredit/kartu judul Prolog). Bug
+ditemukan+diperbaiki sebelum commit: CSS `position:absolute` semula SELALU
+aktif → tanpa-JS/reduced-motion tujuh baris bertumpuk tak terbaca; diperbaiki
+jadi baseline alur normal, absolute-stacking hanya nyala lewat atribut
+`data-ticker-motion` yang diset skrip. Bug kedua: matchMedia ticker awalnya
+cuma cek `prefers-reduced-motion`, ikut nyala di MOBILE (beda dari konvensi
+situs — mobile selalu tanpa motion-pin) — `min-height` tambahannya menggeser
+tinggi Act I dan bikin e2e `early mobile shots clear the fixed navigation`
+gagal (offset −13.6px). Diperbaiki: syarat `min-width: 48rem` ditambahkan.
+
+Bukti: `pnpm verify` (lint 0 error/14 warning lama, typecheck, unit 71+token
+gate, build 20 rute, check-production-journey 0 marker editorial, verify-production
+12 record 0 kritis) PASS penuh. `pnpm test:e2e` — beberapa run awal
+menunjukkan flakiness kontensi paralel (1 tes acak berbeda tiap run, pola
+lama yang sudah tercatat), run bersih akhir **66/14/0**.
+
 ## 2026-08-29 — Arah editorial museum: body sans kecil, judul inskripsi, scrim, register baca; 1292 dipasang
 
 Direktif editorial Chief 2026-08-29 ("Senior Creative Front-End Engineer &

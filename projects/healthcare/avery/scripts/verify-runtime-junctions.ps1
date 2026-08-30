@@ -79,7 +79,8 @@ Write-Host ("{0} tautan bermasalah." -f $broken.Count) -ForegroundColor Red
 
 if (-not $Fix) {
     Write-Host 'Jalankan ulang dengan -Fix untuk memulihkan.'
-    exit 1
+    Write-Host 'Start Avery tidak dihentikan. Perbaiki junction hanya saat gateway dan Studio sudah mati.'
+    return
 }
 
 # Pastikan tidak ada proses Hermes yang memegang berkas.

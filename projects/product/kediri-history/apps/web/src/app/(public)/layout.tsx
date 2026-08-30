@@ -3,8 +3,8 @@ import {
   Cinzel,
   Geist,
   Geist_Mono,
+  IBM_Plex_Sans,
   Newsreader,
-  Plus_Jakarta_Sans,
 } from "next/font/google";
 import type React from "react";
 
@@ -52,14 +52,16 @@ const royal = Cinzel({
 });
 
 /*
- * Peran kelima (direktif editorial Chief 2026-08-29): body copy sinematik di
- * atas citra — sans modern kecil yang halus dan terbaca (museum/arsip
- * digital). Naskah dokumen arsip di luar Journey tetap serif narrative.
+ * Peran kelima (direktif editorial Chief 2026-08-29, font diganti ke IBM
+ * Plex Sans 2026-08-30 Chief): body copy sinematik di atas citra — sans
+ * modern kecil yang halus dan terbaca (museum/arsip digital), SATU font
+ * seragam untuk semua body text lewat token `--type-body`. Naskah dokumen
+ * arsip di luar Journey tetap serif narrative.
  */
-const body = Plus_Jakarta_Sans({
+const body = IBM_Plex_Sans({
   subsets: ["latin"],
   weight: ["400", "500"],
-  variable: "--font-plus-jakarta",
+  variable: "--font-ibm-plex-sans",
   display: "swap",
 });
 

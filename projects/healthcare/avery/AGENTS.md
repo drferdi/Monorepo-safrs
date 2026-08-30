@@ -18,6 +18,7 @@ Read the repository root `AGENTS.md` first. This file narrows project-local cont
 
 ## Required context
 
+0. [`.agents/HANDOFF.md`](.agents/HANDOFF.md) — keadaan sesi; baca lebih dulu
 1. `docs/spds/read_first.md` (SPDS 1.0 entry) and `PROJECT_GENOME.yaml`
 2. `README.md`
 3. `docs/architecture.md`

@@ -85,13 +85,16 @@ class PatchManifestTest(unittest.TestCase):
     def test_manifest_matches_patch(self):
         pdir = REPO_ROOT / "patches" / "hermes-0.20.5"
         manifest = json.loads((pdir / "manifest.json").read_text(encoding="utf-8"))
-        patch_text = (pdir / manifest["patch"]).read_text(encoding="utf-8")
-        self.assertTrue(manifest["files"])
-        for entry in manifest["files"]:
-            self.assertIn(f"b/{entry['path']}", patch_text)
-            for key in ("sha256_before", "sha256_after"):
-                self.assertRegex(entry[key], r"^[0-9a-f]{64}$")
-            self.assertNotEqual(entry["sha256_before"], entry["sha256_after"])
+        specs = manifest.get("patches") or [manifest]
+        self.assertTrue(specs)
+        for spec in specs:
+            patch_text = (pdir / spec["patch"]).read_text(encoding="utf-8")
+            self.assertTrue(spec["files"])
+            for entry in spec["files"]:
+                self.assertIn(f"b/{entry['path']}", patch_text)
+                for key in ("sha256_before", "sha256_after"):
+                    self.assertRegex(entry[key], r"^[0-9a-f]{64}$")
+                self.assertNotEqual(entry["sha256_before"], entry["sha256_after"])
 
 
 if __name__ == "__main__":

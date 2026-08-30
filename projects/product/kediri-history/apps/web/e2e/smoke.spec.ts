@@ -251,6 +251,104 @@ test("published journey slices use labelled picture-led stages", async ({
       scene.locator('.stage-media[data-media-state="ready"] img'),
     ).toHaveAttribute("src", new RegExp(asset.replace(".", "\\."), "u"));
   }
+
+  // Sambutan pembuka Act I adalah transisi alur tersendiri: ia muncul sesudah
+  // header act dan selesai sebelum panggung 879, bukan overlay di dalam scene.
+  const openingTransition = page.locator(
+    '[data-scene-opening-transition="true"]',
+  );
+  await expect(openingTransition).toHaveCount(1);
+  await expect(openingTransition).toHaveClass(/scene-opening-transition/u);
+  await expect(openingTransition.locator(".scene-opening-address")).toHaveCount(
+    1,
+  );
+  const firstMark = page.locator('[id="879-first-mark"]');
+  await expect(firstMark.locator(".scene-opening-address")).toHaveCount(0);
+  const transitionOrder = await page.evaluate(() => {
+    const transition = document.querySelector(
+      '[data-scene-opening-transition="true"]',
+    );
+    const actHeader = document
+      .getElementById("act-the-land-remembers")
+      ?.closest("header");
+    const firstScene = document.getElementById("879-first-mark");
+    return {
+      afterHeader: Boolean(
+        transition &&
+          actHeader &&
+          actHeader.compareDocumentPosition(transition) &
+            Node.DOCUMENT_POSITION_FOLLOWING,
+      ),
+      beforeScene: Boolean(
+        transition &&
+          firstScene &&
+          transition.compareDocumentPosition(firstScene) &
+            Node.DOCUMENT_POSITION_FOLLOWING,
+      ),
+    };
+  });
+  expect(transitionOrder).toEqual({ afterHeader: true, beforeScene: true });
+  await expect(
+    firstMark.locator('.stage-media[data-media-state="ready"] img'),
+  ).toHaveAttribute("src", /01-879-first-mark\.webp/u);
+});
+
+test("Act I opening transition is compact and holds its address until 879 approaches", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop", "desktop motion contract");
+  await page.setViewportSize({ width: 1332, height: 987 });
+  await page.goto("/journey");
+
+  const transition = page.locator('[data-scene-opening-transition="true"]');
+  const address = transition.locator(".scene-opening-address");
+  const geometry = await transition.evaluate((element) => ({
+    height: element.getBoundingClientRect().height,
+    top: element.getBoundingClientRect().top + window.scrollY,
+    viewportHeight: window.innerHeight,
+  }));
+  const firstSceneTop = await page
+    .locator('[id="879-first-mark"]')
+    .evaluate(
+      (element) => element.getBoundingClientRect().top + window.scrollY,
+    );
+
+  const sampleAt = async (scrollTop: number) => {
+    await page.evaluate((target) => window.scrollTo(0, target), scrollTop);
+    await page.waitForTimeout(700);
+    return address.evaluate((element) => {
+      const characters = Array.from(
+        element.querySelectorAll<HTMLElement>("[data-address-char]"),
+      );
+      return {
+        opacity: Number.parseFloat(getComputedStyle(element).opacity),
+        top: element.getBoundingClientRect().top,
+        totalCharacters: characters.length,
+        visibleCharacters: characters.filter(
+          (character) =>
+            Number.parseFloat(getComputedStyle(character).opacity) > 0.95,
+        ).length,
+      };
+    });
+  };
+
+  const early = await sampleAt(
+    geometry.top - geometry.viewportHeight + geometry.viewportHeight * 0.14,
+  );
+  const hold = await sampleAt(firstSceneTop - geometry.viewportHeight * 0.9);
+  const faded = await sampleAt(firstSceneTop - geometry.viewportHeight * 0.74);
+  const restored = await sampleAt(
+    firstSceneTop - geometry.viewportHeight * 0.9,
+  );
+
+  expect(geometry.height).toBeLessThanOrEqual(geometry.viewportHeight * 0.48);
+  expect(early.top).toBeLessThan(geometry.viewportHeight);
+  expect(early.visibleCharacters).toBeGreaterThan(10);
+  expect(hold.opacity).toBeGreaterThan(0.95);
+  expect(hold.visibleCharacters).toBe(hold.totalCharacters);
+  expect(faded.opacity).toBeLessThan(0.05);
+  expect(restored.opacity).toBeGreaterThan(0.95);
+  expect(restored.visibleCharacters).toBe(restored.totalCharacters);
 });
 
 test("journey follows the approved 2026 to 879 to 2026 sequence", async ({
@@ -368,7 +466,8 @@ test("prologue is one visual world with semantic editorial beats", async ({
   ).toHaveCount(0);
 
   const firstScene = page.locator('[id="879-first-mark"]');
-  await expect(firstScene.locator('[data-motion="passage"]')).toHaveCount(4);
+  // 5 beat sejak revisi konten Chief 2026-08-30 (dulu 4).
+  await expect(firstScene.locator('[data-motion="passage"]')).toHaveCount(5);
 });
 
 test("prologue stage beats have no local panel", async ({ page }) => {
@@ -383,7 +482,7 @@ test("prologue stage beats have no local panel", async ({ page }) => {
       "Namun kota ini menyimpan perjalanan yang jauh lebih panjang daripada bangunan yang terlihat saat ini.",
       { exact: true },
     ),
-  ).toBeVisible();
+  ).toHaveCount(1);
 
   const styles = await beats.evaluateAll((elements) =>
     elements.map((element) => {
@@ -408,6 +507,94 @@ test("prologue stage beats have no local panel", async ({ page }) => {
       padding: "0px",
     },
   ]);
+});
+
+test("prologue gives its first beat a long hold and raises the reading field", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/journey#prologue-2026");
+
+  const prologue = page.locator('[data-scene="prologue"]');
+  const beats = prologue.locator('[data-motion="passage"]');
+  const pinSpace = prologue.locator(".prologue-pin-space");
+
+  const marginBottom = await prologue
+    .locator(".prologue-passages")
+    .evaluate((element) =>
+      Number.parseFloat(getComputedStyle(element).marginBottom),
+    );
+  expect(marginBottom).toBeGreaterThanOrEqual(64);
+
+  const scrollToProgress = async (progress: number) => {
+    const target = await prologue.evaluate((element, requestedProgress) => {
+      const spacer = element.querySelector<HTMLElement>(".prologue-pin-space");
+      return (
+        element.getBoundingClientRect().top +
+        window.scrollY +
+        (spacer?.offsetHeight ?? 0) * requestedProgress
+      );
+    }, progress);
+    await page.evaluate((scrollTop) => window.scrollTo(0, scrollTop), target);
+    await page.waitForTimeout(1400);
+  };
+
+  await expect(pinSpace).toHaveCount(1);
+  await scrollToProgress(0.55);
+  await expect(beats.nth(0)).toHaveCSS("opacity", "1");
+  await expect(beats.nth(1)).toHaveCSS("opacity", "0");
+
+  await scrollToProgress(0.73);
+  await expect(beats.nth(0)).toHaveCSS("opacity", "0");
+  await expect(beats.nth(1)).toHaveCSS("opacity", "1");
+
+  await scrollToProgress(0.55);
+  await expect(beats.nth(0)).toHaveCSS("opacity", "1");
+  await expect(beats.nth(1)).toHaveCSS("opacity", "0");
+});
+
+test("tablet keeps the raised prologue copy inside its cinematic safe area", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1024, height: 768 });
+  await page.goto("/journey#prologue-2026");
+
+  const passages = page.locator('[data-scene="prologue"] .prologue-passages');
+  const geometry = await passages.evaluate((element) => {
+    const bounds = element.getBoundingClientRect();
+    return {
+      bottom: bounds.bottom,
+      marginBottom: Number.parseFloat(getComputedStyle(element).marginBottom),
+    };
+  });
+
+  expect(geometry.marginBottom).toBeGreaterThanOrEqual(69);
+  expect(geometry.bottom).toBeLessThanOrEqual(704);
+});
+
+test("879 body copy is one pixel larger and remains panel-free", async ({
+  page,
+}) => {
+  await page.goto("/journey#879-first-mark");
+  const paragraph = page
+    .locator('[data-choreography="inscriptionReveal"] .stage-beat p')
+    .first();
+  const styles = await paragraph.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {
+      backgroundColor: style.backgroundColor,
+      backgroundImage: style.backgroundImage,
+      fontSize: style.fontSize,
+      fontWeight: style.fontWeight,
+      lineHeight: style.lineHeight,
+    };
+  });
+
+  expect(styles.backgroundColor).toBe("rgba(0, 0, 0, 0)");
+  expect(styles.backgroundImage).toBe("none");
+  expect(styles.fontSize).toBe("14px");
+  expect(styles.fontWeight).toBe("400");
+  expect(Number.parseFloat(styles.lineHeight)).toBeCloseTo(25.48, 1);
 });
 
 test("prologue disclosure types only when Daha continuation starts", async ({
@@ -952,7 +1139,7 @@ test("tablet motion registration keeps the prologue geometry stable", async ({
   );
 });
 
-test("evidence is one interaction away, and names its source", async ({
+test("evidence opens by default, remains collapsible, and names its source", async ({
   page,
 }) => {
   await page.goto("/journey#1135-panjalu-jayati");
@@ -960,13 +1147,23 @@ test("evidence is one interaction away, and names its source", async ({
   // ScrollSmoother butuh ±1,1 detik menyusul lompatan hash; interaksi dan
   // asersinya menunggu geometri settle — kontraknya sendiri tidak berubah.
   await page.waitForTimeout(1600);
+  const disclosure = scene.locator("details.evidence-disclosure");
   const summary = scene.locator("details > summary");
   await summary.scrollIntoViewIfNeeded();
   await page.waitForTimeout(1400);
+  await expect(disclosure).toHaveAttribute("open", "");
+  await expect(summary).toHaveText("Bukti sejarah · Historical evidence");
+  await expect(
+    scene.getByText("Bukti yang menopang · Supporting evidence").first(),
+  ).toBeVisible({ timeout: 10_000 });
+  await expect(
+    scene.getByText("catatan katalog D.9", { exact: false }).first(),
+  ).toBeVisible({ timeout: 10_000 });
+
   await summary.click();
-  await expect(scene.getByText("Bukti yang menopang").first()).toBeVisible({
-    timeout: 10_000,
-  });
+  await expect(disclosure).not.toHaveAttribute("open", "");
+  await summary.click();
+  await expect(disclosure).toHaveAttribute("open", "");
   await expect(
     scene.getByText("catatan katalog D.9", { exact: false }).first(),
   ).toBeVisible({ timeout: 10_000 });
@@ -998,9 +1195,11 @@ test("journey to archive and back restores the exact scene", async ({
 
 test("the archive record separates record from reading", async ({ page }) => {
   await page.goto("/archive/events/1135-panjalu-jayati");
-  await expect(page.getByText("PRIMARY RECORD").first()).toBeVisible();
   await expect(
-    page.getByText("SCHOLARLY INTERPRETATION").first(),
+    page.getByText("SUMBER PRIMER · PRIMARY RECORD").first(),
+  ).toBeVisible();
+  await expect(
+    page.getByText("INTERPRETASI AKADEMIK · SCHOLARLY INTERPRETATION").first(),
   ).toBeVisible();
 });
 
@@ -1063,13 +1262,15 @@ test("the journey is meaningful with JavaScript disabled", async ({
 
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "The First Mark" }),
+    page.getByRole("heading", { name: "Jejak Pertama" }),
   ).toBeVisible();
   await expect(
     page.getByText("27 Juli 879").or(page.getByText("879")).first(),
   ).toBeVisible();
   // Bukti tetap terbuka lewat elemen <details> asli.
-  await expect(page.getByText("Lihat bukti").first()).toBeVisible();
+  await expect(
+    page.getByText("Bukti sejarah · Historical evidence").first(),
+  ).toBeVisible();
   await context.close();
 });
 

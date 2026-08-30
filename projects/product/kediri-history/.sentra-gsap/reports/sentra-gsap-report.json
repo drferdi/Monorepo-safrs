@@ -1,0 +1,86 @@
+{
+  "standardVersion": "1.0.0",
+  "generatedAt": "2026-08-27T23:04:36.568Z",
+  "repoRoot": "D:\\DEV\\Monorepo\\projects\\product\\kediri-history",
+  "verdict": "FAIL",
+  "gates": [
+    {
+      "id": "static",
+      "label": "GSAP Architecture",
+      "required": true,
+      "status": "pass",
+      "detail": "0 error(s), 1 warning(s)"
+    },
+    {
+      "id": "typecheck",
+      "label": "Typecheck",
+      "required": true,
+      "status": "pass",
+      "detail": "pnpm run typecheck → exit 0 (1755ms)",
+      "commandResult": {
+        "code": 0,
+        "stdout": "",
+        "stderr": "$ pnpm -r typecheck\n$ tsc --project tsconfig.json\n"
+      }
+    },
+    {
+      "id": "lint",
+      "label": "Lint",
+      "required": true,
+      "status": "fail",
+      "detail": "pnpm run lint → exit 1 (1337ms)",
+      "commandResult": {
+        "code": 1,
+        "stdout": "Checked 103 files in 82ms. No fixes applied.\nFound 1 error.\nFound 14 warnings.\nD:\\DEV\\Monorepo\\projects\\product\\kediri-history\\apps\\web:\r\n[ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL] @kediri/web@0.1.0 lint: `biome check src tests e2e`\nExit status 1\n[ELIFECYCLE] Command failed with exit code 1.\n",
+        "stderr": "escending specificity selector found. This selector specificity is (0, 1, 0)\n  \n    2729 │ /* ---------- footer ---------- */\n    2730 │ \n  > 2731 │ .site-footer {\n         │ ^^^^^^^^^^^^\n    2732 │   margin-top: var(--space-8);\n    2733 │   padding: var(--space-5) 0 var(--space-7);\n  \n  i This selector specificity is (0, 2, 0)\n  \n    394 │ [data-journey=\"true\"] .scene-readout,\n    395 │ [data-journey=\"true\"] .finale-readout,\n  > 396 │ [data-journey=\"true\"] .site-footer {\n        │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    397 │   padding-inline: var(--shell-gutter);\n    398 │ }\n  \n  i Descending specificity selector may not be applied. Consider rearranging the order of the selectors. See MDN web docs for more details.\n  \n\nsrc\\app\\(public)\\globals.css:2758:1 lint/style/noDescendingSpecificity ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n  ! Descending specificity selector found. This selector specificity is (0, 1, 0)\n  \n    2756 │ /* ---------- Journey: intro, timeline, bukti ---------- */\n    2757 │ \n  > 2758 │ .journey-intro {\n         │ ^^^^^^^^^^^^^^\n    2759 │   padding: clamp(3rem, 14vh, 9rem) 0 var(--space-6);\n    2760 │ }\n  \n  i This selector specificity is (0, 2, 0)\n  \n    390 │ }\n    391 │ \n  > 392 │ [data-journey=\"true\"] .journey-intro,\n        │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    393 │ [data-journey=\"true\"] .journey-act > header,\n    394 │ [data-journey=\"true\"] .scene-readout,\n  \n  i Descending specificity selector may not be applied. Consider rearranging the order of the selectors. See MDN web docs for more details.\n  \n\nsrc\\app\\(public)\\globals.css:2834:1 lint/style/noDescendingSpecificity ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n  ! Descending specificity selector found. This selector specificity is (0, 1, 0)\n  \n    2832 │ }\n    2833 │ \n  > 2834 │ .timeline-title {\n         │ ^^^^^^^^^^^^^^^\n    2835 │   font-family: var(--type-narrative);\n    2836 │ }\n  \n  i This selector specificity is (0, 3, 0)\n  \n    2822 │ }\n    2823 │ \n  > 2824 │ .timeline-list [data-hero=\"true\"] .timeline-title {\n         │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    2825 │   font-weight: 600;\n    2826 │ }\n  \n  i Descending specificity selector may not be applied. Consider rearranging the order of the selectors. See MDN web docs for more details.\n  \n\nsrc\\app\\(public)\\globals.css format ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n  × Formatter would have printed the following content:\n  \n    2285 2285 │    * layar tinjauan visual 2026-08-28 (879, 921, 1015, prologue).\n    2286 2286 │    */\n    2287      │ - @media·(scripting:·none),·(prefers-reduced-motion:·reduce),·(max-width:·47.999rem)·{\n         2287 │ + @media·(scripting:·none),·(prefers-reduced-motion:·reduce),\n         2288 │ + ··(max-width:·47.999rem)·{\n    2288 2289 │     .stage-passages {\n    2289 2290 │       gap: var(--space-3);\n  \n\ncheck ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n  × Some errors were emitted while running checks.\n  \n\n"
+      }
+    },
+    {
+      "id": "test",
+      "label": "Test",
+      "required": true,
+      "status": "pass",
+      "detail": "pnpm run test → exit 0 (1972ms)",
+      "commandResult": {
+        "code": 0,
+        "stdout": "\n RUN  v4.1.10 D:/DEV/Monorepo/projects/product/kediri-history/apps/web\n\n\n Test Files  5 passed (5)\n      Tests  71 passed (71)\n   Start at  06:04:17\n   Duration  416ms (transform 368ms, setup 0ms, import 547ms, tests 52ms, environment 0ms)\n\nToken gate passed. 52 contrast checks across 2 Sentra themes plus the Kediri layer, 0 raw values in 1 scoped path(s). Scanned apps: 110, scripts: 6.\n",
+        "stderr": "$ pnpm -r test && node scripts/check-tokens.mjs\n$ vitest run\n"
+      }
+    },
+    {
+      "id": "build",
+      "label": "Build",
+      "required": true,
+      "status": "pass",
+      "detail": "pnpm run build → exit 0 (18456ms)",
+      "commandResult": {
+        "code": 0,
+        "stdout": "▲ Next.js 16.3.0 (webpack)\n- Environments: .env.local\n✓ Running next.config.ts took 25ms\n\n  Creating an optimized production build ...\n✓ Compiled successfully in 5.3s\n  Running TypeScript ...\n  Finished TypeScript in 516ms ...\n  Collecting page data using 11 workers ...\n  Generating static pages using 11 workers (0/15) ...\n  Generating static pages using 11 workers (3/15) \r\n  Generating static pages using 11 workers (7/15) \r\n  Generating static pages using 11 workers (11/15) \r\n✓ Generating static pages using 11 workers (15/15) in 1490ms\n  Finalizing page optimization ...\n  Collecting build traces ...\n\nRoute (app)\n┌ ○ /\n├ ○ /_not-found\n├ ○ /about\n├ ○ /accessibility\n├ ƒ /admin/[[...segments]]\n├ ƒ /api/[...slug]\n├ ƒ /api/editorial-preview/[filename]\n├ ƒ /api/graphql\n├ ƒ /api/graphql-playground\n├ ƒ /archive\n├ ƒ /archive/events/[slug]\n├ ƒ /archive/objects/[slug]\n├ ƒ /archive/people/[slug]\n├ ƒ /archive/places/[slug]\n├ ○ /explore\n├ ○ /explore/places\n├ ○ /explore/timeline\n├ ○ /journey\n├ ○ /methodology\n├ ○ /rights\n└ ○ /sources\n\n\n○  (Static)   prerendered as static content\nƒ  (Dynamic)  server-rendered on demand\n\n",
+        "stderr": "$ pnpm -r build\n$ next build --webpack\n"
+      }
+    },
+    {
+      "id": "browser",
+      "label": "Browser QA",
+      "required": true,
+      "status": "not-run",
+      "detail": "No app URL configured. Set browser.url, SENTRA_GSAP_URL, or --url."
+    },
+    {
+      "id": "visual-review",
+      "label": "Visual Quality Review",
+      "required": true,
+      "status": "fail",
+      "detail": "Visual review verdict is FAIL."
+    }
+  ],
+  "findings": [
+    {
+      "ruleId": "layout-property-animation",
+      "severity": "warn",
+      "file": "apps/web/e2e/smoke.spec.ts",
+      "message": "Layout-property animation detected; prefer transforms when the same visual result is possible.",
+      "evidence": ""
+    }
+  ]
+}

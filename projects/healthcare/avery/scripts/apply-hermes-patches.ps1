@@ -1,8 +1,8 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-    Terapkan atau batalkan (revert) patch WhatsApp ingress reason-codes ke
-    pohon Hermes 0.20.4 vendored.
+    Terapkan atau batalkan (revert) patch WhatsApp Hermes 0.20.4 vendored
+    (ingress reason-codes, lalu outbound safety envelope).
 
 .DESCRIPTION
     Idempoten: mengecek SHA-256 tiap berkas target terhadap manifest sebelum
@@ -28,7 +28,6 @@ $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $PatchDir = Join-Path $ScriptDir "..\patches\hermes-0.20.5"
 $PatchDir = (Resolve-Path $PatchDir).Path
 $ManifestPath = Join-Path $PatchDir "manifest.json"
-$PatchFile = Join-Path $PatchDir "0001-whatsapp-ingress-reason-codes.patch"
 
 if (-not (Test-Path $ManifestPath)) {
     Write-Error "Manifest tidak ditemukan: $ManifestPath"
@@ -86,7 +85,32 @@ if (-not $GitExe) {
 
 $ExitCode = 0
 
-foreach ($entry in $Manifest.files) {
+if ($Manifest.patches) {
+    $PatchList = @($Manifest.patches)
+} else {
+    $PatchList = @($Manifest)
+}
+
+$LastAfter = @{}
+$FirstBefore = @{}
+foreach ($spec in $PatchList) {
+    foreach ($f in @($spec.files)) {
+        $pathKey = [string]$f.path
+        if (-not $FirstBefore.ContainsKey($pathKey)) {
+            $FirstBefore[$pathKey] = $f.sha256_before.ToLowerInvariant()
+        }
+        $LastAfter[$pathKey] = $f.sha256_after.ToLowerInvariant()
+    }
+}
+
+foreach ($spec in $PatchList) {
+    $PatchFile = Join-Path $PatchDir $spec.patch
+    if (-not (Test-Path $PatchFile)) {
+        Write-Error "Patch tidak ditemukan: $PatchFile"
+        $ExitCode = 2
+        continue
+    }
+foreach ($entry in @($spec.files)) {
     $relPath = $entry.path
     $shaBefore = $entry.sha256_before.ToLowerInvariant()
     $shaAfter = $entry.sha256_after.ToLowerInvariant()
@@ -101,34 +125,42 @@ foreach ($entry in $Manifest.files) {
     $currentSha = Get-FileSha256 -Path $targetPath
 
     if ($Revert) {
-        if ($currentSha -eq $shaAfter) {
+        if ($shaAfter -ne $LastAfter[$relPath]) {
+            continue
+        }
+        $originalSha = $FirstBefore[$relPath]
+        if ($currentSha -eq $LastAfter[$relPath]) {
             if (-not (Test-Path $origPath)) {
-                Write-Error "[$relPath] SHA=after tapi salinan .orig tidak ada, tidak bisa revert."
+                Write-Error "[$relPath] SHA=akhir tapi salinan .orig tidak ada, tidak bisa revert."
                 $ExitCode = 4
                 continue
             }
             if ($PSCmdlet.ShouldProcess($targetPath, "Revert dari $origPath")) {
                 Copy-Item -Path $origPath -Destination $targetPath -Force
                 $restoredSha = Get-FileSha256 -Path $targetPath
-                if ($restoredSha -ne $shaBefore) {
-                    Write-Error "[$relPath] SHA setelah revert ($restoredSha) tidak cocok sha256_before ($shaBefore)."
+                if ($restoredSha -ne $originalSha) {
+                    Write-Error "[$relPath] SHA setelah revert ($restoredSha) tidak cocok sha256_before awal ($originalSha)."
                     $ExitCode = 4
                     continue
                 }
                 Write-Host "[$relPath] direvert -> SHA=$restoredSha"
             }
         }
-        elseif ($currentSha -eq $shaBefore) {
+        elseif ($currentSha -eq $originalSha) {
             Write-Host "[$relPath] sudah pada versi asli (sha256_before), tidak ada tindakan."
         }
         else {
-            Write-Error "[$relPath] SHA saat ini ($currentSha) tidak cocok sha256_before maupun sha256_after; versi Hermes berbeda, tidak direvert."
+            Write-Error "[$relPath] SHA saat ini ($currentSha) tidak cocok versi akhir maupun asli; versi Hermes berbeda, tidak direvert."
             $ExitCode = 5
         }
         continue
     }
 
     # --- Apply mode ---
+    if ($currentSha -eq $LastAfter[$relPath]) {
+        Write-Host "[$relPath] sudah pada versi akhir, dilewati."
+        continue
+    }
     if ($currentSha -eq $shaAfter) {
         Write-Host "[$relPath] sudah terpasang (sha256_after cocok), dilewati."
         continue
@@ -177,6 +209,7 @@ foreach ($entry in $Manifest.files) {
         Write-Error "[$relPath] SHA saat ini ($currentSha) tidak cocok sha256_before maupun sha256_after; versi Hermes berbeda, patch tidak diterapkan."
         $ExitCode = 5
     }
+}
 }
 
 exit $ExitCode

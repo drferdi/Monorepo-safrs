@@ -1,16 +1,65 @@
 {
-  "patch": "0001-whatsapp-ingress-reason-codes.patch",
   "hermes_version": "0.20.4",
-  "files": [
+  "patches": [
     {
-      "path": "gateway/platforms/whatsapp_common.py",
-      "sha256_before": "2205d4b3287b18fb318fd066b792c4d9e2e0311b1e6ffd0bf948fc85471570ca",
-      "sha256_after": "e3f473aa214b09c16f7efb110a88b79c231630d743cc5ae6a77cbc3b937cc3f0"
+      "patch": "0001-whatsapp-ingress-reason-codes.patch",
+      "files": [
+        {
+          "path": "gateway/platforms/whatsapp_common.py",
+          "sha256_before": "2205d4b3287b18fb318fd066b792c4d9e2e0311b1e6ffd0bf948fc85471570ca",
+          "sha256_after": "e3f473aa214b09c16f7efb110a88b79c231630d743cc5ae6a77cbc3b937cc3f0"
+        },
+        {
+          "path": "plugins/platforms/whatsapp/adapter.py",
+          "sha256_before": "590dde75852bd197975a03c02cae71466ebaf581ae0235f436c5dde0181c0fac",
+          "sha256_after": "9c65890682f7d226250292ebaa7512e71c833c5452397c243117cbb23a8b1d0a"
+        }
+      ]
     },
     {
-      "path": "plugins/platforms/whatsapp/adapter.py",
-      "sha256_before": "590dde75852bd197975a03c02cae71466ebaf581ae0235f436c5dde0181c0fac",
-      "sha256_after": "9c65890682f7d226250292ebaa7512e71c833c5452397c243117cbb23a8b1d0a"
+      "patch": "0002-whatsapp-outbound-safety.patch",
+      "files": [
+        {
+          "path": "gateway/platforms/whatsapp_common.py",
+          "sha256_before": "e3f473aa214b09c16f7efb110a88b79c231630d743cc5ae6a77cbc3b937cc3f0",
+          "sha256_after": "dcc60d45e0a814024363bd38fbc82cb764e0e8be10dfd37cff0a9946f1171436"
+        },
+        {
+          "path": "plugins/platforms/whatsapp/adapter.py",
+          "sha256_before": "9c65890682f7d226250292ebaa7512e71c833c5452397c243117cbb23a8b1d0a",
+          "sha256_after": "c459cf25aeaf1471328d36f6b7e5ea2165cadb6976295b4a663fc1b5167db9e9"
+        }
+      ]
+    },
+    {
+      "patch": "0003-whatsapp-observe-silent.patch",
+      "files": [
+        {
+          "path": "gateway/platforms/whatsapp_common.py",
+          "sha256_before": "dcc60d45e0a814024363bd38fbc82cb764e0e8be10dfd37cff0a9946f1171436",
+          "sha256_after": "5fc6f83a0edb3e2bf249de96f4e3a323c757daf5c26b78ec5db73f0f036fc963"
+        }
+      ]
+    },
+    {
+      "patch": "0004-outbound-internal-false-positive.patch",
+      "files": [
+        {
+          "path": "gateway/platforms/whatsapp_common.py",
+          "sha256_before": "5fc6f83a0edb3e2bf249de96f4e3a323c757daf5c26b78ec5db73f0f036fc963",
+          "sha256_after": "c0e1c101dcb13854d8656be52f90b3bf7533f55a61d6efb0400e2b5512083893"
+        }
+      ]
+    },
+    {
+      "patch": "0005-drop-reading-skill-status.patch",
+      "files": [
+        {
+          "path": "gateway/platforms/whatsapp_common.py",
+          "sha256_before": "c0e1c101dcb13854d8656be52f90b3bf7533f55a61d6efb0400e2b5512083893",
+          "sha256_after": "bf925c35aebd3026004e2c3ae232deef310b110f48a4d05294aa6d69cbcaf783"
+        }
+      ]
     }
   ]
 }

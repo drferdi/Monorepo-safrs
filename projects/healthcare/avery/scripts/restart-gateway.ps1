@@ -51,11 +51,10 @@ Write-Host ''
 Write-Host '=== [Pra-cek 1] Integritas junction runtime ==='
 $verifyJunctionsScript = Join-Path $PSScriptRoot 'verify-runtime-junctions.ps1'
 if (Test-Path -LiteralPath $verifyJunctionsScript) {
-    if ($Execute) {
-        & $verifyJunctionsScript -Fix
-    } else {
-        & $verifyJunctionsScript
-    }
+    # Hanya laporan. -Fix tidak dijalankan di sini: ia menolak bila gateway
+    # masih hidup, dan mematikan start Avery setiap hari. Perbaikan junction
+    # Studio: verify-runtime-junctions.ps1 -Fix saat proses Hermes sudah mati.
+    & $verifyJunctionsScript
 }
 
 Write-Host ''

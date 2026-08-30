@@ -1,0 +1,809 @@
+{
+  "standardVersion": "1.0.0",
+  "generatedAt": "2026-08-27T21:25:45.488Z",
+  "baseUrl": "http://127.0.0.1:4320",
+  "results": [
+    {
+      "browser": "chromium",
+      "viewportName": "mobile",
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "route": "/",
+      "url": "http://127.0.0.1:4320/",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": [
+          50
+        ]
+      },
+      "keyboard": {
+        "focusable": 17,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "chromium",
+      "viewportName": "mobile",
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "route": "/journey",
+      "url": "http://127.0.0.1:4320/journey",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": [
+          51,
+          64
+        ]
+      },
+      "keyboard": {
+        "focusable": 38,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "chromium",
+      "viewportName": "mobile",
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "route": "/archive",
+      "url": "http://127.0.0.1:4320/archive",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": []
+      },
+      "keyboard": {
+        "focusable": 15,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "chromium",
+      "viewportName": "tablet",
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "route": "/",
+      "url": "http://127.0.0.1:4320/",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": [
+          51
+        ]
+      },
+      "keyboard": {
+        "focusable": 17,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "chromium",
+      "viewportName": "tablet",
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "route": "/journey",
+      "url": "http://127.0.0.1:4320/journey",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": [
+          52,
+          51
+        ]
+      },
+      "keyboard": {
+        "focusable": 38,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "chromium",
+      "viewportName": "tablet",
+      "width": 768,
+      "height": 1024,
+      "touch": true,
+      "route": "/archive",
+      "url": "http://127.0.0.1:4320/archive",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": [
+          52
+        ]
+      },
+      "keyboard": {
+        "focusable": 15,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "chromium",
+      "viewportName": "laptop",
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "route": "/",
+      "url": "http://127.0.0.1:4320/",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": []
+      },
+      "keyboard": {
+        "focusable": 17,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "chromium",
+      "viewportName": "laptop",
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "route": "/journey",
+      "url": "http://127.0.0.1:4320/journey",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": [
+          53,
+          52
+        ]
+      },
+      "keyboard": {
+        "focusable": 38,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "chromium",
+      "viewportName": "laptop",
+      "width": 1024,
+      "height": 768,
+      "touch": false,
+      "route": "/archive",
+      "url": "http://127.0.0.1:4320/archive",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": []
+      },
+      "keyboard": {
+        "focusable": 15,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "chromium",
+      "viewportName": "desktop",
+      "width": 1440,
+      "height": 900,
+      "touch": false,
+      "route": "/",
+      "url": "http://127.0.0.1:4320/",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": [
+          50
+        ]
+      },
+      "keyboard": {
+        "focusable": 17,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "chromium",
+      "viewportName": "desktop",
+      "width": 1440,
+      "height": 900,
+      "touch": false,
+      "route": "/journey",
+      "url": "http://127.0.0.1:4320/journey",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": [
+          59
+        ]
+      },
+      "keyboard": {
+        "focusable": 38,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "chromium",
+      "viewportName": "desktop",
+      "width": 1440,
+      "height": 900,
+      "touch": false,
+      "route": "/archive",
+      "url": "http://127.0.0.1:4320/archive",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": []
+      },
+      "keyboard": {
+        "focusable": 15,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "firefox",
+      "viewportName": "mobile",
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "route": "/",
+      "url": "http://127.0.0.1:4320/",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": []
+      },
+      "keyboard": {
+        "focusable": 17,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "firefox",
+      "viewportName": "mobile",
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "route": "/journey",
+      "url": "http://127.0.0.1:4320/journey",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": []
+      },
+      "keyboard": {
+        "focusable": 38,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "firefox",
+      "viewportName": "mobile",
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "route": "/archive",
+      "url": "http://127.0.0.1:4320/archive",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": []
+      },
+      "keyboard": {
+        "focusable": 15,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "firefox",
+      "viewportName": "desktop",
+      "width": 1440,
+      "height": 900,
+      "touch": false,
+      "route": "/",
+      "url": "http://127.0.0.1:4320/",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": []
+      },
+      "keyboard": {
+        "focusable": 17,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "firefox",
+      "viewportName": "desktop",
+      "width": 1440,
+      "height": 900,
+      "touch": false,
+      "route": "/journey",
+      "url": "http://127.0.0.1:4320/journey",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": []
+      },
+      "keyboard": {
+        "focusable": 38,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "firefox",
+      "viewportName": "desktop",
+      "width": 1440,
+      "height": 900,
+      "touch": false,
+      "route": "/archive",
+      "url": "http://127.0.0.1:4320/archive",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": []
+      },
+      "keyboard": {
+        "focusable": 15,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "webkit",
+      "viewportName": "mobile",
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "route": "/",
+      "url": "http://127.0.0.1:4320/",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": []
+      },
+      "keyboard": {
+        "focusable": 17,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "webkit",
+      "viewportName": "mobile",
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "route": "/journey",
+      "url": "http://127.0.0.1:4320/journey",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": []
+      },
+      "keyboard": {
+        "focusable": 38,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "webkit",
+      "viewportName": "mobile",
+      "width": 390,
+      "height": 844,
+      "touch": true,
+      "route": "/archive",
+      "url": "http://127.0.0.1:4320/archive",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": []
+      },
+      "keyboard": {
+        "focusable": 15,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "webkit",
+      "viewportName": "desktop",
+      "width": 1440,
+      "height": 900,
+      "touch": false,
+      "route": "/",
+      "url": "http://127.0.0.1:4320/",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": []
+      },
+      "keyboard": {
+        "focusable": 17,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "webkit",
+      "viewportName": "desktop",
+      "width": 1440,
+      "height": 900,
+      "touch": false,
+      "route": "/journey",
+      "url": "http://127.0.0.1:4320/journey",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": []
+      },
+      "keyboard": {
+        "focusable": 38,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "webkit",
+      "viewportName": "desktop",
+      "width": 1440,
+      "height": 900,
+      "touch": false,
+      "route": "/archive",
+      "url": "http://127.0.0.1:4320/archive",
+      "status": "pass",
+      "failures": [],
+      "errors": [],
+      "metrics": {
+        "overflow": 0,
+        "imgsMissingAlt": 0,
+        "mainCount": 1,
+        "h1Count": 1,
+        "unnamedButtons": 0,
+        "unnamedLinks": 0,
+        "cls": 0,
+        "longTasks": []
+      },
+      "keyboard": {
+        "focusable": 15,
+        "afterTab": {
+          "moved": true,
+          "visible": true,
+          "tag": "A"
+        }
+      }
+    },
+    {
+      "browser": "chromium",
+      "viewportName": "mobile",
+      "route": "/",
+      "mode": "reduced-motion",
+      "status": "pass",
+      "failures": [],
+      "errors": []
+    },
+    {
+      "browser": "chromium",
+      "viewportName": "desktop",
+      "route": "/",
+      "mode": "reduced-motion",
+      "status": "pass",
+      "failures": [],
+      "errors": []
+    },
+    {
+      "browser": "chromium",
+      "viewportName": "mobile",
+      "journey": "journey-to-archive-and-back",
+      "mode": "route-round-trip",
+      "status": "pass",
+      "failures": [],
+      "errors": []
+    },
+    {
+      "browser": "chromium",
+      "viewportName": "desktop",
+      "journey": "journey-to-archive-and-back",
+      "mode": "route-round-trip",
+      "status": "pass",
+      "failures": [],
+      "errors": []
+    }
+  ],
+  "screenshots": [
+    ".sentra-gsap/screenshots/chromium-mobile-home.png",
+    ".sentra-gsap/screenshots/chromium-mobile-journey.png",
+    ".sentra-gsap/screenshots/chromium-mobile-archive.png",
+    ".sentra-gsap/screenshots/chromium-tablet-home.png",
+    ".sentra-gsap/screenshots/chromium-tablet-journey.png",
+    ".sentra-gsap/screenshots/chromium-tablet-archive.png",
+    ".sentra-gsap/screenshots/chromium-laptop-home.png",
+    ".sentra-gsap/screenshots/chromium-laptop-journey.png",
+    ".sentra-gsap/screenshots/chromium-laptop-archive.png",
+    ".sentra-gsap/screenshots/chromium-desktop-home.png",
+    ".sentra-gsap/screenshots/chromium-desktop-journey.png",
+    ".sentra-gsap/screenshots/chromium-desktop-archive.png",
+    ".sentra-gsap/screenshots/firefox-mobile-home.png",
+    ".sentra-gsap/screenshots/firefox-mobile-journey.png",
+    ".sentra-gsap/screenshots/firefox-mobile-archive.png",
+    ".sentra-gsap/screenshots/firefox-desktop-home.png",
+    ".sentra-gsap/screenshots/firefox-desktop-journey.png",
+    ".sentra-gsap/screenshots/firefox-desktop-archive.png",
+    ".sentra-gsap/screenshots/webkit-mobile-home.png",
+    ".sentra-gsap/screenshots/webkit-mobile-journey.png",
+    ".sentra-gsap/screenshots/webkit-mobile-archive.png",
+    ".sentra-gsap/screenshots/webkit-desktop-home.png",
+    ".sentra-gsap/screenshots/webkit-desktop-journey.png",
+    ".sentra-gsap/screenshots/webkit-desktop-archive.png"
+  ],
+  "verdict": "PASS"
+}

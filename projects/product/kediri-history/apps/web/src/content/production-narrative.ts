@@ -161,7 +161,7 @@ function act(
   slug: string,
   title: string,
   dateRangeDisplay: string,
-  introCopy: string,
+  introCopy: string | readonly string[],
   visualEraKey: string,
   scenes: readonly SceneDto[],
 ): ActDto {
@@ -180,50 +180,64 @@ function act(
 const ACT_1 = act(
   1,
   "the-land-remembers",
-  "The Land Remembers",
+  "1,100+ Years of Kediri",
   "879–1042",
-  "Bahkan sebelum ada kerajaan besar bernama Kediri, sejarah telah meninggalkan sesuatu yang jauh lebih rapuh daripada benteng namun jauh lebih panjang usianya: sebuah catatan.",
+  [
+    "Sebelum banyak kota modern memiliki nama, Kadhiri telah tercatat dalam sejarah Jawa.",
+    "Jejaknya bermula pada 879 M. Namanya muncul pada 921 M. Daha kemudian menjadi pusat Panjalu, Jayabhaya membawa kerajaan menuju kejayaan, dan lebih dari sebelas abad kemudian, Kediri masih berdiri di tepian Brantas.",
+    "Kerajaan berganti. Kekuasaan datang dan pergi. Nama Kediri tetap hidup.",
+  ],
   "ancient",
   [
     scene({
       order: 1,
       slug: "879-first-mark",
-      title: "The First Mark",
+      title: "Jejak Pertama",
       dateDisplay: "27 Juli 879",
       sceneType: "hero",
       visualVariant: "material",
       choreographyKey: "inscriptionReveal",
-      // Empat ketukan: peristiwa → niat penulisnya → daya tahan tulisan →
-      // makna tarikhnya bagi Kediri. Hening di antara tiap ketukan.
-      beatGroups: [[0], [1, 2], [3, 4], [5, 6]],
+      /*
+       * `masterLine` (kalimat pemikul) TIDAK diberikan Chief di revisi ini —
+       * dipinjam dari kalimat brief sendiri ("Itulah mengapa perjalanan ini
+       * dimulai di sini.") karena tiap scene wajib punya satu (kontrak
+       * `production-narrative.test.ts`). Kalimat itu TIDAK diulang lagi di
+       * beat manapun di bawah — kalau ini salah, koreksi Chief dipersilakan.
+       */
+      masterLine: "Itulah mengapa perjalanan ini dimulai di sini.",
+      // Lima ketukan (revisi Chief 2026-08-30), satu per paragraf brief —
+      // hening di antaranya, tidak digabung: mengapa 879 dicatat → belum ada
+      // kota modern → tanggal Prasasti Kwak dipilih → bukan lahir sekaligus,
+      // melainkan titik tambat kronologi → jembatan 42 tahun menuju nama
+      // (921), berdiri sendiri sebagai ketukan penutup sebelum handoff.
+      beatGroups: [[0], [1], [2], [3], [4]],
       imageReady: true,
       // Crop lolos verifikasi Redo Register (REDO-ASSET-001); disajikan
       // statis, tanpa gerbang route pratinjau.
       imagePath: "/journey-approved/01-879-first-mark.webp",
       previewAltText:
         "Visualisasi artistik permukaan batu prasasti dalam cahaya menyudut; relief aksara dan angka tahun 879 tampak timbul dari kegelapan.",
-      masterLine:
-        "Sebelum ada kerajaan bernama Kediri, sudah ada sebuah catatan.",
       paragraphs: [
-        "Pada 27 Juli 879, sebuah keputusan kerajaan dituliskan pada logam.",
-        "Orang-orang yang menorehkannya tidak pernah tahu bahwa lebih dari seribu tahun kemudian, goresan itu masih akan dibaca.",
-        "Mereka tidak sedang menulis sejarah Kediri untuk kita. Mereka sedang mencatat kehidupan mereka sendiri.",
-        "Justru di situlah kekuatan sebuah prasasti.",
-        "Kerajaan dapat hilang. Nama penguasa dapat terlupakan. Bangunan dapat menjadi tanah kembali. Tetapi tulisan dapat menyeberangi waktu.",
-        "Tahun 879 bukanlah tanggal lahir sebuah pemerintahan kota modern.",
-        "Ia adalah sebuah jejak—dan berabad-abad kemudian, jejak itu dipilih Kediri sebagai titik awal untuk mengingat dirinya sendiri.",
+        "Lebih dari sebelas abad lalu, sebuah prasasti dibuat pada masa Jawa kuno.",
+        'Hari itu tentu tidak disebut sebagai "Hari Jadi Kota Kediri". Kota modern bahkan belum ada.',
+        "Tetapi tanggal yang tercatat dalam Prasasti Kwak—27 Juli 879—kelak dipilih sebagai titik awal peringatan sejarah Kediri.",
+        "Bukan karena Kediri lahir sekaligus pada satu hari, tetapi karena dari sinilah kronologi yang kita miliki mulai dapat ditambatkan pada sebuah tanggal.",
+        "42 tahun kemudian, sejarah memberi kita sesuatu yang lebih penting daripada tanggal: sebuah nama.",
       ],
     }),
     scene({
       order: 2,
       slug: "921-kadhiri",
       title: "Kadhiri",
-      dateDisplay: "921",
+      dateDisplay: "19 September 921",
       sceneType: "supporting",
       visualVariant: "word",
       choreographyKey: "nameEmerges",
-      // Tiga ketukan: tempat sebelum nama → nama itu muncul → arti sebuah nama.
-      beatGroups: [[0, 1], [2, 3], [4]],
+      // Tujuh ketukan (revisi Chief 2026-08-30), satu per paragraf brief:
+      // nama muncul → Prasasti Harinjing B → momen penting → wilayah kini
+      // bernama → makna kāḍiri → nama bertahan lintas zaman → jembatan
+      // transisi ("tidak berhenti pada satu prasasti") menuju scene 1015.
+      beatGroups: [[0], [1], [2], [3], [4], [5], [6]],
       imageReady: true,
       // Crop lolos verifikasi Redo Register (REDO-ASSET-002); disajikan
       // statis, tanpa gerbang route pratinjau.
@@ -232,11 +246,13 @@ const ACT_1 = act(
         "Visualisasi artistik bongkah batu prasasti dengan kata kadhiri terbaca di tengah barisan aksara kuno.",
       masterLine: "Kadhiri. Sebuah nama muncul dari dalam sejarah.",
       paragraphs: [
-        "Sebuah tempat dapat hidup jauh sebelum dunia menuliskan namanya.",
-        "Gunung telah berdiri. Brantas telah mengalir. Manusia telah tinggal, bekerja, dan bergerak di wilayah ini.",
-        "Namun pada abad ke-10, sesuatu berubah. Dalam dunia tulisan, sebuah nama mulai muncul: Kadhiri.",
-        "Tahun 879 memberi kita sebuah tanggal. Tahun 921 memberi kita sesuatu yang lebih pribadi: sebuah nama.",
-        "Dan ketika sebuah tempat memiliki nama, ia mulai memperoleh identitas yang dapat diwariskan.",
+        "Nama itu muncul: Kadhiri.",
+        "Dalam Prasasti Harinjing B, bertarikh 19 September 921, nama Kadhiri tercatat secara tertulis pada masa Raja Rakai Layang Dyah Tulodong.",
+        "Inilah salah satu momen penting dalam sejarah Kediri.",
+        "Sebuah wilayah yang sebelumnya kita kenali melalui jejak masa lalu kini memiliki nama yang dapat kita baca lebih dari seribu tahun kemudian.",
+        "Dalam bahasa Jawa Kuno, kāḍiri dikaitkan dengan makna berdiri sendiri, mandiri, atau berdiri tegak.",
+        "Nama itu akan bertahan melewati kerajaan, perang, kolonialisme, revolusi, dan modernisasi.",
+        "Dan nama Kadhiri tidak berhenti pada satu prasasti.",
       ],
     }),
     scene({

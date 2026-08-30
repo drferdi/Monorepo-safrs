@@ -31,6 +31,8 @@ auxiliary:
 display:
   compact: true
   memory_notifications: 'on'
+  # WhatsApp: jangan kirim "Reading skill …" / jejak tool ke chat.
+  tool_progress: off
 
 memory:
   memory_enabled: true
@@ -67,9 +69,11 @@ whatsapp:
   # dikirim ke chat WhatsApp. Dipatuhi oleh lima jalur notice di gateway.
   gateway_restart_notification: false
 
-  # true  → di grup, agen hanya menanggapi bila dipanggil: teks cocok dengan
-  #         mention_patterns, di-reply, atau diawali "/".
+  # true  → di grup, agen hanya *menjawab* bila dipanggil. Pesan allowlist
+  #         tanpa sebut nama tetap dicatat (OBSERVED_SILENT), tidak memanggil model.
   # false → menanggapi setiap pesan di setiap grup yang lolos group_policy.
+  # Jangan isi extra.free_response_chats untuk grup kerja: itu memaksa giliran
+  # model penuh tiap obrolan. Baca tanpa balas = require_mention + observe.
   require_mention: true
 
   # Regex WAJIB ditulis dalam kutip tunggal YAML. Dalam kutip ganda, penulis

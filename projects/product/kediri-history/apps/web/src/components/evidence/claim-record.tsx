@@ -3,6 +3,13 @@ import type { ReactElement } from "react";
 import type { ClaimDto } from "../../content/dto";
 import { EvidenceClassBadge } from "./evidence-badge";
 
+const CONFIDENCE_LABELS: Readonly<Record<string, string>> = {
+  high: "Tinggi · High",
+  moderate: "Sedang · Moderate",
+  low: "Rendah · Low",
+  contested: "Diperdebatkan · Contested",
+};
+
 /**
  * Satu klaim beserta seluruh buktinya, dirender penuh di HTML.
  *
@@ -31,12 +38,17 @@ export function ClaimRecord({
       <p className="claim-statement prose">{claim.statement}</p>
       <p>
         <EvidenceClassBadge evidenceClass={claim.evidenceClass} />{" "}
-        <span className="archive-label">Keyakinan: {claim.confidence}</span>
+        <span className="archive-label">
+          Keyakinan · Confidence:{" "}
+          {CONFIDENCE_LABELS[claim.confidence] ?? claim.confidence}
+        </span>
       </p>
 
       {supporting.length > 0 ? (
         <>
-          <h4 className="archive-label">Bukti yang menopang</h4>
+          <h4 className="archive-label">
+            Bukti yang menopang · Supporting evidence
+          </h4>
           <ul className="record-list">
             {supporting.map((link) => (
               <li key={link.id}>
@@ -63,7 +75,9 @@ export function ClaimRecord({
       {contradicting.length > 0 ? (
         <>
           {/* Ketidaksepakatan dipertahankan, tidak dihapus. */}
-          <h4 className="archive-label">Bukti yang membantah</h4>
+          <h4 className="archive-label">
+            Bukti yang membantah · Contradicting evidence
+          </h4>
           <ul className="record-list">
             {contradicting.map((link) => (
               <li key={link.id}>
@@ -84,7 +98,7 @@ export function ClaimRecord({
 
       {contextual.length > 0 ? (
         <>
-          <h4 className="archive-label">Konteks</h4>
+          <h4 className="archive-label">Konteks · Context</h4>
           <ul className="record-list">
             {contextual.map((link) => (
               <li key={link.id}>
@@ -104,7 +118,8 @@ export function ClaimRecord({
 
       {claim.competingClaimSlugs.length > 0 ? (
         <p className="archive-label">
-          Klaim tandingan: {claim.competingClaimSlugs.join(", ")}
+          Klaim tandingan · Competing claims:{" "}
+          {claim.competingClaimSlugs.join(", ")}
         </p>
       ) : null}
     </article>

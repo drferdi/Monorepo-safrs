@@ -180,7 +180,7 @@ export interface ActDto {
   readonly title: string;
   readonly subtitle?: string;
   readonly dateRangeDisplay: string;
-  readonly introCopy?: string;
+  readonly introCopy?: string | readonly string[];
   readonly visualEraKey: string;
   readonly scenes: readonly SceneDto[];
 }

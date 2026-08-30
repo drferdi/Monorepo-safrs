@@ -6,6 +6,42 @@ Format mengikuti [Keep a Changelog](https://keepachangelog.com/), penomoran meng
 
 ---
 
+## [0.2.1] — 2026-08-28
+
+### Insiden sambutan grup
+
+Cron `member-watch` (00:18) menyambut Pak Guru Karel di 4 grup karena snapshot menganggapnya baru. Cron kini **laporan ke Chief saja**, dilarang kirim ke grup. `require_mention` dipindah ke `platforms.whatsapp.extra` agar gerbang mention tidak jatuh ke default Hermes `false`.
+
+## [0.2.1] — 2026-08-28
+
+### Memory, cron, grup
+
+- `memory.write_approval` dan `skills.write_approval` dinyalakan lagi di runtime.
+- Cron `member-watch` di-pin ke `openai/gpt-5.6-luna` / OpenRouter (sebelumnya skip karena drift dari Gemini Flash).
+- Keputusan grup: **baca tanpa balas**. `require_mention` tetap true, `free_response_chats` tetap kosong. Pesan allowlist tanpa sebut nama dicatat ke `state/group-observe.jsonl` dan log `OBSERVED_SILENT` — tidak memanggil model, tidak membalas. Patch `0003-whatsapp-observe-silent.patch`.
+
+## [0.2.1] — 2026-08-27
+
+### Suara WhatsApp
+
+SOUL + community-steward: jawaban default 1–4 kalimat. Panjang hanya untuk analisis, diagnosis, keputusan/risiko, atau laporan yang diminta.
+
+### P1 — Envelope keselamatan keluaran WhatsApp
+
+Sebelum teks dikirim ke WhatsApp, pemeriksaan deterministik menolak (diam, bukan pesan pengganti):
+
+- Thinking-only response
+- Empty response from model / `(empty)` / peringatan "model returned no response"
+- retrying (status Hermes)
+- fallback provider
+- jejak tool (`Reading skill`, `Calling tool`, `[tool]`, …)
+- job_id / Cronjob Response
+- traceback
+- instruksi internal (system prompt, SOUL, skill_view)
+- keluaran kosong atau hanya separator
+
+Sumber: `src/avery_outbound/safety.py`. `check_draft` memakai gerbang yang sama. Jalur kirim hidup: patch `0002-whatsapp-outbound-safety.patch` pada `WhatsAppAdapter.send` dan `edit_message` (log `outbound safety drop reason=`). Gateway harus di-restart agar berlaku.
+
 ## [0.2.0] — 2026-08-25
 
 ### FIX-01…06 — perbaikan perilaku Avery (2026-08-23)

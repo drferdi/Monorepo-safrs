@@ -29,8 +29,9 @@ Last updated: 2026-08-26 (backlog untracked ter-commit; task ownership hijau)
   `project-standalone verify product/kediri-history` = **PASS** penuh.
   Batas: tidak ada citra historis yang dikirim (akuisisi institusional belum dilakukan),
   klaim 1869 sengaja tertahan di needs_review, dan tidak ada remote/deploy yang dibuat.
-  **SENTRA-GSAP FAIL** — sentra:gsap:qa, tinjauan visual independen, dan sentra:gsap:verify
-  belum dijalankan (G04: gate tingkat repositori). Motion tidak disebut production-ready.
+  **SENTRA-GSAP FAIL (historis)** — gate sentra:gsap:qa/verify tidak pernah dijalankan;
+  standar Sentra-GSAP dicabut 2026-08-28, diganti skill GSAP resmi (`.claude/skills/gsap-*`,
+  router `/gsap`). Motion tetap tidak disebut production-ready sampai diverifikasi ulang.
   **Infra nyata (2026-08-26, Chief menyalakan Docker):** seluruh rantai dijalankan ulang di
   atas PostgreSQL 18.6 dan MinIO dari `infra/docker-compose.yml`, dari basis data kosong:
   migrate, seed, `verify:production` (12 record, 0 kritis), lint, typecheck, 51 unit test,
@@ -97,8 +98,9 @@ Last updated: 2026-08-26 (backlog untracked ter-commit; task ownership hijau)
 6. Kediri: akuisisi citra historis dari institusi penyimpan (Museum Nasional, Perpusnas,
    KITLV, Rijksmuseum, Wereldmuseum, Nationaal Archief) — Phase 16 tidak dapat maju tanpa itu.
 7. Kediri: konfirmasi arsip untuk klaim jembatan 1869 dan mekanisme pengangkatan 1912.
-8. Kediri: gate Sentra-GSAP (`sentra:gsap:qa`, tinjauan visual independen, `sentra:gsap:verify`)
-   belum pernah dijalankan terhadap sumber capsule — status FAIL sampai dijalankan.
+8. Kediri: standar Sentra-GSAP dicabut (2026-08-28) — gate lama tidak pernah dijalankan.
+   Kualitas motion kini diverifikasi lewat skill GSAP resmi (router `/gsap`) + verifikasi
+   visual/e2e capsule; motion belum dinyatakan production-ready sampai itu dilakukan.
 9. Kediri: Phase 22 (deployment) menunggu otorisasi Chief; tidak ada remote yang dibuat.
 10. Belum di-push. Gate pre-push (`CHIEF_PUSH_OK`, `CHIEF_PUSH_PROJECTS_OK`) tetap berlaku, dan
     riwayat lokal tak berkerabat dengan origin — jangan push/fetch tanpa alur publish terfilter.

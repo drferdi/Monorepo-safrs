@@ -772,7 +772,10 @@ const PIN_DISTANCES: Record<
   { readonly desktop: number; readonly tablet: number }
 > = {
   prologueReveal: { desktop: 330, tablet: 210 },
-  inscriptionReveal: { desktop: 420, tablet: 260 },
+  // 879 kini 5 beat (revisi Chief 2026-08-30, bukan 4) — jatah scroll
+  // dinaikkan proporsional (+25%) supaya tiap beat tetap dapat ruang gulir
+  // yang sama seperti sebelumnya, bukan makin sempit dan gampang terlewat.
+  inscriptionReveal: { desktop: 525, tablet: 325 },
   nameEmerges: { desktop: 330, tablet: 205 },
   // Interlude paling hening di Act I: lebih pendek dari shot hero mana pun.
   nameEndures: { desktop: 300, tablet: 190 },

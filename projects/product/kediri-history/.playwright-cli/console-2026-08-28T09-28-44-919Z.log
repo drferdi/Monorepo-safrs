@@ -1,0 +1,129 @@
+[    4930ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[    4986ms] [LOG] [HMR] connected @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[    5149ms] [ERROR] A tree hydrated but some attributes of the server rendered HTML didn't match the client properties. This won't be patched up. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+%s%s https://react.dev/link/hydration-mismatch 
+
+  ...
+    <RenderFromTemplateContext>
+      <ScrollAndMaybeFocusHandler cacheNode={{rsc:{...}, ...}}>
+        <InnerScrollHandlerNew focusAndScrollRef={{scrollRef:null, ...}} cacheNode={{rsc:{...}, ...}}>
+          <ErrorBoundary errorComponent={undefined} errorStyles={undefined} errorScripts={undefined}>
+            <LoadingBoundary name="/" loading={null}>
+              <HTTPAccessFallbackBoundary notFound={{...}} forbidden={undefined} unauthorized={undefined}>
+                <HTTPAccessFallbackErrorBoundary pathname="/journey" notFound={{...}} forbidden={undefined} ...>
+                  <RedirectBoundary>
+                    <RedirectErrorBoundary router={{...}}>
+                      <InnerLayoutRouter url="/journey" tree={[...]} params={{}} cacheNode={{rsc:{...}, ...}} ...>
+                        <SegmentViewNode type="layout" pagePath="(public)/l...">
+                          <SegmentTrieNode>
+                          <link>
+                          <PublicLayout>
+                            <html
+                              lang="id"
+                              className="source_serif_4_1803ef82-module__q6dYlW__variable geist_12215a07-module__ZvBbQ..."
+-                             data-intro="pending"
+                            >
+                      ...
+          ...
+ @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:1052
+[    5739ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90846ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90863ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90864ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90873ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90877ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90879ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90882ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90884ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90886ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90891ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90894ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90895ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90897ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90900ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90902ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90904ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90906ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90909ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90923ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90925ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90927ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90929ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90931ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90933ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90934ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90937ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90938ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90940ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90942ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90944ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90945ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90947ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90949ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90952ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90954ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90956ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90957ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90959ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90961ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90962ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90964ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90965ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90967ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90968ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90970ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90972ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90974ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90976ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[   90978ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1106891ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1106894ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1106906ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1106941ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1106945ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1108596ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1108935ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1109013ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1110806ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1110810ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1110824ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1110874ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1110877ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1112696ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1113075ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1113097ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1242530ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1242534ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1631527ms] [LOG] [Fast Refresh] done in 10083ms @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[ 1631759ms] [LOG] [Fast Refresh] rebuilding @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[ 1632146ms] [LOG] [Fast Refresh] done in 491ms @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[ 1632291ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1632297ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 1632304ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[ 2539605ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=TYJ_kjhdeBxC12syaHtSp' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 2542656ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=TYJ_kjhdeBxC12syaHtSp' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 2545699ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=TYJ_kjhdeBxC12syaHtSp' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 2548760ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=TYJ_kjhdeBxC12syaHtSp' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 2551801ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=TYJ_kjhdeBxC12syaHtSp' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 2558844ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=TYJ_kjhdeBxC12syaHtSp' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 2565912ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=TYJ_kjhdeBxC12syaHtSp' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 2572955ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=TYJ_kjhdeBxC12syaHtSp' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 2579996ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=TYJ_kjhdeBxC12syaHtSp' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 2587029ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=TYJ_kjhdeBxC12syaHtSp' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 2594126ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=TYJ_kjhdeBxC12syaHtSp' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 2601176ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=TYJ_kjhdeBxC12syaHtSp' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 2603276ms] [ERROR] Fetch API cannot load chrome-error://chromewebdata/favicon.ico. URL scheme "chrome-error" is not supported. @ :1
+[ 2603277ms] [ERROR] Fetch API cannot load chrome-error://chromewebdata/favicon.ico. URL scheme "chrome-error" is not supported. @ :1
+[ 2603323ms] [ERROR] Fetch API cannot load chrome-error://chromewebdata/favicon.ico. URL scheme "chrome-error" is not supported. @ :1
+[ 2603349ms] [ERROR] Fetch API cannot load chrome-error://chromewebdata/favicon.ico. URL scheme "chrome-error" is not supported. @ :1
+[ 2603365ms] [ERROR] Fetch API cannot load chrome-error://chromewebdata/favicon.ico. URL scheme "chrome-error" is not supported. @ :1
+[ 2603388ms] [ERROR] Fetch API cannot load chrome-error://chromewebdata/favicon.ico. URL scheme "chrome-error" is not supported. @ :1

@@ -50,6 +50,8 @@ Thumbs.db
 !.claude/agents/**
 !.claude/skills/
 !.claude/skills/**
+!.claude/commands/
+!.claude/commands/**
 .claude/settings.local.json
 
 # Local Codex state; shared project config, hooks, agents, and skills are tracked

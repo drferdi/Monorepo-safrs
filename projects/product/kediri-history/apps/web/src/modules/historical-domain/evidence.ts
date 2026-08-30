@@ -18,12 +18,12 @@ export type EvidenceClass = (typeof EVIDENCE_CLASSES)[number];
 
 /** Label publik per kelas. Warna tidak pernah menjadi satu-satunya pembawa makna. */
 export const EVIDENCE_CLASS_LABELS: Record<EvidenceClass, string> = {
-  primary_record: "PRIMARY RECORD",
-  historical_fact: "HISTORICAL FACT",
-  scholarly_interpretation: "SCHOLARLY INTERPRETATION",
-  tradition: "TRADITION",
-  folklore: "FOLKLORE",
-  modern_verified_data: "MODERN VERIFIED DATA",
+  primary_record: "SUMBER PRIMER · PRIMARY RECORD",
+  historical_fact: "FAKTA SEJARAH · HISTORICAL FACT",
+  scholarly_interpretation: "INTERPRETASI AKADEMIK · SCHOLARLY INTERPRETATION",
+  tradition: "TRADISI · TRADITION",
+  folklore: "CERITA RAKYAT · FOLKLORE",
+  modern_verified_data: "DATA MODERN TERVERIFIKASI · MODERN VERIFIED DATA",
 };
 
 /** Kelas yang wajib tampil dengan pelabelan tradisi/folklore yang eksplisit. */

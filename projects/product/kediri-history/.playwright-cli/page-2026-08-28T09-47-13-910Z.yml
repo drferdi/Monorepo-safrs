@@ -1,0 +1,819 @@
+- generic [active] [ref=e1]:
+  - link "Lompat ke konten sejarah" [ref=e2] [cursor=pointer]:
+    - /url: "#historical-content"
+  - generic [ref=e3]:
+    - navigation "Navigasi Journey" [ref=e4]:
+      - link "Kediri" [ref=e5] [cursor=pointer]:
+        - /url: /
+      - list [ref=e6]:
+        - listitem [ref=e7]:
+          - button "Timeline" [ref=e9] [cursor=pointer]
+        - listitem [ref=e10]:
+          - link "Explore" [ref=e11] [cursor=pointer]:
+            - /url: /explore/timeline
+        - listitem [ref=e12]:
+          - link "Sumber" [ref=e13] [cursor=pointer]:
+            - /url: /sources
+    - generic [ref=e15]:
+      - main [ref=e16]:
+        - region [ref=e18]:
+          - generic [ref=e20]:
+            - 'generic "Visualisasi artistik Kediri kontemporer saat senja: jembatan di atas Brantas, lalu lintas menyala, dan kota yang hidup di kedua tepian sungai." [ref=e24]'
+            - paragraph [ref=e26]: Visualisasi artistik · pratinjau editorial
+            - generic [ref=e27]:
+              - generic [ref=e28]:
+                - paragraph [ref=e29]: Prolog · 2026
+                - heading "Before We Go Back" [level=1] [ref=e30]
+              - paragraph [ref=e31]: Sejak kapan sebuah kota mulai menjadi dirinya sendiri?
+              - generic:
+                - paragraph [ref=e33]: Kediri hidup di tahun 2026.
+                - generic [ref=e34]:
+                  - paragraph [ref=e35]: Kendaraan melintasi jalan. Pasar membuka hari. Orang bekerja, belajar, pulang, berdoa.
+                  - paragraph [ref=e36]: Dua jembatan berdiri di atas Brantas.
+                  - paragraph [ref=e37]: Sungai yang sama telah memisahkan dan mempertemukan dua sisi kota selama berabad-abad.
+                - generic [ref=e38]:
+                  - paragraph [ref=e39]: Lalu suara kota perlahan menjauh.
+                  - paragraph [ref=e40]: Bangunan dapat berubah. Pemerintahan dapat berganti. Jalan dapat diperlebar. Jembatan dapat digantikan.
+                  - paragraph [ref=e41]: Namun Brantas tetap mengalir.
+                - paragraph [ref=e43]: Sebelum kembali ke masa lalu, kita perlu bertanya.
+                - generic [ref=e44]:
+                  - paragraph [ref=e45]: Jawabannya tidak tunggal.
+                  - paragraph [ref=e46]: Kediri memiliki sejarah sebagai wilayah, sebagai kerajaan, sebagai kotapraja kolonial, dan sebagai kota Republik.
+                  - paragraph [ref=e47]: "Perjalanan ini memilih satu tanggal sebagai pintu masuk: 27 Juli 879—tanggal yang kemudian dikenang sebagai awal kronologi peringatan Kota Kediri."
+                - generic [ref=e48]:
+                  - paragraph [ref=e49]: Kita tidak sedang menuju sebuah kota yang telah selesai.
+                  - paragraph [ref=e50]: Kita sedang menelusuri bagaimana sebuah tempat perlahan menjadi Kediri.
+              - complementary [ref=e51]:
+                - strong [ref=e52]: Pratinjau editorial lokal
+                - text: Naskah dan media di stage ini adalah bahan komposisi; build produksi hanya menerbitkan relasi CMS yang telah lolos bukti dan tata kelola.
+              - navigation "Aksi prolog" [ref=e53]:
+                - link "Mulai dari tanda pertama" [ref=e54] [cursor=pointer]:
+                  - /url: "#879-first-mark"
+        - region [ref=e56]:
+          - generic [ref=e57]:
+            - paragraph [ref=e58]: 879–1042
+            - heading "The Land Remembers" [level=2] [ref=e59]
+            - paragraph [ref=e60]: "Bahkan sebelum ada kerajaan besar bernama Kediri, sejarah telah meninggalkan sesuatu yang jauh lebih rapuh daripada benteng namun jauh lebih panjang usianya: sebuah catatan."
+          - region [ref=e62]:
+            - generic [ref=e64]:
+              - img "Visualisasi artistik permukaan batu prasasti dalam cahaya menyudut; relief aksara dan angka tahun 879 tampak timbul dari kegelapan." [ref=e68]
+              - paragraph [ref=e120]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e121]:
+                - time [ref=e122]:
+                  - generic [ref=e123]: "27"
+                  - generic [ref=e125]:
+                    - generic [ref=e126]: ·
+                    - generic [ref=e127]: Juli
+                  - generic [ref=e128]: "879"
+                - generic [ref=e130]:
+                  - paragraph [ref=e131]: Scene 01
+                  - heading "The First Mark" [level=2] [ref=e132]
+                - paragraph [ref=e133]: Sebelum ada kerajaan bernama Kediri, sudah ada sebuah catatan.
+                - generic [ref=e134]:
+                  - paragraph [ref=e136]: Pada 27 Juli 879, sebuah keputusan kerajaan dituliskan pada logam.
+                  - generic [ref=e137]:
+                    - paragraph [ref=e138]: Orang-orang yang menorehkannya tidak pernah tahu bahwa lebih dari seribu tahun kemudian, goresan itu masih akan dibaca.
+                    - paragraph [ref=e139]: Mereka tidak sedang menulis sejarah Kediri untuk kita. Mereka sedang mencatat kehidupan mereka sendiri.
+                  - generic [ref=e140]:
+                    - paragraph [ref=e141]: Justru di situlah kekuatan sebuah prasasti.
+                    - paragraph [ref=e142]: Kerajaan dapat hilang. Nama penguasa dapat terlupakan. Bangunan dapat menjadi tanah kembali. Tetapi tulisan dapat menyeberangi waktu.
+                  - generic [ref=e143]:
+                    - paragraph [ref=e144]: Tahun 879 bukanlah tanggal lahir sebuah pemerintahan kota modern.
+                    - paragraph [ref=e145]: Ia adalah sebuah jejak—dan berabad-abad kemudian, jejak itu dipilih Kediri sebagai titik awal untuk mengingat dirinya sendiri.
+            - generic [ref=e147]:
+              - paragraph [ref=e148]:
+                - generic [ref=e149]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - paragraph [ref=e150]:
+                - generic [ref=e151]:
+                  - generic [ref=e152]: ■
+                  - text: HISTORICAL FACT
+                - generic [ref=e153]: ObjekPrasasti Kwak I · E.6
+              - group [ref=e154]:
+                - generic "Lihat bukti" [ref=e155] [cursor=pointer]
+              - navigation "Aksi untuk The First Mark" [ref=e156]:
+                - link "Catatan arsip lengkap" [ref=e157] [cursor=pointer]:
+                  - /url: /archive/events/879-first-mark
+                - link "Lewati ke bab berikutnya" [ref=e158] [cursor=pointer]:
+                  - /url: "#921-kadhiri"
+          - region [ref=e160]:
+            - generic [ref=e162]:
+              - img "Visualisasi artistik bongkah batu prasasti dengan kata kadhiri terbaca di tengah barisan aksara kuno." [ref=e166]
+              - generic:
+                - paragraph:
+                  - generic: Kadhiri
+              - paragraph [ref=e170]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e171]:
+                - time [ref=e172]:
+                  - generic [ref=e173]: "921"
+                - generic [ref=e175]:
+                  - paragraph [ref=e176]: Scene 02
+                  - heading "Kadhiri" [level=2] [ref=e177]
+                - paragraph [ref=e178]: Kadhiri. Sebuah nama muncul dari dalam sejarah.
+                - generic [ref=e179]:
+                  - generic [ref=e180]:
+                    - paragraph [ref=e181]: Sebuah tempat dapat hidup jauh sebelum dunia menuliskan namanya.
+                    - paragraph [ref=e182]: Gunung telah berdiri. Brantas telah mengalir. Manusia telah tinggal, bekerja, dan bergerak di wilayah ini.
+                  - generic [ref=e183]:
+                    - paragraph [ref=e184]: "Namun pada abad ke-10, sesuatu berubah. Dalam dunia tulisan, sebuah nama mulai muncul: Kadhiri."
+                    - paragraph [ref=e185]: "Tahun 879 memberi kita sebuah tanggal. Tahun 921 memberi kita sesuatu yang lebih pribadi: sebuah nama."
+                  - paragraph [ref=e187]: Dan ketika sebuah tempat memiliki nama, ia mulai memperoleh identitas yang dapat diwariskan.
+            - generic [ref=e189]:
+              - paragraph [ref=e190]:
+                - generic [ref=e191]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk Kadhiri" [ref=e192]:
+                - link "Lewati ke bab berikutnya" [ref=e193] [cursor=pointer]:
+                  - /url: "#1015-name-endures"
+          - region [ref=e195]:
+            - generic [ref=e197]:
+              - img "Visualisasi artistik lempeng tembaga gelap dengan jejak tulisan samar; nama Kadhiri hampir tak terbaca, sengaja menyisakan ketidakpastian." [ref=e201]
+              - paragraph [ref=e205]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e206]:
+                - time [ref=e207]:
+                  - generic [ref=e208]: "1015"
+                - generic [ref=e210]:
+                  - paragraph [ref=e211]: Scene 03
+                  - heading "The Name Endures" [level=2] [ref=e212]
+                - paragraph [ref=e213]: Kadhiri bukan nama yang muncul sekali, lalu lenyap.
+                - generic [ref=e214]:
+                  - paragraph [ref=e216]: "Nama dapat muncul sekali karena kebetulan. Namun jika ia kembali hadir dalam catatan-catatan berikutnya, kita mulai melihat sesuatu yang lebih besar: keberlanjutan."
+                  - generic [ref=e217]:
+                    - paragraph [ref=e218]: Riset saat ini menunjukkan kemungkinan bahwa Kadhiri kembali disebut pada awal abad ke-11 melalui Prasasti Carama.
+                    - paragraph [ref=e219]: Tetapi sejarah yang baik tidak dibangun dari keinginan agar sesuatu menjadi benar. Ia dibangun dari bukti.
+                  - generic [ref=e220]:
+                    - paragraph [ref=e221]: Karena itu, selama lokasi penyimpanan, transkripsi, dan status ilmiahnya belum diverifikasi sepenuhnya, adegan ini tetap menjadi penanda penelitian—bukan kesimpulan.
+                    - paragraph [ref=e222]: Bahkan ketidakpastian memiliki tempat dalam sejarah.
+            - generic [ref=e224]:
+              - paragraph [ref=e225]:
+                - generic [ref=e226]: Status pengetahuan
+                - text: Research Hold · Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk The Name Endures" [ref=e227]:
+                - link "Lewati ke bab berikutnya" [ref=e228] [cursor=pointer]:
+                  - /url: "#1042-river-divides-kingdom"
+          - region [ref=e230]:
+            - generic [ref=e232]:
+              - 'img "Visualisasi artistik pandangan udara malam: sungai Brantas membelah dataran menjadi wilayah Panjalu di barat dan Janggala di timur." [ref=e236]'
+              - generic:
+                - paragraph:
+                  - generic: Panjalu
+                  - generic: Wilayah barat
+                - paragraph:
+                  - generic: Janggala
+                  - generic: Wilayah timur
+                - paragraph:
+                  - generic: Brantas
+              - paragraph [ref=e242]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e243]:
+                - time [ref=e244]:
+                  - generic [ref=e245]: "1042"
+                - generic [ref=e247]:
+                  - paragraph [ref=e248]: Scene 04
+                  - heading "The River Divides a Kingdom" [level=2] [ref=e249]
+                - paragraph [ref=e250]: Sejarah mengingat sebuah pembagian. Tradisi mengingat air suci.
+                - generic [ref=e251]:
+                  - paragraph [ref=e253]: Pada 1042, sebuah warisan politik harus dibagi.
+                  - paragraph [ref=e255]: "Sejarah mencatat pembagian kekuasaan Airlangga menjadi dua wilayah: Panjalu dan Janggala."
+            - generic [ref=e257]:
+              - paragraph [ref=e258]:
+                - generic [ref=e259]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk The River Divides a Kingdom" [ref=e260]:
+                - link "Lewati ke bab berikutnya" [ref=e261] [cursor=pointer]:
+                  - /url: "#daha-centre-of-power"
+        - region [ref=e262]:
+          - generic [ref=e263]:
+            - paragraph [ref=e265]: c. 1042–1222
+            - heading "Panjalu Rises" [level=2] [ref=e266]
+            - paragraph [ref=e267]: Dari pembagian lahir persaingan. Dari persaingan lahir identitas. Panjalu tidak lagi berbicara sebagai bagian dari sesuatu yang telah pecah; ia mulai berbicara dengan suaranya sendiri.
+          - region [ref=e269]:
+            - generic [ref=e271]:
+              - generic "Visualisasi artistik imajiner kota kuno berkabut di lembah sungai saat fajar; bentuknya sengaja tidak pasti karena wujud fisik Daha tidak diketahui." [ref=e275]
+              - paragraph [ref=e281]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e282]:
+                - time [ref=e283]:
+                  - generic [ref=e284]: Daha
+                - generic [ref=e286]:
+                  - paragraph [ref=e287]: Scene 05
+                  - 'heading "Daha: The Centre of Power" [level=2] [ref=e288]'
+                  - paragraph [ref=e289]: Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e290]: Sebagian kota bertahan sebagai reruntuhan. Daha bertahan dalam teks, tempat, dan ingatan.
+                - generic [ref=e291]:
+                  - paragraph [ref=e293]: Tetapi pada abad ke-11 dan ke-12, Daha adalah pusat kekuasaan.
+                  - paragraph [ref=e295]: Kene tau ana sawijining nagara.
+                  - paragraph [ref=e297]: Di sinilah keputusan kerajaan dibuat. Di sinilah Panjalu memandang ke seberang dunia politiknya. Dan di sekitar bentang Sungai Brantas, sejarah Kediri bergerak dari satu generasi menuju generasi berikutnya.
+            - generic [ref=e299]:
+              - paragraph [ref=e300]:
+                - generic [ref=e301]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - 'navigation "Aksi untuk Daha: The Centre of Power" [ref=e302]':
+                - link "Lewati ke bab berikutnya" [ref=e303] [cursor=pointer]:
+                  - /url: "#1135-panjalu-jayati"
+          - region [ref=e305]:
+            - generic [ref=e307]:
+              - img "Visualisasi artistik permukaan batu prasasti makro; frasa Panjalu Jayati terukir tegas di antara barisan aksara kuno." [ref=e311]
+              - paragraph [ref=e315]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e316]:
+                - time [ref=e317]:
+                  - generic [ref=e318]: "1135"
+                - generic [ref=e320]:
+                  - paragraph [ref=e321]: Scene 06
+                  - heading "Panjalu Jayati" [level=2] [ref=e322]
+                  - paragraph [ref=e323]: ObjekPrasasti Hantang · D.9
+                  - generic [ref=e324]:
+                    - generic [ref=e325]: ◐
+                    - text: SCHOLARLY INTERPRETATION
+                  - paragraph [ref=e326]: Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e327]: Sebuah kerajaan yang pernah terbelah telah menemukan suaranya.
+                - generic:
+                  - paragraph [ref=e329]: Hampir satu abad setelah pembagian Airlangga, Panjalu bukan lagi sekadar salah satu sisi dari kerajaan yang pernah terbelah.
+                  - paragraph [ref=e331]: Di bawah Jayabhaya, ia berbicara sebagai kekuasaan yang telah menemukan keyakinannya sendiri.
+                  - paragraph [ref=e333]: "Pada sebuah prasasti, dua kata bertahan: Panjalu Jayati. Panjalu menang."
+                  - paragraph [ref=e335]: Namun kekuatan dua kata itu bukan hanya tentang kemenangan militer. Ia adalah deklarasi identitas.
+                  - paragraph [ref=e337]: Sebuah kerajaan yang pernah lahir dari pembagian kini menyatakan bahwa ia tidak lagi hidup di bawah bayang-bayang masa lalu.
+            - generic [ref=e339]:
+              - paragraph [ref=e340]:
+                - generic [ref=e341]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - group [ref=e342]:
+                - generic "Lihat bukti" [ref=e343] [cursor=pointer]
+              - navigation "Aksi untuk Panjalu Jayati" [ref=e344]:
+                - link "Catatan arsip lengkap" [ref=e345] [cursor=pointer]:
+                  - /url: /archive/events/1135-panjalu-jayati
+                - link "Lewati ke bab berikutnya" [ref=e346] [cursor=pointer]:
+                  - /url: "#1157-words-become-monuments"
+          - region [ref=e348]:
+            - generic [ref=e350]:
+              - img "Visualisasi artistik naskah kuno terbuka bertinta emas; halaman kiri memuat iluminasi adegan kereta perang epos Bharatayuddha." [ref=e354]
+              - paragraph [ref=e358]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e359]:
+                - time [ref=e360]:
+                  - generic [ref=e361]: "1157"
+                - generic [ref=e363]:
+                  - paragraph [ref=e364]: Scene 07
+                  - heading "Words Become Monuments" [level=2] [ref=e365]
+                  - paragraph [ref=e366]: Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e367]: Raja menguasai masa kini. Penyair menjangkau masa depan.
+                - generic:
+                  - paragraph [ref=e369]: Istana dapat runtuh. Tentara dapat dibubarkan. Wilayah kekuasaan dapat berpindah tangan.
+                  - paragraph [ref=e371]: Namun sebuah kalimat dapat bertahan lebih lama daripada semuanya.
+                  - paragraph [ref=e373]: Pada masa Kediri, sastra Jawa Kuno mencapai salah satu puncaknya. Bharatayuddha, melalui Mpu Sedah dan Mpu Panuluh, mengubah kisah perang menjadi karya yang terus dibaca jauh setelah dunia politik yang melahirkannya hilang.
+                  - paragraph [ref=e375]: Di sinilah kita menemukan bentuk kekuasaan yang lain. Bukan kekuasaan atas tanah, tetapi kekuasaan atas ingatan.
+                  - paragraph [ref=e377]: Seorang raja menguasai manusia selama masa pemerintahannya. Seorang penyair dapat berbicara kepada manusia yang belum lahir.
+            - generic [ref=e379]:
+              - paragraph [ref=e380]:
+                - generic [ref=e381]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk Words Become Monuments" [ref=e382]:
+                - link "Lewati ke bab berikutnya" [ref=e383] [cursor=pointer]:
+                  - /url: "#panji-story-left-kediri"
+          - region [ref=e384]:
+            - generic [ref=e386]:
+              - img "Visualisasi artistik hamparan banyak naskah dari tradisi berbeda; kisah Panji yang sama hidup dalam gaya dan bahasa yang berlainan." [ref=e390]
+              - paragraph [ref=e394]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e395]:
+                - time [ref=e396]:
+                  - generic [ref=e397]: Panji
+                - generic [ref=e399]:
+                  - paragraph [ref=e400]: Scene 08
+                  - 'heading "Panji: A Story That Left Kediri" [level=2] [ref=e401]'
+                  - paragraph [ref=e402]: Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e403]: Kerajaan memiliki batas. Ceritanya tidak.
+                - generic [ref=e404]:
+                  - paragraph [ref=e406]: Kerajaan memiliki batas. Cerita tidak.
+                  - paragraph [ref=e408]: Dunia Panji berakar pada lanskap budaya Kediri, Daha, dan Janggala. Namun dalam perjalanan waktu, kisahnya melampaui tempat kelahirannya.
+                  - paragraph [ref=e410]: Ia berpindah dari manuskrip ke pertunjukan. Dari bahasa ke bahasa. Dari Jawa menuju kerajaan dan masyarakat lain di Asia Tenggara.
+                  - paragraph [ref=e412]: Kekuasaan politik Kediri akhirnya berakhir. Tetapi imajinasinya terus berjalan.
+                  - paragraph [ref=e414]: "Dan mungkin inilah salah satu bentuk kemenangan paling panjang yang dapat dimiliki sebuah peradaban: ketika orang-orang yang tidak pernah melihat kerajaannya tetap mengenal ceritanya."
+            - generic [ref=e415]:
+              - paragraph [ref=e416]:
+                - generic [ref=e417]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - 'navigation "Aksi untuk Panji: A Story That Left Kediri" [ref=e418]':
+                - link "Lewati ke bab berikutnya" [ref=e419] [cursor=pointer]:
+                  - /url: "#1222-ganter"
+        - region [ref=e420]:
+          - generic [ref=e421]:
+            - paragraph [ref=e422]: 1222–1293
+            - heading "The Throne Breaks" [level=2] [ref=e423]
+            - paragraph [ref=e424]: Tidak ada pusat kekuasaan yang abadi. Kehancuran sebuah kerajaan tidak selalu berarti hilangnya suatu tempat; kadang-kadang pusat gravitasi sejarah hanya telah berpindah.
+          - region [ref=e426]:
+            - generic [ref=e428]:
+              - 'img "Visualisasi artistik peta kartografis bernuansa bara: wilayah Panjalu, Jenggala, Madiun, dan Lumajang dengan panah pergerakan pasukan tahun 1222." [ref=e432]'
+              - paragraph [ref=e438]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e439]:
+                - time [ref=e440]:
+                  - generic [ref=e441]: "1222"
+                - generic [ref=e443]:
+                  - paragraph [ref=e444]: Scene 09
+                  - heading "Ganter" [level=2] [ref=e445]
+                  - paragraph [ref=e446]: Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e447]: Kediri tidak lenyap. Kekuasaan berpindah.
+                - generic:
+                  - paragraph [ref=e449]: Pada 1222, keseimbangan Jawa Timur berubah.
+                  - paragraph [ref=e451]: Kediri kehilangan kedudukan politik utamanya. Tumapel bangkit. Dari sana, Singhasari akan tumbuh.
+                  - paragraph [ref=e453]: Pertempuran Ganter sering diingat sebagai sebuah kekalahan. Namun perubahan paling penting bukanlah siapa yang berdiri di medan perang pada hari terakhir.
+                  - paragraph [ref=e455]: Perubahan sesungguhnya adalah bahwa pusat kekuasaan telah bergerak.
+                  - paragraph [ref=e457]: Kediri masih ada. Sungainya masih mengalir. Masyarakatnya masih hidup. Tetapi sejarah politik Jawa kini mulai berbicara dari tempat lain.
+            - generic [ref=e459]:
+              - paragraph [ref=e460]:
+                - generic [ref=e461]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk Ganter" [ref=e462]:
+                - link "Lewati ke bab berikutnya" [ref=e463] [cursor=pointer]:
+                  - /url: "#1292-the-return"
+          - region [ref=e464]:
+            - generic [ref=e466]:
+              - generic [ref=e470]:
+                - generic [ref=e471]: Scene 10
+                - strong [ref=e472]: The Return
+                - generic [ref=e473]: Media utama sedang dipersiapkan
+              - generic [ref=e476]:
+                - time [ref=e477]:
+                  - generic [ref=e478]: "1292"
+                - generic [ref=e480]:
+                  - paragraph [ref=e481]: Scene 10
+                  - heading "The Return" [level=2] [ref=e482]
+                  - paragraph [ref=e483]: Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e484]: Sebuah kerajaan kembali. Namun waktu tidak pernah benar-benar berjalan mundur.
+                - generic [ref=e485]:
+                  - paragraph [ref=e487]: Tujuh puluh tahun setelah kehilangan primasi politiknya, Kediri kembali.
+                  - paragraph [ref=e489]: Jayakatwang menjatuhkan Singhasari dan mengembalikan pusat kekuasaan ke Daha.
+                  - paragraph [ref=e491]: Untuk sesaat, masa lalu tampak seperti hendak hidup kembali. Namun sejarah jarang berjalan mundur.
+                  - paragraph [ref=e493]: Kerajaan yang kembali pada 1292 bukan lagi kerajaan yang pernah mendominasi abad sebelumnya. Dunia di sekitarnya telah berubah.
+                  - paragraph [ref=e495]: Dan kebangkitan ini akan berlangsung hanya sebentar.
+            - generic [ref=e496]:
+              - paragraph [ref=e497]:
+                - generic [ref=e498]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk The Return" [ref=e499]:
+                - link "Lewati ke bab berikutnya" [ref=e500] [cursor=pointer]:
+                  - /url: "#1293-last-kingdom"
+          - region [ref=e501]:
+            - generic [ref=e503]:
+              - 'img "Visualisasi artistik montase tiga kekuatan tahun 1293: armada Yuan, peta strategi Jawa Timur, dan dua figur penguasa yang saling berhadapan." [ref=e507]'
+              - paragraph [ref=e513]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e514]:
+                - time [ref=e515]:
+                  - generic [ref=e516]: "1293"
+                - generic [ref=e518]:
+                  - paragraph [ref=e519]: Scene 11
+                  - heading "The Last Kingdom" [level=2] [ref=e520]
+                  - paragraph [ref=e521]: Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e522]: Kerajaannya berakhir. Kediri tidak.
+                - generic [ref=e523]:
+                  - paragraph [ref=e525]: "Pada 1293, beberapa kekuatan bertemu dalam satu titik sejarah: Jayakatwang, pasukan Yuan, dan Raden Wijaya."
+                  - paragraph [ref=e527]: Aliansi berubah menjadi pengkhianatan. Musuh menjadi sekutu sementara. Sekutu berubah menjadi lawan.
+                  - paragraph [ref=e529]: Dari kekacauan itu lahir Majapahit. Dan kekuasaan Kediri sebagai kerajaan berdaulat berakhir.
+                  - paragraph [ref=e531]: Tetapi sebuah kerajaan bukan satu-satunya cara sebuah tempat dapat bertahan. Nama Kediri tidak hilang. Daha tidak sepenuhnya lenyap dari ingatan. Cerita-ceritanya terus hidup. Orang-orang tetap tinggal.
+                  - paragraph [ref=e533]: Yang berakhir adalah sebuah negara. Bukan sebuah identitas.
+            - generic [ref=e534]:
+              - paragraph [ref=e535]:
+                - generic [ref=e536]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk The Last Kingdom" [ref=e537]:
+                - link "Lewati ke bab berikutnya" [ref=e538] [cursor=pointer]:
+                  - /url: "#jayabaya-after-jayabaya"
+        - region [ref=e539]:
+          - generic [ref=e540]:
+            - paragraph [ref=e541]: Setelah 1293
+            - heading "After the Kings" [level=2] [ref=e542]
+            - paragraph [ref=e543]: Ketika kerajaan pergi, manusia mulai mengisi ruang yang ditinggalkannya dengan cerita. Sejarah berubah menjadi ingatan; ingatan berubah menjadi legenda.
+          - region [ref=e544]:
+            - generic [ref=e546]:
+              - img "Visualisasi artistik penggambaran kemudian tentang raja di atas takhta di tengah kerumunan; bukan potret historis Jayabhaya, melainkan citra yang diwariskan tradisi." [ref=e550]
+              - paragraph [ref=e554]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e555]:
+                - time [ref=e556]:
+                  - generic [ref=e557]: Jayabaya
+                - generic [ref=e559]:
+                  - paragraph [ref=e560]: Scene 12
+                  - heading "Jayabaya After Jayabaya" [level=2] [ref=e561]
+                  - paragraph [ref=e562]: Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e563]: Sebagian raja berkuasa selama puluhan tahun. Jayabaya berkuasa dalam imajinasi selama berabad-abad.
+                - generic [ref=e564]:
+                  - paragraph [ref=e566]: Ada Jayabhaya yang hidup di abad ke-12, seorang raja Panjalu yang namanya hadir dalam sejarah.
+                  - paragraph [ref=e568]: "Lalu ada Jayabaya yang hidup jauh setelah kematiannya: Jayabaya sang peramal, dari Zaman Edan, Ratu Adil, dan berbagai penafsiran zaman."
+                  - paragraph [ref=e570]: Dua figur itu tidak boleh kita campurkan. Namun hubungan keduanya menunjukkan sesuatu yang lebih menarik daripada sebuah ramalan.
+                  - paragraph [ref=e572]: Mengapa manusia terus meminjam nama seorang raja yang telah mati berabad-abad untuk berbicara tentang masa depan?
+                  - paragraph [ref=e574]: Mungkin karena sebagian tokoh tidak bertahan melalui kekuasaan. Mereka bertahan karena generasi berikutnya terus membutuhkan mereka.
+            - generic [ref=e575]:
+              - paragraph [ref=e576]:
+                - generic [ref=e577]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk Jayabaya After Jayabaya" [ref=e578]:
+                - link "Lewati ke bab berikutnya" [ref=e579] [cursor=pointer]:
+                  - /url: "#shadow-archive"
+          - region [ref=e580]:
+            - generic [ref=e582]:
+              - 'img "Visualisasi folklor: gunung Kelud bergolak, sosok banteng bertanduk, dan figur-figur legenda Kediri berlapis dalam kegelapan naskah." [ref=e586]'
+              - paragraph [ref=e592]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e593]:
+                - time [ref=e594]:
+                  - generic [ref=e595]: Tradition
+                - generic [ref=e597]:
+                  - paragraph [ref=e598]: Scene 13
+                  - heading "The Shadow Archive" [level=2] [ref=e599]
+                  - paragraph [ref=e600]: Tradition · Folklore · Urban Legend · Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e601]: Folklor bukan sejarah yang gagal. Ia adalah jejak dari cara manusia memberi makna pada dunia.
+                - generic [ref=e602]:
+                  - paragraph [ref=e604]: Tidak semua yang diwariskan manusia adalah fakta. Namun bukan berarti semuanya tidak berarti.
+                  - paragraph [ref=e606]: Calon Arang. Lembu Suro. Kelud. Kutukan Kediri.
+                  - paragraph [ref=e608]: Cerita-cerita ini berada di wilayah tempat sejarah, sastra, ketakutan, ritual, politik, dan imajinasi saling menyentuh.
+                  - paragraph [ref=e610]: Kita tidak memperlakukannya sebagai bukti bahwa peristiwa supernatural benar-benar terjadi. Kita memperlakukannya sebagai bukti bahwa manusia mempercayai, mengingat, mengulang, dan membutuhkan cerita-cerita tersebut.
+                  - paragraph [ref=e612]: Sejarah memberi tahu kita apa yang mungkin terjadi. Folklor memberi tahu kita bagaimana manusia mencoba memahami apa yang terjadi pada mereka.
+            - generic [ref=e613]:
+              - paragraph [ref=e614]:
+                - generic [ref=e615]: Status pengetahuan
+                - text: Tradition · Folklore · Urban Legend · Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk The Shadow Archive" [ref=e616]:
+                - link "Lewati ke bab berikutnya" [ref=e617] [cursor=pointer]:
+                  - /url: "#1678-river-fortress"
+        - region [ref=e618]:
+          - generic [ref=e619]:
+            - paragraph [ref=e620]: "1678"
+            - heading "Empires Cross the Brantas" [level=2] [ref=e621]
+            - paragraph [ref=e622]: Kerajaan telah berganti, tetapi Brantas masih berada di tempat yang sama. Sekali lagi sungai itu menentukan bagaimana manusia bergerak, bertahan, dan berperang.
+          - region [ref=e623]:
+            - generic [ref=e625]:
+              - 'img "Visualisasi artistik masa konflik Trunajaya: perahu-perahu pasukan menyeberangi Brantas di antara palisade dan menara kayu." [ref=e629]'
+              - paragraph [ref=e635]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e636]:
+                - time [ref=e637]:
+                  - generic [ref=e638]: "1678"
+                - generic [ref=e640]:
+                  - paragraph [ref=e641]: Scene 14
+                  - heading "The River as Fortress" [level=2] [ref=e642]
+                  - paragraph [ref=e643]: Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e644]: Sungainya sama. Perangnya berbeda.
+                - generic [ref=e645]:
+                  - paragraph [ref=e647]: Pada masa konflik Trunajaya, Kediri kembali menjadi ruang perebutan kekuasaan.
+                  - paragraph [ref=e649]: Brantas kini bukan lagi sekadar batas politik yang dikenang melalui Airlangga. Ia menjadi rintangan militer.
+                  - paragraph [ref=e651]: Sungai yang dahulu memisahkan dua warisan kerajaan kini memisahkan pasukan. Airnya sama. Fungsinya berubah.
+                  - paragraph [ref=e653]: "Di situlah kita melihat salah satu hukum sejarah Kediri: tempat yang sama dapat memperoleh makna yang sama sekali berbeda dari satu abad ke abad berikutnya."
+            - generic [ref=e654]:
+              - paragraph [ref=e655]:
+                - generic [ref=e656]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk The River as Fortress" [ref=e657]:
+                - link "Lewati ke bab berikutnya" [ref=e658] [cursor=pointer]:
+                  - /url: "#sugar-changes-land"
+        - region [ref=e659]:
+          - generic [ref=e660]:
+            - paragraph [ref=e661]: Abad ke-19–1942
+            - heading "Iron, Sugar & the Modern City" [level=2] [ref=e662]
+            - paragraph [ref=e663]: Kediri memasuki dunia modal, mesin, perkebunan, rel, jembatan, birokrasi, dan kota modern—bukan lagi dunia raja dan prasasti.
+          - region [ref=e664]:
+            - generic [ref=e666]:
+              - 'img "Visualisasi artistik kompleks pabrik gula Meritjan: cerobong, roda mesin, lori tebu, dan rel yang menjalin tanah menjadi satu sistem." [ref=e670]'
+              - paragraph [ref=e676]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e677]:
+                - time [ref=e678]:
+                  - generic [ref=e679]: Sugar
+                - generic [ref=e681]:
+                  - paragraph [ref=e682]: Scene 15
+                  - heading "Sugar Changes the Land" [level=2] [ref=e683]
+                  - paragraph [ref=e684]: Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e685]: Tanah berubah menjadi sistem.
+                - generic [ref=e686]:
+                  - paragraph [ref=e688]: Tebu tidak hanya mengubah apa yang ditanam. Ia mengubah cara tanah diorganisasi.
+                  - paragraph [ref=e690]: Lahan terhubung dengan pabrik. Pabrik dengan jalan. Jalan dengan rel. Rel dengan gudang. Gudang dengan pelabuhan dan pasar yang bahkan berada jauh dari Kediri.
+                  - paragraph [ref=e692]: Sebuah tanaman berubah menjadi sistem ekonomi. Dan sistem itu mengubah kehidupan manusia di sekitarnya.
+                  - paragraph [ref=e694]: Sebelum Kediri dikenal sebagai kota industri modern, tanahnya telah lebih dahulu masuk ke dalam mesin ekonomi yang jauh lebih besar.
+            - generic [ref=e695]:
+              - paragraph [ref=e696]:
+                - generic [ref=e697]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk Sugar Changes the Land" [ref=e698]:
+                - link "Lewati ke bab berikutnya" [ref=e699] [cursor=pointer]:
+                  - /url: "#1869-brantas-bridge"
+          - region [ref=e701]:
+            - generic [ref=e703]:
+              - img "Visualisasi artistik jembatan rangka besi melintasi Brantas beserta diagram struktur penopangnya; besi mengubah pemisah menjadi penghubung." [ref=e707]
+              - paragraph [ref=e711]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e712]:
+                - time [ref=e713]:
+                  - generic [ref=e714]: "18"
+                  - generic [ref=e716]:
+                    - generic [ref=e717]: ·
+                    - generic [ref=e718]: Maret
+                  - generic [ref=e719]: "1869"
+                - generic [ref=e721]:
+                  - paragraph [ref=e722]: Scene 16
+                  - heading "Iron Across the Brantas" [level=2] [ref=e723]
+                  - paragraph [ref=e724]: Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e725]: Besi melintasi Brantas. Sungai yang memisahkan, kini mulai menghubungkan.
+                - generic:
+                  - paragraph [ref=e727]: Selama berabad-abad, Brantas adalah sesuatu yang harus diseberangi. Pada 1869, manusia memutuskan untuk meletakkan besi di atasnya.
+                  - paragraph [ref=e729]: Jembatan Lama bukan hanya sebuah struktur. Ia mengubah hubungan manusia dengan sungai.
+                  - paragraph [ref=e731]: Jarak menjadi lebih pendek. Perdagangan bergerak lebih cepat. Kendaraan, barang, dan manusia dapat melintas dengan cara yang sebelumnya tidak mungkin.
+                  - paragraph [ref=e733]: Empat belas tahun kemudian, Brooklyn Bridge akan dibuka di New York.
+                  - paragraph [ref=e735]: Perbandingan itu bukan tentang siapa yang lebih hebat. Ia mengingatkan kita bahwa Kediri telah menjadi bagian dari zaman teknik modern jauh lebih awal daripada yang sering dibayangkan.
+            - generic [ref=e737]:
+              - paragraph [ref=e738]:
+                - generic [ref=e739]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk Iron Across the Brantas" [ref=e740]:
+                - link "Catatan arsip lengkap" [ref=e741] [cursor=pointer]:
+                  - /url: /archive/events/1869-brantas-bridge
+                - link "Lewati ke bab berikutnya" [ref=e742] [cursor=pointer]:
+                  - /url: "#1906-city-on-paper"
+          - region [ref=e743]:
+            - generic [ref=e745]:
+              - 'img "Visualisasi artistik kota kolonial 1906: stasiun kereta, gereja, jalan beraspal, dan kehidupan yang tertata di atas kertas administrasi." [ref=e749]'
+              - paragraph [ref=e753]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e754]:
+                - time [ref=e755]:
+                  - generic [ref=e756]: "1906"
+                - generic [ref=e758]:
+                  - paragraph [ref=e759]: Scene 17
+                  - heading "A City on Paper" [level=2] [ref=e760]
+                  - paragraph [ref=e761]: Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e762]: Pemerintahan modern datang. Kesetaraan modern belum.
+                - generic [ref=e763]:
+                  - paragraph [ref=e765]: Pada 1906, Kediri memperoleh bentuk pemerintahan kotapraja kolonial.
+                  - paragraph [ref=e767]: Peta berubah. Administrasi bertambah. Jalan, kantor, pajak, dan aturan mulai membentuk wajah kota modern.
+                  - paragraph [ref=e769]: "Namun kita harus berhati-hati dengan satu kata: modern."
+                  - paragraph [ref=e771]: Kota yang lebih teratur bukan berarti masyarakat yang lebih setara. Modernitas kolonial dibangun di dalam sistem yang membedakan manusia berdasarkan ras, hukum, dan kedudukan.
+                  - paragraph [ref=e773]: Kemajuan administratif dan ketidakadilan dapat tumbuh pada waktu yang sama.
+            - generic [ref=e774]:
+              - paragraph [ref=e775]:
+                - generic [ref=e776]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk A City on Paper" [ref=e777]:
+                - link "Lewati ke bab berikutnya" [ref=e778] [cursor=pointer]:
+                  - /url: "#1912-bridge-lift"
+          - region [ref=e780]:
+            - generic [ref=e782]:
+              - img "Visualisasi artistik Jembatan Lama setelah ditinggikan; panel-panel detail teknik bersifat ilustratif dan belum terverifikasi arsip." [ref=e786]
+              - paragraph [ref=e790]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e791]:
+                - time [ref=e792]:
+                  - generic [ref=e793]: "1912"
+                - generic [ref=e795]:
+                  - paragraph [ref=e796]: Scene 18
+                  - heading "Kediri Lifts a Bridge" [level=2] [ref=e797]
+                  - paragraph [ref=e798]: Detail teknis masih memerlukan verifikasi arsip · Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e799]: Sungai berubah. Manusia harus menyesuaikan apa yang telah dibangunnya.
+                - generic:
+                  - paragraph [ref=e801]: Manusia membangun jembatan seolah-olah alam akan tetap diam. Alam tidak pernah berjanji demikian.
+                  - paragraph [ref=e803]: Brantas berubah. Sedimentasi berubah. Kebutuhan transportasi berubah. Dan akhirnya, infrastruktur harus ikut berubah.
+                  - paragraph [ref=e805]: Arsip menunjukkan bahwa Jembatan Lama pernah ditinggikan. Detail tekniknya masih menunggu verifikasi final.
+                  - paragraph [ref=e807]: Teknologi bukan kemenangan manusia atas alam. Teknologi adalah percakapan yang tidak pernah selesai antara manusia dan lingkungan tempat ia hidup.
+            - generic [ref=e809]:
+              - paragraph [ref=e810]:
+                - generic [ref=e811]: Status pengetahuan
+                - text: Detail teknis masih memerlukan verifikasi arsip · Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk Kediri Lifts a Bridge" [ref=e812]:
+                - link "Lewati ke bab berikutnya" [ref=e813] [cursor=pointer]:
+                  - /url: "#people-between-monuments"
+          - region [ref=e814]:
+            - generic [ref=e816]:
+              - 'img "Visualisasi artistik mozaik kehidupan sehari-hari Kediri: keluarga di beranda, pasar pagi, ruang kelas, ibadah, dan perahu di sungai." [ref=e820]'
+              - paragraph [ref=e824]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e825]:
+                - time [ref=e826]:
+                  - generic [ref=e827]: People
+                - generic [ref=e829]:
+                  - paragraph [ref=e830]: Scene 19
+                  - heading "The People Between the Monuments" [level=2] [ref=e831]
+                  - paragraph [ref=e832]: Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e833]: Monumen membentuk wajah kota. Manusia memberinya jiwa.
+                - generic [ref=e834]:
+                  - paragraph [ref=e836]: "Sejarah sering mengingat yang besar: raja, perang, jembatan, pabrik, dan gedung."
+                  - paragraph [ref=e838]: Tetapi kota tidak hidup karena monumennya.
+                  - paragraph [ref=e840]: Kota hidup karena seseorang membuka pasar setiap pagi; karena pekerja berangkat sebelum matahari tinggi; karena anak-anak masuk sekolah; karena keluarga berpindah rumah; karena pedagang membangun usaha; karena komunitas berdoa, merayakan, kehilangan, dan memulai kembali.
+                  - paragraph [ref=e842]: Jika monumen memberi kota bentuk, manusia memberinya kehidupan.
+            - generic [ref=e843]:
+              - paragraph [ref=e844]:
+                - generic [ref=e845]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk The People Between the Monuments" [ref=e846]:
+                - link "Lewati ke bab berikutnya" [ref=e847] [cursor=pointer]:
+                  - /url: "#1942-world-war-arrives"
+        - region [ref=e848]:
+          - generic [ref=e849]:
+            - paragraph [ref=e850]: 1942–1950
+            - heading "Occupation, Revolution, Republic" [level=2] [ref=e851]
+            - paragraph [ref=e852]: Kediri memasuki salah satu masa paling gelap dalam sejarah modernnya. Kekuasaan berubah cepat, dan kota harus bertahan di antara kekuatan yang jauh lebih besar daripada dirinya sendiri.
+          - region [ref=e853]:
+            - generic [ref=e855]:
+              - 'img "Visualisasi artistik masa pendudukan 1942: kendaraan lapis baja dan tentara di depan stasiun Kediri, pesawat di langit, poster propaganda di dinding." [ref=e859]'
+              - paragraph [ref=e863]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e864]:
+                - time [ref=e865]:
+                  - generic [ref=e866]: "1942"
+                - generic [ref=e868]:
+                  - paragraph [ref=e869]: Scene 20
+                  - heading "The World War Arrives" [level=2] [ref=e870]
+                  - paragraph [ref=e871]: Memerlukan penguatan arsip Kediri-spesifik · Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e872]: Perang dunia tidak lagi jauh. Ia telah tiba di Kediri.
+                - generic [ref=e873]:
+                  - paragraph [ref=e875]: Perang dunia terdengar seperti sesuatu yang terjadi jauh dari Kediri. Sampai 1942.
+                  - paragraph [ref=e877]: Pendudukan Jepang mengubah pemerintahan, produksi, transportasi, dan kehidupan sehari-hari.
+                  - paragraph [ref=e879]: Hal-hal yang sebelumnya terasa tetap menjadi tidak pasti.
+                  - paragraph [ref=e881]: Sebuah perang global akhirnya tiba di jalan, pabrik, dan kehidupan manusia di kota ini. Sejarah Kediri sekali lagi menjadi bagian dari sejarah dunia.
+            - generic [ref=e882]:
+              - paragraph [ref=e883]:
+                - generic [ref=e884]: Status pengetahuan
+                - text: Memerlukan penguatan arsip Kediri-spesifik · Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk The World War Arrives" [ref=e885]:
+                - link "Lewati ke bab berikutnya" [ref=e886] [cursor=pointer]:
+                  - /url: "#1947-1948-sugar-weapons"
+          - region [ref=e888]:
+            - generic [ref=e890]:
+              - img "Visualisasi artistik bersyarat interior pabrik gula Meritjan masa revolusi; mesin yang sama, tujuan yang berubah — klaim persenjataan belum terverifikasi." [ref=e894]
+              - paragraph [ref=e899]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e900]:
+                - time [ref=e901]:
+                  - generic [ref=e902]: 1947–1948
+                - generic [ref=e904]:
+                  - paragraph [ref=e905]: Scene 21
+                  - heading "From Sugar to Weapons" [level=2] [ref=e906]
+                  - paragraph [ref=e907]: Klaim produksi mortir belum terverifikasi final · Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e908]: Mesinnya tetap. Tujuannya berubah.
+                - generic:
+                  - paragraph [ref=e910]: Revolusi mengubah fungsi benda. Jalan menjadi jalur militer. Jembatan menjadi titik strategis. Pabrik yang dibangun untuk ekonomi dapat menjadi bagian dari perjuangan mempertahankan sebuah negara yang baru lahir.
+                  - paragraph [ref=e912]: Riset saat ini menyimpan kemungkinan bahwa fasilitas Meritjan turut digunakan untuk kebutuhan perjuangan.
+                  - paragraph [ref=e914]: Tetapi sejarah tidak boleh diselesaikan hanya karena sebuah cerita terasa dramatis.
+                  - paragraph [ref=e916]: Selama mekanisme produksi, jenis senjata, dan ukurannya belum dapat dibuktikan dengan cukup kuat, adegan ini tetap bersyarat.
+                  - paragraph [ref=e918]: "Jika kelak bukti itu ditemukan, maknanya akan sangat kuat: mesin yang dibangun untuk menghasilkan komoditas pernah diarahkan untuk mempertahankan kemerdekaan."
+            - generic [ref=e920]:
+              - paragraph [ref=e921]:
+                - generic [ref=e922]: Status pengetahuan
+                - text: Klaim produksi mortir belum terverifikasi final · Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk From Sugar to Weapons" [ref=e923]:
+                - link "Lewati ke bab berikutnya" [ref=e924] [cursor=pointer]:
+                  - /url: "#1950-city-republic"
+          - region [ref=e925]:
+            - generic [ref=e927]:
+              - img "Visualisasi artistik dokumen pemerintahan daerah tahun 1950 dengan lambang Garuda dan kantor pemerintah kota di latar belakang." [ref=e931]
+              - paragraph [ref=e935]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e936]:
+                - time [ref=e937]:
+                  - generic [ref=e938]: "1950"
+                - generic [ref=e940]:
+                  - paragraph [ref=e941]: Scene 22
+                  - heading "City of the Republic" [level=2] [ref=e942]
+                  - paragraph [ref=e943]: Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e944]: Sebuah nama kuno. Kotapraja kolonial. Kota Republik.
+                - generic [ref=e945]:
+                  - paragraph [ref=e947]: Berapa umur Kediri? Pertanyaan itu tidak memiliki satu jawaban sederhana.
+                  - paragraph [ref=e949]: 879 memberi kita jangkar sejarah yang diperingati. 1906 memberi Kediri bentuk kotapraja kolonial. 1950 menempatkan pemerintahan kota ke dalam kerangka Republik Indonesia.
+                  - paragraph [ref=e951]: Ketiga tanggal itu tidak saling membatalkan. Mereka menunjukkan bahwa sebuah kota dapat memiliki banyak lapisan kelahiran.
+                  - paragraph [ref=e953]: Kediri tidak lahir sekali. Ia dibentuk kembali berkali-kali.
+            - generic [ref=e954]:
+              - paragraph [ref=e955]:
+                - generic [ref=e956]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk City of the Republic" [ref=e957]:
+                - link "Lewati ke bab berikutnya" [ref=e958] [cursor=pointer]:
+                  - /url: "#1958-from-1000-square-metres"
+        - region [ref=e959]:
+          - generic [ref=e960]:
+            - paragraph [ref=e961]: 1958–2000
+            - heading "The Industrial City" [level=2] [ref=e962]
+            - paragraph [ref=e963]: Setelah perang, industri mulai mengambil peran yang sangat besar dalam menentukan bagaimana kota bekerja dan bagaimana kehidupan dibentuk di dalamnya.
+          - region [ref=e965]:
+            - generic [ref=e967]:
+              - 'img "Visualisasi artistik ruang kerja tahun 1958 seluas seribu meter persegi: para pekerja melinting di meja kayu di bawah lampu gantung." [ref=e971]'
+              - paragraph [ref=e976]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e977]:
+                - time [ref=e978]:
+                  - generic [ref=e979]: "1958"
+                - generic [ref=e981]:
+                  - paragraph [ref=e982]: Scene 23
+                  - heading "From 1,000 m²" [level=2] [ref=e983]
+                  - paragraph [ref=e984]: Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e985]: Industri tidak sekadar tumbuh di Kediri. Ia ikut membentuk ulang kota.
+                - generic:
+                  - paragraph [ref=e987]: Perubahan besar jarang terlihat besar pada hari pertama. Pada 1958, sebuah usaha dimulai dari ruang yang terbatas.
+                  - paragraph [ref=e989]: Tidak ada yang dapat melihat seluruh kota masa depan dari seribu meter persegi itu.
+                  - paragraph [ref=e991]: Namun bisnis berkembang. Pabrik membesar. Pekerjaan bertambah. Jalan dan lingkungan berubah. Ekonomi kota mulai memiliki pusat gravitasi baru.
+                  - paragraph [ref=e993]: Cerita ini bukan semata-mata tentang sebuah perusahaan menjadi besar. Ia adalah cerita tentang apa yang terjadi ketika pertumbuhan sebuah perusahaan menjadi cukup besar untuk ikut mengubah kehidupan sebuah kota.
+            - generic [ref=e995]:
+              - paragraph [ref=e996]:
+                - generic [ref=e997]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk From 1,000 m²" [ref=e998]:
+                - link "Lewati ke bab berikutnya" [ref=e999] [cursor=pointer]:
+                  - /url: "#1990-kediri-to-market"
+          - region [ref=e1000]:
+            - generic [ref=e1002]:
+              - 'img "Visualisasi artistik jalan industri-perdagangan Kediri era 1990-an: truk, papan usaha, dan lalu lintas kota yang tumbuh bersama satu sektor besar." [ref=e1006]'
+              - paragraph [ref=e1010]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e1011]:
+                - time [ref=e1012]:
+                  - generic [ref=e1013]: 1990+
+                - generic [ref=e1015]:
+                  - paragraph [ref=e1016]: Scene 24
+                  - heading "From Kediri to the Market" [level=2] [ref=e1017]
+                  - paragraph [ref=e1018]: Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e1019]: Industri memberi Kediri kekuatan. Ketergantungan mengingatkan Kediri untuk tetap berubah.
+                - generic [ref=e1020]:
+                  - paragraph [ref=e1022]: Apa yang bermula sebagai usaha lokal akhirnya masuk ke pasar modal nasional. Kediri kini terhubung bukan hanya melalui jalan dan jembatan, tetapi melalui modal.
+                  - paragraph [ref=e1024]: Pertumbuhan membawa pekerjaan. Produksi membawa kemakmuran. Skala membawa pengaruh.
+                  - paragraph [ref=e1026]: "Namun kekuatan ekonomi yang sangat terkonsentrasi juga membawa pertanyaan: apa yang terjadi ketika nasib sebuah kota terlalu dekat dengan nasib satu sektor?"
+                  - paragraph [ref=e1028]: Kemakmuran dan kerentanan tidak selalu berlawanan. Kadang-kadang keduanya tumbuh dari akar yang sama.
+            - generic [ref=e1029]:
+              - paragraph [ref=e1030]:
+                - generic [ref=e1031]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk From Kediri to the Market" [ref=e1032]:
+                - link "Lewati ke bab berikutnya" [ref=e1033] [cursor=pointer]:
+                  - /url: "#two-bridges-two-centuries"
+        - region [ref=e1034]:
+          - generic [ref=e1035]:
+            - paragraph [ref=e1036]: 2000–2026
+            - heading "The City Connects" [level=2] [ref=e1037]
+            - paragraph [ref=e1038]: "Setiap zaman menemukan cara baru untuk mengatasi jarak: dahulu sungai, kemudian jembatan, rel, jalan raya, dan akhirnya udara."
+          - region [ref=e1039]:
+            - generic [ref=e1041]:
+              - 'img "Visualisasi artistik dua zaman dalam satu bingkai: jembatan rangka besi bernuansa sepia berpadu dengan jembatan beton modern saat senja." [ref=e1045]'
+              - paragraph [ref=e1050]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e1051]:
+                - time [ref=e1052]:
+                  - generic [ref=e1053]: Two
+                  - generic [ref=e1055]:
+                    - generic [ref=e1056]: ·
+                    - generic [ref=e1057]: Bridges
+                - generic [ref=e1058]:
+                  - paragraph [ref=e1059]: Scene 25
+                  - heading "Two Bridges, Two Centuries" [level=2] [ref=e1060]
+                  - paragraph [ref=e1061]: Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e1062]: Infrastruktur yang dahulu menjadi masa depan, kini menjadi ingatan.
+                - generic [ref=e1063]:
+                  - paragraph [ref=e1065]: Di atas Brantas, dua zaman kini berdiri berdampingan.
+                  - paragraph [ref=e1067]: Jembatan Lama pernah menjadi lambang teknologi masa depan. Kini ia adalah warisan. Jembatan yang lebih baru mengambil fungsi yang dahulu dimilikinya.
+                  - paragraph [ref=e1069]: Tidak ada ironi di sana. Itulah perjalanan semua infrastruktur.
+                  - paragraph [ref=e1071]: Apa yang hari ini dianggap baru, suatu hari akan menjadi sejarah. Dalam satu pandangan ke sungai, Kediri dapat melihat masa lalu dan masa kini berdiri dalam frame yang sama.
+            - generic [ref=e1072]:
+              - paragraph [ref=e1073]:
+                - generic [ref=e1074]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk Two Bridges, Two Centuries" [ref=e1075]:
+                - link "Lewati ke bab berikutnya" [ref=e1076] [cursor=pointer]:
+                  - /url: "#2024-2026-river-to-runway"
+          - region [ref=e1078]:
+            - generic [ref=e1080]:
+              - 'img "Visualisasi artistik Bandara Dhoho Kediri saat senja: pesawat lepas landas di atas terminal, sungai dan jalan raya mengalir di sisi barat." [ref=e1084]'
+              - paragraph [ref=e1090]: Visualisasi artistik · pratinjau editorial
+              - generic [ref=e1091]:
+                - time [ref=e1092]:
+                  - generic [ref=e1093]: 2024–2026
+                - generic [ref=e1095]:
+                  - paragraph [ref=e1096]: Scene 26
+                  - heading "From River to Runway" [level=2] [ref=e1097]
+                  - paragraph [ref=e1098]: Naskah editorial untuk peninjauan · belum dipublikasikan
+                - paragraph [ref=e1099]: Kediri tumbuh di tepi sungai. Kini wilayahnya terhubung melalui langit.
+                - generic:
+                  - paragraph [ref=e1101]: Kediri tumbuh di tepi sungai. Selama berabad-abad, Brantas menentukan bagaimana manusia bergerak melintasi wilayah ini.
+                  - paragraph [ref=e1103]: Lalu manusia membangun jalan, jembatan, rel, dan kini landasan pacu.
+                  - paragraph [ref=e1105]: "Dhoho bukan sekadar sebuah bandara. Dalam perjalanan panjang Kediri, ia adalah kelanjutan dari satu kebutuhan manusia yang sangat tua: untuk terhubung."
+                  - paragraph [ref=e1107]: Teknologinya berubah. Dorongannya tetap sama.
+            - generic [ref=e1109]:
+              - paragraph [ref=e1110]:
+                - generic [ref=e1111]: Status pengetahuan
+                - text: Naskah editorial untuk peninjauan · belum dipublikasikan
+              - navigation "Aksi untuk From River to Runway"
+        - region [ref=e1112]:
+          - generic [ref=e1113]:
+            - 'img "Visualisasi artistik Kediri kontemporer saat senja: jembatan di atas Brantas, lalu lintas menyala, dan kota yang hidup di kedua tepian sungai." [ref=e1115]'
+            - paragraph [ref=e1117]: Finale · 2026
+            - heading "The City Continues" [level=2] [ref=e1118]
+            - paragraph [ref=e1119]: Bab berikutnya belum memiliki tanggal. Kota ini terus berlanjut.
+            - paragraph [ref=e1120]: Visualisasi artistik
+          - generic [ref=e1121]:
+            - generic [ref=e1122]:
+              - paragraph [ref=e1123]: Kita kembali ke Kediri yang sama seperti ketika perjalanan dimulai.
+              - paragraph [ref=e1124]: Brantas masih mengalir. Jembatan masih berdiri. Kendaraan melintas. Pasar bergerak. Orang-orang menjalani hidup mereka.
+              - paragraph [ref=e1125]: Namun sekarang, pemandangan itu tidak lagi sama.
+              - paragraph [ref=e1126]: Di bawah kota hari ini terdapat lapisan-lapisan waktu.
+              - paragraph [ref=e1127]: Dari 27 Juli 879 hingga 2026 terbentang 1.147 tahun.
+              - paragraph [ref=e1128]: Bukan 1.147 tahun sebuah pemerintahan yang tidak pernah berubah, tetapi 1.147 tahun sejak tanggal sejarah yang kini dipilih Kediri untuk mengingat perjalanan panjangnya.
+              - paragraph [ref=e1129]: Kerajaan datang dan pergi. Kekuasaan berpindah. Jembatan menua. Industri berubah. Generasi berganti.
+              - paragraph [ref=e1130]: Tetapi kota tidak pernah benar-benar selesai.
+              - paragraph [ref=e1131]: Sebab sejarah bukan cerita tentang masa lalu yang berhenti. Sejarah adalah cara kita memahami mengapa dunia di depan kita menjadi seperti sekarang.
+              - paragraph [ref=e1132]: Dan ketika perjalanan ini berakhir, Kediri tetap bergerak.
+            - generic [ref=e1133]:
+              - paragraph [ref=e1134]: Bab berikutnya belum memiliki tanggal.
+              - paragraph [ref=e1135]: Kediri
+              - paragraph [ref=e1136]: Djojo ing Bojo
+              - paragraph [ref=e1137]: Kota ini terus berlanjut.
+      - contentinfo [ref=e1138]:
+        - navigation "Navigasi sekunder" [ref=e1139]:
+          - list [ref=e1140]:
+            - listitem [ref=e1141]:
+              - link "Tentang" [ref=e1142] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e1143]:
+              - link "Metodologi" [ref=e1144] [cursor=pointer]:
+                - /url: /methodology
+            - listitem [ref=e1145]:
+              - link "Hak dan kredit" [ref=e1146] [cursor=pointer]:
+                - /url: /rights
+            - listitem [ref=e1147]:
+              - link "Aksesibilitas" [ref=e1148] [cursor=pointer]:
+                - /url: /accessibility
+        - paragraph [ref=e1149]: Djojo ing bojo
+  - button "Open Next.js Dev Tools" [ref=e1155] [cursor=pointer]

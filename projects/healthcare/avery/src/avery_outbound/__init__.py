@@ -8,6 +8,7 @@ allowlist `.env`.
 
 from .models import LedgerEntry, OutboundRequest
 from .policy import PolicyError
+from .safety import drop_reason
 from .store import Store, StoreError
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     "PolicyError",
     "Store",
     "StoreError",
+    "drop_reason",
 ]

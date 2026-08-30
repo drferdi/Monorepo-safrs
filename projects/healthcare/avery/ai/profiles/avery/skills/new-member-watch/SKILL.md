@@ -1,7 +1,7 @@
 ---
 name: new-member-watch
 description: >-
-  Use this skill to detect people who have newly joined a WhatsApp group and welcome them proactively, without waiting to be asked. Runs on a schedule and also on demand. Triggers: "cek anggota baru", "siapa yang baru gabung", "sambut anggota baru", the scheduled member-watch job, or any moment a message arrives from a sender Avery has never seen in that group before.
+  Use this skill to detect people who have newly joined a WhatsApp group. Scheduled runs report to Chief only and never post in groups. Welcome in-group only when Chief explicitly asks. Triggers: "cek anggota baru", "siapa yang baru gabung", "sambut anggota baru", the scheduled member-watch job.
 version: 1.0.0
 author: Sentra Artificial Intelligence
 license: Proprietary
@@ -31,7 +31,13 @@ Langkah, dijalankan lewat tool `terminal` **saja** — jangan memakai `execute_c
 
 Bila berkas snapshot belum ada, tulis snapshot pertama dan **jangan menyambut siapa pun** — semua peserta akan tampak baru, dan menyambut semuanya sekaligus itu keliru.
 
-## Menyambut
+## Mode jadwal vs. perintah Chief
+
+Putaran **cron / terjadwal**: deteksi dan perbarui snapshot saja. **Jangan mengirim pesan ke grup.** Bila ada anggota baru, laporan singkat ke Chief (panggilan resmi, tanpa nomor). Bila tidak ada, `[SILENT]`.
+
+**Sambut di grup hanya** bila Chief memintanya secara eksplisit pada giliran itu ("sambut", "welcome").
+
+## Menyambut (hanya jika Chief meminta)
 
 Untuk setiap anggota baru:
 

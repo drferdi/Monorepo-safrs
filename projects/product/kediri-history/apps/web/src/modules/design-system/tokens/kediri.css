@@ -59,13 +59,14 @@
   --type-archive:
     var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
   /*
-   * Direktif editorial Chief 2026-08-29: body copy sinematik memakai sans
-   * modern yang halus (Plus Jakarta Sans), kecil dan terbaca; judul scene
-   * memakai kapital inskripsi (Cinzel). Naskah dokumen arsip di luar Journey
-   * tetap memakai peran narrative.
+   * Direktif editorial Chief 2026-08-29, font diganti 2026-08-30: body copy
+   * sinematik memakai sans modern yang halus (IBM Plex Sans), kecil dan
+   * terbaca, SATU font seragam untuk seluruh body text lewat token ini;
+   * judul scene memakai kapital inskripsi (Cinzel). Naskah dokumen arsip di
+   * luar Journey tetap memakai peran narrative.
    */
   --type-body:
-    var(--font-plus-jakarta), var(--font-geist), "Helvetica Neue", sans-serif;
+    var(--font-ibm-plex-sans), var(--font-geist), "Helvetica Neue", sans-serif;
   --type-display: var(--font-cinzel), var(--type-narrative);
 
   /* Tinta body copy sinematik: off-white lembut di atas citra gelap. */

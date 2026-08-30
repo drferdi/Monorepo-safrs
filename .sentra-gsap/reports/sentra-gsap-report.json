@@ -1,0 +1,78 @@
+{
+  "standardVersion": "1.0.0",
+  "generatedAt": "2026-08-27T08:08:22.420Z",
+  "repoRoot": "D:\\DEV\\Monorepo",
+  "verdict": "FAIL",
+  "gates": [
+    {
+      "id": "static",
+      "label": "GSAP Architecture",
+      "required": true,
+      "status": "pass",
+      "detail": "0 error(s), 0 warning(s)"
+    },
+    {
+      "id": "typecheck",
+      "label": "Typecheck",
+      "required": true,
+      "status": "fail",
+      "detail": "pnpm run typecheck → exit 1 (12123ms)",
+      "commandResult": {
+        "code": 1,
+        "stdout": "E_PKG_NOT_FOUND] In packages\\api: \"@safrs/auth@workspace:*\" is in the dependencies but no package named \"@safrs/auth\" is present in the workspace\n\nThis error happened while installing a direct dependency of D:\\DEV\\Monorepo\\packages\\api\n\nPackages found in the workspace: safrs-monorepo, @safrs/api, @safrs/config, @safrs/database, @safrs/env, @safrs/schemas, @safrs/telemetry, @sentra/token, @safrs/ui, @sentra/control-center, @safrs/web, @sentra/sentrabot-desktop, @sentra/sentrabot-sandbox-supervisor, cora, @sentra/sentrabot-web, @sentra/sentrabot-worker, @safrs/automation, @safrs/capabilities, @safrs/codegen, @safrs/deps-graph, @safrs/doctor, @safrs/project-standalone, @safrs/project-wizard\n[ERROR] Command failed with exit code 1: \"C:\\Program Files\\nodejs\\node.exe\" \"D:\\Database\\pnpm-store\\v11\\links\\@\\pnpm\\11.21.0\\38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a\\node_modules\\pnpm\\bin\\pnpm.mjs\" install\n\npnpm: Command failed with exit code 1: \"C:\\Program Files\\nodejs\\node.exe\" \"D:\\Database\\pnpm-store\\v11\\links\\@\\pnpm\\11.21.0\\38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a\\node_modules\\pnpm\\bin\\pnpm.mjs\" install\n    at getFinalError (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:89024:14)\n    at makeError (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:91331:21)\n    at getSyncResult (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:93175:10)\n    at spawnSubprocessSync (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:93135:14)\n    at execaCoreSync (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:93065:23)\n    at callBoundExeca (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:95593:23)\n    at boundExeca (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:95570:49)\n    at sync2 (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:95729:10)\n    at runPnpmCli (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:269872:5)\n    at runDepsStatusCheck (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:271638:7)\n",
+        "stderr": ""
+      }
+    },
+    {
+      "id": "lint",
+      "label": "Lint",
+      "required": true,
+      "status": "fail",
+      "detail": "pnpm run lint → exit 1 (1222ms)",
+      "commandResult": {
+        "code": 1,
+        "stdout": "E_PKG_NOT_FOUND] In packages\\api: \"@safrs/auth@workspace:*\" is in the dependencies but no package named \"@safrs/auth\" is present in the workspace\n\nThis error happened while installing a direct dependency of D:\\DEV\\Monorepo\\packages\\api\n\nPackages found in the workspace: safrs-monorepo, @safrs/api, @safrs/config, @safrs/database, @safrs/env, @safrs/schemas, @safrs/telemetry, @sentra/token, @safrs/ui, @sentra/control-center, @safrs/web, @sentra/sentrabot-desktop, @sentra/sentrabot-sandbox-supervisor, cora, @sentra/sentrabot-web, @sentra/sentrabot-worker, @safrs/automation, @safrs/capabilities, @safrs/codegen, @safrs/deps-graph, @safrs/doctor, @safrs/project-standalone, @safrs/project-wizard\n[ERROR] Command failed with exit code 1: \"C:\\Program Files\\nodejs\\node.exe\" \"D:\\Database\\pnpm-store\\v11\\links\\@\\pnpm\\11.21.0\\38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a\\node_modules\\pnpm\\bin\\pnpm.mjs\" install\n\npnpm: Command failed with exit code 1: \"C:\\Program Files\\nodejs\\node.exe\" \"D:\\Database\\pnpm-store\\v11\\links\\@\\pnpm\\11.21.0\\38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a\\node_modules\\pnpm\\bin\\pnpm.mjs\" install\n    at getFinalError (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:89024:14)\n    at makeError (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:91331:21)\n    at getSyncResult (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:93175:10)\n    at spawnSubprocessSync (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:93135:14)\n    at execaCoreSync (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:93065:23)\n    at callBoundExeca (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:95593:23)\n    at boundExeca (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:95570:49)\n    at sync2 (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:95729:10)\n    at runPnpmCli (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:269872:5)\n    at runDepsStatusCheck (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:271638:7)\n",
+        "stderr": ""
+      }
+    },
+    {
+      "id": "test",
+      "label": "Test",
+      "required": true,
+      "status": "fail",
+      "detail": "pnpm run test → exit 1 (1286ms)",
+      "commandResult": {
+        "code": 1,
+        "stdout": "E_PKG_NOT_FOUND] In packages\\api: \"@safrs/auth@workspace:*\" is in the dependencies but no package named \"@safrs/auth\" is present in the workspace\n\nThis error happened while installing a direct dependency of D:\\DEV\\Monorepo\\packages\\api\n\nPackages found in the workspace: safrs-monorepo, @safrs/api, @safrs/config, @safrs/database, @safrs/env, @safrs/schemas, @safrs/telemetry, @sentra/token, @safrs/ui, @sentra/control-center, @safrs/web, @sentra/sentrabot-desktop, @sentra/sentrabot-sandbox-supervisor, cora, @sentra/sentrabot-web, @sentra/sentrabot-worker, @safrs/automation, @safrs/capabilities, @safrs/codegen, @safrs/deps-graph, @safrs/doctor, @safrs/project-standalone, @safrs/project-wizard\n[ERROR] Command failed with exit code 1: \"C:\\Program Files\\nodejs\\node.exe\" \"D:\\Database\\pnpm-store\\v11\\links\\@\\pnpm\\11.21.0\\38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a\\node_modules\\pnpm\\bin\\pnpm.mjs\" install\n\npnpm: Command failed with exit code 1: \"C:\\Program Files\\nodejs\\node.exe\" \"D:\\Database\\pnpm-store\\v11\\links\\@\\pnpm\\11.21.0\\38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a\\node_modules\\pnpm\\bin\\pnpm.mjs\" install\n    at getFinalError (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:89024:14)\n    at makeError (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:91331:21)\n    at getSyncResult (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:93175:10)\n    at spawnSubprocessSync (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:93135:14)\n    at execaCoreSync (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:93065:23)\n    at callBoundExeca (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:95593:23)\n    at boundExeca (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:95570:49)\n    at sync2 (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:95729:10)\n    at runPnpmCli (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:269872:5)\n    at runDepsStatusCheck (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:271638:7)\n",
+        "stderr": ""
+      }
+    },
+    {
+      "id": "build",
+      "label": "Build",
+      "required": true,
+      "status": "fail",
+      "detail": "pnpm run build → exit 1 (1273ms)",
+      "commandResult": {
+        "code": 1,
+        "stdout": "E_PKG_NOT_FOUND] In packages\\api: \"@safrs/auth@workspace:*\" is in the dependencies but no package named \"@safrs/auth\" is present in the workspace\n\nThis error happened while installing a direct dependency of D:\\DEV\\Monorepo\\packages\\api\n\nPackages found in the workspace: safrs-monorepo, @safrs/api, @safrs/config, @safrs/database, @safrs/env, @safrs/schemas, @safrs/telemetry, @sentra/token, @safrs/ui, @sentra/control-center, @safrs/web, @sentra/sentrabot-desktop, @sentra/sentrabot-sandbox-supervisor, cora, @sentra/sentrabot-web, @sentra/sentrabot-worker, @safrs/automation, @safrs/capabilities, @safrs/codegen, @safrs/deps-graph, @safrs/doctor, @safrs/project-standalone, @safrs/project-wizard\n[ERROR] Command failed with exit code 1: \"C:\\Program Files\\nodejs\\node.exe\" \"D:\\Database\\pnpm-store\\v11\\links\\@\\pnpm\\11.21.0\\38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a\\node_modules\\pnpm\\bin\\pnpm.mjs\" install\n\npnpm: Command failed with exit code 1: \"C:\\Program Files\\nodejs\\node.exe\" \"D:\\Database\\pnpm-store\\v11\\links\\@\\pnpm\\11.21.0\\38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a\\node_modules\\pnpm\\bin\\pnpm.mjs\" install\n    at getFinalError (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:89024:14)\n    at makeError (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:91331:21)\n    at getSyncResult (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:93175:10)\n    at spawnSubprocessSync (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:93135:14)\n    at execaCoreSync (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:93065:23)\n    at callBoundExeca (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:95593:23)\n    at boundExeca (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:95570:49)\n    at sync2 (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:95729:10)\n    at runPnpmCli (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:269872:5)\n    at runDepsStatusCheck (file:///D:/Database/pnpm-store/v11/links/@/pnpm/11.21.0/38ad5aaef59ae534110ddeaa9b9c6f6718518e28337ad48cab04ae70cca2ac1a/node_modules/pnpm/dist/pnpm.mjs:271638:7)\n",
+        "stderr": ""
+      }
+    },
+    {
+      "id": "browser",
+      "label": "Browser QA",
+      "required": true,
+      "status": "fail",
+      "detail": "browser-qa → exit 1"
+    },
+    {
+      "id": "visual-review",
+      "label": "Visual Quality Review",
+      "required": true,
+      "status": "not-run",
+      "detail": "Missing .sentra-gsap/reviews/visual-review.json"
+    }
+  ],
+  "findings": []
+}

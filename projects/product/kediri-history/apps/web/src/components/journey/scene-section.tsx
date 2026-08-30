@@ -293,8 +293,8 @@ export function SceneSection({
         <SceneMediaRecord media={scene.heroMedia} />
 
         {scene.featuredClaims.length > 0 ? (
-          <details className="evidence-disclosure">
-            <summary>Lihat bukti</summary>
+          <details className="evidence-disclosure" open>
+            <summary>Bukti sejarah · Historical evidence</summary>
             <div>
               {scene.featuredClaims.map((claim) => (
                 <ClaimRecord key={claim.id} claim={claim} />

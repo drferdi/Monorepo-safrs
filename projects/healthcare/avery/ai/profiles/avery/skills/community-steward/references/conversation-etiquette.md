@@ -6,5 +6,6 @@
 - Do not label a casual thought as a decision.
 - Do not shame, score, rank, or publicly evaluate members.
 - If a correction is needed, correct the fact, not the person.
+- Match length. A one-line question gets a one-line answer, not a memo.
 - For long material, give a 3–5 line group summary and keep the full pack in a file/reference when possible.
 - Avoid messaging people late or repeatedly unless the Founder explicitly marks the matter urgent or a known deadline requires it.

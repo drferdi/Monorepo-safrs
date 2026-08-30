@@ -30,14 +30,28 @@ export interface ReadingDirector {
 /** Jendela beat per koreografi — nilai yang sama dengan rezim scrub lama. */
 function passageWindow(key: string): { start: number; end: number } {
   const start =
-    key === "prologueReveal" || key === "inscriptionReveal"
-      ? 0.56
-      : key === "nameEmerges"
-        ? 0.5
-        : 0.54;
-  const end =
-    key === "inscriptionReveal" || key === "nameEndures" ? 0.74 : 0.82;
+    key === "prologueReveal" ? 0.48 : key === "nameEmerges" ? 0.5 : 0.54;
+  /*
+   * 879 (inscriptionReveal) dulu punya jendela lebih sempit (0.74, bukan
+   * 0.82) — sisa era 4 beat. Sejak jadi 5 beat (revisi Chief 2026-08-30),
+   * jendela sempit itu membuat tiap beat cuma kebagian ~180px gulir, gampang
+   * terlompati satu scroll wheel wajar. Dikembalikan ke lebar default situs
+   * (sama seperti kebanyakan shot lain) supaya tiap beat dapat ruang wajar.
+   */
+  const end = key === "nameEndures" ? 0.74 : 0.82;
   return { start, end };
+}
+
+/**
+ * Ambang beat Prolog tidak dibagi rata: kalimat pembuka memerlukan satu
+ * tahanan panjang sebelum kalimat kedua mengambil bingkai. Scene lain tetap
+ * memakai pembagian rata dari passageWindow agar koreografinya tidak berubah.
+ */
+function passageThresholds(key: string, count: number): readonly number[] {
+  if (key === "prologueReveal" && count === 2) return [0.48, 0.7];
+  const { start, end } = passageWindow(key);
+  const slot = (end - start) / count;
+  return Array.from({ length: count }, (_, index) => start + slot * index);
 }
 
 /**
@@ -491,44 +505,92 @@ export function createReadingDirector(
       cues.push({ at: 0.42, played: false, timeline: masterTl });
     }
 
-    /* ---------- beat editorial ---------- */
+    /*
+     * ---------- beat editorial ----------
+     * 879 (inscriptionReveal) DAN 921 (nameEmerges) DIKECUALIKAN dari giliran
+     * satu-per-satu (revisi Chief 2026-08-30): jendela scroll lebar sekalipun
+     * tidak menjamin `pendingEntrance` (delayedCall di bawah) sempat memutar
+     * sebelum beat berikutnya jadi target dan membatalkannya — pengunjung
+     * melaporkan kalimat "hilang" walau sudah scroll pelan di 879; 921 kini
+     * juga naik dari 3 jadi 7 beat (paragraf brief lebih banyak), jendela per
+     * beat-nya ikut menyempit ke risiko yang sama. Beats-nya dibiarkan TIDAK
+     * disentuh sama sekali di sini: tetap pada keadaan baca server-rendered
+     * (CSS `.stage-beat` scene-scoped memaksanya alur statis, semua tampak
+     * sekaligus, tidak pernah ada yang kelewat). `directBeats()` otomatis
+     * no-op karena `beatTimelines` kosong.
+     */
     const still = beatStyle(key) === "still";
-    beats.forEach((beat, index) => {
-      touched.push(beat);
-      // Hanyut horizontal per rasa scene; tanda berganti bila berdialog.
-      const drift = flavor.alternate
-        ? flavor.beatX * (index % 2 === 0 ? 1 : -1)
-        : flavor.beatX;
-      gsap.set(beat, { visibility: "hidden", opacity: 0, xPercent: drift });
-      const timeline = gsap.timeline({ paused: true });
-      timeline.set(beat, { visibility: "visible" }, 0);
-      timeline.to(
-        beat,
-        { opacity: 1, xPercent: 0, duration: 0.6, ease: MOTION.read.ease },
-        0,
-      );
-      if (still) {
-        // Research Hold: menjadi ada tanpa perpindahan.
-      } else {
-        const lineSplit = SplitText.create(beat.querySelectorAll("p"), {
-          type: "lines",
-        });
-        splits.push(lineSplit);
-        gsap.set(lineSplit.lines, { opacity: 0, y: MOTION.read.y });
+    const skipBeatCycle = key === "inscriptionReveal" || key === "nameEmerges";
+    if (skipBeatCycle && beats.length > 0) {
+      /*
+       * 879 dan 921 tetap dapat gerak GSAP (revisi Chief 2026-08-30), tetapi
+       * bukan cycling satu-per-satu yang terbukti buggy (delayedCall
+       * `pendingEntrance` dibatalkan sebelum sempat mutar). Di sini SATU
+       * cue sederhana: seluruh beat fade+naik BERSAMAAN dengan stagger,
+       * lalu TIDAK PERNAH disembunyikan lagi — sama persis pola context/
+       * master di atas yang sudah terbukti stabil, tidak seperti mesin
+       * hide/show per-beat.
+       */
+      touched.push(...beats);
+      gsap.set(beats, { opacity: 0, y: MOTION.read.y });
+      cues.push({
+        at: 0.5,
+        played: false,
+        timeline: gsap.timeline({ paused: true }).to(beats, {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          /*
+           * `amount` (total rentang tetap), BUKAN `each` (per-item) — 921
+           * punya 7 beat vs 879 punya 5; `each` tetap membuat rentang
+           * TOTAL membengkak seiring jumlah beat (7 item × stagger 0.15 =
+           * hampir 1.9 detik, melewati tahanan-settle situs 1.2 detik,
+           * terbukti pada e2e "early secondary beats" — beat terakhir
+           * baru opacity 0.657 saat sampel diambil). `amount` menjaga
+           * rentang tetap ~0.4 detik berapa pun jumlah beatnya.
+           */
+          stagger: { amount: 0.4, from: "start" },
+          ease: MOTION.read.ease,
+        }),
+      });
+    }
+    if (!skipBeatCycle)
+      beats.forEach((beat, index) => {
+        touched.push(beat);
+        // Hanyut horizontal per rasa scene; tanda berganti bila berdialog.
+        const drift = flavor.alternate
+          ? flavor.beatX * (index % 2 === 0 ? 1 : -1)
+          : flavor.beatX;
+        gsap.set(beat, { visibility: "hidden", opacity: 0, xPercent: drift });
+        const timeline = gsap.timeline({ paused: true });
+        timeline.set(beat, { visibility: "visible" }, 0);
         timeline.to(
-          lineSplit.lines,
-          {
-            opacity: 1,
-            y: 0,
-            duration: MOTION.read.duration,
-            stagger: MOTION.read.stagger,
-            ease: MOTION.read.ease,
-          },
-          0.05,
+          beat,
+          { opacity: 1, xPercent: 0, duration: 0.6, ease: MOTION.read.ease },
+          0,
         );
-      }
-      beatTimelines.push(timeline);
-    });
+        if (still) {
+          // Research Hold: menjadi ada tanpa perpindahan.
+        } else {
+          const lineSplit = SplitText.create(beat.querySelectorAll("p"), {
+            type: "lines",
+          });
+          splits.push(lineSplit);
+          gsap.set(lineSplit.lines, { opacity: 0, y: MOTION.read.y });
+          timeline.to(
+            lineSplit.lines,
+            {
+              opacity: 1,
+              y: 0,
+              duration: MOTION.read.duration,
+              stagger: MOTION.read.stagger,
+              ease: MOTION.read.ease,
+            },
+            0.05,
+          );
+        }
+        beatTimelines.push(timeline);
+      });
 
     // Pelat prolog dilepas dari pegangan boot HANYA setelah seluruh keadaan
     // awal anak-anaknya (master, beat, konteks) terpasang di atas.
@@ -572,7 +634,7 @@ export function createReadingDirector(
     }
     fadeTweens[index] = gsap.to(beat, {
       opacity: 0,
-      duration: 0.2,
+      duration: key === "prologueReveal" ? 0.45 : 0.2,
       ease: "power1.in",
       onComplete: () => {
         fadeTweens[index] = null;
@@ -584,15 +646,15 @@ export function createReadingDirector(
 
   function directBeats(progress: number): void {
     if (beats.length === 0 || beatTimelines.length === 0) return;
-    const { start, end } = passageWindow(key);
-    const slot = (end - start) / beats.length;
+    const thresholds = passageThresholds(key, beats.length);
 
     let target = -1;
-    if (progress >= start) {
-      target = Math.min(
-        beats.length - 1,
-        Math.floor((progress - start) / slot),
-      );
+    for (let index = thresholds.length - 1; index >= 0; index -= 1) {
+      const threshold = thresholds[index];
+      if (threshold !== undefined && progress >= threshold) {
+        target = index;
+        break;
+      }
     }
     if (target === activeBeat) return;
 
@@ -608,12 +670,17 @@ export function createReadingDirector(
     if (target >= 0) {
       const entering = beatTimelines[target];
       if (entering) {
-        pendingEntrance = gsap.delayedCall(0.22, () => {
-          pendingEntrance = null;
-          fadeTweens[target]?.kill();
-          fadeTweens[target] = null;
-          entering.pause(0).timeScale(1).play();
-        });
+        const isPrologueTransition =
+          key === "prologueReveal" && activeBeat >= 0;
+        pendingEntrance = gsap.delayedCall(
+          isPrologueTransition ? 0.8 : 0.22,
+          () => {
+            pendingEntrance = null;
+            fadeTweens[target]?.kill();
+            fadeTweens[target] = null;
+            entering.pause(0).timeScale(1).play();
+          },
+        );
         pendingCalls.push(pendingEntrance);
       }
     }

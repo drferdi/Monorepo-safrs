@@ -1,0 +1,51 @@
+[     504ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[     567ms] [LOG] [HMR] connected @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[     679ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
+[    1888ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[    1902ms] [LOG] [HMR] connected @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[   25794ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[   25809ms] [LOG] [HMR] connected @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[   51460ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=NFo2u62yRUYE-9lpxnx7w' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[   54488ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=NFo2u62yRUYE-9lpxnx7w' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[   57518ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=NFo2u62yRUYE-9lpxnx7w' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[   60558ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=NFo2u62yRUYE-9lpxnx7w' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[   63609ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=NFo2u62yRUYE-9lpxnx7w' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[   70664ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=NFo2u62yRUYE-9lpxnx7w' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[   77701ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=NFo2u62yRUYE-9lpxnx7w' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[   84747ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=NFo2u62yRUYE-9lpxnx7w' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[   91757ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=NFo2u62yRUYE-9lpxnx7w' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[   98791ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=NFo2u62yRUYE-9lpxnx7w' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[  103798ms] [LOG] [HMR] connected @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[  105488ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[  105503ms] [LOG] [HMR] connected @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[  568687ms] [LOG] [Fast Refresh] rebuilding @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[  568886ms] [LOG] [Fast Refresh] done in 302ms @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[  645213ms] [LOG] [Fast Refresh] rebuilding @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[  645242ms] [LOG] [Fast Refresh] done in 38ms @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[  645572ms] [LOG] [Fast Refresh] done in 38ms @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[  645716ms] [LOG] [Fast Refresh] done in 38ms @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[  646190ms] [LOG] [Fast Refresh] done in 38ms @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[  648304ms] [LOG] [Fast Refresh] done in 38ms @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[  980955ms] [LOG] [Fast Refresh] rebuilding @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[  981148ms] [LOG] [Fast Refresh] done in 150ms @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[  981310ms] [LOG] [Fast Refresh] rebuilding @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[  981362ms] [LOG] [Fast Refresh] done in 157ms @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[  994875ms] [LOG] [Fast Refresh] rebuilding @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[  994934ms] [LOG] [Fast Refresh] done in 4ms @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[ 1053025ms] [LOG] [Fast Refresh] done in 4ms @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[ 1061156ms] [LOG] [Fast Refresh] done in 4ms @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[ 1387082ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=eaRwU7cyDp7tTyeWzZqQ6' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 1390101ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=eaRwU7cyDp7tTyeWzZqQ6' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 1393121ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=eaRwU7cyDp7tTyeWzZqQ6' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 1396146ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=eaRwU7cyDp7tTyeWzZqQ6' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 1399175ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=eaRwU7cyDp7tTyeWzZqQ6' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 1406183ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=eaRwU7cyDp7tTyeWzZqQ6' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 1413238ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=eaRwU7cyDp7tTyeWzZqQ6' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 1420290ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=eaRwU7cyDp7tTyeWzZqQ6' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 1427369ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=eaRwU7cyDp7tTyeWzZqQ6' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 1434438ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=eaRwU7cyDp7tTyeWzZqQ6' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 1441532ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=eaRwU7cyDp7tTyeWzZqQ6' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 1448605ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=eaRwU7cyDp7tTyeWzZqQ6' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256
+[ 1555258ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[ 1555314ms] [LOG] [HMR] connected @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
+[ 1682875ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=95i5HAMR-qHca3oKzB0Zo' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256

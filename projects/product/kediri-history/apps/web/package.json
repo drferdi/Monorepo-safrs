@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev -H 127.0.0.1 -p 4320",
+    "dev": "next dev -H 127.0.0.1",
     "build": "next build --webpack",
     "start": "next start -H 127.0.0.1 -p 4320",
     "lint": "biome check src tests e2e",

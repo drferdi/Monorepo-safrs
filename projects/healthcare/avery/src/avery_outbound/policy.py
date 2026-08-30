@@ -10,14 +10,13 @@ import hashlib
 import re
 from pathlib import Path
 
+from .safety import drop_reason
+
 
 class PolicyError(Exception):
     """Draf atau target melanggar kebijakan pengiriman keluar."""
 
-
 ALLOW_KEY = "WHATSAPP_ALLOWED_USERS"
-
-SCAFFOLD = ("Cronjob Response", "job_id:", "To stop or manage this job")
 
 # Sebuah pesan keluar boleh MENYEBUT Chief ("asisten dari dr. Ferdi Iskandar")
 # -- itu memang tujuan perkenalan. Yang tidak boleh adalah MENYAPA Chief,
@@ -42,16 +41,12 @@ def normalize(number: str) -> str:
 
 
 def check_draft(text: str) -> None:
-    """Tolak draf kosong, yang memuat perancah cron, atau yang menyapa Chief."""
-    stripped = (text or "").strip()
-    if not stripped:
-        raise PolicyError("berkas pesan kosong")
+    """Tolak draf yang gagal envelope keselamatan, atau yang menyapa Chief."""
+    reason = drop_reason(text)
+    if reason:
+        raise PolicyError("draf ditolak envelope keselamatan: " + reason)
 
-    leaks = [m for m in SCAFFOLD if m in text]
-    if leaks:
-        raise PolicyError("draf memuat perancah internal cron: " + ", ".join(leaks))
-
-    if ADDRESSES_CHIEF.search(text):
+    if ADDRESSES_CHIEF.search(text or ""):
         raise PolicyError(
             "draf ini MENYAPA Chief, artinya ditulis untuk Chief tetapi akan "
             "dikirim ke orang lain. Tulis ulang, tujukan kepada penerima."

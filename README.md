@@ -1115,70 +1115,32 @@ See [`SAFRS_CONFORMANCE.md`](docs/governance/SAFRS_CONFORMANCE.md).
 
 ---
 
-## Sentra-GSAP Standard v1.0.0
+## GSAP Skills (Official)
 
-Repository-level GSAP execution standard for Sentra projects.
+Repository-level GSAP guidance is provided by the official GSAP skills (MIT, from the GreenSock `gsap-skills` package), replacing the retired Sentra-GSAP standard.
 
-### What Chief needs to know
-
-After installation, the intended interface is simply:
+### Interface
 
 ```text
-/Sentra-GSAP
-Build/redesign <what you want>.
+/gsap <animation task>
 ```
 
-The coding agent—not the operator—is responsible for GSAP architecture, plugin decisions, responsive motion, cleanup, performance, accessibility, browser QA, and the final quality gate.
+The `/gsap` command (`.claude/commands/gsap.md`) routes the task to the right skill(s) before any code is written.
 
-### What the package installs
+### Installed skills
 
 ```text
-.agents/skills/sentra-gsap/          canonical standard
-.claude/skills/sentra-gsap/          Claude adapter
-.claude/commands/Sentra-GSAP.md      exact slash alias compatibility
-scripts/sentra-gsap/                 installer + verifier + browser QA
-tests/sentra-gsap/                   standard infrastructure tests
-docs/standards/sentra-gsap/          human governance docs
-sentra-gsap.config.mjs               created only if absent
-AGENTS.md / CLAUDE.md                managed block inserted, never replaced
+.claude/skills/gsap-core/            core API — to/from/fromTo, easing, stagger, matchMedia
+.claude/skills/gsap-timeline/        sequencing, position parameter, nesting, playback
+.claude/skills/gsap-scrolltrigger/   scroll-linked animation, pinning, scrub, parallax
+.claude/skills/gsap-plugins/         SplitText, Flip, Draggable, Observer, ScrollSmoother, …
+.claude/skills/gsap-react/           React/Next.js — useGSAP, refs, cleanup
+.claude/skills/gsap-frameworks/      Vue, Nuxt, Svelte, vanilla lifecycles
+.claude/skills/gsap-utils/           gsap.utils helpers
+.claude/skills/gsap-performance/     jank, layout thrashing, 60fps optimization
 ```
 
-### Installation for a coding agent
-
-From the unpacked package, run:
-
-```bash
-node scripts/sentra-gsap/install.mjs --repo <MONOREPO_ROOT>
-```
-
-Use `--dry-run` first when desired. The installer is idempotent and preserves existing root instructions/configuration outside its marked blocks.
-
-Then run:
-
-```bash
-<package-manager> run sentra:gsap:test-standard
-```
-
-Ensure the repository has `@playwright/test` and installed browser binaries for browser QA.
-
-### First project configuration
-
-Review `sentra-gsap.config.mjs`:
-- point `scanPaths` at frontend source;
-- map non-standard typecheck/lint/test/build commands;
-- list application routes;
-- add route-transition journeys for multi-route experiences;
-- provide the running/preview URL through `SENTRA_GSAP_URL`, config, or `--url`.
-
-Do not disable required gates merely because configuration is incomplete. Configure them.
-
-### Verification
-
-```bash
-<package-manager> run sentra:gsap:verify -- --url http://localhost:3000
-```
-
-A required gate that is not run is a FAIL. See `docs/standards/sentra-gsap/QA.md`.
+Sentra conventions still apply on top of these skills: design tokens, cleanup on unmount, and `prefers-reduced-motion` support are non-negotiable.
 
 ---
 

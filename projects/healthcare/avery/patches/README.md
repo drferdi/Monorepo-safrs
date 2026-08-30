@@ -8,6 +8,14 @@ Patch `hermes-0.20.5/0001-whatsapp-ingress-reason-codes.patch` menambah
 dan menggagalkan boot (`ValueError: BOOT FAIL: ...`) bila pola mention gagal
 compile.
 
+Patch `hermes-0.20.5/0003-whatsapp-observe-silent.patch` mencatat pesan grup allowlist yang tidak menyebut Avery (`OBSERVED_SILENT`) tanpa giliran model.
+
+Patch `hermes-0.20.5/0002-whatsapp-outbound-safety.patch` menolak keluaran bocor
+(thinking-only, empty model, retrying, fallback provider, jejak tool, job_id,
+traceback, instruksi internal, kosong/separator) di `WhatsAppAdapter.send` dan `edit_message`
+sebelum hit bridge. Salinan fail-closed hidup di `whatsapp_common.py`; sumber
+kanonik `src/avery_outbound/safety.py`.
+
 Patch ini **hilang saat Hermes di-update/reinstall**, karena pohon vendored
 bukan repo git milik kita — setiap upgrade menimpa berkas asli. Jalankan
 ulang `apply-hermes-patches.ps1` setelah update untuk memasangnya kembali

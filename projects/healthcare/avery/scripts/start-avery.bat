@@ -15,6 +15,11 @@ powershell.exe -NoProfile -Command ^
   "$entry = $links.links | Where-Object { $_.target -eq 'hermes-studio' };" ^
   "if (-not $entry) { Write-Host '[ERROR] Entri hermes-studio tidak ada di runtime-links.json'; exit 2 };" ^
   "$studioExe = Join-Path (Join-Path 'runtime' $entry.target) 'Hermes Studio.exe';" ^
+  "if (-not (Test-Path -LiteralPath $studioExe)) {" ^
+  "  $native = [Environment]::ExpandEnvironmentVariables([string]$entry.link);" ^
+  "  $studioExe = Join-Path $native 'Hermes Studio.exe';" ^
+  "  Write-Host ('runtime/hermes-studio kosong; memakai lokasi installer: {0}' -f $studioExe)" ^
+  "};" ^
   "if (-not (Test-Path -LiteralPath $studioExe)) { Write-Host ('[ERROR] Hermes Studio.exe tidak ditemukan: {0}' -f $studioExe); exit 2 };" ^
   "Start-Process -FilePath $studioExe"
 if errorlevel 1 goto :fail

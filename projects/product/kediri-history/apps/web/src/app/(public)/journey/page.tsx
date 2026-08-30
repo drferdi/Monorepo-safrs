@@ -1,16 +1,21 @@
 import Link from "next/link";
 import type { ReactElement } from "react";
+import { ActHeaderReveal } from "../../../components/journey/act-header-reveal";
+import { ActMilestoneTicker } from "../../../components/journey/act-milestone-ticker";
 import { DeepLinkLanding } from "../../../components/journey/deep-link-landing";
 import {
   JourneyTimeline,
   type TimelineEntry,
 } from "../../../components/journey/journey-timeline";
+import { PrologueInscriptionInterlude } from "../../../components/journey/prologue-inscription-interlude";
 import {
   FramingStage,
   PrologueScene,
 } from "../../../components/journey/prologue-scene";
+import { SceneOpeningAddress } from "../../../components/journey/scene-opening-address";
 import { SceneSection } from "../../../components/journey/scene-section";
 import { SiteFooter } from "../../../components/site-footer";
+import { JOURNEY_MILESTONES } from "../../../content/journey-milestones";
 import {
   composeProductionJourney,
   PRODUCTION_FINALE,
@@ -31,9 +36,13 @@ import { getJourneyManifest } from "../../../content/queries";
 /**
  * Latar kartu judul act, mode pratinjau editorial saja (direktif Chief
  * 2026-08-28): "Panjalu Rises" memakai citra yang semula milik scene Daha —
- * scene Daha sendiri kini bergerak sebagai video dahanasada.
+ * scene Daha sendiri kini bergerak sebagai video dahanasada. "1,100+ Years
+ * of Kediri" (revisi Chief 2026-08-30) memakai video Jayabaya dari
+ * `project-video/Jayabaya.mp4`, disalin ke `public/journey-approved/` —
+ * pola yang sama dengan video prolog (statis, tanpa gerbang route pratinjau).
  */
 const ACT_HEADER_MEDIA: Readonly<Record<string, string>> = {
+  "the-land-remembers": "/journey-approved/jayabaya.mp4",
   "panjalu-rises": "/api/editorial-preview/05-daha-centre-of-power.webp",
 };
 
@@ -134,7 +143,13 @@ export default async function JourneyPage(): Promise<ReactElement> {
         <div id="smooth-content">
           <main id="historical-content">
             {editorialPreview ? (
-              <PrologueScene narrative={PRODUCTION_PROLOGUE} editorialPreview />
+              <>
+                <PrologueScene
+                  narrative={PRODUCTION_PROLOGUE}
+                  editorialPreview
+                />
+                <PrologueInscriptionInterlude />
+              </>
             ) : (
               <header className="journey-intro">
                 <p className="eyebrow">Kediri · Kronologi terbit</p>
@@ -161,25 +176,56 @@ export default async function JourneyPage(): Promise<ReactElement> {
                       : undefined
                   }
                 >
-                  {editorialPreview && ACT_HEADER_MEDIA[act.slug] ? (
-                    <span className="act-header-media" aria-hidden="true">
-                      {/* biome-ignore lint/performance/noImgElement: aset pratinjau lokal disajikan route sendiri tanpa loader tambahan. */}
-                      <img
-                        src={ACT_HEADER_MEDIA[act.slug]}
-                        alt=""
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </span>
-                  ) : null}
-                  <p className="archive-label">{act.dateRangeDisplay}</p>
-                  <h2 id={`act-${act.slug}`} className="title-scene">
-                    {act.title}
-                  </h2>
-                  {act.introCopy ? (
-                    <p className="lead measure">{act.introCopy}</p>
-                  ) : null}
+                  <ActHeaderReveal
+                    enabled={
+                      editorialPreview && act.slug === "the-land-remembers"
+                    }
+                  >
+                    {editorialPreview && ACT_HEADER_MEDIA[act.slug] ? (
+                      <span className="act-header-media" aria-hidden="true">
+                        {ACT_HEADER_MEDIA[act.slug]?.endsWith(".mp4") ? (
+                          <video
+                            src={ACT_HEADER_MEDIA[act.slug]}
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
+                            preload="metadata"
+                          />
+                        ) : (
+                          // biome-ignore lint/performance/noImgElement: aset pratinjau lokal disajikan route sendiri tanpa loader tambahan.
+                          <img
+                            src={ACT_HEADER_MEDIA[act.slug]}
+                            alt=""
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        )}
+                      </span>
+                    ) : null}
+                    <p className="archive-label">{act.dateRangeDisplay}</p>
+                    <h2 id={`act-${act.slug}`} className="title-scene">
+                      {act.title}
+                    </h2>
+                    {act.introCopy
+                      ? (Array.isArray(act.introCopy)
+                          ? act.introCopy
+                          : [act.introCopy]
+                        ).map((paragraph) => (
+                          <p className="lead measure" key={paragraph}>
+                            {paragraph}
+                          </p>
+                        ))
+                      : null}
+                    {editorialPreview && act.slug === "the-land-remembers" ? (
+                      <ActMilestoneTicker milestones={JOURNEY_MILESTONES} />
+                    ) : null}
+                  </ActHeaderReveal>
                 </header>
+
+                {editorialPreview && act.slug === "the-land-remembers" ? (
+                  <SceneOpeningAddress />
+                ) : null}
 
                 {act.scenes.map((scene) => (
                   <SceneSection

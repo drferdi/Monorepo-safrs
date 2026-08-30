@@ -17,6 +17,7 @@ Yang dicakup:
 | Berkas uji | Kontrak yang dijaga |
 | --- | --- |
 | `test_policy.py` | normalisasi nomor, penolakan draf yang menyapa Chief atau memuat perancah cron, validasi target tunggal, pembacaan allowlist read-only |
+| `test_safety.py` | envelope keselamatan keluaran: thinking-only, empty model, retrying, fallback provider, jejak tool, job_id, traceback, instruksi internal, kosong/separator; prosa sah lolos |
 | `test_store.py` | siklus pending → approved → sent, kedaluwarsa 15 menit (jam disuntikkan), sekali pakai, tulis atomik, ledger tanpa isi pesan |
 | `test_sender.py` | argv `hermes -p avery send ...` persis, pengikatan hash draf, penolakan pengiriman kedua |
 | `test_member_watch.py` | keluaran kosong pada jalankan pertama dan tanpa perubahan; anggota baru dilaporkan tersamar |

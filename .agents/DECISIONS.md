@@ -453,3 +453,18 @@ Supersedes the legacy `apps/{healthcare,internal,academic,...}` topology.
   (history contains real numbers until Chief orders a rewrite).
 - Root cause classified as process debt: restrictions must live in files every session reads
   (HANDOFF/BOUNDARIES), never only in one session's chat.
+
+## 2026-08-28 — Sentra-GSAP retired, replaced by official GSAP skills
+
+- Standar Sentra-GSAP v1.0.0 dicabut penuh atas perintah Chief: `.agents/skills/sentra-gsap/`,
+  `.claude/skills/sentra-gsap/`, `.claude/commands/Sentra-GSAP.md`, `scripts/sentra-gsap/`,
+  `tests/sentra-gsap/` (tidak pernah ter-wire ke vitest workspace), `docs/standards/sentra-gsap/`,
+  serta sisa distribusi paket di root (`INSTALL_FOR_AGENT.md`, `PACKAGE_CONTENTS.txt`,
+  `manifest.json` paket, `integration/*.block.md`, `templates/sentra-gsap.config.mjs`).
+- Pengganti: 8 skill GSAP resmi MIT di `.claude/skills/gsap-*` dengan router `/gsap`
+  (`.claude/commands/gsap.md`). `.gitignore` mendapat negasi `!.claude/commands/`.
+- Konsekuensi: gate mesin G04 (`sentra:gsap:qa`/`verify`) — yang berstatus FAIL historis dan
+  belum pernah dijalankan — berganti menjadi panduan skill + verifikasi visual/e2e capsule.
+  Motion kediri TETAP belum production-ready sampai verifikasi itu dijalankan.
+- Salinan vendored standar lama di capsule kediri (`resources/sentra-gsap-monorepo-standard-v1.0.0*`,
+  `sentra-gsap.config.mjs`, referensi docs) dibiarkan utuh — terikat SHA256SUMS capsule.

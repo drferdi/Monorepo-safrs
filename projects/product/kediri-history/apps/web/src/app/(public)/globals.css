@@ -1081,6 +1081,51 @@ p {
   color: var(--cinema-ink-muted);
 }
 
+/*
+ * Tiket tonggak sejarah (revisi Chief 2026-08-30) — bergantian dengan efek
+ * typing di kepala Act I. Baseline SERVER-RENDERED (tanpa JS, atau motion
+ * mati): alur normal, tujuh baris berdiri sendiri — keadaan baca yang utuh.
+ * Baru saat motion benar-benar menyala (`data-ticker-motion`, diset skrip
+ * setelah island terpasang) baris-barisnya bertumpuk pada kotak yang sama
+ * (position: absolute) sehingga hanya satu tampak sekaligus dan bergantian.
+ */
+.act-milestone-ticker-wrap {
+  margin-top: var(--space-4);
+  max-width: 42ch;
+}
+
+.act-milestone-ticker {
+  position: relative;
+}
+
+.act-milestone-ticker[data-ticker-motion="true"] {
+  min-height: 3.4em;
+}
+
+.act-milestone-line {
+  margin: 0 0 var(--space-2);
+  font-family: var(--type-body);
+  font-size: clamp(0.95rem, 1.6vw, 1.05rem);
+  line-height: 1.6;
+  color: var(--cinema-ink);
+}
+
+.act-milestone-ticker[data-ticker-motion="true"] .act-milestone-line {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+}
+
+.act-milestone-year {
+  font-family: var(--type-archive);
+  letter-spacing: 0.06em;
+  color: var(--cinema-accent);
+}
+
+.act-milestone-char--space {
+  white-space: pre;
+}
+
 /* ---------- panggung ---------- */
 
 .scene {
@@ -1106,7 +1151,15 @@ p {
     height: 240svh;
   }
 
-  .scene[data-choreography="inscriptionReveal"] .scene-pin-space,
+  /*
+   * 879 kini 5 beat, bukan 4 (revisi Chief 2026-08-30) — jatah gulir naik
+   * +25% (mencerminkan PIN_DISTANCES.inscriptionReveal di scenes.ts)
+   * supaya tiap beat tetap dapat ruang yang sama, bukan makin sempit.
+   */
+  .scene[data-choreography="inscriptionReveal"] .scene-pin-space {
+    height: 325svh;
+  }
+
   .scene[data-choreography="bridgeConstruction"] .scene-pin-space {
     height: 260svh;
   }
@@ -1150,7 +1203,10 @@ p {
     height: 390svh;
   }
 
-  .scene[data-choreography="inscriptionReveal"] .scene-pin-space,
+  .scene[data-choreography="inscriptionReveal"] .scene-pin-space {
+    height: 525svh;
+  }
+
   .scene[data-choreography="bridgeConstruction"] .scene-pin-space {
     height: 420svh;
   }
@@ -1954,6 +2010,77 @@ p {
   backdrop-filter: blur(0.35rem);
 }
 
+/* ---------- transisi sambutan pembuka Act I ---------- */
+
+/*
+ * Alur normal sesudah header Act I dan sebelum panggung 879. Tingginya kurang
+ * dari setengah viewport dan address duduk di upper field agar tidak ada jeda
+ * kanvas kosong sebelum huruf pertama terlihat. Tidak ada panel atau bidang
+ * tambahan di belakang tipografi; kanvas act tetap menjadi permukaan induknya.
+ */
+.scene-opening-transition {
+  min-height: clamp(18rem, 44svh, 28rem);
+  display: grid;
+  place-items: start center;
+  padding: clamp(2.5rem, 5svh, 4rem) var(--shell-gutter);
+  background: transparent;
+}
+
+.scene-opening-address {
+  width: min(100%, 34rem);
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  backdrop-filter: none;
+  text-align: center;
+  text-transform: none;
+  letter-spacing: normal;
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.9),
+    0 2px 10px rgba(0, 0, 0, 0.8),
+    0 0 24px rgba(0, 0, 0, 0.6);
+}
+
+.opening-address-line {
+  margin: 0 0 0.35rem;
+  color: var(--cinema-ink);
+}
+
+.opening-address-line:last-child {
+  margin-bottom: 0;
+}
+
+/*
+ * Hierarki dibalik (revisi Chief): aksara Jawa dekoratif — kebanyakan
+ * pembaca tidak bisa membacanya, jadi ia BUKAN baris paling menonjol.
+ * Baris Latin (kalimat yang sungguhan dibaca) memikul bobot utama, lebih
+ * besar dari sebelumnya — sekelas sambutan, bukan caption kecil.
+ */
+.opening-address-line-0 {
+  font-size: clamp(1.1rem, 1.9vw, 1.4rem);
+  line-height: 1.6;
+  color: var(--cinema-ink-muted);
+}
+
+.opening-address-line-1 {
+  font-family: var(--type-narrative);
+  font-style: italic;
+  font-size: clamp(1.5rem, 2.6vw, 1.95rem);
+  line-height: 1.35;
+  color: var(--cinema-ink);
+}
+
+.opening-address-line-2 {
+  font-family: var(--type-body);
+  font-size: clamp(0.85rem, 1.2vw, 1rem);
+  color: var(--cinema-accent);
+}
+
+.opening-address-char--space {
+  white-space: pre;
+}
+
 /* ---------- 1135: authority converges ---------- */
 
 .scene[data-choreography="royalConsolidation"] .scene-stage {
@@ -2170,7 +2297,13 @@ p {
 .scene[data-choreography="inscriptionReveal"] .stage-date {
   grid-column: 1;
   grid-row: 2;
-  align-self: end;
+  /*
+   * Dinaikkan (revisi Chief 2026-08-30): `align-self:end` menahan "879"
+   * raksasa di dasar baris, mendesak beat body-text di bawahnya sampai
+   * mepet tepi bawah viewport. `center` (bukan `start` — itu malah nabrak
+   * sambutan Jawa di kanan-atas) memberi ruang kepala tanpa tabrakan.
+   */
+  align-self: center;
   display: flex;
   gap: 0.025em;
   font-size: clamp(9rem, 27vw, 27rem);
@@ -2205,7 +2338,9 @@ p {
 .scene[data-choreography="inscriptionReveal"] .master-line {
   grid-column: 2;
   grid-row: 2;
-  align-self: end;
+  /* Ikut naik bersama .stage-date (revisi Chief 2026-08-30) — keduanya
+     tetap sebaris satu sama lain, hanya pindah ke tengah baris bersama. */
+  align-self: center;
   max-width: 14ch;
   border-left: 1px solid var(--cinema-accent);
   padding-left: clamp(1.25rem, 2.4vw, 2.5rem);
@@ -2351,6 +2486,41 @@ p {
 }
 
 /*
+ * Bergilir satu-per-satu terbukti gampang "hilang" bagi pengunjung: jendela
+ * scroll yang lebar sekalipun tidak menjamin `pendingEntrance` (delayedCall
+ * 0.22 detik di director.ts) sempat memutar sebelum target beat berikutnya
+ * membatalkannya. Revisi Chief 2026-08-30: SEMUA beat 879 & 921 tampil
+ * sekaligus, alur statis — pola sama dengan fallback mobile/reduced-motion/
+ * tanpa-JS, tetapi di sini UNCONDITIONAL (bukan cuma di media query itu),
+ * supaya tidak ada satu pun kalimat yang bisa "kelewat" gulir di kondisi
+ * apa pun. 879 juga TIDAK BOLEH ada blok/gradient gelap di belakang teks —
+ * kontras dijaga murni lewat text-shadow bertumpuk; 921 sudah tidak
+ * memakainya sejak awal (naskah pindah ke ruang negatif citra).
+ */
+.scene[data-choreography="inscriptionReveal"] .stage-beat,
+.scene[data-choreography="nameEmerges"] .stage-beat {
+  position: static;
+  grid-area: auto;
+  max-width: none;
+}
+
+.scene[data-choreography="inscriptionReveal"] .stage-beat {
+  background: none;
+  padding: 0;
+}
+
+.scene[data-choreography="inscriptionReveal"] .stage-beat p {
+  font-size: clamp(0.875rem, calc(0.9vw + 0.0625rem), 0.9625rem);
+  line-height: 1.82;
+  letter-spacing: 0.02em;
+  font-weight: 400;
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.72),
+    0 2px 10px rgba(0, 0, 0, 0.48),
+    0 0 24px rgba(0, 0, 0, 0.32);
+}
+
+/*
  * Body copy sinematik (direktif editorial Chief 2026-08-29): sans modern
  * kecil, halus, terbaca — standar museum/arsip digital. Ukuran, warna, dan
  * jarak barisnya token, bukan selera per scene.
@@ -2364,6 +2534,21 @@ p {
   font-weight: 400;
   color: var(--cinema-body-ink);
   text-wrap: pretty;
+}
+
+/* Beat Prolog (revisi Chief): +1px dan naik sedikit dari tepi bawah plate. */
+.prologue-passages p {
+  font-size: clamp(0.9375rem, 0.9vw, 1.025rem);
+}
+
+.prologue-passages {
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+  .prologue-passages {
+    margin-bottom: clamp(4rem, 9svh, 6.5rem);
+  }
 }
 
 /* Saat satu beat memikul bingkai sendirian, kalimat pertamanya bersuara —
@@ -2975,8 +3160,23 @@ p {
 
 .evidence-disclosure > summary {
   cursor: pointer;
-  font-family: var(--type-interface);
-  font-size: 0.9rem;
+  color: var(--cinema-ink);
+  background: none;
+  font-family: var(--type-body);
+  font-size: 0.82rem;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0.04em;
+}
+
+.evidence-disclosure > summary::marker {
+  color: var(--cinema-accent);
+}
+
+.evidence-disclosure > div {
+  display: grid;
+  gap: var(--space-3);
+  background: none;
 }
 
 .claim {
@@ -3145,8 +3345,8 @@ p {
     padding-inline: 0;
   }
 
-  /* Label ini sudah tersirat oleh alt text dan metadata media di mobile;
-   * menghilangkannya menjaga context/status tetap menjadi lapisan pertama. */
+  /* Label media panggung tetap ringkas di mobile; address Act I berada di
+   * alur normal tersendiri dan tetap terbaca sebagai copy semantik. */
   .scene .stage-visual-label,
   .prologue-stage .prologue-visual-label {
     display: none;
@@ -3231,6 +3431,15 @@ p {
 
 /* Early Act I mobile: each shot has its own vertical reading composition. */
 @media (max-width: 47.999rem) {
+  .scene-opening-transition {
+    min-height: auto;
+    padding-block: clamp(2.5rem, 7svh, 4rem);
+  }
+
+  .scene-opening-address {
+    text-align: start;
+  }
+
   [data-journey="true"] .site-nav {
     padding-block-start: calc(var(--space-2) + env(safe-area-inset-top));
   }
@@ -3491,7 +3700,8 @@ html[data-smooth="true"] .master-line {
   z-index: -1;
 }
 
-.act-header-media img {
+.act-header-media img,
+.act-header-media video {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -3654,6 +3864,114 @@ html[data-smooth="true"] .prologue-title-card {
   word-spacing: 0.5em;
   text-transform: uppercase;
   color: var(--cinema-ink-muted);
+}
+
+/* ---------- jeda bukti prasasti (revisi Chief 2026-08-30: scroll-driven) ---------- */
+
+/*
+ * Bidikan sendiri di alur dokumen normal, di ANTARA Prolog dan Act I — bukan
+ * overlay bertumpuk di atas video prolog. Panggungnya (`.interlude-stage`)
+ * di-pin oleh `PrologueInscriptionInterlude` (ScrollTrigger scrub) pada
+ * varian bermotion desktop/tablet; mobile dan reduced tidak pernah dipin,
+ * kontennya tampak statis dalam alur normal. Keadaan awal (opacity 1) adalah
+ * BASELINE server-rendered — GSAP yang menyetel ke 0 hanya saat motion aktif.
+ */
+.interlude-scene {
+  background: var(--cinema-canvas);
+}
+
+.interlude-stage {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 6vw, 5rem);
+}
+
+.interlude-frame {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 42rem;
+  text-align: center;
+}
+
+.interlude-intro-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.interlude-eyebrow {
+  margin: 0;
+  font-family: var(--type-archive);
+  font-size: 0.68rem;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  text-transform: uppercase;
+  color: var(--cinema-accent);
+}
+
+.interlude-intro {
+  margin: 0;
+  font-family: var(--type-body);
+  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+  line-height: 1.7;
+  color: var(--cinema-ink);
+}
+
+.interlude-evidence {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  padding-top: var(--space-4);
+  list-style: none;
+  border-top: 1px solid var(--cinema-rule);
+}
+
+.interlude-card-tag {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-family: var(--type-archive);
+  font-size: 0.62rem;
+  letter-spacing: 0.32em;
+  text-indent: 0.32em;
+  text-transform: uppercase;
+  color: var(--cinema-accent);
+}
+
+.interlude-quote {
+  margin: 0 0 var(--space-2);
+  font-family: var(--font-cinzel), var(--type-narrative), serif;
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.1vw, 1.5rem);
+  line-height: 1.5;
+  color: var(--cinema-ink);
+}
+
+.interlude-body {
+  margin: 0 0 var(--space-2);
+  font-family: var(--type-body);
+  font-size: clamp(0.95rem, 1.6vw, 1.15rem);
+  line-height: 1.7;
+  color: var(--cinema-body-ink);
+}
+
+.interlude-source {
+  margin: 0;
+  font-family: var(--type-archive);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cinema-ink-muted);
+}
+
+.interlude-outro {
+  margin-top: var(--space-2);
+  font-family: var(--font-cinzel), var(--type-narrative), serif;
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  color: color-mix(in srgb, var(--cinema-ink) 58%, var(--cinema-accent) 42%);
 }
 
 /* ---------- gerbang boot intro (direktif Chief 2026-08-28) ---------- */
