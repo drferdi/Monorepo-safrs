@@ -27,8 +27,24 @@ const SCENE_1135 = '[id="1135-panjalu-jayati"]';
  * padahal ujinyalah yang terburu-buru.
  */
 async function waitForStages(page: import("@playwright/test").Page) {
+  // `data-motion-ready` hanya ditulis varian desktop (scenes.ts) — mobile
+  // dan reduced tidak pernah men-set atributnya, memang benar begitu. Di
+  // sana cukup menunggu island scene mendaftar sama sekali.
   await page.waitForFunction(
-    () => document.querySelectorAll('[data-motion-ready="true"]').length >= 3,
+    () => {
+      const ready = document.querySelectorAll(
+        '[data-motion-ready="true"]',
+      ).length;
+      if (ready >= 3) return true;
+      const staticFlow = window.matchMedia(
+        "(max-width: 47.999rem), (prefers-reduced-motion: reduce)",
+      ).matches;
+      return (
+        staticFlow &&
+        document.querySelectorAll("[data-scene], [id][data-choreography]")
+          .length >= 3
+      );
+    },
     undefined,
     { timeout: 10_000 },
   );
@@ -251,13 +267,26 @@ test("journey follows the approved 2026 to 879 to 2026 sequence", async ({
   // Penangguhan 1292 ditutup perintah Chief 2026-08-29: 26 slot siap.
   await expect(page.locator('[data-media-state="ready"]')).toHaveCount(26);
   await expect(page.locator('[data-media-state="pending"]')).toHaveCount(0);
-  // Prolog bergerak sebagai video (direktif Chief 2026-08-28) dengan citra
-  // 00-prologue sebagai poster; Finale tetap mengunjungi citra yang sama.
-  await expect(page.locator('[data-framing="prologue"] video')).toHaveCount(1);
+  // Prolog bergerak sebagai dua video berurutan dengan citra 00-prologue
+  // sebagai poster; Finale tetap mengunjungi citra yang sama.
+  const prologueVideo = page.locator('[data-framing="prologue"] video');
+  await expect(prologueVideo).toHaveCount(1);
+  await expect(prologueVideo).toHaveAttribute(
+    "src",
+    /\/journey-approved\/00-prologue\.mp4/u,
+  );
   await expect(page.locator('[data-framing="finale"] img')).toHaveCount(1);
+  await expect(page.locator('[data-motion="master"]').first()).toHaveText(
+    "1.147 Tahun Sebelum Hari Ini",
+  );
+  await expect(page.getByRole("heading", { name: "KEDIRI, 2026" })).toHaveText(
+    "KEDIRI, 2026",
+  );
   await expect(
-    page.getByText("Sejak kapan sebuah kota mulai menjadi dirinya sendiri?"),
-  ).toBeVisible();
+    page.getByText("Sejak kapan sebuah kota mulai menjadi dirinya sendiri?", {
+      exact: true,
+    }),
+  ).toHaveCount(0);
   await expect(page.locator('[id="879-first-mark"]')).toHaveAttribute(
     "data-media-slot",
     "879-first-mark",
@@ -274,12 +303,39 @@ test("prologue is one visual world with semantic editorial beats", async ({
   page,
 }) => {
   await page.goto("/journey");
+  await waitForStages(page);
 
   const prologue = page.locator('[data-scene="prologue"]');
   await expect(prologue).toHaveCount(1);
-  // Satu dunia visual: satu video pembuka (poster = citra prolog), tanpa
-  // citra kedua yang menduplikasinya.
-  await expect(prologue.locator("video")).toHaveCount(1);
+  // Satu dunia visual: satu elemen video mempertahankan frame saat sumber
+  // pembuka selesai dan sumber lanjutan mengambil alih.
+  const video = prologue.locator("video");
+  await expect(video).toHaveCount(1);
+  await expect(video).toHaveAttribute(
+    "src",
+    /\/journey-approved\/00-prologue\.mp4/u,
+  );
+  await expect(video).toHaveAttribute(
+    "poster",
+    /\/journey-approved\/00-prologue\.webp/u,
+  );
+  await expect(video).toHaveAttribute(
+    "aria-label",
+    "Visualisasi artistik Kediri kontemporer saat senja: jembatan di atas Brantas, lalu lintas menyala, dan kota yang hidup di kedua tepian sungai.",
+  );
+  await expect(video).not.toHaveAttribute("loop");
+  await video.evaluate((element) => {
+    element.dispatchEvent(new Event("ended"));
+  });
+  await expect(video).toHaveAttribute(
+    "src",
+    /\/journey-approved\/00-prologue-daha\.mp4/u,
+  );
+  await expect(video).toHaveAttribute(
+    "aria-label",
+    "Rekonstruksi artistik Daha abad XII berdasarkan konteks sejarah; bukan representasi arkeologis definitif.",
+  );
+  await expect(video).toHaveAttribute("loop", "");
   await expect(prologue.locator("img")).toHaveCount(0);
   await expect(prologue.locator(".scene-readout")).toHaveCount(0);
   await expect(prologue.locator('[data-motion="master"]')).toHaveAttribute(
@@ -288,18 +344,197 @@ test("prologue is one visual world with semantic editorial beats", async ({
   );
 
   const beats = prologue.locator('[data-motion="passage"]');
-  await expect(beats).toHaveCount(6);
-  for (let index = 0; index < 6; index += 1) {
+  await expect(beats).toHaveCount(2);
+  for (let index = 0; index < 2; index += 1) {
     await expect(beats.nth(index)).toHaveAttribute(
       "data-beat-index",
       String(index),
     );
   }
-  await expect(beats.nth(0)).toContainText("Kediri hidup di tahun 2026.");
-  await expect(beats.nth(5)).toContainText("perlahan menjadi Kediri");
+  await expect(beats.nth(0)).toHaveText(
+    "Kediri hari ini adalah kota yang kita kenal: jalan yang ramai, pasar yang membuka pagi, kawasan industri, sekolah, rumah ibadah, dan dua tepian kota yang dipertemukan oleh jembatan di atas Brantas.",
+  );
+  await expect(beats.nth(1)).toHaveText(
+    "Namun kota ini menyimpan perjalanan yang jauh lebih panjang daripada bangunan yang terlihat saat ini.",
+  );
+  await expect(prologue.locator('[data-motion="passage"] p')).toHaveCount(2);
+  await expect(
+    prologue.getByText(
+      "Sejak kapan sebuah kota mulai menjadi dirinya sendiri?",
+      {
+        exact: true,
+      },
+    ),
+  ).toHaveCount(0);
 
   const firstScene = page.locator('[id="879-first-mark"]');
   await expect(firstScene.locator('[data-motion="passage"]')).toHaveCount(4);
+});
+
+test("prologue stage beats have no local panel", async ({ page }) => {
+  await page.goto("/journey");
+
+  const prologue = page.locator('[data-scene="prologue"]');
+  const beats = prologue.locator(".stage-beat");
+  await expect(beats).toHaveCount(2);
+
+  await expect(
+    prologue.getByText(
+      "Namun kota ini menyimpan perjalanan yang jauh lebih panjang daripada bangunan yang terlihat saat ini.",
+      { exact: true },
+    ),
+  ).toBeVisible();
+
+  const styles = await beats.evaluateAll((elements) =>
+    elements.map((element) => {
+      const style = getComputedStyle(element);
+      return {
+        backgroundImage: style.backgroundImage,
+        backgroundColor: style.backgroundColor,
+        padding: style.padding,
+      };
+    }),
+  );
+
+  expect(styles).toEqual([
+    {
+      backgroundImage: "none",
+      backgroundColor: "rgba(0, 0, 0, 0)",
+      padding: "0px",
+    },
+    {
+      backgroundImage: "none",
+      backgroundColor: "rgba(0, 0, 0, 0)",
+      padding: "0px",
+    },
+  ]);
+});
+
+test("prologue disclosure types only when Daha continuation starts", async ({
+  page,
+}, testInfo) => {
+  test.skip(
+    testInfo.project.name !== "desktop",
+    "Disclosure lifecycle is sampled on the desktop motion composition.",
+  );
+
+  await page.goto("/journey");
+
+  const prologue = page.locator('[data-scene="prologue"]');
+  const video = prologue.locator("video");
+  const label = prologue.locator(".prologue-visual-label");
+
+  await expect(label).toHaveAttribute("data-label-state", "idle");
+  await expect(label).toBeHidden();
+  await expect(prologue.locator('[data-label-semantic="true"]')).toHaveText(
+    "REKONSTRUKSI ARTISTIK · DAHA, ABAD XII Interpretasi visual berdasarkan konteks sejarah; bukan representasi arkeologis definitif.",
+  );
+  await page.evaluate(() => {
+    type WindowWithContinuationCount = Window & {
+      __kediriContinuationCount?: number;
+    };
+    const testWindow = window as WindowWithContinuationCount;
+    testWindow.__kediriContinuationCount = 0;
+    window.addEventListener("kediri:prologue-continuation-started", () => {
+      testWindow.__kediriContinuationCount =
+        (testWindow.__kediriContinuationCount ?? 0) + 1;
+    });
+  });
+
+  await video.evaluate((element) => {
+    element.dispatchEvent(new Event("ended"));
+    element.dispatchEvent(new Event("ended"));
+  });
+
+  await expect
+    .poll(() =>
+      page.evaluate(
+        () =>
+          (window as Window & { __kediriContinuationCount?: number })
+            .__kediriContinuationCount ?? 0,
+      ),
+    )
+    .toBe(1);
+
+  await expect(video).toHaveAttribute(
+    "src",
+    /\/journey-approved\/00-prologue-daha\.mp4/u,
+  );
+  await expect(label).toHaveAttribute("data-label-state", "typing");
+
+  const disclosureStyles = await label.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {
+      backgroundImage: style.backgroundImage,
+      backgroundColor: style.backgroundColor,
+      borderStyle: style.borderStyle,
+      borderWidth: style.borderWidth,
+      boxShadow: style.boxShadow,
+      backdropFilter: style.backdropFilter,
+    };
+  });
+  expect(disclosureStyles).toEqual({
+    backgroundImage: "none",
+    backgroundColor: "rgba(0, 0, 0, 0)",
+    borderStyle: "none",
+    borderWidth: "0px",
+    boxShadow: "none",
+    backdropFilter: "none",
+  });
+
+  await expect(label).toHaveAttribute("data-label-state", "complete", {
+    timeout: 6_000,
+  });
+  await expect(label.locator('[data-label-line="primary"]')).toHaveText(
+    "REKONSTRUKSI ARTISTIK · DAHA, ABAD XII",
+  );
+  await expect(label.locator('[data-label-line="secondary"]')).toHaveText(
+    "Interpretasi visual berdasarkan konteks sejarah; bukan representasi arkeologis definitif.",
+  );
+  await page.waitForTimeout(3_100);
+  await expect(label).toHaveAttribute("data-label-state", "hidden", {
+    timeout: 2_000,
+  });
+});
+
+test("prologue disclosure is complete immediately with reduced motion", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({
+    reducedMotion: "reduce",
+    viewport: { width: 1280, height: 720 },
+  });
+  const page = await context.newPage();
+  await page.goto("/journey");
+
+  const prologue = page.locator('[data-scene="prologue"]');
+  const video = prologue.locator("video");
+  const label = prologue.locator(".prologue-visual-label");
+  await expect(label).toHaveAttribute("data-label-state", "idle");
+  await expect(label).toBeHidden();
+
+  await video.evaluate((element) => {
+    element.dispatchEvent(new Event("ended"));
+  });
+
+  await expect(label).toHaveAttribute("data-label-state", "complete", {
+    timeout: 2_000,
+  });
+  await expect(label).toBeVisible();
+  await expect(label.locator('[data-label-line="primary"]')).toHaveText(
+    "REKONSTRUKSI ARTISTIK · DAHA, ABAD XII",
+  );
+  await expect(label.locator('[data-label-line="secondary"]')).toHaveText(
+    "Interpretasi visual berdasarkan konteks sejarah; bukan representasi arkeologis definitif.",
+  );
+  const characterOpacities = await label
+    .locator("[data-label-char]")
+    .evaluateAll((elements) =>
+      elements.map((element) => getComputedStyle(element).opacity),
+    );
+  expect(characterOpacities).not.toContain("0");
+
+  await context.close();
 });
 
 test("early scenes expose continuous decorative handoffs", async ({ page }) => {
@@ -537,7 +772,11 @@ test("mobile reduced early scenes keep metadata clear of the visual label", asyn
     "1042-river-divides-kingdom",
   ] as const) {
     const scene = page.locator(`[id="${slug}"]`);
-    const label = scene.locator(".stage-visual-label");
+    const label = scene.locator(
+      slug === "prologue-2026"
+        ? ".prologue-visual-label"
+        : ".stage-visual-label",
+    );
     const contextBlock = scene.locator(
       slug === "prologue-2026" ? ".prologue-context" : ".stage-context",
     );
@@ -558,8 +797,12 @@ test("mobile reduced early scenes keep metadata clear of the visual label", asyn
       );
     }
 
-    const overlap = await scene.evaluate((root) => {
-      const label = root.querySelector<HTMLElement>(".stage-visual-label");
+    const overlap = await scene.evaluate((root, currentSlug) => {
+      const label = root.querySelector<HTMLElement>(
+        currentSlug === "prologue-2026"
+          ? ".prologue-visual-label"
+          : ".stage-visual-label",
+      );
       const context = root.querySelector<HTMLElement>(
         ".prologue-context, .stage-context",
       );
@@ -578,7 +821,7 @@ test("mobile reduced early scenes keep metadata clear of the visual label", asyn
             Math.max(labelBox.top, contextBox.top),
         )
       );
-    });
+    }, slug);
     expect(overlap, `${slug} label must not overlap metadata`).toBe(0);
 
     const opacities = await scene

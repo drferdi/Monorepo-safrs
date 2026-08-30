@@ -660,20 +660,65 @@ p {
   z-index: -1;
 }
 
-.prologue-stage > .stage-visual-label {
+.prologue-visual-label-shell {
+  grid-area: frame;
   align-self: start;
   justify-self: end;
   z-index: 1;
   margin: clamp(5.75rem, 12svh, 7.5rem) var(--shell-gutter) 0;
-  padding: 0.45rem 0.65rem;
-  border: 1px solid var(--cinema-rule);
-  background: color-mix(in srgb, var(--cinema-canvas) 74%, transparent);
+  pointer-events: none;
+}
+
+.prologue-visual-label {
+  margin: 0;
   color: var(--cinema-ink-muted);
   font-family: var(--type-archive);
   font-size: 0.58rem;
-  line-height: 1;
+  line-height: 1.25;
   letter-spacing: 0.18em;
   text-transform: uppercase;
+}
+
+.prologue-visual-label[data-label-state="idle"],
+.prologue-visual-label[data-label-state="hidden"] {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.prologue-visual-label__line {
+  display: block;
+}
+
+.prologue-visual-label__line--primary {
+  color: var(--cinema-ink);
+  font-weight: 600;
+}
+
+.prologue-visual-label__line--secondary {
+  max-width: 36ch;
+  margin-top: 0.45rem;
+  font-family: var(--type-body);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.45;
+  text-transform: none;
+}
+
+.prologue-visual-label__char {
+  display: inline-block;
+}
+
+.prologue-visual-label__char--space {
+  white-space: pre;
+}
+
+/* Scripting tidak ada berarti seluruh disclosure visual tetap terbaca. */
+@media (scripting: none) {
+  .prologue-visual-label[data-label-state="idle"] {
+    visibility: visible;
+    opacity: 1;
+  }
 }
 
 .prologue-plate {
@@ -2300,6 +2345,11 @@ p {
   );
 }
 
+.prologue-scene .stage-beat {
+  background: none;
+  padding: 0;
+}
+
 /*
  * Body copy sinematik (direktif editorial Chief 2026-08-29): sans modern
  * kecil, halus, terbaca — standar museum/arsip digital. Ukuran, warna, dan
@@ -3098,8 +3148,18 @@ p {
   /* Label ini sudah tersirat oleh alt text dan metadata media di mobile;
    * menghilangkannya menjaga context/status tetap menjadi lapisan pertama. */
   .scene .stage-visual-label,
-  .prologue-stage > .stage-visual-label {
+  .prologue-stage .prologue-visual-label {
     display: none;
+  }
+}
+
+/* Reduced motion desktop tetap menampilkan disclosure yang sudah lengkap;
+ * varian mobile mempertahankan penyembunyian label di atas. */
+@media (prefers-reduced-motion: reduce) and (min-width: 48rem) {
+  .prologue-stage .prologue-visual-label[data-label-state="complete"] {
+    display: block;
+    visibility: visible;
+    opacity: 1;
   }
 }
 
@@ -3156,7 +3216,7 @@ p {
     grid-row: 5;
   }
 
-  .prologue-stage > .stage-visual-label {
+  .prologue-visual-label-shell {
     margin-top: clamp(4.5rem, 9svh, 6rem);
   }
 }

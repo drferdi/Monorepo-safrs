@@ -5,6 +5,8 @@ import type {
   FramingNarrative,
 } from "../../content/production-narrative";
 import { frameVariables, sceneFraming } from "../../modules/motion/framing";
+import { PrologueVideoSequence } from "./prologue-video-sequence";
+import { PrologueVisualLabel } from "./prologue-visual-label";
 import { SceneHandoff } from "./scene-handoff";
 import { SceneMotion } from "./scene-motion";
 
@@ -61,15 +63,12 @@ export function FramingStage({
          * hidup di dalam .stage-surface, sehingga dolly, mask cahaya --lit,
          * dan transisi keluar menyapunya persis seperti citra.
          */
-        <video
-          src={media.videoPath}
+        <PrologueVideoSequence
+          firstVideoPath={media.videoPath}
+          continuationVideoPath={media.continuationVideoPath}
           poster={media.path}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          aria-label={media.altText}
+          altText={media.altText}
+          continuationAltText={media.continuationAltText}
         />
       ) : (
         /* biome-ignore lint/performance/noImgElement: aset pratinjau lokal disajikan route sendiri tanpa loader tambahan. */
@@ -179,9 +178,12 @@ export function PrologueScene({
             </span>
           </p>
           <SceneHandoff kind="water-copper" phase="outgoing" />
-          <p className="stage-visual-label">
-            {narrative.media?.label ?? "Visualisasi artistik"}
-          </p>
+          {narrative.media ? (
+            <PrologueVisualLabel
+              label={narrative.media.label}
+              detail={narrative.media.labelDetail ?? ""}
+            />
+          ) : null}
 
           <div className="stage-plate prologue-plate">
             {/*

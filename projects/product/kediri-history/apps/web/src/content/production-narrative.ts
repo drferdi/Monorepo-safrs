@@ -14,9 +14,13 @@ import type { ActDto, JourneyManifestDto, SceneDto } from "./dto";
 export interface FramingMedia {
   readonly path: string;
   readonly altText: string;
+  readonly continuationAltText?: string;
   readonly label: string;
+  readonly labelDetail?: string;
   /** Gerak hidup opsional; `path` tetap poster + fallback tanpa JavaScript. */
   readonly videoPath?: string;
+  /** Sumber lanjutan yang diputar berulang setelah video pembuka selesai. */
+  readonly continuationVideoPath?: string;
 }
 
 export interface FramingNarrative {
@@ -41,31 +45,25 @@ const FRAMING_MEDIA_2026: FramingMedia = {
   // Direktif Chief 2026-08-28: halaman gelap pembuka memakai video opening;
   // citra 00-prologue tetap poster + fallback (Finale tetap citra statis).
   videoPath: "/journey-approved/00-prologue.mp4",
+  continuationVideoPath: "/journey-approved/00-prologue-daha.mp4",
   altText:
     "Visualisasi artistik Kediri kontemporer saat senja: jembatan di atas Brantas, lalu lintas menyala, dan kota yang hidup di kedua tepian sungai.",
-  label: "Visualisasi artistik · pratinjau editorial",
+  continuationAltText:
+    "Rekonstruksi artistik Daha abad XII berdasarkan konteks sejarah; bukan representasi arkeologis definitif.",
+  label: "REKONSTRUKSI ARTISTIK · DAHA, ABAD XII",
+  labelDetail:
+    "Interpretasi visual berdasarkan konteks sejarah; bukan representasi arkeologis definitif.",
 };
 
 export const PRODUCTION_PROLOGUE: FramingNarrative = {
   eyebrow: "Kediri · Jawa Timur · 2026",
-  title: "Before We Go Back",
-  beatGroups: [[0], [1, 2, 3], [4, 5, 6], [7], [8, 9, 10], [11, 12]],
+  title: "KEDIRI, 2026",
+  beatGroups: [[0], [1]],
   paragraphs: [
-    "Kediri hidup di tahun 2026.",
-    "Kendaraan melintasi jalan. Pasar membuka hari. Orang bekerja, belajar, pulang, berdoa.",
-    "Dua jembatan berdiri di atas Brantas.",
-    "Sungai yang sama telah memisahkan dan mempertemukan dua sisi kota selama berabad-abad.",
-    "Lalu suara kota perlahan menjauh.",
-    "Bangunan dapat berubah. Pemerintahan dapat berganti. Jalan dapat diperlebar. Jembatan dapat digantikan.",
-    "Namun Brantas tetap mengalir.",
-    "Sebelum kembali ke masa lalu, kita perlu bertanya.",
-    "Jawabannya tidak tunggal.",
-    "Kediri memiliki sejarah sebagai wilayah, sebagai kerajaan, sebagai kotapraja kolonial, dan sebagai kota Republik.",
-    "Perjalanan ini memilih satu tanggal sebagai pintu masuk: 27 Juli 879—tanggal yang kemudian dikenang sebagai awal kronologi peringatan Kota Kediri.",
-    "Kita tidak sedang menuju sebuah kota yang telah selesai.",
-    "Kita sedang menelusuri bagaimana sebuah tempat perlahan menjadi Kediri.",
+    "Kediri hari ini adalah kota yang kita kenal: jalan yang ramai, pasar yang membuka pagi, kawasan industri, sekolah, rumah ibadah, dan dua tepian kota yang dipertemukan oleh jembatan di atas Brantas.",
+    "Namun kota ini menyimpan perjalanan yang jauh lebih panjang daripada bangunan yang terlihat saat ini.",
   ],
-  masterLine: "Sejak kapan sebuah kota mulai menjadi dirinya sendiri?",
+  masterLine: "1.147 Tahun Sebelum Hari Ini",
   media: FRAMING_MEDIA_2026,
 };
 

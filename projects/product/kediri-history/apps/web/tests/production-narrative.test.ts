@@ -78,23 +78,34 @@ describe("production journey contract", () => {
     expect(new Set(keys)).toEqual(new Set(sceneKeys));
   });
 
-  it("keeps the prologue as one shot with explicit editorial beats", () => {
-    expect(PRODUCTION_PROLOGUE.beatGroups).toEqual([
-      [0],
-      [1, 2, 3],
-      [4, 5, 6],
-      [7],
-      [8, 9, 10],
-      [11, 12],
+  it("menjaga Prolog sebagai satu shot dengan dua beat editorial", () => {
+    expect(PRODUCTION_PROLOGUE.title).toBe("KEDIRI, 2026");
+    expect(PRODUCTION_PROLOGUE.masterLine).toBe("1.147 Tahun Sebelum Hari Ini");
+    expect(PRODUCTION_PROLOGUE.paragraphs).toEqual([
+      "Kediri hari ini adalah kota yang kita kenal: jalan yang ramai, pasar yang membuka pagi, kawasan industri, sekolah, rumah ibadah, dan dua tepian kota yang dipertemukan oleh jembatan di atas Brantas.",
+      "Namun kota ini menyimpan perjalanan yang jauh lebih panjang daripada bangunan yang terlihat saat ini.",
     ]);
+    expect(PRODUCTION_PROLOGUE.beatGroups).toEqual([[0], [1]]);
     expect(PRODUCTION_PROLOGUE.beatGroups?.flat()).toEqual(
       Array.from(
         { length: PRODUCTION_PROLOGUE.paragraphs.length },
         (_, index) => index,
       ),
     );
-    expect(PRODUCTION_PROLOGUE.masterLine).toBe(
-      "Sejak kapan sebuah kota mulai menjadi dirinya sendiri?",
+    expect(PRODUCTION_PROLOGUE.media?.videoPath).toBe(
+      "/journey-approved/00-prologue.mp4",
+    );
+    expect(PRODUCTION_PROLOGUE.media?.continuationVideoPath).toBe(
+      "/journey-approved/00-prologue-daha.mp4",
+    );
+    expect(PRODUCTION_PROLOGUE.media?.label).toBe(
+      "REKONSTRUKSI ARTISTIK · DAHA, ABAD XII",
+    );
+    expect(PRODUCTION_PROLOGUE.media?.labelDetail).toBe(
+      "Interpretasi visual berdasarkan konteks sejarah; bukan representasi arkeologis definitif.",
+    );
+    expect(PRODUCTION_PROLOGUE.media?.continuationAltText).toBe(
+      "Rekonstruksi artistik Daha abad XII berdasarkan konteks sejarah; bukan representasi arkeologis definitif.",
     );
   });
 
