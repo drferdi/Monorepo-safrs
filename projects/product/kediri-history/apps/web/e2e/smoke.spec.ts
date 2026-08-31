@@ -116,6 +116,143 @@ test("a scene deep link lands on that scene", async ({ page }) => {
   await expect(scene.locator("time")).toHaveText("1135");
 });
 
+test("Scene 921 presents its full date as a clean subheading", async ({
+  page,
+}, testInfo) => {
+  if (testInfo.project.name === "desktop") {
+    await page.setViewportSize({ width: 1440, height: 900 });
+  }
+  await page.goto("/journey#921-kadhiri");
+
+  const date = page.locator('[id="921-kadhiri"] .stage-date');
+  await expect(date).toBeVisible();
+  await expect(date).toContainText("19SEPTEMBER921");
+  await expect(date.locator(".date-sep")).toHaveCount(0);
+
+  const layout = await date.evaluate((element) => {
+    const scene = element.closest<HTMLElement>('[id="921-kadhiri"]');
+    if (!scene) throw new Error("Scene 921 is missing");
+    const units = Array.from(
+      element.querySelectorAll<HTMLElement>(".date-unit"),
+    ).map((unit) => unit.getBoundingClientRect());
+    const dateBox = element.getBoundingClientRect();
+    const ornament = scene.querySelector<SVGElement>(".stage-surface > svg");
+    const incomingHandoff = scene.querySelector<HTMLElement>(
+      '.scene-handoff[data-handoff-phase="incoming"]',
+    );
+    const passages = scene.querySelector<HTMLElement>(".stage-passages");
+    if (!passages) throw new Error("Scene 921 passages are missing");
+    const hierarchy = [
+      scene.querySelector<HTMLElement>(".scene-name__word"),
+      element,
+      scene.querySelector<HTMLElement>(".master-line"),
+      scene.querySelector<HTMLElement>(".stage-passages p"),
+    ];
+    const resolvedHierarchy = hierarchy.filter(
+      (item): item is HTMLElement => item !== null,
+    );
+    if (resolvedHierarchy.length !== hierarchy.length) {
+      throw new Error("Scene 921 hierarchy is incomplete");
+    }
+    return {
+      dateHeight: dateBox.height,
+      dateRight: dateBox.right,
+      bodyWidth: passages.getBoundingClientRect().width,
+      fontSizes: resolvedHierarchy.map((item) =>
+        Number.parseFloat(getComputedStyle(item).fontSize),
+      ),
+      leftEdges: resolvedHierarchy.map(
+        (item) => item.getBoundingClientRect().left,
+      ),
+      topEdges: resolvedHierarchy.map(
+        (item) => item.getBoundingClientRect().top,
+      ),
+      unitTops: units.map((unit) => unit.top),
+      ornamentVisible: ornament
+        ? getComputedStyle(ornament).display !== "none" &&
+          ornament.getBoundingClientRect().width > 0
+        : false,
+      incomingHandoffVisible: incomingHandoff
+        ? getComputedStyle(incomingHandoff).display !== "none" &&
+          Number.parseFloat(getComputedStyle(incomingHandoff).opacity) > 0 &&
+          incomingHandoff.getBoundingClientRect().width > 0
+        : false,
+      viewportWidth: window.innerWidth,
+    };
+  });
+
+  expect(layout.dateRight).toBeLessThanOrEqual(layout.viewportWidth);
+  if (testInfo.project.name === "desktop") {
+    expect(layout.dateHeight).toBeLessThan(140);
+    expect(layout.bodyWidth).toBeGreaterThan(520);
+    expect(layout.ornamentVisible).toBe(false);
+    expect(layout.incomingHandoffVisible).toBe(false);
+    expect(
+      Math.max(...layout.leftEdges) - Math.min(...layout.leftEdges),
+    ).toBeLessThan(4);
+    expect(layout.topEdges).toEqual([...layout.topEdges].sort((a, b) => a - b));
+    expect(layout.fontSizes[0]).toBeGreaterThan(layout.fontSizes[2] ?? 0);
+    expect(layout.fontSizes[2]).toBeGreaterThan(layout.fontSizes[1] ?? 0);
+    expect(layout.fontSizes[1]).toBeGreaterThan(layout.fontSizes[3] ?? 0);
+    expect(
+      Math.max(...layout.unitTops) - Math.min(...layout.unitTops),
+    ).toBeLessThan(2);
+  }
+});
+
+test("Scene 1015 presents the approved Carama copy and date subheading", async ({
+  page,
+}, testInfo) => {
+  if (testInfo.project.name === "desktop") {
+    await page.setViewportSize({ width: 1252, height: 987 });
+  }
+  await page.goto("/journey#1015-name-endures");
+
+  const scene = page.locator('[id="1015-name-endures"]');
+  await expect(scene.locator(".stage-date")).toHaveText("7Juni1015");
+  await expect(scene.locator(".stage-date .date-unit")).toHaveText([
+    "7",
+    "Juni",
+    "1015",
+  ]);
+  await expect(scene.locator(".stage-date .date-sep")).toHaveCount(0);
+  await expect(scene.locator(".master-line")).toHaveText(
+    "Nama yang Kembali Muncul",
+  );
+  await expect(scene.locator(".stage-passages")).toContainText(
+    "Prasasti Carama, bertarikh 7 Juni 1015",
+  );
+  await expect(scene.locator(".stage-passages")).toContainText(
+    "Tetapi perubahan terbesar baru terjadi pada 1042.",
+  );
+  await expect(scene).not.toContainText(
+    "Nama dapat muncul sekali karena kebetulan",
+  );
+
+  if (testInfo.project.name === "desktop") {
+    await page.evaluate(() => document.fonts.ready);
+    const beatLineCounts = await scene
+      .locator(".stage-beat")
+      .evaluateAll((beats) =>
+        beats.map((beat) => {
+          const lineTops = new Set<number>();
+          for (const paragraph of beat.querySelectorAll("p")) {
+            const range = document.createRange();
+            range.selectNodeContents(paragraph);
+            for (const rect of range.getClientRects()) {
+              if (rect.width > 0 && rect.height > 0) {
+                lineTops.add(Math.round(rect.top));
+              }
+            }
+          }
+          return lineTops.size;
+        }),
+      );
+    expect(beatLineCounts).toHaveLength(7);
+    expect(Math.max(...beatLineCounts)).toBeLessThanOrEqual(2);
+  }
+});
+
 test("Timeline pushState lands on a readable early scene", async ({
   page,
 }, testInfo) => {
@@ -300,28 +437,39 @@ test("Act I opening transition is compact and holds its address until 879 approa
   await page.setViewportSize({ width: 1332, height: 987 });
   await page.goto("/journey");
 
+  const sourceHeader = page.locator('[data-opening-handoff-source="true"]');
   const transition = page.locator('[data-scene-opening-transition="true"]');
-  const address = transition.locator(".scene-opening-address");
+  await expect(sourceHeader).toHaveCount(1);
+  const sourceGeometry = await sourceHeader.evaluate((element) => ({
+    height: element.getBoundingClientRect().height,
+    top: element.getBoundingClientRect().top + window.scrollY,
+  }));
   const geometry = await transition.evaluate((element) => ({
     height: element.getBoundingClientRect().height,
     top: element.getBoundingClientRect().top + window.scrollY,
     viewportHeight: window.innerHeight,
   }));
-  const firstSceneTop = await page
-    .locator('[id="879-first-mark"]')
-    .evaluate(
-      (element) => element.getBoundingClientRect().top + window.scrollY,
-    );
-
   const sampleAt = async (scrollTop: number) => {
     await page.evaluate((target) => window.scrollTo(0, target), scrollTop);
     await page.waitForTimeout(700);
-    return address.evaluate((element) => {
+    return page.evaluate(() => {
+      const element = document.querySelector<HTMLElement>(
+        ".scene-opening-address",
+      );
+      const source = document.querySelector<HTMLElement>(
+        '[data-opening-handoff-source="true"]',
+      );
+      const firstScene = document.getElementById("879-first-mark");
+      if (!element || !source || !firstScene) {
+        throw new Error("Act I handoff is incomplete");
+      }
       const characters = Array.from(
         element.querySelectorAll<HTMLElement>("[data-address-char]"),
       );
       return {
-        opacity: Number.parseFloat(getComputedStyle(element).opacity),
+        addressOpacity: Number.parseFloat(getComputedStyle(element).opacity),
+        firstSceneTop: firstScene.getBoundingClientRect().top,
+        sourceOpacity: Number.parseFloat(getComputedStyle(source).opacity),
         top: element.getBoundingClientRect().top,
         totalCharacters: characters.length,
         visibleCharacters: characters.filter(
@@ -332,22 +480,32 @@ test("Act I opening transition is compact and holds its address until 879 approa
     });
   };
 
-  const early = await sampleAt(
-    geometry.top - geometry.viewportHeight + geometry.viewportHeight * 0.14,
+  const afterOneWheel = await sampleAt(
+    sourceGeometry.top + geometry.viewportHeight * 0.12,
   );
-  const hold = await sampleAt(firstSceneTop - geometry.viewportHeight * 0.9);
-  const faded = await sampleAt(firstSceneTop - geometry.viewportHeight * 0.74);
+  const reveal = await sampleAt(geometry.top - geometry.viewportHeight * 0.36);
+  const hold = await sampleAt(geometry.top - geometry.viewportHeight * 0.22);
+  const faded = await sampleAt(geometry.top - geometry.viewportHeight * 0.06);
   const restored = await sampleAt(
-    firstSceneTop - geometry.viewportHeight * 0.9,
+    geometry.top - geometry.viewportHeight * 0.22,
   );
 
   expect(geometry.height).toBeLessThanOrEqual(geometry.viewportHeight * 0.48);
-  expect(early.top).toBeLessThan(geometry.viewportHeight);
-  expect(early.visibleCharacters).toBeGreaterThan(10);
-  expect(hold.opacity).toBeGreaterThan(0.95);
+  expect(sourceGeometry.height).toBeGreaterThanOrEqual(
+    geometry.viewportHeight * 0.98,
+  );
+  expect(afterOneWheel.sourceOpacity).toBeGreaterThan(0.95);
+  expect(afterOneWheel.visibleCharacters).toBe(0);
+  expect(reveal.sourceOpacity).toBeLessThan(0.5);
+  expect(reveal.visibleCharacters).toBeGreaterThan(10);
+  expect(hold.sourceOpacity).toBeLessThan(0.05);
+  expect(hold.addressOpacity).toBeGreaterThan(0.95);
   expect(hold.visibleCharacters).toBe(hold.totalCharacters);
-  expect(faded.opacity).toBeLessThan(0.05);
-  expect(restored.opacity).toBeGreaterThan(0.95);
+  expect(faded.addressOpacity).toBeLessThan(0.05);
+  expect(faded.top).toBeGreaterThan(0);
+  expect(faded.firstSceneTop).toBeLessThan(geometry.viewportHeight * 0.65);
+  expect(restored.sourceOpacity).toBeLessThan(0.05);
+  expect(restored.addressOpacity).toBeGreaterThan(0.95);
   expect(restored.visibleCharacters).toBe(restored.totalCharacters);
 });
 
@@ -864,7 +1022,7 @@ test("early secondary beats remain readable on the desktop rest path", async ({
   ] as const) {
     await moveToSceneProgress(page, slug, 0.76);
     // Beat TERAKHIR, bukan indeks tetap — jumlah beat per scene mengikuti
-    // naskah (1042 kini dua beat sejak pemangkasan paragraf 2026-08-28).
+    // naskah (1042 kini enam beat pendek sejak revisi editorial 2026-08-31).
     const beat = page
       .locator(`[id="${slug}"]`)
       .locator('[data-motion="passage"]')
@@ -1152,9 +1310,22 @@ test("evidence opens by default, remains collapsible, and names its source", asy
   await summary.scrollIntoViewIfNeeded();
   await page.waitForTimeout(1400);
   await expect(disclosure).toHaveAttribute("open", "");
-  await expect(summary).toHaveText("Bukti sejarah · Historical evidence");
+  await expect(summary).toHaveText("Sumber dan bukti sejarah yang tersedia");
   await expect(
-    scene.getByText("Bukti yang menopang · Supporting evidence").first(),
+    scene.getByText("Catatan mengenai sumber dan dasar informasi"),
+  ).toBeVisible();
+  await expect(
+    scene
+      .locator(".epistemic-note")
+      .getByText(
+        "Naskah ini masih dalam proses penelaahan editorial dan belum diterbitkan secara resmi.",
+      ),
+  ).toBeVisible();
+  await expect(
+    scene.getByText("Tingkat kepastian berdasarkan sumber: Tinggi"),
+  ).toBeVisible();
+  await expect(
+    scene.getByText("Sumber yang mendukung penafsiran ini").first(),
   ).toBeVisible({ timeout: 10_000 });
   await expect(
     scene.getByText("catatan katalog D.9", { exact: false }).first(),
@@ -1269,7 +1440,7 @@ test("the journey is meaningful with JavaScript disabled", async ({
   ).toBeVisible();
   // Bukti tetap terbuka lewat elemen <details> asli.
   await expect(
-    page.getByText("Bukti sejarah · Historical evidence").first(),
+    page.getByText("Sumber dan bukti sejarah yang tersedia").first(),
   ).toBeVisible();
   await context.close();
 });

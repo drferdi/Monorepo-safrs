@@ -1041,6 +1041,18 @@ p {
   padding-block: var(--space-7) var(--space-6);
 }
 
+/*
+ * Act I adalah bidikan video penuh, bukan kartu antara yang boleh tersapu oleh
+ * satu wheel-scroll. Satu viewport utuh memberi tempo yang sama dengan
+ * panggung sinematik sebelumnya; handoff GSAP baru dimulai setelah separuh
+ * perjalanan kartu. Mobile dan reduced-motion tetap memakai alur normal.
+ */
+@media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+  .journey-act > header[data-opening-handoff-source="true"] {
+    min-height: 100svh;
+  }
+}
+
 .journey-act > header::before {
   content: "";
   position: absolute;
@@ -2437,10 +2449,8 @@ p {
 
 .scene[data-choreography="dividedKingdom"] .stage-passages {
   /*
-   * Cukup setinggi beat terpanjangnya (2 paragraf pendek, ±96px) — beat
-   * bersifat absolute sehingga ruangnya harus dipesan di sini. Dorongan
-   * margin ekstra yang pernah ada sudah tidak diperlukan: pemisahan dari
-   * PANJALU/JANGGALA kini dijamin partisi baris panggung, bukan jarak manual.
+   * Enam beat editorial 1042 tampil satu per satu. Ruang ini menampung dua
+   * baris body copy tanpa mengubah partisi panggung PANJALU/JANGGALA.
    */
   min-height: 4.5rem;
 }
@@ -2642,12 +2652,78 @@ p {
  * tinggi, di bidang bayang yang kosong.
  */
 .scene[data-media-slot="921-kadhiri"] .stage-passages {
-  justify-self: end;
-  margin-right: clamp(0rem, 4vw, 4rem);
+  justify-self: start;
+  width: min(100%, 38rem);
+  max-width: 38rem;
+  margin-top: clamp(1.25rem, 3svh, 2rem);
+  margin-right: 0;
+  gap: clamp(0.65rem, 1.4svh, 0.9rem);
 }
 
 .scene[data-media-slot="921-kadhiri"] .stage-beat {
   background: none;
+  padding: 0;
+}
+
+/* Foto prasasti sudah menjadi subjek visual; blueprint generik varian `word`
+   justru menambah garis yang tidak bermakna pada scene ini. */
+.scene[data-media-slot="921-kadhiri"] .stage-surface > svg {
+  display: none;
+}
+
+/* Motif transisi prasasti sudah selesai pada scene sebelumnya. Menampilkannya
+   kembali di 921 hanya menciptakan garis putus-putus tanpa fungsi naratif. */
+.scene[data-media-slot="921-kadhiri"]
+.scene-handoff[data-handoff-phase="incoming"] {
+  display: none;
+}
+
+/*
+ * Scene 921 kini memakai tarikh lengkap sebagai subheading editorial.
+ * Skala monumental sebelumnya dirancang untuk satu angka tahun; saat diberi
+ * tiga kata, setiap unit jatuh ke baris baru dan separator tampak seperti
+ * titik yatim di kiri. Tarikh lengkap ini harus tetap satu baris, halus, dan
+ * berada di bawah hierarki nama KADHIRI.
+ */
+.scene[data-media-slot="921-kadhiri"][data-choreography="nameEmerges"]
+.stage-date {
+  flex-wrap: nowrap;
+  gap: 0.72em;
+  font-size: clamp(0.875rem, 1.2vw, 1rem);
+  line-height: 1.35;
+  letter-spacing: 0.15em;
+  color: var(--cinema-accent);
+}
+
+.scene[data-media-slot="921-kadhiri"] .stage-date .date-unit {
+  gap: 0;
+}
+
+.scene[data-media-slot="921-kadhiri"][data-choreography="nameEmerges"]
+  .master-line {
+  max-width: 22ch;
+  font-size: clamp(2rem, 3vw, 2.75rem);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+}
+
+.scene[data-media-slot="921-kadhiri"] .stage-passages p {
+  max-width: none;
+  font-size: clamp(0.875rem, 1vw, 0.975rem);
+  line-height: 1.72;
+  letter-spacing: 0.015em;
+}
+
+@media (min-width: 48rem) {
+  .scene[data-media-slot="921-kadhiri"] .scene-nomenclature {
+    justify-items: start;
+    padding-inline: clamp(1.25rem, 5vw, 5rem);
+  }
+
+  .scene[data-media-slot="921-kadhiri"] .scene-name {
+    align-items: flex-start;
+    text-align: left;
+  }
 }
 
 /* Beat awal mempertahankan warna teksnya tanpa bidang latar atau panel. */
@@ -3991,4 +4067,33 @@ html[data-intro="pending"] .prologue-stage .stage-visual-label,
 html[data-intro="pending"] .prologue-credit,
 html[data-intro="pending"] .prologue-title-card {
   opacity: 0;
+}
+
+@media (min-width: 48rem) {
+  /* Scene 1015 memecah naskah panjang menjadi beat tunggal. Bidang baca yang
+     sedikit lebih lebar menjaga setiap beat pada satu atau dua baris tanpa
+     mengecilkan font maupun menambahkan panel di belakang teks. Diletakkan
+     setelah aturan panggung umum agar override ini tidak menambah konflik
+     specificity pada sistem tipografi global. */
+  .scene[data-choreography="nameEndures"] .stage-passages {
+    width: min(100%, 44rem);
+    max-width: 44rem;
+  }
+
+  .scene[data-choreography="nameEndures"] .stage-beat,
+  .scene[data-choreography="nameEndures"] .stage-beat p {
+    max-width: none;
+  }
+
+  /* Scene 1042 memakai enam beat tunggal. Lebar yang sama menjaga kalimat
+     sejarah dan tradisi tetap pendek tanpa panel atau pengecilan tipografi. */
+  .scene[data-choreography="dividedKingdom"] .stage-passages {
+    width: min(100%, 44rem);
+    max-width: 44rem;
+  }
+
+  .scene[data-choreography="dividedKingdom"] .stage-beat,
+  .scene[data-choreography="dividedKingdom"] .stage-beat p {
+    max-width: none;
+  }
 }

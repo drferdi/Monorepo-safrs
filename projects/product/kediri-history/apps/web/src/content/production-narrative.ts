@@ -1,4 +1,5 @@
 import type { ActDto, JourneyManifestDto, SceneDto } from "./dto";
+import { PUBLIC_EVIDENCE_LANGUAGE } from "./public-evidence-language";
 
 /**
  * Snapshot editorial naskah produksi yang ditetapkan Chief pada 2026-08-26.
@@ -113,8 +114,7 @@ type SceneInput = Pick<
   readonly previewAltText?: string;
 };
 
-const EDITORIAL_DRAFT_STATUS =
-  "Naskah editorial untuk peninjauan · belum dipublikasikan";
+const EDITORIAL_DRAFT_STATUS = PUBLIC_EVIDENCE_LANGUAGE.editorialDraft;
 
 function scene(input: SceneInput): SceneDto {
   const expectedPath =
@@ -229,15 +229,14 @@ const ACT_1 = act(
       order: 2,
       slug: "921-kadhiri",
       title: "Kadhiri",
-      dateDisplay: "19 September 921",
+      dateDisplay: "19 SEPTEMBER 921",
       sceneType: "supporting",
       visualVariant: "word",
       choreographyKey: "nameEmerges",
-      // Tujuh ketukan (revisi Chief 2026-08-30), satu per paragraf brief:
-      // nama muncul → Prasasti Harinjing B → momen penting → wilayah kini
-      // bernama → makna kāḍiri → nama bertahan lintas zaman → jembatan
-      // transisi ("tidak berhenti pada satu prasasti") menuju scene 1015.
-      beatGroups: [[0], [1], [2], [3], [4], [5], [6]],
+      // Tujuh ketukan: pembuka dua baris → Prasasti Harinjing B → momen
+      // penting → wilayah kini bernama → makna kāḍiri → nama bertahan lintas
+      // zaman → transisi menuju scene 1015.
+      beatGroups: [[0, 1], [2], [3], [4], [5], [6], [7]],
       imageReady: true,
       // Crop lolos verifikasi Redo Register (REDO-ASSET-002); disajikan
       // statis, tanpa gerbang route pratinjau.
@@ -246,7 +245,8 @@ const ACT_1 = act(
         "Visualisasi artistik bongkah batu prasasti dengan kata kadhiri terbaca di tengah barisan aksara kuno.",
       masterLine: "Kadhiri. Sebuah nama muncul dari dalam sejarah.",
       paragraphs: [
-        "Nama itu muncul: Kadhiri.",
+        "Nama itu muncul:",
+        "Kadhiri.",
         "Dalam Prasasti Harinjing B, bertarikh 19 September 921, nama Kadhiri tercatat secara tertulis pada masa Raja Rakai Layang Dyah Tulodong.",
         "Inilah salah satu momen penting dalam sejarah Kediri.",
         "Sebuah wilayah yang sebelumnya kita kenali melalui jejak masa lalu kini memiliki nama yang dapat kita baca lebih dari seribu tahun kemudian.",
@@ -258,48 +258,55 @@ const ACT_1 = act(
     scene({
       order: 3,
       slug: "1015-name-endures",
-      title: "The Name Endures",
-      dateDisplay: "1015",
+      title: "Nama yang Kembali Muncul",
+      dateDisplay: "7 Juni 1015",
       sceneType: "interlude",
       visualVariant: "document",
       epistemicStatus: "Research Hold",
       choreographyKey: "nameEndures",
-      // Tiga ketukan: keberlanjutan → kemungkinan Carama → disiplin bukti.
-      beatGroups: [[0], [1, 2], [3, 4]],
+      // Tujuh ketukan pendek: setiap ketukan memuat satu gagasan dan tidak
+      // pernah menumpuk lebih dari dua baris pada bidang baca desktop.
+      beatGroups: [[0], [1], [2], [3], [4], [5], [6]],
       imageReady: true,
       // Crop lolos verifikasi Redo Register (REDO-ASSET-003); disajikan
       // statis, tanpa gerbang route pratinjau.
       imagePath: "/journey-approved/03-1015-name-endures.webp",
       previewAltText:
         "Visualisasi artistik lempeng tembaga gelap dengan jejak tulisan samar; nama Kadhiri hampir tak terbaca, sengaja menyisakan ketidakpastian.",
-      masterLine: "Kadhiri bukan nama yang muncul sekali, lalu lenyap.",
+      masterLine: "Nama yang Kembali Muncul",
       paragraphs: [
-        "Nama dapat muncul sekali karena kebetulan. Namun jika ia kembali hadir dalam catatan-catatan berikutnya, kita mulai melihat sesuatu yang lebih besar: keberlanjutan.",
-        "Riset saat ini menunjukkan kemungkinan bahwa Kadhiri kembali disebut pada awal abad ke-11 melalui Prasasti Carama.",
-        "Tetapi sejarah yang baik tidak dibangun dari keinginan agar sesuatu menjadi benar. Ia dibangun dari bukti.",
-        "Karena itu, selama lokasi penyimpanan, transkripsi, dan status ilmiahnya belum diverifikasi sepenuhnya, adegan ini tetap menjadi penanda penelitian—bukan kesimpulan.",
-        "Bahkan ketidakpastian memiliki tempat dalam sejarah.",
+        "Hampir satu abad kemudian, Kadhiri kembali hadir dalam jejak epigrafis.",
+        "Prasasti Carama, bertarikh 7 Juni 1015, mencatat penganugerahan yang berkaitan dengan Sri Mahadewi yang bertakhta di Kadhiri.",
+        "Basis sejarah proyek ini mencatat lempeng tembaganya kini berada di Frankfurt, Jerman.",
+        "Bagi sejarawan, kemunculan nama yang berulang penting.",
+        "Karena ia menunjukkan bahwa Kadhiri bukan sekadar sebuah nama yang kebetulan muncul sekali.",
+        "Wilayah ini telah menjadi bagian dari dunia politik Jawa sebelum Kerajaan Panjalu mencapai kejayaannya.",
+        "Tetapi perubahan terbesar baru terjadi pada 1042.",
       ],
     }),
     scene({
       order: 4,
       slug: "1042-river-divides-kingdom",
-      title: "The River Divides a Kingdom",
+      title: "Panjalu dan Janggala",
       dateDisplay: "1042",
       sceneType: "hero",
       visualVariant: "landscape",
       choreographyKey: "dividedKingdom",
+      beatGroups: [[0], [1], [2], [3], [4], [5]],
       imageReady: true,
       // Crop lolos verifikasi Redo Register (REDO-ASSET-004); disajikan
       // statis, tanpa gerbang route pratinjau.
       imagePath: "/journey-approved/04-1042-river-divides-kingdom.webp",
       previewAltText:
         "Visualisasi artistik pandangan udara malam: sungai Brantas membelah dataran menjadi wilayah Panjalu di barat dan Janggala di timur.",
-      masterLine:
-        "Sejarah mengingat sebuah pembagian. Tradisi mengingat air suci.",
+      masterLine: "Panjalu dan Janggala",
       paragraphs: [
-        "Pada 1042, sebuah warisan politik harus dibagi.",
-        "Sejarah mencatat pembagian kekuasaan Airlangga menjadi dua wilayah: Panjalu dan Janggala.",
+        "Pada 1042, kekuasaan Airlangga dibagi menjadi dua wilayah: Panjalu dan Janggala.",
+        "Pembagian ini mengubah peta politik Jawa Timur.",
+        "Dalam tradisi kemudian, Mpu Bharada dikisahkan membelah tanah dengan air suci untuk menandai kedua wilayah.",
+        "Kisah Mpu Bharada merupakan bagian dari tradisi, bukan catatan peristiwa yang dapat dipastikan secara langsung.",
+        "Di antara kedua wilayah itu mengalir Brantas.",
+        "Dari pembagian inilah Panjalu tumbuh, dengan Daha sebagai pusat kekuasaannya.",
       ],
     }),
   ],

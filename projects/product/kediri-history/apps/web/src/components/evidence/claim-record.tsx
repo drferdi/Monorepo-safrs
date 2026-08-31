@@ -1,13 +1,14 @@
 import type { ReactElement } from "react";
 
 import type { ClaimDto } from "../../content/dto";
+import { PUBLIC_EVIDENCE_LANGUAGE } from "../../content/public-evidence-language";
 import { EvidenceClassBadge } from "./evidence-badge";
 
 const CONFIDENCE_LABELS: Readonly<Record<string, string>> = {
-  high: "Tinggi · High",
-  moderate: "Sedang · Moderate",
-  low: "Rendah · Low",
-  contested: "Diperdebatkan · Contested",
+  high: "Tinggi",
+  moderate: "Sedang",
+  low: "Rendah",
+  contested: "Masih diperdebatkan",
 };
 
 /**
@@ -39,7 +40,7 @@ export function ClaimRecord({
       <p>
         <EvidenceClassBadge evidenceClass={claim.evidenceClass} />{" "}
         <span className="archive-label">
-          Keyakinan · Confidence:{" "}
+          {PUBLIC_EVIDENCE_LANGUAGE.confidence}:{" "}
           {CONFIDENCE_LABELS[claim.confidence] ?? claim.confidence}
         </span>
       </p>
@@ -47,7 +48,7 @@ export function ClaimRecord({
       {supporting.length > 0 ? (
         <>
           <h4 className="archive-label">
-            Bukti yang menopang · Supporting evidence
+            {PUBLIC_EVIDENCE_LANGUAGE.supporting}
           </h4>
           <ul className="record-list">
             {supporting.map((link) => (
@@ -76,7 +77,7 @@ export function ClaimRecord({
         <>
           {/* Ketidaksepakatan dipertahankan, tidak dihapus. */}
           <h4 className="archive-label">
-            Bukti yang membantah · Contradicting evidence
+            {PUBLIC_EVIDENCE_LANGUAGE.differing}
           </h4>
           <ul className="record-list">
             {contradicting.map((link) => (
@@ -98,7 +99,7 @@ export function ClaimRecord({
 
       {contextual.length > 0 ? (
         <>
-          <h4 className="archive-label">Konteks · Context</h4>
+          <h4 className="archive-label">{PUBLIC_EVIDENCE_LANGUAGE.context}</h4>
           <ul className="record-list">
             {contextual.map((link) => (
               <li key={link.id}>
@@ -118,7 +119,7 @@ export function ClaimRecord({
 
       {claim.competingClaimSlugs.length > 0 ? (
         <p className="archive-label">
-          Klaim tandingan · Competing claims:{" "}
+          {PUBLIC_EVIDENCE_LANGUAGE.competing}:{" "}
           {claim.competingClaimSlugs.join(", ")}
         </p>
       ) : null}

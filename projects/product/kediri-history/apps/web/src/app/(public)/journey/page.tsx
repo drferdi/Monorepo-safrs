@@ -175,6 +175,11 @@ export default async function JourneyPage(): Promise<ReactElement> {
                       ? "true"
                       : undefined
                   }
+                  data-opening-handoff-source={
+                    editorialPreview && act.slug === "the-land-remembers"
+                      ? "true"
+                      : undefined
+                  }
                 >
                   <ActHeaderReveal
                     enabled={

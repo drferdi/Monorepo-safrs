@@ -62,6 +62,10 @@ export function SceneOpeningAddress(): ReactElement {
           const address = transition.querySelector<HTMLElement>(
             ".scene-opening-address",
           );
+          const sourceHeader =
+            transition.ownerDocument.querySelector<HTMLElement>(
+              '[data-opening-handoff-source="true"]',
+            );
           const lines = Array.from(
             transition.querySelectorAll<HTMLElement>(".opening-address-line"),
           );
@@ -71,16 +75,28 @@ export function SceneOpeningAddress(): ReactElement {
             ),
           );
 
-          if (!address || lines.length === 0 || chars.length === 0) {
+          if (
+            !address ||
+            !sourceHeader ||
+            lines.length === 0 ||
+            chars.length === 0
+          ) {
             return undefined;
           }
 
-          // Server-rendered text is the fallback; only this motion variant
-          // starts the character reveal from a hidden visual state.
+          // Baseline server-rendered tetap utuh. Motion aktif membuat satu
+          // handoff deterministik: header act meredup, sambutan masuk dan
+          // bertahan, lalu sambutan meredup sebelum 879 mengambil layar.
+          gsap.set(sourceHeader, { opacity: 1 });
           gsap.set(address, { opacity: 1 });
           gsap.set(chars, { opacity: 0, y: MOTION.read.y / 2 });
 
           const timeline = gsap.timeline({ paused: true });
+          timeline.to(
+            sourceHeader,
+            { opacity: 0, duration: 0.18, ease: "none" },
+            0,
+          );
           lines.forEach((line, index) => {
             const lineChars = Array.from(
               line.querySelectorAll<HTMLElement>("[data-address-char]"),
@@ -90,17 +106,16 @@ export function SceneOpeningAddress(): ReactElement {
               {
                 opacity: 1,
                 y: 0,
-                duration: 0.1,
+                duration: 0.07,
                 ease: "none",
-                stagger: { amount: 0.1, from: "start" },
+                stagger: { amount: 0.05, from: "start" },
               },
-              index * 0.08,
+              0.22 + index * 0.08,
             );
           });
 
-          // Reveal selesai pada 36% timeline, sehingga address lengkap dapat
-          // menetap sepanjang hampir setengah jendela scroll. Fade baru mulai
-          // ketika 879 telah mendekati seperempat bawah viewport.
+          // Header selesai meredup sebelum huruf pertama masuk. Address selesai
+          // sekitar 45%, menetap sampai 82%, lalu 879 sudah dekat di viewport.
           timeline.to(
             address,
             { opacity: 0, duration: 0.18, ease: "power1.in" },
@@ -109,8 +124,8 @@ export function SceneOpeningAddress(): ReactElement {
 
           const trigger = ScrollTrigger.create({
             trigger: transition,
-            start: "top bottom",
-            end: "bottom 75%",
+            start: "top 50%",
+            end: "bottom 50%",
             scrub: 0.25,
             invalidateOnRefresh: true,
             animation: timeline,
@@ -119,7 +134,7 @@ export function SceneOpeningAddress(): ReactElement {
           return () => {
             trigger.kill();
             timeline.kill();
-            gsap.set([address, ...chars], { clearProps: "all" });
+            gsap.set([sourceHeader, address, ...chars], { clearProps: "all" });
           };
         },
       );

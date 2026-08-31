@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactElement } from "react";
 
 import type { MediaDto, SceneDto } from "../../content/dto";
+import { PUBLIC_EVIDENCE_LANGUAGE } from "../../content/public-evidence-language";
 import { ClaimRecord } from "../evidence/claim-record";
 import {
   dominantEvidenceClass,
@@ -71,6 +72,9 @@ export function SceneSection({
   const event = scene.primaryEvent;
   const featuredArtifact = event?.artifacts[0];
   const dateParts = stagedDate(scene);
+  const showDateSeparators = !["921-kadhiri", "1015-name-endures"].includes(
+    scene.slug,
+  );
   const narratives =
     scene.narrativeParagraphs ??
     (scene.narrativeShort ? [scene.narrativeShort] : []);
@@ -84,7 +88,7 @@ export function SceneSection({
   // "SCENE n · judul · label review" dari PANGGUNG — bukan dari dokumen.
   // Eyebrow dan judul tetap ada untuk pembaca layar (aria-labelledby, urutan
   // DOM); yang berhenti adalah kotak visualnya. Kalimat pemikul (masterLine)
-  // membawa makna itu secara sinematik. Status pengetahuan tetap tampil utuh
+  // membawa makna itu secara sinematik. Catatan sumber tetap tampil utuh
   // di strip bacaan (.scene-readout) di bawah panggung.
   const stageChromeVisible = !(
     typeof scene.order === "number" && scene.order <= 4
@@ -148,7 +152,7 @@ export function SceneSection({
             >
               {dateParts.map((part, index) => (
                 <span className="date-unit" key={part}>
-                  {index > 0 ? (
+                  {index > 0 && showDateSeparators ? (
                     <span className="date-sep" aria-hidden="true">
                       ·
                     </span>
@@ -262,7 +266,7 @@ export function SceneSection({
       <div className="scene-readout" data-motion="readout">
         {scene.epistemicStatus ? (
           <p className="epistemic-note">
-            <span>Status pengetahuan</span>
+            <span>{PUBLIC_EVIDENCE_LANGUAGE.epistemicLabel}</span>
             {scene.epistemicStatus}
           </p>
         ) : null}
@@ -294,7 +298,7 @@ export function SceneSection({
 
         {scene.featuredClaims.length > 0 ? (
           <details className="evidence-disclosure" open>
-            <summary>Bukti sejarah · Historical evidence</summary>
+            <summary>{PUBLIC_EVIDENCE_LANGUAGE.disclosure}</summary>
             <div>
               {scene.featuredClaims.map((claim) => (
                 <ClaimRecord key={claim.id} claim={claim} />

@@ -43,7 +43,9 @@ describe("production journey contract", () => {
           ? /^\/journey-approved\//u
           : /^\/api\/editorial-preview\//u,
       );
-      expect(scene.epistemicStatus).toContain("belum dipublikasikan");
+      expect(scene.epistemicStatus).toContain(
+        "Naskah ini masih dalam proses penelaahan editorial dan belum diterbitkan secara resmi.",
+      );
     }
     // Seluruh 26 slot siap. Penangguhan 1292 (flag F1) ditutup perintah
     // Chief 2026-08-29 dengan aset revisi; catatan epistemik teks terbakar
@@ -76,6 +78,111 @@ describe("production journey contract", () => {
       .filter((key): key is string => key !== undefined);
     expect(keys).toHaveLength(sceneKeys.length);
     expect(new Set(keys)).toEqual(new Set(sceneKeys));
+  });
+
+  it("uses the approved 19 September 921 Kadhiri narrative", () => {
+    const kadhiri = scenes.find((scene) => scene.slug === "921-kadhiri");
+
+    expect(kadhiri?.dateDisplay).toBe("19 SEPTEMBER 921");
+    expect(kadhiri?.narrativeParagraphs).toEqual([
+      "Nama itu muncul:",
+      "Kadhiri.",
+      "Dalam Prasasti Harinjing B, bertarikh 19 September 921, nama Kadhiri tercatat secara tertulis pada masa Raja Rakai Layang Dyah Tulodong.",
+      "Inilah salah satu momen penting dalam sejarah Kediri.",
+      "Sebuah wilayah yang sebelumnya kita kenali melalui jejak masa lalu kini memiliki nama yang dapat kita baca lebih dari seribu tahun kemudian.",
+      "Dalam bahasa Jawa Kuno, kāḍiri dikaitkan dengan makna berdiri sendiri, mandiri, atau berdiri tegak.",
+      "Nama itu akan bertahan melewati kerajaan, perang, kolonialisme, revolusi, dan modernisasi.",
+      "Dan nama Kadhiri tidak berhenti pada satu prasasti.",
+    ]);
+    expect(kadhiri?.narrativeBeats).toEqual([
+      ["Nama itu muncul:", "Kadhiri."],
+      [
+        "Dalam Prasasti Harinjing B, bertarikh 19 September 921, nama Kadhiri tercatat secara tertulis pada masa Raja Rakai Layang Dyah Tulodong.",
+      ],
+      ["Inilah salah satu momen penting dalam sejarah Kediri."],
+      [
+        "Sebuah wilayah yang sebelumnya kita kenali melalui jejak masa lalu kini memiliki nama yang dapat kita baca lebih dari seribu tahun kemudian.",
+      ],
+      [
+        "Dalam bahasa Jawa Kuno, kāḍiri dikaitkan dengan makna berdiri sendiri, mandiri, atau berdiri tegak.",
+      ],
+      [
+        "Nama itu akan bertahan melewati kerajaan, perang, kolonialisme, revolusi, dan modernisasi.",
+      ],
+      ["Dan nama Kadhiri tidak berhenti pada satu prasasti."],
+    ]);
+    expect(kadhiri?.narrativeParagraphs?.join(" ")).not.toContain(
+      "Sebuah tempat dapat hidup jauh sebelum dunia menuliskan namanya",
+    );
+    expect(kadhiri?.narrativeParagraphs?.join(" ")).not.toContain(
+      "Gunung telah berdiri. Brantas telah mengalir.",
+    );
+  });
+
+  it("uses the approved 7 June 1015 Carama narrative", () => {
+    const carama = scenes.find((scene) => scene.slug === "1015-name-endures");
+
+    expect(carama?.title).toBe("Nama yang Kembali Muncul");
+    expect(carama?.dateDisplay).toBe("7 Juni 1015");
+    expect(carama?.masterLine).toBe("Nama yang Kembali Muncul");
+    expect(carama?.narrativeParagraphs).toEqual([
+      "Hampir satu abad kemudian, Kadhiri kembali hadir dalam jejak epigrafis.",
+      "Prasasti Carama, bertarikh 7 Juni 1015, mencatat penganugerahan yang berkaitan dengan Sri Mahadewi yang bertakhta di Kadhiri.",
+      "Basis sejarah proyek ini mencatat lempeng tembaganya kini berada di Frankfurt, Jerman.",
+      "Bagi sejarawan, kemunculan nama yang berulang penting.",
+      "Karena ia menunjukkan bahwa Kadhiri bukan sekadar sebuah nama yang kebetulan muncul sekali.",
+      "Wilayah ini telah menjadi bagian dari dunia politik Jawa sebelum Kerajaan Panjalu mencapai kejayaannya.",
+      "Tetapi perubahan terbesar baru terjadi pada 1042.",
+    ]);
+    expect(carama?.narrativeBeats).toEqual([
+      [
+        "Hampir satu abad kemudian, Kadhiri kembali hadir dalam jejak epigrafis.",
+      ],
+      [
+        "Prasasti Carama, bertarikh 7 Juni 1015, mencatat penganugerahan yang berkaitan dengan Sri Mahadewi yang bertakhta di Kadhiri.",
+      ],
+      [
+        "Basis sejarah proyek ini mencatat lempeng tembaganya kini berada di Frankfurt, Jerman.",
+      ],
+      ["Bagi sejarawan, kemunculan nama yang berulang penting."],
+      [
+        "Karena ia menunjukkan bahwa Kadhiri bukan sekadar sebuah nama yang kebetulan muncul sekali.",
+      ],
+      [
+        "Wilayah ini telah menjadi bagian dari dunia politik Jawa sebelum Kerajaan Panjalu mencapai kejayaannya.",
+      ],
+      ["Tetapi perubahan terbesar baru terjadi pada 1042."],
+    ]);
+    expect(carama?.narrativeParagraphs?.join(" ")).not.toContain(
+      "Nama dapat muncul sekali karena kebetulan",
+    );
+    expect(carama?.epistemicStatus).toContain("Research Hold");
+  });
+
+  it("presents the 1042 division while distinguishing historical record from tradition", () => {
+    const division = scenes.find(
+      (scene) => scene.slug === "1042-river-divides-kingdom",
+    );
+
+    const paragraphs = [
+      "Pada 1042, kekuasaan Airlangga dibagi menjadi dua wilayah: Panjalu dan Janggala.",
+      "Pembagian ini mengubah peta politik Jawa Timur.",
+      "Dalam tradisi kemudian, Mpu Bharada dikisahkan membelah tanah dengan air suci untuk menandai kedua wilayah.",
+      "Kisah Mpu Bharada merupakan bagian dari tradisi, bukan catatan peristiwa yang dapat dipastikan secara langsung.",
+      "Di antara kedua wilayah itu mengalir Brantas.",
+      "Dari pembagian inilah Panjalu tumbuh, dengan Daha sebagai pusat kekuasaannya.",
+    ];
+
+    expect(division?.title).toBe("Panjalu dan Janggala");
+    expect(division?.dateDisplay).toBe("1042");
+    expect(division?.masterLine).toBe("Panjalu dan Janggala");
+    expect(division?.narrativeParagraphs).toEqual(paragraphs);
+    expect(division?.narrativeBeats).toEqual(
+      paragraphs.map((paragraph) => [paragraph]),
+    );
+    expect(division?.narrativeParagraphs?.join(" ")).not.toContain(
+      "Sejarah mengingat sebuah pembagian. Tradisi mengingat air suci.",
+    );
   });
 
   it("menjaga Prolog sebagai satu shot dengan dua beat editorial", () => {
@@ -142,8 +249,8 @@ describe("production journey contract", () => {
       sceneCount: 1,
     });
 
-    expect(composed.acts[0]?.scenes[0]?.epistemicStatus).toContain(
-      "belum dipublikasikan",
+    expect(composed.acts[0]?.scenes[0]?.epistemicStatus).toBe(
+      "Naskah ini masih dalam proses penelaahan editorial dan belum diterbitkan secara resmi.",
     );
   });
 });
