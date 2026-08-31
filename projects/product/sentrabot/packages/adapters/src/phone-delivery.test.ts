@@ -459,6 +459,176 @@ describe("deliverPhoneOutbound", () => {
   });
 });
 
+describe("deliverPhoneOutbound outside the WhatsApp service window", () => {
+  // The stock identity has no lastInboundAt, so the 24h window is closed.
+  function expiredRow() {
+    return [
+      {
+        id: "out-wa",
+        idempotencyKey: "msg:m-wa",
+        kind: "dm",
+        provider: "whatsapp",
+        toNumber: "+15551234567",
+        body: "Laporan mingguan sudah selesai",
+        status: "pending",
+        providerHandle: null,
+      },
+    ];
+  }
+
+  function withTemplate(deps: ReturnType<typeof createDeps>) {
+    const sendTemplate = vi.fn(async () => ({ handle: "wamid.T1" }));
+    (deps as { whatsappMessaging?: MessagingProvider }).whatsappMessaging = {
+      ...deps.messaging,
+      sendTemplate,
+    } as unknown as MessagingProvider;
+    return sendTemplate;
+  }
+
+  it("reaches the owner through the approved template", async () => {
+    const deps = createDeps({ outboundRows: expiredRow() });
+    const sendTemplate = withTemplate(deps);
+
+    await deliverPhoneOutbound(deps, {}, context);
+
+    expect(sendTemplate).toHaveBeenCalledWith(
+      { to: "+15551234567", body: "Laporan mingguan sudah selesai" },
+      context,
+    );
+    expect(deps.rows[0]).toEqual(
+      expect.objectContaining({ status: "sent", providerHandle: "wamid.T1" }),
+    );
+  });
+
+  it("fails terminally when no template is configured", async () => {
+    // A free-form send can never succeed here; retrying only burns budget.
+    const deps = createDeps({ outboundRows: expiredRow() });
+    await deliverPhoneOutbound(deps, {}, context);
+
+    expect(deps.sendDirect).not.toHaveBeenCalled();
+    expect(deps.rows[0]).toEqual(expect.objectContaining({ status: "failed" }));
+  });
+
+  it("sends normally while the window is still open", async () => {
+    const deps = createDeps({
+      identity: { ...identity, lastInboundAt: new Date() },
+      outboundRows: expiredRow(),
+    });
+    const sendTemplate = withTemplate(deps);
+
+    await deliverPhoneOutbound(deps, {}, context);
+
+    expect(sendTemplate).not.toHaveBeenCalled();
+    expect(deps.sendDirect).toHaveBeenCalled();
+  });
+});
+
+describe("deliverPhoneOutbound approval cards", () => {
+  const askMessage = {
+    id: "m-ask",
+    blocks: [
+      {
+        kind: "ask",
+        text: "Review before gmail.send → budi@example.com",
+        approvalEffectId: "eff-1",
+        status: "pending",
+        actions: [
+          { id: "allow", label: "Allow once" },
+          { id: "always", label: "Always allow this tool" },
+          { id: "deny", label: "Deny" },
+        ],
+      },
+    ],
+  };
+
+  it("sends a pending approval as a numbered card the owner can answer", async () => {
+    const deps = createDeps({ messages: [askMessage] });
+    await deliverPhoneOutbound(deps, { runId: "run-1" }, context);
+
+    // Without this the run waits on an approval the owner never sees.
+    expect(deps.rows[0]).toEqual(
+      expect.objectContaining({ idempotencyKey: "msg:m-ask", kind: "dm" }),
+    );
+    const calls = deps.sendDirect.mock.calls as unknown as Array<[{ body: string }]>;
+    const body = String(calls[0]?.[0].body);
+    expect(body).toContain("Review before gmail.send → budi@example.com");
+    expect(body).toContain("1 = Izinkan sekali");
+  });
+
+  it("does not re-send the message once its approval is answered", async () => {
+    // The continued run mirrors the same bot messages again. The key must not
+    // depend on the ask's status, or the surrounding text goes out twice.
+    const answered = {
+      id: "m-ask",
+      blocks: [
+        { kind: "text", text: "Saya siap mengirim emailnya." },
+        { ...askMessage.blocks[0], status: "answered", answer: "allow" },
+      ],
+    };
+    const deps = createDeps({
+      messages: [answered],
+      outboundRows: [
+        {
+          id: "out-1",
+          idempotencyKey: "msg:m-ask",
+          kind: "dm",
+          toNumber: "+15551234567",
+          body: "already sent",
+          status: "sent",
+        },
+      ],
+    });
+    await deliverPhoneOutbound(deps, { runId: "run-1" }, context);
+
+    expect(deps.rows).toHaveLength(1);
+    expect(deps.sendDirect).not.toHaveBeenCalled();
+  });
+
+  it("points at the app instead of asking for a secret by text", async () => {
+    const deps = createDeps({
+      messages: [
+        {
+          id: "m-secret",
+          blocks: [{ ...askMessage.blocks[0], input: "secret", text: "API key?" }],
+        },
+      ],
+    });
+    await deliverPhoneOutbound(deps, { runId: "run-1" }, context);
+
+    const calls = deps.sendDirect.mock.calls as unknown as Array<[{ body: string }]>;
+    const body = String(calls[0]?.[0].body);
+    expect(body).toContain("buka Sentra di web");
+    expect(body).not.toContain("1 = ");
+  });
+
+  it("keeps a plain reply on the ordinary mirror key", async () => {
+    const deps = createDeps({});
+    await deliverPhoneOutbound(deps, { runId: "run-1" }, context);
+
+    expect(deps.rows[0]).toEqual(expect.objectContaining({ idempotencyKey: "msg:m-1" }));
+  });
+
+  it("does not resend a card that was already mirrored", async () => {
+    const deps = createDeps({
+      messages: [askMessage],
+      outboundRows: [
+        {
+          id: "out-1",
+          idempotencyKey: "msg:m-ask",
+          kind: "dm",
+          toNumber: "+15551234567",
+          body: "already sent",
+          status: "sent",
+        },
+      ],
+    });
+    await deliverPhoneOutbound(deps, { runId: "run-1" }, context);
+
+    expect(deps.rows).toHaveLength(1);
+    expect(deps.sendDirect).not.toHaveBeenCalled();
+  });
+});
+
 describe("applyPhoneOutboundStatus", () => {
   it("maps terminal statuses onto outbox rows by handle", async () => {
     const deps = createDeps({});

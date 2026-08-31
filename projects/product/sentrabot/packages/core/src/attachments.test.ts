@@ -83,6 +83,9 @@ describe("attachment helpers", () => {
     expect(userTurnBlocksForRun("user", "run-fanout", messages, "message-old")).toEqual(
       messages[0]?.blocks,
     );
+    // A photo texted in over WhatsApp is a user turn too; without this the
+    // image block never reaches the model.
+    expect(userTurnBlocksForRun("phone", "run-old", messages)).toEqual(messages[0]?.blocks);
   });
 
   it("selects pending attachments only for their originating bot", () => {

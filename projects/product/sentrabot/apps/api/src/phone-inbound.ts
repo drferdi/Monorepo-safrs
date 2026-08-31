@@ -1,7 +1,18 @@
-import type { JobPublisher, MessagingInboundMessage } from "@sentrabot/adapter-kit";
+import type {
+  JobPublisher,
+  MessagingInboundMedia,
+  MessagingInboundMessage,
+} from "@sentrabot/adapter-kit";
 import { phoneDeliverJob, runContinueJob } from "@sentrabot/adapter-kit";
 import type { MessageBlock } from "@sentrabot/contracts";
-import { parsePhoneCommand, sanitizePhoneLabel } from "@sentrabot/core";
+import {
+  formatPhoneString,
+  type PhoneLocale,
+  parsePhoneCommand,
+  phoneStrings,
+  renderPhoneAskCard,
+  sanitizePhoneLabel,
+} from "@sentrabot/core";
 import type {
   Prisma,
   PrismaClient,
@@ -10,10 +21,11 @@ import type {
   ThreadEvents,
 } from "@sentrabot/db";
 import { createThreadMessage } from "@sentrabot/db";
+import type { PhoneMediaIngestion } from "./phone-media.js";
 
 export interface PhoneInboundDeps {
   prisma: PrismaClient;
-  events: Pick<ThreadEvents, "sendUserMessage" | "notify">;
+  events: Pick<ThreadEvents, "sendUserMessage" | "notify" | "answerRunInput">;
   jobs: Pick<JobPublisher, "enqueue">;
   provision: (phoneE164: string, env: SignupPolicyEnv) => Promise<ProvisionedPhoneIdentity>;
   signupPolicy: SignupPolicyEnv;
@@ -24,6 +36,17 @@ export interface PhoneInboundDeps {
    * Cosmetic only — callers must catch failures; groups never get it.
    */
   typing?: (toNumber: string) => Promise<void>;
+  /**
+   * Turn an inbound attachment into blocks the agent can read (artifact for a
+   * photo or document, transcript for a voice note). Absent for vendors with
+   * no media support — their attachments keep riding along as a URL in text.
+   */
+  ingestMedia?: (
+    owner: { userId: string; workspaceId: string; botId: string },
+    media: MessagingInboundMedia,
+  ) => Promise<PhoneMediaIngestion>;
+  /** Language of the deployment's own copy on this channel; defaults to "id". */
+  locale?: PhoneLocale;
 }
 
 type PhoneIdentityRow = {
@@ -55,25 +78,31 @@ async function handleDirectEvent(
   deps: PhoneInboundDeps,
   event: MessagingInboundMessage,
 ): Promise<void> {
-  // Inbound media arrives as a CDN URL (expires after 30 days); no
-  // artifact ingestion in v1, so it rides along as text.
+  // Vendors that expose media as a plain CDN URL (expiring after 30 days)
+  // still ride along as text; ones that hand over a media id are ingested
+  // into artifacts below.
   const text = [event.content, event.mediaUrl].filter(Boolean).join("\n");
+  const media = deps.ingestMedia ? (event.media ?? null) : null;
 
   const existing = await deps.prisma.phoneIdentity.findUnique({
     where: { phoneE164: event.fromNumber },
   });
   if (existing) {
     // Any reply — even a content-free tapback — ends the consecutive-
-    // outbound streak, but only real text wakes the bot.
+    // outbound streak, but only real content wakes the bot.
     await deps.prisma.phoneIdentity.update({
       where: { id: existing.id },
       data: { outboundSinceInbound: 0, lastInboundAt: new Date() },
     });
-    if (!text) return;
-    // Owner commands are only parsed in the verified 1:1 conversation.
-    const command = parsePhoneCommand(event.content);
+    if (!text && !media) return;
+    // A bare digit answers whichever approval card the bot is waiting on.
+    // Digits, not YES/NO: those already answer channel invites.
+    if (!media && (await applyPhoneAskAnswer(deps, existing, event.content))) return;
+    // Owner commands are only parsed in the verified 1:1 conversation, and
+    // never when an attachment came with them.
+    const command = media ? null : parsePhoneCommand(event.content);
     if (command && (await applyPhoneCommand(deps, existing, command))) return;
-  } else if (!text) {
+  } else if (!text && !media) {
     // Never provision a full account for a tapback or empty payload.
     return;
   }
@@ -94,13 +123,35 @@ async function handleDirectEvent(
     ids = await deps.provision(event.fromNumber, deps.signupPolicy);
   }
 
+  let blocks: MessageBlock[] = [{ kind: "text", text }];
+  let prompt = text;
+  if (media) {
+    const ingestion = await deps.ingestMedia!(
+      { userId: ids.userId, workspaceId: ids.workspaceId, botId: ids.botId },
+      media,
+    );
+    if (ingestion.status === "failed") {
+      // Tell the sender why nothing happened; a dropped photo is
+      // indistinguishable from an agent that ignored them.
+      await enqueueConfirmation(
+        deps,
+        event.fromNumber,
+        `media-fail:${event.handle}`,
+        ingestion.reply,
+      );
+      return;
+    }
+    blocks = ingestion.blocks;
+    prompt = ingestion.prompt;
+  }
+
   const sent = await deps.events.sendUserMessage({
     workspaceId: ids.workspaceId,
     threadId: ids.threadId,
     botId: ids.botId,
     userId: ids.userId,
-    blocks: [{ kind: "text", text }],
-    prompt: text,
+    blocks,
+    prompt,
     trigger: "phone",
     clientNonce: `phone:${event.handle}`,
   });
@@ -119,12 +170,79 @@ async function handleDirectEvent(
   }
 }
 
+/**
+ * Answer the approval card the bot is waiting on. Returns true only when an
+ * answer was actually recorded; anything else — no waiting run, an ask that
+ * belongs in the app, a card already answered elsewhere — falls through and
+ * the text is delivered as an ordinary message.
+ */
+async function applyPhoneAskAnswer(
+  deps: PhoneInboundDeps,
+  identity: PhoneIdentityRow,
+  text: string,
+): Promise<boolean> {
+  const digit = text.trim();
+  if (!/^[1-9]$/.test(digit)) return false;
+  const run = await deps.prisma.run.findFirst({
+    where: { botId: identity.botId, status: "waiting_input" },
+    orderBy: { updatedAt: "desc" },
+    select: { id: true, threadId: true },
+  });
+  if (!run) return false;
+  const messages = await deps.prisma.message.findMany({
+    where: { runId: run.id, role: "bot" },
+    orderBy: { seq: "desc" },
+  });
+  const locale = deps.locale ?? "id";
+  for (const message of messages) {
+    const blocks = Array.isArray(message.blocks) ? (message.blocks as MessageBlock[]) : [];
+    const ask = blocks.find(
+      (block): block is Extract<MessageBlock, { kind: "ask" }> =>
+        block.kind === "ask" && block.status !== "answered",
+    );
+    if (!ask) continue;
+    const answer = renderPhoneAskCard(ask, locale)?.answers[digit];
+    if (!answer) return false;
+    const answered = await deps.events.answerRunInput({
+      workspaceId: identity.workspaceId,
+      threadId: run.threadId,
+      runId: run.id,
+      messageId: message.id,
+      answeredByUserId: identity.userId,
+      answer,
+    });
+    // Answered elsewhere between the read and the write: let the text through
+    // rather than overwriting a newer state.
+    if (!answered) return false;
+    // Without this the approval is recorded and the run still sits idle —
+    // the web route enqueues the same continuation.
+    await deps.jobs.enqueue(runContinueJob(run.id)).catch((error) => {
+      console.error("phone ask answer enqueue error", error);
+    });
+    const confirmation =
+      phoneStrings(locale).askConfirmed[
+        answer as keyof ReturnType<typeof phoneStrings>["askConfirmed"]
+      ];
+    if (confirmation) {
+      await enqueueConfirmation(
+        deps,
+        identity.phoneE164,
+        `ask-answered:${message.id}`,
+        confirmation,
+      );
+    }
+    return true;
+  }
+  return false;
+}
+
 /** Returns true when the command matched a pending item and was handled. */
 async function applyPhoneCommand(
   deps: PhoneInboundDeps,
   identity: PhoneIdentityRow,
   command: "approve" | "decline" | "leave",
 ): Promise<boolean> {
+  const strings = phoneStrings(deps.locale ?? "id");
   if (command === "leave") {
     const membership = await deps.prisma.phoneChannelMember.findFirst({
       where: { identityId: identity.id, status: "approved" },
@@ -142,7 +260,7 @@ async function applyPhoneCommand(
       deps,
       identity.phoneE164,
       `command:leave:${membership.id}`,
-      "You've left the channel; your agent will no longer post there. The iMessage group itself is unchanged. This deployment cannot remove the line from the group, so leaving only stops your agent's participation.",
+      strings.channelLeft,
     );
     return true;
   }
@@ -181,9 +299,7 @@ async function applyPhoneCommand(
         tx,
         identity.phoneE164,
         key,
-        approved
-          ? "You're in — your agent will now see and reply to that group."
-          : "No problem, your agent will stay out of that group.",
+        approved ? strings.channelJoined : strings.channelDeclined,
       );
       return true;
     });
@@ -212,16 +328,14 @@ async function applyPhoneCommand(
       tx,
       identity.phoneE164,
       key,
-      approved
-        ? "Connection approved — your agents can now message each other."
-        : "Connection declined.",
+      approved ? strings.connectionApproved : strings.connectionDeclined,
     );
     if (requesterIdentity) {
       await writeConfirmation(
         tx,
         requesterIdentity.phoneE164,
         connectedKey,
-        "Your connection request was accepted — your agents can now message each other.",
+        strings.connectionAccepted,
       );
     }
     return true;
@@ -347,7 +461,7 @@ async function handleChannelEvent(
           idempotencyKey: `intro:${channel.id}`,
           kind: "intro",
           providerGroupId: channel.providerGroupId,
-          body: "Hi — this number hosts Sentra Bot personal agents. Some people in this group haven't texted this line yet; send any message to this number first if you want your own agent here.",
+          body: phoneStrings(deps.locale ?? "id").channelIntro,
         },
       ],
       skipDuplicates: true,
@@ -418,6 +532,7 @@ async function inviteMember(
   channel: { id: string; name: string | null },
   identity: PhoneIdentityRow,
 ): Promise<void> {
+  const strings = phoneStrings(deps.locale ?? "id");
   const name = channel.name ?? "an iMessage group";
   // A returning member restarts the approval cycle; clear the prior invite
   // row or skipDuplicates would leave them with no prompt to answer.
@@ -430,7 +545,7 @@ async function inviteMember(
         idempotencyKey: `invite:${channel.id}:${identity.phoneE164}`,
         kind: "dm",
         toNumber: identity.phoneE164,
-        body: `"${name}" was linked to your Sentra Bot line. Reply YES to let your agent join the conversation there, or NO to stay out.`,
+        body: formatPhoneString(strings.channelInvite, { name }),
       },
     ],
     skipDuplicates: true,
@@ -443,7 +558,7 @@ async function inviteMember(
       blocks: [
         {
           kind: "meta",
-          text: `You were added to iMessage group "${name}". Reply YES in this conversation to join it with your agent.`,
+          text: formatPhoneString(strings.channelInviteNote, { name }),
         },
       ],
     });

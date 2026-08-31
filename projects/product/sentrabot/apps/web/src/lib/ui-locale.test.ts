@@ -14,6 +14,8 @@ describe("normalizeUiLocale", () => {
     expect(normalizeUiLocale("pt-BR")).toBe("pt-BR");
     expect(normalizeUiLocale("pt")).toBe("pt-BR");
     expect(normalizeUiLocale("hi-IN")).toBe("hi");
+    expect(normalizeUiLocale("id-ID")).toBe("id");
+    expect(normalizeUiLocale("id")).toBe("id");
     expect(normalizeUiLocale("DE")).toBe("de");
   });
 

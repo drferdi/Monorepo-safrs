@@ -46,6 +46,22 @@ export interface AppEnv {
   whatsappAppSecret: string | undefined;
   whatsappVerifyToken: string | undefined;
   whatsappBusinessPhoneE164: string | undefined;
+  /**
+   * Pre-approved WhatsApp template for reaching the owner after the 24h
+   * customer-service window closes. Unset keeps the prior behaviour: those
+   * messages fail terminally.
+   */
+  whatsappTemplateName: string | undefined;
+  whatsappTemplateLanguage: string | undefined;
+  /** Language of the deployment's own phone-channel copy ("id" default). */
+  phoneLocale: string | undefined;
+  /**
+   * Deployment-wide speech-to-text for inbound voice notes. Phone-provisioned
+   * users are synthetic and hold no voice credential of their own, so without
+   * this a voice note gets an honest "not supported" reply.
+   */
+  phoneTranscribeProvider: string | undefined;
+  phoneTranscribeApiKey: string | undefined;
   defaultProvider: string;
   defaultModel: string;
   wakeupDriver: string;
@@ -108,6 +124,11 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): AppEnv {
     whatsappAppSecret: optional(source.WHATSAPP_APP_SECRET),
     whatsappVerifyToken: optional(source.WHATSAPP_VERIFY_TOKEN),
     whatsappBusinessPhoneE164: optional(source.WHATSAPP_BUSINESS_PHONE_E164),
+    whatsappTemplateName: optional(source.WHATSAPP_TEMPLATE_NAME),
+    whatsappTemplateLanguage: optional(source.WHATSAPP_TEMPLATE_LANGUAGE),
+    phoneLocale: optional(source.PHONE_LOCALE),
+    phoneTranscribeProvider: optional(source.PHONE_TRANSCRIBE_PROVIDER),
+    phoneTranscribeApiKey: optional(source.PHONE_TRANSCRIBE_API_KEY),
     defaultProvider: deploymentModel.provider,
     defaultModel: deploymentModel.model,
     wakeupDriver: source.WAKEUP_DRIVER ?? "graphile",

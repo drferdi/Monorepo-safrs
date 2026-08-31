@@ -11,7 +11,10 @@ import {
 } from "@sentrabot/core";
 import { IsolationError, type PrismaClient } from "@sentrabot/db";
 
-function adapterContext(actor: Actor, botId: string, operationId: string) {
+/** Everything artifact ownership needs; a full Actor satisfies it. */
+export type ArtifactOwner = Pick<Actor, "userId" | "workspaceId">;
+
+function adapterContext(actor: ArtifactOwner, botId: string, operationId: string) {
   return {
     operationId,
     traceId: operationId,
@@ -37,7 +40,33 @@ export async function createOwnedArtifact(
   },
 ) {
   validateAttachmentMimeType(input.mimeType);
-  const bytes = decodeAttachmentBase64(input.contentBase64);
+  return createArtifactFromBytes(deps, actor, {
+    ...input,
+    bytes: decodeAttachmentBase64(input.contentBase64),
+  });
+}
+
+/**
+ * Store already-decoded bytes. Inbound phone media arrives as a download, not
+ * as base64, so it skips the transport decode but keeps the same ownership,
+ * hashing, and orphan-cleanup guarantees.
+ */
+export async function createArtifactFromBytes(
+  deps: {
+    prisma: PrismaClient;
+    artifacts: ArtifactStore;
+  },
+  actor: ArtifactOwner,
+  input: {
+    botId: string;
+    groupId?: string;
+    name: string;
+    mimeType: string;
+    bytes: Uint8Array;
+  },
+) {
+  validateAttachmentMimeType(input.mimeType);
+  const { bytes } = input;
   const context = adapterContext(actor, input.botId, `artifact-create:${input.botId}`);
   const stored = await deps.artifacts.put(
     { name: input.name, mimeType: input.mimeType, bytes },

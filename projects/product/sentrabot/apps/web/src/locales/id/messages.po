@@ -1,0 +1,3147 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-08-31 18:58+0700\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: id\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/pages/Shell.tsx:2423
+msgid " (unread)"
+msgstr " (belum dibaca)"
+
+#: src/pages/HostComputerPrompt.tsx:54
+msgid " macOS will not ask for extra permission if you let bots run on this Mac — they run as you."
+msgstr " macOS tidak akan meminta izin tambahan jika Anda mengizinkan bot berjalan di Mac ini — bot berjalan sebagai Anda."
+
+#: src/pages/HostComputerPrompt.tsx:60
+msgid " Your OS will not ask for extra permission if you let bots run on {hostLabel} — they run as you."
+msgstr " Sistem operasi Anda tidak akan meminta izin tambahan jika Anda mengizinkan bot berjalan di {hostLabel} — bot berjalan sebagai Anda."
+
+#. placeholder {0}: group.entries.length
+#: src/pages/ModelSettingsOverlay.tsx:371
+msgid "{0, plural, one {# model} other {# models}}"
+msgstr "{0, plural, one {# model} other {# model}}"
+
+#. placeholder {0}: file.name
+#: src/pages/Shell.tsx:1743
+msgid "{0} (max {ATTACHMENT_MAX_COUNT} attachments)"
+msgstr "{0} (maksimal {ATTACHMENT_MAX_COUNT} lampiran)"
+
+#. placeholder {0}: file.name
+#: src/pages/Shell.tsx:1747
+msgid "{0} (over 10 MiB)"
+msgstr "{0} (lebih dari 10 MiB)"
+
+#. placeholder {0}: preset.n
+#: src/pages/RoutineSchedule.tsx:80
+msgid "{0} {unitLabel}"
+msgstr "{0} {unitLabel}"
+
+#. placeholder {0}: block.name
+#: src/pages/Shell.tsx:6066
+msgid "{0} connection"
+msgstr "Koneksi {0}"
+
+#. placeholder {0}: computer.busyBotName
+#: src/pages/Shell.tsx:2937
+msgid "{0} is using it"
+msgstr "{0} sedang memakainya"
+
+#. placeholder {0}: format(size / 1024)
+#: src/components/ArtifactFileCard.tsx:270
+msgid "{0} KB"
+msgstr "{0} KB"
+
+#. placeholder {0}: format(size / (1024 * 1024))
+#: src/components/ArtifactFileCard.tsx:271
+msgid "{0} MB"
+msgstr "{0} MB"
+
+#. placeholder {0}: usage.runs
+#. placeholder {1}: usage.inputTokens + usage.outputTokens
+#: src/pages/AccountSettingsOverlay.tsx:216
+#: src/pages/Shell.tsx:2644
+msgid "{0} runs · {1} tokens"
+msgstr "{0} run · {1} token"
+
+#. placeholder {0}: conversations.length
+#: src/pages/PeerMessagesOverlay.tsx:149
+msgid "{botName} · {0, plural, one {# peer} other {# peers}}"
+msgstr "{botName} · {0, plural, one {# peer} other {# peer}}"
+
+#: src/pages/PeerMessagesOverlay.tsx:147
+msgid "{botName} has not messaged another bot yet."
+msgstr "{botName} belum mengirim pesan ke bot lain."
+
+#: src/pages/Shell.tsx:5943
+msgid "{botName}’s computer"
+msgstr "Komputer {botName}"
+
+#: src/pages/ActivityList.tsx:142
+msgid "{days}d ago"
+msgstr "{days} hari lalu"
+
+#: src/pages/ActivityList.tsx:140
+msgid "{hours}h ago"
+msgstr "{hours} jam lalu"
+
+#: src/pages/ActivityList.tsx:138
+msgid "{minutes}m ago"
+msgstr "{minutes} menit lalu"
+
+#. js-lingui-explicit-id
+#: src/lib/browser-notifications.ts:87
+msgid "{name} failed"
+msgstr "{name} gagal"
+
+#. js-lingui-explicit-id
+#: src/lib/browser-notifications.ts:98
+msgid "{name} finished"
+msgstr "{name} selesai"
+
+#. js-lingui-explicit-id
+#: src/lib/browser-notifications.ts:93
+msgid "{name} stopped"
+msgstr "{name} dihentikan"
+
+#: src/components/teach/TeachRecordingChrome.tsx:46
+#: src/components/teach/TeachRecordingChrome.tsx:64
+msgid "{remaining} left · bot is watching, not acting"
+msgstr "sisa {remaining} · bot mengamati, belum bertindak"
+
+#: src/components/ArtifactFileCard.tsx:264
+msgid "{size} B"
+msgstr "{size} B"
+
+#: src/pages/ActivityList.tsx:97
+msgid "{title}, {label}"
+msgstr "{title}, {label}"
+
+#: src/pages/Shell.tsx:3723
+msgid "{workingBotName} is working"
+msgstr "{workingBotName} sedang bekerja"
+
+#. placeholder {0}: mention.name
+#: src/pages/Shell.tsx:4223
+msgid "@{0}"
+msgstr "@{0}"
+
+#: src/pages/RoutineSchedule.tsx:150
+msgid "+ Add another schedule"
+msgstr "+ Tambah jadwal lain"
+
+#: src/components/teach/TeachComputerSection.tsx:133
+msgid "+ Teach a task"
+msgstr "+ Ajarkan sebuah tugas"
+
+#: src/pages/McpServersOverlay.tsx:329
+msgid "Access token (optional)"
+msgstr "Access token (opsional)"
+
+#: src/pages/AccountSettingsOverlay.tsx:128
+msgid "Account"
+msgstr "Akun"
+
+#: src/pages/Shell.tsx:5444
+msgid "Account default"
+msgstr "Default akun"
+
+#: src/components/ApprovalRulesSettings.tsx:110
+msgid "Action confirmations"
+msgstr "Konfirmasi tindakan"
+
+#. placeholder {0}: bot.name
+#: src/pages/BotContextMenu.tsx:77
+msgid "Actions for {0}"
+msgstr "Tindakan untuk {0}"
+
+#: src/pages/RoutineEditor.tsx:271
+msgid "Active"
+msgstr "Aktif"
+
+#: src/pages/ModelSettingsOverlay.tsx:326
+msgid "Active model"
+msgstr "Model aktif"
+
+#: src/pages/VoiceSettingsOverlay.tsx:149
+msgid "Active voice"
+msgstr "Suara aktif"
+
+#: src/pages/Shell.tsx:2213
+#: src/pages/Shell.tsx:2215
+msgid "Activity"
+msgstr "Aktivitas"
+
+#: src/pages/PluginsOverlay.tsx:457
+#: src/pages/PluginsOverlay.tsx:668
+#: src/pages/ScratchpadSection.tsx:188
+msgid "Add"
+msgstr "Tambah"
+
+#: src/components/ApprovalRulesSettings.tsx:151
+msgid "Add a model in Settings to use this."
+msgstr "Tambahkan model di Pengaturan untuk memakai ini."
+
+#: src/pages/Shell.tsx:3157
+msgid "Add a run time for this one-shot."
+msgstr "Tentukan waktu jalan untuk sekali-jalan ini."
+
+#: src/pages/RoutineEditor.tsx:467
+msgid "Add a schedule or webhook to run this routine."
+msgstr "Tambahkan jadwal atau webhook untuk menjalankan rutinitas ini."
+
+#: src/pages/Shell.tsx:3129
+msgid "Add a schedule or webhook trigger"
+msgstr "Tambahkan pemicu jadwal atau webhook"
+
+#: src/pages/McpServersOverlay.tsx:254
+msgid "Add a server"
+msgstr "Tambah server"
+
+#: src/pages/McpServersOverlay.tsx:86
+msgid "Add a server name."
+msgstr "Isi nama server."
+
+#: src/pages/McpServersOverlay.tsx:94
+msgid "Add a stdio command."
+msgstr "Isi perintah stdio."
+
+#: src/pages/McpServersOverlay.tsx:90
+msgid "Add an HTTPS server URL."
+msgstr "Isi URL server HTTPS."
+
+#: src/pages/ScratchpadSection.tsx:182
+msgid "Add item"
+msgstr "Tambah item"
+
+#: src/pages/PluginsOverlay.tsx:762
+msgid "Add MCP server"
+msgstr "Tambah server MCP"
+
+#: src/pages/PluginsOverlay.tsx:765
+msgid "Add OpenAPI"
+msgstr "Tambah OpenAPI"
+
+#: src/pages/PluginsOverlay.tsx:780
+msgid "Add remote MCP server"
+msgstr "Tambah server MCP remote"
+
+#: src/pages/McpServersOverlay.tsx:363
+msgid "Add server"
+msgstr "Tambah server"
+
+#: src/components/teach/SkillDraftCard.tsx:178
+#: src/components/teach/TeachComputerSection.tsx:167
+msgid "Add to routine"
+msgstr "Tambahkan ke rutinitas"
+
+#: src/pages/PluginsOverlay.tsx:768
+msgid "Add Treg"
+msgstr "Tambah Treg"
+
+#: src/pages/RoutineEditor.tsx:386
+msgid "Add trigger"
+msgstr "Tambah pemicu"
+
+#: src/pages/McpServersOverlay.tsx:363
+#: src/pages/PluginsOverlay.tsx:452
+#: src/pages/PluginsOverlay.tsx:663
+msgid "Adding…"
+msgstr "Menambahkan…"
+
+#: src/pages/AccountSettingsOverlay.tsx:247
+#: src/pages/PluginsOverlay.tsx:742
+#: src/pages/RoutineSchedule.tsx:42
+#: src/pages/Shell.tsx:5347
+msgid "Advanced"
+msgstr "Lanjutan"
+
+#: src/pages/RoutineEditor.tsx:594
+msgid "Advanced..."
+msgstr "Lanjutan..."
+
+#: src/pages/McpServersOverlay.tsx:369
+msgid "Agent access for new servers"
+msgstr "Akses agent untuk server baru"
+
+#: src/pages/Shell.tsx:2736
+msgid "Agent computer"
+msgstr "Komputer agent"
+
+#: src/pages/PhoneSettingsOverlay.tsx:277
+msgid "Agent connections"
+msgstr "Koneksi antar-agent"
+
+#: src/pages/PhoneSettingsOverlay.tsx:188
+msgid "Agent to pair"
+msgstr "Agent yang dipasangkan"
+
+#: src/pages/McpServersOverlay.tsx:431
+msgid "Agents:"
+msgstr "Agent:"
+
+#. placeholder {0}: rule.matchValue
+#: src/components/ApprovalRulesSettings.tsx:20
+msgid "Allow {0} actions without asking"
+msgstr "Izinkan tindakan {0} tanpa bertanya"
+
+#. placeholder {0}: rule.matchValue
+#: src/components/ApprovalRulesSettings.tsx:22
+msgid "Allow {0} connector without asking"
+msgstr "Izinkan konektor {0} tanpa bertanya"
+
+#. placeholder {0}: rule.matchValue
+#: src/components/ApprovalRulesSettings.tsx:23
+msgid "Allow {0} without asking"
+msgstr "Izinkan {0} tanpa bertanya"
+
+#: src/components/ApprovalRulesSettings.tsx:18
+msgid "Allow email actions without asking"
+msgstr "Izinkan tindakan email tanpa bertanya"
+
+#: src/components/AskCard.tsx:25
+msgid "Allow once"
+msgstr "Izinkan sekali"
+
+#: src/components/ApprovalRulesSettings.tsx:19
+msgid "Allow purchase actions without asking"
+msgstr "Izinkan tindakan pembelian tanpa bertanya"
+
+#: src/components/AskCard.tsx:18
+msgid "Allowed once"
+msgstr "Diizinkan sekali"
+
+#: src/pages/Auth.tsx:159
+msgid "Already have an account?"
+msgstr "Sudah punya akun?"
+
+#: src/components/AskCard.tsx:26
+msgid "Always allow this tool"
+msgstr "Selalu izinkan tool ini"
+
+#: src/components/AskCard.tsx:19
+msgid "Always allowed"
+msgstr "Selalu diizinkan"
+
+#: src/components/AskCard.tsx:138
+msgid "Answer"
+msgstr "Jawab"
+
+#: src/components/AskCard.tsx:16
+msgid "Answered"
+msgstr "Terjawab"
+
+#: src/components/AskCard.tsx:17
+#: src/components/AskCard.tsx:21
+msgid "Answered: {answer}"
+msgstr "Terjawab: {answer}"
+
+#: src/components/SoftwareUpdateSection.tsx:199
+msgid "API is back, but the update did not finish. Check the host logs."
+msgstr "API sudah kembali, tetapi pembaruan belum selesai. Periksa log host."
+
+#: src/lib/localized-provider-hint.ts:9
+#: src/pages/ModelSettingsOverlay.tsx:630
+#: src/pages/ModelSettingsOverlay.tsx:633
+#: src/pages/ModelSettingsOverlay.tsx:649
+#: src/pages/Onboarding.tsx:496
+#: src/pages/Onboarding.tsx:499
+#: src/pages/Onboarding.tsx:510
+#: src/pages/VoiceSettingsOverlay.tsx:236
+msgid "API key"
+msgstr "API key"
+
+#: src/pages/PluginsOverlay.tsx:816
+msgid "API key header"
+msgstr "Header API key"
+
+#: src/pages/McpServersOverlay.tsx:372
+msgid "Applies when you click Add server. Use the agent chips on each server card to change access at any time — the agent picks it up on its next message."
+msgstr "Berlaku saat Anda menekan Tambah server. Gunakan chip agent di tiap kartu server untuk mengubah akses kapan saja — agent memakainya pada pesan berikutnya."
+
+#: src/components/teach/SkillDraftCard.tsx:139
+msgid "Approval boundaries"
+msgstr "Batas persetujuan"
+
+#: src/pages/PhoneSettingsOverlay.tsx:243
+#: src/pages/PhoneSettingsOverlay.tsx:310
+#: src/pages/Shell.tsx:6259
+msgid "Approve"
+msgstr "Setujui"
+
+#: src/pages/Shell.tsx:6250
+msgid "Approve this server to let your agent use its tools."
+msgstr "Setujui server ini agar agent Anda bisa memakai tool-nya."
+
+#: src/pages/BotContextMenu.tsx:104
+msgid "Archive"
+msgstr "Arsipkan"
+
+#: src/pages/Shell.tsx:4892
+msgid "archived"
+msgstr "diarsipkan"
+
+#: src/pages/Shell.tsx:2487
+msgid "Archived"
+msgstr "Diarsipkan"
+
+#: src/pages/Shell.tsx:4903
+msgid "Archived. Chat, memory, and files kept."
+msgstr "Diarsipkan. Chat, memori, dan file tetap disimpan."
+
+#: src/pages/McpServersOverlay.tsx:304
+msgid "Arguments"
+msgstr "Argumen"
+
+#. placeholder {0}: rule.matchValue
+#: src/components/ApprovalRulesSettings.tsx:15
+msgid "Ask before {0}"
+msgstr "Tanya dulu sebelum {0}"
+
+#. placeholder {0}: rule.matchValue
+#: src/components/ApprovalRulesSettings.tsx:12
+msgid "Ask before {0} actions"
+msgstr "Tanya dulu sebelum tindakan {0}"
+
+#. placeholder {0}: rule.matchValue
+#: src/components/ApprovalRulesSettings.tsx:14
+msgid "Ask before {0} connector"
+msgstr "Tanya dulu sebelum konektor {0}"
+
+#: src/components/ApprovalRulesSettings.tsx:10
+msgid "Ask before email actions"
+msgstr "Tanya dulu sebelum tindakan email"
+
+#: src/components/ApprovalRulesSettings.tsx:11
+msgid "Ask before purchase actions"
+msgstr "Tanya dulu sebelum tindakan pembelian"
+
+#: src/components/ApprovalRulesSettings.tsx:133
+msgid "Ask before purchases"
+msgstr "Tanya dulu sebelum pembelian"
+
+#: src/components/ApprovalRulesSettings.tsx:125
+msgid "Ask before sending external email"
+msgstr "Tanya dulu sebelum mengirim email keluar"
+
+#: src/pages/Shell.tsx:2939
+msgid "Asleep"
+msgstr "Tidur"
+
+#. placeholder {0}: preset.time
+#: src/pages/RoutineSchedule.tsx:90
+#: src/pages/RoutineSchedule.tsx:93
+#: src/pages/RoutineSchedule.tsx:98
+msgid "at {0}"
+msgstr "pukul {0}"
+
+#: src/pages/RoutineSchedule.tsx:263
+msgid "at {timeSelect}"
+msgstr "pukul {timeSelect}"
+
+#: src/pages/Shell.tsx:4297
+msgid "Attach file"
+msgstr "Lampirkan file"
+
+#: src/pages/Shell.tsx:4498
+msgid "Attachment"
+msgstr "Lampiran"
+
+#: src/pages/ModelSettingsOverlay.tsx:563
+#: src/pages/Onboarding.tsx:437
+msgid "Authorization code or callback URL"
+msgstr "Kode otorisasi atau URL callback"
+
+#: src/pages/McpServersOverlay.tsx:11
+msgid "Authorization expired — reconnect required"
+msgstr "Otorisasi kedaluwarsa — perlu sambung ulang"
+
+#: src/pages/Shell.tsx:6051
+msgid "Authorization timed out. Please try again."
+msgstr "Otorisasi kehabisan waktu. Silakan coba lagi."
+
+#: src/pages/Shell.tsx:6093
+#: src/pages/Shell.tsx:6259
+msgid "Authorize"
+msgstr "Otorisasi"
+
+#: src/pages/RoutineEditor.tsx:515
+msgid "Available after the routine is saved"
+msgstr "Tersedia setelah rutinitas disimpan"
+
+#: src/pages/AccountSettingsOverlay.tsx:161
+msgid "Avatars"
+msgstr "Avatar"
+
+#: src/pages/RoutineEditor.tsx:243
+msgid "Back"
+msgstr "Kembali"
+
+#: src/pages/memory-providers/SupermemorySettingsForm.tsx:48
+msgid "Base URL"
+msgstr "Base URL"
+
+#: src/pages/PluginsOverlay.tsx:813
+msgid "Bearer token"
+msgstr "Bearer token"
+
+#: src/pages/Shell.tsx:5935
+msgid "Booting live desktop…"
+msgstr "Menyalakan desktop live…"
+
+#. placeholder {0}: active?.name
+#: src/pages/Shell.tsx:3528
+msgid "Booting up {0}’s computer"
+msgstr "Menyalakan komputer {0}"
+
+#: src/pages/Shell.tsx:4752
+#: src/pages/Shell.tsx:4753
+#: src/pages/Shell.tsx:4896
+msgid "bot"
+msgstr "bot"
+
+#. js-lingui-explicit-id
+#: src/lib/browser-notifications.ts:71
+msgid "Bot"
+msgstr "Bot"
+
+#: src/pages/Shell.tsx:1559
+msgid "Bot"
+msgstr "Bot"
+
+#: src/pages/PeerMessagesOverlay.tsx:141
+msgid "Bot messages"
+msgstr "Pesan antar-bot"
+
+#: src/pages/Shell.tsx:3625
+msgid "Bot screen"
+msgstr "Layar bot"
+
+#: src/pages/Shell.tsx:2903
+msgid "Bot screen preview"
+msgstr "Pratinjau layar bot"
+
+#: src/components/ApprovalRulesSettings.tsx:113
+msgid "Bots act without asking by default. Add an exception only when you want to review a type of action first. These preferences apply across all your bots."
+msgstr "Secara default bot bertindak tanpa bertanya. Tambahkan pengecualian hanya bila Anda ingin meninjau jenis tindakan tertentu lebih dulu. Preferensi ini berlaku untuk semua bot Anda."
+
+#: src/pages/Shell.tsx:3724
+msgid "Bots are working"
+msgstr "Bot sedang bekerja"
+
+#: src/pages/VoiceSettingsOverlay.tsx:130
+msgid "Bring your own key. The provider is swappable; your bots keep the same speak and call buttons."
+msgstr "Pakai key Anda sendiri. Provider bisa diganti; tombol bicara dan telepon di bot Anda tetap sama."
+
+#: src/pages/CallView.tsx:233
+#: src/pages/Shell.tsx:2718
+#: src/pages/Shell.tsx:2719
+msgid "Call"
+msgstr "Telepon"
+
+#: src/App.tsx:125
+msgid "Can't reach the server."
+msgstr "Server tidak bisa dijangkau."
+
+#: src/components/AskCard.tsx:161
+#: src/components/ComputerMaintenanceActions.tsx:108
+#: src/components/teach/TeachComputerSection.tsx:122
+#: src/pages/PluginsOverlay.tsx:864
+#: src/pages/Shell.tsx:5611
+#: src/pages/Shell.tsx:5683
+#: src/pages/Shell.tsx:5798
+#: src/pages/Shell.tsx:5874
+msgid "Cancel"
+msgstr "Batal"
+
+#: src/pages/Shell.tsx:5140
+msgid "Cancel new bot"
+msgstr "Batalkan bot baru"
+
+#: src/pages/GroupPanel.tsx:100
+msgid "Cancel new group"
+msgstr "Batalkan grup baru"
+
+#: src/pages/Shell.tsx:4170
+msgid "Cancel reply"
+msgstr "Batalkan balasan"
+
+#: src/pages/ActivityList.tsx:163
+msgid "Cancelled"
+msgstr "Dibatalkan"
+
+#: src/pages/PhoneSettingsOverlay.tsx:210
+msgid "Channels"
+msgstr "Kanal"
+
+#: src/pages/Shell.tsx:6156
+msgid "Chart failed to render: {error}"
+msgstr "Grafik gagal ditampilkan: {error}"
+
+#: src/pages/Shell.tsx:4439
+msgid "Chat Settings"
+msgstr "Pengaturan Chat"
+
+#: src/pages/PhoneSettingsOverlay.tsx:184
+msgid "Chat with your agent straight from WhatsApp."
+msgstr "Ngobrol dengan agent Anda langsung dari WhatsApp."
+
+#: src/components/SoftwareUpdateSection.tsx:151
+msgid "Check failed"
+msgstr "Pengecekan gagal"
+
+#: src/components/SoftwareUpdateSection.tsx:71
+msgid "Check for updates"
+msgstr "Periksa pembaruan"
+
+#: src/pages/Shell.tsx:3170
+#: src/pages/Shell.tsx:3180
+msgid "Check in."
+msgstr "Lapor perkembangan."
+
+#: src/components/SoftwareUpdateSection.tsx:71
+msgid "Checking…"
+msgstr "Memeriksa…"
+
+#: src/components/SoftwareUpdateSection.tsx:261
+msgid "Checkout has local changes. Clean it before updating."
+msgstr "Checkout punya perubahan lokal. Bersihkan dulu sebelum memperbarui."
+
+#: src/pages/Onboarding.tsx:269
+msgid "Choose a model to get started."
+msgstr "Pilih model untuk mulai."
+
+#: src/pages/ModelSettingsOverlay.tsx:310
+msgid "Choose which connected model Sentra Bot uses."
+msgstr "Pilih model tersambung mana yang dipakai Sentra Bot."
+
+#: src/pages/AccountSettingsOverlay.tsx:187
+msgid "Clay"
+msgstr "Clay"
+
+#: src/pages/Shell.tsx:5698
+msgid "Clear"
+msgstr "Bersihkan"
+
+#. placeholder {0}: bot.name
+#: src/pages/Shell.tsx:5664
+msgid "Clear {0}’s conversation?"
+msgstr "Bersihkan percakapan {0}?"
+
+#: src/pages/BotContextMenu.tsx:103
+#: src/pages/Shell.tsx:5499
+msgid "Clear conversation"
+msgstr "Bersihkan percakapan"
+
+#: src/pages/Shell.tsx:5698
+msgid "Clearing…"
+msgstr "Membersihkan…"
+
+#: src/pages/BotContextMenu.tsx:67
+#: src/pages/RoutineEditor.tsx:249
+#: src/pages/WindowChrome.tsx:19
+msgid "Close"
+msgstr "Tutup"
+
+#: src/pages/PeerMessagesOverlay.tsx:155
+msgid "Close bot messages"
+msgstr "Tutup pesan antar-bot"
+
+#: src/pages/Shell.tsx:6341
+msgid "Close chart"
+msgstr "Tutup grafik"
+
+#: src/pages/Shell.tsx:3599
+msgid "Close computer"
+msgstr "Tutup komputer"
+
+#: src/pages/Shell.tsx:6441
+msgid "Close image preview"
+msgstr "Tutup pratinjau gambar"
+
+#: src/pages/PluginsOverlay.tsx:586
+msgid "Close integrations"
+msgstr "Tutup integrasi"
+
+#: src/pages/McpServersOverlay.tsx:239
+msgid "Close MCP servers"
+msgstr "Tutup server MCP"
+
+#: src/pages/MemorySettingsOverlay.tsx:144
+msgid "Close memory settings"
+msgstr "Tutup pengaturan memori"
+
+#: src/pages/ModelSettingsOverlay.tsx:316
+msgid "Close model settings"
+msgstr "Tutup pengaturan model"
+
+#: src/pages/Shell.tsx:2195
+msgid "Close navigation"
+msgstr "Tutup navigasi"
+
+#: src/pages/Shell.tsx:2881
+msgid "Close panel"
+msgstr "Tutup panel"
+
+#: src/pages/PhoneSettingsOverlay.tsx:120
+msgid "Close phone settings"
+msgstr "Tutup pengaturan telepon"
+
+#: src/components/ArtifactFileCard.tsx:182
+#: src/components/ArtifactFileCard.tsx:222
+msgid "Close preview"
+msgstr "Tutup pratinjau"
+
+#: src/pages/AccountSettingsOverlay.tsx:118
+msgid "Close user settings"
+msgstr "Tutup pengaturan pengguna"
+
+#: src/pages/VoiceSettingsOverlay.tsx:139
+msgid "Close voice settings"
+msgstr "Tutup pengaturan suara"
+
+#: src/pages/memory-providers/SupermemorySettingsForm.tsx:41
+msgid "Cloud"
+msgstr "Cloud"
+
+#: src/components/AskCard.tsx:113
+#: src/components/AskCard.tsx:118
+msgid "Code"
+msgstr "Kode"
+
+#. placeholder {0}: group.title
+#: src/pages/Shell.tsx:2305
+msgid "Collapse {0}"
+msgstr "Ciutkan {0}"
+
+#: src/pages/RoutineEditor.tsx:439
+msgid "Coming soon"
+msgstr "Segera hadir"
+
+#: src/pages/McpServersOverlay.tsx:294
+msgid "Command"
+msgstr "Perintah"
+
+#: src/pages/ScratchpadSection.tsx:118
+msgid "Complete"
+msgstr "Selesaikan"
+
+#: src/pages/Shell.tsx:5050
+#: src/pages/Shell.tsx:5078
+msgid "Computer"
+msgstr "Komputer"
+
+#: src/pages/Shell.tsx:5938
+msgid "Computer failed to boot"
+msgstr "Komputer gagal dinyalakan"
+
+#: src/pages/Shell.tsx:3647
+msgid "Computer is asleep"
+msgstr "Komputer sedang tidur"
+
+#: src/pages/Shell.tsx:5937
+msgid "Computer is asleep. Take control to wake it."
+msgstr "Komputer sedang tidur. Ambil alih untuk membangunkannya."
+
+#: src/pages/Shell.tsx:5939
+msgid "Computer is stopped"
+msgstr "Komputer berhenti"
+
+#: src/pages/AccountSettingsOverlay.tsx:234
+msgid "Computers"
+msgstr "Komputer"
+
+#: src/components/ComputersUnavailableHint.tsx:7
+msgid "Computers are off. Set SANDBOX_PROVIDER=docker with SANDBOX_SUPERVISOR_TOKEN, or set SANDBOX_PROVIDER to e2b, daytona, or box with its API key. Recreate the stack after changing .env."
+msgstr "Komputer nonaktif. Set SANDBOX_PROVIDER=docker beserta SANDBOX_SUPERVISOR_TOKEN, atau set SANDBOX_PROVIDER ke e2b, daytona, atau box beserta API key-nya. Buat ulang stack setelah mengubah .env."
+
+#: src/pages/ModelSettingsOverlay.tsx:333
+msgid "Configured by deployment"
+msgstr "Diatur oleh deployment"
+
+#: src/pages/McpServersOverlay.tsx:402
+msgid "Configured servers"
+msgstr "Server yang dikonfigurasi"
+
+#: src/pages/McpServersOverlay.tsx:479
+msgid "Confirm delete"
+msgstr "Konfirmasi penghapusan"
+
+#: src/pages/memory-providers/SupermemorySettingsForm.tsx:80
+#: src/pages/PluginsOverlay.tsx:494
+#: src/pages/VoiceSettingsOverlay.tsx:257
+msgid "Connect"
+msgstr "Sambungkan"
+
+#: src/pages/Onboarding.tsx:266
+msgid "Connect a model"
+msgstr "Sambungkan sebuah model"
+
+#: src/pages/ModelSettingsOverlay.tsx:679
+msgid "Connect API key"
+msgstr "Sambungkan API key"
+
+#: src/pages/VoiceSettingsOverlay.tsx:160
+msgid "Connect ElevenLabs, OpenAI, or Cartesia"
+msgstr "Sambungkan ElevenLabs, OpenAI, atau Cartesia"
+
+#: src/pages/Shell.tsx:6239
+msgid "Connect MCP server “{name}”"
+msgstr "Sambungkan server MCP “{name}”"
+
+#: src/pages/McpServersOverlay.tsx:17
+msgid "Connect OAuth"
+msgstr "Sambungkan OAuth"
+
+#: src/pages/McpServersOverlay.tsx:232
+msgid "Connect remote or local tool servers and choose which agents can use them."
+msgstr "Sambungkan server tool remote atau lokal dan pilih agent mana yang boleh memakainya."
+
+#: src/pages/ModelSettingsOverlay.tsx:533
+msgid "Connect this provider to use it as your personal model."
+msgstr "Sambungkan provider ini untuk memakainya sebagai model pribadi Anda."
+
+#: src/pages/PluginsOverlay.tsx:778
+msgid "Connect Treg"
+msgstr "Sambungkan Treg"
+
+#: src/pages/McpOAuthCallback.tsx:53
+#: src/pages/MemorySettingsOverlay.tsx:163
+#: src/pages/ModelSettingsOverlay.tsx:378
+#: src/pages/Shell.tsx:6090
+#: src/pages/VoiceSettingsOverlay.tsx:202
+msgid "Connected"
+msgstr "Tersambung"
+
+#: src/pages/Shell.tsx:6269
+msgid "Connected — its tools are available from your next message."
+msgstr "Tersambung — tool-nya tersedia mulai pesan Anda berikutnya."
+
+#. placeholder {0}: credential.label
+#. placeholder {0}: selected.name
+#: src/pages/ModelSettingsOverlay.tsx:522
+#: src/pages/VoiceSettingsOverlay.tsx:223
+msgid "Connected · {0}"
+msgstr "Tersambung · {0}"
+
+#. placeholder {0}: selected.name
+#: src/pages/VoiceSettingsOverlay.tsx:73
+msgid "Connected {0}."
+msgstr "{0} tersambung."
+
+#. placeholder {0}: selected.label
+#. placeholder {0}: selectedLabelRef.current ?? "this model"
+#: src/pages/ModelSettingsOverlay.tsx:61
+#: src/pages/ModelSettingsOverlay.tsx:275
+msgid "Connected and using {0}."
+msgstr "Tersambung dan memakai {0}."
+
+#: src/pages/McpServersOverlay.tsx:16
+#: src/pages/memory-providers/SupermemorySettingsForm.tsx:80
+#: src/pages/PluginsOverlay.tsx:494
+#: src/pages/Shell.tsx:6259
+#: src/pages/VoiceSettingsOverlay.tsx:253
+msgid "Connecting…"
+msgstr "Menyambungkan…"
+
+#. placeholder {0}: item.name
+#: src/pages/PluginsOverlay.tsx:297
+msgid "Connection to {0} is still pending. You can close this and check again."
+msgstr "Koneksi ke {0} masih tertunda. Anda bisa menutup ini dan memeriksanya lagi."
+
+#: src/pages/Onboarding.tsx:538
+#: src/pages/Onboarding.tsx:697
+msgid "Continue"
+msgstr "Lanjutkan"
+
+#: src/pages/Auth.tsx:144
+msgid "Continue with email"
+msgstr "Lanjutkan dengan email"
+
+#: src/pages/Shell.tsx:4535
+msgid "Copy"
+msgstr "Salin"
+
+#: src/pages/ScratchpadSection.tsx:54
+msgid "Could not add"
+msgstr "Gagal menambahkan"
+
+#: src/pages/McpServersOverlay.tsx:148
+msgid "Could not add MCP server"
+msgstr "Gagal menambahkan server MCP"
+
+#: src/pages/Shell.tsx:6226
+msgid "Could not approve this server"
+msgstr "Gagal menyetujui server ini"
+
+#: src/pages/Shell.tsx:6054
+msgid "Could not authorize this app"
+msgstr "Gagal mengotorisasi aplikasi ini"
+
+#: src/pages/ModelSettingsOverlay.tsx:239
+msgid "Could not change the default model"
+msgstr "Gagal mengubah model default"
+
+#: src/pages/Shell.tsx:5692
+msgid "Could not clear conversation"
+msgstr "Gagal membersihkan percakapan"
+
+#: src/pages/McpOAuthCallback.tsx:42
+msgid "Could not complete OAuth"
+msgstr "Gagal menyelesaikan OAuth"
+
+#: src/pages/PluginsOverlay.tsx:301
+msgid "Could not connect"
+msgstr "Gagal menyambungkan"
+
+#. placeholder {0}: registration.name
+#: src/pages/MemorySettingsOverlay.tsx:94
+msgid "Could not connect {0}"
+msgstr "Gagal menyambungkan {0}"
+
+#: src/pages/ModelSettingsOverlay.tsx:277
+msgid "Could not connect this provider"
+msgstr "Gagal menyambungkan provider ini"
+
+#: src/pages/VoiceSettingsOverlay.tsx:75
+msgid "Could not connect this voice provider"
+msgstr "Gagal menyambungkan provider suara ini"
+
+#: src/pages/Auth.tsx:33
+msgid "Could not continue"
+msgstr "Gagal melanjutkan"
+
+#: src/pages/Shell.tsx:5128
+msgid "Could not create bot"
+msgstr "Gagal membuat bot"
+
+#: src/pages/GroupPanel.tsx:88
+msgid "Could not create group"
+msgstr "Gagal membuat grup"
+
+#: src/pages/Shell.tsx:5583
+msgid "Could not create section"
+msgstr "Gagal membuat seksi"
+
+#: src/pages/Onboarding.tsx:251
+msgid "Could not create your bot"
+msgstr "Gagal membuat bot Anda"
+
+#: src/pages/Shell.tsx:5807
+msgid "Could not delete bot"
+msgstr "Gagal menghapus bot"
+
+#: src/pages/Shell.tsx:5887
+msgid "Could not delete group"
+msgstr "Gagal menghapus grup"
+
+#: src/pages/McpServersOverlay.tsx:203
+msgid "Could not delete MCP server"
+msgstr "Gagal menghapus server MCP"
+
+#: src/pages/Shell.tsx:5888
+msgid "Could not delete routine"
+msgstr "Gagal menghapus rutinitas"
+
+#: src/pages/MemorySettingsOverlay.tsx:108
+msgid "Could not disconnect memory provider"
+msgstr "Gagal memutus provider memori"
+
+#: src/pages/McpServersOverlay.tsx:214
+msgid "Could not disconnect OAuth"
+msgstr "Gagal memutus OAuth"
+
+#. placeholder {0}: props.name
+#: src/components/ArtifactFileCard.tsx:34
+msgid "Could not download {0}. Try again."
+msgstr "Gagal mengunduh {0}. Coba lagi."
+
+#: src/components/ArtifactFileCard.tsx:211
+msgid "Could not download {name}. Try again."
+msgstr "Gagal mengunduh {name}. Coba lagi."
+
+#: src/pages/PluginsOverlay.tsx:952
+msgid "Could not install connector"
+msgstr "Gagal memasang konektor"
+
+#: src/pages/PluginsOverlay.tsx:370
+msgid "Could not install MCP server"
+msgstr "Gagal memasang server MCP"
+
+#: src/pages/PluginsOverlay.tsx:409
+msgid "Could not install skill"
+msgstr "Gagal memasang skill"
+
+#: src/components/ApprovalRulesSettings.tsx:46
+msgid "Could not load approval rules"
+msgstr "Gagal memuat aturan persetujuan"
+
+#: src/pages/PluginsOverlay.tsx:130
+msgid "Could not load integrations"
+msgstr "Gagal memuat integrasi"
+
+#: src/pages/McpServersOverlay.tsx:60
+msgid "Could not load MCP servers"
+msgstr "Gagal memuat server MCP"
+
+#: src/pages/ModelSettingsOverlay.tsx:107
+msgid "Could not load model settings"
+msgstr "Gagal memuat pengaturan model"
+
+#: src/components/ArtifactFileCard.tsx:169
+msgid "Could not load this file."
+msgstr "Gagal memuat file ini."
+
+#: src/components/SoftwareUpdateSection.tsx:111
+msgid "Could not load update status"
+msgstr "Gagal memuat status pembaruan"
+
+#: src/pages/VoiceSettingsOverlay.tsx:47
+msgid "Could not load voice settings"
+msgstr "Gagal memuat pengaturan suara"
+
+#: src/pages/VoiceSettingsOverlay.tsx:109
+msgid "Could not play a test clip"
+msgstr "Gagal memutar klip uji"
+
+#: src/pages/ModelSettingsOverlay.tsx:221
+#: src/pages/Onboarding.tsx:197
+msgid "Could not reach this model server"
+msgstr "Server model ini tidak bisa dijangkau"
+
+#: src/pages/ScratchpadSection.tsx:95
+msgid "Could not remove"
+msgstr "Gagal menghapus"
+
+#: src/pages/PluginsOverlay.tsx:965
+msgid "Could not remove connector"
+msgstr "Gagal menghapus konektor"
+
+#: src/pages/GroupPanel.tsx:169
+msgid "Could not remove group"
+msgstr "Gagal menghapus grup"
+
+#: src/pages/PluginsOverlay.tsx:396
+msgid "Could not remove MCP server"
+msgstr "Gagal menghapus server MCP"
+
+#: src/components/ApprovalRulesSettings.tsx:90
+msgid "Could not remove rule"
+msgstr "Gagal menghapus aturan"
+
+#: src/pages/PluginsOverlay.tsx:423
+msgid "Could not remove skill"
+msgstr "Gagal menghapus skill"
+
+#: src/pages/Shell.tsx:6146
+msgid "Could not render chart"
+msgstr "Gagal menampilkan grafik"
+
+#: src/pages/PluginsOverlay.tsx:327
+msgid "Could not revoke connection"
+msgstr "Gagal mencabut koneksi"
+
+#: src/pages/Shell.tsx:3232
+msgid "Could not run routine"
+msgstr "Gagal menjalankan rutinitas"
+
+#: src/pages/Shell.tsx:5484
+msgid "Could not save"
+msgstr "Gagal menyimpan"
+
+#: src/components/ApprovalRulesSettings.tsx:101
+msgid "Could not save Auto Review"
+msgstr "Gagal menyimpan Auto Review"
+
+#: src/pages/GroupPanel.tsx:168
+msgid "Could not save group"
+msgstr "Gagal menyimpan grup"
+
+#: src/pages/Onboarding.tsx:224
+msgid "Could not save model"
+msgstr "Gagal menyimpan model"
+
+#: src/pages/Shell.tsx:3203
+msgid "Could not save routine"
+msgstr "Gagal menyimpan rutinitas"
+
+#: src/components/ApprovalRulesSettings.tsx:78
+msgid "Could not save rule"
+msgstr "Gagal menyimpan aturan"
+
+#: src/pages/HostComputerPrompt.tsx:39
+msgid "Could not save that choice"
+msgstr "Gagal menyimpan pilihan itu"
+
+#: src/pages/VoiceSettingsOverlay.tsx:90
+msgid "Could not save that voice"
+msgstr "Gagal menyimpan suara itu"
+
+#: src/pages/Shell.tsx:5966
+msgid "Could not save this choice"
+msgstr "Gagal menyimpan pilihan ini"
+
+#: src/pages/CallView.tsx:112
+msgid "Could not send that"
+msgstr "Gagal mengirim itu"
+
+#: src/pages/McpServersOverlay.tsx:172
+#: src/pages/PluginsOverlay.tsx:384
+msgid "Could not start OAuth"
+msgstr "Gagal memulai OAuth"
+
+#: src/components/AskCard.tsx:58
+msgid "Could not submit this answer"
+msgstr "Gagal mengirim jawaban ini"
+
+#: src/pages/Shell.tsx:2043
+msgid "Could not take control"
+msgstr "Gagal mengambil alih"
+
+#: src/pages/ScratchpadSection.tsx:76
+msgid "Could not update"
+msgstr "Gagal memperbarui"
+
+#: src/pages/McpServersOverlay.tsx:188
+msgid "Could not update agent access"
+msgstr "Gagal memperbarui akses agent"
+
+#: src/components/ComputerMaintenanceActions.tsx:46
+msgid "Could not update computer"
+msgstr "Gagal memperbarui komputer"
+
+#: src/pages/MemorySettingsOverlay.tsx:122
+msgid "Could not update the default memory scope"
+msgstr "Gagal memperbarui cakupan memori default"
+
+#: src/pages/PhoneSettingsOverlay.tsx:64
+msgid "Couldn't load phone settings"
+msgstr "Gagal memuat pengaturan telepon"
+
+#: src/pages/PhoneSettingsOverlay.tsx:89
+msgid "Couldn't start WhatsApp pairing"
+msgstr "Gagal memulai pemasangan WhatsApp"
+
+#: src/pages/AccountSettingsOverlay.tsx:93
+msgid "Couldn't update avatars"
+msgstr "Gagal memperbarui avatar"
+
+#: src/pages/PhoneSettingsOverlay.tsx:99
+msgid "Couldn't update phone settings"
+msgstr "Gagal memperbarui pengaturan telepon"
+
+#: src/pages/Shell.tsx:2233
+#: src/pages/Shell.tsx:5187
+#: src/pages/Shell.tsx:5618
+msgid "Create"
+msgstr "Buat"
+
+#. placeholder {0}: bot.name
+#: src/pages/Shell.tsx:5592
+msgid "Create a section and move {0} into it."
+msgstr "Buat seksi lalu pindahkan {0} ke dalamnya."
+
+#: src/pages/Auth.tsx:146
+msgid "Create account"
+msgstr "Buat akun"
+
+#: src/pages/GroupPanel.tsx:134
+msgid "Create group"
+msgstr "Buat grup"
+
+#: src/pages/Onboarding.tsx:557
+msgid "Create your first bot"
+msgstr "Buat bot pertama Anda"
+
+#: src/pages/Auth.tsx:17
+msgid "Create your Sentra Bot"
+msgstr "Buat Sentra Bot Anda"
+
+#: src/pages/GroupPanel.tsx:134
+#: src/pages/Shell.tsx:5187
+#: src/pages/Shell.tsx:5618
+msgid "Creating…"
+msgstr "Membuat…"
+
+#: src/pages/PluginsOverlay.tsx:569
+msgid "Creativity"
+msgstr "Kreativitas"
+
+#: src/pages/PluginsOverlay.tsx:834
+msgid "Credential"
+msgstr "Kredensial"
+
+#: src/pages/PluginsOverlay.tsx:892
+msgid "credential saved"
+msgstr "kredensial tersimpan"
+
+#: src/pages/RoutineSchedule.tsx:87
+msgid "Cron"
+msgstr "Cron"
+
+#: src/pages/RoutineSchedule.tsx:268
+msgid "Cron expression"
+msgstr "Ekspresi cron"
+
+#: src/pages/RoutineSchedule.tsx:68
+msgid "day"
+msgstr "hari"
+
+#: src/pages/RoutineSchedule.tsx:55
+msgid "days"
+msgstr "hari"
+
+#: src/pages/PhoneSettingsOverlay.tsx:255
+#: src/pages/PhoneSettingsOverlay.tsx:322
+msgid "Decline"
+msgstr "Tolak"
+
+#: src/pages/Shell.tsx:5391
+msgid "Default (medium)"
+msgstr "Default (sedang)"
+
+#: src/pages/MemorySettingsOverlay.tsx:24
+msgid "Default scope"
+msgstr "Cakupan default"
+
+#: src/pages/BotContextMenu.tsx:105
+#: src/pages/McpServersOverlay.tsx:481
+#: src/pages/RoutineEditor.tsx:280
+#: src/pages/Shell.tsx:2522
+#: src/pages/Shell.tsx:2552
+#: src/pages/Shell.tsx:5813
+#: src/pages/Shell.tsx:5895
+msgid "Delete"
+msgstr "Hapus"
+
+#. placeholder {0}: bot.name
+#. placeholder {0}: group.name
+#: src/pages/Shell.tsx:2518
+#: src/pages/Shell.tsx:2548
+msgid "Delete {0}"
+msgstr "Hapus {0}"
+
+#. placeholder {0}: bot.name
+#. placeholder {0}: item.name
+#: src/pages/Shell.tsx:5745
+#: src/pages/Shell.tsx:5861
+msgid "Delete {0}?"
+msgstr "Hapus {0}?"
+
+#: src/pages/GroupPanel.tsx:232
+msgid "Delete group"
+msgstr "Hapus grup"
+
+#: src/pages/Shell.tsx:5782
+msgid "Delete memories too"
+msgstr "Hapus memorinya juga"
+
+#: src/pages/Shell.tsx:4894
+msgid "deleted"
+msgstr "dihapus"
+
+#: src/pages/GroupPanel.tsx:232
+#: src/pages/Shell.tsx:5813
+#: src/pages/Shell.tsx:5895
+msgid "Deleting…"
+msgstr "Menghapus…"
+
+#: src/components/AskCard.tsx:20
+msgid "Denied"
+msgstr "Ditolak"
+
+#: src/components/AskCard.tsx:27
+msgid "Deny"
+msgstr "Jangan"
+
+#: src/pages/ModelSettingsOverlay.tsx:329
+msgid "Deployment default"
+msgstr "Default deployment"
+
+#: src/pages/Onboarding.tsx:676
+#: src/pages/Shell.tsx:5165
+msgid "Describe what this bot does"
+msgstr "Jelaskan apa yang dikerjakan bot ini"
+
+#: src/pages/Onboarding.tsx:651
+msgid "Describe your own bot in the panel."
+msgstr "Jelaskan bot Anda sendiri di panel ini."
+
+#: src/pages/Onboarding.tsx:681
+#: src/pages/Shell.tsx:5170
+#: src/pages/Shell.tsx:5335
+msgid "Description"
+msgstr "Deskripsi"
+
+#: src/pages/PluginsOverlay.tsx:565
+msgid "Developer"
+msgstr "Developer"
+
+#: src/pages/Shell.tsx:4306
+msgid "Dictate"
+msgstr "Dikte"
+
+#: src/pages/McpServersOverlay.tsx:468
+#: src/pages/MemorySettingsOverlay.tsx:186
+msgid "Disconnect"
+msgstr "Putuskan"
+
+#: src/pages/MemorySettingsOverlay.tsx:184
+msgid "Disconnecting…"
+msgstr "Memutuskan…"
+
+#: src/pages/Shell.tsx:4153
+msgid "Dismiss error"
+msgstr "Tutup pesan kesalahan"
+
+#: src/pages/Shell.tsx:6274
+msgid "Dismissed — reconnect anytime from MCP settings."
+msgstr "Ditutup — sambungkan lagi kapan saja dari pengaturan MCP."
+
+#: src/pages/PluginsOverlay.tsx:788
+msgid "Display name"
+msgstr "Nama tampilan"
+
+#: src/components/teach/TeachRecordingChrome.tsx:49
+#: src/components/teach/TeachRecordingChrome.tsx:67
+msgid "Do not type passwords into the demo. Use Take control for credentials."
+msgstr "Jangan mengetik kata sandi di demo. Pakai Ambil alih untuk kredensial."
+
+#: src/pages/HostComputerPrompt.tsx:75
+msgid "Docker (recommended)"
+msgstr "Docker (disarankan)"
+
+#: src/pages/HostComputerPrompt.tsx:52
+msgid "Docker is the default: bots use a shared Team Computer."
+msgstr "Docker adalah default: bot memakai Team Computer bersama."
+
+#: src/pages/Auth.tsx:152
+msgid "Don’t have an account?"
+msgstr "Belum punya akun?"
+
+#: src/pages/ActivityList.tsx:159
+msgid "Done"
+msgstr "Selesai"
+
+#. placeholder {0}: props.name
+#: src/components/ArtifactFileCard.tsx:84
+#: src/components/ArtifactFileCard.tsx:85
+msgid "Download {0}"
+msgstr "Unduh {0}"
+
+#: src/components/ArtifactFileCard.tsx:202
+#: src/components/ArtifactFileCard.tsx:203
+msgid "Download {name}"
+msgstr "Unduh {name}"
+
+#: src/components/teach/SkillDraftCard.tsx:79
+msgid "Draft skill"
+msgstr "Draf skill"
+
+#: src/pages/BotContextMenu.tsx:101
+msgid "Duplicate"
+msgstr "Duplikat"
+
+#: src/pages/Shell.tsx:4697
+msgid "Earlier message"
+msgstr "Pesan sebelumnya"
+
+#: src/components/AskCard.tsx:181
+msgid "Edit first"
+msgstr "Edit dulu"
+
+#: src/pages/BotContextMenu.tsx:100
+msgid "Edit Profile"
+msgstr "Edit Profil"
+
+#: src/pages/Auth.tsx:62
+msgid "Email"
+msgstr "Email"
+
+#: src/pages/McpServersOverlay.tsx:12
+msgid "Encrypted static credential saved"
+msgstr "Kredensial statis terenkripsi tersimpan"
+
+#. placeholder {0}: oauth.verificationUri.replace(/^https:\/\//, "")
+#: src/pages/ModelSettingsOverlay.tsx:586
+#: src/pages/Onboarding.tsx:459
+msgid "Enter this code at <0>{0}</0>"
+msgstr "Masukkan kode ini di <0>{0}</0>"
+
+#: src/pages/RoutineSchedule.tsx:79
+msgid "Every"
+msgstr "Setiap"
+
+#: src/pages/RoutineSchedule.tsx:259
+msgid "every {intervalAmountSelect} {intervalUnitSelect}"
+msgstr "setiap {intervalAmountSelect} {intervalUnitSelect}"
+
+#: src/pages/RoutineEditor.tsx:584
+#: src/pages/RoutineSchedule.tsx:32
+#: src/pages/RoutineSchedule.tsx:98
+msgid "Every day"
+msgstr "Setiap hari"
+
+#: src/pages/RoutineEditor.tsx:582
+#: src/pages/RoutineSchedule.tsx:30
+#: src/pages/RoutineSchedule.tsx:84
+msgid "Every hour"
+msgstr "Setiap jam"
+
+#: src/pages/RoutineSchedule.tsx:93
+msgid "Every Monday"
+msgstr "Setiap Senin"
+
+#: src/pages/RoutineEditor.tsx:590
+#: src/pages/RoutineSchedule.tsx:38
+msgid "Every month"
+msgstr "Setiap bulan"
+
+#: src/pages/RoutineEditor.tsx:588
+#: src/pages/RoutineSchedule.tsx:36
+msgid "Every week"
+msgstr "Setiap minggu"
+
+#: src/pages/Shell.tsx:6320
+msgid "Expand"
+msgstr "Perluas"
+
+#. placeholder {0}: group.title
+#: src/pages/Shell.tsx:2305
+msgid "Expand {0}"
+msgstr "Perluas {0}"
+
+#: src/pages/Shell.tsx:5496
+msgid "Export"
+msgstr "Ekspor"
+
+#: src/components/teach/TeachComputerSection.tsx:106
+msgid "Export this week's list from the CRM and drop it in the shared folder"
+msgstr "Ekspor daftar minggu ini dari CRM dan taruh di folder bersama"
+
+#: src/pages/Shell.tsx:5516
+msgid "Extra high"
+msgstr "Sangat tinggi"
+
+#: src/pages/ActivityList.tsx:161
+msgid "Failed"
+msgstr "Gagal"
+
+#: src/pages/Shell.tsx:1878
+#: src/pages/Shell.tsx:1880
+#: src/pages/Shell.tsx:1882
+msgid "Failed to send message"
+msgstr "Gagal mengirim pesan"
+
+#: src/pages/Shell.tsx:1912
+#: src/pages/Shell.tsx:1931
+msgid "Failed to stop"
+msgstr "Gagal menghentikan"
+
+#. js-lingui-explicit-id
+#: src/lib/browser-notifications.ts:88
+msgid "Failed."
+msgstr "Gagal."
+
+#: src/components/teach/SkillDraftCard.tsx:147
+msgid "Failure handling"
+msgstr "Penanganan kegagalan"
+
+#: src/pages/ModelSettingsOverlay.tsx:427
+#: src/pages/Onboarding.tsx:336
+msgid "Find models"
+msgstr "Cari model"
+
+#: src/pages/ModelSettingsOverlay.tsx:427
+#: src/pages/Onboarding.tsx:336
+msgid "Finding…"
+msgstr "Mencari…"
+
+#. placeholder {0}: new URL(oauth.verificationUri).hostname
+#: src/pages/ModelSettingsOverlay.tsx:546
+#: src/pages/Onboarding.tsx:420
+msgid "Finish signing in at <0>{0}</0>. The final page may not load; paste its URL or code here."
+msgstr "Selesaikan proses masuk di <0>{0}</0>. Halaman terakhir mungkin tidak termuat; tempel URL atau kodenya di sini."
+
+#. js-lingui-explicit-id
+#: src/lib/browser-notifications.ts:99
+msgid "Finished."
+msgstr "Selesai."
+
+#: src/pages/McpOAuthCallback.tsx:55
+msgid "Finishing MCP connection…"
+msgstr "Menyelesaikan koneksi MCP…"
+
+#: src/components/ApprovalRulesSettings.tsx:147
+msgid "Flag unexpected actions"
+msgstr "Tandai tindakan yang tidak terduga"
+
+#: src/pages/ModelSettingsOverlay.tsx:1026
+msgid "Free"
+msgstr "Gratis"
+
+#: src/pages/WindowChrome.tsx:31
+msgid "Fullscreen"
+msgstr "Layar penuh"
+
+#: src/pages/RoutineEditor.tsx:45
+msgid "Git event"
+msgstr "Event Git"
+
+#: src/pages/PhoneSettingsOverlay.tsx:224
+#: src/pages/Shell.tsx:2708
+#: src/pages/Shell.tsx:2863
+msgid "Group"
+msgstr "Grup"
+
+#: src/pages/GroupPanel.tsx:192
+msgid "Group settings"
+msgstr "Pengaturan grup"
+
+#: src/pages/CallView.tsx:262
+msgid "Hang up"
+msgstr "Tutup telepon"
+
+#: src/pages/CallView.tsx:42
+#: src/pages/CallView.tsx:43
+msgid "Hang up first, then enter the code on screen."
+msgstr "Tutup telepon dulu, lalu masukkan kode di layar."
+
+#: src/pages/CallView.tsx:95
+msgid "Hang up, then enter the code on screen."
+msgstr "Tutup telepon, lalu masukkan kode di layar."
+
+#: src/pages/RoutineEditor.tsx:560
+msgid "header"
+msgstr "header"
+
+#: src/pages/McpServersOverlay.tsx:342
+#: src/pages/PluginsOverlay.tsx:824
+msgid "Header name"
+msgstr "Nama header"
+
+#: src/pages/McpServersOverlay.tsx:348
+msgid "Header value"
+msgstr "Nilai header"
+
+#: src/pages/VoiceSettingsOverlay.tsx:284
+msgid "Hear a sample"
+msgstr "Dengar contoh"
+
+#: src/pages/VoiceSettingsOverlay.tsx:102
+msgid "Hi, this is how I'll sound when I read replies out loud."
+msgstr "Halo, beginilah suara saya saat membacakan balasan."
+
+#: src/pages/Auth.tsx:95
+msgid "Hide password"
+msgstr "Sembunyikan kata sandi"
+
+#: src/pages/Shell.tsx:5519
+msgid "High"
+msgstr "Tinggi"
+
+#: src/pages/Shell.tsx:4325
+msgid "Hold to talk"
+msgstr "Tahan untuk bicara"
+
+#: src/pages/Shell.tsx:4325
+msgid "Hold to talk (on-device dictation)"
+msgstr "Tahan untuk bicara (dikte di perangkat)"
+
+#: src/pages/RoutineSchedule.tsx:66
+msgid "hour"
+msgstr "jam"
+
+#: src/pages/RoutineSchedule.tsx:53
+msgid "hours"
+msgstr "jam"
+
+#: src/pages/RoutineSchedule.tsx:242
+msgid "How often"
+msgstr "Seberapa sering"
+
+#: src/components/teach/SkillDraftCard.tsx:123
+msgid "How to check"
+msgstr "Cara memeriksa"
+
+#: src/pages/Shell.tsx:4591
+msgid "I’m done"
+msgstr "Saya sudah selesai"
+
+#: src/pages/VoiceSettingsOverlay.tsx:107
+msgid "If you heard that, voice is ready."
+msgstr "Kalau tadi terdengar, suara sudah siap."
+
+#: src/pages/AccountSettingsOverlay.tsx:140
+msgid "iMessage channels and agent connections."
+msgstr "Kanal iMessage dan koneksi antar-agent."
+
+#: src/pages/PhoneSettingsOverlay.tsx:132
+msgid "iMessage line"
+msgstr "Nomor iMessage"
+
+#: src/pages/PluginsOverlay.tsx:782
+msgid "Import OpenAPI JSON"
+msgstr "Impor JSON OpenAPI"
+
+#: src/pages/Onboarding.tsx:701
+msgid "Includes a full operating playbook for this role."
+msgstr "Termasuk playbook kerja lengkap untuk peran ini."
+
+#: src/pages/Shell.tsx:5406
+msgid "Inherit default"
+msgstr "Ikuti default"
+
+#: src/components/teach/SkillDraftCard.tsx:97
+msgid "Inputs"
+msgstr "Input"
+
+#: src/pages/PluginsOverlay.tsx:482
+#: src/pages/PluginsOverlay.tsx:533
+msgid "Install"
+msgstr "Pasang"
+
+#: src/pages/PluginsOverlay.tsx:498
+#: src/pages/PluginsOverlay.tsx:537
+msgid "Installed"
+msgstr "Terpasang"
+
+#: src/pages/PluginsOverlay.tsx:482
+#: src/pages/PluginsOverlay.tsx:533
+msgid "Installing…"
+msgstr "Memasang…"
+
+#: src/pages/memory-providers/SupermemorySettingsForm.tsx:60
+msgid "Instance API key"
+msgstr "API key instance"
+
+#: src/pages/RoutineEditor.tsx:304
+msgid "Instruction"
+msgstr "Instruksi"
+
+#: src/pages/PluginsOverlay.tsx:582
+#: src/pages/Shell.tsx:2570
+msgid "Integrations"
+msgstr "Integrasi"
+
+#: src/pages/CallView.tsx:255
+msgid "Interrupt"
+msgstr "Sela"
+
+#: src/pages/RoutineEditor.tsx:592
+#: src/pages/RoutineSchedule.tsx:40
+msgid "Interval"
+msgstr "Interval"
+
+#: src/pages/RoutineSchedule.tsx:176
+msgid "Interval amount"
+msgstr "Jumlah interval"
+
+#: src/pages/RoutineSchedule.tsx:191
+msgid "Interval unit"
+msgstr "Satuan interval"
+
+#: src/pages/MemorySettingsOverlay.tsx:39
+#: src/pages/Shell.tsx:5407
+msgid "Isolated"
+msgstr "Terpisah"
+
+#: src/pages/Shell.tsx:5748
+msgid "Its conversation, files, and routines will be permanently deleted. Bots it created stay in your list."
+msgstr "Percakapan, file, dan rutinitasnya akan dihapus permanen. Bot yang dibuatnya tetap ada di daftar Anda."
+
+#: src/pages/Shell.tsx:3886
+msgid "Jump to latest"
+msgstr "Lompat ke terbaru"
+
+#: src/pages/Shell.tsx:4692
+msgid "Jump to replied message"
+msgstr "Lompat ke pesan yang dibalas"
+
+#: src/pages/ActivityList.tsx:136
+msgid "just now"
+msgstr "baru saja"
+
+#: src/pages/Shell.tsx:5766
+msgid "Keep memories"
+msgstr "Simpan memorinya"
+
+#: src/pages/RoutineEditor.tsx:553
+msgid "key"
+msgstr "key"
+
+#: src/pages/VoiceSettingsOverlay.tsx:229
+msgid "Keys stay on the server. The app only learns whether a provider is configured."
+msgstr "Key tetap di server. Aplikasi hanya tahu apakah sebuah provider sudah dikonfigurasi."
+
+#: src/pages/PluginsOverlay.tsx:571
+msgid "Knowledge"
+msgstr "Pengetahuan"
+
+#: src/pages/AccountSettingsOverlay.tsx:154
+#: src/pages/AccountSettingsOverlay.tsx:363
+#: src/pages/AccountSettingsOverlay.tsx:380
+msgid "Language"
+msgstr "Bahasa"
+
+#: src/pages/PhoneSettingsOverlay.tsx:265
+msgid "Leave"
+msgstr "Keluar"
+
+#: src/pages/RoutineEditor.tsx:47
+msgid "Linear issue"
+msgstr "Issue Linear"
+
+#. placeholder {0}: status.phoneE164
+#: src/pages/PhoneSettingsOverlay.tsx:136
+msgid "Linked as {0}"
+msgstr "Tertaut sebagai {0}"
+
+#: src/pages/CallView.tsx:238
+msgid "Listening…"
+msgstr "Mendengarkan…"
+
+#: src/pages/Shell.tsx:3839
+msgid "Load earlier messages"
+msgstr "Muat pesan sebelumnya"
+
+#: src/pages/ActivityList.tsx:60
+msgid "Loading activity…"
+msgstr "Memuat aktivitas…"
+
+#: src/pages/PluginsOverlay.tsx:608
+msgid "Loading integrations…"
+msgstr "Memuat integrasi…"
+
+#: src/pages/MemorySettingsOverlay.tsx:158
+msgid "Loading memory settings…"
+msgstr "Memuat pengaturan memori…"
+
+#: src/pages/ModelSettingsOverlay.tsx:308
+#: src/pages/ModelSettingsOverlay.tsx:714
+msgid "Loading model catalog…"
+msgstr "Memuat katalog model…"
+
+#: src/pages/PeerMessagesOverlay.tsx:145
+#: src/pages/PeerMessagesOverlay.tsx:165
+msgid "Loading peer messages…"
+msgstr "Memuat pesan antar-bot…"
+
+#: src/components/ArtifactFileCard.tsx:238
+msgid "Loading preview…"
+msgstr "Memuat pratinjau…"
+
+#: src/components/ApprovalRulesSettings.tsx:159
+msgid "Loading rules…"
+msgstr "Memuat aturan…"
+
+#: src/pages/VoiceSettingsOverlay.tsx:128
+msgid "Loading voice providers…"
+msgstr "Memuat provider suara…"
+
+#: src/App.tsx:50
+#: src/pages/Onboarding.tsx:260
+#: src/pages/Shell.tsx:3839
+msgid "Loading…"
+msgstr "Memuat…"
+
+#: src/pages/memory-providers/SupermemorySettingsForm.tsx:41
+msgid "Local"
+msgstr "Lokal"
+
+#: src/pages/Shell.tsx:2656
+msgid "Log out"
+msgstr "Keluar"
+
+#: src/pages/Shell.tsx:5517
+msgid "Low"
+msgstr "Rendah"
+
+#: src/pages/AccountSettingsOverlay.tsx:147
+msgid "Manage phone settings"
+msgstr "Kelola pengaturan telepon"
+
+#: src/pages/MemorySettingsOverlay.tsx:138
+msgid "Manage the workspace semantic memory provider."
+msgstr "Kelola provider memori semantik untuk workspace ini."
+
+#: src/pages/BotContextMenu.tsx:96
+msgid "Mark as Read"
+msgstr "Tandai sudah dibaca"
+
+#: src/pages/BotContextMenu.tsx:96
+msgid "Mark as Unread"
+msgstr "Tandai belum dibaca"
+
+#: src/pages/Shell.tsx:5521
+msgid "Max"
+msgstr "Maks"
+
+#: src/pages/McpServersOverlay.tsx:224
+#: src/pages/McpServersOverlay.tsx:229
+#: src/pages/PluginsOverlay.tsx:756
+msgid "MCP servers"
+msgstr "Server MCP"
+
+#: src/pages/Shell.tsx:5518
+msgid "Medium"
+msgstr "Sedang"
+
+#: src/pages/GroupPanel.tsx:209
+msgid "Members ({GROUP_MEMBER_MIN}–{GROUP_MEMBER_MAX})"
+msgstr "Anggota ({GROUP_MEMBER_MIN}–{GROUP_MEMBER_MAX})"
+
+#: src/pages/GroupPanel.tsx:119
+msgid "Members (pick {GROUP_MEMBER_MIN}–{GROUP_MEMBER_MAX})"
+msgstr "Anggota (pilih {GROUP_MEMBER_MIN}–{GROUP_MEMBER_MAX})"
+
+#: src/pages/MemorySettingsOverlay.tsx:134
+#: src/pages/Shell.tsx:2614
+msgid "Memory"
+msgstr "Memori"
+
+#: src/pages/Shell.tsx:5402
+msgid "Memory scope"
+msgstr "Cakupan memori"
+
+#. js-lingui-explicit-id
+#: src/lib/browser-notifications.ts:83
+msgid "Message"
+msgstr "Pesan"
+
+#: src/pages/Shell.tsx:4403
+#: src/pages/Shell.tsx:4500
+msgid "Message"
+msgstr "Pesan"
+
+#: src/pages/Shell.tsx:4399
+#: src/pages/Shell.tsx:4403
+msgid "Message {activeName}"
+msgstr "Kirim pesan ke {activeName}"
+
+#: src/pages/Shell.tsx:4134
+msgid "Message composer"
+msgstr "Kolom tulis pesan"
+
+#: src/pages/Shell.tsx:4770
+msgid "Message from {peer}"
+msgstr "Pesan dari {peer}"
+
+#: src/pages/Shell.tsx:4400
+msgid "Message…"
+msgstr "Pesan…"
+
+#: src/pages/Shell.tsx:4770
+msgid "Messaged {peer}"
+msgstr "Mengirim pesan ke {peer}"
+
+#: src/pages/CallView.tsx:81
+msgid "Microphone failed"
+msgstr "Mikrofon gagal"
+
+#: src/pages/Shell.tsx:5520
+msgid "Minimal"
+msgstr "Minimal"
+
+#: src/pages/WindowChrome.tsx:25
+msgid "Minimize"
+msgstr "Perkecil"
+
+#: src/pages/RoutineSchedule.tsx:64
+msgid "minute"
+msgstr "menit"
+
+#: src/pages/RoutineSchedule.tsx:51
+msgid "minutes"
+msgstr "menit"
+
+#: src/pages/ModelSettingsOverlay.tsx:432
+#: src/pages/ModelSettingsOverlay.tsx:493
+#: src/pages/ModelSettingsOverlay.tsx:914
+#: src/pages/Onboarding.tsx:341
+#: src/pages/Onboarding.tsx:390
+#: src/pages/Onboarding.tsx:398
+#: src/pages/Shell.tsx:5358
+msgid "Model"
+msgstr "Model"
+
+#: src/pages/ModelSettingsOverlay.tsx:474
+#: src/pages/Onboarding.tsx:371
+msgid "Model id"
+msgstr "ID model"
+
+#: src/pages/ModelSettingsOverlay.tsx:950
+msgid "Model options"
+msgstr "Opsi model"
+
+#: src/pages/AccountSettingsOverlay.tsx:222
+msgid "Model spend uses your provider keys."
+msgstr "Biaya model memakai key provider Anda."
+
+#: src/pages/ModelSettingsOverlay.tsx:237
+msgid "Model updated."
+msgstr "Model diperbarui."
+
+#: src/pages/ModelSettingsOverlay.tsx:304
+#: src/pages/Shell.tsx:2601
+msgid "Models"
+msgstr "Model"
+
+#: src/pages/ModelSettingsOverlay.tsx:445
+#: src/pages/Onboarding.tsx:348
+msgid "Models from server"
+msgstr "Model dari server"
+
+#: src/pages/RoutineSchedule.tsx:96
+msgid "Monthly"
+msgstr "Bulanan"
+
+#: src/pages/PluginsOverlay.tsx:573
+msgid "More apps"
+msgstr "Aplikasi lain"
+
+#. placeholder {0}: bot.name
+#: src/pages/BotContextMenu.tsx:110
+msgid "Move {0} to section"
+msgstr "Pindahkan {0} ke seksi"
+
+#: src/pages/Shell.tsx:5769
+msgid "Move them to your shared memory."
+msgstr "Pindahkan ke memori bersama Anda."
+
+#: src/pages/BotContextMenu.tsx:90
+msgid "Move to"
+msgstr "Pindahkan ke"
+
+#: src/components/teach/SkillDraftCard.tsx:82
+#: src/pages/Auth.tsx:49
+#: src/pages/GroupPanel.tsx:110
+#: src/pages/GroupPanel.tsx:201
+#: src/pages/Onboarding.tsx:663
+#: src/pages/RoutineEditor.tsx:294
+#: src/pages/Shell.tsx:5150
+#: src/pages/Shell.tsx:5317
+#: src/pages/Shell.tsx:5595
+msgid "Name"
+msgstr "Nama"
+
+#: src/pages/Onboarding.tsx:667
+#: src/pages/Shell.tsx:5155
+msgid "Name this bot"
+msgstr "Beri nama bot ini"
+
+#: src/pages/GroupPanel.tsx:114
+msgid "Name this group"
+msgstr "Beri nama grup ini"
+
+#: src/pages/RoutineEditor.tsx:297
+msgid "Name this routine"
+msgstr "Beri nama rutinitas ini"
+
+#: src/pages/ActivityList.tsx:155
+msgid "Needs input"
+msgstr "Butuh masukan"
+
+#: src/pages/ActivityList.tsx:157
+msgid "Needs takeover"
+msgstr "Butuh diambil alih"
+
+#: src/pages/Shell.tsx:2247
+#: src/pages/Shell.tsx:5138
+msgid "New bot"
+msgstr "Bot baru"
+
+#: src/pages/GroupPanel.tsx:98
+#: src/pages/Shell.tsx:2257
+msgid "New group"
+msgstr "Grup baru"
+
+#: src/pages/ScratchpadSection.tsx:183
+msgid "New open-work item"
+msgstr "Item pekerjaan terbuka baru"
+
+#: src/pages/RoutineEditor.tsx:100
+msgid "New routine"
+msgstr "Rutinitas baru"
+
+#: src/pages/BotContextMenu.tsx:130
+#: src/pages/Shell.tsx:5589
+msgid "New section"
+msgstr "Seksi baru"
+
+#: src/pages/PhoneSettingsOverlay.tsx:281
+msgid "No agent connections yet."
+msgstr "Belum ada koneksi antar-agent."
+
+#: src/pages/PluginsOverlay.tsx:687
+msgid "No apps match your search."
+msgstr "Tidak ada aplikasi yang cocok dengan pencarian Anda."
+
+#: src/pages/PluginsOverlay.tsx:894
+msgid "no auth"
+msgstr "tanpa auth"
+
+#: src/pages/PluginsOverlay.tsx:810
+msgid "No authentication"
+msgstr "Tanpa autentikasi"
+
+#. placeholder {0}: item.name
+#: src/pages/PluginsOverlay.tsx:323
+msgid "No connection record found for {0}."
+msgstr "Tidak ada catatan koneksi untuk {0}."
+
+#: src/pages/McpServersOverlay.tsx:12
+msgid "No credential saved"
+msgstr "Belum ada kredensial tersimpan"
+
+#: src/components/ApprovalRulesSettings.tsx:163
+msgid "No exceptions. Actions run automatically."
+msgstr "Tanpa pengecualian. Tindakan berjalan otomatis."
+
+#: src/pages/PhoneSettingsOverlay.tsx:214
+msgid "No iMessage groups yet."
+msgstr "Belum ada grup iMessage."
+
+#: src/components/AskCard.tsx:80
+msgid "No longer active"
+msgstr "Sudah tidak aktif"
+
+#: src/pages/PluginsOverlay.tsx:682
+msgid "No managed app catalog is configured on this deployment."
+msgstr "Deployment ini belum punya katalog aplikasi terkelola."
+
+#: src/pages/ModelSettingsOverlay.tsx:978
+msgid "No matching models"
+msgstr "Tidak ada model yang cocok"
+
+#: src/pages/PluginsOverlay.tsx:876
+msgid "No MCP or API tool sources installed yet."
+msgstr "Belum ada sumber tool MCP atau API yang terpasang."
+
+#: src/pages/McpServersOverlay.tsx:407
+msgid "No MCP servers yet."
+msgstr "Belum ada server MCP."
+
+#: src/pages/ModelSettingsOverlay.tsx:718
+msgid "No model catalog is available."
+msgstr "Katalog model tidak tersedia."
+
+#: src/pages/ModelSettingsOverlay.tsx:386
+msgid "No providers found."
+msgstr "Provider tidak ditemukan."
+
+#: src/pages/WorkspaceSearch.tsx:23
+msgid "No results"
+msgstr "Tidak ada hasil"
+
+#: src/pages/RoutineEditor.tsx:491
+msgid "No runs yet"
+msgstr "Belum pernah dijalankan"
+
+#: src/pages/RoutineEditor.tsx:88
+msgid "No trigger"
+msgstr "Tanpa pemicu"
+
+#: src/pages/ScratchpadSection.tsx:108
+msgid "None yet"
+msgstr "Belum ada"
+
+#: src/pages/VoiceSettingsOverlay.tsx:156
+msgid "Not configured"
+msgstr "Belum dikonfigurasi"
+
+#: src/pages/ModelSettingsOverlay.tsx:524
+#: src/pages/VoiceSettingsOverlay.tsx:225
+msgid "Not connected"
+msgstr "Belum tersambung"
+
+#: src/pages/PluginsOverlay.tsx:643
+msgid "Not in the plugin catalog"
+msgstr "Tidak ada di katalog plugin"
+
+#: src/pages/PhoneSettingsOverlay.tsx:138
+msgid "Not linked — text the deployment's number once to link your phone to your agent."
+msgstr "Belum tertaut — kirim satu pesan ke nomor deployment untuk menautkan ponsel Anda dengan agent."
+
+#: src/pages/Shell.tsx:6262
+msgid "Not now"
+msgstr "Nanti saja"
+
+#: src/pages/ActivityList.tsx:72
+msgid "Now"
+msgstr "Sekarang"
+
+#. placeholder {0}: selected.label
+#: src/pages/ModelSettingsOverlay.tsx:237
+msgid "Now using {0}."
+msgstr "Sekarang memakai {0}."
+
+#: src/pages/McpOAuthCallback.tsx:23
+msgid "OAuth authorization was cancelled."
+msgstr "Otorisasi OAuth dibatalkan."
+
+#: src/pages/McpServersOverlay.tsx:10
+msgid "OAuth connected"
+msgstr "OAuth tersambung"
+
+#: src/pages/McpOAuthCallback.tsx:51
+msgid "OAuth connection failed"
+msgstr "Koneksi OAuth gagal"
+
+#: src/pages/McpServersOverlay.tsx:257
+msgid "OAuth will be available for providers that support browser authorization. Static headers work today."
+msgstr "OAuth akan tersedia untuk provider yang mendukung otorisasi lewat browser. Header statis sudah bisa dipakai sekarang."
+
+#: src/pages/RoutineEditor.tsx:406
+msgid "On a schedule"
+msgstr "Sesuai jadwal"
+
+#. placeholder {0}: preset.time
+#: src/pages/RoutineSchedule.tsx:96
+msgid "on the 1st at {0}"
+msgstr "pada tanggal 1 pukul {0}"
+
+#: src/pages/ScratchpadSection.tsx:157
+msgid "Open"
+msgstr "Buka"
+
+#: src/pages/Shell.tsx:2926
+msgid "Open computer"
+msgstr "Buka komputer"
+
+#: src/pages/Shell.tsx:2892
+msgid "Open in full window"
+msgstr "Buka di jendela penuh"
+
+#: src/pages/Shell.tsx:2680
+msgid "Open navigation"
+msgstr "Buka navigasi"
+
+#: src/components/teach/TeachComputerSection.tsx:84
+msgid "Open the computer view on web or desktop to teach a task."
+msgstr "Buka tampilan komputer di web atau desktop untuk mengajarkan sebuah tugas."
+
+#: src/pages/PhoneSettingsOverlay.tsx:160
+msgid "Open the link below on your phone and send the prefilled message. Pairing completes automatically."
+msgstr "Buka tautan di bawah ini di ponsel Anda dan kirim pesan yang sudah terisi. Pemasangan selesai otomatis."
+
+#: src/pages/PhoneSettingsOverlay.tsx:171
+msgid "Open WhatsApp"
+msgstr "Buka WhatsApp"
+
+#: src/pages/ScratchpadSection.tsx:104
+msgid "Open work"
+msgstr "Pekerjaan terbuka"
+
+#: src/pages/ModelSettingsOverlay.tsx:405
+#: src/pages/Onboarding.tsx:315
+msgid "OpenAI-compatible server URL"
+msgstr "URL server yang kompatibel dengan OpenAI"
+
+#: src/pages/Shell.tsx:4905
+msgid "Opened its thread."
+msgstr "Membuka percakapannya."
+
+#: src/App.tsx:166
+msgid "Opening your workspace…"
+msgstr "Membuka workspace Anda…"
+
+#: src/pages/ModelSettingsOverlay.tsx:636
+#: src/pages/Onboarding.tsx:502
+msgid "Optional"
+msgstr "Opsional"
+
+#: src/pages/AccountSettingsOverlay.tsx:250
+msgid "Optional controls most people never need"
+msgstr "Kontrol opsional yang jarang dibutuhkan"
+
+#: src/pages/McpServersOverlay.tsx:352
+msgid "Optional header value"
+msgstr "Nilai header opsional"
+
+#: src/pages/ModelSettingsOverlay.tsx:647
+msgid "Or connect an API key"
+msgstr "Atau sambungkan sebuah API key"
+
+#: src/pages/Onboarding.tsx:510
+msgid "Or paste an API key"
+msgstr "Atau tempel sebuah API key"
+
+#. placeholder {0}: whatsapp.businessPhoneE164
+#: src/pages/PhoneSettingsOverlay.tsx:174
+msgid "Or send this code to {0}:"
+msgstr "Atau kirim kode ini ke {0}:"
+
+#: src/pages/AccountSettingsOverlay.tsx:191
+msgid "Organic"
+msgstr "Organic"
+
+#: src/pages/memory-providers/SupermemorySettingsForm.tsx:60
+msgid "Organization API key"
+msgstr "API key organisasi"
+
+#: src/pages/ModelSettingsOverlay.tsx:454
+#: src/pages/Onboarding.tsx:357
+msgid "Other model…"
+msgstr "Model lain…"
+
+#: src/pages/RoutineEditor.tsx:49
+msgid "PagerDuty incident"
+msgstr "Insiden PagerDuty"
+
+#: src/pages/PhoneSettingsOverlay.tsx:201
+msgid "Pair WhatsApp"
+msgstr "Pasangkan WhatsApp"
+
+#. placeholder {0}: whatsapp.phoneE164
+#: src/pages/PhoneSettingsOverlay.tsx:155
+msgid "Paired as {0}"
+msgstr "Terpasang sebagai {0}"
+
+#: src/pages/ScratchpadSection.tsx:142
+#: src/pages/ScratchpadSection.tsx:147
+msgid "Park"
+msgstr "Tunda"
+
+#: src/pages/Auth.tsx:77
+#: src/pages/Auth.tsx:86
+msgid "Password"
+msgstr "Kata sandi"
+
+#: src/pages/VoiceSettingsOverlay.tsx:242
+msgid "Paste a replacement key"
+msgstr "Tempel key pengganti"
+
+#: src/pages/ModelSettingsOverlay.tsx:416
+#: src/pages/Onboarding.tsx:326
+msgid "Paste the OpenAI-compatible address from your server. Sentra Bot adds /v1 if needed."
+msgstr "Tempel alamat kompatibel-OpenAI dari server Anda. Sentra Bot menambahkan /v1 bila perlu."
+
+#: src/pages/VoiceSettingsOverlay.tsx:242
+msgid "Paste your API key"
+msgstr "Tempel API key Anda"
+
+#: src/pages/RoutineEditor.tsx:84
+msgid "Paused"
+msgstr "Dijeda"
+
+#: src/pages/PluginsOverlay.tsx:567
+msgid "Payments"
+msgstr "Pembayaran"
+
+#: src/pages/ModelSettingsOverlay.tsx:518
+#: src/pages/VoiceSettingsOverlay.tsx:219
+msgid "Personal credential"
+msgstr "Kredensial pribadi"
+
+#: src/pages/AccountSettingsOverlay.tsx:137
+#: src/pages/PhoneSettingsOverlay.tsx:116
+msgid "Phone"
+msgstr "Telepon"
+
+#: src/pages/VoiceSettingsOverlay.tsx:155
+msgid "Pick a voice"
+msgstr "Pilih suara"
+
+#: src/pages/BotContextMenu.tsx:84
+msgid "Pin"
+msgstr "Sematkan"
+
+#: src/pages/VoiceSettingsOverlay.tsx:284
+msgid "Playing…"
+msgstr "Memutar…"
+
+#: src/pages/PluginsOverlay.tsx:615
+msgid "Popular"
+msgstr "Populer"
+
+#: src/pages/RoutineEditor.tsx:546
+msgid "POST to"
+msgstr "POST ke"
+
+#. placeholder {0}: props.name
+#: src/components/ArtifactFileCard.tsx:68
+msgid "Preview {0}"
+msgstr "Pratinjau {0}"
+
+#: src/pages/Shell.tsx:5093
+msgid "Private"
+msgstr "Privat"
+
+#: src/pages/PluginsOverlay.tsx:563
+msgid "Productivity"
+msgstr "Produktivitas"
+
+#: src/pages/MemorySettingsOverlay.tsx:194
+msgid "Provider"
+msgstr "Provider"
+
+#: src/pages/ModelSettingsOverlay.tsx:341
+#: src/pages/VoiceSettingsOverlay.tsx:168
+msgid "Providers"
+msgstr "Provider"
+
+#: src/pages/ActivityList.tsx:149
+msgid "Queued"
+msgstr "Antre"
+
+#: src/pages/Shell.tsx:5434
+msgid "Read replies aloud"
+msgstr "Bacakan balasan dengan suara"
+
+#: src/pages/ActivityList.tsx:82
+msgid "Recent"
+msgstr "Terbaru"
+
+#: src/pages/McpServersOverlay.tsx:17
+msgid "Reconnect OAuth"
+msgstr "Sambungkan ulang OAuth"
+
+#: src/App.tsx:123
+msgid "Reconnecting"
+msgstr "Menyambungkan ulang"
+
+#. placeholder {0}: recording.goal
+#: src/components/teach/TeachRecordingChrome.tsx:43
+#: src/components/teach/TeachRecordingChrome.tsx:61
+msgid "Recording: {0}"
+msgstr "Merekam: {0}"
+
+#: src/components/ComputerMaintenanceActions.tsx:57
+msgid "Recover computer"
+msgstr "Pulihkan komputer"
+
+#: src/components/ComputerMaintenanceActions.tsx:79
+msgid "Recover replaces an unreachable computer and keeps files in the saved workspace. Reset restores the last saved workspace and loses unsaved work. Update rebuilds with the latest image and keeps the saved workspace."
+msgstr "Pulihkan mengganti komputer yang tidak terjangkau dan mempertahankan file di workspace tersimpan. Reset mengembalikan workspace tersimpan terakhir dan pekerjaan yang belum disimpan hilang. Perbarui membangun ulang dengan image terbaru dan mempertahankan workspace tersimpan."
+
+#: src/components/ComputerMaintenanceActions.tsx:57
+msgid "Recovering…"
+msgstr "Memulihkan…"
+
+#: src/pages/Shell.tsx:4581
+msgid "Release"
+msgstr "Lepaskan"
+
+#: src/components/ApprovalRulesSettings.tsx:178
+#: src/pages/PluginsOverlay.tsx:455
+#: src/pages/PluginsOverlay.tsx:508
+#: src/pages/PluginsOverlay.tsx:547
+#: src/pages/PluginsOverlay.tsx:666
+#: src/pages/PluginsOverlay.tsx:905
+#: src/pages/ScratchpadSection.tsx:162
+msgid "Remove"
+msgstr "Hapus"
+
+#. placeholder {0}: attachment.file.name
+#: src/pages/Shell.tsx:4204
+msgid "Remove {0}"
+msgstr "Hapus {0}"
+
+#. placeholder {0}: mention.name
+#: src/pages/Shell.tsx:4362
+msgid "Remove mention {0}"
+msgstr "Hapus sebutan {0}"
+
+#: src/pages/RoutineEditor.tsx:334
+msgid "Remove schedule"
+msgstr "Hapus jadwal"
+
+#. placeholder {0}: selectedSkill.name
+#: src/pages/Shell.tsx:4341
+msgid "Remove skill {0}"
+msgstr "Hapus skill {0}"
+
+#: src/pages/RoutineSchedule.tsx:125
+msgid "Remove this schedule"
+msgstr "Hapus jadwal ini"
+
+#: src/pages/RoutineEditor.tsx:537
+msgid "Remove webhook"
+msgstr "Hapus webhook"
+
+#: src/pages/Shell.tsx:4904
+msgid "Removed with chat, computer, and memory."
+msgstr "Dihapus beserta chat, komputer, dan memorinya."
+
+#: src/pages/ScratchpadSection.tsx:92
+msgid "Removed, but list refresh failed"
+msgstr "Terhapus, tetapi daftar gagal disegarkan"
+
+#: src/pages/PluginsOverlay.tsx:450
+#: src/pages/PluginsOverlay.tsx:547
+#: src/pages/PluginsOverlay.tsx:661
+#: src/pages/PluginsOverlay.tsx:905
+msgid "Removing…"
+msgstr "Menghapus…"
+
+#: src/pages/ScratchpadSection.tsx:118
+#: src/pages/ScratchpadSection.tsx:152
+msgid "Reopen"
+msgstr "Buka kembali"
+
+#: src/pages/ModelSettingsOverlay.tsx:645
+#: src/pages/ModelSettingsOverlay.tsx:677
+msgid "Replace API key"
+msgstr "Ganti API key"
+
+#: src/pages/VoiceSettingsOverlay.tsx:255
+msgid "Replace key"
+msgstr "Ganti key"
+
+#: src/pages/Shell.tsx:4527
+msgid "Reply"
+msgstr "Balas"
+
+#: src/pages/Shell.tsx:4167
+msgid "Replying to {replyName}"
+msgstr "Membalas {replyName}"
+
+#: src/components/ComputerMaintenanceActions.tsx:115
+msgid "Reset"
+msgstr "Reset"
+
+#: src/components/ComputerMaintenanceActions.tsx:68
+msgid "Reset computer"
+msgstr "Reset komputer"
+
+#: src/components/ComputerMaintenanceActions.tsx:97
+msgid "Reset computer?"
+msgstr "Reset komputer?"
+
+#: src/components/ComputerMaintenanceActions.tsx:68
+#: src/components/ComputerMaintenanceActions.tsx:115
+msgid "Resetting…"
+msgstr "Mereset…"
+
+#: src/pages/Shell.tsx:2514
+#: src/pages/Shell.tsx:2544
+msgid "Restore"
+msgstr "Pulihkan"
+
+#: src/components/ComputerMaintenanceActions.tsx:103
+msgid "Restore the last saved workspace. Unsaved work on the computer is lost."
+msgstr "Pulihkan workspace tersimpan terakhir. Pekerjaan di komputer yang belum disimpan akan hilang."
+
+#: src/App.tsx:135
+msgid "Retry now"
+msgstr "Coba lagi sekarang"
+
+#: src/pages/McpOAuthCallback.tsx:65
+msgid "Return to Sentra Bot"
+msgstr "Kembali ke Sentra Bot"
+
+#: src/pages/PluginsOverlay.tsx:716
+msgid "Reusable SKILL.md playbooks your agents follow. Install one and invoke it with /Name in the composer."
+msgstr "Playbook SKILL.md yang bisa dipakai ulang oleh agent Anda. Pasang satu lalu panggil dengan /Nama di kolom tulis pesan."
+
+#: src/pages/PhoneSettingsOverlay.tsx:334
+msgid "Revoke"
+msgstr "Cabut"
+
+#: src/pages/AccountSettingsOverlay.tsx:189
+msgid "Robot"
+msgstr "Robot"
+
+#: src/pages/RoutineEditor.tsx:571
+msgid "Rotate key"
+msgstr "Rotasi key"
+
+#: src/pages/RoutineEditor.tsx:247
+#: src/pages/Shell.tsx:3169
+#: src/pages/Shell.tsx:3179
+msgid "Routine"
+msgstr "Rutinitas"
+
+#: src/pages/RoutineEditor.tsx:96
+msgid "Routines"
+msgstr "Rutinitas"
+
+#: src/pages/RoutineEditor.tsx:361
+#: src/pages/RoutineEditor.tsx:366
+msgid "Run at"
+msgstr "Jalankan pada"
+
+#: src/pages/RoutineEditor.tsx:489
+msgid "Run history"
+msgstr "Riwayat jalan"
+
+#: src/pages/Shell.tsx:3162
+msgid "Run time must be in the future."
+msgstr "Waktu jalan harus di masa depan."
+
+#: src/pages/ActivityList.tsx:153
+msgid "Running"
+msgstr "Berjalan"
+
+#: src/pages/RoutineEditor.tsx:152
+msgid "Running · Stop"
+msgstr "Berjalan · Hentikan"
+
+#: src/pages/RoutineEditor.tsx:288
+msgid "Running…"
+msgstr "Menjalankan…"
+
+#: src/components/teach/SkillDraftCard.tsx:162
+#: src/components/teach/TeachComputerSection.tsx:183
+#: src/pages/GroupPanel.tsx:224
+#: src/pages/ModelSettingsOverlay.tsx:675
+#: src/pages/RoutineEditor.tsx:479
+#: src/pages/Shell.tsx:5489
+msgid "Save"
+msgstr "Simpan"
+
+#: src/components/teach/SkillDraftCard.tsx:162
+msgid "Saved"
+msgstr "Tersimpan"
+
+#: src/components/teach/TeachComputerSection.tsx:140
+msgid "Saved skills"
+msgstr "Skill tersimpan"
+
+#: src/pages/ScratchpadSection.tsx:51
+#: src/pages/ScratchpadSection.tsx:73
+msgid "Saved, but list refresh failed"
+msgstr "Tersimpan, tetapi daftar gagal disegarkan"
+
+#: src/pages/ModelSettingsOverlay.tsx:275
+msgid "Saved."
+msgstr "Tersimpan."
+
+#: src/pages/RoutineEditor.tsx:519
+msgid "Saved. Rotate to reveal."
+msgstr "Tersimpan. Rotasi untuk menampilkannya."
+
+#: src/components/teach/SkillDraftCard.tsx:162
+#: src/pages/GroupPanel.tsx:224
+#: src/pages/ModelSettingsOverlay.tsx:673
+#: src/pages/RoutineEditor.tsx:479
+msgid "Saving…"
+msgstr "Menyimpan…"
+
+#: src/pages/CallView.tsx:246
+msgid "Say something. Silence sends it."
+msgstr "Silakan bicara. Berhenti sejenak untuk mengirim."
+
+#: src/pages/CallView.tsx:40
+#: src/pages/CallView.tsx:41
+msgid "Say yes or no, or answer in a sentence."
+msgstr "Jawab ya atau tidak, atau jawab dengan satu kalimat."
+
+#: src/pages/ModelSettingsOverlay.tsx:939
+#: src/pages/Shell.tsx:2268
+msgid "Search"
+msgstr "Cari"
+
+#: src/pages/PluginsOverlay.tsx:598
+#: src/pages/PluginsOverlay.tsx:599
+msgid "Search apps"
+msgstr "Cari aplikasi"
+
+#: src/pages/ModelSettingsOverlay.tsx:934
+msgid "Search models"
+msgstr "Cari model"
+
+#: src/pages/ModelSettingsOverlay.tsx:344
+#: src/pages/ModelSettingsOverlay.tsx:350
+msgid "Search providers"
+msgstr "Cari provider"
+
+#: src/pages/Onboarding.tsx:274
+#: src/pages/Onboarding.tsx:275
+msgid "Search providers and models"
+msgstr "Cari provider dan model"
+
+#: src/pages/WorkspaceSearch.tsx:16
+msgid "Searching…"
+msgstr "Mencari…"
+
+#: src/pages/Shell.tsx:2709
+msgid "Select a bot"
+msgstr "Pilih bot"
+
+#: src/pages/Shell.tsx:4423
+msgid "Send"
+msgstr "Kirim"
+
+#: src/components/AskCard.tsx:150
+msgid "Send answer"
+msgstr "Kirim jawaban"
+
+#: src/components/AskCard.tsx:173
+msgid "Send it"
+msgstr "Kirim"
+
+#: src/components/AskCard.tsx:97
+#: src/components/AskCard.tsx:126
+#: src/components/AskCard.tsx:150
+#: src/components/AskCard.tsx:173
+msgid "Sending…"
+msgstr "Mengirim…"
+
+#: src/pages/PluginsOverlay.tsx:839
+msgid "Sentra Bot verifies the source before saving it. Credentials are encrypted and are never returned to clients or exposed to the model."
+msgstr "Sentra Bot memverifikasi sumbernya sebelum menyimpan. Kredensial dienkripsi, tidak pernah dikembalikan ke klien maupun dibuka ke model."
+
+#: src/pages/RoutineEditor.tsx:48
+msgid "Sentry alert"
+msgstr "Peringatan Sentry"
+
+#: src/pages/McpServersOverlay.tsx:263
+msgid "Server name"
+msgstr "Nama server"
+
+#: src/pages/McpServersOverlay.tsx:317
+#: src/pages/ModelSettingsOverlay.tsx:401
+#: src/pages/Onboarding.tsx:311
+msgid "Server URL"
+msgstr "URL server"
+
+#: src/pages/Shell.tsx:2718
+msgid "Set up voice to call"
+msgstr "Siapkan suara untuk menelepon"
+
+#: src/pages/AccountSettingsOverlay.tsx:113
+#: src/pages/Shell.tsx:2578
+#: src/pages/Shell.tsx:2588
+#: src/pages/Shell.tsx:2859
+msgid "Settings"
+msgstr "Pengaturan"
+
+#: src/pages/Shell.tsx:4441
+msgid "Settings: General"
+msgstr "Pengaturan: Umum"
+
+#: src/pages/Shell.tsx:4443
+msgid "Settings: Usage"
+msgstr "Pengaturan: Pemakaian"
+
+#: src/pages/ModelSettingsOverlay.tsx:413
+#: src/pages/Onboarding.tsx:323
+msgid "Setup help"
+msgstr "Bantuan penyiapan"
+
+#: src/pages/MemorySettingsOverlay.tsx:39
+#: src/pages/Shell.tsx:5408
+msgid "Shared"
+msgstr "Bersama"
+
+#: src/pages/Shell.tsx:2870
+msgid "Show computer"
+msgstr "Tampilkan komputer"
+
+#: src/pages/Auth.tsx:95
+msgid "Show password"
+msgstr "Tampilkan kata sandi"
+
+#: src/pages/Shell.tsx:2870
+msgid "Show settings"
+msgstr "Tampilkan pengaturan"
+
+#: src/lib/localized-provider-hint.ts:7
+#: src/pages/Auth.tsx:161
+#: src/pages/ModelSettingsOverlay.tsx:618
+#: src/pages/Onboarding.tsx:151
+msgid "Sign in"
+msgstr "Masuk"
+
+#: src/pages/Welcome.tsx:34
+msgid "Sign in  →"
+msgstr "Masuk  →"
+
+#: src/pages/Auth.tsx:17
+msgid "Sign in to Sentra Bot"
+msgstr "Masuk ke Sentra Bot"
+
+#: src/pages/Auth.tsx:154
+msgid "Sign up"
+msgstr "Daftar"
+
+#. placeholder {0}: skill.name
+#: src/pages/Shell.tsx:4251
+msgid "Skill {0}"
+msgstr "Skill {0}"
+
+#: src/pages/PluginsOverlay.tsx:713
+msgid "Skills"
+msgstr "Skill"
+
+#: src/pages/Shell.tsx:4588
+msgid "Skip"
+msgstr "Lewati"
+
+#: src/pages/Onboarding.tsx:548
+msgid "Skip for now"
+msgstr "Lewati dulu"
+
+#: src/lib/localized-provider-hint.ts:8
+msgid "Skip or deploy key"
+msgstr "Lewati atau pakai deploy key"
+
+#. placeholder {0}: skipped.join(", ")
+#: src/pages/Shell.tsx:1763
+msgid "Skipped {0}"
+msgstr "Melewati {0}"
+
+#: src/pages/RoutineEditor.tsx:44
+msgid "Slack message"
+msgstr "Pesan Slack"
+
+#: src/components/SoftwareUpdateSection.tsx:134
+#: src/components/SoftwareUpdateSection.tsx:229
+msgid "Software update"
+msgstr "Pembaruan perangkat lunak"
+
+#: src/pages/CallView.tsx:266
+msgid "Space interrupts · Esc hangs up"
+msgstr "Spasi untuk menyela · Esc untuk menutup telepon"
+
+#: src/pages/Shell.tsx:4739
+#: src/pages/Shell.tsx:5002
+msgid "Speak"
+msgstr "Bicara"
+
+#: src/pages/VoiceSettingsOverlay.tsx:194
+msgid "Speak + transcribe"
+msgstr "Bicara + transkripsi"
+
+#: src/pages/VoiceSettingsOverlay.tsx:196
+msgid "Speak only"
+msgstr "Bicara saja"
+
+#: src/pages/Shell.tsx:4735
+#: src/pages/Shell.tsx:4998
+msgid "Speak this reply"
+msgstr "Bacakan balasan ini"
+
+#: src/pages/CallView.tsx:240
+msgid "Speaking…"
+msgstr "Berbicara…"
+
+#: src/pages/Onboarding.tsx:560
+msgid "Start from a proven Chief of Staff, or build your own from scratch."
+msgstr "Mulai dari Chief of Staff yang sudah teruji, atau bangun sendiri dari nol."
+
+#: src/pages/Onboarding.tsx:644
+msgid "Start from scratch"
+msgstr "Mulai dari nol"
+
+#: src/components/teach/TeachComputerSection.tsx:115
+msgid "Start recording"
+msgstr "Mulai merekam"
+
+#: src/pages/ActivityList.tsx:151
+msgid "Starting"
+msgstr "Memulai"
+
+#: src/components/teach/TeachComputerSection.tsx:115
+#: src/pages/ModelSettingsOverlay.tsx:616
+#: src/pages/Onboarding.tsx:487
+msgid "Starting…"
+msgstr "Memulai…"
+
+#: src/components/teach/SkillDraftCard.tsx:110
+msgid "Steps"
+msgstr "Langkah"
+
+#: src/pages/Shell.tsx:3568
+#: src/pages/Shell.tsx:3572
+#: src/pages/Shell.tsx:4414
+#: src/pages/Shell.tsx:4739
+#: src/pages/Shell.tsx:5002
+msgid "Stop"
+msgstr "Hentikan"
+
+#: src/pages/Shell.tsx:4306
+msgid "Stop dictation"
+msgstr "Hentikan dikte"
+
+#: src/pages/Shell.tsx:4735
+#: src/pages/Shell.tsx:4998
+msgid "Stop speaking"
+msgstr "Hentikan suara"
+
+#: src/components/teach/TeachRecordingChrome.tsx:78
+#: src/components/teach/TeachRecordingChrome.tsx:100
+msgid "Stop teaching"
+msgstr "Hentikan pengajaran"
+
+#: src/pages/Shell.tsx:2953
+#: src/pages/Shell.tsx:3588
+msgid "Stop the bot first"
+msgstr "Hentikan botnya dulu"
+
+#. js-lingui-explicit-id
+#: src/lib/browser-notifications.ts:94
+msgid "Stopped."
+msgstr "Dihentikan."
+
+#: src/pages/McpServersOverlay.tsx:336
+msgid "Stored encrypted"
+msgstr "Disimpan terenkripsi"
+
+#: src/pages/Shell.tsx:4856
+msgid "subagent"
+msgstr "subagent"
+
+#: src/components/AskCard.tsx:126
+#: src/pages/ModelSettingsOverlay.tsx:576
+#: src/pages/Onboarding.tsx:449
+msgid "Submit"
+msgstr "Kirim"
+
+#: src/components/AskCard.tsx:15
+msgid "Submitted"
+msgstr "Terkirim"
+
+#: src/pages/ModelSettingsOverlay.tsx:704
+msgid "Switching…"
+msgstr "Mengganti…"
+
+#: src/pages/Shell.tsx:2956
+#: src/pages/Shell.tsx:3593
+msgid "Take control"
+msgstr "Ambil alih"
+
+#: src/components/teach/TeachComputerSection.tsx:74
+msgid "Teach a task"
+msgstr "Ajarkan sebuah tugas"
+
+#: src/pages/Shell.tsx:2783
+msgid "Teaching in progress — stop teaching before sending a new message."
+msgstr "Sedang mengajarkan — hentikan pengajaran sebelum mengirim pesan baru."
+
+#: src/components/teach/TeachComputerSection.tsx:79
+msgid "Teaching needs a graphical sandbox computer. Desktop-host bots can run shell tasks, but not screen recording."
+msgstr "Pengajaran butuh komputer sandbox grafis. Bot desktop-host bisa menjalankan tugas shell, tetapi tidak bisa merekam layar."
+
+#: src/pages/Shell.tsx:5093
+msgid "Team"
+msgstr "Tim"
+
+#: src/pages/Shell.tsx:5943
+msgid "Team Computer"
+msgstr "Team Computer"
+
+#: src/pages/RoutineEditor.tsx:46
+msgid "Teams message"
+msgstr "Pesan Teams"
+
+#: src/components/teach/SkillDraftCard.tsx:170
+#: src/components/teach/TeachComputerSection.tsx:160
+msgid "Test"
+msgstr "Uji"
+
+#: src/pages/RoutineEditor.tsx:288
+msgid "Test run"
+msgstr "Jalankan uji coba"
+
+#: src/components/SoftwareUpdateSection.tsx:206
+msgid "The API did not come back. Refresh this page."
+msgstr "API tidak kembali. Segarkan halaman ini."
+
+#: src/pages/MemorySettingsOverlay.tsx:218
+msgid "The selected memory provider is not available in this build."
+msgstr "Provider memori yang dipilih tidak tersedia di build ini."
+
+#: src/pages/Shell.tsx:5385
+msgid "Thinking"
+msgstr "Berpikir"
+
+#: src/pages/Shell.tsx:2896
+msgid "This bot runs on this computer, not a Linux desktop. Shell and files use your home folder."
+msgstr "Bot ini berjalan di komputer ini, bukan di desktop Linux. Shell dan file memakai folder home Anda."
+
+#: src/pages/Shell.tsx:3617
+msgid "This bot runs on this computer. There is no separate Linux desktop. Ask it to use the shell; working directories under your home folder are allowed."
+msgstr "Bot ini berjalan di komputer ini. Tidak ada desktop Linux terpisah. Minta bot memakai shell; direktori kerja di bawah folder home Anda diizinkan."
+
+#: src/pages/Shell.tsx:5785
+#: src/pages/Shell.tsx:5864
+msgid "This cannot be undone."
+msgstr "Tindakan ini tidak bisa dibatalkan."
+
+#: src/pages/HostComputerPrompt.tsx:14
+msgid "this computer"
+msgstr "komputer ini"
+
+#: src/pages/HostComputerPrompt.tsx:93
+msgid "This computer runs shell commands with your account, including files in your home folder. Do not turn it on for a shared or public server."
+msgstr "Komputer ini menjalankan perintah shell dengan akun Anda, termasuk file di folder home Anda. Jangan aktifkan pada server bersama atau server publik."
+
+#: src/components/ArtifactFileCard.tsx:162
+msgid "This file is not valid UTF-8 Markdown."
+msgstr "File ini bukan Markdown UTF-8 yang valid."
+
+#: src/pages/HostComputerPrompt.tsx:14
+msgid "this Mac"
+msgstr "Mac ini"
+
+#: src/pages/HostComputerPrompt.tsx:88
+msgid "This Mac runs shell commands with your account, including files in your home folder. Do not turn it on for a shared or public server."
+msgstr "Mac ini menjalankan perintah shell dengan akun Anda, termasuk file di folder home Anda. Jangan aktifkan pada server bersama atau server publik."
+
+#: src/pages/Shell.tsx:5670
+msgid "This permanently removes every message and stops current work. The chat remains available."
+msgstr "Ini menghapus permanen seluruh pesan dan menghentikan pekerjaan yang berjalan. Chat-nya tetap ada."
+
+#: src/pages/Onboarding.tsx:523
+msgid "This provider cannot paste a key here. Skip if this deployment already has credentials."
+msgstr "Provider ini tidak bisa menempel key di sini. Lewati jika deployment ini sudah punya kredensial."
+
+#: src/pages/Shell.tsx:6210
+msgid "This server cannot be assigned without a bot."
+msgstr "Server ini tidak bisa ditugaskan tanpa bot."
+
+#: src/pages/McpServersOverlay.tsx:167
+msgid "This server did not request browser authorization."
+msgstr "Server ini tidak meminta otorisasi lewat browser."
+
+#: src/pages/McpServersOverlay.tsx:163
+msgid "This server is already connected. Disconnect it first to authorize again."
+msgstr "Server ini sudah tersambung. Putuskan dulu untuk mengotorisasi ulang."
+
+#: src/pages/Shell.tsx:6249
+msgid "This server uses browser sign-in. Authorize it to let your agents use its tools — a popup will open."
+msgstr "Server ini memakai proses masuk lewat browser. Otorisasi agar agent Anda bisa memakai tool-nya — sebuah popup akan terbuka."
+
+#: src/pages/ModelSettingsOverlay.tsx:687
+msgid "This subscription sign-in is not available in Sentra Bot yet. Use a deployment credential or choose another provider."
+msgstr "Proses masuk berbasis langganan ini belum tersedia di Sentra Bot. Pakai kredensial deployment atau pilih provider lain."
+
+#: src/pages/RoutineSchedule.tsx:206
+msgid "Time of day"
+msgstr "Waktu dalam sehari"
+
+#: src/pages/Onboarding.tsx:672
+#: src/pages/Shell.tsx:5160
+#: src/pages/Shell.tsx:5326
+msgid "Title"
+msgstr "Judul"
+
+#: src/pages/PluginsOverlay.tsx:872
+msgid "Tool sources"
+msgstr "Sumber tool"
+
+#: src/pages/PluginsOverlay.tsx:834
+msgid "Treg token"
+msgstr "Token Treg"
+
+#: src/components/AskCard.tsx:141
+msgid "Type your answer"
+msgstr "Ketik jawaban Anda"
+
+#: src/pages/BotContextMenu.tsx:126
+msgid "Unassigned"
+msgstr "Belum ditugaskan"
+
+#: src/components/SoftwareUpdateSection.tsx:266
+msgid "Unavailable"
+msgstr "Tidak tersedia"
+
+#: src/pages/BotContextMenu.tsx:84
+msgid "Unpin"
+msgstr "Lepas sematan"
+
+#. placeholder {0}: pending.file.name
+#: src/pages/Shell.tsx:1834
+msgid "Unsupported file type: {0}"
+msgstr "Jenis file tidak didukung: {0}"
+
+#: src/components/SoftwareUpdateSection.tsx:247
+msgid "Up to date"
+msgstr "Sudah terbaru"
+
+#: src/components/SoftwareUpdateSection.tsx:75
+msgid "Update"
+msgstr "Perbarui"
+
+#: src/components/SoftwareUpdateSection.tsx:254
+msgid "Update available"
+msgstr "Pembaruan tersedia"
+
+#: src/components/ComputerMaintenanceActions.tsx:73
+msgid "Update computer"
+msgstr "Perbarui komputer"
+
+#: src/components/SoftwareUpdateSection.tsx:179
+msgid "Update failed"
+msgstr "Pembaruan gagal"
+
+#: src/components/SoftwareUpdateSection.tsx:175
+#: src/components/SoftwareUpdateSection.tsx:195
+msgid "Update finished with errors"
+msgstr "Pembaruan selesai dengan kesalahan"
+
+#: src/components/SoftwareUpdateSection.tsx:172
+#: src/components/SoftwareUpdateSection.tsx:189
+msgid "Updated"
+msgstr "Diperbarui"
+
+#: src/components/ComputerMaintenanceActions.tsx:73
+#: src/components/SoftwareUpdateSection.tsx:75
+msgid "Updating…"
+msgstr "Memperbarui…"
+
+#: src/pages/AccountSettingsOverlay.tsx:212
+#: src/pages/Shell.tsx:2639
+msgid "Usage"
+msgstr "Pemakaian"
+
+#: src/pages/HostComputerPrompt.tsx:83
+msgid "Use {hostLabel}"
+msgstr "Pakai {hostLabel}"
+
+#: src/pages/ModelSettingsOverlay.tsx:485
+#: src/pages/Onboarding.tsx:382
+msgid "Use a found model"
+msgstr "Pakai model yang ditemukan"
+
+#: src/pages/ModelSettingsOverlay.tsx:706
+msgid "Use this model"
+msgstr "Pakai model ini"
+
+#: src/pages/PluginsOverlay.tsx:855
+msgid "Verify and add"
+msgstr "Verifikasi dan tambahkan"
+
+#: src/pages/PluginsOverlay.tsx:853
+msgid "Verifying…"
+msgstr "Memverifikasi…"
+
+#: src/pages/Shell.tsx:2627
+#: src/pages/Shell.tsx:5438
+#: src/pages/VoiceSettingsOverlay.tsx:124
+#: src/pages/VoiceSettingsOverlay.tsx:264
+msgid "Voice"
+msgstr "Suara"
+
+#: src/pages/ModelSettingsOverlay.tsx:580
+#: src/pages/ModelSettingsOverlay.tsx:602
+#: src/pages/Onboarding.tsx:453
+#: src/pages/Onboarding.tsx:475
+msgid "Waiting for sign-in…"
+msgstr "Menunggu proses masuk…"
+
+#: src/components/SoftwareUpdateSection.tsx:182
+msgid "Waiting for the API to come back…"
+msgstr "Menunggu API kembali…"
+
+#: src/pages/PhoneSettingsOverlay.tsx:178
+msgid "Waiting for your message…"
+msgstr "Menunggu pesan Anda…"
+
+#: src/pages/Shell.tsx:6093
+msgid "Waiting…"
+msgstr "Menunggu…"
+
+#: src/pages/RoutineEditor.tsx:459
+msgid "Webhook"
+msgstr "Webhook"
+
+#: src/pages/RoutineEditor.tsx:586
+#: src/pages/RoutineSchedule.tsx:34
+#: src/pages/RoutineSchedule.tsx:90
+msgid "Weekdays"
+msgstr "Hari kerja"
+
+#: src/pages/Shell.tsx:5755
+msgid "What about its memories?"
+msgstr "Bagaimana dengan memorinya?"
+
+#: src/components/teach/TeachComputerSection.tsx:97
+msgid "What result will you demonstrate?"
+msgstr "Hasil apa yang akan Anda peragakan?"
+
+#: src/pages/RoutineEditor.tsx:307
+msgid "What should this routine do each time it runs?"
+msgstr "Apa yang harus dikerjakan rutinitas ini setiap kali berjalan?"
+
+#: src/pages/Onboarding.tsx:685
+#: src/pages/Shell.tsx:5175
+msgid "What this bot is for"
+msgstr "Bot ini untuk apa"
+
+#: src/components/teach/SkillDraftCard.tsx:131
+msgid "What to return"
+msgstr "Apa yang harus dikembalikan"
+
+#: src/pages/PhoneSettingsOverlay.tsx:151
+msgid "WhatsApp"
+msgstr "WhatsApp"
+
+#: src/pages/PeerMessagesOverlay.tsx:169
+msgid "When {botName} messages another bot, the exchange shows up here instead of in the chat."
+msgstr "Saat {botName} mengirim pesan ke bot lain, percakapannya muncul di sini, bukan di chat."
+
+#: src/pages/RoutineEditor.tsx:86
+#: src/pages/RoutineEditor.tsx:533
+msgid "When a webhook fires"
+msgstr "Saat sebuah webhook terpicu"
+
+#: src/pages/RoutineEditor.tsx:316
+msgid "When to run"
+msgstr "Kapan dijalankan"
+
+#: src/components/teach/SkillDraftCard.tsx:89
+msgid "When to use"
+msgstr "Kapan dipakai"
+
+#: src/pages/HostComputerPrompt.tsx:49
+msgid "Where should bots run?"
+msgstr "Di mana bot dijalankan?"
+
+#: src/pages/Auth.tsx:142
+#: src/pages/CallView.tsx:242
+msgid "Working…"
+msgstr "Bekerja…"
+
+#: src/pages/Shell.tsx:5368
+msgid "Workspace default"
+msgstr "Default workspace"
+
+#: src/pages/Shell.tsx:1558
+#: src/pages/Shell.tsx:2175
+msgid "You"
+msgstr "Anda"
+
+#: src/pages/McpOAuthCallback.tsx:72
+msgid "You can close this tab if it does not redirect automatically."
+msgstr "Anda bisa menutup tab ini jika tidak dialihkan otomatis."
+
+#: src/pages/McpOAuthCallback.tsx:70
+msgid "You can close this window."
+msgstr "Anda bisa menutup jendela ini."
+
+#: src/pages/Shell.tsx:2933
+#: src/pages/Shell.tsx:3558
+msgid "You have control"
+msgstr "Anda yang memegang kendali"
+
+#: src/pages/Onboarding.tsx:660
+msgid "Your bot"
+msgstr "Bot Anda"
+
+#: src/pages/Auth.tsx:69
+msgid "Your email address"
+msgstr "Alamat email Anda"
+
+#: src/pages/ModelSettingsOverlay.tsx:529
+msgid "Your key or subscription token is stored securely and is never shown here."
+msgstr "Key atau token langganan Anda disimpan dengan aman dan tidak pernah ditampilkan di sini."
+
+#: src/pages/Auth.tsx:56
+msgid "Your name"
+msgstr "Nama Anda"
+
+#: src/pages/Welcome.tsx:23
+msgid "Your team of always-on agents<0/>that you can give real work to."
+msgstr "Tim agent Anda yang selalu siap<0/>dan benar-benar bisa diberi pekerjaan."

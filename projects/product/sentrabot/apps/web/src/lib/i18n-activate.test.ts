@@ -48,6 +48,7 @@ describe("activateUiLocale", () => {
       ko: async () => ({ messages: { Settings: "설정" } }),
       tr: async () => ({ messages: { Settings: "Ayarlar" } }),
       hi: async () => ({ messages: { Settings: "सेटिंग्स" } }),
+      id: async () => ({ messages: { Settings: "Pengaturan" } }),
       "pt-BR": async () => ({ messages: { Settings: "Configurações" } }),
     });
 
@@ -75,6 +76,9 @@ describe("activateUiLocale", () => {
       hi: async () => {
         throw new Error("hi missing");
       },
+      id: async () => {
+        throw new Error("id missing");
+      },
       "pt-BR": async () => {
         throw new Error("pt-BR missing");
       },
@@ -97,6 +101,7 @@ describe("activateUiLocale", () => {
       ko: async () => ({ messages: { Settings: "설정" } }),
       tr: async () => ({ messages: { Settings: "Ayarlar" } }),
       hi: async () => ({ messages: { Settings: "सेटिंग्स" } }),
+      id: async () => ({ messages: { Settings: "Pengaturan" } }),
       "pt-BR": async () => ({ messages: { Settings: "Configurações" } }),
     });
 
@@ -122,6 +127,7 @@ describe("activateUiLocale", () => {
       ko: async () => ({ messages: { Settings: "설정" } }),
       tr: async () => ({ messages: { Settings: "Ayarlar" } }),
       hi: async () => ({ messages: { Settings: "सेटिंग्स" } }),
+      id: async () => ({ messages: { Settings: "Pengaturan" } }),
       "pt-BR": async () => ({ messages: { Settings: "Configurações" } }),
     });
 
@@ -152,6 +158,7 @@ describe("activateUiLocale", () => {
       ko: async () => ({ messages: { Settings: "설정" } }),
       tr: async () => ({ messages: { Settings: "Ayarlar" } }),
       hi: async () => ({ messages: { Settings: "सेटिंग्स" } }),
+      id: async () => ({ messages: { Settings: "Pengaturan" } }),
       "pt-BR": async () => ({ messages: { Settings: "Configurações" } }),
     });
 

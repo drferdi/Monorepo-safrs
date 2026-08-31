@@ -32,6 +32,7 @@ import type {
   MessagingDirectRequest,
   MessagingGroup,
   MessagingGroupRequest,
+  MessagingMediaContent,
   MessagingSendResult,
   MessagingTypingRequest,
   NotificationMessage,
@@ -289,4 +290,20 @@ export interface MessagingProvider {
    * delivery.
    */
   sendTypingIndicator?(request: MessagingTypingRequest, context: AdapterContext): Promise<void>;
+  /**
+   * Download an inbound attachment by the vendor's media id. Optional: vendors
+   * that expose a plain CDN URL on the inbound event do not implement it.
+   * Implementations must refuse payloads past the attachment size cap rather
+   * than buffering them.
+   */
+  fetchMedia?(mediaId: string, context: AdapterContext): Promise<MessagingMediaContent>;
+  /**
+   * Reach a recipient outside the vendor's free-form messaging window, where
+   * only pre-approved template content is accepted. Optional: vendors without
+   * such a window (or without a configured template) do not implement it.
+   */
+  sendTemplate?(
+    request: MessagingDirectRequest,
+    context: AdapterContext,
+  ): Promise<MessagingSendResult>;
 }

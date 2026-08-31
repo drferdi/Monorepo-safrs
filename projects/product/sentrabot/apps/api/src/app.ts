@@ -31,6 +31,7 @@ import {
   isComposioEnabled,
   isPhoneSurfaceEnabled,
   isPipedreamEnabled,
+  isWhatsAppEnabled,
   LocalAgentHomeStore,
   LocalArtifactStore,
   McpConnector,
@@ -40,21 +41,20 @@ import {
   PipedreamConnector,
   PostgresRealtimeFanout,
   parseSendBlueInbound,
+  parseWhatsAppInbound,
   pipedreamConfigFromEnv,
   pushTokenPath,
   type RemoteConnectorDependencies,
   ScriptedAgentRuntime,
   SendBlueMessagingProvider,
   sendBlueConfigFromEnv,
-  isWhatsAppEnabled,
-  parseWhatsAppInbound,
   verifyWhatsAppSignature,
-  whatsAppConfigFromEnv,
   WhatsAppMessagingProvider,
   WorkspaceMemoryProviderResolver,
+  whatsAppConfigFromEnv,
 } from "@sentrabot/adapters";
 import { blockedAuthPaths, createAuth } from "@sentrabot/auth";
-import { signupPolicyFromEnv } from "@sentrabot/core";
+import { normalizePhoneLocale, signupPolicyFromEnv } from "@sentrabot/core";
 import {
   createDb,
   createThreadEvents,
@@ -67,6 +67,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { type AppEnv, loadEnv } from "./env.js";
 import { createPhoneInboundHandler } from "./phone-inbound.js";
+import { createPhoneTranscriber, ingestPhoneMedia } from "./phone-media.js";
 import { mountPhoneWebhookRoutes } from "./phone-webhook.js";
 import { createRouter } from "./router.js";
 import { mountVoiceHttpRoutes } from "./voice.js";
@@ -197,6 +198,11 @@ export async function createApp(
   const whatsappMessaging = isWhatsAppEnabled(whatsAppConfig)
     ? new WhatsAppMessagingProvider(whatsAppConfig)
     : undefined;
+  const phoneLocale = normalizePhoneLocale(env.phoneLocale);
+  const phoneTranscriber = createPhoneTranscriber({
+    provider: env.phoneTranscribeProvider,
+    apiKey: env.phoneTranscribeApiKey,
+  });
   const installed = new InstalledConnectorProvider(prisma, secrets, remoteConnectors);
   const stack = createConnectorStack(isComposioEnabled(env.composioApiKey), composioOverride, [
     installed,
@@ -285,6 +291,7 @@ export async function createApp(
     deploymentModelKey: env.deploymentModelKey,
     messaging,
     whatsappMessaging,
+    phoneLocale,
   });
   if (inMemoryJobs) {
     await inMemoryJobs.start(jobHandlers);
@@ -383,6 +390,7 @@ export async function createApp(
           signupAllowlist: env.signupAllowlist,
         },
         lineNumber: env.sendbluePhoneNumber ?? "",
+        locale: phoneLocale,
         typing: (toNumber) => {
           // Keep the raw phone number out of trace ids — those reach logs
           // and telemetry, a different trust boundary than the database.
@@ -413,6 +421,7 @@ export async function createApp(
       verifySignature: (rawBody, signatureHeader) =>
         verifyWhatsAppSignature(rawBody, signatureHeader, whatsAppConfig.appSecret),
       parseInbound: parseWhatsAppInbound,
+      locale: phoneLocale,
       completePairing: (code, phoneE164) => completeWhatsAppPairing(prisma, code, phoneE164),
       sendReply: async (toE164, body) => {
         const operationId = `whatsapp.pair-reply:${randomUUID()}`;
@@ -445,6 +454,20 @@ export async function createApp(
           signupAllowlist: env.signupAllowlist,
         },
         lineNumber: env.whatsappBusinessPhoneE164 ?? "",
+        locale: phoneLocale,
+        ingestMedia: (owner, media) =>
+          ingestPhoneMedia(
+            {
+              prisma,
+              artifacts,
+              fetchMedia: (mediaId, mediaContext) =>
+                whatsappMessaging.fetchMedia!(mediaId, mediaContext),
+              transcribe: phoneTranscriber,
+              locale: phoneLocale,
+            },
+            owner,
+            media,
+          ),
       }),
     });
   }

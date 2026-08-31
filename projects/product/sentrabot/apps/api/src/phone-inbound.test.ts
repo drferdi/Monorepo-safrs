@@ -1,3 +1,4 @@
+import { phoneStrings } from "@sentrabot/core";
 import { describe, expect, it, vi } from "vitest";
 import { createPhoneInboundHandler, type PhoneInboundDeps } from "./phone-inbound.js";
 
@@ -10,6 +11,10 @@ function createDeps(
     invitedMember?: unknown;
     approvedMember?: unknown;
     sendResult?: { messageId: string; runId: string | null; seq: number };
+    /** Newest run awaiting an answer, plus the bot messages it produced. */
+    waitingRun?: unknown;
+    runMessages?: Array<Record<string, unknown>>;
+    answered?: boolean;
   } = {},
 ) {
   const identity =
@@ -59,6 +64,7 @@ function createDeps(
     },
     run: { findUnique: vi.fn(async () => null) },
   };
+  const answerRunInput = vi.fn(async () => overrides.answered ?? true);
   const members = overrides.members ?? [];
   const prisma = {
     phoneIdentity: {
@@ -72,6 +78,8 @@ function createDeps(
       update: vi.fn(async () => identity),
     },
     thread: { findFirst: vi.fn(async () => ({ id: "thread-1" })) },
+    run: { findFirst: vi.fn(async () => overrides.waitingRun ?? null) },
+    message: { findMany: vi.fn(async () => overrides.runMessages ?? []) },
     phoneChannel: {
       upsert: vi.fn(async () => channel),
       update: vi.fn(async () => ({ ...channel, introPostedAt: new Date() })),
@@ -190,7 +198,7 @@ function createDeps(
   };
   return {
     prisma,
-    events: { sendUserMessage, notify },
+    events: { sendUserMessage, notify, answerRunInput },
     jobs: { enqueue },
     provision,
     signupPolicy,
@@ -198,6 +206,7 @@ function createDeps(
     typing,
     sendUserMessage,
     notify,
+    answerRunInput,
     enqueue,
     outboundRows,
     members,
@@ -205,6 +214,7 @@ function createDeps(
   } as unknown as PhoneInboundDeps & {
     sendUserMessage: ReturnType<typeof vi.fn>;
     notify: ReturnType<typeof vi.fn>;
+    answerRunInput: ReturnType<typeof vi.fn>;
     enqueue: ReturnType<typeof vi.fn>;
     typing: ReturnType<typeof vi.fn>;
     provision: ReturnType<typeof vi.fn>;
@@ -315,6 +325,162 @@ describe("createPhoneInboundHandler DM routing", () => {
     await handle(dmEvent);
 
     expect(deps.enqueue).not.toHaveBeenCalled();
+  });
+});
+
+describe("createPhoneInboundHandler approval answers", () => {
+  const waitingRun = { id: "run-9", threadId: "thread-1" };
+  const askMessages = [
+    {
+      id: "m-ask",
+      blocks: [
+        {
+          kind: "ask",
+          text: "Review before gmail.send → budi@example.com",
+          approvalEffectId: "eff-1",
+          status: "pending",
+          actions: [
+            { id: "allow", label: "Allow once" },
+            { id: "always", label: "Always allow this tool" },
+            { id: "deny", label: "Deny" },
+          ],
+        },
+      ],
+    },
+  ];
+
+  it("answers the waiting approval, wakes the run, and confirms", async () => {
+    const deps = createDeps({ waitingRun, runMessages: askMessages });
+    const handle = createPhoneInboundHandler(deps);
+    await handle({ ...dmEvent, content: "1" });
+
+    expect(deps.answerRunInput).toHaveBeenCalledWith({
+      workspaceId: "ws-1",
+      threadId: "thread-1",
+      runId: "run-9",
+      messageId: "m-ask",
+      answeredByUserId: "user-1",
+      answer: "allow",
+    });
+    // Recording the answer without waking the run leaves it idle forever.
+    expect(deps.enqueue).toHaveBeenCalledWith(
+      expect.objectContaining({ payload: { runId: "run-9" } }),
+    );
+    expect(deps.sendUserMessage).not.toHaveBeenCalled();
+    expect(deps.outboundRows).toEqual([
+      expect.objectContaining({ idempotencyKey: "ask-answered:m-ask" }),
+    ]);
+  });
+
+  it("maps the third option to a denial", async () => {
+    const deps = createDeps({ waitingRun, runMessages: askMessages });
+    const handle = createPhoneInboundHandler(deps);
+    await handle({ ...dmEvent, content: "3" });
+
+    expect(deps.answerRunInput).toHaveBeenCalledWith(expect.objectContaining({ answer: "deny" }));
+  });
+
+  it("treats a digit as an ordinary message when nothing is waiting", async () => {
+    const deps = createDeps();
+    const handle = createPhoneInboundHandler(deps);
+    await handle({ ...dmEvent, content: "1" });
+
+    expect(deps.answerRunInput).not.toHaveBeenCalled();
+    expect(deps.sendUserMessage).toHaveBeenCalledWith(
+      expect.objectContaining({ prompt: "1", trigger: "phone" }),
+    );
+  });
+
+  it("delivers the text when the card was already answered elsewhere", async () => {
+    const deps = createDeps({ waitingRun, runMessages: askMessages, answered: false });
+    const handle = createPhoneInboundHandler(deps);
+    await handle({ ...dmEvent, content: "2" });
+
+    expect(deps.sendUserMessage).toHaveBeenCalled();
+    expect(deps.outboundRows).toEqual([]);
+  });
+
+  it("ignores an out-of-range digit rather than guessing an action", async () => {
+    const deps = createDeps({ waitingRun, runMessages: askMessages });
+    const handle = createPhoneInboundHandler(deps);
+    await handle({ ...dmEvent, content: "7" });
+
+    expect(deps.answerRunInput).not.toHaveBeenCalled();
+    expect(deps.sendUserMessage).toHaveBeenCalled();
+  });
+});
+
+describe("createPhoneInboundHandler media", () => {
+  const photoEvent = {
+    ...dmEvent,
+    content: "",
+    media: { id: "MEDIA_1", mimeType: "image/jpeg", kind: "image" as const },
+  };
+
+  it("sends the ingested blocks instead of the raw text", async () => {
+    const deps = createDeps();
+    const blocks = [
+      { kind: "image" as const, artifactId: "art-1", mimeType: "image/jpeg", name: "photo.jpg" },
+    ];
+    deps.ingestMedia = vi.fn(async () => ({
+      status: "ingested" as const,
+      blocks,
+      prompt: "See attached files.",
+    }));
+    const handle = createPhoneInboundHandler(deps);
+    await handle(photoEvent);
+
+    expect(deps.ingestMedia).toHaveBeenCalledWith(
+      { userId: "user-1", workspaceId: "ws-1", botId: "bot-1" },
+      photoEvent.media,
+    );
+    expect(deps.sendUserMessage).toHaveBeenCalledWith(
+      expect.objectContaining({ blocks, prompt: "See attached files." }),
+    );
+  });
+
+  it("texts back the reason and starts no run when ingestion fails", async () => {
+    const deps = createDeps();
+    deps.ingestMedia = vi.fn(async () => ({
+      status: "failed" as const,
+      reply: "Maaf, filenya terlalu besar (maksimal 10 MB).",
+    }));
+    const handle = createPhoneInboundHandler(deps);
+    await handle(photoEvent);
+
+    expect(deps.sendUserMessage).not.toHaveBeenCalled();
+    expect(deps.outboundRows).toEqual([
+      expect.objectContaining({
+        idempotencyKey: "media-fail:handle-1",
+        kind: "dm",
+        toNumber: "+15551111111",
+        body: "Maaf, filenya terlalu besar (maksimal 10 MB).",
+      }),
+    ]);
+  });
+
+  it("keeps ignoring attachments on vendors with no media ingestion", async () => {
+    const deps = createDeps();
+    const handle = createPhoneInboundHandler(deps);
+    await handle(photoEvent);
+
+    // No ingestMedia dep: an empty-content event stays a tapback.
+    expect(deps.sendUserMessage).not.toHaveBeenCalled();
+  });
+
+  it("does not read an attachment's caption as a YES/NO owner command", async () => {
+    const deps = createDeps({
+      invitedMember: { id: "member-1", status: "invited", updatedAt: new Date() },
+    });
+    deps.ingestMedia = vi.fn(async () => ({
+      status: "ingested" as const,
+      blocks: [{ kind: "text" as const, text: "yes" }],
+      prompt: "yes",
+    }));
+    const handle = createPhoneInboundHandler(deps);
+    await handle({ ...photoEvent, content: "yes" });
+
+    expect(deps.sendUserMessage).toHaveBeenCalled();
   });
 });
 
@@ -430,9 +596,12 @@ describe("createPhoneInboundHandler owner commands", () => {
         data: { status: "left" },
       }),
     );
+    // The caveat itself matters, not its wording: the deployment cannot remove
+    // the line from the group, and the owner has to be told.
     expect(deps.outboundRows[0]).toEqual(
-      expect.objectContaining({ kind: "dm", body: expect.stringMatching(/unchanged|no leave/i) }),
+      expect.objectContaining({ kind: "dm", body: phoneStrings("id").channelLeft }),
     );
+    expect(phoneStrings("id").channelLeft).toMatch(/tidak bisa mengeluarkan nomor dari grup/i);
   });
 
   it("approves a pending agent connection on YES and texts both owners", async () => {

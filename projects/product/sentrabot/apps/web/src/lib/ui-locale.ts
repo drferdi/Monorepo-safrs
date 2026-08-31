@@ -1,4 +1,4 @@
-export const UI_LOCALES = ["en", "de", "ko", "tr", "hi", "pt-BR"] as const;
+export const UI_LOCALES = ["en", "de", "ko", "tr", "hi", "id", "pt-BR"] as const;
 
 export type UiLocale = (typeof UI_LOCALES)[number];
 
@@ -10,6 +10,7 @@ export const UI_LOCALE_LABELS: Record<UiLocale, string> = {
   ko: "한국어",
   tr: "Türkçe",
   hi: "हिन्दी",
+  id: "Bahasa Indonesia",
   "pt-BR": "Português (Brasil)",
 };
 
@@ -20,6 +21,7 @@ export function isUiLocale(value: string | null | undefined): value is UiLocale 
     value === "ko" ||
     value === "tr" ||
     value === "hi" ||
+    value === "id" ||
     value === "pt-BR"
   );
 }

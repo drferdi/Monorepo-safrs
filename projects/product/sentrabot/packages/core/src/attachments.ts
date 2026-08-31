@@ -180,7 +180,9 @@ export function userTurnBlocksForRun(
   }>,
   sourceMessageId?: string | null,
 ): MessageBlock[] | undefined {
-  if (trigger !== "user") return undefined;
+  // "phone" carries real user turns too — a photo or document texted in has
+  // the same attachment blocks a web upload does.
+  if (trigger !== "user" && trigger !== "phone") return undefined;
   return messages.find(
     (message) =>
       message.role === "user" &&

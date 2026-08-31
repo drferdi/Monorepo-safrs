@@ -1,5 +1,5 @@
 import type { MessagingInboundMessage } from "@sentrabot/adapter-kit";
-import { timingSafeStringEqual } from "@sentrabot/core";
+import { type PhoneLocale, phoneStrings, timingSafeStringEqual } from "@sentrabot/core";
 import type { Hono } from "hono";
 import { readBoundedBody, WEBHOOK_MAX_BODY_BYTES } from "./webhook.js";
 
@@ -23,13 +23,8 @@ export type WhatsAppWebhookDeps = {
   /** Best-effort confirmation reply back to the sender. */
   sendReply?: (toE164: string, body: string) => Promise<void>;
   handle: (event: MessagingInboundMessage) => Promise<void>;
-};
-
-const PAIRING_REPLIES: Record<WhatsAppPairingResult, string> = {
-  paired: "WhatsApp paired. Your agent is listening — just send a message.",
-  invalid: "That pairing code is invalid or expired. Generate a new one in Settings.",
-  "conflict-number": "This WhatsApp number is already paired.",
-  "conflict-bot": "That agent already has a paired number. Unpair it first in Settings.",
+  /** Language of the pairing replies; defaults to "id". */
+  locale?: PhoneLocale;
 };
 
 /**
@@ -73,7 +68,8 @@ export function mountWhatsAppWebhookRoutes(app: Hono, deps: WhatsAppWebhookDeps)
           (pairMatch[1] ?? "").toUpperCase(),
           event.fromNumber,
         );
-        await deps.sendReply?.(event.fromNumber, PAIRING_REPLIES[result]).catch(() => undefined);
+        const replies = phoneStrings(deps.locale ?? "id").pairing;
+        await deps.sendReply?.(event.fromNumber, replies[result]).catch(() => undefined);
       } else {
         await deps.handle(event);
       }

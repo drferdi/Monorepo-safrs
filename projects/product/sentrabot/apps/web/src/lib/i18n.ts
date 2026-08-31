@@ -14,6 +14,7 @@ const defaultCatalogLoaders: Record<UiLocale, CatalogLoader> = {
   ko: () => import("../locales/ko/messages.po") as Promise<CatalogModule>,
   tr: () => import("../locales/tr/messages.po") as Promise<CatalogModule>,
   hi: () => import("../locales/hi/messages.po") as Promise<CatalogModule>,
+  id: () => import("../locales/id/messages.po") as Promise<CatalogModule>,
   "pt-BR": () => import("../locales/pt-BR/messages.po") as Promise<CatalogModule>,
 };
 

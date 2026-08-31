@@ -7,6 +7,7 @@ import type {
   SandboxProvider,
 } from "@sentrabot/adapter-kit";
 import { phoneDeliverJob } from "@sentrabot/adapter-kit";
+import type { PhoneLocale } from "@sentrabot/core";
 import type { PrismaClient, ThreadEvents } from "@sentrabot/db";
 import { expireComputerControl } from "./computer-control.js";
 import { scheduleComputerSleep, sleepComputerIfIdle } from "./computer-idle.js";
@@ -31,6 +32,7 @@ export function createBackgroundJobHandlers(deps: {
   deploymentModelKey?: string;
   messaging?: MessagingProvider;
   whatsappMessaging?: MessagingProvider;
+  phoneLocale?: PhoneLocale;
 }): BackgroundJobHandlers {
   const primaryMessaging = () => deps.messaging ?? deps.whatsappMessaging;
   return {
@@ -54,6 +56,7 @@ export function createBackgroundJobHandlers(deps: {
           whatsappMessaging: deps.whatsappMessaging,
           events: deps.events,
           jobs: deps.jobs,
+          locale: deps.phoneLocale,
         },
         payload,
         {

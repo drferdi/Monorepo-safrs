@@ -1,5 +1,6 @@
 import { createHmac } from "node:crypto";
 import { parseWhatsAppInbound, verifyWhatsAppSignature } from "@sentrabot/adapters";
+import { phoneStrings } from "@sentrabot/core";
 import { Hono } from "hono";
 import { describe, expect, it, vi } from "vitest";
 import {
@@ -105,15 +106,19 @@ describe("whatsapp webhook", () => {
     // The pairing interception must run INSTEAD of the provisioning path.
     expect(handle).not.toHaveBeenCalled();
     expect(completePairing).toHaveBeenCalledWith("AB12CD34", "+628123456789");
-    expect(sendReply).toHaveBeenCalledWith("+628123456789", expect.stringMatching(/paired/i));
+    // Indonesian is the default: this is the first message a paired user reads.
+    expect(sendReply).toHaveBeenCalledWith("+628123456789", phoneStrings("id").pairing.paired);
   });
 
   it("replies with the failure reason for an invalid code", async () => {
     const { app, sendReply } = buildApp({ completePairing: async () => "invalid" });
     await signedPost(app, textMessage("PAIR-ZZZZZZ"));
-    expect(sendReply).toHaveBeenCalledWith(
-      "+628123456789",
-      expect.stringMatching(/invalid or expired/i),
-    );
+    expect(sendReply).toHaveBeenCalledWith("+628123456789", phoneStrings("id").pairing.invalid);
+  });
+
+  it("answers in English when the deployment is configured that way", async () => {
+    const { app, sendReply } = buildApp({ locale: "en" });
+    await signedPost(app, textMessage("PAIR-ab12cd34"));
+    expect(sendReply).toHaveBeenCalledWith("+628123456789", phoneStrings("en").pairing.paired);
   });
 });

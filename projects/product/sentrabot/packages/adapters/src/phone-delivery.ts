@@ -6,7 +6,13 @@ import type {
 } from "@sentrabot/adapter-kit";
 import { phoneDeliverJob, runContinueJob } from "@sentrabot/adapter-kit";
 import type { MessageBlock } from "@sentrabot/contracts";
-import { botMessageHopExhausted, nextBotMessageHop } from "@sentrabot/core";
+import {
+  botMessageHopExhausted,
+  nextBotMessageHop,
+  type PhoneLocale,
+  phoneStrings,
+  renderPhoneAskCard,
+} from "@sentrabot/core";
 import type { PrismaClient, ThreadEvents } from "@sentrabot/db";
 import { appendEventInTransaction, createThreadMessageInTransaction } from "@sentrabot/db";
 import { isWhatsAppWindowExpiredError } from "./whatsapp.js";
@@ -28,6 +34,8 @@ export interface PhoneDeliveryDeps {
   whatsappMessaging?: MessagingProvider;
   events: Pick<ThreadEvents, "sendUserMessage" | "notify">;
   jobs: Pick<JobPublisher, "enqueue">;
+  /** Language of the deployment's own copy on this channel; defaults to "id". */
+  locale?: PhoneLocale;
 }
 
 /** Meta's customer-service window: free-form sends expire 24h after the last inbound. */
@@ -83,15 +91,28 @@ async function mirrorRun(deps: PhoneDeliveryDeps, runId: string): Promise<void> 
     where: { runId: run.id, role: "bot" },
     orderBy: { seq: "asc" },
   });
+  const strings = phoneStrings(deps.locale ?? "id");
   const rows = messages
-    .map((message) => ({
-      idempotencyKey: `msg:${message.id}`,
-      kind: "dm",
-      provider: identity.provider,
-      toNumber: identity.phoneE164,
-      body: extractText(message.blocks),
-      sourceMessageId: message.id,
-    }))
+    .map((message) => {
+      const ask = pendingAskBlock(message.blocks);
+      // An approval that never reaches the phone leaves the run waiting with
+      // nothing to answer, so the card replaces the plain mirror for that
+      // message and carries the numbered replies with it.
+      const askBody = ask
+        ? (renderPhoneAskCard(ask, deps.locale ?? "id")?.body ?? strings.askOpenApp)
+        : null;
+      return {
+        // One key per message, ask or not: the answered run mirrors the same
+        // messages again, and a key that changed with the ask's status would
+        // send the message's text a second time.
+        idempotencyKey: `msg:${message.id}`,
+        kind: "dm",
+        provider: identity.provider,
+        toNumber: identity.phoneE164,
+        body: [extractText(message.blocks), askBody].filter(Boolean).join("\n\n"),
+        sourceMessageId: message.id,
+      };
+    })
     .filter((row) => row.body);
   if (rows.length === 0) return;
   // Atomic dedupe: a concurrent phone.deliver for the same run loses on the
@@ -353,15 +374,32 @@ async function drain(deps: PhoneDeliveryDeps, context: AdapterContext): Promise<
         continue;
       }
       if (row.provider === "whatsapp") {
-        // Cloud API refuses free-form sends outside the 24h window; retrying
-        // cannot help until the customer writes again, so fail terminally
-        // instead of burning the retry budget.
+        // Cloud API refuses free-form sends outside the 24h window. A
+        // pre-approved template is the only way through — that is what keeps
+        // the "leave it, Sentra keeps working" promise for a routine that
+        // finishes a day later. Without one, retrying can never succeed, so
+        // fail terminally instead of burning the retry budget.
         const lastInbound = identity?.lastInboundAt?.getTime() ?? 0;
         if (Date.now() - lastInbound >= WHATSAPP_SERVICE_WINDOW_MS) {
-          await deps.prisma.phoneOutbound.update({
+          const provider = messagingFor(deps, row.provider);
+          if (!provider.sendTemplate) {
+            await deps.prisma.phoneOutbound.update({
+              where: { id: row.id },
+              data: { status: "failed" },
+            });
+            continue;
+          }
+          const sent = await provider.sendTemplate({ to: row.toNumber, body: row.body }, context);
+          await deps.prisma.phoneOutbound.updateMany({
             where: { id: row.id },
-            data: { status: "failed" },
+            data: { providerHandle: sent.handle },
           });
+          if (identity) {
+            await deps.prisma.phoneIdentity.update({
+              where: { id: identity.id },
+              data: { outboundSinceInbound: { increment: 1 } },
+            });
+          }
           continue;
         }
       }
@@ -400,7 +438,8 @@ async function drain(deps: PhoneDeliveryDeps, context: AdapterContext): Promise<
       // retry; only an exhausted budget is terminal. Meta's re-engagement
       // error is permanent until the customer writes again — fail now.
       const attempts = (row.attempts ?? 0) + 1;
-      const exhausted = attempts >= PHONE_OUTBOUND_MAX_ATTEMPTS || isWhatsAppWindowExpiredError(error);
+      const exhausted =
+        attempts >= PHONE_OUTBOUND_MAX_ATTEMPTS || isWhatsAppWindowExpiredError(error);
       const retryAt = exhausted ? null : new Date(Date.now() + phoneOutboundRetryDelayMs(attempts));
       await deps.prisma.phoneOutbound.updateMany({
         where: { id: row.id },
@@ -443,6 +482,16 @@ export async function applyPhoneOutboundStatus(
     where: { providerHandle: event.handle },
     data: { status },
   });
+}
+
+/** The unanswered ask on a bot message, if it carries one. */
+function pendingAskBlock(blocks: unknown): Extract<MessageBlock, { kind: "ask" }> | null {
+  if (!Array.isArray(blocks)) return null;
+  const ask = (blocks as MessageBlock[]).find(
+    (block): block is Extract<MessageBlock, { kind: "ask" }> =>
+      typeof block === "object" && block !== null && block.kind === "ask",
+  );
+  return ask && ask.status !== "answered" ? ask : null;
 }
 
 function extractText(blocks: unknown): string {

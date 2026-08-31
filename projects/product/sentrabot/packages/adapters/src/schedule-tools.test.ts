@@ -107,6 +107,17 @@ describe("filterBuiltinToolsForThread", () => {
     ]);
   });
 
+  it("leaves every schedule tool available on a phone DM thread", () => {
+    // A WhatsApp/iMessage conversation is a DM thread (no groupId), so
+    // "setiap Senin pagi kirim laporan" reaches schedule_create from the
+    // phone exactly as it does from the web.
+    const names = filterBuiltinToolsForThread(
+      [...SCHEDULE_TOOL_NAMES].map((name) => ({ name })),
+      null,
+    ).map((tool) => tool.name);
+    expect(names).toEqual([...SCHEDULE_TOOL_NAMES]);
+  });
+
   it("covers every schedule tool name", () => {
     for (const name of SCHEDULE_TOOL_NAMES) {
       expect(filterBuiltinToolsForThread([{ name }, { name: "remember" }], "group-1")).toEqual([

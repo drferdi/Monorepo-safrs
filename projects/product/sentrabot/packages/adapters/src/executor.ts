@@ -43,6 +43,7 @@ import {
   isOneShotRoutineCrons,
   isPhoneChannelRun,
   isTerminal,
+  languageMirroringNote,
   nextCronDateAcross,
   nextFence,
   phoneChannelPrivacyBlock,
@@ -979,6 +980,14 @@ export function createRunExecutor(deps: ExecutorDeps) {
         const acceptsImages =
           deps.runtime.describe().capabilities.scripted ||
           modelAcceptsImageInput(runModelProvider, runModelId);
+        // Sending bytes to a model without vision drops them silently, and the
+        // agent then answers as if nothing was attached. Say what happened.
+        const visibleTurnImages = acceptsImages ? currentTurnImages : undefined;
+        const unreadableImagesPrompt = currentTurnImages?.length && !acceptsImages
+          ? `The user attached ${currentTurnImages.length} image(s): ${currentTurnImages
+              .map((image) => JSON.stringify(image.name))
+              .join(", ")}. This model cannot view images — say so plainly and ask for a description or the text instead of guessing at the content.`
+          : undefined;
         const groupContext = thread.groupId
           ? await loadGroupContext(deps.prisma, thread.groupId, { id: bot.id, name: bot.name })
           : undefined;
@@ -2381,7 +2390,7 @@ export function createRunExecutor(deps: ExecutorDeps) {
             : undefined;
         const agentSkillsLine = formatSkillsCatalogInstruction(agentSkills);
         const taskPrompt = expandSkillReferencesInPrompt(
-          [task.prompt, attachedFilesPrompt].filter(Boolean).join("\n\n"),
+          [task.prompt, attachedFilesPrompt, unreadableImagesPrompt].filter(Boolean).join("\n\n"),
           agentSkills,
         );
         const invokedSkill = savedSkills.find((skill) =>
@@ -2450,6 +2459,7 @@ export function createRunExecutor(deps: ExecutorDeps) {
               prompt,
               instructions: [
                 bot.instructions || `${bot.name}: ${bot.title}\n${bot.description}`,
+                languageMirroringNote(),
                 groupContext,
                 phoneContext,
                 memoryContext ? redactSecrets(memoryContext, runSecrets) : undefined,
@@ -2475,7 +2485,7 @@ export function createRunExecutor(deps: ExecutorDeps) {
                 .filter((instruction): instruction is string => Boolean(instruction))
                 .join("\n\n"),
               history: runtimeHistory,
-              currentTurnImages,
+              currentTurnImages: visibleTurnImages,
               tools,
               model: {
                 provider: runModelProvider,

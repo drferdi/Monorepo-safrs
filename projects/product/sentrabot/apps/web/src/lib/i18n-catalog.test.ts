@@ -2,6 +2,7 @@ import { i18n } from "@lingui/core";
 import { beforeEach, describe, expect, it } from "vitest";
 import de from "../../scripts/translations-de.json";
 import hi from "../../scripts/translations-hi.json";
+import id from "../../scripts/translations-id.json";
 import ko from "../../scripts/translations-ko.json";
 import ptBR from "../../scripts/translations-pt-BR.json";
 import tr from "../../scripts/translations-tr.json";
@@ -101,6 +102,29 @@ describe("lingui catalogs", () => {
         values: { timeSelect: "09:00" },
       }),
     ).toBe("09:00 बजे");
+  });
+
+  it("keeps placeholders intact in the fully translated Indonesian catalog", () => {
+    i18n.load("id", id as Record<string, string>);
+    i18n.activate("id");
+    expect(i18n._({ id: "Settings", message: "Settings" })).toBe("Pengaturan");
+    expect(i18n._({ id: "Cancel", message: "Cancel" })).toBe("Batal");
+    expect(
+      i18n._({
+        id: "every {intervalAmountSelect} {intervalUnitSelect}",
+        message: "every {intervalAmountSelect} {intervalUnitSelect}",
+        values: { intervalAmountSelect: "5", intervalUnitSelect: "menit" },
+      }),
+    ).toBe("setiap 5 menit");
+    // Indonesian has no plural inflection, but Lingui still needs both
+    // categories present or the ICU message fails to compile.
+    expect(
+      i18n._({
+        id: "{0, plural, one {# model} other {# models}}",
+        message: "{0, plural, one {# model} other {# models}}",
+        values: { 0: 3 },
+      }),
+    ).toBe("3 model");
   });
 
   it("uses seeded catalog strings for German, Korean, Turkish, Hindi, and Brazilian Portuguese chrome", () => {

@@ -486,6 +486,27 @@ export interface MessagingGroup {
   participants: string[];
 }
 
+/**
+ * Attachment on an inbound message, referenced by the vendor's media id so the
+ * bytes are fetched on demand (`MessagingProvider.fetchMedia`) rather than
+ * carried through the webhook. Vendors that hand out a plain CDN URL keep
+ * using `mediaUrl` instead.
+ */
+export interface MessagingInboundMedia {
+  id: string;
+  mimeType: string;
+  kind: "image" | "audio" | "document" | "sticker";
+  /** A voice note recorded in the app, not an attached audio file. */
+  voice?: boolean;
+  caption?: string;
+  filename?: string;
+}
+
+export interface MessagingMediaContent {
+  bytes: Uint8Array;
+  mimeType: string;
+}
+
 /** Provider-neutral inbound message after vendor webhook parsing. */
 export interface MessagingInboundMessage {
   type: "message";
@@ -496,6 +517,7 @@ export interface MessagingInboundMessage {
   participants: string[];
   content: string;
   mediaUrl: string | null;
+  media?: MessagingInboundMedia | null;
 }
 
 /** Provider-neutral outbound delivery status after vendor webhook parsing. */
