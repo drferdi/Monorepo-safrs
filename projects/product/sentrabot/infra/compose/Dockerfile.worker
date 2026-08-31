@@ -1,8 +1,0 @@
-FROM node:24.18-alpine
-WORKDIR /workspace
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY tsconfig.json ./
-COPY packages ./packages
-COPY projects/sentrabot ./projects/sentrabot
-RUN corepack enable && pnpm install --frozen-lockfile --prod=false && pnpm --filter @sentra/sentrabot-worker build
-CMD ["pnpm", "--filter", "@sentra/sentrabot-worker", "start"]

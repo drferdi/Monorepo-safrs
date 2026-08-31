@@ -1,0 +1,40 @@
+{
+  "name": "sentrabot",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": "^22.22.2 || ^24.0.0 || >=26.0.0"
+  },
+  "scripts": {
+    "dev": "cross-env COREPACK_ENABLE_DOWNLOAD_PROMPT=0 turbo dev --filter=@sentrabot/api --filter=@sentrabot/worker --filter=@sentrabot/web --filter=@sentrabot/sandbox-supervisor",
+    "build": "turbo build",
+    "check": "turbo check",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "db:generate": "pnpm --filter @sentrabot/db generate",
+    "db:migrate": "pnpm --filter @sentrabot/db migrate",
+    "sandbox:build": "docker build -t sentrabot/computer:local infra/sandboxes/computer",
+    "test": "vitest run",
+    "test:integration": "tsx packages/testkit/src/cli/harness.ts --integration",
+    "test:e2e": "tsx packages/testkit/src/cli/harness.ts --e2e",
+    "test:topology": "tsx packages/testkit/src/cli/topology.ts",
+    "test:canary": "tsx packages/testkit/src/cli/canary.ts",
+    "test:computer": "tsx packages/testkit/src/cli/computer.ts",
+    "perf:desktop": "tsx packages/testkit/src/cli/desktop-performance.ts",
+    "perf:compare": "tsx packages/testkit/src/cli/compare-performance.ts",
+    "compose:up": "docker compose --env-file .env -f infra/compose/docker-compose.yml up --build",
+    "compose:down": "docker compose --env-file .env -f infra/compose/docker-compose.yml down -v"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.8",
+    "@types/node": "^24.3.0",
+    "cross-env": "^10.1.0",
+    "tsx": "^4.20.5",
+    "turbo": "^2.5.6",
+    "typescript": "^5.9.2",
+    "vitest": "^4.1.10"
+  }
+}

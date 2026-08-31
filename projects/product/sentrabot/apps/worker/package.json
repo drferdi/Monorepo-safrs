@@ -1,26 +1,23 @@
 {
-  "name": "@sentra/sentrabot-worker",
-  "version": "0.0.0",
-  "private": true,
+  "name": "@sentrabot/worker",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
   "type": "module",
   "scripts": {
-    "build": "tsc --project tsconfig.runtime.json",
-    "dev": "node --watch --experimental-strip-types src/server.ts",
-    "start": "node dist/src/server.js",
-    "lint": "biome check .",
-    "typecheck": "tsc --noEmit",
+    "dev": "node ../../scripts/dev-watch.mjs src/index.ts",
+    "start": "tsx src/index.ts",
+    "check": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
-    "@safrs/database": "workspace:*",
-    "@safrs/env": "workspace:*",
-    "@safrs/schemas": "workspace:*",
-    "hono": "catalog:",
-    "zod": "catalog:"
+    "@sentrabot/adapter-kit": "workspace:*",
+    "@sentrabot/adapters": "workspace:*",
+    "@sentrabot/core": "workspace:*",
+    "@sentrabot/db": "workspace:*",
+    "@sentrabot/memory": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "catalog:",
-    "typescript": "catalog:",
-    "vitest": "catalog:"
+    "typescript": "^5.9.2",
+    "vitest": "^4.1.10"
   }
 }

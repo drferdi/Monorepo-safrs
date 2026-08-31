@@ -1,57 +1,31 @@
 # Changelog
 
-All notable changes to the Sentra Bot **capsule** are recorded here.
-Format: [Keep a Changelog 1.1](https://keepachangelog.com/en/1.1.0/).
-This project has **no published version**. Do not invent `1.0.0` or git tags.
+Notable product changes in Sentra Bot. This is for people following the repo, not a dump of every commit. GitHub Releases still mark tagged builds.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
-### Added
-
-- Capsule at `projects/product/sentrabot/` with product apps web, worker,
-  sandbox-supervisor, and desktop, plus `apps/site` (Cora Vite shell; not
-  the product origin).
-- Domain contracts in `@safrs/schemas/sentrabot` and Hono facade
-  `/api/sentrabot/*` (shared packages; listed here as product-visible).
-- Prisma models and migrations `0003`–`0005` for deployment settings, bots,
-  threads, messages, memory, and routines; `0006`–`0007` Better Auth tables
-  (shared database package).
-- Worker: private control contract, AES-256-GCM credential envelope,
-  idempotent execution helper, routine-to-execution mapping, HTTP server.
-- Supervisor: health/ready split, timing-safe bearer ops, isolated Docker
-  **policy** (no socket), HTTP server.
-- Compose contract under `infra/compose/` (internal network, health-gated
-  web/worker/postgres, supervisor hardening flags).
-- Token-scoped web dashboard (local UI state; not API-wired).
-- Persona catalog under `src/personas/` (twelve Indonesian assistants).
-- Local-only email template and delivery helpers.
-- Apache-2.0 [LICENSE](LICENSE) and Rakazo [NOTICE](NOTICE).
-- Documentation scaffold (Diátaxis + capsule community files).
-
 ### Changed
 
-- Nothing released. Capsule remains migration-foundation.
+- Model picker includes Grok 4.6 (xAI) and Ox Alpha Free / GLM-5.3 (OpenCode Go).
 
-### Security
+### Added
 
-- Signup policy defaults to `closed`.
-- Worker and supervisor ports are Compose `expose` only (not published).
-- Supervisor rejects traversal-shaped computer IDs and undeclared payload
-  fields.
+- Voice mode: speak replies, hold-to-talk dictation, and half-duplex calls. Speech sits behind a `VoiceProvider` interface (ElevenLabs, OpenAI, Cartesia) so the product is not tied to one vendor. Keys stay on the server.
+- Electron first-run: Docker (default) or this Mac. This Mac runs the bot shell as you, with working directories under your home folder. macOS does not show its own permission dialog; the consent is Sentra Bot's. The choice is owner-only and is refused when `SANDBOX_PROVIDER` is not `docker` (so E2B and test fakes cannot enable it).
+- GitHub Copilot and SuperGrok / X Premium sign-in via Pi device-code OAuth (`openai-codex`, `github-copilot`, `xai`). Claude Pro is still omitted because Pi's Claude login uses a localhost callback that does not work from the web app.
+- Spawn peer bots (each with its own thread and computer) and short-lived in-thread subagents.
+- ChatGPT Plus or Pro sign-in for model access.
+- Mobile: point the app at a self-hosted API origin, a native iOS inbox, and take control of the live desktop.
+- Provider-neutral integrations: managed apps through Composio or Pipedream Connect, plus encrypted user-installed Treg, HTTPS MCP, and OpenAPI tool sources on web and mobile.
+- Revoke for connected Composio plugins.
+- Routines in plain language instead of raw cron.
 
-### Known blockers (not removals)
+### Removed
 
-- Source pin `d17a138` unavailable; `7f08da5` is provisional technical baseline
-  only. See [docs/provenance.md](docs/provenance.md).
-- Signup remains closed. No signed Electron artifact. Docker executor not
-  run against a real daemon. Compose images not started as a release claim.
-  SBOM/SLSA not generated.
+- Unused Grant folder picker in the desktop app. Bots never got a host folder that way.
 
-```mermaid
-stateDiagram-v2
-  [*] --> Unreleased
-  Unreleased --> SelfHostBeta: TARGET public source + closed signup
-  SelfHostBeta --> SignedDesktop: TARGET separate desktop gate
-  SignedDesktop --> Hosted: TARGET R3 only
-  note right of Unreleased: CURRENT — no version number
-```
+## [0.1.0-beta] - 2026-08-13
+
+Initial public beta: web, Electron, and Expo clients; Pi runtime; Docker and E2B computers; plugins; one thread, computer, memory, routines, and history per bot.

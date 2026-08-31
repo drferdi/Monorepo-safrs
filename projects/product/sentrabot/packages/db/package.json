@@ -1,0 +1,35 @@
+{
+  "name": "@sentrabot/db",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "generate": "prisma generate",
+    "migrate": "prisma migrate deploy",
+    "migrate:dev": "prisma migrate dev",
+    "check": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --root ../.. packages/db/src"
+  },
+  "dependencies": {
+    "@sentrabot/adapter-kit": "workspace:*",
+    "@prisma/adapter-pg": "^7.9.1",
+    "@prisma/client": "^7.9.1",
+    "@sentrabot/contracts": "workspace:*",
+    "@sentrabot/core": "workspace:*",
+    "pg": "^8.16.3",
+    "dotenv": "^17.2.1"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.15.5",
+    "prisma": "^7.9.1",
+    "typescript": "^5.9.2",
+    "vitest": "^4.1.10"
+  }
+}

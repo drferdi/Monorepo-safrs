@@ -1,0 +1,14 @@
+[Unit]
+Description=Create and verify a Sentra Bot production backup
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/sentrabot-backup
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/var/backups

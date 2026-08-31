@@ -1,0 +1,45 @@
+{
+  "name": "@sentrabot/core",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./node/load-root-env": {
+      "types": "./src/node/load-root-env.ts",
+      "development": "./src/node/load-root-env.ts",
+      "default": "./src/node/load-root-env.ts"
+    },
+    "./node/approval-effect-key": {
+      "types": "./src/approval-effect-key.ts",
+      "development": "./src/approval-effect-key.ts",
+      "default": "./src/approval-effect-key.ts"
+    },
+    "./plot": {
+      "types": "./src/plot/plot-spec.ts",
+      "development": "./src/plot/plot-spec.ts",
+      "default": "./src/plot/plot-spec.ts"
+    }
+  },
+  "scripts": {
+    "check": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --root ../.. packages/core/src"
+  },
+  "dependencies": {
+    "@sentrabot/contracts": "workspace:*",
+    "dotenv": "^17.2.1",
+    "@observablehq/plot": "^0.6.17",
+    "d3-dsv": "^3.0.1",
+    "croner": "^10.0.1"
+  },
+  "devDependencies": {
+    "fast-check": "^4.3.0",
+    "typescript": "^5.9.2",
+    "vitest": "^4.1.10",
+    "@types/d3-dsv": "^3.0.7"
+  }
+}

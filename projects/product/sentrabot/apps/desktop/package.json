@@ -1,20 +1,78 @@
 {
-  "name": "@sentra/sentrabot-desktop",
-  "version": "0.0.0",
-  "private": true,
+  "name": "@sentrabot/desktop",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
   "type": "module",
+  "main": "dist/main.js",
   "scripts": {
-    "lint": "biome check .",
-    "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "dev": "pnpm build && electron .",
+    "build": "tsc -p tsconfig.json && node scripts/copy-static.mjs",
+    "pack": "pnpm --filter @sentrabot/web build && pnpm build && electron-builder --mac --win --linux",
+    "pack:dir": "pnpm --filter @sentrabot/web build && pnpm build && electron-builder --dir",
+    "check": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --root ../.. apps/desktop/src",
+    "test:e2e": "pnpm build && playwright test --config e2e/playwright.config.ts",
+    "release": "pnpm --filter @sentrabot/web build && pnpm build && electron-builder --publish never"
   },
   "dependencies": {
-    "electron": "catalog:",
-    "zod": "catalog:"
+    "@sentrabot/contracts": "workspace:*",
+    "electron-updater": "^6.8.9"
   },
   "devDependencies": {
-    "@types/node": "catalog:",
-    "typescript": "catalog:",
-    "vitest": "catalog:"
+    "@playwright/test": "^1.55.0",
+    "electron": "^43.4.0",
+    "electron-builder": "^26.0.12",
+    "typescript": "^5.9.2",
+    "vitest": "^4.1.10"
+  },
+  "build": {
+    "appId": "dev.sentrabot.desktop",
+    "productName": "Sentra Bot",
+    "directories": {
+      "output": "out",
+      "buildResources": "assets"
+    },
+    "files": [
+      "dist/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../web/dist",
+        "to": "web"
+      }
+    ],
+    "extraMetadata": {
+      "main": "dist/main.js"
+    },
+    "mac": {
+      "icon": "assets/icon.icns",
+      "category": "public.app-category.productivity",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "notarize": true
+    },
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": [
+        "nsis"
+      ],
+      "verifyUpdateCodeSignature": true
+    },
+    "linux": {
+      "icon": "assets/icon.png",
+      "target": [
+        "AppImage"
+      ]
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "drferdii",
+        "repo": "sentrabot"
+      }
+    ]
   }
 }

@@ -1,79 +1,61 @@
 # Contributing to Sentra Bot
 
-This capsule lives inside the Sentra Monorepo. There is no separate GitHub
-repository, issue template tree, or project-local CI workflow. Root `.github/**`
-and root `.cursor/rules` are **out of scope** for capsule contributors (R2
-governance).
+Thanks for helping improve Sentra Bot. Keep changes focused and testable.
 
-## Who this is for
+## Run locally
 
-- **Chief** — sole human owner and merger of sensitive work.
-- **Agents** — follow [AGENTS.md](AGENTS.md) first; this file is the human
-  counterpart.
-- **Inner-source readers** — propose capsule-scoped documentation or tests
-  without expanding into shared packages.
-
-## Before you change anything
-
-1. Read root [AGENTS.md](../../AGENTS.md) and this capsule [AGENTS.md](AGENTS.md).
-2. Classify risk. Capsule-only docs and app-local tests are usually R1.
-   Schemas, API, Prisma, auth, lockfile, and CI are R2 and need designated
-   review. Hosted production and credential issuance are R3.
-3. Do not copy source from `D:/DEV/Sentraverse/sentrabot`. Intake remains
-   pinned to `d17a138` (blocked). Technical porting may use `7f08da5` only
-   as a **provisional** baseline.
-
-```mermaid
-flowchart TD
-  Idea["Change idea"] --> Scope{"Inside projects/product/sentrabot?"}
-  Scope -->|no| Stop["Stop — ask Chief for scope expansion"]
-  Scope -->|yes| Risk{"R2 or R3 surface?"}
-  Risk -->|R3| Gate["Prepare only — Chief must authorize"]
-  Risk -->|R2| Review["Designated review before merge"]
-  Risk -->|R1| Work["Smallest viable patch"]
-  Work --> Verify["App filters + bash scripts/safrs-verify.sh"]
-  Review --> Verify
-```
-
-## Machine steps
-
-Agents must use the exact commands in [AGENTS.md](AGENTS.md). Humans use the
-same filters from the repository root:
+See [README.md](README.md) for full details. Quick start from the repo root:
 
 ```bash
-pnpm --filter @sentra/sentrabot-web lint
-pnpm --filter @sentra/sentrabot-web typecheck
-pnpm --filter @sentra/sentrabot-web test
-pnpm --filter @sentra/sentrabot-web e2e
-pnpm --filter @sentra/sentrabot-worker test
-pnpm --filter @sentra/sentrabot-sandbox-supervisor test
-pnpm --filter @sentra/sentrabot-desktop test
-bash scripts/safrs-verify.sh
+cp .env.example .env
+# Set BETTER_AUTH_SECRET and ENCRYPTION_KEY to long random strings.
+docker compose --env-file .env -f infra/compose/docker-compose.yml up postgres -d
+pnpm install
+pnpm db:generate
+pnpm db:migrate
+pnpm sandbox:build
+pnpm dev
 ```
 
-Do not add a nested `pnpm-workspace.yaml`, lockfile, or Biome config here.
+## Checks before you open a PR
 
-## Documentation
+| Command | When to run |
+| --- | --- |
+| `pnpm test` | Default. Units, properties, and in-process contracts. Scripted runtime, fake sandbox, in-memory wakeup — no live connector or model-provider calls. |
+| `pnpm test:integration` | Postgres via Testcontainers: product journeys, authorization, executor lifecycle, Graphile / LISTEN/NOTIFY. Needs Docker. |
+| `pnpm test:e2e` | Playwright against the emulated API. Needs Docker. |
+| `pnpm test:topology` | Local product-path smoke: Docker computer + Graphile worker recovery. Needs Docker. Not PR CI. |
+| `pnpm test:canary` | Live OpenRouter / E2B canaries. Needs keys. Not PR CI. |
+| `pnpm test:computer` | Real vision model + E2B desktop. Needs keys; see README. Not PR CI. |
+| `pnpm check` | TypeScript (`tsc`) across the monorepo. |
+| `pnpm lint` | Biome lint and format check. |
 
-Follow Diátaxis: one topic, one file. Index: [docs/README.md](docs/README.md).
-Every new human-facing markdown file in this capsule must be English and
-include a mermaid diagram that is specific to that file. Link other topics;
-do not paste architecture into every README.
+CI runs `pnpm lint`, `pnpm check`, production builds (including Electron preload smoke), `pnpm test`, `pnpm test:integration`, and `pnpm test:e2e` on every PR.
 
-## Tests
+## Secrets and configuration
 
-- App-local Vitest next to the code it covers.
-- Cross-app contracts under [tests/](tests/README.md).
-- Compose contract tests read YAML; they do **not** prove a running cluster.
-- No production credentials, source `.env`, or Docker socket in tests.
+- **Never** commit `.env` files or secrets.
+- **Never** paste API keys, tokens, or passwords in issues or PRs.
+- Use placeholders in examples (`your-openrouter-key`, etc.).
 
-## Pull requests and commits
+The product path is **Pi + Docker + Graphile**. Emulator settings (`AGENT_RUNTIME=scripted`, `SANDBOX_PROVIDER=fake`, `WAKEUP_DRIVER=memory`) are for tests only.
 
-Use the Monorepo root process. Conventional commits with scope `sentrabot`
-when the change is capsule-owned. Do not commit secrets. Do not claim the
-source pin is complete.
+**Integrations** can use [Composio](https://composio.dev/) or Pipedream Connect as optional managed
+app catalogs. Users can also install HTTPS MCP servers (including Treg) and bounded OpenAPI tool
+sources. Connector tests must stay deterministic and offline. Never put connector credentials in
+capability config, fixtures, logs, or snapshots; use the encrypted secret store and fake placeholders.
 
-## Conduct and security
+## Pull requests
 
-- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
-- Capsule [SECURITY.md](SECURITY.md) and root [SECURITY.md](../../SECURITY.md)
+- Keep PRs small and easy to review.
+- Target the `main` branch.
+- Describe what changed and **how you tested** (e.g. `pnpm test`, manual steps).
+- Link related issues when applicable.
+
+## Contact
+
+| Address | Use for |
+| --- | --- |
+| [security@sentrabot.com](mailto:security@sentrabot.com) | Vulnerabilities only — see [SECURITY.md](SECURITY.md) |
+| [support@sentrabot.com](mailto:support@sentrabot.com) | User and support questions |
+| [elie@sentrabot.com](mailto:elie@sentrabot.com) | Maintainer |

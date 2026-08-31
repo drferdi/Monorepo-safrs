@@ -1,0 +1,14 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+
+group = 'com.sentrabot.notifications'
+version = '0.1.0'
+
+android {
+  namespace 'com.sentrabot.notifications'
+  defaultConfig {
+    versionName '0.1.0'
+  }
+}

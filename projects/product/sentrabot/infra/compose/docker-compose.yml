@@ -1,67 +1,117 @@
+name: sentrabot
 services:
   postgres:
-    image: postgres:17.6-alpine
+    image: postgres:16
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-sentrabot_test}
       POSTGRES_USER: sentrabot
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      POSTGRES_PASSWORD: sentrabot
+      POSTGRES_DB: sentrabot
+    ports:
+      - "127.0.0.1:5433:5432"
     volumes:
-      - sentrabot-postgres:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U sentrabot -d ${POSTGRES_DB:-sentrabot_test}"]
-      interval: 5s
+      test: ["CMD-SHELL", "pg_isready -U sentrabot"]
+      interval: 3s
       timeout: 5s
       retries: 20
-    networks: [backend]
-
-  web:
-    build:
-      context: ../../../../
-      dockerfile: projects/product/sentrabot/infra/compose/Dockerfile.web
-    environment:
-      DATABASE_URL: postgresql://sentrabot:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-sentrabot_test}
-      NODE_ENV: production
-      APP_URL: ${APP_URL:-http://localhost:3000}
-      BETTER_AUTH_URL: ${BETTER_AUTH_URL:?BETTER_AUTH_URL is required}
-      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?BETTER_AUTH_SECRET is required}
-    depends_on:
-      postgres: { condition: service_healthy }
-      worker: { condition: service_healthy }
-    ports: ["3000:3000"]
-    networks: [backend, public]
-
-  worker:
-    build:
-      context: ../../../../
-      dockerfile: projects/product/sentrabot/infra/compose/Dockerfile.worker
-    environment:
-      NODE_ENV: production
-      WORKER_CONTROL_TOKEN: ${WORKER_CONTROL_TOKEN:?WORKER_CONTROL_TOKEN is required}
-    expose: ["8787"]
-    healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8787/health"]
-      interval: 5s
-      timeout: 3s
-      retries: 20
-    networks: [backend]
 
   supervisor:
     build:
-      context: ../../../../
-      dockerfile: projects/product/sentrabot/infra/compose/Dockerfile.supervisor
+      context: ../..
+      dockerfile: infra/sandboxes/supervisor/Dockerfile
     environment:
-      NODE_ENV: production
-      SUPERVISOR_TOKEN: ${SUPERVISOR_TOKEN:?SUPERVISOR_TOKEN is required}
-    expose: ["8788"]
-    read_only: true
-    cap_drop: ["ALL"]
-    security_opt: ["no-new-privileges:true"]
-    networks: [backend]
+      DATA_DIR: /data
+      SUPERVISOR_HOST: "0.0.0.0"
+      SUPERVISOR_PORT: "7091"
+      DOCKER_SOCKET: /var/run/docker.sock
+      SENTRABOT_COMPUTER_IMAGE: sentrabot/computer:local
+      SANDBOX_COMMAND_TIMEOUT_MS: ${SANDBOX_COMMAND_TIMEOUT_MS:-300000}
+      SANDBOX_SUPERVISOR_TOKEN: ${SANDBOX_SUPERVISOR_TOKEN:?Set SANDBOX_SUPERVISOR_TOKEN in .env}
+      SANDBOX_SCREEN_NETWORK: isolated
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ../../data:/data
+    depends_on:
+      computer:
+        condition: service_completed_successfully
+
+  computer:
+    image: sentrabot/computer:local
+    build:
+      context: ../sandboxes/computer
+    command: ["true"]
+    restart: "no"
+
+  data-init:
+    image: busybox:1
+    command: ["chown", "-R", "1000:1000", "/data"]
+    restart: "no"
+    volumes:
+      - ../../data:/data
+
+  api:
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile
+    command: ["bash", "-lc", "pnpm --filter @sentrabot/db exec prisma migrate deploy && pnpm --filter @sentrabot/api start"]
+    env_file:
+      - ../../.env
+    environment:
+      DATABASE_URL: postgres://sentrabot:sentrabot@postgres:5432/sentrabot
+      API_HOST: "0.0.0.0"
+      DATA_DIR: /data
+      SANDBOX_SUPERVISOR_URL: http://supervisor:7091
+      WAKEUP_DRIVER: graphile
+      SANDBOX_PROVIDER: docker
+      AGENT_RUNTIME: pi
+    ports:
+      - "127.0.0.1:3100:3100"
+    volumes:
+      - ../../data:/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      data-init:
+        condition: service_completed_successfully
+
+  worker:
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile
+    command: ["pnpm", "--filter", "@sentrabot/worker", "start"]
+    env_file:
+      - ../../.env
+    environment:
+      BETTER_AUTH_SECRET: ""
+      DATABASE_URL: postgres://sentrabot:sentrabot@postgres:5432/sentrabot
+      DATA_DIR: /data
+      SANDBOX_SUPERVISOR_URL: http://supervisor:7091
+      WAKEUP_DRIVER: graphile
+      SANDBOX_PROVIDER: docker
+      SCREEN_PROXY_SECRET: ""
+      AGENT_RUNTIME: pi
+    volumes:
+      - ../../data:/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      data-init:
+        condition: service_completed_successfully
+
+  web:
+    build:
+      context: ../..
+      dockerfile: infra/compose/Dockerfile
+    command: ["pnpm", "--filter", "@sentrabot/web", "preview", "--host", "0.0.0.0", "--port", "5173"]
+    environment:
+      API_PROXY_TARGET: http://api:3100
+      SCREEN_PROXY_SECRET: ${SCREEN_PROXY_SECRET:?Set SCREEN_PROXY_SECRET in .env}
+      SENTRABOT_HOST: ${SENTRABOT_HOST:-localhost}
+    ports:
+      - "127.0.0.1:5173:5173"
+    depends_on:
+      - api
 
 volumes:
-  sentrabot-postgres:
-
-networks:
-  backend:
-    internal: true
-  public:
+  pgdata:

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Sentra Bot Browser
+Comment=Chromium with Sentra Bot container flags and profile isolation
+Exec=/usr/local/bin/sentrabot-browser %U
+Terminal=false
+Categories=Network;WebBrowser;
+MimeType=x-scheme-handler/http;x-scheme-handler/https;text/html;
+StartupNotify=false

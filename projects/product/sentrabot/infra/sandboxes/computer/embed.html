@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Sentra Bot computer</title>
+    <style>
+      html,
+      body,
+      #screen {
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        background: #0e0e10;
+        overflow: hidden;
+      }
+    </style>
+    <script type="module">
+      import { attachHostClipboardPaste } from "./clipboard-bridge.js";
+      import RFB from "./core/rfb.js";
+
+      function query(name, fallback) {
+        const match = `${document.location.href}${window.location.hash}`.match(
+          new RegExp(`.*[?&]${name}=([^&#]*)`),
+        );
+        return match ? decodeURIComponent(match[1]) : fallback;
+      }
+
+      function flag(name) {
+        const value = String(query(name, "false")).toLowerCase();
+        return value === "1" || value === "true" || value === "yes";
+      }
+
+      const path = String(query("path", "websockify")).replace(/^\//, "");
+      const prefix = window.location.pathname.replace(/[^/]+$/, "");
+      const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+      const url = `${protocol}://${window.location.host}${prefix}${path}`;
+      const rfb = new RFB(document.getElementById("screen"), url);
+      rfb.viewOnly = flag("view_only");
+      rfb.scaleViewport = true;
+      rfb.clipViewport = false;
+      if (!rfb.viewOnly) attachHostClipboardPaste(rfb);
+    </script>
+  </head>
+  <body>
+    <div id="screen"></div>
+  </body>
+</html>

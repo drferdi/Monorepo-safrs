@@ -1,45 +1,184 @@
-import { Hono } from "hono";
+import type { JobPublisher, JobWorkerHost } from "@sentrabot/adapter-kit";
+import { loadRootEnv } from "@sentrabot/core/node/load-root-env";
+
+loadRootEnv();
+
 import {
-  hasValidWorkerToken,
-  workerControlRequestSchema,
-} from "./control-contract.js";
-import {
-  createIdempotentExecutor,
-  type ExecutionRuntime,
-} from "./execution-contract.js";
+  createBackgroundJobHandlers,
+  createConnectorStack,
+  createJobReconciler,
+  createPhoneContextLoader,
+  createPostgresReconciliationLeadership,
+  createRunExecutor,
+  createRunSandbox,
+  createRunSecretWriter,
+  EncryptedSecretStore,
+  ExpoPushProvider,
+  GraphileJobPublisher,
+  GraphileJobWorkerHost,
+  InMemoryJobQueue,
+  InstalledConnectorProvider,
+  isComposioEnabled,
+  isPhoneSurfaceEnabled,
+  isPipedreamEnabled,
+  LocalAgentHomeStore,
+  LocalArtifactStore,
+  McpConnector,
+  McpOAuthBroker,
+  PiAgentRuntime,
+  PipedreamConnector,
+  PostgresRealtimeFanout,
+  pipedreamConfigFromEnv,
+  resolveDeploymentModel,
+  resolveSandboxProvider,
+  ScriptedAgentRuntime,
+  SendBlueMessagingProvider,
+  sendBlueConfigFromEnv,
+  WorkspaceMemoryProviderResolver,
+} from "@sentrabot/adapters";
+import { resolveEncryptionKey, resolveSupervisorToken } from "@sentrabot/core";
+import { createDb, createThreadEvents } from "@sentrabot/db";
+import { MarkdownMemoryStore } from "@sentrabot/memory";
 
-export type WorkerEnvironment = {
-  WORKER_CONTROL_TOKEN: string;
-};
-
-export function createWorkerControlApp(getEnv: () => WorkerEnvironment) {
-  const app = new Hono();
-
-  app.get("/health", (context) =>
-    context.json({ ok: true as const, service: "worker" }),
+async function main() {
+  const databaseUrl = process.env.DATABASE_URL;
+  if (!databaseUrl) throw new Error("DATABASE_URL is required");
+  const { prisma, pool } = createDb(databaseUrl);
+  const realtime = new PostgresRealtimeFanout({
+    connectionString: process.env.REALTIME_DATABASE_URL ?? databaseUrl,
+    publisher: pool,
+  });
+  const secrets = new EncryptedSecretStore(resolveEncryptionKey(process.env));
+  const events = createThreadEvents(prisma, realtime, {
+    runSecretWriter: createRunSecretWriter(secrets),
+  });
+  const runtime =
+    process.env.AGENT_RUNTIME === "scripted" ? new ScriptedAgentRuntime() : new PiAgentRuntime();
+  const dataDir = process.env.DATA_DIR ?? "./data";
+  // Same resolver the API uses, so both processes agree on provider, model and key.
+  const { key: deploymentModelKey } = resolveDeploymentModel();
+  const sandboxProvider = resolveSandboxProvider(process.env);
+  const sandbox = createRunSandbox(sandboxProvider, {
+    supervisorUrl: process.env.SANDBOX_SUPERVISOR_URL ?? "http://127.0.0.1:7091",
+    supervisorToken: sandboxProvider === "docker" ? resolveSupervisorToken(process.env) : undefined,
+    e2bApiKey: process.env.E2B_API_KEY,
+    daytonaApiKey: process.env.DAYTONA_API_KEY,
+    daytonaApiUrl: process.env.DAYTONA_API_URL,
+    daytonaTarget: process.env.DAYTONA_TARGET,
+    boxApiKey: process.env.BOX_API_KEY,
+    boxApiUrl: process.env.BOX_API_URL ?? process.env.BOX_BASE_URL,
+    dataDir,
+    prisma,
+  });
+  const mcpOAuth = new McpOAuthBroker(prisma, secrets);
+  const mcp = new McpConnector(
+    prisma,
+    secrets,
+    {
+      stdioEnabled: process.env.MCP_STDIO_ENABLED === "true",
+      allowedCommands: (process.env.MCP_STDIO_ALLOWED_COMMANDS ?? "")
+        .split(",")
+        .map((v) => v.trim())
+        .filter(Boolean),
+    },
+    mcpOAuth,
   );
-  app.post("/control/computer", async (context) => {
-    if (!hasValidWorkerToken(context.req.raw, getEnv().WORKER_CONTROL_TOKEN)) {
-      return context.json({ error: "Unauthorized" }, 401);
-    }
-
-    const parsed = workerControlRequestSchema.safeParse(
-      await context.req.json(),
-    );
-    if (!parsed.success) {
-      return context.json({ error: "Invalid request" }, 400);
-    }
-
-    return context.json({
-      ok: true as const,
-      requestId: parsed.data.requestId,
-      operation: parsed.data.operation.operation,
-    });
+  const pipedreamConfig = pipedreamConfigFromEnv({
+    pipedreamClientId: process.env.PIPEDREAM_CLIENT_ID,
+    pipedreamClientSecret: process.env.PIPEDREAM_CLIENT_SECRET,
+    pipedreamProjectId: process.env.PIPEDREAM_PROJECT_ID,
+    pipedreamEnvironment: process.env.PIPEDREAM_ENVIRONMENT,
+    encryptionKey: resolveEncryptionKey(process.env),
+  });
+  const pipedream = isPipedreamEnabled(pipedreamConfig)
+    ? new PipedreamConnector(pipedreamConfig)
+    : undefined;
+  const sendBlueConfig = sendBlueConfigFromEnv({
+    sendblueApiKeyId: process.env.SENDBLUE_API_KEY_ID,
+    sendblueApiSecret: process.env.SENDBLUE_API_SECRET,
+    sendblueSigningSecret: process.env.SENDBLUE_SIGNING_SECRET,
+    sendbluePhoneNumber: process.env.SENDBLUE_PHONE_NUMBER,
+  });
+  const messaging = isPhoneSurfaceEnabled(sendBlueConfig, deploymentModelKey)
+    ? new SendBlueMessagingProvider(sendBlueConfig)
+    : undefined;
+  const stack = createConnectorStack(isComposioEnabled(process.env.COMPOSIO_API_KEY), undefined, [
+    new InstalledConnectorProvider(prisma, secrets),
+    ...(pipedream ? [pipedream] : []),
+    mcp,
+  ]);
+  const connector = stack.destination;
+  await connector.start();
+  const memoryProviders = new WorkspaceMemoryProviderResolver(prisma, secrets);
+  const home = new LocalAgentHomeStore(dataDir);
+  const artifacts = new LocalArtifactStore(dataDir);
+  const inMemoryJobs = process.env.WAKEUP_DRIVER === "memory" ? new InMemoryJobQueue() : undefined;
+  const jobs: JobPublisher = inMemoryJobs ?? new GraphileJobPublisher(databaseUrl);
+  const jobHost: JobWorkerHost = inMemoryJobs ?? new GraphileJobWorkerHost(databaseUrl);
+  const executor = createRunExecutor({
+    prisma,
+    runtime,
+    sandbox,
+    memory: new MarkdownMemoryStore(prisma),
+    memoryProviders,
+    home,
+    artifacts,
+    connector: stack.connector,
+    connectors: stack.connector,
+    listConnectedPluginSlugs: stack.composio?.listConnectedSlugs.bind(stack.composio),
+    secrets: [deploymentModelKey ?? "", process.env.COMPOSIO_API_KEY ?? ""].filter(Boolean),
+    secretStore: secrets,
+    deploymentModelKey,
+    dataDir,
+    notifications: new ExpoPushProvider(dataDir),
+    jobs,
+    events,
+    phone: messaging ? createPhoneContextLoader(prisma) : undefined,
   });
 
-  return app;
+  const jobHandlers = createBackgroundJobHandlers({
+    executor,
+    prisma,
+    sandbox,
+    home,
+    jobs,
+    events,
+    workerId: process.pid.toString(),
+    runtime,
+    secretStore: secrets,
+    memoryProviders,
+    deploymentModelKey,
+    messaging,
+  });
+  await jobHost.start(jobHandlers);
+  const reconciler = createJobReconciler({
+    prisma,
+    jobs,
+    events,
+    leadership: createPostgresReconciliationLeadership(pool),
+  });
+  reconciler.start();
+
+  let stopping = false;
+  const stop = async () => {
+    if (stopping) return;
+    stopping = true;
+    await reconciler.stop();
+    await jobHost.stop();
+    await jobs.close();
+    await realtime.close();
+    await connector.stop();
+    await mcp.close();
+    await prisma.$disconnect().catch(() => undefined);
+    await pool.end().catch(() => undefined);
+  };
+  process.once("SIGTERM", () => void stop());
+  process.once("SIGINT", () => void stop());
+
+  console.log("sentrabot worker ready");
 }
 
-export function createWorkerExecutor(runtime: ExecutionRuntime) {
-  return createIdempotentExecutor(runtime);
-}
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

@@ -1,29 +1,35 @@
 import { defineConfig, devices } from "@playwright/test";
+import { isRealSandboxProvider } from "./e2e/helpers";
 
-process.env.DATABASE_URL ??=
-  "postgresql://safrs:safrs@127.0.0.1:54329/safrs_local";
-process.env.NODE_ENV ??= "test";
-const baseURL = process.env.E2E_BASE_URL ?? "http://localhost:5001";
-process.env.APP_URL ??= baseURL;
-process.env.BETTER_AUTH_SECRET ??= "sentrabot-disposable-auth-secret-32-chars";
-process.env.BETTER_AUTH_URL ??= "http://127.0.0.1:5001";
+const webPort = Number(process.env.WEB_PORT ?? 5173);
+const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${webPort}`;
+const realSandbox = isRealSandboxProvider();
+const boxSandbox = process.env.SANDBOX_PROVIDER === "box";
+const reporters = [
+  ...(process.env.CI ? ([["github"]] as const) : []),
+  ["list"] as const,
+  ["html", { open: "never", outputFolder: "../../playwright-report" }] as const,
+];
 
 export default defineConfig({
   testDir: "./e2e",
-  fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
-  reporter: process.env.CI ? "line" : "list",
+  fullyParallel: false,
+  workers: realSandbox ? 1 : undefined,
+  timeout: boxSandbox ? 600_000 : realSandbox ? 300_000 : 120_000,
+  expect: { timeout: boxSandbox ? 300_000 : realSandbox ? 90_000 : 20_000 },
+  reporter: reporters,
   use: {
     baseURL,
-    trace: "on-first-retry",
+    trace: "retain-on-failure",
+    screenshot: "only-on-failure",
+    video: "retain-on-failure",
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
-  webServer: process.env.E2E_BASE_URL
-    ? undefined
-    : {
-        command: "pnpm dev",
-        url: `${baseURL}/workspace`,
-        reuseExistingServer: !process.env.CI,
-        timeout: 120_000,
-      },
+  webServer: {
+    command: "pnpm dev",
+    url: baseURL,
+    reuseExistingServer: !process.env.CI,
+    timeout: 120_000,
+  },
 });
