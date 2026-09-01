@@ -143,7 +143,7 @@ All changes live in `src/polish.css` (overrides, loaded after the compiled style
 | M4 Header scrolled | Fixed. `data-scrolled` after 24 px: logo tile scales to .9, nav pill gains a shadow. | `useHeaderState.js`, `polish.css` |
 | M5 Empty demo stage | Accepted as is. Bottom-anchored messages are the chat convention and the stage fills over the eight steps; moving them to the top would read as a list, not a conversation. | — |
 | M6 Display leading | Fixed. `.h2` 1.08, `.h3` 1.14, `.h4`/`.h4-l` 1.12, `-0.01em` tracking on `.h1`/`.h2`. | `polish.css` |
-| M7 First paint | Fixed. Preload for Signifier 300, Switzer, and the breakpoint-matched hero screenshot; 240 ms fade on `#root`. | `index.html`, `polish.css` |
+| M7 First paint | Fixed. Preload for Signifier 300, Switzer, and the breakpoint-matched hero screenshot; 240 ms fade on the page wrapper React injects (not `#root`, which exists before React runs). Ground colour behind the painting and before first render stays the sampled sky blue, not the accent. | `index.html`, `polish.css` |
 | M8 Page weight | Partly fixed via C1 (−3.8 MB). The 1.5 MB painting is unchanged; a 720 px variant needs an asset export and is left for the asset owner. | — |
 | L1 Dead code | Fixed. `src/app.js`, `src/site.css`, `src/vendor/`, `src/hooks/useMarquee.js` removed. | — |
 | L2 Debug palette | Fixed. Hidden floating-ui dialog removed from `PostMain.html`. | — |

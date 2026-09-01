@@ -21,8 +21,15 @@
   color-scheme: light;
 }
 
-/* M7: content fades in once React has painted instead of popping. */
-#root {
+/* Page ground: the accent is for controls; the ground behind the painting
+   (and before React paints) stays the sampled sky blue. */
+body,
+#root > div > .bg-primary {
+  background-color: #228dcd;
+}
+
+/* M7: the page wrapper React injects fades in instead of popping. */
+#root > div > .bg-primary {
   animation: sb-reveal var(--sb-base) var(--sb-ease) both;
 }
 @keyframes sb-reveal {
@@ -223,7 +230,10 @@ header[data-scrolled] nav {
   .marquee-module__irIMSq__marquee {
     overflow-x: auto;
   }
-  #root {
+  .marquee-module__irIMSq__inner > [aria-hidden="true"] {
+    display: none;
+  }
+  #root > div > .bg-primary {
     animation: none;
   }
   .sb-pill,

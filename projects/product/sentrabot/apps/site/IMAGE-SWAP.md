@@ -264,3 +264,7 @@ Di mesin lokal, `npm install && npm run build` akan menghasilkan build bersih.
 3. **Klaim keamanan pada visual dan copy** (local-first, sandboxed, human-gated, BYOK) harus
    diverifikasi terhadap implementasi Sentra Bot yang sebenarnya sebelum publikasi.
 4. **Metafora amplop** di seksi Brief masih menyiratkan produk email, bukan platform agen.
+
+## Addendum — 2026-09-02: warna aksen diputuskan
+
+Pertanyaan terbuka Wave 19 (nav pill dan tombol CTA masih `#117bc8`) sudah diputuskan pemilik produk: aksen resmi `#5B8CFF` dipakai pada kontrol nyata melalui `src/polish.css` (`--color-primary`, `--color-contrast`), teks pill header memakai ink `#0D1117` agar kontras terpenuhi. Detail di `VISUAL_AUDIT.md`.
