@@ -26,6 +26,7 @@ export function useFaqAccordion(rootRef) {
         if (el === body) return;
         el.style.height = "0px";
         el.setAttribute("aria-hidden", "true");
+        el.parentElement?.removeAttribute("data-open");
         const otherIcon = el.parentElement?.querySelector("button svg");
         if (otherIcon) otherIcon.style.transform = "";
       });
@@ -33,10 +34,12 @@ export function useFaqAccordion(rootRef) {
       if (isOpen) {
         body.style.height = "0px";
         body.setAttribute("aria-hidden", "true");
+        item.removeAttribute("data-open");
         if (icon) icon.style.transform = "";
       } else {
         body.style.height = `${body.scrollHeight}px`;
         body.setAttribute("aria-hidden", "false");
+        item.setAttribute("data-open", "");
         if (icon) icon.style.transform = "rotate(180deg)";
       }
     };

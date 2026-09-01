@@ -3,6 +3,8 @@ import { useBriefSequence } from "./hooks/useBriefSequence.js";
 import { useDemoSequence } from "./hooks/useDemoSequence.js";
 import { useFaqAccordion } from "./hooks/useFaqAccordion.js";
 import { useHeaderState } from "./hooks/useHeaderState.js";
+import { useMascot } from "./hooks/useMascot.js";
+import { useMascotScenes } from "./hooks/useMascotScenes.js";
 import { usePricingTabs } from "./hooks/usePricingTabs.js";
 import briefHtml from "./html/Brief.html?raw";
 import demoDesktopHtml from "./html/DemoDesktop.html?raw";
@@ -51,6 +53,8 @@ export function App() {
   useDemoSequence(pageRef);
   useBriefSequence(pageRef);
   useHeaderState(pageRef);
+  useMascot(pageRef);
+  useMascotScenes(pageRef);
 
   return (
     <div

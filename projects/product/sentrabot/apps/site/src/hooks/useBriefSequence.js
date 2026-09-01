@@ -125,6 +125,17 @@ export function useBriefSequence(rootRef) {
       panel.style.opacity = enter.toFixed(3);
       panel.style.clipPath = `inset(${screenTop.toFixed(1)}px ${screenRight.toFixed(1)}px ${screenBottom.toFixed(1)}px ${screenLeft.toFixed(1)}px round ${radius.toFixed(1)}px)`;
       panelInner.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0)`;
+
+      // Mascot peeks from behind the device once the digest has settled.
+      const peek = stage.querySelector(".sb-brief-peek");
+      if (peek) {
+        peek.style.setProperty("--sb-shell-half", `${(shellRect.width / 2).toFixed(1)}px`);
+        const shown = p >= 0.96;
+        if (shown !== peek.hasAttribute("data-shown")) {
+          peek.toggleAttribute("data-shown", shown);
+          if (shown) window.sbMascot?.set(peek, "celebrate");
+        }
+      }
     };
 
     if (reduceMotion) {

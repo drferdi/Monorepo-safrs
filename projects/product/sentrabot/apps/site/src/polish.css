@@ -474,3 +474,363 @@ header[data-scrolled] nav {
   user-select: none;
   -webkit-user-drag: none;
 }
+
+/* ================================================================ */
+/* Mascot system - see MOTION_PLAN.md section 1. One node, one state. */
+/* ================================================================ */
+.sb-mascot {
+  position: relative;
+  width: var(--sb-size, 64px);
+  height: var(--sb-size, 64px);
+  flex: none;
+  transform-origin: 50% 100%;
+  transition: transform 200ms var(--sb-ease);
+  will-change: transform;
+  pointer-events: none;
+}
+.sb-mascot__body {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+/* Eyelids: face-coloured slabs over the eye slots (the slots are cut-outs
+   in the PNG: left 31-39.5% x, right 60.5-69% x, both 30-47.5% y). */
+.sb-mascot__lid {
+  position: absolute;
+  top: 29.5%;
+  width: 9%;
+  height: 18.5%;
+  border-radius: 45%;
+  background: #f6e7d0;
+  transform: scaleY(0);
+  transform-origin: 50% 0;
+  transition: transform 110ms ease-in;
+}
+.sb-mascot__lid--l {
+  left: 31%;
+}
+.sb-mascot__lid--r {
+  left: 60.4%;
+  background: #fbecd7;
+}
+/* Pupils follow the pointer via --gx/--gy set by useMascot. */
+.sb-mascot__pupil {
+  position: absolute;
+  top: 36%;
+  width: 8%;
+  height: 8%;
+  border-radius: 50%;
+  background: var(--sb-ink);
+  transform: translate(calc(var(--gx, 0) * 22%), calc(var(--gy, 0) * 28%));
+  transition: transform 140ms ease-out;
+}
+.sb-mascot__pupil--l {
+  left: 31.5%;
+}
+.sb-mascot__pupil--r {
+  left: 60.9%;
+}
+.sb-mascot__bubble {
+  position: absolute;
+  left: 80%;
+  top: -18%;
+  padding: 0.05em 0.5em;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--sb-ink);
+  font: 600 calc(var(--sb-size, 64px) * 0.19) / 1.25 var(--next-font-switzer);
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(13, 17, 23, 0.18);
+  animation: sb-bubble-in 220ms var(--sb-ease) both;
+}
+.sb-mascot__bubble[hidden] {
+  display: none;
+}
+
+/* states */
+.sb-mascot[data-blink] .sb-mascot__lid {
+  transform: scaleY(1);
+}
+.sb-mascot[data-state="idle"] .sb-mascot__body {
+  animation: sb-breathe 3.2s ease-in-out infinite alternate;
+}
+.sb-mascot[data-state="greet"] {
+  animation: sb-greet 640ms var(--sb-ease) 1;
+}
+.sb-mascot[data-state="celebrate"] {
+  animation: sb-celebrate 520ms var(--sb-ease) 1;
+}
+.sb-mascot[data-state="listen"] {
+  transform: rotate(-5deg) translateY(-4%);
+}
+.sb-mascot[data-state="listen"] .sb-mascot__pupil {
+  transform: translate(calc(var(--gx, 0) * 10%), -30%);
+}
+.sb-mascot[data-state="think"] .sb-mascot__body {
+  animation: sb-think 0.9s ease-in-out infinite alternate;
+}
+.sb-mascot[data-state="think"] .sb-mascot__pupil {
+  transform: translate(-22%, -30%);
+}
+.sb-mascot[data-state="sleep"] .sb-mascot__body {
+  animation: sb-breathe 4s ease-in-out infinite alternate;
+}
+.sb-mascot[data-state="sleep"] .sb-mascot__lid {
+  transform: scaleY(0.88);
+}
+.sb-mascot[data-state="sleep"] {
+  transform: rotate(3deg);
+}
+.sb-mascot[data-state="error"] {
+  animation: sb-shake 280ms ease-in-out 1;
+  transform: rotate(-4deg);
+}
+.sb-mascot[data-state="error"] .sb-mascot__lid {
+  transform: scaleY(0.45);
+}
+.sb-mascot[data-offscreen] .sb-mascot__body,
+.sb-mascot[data-offscreen] .sb-mascot__bubble {
+  animation-play-state: paused;
+}
+
+@keyframes sb-breathe {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(1.015);
+  }
+}
+@keyframes sb-think {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-3%);
+  }
+}
+@keyframes sb-greet {
+  0% {
+    transform: rotate(0);
+  }
+  35% {
+    transform: rotate(-8deg);
+  }
+  70% {
+    transform: rotate(6deg);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}
+@keyframes sb-celebrate {
+  0% {
+    transform: scale(1, 1);
+  }
+  25% {
+    transform: scale(1.08, 0.92);
+  }
+  55% {
+    transform: translateY(-14%) scale(0.96, 1.06);
+  }
+  80% {
+    transform: translateY(0) scale(1.06, 0.94);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+@keyframes sb-shake {
+  0%,
+  100% {
+    transform: translateX(0) rotate(-4deg);
+  }
+  25% {
+    transform: translateX(-3px) rotate(-4deg);
+  }
+  75% {
+    transform: translateX(3px) rotate(-4deg);
+  }
+}
+@keyframes sb-bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(0.9);
+  }
+}
+
+/* Hero walker hosts a mascot inside the runner: runner = travel,
+   figure = state, body = bob. */
+.sb-walk__figure {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.sb-walk__figure .sb-walk__mascot {
+  position: absolute;
+  inset: 0;
+}
+
+/* Hero entrance: headline, subhead, CTA, 80 ms apart. backwards fill so
+   hover transforms stay free once the entrance is over. */
+.sb-enter {
+  animation: sb-enter 420ms cubic-bezier(0.22, 0.9, 0.28, 1) backwards;
+}
+p.sb-enter {
+  animation-delay: 80ms;
+}
+a.sb-enter {
+  animation-delay: 160ms;
+}
+@keyframes sb-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+@media (width < 800px) {
+  .sb-enter {
+    animation-duration: 340ms;
+  }
+}
+
+/* Footer: the mascot rests beside the CTA. */
+.sb-footer-cta {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+}
+@media (width < 800px) {
+  .sb-footer-mascot {
+    --sb-size: 52px;
+  }
+}
+
+/* FAQ: 320 ms open, answer text rises 8 px behind it. */
+.accordion-module__tWMLDa__body {
+  transition-duration: 320ms;
+}
+.accordion-module__tWMLDa__body p {
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 240ms 60ms cubic-bezier(0, 0, 0.2, 1),
+    transform 240ms 60ms cubic-bezier(0, 0, 0.2, 1);
+}
+.faq-module__O8tnPq__faq__item[data-open] .accordion-module__tWMLDa__body p {
+  opacity: 1;
+  transform: none;
+}
+
+/* Privacy: bullets rise in with a 60 ms stagger once the card is seen. */
+[data-privacy] li {
+  opacity: 0;
+  transform: translateY(10px);
+}
+[data-privacy][data-in] li {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 300ms cubic-bezier(0, 0, 0.2, 1),
+    transform 300ms cubic-bezier(0, 0, 0.2, 1);
+}
+[data-privacy][data-in] li:nth-child(2) {
+  transition-delay: 60ms;
+}
+[data-privacy][data-in] li:nth-child(3) {
+  transition-delay: 120ms;
+}
+[data-privacy][data-in] li:nth-child(4) {
+  transition-delay: 180ms;
+}
+
+/* Demo iPads: the mascot is the agent avatar in the chat header. */
+.sb-mascot--avatar {
+  --sb-size: 2.6cqw;
+  margin-right: 0.2cqw;
+}
+.sb-mascot--avatar-m {
+  --sb-size: 5.6cqw;
+}
+
+/* Brief scene: peeks from behind the device once the digest settles. */
+.sb-brief-peek {
+  position: absolute;
+  left: calc(50% + var(--sb-shell-half, 275px) - 34px);
+  bottom: 7%;
+  --sb-size: 72px;
+  z-index: 4;
+  opacity: 0;
+  transform: translateY(70%);
+  transition:
+    transform 360ms var(--sb-ease),
+    opacity 240ms var(--sb-ease);
+}
+.sb-brief-peek[data-shown] {
+  opacity: 1;
+  transform: none;
+}
+@media (width < 800px) {
+  .sb-brief-peek {
+    --sb-size: 52px;
+    left: calc(50% + var(--sb-shell-half, 178px) - 30px);
+  }
+}
+
+/* Features iPad: rides the active step chip. */
+.sb-rider {
+  position: absolute;
+  left: 0;
+  top: 0;
+  --sb-size: 4.2cqw;
+  z-index: 5;
+  opacity: 0;
+  transition:
+    transform 320ms var(--sb-ease),
+    opacity 200ms var(--sb-ease);
+}
+.sb-rider[data-on] {
+  opacity: 1;
+}
+
+/* Pricing: cheers when the yearly plan is chosen. */
+.sb-price-mascot {
+  position: absolute;
+  right: -46px;
+  bottom: 2px;
+  --sb-size: 38px;
+}
+@media (width < 800px) {
+  .sb-price-mascot {
+    right: -42px;
+    --sb-size: 34px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sb-mascot,
+  .sb-mascot__body,
+  .sb-mascot__lid,
+  .sb-mascot__pupil,
+  .sb-mascot__bubble,
+  .sb-enter,
+  .sb-brief-peek,
+  .sb-rider,
+  [data-privacy] li,
+  .accordion-module__tWMLDa__body p {
+    animation: none !important;
+    transition: none !important;
+  }
+  .sb-mascot[data-state="listen"],
+  .sb-mascot[data-state="sleep"],
+  .sb-mascot[data-state="error"] {
+    transform: none;
+  }
+  [data-privacy] li,
+  .accordion-module__tWMLDa__body p {
+    opacity: 1;
+    transform: none;
+  }
+}
