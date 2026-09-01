@@ -214,9 +214,12 @@ body,
    Hover pauses it; reduced-motion parks it at the right end. */
 .sb-walk {
   position: relative;
-  height: 0;
-  --sb-walk-size: 64px;
-  --sb-walk-time: 27s;
+  /* Extra room so the bigger figure clears the CTA above it. */
+  height: calc(var(--sb-walk-size) - 46px);
+  --sb-walk-size: 104px;
+  --sb-walk-time: 29s;
+  /* How far the figure shows while peeking in from the left edge. */
+  --sb-peek-x: calc(var(--sb-walk-size) * 0.62 + 40px);
 }
 .sb-walk__clip {
   position: absolute;
@@ -257,12 +260,42 @@ body,
   transform-origin: 50% 50%;
   animation: sb-shadow 0.46s ease-in-out infinite alternate;
 }
+/* One cycle: peek in from the left (0–2%), hold and look around (2–8%),
+   then walk across at a constant pace (8–100%). */
 @keyframes sb-walk {
-  from {
+  0% {
     transform: translate3d(0, 0, 0);
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   }
-  to {
+  2% {
+    transform: translate3d(var(--sb-peek-x), 0, 0);
+    animation-timing-function: ease-in-out;
+  }
+  8% {
+    transform: translate3d(var(--sb-peek-x), 0, 0);
+    animation-timing-function: linear;
+  }
+  100% {
     transform: translate3d(calc(100vw + var(--sb-walk-size) + 80px), 0, 0);
+  }
+}
+/* While peeking the figure leans in from the edge. The lean lives on its
+   own wrapper so the data-state transforms on the figure (CTA lean) still
+   compose with it; it rides the same clock as the walk. */
+.sb-walk__lean {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 100%;
+  animation: sb-walk-lean var(--sb-walk-time) linear infinite;
+}
+@keyframes sb-walk-lean {
+  0%,
+  6% {
+    transform: rotate(-9deg) translateX(-4%);
+  }
+  9%,
+  100% {
+    transform: rotate(0) translateX(0);
   }
 }
 @keyframes sb-bob {
@@ -292,13 +325,14 @@ body,
 }
 @media (width >= 600px) and (width < 800px) {
   .sb-walk {
-    --sb-walk-time: 16s;
+    --sb-walk-size: 88px;
+    --sb-walk-time: 18s;
   }
 }
 @media (width < 600px) {
   .sb-walk {
-    --sb-walk-size: 48px;
-    --sb-walk-time: 10s;
+    --sb-walk-size: 68px;
+    --sb-walk-time: 12s;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -308,7 +342,8 @@ body,
     right: 6%;
   }
   .sb-walk__mascot,
-  .sb-walk__shadow {
+  .sb-walk__shadow,
+  .sb-walk__lean {
     animation: none;
   }
 }
@@ -779,22 +814,6 @@ a.sb-enter {
   }
 }
 
-/* Features iPad: rides the active step chip. */
-.sb-rider {
-  position: absolute;
-  left: 0;
-  top: 0;
-  --sb-size: 4.2cqw;
-  z-index: 5;
-  opacity: 0;
-  transition:
-    transform 320ms var(--sb-ease),
-    opacity 200ms var(--sb-ease);
-}
-.sb-rider[data-on] {
-  opacity: 1;
-}
-
 /* Pricing: cheers when the yearly plan is chosen. */
 .sb-price-mascot {
   position: absolute;
@@ -817,7 +836,6 @@ a.sb-enter {
   .sb-mascot__bubble,
   .sb-enter,
   .sb-brief-peek,
-  .sb-rider,
   [data-privacy] li,
   .accordion-module__tWMLDa__body p {
     animation: none !important;

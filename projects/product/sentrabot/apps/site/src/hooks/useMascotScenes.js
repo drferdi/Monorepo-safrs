@@ -14,7 +14,6 @@ import { useEffect } from "react";
 
 const WAKE_MS = 4000;
 const SNORE_MS = 6000;
-const GREET_PAUSE_MS = 700;
 
 export function useMascotScenes(rootRef) {
   useEffect(() => {
@@ -35,23 +34,9 @@ export function useMascotScenes(rootRef) {
     const runner = root.querySelector(".sb-walk__runner");
     const figure = root.querySelector(".sb-walk__figure");
     const heroCta = root.querySelector("[data-hero-cta]");
+    // The walk itself opens with a peek (see .sb-walk keyframes in
+    // polish.css); the only scripted hero moment is the CTA lean.
     if (runner && figure) {
-      const io = new IntersectionObserver(
-        ([entry]) => {
-          if (!entry?.isIntersecting || !api()) return;
-          io.disconnect();
-          if (api().reduceMotion) return;
-          runner.style.animationPlayState = "paused";
-          api().set(figure, "greet");
-          later(() => {
-            runner.style.animationPlayState = "";
-          }, GREET_PAUSE_MS);
-        },
-        { threshold: 0.6 },
-      );
-      io.observe(runner.parentElement || runner);
-      cleanups.push(() => io.disconnect());
-
       if (heroCta) {
         const lean = () => api()?.set(figure, "listen");
         const walk = () => {

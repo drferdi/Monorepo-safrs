@@ -129,35 +129,11 @@ export function useDemoSequence(rootRef) {
      *   asks permission  → listen
      *   "Diizinkan"      → celebrate (one-shot)
      *   draft ready      → greet (one-shot)
-     * The features iPad has no avatar; its mascot rides the active step chip.
+     * Runways without a mascot (the features iPad) are left alone.
      */
     const reactMascot = (group, step) => {
       const api = window.sbMascot;
       if (!api) return;
-      const rider = group.runway.querySelector(".sb-rider");
-      if (rider) {
-        const chip = Array.from(
-          group.runway.querySelectorAll('[data-seq-in] div[style*="background:#5B8CFF"]'),
-        ).find((el) => /Pilih bot|Sambungkan|Jalankan/.test(el.textContent));
-        if (!chip) {
-          rider.removeAttribute("data-on");
-          return;
-        }
-        const c = chip.getBoundingClientRect();
-        const r = group.runway.getBoundingClientRect();
-        const x = c.left - r.left + c.width / 2 - rider.offsetWidth / 2;
-        const y = c.top - r.top - rider.offsetHeight + rider.offsetHeight * 0.18;
-        rider.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
-        if (!rider.hasAttribute("data-on")) {
-          rider.setAttribute("data-on", "");
-          api.set(rider, "idle");
-        } else if (rider.dataset.chip !== chip.textContent) {
-          api.set(rider, "celebrate");
-        }
-        rider.dataset.chip = chip.textContent;
-        return;
-      }
-
       const avatar = group.runway.querySelector(".sb-mascot");
       if (!avatar) return;
       const visible = group.items.filter(
