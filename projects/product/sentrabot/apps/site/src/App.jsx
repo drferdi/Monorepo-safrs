@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useDemoSequence } from "./hooks/useDemoSequence.js";
 import { useFaqAccordion } from "./hooks/useFaqAccordion.js";
 import { useMarquee } from "./hooks/useMarquee.js";
 import { usePricingTabs } from "./hooks/usePricingTabs.js";
@@ -47,6 +48,7 @@ export function App() {
   useFaqAccordion(pageRef);
   usePricingTabs(pageRef);
   useMarquee(pageRef);
+  useDemoSequence(pageRef);
 
   return (
     <div

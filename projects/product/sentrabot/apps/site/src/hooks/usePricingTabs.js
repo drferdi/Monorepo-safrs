@@ -1,18 +1,29 @@
 import { useEffect } from "react";
 
 /**
- * Pricing yearly/monthly toggle — prices taken verbatim from original chunk data.
- * Professional: yearly $20/bulan + "Ditagih tahunan sebesar $240" | monthly $25/bulan
- * Unlimited: yearly $39/bulan + "Ditagih tahunan sebesar $470" | monthly $49/bulan
+ * Pricing yearly/monthly toggle — four Rupiah tiers.
+ *
+ * Monthly figures are the ones Sentra publishes. Yearly figures are the monthly
+ * price less the 20% the tab itself advertises ("Tahunan (hemat 20%)"), rounded
+ * to the nearest thousand, with the annual total spelled out so the discount is
+ * checkable rather than merely claimed.
  */
 const PLANS = [
   {
-    yearly: { price: "$20/bulan", note: "Ditagih tahunan sebesar $240" },
-    monthly: { price: "$25/bulan", note: "" },
+    yearly: { price: "Rp0", note: "Selamanya gratis" },
+    monthly: { price: "Rp0", note: "Selamanya gratis" },
   },
   {
-    yearly: { price: "$39/bulan", note: "Ditagih tahunan sebesar $470" },
-    monthly: { price: "$49/bulan", note: "" },
+    yearly: { price: "Rp63.000", note: "per bulan · ditagih Rp756.000/tahun" },
+    monthly: { price: "Rp79.000", note: "per bulan" },
+  },
+  {
+    yearly: { price: "Rp159.000", note: "per bulan · ditagih Rp1.908.000/tahun" },
+    monthly: { price: "Rp199.000", note: "per bulan" },
+  },
+  {
+    yearly: { price: "Rp399.000", note: "per bulan · ditagih Rp4.788.000/tahun" },
+    monthly: { price: "Rp499.000", note: "per bulan" },
   },
 ];
 

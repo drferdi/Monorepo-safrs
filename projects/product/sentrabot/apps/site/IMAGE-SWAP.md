@@ -170,6 +170,60 @@ Angka rupiah dan nomor invoice pada notifikasi bersifat **ilustratif**, bukan da
    perubahan CSS. Perangkat digambar mengisi kotak, dengan Dynamic Island, status bar, dan
    home indicator sebagai penanda agar tetap terbaca sebagai ponsel.
 
+## Wave 19 — Logo diganti ke aset resmi Sentra Artificial Intelligence (2026-09-01)
+
+Wave 11 memakai logomark yang di-*threshold* manual dari tangkapan layar panduan merek dan
+tipografi situs sendiri (Signifier/Switzer). Wave ini mengganti isi tiga file gambar tersebut
+dengan **logomark vektor resmi** (`docs/brand/01-LOGO-MASTER/sentra-logomark-master-black.svg`,
+tidak digambar ulang — hanya di-render ke raster) dan **font resmi Geist Sans** (paket npm
+`geist@1.7.2`, sesuai `docs/brand/00-BRAND-STRATEGY/BRAND_FOUNDATION.md`). Nama file dan
+dimensi piksel tetap identik; tidak ada `<img>`, class, atau markup yang disentuh.
+
+| File | Dimensi | Sebelum (Wave 11) | Sesudah (Wave 19) |
+|---|---|---|---|
+| `6c37fbbce1e0.png` | 152×112 | Bingkai putih + latar langit, kepala robot + "Sentra Bot" | Kartu putih bulat, logomark resmi hitam + wordmark "Sentra Bot" (Geist SemiBold) |
+| `5c034dcd3ece.png` | 2420×878 | "BAGIAN DARI / SENTRA / ARTIFICIAL INTELLIGENCE" — wordmark serif situs (Signifier) | Layout ghost-card sama persis; logomark resmi + "Sentra" (Geist SemiBold) menggantikan wordmark serif |
+| `ec52fc786ac8.png` | 3866×1080 | Logomark hasil threshold + wordmark "Sentra" outline | Logomark resmi + wordmark "Sentra" (Geist Bold), putih solid |
+| `favicon-32/180/512.png` | 32/180/512 | Ikon kepala Sentra Bot | `sentra-favicon-32.png`, `sentra-apple-touch-icon-180.png`, `sentra-pwa-icon-512.png` resmi (disalin langsung, tanpa modifikasi) |
+
+Diterapkan ke `public/assets/`, `assets/`, dan `dist/assets/` sekaligus (mengikuti pola Wave 11–18).
+
+**Tidak diubah:** proporsi logomark, warna resmi (`#0D1117`/`#FFFFFF`/`#000000`), tata letak kartu,
+posisi/ukuran elemen. Logomark tidak digambar ulang — hanya di-render dari SVG master resmi.
+
+**Rekomendasi lanjutan (di luar remit "hanya ganti gambar"):**
+1. `index.html` dan `docs/brand/04-FAVICON-BROWSER/sentra-favicon.svg` — tambahkan varian SVG favicon resmi untuk browser modern (saat ini hanya PNG).
+2. Header/Footer nav pill dan tombol CTA masih pakai `bg-primary` biru `#117bc8` (tema lama), bukan aksen resmi Sentra Intelligence Blue `#5B8CFF` atau dasar gelap resmi `#0D1117` — perubahan ini di luar cakupan "ganti logo" dan butuh keputusan terpisah karena menyentuh CSS/tema, bukan hanya gambar.
+3. Font situs (Switzer/Signifier) belum diganti ke Geist Sans/Geist Mono resmi di luar aset gambar ini — perubahan itu menyentuh `site.css`/build config, di luar cakupan wave ini.
+
+## Wave 20 — Logo kartu testimoni: korporat → kampus & kota (2026-09-01)
+
+Lanjutan Wave 11 di `REBRAND.md` (testimoni ditulis ulang ke persona mahasiswa / ibu rumah
+tangga / pekerja / pemilik warung). Jabatan baru berakhiran "di", sementara wordmark mungil
+di sebelahnya masih nama perusahaan fiktif — terbaca "Mahasiswa di Nusantara Ops". Wave ini
+mengganti isi kedelapan file itu. Nama file dan dimensi piksel identik; markup tidak disentuh.
+
+| File | Dimensi | Sebelum | Sesudah | Dipakai oleh |
+|---|---|---|---|---|
+| `eb1cb1319224.png` | 276×32 | Nusantara Ops | Universitas Nusantara | Raka Putra — Mahasiswa di |
+| `86ad33557c89.png` | 54×32 | Arka | Solo | Sari Wijaya — Ibu rumah tangga di |
+| `c9519fbb9102.png` | 174×32 | Bahari | Bahari Group | Andi Pratama — Staf keuangan di |
+| `de14f6bc1e2c.png` | 101×24 | Cakrawala | Yogyakarta | Maya Kusuma — Ibu rumah tangga di |
+| `9f3d12ce7430.png` | 156×32 | Dwipa | Bandung | Bima Santoso — Pemilik warung di |
+| `2b5476baa743.png` | 164×32 | Elang Data | Surabaya | Dewi Lestari — Ibu rumah tangga di |
+| `e725a0be2401.png` | 236×32 | Garuda Works | Politeknik Dwipa | Farhan Akbar — Mahasiswa tingkat akhir di |
+| `e61da0bd1d2d.svg` | 90×14 | Katalis AI | Elang Data | Nina Rahayu — Staf kantor di |
+
+Tipografi memakai **Geist SemiBold resmi** (`geist@1.7.2`), warna `#1C1917` — sama dengan
+wordmark asli. Ukuran huruf dikunci ke rasio tinggi kotak (19px pada kotak 32px, 14px pada
+kotak 24px), bukan dipaskan ke lebar, karena CSS menyamakan **tinggi** semua logo ke 14px
+(`!dr-h-14`); memaskan ke lebar membuat teks pada kotak sempit tampil jauh lebih kecil dari
+yang lain. Teks dipilih agar muat pada rasio tetap itu — karena itu Sari memakai "Solo"
+(kotak hanya 54px) dan Farhan "Politeknik Dwipa", bukan "Institut Teknologi Dwipa".
+
+Nama kampus, kota, dan perusahaan bersifat **ilustratif**, sejalan dengan status testimoni
+yang masih fiktif. Lihat catatan risiko di bawah.
+
 ## Perubahan markup
 
 Satu-satunya perubahan di luar file gambar: dua baris `<link rel="icon">` pada `index.html`
