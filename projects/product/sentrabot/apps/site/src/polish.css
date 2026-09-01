@@ -168,6 +168,151 @@ body,
   object-position: top center;
 }
 
+/* --------------------------------------------------- brand lockup */
+/* Official white logomark (docs/brand/00-MASTER-LOGO) + wordmark set in
+   Switzer; a faint drop shadow keeps it legible when white content scrolls
+   under the fixed header. */
+.sb-brand {
+  gap: 10px;
+  color: #fff;
+}
+.sb-brand__mark {
+  width: 40px;
+  height: 40px;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 2px rgba(13, 17, 23, 0.35));
+}
+.sb-brand__name {
+  font-family: var(--next-font-switzer);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-shadow: 0 1px 2px rgba(13, 17, 23, 0.3);
+}
+.sb-brand__mark--footer {
+  width: 48px;
+  height: 48px;
+  filter: none;
+}
+@media (width < 800px) {
+  .sb-brand__mark {
+    width: 36px;
+    height: 36px;
+  }
+  .sb-brand__name {
+    font-size: 15px;
+  }
+}
+
+/* --------------------------------------------- hero mascot walk */
+/* The clay mascot crosses the hero left to right in the empty band between
+   the CTA and the screenshot card, so it never overlaps copy or controls.
+   Track: one linear pass, 60 px/s at every breakpoint. Body: a short
+   alternate bob with a counter-scaling ground shadow sells the steps.
+   Hover pauses it; reduced-motion parks it at the right end. */
+.sb-walk {
+  position: relative;
+  height: 0;
+  --sb-walk-size: 64px;
+  --sb-walk-time: 27s;
+}
+.sb-walk__clip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: calc(var(--sb-walk-size) + 14px);
+  overflow: hidden;
+  pointer-events: none;
+}
+.sb-walk__runner {
+  position: absolute;
+  left: calc(-1 * var(--sb-walk-size) - 40px);
+  bottom: 4px;
+  width: var(--sb-walk-size);
+  height: var(--sb-walk-size);
+  pointer-events: auto;
+  will-change: transform;
+  animation: sb-walk var(--sb-walk-time) linear infinite;
+}
+.sb-walk__mascot {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform-origin: 50% 100%;
+  animation: sb-bob 0.46s ease-in-out infinite alternate;
+}
+.sb-walk__shadow {
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  bottom: -5px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(13, 17, 23, 0.32), rgba(13, 17, 23, 0));
+  transform-origin: 50% 50%;
+  animation: sb-shadow 0.46s ease-in-out infinite alternate;
+}
+@keyframes sb-walk {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(calc(100vw + var(--sb-walk-size) + 80px), 0, 0);
+  }
+}
+@keyframes sb-bob {
+  from {
+    transform: translateY(0) rotate(-2.5deg) scale(1.03, 0.97);
+  }
+  to {
+    transform: translateY(-8%) rotate(2.5deg) scale(0.98, 1.02);
+  }
+}
+@keyframes sb-shadow {
+  from {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  to {
+    transform: scaleX(0.78);
+    opacity: 0.55;
+  }
+}
+@media (hover: hover) {
+  .sb-walk__runner:hover,
+  .sb-walk__runner:hover .sb-walk__mascot,
+  .sb-walk__runner:hover .sb-walk__shadow {
+    animation-play-state: paused;
+  }
+}
+@media (width >= 600px) and (width < 800px) {
+  .sb-walk {
+    --sb-walk-time: 16s;
+  }
+}
+@media (width < 600px) {
+  .sb-walk {
+    --sb-walk-size: 48px;
+    --sb-walk-time: 10s;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sb-walk__runner {
+    animation: none;
+    left: auto;
+    right: 6%;
+  }
+  .sb-walk__mascot,
+  .sb-walk__shadow {
+    animation: none;
+  }
+}
+
 /* ------------------------------------------------ M4: header scrolled */
 header > div > button,
 header nav {

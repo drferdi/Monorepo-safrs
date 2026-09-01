@@ -21,10 +21,20 @@ export function useHeaderState(rootRef) {
       if (!frame) frame = window.requestAnimationFrame(update);
     };
 
+    // The logo button is labelled "Kembali ke atas"; make it do that.
+    const brand = header.querySelector(".sb-brand");
+    const toTop = () => {
+      const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)")
+        .matches;
+      window.scrollTo({ top: 0, behavior: smooth ? "smooth" : "auto" });
+    };
+
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
+    brand?.addEventListener("click", toTop);
     return () => {
       window.removeEventListener("scroll", onScroll);
+      brand?.removeEventListener("click", toTop);
       if (frame) window.cancelAnimationFrame(frame);
     };
   }, [rootRef]);

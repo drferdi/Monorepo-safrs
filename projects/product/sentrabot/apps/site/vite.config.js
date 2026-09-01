@@ -4,7 +4,8 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 5173,
+    // PORT lets the editor preview assign a free port; 5173 otherwise.
+    port: Number(process.env.PORT) || 5173,
     open: false,
   },
   build: {
