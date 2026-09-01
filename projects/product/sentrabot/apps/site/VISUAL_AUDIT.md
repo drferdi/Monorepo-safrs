@@ -155,6 +155,8 @@ All changes live in `src/polish.css` (overrides, loaded after the compiled style
 
 Follow-up (same day, product owner request): header and footer now use the official white logomark from `docs/brand/00-MASTER-LOGO` (trimmed to 256 px, 19 KB) with a Switzer wordmark; the logo button scrolls to top as its label promised. The clay mascot (`sentrabot-mascot.png`, 320 px) walks left to right in the empty band between the hero CTA and the screenshot card at 60 px/s, with an alternate-direction bob and counter-scaling ground shadow; hover pauses it, reduced-motion parks it at the right end. Transform/opacity only.
 
+Follow-up 2: the digest overflowed the device frame. The panel is now clipped on all four sides to the shell's screen (bezel 2.6% × 1.6%, corner radius 7%), sized to the screen width minus a gutter, kept clear of the camera island and home indicator, and drawn on a light screen surface with an iOS-style frosted status bar (time, signal, wifi, battery). Heading and the "Semua agen" chip switch to ink so they read on the surface.
+
 Verified on the Vite dev server at 1440×900, 768×1024 and 375×812: no horizontal overflow, no console errors on a fresh load, `npm run build` clean.
 
 ## Verification plan

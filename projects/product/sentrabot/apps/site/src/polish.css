@@ -410,6 +410,62 @@ header[data-scrolled] nav {
 [data-brief="panel"] {
   opacity: 0;
   will-change: clip-path, opacity;
+  /* The digest lives on a real screen surface, not on the landscape. */
+  background: linear-gradient(180deg, #eef2f7 0%, #e6ebf2 100%);
+  color: var(--sb-ink);
+}
+[data-brief="panel"] .h4-l {
+  color: var(--sb-ink);
+}
+[data-brief="panel"] .dr-border-\[\#FFFFFF\] {
+  border-color: rgba(13, 17, 23, 0.18);
+  color: var(--sb-ink);
+}
+[data-brief="panel"] .dr-border-\[\#FFFFFF\] path {
+  fill: var(--sb-ink);
+}
+[data-brief="panel"] > div:not(.sb-statusbar) {
+  will-change: transform;
+}
+/* iOS-style status bar pinned under the top bezel, beside the island.
+   Geometry comes from the hook as --sb-screen-* custom properties. */
+.sb-statusbar {
+  position: absolute;
+  z-index: 2;
+  top: var(--sb-screen-top, 0px);
+  left: var(--sb-screen-left, 0px);
+  width: var(--sb-screen-w, 100%);
+  height: var(--sb-safe-top, 44px);
+  padding: 4px var(--sb-screen-pad, 0px) 0;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* Frosted strip so content scrolling underneath stays readable, like iOS. */
+  background: rgba(238, 242, 247, 0.84);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-family: var(--next-font-switzer);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+  color: var(--sb-ink);
+  pointer-events: none;
+}
+.sb-statusbar__icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+@media (width < 800px) {
+  .sb-statusbar {
+    font-size: 11px;
+    padding-top: 2px;
+  }
+  .sb-statusbar__icons svg {
+    transform: scale(0.8);
+    transform-origin: right center;
+  }
 }
 [data-brief="shell"] {
   opacity: 0;

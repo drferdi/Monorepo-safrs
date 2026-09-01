@@ -48,7 +48,7 @@ export function useBriefSequence(rootRef) {
     const phone = runway.querySelector('[data-brief="phone"]');
     const cards = Array.from(runway.querySelectorAll('[data-brief="cards"] > div'));
     const panel = runway.querySelector('[data-brief="panel"]');
-    const panelInner = panel?.firstElementChild;
+    const panelInner = panel?.querySelector(":scope > div:not(.sb-statusbar)");
     const shell = runway.querySelector('[data-brief="shell"]');
     if (!stage || !phone || !panel || !panelInner || !shell) return undefined;
 
@@ -66,13 +66,29 @@ export function useBriefSequence(rootRef) {
       const W = stageRect.width;
       const H = stageRect.height;
       // Screen bounds come from the shell so the digest is clipped to the
-      // phone regardless of breakpoint. Bezel ≈ 1.6% of the phone height.
+      // device regardless of breakpoint. Bezel measured on the shell art:
+      // ≈2.6% of width on the sides, ≈1.6% of height top and bottom. Safe
+      // areas keep content clear of the camera island and home indicator.
       const shellRect = shell.getBoundingClientRect();
-      const bezel = shellRect.height * 0.016;
-      const screenTop = shellRect.top - stageRect.top + bezel;
-      const screenBottom = stageRect.bottom - shellRect.bottom + bezel;
+      const bezelX = shellRect.width * 0.026;
+      const bezelY = shellRect.height * 0.016;
+      const screenTop = shellRect.top - stageRect.top + bezelY;
+      const screenBottom = stageRect.bottom - shellRect.bottom + bezelY;
+      const screenLeft = shellRect.left - stageRect.left + bezelX;
+      const screenRight = stageRect.right - shellRect.right + bezelX;
+      const screenW = W - screenLeft - screenRight;
       const screenH = H - screenTop - screenBottom;
-      const radius = shellRect.width * 0.085;
+      const safeTop = shellRect.height * 0.062;
+      const safeBottom = shellRect.height * 0.04;
+      const radius = shellRect.width * 0.075;
+      const pad = Math.round(screenW * 0.04);
+
+      panel.style.setProperty("--sb-screen-top", `${screenTop.toFixed(1)}px`);
+      panel.style.setProperty("--sb-screen-left", `${screenLeft.toFixed(1)}px`);
+      panel.style.setProperty("--sb-screen-w", `${screenW.toFixed(1)}px`);
+      panel.style.setProperty("--sb-screen-pad", `${pad}px`);
+      panel.style.setProperty("--sb-safe-top", `${safeTop.toFixed(1)}px`);
+      panelInner.style.width = `${Math.round(screenW - pad * 2)}px`;
 
       // Cards: burst (staggered) then converge.
       const back = easeInOut(seg(p, 0.5, 0.72));
@@ -98,11 +114,16 @@ export function useBriefSequence(rootRef) {
       const enter = easeOut(seg(p, 0.66, 0.8));
       const settle = easeInOut(seg(p, 0.8, 1));
       const innerH = panelInner.getBoundingClientRect().height;
-      const overflow = Math.max(0, innerH - screenH);
+      // Inner sits at the stage bottom by layout; translate it so its top
+      // starts under the status bar, then scroll to its bottom edge if it
+      // is taller than the screen.
+      const yTop = screenTop + safeTop + innerH - H;
+      const yBottom = -screenBottom - safeBottom;
+      const yRest = innerH > screenH - safeTop - safeBottom ? yBottom : yTop;
       const slide = (1 - enter) * 56;
-      const y = -screenBottom + overflow * (1 - settle) + slide;
+      const y = yTop + (yRest - yTop) * settle + slide;
       panel.style.opacity = enter.toFixed(3);
-      panel.style.clipPath = `inset(${screenTop.toFixed(1)}px 0 ${screenBottom.toFixed(1)}px round ${radius.toFixed(1)}px)`;
+      panel.style.clipPath = `inset(${screenTop.toFixed(1)}px ${screenRight.toFixed(1)}px ${screenBottom.toFixed(1)}px ${screenLeft.toFixed(1)}px round ${radius.toFixed(1)}px)`;
       panelInner.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0)`;
     };
 
