@@ -124,6 +124,37 @@ Harmless (`height:auto` rules), but misleading. Remove the class.
 
 ---
 
+## Resolution log (2026-09-02)
+
+All changes live in `src/polish.css` (overrides, loaded after the compiled stylesheet), two new hooks, and small attribute-level edits to the section markup. Section order, copy, and images are unchanged.
+
+| Finding | Status | Where |
+|---|---|---|
+| C1 Brief dead scroll | Fixed. New `useBriefSequence` drives a three-phase scene on the existing runway: lock-screen holds, six notifications fan out, they converge back and the phone becomes the white shell, the digest slides in clipped to the screen and settles on its last section. Both 38-frame "sequences" turned out to be 38 copies of one image each; they are now one `<img>` each, cutting 3.8 MB of duplicate requests. Reduced-motion shows the settled state. | `src/hooks/useBriefSequence.js`, `src/html/Brief.html` |
+| C2 Focus ring | Fixed. Two-tone ring, verified by keyboard on the hero CTA (`outline: 2px #fff`, `box-shadow: 0 0 0 5px rgba(13,17,23,.6)`). | `polish.css` |
+| H1 Background seam | Fixed. Painting fills the page (`top:0; bottom:0; object-position: top`), gradient placeholder while it decodes. | `polish.css`, `MainPreamble.html` |
+| H2 Tablet tier | Fixed. 600–799 px: header spans the viewport, columns widen to `min(92vw, 640px)`, hero shot and Brief phone capped separately. | `polish.css` |
+| H3 Contrast | Fixed. FAQ answers .56 → .84, privacy body .70 → .88, tax note .72 → .90, copyright .62 → .76. | `polish.css`, `Pricing.html`, `Footer.html` |
+| H4 Mobile type | Fixed. `.p`/`.p-xxl` 15 px, `.p-s`/`.cta-md-s`/`.username` 14 px, line-height 1.45 below 800 px. | `polish.css` |
+| H5 Touch targets | Fixed. Hero/pricing/footer CTAs 44 px, header pill and `Masuk` 42 px, pricing tabs 44 px on mobile. | `polish.css` |
+| M1 Hover recipe | Fixed. One lift + soft shadow recipe per button family; off-axis shadow and dead `backdrop-blur` removed from hero/header/footer pills (`sb-pill`). | `polish.css`, `Hero.html`, `Header.html`, `Footer.html` |
+| M2 Marquee | Fixed, and a worse bug found on the way: the ten inner copies were each animated independently in alternating directions, so the right half of the row went blank after ~45 s. Now one inner with two copies of the eight cards (second copy `aria-hidden`), pure CSS animation, paused on hover and under reduced-motion. `useMarquee.js` deleted. | `polish.css`, `Testimonials.html` |
+| M3 Avatars | Not an issue. On inspection every avatar is already a monogram image (`RP`, `SW`, …); the earlier "photo" read was wrong. No change. | — |
+| M4 Header scrolled | Fixed. `data-scrolled` after 24 px: logo tile scales to .9, nav pill gains a shadow. | `useHeaderState.js`, `polish.css` |
+| M5 Empty demo stage | Accepted as is. Bottom-anchored messages are the chat convention and the stage fills over the eight steps; moving them to the top would read as a list, not a conversation. | — |
+| M6 Display leading | Fixed. `.h2` 1.08, `.h3` 1.14, `.h4`/`.h4-l` 1.12, `-0.01em` tracking on `.h1`/`.h2`. | `polish.css` |
+| M7 First paint | Fixed. Preload for Signifier 300, Switzer, and the breakpoint-matched hero screenshot; 240 ms fade on `#root`. | `index.html`, `polish.css` |
+| M8 Page weight | Partly fixed via C1 (−3.8 MB). The 1.5 MB painting is unchanged; a 720 px variant needs an asset export and is left for the asset owner. | — |
+| L1 Dead code | Fixed. `src/app.js`, `src/site.css`, `src/vendor/`, `src/hooks/useMarquee.js` removed. | — |
+| L2 Debug palette | Fixed. Hidden floating-ui dialog removed from `PostMain.html`. | — |
+| L3 `target="_blank"` | Left as is (behavioural, needs product owner). | — |
+| L4 Footer wordmark | Left as is (needs an asset export). | — |
+| L5 `color-scheme` | Fixed: `light`. | `polish.css` |
+| L6 `lenis` class | Fixed: removed from `<html>`. | `index.html` |
+| Brand blue | Product owner chose the brand accent. `--color-primary`/`--color-contrast` are now `#5B8CFF`; the header pill uses ink text (`#0D1117`) on it because white on `#5B8CFF` is 3.2:1. Body fallback colour follows. | `polish.css` |
+
+Verified on the Vite dev server at 1440×900, 768×1024 and 375×812: no horizontal overflow, no console errors on a fresh load, `npm run build` clean.
+
 ## Verification plan
 
 1. `npm run build` completes with no warnings beyond the pre-existing ones.

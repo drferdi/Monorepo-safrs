@@ -1,7 +1,8 @@
 import { useRef } from "react";
+import { useBriefSequence } from "./hooks/useBriefSequence.js";
 import { useDemoSequence } from "./hooks/useDemoSequence.js";
 import { useFaqAccordion } from "./hooks/useFaqAccordion.js";
-import { useMarquee } from "./hooks/useMarquee.js";
+import { useHeaderState } from "./hooks/useHeaderState.js";
 import { usePricingTabs } from "./hooks/usePricingTabs.js";
 import briefHtml from "./html/Brief.html?raw";
 import demoDesktopHtml from "./html/DemoDesktop.html?raw";
@@ -47,8 +48,9 @@ export function App() {
   const pageRef = useRef(null);
   useFaqAccordion(pageRef);
   usePricingTabs(pageRef);
-  useMarquee(pageRef);
   useDemoSequence(pageRef);
+  useBriefSequence(pageRef);
+  useHeaderState(pageRef);
 
   return (
     <div

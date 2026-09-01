@@ -21,3 +21,11 @@ npm run preview
 ## Constraint
 
 Do not redesign. Text and destination URLs may change for Sentra Bot; visual system stays.
+
+## Polish layer
+
+`src/polish.css` is the only hand-written stylesheet. It loads after the compiled
+CSS in `public/assets` and carries the fixes from `VISUAL_AUDIT.md` (brand accent,
+focus ring, contrast, mobile type, touch targets, hover recipe, tablet tier,
+background fill, marquee, Brief stage). Put new visual overrides there, not in the
+compiled files.

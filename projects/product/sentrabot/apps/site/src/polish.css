@@ -1,0 +1,265 @@
+/*
+ * Sentra Bot landing — visual polish layer.
+ *
+ * Loaded after the compiled stylesheet in public/assets, so every rule here is
+ * a deliberate override. Each block names the VISUAL_AUDIT.md finding it
+ * resolves. Nothing in this file changes layout structure, section order, or
+ * copy; it adjusts tokens, type, spacing, states, and motion.
+ */
+
+/* ---------------------------------------------------------------- tokens */
+:root {
+  /* Brand accent: Sentra Intelligence Blue replaces the cloned theme blue. */
+  --color-primary: #5b8cff;
+  --color-contrast: #5b8cff;
+  --color-blue: #5b8cff;
+  --sb-ink: #0d1117;
+  --sb-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --sb-fast: 160ms;
+  --sb-base: 240ms;
+  /* L5: light-only design; keep native controls and scrollbars light. */
+  color-scheme: light;
+}
+
+/* M7: content fades in once React has painted instead of popping. */
+#root {
+  animation: sb-reveal var(--sb-base) var(--sb-ease) both;
+}
+@keyframes sb-reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---------------------------------------------------------- C2: focus */
+/* Two-tone ring: white line + dark halo reads on sky, grass, white cards
+   and the navy footer alike. */
+:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px rgba(13, 17, 23, 0.6);
+}
+
+/* -------------------------------------------------------- H3: contrast */
+.faq-module__O8tnPq__faq__item .opacity-\[0\.56\] {
+  opacity: 0.84;
+}
+.privacy-module__DjJjcq__privacy .opacity-70 {
+  opacity: 0.88;
+}
+
+/* ------------------------------------------------- M6 / H4: typography */
+.h1 {
+  letter-spacing: -0.012em;
+}
+.h2 {
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+.h3 {
+  line-height: 1.14;
+}
+.h4,
+.h4-l {
+  line-height: 1.12;
+}
+@media (width < 800px) {
+  .p,
+  .p-xxl {
+    font-size: 15px;
+    line-height: 1.45;
+  }
+  .p-s,
+  .cta-md-s,
+  .username {
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .quote {
+    line-height: 1.32;
+  }
+}
+
+/* ---------------------------------------------------- H5: touch targets */
+@media (width < 800px) {
+  header nav a {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+  }
+  header nav a.uline {
+    --bottom: calc(50% - 0.8em);
+  }
+  main a[href="/workspace"],
+  footer a[href="/workspace"] {
+    min-height: 44px;
+    align-items: center;
+  }
+  .pricing-module__NXQy5G__tabs button {
+    min-height: 44px;
+  }
+}
+
+/* ------------------------------------------------ M1: one hover recipe */
+/* White pill (hero, footer) and brand pill (header). Lift + soft shadow,
+   no off-axis shadow, no blur on a solid surface. */
+.sb-pill {
+  transition:
+    transform var(--sb-base) var(--sb-ease),
+    box-shadow var(--sb-base) var(--sb-ease),
+    background-color var(--sb-base) var(--sb-ease),
+    color var(--sb-base) var(--sb-ease);
+}
+.sb-pill--brand {
+  color: var(--sb-ink);
+}
+.button-module__h0EWEW__btn,
+.pricing-module__NXQy5G__card__wrapper a {
+  transition:
+    transform var(--sb-base) var(--sb-ease),
+    box-shadow var(--sb-base) var(--sb-ease),
+    background-color var(--sb-base) var(--sb-ease);
+}
+@media (hover: hover) {
+  .sb-pill:hover {
+    background-color: #f3f5f9;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px -10px rgba(13, 17, 23, 0.5);
+  }
+  .sb-pill--brand:hover {
+    background-color: #4d7ef5;
+    color: var(--sb-ink);
+  }
+  .button-module__h0EWEW__btn:hover,
+  .pricing-module__NXQy5G__card__wrapper a:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px -10px rgba(13, 17, 23, 0.45);
+  }
+  .sb-pill:active,
+  .button-module__h0EWEW__btn:active,
+  .pricing-module__NXQy5G__card__wrapper a:active {
+    transform: translateY(0);
+    transition-duration: var(--sb-fast);
+  }
+}
+
+/* -------------------------------------------------- H1: background fill */
+/* The painting fills the whole page instead of stopping at its own aspect
+   ratio; top-anchored so the hero sky never moves. */
+.sb-bg {
+  top: 0;
+  bottom: 0;
+  aspect-ratio: auto;
+  /* Placeholder while the painting decodes: sky at the top, grass below,
+     sampled from the image itself. */
+  background: linear-gradient(180deg, #228dcd 0%, #228dcd 30%, #4f8438 100%);
+}
+.sb-bg > img {
+  object-position: top center;
+}
+
+/* ------------------------------------------------ M4: header scrolled */
+header > div > button,
+header nav {
+  transition:
+    transform var(--sb-base) var(--sb-ease),
+    box-shadow var(--sb-base) var(--sb-ease);
+}
+header[data-scrolled] > div > button {
+  transform: scale(0.9);
+  transform-origin: left center;
+}
+header[data-scrolled] nav {
+  box-shadow: 0 12px 32px -14px rgba(13, 17, 23, 0.5);
+}
+
+/* ---------------------------------------------------- H2: tablet tier */
+/* 600–799px: the phone layout is kept but the column widens so the page
+   stops looking like a phone centred on a tablet. */
+@media (width >= 600px) and (width < 800px) {
+  header > div,
+  .dr-w-393 {
+    width: 100%;
+  }
+  .dr-w-357 {
+    width: min(92vw, 640px);
+  }
+  .floating-container.dr-w-357 {
+    width: min(76vw, 520px);
+  }
+  .aspect-\[2918\/4346\].dr-w-357 {
+    width: min(58vw, 400px);
+  }
+  .dr-w-329 {
+    width: min(54vw, 372px);
+  }
+}
+
+/* ------------------------------------------------------- M2: marquee */
+.marquee-module__irIMSq__inner {
+  animation: sb-marquee 56s linear infinite;
+  will-change: transform;
+}
+@keyframes sb-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+@media (hover: hover) {
+  .marquee-module__irIMSq__marquee:hover .marquee-module__irIMSq__inner {
+    animation-play-state: paused;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-module__irIMSq__inner {
+    animation: none;
+  }
+  .marquee-module__irIMSq__marquee {
+    overflow-x: auto;
+  }
+  #root {
+    animation: none;
+  }
+  .sb-pill,
+  .button-module__h0EWEW__btn,
+  .pricing-module__NXQy5G__card__wrapper a,
+  header > div > button,
+  header nav {
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------ C1: Brief stage */
+/* Layer order for the scroll choreography (see useBriefSequence.js). */
+[data-brief="phone"],
+[data-brief="shell"] {
+  position: relative;
+  z-index: 1;
+}
+[data-brief="panel"] {
+  z-index: 2;
+}
+[data-brief="cards"] {
+  z-index: 3;
+}
+[data-brief="cards"] > div {
+  opacity: 0;
+  will-change: transform, opacity;
+}
+[data-brief="panel"] {
+  opacity: 0;
+  will-change: clip-path, opacity;
+}
+[data-brief="shell"] {
+  opacity: 0;
+}
+[data-brief] img {
+  user-select: none;
+  -webkit-user-drag: none;
+}
