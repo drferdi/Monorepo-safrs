@@ -27,7 +27,9 @@ export function useFaqAccordion(rootRef) {
         el.style.height = "0px";
         el.setAttribute("aria-hidden", "true");
         el.parentElement?.removeAttribute("data-open");
-        const otherIcon = el.parentElement?.querySelector("button svg");
+        const otherButton = el.parentElement?.querySelector("button");
+        otherButton?.setAttribute("aria-expanded", "false");
+        const otherIcon = otherButton?.querySelector("svg");
         if (otherIcon) otherIcon.style.transform = "";
       });
 
@@ -35,11 +37,13 @@ export function useFaqAccordion(rootRef) {
         body.style.height = "0px";
         body.setAttribute("aria-hidden", "true");
         item.removeAttribute("data-open");
+        button.setAttribute("aria-expanded", "false");
         if (icon) icon.style.transform = "";
       } else {
         body.style.height = `${body.scrollHeight}px`;
         body.setAttribute("aria-hidden", "false");
         item.setAttribute("data-open", "");
+        button.setAttribute("aria-expanded", "true");
         if (icon) icon.style.transform = "rotate(180deg)";
       }
     };
