@@ -161,4 +161,15 @@ describe("loadEnv", () => {
     expect(env.updaterUrl).toBe("http://updater:7092");
     expect(env.updaterToken).toBe("fake-review-updater-token-000000000000");
   });
+
+  it("loads Managed AI only with an explicit durable Free cost budget", () => {
+    const env = loadEnv({
+      ...base,
+      OPENAI_API_KEY: "test-openai-key",
+      SENTRABOT_MANAGED_AI_FREE_BUDGET_MICROS: "2000000",
+    });
+
+    expect(env.openaiApiKey).toBe("test-openai-key");
+    expect(env.managedAiFreeBudgetMicros).toBe(2_000_000n);
+  });
 });

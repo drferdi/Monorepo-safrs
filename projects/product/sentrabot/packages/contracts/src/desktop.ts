@@ -36,6 +36,10 @@ export interface SentraBotDesktopOAuthCallback {
   state?: string;
 }
 
+export interface DesktopRuntimeStatus {
+  online: boolean;
+}
+
 export interface SentraBotDesktop {
   platform: string;
   window: {
@@ -45,6 +49,9 @@ export interface SentraBotDesktop {
     state: () => Promise<{ minimized: boolean; maximized: boolean; fullScreen: boolean }>;
   };
   update: SentraBotDesktopUpdate;
+  runtime: {
+    state: () => Promise<DesktopRuntimeStatus>;
+  };
   oauth: {
     /**
      * Authorization codes captured from a sign-in popup's loopback redirect.

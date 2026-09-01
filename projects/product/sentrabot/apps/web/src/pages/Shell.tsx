@@ -129,6 +129,7 @@ import {
   shouldNotifyBrowser,
 } from "../lib/browser-notifications";
 import { chartViewport } from "../lib/chart-viewport";
+import { desktopRuntimeOnline } from "../lib/desktop";
 import { dictation } from "../lib/dictation";
 import { localTimezone } from "../lib/local-timezone";
 import { connectMcpOauth } from "../lib/mcp-connect";
@@ -287,8 +288,23 @@ export function ShellPage() {
     setCollapsedSidebarSections(readCollapsedSidebarSections(userId));
   }, [userId]);
   const [query, setQuery] = useState("");
+  const [desktopRuntimeOnlineState, setDesktopRuntimeOnlineState] = useState<boolean | null>(null);
   const [searchHits, setSearchHits] = useState<SearchHit[]>([]);
   const [searchLoading, setSearchLoading] = useState(false);
+
+  useEffect(() => {
+    let disposed = false;
+    const refresh = () =>
+      void desktopRuntimeOnline().then((online) => {
+        if (!disposed) setDesktopRuntimeOnlineState(online);
+      });
+    refresh();
+    const interval = window.setInterval(refresh, 10_000);
+    return () => {
+      disposed = true;
+      window.clearInterval(interval);
+    };
+  }, []);
   const [snapshot, setSnapshot] = useState<ThreadSnapshot | null>(null);
   const snapshotRef = useRef<ThreadSnapshot | null>(null);
   const [pendingAttachments, setPendingAttachments] = useState<PendingAttachment[]>([]);
@@ -425,10 +441,7 @@ export function ShellPage() {
   useEffect(() => {
     if (!session.data?.user) return;
     let cancelled = false;
-    void Promise.all([
-      rpc.phone.status(),
-      rpc.phone.whatsapp.status().catch(() => null),
-    ])
+    void Promise.all([rpc.phone.status(), rpc.phone.whatsapp.status().catch(() => null)])
       .then(([status, whatsapp]) => {
         if (!cancelled) setPhoneSurfaceEnabled(status.enabled || Boolean(whatsapp?.enabled));
       })
@@ -2710,6 +2723,11 @@ export function ShellPage() {
                 </span>
               </span>
             </button>
+            {desktopRuntimeOnlineState === false ? (
+              <span className="rounded-full bg-[#2A1714] px-2 py-1 text-[11px] text-[#F3A58B]">
+                <Trans>Desktop Runtime offline</Trans>
+              </span>
+            ) : null}
           </div>
           <div className="flex items-center gap-1">
             {!inGroup && active ? (
@@ -6031,7 +6049,11 @@ function AppConnectCard({
         displayName: block.name,
       });
       if (started.authorizationUrl) {
-        window.open(started.authorizationUrl, "sentrabot-app-connect", "popup,width=560,height=720");
+        window.open(
+          started.authorizationUrl,
+          "sentrabot-app-connect",
+          "popup,width=560,height=720",
+        );
       }
       for (let i = 0; i < 60; i += 1) {
         if (controller.signal.aborted) return;

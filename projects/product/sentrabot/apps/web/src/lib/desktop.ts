@@ -12,6 +12,27 @@ export function desktopBridge(): SentraBotDesktop | undefined {
   return typeof window === "undefined" ? undefined : window.sentrabotDesktop;
 }
 
+/** `null` means server rendering; `false` means the local Runtime is unavailable. */
+export async function desktopRuntimeOnline(): Promise<boolean | null> {
+  const runtime = desktopBridge()?.runtime;
+  if (!runtime) {
+    if (typeof window === "undefined") return null;
+    try {
+      const response = await fetch("/v1/runtimes/status", { credentials: "include" });
+      if (!response.ok) return false;
+      const body = (await response.json()) as { online?: unknown };
+      return typeof body.online === "boolean" ? body.online : false;
+    } catch {
+      return false;
+    }
+  }
+  try {
+    return (await runtime.state()).online;
+  } catch {
+    return false;
+  }
+}
+
 /** The compact `code#state` form the manual paste flow already accepts. */
 export function desktopOAuthCode(callback: SentraBotDesktopOAuthCallback) {
   return callback.state === undefined ? callback.code : `${callback.code}#${callback.state}`;

@@ -36,6 +36,7 @@ import {
   LocalArtifactStore,
   McpConnector,
   McpOAuthBroker,
+  OpenAiManagedProvider,
   PiAgentRuntime,
   PiOAuthLogins,
   PipedreamConnector,
@@ -52,28 +53,67 @@ import {
   WhatsAppMessagingProvider,
   WorkspaceMemoryProviderResolver,
   whatsAppConfigFromEnv,
+  XenditCheckoutProvider,
 } from "@sentrabot/adapters";
 import { blockedAuthPaths, createAuth } from "@sentrabot/auth";
 import { normalizePhoneLocale, signupPolicyFromEnv } from "@sentrabot/core";
 import {
+  acknowledgeWorkspaceE2eeMigration,
+  acquireRuntimeLease,
+  applyVerifiedPaymentEvent,
+  beginCheckout,
+  canDeliverRelay,
   createDb,
+  createPlatformDatabase,
+  createPlatformRuntimeDatabase,
   createThreadEvents,
+  exportLegacyPrivateState,
+  finalizeManagedAiUsage,
+  findPaymentTargetByProviderReference,
+  getManagedAiBudgetRatio,
+  getPlatformRuntimeStatus,
+  heartbeatPlatformRuntime,
+  isTrustedPlatformDevice,
+  isTrustedPlatformRuntime,
+  listEncryptedSyncObjects,
+  listKeyEnvelopesForDevice,
+  listTrustedPlatformDevices,
   type PrismaClient,
   provisionPhoneIdentity,
+  publishKeyEnvelope,
+  putEncryptedSyncObject,
+  registerPlatformDevice,
+  registerPlatformRuntime,
+  releaseManagedAiUsage,
+  releaseRuntimeLease,
+  renewRuntimeLease,
   requireMembership,
+  reserveManagedAiUsage,
+  revokePlatformDevice,
+  tombstoneEncryptedSyncObject,
 } from "@sentrabot/db";
 import { MarkdownMemoryStore } from "@sentrabot/memory";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { createBillingRoutes } from "./billing-routes.js";
 import { type AppEnv, loadEnv } from "./env.js";
+import { createManagedAiRoutes } from "./managed-ai.js";
+import {
+  calculateOpenAiCostMicros,
+  estimateOpenAiCostMicros,
+  openAiPriceVersion,
+} from "./managed-ai-pricing.js";
 import { createPhoneInboundHandler } from "./phone-inbound.js";
 import { createPhoneTranscriber, ingestPhoneMedia } from "./phone-media.js";
 import { mountPhoneWebhookRoutes } from "./phone-webhook.js";
+import { createPlatformRoutes } from "./platform-routes.js";
+import { createRelayRoutes } from "./relay-routes.js";
 import { createRouter } from "./router.js";
 import { mountVoiceHttpRoutes } from "./voice.js";
 import { mountWebhookHttpRoutes } from "./webhook.js";
 import { completeWhatsAppPairing } from "./whatsapp-pairing.js";
 import { mountWhatsAppWebhookRoutes } from "./whatsapp-webhook.js";
+import { mountXenditWebhookRoutes } from "./xendit-webhook.js";
 
 export interface AppHandles {
   app: Hono;
@@ -355,6 +395,141 @@ export async function createApp(
     }
     return auth.handler(c.req.raw);
   });
+  const platformRuntimeDb = createPlatformRuntimeDatabase(prisma);
+  const platformDb = createPlatformDatabase(prisma);
+  app.route(
+    "/",
+    createRelayRoutes({
+      authenticate: async (request) => {
+        const session = await auth.api.getSession({ headers: sessionHeaders(request) });
+        if (!session?.user) return null;
+        return requireMembership(prisma, session.user.id).catch(() => null);
+      },
+      isTrustedDevice: (input) => isTrustedPlatformDevice(platformRuntimeDb, input),
+      isTrustedRuntime: (input) => isTrustedPlatformRuntime(platformRuntimeDb, input),
+      canDeliver: (input) =>
+        canDeliverRelay(prisma, { ...input, now: new Date(), heartbeatMaxAgeMs: 30_000 }),
+      publish: (topic, payload) => realtime.publish(topic, payload),
+      subscribe: (topic, onMessage) => realtime.subscribe(topic, onMessage),
+    }),
+  );
+  if (env.openaiApiKey && env.managedAiFreeBudgetMicros) {
+    const provider = new OpenAiManagedProvider({ apiKey: env.openaiApiKey });
+    app.route(
+      "/",
+      createManagedAiRoutes({
+        authenticate: async (request) => {
+          const session = await auth.api.getSession({ headers: sessionHeaders(request) });
+          if (!session?.user) return null;
+          return requireMembership(prisma, session.user.id).catch(() => null);
+        },
+        isTrustedRuntime: (input) => isTrustedPlatformRuntime(platformRuntimeDb, input),
+        getBudgetRatio: (input) =>
+          getManagedAiBudgetRatio(prisma, {
+            actor: input.actor,
+            now: new Date(),
+            monthlyBudgetMicros: env.managedAiFreeBudgetMicros!,
+          }),
+        reserveUsage: (input) => reserveManagedAiUsage(prisma, input),
+        finalizeUsage: (input) => finalizeManagedAiUsage(prisma, input),
+        releaseUsage: (input) => releaseManagedAiUsage(prisma, input),
+        estimateCostMicros: estimateOpenAiCostMicros,
+        calculateActualCostMicros: calculateOpenAiCostMicros,
+        now: () => new Date(),
+        provider,
+        providerId: "openai",
+        priceVersion: openAiPriceVersion,
+      }),
+    );
+  }
+  if (env.xenditApiKey) {
+    const checkoutProvider = new XenditCheckoutProvider({ apiKey: env.xenditApiKey });
+    app.route(
+      "/",
+      createBillingRoutes({
+        authenticate: async (request) => {
+          const session = await auth.api.getSession({ headers: sessionHeaders(request) });
+          if (!session?.user) return null;
+          return requireMembership(prisma, session.user.id).catch(() => null);
+        },
+        beginCheckout: (input) => beginCheckout(prisma, input),
+        createCheckout: (input) => checkoutProvider.createCheckout(input),
+        newReference: randomUUID,
+        successReturnUrl: `${env.webOrigin}/billing/success`,
+        cancelReturnUrl: `${env.webOrigin}/billing/cancel`,
+      }),
+    );
+  }
+  app.route(
+    "/",
+    createPlatformRoutes({
+      authenticate: async (request) => {
+        const session = await auth.api.getSession({ headers: sessionHeaders(request) });
+        if (!session?.user) return null;
+        return requireMembership(prisma, session.user.id).catch(() => null);
+      },
+      isTrustedDevice: (input) => isTrustedPlatformDevice(platformRuntimeDb, input),
+      listDevices: (actor) => listTrustedPlatformDevices(prisma, actor),
+      runtimeStatus: (actor) =>
+        getPlatformRuntimeStatus(prisma, {
+          actor,
+          now: new Date(),
+          heartbeatMaxAgeMs: 30_000,
+        }),
+      registerDevice: (input) => registerPlatformDevice(platformRuntimeDb, input),
+      registerRuntime: (input) => registerPlatformRuntime(platformRuntimeDb, input),
+      isTrustedRuntime: (input) => isTrustedPlatformRuntime(platformRuntimeDb, input),
+      canAcknowledgeE2eeMigration: (input) =>
+        canDeliverRelay(prisma, { ...input, now: new Date(), heartbeatMaxAgeMs: 30_000 }),
+      revokeDevice: (input) => revokePlatformDevice(prisma, { ...input, now: new Date() }),
+      publishKeyEnvelope: (input) => publishKeyEnvelope(prisma, input),
+      listKeyEnvelopes: (input) => listKeyEnvelopesForDevice(prisma, input),
+      putSyncObject: (input) => putEncryptedSyncObject(prisma, input),
+      listSyncObjects: (input) => listEncryptedSyncObjects(prisma, input),
+      deleteSyncObject: async (input) => {
+        await tombstoneEncryptedSyncObject(prisma, { ...input, now: new Date() });
+      },
+      acquireRuntimeLease: async (input) => {
+        const lease = await acquireRuntimeLease(platformDb, {
+          workspaceId: input.workspaceId,
+          runtimeId: input.runtimeId,
+          now: new Date(),
+          leaseDurationMs: 30_000,
+        });
+        return { ...lease, leaseExpiresAt: lease.leaseExpiresAt.toISOString() };
+      },
+      renewRuntimeLease: async (input) => {
+        const lease = await renewRuntimeLease(platformDb, {
+          workspaceId: input.workspaceId,
+          runtimeId: input.runtimeId,
+          now: new Date(),
+          leaseDurationMs: 30_000,
+        });
+        return { ...lease, leaseExpiresAt: lease.leaseExpiresAt.toISOString() };
+      },
+      releaseRuntimeLease: (input) =>
+        releaseRuntimeLease(platformDb, {
+          workspaceId: input.workspaceId,
+          runtimeId: input.runtimeId,
+          now: new Date(),
+        }),
+      heartbeatRuntime: (input) =>
+        heartbeatPlatformRuntime(platformRuntimeDb, { ...input, now: new Date() }),
+      acknowledgeE2eeMigration: ({ actor }) =>
+        acknowledgeWorkspaceE2eeMigration(prisma, {
+          workspaceId: actor.workspaceId,
+          now: new Date(),
+        }),
+      exportLegacyPrivateState: (actor) => exportLegacyPrivateState(prisma, actor),
+    }),
+  );
+  if (env.xenditCallbackToken) {
+    mountXenditWebhookRoutes(app, {
+      callbackToken: env.xenditCallbackToken,
+      resolvePaymentTarget: (reference) => findPaymentTargetByProviderReference(prisma, reference),
+      applyVerifiedPayment: (input) => applyVerifiedPaymentEvent(platformDb, input),
+    });
+  }
   app.use("/rpc/*", async (c, next) => {
     const session = await auth.api.getSession({ headers: sessionHeaders(c.req.raw) });
     const actor = session?.user

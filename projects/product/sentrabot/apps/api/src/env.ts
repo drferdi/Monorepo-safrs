@@ -75,6 +75,10 @@ export interface AppEnv {
   updaterToken: string | undefined;
   /** Current application image tag; used for compose manual-upgrade command selection. */
   imageTag: string | undefined;
+  xenditCallbackToken: string | undefined;
+  xenditApiKey: string | undefined;
+  openaiApiKey: string | undefined;
+  managedAiFreeBudgetMicros: bigint | undefined;
 }
 
 export function loadEnv(source: NodeJS.ProcessEnv = process.env): AppEnv {
@@ -142,6 +146,12 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): AppEnv {
     updaterUrl,
     updaterToken,
     imageTag: optional(source.SENTRABOT_IMAGE_TAG),
+    xenditCallbackToken: optional(source.XENDIT_CALLBACK_TOKEN),
+    xenditApiKey: optional(source.XENDIT_API_KEY),
+    openaiApiKey: optional(source.OPENAI_API_KEY),
+    managedAiFreeBudgetMicros: positiveBigInt(
+      optional(source.SENTRABOT_MANAGED_AI_FREE_BUDGET_MICROS),
+    ),
   };
 }
 
@@ -154,4 +164,14 @@ function required(source: NodeJS.ProcessEnv, key: string): string {
 function optional(value: string | undefined): string | undefined {
   const trimmed = value?.trim();
   return trimmed || undefined;
+}
+
+function positiveBigInt(value: string | undefined): bigint | undefined {
+  if (value === undefined) return undefined;
+  if (!/^\d+$/.test(value))
+    throw new Error("SENTRABOT_MANAGED_AI_FREE_BUDGET_MICROS must be a positive integer");
+  const parsed = BigInt(value);
+  if (parsed <= 0n)
+    throw new Error("SENTRABOT_MANAGED_AI_FREE_BUDGET_MICROS must be a positive integer");
+  return parsed;
 }

@@ -31,6 +31,19 @@ export interface AdapterDescriptor<TCapabilities> {
   capabilities: TCapabilities;
 }
 
+/** Provider-neutral hosted checkout boundary. Billing state remains in Control Plane. */
+export interface PaymentProvider {
+  createCheckout(input: {
+    referenceId: string;
+    amount: number;
+    currency: "IDR";
+    country: "ID";
+    description: string;
+    successReturnUrl: string;
+    cancelReturnUrl: string;
+  }): Promise<{ providerReference: string; checkoutUrl: string }>;
+}
+
 /**
  * In-process OAuth material for a single agent run. Not part of any RPC or
  * persisted contract. Extra provider fields such as `accountId` are copied

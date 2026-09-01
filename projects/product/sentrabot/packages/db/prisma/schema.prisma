@@ -27,6 +27,11 @@ model User {
   botSections      BotSection[]
   actionApprovalRules ActionApprovalRule[]
   actionAutoReviewPreferences ActionAutoReviewPreference[]
+  devices          Device[]
+  subscriptions    Subscription[]
+  paymentEvents    PaymentEvent[]
+  usageReservations UsageReservation[]
+  usageLedger       UsageLedger[]
 
   @@unique([email])
   @@map("user")
@@ -116,9 +121,155 @@ model Organization {
   actionAutoReviewPreferences ActionAutoReviewPreference[]
   workspaceMemoryConfig WorkspaceMemoryConfig?
   chatGroups  ChatGroup[]
+  devices     Device[]
+  runtimes    Runtime[]
+  keyEnvelopes KeyEnvelope[]
+  subscriptions Subscription[]
+  paymentEvents  PaymentEvent[]
+  usageReservations UsageReservation[]
+  usageLedger       UsageLedger[]
+  privacyState      WorkspacePrivacyState?
 
   @@unique([slug])
   @@map("organization")
+}
+
+model Device {
+  id          String       @id
+  userId      String       @map("user_id")
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspaceId String       @map("workspace_id")
+  workspace   Organization @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  publicKey   String       @map("public_key")
+  revokedAt   DateTime?    @map("revoked_at")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  runtimes    Runtime[]
+  sentKeyEnvelopes KeyEnvelope[] @relation("key_envelope_sender")
+  receivedKeyEnvelopes KeyEnvelope[] @relation("key_envelope_recipient")
+
+  @@index([userId, workspaceId, revokedAt])
+  @@map("devices")
+}
+
+model Runtime {
+  id            String       @id
+  deviceId      String       @map("device_id")
+  device        Device       @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  workspaceId   String       @map("workspace_id")
+  workspace     Organization @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  lastHeartbeat DateTime?    @map("last_heartbeat")
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+
+  @@index([workspaceId, deviceId])
+  @@map("runtimes")
+}
+
+model KeyEnvelope {
+  id                String       @id @default(uuid()) @db.Uuid
+  workspaceId       String       @map("workspace_id")
+  workspace         Organization @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  senderDeviceId    String       @map("sender_device_id")
+  senderDevice      Device       @relation("key_envelope_sender", fields: [senderDeviceId], references: [id], onDelete: Cascade)
+  recipientDeviceId String       @map("recipient_device_id")
+  recipientDevice   Device       @relation("key_envelope_recipient", fields: [recipientDeviceId], references: [id], onDelete: Cascade)
+  version           Int
+  ciphertext        String       @db.Text
+  createdAt         DateTime     @default(now()) @map("created_at")
+
+  @@unique([senderDeviceId, recipientDeviceId, version])
+  @@index([workspaceId, recipientDeviceId, createdAt])
+  @@map("key_envelopes")
+}
+
+model Subscription {
+  id                   String       @id @default(cuid())
+  userId               String       @map("user_id")
+  user                 User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspaceId          String       @unique @map("workspace_id")
+  workspace            Organization @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  planCode             String       @map("plan_code")
+  state                String
+  currentPeriodEndsAt  DateTime?    @map("current_period_ends_at")
+  graceEndsAt          DateTime?    @map("grace_ends_at")
+  provider             String       @default("xendit")
+  providerReference    String?      @unique @map("provider_reference")
+  createdAt            DateTime     @default(now()) @map("created_at")
+  updatedAt            DateTime     @updatedAt @map("updated_at")
+
+  @@index([userId, state])
+  @@map("subscriptions")
+}
+
+model PaymentEvent {
+  id              String       @id @default(cuid())
+  userId          String       @map("user_id")
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspaceId     String       @map("workspace_id")
+  workspace       Organization @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  provider        String
+  providerEventId String       @map("provider_event_id")
+  lifecycle       String
+  verifiedAt      DateTime     @map("verified_at")
+  createdAt       DateTime     @default(now()) @map("created_at")
+
+  @@unique([provider, providerEventId])
+  @@index([workspaceId, createdAt])
+  @@map("payment_events")
+}
+
+model UsageReservation {
+  id                  String       @id @default(cuid())
+  userId              String       @map("user_id")
+  user                User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspaceId         String       @map("workspace_id")
+  workspace           Organization @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  idempotencyKey      String       @map("idempotency_key")
+  capability          String
+  estimatedCostMicros BigInt       @map("estimated_cost_micros")
+  status              String
+  expiresAt           DateTime     @map("expires_at")
+  finalizedAt         DateTime?    @map("finalized_at")
+  createdAt           DateTime     @default(now()) @map("created_at")
+  updatedAt           DateTime     @updatedAt @map("updated_at")
+  ledger              UsageLedger?
+
+  @@unique([workspaceId, idempotencyKey])
+  @@index([workspaceId, status, expiresAt])
+  @@map("usage_reservations")
+}
+
+model UsageLedger {
+  id               String           @id @default(cuid())
+  userId           String           @map("user_id")
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspaceId      String           @map("workspace_id")
+  workspace        Organization     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  reservationId    String           @unique @map("reservation_id")
+  reservation      UsageReservation @relation(fields: [reservationId], references: [id], onDelete: Restrict)
+  provider         String
+  model            String
+  inputTokens      Int              @map("input_tokens")
+  outputTokens     Int              @map("output_tokens")
+  cachedInputTokens Int              @default(0) @map("cached_input_tokens")
+  actualCostMicros BigInt           @map("actual_cost_micros")
+  priceVersion     String           @map("price_version")
+  createdAt        DateTime         @default(now()) @map("created_at")
+
+  @@index([userId, createdAt])
+  @@index([workspaceId, createdAt])
+  @@map("usage_ledger")
+}
+
+model WorkspacePrivacyState {
+  workspaceId String       @id @map("workspace_id")
+  workspace   Organization @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  mode        String       @default("legacy")
+  migratedAt  DateTime?    @map("migrated_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  @@map("workspace_privacy_states")
 }
 
 model ActionApprovalRule {
@@ -995,4 +1146,54 @@ model AgentConnection {
   @@unique([requesterBotId, targetBotId])
   @@index([targetBotId, status])
   @@map("agent_connections")
+}
+
+model EntitlementState {
+  workspaceId String   @id @map("workspace_id")
+  planCode    String   @map("plan_code")
+  state       String
+  version     Int      @default(1)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("entitlement_states")
+}
+
+model RuntimeLease {
+  workspaceId      String   @id @map("workspace_id")
+  activeRuntimeId  String   @map("active_runtime_id")
+  executionEpoch   Int      @map("execution_epoch")
+  leaseExpiresAt   DateTime @map("lease_expires_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  @@map("runtime_leases")
+}
+
+model SyncObjectIndex {
+  id                String   @id @default(uuid()) @db.Uuid
+  userId            String   @map("user_id")
+  opaqueObjectId    String   @map("opaque_object_id")
+  objectType        String   @map("object_type")
+  version           Int
+  ciphertextLocator String   @map("ciphertext_locator")
+  ciphertext        String   @db.Text
+  tombstonedAt      DateTime? @map("tombstoned_at")
+  cursorSeq         BigInt   @default(autoincrement()) @map("cursor_seq")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, opaqueObjectId])
+  @@index([userId, cursorSeq])
+  @@map("sync_object_index")
+}
+
+model OutboxEvent {
+  id        String   @id @default(uuid()) @db.Uuid
+  dedupeKey String   @unique @map("dedupe_key")
+  type      String
+  payload   Json
+  createdAt DateTime @default(now()) @map("created_at")
+  sentAt    DateTime? @map("sent_at")
+
+  @@index([sentAt, createdAt])
+  @@map("outbox_events")
 }

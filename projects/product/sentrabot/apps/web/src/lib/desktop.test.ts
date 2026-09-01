@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   desktopOAuthCode,
+  desktopRuntimeOnline,
   oauthStateOf,
   onDesktopOAuthCallback,
   type SentraBotDesktop,
@@ -35,6 +36,7 @@ function desktop(platform: string): SentraBotDesktop {
       install: async () => updateState,
     },
     oauth: { onCallback: () => () => undefined },
+    runtime: { state: async () => ({ online: true }) },
   };
 }
 
@@ -69,6 +71,34 @@ describe("window chrome", () => {
     expect(shell).toContain('className="app-no-drag grid h-8 w-8');
     expect(shell).toContain('className="app-no-drag flex min-w-0 items-center gap-3"');
     expect(shell.match(/className="app-no-drag grid h-\[30px\] w-\[34px\]/g)).toHaveLength(2);
+  });
+});
+
+describe("desktop runtime status", () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  it("returns null during server rendering and fails closed when the bridge errors", async () => {
+    vi.stubGlobal("window", undefined);
+    await expect(desktopRuntimeOnline()).resolves.toBeNull();
+
+    vi.stubGlobal("window", {
+      sentrabotDesktop: {
+        ...desktop("linux"),
+        runtime: { state: async () => Promise.reject(new Error("offline")) },
+      },
+    });
+    await expect(desktopRuntimeOnline()).resolves.toBe(false);
+  });
+
+  it("reads durable runtime liveness from the Control Plane in a browser client", async () => {
+    vi.stubGlobal("window", {});
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: true, json: async () => ({ online: true }) }),
+    );
+
+    await expect(desktopRuntimeOnline()).resolves.toBe(true);
+    expect(fetch).toHaveBeenCalledWith("/v1/runtimes/status", { credentials: "include" });
   });
 });
 

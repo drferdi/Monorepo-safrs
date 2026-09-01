@@ -1,14 +1,28 @@
+import { createHash, randomUUID } from "node:crypto";
 import { existsSync } from "node:fs";
-import { readFile, stat, writeFile } from "node:fs/promises";
+import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { DesktopReachability, DesktopSetup } from "@sentrabot/contracts";
-import { app, BrowserWindow, ipcMain, Menu, net, type Session, session, shell } from "electron";
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  Menu,
+  net,
+  type Session,
+  safeStorage,
+  session,
+  shell,
+} from "electron";
 import {
   DesktopUpdateController,
   type ElectronAutoUpdater,
   LAUNCH_CHECK_DELAY_MS,
 } from "./auto-update.js";
+import { ControlPlaneTransport } from "./control-plane-transport.js";
+import { DeviceKeypairStore } from "./e2ee-store.js";
 import { oauthCallbackFrom } from "./oauth-callback.js";
+import { materializeSentraPersonal } from "./personal-bot.js";
 import {
   bundledRendererCandidates,
   contentType,
@@ -16,6 +30,8 @@ import {
   immutableRendererAsset,
   isRendererAssetMiss,
 } from "./renderer-assets.js";
+import { DesktopRuntimeController } from "./runtime-controller.js";
+import { DesktopRuntimeLease } from "./runtime-lease.js";
 import {
   DEFAULT_LOCAL_WEB_URL,
   isSentraBotHealth,
@@ -45,6 +61,9 @@ let openAppPromise: Promise<boolean> | null = null;
 let pendingPreviousWindow: BrowserWindow | null = null;
 let quitting = false;
 let warmWindowTimer: NodeJS.Timeout | undefined;
+let runtimeController: DesktopRuntimeController | null = null;
+let runtimeTickTimer: NodeJS.Timeout | undefined;
+let runtimeRetryTimer: NodeJS.Timeout | undefined;
 const WARM_WINDOW_TTL_MS = warmWindowTtlMs(process.env.SENTRABOT_WARM_WINDOW_TTL_MS);
 
 const updaterEnvironment = {
@@ -82,6 +101,97 @@ function developmentIcon() {
   if (app.isPackaged) return undefined;
   const icon = path.join(app.getAppPath(), "assets", "icon.png");
   return existsSync(icon) ? icon : undefined;
+}
+
+function desktopRuntimePaths() {
+  const runtimeDir = path.join(app.getPath("userData"), "runtime");
+  return {
+    runtimeDir,
+    deviceKeyPath: path.join(runtimeDir, "device-keypair.json"),
+    personalBotPath: path.join(runtimeDir, "sentra-personal.json"),
+  };
+}
+
+async function startDesktopRuntime(win: BrowserWindow, targetUrl: string): Promise<void> {
+  if (new URL(targetUrl).protocol !== "http:" && new URL(targetUrl).protocol !== "https:") return;
+  await stopDesktopRuntime();
+  const paths = desktopRuntimePaths();
+  const keyStore = new DeviceKeypairStore({
+    protection: {
+      isAvailable: () => safeStorage.isEncryptionAvailable(),
+      encrypt: (value) => safeStorage.encryptString(value).toString("base64"),
+      decrypt: (value) => safeStorage.decryptString(Buffer.from(value, "base64")),
+    },
+    storage: {
+      read: async () => readFile(paths.deviceKeyPath, "utf8").catch(() => null),
+      write: async (value) => {
+        await mkdir(paths.runtimeDir, { recursive: true });
+        await writeFile(paths.deviceKeyPath, value, { encoding: "utf8", mode: 0o600 });
+      },
+    },
+  });
+  const keypair = await keyStore.loadOrCreate();
+  const identity = createHash("sha256").update(keypair.publicKey).digest("hex").slice(0, 32);
+  const transport = new ControlPlaneTransport({
+    baseUrl: targetUrl,
+    fetch: (input, init) => win.webContents.session.fetch(input, init),
+  });
+  const actor = await transport.request<{ workspaceId: string }>({
+    method: "GET",
+    path: "/v1/control-plane/identity",
+  });
+  const lease = new DesktopRuntimeLease({
+    apiUrl: new URL(targetUrl).origin,
+    deviceId: `desktop-${identity}`,
+    runtimeId: `runtime-${identity}`,
+    workspaceId: actor.workspaceId,
+    publicKey: keypair.publicKey,
+    transport,
+  });
+  runtimeController = new DesktopRuntimeController({
+    lease,
+    materializePersonal: () =>
+      materializeSentraPersonal(
+        {
+          findByKind: async () =>
+            readFile(paths.personalBotPath, "utf8")
+              .then(() => ({ id: "local" }))
+              .catch(() => null),
+          create: async (bot) => {
+            await mkdir(paths.runtimeDir, { recursive: true });
+            await writeFile(paths.personalBotPath, JSON.stringify(bot), {
+              encoding: "utf8",
+              mode: 0o600,
+            });
+          },
+        },
+        { newId: randomUUID },
+      ),
+  });
+  await runtimeController.start();
+  runtimeTickTimer = setInterval(() => void runtimeController?.tick(), 15_000);
+  runtimeTickTimer.unref();
+}
+
+async function ensureDesktopRuntime(win: BrowserWindow, targetUrl: string): Promise<void> {
+  if (runtimeController !== null || win.isDestroyed()) return;
+  try {
+    await startDesktopRuntime(win, targetUrl);
+  } catch {
+    if (runtimeRetryTimer) return;
+    runtimeRetryTimer = setInterval(() => void ensureDesktopRuntime(win, targetUrl), 15_000);
+    runtimeRetryTimer.unref();
+  }
+}
+
+async function stopDesktopRuntime(): Promise<void> {
+  if (runtimeTickTimer) clearInterval(runtimeTickTimer);
+  runtimeTickTimer = undefined;
+  if (runtimeRetryTimer) clearInterval(runtimeRetryTimer);
+  runtimeRetryTimer = undefined;
+  const current = runtimeController;
+  runtimeController = null;
+  await current?.stop().catch(() => undefined);
 }
 
 function sessionPartitionKey(targetUrl: string) {
@@ -722,6 +832,7 @@ async function openAppOnce(targetUrl: string) {
     win = created.win;
     await created.loaded;
     currentTargetUrl = targetUrl;
+    void ensureDesktopRuntime(win, targetUrl);
     setupError = null;
     // Keep the previous window until the caller commits (after setup.json is written).
     pendingPreviousWindow =
@@ -902,6 +1013,10 @@ app.whenReady().then(async () => {
     if (state.phase !== "ready") quitting = false;
     return state;
   });
+  ipcMain.handle("desktop.runtime.state", (event) => {
+    if (!fromMainWindow(event)) return { online: false };
+    return { online: runtimeController?.isActive() ?? false };
+  });
   ipcMain.handle("desktop.setup.state", (event) => {
     if (!fromSetupWindow(event)) return null;
     return {
@@ -1041,4 +1156,5 @@ app.on("window-all-closed", () => {
 app.on("before-quit", () => {
   quitting = true;
   clearTimeout(warmWindowTimer);
+  void stopDesktopRuntime();
 });

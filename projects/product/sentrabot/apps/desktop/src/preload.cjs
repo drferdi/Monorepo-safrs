@@ -14,6 +14,9 @@ contextBridge.exposeInMainWorld("sentrabotDesktop", {
     download: () => ipcRenderer.invoke("desktop.update.download"),
     install: () => ipcRenderer.invoke("desktop.update.install"),
   },
+  runtime: {
+    state: () => ipcRenderer.invoke("desktop.runtime.state"),
+  },
   oauth: {
     onCallback: (listener) => {
       // The IpcRendererEvent stays in the preload: the renderer only sees the code.

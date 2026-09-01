@@ -7,6 +7,8 @@ export * from "./memory-config.js";
 export * from "./messages.js";
 export * from "./model-credentials.js";
 export * from "./phone.js";
+export * from "./platform.js";
+export * from "./private-state-migration.js";
 export * from "./repos.js";
 export * from "./scope.js";
 export * from "./transaction-retry.js";
