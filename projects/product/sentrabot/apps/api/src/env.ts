@@ -80,8 +80,8 @@ export interface AppEnv {
   openaiApiKey: string | undefined;
   managedAiFreeBudgetMicros: bigint | undefined;
   /**
-   * Experimental hybrid control-plane relay stream (/v1/relay/*, /v1/events). No client
-   * consumes it yet, so it stays unmounted unless SENTRABOT_CONTROL_PLANE_RELAY=enabled.
+   * Experimental hybrid control-plane relay stream (/v1/relay/*). No client consumes it yet,
+   * so it stays unmounted unless SENTRABOT_CONTROL_PLANE_RELAY=enabled.
    */
   controlPlaneRelay: boolean;
 }

@@ -44,7 +44,7 @@ describe("ciphertext relay", () => {
       subscribe,
     });
 
-    const response = await app.request("/v1/events?deviceId=device-1&runtimeId=runtime-1");
+    const response = await app.request("/v1/relay/events?deviceId=device-1&runtimeId=runtime-1");
 
     expect(response.status).toBe(403);
     expect(subscribe).not.toHaveBeenCalled();

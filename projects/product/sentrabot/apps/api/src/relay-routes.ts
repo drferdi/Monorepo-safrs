@@ -69,7 +69,6 @@ export function createRelayRoutes(dependencies: {
       await unsubscribe();
     });
   };
-  app.get("/v1/events", eventStream);
   app.get("/v1/relay/events", eventStream);
   return app;
 }
