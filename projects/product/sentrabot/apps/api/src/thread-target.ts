@@ -13,6 +13,7 @@ import {
   projectMessages,
   resolveGroupTargetBotIds,
   runFailureError,
+  runLog,
 } from "@sentrabot/core";
 import {
   appendEventInTransaction,
@@ -674,6 +675,13 @@ export async function stopThreadRuns(
     where: { id: { in: runIds } },
     data: { status: "cancelled", completedAt: new Date() },
   });
+  for (const runId of runIds)
+    runLog("run.cancelled", {
+      runId,
+      threadId: target.threadId,
+      workspaceId: actor.workspaceId,
+      by: actor.userId,
+    });
   const computers = runIds.length
     ? await deps.prisma.computer.findMany({
         where: { executionRunId: { in: runIds } },

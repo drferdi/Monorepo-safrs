@@ -98,6 +98,7 @@ async function main() {
           "packages/testkit/src/host-approval.test.ts",
           "packages/testkit/src/connections.test.ts",
           "packages/adapters/src/wakeup.postgres.test.ts",
+          "packages/adapters/src/graphile-restart.postgres.test.ts",
           "packages/adapters/src/realtime.postgres.test.ts",
           "packages/adapters/src/job-reconciler.postgres.test.ts",
         ].join(" "),

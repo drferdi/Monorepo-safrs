@@ -617,6 +617,13 @@ export function createRunExecutor(deps: ExecutorDeps) {
       } catch {
         // Best effort: the run is already queued.
       }
+      runLog("routine.fired", {
+        routineId,
+        runId: claimed.id,
+        botId: bot.id,
+        threadId: thread.id,
+        scheduledFor,
+      });
       if (isOneShotRoutineCrons(routine.crons)) {
         try {
           await deps.jobs.cancel(routineJobKey(routine.id));
@@ -688,6 +695,7 @@ export function createRunExecutor(deps: ExecutorDeps) {
         fence,
         trigger: run.trigger,
       });
+      const attemptStartedAt = Date.now();
       const leaseTarget = await deps.prisma.bot.findUniqueOrThrow({
         where: { id: run.botId },
         select: { computerId: true, computerSwitching: true },
@@ -980,6 +988,12 @@ export function createRunExecutor(deps: ExecutorDeps) {
         const storedComputer = bot.computer;
         const computerMode = parseComputerMode(storedComputer.scope);
         const computer = await provisionComputer(deps, storedComputer.id, context, "bot");
+        runLog("computer.provisioned", {
+          runId,
+          computerId: storedComputer.id,
+          computerKind: computer.kind,
+          providerId: deps.sandbox.describe().id,
+        });
         screenRelease = { computer, context };
         scheduleComputerSleep(deps.jobs, storedComputer.id);
         const currentTurnFiles = deps.artifacts
@@ -2706,6 +2720,17 @@ export function createRunExecutor(deps: ExecutorDeps) {
                   outcome: "completed",
                   blocks: [{ kind: "text", text: stuckText }],
                 });
+                runLog(
+                  "run.finalized",
+                  {
+                    runId,
+                    workerId,
+                    fence,
+                    outcome: "completed",
+                    durationMs: Date.now() - attemptStartedAt,
+                  },
+                  "info",
+                );
                 if (!stopped) return;
                 if (run.trigger === "bot_message") {
                   await returnBotMessageOutcome(
@@ -2847,6 +2872,17 @@ export function createRunExecutor(deps: ExecutorDeps) {
             outcome: "completed",
             blocks,
           });
+          runLog(
+            "run.finalized",
+            {
+              runId,
+              workerId,
+              fence,
+              outcome: "completed",
+              durationMs: Date.now() - attemptStartedAt,
+            },
+            "info",
+          );
           if (!completed) return;
           if (run.trigger === "bot_message" && text) {
             await returnBotMessageOutcome(
@@ -2914,6 +2950,17 @@ export function createRunExecutor(deps: ExecutorDeps) {
             outcome: "failed",
             error: message,
           });
+          runLog(
+            "run.finalized",
+            {
+              runId,
+              workerId,
+              fence,
+              outcome: "failed",
+              durationMs: Date.now() - attemptStartedAt,
+            },
+            "error",
+          );
           if (!failed) return;
           if (run.trigger === "bot_message") {
             await returnBotMessageOutcome(
