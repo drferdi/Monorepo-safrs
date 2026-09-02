@@ -64,11 +64,12 @@ by default, and only the deployment owner can enable it. On a host computer the 
 matches. Containment on Windows relies on Win32 handles opened relative to a held parent handle
 (`packages/adapters/src/desktop-sandbox-win32-path.ts`); Node's descriptors are not visible to the
 C runtime, so the module verifies handle identity (volume serial + file index) instead of bridging
-descriptors, and a directory whose pathname no longer resolves to the held inode fails closed. Two
-residual properties: a child that is a reparse point (junction or symlink) is rejected outright
-on Windows, which is stricter than the POSIX branch; and an identity mismatch detected right after
-an exclusive create can leave an empty file inside the held parent directory. The executable bit
-cannot be persisted on Windows.
+descriptors, and a directory whose pathname no longer resolves to the held inode fails closed. When
+an identity mismatch is detected right after an exclusive create, the created object is deleted
+through its own handle rather than by pathname, so nothing is left behind in the held parent. One
+residual property remains: a child that is a reparse point (junction or symlink) is rejected
+outright on Windows, which is stricter than the POSIX branch. The executable bit cannot be
+persisted on Windows.
 
 ## Optional remote providers and what they receive
 

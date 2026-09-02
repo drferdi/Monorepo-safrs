@@ -174,6 +174,13 @@ import {
   renderPlotSpecToSvg,
   searchChartCatalog,
 } from "./plot-tool.js";
+import { completeEffect, recordEffect, uncertainEffectError } from "./run-effects.js";
+import {
+  computerRetryDelay,
+  computerRunRequeueData,
+  renewRunLease,
+  requeueComputerRun,
+} from "./run-lifecycle.js";
 import {
   commitConsumedRunSecret,
   reconcileManagedConnection,
@@ -206,7 +213,7 @@ import {
   skillReadFromTool,
   skillUpdateFromTool,
 } from "./skill-tools.js";
-import { type TakeoverResumeCheckpoint, takeoverResumeFromRelease } from "./takeover-resume.js";
+import { takeoverResumeFromRelease } from "./takeover-resume.js";
 import { getActiveTeachingSession, parsePlaybook } from "./teaching-session.js";
 import {
   attachWorkspaceFileToThread,
@@ -3042,26 +3049,6 @@ async function notifyRun(
     });
 }
 
-async function renewRunLease(
-  deps: ExecutorDeps,
-  runId: string,
-  workerId: string,
-  fence: number,
-): Promise<boolean> {
-  const renewed = await deps.prisma.run.updateMany({
-    where: { id: runId, status: "running", leaseOwner: workerId, leaseFence: fence },
-    data: { leaseExpiresAt: new Date(Date.now() + 5 * 60_000) },
-  });
-  if (renewed.count !== 1) {
-    runLog("run.lease.lost", { runId, workerId, fence }, "warn");
-  }
-  return renewed.count === 1;
-}
-
-function computerRetryDelay(fence: number): number {
-  return Math.min(10_000, 250 * 2 ** Math.min(Math.max(fence - 1, 0), 5));
-}
-
 export function threadContextForRun<T>(
   trigger: string,
   context: {
@@ -3107,37 +3094,6 @@ export function completionNotificationBody(assembled: string, blocks: MessageBlo
     .filter((block): block is Extract<MessageBlock, { kind: "text" }> => block.kind === "text")
     .map((block) => block.text)
     .join("");
-}
-
-function computerRunRequeueData(
-  resumeCheckpoint: TakeoverResumeCheckpoint | null,
-  error: string | null = null,
-) {
-  return {
-    status: "queued" as const,
-    error,
-    leaseOwner: null,
-    leaseExpiresAt: null,
-    checkpoint: resumeCheckpoint,
-  };
-}
-
-async function requeueComputerRun(
-  deps: ExecutorDeps,
-  runId: string,
-  workerId: string,
-  fence: number,
-  resumeCheckpoint: TakeoverResumeCheckpoint | null,
-): Promise<void> {
-  const released = await deps.prisma.run.updateMany({
-    where: { id: runId, status: "running", leaseOwner: workerId, leaseFence: fence },
-    data: computerRunRequeueData(resumeCheckpoint),
-  });
-  if (released.count !== 1) return;
-  await deps.jobs.enqueue({
-    ...runContinueJob(runId),
-    availableAt: new Date(Date.now() + computerRetryDelay(fence)),
-  });
 }
 
 function redactBlocks(blocks: MessageBlock[], secrets: string[]): MessageBlock[] {
@@ -3189,74 +3145,6 @@ async function persistMessageInTransaction(
     payload: { messageId: message.id, role, blocks },
   });
   return { message, eventSeq: event.seq };
-}
-
-async function recordEffect(
-  deps: ExecutorDeps,
-  run: { id: string; workspaceId: string; threadId: string; botId: string },
-  kind: string,
-  executionId: string,
-  request: Record<string, unknown>,
-) {
-  const existing = await deps.prisma.externalEffect.findUnique({
-    where: { idempotencyKey: executionId },
-  });
-  if (existing) {
-    await deps.events.append({
-      workspaceId: run.workspaceId,
-      threadId: run.threadId,
-      botId: run.botId,
-      type: "effect.reconciled",
-      runId: run.id,
-      payload: { executionId, kind },
-    });
-    runLog("run.effect.recorded", {
-      runId: run.id,
-      kind,
-      idempotencyKey: executionId,
-      status: existing.status,
-    });
-    return { duplicate: true, effect: existing };
-  }
-  const effect = await deps.prisma.externalEffect.create({
-    data: {
-      workspaceId: run.workspaceId,
-      runId: run.id,
-      kind,
-      idempotencyKey: executionId,
-      status: "intended",
-      request: request as never,
-    },
-  });
-  runLog("run.effect.recorded", {
-    runId: run.id,
-    kind,
-    idempotencyKey: executionId,
-    status: effect.status,
-  });
-  return { duplicate: false, effect };
-}
-
-async function completeEffect(
-  deps: ExecutorDeps,
-  effectId: string,
-  expectedStatus: "intended" | "executing",
-  result: unknown,
-) {
-  const storedResult =
-    result &&
-    typeof result === "object" &&
-    (result as { kind?: unknown }).kind === "agent_tool_result" &&
-    "details" in result
-      ? (result as { details: unknown }).details
-      : result;
-  return completeExternalEffect(deps.prisma, effectId, expectedStatus, storedResult as never);
-}
-
-function uncertainEffectError(toolName: string): Error {
-  return new Error(
-    `tool ${toolName} has an earlier execution with an uncertain outcome; it may already have completed, so verify the destination before retrying`,
-  );
 }
 
 async function runSandboxCommand(

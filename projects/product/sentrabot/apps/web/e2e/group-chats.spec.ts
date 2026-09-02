@@ -153,8 +153,13 @@ test("create group from + and see two bots in one transcript", async ({ page }, 
     timeout: 60_000,
   });
   const transcript = page.getByTestId("transcript");
-  await expect(transcript.getByText("Researcher", { exact: true }).first()).toBeVisible();
-  await expect(transcript.getByText("Research Writer", { exact: true }).first()).toBeVisible();
+  // The two replies arrive sequentially from scripted runs; give the second one the same budget.
+  await expect(transcript.getByText("Researcher", { exact: true }).first()).toBeVisible({
+    timeout: 60_000,
+  });
+  await expect(transcript.getByText("Research Writer", { exact: true }).first()).toBeVisible({
+    timeout: 60_000,
+  });
   const researcherReply = transcript.getByText("Researcher", { exact: true }).first().locator("..");
   const [speechRequest] = await Promise.all([
     page.waitForRequest(

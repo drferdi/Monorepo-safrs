@@ -191,7 +191,13 @@ describe("sandbox conformance", () => {
     expect(events).toContainEqual({ type: "stderr", data: "command aborted\n" });
 
     await desktop.destroy(computer, ctx);
-    rmSync(root, { recursive: true, force: true });
+    // The killed child can keep the cwd open for a while on Windows; the temp dir is
+    // disposable, so cleanup is best effort here rather than a source of flakes.
+    try {
+      rmSync(root, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+    } catch {
+      // leave the temp directory behind
+    }
   });
 
   it("reuses one desktop machine per bot", async () => {

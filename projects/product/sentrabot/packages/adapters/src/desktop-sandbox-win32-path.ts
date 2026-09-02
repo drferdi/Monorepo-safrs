@@ -32,6 +32,10 @@ const OBJ_CASE_INSENSITIVE = 0x00000040;
 const GENERIC_READ = 0x80000000;
 const GENERIC_WRITE = 0x40000000;
 const SYNCHRONIZE = 0x00100000;
+/** Standard right required before FileDispositionInformation may set delete-on-close. */
+const DELETE_ACCESS = 0x00010000;
+/** FILE_INFORMATION_CLASS.FileDispositionInformation */
+const FILE_DISPOSITION_INFORMATION_CLASS = 13;
 const FILE_SHARE_ALL = 0x00000007;
 const FILE_ATTRIBUTE_NORMAL = 0x00000080;
 const FILE_ATTRIBUTE_DIRECTORY = 0x00000010;
@@ -54,12 +58,14 @@ type Win32Handle = number | bigint | object;
 
 type NtFns = {
   NtCreateFile: koffi.KoffiFunction;
+  NtSetInformationFile: koffi.KoffiFunction;
   RtlInitUnicodeString: koffi.KoffiFunction;
   CreateFileW: koffi.KoffiFunction;
   GetFileInformationByHandle: koffi.KoffiFunction;
   CloseHandle: koffi.KoffiFunction;
   GetFinalPathNameByHandleW: koffi.KoffiFunction;
   objectAttributesSize: number;
+  fileDispositionInformationSize: number;
 };
 
 let cached: NtFns | undefined | null;
@@ -99,6 +105,9 @@ function nt(): NtFns {
     Status: "intptr_t",
     Information: "uintptr_t",
   });
+  const FILE_DISPOSITION_INFORMATION = koffi.struct("FILE_DISPOSITION_INFORMATION", {
+    DeleteFile: "uint8_t",
+  });
   koffi.struct("BY_HANDLE_FILE_INFORMATION", {
     dwFileAttributes: "uint32_t",
     ftCreationTimeLow: "uint32_t",
@@ -119,6 +128,9 @@ function nt(): NtFns {
     NtCreateFile: ntdll.func(
       "int32_t __stdcall NtCreateFile(_Out_ void **FileHandle, uint32_t DesiredAccess, OBJECT_ATTRIBUTES *ObjectAttributes, IO_STATUS_BLOCK *IoStatusBlock, void *AllocationSize, uint32_t FileAttributes, uint32_t ShareAccess, uint32_t CreateDisposition, uint32_t CreateOptions, void *EaBuffer, uint32_t EaLength)",
     ),
+    NtSetInformationFile: ntdll.func(
+      "int32_t __stdcall NtSetInformationFile(void *FileHandle, IO_STATUS_BLOCK *IoStatusBlock, FILE_DISPOSITION_INFORMATION *FileInformation, uint32_t Length, uint32_t FileInformationClass)",
+    ),
     RtlInitUnicodeString: ntdll.func(
       "void __stdcall RtlInitUnicodeString(_Out_ UNICODE_STRING *DestinationString, void *SourceString)",
     ),
@@ -133,8 +145,34 @@ function nt(): NtFns {
       "uint32_t __stdcall GetFinalPathNameByHandleW(void *hFile, void *lpszFilePath, uint32_t cchFilePath, uint32_t dwFlags)",
     ),
     objectAttributesSize: koffi.sizeof(OBJECT_ATTRIBUTES),
+    fileDispositionInformationSize: koffi.sizeof(FILE_DISPOSITION_INFORMATION),
   };
   return cached;
+}
+
+/** NTSTATUS 0xC0000001 as signed int32, returned when the mark could not even be attempted. */
+const STATUS_UNSUCCESSFUL = -1073741823;
+
+/**
+ * Set delete-on-close on the object the handle names, so it disappears when the last
+ * handle to it closes. Addresses the inode through the handle, never through a pathname,
+ * so nothing that was swapped into the name in the meantime can be hit. Never throws:
+ * the caller is already unwinding an error it must not lose.
+ */
+function markForDeleteOnClose(handle: Win32Handle): number {
+  try {
+    const api = nt();
+    const ioStatus = {};
+    return api.NtSetInformationFile(
+      handle,
+      ioStatus,
+      { DeleteFile: 1 },
+      api.fileDispositionInformationSize >>> 0,
+      FILE_DISPOSITION_INFORMATION_CLASS >>> 0,
+    ) as number;
+  } catch {
+    return STATUS_UNSUCCESSFUL;
+  }
 }
 
 /**
@@ -243,9 +281,12 @@ function ntCreateRelative(
     };
     const ioStatus = {};
     const handleOut: Array<unknown> = [null];
+    // DELETE is requested only for objects this call creates, so a failed identity check
+    // can retract them through the handle. Opens of existing objects keep the old mask.
+    const deleteAccess = createDisposition === FILE_CREATE ? DELETE_ACCESS : 0;
     const status = api.NtCreateFile(
       handleOut,
-      (GENERIC_READ | GENERIC_WRITE | SYNCHRONIZE) >>> 0,
+      (GENERIC_READ | GENERIC_WRITE | SYNCHRONIZE | deleteAccess) >>> 0,
       objectAttributes,
       ioStatus,
       null,
@@ -272,16 +313,26 @@ function ntCreateRelative(
  * names the inode; its final path is re-opened by Node and then required to be the
  * same inode, so a swap between the two opens fails closed.
  */
-function nodeHandleFromNtHandle(handle: Win32Handle, flags: number) {
+function nodeHandleFromNtHandle(
+  handle: Win32Handle,
+  flags: number,
+  options: {
+    /** Retract the object through its handle when the identity check fails. */
+    deleteOnMismatch?: boolean;
+    /** Test seam only: substitutes the re-open so a mismatch can be provoked. */
+    open?: (target: string, openFlags: number) => number;
+  } = {},
+) {
   const api = nt();
   let fd = -1;
   let finalPath = "";
   try {
     finalPath = finalPathFromHandle(handle);
-    fd = openSync(finalPath, flags);
+    fd = (options.open ?? openSync)(finalPath, flags);
     assertSameIdentity(handle, fd);
   } catch (error) {
     if (fd >= 0) closeSync(fd);
+    if (options.deleteOnMismatch) markForDeleteOnClose(handle);
     api.CloseHandle(handle);
     throw error;
   }
@@ -356,7 +407,7 @@ export function createExclusiveChildViaDirectoryFdWin32(
     throw err;
   }
   if (status !== 0 || handle == null) escapeWorkspace();
-  return nodeHandleFromNtHandle(handle, fsConstants.O_RDWR);
+  return nodeHandleFromNtHandle(handle, fsConstants.O_RDWR, { deleteOnMismatch: true });
 }
 
 /** Creates a child directory relative to the held parent. Returns its final path when available. */
@@ -401,3 +452,21 @@ export function openChildDirectoryViaDirectoryFdWin32(
   if (status !== 0 || handle == null) escapeWorkspace();
   return nodeHandleFromNtHandle(handle, fsConstants.O_RDONLY);
 }
+
+/**
+ * Test seam, not public API. An identity mismatch cannot be provoked from outside:
+ * the re-open follows the handle's own final path, so it always lands on the same
+ * inode. Tests inject a different descriptor to exercise the failure branch.
+ */
+export const __test = {
+  ntCreateRelative,
+  nodeHandleFromNtHandle,
+  markForDeleteOnClose,
+  closeHandle: (handle: Win32Handle) => nt().CloseHandle(handle),
+  FILE_CREATE,
+  FILE_OPEN,
+  FILE_NON_DIRECTORY_FILE,
+  FILE_SYNCHRONOUS_IO_NONALERT,
+  FILE_OPEN_REPARSE_POINT,
+  FILE_ATTRIBUTE_NORMAL,
+};
