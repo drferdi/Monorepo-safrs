@@ -16,6 +16,11 @@ const runtimeArg = process.argv.find((arg) => arg.startsWith("--runtime="));
 const sandboxProvider = sandboxArg?.slice("--sandbox=".length) ?? "fake";
 const e2eSpec = specArg?.slice("--spec=".length);
 const e2eGrep = grepArg?.slice("--grep=".length);
+const workersArg = process.argv.find((arg) => arg.startsWith("--workers="));
+// One worker by default: every spec file shares one API and one web server, and the
+// default expect timeout (20 s) is not enough under parallel load (37/37 pass with one
+// worker; 3 load-dependent failures with the default worker count on 2026-09-02).
+const e2eWorkers = workersArg?.slice("--workers=".length) ?? "1";
 const agentRuntime = runtimeArg?.slice("--runtime=".length) ?? "scripted";
 
 if (Number(integration) + Number(e2e) !== 1) {
@@ -90,6 +95,7 @@ async function main() {
           "packages/testkit/src/voice.test.ts",
           "packages/testkit/src/search.test.ts",
           "packages/testkit/src/executor-lifecycle.test.ts",
+          "packages/testkit/src/host-approval.test.ts",
           "packages/testkit/src/connections.test.ts",
           "packages/adapters/src/wakeup.postgres.test.ts",
           "packages/adapters/src/realtime.postgres.test.ts",
@@ -165,6 +171,7 @@ async function main() {
             "test",
             ...(e2eSpec ? [e2eSpec] : []),
             ...(e2eGrep ? ["--grep", e2eGrep] : []),
+            ...(e2eWorkers ? ["--workers", e2eWorkers] : []),
           ],
           {
             ...process.env,

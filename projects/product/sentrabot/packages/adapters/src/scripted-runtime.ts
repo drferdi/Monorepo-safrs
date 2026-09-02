@@ -256,6 +256,16 @@ export function inferScript(
       },
     ];
   }
+  const shellCommand = /run the shell command "([^"]+)"/i.exec(prompt)?.[1];
+  if (shellCommand) {
+    return [
+      {
+        assistant: "Command finished.",
+        toolCalls: [{ name: "shell", args: { command: shellCommand } }],
+        complete: true,
+      },
+    ];
+  }
   if (lower.startsWith("run taught skill:") || lower.includes("this is a safe test")) {
     return [
       {
