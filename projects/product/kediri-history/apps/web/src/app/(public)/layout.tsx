@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import {
   Cinzel,
+  Cormorant_Garamond,
   Geist,
   Geist_Mono,
   IBM_Plex_Sans,
   Newsreader,
+  Noto_Sans_Javanese,
 } from "next/font/google";
 import type React from "react";
 
@@ -65,6 +67,20 @@ const body = IBM_Plex_Sans({
   display: "swap",
 });
 
+const openingDisplay = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-cormorant",
+  display: "swap",
+});
+
+const javanese = Noto_Sans_Javanese({
+  subsets: ["javanese"],
+  weight: "400",
+  variable: "--font-noto-javanese",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: {
     default: "Kediri — A Living Civilization",
@@ -90,7 +106,7 @@ export default function PublicLayout({
     <html
       lang="id"
       suppressHydrationWarning
-      className={`${narrative.variable} ${interfaceFont.variable} ${archive.variable} ${royal.variable} ${body.variable}`}
+      className={`${narrative.variable} ${interfaceFont.variable} ${archive.variable} ${royal.variable} ${body.variable} ${openingDisplay.variable} ${javanese.variable}`}
     >
       <body>
         <a className="skip-link" href="#historical-content" tabIndex={0}>

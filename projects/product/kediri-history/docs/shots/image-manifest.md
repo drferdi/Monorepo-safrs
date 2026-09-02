@@ -26,7 +26,7 @@
 | 07 | `1157-words-become-monuments` | 1157 | `07 - 1157 — Words Become Monuments.png` | Naskah kuno terbuka, tinta emas, iluminasi kereta perang | Visualisasi artistik | ✅ |
 | 08 | `panji-story-left-kediri` | ±1200+ | `08 - Panji — Story That Left Kediri.png` | Hamparan banyak naskah tradisi berbeda — cerita yang menyebar | Visualisasi artistik | ✅ |
 | 09 | `1222-ganter` | 1222 | `09 - 1222 — Ganter.png` | Peta kartografis merah-bara: PANJALU/JENGGALA/MADIUN/LUMAJANG + legenda | Visualisasi artistik | ✅ |
-| 10 | `1292-the-return` | 1292 | `10 - 1292 — The Return.png` | Potret Jayakatwang + peta rute Kadiri→Daha — dipasang 2026-08-29, lihat flag F1 (caveat terbuka) | Visualisasi artistik | ✅ |
+| 10 | `1292-the-return` | 1292 | `10-1292-the-return.webp` | Rekonstruksi artistik tanpa teks: siluet anonim, suasana istana berbara, dan geografi kampanye tanpa label | Visualisasi artistik | ✅ |
 | 11 | `1293-last-kingdom` | 1293 | `11 - 1293 — The Last Kingdom.png` | Montase ungu: tiga vektor kekuatan, kapal Yuan, peta strategi | Visualisasi artistik | ✅ |
 | 12 | `jayabaya-after-jayabaya` | — | `12 - Jayabaya After Jayabaya.png` | Raja bertakhta di tengah kerumunan — versi dasar (lihat flag F5) | Visualisasi artistik | ✅ |
 | 13 | `shadow-archive` | — | `13 - Shadow Archive.png` | Gunung Kelud, Lembu Suro, Calon Arang — komposit folklor gelap | Visualisasi artistik | ✅ |
@@ -57,14 +57,11 @@ Total hero image produksi: **27** (Finale menggunakan ulang citra 00 sesuai §5/
 
 ## Flag integritas untuk keputusan Chief
 
-- **F1 — Citra 10 (1292): penangguhan DITUTUP perintah Chief 2026-08-29; caveat teks
-  terbakar TETAP TERBUKA.** Aset revisi dipasang (`ready=true`, derivatif webp
-  digenerate ulang dari `project-images`), tetapi inspeksi pemasangan menemukan
-  kesalahan lama masih ada di raster: typo "JAYAKASTWANG", frasa "RAJA KEDAHIRAN
-  TERAKHIR", dan kapsi "dikalahkan oleh pasukan **Jayabaya** (Raden Wijaya)" — yang
-  benar pasukan **Raden Wijaya**; Jayabhaya adalah raja abad ke-12. Dilaporkan ke
-  Chief pada sesi pemasangan; revisi raster berikutnya diharapkan memperbaikinya
-  sebelum rilis publik final.
+- **F1 — Citra 10 (1292): RESOLVED 2026-08-31.** Derivatif WebP editorial diganti
+  dengan rekonstruksi artistik tanpa teks, watermark, maupun wajah terautentikasi.
+  Tiga kesalahan raster lama (`JAYAKASTWANG`, `RAJA KEDAHIRAN TERAKHIR`, dan
+  atribusi pasukan Jayabaya) tidak lagi dapat terkirim. Nama dan atribusi kanonik
+  kini berada di DOM yang dapat dikoreksi; original `project-images` tetap utuh.
 - **F2 — Citra 16 (1869)** memuat kapsi internal "Foto Arsip ± 1880-an (Kolonial
   Belanda)" pada render AI — kategori yang §8 larang bila disajikan sebagai fotografi
   arsip. Aman di bawah label "Visualisasi artistik"; penggunaan produksi (CMS) butuh

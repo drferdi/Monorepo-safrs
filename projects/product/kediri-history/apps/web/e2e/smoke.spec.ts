@@ -1593,8 +1593,7 @@ test("deep-linked journey skips the time-based prologue intro", async ({
 
   await page.goto("/journey#879-first-mark");
 
-  await expect(page.locator(".prologue-credit")).toHaveCSS("opacity", "0");
-  await expect(page.locator(".prologue-title-card")).toHaveCSS("opacity", "0");
+  await expect(page.locator('[data-motion="master"]')).toBeVisible();
   await expect
     .poll(() =>
       page.evaluate(() => document.documentElement.getAttribute("data-intro")),
@@ -1624,8 +1623,74 @@ test("journey reload at a restored scroll position skips the prologue intro", as
   await expect
     .poll(() => page.evaluate(() => window.scrollY), { timeout: 10_000 })
     .toBeGreaterThan(0);
-  await expect(page.locator(".prologue-credit")).toHaveCSS("opacity", "0");
-  await expect(page.locator(".prologue-title-card")).toHaveCSS("opacity", "0");
+  await expect(page.locator('[data-motion="master"]')).toBeVisible();
+});
+
+test("first-load prologue keeps chrome hidden through the exact eight-second opening", async ({
+  page,
+}, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop", "Diuji sekali pada desktop.");
+
+  await page.goto("/journey");
+  await expect
+    .poll(() => page.evaluate(() => document.documentElement.dataset.intro))
+    .not.toBeUndefined();
+  await expect(page.locator(".site-nav")).toBeHidden();
+  await expect(page.locator('[data-brantas-thread="true"]')).toHaveCSS(
+    "opacity",
+    "0",
+  );
+  await expect(page.locator('[data-opening-frame="1"]')).toContainText("ꦱꦸꦩꦁꦒ");
+
+  await page.waitForTimeout(2_150);
+  await expect(page.locator('[data-opening-frame="2"]')).toHaveCSS(
+    "opacity",
+    "1",
+  );
+  await expect(page.locator('[data-opening-frame="3"]')).toHaveText(
+    "Satu sungai. Tujuh kerajaan. Satu industri.",
+  );
+
+  await page.waitForTimeout(6_150);
+  await expect
+    .poll(() => page.evaluate(() => document.documentElement.dataset.intro))
+    .toBeUndefined();
+  await expect(page.locator(".site-nav")).toBeVisible();
+  await expect(page.locator('[data-brantas-thread="true"]')).toHaveCSS(
+    "opacity",
+    "1",
+  );
+});
+
+test("Scene 10 exposes correctable canonical text while its raster remains decorative", async ({
+  page,
+}) => {
+  await page.goto("/journey#1292-the-return");
+  const scene = page.locator('[id="1292-the-return"]');
+
+  await expect(scene).toContainText("JAYAKATWANG");
+  await expect(scene).toContainText("RAJA KEDIRIAN TERAKHIR");
+  await expect(scene).toContainText("dikalahkan oleh pasukan Raden Wijaya");
+  await expect(scene).not.toContainText("JAYAKASTWANG");
+  await expect(scene).not.toContainText("KEDAHIRAN");
+  await expect(scene).not.toContainText("pasukan Jayabaya");
+});
+
+test("Brantas line remains decorative and static when reduced motion is requested", async ({
+  browser,
+}) => {
+  const context = await browser.newContext({ reducedMotion: "reduce" });
+  const page = await context.newPage();
+  await page.goto("/journey#1042-river-divides-kingdom");
+
+  const thread = page.locator('[data-brantas-thread="true"]');
+  await expect(thread).toHaveAttribute("aria-hidden", "true");
+  await expect(thread.locator("[data-brantas-path]")).toBeVisible();
+  await expect(thread.locator("[data-brantas-path]")).toHaveCSS(
+    "opacity",
+    "0.48",
+  );
+  await context.close();
 });
 
 test("original video perspective preserves the full 16:9 frame", async ({

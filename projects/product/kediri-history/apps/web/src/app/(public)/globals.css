@@ -637,6 +637,101 @@ p {
   grid-area: frame;
 }
 
+/* Empat frame pembuka hanya ada pada kunjungan baru desktop/tablet. */
+.prologue-opening {
+  display: none;
+}
+
+html[data-intro] .site-nav {
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+html[data-intro] .prologue-stage {
+  background: var(--cinema-canvas);
+}
+
+html[data-intro] .prologue-stage > :not(.prologue-opening) {
+  opacity: 0;
+  pointer-events: none;
+}
+
+html[data-intro] .prologue-opening {
+  position: relative;
+  z-index: 6;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 100%;
+  padding: var(--shell-gutter);
+  color: var(--cinema-ink);
+  text-align: center;
+}
+
+.prologue-opening-frame {
+  grid-area: 1 / 1;
+  margin: 0;
+  color: var(--cinema-ink);
+  opacity: 0;
+}
+
+.prologue-opening-frame[data-opening-frame="1"] {
+  max-width: 32ch;
+  font-family: var(--font-noto-javanese), var(--type-interface);
+  font-size: clamp(0.8rem, 1.1vw, 1rem);
+  line-height: 1.5;
+}
+
+.prologue-opening-frame[data-opening-frame="2"] {
+  display: grid;
+  gap: var(--space-2);
+  font-family: var(--font-cormorant), var(--type-narrative);
+  font-size: clamp(2.25rem, 6vw, 5.5rem);
+  line-height: 0.94;
+}
+
+.prologue-opening-title,
+.prologue-opening-remainder {
+  display: block;
+}
+
+.prologue-opening-remainder {
+  position: relative;
+  min-height: 1.2em;
+  font-size: 0.46em;
+}
+
+.prologue-opening-remainder [data-opening-script="javanese"],
+.prologue-opening-remainder [data-opening-script="latin"] {
+  inset: 0;
+}
+
+.prologue-opening-remainder [data-opening-script="javanese"] {
+  font-family: var(--font-noto-javanese), var(--type-interface);
+}
+
+.prologue-opening-remainder [data-opening-script="latin"] {
+  position: absolute;
+  font-family: var(--font-cormorant), var(--type-narrative);
+}
+
+.prologue-opening-frame[data-opening-frame="3"] {
+  max-width: 34ch;
+  font-family: var(--type-interface);
+  font-size: clamp(0.9rem, 1.3vw, 1.15rem);
+  line-height: 1.5;
+  letter-spacing: 0.05em;
+}
+
+.prologue-opening-frame[data-opening-frame="4"] {
+  align-self: start;
+  margin-top: 38.2svh;
+  font-family: var(--font-cormorant), var(--type-narrative);
+  font-size: clamp(2.8rem, 8vw, 7rem);
+  line-height: 0.9;
+}
+
 .prologue-surface {
   transform-origin: 54% 52%;
 }
@@ -795,6 +890,48 @@ p {
   text-decoration: none;
 }
 
+/* Garis Brantas: dekoratif, tersubordinasi, dan tidak pernah menjadi konten. */
+.brantas-visual-thread {
+  position: fixed;
+  z-index: 3;
+  inset-inline-end: var(--shell-gutter);
+  inset-block-end: clamp(3rem, 12svh, 8rem);
+  width: min(24vw, 18rem);
+  height: clamp(2.25rem, 6vw, 4.5rem);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.brantas-visual-thread__static {
+  fill: none;
+  stroke: var(--cinema-accent);
+  stroke-linecap: round;
+  stroke-width: 1.5;
+  opacity: 0.56;
+}
+
+@media (max-width: 47.999rem) {
+  .brantas-visual-thread {
+    inset-block-end: var(--space-3);
+    width: min(36vw, 10rem);
+    height: 2.5rem;
+  }
+
+  .brantas-visual-thread__static {
+    opacity: 0.48;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brantas-visual-thread__static {
+    opacity: 0.48;
+  }
+}
+
+html[data-intro] .brantas-visual-thread {
+  opacity: 0;
+}
+
 /* ---------- handoff: motif di dalam dunia shot, bukan rule antarsection ---------- */
 
 .scene-handoff {
@@ -822,12 +959,6 @@ p {
   inset-block-end: clamp(5rem, 15svh, 9rem);
   inset-inline-end: var(--shell-gutter);
   transform-origin: right center;
-}
-
-.scene-handoff[data-handoff-phase="outgoing"] {
-  filter: drop-shadow(
-    0 0 0.35rem color-mix(in srgb, var(--cinema-accent) 48%, transparent)
-  );
 }
 
 .scene-handoff > span {

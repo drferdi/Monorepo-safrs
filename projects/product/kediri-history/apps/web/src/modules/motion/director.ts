@@ -120,6 +120,12 @@ interface Cue {
 /** Histeresis pembalikan supaya ambang tidak bergetar di tepi. */
 const REVERSE_SLACK = 0.05;
 
+export const PROLOGUE_OPENING_DURATION = 8;
+export const OPENING_FRAME_1_AT = 0;
+export const OPENING_FRAME_2_AT = 2;
+export const OPENING_FRAME_3_AT = 4;
+export const OPENING_FRAME_4_AT = 6;
+
 /**
  * Intro hanya milik entry Journey baru di puncak dokumen. Hash landing dan
  * scroll restoration harus tetap berada pada keadaan baca server-rendered.
@@ -128,7 +134,9 @@ function isPrologueIntroEligible(): boolean {
   return (
     typeof window !== "undefined" &&
     window.location.hash === "" &&
-    window.scrollY <= 0
+    window.scrollY <= 0 &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+    window.matchMedia("(min-width: 48rem)").matches
   );
 }
 
@@ -157,204 +165,118 @@ export function createReadingDirector(
    * bukan gulir, jadi ia hidup di Jam 2 dan dipasang SINKRON (tidak menunggu
    * font) supaya kegelapannya menutup sedini mungkin setelah hidrasi.
    */
-  if (key === "prologueReveal") {
+  if (key === "prologueReveal" && isPrologueIntroEligible()) {
     const surface = root.querySelector<HTMLElement>(".prologue-surface");
-    const credit = root.querySelector<HTMLElement>(".prologue-credit");
-    const titleCard = root.querySelector<HTMLElement>(".prologue-title-card");
-    if (!isPrologueIntroEligible()) {
-      document.documentElement.removeAttribute("data-intro");
-      const overlays = [credit, titleCard].filter(
-        (element): element is HTMLElement => element !== null,
+    const plate = root.querySelector<HTMLElement>(".prologue-plate");
+    const opening = root.querySelector<HTMLElement>(".prologue-opening");
+    const frame = (index: 1 | 2 | 3 | 4) =>
+      opening?.querySelector<HTMLElement>(
+        `[data-opening-frame="${String(index)}"]`,
       );
-      if (overlays.length > 0) {
-        touched.push(...overlays);
-        gsap.set(overlays, { opacity: 0 });
+    const frame1 = frame(1);
+    const frame2 = frame(2);
+    const frame3 = frame(3);
+    const frame4 = frame(4);
+    const javanese = opening?.querySelector<HTMLElement>(
+      '[data-opening-script="javanese"]',
+    );
+    const latin = opening?.querySelector<HTMLElement>(
+      '[data-opening-script="latin"]',
+    );
+
+    if (opening && frame1 && frame2 && frame3 && frame4 && javanese && latin) {
+      touched.push(opening);
+      document.documentElement.dataset.intro = "playing";
+      if (surface) {
+        touched.push(surface);
+        gsap.set(surface, { opacity: 0, "--lit": 0 });
       }
-    } else if (surface) {
-      touched.push(surface);
-      const video = surface.querySelector<HTMLVideoElement>("video");
-      gsap.set(surface, { opacity: 0, "--lit": 0 });
-      video?.pause();
-      /*
-       * Serah terima dari gerbang boot (skrip sinkron journey/page.tsx):
-       * pelat naskah ikut dipegang dulu — build() akan melepasnya setelah
-       * seluruh keadaan awal anak-anaknya terpasang — lalu atribut boot
-       * dilepas karena GSAP kini memegang kendali penuh.
-       */
-      const plate = root.querySelector<HTMLElement>(".prologue-plate");
       if (plate) {
         touched.push(plate);
         gsap.set(plate, { opacity: 0 });
       }
-      document.documentElement.removeAttribute("data-intro");
-      // Posisi absolut di satu timeline: t=0 gelap; t=2 video mulai + cahaya
-      // membuka; t=5 (tiga detik SETELAH video mulai, koreksi Chief
-      // 2026-08-28) kredit hadir di atas footage, menahan, lalu pamit.
-      introTimeline = gsap.timeline();
-      if (credit) {
-        touched.push(credit);
-        const logo = credit.querySelector<HTMLElement>('[data-credit="logo"]');
-        const vline = credit.querySelector<HTMLElement>(
-          '[data-credit="vline"]',
-        );
-        const hline = credit.querySelector<HTMLElement>(
-          '[data-credit="hline"]',
-        );
-        const lines = Array.from(
-          credit.querySelectorAll<HTMLElement>('[data-credit="line"]'),
-        );
-        // "chars,words": wrapper kata menjaga spasi antar-kata tetap terbaca
-        // di bawah letter-spacing lebar; yang dianimasikan tetap hurufnya.
-        const creditSplit = SplitText.create(lines, { type: "chars,words" });
-        splits.push(creditSplit);
-        gsap.set(credit, { opacity: 1 });
+      gsap.set([frame1, frame2, frame3, frame4].filter(Boolean), {
+        opacity: 0,
+      });
+      gsap.set(latin, { opacity: 0 });
 
-        // Lockup terakit dari logikanya sendiri: tanda → garis turun →
-        // bidang → nama. Tiga detik setelah video mulai (t=5).
-        const AT = 5;
-        if (logo) {
-          introTimeline.fromTo(
-            logo,
-            { opacity: 0, scale: 0.86, yPercent: 12 },
-            {
-              opacity: 1,
-              scale: 1,
-              yPercent: 0,
-              duration: 0.9,
-              ease: MOTION.text.ease,
-            },
-            AT,
-          );
-        }
-        if (vline) {
-          introTimeline.fromTo(
-            vline,
-            { scaleY: 0 },
-            { scaleY: 1, duration: 0.5, ease: "power2.out" },
-            AT + 0.35,
-          );
-        }
-        if (hline) {
-          introTimeline.fromTo(
-            hline,
-            { scaleX: 0 },
-            { scaleX: 1, duration: 0.8, ease: MOTION.text.ease },
-            AT + 0.55,
-          );
-        }
-        introTimeline.fromTo(
-          creditSplit.chars,
-          { opacity: 0, yPercent: 60, filter: "blur(6px)" },
-          {
-            opacity: 1,
-            yPercent: 0,
-            filter: "blur(0px)",
-            duration: 1,
-            stagger: { each: 0.016, from: "center" },
-            ease: MOTION.text.ease,
-          },
-          AT + 0.7,
-        );
-        // Menahan cukup lama untuk terbaca, lalu pergi satu tarikan napas.
-        introTimeline.to(
-          credit,
-          { opacity: 0, yPercent: -12, duration: 0.8, ease: "power2.in" },
-          AT + 4,
-        );
-      }
-
-      /*
-       * Kartu judul resmi menyusul kredit: "KEDIRI — A Century of History,
-       * Kings, and Industry". Nama besar naik per-huruf, garis emas
-       * menggambar diri, subjudul mengalir dari tengah; menahan, lalu pamit
-       * sebelum koreografi gulir memimpin.
-       */
-      const titleCard = root.querySelector<HTMLElement>(".prologue-title-card");
-      if (titleCard) {
-        touched.push(titleCard);
-        const name = titleCard.querySelector<HTMLElement>(
-          '[data-title-card="name"]',
-        );
-        const rule = titleCard.querySelector<HTMLElement>(
-          '[data-title-card="rule"]',
-        );
-        const sub = titleCard.querySelector<HTMLElement>(
-          '[data-title-card="sub"]',
-        );
-        const TITLE_AT = 10;
-        gsap.set(titleCard, { opacity: 1 });
-        if (name) {
-          const nameSplit = SplitText.create(name, {
-            type: "chars",
-            mask: "chars",
-          });
-          splits.push(nameSplit);
-          introTimeline.fromTo(
-            nameSplit.chars,
-            { yPercent: 110, rotateX: -40, transformOrigin: "50% 100% -30px" },
-            {
-              yPercent: 0,
-              rotateX: 0,
-              duration: 1.1,
-              stagger: 0.05,
-              ease: MOTION.text.ease,
-            },
-            TITLE_AT,
-          );
-        }
-        if (rule) {
-          introTimeline.fromTo(
-            rule,
-            { scaleX: 0 },
-            { scaleX: 1, duration: 0.8, ease: MOTION.text.ease },
-            TITLE_AT + 0.55,
-          );
-        }
-        if (sub) {
-          const subSplit = SplitText.create(sub, { type: "chars,words" });
-          splits.push(subSplit);
-          introTimeline.fromTo(
-            subSplit.chars,
-            { opacity: 0, yPercent: 50, filter: "blur(5px)" },
-            {
-              opacity: 1,
-              yPercent: 0,
-              filter: "blur(0px)",
-              duration: 0.9,
-              stagger: { each: 0.012, from: "center" },
-              ease: MOTION.text.ease,
-            },
-            TITLE_AT + 0.75,
-          );
-        }
-        introTimeline.to(
-          titleCard,
-          { opacity: 0, yPercent: -10, duration: 0.9, ease: "power2.in" },
-          TITLE_AT + 4.6,
-        );
-      }
-      introTimeline.call(
-        () => {
-          // Muted + playsinline: play() dari timeline selalu diizinkan; bila
-          // browser tetap menolak, poster diam adalah fallback yang sah.
-          video?.play().catch(() => undefined);
+      introTimeline = gsap.timeline({
+        onComplete: () => {
+          document.documentElement.removeAttribute("data-intro");
         },
-        undefined,
-        2,
+      });
+      introTimeline.fromTo(
+        frame1,
+        { opacity: 0 },
+        { opacity: 0.12, duration: 0.45, ease: "none" },
+        OPENING_FRAME_1_AT,
       );
       introTimeline.to(
-        surface,
-        { opacity: 1, duration: 0.9, ease: "power1.inOut" },
-        2,
+        frame1,
+        { opacity: 0, duration: 0.35, ease: "none" },
+        1.55,
       );
-      // Cahaya membuka bingkai lewat mask --lit yang sama dengan scene lain:
-      // videonya tidak sekadar muncul — ia disingkap.
+      introTimeline.fromTo(
+        frame2,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.45, ease: "power1.out" },
+        OPENING_FRAME_2_AT,
+      );
+      introTimeline.fromTo(
+        javanese,
+        { opacity: 1 },
+        { opacity: 0, duration: 0.45, ease: "power1.inOut" },
+        3.15,
+      );
+      introTimeline.fromTo(
+        latin,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.45, ease: "power1.inOut" },
+        3.15,
+      );
       introTimeline.to(
-        surface,
-        { "--lit": 1, duration: 1.6, ease: MOTION.text.ease },
-        2.15,
+        frame2,
+        { opacity: 0, duration: 0.25, ease: "none" },
+        3.75,
       );
+      introTimeline.fromTo(
+        frame3,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.35, ease: "power1.out" },
+        OPENING_FRAME_3_AT,
+      );
+      introTimeline.to(
+        frame3,
+        { opacity: 0, duration: 0.3, ease: "none" },
+        5.6,
+      );
+      introTimeline.fromTo(
+        frame4,
+        { opacity: 0, yPercent: 35 },
+        { opacity: 1, yPercent: 0, duration: 0.8, ease: "power2.out" },
+        OPENING_FRAME_4_AT,
+      );
+      // Tahanan eksplisit menjaga total Jam 2 tepat 8,0 detik tanpa delay.
+      introTimeline.to(
+        frame4,
+        { opacity: 1, duration: 1.2, ease: "none" },
+        6.8,
+      );
+      introTimeline.set(
+        [surface, plate].filter((element): element is HTMLElement =>
+          Boolean(element),
+        ),
+        { opacity: 1, "--lit": 1 },
+        PROLOGUE_OPENING_DURATION,
+      );
+      introTimeline.set(opening, { opacity: 0 }, PROLOGUE_OPENING_DURATION);
     }
+  }
+
+  if (key === "prologueReveal" && !isPrologueIntroEligible()) {
+    document.documentElement.removeAttribute("data-intro");
+    const opening = root.querySelector<HTMLElement>(".prologue-opening");
+    if (opening) gsap.set(opening, { opacity: 0 });
   }
 
   const build = () => {

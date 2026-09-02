@@ -353,39 +353,32 @@ scenes:
 - scene_id: '10'
   act: ACT III
   year_or_marker: '1292'
-  title: The Return
-  image_file: project-images/10 - 1292 — The Return.png
-  source_filename: 10 - 1292 — The Return.png
+  title: JAYAKATWANG
+  image_file: apps/web/editorial-preview/journey/10-1292-the-return.webp
+  source_filename: generated artistic reconstruction, 2026-08-31
   source_dimensions: 1536x1024
   image_verified: true
-  hero_subject: Editorial poster composition - a crowned ruler in close portrait at
-    left, a campaign map at right with a marked route between named points.
+  hero_subject: Text-free artistic reconstruction: anonymous back-facing period
+    silhouette, ember-lit palace atmosphere, and unlabelled campaign geography.
   evidence_class: V4_artistic_interpretation
-  baked_text_audit: PRESENT AND EXTENSIVE. "1292 / THE RETURN / PERGERAKAN
-    JAYAKATWANG MENUJU PUSAT KEKUASAAN"; map labels KADIRI, DAHA (PUSAT KEKUASAAN),
-    JAYAKATWANG; name plate "JAYAKASTWANG / RAJA KEDAHIRAN TERAKHIR / (MEMERINTAH
-    1292-1293)"; and a full paragraph of Indonesian historical prose.
-  canon_conflict: THREE FACTUAL DEFECTS INSIDE ONE FRAME. (1) The name plate reads
-    JAYAKASTWANG while the map in the same image reads JAYAKATWANG. (2) "RAJA
-    KEDAHIRAN" is not a canon form. (3) The prose states he was defeated by "pasukan
-    Jayabaya (Raden Wijaya)" - conflating Jayabaya, the 12th-century Panjalu king,
-    with Raden Wijaya, founder of Majapahit. Canon 08 Scene 11 and Scene 12 keep
-    these figures strictly separate, and Scene 12 exists precisely to prevent this
-    confusion.
-  crop_desktop: NOT_CROPPABLE - the prose block, name plate, and map labels occupy
-    three separate regions.
-  crop_mobile: NOT_CROPPABLE
+  baked_text_audit: NONE. Inspected after WebP generation; no letters, numerals,
+    glyphs, labels, borders, watermark, or legible writing.
+  canon_conflict: RESOLVED IN DEPLOYED DERIVATIVE. Historical identification and
+    attribution live in canonical DOM copy, not raster text. The anonymous figure
+    is not an authenticated likeness.
+  crop_desktop: SAFE - text-free composition retains the tension between palace and
+    campaign geography.
+  crop_mobile: SAFE - text-free composition retains the anonymous silhouette and river.
   object_position_desktop: TO_BE_ART_DIRECTED_AT_BATCH_C
   object_position_mobile: TO_BE_ART_DIRECTED_AT_BATCH_C
-  visual_notes: The most serious factual defect found in the whole set. A wrong
-    historical claim is burned into a raster on a history site and cannot be
-    corrected by editing copy. Escalated as REDO-ASSET-007.
+  visual_notes: REDO-ASSET-007 resolved in the deployed editorial derivative. The
+    original under project-images remains preserved and is not consumed at runtime.
   camera_intention: DEFINED_IN_SCENE_CONTRACT
   light_behavior: DEFINED_IN_SCENE_CONTRACT
   historical_argument: DEFINED_IN_PRODUCTION_NARRATIVE
   transition_in: SEE_03_TRANSITION_MAP
   transition_out: SEE_03_TRANSITION_MAP
-  status: MAPPED_WITH_FLAG
+  status: MAPPED_READY_FOR_REVIEW
 - scene_id: '11'
   act: ACT III
   year_or_marker: '1293'

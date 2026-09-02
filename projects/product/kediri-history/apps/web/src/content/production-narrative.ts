@@ -439,27 +439,20 @@ const ACT_3 = act(
     scene({
       order: 10,
       slug: "1292-the-return",
-      title: "The Return",
+      title: "JAYAKATWANG",
       dateDisplay: "1292",
       sceneType: "supporting",
       visualVariant: "word",
-      // Aset revisi dipasang atas perintah Chief 2026-08-29 (menutup
-      // penangguhan F1). CATATAN EPISTEMIK TERBUKA: teks terbakar pada aset
-      // revisi masih memuat "JAYAKASTWANG" (typo nama), "RAJA KEDAHIRAN
-      // TERAKHIR", dan kapsi "pasukan Jayabaya (Raden Wijaya)" — atribusi
-      // keliru. Dilaporkan ke Chief pada sesi pemasangan; revisi raster
-      // berikutnya diharapkan memperbaikinya.
       imageReady: true,
       previewAltText:
-        "Visualisasi artistik potret Jayakatwang menunduk berlatar peta pergerakan 1292 dari Kadiri menuju Daha sebagai pusat kekuasaan.",
-      masterLine:
-        "Sebuah kerajaan kembali. Namun waktu tidak pernah benar-benar berjalan mundur.",
+        "Rekonstruksi artistik suasana krisis 1292: bara istana dan lintasan kampanye tanpa potret tokoh yang dapat diautentikasi.",
+      masterLine: "RAJA KEDIRIAN TERAKHIR",
       paragraphs: [
         "Tujuh puluh tahun setelah kehilangan primasi politiknya, Kediri kembali.",
         "Jayakatwang menjatuhkan Singhasari dan mengembalikan pusat kekuasaan ke Daha.",
         "Untuk sesaat, masa lalu tampak seperti hendak hidup kembali. Namun sejarah jarang berjalan mundur.",
         "Kerajaan yang kembali pada 1292 bukan lagi kerajaan yang pernah mendominasi abad sebelumnya. Dunia di sekitarnya telah berubah.",
-        "Dan kebangkitan ini akan berlangsung hanya sebentar.",
+        "Pada 1293, Jayakatwang dikalahkan oleh pasukan Raden Wijaya.",
       ],
     }),
     scene({

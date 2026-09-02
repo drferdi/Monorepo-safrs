@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
 import {
@@ -157,6 +159,53 @@ describe("production journey contract", () => {
       "Nama dapat muncul sekali karena kebetulan",
     );
     expect(carama?.epistemicStatus).toContain("Research Hold");
+  });
+
+  it("keeps Scene 10 as the canonical Jayakatwang return without the retired conflations", () => {
+    const scene = scenes.find(
+      (candidate) => candidate.slug === "1292-the-return",
+    );
+    const domText = [
+      scene?.title,
+      scene?.masterLine,
+      ...(scene?.narrativeParagraphs ?? []),
+    ].join(" ");
+
+    expect(domText).toContain("JAYAKATWANG");
+    expect(domText).toContain("RAJA KEDIRIAN TERAKHIR");
+    expect(domText).toContain("dikalahkan oleh pasukan Raden Wijaya");
+    expect(domText).not.toContain("JAYAKASTWANG");
+    expect(domText).not.toContain("KEDAHIRAN");
+    expect(domText).not.toContain("dikalahkan oleh pasukan Jayabaya");
+  });
+
+  it("uses the eight-second four-frame opening contract and hides global chrome until it completes", async () => {
+    const directorPath = fileURLToPath(
+      new URL("../src/modules/motion/director.ts", import.meta.url),
+    );
+    const pagePath = fileURLToPath(
+      new URL("../src/app/(public)/journey/page.tsx", import.meta.url),
+    );
+    const cssPath = fileURLToPath(
+      new URL("../src/app/(public)/globals.css", import.meta.url),
+    );
+    const [director, page, css] = await Promise.all([
+      readFile(directorPath, "utf8"),
+      readFile(pagePath, "utf8"),
+      readFile(cssPath, "utf8"),
+    ]);
+
+    expect(director).toContain("const PROLOGUE_OPENING_DURATION = 8");
+    expect(director).toContain("const OPENING_FRAME_1_AT = 0");
+    expect(director).toContain("const OPENING_FRAME_2_AT = 2");
+    expect(director).toContain("const OPENING_FRAME_3_AT = 4");
+    expect(director).toContain("const OPENING_FRAME_4_AT = 6");
+    expect(director).toContain('ease: "power2.out"');
+    expect(director).toContain("duration: 0.8");
+    expect(page).toContain('d.setAttribute("data-intro"');
+    expect(page).toContain('"pending"');
+    expect(css).toContain("html[data-intro] .site-nav");
+    expect(css).toContain('.prologue-opening-frame[data-opening-frame="4"]');
   });
 
   it("presents the 1042 division while distinguishing historical record from tradition", () => {

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactElement } from "react";
 import { ActHeaderReveal } from "../../../components/journey/act-header-reveal";
 import { ActMilestoneTicker } from "../../../components/journey/act-milestone-ticker";
+import { BrantasVisualThread } from "../../../components/journey/brantas-visual-thread";
 import { DeepLinkLanding } from "../../../components/journey/deep-link-landing";
 import {
   JourneyTimeline,
@@ -57,7 +58,7 @@ const ACT_HEADER_MEDIA: Readonly<Record<string, string>> = {
  * tak pernah jalan — halaman statis utuh. Failsafe 5 detik menjamin halaman
  * tidak pernah terkunci gelap bila island motion gagal dimuat.
  */
-const INTRO_BOOT_SCRIPT = `(function(){try{if(location.hash)return;if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;if(!matchMedia("(min-width: 48rem)").matches)return;var d=document.documentElement;d.setAttribute("data-intro","pending");setTimeout(function(){d.removeAttribute("data-intro")},5000)}catch(e){}})()`;
+const INTRO_BOOT_SCRIPT = `(function(){try{if(location.hash)return;if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;if(!matchMedia("(min-width: 48rem)").matches)return;var d=document.documentElement;d.setAttribute("data-intro", "pending");setTimeout(function(){d.removeAttribute("data-intro")},9000)}catch(e){}})()`;
 
 export const metadata = {
   title: "Journey",
@@ -131,6 +132,7 @@ export default async function JourneyPage(): Promise<ReactElement> {
           </li>
         </ul>
       </nav>
+      <BrantasVisualThread />
 
       {/*
        * Kerangka ScrollSmoother (100% GSAP, direktif Chief 2026-08-28).
