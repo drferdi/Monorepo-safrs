@@ -54,6 +54,7 @@ import {
   redactSecrets,
   renderBotDirectory,
   resolveActionApprovalDetail,
+  runLog,
   sandboxCommandTimeoutMs,
   type ToolCallStreak,
   toolRequiresApproval,
@@ -671,6 +672,15 @@ export function createRunExecutor(deps: ExecutorDeps) {
         data: { status: "running", startedAt: current.startedAt ?? new Date() },
       });
       if (started.count !== 1) return;
+      runLog("run.attempt.started", {
+        workspaceId: run.workspaceId,
+        botId: run.botId,
+        threadId: run.threadId,
+        runId,
+        workerId,
+        fence,
+        trigger: run.trigger,
+      });
       const leaseTarget = await deps.prisma.bot.findUniqueOrThrow({
         where: { id: run.botId },
         select: { computerId: true, computerSwitching: true },
@@ -984,11 +994,14 @@ export function createRunExecutor(deps: ExecutorDeps) {
         // Sending bytes to a model without vision drops them silently, and the
         // agent then answers as if nothing was attached. Say what happened.
         const visibleTurnImages = acceptsImages ? currentTurnImages : undefined;
-        const unreadableImagesPrompt = currentTurnImages?.length && !acceptsImages
-          ? `The user attached ${currentTurnImages.length} image(s): ${currentTurnImages
-              .map((image) => JSON.stringify(image.name))
-              .join(", ")}. This model cannot view images — say so plainly and ask for a description or the text instead of guessing at the content.`
-          : undefined;
+        const unreadableImagesPrompt =
+          currentTurnImages?.length && !acceptsImages
+            ? `The user attached ${currentTurnImages.length} image(s): ${currentTurnImages
+                .map((image) => JSON.stringify(image.name))
+                .join(
+                  ", ",
+                )}. This model cannot view images — say so plainly and ask for a description or the text instead of guessing at the content.`
+            : undefined;
         const groupContext = thread.groupId
           ? await loadGroupContext(deps.prisma, thread.groupId, { id: bot.id, name: bot.name })
           : undefined;
@@ -1310,6 +1323,14 @@ export function createRunExecutor(deps: ExecutorDeps) {
           }
 
           const needsApproval = gateDecision === "ask";
+          runLog("run.tool.gated", {
+            runId,
+            toolName: name,
+            decision: gateDecision,
+            source: approvalResolved.source,
+            effectKey,
+            computerKind: computer.kind,
+          });
           const bypassApproval = gateDecision === "allow" && requiresApprovalByDefault;
           let claimedEffect = false;
 
@@ -3031,6 +3052,9 @@ async function renewRunLease(
     where: { id: runId, status: "running", leaseOwner: workerId, leaseFence: fence },
     data: { leaseExpiresAt: new Date(Date.now() + 5 * 60_000) },
   });
+  if (renewed.count !== 1) {
+    runLog("run.lease.lost", { runId, workerId, fence }, "warn");
+  }
   return renewed.count === 1;
 }
 
@@ -3186,6 +3210,12 @@ async function recordEffect(
       runId: run.id,
       payload: { executionId, kind },
     });
+    runLog("run.effect.recorded", {
+      runId: run.id,
+      kind,
+      idempotencyKey: executionId,
+      status: existing.status,
+    });
     return { duplicate: true, effect: existing };
   }
   const effect = await deps.prisma.externalEffect.create({
@@ -3197,6 +3227,12 @@ async function recordEffect(
       status: "intended",
       request: request as never,
     },
+  });
+  runLog("run.effect.recorded", {
+    runId: run.id,
+    kind,
+    idempotencyKey: executionId,
+    status: effect.status,
   });
   return { duplicate: false, effect };
 }

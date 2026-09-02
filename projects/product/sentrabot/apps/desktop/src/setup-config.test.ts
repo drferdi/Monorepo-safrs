@@ -22,7 +22,9 @@ describe("server address normalization", () => {
   });
 
   it("keeps an explicit secure scheme and port but stores only the origin", () => {
-    expect(normalizeServerUrl("https://sentrabot.example.com")).toBe("https://sentrabot.example.com");
+    expect(normalizeServerUrl("https://sentrabot.example.com")).toBe(
+      "https://sentrabot.example.com",
+    );
     expect(normalizeServerUrl("https://sentrabot.example.com:8443/team")).toBe(
       "https://sentrabot.example.com:8443",
     );

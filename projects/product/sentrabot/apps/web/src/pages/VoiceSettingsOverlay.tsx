@@ -1,5 +1,10 @@
 import { Trans, useLingui } from "@lingui/react/macro";
-import type { VoiceCatalogEntry, VoiceCredential, VoiceInfo, VoiceStatus } from "@sentrabot/contracts";
+import type {
+  VoiceCatalogEntry,
+  VoiceCredential,
+  VoiceInfo,
+  VoiceStatus,
+} from "@sentrabot/contracts";
 import { Button } from "@sentrabot/ui-web";
 import { useEffect, useMemo, useState } from "react";
 import { rpc } from "../lib/rpc";

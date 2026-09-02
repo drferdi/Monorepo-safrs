@@ -52,7 +52,10 @@ describe("mobile API authentication", () => {
         body: JSON.stringify({ email: "ada@example.com", password: "correct horse" }),
       }),
     );
-    expect(SecureStore.setItemAsync).toHaveBeenCalledWith("sentrabot.session_token", "session-token");
+    expect(SecureStore.setItemAsync).toHaveBeenCalledWith(
+      "sentrabot.session_token",
+      "session-token",
+    );
   });
 
   it("surfaces the server message and does not persist a failed sign-in", async () => {

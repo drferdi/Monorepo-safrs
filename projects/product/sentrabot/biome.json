@@ -21,6 +21,13 @@
       "!**/verify-report",
       "!**/data",
       "!**/*.astro",
+      "!**/.claude",
+      "!**/.mimosa",
+      "!**/docs/brand",
+      "!**/apps/site/assets",
+      "!**/apps/site/original",
+      "!**/apps/site/public/assets",
+      "!**/apps/site/src/html",
       "!**/packages/bot-templates"
     ]
   },

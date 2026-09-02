@@ -670,7 +670,11 @@ describeWithDatabase("API authorization and resource isolation", () => {
   });
 
   it("chooses the newest duplicate provider credential when selecting a default", async () => {
-    const cookie = await signup(app, `model-duplicates-${stamp}@sentrabot.test`, "Model Duplicates");
+    const cookie = await signup(
+      app,
+      `model-duplicates-${stamp}@sentrabot.test`,
+      "Model Duplicates",
+    );
     const actor = await rpc<Actor>(app, cookie, "me");
     const olderSecret = await handles.prisma.secret.create({
       data: {

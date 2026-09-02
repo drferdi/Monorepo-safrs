@@ -522,8 +522,9 @@ async function measureInteractions(app: ElectronApplication, page: Page) {
     const target = document.querySelector<HTMLInputElement>('input[placeholder^="Message "]');
     if (!target) throw new Error("Composer is missing");
     const samples: number[] = [];
-    (window as typeof window & { __sentrabotKeyPaintSamples?: number[] }).__sentrabotKeyPaintSamples =
-      samples;
+    (
+      window as typeof window & { __sentrabotKeyPaintSamples?: number[] }
+    ).__sentrabotKeyPaintSamples = samples;
     target.addEventListener("keydown", () => {
       const started = performance.now();
       requestAnimationFrame(() => samples.push(performance.now() - started));
@@ -532,14 +533,14 @@ async function measureInteractions(app: ElectronApplication, page: Page) {
   await page.keyboard.type("a".repeat(characterCount), { delay: 16 });
   await page.waitForFunction(
     (count) =>
-      ((window as typeof window & { __sentrabotKeyPaintSamples?: number[] }).__sentrabotKeyPaintSamples
-        ?.length ?? 0) >= count,
+      ((window as typeof window & { __sentrabotKeyPaintSamples?: number[] })
+        .__sentrabotKeyPaintSamples?.length ?? 0) >= count,
     characterCount,
   );
   const keyPaintMs = await page.evaluate(
     () =>
-      (window as typeof window & { __sentrabotKeyPaintSamples?: number[] }).__sentrabotKeyPaintSamples ??
-      [],
+      (window as typeof window & { __sentrabotKeyPaintSamples?: number[] })
+        .__sentrabotKeyPaintSamples ?? [],
   );
   const typingAfter = await cdpMetrics(session);
 

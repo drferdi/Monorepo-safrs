@@ -17,11 +17,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   CATEGORY_ORDER,
   CONNECTOR_META,
+  type DirectoryCategory,
   MCP_DIRECTORY,
+  type McpDirectoryEntry,
   normalizeDirectoryKey,
   SKILL_LIBRARY,
-  type DirectoryCategory,
-  type McpDirectoryEntry,
   type SkillLibraryEntry,
 } from "../lib/integration-directory";
 import { connectMcpOauth, MCP_OAUTH_CHANNEL } from "../lib/mcp-connect";
@@ -51,7 +51,10 @@ function normalizeEndpoint(value: string | undefined | null): string {
 }
 
 function connectorMeta(item: ConnectionCatalogItem) {
-  return CONNECTOR_META[normalizeDirectoryKey(item.slug)] ?? CONNECTOR_META[normalizeDirectoryKey(item.name)];
+  return (
+    CONNECTOR_META[normalizeDirectoryKey(item.slug)] ??
+    CONNECTOR_META[normalizeDirectoryKey(item.name)]
+  );
 }
 
 const AVATAR_COLORS = ["#30356A", "#4A2E5C", "#2E4A3C", "#5C452E", "#2E3F5C", "#5C2E33"];
@@ -196,9 +199,7 @@ export function PluginsOverlay({
         kind: "skill" as const,
         key: `skill:${entry.id}`,
         entry,
-        installed: skills.find(
-          (row) => row.name.toLowerCase() === entry.name.toLowerCase(),
-        ),
+        installed: skills.find((row) => row.name.toLowerCase() === entry.name.toLowerCase()),
       })),
     [skills],
   );
@@ -625,7 +626,8 @@ export function PluginsOverlay({
                     const key = item ? itemKey(item) : tile.id;
                     const disabled = tile.missing || !item;
                     const connected = item?.connected ?? false;
-                    const description = CONNECTOR_META[normalizeDirectoryKey(tile.label)]?.description;
+                    const description =
+                      CONNECTOR_META[normalizeDirectoryKey(tile.label)]?.description;
                     return (
                       <div
                         key={key}
@@ -837,8 +839,8 @@ export function PluginsOverlay({
                   ) : null}
                   <p className="text-xs leading-5 text-[#707077]">
                     <Trans>
-                      Sentra Bot verifies the source before saving it. Credentials are encrypted and are
-                      never returned to clients or exposed to the model.
+                      Sentra Bot verifies the source before saving it. Credentials are encrypted and
+                      are never returned to clients or exposed to the model.
                     </Trans>
                   </p>
                   <div className="flex gap-2">

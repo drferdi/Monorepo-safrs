@@ -24,7 +24,8 @@ test("launches with a narrow preload bridge and an isolated renderer", async () 
     await expect(page).toHaveTitle("Sentra Bot desktop smoke");
 
     const renderer = await page.evaluate(async () => {
-      const desktop = (window as typeof window & { sentrabotDesktop?: SentraBotDesktop }).sentrabotDesktop;
+      const desktop = (window as typeof window & { sentrabotDesktop?: SentraBotDesktop })
+        .sentrabotDesktop;
 
       return {
         bridgeKeys: desktop ? Object.keys(desktop).sort() : [],

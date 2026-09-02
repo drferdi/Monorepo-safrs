@@ -93,8 +93,7 @@ export function useMascotScenes(rootRef) {
         frame = 0;
         const rect = privacy.getBoundingClientRect();
         const shown =
-          (Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0)) /
-          rect.height;
+          (Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0)) / rect.height;
         if (shown >= 0.3) {
           privacy.setAttribute("data-in", "");
           window.removeEventListener("scroll", onScroll);

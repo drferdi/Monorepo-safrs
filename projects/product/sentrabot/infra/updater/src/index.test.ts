@@ -28,7 +28,9 @@ afterEach(async () => {
   );
 });
 
-async function deployment(env = "SENTRABOT_IMAGE_TAG=v1.0.0\nSENTRABOT_IMAGE_TAG_PREVIOUS=v0.9.0\n") {
+async function deployment(
+  env = "SENTRABOT_IMAGE_TAG=v1.0.0\nSENTRABOT_IMAGE_TAG_PREVIOUS=v0.9.0\n",
+) {
   // resolveUpdaterConfig requires a POSIX-absolute path (the deploy dir is always a Linux container
   // bind mount in production), which os.tmpdir() can never produce on a Windows dev machine (it's
   // drive-letter-rooted, e.g. "C:\..."). Root test fixtures at a fixed POSIX-style "/tmp" instead —
@@ -41,7 +43,10 @@ async function deployment(env = "SENTRABOT_IMAGE_TAG=v1.0.0\nSENTRABOT_IMAGE_TAG
   await writeFile(path.join(deployDir, ".env"), env);
   return {
     deployDir,
-    config: resolveUpdaterConfig({ SENTRABOT_DEPLOY_DIR: deployDir, SENTRABOT_UPDATER_TOKEN: token }),
+    config: resolveUpdaterConfig({
+      SENTRABOT_DEPLOY_DIR: deployDir,
+      SENTRABOT_UPDATER_TOKEN: token,
+    }),
   };
 }
 
@@ -113,7 +118,10 @@ describe("updater HTTP surface", () => {
     const response = await app.request("/apply", {
       method: "POST",
       headers: authorized,
-      body: JSON.stringify({ repoUrl: "https://github.com/drferdii/sentrabot", branch: "--exec=id" }),
+      body: JSON.stringify({
+        repoUrl: "https://github.com/drferdii/sentrabot",
+        branch: "--exec=id",
+      }),
     });
     expect(response.status).toBe(400);
   });

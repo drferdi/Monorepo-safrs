@@ -21,6 +21,7 @@ export * from "./phone-commands.js";
 export * from "./phone-prompts.js";
 export * from "./phone-strings.js";
 export * from "./platform-policy.js";
+export * from "./run-log.js";
 export * from "./run-state.js";
 export * from "./sandbox-command.js";
 export * from "./screen-lease.js";

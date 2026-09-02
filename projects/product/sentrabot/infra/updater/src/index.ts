@@ -752,7 +752,9 @@ function startUpdater() {
   const config = resolveUpdaterConfig(process.env);
   const app = createUpdaterApp(config);
   return serve({ fetch: app.fetch, hostname: config.host, port: config.port }, () => {
-    console.log(`sentrabot updater on http://${config.host}:${config.port} for ${config.deployDir}`);
+    console.log(
+      `sentrabot updater on http://${config.host}:${config.port} for ${config.deployDir}`,
+    );
   });
 }
 

@@ -24,14 +24,12 @@ describe("private-state migration", () => {
       {
         bot: { findMany: vi.fn().mockResolvedValue([{ id: "bot-1", name: "Private bot" }]) },
         thread: {
-          findMany: vi
-            .fn()
-            .mockResolvedValue([
-              {
-                id: "thread-1",
-                messages: [{ id: "message-1", role: "user", blocks: [{ text: "private" }] }],
-              },
-            ]),
+          findMany: vi.fn().mockResolvedValue([
+            {
+              id: "thread-1",
+              messages: [{ id: "message-1", role: "user", blocks: [{ text: "private" }] }],
+            },
+          ]),
         },
         memoryDocument: {
           findMany: vi

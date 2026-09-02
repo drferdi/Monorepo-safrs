@@ -119,7 +119,11 @@ export async function deleteAccount(password: string) {
   await rpc("notifications/unregisterPush").catch(() => undefined);
   const res = await fetch(`${currentApiBase()}/api/auth/delete-user`, {
     method: "POST",
-    headers: { "content-type": "application/json", origin: "sentrabot://", ...(await authHeaders()) },
+    headers: {
+      "content-type": "application/json",
+      origin: "sentrabot://",
+      ...(await authHeaders()),
+    },
     body: JSON.stringify({ password }),
   });
   const body = await res.json().catch(() => ({}));

@@ -33,9 +33,7 @@ export function useMascot(rootRef) {
     const mascots = Array.from(root.querySelectorAll(".sb-mascot"));
     if (mascots.length === 0) return undefined;
 
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const canHover = window.matchMedia("(hover: hover)").matches;
     const timers = new Set();
     const later = (fn, ms) => {
@@ -49,13 +47,16 @@ export function useMascot(rootRef) {
 
     // Blink, randomised per mascot so they never blink in sync.
     const scheduleBlink = (el) => {
-      later(() => {
-        if (!el.hasAttribute("data-offscreen") && el.dataset.state !== "sleep") {
-          el.setAttribute("data-blink", "");
-          later(() => el.removeAttribute("data-blink"), BLINK_MS);
-        }
-        scheduleBlink(el);
-      }, BLINK_MIN + Math.random() * BLINK_SPREAD);
+      later(
+        () => {
+          if (!el.hasAttribute("data-offscreen") && el.dataset.state !== "sleep") {
+            el.setAttribute("data-blink", "");
+            later(() => el.removeAttribute("data-blink"), BLINK_MS);
+          }
+          scheduleBlink(el);
+        },
+        BLINK_MIN + Math.random() * BLINK_SPREAD,
+      );
     };
     if (!reduceMotion) mascots.forEach(scheduleBlink);
 
@@ -68,7 +69,7 @@ export function useMascot(rootRef) {
         delete el.dataset.prev;
       }
     };
-    mascots.forEach((el) => el.addEventListener("animationend", onAnimationEnd));
+    for (const el of mascots) el.addEventListener("animationend", onAnimationEnd);
 
     // Pause idle loops while off-screen.
     const io = new IntersectionObserver(
@@ -79,7 +80,7 @@ export function useMascot(rootRef) {
       },
       { rootMargin: "20%" },
     );
-    mascots.forEach((el) => io.observe(el));
+    for (const el of mascots) io.observe(el);
 
     // Gaze: pupils follow the pointer within ±1, set as --gx/--gy.
     let gazeFrame = 0;
@@ -133,7 +134,7 @@ export function useMascot(rootRef) {
       for (const id of timers) window.clearTimeout(id);
       if (gazeFrame) window.cancelAnimationFrame(gazeFrame);
       window.removeEventListener("pointermove", onPointerMove);
-      mascots.forEach((el) => el.removeEventListener("animationend", onAnimationEnd));
+      for (const el of mascots) el.removeEventListener("animationend", onAnimationEnd);
       io.disconnect();
       if (window.sbMascot === api) delete window.sbMascot;
     };

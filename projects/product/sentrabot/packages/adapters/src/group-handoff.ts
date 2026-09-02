@@ -1,6 +1,10 @@
 import { runContinueJob } from "@sentrabot/adapter-kit";
 import { MessageBlock } from "@sentrabot/contracts";
-import { botMessageHopExhausted, nextBotMessageHop, renderGroupMembersContext } from "@sentrabot/core";
+import {
+  botMessageHopExhausted,
+  nextBotMessageHop,
+  renderGroupMembersContext,
+} from "@sentrabot/core";
 import {
   appendEventInTransaction,
   createThreadMessageInTransaction,

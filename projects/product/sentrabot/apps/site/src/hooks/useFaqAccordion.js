@@ -10,9 +10,7 @@ export function useFaqAccordion(rootRef) {
     if (!root) return undefined;
 
     const onClick = (event) => {
-      const button = event.target.closest(
-        ".faq-module__O8tnPq__faq__item > button",
-      );
+      const button = event.target.closest(".faq-module__O8tnPq__faq__item > button");
       if (!button || !root.contains(button)) return;
 
       const item = button.parentElement;

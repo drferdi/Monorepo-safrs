@@ -27,7 +27,10 @@ describe("mobile session storage", () => {
     await saveSessionToken("secret-token");
     await clearSessionToken();
 
-    expect(SecureStore.setItemAsync).toHaveBeenCalledWith("sentrabot.session_token", "secret-token");
+    expect(SecureStore.setItemAsync).toHaveBeenCalledWith(
+      "sentrabot.session_token",
+      "secret-token",
+    );
     expect(SecureStore.deleteItemAsync).toHaveBeenCalledWith("sentrabot.session_token");
   });
 

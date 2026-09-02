@@ -111,10 +111,14 @@ app.post("/computers", async (c) => {
     })
     .parse(await c.req.json());
   try {
-    assertRequestIdentity(c.req.header("x-sentrabot-bot-id"), c.req.header("x-sentrabot-workspace-id"), {
-      botId: body.botId,
-      workspaceId: body.workspaceId,
-    });
+    assertRequestIdentity(
+      c.req.header("x-sentrabot-bot-id"),
+      c.req.header("x-sentrabot-workspace-id"),
+      {
+        botId: body.botId,
+        workspaceId: body.workspaceId,
+      },
+    );
     return await withBotLifecycleLock(body.botId, async () => {
       await ensureComputerImage();
       const runtimeInfo = await inspectSupervisorContainer();
@@ -232,7 +236,8 @@ app.post("/computers/:id/exec", async (c) => {
       c.req.header("x-sentrabot-bot-id"),
       c.req.header("x-sentrabot-workspace-id"),
     );
-    const screenId = c.req.header("x-sentrabot-screen-id") || c.req.header("x-sentrabot-bot-id") || id;
+    const screenId =
+      c.req.header("x-sentrabot-screen-id") || c.req.header("x-sentrabot-bot-id") || id;
     const screenIndex = computerScreens.get(id)?.get(screenId)?.index ?? 0;
     const layout = screenPorts(screenIndex);
     const result = await runContainerCommand(
@@ -528,7 +533,9 @@ app.delete("/computers/:id/screen", async (c) => {
       c.req.header("x-sentrabot-workspace-id"),
     );
     const screenId =
-      c.req.header("x-sentrabot-screen-id") || c.req.header("x-sentrabot-bot-id") || c.req.param("id");
+      c.req.header("x-sentrabot-screen-id") ||
+      c.req.header("x-sentrabot-bot-id") ||
+      c.req.param("id");
     const assigned = computerScreens.get(c.req.param("id"));
     const index = assigned
       ? releaseAssignedScreen(assigned, screenId, c.req.header("x-sentrabot-screen-lease-id"))
@@ -662,7 +669,8 @@ async function managedContainer(id: string, botId?: string, workspaceId?: string
   if (!botId || !workspaceId) throw new Error("missing computer identity");
   const container = docker.getContainer(id);
   const info = await container.inspect();
-  if (!isSentraBotContainer(info, botId, workspaceId)) throw new Error("computer identity mismatch");
+  if (!isSentraBotContainer(info, botId, workspaceId))
+    throw new Error("computer identity mismatch");
   return { container, info };
 }
 
@@ -689,11 +697,17 @@ async function managedScreen(
   return { container, info, layout };
 }
 
-function isSentraBotContainer(info: Docker.ContainerInspectInfo, botId: string, workspaceId: string) {
+function isSentraBotContainer(
+  info: Docker.ContainerInspectInfo,
+  botId: string,
+  workspaceId: string,
+) {
   const labels = info.Config.Labels ?? {};
   const managed = labels["sentrabot.managed"] === "true" || info.Config.Image === COMPUTER_IMAGE;
   return (
-    managed && labels["sentrabot.botId"] === botId && labels["sentrabot.workspaceId"] === workspaceId
+    managed &&
+    labels["sentrabot.botId"] === botId &&
+    labels["sentrabot.workspaceId"] === workspaceId
   );
 }
 

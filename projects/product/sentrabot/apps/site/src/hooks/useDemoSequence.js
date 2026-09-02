@@ -81,10 +81,7 @@ export function useDemoSequence(rootRef) {
 
     const groups = runways.map((runway) => {
       const items = Array.from(runway.querySelectorAll("[data-seq]"));
-      const maxStep = items.reduce(
-        (max, el) => Math.max(max, Number(el.dataset.seq) || 0),
-        0,
-      );
+      const maxStep = items.reduce((max, el) => Math.max(max, Number(el.dataset.seq) || 0), 0);
       return {
         runway,
         items,
@@ -94,9 +91,7 @@ export function useDemoSequence(rootRef) {
       };
     });
 
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     /** Apply a step to one group; skips DOM writes when nothing changed. */
     const paint = (group, step) => {
@@ -169,9 +164,7 @@ export function useDemoSequence(rootRef) {
     const startCascade = (group) => {
       group.started = true;
       for (let step = 1; step <= group.maxStep; step += 1) {
-        timers.add(
-          window.setTimeout(() => paint(group, step), (step - 1) * STEP_DELAY),
-        );
+        timers.add(window.setTimeout(() => paint(group, step), (step - 1) * STEP_DELAY));
       }
     };
 
@@ -185,8 +178,7 @@ export function useDemoSequence(rootRef) {
         if (group.started) continue;
         const rect = group.runway.getBoundingClientRect();
         if (rect.height === 0) continue;
-        const shown =
-          (Math.min(rect.bottom, viewport) - Math.max(rect.top, 0)) / rect.height;
+        const shown = (Math.min(rect.bottom, viewport) - Math.max(rect.top, 0)) / rect.height;
         if (shown >= ENTER_THRESHOLD) startCascade(group);
       }
 
@@ -202,8 +194,7 @@ export function useDemoSequence(rootRef) {
         }
 
         const travel = rect.height - viewport;
-        const progress =
-          travel > 0 ? clamp(-rect.top / travel, 0, 1) : rect.top < viewport ? 1 : 0;
+        const progress = travel > 0 ? clamp(-rect.top / travel, 0, 1) : rect.top < viewport ? 1 : 0;
 
         const t = clamp((progress - LEAD_IN) / SPAN, 0, 1);
         paint(group, clamp(Math.ceil(t * group.maxStep), 1, group.maxStep));
@@ -246,4 +237,3 @@ export function useDemoSequence(rootRef) {
     };
   }, [rootRef]);
 }
-

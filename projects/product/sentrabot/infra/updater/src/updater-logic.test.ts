@@ -44,11 +44,15 @@ describe("resolveUpdaterConfig", () => {
 
   it("binds to loopback unless the deployment says otherwise, so a stray port is not a door", () => {
     expect(resolveUpdaterConfig({ ...base }).host).toBe("127.0.0.1");
-    expect(resolveUpdaterConfig({ ...base, SENTRABOT_UPDATER_HOST: "0.0.0.0" }).host).toBe("0.0.0.0");
+    expect(resolveUpdaterConfig({ ...base, SENTRABOT_UPDATER_HOST: "0.0.0.0" }).host).toBe(
+      "0.0.0.0",
+    );
   });
 
   it("refuses a deployment directory that is missing or relative", () => {
-    expect(() => resolveUpdaterConfig({ SENTRABOT_UPDATER_TOKEN: "t" })).toThrow(/SENTRABOT_DEPLOY_DIR/);
+    expect(() => resolveUpdaterConfig({ SENTRABOT_UPDATER_TOKEN: "t" })).toThrow(
+      /SENTRABOT_DEPLOY_DIR/,
+    );
     expect(() => resolveUpdaterConfig({ ...base, SENTRABOT_DEPLOY_DIR: "srv/sentrabot" })).toThrow(
       /SENTRABOT_DEPLOY_DIR/,
     );
@@ -73,7 +77,9 @@ describe("resolveUpdaterConfig", () => {
 
   it("refuses a port that is not a port", () => {
     expect(() => resolveUpdaterConfig({ ...base, SENTRABOT_UPDATER_PORT: "0" })).toThrow(/port/);
-    expect(() => resolveUpdaterConfig({ ...base, SENTRABOT_UPDATER_PORT: "seven" })).toThrow(/port/);
+    expect(() => resolveUpdaterConfig({ ...base, SENTRABOT_UPDATER_PORT: "seven" })).toThrow(
+      /port/,
+    );
   });
 });
 

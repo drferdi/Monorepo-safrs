@@ -184,7 +184,11 @@ describe("saveSupermemoryMemoryToContainers", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     await expect(
-      saveSupermemoryMemoryToContainers("fact", ["sentrabot:workspace:ws-1", "sentrabot:bot-1"], config),
+      saveSupermemoryMemoryToContainers(
+        "fact",
+        ["sentrabot:workspace:ws-1", "sentrabot:bot-1"],
+        config,
+      ),
     ).resolves.toEqual({ ok: true });
     expect(fetchMock).toHaveBeenCalledTimes(2);
     vi.unstubAllGlobals();

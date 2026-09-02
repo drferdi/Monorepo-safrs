@@ -37,9 +37,7 @@ export function usePricingTabs(rootRef) {
 
     const pill = tabs.querySelector("span.absolute");
     const buttons = [...tabs.querySelectorAll("button")];
-    const cards = [
-      ...root.querySelectorAll(".pricing-module__NXQy5G__card__wrapper > div"),
-    ];
+    const cards = [...root.querySelectorAll(".pricing-module__NXQy5G__card__wrapper > div")];
 
     let isYearly = true;
 

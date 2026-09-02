@@ -533,7 +533,10 @@ describe("managed env assignments", () => {
 describe("sidecar boundary validation", () => {
   it("normalizes a request the API already validated", () => {
     expect(
-      validateUpdateRequest({ repoUrl: "https://github.com/drferdii/sentrabot.git", branch: " main " }),
+      validateUpdateRequest({
+        repoUrl: "https://github.com/drferdii/sentrabot.git",
+        branch: " main ",
+      }),
     ).toEqual({
       request: {
         repoUrl: "https://github.com/drferdii/sentrabot.git",

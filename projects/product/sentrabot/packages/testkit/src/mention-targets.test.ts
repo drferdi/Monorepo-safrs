@@ -68,7 +68,11 @@ describeWithDatabase("structured @ mention targets", () => {
   });
 
   it("replays routine testRun with the same clientNonce", async () => {
-    const cookie = await signup(app, `mention-routine-replay-${stamp}@sentrabot.test`, "Replay Owner");
+    const cookie = await signup(
+      app,
+      `mention-routine-replay-${stamp}@sentrabot.test`,
+      "Replay Owner",
+    );
     const bot = await rpc<{ id: string }>(app, cookie, "bots/create", {
       name: "ReplayBot",
       title: "",
@@ -103,7 +107,11 @@ describeWithDatabase("structured @ mention targets", () => {
   });
 
   it("includes connector intent on a 1:1 send prompt", async () => {
-    const cookie = await signup(app, `mention-connector-${stamp}@sentrabot.test`, "Connector Owner");
+    const cookie = await signup(
+      app,
+      `mention-connector-${stamp}@sentrabot.test`,
+      "Connector Owner",
+    );
     const bot = await rpc<{ id: string }>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",
@@ -171,7 +179,11 @@ describeWithDatabase("structured @ mention targets", () => {
   });
 
   it("wakes exactly one bot on an unmentioned group send", async () => {
-    const cookie = await signup(app, `mention-group-default-${stamp}@sentrabot.test`, "Group Default");
+    const cookie = await signup(
+      app,
+      `mention-group-default-${stamp}@sentrabot.test`,
+      "Group Default",
+    );
     const botA = await rpc<{ id: string }>(app, cookie, "bots/create", {
       name: "BotA",
       title: "",

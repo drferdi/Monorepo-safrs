@@ -24,8 +24,7 @@ export function useHeaderState(rootRef) {
     // The logo button is labelled "Kembali ke atas"; make it do that.
     const brand = header.querySelector(".sb-brand");
     const toTop = () => {
-      const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)")
-        .matches;
+      const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       window.scrollTo({ top: 0, behavior: smooth ? "smooth" : "auto" });
     };
 

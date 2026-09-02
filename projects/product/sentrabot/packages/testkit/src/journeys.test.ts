@@ -2243,7 +2243,11 @@ describeJourneys("required product journeys", () => {
   });
 
   it("21: routine destination writes pause on the same approval card", async () => {
-    const cookie = await signup(app, `routine-approval-j-${stamp}@sentrabot.test`, "Routine Approval");
+    const cookie = await signup(
+      app,
+      `routine-approval-j-${stamp}@sentrabot.test`,
+      "Routine Approval",
+    );
     const bot = await rpc<Bot>(app, cookie, "bots/create", {
       name: "Chief",
       title: "",

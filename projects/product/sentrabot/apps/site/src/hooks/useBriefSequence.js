@@ -52,9 +52,7 @@ export function useBriefSequence(rootRef) {
     const shell = runway.querySelector('[data-brief="shell"]');
     if (!stage || !phone || !panel || !panelInner || !shell) return undefined;
 
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
-    ).matches;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     let lastP = -1;
 
@@ -150,11 +148,7 @@ export function useBriefSequence(rootRef) {
       const rect = runway.getBoundingClientRect();
       const travel = rect.height - stage.clientHeight;
       const progress =
-        travel > 0
-          ? clamp(-rect.top / travel, 0, 1)
-          : rect.top < window.innerHeight
-            ? 1
-            : 0;
+        travel > 0 ? clamp(-rect.top / travel, 0, 1) : rect.top < window.innerHeight ? 1 : 0;
       paint(Math.round(progress * 1000) / 1000);
     };
 

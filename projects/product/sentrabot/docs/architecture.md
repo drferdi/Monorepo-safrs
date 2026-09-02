@@ -134,6 +134,24 @@ boundary is needed.
   `always_allow` rule for the tool.
 - Migration consequence: none; rules are evaluated per call.
 
+### 2026-09-02 — router decomposition starts with routines
+
+- Problem: `apps/api/src/router.ts` held every oRPC handler group plus their helpers (3870 lines).
+- Decision: handler groups move one at a time into `apps/api/src/routes/<domain>.ts` as
+  `create<Domain>Routes(deps, authed, repos, …)` factories; the shared oRPC context and the
+  `authed` middleware live in `apps/api/src/authed.ts`. `routines` moved first because its helpers
+  were self-contained and the integration journeys already pin its behavior. Candidates next:
+  `mcp` (integrations), `computer`, `phone`.
+- Trade-off: `RouterDeps` still lives in `router.ts` and is imported as a type by the route modules.
+
+### 2026-09-02 — structured run log
+
+- Decision: `runLog(event, fields, level)` in `packages/core/src/run-log.ts` writes one JSON line
+  per event to stdout. The executor emits `run.attempt.started`, `run.tool.gated`,
+  `run.effect.recorded`, and `run.lease.lost` with workspace, bot, thread, run, worker, fence,
+  tool name, gate decision and source, effect key, and computer kind. Fields are identifiers and
+  enums only; never prompts, tool arguments, message text, or stack traces.
+
 ### 2026-09-02 — shared agent-runtime composition
 
 - Problem: `apps/api/src/app.ts` and `apps/worker/src/index.ts` each hand-built the executor,
