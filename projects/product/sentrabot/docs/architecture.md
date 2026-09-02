@@ -111,7 +111,9 @@ boundary is needed.
   and the server-owned runtime coexisted, with the relay SSE stream (`/v1/events`,
   `/v1/relay/events`) mounted by default although no client consumes it.
 - Evidence: 4 of 32 plan steps done; no consumer of the relay stream in web, desktop, or mobile;
-  the `outbox_events` table has no application writer; the desktop runtime lease loop executes nothing.
+  the `outbox_events` table appeared to have no application writer (corrected 2026-09-03: the
+  billing path writes it — see the 2026-09-03 decision below); the desktop runtime lease loop
+  executes nothing.
 - Decision: the relay stream is mounted only when `SENTRABOT_CONTROL_PLANE_RELAY=enabled`. Platform
   routes (device and runtime registry, key envelopes, sync objects, runtime leases) stay mounted
   because the desktop app calls them. Code and tables are kept; work resumes after the golden path
@@ -160,3 +162,35 @@ boundary is needed.
 - Decision: `composeAgentRuntime` (`packages/adapters/src/agent-runtime-composition.ts`) is the one
   place that builds them; both processes call it with their resolved configuration.
 - Trade-off: the worker now warms the Composio and Pipedream directories at startup like the API.
+
+### 2026-09-03 — dead relay alias `/v1/events` removed
+
+- Problem: the experimental relay registered two GET routes for the same event stream
+  (`/v1/events` and `/v1/relay/events`); the alias predates the canonical path name and nothing
+  calls it.
+- Evidence: a repo-wide grep for `v1/events` across `apps/*`, `packages/*`, and `infra/*` found
+  only the registration and one relay test; web, mobile, desktop, and the contracts package have
+  no reference. The older implementation spec
+  (`docs/superpowers/specs/2026-09-01-sentrabot-implementation-spec-v1.md`) named `/v1/events`,
+  but the relay itself is frozen as experimental and off by default.
+- Decision: remove the alias; the untrusted-runtime test now pins `/v1/relay/events`.
+- Rejected: keeping the alias for spec compatibility (no consumer exists, and the relay is off by
+  default).
+- Trade-off: anything still following the older spec path gets a 404 while the relay is disabled.
+- Migration consequence: none (the route was never mounted unless
+  `SENTRABOT_CONTROL_PLANE_RELAY=enabled`).
+
+### 2026-09-03 — `outbox_events` is a write-only outbox (recorded debt)
+
+- Problem: the table was recorded as having "no application writer", but billing writes it; the
+  real gap is that nothing drains it.
+- Evidence: `applyVerifiedPaymentEvent`/`applyEntitlementEvent` (`packages/db/src/platform.ts`)
+  create `entitlement.changed` rows inside the live Xendit webhook transaction; no read path
+  exists anywhere, so `sentAt` is never set.
+- Decision: document it as permanent debt tied to the frozen hybrid control-plane work. No
+  drain/deliverer is added and the writer is not removed without Chief's approval.
+- Rejected: wiring `drainOutbox` now (the hybrid work is frozen); dropping the table (never
+  without an approved migration).
+- Trade-off: rows accumulate locally with `sentAt` null; harmless in the self-hosted database,
+  revisited when the hybrid work resumes.
+- Migration consequence: none.
