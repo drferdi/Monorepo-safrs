@@ -13,31 +13,21 @@ import {
   applyPhoneOutboundStatus,
   type ComposioProvider,
   type ConnectorRegistry,
-  createBackgroundJobHandlers,
-  createConnectorStack,
+  composeAgentRuntime,
   createJobReconciler,
-  createPhoneContextLoader,
-  createRunExecutor,
-  createRunSandbox,
+  type createRunExecutor,
   createRunSecretWriter,
   type DestinationEmulator,
   destroyBot,
   EncryptedSecretStore,
-  ExpoPushProvider,
   GraphileJobPublisher,
   InMemoryJobQueue,
   InMemoryRealtimeFanout,
-  InstalledConnectorProvider,
   isComposioEnabled,
   isPhoneSurfaceEnabled,
   isPipedreamEnabled,
   isWhatsAppEnabled,
-  LocalAgentHomeStore,
-  LocalArtifactStore,
-  McpConnector,
-  McpOAuthBroker,
   OpenAiManagedProvider,
-  PiAgentRuntime,
   PiOAuthLogins,
   PipedreamConnector,
   PostgresRealtimeFanout,
@@ -46,12 +36,10 @@ import {
   pipedreamConfigFromEnv,
   pushTokenPath,
   type RemoteConnectorDependencies,
-  ScriptedAgentRuntime,
   SendBlueMessagingProvider,
   sendBlueConfigFromEnv,
   verifyWhatsAppSignature,
   WhatsAppMessagingProvider,
-  WorkspaceMemoryProviderResolver,
   whatsAppConfigFromEnv,
   XenditCheckoutProvider,
 } from "@sentrabot/adapters";
@@ -193,34 +181,8 @@ export async function createApp(
   const jobKind = env.wakeupDriver;
   const inMemoryJobs = jobKind === "memory" ? new InMemoryJobQueue() : undefined;
   const jobs = inMemoryJobs ?? new GraphileJobPublisher(env.databaseUrl);
-  const sandbox: SandboxProvider = createRunSandbox(env.sandboxProvider, {
-    supervisorUrl: env.sandboxSupervisorUrl,
-    supervisorToken: env.sandboxSupervisorToken,
-    e2bApiKey: env.e2bApiKey,
-    daytonaApiKey: env.daytonaApiKey,
-    daytonaApiUrl: env.daytonaApiUrl,
-    daytonaTarget: env.daytonaTarget,
-    boxApiKey: env.boxApiKey,
-    boxApiUrl: env.boxApiUrl,
-    dataDir: env.dataDir,
-    prisma,
-  });
-  const mcpOAuth = new McpOAuthBroker(prisma, secrets, remoteConnectors);
-  const memoryProviders = new WorkspaceMemoryProviderResolver(prisma, secrets);
   const oauthLogins = new PiOAuthLogins();
-  const home = new LocalAgentHomeStore(env.dataDir);
-  const artifacts = new LocalArtifactStore(env.dataDir);
   const memory = new MarkdownMemoryStore(prisma);
-  const mcp = new McpConnector(
-    prisma,
-    secrets,
-    {
-      stdioEnabled: env.mcpStdioEnabled,
-      allowedCommands: env.mcpStdioAllowedCommands,
-      network: remoteConnectors,
-    },
-    mcpOAuth,
-  );
   const pipedreamConfig = pipedreamConfigFromEnv(env);
   const pipedream =
     pipedreamOverride ??
@@ -243,19 +205,44 @@ export async function createApp(
     provider: env.phoneTranscribeProvider,
     apiKey: env.phoneTranscribeApiKey,
   });
-  const installed = new InstalledConnectorProvider(prisma, secrets, remoteConnectors);
-  const stack = createConnectorStack(isComposioEnabled(env.composioApiKey), composioOverride, [
-    installed,
-    ...(pipedream ? [pipedream] : []),
-    mcp,
-  ]);
-  const connector = stack.destination;
-  await connector.start();
-  void stack.composio?.warmDirectory().catch(() => undefined);
-  void pipedream?.warmDirectory?.().catch(() => undefined);
-  const runtime =
-    env.agentRuntime === "scripted" ? new ScriptedAgentRuntime() : new PiAgentRuntime();
-  const notifications = new ExpoPushProvider(env.dataDir);
+  const composition = await composeAgentRuntime({
+    prisma,
+    events,
+    secrets,
+    jobs,
+    workerId: "api",
+    dataDir: env.dataDir,
+    agentRuntime: env.agentRuntime,
+    sandboxProvider: env.sandboxProvider,
+    sandbox: {
+      supervisorUrl: env.sandboxSupervisorUrl,
+      supervisorToken: env.sandboxSupervisorToken,
+      e2bApiKey: env.e2bApiKey,
+      daytonaApiKey: env.daytonaApiKey,
+      daytonaApiUrl: env.daytonaApiUrl,
+      daytonaTarget: env.daytonaTarget,
+      boxApiKey: env.boxApiKey,
+      boxApiUrl: env.boxApiUrl,
+      dataDir: env.dataDir,
+    },
+    deploymentModelKey: env.deploymentModelKey,
+    composio: {
+      enabled: isComposioEnabled(env.composioApiKey),
+      apiKey: env.composioApiKey,
+      override: composioOverride,
+    },
+    pipedream,
+    mcp: {
+      stdioEnabled: env.mcpStdioEnabled,
+      allowedCommands: env.mcpStdioAllowedCommands,
+    },
+    remoteConnectors,
+    memory,
+    messaging,
+    whatsappMessaging,
+    phoneLocale,
+  });
+  const { sandbox, home, artifacts, stack, connector, executor, jobHandlers } = composition;
   const auth = createAuth(prisma, {
     secret: env.authSecret,
     baseURL: env.authUrl,
@@ -296,43 +283,6 @@ export async function createApp(
       await rm(pushTokenPath(env.dataDir, userId), { force: true }).catch(() => undefined);
     },
   });
-  const executor = createRunExecutor({
-    prisma,
-    runtime,
-    sandbox,
-    memory,
-    memoryProviders,
-    home,
-    artifacts,
-    connector: stack.connector,
-    connectors: stack.connector,
-    listConnectedPluginSlugs: stack.composio?.listConnectedSlugs.bind(stack.composio),
-    secrets: [env.deploymentModelKey ?? "", env.composioApiKey ?? ""].filter(Boolean),
-    secretStore: secrets,
-    deploymentModelKey: env.deploymentModelKey,
-    dataDir: env.dataDir,
-    notifications,
-    jobs,
-    events,
-    phone: messaging || whatsappMessaging ? createPhoneContextLoader(prisma) : undefined,
-  });
-
-  const jobHandlers = createBackgroundJobHandlers({
-    executor,
-    prisma,
-    sandbox,
-    home,
-    jobs,
-    events,
-    workerId: "api",
-    runtime,
-    secretStore: secrets,
-    memoryProviders,
-    deploymentModelKey: env.deploymentModelKey,
-    messaging,
-    whatsappMessaging,
-    phoneLocale,
-  });
   if (inMemoryJobs) {
     await inMemoryJobs.start(jobHandlers);
   }
@@ -346,11 +296,11 @@ export async function createApp(
     jobs,
     sandbox,
     memory,
-    memoryProviders,
+    memoryProviders: composition.memoryProviders,
     home,
     secrets,
     oauthLogins,
-    mcpOAuth,
+    mcpOAuth: composition.mcpOAuth,
     composio: stack.composio,
     connectors: stack.connector,
     remoteConnectors,
@@ -681,8 +631,7 @@ export async function createApp(
       await reconciler?.stop();
       await jobs.close();
       await realtime.close();
-      await connector.stop();
-      await mcp.close();
+      await composition.stop();
       await prisma.$disconnect().catch(() => undefined);
       await created.pool?.end().catch(() => undefined);
     },

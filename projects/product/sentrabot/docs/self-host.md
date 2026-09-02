@@ -140,9 +140,9 @@ The Electron desktop app is a client of the same API. Docker and E2B still apply
   commands on the API/worker host as the API/worker user, with the bot home and your home directory
   as allowed roots. This is not sandbox isolation. Docker stays the default; the setting is off
   until the deployment owner chooses This Mac when the Electron app asks once. Do not enable it on a
-  public or shared service. macOS does not show its own permission dialog for this. Unsupported on
-  Windows until `packages/adapters/src/desktop-sandbox-*.test.ts` pass there (13 path-containment
-  tests fail on Windows as of 2026-09-02).
+  public or shared service. macOS does not show its own permission dialog for this. On a host
+  computer the `shell`, `write_file`, `launch_app`, and `open_path` tools ask for approval unless
+  you add an always-allow rule for them.
 - **Fake** is only an emulator for verification.
 - **None** boots the product without a computer host (fallback when Docker/supervisor is not
   configured, or when a remote provider is selected without its API key).

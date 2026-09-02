@@ -163,6 +163,26 @@ export function planActionGate(input: {
   return "allow";
 }
 
+export const HOST_EXECUTION_REVIEW_TOOLS = new Set([
+  "shell",
+  "write_file",
+  "launch_app",
+  "open_path",
+]);
+
+/** On a trusted host computer, host-affecting builtins ask unless an always_allow rule matched. */
+export function applyHostExecutionPolicy(input: {
+  resolved: ActionApprovalResolved;
+  toolName: string;
+  hostExecution: boolean;
+}): ActionApprovalResolved {
+  if (!input.hostExecution || !HOST_EXECUTION_REVIEW_TOOLS.has(input.toolName)) {
+    return input.resolved;
+  }
+  if (input.resolved.source === "always_allow") return input.resolved;
+  return { ...input.resolved, decision: "ask", source: "require_approval" };
+}
+
 /** Map a judge outcome onto ask/allow. Errors fail closed on consequential tools. */
 export function applyJudgeDecision(input: {
   decision: AutoReviewJudgeDecision;

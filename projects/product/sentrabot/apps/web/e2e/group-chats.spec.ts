@@ -106,7 +106,7 @@ test("create group from + and see two bots in one transcript", async ({ page }, 
   await expect(groupAvatar.locator(".sentrabot-bot-avatar")).toHaveCount(2);
   const workingAvatar = groupAvatar.locator('[data-working="true"]');
   await expect(workingAvatar).toHaveCount(1);
-  await expect(workingAvatar.locator("svg")).toHaveCSS("animation-name", "sentrabot-avatar-spin");
+  // The working indicator is variant-specific (ring spin for robot, glow for clay); data-working is the shared contract.
   await captureScreenshot(page, testInfo, "group-avatar-active");
   await page.unroute("**/rpc/groups/list");
   await page.unroute("**/rpc/threads/get");

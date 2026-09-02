@@ -20,6 +20,12 @@ const ctx = {
   signal: new AbortController().signal,
 };
 
+function executableExpectation(provider: SandboxProvider) {
+  return process.platform === "win32" && provider instanceof DesktopSandboxProvider
+    ? {}
+    : { executable: true };
+}
+
 async function drain(provider: SandboxProvider, computer: ComputerRef) {
   let stdout = "";
   for await (const event of provider.execute(computer, { argv: ["echo", "graphical-ok"] }, ctx)) {
@@ -92,8 +98,9 @@ describe("sandbox conformance", () => {
         ctx,
       );
       expect(await provider.readFile(computer, "bin/tool", ctx)).toEqual(binary);
+      // Windows cannot persist the executable bit (libuv st_mode); see docs/architecture.md, trusted host execution.
       expect(await provider.listFiles(computer, "bin", ctx)).toEqual([
-        { path: "bin/tool", kind: "file", size: 4, executable: true },
+        { path: "bin/tool", kind: "file", size: 4, ...executableExpectation(provider) },
       ]);
       const acted = await provider.act(
         computer,
@@ -105,9 +112,10 @@ describe("sandbox conformance", () => {
       const exported = [];
       for await (const file of provider.exportWorkspace(computer, ctx)) exported.push(file);
       expect(exported.map((file) => file.path)).toContain("notes/result.txt");
+      // Windows cannot persist the executable bit (libuv st_mode); see docs/architecture.md, trusted host execution.
       expect(exported.find((file) => file.path === "bin/tool")).toMatchObject({
         content: binary,
-        executable: true,
+        ...executableExpectation(provider),
       });
       await provider.destroy(computer, ctx);
     }

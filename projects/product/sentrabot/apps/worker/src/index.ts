@@ -4,34 +4,21 @@ import { loadRootEnv } from "@sentrabot/core/node/load-root-env";
 loadRootEnv();
 
 import {
-  createBackgroundJobHandlers,
-  createConnectorStack,
+  composeAgentRuntime,
   createJobReconciler,
-  createPhoneContextLoader,
   createPostgresReconciliationLeadership,
-  createRunExecutor,
-  createRunSandbox,
   createRunSecretWriter,
   EncryptedSecretStore,
-  ExpoPushProvider,
   GraphileJobPublisher,
   GraphileJobWorkerHost,
   InMemoryJobQueue,
-  InstalledConnectorProvider,
   isComposioEnabled,
   isPipedreamEnabled,
-  LocalAgentHomeStore,
-  LocalArtifactStore,
-  McpConnector,
-  McpOAuthBroker,
-  PiAgentRuntime,
   PipedreamConnector,
   PostgresRealtimeFanout,
   pipedreamConfigFromEnv,
   resolveDeploymentModel,
   resolveSandboxProvider,
-  ScriptedAgentRuntime,
-  WorkspaceMemoryProviderResolver,
 } from "@sentrabot/adapters";
 import { resolveEncryptionKey, resolveSupervisorToken } from "@sentrabot/core";
 import { createDb, createThreadEvents } from "@sentrabot/db";
@@ -50,37 +37,10 @@ async function main() {
   const events = createThreadEvents(prisma, realtime, {
     runSecretWriter: createRunSecretWriter(secrets),
   });
-  const runtime =
-    process.env.AGENT_RUNTIME === "scripted" ? new ScriptedAgentRuntime() : new PiAgentRuntime();
   const dataDir = process.env.DATA_DIR ?? "./data";
   // Same resolver the API uses, so both processes agree on provider, model and key.
   const { key: deploymentModelKey } = resolveDeploymentModel();
   const sandboxProvider = resolveSandboxProvider(process.env);
-  const sandbox = createRunSandbox(sandboxProvider, {
-    supervisorUrl: process.env.SANDBOX_SUPERVISOR_URL ?? "http://127.0.0.1:7091",
-    supervisorToken: sandboxProvider === "docker" ? resolveSupervisorToken(process.env) : undefined,
-    e2bApiKey: process.env.E2B_API_KEY,
-    daytonaApiKey: process.env.DAYTONA_API_KEY,
-    daytonaApiUrl: process.env.DAYTONA_API_URL,
-    daytonaTarget: process.env.DAYTONA_TARGET,
-    boxApiKey: process.env.BOX_API_KEY,
-    boxApiUrl: process.env.BOX_API_URL ?? process.env.BOX_BASE_URL,
-    dataDir,
-    prisma,
-  });
-  const mcpOAuth = new McpOAuthBroker(prisma, secrets);
-  const mcp = new McpConnector(
-    prisma,
-    secrets,
-    {
-      stdioEnabled: process.env.MCP_STDIO_ENABLED === "true",
-      allowedCommands: (process.env.MCP_STDIO_ALLOWED_COMMANDS ?? "")
-        .split(",")
-        .map((v) => v.trim())
-        .filter(Boolean),
-    },
-    mcpOAuth,
-  );
   const pipedreamConfig = pipedreamConfigFromEnv({
     pipedreamClientId: process.env.PIPEDREAM_CLIENT_ID,
     pipedreamClientSecret: process.env.PIPEDREAM_CLIENT_SECRET,
@@ -96,57 +56,49 @@ async function main() {
     process.env,
     deploymentModelKey,
   );
-  const stack = createConnectorStack(isComposioEnabled(process.env.COMPOSIO_API_KEY), undefined, [
-    new InstalledConnectorProvider(prisma, secrets),
-    ...(pipedream ? [pipedream] : []),
-    mcp,
-  ]);
-  const connector = stack.destination;
-  await connector.start();
-  const memoryProviders = new WorkspaceMemoryProviderResolver(prisma, secrets);
-  const home = new LocalAgentHomeStore(dataDir);
-  const artifacts = new LocalArtifactStore(dataDir);
   const inMemoryJobs = process.env.WAKEUP_DRIVER === "memory" ? new InMemoryJobQueue() : undefined;
   const jobs: JobPublisher = inMemoryJobs ?? new GraphileJobPublisher(databaseUrl);
   const jobHost: JobWorkerHost = inMemoryJobs ?? new GraphileJobWorkerHost(databaseUrl);
-  const executor = createRunExecutor({
+  const composition = await composeAgentRuntime({
     prisma,
-    runtime,
-    sandbox,
-    memory: new MarkdownMemoryStore(prisma),
-    memoryProviders,
-    home,
-    artifacts,
-    connector: stack.connector,
-    connectors: stack.connector,
-    listConnectedPluginSlugs: stack.composio?.listConnectedSlugs.bind(stack.composio),
-    secrets: [deploymentModelKey ?? "", process.env.COMPOSIO_API_KEY ?? ""].filter(Boolean),
-    secretStore: secrets,
-    deploymentModelKey,
-    dataDir,
-    notifications: new ExpoPushProvider(dataDir),
-    jobs,
     events,
-    phone: messaging || whatsappMessaging ? createPhoneContextLoader(prisma) : undefined,
-  });
-
-  const jobHandlers = createBackgroundJobHandlers({
-    executor,
-    prisma,
-    sandbox,
-    home,
+    secrets,
     jobs,
-    events,
     workerId: process.pid.toString(),
-    runtime,
-    secretStore: secrets,
-    memoryProviders,
+    dataDir,
+    agentRuntime: process.env.AGENT_RUNTIME ?? "",
+    sandboxProvider,
+    sandbox: {
+      supervisorUrl: process.env.SANDBOX_SUPERVISOR_URL ?? "http://127.0.0.1:7091",
+      supervisorToken:
+        sandboxProvider === "docker" ? resolveSupervisorToken(process.env) : undefined,
+      e2bApiKey: process.env.E2B_API_KEY,
+      daytonaApiKey: process.env.DAYTONA_API_KEY,
+      daytonaApiUrl: process.env.DAYTONA_API_URL,
+      daytonaTarget: process.env.DAYTONA_TARGET,
+      boxApiKey: process.env.BOX_API_KEY,
+      boxApiUrl: process.env.BOX_API_URL ?? process.env.BOX_BASE_URL,
+      dataDir,
+    },
     deploymentModelKey,
+    composio: {
+      enabled: isComposioEnabled(process.env.COMPOSIO_API_KEY),
+      apiKey: process.env.COMPOSIO_API_KEY,
+    },
+    pipedream,
+    mcp: {
+      stdioEnabled: process.env.MCP_STDIO_ENABLED === "true",
+      allowedCommands: (process.env.MCP_STDIO_ALLOWED_COMMANDS ?? "")
+        .split(",")
+        .map((v) => v.trim())
+        .filter(Boolean),
+    },
+    memory: new MarkdownMemoryStore(prisma),
     messaging,
     whatsappMessaging,
     phoneLocale,
   });
-  await jobHost.start(jobHandlers);
+  await jobHost.start(composition.jobHandlers);
   const reconciler = createJobReconciler({
     prisma,
     jobs,
@@ -163,8 +115,7 @@ async function main() {
     await jobHost.stop();
     await jobs.close();
     await realtime.close();
-    await connector.stop();
-    await mcp.close();
+    await composition.stop();
     await prisma.$disconnect().catch(() => undefined);
     await pool.end().catch(() => undefined);
   };

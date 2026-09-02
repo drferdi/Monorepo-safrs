@@ -1,4 +1,5 @@
 export * from "./agent-connections.js";
+export * from "./agent-runtime-composition.js";
 export * from "./artifacts.js";
 export * from "./auto-review.js";
 export * from "./background-job-handlers.js";

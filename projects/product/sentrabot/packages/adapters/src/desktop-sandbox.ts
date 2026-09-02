@@ -41,7 +41,7 @@ import {
   mkdirChildViaDirectoryFdWin32,
   openChildDirectoryViaDirectoryFdWin32,
   openExistingChildViaDirectoryFdWin32,
-  pathFromDirectoryFd,
+  pathFromHandle,
   type Win32FileHandle,
   win32NtRelativeAvailable,
 } from "./desktop-sandbox-win32-path.js";
@@ -329,7 +329,10 @@ async function localWorkspaceTarget(home: string, relative: string, mustExist: b
         let created: { path: string; dev: number; ino: number } | undefined;
         try {
           if (useWin32Relative) {
-            const createdPath = mkdirChildViaDirectoryFdWin32(parentHandle.fd, segment);
+            const createdPath = mkdirChildViaDirectoryFdWin32(
+              { fd: parentHandle.fd, path: current },
+              segment,
+            );
             if (createdPath) {
               const createdStat = await stat(createdPath).catch(() => undefined);
               if (createdStat?.isDirectory()) {
@@ -351,7 +354,10 @@ async function localWorkspaceTarget(home: string, relative: string, mustExist: b
           let before: { dev: number; ino: number; isDirectory(): boolean };
           let resolved: string;
           if (useWin32Relative) {
-            nextHandle = openChildDirectoryViaDirectoryFdWin32(parentHandle.fd, segment);
+            nextHandle = openChildDirectoryViaDirectoryFdWin32(
+              { fd: parentHandle.fd, path: current },
+              segment,
+            );
             before = await nextHandle.stat();
             if (!before.isDirectory()) {
               await nextHandle.close().catch(() => undefined);
@@ -446,15 +452,21 @@ async function openContainedWorkspaceFile(home: string, target: string, mode: nu
       // Open/create relative to the held parent HANDLE so a junction swap of the
       // parent pathname cannot redirect the write (true openat-style on Windows).
       try {
-        handle = openExistingChildViaDirectoryFdWin32(parentHandle.fd, name);
+        handle = openExistingChildViaDirectoryFdWin32(
+          { fd: parentHandle.fd, path: containedParent },
+          name,
+        );
       } catch (error) {
         if (!hasErrorCode(error, "ENOENT")) throw error;
-        handle = createExclusiveChildViaDirectoryFdWin32(parentHandle.fd, name);
+        handle = createExclusiveChildViaDirectoryFdWin32(
+          { fd: parentHandle.fd, path: containedParent },
+          name,
+        );
         created = true;
         await handle.chmod(mode).catch(() => undefined);
       }
       try {
-        openedPath = pathFromDirectoryFd(handle.fd);
+        openedPath = pathFromHandle(handle as Win32FileHandle);
       } catch {
         openedPath = path.join(containedParent, name);
       }
@@ -499,7 +511,7 @@ async function openContainedWorkspaceFile(home: string, target: string, mode: nu
       let cleanupPath = openedPath;
       if (useWin32Relative) {
         try {
-          cleanupPath = pathFromDirectoryFd(handle.fd);
+          cleanupPath = pathFromHandle(handle as Win32FileHandle);
         } catch {
           // Keep openedPath when GetFinalPathName is unavailable.
         }
@@ -535,8 +547,8 @@ async function assertContainedDirectoryHandle(
   ) {
     throw new Error("Path escapes the computer workspace");
   }
-  // Prefer fd-bound realpath so containment cannot diverge from the open handle.
-  const resolved = await realpathFromFd(handle.fd);
+  // Prefer handle-bound realpath so containment cannot diverge from the open handle.
+  const resolved = await realpathFromHandle(handle);
   if (resolved) {
     const named = await lstat(resolved).catch(() => undefined);
     if (named?.isSymbolicLink() || !isAllowedDesktopPath(resolved, [resolvedHome])) {
@@ -544,6 +556,13 @@ async function assertContainedDirectoryHandle(
     }
     const fully = await realpath(resolved);
     if (!isAllowedDesktopPath(fully, [resolvedHome])) {
+      throw new Error("Path escapes the computer workspace");
+    }
+    // A directory is a traversal step, so the pathname the caller walked must still
+    // resolve to the held inode. A junction swapped in for that name resolves elsewhere
+    // and fails closed here instead of silently continuing under the displaced inode.
+    const byName = await realpath(pathToRecheck).catch(() => undefined);
+    if (!byName || !sameResolvedPath(byName, fully)) {
       throw new Error("Path escapes the computer workspace");
     }
     return fully;
@@ -576,7 +595,7 @@ async function assertContainedFileHandle(
   if (!opened.isFile() || opened.nlink !== 1n) {
     throw new Error("Path escapes the computer workspace");
   }
-  const resolved = await realpathFromFd(handle.fd);
+  const resolved = await realpathFromHandle(handle);
   if (resolved) {
     const named = await lstat(resolved, { bigint: true });
     if (
@@ -646,17 +665,24 @@ function childPathViaDirFd(fd: number, name: string) {
   return undefined;
 }
 
+/** Live path of the inode a handle holds; win32 handles carry their own NT handle. */
+async function realpathFromHandle(handle: ContainedHandle) {
+  if ("ntHandle" in handle && handle.ntHandle != null) {
+    return pathFromHandle(handle as Win32FileHandle);
+  }
+  return realpathFromFd(handle.fd);
+}
+
 async function realpathFromFd(fd: number) {
   if (process.platform === "linux") return realpath(`/proc/self/fd/${fd}`);
-  if (process.platform === "win32") {
-    try {
-      return pathFromDirectoryFd(fd);
-    } catch {
-      // Hosts that only pretend to be win32 (unit tests) lack the Win32 APIs.
-      return undefined;
-    }
-  }
+  // Windows has no fd-bound realpath: Node descriptors are invisible to Win32, so
+  // containment falls back to the pathname + inode re-check below.
   return undefined;
+}
+
+function sameResolvedPath(left: string, right: string) {
+  if (process.platform !== "win32") return left === right;
+  return path.win32.normalize(left).toLowerCase() === path.win32.normalize(right).toLowerCase();
 }
 
 function hasErrorCode(error: unknown, code: string): error is NodeJS.ErrnoException {

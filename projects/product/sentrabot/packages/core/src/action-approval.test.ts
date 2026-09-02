@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  type ActionApprovalResolved,
   type ActionApprovalRule,
+  applyHostExecutionPolicy,
   applyJudgeDecision,
   connectorKindFromToolName,
   connectorToolRequiresApproval,
@@ -279,6 +281,62 @@ describe("planActionGate", () => {
         checkerConfigured: true,
       }),
     ).toBe("allow");
+  });
+});
+
+describe("applyHostExecutionPolicy", () => {
+  const defaultResolved: ActionApprovalResolved = {
+    decision: "allow",
+    source: "default",
+    matchingRules: [],
+  };
+
+  it("leaves everything untouched when the computer is not a trusted host", () => {
+    expect(
+      applyHostExecutionPolicy({
+        resolved: defaultResolved,
+        toolName: "shell",
+        hostExecution: false,
+      }),
+    ).toBe(defaultResolved);
+  });
+
+  it("asks for host-affecting builtins on a desktop computer", () => {
+    for (const toolName of ["shell", "write_file", "launch_app", "open_path"]) {
+      expect(
+        applyHostExecutionPolicy({ resolved: defaultResolved, toolName, hostExecution: true }),
+      ).toMatchObject({ decision: "ask", source: "require_approval" });
+    }
+  });
+
+  it("keeps an always_allow rule allowing host execution", () => {
+    const allowed: ActionApprovalResolved = {
+      decision: "allow",
+      source: "always_allow",
+      matchingRules: [{ effect: "always_allow", matchKind: "tool", matchValue: "shell" }],
+    };
+    expect(
+      applyHostExecutionPolicy({ resolved: allowed, toolName: "shell", hostExecution: true }),
+    ).toBe(allowed);
+  });
+
+  it("leaves tools outside the host-execution set unchanged", () => {
+    for (const toolName of ["read_file", "computer_observe"]) {
+      expect(
+        applyHostExecutionPolicy({ resolved: defaultResolved, toolName, hostExecution: true }),
+      ).toBe(defaultResolved);
+    }
+  });
+
+  it("keeps a require_approval rule asking", () => {
+    const required: ActionApprovalResolved = {
+      decision: "ask",
+      source: "require_approval",
+      matchingRules: [{ effect: "require_approval", matchKind: "tool", matchValue: "shell" }],
+    };
+    expect(
+      applyHostExecutionPolicy({ resolved: required, toolName: "shell", hostExecution: true }),
+    ).toMatchObject({ decision: "ask", source: "require_approval" });
   });
 });
 

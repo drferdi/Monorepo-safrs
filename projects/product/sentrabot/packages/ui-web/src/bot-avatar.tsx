@@ -1,12 +1,5 @@
 import { ACTIVE_RUN_STATUSES, avatarIdentitySeed, organicAvatarPath } from "@sentrabot/core";
-import {
-  type CSSProperties,
-  memo,
-  useEffect,
-  useId,
-  useRef,
-  useSyncExternalStore,
-} from "react";
+import { type CSSProperties, memo, useEffect, useId, useRef, useSyncExternalStore } from "react";
 import { type AvatarStyle, useAvatarStyle } from "./avatar-style.js";
 import { cn } from "./lib/utils.js";
 import "./styles.css";
@@ -244,7 +237,10 @@ function ClayAvatar({
       ref={svgRef}
       viewBox="0 0 120 120"
       aria-hidden="true"
-      className={cn("sentrabot-clay-avatar overflow-visible select-none", className)}
+      className={cn(
+        "sentrabot-bot-avatar sentrabot-clay-avatar overflow-visible select-none",
+        className,
+      )}
       data-working={isWorking}
       style={
         {
@@ -347,7 +343,10 @@ function OrganicAvatar({
     <svg
       viewBox="-60 -60 120 120"
       aria-hidden="true"
-      className={cn("sentrabot-organic-avatar overflow-visible select-none", className)}
+      className={cn(
+        "sentrabot-bot-avatar sentrabot-organic-avatar overflow-visible select-none",
+        className,
+      )}
       data-working={isWorking}
       data-shape-family={seed % 10}
       data-eye-pattern={seed % 4}

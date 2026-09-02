@@ -59,8 +59,16 @@ bounded by lease expiry plus `SANDBOX_COMMAND_TIMEOUT_MS`.
 `SANDBOX_PROVIDER=desktop`, or the deployment-owner setting `computerHost = "this-mac"` on a Docker
 deployment, runs commands on the API/worker host with the bot home and the user's home directory
 as allowed roots. This is trusted host execution, not sandbox isolation. It is experimental, off
-by default, only the deployment owner can enable it, and it is unsupported on Windows until
-`packages/adapters/src/desktop-sandbox-*.test.ts` pass there.
+by default, and only the deployment owner can enable it. On a host computer the `shell`,
+`write_file`, `launch_app`, and `open_path` tools ask for approval unless an always-allow rule
+matches. Containment on Windows relies on Win32 handles opened relative to a held parent handle
+(`packages/adapters/src/desktop-sandbox-win32-path.ts`); Node's descriptors are not visible to the
+C runtime, so the module verifies handle identity (volume serial + file index) instead of bridging
+descriptors, and a directory whose pathname no longer resolves to the held inode fails closed. Two
+residual properties: a child that is a reparse point (junction or symlink) is rejected outright
+on Windows, which is stricter than the POSIX branch; and an identity mismatch detected right after
+an exclusive create can leave an empty file inside the held parent directory. The executable bit
+cannot be persisted on Windows.
 
 ## Optional remote providers and what they receive
 
@@ -112,11 +120,24 @@ boundary is needed.
 - Trade-off: `outbox_events` and the desktop lease remain unused debt until the hybrid work resumes.
 - Migration consequence: none.
 
-### 2026-09-02 — tool policy on trusted host computers is unchanged
+### 2026-09-02 — host-affecting tools ask on trusted host computers
 
 - Problem: on a `desktop` computer the builtin tools `shell`, `write_file`, `launch_app`, and
-  `open_path` are approval-exempt, exactly as inside an isolated sandbox.
-- Decision: keep the current behavior; host execution is opt-in by the deployment owner and is
-  labeled as trusted host execution. Making these tools ASK by default on host computers is a
-  possible follow-up, not part of the convergence phase.
-- Trade-off: the human authority boundary on the host is the opt-in itself, not per-action review.
+  `open_path` were approval-exempt, exactly as inside an isolated sandbox, although they act on
+  the operator's own machine.
+- Decision: `applyHostExecutionPolicy` (`packages/core/src/action-approval.ts`) turns those four
+  tools into ASK when the run's computer kind is `desktop`, unless an `always_allow` workspace rule
+  matches the tool; `require_approval` rules still ask. Isolated sandboxes are unchanged.
+- Rejected: keeping them exempt (the opt-in alone would be the whole authority boundary); a
+  separate host capability grant (new schema for the same decision).
+- Trade-off: more approval cards for shell-heavy work on This Mac until the user adds an
+  `always_allow` rule for the tool.
+- Migration consequence: none; rules are evaluated per call.
+
+### 2026-09-02 — shared agent-runtime composition
+
+- Problem: `apps/api/src/app.ts` and `apps/worker/src/index.ts` each hand-built the executor,
+  sandbox, connectors, and job handlers, and drifted (the worker lacked WhatsApp messaging).
+- Decision: `composeAgentRuntime` (`packages/adapters/src/agent-runtime-composition.ts`) is the one
+  place that builds them; both processes call it with their resolved configuration.
+- Trade-off: the worker now warms the Composio and Pipedream directories at startup like the API.

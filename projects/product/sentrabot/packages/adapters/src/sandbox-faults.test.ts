@@ -182,7 +182,10 @@ describe.each([
       "injected exportWorkspace failure",
     );
     const exported = await collect(faulted.exportWorkspace(computer, context));
-    expect(exported).toEqual([file]);
+    // Windows cannot persist the executable bit (libuv st_mode); see docs/architecture.md, trusted host execution.
+    expect(exported).toEqual([
+      losesExecutableBit(provider) ? { ...file, executable: false } : file,
+    ]);
   });
 });
 
@@ -220,18 +223,25 @@ describe("portable workspace transfer", () => {
         await target.importWorkspace(targetComputer, portableFiles(exported), context);
 
         expect(await target.readFile(targetComputer, "bin/tool", context)).toEqual(binary);
+        // Windows cannot persist the executable bit (libuv st_mode); see docs/architecture.md, trusted host execution.
         expect(await target.listFiles(targetComputer, "bin", context)).toEqual([
           {
             path: "bin/tool",
             kind: "file",
             size: binary.byteLength,
-            executable: true,
+            ...(losesExecutableBit(source) || losesExecutableBit(target)
+              ? {}
+              : { executable: true }),
           },
         ]);
       }
     }
   });
 });
+
+function losesExecutableBit(provider: SandboxProvider) {
+  return process.platform === "win32" && provider instanceof DesktopSandboxProvider;
+}
 
 type FaultableMethod = "provision" | "prepare" | "importWorkspace" | "exportWorkspace";
 

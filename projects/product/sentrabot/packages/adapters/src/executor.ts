@@ -27,6 +27,7 @@ import {
   type ActionApprovalRule,
   appendTextSegment,
   appendToolCallSegment,
+  applyHostExecutionPolicy,
   applyJudgeDecision,
   assertTransition,
   blocksToAgentHistoryText,
@@ -1165,10 +1166,15 @@ export function createRunExecutor(deps: ExecutorDeps) {
             name,
             connectedPlugins.map((plugin) => plugin.provider),
           );
-          const approvalResolved = resolveActionApprovalDetail({
+          const resolvedByRules = resolveActionApprovalDetail({
             toolName: name,
             connectorKind,
             rules: await loadApprovalRules(),
+          });
+          const approvalResolved = applyHostExecutionPolicy({
+            resolved: resolvedByRules,
+            toolName: name,
+            hostExecution: computer.kind === "desktop",
           });
           const autoReviewPref = await loadAutoReviewPreference();
           const checker = resolveAutoReviewChecker();
