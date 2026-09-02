@@ -304,7 +304,16 @@ describe("graphical computer spec", () => {
     ).toBeUndefined();
   });
 
-  it("restricts computer control argv to supervisor shapes", () => {
+  it("restricts computer control argv to supervisor shapes", async ({ skip }) => {
+    // The allowlist under test lives in the container's control.py, so this check needs a real
+    // python3 binary; Windows dev machines typically only ship the Store stub.
+    if (
+      process.platform === "win32" ||
+      spawnSync("python3", ["--version"], { encoding: "utf8" }).status !== 0
+    ) {
+      skip();
+      return;
+    }
     const controlPath = path.resolve(import.meta.dirname, "../../computer/control.py");
     const result = spawnSync(
       "python3",

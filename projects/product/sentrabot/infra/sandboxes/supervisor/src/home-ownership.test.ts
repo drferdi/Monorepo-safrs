@@ -32,7 +32,13 @@ describe("computer home ownership", () => {
     ).rejects.toThrow(/does not exist/);
   });
 
-  it("rejects a symlink as the home root", async () => {
+  it("rejects a symlink as the home root", async ({ skip }) => {
+    // Creating symlinks requires elevated privilege (root; Developer Mode on Windows). The
+    // deployment host validates homes as root, so the check only runs there.
+    if (process.platform === "win32" || (process.getuid?.() ?? -1) !== 0) {
+      skip();
+      return;
+    }
     const parent = await mkdtemp(path.join(tmpdir(), "sentrabot-home-root-link-"));
     roots.push(parent);
     const outside = path.join(parent, "outside");
@@ -85,7 +91,12 @@ describe("computer home ownership", () => {
     await expect(assertComputerHomeWritable(home, stat.uid, stat.gid)).rejects.toThrow(/chown -R/);
   });
 
-  it("does not follow symlinks while checking host-run compatibility", async () => {
+  it("does not follow symlinks while checking host-run compatibility", async ({ skip }) => {
+    // Same privilege requirement as the symlink-root test above.
+    if (process.platform === "win32" || (process.getuid?.() ?? -1) !== 0) {
+      skip();
+      return;
+    }
     const parent = await mkdtemp(path.join(tmpdir(), "sentrabot-home-writable-link-"));
     roots.push(parent);
     const home = path.join(parent, "home");
