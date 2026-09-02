@@ -1,0 +1,30 @@
+{
+  "asOf": "2026-08-31",
+  "jurisdiction": "Indonesia",
+  "items": [
+    {
+      "instrument": "UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi",
+      "status": "enacted",
+      "source": "https://peraturan.bpk.go.id/Details/229798/uu-no-27-tahun-2022",
+      "implementationNote": "Use as a legal baseline for personal-data processing; obtain qualified Indonesian legal review for system-specific conclusions."
+    },
+    {
+      "instrument": "SE Menteri Kominfo No. 9 Tahun 2023 tentang Etika Kecerdasan Artifisial",
+      "status": "guidance",
+      "source": "https://jdih.komdigi.go.id/pdfjs/web/viewer.html?file=%2Fstorage%2Ffiles%2F1704180565-SE_Kominfo_Nomor_9_Tahun_2023.pdf",
+      "implementationNote": "Treat as an active ethics-governance reference subject to later instruments."
+    },
+    {
+      "instrument": "RPerpres Peta Jalan Kecerdasan Artifisial Nasional 2026-2029",
+      "status": "draft-awaiting-establishment-as-reported-by-Komdigi",
+      "source": "https://portal.komdigi.go.id/kanal-publik/berita-kini/10425",
+      "implementationNote": "Do not encode draft provisions as binding law until official establishment is verified."
+    },
+    {
+      "instrument": "RPerpres Etika Kecerdasan Artifisial",
+      "status": "draft-awaiting-establishment-as-reported-by-Komdigi",
+      "source": "https://www.komdigi.go.id/berita/siaran-pers/detail/wamen-nezar-patria-saat-ai-mulai-bertindak-tata-kelola-tak-boleh-tertinggal",
+      "implementationNote": "Monitor for presidential establishment and update the policy pack version when status changes."
+    }
+  ]
+}

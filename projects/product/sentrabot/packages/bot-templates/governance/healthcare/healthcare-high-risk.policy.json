@@ -1,0 +1,13 @@
+{
+  "id": "healthcare-high-risk-agent-policy",
+  "version": "1.0.0",
+  "jurisdiction": "healthcare-internal",
+  "effectiveStatus": "internal",
+  "rules": [
+    {"id":"clinical-human-decision","effect":"deny","statement":"The Chief of Staff role does not independently diagnose, prescribe, determine treatment, or replace licensed clinical judgment."},
+    {"id":"patient-facing-approval","effect":"require_approval","statement":"Patient-facing actions and communications require appropriate human authorization and workflow controls."},
+    {"id":"record-modification","effect":"require_approval","statement":"Modification of clinical or patient records must use authorized systems, identity controls, and role-based permissions."},
+    {"id":"safety-escalation","effect":"require","statement":"Potential patient-safety signals receive enhanced human oversight and must not be suppressed by productivity objectives."},
+    {"id":"minimum-data","effect":"require","statement":"Minimize exposure of sensitive personal and health data to the minimum required for the task."}
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sentra.ai/schemas/governance-policy.schema.json",
+  "title": "Governance Policy Pack",
+  "type": "object",
+  "required": ["id","version","jurisdiction","effectiveStatus","rules"],
+  "properties": {
+    "id": {"type":"string"},
+    "version": {"type":"string"},
+    "jurisdiction": {"type":"string"},
+    "effectiveStatus": {"enum":["active","draft","advisory","internal"]},
+    "rules": {"type":"array","items":{"type":"object"}}
+  },
+  "additionalProperties": false
+}

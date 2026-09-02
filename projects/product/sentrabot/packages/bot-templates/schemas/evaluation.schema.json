@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sentra.ai/schemas/evaluation.schema.json",
+  "title": "Evaluation Manifest",
+  "type": "object",
+  "required": ["suites","minimumPassRate","mandatoryCases"],
+  "properties": {
+    "suites": {"type":"array","minItems":1,"items":{"type":"string"}},
+    "minimumPassRate": {"type":"number","minimum":0,"maximum":1},
+    "mandatoryCases": {"type":"array","minItems":1,"items":{"type":"string"}}
+  },
+  "additionalProperties": false
+}

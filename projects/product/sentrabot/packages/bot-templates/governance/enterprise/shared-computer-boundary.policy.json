@@ -1,0 +1,12 @@
+{
+  "id": "shared-computer-boundary",
+  "version": "1.0.0",
+  "jurisdiction": "enterprise-internal",
+  "effectiveStatus": "internal",
+  "rules": [
+    {"id":"bot-not-isolation","effect":"deny","statement":"Do not treat separate bot identities as a security isolation boundary when the underlying platform shares browser sessions, files, or credentials."},
+    {"id":"connector-scope","effect":"require","statement":"Enforce sensitive access at the connector, credential, service-account, network, and tool-policy layers."},
+    {"id":"credential-hygiene","effect":"require","statement":"Avoid placing reusable secrets in prompts, role files, shared workspaces, or template packages."},
+    {"id":"revoke-on-end","effect":"require","statement":"Revoke or remove access when a workflow or project no longer needs the source system."}
+  ]
+}

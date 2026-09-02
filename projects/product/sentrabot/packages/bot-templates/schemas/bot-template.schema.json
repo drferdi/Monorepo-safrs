@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sentra.ai/schemas/bot-template.schema.json",
+  "title": "Sentra Chief of Staff Bot Template",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "id",
+    "version",
+    "locale",
+    "identity",
+    "mission",
+    "scope",
+    "sourcesOfTruth",
+    "authority",
+    "approvals",
+    "evidence",
+    "output",
+    "risk",
+    "workflow",
+    "operatingModel",
+    "evaluation",
+    "tags"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "locale": {
+      "type": "string"
+    },
+    "identity": {
+      "type": "object"
+    },
+    "mission": {
+      "type": "object"
+    },
+    "scope": {
+      "type": "object"
+    },
+    "sourcesOfTruth": {
+      "type": "array",
+      "minItems": 1
+    },
+    "authority": {
+      "$ref": "authority.schema.json"
+    },
+    "approvals": {
+      "type": "object"
+    },
+    "evidence": {
+      "type": "object"
+    },
+    "output": {
+      "$ref": "output-contract.schema.json"
+    },
+    "risk": {
+      "type": "object"
+    },
+    "workflow": {
+      "type": "object"
+    },
+    "evaluation": {
+      "$ref": "evaluation.schema.json"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "operatingModel": {
+      "type": "object",
+      "required": [
+        "keyQuestions",
+        "kpis",
+        "cadences",
+        "routineSeeds",
+        "escalationTriggers"
+      ],
+      "properties": {
+        "keyQuestions": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "string"
+          }
+        },
+        "kpis": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string"
+          }
+        },
+        "cadences": {
+          "type": "object",
+          "required": [
+            "daily",
+            "weekly",
+            "monthly"
+          ],
+          "properties": {
+            "daily": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            },
+            "weekly": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            },
+            "monthly": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "routineSeeds": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "trigger",
+              "output",
+              "approvalBoundary"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "trigger": {
+                "type": "string"
+              },
+              "output": {
+                "type": "string"
+              },
+              "approvalBoundary": {
+                "enum": [
+                  "prepare_only",
+                  "approval_gated_execute"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "escalationTriggers": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

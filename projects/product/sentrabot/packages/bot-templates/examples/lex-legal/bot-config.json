@@ -1,0 +1,36 @@
+{
+  "name": "Lex",
+  "templateId": "legal-affairs-chief-of-staff",
+  "templateVersion": "1.0.0",
+  "locale": "id-ID",
+  "authority": "prepare",
+  "sources": [
+    {
+      "name": "Contract repository",
+      "access": "read",
+      "authority": "authoritative"
+    },
+    {
+      "name": "Legal matter tracker",
+      "access": "read",
+      "authority": "supporting"
+    },
+    {
+      "name": "Approved correspondence",
+      "access": "read",
+      "authority": "supporting"
+    },
+    {
+      "name": "Official legal/regulatory sources",
+      "access": "read",
+      "authority": "supporting"
+    }
+  ],
+  "outputs": [
+    "Legal matter brief",
+    "Obligation register",
+    "Draft counsel correspondence"
+  ],
+  "approvalMode": "explicit-for-consequential-actions",
+  "routineState": "disabled-until-skill-tested"
+}

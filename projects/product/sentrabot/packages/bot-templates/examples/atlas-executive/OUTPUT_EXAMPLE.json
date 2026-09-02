@@ -1,0 +1,7 @@
+{
+  "executive_summary": "Three commitments are due this week; one cross-functional dependency is likely to delay a board-preparation milestone unless an owner is assigned today.",
+  "decisions_required": ["Assign a single accountable owner for the dependency.", "Confirm whether the board milestone should remain unchanged."],
+  "recommended_actions": ["Prepare an updated action register and decision note."],
+  "evidence": ["Executive action register", "Current program milestone tracker"],
+  "uncertainty": ["The dependency owner's capacity has not yet been re-verified."]
+}

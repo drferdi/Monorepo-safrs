@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sentra.ai/schemas/output-contract.schema.json",
+  "title": "Output Contract",
+  "type": "object",
+  "required": ["format","fields"],
+  "properties": {
+    "format": {"enum":["structured_brief","memo","register","mixed"]},
+    "fields": {"type":"array","minItems":1,"items":{"type":"object","required":["id","label","required"],"properties":{"id":{"type":"string"},"label":{"type":"string"},"required":{"type":"boolean"}},"additionalProperties":false}}
+  },
+  "additionalProperties": false
+}

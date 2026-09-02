@@ -1,0 +1,9 @@
+{
+  "executive_summary": "Two operational exceptions require human attention: one scheduling coverage gap and one vendor SLA breach. No clinical decision is proposed.",
+  "what_changed": ["Coverage gap appeared in the current schedule.", "Vendor SLA item passed its internal escalation threshold."],
+  "why_it_matters": ["The coverage gap may affect service capacity if unresolved.", "The vendor issue may create an operational dependency risk."],
+  "decisions_required": ["Assign an operations owner to close the coverage gap.", "Decide whether to escalate the vendor issue under the existing contract workflow."],
+  "recommended_actions": ["Prepare owner/deadline assignments.", "Draft vendor escalation for approval; do not send yet."],
+  "evidence": ["Current scheduling system", "Vendor SLA tracker"],
+  "uncertainty": ["No patient-level or clinical conclusion was assessed in this example."]
+}
