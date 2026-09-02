@@ -1139,3 +1139,28 @@ a.sb-enter {
     animation: none;
   }
 }
+
+/* Mascot scene on static pages: walks in from the left when seen, then
+   idles. The travel is on the figure wrapper so the mascot's own
+   data-state transforms (greet, celebrate) stay free. */
+.sb-mascot[data-state="walk"] .sb-mascot__body {
+  animation: sb-bob 0.46s ease-in-out infinite alternate;
+}
+[data-mascot-scene] {
+  opacity: 0;
+  transform: translateX(-72px);
+  transition:
+    transform 950ms var(--sb-ease),
+    opacity 320ms var(--sb-ease);
+}
+[data-mascot-scene][data-in] {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-mascot-scene] {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}
