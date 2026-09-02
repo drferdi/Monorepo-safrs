@@ -24,8 +24,8 @@ describe("ciphertext relay", () => {
         sequence: 1,
         ciphertext: "opaque-ciphertext",
         signature: "signature",
-        createdAt: "2026-09-02T00:00:00.000Z",
-        expiresAt: "2026-09-02T00:01:00.000Z",
+        createdAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + 60_000).toISOString(),
       }),
     });
     expect(response.status).toBe(409);
@@ -109,8 +109,8 @@ describe("ciphertext relay", () => {
         sequence: 2,
         ciphertext: "x".repeat(8_000),
         signature: "signature",
-        createdAt: "2026-09-02T00:00:00.000Z",
-        expiresAt: "2026-09-02T00:01:00.000Z",
+        createdAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + 60_000).toISOString(),
       }),
     });
 

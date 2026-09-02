@@ -79,6 +79,11 @@ export interface AppEnv {
   xenditApiKey: string | undefined;
   openaiApiKey: string | undefined;
   managedAiFreeBudgetMicros: bigint | undefined;
+  /**
+   * Experimental hybrid control-plane relay stream (/v1/relay/*, /v1/events). No client
+   * consumes it yet, so it stays unmounted unless SENTRABOT_CONTROL_PLANE_RELAY=enabled.
+   */
+  controlPlaneRelay: boolean;
 }
 
 export function loadEnv(source: NodeJS.ProcessEnv = process.env): AppEnv {
@@ -142,6 +147,7 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): AppEnv {
       .map((value) => value.trim())
       .filter(Boolean),
     port: Number(source.API_PORT ?? 3100),
+    controlPlaneRelay: source.SENTRABOT_CONTROL_PLANE_RELAY?.trim() === "enabled",
     gitSha: optional(source.GIT_SHA) ?? optional(source.SENTRABOT_GIT_SHA),
     updaterUrl,
     updaterToken,

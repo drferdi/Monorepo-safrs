@@ -397,22 +397,26 @@ export async function createApp(
   });
   const platformRuntimeDb = createPlatformRuntimeDatabase(prisma);
   const platformDb = createPlatformDatabase(prisma);
-  app.route(
-    "/",
-    createRelayRoutes({
-      authenticate: async (request) => {
-        const session = await auth.api.getSession({ headers: sessionHeaders(request) });
-        if (!session?.user) return null;
-        return requireMembership(prisma, session.user.id).catch(() => null);
-      },
-      isTrustedDevice: (input) => isTrustedPlatformDevice(platformRuntimeDb, input),
-      isTrustedRuntime: (input) => isTrustedPlatformRuntime(platformRuntimeDb, input),
-      canDeliver: (input) =>
-        canDeliverRelay(prisma, { ...input, now: new Date(), heartbeatMaxAgeMs: 30_000 }),
-      publish: (topic, payload) => realtime.publish(topic, payload),
-      subscribe: (topic, onMessage) => realtime.subscribe(topic, onMessage),
-    }),
-  );
+  // The ciphertext relay is part of the frozen hybrid control-plane work: no client consumes
+  // it yet, and threads.subscribe is the one activity stream. Mount it only on explicit opt-in.
+  if (env.controlPlaneRelay) {
+    app.route(
+      "/",
+      createRelayRoutes({
+        authenticate: async (request) => {
+          const session = await auth.api.getSession({ headers: sessionHeaders(request) });
+          if (!session?.user) return null;
+          return requireMembership(prisma, session.user.id).catch(() => null);
+        },
+        isTrustedDevice: (input) => isTrustedPlatformDevice(platformRuntimeDb, input),
+        isTrustedRuntime: (input) => isTrustedPlatformRuntime(platformRuntimeDb, input),
+        canDeliver: (input) =>
+          canDeliverRelay(prisma, { ...input, now: new Date(), heartbeatMaxAgeMs: 30_000 }),
+        publish: (topic, payload) => realtime.publish(topic, payload),
+        subscribe: (topic, onMessage) => realtime.subscribe(topic, onMessage),
+      }),
+    );
+  }
   if (env.openaiApiKey && env.managedAiFreeBudgetMicros) {
     const provider = new OpenAiManagedProvider({ apiKey: env.openaiApiKey });
     app.route(

@@ -1,10 +1,10 @@
 # Self-hosting Sentra Bot
 
-The signed-in product is a long-running API, a Graphile Worker, Postgres, and a computer provider (Docker supervisor, E2B, Daytona, or Box). It is not a static site. The marketing site in `apps/www` can be hosted separately.
+The signed-in product is a long-running API, a Graphile Worker, Postgres, and a computer provider (Docker supervisor, E2B, Daytona, or Box). It is not a static site. The marketing site in `apps/site` can be hosted separately. The runtime topology is described in [architecture.md](architecture.md).
 
 ## Local (source checkout)
 
-Same as the README quick start: `.env` from `.env.example`, Postgres via Compose, `pnpm sandbox:build`, `pnpm dev`, then [http://127.0.0.1:5173](http://127.0.0.1:5173). Electron: `pnpm --filter @sentrabot/desktop dev` while that stack is up.
+Same as the quick start in the root `README.md` (Product runtime section): `.env` from `.env.example`, Postgres via Compose, `pnpm sandbox:build`, `pnpm dev`, then [http://127.0.0.1:5173](http://127.0.0.1:5173). Electron: `pnpm --filter @sentrabot/desktop dev` while that stack is up.
 
 ## Published images (no checkout)
 
@@ -136,10 +136,13 @@ The Electron desktop app is a client of the same API. Docker and E2B still apply
   workspace under `/home/user/sentrabot-home`, and refreshes a two-hour TTL. A Box currently exposes one
   shared desktop, so concurrent Team bots can still use shell and files but only one can use
   graphical tools at a time.
-- **Desktop provider** / **This Mac** runs commands on the API/worker host. Docker stays the default.
-  The Electron app asks once; if you choose This Mac, bots can use working directories under your home
-  folder. Do not enable it on a public or shared service. macOS does not show its own permission
-  dialog for this.
+- **Trusted host execution** (`SANDBOX_PROVIDER=desktop` / **This Mac**) — experimental. Runs
+  commands on the API/worker host as the API/worker user, with the bot home and your home directory
+  as allowed roots. This is not sandbox isolation. Docker stays the default; the setting is off
+  until the deployment owner chooses This Mac when the Electron app asks once. Do not enable it on a
+  public or shared service. macOS does not show its own permission dialog for this. Unsupported on
+  Windows until `packages/adapters/src/desktop-sandbox-*.test.ts` pass there (13 path-containment
+  tests fail on Windows as of 2026-09-02).
 - **Fake** is only an emulator for verification.
 - **None** boots the product without a computer host (fallback when Docker/supervisor is not
   configured, or when a remote provider is selected without its API key).

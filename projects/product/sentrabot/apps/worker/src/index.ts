@@ -19,7 +19,6 @@ import {
   InMemoryJobQueue,
   InstalledConnectorProvider,
   isComposioEnabled,
-  isPhoneSurfaceEnabled,
   isPipedreamEnabled,
   LocalAgentHomeStore,
   LocalArtifactStore,
@@ -32,13 +31,12 @@ import {
   resolveDeploymentModel,
   resolveSandboxProvider,
   ScriptedAgentRuntime,
-  SendBlueMessagingProvider,
-  sendBlueConfigFromEnv,
   WorkspaceMemoryProviderResolver,
 } from "@sentrabot/adapters";
 import { resolveEncryptionKey, resolveSupervisorToken } from "@sentrabot/core";
 import { createDb, createThreadEvents } from "@sentrabot/db";
 import { MarkdownMemoryStore } from "@sentrabot/memory";
+import { workerMessagingFromEnv } from "./messaging.js";
 
 async function main() {
   const databaseUrl = process.env.DATABASE_URL;
@@ -93,15 +91,11 @@ async function main() {
   const pipedream = isPipedreamEnabled(pipedreamConfig)
     ? new PipedreamConnector(pipedreamConfig)
     : undefined;
-  const sendBlueConfig = sendBlueConfigFromEnv({
-    sendblueApiKeyId: process.env.SENDBLUE_API_KEY_ID,
-    sendblueApiSecret: process.env.SENDBLUE_API_SECRET,
-    sendblueSigningSecret: process.env.SENDBLUE_SIGNING_SECRET,
-    sendbluePhoneNumber: process.env.SENDBLUE_PHONE_NUMBER,
-  });
-  const messaging = isPhoneSurfaceEnabled(sendBlueConfig, deploymentModelKey)
-    ? new SendBlueMessagingProvider(sendBlueConfig)
-    : undefined;
+  // Same messaging decision as the API: run.continue and phone.deliver execute in this process.
+  const { messaging, whatsappMessaging, phoneLocale } = workerMessagingFromEnv(
+    process.env,
+    deploymentModelKey,
+  );
   const stack = createConnectorStack(isComposioEnabled(process.env.COMPOSIO_API_KEY), undefined, [
     new InstalledConnectorProvider(prisma, secrets),
     ...(pipedream ? [pipedream] : []),
@@ -133,7 +127,7 @@ async function main() {
     notifications: new ExpoPushProvider(dataDir),
     jobs,
     events,
-    phone: messaging ? createPhoneContextLoader(prisma) : undefined,
+    phone: messaging || whatsappMessaging ? createPhoneContextLoader(prisma) : undefined,
   });
 
   const jobHandlers = createBackgroundJobHandlers({
@@ -149,6 +143,8 @@ async function main() {
     memoryProviders,
     deploymentModelKey,
     messaging,
+    whatsappMessaging,
+    phoneLocale,
   });
   await jobHost.start(jobHandlers);
   const reconciler = createJobReconciler({

@@ -265,6 +265,77 @@ describeIntegration("run executor lifecycle", () => {
     expect(await handles.prisma.event.count({ where: { runId: seeded.run.id } })).toBe(0);
   });
 
+  it("a due routine survives a restart and fires exactly once", async () => {
+    const { createJobReconciler } = await import("@sentrabot/adapters");
+    const seeded = await seedRun("routine-restart", "seed", {
+      status: "completed",
+      completedAt: new Date(),
+    });
+    const routine = await handles.prisma.routine.create({
+      data: {
+        workspaceId: seeded.me.workspaceId,
+        botId: seeded.bot.id,
+        userId: seeded.me.userId,
+        threadId: seeded.thread.id,
+        name: "restart",
+        prompt: "write a file that says restarted",
+        // Daily: the re-armed nextRunAt stays inside setTimeout range under the memory driver.
+        crons: ["0 0 * * *"],
+        active: true,
+        nextRunAt: new Date(Date.now() - 1_000),
+      },
+    });
+    // Restart simulation: only the durable routine row exists; no in-memory wakeup job survived.
+    const reconciler = createJobReconciler(
+      { prisma: handles.prisma, jobs: handles.jobs },
+      { intervalMs: 3_600_000 },
+    );
+    try {
+      await reconciler.reconcileOnce();
+      await reconciler.reconcileOnce();
+      const deadline = Date.now() + 10_000;
+      let runs = await handles.prisma.run.findMany({ where: { routineId: routine.id } });
+      while (runs.length === 0 && Date.now() < deadline) {
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        runs = await handles.prisma.run.findMany({ where: { routineId: routine.id } });
+      }
+      await reconciler.reconcileOnce();
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      runs = await handles.prisma.run.findMany({ where: { routineId: routine.id } });
+      expect(runs).toHaveLength(1);
+      await expect(
+        handles.prisma.routine.findUniqueOrThrow({ where: { id: routine.id } }),
+      ).resolves.toMatchObject({ lastRunAt: expect.any(Date) });
+    } finally {
+      await reconciler.stop();
+    }
+  });
+
+  it("a run waiting for permission is untouched by restart reconciliation", async () => {
+    const { createJobReconciler } = await import("@sentrabot/adapters");
+    const seeded = await seedRun("waiting-restart", "send an email", {
+      status: "waiting_input",
+      leaseOwner: "dead-worker",
+      leaseFence: 3,
+      leaseExpiresAt: new Date(Date.now() - 60_000),
+      startedAt: new Date(Date.now() - 120_000),
+    });
+    const reconciler = createJobReconciler(
+      { prisma: handles.prisma, jobs: handles.jobs },
+      { intervalMs: 3_600_000 },
+    );
+    try {
+      await reconciler.reconcileOnce();
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      await expect(
+        handles.prisma.run.findUniqueOrThrow({ where: { id: seeded.run.id } }),
+      ).resolves.toMatchObject({ status: "waiting_input", leaseFence: 3 });
+      expect(await handles.prisma.attempt.count({ where: { runId: seeded.run.id } })).toBe(0);
+    } finally {
+      await reconciler.stop();
+    }
+  });
+
   async function seedRun(
     label: string,
     prompt: string,

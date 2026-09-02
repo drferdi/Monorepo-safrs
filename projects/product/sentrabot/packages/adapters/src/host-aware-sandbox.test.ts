@@ -1,7 +1,7 @@
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { afterAll, describe, expect, it } from "vitest";
+import { afterAll, describe, expect, it, vi } from "vitest";
 import { DesktopSandboxProvider } from "./desktop-sandbox.js";
 import { FakeSandboxProvider } from "./fake-sandbox.js";
 import { HostAwareSandbox, sandboxKindForBot } from "./host-aware-sandbox.js";
@@ -85,6 +85,21 @@ describe("host-aware sandbox", () => {
     }
     expect(code).toBe(0);
     await desktop.destroy(computer, ctx);
+  });
+
+  it("never reaches the host provider while this-mac is off", async () => {
+    // Pinned invariant: trusted host execution is opt-in; an unset or "docker" computerHost
+    // must keep every provisioning call on the isolated provider.
+    for (const stored of [null, "docker"]) {
+      const isolated = new FakeSandboxProvider();
+      const host = new DesktopSandboxProvider();
+      const hostProvision = vi.spyOn(host, "provision");
+      const sandbox = new HostAwareSandbox(isolated, host, async () => stored === "this-mac");
+      const computer = await sandbox.provision({ botId: "off", homePath: "/tmp/off" }, ctx);
+      expect(hostProvision).not.toHaveBeenCalled();
+      expect(computer.kind).toBe("fake");
+      await sandbox.destroy(computer, ctx);
+    }
   });
 
   it("only switches docker deployments onto this Mac", () => {

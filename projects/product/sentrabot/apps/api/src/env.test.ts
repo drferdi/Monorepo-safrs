@@ -117,6 +117,17 @@ describe("loadEnv", () => {
     expect(env.apiHost).toBe("0.0.0.0");
   });
 
+  it("keeps the experimental control-plane relay off unless explicitly enabled", () => {
+    expect(loadEnv(base).controlPlaneRelay).toBe(false);
+    expect(loadEnv({ ...base, SENDBLUE_API_KEY_ID: "x" }).controlPlaneRelay).toBe(false);
+    expect(loadEnv({ ...base, SENTRABOT_CONTROL_PLANE_RELAY: "enabled" }).controlPlaneRelay).toBe(
+      true,
+    );
+    expect(loadEnv({ ...base, SENTRABOT_CONTROL_PLANE_RELAY: "true" }).controlPlaneRelay).toBe(
+      false,
+    );
+  });
+
   it("falls back to none in production when Docker has no supervisor token", () => {
     const env = loadEnv({
       DATABASE_URL: base.DATABASE_URL,

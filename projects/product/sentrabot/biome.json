@@ -21,7 +21,6 @@
       "!**/verify-report",
       "!**/data",
       "!**/*.astro",
-      "!**/apps/www",
       "!**/packages/bot-templates"
     ]
   },

@@ -12,7 +12,7 @@ export default defineConfig({
       "apps/web/src/**/*.test.{ts,tsx}",
       "apps/mobile/lib/**/*.test.ts",
       "apps/api/src/**/*.test.ts",
-      "apps/www/src/**/*.test.ts",
+      "apps/worker/src/**/*.test.ts",
     ],
     testTimeout: 30_000,
     hookTimeout: 60_000,
