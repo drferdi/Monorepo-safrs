@@ -191,8 +191,8 @@ every file touched here passes `biome check` individually.
 | 13 supervisor tests impossible on Windows gated | inline | done | `computer-spec.test.ts` argv test skips on win32 or missing `python3`; two `home-ownership.test.ts` symlink tests skip on win32 or non-root; `pnpm vitest run infra/sandboxes/supervisor/src` → 63 passed, 5 skipped, 0 failed (was 3 failed) |
 | 14a dead `/v1/events` relay alias removed | inline | done | grep for `v1/events` in code → zero hits; relay suite 5/5; `tsc` clean; the untrusted-runtime test now pins `/v1/relay/events`; stale comments in `env.ts` and `.env.example` updated |
 | 14b `outbox_events` recorded as write-only debt | inline | done | corrected fact: `applyVerifiedPaymentEvent`/`applyEntitlementEvent` (`packages/db/src/platform.ts`) write `entitlement.changed` rows from the live Xendit webhook path, no reader exists, `sentAt` never set; two 2026-09-03 decision-log entries added to `docs/architecture.md`, the frozen-hybrid evidence line corrected |
-| 15 no-backdoor copy aligned with the provider table (all live surfaces) | inline | pending | — |
-| 16 static register funnel page in `apps/site` | inline | pending | — |
+| 15 no-backdoor copy aligned with the provider table (all live surfaces) | inline | done | `tentang.html` panel and the `Privacy.html` bullet gained the optional-provider qualifier (vendor-access claims kept, "Titik." absolutism dropped); FAQ now says connected services receive data "sebatas fungsinya"; `privasi.html` left as-is (its claim is vendor-scoped and already followed by a third-party disclosure section); `pnpm --filter cora build` passes |
+| 16 static register funnel page in `apps/site` | inline | done | `apps/site/public/daftar.html` (landing chrome, flow Daftar → pilih paket → Pasang, static funnel, CTAs point at the existing `/workspace` beta target); served check: `vite preview` → `daftar.html` HTTP 200, title + 3 panels + `polish.css` 200; `pnpm --filter cora build` passes; nav wiring into other pages intentionally not done (not requested) |
 
 ## Part D — Decisions required from Chief before implementation
 
