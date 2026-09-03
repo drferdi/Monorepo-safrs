@@ -8,7 +8,7 @@
     "shortTitle": "Personal Finance",
     "icon": "piggy-bank",
     "category": "personal",
-    "featured": false
+    "featured": true
   },
   "mission": {
     "primaryOutcome": "Maintain personal finance execution clarity across cash flow, obligations, savings goals, bill calendars, and financial decision readiness.",

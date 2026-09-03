@@ -116,10 +116,10 @@ Total: **66 production role packages**.
 
 | Role | Template ID | Featured |
 |---|---|---:|
-| Career & Job Search Chief of Staff | `career-chief-of-staff` |  |
-| Freelancer Chief of Staff | `freelancer-chief-of-staff` |  |
-| Personal Finance Chief of Staff | `personal-finance-chief-of-staff` |  |
-| Student Chief of Staff | `student-chief-of-staff` |  |
+| Career & Job Search Chief of Staff | `career-chief-of-staff` | Yes |
+| Freelancer Chief of Staff | `freelancer-chief-of-staff` | Yes |
+| Personal Finance Chief of Staff | `personal-finance-chief-of-staff` | Yes |
+| Student Chief of Staff | `student-chief-of-staff` | Yes |
 
 ## Small Business — 1
 

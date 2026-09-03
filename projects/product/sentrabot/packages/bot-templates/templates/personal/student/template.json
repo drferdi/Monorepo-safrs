@@ -8,7 +8,7 @@
     "shortTitle": "Student",
     "icon": "graduation-cap",
     "category": "personal",
-    "featured": false
+    "featured": true
   },
   "mission": {
     "primaryOutcome": "Maintain student execution clarity across academic deadlines, assignments and exams, study plans, administrative requirements, and campus commitments.",

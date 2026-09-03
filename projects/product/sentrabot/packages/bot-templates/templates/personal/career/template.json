@@ -8,7 +8,7 @@
     "shortTitle": "Career",
     "icon": "compass",
     "category": "personal",
-    "featured": false
+    "featured": true
   },
   "mission": {
     "primaryOutcome": "Maintain career and job search execution clarity across applications, interviews, follow-ups, skill development commitments, and offer decision readiness.",

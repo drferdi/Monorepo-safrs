@@ -8,7 +8,7 @@
     "roleTemplates": 66,
     "roleOverlays": 66,
     "roleEvaluationManifests": 66,
-    "featuredTemplates": 11
+    "featuredTemplates": 15
   },
   "runtime": {
     "language": "TypeScript",

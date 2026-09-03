@@ -344,28 +344,28 @@
       "path": "templates/personal/career/template.json",
       "category": "personal",
       "title": "Career & Job Search Chief of Staff",
-      "featured": false
+      "featured": true
     },
     {
       "id": "freelancer-chief-of-staff",
       "path": "templates/personal/freelancer/template.json",
       "category": "personal",
       "title": "Freelancer Chief of Staff",
-      "featured": false
+      "featured": true
     },
     {
       "id": "personal-finance-chief-of-staff",
       "path": "templates/personal/personal-finance/template.json",
       "category": "personal",
       "title": "Personal Finance Chief of Staff",
-      "featured": false
+      "featured": true
     },
     {
       "id": "student-chief-of-staff",
       "path": "templates/personal/student/template.json",
       "category": "personal",
       "title": "Student Chief of Staff",
-      "featured": false
+      "featured": true
     },
     {
       "id": "academic-research-chief-of-staff",

@@ -6,13 +6,17 @@ import {
 } from "@sentrabot/contracts";
 import {
   BrainCircuit,
+  Briefcase,
   ChartColumn,
   ChevronDown,
   Clapperboard,
+  Compass,
+  GraduationCap,
   Landmark,
   type LucideIcon,
   Microscope,
   PenLine,
+  PiggyBank,
   Scale,
   Settings,
   Stethoscope,
@@ -50,6 +54,10 @@ const TEMPLATE_ICONS: Record<string, LucideIcon> = {
   clapperboard: Clapperboard,
   landmark: Landmark,
   store: Store,
+  compass: Compass,
+  "piggy-bank": PiggyBank,
+  briefcase: Briefcase,
+  "graduation-cap": GraduationCap,
 };
 
 // Every bot gets the starter's core policy layers plus its role contract.

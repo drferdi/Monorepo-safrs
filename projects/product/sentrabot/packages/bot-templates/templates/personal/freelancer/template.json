@@ -8,7 +8,7 @@
     "shortTitle": "Freelancer",
     "icon": "briefcase",
     "category": "personal",
-    "featured": false
+    "featured": true
   },
   "mission": {
     "primaryOutcome": "Maintain freelance practice execution clarity across client work, proposals and contracts, deadlines, invoices and payments, and capacity planning.",
