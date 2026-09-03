@@ -8,6 +8,7 @@ import {
   JourneyTimeline,
   type TimelineEntry,
 } from "../../../components/journey/journey-timeline";
+import { MotionRefreshGate } from "../../../components/journey/motion-refresh-gate";
 import { PrologueInscriptionInterlude } from "../../../components/journey/prologue-inscription-interlude";
 import {
   FramingStage,
@@ -93,6 +94,11 @@ export default async function JourneyPage(): Promise<ReactElement> {
   return (
     <div className="shell" data-journey="true">
       <DeepLinkLanding />
+      {/*
+       * Satu pemilik refresh ScrollTrigger (font + media kritis) dan pegangan
+       * debug motion untuk seluruh halaman — bukan per island.
+       */}
+      <MotionRefreshGate />
       {/*
        * Nav journey adalah overlay `position: fixed` — ia dan panel Timeline
        * WAJIB hidup di luar #smooth-wrapper: elemen fixed di dalam konten

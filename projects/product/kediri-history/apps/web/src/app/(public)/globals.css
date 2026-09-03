@@ -1827,8 +1827,14 @@ p {
  * atas, dan "name" auto-size aman karena isinya teks biasa, bukan anak
  * `align-self:stretch`.
  */
-@media (max-width: 47.999rem) and (scripting: none),
-  (max-width: 47.999rem) and (prefers-reduced-motion: reduce) {
+/*
+ * Berlaku untuk SELURUH mobile, bukan hanya mobile+tanpa-JS dan
+ * mobile+reduced: varian koreografi mobile memang tidak pernah membangun
+ * timeline (attachScene mengembalikan pembersih kosong), jadi beat-nya sudah
+ * menumpuk vertikal dan lapisan nama `inset:0` menutupi paragraf persis
+ * seperti kedua kasus lain (terbukti pada tangkapan mobile 1042 2026-09-03).
+ */
+@media (max-width: 47.999rem) {
   .scene[data-media-slot="921-kadhiri"] .scene-stage,
   .scene[data-media-slot="1042-river-divides-kingdom"] .scene-stage {
     grid-template-areas: "frame" "name";
@@ -2808,6 +2814,19 @@ p {
   .stage-beat p:first-child {
     font-weight: 500;
   }
+
+  /*
+   * Kredit pembuka Prolog ("Dari jejak yang tercatat…") adalah lapisan
+   * BERBASIS WAKTU milik director: ia tampil 4 detik lalu pergi sebelum
+   * pelat judul masuk. Tanpa timeline (tanpa-JS, reduced-motion, mobile) ia
+   * tidak pernah pergi dan tercetak DI ATAS pelat "KEDIRI, 2026" di sel grid
+   * yang sama — dua naskah saling tindih, keduanya tak terbaca (terbukti pada
+   * tangkapan reduced-motion dan mobile 2026-09-03). Di ketiga alur statis
+   * itu kredit tidak dirender; naskah historisnya sendiri utuh di pelat.
+   */
+  .prologue-opening {
+    display: none;
+  }
 }
 
 /*
@@ -3596,8 +3615,25 @@ body[data-timeline-open="true"] {
   width: min(72vw, 70rem);
   max-width: none;
   margin: 0 auto;
-  opacity: 0.24;
+  /*
+   * Di atas foto full-bleed, 0.24 + screen membuat garis yang "menggambar
+   * dirinya" tidak pernah terlihat — gerak yang tidak menyampaikan apa pun
+   * (audit 2026-09-03). Cukup terang untuk terbaca sebagai diagram, tetap
+   * cukup redup untuk tidak pernah menyaingi foto.
+   */
+  opacity: 0.62;
   mix-blend-mode: screen;
+}
+
+.scene[data-choreography="bridgeConstruction"]
+  .stage-surface
+  .bridge-geometry
+  line,
+.scene[data-choreography="bridgeConstruction"]
+  .stage-surface
+  .bridge-geometry
+  path {
+  stroke-width: 2.5;
 }
 
 /* Diletakkan setelah seluruh kontrol dasar agar override mobile tidak membuat

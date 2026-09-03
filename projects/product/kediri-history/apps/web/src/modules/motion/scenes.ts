@@ -1,5 +1,5 @@
 import { createReadingDirector } from "./director";
-import { gsap, MOTION, ScrollTrigger } from "./gsap";
+import { debugMarkers, gsap, MOTION, ScrollTrigger } from "./gsap";
 import type { ChoreographyKey, MotionVariant } from "./registry";
 import { ensureSmoother, releaseSmoother } from "./smooth";
 
@@ -920,6 +920,8 @@ export function attachScene(
      */
     pin: smoother && extended ? stage : false,
     pinSpacing: false,
+    // Marker hanya di balik saklar debug (`?motionDebug=1`), tidak pernah di produksi.
+    markers: debugMarkers(),
     animation: timeline,
     onUpdate: (self) => director.onProgress(self.progress),
   });

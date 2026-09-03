@@ -4,6 +4,8 @@ import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 
+import { CUSTOM_EASES } from "./tokens";
+
 /**
  * Registrasi GSAP terpusat (Sentra-GSAP: daftarkan plugin sekali di satu modul
  * GSAP pusat).
@@ -24,51 +26,70 @@ export function registerGsap(): typeof gsap {
   if (!registered && typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase);
     /*
-     * Ease sinematik untuk Jam 2 (naskah yang di-TRIGGER): berangkat cepat,
-     * mendarat sangat lembut. Jam 1 (kamera yang di-scrub) tetap linear.
+     * Ease sinematik untuk Jam 2 (naskah yang di-TRIGGER) didaftarkan sekali
+     * dari token pusat (`tokens.ts`). Jam 1 (kamera yang di-scrub) tetap
+     * linear.
      */
-    CustomEase.create("cine", "M0,0 C0.16,1 0.3,1 1,1");
+    for (const ease of CUSTOM_EASES) {
+      CustomEase.create(ease.name, ease.path);
+    }
     registered = true;
   }
   return gsap;
 }
 
+/*
+ * Token motion hidup di `tokens.ts` (data murni, tanpa efek samping) dan
+ * diekspor ulang di sini supaya seluruh import lama `MOTION` tetap berlaku.
+ */
+export { DURATIONS, EASES, MOTION, STAGGERS } from "./tokens";
 export { CustomEase, gsap, ScrollSmoother, ScrollTrigger, SplitText };
 
 /**
- * Token motion. Timing dan easing adalah milik kode, tidak pernah milik CMS
- * (Technical Bible bagian 19).
- *
- * MODEL DUA-JAM (hasil teardown bombon.rs / jasminadenner.com, 2026-08-28):
- *   Jam 1 — KAMERA: dolly, cahaya, parallax, pemisahan wilayah → di-scrub
- *            linear oleh gulir.
- *   Jam 2 — NASKAH: tarikh, kalimat pemikul, beat editorial → di-TRIGGER
- *            pada ambang progres, lalu bermain di jamnya sendiri dengan ease
- *            ekspresif. Naskah yang ikut jam kamera terasa mekanis; itulah
- *            akar keluhan "tulisannya tidak bergerak seperti GSAP".
+ * Saklar debug motion. HANYA dibaca di dalam effect (bukan saat render) agar
+ * markup server dan klien identik. Aktif bila URL memuat `motionDebug=1`
+ * atau build diset `NEXT_PUBLIC_MOTION_DEBUG=1`. Tidak pernah aktif di
+ * produksi tanpa salah satu saklar itu.
  */
-export const MOTION = {
-  /** Gerak yang di-scrub selalu linear: kurva ganda terasa seperti bug. */
-  scrubEase: "none",
-  reveal: { duration: 0.9, ease: "power2.out" },
-  settle: { duration: 1.2, ease: "power3.out" },
-  /** Jarak perjalanan spasial, dalam persen dari elemennya sendiri. */
-  travel: { desktop: 12, tablet: 8, mobile: 4 },
-  /** Jam 2 — naskah yang di-trigger. */
-  text: {
-    ease: "cine",
-    line: { duration: 0.85, stagger: 0.09, travel: 115 },
-    char: { duration: 1.1, stagger: 0.05 },
-    unit: { duration: 0.55, stagger: 0.1 },
-  },
-  /**
-   * Register BACA (direktif editorial Chief 2026-08-29): naskah di atas citra
-   * muncul lembut — offset kecil, tanpa pantulan, tanpa rotasi. Register
-   * sinematik "cine" tetap milik kredit pembuka dan kartu judul.
-   */
-  read: { y: 16, duration: 1, stagger: 0.15, ease: "power2.out" },
-  /** Parallax latar ambient: halus, -8 sampai -12 persen. */
-  parallax: { from: 4, to: -10 },
-  /** Kelembutan ScrollSmoother pada varian yang memakainya. */
-  smooth: 1.1,
-} as const;
+export function isMotionDebug(): boolean {
+  if (typeof window === "undefined") return false;
+  if (process.env.NEXT_PUBLIC_MOTION_DEBUG === "1") return true;
+  try {
+    return (
+      new URLSearchParams(window.location.search).get("motionDebug") === "1"
+    );
+  } catch {
+    return false;
+  }
+}
+
+/** Marker ScrollTrigger hanya di balik saklar debug — tidak pernah di produksi. */
+export function debugMarkers(): boolean {
+  return isMotionDebug();
+}
+
+interface MotionDebugHandle {
+  readonly gsap: typeof gsap;
+  readonly ScrollTrigger: typeof ScrollTrigger;
+  activeTriggers(): number;
+}
+
+declare global {
+  interface Window {
+    __kediriMotion?: MotionDebugHandle;
+  }
+}
+
+/**
+ * Memaparkan pegangan inspeksi (`window.__kediriMotion`) di balik saklar
+ * debug, sehingga e2e dan DevTools dapat menghitung ScrollTrigger yang hidup
+ * (`activeTriggers()`) tanpa membongkar modul.
+ */
+export function exposeMotionDebug(): void {
+  if (!isMotionDebug()) return;
+  window.__kediriMotion = {
+    gsap,
+    ScrollTrigger,
+    activeTriggers: () => ScrollTrigger.getAll().length,
+  };
+}
