@@ -198,7 +198,7 @@ every file touched here passes `biome check` individually.
 
 | Item | Status | Verification evidence |
 |---|---|---|
-| `continueRun` attempt body named | done | `executeRunAttempt(...)` owns the former attempt body; the body is byte-identical to the prior closure after indentation normalization. `pnpm --filter @sentrabot/adapters check` and adapters Vitest pass. |
+| `continueRun` attempt body named | done | `executeRunAttempt(...)` owns the former attempt body; a pre-format comparison found the moved body byte-identical after indentation normalization. `pnpm --filter @sentrabot/adapters check` and adapters Vitest pass. |
 | Frozen hybrid outbox | closed debt | No drainer, writer, or schema change. The existing billing writer and frozen-delivery decision remain canonical in `docs/architecture.md`. |
 | Historical plan state | done | Part D and Part E now identify resolved decisions and historical instructions; Part F records only the frozen outbox residual. |
 | Unrelated workspace state | classified | Restored the six uncommitted `gsap-cinematic` sources. `.agent/`, `.mimosa/`, and local preview captures are ignored; untracked documentation, legal, font, and product assets remain separate candidate source work and are not staged here. |
