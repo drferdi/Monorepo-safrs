@@ -8,12 +8,15 @@ import {
   BrainCircuit,
   ChartColumn,
   ChevronDown,
+  Clapperboard,
+  Landmark,
   type LucideIcon,
   Microscope,
   PenLine,
   Scale,
   Settings,
   Stethoscope,
+  Store,
   Target,
   Wrench,
 } from "lucide-react";
@@ -44,6 +47,9 @@ const TEMPLATE_ICONS: Record<string, LucideIcon> = {
   microscope: Microscope,
   "brain-circuit": BrainCircuit,
   wrench: Wrench,
+  clapperboard: Clapperboard,
+  landmark: Landmark,
+  store: Store,
 };
 
 // Every bot gets the starter's core policy layers plus its role contract.

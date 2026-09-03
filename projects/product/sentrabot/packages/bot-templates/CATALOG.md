@@ -1,6 +1,6 @@
 # Role Catalog
 
-Total: **50 production role packages**.
+Total: **66 production role packages**.
 
 ## Leadership — 6
 
@@ -13,17 +13,20 @@ Total: **50 production role packages**.
 | Strategy Chief of Staff | `strategy-chief-of-staff` |  |
 | Transformation & PMO Chief of Staff | `transformation-pmo-chief-of-staff` |  |
 
-## Corporate — 8
+## Corporate — 11
 
 | Role | Template ID | Featured |
 |---|---|---:|
+| ESG & Sustainability Chief of Staff | `esg-sustainability-chief-of-staff` |  |
 | Finance & Business Chief of Staff | `finance-business-chief-of-staff` | Yes |
 | Internal Audit Chief of Staff | `internal-audit-chief-of-staff` |  |
+| Law Practice Chief of Staff | `law-practice-chief-of-staff` |  |
 | Legal Affairs Chief of Staff | `legal-affairs-chief-of-staff` | Yes |
 | People & HR Chief of Staff | `people-hr-chief-of-staff` |  |
 | Privacy & Data Governance Chief of Staff | `privacy-data-governance-chief-of-staff` |  |
 | Procurement & Vendor Chief of Staff | `procurement-vendor-chief-of-staff` |  |
 | Risk & Compliance Chief of Staff | `risk-compliance-chief-of-staff` |  |
+| Tax & Accounting Practice Chief of Staff | `tax-accounting-practice-chief-of-staff` |  |
 | Treasury Chief of Staff | `treasury-chief-of-staff` |  |
 
 ## Commercial — 6
@@ -37,12 +40,17 @@ Total: **50 production role packages**.
 | Revenue Chief of Staff | `revenue-chief-of-staff` |  |
 | Sales Operations Chief of Staff | `sales-operations-chief-of-staff` |  |
 
-## Operations — 7
+## Operations — 12
 
 | Role | Template ID | Featured |
 |---|---|---:|
+| Agriculture & Plantation Chief of Staff | `agriculture-plantation-chief-of-staff` |  |
+| Construction & Property Chief of Staff | `construction-property-chief-of-staff` |  |
 | Crisis & Business Continuity Chief of Staff | `business-continuity-chief-of-staff` |  |
 | Facilities Chief of Staff | `facilities-chief-of-staff` |  |
+| Health, Safety & Environment Chief of Staff | `hse-chief-of-staff` |  |
+| Hospitality & F&B Chief of Staff | `hospitality-fnb-chief-of-staff` |  |
+| Logistics & Last-Mile Chief of Staff | `logistics-lastmile-chief-of-staff` |  |
 | Manufacturing Chief of Staff | `manufacturing-chief-of-staff` |  |
 | Operations Chief of Staff | `operations-chief-of-staff` | Yes |
 | Project Delivery Chief of Staff | `project-delivery-chief-of-staff` |  |
@@ -92,3 +100,35 @@ Total: **50 production role packages**.
 | Public Sector Program Delivery Chief of Staff | `public-sector-program-delivery-chief-of-staff` |  |
 | Regulatory Intelligence Chief of Staff | `regulatory-intelligence-chief-of-staff` |  |
 
+## Creative — 1
+
+| Role | Template ID | Featured |
+|---|---|---:|
+| Creator & Media Chief of Staff | `creator-media-chief-of-staff` | Yes |
+
+## Financial Services — 1
+
+| Role | Template ID | Featured |
+|---|---|---:|
+| Financial Services Chief of Staff | `financial-services-chief-of-staff` | Yes |
+
+## Personal — 4
+
+| Role | Template ID | Featured |
+|---|---|---:|
+| Career & Job Search Chief of Staff | `career-chief-of-staff` |  |
+| Freelancer Chief of Staff | `freelancer-chief-of-staff` |  |
+| Personal Finance Chief of Staff | `personal-finance-chief-of-staff` |  |
+| Student Chief of Staff | `student-chief-of-staff` |  |
+
+## Small Business — 1
+
+| Role | Template ID | Featured |
+|---|---|---:|
+| UMKM Owner Chief of Staff | `umkm-owner-chief-of-staff` | Yes |
+
+## Social Impact — 1
+
+| Role | Template ID | Featured |
+|---|---|---:|
+| NGO & Social Program Chief of Staff | `ngo-program-chief-of-staff` |  |

@@ -1,14 +1,14 @@
 {
   "release": "Sentra Chief of Staff Production Starter",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "researchBaseline": "2026-08-31",
   "localeBaseline": "id-ID",
   "catalog": {
-    "domains": 8,
-    "roleTemplates": 50,
-    "roleOverlays": 50,
-    "roleEvaluationManifests": 50,
-    "featuredTemplates": 8
+    "domains": 13,
+    "roleTemplates": 66,
+    "roleOverlays": 66,
+    "roleEvaluationManifests": 66,
+    "featuredTemplates": 11
   },
   "runtime": {
     "language": "TypeScript",
@@ -23,10 +23,10 @@
   "verification": {
     "automatedTests": 17,
     "testFailures": 0,
-    "validTemplates": 50,
+    "validTemplates": 66,
     "invalidTemplates": 0,
     "templateWarnings": 0,
-    "jsonFilesParsed": 125,
+    "jsonFilesParsed": 157,
     "secretPatternScan": "pass",
     "placeholderScan": "pass"
   },

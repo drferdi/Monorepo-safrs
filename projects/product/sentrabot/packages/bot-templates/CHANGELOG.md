@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.1.0 — 2026-09-03
+### Added
+- 8 new Chief of Staff role packages across 5 new domains: small-business (UMKM Owner), financial-services (Financial Services), creative (Creator & Media), social-impact (NGO & Social Program), and personal (Career & Job Search, Personal Finance, Freelancer, Student).
+- 8 new role packages within existing domains: operations (Agriculture & Plantation, Construction & Property, Health Safety & Environment, Hospitality & F&B, Logistics & Last-Mile) and corporate (ESG & Sustainability, Law Practice, Tax & Accounting Practice).
+- Each new role ships the full package: template.json, ROLE.md operating overlay, and evals.json with all mandatory adversarial/governance cases.
+- Catalog now totals 66 role packages across 13 operating domains; 11 featured templates (UMKM Owner, Financial Services, Creator & Media added).
+
 ## 2.0.0 — 2026-08-31
 ### Added
 - 50 complete Chief of Staff role packages across 8 domains.

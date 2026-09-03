@@ -1,6 +1,6 @@
 # Sentra Chief of Staff Production Starter
 
-**Version 2.0.0 · Indonesia-first · 2026-08-31 research baseline**
+**Version 2.1.0 · Indonesia-first · 2026-08-31 research baseline**
 
 A production-oriented repository for building **outcome-owned Chief of Staff agents** with explicit source-of-truth rules, authority boundaries, human approval gates, agentic threat controls, structured role contracts, and evaluation assets.
 
@@ -8,7 +8,7 @@ This is deliberately **not a prompt pack**. It separates what an agent is instru
 
 ## What ships
 
-- **50 role packages** across 8 operating domains.
+- **66 role packages** across 13 operating domains.
 - Each role includes `template.json`, `ROLE.md`, and `evals.json`.
 - Typed TypeScript contracts for templates, actions, policy decisions, evidence, and evaluations.
 - Conservative `ALLOW / REQUIRE_APPROVAL / DENY` policy engine.
@@ -84,7 +84,7 @@ src/runtime/           deterministic prompt composition
 src/registry/          role discovery and loading
 src/cli/               repository validation CLI
 
-templates/             50 complete role packages
+templates/             66 complete role packages
 governance/            policy packs and regulatory status
 evals/                 reusable behavioral evaluation cases
 ui/                    design tokens, builder UX, reference prototype
@@ -98,14 +98,14 @@ docs/                  architecture, threat model, research provenance
 ### Leadership — 6
 Executive; Founder; Strategy; Board & Governance; Transformation & PMO; Corporate Affairs.
 
-### Corporate — 8
-Finance & Business; Treasury; Legal Affairs; Risk & Compliance; Internal Audit; People & HR; Procurement & Vendor; Privacy & Data Governance.
+### Corporate — 11
+Finance & Business; Treasury; Legal Affairs; Law Practice; Tax & Accounting Practice; Risk & Compliance; Internal Audit; People & HR; Procurement & Vendor; Privacy & Data Governance; ESG & Sustainability.
 
 ### Commercial — 6
 Revenue; Sales Operations; Growth & Marketing; Customer Success; Partnerships; Pricing & Revenue Management.
 
-### Operations — 7
-Operations; Supply Chain; Manufacturing; Quality; Facilities; Project Delivery; Crisis & Business Continuity.
+### Operations — 12
+Operations; Supply Chain; Manufacturing; Quality; Facilities; Project Delivery; Crisis & Business Continuity; Health, Safety & Environment; Construction & Property; Hospitality & F&B; Logistics & Last-Mile; Agriculture & Plantation.
 
 ### Technology — 8
 Product; Engineering; AI & Data; Cybersecurity; Technology Operations; DevOps & SRE; Enterprise IT; AI Governance.
@@ -118,6 +118,21 @@ Academic & Research; Clinical Research; Knowledge & Intelligence; Education & Ac
 
 ### Indonesia & Public Sector — 4
 Public Affairs & Government Relations; Public Policy; Regulatory Intelligence; Public Sector Program Delivery.
+
+### Small Business — 1
+UMKM Owner.
+
+### Financial Services — 1
+Financial Services.
+
+### Creative — 1
+Creator & Media.
+
+### Social Impact — 1
+NGO & Social Program.
+
+### Personal — 4
+Career & Job Search; Personal Finance; Freelancer; Student.
 
 See `templates/registry.json` for machine-readable discovery.
 
@@ -133,7 +148,7 @@ npm run check
 Expected repository validation:
 
 ```text
-Validated 50 templates: 50 valid, 0 invalid, 0 warnings.
+Validated 66 templates: 66 valid, 0 invalid, 0 warnings.
 ```
 
 Compile:

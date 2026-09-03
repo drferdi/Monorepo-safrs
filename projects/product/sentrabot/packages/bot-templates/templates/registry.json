@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "generatedAt": "2026-08-31",
-  "count": 50,
+  "generatedAt": "2026-09-03",
+  "count": 66,
   "templates": [
     {
       "id": "customer-success-chief-of-staff",
@@ -46,6 +46,13 @@
       "featured": false
     },
     {
+      "id": "esg-sustainability-chief-of-staff",
+      "path": "templates/corporate/esg-sustainability/template.json",
+      "category": "corporate",
+      "title": "ESG & Sustainability Chief of Staff",
+      "featured": false
+    },
+    {
       "id": "finance-business-chief-of-staff",
       "path": "templates/corporate/finance-business/template.json",
       "category": "corporate",
@@ -57,6 +64,13 @@
       "path": "templates/corporate/internal-audit/template.json",
       "category": "corporate",
       "title": "Internal Audit Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "law-practice-chief-of-staff",
+      "path": "templates/corporate/law-practice/template.json",
+      "category": "corporate",
+      "title": "Law Practice Chief of Staff",
       "featured": false
     },
     {
@@ -95,11 +109,32 @@
       "featured": false
     },
     {
+      "id": "tax-accounting-practice-chief-of-staff",
+      "path": "templates/corporate/tax-accounting-practice/template.json",
+      "category": "corporate",
+      "title": "Tax & Accounting Practice Chief of Staff",
+      "featured": false
+    },
+    {
       "id": "treasury-chief-of-staff",
       "path": "templates/corporate/treasury/template.json",
       "category": "corporate",
       "title": "Treasury Chief of Staff",
       "featured": false
+    },
+    {
+      "id": "creator-media-chief-of-staff",
+      "path": "templates/creative/creator-media/template.json",
+      "category": "creative",
+      "title": "Creator & Media Chief of Staff",
+      "featured": true
+    },
+    {
+      "id": "financial-services-chief-of-staff",
+      "path": "templates/financial-services/financial-services/template.json",
+      "category": "financial-services",
+      "title": "Financial Services Chief of Staff",
+      "featured": true
     },
     {
       "id": "clinical-operations-chief-of-staff",
@@ -123,13 +158,6 @@
       "featured": true
     },
     {
-      "id": "regulatory-accreditation-chief-of-staff",
-      "path": "templates/healthcare/regulatory-accreditation/template.json",
-      "category": "healthcare",
-      "title": "Healthcare Regulatory & Accreditation Chief of Staff",
-      "featured": false
-    },
-    {
       "id": "healthcare-workforce-chief-of-staff",
       "path": "templates/healthcare/healthcare-workforce/template.json",
       "category": "healthcare",
@@ -148,6 +176,13 @@
       "path": "templates/healthcare/quality-patient-safety/template.json",
       "category": "healthcare",
       "title": "Quality & Patient Safety Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "regulatory-accreditation-chief-of-staff",
+      "path": "templates/healthcare/regulatory-accreditation/template.json",
+      "category": "healthcare",
+      "title": "Healthcare Regulatory & Accreditation Chief of Staff",
       "featured": false
     },
     {
@@ -221,6 +256,13 @@
       "featured": false
     },
     {
+      "id": "agriculture-plantation-chief-of-staff",
+      "path": "templates/operations/agriculture-plantation/template.json",
+      "category": "operations",
+      "title": "Agriculture & Plantation Chief of Staff",
+      "featured": false
+    },
+    {
       "id": "business-continuity-chief-of-staff",
       "path": "templates/operations/business-continuity/template.json",
       "category": "operations",
@@ -228,10 +270,38 @@
       "featured": false
     },
     {
+      "id": "construction-property-chief-of-staff",
+      "path": "templates/operations/construction-property/template.json",
+      "category": "operations",
+      "title": "Construction & Property Chief of Staff",
+      "featured": false
+    },
+    {
       "id": "facilities-chief-of-staff",
       "path": "templates/operations/facilities/template.json",
       "category": "operations",
       "title": "Facilities Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "hospitality-fnb-chief-of-staff",
+      "path": "templates/operations/hospitality-fnb/template.json",
+      "category": "operations",
+      "title": "Hospitality & F&B Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "hse-chief-of-staff",
+      "path": "templates/operations/hse/template.json",
+      "category": "operations",
+      "title": "Health, Safety & Environment Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "logistics-lastmile-chief-of-staff",
+      "path": "templates/operations/logistics-lastmile/template.json",
+      "category": "operations",
+      "title": "Logistics & Last-Mile Chief of Staff",
       "featured": false
     },
     {
@@ -270,6 +340,34 @@
       "featured": false
     },
     {
+      "id": "career-chief-of-staff",
+      "path": "templates/personal/career/template.json",
+      "category": "personal",
+      "title": "Career & Job Search Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "freelancer-chief-of-staff",
+      "path": "templates/personal/freelancer/template.json",
+      "category": "personal",
+      "title": "Freelancer Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "personal-finance-chief-of-staff",
+      "path": "templates/personal/personal-finance/template.json",
+      "category": "personal",
+      "title": "Personal Finance Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "student-chief-of-staff",
+      "path": "templates/personal/student/template.json",
+      "category": "personal",
+      "title": "Student Chief of Staff",
+      "featured": false
+    },
+    {
       "id": "academic-research-chief-of-staff",
       "path": "templates/research-education/academic-research/template.json",
       "category": "research-education",
@@ -295,6 +393,20 @@
       "path": "templates/research-education/knowledge-intelligence/template.json",
       "category": "research-education",
       "title": "Knowledge & Intelligence Chief of Staff",
+      "featured": false
+    },
+    {
+      "id": "umkm-owner-chief-of-staff",
+      "path": "templates/small-business/umkm-owner/template.json",
+      "category": "small-business",
+      "title": "UMKM Owner Chief of Staff",
+      "featured": true
+    },
+    {
+      "id": "ngo-program-chief-of-staff",
+      "path": "templates/social-impact/ngo-program/template.json",
+      "category": "social-impact",
+      "title": "NGO & Social Program Chief of Staff",
       "featured": false
     },
     {

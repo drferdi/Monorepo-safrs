@@ -1,8 +1,8 @@
 {
   "name": "@sentrabot/bot-templates",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
-  "description": "Sentra Chief of Staff Production Starter: 50 role templates, policy engine, governance packs, and evaluation assets for Indonesia-first agentic systems.",
+  "description": "Sentra Chief of Staff Production Starter: 66 role templates, policy engine, governance packs, and evaluation assets for Indonesia-first agentic systems.",
   "license": "UNLICENSED",
   "engines": {
     "node": ">=22"
