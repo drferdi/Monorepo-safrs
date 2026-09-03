@@ -194,7 +194,19 @@ every file touched here passes `biome check` individually.
 | 15 no-backdoor copy aligned with the provider table (all live surfaces) | inline | done | `tentang.html` panel and the `Privacy.html` bullet gained the optional-provider qualifier (vendor-access claims kept, "Titik." absolutism dropped); FAQ now says connected services receive data "sebatas fungsinya"; `privasi.html` left as-is (its claim is vendor-scoped and already followed by a third-party disclosure section); `pnpm --filter cora build` passes |
 | 16 static register funnel page in `apps/site` | inline | done | `apps/site/public/daftar.html` (landing chrome, flow Daftar → pilih paket → Pasang, static funnel, CTAs point at the existing `/workspace` beta target); served check: `vite preview` → `daftar.html` HTTP 200, title + 3 panels + `polish.css` 200; `pnpm --filter cora build` passes; nav wiring into other pages intentionally not done (not requested) |
 
-## Part D — Decisions required from Chief before implementation
+### Batch 8 (2026-09-03, residual closure and workspace-state reconciliation)
+
+| Item | Status | Verification evidence |
+|---|---|---|
+| `continueRun` attempt body named | done | `executeRunAttempt(...)` owns the former attempt body; the body is byte-identical to the prior closure after indentation normalization. `pnpm --filter @sentrabot/adapters check` and adapters Vitest pass. |
+| Frozen hybrid outbox | closed debt | No drainer, writer, or schema change. The existing billing writer and frozen-delivery decision remain canonical in `docs/architecture.md`. |
+| Historical plan state | done | Part D and Part E now identify resolved decisions and historical instructions; Part F records only the frozen outbox residual. |
+| Unrelated workspace state | classified | Restored the six uncommitted `gsap-cinematic` sources. `.agent/`, `.mimosa/`, and local preview captures are ignored; untracked documentation, legal, font, and product assets remain separate candidate source work and are not staged here. |
+
+## Part D — Decisions resolved by Chief
+
+All decisions in this section are historical. The selected outcomes are recorded in the
+Batch 4–7 execution-status tables and `docs/architecture.md`; they are not active gates.
 
 1. **Hybrid Control Plane / Desktop Runtime (Drift #2, #3, #15).** Options: (a) *Freeze as experimental* — keep code and tables, mount relay routes only behind `SENTRABOT_CONTROL_PLANE_RELAY=enabled`, record the decision, resume after the golden path passes (Tasks 3+4). (b) *Continue as target* — then the directive's canonical model must be amended and Task 4 is dropped. Recommendation: (a); the directive forbids two competing control planes and the scaffolding has no consumer today.
 2. **Host-tool policy on a `desktop` computer (Drift #5).** Keep `shell`/`write_file`/`launch_app`/`open_path` approval-exempt on the trusted host (current), or make them ASK unless an `always_allow` rule exists. Recommendation: ASK by default on `desktop` computers, as a follow-up task after Task 5, because it changes user-visible behavior.
@@ -202,7 +214,10 @@ every file touched here passes `biome check` individually.
 
 ---
 
-## Part E — Tasks
+## Part E — Historical task instructions
+
+The unchecked boxes below are the original implementation recipe. They are superseded by the
+Batch 4–7 execution-status tables and do not represent remaining work.
 
 ### Task 1: Architecture decision record and documentation alignment (P0 — Architecture)
 
@@ -724,14 +739,12 @@ git commit -m "test(testkit): pin routine and waiting-permission survival across
 
 ---
 
-## Part F — Deferred (P1) — only after the golden path passes
+## Part F — Closed residual record
 
-- Shared composition helper used by both `apps/api/src/app.ts` and `apps/worker/src/index.ts` (removes RC2 for good).
-- Host-tool ASK policy on `desktop` computers (Part D decision 2) with tests in `packages/adapters/src/executor-approval-*.test.ts`.
-- Fix Windows path containment in `packages/adapters/src/desktop-sandbox-win32-path.ts` (heavy lane; security-sensitive).
-- Structured run log helper carrying `workspaceId/botId/threadId/runId/attempt.fence/toolCallId/effectId/computerId`.
-- `OutboxEvent` table: either wire the hybrid outbox or record as unused in the decision log; never drop without an approved migration.
-- Monolith decomposition at proven boundaries only (`router.ts` → `bots/threads/runs/routines/computers/integrations/permissions`; `executor.ts` → `lifecycle/permissions/tool-dispatch/sandbox/retry/audit`).
+- Shared composition, host-tool ASK policy, Windows containment, structured run logging, and
+  the completed router/executor extractions are recorded in the Batch 4–6 execution status.
+- `outbox_events` remains a write-only billing outbox while the hybrid control plane is frozen;
+  do not add a drainer or alter its schema until that work resumes under a separate decision.
 
 ## Self-review
 

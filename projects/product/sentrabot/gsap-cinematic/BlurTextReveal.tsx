@@ -1,15 +1,16 @@
-'use client';
+"use client";
 
-import React, { useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import { SplitText } from 'gsap/SplitText';
+import gsap from "gsap";
+import { SplitText } from "gsap/SplitText";
+import type React from "react";
+import { useEffect, useRef } from "react";
 
 gsap.registerPlugin(SplitText);
 
 interface BlurTextRevealProps {
   text: string;
   as?: React.ElementType;
-  type?: 'chars' | 'words' | 'lines';
+  type?: "chars" | "words" | "lines";
   stagger?: number;
   duration?: number;
   delay?: number;
@@ -25,17 +26,17 @@ interface BlurTextRevealProps {
 
 export default function BlurTextReveal({
   text,
-  as: Tag = 'h2',
-  type = 'words',
+  as: Tag = "h2",
+  type = "words",
   stagger = 0.08,
   duration = 1.2,
   delay = 0,
   blurAmount = 10,
   yOffset = 24,
-  className = '',
+  className = "",
   scrollTrigger = true,
-  start = 'top 85%',
-  end = 'bottom top',
+  start = "top 85%",
+  end = "bottom top",
   scrub = false,
   once = true,
 }: BlurTextRevealProps) {
@@ -52,19 +53,19 @@ export default function BlurTextReveal({
       opacity: 0,
       filter: `blur(${blurAmount}px)`,
       y: yOffset,
-      willChange: 'filter, opacity, transform',
+      willChange: "filter, opacity, transform",
     };
 
     const toVars: gsap.TweenVars = {
       opacity: 1,
-      filter: 'blur(0px)',
+      filter: "blur(0px)",
       y: 0,
       duration,
       stagger,
       delay,
-      ease: 'power3.out',
+      ease: "power3.out",
       onComplete: () => {
-        gsap.set(targets, { willChange: 'auto' });
+        gsap.set(targets, { willChange: "auto" });
       },
     };
 
@@ -74,7 +75,7 @@ export default function BlurTextReveal({
         start,
         end: scrub ? end : undefined,
         scrub: scrub || false,
-        toggleActions: once ? 'play none none none' : 'play reverse play reverse',
+        toggleActions: once ? "play none none none" : "play reverse play reverse",
       };
     }
 
@@ -84,7 +85,24 @@ export default function BlurTextReveal({
       tween.kill();
       split.revert();
     };
-  }, [text, type, stagger, duration, delay, blurAmount, yOffset, scrollTrigger, start, end, scrub, once]);
+  }, [
+    text,
+    type,
+    stagger,
+    duration,
+    delay,
+    blurAmount,
+    yOffset,
+    scrollTrigger,
+    start,
+    end,
+    scrub,
+    once,
+  ]);
 
-  return <Tag ref={containerRef} className={className}>{text}</Tag>;
+  return (
+    <Tag ref={containerRef} className={className}>
+      {text}
+    </Tag>
+  );
 }

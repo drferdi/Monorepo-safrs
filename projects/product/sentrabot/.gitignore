@@ -37,6 +37,14 @@ verify-report
 design/
 PRODUCT_PLAN.md
 
+# Local agent state and visual-review captures; neither is product source.
+.agent/
+.mimosa/
+_preview/
+_preview*.png
+_avatar_preview.png
+_phone_preview.png
+
 # Lingui compiled catalogs — Vite plugin compiles .po at build time
 apps/web/src/locales/**/*.mjs
 apps/web/src/locales/**/*.js

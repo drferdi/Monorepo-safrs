@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import React, { useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect, useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
 interface ClipImageProps {
   src: string;
   alt: string;
-  direction?: 'left' | 'right' | 'up' | 'down';
+  direction?: "left" | "right" | "up" | "down";
   duration?: number;
   className?: string;
   start?: string;
@@ -17,19 +17,19 @@ interface ClipImageProps {
 }
 
 const clipMap = {
-  left: { from: 'inset(0 100% 0 0)', to: 'inset(0 0% 0 0)' },
-  right: { from: 'inset(0 0 0 100%)', to: 'inset(0 0 0 0%)' },
-  up: { from: 'inset(100% 0 0 0)', to: 'inset(0% 0 0 0)' },
-  down: { from: 'inset(0 0 100% 0)', to: 'inset(0 0 0% 0)' },
+  left: { from: "inset(0 100% 0 0)", to: "inset(0 0% 0 0)" },
+  right: { from: "inset(0 0 0 100%)", to: "inset(0 0 0 0%)" },
+  up: { from: "inset(100% 0 0 0)", to: "inset(0% 0 0 0)" },
+  down: { from: "inset(0 0 100% 0)", to: "inset(0 0 0% 0)" },
 };
 
 export default function ClipImage({
   src,
   alt,
-  direction = 'left',
+  direction = "left",
   duration = 1.4,
-  className = '',
-  start = 'top 80%',
+  className = "",
+  start = "top 80%",
   once = true,
 }: ClipImageProps) {
   const imageRef = useRef<HTMLDivElement>(null);
@@ -42,20 +42,20 @@ export default function ClipImage({
 
     const tween = gsap.fromTo(
       el,
-      { clipPath: from, willChange: 'clip-path' },
+      { clipPath: from, willChange: "clip-path" },
       {
         clipPath: to,
         duration,
-        ease: 'power3.inOut',
+        ease: "power3.inOut",
         scrollTrigger: {
           trigger: el,
           start,
-          toggleActions: once ? 'play none none none' : 'play reverse play reverse',
+          toggleActions: once ? "play none none none" : "play reverse play reverse",
         },
         onComplete: () => {
-          gsap.set(el, { willChange: 'auto' });
+          gsap.set(el, { willChange: "auto" });
         },
-      }
+      },
     );
 
     return () => {

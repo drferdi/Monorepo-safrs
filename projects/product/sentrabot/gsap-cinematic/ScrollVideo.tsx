@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React, { useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect, useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,9 +19,9 @@ interface ScrollVideoProps {
 export default function ScrollVideo({
   src,
   poster,
-  className = '',
-  pinDuration = '+=300%',
-  start = 'top top',
+  className = "",
+  pinDuration = "+=300%",
+  start = "top top",
   end,
   scrub = true,
 }: ScrollVideoProps) {
@@ -47,7 +47,7 @@ export default function ScrollVideo({
 
         gsap.to(video, {
           currentTime: videoDuration,
-          ease: 'none',
+          ease: "none",
           scrollTrigger: {
             trigger: section,
             start,
@@ -63,9 +63,9 @@ export default function ScrollVideo({
     if (video.readyState >= 1) {
       return setup();
     } else {
-      video.addEventListener('loadedmetadata', setup, { once: true });
+      video.addEventListener("loadedmetadata", setup, { once: true });
       return () => {
-        video.removeEventListener('loadedmetadata', setup);
+        video.removeEventListener("loadedmetadata", setup);
       };
     }
   }, [src, pinDuration, start, end, scrub]);
@@ -80,7 +80,7 @@ export default function ScrollVideo({
         playsInline
         muted
         className="absolute inset-0 w-full h-full object-cover"
-        style={{ willChange: 'transform' }}
+        style={{ willChange: "transform" }}
       />
     </div>
   );

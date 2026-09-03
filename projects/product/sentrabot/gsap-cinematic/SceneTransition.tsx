@@ -1,12 +1,13 @@
-'use client';
+"use client";
 
-import React, { useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import type React from "react";
+import { useEffect, useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-type TransitionType = 'wipe-left' | 'wipe-right' | 'wipe-up' | 'crossfade' | 'scale';
+type TransitionType = "wipe-left" | "wipe-right" | "wipe-up" | "crossfade" | "scale";
 
 interface SceneTransitionProps {
   children: React.ReactNode;
@@ -19,11 +20,11 @@ interface SceneTransitionProps {
 
 export default function SceneTransition({
   children,
-  className = '',
-  type = 'wipe-left',
+  className = "",
+  type = "wipe-left",
   duration = 1,
-  pinDuration = '+=250%',
-  start = 'top top',
+  pinDuration = "+=250%",
+  start = "top top",
 }: SceneTransitionProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -43,11 +44,11 @@ export default function SceneTransition({
       });
 
       const fromVars: Record<TransitionType, gsap.TweenVars> = {
-        'wipe-left': { xPercent: 100, opacity: 0.4 },
-        'wipe-right': { xPercent: -100, opacity: 0.4 },
-        'wipe-up': { yPercent: 100, opacity: 0.4 },
-        'crossfade': { opacity: 0, scale: 0.96 },
-        'scale': { scale: 1.08, opacity: 0 },
+        "wipe-left": { xPercent: 100, opacity: 0.4 },
+        "wipe-right": { xPercent: -100, opacity: 0.4 },
+        "wipe-up": { yPercent: 100, opacity: 0.4 },
+        crossfade: { opacity: 0, scale: 0.96 },
+        scale: { scale: 1.08, opacity: 0 },
       };
 
       const toVars: gsap.TweenVars = {
@@ -56,11 +57,11 @@ export default function SceneTransition({
         scale: 1,
         opacity: 1,
         duration,
-        ease: 'power3.inOut',
+        ease: "power3.inOut",
         scrollTrigger: {
           trigger: section,
           start,
-          end: 'top+=20% top',
+          end: "top+=20% top",
           scrub: 1.5,
         },
       };
@@ -68,20 +69,20 @@ export default function SceneTransition({
       gsap.fromTo(content, fromVars[type], toVars);
 
       const exitVars: Record<TransitionType, gsap.TweenVars> = {
-        'wipe-left': { xPercent: -30, opacity: 0.3 },
-        'wipe-right': { xPercent: 30, opacity: 0.3 },
-        'wipe-up': { yPercent: -20, opacity: 0.3 },
-        'crossfade': { opacity: 0.2, scale: 0.98 },
-        'scale': { scale: 1.04, opacity: 0.3 },
+        "wipe-left": { xPercent: -30, opacity: 0.3 },
+        "wipe-right": { xPercent: 30, opacity: 0.3 },
+        "wipe-up": { yPercent: -20, opacity: 0.3 },
+        crossfade: { opacity: 0.2, scale: 0.98 },
+        scale: { scale: 1.04, opacity: 0.3 },
       };
 
       gsap.to(content, {
         ...exitVars[type],
-        ease: 'none',
+        ease: "none",
         scrollTrigger: {
           trigger: section,
-          start: 'bottom-=30% bottom',
-          end: 'bottom bottom',
+          start: "bottom-=30% bottom",
+          end: "bottom bottom",
           scrub: true,
         },
       });
