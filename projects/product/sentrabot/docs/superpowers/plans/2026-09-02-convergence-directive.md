@@ -187,7 +187,7 @@ every file touched here passes `biome check` individually.
 
 | Item | Lane | Status | Verification evidence |
 |---|---|---|---|
-| 12 `biome migrate` to schema 2.5.11 | inline | done, commit awaiting Chief's approval of the config diff | migration rewrote only `$schema` (2.5.8 → 2.5.11), `files.includes` untouched; `pnpm lint` exit 0 (2 pre-existing warnings in `infra/updater/src/compose-service.test.ts`, from CLI 2.5.11, not the schema bump) |
+| 12 `biome migrate` to schema 2.5.11 | inline | done, commit accepted by Chief | migration rewrote only `$schema` (2.5.8 → 2.5.11), `files.includes` untouched; `pnpm lint` exit 0 (2 pre-existing warnings in `infra/updater/src/compose-service.test.ts`, from CLI 2.5.11, not the schema bump) |
 | 13 supervisor tests impossible on Windows gated | inline | done | `computer-spec.test.ts` argv test skips on win32 or missing `python3`; two `home-ownership.test.ts` symlink tests skip on win32 or non-root; `pnpm vitest run infra/sandboxes/supervisor/src` → 63 passed, 5 skipped, 0 failed (was 3 failed) |
 | 14a dead `/v1/events` relay alias removed | inline | done | grep for `v1/events` in code → zero hits; relay suite 5/5; `tsc` clean; the untrusted-runtime test now pins `/v1/relay/events`; stale comments in `env.ts` and `.env.example` updated |
 | 14b `outbox_events` recorded as write-only debt | inline | done | corrected fact: `applyVerifiedPaymentEvent`/`applyEntitlementEvent` (`packages/db/src/platform.ts`) write `entitlement.changed` rows from the live Xendit webhook path, no reader exists, `sentAt` never set; two 2026-09-03 decision-log entries added to `docs/architecture.md`, the frozen-hybrid evidence line corrected |
