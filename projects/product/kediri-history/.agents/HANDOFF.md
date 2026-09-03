@@ -88,14 +88,20 @@ perubahan kode — kontensi 6 worker paralel + dev server cold-compile, BUKAN
 regresi. Jangan panik pada satu run merah; jalankan ulang 1-2 kali sebelum
 menyimpulkan ada bug nyata.
 
-## Bukti terakhir yang benar-benar dijalankan (2026-08-30)
+## Bukti terakhir yang benar-benar dijalankan (2026-09-03)
 
 | Perintah | Hasil |
 | --- | --- |
-| `pnpm verify` (kediri-history) | PASS penuh — lint 0 error/14 warning lama, typecheck, unit 71 + token gate, build 20 rute, check-production-journey 0 marker editorial, verify-production 12 record 0 kritis |
-| `pnpm test:e2e` | Beberapa run awal flaky (lihat di atas); run bersih akhir **66/14/0** |
+| `pnpm run typecheck` | PASS, 0 error |
+| `pnpm run lint` | PASS, 0 error, 16 warning `noDescendingSpecificity` lama di `globals.css` |
+| `pnpm run test` | PASS — 7 file, 81 tes; token gate 52 contrast check, 0 raw value |
+| `pnpm test:e2e` (tanpa DB CMS) | **54/33/17** setelah perubahan vs baseline **52/35/17** sebelum perubahan; tidak ada tes yang baru gagal |
+| Playwright manual (Chromium) | Navigasi SPA: ScrollTrigger 68 → 0 → 68; deep link 1135 lalu gulir naik: strip arsip di atasnya opacity 1; font terlambat 4 s: label Act I tidak misfire; WebKit smoke PASS; Firefox belum terpasang |
+| `pnpm run build` / `pnpm verify` | TIDAK dijalankan sesi ini (dev server aktif sepanjang sesi — jangan build saat server hidup) |
 
-Belum di-commit.
+Sudah di-commit lokal (belum di-subtree-push): `dfc5a97` fix(journey) token/debug/
+refresh/CSS, `15c5891` feat(journey) identitas director, `4469ce9` feat(journey)
+kartu act/interlude/finale/batch, `d90aae3` docs(journey) audit + arc + handoff.
 
 ## Tindakan berikutnya
 
@@ -104,8 +110,10 @@ Belum di-commit.
 2. Keputusan Chief atas flag F1–F5 di `docs/shots/image-manifest.md`.
 3. Record rights/provenance CMS untuk seluruh media pratinjau (termasuk
    video) sebelum rilis publik final.
-4. Koreografi khusus untuk scene yang masih memakai flavor default + transisi
-   kausal antar-act; tinjauan visual independen Sentra-GSAP.
+4. Tinjauan visual independen Sentra-GSAP atas identitas per-section yang
+   baru (`docs/GSAP_AUDIT.md` §5); `npx playwright install firefox` lalu
+   smoke Firefox; Performance panel di GPU sungguhan; perbaiki/hapus tes
+   prolog usang (`data-opening-frame`, `dataset.intro`) di `smoke.spec.ts`.
 5. Phase 17–19 (mobile per scene, aksesibilitas manual, budget performa);
    Phase 22 (deployment) tetap menunggu otorisasi eksplisit Chief (G02).
 6. Pertimbangkan formalisasi flakiness e2e paralel di atas — kalau makin

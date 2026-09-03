@@ -245,8 +245,14 @@ departure → Act IX mask → two-bridges assembly → 2024 tracking → finale)
 | Scroll frame sample (4 s scripted scroll across 879–1042, headless Chromium) | 658 frames, mean 6.1 ms, max 12.1 ms, 0 frames over 34 ms. Headless is not a device measurement; DevTools Performance on a real GPU remains a manual check |
 | Reduced motion (desktop) | Titles, master lines, act titles, finale, readouts all `opacity: 1` immediately; prologue credit no longer overlaps the plate |
 | Mobile 390×844 | Prologue readable; 1042 names in their own row below the beats |
+| Client-side route change (`/journey` → wordmark link to `/` → `history.back()`) | Triggers 68 → 0 → 68; `data-smooth` removed on `/`. Every island reverts; no orphan ScrollTrigger |
+| Deep link `/journey#1135-panjalu-jayati` then scroll up to 879 | Readouts of 879, 921, 1015, 1042 stay `opacity: 1` at landing and after scrolling up (viewport guard works); 1135's own readout is below the landing viewport and reveals on entry |
+| Late fonts (CDP `Fetch` pausing the first three `.woff2` requests by 4 s) | `fonts.ready` at 4.5 s; Act I label stays `opacity: 0` at scrollY 0 both before and after the refresh (no misfire), reaches 1 after scrolling to the header |
+| Act title line mask | Two mask wrappers (`overflow: clip`), lines at translateY 92 px before, mid-travel at 4–8 px, 0 at rest |
 | Playwright e2e (`pnpm test:e2e`, Chromium desktop + Pixel 7) | See table below |
-| Safari / Firefox | **Unverified** in this pass — Playwright WebKit and Firefox builds exist locally but the project config only defines Chromium projects; a cross-engine run is a follow-up |
+| Safari (WebKit 2336 via Playwright) | Smoke PASS: no page or console errors, ScrollSmoother active, 1135 master/title and Act I title `opacity: 1` at the rest state |
+| Firefox | **Unverified** — the local Playwright Firefox build (`firefox-1538`) has no executable; install it (`npx playwright install firefox`) and rerun the smoke script |
+| Real-device DevTools Performance panel | **Unverified** — headless frame sampling only |
 
 E2E comparison against the pre-change baseline run in the same environment
 (no CMS database attached, so archive/search tests fail identically in both):
