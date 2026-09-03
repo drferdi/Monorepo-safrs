@@ -1,4 +1,4 @@
-import { gsap, MOTION, SplitText } from "./gsap";
+import { DURATIONS, EASES, gsap, MOTION, SplitText, STAGGERS } from "./gsap";
 
 /**
  * Sutradara naskah — Jam 2 dari model dua-jam.
@@ -6,9 +6,15 @@ import { gsap, MOTION, SplitText } from "./gsap";
  * Kamera (Jam 1) tetap di-scrub linear oleh ScrollTrigger di `scenes.ts`.
  * Berkas ini memegang jam yang satunya: tarikh, kalimat pemikul, nama, dan
  * beat editorial DI-TRIGGER pada ambang progres shot, lalu bermain di jamnya
- * sendiri dengan ease ekspresif ("cine"). Inilah perbedaan struktural antara
+ * sendiri dengan ease ekspresif. Inilah perbedaan struktural antara
  * "gambar yang ditarik-tarik" dan situs referensi (bombon.rs,
  * jasminadenner.com): di sana naskah tidak pernah menumpang jam kamera.
+ *
+ * IDENTITAS GERAK PER SCENE (audit 2026-09-03): setiap koreografi memiliki
+ * satu teknik utama yang menjawab argumen historisnya — lihat `SCRIPT_STYLES`.
+ * Identitas dipasang pada PERNYATAAN KUNCI (tarikh, nama, kalimat pemikul);
+ * beat pendukung tetap di register BACA yang tenang (`MOTION.read`), sehingga
+ * tidak semua hal bergerak sama kerasnya.
  *
  * Aturan yang tetap mengikat:
  *   - Tidak ada teks yang dibuat di sini; seluruh sejarah sudah dirender
@@ -18,6 +24,9 @@ import { gsap, MOTION, SplitText } from "./gsap";
  *   - Tidak pernah autoAlpha / visibility:hidden pada naskah historis,
  *     KECUALI beat yang bergiliran — dan varian mobile/reduced/tanpa-JS
  *     tidak pernah melewati jalur ini (CSS menumpuknya statis).
+ *   - Hanya transform, opacity, dan filter (khusus kredit Prolog) yang
+ *     dianimasikan. Efek "tracking" dibuat dari offset `x` per huruf, bukan
+ *     dari `letter-spacing` (properti layout).
  *   - Mundur harus jujur: menggulir balik melewati ambang memutar balik
  *     timeline-nya, sehingga keadaan selalu fungsi dari posisi gulir.
  */
@@ -100,12 +109,31 @@ const FLAVORS: Readonly<Record<string, SceneFlavor>> = {
   bridgeLift: { beatX: 0, unitAxis: "y", unitDir: -1 },
   // 1947–1948: ritme mesin, dua sisi bergantian cepat.
   revolutionMachine: { beatX: 8, alternate: true, unitAxis: "y", unitDir: 1 },
+  // 1990: perusahaan berangkat ke pasar nasional — semuanya dari kiri.
+  marketDeparture: { beatX: -9, unitAxis: "x", unitDir: -1 },
   // 2024–2026: satu garis memanjang ke cakrawala, dari kiri.
   runwayTransition: { beatX: -9, unitAxis: "x", unitDir: -1 },
 };
 
 function flavorFor(key: string): SceneFlavor {
   return FLAVORS[key] ?? DEFAULT_FLAVOR;
+}
+
+/**
+ * Identitas gerak per SLUG, milik kode (preseden: `framing.ts` dan
+ * `HANDOFF_BEFORE_SCENE` juga dikunci per slug). CMS tetap memilih
+ * `choreographyKey`; peta ini hanya memecah dua scene BERSEBELAHAN yang
+ * memakai key sama (1958 → 1990, keduanya `industrialExpansion`) supaya tidak
+ * ada dua entrance identik berturut-turut.
+ */
+const SLUG_IDENTITY: Readonly<Record<string, string>> = {
+  "1990-kediri-to-market": "marketDeparture",
+};
+
+function identityFor(root: HTMLElement, key: string): string {
+  const scene = root.querySelector<HTMLElement>(".scene[id]");
+  const slug = scene?.id;
+  return (slug && SLUG_IDENTITY[slug]) || key;
 }
 
 const q = (root: HTMLElement, name: string) =>
@@ -117,97 +145,354 @@ interface Cue {
   played: boolean;
 }
 
-interface TextEntranceStyle {
-  readonly initial: gsap.TweenVars | ((index: number) => gsap.TweenVars);
-  readonly tween: gsap.TweenVars;
+type FromVars =
+  | gsap.TweenVars
+  | ((index: number, count: number) => gsap.TweenVars);
+
+interface Entrance {
+  readonly from: FromVars;
+  readonly to: gsap.TweenVars;
 }
 
-function textEntranceProps(key: string): TextEntranceStyle {
-  switch (key) {
-    case "prologueReveal":
-      return {
-        initial: { opacity: 0, y: 20, filter: "blur(4px)" },
-        tween: {
-          opacity: 1,
-          y: 0,
-          filter: "blur(0px)",
-          duration: 0.85,
-          ease: "power2.out",
-          stagger: 0.08,
-        },
-      };
-    case "inscriptionReveal":
-      return {
-        initial: { opacity: 0, x: -22, y: 4 },
-        tween: {
-          opacity: 1,
-          x: 0,
-          y: 0,
-          duration: 0.75,
-          ease: "power2.out",
-          stagger: 0.07,
-        },
-      };
-    case "nameEmerges":
-      return {
-        initial: { opacity: 0, y: 28, scale: 0.96 },
-        tween: {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.8,
-          ease: "back.out(1.15)",
-          stagger: 0.08,
-        },
-      };
-    case "nameEndures":
-      return {
-        initial: { opacity: 0, x: -16, y: 8 },
-        tween: {
-          opacity: 1,
-          x: 0,
-          y: 0,
-          duration: 0.7,
-          ease: "power2.out",
-          stagger: 0.06,
-        },
-      };
-    case "dividedKingdom":
-      return {
-        initial: (index: number) => ({
-          opacity: 0,
-          x: index % 2 === 0 ? -28 : 28,
-        }),
-        tween: {
-          opacity: 1,
-          x: 0,
-          duration: 0.75,
-          ease: "power3.out",
-          stagger: 0.08,
-        },
-      };
-    case "dahaLiving":
-      return {
-        initial: { opacity: 0, y: 14 },
-        tween: {
-          opacity: 1,
-          y: 0,
-          duration: 0.9,
-          ease: "sine.out",
-          stagger: 0.1,
-        },
-      };
-    default:
-      return {
-        initial: { opacity: 0, y: MOTION.read.y },
-        tween: {
-          opacity: 1,
-          y: 0,
-          duration: MOTION.read.duration,
-          ease: MOTION.read.ease,
-          stagger: MOTION.read.stagger,
-        },
-      };
+/**
+ * Gaya naskah per identitas.
+ *
+ *   `masterSplit` unit pembelahan kalimat pemikul (baris, kata, huruf);
+ *   `master`      keadaan awal + tween per unit itu — INILAH identitas;
+ *   `beats`       entrance beat pendukung — tetap dekat register baca.
+ *
+ * Seluruh stagger memakai `amount` (rentang total), bukan `each`, sehingga
+ * kalimat panjang tidak memanjangkan durasi: keadaan baca selalu tercapai
+ * dalam ~1.5 detik setelah ambangnya terlewati.
+ */
+interface ScriptStyle {
+  readonly masterSplit: "lines" | "words" | "chars";
+  readonly master: Entrance;
+  readonly beats: Entrance;
+}
+
+const READ_BEATS: Entrance = {
+  from: { opacity: 0, y: MOTION.read.y },
+  to: {
+    opacity: 1,
+    y: 0,
+    duration: MOTION.read.duration,
+    ease: MOTION.read.ease,
+  },
+};
+
+const DEFAULT_STYLE: ScriptStyle = {
+  masterSplit: "lines",
+  master: {
+    from: { opacity: 0, y: MOTION.read.y },
+    to: {
+      opacity: 1,
+      y: 0,
+      duration: MOTION.read.duration,
+      ease: MOTION.read.ease,
+      stagger: { amount: 0.3 },
+    },
+  },
+  beats: READ_BEATS,
+};
+
+const SCRIPT_STYLES: Readonly<Record<string, ScriptStyle>> = {
+  /* Prolog — takjub: kata-kata terkuak dari kabut (tanda tangan situs). */
+  prologueReveal: {
+    masterSplit: "lines",
+    master: {
+      from: { opacity: 0, y: 20, filter: "blur(4px)" },
+      to: {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 0.85,
+        ease: EASES.read,
+        stagger: { amount: 0.24 },
+      },
+    },
+    beats: {
+      from: { opacity: 0, y: 20, filter: "blur(4px)" },
+      to: {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 0.85,
+        ease: EASES.read,
+      },
+    },
+  },
+  /* 879 — keterbacaan adalah peristiwa: huruf terbaca menyusul sapuan cahaya. */
+  inscriptionReveal: {
+    masterSplit: "chars",
+    master: {
+      from: { opacity: 0, x: 10, skewX: -12 },
+      to: {
+        opacity: 1,
+        x: 0,
+        skewX: 0,
+        duration: 0.7,
+        ease: EASES.cine,
+        stagger: { amount: 0.8, from: "start" },
+      },
+    },
+    beats: {
+      from: { opacity: 0, x: -22, y: 4 },
+      to: { opacity: 1, x: 0, y: 0, duration: 0.75, ease: EASES.read },
+    },
+  },
+  /* 921 — sebuah nama menempati kursinya: mendarat dari kedalaman, tanpa pantulan. */
+  nameEmerges: {
+    masterSplit: "lines",
+    master: {
+      from: { opacity: 0, y: 28 },
+      to: {
+        opacity: 1,
+        y: 0,
+        duration: 0.9,
+        ease: EASES.settle,
+        stagger: { amount: 0.25 },
+      },
+    },
+    beats: {
+      from: { opacity: 0, y: 18 },
+      to: { opacity: 1, y: 0, duration: 0.8, ease: EASES.settle },
+    },
+  },
+  /* 1015 — Research Hold: keheningan; naskah sekadar menjadi ada. */
+  nameEndures: {
+    masterSplit: "lines",
+    master: {
+      from: { opacity: 0 },
+      to: {
+        opacity: 1,
+        duration: DURATIONS.dwell,
+        ease: EASES.sine,
+        stagger: { amount: 0.2 },
+      },
+    },
+    beats: {
+      from: { opacity: 0, x: -16, y: 8 },
+      to: { opacity: 1, x: 0, y: 0, duration: 0.7, ease: EASES.read },
+    },
+  },
+  /* 1042 — pembagian terjadi di RUANG: kata-kata terbelah barat/timur. */
+  dividedKingdom: {
+    masterSplit: "words",
+    master: {
+      from: (index) => ({ opacity: 0, x: index % 2 === 0 ? -36 : 36 }),
+      to: {
+        opacity: 1,
+        x: 0,
+        duration: 0.8,
+        ease: EASES.converge,
+        stagger: { amount: 0.4 },
+      },
+    },
+    beats: {
+      from: (index) => ({ opacity: 0, x: index % 2 === 0 ? -28 : 28 }),
+      to: { opacity: 1, x: 0, duration: 0.75, ease: EASES.converge },
+    },
+  },
+  /* Daha — kota yang masih bernapas: naik lembut, tidak menyaingi video. */
+  dahaLiving: {
+    masterSplit: "lines",
+    master: {
+      from: { opacity: 0, y: 14 },
+      to: {
+        opacity: 1,
+        y: 0,
+        duration: 0.9,
+        ease: EASES.sine,
+        stagger: { amount: 0.3 },
+      },
+    },
+    beats: {
+      from: { opacity: 0, y: 14 },
+      to: { opacity: 1, y: 0, duration: 0.9, ease: EASES.sine },
+    },
+  },
+  /* 1135 / 1292 — otoritas yang tercerai menyatu: kata datang dari dua sisi ke tengah. */
+  royalConsolidation: {
+    masterSplit: "words",
+    master: {
+      from: (index, count) => ({
+        opacity: 0,
+        x: (index < count / 2 ? -1 : 1) * 56,
+      }),
+      to: {
+        opacity: 1,
+        x: 0,
+        duration: 0.9,
+        ease: EASES.converge,
+        stagger: { amount: 0.35, from: "edges" },
+      },
+    },
+    beats: READ_BEATS,
+  },
+  /* 1157 / 1906 / 1950 — halaman arsip terbuka: baris berputar dari engsel kiri. */
+  manuscriptWorld: {
+    masterSplit: "lines",
+    master: {
+      from: {
+        opacity: 0,
+        x: -24,
+        rotationX: -55,
+        transformOrigin: "left top",
+        transformPerspective: 800,
+      },
+      to: {
+        opacity: 1,
+        x: 0,
+        rotationX: 0,
+        duration: 0.9,
+        ease: EASES.settle,
+        stagger: { amount: 0.3 },
+      },
+    },
+    beats: {
+      from: { opacity: 0, x: -10 },
+      to: { opacity: 1, x: 0, duration: 0.9, ease: EASES.read },
+    },
+  },
+  /* 1222 / 1293 / … — retak: potongan keras, stagger rapat, dari kanan. */
+  politicalFracture: {
+    masterSplit: "lines",
+    master: {
+      from: { opacity: 0, x: 48 },
+      to: {
+        opacity: 1,
+        x: 0,
+        duration: DURATIONS.cut,
+        ease: EASES.hardCut,
+        stagger: { each: 0.09 },
+      },
+    },
+    beats: {
+      from: { opacity: 0, x: 24 },
+      to: { opacity: 1, x: 0, duration: DURATIONS.cut, ease: EASES.hardCut },
+    },
+  },
+  /* 1869 / dua jembatan — terakit: kata naik dari bawah, dari tepi ke tengah. */
+  bridgeConstruction: {
+    masterSplit: "words",
+    master: {
+      from: { opacity: 0, y: 34 },
+      to: {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        stagger: { amount: 0.45, from: "edges" },
+      },
+    },
+    beats: READ_BEATS,
+  },
+  /* 1912 — terangkat: baris naik jauh dengan deselerasi panjang. */
+  bridgeLift: {
+    masterSplit: "lines",
+    master: {
+      from: { opacity: 0, y: 40 },
+      to: {
+        opacity: 1,
+        y: 0,
+        duration: 0.9,
+        ease: EASES.lift,
+        stagger: { amount: 0.3 },
+      },
+    },
+    beats: {
+      from: { opacity: 0, y: 24 },
+      to: { opacity: 1, y: 0, duration: 0.9, ease: EASES.lift },
+    },
+  },
+  /* 1947–1948 — ritme mesin: potongan bergantian sisi, stagger tercepat di situs. */
+  revolutionMachine: {
+    masterSplit: "lines",
+    master: {
+      from: (index) => ({ opacity: 0, x: index % 2 === 0 ? -28 : 28 }),
+      to: {
+        opacity: 1,
+        x: 0,
+        duration: 0.24,
+        ease: EASES.hardCut,
+        stagger: { each: 0.06 },
+      },
+    },
+    beats: {
+      from: (index) => ({ opacity: 0, x: index % 2 === 0 ? -14 : 14 }),
+      to: { opacity: 1, x: 0, duration: DURATIONS.cut, ease: EASES.hardCut },
+    },
+  },
+  /* gula / warga / 1958 — meluas dari tapak kecil: kata mekar dari tengah. */
+  industrialExpansion: {
+    masterSplit: "words",
+    master: {
+      from: { opacity: 0, scale: 0.92, y: 6, transformOrigin: "center" },
+      to: {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        duration: 0.85,
+        ease: EASES.expand,
+        stagger: { amount: 0.4, from: "center" },
+      },
+    },
+    beats: READ_BEATS,
+  },
+  /* 1990 (override slug) — berangkat ke pasar nasional: sapuan panjang dari kiri. */
+  marketDeparture: {
+    masterSplit: "lines",
+    master: {
+      from: { opacity: 0, x: -80 },
+      to: {
+        opacity: 1,
+        x: 0,
+        duration: 1.2,
+        ease: EASES.expand,
+        stagger: { amount: 0.25 },
+      },
+    },
+    beats: {
+      from: { opacity: 0, x: -20 },
+      to: { opacity: 1, x: 0, duration: 1, ease: EASES.expand },
+    },
+  },
+  /* 2024–2026 — satu garis ke cakrawala: huruf merenggang dari tengah (tracking lewat x). */
+  runwayTransition: {
+    masterSplit: "chars",
+    master: {
+      from: (index, count) => ({
+        opacity: 0,
+        x: (count / 2 - index) * 9,
+      }),
+      to: {
+        opacity: 1,
+        x: 0,
+        duration: 1.2,
+        ease: EASES.settle,
+        stagger: { amount: 0.3, from: "center" },
+      },
+    },
+    beats: {
+      from: { opacity: 0, x: -18 },
+      to: { opacity: 1, x: 0, duration: 1, ease: EASES.settle },
+    },
+  },
+};
+
+function styleFor(identity: string): ScriptStyle {
+  return SCRIPT_STYLES[identity] ?? DEFAULT_STYLE;
+}
+
+/** Menetapkan keadaan awal per elemen; `from` boleh bergantung pada indeks. */
+function applyFrom(targets: readonly Element[], from: FromVars): void {
+  if (typeof from === "function") {
+    targets.forEach((target, index) => {
+      gsap.set(target, from(index, targets.length));
+    });
+  } else if (targets.length > 0) {
+    gsap.set(targets, from);
   }
 }
 
@@ -223,12 +508,16 @@ export function createReadingDirector(
   const splits: SplitText[] = [];
   const beatTimelines: gsap.core.Timeline[] = [];
   const pendingCalls: gsap.core.Tween[] = [];
+  /** Tween ambient (loop) yang tidak terikat cue — WAJIB dibunuh saat destroy. */
+  const ambient: gsap.core.Tween[] = [];
   let beats: HTMLElement[] = [];
   let activeBeat = -1;
   const touched: HTMLElement[] = [];
   const fadeTweens: (gsap.core.Tween | null)[] = [];
   let pendingEntrance: gsap.core.Tween | null = null;
-  const flavor = flavorFor(key);
+  const identity = identityFor(root, key);
+  const flavor = flavorFor(identity);
+  const style = styleFor(identity);
 
   if (key === "prologueReveal") {
     const opening = root.querySelector<HTMLElement>(".prologue-opening");
@@ -312,6 +601,7 @@ export function createReadingDirector(
             4.0,
           );
       }
+      cues.push({ at: -1, played: true, timeline: introTl });
 
       const scrollCue = root.querySelector<HTMLElement>(
         '[data-motion="scroll-cue"]',
@@ -329,15 +619,19 @@ export function createReadingDirector(
           },
           4.8,
         );
-        const icon = scrollCue.querySelector(".scroll-cue-icon");
+        const icon = scrollCue.querySelector<HTMLElement>(".scroll-cue-icon");
         if (icon) {
-          gsap.to(icon, {
-            y: 5,
-            duration: 1.1,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut",
-          });
+          touched.push(icon);
+          // Loop tak berujung — dilacak di `ambient` supaya mati bersama island.
+          ambient.push(
+            gsap.to(icon, {
+              y: 5,
+              duration: 1.1,
+              repeat: -1,
+              yoyo: true,
+              ease: "sine.inOut",
+            }),
+          );
         }
       }
     }
@@ -392,7 +686,29 @@ export function createReadingDirector(
             xPercent: 0,
             duration: MOTION.text.unit.duration * 1.3,
             stagger: 0.08,
-            ease: MOTION.read.ease,
+            ease: EASES.converge,
+          }),
+        });
+      } else if (
+        identity === "politicalFracture" ||
+        identity === "revolutionMachine"
+      ) {
+        // Tegang: tarikh tidak "tiba", ia DIPOTONG masuk.
+        const axis = flavor.unitAxis;
+        const sign = flavor.unitDir;
+        const initial =
+          axis === "x" ? { xPercent: 18 * sign } : { yPercent: 18 * sign };
+        const target = axis === "x" ? { xPercent: 0 } : { yPercent: 0 };
+        gsap.set(units, { opacity: 0, ...initial });
+        cues.push({
+          at: 0.3,
+          played: false,
+          timeline: gsap.timeline({ paused: true }).to(units, {
+            opacity: 1,
+            ...target,
+            duration: DURATIONS.cut,
+            stagger: 0.07,
+            ease: EASES.hardCut,
           }),
         });
       } else {
@@ -410,7 +726,7 @@ export function createReadingDirector(
             ...target,
             duration: MOTION.text.unit.duration,
             stagger: MOTION.text.unit.stagger,
-            ease: MOTION.read.ease,
+            ease: identity === "bridgeLift" ? EASES.lift : MOTION.read.ease,
           }),
         });
       }
@@ -436,19 +752,34 @@ export function createReadingDirector(
     if (names.length > 0) {
       touched.push(...names);
       if (key === "nameEmerges") {
+        /*
+         * KADHIRI tiba sebagai peristiwa: huruf-huruf berangkat dari sebaran
+         * lebar dan kedalaman (scale) lalu menempati kursinya — efek tracking
+         * yang dibangun dari `x` per huruf, bukan dari letter-spacing. Ease
+         * `settle` tanpa pantulan: nama historis mendarat, tidak melompat.
+         */
         const nameSplit = SplitText.create(names, { type: "chars" });
         splits.push(nameSplit);
-        gsap.set(nameSplit.chars, { opacity: 0, scale: 0.75, y: 12 });
+        const chars = nameSplit.chars;
+        const middle = (chars.length - 1) / 2;
+        chars.forEach((char, index) => {
+          gsap.set(char, {
+            opacity: 0,
+            scale: 1.35,
+            x: (index - middle) * 18,
+            transformOrigin: "center",
+          });
+        });
         cues.push({
           at: 0.34,
           played: false,
-          timeline: gsap.timeline({ paused: true }).to(nameSplit.chars, {
+          timeline: gsap.timeline({ paused: true }).to(chars, {
             opacity: 1,
             scale: 1,
-            y: 0,
+            x: 0,
             duration: MOTION.text.char.duration,
-            stagger: MOTION.text.char.stagger,
-            ease: MOTION.read.ease,
+            stagger: { amount: 0.3, from: "center" },
+            ease: EASES.settle,
           }),
         });
       } else {
@@ -472,23 +803,25 @@ export function createReadingDirector(
       gsap.set(master, { opacity: 0 });
       masterTl.to(
         master,
-        { opacity: 1, duration: 0.45, ease: "power1.out" },
+        { opacity: 1, duration: 0.45, ease: EASES.fadeIn },
         0.05,
       );
-      const masterSplit = SplitText.create(master, { type: "lines" });
+      const splitType =
+        style.masterSplit === "chars"
+          ? "words,chars"
+          : style.masterSplit === "words"
+            ? "words"
+            : "lines";
+      const masterSplit = SplitText.create(master, { type: splitType });
       splits.push(masterSplit);
-      const entrance = textEntranceProps(key);
-      if (typeof entrance.initial === "function") {
-        masterSplit.lines.forEach((line, idx) => {
-          gsap.set(
-            line,
-            (entrance.initial as (i: number) => gsap.TweenVars)(idx),
-          );
-        });
-      } else {
-        gsap.set(masterSplit.lines, entrance.initial);
-      }
-      masterTl.to(masterSplit.lines, entrance.tween, 0.1);
+      const pieces =
+        style.masterSplit === "chars"
+          ? masterSplit.chars
+          : style.masterSplit === "words"
+            ? masterSplit.words
+            : masterSplit.lines;
+      applyFrom(pieces, style.master.from);
+      masterTl.to(pieces, style.master.to, 0.1);
     }
     if (masterTl.getChildren().length > 0) {
       cues.push({ at: 0.42, played: false, timeline: masterTl });
@@ -499,23 +832,20 @@ export function createReadingDirector(
     const skipBeatCycle = key !== "prologueReveal";
     if (skipBeatCycle && beats.length > 0) {
       touched.push(...beats);
-      const entrance = textEntranceProps(key);
-      if (typeof entrance.initial === "function") {
-        beats.forEach((beat, idx) => {
-          gsap.set(
-            beat,
-            (entrance.initial as (i: number) => gsap.TweenVars)(idx),
-          );
-        });
-      } else {
-        gsap.set(beats, entrance.initial);
-      }
+      applyFrom(beats, style.beats.from);
       cues.push({
         at: 0.5,
         played: false,
         timeline: gsap.timeline({ paused: true }).to(beats, {
-          ...entrance.tween,
-          stagger: { amount: 0.4, from: "start" },
+          ...style.beats.to,
+          stagger: {
+            amount:
+              identity === "politicalFracture" ||
+              identity === "revolutionMachine"
+                ? 0.2
+                : STAGGERS.beatsAmount,
+            from: "start",
+          },
         }),
       });
     }
@@ -540,38 +870,12 @@ export function createReadingDirector(
             type: "lines",
           });
           splits.push(lineSplit);
-          if (key === "prologueReveal") {
-            gsap.set(lineSplit.lines, {
-              opacity: 0,
-              y: 18,
-              filter: "blur(4px)",
-            });
-            timeline.to(
-              lineSplit.lines,
-              {
-                opacity: 1,
-                y: 0,
-                filter: "blur(0px)",
-                duration: 0.8,
-                ease: "power2.out",
-                stagger: 0.08,
-              },
-              0.05,
-            );
-          } else {
-            gsap.set(lineSplit.lines, { opacity: 0, y: MOTION.read.y });
-            timeline.to(
-              lineSplit.lines,
-              {
-                opacity: 1,
-                y: 0,
-                duration: MOTION.read.duration,
-                stagger: MOTION.read.stagger,
-                ease: MOTION.read.ease,
-              },
-              0.05,
-            );
-          }
+          applyFrom(lineSplit.lines, style.beats.from);
+          timeline.to(
+            lineSplit.lines,
+            { ...style.beats.to, stagger: 0.08 },
+            0.05,
+          );
         }
         beatTimelines.push(timeline);
       });
@@ -610,7 +914,7 @@ export function createReadingDirector(
     fadeTweens[index] = gsap.to(beat, {
       opacity: 0,
       duration: key === "prologueReveal" ? 0.45 : 0.2,
-      ease: "power1.in",
+      ease: EASES.fadeOut,
       onComplete: () => {
         fadeTweens[index] = null;
         gsap.set(beat, { visibility: "hidden" });
@@ -666,6 +970,8 @@ export function createReadingDirector(
     if (destroyed) return;
     lastProgress = progress;
     for (const cue of cues) {
+      // Cue negatif = intro berbasis waktu: tidak pernah dipicu oleh gulir.
+      if (cue.at < 0) continue;
       if (!cue.played && progress >= cue.at) {
         cue.timeline.play();
         cue.played = true;
@@ -700,6 +1006,7 @@ export function createReadingDirector(
       destroyed = true;
       for (const call of pendingCalls) call.kill();
       for (const tween of fadeTweens) tween?.kill();
+      for (const tween of ambient) tween.kill();
       for (const cue of cues) cue.timeline.kill();
       for (const timeline of beatTimelines) timeline.kill();
       for (const split of splits) split.revert();
