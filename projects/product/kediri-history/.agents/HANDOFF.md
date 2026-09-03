@@ -3,11 +3,46 @@
 > Baca lebih dulu setiap sesi. **Ditimpa**, bukan ditambah — ini keadaan sekarang, bukan log.
 > Status fase: `PROGRESS.md`. Keputusan durable: `DECISIONS.md`. Pagar: `BOUNDARIES.md`.
 
-Last updated: 2026-08-30
+Last updated: 2026-09-03
 
 ---
 
 ## Keadaan sekarang
+
+**Overhaul GSAP per-section selesai (2026-09-03, audit penuh di
+`docs/GSAP_AUDIT.md`, arc pacing di `docs/MOTION_ARC.md`).** Yang berubah dan
+yang harus dijaga:
+
+- Token motion hidup di `modules/motion/tokens.ts` (CustomEase `cine`,
+  `cineIn`, `hardCut`, `settle`; `EASES`/`DURATIONS`/`STAGGERS`); `MOTION`
+  masih diekspor dari `gsap.ts` untuk kompatibilitas.
+- `director.ts` memakai tabel `SCRIPT_STYLES` — satu identitas gerak per
+  `choreographyKey` (kalimat pemikul dibelah lines/words/chars sesuai
+  identitas; beat tetap register baca). Ambang cue TIDAK berubah (e2e
+  mengunci 0.74 rest dan [0.48, 0.7] prolog). `SLUG_IDENTITY` memecah
+  1958→1990 (`marketDeparture`) tanpa menyentuh kontrak CMS.
+- Saklar debug: `?motionDebug=1` (atau `NEXT_PUBLIC_MOTION_DEBUG=1`)
+  menyalakan marker ScrollTrigger dan `window.__kediriMotion.activeTriggers()`;
+  hanya dibaca di dalam effect (kontrak hidrasi). Jangan pernah `markers: true`
+  literal.
+- `MotionRefreshGate` (sekali per halaman) me-refresh ScrollTrigger setelah
+  `fonts.ready`, media kritis, dan video lanjutan prolog. `ReadoutBatch`
+  memakai `ScrollTrigger.batch` `once` untuk 26 strip arsip — hanya strip di
+  bawah viewport yang disembunyikan (tautan dalam tidak boleh meninggalkan
+  strip transparan).
+- Semua act header kini bergerak lewat `ActHeaderReveal` mode `card` /
+  `wipe` / `scrubWords` (Babak III = sorot kata mengikuti gulir). Finale
+  punya island `FinaleMotion`. Interlude memakai clip-path wipe, pin 420%.
+- Bug yang diperbaiki: kredit prolog menimpa pelat pada reduced/mobile
+  (`.prologue-opening { display:none }` di blok alur statis); nama 1042
+  menimpa paragraf di mobile (aturan baris "name" kini seluruh mobile);
+  garis jembatan 1869 tak terlihat (opacity 0.62, stroke 2.5).
+- e2e baseline SEBELUM perubahan di mesin ini: 52 pass / 35 fail / 17 skip —
+  kegagalan arsip/pencarian karena tanpa basis data CMS, plus tes prolog
+  lama yang usang (`data-opening-frame`, `dataset.intro` tidak ada lagi di
+  `src/`). Bandingkan selalu terhadap baseline itu, bukan terhadap nol.
+- Belum diverifikasi: Safari/Firefox (config Playwright hanya Chromium),
+  DevTools Performance di GPU sungguhan.
 
 **Jeda "bukti prasasti" scroll-driven terpasang di antara Prolog dan Act I**
 (direktif Chief 2026-08-30, detail penuh: DECISIONS 2026-08-30). Section baru
