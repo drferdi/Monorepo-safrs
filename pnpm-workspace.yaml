@@ -8,6 +8,10 @@ packages:
   # menyerap apps/web-nya ke workspace root dan melanggar kontrak standalone
   # (AGENTS.md "Standalone project contract"; keputusan Chief G01/G03 2026-08-26).
   - '!projects/product/kediri-history/**'
+  # sentrabot berdiri sendiri sebagai workspace pnpm mandiri dengan lockfile,
+  # biome, dan CI sendiri; glob projects/*/*/apps/* tidak boleh menyerap
+  # apps-nya ke workspace root (keputusan kemandirian produk 2026-09-03).
+  - '!projects/product/sentrabot/**'
   - packages/*
   - tools/*
 
