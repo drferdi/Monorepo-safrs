@@ -194,3 +194,23 @@ boundary is needed.
 - Trade-off: rows accumulate locally with `sentAt` null; harmless in the self-hosted database,
   revisited when the hybrid work resumes.
 - Migration consequence: none.
+
+### 2026-09-03 — sentrabot is a standalone workspace, not a Monorepo member
+
+- Problem: the Monorepo root glob `projects/*/*/apps/*` absorbed sentrabot's apps into the root
+  workspace, so a root `pnpm install` resolved sentrabot's dependencies (electron,
+  electron-builder, @vitejs/plugin-react, fast-check, @orpc/contract, @types/d3-dsv) under the
+  root's pinned pnpm, whose registry metadata fetch fails on this Node with `ERR_INVALID_THIS`.
+- Fact: sentrabot already carries its own `pnpm-workspace.yaml`, `pnpm-lock.yaml`, `.npmrc`,
+  biome, turbo, tsconfig, and CI workflows; no `catalog:` references and no `@safrs/*` imports
+  in code — only its git root sits inside the Monorepo repository.
+- Decision: sentrabot stays a self-contained workspace that must install, test, and build with
+  `pnpm@9.15.0` from its own root, independent of the Monorepo. The Monorepo root
+  `pnpm-workspace.yaml` now excludes `projects/product/sentrabot/**` (same standalone-capsule
+  contract as kediri-history and academic-smartboard).
+- Evidence: `pnpm install` in sentrabot resolves 21 workspace projects from its own lockfile;
+  `pnpm test` 2060 passed / 0 failed; `pnpm --filter cora build` succeeds; Monorepo root
+  install regenerates cleanly with 0 sentrabot importers in its lockfile.
+- Consequence: dependency changes in sentrabot must never be validated by installing at the
+  Monorepo root, and vice versa; the Monorepo lockfile no longer pins anything for sentrabot.
+

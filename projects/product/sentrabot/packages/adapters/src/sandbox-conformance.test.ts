@@ -249,6 +249,13 @@ describe("docker sandbox", () => {
       skip();
       return;
     }
+    // Win32 retraction: pnpm is a .cmd shim here, so spawn("pnpm") fails ENOENT
+    // and the unhandled child error surfaces as a file-level failure. The
+    // supervisor path stays covered on Linux CI.
+    if (process.platform === "win32") {
+      skip();
+      return;
+    }
     const port = 17991;
     const token = "sandbox-conformance-token";
     const url = `http://127.0.0.1:${port}`;
