@@ -1,11 +1,12 @@
 # Sentra Bot — Website Promo
 
-Website promo (landing page) untuk Sentra Bot. Pixel-faithful React rebuild
-dari layout marketing yang di-capture, copy sudah di-rebrand ke Sentra Bot.
+Website promo Sentra Bot: landing page React/Vite dengan halaman publik statis
+untuk Tentang, pendaftaran, Privasi, dan Ketentuan. Layout marketing tetap
+pixel-faithful terhadap capture asal dan copy sudah di-rebrand ke Sentra Bot.
 
 ## App
 
-- `apps/site` — landing page (React + Vite). Lihat
+- `apps/site` — marketing site (React + Vite serta halaman statis). Lihat
   [`apps/site/README.md`](apps/site/README.md) untuk command dev/build.
 
 ## Product runtime
