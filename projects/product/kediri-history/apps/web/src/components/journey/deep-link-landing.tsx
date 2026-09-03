@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { scrollJourneyTo } from "../../modules/motion/smooth";
 
 /**
  * Pendaratan tautan dalam pada Journey.
@@ -53,13 +54,38 @@ export function announceJourneyNavigation(id: string): void {
  * tata letak — bukan dari instance yang bergerak — pengulangan ini konvergen,
  * tidak berosilasi.
  */
-const DESKTOP_ATTEMPTS = [300, 750, 1400] as const;
-const STATIC_ATTEMPTS = [320, 800, 1_450, 1_850] as const;
+/**
+ * Percobaan berulang untuk memastikan pendaratan konvergen bahkan saat
+ * aset atau ScrollSmoother sedang menyelesaikan inisialisasi tata letak.
+ */
+const DESKTOP_ATTEMPTS = [0, 150, 450, 900, 1500] as const;
+const STATIC_ATTEMPTS = [0, 150, 450, 900, 1500] as const;
+
+function getAbsoluteTop(element: HTMLElement): number {
+  const content = document.getElementById("smooth-content");
+  if (content?.contains(element)) {
+    let top = 0;
+    let curr: HTMLElement | null = element;
+    while (curr && curr !== content) {
+      top += curr.offsetTop;
+      curr = curr.offsetParent as HTMLElement | null;
+    }
+    return top;
+  }
+  let top = 0;
+  let curr: HTMLElement | null = element;
+  while (curr) {
+    top += curr.offsetTop;
+    curr = curr.offsetParent as HTMLElement | null;
+  }
+  return top;
+}
 
 export function DeepLinkLanding(): null {
   useEffect(() => {
     let cancelled = false;
     let timers: number[] = [];
+    let isNavigatingProgrammatically = false;
 
     const clearTimers = () => {
       for (const timer of timers) window.clearTimeout(timer);
@@ -71,10 +97,11 @@ export function DeepLinkLanding(): null {
         "(max-width: 47.999rem), (prefers-reduced-motion: reduce)",
       ).matches;
 
-    /** Kehendak pengunjung selalu menang: sekali ia menggulir, koreksi berhenti. */
-    const takeOver = () => {
-      cancelled = true;
-      clearTimers();
+    const onUserScroll = () => {
+      if (!isNavigatingProgrammatically) {
+        cancelled = true;
+        clearTimers();
+      }
     };
 
     const land = (id: string) => {
@@ -84,9 +111,8 @@ export function DeepLinkLanding(): null {
 
       if (isStaticFlow()) {
         const nav = document.querySelector<HTMLElement>(".site-nav");
-        const navHeight = nav?.getBoundingClientRect().height ?? 0;
-        const targetTop =
-          scene.getBoundingClientRect().top + window.scrollY - navHeight - 8;
+        const navHeight = nav?.offsetHeight ?? 0;
+        const targetTop = getAbsoluteTop(scene) - navHeight - 8;
         if (Math.abs(window.scrollY - targetTop) <= 8) return;
         window.scrollTo({
           top: Math.max(0, Math.round(targetTop)),
@@ -95,29 +121,43 @@ export function DeepLinkLanding(): null {
         return;
       }
 
-      const shot = scene.closest(".scene")?.querySelector(".scene-shot");
+      const shot =
+        scene.closest(".scene")?.querySelector(".scene-shot") ??
+        scene.querySelector(".scene-shot");
       if (!(shot instanceof HTMLElement)) return;
 
-      const span = shot.offsetHeight - window.innerHeight;
-      if (span <= 0) return;
+      const span = Math.max(0, shot.offsetHeight - window.innerHeight);
+      if (span <= 0) {
+        const target = getAbsoluteTop(scene);
+        scrollJourneyTo(target);
+        return;
+      }
 
-      const top = shot.getBoundingClientRect().top + window.scrollY;
+      const top = getAbsoluteTop(shot);
       const target = Math.round(top + span * REST);
       if (Math.abs(window.scrollY - target) <= 8) return;
-      window.scrollTo({ top: target, behavior: "auto" });
+      scrollJourneyTo(target);
     };
 
     const start = (requestedId?: string) => {
-      const id =
-        requestedId ?? decodeURIComponent(window.location.hash.slice(1));
+      const hash = window.location.hash.startsWith("#")
+        ? window.location.hash.slice(1)
+        : window.location.hash;
+      const id = requestedId ?? decodeURIComponent(hash);
       if (!id) return;
-      // Setiap kedatangan baru membatalkan jadwal sebelumnya dan memulihkan
-      // hak koreksi, termasuk setelah pengunjung sempat menggulir sendiri.
+
       clearTimers();
       cancelled = false;
+      isNavigatingProgrammatically = true;
+
       const attempts = isStaticFlow() ? STATIC_ATTEMPTS : DESKTOP_ATTEMPTS;
       timers = attempts.map((delay) =>
-        window.setTimeout(() => land(id), delay),
+        window.setTimeout(() => {
+          land(id);
+          if (delay === attempts[attempts.length - 1]) {
+            isNavigatingProgrammatically = false;
+          }
+        }, delay),
       );
     };
 
@@ -125,22 +165,29 @@ export function DeepLinkLanding(): null {
       const detail = (event as CustomEvent<{ readonly id?: unknown }>).detail;
       const id = detail?.id;
       if (typeof id !== "string" || id.length === 0) return;
-
-      // Ini satu-satunya lompatan awal untuk Timeline. Setelahnya, percobaan
-      // tertunda di atas mengantar scene ke keadaan baca setelah geometry dan
-      // refresh motion selesai.
-      document.getElementById(id)?.scrollIntoView({ block: "start" });
       start(id);
     };
 
-    for (const event of ["wheel", "touchstart", "keydown"] as const) {
-      window.addEventListener(event, takeOver, { passive: true });
+    let resizeTimer: number | undefined;
+    const onResizeOrOrientation = () => {
+      if (resizeTimer) window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        const hash = window.location.hash.slice(1);
+        if (hash) start(hash);
+      }, 200);
+    };
+
+    for (const event of ["wheel", "touchstart"] as const) {
+      window.addEventListener(event, onUserScroll, { passive: true });
     }
     const onHashChange = () => start();
     const onPopState = () => start();
     const onLoad = () => start();
+
     window.addEventListener("hashchange", onHashChange);
     window.addEventListener("popstate", onPopState);
+    window.addEventListener("resize", onResizeOrOrientation);
+    window.addEventListener("orientationchange", onResizeOrOrientation);
     window.addEventListener(JOURNEY_NAVIGATION_EVENT, onJourneyNavigation);
 
     if (document.readyState === "complete") start();
@@ -149,12 +196,15 @@ export function DeepLinkLanding(): null {
     return () => {
       cancelled = true;
       clearTimers();
+      if (resizeTimer) window.clearTimeout(resizeTimer);
       window.removeEventListener("load", onLoad);
       window.removeEventListener("hashchange", onHashChange);
       window.removeEventListener("popstate", onPopState);
+      window.removeEventListener("resize", onResizeOrOrientation);
+      window.removeEventListener("orientationchange", onResizeOrOrientation);
       window.removeEventListener(JOURNEY_NAVIGATION_EVENT, onJourneyNavigation);
-      for (const event of ["wheel", "touchstart", "keydown"] as const) {
-        window.removeEventListener(event, takeOver);
+      for (const event of ["wheel", "touchstart"] as const) {
+        window.removeEventListener(event, onUserScroll);
       }
     };
   }, []);

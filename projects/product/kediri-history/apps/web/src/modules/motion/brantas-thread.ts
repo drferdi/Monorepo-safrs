@@ -97,13 +97,14 @@ export function attachBrantasThread(root: SVGSVGElement): () => void {
       ...state,
       progress: anchorProgress(state),
     }));
+    const [firstState, ...followingStates] = states;
+    if (!firstState) return;
 
     timeline.clear();
-    gsap.set(path, stateVars(states[0]));
+    gsap.set(path, stateVars(firstState));
 
-    for (let index = 1; index < states.length; index += 1) {
-      const previous = states[index - 1];
-      const next = states[index];
+    let previous = firstState;
+    for (const next of followingStates) {
       timeline.fromTo(
         path,
         stateVars(previous),
@@ -114,15 +115,20 @@ export function attachBrantasThread(root: SVGSVGElement): () => void {
         },
         previous.progress,
       );
+      previous = next;
     }
 
-    const finalState = states[states.length - 1];
+    const finalState = previous;
     if (finalState.progress < 1) {
-      timeline.to(path, {
-        ...stateVars(finalState),
-        duration: Math.max(1 - finalState.progress, 0.001),
-        ease: "none",
-      }, finalState.progress);
+      timeline.to(
+        path,
+        {
+          ...stateVars(finalState),
+          duration: Math.max(1 - finalState.progress, 0.001),
+          ease: "none",
+        },
+        finalState.progress,
+      );
     }
   };
 

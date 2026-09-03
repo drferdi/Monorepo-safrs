@@ -69,11 +69,8 @@ const REST_LEAVE = 0.84;
  * mengubah jarak pandang, pantulan, dan urutan editorial; ia tidak menciptakan
  * fakta baru di luar naskah yang sudah dirender server.
  */
-const prologueReveal: SceneTimelineFactory = ({ root, variant }) => {
+const prologueReveal: SceneTimelineFactory = ({ root }) => {
   const surface = one(root, ".prologue-surface");
-  const waterLine = one(root, '[data-motion="water-line"]');
-  const metadata = q(root, "metadata");
-  const plate = one(root, ".prologue-plate");
   const timeline = gsap.timeline({ paused: true });
 
   if (surface) {
@@ -85,30 +82,9 @@ const prologueReveal: SceneTimelineFactory = ({ root, variant }) => {
      */
     timeline.set(surface, { "--dolly": 1 }, 0);
   }
-  if (waterLine) {
-    timeline.fromTo(
-      waterLine,
-      { opacity: 0, scaleX: 0.24, xPercent: -10 },
-      {
-        opacity: 0.78,
-        scaleX: 1,
-        xPercent: 0,
-        ease: MOTION.scrubEase,
-        duration: 0.28,
-      },
-      0.16,
-    );
-  }
-  // Naskah (konteks, kalimat pemikul, beat) milik Jam 2 — director.ts.
-  if (variant === "desktop" || variant === "tablet") {
-    timeline.fromTo(
-      metadata,
-      { opacity: 0 },
-      { opacity: 1, ease: MOTION.scrubEase, duration: 0.06 },
-      REST_LEAVE + 0.01,
-    );
-  }
-  addLosingScaleExit(timeline, surface, plate, variant);
+  // Prolog hanya memakai fade teks lalu video. Tidak ada garis, parallax,
+  // zoom, atau transisi keluar yang mengubah visual footage.
+  timeline.set({}, {}, 1);
   return timeline;
 };
 
@@ -185,10 +161,32 @@ const inscriptionReveal: SceneTimelineFactory = ({ root, variant }) => {
   // kini milik Jam 2: director.ts men-trigger-nya pada ambang progres, dengan
   // ease ekspresif — bukan menumpang jam kamera ini.
 
-  // Ketukan 6 — tahanan baca. Komposisi diam; tautan dalam mendarat di sini.
-
-  // Ketukan 7 — permukaan KEHILANGAN SKALA: material menjadi bentang.
-  addLosingScaleExit(timeline, surface, plate, variant);
+  // Ketukan 7 — transisi mulus ke 921: citra 879 tetap bercahaya dan bergerak maju (dolly),
+  // mengalirkan kontinuitas visual langsung ke lanskap 921 tanpa jatuh ke lubang hitam.
+  if (surface) {
+    timeline.to(
+      surface,
+      {
+        "--dolly": 1.45,
+        opacity: 0.85,
+        ease: MOTION.scrubEase,
+        duration: 1 - REST_LEAVE,
+      },
+      REST_LEAVE,
+    );
+  }
+  if (plate) {
+    timeline.to(
+      plate,
+      {
+        yPercent: -travelFor(variant) / 5,
+        opacity: 0.15,
+        ease: MOTION.scrubEase,
+        duration: 1 - REST_LEAVE,
+      },
+      REST_LEAVE,
+    );
+  }
   return timeline;
 };
 
@@ -328,13 +326,13 @@ const nameEmerges: SceneTimelineFactory = ({ root, variant }) => {
   if (surface) {
     timeline.fromTo(
       surface,
-      { opacity: 0, "--dolly": 1.18, "--lit": 0 },
+      { opacity: 0.85, "--dolly": 1.12, "--lit": 0.85 },
       {
         opacity: 1,
         "--dolly": 1,
         "--lit": 1,
         ease: MOTION.scrubEase,
-        duration: 0.42,
+        duration: 0.35,
       },
       0,
     );
@@ -345,15 +343,34 @@ const nameEmerges: SceneTimelineFactory = ({ root, variant }) => {
    * pada ambang 0.34 — ia datang SEBELUM judul dan kalimat pemikul, karena
    * di scene ini namanya adalah peristiwanya.
    */
-  addLosingScaleExit(timeline, surface, plate, variant);
+  // Di akhir 921: transisi mengalir langsung ke 1015 tanpa lubang hitam kosong.
+  if (surface) {
+    timeline.to(
+      surface,
+      {
+        "--dolly": 1.25,
+        opacity: 0.85,
+        ease: MOTION.scrubEase,
+        duration: 1 - REST_LEAVE,
+      },
+      REST_LEAVE,
+    );
+  }
+  if (plate) {
+    timeline.to(
+      plate,
+      {
+        yPercent: -travelFor(variant) / 5,
+        opacity: 0.15,
+        ease: MOTION.scrubEase,
+        duration: 1 - REST_LEAVE,
+      },
+      REST_LEAVE,
+    );
+  }
   /*
    * KADHIRI sendiri tidak pernah dianimasikan keluar — ia menetap solid di
-   * tengah bingkai sepanjang timeline. Saat transisi keluar menggeser
-   * `.stage-plate` ke atas (addLosingScaleExit), kalimat pemikul dapat lewat
-   * tepat di baris nama yang diam itu dan bertabrakan — terbukti pada
-   * tinjauan visual 2026-08-28 ronde ketiga. Nama ikut meredup pada jendela
-   * keluar yang SAMA, sehingga teks yang lewat tidak pernah menabrak kata
-   * solid.
+   * tengah bingkai sepanjang timeline.
    */
   const names = q(root, "scene-name");
   if (names.length > 0) {
@@ -383,16 +400,16 @@ const nameEndures: SceneTimelineFactory = ({ root, variant }) => {
   const timeline = gsap.timeline({ paused: true });
 
   if (surface) {
-    // Permukaan tidak "tiba" — ia sudah ada, hanya perlahan menjadi terbaca.
+    // Permukaan tidak "tiba" — ia sudah ada, mengalir langsung dari 921.
     timeline.fromTo(
       surface,
-      { opacity: 0.42, "--lit": 0.5, "--dolly": 1.06 },
+      { opacity: 0.85, "--lit": 0.85, "--dolly": 1.06 },
       {
         opacity: 1,
         "--lit": 1,
         "--dolly": 1.02,
         ease: MOTION.scrubEase,
-        duration: 0.5,
+        duration: 0.4,
       },
       0,
     );
@@ -862,7 +879,7 @@ export function attachScene(
    * transform GSAP.
    */
   const media = one(context.root, ".stage-media");
-  if (media) {
+  if (media && key !== "prologueReveal") {
     timeline.fromTo(
       media,
       { yPercent: MOTION.parallax.from },

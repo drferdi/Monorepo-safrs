@@ -117,29 +117,102 @@ interface Cue {
   played: boolean;
 }
 
-/** Histeresis pembalikan supaya ambang tidak bergetar di tepi. */
-const REVERSE_SLACK = 0.05;
-
-export const PROLOGUE_OPENING_DURATION = 8;
-export const OPENING_FRAME_1_AT = 0;
-export const OPENING_FRAME_2_AT = 2;
-export const OPENING_FRAME_3_AT = 4;
-export const OPENING_FRAME_4_AT = 6;
-
-/**
- * Intro hanya milik entry Journey baru di puncak dokumen. Hash landing dan
- * scroll restoration harus tetap berada pada keadaan baca server-rendered.
- */
-function isPrologueIntroEligible(): boolean {
-  return (
-    typeof window !== "undefined" &&
-    window.location.hash === "" &&
-    window.scrollY <= 0 &&
-    !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
-    window.matchMedia("(min-width: 48rem)").matches
-  );
+interface TextEntranceStyle {
+  readonly initial: gsap.TweenVars | ((index: number) => gsap.TweenVars);
+  readonly tween: gsap.TweenVars;
 }
 
+function textEntranceProps(key: string): TextEntranceStyle {
+  switch (key) {
+    case "prologueReveal":
+      return {
+        initial: { opacity: 0, y: 20, filter: "blur(4px)" },
+        tween: {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 0.85,
+          ease: "power2.out",
+          stagger: 0.08,
+        },
+      };
+    case "inscriptionReveal":
+      return {
+        initial: { opacity: 0, x: -22, y: 4 },
+        tween: {
+          opacity: 1,
+          x: 0,
+          y: 0,
+          duration: 0.75,
+          ease: "power2.out",
+          stagger: 0.07,
+        },
+      };
+    case "nameEmerges":
+      return {
+        initial: { opacity: 0, y: 28, scale: 0.96 },
+        tween: {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 0.8,
+          ease: "back.out(1.15)",
+          stagger: 0.08,
+        },
+      };
+    case "nameEndures":
+      return {
+        initial: { opacity: 0, x: -16, y: 8 },
+        tween: {
+          opacity: 1,
+          x: 0,
+          y: 0,
+          duration: 0.7,
+          ease: "power2.out",
+          stagger: 0.06,
+        },
+      };
+    case "dividedKingdom":
+      return {
+        initial: (index: number) => ({
+          opacity: 0,
+          x: index % 2 === 0 ? -28 : 28,
+        }),
+        tween: {
+          opacity: 1,
+          x: 0,
+          duration: 0.75,
+          ease: "power3.out",
+          stagger: 0.08,
+        },
+      };
+    case "dahaLiving":
+      return {
+        initial: { opacity: 0, y: 14 },
+        tween: {
+          opacity: 1,
+          y: 0,
+          duration: 0.9,
+          ease: "sine.out",
+          stagger: 0.1,
+        },
+      };
+    default:
+      return {
+        initial: { opacity: 0, y: MOTION.read.y },
+        tween: {
+          opacity: 1,
+          y: 0,
+          duration: MOTION.read.duration,
+          ease: MOTION.read.ease,
+          stagger: MOTION.read.stagger,
+        },
+      };
+  }
+}
+
+/** Histeresis pembalikan supaya ambang tidak bergetar di tepi. */
+const REVERSE_SLACK = 0.05;
 export function createReadingDirector(
   root: HTMLElement,
   key: string,
@@ -155,128 +228,119 @@ export function createReadingDirector(
   const touched: HTMLElement[] = [];
   const fadeTweens: (gsap.core.Tween | null)[] = [];
   let pendingEntrance: gsap.core.Tween | null = null;
-  let introTimeline: gsap.core.Timeline | null = null;
   const flavor = flavorFor(key);
 
-  /*
-   * INTRO PROLOG (direktif Chief 2026-08-28): halaman pertama GELAP 2 detik,
-   * lalu video mulai berputar, lalu cahaya membukanya — sementara seluruh
-   * koreografi gulir tetap berjalan seperti biasa. Ini cue berbasis WAKTU,
-   * bukan gulir, jadi ia hidup di Jam 2 dan dipasang SINKRON (tidak menunggu
-   * font) supaya kegelapannya menutup sedini mungkin setelah hidrasi.
-   */
-  if (key === "prologueReveal" && isPrologueIntroEligible()) {
+  if (key === "prologueReveal") {
+    const opening = root.querySelector<HTMLElement>(".prologue-opening");
     const surface = root.querySelector<HTMLElement>(".prologue-surface");
-    const plate = root.querySelector<HTMLElement>(".prologue-plate");
-    const opening = root.querySelector<HTMLElement>(".prologue-opening");
-    const frame = (index: 1 | 2 | 3 | 4) =>
-      opening?.querySelector<HTMLElement>(
-        `[data-opening-frame="${String(index)}"]`,
-      );
-    const frame1 = frame(1);
-    const frame2 = frame(2);
-    const frame3 = frame(3);
-    const frame4 = frame(4);
-    const javanese = opening?.querySelector<HTMLElement>(
-      '[data-opening-script="javanese"]',
-    );
-    const latin = opening?.querySelector<HTMLElement>(
-      '[data-opening-script="latin"]',
-    );
+    const copy = opening?.querySelector<HTMLElement>(".prologue-opening-copy");
 
-    if (opening && frame1 && frame2 && frame3 && frame4 && javanese && latin) {
-      touched.push(opening);
-      document.documentElement.dataset.intro = "playing";
-      if (surface) {
-        touched.push(surface);
-        gsap.set(surface, { opacity: 0, "--lit": 0 });
-      }
-      if (plate) {
-        touched.push(plate);
-        gsap.set(plate, { opacity: 0 });
-      }
-      gsap.set([frame1, frame2, frame3, frame4].filter(Boolean), {
-        opacity: 0,
-      });
-      gsap.set(latin, { opacity: 0 });
+    if (opening && surface) {
+      touched.push(opening, surface);
+      const introTl = gsap.timeline();
 
-      introTimeline = gsap.timeline({
-        onComplete: () => {
-          document.documentElement.removeAttribute("data-intro");
-        },
-      });
-      introTimeline.fromTo(
-        frame1,
-        { opacity: 0 },
-        { opacity: 0.12, duration: 0.45, ease: "none" },
-        OPENING_FRAME_1_AT,
+      if (copy) {
+        // Tipografi gerak modern: kata-kata terkuak secara kinetik dari kabut atmosferik
+        const split = SplitText.create(copy, { type: "words,lines" });
+        splits.push(split);
+        gsap.set(opening, { opacity: 1 });
+        gsap.set(split.words, {
+          opacity: 0,
+          y: 28,
+          scale: 0.96,
+          filter: "blur(8px)",
+        });
+
+        introTl
+          .to(
+            split.words,
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              filter: "blur(0px)",
+              duration: 1.1,
+              stagger: { each: 0.04, from: "start" },
+              ease: "power3.out",
+            },
+            0.4,
+          )
+          // Tahanan baca hening yang berwibawa
+          .to(
+            split.words,
+            {
+              opacity: 0,
+              y: -18,
+              filter: "blur(6px)",
+              duration: 0.7,
+              stagger: { each: 0.015, from: "start" },
+              ease: "power2.inOut",
+            },
+            3.6,
+          )
+          // Putar video tepat saat permukaan terbuka agar video ditonton utuh dari detik 00:00
+          .call(
+            () => {
+              window.dispatchEvent(new Event("kediri:prologue-video-start"));
+            },
+            undefined,
+            4.0,
+          )
+          // Masuk video sungai Brantas secara perlahan dan megah setelah teks bersih
+          .to(
+            surface,
+            {
+              opacity: 1,
+              "--lit": 1,
+              duration: 1.4,
+              ease: "power2.inOut",
+            },
+            4.0,
+          );
+      } else {
+        gsap.set(opening, { opacity: 0, y: MOTION.read.y });
+        introTl
+          .to(
+            opening,
+            { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
+            0.4,
+          )
+          .to(opening, { opacity: 0, duration: 0.6, ease: "power2.inOut" }, 4.2)
+          .to(
+            surface,
+            { opacity: 1, "--lit": 1, duration: 1.5, ease: "power2.inOut" },
+            4.0,
+          );
+      }
+
+      const scrollCue = root.querySelector<HTMLElement>(
+        '[data-motion="scroll-cue"]',
       );
-      introTimeline.to(
-        frame1,
-        { opacity: 0, duration: 0.35, ease: "none" },
-        1.55,
-      );
-      introTimeline.fromTo(
-        frame2,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.45, ease: "power1.out" },
-        OPENING_FRAME_2_AT,
-      );
-      introTimeline.fromTo(
-        javanese,
-        { opacity: 1 },
-        { opacity: 0, duration: 0.45, ease: "power1.inOut" },
-        3.15,
-      );
-      introTimeline.fromTo(
-        latin,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.45, ease: "power1.inOut" },
-        3.15,
-      );
-      introTimeline.to(
-        frame2,
-        { opacity: 0, duration: 0.25, ease: "none" },
-        3.75,
-      );
-      introTimeline.fromTo(
-        frame3,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.35, ease: "power1.out" },
-        OPENING_FRAME_3_AT,
-      );
-      introTimeline.to(
-        frame3,
-        { opacity: 0, duration: 0.3, ease: "none" },
-        5.6,
-      );
-      introTimeline.fromTo(
-        frame4,
-        { opacity: 0, yPercent: 35 },
-        { opacity: 1, yPercent: 0, duration: 0.8, ease: "power2.out" },
-        OPENING_FRAME_4_AT,
-      );
-      // Tahanan eksplisit menjaga total Jam 2 tepat 8,0 detik tanpa delay.
-      introTimeline.to(
-        frame4,
-        { opacity: 1, duration: 1.2, ease: "none" },
-        6.8,
-      );
-      introTimeline.set(
-        [surface, plate].filter((element): element is HTMLElement =>
-          Boolean(element),
-        ),
-        { opacity: 1, "--lit": 1 },
-        PROLOGUE_OPENING_DURATION,
-      );
-      introTimeline.set(opening, { opacity: 0 }, PROLOGUE_OPENING_DURATION);
+      if (scrollCue) {
+        touched.push(scrollCue);
+        gsap.set(scrollCue, { opacity: 0, y: 12 });
+        introTl.to(
+          scrollCue,
+          {
+            opacity: 0.9,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out",
+          },
+          4.8,
+        );
+        const icon = scrollCue.querySelector(".scroll-cue-icon");
+        if (icon) {
+          gsap.to(icon, {
+            y: 5,
+            duration: 1.1,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+          });
+        }
+      }
     }
-  }
-
-  if (key === "prologueReveal" && !isPrologueIntroEligible()) {
-    document.documentElement.removeAttribute("data-intro");
-    const opening = root.querySelector<HTMLElement>(".prologue-opening");
-    if (opening) gsap.set(opening, { opacity: 0 });
   }
 
   const build = () => {
@@ -291,7 +355,6 @@ export function createReadingDirector(
     if (units.length > 0) {
       touched.push(...units);
       if (key === "inscriptionReveal" && units.length > 1) {
-        // Keberadaan sebelum presisi: TAHUN lebih dulu (unit terakhir).
         const year = units[units.length - 1] as HTMLElement;
         const precision = units.slice(0, -1);
         gsap.set(units, { opacity: 0, yPercent: 16 });
@@ -317,36 +380,34 @@ export function createReadingDirector(
           }),
         });
       } else if (key === "royalConsolidation") {
-        // Konsolidasi ADALAH argumennya: potongan tarikh menyatu dari dua sisi.
         gsap.set(units, {
           opacity: 0,
           xPercent: (index: number) => (index % 2 === 0 ? -14 : 14),
         });
         cues.push({
-          at: 0.3,
+          at: 0.32,
           played: false,
           timeline: gsap.timeline({ paused: true }).to(units, {
             opacity: 1,
             xPercent: 0,
-            duration: 0.9,
-            stagger: MOTION.text.unit.stagger,
+            duration: MOTION.text.unit.duration * 1.3,
+            stagger: 0.08,
             ease: MOTION.read.ease,
           }),
         });
       } else {
-        // Sumbu dan arah kedatangan tarikh mengikuti rasa scene-nya.
-        const from =
-          flavor.unitAxis === "x"
-            ? { opacity: 0, xPercent: 10 * flavor.unitDir }
-            : { opacity: 0, yPercent: 14 * flavor.unitDir };
-        gsap.set(units, from);
+        const axis = flavor.unitAxis;
+        const sign = flavor.unitDir;
+        const initial =
+          axis === "x" ? { xPercent: 14 * sign } : { yPercent: 14 * sign };
+        const target = axis === "x" ? { xPercent: 0 } : { yPercent: 0 };
+        gsap.set(units, { opacity: 0, ...initial });
         cues.push({
-          at: 0.28,
+          at: 0.3,
           played: false,
           timeline: gsap.timeline({ paused: true }).to(units, {
             opacity: 1,
-            xPercent: 0,
-            yPercent: 0,
+            ...target,
             duration: MOTION.text.unit.duration,
             stagger: MOTION.text.unit.stagger,
             ease: MOTION.read.ease,
@@ -355,50 +416,58 @@ export function createReadingDirector(
       }
     }
 
-    /* ---------- nama (921: namanya adalah peristiwanya) ---------- */
-    if (key === "nameEmerges" && names.length > 0) {
-      const nameSplit = SplitText.create(names, { type: "chars" });
-      splits.push(nameSplit);
-      gsap.set(nameSplit.chars, {
-        opacity: 0,
-        yPercent: 24,
-        rotateX: -20,
-        transformOrigin: "50% 100% -40px",
-      });
+    /* ---------- konteks ---------- */
+    if (context.length > 0) {
+      touched.push(...context);
+      gsap.set(context, { opacity: 0, y: MOTION.read.y });
       cues.push({
-        at: 0.34,
+        at: 0.36,
         played: false,
-        timeline: gsap.timeline({ paused: true }).to(nameSplit.chars, {
+        timeline: gsap.timeline({ paused: true }).to(context, {
           opacity: 1,
-          yPercent: 0,
-          rotateX: 0,
-          duration: MOTION.text.char.duration,
-          stagger: { each: MOTION.text.char.stagger, from: "center" },
-          ease: MOTION.text.ease,
+          y: 0,
+          duration: MOTION.read.duration * 0.9,
+          ease: MOTION.read.ease,
         }),
       });
     }
 
-    /* ---------- kalimat pemikul + konteks ---------- */
-    const masterTl = gsap.timeline({ paused: true });
-    if (context.length > 0) {
-      touched.push(...context);
-      gsap.set(context, { opacity: 0 });
-      masterTl.to(
-        context,
-        { opacity: 1, duration: 0.5, ease: "power1.out" },
-        0,
-      );
+    /* ---------- nama ---------- */
+    if (names.length > 0) {
+      touched.push(...names);
+      if (key === "nameEmerges") {
+        const nameSplit = SplitText.create(names, { type: "chars" });
+        splits.push(nameSplit);
+        gsap.set(nameSplit.chars, { opacity: 0, scale: 0.75, y: 12 });
+        cues.push({
+          at: 0.34,
+          played: false,
+          timeline: gsap.timeline({ paused: true }).to(nameSplit.chars, {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: MOTION.text.char.duration,
+            stagger: MOTION.text.char.stagger,
+            ease: MOTION.read.ease,
+          }),
+        });
+      } else {
+        gsap.set(names, { opacity: 0 });
+        cues.push({
+          at: 0.34,
+          played: false,
+          timeline: gsap.timeline({ paused: true }).to(names, {
+            opacity: 1,
+            duration: 0.6,
+            ease: MOTION.read.ease,
+          }),
+        });
+      }
     }
+
+    /* ---------- kalimat pemikul ---------- */
+    const masterTl = gsap.timeline({ paused: true });
     if (master.length > 0) {
-      /*
-       * Kontainer master ikut dipudarkan, bukan hanya barisnya. Topeng
-       * SplitText menyembunyikan TEKS, tetapi dekorasi kontainer (mis.
-       * border-left emas .prologue-lead / .master-line beberapa scene) tetap
-       * tercat — meninggalkan satu garis vertikal yatim di atas citra
-       * (temuan Chief 2026-08-28). Opacity, bukan visibility: naskah tidak
-       * pernah keluar dari pohon aksesibilitas.
-       */
       touched.push(...master);
       gsap.set(master, { opacity: 0 });
       masterTl.to(
@@ -406,80 +475,53 @@ export function createReadingDirector(
         { opacity: 1, duration: 0.45, ease: "power1.out" },
         0.05,
       );
-      // Register BACA (direktif editorial 2026-08-29): offset 16px + fade,
-      // per baris, tanpa topeng perjalanan besar.
       const masterSplit = SplitText.create(master, { type: "lines" });
       splits.push(masterSplit);
-      gsap.set(masterSplit.lines, { opacity: 0, y: MOTION.read.y });
-      masterTl.to(
-        masterSplit.lines,
-        {
-          opacity: 1,
-          y: 0,
-          duration: MOTION.read.duration,
-          stagger: MOTION.read.stagger,
-          ease: MOTION.read.ease,
-        },
-        0.1,
-      );
+      const entrance = textEntranceProps(key);
+      if (typeof entrance.initial === "function") {
+        masterSplit.lines.forEach((line, idx) => {
+          gsap.set(
+            line,
+            (entrance.initial as (i: number) => gsap.TweenVars)(idx),
+          );
+        });
+      } else {
+        gsap.set(masterSplit.lines, entrance.initial);
+      }
+      masterTl.to(masterSplit.lines, entrance.tween, 0.1);
     }
     if (masterTl.getChildren().length > 0) {
       cues.push({ at: 0.42, played: false, timeline: masterTl });
     }
 
-    /*
-     * ---------- beat editorial ----------
-     * 879 (inscriptionReveal) DAN 921 (nameEmerges) DIKECUALIKAN dari giliran
-     * satu-per-satu (revisi Chief 2026-08-30): jendela scroll lebar sekalipun
-     * tidak menjamin `pendingEntrance` (delayedCall di bawah) sempat memutar
-     * sebelum beat berikutnya jadi target dan membatalkannya — pengunjung
-     * melaporkan kalimat "hilang" walau sudah scroll pelan di 879; 921 kini
-     * juga naik dari 3 jadi 7 beat (paragraf brief lebih banyak), jendela per
-     * beat-nya ikut menyempit ke risiko yang sama. Beats-nya dibiarkan TIDAK
-     * disentuh sama sekali di sini: tetap pada keadaan baca server-rendered
-     * (CSS `.stage-beat` scene-scoped memaksanya alur statis, semua tampak
-     * sekaligus, tidak pernah ada yang kelewat). `directBeats()` otomatis
-     * no-op karena `beatTimelines` kosong.
-     */
+    /* ---------- beat editorial ---------- */
     const still = beatStyle(key) === "still";
-    const skipBeatCycle = key === "inscriptionReveal" || key === "nameEmerges";
+    const skipBeatCycle = key !== "prologueReveal";
     if (skipBeatCycle && beats.length > 0) {
-      /*
-       * 879 dan 921 tetap dapat gerak GSAP (revisi Chief 2026-08-30), tetapi
-       * bukan cycling satu-per-satu yang terbukti buggy (delayedCall
-       * `pendingEntrance` dibatalkan sebelum sempat mutar). Di sini SATU
-       * cue sederhana: seluruh beat fade+naik BERSAMAAN dengan stagger,
-       * lalu TIDAK PERNAH disembunyikan lagi — sama persis pola context/
-       * master di atas yang sudah terbukti stabil, tidak seperti mesin
-       * hide/show per-beat.
-       */
       touched.push(...beats);
-      gsap.set(beats, { opacity: 0, y: MOTION.read.y });
+      const entrance = textEntranceProps(key);
+      if (typeof entrance.initial === "function") {
+        beats.forEach((beat, idx) => {
+          gsap.set(
+            beat,
+            (entrance.initial as (i: number) => gsap.TweenVars)(idx),
+          );
+        });
+      } else {
+        gsap.set(beats, entrance.initial);
+      }
       cues.push({
         at: 0.5,
         played: false,
         timeline: gsap.timeline({ paused: true }).to(beats, {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          /*
-           * `amount` (total rentang tetap), BUKAN `each` (per-item) — 921
-           * punya 7 beat vs 879 punya 5; `each` tetap membuat rentang
-           * TOTAL membengkak seiring jumlah beat (7 item × stagger 0.15 =
-           * hampir 1.9 detik, melewati tahanan-settle situs 1.2 detik,
-           * terbukti pada e2e "early secondary beats" — beat terakhir
-           * baru opacity 0.657 saat sampel diambil). `amount` menjaga
-           * rentang tetap ~0.4 detik berapa pun jumlah beatnya.
-           */
+          ...entrance.tween,
           stagger: { amount: 0.4, from: "start" },
-          ease: MOTION.read.ease,
         }),
       });
     }
     if (!skipBeatCycle)
       beats.forEach((beat, index) => {
         touched.push(beat);
-        // Hanyut horizontal per rasa scene; tanda berganti bila berdialog.
         const drift = flavor.alternate
           ? flavor.beatX * (index % 2 === 0 ? 1 : -1)
           : flavor.beatX;
@@ -492,37 +534,48 @@ export function createReadingDirector(
           0,
         );
         if (still) {
-          // Research Hold: menjadi ada tanpa perpindahan.
+          // Research Hold
         } else {
           const lineSplit = SplitText.create(beat.querySelectorAll("p"), {
             type: "lines",
           });
           splits.push(lineSplit);
-          gsap.set(lineSplit.lines, { opacity: 0, y: MOTION.read.y });
-          timeline.to(
-            lineSplit.lines,
-            {
-              opacity: 1,
-              y: 0,
-              duration: MOTION.read.duration,
-              stagger: MOTION.read.stagger,
-              ease: MOTION.read.ease,
-            },
-            0.05,
-          );
+          if (key === "prologueReveal") {
+            gsap.set(lineSplit.lines, {
+              opacity: 0,
+              y: 18,
+              filter: "blur(4px)",
+            });
+            timeline.to(
+              lineSplit.lines,
+              {
+                opacity: 1,
+                y: 0,
+                filter: "blur(0px)",
+                duration: 0.8,
+                ease: "power2.out",
+                stagger: 0.08,
+              },
+              0.05,
+            );
+          } else {
+            gsap.set(lineSplit.lines, { opacity: 0, y: MOTION.read.y });
+            timeline.to(
+              lineSplit.lines,
+              {
+                opacity: 1,
+                y: 0,
+                duration: MOTION.read.duration,
+                stagger: MOTION.read.stagger,
+                ease: MOTION.read.ease,
+              },
+              0.05,
+            );
+          }
         }
         beatTimelines.push(timeline);
       });
 
-    // Pelat prolog dilepas dari pegangan boot HANYA setelah seluruh keadaan
-    // awal anak-anaknya (master, beat, konteks) terpasang di atas.
-    if (key === "prologueReveal") {
-      const plate = root.querySelector<HTMLElement>(".prologue-plate");
-      if (plate) gsap.set(plate, { opacity: 1 });
-    }
-
-    // Kedatangan tertunda (deep-link mendarat di tengah shot): mainkan cue
-    // yang ambangnya sudah terlewati, langsung dari keadaan sekarang.
     onProgress(lastProgress);
   };
 
@@ -621,6 +674,23 @@ export function createReadingDirector(
         cue.played = false;
       }
     }
+
+    if (key === "prologueReveal") {
+      const scrollCue = root.querySelector<HTMLElement>(
+        '[data-motion="scroll-cue"]',
+      );
+      if (scrollCue) {
+        if (progress > 0.04) {
+          gsap.to(scrollCue, { opacity: 0, duration: 0.25, overwrite: "auto" });
+        } else if (progress <= 0.02) {
+          gsap.to(scrollCue, {
+            opacity: 0.9,
+            duration: 0.35,
+            overwrite: "auto",
+          });
+        }
+      }
+    }
     directBeats(progress);
   }
 
@@ -628,7 +698,6 @@ export function createReadingDirector(
     onProgress,
     destroy() {
       destroyed = true;
-      introTimeline?.kill();
       for (const call of pendingCalls) call.kill();
       for (const tween of fadeTweens) tween?.kill();
       for (const cue of cues) cue.timeline.kill();

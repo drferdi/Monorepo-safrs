@@ -8,10 +8,10 @@ import {
 } from "react";
 
 export const JOURNEY_OPENING_TITLE =
-  'Welcome to the "Kediri : A Century of Historic king & Industry"';
+  "Kediri: Perjalanan Sejarah yang Terus Hidup";
 export const JOURNEY_OPENING_DESCRIPTION =
-  "Telusuri kisah Kediri melalui rangkaian waktu, ruang, dan perubahan yang terus hidup hingga hari ini.";
-export const JOURNEY_OPENING_CUE = "Scroll untuk memulai";
+  "Ikuti perjalanan Kediri dari catatan awal, masa kerajaan, dan perubahan kota hingga hari ini.";
+export const JOURNEY_OPENING_CUE = "Gulir untuk memulai";
 
 const JOURNEY_OPENING_TITLE_ID = "journey-opening-title";
 const titleCharacters = Array.from(JOURNEY_OPENING_TITLE);

@@ -6,8 +6,6 @@ import type {
 } from "../../content/production-narrative";
 import { frameVariables, sceneFraming } from "../../modules/motion/framing";
 import { PrologueVideoSequence } from "./prologue-video-sequence";
-import { PrologueVisualLabel } from "./prologue-visual-label";
-import { SceneHandoff } from "./scene-handoff";
 import { SceneMotion } from "./scene-motion";
 
 /**
@@ -32,8 +30,6 @@ function prologueFramingStyle(): CSSProperties | undefined {
     "--frame-pos-m": framing.objectPositionMobile,
   } as CSSProperties;
 }
-
-const FIRST_SCENE_SLUG = "879-first-mark";
 
 /**
  * Bingkai yang dipakai Prolog dan Finale. Prolog menaruhnya di dalam stage
@@ -69,6 +65,8 @@ export function FramingStage({
           poster={media.path}
           altText={media.altText}
           continuationAltText={media.continuationAltText}
+          label={media.label}
+          labelDetail={media.labelDetail}
         />
       ) : (
         /* biome-ignore lint/performance/noImgElement: aset pratinjau lokal disajikan route sendiri tanpa loader tambahan. */
@@ -98,18 +96,9 @@ export function FramingStage({
  */
 export function PrologueScene({
   narrative,
-  editorialPreview,
 }: {
   readonly narrative: FramingNarrative;
-  readonly editorialPreview: boolean;
 }): ReactElement {
-  const beats =
-    narrative.beatGroups?.map((group) =>
-      group
-        .map((index) => narrative.paragraphs[index])
-        .filter((line): line is string => line !== undefined),
-    ) ?? narrative.paragraphs.map((paragraph) => [paragraph]);
-
   const body = (
     <section
       className="prologue-scene"
@@ -117,34 +106,15 @@ export function PrologueScene({
       data-scene="prologue"
       data-scene-type="hero"
       data-choreography="prologueReveal"
-      aria-labelledby="prologue-2026-title"
+      aria-label="Pembuka perjalanan sejarah Kediri"
     >
       <div className="scene-shot prologue-shot">
         <div className="prologue-stage" data-motion="stage">
           <div className="stage-void" aria-hidden="true" />
-          <div
-            className="prologue-opening"
-            data-motion="opening"
-            aria-hidden="true"
-          >
-            <p
-              className="prologue-opening-frame prologue-opening-frame--javanese"
-              data-opening-frame="1"
-            >
-              ꦱꦸꦩꦁꦒ꧈ ꦏꦶꦠ ꦮꦶꦮꦶꦠꦶ ꦕꦫꦶꦪꦺꦴꦱꦶꦥꦸꦤ꧀ ꦏꦸꦛ ꦏꦼꦢꦶꦫꦶ꧉
-            </p>
-            <p className="prologue-opening-frame" data-opening-frame="2">
-              <span className="prologue-opening-title">Kediri, 1147</span>
-              <span className="prologue-opening-remainder">
-                <span data-opening-script="javanese">ꦠꦲꦸꦤ꧀ ꦱꦼꦧꦼꦭꦸꦩ꧀ ꦲꦫꦶ ꦲꦶꦤꦶ꧉</span>
-                <span data-opening-script="latin">tahun sebelum hari ini.</span>
-              </span>
-            </p>
-            <p className="prologue-opening-frame" data-opening-frame="3">
-              Satu sungai. Tujuh kerajaan. Satu industri.
-            </p>
-            <p className="prologue-opening-frame" data-opening-frame="4">
-              MULA PERJALANAN
+          <div className="prologue-opening" data-motion="opening">
+            <p className="prologue-opening-copy">
+              Dari jejak yang tercatat, Kediri tumbuh di tepi Brantas. Sebelum
+              menjadi kota hari ini, namanya telah hadir dalam perjalanan Jawa.
             </p>
           </div>
           <div className="stage-surface prologue-surface" data-motion="surface">
@@ -156,85 +126,57 @@ export function PrologueScene({
               />
             ) : null}
           </div>
-          <span
-            className="prologue-water-line"
-            data-motion="water-line"
-            aria-hidden="true"
-          />
-          <SceneHandoff kind="water-copper" phase="outgoing" />
-          {narrative.media ? (
-            <PrologueVisualLabel
-              label={narrative.media.label}
-              detail={narrative.media.labelDetail ?? ""}
-            />
-          ) : null}
-
-          <div className="stage-plate prologue-plate">
-            {/*
-             * Direktif runtime 2026-08-28: chrome "Prolog · 2026 · judul"
-             * berhenti tampil sebagai kotak visual di panggung — kalimat
-             * pemikul (masterLine) membawa maknanya secara sinematik. Eyebrow
-             * dan h1 tetap ada untuk pembaca layar (aria-labelledby, urutan
-             * DOM); yang berhenti hanyalah kotaknya.
-             */}
-            <div className="prologue-context" data-motion="context">
-              <p className="visually-hidden">Prolog · 2026</p>
+          <div className="stage-plate">
+            <div className="stage-context" data-motion="context">
+              <p className="eyebrow">{narrative.eyebrow}</p>
               <h1
-                className="visually-hidden"
+                className="title-scene"
                 id="prologue-2026-title"
                 data-motion="title"
               >
                 {narrative.title}
               </h1>
             </div>
-
             <p
-              className="master-line scene-lead-line prologue-lead"
+              className="master-line prologue-lead"
               data-motion="master"
               data-editorial-role="lead-line"
             >
               {narrative.masterLine}
             </p>
-
-            <div className="stage-passages prologue-passages">
-              {beats.map((beat, index) => (
+            <div className="prologue-passages stage-passages">
+              {narrative.paragraphs.map((paragraph, index) => (
                 <div
                   className="stage-beat"
                   data-motion="passage"
                   data-beat-index={index}
-                  key={beat.join("|")}
+                  key={paragraph}
                 >
-                  {beat.map((line) => (
-                    <p key={line}>{line}</p>
-                  ))}
+                  <p>{paragraph}</p>
                 </div>
               ))}
             </div>
-
-            {/*
-             * Disclosure tata kelola tetap ADA (tidak dihapus) tetapi tidak
-             * lagi mengambil ruang visual di panggung sinematik — pembaca
-             * layar dan pandangan sumber tetap melihatnya (direktif runtime
-             * 2026-08-28).
-             */}
-            {editorialPreview ? (
-              <aside className="visually-hidden" data-motion="metadata">
-                <strong>Pratinjau editorial lokal</strong>
-                <span>
-                  Naskah dan media di stage ini adalah bahan komposisi; build
-                  produksi hanya menerbitkan relasi CMS yang telah lolos bukti
-                  dan tata kelola.
-                </span>
-              </aside>
-            ) : null}
-
-            <nav
-              className="scene-actions prologue-actions"
-              aria-label="Aksi prolog"
-              data-motion="metadata"
+          </div>
+          <div
+            className="prologue-scroll-cue"
+            data-motion="scroll-cue"
+            aria-hidden="true"
+          >
+            <span className="scroll-cue-text">Gulir untuk Memulai</span>
+            <svg
+              className="scroll-cue-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
             >
-              <a href={`#${FIRST_SCENE_SLUG}`}>Mulai dari tanda pertama</a>
-            </nav>
+              <path
+                d="M12 5v14M5 12l7 7 7-7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </div>
         </div>
         <div

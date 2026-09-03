@@ -1739,3 +1739,73 @@ test("original video perspective preserves the full 16:9 frame", async ({
     expect(perspective.scale).toBeCloseTo(1, 2);
   }
 });
+
+test("timeline overlay locks body scroll, traps focus, and closes on Escape", async ({
+  page,
+}) => {
+  await page.goto("/journey");
+  const timelineButton = page.getByRole("button", { name: "Timeline" });
+  await timelineButton.click();
+
+  const panel = page.locator(".timeline-panel");
+  await expect(panel).toBeVisible();
+
+  // Verify body scroll lock and inert background
+  const bodyState = await page.evaluate(() => ({
+    locked: document.body.dataset.timelineOpen === "true",
+    overflow: getComputedStyle(document.body).overflow,
+    smoothInert: document
+      .getElementById("smooth-wrapper")
+      ?.hasAttribute("inert"),
+  }));
+  expect(bodyState.locked).toBe(true);
+  expect(bodyState.overflow).toBe("hidden");
+  expect(bodyState.smoothInert).toBe(true);
+
+  // Press Escape to close
+  await page.keyboard.press("Escape");
+  await expect(panel).toHaveCount(0);
+  await expect(timelineButton).toBeFocused();
+
+  const restoredBodyState = await page.evaluate(() => ({
+    locked: document.body.dataset.timelineOpen === "true",
+    smoothInert: document
+      .getElementById("smooth-wrapper")
+      ?.hasAttribute("inert"),
+  }));
+  expect(restoredBodyState.locked).toBe(false);
+  expect(restoredBodyState.smoothInert).toBe(false);
+});
+
+test("skip-to-next-scene navigates globally across act boundaries", async ({
+  page,
+}) => {
+  await page.goto("/journey#1042-river-divides-kingdom");
+  const scene1042 = page.locator('[id="1042-river-divides-kingdom"]');
+  const skipLink = scene1042.locator('.scene-actions a[href*="#"]');
+  await expect(skipLink).toBeVisible();
+  const targetHref = await skipLink.getAttribute("href");
+  // The last scene of Act 1 (1042) must point to the first scene of Act 2 (daha)
+  expect(targetHref).toBe("#daha-centre-of-power");
+});
+
+test("scene anchor survives viewport layout mode changes on resize", async ({
+  page,
+}, testInfo) => {
+  test.skip(
+    testInfo.project.name !== "desktop",
+    "Desktop to mobile resize test",
+  );
+  await page.setViewportSize({ width: 1200, height: 800 });
+  await page.goto("/journey#879-first-mark");
+  await page.waitForTimeout(600);
+
+  // Resize to mobile viewport
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(600);
+
+  // Scene 879 should still be the target and visible
+  const scene = page.locator('[id="879-first-mark"]');
+  await expect(scene).toBeVisible();
+  expect(page.url()).toContain("#879-first-mark");
+});

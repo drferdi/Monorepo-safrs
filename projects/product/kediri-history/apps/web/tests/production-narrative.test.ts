@@ -7,7 +7,7 @@ import {
   PRODUCTION_JOURNEY,
   PRODUCTION_PROLOGUE,
 } from "../src/content/production-narrative";
-import { CHOREOGRAPHY_KEYS } from "../src/modules/motion/registry";
+import { isKnownChoreographyKey } from "../src/modules/motion/registry";
 
 describe("production journey contract", () => {
   const scenes = PRODUCTION_JOURNEY.acts.flatMap((act) => act.scenes);
@@ -71,15 +71,16 @@ describe("production journey contract", () => {
     );
   });
 
-  it("uses each scene choreography exactly once", () => {
-    const sceneKeys = CHOREOGRAPHY_KEYS.filter(
-      (key) => key !== "prologueReveal",
-    );
+  it("keeps GSAP choreography active from Ganter through the final scene", () => {
     const keys = scenes
       .map((scene) => scene.choreographyKey)
       .filter((key): key is string => key !== undefined);
-    expect(keys).toHaveLength(sceneKeys.length);
-    expect(new Set(keys)).toEqual(new Set(sceneKeys));
+    expect(keys.every(isKnownChoreographyKey)).toBe(true);
+    expect(
+      scenes
+        .filter((scene) => scene.order >= 9)
+        .every((scene) => scene.choreographyKey !== undefined),
+    ).toBe(true);
   });
 
   it("uses the approved 19 September 921 Kadhiri narrative", () => {
@@ -121,39 +122,31 @@ describe("production journey contract", () => {
     );
   });
 
-  it("uses the approved 7 June 1015 Carama narrative", () => {
+  it("uses the clear 7 June 1015 Carama narrative", () => {
     const carama = scenes.find((scene) => scene.slug === "1015-name-endures");
 
     expect(carama?.title).toBe("Nama yang Kembali Muncul");
     expect(carama?.dateDisplay).toBe("7 Juni 1015");
     expect(carama?.masterLine).toBe("Nama yang Kembali Muncul");
     expect(carama?.narrativeParagraphs).toEqual([
-      "Hampir satu abad kemudian, Kadhiri kembali hadir dalam jejak epigrafis.",
+      "Nama Kadhiri yang tercatat pada 921 muncul lagi hampir satu abad kemudian.",
       "Prasasti Carama, bertarikh 7 Juni 1015, mencatat penganugerahan yang berkaitan dengan Sri Mahadewi yang bertakhta di Kadhiri.",
-      "Basis sejarah proyek ini mencatat lempeng tembaganya kini berada di Frankfurt, Jerman.",
-      "Bagi sejarawan, kemunculan nama yang berulang penting.",
-      "Karena ia menunjukkan bahwa Kadhiri bukan sekadar sebuah nama yang kebetulan muncul sekali.",
-      "Wilayah ini telah menjadi bagian dari dunia politik Jawa sebelum Kerajaan Panjalu mencapai kejayaannya.",
-      "Tetapi perubahan terbesar baru terjadi pada 1042.",
+      "Lempeng tembaganya kini tercatat berada di Frankfurt, Jerman.",
+      "Penyebutan berulang ini menunjukkan bahwa Kadhiri sudah dikenal dalam lingkungan politik Jawa sebelum masa Panjalu.",
+      "Setelah itu, perubahan politik yang lebih besar terjadi pada 1042.",
     ]);
     expect(carama?.narrativeBeats).toEqual([
       [
-        "Hampir satu abad kemudian, Kadhiri kembali hadir dalam jejak epigrafis.",
+        "Nama Kadhiri yang tercatat pada 921 muncul lagi hampir satu abad kemudian.",
       ],
       [
         "Prasasti Carama, bertarikh 7 Juni 1015, mencatat penganugerahan yang berkaitan dengan Sri Mahadewi yang bertakhta di Kadhiri.",
       ],
+      ["Lempeng tembaganya kini tercatat berada di Frankfurt, Jerman."],
       [
-        "Basis sejarah proyek ini mencatat lempeng tembaganya kini berada di Frankfurt, Jerman.",
+        "Penyebutan berulang ini menunjukkan bahwa Kadhiri sudah dikenal dalam lingkungan politik Jawa sebelum masa Panjalu.",
       ],
-      ["Bagi sejarawan, kemunculan nama yang berulang penting."],
-      [
-        "Karena ia menunjukkan bahwa Kadhiri bukan sekadar sebuah nama yang kebetulan muncul sekali.",
-      ],
-      [
-        "Wilayah ini telah menjadi bagian dari dunia politik Jawa sebelum Kerajaan Panjalu mencapai kejayaannya.",
-      ],
-      ["Tetapi perubahan terbesar baru terjadi pada 1042."],
+      ["Setelah itu, perubahan politik yang lebih besar terjadi pada 1042."],
     ]);
     expect(carama?.narrativeParagraphs?.join(" ")).not.toContain(
       "Nama dapat muncul sekali karena kebetulan",
@@ -179,7 +172,7 @@ describe("production journey contract", () => {
     expect(domText).not.toContain("dikalahkan oleh pasukan Jayabaya");
   });
 
-  it("uses the eight-second four-frame opening contract and hides global chrome until it completes", async () => {
+  it("shows the Kediri origin text before video one and crossfades into video two", async () => {
     const directorPath = fileURLToPath(
       new URL("../src/modules/motion/director.ts", import.meta.url),
     );
@@ -189,23 +182,36 @@ describe("production journey contract", () => {
     const cssPath = fileURLToPath(
       new URL("../src/app/(public)/globals.css", import.meta.url),
     );
-    const [director, page, css] = await Promise.all([
+    const prologuePath = fileURLToPath(
+      new URL("../src/components/journey/prologue-scene.tsx", import.meta.url),
+    );
+    const videoPath = fileURLToPath(
+      new URL(
+        "../src/components/journey/prologue-video-sequence.tsx",
+        import.meta.url,
+      ),
+    );
+    const [director, page, css, prologue, video] = await Promise.all([
       readFile(directorPath, "utf8"),
       readFile(pagePath, "utf8"),
       readFile(cssPath, "utf8"),
+      readFile(prologuePath, "utf8"),
+      readFile(videoPath, "utf8"),
     ]);
 
-    expect(director).toContain("const PROLOGUE_OPENING_DURATION = 8");
-    expect(director).toContain("const OPENING_FRAME_1_AT = 0");
-    expect(director).toContain("const OPENING_FRAME_2_AT = 2");
-    expect(director).toContain("const OPENING_FRAME_3_AT = 4");
-    expect(director).toContain("const OPENING_FRAME_4_AT = 6");
-    expect(director).toContain('ease: "power2.out"');
-    expect(director).toContain("duration: 0.8");
-    expect(page).toContain('d.setAttribute("data-intro"');
-    expect(page).toContain('"pending"');
-    expect(css).toContain("html[data-intro] .site-nav");
-    expect(css).toContain('.prologue-opening-frame[data-opening-frame="4"]');
+    expect(prologue).toContain("Dari jejak yang tercatat, Kediri tumbuh");
+    expect(director).toContain("kediri:prologue-video-start");
+    expect(page).not.toContain("INTRO_BOOT_SCRIPT");
+    expect(css).toContain(".prologue-opening-copy");
+    expect(prologue).not.toContain("PrologueVisualLabel");
+    expect(prologue).not.toContain("SceneHandoff");
+    expect(prologue).not.toContain("prologue-water-line");
+    expect(prologue).not.toContain("prologue-plate");
+    expect(video).toContain("firstVideoRef");
+    expect(video).toContain("PROLOGUE_FIRST_VIDEO_START_EVENT");
+    expect(video).not.toContain("autoPlay");
+    expect(video).toContain("secondVideoRef");
+    expect(video).toContain("autoAlpha: 1");
   });
 
   it("presents the 1042 division while distinguishing historical record from tradition", () => {
@@ -214,12 +220,12 @@ describe("production journey contract", () => {
     );
 
     const paragraphs = [
-      "Pada 1042, kekuasaan Airlangga dibagi menjadi dua wilayah: Panjalu dan Janggala.",
+      "Perubahan itu terjadi pada 1042, ketika kekuasaan Airlangga dibagi menjadi Panjalu dan Janggala.",
       "Pembagian ini mengubah peta politik Jawa Timur.",
-      "Dalam tradisi kemudian, Mpu Bharada dikisahkan membelah tanah dengan air suci untuk menandai kedua wilayah.",
-      "Kisah Mpu Bharada merupakan bagian dari tradisi, bukan catatan peristiwa yang dapat dipastikan secara langsung.",
-      "Di antara kedua wilayah itu mengalir Brantas.",
-      "Dari pembagian inilah Panjalu tumbuh, dengan Daha sebagai pusat kekuasaannya.",
+      "Tradisi kemudian mengisahkan Mpu Bharada membelah tanah dengan air suci untuk menandai kedua wilayah.",
+      "Kisah itu adalah tradisi, bukan catatan peristiwa yang dapat dipastikan secara langsung.",
+      "Brantas berada di antara kedua wilayah tersebut.",
+      "Dari pembagian ini, Panjalu berkembang dengan Daha sebagai pusat kekuasaannya.",
     ];
 
     expect(division?.title).toBe("Panjalu dan Janggala");
@@ -301,5 +307,21 @@ describe("production journey contract", () => {
     expect(composed.acts[0]?.scenes[0]?.epistemicStatus).toBe(
       "Naskah ini masih dalam proses penelaahan editorial dan belum diterbitkan secara resmi.",
     );
+  });
+
+  it("ensures scene sequence links cross act boundaries without trapping navigation", () => {
+    const orderedScenes = PRODUCTION_JOURNEY.acts.flatMap((act) => act.scenes);
+    for (let i = 0; i < orderedScenes.length - 1; i++) {
+      const current = orderedScenes[i];
+      const next = orderedScenes[i + 1];
+      expect(current).toBeDefined();
+      expect(next).toBeDefined();
+      expect(next?.slug.length).toBeGreaterThan(0);
+    }
+    // Specifically test the boundary between Act 1 (Scene 4) and Act 2 (Scene 5)
+    const act1LastScene = PRODUCTION_JOURNEY.acts[0]?.scenes.at(-1);
+    const act2FirstScene = PRODUCTION_JOURNEY.acts[1]?.scenes[0];
+    expect(act1LastScene?.slug).toBe("1042-river-divides-kingdom");
+    expect(act2FirstScene?.slug).toBe("daha-centre-of-power");
   });
 });

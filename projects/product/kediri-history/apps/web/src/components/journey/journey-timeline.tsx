@@ -45,25 +45,79 @@ export function JourneyTimeline({
 
   useEffect(() => {
     if (!open) return;
+
+    // Kunci gulir dokumen dan tandai latar belakang inert
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalHtmlOverflow = document.documentElement.style.overflow;
+    document.body.dataset.timelineOpen = "true";
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
+    const mainContent = document.getElementById("smooth-wrapper");
+    if (mainContent) {
+      mainContent.setAttribute("inert", "");
+      mainContent.setAttribute("aria-hidden", "true");
+    }
+
+    const panel = panelRef.current;
+    const focusableElements = panel
+      ? Array.from(
+          panel.querySelectorAll<HTMLElement>(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+          ),
+        )
+      : [];
+
+    const firstFocusable = focusableElements[0];
+    const lastFocusable = focusableElements[focusableElements.length - 1];
+
     const onKeyDown = (eventArgs: KeyboardEvent) => {
       if (eventArgs.key === "Escape") {
         eventArgs.stopPropagation();
         close();
+        return;
+      }
+
+      if (eventArgs.key === "Tab" && focusableElements.length > 0) {
+        if (eventArgs.shiftKey) {
+          if (
+            document.activeElement === firstFocusable ||
+            document.activeElement === panel
+          ) {
+            eventArgs.preventDefault();
+            lastFocusable?.focus();
+          }
+        } else {
+          if (document.activeElement === lastFocusable) {
+            eventArgs.preventDefault();
+            firstFocusable?.focus();
+          }
+        }
       }
     };
-    // Hanya saat panel terbuka, dan hanya Escape: tidak ada penangkapan
-    // tombol panah yang merampas navigasi pembaca layar.
+
     document.addEventListener("keydown", onKeyDown);
-    panelRef.current?.querySelector("a")?.focus();
-    return () => document.removeEventListener("keydown", onKeyDown);
+    // Fokus awal ke tautan pertama atau tombol tutup
+    const initialFocusTarget =
+      panel?.querySelector<HTMLElement>(".timeline-list a") ??
+      panel?.querySelector<HTMLElement>("button");
+    initialFocusTarget?.focus();
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      delete document.body.dataset.timelineOpen;
+      document.body.style.overflow = originalBodyOverflow;
+      document.documentElement.style.overflow = originalHtmlOverflow;
+      if (mainContent) {
+        mainContent.removeAttribute("inert");
+        mainContent.removeAttribute("aria-hidden");
+      }
+    };
   }, [open, close]);
 
   const jump = useCallback((slug: string) => {
     setOpen(false);
-    // getElementById, bukan querySelector: anchor scene dimulai dengan angka
-    // (1135-panjalu-jayati) dan "#1135-..." bukan selector CSS yang sah.
     if (!document.getElementById(slug)) return;
-    // Riwayat asli, bukan alam semesta navigasi buatan sendiri.
     window.history.pushState(null, "", `#${slug}`);
     announceJourneyNavigation(slug);
     const heading = document.getElementById(`${slug}-title`);
@@ -93,6 +147,7 @@ export function JourneyTimeline({
           role="dialog"
           aria-modal="true"
           aria-label="Lompat ke satu masa"
+          tabIndex={-1}
         >
           <div className="timeline-panel-head">
             <h2 className="archive-label">Lompat ke satu masa</h2>

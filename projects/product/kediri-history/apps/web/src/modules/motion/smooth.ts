@@ -44,6 +44,15 @@ export function ensureSmoother(): ScrollSmoother | null {
   return smoother;
 }
 
+/** Menggunakan scroller aktif agar trigger dan posisi visual tetap sejalan. */
+export function scrollJourneyTo(top: number): void {
+  if (smoother) {
+    smoother.scrollTop(top);
+    return;
+  }
+  window.scrollTo({ top, behavior: "auto" });
+}
+
 export function releaseSmoother(): void {
   refCount = Math.max(0, refCount - 1);
   if (refCount === 0 && smoother) {

@@ -40,6 +40,7 @@ body {
 [data-journey="true"] {
   background: var(--cinema-canvas);
   color: var(--cinema-ink);
+  font-family: var(--type-body);
   min-height: 100vh;
 }
 
@@ -637,103 +638,32 @@ p {
   grid-area: frame;
 }
 
-/* Empat frame pembuka hanya ada pada kunjungan baru desktop/tablet. */
 .prologue-opening {
-  display: none;
-}
-
-html[data-intro] .site-nav {
-  opacity: 0;
-  pointer-events: none;
-  visibility: hidden;
-}
-
-html[data-intro] .prologue-stage {
-  background: var(--cinema-canvas);
-}
-
-html[data-intro] .prologue-stage > :not(.prologue-opening) {
-  opacity: 0;
-  pointer-events: none;
-}
-
-html[data-intro] .prologue-opening {
-  position: relative;
-  z-index: 6;
+  z-index: 2;
   display: grid;
   place-items: center;
-  width: 100%;
-  min-height: 100%;
   padding: var(--shell-gutter);
-  color: var(--cinema-ink);
+  pointer-events: none;
   text-align: center;
 }
 
-.prologue-opening-frame {
-  grid-area: 1 / 1;
+.prologue-opening-copy {
+  max-width: 36ch;
   margin: 0;
   color: var(--cinema-ink);
-  opacity: 0;
-}
-
-.prologue-opening-frame[data-opening-frame="1"] {
-  max-width: 32ch;
-  font-family: var(--font-noto-javanese), var(--type-interface);
-  font-size: clamp(0.8rem, 1.1vw, 1rem);
-  line-height: 1.5;
-}
-
-.prologue-opening-frame[data-opening-frame="2"] {
-  display: grid;
-  gap: var(--space-2);
   font-family: var(--font-cormorant), var(--type-narrative);
-  font-size: clamp(2.25rem, 6vw, 5.5rem);
-  line-height: 0.94;
-}
-
-.prologue-opening-title,
-.prologue-opening-remainder {
-  display: block;
-}
-
-.prologue-opening-remainder {
-  position: relative;
-  min-height: 1.2em;
-  font-size: 0.46em;
-}
-
-.prologue-opening-remainder [data-opening-script="javanese"],
-.prologue-opening-remainder [data-opening-script="latin"] {
-  inset: 0;
-}
-
-.prologue-opening-remainder [data-opening-script="javanese"] {
-  font-family: var(--font-noto-javanese), var(--type-interface);
-}
-
-.prologue-opening-remainder [data-opening-script="latin"] {
-  position: absolute;
-  font-family: var(--font-cormorant), var(--type-narrative);
-}
-
-.prologue-opening-frame[data-opening-frame="3"] {
-  max-width: 34ch;
-  font-family: var(--type-interface);
-  font-size: clamp(0.9rem, 1.3vw, 1.15rem);
-  line-height: 1.5;
-  letter-spacing: 0.05em;
-}
-
-.prologue-opening-frame[data-opening-frame="4"] {
-  align-self: start;
-  margin-top: 38.2svh;
-  font-family: var(--font-cormorant), var(--type-narrative);
-  font-size: clamp(2.8rem, 8vw, 7rem);
-  line-height: 0.9;
+  font-size: clamp(2rem, 4.2vw, 4.2rem);
+  line-height: 1.22;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
 }
 
 .prologue-surface {
+  position: relative;
+  opacity: 0;
   transform-origin: 54% 52%;
+  -webkit-mask-image: none;
+  mask-image: none;
 }
 
 .prologue-water-line {
@@ -849,21 +779,34 @@ html[data-intro] .prologue-opening {
   margin: 0;
 }
 
+.prologue-scene .stage-plate {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  max-width: min(94vw, 56rem);
+}
+
+.prologue-scene .stage-context {
+  grid-column: 1;
+  grid-row: 1;
+}
+
 .prologue-lead {
-  grid-column: 2;
+  grid-column: 1;
   grid-row: 2;
-  align-self: center;
-  max-width: 15ch;
-  border-left: 1px solid var(--cinema-accent);
-  padding-left: clamp(1.25rem, 2.4vw, 2.5rem);
-  font-size: clamp(2rem, 3.7vw, 4.5rem);
-  line-height: 0.98;
+  align-self: start;
+  max-width: 24ch;
+  border-left: 0;
+  border-top: 1px solid var(--cinema-accent);
+  padding-top: var(--space-3);
+  padding-left: 0;
+  font-size: clamp(2rem, 3.8vw, 3.8rem);
+  line-height: 1.08;
 }
 
 .prologue-passages {
   grid-column: 1;
   grid-row: 3;
-  align-self: end;
+  align-self: start;
   margin: 0;
   max-width: 48ch;
 }
@@ -888,6 +831,38 @@ html[data-intro] .prologue-opening {
   border-bottom: 1px solid var(--cinema-accent);
   padding-bottom: 0.35em;
   text-decoration: none;
+}
+
+/* Affordance gulir GSAP sinematik */
+.prologue-scroll-cue {
+  position: absolute;
+  bottom: clamp(1.75rem, 4.5svh, 3rem);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.scroll-cue-text {
+  font-family: var(--type-archive);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--cinema-accent);
+  opacity: 0.9;
+}
+
+.scroll-cue-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+  stroke: var(--cinema-accent);
+  opacity: 0.85;
 }
 
 /* Garis Brantas: dekoratif, tersubordinasi, dan tidak pernah menjadi konten. */
@@ -926,10 +901,6 @@ html[data-intro] .prologue-opening {
   .brantas-visual-thread__static {
     opacity: 0.48;
   }
-}
-
-html[data-intro] .brantas-visual-thread {
-  opacity: 0;
 }
 
 /* ---------- handoff: motif di dalam dunia shot, bukan rule antarsection ---------- */
@@ -1222,6 +1193,69 @@ html[data-intro] .brantas-visual-thread {
 .journey-act > header .lead {
   max-width: 42ch;
   color: var(--cinema-ink-muted);
+}
+
+/*
+ * Kartu judul era tanpa media latar (Pusat Kekuasaan Berpindah, dsb):
+ * Format tengah (middle) dan bentangan teks horizontal yang lebih leluasa.
+ */
+.journey-act > header:not([data-header-media]) {
+  min-height: 82svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-4);
+  padding-block: clamp(5.5rem, 13svh, 9rem);
+  padding-inline: clamp(1.5rem, 5vw, 4rem);
+}
+
+.journey-act > header:not([data-header-media])::before {
+  inset: auto 20% 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--cinema-rule) 45%, transparent) 25%,
+    var(--cinema-accent) 50%,
+    color-mix(in srgb, var(--cinema-rule) 45%, transparent) 75%,
+    transparent
+  );
+  opacity: 0.55;
+}
+
+.journey-act > header:not([data-header-media]) .archive-label {
+  margin-inline: auto;
+  text-align: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.36em;
+}
+
+.journey-act > header:not([data-header-media]) .title-scene {
+  max-width: 28ch;
+  margin-inline: auto;
+  text-align: center;
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  line-height: 1.1;
+  letter-spacing: 0.07em;
+  margin-bottom: var(--space-2);
+}
+
+.journey-act > header:not([data-header-media]) .lead {
+  max-width: min(100%, 64rem);
+  margin-inline: auto;
+  text-align: center;
+  color: var(--cinema-ink-muted);
+  font-family: var(--type-body);
+  font-size: clamp(1.02rem, 1.25vw, 1.18rem);
+  line-height: 1.82;
+  letter-spacing: 0.012em;
+  text-wrap: pretty;
+  margin-bottom: var(--space-3);
+}
+
+.journey-act > header:not([data-header-media]) .lead:last-child {
+  margin-bottom: 0;
 }
 
 /*
@@ -1830,17 +1864,43 @@ html[data-intro] .brantas-visual-thread {
   position: absolute;
   inset: 0;
   background:
+/* Gradasi vertikal atas & bawah: menghapus potongan tegas dan mengalirkan citra ke kanvas */
+    linear-gradient(
+      180deg,
+      var(--cinema-canvas) 0%,
+      color-mix(in srgb, var(--cinema-canvas) 85%, transparent) 8%,
+      transparent 22%,
+      transparent 76%,
+      color-mix(in srgb, var(--cinema-canvas) 88%, transparent) 92%,
+      var(--cinema-canvas) 100%
+    ),
     linear-gradient(
       90deg,
-      color-mix(in srgb, var(--cinema-canvas) 78%, transparent),
+      color-mix(in srgb, var(--cinema-canvas) 82%, transparent),
       color-mix(in srgb, var(--cinema-canvas) 14%, transparent) 58%,
       color-mix(in srgb, var(--cinema-canvas) 42%, transparent)
+    );
+}
+
+/* Prolog ditayangkan penuh; naskah pembuka sudah selesai sebelum footage masuk. */
+.prologue-surface .stage-media-shade {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      circle at center,
+      transparent 35%,
+      color-mix(in srgb, var(--cinema-canvas) 50%, transparent) 75%,
+      var(--cinema-canvas) 100%
     ),
     linear-gradient(
       0deg,
-      color-mix(in srgb, var(--cinema-canvas) 92%, transparent),
-      transparent 64%
+      var(--cinema-canvas) 0%,
+      transparent 20%,
+      transparent 80%,
+      var(--cinema-canvas) 100%
     );
+  pointer-events: none;
 }
 
 .stage-media--pending {
@@ -2500,21 +2560,23 @@ html[data-intro] .brantas-visual-thread {
  * naskah naratifnya sudah selesai dibaca DI DALAM shot.
  */
 .scene-readout {
-  padding-block: clamp(2.5rem, 7svh, 4.5rem);
+  padding-block: clamp(1.25rem, 3svh, 2.25rem);
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-3);
   justify-items: start;
-  border-top: 1px solid var(--cinema-rule);
+  font-family: var(--type-body);
+  position: relative;
+  border-top: none;
 }
 
 .narrative-stack {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-3);
   max-width: var(--measure-narrative);
 }
 
 .narrative-stack p {
-  font-family: var(--type-narrative);
+  font-family: var(--type-body);
   font-size: var(--type-size-lead);
   line-height: 1.55;
   font-weight: 400;
@@ -2548,8 +2610,13 @@ html[data-intro] .brantas-visual-thread {
   width: min(100%, 52ch);
   margin-top: var(--space-4);
   display: grid;
-  gap: 0;
+  gap: var(--space-3);
   max-width: 52ch;
+}
+
+/* Setiap scene menyajikan naskah lengkap dalam alur baca yang jelas. */
+.scene[data-choreography] .stage-passages {
+  min-height: 0;
 }
 
 /*
@@ -2599,26 +2666,16 @@ html[data-intro] .brantas-visual-thread {
    * (tinjauan visual 2026-08-28 ronde kelima). `position:absolute` benar-
    * benar tidak berkontribusi ke ukuran induk, apa pun opacity-nya.
    */
-  position: absolute;
+  position: static;
+  grid-area: auto;
   inset-inline: 0;
   inset-block-end: 0;
   display: grid;
   gap: var(--space-2);
-  max-width: 42ch;
-  /*
-   * Scrim lokal (direktif editorial Chief 2026-08-29, membalikkan sebagian
-   * `background: none` dari commit 0d4b005 atas arahan yang lebih baru):
-   * gradient halus ke arah teks, bukan blur backdrop — blur me-repaint tiap
-   * frame gulir dan merusak tone citra. Gradiennya berhenti sebelum tengah
-   * bingkai sehingga titik fokus visual tidak pernah tertutup.
-   */
-  padding: var(--space-3) var(--space-4) var(--space-3) var(--space-3);
-  background: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0.55) 0%,
-    rgba(0, 0, 0, 0.3) 55%,
-    rgba(0, 0, 0, 0) 100%
-  );
+  max-width: none;
+  /* Body copy berdiri langsung di atas visual; tidak ada panel hitam. */
+  padding: 0;
+  background: none;
 }
 
 .prologue-scene .stage-beat {
@@ -2666,12 +2723,14 @@ html[data-intro] .brantas-visual-thread {
  * kecil, halus, terbaca — standar museum/arsip digital. Ukuran, warna, dan
  * jarak barisnya token, bukan selera per scene.
  */
-.stage-passages p {
+.stage-passages p,
+.prologue-passages p,
+.stage-beat p {
   margin: 0;
   font-family: var(--type-body);
-  font-size: clamp(0.8125rem, 0.9vw, 0.9rem);
-  line-height: 1.78;
-  letter-spacing: 0.025em;
+  font-size: clamp(0.95rem, 1.05vw, 1.0625rem);
+  line-height: 1.65;
+  letter-spacing: 0.012em;
   font-weight: 400;
   color: var(--cinema-body-ink);
   text-wrap: pretty;
@@ -3284,6 +3343,11 @@ html[data-intro] .brantas-visual-thread {
   cursor: pointer;
 }
 
+body[data-timeline-open="true"] {
+  overflow: hidden !important;
+  touch-action: none;
+}
+
 .timeline-panel {
   position: fixed;
   inset: 0;
@@ -3291,6 +3355,7 @@ html[data-intro] .brantas-visual-thread {
   background: var(--cinema-canvas);
   color: var(--cinema-ink);
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: clamp(1rem, 4vw, 3rem);
 }
 
@@ -3581,7 +3646,8 @@ html[data-intro] .brantas-visual-thread {
     align-items: stretch;
   }
 
-  .prologue-plate {
+  .prologue-plate,
+  .prologue-stage .stage-plate {
     align-self: stretch;
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto auto auto auto;
@@ -3723,6 +3789,9 @@ html[data-intro] .brantas-visual-thread {
 
   .scene[data-choreography="nameEmerges"] .stage-plate {
     align-self: stretch;
+    justify-self: end;
+    max-width: min(44rem, 50vw);
+    margin-right: clamp(1.5rem, 5vw, 5rem);
     padding-top: max(
       clamp(5.75rem, 13svh, 8rem),
       calc(env(safe-area-inset-top) + 4.5rem)
@@ -3886,6 +3955,26 @@ html[data-smooth="true"] .master-line {
   object-fit: cover;
   object-position: 50% 42%;
   transform-origin: center center;
+}
+
+.prologue-video-sequence,
+.prologue-video-sequence video {
+  width: 100%;
+  height: 100%;
+}
+
+.prologue-video-sequence {
+  position: relative;
+}
+
+.prologue-video-sequence video {
+  position: absolute;
+  inset: 0;
+}
+
+.prologue-video-sequence video + video {
+  visibility: hidden;
+  opacity: 0;
 }
 
 /* Prolog mempertahankan seluruh perspektif sumber 16:9 di dalam panggung. */
@@ -4179,25 +4268,6 @@ html[data-smooth="true"] .prologue-title-card {
   font-family: var(--font-cinzel), var(--type-narrative), serif;
   font-size: clamp(1.1rem, 2vw, 1.4rem);
   color: color-mix(in srgb, var(--cinema-ink) 58%, var(--cinema-accent) 42%);
-}
-
-/* ---------- gerbang boot intro (direktif Chief 2026-08-28) ---------- */
-
-/*
- * Selama atribut boot hidup (di-set skrip sinkron sebelum cat pertama,
- * hanya varian bermotion), panggung prolog menahan diri: tidak ada poster,
- * naskah, atau motif yang sempat tercat sebelum sekuens gelap→video milik
- * director dimulai. Director melepas atribut ini begitu GSAP memegang
- * kendali; failsafe 5 detik menjaga halaman bila island gagal dimuat.
- */
-html[data-intro="pending"] .prologue-surface,
-html[data-intro="pending"] .prologue-plate,
-html[data-intro="pending"] .prologue-water-line,
-html[data-intro="pending"] .prologue-stage .scene-handoff,
-html[data-intro="pending"] .prologue-stage .stage-visual-label,
-html[data-intro="pending"] .prologue-credit,
-html[data-intro="pending"] .prologue-title-card {
-  opacity: 0;
 }
 
 @media (min-width: 48rem) {
