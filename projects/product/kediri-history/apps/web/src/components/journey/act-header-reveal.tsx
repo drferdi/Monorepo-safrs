@@ -38,7 +38,7 @@ import {
  * dalamnya sudah lengkap tanpa JavaScript (SSR baseline tetap tampak penuh).
  * Mobile dan reduced-motion tidak pernah membangun timeline.
  */
-export type ActHeaderMode = "card" | "wipe" | "scrubWords";
+export type ActHeaderMode = "card" | "wipe" | "scrubWords" | "slide";
 
 export function ActHeaderReveal({
   enabled,
@@ -121,14 +121,24 @@ export function ActHeaderReveal({
             }
           }
           if (rest.length > 0) {
-            gsap.set(rest, { opacity: 0, y: 20 });
+            /*
+             * `slide` (Babak VI, direktif Chief 2026-09-03): transisi dari
+             * 1678 bergeser KE KANAN — pendukung datang dari kiri dengan
+             * sapuan panjang, bukan naik. Kartu lain tetap naik lembut.
+             */
+            const slide = mode === "slide";
+            gsap.set(
+              rest,
+              slide ? { opacity: 0, x: -72 } : { opacity: 0, y: 20 },
+            );
             timeline.to(
               rest,
               {
                 opacity: 1,
+                x: 0,
                 y: 0,
-                duration: MOTION.reveal.duration,
-                ease: MOTION.reveal.ease,
+                duration: slide ? 1.2 : MOTION.reveal.duration,
+                ease: slide ? EASES.expand : MOTION.reveal.ease,
                 stagger: 0.12,
               },
               headerMedia ? 0.35 : 0.15,
@@ -154,6 +164,8 @@ export function ActHeaderReveal({
               onSplit: (self) => {
                 const tween = gsap.from(self.lines, {
                   yPercent: 110,
+                  // `slide`: baris judul ikut bergeser ke kanan saat terkuak.
+                  xPercent: mode === "slide" ? -12 : 0,
                   duration: 1.05,
                   ease: EASES.cine,
                   stagger: STAGGERS.linesEach,

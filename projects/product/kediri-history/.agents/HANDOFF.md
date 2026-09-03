@@ -43,6 +43,17 @@ yang harus dijaga:
   `src/`). Bandingkan selalu terhadap baseline itu, bukan terhadap nol.
 - Belum diverifikasi: Safari/Firefox (config Playwright hanya Chromium),
   DevTools Performance di GPU sungguhan.
+- **Tata letak kanan paruh kedua** (direktif Chief 2026-09-03, sesi yang
+  sama): `page.tsx` menandai `data-layout="right"` pada `.journey-act` mulai
+  `RIGHT_LAYOUT_FROM = "iron-sugar-modern-city"` (Babak VI–IX). CSS blok
+  terakhir `globals.css` (`@media (min-width: 48rem)`): pelat `justify-self:
+  end; align-self: center`, tarikh dibatasi `min(monumental, 17svh)` supaya
+  tarikh dua baris (1947–1948, 2024–2026) tidak mendorong beat keluar
+  viewport (terukur: pelat 1013–1045 px → 782–841 px pada 900 px), label
+  visual pindah ke kiri, kartu judul rata-kanan. Kartu Babak VI memakai mode
+  `slide` (`ActHeaderReveal`): pendukung datang dari kiri x −72 → 0
+  `expo.out`, baris judul xPercent −12 → 0 — transisi 1678 → Babak VI
+  bergeser ke kanan. Mobile tidak berubah.
 
 **Jeda "bukti prasasti" scroll-driven terpasang di antara Prolog dan Act I**
 (direktif Chief 2026-08-30, detail penuh: DECISIONS 2026-08-30). Section baru

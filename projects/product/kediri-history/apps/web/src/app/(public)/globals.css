@@ -4334,3 +4334,84 @@ html[data-smooth="true"] .prologue-title-card {
     max-width: none;
   }
 }
+
+/* ---------- paruh kedua: tata letak kanan (Babak VI ke bawah) ---------- */
+
+/*
+ * Pembeda paruh kedua Journey (direktif Chief 2026-09-03): mulai "Besi, Gula,
+ * dan Kota Modern", pelat naskah berpindah ke sisi KANAN bingkai dan duduk di
+ * tengah vertikal — bukan lagi menempel dasar bingkai, yang membuat body copy
+ * terdorong terlalu ke bawah dan terpotong tepi pin. Kartu judul act ikut
+ * rata-kanan. Label visual pindah ke kiri agar tidak bertabrakan dengan
+ * pelat. Naskah tetap rata-kiri di dalam pelatnya: keterbacaan lebih dulu.
+ * Desktop dan tablet saja; mobile tetap novel grafis vertikal.
+ */
+@media (min-width: 48rem) {
+  .journey-act[data-layout="right"] > header:not([data-header-media]) {
+    align-items: flex-end;
+    text-align: end;
+  }
+
+  /* Anak kartu memakai `margin-inline: auto` + `text-align: center` dari
+     format tengah Babak III; di paruh kedua ketiganya rata-kanan. */
+  .journey-act[data-layout="right"]
+    > header:not([data-header-media])
+    .archive-label,
+  .journey-act[data-layout="right"]
+    > header:not([data-header-media])
+    .title-scene,
+  .journey-act[data-layout="right"] > header:not([data-header-media]) .lead {
+    margin-inline: auto 0;
+    text-align: end;
+  }
+
+  .journey-act[data-layout="right"] > header:not([data-header-media]) .lead {
+    max-width: min(100%, 48rem);
+  }
+
+  .journey-act[data-layout="right"] > header:not([data-header-media])::before {
+    inset: auto 0 0 40%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--cinema-rule) 45%, transparent) 40%,
+      var(--cinema-accent)
+    );
+  }
+
+  .journey-act[data-layout="right"] .stage-plate {
+    align-self: center;
+    justify-self: end;
+    padding-block: clamp(5rem, 11svh, 6.5rem) clamp(2rem, 5svh, 3.5rem);
+    gap: var(--space-2);
+  }
+
+  /*
+   * Tarikh dua baris (1947–1948, 2024–2026) pada ukuran monumental membuat
+   * pelat 1.000 px+ pada viewport 900 px — beat terakhir terpotong tepi pin
+   * (terukur 2026-09-03). Di paruh kedua tarikh dibatasi terhadap tinggi
+   * viewport supaya seluruh pelat selalu muat di tengah bingkai.
+   */
+  .journey-act[data-layout="right"] .stage-date {
+    font-size: min(var(--type-size-monumental), clamp(5rem, 17svh, 12rem));
+  }
+
+  .journey-act[data-layout="right"] .stage-passages {
+    margin-top: var(--space-2);
+  }
+
+  /* Pelat dua kolom (1135-gaya, 1869-gaya) tetap selebar bingkai, tetapi
+     naik ke tengah bersama pelat lain. */
+  .journey-act[data-layout="right"]
+    .scene[data-choreography="royalConsolidation"]
+    .stage-plate,
+  .journey-act[data-layout="right"]
+    .scene[data-choreography="bridgeConstruction"]
+    .stage-plate {
+    align-items: center;
+  }
+
+  .journey-act[data-layout="right"] .scene .stage-visual-label {
+    justify-self: start;
+  }
+}

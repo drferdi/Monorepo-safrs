@@ -63,11 +63,21 @@ const ACT_HEADER_MEDIA: Readonly<Record<string, string>> = {
  */
 function actHeaderMode(slug: string, preview: boolean): ActHeaderMode {
   if (slug === "the-throne-breaks") return "scrubWords";
+  if (slug === RIGHT_LAYOUT_FROM) return "slide";
   if (preview && ACT_HEADER_MEDIA[slug] && slug !== "the-land-remembers") {
     return "wipe";
   }
   return "card";
 }
+
+/**
+ * Pembeda paruh kedua Journey (direktif Chief 2026-09-03): mulai "Besi, Gula,
+ * dan Kota Modern" ke bawah, pelat naskah berpindah ke SISI KANAN bingkai dan
+ * duduk di tengah vertikal (tidak lagi menempel dasar bingkai). Transisi dari
+ * 1678 ke kartu judul act ini bergeser ke kanan (mode `slide`). Desktop dan
+ * tablet saja — mobile tetap novel grafis vertikal.
+ */
+const RIGHT_LAYOUT_FROM = "iron-sugar-modern-city";
 
 export const metadata = {
   title: "Journey",
@@ -88,6 +98,9 @@ export default async function JourneyPage(): Promise<ReactElement> {
   const manifest = editorialPreview
     ? composeProductionJourney(publishedManifest)
     : publishedManifest;
+  const rightLayoutIndex = manifest.acts.findIndex(
+    (act) => act.slug === RIGHT_LAYOUT_FROM,
+  );
   const orderedScenes = manifest.acts.flatMap((act) =>
     act.scenes.map((scene) => ({ scene, actTitle: act.title })),
   );
@@ -171,11 +184,16 @@ export default async function JourneyPage(): Promise<ReactElement> {
               </header>
             )}
 
-            {manifest.acts.map((act) => (
+            {manifest.acts.map((act, actIndex) => (
               <section
                 key={act.id}
                 className="journey-act"
                 data-era={act.visualEraKey}
+                data-layout={
+                  rightLayoutIndex >= 0 && actIndex >= rightLayoutIndex
+                    ? "right"
+                    : undefined
+                }
                 aria-labelledby={`act-${act.slug}`}
               >
                 <header
