@@ -5,9 +5,9 @@ import {
   ActHeaderReveal,
 } from "../../../components/journey/act-header-reveal";
 import { ActMilestoneTicker } from "../../../components/journey/act-milestone-ticker";
-import { BrantasVisualThread } from "../../../components/journey/brantas-visual-thread";
 import { DeepLinkLanding } from "../../../components/journey/deep-link-landing";
 import { FinaleMotion } from "../../../components/journey/finale-motion";
+import { JourneyAudio } from "../../../components/journey/journey-audio";
 import {
   JourneyTimeline,
   type TimelineEntry,
@@ -158,6 +158,9 @@ export default async function JourneyPage(): Promise<ReactElement> {
           <li>
             <Link href="/sources">Sumber</Link>
           </li>
+          <li>
+            <JourneyAudio />
+          </li>
         </ul>
       </nav>
       {/*
@@ -169,7 +172,6 @@ export default async function JourneyPage(): Promise<ReactElement> {
        */}
       <div id="smooth-wrapper">
         <div id="smooth-content">
-          <BrantasVisualThread />
           <main id="historical-content">
             {editorialPreview ? (
               <PrologueScene narrative={PRODUCTION_PROLOGUE} />

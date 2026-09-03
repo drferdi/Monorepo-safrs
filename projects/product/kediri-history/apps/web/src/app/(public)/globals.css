@@ -130,7 +130,7 @@ a {
 
 .site-nav {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
   padding: var(--space-4) 0;
@@ -143,9 +143,18 @@ a {
   border-bottom-color: var(--cinema-rule);
 }
 
-.site-nav a {
+.site-nav a,
+.site-nav button {
   color: inherit;
+  font: inherit;
   text-decoration: none;
+}
+
+.site-nav button {
+  cursor: pointer;
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 
 .site-nav .wordmark {
@@ -158,6 +167,9 @@ a {
 
 .site-nav ul {
   display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
   gap: var(--space-4);
   list-style: none;
   margin: 0;
@@ -166,7 +178,9 @@ a {
 }
 
 .site-nav a:hover,
-.site-nav a:focus-visible {
+.site-nav a:focus-visible,
+.site-nav button:hover,
+.site-nav button:focus-visible {
   text-decoration: underline;
   text-underline-offset: 4px;
 }
@@ -434,11 +448,13 @@ p {
   pointer-events: none;
 }
 
-[data-journey="true"] .site-nav a {
+[data-journey="true"] .site-nav a,
+[data-journey="true"] .site-nav button {
   font-family: var(--type-archive);
   font-size: 0.66rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 [data-journey="true"] .site-nav .wordmark {
@@ -1267,44 +1283,6 @@ p {
   height: 1.15rem;
   stroke: var(--cinema-accent);
   opacity: 0.85;
-}
-
-/* Garis Brantas: dekoratif, tersubordinasi, dan tidak pernah menjadi konten. */
-.brantas-visual-thread {
-  position: fixed;
-  z-index: 3;
-  inset-inline-end: var(--shell-gutter);
-  inset-block-end: clamp(3rem, 12svh, 8rem);
-  width: min(24vw, 18rem);
-  height: clamp(2.25rem, 6vw, 4.5rem);
-  overflow: visible;
-  pointer-events: none;
-}
-
-.brantas-visual-thread__static {
-  fill: none;
-  stroke: var(--cinema-accent);
-  stroke-linecap: round;
-  stroke-width: 1.5;
-  opacity: 0.56;
-}
-
-@media (max-width: 47.999rem) {
-  .brantas-visual-thread {
-    inset-block-end: var(--space-3);
-    width: min(36vw, 10rem);
-    height: 2.5rem;
-  }
-
-  .brantas-visual-thread__static {
-    opacity: 0.48;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .brantas-visual-thread__static {
-    opacity: 0.48;
-  }
 }
 
 /* ---------- handoff: motif di dalam dunia shot, bukan rule antarsection ---------- */
