@@ -19,7 +19,9 @@ import {
 } from "../../modules/motion/index";
 
 /**
- * Jeda "bukti prasasti" (revisi Chief 2026-08-30: scroll-driven, bukan timer).
+ * Jeda "bukti prasasti" setelah scene 921 (revisi Chief 2026-09-03):
+ * scroll-driven, bukan timer. Posisi ini menjaga Prolog → 879 tetap langsung,
+ * lalu memperkuat argumen nama Kadhiri setelah penyebutan 921 diperkenalkan.
  *
  * Bidikan sendiri, di luar registry koreografi shot — bukan Jam 1/Jam 2 milik
  * `scenes.ts`/`director.ts`, karena kontennya bukan naskah CMS. Satu timeline
@@ -31,9 +33,9 @@ import {
  * Identitas gerak (audit 2026-09-03): tiap kartu bukti masuk lewat SAPUAN
  * CLIP-PATH dari bawah — batu demi batu diletakkan — lalu pergi lewat fade
  * naik. Ini satu-satunya section yang memakai wipe sebagai entrance utama,
- * berbeda dari kredit Prolog (blur) sebelumnya dan topeng baris kartu judul
- * Babak I sesudahnya. Pin dipendekkan 550% → 420% supaya kanvas hitam tidak
- * menyisakan gulir kosong (§ G13 audit).
+ * berbeda dari pertanyaan Prolog sebelumnya dan shot 1015 sesudahnya. Pin
+ * dipadatkan menjadi 320% supaya bukti tetap punya tempo tanpa menahan
+ * pengunjung terlalu lama.
  *
  * Video pembuka meredup lewat tweak `prologueReveal` di `scenes.ts` (Jam 1
  * shot itu sendiri), bukan di sini — bidikan ini hanya mengurus panggung
@@ -108,7 +110,7 @@ export function PrologueInscriptionInterlude(): ReactElement {
           const trigger = ScrollTrigger.create({
             trigger: stage,
             start: "top top",
-            end: "+=420%",
+            end: "+=320%",
             pin: true,
             pinSpacing: true,
             scrub: 0.5,
@@ -133,7 +135,7 @@ export function PrologueInscriptionInterlude(): ReactElement {
   return (
     <section
       className="interlude-scene"
-      aria-label="Bukti prasasti nama Kadiri"
+      aria-label="Rangkaian bukti prasasti setelah penyebutan Kadhiri tahun 921"
     >
       <div className="interlude-stage" ref={stageRef}>
         <div className="interlude-frame">

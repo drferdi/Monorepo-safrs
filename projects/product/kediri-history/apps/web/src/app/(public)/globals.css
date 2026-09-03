@@ -492,7 +492,7 @@ p {
   height: 100%;
   display: block;
   object-fit: cover;
-  object-position: 50% 46%;
+  object-position: center center;
 }
 
 /* Finale lebih tenang: kamera akhirnya berhenti, paletnya mereda. */
@@ -638,29 +638,9 @@ p {
   grid-area: frame;
 }
 
-.prologue-opening {
-  z-index: 2;
-  display: grid;
-  place-items: center;
-  padding: var(--shell-gutter);
-  pointer-events: none;
-  text-align: center;
-}
-
-.prologue-opening-copy {
-  max-width: 36ch;
-  margin: 0;
-  color: var(--cinema-ink);
-  font-family: var(--font-cormorant), var(--type-narrative);
-  font-size: clamp(2rem, 4.2vw, 4.2rem);
-  line-height: 1.22;
-  letter-spacing: -0.012em;
-  text-wrap: balance;
-}
-
 .prologue-surface {
   position: relative;
-  opacity: 0;
+  opacity: 1;
   transform-origin: 54% 52%;
   -webkit-mask-image: none;
   mask-image: none;
@@ -683,67 +663,6 @@ p {
   opacity: 0.72;
   pointer-events: none;
   z-index: -1;
-}
-
-.prologue-visual-label-shell {
-  grid-area: frame;
-  align-self: start;
-  justify-self: end;
-  z-index: 1;
-  margin: clamp(5.75rem, 12svh, 7.5rem) var(--shell-gutter) 0;
-  pointer-events: none;
-}
-
-.prologue-visual-label {
-  margin: 0;
-  color: var(--cinema-ink-muted);
-  font-family: var(--type-archive);
-  font-size: 0.58rem;
-  line-height: 1.25;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.prologue-visual-label[data-label-state="idle"],
-.prologue-visual-label[data-label-state="hidden"] {
-  visibility: hidden;
-  opacity: 0;
-}
-
-.prologue-visual-label__line {
-  display: block;
-}
-
-.prologue-visual-label__line--primary {
-  color: var(--cinema-ink);
-  font-weight: 600;
-}
-
-.prologue-visual-label__line--secondary {
-  max-width: 36ch;
-  margin-top: 0.45rem;
-  font-family: var(--type-body);
-  font-size: 0.72rem;
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  line-height: 1.45;
-  text-transform: none;
-}
-
-.prologue-visual-label__char {
-  display: inline-block;
-}
-
-.prologue-visual-label__char--space {
-  white-space: pre;
-}
-
-/* Scripting tidak ada berarti seluruh disclosure visual tetap terbaca. */
-@media (scripting: none) {
-  .prologue-visual-label[data-label-state="idle"] {
-    visibility: visible;
-    opacity: 1;
-  }
 }
 
 .prologue-plate {
@@ -833,6 +752,491 @@ p {
   text-decoration: none;
 }
 
+/* ---------- pembuka Prolog: dua babak footage dan satu naskah ---------- */
+
+/*
+ * Babak pembuka (direktif Chief 2026-09-04). Footage-nya dekoratif dan
+ * default-nya `opacity: 0`, persis seperti copper dan portal di bawah: tanpa
+ * JavaScript tidak ada satu pun yang berkedip, dan hanya timeline
+ * `prologueReveal` yang menaikkannya. Naskahnya historis, jadi ia justru
+ * TERBACA pada alur statis dan hanya disembunyikan ketika motion aktif.
+ */
+/*
+ * DASAR adalah alur statis, bukan sebaliknya: panggung mendapat baris sendiri
+ * untuk naskah pembuka sehingga ia tidak pernah menumpuk di sel "frame"
+ * bersama pelat ketika tidak ada timeline (tanpa JavaScript, reduced motion,
+ * mobile). Pola baris terpisah ini sama dengan `.scene-nomenclature` di 921
+ * dan 1042. Varian motion di bawah mengembalikannya menjadi satu sel penuh.
+ */
+/*
+ * Urutan alur statis: BINGKAI 2026 lebih dulu, baru naskah era Daha. Pada
+ * mobile pengunjung harus disambut "KEDIRI, 2026" — bukan kalimat tentang
+ * Daha abad ke-11 yang belum punya konteks (terukur 2026-09-04 di 375 px:
+ * naskah Daha tampil di atas judul). Varian motion tetap menumpuknya di satu
+ * sel dan menempatkannya di antara dua footage lewat timeline.
+ */
+.prologue-stage:has(.prologue-overture) {
+  grid-template-areas: "frame" "overture";
+  grid-template-rows: 1fr auto;
+}
+
+.prologue-overture {
+  position: relative;
+  z-index: 0;
+  grid-area: overture;
+  align-self: start;
+  justify-self: stretch;
+  pointer-events: none;
+}
+
+.prologue-overture-clip {
+  position: absolute;
+  inset: 0;
+  display: none;
+  opacity: 0;
+  /*
+   * Vignette elips sedikit lebih rapat daripada semula (96%/94%, 80→100%):
+   * bersama pembesaran 1,09× pada <video>, sudut kanan-bawah — tempat
+   * watermark alat pada render 1080p — jatuh di luar elips dan meredup ke
+   * `.stage-void`. SEMENTARA; longgarkan kembali saat render bersih tiba.
+   */
+  mask-image: radial-gradient(
+    ellipse 92% 88% at 50% 50%,
+    black 66%,
+    transparent 96%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 92% 88% at 50% 50%,
+    black 66%,
+    transparent 96%
+  );
+}
+
+.prologue-overture-clip video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  /*
+   * SEMENTARA (2026-09-04): kedua render 1080p masih membawa watermark alat
+   * di sudut kanan-bawah. Pembesaran kecil dengan titik asal condong ke
+   * kiri-atas mendorong sudut itu keluar bingkai tanpa menyentuh berkasnya.
+   * Hapus dua baris ini begitu Chief menimpa render tanpa watermark.
+   */
+  transform: scale(1.09);
+  transform-origin: 40% 36%;
+}
+
+.prologue-overture-copy {
+  display: grid;
+  gap: var(--space-3);
+  max-width: min(100%, 46rem);
+  padding: var(--space-5) var(--shell-gutter);
+  color: var(--cinema-ink);
+  font-family: var(--type-body);
+  font-size: clamp(1rem, 1.15vw, 1.15rem);
+  line-height: 1.78;
+  text-wrap: pretty;
+}
+
+.prologue-overture-copy p:first-child {
+  font-family: var(--type-narrative);
+  font-size: clamp(1.5rem, 2.6vw, 2.3rem);
+  line-height: 1.24;
+  color: var(--cinema-ink);
+}
+
+.prologue-overture-copy p:last-child {
+  color: var(--cinema-ink-muted);
+  font-family: var(--type-archive);
+  font-size: clamp(0.68rem, 0.85vw, 0.78rem);
+  line-height: 1.6;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ---------- Prologue Cinematic Title di Layar Gelap ---------- */
+.prologue-cinematic-title {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-6) var(--shell-gutter);
+  pointer-events: none;
+  z-index: 8;
+  opacity: 0;
+  visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.cinematic-title-eyebrow {
+  display: block;
+  font-family: var(--type-mono);
+  font-size: clamp(0.75rem, 1vw, 0.875rem);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--cinema-accent);
+  margin-bottom: var(--space-4);
+  opacity: 0.9;
+}
+
+.cinematic-title-heading {
+  font-family: var(--type-display);
+  font-size: clamp(2.2rem, 5.2vw, 4.2rem);
+  font-weight: 400;
+  line-height: 1.14;
+  letter-spacing: 0.04em;
+  color: var(--cinema-ink);
+  max-width: 24ch;
+  text-wrap: balance;
+  text-shadow:
+    0 4px 30px rgba(0, 0, 0, 0.9),
+    0 0 50px rgba(205, 167, 91, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prologue-cinematic-title {
+    filter: none !important;
+  }
+}
+
+/* ---------- Presenter Text & Logo di Video 1 (Smooth Typing) ---------- */
+/*
+ * Kredit presenter duduk di sepertiga bawah — konvensi kartu "presents" —
+ * bukan di tengah bingkai, supaya tidak bersaing dengan kota yang sedang
+ * diperkenalkan footage (tinjauan visual 2026-09-04).
+ */
+.prologue-overture-present {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-block-end: clamp(4.5rem, 13svh, 8rem);
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+  visibility: hidden;
+  will-change: transform, opacity;
+}
+
+.overture-present-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  text-align: center;
+  background: none;
+}
+
+.overture-present-logo {
+  width: clamp(2rem, 2.8vw, 2.75rem);
+  height: clamp(2rem, 2.8vw, 2.75rem);
+  display: block;
+  object-fit: contain;
+  filter: invert(72%) sepia(52%) saturate(520%) hue-rotate(5deg)
+    brightness(105%) contrast(98%) drop-shadow(0 2px 16px rgba(0, 0, 0, 0.9));
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.overture-present-text {
+  font-family: var(--type-display);
+  font-size: clamp(0.9rem, 1.45vw, 1.25rem);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--cinema-ink);
+  text-shadow:
+    0 2px 16px rgba(0, 0, 0, 0.95),
+    0 0 24px rgba(205, 167, 91, 0.4);
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.typing-char {
+  display: inline-block;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.typing-cursor {
+  display: inline-block;
+  color: var(--cinema-accent);
+  margin-left: 0.2em;
+  font-weight: 300;
+  animation: typingCursorBlink 0.75s infinite alternate ease-in-out;
+}
+
+@keyframes typingCursorBlink {
+  0% {
+    opacity: 0.15;
+  }
+  100% {
+    opacity: 1;
+    text-shadow: 0 0 8px var(--cinema-accent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prologue-overture-present {
+    filter: none !important;
+  }
+  .overture-present-logo,
+  .typing-char {
+    opacity: 1 !important;
+    filter: none !important;
+  }
+  .typing-cursor {
+    display: none;
+  }
+}
+
+/*
+ * Varian motion: panggung kembali menjadi satu sel, footage mengisi bingkai
+ * penuh, dan naskah pembuka menjadi lapisan di tengah yang dimulai dari nol —
+ * timeline `prologueReveal` yang memunculkannya di antara dua footage.
+ */
+@media (min-width: 48rem) and (prefers-reduced-motion: no-preference) {
+  .prologue-stage:has(.prologue-overture) {
+    grid-template-areas: "frame";
+    grid-template-rows: 1fr;
+  }
+
+  .prologue-overture {
+    grid-area: frame;
+    align-self: stretch;
+  }
+
+  .prologue-overture-clip {
+    display: block;
+  }
+
+  .prologue-overture-copy {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    align-content: center;
+    justify-items: center;
+    max-width: none;
+    margin: 0 auto;
+    padding-inline: max(var(--shell-gutter), calc((100% - 46rem) / 2));
+    opacity: 0;
+    text-align: center;
+  }
+
+  /*
+   * Layar pertama sebagai title sequence (2026-09-04): citra dan naskah
+   * berangkat dari nol dan dimunculkan entrance berbasis waktu milik
+   * director (`intro`, ±2,4 detik, kalah oleh gulir). Hanya kontainer DALAM
+   * citra (`.stage-media`) yang disembunyikan — `.prologue-surface` dan
+   * `.stage-plate` dipegang timeline scrub dan tidak boleh diberi keadaan
+   * awal di sini. Blok `scripting: none` di bawah membatalkannya tanpa JS.
+   */
+  .prologue-surface .stage-media,
+  .prologue-scene .stage-context .eyebrow,
+  .prologue-scene .stage-context .title-scene,
+  .prologue-lead,
+  .prologue-passages .stage-beat,
+  .prologue-stage .prologue-scroll-cue {
+    /* Beat disembunyikan per elemen (bukan wadahnya), karena entrance
+       men-tween tiap `.stage-beat`. Cue memakai selektor berspesifisitas
+       lebih tinggi: aturan dasarnya (opacity 0.9) berada lebih bawah. */
+    opacity: 0;
+  }
+
+  /*
+   * Letterbox 2,39:1 layar pertama. `--letterbox` (persen tinggi bingkai)
+   * di-tween GSAP dari pita penuh ke 0 — pola `--dolly`; tanpa nilai (varian
+   * statis, atau setelah clearProps) inset-nya 0 dan tidak berpengaruh.
+   */
+  .prologue-surface .stage-media {
+    clip-path: inset(calc(var(--letterbox, 0) * 1%) 0%);
+  }
+
+  /* "KEDIRI, 2026" adalah baris hero layar pertama, bukan label. */
+  .prologue-scene .stage-context .title-scene {
+    font-size: calc(var(--type-size-scene) * 1.25);
+  }
+}
+
+/*
+ * Tanpa JavaScript tidak ada timeline yang menaikkan opacity kembali, jadi
+ * perlakuan overlay di atas HARUS dibatalkan — kalau tidak, naskah era Daha
+ * berdiri di opacity nol dan sejarahnya hilang dari halaman (terbukti pada
+ * pemeriksaan tanpa-JS 2026-09-04). Blok ini sengaja berada SESUDAH varian
+ * motion supaya memenangkan kaskade pada lebar yang sama.
+ */
+@media (scripting: none) {
+  .prologue-stage:has(.prologue-overture) {
+    grid-template-areas: "frame" "overture";
+    grid-template-rows: 1fr auto;
+  }
+
+  .prologue-overture {
+    grid-area: overture;
+    align-self: start;
+    padding-block: var(--space-4) var(--space-6);
+  }
+
+  .prologue-overture-clip {
+    display: none;
+  }
+
+  .prologue-overture-copy {
+    position: static;
+    inset: auto;
+    max-width: min(100%, 46rem);
+    opacity: 1;
+    text-align: start;
+  }
+
+  /* Keadaan awal entrance layar pertama dibatalkan: komposisi langsung utuh. */
+  .prologue-surface .stage-media,
+  .prologue-scene .stage-context .eyebrow,
+  .prologue-scene .stage-context .title-scene,
+  .prologue-lead,
+  .prologue-passages .stage-beat {
+    opacity: 1;
+  }
+
+  .prologue-stage .prologue-scroll-cue {
+    opacity: 0.9;
+  }
+}
+
+/*
+ * Surface procedural resolusi-independen: air → horizon → tembaga. Seluruh
+ * bentuk adalah metafora presentasi, bukan citra artefak atau bukti sejarah.
+ */
+.prologue-material-world {
+  position: relative;
+  z-index: -1;
+  align-self: stretch;
+  justify-self: stretch;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.prologue-city-veil,
+.prologue-copper-field,
+.prologue-horizon {
+  position: absolute;
+  display: block;
+}
+
+.prologue-city-veil {
+  inset: 0;
+  opacity: 0.08;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--cinema-canvas) 8%, transparent),
+      color-mix(in srgb, var(--cinema-canvas) 72%, transparent) 62%,
+      var(--cinema-canvas)
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--cinema-canvas) 68%, transparent),
+      transparent 45%,
+      color-mix(in srgb, var(--cinema-canvas) 48%, transparent)
+    );
+}
+
+.prologue-water-field {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: color-mix(in srgb, var(--cinema-ink) 64%, var(--cinema-accent));
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.12;
+  mix-blend-mode: screen;
+}
+
+.prologue-water-field path:nth-child(2) {
+  opacity: 0.74;
+}
+
+.prologue-water-field path:nth-child(3) {
+  opacity: 0.5;
+}
+
+.prologue-water-field path:nth-child(4) {
+  opacity: 0.3;
+}
+
+.prologue-horizon {
+  z-index: 2;
+  inset-inline: 12%;
+  top: 72%;
+  height: 1px;
+  opacity: 0;
+  background: color-mix(in srgb, var(--cinema-accent) 78%, var(--cinema-ink));
+}
+
+.prologue-copper-field {
+  inset: 0;
+  opacity: 0;
+  background:
+    repeating-linear-gradient(
+      98deg,
+      color-mix(in srgb, var(--cinema-surface) 82%, transparent) 0 1px,
+      transparent 1px 0.48rem
+    ),
+    repeating-linear-gradient(
+      4deg,
+      color-mix(in srgb, var(--cinema-rule) 34%, transparent) 0 1px,
+      transparent 1px 1.35rem
+    ),
+    radial-gradient(
+      ellipse at 50% 72%,
+      color-mix(in srgb, var(--cinema-accent) 38%, transparent),
+      color-mix(in srgb, var(--cinema-surface) 82%, var(--cinema-canvas)) 52%,
+      var(--cinema-canvas) 100%
+    );
+}
+
+.prologue-portal {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  opacity: 0;
+  text-align: center;
+}
+
+.prologue-portal-date {
+  font-family: var(--font-cinzel), var(--type-narrative), serif;
+  font-size: clamp(7rem, 24vw, 21rem);
+  font-weight: 500;
+  line-height: 0.78;
+  letter-spacing: -0.08em;
+  color: var(--cinema-ink);
+}
+
+.prologue-portal-label {
+  max-width: 30ch;
+  font-family: var(--type-archive);
+  font-size: clamp(0.62rem, 0.85vw, 0.78rem);
+  line-height: 1.5;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--cinema-ink) 72%, var(--cinema-accent));
+}
+
 /* Affordance gulir GSAP sinematik */
 .prologue-scroll-cue {
   position: absolute;
@@ -843,7 +1247,7 @@ p {
   flex-direction: column;
   align-items: center;
   gap: var(--space-2);
-  opacity: 0;
+  opacity: 0.9;
   pointer-events: none;
   z-index: 10;
 }
@@ -976,8 +1380,16 @@ p {
   );
 }
 
+/*
+ * Motif "air menjadi tembaga" adalah SEAM tipis yang bercahaya, bukan balok:
+ * kolom tengah grid selebar 0.3fr pernah terisi penuh menjadi persegi emas
+ * 54x49 px tepat di bawah portal 879 (tinjauan visual 2026-09-04) dan terbaca
+ * sebagai artefak UI, bukan transformasi material.
+ */
 .scene-handoff[data-handoff="water-copper"] .scene-handoff__transform {
   height: 100%;
+  width: 0.35rem;
+  justify-self: center;
   background: linear-gradient(
     180deg,
     transparent,
@@ -1103,9 +1515,10 @@ p {
 @media (min-width: 48rem) and (max-width: 63.999rem) and (
     prefers-reduced-motion: no-preference
   ) {
+  /* Mencerminkan PIN_DISTANCES.prologueReveal di modules/motion/scenes.ts. */
   .prologue-pin-space {
     display: block;
-    height: 210svh;
+    height: 300svh;
   }
 
   .prologue-stage {
@@ -1115,9 +1528,10 @@ p {
 }
 
 @media (min-width: 64rem) and (prefers-reduced-motion: no-preference) {
+  /* Mencerminkan PIN_DISTANCES.prologueReveal di modules/motion/scenes.ts. */
   .prologue-pin-space {
     display: block;
-    height: 330svh;
+    height: 420svh;
   }
 
   .prologue-stage {
@@ -1489,6 +1903,16 @@ p {
   position: absolute;
   inset: 0;
   overflow: hidden;
+  mask-image: radial-gradient(
+    ellipse 98% 95% at 50% 50%,
+    black 82%,
+    transparent 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 98% 95% at 50% 50%,
+    black 82%,
+    transparent 100%
+  );
 }
 
 .stage-media img {
@@ -1496,25 +1920,20 @@ p {
   height: 100%;
   display: block;
   object-fit: cover;
-  object-position: 50% 42%;
+  object-position: center center;
 }
 
 /*
  * JENDELA BINGKAI (Authority Rule 1).
  *
- * Sebagian aset produksi membawa teks yang terbakar ke dalam raster — tarikh,
- * nama wilayah, nama tempat. Informasi semacam itu harus hidup sebagai DOM
- * supaya dapat dibaca teknologi bantu, dilokalkan, dan dikoreksi. Jendela di
- * sini mengeluarkan teks tersebut dari bingkai, lalu maknanya dikembalikan
- * sebagai lapisan DOM.
- *
- * Nilainya datang dari src/modules/motion/framing.ts, yang mencerminkan
- * docs/production/01_SCENE_MANIFEST.yaml. Ia dirender server sebagai custom
- * property, jadi crop sudah benar pada cat pertama — tidak ada lompatan ketika
- * JavaScript menyusul, dan tidak ada CLS.
- *
- * Aset asli tidak pernah disentuh: `project-images/` tetap otoritas, dan
- * seluruh pengarahan ini dapat dibatalkan dengan menghapus satu entri.
+ * Jendela di `modules/motion/framing.ts` HANYA bekerja bila transform ini
+ * benar-benar diterapkan pada <img>. Sesi 2026-09-03 sempat menggantinya
+ * dengan `transform: none` (alasan: "tanpa pembesaran ekstrem") tanpa
+ * keputusan tercatat — akibatnya kata "kadhiri" dan tarikh yang terbakar di
+ * raster 879/921/1015/1042 kembali tampil, dan gate vitest hanya menguji
+ * simulator, bukan bingkai yang dirender. Dipulihkan 2026-09-04: kalau
+ * sebuah jendela terasa terlalu besar, ubah JENDELANYA di framing.ts (dan
+ * gate akan menguji ulang), jangan matikan mekanismenya.
  *
  * Mobile lebih dulu, karena jendela mobile adalah komposisi tersendiri dan
  * bukan desktop yang dikecilkan (UX Bible bagian 26).
@@ -1526,7 +1945,7 @@ p {
 
 .stage-media[style*="--frame-zoom-m"] img,
 .framing-stage[style*="--frame-zoom-m"] img {
-  object-position: var(--frame-pos-m, 50% 42%);
+  object-position: var(--frame-pos-m, center center);
   transform: scale(var(--frame-zoom-m, 1))
     translate(var(--frame-x-m, 0%), var(--frame-y-m, 0%));
 }
@@ -1534,7 +1953,7 @@ p {
 @media (min-width: 48rem) {
   .stage-media[style*="--frame-zoom-d"] img,
   .framing-stage[style*="--frame-zoom-d"] img {
-    object-position: var(--frame-pos-d, 50% 42%);
+    object-position: var(--frame-pos-d, center center);
     transform: scale(var(--frame-zoom-d, 1))
       translate(var(--frame-x-d, 0%), var(--frame-y-d, 0%));
   }
@@ -1895,8 +2314,8 @@ p {
   background:
     radial-gradient(
       circle at center,
-      transparent 35%,
-      color-mix(in srgb, var(--cinema-canvas) 50%, transparent) 75%,
+      transparent 30%,
+      color-mix(in srgb, var(--cinema-canvas) 58%, transparent) 75%,
       var(--cinema-canvas) 100%
     ),
     linear-gradient(
@@ -2814,19 +3233,6 @@ p {
   .stage-beat p:first-child {
     font-weight: 500;
   }
-
-  /*
-   * Kredit pembuka Prolog ("Dari jejak yang tercatat…") adalah lapisan
-   * BERBASIS WAKTU milik director: ia tampil 4 detik lalu pergi sebelum
-   * pelat judul masuk. Tanpa timeline (tanpa-JS, reduced-motion, mobile) ia
-   * tidak pernah pergi dan tercetak DI ATAS pelat "KEDIRI, 2026" di sel grid
-   * yang sama — dua naskah saling tindih, keduanya tak terbaca (terbukti pada
-   * tangkapan reduced-motion dan mobile 2026-09-03). Di ketiga alur statis
-   * itu kredit tidak dirender; naskah historisnya sendiri utuh di pelat.
-   */
-  .prologue-opening {
-    display: none;
-  }
 }
 
 /*
@@ -3655,19 +4061,8 @@ body[data-timeline-open="true"] {
 
   /* Label media panggung tetap ringkas di mobile; address Act I berada di
    * alur normal tersendiri dan tetap terbaca sebagai copy semantik. */
-  .scene .stage-visual-label,
-  .prologue-stage .prologue-visual-label {
+  .scene .stage-visual-label {
     display: none;
-  }
-}
-
-/* Reduced motion desktop tetap menampilkan disclosure yang sudah lengkap;
- * varian mobile mempertahankan penyembunyian label di atas. */
-@media (prefers-reduced-motion: reduce) and (min-width: 48rem) {
-  .prologue-stage .prologue-visual-label[data-label-state="complete"] {
-    display: block;
-    visibility: visible;
-    opacity: 1;
   }
 }
 
@@ -3680,6 +4075,15 @@ body[data-timeline-open="true"] {
   .prologue-stage {
     min-height: max(52rem, 100svh);
     align-items: stretch;
+  }
+
+  /* Naskah pembuka membuka panel mobile, di atas pelat "KEDIRI, 2026". */
+  .prologue-overture {
+    padding-block-start: clamp(5rem, 11svh, 6.5rem);
+  }
+
+  .prologue-overture-copy {
+    padding-block: 0 var(--space-4);
   }
 
   .prologue-plate,
@@ -3723,10 +4127,6 @@ body[data-timeline-open="true"] {
 
   .prologue-actions {
     grid-row: 5;
-  }
-
-  .prologue-visual-label-shell {
-    margin-top: clamp(4.5rem, 9svh, 6rem);
   }
 }
 
@@ -3989,7 +4389,7 @@ html[data-smooth="true"] .master-line {
   height: 100%;
   display: block;
   object-fit: cover;
-  object-position: 50% 42%;
+  object-position: center center;
   transform-origin: center center;
 }
 
@@ -4015,7 +4415,7 @@ html[data-smooth="true"] .master-line {
 
 /* Prolog mempertahankan seluruh perspektif sumber 16:9 di dalam panggung. */
 .prologue-surface .stage-media video {
-  object-fit: contain;
+  object-fit: cover;
   object-position: center center;
 }
 
@@ -4413,5 +4813,83 @@ html[data-smooth="true"] .prologue-title-card {
 
   .journey-act[data-layout="right"] .scene .stage-visual-label {
     justify-self: start;
+  }
+
+  /*
+   * Pelat di KANAN menuntut bayangan citra yang berat di kanan pula — cermin
+   * dari gradien horizontal `.stage-media-shade` bawaan (berat di kiri, untuk
+   * pelat kiri paruh pertama). Tanpa cermin ini naskah Babak VI–IX bertumpu
+   * langsung di atas bagian citra yang paling ramai (terukur 2026-09-04:
+   * sugar, 1906, 1912, people tidak terbaca di desktop).
+   */
+  .journey-act[data-layout="right"] .stage-media-shade {
+    background:
+      linear-gradient(
+        180deg,
+        var(--cinema-canvas) 0%,
+        color-mix(in srgb, var(--cinema-canvas) 85%, transparent) 8%,
+        transparent 22%,
+        transparent 76%,
+        color-mix(in srgb, var(--cinema-canvas) 88%, transparent) 92%,
+        var(--cinema-canvas) 100%
+      ),
+      linear-gradient(
+        270deg,
+        color-mix(in srgb, var(--cinema-canvas) 86%, transparent),
+        color-mix(in srgb, var(--cinema-canvas) 58%, transparent) 34%,
+        color-mix(in srgb, var(--cinema-canvas) 16%, transparent) 62%,
+        color-mix(in srgb, var(--cinema-canvas) 30%, transparent)
+      );
+  }
+
+  /*
+   * Era terang (Babak VI): ink gelap di atas citra ramai butuh veil gading
+   * yang lebih tebal daripada era gelap — kanvas terang tidak punya bayangan
+   * yang "menyerap" citra seperti kanvas hitam.
+   */
+  .journey-act[data-era="colonialIndustrial"][data-layout="right"]
+  .stage-media-shade {
+    background:
+      linear-gradient(
+        180deg,
+        var(--cinema-canvas) 0%,
+        color-mix(in srgb, var(--cinema-canvas) 82%, transparent) 10%,
+        color-mix(in srgb, var(--cinema-canvas) 22%, transparent) 26%,
+        color-mix(in srgb, var(--cinema-canvas) 22%, transparent) 72%,
+        color-mix(in srgb, var(--cinema-canvas) 84%, transparent) 90%,
+        var(--cinema-canvas) 100%
+      ),
+      linear-gradient(
+        270deg,
+        color-mix(in srgb, var(--cinema-canvas) 94%, transparent),
+        color-mix(in srgb, var(--cinema-canvas) 78%, transparent) 36%,
+        color-mix(in srgb, var(--cinema-canvas) 30%, transparent) 64%,
+        color-mix(in srgb, var(--cinema-canvas) 42%, transparent)
+      );
+  }
+}
+
+/*
+ * Era terang di lebar ponsel: pelat duduk di dasar bingkai, jadi veil gading
+ * dibuat berat di bawah (terukur 2026-09-04: sugar tidak terbaca di 375 px).
+ */
+@media (max-width: 47.999rem) {
+  .journey-act[data-era="colonialIndustrial"] .stage-media-shade {
+    background:
+      linear-gradient(
+        180deg,
+        var(--cinema-canvas) 0%,
+        color-mix(in srgb, var(--cinema-canvas) 78%, transparent) 10%,
+        color-mix(in srgb, var(--cinema-canvas) 24%, transparent) 30%,
+        color-mix(in srgb, var(--cinema-canvas) 56%, transparent) 52%,
+        color-mix(in srgb, var(--cinema-canvas) 88%, transparent) 70%,
+        var(--cinema-canvas) 100%
+      ),
+      linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--cinema-canvas) 62%, transparent),
+        color-mix(in srgb, var(--cinema-canvas) 30%, transparent) 58%,
+        color-mix(in srgb, var(--cinema-canvas) 50%, transparent)
+      );
   }
 }

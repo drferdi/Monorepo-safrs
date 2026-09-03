@@ -48,8 +48,14 @@ export interface SceneFraming {
 const SIZE_3x2 = { width: 1536, height: 1024 } as const;
 
 /**
- * Batch A. Scene 05+ belum diarahkan: batch mereka belum dibuka, dan menebak
- * bingkai lebih awal justru mengunci keputusan yang belum ditinjau.
+ * Batch A, ditambah dua aset pratinjau editorial yang diarahkan menyusul
+ * (2026-09-04): `1869-brantas-bridge` dan `two-bridges-two-centuries`. Keduanya
+ * masuk karena alasan yang sama dengan Batch A — kapsi terbakar yang menyajikan
+ * render sintetis sebagai fotografi arsip (flag F2 dan F4 pada
+ * `docs/shots/image-manifest.md`), yang dilarang Authority Rule 1.
+ *
+ * Scene lain yang belum diarahkan tetap dibiarkan: batch mereka belum dibuka,
+ * dan menebak bingkai lebih awal justru mengunci keputusan yang belum ditinjau.
  */
 export const SCENE_FRAMING: Readonly<Record<string, SceneFraming>> = {
   "2026-prologue": {
@@ -99,6 +105,28 @@ export const SCENE_FRAMING: Readonly<Record<string, SceneFraming>> = {
     rationale:
       "Tiga kotak teks, diukur dari kisi: PANJALU (160,370)-(410,600), JENGGALA (1120,370)-(1395,600), BRANTAS (650,720)-(895,805). Jendela desktop menelusuri koridor sungai secara vertikal; jendela mobile mengambil pita atas berisi gunung dan hulu sungai — dua komposisi yang benar-benar berbeda, bukan satu bingkai yang diperkecil. Ketiga kotak berada di luar bidang pandang pada seluruh rasio viewport yang diuji, termasuk ultrawide. Seluruh pelabelan menjadi DOM semantik, yang sekaligus menjadikan ejaan Janggala perbaikan satu baris teks, bukan perbaikan aset, dan menjaga lapisan tradisi Mpu Bharada tetap klaim yang terpisah. REDO-ASSET-004.",
   },
+
+  "1869-brantas-bridge": {
+    // Aset ini bukan 3:2. Ukuran diambil dari berkasnya sendiri:
+    // editorial-preview/journey/16-1869-brantas-bridge.webp.
+    source: { width: 1389, height: 1132 },
+    desktop: { x: 330, y: 150, width: 1039, height: 760 },
+    mobile: { x: 560, y: 150, width: 760, height: 700 },
+    objectPositionDesktop: "50% 50%",
+    objectPositionMobile: "50% 50%",
+    rationale:
+      "Aset membawa blok judul terbakar di kiri-atas, kapsi 'Jembatan Brantas Lama / Foto Arsip ± 1880-an (Kolonial Belanda)' yang menyajikan render sintetis sebagai fotografi arsip (flag F2 pada `docs/shots/image-manifest.md`), satu kapsi foto modern di bawahnya, pita diagram 'DETAIL STRUKTUR', serta panel kapsi memanjang di tepi bawah. Kedua jendela mengambil pita tengah tempat dua bentang jembatan bertumpuk — sepia di atas, modern di bawah — sehingga setiap kapsi keluar dari bidang pandang dan yang tersisa hanya strukturnya. Klaim '± 1880-an' tidak dapat dibantah dari dalam raster; ia hanya dapat dicegah terkirim, lalu tarikh dan statusnya kembali sebagai lapisan DOM. Ini pembatasan kerusakan, bukan perbaikan. REDO-ASSET-005.",
+  },
+
+  "two-bridges-two-centuries": {
+    source: SIZE_3x2,
+    desktop: { x: 0, y: 230, width: 1536, height: 700 },
+    mobile: { x: 300, y: 230, width: 900, height: 700 },
+    objectPositionDesktop: "50% 50%",
+    objectPositionMobile: "50% 50%",
+    rationale:
+      "Tiga kotak teks, diukur dari kisi: judul terbakar 'Two Bridges, Two Centuries' di tengah-atas (570,40)-(970,220), kapsi 'Djembatan Brantas Kediri, 1912' di kiri-bawah (10,930)-(285,1010) yang menyajikan render sintetis sebagai foto 1912 — masalah AI-sebagai-arsip yang sama dengan F2, dicatat sebagai flag F4 — dan rambu jalan 'JEMBATAN BRANTAS KEDIRI' berdiri di tepi kanan (1355,695)-(1525,855). Jendela desktop mengambil pita tengah selebar aset; jendela mobile menyempit ke poros tengah, cukup jauh dari rambu di kanan. Keduanya mempertahankan jahitan sepia-modern beserta kedua bentang, yang memang seluruh argumen visual scene ini. Tarikh dan nama tempat kembali sebagai DOM. REDO-ASSET-006.",
+  },
 };
 
 /**
@@ -122,6 +150,19 @@ export const BAKED_TEXT_BOXES: Readonly<
     { x: 160, y: 370, width: 250, height: 230 },
     { x: 1120, y: 370, width: 275, height: 230 },
     { x: 650, y: 720, width: 245, height: 85 },
+  ],
+  // Koordinat di bawah berada di ruang piksel aset 1389x1132, bukan 1536x1024.
+  "1869-brantas-bridge": [
+    { x: 50, y: 40, width: 300, height: 150 },
+    { x: 35, y: 460, width: 175, height: 60 },
+    { x: 35, y: 805, width: 150, height: 60 },
+    { x: 35, y: 910, width: 670, height: 222 },
+    { x: 695, y: 985, width: 694, height: 147 },
+  ],
+  "two-bridges-two-centuries": [
+    { x: 570, y: 40, width: 400, height: 180 },
+    { x: 10, y: 930, width: 275, height: 80 },
+    { x: 1355, y: 695, width: 170, height: 160 },
   ],
 };
 

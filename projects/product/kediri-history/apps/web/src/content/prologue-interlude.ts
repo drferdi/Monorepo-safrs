@@ -1,6 +1,6 @@
 /**
- * Naskah jeda "bukti prasasti" antara video pembuka dan video lanjutan Daha
- * (direktif Chief 2026-08-30). Bukan bagian dari graf CMS/narasi scene —
+ * Naskah jeda "bukti prasasti" setelah Scene 921 (direktif Chief 2026-09-03).
+ * Bukan bagian dari graf CMS/narasi scene —
  * jeda ini murni presentasi prolog, jadi teksnya hidup di sini, bukan di
  * `production-narrative.ts`.
  */

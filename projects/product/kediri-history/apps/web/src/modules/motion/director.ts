@@ -39,7 +39,7 @@ export interface ReadingDirector {
 /** Jendela beat per koreografi — nilai yang sama dengan rezim scrub lama. */
 function passageWindow(key: string): { start: number; end: number } {
   const start =
-    key === "prologueReveal" ? 0.48 : key === "nameEmerges" ? 0.5 : 0.54;
+    key === "prologueReveal" ? 0.7 : key === "nameEmerges" ? 0.5 : 0.54;
   /*
    * 879 (inscriptionReveal) dulu punya jendela lebih sempit (0.74, bukan
    * 0.82) — sisa era 4 beat. Sejak jadi 5 beat (revisi Chief 2026-08-30),
@@ -57,18 +57,16 @@ function passageWindow(key: string): { start: number; end: number } {
  * memakai pembagian rata dari passageWindow agar koreografinya tidak berubah.
  */
 function passageThresholds(key: string, count: number): readonly number[] {
-  if (key === "prologueReveal" && count === 2) return [0.48, 0.7];
+  /*
+   * Prolog memakai babak pembuka (dua footage dan satu naskah era Daha)
+   * sebelum pelat "KEDIRI, 2026" masuk pada 0,63 — lihat `prologueReveal` di
+   * scenes.ts. Ambang beat karena itu duduk di babak terakhir; ambang lama
+   * [0,48; 0,70] akan menyalakan naskah di balik footage yang sedang tayang.
+   */
+  if (key === "prologueReveal" && count === 2) return [0.7, 0.85];
   const { start, end } = passageWindow(key);
   const slot = (end - start) / count;
   return Array.from({ length: count }, (_, index) => start + slot * index);
-}
-
-/**
- * Gaya beat per koreografi. nameEndures berstatus Research Hold: naskahnya
- * hadir tanpa perjalanan dekoratif — keheningan adalah argumennya.
- */
-function beatStyle(key: string): "still" | "lines" {
-  return key === "nameEndures" ? "still" : "lines";
 }
 
 /**
@@ -498,6 +496,8 @@ function applyFrom(targets: readonly Element[], from: FromVars): void {
 
 /** Histeresis pembalikan supaya ambang tidak bergetar di tepi. */
 const REVERSE_SLACK = 0.05;
+/** Progres gulir yang membatalkan entrance layar pertama Prolog (≈40 px). */
+const INTRO_CANCEL = 0.01;
 export function createReadingDirector(
   root: HTMLElement,
   key: string,
@@ -515,125 +515,93 @@ export function createReadingDirector(
   const touched: HTMLElement[] = [];
   const fadeTweens: (gsap.core.Tween | null)[] = [];
   let pendingEntrance: gsap.core.Tween | null = null;
+  /**
+   * Entrance layar pertama Prolog (cue negatif, berbasis waktu): dua
+   * timeline — citra (dibuat SINKRON saat island terpasang, tidak menunggu
+   * font) dan naskah (dibuat di build() setelah fonts.ready, karena SplitText
+   * menuntut pemenggalan baris yang final). `settleIntro` melompatkan
+   * keduanya ke keadaan akhir begitu pembaca menggulir — gulir selalu menang.
+   */
+  const intro: gsap.core.Timeline[] = [];
+  let introDone = false;
+  const settleIntro = () => {
+    if (introDone) return;
+    introDone = true;
+    for (const timeline of intro) timeline.progress(1);
+  };
   const identity = identityFor(root, key);
   const flavor = flavorFor(identity);
   const style = styleFor(identity);
 
   if (key === "prologueReveal") {
-    const opening = root.querySelector<HTMLElement>(".prologue-opening");
-    const surface = root.querySelector<HTMLElement>(".prologue-surface");
-    const copy = opening?.querySelector<HTMLElement>(".prologue-opening-copy");
-
-    if (opening && surface) {
-      touched.push(opening, surface);
-      const introTl = gsap.timeline();
-
-      if (copy) {
-        // Tipografi gerak modern: kata-kata terkuak secara kinetik dari kabut atmosferik
-        const split = SplitText.create(copy, { type: "words,lines" });
-        splits.push(split);
-        gsap.set(opening, { opacity: 1 });
-        gsap.set(split.words, {
-          opacity: 0,
-          y: 28,
-          scale: 0.96,
-          filter: "blur(8px)",
-        });
-
-        introTl
-          .to(
-            split.words,
-            {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              filter: "blur(0px)",
-              duration: 1.1,
-              stagger: { each: 0.04, from: "start" },
-              ease: "power3.out",
-            },
-            0.4,
-          )
-          // Tahanan baca hening yang berwibawa
-          .to(
-            split.words,
-            {
-              opacity: 0,
-              y: -18,
-              filter: "blur(6px)",
-              duration: 0.7,
-              stagger: { each: 0.015, from: "start" },
-              ease: "power2.inOut",
-            },
-            3.6,
-          )
-          // Putar video tepat saat permukaan terbuka agar video ditonton utuh dari detik 00:00
-          .call(
-            () => {
-              window.dispatchEvent(new Event("kediri:prologue-video-start"));
-            },
-            undefined,
-            4.0,
-          )
-          // Masuk video sungai Brantas secara perlahan dan megah setelah teks bersih
-          .to(
-            surface,
-            {
-              opacity: 1,
-              "--lit": 1,
-              duration: 1.4,
-              ease: "power2.inOut",
-            },
-            4.0,
-          );
-      } else {
-        gsap.set(opening, { opacity: 0, y: MOTION.read.y });
-        introTl
-          .to(
-            opening,
-            { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" },
-            0.4,
-          )
-          .to(opening, { opacity: 0, duration: 0.6, ease: "power2.inOut" }, 4.2)
-          .to(
-            surface,
-            { opacity: 1, "--lit": 1, duration: 1.5, ease: "power2.inOut" },
-            4.0,
-          );
-      }
-      cues.push({ at: -1, played: true, timeline: introTl });
-
-      const scrollCue = root.querySelector<HTMLElement>(
-        '[data-motion="scroll-cue"]',
-      );
-      if (scrollCue) {
-        touched.push(scrollCue);
-        gsap.set(scrollCue, { opacity: 0, y: 12 });
-        introTl.to(
-          scrollCue,
-          {
-            opacity: 0.9,
-            y: 0,
-            duration: 0.8,
-            ease: "power2.out",
-          },
-          4.8,
+    const scrollCue = root.querySelector<HTMLElement>(
+      '[data-motion="scroll-cue"]',
+    );
+    if (scrollCue) {
+      touched.push(scrollCue);
+      // Cue baru tampil di akhir entrance layar pertama (lihat `intro`).
+      gsap.set(scrollCue, { opacity: 0, y: 0 });
+      const icon = scrollCue.querySelector<HTMLElement>(".scroll-cue-icon");
+      if (icon) {
+        touched.push(icon);
+        // Satu affordance ambient, langsung tersedia dan dibersihkan bersama island.
+        ambient.push(
+          gsap.to(icon, {
+            y: 5,
+            duration: 1.1,
+            repeat: -1,
+            yoyo: true,
+            ease: EASES.sine,
+          }),
         );
-        const icon = scrollCue.querySelector<HTMLElement>(".scroll-cue-icon");
-        if (icon) {
-          touched.push(icon);
-          // Loop tak berujung — dilacak di `ambient` supaya mati bersama island.
-          ambient.push(
-            gsap.to(icon, {
-              y: 5,
-              duration: 1.1,
-              repeat: -1,
-              yoyo: true,
-              ease: "sine.inOut",
-            }),
-          );
-        }
       }
+    }
+
+    /*
+     * Layar pertama sebagai title sequence — babak CITRA (direktif Chief
+     * 2026-09-04, "just a cinematic first visual"). Citra Kediri 2026 muncul
+     * dari `.stage-void` dengan letterbox 2,39:1 yang membuka dan dorongan
+     * kamera 1,10 → 1. Dimulai di sini, bukan di build(): fonts.ready di
+     * dev terukur ±3 detik, dan pembaca tidak boleh menatap layar gelap
+     * selama itu.
+     *
+     * Yang digerakkan adalah `.stage-media` (kontainer dalam), BUKAN
+     * `.prologue-surface`: timeline scrub `prologueReveal` menulis
+     * `opacity: 1` dan `--dolly: 1` pada surface lewat fromTo
+     * (immediateRender) dan ScrollTrigger `invalidateOnRefresh` menulisnya
+     * ulang pada setiap refresh — termasuk refresh gate font/media yang
+     * jatuh di tengah entrance ini. Letterbox dibawa custom property
+     * `--letterbox` (CSS: `clip-path: inset(calc(var(--letterbox) * 1%) 0)`),
+     * pola yang sama dengan `--dolly` — tween string `clip-path` langsung
+     * terbukti tidak bergerak di Chromium (terukur 2026-09-04).
+     */
+    const media = root.querySelector<HTMLElement>(
+      ".prologue-surface .stage-media",
+    );
+    if (media) {
+      touched.push(media);
+      const stage = media.closest<HTMLElement>(".prologue-stage") ?? media;
+      const ratio = stage.clientWidth / Math.max(1, stage.clientHeight);
+      // Pita atas-bawah letterbox 2,39:1, dalam persen tinggi bingkai.
+      const bar = Math.max(0, ((1 - ratio / 2.39) / 2) * 100);
+      const introMedia = gsap.timeline({
+        paused: true,
+        defaults: { ease: EASES.cine },
+      });
+      introMedia.fromTo(
+        media,
+        {
+          opacity: 0,
+          scale: 1.1,
+          "--letterbox": bar,
+          transformOrigin: "54% 52%",
+        },
+        { opacity: 1, scale: 1, "--letterbox": 0, duration: 1.6 },
+        0,
+      );
+      cues.push({ at: -1, played: true, timeline: introMedia });
+      intro.push(introMedia);
+      introMedia.play();
     }
   }
 
@@ -735,17 +703,22 @@ export function createReadingDirector(
     /* ---------- konteks ---------- */
     if (context.length > 0) {
       touched.push(...context);
-      gsap.set(context, { opacity: 0, y: MOTION.read.y });
-      cues.push({
-        at: 0.36,
-        played: false,
-        timeline: gsap.timeline({ paused: true }).to(context, {
-          opacity: 1,
-          y: 0,
-          duration: MOTION.read.duration * 0.9,
-          ease: MOTION.read.ease,
-        }),
-      });
+      if (key === "prologueReveal") {
+        // Pada Prolog, konteks (eyebrow dan judul) adalah bagian dari Opening Screen awal (0,00)
+        gsap.set(context, { opacity: 1, y: 0 });
+      } else {
+        gsap.set(context, { opacity: 0, y: MOTION.read.y });
+        cues.push({
+          at: 0.36,
+          played: false,
+          timeline: gsap.timeline({ paused: true }).to(context, {
+            opacity: 1,
+            y: 0,
+            duration: MOTION.read.duration * 0.9,
+            ease: MOTION.read.ease,
+          }),
+        });
+      }
     }
 
     /* ---------- nama ---------- */
@@ -800,37 +773,53 @@ export function createReadingDirector(
     const masterTl = gsap.timeline({ paused: true });
     if (master.length > 0) {
       touched.push(...master);
-      gsap.set(master, { opacity: 0 });
-      masterTl.to(
-        master,
-        { opacity: 1, duration: 0.45, ease: EASES.fadeIn },
-        0.05,
-      );
-      const splitType =
-        style.masterSplit === "chars"
-          ? "words,chars"
-          : style.masterSplit === "words"
-            ? "words"
-            : "lines";
-      const masterSplit = SplitText.create(master, { type: splitType });
-      splits.push(masterSplit);
-      const pieces =
-        style.masterSplit === "chars"
-          ? masterSplit.chars
-          : style.masterSplit === "words"
-            ? masterSplit.words
-            : masterSplit.lines;
-      applyFrom(pieces, style.master.from);
-      masterTl.to(pieces, style.master.to, 0.1);
+      if (key === "prologueReveal") {
+        // Kalimat pemikul Prolog tiba lewat entrance layar pertama (`intro`
+        // di bawah), sebagai SATU blok — tidak dibelah, supaya teksnya tetap
+        // satu node yang dapat dicari persis.
+      } else {
+        gsap.set(master, { opacity: 0 });
+        masterTl.to(
+          master,
+          { opacity: 1, duration: 0.45, ease: EASES.fadeIn },
+          0.05,
+        );
+        const splitType =
+          style.masterSplit === "chars"
+            ? "words,chars"
+            : style.masterSplit === "words"
+              ? "words"
+              : "lines";
+        const masterSplit = SplitText.create(master, { type: splitType });
+        splits.push(masterSplit);
+        const pieces =
+          style.masterSplit === "chars"
+            ? masterSplit.chars
+            : style.masterSplit === "words"
+              ? masterSplit.words
+              : masterSplit.lines;
+        applyFrom(pieces, style.master.from);
+        masterTl.to(pieces, style.master.to, 0.1);
+      }
     }
-    if (masterTl.getChildren().length > 0) {
-      cues.push({ at: 0.42, played: false, timeline: masterTl });
+    if (key !== "prologueReveal" && masterTl.getChildren().length > 0) {
+      cues.push({
+        at: 0.42,
+        played: false,
+        timeline: masterTl,
+      });
     }
 
     /* ---------- beat editorial ---------- */
-    const still = beatStyle(key) === "still";
-    const skipBeatCycle = key !== "prologueReveal";
-    if (skipBeatCycle && beats.length > 0) {
+    const isPrologue = key === "prologueReveal";
+    if (isPrologue) {
+      // Pada Prolog seluruh beat hadir bersama di layar pertama (tidak
+      // bergiliran); opacity-nya dinaikkan entrance `intro` di bawah.
+      beats.forEach((beat) => {
+        touched.push(beat);
+        gsap.set(beat, { visibility: "visible", xPercent: 0 });
+      });
+    } else if (beats.length > 0) {
       touched.push(...beats);
       applyFrom(beats, style.beats.from);
       cues.push({
@@ -849,36 +838,90 @@ export function createReadingDirector(
         }),
       });
     }
-    if (!skipBeatCycle)
-      beats.forEach((beat, index) => {
-        touched.push(beat);
-        const drift = flavor.alternate
-          ? flavor.beatX * (index % 2 === 0 ? 1 : -1)
-          : flavor.beatX;
-        gsap.set(beat, { visibility: "hidden", opacity: 0, xPercent: drift });
-        const timeline = gsap.timeline({ paused: true });
-        timeline.set(beat, { visibility: "visible" }, 0);
-        timeline.to(
-          beat,
-          { opacity: 1, xPercent: 0, duration: 0.6, ease: MOTION.read.ease },
+
+    /* ---------- layar pertama Prolog: babak NASKAH title sequence ---------- */
+    if (isPrologue) {
+      /*
+       * Setelah citra (babak sinkron di atas) mulai muncul: eyebrow → judul
+       * "KEDIRI, 2026" dari topeng baris → kalimat pemikul → beat → cue gulir.
+       * Dibuat di sini karena SplitText butuh font final. Dimulai 0,55 s
+       * setelah citra mulai — bila font tiba lebih lambat dari itu, naskah
+       * langsung menyusul tanpa menunggu lagi.
+       *
+       * Tidak pernah memblokir: begitu progres gulir melewati INTRO_CANCEL,
+       * `settleIntro` melompatkan kedua timeline ke akhir (bukan di-kill,
+       * yang akan meninggalkan nilai setengah jalan). Cue negatif = tidak
+       * pernah dipicu gulir; dibunuh di destroy() bersama cue lain.
+       */
+      const eyebrow = q(root, "eyebrow");
+      const title = q(root, "title")[0];
+      const scrollCue = root.querySelector<HTMLElement>(
+        '[data-motion="scroll-cue"]',
+      );
+      const introText = gsap.timeline({
+        paused: true,
+        defaults: { ease: EASES.cine },
+      });
+
+      if (eyebrow.length > 0) {
+        touched.push(...eyebrow);
+        introText.fromTo(
+          eyebrow,
+          { opacity: 0, y: 10 },
+          { opacity: 1, y: 0, duration: 0.7 },
           0,
         );
-        if (still) {
-          // Research Hold
-        } else {
-          const lineSplit = SplitText.create(beat.querySelectorAll("p"), {
-            type: "lines",
-          });
-          splits.push(lineSplit);
-          applyFrom(lineSplit.lines, style.beats.from);
-          timeline.to(
-            lineSplit.lines,
-            { ...style.beats.to, stagger: 0.08 },
-            0.05,
-          );
-        }
-        beatTimelines.push(timeline);
-      });
+      }
+      if (title) {
+        touched.push(title);
+        // Split dulu, tween `from` (immediateRender) menaruh baris di bawah
+        // topeng, baru judulnya sendiri dinaikkan ke opacity 1.
+        const titleSplit = SplitText.create(title, {
+          type: "lines",
+          mask: "lines",
+        });
+        splits.push(titleSplit);
+        introText.from(
+          titleSplit.lines,
+          {
+            yPercent: MOTION.text.line.travel,
+            duration: MOTION.text.line.duration,
+            stagger: MOTION.text.line.stagger,
+          },
+          0.2,
+        );
+        gsap.set(title, { opacity: 1 });
+      }
+      if (master.length > 0) {
+        introText.fromTo(master, style.master.from, style.master.to, 0.7);
+      }
+      if (beats.length > 0) {
+        introText.fromTo(
+          beats,
+          style.beats.from,
+          { ...style.beats.to, stagger: { amount: 0.2 } },
+          1.05,
+        );
+      }
+      if (scrollCue) {
+        introText.to(scrollCue, { opacity: 0.9, duration: 0.5 }, 1.35);
+      }
+
+      cues.push({ at: -1, played: true, timeline: introText });
+      intro.push(introText);
+      if (introDone || lastProgress > INTRO_CANCEL) {
+        // Tautan dalam / restorasi gulir / sudah menggulir: keadaan akhir.
+        settleIntro();
+        introText.progress(1);
+      } else {
+        const elapsed = intro[0] === introText ? 0.55 : (intro[0]?.time() ?? 0);
+        const wait = Math.max(0, 0.55 - elapsed);
+        const start = gsap.delayedCall(wait, () => {
+          if (!introDone) introText.play();
+        });
+        pendingCalls.push(start);
+      }
+    }
 
     onProgress(lastProgress);
   };
@@ -982,13 +1025,24 @@ export function createReadingDirector(
     }
 
     if (key === "prologueReveal") {
+      // Gulir menang: entrance layar pertama dilompatkan ke keadaan akhir.
+      if (progress > INTRO_CANCEL) settleIntro();
+      // Sebelum babak naskah dibangun (menunggu fonts.ready) entrance belum
+      // selesai: cue TETAP gelap — kalau tidak, update ScrollTrigger pertama
+      // menyalakannya di detik 0, sebelum citra dan judulnya sendiri tiba.
+      const introSettled =
+        introDone ||
+        (intro.length >= 2 &&
+          intro.every((timeline) => timeline.progress() === 1));
       const scrollCue = root.querySelector<HTMLElement>(
         '[data-motion="scroll-cue"]',
       );
       if (scrollCue) {
         if (progress > 0.04) {
           gsap.to(scrollCue, { opacity: 0, duration: 0.25, overwrite: "auto" });
-        } else if (progress <= 0.02) {
+        } else if (progress <= 0.02 && introSettled) {
+          // Dijaga `introSettled`: overwrite "auto" akan membunuh tween cue
+          // milik entrance pada update ScrollTrigger pertama di progres 0.
           gsap.to(scrollCue, {
             opacity: 0.9,
             duration: 0.35,

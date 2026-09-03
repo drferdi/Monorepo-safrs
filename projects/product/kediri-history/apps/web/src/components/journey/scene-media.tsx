@@ -83,11 +83,15 @@ export function SceneMedia({
            * sehingga cat pertama dan fallback identik dengan versi statis.
            * Kamera GSAP (dolly, mask --lit, transisi keluar) menyapunya
            * lewat .stage-surface persis seperti citra.
+           *
+           * TANPA autoPlay: pemutaran dimiliki island motion
+           * (modules/motion/media-gate.ts), yang baru menghidupkannya ketika
+           * scene benar-benar di layar. Tanpa JavaScript, poster — yaitu citra
+           * scene itu sendiri — sudah menjadi komposisi yang utuh.
            */
           <video
             src={slot.videoPath}
             poster={slot.expectedPath}
-            autoPlay
             muted
             loop
             playsInline

@@ -1,5 +1,6 @@
 import { createReadingDirector } from "./director";
 import { debugMarkers, gsap, MOTION, ScrollTrigger } from "./gsap";
+import { attachMediaGate } from "./media-gate";
 import type { ChoreographyKey, MotionVariant } from "./registry";
 import { ensureSmoother, releaseSmoother } from "./smooth";
 
@@ -63,27 +64,297 @@ function travelFor(variant: MotionVariant): number {
 const REST_LEAVE = 0.84;
 
 /**
- * Prolog 2026 — kota yang masih hidup berubah menjadi permukaan air.
+ * Prolog 2026 — pembuka bertahap menuju catatan pertama.
  *
- * Prolog memakai citra yang sama dari awal sampai handoff. Timeline hanya
- * mengubah jarak pandang, pantulan, dan urutan editorial; ia tidak menciptakan
- * fakta baru di luar naskah yang sudah dirender server.
+ * Urutan (direktif Chief 2026-09-04): citra Kediri 2026 bergerak ke gelap,
+ * footage kota kuno, gelap lagi, naskah era Daha, footage kehidupan
+ * sehari-hari, gelap, lalu pelat "KEDIRI, 2026" dengan material air menjadi
+ * tembaga dan portal 879. Kanvas gelap di antara babak BUKAN lapisan
+ * tambahan: ia `.stage-void` yang memang sudah ada di belakang, terlihat
+ * begitu seluruh lapisan media berada di opacity nol pada saat yang sama.
+ *
+ * Seluruh gerak di sini di-scrub linear — gulir adalah pemutarnya. Naskah
+ * (tarikh, kalimat pemikul, beat) tetap milik Jam 2 di `director.ts`, dan
+ * ambangnya digeser ke babak terakhir supaya tidak menyala di balik footage.
  */
+
+/** Jendela babak footage, dalam progres 0..1. Satu sumber untuk fade dan pemutaran. */
+export const PROLOGUE_OVERTURE_WINDOWS = {
+  city: { from: 0.38, to: 0.58 },
+  life: { from: 0.62, to: 0.8 },
+} as const;
+
 const prologueReveal: SceneTimelineFactory = ({ root }) => {
   const surface = one(root, ".prologue-surface");
+  const plate = one(root, ".prologue-stage .stage-plate");
+  const cinematicTitle = one(root, '[data-motion="cinematic-title"]');
+  const cityClip = one(root, '[data-motion="overture-city"]');
+  const cityPresent = one(root, '[data-motion="overture-present"]');
+  const lifeClip = one(root, '[data-motion="overture-life"]');
+  const overtureCopy = one(root, '[data-motion="overture-copy"]');
+  const cityVeil = one(root, '[data-motion="city-veil"]');
+  const water = one(root, '[data-motion="water-field"]');
+  const horizon = one(root, '[data-motion="horizon"]');
+  const copper = one(root, '[data-motion="copper"]');
+  const portal = one(root, '[data-motion="portal"]');
   const timeline = gsap.timeline({ paused: true });
 
+  /* ---------- Babak A: Opening Screen resmi Kediri 2026 (0.00 -> 0.14) ---------- */
   if (surface) {
-    /*
-     * KEMUNCULAN permukaan (gelap 2 detik → video mulai → cahaya membuka)
-     * bukan milik jam kamera ini — ia intro berbasis WAKTU milik director
-     * (direktif Chief 2026-08-28). Scrub menjaga dolly tetap 1 sampai
-     * transisi keluar, supaya dua jam tidak berebut opacity maupun skala.
-     */
-    timeline.set(surface, { "--dolly": 1 }, 0);
+    // Citra 2026 mengiringi opening screen dalam ukuran proporsional asli
+    timeline.fromTo(
+      surface,
+      { opacity: 1, "--dolly": 1, yPercent: 0 },
+      { "--dolly": 1, ease: MOTION.scrubEase, duration: 0.14 },
+      0,
+    );
+    // Menyerah pada kanvas gelap saat mulai menembus waktu
+    timeline.to(
+      surface,
+      { opacity: 0, ease: MOTION.scrubEase, duration: 0.06 },
+      0.1,
+    );
   }
-  // Prolog hanya memakai fade teks lalu video. Tidak ada garis, parallax,
-  // zoom, atau transisi keluar yang mengubah visual footage.
+  if (plate) {
+    // Pelat "KEDIRI, 2026" hadir sejak first paint (0.00), memudar lembut saat digulir
+    timeline.fromTo(
+      plate,
+      { opacity: 1, y: 0 },
+      { opacity: 0, y: -20, ease: MOTION.scrubEase, duration: 0.08 },
+      0.05,
+    );
+  }
+
+  /* ---------- Babak B: Layar Gelap & Teks Monumental (0.14 -> 0.38) ---------- */
+  if (cinematicTitle) {
+    // Masuk anggun di atas kanvas hitam murni
+    timeline.fromTo(
+      cinematicTitle,
+      {
+        opacity: 0,
+        y: 28,
+        scale: 0.95,
+        filter: "blur(6px)",
+        visibility: "hidden",
+      },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        filter: "blur(0px)",
+        visibility: "visible",
+        ease: "power2.out",
+        duration: 0.09,
+      },
+      0.14,
+    );
+    // Tahan sejenak di puncak keemasan (0.23 -> 0.30)
+    // Melayang keluar menembus kamera sebelum video 1 masuk. Blur keluar
+    // dijaga kecil: 8px meninggalkan bayangan keruh yang masih tampak di
+    // progres 0,34 (tinjauan visual 2026-09-04).
+    timeline.to(
+      cinematicTitle,
+      {
+        opacity: 0,
+        y: -20,
+        scale: 1.05,
+        filter: "blur(3px)",
+        ease: "power2.in",
+        duration: 0.07,
+      },
+      0.3,
+    );
+  }
+
+  /* ---------- Babak C: Baru Masuk ke Video 1 - Kota Kuno (0.38 -> 0.58) ---------- */
+  if (cityClip) {
+    timeline.fromTo(
+      cityClip,
+      { opacity: 0 },
+      { opacity: 1, ease: MOTION.scrubEase, duration: 0.06 },
+      PROLOGUE_OVERTURE_WINDOWS.city.from,
+    );
+    timeline.to(
+      cityClip,
+      { opacity: 0, ease: MOTION.scrubEase, duration: 0.06 },
+      PROLOGUE_OVERTURE_WINDOWS.city.to - 0.06,
+    );
+  }
+  if (cityPresent) {
+    const presentLogo = one(
+      root,
+      '[data-motion="overture-present"] .overture-present-logo',
+    );
+    const typingChars = root.querySelectorAll(
+      '[data-motion="overture-present"] .typing-char',
+    );
+
+    // Wadah presenter aktif di atas video 1
+    timeline.set(cityPresent, { visibility: "visible", opacity: 1 }, 0.39);
+
+    // 1. Logo Sentra emas terbit lembut
+    if (presentLogo) {
+      timeline.fromTo(
+        presentLogo,
+        { opacity: 0, scale: 0.88, y: 6 },
+        { opacity: 1, scale: 1, y: 0, ease: "power2.out", duration: 0.03 },
+        0.4,
+      );
+    }
+
+    // 2. Smooth Typing Effect: huruf terbit mengalir satu per satu
+    if (typingChars.length > 0) {
+      timeline.fromTo(
+        typingChars,
+        { opacity: 0, filter: "blur(3px)", y: 2 },
+        {
+          opacity: 1,
+          filter: "blur(0px)",
+          y: 0,
+          stagger: 0.0016,
+          ease: "power1.out",
+          duration: 0.04,
+        },
+        0.41,
+      );
+    }
+
+    // 3. Apresiasi & Melayang keluar halus sebelum video 1 berakhir
+    timeline.to(
+      cityPresent,
+      {
+        opacity: 0,
+        y: -14,
+        scale: 1.03,
+        filter: "blur(6px)",
+        ease: "power2.in",
+        duration: 0.04,
+      },
+      0.53,
+    );
+  }
+
+  /* ---------- Babak D: Naskah era Daha di atas kanvas gelap (0.54 -> 0.68) ---------- */
+  if (overtureCopy) {
+    timeline.fromTo(
+      overtureCopy,
+      { opacity: 0, y: 18 },
+      { opacity: 1, y: 0, ease: MOTION.scrubEase, duration: 0.05 },
+      0.54,
+    );
+    timeline.to(
+      overtureCopy,
+      { opacity: 0, y: -14, ease: MOTION.scrubEase, duration: 0.05 },
+      0.64,
+    );
+  }
+
+  /* ---------- Babak E: Video 2 - Kehidupan sehari-hari Daha (0.62 -> 0.80) ---------- */
+  if (lifeClip) {
+    timeline.fromTo(
+      lifeClip,
+      { opacity: 0 },
+      { opacity: 1, ease: MOTION.scrubEase, duration: 0.06 },
+      PROLOGUE_OVERTURE_WINDOWS.life.from,
+    );
+    timeline.to(
+      lifeClip,
+      { opacity: 0, ease: MOTION.scrubEase, duration: 0.06 },
+      PROLOGUE_OVERTURE_WINDOWS.life.to - 0.06,
+    );
+  }
+
+  /* ---------- Babak F: Air Brantas memipih menjadi tembaga, portal 879 (0.80 -> 1.00) ---------- */
+  if (cityVeil) {
+    timeline.fromTo(
+      cityVeil,
+      { opacity: 0.08 },
+      { opacity: 0.88, ease: MOTION.scrubEase, duration: 0.1 },
+      0.8,
+    );
+  }
+  if (water) {
+    timeline.fromTo(
+      water,
+      { opacity: 0.12, scaleY: 1, yPercent: 0 },
+      {
+        opacity: 0.92,
+        scaleY: 0.08,
+        yPercent: 13,
+        transformOrigin: "center 72%",
+        ease: MOTION.scrubEase,
+        duration: 0.14,
+      },
+      0.82,
+    );
+  }
+  if (horizon) {
+    timeline.fromTo(
+      horizon,
+      { opacity: 0, scaleX: 0.12 },
+      {
+        opacity: 0.9,
+        scaleX: 1,
+        ease: MOTION.scrubEase,
+        duration: 0.1,
+      },
+      0.84,
+    );
+  }
+  if (copper) {
+    timeline.fromTo(
+      copper,
+      { opacity: 0 },
+      { opacity: 0.94, ease: MOTION.scrubEase, duration: 0.06 },
+      0.85,
+    );
+  }
+  if (portal) {
+    timeline.fromTo(
+      portal,
+      { opacity: 0, scale: 1.08, y: 18 },
+      {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        ease: MOTION.scrubEase,
+        duration: 0.08,
+      },
+    );
+  }
+
+  /*
+   * Footage hanya berputar selama babaknya sendiri. Timeline yang di-scrub
+   * tidak boleh memakai `.call()` untuk ini — menggulir mundur atau cepat
+   * membuat panggilan terlewat — jadi keadaan pemutaran dihitung ULANG dari
+   * progres pada setiap update, sehingga selalu menjadi fungsi posisi gulir.
+   */
+  const clips = [
+    {
+      video: one(root, '[data-motion="overture-city"] video'),
+      ...PROLOGUE_OVERTURE_WINDOWS.city,
+    },
+    {
+      video: one(root, '[data-motion="overture-life"] video'),
+      ...PROLOGUE_OVERTURE_WINDOWS.life,
+    },
+  ];
+  if (clips.some((clip) => clip.video !== null)) {
+    timeline.eventCallback("onUpdate", () => {
+      const progress = timeline.progress();
+      for (const clip of clips) {
+        const video = clip.video;
+        if (!(video instanceof HTMLVideoElement)) continue;
+        const active = progress >= clip.from && progress <= clip.to;
+        if (active && video.paused) {
+          void video.play().catch(() => undefined);
+        } else if (!active && !video.paused) {
+          video.pause();
+        }
+      }
+    });
+  }
+
   timeline.set({}, {}, 1);
   return timeline;
 };
@@ -788,7 +1059,7 @@ const PIN_DISTANCES: Record<
   ChoreographyKey,
   { readonly desktop: number; readonly tablet: number }
 > = {
-  prologueReveal: { desktop: 330, tablet: 210 },
+  prologueReveal: { desktop: 420, tablet: 300 },
   // 879 kini 5 beat (revisi Chief 2026-08-30, bukan 4) — jatah scroll
   // dinaikkan proporsional (+25%) supaya tiap beat tetap dapat ruang gulir
   // yang sama seperti sebelumnya, bukan makin sempit dan gampang terlewat.
@@ -827,6 +1098,15 @@ export function attachScene(
   context: SceneMotionContext,
   key: string,
 ): () => void {
+  /*
+   * Gerbang media lebih dulu, dan untuk KEEMPAT varian. Slot video tidak lagi
+   * autoplay di markup: island inilah pemilik pemutarannya, sehingga video
+   * berat tidak berputar ribuan piksel di bawah lipatan. Ia dipasang sebelum
+   * cabang di bawah, karena mobile dan reduced pun berhak atas gerbang itu —
+   * justru merekalah yang paling dirugikan bila video jalan tanpa dilihat.
+   */
+  const releaseMediaGate = attachMediaGate(context.root, context.variant);
+
   if (context.variant === "reduced" || context.variant === "mobile") {
     /*
      * Mobile adalah panel novel grafis dalam alur native, dan reduced adalah
@@ -835,14 +1115,14 @@ export function attachScene(
      * paused, tidak membangun timeline berarti tidak ada satu properti pun
      * yang perlu direkonstruksi — dan tidak ada drift yang mungkin terjadi.
      */
-    return () => undefined;
+    return releaseMediaGate;
   }
 
   const factory = sceneTimelineFactory(key);
-  if (!factory) return () => undefined;
+  if (!factory) return releaseMediaGate;
 
   const timeline = factory(context);
-  if (!timeline) return () => undefined;
+  if (!timeline) return releaseMediaGate;
 
   // Smoother lebih dulu, ScrollTrigger belakangan: keputusan pin-vs-sticky
   // harus diambil sebelum trigger pertama dibuat. Null berarti degradasi ke
@@ -941,6 +1221,7 @@ export function attachScene(
    */
   return () => {
     delete context.root.dataset.motionReady;
+    releaseMediaGate();
     director.destroy();
     trigger.kill();
     timeline.kill();

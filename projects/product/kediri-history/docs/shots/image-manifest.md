@@ -66,11 +66,18 @@ Total hero image produksi: **27** (Finale menggunakan ulang citra 00 sesuai §5/
   Belanda)" pada render AI — kategori yang §8 larang bila disajikan sebagai fotografi
   arsip. Aman di bawah label "Visualisasi artistik"; penggunaan produksi (CMS) butuh
   keputusan Chief.
+  Sejak 2026-09-04 seluruh kotak kapsi ini dijaga keluar bingkai oleh jendela tampilan
+  `1869-brantas-bridge` di `apps/web/src/modules/motion/framing.ts` (REDO-ASSET-005),
+  diverifikasi `apps/web/tests/framing-baked-text.test.ts`; aset asli tidak disentuh.
 - **F3 — Citra 18 (1912)** memvisualkan panel "MEKANISME PENGANGKATAN" padahal detail
   teknis pengangkatan masih archive-gated. Naskah scene mempertahankan status
   epistemiknya; koreografi tidak menganimasikan mekanisme spesifik.
 - **F4 — Citra 25** separuh sepia diberi kapsi "Djembatan Brantas Kediri, 1912" —
   masalah AI-sebagai-arsip yang sama dengan F2.
+  Sejak 2026-09-04 kotak kapsi, judul terbakar, dan rambu jalan dijaga keluar bingkai
+  oleh jendela tampilan `two-bridges-two-centuries` di
+  `apps/web/src/modules/motion/framing.ts` (REDO-ASSET-006), diverifikasi
+  `apps/web/tests/framing-baked-text.test.ts`; aset asli tidak disentuh.
 - **F5 — Scene 12** punya dua versi citra dan menggambarkan wajah raja secara frontal,
   sementara Jayabhaya bertanda `no_known_likeness` di CMS. Versi dasar dipakai untuk
   pratinjau di bawah label visualisasi; penggantian dengan perlakuan non-figuratif

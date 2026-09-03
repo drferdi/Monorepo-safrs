@@ -6,6 +6,7 @@ import type {
 } from "../../content/production-narrative";
 import { frameVariables, sceneFraming } from "../../modules/motion/framing";
 import { PrologueVideoSequence } from "./prologue-video-sequence";
+import { SceneHandoff } from "./scene-handoff";
 import { SceneMotion } from "./scene-motion";
 
 /**
@@ -53,20 +54,15 @@ export function FramingStage({
     >
       {media.videoPath && framing === "prologue" ? (
         /*
-         * Video pembuka (direktif Chief 2026-08-28). Poster = citra prolog,
-         * jadi cat pertama dan fallback tanpa-JS identik dengan versi statis.
-         * Sentuhan GSAP-nya diwarisi dari timeline prologueReveal: video ini
-         * hidup di dalam .stage-surface, sehingga dolly, mask cahaya --lit,
-         * dan transisi keluar menyapunya persis seperti citra.
+         * Jalur footage bersifat opsional dan hanya boleh aktif bila medianya
+         * benar-benar Kediri kontemporer serta lolos kurasi. Poster menjaga cat
+         * pertama dan fallback tanpa-JS identik dengan versi statis; timeline
+         * prologueReveal tetap menyapu satu .stage-surface tanpa source swap.
          */
         <PrologueVideoSequence
-          firstVideoPath={media.videoPath}
-          continuationVideoPath={media.continuationVideoPath}
+          videoPath={media.videoPath}
           poster={media.path}
           altText={media.altText}
-          continuationAltText={media.continuationAltText}
-          label={media.label}
-          labelDetail={media.labelDetail}
         />
       ) : (
         /* biome-ignore lint/performance/noImgElement: aset pratinjau lokal disajikan route sendiri tanpa loader tambahan. */
@@ -111,12 +107,6 @@ export function PrologueScene({
       <div className="scene-shot prologue-shot">
         <div className="prologue-stage" data-motion="stage">
           <div className="stage-void" aria-hidden="true" />
-          <div className="prologue-opening" data-motion="opening">
-            <p className="prologue-opening-copy">
-              Dari jejak yang tercatat, Kediri tumbuh di tepi Brantas. Sebelum
-              menjadi kota hari ini, namanya telah hadir dalam perjalanan Jawa.
-            </p>
-          </div>
           <div className="stage-surface prologue-surface" data-motion="surface">
             {narrative.media ? (
               <FramingStage
@@ -126,9 +116,136 @@ export function PrologueScene({
               />
             ) : null}
           </div>
+          {/*
+           * Babak Judul Sinematik di Layar Gelap (direktif Chief 2026-09-04):
+           * Setelah layar pertama memudar ke kegelapan, muncul teks monumental
+           * sebelum masuk ke footage video 1.
+           */}
+          <div
+            className="prologue-cinematic-title"
+            data-motion="cinematic-title"
+          >
+            <span className="cinematic-title-eyebrow">SEJARAH KEDIRI</span>
+            <h2 className="cinematic-title-heading">
+              Kediri: A Century of History, Kings, and Industry
+            </h2>
+          </div>
+          {/*
+           * Pembuka bertahap (direktif Chief 2026-09-04): dua babak footage
+           * dan satu naskah era Daha, semuanya di dalam panggung yang sama.
+           * Footage-nya dekoratif dan default-nya `opacity: 0` lewat CSS,
+           * sehingga tanpa JavaScript tidak ada satu pun yang berkedip; yang
+           * membuatnya tampak hanyalah timeline `prologueReveal`. Naskahnya
+           * historis, jadi ia tetap terbaca pada alur statis (mobile,
+           * reduced motion, tanpa JavaScript).
+           */}
+          {narrative.overture ? (
+            <div className="prologue-overture" data-motion="overture">
+              <div
+                className="prologue-overture-clip"
+                data-motion="overture-city"
+              >
+                <video
+                  src={narrative.overture.city.videoPath}
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  aria-label={narrative.overture.city.altText}
+                />
+                <div
+                  className="prologue-overture-present"
+                  data-motion="overture-present"
+                >
+                  <div className="overture-present-brand">
+                    {/* biome-ignore lint/performance/noImgElement: logomark SVG statis lokal, tanpa loader tambahan. */}
+                    <img
+                      src="/static/sentra-logomark.svg"
+                      alt=""
+                      className="overture-present-logo"
+                      width={36}
+                      height={36}
+                    />
+                    <span
+                      className="overture-present-text"
+                      data-motion="present-text"
+                    >
+                      {"Sentra Artificial Intelligence Present"
+                        .split("")
+                        .map((char, index) => (
+                          <span
+                            // biome-ignore lint/suspicious/noArrayIndexKey: string sumbernya literal statis — urutan karakter tetap, tidak pernah di-reorder.
+                            key={`typing-${index}-${char}`}
+                            className="typing-char"
+                            style={
+                              char === " " ? { width: "0.45em" } : undefined
+                            }
+                          >
+                            {char === " " ? "\u00A0" : char}
+                          </span>
+                        ))}
+                      <span className="typing-cursor" aria-hidden="true">
+                        |
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="prologue-overture-clip"
+                data-motion="overture-life"
+              >
+                <video
+                  src={narrative.overture.life.videoPath}
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  aria-label={narrative.overture.life.altText}
+                />
+              </div>
+              <div
+                className="prologue-overture-copy"
+                data-motion="overture-copy"
+              >
+                {narrative.overture.copy.map((line) => (
+                  <p key={line}>{line}</p>
+                ))}
+              </div>
+            </div>
+          ) : null}
+          <div className="prologue-material-world" aria-hidden="true">
+            <span className="prologue-city-veil" data-motion="city-veil" />
+            <svg
+              className="prologue-water-field"
+              data-motion="water-field"
+              viewBox="0 0 1600 900"
+              preserveAspectRatio="none"
+            >
+              <title>Garis abstrak aliran Brantas</title>
+              <path d="M-80 590 C180 520 330 680 610 602 S1080 500 1680 610" />
+              <path d="M-120 650 C210 570 390 735 735 636 S1210 560 1710 664" />
+              <path d="M-90 716 C260 648 500 785 850 704 S1310 650 1690 735" />
+              <path d="M-60 780 C300 730 580 830 970 770 S1390 742 1660 802" />
+            </svg>
+            <span className="prologue-horizon" data-motion="horizon" />
+            <span className="prologue-copper-field" data-motion="copper" />
+            {narrative.portal ? (
+              <span className="prologue-portal" data-motion="portal">
+                <span className="prologue-portal-date">
+                  {narrative.portal.date}
+                </span>
+                <span className="prologue-portal-label">
+                  {narrative.portal.label}
+                </span>
+              </span>
+            ) : null}
+          </div>
           <div className="stage-plate">
             <div className="stage-context" data-motion="context">
-              <p className="eyebrow">{narrative.eyebrow}</p>
+              <p className="eyebrow" data-motion="eyebrow">
+                {narrative.eyebrow}
+              </p>
               <h1
                 className="title-scene"
                 id="prologue-2026-title"
@@ -157,6 +274,7 @@ export function PrologueScene({
               ))}
             </div>
           </div>
+          <SceneHandoff kind="water-copper" phase="outgoing" />
           <div
             className="prologue-scroll-cue"
             data-motion="scroll-cue"

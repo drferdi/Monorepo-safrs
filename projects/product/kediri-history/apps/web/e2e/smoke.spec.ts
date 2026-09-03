@@ -384,9 +384,21 @@ test("published journey slices use labelled picture-led stages", async ({
     await expect(scene.locator(".stage-visual-label")).toHaveText(
       "Visualisasi artistik · pratinjau editorial",
     );
-    await expect(
-      scene.locator('.stage-media[data-media-state="ready"] img'),
-    ).toHaveAttribute("src", new RegExp(asset.replace(".", "\\."), "u"));
+    /*
+     * Sebuah slot boleh dipimpin citra ATAU footage (1135 memakai video sejak
+     * direktif Chief 2026-09-04). Kontraknya tetap sama: citra slot yang sudah
+     * disetujui harus memimpin bingkai — sebagai `src` pada citra, atau
+     * sebagai `poster` pada video, yang juga menjadi fallback tanpa JavaScript.
+     */
+    const leadAsset = await scene
+      .locator('.stage-media[data-media-state="ready"] :is(img, video)')
+      .first()
+      .evaluate((node: HTMLImageElement | HTMLVideoElement) =>
+        node instanceof HTMLVideoElement
+          ? node.getAttribute("poster")
+          : node.getAttribute("src"),
+      );
+    expect(leadAsset).toMatch(new RegExp(asset.replace(".", "\\."), "u"));
   }
 
   // Sambutan pembuka Act I adalah transisi alur tersendiri: ia muncul sesudah
@@ -516,33 +528,33 @@ test("journey follows the approved 2026 to 879 to 2026 sequence", async ({
 
   await expect(page.locator(".journey-act")).toHaveCount(9);
   await expect(page.locator(".scene")).toHaveCount(26);
-  await expect(page.getByText("Pratinjau editorial lokal")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "KEDIRI, 2026" }),
+  ).toBeVisible();
   // 25 slot scene siap; scene 1292 sengaja ditangguhkan (flag F1 pada
   // docs/shots/image-manifest.md). Prolog dan Finale memakai bingkai
   // tersendiri di luar slot scene.
   // Penangguhan 1292 ditutup perintah Chief 2026-08-29: 26 slot siap.
   await expect(page.locator('[data-media-state="ready"]')).toHaveCount(26);
   await expect(page.locator('[data-media-state="pending"]')).toHaveCount(0);
-  // Prolog bergerak sebagai dua video berurutan dengan citra 00-prologue
-  // sebagai poster; Finale tetap mengunjungi citra yang sama.
-  const prologueVideo = page.locator('[data-framing="prologue"] video');
-  await expect(prologueVideo).toHaveCount(1);
-  await expect(prologueVideo).toHaveAttribute(
+  // Prolog mempertahankan satu gambar HD kontemporer; perjalanan ke 879
+  // terjadi lewat kamera dan lapisan material. Finale mengunjungi citra yang sama.
+  const prologueImage = page.locator('[data-framing="prologue"] img');
+  await expect(prologueImage).toHaveCount(1);
+  await expect(prologueImage).toHaveAttribute(
     "src",
-    /\/journey-approved\/00-prologue\.mp4/u,
+    /\/journey-approved\/00-prologue\.webp/u,
   );
   await expect(page.locator('[data-framing="finale"] img')).toHaveCount(1);
   await expect(page.locator('[data-motion="master"]').first()).toHaveText(
-    "1.147 Tahun Sebelum Hari Ini",
+    "Berapa Usia Sebuah Kota?",
   );
   await expect(page.getByRole("heading", { name: "KEDIRI, 2026" })).toHaveText(
     "KEDIRI, 2026",
   );
   await expect(
-    page.getByText("Sejak kapan sebuah kota mulai menjadi dirinya sendiri?", {
-      exact: true,
-    }),
-  ).toHaveCount(0);
+    page.getByText("Berapa Usia Sebuah Kota?", { exact: true }),
+  ).toHaveCount(1);
   await expect(page.locator('[id="879-first-mark"]')).toHaveAttribute(
     "data-media-slot",
     "879-first-mark",
@@ -563,36 +575,46 @@ test("prologue is one visual world with semantic editorial beats", async ({
 
   const prologue = page.locator('[data-scene="prologue"]');
   await expect(prologue).toHaveCount(1);
-  // Satu dunia visual: satu elemen video mempertahankan frame saat sumber
-  // pembuka selesai dan sumber lanjutan mengambil alih.
-  const video = prologue.locator("video");
-  await expect(video).toHaveCount(1);
-  await expect(video).toHaveAttribute(
+  /*
+   * Bingkai DASAR Prolog tetap citra Kediri 2026: cat pertama dan fallback
+   * tanpa JavaScript tidak pernah berubah era. Footage hidup di babak
+   * pembuka (direktif Chief 2026-09-04) sebagai dua lapisan terpisah, bukan
+   * sebagai source swap pada satu elemen.
+   */
+  const image = prologue.locator(".prologue-surface img");
+  await expect(image).toHaveCount(1);
+  await expect(image).toHaveAttribute(
+    "src",
+    /\/journey-approved\/00-prologue\.webp/u,
+  );
+  await expect(image).toHaveAttribute(
+    "alt",
+    "Visualisasi artistik Kediri kontemporer saat senja: jembatan di atas Brantas, lalu lintas menyala, dan kota yang hidup di kedua tepian sungai.",
+  );
+
+  const overtureClips = prologue.locator(".prologue-overture-clip video");
+  await expect(overtureClips).toHaveCount(2);
+  await expect(overtureClips.nth(0)).toHaveAttribute(
     "src",
     /\/journey-approved\/00-prologue\.mp4/u,
   );
-  await expect(video).toHaveAttribute(
-    "poster",
-    /\/journey-approved\/00-prologue\.webp/u,
-  );
-  await expect(video).toHaveAttribute(
-    "aria-label",
-    "Visualisasi artistik Kediri kontemporer saat senja: jembatan di atas Brantas, lalu lintas menyala, dan kota yang hidup di kedua tepian sungai.",
-  );
-  await expect(video).not.toHaveAttribute("loop");
-  await video.evaluate((element) => {
-    element.dispatchEvent(new Event("ended"));
-  });
-  await expect(video).toHaveAttribute(
+  await expect(overtureClips.nth(1)).toHaveAttribute(
     "src",
     /\/journey-approved\/00-prologue-daha\.mp4/u,
   );
-  await expect(video).toHaveAttribute(
-    "aria-label",
-    "Rekonstruksi artistik Daha abad XII berdasarkan konteks sejarah; bukan representasi arkeologis definitif.",
+  // Keduanya wajib menyatakan diri rekaan: tidak ada rekonstruksi yang boleh
+  // lewat sebagai rekaman peristiwa.
+  await expect(overtureClips.nth(0)).toHaveAttribute("aria-label", /rekaan/u);
+  await expect(overtureClips.nth(1)).toHaveAttribute("aria-label", /rekaan/u);
+  // Naskah era Daha ada di HTML sejak awal, apa pun variannya.
+  await expect(prologue.locator('[data-motion="overture-copy"]')).toContainText(
+    "abad ke-11 dan ke-12",
   );
-  await expect(video).toHaveAttribute("loop", "");
-  await expect(prologue.locator("img")).toHaveCount(0);
+  await expect(prologue.locator('[data-motion="water-field"]')).toHaveCount(1);
+  await expect(prologue.locator('[data-motion="copper"]')).toHaveCount(1);
+  await expect(prologue.locator('[data-motion="portal"]')).toHaveText(
+    /879.*Catatan pertama menunggu di balik aliran\./u,
+  );
   await expect(prologue.locator(".scene-readout")).toHaveCount(0);
   await expect(prologue.locator('[data-motion="master"]')).toHaveAttribute(
     "data-editorial-role",
@@ -608,20 +630,15 @@ test("prologue is one visual world with semantic editorial beats", async ({
     );
   }
   await expect(beats.nth(0)).toHaveText(
-    "Kediri hari ini adalah kota yang kita kenal: jalan yang ramai, pasar yang membuka pagi, kawasan industri, sekolah, rumah ibadah, dan dua tepian kota yang dipertemukan oleh jembatan di atas Brantas.",
+    "Kota memiliki lebih dari satu awal. Bentang alam, permukiman, pemerintahan, dan ingatan warganya tidak lahir pada saat yang sama.",
   );
   await expect(beats.nth(1)).toHaveText(
-    "Namun kota ini menyimpan perjalanan yang jauh lebih panjang daripada bangunan yang terlihat saat ini.",
+    "27 Juli 879 diperingati Kota Kediri sebagai awal kronologi sipilnya—bukan sebagai tanggal berdirinya pemerintahan kota modern.",
   );
   await expect(prologue.locator('[data-motion="passage"] p')).toHaveCount(2);
   await expect(
-    prologue.getByText(
-      "Sejak kapan sebuah kota mulai menjadi dirinya sendiri?",
-      {
-        exact: true,
-      },
-    ),
-  ).toHaveCount(0);
+    prologue.getByText("Berapa Usia Sebuah Kota?", { exact: true }),
+  ).toHaveCount(1);
 
   const firstScene = page.locator('[id="879-first-mark"]');
   // 5 beat sejak revisi konten Chief 2026-08-30 (dulu 4).
@@ -637,7 +654,7 @@ test("prologue stage beats have no local panel", async ({ page }) => {
 
   await expect(
     prologue.getByText(
-      "Namun kota ini menyimpan perjalanan yang jauh lebih panjang daripada bangunan yang terlihat saat ini.",
+      "27 Juli 879 diperingati Kota Kediri sebagai awal kronologi sipilnya—bukan sebagai tanggal berdirinya pemerintahan kota modern.",
       { exact: true },
     ),
   ).toHaveCount(1);
@@ -667,11 +684,16 @@ test("prologue stage beats have no local panel", async ({ page }) => {
   ]);
 });
 
-test("prologue gives its first beat a long hold and raises the reading field", async ({
+test("prologue presents its held beats in order and reverses honestly", async ({
   page,
-}) => {
+}, testInfo) => {
+  test.skip(
+    testInfo.project.name !== "desktop",
+    "Beat timing is sampled on the desktop pinned composition.",
+  );
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/journey#prologue-2026");
+  await waitForStages(page);
 
   const prologue = page.locator('[data-scene="prologue"]');
   const beats = prologue.locator('[data-motion="passage"]');
@@ -683,30 +705,82 @@ test("prologue gives its first beat a long hold and raises the reading field", a
       Number.parseFloat(getComputedStyle(element).marginBottom),
     );
   expect(marginBottom).toBeGreaterThanOrEqual(64);
+  await expect(pinSpace).toHaveCount(1);
 
-  const scrollToProgress = async (progress: number) => {
-    const target = await prologue.evaluate((element, requestedProgress) => {
-      const spacer = element.querySelector<HTMLElement>(".prologue-pin-space");
-      return (
-        element.getBoundingClientRect().top +
-        window.scrollY +
-        (spacer?.offsetHeight ?? 0) * requestedProgress
+  const findVisibleBeat = async (
+    beatIndex: number,
+    start: number,
+    end: number,
+  ): Promise<number> => {
+    const samples: Array<{
+      readonly progress: number;
+      readonly opacities: readonly number[];
+    }> = [];
+
+    for (let progress = start; progress <= end; progress += 0.04) {
+      await moveToSceneProgress(page, "prologue-2026", progress);
+      const opacities = await beats.evaluateAll((elements) =>
+        elements.map((element) =>
+          Number.parseFloat(getComputedStyle(element).opacity),
+        ),
       );
-    }, progress);
-    await page.evaluate((scrollTop) => window.scrollTo(0, scrollTop), target);
-    await page.waitForTimeout(1400);
+      samples.push({ progress, opacities });
+
+      const otherBeatIndex = beatIndex === 0 ? 1 : 0;
+      if (
+        (opacities[beatIndex] ?? 0) >= 0.95 &&
+        (opacities[otherBeatIndex] ?? 1) <= 0.05
+      ) {
+        return progress;
+      }
+    }
+
+    throw new Error(
+      `Beat ${beatIndex} never became exclusively visible: ${JSON.stringify(samples)}`,
+    );
   };
 
-  await expect(pinSpace).toHaveCount(1);
-  await scrollToProgress(0.55);
-  await expect(beats.nth(0)).toHaveCSS("opacity", "1");
-  await expect(beats.nth(1)).toHaveCSS("opacity", "0");
+  /*
+   * Mulai dari keadaan yang BERSIH. Pendaratan tautan dalam menaruh pembaca
+   * di keadaan baca shot (REST), dan sejak babak pembuka Prolog dipasang
+   * (2026-09-04) keadaan itu memang sudah menampilkan beat pertama. Tanpa
+   * langkah ini, sampel pertama memotret sisa keadaan pendaratan dan
+   * pemindaian langsung "menemukan" beat 0 pada progres paling awal —
+   * positif palsu yang tidak ada hubungannya dengan posisi gulir.
+   */
+  /*
+   * Percobaan pendaratan tautan dalam berjalan sampai 1,5 detik sesudah
+   * `load` (lihat DESKTOP_ATTEMPTS di deep-link-landing.tsx). Menggulir di
+   * tengah rentang itu akan ditarik balik ke REST, jadi jendela itu dibiarkan
+   * habis lebih dulu — kalau tidak, pemindaian mengukur pendaratan, bukan
+   * koreografi.
+   */
+  await page.waitForTimeout(1_700);
+  await moveToSceneProgress(page, "prologue-2026", 0.2);
+  await expect
+    .poll(async () =>
+      (
+        await beats.evaluateAll((elements) =>
+          elements.map((element) =>
+            Number.parseFloat(getComputedStyle(element).opacity),
+          ),
+        )
+      ).every((opacity) => opacity <= 0.05),
+    )
+    .toBe(true);
 
-  await scrollToProgress(0.73);
-  await expect(beats.nth(0)).toHaveCSS("opacity", "0");
-  await expect(beats.nth(1)).toHaveCSS("opacity", "1");
+  // Cari state yang benar-benar dilihat pembaca; jangan menganggap helper
+  // geometri identik dengan progres internal ScrollTrigger/ScrollSmoother.
+  const firstBeatProgress = await findVisibleBeat(0, 0.24, 0.76);
+  const secondBeatProgress = await findVisibleBeat(
+    1,
+    firstBeatProgress + 0.04,
+    0.92,
+  );
 
-  await scrollToProgress(0.55);
+  expect(secondBeatProgress - firstBeatProgress).toBeGreaterThanOrEqual(0.12);
+
+  await moveToSceneProgress(page, "prologue-2026", firstBeatProgress);
   await expect(beats.nth(0)).toHaveCSS("opacity", "1");
   await expect(beats.nth(1)).toHaveCSS("opacity", "0");
 });
@@ -755,94 +829,53 @@ test("879 body copy is one pixel larger and remains panel-free", async ({
   expect(Number.parseFloat(styles.lineHeight)).toBeCloseTo(25.48, 1);
 });
 
-test("prologue disclosure types only when Daha continuation starts", async ({
+test("prologue transforms the contemporary river into the 879 portal", async ({
   page,
 }, testInfo) => {
   test.skip(
     testInfo.project.name !== "desktop",
-    "Disclosure lifecycle is sampled on the desktop motion composition.",
+    "Material transition is sampled on the desktop motion composition.",
   );
 
   await page.goto("/journey");
+  await waitForStages(page);
 
   const prologue = page.locator('[data-scene="prologue"]');
-  const video = prologue.locator("video");
-  const label = prologue.locator(".prologue-visual-label");
+  const surface = prologue.locator(".prologue-surface img");
+  const copper = prologue.locator('[data-motion="copper"]');
+  const portal = prologue.locator('[data-motion="portal"]');
 
-  await expect(label).toHaveAttribute("data-label-state", "idle");
-  await expect(label).toBeHidden();
-  await expect(prologue.locator('[data-label-semantic="true"]')).toHaveText(
-    "REKONSTRUKSI ARTISTIK · DAHA, ABAD XII Interpretasi visual berdasarkan konteks sejarah; bukan representasi arkeologis definitif.",
-  );
-  await page.evaluate(() => {
-    type WindowWithContinuationCount = Window & {
-      __kediriContinuationCount?: number;
-    };
-    const testWindow = window as WindowWithContinuationCount;
-    testWindow.__kediriContinuationCount = 0;
-    window.addEventListener("kediri:prologue-continuation-started", () => {
-      testWindow.__kediriContinuationCount =
-        (testWindow.__kediriContinuationCount ?? 0) + 1;
-    });
-  });
+  await moveToSceneProgress(page, "prologue-2026", 0.18);
+  const cityState = {
+    copper: Number(
+      await copper.evaluate((node) => getComputedStyle(node).opacity),
+    ),
+    portal: Number(
+      await portal.evaluate((node) => getComputedStyle(node).opacity),
+    ),
+  };
 
-  await video.evaluate((element) => {
-    element.dispatchEvent(new Event("ended"));
-    element.dispatchEvent(new Event("ended"));
-  });
+  await moveToSceneProgress(page, "prologue-2026", 0.99);
+  const recordState = {
+    copper: Number(
+      await copper.evaluate((node) => getComputedStyle(node).opacity),
+    ),
+    portal: Number(
+      await portal.evaluate((node) => getComputedStyle(node).opacity),
+    ),
+  };
 
-  await expect
-    .poll(() =>
-      page.evaluate(
-        () =>
-          (window as Window & { __kediriContinuationCount?: number })
-            .__kediriContinuationCount ?? 0,
-      ),
-    )
-    .toBe(1);
-
-  await expect(video).toHaveAttribute(
+  expect(recordState.copper).toBeGreaterThan(cityState.copper + 0.65);
+  expect(recordState.portal).toBeGreaterThan(cityState.portal + 0.75);
+  // Bingkai dasarnya tetap citra 2026 — tidak ada source swap di tengah shot.
+  await expect(surface).toHaveAttribute(
     "src",
-    /\/journey-approved\/00-prologue-daha\.mp4/u,
+    /\/journey-approved\/00-prologue\.webp/u,
   );
-  await expect(label).toHaveAttribute("data-label-state", "typing");
-
-  const disclosureStyles = await label.evaluate((element) => {
-    const style = getComputedStyle(element);
-    return {
-      backgroundImage: style.backgroundImage,
-      backgroundColor: style.backgroundColor,
-      borderStyle: style.borderStyle,
-      borderWidth: style.borderWidth,
-      boxShadow: style.boxShadow,
-      backdropFilter: style.backdropFilter,
-    };
-  });
-  expect(disclosureStyles).toEqual({
-    backgroundImage: "none",
-    backgroundColor: "rgba(0, 0, 0, 0)",
-    borderStyle: "none",
-    borderWidth: "0px",
-    boxShadow: "none",
-    backdropFilter: "none",
-  });
-
-  await expect(label).toHaveAttribute("data-label-state", "complete", {
-    timeout: 6_000,
-  });
-  await expect(label.locator('[data-label-line="primary"]')).toHaveText(
-    "REKONSTRUKSI ARTISTIK · DAHA, ABAD XII",
-  );
-  await expect(label.locator('[data-label-line="secondary"]')).toHaveText(
-    "Interpretasi visual berdasarkan konteks sejarah; bukan representasi arkeologis definitif.",
-  );
-  await page.waitForTimeout(3_100);
-  await expect(label).toHaveAttribute("data-label-state", "hidden", {
-    timeout: 2_000,
-  });
+  await expect(prologue).not.toContainText("DAHA, ABAD XII");
 });
 
-test("prologue disclosure is complete immediately with reduced motion", async ({
+test("prologue keeps its HD image static for reduced motion", async ({
   browser,
 }) => {
   const context = await browser.newContext({
@@ -853,33 +886,36 @@ test("prologue disclosure is complete immediately with reduced motion", async ({
   await page.goto("/journey");
 
   const prologue = page.locator('[data-scene="prologue"]');
-  const video = prologue.locator("video");
-  const label = prologue.locator(".prologue-visual-label");
-  await expect(label).toHaveAttribute("data-label-state", "idle");
-  await expect(label).toBeHidden();
-
-  await video.evaluate((element) => {
-    element.dispatchEvent(new Event("ended"));
-  });
-
-  await expect(label).toHaveAttribute("data-label-state", "complete", {
-    timeout: 2_000,
-  });
-  await expect(label).toBeVisible();
-  await expect(label.locator('[data-label-line="primary"]')).toHaveText(
-    "REKONSTRUKSI ARTISTIK · DAHA, ABAD XII",
-  );
-  await expect(label.locator('[data-label-line="secondary"]')).toHaveText(
-    "Interpretasi visual berdasarkan konteks sejarah; bukan representasi arkeologis definitif.",
-  );
-  const characterOpacities = await label
-    .locator("[data-label-char]")
-    .evaluateAll((elements) =>
-      elements.map((element) => getComputedStyle(element).opacity),
-    );
-  expect(characterOpacities).not.toContain("0");
+  /*
+   * Reduced motion tidak pernah memutar babak pembuka: lapisan footage-nya
+   * `display: none`, sedangkan NASKAH era Daha justru terbaca dalam alur
+   * dokumen — komposisi baca yang utuh, bukan versi rusak.
+   */
+  await expect(
+    prologue.locator(".prologue-overture-clip").first(),
+  ).toBeHidden();
+  await expect(prologue.locator('[data-motion="overture-copy"]')).toBeVisible();
+  await expect(prologue.locator(".prologue-surface img")).toBeVisible();
+  await expect(prologue.locator('[data-motion="master"]')).toBeVisible();
+  await expect(prologue.locator('[data-motion="passage"]')).toHaveCount(2);
+  await expect(prologue).not.toContainText("DAHA, ABAD XII");
 
   await context.close();
+});
+
+test("inscription evidence follows the 921 Kadhiri scene", async ({ page }) => {
+  await page.goto("/journey");
+  const followsScene = await page
+    .locator('[id="921-kadhiri"]')
+    .evaluate((scene) => {
+      const interlude = document.querySelector(".interlude-scene");
+      return Boolean(
+        interlude &&
+          scene.compareDocumentPosition(interlude) &
+            Node.DOCUMENT_POSITION_FOLLOWING,
+      );
+    });
+  expect(followsScene).toBe(true);
 });
 
 test("early scenes expose continuous decorative handoffs", async ({ page }) => {
@@ -1093,7 +1129,7 @@ test("prologue reduced motion has no empty pin contract", async ({
   await context.close();
 });
 
-test("mobile reduced early scenes keep metadata clear of the visual label", async ({
+test("mobile reduced early scenes keep metadata clear of visual labels", async ({
   browser,
 }, testInfo) => {
   test.skip(
@@ -1110,21 +1146,14 @@ test("mobile reduced early scenes keep metadata clear of the visual label", asyn
   await page.goto("/journey");
 
   for (const slug of [
-    "prologue-2026",
     "879-first-mark",
     "921-kadhiri",
     "1015-name-endures",
     "1042-river-divides-kingdom",
   ] as const) {
     const scene = page.locator(`[id="${slug}"]`);
-    const label = scene.locator(
-      slug === "prologue-2026"
-        ? ".prologue-visual-label"
-        : ".stage-visual-label",
-    );
-    const contextBlock = scene.locator(
-      slug === "prologue-2026" ? ".prologue-context" : ".stage-context",
-    );
+    const label = scene.locator(".stage-visual-label");
+    const contextBlock = scene.locator(".stage-context");
     await expect(label).toHaveCSS("display", "none");
     // Direktif runtime 2026-08-28: chrome "SCENE n / Prolog · judul" berhenti
     // dicat untuk lima scene ini — teksnya (eyebrow, judul) sengaja
@@ -1142,12 +1171,8 @@ test("mobile reduced early scenes keep metadata clear of the visual label", asyn
       );
     }
 
-    const overlap = await scene.evaluate((root, currentSlug) => {
-      const label = root.querySelector<HTMLElement>(
-        currentSlug === "prologue-2026"
-          ? ".prologue-visual-label"
-          : ".stage-visual-label",
-      );
+    const overlap = await scene.evaluate((root) => {
+      const label = root.querySelector<HTMLElement>(".stage-visual-label");
       const context = root.querySelector<HTMLElement>(
         ".prologue-context, .stage-context",
       );
@@ -1166,7 +1191,7 @@ test("mobile reduced early scenes keep metadata clear of the visual label", asyn
             Math.max(labelBox.top, contextBox.top),
         )
       );
-    }, slug);
+    });
     expect(overlap, `${slug} label must not overlap metadata`).toBe(0);
 
     const opacities = await scene
@@ -1583,17 +1608,19 @@ test("desktop journey boot does not emit a hydration attribute mismatch", async 
   expect(hydrationWarnings, hydrationWarnings.join("\n")).toEqual([]);
 });
 
-test("deep-linked journey skips the time-based prologue intro", async ({
+test("deep-linked journey has no blocking prologue intro", async ({
   page,
 }, testInfo) => {
   test.skip(
     testInfo.project.name !== "desktop",
-    "Intro time-based hanya dirender pada varian desktop; mobile tetap statis.",
+    "Kontrak deep link diperiksa sekali pada desktop.",
   );
 
   await page.goto("/journey#879-first-mark");
 
-  await expect(page.locator('[data-motion="master"]')).toBeVisible();
+  await expect(
+    page.locator('[id="879-first-mark"] [data-motion="master"]'),
+  ).toBeVisible();
   await expect
     .poll(() =>
       page.evaluate(() => document.documentElement.getAttribute("data-intro")),
@@ -1601,7 +1628,7 @@ test("deep-linked journey skips the time-based prologue intro", async ({
     .toBeNull();
 });
 
-test("journey reload at a restored scroll position skips the prologue intro", async ({
+test("journey reload at a restored position has no blocking intro", async ({
   page,
 }, testInfo) => {
   test.skip(
@@ -1623,43 +1650,29 @@ test("journey reload at a restored scroll position skips the prologue intro", as
   await expect
     .poll(() => page.evaluate(() => window.scrollY), { timeout: 10_000 })
     .toBeGreaterThan(0);
-  await expect(page.locator('[data-motion="master"]')).toBeVisible();
+  await expect(page.locator(".site-nav")).toBeVisible();
+  const introState = await page.evaluate(() =>
+    document.documentElement.getAttribute("data-intro"),
+  );
+  expect(introState).toBeNull();
 });
 
-test("first-load prologue keeps chrome hidden through the exact eight-second opening", async ({
+test("first-load prologue opens immediately without a forced intro", async ({
   page,
 }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop", "Diuji sekali pada desktop.");
 
   await page.goto("/journey");
-  await expect
-    .poll(() => page.evaluate(() => document.documentElement.dataset.intro))
-    .not.toBeUndefined();
-  await expect(page.locator(".site-nav")).toBeHidden();
-  await expect(page.locator('[data-brantas-thread="true"]')).toHaveCSS(
-    "opacity",
-    "0",
-  );
-  await expect(page.locator('[data-opening-frame="1"]')).toContainText("ꦱꦸꦩꦁꦒ");
-
-  await page.waitForTimeout(2_150);
-  await expect(page.locator('[data-opening-frame="2"]')).toHaveCSS(
-    "opacity",
-    "1",
-  );
-  await expect(page.locator('[data-opening-frame="3"]')).toHaveText(
-    "Satu sungai. Tujuh kerajaan. Satu industri.",
-  );
-
-  await page.waitForTimeout(6_150);
-  await expect
-    .poll(() => page.evaluate(() => document.documentElement.dataset.intro))
-    .toBeUndefined();
+  const prologue = page.locator('[data-scene="prologue"]');
   await expect(page.locator(".site-nav")).toBeVisible();
-  await expect(page.locator('[data-brantas-thread="true"]')).toHaveCSS(
-    "opacity",
-    "1",
+  await expect(page.locator('[data-brantas-thread="true"]')).toBeVisible();
+  await expect(prologue.locator(".prologue-surface img")).toBeVisible();
+  await expect(prologue.locator('[data-motion="scroll-cue"]')).toBeVisible();
+  await expect(page.locator("[data-opening-frame]")).toHaveCount(0);
+  const introState = await page.evaluate(
+    () => document.documentElement.dataset.intro,
   );
+  expect(introState).toBeUndefined();
 });
 
 test("Scene 10 exposes correctable canonical text while its raster remains decorative", async ({
@@ -1693,13 +1706,13 @@ test("Brantas line remains decorative and static when reduced motion is requeste
   await context.close();
 });
 
-test("original video perspective preserves the full 16:9 frame", async ({
+test("prologue image fills the cinematic frame before the river dolly", async ({
   page,
 }, testInfo) => {
   await page.goto("/journey");
 
-  // Catches the user-visible hero break where cover-cropping hides source
-  // edges and the camera starts already zoomed into the footage.
+  // The opening must fill the viewport; the GSAP camera then performs the
+  // deliberate crop toward Brantas instead of exposing letterbox bands.
   if (testInfo.project.name === "desktop") {
     await waitForStages(page);
     await page.evaluate(() => {
@@ -1708,13 +1721,13 @@ test("original video perspective preserves the full 16:9 frame", async ({
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
   }
 
-  const video = page.locator('[data-scene="prologue"] .prologue-surface video');
-  await expect(video).toHaveCount(1);
+  const surface = page.locator('[data-scene="prologue"] .prologue-surface img');
+  await expect(surface).toHaveCount(1);
   await expect
     .poll(() =>
-      video.evaluate((element) => getComputedStyle(element).objectFit),
+      surface.evaluate((element) => getComputedStyle(element).objectFit),
     )
-    .toBe("contain");
+    .toBe("cover");
 
   if (testInfo.project.name === "desktop") {
     const perspective = await page

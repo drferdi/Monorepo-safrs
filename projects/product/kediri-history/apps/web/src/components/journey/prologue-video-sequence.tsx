@@ -1,127 +1,69 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
-import { useRef, useState } from "react";
-
-import { registerGsap } from "../../modules/motion/index";
-import { PrologueVisualLabel } from "./prologue-visual-label";
-
-export const PROLOGUE_CONTINUATION_STARTED_EVENT =
-  "kediri:prologue-continuation-started";
-export const PROLOGUE_FIRST_VIDEO_START_EVENT = "kediri:prologue-video-start";
+import { useEffect, useRef } from "react";
 
 interface PrologueVideoSequenceProps {
-  readonly firstVideoPath: string;
-  readonly continuationVideoPath?: string;
+  readonly videoPath: string;
   readonly poster: string;
   readonly altText: string;
-  readonly continuationAltText?: string;
-  readonly label?: string;
-  readonly labelDetail?: string;
 }
 
 /**
- * Satu elemen video mempertahankan frame saat sumber pembuka selesai dan sumber lanjutan mengambil alih.
+ * Jalur opsional untuk footage Kediri kontemporer yang kelak lolos kurasi.
+ * Opening saat ini memakai gambar HD; bila footage resmi tersedia, perjalanan
+ * menuju 879 tetap dibangun oleh kamera dan lapisan material tanpa source swap.
  */
 export function PrologueVideoSequence({
-  firstVideoPath,
-  continuationVideoPath,
+  videoPath,
   poster,
   altText,
-  continuationAltText,
-  label: propLabel,
-  labelDetail,
 }: PrologueVideoSequenceProps) {
-  const sequenceRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const firstVideoRef = videoRef;
-  const secondVideoRef = videoRef;
-  void firstVideoRef;
-  void secondVideoRef;
-  const firstVideoStartedRef = useRef(false);
-  const continuationStartedRef = useRef(false);
-  const [src, setSrc] = useState(firstVideoPath);
-  const [label, setLabel] = useState(altText);
-  const [loop, setLoop] = useState(false);
-  const [activePoster, setActivePoster] = useState<string | undefined>(poster);
-  const [videoFading, setVideoFading] = useState(false);
 
-  const startContinuation = () => {
-    if (!continuationVideoPath || continuationStartedRef.current) return;
-    continuationStartedRef.current = true;
-    // autoAlpha: 1 smooth continuity transition
-    setVideoFading(true);
-    setTimeout(() => {
-      setSrc(continuationVideoPath);
-      setLabel(continuationAltText ?? altText);
-      setLoop(true);
-      const video = videoRef.current;
-      if (video) {
-        video.src = continuationVideoPath;
-        video.setAttribute("aria-label", continuationAltText ?? altText);
-        video.setAttribute("loop", "");
-        video.loop = true;
-        video.load();
-        const playContinuation = () => {
-          video.removeEventListener("canplay", playContinuation);
-          void video.play().catch(() => undefined);
-        };
-        video.addEventListener("canplay", playContinuation);
-        void video.play().catch(() => undefined);
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    /*
+     * Mobile adalah desain tersendiri, bukan desktop yang dikecilkan: di
+     * lebar telepon naskah "KEDIRI, 2026" duduk langsung di atas bingkai dan
+     * footage membuatnya tidak terbaca (terukur 390×844, 2026-09-04). Video
+     * yang belum pernah diputar menampilkan POSTER-nya, yaitu citra Kediri
+     * 2026 — jadi menahan pemutaran di bawah 48rem sekaligus mengembalikan
+     * komposisi mobile yang benar tanpa cabang markup yang berisiko hidrasi.
+     */
+    const motionViewport = window.matchMedia("(min-width: 48rem)");
+    const syncPlayback = () => {
+      if (reducedMotion.matches || !motionViewport.matches) {
+        video.pause();
+        video.currentTime = 0;
+        return;
       }
-      setVideoFading(false);
-      window.dispatchEvent(new Event(PROLOGUE_CONTINUATION_STARTED_EVENT));
-    }, 150);
-  };
+      void video.play().catch(() => undefined);
+    };
 
-  useGSAP(
-    () => {
-      registerGsap();
-
-      const startFirstVideo = () => {
-        if (firstVideoStartedRef.current) return;
-        firstVideoStartedRef.current = true;
-        const video = videoRef.current;
-        if (video) {
-          video.currentTime = 0;
-          void video.play().catch(() => undefined);
-        }
-      };
-      window.addEventListener(
-        PROLOGUE_FIRST_VIDEO_START_EVENT,
-        startFirstVideo,
-      );
-      return () => {
-        window.removeEventListener(
-          PROLOGUE_FIRST_VIDEO_START_EVENT,
-          startFirstVideo,
-        );
-      };
-    },
-    { scope: sequenceRef },
-  );
+    syncPlayback();
+    reducedMotion.addEventListener("change", syncPlayback);
+    motionViewport.addEventListener("change", syncPlayback);
+    return () => {
+      reducedMotion.removeEventListener("change", syncPlayback);
+      motionViewport.removeEventListener("change", syncPlayback);
+      video.pause();
+    };
+  }, []);
 
   return (
-    <div ref={sequenceRef} className="prologue-video-sequence">
+    <div className="prologue-video-sequence">
       <video
         ref={videoRef}
-        src={src}
-        poster={activePoster}
+        src={videoPath}
+        poster={poster}
         muted
+        loop
         playsInline
-        preload="metadata"
-        aria-label={label}
-        loop={loop ? true : undefined}
-        onPlay={() => setActivePoster(undefined)}
-        onEnded={startContinuation}
-        style={{
-          opacity: videoFading ? 0.3 : 1,
-          transition: "opacity 0.4s ease",
-        }}
+        preload="auto"
+        aria-label={altText}
       />
-      {propLabel && labelDetail ? (
-        <PrologueVisualLabel label={propLabel} detail={labelDetail} />
-      ) : null}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ReactElement } from "react";
+import { Fragment, type ReactElement } from "react";
 import {
   type ActHeaderMode,
   ActHeaderReveal,
@@ -43,13 +43,17 @@ import { getJourneyManifest } from "../../../content/queries";
 /**
  * Latar kartu judul act, mode pratinjau editorial saja (direktif Chief
  * 2026-08-28): "Panjalu Rises" memakai citra yang semula milik scene Daha —
- * scene Daha sendiri kini bergerak sebagai video dahanasada. "1,100+ Years
- * of Kediri" (revisi Chief 2026-08-30) memakai video Jayabaya dari
- * `project-video/Jayabaya.mp4`, disalin ke `public/journey-approved/` —
- * pola yang sama dengan video prolog (statis, tanpa gerbang route pratinjau).
+ * scene Daha sendiri kini bergerak sebagai video dahanasada. Babak I kembali
+ * menjadi kartu tipografis agar Prolog water→copper tidak dipotong footage
+ * Jayabaya sebelum pintu kronologi 879.
  */
 const ACT_HEADER_MEDIA: Readonly<Record<string, string>> = {
-  "the-land-remembers": "/journey-approved/jayabaya.mp4",
+  /*
+   * Kartu "Panjalu Bangkit" kembali memakai citra diam Daha: footage
+   * kehidupan sehari-hari kini menjadi babak kedua pembuka Prolog (direktif
+   * Chief 2026-09-04), dan menayangkannya dua kali dalam satu halaman
+   * membuat kartu judul ini terbaca sebagai pengulangan, bukan babak baru.
+   */
   "panjalu-rises": "/api/editorial-preview/05-daha-centre-of-power.webp",
 };
 
@@ -168,10 +172,7 @@ export default async function JourneyPage(): Promise<ReactElement> {
           <BrantasVisualThread />
           <main id="historical-content">
             {editorialPreview ? (
-              <>
-                <PrologueScene narrative={PRODUCTION_PROLOGUE} />
-                <PrologueInscriptionInterlude />
-              </>
+              <PrologueScene narrative={PRODUCTION_PROLOGUE} />
             ) : (
               <header className="journey-intro">
                 <p className="eyebrow">Kediri · Kronologi terbit</p>
@@ -259,12 +260,16 @@ export default async function JourneyPage(): Promise<ReactElement> {
                 ) : null}
 
                 {act.scenes.map((scene) => (
-                  <SceneSection
-                    key={scene.id}
-                    scene={scene}
-                    nextSceneSlug={nextSceneBySlug.get(scene.slug)}
-                    editorialPreview={editorialPreview}
-                  />
+                  <Fragment key={scene.id}>
+                    <SceneSection
+                      scene={scene}
+                      nextSceneSlug={nextSceneBySlug.get(scene.slug)}
+                      editorialPreview={editorialPreview}
+                    />
+                    {editorialPreview && scene.slug === "921-kadhiri" ? (
+                      <PrologueInscriptionInterlude />
+                    ) : null}
+                  </Fragment>
                 ))}
               </section>
             ))}

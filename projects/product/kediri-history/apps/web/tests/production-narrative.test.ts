@@ -172,7 +172,7 @@ describe("production journey contract", () => {
     expect(domText).not.toContain("dikalahkan oleh pasukan Jayabaya");
   });
 
-  it("shows the Kediri origin text before video one and crossfades into video two", async () => {
+  it("keeps one contemporary prologue world and transforms it toward 879", async () => {
     const directorPath = fileURLToPath(
       new URL("../src/modules/motion/director.ts", import.meta.url),
     );
@@ -199,19 +199,16 @@ describe("production journey contract", () => {
       readFile(videoPath, "utf8"),
     ]);
 
-    expect(prologue).toContain("Dari jejak yang tercatat, Kediri tumbuh");
-    expect(director).toContain("kediri:prologue-video-start");
     expect(page).not.toContain("INTRO_BOOT_SCRIPT");
-    expect(css).toContain(".prologue-opening-copy");
+    expect(prologue).toContain("prologue-water-field");
+    expect(prologue).toContain("prologue-copper-field");
+    expect(prologue).toContain('kind="water-copper"');
     expect(prologue).not.toContain("PrologueVisualLabel");
-    expect(prologue).not.toContain("SceneHandoff");
-    expect(prologue).not.toContain("prologue-water-line");
-    expect(prologue).not.toContain("prologue-plate");
-    expect(video).toContain("firstVideoRef");
-    expect(video).toContain("PROLOGUE_FIRST_VIDEO_START_EVENT");
-    expect(video).not.toContain("autoPlay");
-    expect(video).toContain("secondVideoRef");
-    expect(video).toContain("autoAlpha: 1");
+    expect(css).toContain(".prologue-material-world");
+    expect(director).not.toContain("kediri:prologue-video-start");
+    expect(video).toContain("prefers-reduced-motion: reduce");
+    expect(video).toContain("video.play()");
+    expect(video).not.toContain("continuationVideoPath");
   });
 
   it("presents the 1042 division while distinguishing historical record from tradition", () => {
@@ -242,11 +239,15 @@ describe("production journey contract", () => {
 
   it("menjaga Prolog sebagai satu shot dengan dua beat editorial", () => {
     expect(PRODUCTION_PROLOGUE.title).toBe("KEDIRI, 2026");
-    expect(PRODUCTION_PROLOGUE.masterLine).toBe("1.147 Tahun Sebelum Hari Ini");
+    expect(PRODUCTION_PROLOGUE.masterLine).toBe("Berapa Usia Sebuah Kota?");
     expect(PRODUCTION_PROLOGUE.paragraphs).toEqual([
-      "Kediri hari ini adalah kota yang kita kenal: jalan yang ramai, pasar yang membuka pagi, kawasan industri, sekolah, rumah ibadah, dan dua tepian kota yang dipertemukan oleh jembatan di atas Brantas.",
-      "Namun kota ini menyimpan perjalanan yang jauh lebih panjang daripada bangunan yang terlihat saat ini.",
+      "Kota memiliki lebih dari satu awal. Bentang alam, permukiman, pemerintahan, dan ingatan warganya tidak lahir pada saat yang sama.",
+      "27 Juli 879 diperingati Kota Kediri sebagai awal kronologi sipilnya—bukan sebagai tanggal berdirinya pemerintahan kota modern.",
     ]);
+    expect(PRODUCTION_PROLOGUE.portal).toEqual({
+      date: "879",
+      label: "Catatan pertama menunggu di balik aliran.",
+    });
     expect(PRODUCTION_PROLOGUE.beatGroups).toEqual([[0], [1]]);
     expect(PRODUCTION_PROLOGUE.beatGroups?.flat()).toEqual(
       Array.from(
@@ -254,21 +255,42 @@ describe("production journey contract", () => {
         (_, index) => index,
       ),
     );
-    expect(PRODUCTION_PROLOGUE.media?.videoPath).toBe(
-      "/journey-approved/00-prologue.mp4",
-    );
-    expect(PRODUCTION_PROLOGUE.media?.continuationVideoPath).toBe(
-      "/journey-approved/00-prologue-daha.mp4",
+    /*
+     * Bingkai dasar Prolog tetap CITRA Kediri 2026 — footage hidup di babak
+     * pembuka (`overture`), bukan sebagai pengganti citra, sehingga cat
+     * pertama dan fallback tanpa JavaScript tidak pernah berubah era.
+     */
+    expect(PRODUCTION_PROLOGUE.media?.videoPath).toBeUndefined();
+    expect(PRODUCTION_PROLOGUE.media?.continuationVideoPath).toBeUndefined();
+    expect(PRODUCTION_PROLOGUE.media?.path).toBe(
+      "/journey-approved/00-prologue.webp",
     );
     expect(PRODUCTION_PROLOGUE.media?.label).toBe(
-      "REKONSTRUKSI ARTISTIK · DAHA, ABAD XII",
+      "VISUALISASI ARTISTIK · KEDIRI, 2026",
     );
-    expect(PRODUCTION_PROLOGUE.media?.labelDetail).toBe(
-      "Interpretasi visual berdasarkan konteks sejarah; bukan representasi arkeologis definitif.",
+  });
+
+  it("membuka Prolog dengan dua babak footage dan naskah era Daha", () => {
+    /*
+     * Urutan yang dikunci (direktif Chief 2026-09-04): citra 2026 → gelap →
+     * footage kota kuno → gelap → naskah era Daha → footage kehidupan
+     * sehari-hari → gelap → pelat "KEDIRI, 2026" dan portal 879.
+     */
+    const overture = PRODUCTION_PROLOGUE.overture;
+    expect(overture).toBeDefined();
+    expect(overture?.city.videoPath).toBe("/journey-approved/00-prologue.mp4");
+    expect(overture?.life.videoPath).toBe(
+      "/journey-approved/00-prologue-daha.mp4",
     );
-    expect(PRODUCTION_PROLOGUE.media?.continuationAltText).toBe(
-      "Rekonstruksi artistik Daha abad XII berdasarkan konteks sejarah; bukan representasi arkeologis definitif.",
-    );
+    // Keduanya wajib menyatakan dirinya rekaan: tidak ada footage rekonstruksi
+    // yang boleh lewat sebagai rekaman peristiwa.
+    expect(overture?.city.altText).toMatch(/rekaan/u);
+    expect(overture?.life.altText).toMatch(/rekaan/u);
+    expect(overture?.copy).toHaveLength(3);
+    // Abad yang disebut adalah era Daha, bukan abad ke-17.
+    expect(overture?.copy[0]).toContain("abad ke-11 dan ke-12");
+    expect(overture?.copy[0]).toContain("Daha");
+    expect(overture?.copy.join(" ")).not.toMatch(/abad ke-17/u);
   });
 
   it("retains the unpublished marker after governed CMS claims are composed", () => {

@@ -5,6 +5,155 @@ Keputusan lintas-repositori tetap dicatat di `.agents/DECISIONS.md` root.
 
 ---
 
+## 2026-09-04 (sesi sinematik, lanjutan) — Layar pertama Prolog sebagai title sequence
+
+Direktif Chief: "gak usah merubah banyak lagi, JUST A CINEMATIC FIRST VISUAL";
+target = layar pertama "KEDIRI, 2026"; tanpa citra baru (Higgsfield 0 kredit,
+`unlim.available: false`); struktur Prolog tidak diubah.
+
+(1) **Entrance berbasis waktu ±2,4 s** milik director (`createReadingDirector`,
+cue negatif `at: -1`): citra 2026 muncul dari `.stage-void` dengan letterbox
+2,39:1 yang membuka dan dorongan 1,10 → 1, lalu eyebrow → judul topeng baris →
+kalimat pemikul → beat → cue gulir. Gulir menang: progres > 0,01 melompatkan
+seluruh entrance ke keadaan akhir (`settleIntro`), tautan dalam langsung akhir.
+(2) **Dua timeline, bukan satu.** Babak citra dibuat SINKRON saat island
+terpasang (fonts.ready di dev terukur ±3 s — layar gelap selama itu tidak
+dapat diterima); babak naskah dibuat setelah fonts.ready karena SplitText
+menuntut pemenggalan baris final, dan menyusul 0,55 s setelah citra mulai.
+(3) **Target `.stage-media`, bukan `.prologue-surface`.** Timeline scrub
+menulis ulang `opacity`/`--dolly` surface pada setiap `ScrollTrigger.refresh()`
+(immediateRender + invalidateOnRefresh); kontainer dalam tidak disentuh siapa
+pun. (4) **Letterbox lewat `--letterbox`** (CSS `clip-path: inset(calc(var()
+* 1%) 0)`), bukan tween string `clip-path` — yang terakhir terbukti tidak
+bergerak di Chromium. (5) Keadaan awal opacity 0 hanya di media query varian
+motion; blok `scripting: none` mengembalikannya; mobile dan reduced motion
+tidak tersentuh (diverifikasi Playwright: komposisi langsung utuh).
+(6) "KEDIRI, 2026" 1,25× di varian motion; veil radial cat pertama sedikit
+lebih gelap.
+
+Jebakan verifikasi: rAF pada tab latar belakang (Browser pane desktop, halaman
+Playwright yang tidak di depan) di-throttle ke 1 fps, dan lag smoothing GSAP
+memajukan tween hanya 33 ms per tick — entrance tampak "macet". Ukur dengan
+`page.bringToFront()` (rAF 38–166 fps): urutan selesai ±3 s.
+
+Bukti: lint 0 error (24 warning CSS lama, 4 di antaranya `noDescendingSpecificity`
+baru dari aturan varian motion); vitest 92; tsc 0; token gate 0 raw; tangkapan
+Playwright 1440×900 pada 0,9 s / 1,7 s / 3,0 s / 4,5 s, tablet 1024×768, mobile
+375×812, reduced motion. E2E tetap terblokir dev 4320 milik sesi lain.
+
+## 2026-09-04 (sesi sinematik, Fable 5.1 + lane Opus 5) — Keterbacaan era terang, framing dipulihkan, video digerbangi
+
+Direktif master Chief "Kediri Cinematic Experience". Struktur pembuka
+2026-09-04 (citra 2026 → gelap → judul → footage → naskah Daha → footage →
+tembaga → 879) DIPERTAHANKAN sebagai keputusan Chief; sesi ini memoles, tidak
+menulis ulang.
+
+(1) **Pelat kanan menuntut bayangan kanan.** `.journey-act[data-layout="right"]
+.stage-media-shade` kini cermin gradien horizontal bawaan (berat di kanan), dan
+era `colonialIndustrial` memakai veil gading lebih tebal (desktop dan mobile).
+Sebelumnya sugar, 1906, 1912, dan people tidak terbaca di kedua viewport
+(terukur, tangkapan layar 2026-09-04). Hanya CSS; tidak ada perubahan naskah.
+(2) **Transform framing dipulihkan.** Sesi 2026-09-03 sore mengganti
+`transform: scale(var(--frame-zoom)) translate(...)` pada `<img>` panggung
+dengan `transform: none` tanpa keputusan tercatat, sehingga SEMUA jendela
+Authority Rule 1 (879/921/1015/1042) tidak pernah diterapkan di browser — kata
+"kadhiri" dan tarikh terbakar kembali tampil — sementara gate vitest hanya
+menguji simulator. Mekanismenya dipulihkan ke bentuk commit `76561b6`; bila
+sebuah jendela terasa terlalu besar, ubah jendelanya di `framing.ts`, bukan
+mematikan mekanismenya.
+(3) **Framing 1869 dan two-bridges (REDO-ASSET-005/006).** Kapsi sintetis yang
+menyamar sebagai foto arsip ("Foto Arsip ± 1880-an", "Djembatan Brantas Kediri,
+1912"), judul terbakar, panel diagram, dan papan nama dikeluarkan dari bingkai
+lewat jendela di `framing.ts` + `BAKED_TEXT_BOXES`, diuji gate vitest di semua
+viewport. Aset asli tidak disentuh; flag F2/F4 di manifest diperbarui.
+(4) **Video scene tidak lagi autoplay.** `modules/motion/media-gate.ts`
+(baru) memiliki pemutaran: IntersectionObserver pada `.scene-stage` (bukan
+`.stage-media`, yang dibesarkan dolly sampai ~1,7× viewport sehingga rasio
+0,25 tak pernah tercapai — terukur 0,12 di dataran baca Daha); reduced motion
+tidak pernah memutar; tanpa JavaScript poster = citra scene. Diuji 4 kasus
+unit + perilaku browser (Daha hidup di Daha, 1135 hidup di 1135, keduanya
+diam di tempat lain).
+(5) **Polesan Prolog.** Motif water→copper menjadi seam 0,35 rem (dulu balok
+emas 54×49 px di bawah portal 879); blur keluar judul sinematik 8 → 3 px,
+masuk 10 → 6 px; kredit presenter ke sepertiga bawah; footage pembuka
+dibesarkan 1,09× (SEMENTARA — mendorong watermark sudut kanan-bawah render
+1080p keluar bingkai; hapus saat render bersih tiba); alur statis (mobile,
+reduced, tanpa-JS) menaruh bingkai "KEDIRI, 2026" SEBELUM naskah era Daha.
+(6) **Baseline dipulihkan.** Lint 2 error → 0 (biome-ignore beralasan pada
+logomark `<img>` dan key typing statis; formatter `globals.css`); token gate 4
+hex → token (`--cinema-accent`, `--cinema-ink`; `--cinema-gold` yang tidak
+pernah ada diganti); `will-change` tanpa `filter`. Kontrak e2e usang
+"Pratinjau editorial lokal" diganti heading "KEDIRI, 2026"; entri mati yang
+sama dihapus dari deny-list `check-production-journey.mjs` (marker
+`/api/editorial-preview/` tetap menjaga kebocoran pratinjau).
+
+Ditangguhkan untuk keputusan Chief: kalimat naskah Daha "Yang tampak berikut
+ini …" tidak punya rujukan pada alur statis (footage tidak dirender di sana);
+grammar kredit "Sentra Artificial Intelligence Present" (→ "Presents");
+Higgsfield tidak dapat dipakai (saldo 0 kredit, paket free) sehingga tidak ada
+citra baru — kandidat pengganti citra 15 (sugar, paling jenuh) menunggu kredit.
+
+Bukti: lint 0 error/20 warning lama; vitest 8 berkas/92 tes; tsc 0 error; token
+gate 52 pemeriksaan/0 raw; `next build --webpack` exit 0 (20 rute);
+`check-production-journey` lulus (3 scene CMS, 0 marker). Gate Sentra-GSAP root
+(`scripts/sentra-gsap/verify.mjs`) TIDAK ADA di Monorepo → status FAIL
+(tidak dapat dijalankan), bukan netral.
+
+## 2026-09-04 — Pembuka Prolog bertahap: citra 2026, dua babak footage, naskah era Daha
+
+Direktif Chief in-session, menggantikan bagian "footage ditolak" dari keputusan
+2026-09-03 tanpa menghapus catatan historisnya.
+
+(1) **Urutan pembuka**: citra Kediri 2026 → gelap → footage kota kuno
+(`00-prologue.mp4`) → gelap → naskah era Daha → footage kehidupan sehari-hari
+(`00-prologue-daha.mp4`) → gelap → pelat "KEDIRI, 2026", air menjadi tembaga,
+portal 879. Kanvas gelap adalah `.stage-void` yang memang sudah ada, bukan
+lapisan tambahan. Citra 2026 tetap bingkai DASAR: poster, fallback tanpa
+JavaScript, dan bingkai Finale. (2) **Abad yang disebut adalah ke-11 dan ke-12
+(era Daha)**, bukan abad ke-17: footage-nya desa Jawa kuno tanpa penanda abad
+ke-17, dan situs sudah punya scene 1678 tersendiri. Ketiga kalimat naskah
+disusun dari pernyataan yang sudah dipakai scene Daha, ditutup pernyataan
+eksplisit bahwa yang ditonton bayangan artistik. (3) **Pin Prolog** 280/180 →
+520/340 svh; ambang beat digeser ke babak terakhir (0,70 dan 0,85) supaya
+naskah tidak menyala di balik footage. (4) **Kartu "Panjalu Bangkit" kembali ke
+citra diam** karena footage kehidupan kini menjadi babak kedua pembuka.
+(5) **Scene 1135 memakai footage Jayabaya** dengan status epistemik tercetak di
+halaman: sosok raja itu rekaan, tidak ada potret Jayabhaya yang terdokumentasi.
+(6) **Berkas video**: kabel menunjuk aset 720p yang bersih dari watermark.
+Render 1080p di `project-video/output_1080p/` isinya identik tetapi memuat
+watermark logo yang menonjol, jadi Chief menahannya sampai ada render bersih —
+peningkatan nanti cukup menimpa berkas, tanpa mengubah kode.
+
+Verifikasi sesi: `typecheck` 0 error, `lint` 0 error/16 warning lama, unit
+82/82, e2e **81 lulus / 7 gagal / 18 skip** dengan basis data hidup. Ketujuh
+kegagalan itu warisan keadaan 2026-09-03 yang memang belum pernah lolos
+verifikasi; tidak ada kegagalan baru dari perubahan ini.
+
+## 2026-09-03 — Opening Brantas: satu footage, tanpa forced wait, water → copper → 879
+
+Direktif Chief in-session setelah audit kreatif opening, dengan skill GSAP resmi.
+Keputusan ini menggantikan bagian opening dari keputusan 2026-08-30 tanpa
+menghapus catatan historisnya.
+
+(1) Gambar HD Kediri kontemporer hadir sejak first paint. Bukti screenshot e2e
+menunjukkan `00-prologue.mp4` berisi figur/candi, bukan Kediri 2026, sehingga
+video itu ditolak dari Prolog; source swap ke rekonstruksi Daha juga dihapus
+agar urutan 2026 → 879 tidak melompat ke abad XII. (2) `prologueReveal` kembali menjadi kamera
+scroll-scrubbed nyata: dolly menuju Brantas, city veil, empat garis air SVG
+resolution-independent, horizon, copper procedural field, portal 879, dan
+handoff `water-copper`. Seluruh visual baru adalah metafora presentasi tanpa
+aksara, wajah, artefak, atau klaim sejarah rekaan. (3) Master line menjadi
+“Berapa Usia Sebuah Kota?”; dua beat menjelaskan pluralitas awal kota dan
+membedakan 27 Juli 879 sebagai awal kronologi sipil dari pendirian pemerintahan
+modern. (4) Pin Prolog dipadatkan 330/210 → 280/180svh. Interlude bukti
+berpindah setelah Scene 921 dan dipadatkan 420 → 320%, sehingga handoff Prolog
+menuju 879 tidak dipotong bukti lintas-abad. (5) Latar video Jayabaya pada kartu
+Babak I dilepas agar material tembaga tidak diputus oleh footage era lain.
+
+Verifikasi sesi: project diagnostics 0 error/0 warning. `pnpm run typecheck`,
+`pnpm run test`, dan `pnpm run lint` tidak dapat dieksekusi karena binary host
+Zed gagal memuat `libasound.so.2`; tidak ada klaim PASS untuk ketiga command.
+
 ## 2026-08-30 — Jeda "bukti prasasti" scroll-driven, video lanjutan sebagai reveal terakhir, revisi konten Act I, tiket tonggak sejarah
 
 Direktif Chief in-session (iteratif, ScrollTrigger skill dipakai eksplisit).
@@ -100,23 +249,24 @@ Direktif Chief in-session (2026-08-28), ditutup perintah eksplisit "GIT COMMIT".
 `00-prologue.mp4` (sumber `project-video/opening.mp4`); scene Daha memakai
 `05-daha-centre-of-power.mp4` (sumber `project-video/dahanasada.mp4`).
 Keduanya `autoplay muted loop playsinline`, dengan citra slot sebagai poster
-+ fallback tanpa-JS — cat pertama identik dengan versi statis. Kamera GSAP
-(dolly, mask `--lit`, transisi keluar) menyapu video persis seperti citra.
-(2) **Citra Daha pindah** menjadi latar kartu judul act "Panjalu Rises"
-(`ACT_HEADER_MEDIA`, mode pratinjau editorial, opacity rendah + gradien —
-kartu judul tetap dipimpin naskah). (3) **Publikasi aset pratinjau** (route
-`SHOW_EDITORIAL_PREVIEW` + `public/journey-approved/` statis, termasuk kedua
-mp4) kini TEREKAM sebagai keputusan Chief; catatan tetap terbuka:
-`check-production-journey.mjs` belum mencakup path statis (follow-up), dan
-verifikasi Redo Register membuktikan crop, bukan rights — record rights CMS
-tetap terutang sebelum rilis publik final. (4) **Teks dobel** diperbaiki dua
-sisi: scene tanpa `choreographyKey` kini menumpuk beat secara statis via CSS
-(`.scene:not([data-choreography])`), dan mesin beat director menyembunyikan
-beat lama dengan fade cepat deterministik — tidak pernah reverse pelan.
-(5) **Variasi arah** per koreografi (`FLAVORS` di director.ts): arah masuk
-tarikh/beat berbeda antar-scene dan tetap menjawab argumen historisnya.
-Bukti: unit 71, e2e 56 (3 assertion media diadaptasi ke kontrak video —
-integrity review rule 7 dicatat di sini), typecheck, lint hijau.
+
+- fallback tanpa-JS — cat pertama identik dengan versi statis. Kamera GSAP
+  (dolly, mask `--lit`, transisi keluar) menyapu video persis seperti citra.
+  (2) **Citra Daha pindah** menjadi latar kartu judul act "Panjalu Rises"
+  (`ACT_HEADER_MEDIA`, mode pratinjau editorial, opacity rendah + gradien —
+  kartu judul tetap dipimpin naskah). (3) **Publikasi aset pratinjau** (route
+  `SHOW_EDITORIAL_PREVIEW` + `public/journey-approved/` statis, termasuk kedua
+  mp4) kini TEREKAM sebagai keputusan Chief; catatan tetap terbuka:
+  `check-production-journey.mjs` belum mencakup path statis (follow-up), dan
+  verifikasi Redo Register membuktikan crop, bukan rights — record rights CMS
+  tetap terutang sebelum rilis publik final. (4) **Teks dobel** diperbaiki dua
+  sisi: scene tanpa `choreographyKey` kini menumpuk beat secara statis via CSS
+  (`.scene:not([data-choreography])`), dan mesin beat director menyembunyikan
+  beat lama dengan fade cepat deterministik — tidak pernah reverse pelan.
+  (5) **Variasi arah** per koreografi (`FLAVORS` di director.ts): arah masuk
+  tarikh/beat berbeda antar-scene dan tetap menjawab argumen historisnya.
+  Bukti: unit 71, e2e 56 (3 assertion media diadaptasi ke kontrak video —
+  integrity review rule 7 dicatat di sini), typecheck, lint hijau.
 
 ## 2026-08-28 — Model dua-jam + stack 100% GSAP; smooth scroll opt-in Journey
 

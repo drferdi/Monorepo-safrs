@@ -3,159 +3,184 @@
 > Baca lebih dulu setiap sesi. **Ditimpa**, bukan ditambah — ini keadaan sekarang, bukan log.
 > Status fase: `PROGRESS.md`. Keputusan durable: `DECISIONS.md`. Pagar: `BOUNDARIES.md`.
 
-Last updated: 2026-09-03
+Last updated: 2026-09-04 (sesi sinematik — Fable 5.1 arah kreatif, tiga lane Opus 5)
 
 ---
 
+## Peringatan pertama: pohon kerja BELUM di-commit dan bercampur TIGA sesi
+
+Working tree capsule memuat pekerjaan tiga sesi pada berkas yang sama, belum
+satu pun di-commit:
+
+1. **Sesi 2026-09-03 sore**: Prolog kamera prosedural, jeda prasasti pindah
+   setelah 921, `prologue-visual-label.tsx` dihapus, dan — TANPA keputusan
+   tercatat — transform framing `<img>` diganti `transform: none` (dipulihkan
+   sesi ini, lihat DECISIONS 2026-09-04 sesi sinematik).
+2. **Sesi 2026-09-04 pagi**: pembuka Prolog bertahap, penempatan video 1080p.
+3. **Sesi 2026-09-04 sinematik (ini)**: keterbacaan era terang, framing
+   dipulihkan + 1869/two-bridges, gate video, polesan Prolog, baseline hijau.
+
+**Jangan `git stash` per-path** untuk mencari baseline — hasilnya pohon
+Frankenstein (terbukti 2026-09-04 pagi). Bandingkan selalu terhadap commit
+`8cd0af3`, bukan stash. Commit menunggu perintah Chief (BOUNDARIES §4).
+
 ## Keadaan sekarang
 
-**Overhaul GSAP per-section selesai (2026-09-03, audit penuh di
-`docs/GSAP_AUDIT.md`, arc pacing di `docs/MOTION_ARC.md`).** Yang berubah dan
-yang harus dijaga:
+### Prolog (struktur direktif Chief 2026-09-04 pagi, DIPERTAHANKAN)
 
-- Token motion hidup di `modules/motion/tokens.ts` (CustomEase `cine`,
-  `cineIn`, `hardCut`, `settle`; `EASES`/`DURATIONS`/`STAGGERS`); `MOTION`
-  masih diekspor dari `gsap.ts` untuk kompatibilitas.
-- `director.ts` memakai tabel `SCRIPT_STYLES` — satu identitas gerak per
-  `choreographyKey` (kalimat pemikul dibelah lines/words/chars sesuai
-  identitas; beat tetap register baca). Ambang cue TIDAK berubah (e2e
-  mengunci 0.74 rest dan [0.48, 0.7] prolog). `SLUG_IDENTITY` memecah
-  1958→1990 (`marketDeparture`) tanpa menyentuh kontrak CMS.
-- Saklar debug: `?motionDebug=1` (atau `NEXT_PUBLIC_MOTION_DEBUG=1`)
-  menyalakan marker ScrollTrigger dan `window.__kediriMotion.activeTriggers()`;
-  hanya dibaca di dalam effect (kontrak hidrasi). Jangan pernah `markers: true`
-  literal.
-- `MotionRefreshGate` (sekali per halaman) me-refresh ScrollTrigger setelah
-  `fonts.ready`, media kritis, dan video lanjutan prolog. `ReadoutBatch`
-  memakai `ScrollTrigger.batch` `once` untuk 26 strip arsip — hanya strip di
-  bawah viewport yang disembunyikan (tautan dalam tidak boleh meninggalkan
-  strip transparan).
-- Semua act header kini bergerak lewat `ActHeaderReveal` mode `card` /
-  `wipe` / `scrubWords` (Babak III = sorot kata mengikuti gulir). Finale
-  punya island `FinaleMotion`. Interlude memakai clip-path wipe, pin 420%.
-- Bug yang diperbaiki: kredit prolog menimpa pelat pada reduced/mobile
-  (`.prologue-opening { display:none }` di blok alur statis); nama 1042
-  menimpa paragraf di mobile (aturan baris "name" kini seluruh mobile);
-  garis jembatan 1869 tak terlihat (opacity 0.62, stroke 2.5).
-- e2e baseline SEBELUM perubahan di mesin ini: 52 pass / 35 fail / 17 skip —
-  kegagalan arsip/pencarian karena tanpa basis data CMS, plus tes prolog
-  lama yang usang (`data-opening-frame`, `dataset.intro` tidak ada lagi di
-  `src/`). Bandingkan selalu terhadap baseline itu, bukan terhadap nol.
-- Belum diverifikasi: Safari/Firefox (config Playwright hanya Chromium),
-  DevTools Performance di GPU sungguhan.
-- **Tata letak kanan paruh kedua** (direktif Chief 2026-09-03, sesi yang
-  sama): `page.tsx` menandai `data-layout="right"` pada `.journey-act` mulai
-  `RIGHT_LAYOUT_FROM = "iron-sugar-modern-city"` (Babak VI–IX). CSS blok
-  terakhir `globals.css` (`@media (min-width: 48rem)`): pelat `justify-self:
-  end; align-self: center`, tarikh dibatasi `min(monumental, 17svh)` supaya
-  tarikh dua baris (1947–1948, 2024–2026) tidak mendorong beat keluar
-  viewport (terukur: pelat 1013–1045 px → 782–841 px pada 900 px), label
-  visual pindah ke kiri, kartu judul rata-kanan. Kartu Babak VI memakai mode
-  `slide` (`ActHeaderReveal`): pendukung datang dari kiri x −72 → 0
-  `expo.out`, baris judul xPercent −12 → 0 — transisi 1678 → Babak VI
-  bergeser ke kanan. Mobile tidak berubah.
+Satu bidikan di-pin 420/300 svh, seluruhnya digerakkan gulir:
 
-**Jeda "bukti prasasti" scroll-driven terpasang di antara Prolog dan Act I**
-(direktif Chief 2026-08-30, detail penuh: DECISIONS 2026-08-30). Section baru
-`PrologueInscriptionInterlude` — di luar registry koreografi shot
-(`scenes.ts`/`director.ts`), karena kontennya bukan naskah CMS: satu
-`gsap.timeline` di-scrub LANGSUNG oleh `ScrollTrigger` (pin, scrub 0.5,
-bobot tidak seragam, pin 700%), enam-tujuh target reveal (label+pembuka,
-empat kartu prasasti Harinjing B/Ceker/Kamulan/Mula Malurung, penutup, lalu
-video lanjutan Daha sebagai reveal TERAKHIR — full-bleed, tidak fade-out)
-bergiliran tampak persis mengikuti posisi gulir. Video pembuka (Jam 1
-`prologueReveal`) tetap pudar lewat `addLosingScaleExit` bawaan (0.16) —
-JANGAN naikkan lagi opacity target itu tanpa e2e penuh; percobaan ke 0.02
-sempat memicu 2 tes goyang dan sudah dibatalkan. Mobile/reduced-motion tidak
-pernah dipin — statis dalam alur dokumen (kontrak aksesibilitas situs).
+| Progres     | Yang tampak                                                          |
+| ----------- | -------------------------------------------------------------------- |
+| 0,00 → 0,14 | Opening Screen resmi Kediri 2026 (judul, lead, dua beat, citra 2026) |
+| 0,14 → 0,38 | `stage-void` gelap + judul sinematik "Kediri: A Century of History…" |
+| 0,38 → 0,58 | Footage kota kuno (`00-prologue.mp4`) + kredit presenter sepertiga bawah |
+| 0,54 → 0,68 | Naskah era Daha di atas kanvas gelap                                 |
+| 0,62 → 0,80 | Footage kehidupan sehari-hari (`00-prologue-daha.mp4`)               |
+| 0,80 → 1,00 | Veil kota, empat garis air memipih, horizon tembaga, seam, portal 879 |
 
-**Act I diganti** (direktif Chief 2026-08-30): judul "The Land Remembers" →
-**"1,100+ Years of Kediri"**; `introCopy` jadi 3 paragraf (`ActDto.introCopy`
-kini `string | readonly string[]`, backward-compatible). **Tiket tonggak
-sejarah** (`ActMilestoneTicker`) di kepala Act I: 7 baris tanggal (1042–2024,
-melintasi SELURUH Journey) bergantian dengan efek typing per-karakter, loop
-tak berhenti, berbasis WAKTU — hanya aktif `(prefers-reduced-motion:
-no-preference) and (min-width: 48rem)`, SAMA seperti konvensi motion
-situs lainnya (mobile tidak pernah dapat motion-pin). Jangan hapus syarat
-`min-width` itu — pernah bikin e2e mobile nav-clearing gagal karena
-`min-height` ticker menggeser tinggi Act I.
+Polesan sesi ini (detail: `docs/shots/00-prologue-2026.md` §"Polesan
+2026-09-04"): seam handoff (bukan balok emas), blur judul 6/3 px, kredit
+presenter di sepertiga bawah, crop 1,09× SEMENTARA untuk menyembunyikan
+watermark render 1080p, alur statis "frame" lalu "overture".
 
-**BG "The Land Remembers" dengan citra scene 879 — PERNAH DICOBA, SALAH,
-SUDAH DIBATALKAN PENUH.** Jangan diulang: citra `01-879-first-mark.webp`
-masih dipakai scene "The First Mark" sendiri tepat di bawahnya (beda dari
-kasus "Panjalu Rises" yang boleh pinjam citra Daha karena Daha sudah pindah
-ke video). BG Act I sekarang polos (`var(--cinema-canvas)`) lagi, seperti
-act lain kecuali Panjalu Rises.
+**Layar pertama = title sequence** (direktif Chief "just a cinematic first
+visual", DECISIONS 2026-09-04 lanjutan): entrance ±2,4 s milik director
+(`intro[]` + `settleIntro`, cue negatif) — citra dari gelap dengan letterbox
+`--letterbox` yang membuka dan dorongan 1,10 → 1 pada `.stage-media` (BUKAN
+surface), lalu eyebrow → judul topeng baris → lead → beat → cue. Babak citra
+dibuat sinkron, babak naskah setelah fonts.ready. Gulir > 0,01 melompatkan ke
+akhir. Keadaan awal opacity 0 hanya di media query varian motion +
+blok `scripting: none` pengembali. Mobile/reduced tidak berubah.
 
-Catatan gate lama yang masih berlaku: Next 16 menolak dev server kedua —
-matikan dev 4320 sebelum e2e; Next dev menulis ulang `importMap.js` tanpa
-format (lint flake); `rm -rf apps/web/.next` sebelum `project-standalone
-verify`. **Flakiness e2e paralel** (baru diamati 2026-08-30): saat
-`pnpm test:e2e` dijalankan berkali-kali berturutan di mesin ini, SATU tes
-acak (beda tiap run — pernah `home leads into the journey`, `prologue stage
-beats have no local panel`, `prologue disclosure is complete immediately
-with reduced motion`) kadang gagal lalu PASS lagi di run berikutnya tanpa
-perubahan kode — kontensi 6 worker paralel + dev server cold-compile, BUKAN
-regresi. Jangan panik pada satu run merah; jalankan ulang 1-2 kali sebelum
-menyimpulkan ada bug nyata.
+- Jendela footage = `PROLOGUE_OVERTURE_WINDOWS` di `modules/motion/scenes.ts`
+  (satu sumber untuk fade dan pemutaran; pemutaran dihitung ulang dari progres).
+- Kedua render 1080p (`00-prologue.mp4` = `opening.mp4`, `00-prologue-daha.mp4`
+  = `Daha.mp4`, dikonfirmasi identik lewat metadata MP4) MASIH memuat watermark
+  sudut kanan-bawah. `05-daha-centre-of-power.mp4` (1280×720) dan `jayabaya.mp4`
+  (1504×832) BELUM diganti 1080p — padanannya `dahanasada.mp4` / `Jayabaya.mp4`.
 
-## Bukti terakhir yang benar-benar dijalankan (2026-09-03)
+### Keterbacaan paruh kedua (Babak VI–IX, `data-layout="right"`)
 
-| Perintah | Hasil |
-| --- | --- |
-| `pnpm run typecheck` | PASS, 0 error |
-| `pnpm run lint` | PASS, 0 error, 16 warning `noDescendingSpecificity` lama di `globals.css` |
-| `pnpm run test` | PASS — 7 file, 81 tes; token gate 52 contrast check, 0 raw value |
-| `pnpm test:e2e` (DB compose capsule aktif) | HEAD **71/16/17** vs sumber pra-perubahan `3a12b87` **72/15/17**; satu-satunya beda "home leads into the journey" — lulus 3/3 saat diulang terisolasi (flaky paralel). Tanpa DB: 54/33/17 vs baseline 52/35/17 |
-| Playwright manual (Chromium) | Navigasi SPA: ScrollTrigger 68 → 0 → 68; deep link 1135 lalu gulir naik: strip arsip di atasnya opacity 1; font terlambat 4 s: label Act I tidak misfire; WebKit smoke PASS; Firefox belum terpasang |
-| `pnpm run build` | PASS exit 0 (webpack, 15/15 halaman statis) — sesudah `docker compose -f infra/docker-compose.yml up -d`, `db:migrate`, `db:seed`; stack compose dibiarkan hidup |
-| `check-production-journey.mjs` / `verify-production` | PASS: 3 scene CMS, 0 marker editorial; 12 record, 0 kritis, 0 warning |
+`.stage-media-shade` untuk tata letak kanan kini cermin (berat di kanan);
+era `colonialIndustrial` memakai veil gading lebih tebal di desktop dan mobile.
+Diverifikasi tangkapan layar: sugar, 1906, 1912, people terbaca; 1958, 2024
+(era gelap, tata letak kanan) tidak berubah keterbacaannya.
 
-Sudah di-commit lokal (belum di-subtree-push): `dfc5a97` fix(journey) token/debug/
-refresh/CSS, `15c5891` feat(journey) identitas director, `4469ce9` feat(journey)
-kartu act/interlude/finale/batch, `d90aae3` docs(journey) audit + arc + handoff.
+### Framing Authority Rule 1
+
+Transform `scale(var(--frame-zoom)) translate(...)` pada `<img>` panggung
+DIPULIHKAN — tanpa itu jendela 879/921/1015/1042 tidak pernah diterapkan di
+browser dan kata "kadhiri" terbakar tampil lagi. Jendela baru:
+`1869-brantas-bridge` (sumber 1389×1132, BUKAN 3:2) dan
+`two-bridges-two-centuries` (REDO-ASSET-005/006), gate vitest
+`framing-baked-text.test.ts` kini 21 kasus. Bila sebuah jendela terasa terlalu
+besar, ubah jendelanya di `framing.ts` — jangan matikan mekanismenya.
+
+### Gate video scene
+
+`modules/motion/media-gate.ts` (baru) memiliki pemutaran `.stage-media video`
+(Daha, 1135): IntersectionObserver pada `.scene-stage` (bukan `.stage-media`
+yang dibesarkan dolly), threshold 0,25; reduced motion tidak pernah memutar;
+`autoPlay` dihapus dari `scene-media.tsx` (poster = citra scene, komposisi
+utuh tanpa JS). Cabang video act-header di `journey/page.tsx` masih `autoPlay`
+tetapi mati (tidak ada `.mp4` di `ACT_HEADER_MEDIA`).
+
+### Yang masih berlaku dari sesi sebelumnya
+
+- Jeda bukti prasasti SETELAH Scene 921, pin 320%, wipe clip-path per kartu.
+- Act I: `ActMilestoneTicker` hanya `(prefers-reduced-motion: no-preference)
+  and (min-width: 48rem)` — jangan hapus syarat `min-width`.
+- BG Act I dengan citra 879 PERNAH DICOBA, SALAH, DIBATALKAN — jangan diulang.
+- Scene 1135 memakai footage Jayabaya dengan status epistemik tercetak di
+  halaman (sosok raja rekaan) — jangan hapus kalimat itu.
+- Kartu "Panjalu Bangkit" memakai citra diam Daha.
+
+## Bukti terakhir yang benar-benar dijalankan (2026-09-04, sesi sinematik)
+
+| Perintah                                                   | Hasil                                                                 |
+| ---------------------------------------------------------- | --------------------------------------------------------------------- |
+| `npx biome check src tests e2e` (apps/web)                 | PASS — **0 error**, 24 warning CSS (`noImportantStyles`, `noDescendingSpecificity`; 4 baru dari aturan varian motion layar pertama) |
+| `npx vitest run` (apps/web)                                | PASS — **8 berkas, 92 tes** (+4 media-gate, +6 framing)               |
+| `npx tsc --project tsconfig.json` (apps/web)               | PASS, 0 error                                                         |
+| `node scripts/check-tokens.mjs`                            | PASS — 52 pemeriksaan kontras, 0 raw value                            |
+| `npx next build --webpack` (apps/web)                      | PASS, exit 0, 20 rute (dijalankan bersamaan dev 4320; dist `.next/dev` terpisah) |
+| `node scripts/check-production-journey.mjs`                | PASS — 3 scene CMS, 0 marker editorial                                |
+| Tinjauan visual browser (dev 4320): desktop 1224×1040 & 1440×900, mobile 375×812 | Seluruh section Prolog → Finale; Daha/1135 hanya berputar saat tampak; crop 921/879/1869/two-bridges tanpa teks terbakar |
+
+**Sebelum sesi ini** (laporan Opus baseline, read-only): lint **2 error**
+(`prologue-scene.tsx` noImgElement + noArrayIndexKey), token gate **4 raw hex**
+di `globals.css` — HANDOFF lama keliru mengklaim PASS.
+
+**TIDAK dijalankan / tidak dapat dijalankan:**
+
+- **Playwright e2e**: Next 16 menolak dev server kedua di 4321 selama dev 4320
+  (PID 10168, milik sesi lain) hidup; `next start` 4321 tidak setara karena
+  `/journey` di-prerender tanpa pratinjau editorial. Matikan dev 4320 dari sesi
+  pemiliknya, lalu `npx playwright test`. Catatan Opus: dari 4 kegagalan e2e
+  yang HANDOFF lama sebut "usang", hanya 1 yang terbukti usang (sudah
+  diperbaiki); `Scene 1015 Carama`, `Timeline pushState`, `Act I opening
+  transition` masih punya seluruh hook DOM-nya di `src` → kemungkinan bug
+  perilaku, bukan kontrak basi.
+- **Gate Sentra-GSAP root** (`scripts/sentra-gsap/verify.mjs`): TIDAK ADA di
+  Monorepo → **FAIL** (BOUNDARIES §5: gate yang tidak dijalankan = gagal).
+- `verify-production` (butuh urutan build → server segar), Firefox, profil GPU
+  sungguhan, reduced-motion di browser (perlu emulasi Playwright).
+- `rtk` tidak ada di PATH; `pnpm` tidak ada di PATH (pakai `corepack pnpm`).
+
+## Jebakan yang menggigit sesi ini (2026-09-04 sinematik)
+
+1. **Emulasi viewport Browser pane rusak setelah beberapa menit**: tangkapan
+   layar menjadi bidang krem polos padahal DOM sehat. Reset preset `desktop`
+   + reload memulihkannya. Pakai ukuran pane asli untuk tinjauan panjang.
+   **rAF tab latar belakang di-throttle ke 1 fps** (Browser pane dan halaman
+   Playwright yang tidak di depan): tween berbasis waktu tampak macet karena
+   lag smoothing GSAP. Verifikasi entrance dengan Playwright
+   `page.bringToFront()` (rAF 38–166 fps), jangan dari Browser pane.
+2. **Posisi section tidak bisa dihitung dari `rect.top + scrollY`** di bawah
+   ScrollSmoother (dan tidak dari rect yang dipin). Yang andal:
+   `rect.top - smoothContent.getBoundingClientRect().top` lalu `scrollTo`.
+3. **`.stage-media` dibesarkan dolly** sampai ~1,7× viewport → rasio
+   IntersectionObserver tak pernah mencapai 0,25; amati `.scene-stage`.
+4. **Token gate menolak `border-radius: 999px`** (raw radius) — pakai token
+   radius atau hilangkan.
+5. **Biome menuntut `biome-ignore noArrayIndexKey` tepat di atas atribut
+   `key`**, bukan di atas `.map(`.
+6. **Higgsfield MCP**: saldo 0 kredit, paket free → generate_image terblokir.
+7. Catatan lama yang masih berlaku: Chromium Playwright bawaan tidak
+   mendekode H.264 (pakai `channel: "chrome"`); `file://` video diblokir;
+   `rm -rf apps/web/.next` sebelum `project-standalone verify`.
 
 ## Tindakan berikutnya
 
-1. Perluas `check-production-journey.mjs` ke path statis
-   `public/journey-approved/`.
-2. Keputusan Chief atas flag F1–F5 di `docs/shots/image-manifest.md`.
-3. Record rights/provenance CMS untuk seluruh media pratinjau (termasuk
-   video) sebelum rilis publik final.
-4. Tinjauan visual independen Sentra-GSAP atas identitas per-section yang
-   baru (`docs/GSAP_AUDIT.md` §5); `npx playwright install firefox` lalu
-   smoke Firefox; Performance panel di GPU sungguhan; perbaiki/hapus tes
-   prolog usang (`data-opening-frame`, `dataset.intro`) di `smoke.spec.ts`.
+1. Keputusan Chief: (a) kalimat naskah Daha "Yang tampak berikut ini …" pada
+   alur statis; (b) grammar kredit "Present" → "Presents"; (c) render 1080p
+   tanpa watermark (lalu hapus `scale(1.09)` di `.prologue-overture-clip
+   video`); (d) padanan 1080p untuk Daha dan Jayabaya.
+2. Commit pekerjaan tiga sesi sebagai satu rantai atau dipisah — keputusan
+   Chief; sampai itu, pohon tetap kotor.
+3. Matikan dev 4320 dari sesi pemiliknya, jalankan e2e, triase tiga kegagalan
+   yang kemungkinan bug perilaku (1015 Carama, Timeline pushState, Act I
+   transition).
+4. Bila kredit Higgsfield tersedia: kandidat pengganti citra 15 (sugar —
+   grading paling jenuh) dan 12 (wajah raja frontal, flag F5); kandidat masuk
+   scratchpad/pratinjau, bukan produksi, sampai Chief menetapkan provenance.
 5. Phase 17–19 (mobile per scene, aksesibilitas manual, budget performa);
-   Phase 22 (deployment) tetap menunggu otorisasi eksplisit Chief (G02).
-6. Pertimbangkan formalisasi flakiness e2e paralel di atas — kalau makin
-   sering, mungkin perlu kurangi worker count di `playwright.config.ts` atau
-   naikkan timeout default, bukan terus rerun manual.
+   Phase 22 (deployment) menunggu otorisasi eksplisit Chief (G02).
 
 ## Publikasi (2026-08-29, otorisasi eksplisit Chief)
 
-Rantai commit kediri terbaru (termasuk `5feb6a1` — audit editorial museum +
-Scene 10) dipublikasikan lewat `git subtree split --prefix=projects/product/kediri-history
--b <branch>` lalu `CHIEF_PUSH_PROJECTS_OK=1 CHIEF_PUSH_OK=1 git push kediri
-<branch>:main`, ke `https://github.com/drferdii/Kediri-Kings-Century`
-(remote `kediri`, branch `main`, HEAD `e1a6044`, fast-forward dari
-`8c36e88`). Branch split lokal dihapus setelah push. Sebelumnya salah
-tracking sempat menunjuk `main` lokal ke remote `avery` — dibetulkan ke
-`origin/main`, tetapi **origin adalah histori terpisah (rewrite Chief
-2026-08-25, `projects/**` dibuang) — JANGAN pernah push/merge/fetch main
-lokal dari/ke `origin`** (lihat `BOUNDARIES.md` root). Publikasi kediri
-SELALU lewat remote `kediri` via subtree, tidak pernah lewat `origin`.
-Kerja sejak `dc06e31` (fix prolog video-continuation) BELUM di-subtree-push.
-
-GitHub melaporkan 5 kerentanan dependabot (3 moderate, 2 low) di
-Kediri-Kings-Century pasca-push — belum ditinjau, follow-up terpisah.
+Rantai commit kediri terbaru dipublikasikan lewat `git subtree split
+--prefix=projects/product/kediri-history -b <branch>` lalu
+`CHIEF_PUSH_PROJECTS_OK=1 CHIEF_PUSH_OK=1 git push kediri <branch>:main`, ke
+`https://github.com/drferdii/Kediri-Kings-Century` (remote `kediri`, branch
+`main`, HEAD `e1a6044`). **origin adalah histori terpisah — JANGAN pernah
+push/merge/fetch main lokal dari/ke `origin`.** Kerja sejak `dc06e31` BELUM
+di-subtree-push. GitHub melaporkan 5 kerentanan dependabot (3 moderate, 2 low)
+— belum ditinjau.
 
 ## Catatan lintas-repositori
 
-Working tree ROOT monorepo saat ini campur kerja sesi lain yang bukan milik
-capsule Kediri (avery, sentra-gsap teardown, dsb) — JANGAN tercampur dalam
-commit capsule. `/verify` skill di level root (SAFRS governance,
-`pnpm governance`/`pnpm check`) SENGAJA tidak dijalankan sesi ini atas
-konfirmasi Chief — verifikasi dilakukan lewat `pnpm verify` milik
-kediri-history sendiri, bukan governance root, supaya tidak ikut menyapu
-uncommitted diff sesi lain.
+Working tree ROOT monorepo memuat kerja sesi lain (avery, sentrabot, skill
+Codex, dsb) — JANGAN tercampur dalam commit capsule. `/verify` root SENGAJA
+tidak dijalankan; verifikasi memakai perintah milik kediri-history sendiri.

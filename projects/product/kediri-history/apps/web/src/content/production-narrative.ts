@@ -24,6 +24,32 @@ export interface FramingMedia {
   readonly continuationVideoPath?: string;
 }
 
+/**
+ * Satu babak footage di dalam pembuka Prolog. `posterPath` sengaja opsional:
+ * babak yang datang dari kanvas gelap tidak butuh poster, dan poster yang
+ * salah justru berkedip sebagai citra era lain sebelum footage-nya siap.
+ */
+export interface PrologueOvertureClip {
+  readonly videoPath: string;
+  readonly altText: string;
+}
+
+/**
+ * Pembuka Prolog (direktif Chief 2026-09-04): citra Kediri 2026 → gelap →
+ * footage kota kuno → gelap → naskah era Daha → footage kehidupan sehari-hari
+ * → gelap → pelat "KEDIRI, 2026" dan portal 879 yang sudah ada.
+ *
+ * Naskahnya tidak menambah fakta baru: ketiga kalimat disusun dari pernyataan
+ * yang sudah dipakai scene Daha (abad ke-11 dan ke-12, bentuk fisik kota
+ * belum dapat dipastikan), lalu menutup dengan pernyataan jujur bahwa yang
+ * ditonton adalah bayangan artistik, bukan rekaman peristiwa.
+ */
+export interface PrologueOverture {
+  readonly city: PrologueOvertureClip;
+  readonly life: PrologueOvertureClip;
+  readonly copy: readonly string[];
+}
+
 export interface FramingNarrative {
   readonly eyebrow: string;
   readonly title: string;
@@ -31,7 +57,12 @@ export interface FramingNarrative {
   /** Pengelompokan indeks paragraf menjadi ketukan editorial di dalam frame. */
   readonly beatGroups?: readonly (readonly number[])[];
   readonly masterLine: string;
+  readonly portal?: {
+    readonly date: string;
+    readonly label: string;
+  };
   readonly media?: FramingMedia;
+  readonly overture?: PrologueOverture;
 }
 
 /**
@@ -43,17 +74,34 @@ const FRAMING_MEDIA_2026: FramingMedia = {
   // Scene 00 lolos verifikasi crop (Redo Register); disajikan statis, tanpa
   // gerbang route pratinjau (direktif runtime 2026-08-28).
   path: "/journey-approved/00-prologue.webp",
-  // Direktif Chief 2026-08-28: halaman gelap pembuka memakai video opening;
-  // citra 00-prologue tetap poster + fallback (Finale tetap citra statis).
-  videoPath: "/journey-approved/00-prologue.mp4",
-  continuationVideoPath: "/journey-approved/00-prologue-daha.mp4",
   altText:
     "Visualisasi artistik Kediri kontemporer saat senja: jembatan di atas Brantas, lalu lintas menyala, dan kota yang hidup di kedua tepian sungai.",
-  continuationAltText:
-    "Rekonstruksi artistik Daha abad XII berdasarkan konteks sejarah; bukan representasi arkeologis definitif.",
-  label: "REKONSTRUKSI ARTISTIK · DAHA, ABAD XII",
-  labelDetail:
-    "Interpretasi visual berdasarkan konteks sejarah; bukan representasi arkeologis definitif.",
+  label: "VISUALISASI ARTISTIK · KEDIRI, 2026",
+};
+
+/*
+ * Berkas footage sengaja menunjuk aset 720p yang sudah bersih dari watermark
+ * (keputusan Chief 2026-09-04: tunggu render tanpa watermark). Isi kedua
+ * berkas identik dengan `project-video/output_1080p/opening.mp4` dan
+ * `Daha.mp4` — durasi dan adegannya sama — sehingga peningkatan ke 1080p
+ * cukup menimpa berkasnya tanpa menyentuh satu baris kode pun.
+ */
+const PROLOGUE_OVERTURE: PrologueOverture = {
+  city: {
+    videoPath: "/journey-approved/00-prologue.mp4",
+    altText:
+      "Visualisasi artistik imajiner sebuah kota kuno bercandi di tepi sungai saat fajar; wujudnya rekaan dan tidak menggambarkan tempat atau bangunan yang terdokumentasi.",
+  },
+  life: {
+    videoPath: "/journey-approved/00-prologue-daha.mp4",
+    altText:
+      "Visualisasi artistik imajiner hari biasa di sebuah permukiman Jawa kuno: pasar, gerabah, dan pekerjaan sehari-hari; adegannya rekaan, bukan rekaman peristiwa.",
+  },
+  copy: [
+    "Pada abad ke-11 dan ke-12, Daha menjadi pusat kekuasaan Panjalu.",
+    "Bentuk fisik kotanya belum dapat dipastikan sepenuhnya; nama Daha bertahan lewat teks dan nama tempat, bukan lewat kota yang masih berdiri.",
+    "Yang tampak berikut ini adalah bayangan artistik tentang hari-hari biasa di sekitarnya, bukan rekaman peristiwa.",
+  ],
 };
 
 export const PRODUCTION_PROLOGUE: FramingNarrative = {
@@ -61,11 +109,16 @@ export const PRODUCTION_PROLOGUE: FramingNarrative = {
   title: "KEDIRI, 2026",
   beatGroups: [[0], [1]],
   paragraphs: [
-    "Kediri hari ini adalah kota yang kita kenal: jalan yang ramai, pasar yang membuka pagi, kawasan industri, sekolah, rumah ibadah, dan dua tepian kota yang dipertemukan oleh jembatan di atas Brantas.",
-    "Namun kota ini menyimpan perjalanan yang jauh lebih panjang daripada bangunan yang terlihat saat ini.",
+    "Kota memiliki lebih dari satu awal. Bentang alam, permukiman, pemerintahan, dan ingatan warganya tidak lahir pada saat yang sama.",
+    "27 Juli 879 diperingati Kota Kediri sebagai awal kronologi sipilnya—bukan sebagai tanggal berdirinya pemerintahan kota modern.",
   ],
-  masterLine: "1.147 Tahun Sebelum Hari Ini",
+  masterLine: "Berapa Usia Sebuah Kota?",
+  portal: {
+    date: "879",
+    label: "Catatan pertama menunggu di balik aliran.",
+  },
   media: FRAMING_MEDIA_2026,
+  overture: PROLOGUE_OVERTURE,
 };
 
 export const PRODUCTION_FINALE: FramingNarrative = {
@@ -343,8 +396,18 @@ const ACT_2 = act(
       visualVariant: "word",
       choreographyKey: "royalConsolidation",
       imageReady: true,
+      /*
+       * Footage Jayabaya dipasang di sini atas direktif Chief 2026-09-04.
+       * Sosok raja di dalamnya REKAAN: tidak ada potret Jayabhaya yang
+       * terdokumentasi, dan status epistemik di bawah menyatakannya di
+       * halaman, bukan hanya di komentar ini. Citra prasasti tetap poster dan
+       * fallback tanpa JavaScript.
+       */
+      videoPath: "/journey-approved/jayabaya.mp4",
+      epistemicStatus:
+        "Sosok raja dalam visual adalah rekaan; tidak ada potret Jayabhaya yang terdokumentasi",
       previewAltText:
-        "Visualisasi artistik permukaan batu prasasti makro; frasa Panjalu Jayati terukir tegas di antara barisan aksara kuno.",
+        "Visualisasi artistik imajiner seorang raja bermahkota di balai batu berelief; wajah dan busananya rekaan, bukan potret Jayabhaya yang terdokumentasi.",
       masterLine: "Panjalu tampil sebagai kerajaan yang kuat.",
       paragraphs: [
         "Dari Daha, Panjalu berkembang menjadi salah satu kekuatan penting di Jawa Timur.",

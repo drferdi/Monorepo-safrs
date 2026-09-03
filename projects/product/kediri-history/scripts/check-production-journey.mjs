@@ -12,7 +12,7 @@ const htmlPath = path.resolve(
 const html = readFileSync(htmlPath, "utf8");
 
 const forbidden = [
-  "Pratinjau editorial lokal",
+  // "Pratinjau editorial lokal" dihapus: banner-nya tidak ada lagi di apps/web/src; "/api/editorial-preview/" di bawah adalah penanda editorial yang masih hidup.
   "Naskah editorial untuk peninjauan",
   "/api/editorial-preview/",
   "Before We Go Back",
