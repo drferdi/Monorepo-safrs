@@ -9,6 +9,8 @@
 
 /* ---------------------------------------------------------------- tokens */
 :root {
+  --next-font-signifier: "IBM Plex Sans", Arial, sans-serif;
+  --next-font-switzer: "IBM Plex Sans", Arial, sans-serif;
   /* Brand accent: Sentra Intelligence Blue replaces the cloned theme blue. */
   --color-primary: #5b8cff;
   --color-contrast: #5b8cff;
@@ -19,6 +21,15 @@
   --sb-base: 240ms;
   /* L5: light-only design; keep native controls and scrollbars light. */
   color-scheme: light;
+}
+
+html,
+body,
+button,
+input,
+select,
+textarea {
+  font-family: "IBM Plex Sans", Arial, sans-serif !important;
 }
 
 /* Page ground: the accent is for controls; the ground behind the painting
@@ -173,8 +184,11 @@ body,
    Switzer; a faint drop shadow keeps it legible when white content scrolls
    under the fixed header. */
 .sb-brand {
+  display: flex;
+  align-items: center;
   gap: 10px;
   color: #fff;
+  text-decoration: none;
 }
 .sb-brand__mark {
   width: 40px;
@@ -196,7 +210,86 @@ body,
   height: 48px;
   filter: none;
 }
+.sb-site-nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 10px 30px rgba(13, 17, 23, 0.12);
+  backdrop-filter: blur(24px);
+}
+.sb-site-nav__link {
+  padding: 9px 12px;
+  border-radius: 999px;
+  color: var(--sb-ink);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  transition: background-color var(--sb-fast), color var(--sb-fast);
+}
+.sb-site-nav__link:hover {
+  background: rgba(91, 140, 255, 0.12);
+}
+.sb-site-nav__link--primary,
+.sb-site-nav__link--primary:hover {
+  background: var(--color-primary);
+  color: #fff;
+}
+.sb-page-header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 29px 30px;
+}
+.sb-nav-mobile {
+  display: none !important;
+}
 @media (width < 800px) {
+  .sb-page-header {
+    padding: 20px;
+  }
+  .sb-nav {
+    display: none !important;
+  }
+  .sb-nav-mobile {
+    display: block !important;
+    position: relative;
+  }
+  .sb-nav-mobile summary {
+    cursor: pointer;
+    list-style: none;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--sb-ink);
+    padding: 10px 14px;
+  }
+  .sb-nav-mobile summary::-webkit-details-marker {
+    display: none;
+  }
+  .sb-nav-mobile nav {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    display: grid;
+    min-width: 150px;
+    overflow: hidden;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 12px 30px rgba(13, 17, 23, 0.2);
+  }
+  .sb-nav-mobile nav a {
+    padding: 11px 14px;
+    color: var(--sb-ink);
+  }
   .sb-brand__mark {
     width: 36px;
     height: 36px;
@@ -1116,6 +1209,100 @@ a.sb-enter {
 }
 .about__legal li {
   list-style: none;
+}
+
+/* Legal pages reuse the About page's blue ground, translucent surfaces and
+   reading rhythm while preserving their long-form legal copy. */
+.legal-page {
+  min-height: 100vh;
+  background-color: #228dcd;
+  background-image: linear-gradient(rgba(34, 141, 205, 0.76), rgba(34, 141, 205, 0.94)),
+    url("/assets/3b088bdb031e.webp");
+  background-position: top center;
+  background-size: cover;
+  background-attachment: fixed;
+  color: #fff;
+}
+.legal-document {
+  position: relative;
+  width: min(90vw, 760px);
+  margin: 0 auto;
+  padding: clamp(48px, 7vw, 88px) 0 clamp(64px, 9vw, 112px);
+}
+.legal-document h1 {
+  margin: 0 0 12px;
+  color: #fff;
+  font-size: clamp(42px, 6vw, 68px);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  text-align: center;
+}
+.legal-document .meta {
+  margin: 0 0 clamp(40px, 6vw, 64px);
+  color: rgba(255, 255, 255, 0.72);
+  text-align: center;
+}
+.legal-document h2,
+.legal-document h3,
+.legal-document strong {
+  color: #fff;
+}
+.legal-document h2 {
+  margin-top: clamp(48px, 7vw, 72px);
+  padding-top: 18px;
+  border-top: 3px solid rgba(255, 255, 255, 0.42);
+}
+.legal-document p,
+.legal-document li,
+.legal-document td {
+  color: rgba(255, 255, 255, 0.88);
+}
+.legal-document a {
+  color: #fff;
+  text-underline-offset: 3px;
+}
+.legal-document .lead,
+.legal-document table {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+.legal-document .lead {
+  padding: 22px 24px;
+}
+.legal-document .lead p {
+  color: #fff;
+}
+.legal-document table {
+  width: 100%;
+  padding: 8px 12px;
+}
+.legal-document th,
+.legal-document td {
+  border-bottom-color: rgba(255, 255, 255, 0.16);
+}
+.legal-document th {
+  color: rgba(255, 255, 255, 0.72);
+}
+.legal-document footer {
+  border-top-color: rgba(255, 255, 255, 0.22);
+}
+.legal-document footer a,
+.legal-document footer span {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+.legal-document footer a:hover {
+  color: #fff;
+}
+@media (width < 800px) {
+  .legal-page {
+    background-attachment: scroll;
+  }
+  .legal-document {
+    width: min(92vw, 760px);
+    padding-top: 36px;
+  }
 }
 
 /* Mascot without JavaScript: the static pages have no useMascot hook, so
