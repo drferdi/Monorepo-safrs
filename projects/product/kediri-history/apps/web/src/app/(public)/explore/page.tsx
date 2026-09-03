@@ -8,6 +8,7 @@ export const metadata = {
   title: "Explore",
   description:
     "Tiga jalan masuk ke sejarah Kediri: kronologi, tempat, dan tema yang menyambung zaman.",
+  alternates: { canonical: "/explore" },
 };
 
 export default function ExplorePage(): ReactElement {

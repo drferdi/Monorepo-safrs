@@ -1,1 +1,0 @@
-copy file per file, paste ke components/. Semua pakai useEffect + gsap.context — cleanup otomatis. Siap import ke 14 scene.

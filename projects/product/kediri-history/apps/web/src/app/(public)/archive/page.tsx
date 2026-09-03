@@ -17,6 +17,7 @@ export const metadata = {
   title: "Arsip",
   description:
     "Peristiwa, orang, tempat, objek, dan sumber sejarah Kediri, lengkap dengan bukti dan batas setiap bukti.",
+  alternates: { canonical: "/archive" },
 };
 
 export default async function ArchivePage({

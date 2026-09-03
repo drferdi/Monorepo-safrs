@@ -12,6 +12,11 @@ import type React from "react";
 
 import "./globals.css";
 
+const SITE_URL = new URL("https://kediri.sentrahai.com");
+const SITE_NAME = "Kediri Digital Heritage Experience";
+const SITE_DESCRIPTION =
+  "Perjalanan sinematik dan arsip sejarah Kediri dari 879 hingga 2026, dibangun dengan klaim yang dapat ditelusuri.";
+
 /**
  * Tiga peran tipografi, bukan tiga selera (Bible 04 bagian 7):
  *   - Newsreader membawa suara naratif dan pernyataan historis dengan optical
@@ -82,12 +87,37 @@ const javanese = Noto_Sans_Javanese({
 });
 
 export const metadata: Metadata = {
+  metadataBase: SITE_URL,
   title: {
-    default: "Kediri — A Living Civilization",
+    default: SITE_NAME,
     template: "%s · Kediri",
   },
-  description:
-    "Pengalaman sejarah resmi Kota Kediri, 879 hingga 2026: perjalanan sinematik dan arsip sejarah yang dapat ditelusuri.",
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  openGraph: {
+    type: "website",
+    locale: "id_ID",
+    url: "/",
+    siteName: SITE_NAME,
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: "/journey-approved/00-prologue.webp",
+        alt: "Kediri Digital Heritage Experience",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_NAME,
+    description: SITE_DESCRIPTION,
+    images: ["/journey-approved/00-prologue.webp"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 /**

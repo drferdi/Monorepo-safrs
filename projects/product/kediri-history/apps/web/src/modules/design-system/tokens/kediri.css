@@ -1,15 +1,14 @@
 /*
  * Lapisan token Kediri.
  *
- * Sumber: docs/bibles/04-visual-design-art-direction-bible.md. Nilai di sini
- * dicerminkan di kediri.json supaya scripts/check-tokens.mjs dapat MENGUKUR
+ * Nilai di sini dicerminkan di kediri.json supaya scripts/check-tokens.mjs dapat MENGUKUR
  * kontras setiap pasangan semantik, bukan mempercayainya.
  *
  * Dua dunia, bukan satu tema gelap dan satu terang:
  *   - READING  : Arsip, Explore, Sumber. Terang, dokumenter, tenang.
  *   - CINEMA   : Journey. Gelap, sinematik.
- * Bible 04 bagian 13: kegelapan harus bermakna. Situs menjadi lebih terang
- * saat mendekati 2026, dan permukaan dokumenter memang terang.
+ * Kegelapan harus bermakna. Situs menjadi lebih terang saat mendekati 2026,
+ * dan permukaan dokumenter memang terang.
  */
 
 :root {

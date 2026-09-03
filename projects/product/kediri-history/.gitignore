@@ -11,6 +11,19 @@ test-results/
 !.env.example
 .turbo/
 
+# State kerja AI dan automation bersifat lokal dan tidak ikut rilis.
+.agents/
+.claude/
+.playwright-cli/
+.playwright-mcp/
+.sentra-gsap/
+.zed-*.log
+
+# Render sumber dan cadangan tidak dipublikasikan.
+project-video/backup/
+project-video/output/
+project-video/output_1080p/
+
 # Dihasilkan ulang oleh `next dev` setiap kali dijalankan (lihat
 # node_modules/next/dist/server/lib/generate-agent-files.js) — bukan sumber kanonik.
 apps/*/AGENTS.md

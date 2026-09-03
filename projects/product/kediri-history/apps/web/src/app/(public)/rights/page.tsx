@@ -7,6 +7,7 @@ export const metadata = {
   title: "Hak dan kredit",
   description:
     "Bagaimana citra sejarah diperoleh, diklasifikasikan, dan dikreditkan.",
+  alternates: { canonical: "/rights" },
 };
 
 export default function RightsPage(): ReactElement {

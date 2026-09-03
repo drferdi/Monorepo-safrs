@@ -8,6 +8,7 @@ export const metadata = {
   title: "Tentang",
   description:
     "Tentang proyek sejarah digital Kota Kediri: tujuan, cakupan, dan cara kerjanya.",
+  alternates: { canonical: "/about" },
 };
 
 export default function AboutPage(): ReactElement {

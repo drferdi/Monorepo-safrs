@@ -7,6 +7,7 @@ export const metadata = {
   title: "Metodologi",
   description:
     "Bagaimana klaim sejarah di situs ini dinilai, diklasifikasikan, ditinjau, dan diterbitkan.",
+  alternates: { canonical: "/methodology" },
 };
 
 export default function MethodologyPage(): ReactElement {

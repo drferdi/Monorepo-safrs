@@ -2994,10 +2994,9 @@ p {
  * lagi digerbang `[data-motion-ready="true"]`. Menunggu atribut yang ditulis
  * JS setelah hidrasi berarti cat pertama merender tumpukan vertikal penuh
  * (tinggi natural), lalu menyusut ke satu sel begitu GSAP mount — sebuah
- * lompatan tata letak nyata (CLS terukur 0,163 di Chromium 1024×768,
- * `.sentra-gsap/reports/browser-qa.json`) karena race antara cat dan JS.
+ * lompatan tata letak saat hidrasi karena race antara cat dan JS.
  * `@media (scripting: none)` di bawah mengevaluasi kemampuan peramban saat
- * CSS diuraikan, tanpa race — baseline tanpa-JavaScript (UX Bible bagian 7)
+ * CSS diuraikan, tanpa race — baseline tanpa-JavaScript
  * kini tercapai TANPA membuat pengguna berskrip menanggung lompatan.
  */
 .stage-passages {

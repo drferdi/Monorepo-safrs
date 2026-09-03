@@ -12,10 +12,8 @@
 
 ## Why a snapshot and not a dependency
 
-Root `AGENTS.md` requires every rendered surface to use approved Sentra design tokens, and the
-standalone-capsule contract forbids this capsule from resolving `packages/token` or any other root
-workspace package. The sanctioned resolution is a capsule-local snapshot carrying version and
-provenance, which is what this directory is.
+Every rendered surface uses approved Sentra design tokens. The capsule-local snapshot keeps the
+project standalone without resolving an external workspace package.
 
 ## Rules
 
@@ -28,11 +26,8 @@ provenance, which is what this directory is.
 
 ## Kediri era palette
 
-The era colour script in `docs/bibles/04-visual-design-art-direction-bible.md` (Kediri Black
-`#0C0D0C`, River Deep, Civic Green, Civic Gold, Parchment, Iron, Copper, and the per-era ramps)
-is **not** yet represented here. It will be added as a Kediri layer inside this directory when the
-visual system is implemented, so that raw values still appear nowhere else. Phase 1 ships only the
-Sentra foundation.
+The Kediri layer defines the cinematic palette and per-era ramps inside this directory, so raw
+values remain local to the token contract.
 
 ## Updating
 

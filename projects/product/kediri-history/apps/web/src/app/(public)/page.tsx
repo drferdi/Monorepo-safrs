@@ -12,9 +12,10 @@ import { SiteNav } from "../../components/site-nav";
  * tidak ada carousel berita, tidak ada sambutan wajib.
  */
 export const metadata = {
-  title: "Kediri — A Living Civilization",
+  title: "Kediri Digital Heritage Experience — A Living Civilization",
   description:
     "Kerajaan berganti. Rezim berganti. Industri tumbuh. Brantas terus mengalir. Kediri bertahan. 879 hingga 2026.",
+  alternates: { canonical: "/" },
 };
 
 export default function HomePage(): ReactElement {

@@ -16,6 +16,7 @@ export const metadata = {
   title: "Tempat",
   description:
     "Sungai, jembatan, situs, dan bangunan tempat sejarah Kediri masih dapat dikunjungi.",
+  alternates: { canonical: "/explore/places" },
 };
 
 export default async function PlacesPage(): Promise<ReactElement> {

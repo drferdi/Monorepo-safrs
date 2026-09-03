@@ -13,6 +13,7 @@ export const metadata = {
   title: "Sumber",
   description:
     "Prasasti, manuskrip, arsip, catatan resmi, dan penelitian yang menopang sejarah Kediri.",
+  alternates: { canonical: "/sources" },
 };
 
 export default async function SourcesPage(): Promise<ReactElement> {

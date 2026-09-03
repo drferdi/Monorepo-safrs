@@ -7,6 +7,7 @@ export const metadata = {
   title: "Aksesibilitas",
   description:
     "Komitmen aksesibilitas situs sejarah Kediri, termasuk reduced motion dan operasi keyboard penuh.",
+  alternates: { canonical: "/accessibility" },
 };
 
 export default function AccessibilityPage(): ReactElement {

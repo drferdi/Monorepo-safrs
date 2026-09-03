@@ -1,5 +1,5 @@
 {
-  "$comment": "Palet Kediri dari docs/bibles/04-visual-design-art-direction-bible.md. Berkas ini machine-readable supaya scripts/check-tokens.mjs dapat MENGUKUR kontras pasangan semantik, bukan mempercayainya. Nilai mentah hanya boleh ada di direktori token ini.",
+  "$comment": "Palet Kediri. Berkas ini machine-readable supaya scripts/check-tokens.mjs dapat MENGUKUR kontras pasangan semantik, bukan mempercayainya. Nilai mentah hanya boleh ada di direktori token ini.",
   "primitive": {
     "--kediri-black": {
       "value": "#0C0D0C",

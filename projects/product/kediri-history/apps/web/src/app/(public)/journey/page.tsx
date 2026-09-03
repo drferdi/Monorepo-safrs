@@ -87,6 +87,7 @@ export const metadata = {
   title: "Journey",
   description:
     "Perjalanan sejarah Kediri dari 879 hingga 2026, satu halaman berkelanjutan dengan tautan dalam yang stabil untuk setiap masa.",
+  alternates: { canonical: "/journey" },
 };
 
 export default async function JourneyPage(): Promise<ReactElement> {
@@ -94,8 +95,7 @@ export default async function JourneyPage(): Promise<ReactElement> {
   // Naskah penuh adalah ruang kerja desain lokal, bukan shortcut publikasi.
   // Build produksi hanya merender scene yang sudah lolos CMS beserta rantai
   // bukti dan tata kelola medianya — kecuali `SHOW_EDITORIAL_PREVIEW=true`
-  // diset eksplisit, saklar yang hanya menyala atas otorisasi Chief
-  // in-session (lihat DECISIONS.md dan route editorial-preview).
+  // diset eksplisit untuk lingkungan editorial.
   const editorialPreview =
     process.env.NODE_ENV !== "production" ||
     process.env.SHOW_EDITORIAL_PREVIEW === "true";

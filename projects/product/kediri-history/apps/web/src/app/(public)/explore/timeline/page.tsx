@@ -16,6 +16,7 @@ export const metadata = {
   title: "Kronologi",
   description:
     "Kronologi sejarah Kediri yang dapat ditelusuri, dari 879 hingga hari ini.",
+  alternates: { canonical: "/explore/timeline" },
 };
 
 export default async function TimelinePage(): Promise<ReactElement> {

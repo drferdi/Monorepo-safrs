@@ -1,6 +1,0 @@
-[     449ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
-[     499ms] [LOG] [HMR] connected @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
-[     589ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4320/favicon.ico:0
-[    1612ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
-[    1624ms] [LOG] [HMR] connected @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_0cict2t._.js:776
-[  124299ms] [ERROR] WebSocket connection to 'ws://127.0.0.1:4320/_next/hmr?id=OM0lZ4FlFZxWD0parz1x6' failed: Error in connection establishment: net::ERR_CONNECTION_REFUSED @ http://127.0.0.1:4320/_next/static/chunks/00c9_next_dist_client_1qio958._.js:16256

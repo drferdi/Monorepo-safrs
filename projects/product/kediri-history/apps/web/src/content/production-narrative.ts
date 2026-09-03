@@ -80,11 +80,9 @@ const FRAMING_MEDIA_2026: FramingMedia = {
 };
 
 /*
- * Berkas footage sengaja menunjuk aset 720p yang sudah bersih dari watermark
- * (keputusan Chief 2026-09-04: tunggu render tanpa watermark). Isi kedua
- * berkas identik dengan `project-video/output_1080p/opening.mp4` dan
- * `Daha.mp4` — durasi dan adegannya sama — sehingga peningkatan ke 1080p
- * cukup menimpa berkasnya tanpa menyentuh satu baris kode pun.
+ * Berkas footage menunjuk aset publik yang sudah bersih dari watermark.
+ * Peningkatan resolusi cukup mengganti berkas publik pada path yang sama,
+ * tanpa menyentuh kode naratif.
  */
 const PROLOGUE_OVERTURE: PrologueOverture = {
   city: {
