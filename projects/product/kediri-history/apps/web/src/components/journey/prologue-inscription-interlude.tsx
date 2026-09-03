@@ -11,6 +11,7 @@ import {
   INSCRIPTION_INTERLUDE_OUTRO,
 } from "../../content/prologue-interlude";
 import {
+  debugMarkers,
   gsap,
   MOTION,
   registerGsap,
@@ -25,6 +26,15 @@ import {
  * di-scrub LANGSUNG oleh ScrollTrigger (bukan di-trigger lalu bermain sendiri):
  * enam target reveal (label+pembuka, empat kartu bukti, penutup) bergiliran
  * tampak persis mengikuti posisi gulir — maju menyingkap, mundur menyembunyikan.
+ * Scrub adalah pilihan yang disengaja: bukti diletakkan pada tempo pembaca.
+ *
+ * Identitas gerak (audit 2026-09-03): tiap kartu bukti masuk lewat SAPUAN
+ * CLIP-PATH dari bawah — batu demi batu diletakkan — lalu pergi lewat fade
+ * naik. Ini satu-satunya section yang memakai wipe sebagai entrance utama,
+ * berbeda dari kredit Prolog (blur) sebelumnya dan topeng baris kartu judul
+ * Babak I sesudahnya. Pin dipendekkan 550% → 420% supaya kanvas hitam tidak
+ * menyisakan gulir kosong (§ G13 audit).
+ *
  * Video pembuka meredup lewat tweak `prologueReveal` di `scenes.ts` (Jam 1
  * shot itu sendiri), bukan di sini — bidikan ini hanya mengurus panggung
  * gelapnya sendiri.
@@ -32,10 +42,6 @@ import {
  * Mobile dan reduced-motion tidak pernah dipin/di-scrub: seluruh konten
  * tampak statis dalam alur dokumen, konsisten dengan kontrak aksesibilitas
  * situs ("keadaan baca adalah DOM hasil server-render").
- *
- * Video lanjutan sebagai reveal terakhir SUDAH DIBUANG (revisi Chief
- * 2026-08-30) — kalimat penutup kembali jadi beat terakhir, tertahan sampai
- * bidikan berakhir.
  */
 export function PrologueInscriptionInterlude(): ReactElement {
   const stageRef = useRef<HTMLDivElement>(null);
@@ -60,18 +66,28 @@ export function PrologueInscriptionInterlude(): ReactElement {
           );
           if (targets.length === 0) return undefined;
 
-          gsap.set(targets, { opacity: 0, y: MOTION.read.y });
+          gsap.set(targets, {
+            opacity: 0,
+            y: MOTION.read.y,
+            clipPath: "inset(100% 0 0 0)",
+          });
 
           const timeline = gsap.timeline({ paused: true });
           const slot = 1 / targets.length;
           targets.forEach((target, index) => {
             const start = index * slot;
-            const fadeIn = slot * 0.32;
+            const wipe = slot * 0.34;
             const hold = slot * 0.38;
-            const fadeOut = slot * 0.22;
+            const fadeOut = slot * 0.2;
             timeline.to(
               target,
-              { opacity: 1, y: 0, ease: MOTION.scrubEase, duration: fadeIn },
+              {
+                opacity: 1,
+                y: 0,
+                clipPath: "inset(0% 0 0 0)",
+                ease: MOTION.scrubEase,
+                duration: wipe,
+              },
               start,
             );
             // Beat terakhir tetap terbaca sampai bidikan berakhir — tidak pergi.
@@ -84,7 +100,7 @@ export function PrologueInscriptionInterlude(): ReactElement {
                   ease: MOTION.scrubEase,
                   duration: fadeOut,
                 },
-                start + fadeIn + hold,
+                start + wipe + hold,
               );
             }
           });
@@ -92,11 +108,12 @@ export function PrologueInscriptionInterlude(): ReactElement {
           const trigger = ScrollTrigger.create({
             trigger: stage,
             start: "top top",
-            end: "+=550%",
+            end: "+=420%",
             pin: true,
             pinSpacing: true,
             scrub: 0.5,
             invalidateOnRefresh: true,
+            markers: debugMarkers(),
             animation: timeline,
           });
 

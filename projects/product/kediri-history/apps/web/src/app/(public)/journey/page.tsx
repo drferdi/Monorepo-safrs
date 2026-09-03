@@ -1,9 +1,13 @@
 import Link from "next/link";
 import type { ReactElement } from "react";
-import { ActHeaderReveal } from "../../../components/journey/act-header-reveal";
+import {
+  type ActHeaderMode,
+  ActHeaderReveal,
+} from "../../../components/journey/act-header-reveal";
 import { ActMilestoneTicker } from "../../../components/journey/act-milestone-ticker";
 import { BrantasVisualThread } from "../../../components/journey/brantas-visual-thread";
 import { DeepLinkLanding } from "../../../components/journey/deep-link-landing";
+import { FinaleMotion } from "../../../components/journey/finale-motion";
 import {
   JourneyTimeline,
   type TimelineEntry,
@@ -14,6 +18,7 @@ import {
   FramingStage,
   PrologueScene,
 } from "../../../components/journey/prologue-scene";
+import { ReadoutBatch } from "../../../components/journey/readout-batch";
 import { SceneOpeningAddress } from "../../../components/journey/scene-opening-address";
 import { SceneSection } from "../../../components/journey/scene-section";
 import { SiteFooter } from "../../../components/site-footer";
@@ -47,6 +52,22 @@ const ACT_HEADER_MEDIA: Readonly<Record<string, string>> = {
   "the-land-remembers": "/journey-approved/jayabaya.mp4",
   "panjalu-rises": "/api/editorial-preview/05-daha-centre-of-power.webp",
 };
+
+/**
+ * Mode kartu judul per act (audit 2026-09-03). Semua act kini bergerak;
+ * identitasnya berbeda supaya tidak ada dua kartu berturut-turut yang sama:
+ *   - Babak I: `card` (media dolly + topeng baris; handoff ke sambutan pembuka);
+ *   - act bermedia lain: `wipe` (tirai clip-path);
+ *   - Babak III (teks panjang tanpa media): `scrubWords` (sorot kata mengikuti gulir);
+ *   - selebihnya: `card`.
+ */
+function actHeaderMode(slug: string, preview: boolean): ActHeaderMode {
+  if (slug === "the-throne-breaks") return "scrubWords";
+  if (preview && ACT_HEADER_MEDIA[slug] && slug !== "the-land-remembers") {
+    return "wipe";
+  }
+  return "card";
+}
 
 export const metadata = {
   title: "Journey",
@@ -170,9 +191,8 @@ export default async function JourneyPage(): Promise<ReactElement> {
                   }
                 >
                   <ActHeaderReveal
-                    enabled={
-                      editorialPreview && act.slug === "the-land-remembers"
-                    }
+                    enabled
+                    mode={actHeaderMode(act.slug, editorialPreview)}
                   >
                     {editorialPreview && ACT_HEADER_MEDIA[act.slug] ? (
                       <span className="act-header-media" aria-hidden="true">
@@ -232,40 +252,46 @@ export default async function JourneyPage(): Promise<ReactElement> {
             ))}
 
             {editorialPreview ? (
-              <section
-                className="journey-finale"
-                aria-labelledby="journey-finale"
-              >
-                <div className="finale-frame">
-                  {PRODUCTION_FINALE.media ? (
-                    <FramingStage
-                      media={PRODUCTION_FINALE.media}
-                      framing="finale"
-                    />
-                  ) : null}
-                  <p className="eyebrow">{PRODUCTION_FINALE.eyebrow}</p>
-                  <h2 id="journey-finale" className="title-scene">
-                    {PRODUCTION_FINALE.title}
-                  </h2>
-                  <p className="master-line">{PRODUCTION_FINALE.masterLine}</p>
-                  <p className="journey-visual-label">Visualisasi artistik</p>
-                </div>
-                <div className="finale-readout">
-                  <div className="narrative-stack">
-                    {PRODUCTION_FINALE.paragraphs.map((paragraph) => (
-                      <p key={paragraph}>{paragraph}</p>
-                    ))}
+              <FinaleMotion>
+                <section
+                  className="journey-finale"
+                  aria-labelledby="journey-finale"
+                >
+                  <div className="finale-frame">
+                    {PRODUCTION_FINALE.media ? (
+                      <FramingStage
+                        media={PRODUCTION_FINALE.media}
+                        framing="finale"
+                      />
+                    ) : null}
+                    <p className="eyebrow">{PRODUCTION_FINALE.eyebrow}</p>
+                    <h2 id="journey-finale" className="title-scene">
+                      {PRODUCTION_FINALE.title}
+                    </h2>
+                    <p className="master-line">
+                      {PRODUCTION_FINALE.masterLine}
+                    </p>
+                    <p className="journey-visual-label">Visualisasi artistik</p>
                   </div>
-                  <div className="finale-coda">
-                    <p>Bab berikutnya belum memiliki tanggal.</p>
-                    <p>Kediri</p>
-                    <p>Djojo ing Bojo</p>
-                    <p>Kota ini terus berlanjut.</p>
+                  <div className="finale-readout">
+                    <div className="narrative-stack">
+                      {PRODUCTION_FINALE.paragraphs.map((paragraph) => (
+                        <p key={paragraph}>{paragraph}</p>
+                      ))}
+                    </div>
+                    <div className="finale-coda">
+                      <p>Bab berikutnya belum memiliki tanggal.</p>
+                      <p>Kediri</p>
+                      <p>Djojo ing Bojo</p>
+                      <p>Kota ini terus berlanjut.</p>
+                    </div>
                   </div>
-                </div>
-              </section>
+                </section>
+              </FinaleMotion>
             ) : null}
           </main>
+          {/* Entrance strip arsip (26×) lewat ScrollTrigger.batch, satu pemilik. */}
+          <ReadoutBatch />
 
           <SiteFooter />
         </div>
