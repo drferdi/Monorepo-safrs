@@ -4,12 +4,8 @@
 
 <img src="https://i.ibb.co.com/0pcrZTSv/Chat-GPT-Image-Sep-4-2026-06-29-17-AM-removebg-preview.png" alt="Kediri — A Living Civilization" width="150" />
 <br />
-<b>dr. Ferdi Iskandar</b><br />
-Lead Architect
-<br />
-<a href="https://ferdiiskandar.com">
-  <img src="https://img.shields.io/badge/FERDIISKANDAR.COM-0D1117?style=for-the-badge&logo=vercel&logoColor=white" alt="Official website" />
-</a>
+<b>KEDIRI</b><br />
+Digital Heritage Experience
 <br />
 <img src="https://img.shields.io/badge/KEDIRI%20INDONESIA-22D3EE?style=flat-square" alt="Kediri, Indonesia" />
 <img src="https://img.shields.io/badge/RELEASE-FIRST%20PUBLIC%20EDITION-5B8CFF?style=flat-square" alt="First public edition" />
