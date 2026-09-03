@@ -259,8 +259,22 @@ E2E comparison against the pre-change baseline run in the same environment
 
 | Run | Passed | Failed | Skipped |
 | --- | --- | --- | --- |
-| Baseline (before any change) | 52 | 35 | 17 |
-| After | 54 | 33 | 17 |
+| Baseline (before any change), no database | 52 | 35 | 17 |
+| After, no database | 54 | 33 | 17 |
+| Pre-change source (`3a12b87`, checked out temporarily), capsule Postgres up | 72 | 15 | 17 |
+| After, capsule Postgres up | 71 | 16 | 17 |
+
+With the database up, the only test that differs between pre-change source
+and HEAD is "home leads into the journey" (desktop). Rerun in isolation on
+HEAD three times: 3/3 passed — parallel-worker flakiness already documented
+in `.agents/HANDOFF.md`, not a regression. The 15 shared failures are the
+stale prologue contracts (G12) and pre-existing early-scene geometry tests.
+
+Production build and gates (run with the capsule compose stack up, after
+`db:migrate` + `db:seed`): `pnpm run build` exit 0 (webpack compiled, 15/15
+static pages); `check-production-journey.mjs` passed (3 CMS scenes, 0
+editorial markers); `verify-production` passed (12 records, 0 critical, 0
+warnings).
 
 No test that passed in the baseline fails after the change. Two tests moved
 from failing to passing: "home leads into the journey" (desktop; a known

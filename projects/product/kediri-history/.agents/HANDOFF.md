@@ -95,9 +95,10 @@ menyimpulkan ada bug nyata.
 | `pnpm run typecheck` | PASS, 0 error |
 | `pnpm run lint` | PASS, 0 error, 16 warning `noDescendingSpecificity` lama di `globals.css` |
 | `pnpm run test` | PASS — 7 file, 81 tes; token gate 52 contrast check, 0 raw value |
-| `pnpm test:e2e` (tanpa DB CMS) | **54/33/17** setelah perubahan vs baseline **52/35/17** sebelum perubahan; tidak ada tes yang baru gagal |
+| `pnpm test:e2e` (DB compose capsule aktif) | HEAD **71/16/17** vs sumber pra-perubahan `3a12b87` **72/15/17**; satu-satunya beda "home leads into the journey" — lulus 3/3 saat diulang terisolasi (flaky paralel). Tanpa DB: 54/33/17 vs baseline 52/35/17 |
 | Playwright manual (Chromium) | Navigasi SPA: ScrollTrigger 68 → 0 → 68; deep link 1135 lalu gulir naik: strip arsip di atasnya opacity 1; font terlambat 4 s: label Act I tidak misfire; WebKit smoke PASS; Firefox belum terpasang |
-| `pnpm run build` / `pnpm verify` | TIDAK dijalankan sesi ini (dev server aktif sepanjang sesi — jangan build saat server hidup) |
+| `pnpm run build` | PASS exit 0 (webpack, 15/15 halaman statis) — sesudah `docker compose -f infra/docker-compose.yml up -d`, `db:migrate`, `db:seed`; stack compose dibiarkan hidup |
+| `check-production-journey.mjs` / `verify-production` | PASS: 3 scene CMS, 0 marker editorial; 12 record, 0 kritis, 0 warning |
 
 Sudah di-commit lokal (belum di-subtree-push): `dfc5a97` fix(journey) token/debug/
 refresh/CSS, `15c5891` feat(journey) identitas director, `4469ce9` feat(journey)
