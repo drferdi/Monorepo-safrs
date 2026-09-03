@@ -7,10 +7,16 @@ Last updated: 2026-09-04 (sesi sinematik — Fable 5.1 arah kreatif, tiga lane O
 
 ---
 
-## Peringatan pertama: pohon kerja BELUM di-commit dan bercampur TIGA sesi
+## Status commit
 
-Working tree capsule memuat pekerjaan tiga sesi pada berkas yang sama, belum
-satu pun di-commit:
+Pekerjaan tiga sesi di bawah ini DI-COMMIT sebagai satu rantai atas perintah
+Chief (2026-09-04): `af80476` "feat(journey): cinematic first visual, light-era
+legibility, framing restored, gated video". Sengaja TIDAK ikut: dua mp3 tak
+terpakai di `public/journey-approved/`, `project-video/backup|output|output_1080p`
+(render sumber), log Zed, dan `.playwright-mcp/`. Belum di-subtree-push ke
+remote `kediri` (menunggu perintah Chief).
+
+Tiga sesi yang tergabung di commit itu, pada berkas yang sama:
 
 1. **Sesi 2026-09-03 sore**: Prolog kamera prosedural, jeda prasasti pindah
    setelah 921, `prologue-visual-label.tsx` dihapus, dan — TANPA keputusan
@@ -21,8 +27,7 @@ satu pun di-commit:
    dipulihkan + 1869/two-bridges, gate video, polesan Prolog, baseline hijau.
 
 **Jangan `git stash` per-path** untuk mencari baseline — hasilnya pohon
-Frankenstein (terbukti 2026-09-04 pagi). Bandingkan selalu terhadap commit
-`8cd0af3`, bukan stash. Commit menunggu perintah Chief (BOUNDARIES §4).
+Frankenstein (terbukti 2026-09-04 pagi). Baseline kini `af80476`.
 
 ## Keadaan sekarang
 
@@ -157,8 +162,8 @@ di `globals.css` — HANDOFF lama keliru mengklaim PASS.
    alur statis; (b) grammar kredit "Present" → "Presents"; (c) render 1080p
    tanpa watermark (lalu hapus `scale(1.09)` di `.prologue-overture-clip
    video`); (d) padanan 1080p untuk Daha dan Jayabaya.
-2. Commit pekerjaan tiga sesi sebagai satu rantai atau dipisah — keputusan
-   Chief; sampai itu, pohon tetap kotor.
+2. Subtree-push `af80476` ke remote `kediri` bila Chief memerintahkan
+   (lihat bagian Publikasi); JANGAN ke `origin`.
 3. Matikan dev 4320 dari sesi pemiliknya, jalankan e2e, triase tiga kegagalan
    yang kemungkinan bug perilaku (1015 Carama, Timeline pushState, Act I
    transition).
