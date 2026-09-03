@@ -22,6 +22,14 @@
   /* L5: light-only design; keep native controls and scrollbars light. */
   color-scheme: light;
 }
+/* Override captured Signifier/Switzer module classes so the variables
+   that the compiled stack emits on <html> point at IBM Plex Sans too.
+   polish.css loads last so this cascade beats the captured definitions. */
+.switcher_998928fd-module__HMAM_a__variable,
+.signifier_6dd7a78e-module__Qm36qW__variable {
+  --next-font-switzer: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --next-font-signifier: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+}
 
 html,
 body,
