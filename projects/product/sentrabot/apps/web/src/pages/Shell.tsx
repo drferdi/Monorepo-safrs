@@ -1778,6 +1778,10 @@ export function ShellPage() {
         if (permissionRequest) void permissionRequest.then(flushPendingBrowserNotifications);
       }
       const trimmed = plan.trimmed;
+      // One nonce per composed message: the server dedupes on
+      // (threadId, clientNonce), so an in-flight retry of this same send
+      // replays the original message instead of creating a second run.
+      const messageNonce = crypto.randomUUID();
       setSending(true);
       setSendError(null);
       try {
@@ -1831,6 +1835,7 @@ export function ShellPage() {
             mentions: plan.mentionPayload.length ? plan.mentionPayload : undefined,
             artifactIds: artifactIds.length ? artifactIds : undefined,
             replyToMessageId: reroutedToGroup ? undefined : activeReplyTarget?.id,
+            clientNonce: messageNonce,
           });
         } else if (botTarget) {
           await rpc.threads.send({
@@ -1839,6 +1844,7 @@ export function ShellPage() {
             mentions: plan.mentionPayload.length ? plan.mentionPayload : undefined,
             artifactIds: artifactIds.length ? artifactIds : undefined,
             replyToMessageId: activeReplyTarget?.id,
+            clientNonce: messageNonce,
           });
         }
         setReplyTarget(null);
