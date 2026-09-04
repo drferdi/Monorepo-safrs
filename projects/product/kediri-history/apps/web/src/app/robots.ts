@@ -1,7 +1,12 @@
 import type { MetadataRoute } from "next";
 
-const SITE_URL = "https://kediri.sentrahai.com";
+import { SITE_URL } from "../site";
 
+/**
+ * Konten sejarah publik terbuka penuh untuk crawler. Yang ditutup hanya
+ * permukaan yang memang bukan halaman publik: admin Payload dan route API
+ * (termasuk jalur pratinjau editorial, yang berada di bawah `/api/`).
+ */
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {

@@ -25,7 +25,11 @@ export async function generateMetadata({
   const { slug } = await params;
   const event = await getEventBySlug(slug);
   if (!event) return { title: "Peristiwa tidak ditemukan" };
-  return { title: event.name, description: event.summary };
+  return {
+    title: event.name,
+    description: event.summary,
+    alternates: { canonical: `/archive/events/${event.slug}` },
+  };
 }
 
 export default async function EventPage({

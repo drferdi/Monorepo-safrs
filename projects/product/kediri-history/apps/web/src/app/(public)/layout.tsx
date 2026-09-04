@@ -10,12 +10,15 @@ import {
 } from "next/font/google";
 import type React from "react";
 
+import {
+  OPEN_GRAPH_BASE,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TITLE,
+  SITE_URL,
+  TWITTER_BASE,
+} from "../../site";
 import "./globals.css";
-
-const SITE_URL = new URL("https://kediri.sentrahai.com");
-const SITE_NAME = "Kediri Digital Heritage Experience";
-const SITE_DESCRIPTION =
-  "Perjalanan sinematik dan arsip sejarah Kediri dari 879 hingga 2026, dibangun dengan klaim yang dapat ditelusuri.";
 
 /**
  * Tiga peran tipografi, bukan tiga selera (Bible 04 bagian 7):
@@ -86,33 +89,45 @@ const javanese = Noto_Sans_Javanese({
   display: "swap",
 });
 
+/**
+ * Metadata dasar seluruh rute publik.
+ *
+ * `metadataBase` membuat setiap jalur relatif di bawah ini — kanonis, citra
+ * Open Graph, citra Twitter — diselesaikan menjadi URL absolut oleh Next,
+ * sehingga tidak ada URL produksi yang ditulis ulang per halaman.
+ *
+ * Judul dokumen memakai `SITE_TITLE`; `siteName` tetap nama penerbit. Template
+ * sengaja pendek ("%s · Kediri") supaya judul catatan arsip yang panjang tidak
+ * terpotong mesin pencari; halaman yang butuh judul penuh menyatakannya sendiri
+ * lewat `title.absolute`.
+ *
+ * TIDAK ada `alternates.canonical` di sini, dan itu disengaja: kanonis
+ * diwariskan ke setiap rute keturunan, sehingga halaman baru yang lupa
+ * menyatakan kanonisnya akan diam-diam mengaku sebagai beranda. Setiap
+ * halaman publik menyatakan kanonisnya sendiri, dan `seo-routes.test.ts`
+ * menjaga janji itu.
+ *
+ * Charset dan viewport TIDAK ditulis di sini: Next 16 memancarkannya secara
+ * bawaan, dan menduplikasinya justru menghasilkan dua tag yang sama.
+ */
 export const metadata: Metadata = {
-  metadataBase: SITE_URL,
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: SITE_NAME,
+    default: SITE_TITLE,
     template: "%s · Kediri",
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
   openGraph: {
-    type: "website",
-    locale: "id_ID",
+    ...OPEN_GRAPH_BASE,
     url: "/",
-    siteName: SITE_NAME,
-    title: SITE_NAME,
+    title: SITE_TITLE,
     description: SITE_DESCRIPTION,
-    images: [
-      {
-        url: "/journey-approved/00-prologue.webp",
-        alt: "Kediri Digital Heritage Experience",
-      },
-    ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: SITE_NAME,
+    ...TWITTER_BASE,
+    title: SITE_TITLE,
     description: SITE_DESCRIPTION,
-    images: ["/journey-approved/00-prologue.webp"],
   },
   robots: {
     index: true,

@@ -21,7 +21,11 @@ export async function generateMetadata({
   const { slug } = await params;
   const place = await getPlaceBySlug(slug);
   if (!place) return { title: "Tempat tidak ditemukan" };
-  return { title: place.name, description: place.summary };
+  return {
+    title: place.name,
+    description: place.summary,
+    alternates: { canonical: `/archive/places/${place.slug}` },
+  };
 }
 
 const CERTAINTY_COPY: Record<string, string> = {

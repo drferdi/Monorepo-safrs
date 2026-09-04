@@ -1,8 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactElement } from "react";
 
 import { SiteFooter } from "../../components/site-footer";
 import { SiteNav } from "../../components/site-nav";
+import { OPEN_GRAPH_BASE, SITE_DESCRIPTION, SITE_TITLE } from "../../site";
 
 /**
  * Beranda.
@@ -11,11 +13,20 @@ import { SiteNav } from "../../components/site-nav";
  * pengunjung memilih modenya (UX Bible bagian 4): tidak ada intro paksa,
  * tidak ada carousel berita, tidak ada sambutan wajib.
  */
-export const metadata = {
-  title: "Kediri Digital Heritage Experience — A Living Civilization",
-  description:
-    "Kerajaan berganti. Rezim berganti. Industri tumbuh. Brantas terus mengalir. Kediri bertahan. 879 hingga 2026.",
+/**
+ * Beranda memakai judul situs penuh (`title.absolute`), bukan template
+ * "%s · Kediri": ia halaman akar, jadi judulnya adalah judul situs.
+ */
+export const metadata: Metadata = {
+  title: { absolute: SITE_TITLE },
+  description: SITE_DESCRIPTION,
   alternates: { canonical: "/" },
+  openGraph: {
+    ...OPEN_GRAPH_BASE,
+    url: "/",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
 };
 
 export default function HomePage(): ReactElement {

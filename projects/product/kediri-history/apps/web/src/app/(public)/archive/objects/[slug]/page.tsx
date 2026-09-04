@@ -21,7 +21,11 @@ export async function generateMetadata({
   const { slug } = await params;
   const artifact = await getArtifactBySlug(slug);
   if (!artifact) return { title: "Objek tidak ditemukan" };
-  return { title: artifact.name, description: artifact.summary };
+  return {
+    title: artifact.name,
+    description: artifact.summary,
+    alternates: { canonical: `/archive/objects/${artifact.slug}` },
+  };
 }
 
 export default async function ObjectPage({

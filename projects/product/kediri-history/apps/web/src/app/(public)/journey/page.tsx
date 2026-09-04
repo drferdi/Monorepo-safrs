@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Fragment, type ReactElement } from "react";
 import {
@@ -29,6 +30,7 @@ import {
   PRODUCTION_PROLOGUE,
 } from "../../../content/production-narrative";
 import { getJourneyManifest } from "../../../content/queries";
+import { OPEN_GRAPH_BASE, SITE_TITLE, TWITTER_BASE } from "../../../site";
 
 /**
  * Journey adalah SATU rute dengan anchor yang stabil (UX Bible bagian 5).
@@ -83,11 +85,28 @@ function actHeaderMode(slug: string, preview: boolean): ActHeaderMode {
  */
 const RIGHT_LAYOUT_FROM = "iron-sugar-modern-city";
 
-export const metadata = {
-  title: "Journey",
-  description:
-    "Perjalanan sejarah Kediri dari 879 hingga 2026, satu halaman berkelanjutan dengan tautan dalam yang stabil untuk setiap masa.",
+/**
+ * Journey adalah halaman indeksabel yang berdiri sendiri, jadi ia memikul
+ * judul penuh dan kanonisnya sendiri — bukan mewarisi kanonis beranda.
+ */
+const JOURNEY_DESCRIPTION =
+  "Perjalanan sejarah Kediri dari 879 hingga 2026 dalam satu halaman berkelanjutan: prasasti, kerajaan, kolonialisme, industri, dan kota hari ini.";
+
+export const metadata: Metadata = {
+  title: { absolute: `Journey | ${SITE_TITLE}` },
+  description: JOURNEY_DESCRIPTION,
   alternates: { canonical: "/journey" },
+  openGraph: {
+    ...OPEN_GRAPH_BASE,
+    url: "/journey",
+    title: `Journey | ${SITE_TITLE}`,
+    description: JOURNEY_DESCRIPTION,
+  },
+  twitter: {
+    ...TWITTER_BASE,
+    title: `Journey | ${SITE_TITLE}`,
+    description: JOURNEY_DESCRIPTION,
+  },
 };
 
 export default async function JourneyPage(): Promise<ReactElement> {

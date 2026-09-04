@@ -20,7 +20,11 @@ export async function generateMetadata({
   const { slug } = await params;
   const person = await getPersonBySlug(slug);
   if (!person) return { title: "Catatan tidak ditemukan" };
-  return { title: person.name, description: person.summary };
+  return {
+    title: person.name,
+    description: person.summary,
+    alternates: { canonical: `/archive/people/${person.slug}` },
+  };
 }
 
 const POLICY_COPY: Record<string, string> = {
