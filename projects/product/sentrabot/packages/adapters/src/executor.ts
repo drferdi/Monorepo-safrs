@@ -236,6 +236,8 @@ const READ_ONLY_AGENT_TOOLS = new Set([
   "skill_read",
 ]);
 const MAX_MODEL_FILE_BYTES = 250_000;
+/** Setup failures (provisioning etc.) tolerated per run before it is finalized as failed. */
+const MAX_SETUP_FAILURES = 5;
 const BUILTIN_AGENT_TOOL_NAMES = new Set(builtinAgentTools.map((tool) => tool.name));
 
 const SHELL_INTERPRETER_NAMES = /^(?:bash|sh|dash|zsh|ksh|fish)$/;
@@ -2992,44 +2994,102 @@ async function executeRunAttempt({
     }
   } catch (setupError) {
     const computerBusy = setupError instanceof ComputerBusyError;
-    if (!computerBusy) {
-      // undici collapses every network failure to "fetch failed"; the cause names the
-      // host and errno, which is the only part worth paging over.
-      const causeMessage =
-        setupError instanceof Error && setupError.cause instanceof Error
-          ? `: ${setupError.cause.message}`
-          : "";
-      console.error(
-        "run setup failed",
-        redactSecrets(
-          setupError instanceof Error ? `${setupError.message}${causeMessage}` : String(setupError),
-          runSecrets,
-        ),
-      );
+    // undici collapses every network failure to "fetch failed"; the cause names the
+    // host and errno, which is the only part worth paging over.
+    const causeMessage =
+      setupError instanceof Error && setupError.cause instanceof Error
+        ? `: ${setupError.cause.message}`
+        : "";
+    const cause = redactSecrets(
+      setupError instanceof Error ? `${setupError.message}${causeMessage}` : String(setupError),
+      runSecrets,
+    );
+    if (computerBusy) {
+      const released = await deps.prisma.run.updateMany({
+        where: { id: runId, status: "running", leaseOwner: workerId, leaseFence: fence },
+        data: computerRunRequeueData(resumeCheckpoint, null),
+      });
+      if (released.count === 1) {
+        await deps.prisma.attempt.update({
+          where: { id: attempt.id },
+          data: {
+            status: "computer_busy",
+            error: "Computer busy; retrying",
+            finishedAt: new Date(),
+          },
+        });
+        await deps.jobs.enqueue({
+          ...runContinueJob(runId),
+          availableAt: new Date(Date.now() + computerRetryDelay(fence)),
+        });
+      }
+      return;
     }
+    console.error("run setup failed", cause);
+    // The reconciler re-enqueues every queued run with a replace key, which resets
+    // graphile's attempt counter — so maxAttempts can never end a run whose setup keeps
+    // failing. Count the genuine setup failures ourselves and finalize at the cap.
+    const priorSetupFailures = await deps.prisma.attempt.count({
+      where: { runId, status: "setup_failed" },
+    });
+    if (priorSetupFailures >= MAX_SETUP_FAILURES - 1) {
+      // finalizeRun needs the run still running under this lease and the attempt still
+      // running, so it has to happen before any requeue/attempt bookkeeping.
+      const failed = await deps.events.finalizeRun({
+        workspaceId: run.workspaceId,
+        threadId: run.threadId,
+        botId: run.botId,
+        runId,
+        taskId: run.taskId,
+        attemptId: attempt.id,
+        leaseOwner: workerId,
+        leaseFence: fence,
+        outcome: "failed",
+        error: `Run setup failed: ${cause}`,
+      });
+      runLog(
+        "run.finalized",
+        {
+          runId,
+          workerId,
+          fence,
+          outcome: "failed",
+          durationMs: Date.now() - attemptStartedAt,
+        },
+        "error",
+      );
+      if (!failed) return;
+      const botName =
+        (
+          await deps.prisma.bot.findUnique({
+            where: { id: run.botId },
+            select: { name: true },
+          })
+        )?.name ?? "Bot";
+      await notifyRun(deps, run, {
+        kind: "failure",
+        title: `${botName} failed`,
+        body: `Run setup failed: ${cause}`.slice(0, 180),
+        botId: run.botId,
+        threadId: run.threadId,
+      });
+      // Never rethrow: a finalized run must not be retried by graphile.
+      return;
+    }
+    const retryError = `Run setup failed; retrying: ${cause}`;
     const released = await deps.prisma.run.updateMany({
       where: { id: runId, status: "running", leaseOwner: workerId, leaseFence: fence },
-      data: computerRunRequeueData(
-        resumeCheckpoint,
-        computerBusy ? null : "Run setup failed; retrying",
-      ),
+      data: computerRunRequeueData(resumeCheckpoint, retryError),
     });
     if (released.count === 1) {
       await deps.prisma.attempt.update({
         where: { id: attempt.id },
         data: {
           status: "setup_failed",
-          error: "Run setup failed; retrying",
+          error: retryError,
           finishedAt: new Date(),
         },
       });
-      if (computerBusy) {
-        await deps.jobs.enqueue({
-          ...runContinueJob(runId),
-          availableAt: new Date(Date.now() + computerRetryDelay(fence)),
-        });
-        return;
-      }
       throw new Error("Run setup failed; retrying");
     }
   } finally {

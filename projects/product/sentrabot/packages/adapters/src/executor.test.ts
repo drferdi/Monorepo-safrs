@@ -1,6 +1,7 @@
 import { ONCE_ROUTINE_CRON } from "@sentrabot/core";
 import type { PrismaClient } from "@sentrabot/db";
 import { describe, expect, it, vi } from "vitest";
+import { ComputerBusyError } from "./computer-lifecycle.js";
 import { createRunExecutor, runNotificationsEnabled, threadContextForRun } from "./executor.js";
 
 describe("run notification preference", () => {
@@ -706,5 +707,107 @@ description: Prepare standup notes
       id: "deepseek/deepseek-v4-flash-0731",
       thinkingLevel: "high",
     });
+  });
+});
+
+describe("run setup failures", () => {
+  function setupHarness(setupError: Error) {
+    const run = {
+      id: "run-1",
+      status: "queued",
+      leaseFence: 0,
+      checkpoint: null,
+      trigger: "user",
+      workspaceId: "ws-1",
+      botId: "bot-1",
+      threadId: "thread-1",
+      taskId: "task-1",
+      userId: "user-1",
+      sourceMessageId: null,
+      startedAt: null,
+    };
+    const enqueue = vi.fn(async () => undefined);
+    const attemptUpdate = vi.fn(async () => ({}));
+    const attemptCount = vi.fn(async () => 4);
+    const finalizeRun = vi.fn(async () => true);
+    const prisma = {
+      run: {
+        findUnique: vi.fn(async () => run),
+        findUniqueOrThrow: vi.fn(async () => ({ ...run, status: "leased" })),
+        updateMany: vi.fn(async () => ({ count: 1 })),
+      },
+      bot: {
+        findUniqueOrThrow: vi
+          .fn()
+          .mockResolvedValueOnce({ computerId: "computer-1", computerSwitching: false })
+          .mockRejectedValueOnce(setupError),
+        findUnique: vi.fn(async () => ({ name: "Helper" })),
+      },
+      computer: {
+        findUniqueOrThrow: vi.fn(async () => ({ id: "computer-1", scope: "personal" })),
+      },
+      attempt: {
+        create: vi.fn(async () => ({
+          id: "attempt-1",
+          runId: "run-1",
+          fence: 1,
+          status: "running",
+          startedAt: new Date(),
+        })),
+        update: attemptUpdate,
+        updateMany: vi.fn(async () => ({ count: 1 })),
+        count: attemptCount,
+      },
+      thread: { findUniqueOrThrow: vi.fn(async () => ({ id: "thread-1" })) },
+      message: { findMany: vi.fn(async () => []) },
+      task: { findUniqueOrThrow: vi.fn(async () => ({ id: "task-1" })) },
+      connection: { findMany: vi.fn(async () => []) },
+      deploymentSettings: { findUnique: vi.fn(async () => null) },
+      taughtSkill: { findMany: vi.fn(async () => []) },
+      agentSkill: { findMany: vi.fn(async () => []) },
+      userModelCredential: { findFirst: vi.fn(async () => null) },
+    } as unknown as PrismaClient;
+    const executor = createRunExecutor({
+      prisma,
+      secrets: [],
+      jobs: { enqueue, cancel: vi.fn(async () => undefined), close: vi.fn(async () => undefined) },
+      events: { append: vi.fn(async () => undefined), finalizeRun },
+      memoryProviders: { resolve: vi.fn(async () => null) },
+      sandbox: {},
+    } as unknown as Parameters<typeof createRunExecutor>[0]);
+    return { executor, enqueue, finalizeRun, attemptUpdate, attemptCount };
+  }
+
+  it("finalizes a run as failed after MAX_SETUP_FAILURES genuine setup failures", async () => {
+    const { executor, enqueue, finalizeRun, attemptCount } = setupHarness(new Error("boom"));
+
+    await expect(executor.continueRun("run-1", "worker-1")).resolves.toBeUndefined();
+
+    expect(attemptCount).toHaveBeenCalledWith({
+      where: { runId: "run-1", status: "setup_failed" },
+    });
+    expect(finalizeRun).toHaveBeenCalledWith(
+      expect.objectContaining({
+        outcome: "failed",
+        error: expect.stringContaining("Run setup failed: boom"),
+      }),
+    );
+    expect(enqueue).not.toHaveBeenCalled();
+  });
+
+  it("keeps retrying while the computer is merely busy", async () => {
+    const { executor, enqueue, finalizeRun, attemptUpdate } = setupHarness(new ComputerBusyError());
+
+    await expect(executor.continueRun("run-1", "worker-1")).resolves.toBeUndefined();
+
+    expect(finalizeRun).not.toHaveBeenCalled();
+    expect(attemptUpdate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ status: "computer_busy" }),
+      }),
+    );
+    expect(enqueue).toHaveBeenCalledWith(
+      expect.objectContaining({ availableAt: expect.any(Date) }),
+    );
   });
 });
