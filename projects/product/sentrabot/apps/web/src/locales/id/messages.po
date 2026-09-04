@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/pages/Shell.tsx:2423
+#: src/pages/Shell.tsx:2412
 msgid " (unread)"
 msgstr " (belum dibaca)"
 
@@ -31,12 +31,12 @@ msgid "{0, plural, one {# model} other {# models}}"
 msgstr "{0, plural, one {# model} other {# model}}"
 
 #. placeholder {0}: file.name
-#: src/pages/Shell.tsx:1743
+#: src/pages/Shell.tsx:1726
 msgid "{0} (max {ATTACHMENT_MAX_COUNT} attachments)"
 msgstr "{0} (maksimal {ATTACHMENT_MAX_COUNT} lampiran)"
 
 #. placeholder {0}: file.name
-#: src/pages/Shell.tsx:1747
+#: src/pages/Shell.tsx:1730
 msgid "{0} (over 10 MiB)"
 msgstr "{0} (lebih dari 10 MiB)"
 
@@ -46,12 +46,12 @@ msgid "{0} {unitLabel}"
 msgstr "{0} {unitLabel}"
 
 #. placeholder {0}: block.name
-#: src/pages/Shell.tsx:6066
+#: src/components/conversation/MessageView.tsx:612
 msgid "{0} connection"
 msgstr "Koneksi {0}"
 
 #. placeholder {0}: computer.busyBotName
-#: src/pages/Shell.tsx:2937
+#: src/pages/Shell.tsx:2931
 msgid "{0} is using it"
 msgstr "{0} sedang memakainya"
 
@@ -67,8 +67,8 @@ msgstr "{0} MB"
 
 #. placeholder {0}: usage.runs
 #. placeholder {1}: usage.inputTokens + usage.outputTokens
-#: src/pages/AccountSettingsOverlay.tsx:216
-#: src/pages/Shell.tsx:2644
+#: src/pages/AccountSettingsOverlay.tsx:149
+#: src/pages/Shell.tsx:2633
 msgid "{0} runs · {1} tokens"
 msgstr "{0} run · {1} token"
 
@@ -81,7 +81,7 @@ msgstr "{botName} · {0, plural, one {# peer} other {# peer}}"
 msgid "{botName} has not messaged another bot yet."
 msgstr "{botName} belum mengirim pesan ke bot lain."
 
-#: src/pages/Shell.tsx:5943
+#: src/pages/Shell.tsx:4858
 msgid "{botName}’s computer"
 msgstr "Komputer {botName}"
 
@@ -125,12 +125,12 @@ msgstr "{size} B"
 msgid "{title}, {label}"
 msgstr "{title}, {label}"
 
-#: src/pages/Shell.tsx:3723
+#: src/pages/Shell.tsx:3712
 msgid "{workingBotName} is working"
 msgstr "{workingBotName} sedang bekerja"
 
 #. placeholder {0}: mention.name
-#: src/pages/Shell.tsx:4223
+#: src/components/composer/Composer.tsx:363
 msgid "@{0}"
 msgstr "@{0}"
 
@@ -146,11 +146,11 @@ msgstr "+ Ajarkan sebuah tugas"
 msgid "Access token (optional)"
 msgstr "Access token (opsional)"
 
-#: src/pages/AccountSettingsOverlay.tsx:128
+#: src/pages/AccountSettingsOverlay.tsx:107
 msgid "Account"
 msgstr "Akun"
 
-#: src/pages/Shell.tsx:5444
+#: src/pages/Shell.tsx:4359
 msgid "Account default"
 msgstr "Default akun"
 
@@ -171,17 +171,17 @@ msgstr "Aktif"
 msgid "Active model"
 msgstr "Model aktif"
 
-#: src/pages/VoiceSettingsOverlay.tsx:149
+#: src/pages/VoiceSettingsOverlay.tsx:154
 msgid "Active voice"
 msgstr "Suara aktif"
 
-#: src/pages/Shell.tsx:2213
-#: src/pages/Shell.tsx:2215
+#: src/pages/Shell.tsx:2202
+#: src/pages/Shell.tsx:2204
 msgid "Activity"
 msgstr "Aktivitas"
 
-#: src/pages/PluginsOverlay.tsx:457
-#: src/pages/PluginsOverlay.tsx:668
+#: src/pages/PluginsOverlay.tsx:458
+#: src/pages/PluginsOverlay.tsx:670
 #: src/pages/ScratchpadSection.tsx:188
 msgid "Add"
 msgstr "Tambah"
@@ -190,7 +190,7 @@ msgstr "Tambah"
 msgid "Add a model in Settings to use this."
 msgstr "Tambahkan model di Pengaturan untuk memakai ini."
 
-#: src/pages/Shell.tsx:3157
+#: src/pages/Shell.tsx:3151
 msgid "Add a run time for this one-shot."
 msgstr "Tentukan waktu jalan untuk sekali-jalan ini."
 
@@ -198,7 +198,7 @@ msgstr "Tentukan waktu jalan untuk sekali-jalan ini."
 msgid "Add a schedule or webhook to run this routine."
 msgstr "Tambahkan jadwal atau webhook untuk menjalankan rutinitas ini."
 
-#: src/pages/Shell.tsx:3129
+#: src/pages/Shell.tsx:3123
 msgid "Add a schedule or webhook trigger"
 msgstr "Tambahkan pemicu jadwal atau webhook"
 
@@ -222,15 +222,15 @@ msgstr "Isi URL server HTTPS."
 msgid "Add item"
 msgstr "Tambah item"
 
-#: src/pages/PluginsOverlay.tsx:762
+#: src/pages/PluginsOverlay.tsx:764
 msgid "Add MCP server"
 msgstr "Tambah server MCP"
 
-#: src/pages/PluginsOverlay.tsx:765
+#: src/pages/PluginsOverlay.tsx:767
 msgid "Add OpenAPI"
 msgstr "Tambah OpenAPI"
 
-#: src/pages/PluginsOverlay.tsx:780
+#: src/pages/PluginsOverlay.tsx:782
 msgid "Add remote MCP server"
 msgstr "Tambah server MCP remote"
 
@@ -243,7 +243,7 @@ msgstr "Tambah server"
 msgid "Add to routine"
 msgstr "Tambahkan ke rutinitas"
 
-#: src/pages/PluginsOverlay.tsx:768
+#: src/pages/PluginsOverlay.tsx:770
 msgid "Add Treg"
 msgstr "Tambah Treg"
 
@@ -252,15 +252,15 @@ msgid "Add trigger"
 msgstr "Tambah pemicu"
 
 #: src/pages/McpServersOverlay.tsx:363
-#: src/pages/PluginsOverlay.tsx:452
-#: src/pages/PluginsOverlay.tsx:663
+#: src/pages/PluginsOverlay.tsx:453
+#: src/pages/PluginsOverlay.tsx:665
 msgid "Adding…"
 msgstr "Menambahkan…"
 
-#: src/pages/AccountSettingsOverlay.tsx:247
-#: src/pages/PluginsOverlay.tsx:742
+#: src/pages/AccountSettingsOverlay.tsx:180
+#: src/pages/PluginsOverlay.tsx:744
 #: src/pages/RoutineSchedule.tsx:42
-#: src/pages/Shell.tsx:5347
+#: src/pages/Shell.tsx:4262
 msgid "Advanced"
 msgstr "Lanjutan"
 
@@ -272,7 +272,7 @@ msgstr "Lanjutan..."
 msgid "Agent access for new servers"
 msgstr "Akses agent untuk server baru"
 
-#: src/pages/Shell.tsx:2736
+#: src/pages/Shell.tsx:2730
 msgid "Agent computer"
 msgstr "Komputer agent"
 
@@ -352,14 +352,14 @@ msgstr "API sudah kembali, tetapi pembaruan belum selesai. Periksa log host."
 #: src/pages/ModelSettingsOverlay.tsx:630
 #: src/pages/ModelSettingsOverlay.tsx:633
 #: src/pages/ModelSettingsOverlay.tsx:649
-#: src/pages/Onboarding.tsx:496
-#: src/pages/Onboarding.tsx:499
 #: src/pages/Onboarding.tsx:510
-#: src/pages/VoiceSettingsOverlay.tsx:236
+#: src/pages/Onboarding.tsx:513
+#: src/pages/Onboarding.tsx:524
+#: src/pages/VoiceSettingsOverlay.tsx:241
 msgid "API key"
 msgstr "API key"
 
-#: src/pages/PluginsOverlay.tsx:816
+#: src/pages/PluginsOverlay.tsx:818
 msgid "API key header"
 msgstr "Header API key"
 
@@ -371,13 +371,13 @@ msgstr "Berlaku saat Anda menekan Tambah server. Gunakan chip agent di tiap kart
 msgid "Approval boundaries"
 msgstr "Batas persetujuan"
 
+#: src/components/conversation/MessageView.tsx:805
 #: src/pages/PhoneSettingsOverlay.tsx:243
 #: src/pages/PhoneSettingsOverlay.tsx:310
-#: src/pages/Shell.tsx:6259
 msgid "Approve"
 msgstr "Setujui"
 
-#: src/pages/Shell.tsx:6250
+#: src/components/conversation/MessageView.tsx:796
 msgid "Approve this server to let your agent use its tools."
 msgstr "Setujui server ini agar agent Anda bisa memakai tool-nya."
 
@@ -385,15 +385,15 @@ msgstr "Setujui server ini agar agent Anda bisa memakai tool-nya."
 msgid "Archive"
 msgstr "Arsipkan"
 
-#: src/pages/Shell.tsx:4892
+#: src/components/conversation/MessageView.tsx:312
 msgid "archived"
 msgstr "diarsipkan"
 
-#: src/pages/Shell.tsx:2487
+#: src/pages/Shell.tsx:2476
 msgid "Archived"
 msgstr "Diarsipkan"
 
-#: src/pages/Shell.tsx:4903
+#: src/components/conversation/MessageView.tsx:323
 msgid "Archived. Chat, memory, and files kept."
 msgstr "Diarsipkan. Chat, memori, dan file tetap disimpan."
 
@@ -432,7 +432,7 @@ msgstr "Tanya dulu sebelum pembelian"
 msgid "Ask before sending external email"
 msgstr "Tanya dulu sebelum mengirim email keluar"
 
-#: src/pages/Shell.tsx:2939
+#: src/pages/Shell.tsx:2933
 msgid "Asleep"
 msgstr "Tidur"
 
@@ -447,16 +447,16 @@ msgstr "pukul {0}"
 msgid "at {timeSelect}"
 msgstr "pukul {timeSelect}"
 
-#: src/pages/Shell.tsx:4297
+#: src/components/composer/Composer.tsx:437
 msgid "Attach file"
 msgstr "Lampirkan file"
 
-#: src/pages/Shell.tsx:4498
+#: src/components/composer/shared.ts:21
 msgid "Attachment"
 msgstr "Lampiran"
 
 #: src/pages/ModelSettingsOverlay.tsx:563
-#: src/pages/Onboarding.tsx:437
+#: src/pages/Onboarding.tsx:451
 msgid "Authorization code or callback URL"
 msgstr "Kode otorisasi atau URL callback"
 
@@ -464,22 +464,18 @@ msgstr "Kode otorisasi atau URL callback"
 msgid "Authorization expired — reconnect required"
 msgstr "Otorisasi kedaluwarsa — perlu sambung ulang"
 
-#: src/pages/Shell.tsx:6051
+#: src/components/conversation/MessageView.tsx:597
 msgid "Authorization timed out. Please try again."
 msgstr "Otorisasi kehabisan waktu. Silakan coba lagi."
 
-#: src/pages/Shell.tsx:6093
-#: src/pages/Shell.tsx:6259
+#: src/components/conversation/MessageView.tsx:639
+#: src/components/conversation/MessageView.tsx:805
 msgid "Authorize"
 msgstr "Otorisasi"
 
 #: src/pages/RoutineEditor.tsx:515
 msgid "Available after the routine is saved"
 msgstr "Tersedia setelah rutinitas disimpan"
-
-#: src/pages/AccountSettingsOverlay.tsx:161
-msgid "Avatars"
-msgstr "Avatar"
 
 #: src/pages/RoutineEditor.tsx:243
 msgid "Back"
@@ -489,22 +485,22 @@ msgstr "Kembali"
 msgid "Base URL"
 msgstr "Base URL"
 
-#: src/pages/PluginsOverlay.tsx:813
+#: src/pages/PluginsOverlay.tsx:815
 msgid "Bearer token"
 msgstr "Bearer token"
 
-#: src/pages/Shell.tsx:5935
+#: src/pages/Shell.tsx:4850
 msgid "Booting live desktop…"
 msgstr "Menyalakan desktop live…"
 
 #. placeholder {0}: active?.name
-#: src/pages/Shell.tsx:3528
+#: src/pages/Shell.tsx:3517
 msgid "Booting up {0}’s computer"
 msgstr "Menyalakan komputer {0}"
 
-#: src/pages/Shell.tsx:4752
-#: src/pages/Shell.tsx:4753
-#: src/pages/Shell.tsx:4896
+#: src/components/conversation/MessageView.tsx:172
+#: src/components/conversation/MessageView.tsx:173
+#: src/components/conversation/MessageView.tsx:316
 msgid "bot"
 msgstr "bot"
 
@@ -513,7 +509,7 @@ msgstr "bot"
 msgid "Bot"
 msgstr "Bot"
 
-#: src/pages/Shell.tsx:1559
+#: src/pages/Shell.tsx:1542
 msgid "Bot"
 msgstr "Bot"
 
@@ -521,11 +517,11 @@ msgstr "Bot"
 msgid "Bot messages"
 msgstr "Pesan antar-bot"
 
-#: src/pages/Shell.tsx:3625
+#: src/pages/Shell.tsx:3614
 msgid "Bot screen"
 msgstr "Layar bot"
 
-#: src/pages/Shell.tsx:2903
+#: src/pages/Shell.tsx:2897
 msgid "Bot screen preview"
 msgstr "Pratinjau layar bot"
 
@@ -533,17 +529,17 @@ msgstr "Pratinjau layar bot"
 msgid "Bots act without asking by default. Add an exception only when you want to review a type of action first. These preferences apply across all your bots."
 msgstr "Secara default bot bertindak tanpa bertanya. Tambahkan pengecualian hanya bila Anda ingin meninjau jenis tindakan tertentu lebih dulu. Preferensi ini berlaku untuk semua bot Anda."
 
-#: src/pages/Shell.tsx:3724
+#: src/pages/Shell.tsx:3713
 msgid "Bots are working"
 msgstr "Bot sedang bekerja"
 
-#: src/pages/VoiceSettingsOverlay.tsx:130
+#: src/pages/VoiceSettingsOverlay.tsx:135
 msgid "Bring your own key. The provider is swappable; your bots keep the same speak and call buttons."
 msgstr "Pakai key Anda sendiri. Provider bisa diganti; tombol bicara dan telepon di bot Anda tetap sama."
 
 #: src/pages/CallView.tsx:233
-#: src/pages/Shell.tsx:2718
-#: src/pages/Shell.tsx:2719
+#: src/pages/Shell.tsx:2712
+#: src/pages/Shell.tsx:2713
 msgid "Call"
 msgstr "Telepon"
 
@@ -554,15 +550,15 @@ msgstr "Server tidak bisa dijangkau."
 #: src/components/AskCard.tsx:161
 #: src/components/ComputerMaintenanceActions.tsx:108
 #: src/components/teach/TeachComputerSection.tsx:122
-#: src/pages/PluginsOverlay.tsx:864
-#: src/pages/Shell.tsx:5611
-#: src/pages/Shell.tsx:5683
-#: src/pages/Shell.tsx:5798
-#: src/pages/Shell.tsx:5874
+#: src/pages/PluginsOverlay.tsx:866
+#: src/pages/Shell.tsx:4526
+#: src/pages/Shell.tsx:4598
+#: src/pages/Shell.tsx:4713
+#: src/pages/Shell.tsx:4789
 msgid "Cancel"
 msgstr "Batal"
 
-#: src/pages/Shell.tsx:5140
+#: src/pages/Shell.tsx:4055
 msgid "Cancel new bot"
 msgstr "Batalkan bot baru"
 
@@ -570,7 +566,7 @@ msgstr "Batalkan bot baru"
 msgid "Cancel new group"
 msgstr "Batalkan grup baru"
 
-#: src/pages/Shell.tsx:4170
+#: src/components/composer/Composer.tsx:310
 msgid "Cancel reply"
 msgstr "Batalkan balasan"
 
@@ -582,11 +578,11 @@ msgstr "Dibatalkan"
 msgid "Channels"
 msgstr "Kanal"
 
-#: src/pages/Shell.tsx:6156
+#: src/components/conversation/MessageView.tsx:702
 msgid "Chart failed to render: {error}"
 msgstr "Grafik gagal ditampilkan: {error}"
 
-#: src/pages/Shell.tsx:4439
+#: src/components/composer/Composer.tsx:579
 msgid "Chat Settings"
 msgstr "Pengaturan Chat"
 
@@ -602,8 +598,8 @@ msgstr "Pengecekan gagal"
 msgid "Check for updates"
 msgstr "Periksa pembaruan"
 
-#: src/pages/Shell.tsx:3170
-#: src/pages/Shell.tsx:3180
+#: src/pages/Shell.tsx:3164
+#: src/pages/Shell.tsx:3174
 msgid "Check in."
 msgstr "Lapor perkembangan."
 
@@ -615,7 +611,7 @@ msgstr "Memeriksa…"
 msgid "Checkout has local changes. Clean it before updating."
 msgstr "Checkout punya perubahan lokal. Bersihkan dulu sebelum memperbarui."
 
-#: src/pages/Onboarding.tsx:269
+#: src/pages/Onboarding.tsx:283
 msgid "Choose a model to get started."
 msgstr "Pilih model untuk mulai."
 
@@ -623,25 +619,21 @@ msgstr "Pilih model untuk mulai."
 msgid "Choose which connected model Sentra Bot uses."
 msgstr "Pilih model tersambung mana yang dipakai Sentra Bot."
 
-#: src/pages/AccountSettingsOverlay.tsx:187
-msgid "Clay"
-msgstr "Clay"
-
-#: src/pages/Shell.tsx:5698
+#: src/pages/Shell.tsx:4613
 msgid "Clear"
 msgstr "Bersihkan"
 
 #. placeholder {0}: bot.name
-#: src/pages/Shell.tsx:5664
+#: src/pages/Shell.tsx:4579
 msgid "Clear {0}’s conversation?"
 msgstr "Bersihkan percakapan {0}?"
 
 #: src/pages/BotContextMenu.tsx:103
-#: src/pages/Shell.tsx:5499
+#: src/pages/Shell.tsx:4414
 msgid "Clear conversation"
 msgstr "Bersihkan percakapan"
 
-#: src/pages/Shell.tsx:5698
+#: src/pages/Shell.tsx:4613
 msgid "Clearing…"
 msgstr "Membersihkan…"
 
@@ -655,19 +647,19 @@ msgstr "Tutup"
 msgid "Close bot messages"
 msgstr "Tutup pesan antar-bot"
 
-#: src/pages/Shell.tsx:6341
+#: src/components/conversation/MessageView.tsx:887
 msgid "Close chart"
 msgstr "Tutup grafik"
 
-#: src/pages/Shell.tsx:3599
+#: src/pages/Shell.tsx:3588
 msgid "Close computer"
 msgstr "Tutup komputer"
 
-#: src/pages/Shell.tsx:6441
+#: src/components/conversation/MessageView.tsx:987
 msgid "Close image preview"
 msgstr "Tutup pratinjau gambar"
 
-#: src/pages/PluginsOverlay.tsx:586
+#: src/pages/PluginsOverlay.tsx:587
 msgid "Close integrations"
 msgstr "Tutup integrasi"
 
@@ -683,11 +675,11 @@ msgstr "Tutup pengaturan memori"
 msgid "Close model settings"
 msgstr "Tutup pengaturan model"
 
-#: src/pages/Shell.tsx:2195
+#: src/pages/Shell.tsx:2184
 msgid "Close navigation"
 msgstr "Tutup navigasi"
 
-#: src/pages/Shell.tsx:2881
+#: src/pages/Shell.tsx:2875
 msgid "Close panel"
 msgstr "Tutup panel"
 
@@ -700,11 +692,11 @@ msgstr "Tutup pengaturan telepon"
 msgid "Close preview"
 msgstr "Tutup pratinjau"
 
-#: src/pages/AccountSettingsOverlay.tsx:118
+#: src/pages/AccountSettingsOverlay.tsx:97
 msgid "Close user settings"
 msgstr "Tutup pengaturan pengguna"
 
-#: src/pages/VoiceSettingsOverlay.tsx:139
+#: src/pages/VoiceSettingsOverlay.tsx:144
 msgid "Close voice settings"
 msgstr "Tutup pengaturan suara"
 
@@ -718,7 +710,7 @@ msgid "Code"
 msgstr "Kode"
 
 #. placeholder {0}: group.title
-#: src/pages/Shell.tsx:2305
+#: src/pages/Shell.tsx:2294
 msgid "Collapse {0}"
 msgstr "Ciutkan {0}"
 
@@ -734,28 +726,28 @@ msgstr "Perintah"
 msgid "Complete"
 msgstr "Selesaikan"
 
-#: src/pages/Shell.tsx:5050
-#: src/pages/Shell.tsx:5078
+#: src/components/conversation/MessageView.tsx:470
+#: src/pages/Shell.tsx:3993
 msgid "Computer"
 msgstr "Komputer"
 
-#: src/pages/Shell.tsx:5938
+#: src/pages/Shell.tsx:4853
 msgid "Computer failed to boot"
 msgstr "Komputer gagal dinyalakan"
 
-#: src/pages/Shell.tsx:3647
+#: src/pages/Shell.tsx:3636
 msgid "Computer is asleep"
 msgstr "Komputer sedang tidur"
 
-#: src/pages/Shell.tsx:5937
+#: src/pages/Shell.tsx:4852
 msgid "Computer is asleep. Take control to wake it."
 msgstr "Komputer sedang tidur. Ambil alih untuk membangunkannya."
 
-#: src/pages/Shell.tsx:5939
+#: src/pages/Shell.tsx:4854
 msgid "Computer is stopped"
 msgstr "Komputer berhenti"
 
-#: src/pages/AccountSettingsOverlay.tsx:234
+#: src/pages/AccountSettingsOverlay.tsx:167
 msgid "Computers"
 msgstr "Komputer"
 
@@ -776,12 +768,12 @@ msgid "Confirm delete"
 msgstr "Konfirmasi penghapusan"
 
 #: src/pages/memory-providers/SupermemorySettingsForm.tsx:80
-#: src/pages/PluginsOverlay.tsx:494
-#: src/pages/VoiceSettingsOverlay.tsx:257
+#: src/pages/PluginsOverlay.tsx:495
+#: src/pages/VoiceSettingsOverlay.tsx:262
 msgid "Connect"
 msgstr "Sambungkan"
 
-#: src/pages/Onboarding.tsx:266
+#: src/pages/Onboarding.tsx:280
 msgid "Connect a model"
 msgstr "Sambungkan sebuah model"
 
@@ -789,11 +781,11 @@ msgstr "Sambungkan sebuah model"
 msgid "Connect API key"
 msgstr "Sambungkan API key"
 
-#: src/pages/VoiceSettingsOverlay.tsx:160
+#: src/pages/VoiceSettingsOverlay.tsx:165
 msgid "Connect ElevenLabs, OpenAI, or Cartesia"
 msgstr "Sambungkan ElevenLabs, OpenAI, atau Cartesia"
 
-#: src/pages/Shell.tsx:6239
+#: src/components/conversation/MessageView.tsx:785
 msgid "Connect MCP server “{name}”"
 msgstr "Sambungkan server MCP “{name}”"
 
@@ -809,31 +801,31 @@ msgstr "Sambungkan server tool remote atau lokal dan pilih agent mana yang boleh
 msgid "Connect this provider to use it as your personal model."
 msgstr "Sambungkan provider ini untuk memakainya sebagai model pribadi Anda."
 
-#: src/pages/PluginsOverlay.tsx:778
+#: src/pages/PluginsOverlay.tsx:780
 msgid "Connect Treg"
 msgstr "Sambungkan Treg"
 
+#: src/components/conversation/MessageView.tsx:636
 #: src/pages/McpOAuthCallback.tsx:53
 #: src/pages/MemorySettingsOverlay.tsx:163
 #: src/pages/ModelSettingsOverlay.tsx:378
-#: src/pages/Shell.tsx:6090
-#: src/pages/VoiceSettingsOverlay.tsx:202
+#: src/pages/VoiceSettingsOverlay.tsx:207
 msgid "Connected"
 msgstr "Tersambung"
 
-#: src/pages/Shell.tsx:6269
+#: src/components/conversation/MessageView.tsx:815
 msgid "Connected — its tools are available from your next message."
 msgstr "Tersambung — tool-nya tersedia mulai pesan Anda berikutnya."
 
 #. placeholder {0}: credential.label
 #. placeholder {0}: selected.name
 #: src/pages/ModelSettingsOverlay.tsx:522
-#: src/pages/VoiceSettingsOverlay.tsx:223
+#: src/pages/VoiceSettingsOverlay.tsx:228
 msgid "Connected · {0}"
 msgstr "Tersambung · {0}"
 
 #. placeholder {0}: selected.name
-#: src/pages/VoiceSettingsOverlay.tsx:73
+#: src/pages/VoiceSettingsOverlay.tsx:78
 msgid "Connected {0}."
 msgstr "{0} tersambung."
 
@@ -844,21 +836,21 @@ msgstr "{0} tersambung."
 msgid "Connected and using {0}."
 msgstr "Tersambung dan memakai {0}."
 
+#: src/components/conversation/MessageView.tsx:805
 #: src/pages/McpServersOverlay.tsx:16
 #: src/pages/memory-providers/SupermemorySettingsForm.tsx:80
-#: src/pages/PluginsOverlay.tsx:494
-#: src/pages/Shell.tsx:6259
-#: src/pages/VoiceSettingsOverlay.tsx:253
+#: src/pages/PluginsOverlay.tsx:495
+#: src/pages/VoiceSettingsOverlay.tsx:258
 msgid "Connecting…"
 msgstr "Menyambungkan…"
 
 #. placeholder {0}: item.name
-#: src/pages/PluginsOverlay.tsx:297
+#: src/pages/PluginsOverlay.tsx:298
 msgid "Connection to {0} is still pending. You can close this and check again."
 msgstr "Koneksi ke {0} masih tertunda. Anda bisa menutup ini dan memeriksanya lagi."
 
-#: src/pages/Onboarding.tsx:538
-#: src/pages/Onboarding.tsx:697
+#: src/pages/Onboarding.tsx:552
+#: src/pages/Onboarding.tsx:711
 msgid "Continue"
 msgstr "Lanjutkan"
 
@@ -866,7 +858,7 @@ msgstr "Lanjutkan"
 msgid "Continue with email"
 msgstr "Lanjutkan dengan email"
 
-#: src/pages/Shell.tsx:4535
+#: src/pages/Shell.tsx:3921
 msgid "Copy"
 msgstr "Salin"
 
@@ -878,11 +870,11 @@ msgstr "Gagal menambahkan"
 msgid "Could not add MCP server"
 msgstr "Gagal menambahkan server MCP"
 
-#: src/pages/Shell.tsx:6226
+#: src/components/conversation/MessageView.tsx:772
 msgid "Could not approve this server"
 msgstr "Gagal menyetujui server ini"
 
-#: src/pages/Shell.tsx:6054
+#: src/components/conversation/MessageView.tsx:600
 msgid "Could not authorize this app"
 msgstr "Gagal mengotorisasi aplikasi ini"
 
@@ -890,7 +882,7 @@ msgstr "Gagal mengotorisasi aplikasi ini"
 msgid "Could not change the default model"
 msgstr "Gagal mengubah model default"
 
-#: src/pages/Shell.tsx:5692
+#: src/pages/Shell.tsx:4607
 msgid "Could not clear conversation"
 msgstr "Gagal membersihkan percakapan"
 
@@ -898,7 +890,7 @@ msgstr "Gagal membersihkan percakapan"
 msgid "Could not complete OAuth"
 msgstr "Gagal menyelesaikan OAuth"
 
-#: src/pages/PluginsOverlay.tsx:301
+#: src/pages/PluginsOverlay.tsx:302
 msgid "Could not connect"
 msgstr "Gagal menyambungkan"
 
@@ -911,7 +903,7 @@ msgstr "Gagal menyambungkan {0}"
 msgid "Could not connect this provider"
 msgstr "Gagal menyambungkan provider ini"
 
-#: src/pages/VoiceSettingsOverlay.tsx:75
+#: src/pages/VoiceSettingsOverlay.tsx:80
 msgid "Could not connect this voice provider"
 msgstr "Gagal menyambungkan provider suara ini"
 
@@ -919,7 +911,7 @@ msgstr "Gagal menyambungkan provider suara ini"
 msgid "Could not continue"
 msgstr "Gagal melanjutkan"
 
-#: src/pages/Shell.tsx:5128
+#: src/pages/Shell.tsx:4043
 msgid "Could not create bot"
 msgstr "Gagal membuat bot"
 
@@ -927,19 +919,19 @@ msgstr "Gagal membuat bot"
 msgid "Could not create group"
 msgstr "Gagal membuat grup"
 
-#: src/pages/Shell.tsx:5583
+#: src/pages/Shell.tsx:4498
 msgid "Could not create section"
 msgstr "Gagal membuat seksi"
 
-#: src/pages/Onboarding.tsx:251
+#: src/pages/Onboarding.tsx:265
 msgid "Could not create your bot"
 msgstr "Gagal membuat bot Anda"
 
-#: src/pages/Shell.tsx:5807
+#: src/pages/Shell.tsx:4722
 msgid "Could not delete bot"
 msgstr "Gagal menghapus bot"
 
-#: src/pages/Shell.tsx:5887
+#: src/pages/Shell.tsx:4802
 msgid "Could not delete group"
 msgstr "Gagal menghapus grup"
 
@@ -947,7 +939,7 @@ msgstr "Gagal menghapus grup"
 msgid "Could not delete MCP server"
 msgstr "Gagal menghapus server MCP"
 
-#: src/pages/Shell.tsx:5888
+#: src/pages/Shell.tsx:4803
 msgid "Could not delete routine"
 msgstr "Gagal menghapus rutinitas"
 
@@ -968,15 +960,15 @@ msgstr "Gagal mengunduh {0}. Coba lagi."
 msgid "Could not download {name}. Try again."
 msgstr "Gagal mengunduh {name}. Coba lagi."
 
-#: src/pages/PluginsOverlay.tsx:952
+#: src/pages/PluginsOverlay.tsx:954
 msgid "Could not install connector"
 msgstr "Gagal memasang konektor"
 
-#: src/pages/PluginsOverlay.tsx:370
+#: src/pages/PluginsOverlay.tsx:371
 msgid "Could not install MCP server"
 msgstr "Gagal memasang server MCP"
 
-#: src/pages/PluginsOverlay.tsx:409
+#: src/pages/PluginsOverlay.tsx:410
 msgid "Could not install skill"
 msgstr "Gagal memasang skill"
 
@@ -984,7 +976,7 @@ msgstr "Gagal memasang skill"
 msgid "Could not load approval rules"
 msgstr "Gagal memuat aturan persetujuan"
 
-#: src/pages/PluginsOverlay.tsx:130
+#: src/pages/PluginsOverlay.tsx:133
 msgid "Could not load integrations"
 msgstr "Gagal memuat integrasi"
 
@@ -1004,16 +996,16 @@ msgstr "Gagal memuat file ini."
 msgid "Could not load update status"
 msgstr "Gagal memuat status pembaruan"
 
-#: src/pages/VoiceSettingsOverlay.tsx:47
+#: src/pages/VoiceSettingsOverlay.tsx:52
 msgid "Could not load voice settings"
 msgstr "Gagal memuat pengaturan suara"
 
-#: src/pages/VoiceSettingsOverlay.tsx:109
+#: src/pages/VoiceSettingsOverlay.tsx:114
 msgid "Could not play a test clip"
 msgstr "Gagal memutar klip uji"
 
 #: src/pages/ModelSettingsOverlay.tsx:221
-#: src/pages/Onboarding.tsx:197
+#: src/pages/Onboarding.tsx:211
 msgid "Could not reach this model server"
 msgstr "Server model ini tidak bisa dijangkau"
 
@@ -1021,7 +1013,7 @@ msgstr "Server model ini tidak bisa dijangkau"
 msgid "Could not remove"
 msgstr "Gagal menghapus"
 
-#: src/pages/PluginsOverlay.tsx:965
+#: src/pages/PluginsOverlay.tsx:967
 msgid "Could not remove connector"
 msgstr "Gagal menghapus konektor"
 
@@ -1029,7 +1021,7 @@ msgstr "Gagal menghapus konektor"
 msgid "Could not remove group"
 msgstr "Gagal menghapus grup"
 
-#: src/pages/PluginsOverlay.tsx:396
+#: src/pages/PluginsOverlay.tsx:397
 msgid "Could not remove MCP server"
 msgstr "Gagal menghapus server MCP"
 
@@ -1037,23 +1029,23 @@ msgstr "Gagal menghapus server MCP"
 msgid "Could not remove rule"
 msgstr "Gagal menghapus aturan"
 
-#: src/pages/PluginsOverlay.tsx:423
+#: src/pages/PluginsOverlay.tsx:424
 msgid "Could not remove skill"
 msgstr "Gagal menghapus skill"
 
-#: src/pages/Shell.tsx:6146
+#: src/components/conversation/MessageView.tsx:692
 msgid "Could not render chart"
 msgstr "Gagal menampilkan grafik"
 
-#: src/pages/PluginsOverlay.tsx:327
+#: src/pages/PluginsOverlay.tsx:328
 msgid "Could not revoke connection"
 msgstr "Gagal mencabut koneksi"
 
-#: src/pages/Shell.tsx:3232
+#: src/pages/Shell.tsx:3226
 msgid "Could not run routine"
 msgstr "Gagal menjalankan rutinitas"
 
-#: src/pages/Shell.tsx:5484
+#: src/pages/Shell.tsx:4399
 msgid "Could not save"
 msgstr "Gagal menyimpan"
 
@@ -1065,11 +1057,11 @@ msgstr "Gagal menyimpan Auto Review"
 msgid "Could not save group"
 msgstr "Gagal menyimpan grup"
 
-#: src/pages/Onboarding.tsx:224
+#: src/pages/Onboarding.tsx:238
 msgid "Could not save model"
 msgstr "Gagal menyimpan model"
 
-#: src/pages/Shell.tsx:3203
+#: src/pages/Shell.tsx:3197
 msgid "Could not save routine"
 msgstr "Gagal menyimpan rutinitas"
 
@@ -1081,11 +1073,11 @@ msgstr "Gagal menyimpan aturan"
 msgid "Could not save that choice"
 msgstr "Gagal menyimpan pilihan itu"
 
-#: src/pages/VoiceSettingsOverlay.tsx:90
+#: src/pages/VoiceSettingsOverlay.tsx:95
 msgid "Could not save that voice"
 msgstr "Gagal menyimpan suara itu"
 
-#: src/pages/Shell.tsx:5966
+#: src/components/conversation/MessageView.tsx:508
 msgid "Could not save this choice"
 msgstr "Gagal menyimpan pilihan ini"
 
@@ -1094,7 +1086,7 @@ msgid "Could not send that"
 msgstr "Gagal mengirim itu"
 
 #: src/pages/McpServersOverlay.tsx:172
-#: src/pages/PluginsOverlay.tsx:384
+#: src/pages/PluginsOverlay.tsx:385
 msgid "Could not start OAuth"
 msgstr "Gagal memulai OAuth"
 
@@ -1102,7 +1094,7 @@ msgstr "Gagal memulai OAuth"
 msgid "Could not submit this answer"
 msgstr "Gagal mengirim jawaban ini"
 
-#: src/pages/Shell.tsx:2043
+#: src/pages/Shell.tsx:2032
 msgid "Could not take control"
 msgstr "Gagal mengambil alih"
 
@@ -1130,22 +1122,18 @@ msgstr "Gagal memuat pengaturan telepon"
 msgid "Couldn't start WhatsApp pairing"
 msgstr "Gagal memulai pemasangan WhatsApp"
 
-#: src/pages/AccountSettingsOverlay.tsx:93
-msgid "Couldn't update avatars"
-msgstr "Gagal memperbarui avatar"
-
 #: src/pages/PhoneSettingsOverlay.tsx:99
 msgid "Couldn't update phone settings"
 msgstr "Gagal memperbarui pengaturan telepon"
 
-#: src/pages/Shell.tsx:2233
-#: src/pages/Shell.tsx:5187
-#: src/pages/Shell.tsx:5618
+#: src/pages/Shell.tsx:2222
+#: src/pages/Shell.tsx:4102
+#: src/pages/Shell.tsx:4533
 msgid "Create"
 msgstr "Buat"
 
 #. placeholder {0}: bot.name
-#: src/pages/Shell.tsx:5592
+#: src/pages/Shell.tsx:4507
 msgid "Create a section and move {0} into it."
 msgstr "Buat seksi lalu pindahkan {0} ke dalamnya."
 
@@ -1157,7 +1145,7 @@ msgstr "Buat akun"
 msgid "Create group"
 msgstr "Buat grup"
 
-#: src/pages/Onboarding.tsx:557
+#: src/pages/Onboarding.tsx:571
 msgid "Create your first bot"
 msgstr "Buat bot pertama Anda"
 
@@ -1166,20 +1154,20 @@ msgid "Create your Sentra Bot"
 msgstr "Buat Sentra Bot Anda"
 
 #: src/pages/GroupPanel.tsx:134
-#: src/pages/Shell.tsx:5187
-#: src/pages/Shell.tsx:5618
+#: src/pages/Shell.tsx:4102
+#: src/pages/Shell.tsx:4533
 msgid "Creating…"
 msgstr "Membuat…"
 
-#: src/pages/PluginsOverlay.tsx:569
+#: src/pages/PluginsOverlay.tsx:570
 msgid "Creativity"
 msgstr "Kreativitas"
 
-#: src/pages/PluginsOverlay.tsx:834
+#: src/pages/PluginsOverlay.tsx:836
 msgid "Credential"
 msgstr "Kredensial"
 
-#: src/pages/PluginsOverlay.tsx:892
+#: src/pages/PluginsOverlay.tsx:894
 msgid "credential saved"
 msgstr "kredensial tersimpan"
 
@@ -1204,7 +1192,7 @@ msgstr "hari"
 msgid "Decline"
 msgstr "Tolak"
 
-#: src/pages/Shell.tsx:5391
+#: src/pages/Shell.tsx:4306
 msgid "Default (medium)"
 msgstr "Default (sedang)"
 
@@ -1215,24 +1203,24 @@ msgstr "Cakupan default"
 #: src/pages/BotContextMenu.tsx:105
 #: src/pages/McpServersOverlay.tsx:481
 #: src/pages/RoutineEditor.tsx:280
-#: src/pages/Shell.tsx:2522
-#: src/pages/Shell.tsx:2552
-#: src/pages/Shell.tsx:5813
-#: src/pages/Shell.tsx:5895
+#: src/pages/Shell.tsx:2511
+#: src/pages/Shell.tsx:2541
+#: src/pages/Shell.tsx:4728
+#: src/pages/Shell.tsx:4810
 msgid "Delete"
 msgstr "Hapus"
 
 #. placeholder {0}: bot.name
 #. placeholder {0}: group.name
-#: src/pages/Shell.tsx:2518
-#: src/pages/Shell.tsx:2548
+#: src/pages/Shell.tsx:2507
+#: src/pages/Shell.tsx:2537
 msgid "Delete {0}"
 msgstr "Hapus {0}"
 
 #. placeholder {0}: bot.name
 #. placeholder {0}: item.name
-#: src/pages/Shell.tsx:5745
-#: src/pages/Shell.tsx:5861
+#: src/pages/Shell.tsx:4660
+#: src/pages/Shell.tsx:4776
 msgid "Delete {0}?"
 msgstr "Hapus {0}?"
 
@@ -1240,17 +1228,17 @@ msgstr "Hapus {0}?"
 msgid "Delete group"
 msgstr "Hapus grup"
 
-#: src/pages/Shell.tsx:5782
+#: src/pages/Shell.tsx:4697
 msgid "Delete memories too"
 msgstr "Hapus memorinya juga"
 
-#: src/pages/Shell.tsx:4894
+#: src/components/conversation/MessageView.tsx:314
 msgid "deleted"
 msgstr "dihapus"
 
 #: src/pages/GroupPanel.tsx:232
-#: src/pages/Shell.tsx:5813
-#: src/pages/Shell.tsx:5895
+#: src/pages/Shell.tsx:4728
+#: src/pages/Shell.tsx:4810
 msgid "Deleting…"
 msgstr "Menghapus…"
 
@@ -1266,26 +1254,30 @@ msgstr "Jangan"
 msgid "Deployment default"
 msgstr "Default deployment"
 
-#: src/pages/Onboarding.tsx:676
-#: src/pages/Shell.tsx:5165
+#: src/pages/Onboarding.tsx:690
+#: src/pages/Shell.tsx:4080
 msgid "Describe what this bot does"
 msgstr "Jelaskan apa yang dikerjakan bot ini"
 
-#: src/pages/Onboarding.tsx:651
+#: src/pages/Onboarding.tsx:665
 msgid "Describe your own bot in the panel."
 msgstr "Jelaskan bot Anda sendiri di panel ini."
 
-#: src/pages/Onboarding.tsx:681
-#: src/pages/Shell.tsx:5170
-#: src/pages/Shell.tsx:5335
+#: src/pages/Onboarding.tsx:695
+#: src/pages/Shell.tsx:4085
+#: src/pages/Shell.tsx:4250
 msgid "Description"
 msgstr "Deskripsi"
 
-#: src/pages/PluginsOverlay.tsx:565
+#: src/pages/Shell.tsx:2704
+msgid "Desktop Runtime offline"
+msgstr ""
+
+#: src/pages/PluginsOverlay.tsx:566
 msgid "Developer"
 msgstr "Developer"
 
-#: src/pages/Shell.tsx:4306
+#: src/components/composer/Composer.tsx:446
 msgid "Dictate"
 msgstr "Dikte"
 
@@ -1298,15 +1290,15 @@ msgstr "Putuskan"
 msgid "Disconnecting…"
 msgstr "Memutuskan…"
 
-#: src/pages/Shell.tsx:4153
+#: src/components/composer/Composer.tsx:293
 msgid "Dismiss error"
 msgstr "Tutup pesan kesalahan"
 
-#: src/pages/Shell.tsx:6274
+#: src/components/conversation/MessageView.tsx:820
 msgid "Dismissed — reconnect anytime from MCP settings."
 msgstr "Ditutup — sambungkan lagi kapan saja dari pengaturan MCP."
 
-#: src/pages/PluginsOverlay.tsx:788
+#: src/pages/PluginsOverlay.tsx:790
 msgid "Display name"
 msgstr "Nama tampilan"
 
@@ -1350,7 +1342,7 @@ msgstr "Draf skill"
 msgid "Duplicate"
 msgstr "Duplikat"
 
-#: src/pages/Shell.tsx:4697
+#: src/components/conversation/MessageView.tsx:117
 msgid "Earlier message"
 msgstr "Pesan sebelumnya"
 
@@ -1372,7 +1364,7 @@ msgstr "Kredensial statis terenkripsi tersimpan"
 
 #. placeholder {0}: oauth.verificationUri.replace(/^https:\/\//, "")
 #: src/pages/ModelSettingsOverlay.tsx:586
-#: src/pages/Onboarding.tsx:459
+#: src/pages/Onboarding.tsx:473
 msgid "Enter this code at <0>{0}</0>"
 msgstr "Masukkan kode ini di <0>{0}</0>"
 
@@ -1410,16 +1402,16 @@ msgstr "Setiap bulan"
 msgid "Every week"
 msgstr "Setiap minggu"
 
-#: src/pages/Shell.tsx:6320
+#: src/components/conversation/MessageView.tsx:866
 msgid "Expand"
 msgstr "Perluas"
 
 #. placeholder {0}: group.title
-#: src/pages/Shell.tsx:2305
+#: src/pages/Shell.tsx:2294
 msgid "Expand {0}"
 msgstr "Perluas {0}"
 
-#: src/pages/Shell.tsx:5496
+#: src/pages/Shell.tsx:4411
 msgid "Export"
 msgstr "Ekspor"
 
@@ -1427,7 +1419,7 @@ msgstr "Ekspor"
 msgid "Export this week's list from the CRM and drop it in the shared folder"
 msgstr "Ekspor daftar minggu ini dari CRM dan taruh di folder bersama"
 
-#: src/pages/Shell.tsx:5516
+#: src/pages/Shell.tsx:4431
 msgid "Extra high"
 msgstr "Sangat tinggi"
 
@@ -1435,14 +1427,14 @@ msgstr "Sangat tinggi"
 msgid "Failed"
 msgstr "Gagal"
 
-#: src/pages/Shell.tsx:1878
-#: src/pages/Shell.tsx:1880
-#: src/pages/Shell.tsx:1882
+#: src/pages/Shell.tsx:1867
+#: src/pages/Shell.tsx:1869
+#: src/pages/Shell.tsx:1871
 msgid "Failed to send message"
 msgstr "Gagal mengirim pesan"
 
-#: src/pages/Shell.tsx:1912
-#: src/pages/Shell.tsx:1931
+#: src/pages/Shell.tsx:1901
+#: src/pages/Shell.tsx:1920
 msgid "Failed to stop"
 msgstr "Gagal menghentikan"
 
@@ -1456,18 +1448,18 @@ msgid "Failure handling"
 msgstr "Penanganan kegagalan"
 
 #: src/pages/ModelSettingsOverlay.tsx:427
-#: src/pages/Onboarding.tsx:336
+#: src/pages/Onboarding.tsx:350
 msgid "Find models"
 msgstr "Cari model"
 
 #: src/pages/ModelSettingsOverlay.tsx:427
-#: src/pages/Onboarding.tsx:336
+#: src/pages/Onboarding.tsx:350
 msgid "Finding…"
 msgstr "Mencari…"
 
 #. placeholder {0}: new URL(oauth.verificationUri).hostname
 #: src/pages/ModelSettingsOverlay.tsx:546
-#: src/pages/Onboarding.tsx:420
+#: src/pages/Onboarding.tsx:434
 msgid "Finish signing in at <0>{0}</0>. The final page may not load; paste its URL or code here."
 msgstr "Selesaikan proses masuk di <0>{0}</0>. Halaman terakhir mungkin tidak termuat; tempel URL atau kodenya di sini."
 
@@ -1497,8 +1489,8 @@ msgid "Git event"
 msgstr "Event Git"
 
 #: src/pages/PhoneSettingsOverlay.tsx:224
-#: src/pages/Shell.tsx:2708
-#: src/pages/Shell.tsx:2863
+#: src/pages/Shell.tsx:2697
+#: src/pages/Shell.tsx:2857
 msgid "Group"
 msgstr "Grup"
 
@@ -1524,7 +1516,7 @@ msgid "header"
 msgstr "header"
 
 #: src/pages/McpServersOverlay.tsx:342
-#: src/pages/PluginsOverlay.tsx:824
+#: src/pages/PluginsOverlay.tsx:826
 msgid "Header name"
 msgstr "Nama header"
 
@@ -1532,11 +1524,11 @@ msgstr "Nama header"
 msgid "Header value"
 msgstr "Nilai header"
 
-#: src/pages/VoiceSettingsOverlay.tsx:284
+#: src/pages/VoiceSettingsOverlay.tsx:289
 msgid "Hear a sample"
 msgstr "Dengar contoh"
 
-#: src/pages/VoiceSettingsOverlay.tsx:102
+#: src/pages/VoiceSettingsOverlay.tsx:107
 msgid "Hi, this is how I'll sound when I read replies out loud."
 msgstr "Halo, beginilah suara saya saat membacakan balasan."
 
@@ -1544,15 +1536,15 @@ msgstr "Halo, beginilah suara saya saat membacakan balasan."
 msgid "Hide password"
 msgstr "Sembunyikan kata sandi"
 
-#: src/pages/Shell.tsx:5519
+#: src/pages/Shell.tsx:4434
 msgid "High"
 msgstr "Tinggi"
 
-#: src/pages/Shell.tsx:4325
+#: src/components/composer/Composer.tsx:465
 msgid "Hold to talk"
 msgstr "Tahan untuk bicara"
 
-#: src/pages/Shell.tsx:4325
+#: src/components/composer/Composer.tsx:465
 msgid "Hold to talk (on-device dictation)"
 msgstr "Tahan untuk bicara (dikte di perangkat)"
 
@@ -1572,15 +1564,15 @@ msgstr "Seberapa sering"
 msgid "How to check"
 msgstr "Cara memeriksa"
 
-#: src/pages/Shell.tsx:4591
+#: src/pages/Shell.tsx:3977
 msgid "I’m done"
 msgstr "Saya sudah selesai"
 
-#: src/pages/VoiceSettingsOverlay.tsx:107
+#: src/pages/VoiceSettingsOverlay.tsx:112
 msgid "If you heard that, voice is ready."
 msgstr "Kalau tadi terdengar, suara sudah siap."
 
-#: src/pages/AccountSettingsOverlay.tsx:140
+#: src/pages/AccountSettingsOverlay.tsx:119
 msgid "iMessage channels and agent connections."
 msgstr "Kanal iMessage dan koneksi antar-agent."
 
@@ -1588,15 +1580,15 @@ msgstr "Kanal iMessage dan koneksi antar-agent."
 msgid "iMessage line"
 msgstr "Nomor iMessage"
 
-#: src/pages/PluginsOverlay.tsx:782
+#: src/pages/PluginsOverlay.tsx:784
 msgid "Import OpenAPI JSON"
 msgstr "Impor JSON OpenAPI"
 
-#: src/pages/Onboarding.tsx:701
+#: src/pages/Onboarding.tsx:715
 msgid "Includes a full operating playbook for this role."
 msgstr "Termasuk playbook kerja lengkap untuk peran ini."
 
-#: src/pages/Shell.tsx:5406
+#: src/pages/Shell.tsx:4321
 msgid "Inherit default"
 msgstr "Ikuti default"
 
@@ -1604,18 +1596,18 @@ msgstr "Ikuti default"
 msgid "Inputs"
 msgstr "Input"
 
-#: src/pages/PluginsOverlay.tsx:482
-#: src/pages/PluginsOverlay.tsx:533
+#: src/pages/PluginsOverlay.tsx:483
+#: src/pages/PluginsOverlay.tsx:534
 msgid "Install"
 msgstr "Pasang"
 
-#: src/pages/PluginsOverlay.tsx:498
-#: src/pages/PluginsOverlay.tsx:537
+#: src/pages/PluginsOverlay.tsx:499
+#: src/pages/PluginsOverlay.tsx:538
 msgid "Installed"
 msgstr "Terpasang"
 
-#: src/pages/PluginsOverlay.tsx:482
-#: src/pages/PluginsOverlay.tsx:533
+#: src/pages/PluginsOverlay.tsx:483
+#: src/pages/PluginsOverlay.tsx:534
 msgid "Installing…"
 msgstr "Memasang…"
 
@@ -1627,8 +1619,8 @@ msgstr "API key instance"
 msgid "Instruction"
 msgstr "Instruksi"
 
-#: src/pages/PluginsOverlay.tsx:582
-#: src/pages/Shell.tsx:2570
+#: src/pages/PluginsOverlay.tsx:583
+#: src/pages/Shell.tsx:2559
 msgid "Integrations"
 msgstr "Integrasi"
 
@@ -1650,19 +1642,19 @@ msgid "Interval unit"
 msgstr "Satuan interval"
 
 #: src/pages/MemorySettingsOverlay.tsx:39
-#: src/pages/Shell.tsx:5407
+#: src/pages/Shell.tsx:4322
 msgid "Isolated"
 msgstr "Terpisah"
 
-#: src/pages/Shell.tsx:5748
+#: src/pages/Shell.tsx:4663
 msgid "Its conversation, files, and routines will be permanently deleted. Bots it created stay in your list."
 msgstr "Percakapan, file, dan rutinitasnya akan dihapus permanen. Bot yang dibuatnya tetap ada di daftar Anda."
 
-#: src/pages/Shell.tsx:3886
+#: src/pages/Shell.tsx:3875
 msgid "Jump to latest"
 msgstr "Lompat ke terbaru"
 
-#: src/pages/Shell.tsx:4692
+#: src/components/conversation/MessageView.tsx:112
 msgid "Jump to replied message"
 msgstr "Lompat ke pesan yang dibalas"
 
@@ -1670,7 +1662,7 @@ msgstr "Lompat ke pesan yang dibalas"
 msgid "just now"
 msgstr "baru saja"
 
-#: src/pages/Shell.tsx:5766
+#: src/pages/Shell.tsx:4681
 msgid "Keep memories"
 msgstr "Simpan memorinya"
 
@@ -1678,17 +1670,17 @@ msgstr "Simpan memorinya"
 msgid "key"
 msgstr "key"
 
-#: src/pages/VoiceSettingsOverlay.tsx:229
+#: src/pages/VoiceSettingsOverlay.tsx:234
 msgid "Keys stay on the server. The app only learns whether a provider is configured."
 msgstr "Key tetap di server. Aplikasi hanya tahu apakah sebuah provider sudah dikonfigurasi."
 
-#: src/pages/PluginsOverlay.tsx:571
+#: src/pages/PluginsOverlay.tsx:572
 msgid "Knowledge"
 msgstr "Pengetahuan"
 
-#: src/pages/AccountSettingsOverlay.tsx:154
-#: src/pages/AccountSettingsOverlay.tsx:363
-#: src/pages/AccountSettingsOverlay.tsx:380
+#: src/pages/AccountSettingsOverlay.tsx:133
+#: src/pages/AccountSettingsOverlay.tsx:296
+#: src/pages/AccountSettingsOverlay.tsx:313
 msgid "Language"
 msgstr "Bahasa"
 
@@ -1709,7 +1701,7 @@ msgstr "Tertaut sebagai {0}"
 msgid "Listening…"
 msgstr "Mendengarkan…"
 
-#: src/pages/Shell.tsx:3839
+#: src/pages/Shell.tsx:3828
 msgid "Load earlier messages"
 msgstr "Muat pesan sebelumnya"
 
@@ -1717,7 +1709,7 @@ msgstr "Muat pesan sebelumnya"
 msgid "Loading activity…"
 msgstr "Memuat aktivitas…"
 
-#: src/pages/PluginsOverlay.tsx:608
+#: src/pages/PluginsOverlay.tsx:609
 msgid "Loading integrations…"
 msgstr "Memuat integrasi…"
 
@@ -1743,13 +1735,13 @@ msgstr "Memuat pratinjau…"
 msgid "Loading rules…"
 msgstr "Memuat aturan…"
 
-#: src/pages/VoiceSettingsOverlay.tsx:128
+#: src/pages/VoiceSettingsOverlay.tsx:133
 msgid "Loading voice providers…"
 msgstr "Memuat provider suara…"
 
 #: src/App.tsx:50
-#: src/pages/Onboarding.tsx:260
-#: src/pages/Shell.tsx:3839
+#: src/pages/Onboarding.tsx:274
+#: src/pages/Shell.tsx:3828
 msgid "Loading…"
 msgstr "Memuat…"
 
@@ -1757,15 +1749,15 @@ msgstr "Memuat…"
 msgid "Local"
 msgstr "Lokal"
 
-#: src/pages/Shell.tsx:2656
+#: src/pages/Shell.tsx:2645
 msgid "Log out"
 msgstr "Keluar"
 
-#: src/pages/Shell.tsx:5517
+#: src/pages/Shell.tsx:4432
 msgid "Low"
 msgstr "Rendah"
 
-#: src/pages/AccountSettingsOverlay.tsx:147
+#: src/pages/AccountSettingsOverlay.tsx:126
 msgid "Manage phone settings"
 msgstr "Kelola pengaturan telepon"
 
@@ -1781,17 +1773,17 @@ msgstr "Tandai sudah dibaca"
 msgid "Mark as Unread"
 msgstr "Tandai belum dibaca"
 
-#: src/pages/Shell.tsx:5521
+#: src/pages/Shell.tsx:4436
 msgid "Max"
 msgstr "Maks"
 
 #: src/pages/McpServersOverlay.tsx:224
 #: src/pages/McpServersOverlay.tsx:229
-#: src/pages/PluginsOverlay.tsx:756
+#: src/pages/PluginsOverlay.tsx:758
 msgid "MCP servers"
 msgstr "Server MCP"
 
-#: src/pages/Shell.tsx:5518
+#: src/pages/Shell.tsx:4433
 msgid "Medium"
 msgstr "Sedang"
 
@@ -1804,11 +1796,11 @@ msgid "Members (pick {GROUP_MEMBER_MIN}–{GROUP_MEMBER_MAX})"
 msgstr "Anggota (pilih {GROUP_MEMBER_MIN}–{GROUP_MEMBER_MAX})"
 
 #: src/pages/MemorySettingsOverlay.tsx:134
-#: src/pages/Shell.tsx:2614
+#: src/pages/Shell.tsx:2603
 msgid "Memory"
 msgstr "Memori"
 
-#: src/pages/Shell.tsx:5402
+#: src/pages/Shell.tsx:4317
 msgid "Memory scope"
 msgstr "Cakupan memori"
 
@@ -1817,29 +1809,29 @@ msgstr "Cakupan memori"
 msgid "Message"
 msgstr "Pesan"
 
-#: src/pages/Shell.tsx:4403
-#: src/pages/Shell.tsx:4500
+#: src/components/composer/Composer.tsx:543
+#: src/components/composer/shared.ts:23
 msgid "Message"
 msgstr "Pesan"
 
-#: src/pages/Shell.tsx:4399
-#: src/pages/Shell.tsx:4403
+#: src/components/composer/Composer.tsx:539
+#: src/components/composer/Composer.tsx:543
 msgid "Message {activeName}"
 msgstr "Kirim pesan ke {activeName}"
 
-#: src/pages/Shell.tsx:4134
+#: src/components/composer/Composer.tsx:274
 msgid "Message composer"
 msgstr "Kolom tulis pesan"
 
-#: src/pages/Shell.tsx:4770
+#: src/components/conversation/MessageView.tsx:190
 msgid "Message from {peer}"
 msgstr "Pesan dari {peer}"
 
-#: src/pages/Shell.tsx:4400
+#: src/components/composer/Composer.tsx:540
 msgid "Message…"
 msgstr "Pesan…"
 
-#: src/pages/Shell.tsx:4770
+#: src/components/conversation/MessageView.tsx:190
 msgid "Messaged {peer}"
 msgstr "Mengirim pesan ke {peer}"
 
@@ -1847,7 +1839,7 @@ msgstr "Mengirim pesan ke {peer}"
 msgid "Microphone failed"
 msgstr "Mikrofon gagal"
 
-#: src/pages/Shell.tsx:5520
+#: src/pages/Shell.tsx:4435
 msgid "Minimal"
 msgstr "Minimal"
 
@@ -1866,15 +1858,15 @@ msgstr "menit"
 #: src/pages/ModelSettingsOverlay.tsx:432
 #: src/pages/ModelSettingsOverlay.tsx:493
 #: src/pages/ModelSettingsOverlay.tsx:914
-#: src/pages/Onboarding.tsx:341
-#: src/pages/Onboarding.tsx:390
-#: src/pages/Onboarding.tsx:398
-#: src/pages/Shell.tsx:5358
+#: src/pages/Onboarding.tsx:355
+#: src/pages/Onboarding.tsx:404
+#: src/pages/Onboarding.tsx:412
+#: src/pages/Shell.tsx:4273
 msgid "Model"
 msgstr "Model"
 
 #: src/pages/ModelSettingsOverlay.tsx:474
-#: src/pages/Onboarding.tsx:371
+#: src/pages/Onboarding.tsx:385
 msgid "Model id"
 msgstr "ID model"
 
@@ -1882,7 +1874,7 @@ msgstr "ID model"
 msgid "Model options"
 msgstr "Opsi model"
 
-#: src/pages/AccountSettingsOverlay.tsx:222
+#: src/pages/AccountSettingsOverlay.tsx:155
 msgid "Model spend uses your provider keys."
 msgstr "Biaya model memakai key provider Anda."
 
@@ -1891,12 +1883,12 @@ msgid "Model updated."
 msgstr "Model diperbarui."
 
 #: src/pages/ModelSettingsOverlay.tsx:304
-#: src/pages/Shell.tsx:2601
+#: src/pages/Shell.tsx:2590
 msgid "Models"
 msgstr "Model"
 
 #: src/pages/ModelSettingsOverlay.tsx:445
-#: src/pages/Onboarding.tsx:348
+#: src/pages/Onboarding.tsx:362
 msgid "Models from server"
 msgstr "Model dari server"
 
@@ -1904,7 +1896,7 @@ msgstr "Model dari server"
 msgid "Monthly"
 msgstr "Bulanan"
 
-#: src/pages/PluginsOverlay.tsx:573
+#: src/pages/PluginsOverlay.tsx:574
 msgid "More apps"
 msgstr "Aplikasi lain"
 
@@ -1913,7 +1905,7 @@ msgstr "Aplikasi lain"
 msgid "Move {0} to section"
 msgstr "Pindahkan {0} ke seksi"
 
-#: src/pages/Shell.tsx:5769
+#: src/pages/Shell.tsx:4684
 msgid "Move them to your shared memory."
 msgstr "Pindahkan ke memori bersama Anda."
 
@@ -1925,16 +1917,16 @@ msgstr "Pindahkan ke"
 #: src/pages/Auth.tsx:49
 #: src/pages/GroupPanel.tsx:110
 #: src/pages/GroupPanel.tsx:201
-#: src/pages/Onboarding.tsx:663
+#: src/pages/Onboarding.tsx:677
 #: src/pages/RoutineEditor.tsx:294
-#: src/pages/Shell.tsx:5150
-#: src/pages/Shell.tsx:5317
-#: src/pages/Shell.tsx:5595
+#: src/pages/Shell.tsx:4065
+#: src/pages/Shell.tsx:4232
+#: src/pages/Shell.tsx:4510
 msgid "Name"
 msgstr "Nama"
 
-#: src/pages/Onboarding.tsx:667
-#: src/pages/Shell.tsx:5155
+#: src/pages/Onboarding.tsx:681
+#: src/pages/Shell.tsx:4070
 msgid "Name this bot"
 msgstr "Beri nama bot ini"
 
@@ -1954,13 +1946,13 @@ msgstr "Butuh masukan"
 msgid "Needs takeover"
 msgstr "Butuh diambil alih"
 
-#: src/pages/Shell.tsx:2247
-#: src/pages/Shell.tsx:5138
+#: src/pages/Shell.tsx:2236
+#: src/pages/Shell.tsx:4053
 msgid "New bot"
 msgstr "Bot baru"
 
 #: src/pages/GroupPanel.tsx:98
-#: src/pages/Shell.tsx:2257
+#: src/pages/Shell.tsx:2246
 msgid "New group"
 msgstr "Grup baru"
 
@@ -1973,7 +1965,7 @@ msgid "New routine"
 msgstr "Rutinitas baru"
 
 #: src/pages/BotContextMenu.tsx:130
-#: src/pages/Shell.tsx:5589
+#: src/pages/Shell.tsx:4504
 msgid "New section"
 msgstr "Seksi baru"
 
@@ -1981,20 +1973,20 @@ msgstr "Seksi baru"
 msgid "No agent connections yet."
 msgstr "Belum ada koneksi antar-agent."
 
-#: src/pages/PluginsOverlay.tsx:687
+#: src/pages/PluginsOverlay.tsx:689
 msgid "No apps match your search."
 msgstr "Tidak ada aplikasi yang cocok dengan pencarian Anda."
 
-#: src/pages/PluginsOverlay.tsx:894
+#: src/pages/PluginsOverlay.tsx:896
 msgid "no auth"
 msgstr "tanpa auth"
 
-#: src/pages/PluginsOverlay.tsx:810
+#: src/pages/PluginsOverlay.tsx:812
 msgid "No authentication"
 msgstr "Tanpa autentikasi"
 
 #. placeholder {0}: item.name
-#: src/pages/PluginsOverlay.tsx:323
+#: src/pages/PluginsOverlay.tsx:324
 msgid "No connection record found for {0}."
 msgstr "Tidak ada catatan koneksi untuk {0}."
 
@@ -2014,7 +2006,7 @@ msgstr "Belum ada grup iMessage."
 msgid "No longer active"
 msgstr "Sudah tidak aktif"
 
-#: src/pages/PluginsOverlay.tsx:682
+#: src/pages/PluginsOverlay.tsx:684
 msgid "No managed app catalog is configured on this deployment."
 msgstr "Deployment ini belum punya katalog aplikasi terkelola."
 
@@ -2022,7 +2014,7 @@ msgstr "Deployment ini belum punya katalog aplikasi terkelola."
 msgid "No matching models"
 msgstr "Tidak ada model yang cocok"
 
-#: src/pages/PluginsOverlay.tsx:876
+#: src/pages/PluginsOverlay.tsx:878
 msgid "No MCP or API tool sources installed yet."
 msgstr "Belum ada sumber tool MCP atau API yang terpasang."
 
@@ -2054,16 +2046,16 @@ msgstr "Tanpa pemicu"
 msgid "None yet"
 msgstr "Belum ada"
 
-#: src/pages/VoiceSettingsOverlay.tsx:156
+#: src/pages/VoiceSettingsOverlay.tsx:161
 msgid "Not configured"
 msgstr "Belum dikonfigurasi"
 
 #: src/pages/ModelSettingsOverlay.tsx:524
-#: src/pages/VoiceSettingsOverlay.tsx:225
+#: src/pages/VoiceSettingsOverlay.tsx:230
 msgid "Not connected"
 msgstr "Belum tersambung"
 
-#: src/pages/PluginsOverlay.tsx:643
+#: src/pages/PluginsOverlay.tsx:645
 msgid "Not in the plugin catalog"
 msgstr "Tidak ada di katalog plugin"
 
@@ -2071,7 +2063,7 @@ msgstr "Tidak ada di katalog plugin"
 msgid "Not linked — text the deployment's number once to link your phone to your agent."
 msgstr "Belum tertaut — kirim satu pesan ke nomor deployment untuk menautkan ponsel Anda dengan agent."
 
-#: src/pages/Shell.tsx:6262
+#: src/components/conversation/MessageView.tsx:808
 msgid "Not now"
 msgstr "Nanti saja"
 
@@ -2113,15 +2105,15 @@ msgstr "pada tanggal 1 pukul {0}"
 msgid "Open"
 msgstr "Buka"
 
-#: src/pages/Shell.tsx:2926
+#: src/pages/Shell.tsx:2920
 msgid "Open computer"
 msgstr "Buka komputer"
 
-#: src/pages/Shell.tsx:2892
+#: src/pages/Shell.tsx:2886
 msgid "Open in full window"
 msgstr "Buka di jendela penuh"
 
-#: src/pages/Shell.tsx:2680
+#: src/pages/Shell.tsx:2669
 msgid "Open navigation"
 msgstr "Buka navigasi"
 
@@ -2142,11 +2134,11 @@ msgid "Open work"
 msgstr "Pekerjaan terbuka"
 
 #: src/pages/ModelSettingsOverlay.tsx:405
-#: src/pages/Onboarding.tsx:315
+#: src/pages/Onboarding.tsx:329
 msgid "OpenAI-compatible server URL"
 msgstr "URL server yang kompatibel dengan OpenAI"
 
-#: src/pages/Shell.tsx:4905
+#: src/components/conversation/MessageView.tsx:325
 msgid "Opened its thread."
 msgstr "Membuka percakapannya."
 
@@ -2155,11 +2147,11 @@ msgid "Opening your workspace…"
 msgstr "Membuka workspace Anda…"
 
 #: src/pages/ModelSettingsOverlay.tsx:636
-#: src/pages/Onboarding.tsx:502
+#: src/pages/Onboarding.tsx:516
 msgid "Optional"
 msgstr "Opsional"
 
-#: src/pages/AccountSettingsOverlay.tsx:250
+#: src/pages/AccountSettingsOverlay.tsx:183
 msgid "Optional controls most people never need"
 msgstr "Kontrol opsional yang jarang dibutuhkan"
 
@@ -2171,7 +2163,7 @@ msgstr "Nilai header opsional"
 msgid "Or connect an API key"
 msgstr "Atau sambungkan sebuah API key"
 
-#: src/pages/Onboarding.tsx:510
+#: src/pages/Onboarding.tsx:524
 msgid "Or paste an API key"
 msgstr "Atau tempel sebuah API key"
 
@@ -2180,16 +2172,12 @@ msgstr "Atau tempel sebuah API key"
 msgid "Or send this code to {0}:"
 msgstr "Atau kirim kode ini ke {0}:"
 
-#: src/pages/AccountSettingsOverlay.tsx:191
-msgid "Organic"
-msgstr "Organic"
-
 #: src/pages/memory-providers/SupermemorySettingsForm.tsx:60
 msgid "Organization API key"
 msgstr "API key organisasi"
 
 #: src/pages/ModelSettingsOverlay.tsx:454
-#: src/pages/Onboarding.tsx:357
+#: src/pages/Onboarding.tsx:371
 msgid "Other model…"
 msgstr "Model lain…"
 
@@ -2216,16 +2204,16 @@ msgstr "Tunda"
 msgid "Password"
 msgstr "Kata sandi"
 
-#: src/pages/VoiceSettingsOverlay.tsx:242
+#: src/pages/VoiceSettingsOverlay.tsx:247
 msgid "Paste a replacement key"
 msgstr "Tempel key pengganti"
 
 #: src/pages/ModelSettingsOverlay.tsx:416
-#: src/pages/Onboarding.tsx:326
+#: src/pages/Onboarding.tsx:340
 msgid "Paste the OpenAI-compatible address from your server. Sentra Bot adds /v1 if needed."
 msgstr "Tempel alamat kompatibel-OpenAI dari server Anda. Sentra Bot menambahkan /v1 bila perlu."
 
-#: src/pages/VoiceSettingsOverlay.tsx:242
+#: src/pages/VoiceSettingsOverlay.tsx:247
 msgid "Paste your API key"
 msgstr "Tempel API key Anda"
 
@@ -2233,21 +2221,21 @@ msgstr "Tempel API key Anda"
 msgid "Paused"
 msgstr "Dijeda"
 
-#: src/pages/PluginsOverlay.tsx:567
+#: src/pages/PluginsOverlay.tsx:568
 msgid "Payments"
 msgstr "Pembayaran"
 
 #: src/pages/ModelSettingsOverlay.tsx:518
-#: src/pages/VoiceSettingsOverlay.tsx:219
+#: src/pages/VoiceSettingsOverlay.tsx:224
 msgid "Personal credential"
 msgstr "Kredensial pribadi"
 
-#: src/pages/AccountSettingsOverlay.tsx:137
+#: src/pages/AccountSettingsOverlay.tsx:116
 #: src/pages/PhoneSettingsOverlay.tsx:116
 msgid "Phone"
 msgstr "Telepon"
 
-#: src/pages/VoiceSettingsOverlay.tsx:155
+#: src/pages/VoiceSettingsOverlay.tsx:160
 msgid "Pick a voice"
 msgstr "Pilih suara"
 
@@ -2255,11 +2243,11 @@ msgstr "Pilih suara"
 msgid "Pin"
 msgstr "Sematkan"
 
-#: src/pages/VoiceSettingsOverlay.tsx:284
+#: src/pages/VoiceSettingsOverlay.tsx:289
 msgid "Playing…"
 msgstr "Memutar…"
 
-#: src/pages/PluginsOverlay.tsx:615
+#: src/pages/PluginsOverlay.tsx:616
 msgid "Popular"
 msgstr "Populer"
 
@@ -2272,11 +2260,11 @@ msgstr "POST ke"
 msgid "Preview {0}"
 msgstr "Pratinjau {0}"
 
-#: src/pages/Shell.tsx:5093
+#: src/pages/Shell.tsx:4008
 msgid "Private"
 msgstr "Privat"
 
-#: src/pages/PluginsOverlay.tsx:563
+#: src/pages/PluginsOverlay.tsx:564
 msgid "Productivity"
 msgstr "Produktivitas"
 
@@ -2285,7 +2273,7 @@ msgid "Provider"
 msgstr "Provider"
 
 #: src/pages/ModelSettingsOverlay.tsx:341
-#: src/pages/VoiceSettingsOverlay.tsx:168
+#: src/pages/VoiceSettingsOverlay.tsx:173
 msgid "Providers"
 msgstr "Provider"
 
@@ -2293,7 +2281,7 @@ msgstr "Provider"
 msgid "Queued"
 msgstr "Antre"
 
-#: src/pages/Shell.tsx:5434
+#: src/pages/Shell.tsx:4349
 msgid "Read replies aloud"
 msgstr "Bacakan balasan dengan suara"
 
@@ -2327,27 +2315,27 @@ msgstr "Pulihkan mengganti komputer yang tidak terjangkau dan mempertahankan fil
 msgid "Recovering…"
 msgstr "Memulihkan…"
 
-#: src/pages/Shell.tsx:4581
+#: src/pages/Shell.tsx:3967
 msgid "Release"
 msgstr "Lepaskan"
 
 #: src/components/ApprovalRulesSettings.tsx:178
-#: src/pages/PluginsOverlay.tsx:455
-#: src/pages/PluginsOverlay.tsx:508
-#: src/pages/PluginsOverlay.tsx:547
-#: src/pages/PluginsOverlay.tsx:666
-#: src/pages/PluginsOverlay.tsx:905
+#: src/pages/PluginsOverlay.tsx:456
+#: src/pages/PluginsOverlay.tsx:509
+#: src/pages/PluginsOverlay.tsx:548
+#: src/pages/PluginsOverlay.tsx:668
+#: src/pages/PluginsOverlay.tsx:907
 #: src/pages/ScratchpadSection.tsx:162
 msgid "Remove"
 msgstr "Hapus"
 
 #. placeholder {0}: attachment.file.name
-#: src/pages/Shell.tsx:4204
+#: src/components/composer/Composer.tsx:344
 msgid "Remove {0}"
 msgstr "Hapus {0}"
 
 #. placeholder {0}: mention.name
-#: src/pages/Shell.tsx:4362
+#: src/components/composer/Composer.tsx:502
 msgid "Remove mention {0}"
 msgstr "Hapus sebutan {0}"
 
@@ -2356,7 +2344,7 @@ msgid "Remove schedule"
 msgstr "Hapus jadwal"
 
 #. placeholder {0}: selectedSkill.name
-#: src/pages/Shell.tsx:4341
+#: src/components/composer/Composer.tsx:481
 msgid "Remove skill {0}"
 msgstr "Hapus skill {0}"
 
@@ -2368,7 +2356,7 @@ msgstr "Hapus jadwal ini"
 msgid "Remove webhook"
 msgstr "Hapus webhook"
 
-#: src/pages/Shell.tsx:4904
+#: src/components/conversation/MessageView.tsx:324
 msgid "Removed with chat, computer, and memory."
 msgstr "Dihapus beserta chat, komputer, dan memorinya."
 
@@ -2376,10 +2364,10 @@ msgstr "Dihapus beserta chat, komputer, dan memorinya."
 msgid "Removed, but list refresh failed"
 msgstr "Terhapus, tetapi daftar gagal disegarkan"
 
-#: src/pages/PluginsOverlay.tsx:450
-#: src/pages/PluginsOverlay.tsx:547
-#: src/pages/PluginsOverlay.tsx:661
-#: src/pages/PluginsOverlay.tsx:905
+#: src/pages/PluginsOverlay.tsx:451
+#: src/pages/PluginsOverlay.tsx:548
+#: src/pages/PluginsOverlay.tsx:663
+#: src/pages/PluginsOverlay.tsx:907
 msgid "Removing…"
 msgstr "Menghapus…"
 
@@ -2393,15 +2381,15 @@ msgstr "Buka kembali"
 msgid "Replace API key"
 msgstr "Ganti API key"
 
-#: src/pages/VoiceSettingsOverlay.tsx:255
+#: src/pages/VoiceSettingsOverlay.tsx:260
 msgid "Replace key"
 msgstr "Ganti key"
 
-#: src/pages/Shell.tsx:4527
+#: src/pages/Shell.tsx:3913
 msgid "Reply"
 msgstr "Balas"
 
-#: src/pages/Shell.tsx:4167
+#: src/components/composer/Composer.tsx:307
 msgid "Replying to {replyName}"
 msgstr "Membalas {replyName}"
 
@@ -2422,8 +2410,8 @@ msgstr "Reset komputer?"
 msgid "Resetting…"
 msgstr "Mereset…"
 
-#: src/pages/Shell.tsx:2514
-#: src/pages/Shell.tsx:2544
+#: src/pages/Shell.tsx:2503
+#: src/pages/Shell.tsx:2533
 msgid "Restore"
 msgstr "Pulihkan"
 
@@ -2439,7 +2427,7 @@ msgstr "Coba lagi sekarang"
 msgid "Return to Sentra Bot"
 msgstr "Kembali ke Sentra Bot"
 
-#: src/pages/PluginsOverlay.tsx:716
+#: src/pages/PluginsOverlay.tsx:718
 msgid "Reusable SKILL.md playbooks your agents follow. Install one and invoke it with /Name in the composer."
 msgstr "Playbook SKILL.md yang bisa dipakai ulang oleh agent Anda. Pasang satu lalu panggil dengan /Nama di kolom tulis pesan."
 
@@ -2447,17 +2435,13 @@ msgstr "Playbook SKILL.md yang bisa dipakai ulang oleh agent Anda. Pasang satu l
 msgid "Revoke"
 msgstr "Cabut"
 
-#: src/pages/AccountSettingsOverlay.tsx:189
-msgid "Robot"
-msgstr "Robot"
-
 #: src/pages/RoutineEditor.tsx:571
 msgid "Rotate key"
 msgstr "Rotasi key"
 
 #: src/pages/RoutineEditor.tsx:247
-#: src/pages/Shell.tsx:3169
-#: src/pages/Shell.tsx:3179
+#: src/pages/Shell.tsx:3163
+#: src/pages/Shell.tsx:3173
 msgid "Routine"
 msgstr "Rutinitas"
 
@@ -2474,7 +2458,7 @@ msgstr "Jalankan pada"
 msgid "Run history"
 msgstr "Riwayat jalan"
 
-#: src/pages/Shell.tsx:3162
+#: src/pages/Shell.tsx:3156
 msgid "Run time must be in the future."
 msgstr "Waktu jalan harus di masa depan."
 
@@ -2495,7 +2479,7 @@ msgstr "Menjalankan…"
 #: src/pages/GroupPanel.tsx:224
 #: src/pages/ModelSettingsOverlay.tsx:675
 #: src/pages/RoutineEditor.tsx:479
-#: src/pages/Shell.tsx:5489
+#: src/pages/Shell.tsx:4404
 msgid "Save"
 msgstr "Simpan"
 
@@ -2537,12 +2521,12 @@ msgid "Say yes or no, or answer in a sentence."
 msgstr "Jawab ya atau tidak, atau jawab dengan satu kalimat."
 
 #: src/pages/ModelSettingsOverlay.tsx:939
-#: src/pages/Shell.tsx:2268
+#: src/pages/Shell.tsx:2257
 msgid "Search"
 msgstr "Cari"
 
-#: src/pages/PluginsOverlay.tsx:598
 #: src/pages/PluginsOverlay.tsx:599
+#: src/pages/PluginsOverlay.tsx:600
 msgid "Search apps"
 msgstr "Cari aplikasi"
 
@@ -2555,8 +2539,8 @@ msgstr "Cari model"
 msgid "Search providers"
 msgstr "Cari provider"
 
-#: src/pages/Onboarding.tsx:274
-#: src/pages/Onboarding.tsx:275
+#: src/pages/Onboarding.tsx:288
+#: src/pages/Onboarding.tsx:289
 msgid "Search providers and models"
 msgstr "Cari provider dan model"
 
@@ -2564,11 +2548,11 @@ msgstr "Cari provider dan model"
 msgid "Searching…"
 msgstr "Mencari…"
 
-#: src/pages/Shell.tsx:2709
+#: src/pages/Shell.tsx:2698
 msgid "Select a bot"
 msgstr "Pilih bot"
 
-#: src/pages/Shell.tsx:4423
+#: src/components/composer/Composer.tsx:563
 msgid "Send"
 msgstr "Kirim"
 
@@ -2587,7 +2571,7 @@ msgstr "Kirim"
 msgid "Sending…"
 msgstr "Mengirim…"
 
-#: src/pages/PluginsOverlay.tsx:839
+#: src/pages/PluginsOverlay.tsx:841
 msgid "Sentra Bot verifies the source before saving it. Credentials are encrypted and are never returned to clients or exposed to the model."
 msgstr "Sentra Bot memverifikasi sumbernya sebelum menyimpan. Kredensial dienkripsi, tidak pernah dikembalikan ke klien maupun dibuka ke model."
 
@@ -2601,40 +2585,40 @@ msgstr "Nama server"
 
 #: src/pages/McpServersOverlay.tsx:317
 #: src/pages/ModelSettingsOverlay.tsx:401
-#: src/pages/Onboarding.tsx:311
+#: src/pages/Onboarding.tsx:325
 msgid "Server URL"
 msgstr "URL server"
 
-#: src/pages/Shell.tsx:2718
+#: src/pages/Shell.tsx:2712
 msgid "Set up voice to call"
 msgstr "Siapkan suara untuk menelepon"
 
-#: src/pages/AccountSettingsOverlay.tsx:113
-#: src/pages/Shell.tsx:2578
-#: src/pages/Shell.tsx:2588
-#: src/pages/Shell.tsx:2859
+#: src/pages/AccountSettingsOverlay.tsx:92
+#: src/pages/Shell.tsx:2567
+#: src/pages/Shell.tsx:2577
+#: src/pages/Shell.tsx:2853
 msgid "Settings"
 msgstr "Pengaturan"
 
-#: src/pages/Shell.tsx:4441
+#: src/components/composer/Composer.tsx:581
 msgid "Settings: General"
 msgstr "Pengaturan: Umum"
 
-#: src/pages/Shell.tsx:4443
+#: src/components/composer/Composer.tsx:583
 msgid "Settings: Usage"
 msgstr "Pengaturan: Pemakaian"
 
 #: src/pages/ModelSettingsOverlay.tsx:413
-#: src/pages/Onboarding.tsx:323
+#: src/pages/Onboarding.tsx:337
 msgid "Setup help"
 msgstr "Bantuan penyiapan"
 
 #: src/pages/MemorySettingsOverlay.tsx:39
-#: src/pages/Shell.tsx:5408
+#: src/pages/Shell.tsx:4323
 msgid "Shared"
 msgstr "Bersama"
 
-#: src/pages/Shell.tsx:2870
+#: src/pages/Shell.tsx:2864
 msgid "Show computer"
 msgstr "Tampilkan komputer"
 
@@ -2642,14 +2626,14 @@ msgstr "Tampilkan komputer"
 msgid "Show password"
 msgstr "Tampilkan kata sandi"
 
-#: src/pages/Shell.tsx:2870
+#: src/pages/Shell.tsx:2864
 msgid "Show settings"
 msgstr "Tampilkan pengaturan"
 
 #: src/lib/localized-provider-hint.ts:7
 #: src/pages/Auth.tsx:161
 #: src/pages/ModelSettingsOverlay.tsx:618
-#: src/pages/Onboarding.tsx:151
+#: src/pages/Onboarding.tsx:165
 msgid "Sign in"
 msgstr "Masuk"
 
@@ -2666,19 +2650,19 @@ msgid "Sign up"
 msgstr "Daftar"
 
 #. placeholder {0}: skill.name
-#: src/pages/Shell.tsx:4251
+#: src/components/composer/Composer.tsx:391
 msgid "Skill {0}"
 msgstr "Skill {0}"
 
-#: src/pages/PluginsOverlay.tsx:713
+#: src/pages/PluginsOverlay.tsx:715
 msgid "Skills"
 msgstr "Skill"
 
-#: src/pages/Shell.tsx:4588
+#: src/pages/Shell.tsx:3974
 msgid "Skip"
 msgstr "Lewati"
 
-#: src/pages/Onboarding.tsx:548
+#: src/pages/Onboarding.tsx:562
 msgid "Skip for now"
 msgstr "Lewati dulu"
 
@@ -2687,7 +2671,7 @@ msgid "Skip or deploy key"
 msgstr "Lewati atau pakai deploy key"
 
 #. placeholder {0}: skipped.join(", ")
-#: src/pages/Shell.tsx:1763
+#: src/pages/Shell.tsx:1746
 msgid "Skipped {0}"
 msgstr "Melewati {0}"
 
@@ -2704,21 +2688,21 @@ msgstr "Pembaruan perangkat lunak"
 msgid "Space interrupts · Esc hangs up"
 msgstr "Spasi untuk menyela · Esc untuk menutup telepon"
 
-#: src/pages/Shell.tsx:4739
-#: src/pages/Shell.tsx:5002
+#: src/components/conversation/MessageView.tsx:159
+#: src/components/conversation/MessageView.tsx:422
 msgid "Speak"
 msgstr "Bicara"
 
-#: src/pages/VoiceSettingsOverlay.tsx:194
+#: src/pages/VoiceSettingsOverlay.tsx:199
 msgid "Speak + transcribe"
 msgstr "Bicara + transkripsi"
 
-#: src/pages/VoiceSettingsOverlay.tsx:196
+#: src/pages/VoiceSettingsOverlay.tsx:201
 msgid "Speak only"
 msgstr "Bicara saja"
 
-#: src/pages/Shell.tsx:4735
-#: src/pages/Shell.tsx:4998
+#: src/components/conversation/MessageView.tsx:155
+#: src/components/conversation/MessageView.tsx:418
 msgid "Speak this reply"
 msgstr "Bacakan balasan ini"
 
@@ -2726,11 +2710,11 @@ msgstr "Bacakan balasan ini"
 msgid "Speaking…"
 msgstr "Berbicara…"
 
-#: src/pages/Onboarding.tsx:560
+#: src/pages/Onboarding.tsx:574
 msgid "Start from a proven Chief of Staff, or build your own from scratch."
 msgstr "Mulai dari Chief of Staff yang sudah teruji, atau bangun sendiri dari nol."
 
-#: src/pages/Onboarding.tsx:644
+#: src/pages/Onboarding.tsx:658
 msgid "Start from scratch"
 msgstr "Mulai dari nol"
 
@@ -2744,7 +2728,7 @@ msgstr "Memulai"
 
 #: src/components/teach/TeachComputerSection.tsx:115
 #: src/pages/ModelSettingsOverlay.tsx:616
-#: src/pages/Onboarding.tsx:487
+#: src/pages/Onboarding.tsx:501
 msgid "Starting…"
 msgstr "Memulai…"
 
@@ -2752,20 +2736,20 @@ msgstr "Memulai…"
 msgid "Steps"
 msgstr "Langkah"
 
-#: src/pages/Shell.tsx:3568
-#: src/pages/Shell.tsx:3572
-#: src/pages/Shell.tsx:4414
-#: src/pages/Shell.tsx:4739
-#: src/pages/Shell.tsx:5002
+#: src/components/composer/Composer.tsx:554
+#: src/components/conversation/MessageView.tsx:159
+#: src/components/conversation/MessageView.tsx:422
+#: src/pages/Shell.tsx:3557
+#: src/pages/Shell.tsx:3561
 msgid "Stop"
 msgstr "Hentikan"
 
-#: src/pages/Shell.tsx:4306
+#: src/components/composer/Composer.tsx:446
 msgid "Stop dictation"
 msgstr "Hentikan dikte"
 
-#: src/pages/Shell.tsx:4735
-#: src/pages/Shell.tsx:4998
+#: src/components/conversation/MessageView.tsx:155
+#: src/components/conversation/MessageView.tsx:418
 msgid "Stop speaking"
 msgstr "Hentikan suara"
 
@@ -2774,8 +2758,8 @@ msgstr "Hentikan suara"
 msgid "Stop teaching"
 msgstr "Hentikan pengajaran"
 
-#: src/pages/Shell.tsx:2953
-#: src/pages/Shell.tsx:3588
+#: src/pages/Shell.tsx:2947
+#: src/pages/Shell.tsx:3577
 msgid "Stop the bot first"
 msgstr "Hentikan botnya dulu"
 
@@ -2788,13 +2772,13 @@ msgstr "Dihentikan."
 msgid "Stored encrypted"
 msgstr "Disimpan terenkripsi"
 
-#: src/pages/Shell.tsx:4856
+#: src/components/conversation/MessageView.tsx:276
 msgid "subagent"
 msgstr "subagent"
 
 #: src/components/AskCard.tsx:126
 #: src/pages/ModelSettingsOverlay.tsx:576
-#: src/pages/Onboarding.tsx:449
+#: src/pages/Onboarding.tsx:463
 msgid "Submit"
 msgstr "Kirim"
 
@@ -2806,8 +2790,8 @@ msgstr "Terkirim"
 msgid "Switching…"
 msgstr "Mengganti…"
 
-#: src/pages/Shell.tsx:2956
-#: src/pages/Shell.tsx:3593
+#: src/pages/Shell.tsx:2950
+#: src/pages/Shell.tsx:3582
 msgid "Take control"
 msgstr "Ambil alih"
 
@@ -2815,7 +2799,7 @@ msgstr "Ambil alih"
 msgid "Teach a task"
 msgstr "Ajarkan sebuah tugas"
 
-#: src/pages/Shell.tsx:2783
+#: src/pages/Shell.tsx:2777
 msgid "Teaching in progress — stop teaching before sending a new message."
 msgstr "Sedang mengajarkan — hentikan pengajaran sebelum mengirim pesan baru."
 
@@ -2823,11 +2807,11 @@ msgstr "Sedang mengajarkan — hentikan pengajaran sebelum mengirim pesan baru."
 msgid "Teaching needs a graphical sandbox computer. Desktop-host bots can run shell tasks, but not screen recording."
 msgstr "Pengajaran butuh komputer sandbox grafis. Bot desktop-host bisa menjalankan tugas shell, tetapi tidak bisa merekam layar."
 
-#: src/pages/Shell.tsx:5093
+#: src/pages/Shell.tsx:4008
 msgid "Team"
 msgstr "Tim"
 
-#: src/pages/Shell.tsx:5943
+#: src/pages/Shell.tsx:4858
 msgid "Team Computer"
 msgstr "Team Computer"
 
@@ -2852,20 +2836,20 @@ msgstr "API tidak kembali. Segarkan halaman ini."
 msgid "The selected memory provider is not available in this build."
 msgstr "Provider memori yang dipilih tidak tersedia di build ini."
 
-#: src/pages/Shell.tsx:5385
+#: src/pages/Shell.tsx:4300
 msgid "Thinking"
 msgstr "Berpikir"
 
-#: src/pages/Shell.tsx:2896
+#: src/pages/Shell.tsx:2890
 msgid "This bot runs on this computer, not a Linux desktop. Shell and files use your home folder."
 msgstr "Bot ini berjalan di komputer ini, bukan di desktop Linux. Shell dan file memakai folder home Anda."
 
-#: src/pages/Shell.tsx:3617
+#: src/pages/Shell.tsx:3606
 msgid "This bot runs on this computer. There is no separate Linux desktop. Ask it to use the shell; working directories under your home folder are allowed."
 msgstr "Bot ini berjalan di komputer ini. Tidak ada desktop Linux terpisah. Minta bot memakai shell; direktori kerja di bawah folder home Anda diizinkan."
 
-#: src/pages/Shell.tsx:5785
-#: src/pages/Shell.tsx:5864
+#: src/pages/Shell.tsx:4700
+#: src/pages/Shell.tsx:4779
 msgid "This cannot be undone."
 msgstr "Tindakan ini tidak bisa dibatalkan."
 
@@ -2889,15 +2873,15 @@ msgstr "Mac ini"
 msgid "This Mac runs shell commands with your account, including files in your home folder. Do not turn it on for a shared or public server."
 msgstr "Mac ini menjalankan perintah shell dengan akun Anda, termasuk file di folder home Anda. Jangan aktifkan pada server bersama atau server publik."
 
-#: src/pages/Shell.tsx:5670
+#: src/pages/Shell.tsx:4585
 msgid "This permanently removes every message and stops current work. The chat remains available."
 msgstr "Ini menghapus permanen seluruh pesan dan menghentikan pekerjaan yang berjalan. Chat-nya tetap ada."
 
-#: src/pages/Onboarding.tsx:523
+#: src/pages/Onboarding.tsx:537
 msgid "This provider cannot paste a key here. Skip if this deployment already has credentials."
 msgstr "Provider ini tidak bisa menempel key di sini. Lewati jika deployment ini sudah punya kredensial."
 
-#: src/pages/Shell.tsx:6210
+#: src/components/conversation/MessageView.tsx:756
 msgid "This server cannot be assigned without a bot."
 msgstr "Server ini tidak bisa ditugaskan tanpa bot."
 
@@ -2909,7 +2893,7 @@ msgstr "Server ini tidak meminta otorisasi lewat browser."
 msgid "This server is already connected. Disconnect it first to authorize again."
 msgstr "Server ini sudah tersambung. Putuskan dulu untuk mengotorisasi ulang."
 
-#: src/pages/Shell.tsx:6249
+#: src/components/conversation/MessageView.tsx:795
 msgid "This server uses browser sign-in. Authorize it to let your agents use its tools — a popup will open."
 msgstr "Server ini memakai proses masuk lewat browser. Otorisasi agar agent Anda bisa memakai tool-nya — sebuah popup akan terbuka."
 
@@ -2921,17 +2905,17 @@ msgstr "Proses masuk berbasis langganan ini belum tersedia di Sentra Bot. Pakai 
 msgid "Time of day"
 msgstr "Waktu dalam sehari"
 
-#: src/pages/Onboarding.tsx:672
-#: src/pages/Shell.tsx:5160
-#: src/pages/Shell.tsx:5326
+#: src/pages/Onboarding.tsx:686
+#: src/pages/Shell.tsx:4075
+#: src/pages/Shell.tsx:4241
 msgid "Title"
 msgstr "Judul"
 
-#: src/pages/PluginsOverlay.tsx:872
+#: src/pages/PluginsOverlay.tsx:874
 msgid "Tool sources"
 msgstr "Sumber tool"
 
-#: src/pages/PluginsOverlay.tsx:834
+#: src/pages/PluginsOverlay.tsx:836
 msgid "Treg token"
 msgstr "Token Treg"
 
@@ -2952,7 +2936,7 @@ msgid "Unpin"
 msgstr "Lepas sematan"
 
 #. placeholder {0}: pending.file.name
-#: src/pages/Shell.tsx:1834
+#: src/pages/Shell.tsx:1821
 msgid "Unsupported file type: {0}"
 msgstr "Jenis file tidak didukung: {0}"
 
@@ -2991,8 +2975,8 @@ msgstr "Diperbarui"
 msgid "Updating…"
 msgstr "Memperbarui…"
 
-#: src/pages/AccountSettingsOverlay.tsx:212
-#: src/pages/Shell.tsx:2639
+#: src/pages/AccountSettingsOverlay.tsx:145
+#: src/pages/Shell.tsx:2628
 msgid "Usage"
 msgstr "Pemakaian"
 
@@ -3001,7 +2985,7 @@ msgid "Use {hostLabel}"
 msgstr "Pakai {hostLabel}"
 
 #: src/pages/ModelSettingsOverlay.tsx:485
-#: src/pages/Onboarding.tsx:382
+#: src/pages/Onboarding.tsx:396
 msgid "Use a found model"
 msgstr "Pakai model yang ditemukan"
 
@@ -3009,25 +2993,25 @@ msgstr "Pakai model yang ditemukan"
 msgid "Use this model"
 msgstr "Pakai model ini"
 
-#: src/pages/PluginsOverlay.tsx:855
+#: src/pages/PluginsOverlay.tsx:857
 msgid "Verify and add"
 msgstr "Verifikasi dan tambahkan"
 
-#: src/pages/PluginsOverlay.tsx:853
+#: src/pages/PluginsOverlay.tsx:855
 msgid "Verifying…"
 msgstr "Memverifikasi…"
 
-#: src/pages/Shell.tsx:2627
-#: src/pages/Shell.tsx:5438
-#: src/pages/VoiceSettingsOverlay.tsx:124
-#: src/pages/VoiceSettingsOverlay.tsx:264
+#: src/pages/Shell.tsx:2616
+#: src/pages/Shell.tsx:4353
+#: src/pages/VoiceSettingsOverlay.tsx:129
+#: src/pages/VoiceSettingsOverlay.tsx:269
 msgid "Voice"
 msgstr "Suara"
 
 #: src/pages/ModelSettingsOverlay.tsx:580
 #: src/pages/ModelSettingsOverlay.tsx:602
-#: src/pages/Onboarding.tsx:453
-#: src/pages/Onboarding.tsx:475
+#: src/pages/Onboarding.tsx:467
+#: src/pages/Onboarding.tsx:489
 msgid "Waiting for sign-in…"
 msgstr "Menunggu proses masuk…"
 
@@ -3039,7 +3023,7 @@ msgstr "Menunggu API kembali…"
 msgid "Waiting for your message…"
 msgstr "Menunggu pesan Anda…"
 
-#: src/pages/Shell.tsx:6093
+#: src/components/conversation/MessageView.tsx:639
 msgid "Waiting…"
 msgstr "Menunggu…"
 
@@ -3053,7 +3037,7 @@ msgstr "Webhook"
 msgid "Weekdays"
 msgstr "Hari kerja"
 
-#: src/pages/Shell.tsx:5755
+#: src/pages/Shell.tsx:4670
 msgid "What about its memories?"
 msgstr "Bagaimana dengan memorinya?"
 
@@ -3065,8 +3049,8 @@ msgstr "Hasil apa yang akan Anda peragakan?"
 msgid "What should this routine do each time it runs?"
 msgstr "Apa yang harus dikerjakan rutinitas ini setiap kali berjalan?"
 
-#: src/pages/Onboarding.tsx:685
-#: src/pages/Shell.tsx:5175
+#: src/pages/Onboarding.tsx:699
+#: src/pages/Shell.tsx:4090
 msgid "What this bot is for"
 msgstr "Bot ini untuk apa"
 
@@ -3104,12 +3088,12 @@ msgstr "Di mana bot dijalankan?"
 msgid "Working…"
 msgstr "Bekerja…"
 
-#: src/pages/Shell.tsx:5368
+#: src/pages/Shell.tsx:4283
 msgid "Workspace default"
 msgstr "Default workspace"
 
-#: src/pages/Shell.tsx:1558
-#: src/pages/Shell.tsx:2175
+#: src/pages/Shell.tsx:1541
+#: src/pages/Shell.tsx:2164
 msgid "You"
 msgstr "Anda"
 
@@ -3121,12 +3105,12 @@ msgstr "Anda bisa menutup tab ini jika tidak dialihkan otomatis."
 msgid "You can close this window."
 msgstr "Anda bisa menutup jendela ini."
 
-#: src/pages/Shell.tsx:2933
-#: src/pages/Shell.tsx:3558
+#: src/pages/Shell.tsx:2927
+#: src/pages/Shell.tsx:3547
 msgid "You have control"
 msgstr "Anda yang memegang kendali"
 
-#: src/pages/Onboarding.tsx:660
+#: src/pages/Onboarding.tsx:674
 msgid "Your bot"
 msgstr "Bot Anda"
 
