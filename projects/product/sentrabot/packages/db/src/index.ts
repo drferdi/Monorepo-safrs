@@ -11,5 +11,6 @@ export * from "./platform.js";
 export * from "./private-state-migration.js";
 export * from "./repos.js";
 export * from "./scope.js";
+export * from "./signup-gate.js";
 export * from "./transaction-retry.js";
 export * from "./voice-credentials.js";

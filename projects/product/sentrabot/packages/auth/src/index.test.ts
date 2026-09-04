@@ -6,6 +6,26 @@ describe("auth policy", () => {
     expect(blockedAuthPaths.some((path) => path.includes("invite"))).toBe(true);
     expect(blockedAuthPaths.some((path) => path.includes("create"))).toBe(true);
   });
+
+  it("blocks every organization endpoint that mutates or destroys a workspace", () => {
+    expect(blockedAuthPaths).toEqual(
+      expect.arrayContaining([
+        "/organization/create",
+        "/organization/invite",
+        "/organization/accept-invitation",
+        "/organization/reject-invitation",
+        "/organization/remove-member",
+        "/organization/update-member-role",
+        "/organization/delete",
+        "/organization/leave",
+        "/organization/update",
+      ]),
+    );
+  });
+
+  it("blocks organization deletion so a single request cannot destroy a workspace", () => {
+    expect(blockedAuthPaths).toContain("/organization/delete");
+  });
 });
 
 describe("resolveSignupPolicy", () => {

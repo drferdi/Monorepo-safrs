@@ -1,5 +1,5 @@
-import { emailAllowed, parseAllowlist, signupPolicyFromEnv } from "@sentrabot/core";
-import { bootstrapUserWorkspace, type PrismaClient } from "@sentrabot/db";
+import { emailAllowed } from "@sentrabot/core";
+import { bootstrapUserWorkspace, type PrismaClient, resolveSignupPolicy } from "@sentrabot/db";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { APIError } from "better-auth/api";
@@ -15,22 +15,7 @@ export interface AuthEnv {
   beforeDeleteUser?: (userId: string) => Promise<void>;
 }
 
-export async function resolveSignupPolicy(
-  prisma: Pick<PrismaClient, "deploymentSettings">,
-  env: Pick<AuthEnv, "signupsEnabled" | "signupAllowlist">,
-): Promise<{ enabled: boolean; allowlist: string[] }> {
-  const settings = await prisma.deploymentSettings.findUnique({
-    where: { id: "default" },
-    select: { signupsEnabled: true, signupAllowlist: true, signupPolicyInitialized: true },
-  });
-  if (settings?.signupPolicyInitialized) {
-    return {
-      enabled: settings.signupsEnabled,
-      allowlist: parseAllowlist(settings.signupAllowlist),
-    };
-  }
-  return signupPolicyFromEnv(env);
-}
+export { resolveSignupPolicy } from "@sentrabot/db";
 
 export function createAuth(prisma: PrismaClient, env: AuthEnv) {
   return betterAuth({
@@ -85,6 +70,8 @@ export function createAuth(prisma: PrismaClient, env: AuthEnv) {
       organization({
         allowUserToCreateOrganization: false,
         creatorRole: "owner",
+        // Deliberately redundant with blockedAuthPaths: that is path matching, this is the plugin refusing the operation.
+        disableOrganizationDeletion: true,
       }),
     ],
     hooks: {
@@ -125,4 +112,7 @@ export const blockedAuthPaths = [
   "/organization/reject-invitation",
   "/organization/remove-member",
   "/organization/update-member-role",
+  "/organization/delete",
+  "/organization/leave",
+  "/organization/update",
 ];

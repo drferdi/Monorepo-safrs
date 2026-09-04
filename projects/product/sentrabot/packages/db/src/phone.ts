@@ -2,6 +2,7 @@ import { randomBytes } from "node:crypto";
 import { bootstrapUserWorkspace, type SignupPolicyEnv } from "./bootstrap-user.js";
 import type { PrismaClient } from "./client.js";
 import { createRepos } from "./repos.js";
+import { resolveSignupPolicy } from "./signup-gate.js";
 
 export interface ProvisionedPhoneIdentity {
   phoneE164: string;
@@ -54,6 +55,19 @@ export async function provisionPhoneIdentity(
   const email = phoneEmail(phoneE164);
   let user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
+    // Only a brand-new phone user is a signup, so the policy is checked here
+    // and not on the resume path above. The allowlist is an *email* allowlist,
+    // and a synthetic `phone-…@phone.invalid` address can never satisfy it, so
+    // any configured allowlist closes the phone channel outright — fail closed.
+    const policy = await resolveSignupPolicy(prisma, env);
+    if (!policy.enabled) {
+      throw new Error("Registration is closed");
+    }
+    if (policy.allowlist.length > 0) {
+      throw new Error(
+        "Registration is restricted to an email allowlist, which a phone number cannot satisfy",
+      );
+    }
     user = await prisma.user
       .create({
         data: {

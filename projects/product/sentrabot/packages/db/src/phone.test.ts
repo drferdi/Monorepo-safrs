@@ -76,6 +76,91 @@ describe("provisionPhoneIdentity", () => {
   });
 });
 
+describe("provisionPhoneIdentity signup policy", () => {
+  it("refuses to create a new phone user when signups are closed", async () => {
+    const prisma = {
+      phoneIdentity: { findUnique: vi.fn(async () => null) },
+      user: { findUnique: vi.fn(async () => null), create: vi.fn() },
+      deploymentSettings: {
+        findUnique: vi.fn(async () => ({
+          signupsEnabled: false,
+          signupAllowlist: "",
+          signupPolicyInitialized: true,
+        })),
+      },
+    };
+    await expect(
+      provisionPhoneIdentity(prisma as unknown as PrismaClient, "+15551234567", {
+        signupsEnabled: undefined,
+        signupAllowlist: undefined,
+      }),
+    ).rejects.toThrow(/closed/i);
+    expect(prisma.user.create).not.toHaveBeenCalled();
+  });
+
+  it("refuses to create a new phone user when an email allowlist is configured", async () => {
+    const prisma = {
+      phoneIdentity: { findUnique: vi.fn(async () => null) },
+      user: { findUnique: vi.fn(async () => null), create: vi.fn() },
+      deploymentSettings: {
+        findUnique: vi.fn(async () => ({
+          signupsEnabled: true,
+          signupAllowlist: "owner@example.com",
+          signupPolicyInitialized: true,
+        })),
+      },
+    };
+    await expect(
+      provisionPhoneIdentity(prisma as unknown as PrismaClient, "+15551234567", {
+        signupsEnabled: undefined,
+        signupAllowlist: undefined,
+      }),
+    ).rejects.toThrow(/allowlist/i);
+    expect(prisma.user.create).not.toHaveBeenCalled();
+  });
+
+  it("still resumes an already provisioned identity while signups are closed", async () => {
+    const existing = {
+      id: "pi-1",
+      phoneE164: "+15551234567",
+      userId: "user-1",
+      workspaceId: "ws-1",
+      botId: "bot-1",
+      verifiedAt: null,
+      lastInboundAt: null,
+      outboundSinceInbound: 0,
+      createdAt: new Date("2026-08-28T00:00:00.000Z"),
+      updatedAt: new Date("2026-08-28T00:00:00.000Z"),
+    };
+    const prisma = {
+      phoneIdentity: { findUnique: vi.fn(async () => existing) },
+      thread: { findFirst: vi.fn(async () => ({ id: "thread-1" })) },
+      user: { create: vi.fn() },
+      deploymentSettings: {
+        findUnique: vi.fn(async () => ({
+          signupsEnabled: false,
+          signupAllowlist: "",
+          signupPolicyInitialized: true,
+        })),
+      },
+    };
+    const result = await provisionPhoneIdentity(prisma as unknown as PrismaClient, "+15551234567", {
+      signupsEnabled: undefined,
+      signupAllowlist: undefined,
+    });
+
+    expect(result).toEqual({
+      phoneE164: "+15551234567",
+      userId: "user-1",
+      workspaceId: "ws-1",
+      botId: "bot-1",
+      threadId: "thread-1",
+      created: false,
+    });
+    expect(prisma.user.create).not.toHaveBeenCalled();
+  });
+});
+
 describe("provisionPhoneIdentity create race", () => {
   it("resolves the thread for the winning identity's bot, not the loser's", async () => {
     const winner = {
