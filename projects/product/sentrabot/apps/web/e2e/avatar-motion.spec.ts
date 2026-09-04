@@ -1,24 +1,37 @@
 import { expect, test } from "@playwright/test";
 
-test("organic avatar path stays still when reduced motion is enabled", async ({ page }) => {
+const eyeTransform = (group: SVGGElement) => group.style.transform;
+
+test("chip avatar stays still when reduced motion is enabled", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/e2e/fixtures/avatar-motion.html");
 
-  const avatar = page.locator(".sentrabot-organic-avatar");
+  const avatar = page.getByTestId("large").locator(".sentrabot-clay-avatar");
   await expect(avatar).toBeVisible();
   await expect(avatar.locator("animate")).toHaveCount(0);
 
-  const body = avatar.locator(".sentrabot-organic-avatar-body-working");
-  const snapshot = () =>
-    body.evaluate((path: SVGPathElement) => ({
-      animationName: getComputedStyle(path).animationName,
-      d: getComputedStyle(path).d,
-      length: path.getTotalLength(),
-    }));
-  const first = await snapshot();
-  await page.waitForTimeout(300);
-  const second = await snapshot();
+  const eyes = avatar.locator(".sentrabot-clay-avatar-eyes");
+  await expect(eyes).toBeVisible();
+  await page.mouse.move(10, 10);
+  await page.mouse.move(600, 400);
+  await page.waitForTimeout(250);
 
-  expect(first.animationName).toBe("none");
-  expect(second).toEqual(first);
+  expect(await eyes.evaluate(eyeTransform)).toBe("");
+});
+
+test("only chips at 48px and above follow the pointer", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.goto("/e2e/fixtures/avatar-motion.html");
+
+  const largeEyes = page.getByTestId("large").locator(".sentrabot-clay-avatar-eyes");
+  const smallEyes = page.getByTestId("small").locator(".sentrabot-clay-avatar-eyes");
+  await expect(largeEyes).toBeVisible();
+  await expect(smallEyes).toBeVisible();
+
+  await page.mouse.move(10, 10);
+  await page.mouse.move(700, 500);
+  await page.waitForTimeout(250);
+
+  expect(await largeEyes.evaluate(eyeTransform)).toMatch(/^translate\(/);
+  expect(await smallEyes.evaluate(eyeTransform)).toBe("");
 });

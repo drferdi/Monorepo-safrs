@@ -3446,17 +3446,12 @@ export function ShellPage() {
             email={session.data?.user.email}
             usage={usage}
             focusUsage={accountSettingsFocusUsage}
-            avatarStyle={bootstrapMe?.avatarStyle ?? "clay"}
             isDeploymentOwner={bootstrapMe?.isDeploymentOwner === true}
             sandboxProvider={bootstrapMe?.sandboxProvider}
             phoneEnabled={phoneSurfaceEnabled}
             onOpenPhone={() => {
               setAccountSettingsOpen(false);
               setPhoneSettingsOpen(true);
-            }}
-            onAvatarStyleChange={async (avatarStyle) => {
-              const nextMe = await rpc.preferences.update({ avatarStyle });
-              setBootstrapMe(nextMe);
             }}
             onClose={() => {
               setAccountSettingsOpen(false);
