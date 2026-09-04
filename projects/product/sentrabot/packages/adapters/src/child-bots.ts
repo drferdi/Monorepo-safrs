@@ -373,6 +373,10 @@ export async function destroyBot(
       });
       const groupCleanup = await detachBotFromGroups(tx, bot.id);
       await tx.computerExecutionLease.deleteMany({ where: { botId: bot.id } });
+      // PhoneIdentity/PhonePairing are deliberately FK-free, so the unique
+      // phoneE164 would point at a deleted bot forever without this.
+      await tx.phoneIdentity.deleteMany({ where: { botId: bot.id } });
+      await tx.phonePairing.deleteMany({ where: { botId: bot.id } });
       await tx.computer.updateMany({
         where: {
           ...(dedicated ? { id: { not: dedicated.id } } : {}),

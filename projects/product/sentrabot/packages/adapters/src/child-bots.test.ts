@@ -176,6 +176,8 @@ describe("destroyBot", () => {
         artifact: { findMany: findArtifacts, deleteMany: deleteArtifacts },
         computerExecutionLease: { deleteMany: vi.fn().mockResolvedValue({ count: 0 }) },
         computer: { updateMany: releaseComputers },
+        phoneIdentity: { deleteMany: vi.fn().mockResolvedValue({ count: 0 }) },
+        phonePairing: { deleteMany: vi.fn().mockResolvedValue({ count: 0 }) },
         $executeRaw: executeRaw,
         botDeletion: { create: createDeletion },
         bot: { delete: deleteBot },
@@ -246,6 +248,58 @@ describe("destroyBot", () => {
     expect(removeArtifact).toHaveBeenCalledWith("stored-artifact", context);
   });
 
+  it("clears phone identity and pairing rows for the deleted bot", async () => {
+    const deletePhoneIdentity = vi.fn().mockResolvedValue({ count: 1 });
+    const deletePhonePairing = vi.fn().mockResolvedValue({ count: 1 });
+    const transaction = vi.fn(async (callback: (tx: unknown) => Promise<void>) =>
+      callback({
+        $queryRaw: vi.fn().mockResolvedValue([]),
+        chatGroup: {
+          findMany: vi.fn().mockResolvedValue([]),
+          deleteMany: vi.fn().mockResolvedValue({ count: 0 }),
+        },
+        artifact: {
+          findMany: vi.fn().mockResolvedValue([]),
+          deleteMany: vi.fn().mockResolvedValue({ count: 0 }),
+        },
+        computerExecutionLease: { deleteMany: vi.fn().mockResolvedValue({ count: 0 }) },
+        computer: { updateMany: vi.fn().mockResolvedValue({ count: 0 }) },
+        phoneIdentity: { deleteMany: deletePhoneIdentity },
+        phonePairing: { deleteMany: deletePhonePairing },
+        $executeRaw: vi.fn().mockResolvedValue(1),
+        botDeletion: { create: vi.fn().mockResolvedValue({}) },
+        bot: { delete: vi.fn().mockResolvedValue({}) },
+      }),
+    );
+    const prisma = {
+      bot: {
+        findUnique: vi.fn(),
+      },
+      computer: { findUnique: vi.fn().mockResolvedValue(null) },
+      run: {
+        findMany: vi.fn().mockResolvedValue([]),
+        updateMany: vi.fn().mockResolvedValue({ count: 0 }),
+      },
+      routine: { findMany: vi.fn().mockResolvedValue([]) },
+      $transaction: transaction,
+    } as unknown as PrismaClient;
+
+    await destroyBot(
+      {
+        prisma,
+        sandbox: {} as SandboxProvider,
+        home: {} as AgentHomeStore,
+        jobs: { cancel: vi.fn() } as unknown as JobPublisher,
+      },
+      { id: "bot-1", workspaceId: "workspace-1", name: "Researcher", archivedAt: null },
+      context,
+      { deleteMemories: true },
+    );
+
+    expect(deletePhoneIdentity).toHaveBeenCalledWith({ where: { botId: "bot-1" } });
+    expect(deletePhonePairing).toHaveBeenCalledWith({ where: { botId: "bot-1" } });
+  });
+
   it("dissolves groups with fewer than two active members after deleting the bot", async () => {
     const deleteGroups = vi.fn().mockResolvedValue({ count: 1 });
     const deleteMemberships = vi.fn().mockResolvedValue({ count: 1 });
@@ -314,6 +368,8 @@ describe("destroyBot", () => {
         },
         computerExecutionLease: { deleteMany: deleteExecutionLeases },
         computer: { updateMany: clearExecution },
+        phoneIdentity: { deleteMany: vi.fn().mockResolvedValue({ count: 0 }) },
+        phonePairing: { deleteMany: vi.fn().mockResolvedValue({ count: 0 }) },
         $executeRaw: vi.fn(),
         botDeletion: { create: vi.fn() },
         bot: { delete: vi.fn() },
