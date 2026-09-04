@@ -94,7 +94,7 @@ describe("provisionPhoneIdentity signup policy", () => {
         signupsEnabled: undefined,
         signupAllowlist: undefined,
       }),
-    ).rejects.toThrow(/closed/i);
+    ).rejects.toThrow(/ditutup/i);
     expect(prisma.user.create).not.toHaveBeenCalled();
   });
 
@@ -115,7 +115,7 @@ describe("provisionPhoneIdentity signup policy", () => {
         signupsEnabled: undefined,
         signupAllowlist: undefined,
       }),
-    ).rejects.toThrow(/allowlist/i);
+    ).rejects.toThrow(/diizinkan/i);
     expect(prisma.user.create).not.toHaveBeenCalled();
   });
 

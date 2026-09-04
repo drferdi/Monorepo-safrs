@@ -31,7 +31,7 @@ export async function beginWhatsAppPairing(
   });
   if (!bot) throw new Error("Bot not found");
   const existingIdentity = await prisma.phoneIdentity.findUnique({ where: { botId } });
-  if (existingIdentity) throw new Error("That agent already has a paired number.");
+  if (existingIdentity) throw new Error("Agen itu sudah punya nomor yang terhubung.");
 
   await prisma.phonePairing.deleteMany({
     where: { botId, usedAt: null },

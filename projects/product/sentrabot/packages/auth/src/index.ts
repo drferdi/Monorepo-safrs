@@ -80,14 +80,14 @@ export function createAuth(prisma: PrismaClient, env: AuthEnv) {
         if (!path.includes("sign-up")) return;
         const policy = await resolveSignupPolicy(prisma, env);
         if (!policy.enabled) {
-          throw new APIError("BAD_REQUEST", { message: "Registration is closed" });
+          throw new APIError("BAD_REQUEST", { message: "Pendaftaran ditutup" });
         }
         const email =
           typeof ctx.body === "object" && ctx.body && "email" in ctx.body
             ? String((ctx.body as { email?: string }).email ?? "")
             : "";
         if (email && !emailAllowed(email, policy.allowlist)) {
-          throw new APIError("BAD_REQUEST", { message: "Email is not allowed to register" });
+          throw new APIError("BAD_REQUEST", { message: "Email ini tidak diizinkan mendaftar" });
         }
       },
     },

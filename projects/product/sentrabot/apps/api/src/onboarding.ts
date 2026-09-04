@@ -32,40 +32,40 @@ const FOCUS_OPTIONS: FocusOption[] = [
   {
     id: "day",
     letter: "A",
-    label: "Day-to-day work",
-    summary: "Slack, calendar, and email",
+    label: "Pekerjaan sehari-hari",
+    summary: "Slack, kalender, dan email",
     apps: ["slack", "gmail", "googlecalendar"],
   },
   {
     id: "inbox",
     letter: "B",
-    label: "Inbox & email",
-    summary: "email and calendar",
+    label: "Kotak masuk & email",
+    summary: "email dan kalender",
     apps: ["gmail", "googlecalendar", "slack"],
   },
   {
     id: "research",
     letter: "C",
-    label: "Research & writing",
-    summary: "the web, notes, and docs",
+    label: "Riset & penulisan",
+    summary: "web, catatan, dan dokumen",
     apps: ["hackernews", "notion", "googledocs"],
   },
   {
     id: "everything",
     letter: "D",
-    label: "A bit of everything",
-    summary: "Slack, calendar, and email",
+    label: "Sedikit dari semuanya",
+    summary: "Slack, kalender, dan email",
     apps: ["slack", "gmail", "googlecalendar"],
   },
 ];
 
 const APP_DESCRIPTIONS: Record<string, string> = {
-  slack: "Search, read, and send messages.",
-  gmail: "Search, read, draft, and send email.",
-  googlecalendar: "Search events and schedule meetings.",
-  notion: "Search and edit pages and databases.",
-  googledocs: "Draft and edit documents.",
-  hackernews: "Search stories and discussions.",
+  slack: "Cari, baca, dan kirim pesan.",
+  gmail: "Cari, baca, buat draf, dan kirim email.",
+  googlecalendar: "Cari acara dan jadwalkan pertemuan.",
+  notion: "Cari dan sunting halaman serta database.",
+  googledocs: "Buat draf dan sunting dokumen.",
+  hackernews: "Cari cerita dan diskusi.",
 };
 
 const APP_NAMES: Record<string, string> = {
@@ -134,15 +134,18 @@ export async function startOnboarding(
     where: { id: actor.userId },
     select: { name: true },
   });
-  const firstName = (user?.name ?? "there").split(/\s+/)[0];
+  const firstName = (user?.name ?? "").split(/\s+/)[0];
   const target = { workspaceId: actor.workspaceId, botId: bot.id, threadId: thread.id };
   await post(deps, target, [
-    { kind: "text", text: `Hey ${firstName}. Fresh start on my side, so I’ll keep this short.` },
+    {
+      kind: "text",
+      text: `Halo${firstName ? ` ${firstName}` : ""}. Saya mulai dari nol, jadi saya buat singkat saja.`,
+    },
   ]);
   await post(deps, target, [
     {
       kind: "choice",
-      question: "What do you want me on first?",
+      question: "Mau saya pegang apa lebih dulu?",
       options: FOCUS_OPTIONS.map(({ id, letter, label }) => ({ id, letter, label })),
     },
   ]);
@@ -177,7 +180,7 @@ export async function chooseFocus(
   await post(deps, target, [
     {
       kind: "text",
-      text: `Got it. ${capitalize(option.summary)}. I’ll see what’s already connected so I don’t make you set something up twice.`,
+      text: `Siap. ${capitalize(option.summary)}. Saya cek dulu apa yang sudah terhubung supaya Anda tidak perlu mengatur dua kali.`,
     },
   ]);
 
@@ -200,7 +203,7 @@ export async function chooseFocus(
       kind: "app_connect",
       provider: entry?.slug ?? slug,
       name: entry?.name ?? APP_NAMES[slug] ?? capitalize(slug),
-      description: APP_DESCRIPTIONS[slug] ?? `Connect ${entry?.name ?? slug} to your account.`,
+      description: APP_DESCRIPTIONS[slug] ?? `Hubungkan ${entry?.name ?? slug} ke akun Anda.`,
       logo: entry?.logo ?? null,
       status: entry?.connected ? "connected" : "pending",
     };
@@ -208,18 +211,18 @@ export async function chooseFocus(
   const cardNames = cards
     .map((card) => (card.kind === "app_connect" ? card.name : ""))
     .filter(Boolean);
-  const named = `${cardNames.slice(0, -1).join(", ")}${cardNames.length > 1 ? ", and " : ""}${cardNames.at(-1)}`;
+  const named = `${cardNames.slice(0, -1).join(", ")}${cardNames.length > 1 ? ", dan " : ""}${cardNames.at(-1)}`;
   await post(deps, target, [
     {
       kind: "text",
-      text: `${named} are a good place to start. Connect them here and I’ll use what you already have.`,
+      text: `${named} adalah awal yang bagus. Hubungkan di sini, dan saya pakai yang sudah Anda punya.`,
     },
   ]);
   await post(deps, target, cards);
   await post(deps, target, [
     {
       kind: "text",
-      text: `Hit those ${cards.length === 1 ? "one" : cards.length === 2 ? "two" : "three"} and I’ll start pulling the picture.`,
+      text: `Hubungkan ${cards.length === 1 ? "satu" : cards.length === 2 ? "dua" : "tiga"} itu, dan saya mulai menyusun gambarannya.`,
     },
   ]);
 }

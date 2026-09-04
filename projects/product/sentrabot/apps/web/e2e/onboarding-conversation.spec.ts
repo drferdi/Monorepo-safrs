@@ -13,13 +13,13 @@ test("focus choice suggests apps and preserves a completed connection", async ({
   await completeOnboarding(page);
 
   await expect(
-    page.getByText("Hey Robin. Fresh start on my side, so I’ll keep this short."),
+    page.getByText("Halo Robin. Saya mulai dari nol, jadi saya buat singkat saja."),
   ).toBeVisible();
-  await expect(page.getByText("What do you want me on first?", { exact: true })).toBeVisible();
+  await expect(page.getByText("Mau saya pegang apa lebih dulu?", { exact: true })).toBeVisible();
   await page.mouse.move(1, 1);
   await captureScreenshot(page, testInfo, "01-focus-choice");
 
-  await page.getByRole("button", { name: /Day-to-day work/ }).click();
+  await page.getByRole("button", { name: /Pekerjaan sehari-hari/ }).click();
   // The focus step suggests apps but must not rename the bot: the name the
   // user chose during creation ("Chief") is preserved.
   await expect(page.locator("main").getByText("Chief", { exact: true })).toBeVisible();
@@ -28,7 +28,7 @@ test("focus choice suggests apps and preserves a completed connection", async ({
   await expect(page.getByText("Gmail", { exact: true })).toBeVisible();
   await page
     .getByTestId("transcript")
-    .getByText("Hit those three and I’ll start pulling the picture.")
+    .getByText("Hubungkan tiga itu, dan saya mulai menyusun gambarannya.")
     .scrollIntoViewIfNeeded();
   await page.mouse.move(1, 1);
   await captureScreenshot(page, testInfo, "02-app-suggestions");

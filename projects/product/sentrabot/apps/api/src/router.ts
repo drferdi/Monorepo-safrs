@@ -1489,7 +1489,7 @@ export function createRouter(deps: RouterDeps) {
         const connector = deps.connectors.managed(input.connectorId);
         if (!connector) {
           throw new ORPCError("BAD_REQUEST", {
-            message: `Connector ${input.connectorId} is not configured`,
+            message: `Konektor ${input.connectorId} belum dikonfigurasi`,
           });
         }
         const row = await deps.prisma.connection.create({
@@ -1536,7 +1536,7 @@ export function createRouter(deps: RouterDeps) {
         const connector = deps.connectors.managed(existing.connectorId);
         if (!connector) {
           throw new ORPCError("BAD_REQUEST", {
-            message: `Connector ${existing.connectorId} is not configured`,
+            message: `Konektor ${existing.connectorId} belum dikonfigurasi`,
           });
         }
         let row = existing;
@@ -1585,7 +1585,7 @@ export function createRouter(deps: RouterDeps) {
           const connector = deps.connectors.managed(row.connectorId);
           if (!connector) {
             throw new ORPCError("BAD_REQUEST", {
-              message: `Connector ${row.connectorId} is not configured`,
+              message: `Konektor ${row.connectorId} belum dikonfigurasi`,
             });
           }
           try {

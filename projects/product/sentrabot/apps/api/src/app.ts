@@ -341,7 +341,7 @@ export async function createApp(
   app.on(["GET", "POST"], "/api/auth/*", async (c) => {
     const path = new URL(c.req.url).pathname.replace("/api/auth", "");
     if (blockedAuthPaths.some((blocked) => path.startsWith(blocked))) {
-      return c.json({ error: "Not available in version 1" }, 404);
+      return c.json({ error: "Belum tersedia di versi 1" }, 404);
     }
     return auth.handler(c.req.raw);
   });

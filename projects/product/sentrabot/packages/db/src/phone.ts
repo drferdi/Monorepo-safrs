@@ -61,11 +61,11 @@ export async function provisionPhoneIdentity(
     // any configured allowlist closes the phone channel outright — fail closed.
     const policy = await resolveSignupPolicy(prisma, env);
     if (!policy.enabled) {
-      throw new Error("Registration is closed");
+      throw new Error("Pendaftaran ditutup");
     }
     if (policy.allowlist.length > 0) {
       throw new Error(
-        "Registration is restricted to an email allowlist, which a phone number cannot satisfy",
+        "Pendaftaran dibatasi ke daftar email yang diizinkan, dan nomor telepon tidak bisa memenuhinya",
       );
     }
     user = await prisma.user
