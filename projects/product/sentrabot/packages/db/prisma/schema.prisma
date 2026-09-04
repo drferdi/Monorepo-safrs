@@ -247,7 +247,7 @@ model UsageLedger {
   workspaceId      String           @map("workspace_id")
   workspace        Organization     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   reservationId    String           @unique @map("reservation_id")
-  reservation      UsageReservation @relation(fields: [reservationId], references: [id], onDelete: Restrict)
+  reservation      UsageReservation @relation(fields: [reservationId], references: [id], onDelete: NoAction)
   provider         String
   model            String
   inputTokens      Int              @map("input_tokens")
