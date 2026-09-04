@@ -58,6 +58,10 @@ services:
     env_file:
       - ../../.env
     environment:
+      # env_file below is overridden by this block, so a developer .env cannot
+      # leak NODE_ENV=development into a deployed stack (it disables auth rate
+      # limiting and unlocks the development secret fallbacks).
+      NODE_ENV: production
       DATABASE_URL: postgres://sentrabot:sentrabot@postgres:5432/sentrabot
       API_HOST: "0.0.0.0"
       DATA_DIR: /data
@@ -83,6 +87,7 @@ services:
     env_file:
       - ../../.env
     environment:
+      NODE_ENV: production
       BETTER_AUTH_SECRET: ""
       DATABASE_URL: postgres://sentrabot:sentrabot@postgres:5432/sentrabot
       DATA_DIR: /data
@@ -105,6 +110,7 @@ services:
       dockerfile: infra/compose/Dockerfile
     command: ["pnpm", "--filter", "@sentrabot/web", "preview", "--host", "0.0.0.0", "--port", "5173"]
     environment:
+      NODE_ENV: production
       API_PROXY_TARGET: http://api:3100
       SCREEN_PROXY_SECRET: ${SCREEN_PROXY_SECRET:?Set SCREEN_PROXY_SECRET in .env}
       SENTRABOT_HOST: ${SENTRABOT_HOST:-localhost}
