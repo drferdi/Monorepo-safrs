@@ -309,7 +309,7 @@ describe("applyHostExecutionPolicy", () => {
     }
   });
 
-  it("keeps an always_allow rule allowing host execution", () => {
+  it("does not let an always_allow rule bypass host execution review", () => {
     const allowed: ActionApprovalResolved = {
       decision: "allow",
       source: "always_allow",
@@ -317,6 +317,17 @@ describe("applyHostExecutionPolicy", () => {
     };
     expect(
       applyHostExecutionPolicy({ resolved: allowed, toolName: "shell", hostExecution: true }),
+    ).toMatchObject({ decision: "ask", source: "require_approval" });
+  });
+
+  it("keeps an always_allow rule working off a host computer", () => {
+    const allowed: ActionApprovalResolved = {
+      decision: "allow",
+      source: "always_allow",
+      matchingRules: [{ effect: "always_allow", matchKind: "tool", matchValue: "shell" }],
+    };
+    expect(
+      applyHostExecutionPolicy({ resolved: allowed, toolName: "shell", hostExecution: false }),
     ).toBe(allowed);
   });
 

@@ -1425,6 +1425,7 @@ async function executeRunAttempt({
           blocks: [
             buildApprovalAskBlock(applied!.effect.id, name, args, runSecrets, {
               reviewReason,
+              hostExecution: computer.kind === "desktop",
             }),
           ],
         });

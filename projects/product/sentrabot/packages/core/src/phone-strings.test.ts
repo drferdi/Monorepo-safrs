@@ -30,18 +30,22 @@ describe("renderPhoneAskCard", () => {
   it("numbers the actions so the card can be answered by a single digit", () => {
     const card = renderPhoneAskCard(approvalAsk(), "id");
     expect(card).not.toBeNull();
-    expect(card?.answers).toEqual({ "1": "allow", "2": "always", "3": "deny" });
+    expect(card?.answers).toEqual({ "1": "allow", "2": "deny" });
     expect(card?.body).toContain("Review before gmail.send → budi@example.com");
     expect(card?.body).toContain("subject: Rapat besok");
-    expect(card?.body).toContain(
-      "Balas dengan angka: 1 = Izinkan sekali, 2 = Selalu izinkan, 3 = Jangan",
-    );
+    expect(card?.body).toContain("Balas dengan angka: 1 = Izinkan sekali, 2 = Jangan");
   });
 
   it("uses English labels when the deployment runs in English", () => {
     expect(renderPhoneAskCard(approvalAsk(), "en")?.body).toContain(
-      "Reply with a number: 1 = Allow once, 2 = Always allow, 3 = Deny",
+      "Reply with a number: 1 = Allow once, 2 = Deny",
     );
+  });
+
+  it("drops the always action — a phone-only user could never see or revoke that rule", () => {
+    const card = renderPhoneAskCard(approvalAsk(), "id");
+    expect(card?.answers).toEqual({ "1": "allow", "2": "deny" });
+    expect(card?.body).not.toContain("Selalu izinkan");
   });
 
   it("refuses asks that need typed input — a secret must not travel by text", () => {

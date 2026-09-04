@@ -50,4 +50,24 @@ describe("buildApprovalAskBlock", () => {
     expect(block.detail?.startsWith("Sends email outside the draft-only task.")).toBe(true);
     expect(block.detail).toContain("to: person@example.test");
   });
+
+  it("omits the always action when the run executes on a host computer", () => {
+    const block = buildApprovalAskBlock("effect-1", "shell", { command: "ls" }, [], {
+      hostExecution: true,
+    });
+
+    expect(block.kind).toBe("ask");
+    if (block.kind !== "ask") throw new Error("expected ask block");
+    expect(block.actions?.map((action) => action.id)).toEqual(["allow", "deny"]);
+  });
+
+  it("offers the always action off a host computer", () => {
+    for (const options of [undefined, { hostExecution: false }]) {
+      const block = buildApprovalAskBlock("effect-1", "shell", { command: "ls" }, [], options);
+
+      expect(block.kind).toBe("ask");
+      if (block.kind !== "ask") throw new Error("expected ask block");
+      expect(block.actions?.map((action) => action.id)).toEqual(["allow", "always", "deny"]);
+    }
+  });
 });

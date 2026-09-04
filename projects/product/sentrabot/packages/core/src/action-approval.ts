@@ -170,7 +170,10 @@ export const HOST_EXECUTION_REVIEW_TOOLS = new Set([
   "open_path",
 ]);
 
-/** On a trusted host computer, host-affecting builtins ask unless an always_allow rule matched. */
+/**
+ * On a trusted host computer, host-affecting builtins always ask. `always_allow` rules do not
+ * apply to host execution: a rule keyed on the bare tool name cannot express that boundary.
+ */
 export function applyHostExecutionPolicy(input: {
   resolved: ActionApprovalResolved;
   toolName: string;
@@ -179,7 +182,6 @@ export function applyHostExecutionPolicy(input: {
   if (!input.hostExecution || !HOST_EXECUTION_REVIEW_TOOLS.has(input.toolName)) {
     return input.resolved;
   }
-  if (input.resolved.source === "always_allow") return input.resolved;
   return { ...input.resolved, decision: "ask", source: "require_approval" };
 }
 

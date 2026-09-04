@@ -65,7 +65,7 @@ describeIntegration("host execution approval", () => {
     expect(shellEffects[0]).toMatchObject({ status: "intended" });
   });
 
-  it("an always_allow rule lets shell run on the host without pausing", async () => {
+  it("an always_allow rule does not bypass host execution review", async () => {
     const seeded = await seedRun("allow", shellPrompt);
     await handles.prisma.actionApprovalRule.create({
       data: {
@@ -87,16 +87,20 @@ describeIntegration("host execution approval", () => {
       }),
       handles.prisma.externalEffect.findMany({ where: { runId: seeded.run.id } }),
     ]);
-    expect(run.status).toBe("completed");
+    // A rule keyed on the bare tool name cannot express the host boundary, so
+    // the run must still pause for review — and the card must not offer a way
+    // to widen that grant further.
+    expect(run.status).toBe("waiting_input");
 
     const askBlocks = messages
       .flatMap((message) => message.blocks as MessageBlockRow[])
       .filter((block) => block.kind === "ask" && typeof block.approvalEffectId === "string");
-    expect(askBlocks).toEqual([]);
+    expect(askBlocks).toHaveLength(1);
+    expect(askBlocks[0]?.actions?.map((action) => action.id)).toEqual(["allow", "deny"]);
 
     const shellEffects = effects.filter((effect) => effect.kind === "shell");
     expect(shellEffects).toHaveLength(1);
-    expect(shellEffects[0]).toMatchObject({ status: "completed" });
+    expect(shellEffects[0]).toMatchObject({ status: "intended" });
   });
 
   async function seedRun(label: string, prompt: string) {

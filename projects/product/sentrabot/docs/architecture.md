@@ -137,6 +137,22 @@ boundary is needed.
   `always_allow` rule for the tool.
 - Migration consequence: none; rules are evaluated per call.
 
+### 2026-09-04 — always_allow rules no longer apply to host execution
+
+- Problem: an `always_allow` rule is keyed on the bare tool name with no bot, computer-kind, or
+  expiry scope, yet it bypassed `applyHostExecutionPolicy`. One "Always allow this tool" on a host
+  `shell` card permanently disabled host review for every future host shell command from any bot;
+  over SMS the same grant was a single digit.
+- Decision: `applyHostExecutionPolicy` no longer honours `always_allow` on a `desktop` computer —
+  those four tools always ask there. The approval card omits the `always` action when the run is
+  on a host computer (server-enforced: answers absent from `block.actions` are rejected), and
+  phone cards omit `always` on every run because phone-only users cannot see or revoke rules.
+- Rejected: scoping rules by computer kind (a schema change for a boundary the policy can express
+  directly); leaving the card unchanged (a visible button that silently would not apply).
+- Trade-off: shell-heavy work on This Mac asks on every call; the way to reduce prompts is to run it
+  in an isolated sandbox, not to widen the host grant.
+- Migration consequence: none; existing `always_allow` rows keep working inside isolated sandboxes.
+
 ### 2026-09-02 — router decomposition starts with routines
 
 - Problem: `apps/api/src/router.ts` held every oRPC handler group plus their helpers (3870 lines).

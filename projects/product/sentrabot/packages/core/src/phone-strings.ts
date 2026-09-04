@@ -155,7 +155,8 @@ export function renderPhoneAskCard(
   locale: PhoneLocale,
 ): PhoneAskCard | null {
   if (block.input) return null;
-  const actions = block.actions ?? [];
+  // Phone-only users cannot log in, so a rule made here is one they can never see or revoke.
+  const actions = (block.actions ?? []).filter((action) => action.id !== "always");
   if (actions.length === 0) return null;
   const labels = ACTION_LABELS[locale];
   const strings = phoneStrings(locale);

@@ -9,22 +9,31 @@ export function buildApprovalAskBlock(
   toolName: string,
   args: Record<string, unknown>,
   secrets: string[],
-  options?: { reviewReason?: string },
+  options?: { reviewReason?: string; hostExecution?: boolean },
 ): MessageBlock {
   const summary = describeApprovalAction(toolName, args);
   const detail = formatApprovalDetail(args, options?.reviewReason);
   const safeDetail = detail ? redactSecrets(detail, secrets) : undefined;
+  // The server rejects answers absent from block.actions, so omitting "always" on a host run is
+  // enforced, not cosmetic: a rule keyed on the bare tool name cannot express the host boundary.
+  const actions =
+    options?.hostExecution === true
+      ? [
+          { id: "allow", label: "Allow once" },
+          { id: "deny", label: "Deny" },
+        ]
+      : [
+          { id: "allow", label: "Allow once" },
+          { id: "always", label: "Always allow this tool" },
+          { id: "deny", label: "Deny" },
+        ];
   return {
     kind: "ask",
     approvalEffectId: effectId,
     text: truncate(redactSecrets(`Review before ${summary}`, secrets), MAX_APPROVAL_SUMMARY_LENGTH),
     detail: safeDetail ? truncate(safeDetail, MAX_APPROVAL_DETAIL_LENGTH) : undefined,
     status: "pending",
-    actions: [
-      { id: "allow", label: "Allow once" },
-      { id: "always", label: "Always allow this tool" },
-      { id: "deny", label: "Deny" },
-    ],
+    actions,
   };
 }
 

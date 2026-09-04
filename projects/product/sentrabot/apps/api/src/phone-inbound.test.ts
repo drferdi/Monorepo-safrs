@@ -372,12 +372,22 @@ describe("createPhoneInboundHandler approval answers", () => {
     ]);
   });
 
-  it("maps the third option to a denial", async () => {
+  it("maps the second option to a denial", async () => {
+    const deps = createDeps({ waitingRun, runMessages: askMessages });
+    const handle = createPhoneInboundHandler(deps);
+    await handle({ ...dmEvent, content: "2" });
+
+    expect(deps.answerRunInput).toHaveBeenCalledWith(expect.objectContaining({ answer: "deny" }));
+  });
+
+  it("never offers an always-allow digit over the phone", async () => {
+    // Phone cards drop the "always" action, so "3" is not an answer and is
+    // delivered as an ordinary message instead of creating a standing rule.
     const deps = createDeps({ waitingRun, runMessages: askMessages });
     const handle = createPhoneInboundHandler(deps);
     await handle({ ...dmEvent, content: "3" });
 
-    expect(deps.answerRunInput).toHaveBeenCalledWith(expect.objectContaining({ answer: "deny" }));
+    expect(deps.answerRunInput).not.toHaveBeenCalled();
   });
 
   it("treats a digit as an ordinary message when nothing is waiting", async () => {
