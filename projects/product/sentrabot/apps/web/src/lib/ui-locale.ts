@@ -26,13 +26,13 @@ export function isUiLocale(value: string | null | undefined): value is UiLocale 
   );
 }
 
-/** Normalize BCP-47 tags (`de-DE`, `ko-KR`, `pt-BR`) to a supported UI locale, else `en`. */
+/** Normalize BCP-47 tags (`de-DE`, `ko-KR`, `pt-BR`) to a supported UI locale, else `id`. */
 export function normalizeUiLocale(raw: string | null | undefined): UiLocale {
-  if (!raw) return "en";
+  if (!raw) return "id";
   const normalized = raw.trim().toLowerCase().replace("_", "-");
   if (normalized === "pt" || normalized.startsWith("pt-")) return "pt-BR";
   const primary = normalized.split("-")[0] ?? "";
-  return isUiLocale(primary) ? primary : "en";
+  return isUiLocale(primary) ? primary : "id";
 }
 
 function readStoredLocale(storage: Pick<Storage, "getItem"> | null | undefined): string | null {
@@ -69,7 +69,7 @@ export type ResolveUiLocaleOptions = {
 
 /**
  * Order: saved choice (`localStorage`) → `VITE_DEFAULT_UI_LOCALE` →
- * `navigator.language` → English.
+ * `navigator.language` (when it is a supported locale) → `id` (Bahasa Indonesia).
  */
 export function resolveUiLocale(options: ResolveUiLocaleOptions = {}): UiLocale {
   const stored =
@@ -101,7 +101,7 @@ export function resolveUiLocale(options: ResolveUiLocaleOptions = {}): UiLocale 
         );
   if (navigatorLanguage) return normalizeUiLocale(navigatorLanguage);
 
-  return "en";
+  return "id";
 }
 
 export function persistUiLocale(

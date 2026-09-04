@@ -19,11 +19,11 @@ describe("normalizeUiLocale", () => {
     expect(normalizeUiLocale("DE")).toBe("de");
   });
 
-  it("falls back to English for unknown locales", () => {
-    expect(normalizeUiLocale("fr-FR")).toBe("en");
-    expect(normalizeUiLocale("he-IL")).toBe("en");
-    expect(normalizeUiLocale("")).toBe("en");
-    expect(normalizeUiLocale(null)).toBe("en");
+  it("falls back to Indonesian for unknown locales", () => {
+    expect(normalizeUiLocale("fr-FR")).toBe("id");
+    expect(normalizeUiLocale("he-IL")).toBe("id");
+    expect(normalizeUiLocale("")).toBe("id");
+    expect(normalizeUiLocale(null)).toBe("id");
   });
 });
 
@@ -48,7 +48,7 @@ describe("resolveUiLocale", () => {
     ).toBe("de");
   });
 
-  it("uses navigator.language next, then English", () => {
+  it("uses navigator.language next, then Indonesian", () => {
     expect(
       resolveUiLocale({
         stored: null,
@@ -60,14 +60,31 @@ describe("resolveUiLocale", () => {
       resolveUiLocale({
         stored: null,
         envDefault: null,
+        navigatorLanguage: "de-DE",
+      }),
+    ).toBe("de");
+    expect(
+      resolveUiLocale({
+        stored: null,
+        envDefault: null,
         navigatorLanguage: "fr-FR",
       }),
-    ).toBe("en");
+    ).toBe("id");
     expect(
       resolveUiLocale({
         stored: null,
         envDefault: null,
         navigatorLanguage: null,
+      }),
+    ).toBe("id");
+  });
+
+  it("honours a saved English choice", () => {
+    expect(
+      resolveUiLocale({
+        stored: "en",
+        envDefault: null,
+        navigatorLanguage: "id-ID",
       }),
     ).toBe("en");
   });

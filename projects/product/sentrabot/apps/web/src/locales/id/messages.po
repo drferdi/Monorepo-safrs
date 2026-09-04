@@ -483,11 +483,11 @@ msgstr "Kembali"
 
 #: src/pages/memory-providers/SupermemorySettingsForm.tsx:48
 msgid "Base URL"
-msgstr "Base URL"
+msgstr "URL dasar"
 
 #: src/pages/PluginsOverlay.tsx:815
 msgid "Bearer token"
-msgstr "Bearer token"
+msgstr "Token bearer"
 
 #: src/pages/Shell.tsx:4850
 msgid "Booting live desktop…"
@@ -1271,11 +1271,11 @@ msgstr "Deskripsi"
 
 #: src/pages/Shell.tsx:2704
 msgid "Desktop Runtime offline"
-msgstr ""
+msgstr "Desktop Runtime luring"
 
 #: src/pages/PluginsOverlay.tsx:566
 msgid "Developer"
-msgstr "Developer"
+msgstr "Pengembang"
 
 #: src/components/composer/Composer.tsx:446
 msgid "Dictate"
@@ -2270,7 +2270,7 @@ msgstr "Produktivitas"
 
 #: src/pages/MemorySettingsOverlay.tsx:194
 msgid "Provider"
-msgstr "Provider"
+msgstr "Penyedia"
 
 #: src/pages/ModelSettingsOverlay.tsx:341
 #: src/pages/VoiceSettingsOverlay.tsx:173
@@ -2774,7 +2774,7 @@ msgstr "Disimpan terenkripsi"
 
 #: src/components/conversation/MessageView.tsx:276
 msgid "subagent"
-msgstr "subagent"
+msgstr "subagen"
 
 #: src/components/AskCard.tsx:126
 #: src/pages/ModelSettingsOverlay.tsx:576
@@ -2813,7 +2813,7 @@ msgstr "Tim"
 
 #: src/pages/Shell.tsx:4858
 msgid "Team Computer"
-msgstr "Team Computer"
+msgstr "Komputer Tim"
 
 #: src/pages/RoutineEditor.tsx:46
 msgid "Teams message"
