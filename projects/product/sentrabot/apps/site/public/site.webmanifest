@@ -1,0 +1,24 @@
+{
+  "name": "Sentra Bot",
+  "short_name": "Sentra Bot",
+  "description": "Sembilan bot Sentra yang berjalan di komputer Anda sendiri dengan API key Anda, untuk belajar, berkarier, dan mengatur keuangan.",
+  "lang": "id",
+  "dir": "ltr",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#228dcd",
+  "theme_color": "#228dcd",
+  "icons": [
+    { "src": "/assets/favicon-32.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "/assets/favicon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/assets/favicon-512.png", "sizes": "512x512", "type": "image/png" },
+    {
+      "src": "/assets/favicon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -20,6 +20,7 @@ pnpm --filter cora preview
 - `public/{privasi,ketentuan}/index.html` — extensionless-route copies kept byte-identical to their canonical `.html` pages
 - `IMAGE-SWAP.md` — image rebrand log (waves 11–16)
 - `public/assets/` — captured CSS, rebranded images, the polish layer, and self-hosted IBM Plex Sans
+- `public/{favicon.ico,apple-touch-icon.png,site.webmanifest,robots.txt,sitemap.xml}` — crawler and installability surface; icons and the OG image are official brand-kit files copied unmodified
 
 ## Constraint
 
