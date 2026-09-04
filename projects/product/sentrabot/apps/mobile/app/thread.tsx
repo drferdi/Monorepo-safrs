@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { ChatMarkdown } from "@sentrabot/chat-ui/native";
 import type {
   AgentSkillCatalogEntry,
@@ -103,12 +104,15 @@ function newClientNonce(): string {
   return `m-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-function formatApprovalAnswer(answer: string | undefined): string {
-  if (!answer) return "Answered";
-  if (answer === "allow") return "Allowed once";
-  if (answer === "always") return "Always allowed";
-  if (answer === "deny") return "Denied";
-  return `Answered: ${answer}`;
+function formatApprovalAnswer(
+  t: ReturnType<typeof useLingui>["t"],
+  answer: string | undefined,
+): string {
+  if (!answer) return t`Answered`;
+  if (answer === "allow") return t`Allowed once`;
+  if (answer === "always") return t`Always allowed`;
+  if (answer === "deny") return t`Denied`;
+  return t`Answered: ${answer}`;
 }
 
 function isWorkingStatus(status: string | undefined): boolean {
@@ -118,6 +122,7 @@ function isWorkingStatus(status: string | undefined): boolean {
 export default function Thread() {
   const navigation = useNavigation();
   const router = useRouter();
+  const { t } = useLingui();
   const headerHeight = useHeaderHeight();
   const insets = useSafeAreaInsets();
   const { botId, groupId, name, messageId } = useLocalSearchParams<{
@@ -361,7 +366,7 @@ export default function Thread() {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: name || "Thread",
+      title: name || t`Thread`,
       headerTitle: () => (
         <View
           style={{
@@ -381,14 +386,14 @@ export default function Thread() {
             />
           ) : null}
           <Text numberOfLines={1} style={{ color: "#ECECEE", fontSize: 18, fontWeight: "600" }}>
-            {name || "Thread"}
+            {name || t`Thread`}
           </Text>
         </View>
       ),
       headerRight: () =>
         inGroup ? (
           <Pressable
-            accessibilityLabel="Group settings"
+            accessibilityLabel={t`Group settings`}
             hitSlop={8}
             onPress={() =>
               router.push({
@@ -400,7 +405,7 @@ export default function Thread() {
             <NativeSymbol ios="gearshape" android="settings-outline" size={21} color="#ECECEE" />
           </Pressable>
         ) : (
-          <Pressable accessibilityLabel="Bot actions" hitSlop={8} onPress={showBotActions}>
+          <Pressable accessibilityLabel={t`Bot actions`} hitSlop={8} onPress={showBotActions}>
             <NativeSymbol ios="ellipsis" android="ellipsis-horizontal" size={21} color="#ECECEE" />
           </Pressable>
         ),
@@ -425,26 +430,26 @@ export default function Thread() {
         );
       })
       .catch((err: unknown) =>
-        setError(err instanceof Error ? err.message : "Could not clear conversation"),
+        setError(err instanceof Error ? err.message : t`Could not clear conversation`),
       );
   }
 
   function showBotActions() {
     if (!botId) return;
-    const bot = { id: botId, name: name || "Bot" };
-    Alert.alert(bot.name, "Archive keeps everything and can be undone. Delete is permanent.", [
-      { text: "Cancel", style: "cancel" },
+    const bot = { id: botId, name: name || t`Bot` };
+    Alert.alert(bot.name, t`Archive keeps everything and can be undone. Delete is permanent.`, [
+      { text: t`Cancel`, style: "cancel" },
       {
-        text: "Clear conversation",
+        text: t`Clear conversation`,
         style: "destructive",
         onPress: () => {
           Alert.alert(
-            "Clear conversation?",
-            "This removes every message and stops current work. The bot, computer, memory, and routines are kept.",
+            t`Clear conversation?`,
+            t`This removes every message and stops current work. The bot, computer, memory, and routines are kept.`,
             [
-              { text: "Cancel", style: "cancel" },
+              { text: t`Cancel`, style: "cancel" },
               {
-                text: "Clear",
+                text: t`Clear`,
                 style: "destructive",
                 onPress: clearConversation,
               },
@@ -453,19 +458,19 @@ export default function Thread() {
         },
       },
       {
-        text: "Archive",
+        text: t`Archive`,
         onPress: () =>
           void rpc("bots/archive", { botId })
             .then(leaveBot)
             .catch((error) =>
               Alert.alert(
-                "Could not archive bot",
-                error instanceof Error ? error.message : "Try again.",
+                t`Could not archive bot`,
+                error instanceof Error ? error.message : t`Try again.`,
               ),
             ),
       },
       {
-        text: "Delete…",
+        text: t`Delete…`,
         style: "destructive",
         onPress: () => confirmDeleteBot(bot, leaveBot),
       },
@@ -547,7 +552,7 @@ export default function Thread() {
       setSnap((prev) => prependMobileMessagePage(prev, page));
     } catch (err) {
       loadingOlderContent.current = false;
-      setError(err instanceof Error ? err.message : "Could not load earlier messages");
+      setError(err instanceof Error ? err.message : t`Could not load earlier messages`);
     } finally {
       setLoadingOlder(false);
     }
@@ -720,7 +725,7 @@ export default function Thread() {
     if ((!botId && !groupId) || !messageId) return;
     void applyMessageJump(groupId ? { groupId, messageId } : { botId: botId!, messageId }).catch(
       (err) => {
-        setError(err instanceof Error ? err.message : "Could not open message");
+        setError(err instanceof Error ? err.message : t`Could not open message`);
       },
     );
   }, [botId, groupId, messageId]);
@@ -847,7 +852,7 @@ export default function Thread() {
             pathname: "/group-thread",
             params: {
               groupId: groupTarget,
-              name: plan.rerouteGroupName ?? "Group",
+              name: plan.rerouteGroupName ?? t`Group`,
             },
           });
           return;
@@ -894,7 +899,7 @@ export default function Thread() {
           pathname: "/group-thread",
           params: {
             groupId: groupTarget,
-            name: plan.rerouteGroupName ?? "Group",
+            name: plan.rerouteGroupName ?? t`Group`,
           },
         });
         return;
@@ -904,9 +909,9 @@ export default function Thread() {
       }
     } catch (err) {
       if (reroutedToGroup && groupTarget) {
-        setError(err instanceof Error ? err.message : "Failed to send message");
+        setError(err instanceof Error ? err.message : t`Failed to send message`);
       } else if (isCurrentTarget(botTarget, groupTarget)) {
-        setError(err instanceof Error ? err.message : "Failed to send message");
+        setError(err instanceof Error ? err.message : t`Failed to send message`);
       }
     } finally {
       setSending(false);
@@ -937,21 +942,25 @@ export default function Thread() {
 
   const speak = useCallback(
     (message: MobileMessage) =>
-      void speakMessage(message.botId ?? botId ?? snap?.members?.[0]?.botId ?? "", message).catch(
-        (err) => Alert.alert("Could not speak", err instanceof Error ? err.message : "Try again."),
+      void speakMessage(
+        t,
+        message.botId ?? botId ?? snap?.members?.[0]?.botId ?? "",
+        message,
+      ).catch((err) =>
+        Alert.alert(t`Could not speak`, err instanceof Error ? err.message : t`Try again.`),
       ),
-    [botId, snap?.members],
+    [botId, snap?.members, t],
   );
 
   function showAttachMenu() {
-    Alert.alert("Attach", undefined, [
+    Alert.alert(t`Attach`, undefined, [
       {
-        text: "Photo library",
+        text: t`Photo library`,
         onPress: () => void addAttachments(pickFromLibrary),
       },
-      { text: "Camera", onPress: () => void addAttachments(takePhoto) },
-      { text: "File", onPress: () => void addAttachments(pickDocuments) },
-      { text: "Cancel", style: "cancel" },
+      { text: t`Camera`, onPress: () => void addAttachments(takePhoto) },
+      { text: t`File`, onPress: () => void addAttachments(pickDocuments) },
+      { text: t`Cancel`, style: "cancel" },
     ]);
   }
 
@@ -1074,14 +1083,16 @@ export default function Thread() {
           }}
         >
           <Pressable
-            accessibilityLabel="Reply"
+            accessibilityLabel={t`Reply`}
             onPress={() => setReplyTarget(message)}
             style={{
               alignSelf: message.role === "user" ? "flex-end" : "flex-start",
               marginBottom: 4,
             }}
           >
-            <Text style={{ color: "#6C6C70", fontSize: 12 }}>Reply</Text>
+            <Text style={{ color: "#6C6C70", fontSize: 12 }}>
+              <Trans>Reply</Trans>
+            </Text>
           </Pressable>
           <MessageBubble
             botId={botId ?? snap?.members?.[0]?.botId ?? ""}
@@ -1103,6 +1114,7 @@ export default function Thread() {
     );
   }
 
+  const defaultAgentName = t`Agent`;
   const workingFooter =
     !inGroup && currentBot && isWorkingStatus(currentBotStatus) && !hasLiveProgress ? (
       <View
@@ -1120,7 +1132,9 @@ export default function Thread() {
           size={28}
           status={currentBotStatus}
         />
-        <Text style={{ color: "#85858A", fontSize: 13.5 }}>{currentBot.name} is working</Text>
+        <Text style={{ color: "#85858A", fontSize: 13.5 }}>
+          <Trans>{currentBot.name} is working</Trans>
+        </Text>
       </View>
     ) : inGroup && workingGroupBots.length > 0 ? (
       <View
@@ -1147,8 +1161,8 @@ export default function Thread() {
         </View>
         <Text style={{ color: "#85858A", fontSize: 13.5, flexShrink: 1 }}>
           {workingGroupBots.length === 1
-            ? `${workingGroupBots[0]?.name ?? "Agent"} is working`
-            : `${workingGroupBots.length} agents working`}
+            ? t`${workingGroupBots[0]?.name ?? defaultAgentName} is working`
+            : t`${workingGroupBots.length} agents working`}
         </Text>
       </View>
     ) : null;
@@ -1165,7 +1179,7 @@ export default function Thread() {
         }}
       >
         <Text style={{ color: "#85858A", fontSize: 13 }}>
-          {loadingOlder ? "Loading…" : "Load earlier messages"}
+          {loadingOlder ? t`Loading…` : t`Load earlier messages`}
         </Text>
       </Pressable>
     ) : null;
@@ -1238,7 +1252,7 @@ export default function Thread() {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel={
-              threadScrollState.unread ? "Jump to latest, new messages" : "Jump to latest"
+              threadScrollState.unread ? t`Jump to latest, new messages` : t`Jump to latest`
             }
             onPress={() => {
               performScroll(scrollBehavior.current.jumpToLatest());
@@ -1293,12 +1307,14 @@ export default function Thread() {
             }}
           >
             <View style={{ flex: 1 }}>
-              <Text style={{ color: "#85858A", fontSize: 12 }}>Replying to</Text>
+              <Text style={{ color: "#85858A", fontSize: 12 }}>
+                <Trans>Replying to</Trans>
+              </Text>
               <Text style={{ color: "#C9C9CE", fontSize: 13 }} numberOfLines={1}>
-                {previewMessageText(replyTarget)}
+                {previewMessageText(t, replyTarget)}
               </Text>
             </View>
-            <Pressable accessibilityLabel="Cancel reply" onPress={() => setReplyTarget(null)}>
+            <Pressable accessibilityLabel={t`Cancel reply`} onPress={() => setReplyTarget(null)}>
               <Text style={{ color: "#85858A" }}>✕</Text>
             </Pressable>
           </View>
@@ -1342,7 +1358,7 @@ export default function Thread() {
                   {attachment.name}
                 </Text>
                 <Pressable
-                  accessibilityLabel={`Remove ${attachment.name}`}
+                  accessibilityLabel={t`Remove ${attachment.name}`}
                   onPress={() =>
                     setPendingAttachments((current) =>
                       current.filter((item) => item.id !== attachment.id),
@@ -1415,7 +1431,7 @@ export default function Thread() {
             {slashSkillOptions.map((skill) => (
               <Pressable
                 key={skill.id}
-                accessibilityLabel={`Skill ${skill.name}`}
+                accessibilityLabel={t`Skill ${skill.name}`}
                 onPress={() => insertSkill(skill)}
                 style={{
                   flexDirection: "row",
@@ -1470,7 +1486,7 @@ export default function Thread() {
           }}
         >
           <Pressable
-            accessibilityLabel="Attach file"
+            accessibilityLabel={t`Attach file`}
             onPress={showAttachMenu}
             style={{
               width: 44,
@@ -1517,7 +1533,7 @@ export default function Thread() {
                   {selectedSkill.name}
                 </Text>
                 <Pressable
-                  accessibilityLabel={`Remove skill ${selectedSkill.name}`}
+                  accessibilityLabel={t`Remove skill ${selectedSkill.name}`}
                   hitSlop={8}
                   onPress={() => setSelectedSkill(null)}
                 >
@@ -1545,7 +1561,7 @@ export default function Thread() {
                   {mention.name}
                 </Text>
                 <Pressable
-                  accessibilityLabel={`Remove mention ${mention.name}`}
+                  accessibilityLabel={t`Remove mention ${mention.name}`}
                   hitSlop={8}
                   onPress={() =>
                     setSelectedMentions((current) =>
@@ -1562,7 +1578,7 @@ export default function Thread() {
             <TextInput
               value={draft}
               onChangeText={updateDraft}
-              accessibilityLabel="Message"
+              accessibilityLabel={t`Message`}
               onKeyPress={(event) => {
                 if (
                   event.nativeEvent.key === "Backspace" &&
@@ -1572,7 +1588,7 @@ export default function Thread() {
                   removeLastChip();
                 }
               }}
-              placeholder={selectedSkill || selectedMentions.length ? undefined : "Message…"}
+              placeholder={selectedSkill || selectedMentions.length ? undefined : t`Message…`}
               placeholderTextColor="#6C6C70"
               keyboardAppearance="dark"
               multiline
@@ -1614,7 +1630,9 @@ export default function Thread() {
             asChild
           >
             <Pressable style={{ marginTop: 16 }}>
-              <Text style={{ color: "#C9C9CE" }}>Open computer →</Text>
+              <Text style={{ color: "#C9C9CE" }}>
+                <Trans>Open computer →</Trans>
+              </Text>
             </Pressable>
           </Link>
         ) : null}
@@ -1732,7 +1750,7 @@ function MentionChipIcon({ mention }: { mention: ComposerMention }) {
   );
 }
 
-function previewMessageText(message: MobileMessage): string {
+function previewMessageText(t: ReturnType<typeof useLingui>["t"], message: MobileMessage): string {
   const text = message.blocks
     .flatMap((block) => {
       if (block.kind === "phone_channel_message" && block.text) {
@@ -1744,9 +1762,9 @@ function previewMessageText(message: MobileMessage): string {
     .trim();
   if (text) return text;
   if (message.blocks.some((block) => block.kind === "image" || block.kind === "file")) {
-    return "Attachment";
+    return t`Attachment`;
   }
-  return "Message";
+  return t`Message`;
 }
 
 function memberName(
@@ -1757,14 +1775,18 @@ function memberName(
   return members.find((member) => member.botId === botId)?.name;
 }
 
-async function speakMessage(botId: string, message: MobileMessage) {
+async function speakMessage(
+  t: ReturnType<typeof useLingui>["t"],
+  botId: string,
+  message: MobileMessage,
+) {
   const text = blockText(message);
   if (!text.trim()) return;
   const prepared = await rpc<{ ready: boolean; utterances: string[] }>("voice/prepare", {
     text,
     botId,
   });
-  if (!prepared.ready) throw new Error("Add a voice provider in Voice settings.");
+  if (!prepared.ready) throw new Error(t`Add a voice provider in Voice settings.`);
   for (const utterance of prepared.utterances) {
     await playMpeg(await speakUtterance(utterance, { botId }));
   }
@@ -1795,6 +1817,7 @@ const MessageBubble = memo(function MessageBubble({
   onPreviewMarkdown: (target: MarkdownArtifactPreviewTarget) => void;
   onSpeak?: (message: MobileMessage) => void;
 }) {
+  const { t } = useLingui();
   const [peerExpanded, setPeerExpanded] = useState(false);
   const artifactTarget: MobileArtifactTarget = groupId ? { groupId } : { botId };
   const cardBotId = message.botId ?? botId;
@@ -1822,11 +1845,11 @@ const MessageBubble = memo(function MessageBubble({
   }
   const handoff = message.blocks.find((block) => block.kind === "handoff");
   if (handoff) {
-    const from = memberName(members, handoff.fromBotId) ?? "bot";
-    const to = memberName(members, handoff.toBotId) ?? "bot";
+    const from = memberName(members, handoff.fromBotId) ?? t`bot`;
+    const to = memberName(members, handoff.toBotId) ?? t`bot`;
     return (
       <AgentEventLabel
-        label={`${from} messaged ${to}`}
+        label={t`${from} messaged ${to}`}
         detail={handoff.text}
         expanded={peerExpanded}
         onToggle={() => setPeerExpanded((expanded) => !expanded)}
@@ -1844,7 +1867,7 @@ const MessageBubble = memo(function MessageBubble({
     const peer = sent ? peerMessage.toBotName : peerMessage.fromBotName;
     return (
       <AgentEventLabel
-        label={sent ? `Messaged ${peer}` : `Message from ${peer}`}
+        label={sent ? t`Messaged ${peer}` : t`Message from ${peer}`}
         detail={peerMessage.text}
         expanded={peerExpanded}
         onToggle={() => setPeerExpanded((expanded) => !expanded)}
@@ -1859,7 +1882,9 @@ const MessageBubble = memo(function MessageBubble({
     return (
       <View style={{ width: "100%", paddingVertical: 4, alignItems: "center" }}>
         <Text style={{ color: "#85858A", fontSize: 13.5, textAlign: "center" }}>
-          iMessage · {phoneChannel.fromLabel}: {phoneChannel.text}
+          <Trans>
+            iMessage · {phoneChannel.fromLabel}: {phoneChannel.text}
+          </Trans>
         </Text>
       </View>
     );
@@ -1890,7 +1915,7 @@ const MessageBubble = memo(function MessageBubble({
           }}
         >
           <Text style={{ color: "#ECECEE", fontSize: 15, fontWeight: "600" }}>
-            {special.name || "subagent"}
+            {special.name || t`subagent`}
           </Text>
           <Text
             style={{
@@ -1898,7 +1923,7 @@ const MessageBubble = memo(function MessageBubble({
               fontSize: 13,
             }}
           >
-            {running ? "subagent" : special.status}
+            {running ? t`subagent` : special.status}
           </Text>
         </View>
         {special.task ? (
@@ -1919,7 +1944,7 @@ const MessageBubble = memo(function MessageBubble({
     return (
       <Pressable
         disabled={removed}
-        onPress={() => onOpenBot(special.botId ?? "", special.name ?? "Bot")}
+        onPress={() => onOpenBot(special.botId ?? "", special.name ?? t`Bot`)}
         style={{
           width: "90%",
           borderRadius: 18,
@@ -1939,14 +1964,14 @@ const MessageBubble = memo(function MessageBubble({
           }}
         >
           <Text style={{ color: "#ECECEE", fontSize: 15, fontWeight: "600" }}>
-            {special.name || "Bot"}
+            {special.name || t`Bot`}
           </Text>
           <Text style={{ color: removed ? "#E65707" : "#4ECB71", fontSize: 13 }}>
             {special.status === "archived"
-              ? "archived"
+              ? t`archived`
               : special.status === "deleted"
-                ? "deleted"
-                : "bot"}
+                ? t`deleted`
+                : t`bot`}
           </Text>
         </View>
         <Text
@@ -1959,9 +1984,9 @@ const MessageBubble = memo(function MessageBubble({
         >
           {removed
             ? special.status === "archived"
-              ? "Archived. Chat, memory, and files kept."
-              : "Removed with chat, computer, and memory."
-            : special.title || "Opened its thread."}
+              ? t`Archived. Chat, memory, and files kept.`
+              : t`Removed with chat, computer, and memory.`
+            : special.title || t`Opened its thread.`}
         </Text>
       </Pressable>
     );
@@ -2017,7 +2042,7 @@ const MessageBubble = memo(function MessageBubble({
                 fontWeight: "600",
               }}
             >
-              {formatApprovalAnswer(askBlock.answer)}
+              {formatApprovalAnswer(t, askBlock.answer)}
             </Text>
           ) : canAnswer && onAnswer ? (
             <AskActions
@@ -2026,7 +2051,7 @@ const MessageBubble = memo(function MessageBubble({
             />
           ) : (
             <Text style={{ color: "#85858A", marginTop: 12, fontSize: 13.5 }}>
-              No longer active
+              <Trans>No longer active</Trans>
             </Text>
           )}
         </View>
@@ -2068,7 +2093,7 @@ const MessageBubble = memo(function MessageBubble({
         ) : null}
         {replyPreview ? (
           <Text style={{ color: "#85858A", fontSize: 12.5 }} numberOfLines={2}>
-            {previewMessageText(replyPreview)}
+            {previewMessageText(t, replyPreview)}
           </Text>
         ) : null}
         {caption ? (
@@ -2090,12 +2115,12 @@ const MessageBubble = memo(function MessageBubble({
                   ? void openMobileArtifact(
                       artifactTarget,
                       attachment.artifactId,
-                      attachment.name ?? "Image",
+                      attachment.name ?? t`Image`,
                       attachment.mimeType ?? "image/png",
                     ).catch((err) =>
                       Alert.alert(
-                        "Could not open image",
-                        err instanceof Error ? err.message : "Try again.",
+                        t`Could not open image`,
+                        err instanceof Error ? err.message : t`Try again.`,
                       ),
                     )
                   : undefined
@@ -2107,7 +2132,7 @@ const MessageBubble = memo(function MessageBubble({
                   fontSize: 15,
                 }}
               >
-                🖼 {attachment.name ?? "Image"}
+                🖼 {attachment.name ?? t`Image`}
               </Text>
             </Pressable>
           ) : (
@@ -2118,18 +2143,18 @@ const MessageBubble = memo(function MessageBubble({
                   ? attachment.mimeType === "text/markdown"
                     ? onPreviewMarkdown({
                         artifactId: attachment.artifactId,
-                        name: attachment.name ?? "Markdown file",
+                        name: attachment.name ?? t`Markdown file`,
                         mimeType: attachment.mimeType,
                       })
                     : void openMobileArtifact(
                         artifactTarget,
                         attachment.artifactId,
-                        attachment.name ?? "File",
+                        attachment.name ?? t`File`,
                         attachment.mimeType ?? "text/plain",
                       ).catch((err) =>
                         Alert.alert(
-                          "Could not open file",
-                          err instanceof Error ? err.message : "Try again.",
+                          t`Could not open file`,
+                          err instanceof Error ? err.message : t`Try again.`,
                         ),
                       )
                   : undefined
@@ -2141,11 +2166,13 @@ const MessageBubble = memo(function MessageBubble({
                   fontSize: 15,
                 }}
               >
-                📎 {attachment.name ?? "File"}
+                📎 {attachment.name ?? t`File`}
               </Text>
               {attachment.size ? (
                 <Text style={{ color: "#85858A", marginTop: 4, fontSize: 13 }}>
-                  {attachment.mimeType ?? "file"} · {attachment.size} bytes
+                  <Trans>
+                    {attachment.mimeType ?? t`file`} · {attachment.size} bytes
+                  </Trans>
                 </Text>
               ) : null}
             </Pressable>
@@ -2198,6 +2225,7 @@ function MessageTextCard({
   replyPreview?: MobileMessage;
   onSpeak?: () => void;
 }) {
+  const { t } = useLingui();
   const contentText = blockText(message);
   if (!contentText) return null;
   return (
@@ -2218,7 +2246,7 @@ function MessageTextCard({
       ) : null}
       {replyPreview ? (
         <Text style={{ color: "#85858A", fontSize: 12.5, marginBottom: 6 }} numberOfLines={2}>
-          {previewMessageText(replyPreview)}
+          {previewMessageText(t, replyPreview)}
         </Text>
       ) : null}
       {message.role === "user" ? (
@@ -2229,12 +2257,14 @@ function MessageTextCard({
           {onSpeak ? (
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Speak message"
+              accessibilityLabel={t`Speak message`}
               onPress={onSpeak}
               hitSlop={8}
               style={{ marginTop: 8 }}
             >
-              <Text style={{ color: "#85858A", fontSize: 13 }}>Speak</Text>
+              <Text style={{ color: "#85858A", fontSize: 13 }}>
+                <Trans>Speak</Trans>
+              </Text>
             </Pressable>
           ) : null}
         </>
@@ -2254,11 +2284,12 @@ function AgentEventLabel({
   expanded: boolean;
   onToggle: () => void;
 }) {
+  const { t } = useLingui();
   return (
     <Pressable
       onPress={onToggle}
       accessibilityRole="button"
-      accessibilityLabel={`${expanded ? "Hide" : "Show"} ${label}`}
+      accessibilityLabel={expanded ? t`Hide ${label}` : t`Show ${label}`}
       style={{ width: "100%", paddingVertical: 4, alignItems: "center" }}
     >
       <Text style={{ color: "#85858A", fontSize: 13.5, textAlign: "center" }}>↔ {label}</Text>
@@ -2287,6 +2318,7 @@ function ExpandableToolBlock({
 }: {
   block: Extract<MessageBlock, { kind: "progress" | "steps" }>;
 }) {
+  const { t } = useLingui();
   const [expanded, setExpanded] = useState(false);
   const provider =
     block.kind === "progress" ? /^Using\s+([^:]+)/i.exec(block.text)?.[1] : undefined;
@@ -2299,7 +2331,7 @@ function ExpandableToolBlock({
             : []),
           ...(block.pendingToolNames ?? []),
         ].filter(Boolean);
-  const title = provider ? `Using ${provider}` : "Tools";
+  const title = provider ? t`Using ${provider}` : t`Tools`;
 
   return (
     <View
@@ -2310,7 +2342,7 @@ function ExpandableToolBlock({
     >
       <Pressable
         accessibilityRole="button"
-        accessibilityLabel={expanded ? "Hide tool details" : "Show tool details"}
+        accessibilityLabel={expanded ? t`Hide tool details` : t`Show tool details`}
         onPress={() => setExpanded((current) => !current)}
         style={{
           flexDirection: "row",
@@ -2356,6 +2388,8 @@ function AskBlock({
   canAnswer: boolean;
   onAnswer: (answer: string) => Promise<void>;
 }) {
+  const { t } = useLingui();
+  const doneLabel = t`Done`;
   const [answer, setAnswer] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -2371,7 +2405,7 @@ function AskBlock({
     try {
       await onAnswer(submitValue);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Could not send answer");
+      setError(cause instanceof Error ? cause.message : t`Could not send answer`);
     } finally {
       setSubmitting(false);
     }
@@ -2394,15 +2428,15 @@ function AskBlock({
       {ask.detail ? <Text style={{ color: "#85858A", fontSize: 13.5 }}>{ask.detail}</Text> : null}
       {answered ? (
         <Text style={{ color: "#4ECB71", fontSize: 14 }}>
-          {secretInput ? "Submitted" : `Answered: ${ask.answer ?? "Done"}`}
+          {secretInput ? t`Submitted` : t`Answered: ${ask.answer ?? doneLabel}`}
         </Text>
       ) : canAnswer ? (
         <>
           <TextInput
-            accessibilityLabel={secretInput ? "Code" : "Answer"}
+            accessibilityLabel={secretInput ? t`Code` : t`Answer`}
             value={answer}
             onChangeText={setAnswer}
-            placeholder={secretInput ? "Code" : "Type your answer"}
+            placeholder={secretInput ? t`Code` : t`Type your answer`}
             placeholderTextColor="#6C6C70"
             secureTextEntry={secretInput}
             autoComplete="off"
@@ -2419,7 +2453,7 @@ function AskBlock({
           />
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="Send answer"
+            accessibilityLabel={t`Send answer`}
             disabled={(secretInput ? answer.length === 0 : !answer.trim()) || submitting}
             onPress={() => void submit()}
             style={{
@@ -2432,12 +2466,14 @@ function AskBlock({
             }}
           >
             <Text style={{ color: "#17171A", fontWeight: "600" }}>
-              {submitting ? "Sending…" : "Send answer"}
+              {submitting ? t`Sending…` : t`Send answer`}
             </Text>
           </Pressable>
         </>
       ) : (
-        <Text style={{ color: "#85858A", fontSize: 13.5 }}>Waiting for this bot’s response.</Text>
+        <Text style={{ color: "#85858A", fontSize: 13.5 }}>
+          <Trans>Waiting for this bot’s response.</Trans>
+        </Text>
       )}
       {error ? <Text style={{ color: "#E65707", fontSize: 13 }}>{error}</Text> : null}
     </View>

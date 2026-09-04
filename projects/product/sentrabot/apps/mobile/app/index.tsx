@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import type { RunActivityRow, SearchHit } from "@sentrabot/contracts";
 import { groupBotsForSidebar } from "@sentrabot/core";
 import { Redirect, useFocusEffect, useRouter } from "expo-router";
@@ -51,6 +52,7 @@ type InboxItem =
   | { type: "heading"; key: string; title: string };
 
 export default function Home() {
+  const { t } = useLingui();
   const [bots, setBots] = useState<MobileBot[]>([]);
   const [groups, setGroups] = useState<MobileGroup[]>([]);
   const [botSections, setBotSections] = useState<MobileBotSection[]>([]);
@@ -102,7 +104,7 @@ export default function Home() {
       setGroups(nextGroups);
     } catch (err) {
       if (requestId !== inboxRequestId.current) return;
-      setError(err instanceof Error ? err.message : "Could not load bots");
+      setError(err instanceof Error ? err.message : t`Could not load bots`);
     }
   }, []);
 
@@ -255,12 +257,12 @@ export default function Home() {
   return (
     <View style={[styles.screen, { paddingTop: Math.max(insets.top, 20) }]}>
       <View style={styles.header}>
-        <CircleButton accessibilityLabel="Account" onPress={() => router.push("/account")}>
+        <CircleButton accessibilityLabel={t`Account`} onPress={() => router.push("/account")}>
           <Text style={styles.profileInitials}>{initials}</Text>
         </CircleButton>
         <View style={styles.headerActions}>
           <CircleButton
-            accessibilityLabel="Activity"
+            accessibilityLabel={t`Activity`}
             active={activityMode}
             accent
             onPress={toggleActivityMode}
@@ -273,7 +275,7 @@ export default function Home() {
             />
           </CircleButton>
           <CircleButton
-            accessibilityLabel="Search"
+            accessibilityLabel={t`Search`}
             active={searching}
             onPress={() =>
               setSearching((open) => {
@@ -285,12 +287,12 @@ export default function Home() {
             <NativeSymbol ios="magnifyingglass" android="search" size={17} />
           </CircleButton>
           <CircleButton
-            accessibilityLabel="Create"
+            accessibilityLabel={t`Create`}
             onPress={() =>
-              Alert.alert("Create", undefined, [
-                { text: "New bot", onPress: () => router.push("/new") },
-                { text: "New group", onPress: () => router.push("/new-group") },
-                { text: "Cancel", style: "cancel" },
+              Alert.alert(t`Create`, undefined, [
+                { text: t`New bot`, onPress: () => router.push("/new") },
+                { text: t`New group`, onPress: () => router.push("/new-group") },
+                { text: t`Cancel`, style: "cancel" },
               ])
             }
           >
@@ -304,7 +306,7 @@ export default function Home() {
           autoFocus
           value={query}
           onChangeText={setQuery}
-          placeholder="Search"
+          placeholder={t`Search`}
           placeholderTextColor="#6C6C70"
           autoCorrect={false}
           autoCapitalize="none"
@@ -354,13 +356,13 @@ export default function Home() {
           <Text style={styles.empty}>
             {query.trim() && searching
               ? searchLoading
-                ? "Searching…"
-                : "No results"
+                ? t`Searching…`
+                : t`No results`
               : query.trim()
-                ? "No matching bots"
+                ? t`No matching bots`
                 : searching
-                  ? "Search conversations, files, and routines"
-                  : "Tap + to create a bot"}
+                  ? t`Search conversations, files, and routines`
+                  : t`Tap + to create a bot`}
           </Text>
         }
         renderItem={({ item }) =>
@@ -429,6 +431,7 @@ function ActivitySection({
   activity: { active: RunActivityRow[]; recent: RunActivityRow[] };
 }) {
   const router = useRouter();
+  const { t } = useLingui();
   const openRun = (run: RunActivityRow) => {
     if (run.groupId) {
       router.push({
@@ -444,7 +447,7 @@ function ActivitySection({
     <View style={styles.activitySection}>
       {activity.active.length > 0 ? (
         <>
-          <Text style={styles.sectionHeading}>Now</Text>
+          <Text style={styles.sectionHeading}>{t`Now`}</Text>
           {activity.active.map((run) => (
             <ActivityRow key={run.runId} run={run} onPress={() => openRun(run)} />
           ))}
@@ -453,7 +456,7 @@ function ActivitySection({
       {activity.recent.length > 0 ? (
         <>
           <Text style={[styles.sectionHeading, activity.active.length > 0 && styles.activityGap]}>
-            Recent
+            {t`Recent`}
           </Text>
           {activity.recent.map((run) => (
             <ActivityRow key={run.runId} run={run} onPress={() => openRun(run)} />
@@ -545,15 +548,16 @@ function SearchRow({ hit, onPress }: { hit: SearchHit; onPress: () => void }) {
 
 function BotRow({ bot, onLongPress }: { bot: MobileBot; onLongPress: () => void }) {
   const router = useRouter();
-  const preview = previewSnippet(bot.preview, 40) || bot.title || "No messages yet";
+  const { t } = useLingui();
+  const preview = previewSnippet(bot.preview, 40) || bot.title || t`No messages yet`;
   const time = bot.updatedAt ? formatThreadTime(bot.updatedAt) : "";
   const tag = botTag(bot.title, bot.name);
   // Spelled out because an explicit label replaces the one built from the row's children.
   const label = [
     bot.name,
     tag,
-    bot.notifyOnFinish ? null : "notifications silenced",
-    bot.unread ? "unread" : null,
+    bot.notifyOnFinish ? null : t`notifications silenced`,
+    bot.unread ? t`unread` : null,
     time,
     preview,
   ]
@@ -562,7 +566,7 @@ function BotRow({ bot, onLongPress }: { bot: MobileBot; onLongPress: () => void 
   return (
     <Pressable
       accessibilityLabel={label}
-      accessibilityHint="Long press to pin, move, or silence notifications"
+      accessibilityHint={t`Long press to pin, move, or silence notifications`}
       onPress={() =>
         router.push({ pathname: "/thread", params: { botId: bot.id, name: bot.name } })
       }
@@ -608,19 +612,20 @@ function BotRow({ bot, onLongPress }: { bot: MobileBot; onLongPress: () => void 
 
 function GroupRow({ group, onLongPress }: { group: MobileGroup; onLongPress: () => void }) {
   const router = useRouter();
+  const { t } = useLingui();
   const preview =
     previewSnippet(group.preview, 40) || group.members.map((member) => member.name).join(", ");
   const time = group.updatedAt ? formatThreadTime(group.updatedAt) : "";
   return (
     <Pressable
-      accessibilityLabel={[group.name, group.unread ? "unread" : null, time, preview]
+      accessibilityLabel={[group.name, group.unread ? t`unread` : null, time, preview]
         .filter(Boolean)
         .join(", ")}
       onPress={() =>
         router.push({ pathname: "/group-thread", params: { groupId: group.id, name: group.name } })
       }
       onLongPress={onLongPress}
-      accessibilityHint="Long press to pin or move to a section"
+      accessibilityHint={t`Long press to pin or move to a section`}
       style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
     >
       <GroupAvatar members={group.members} size={54} />

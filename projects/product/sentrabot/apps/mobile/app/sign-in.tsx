@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { Redirect, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
@@ -27,6 +28,7 @@ import {
 
 export default function SignIn() {
   const router = useRouter();
+  const { t } = useLingui();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +48,9 @@ export default function SignIn() {
   if (!ready) {
     return (
       <View style={{ flex: 1, backgroundColor: "#F7F7F4", justifyContent: "center", padding: 24 }}>
-        <Text style={{ color: "#6E6E68", textAlign: "center" }}>Loading…</Text>
+        <Text style={{ color: "#6E6E68", textAlign: "center" }}>
+          <Trans>Loading…</Trans>
+        </Text>
       </View>
     );
   }
@@ -59,7 +63,7 @@ export default function SignIn() {
       await signIn(email.trim(), password);
       router.replace("/");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not sign in");
+      setError(err instanceof Error ? err.message : t`Could not sign in`);
     } finally {
       setPending(false);
     }
@@ -72,15 +76,15 @@ export default function SignIn() {
       <StatusBar style="dark" />
       <View style={{ flex: 1, justifyContent: "center", paddingHorizontal: 24 }}>
         <Text style={{ color: "#1B1B1E", fontSize: 32, fontWeight: "500", textAlign: "center" }}>
-          Sign in to Sentra Bot
+          <Trans>Sign in to Sentra Bot</Trans>
         </Text>
         <Text style={{ color: "#6E6E68", marginTop: 8, textAlign: "center" }}>
-          Same Better Auth session as the web app.
+          <Trans>Same Better Auth session as the web app.</Trans>
         </Text>
         <TextInput
           autoCapitalize="none"
           keyboardType="email-address"
-          placeholder="Email"
+          placeholder={t`Email`}
           placeholderTextColor="#8C8C86"
           value={email}
           onChangeText={setEmail}
@@ -93,7 +97,7 @@ export default function SignIn() {
           }}
         />
         <TextInput
-          placeholder="Password"
+          placeholder={t`Password`}
           placeholderTextColor="#8C8C86"
           secureTextEntry
           value={password}
@@ -119,14 +123,14 @@ export default function SignIn() {
           }}
         >
           <Text style={{ color: "#FBFBF9", fontSize: 17 }}>
-            {pending ? "Working…" : "Continue with email"}
+            {pending ? t`Working…` : t`Continue with email`}
           </Text>
         </Pressable>
       </View>
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={
-          custom ? `Custom server ${displayApiHost(apiBase)}` : "Use a custom server"
+          custom ? t`Custom server ${displayApiHost(apiBase)}` : t`Use a custom server`
         }
         hitSlop={12}
         onPress={() => setServerOpen(true)}
@@ -134,13 +138,17 @@ export default function SignIn() {
       >
         {custom ? (
           <>
-            <Text style={{ color: "#A8A8A2", fontSize: 12 }}>Custom server</Text>
+            <Text style={{ color: "#A8A8A2", fontSize: 12 }}>
+              <Trans>Custom server</Trans>
+            </Text>
             <Text style={{ color: "#6E6E68", fontSize: 13, marginTop: 2 }}>
               {displayApiHost(apiBase)}
             </Text>
           </>
         ) : (
-          <Text style={{ color: "#A8A8A2", fontSize: 13 }}>Use a custom server</Text>
+          <Text style={{ color: "#A8A8A2", fontSize: 13 }}>
+            <Trans>Use a custom server</Trans>
+          </Text>
         )}
       </Pressable>
       <ServerSheet
@@ -167,6 +175,7 @@ function ServerSheet({
   onClose: () => void;
   onSaved: (url: string) => void;
 }) {
+  const { t } = useLingui();
   const [draft, setDraft] = useState(current);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
@@ -236,18 +245,24 @@ function ServerSheet({
             }}
           >
             <Pressable onPress={onClose} hitSlop={8}>
-              <Text style={{ color: "#6E6E68", fontSize: 17 }}>Cancel</Text>
+              <Text style={{ color: "#6E6E68", fontSize: 17 }}>
+                <Trans>Cancel</Trans>
+              </Text>
             </Pressable>
-            <Text style={{ color: "#1B1B1E", fontSize: 17, fontWeight: "600" }}>Server</Text>
+            <Text style={{ color: "#1B1B1E", fontSize: 17, fontWeight: "600" }}>
+              <Trans>Server</Trans>
+            </Text>
             <Pressable onPress={() => void save()} disabled={pending} hitSlop={8}>
               <Text style={{ color: "#1B1B1E", fontSize: 17, fontWeight: "600" }}>
-                {pending ? "Checking…" : "Save"}
+                {pending ? t`Checking…` : t`Save`}
               </Text>
             </Pressable>
           </View>
           <Text style={{ color: "#6E6E68", marginTop: 28, fontSize: 15, lineHeight: 22 }}>
-            Point this app at your self-hosted Sentra Bot origin — the same HTTPS URL you open in a
-            browser.
+            <Trans>
+              Point this app at your self-hosted Sentra Bot origin — the same HTTPS URL you open in
+              a browser.
+            </Trans>
           </Text>
           <TextInput
             autoCapitalize="none"
@@ -283,7 +298,9 @@ function ServerSheet({
               disabled={pending}
               style={{ marginTop: 28, alignItems: "center" }}
             >
-              <Text style={{ color: "#6E6E68", fontSize: 15 }}>Use default server</Text>
+              <Text style={{ color: "#6E6E68", fontSize: 15 }}>
+                <Trans>Use default server</Trans>
+              </Text>
             </Pressable>
           ) : null}
         </SafeAreaView>

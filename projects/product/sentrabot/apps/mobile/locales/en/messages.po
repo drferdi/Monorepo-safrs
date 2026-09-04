@@ -1,0 +1,1323 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-09-04 17:30+0700\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#. placeholder {0}: attachment.mimeType ?? t`file`
+#. placeholder {1}: attachment.size
+#: app/thread.tsx:2173
+msgid "{0} · {1} bytes"
+msgstr "{0} · {1} bytes"
+
+#. placeholder {0}: workingGroupBots.length
+#: app/thread.tsx:1165
+msgid "{0} agents working"
+msgstr "{0} agents working"
+
+#. placeholder {0}: currentBot.name
+#. placeholder {0}: workingGroupBots[0]?.name ?? defaultAgentName
+#: app/thread.tsx:1136
+#: app/thread.tsx:1164
+msgid "{0} is working"
+msgstr "{0} is working"
+
+#. placeholder {0}: group.entries.length
+#. placeholder {1}: group.entries.length === 1 ? "" : "s"
+#: app/models.tsx:418
+msgid "{0} model{1}"
+msgstr "{0} model{1}"
+
+#. placeholder {0}: usage.runs
+#. placeholder {1}: usage.inputTokens + usage.outputTokens
+#: app/account.tsx:98
+msgid "{0} runs · {1} tokens"
+msgstr "{0} runs · {1} tokens"
+
+#: app/thread.tsx:1852
+msgid "{from} messaged {to}"
+msgstr "{from} messaged {to}"
+
+#: app/account.tsx:219
+msgid "{label} avatars"
+msgstr "{label} avatars"
+
+#: app/_layout.tsx:69
+#: app/index.tsx:260
+msgid "Account"
+msgstr "Account"
+
+#: app/models.tsx:385
+msgid "Active model"
+msgstr "Active model"
+
+#: app/index.tsx:265
+msgid "Activity"
+msgstr "Activity"
+
+#: app/integrations.tsx:267
+#: app/integrations.tsx:295
+msgid "Add"
+msgstr "Add"
+
+#. placeholder {0}: item.name
+#. placeholder {0}: tile.label
+#: app/integrations.tsx:261
+#: app/integrations.tsx:289
+msgid "Add {0}"
+msgstr "Add {0}"
+
+#: app/integrations.tsx:334
+msgid "Add MCP server"
+msgstr "Add MCP server"
+
+#: app/integrations.tsx:335
+msgid "Add OpenAPI"
+msgstr "Add OpenAPI"
+
+#: app/integrations.tsx:332
+msgid "Add Treg"
+msgstr "Add Treg"
+
+#: app/integrations.tsx:315
+msgid "Advanced"
+msgstr "Advanced"
+
+#: app/thread.tsx:1117
+msgid "Agent"
+msgstr "Agent"
+
+#: app/account.tsx:286
+msgid "Agent messages"
+msgstr "Agent messages"
+
+#: app/account.tsx:294
+msgid "Alerts from routines"
+msgstr "Alerts from routines"
+
+#: app/thread.tsx:2436
+msgid "Answer"
+msgstr "Answer"
+
+#. placeholder {0}: ask.answer ?? doneLabel
+#: app/thread.tsx:2431
+msgid "Answered: {0}"
+msgstr "Answered: {0}"
+
+#: app/models.tsx:678
+#: app/models.tsx:683
+#: app/models.tsx:706
+#: app/models.tsx:709
+msgid "API key"
+msgstr "API key"
+
+#: app/thread.tsx:461
+msgid "Archive"
+msgstr "Archive"
+
+#: app/thread.tsx:440
+msgid "Archive keeps everything and can be undone. Delete is permanent."
+msgstr "Archive keeps everything and can be undone. Delete is permanent."
+
+#: app/thread.tsx:1971
+msgid "archived"
+msgstr "archived"
+
+#: app/account.tsx:397
+msgid "Archived bots"
+msgstr "Archived bots"
+
+#: app/thread.tsx:1987
+msgid "Archived. Chat, memory, and files kept."
+msgstr "Archived. Chat, memory, and files kept."
+
+#: app/thread.tsx:956
+msgid "Attach"
+msgstr "Attach"
+
+#: app/thread.tsx:1489
+msgid "Attach file"
+msgstr "Attach file"
+
+#: app/models.tsx:608
+msgid "Authorization code"
+msgstr "Authorization code"
+
+#: app/account.tsx:208
+msgid "Avatar style"
+msgstr "Avatar style"
+
+#: app/account.tsx:210
+msgid "Avatars"
+msgstr "Avatars"
+
+#: app/integrations.tsx:381
+msgid "Bearer authentication"
+msgstr "Bearer authentication"
+
+#: app/integrations.tsx:392
+msgid "Bearer token"
+msgstr "Bearer token"
+
+#: app/computer.tsx:306
+msgid "Booting {label}"
+msgstr "Booting {label}"
+
+#: app/thread.tsx:1848
+#: app/thread.tsx:1849
+#: app/thread.tsx:1974
+msgid "bot"
+msgstr "bot"
+
+#: app/computer.tsx:31
+#: app/thread.tsx:439
+#: app/thread.tsx:1947
+#: app/thread.tsx:1967
+msgid "Bot"
+msgstr "Bot"
+
+#: app/thread.tsx:408
+msgid "Bot actions"
+msgstr "Bot actions"
+
+#: app/voice.tsx:143
+msgid "Bring your own key. ElevenLabs, OpenAI, and Cartesia all plug into the same speak buttons."
+msgstr "Bring your own key. ElevenLabs, OpenAI, and Cartesia all plug into the same speak buttons."
+
+#: app/thread.tsx:961
+msgid "Camera"
+msgstr "Camera"
+
+#: app/account.tsx:174
+#: app/group-settings.tsx:67
+#: app/index.tsx:295
+#: app/integrations.tsx:418
+#: app/new.tsx:64
+#: app/new.tsx:67
+#: app/sign-in.tsx:249
+#: app/thread.tsx:441
+#: app/thread.tsx:450
+#: app/thread.tsx:963
+#: components/bot-organize-modal.tsx:147
+msgid "Cancel"
+msgstr "Cancel"
+
+#: app/thread.tsx:1317
+msgid "Cancel reply"
+msgstr "Cancel reply"
+
+#: app/_layout.tsx:92
+#: app/bot-settings.tsx:88
+msgid "Chat settings"
+msgstr "Chat settings"
+
+#: app/sign-in.tsx:257
+msgid "Checking…"
+msgstr "Checking…"
+
+#: app/account.tsx:343
+msgid "Choose your provider and active model"
+msgstr "Choose your provider and active model"
+
+#: app/account.tsx:215
+msgid "Clay"
+msgstr "Clay"
+
+#: app/thread.tsx:452
+msgid "Clear"
+msgstr "Clear"
+
+#: app/thread.tsx:443
+msgid "Clear conversation"
+msgstr "Clear conversation"
+
+#: app/thread.tsx:447
+msgid "Clear conversation?"
+msgstr "Clear conversation?"
+
+#: components/bot-organize-modal.tsx:51
+msgid "Close chat organization"
+msgstr "Close chat organization"
+
+#: app/computer.tsx:396
+msgid "Close computer"
+msgstr "Close computer"
+
+#: app/thread.tsx:2436
+#: app/thread.tsx:2439
+msgid "Code"
+msgstr "Code"
+
+#: app/_layout.tsx:95
+#: components/computer-mode-picker.tsx:18
+msgid "Computer"
+msgstr "Computer"
+
+#: app/computer.tsx:427
+msgid "Computer is asleep"
+msgstr "Computer is asleep"
+
+#: app/models.tsx:391
+msgid "Configured by deployment"
+msgstr "Configured by deployment"
+
+#: app/voice.tsx:192
+msgid "Connect"
+msgstr "Connect"
+
+#: app/voice.tsx:124
+msgid "Connect a voice provider first."
+msgstr "Connect a voice provider first."
+
+#: app/models.tsx:746
+msgid "Connect API key"
+msgstr "Connect API key"
+
+#: app/account.tsx:377
+#: app/integrations.tsx:220
+msgid "Connect apps."
+msgstr "Connect apps."
+
+#: app/models.tsx:588
+msgid "Connect this provider to use it as your personal model."
+msgstr "Connect this provider to use it as your personal model."
+
+#: app/integrations.tsx:347
+msgid "Connect Treg"
+msgstr "Connect Treg"
+
+#: app/models.tsx:425
+#: app/voice.tsx:162
+msgid "Connected"
+msgstr "Connected"
+
+#. placeholder {0}: credential.label
+#: app/models.tsx:583
+msgid "Connected · {0}"
+msgstr "Connected · {0}"
+
+#. placeholder {0}: selected.name
+#: app/voice.tsx:96
+msgid "Connected {0}."
+msgstr "Connected {0}."
+
+#. placeholder {0}: selected.label
+#: app/models.tsx:273
+msgid "Connected and using {0}."
+msgstr "Connected and using {0}."
+
+#: app/models.tsx:291
+msgid "Connected and using {label}."
+msgstr "Connected and using {label}."
+
+#: app/integrations.tsx:129
+msgid "Connection pending"
+msgstr "Connection pending"
+
+#: app/sign-in.tsx:126
+msgid "Continue with email"
+msgstr "Continue with email"
+
+#: app/integrations.tsx:197
+msgid "Could not add source"
+msgstr "Could not add source"
+
+#: app/thread.tsx:467
+msgid "Could not archive bot"
+msgstr "Could not archive bot"
+
+#: app/models.tsx:237
+msgid "Could not change the default model"
+msgstr "Could not change the default model"
+
+#: app/thread.tsx:433
+msgid "Could not clear conversation"
+msgstr "Could not clear conversation"
+
+#: app/integrations.tsx:134
+#: app/voice.tsx:98
+msgid "Could not connect"
+msgstr "Could not connect"
+
+#: app/models.tsx:275
+msgid "Could not connect this provider"
+msgstr "Could not connect this provider"
+
+#: app/new.tsx:49
+msgid "Could not create bot"
+msgstr "Could not create bot"
+
+#: app/new-group.tsx:52
+msgid "Could not create group"
+msgstr "Could not create group"
+
+#: app/account.tsx:192
+msgid "Could not delete account"
+msgstr "Could not delete account"
+
+#: app/group-settings.tsx:76
+msgid "Could not delete group"
+msgstr "Could not delete group"
+
+#: app/models.tsx:363
+msgid "Could not finish sign-in"
+msgstr "Could not finish sign-in"
+
+#: app/bot-settings.tsx:48
+msgid "Could not load bot"
+msgstr "Could not load bot"
+
+#: app/index.tsx:107
+msgid "Could not load bots"
+msgstr "Could not load bots"
+
+#: app/thread.tsx:555
+msgid "Could not load earlier messages"
+msgstr "Could not load earlier messages"
+
+#: app/group-settings.tsx:35
+msgid "Could not load group"
+msgstr "Could not load group"
+
+#: app/integrations.tsx:74
+msgid "Could not load integrations"
+msgstr "Could not load integrations"
+
+#: app/models.tsx:117
+msgid "Could not load model settings"
+msgstr "Could not load model settings"
+
+#: app/computer.tsx:199
+msgid "Could not load the desktop. This device cannot reach the screen URL."
+msgstr "Could not load the desktop. This device cannot reach the screen URL."
+
+#: app/voice.tsx:75
+msgid "Could not load voice settings"
+msgstr "Could not load voice settings"
+
+#: app/computer.tsx:99
+msgid "Could not open computer"
+msgstr "Could not open computer"
+
+#: app/thread.tsx:2156
+msgid "Could not open file"
+msgstr "Could not open file"
+
+#: app/thread.tsx:2122
+msgid "Could not open image"
+msgstr "Could not open image"
+
+#: app/thread.tsx:728
+msgid "Could not open message"
+msgstr "Could not open message"
+
+#: app/voice.tsx:130
+msgid "Could not play a sample"
+msgstr "Could not play a sample"
+
+#: app/models.tsx:219
+msgid "Could not reach this model server"
+msgstr "Could not reach this model server"
+
+#: app/integrations.tsx:210
+msgid "Could not remove source"
+msgstr "Could not remove source"
+
+#: app/account.tsx:115
+msgid "Could not restore bot"
+msgstr "Could not restore bot"
+
+#: app/integrations.tsx:161
+msgid "Could not revoke connection"
+msgstr "Could not revoke connection"
+
+#: app/bot-settings.tsx:80
+msgid "Could not save bot"
+msgstr "Could not save bot"
+
+#: app/group-settings.tsx:58
+msgid "Could not save group"
+msgstr "Could not save group"
+
+#: app/voice.tsx:111
+msgid "Could not save that voice"
+msgstr "Could not save that voice"
+
+#: app/thread.tsx:2408
+msgid "Could not send answer"
+msgstr "Could not send answer"
+
+#: app/sign-in.tsx:66
+msgid "Could not sign in"
+msgstr "Could not sign in"
+
+#: app/thread.tsx:950
+msgid "Could not speak"
+msgstr "Could not speak"
+
+#: app/models.tsx:324
+msgid "Could not start sign-in"
+msgstr "Could not start sign-in"
+
+#: app/computer.tsx:166
+msgid "Could not switch computer"
+msgstr "Could not switch computer"
+
+#: components/bot-organize-modal.tsx:42
+msgid "Could not update chat"
+msgstr "Could not update chat"
+
+#: app/account.tsx:161
+msgid "Could not update notifications"
+msgstr "Could not update notifications"
+
+#: app/account.tsx:128
+msgid "Couldn't update avatars"
+msgstr "Couldn't update avatars"
+
+#: app/index.tsx:290
+#: app/index.tsx:292
+#: app/new.tsx:148
+#: components/bot-organize-modal.tsx:128
+msgid "Create"
+msgstr "Create"
+
+#: app/new-group.tsx:131
+msgid "Create group"
+msgstr "Create group"
+
+#: components/bot-organize-modal.tsx:122
+msgid "Create section"
+msgstr "Create section"
+
+#: app/new-group.tsx:131
+#: app/new.tsx:148
+msgid "Creating…"
+msgstr "Creating…"
+
+#: app/account.tsx:437
+#: app/account.tsx:445
+msgid "Current password"
+msgstr "Current password"
+
+#: app/integrations.tsx:183
+msgid "Custom connector"
+msgstr "Custom connector"
+
+#: app/sign-in.tsx:142
+msgid "Custom server"
+msgstr "Custom server"
+
+#. placeholder {0}: displayApiHost(apiBase)
+#: app/sign-in.tsx:133
+msgid "Custom server {0}"
+msgstr "Custom server {0}"
+
+#: app/account.tsx:418
+#: app/group-settings.tsx:69
+msgid "Delete"
+msgstr "Delete"
+
+#: app/account.tsx:176
+#: app/account.tsx:428
+#: app/account.tsx:467
+msgid "Delete account"
+msgstr "Delete account"
+
+#: app/group-settings.tsx:167
+msgid "Delete group"
+msgstr "Delete group"
+
+#: app/group-settings.tsx:66
+msgid "Delete this group? Bots and their solo threads are kept."
+msgstr "Delete this group? Bots and their solo threads are kept."
+
+#: app/account.tsx:171
+msgid "Delete your account?"
+msgstr "Delete your account?"
+
+#: app/thread.tsx:473
+msgid "Delete…"
+msgstr "Delete…"
+
+#: app/thread.tsx:1973
+msgid "deleted"
+msgstr "deleted"
+
+#: app/models.tsx:388
+msgid "Deployment default"
+msgstr "Deployment default"
+
+#: app/bot-settings.tsx:119
+#: app/new.tsx:103
+msgid "Describe what this bot does"
+msgstr "Describe what this bot does"
+
+#: app/bot-settings.tsx:130
+#: app/new.tsx:114
+msgid "Description"
+msgstr "Description"
+
+#: app/integrations.tsx:355
+msgid "Display name"
+msgstr "Display name"
+
+#: app/thread.tsx:2392
+msgid "Done"
+msgstr "Done"
+
+#: app/sign-in.tsx:87
+msgid "Email"
+msgstr "Email"
+
+#: app/models.tsx:638
+msgid "Enter this code in your browser:"
+msgstr "Enter this code in your browser:"
+
+#: app/account.tsx:431
+msgid "Enter your current password, then confirm permanent deletion of your account and all associated data."
+msgstr "Enter your current password, then confirm permanent deletion of your account and all associated data."
+
+#: app/models.tsx:530
+msgid "exact-model-id"
+msgstr "exact-model-id"
+
+#: app/thread.tsx:912
+#: app/thread.tsx:914
+msgid "Failed to send message"
+msgstr "Failed to send message"
+
+#: app/thread.tsx:2174
+msgid "file"
+msgstr "file"
+
+#: app/thread.tsx:962
+#: app/thread.tsx:2152
+#: app/thread.tsx:2169
+msgid "File"
+msgstr "File"
+
+#: app/models.tsx:478
+msgid "Find models"
+msgstr "Find models"
+
+#: app/models.tsx:478
+msgid "Finding…"
+msgstr "Finding…"
+
+#: app/integrations.tsx:130
+msgid "Finish connecting in the browser, then refresh this page."
+msgstr "Finish connecting in the browser, then refresh this page."
+
+#: app/models.tsx:599
+msgid "Finish signing in in your browser:"
+msgstr "Finish signing in in your browser:"
+
+#: app/_layout.tsx:90
+#: app/thread.tsx:855
+#: app/thread.tsx:902
+msgid "Group"
+msgstr "Group"
+
+#: app/group-settings.tsx:97
+msgid "Group name"
+msgstr "Group name"
+
+#: app/_layout.tsx:91
+#: app/group-settings.tsx:86
+#: app/thread.tsx:396
+msgid "Group settings"
+msgstr "Group settings"
+
+#: app/voice.tsx:215
+msgid "Hear a sample"
+msgstr "Hear a sample"
+
+#: app/voice.tsx:122
+msgid "Hi, this is how I'll sound when I read replies out loud."
+msgstr "Hi, this is how I'll sound when I read replies out loud."
+
+#: app/thread.tsx:2292
+msgid "Hide {label}"
+msgstr "Hide {label}"
+
+#: app/thread.tsx:2345
+msgid "Hide tool details"
+msgstr "Hide tool details"
+
+#: app/computer.tsx:453
+msgid "I’m done"
+msgstr "I’m done"
+
+#: app/voice.tsx:128
+msgid "If you heard that, voice is ready."
+msgstr "If you heard that, voice is ready."
+
+#: app/thread.tsx:2118
+#: app/thread.tsx:2135
+msgid "Image"
+msgstr "Image"
+
+#. placeholder {0}: phoneChannel.fromLabel
+#. placeholder {1}: phoneChannel.text
+#: app/thread.tsx:1885
+msgid "iMessage · {0}: {1}"
+msgstr "iMessage · {0}: {1}"
+
+#: app/_layout.tsx:72
+#: app/account.tsx:374
+msgid "Integrations"
+msgstr "Integrations"
+
+#: app/thread.tsx:1255
+msgid "Jump to latest"
+msgstr "Jump to latest"
+
+#: app/thread.tsx:1255
+msgid "Jump to latest, new messages"
+msgstr "Jump to latest, new messages"
+
+#: app/account.tsx:244
+#: app/account.tsx:246
+msgid "Language"
+msgstr "Language"
+
+#: app/account.tsx:316
+msgid "Live update settings"
+msgstr "Live update settings"
+
+#: app/account.tsx:277
+msgid "Live working status"
+msgstr "Live working status"
+
+#: app/thread.tsx:1182
+msgid "Load earlier messages"
+msgstr "Load earlier messages"
+
+#: app/sign-in.tsx:52
+#: app/thread.tsx:1182
+msgid "Loading…"
+msgstr "Loading…"
+
+#: app/index.tsx:628
+msgid "Long press to pin or move to a section"
+msgstr "Long press to pin or move to a section"
+
+#: app/index.tsx:569
+msgid "Long press to pin, move, or silence notifications"
+msgstr "Long press to pin, move, or silence notifications"
+
+#: app/thread.tsx:2146
+msgid "Markdown file"
+msgstr "Markdown file"
+
+#: app/group-settings.tsx:109
+#: app/new-group.tsx:83
+msgid "Members ({GROUP_MEMBER_MIN}–{GROUP_MEMBER_MAX})"
+msgstr "Members ({GROUP_MEMBER_MIN}–{GROUP_MEMBER_MAX})"
+
+#: app/thread.tsx:1581
+msgid "Message"
+msgstr "Message"
+
+#: app/thread.tsx:1870
+msgid "Message from {peer}"
+msgstr "Message from {peer}"
+
+#: app/thread.tsx:1591
+msgid "Message…"
+msgstr "Message…"
+
+#: app/thread.tsx:1870
+msgid "Messaged {peer}"
+msgstr "Messaged {peer}"
+
+#: app/models.tsx:437
+#: app/models.tsx:481
+msgid "Model"
+msgstr "Model"
+
+#: app/models.tsx:525
+msgid "Model id"
+msgstr "Model id"
+
+#: app/account.tsx:104
+msgid "Model spend uses your provider keys."
+msgstr "Model spend uses your provider keys."
+
+#: app/models.tsx:235
+msgid "Model updated."
+msgstr "Model updated."
+
+#: app/_layout.tsx:70
+#: app/account.tsx:340
+msgid "Models"
+msgstr "Models"
+
+#: components/bot-organize-modal.tsx:90
+msgid "Move to"
+msgstr "Move to"
+
+#: app/bot-settings.tsx:96
+#: app/group-settings.tsx:92
+#: app/new-group.tsx:66
+#: app/new.tsx:80
+msgid "Name"
+msgstr "Name"
+
+#: app/bot-settings.tsx:102
+#: app/new.tsx:86
+msgid "Name this bot"
+msgstr "Name this bot"
+
+#: app/new-group.tsx:71
+msgid "Name this group"
+msgstr "Name this group"
+
+#: app/account.tsx:302
+msgid "Needs attention"
+msgstr "Needs attention"
+
+#: app/_layout.tsx:76
+#: app/index.tsx:293
+msgid "New bot"
+msgstr "New bot"
+
+#: app/_layout.tsx:85
+#: app/index.tsx:294
+#: app/new-group.tsx:60
+msgid "New group"
+msgstr "New group"
+
+#: components/bot-organize-modal.tsx:140
+msgid "New section"
+msgstr "New section"
+
+#: app/integrations.tsx:381
+msgid "No authentication"
+msgstr "No authentication"
+
+#. placeholder {0}: item.name
+#: app/integrations.tsx:157
+msgid "No connection record found for {0}."
+msgstr "No connection record found for {0}."
+
+#: app/integrations.tsx:430
+msgid "No custom sources installed."
+msgstr "No custom sources installed."
+
+#: app/thread.tsx:2054
+msgid "No longer active"
+msgstr "No longer active"
+
+#: app/index.tsx:362
+msgid "No matching bots"
+msgstr "No matching bots"
+
+#: app/index.tsx:552
+msgid "No messages yet"
+msgstr "No messages yet"
+
+#: app/index.tsx:360
+msgid "No results"
+msgstr "No results"
+
+#: app/models.tsx:583
+msgid "Not connected"
+msgstr "Not connected"
+
+#: app/integrations.tsx:253
+msgid "Not in the plugin catalog"
+msgstr "Not in the plugin catalog"
+
+#: app/account.tsx:325
+msgid "Notification settings"
+msgstr "Notification settings"
+
+#: app/account.tsx:272
+#: app/account.tsx:274
+msgid "Notifications"
+msgstr "Notifications"
+
+#: app/index.tsx:559
+msgid "notifications silenced"
+msgstr "notifications silenced"
+
+#: app/index.tsx:450
+msgid "Now"
+msgstr "Now"
+
+#. placeholder {0}: selected.label
+#: app/models.tsx:235
+msgid "Now using {0}."
+msgstr "Now using {0}."
+
+#: app/computer.tsx:209
+msgid "Open computer"
+msgstr "Open computer"
+
+#: app/thread.tsx:1634
+msgid "Open computer →"
+msgstr "Open computer →"
+
+#: app/computer.tsx:190
+msgid "Open in full window"
+msgstr "Open in full window"
+
+#: app/models.tsx:446
+msgid "OpenAI-compatible server URL"
+msgstr "OpenAI-compatible server URL"
+
+#: app/integrations.tsx:350
+msgid "OpenAPI JSON"
+msgstr "OpenAPI JSON"
+
+#: app/thread.tsx:1989
+msgid "Opened its thread."
+msgstr "Opened its thread."
+
+#: app/models.tsx:690
+msgid "Optional"
+msgstr "Optional"
+
+#: app/models.tsx:705
+msgid "Or connect an API key"
+msgstr "Or connect an API key"
+
+#: app/account.tsx:215
+msgid "Organic"
+msgstr "Organic"
+
+#: app/models.tsx:518
+msgid "Other model…"
+msgstr "Other model…"
+
+#: app/sign-in.tsx:100
+msgid "Password"
+msgstr "Password"
+
+#: app/voice.tsx:181
+msgid "Paste a replacement key"
+msgstr "Paste a replacement key"
+
+#: app/voice.tsx:181
+msgid "Paste your API key"
+msgstr "Paste your API key"
+
+#: app/models.tsx:580
+msgid "Personal credential"
+msgstr "Personal credential"
+
+#: app/thread.tsx:958
+msgid "Photo library"
+msgstr "Photo library"
+
+#: components/bot-organize-modal.tsx:70
+msgid "Pin"
+msgstr "Pin"
+
+#: app/sign-in.tsx:262
+msgid "Point this app at your self-hosted Sentra Bot origin — the same HTTPS URL you open in a browser."
+msgstr "Point this app at your self-hosted Sentra Bot origin — the same HTTPS URL you open in a browser."
+
+#: components/computer-mode-picker.tsx:40
+msgid "Private"
+msgstr "Private"
+
+#: app/models.tsx:399
+msgid "Providers"
+msgstr "Providers"
+
+#: app/account.tsx:303
+msgid "Questions, approvals, takeover"
+msgstr "Questions, approvals, takeover"
+
+#: app/index.tsx:459
+msgid "Recent"
+msgstr "Recent"
+
+#: app/computer.tsx:275
+msgid "Recording a live demonstration needs desktop or web with the full computer view. You can still ask this bot to run saved skills from chat."
+msgstr "Recording a live demonstration needs desktop or web with the full computer view. You can still ask this bot to run saved skills from chat."
+
+#: app/computer.tsx:455
+msgid "Release"
+msgstr "Release"
+
+#: app/integrations.tsx:349
+msgid "Remote MCP server"
+msgstr "Remote MCP server"
+
+#: app/integrations.tsx:267
+#: app/integrations.tsx:295
+#: app/integrations.tsx:443
+msgid "Remove"
+msgstr "Remove"
+
+#. placeholder {0}: attachment.name
+#. placeholder {0}: item.name
+#. placeholder {0}: tile.label
+#: app/integrations.tsx:261
+#: app/integrations.tsx:289
+#: app/thread.tsx:1361
+msgid "Remove {0}"
+msgstr "Remove {0}"
+
+#. placeholder {0}: mention.name
+#: app/thread.tsx:1564
+msgid "Remove mention {0}"
+msgstr "Remove mention {0}"
+
+#. placeholder {0}: selectedSkill.name
+#: app/thread.tsx:1536
+msgid "Remove skill {0}"
+msgstr "Remove skill {0}"
+
+#: app/thread.tsx:1988
+msgid "Removed with chat, computer, and memory."
+msgstr "Removed with chat, computer, and memory."
+
+#: app/integrations.tsx:443
+msgid "Removing…"
+msgstr "Removing…"
+
+#: app/models.tsx:703
+#: app/models.tsx:745
+msgid "Replace API key"
+msgstr "Replace API key"
+
+#: app/voice.tsx:192
+msgid "Replace key"
+msgstr "Replace key"
+
+#: app/account.tsx:287
+msgid "Replies and completed work"
+msgstr "Replies and completed work"
+
+#: app/thread.tsx:1086
+#: app/thread.tsx:1094
+msgid "Reply"
+msgstr "Reply"
+
+#: app/thread.tsx:1311
+msgid "Replying to"
+msgstr "Replying to"
+
+#: app/account.tsx:406
+msgid "Restore"
+msgstr "Restore"
+
+#: components/bot-organize-modal.tsx:85
+msgid "Resume notifications"
+msgstr "Resume notifications"
+
+#: app/account.tsx:215
+msgid "Robot"
+msgstr "Robot"
+
+#: app/_layout.tsx:94
+msgid "Routine"
+msgstr "Routine"
+
+#: app/sign-in.tsx:82
+msgid "Same Better Auth session as the web app."
+msgstr "Same Better Auth session as the web app."
+
+#: app/bot-settings.tsx:171
+#: app/group-settings.tsx:152
+#: app/models.tsx:743
+#: app/sign-in.tsx:257
+msgid "Save"
+msgstr "Save"
+
+#: app/models.tsx:273
+msgid "Saved."
+msgstr "Saved."
+
+#: app/bot-settings.tsx:171
+#: app/group-settings.tsx:152
+#: app/models.tsx:741
+msgid "Saving…"
+msgstr "Saving…"
+
+#: app/account.tsx:293
+msgid "Scheduled tasks"
+msgstr "Scheduled tasks"
+
+#: app/index.tsx:278
+#: app/index.tsx:309
+msgid "Search"
+msgstr "Search"
+
+#: app/index.tsx:364
+msgid "Search conversations, files, and routines"
+msgstr "Search conversations, files, and routines"
+
+#: app/index.tsx:359
+msgid "Searching…"
+msgstr "Searching…"
+
+#: components/bot-organize-modal.tsx:116
+msgid "Section name"
+msgstr "Section name"
+
+#: app/thread.tsx:2456
+#: app/thread.tsx:2469
+msgid "Send answer"
+msgstr "Send answer"
+
+#: app/thread.tsx:2469
+msgid "Sending…"
+msgstr "Sending…"
+
+#: app/sign-in.tsx:253
+msgid "Server"
+msgstr "Server"
+
+#: app/models.tsx:443
+msgid "Server URL"
+msgstr "Server URL"
+
+#: app/models.tsx:462
+msgid "Setup help"
+msgstr "Setup help"
+
+#: app/thread.tsx:2292
+msgid "Show {label}"
+msgstr "Show {label}"
+
+#: app/thread.tsx:2345
+msgid "Show tool details"
+msgstr "Show tool details"
+
+#: app/models.tsx:662
+msgid "Sign in"
+msgstr "Sign in"
+
+#: app/sign-in.tsx:79
+msgid "Sign in to Sentra Bot"
+msgstr "Sign in to Sentra Bot"
+
+#: app/account.tsx:390
+msgid "Sign out"
+msgstr "Sign out"
+
+#: components/bot-organize-modal.tsx:85
+msgid "Silence notifications"
+msgstr "Silence notifications"
+
+#. placeholder {0}: skill.name
+#: app/thread.tsx:1434
+msgid "Skill {0}"
+msgstr "Skill {0}"
+
+#: app/computer.tsx:452
+msgid "Skip"
+msgstr "Skip"
+
+#: app/thread.tsx:2266
+msgid "Speak"
+msgstr "Speak"
+
+#: app/voice.tsx:164
+msgid "Speak + transcribe"
+msgstr "Speak + transcribe"
+
+#: app/thread.tsx:2260
+msgid "Speak message"
+msgstr "Speak message"
+
+#: app/voice.tsx:165
+msgid "Speak only"
+msgstr "Speak only"
+
+#: app/account.tsx:360
+msgid "Speak replies aloud with ElevenLabs, OpenAI, or Cartesia"
+msgstr "Speak replies aloud with ElevenLabs, OpenAI, or Cartesia"
+
+#: app/models.tsx:662
+msgid "Starting…"
+msgstr "Starting…"
+
+#: app/thread.tsx:1918
+#: app/thread.tsx:1926
+msgid "subagent"
+msgstr "subagent"
+
+#: app/models.tsx:628
+msgid "Submit"
+msgstr "Submit"
+
+#: app/thread.tsx:2431
+msgid "Submitted"
+msgstr "Submitted"
+
+#: app/models.tsx:773
+msgid "Switching…"
+msgstr "Switching…"
+
+#: app/computer.tsx:240
+#: app/computer.tsx:391
+msgid "Take control"
+msgstr "Take control"
+
+#: app/index.tsx:365
+msgid "Tap + to create a bot"
+msgstr "Tap + to create a bot"
+
+#: app/computer.tsx:272
+msgid "Teach a task"
+msgstr "Teach a task"
+
+#: components/computer-mode-picker.tsx:40
+msgid "Team"
+msgstr "Team"
+
+#: app/models.tsx:605
+msgid "The final page may not load. Paste its URL or code here."
+msgstr "The final page may not load. Paste its URL or code here."
+
+#: app/models.tsx:290
+msgid "this model"
+msgstr "this model"
+
+#: app/account.tsx:172
+msgid "This permanently deletes your account, bots, conversations, memories, files, and saved connections. This cannot be undone."
+msgstr "This permanently deletes your account, bots, conversations, memories, files, and saved connections. This cannot be undone."
+
+#: app/thread.tsx:448
+msgid "This removes every message and stops current work. The bot, computer, memory, and routines are kept."
+msgstr "This removes every message and stops current work. The bot, computer, memory, and routines are kept."
+
+#: app/models.tsx:754
+msgid "This subscription sign-in is not available in Sentra Bot yet. Use a deployment credential or choose another provider."
+msgstr "This subscription sign-in is not available in Sentra Bot yet. Use a deployment credential or choose another provider."
+
+#: app/_layout.tsx:93
+#: app/thread.tsx:369
+#: app/thread.tsx:389
+msgid "Thread"
+msgstr "Thread"
+
+#: app/bot-settings.tsx:113
+#: app/new.tsx:97
+msgid "Title"
+msgstr "Title"
+
+#: app/integrations.tsx:426
+msgid "Tool sources"
+msgstr "Tool sources"
+
+#: app/thread.tsx:2334
+msgid "Tools"
+msgstr "Tools"
+
+#: app/integrations.tsx:392
+msgid "Treg token"
+msgstr "Treg token"
+
+#: app/account.tsx:116
+#: app/group-settings.tsx:77
+#: app/thread.tsx:468
+#: app/thread.tsx:950
+#: app/thread.tsx:2123
+#: app/thread.tsx:2157
+msgid "Try again."
+msgstr "Try again."
+
+#: app/thread.tsx:2439
+msgid "Type your answer"
+msgstr "Type your answer"
+
+#: components/bot-organize-modal.tsx:103
+msgid "Unassigned"
+msgstr "Unassigned"
+
+#: components/bot-organize-modal.tsx:70
+msgid "Unpin"
+msgstr "Unpin"
+
+#: app/index.tsx:560
+#: app/index.tsx:621
+msgid "unread"
+msgstr "unread"
+
+#: app/account.tsx:92
+#: app/account.tsx:94
+msgid "Usage"
+msgstr "Usage"
+
+#: app/sign-in.tsx:133
+#: app/sign-in.tsx:150
+msgid "Use a custom server"
+msgstr "Use a custom server"
+
+#: app/models.tsx:541
+msgid "Use a found model"
+msgstr "Use a found model"
+
+#: app/sign-in.tsx:302
+msgid "Use default server"
+msgstr "Use default server"
+
+#: app/models.tsx:773
+msgid "Use this model"
+msgstr "Use this model"
+
+#: app/thread.tsx:2334
+msgid "Using {provider}"
+msgstr "Using {provider}"
+
+#: app/integrations.tsx:408
+msgid "Verify and add"
+msgstr "Verify and add"
+
+#: app/_layout.tsx:71
+#: app/account.tsx:357
+msgid "Voice"
+msgstr "Voice"
+
+#: app/models.tsx:632
+#: app/models.tsx:645
+msgid "Waiting for sign-in…"
+msgstr "Waiting for sign-in…"
+
+#: app/thread.tsx:2475
+msgid "Waiting for this bot’s response."
+msgstr "Waiting for this bot’s response."
+
+#: app/bot-settings.tsx:136
+#: app/new.tsx:120
+msgid "What this bot is for"
+msgstr "What this bot is for"
+
+#: app/account.tsx:278
+msgid "While agents are working"
+msgstr "While agents are working"
+
+#: app/integrations.tsx:267
+#: app/integrations.tsx:295
+#: app/sign-in.tsx:126
+msgid "Working…"
+msgstr "Working…"
+
+#: app/computer.tsx:361
+msgid "You have control"
+msgstr "You have control"
+
+#: app/account.tsx:203
+msgid "Your account"
+msgstr "Your account"
+
+#: app/models.tsx:587
+msgid "Your key or subscription token is stored securely and is never shown here."
+msgstr "Your key or subscription token is stored securely and is never shown here."

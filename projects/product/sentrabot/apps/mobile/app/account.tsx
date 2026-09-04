@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import type { AvatarStyle } from "@sentrabot/contracts";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -26,6 +27,7 @@ import {
   signOut,
 } from "../lib/api";
 import { confirmDeleteBot } from "../lib/bot-lifecycle";
+import { activateLocale } from "../lib/i18n";
 import {
   canPostPromotedNotifications,
   DEFAULT_LIVE_NOTIFICATION_SETTINGS,
@@ -37,6 +39,12 @@ import {
 } from "../lib/live-notifications";
 import { native } from "../lib/native";
 import { registerPushToken } from "../lib/push";
+import { persistUiLocale, type UiLocale } from "../lib/ui-locale";
+
+const UI_LOCALE_OPTIONS: { locale: UiLocale; label: string }[] = [
+  { locale: "id", label: "Bahasa Indonesia" },
+  { locale: "en", label: "English" },
+];
 
 export default function Account() {
   const router = useRouter();
@@ -60,6 +68,7 @@ export default function Account() {
     outputTokens: number;
   } | null>(null);
   const { avatarStyle, updateAvatarStyle } = useAvatarStyle();
+  const { t, i18n } = useLingui();
 
   useEffect(() => {
     void rpc<MobileMe>("me")
@@ -80,14 +89,20 @@ export default function Account() {
   }, []);
 
   const usageBlock = (
-    <View accessibilityLabel="Usage" style={styles.profile}>
-      <Text style={styles.settingsTitle}>Usage</Text>
+    <View accessibilityLabel={t`Usage`} style={styles.profile}>
+      <Text style={styles.settingsTitle}>
+        <Trans>Usage</Trans>
+      </Text>
       {usage ? (
         <Text style={styles.email}>
-          {usage.runs} runs · {usage.inputTokens + usage.outputTokens} tokens
+          <Trans>
+            {usage.runs} runs · {usage.inputTokens + usage.outputTokens} tokens
+          </Trans>
         </Text>
       ) : null}
-      <Text style={styles.settingsExplanation}>Model spend uses your provider keys.</Text>
+      <Text style={styles.settingsExplanation}>
+        <Trans>Model spend uses your provider keys.</Trans>
+      </Text>
     </View>
   );
 
@@ -97,8 +112,8 @@ export default function Account() {
       setArchivedBots((bots) => bots.filter((bot) => bot.id !== botId));
     } catch (restoreError) {
       Alert.alert(
-        "Could not restore bot",
-        restoreError instanceof Error ? restoreError.message : "Try again.",
+        t`Could not restore bot`,
+        restoreError instanceof Error ? restoreError.message : t`Try again.`,
       );
     }
   }
@@ -110,10 +125,16 @@ export default function Account() {
     try {
       await updateAvatarStyle(next);
     } catch {
-      setAvatarError("Couldn't update avatars");
+      setAvatarError(t`Couldn't update avatars`);
     } finally {
       setAvatarPending(false);
     }
+  }
+
+  async function selectLocale(locale: UiLocale) {
+    if (i18n.locale === locale) return;
+    await persistUiLocale(locale);
+    await activateLocale(locale);
   }
 
   async function handleSignOut() {
@@ -137,7 +158,7 @@ export default function Account() {
     } catch (cause) {
       setNotifications(previous);
       setNotificationError(
-        cause instanceof Error ? cause.message : "Could not update notifications",
+        cause instanceof Error ? cause.message : t`Could not update notifications`,
       );
     } finally {
       setNotificationPending(false);
@@ -147,12 +168,12 @@ export default function Account() {
   function confirmDeletion() {
     setError(null);
     Alert.alert(
-      "Delete your account?",
-      "This permanently deletes your account, bots, conversations, memories, files, and saved connections. This cannot be undone.",
+      t`Delete your account?`,
+      t`This permanently deletes your account, bots, conversations, memories, files, and saved connections. This cannot be undone.`,
       [
-        { text: "Cancel", style: "cancel" },
+        { text: t`Cancel`, style: "cancel" },
         {
-          text: "Delete account",
+          text: t`Delete account`,
           style: "destructive",
           onPress: () => void handleDeletion(),
         },
@@ -168,7 +189,7 @@ export default function Account() {
       router.dismissAll();
       router.replace("/sign-in");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not delete account");
+      setError(err instanceof Error ? err.message : t`Could not delete account`);
     } finally {
       setPending(false);
     }
@@ -179,21 +200,23 @@ export default function Account() {
       <ScrollView contentContainerStyle={styles.content}>
         {focus === "usage" ? usageBlock : null}
         <View style={styles.profile}>
-          <Text style={styles.name}>{me?.name || "Your account"}</Text>
+          <Text style={styles.name}>{me?.name || t`Your account`}</Text>
           {me?.email ? <Text style={styles.email}>{me.email}</Text> : null}
         </View>
         {focus !== "usage" ? usageBlock : null}
 
-        <View accessibilityLabel="Avatar style" style={styles.avatarSection}>
-          <Text style={styles.settingsTitle}>Avatars</Text>
+        <View accessibilityLabel={t`Avatar style`} style={styles.avatarSection}>
+          <Text style={styles.settingsTitle}>
+            <Trans>Avatars</Trans>
+          </Text>
           <View style={styles.avatarOptions}>
             {(["clay", "robot", "organic"] as const).map((style) => {
               const selected = avatarStyle === style;
-              const label = style === "clay" ? "Clay" : style === "robot" ? "Robot" : "Organic";
+              const label = style === "clay" ? t`Clay` : style === "robot" ? t`Robot` : t`Organic`;
               return (
                 <Pressable
                   key={style}
-                  accessibilityLabel={`${label} avatars`}
+                  accessibilityLabel={t`${label} avatars`}
                   accessibilityRole="button"
                   accessibilityState={{ selected, disabled: avatarPending }}
                   disabled={avatarPending}
@@ -218,12 +241,41 @@ export default function Account() {
           {avatarError ? <Text style={styles.error}>{avatarError}</Text> : null}
         </View>
 
+        <View accessibilityLabel={t`Language`} style={styles.avatarSection}>
+          <Text style={styles.settingsTitle}>
+            <Trans>Language</Trans>
+          </Text>
+          <View style={styles.languageOptions}>
+            {UI_LOCALE_OPTIONS.map((option) => {
+              const selected = i18n.locale === option.locale;
+              return (
+                <Pressable
+                  key={option.locale}
+                  accessibilityLabel={option.label}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected }}
+                  onPress={() => void selectLocale(option.locale)}
+                  style={({ pressed }) => [
+                    styles.languageOption,
+                    selected && styles.languageOptionSelected,
+                    pressed && styles.pressed,
+                  ]}
+                >
+                  <Text style={styles.languageLabel}>{option.label}</Text>
+                </Pressable>
+              );
+            })}
+          </View>
+        </View>
+
         {Platform.OS === "android" ? (
-          <View accessibilityLabel="Notifications" style={styles.profile}>
-            <Text style={styles.settingsTitle}>Notifications</Text>
+          <View accessibilityLabel={t`Notifications`} style={styles.profile}>
+            <Text style={styles.settingsTitle}>
+              <Trans>Notifications</Trans>
+            </Text>
             <NotificationSwitch
-              label="Live working status"
-              detail="While agents are working"
+              label={t`Live working status`}
+              detail={t`While agents are working`}
               value={notifications.liveConnection}
               disabled={notificationPending || !notificationsReady}
               onChange={(liveConnection) =>
@@ -231,15 +283,15 @@ export default function Account() {
               }
             />
             <NotificationSwitch
-              label="Agent messages"
-              detail="Replies and completed work"
+              label={t`Agent messages`}
+              detail={t`Replies and completed work`}
               value={notifications.messages}
               disabled={notificationPending || !notificationsReady}
               onChange={(messages) => void updateNotifications({ ...notifications, messages })}
             />
             <NotificationSwitch
-              label="Scheduled tasks"
-              detail="Alerts from routines"
+              label={t`Scheduled tasks`}
+              detail={t`Alerts from routines`}
               value={notifications.scheduledTasks}
               disabled={notificationPending || !notificationsReady}
               onChange={(scheduledTasks) =>
@@ -247,8 +299,8 @@ export default function Account() {
               }
             />
             <NotificationSwitch
-              label="Needs attention"
-              detail="Questions, approvals, takeover"
+              label={t`Needs attention`}
+              detail={t`Questions, approvals, takeover`}
               value={notifications.needsAttention}
               disabled={notificationPending || !notificationsReady}
               onChange={(needsAttention) =>
@@ -260,14 +312,18 @@ export default function Account() {
               onPress={() => void openPromotedNotificationSettings()}
               style={{ minHeight: 44, justifyContent: "center" }}
             >
-              <Text style={{ color: "#4C8DFF", fontSize: 14 }}>Live update settings</Text>
+              <Text style={{ color: "#4C8DFF", fontSize: 14 }}>
+                <Trans>Live update settings</Trans>
+              </Text>
             </Pressable>
             <Pressable
               accessibilityRole="button"
               onPress={() => void openLiveNotificationSettings()}
               style={{ minHeight: 44, justifyContent: "center" }}
             >
-              <Text style={{ color: "#4C8DFF", fontSize: 14 }}>Notification settings</Text>
+              <Text style={{ color: "#4C8DFF", fontSize: 14 }}>
+                <Trans>Notification settings</Trans>
+              </Text>
             </Pressable>
             {notificationError ? <Text style={styles.error}>{notificationError}</Text> : null}
           </View>
@@ -280,8 +336,12 @@ export default function Account() {
           style={({ pressed }) => [styles.settingsButton, pressed && styles.pressed]}
         >
           <View>
-            <Text style={styles.settingsTitle}>Models</Text>
-            <Text style={styles.settingsExplanation}>Choose your provider and active model</Text>
+            <Text style={styles.settingsTitle}>
+              <Trans>Models</Trans>
+            </Text>
+            <Text style={styles.settingsExplanation}>
+              <Trans>Choose your provider and active model</Trans>
+            </Text>
           </View>
           <Text style={styles.chevron}>›</Text>
         </Pressable>
@@ -293,9 +353,11 @@ export default function Account() {
           style={({ pressed }) => [styles.settingsButton, pressed && styles.pressed]}
         >
           <View>
-            <Text style={styles.settingsTitle}>Voice</Text>
+            <Text style={styles.settingsTitle}>
+              <Trans>Voice</Trans>
+            </Text>
             <Text style={styles.settingsExplanation}>
-              Speak replies aloud with ElevenLabs, OpenAI, or Cartesia
+              <Trans>Speak replies aloud with ElevenLabs, OpenAI, or Cartesia</Trans>
             </Text>
           </View>
           <Text style={styles.chevron}>›</Text>
@@ -308,8 +370,12 @@ export default function Account() {
           style={({ pressed }) => [styles.settingsButton, pressed && styles.pressed]}
         >
           <View>
-            <Text style={styles.settingsTitle}>Integrations</Text>
-            <Text style={styles.settingsExplanation}>Connect apps.</Text>
+            <Text style={styles.settingsTitle}>
+              <Trans>Integrations</Trans>
+            </Text>
+            <Text style={styles.settingsExplanation}>
+              <Trans>Connect apps.</Trans>
+            </Text>
           </View>
           <Text style={styles.chevron}>›</Text>
         </Pressable>
@@ -320,19 +386,25 @@ export default function Account() {
           onPress={() => void handleSignOut()}
           style={({ pressed }) => [styles.button, pressed && styles.pressed]}
         >
-          <Text style={styles.buttonLabel}>Sign out</Text>
+          <Text style={styles.buttonLabel}>
+            <Trans>Sign out</Trans>
+          </Text>
         </Pressable>
 
         {archivedBots.length > 0 ? (
           <View style={styles.archivedSection}>
-            <Text style={styles.sectionTitle}>Archived bots</Text>
+            <Text style={styles.sectionTitle}>
+              <Trans>Archived bots</Trans>
+            </Text>
             {archivedBots.map((bot) => (
               <View key={bot.id} style={styles.archivedRow}>
                 <Text numberOfLines={1} style={styles.archivedName}>
                   {bot.name}
                 </Text>
                 <Pressable onPress={() => void restoreBot(bot.id)} hitSlop={8}>
-                  <Text style={styles.restoreLabel}>Restore</Text>
+                  <Text style={styles.restoreLabel}>
+                    <Trans>Restore</Trans>
+                  </Text>
                 </Pressable>
                 <Pressable
                   onPress={() =>
@@ -342,7 +414,9 @@ export default function Account() {
                   }
                   hitSlop={8}
                 >
-                  <Text style={styles.archivedDeleteLabel}>Delete</Text>
+                  <Text style={styles.archivedDeleteLabel}>
+                    <Trans>Delete</Trans>
+                  </Text>
                 </Pressable>
               </View>
             ))}
@@ -350,13 +424,17 @@ export default function Account() {
         ) : null}
 
         <View style={styles.dangerZone}>
-          <Text style={styles.dangerTitle}>Delete account</Text>
+          <Text style={styles.dangerTitle}>
+            <Trans>Delete account</Trans>
+          </Text>
           <Text style={styles.explanation}>
-            Enter your current password, then confirm permanent deletion of your account and all
-            associated data.
+            <Trans>
+              Enter your current password, then confirm permanent deletion of your account and all
+              associated data.
+            </Trans>
           </Text>
           <TextInput
-            accessibilityLabel="Current password"
+            accessibilityLabel={t`Current password`}
             autoCapitalize="none"
             autoCorrect={false}
             editable={!pending}
@@ -364,7 +442,7 @@ export default function Account() {
               setPassword(value);
               setError(null);
             }}
-            placeholder="Current password"
+            placeholder={t`Current password`}
             placeholderTextColor={native.tertiaryLabel}
             secureTextEntry
             style={styles.password}
@@ -385,7 +463,9 @@ export default function Account() {
             {pending ? (
               <ActivityIndicator color="#FFFFFF" />
             ) : (
-              <Text style={styles.deleteLabel}>Delete account</Text>
+              <Text style={styles.deleteLabel}>
+                <Trans>Delete account</Trans>
+              </Text>
             )}
           </Pressable>
         </View>
@@ -531,6 +611,29 @@ const styles = StyleSheet.create({
   avatarOptionSelected: {
     borderColor: native.label,
     backgroundColor: native.fillPressed,
+  },
+  languageOptions: {
+    flexDirection: "row",
+    gap: 12,
+  },
+  languageOption: {
+    flex: 1,
+    minHeight: 48,
+    borderRadius: 14,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: native.tertiaryLabel,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 10,
+  },
+  languageOptionSelected: {
+    borderColor: native.label,
+    backgroundColor: native.fillPressed,
+  },
+  languageLabel: {
+    color: native.label,
+    fontSize: 14,
+    fontWeight: "600",
   },
   avatarLabel: {
     color: native.label,

@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import type { ComputerMode, ComputerReleaseReason } from "@sentrabot/contracts";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
@@ -25,8 +26,9 @@ import {
 
 export default function Computer() {
   const navigation = useNavigation();
+  const { t } = useLingui();
   const { botId, name: nameParam } = useLocalSearchParams<{ botId?: string; name?: string }>();
-  const name = nameParam || "Bot";
+  const name = nameParam || t`Bot`;
   const [computer, setComputer] = useState<ComputerStatus | null>(null);
   const [screenUrl, setScreenUrl] = useState<string | null>(null);
   const [screenError, setScreenError] = useState<string | null>(null);
@@ -94,7 +96,7 @@ export default function Computer() {
       await refresh({ screenAttempts: SCREEN_URL_OPEN_ATTEMPTS });
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not open computer");
+      setError(err instanceof Error ? err.message : t`Could not open computer`);
       throw err;
     } finally {
       setBooting(false);
@@ -161,7 +163,7 @@ export default function Computer() {
       autoBooted.current = null;
       await refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not switch computer");
+      setError(err instanceof Error ? err.message : t`Could not switch computer`);
     } finally {
       setSwitching(false);
     }
@@ -184,14 +186,18 @@ export default function Computer() {
       >
         {computerOpen ? (
           <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <Text style={{ color: "#6C6C70" }}>Open in full window</Text>
+            <Text style={{ color: "#6C6C70" }}>
+              <Trans>Open in full window</Trans>
+            </Text>
           </View>
         ) : computer?.state === "running" && embeddedScreenUrl ? (
           <ScreenWebView
             url={embeddedScreenUrl}
             interactive={false}
             onError={() =>
-              setScreenError("Could not load the desktop. This device cannot reach the screen URL.")
+              setScreenError(
+                t`Could not load the desktop. This device cannot reach the screen URL.`,
+              )
             }
           />
         ) : (
@@ -200,7 +206,7 @@ export default function Computer() {
           </View>
         )}
         <Pressable
-          accessibilityLabel="Open computer"
+          accessibilityLabel={t`Open computer`}
           onPress={() => void openComputer()}
           style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
         />
@@ -230,7 +236,9 @@ export default function Computer() {
               borderRadius: 12,
             }}
           >
-            <Text style={{ color: "#ECECEE" }}>Take control</Text>
+            <Text style={{ color: "#ECECEE" }}>
+              <Trans>Take control</Trans>
+            </Text>
           </Pressable>
         )}
       </View>
@@ -260,10 +268,14 @@ export default function Computer() {
           gap: 8,
         }}
       >
-        <Text style={{ color: "#85858A", fontSize: 14 }}>Teach a task</Text>
+        <Text style={{ color: "#85858A", fontSize: 14 }}>
+          <Trans>Teach a task</Trans>
+        </Text>
         <Text style={{ color: "#6C6C70", fontSize: 13.5, lineHeight: 20 }}>
-          Recording a live demonstration needs desktop or web with the full computer view. You can
-          still ask this bot to run saved skills from chat.
+          <Trans>
+            Recording a live demonstration needs desktop or web with the full computer view. You can
+            still ask this bot to run saved skills from chat.
+          </Trans>
         </Text>
       </View>
 
@@ -291,7 +303,7 @@ export default function Computer() {
               <Text
                 style={{ color: "#F1F1F2", fontSize: 19, fontWeight: "500", textAlign: "center" }}
               >
-                Booting {label}
+                <Trans>Booting {label}</Trans>
               </Text>
               <View
                 style={{
@@ -345,7 +357,9 @@ export default function Computer() {
                         paddingVertical: 4,
                       }}
                     >
-                      <Text style={{ color: "#4ECB71", fontSize: 13 }}>You have control</Text>
+                      <Text style={{ color: "#4ECB71", fontSize: 13 }}>
+                        <Trans>You have control</Trans>
+                      </Text>
                     </View>
                   ) : null}
                 </View>
@@ -373,11 +387,13 @@ export default function Computer() {
                         justifyContent: "center",
                       }}
                     >
-                      <Text style={{ color: "#ECECEE" }}>Take control</Text>
+                      <Text style={{ color: "#ECECEE" }}>
+                        <Trans>Take control</Trans>
+                      </Text>
                     </Pressable>
                   )}
                   <Pressable
-                    accessibilityLabel="Close computer"
+                    accessibilityLabel={t`Close computer`}
                     hitSlop={8}
                     onPress={() => setComputerOpen(false)}
                     style={{
@@ -408,7 +424,7 @@ export default function Computer() {
                   >
                     <Text style={{ color: "#6C6C70", textAlign: "center" }}>
                       {computer?.state === "suspended"
-                        ? "Computer is asleep"
+                        ? t`Computer is asleep`
                         : computerLabel(computer?.mode, name)}
                     </Text>
                   </View>
@@ -429,13 +445,14 @@ function ComputerReleaseActions({
   takeoverRequested: boolean;
   onRelease: (reason?: ComputerReleaseReason) => Promise<void>;
 }) {
+  const { t } = useLingui();
   const actions: Array<{ label: string; reason?: ComputerReleaseReason; primary?: boolean }> =
     takeoverRequested
       ? [
-          { label: "Skip", reason: "skipped" },
-          { label: "I’m done", reason: "done", primary: true },
+          { label: t`Skip`, reason: "skipped" },
+          { label: t`I’m done`, reason: "done", primary: true },
         ]
-      : [{ label: "Release" }];
+      : [{ label: t`Release` }];
   return (
     <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
       {actions.map((action) => (

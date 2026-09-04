@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   BOT_DESCRIPTION_MAX_LENGTH,
   BOT_NAME_MAX_LENGTH,
@@ -13,6 +14,7 @@ import { type MobileBot, rpc } from "../lib/api";
 
 export default function NewBot() {
   const router = useRouter();
+  const { t } = useLingui();
   const [name, setName] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -44,7 +46,7 @@ export default function NewBot() {
       });
       router.replace({ pathname: "/thread", params: { botId: bot.id, name: bot.name } });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not create bot");
+      setError(err instanceof Error ? err.message : t`Could not create bot`);
     } finally {
       setPending(false);
     }
@@ -59,9 +61,11 @@ export default function NewBot() {
               onPress={close}
               hitSlop={12}
               accessibilityRole="button"
-              accessibilityLabel="Cancel"
+              accessibilityLabel={t`Cancel`}
             >
-              <Text style={{ color: "#0A84FF", fontSize: 17 }}>Cancel</Text>
+              <Text style={{ color: "#0A84FF", fontSize: 17 }}>
+                <Trans>Cancel</Trans>
+              </Text>
             </Pressable>
           ),
         }}
@@ -72,12 +76,14 @@ export default function NewBot() {
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
       >
-        <Text style={{ color: "#85858A", fontSize: 14 }}>Name</Text>
+        <Text style={{ color: "#85858A", fontSize: 14 }}>
+          <Trans>Name</Trans>
+        </Text>
         <TextInput
           value={name}
           maxLength={BOT_NAME_MAX_LENGTH}
           onChangeText={setName}
-          placeholder="Name this bot"
+          placeholder={t`Name this bot`}
           placeholderTextColor="#6C6C70"
           style={{
             marginTop: 8,
@@ -87,12 +93,14 @@ export default function NewBot() {
             color: "#ECECEE",
           }}
         />
-        <Text style={{ color: "#85858A", marginTop: 16, fontSize: 14 }}>Title</Text>
+        <Text style={{ color: "#85858A", marginTop: 16, fontSize: 14 }}>
+          <Trans>Title</Trans>
+        </Text>
         <TextInput
           value={title}
           maxLength={BOT_TITLE_MAX_LENGTH}
           onChangeText={setTitle}
-          placeholder="Describe what this bot does"
+          placeholder={t`Describe what this bot does`}
           placeholderTextColor="#6C6C70"
           style={{
             marginTop: 8,
@@ -102,12 +110,14 @@ export default function NewBot() {
             color: "#ECECEE",
           }}
         />
-        <Text style={{ color: "#85858A", marginTop: 16, fontSize: 14 }}>Description</Text>
+        <Text style={{ color: "#85858A", marginTop: 16, fontSize: 14 }}>
+          <Trans>Description</Trans>
+        </Text>
         <TextInput
           value={description}
           maxLength={BOT_DESCRIPTION_MAX_LENGTH}
           onChangeText={setDescription}
-          placeholder="What this bot is for"
+          placeholder={t`What this bot is for`}
           placeholderTextColor="#6C6C70"
           multiline
           style={{
@@ -134,7 +144,9 @@ export default function NewBot() {
             opacity: !name.trim() || pending ? 0.4 : 1,
           }}
         >
-          <Text style={{ color: "#17171A", fontSize: 16 }}>{pending ? "Creating…" : "Create"}</Text>
+          <Text style={{ color: "#17171A", fontSize: 16 }}>
+            {pending ? t`Creating…` : t`Create`}
+          </Text>
         </Pressable>
       </ScrollView>
     </>

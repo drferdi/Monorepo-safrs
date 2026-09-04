@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { GROUP_MEMBER_MAX, GROUP_MEMBER_MIN } from "@sentrabot/contracts";
 import { Stack, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -7,6 +8,7 @@ import { type MobileBot, rpc } from "../lib/api";
 
 export default function NewGroup() {
   const router = useRouter();
+  const { t } = useLingui();
   const [bots, setBots] = useState<MobileBot[]>([]);
   const [name, setName] = useState("");
   const [selected, setSelected] = useState<string[]>([]);
@@ -47,7 +49,7 @@ export default function NewGroup() {
         params: { groupId: group.id, name: group.name },
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not create group");
+      setError(err instanceof Error ? err.message : t`Could not create group`);
     } finally {
       setPending(false);
     }
@@ -55,16 +57,18 @@ export default function NewGroup() {
 
   return (
     <>
-      <Stack.Screen options={{ title: "New group" }} />
+      <Stack.Screen options={{ title: t`New group` }} />
       <ScrollView
         style={{ flex: 1, backgroundColor: "#050506" }}
         contentContainerStyle={{ padding: 24 }}
       >
-        <Text style={{ color: "#85858A", fontSize: 14 }}>Name</Text>
+        <Text style={{ color: "#85858A", fontSize: 14 }}>
+          <Trans>Name</Trans>
+        </Text>
         <TextInput
           value={name}
           onChangeText={setName}
-          placeholder="Name this group"
+          placeholder={t`Name this group`}
           placeholderTextColor="#6C6C70"
           style={{
             marginTop: 8,
@@ -76,7 +80,9 @@ export default function NewGroup() {
           }}
         />
         <Text style={{ color: "#85858A", fontSize: 14, marginTop: 20 }}>
-          Members ({GROUP_MEMBER_MIN}–{GROUP_MEMBER_MAX})
+          <Trans>
+            Members ({GROUP_MEMBER_MIN}–{GROUP_MEMBER_MAX})
+          </Trans>
         </Text>
         {bots.map((bot) => {
           const checked = selected.includes(bot.id);
@@ -122,7 +128,7 @@ export default function NewGroup() {
           }}
         >
           <Text style={{ color: "#FFF", fontSize: 16, fontWeight: "600" }}>
-            {pending ? "Creating…" : "Create group"}
+            {pending ? t`Creating…` : t`Create group`}
           </Text>
         </Pressable>
       </ScrollView>

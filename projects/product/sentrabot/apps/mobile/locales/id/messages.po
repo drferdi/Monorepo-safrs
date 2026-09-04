@@ -1,0 +1,1323 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-09-04 17:30+0700\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: id\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#. placeholder {0}: attachment.mimeType ?? t`file`
+#. placeholder {1}: attachment.size
+#: app/thread.tsx:2173
+msgid "{0} · {1} bytes"
+msgstr "{0} · {1} byte"
+
+#. placeholder {0}: workingGroupBots.length
+#: app/thread.tsx:1165
+msgid "{0} agents working"
+msgstr "{0} agen sedang bekerja"
+
+#. placeholder {0}: currentBot.name
+#. placeholder {0}: workingGroupBots[0]?.name ?? defaultAgentName
+#: app/thread.tsx:1136
+#: app/thread.tsx:1164
+msgid "{0} is working"
+msgstr "{0} sedang bekerja"
+
+#. placeholder {0}: group.entries.length
+#. placeholder {1}: group.entries.length === 1 ? "" : "s"
+#: app/models.tsx:418
+msgid "{0} model{1}"
+msgstr "{0} model{1}"
+
+#. placeholder {0}: usage.runs
+#. placeholder {1}: usage.inputTokens + usage.outputTokens
+#: app/account.tsx:98
+msgid "{0} runs · {1} tokens"
+msgstr "{0} run · {1} token"
+
+#: app/thread.tsx:1852
+msgid "{from} messaged {to}"
+msgstr "{from} mengirim pesan ke {to}"
+
+#: app/account.tsx:219
+msgid "{label} avatars"
+msgstr "Avatar {label}"
+
+#: app/_layout.tsx:69
+#: app/index.tsx:260
+msgid "Account"
+msgstr "Akun"
+
+#: app/models.tsx:385
+msgid "Active model"
+msgstr "Model aktif"
+
+#: app/index.tsx:265
+msgid "Activity"
+msgstr "Aktivitas"
+
+#: app/integrations.tsx:267
+#: app/integrations.tsx:295
+msgid "Add"
+msgstr "Tambah"
+
+#. placeholder {0}: item.name
+#. placeholder {0}: tile.label
+#: app/integrations.tsx:261
+#: app/integrations.tsx:289
+msgid "Add {0}"
+msgstr "Tambah {0}"
+
+#: app/integrations.tsx:334
+msgid "Add MCP server"
+msgstr "Tambah server MCP"
+
+#: app/integrations.tsx:335
+msgid "Add OpenAPI"
+msgstr "Tambah OpenAPI"
+
+#: app/integrations.tsx:332
+msgid "Add Treg"
+msgstr "Tambah Treg"
+
+#: app/integrations.tsx:315
+msgid "Advanced"
+msgstr "Lanjutan"
+
+#: app/thread.tsx:1117
+msgid "Agent"
+msgstr "Agen"
+
+#: app/account.tsx:286
+msgid "Agent messages"
+msgstr "Pesan agen"
+
+#: app/account.tsx:294
+msgid "Alerts from routines"
+msgstr "Peringatan dari rutinitas"
+
+#: app/thread.tsx:2436
+msgid "Answer"
+msgstr "Jawab"
+
+#. placeholder {0}: ask.answer ?? doneLabel
+#: app/thread.tsx:2431
+msgid "Answered: {0}"
+msgstr "Dijawab: {0}"
+
+#: app/models.tsx:678
+#: app/models.tsx:683
+#: app/models.tsx:706
+#: app/models.tsx:709
+msgid "API key"
+msgstr "API key"
+
+#: app/thread.tsx:461
+msgid "Archive"
+msgstr "Arsipkan"
+
+#: app/thread.tsx:440
+msgid "Archive keeps everything and can be undone. Delete is permanent."
+msgstr "Arsipkan menyimpan semuanya dan bisa dibatalkan. Hapus bersifat permanen."
+
+#: app/thread.tsx:1971
+msgid "archived"
+msgstr "diarsipkan"
+
+#: app/account.tsx:397
+msgid "Archived bots"
+msgstr "Bot yang diarsipkan"
+
+#: app/thread.tsx:1987
+msgid "Archived. Chat, memory, and files kept."
+msgstr "Diarsipkan. Chat, memori, dan file tetap disimpan."
+
+#: app/thread.tsx:956
+msgid "Attach"
+msgstr "Lampirkan"
+
+#: app/thread.tsx:1489
+msgid "Attach file"
+msgstr "Lampirkan file"
+
+#: app/models.tsx:608
+msgid "Authorization code"
+msgstr "Kode otorisasi"
+
+#: app/account.tsx:208
+msgid "Avatar style"
+msgstr "Gaya avatar"
+
+#: app/account.tsx:210
+msgid "Avatars"
+msgstr "Avatar"
+
+#: app/integrations.tsx:381
+msgid "Bearer authentication"
+msgstr "Autentikasi bearer"
+
+#: app/integrations.tsx:392
+msgid "Bearer token"
+msgstr "Token bearer"
+
+#: app/computer.tsx:306
+msgid "Booting {label}"
+msgstr "Menyalakan {label}"
+
+#: app/thread.tsx:1848
+#: app/thread.tsx:1849
+#: app/thread.tsx:1974
+msgid "bot"
+msgstr "bot"
+
+#: app/computer.tsx:31
+#: app/thread.tsx:439
+#: app/thread.tsx:1947
+#: app/thread.tsx:1967
+msgid "Bot"
+msgstr "Bot"
+
+#: app/thread.tsx:408
+msgid "Bot actions"
+msgstr "Tindakan bot"
+
+#: app/voice.tsx:143
+msgid "Bring your own key. ElevenLabs, OpenAI, and Cartesia all plug into the same speak buttons."
+msgstr "Pakai kunci Anda sendiri. ElevenLabs, OpenAI, dan Cartesia semuanya terhubung ke tombol bicara yang sama."
+
+#: app/thread.tsx:961
+msgid "Camera"
+msgstr "Kamera"
+
+#: app/account.tsx:174
+#: app/group-settings.tsx:67
+#: app/index.tsx:295
+#: app/integrations.tsx:418
+#: app/new.tsx:64
+#: app/new.tsx:67
+#: app/sign-in.tsx:249
+#: app/thread.tsx:441
+#: app/thread.tsx:450
+#: app/thread.tsx:963
+#: components/bot-organize-modal.tsx:147
+msgid "Cancel"
+msgstr "Batal"
+
+#: app/thread.tsx:1317
+msgid "Cancel reply"
+msgstr "Batalkan balasan"
+
+#: app/_layout.tsx:92
+#: app/bot-settings.tsx:88
+msgid "Chat settings"
+msgstr "Pengaturan obrolan"
+
+#: app/sign-in.tsx:257
+msgid "Checking…"
+msgstr "Memeriksa…"
+
+#: app/account.tsx:343
+msgid "Choose your provider and active model"
+msgstr "Pilih penyedia dan model aktif Anda"
+
+#: app/account.tsx:215
+msgid "Clay"
+msgstr "Clay"
+
+#: app/thread.tsx:452
+msgid "Clear"
+msgstr "Bersihkan"
+
+#: app/thread.tsx:443
+msgid "Clear conversation"
+msgstr "Bersihkan percakapan"
+
+#: app/thread.tsx:447
+msgid "Clear conversation?"
+msgstr "Bersihkan percakapan?"
+
+#: components/bot-organize-modal.tsx:51
+msgid "Close chat organization"
+msgstr "Tutup pengaturan susunan obrolan"
+
+#: app/computer.tsx:396
+msgid "Close computer"
+msgstr "Tutup komputer"
+
+#: app/thread.tsx:2436
+#: app/thread.tsx:2439
+msgid "Code"
+msgstr "Kode"
+
+#: app/_layout.tsx:95
+#: components/computer-mode-picker.tsx:18
+msgid "Computer"
+msgstr "Komputer"
+
+#: app/computer.tsx:427
+msgid "Computer is asleep"
+msgstr "Komputer sedang tidur"
+
+#: app/models.tsx:391
+msgid "Configured by deployment"
+msgstr "Diatur oleh deployment"
+
+#: app/voice.tsx:192
+msgid "Connect"
+msgstr "Sambungkan"
+
+#: app/voice.tsx:124
+msgid "Connect a voice provider first."
+msgstr "Sambungkan penyedia suara lebih dulu."
+
+#: app/models.tsx:746
+msgid "Connect API key"
+msgstr "Sambungkan API key"
+
+#: app/account.tsx:377
+#: app/integrations.tsx:220
+msgid "Connect apps."
+msgstr "Sambungkan aplikasi."
+
+#: app/models.tsx:588
+msgid "Connect this provider to use it as your personal model."
+msgstr "Sambungkan provider ini untuk memakainya sebagai model pribadi Anda."
+
+#: app/integrations.tsx:347
+msgid "Connect Treg"
+msgstr "Sambungkan Treg"
+
+#: app/models.tsx:425
+#: app/voice.tsx:162
+msgid "Connected"
+msgstr "Tersambung"
+
+#. placeholder {0}: credential.label
+#: app/models.tsx:583
+msgid "Connected · {0}"
+msgstr "Tersambung · {0}"
+
+#. placeholder {0}: selected.name
+#: app/voice.tsx:96
+msgid "Connected {0}."
+msgstr "{0} tersambung."
+
+#. placeholder {0}: selected.label
+#: app/models.tsx:273
+msgid "Connected and using {0}."
+msgstr "Tersambung dan memakai {0}."
+
+#: app/models.tsx:291
+msgid "Connected and using {label}."
+msgstr "Tersambung dan memakai {label}."
+
+#: app/integrations.tsx:129
+msgid "Connection pending"
+msgstr "Sambungan menunggu"
+
+#: app/sign-in.tsx:126
+msgid "Continue with email"
+msgstr "Lanjutkan dengan email"
+
+#: app/integrations.tsx:197
+msgid "Could not add source"
+msgstr "Gagal menambahkan sumber"
+
+#: app/thread.tsx:467
+msgid "Could not archive bot"
+msgstr "Gagal mengarsipkan bot"
+
+#: app/models.tsx:237
+msgid "Could not change the default model"
+msgstr "Gagal mengubah model default"
+
+#: app/thread.tsx:433
+msgid "Could not clear conversation"
+msgstr "Gagal membersihkan percakapan"
+
+#: app/integrations.tsx:134
+#: app/voice.tsx:98
+msgid "Could not connect"
+msgstr "Gagal menyambungkan"
+
+#: app/models.tsx:275
+msgid "Could not connect this provider"
+msgstr "Gagal menyambungkan provider ini"
+
+#: app/new.tsx:49
+msgid "Could not create bot"
+msgstr "Gagal membuat bot"
+
+#: app/new-group.tsx:52
+msgid "Could not create group"
+msgstr "Gagal membuat grup"
+
+#: app/account.tsx:192
+msgid "Could not delete account"
+msgstr "Gagal menghapus akun"
+
+#: app/group-settings.tsx:76
+msgid "Could not delete group"
+msgstr "Gagal menghapus grup"
+
+#: app/models.tsx:363
+msgid "Could not finish sign-in"
+msgstr "Gagal menyelesaikan proses masuk"
+
+#: app/bot-settings.tsx:48
+msgid "Could not load bot"
+msgstr "Gagal memuat bot"
+
+#: app/index.tsx:107
+msgid "Could not load bots"
+msgstr "Gagal memuat daftar bot"
+
+#: app/thread.tsx:555
+msgid "Could not load earlier messages"
+msgstr "Gagal memuat pesan sebelumnya"
+
+#: app/group-settings.tsx:35
+msgid "Could not load group"
+msgstr "Gagal memuat grup"
+
+#: app/integrations.tsx:74
+msgid "Could not load integrations"
+msgstr "Gagal memuat integrasi"
+
+#: app/models.tsx:117
+msgid "Could not load model settings"
+msgstr "Gagal memuat pengaturan model"
+
+#: app/computer.tsx:199
+msgid "Could not load the desktop. This device cannot reach the screen URL."
+msgstr "Gagal memuat desktop. Perangkat ini tidak bisa menjangkau URL layar."
+
+#: app/voice.tsx:75
+msgid "Could not load voice settings"
+msgstr "Gagal memuat pengaturan suara"
+
+#: app/computer.tsx:99
+msgid "Could not open computer"
+msgstr "Gagal membuka komputer"
+
+#: app/thread.tsx:2156
+msgid "Could not open file"
+msgstr "Gagal membuka file"
+
+#: app/thread.tsx:2122
+msgid "Could not open image"
+msgstr "Gagal membuka gambar"
+
+#: app/thread.tsx:728
+msgid "Could not open message"
+msgstr "Gagal membuka pesan"
+
+#: app/voice.tsx:130
+msgid "Could not play a sample"
+msgstr "Gagal memutar contoh"
+
+#: app/models.tsx:219
+msgid "Could not reach this model server"
+msgstr "Server model ini tidak bisa dijangkau"
+
+#: app/integrations.tsx:210
+msgid "Could not remove source"
+msgstr "Gagal menghapus sumber"
+
+#: app/account.tsx:115
+msgid "Could not restore bot"
+msgstr "Gagal memulihkan bot"
+
+#: app/integrations.tsx:161
+msgid "Could not revoke connection"
+msgstr "Gagal mencabut koneksi"
+
+#: app/bot-settings.tsx:80
+msgid "Could not save bot"
+msgstr "Gagal menyimpan bot"
+
+#: app/group-settings.tsx:58
+msgid "Could not save group"
+msgstr "Gagal menyimpan grup"
+
+#: app/voice.tsx:111
+msgid "Could not save that voice"
+msgstr "Gagal menyimpan suara itu"
+
+#: app/thread.tsx:2408
+msgid "Could not send answer"
+msgstr "Gagal mengirim jawaban"
+
+#: app/sign-in.tsx:66
+msgid "Could not sign in"
+msgstr "Gagal masuk"
+
+#: app/thread.tsx:950
+msgid "Could not speak"
+msgstr "Gagal berbicara"
+
+#: app/models.tsx:324
+msgid "Could not start sign-in"
+msgstr "Gagal memulai proses masuk"
+
+#: app/computer.tsx:166
+msgid "Could not switch computer"
+msgstr "Gagal berganti komputer"
+
+#: components/bot-organize-modal.tsx:42
+msgid "Could not update chat"
+msgstr "Gagal memperbarui obrolan"
+
+#: app/account.tsx:161
+msgid "Could not update notifications"
+msgstr "Gagal memperbarui notifikasi"
+
+#: app/account.tsx:128
+msgid "Couldn't update avatars"
+msgstr "Gagal memperbarui avatar"
+
+#: app/index.tsx:290
+#: app/index.tsx:292
+#: app/new.tsx:148
+#: components/bot-organize-modal.tsx:128
+msgid "Create"
+msgstr "Buat"
+
+#: app/new-group.tsx:131
+msgid "Create group"
+msgstr "Buat grup"
+
+#: components/bot-organize-modal.tsx:122
+msgid "Create section"
+msgstr "Buat bagian"
+
+#: app/new-group.tsx:131
+#: app/new.tsx:148
+msgid "Creating…"
+msgstr "Membuat…"
+
+#: app/account.tsx:437
+#: app/account.tsx:445
+msgid "Current password"
+msgstr "Kata sandi saat ini"
+
+#: app/integrations.tsx:183
+msgid "Custom connector"
+msgstr "Konektor kustom"
+
+#: app/sign-in.tsx:142
+msgid "Custom server"
+msgstr "Server kustom"
+
+#. placeholder {0}: displayApiHost(apiBase)
+#: app/sign-in.tsx:133
+msgid "Custom server {0}"
+msgstr "Server kustom {0}"
+
+#: app/account.tsx:418
+#: app/group-settings.tsx:69
+msgid "Delete"
+msgstr "Hapus"
+
+#: app/account.tsx:176
+#: app/account.tsx:428
+#: app/account.tsx:467
+msgid "Delete account"
+msgstr "Hapus akun"
+
+#: app/group-settings.tsx:167
+msgid "Delete group"
+msgstr "Hapus grup"
+
+#: app/group-settings.tsx:66
+msgid "Delete this group? Bots and their solo threads are kept."
+msgstr "Hapus grup ini? Bot dan utas tunggalnya tetap disimpan."
+
+#: app/account.tsx:171
+msgid "Delete your account?"
+msgstr "Hapus akun Anda?"
+
+#: app/thread.tsx:473
+msgid "Delete…"
+msgstr "Hapus…"
+
+#: app/thread.tsx:1973
+msgid "deleted"
+msgstr "dihapus"
+
+#: app/models.tsx:388
+msgid "Deployment default"
+msgstr "Default deployment"
+
+#: app/bot-settings.tsx:119
+#: app/new.tsx:103
+msgid "Describe what this bot does"
+msgstr "Jelaskan apa yang dikerjakan bot ini"
+
+#: app/bot-settings.tsx:130
+#: app/new.tsx:114
+msgid "Description"
+msgstr "Deskripsi"
+
+#: app/integrations.tsx:355
+msgid "Display name"
+msgstr "Nama tampilan"
+
+#: app/thread.tsx:2392
+msgid "Done"
+msgstr "Selesai"
+
+#: app/sign-in.tsx:87
+msgid "Email"
+msgstr "Email"
+
+#: app/models.tsx:638
+msgid "Enter this code in your browser:"
+msgstr "Masukkan kode ini di browser Anda:"
+
+#: app/account.tsx:431
+msgid "Enter your current password, then confirm permanent deletion of your account and all associated data."
+msgstr "Masukkan kata sandi Anda saat ini, lalu konfirmasi penghapusan permanen akun Anda beserta seluruh data terkait."
+
+#: app/models.tsx:530
+msgid "exact-model-id"
+msgstr "id-model-persis"
+
+#: app/thread.tsx:912
+#: app/thread.tsx:914
+msgid "Failed to send message"
+msgstr "Gagal mengirim pesan"
+
+#: app/thread.tsx:2174
+msgid "file"
+msgstr "file"
+
+#: app/thread.tsx:962
+#: app/thread.tsx:2152
+#: app/thread.tsx:2169
+msgid "File"
+msgstr "File"
+
+#: app/models.tsx:478
+msgid "Find models"
+msgstr "Cari model"
+
+#: app/models.tsx:478
+msgid "Finding…"
+msgstr "Mencari…"
+
+#: app/integrations.tsx:130
+msgid "Finish connecting in the browser, then refresh this page."
+msgstr "Selesaikan penyambungan di browser, lalu muat ulang halaman ini."
+
+#: app/models.tsx:599
+msgid "Finish signing in in your browser:"
+msgstr "Selesaikan proses masuk di browser Anda:"
+
+#: app/_layout.tsx:90
+#: app/thread.tsx:855
+#: app/thread.tsx:902
+msgid "Group"
+msgstr "Grup"
+
+#: app/group-settings.tsx:97
+msgid "Group name"
+msgstr "Nama grup"
+
+#: app/_layout.tsx:91
+#: app/group-settings.tsx:86
+#: app/thread.tsx:396
+msgid "Group settings"
+msgstr "Pengaturan grup"
+
+#: app/voice.tsx:215
+msgid "Hear a sample"
+msgstr "Dengar contoh"
+
+#: app/voice.tsx:122
+msgid "Hi, this is how I'll sound when I read replies out loud."
+msgstr "Halo, beginilah suara saya saat membacakan balasan."
+
+#: app/thread.tsx:2292
+msgid "Hide {label}"
+msgstr "Sembunyikan {label}"
+
+#: app/thread.tsx:2345
+msgid "Hide tool details"
+msgstr "Sembunyikan detail alat"
+
+#: app/computer.tsx:453
+msgid "I’m done"
+msgstr "Saya sudah selesai"
+
+#: app/voice.tsx:128
+msgid "If you heard that, voice is ready."
+msgstr "Kalau tadi terdengar, suara sudah siap."
+
+#: app/thread.tsx:2118
+#: app/thread.tsx:2135
+msgid "Image"
+msgstr "Gambar"
+
+#. placeholder {0}: phoneChannel.fromLabel
+#. placeholder {1}: phoneChannel.text
+#: app/thread.tsx:1885
+msgid "iMessage · {0}: {1}"
+msgstr "iMessage · {0}: {1}"
+
+#: app/_layout.tsx:72
+#: app/account.tsx:374
+msgid "Integrations"
+msgstr "Integrasi"
+
+#: app/thread.tsx:1255
+msgid "Jump to latest"
+msgstr "Lompat ke terbaru"
+
+#: app/thread.tsx:1255
+msgid "Jump to latest, new messages"
+msgstr "Lompat ke pesan terbaru, ada pesan baru"
+
+#: app/account.tsx:244
+#: app/account.tsx:246
+msgid "Language"
+msgstr "Bahasa"
+
+#: app/account.tsx:316
+msgid "Live update settings"
+msgstr "Pengaturan pembaruan langsung"
+
+#: app/account.tsx:277
+msgid "Live working status"
+msgstr "Status kerja langsung"
+
+#: app/thread.tsx:1182
+msgid "Load earlier messages"
+msgstr "Muat pesan sebelumnya"
+
+#: app/sign-in.tsx:52
+#: app/thread.tsx:1182
+msgid "Loading…"
+msgstr "Memuat…"
+
+#: app/index.tsx:628
+msgid "Long press to pin or move to a section"
+msgstr "Tekan lama untuk menyematkan atau memindahkan ke bagian"
+
+#: app/index.tsx:569
+msgid "Long press to pin, move, or silence notifications"
+msgstr "Tekan lama untuk menyematkan, memindahkan, atau membisukan notifikasi"
+
+#: app/thread.tsx:2146
+msgid "Markdown file"
+msgstr "File Markdown"
+
+#: app/group-settings.tsx:109
+#: app/new-group.tsx:83
+msgid "Members ({GROUP_MEMBER_MIN}–{GROUP_MEMBER_MAX})"
+msgstr "Anggota ({GROUP_MEMBER_MIN}–{GROUP_MEMBER_MAX})"
+
+#: app/thread.tsx:1581
+msgid "Message"
+msgstr "Pesan"
+
+#: app/thread.tsx:1870
+msgid "Message from {peer}"
+msgstr "Pesan dari {peer}"
+
+#: app/thread.tsx:1591
+msgid "Message…"
+msgstr "Pesan…"
+
+#: app/thread.tsx:1870
+msgid "Messaged {peer}"
+msgstr "Mengirim pesan ke {peer}"
+
+#: app/models.tsx:437
+#: app/models.tsx:481
+msgid "Model"
+msgstr "Model"
+
+#: app/models.tsx:525
+msgid "Model id"
+msgstr "ID model"
+
+#: app/account.tsx:104
+msgid "Model spend uses your provider keys."
+msgstr "Biaya model memakai key provider Anda."
+
+#: app/models.tsx:235
+msgid "Model updated."
+msgstr "Model diperbarui."
+
+#: app/_layout.tsx:70
+#: app/account.tsx:340
+msgid "Models"
+msgstr "Model"
+
+#: components/bot-organize-modal.tsx:90
+msgid "Move to"
+msgstr "Pindahkan ke"
+
+#: app/bot-settings.tsx:96
+#: app/group-settings.tsx:92
+#: app/new-group.tsx:66
+#: app/new.tsx:80
+msgid "Name"
+msgstr "Nama"
+
+#: app/bot-settings.tsx:102
+#: app/new.tsx:86
+msgid "Name this bot"
+msgstr "Beri nama bot ini"
+
+#: app/new-group.tsx:71
+msgid "Name this group"
+msgstr "Beri nama grup ini"
+
+#: app/account.tsx:302
+msgid "Needs attention"
+msgstr "Perlu perhatian"
+
+#: app/_layout.tsx:76
+#: app/index.tsx:293
+msgid "New bot"
+msgstr "Bot baru"
+
+#: app/_layout.tsx:85
+#: app/index.tsx:294
+#: app/new-group.tsx:60
+msgid "New group"
+msgstr "Grup baru"
+
+#: components/bot-organize-modal.tsx:140
+msgid "New section"
+msgstr "Seksi baru"
+
+#: app/integrations.tsx:381
+msgid "No authentication"
+msgstr "Tanpa autentikasi"
+
+#. placeholder {0}: item.name
+#: app/integrations.tsx:157
+msgid "No connection record found for {0}."
+msgstr "Tidak ada catatan koneksi untuk {0}."
+
+#: app/integrations.tsx:430
+msgid "No custom sources installed."
+msgstr "Belum ada sumber kustom yang terpasang."
+
+#: app/thread.tsx:2054
+msgid "No longer active"
+msgstr "Sudah tidak aktif"
+
+#: app/index.tsx:362
+msgid "No matching bots"
+msgstr "Tidak ada bot yang cocok"
+
+#: app/index.tsx:552
+msgid "No messages yet"
+msgstr "Belum ada pesan"
+
+#: app/index.tsx:360
+msgid "No results"
+msgstr "Tidak ada hasil"
+
+#: app/models.tsx:583
+msgid "Not connected"
+msgstr "Belum tersambung"
+
+#: app/integrations.tsx:253
+msgid "Not in the plugin catalog"
+msgstr "Tidak ada di katalog plugin"
+
+#: app/account.tsx:325
+msgid "Notification settings"
+msgstr "Pengaturan notifikasi"
+
+#: app/account.tsx:272
+#: app/account.tsx:274
+msgid "Notifications"
+msgstr "Notifikasi"
+
+#: app/index.tsx:559
+msgid "notifications silenced"
+msgstr "notifikasi dibisukan"
+
+#: app/index.tsx:450
+msgid "Now"
+msgstr "Sekarang"
+
+#. placeholder {0}: selected.label
+#: app/models.tsx:235
+msgid "Now using {0}."
+msgstr "Sekarang memakai {0}."
+
+#: app/computer.tsx:209
+msgid "Open computer"
+msgstr "Buka komputer"
+
+#: app/thread.tsx:1634
+msgid "Open computer →"
+msgstr "Buka komputer →"
+
+#: app/computer.tsx:190
+msgid "Open in full window"
+msgstr "Buka di jendela penuh"
+
+#: app/models.tsx:446
+msgid "OpenAI-compatible server URL"
+msgstr "URL server yang kompatibel dengan OpenAI"
+
+#: app/integrations.tsx:350
+msgid "OpenAPI JSON"
+msgstr "JSON OpenAPI"
+
+#: app/thread.tsx:1989
+msgid "Opened its thread."
+msgstr "Membuka percakapannya."
+
+#: app/models.tsx:690
+msgid "Optional"
+msgstr "Opsional"
+
+#: app/models.tsx:705
+msgid "Or connect an API key"
+msgstr "Atau sambungkan sebuah API key"
+
+#: app/account.tsx:215
+msgid "Organic"
+msgstr "Organik"
+
+#: app/models.tsx:518
+msgid "Other model…"
+msgstr "Model lain…"
+
+#: app/sign-in.tsx:100
+msgid "Password"
+msgstr "Kata sandi"
+
+#: app/voice.tsx:181
+msgid "Paste a replacement key"
+msgstr "Tempel key pengganti"
+
+#: app/voice.tsx:181
+msgid "Paste your API key"
+msgstr "Tempel API key Anda"
+
+#: app/models.tsx:580
+msgid "Personal credential"
+msgstr "Kredensial pribadi"
+
+#: app/thread.tsx:958
+msgid "Photo library"
+msgstr "Galeri foto"
+
+#: components/bot-organize-modal.tsx:70
+msgid "Pin"
+msgstr "Sematkan"
+
+#: app/sign-in.tsx:262
+msgid "Point this app at your self-hosted Sentra Bot origin — the same HTTPS URL you open in a browser."
+msgstr "Arahkan aplikasi ini ke origin Sentra Bot yang Anda host sendiri — URL HTTPS yang sama dengan yang Anda buka di browser."
+
+#: components/computer-mode-picker.tsx:40
+msgid "Private"
+msgstr "Privat"
+
+#: app/models.tsx:399
+msgid "Providers"
+msgstr "Provider"
+
+#: app/account.tsx:303
+msgid "Questions, approvals, takeover"
+msgstr "Pertanyaan, persetujuan, pengambilalihan"
+
+#: app/index.tsx:459
+msgid "Recent"
+msgstr "Terbaru"
+
+#: app/computer.tsx:275
+msgid "Recording a live demonstration needs desktop or web with the full computer view. You can still ask this bot to run saved skills from chat."
+msgstr "Merekam demonstrasi langsung membutuhkan desktop atau web dengan tampilan komputer penuh. Anda tetap bisa meminta bot ini menjalankan skill tersimpan dari obrolan."
+
+#: app/computer.tsx:455
+msgid "Release"
+msgstr "Lepaskan"
+
+#: app/integrations.tsx:349
+msgid "Remote MCP server"
+msgstr "Server MCP jarak jauh"
+
+#: app/integrations.tsx:267
+#: app/integrations.tsx:295
+#: app/integrations.tsx:443
+msgid "Remove"
+msgstr "Hapus"
+
+#. placeholder {0}: attachment.name
+#. placeholder {0}: item.name
+#. placeholder {0}: tile.label
+#: app/integrations.tsx:261
+#: app/integrations.tsx:289
+#: app/thread.tsx:1361
+msgid "Remove {0}"
+msgstr "Hapus {0}"
+
+#. placeholder {0}: mention.name
+#: app/thread.tsx:1564
+msgid "Remove mention {0}"
+msgstr "Hapus sebutan {0}"
+
+#. placeholder {0}: selectedSkill.name
+#: app/thread.tsx:1536
+msgid "Remove skill {0}"
+msgstr "Hapus skill {0}"
+
+#: app/thread.tsx:1988
+msgid "Removed with chat, computer, and memory."
+msgstr "Dihapus beserta chat, komputer, dan memorinya."
+
+#: app/integrations.tsx:443
+msgid "Removing…"
+msgstr "Menghapus…"
+
+#: app/models.tsx:703
+#: app/models.tsx:745
+msgid "Replace API key"
+msgstr "Ganti API key"
+
+#: app/voice.tsx:192
+msgid "Replace key"
+msgstr "Ganti key"
+
+#: app/account.tsx:287
+msgid "Replies and completed work"
+msgstr "Balasan dan pekerjaan yang selesai"
+
+#: app/thread.tsx:1086
+#: app/thread.tsx:1094
+msgid "Reply"
+msgstr "Balas"
+
+#: app/thread.tsx:1311
+msgid "Replying to"
+msgstr "Membalas"
+
+#: app/account.tsx:406
+msgid "Restore"
+msgstr "Pulihkan"
+
+#: components/bot-organize-modal.tsx:85
+msgid "Resume notifications"
+msgstr "Lanjutkan notifikasi"
+
+#: app/account.tsx:215
+msgid "Robot"
+msgstr "Robot"
+
+#: app/_layout.tsx:94
+msgid "Routine"
+msgstr "Rutinitas"
+
+#: app/sign-in.tsx:82
+msgid "Same Better Auth session as the web app."
+msgstr "Sesi Better Auth yang sama dengan aplikasi web."
+
+#: app/bot-settings.tsx:171
+#: app/group-settings.tsx:152
+#: app/models.tsx:743
+#: app/sign-in.tsx:257
+msgid "Save"
+msgstr "Simpan"
+
+#: app/models.tsx:273
+msgid "Saved."
+msgstr "Tersimpan."
+
+#: app/bot-settings.tsx:171
+#: app/group-settings.tsx:152
+#: app/models.tsx:741
+msgid "Saving…"
+msgstr "Menyimpan…"
+
+#: app/account.tsx:293
+msgid "Scheduled tasks"
+msgstr "Tugas terjadwal"
+
+#: app/index.tsx:278
+#: app/index.tsx:309
+msgid "Search"
+msgstr "Cari"
+
+#: app/index.tsx:364
+msgid "Search conversations, files, and routines"
+msgstr "Cari percakapan, file, dan rutinitas"
+
+#: app/index.tsx:359
+msgid "Searching…"
+msgstr "Mencari…"
+
+#: components/bot-organize-modal.tsx:116
+msgid "Section name"
+msgstr "Nama bagian"
+
+#: app/thread.tsx:2456
+#: app/thread.tsx:2469
+msgid "Send answer"
+msgstr "Kirim jawaban"
+
+#: app/thread.tsx:2469
+msgid "Sending…"
+msgstr "Mengirim…"
+
+#: app/sign-in.tsx:253
+msgid "Server"
+msgstr "Server"
+
+#: app/models.tsx:443
+msgid "Server URL"
+msgstr "URL server"
+
+#: app/models.tsx:462
+msgid "Setup help"
+msgstr "Bantuan penyiapan"
+
+#: app/thread.tsx:2292
+msgid "Show {label}"
+msgstr "Tampilkan {label}"
+
+#: app/thread.tsx:2345
+msgid "Show tool details"
+msgstr "Tampilkan detail alat"
+
+#: app/models.tsx:662
+msgid "Sign in"
+msgstr "Masuk"
+
+#: app/sign-in.tsx:79
+msgid "Sign in to Sentra Bot"
+msgstr "Masuk ke Sentra Bot"
+
+#: app/account.tsx:390
+msgid "Sign out"
+msgstr "Keluar"
+
+#: components/bot-organize-modal.tsx:85
+msgid "Silence notifications"
+msgstr "Bisukan notifikasi"
+
+#. placeholder {0}: skill.name
+#: app/thread.tsx:1434
+msgid "Skill {0}"
+msgstr "Skill {0}"
+
+#: app/computer.tsx:452
+msgid "Skip"
+msgstr "Lewati"
+
+#: app/thread.tsx:2266
+msgid "Speak"
+msgstr "Bicara"
+
+#: app/voice.tsx:164
+msgid "Speak + transcribe"
+msgstr "Bicara + transkripsi"
+
+#: app/thread.tsx:2260
+msgid "Speak message"
+msgstr "Bacakan pesan"
+
+#: app/voice.tsx:165
+msgid "Speak only"
+msgstr "Bicara saja"
+
+#: app/account.tsx:360
+msgid "Speak replies aloud with ElevenLabs, OpenAI, or Cartesia"
+msgstr "Bacakan balasan dengan ElevenLabs, OpenAI, atau Cartesia"
+
+#: app/models.tsx:662
+msgid "Starting…"
+msgstr "Memulai…"
+
+#: app/thread.tsx:1918
+#: app/thread.tsx:1926
+msgid "subagent"
+msgstr "subagen"
+
+#: app/models.tsx:628
+msgid "Submit"
+msgstr "Kirim"
+
+#: app/thread.tsx:2431
+msgid "Submitted"
+msgstr "Terkirim"
+
+#: app/models.tsx:773
+msgid "Switching…"
+msgstr "Mengganti…"
+
+#: app/computer.tsx:240
+#: app/computer.tsx:391
+msgid "Take control"
+msgstr "Ambil alih"
+
+#: app/index.tsx:365
+msgid "Tap + to create a bot"
+msgstr "Ketuk + untuk membuat bot"
+
+#: app/computer.tsx:272
+msgid "Teach a task"
+msgstr "Ajarkan sebuah tugas"
+
+#: components/computer-mode-picker.tsx:40
+msgid "Team"
+msgstr "Tim"
+
+#: app/models.tsx:605
+msgid "The final page may not load. Paste its URL or code here."
+msgstr "Halaman terakhir mungkin tidak termuat. Tempel URL atau kodenya di sini."
+
+#: app/models.tsx:290
+msgid "this model"
+msgstr "model ini"
+
+#: app/account.tsx:172
+msgid "This permanently deletes your account, bots, conversations, memories, files, and saved connections. This cannot be undone."
+msgstr "Ini menghapus permanen akun, bot, percakapan, memori, file, dan sambungan tersimpan Anda. Tindakan ini tidak bisa dibatalkan."
+
+#: app/thread.tsx:448
+msgid "This removes every message and stops current work. The bot, computer, memory, and routines are kept."
+msgstr "Ini menghapus semua pesan dan menghentikan pekerjaan yang sedang berjalan. Bot, komputer, memori, dan rutinitas tetap disimpan."
+
+#: app/models.tsx:754
+msgid "This subscription sign-in is not available in Sentra Bot yet. Use a deployment credential or choose another provider."
+msgstr "Proses masuk berbasis langganan ini belum tersedia di Sentra Bot. Pakai kredensial deployment atau pilih provider lain."
+
+#: app/_layout.tsx:93
+#: app/thread.tsx:369
+#: app/thread.tsx:389
+msgid "Thread"
+msgstr "Utas"
+
+#: app/bot-settings.tsx:113
+#: app/new.tsx:97
+msgid "Title"
+msgstr "Judul"
+
+#: app/integrations.tsx:426
+msgid "Tool sources"
+msgstr "Sumber tool"
+
+#: app/thread.tsx:2334
+msgid "Tools"
+msgstr "Alat"
+
+#: app/integrations.tsx:392
+msgid "Treg token"
+msgstr "Token Treg"
+
+#: app/account.tsx:116
+#: app/group-settings.tsx:77
+#: app/thread.tsx:468
+#: app/thread.tsx:950
+#: app/thread.tsx:2123
+#: app/thread.tsx:2157
+msgid "Try again."
+msgstr "Coba lagi."
+
+#: app/thread.tsx:2439
+msgid "Type your answer"
+msgstr "Ketik jawaban Anda"
+
+#: components/bot-organize-modal.tsx:103
+msgid "Unassigned"
+msgstr "Belum ditugaskan"
+
+#: components/bot-organize-modal.tsx:70
+msgid "Unpin"
+msgstr "Lepas sematan"
+
+#: app/index.tsx:560
+#: app/index.tsx:621
+msgid "unread"
+msgstr "belum dibaca"
+
+#: app/account.tsx:92
+#: app/account.tsx:94
+msgid "Usage"
+msgstr "Pemakaian"
+
+#: app/sign-in.tsx:133
+#: app/sign-in.tsx:150
+msgid "Use a custom server"
+msgstr "Pakai server kustom"
+
+#: app/models.tsx:541
+msgid "Use a found model"
+msgstr "Pakai model yang ditemukan"
+
+#: app/sign-in.tsx:302
+msgid "Use default server"
+msgstr "Pakai server bawaan"
+
+#: app/models.tsx:773
+msgid "Use this model"
+msgstr "Pakai model ini"
+
+#: app/thread.tsx:2334
+msgid "Using {provider}"
+msgstr "Memakai {provider}"
+
+#: app/integrations.tsx:408
+msgid "Verify and add"
+msgstr "Verifikasi dan tambahkan"
+
+#: app/_layout.tsx:71
+#: app/account.tsx:357
+msgid "Voice"
+msgstr "Suara"
+
+#: app/models.tsx:632
+#: app/models.tsx:645
+msgid "Waiting for sign-in…"
+msgstr "Menunggu proses masuk…"
+
+#: app/thread.tsx:2475
+msgid "Waiting for this bot’s response."
+msgstr "Menunggu balasan bot ini."
+
+#: app/bot-settings.tsx:136
+#: app/new.tsx:120
+msgid "What this bot is for"
+msgstr "Bot ini untuk apa"
+
+#: app/account.tsx:278
+msgid "While agents are working"
+msgstr "Saat agen sedang bekerja"
+
+#: app/integrations.tsx:267
+#: app/integrations.tsx:295
+#: app/sign-in.tsx:126
+msgid "Working…"
+msgstr "Bekerja…"
+
+#: app/computer.tsx:361
+msgid "You have control"
+msgstr "Anda yang memegang kendali"
+
+#: app/account.tsx:203
+msgid "Your account"
+msgstr "Akun Anda"
+
+#: app/models.tsx:587
+msgid "Your key or subscription token is stored securely and is never shown here."
+msgstr "Key atau token langganan Anda disimpan dengan aman dan tidak pernah ditampilkan di sini."

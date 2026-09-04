@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import type { ModelOAuthBegin } from "@sentrabot/contracts";
 import {
   OPENAI_COMPATIBLE_BASE_URL_HINT,
@@ -32,6 +33,7 @@ type ModelSelection = {
 };
 
 export default function Models() {
+  const { t } = useLingui();
   const [catalog, setCatalog] = useState<MobileModel[]>([]);
   const [credentials, setCredentials] = useState<MobileModelCredential[]>([]);
   const [me, setMe] = useState<MobileMe | null>(null);
@@ -112,7 +114,7 @@ export default function Models() {
     useCallback(() => {
       void load()
         .catch((err: unknown) =>
-          setError(err instanceof Error ? err.message : "Could not load model settings"),
+          setError(err instanceof Error ? err.message : t`Could not load model settings`),
         )
         .finally(() => setLoading(false));
       return () => {
@@ -214,7 +216,7 @@ export default function Models() {
       setNotice(openAiCompatibleProbeSuccessMessage(result.models.length));
     } catch (err) {
       if (requestId !== probeRequestIdRef.current) return;
-      setError(err instanceof Error ? err.message : "Could not reach this model server");
+      setError(err instanceof Error ? err.message : t`Could not reach this model server`);
     } finally {
       if (requestId === probeRequestIdRef.current) setProbing(false);
     }
@@ -230,9 +232,9 @@ export default function Models() {
     try {
       await rpc("models/setDefault", { provider: selected.provider, modelId: activeModelId });
       await load({ provider, modelId: activeModelId });
-      setNotice(isOpenAiCompatible ? "Model updated." : `Now using ${selected.label}.`);
+      setNotice(isOpenAiCompatible ? t`Model updated.` : t`Now using ${selected.label}.`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not change the default model");
+      setError(err instanceof Error ? err.message : t`Could not change the default model`);
     } finally {
       setPending(null);
     }
@@ -268,9 +270,9 @@ export default function Models() {
       );
       setApiKey("");
       await load({ provider, modelId });
-      setNotice(isOpenAiCompatible ? "Saved." : `Connected and using ${selected.label}.`);
+      setNotice(isOpenAiCompatible ? t`Saved.` : t`Connected and using ${selected.label}.`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not connect this provider");
+      setError(err instanceof Error ? err.message : t`Could not connect this provider`);
     } finally {
       setPending(null);
     }
@@ -285,7 +287,8 @@ export default function Models() {
     setOauth(null);
     await load({ provider, modelId });
     if (controller.signal.aborted) return;
-    setNotice(`Connected and using ${selected?.label ?? "this model"}.`);
+    const label = selected?.label ?? t`this model`;
+    setNotice(t`Connected and using ${label}.`);
   }
 
   async function startSubscriptionSignIn() {
@@ -318,7 +321,7 @@ export default function Models() {
       const loginId = oauthLoginIdRef.current;
       oauthLoginIdRef.current = null;
       if (loginId) void rpc("models/cancelOAuth", { loginId }).catch(() => undefined);
-      setError(err instanceof Error ? err.message : "Could not start sign-in");
+      setError(err instanceof Error ? err.message : t`Could not start sign-in`);
       setOauth(null);
     } finally {
       if (!waitingForCode) {
@@ -357,7 +360,7 @@ export default function Models() {
         retryable = true;
         setPasteCode(code);
       }
-      setError(err instanceof Error ? err.message : "Could not finish sign-in");
+      setError(err instanceof Error ? err.message : t`Could not finish sign-in`);
     } finally {
       oauthCodeSubmittingRef.current = false;
       if (!retryable) {
@@ -378,19 +381,23 @@ export default function Models() {
     <SafeAreaView edges={["bottom"]} style={styles.screen}>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <View style={styles.activeCard}>
-          <Text style={styles.eyebrow}>Active model</Text>
+          <Text style={styles.eyebrow}>
+            <Trans>Active model</Trans>
+          </Text>
           <Text style={styles.activeModel}>
-            {currentEntry?.label ?? me?.defaultModel ?? "Deployment default"}
+            {currentEntry?.label ?? me?.defaultModel ?? t`Deployment default`}
           </Text>
           <Text style={styles.secondary}>
-            {currentEntry?.providerName ?? me?.defaultProvider ?? "Configured by deployment"}
+            {currentEntry?.providerName ?? me?.defaultProvider ?? t`Configured by deployment`}
           </Text>
         </View>
 
         {error ? <Text style={styles.error}>{error}</Text> : null}
         {notice ? <Text style={styles.notice}>{notice}</Text> : null}
 
-        <Text style={styles.sectionTitle}>Providers</Text>
+        <Text style={styles.sectionTitle}>
+          <Trans>Providers</Trans>
+        </Text>
         <View style={styles.card}>
           {groups.map((group) => {
             const connected = credentials.some((entry) => entry.provider === group.id);
@@ -408,10 +415,16 @@ export default function Models() {
                 <View style={styles.providerCopy}>
                   <Text style={styles.providerName}>{group.name}</Text>
                   <Text style={styles.secondary}>
-                    {group.entries.length} model{group.entries.length === 1 ? "" : "s"}
+                    <Trans>
+                      {group.entries.length} model{group.entries.length === 1 ? "" : "s"}
+                    </Trans>
                   </Text>
                 </View>
-                {connected ? <Text style={styles.connected}>Connected</Text> : null}
+                {connected ? (
+                  <Text style={styles.connected}>
+                    <Trans>Connected</Trans>
+                  </Text>
+                ) : null}
               </Pressable>
             );
           })}
@@ -419,12 +432,18 @@ export default function Models() {
 
         {selected ? (
           <>
-            {!isOpenAiCompatible ? <Text style={styles.sectionTitle}>Model</Text> : null}
+            {!isOpenAiCompatible ? (
+              <Text style={styles.sectionTitle}>
+                <Trans>Model</Trans>
+              </Text>
+            ) : null}
             {isOpenAiCompatible ? (
               <>
-                <Text style={styles.sectionTitle}>Server URL</Text>
+                <Text style={styles.sectionTitle}>
+                  <Trans>Server URL</Trans>
+                </Text>
                 <TextInput
-                  accessibilityLabel="OpenAI-compatible server URL"
+                  accessibilityLabel={t`OpenAI-compatible server URL`}
                   autoCapitalize="none"
                   autoCorrect={false}
                   editable={!busy}
@@ -439,7 +458,9 @@ export default function Models() {
                   accessibilityState={{ expanded: showEndpointHelp }}
                   onPress={() => setShowEndpointHelp((visible) => !visible)}
                 >
-                  <Text style={styles.helpLabel}>Setup help</Text>
+                  <Text style={styles.helpLabel}>
+                    <Trans>Setup help</Trans>
+                  </Text>
                 </Pressable>
                 {showEndpointHelp ? (
                   <Text style={styles.hint}>{OPENAI_COMPATIBLE_BASE_URL_HINT}</Text>
@@ -454,9 +475,11 @@ export default function Models() {
                     pressed && styles.pressed,
                   ]}
                 >
-                  <Text style={styles.outlineLabel}>{probing ? "Finding…" : "Find models"}</Text>
+                  <Text style={styles.outlineLabel}>{probing ? t`Finding…` : t`Find models`}</Text>
                 </Pressable>
-                <Text style={[styles.sectionTitle, { marginTop: 12 }]}>Model</Text>
+                <Text style={[styles.sectionTitle, { marginTop: 12 }]}>
+                  <Trans>Model</Trans>
+                </Text>
                 {probeModels.length && probeModels.includes(modelId) ? (
                   <View style={styles.card}>
                     {probeModels.map((entry) => (
@@ -491,18 +514,20 @@ export default function Models() {
                       ]}
                     >
                       <View style={styles.radio} />
-                      <Text style={styles.modelLabel}>Other model…</Text>
+                      <Text style={styles.modelLabel}>
+                        <Trans>Other model…</Trans>
+                      </Text>
                     </Pressable>
                   </View>
                 ) : (
                   <>
                     <TextInput
-                      accessibilityLabel="Model id"
+                      accessibilityLabel={t`Model id`}
                       autoCapitalize="none"
                       autoCorrect={false}
                       editable={!busy && !probing}
                       onChangeText={setModelId}
-                      placeholder="exact-model-id"
+                      placeholder={t`exact-model-id`}
                       placeholderTextColor={native.tertiaryLabel}
                       style={styles.keyInput}
                       value={modelId}
@@ -512,7 +537,9 @@ export default function Models() {
                         accessibilityRole="button"
                         onPress={() => setModelId(probeModels[0] ?? "")}
                       >
-                        <Text style={styles.helpLabel}>Use a found model</Text>
+                        <Text style={styles.helpLabel}>
+                          <Trans>Use a found model</Trans>
+                        </Text>
                       </Pressable>
                     ) : null}
                   </>
@@ -549,14 +576,16 @@ export default function Models() {
 
             {!isOpenAiCompatible ? (
               <View style={styles.credentialCard}>
-                <Text style={styles.eyebrow}>Personal credential</Text>
+                <Text style={styles.eyebrow}>
+                  <Trans>Personal credential</Trans>
+                </Text>
                 <Text style={styles.credentialTitle}>
-                  {credential ? `Connected · ${credential.label}` : "Not connected"}
+                  {credential ? t`Connected · ${credential.label}` : t`Not connected`}
                 </Text>
                 <Text style={styles.secondary}>
                   {credential
-                    ? "Your key or subscription token is stored securely and is never shown here."
-                    : "Connect this provider to use it as your personal model."}
+                    ? t`Your key or subscription token is stored securely and is never shown here.`
+                    : t`Connect this provider to use it as your personal model.`}
                 </Text>
               </View>
             ) : null}
@@ -566,15 +595,17 @@ export default function Models() {
                 <View style={styles.oauthCard}>
                   {oauth.mode === "auth-url" ? (
                     <>
-                      <Text style={styles.secondary}>Finish signing in in your browser:</Text>
+                      <Text style={styles.secondary}>
+                        <Trans>Finish signing in in your browser:</Trans>
+                      </Text>
                       <Pressable onPress={() => void Linking.openURL(oauth.verificationUri)}>
                         <Text style={styles.link}>{oauth.verificationUri}</Text>
                       </Pressable>
                       <Text style={styles.secondary}>
-                        The final page may not load. Paste its URL or code here.
+                        <Trans>The final page may not load. Paste its URL or code here.</Trans>
                       </Text>
                       <TextInput
-                        accessibilityLabel="Authorization code"
+                        accessibilityLabel={t`Authorization code`}
                         value={pasteCode}
                         onChangeText={setPasteCode}
                         autoCapitalize="none"
@@ -593,18 +624,26 @@ export default function Models() {
                           !pasteCode.trim() && styles.disabled,
                         ]}
                       >
-                        <Text style={styles.outlineLabel}>Submit</Text>
+                        <Text style={styles.outlineLabel}>
+                          <Trans>Submit</Trans>
+                        </Text>
                       </Pressable>
-                      <Text style={styles.secondary}>Waiting for sign-in…</Text>
+                      <Text style={styles.secondary}>
+                        <Trans>Waiting for sign-in…</Trans>
+                      </Text>
                     </>
                   ) : (
                     <>
-                      <Text style={styles.secondary}>Enter this code in your browser:</Text>
+                      <Text style={styles.secondary}>
+                        <Trans>Enter this code in your browser:</Trans>
+                      </Text>
                       <Pressable onPress={() => void Linking.openURL(oauth.verificationUri)}>
                         <Text style={styles.link}>{oauth.verificationUri}</Text>
                       </Pressable>
                       <Text style={styles.code}>{oauth.userCode}</Text>
-                      <Text style={styles.secondary}>Waiting for sign-in…</Text>
+                      <Text style={styles.secondary}>
+                        <Trans>Waiting for sign-in…</Trans>
+                      </Text>
                     </>
                   )}
                 </View>
@@ -620,7 +659,7 @@ export default function Models() {
                   ]}
                 >
                   <Text style={styles.outlineLabel}>
-                    {oauthPending ? "Starting…" : (selected.oauthLabel ?? "Sign in")}
+                    {oauthPending ? t`Starting…` : (selected.oauthLabel ?? t`Sign in`)}
                   </Text>
                 </Pressable>
               )
@@ -635,18 +674,20 @@ export default function Models() {
                       accessibilityState={{ expanded: showApiKey }}
                       onPress={() => setShowApiKey((visible) => !visible)}
                     >
-                      <Text style={styles.helpLabel}>API key</Text>
+                      <Text style={styles.helpLabel}>
+                        <Trans>API key</Trans>
+                      </Text>
                     </Pressable>
                     {showApiKey ? (
                       <TextInput
-                        accessibilityLabel="API key"
+                        accessibilityLabel={t`API key`}
                         autoCapitalize="none"
                         autoCorrect={false}
                         autoComplete="off"
                         editable={!busy}
                         importantForAutofill="no"
                         onChangeText={updateApiKey}
-                        placeholder="Optional"
+                        placeholder={t`Optional`}
                         placeholderTextColor={native.tertiaryLabel}
                         secureTextEntry
                         style={styles.keyInput}
@@ -659,13 +700,13 @@ export default function Models() {
                   <>
                     <Text style={styles.sectionTitle}>
                       {credential
-                        ? "Replace API key"
+                        ? t`Replace API key`
                         : subscriptionSignIn
-                          ? "Or connect an API key"
-                          : "API key"}
+                          ? t`Or connect an API key`
+                          : t`API key`}
                     </Text>
                     <TextInput
-                      accessibilityLabel="API key"
+                      accessibilityLabel={t`API key`}
                       autoCapitalize="none"
                       autoCorrect={false}
                       autoComplete="off"
@@ -697,12 +738,12 @@ export default function Models() {
                 >
                   <Text style={styles.primaryLabel}>
                     {pending === "connect"
-                      ? "Saving…"
+                      ? t`Saving…`
                       : isOpenAiCompatible
-                        ? "Save"
+                        ? t`Save`
                         : credential
-                          ? "Replace API key"
-                          : "Connect API key"}
+                          ? t`Replace API key`
+                          : t`Connect API key`}
                   </Text>
                 </Pressable>
               </View>
@@ -710,8 +751,10 @@ export default function Models() {
 
             {selected.auth === "oauth" && !subscriptionSignIn ? (
               <Text style={styles.secondary}>
-                This subscription sign-in is not available in Sentra Bot yet. Use a deployment
-                credential or choose another provider.
+                <Trans>
+                  This subscription sign-in is not available in Sentra Bot yet. Use a deployment
+                  credential or choose another provider.
+                </Trans>
               </Text>
             ) : null}
 
@@ -727,7 +770,7 @@ export default function Models() {
                 ]}
               >
                 <Text style={styles.primaryLabel}>
-                  {pending === "default" ? "Switching…" : "Use this model"}
+                  {pending === "default" ? t`Switching…` : t`Use this model`}
                 </Text>
               </Pressable>
             ) : null}

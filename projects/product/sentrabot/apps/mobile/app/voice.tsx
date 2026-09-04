@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import { useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import {
@@ -33,6 +34,7 @@ type VoiceStatus = {
 type VoiceInfo = { id: string; label: string; description?: string };
 
 export default function VoiceSettings() {
+  const { t } = useLingui();
   const [catalog, setCatalog] = useState<VoiceCatalogEntry[]>([]);
   const [credentials, setCredentials] = useState<VoiceCredential[]>([]);
   const [status, setStatus] = useState<VoiceStatus | null>(null);
@@ -70,7 +72,7 @@ export default function VoiceSettings() {
       setLoading(true);
       void load()
         .catch((err: unknown) =>
-          setError(err instanceof Error ? err.message : "Could not load voice settings"),
+          setError(err instanceof Error ? err.message : t`Could not load voice settings`),
         )
         .finally(() => setLoading(false));
     }, [load]),
@@ -91,9 +93,9 @@ export default function VoiceSettings() {
       });
       setApiKey("");
       await load(selected.id);
-      setNotice(`Connected ${selected.name}.`);
+      setNotice(t`Connected ${selected.name}.`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not connect");
+      setError(err instanceof Error ? err.message : t`Could not connect`);
     } finally {
       setPending(false);
     }
@@ -106,7 +108,7 @@ export default function VoiceSettings() {
       await rpc("voice/setVoice", { voiceId: nextVoiceId, provider: selected?.id });
       await load(selected?.id);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not save that voice");
+      setError(err instanceof Error ? err.message : t`Could not save that voice`);
     } finally {
       setPending(false);
     }
@@ -117,15 +119,15 @@ export default function VoiceSettings() {
     setError(null);
     try {
       const prepared = await rpc<{ ready: boolean; utterances: string[] }>("voice/prepare", {
-        text: "Hi, this is how I'll sound when I read replies out loud.",
+        text: t`Hi, this is how I'll sound when I read replies out loud.`,
       });
-      if (!prepared.ready) throw new Error("Connect a voice provider first.");
+      if (!prepared.ready) throw new Error(t`Connect a voice provider first.`);
       for (const utterance of prepared.utterances) {
         await playMpeg(await speakUtterance(utterance));
       }
-      setNotice("If you heard that, voice is ready.");
+      setNotice(t`If you heard that, voice is ready.`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not play a sample");
+      setError(err instanceof Error ? err.message : t`Could not play a sample`);
     } finally {
       setPending(false);
     }
@@ -138,7 +140,10 @@ export default function VoiceSettings() {
         {error ? <Text style={styles.error}>{error}</Text> : null}
         {notice ? <Text style={styles.notice}>{notice}</Text> : null}
         <Text style={styles.lede}>
-          Bring your own key. ElevenLabs, OpenAI, and Cartesia all plug into the same speak buttons.
+          <Trans>
+            Bring your own key. ElevenLabs, OpenAI, and Cartesia all plug into the same speak
+            buttons.
+          </Trans>
         </Text>
         {catalog.map((entry) => {
           const connected = credentials.some((cred) => cred.provider === entry.id);
@@ -153,7 +158,11 @@ export default function VoiceSettings() {
             >
               <Text style={styles.cardTitle}>{entry.name}</Text>
               <Text style={styles.cardMeta}>
-                {connected ? "Connected" : entry.transcribe ? "Speak + transcribe" : "Speak only"}
+                {connected
+                  ? t`Connected`
+                  : entry.transcribe
+                    ? t`Speak + transcribe`
+                    : t`Speak only`}
               </Text>
             </Pressable>
           );
@@ -169,7 +178,7 @@ export default function VoiceSettings() {
               importantForAutofill="no"
               value={apiKey}
               onChangeText={setApiKey}
-              placeholder={credential ? "Paste a replacement key" : "Paste your API key"}
+              placeholder={credential ? t`Paste a replacement key` : t`Paste your API key`}
               placeholderTextColor="#6C6C70"
               secureTextEntry
               style={styles.input}
@@ -180,7 +189,7 @@ export default function VoiceSettings() {
               onPress={() => void connect()}
               style={[styles.button, (pending || apiKey.trim().length < 8) && styles.disabled]}
             >
-              <Text style={styles.buttonLabel}>{credential ? "Replace key" : "Connect"}</Text>
+              <Text style={styles.buttonLabel}>{credential ? t`Replace key` : t`Connect`}</Text>
             </Pressable>
             {voices.length ? (
               <View style={styles.voices}>
@@ -202,7 +211,9 @@ export default function VoiceSettings() {
                 onPress={() => void testVoice()}
                 style={styles.secondary}
               >
-                <Text style={styles.secondaryLabel}>Hear a sample</Text>
+                <Text style={styles.secondaryLabel}>
+                  <Trans>Hear a sample</Trans>
+                </Text>
               </Pressable>
             ) : null}
           </>

@@ -1,3 +1,4 @@
+import { Trans, useLingui } from "@lingui/react/macro";
 import type { CapabilityInstall, Connection, ConnectionCatalogItem } from "@sentrabot/contracts";
 import {
   abortableDelay,
@@ -26,6 +27,7 @@ import { native } from "../lib/native";
 type SourceKind = "treg" | "mcp" | "api";
 
 export default function Integrations() {
+  const { t } = useLingui();
   const { width } = useWindowDimensions();
   const catalogColumns = width >= 480 ? 2 : 1;
   const [catalog, setCatalog] = useState<ConnectionCatalogItem[]>([]);
@@ -69,7 +71,7 @@ export default function Integrations() {
   useEffect(() => {
     void refresh().catch((reason) => {
       setCatalogReady(false);
-      setCatalogError(reason instanceof Error ? reason.message : "Could not load integrations");
+      setCatalogError(reason instanceof Error ? reason.message : t`Could not load integrations`);
     });
     void loadLastBotId().then(setLastBotId);
     return () => connectionAttempt.current?.abort();
@@ -124,12 +126,12 @@ export default function Integrations() {
       }
       if (controller.signal.aborted) return;
       Alert.alert(
-        "Connection pending",
-        "Finish connecting in the browser, then refresh this page.",
+        t`Connection pending`,
+        t`Finish connecting in the browser, then refresh this page.`,
       );
     } catch (reason) {
       if (controller.signal.aborted) return;
-      setCatalogError(reason instanceof Error ? reason.message : "Could not connect");
+      setCatalogError(reason instanceof Error ? reason.message : t`Could not connect`);
     } finally {
       if (connectionAttempt.current === controller) {
         connectionAttempt.current = null;
@@ -152,11 +154,11 @@ export default function Integrations() {
         matches.find((connection) => connection.status === "connected") ??
         matches.find((connection) => connection.status === "pending") ??
         matches.find((connection) => connection.status === "error");
-      if (!row) throw new Error(`No connection record found for ${item.name}.`);
+      if (!row) throw new Error(t`No connection record found for ${item.name}.`);
       await rpc("connections/revoke", { connectionId: row.id });
       await refresh();
     } catch (reason) {
-      setCatalogError(reason instanceof Error ? reason.message : "Could not revoke connection");
+      setCatalogError(reason instanceof Error ? reason.message : t`Could not revoke connection`);
     } finally {
       setPending(null);
     }
@@ -178,7 +180,7 @@ export default function Integrations() {
     try {
       await rpc("capabilities/install", {
         kind: sourceKind === "api" ? "api" : "mcp",
-        name: name.trim() || (sourceKind === "treg" ? "Treg" : "Custom connector"),
+        name: name.trim() || (sourceKind === "treg" ? "Treg" : t`Custom connector`),
         source: url.trim(),
         credential: credential.trim() || undefined,
         config:
@@ -192,7 +194,7 @@ export default function Integrations() {
       setSourceKind(null);
       await refresh();
     } catch (reason) {
-      setSourceError(reason instanceof Error ? reason.message : "Could not add source");
+      setSourceError(reason instanceof Error ? reason.message : t`Could not add source`);
     } finally {
       setPending(null);
     }
@@ -205,7 +207,7 @@ export default function Integrations() {
       await rpc("capabilities/remove", { id: source.id });
       setSources((current) => current.filter((item) => item.id !== source.id));
     } catch (reason) {
-      setSourceError(reason instanceof Error ? reason.message : "Could not remove source");
+      setSourceError(reason instanceof Error ? reason.message : t`Could not remove source`);
     } finally {
       setPending(null);
     }
@@ -214,7 +216,9 @@ export default function Integrations() {
   return (
     <SafeAreaView edges={["bottom"]} style={styles.screen}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.explanation}>Connect apps.</Text>
+        <Text style={styles.explanation}>
+          <Trans>Connect apps.</Trans>
+        </Text>
 
         {catalogError ? <Text style={styles.error}>{catalogError}</Text> : null}
 
@@ -245,18 +249,22 @@ export default function Integrations() {
                       {tile.label}
                     </Text>
                     {disabled ? (
-                      <Text style={styles.secondary}>Not in the plugin catalog</Text>
+                      <Text style={styles.secondary}>
+                        <Trans>Not in the plugin catalog</Trans>
+                      </Text>
                     ) : null}
                   </View>
                   {disabled || !item ? null : (
                     <Pressable
                       accessibilityRole="button"
-                      accessibilityLabel={connected ? `Remove ${tile.label}` : `Add ${tile.label}`}
+                      accessibilityLabel={
+                        connected ? t`Remove ${tile.label}` : t`Add ${tile.label}`
+                      }
                       disabled={pending === key}
                       onPress={() => void (connected ? revoke(item) : connect(item))}
                     >
                       <Text style={styles.link}>
-                        {pending === key ? "Working…" : connected ? "Remove" : "Add"}
+                        {pending === key ? t`Working…` : connected ? t`Remove` : t`Add`}
                       </Text>
                     </Pressable>
                   )}
@@ -277,12 +285,14 @@ export default function Integrations() {
                   </View>
                   <Pressable
                     accessibilityRole="button"
-                    accessibilityLabel={item.connected ? `Remove ${item.name}` : `Add ${item.name}`}
+                    accessibilityLabel={
+                      item.connected ? t`Remove ${item.name}` : t`Add ${item.name}`
+                    }
                     disabled={pending === key}
                     onPress={() => void (item.connected ? revoke(item) : connect(item))}
                   >
                     <Text style={styles.link}>
-                      {pending === key ? "Working…" : item.connected ? "Remove" : "Add"}
+                      {pending === key ? t`Working…` : item.connected ? t`Remove` : t`Add`}
                     </Text>
                   </Pressable>
                 </View>
@@ -301,7 +311,9 @@ export default function Integrations() {
           }}
           style={styles.advancedToggle}
         >
-          <Text style={styles.advancedLabel}>Advanced</Text>
+          <Text style={styles.advancedLabel}>
+            <Trans>Advanced</Trans>
+          </Text>
           <Text style={styles.chevron}>›</Text>
         </Pressable>
 
@@ -317,10 +329,10 @@ export default function Integrations() {
                 >
                   <Text style={styles.buttonLabel}>
                     {kind === "treg"
-                      ? "Add Treg"
+                      ? t`Add Treg`
                       : kind === "mcp"
-                        ? "Add MCP server"
-                        : "Add OpenAPI"}
+                        ? t`Add MCP server`
+                        : t`Add OpenAPI`}
                   </Text>
                 </Pressable>
               ))}
@@ -332,15 +344,15 @@ export default function Integrations() {
               <View style={styles.card}>
                 <Text style={styles.title}>
                   {sourceKind === "treg"
-                    ? "Connect Treg"
+                    ? t`Connect Treg`
                     : sourceKind === "mcp"
-                      ? "Remote MCP server"
-                      : "OpenAPI JSON"}
+                      ? t`Remote MCP server`
+                      : t`OpenAPI JSON`}
                 </Text>
                 <TextInput
                   value={name}
                   onChangeText={setName}
-                  placeholder="Display name"
+                  placeholder={t`Display name`}
                   placeholderTextColor={native.tertiaryLabel}
                   style={styles.input}
                 />
@@ -366,7 +378,7 @@ export default function Integrations() {
                     style={styles.authToggle}
                   >
                     <Text style={styles.secondary}>
-                      {requiresAuth ? "Bearer authentication" : "No authentication"}
+                      {requiresAuth ? t`Bearer authentication` : t`No authentication`}
                     </Text>
                   </Pressable>
                 ) : null}
@@ -377,7 +389,7 @@ export default function Integrations() {
                     secureTextEntry
                     autoCapitalize="none"
                     autoCorrect={false}
-                    placeholder={sourceKind === "treg" ? "Treg token" : "Bearer token"}
+                    placeholder={sourceKind === "treg" ? t`Treg token` : t`Bearer token`}
                     placeholderTextColor={native.tertiaryLabel}
                     style={styles.input}
                   />
@@ -392,7 +404,9 @@ export default function Integrations() {
                     {pending === "source" ? (
                       <ActivityIndicator color={native.label} />
                     ) : (
-                      <Text style={styles.buttonLabel}>Verify and add</Text>
+                      <Text style={styles.buttonLabel}>
+                        <Trans>Verify and add</Trans>
+                      </Text>
                     )}
                   </Pressable>
                   <Pressable
@@ -400,15 +414,21 @@ export default function Integrations() {
                     onPress={() => setSourceKind(null)}
                     style={styles.smallButton}
                   >
-                    <Text style={styles.buttonLabel}>Cancel</Text>
+                    <Text style={styles.buttonLabel}>
+                      <Trans>Cancel</Trans>
+                    </Text>
                   </Pressable>
                 </View>
               </View>
             ) : null}
 
-            <Text style={styles.section}>Tool sources</Text>
+            <Text style={styles.section}>
+              <Trans>Tool sources</Trans>
+            </Text>
             {sources.length === 0 ? (
-              <Text style={styles.secondary}>No custom sources installed.</Text>
+              <Text style={styles.secondary}>
+                <Trans>No custom sources installed.</Trans>
+              </Text>
             ) : null}
             {sources.map((source) => (
               <View key={source.id} style={styles.row}>
@@ -420,7 +440,7 @@ export default function Integrations() {
                 </View>
                 <Pressable accessibilityRole="button" onPress={() => void removeSource(source)}>
                   <Text style={styles.remove}>
-                    {pending === source.id ? "Removing…" : "Remove"}
+                    {pending === source.id ? t`Removing…` : t`Remove`}
                   </Text>
                 </Pressable>
               </View>
