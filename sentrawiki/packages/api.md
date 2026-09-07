@@ -1,8 +1,10 @@
 # API (`@safrs/api`)
 
+> **Scope.** Root Hono app for **golden-path** only. SentraBot's public API is `projects/product/sentrabot/apps/api` (default `127.0.0.1:3100`). Kediri uses Payload inside its capsule. Do not import `@safrs/api` from a new capsule.
+
 ## Purpose
 
-The single typed HTTP boundary of the monorepo. `@safrs/api` owns the Hono application mounted by the golden-path web app under `/api`, the typed RPC client (`hc` from `hono/client`), the error envelope, and a schema-driven OpenAPI endpoint. It imports validation contracts from `@safrs/schemas` and database access from `@safrs/database` — never the other way around.
+Typed HTTP boundary of the golden-path demo. `@safrs/api` owns the Hono application mounted under `/api`, the typed RPC client (`hc` from `hono/client`), the error envelope, and a schema-driven OpenAPI endpoint. It imports validation contracts from `@safrs/schemas` and database access from `@safrs/database` — never the other way around.
 
 ## Key source files
 

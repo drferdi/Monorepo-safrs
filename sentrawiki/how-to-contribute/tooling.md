@@ -36,7 +36,7 @@ pnpm fix       # biome check --write .
 
 ## pnpm catalog
 
-`pnpm-workspace.yaml` centralizes dependency versions in its `catalog` section so packages reference `catalog:` instead of pinning versions. It also enforces supply-chain policy:
+Root `pnpm-workspace.yaml` centralizes versions in `catalog:` for **root workspace members**. Excluded capsules (SentraBot, Kediri, Smartboard) do not use this catalog. It also enforces supply-chain policy:
 
 - `minimumReleaseAge: 1440` (minutes = 1 day) with excludes for `resend` and `stripe`.
 - `allowBuilds` limits build scripts (`@prisma/engines`, `esbuild`, `prisma`, `protobufjs`, `sharp`).

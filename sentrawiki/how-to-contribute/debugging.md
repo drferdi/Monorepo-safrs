@@ -1,6 +1,6 @@
 # Debugging
 
-This page lists common failure modes in the Monorepo and how to diagnose them. Use `pnpm doctor` for a read-only environment diagnosis and `pnpm status` for task/registry/governance state. For deeper context start from [How to contribute](index.md) and [Development workflow](development-workflow.md).
+This page lists common **root / golden-path** failure modes. Use `pnpm doctor` and `pnpm status`. Capsule failures (Kediri Payload, SentraBot worker, Avery Hermes) are diagnosed from that capsule's `docs/testing.md`.
 
 ## Purpose
 

@@ -2,7 +2,7 @@
 
 ## Coding style
 
-- **TypeScript strict** across all packages. The shared tsconfig base lives in `packages/config/tsconfig/base.json`.
+- **TypeScript strict** in the root workspace. Shared tsconfig base: `packages/config/tsconfig/base.json`. Excluded capsules use their own tsconfig.
 - **Biome** handles formatting and linting with the `recommended` preset. Double quotes, semicolons, trailing commas, 2-space indent.
 - **Named exports** only. No default exports except for Next.js pages and React Email templates.
 - Functions and components are small and single-purpose.
@@ -11,7 +11,7 @@
 
 ## Error handling
 
-The API uses a correlation-ID error envelope defined in `packages/api/src/error.ts`. Every response (success or error) carries an `x-correlation-id` header. Errors follow the `apiErrorSchema` from `@safrs/schemas`:
+The **golden-path** API uses a correlation-ID error envelope in `packages/api/src/error.ts`. Every response carries `x-correlation-id`. Errors follow `apiErrorSchema` from `@safrs/schemas`. Product APIs use their own envelopes.
 
 ```typescript
 {

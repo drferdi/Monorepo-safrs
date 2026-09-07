@@ -1,8 +1,10 @@
 # Environment (`@safrs/env`)
 
+> **Scope.** Root env contract for golden-path and other root-workspace apps. Control Center explicitly does **not** import `@safrs/env/server`. Sovereign capsules validate env locally. Do not treat this package as the repo-wide env schema.
+
 ## Purpose
 
-Runtime environment validation built on `@t3-oss/env-*` plus Zod. The package is split into a server half and a client half so browser bundles never see server-only variables (prisma/prisma schema, `DATABASE_URL`, Stripe secrets). Invalid values throw at process start instead of failing later with a confusing runtime error.
+Runtime environment validation built on `@t3-oss/env-*` plus Zod. Split into server and client halves so browser bundles never see server-only variables (`DATABASE_URL`, Stripe secrets). Invalid values throw at process start.
 
 ## Key source files
 

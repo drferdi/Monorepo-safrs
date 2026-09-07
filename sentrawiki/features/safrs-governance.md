@@ -97,11 +97,12 @@ Document lifecycle (`docs/governance/SAFRS_DOCUMENT_LIFECYCLE.md`): `CANONICAL`,
 `PROPOSED → ACCEPTED → SUPERSEDED|REJECTED`; plans run
 `ACTIVE → COMPLETED → ARCHIVED`.
 
-## Verification pipeline (16 checkers)
+## Verification pipeline
 
 `scripts/safrs-verify.sh` (and `.ps1`/`.mjs` on Windows) runs the machine
-enforcement. It drives a battery of **16 governance checkers**, primarily in
-`tools/safrs/` plus supporting repository tests:
+enforcement. Count the invocations in that script rather than reusing a stale
+"16 checkers" figure. Authoritative list: [safrs-verify](../verification/safrs-verify.md).
+Checkers live primarily in `tools/safrs/` plus supporting repository tests:
 
 - `check_policy.py`, `check_topology.py`, `check_routing.py`, `check_docs.py`,
   `check_handoff.py`, `check_tool_inventory.py`

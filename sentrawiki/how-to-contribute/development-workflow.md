@@ -1,6 +1,8 @@
 # Development workflow
 
-This page describes the day-to-day cycle of contributing to the Monorepo: how to branch and worktree, which pnpm scripts to run, and how the gates (`pnpm check`, `pnpm governance`) enforce SAFRS. Start from [How to contribute](index.md) and [Getting started](../overview/getting-started.md).
+This page describes the day-to-day cycle: worktrees, root scripts, and SAFRS gates. Start from [How to contribute](index.md) and [Getting started](../overview/getting-started.md).
+
+If the mutation is inside a sovereign capsule, run that capsule's lifecycle from the **capsule root**. Root `pnpm check` / `pnpm governance` are integration gates, not capsule prerequisites.
 
 ## Purpose
 

@@ -1,6 +1,8 @@
 # API
 
-**Purpose**: This page gives an overview of the golden-path HTTP API in the SAFRS Monorepo. It explains how the Hono app is mounted under `/api` inside Next.js, how the typed RPC client keeps the frontend safe from drift, and where the OpenAPI description and interactive docs are served.
+> **Scope.** Golden-path HTTP API only (`@safrs/api` mounted in Next.js). Product APIs: [SentraBot](../projects/sentrabot.md) (`apps/api` :3100), Kediri Payload, Avery Hermes gateway.
+
+**Purpose**: How the golden-path Hono app is mounted under `/api` inside Next.js, how the typed RPC client keeps that frontend from drifting, and where OpenAPI / docs are served.
 
 ## Overview
 

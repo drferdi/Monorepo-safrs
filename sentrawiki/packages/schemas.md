@@ -1,10 +1,12 @@
 # Schemas (`@safrs/schemas`)
 
+> **Scope.** Zod contracts for the **golden-path** demo API. SentraBot contracts live in `projects/product/sentrabot/packages/contracts`. A `src/sentrabot/` folder exists in this package but is **not** re-exported from `src/index.ts` (barrel only exports demo + error schemas).
+
 ## Purpose
 
-The shared Zod contract package. `@safrs/schemas` is the single source of truth for data shapes across the typed `Database → API → Web` flow. Because the OpenAPI document, the Hono validation, and the typed client are all derived from (or validated against) these schemas, a shape change lands here once and propagates everywhere.
+Zod contracts for the typed golden-path `Database → API → Web` flow. The OpenAPI document, Hono validation, and typed client for that demo are derived from these schemas.
 
-The package deliberately exports only the schemas and their inferred types; validation logic lives in consumers (notably `@safrs/api` and `@safrs/env`).
+The package exports only schemas and inferred types; validation logic lives in consumers (`@safrs/api`, `@safrs/env`).
 
 ## Key source files
 

@@ -1,8 +1,10 @@
 # UI (`@safrs/ui`)
 
+> **Scope.** Root primitive used by golden-path. Product UIs (SentraBot, Kediri, Smartboard, portfolio) do not consume this package.
+
 ## Purpose
 
-React primitives built on the Sentra design tokens. The package is deliberately minimal — one exported component today — and exists so UI consumers share a common visual vocabulary instead of hand-inventing compositions. It is a shared package, so changes are R2.
+React primitives built on the Sentra design tokens. Deliberately minimal — one exported component (`StatusCard`). Shared-package changes are R2.
 
 ## Key source files
 

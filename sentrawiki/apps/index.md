@@ -1,62 +1,23 @@
 # Apps — deployable units
 
-## Purpose
+The repository is **not** a single-app monorepo. ADR 0005/0006 put products in capsules. This section originally documented only the golden-path Next.js unit because that was the solo-developer baseline (ADR 0001).
 
-This section documents the deployable application units in the SAFRS Monorepo. A
-*deployable unit* is a runnable artifact that can be built and served; everything
-that is not a deployable app (shared packages, governance tooling, capability
-manifests) lives elsewhere and is consumed by these units.
+## Deployable and runnable surfaces
 
-The monorepo intentionally keeps **one** deployable application. SAFRS is
-product-neutral and does not mandate a fixed set of apps; new units are added by
-creating a project capsule under `projects/<domain>/<capsule>/` following
-`docs/governance/SAFRS_PROJECT_CAPSULES.md`.
+| Unit | Path | Notes |
+| --- | --- | --- |
+| Golden-path web | `projects/internal/golden-path/apps/web` | Legacy root-coupled demonstrator. [Detail](golden-path-web.md) |
+| Control Center | `projects/internal/control-center/apps/web` | Local-only operator UI |
+| SentraBot API / web / desktop / mobile / worker | `projects/product/sentrabot/apps/*` | Sovereign capsule |
+| Kediri web | `projects/product/kediri-history/apps/web` | Sovereign capsule |
+| Smartboard web + site | `projects/academic/academic-smartboard/apps/*` | Partial product |
+| Portfolio | `projects/corporate/portfolio-drnovia` | Static Node server |
+| Avery | Hermes runtime **outside** the capsule | Capsule is configuration |
 
-## The one deployable app
-
-| App | Path | Framework | Runtime | Status |
-| --- | --- | --- | --- | --- |
-| Golden-path web | `projects/internal/golden-path/apps/web/` | Next.js (App Router) | Node.js | Baseline demonstrator |
-
-Golden-path web is the default and only deployable unit. It mounts the
-package-owned typed Hono API under `/api` and renders a server-first "readiness
-desk" that proves the typed Database → API → Web flow with one safe demo record.
-See [Golden-path web](golden-path-web.md).
-
-## "App-like" surfaces that are not deployable units
-
-The optional capability packs define *shell* manifests for desktop and browser
-extension applications, but none is a runtime deployable in this repo today:
-
-- **Electron** (`tools/capabilities/manifests/electron.json`) and **WXT**
-  (`tools/capabilities/manifests/wxt.json`) describe a `projects/<domain>/<capsule>/apps/desktop/`
-  and `projects/<domain>/<capsule>/apps/extension/` boundary that a project must opt into
-  and implement. No project currently activates them.
-
-These are activated through the capability workflow, not bundled into the baseline
-runtime. See [Capability packs](../features/capability-packs.md).
-
-## Key source files
-
-- `projects/internal/golden-path/apps/web/src/app/page.tsx` — the server-first page
-- `projects/internal/golden-path/apps/web/src/app/api/[[...route]]/route.ts` — mounts the Hono API
-- `projects/internal/golden-path/apps/web/src/app/api/webhooks/stripe/route.ts` — Stripe webhook bound to static scope
-- `projects/internal/golden-path/apps/web/src/components/demo-form.tsx` — the smallest client leaf
-- `projects/internal/golden-path/apps/web/AGENTS.md` — the web boundary contract
-
-## Integration points
-
-- **Shared packages** consumed: `@safrs/api`, `@safrs/database`, `@safrs/env`,
-  `@safrs/ui`, `@safrs/telemetry`, `@safrs/config`, `@sentra/token`, and
-  `@safrs/schemas` (transitively).
-- **API**: mounts `@safrs/api` under `/api` — see [API overview](../api/index.md).
-- **Design tokens**: every rendered surface consumes `@sentra/token` — see
-  [Design tokens](../features/design-tokens.md).
-- **Governance**: the app's packages and config are sensitive/shared paths — see
-  [SAFRS governance](../features/safrs-governance.md).
+Capability packs still describe optional Electron/WXT shells for **root-scaffolded** projects. SentraBot already has a real Electron app inside its own capsule — that is not the root capability pack.
 
 ## Related
 
+- [Projects](../projects/index.md)
 - [Golden-path web](golden-path-web.md)
 - [API overview](../api/index.md)
-- [Packages overview](../packages/index.md)

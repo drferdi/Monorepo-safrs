@@ -1,8 +1,10 @@
 # Telemetry (`@safrs/telemetry`)
 
+> **Scope.** Optional OpenTelemetry for the **golden-path** Next.js → Hono → Prisma chain. Not SentraBot/Kediri/Avery observability.
+
 ## Purpose
 
-Shared OpenTelemetry instrumentation for the `Next.js → Hono → Prisma → PostgreSQL` chain. It initializes the Node SDK with an OTLP trace exporter, HTTP instrumentation, and Prisma query tracing, and it exposes a Hono middleware that opens a root span per request. The package is server-only — it must never be imported from browser code.
+OpenTelemetry Node SDK (OTLP HTTP traces, HTTP + Prisma instrumentation) and a Hono middleware that opens a root span per request. Server-only — never import from browser code.
 
 ## Key source files
 

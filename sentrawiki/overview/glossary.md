@@ -1,33 +1,36 @@
 # Glossary
 
-Project-specific terms used throughout the SAFRS Monorepo.
+Project-specific terms. Prefer these over inventing synonyms.
 
 | Term | Definition |
 | --- | --- |
-| **SAFRS** | Sentra Agent-First Repository Standard. The governance specification defining how a repository should be structured when AI agents participate in engineering. Current version: v1.1. |
-| **Chief** | Dr. Ferdi Iskandar, the solo developer and human authority for the repository. |
-| **Golden path** | The default reference application proving the typed Database to API to Web flow with one safe demo record. Lives at `projects/internal/golden-path/apps/web`. |
-| **R0** | Read-only analysis. No mutation allowed. |
-| **R1** | Reversible local change. Scoped mutation with standard verification. |
-| **R2** | Boundary-affecting change. Requires designated human or code-owner review. |
-| **R3** | High-impact change. Requires explicit human authorization before execution. Agent may prepare but not self-authorize. |
-| **Project capsule** | A self-contained context boundary for one project, including `AGENTS.md`, README, docs, src, and tests. Defined in `docs/governance/SAFRS_PROJECT_CAPSULES.md`. |
-| **Capability pack** | An optional feature module (Stripe, email, Electron, WXT, AI, Python) that can be activated per project via `pnpm capability:add`. |
-| **Design tokens** | Sentra semantic tokens in `@sentra/token`. Raw colour values are forbidden outside `packages/token/src/tokens.css`. Enforced by `scripts/check-tokens.mjs`. |
-| **Document registry** | Machine-readable index at `.safrs/document-registry.json` tracking every canonical, reference, plan, and ADR document with status and normativity. |
-| **Sensitive paths** | File patterns classified as R2 or higher in `.safrs/sensitive-paths.json`. Changes to these paths trigger enhanced review. |
-| **Tool inventory** | Machine-readable inventory at `.safrs/tool-inventory.json` recording every approved tool, its purpose, data scope, and review status. |
-| **Verification control** | Files that enforce governance: `.safrs/**`, `AGENTS.md`, CI workflows, security tests, architecture checks, `tools/automation/**`. Changes to these are minimum R2. |
-| **Disposable database** | A local or test database that can be safely reset. Must be on `127.0.0.1:54329` with a name ending in `_local` or `_test`. Enforced by `packages/database/src/reset-guard.ts`. |
-| **Correlation ID** | A UUID generated per request and attached to both the response header (`x-correlation-id`) and error envelopes for tracing. |
-| **Agent adapter** | A vendor-specific file (`.cursor/rules/`, `CLAUDE.md`, `.codex/config.toml`) that points at root `AGENTS.md` without duplicating policy. |
-| **HANDOFF** | `.agents/HANDOFF.md`, overwritten each session with current state, work in flight, blockers, and next actions. Machine-enforced by `check_handoff.py`. |
-| **Automation control plane** | The machine-checked enforcement layer (ADR 0002): canonical contracts, monotonic risk, lease chains, PR gates, evidence manifests, approvals, and a publisher identity. Implemented in `tools/automation/`. |
-| **Canonical JSON** | UTF-8, lexicographically sorted keys, preserved array order, no insignificant whitespace, safe integers only. Digests must be byte-identical across Node and Python. Defined in `tools/automation/src/canonical-json.mjs`. |
-| **Monotonic risk** | `effective_risk = max(declared, path, operation, data, capability, actual_diff)`. Agents may raise risk, never lower it. Defined in `tools/automation/src/risk.mjs`. |
-| **Lease event chain** | An append-only NDJSON ledger of `LeaseEventV1` records tracking task ownership transitions (CLAIM, RENEW, TRANSITION, RELEASE) with fencing tokens. Defined in `tools/automation/src/leases.mjs`. |
-| **PR gates** | 8 individually named GitHub Actions checks (contract, lease, risk, budgets, verification, review, evidence, platform) that branch protection can require. Defined in `tools/automation/src/gates.mjs`. |
-| **Evidence manifest** | A content-addressed, redacted, reconstructable record of a task lifecycle: contract digest, lease events, check verdicts, approvals, budget usage, artifact hashes. Defined in `tools/automation/src/evidence.mjs`. |
-| **Publisher identity** | A separated identity that may only request GitHub auto-merge for an exact verified head. It cannot merge, push, approve, bypass rules, or deploy. Defined in `tools/automation/src/publisher.mjs`. |
-| **Shared guard** | A vendor-neutral pre-action decision module (`allow`, `ask`, `deny`, `stop`) shared across all agent adapters. Defined in `tools/automation/src/guard.mjs`. |
-| **Fencing token** | A monotonically incrementing integer in the lease chain. A writer holding an older token must stop before mutating or pushing. |
+| **SAFRS** | Sentra Agent-First Repository Standard. Current version: v1.1. Spec: `SAFRS_SPEC.md`. |
+| **Chief** | Dr. Ferdi Iskandar — the human authority for this repository. |
+| **Control plane** | The repository root: policy, orchestration, verification. Optional for capsule survival. |
+| **Project capsule** | A sovereign project at `projects/<domain>/<capsule>/`. Must remain operable after extraction. |
+| **Domain folder** | `projects/<domain>/` — routing only (`AGENTS.md` + `README.md`). No application code. |
+| **Golden path** | Legacy Next.js demonstrator proving Database → API → Web with one demo record. `projects/internal/golden-path`. Not a new-product template. |
+| **Standalone** | Capsule lifecycle (`install`, `build`, `test`, `run`, `deployDryRun`) succeeds after extraction. Structural check + empirical extraction. ADR 0006. |
+| **R0** | Read-only analysis. |
+| **R1** | Reversible local change. |
+| **R2** | Boundary-affecting change. Designated review. |
+| **R3** | High-impact change. Explicit human authorization before execution. Agent may prepare only. |
+| **Capability pack** | Optional module (Stripe, email, Electron, WXT, AI, Python) via `pnpm capability:add`. Root convenience; not a capsule runtime requirement. |
+| **Design tokens** | Sentra semantic tokens. Capsules must own or pin them; extraction must not resolve `packages/token`. |
+| **Document registry** | `.safrs/document-registry.json` — status and read-order for canonical docs. Generates the AGENTS.md routing block. |
+| **Sensitive paths** | Patterns in `.safrs/sensitive-paths.json` classified R2+. |
+| **Tool inventory** | `.safrs/tool-inventory.json` — approved tools, data scope, review status. |
+| **Verification control** | Files that enforce governance (`.safrs/**`, `AGENTS.md`, CI, `tools/automation/**`, checkers). Changes are minimum R2. |
+| **Disposable database** | Local/test Postgres that the reset guard will allow. Root demo: `127.0.0.1:54329`, name ending `_local` or `_test`. |
+| **HANDOFF** | `.agents/HANDOFF.md` — current session state, overwritten each session. Enforced by `check_handoff.py`. |
+| **Automation control plane** | ADR 0002 machine-checked contracts, leases, gates, evidence, publisher. `tools/automation/`. |
+| **Canonical JSON** | UTF-8, sorted keys, preserved array order, no insignificant whitespace. Digests identical across Node and Python. |
+| **Monotonic risk** | `effective_risk = max(declared, path, operation, data, capability, actual_diff)`. Agents may raise, never lower. |
+| **Lease event chain** | Append-only NDJSON of ownership events with fencing tokens. Lives in the git common dir, not in `.safrs/`. |
+| **Publisher identity** | May only enable auto-merge for an exact verified head. Cannot merge, push, approve, or deploy. |
+| **Shared guard** | Vendor-neutral pre-action decision: allow / ask / deny / stop. |
+| **Fencing token** | Monotonic integer on a lease. Stale holders must stop. |
+| **Wiki** | `sentrawiki/` — derived navigation. Not canonical. |
+| **SPDS** | Sentra Project Documentation Standard 1.0 — per-capsule professional docs (`docs/spds/`), distinct from this wiki. |
+
+Shorter collaboration glossary: `.agents/knowledge/10_GLOSSARY.md`.

@@ -1,10 +1,12 @@
 # Database (`@safrs/database`)
 
+> **Scope.** Root workspace package for the **legacy golden-path** demo (Postgres `safrs_local` on `127.0.0.1:54329`). It is **not** the database for SentraBot, Kediri, Avery, or Smartboard. Those capsules own their own schemas. New capsules must not import this package (ADR 0006).
+
 ## Purpose
 
-The single database boundary: Prisma 7 + PostgreSQL with a generated client, a hardened **reset guard**, and a deterministic local seed. It is the only place `DATABASE_URL` is turned into a live client, and it is the only package allowed to touch the Prisma schema and migrations.
+Prisma 7 + PostgreSQL client, reset guard, and a deterministic local seed for the golden-path demo. In the **root** workspace it is the only package allowed to touch **this** Prisma schema and these migrations.
 
-Because the database is a shared boundary, migrations and schema changes are R2; production data and destructive production operations are R3 and may only be *prepared* until the Chief explicitly authorizes execution (`packages/database/AGENTS.md`).
+Migrations and schema changes here are R2. Production data and destructive production operations are R3 and may only be prepared until Chief authorizes execution (`packages/database/AGENTS.md`).
 
 ## Key source files
 
@@ -21,9 +23,15 @@ Because the database is a shared boundary, migrations and schema changes are R2;
 
 ## Data model
 
-`packages/database/prisma/schema.prisma` uses the `prisma-client` generator (`engineType = "client"`, ESM output into `src/generated/prisma`) and a PostgreSQL datasource:
+`packages/database/prisma/schema.prisma` uses the `prisma-client` generator (`engineType = "client"`, ESM output into `src/generated/prisma`) and a PostgreSQL datasource.
 
-- **`Demo`** — `id` (uuid PK, DB-generated default), `name` (unique), `createdAt` (timestamptz, default now). Maps to table `demos`.
+Models present in the schema today:
+
+| Model | Role |
+| --- | --- |
+| `Demo` | Golden-path demo record (`demos`) |
+| `User`, `Session`, `Account`, `Verification` | Better Auth tables (golden-path AGENTS lists auth as a non-goal; schema leftover) |
+| `SentraBotDeploymentSettings`, `SentraBotBot`, `SentraBotThread`, `SentraBotThreadMessage`, `SentraBotMemoryDocument`, `SentraBotRoutine` | Product tables left in the **root** schema. Live SentraBot persistence is `projects/product/sentrabot/packages/db`. Treat these root models as a sovereignty defect, not as SentraBot's database. |
 
 ## The reset guard
 

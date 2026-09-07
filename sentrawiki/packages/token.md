@@ -1,10 +1,14 @@
 # Token (`@sentra/token`)
 
+> **Scope.** Root **authoring** source for Sentra tokens. ADR 0006: a standalone capsule must own a local snapshot or pin an independently distributable version. Extraction must not resolve `packages/token`. Root `scripts/check-tokens.mjs` is a root gate, not a capsule lifecycle command.
+
 ## Purpose
 
-The Sentra design token package and the enforced source of visual truth for every rendered surface in the repository. **Any agent building UI must consume these tokens** — raw colour or radius values are forbidden outside `packages/token/src/tokens.css`. This is machine-enforced by `node scripts/check-tokens.mjs` (raw-value scan + WCAG 2.2 AA contrast recomputation), which runs as part of the governance gate.
+Sentra design tokens. Agents building UI must use approved Sentra tokens. Raw colour or radius values are forbidden outside the owning token file (`packages/token/src/tokens.css` in the root authoring tree, or the capsule-local equivalent).
 
-The package was ported verbatim from `abyss-monorepo/packages/token` (Sentraverse Foundation Tokens v1.0). Token values and their measured contrast annotations are the source of truth; do not re-derive them.
+Root enforcement: `node scripts/check-tokens.mjs` (raw-value scan + WCAG 2.2 AA contrast). `packages/token/scope.txt` currently lists `packages/token`, `packages/ui`, golden-path web, academic-smartboard apps, and `projects/product/sentrabot/apps/web/src`. SentraBot is excluded from the root pnpm workspace; do not assume that scope line means SentraBot runtime-depends on this package.
+
+Ported from `abyss-monorepo/packages/token` (Sentraverse Foundation Tokens v1.0). Do not re-derive measured contrast annotations.
 
 ## Key source files
 

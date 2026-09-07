@@ -114,7 +114,7 @@ A contribution is done when all of the following hold:
 
 1. The task, if a mutation, is claimed and its registry state reflects reality.
 2. The smallest viable change fully solves the task within its declared scope prefixes.
-3. Verification passes: `pnpm governance` (PASS), plus lint, typecheck, and the affected tests/builds.
+3. Verification passes for the **actual scope**: capsule-local lifecycle when the work is in a capsule; `pnpm governance` when the work is root/governance/integration. Do not treat root `pnpm governance` as a capsule prerequisite. Plus lint, typecheck, and the affected tests/builds.
 4. Verification controls were not weakened to obtain a pass (no deleted assertions, widened ignores, skipped tests, lowered thresholds, or disabled gates).
 5. `.agents/HANDOFF.md` is updated, and durable decisions/lessons are recorded where applicable.
 6. R2 changes have designated review; R3 changes have explicit human authorization.

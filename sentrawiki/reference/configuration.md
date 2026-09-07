@@ -1,6 +1,8 @@
 # Configuration reference
 
-This page documents the repository's normalized configuration. Values come directly from the files named in each section.
+> **Scope.** Root control-plane and golden-path configuration. Excluded capsules have their own lockfiles, biome, tsconfig, and compose files.
+
+This page documents the repository's **root** normalized configuration. Values come from the files named in each section.
 
 ## Environment variables
 
@@ -59,18 +61,20 @@ Root scripts map to `biome check` (`pnpm lint`) and `biome check --write` (`pnpm
 
 ## pnpm-workspace.yaml — catalog
 
-`pnpm-workspace.yaml` declares the workspace packages:
+`pnpm-workspace.yaml` declares the **root** workspace packages:
 
-- `projects/*/apps/*` — deployable applications.
-- `packages/*` — shared packages.
+- `projects/*/*/apps/*` — apps two levels under `projects/` (ADR 0005).
+- Negations: `!projects/academic/academic-smartboard/**`, `!projects/product/kediri-history/**`, `!projects/product/sentrabot/**`.
+- `packages/*` — root shared packages.
 - `tools/*` — developer tooling.
 
-It pins every dependency version in a `catalog:` block (single source of truth for versions, see [Dependencies](dependencies.md)), allows a small set of postinstall/build scripts (`@prisma/engines`, `esbuild`, `prisma`, `protobufjs`, `sharp`), and exempts `resend@6.19.0` and `stripe@22.5.0` from the minimum-release-age check. Package manager is `pnpm@11.21.0`, Node `>=24.18 <25`.
+The `catalog:` block is the version pin for **root workspace members only**. Excluded capsules pin versions in their own lockfiles. `allowBuilds` is a small trusted set. `minimumReleaseAge` is 1440 minutes; `resend@6.19.0` and `stripe@22.5.0` are exempt. Package manager `pnpm@11.21.0`, Node `>=24.18.0 <25`.
 
 ## Docker Compose
 
-- **`compose.yaml`** — local PostgreSQL 17 (`postgres:17-alpine`) named `safrs_local`, user/password `safrs`, exposed on `127.0.0.1:54329:5432`, with a `pg_isready` healthcheck and a `postgres_data` volume. Started via `pnpm db:start`.
-- **`compose.telemetry.yaml`** — optional local Jaeger collector (`jaegertracing/all-in-one:1.62`) for distributed-trace inspection, exposing the UI (`127.0.0.1:16686`) and OTLP gRPC/HTTP ports (`4317`, `4318`). Started via `docker compose -f compose.telemetry.yaml up -d jaeger`.
+- **`compose.yaml`** — local PostgreSQL 17 (`postgres:17-alpine`) named `safrs_local`, user/password `safrs`, exposed on `127.0.0.1:54329:5432`, with a `pg_isready` healthcheck and a `postgres_data` volume. Started via `pnpm db:start`. **Golden-path only.**
+- **`compose.telemetry.yaml`** — optional local Jaeger collector for golden-path traces. UI `127.0.0.1:16686`, OTLP `4317`/`4318`.
+- Capsule compose files (Kediri `infra/docker-compose.yml`, SentraBot `infra/compose/`) are not this file.
 
 ## Related pages
 

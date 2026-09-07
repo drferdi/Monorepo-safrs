@@ -1,8 +1,10 @@
 # Automation Control Plane
 
+> **Scope.** Root SAFRS control plane (`tools/automation/`, ADR 0002). It orchestrates work **on** capsules. It is not a capsule runtime.
+
 ## Purpose
 
-The automation control plane (ADR 0002) is the cross-cutting SAFRS feature that turns an agent's intent into a machine-checked, reconstructable, published change. It extends the local Control Plane v1 with canonical contracts, monotonic risk, serialized remote leases, budget enforcement, PR gates, sealed evidence, content-bound approvals, and a separated publisher identity. Every automated change is reconstructable from durable evidence: contract digest → lease chain → run → checks → approvals → publication.
+The automation control plane (ADR 0002) turns an agent's intent into a machine-checked, reconstructable, published change. It extends the local Control Plane v1 with canonical contracts, monotonic risk, serialized remote leases, budget enforcement, PR gates, sealed evidence, content-bound approvals, and a separated publisher identity. Every automated change is reconstructable from durable evidence: contract digest → lease chain → run → checks → approvals → publication.
 
 Implementation lives in `tools/automation/`; this page describes the feature end to end.
 

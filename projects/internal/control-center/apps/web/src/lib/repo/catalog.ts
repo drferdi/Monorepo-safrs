@@ -366,7 +366,7 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
     name: "Wiki Repository",
     area: "knowledge",
     purpose:
-      "46 halaman penjelasan repository: arsitektur, paket, tool, fitur, keamanan, dan istilah.",
+      "79 halaman penjelasan repository: control plane, kapsul, kedaulatan, paket, tool, fitur, keamanan, dan istilah.",
     userValue: "Penjelasan bahasa manusia untuk setiap bagian repository.",
     whenToUse: "Saat ingin memahami sesuatu sebelum menyentuhnya.",
     entryPoint: "sentrawiki/overview/index.md",
