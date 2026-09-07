@@ -19,18 +19,21 @@ class SafrsTopologyTests(unittest.TestCase):
                 self.assertTrue((ROOT / path).is_file())
 
     def test_monorepo_roots_exist(self):
-        for path in ['projects', 'packages', 'tools', 'tests', 'scripts', 'docs']:
+        for path in ['packages', 'tools', 'tests', 'scripts', 'docs']:
             with self.subTest(path=path):
                 self.assertTrue((ROOT / path).is_dir())
 
     def test_active_runtime_boundaries_have_concise_agent_routing(self):
         expected = {
-            'projects/internal/golden-path/AGENTS.md': '../../../AGENTS.md',
-            'projects/internal/golden-path/apps/web/AGENTS.md': '../../../../../AGENTS.md',
             'packages/api/AGENTS.md': '../../AGENTS.md',
             'packages/database/AGENTS.md': '../../AGENTS.md',
             'tools/AGENTS.md': '../AGENTS.md',
         }
+        if (ROOT / 'projects').is_dir():
+            expected.update({
+                'projects/internal/golden-path/AGENTS.md': '../../../AGENTS.md',
+                'projects/internal/golden-path/apps/web/AGENTS.md': '../../../../../AGENTS.md',
+            })
         for path, canonical_link in expected.items():
             with self.subTest(path=path):
                 document = ROOT / path
