@@ -69,10 +69,15 @@ jobs:
       - name: Type check
         run: pnpm typecheck
       - name: Test contracts and runtime
+        if: hashFiles('projects/internal/golden-path/apps/web/package.json') != ''
         run: pnpm test
+      - name: Test control-plane packages
+        if: hashFiles('projects/internal/golden-path/apps/web/package.json') == ''
+        run: pnpm turbo run test
       - name: Build
         run: pnpm build
       - name: Browser smoke
+        if: hashFiles('projects/internal/golden-path/apps/web/package.json') != ''
         run: pnpm test:e2e
       - name: Preserve browser evidence on failure
         if: failure()
