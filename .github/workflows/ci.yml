@@ -68,7 +68,11 @@ jobs:
       - name: Lint
         run: pnpm lint
       - name: Type check
+        if: hashFiles('packages/database/src/sentrabot/bots.ts') != ''
         run: pnpm typecheck
+      - name: Type check control-plane packages
+        if: hashFiles('packages/database/src/sentrabot/bots.ts') == ''
+        run: pnpm turbo run typecheck --filter=!@safrs/database --filter=!@safrs/api
       - name: Test contracts and runtime
         if: hashFiles('projects/internal/golden-path/apps/web/package.json') != ''
         run: pnpm test
