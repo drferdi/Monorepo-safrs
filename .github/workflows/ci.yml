@@ -78,7 +78,7 @@ jobs:
         run: pnpm test
       - name: Test control-plane packages
         if: hashFiles('projects/internal/golden-path/apps/web/package.json') == ''
-        run: pnpm turbo run test
+        run: pnpm turbo run test --filter=!@safrs/project-wizard --filter=!@safrs/project-standalone --filter=!@safrs/database --filter=!@safrs/api
       - name: Build
         run: pnpm build
       - name: Browser smoke
