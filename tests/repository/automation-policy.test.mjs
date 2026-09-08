@@ -544,9 +544,7 @@ test("Codex formatter extracts unique apply_patch paths", async () => {
   );
   assert.equal(formatter.shouldFormat("README.md"), false);
   assert.equal(
-    formatter.findRepositoryRoot(
-      join(repositoryRoot, "packages/api"),
-    ),
+    formatter.findRepositoryRoot(join(repositoryRoot, "packages/api")),
     repositoryRoot,
   );
 });
