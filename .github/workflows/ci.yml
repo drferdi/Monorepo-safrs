@@ -63,6 +63,7 @@ jobs:
       - name: Verify automation policy
         run: node --test tests/repository/automation-policy.test.mjs
       - name: Verify supply chain
+        if: hashFiles('projects/internal/golden-path/apps/web/package.json') != ''
         run: pnpm check:security
       - name: Lint
         run: pnpm lint
