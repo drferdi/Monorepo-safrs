@@ -10,7 +10,9 @@
     "lint": "biome check src tests e2e",
     "typecheck": "tsc --project tsconfig.json",
     "test": "vitest run",
-    "e2e": "playwright test --config playwright.config.ts"
+    "e2e": "playwright test --config playwright.config.ts",
+    "e2e:production": "node ../../scripts/run-production-motion.mjs",
+    "e2e:production:built": "playwright test --config playwright.production.config.ts"
   },
   "dependencies": {
     "@faceless-ui/modal": "3.0.0",

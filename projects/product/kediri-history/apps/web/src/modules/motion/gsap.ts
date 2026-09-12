@@ -1,3 +1,4 @@
+import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
@@ -5,6 +6,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 
 import { CUSTOM_EASES } from "./tokens";
+
+// `useGSAP` adalah plugin GSAP: daftarkan saat modul klien dievaluasi, sebelum
+// komponen mana pun dapat memanggil hook-nya.
+gsap.registerPlugin(useGSAP);
 
 /**
  * Registrasi GSAP terpusat (Sentra-GSAP: daftarkan plugin sekali di satu modul
