@@ -29,7 +29,7 @@ arsip `abyss-monorepo` (ADR 0003; spec:
 
 | App | Status |
 | --- | --- |
-| `apps/web` (aplikasi utama) | di-port (sub-fase 2/5 — jadwal, sesi+eval/CP, kurikulum+reading pane, perkembangan; Task 16 formal/isolation masih terbuka) |
+| `apps/web` (aplikasi utama) | di-port (sub-fase 2/5 COMPLETED — jadwal, sesi+eval/CP, kurikulum trio+reading pane, perkembangan; sub-fase 3–5 / api / demo masih terbuka) |
 | `apps/site` (promo/publik) | di-port |
 | `apps/api` (backend) | belum di-port |
 | `apps/demo` (environment demo) | belum dibuat |
@@ -46,9 +46,8 @@ Website promo/publik El-Kayyisa: Next.js 16, static export (`output: "export"`),
 10 route. Detail arsitektur, data, dan verifikasi ada di
 `docs/architecture.md`, `docs/data.md`, `docs/testing.md`.
 
-## `apps/web` — aplikasi bimbel utama (sub-fase 1/5)
+## `apps/web` — aplikasi bimbel utama (sub-fase 1–2/5)
 
-Sub-fase 1 (fondasi): scaffold Next.js 16 static export, auth cookie-session
-terhadap backend arsip, shell ber-navigasi role-aware, dan satu halaman data
-nyata (Master › Murid). Detail arsitektur, data, dan verifikasi ada di
-`docs/architecture.md`, `docs/data.md`, `docs/testing.md`.
+Sub-fase 1 (fondasi) + sub-fase 2 (penjadwalan + akademik) sudah di-port.
+Detail: `docs/architecture.md`, `docs/data.md`, `docs/testing.md`. Plan
+sub-fase 2: `docs/plans/completed/2026-08-22-smartboard-web-subphase2-akademik.md`.

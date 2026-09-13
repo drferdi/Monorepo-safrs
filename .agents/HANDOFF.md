@@ -1,20 +1,25 @@
-# HANDOFF — Current State and Next Action
-
-> Overwrite each session. Keep under ~1k tokens.
-> **BINDING:** `.agents/BOUNDARIES.md` — no push without an explicit Chief order in THIS session; local/origin histories are unrelated.
-
-Last updated: 2026-09-13 (Smartboard sub-fase 2 — reading pane + evaluasi paritas)
+Last updated: 2026-09-13 (Smartboard web sub-fase 2 CLOSED)
 
 ## Current state
 
-- **Workstream:** lanjut tutup sub-fase 2 Smartboard (CurriculumReadingPane, evaluasi labels arsip, CurriculumPhaseBanner).
-- **Commits lokal sebelumnya (belum push):** `fa5dcdb`, `d1f4c97`. Perubahan reading pane / evaluasi / banner **belum di-commit**.
-- **Smartboard tetap BELUM complete** (sub-fase 3–5, api, demo, Task 16 isolation formal).
-- Local `main` vs `origin/main` unrelated; **jangan push** tanpa filtered publish.
+- **Sub-fase 2 `apps/web`:** COMPLETED (port + Task 16 docs/verify). Plan di
+  `docs/plans/completed/2026-08-22-smartboard-web-subphase2-akademik.md`.
+  Roadmap baris 2 COMPLETED.
+- **Commits lokal (belum push):** `fa5dcdb`, `d1f4c97`, `791f02d`, + commit
+  tutup keselarasan/cakupan + Task 16 (lihat `git log`).
+- **Verifikasi capsule:** unit **59 PASS**, typecheck PASS, build PASS,
+  `test:build` **12 PASS**. Grep keamanan: bersih; `process.env` hanya
+  `NEXT_PUBLIC_BACKEND_URL` + `NEXT_PUBLIC_DEV_TENANT_SLUG`.
+- **Smartboard produk tetap BELUM complete:** sub-fase 3–5 web, `apps/api`,
+  `apps/demo`, orphan Dashboard/Pengajar/Tutorial.
+- Local `main` vs `origin/main` unrelated setelah rewrite; **jangan push**
+  tanpa filtered publish + capsule gate.
+- Working tree bisa kotor di path **luar** smartboard — jangan campur commit.
 
 ## Next action
 
-1. Commit scoped perubahan reading pane + evaluasi + banner bila Chief setuju.
-2. Task 16: docs capsule penuh + isolation copy-out `%TEMP%`.
-3. Atau mulai tulis plan sub-fase 3 (payroll).
-4. Jangan `git push origin main` (BOUNDARIES).
+1. Chief: E2E manual vs backend FastAPI arsip (login → jadwal → sesi → eval →
+   perkembangan → trio kurikulum); uji negatif role `murid_ortu`.
+2. Tulis/eksekusi plan **sub-fase 3** (payroll + finance), atau isolation
+   install ulang di `%TEMP%` bila ingin bukti install-from-copy.
+3. Jangan `git push origin main` tanpa BOUNDARIES filtered publish.

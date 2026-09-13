@@ -3,10 +3,12 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-- **Status:** ACTIVE — disetujui Chief 2026-09-13; eksekusi TDD di capsule mandiri (tanpa root `catalog:`).
+- **Status:** COMPLETED — 2026-09-13 (port web sub-fase 2 + Task 16 docs/verify; E2E manual + push tetap milik Chief).
 - **Owner:** Chief
 - **Roadmap:** `docs/plans/active/2026-08-21-smartboard-web-roadmap.md` (baris 2/5)
 - **Pendahulu:** `docs/plans/completed/2026-08-21-smartboard-web-subphase1-foundation.md` (COMPLETED — scaffold, auth, shell, Master › Murid)
+
+**Catatan eksekusi (2026-09-13):** Dependensi `recharts`/`sonner` dipin di capsule (bukan root `catalog:`). Route dinamis memakai sentinel `generateStaticParams` `placeholder`. Keselarasan/cakupan diperdalam ke paritas arsip (matriks + coverage + reading pane). Verifikasi capsule: 59 unit PASS, typecheck/build/`test:build` PASS. Grep keamanan bersih.
 
 **Goal:** Port 8 halaman penjadwalan + akademik dari `frontend/` arsip (~5.219 baris halaman + ~880 baris komponen/lib pendukung) ke `projects/academic/academic-smartboard/apps/web`, memakai fondasi sub-fase 1 (axios cookie-session, `ProtectedRoute`, `AppShell`, `DataTable`, primitif token) — sampai seorang pengajar bisa: melihat jadwal mingguan, membuka daftar sesi, membuka satu sesi, mengisi absensi + evaluasi, lalu melihat perkembangan murid dan peta kurikulum, semuanya terhadap backend FastAPI arsip.
 

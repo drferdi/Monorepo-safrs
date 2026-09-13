@@ -161,8 +161,20 @@ export type CurriculumStatus = {
   [key: string]: unknown;
 };
 
+export type CurriculumStructurePhaseSubject = {
+  subject: string;
+  cp_count?: number;
+  tp_count?: number;
+};
+
+export type CurriculumStructurePhase = {
+  phase: string;
+  subjects?: CurriculumStructurePhaseSubject[];
+};
+
 export type CurriculumStructure = {
-  phases?: Record<string, string[]>;
+  /** Backend arsip: array `{ phase, subjects[] }`; bentuk record tetap ditoleransi. */
+  phases?: CurriculumStructurePhase[] | Record<string, unknown>;
   [key: string]: unknown;
 };
 
@@ -188,13 +200,68 @@ export type CurriculumOutcome = {
   [key: string]: unknown;
 };
 
+export type CurriculumAlignmentGrade = {
+  grade_id: string;
+  name: string;
+  stage: string;
+  order?: number;
+  phase?: string;
+};
+
+export type CurriculumAlignmentSubject = {
+  subject_id: string;
+  name: string;
+  stage: string;
+};
+
+export type CurriculumAlignmentCell = {
+  subject_id: string;
+  grade_id: string;
+  phase?: string;
+  cp_count: number;
+  element_count: number;
+};
+
 export type CurriculumAlignment = {
-  cells?: Array<Record<string, unknown>>;
+  grades?: CurriculumAlignmentGrade[];
+  subjects?: CurriculumAlignmentSubject[];
+  cells?: CurriculumAlignmentCell[];
+  totals?: {
+    national_subjects?: number;
+    national_cp?: number;
+    national_elements?: number;
+    bimbel_subjects?: number;
+    bimbel_grades?: number;
+    cells: number;
+    cells_with_guidance: number;
+  };
   [key: string]: unknown;
 };
 
+export type CurriculumCoverageCp = {
+  learning_outcome_code: string;
+  element_name?: string;
+  taught_count: number;
+  last_taught_at?: string | null;
+};
+
 export type CurriculumCoverage = {
-  items?: Array<Record<string, unknown>>;
+  subject?: {
+    subject_id?: string;
+    name: string;
+    stage?: string;
+    offered?: boolean;
+  };
+  grade?: {
+    grade_id: string;
+    name: string;
+    phase?: string;
+  };
+  cps?: CurriculumCoverageCp[];
+  totals?: {
+    cp_total: number;
+    cp_taught: number;
+  };
   [key: string]: unknown;
 };
 

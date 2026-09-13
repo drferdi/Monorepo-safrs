@@ -26,22 +26,24 @@ Record the exact build, lint, type-check, unit, integration, and end-to-end comm
     belum ada.
   - `lint` — Biome (`biome check src`).
   - `typecheck` — `tsc --project tsconfig.json`.
-- `apps/web` (`@sentra/smartboard-web`) sub-fase 1/5, dari
-  `pnpm --filter @sentra/smartboard-web <script>`:
-  - `test` — Vitest, unit logic murni, TANPA render DOM/React Testing
-    Library: `cn.test.ts` (util merge class), `api.test.ts` (client axios,
-    mock), `auth.test.ts` (reducer state machine `authReducer`),
-    `nav.test.ts` (filter `filterByRole`). RTL + `jsdom` sengaja belum
-    ditambah sub-fase ini (Keputusan terbuka #5, plan sub-fase 1) — kalau
-    Chief mau rendering test, itu keputusan cross-cutting terpisah untuk
-    semua app, bukan satu-off `apps/web`; sampai saat itu, rendering
-    dicek manual lewat dev server.
-  - `test:build` — `node --test tests/build-output.test.mjs`: assert 3
-    route sub-fase 1 (`/`, `/login`, `/master/murid`) diekspor ke
-    `out/<route>/index.html`. Jalankan build (`pnpm --filter
-    @sentra/smartboard-web build`) dulu kalau `out/` belum ada.
+- `apps/web` (`@sentra/smartboard-web`) sub-fase 1–2/5, dari
+  `pnpm --filter @sentra/smartboard-web <script>` (atau dari capsule root
+  setelah isolasi):
+  - `test` — Vitest, unit logic murni, TANPA React Testing Library: labels,
+    week, curriculum phase/alignment/coverage/structure/reading, progression,
+    sessionDetail, api `buildQuery`, nav, auth reducer, cn. RTL + `jsdom`
+    sengaja belum ditambah (Keputusan terbuka plan — rendering dicek manual /
+    E2E Chief terhadap backend arsip).
+  - `test:build` — `node --test tests/build-output.test.mjs`: assert **12**
+    route sub-fase 1+2 diekspor ke `out/<route>/index.html` (termasuk
+    `/sesi/placeholder`, `/akademik/perkembangan/placeholder`). Jalankan
+    `build` dulu kalau `out/` belum ada.
   - `lint` — Biome (`biome check src`), sama seperti `apps/site`.
-  - `typecheck` — `tsc --project tsconfig.json`, sama seperti `apps/site`.
+  - `typecheck` — `tsc --project tsconfig.json`.
+  - Verifikasi terakhir (2026-09-13): unit **59 PASS**, typecheck PASS,
+    build PASS, `test:build` **12 PASS**. Audit grep: tidak ada
+    `dangerouslySetInnerHTML` / `localStorage` / `eval`; `process.env` hanya
+    `NEXT_PUBLIC_BACKEND_URL` + `NEXT_PUBLIC_DEV_TENANT_SLUG`.
 
 ## Rencana test fase port
 

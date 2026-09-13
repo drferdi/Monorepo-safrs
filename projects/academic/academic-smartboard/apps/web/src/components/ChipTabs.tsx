@@ -5,13 +5,19 @@ export function ChipTabs({
   options,
   value,
   onChange,
+  ariaLabel,
 }: {
   options: Array<{ id: string; label: string; testId?: string }>;
   value: string;
   onChange: (id: string) => void;
+  ariaLabel?: string;
 }) {
   return (
-    <div role="tablist" className="flex flex-wrap gap-(--space-2)">
+    <div
+      role="tablist"
+      aria-label={ariaLabel}
+      className="flex flex-wrap gap-(--space-2)"
+    >
       {options.map((opt) => {
         const pressed = opt.id === value;
         return (

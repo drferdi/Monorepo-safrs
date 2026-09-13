@@ -9,7 +9,7 @@
 | # | Sub-fase | Halaman arsip tercakup | Plan | Status |
 | --- | --- | --- | --- | --- |
 | 1 | Fondasi: scaffold, auth, shell, 1 modul master data (vertical proof) | Login, TutorActivation, OwnerActivation, shell/nav, Master › Murid | `docs/plans/completed/2026-08-21-smartboard-web-subphase1-foundation.md` | COMPLETED (Task 1–12 selesai penuh, merge+push ke main; TutorActivation/OwnerActivation ditunda ke sub-fase 4 per plan) |
-| 2 | Penjadwalan + akademik | Jadwal, Sesi(List/Detail), Evaluasi, Kurikulum, KurikulumSelaras, KurikulumCakupan, PerkembanganMurid | `docs/plans/active/2026-08-22-smartboard-web-subphase2-akademik.md` | ACTIVE — inti + eval/CP + CurriculumReadingPane; Task 16 (docs/isolation formal) masih terbuka |
+| 2 | Penjadwalan + akademik | Jadwal, Sesi(List/Detail), Evaluasi, Kurikulum, KurikulumSelaras, KurikulumCakupan, PerkembanganMurid | `docs/plans/completed/2026-08-22-smartboard-web-subphase2-akademik.md` | COMPLETED (2026-09-13 — port + Task 16 docs/verify; E2E manual Chief vs backend arsip; push/filtered publish terpisah) |
 | 3 | Payroll + finance | RekapHonor, Payroll, Pembayaran, Tarif, Lembur, Finance (tuition) | belum ditulis | belum dimulai |
 | 4 | Komunikasi + operasional | TutorActivation, OwnerActivation, Komunikasi, Pengumuman, JournalEntry (di dalam Perkembangan), Tasks, Laporan, sisa 6 halaman Master (`tim`, `orang-tua`, `sekolah`, `mata-pelajaran`, `jenjang`, `tahun-ajaran`) | belum ditulis | belum dimulai |
 | 5 | Admin platform + Kayyisa AI | HakAkses, TutorDirectory, TemplateEvaluasi, AuditLog, Persetujuan, PlatformConsole (+AuditTab, PlansTab), widget chat Kayyisa | belum ditulis | belum dimulai |

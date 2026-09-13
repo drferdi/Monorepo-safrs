@@ -20,7 +20,7 @@ Record actual data classes, ownership, retention, privacy constraints, environme
   10 halaman) — publik, R1
 - `apps/site/public/`: 6 gambar webp artikel wawasan hasil optimasi
   (504K total) — publik, R1
-- `apps/web/` sub-fase 1: kode aplikasi saja (komponen, lib, test unit) —
+- `apps/web/` sub-fase 1–2: kode aplikasi saja (komponen, lib, test unit) —
   nol data pribadi/nyata disimpan di repo ini, lihat bagian `apps/web` di
   bawah
 
@@ -38,17 +38,30 @@ bagian `tentang` tidak punya field gambar) sampai ada konfirmasi tertulis
 dari Chief. `public/` hanya memuat 6 gambar webp artikel wawasan hasil
 optimasi (504K total), tanpa foto orang.
 
-## `apps/web` — data (sub-fase 1/5)
+## `apps/web` — data (sub-fase 1–2/5)
 
-Sub-fase 1 **tidak menyentuh data pribadi nyata** — repo ini menyimpan nol
-record siswa/tentor/keluarga. Halaman Master › Murid memanggil
-`GET /api/students` pada backend arsip (FastAPI + MongoDB, dijalankan
-manual, dev-only, terpisah dari monorepo ini) saat runtime di browser;
-respons hanya ada di memori client selama sesi, tidak pernah ditulis ke
-disk atau di-commit. Test unit (`api.test.ts`) memakai mock `axios`, bukan
-data nyata.
+Sub-fase 1–2 **tidak menyentuh data pribadi nyata di repo** — tidak ada
+record siswa/tentor/keluarga di-commit. Halaman memanggil backend FastAPI
+arsip (dev-only, di luar monorepo) lewat `NEXT_PUBLIC_BACKEND_URL`; respons
+hanya di memori client selama sesi. Test unit memakai mock / fungsi murni,
+bukan data nyata.
 
-Kalau sub-fase berikutnya (2-5) butuh sampel data arsip untuk fixture/test,
+Endpoint yang dipanggil `apps/web` (sub-fase 1–2), selain auth/students
+fondasi:
+
+| Area | Endpoint (relatif `/api`) |
+| --- | --- |
+| Jadwal | `GET/POST/PUT/DELETE /schedules` |
+| Sesi | `GET /sessions`, `GET /sessions/{id}`, attendance/verify/cancel/reschedule, evaluations draft/submit, tutor check-in/out, attendance catch-up |
+| Master pendukung | `GET /tutors`, `/subjects`, `/schools`, `/grade-levels` |
+| Kurikulum | `GET /curriculum/status\|structure\|outcomes\|alignment\|coverage` |
+| Perkembangan | `GET /students/{id}/progression` |
+
+**Belum dipanggil (carve-out):** jurnal kolaboratif, trajectory Kayyisa —
+penanda komentar di detail perkembangan; endpoint jurnal/AI menunggu
+sub-fase 4/5.
+
+Kalau sub-fase berikutnya butuh sampel data arsip untuk fixture/test,
 aturan karantina `raw_data/` di bawah tetap berlaku penuh — sampel HARUS
 disintesis/dianonimkan, bukan disalin dari `raw_data/` arsip.
 
