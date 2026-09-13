@@ -5,11 +5,15 @@ import { type ReactNode, useEffect } from "react";
 import { useAuth } from "../lib/auth.tsx";
 import type { Role } from "../lib/nav.ts";
 
+/**
+ * roles undefined/empty = any authenticated user (arsip: /sesi, /evaluasi).
+ * roles populated = must match (arsip ProtectedRoute).
+ */
 export function ProtectedRoute({
   roles,
   children,
 }: {
-  roles: Role[];
+  roles?: Role[];
   children: ReactNode;
 }) {
   const { status, user } = useAuth();
@@ -25,11 +29,11 @@ export function ProtectedRoute({
     return null;
   }
 
-  if (status === "unauthenticated") {
+  if (status === "unauthenticated" || !user) {
     return null;
   }
 
-  if (!roles.includes(user.role)) {
+  if (roles && roles.length > 0 && !roles.includes(user.role)) {
     return (
       <main className="flex min-h-screen items-center justify-center px-(--space-4)">
         <p

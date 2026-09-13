@@ -5,7 +5,20 @@ import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
 const out = join(dirname(fileURLToPath(import.meta.url)), "..", "out");
-const ROUTES = ["", "login", "master/murid"];
+const ROUTES = [
+  "",
+  "login",
+  "master/murid",
+  "jadwal",
+  "sesi",
+  "sesi/placeholder",
+  "evaluasi",
+  "akademik/kurikulum",
+  "akademik/keselarasan",
+  "akademik/cakupan",
+  "akademik/perkembangan",
+  "akademik/perkembangan/placeholder",
+];
 
 for (const route of ROUTES) {
   test(`route /${route} diekspor`, () => {

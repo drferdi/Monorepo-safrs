@@ -29,14 +29,16 @@ arsip `abyss-monorepo` (ADR 0003; spec:
 
 | App | Status |
 | --- | --- |
-| `apps/web` (aplikasi utama) | di-port (sub-fase 1/5 — fondasi: scaffold, auth, shell, Master›Murid) |
+| `apps/web` (aplikasi utama) | di-port (sub-fase 2/5 — jadwal, sesi, evaluasi, kurikulum, perkembangan; detail sesi evaluasi/CP masih tipis) |
 | `apps/site` (promo/publik) | di-port |
 | `apps/api` (backend) | belum di-port |
 | `apps/demo` (environment demo) | belum dibuat |
 
 Sudah bermigrasi: `ai/kayyisa/` (knowledge package v3.0.0),
 `data/curriculum/`, `data/reference/`, `apps/site` (website publik El-Kayyisa),
-`apps/web` sub-fase 1 (fondasi).
+`apps/web` sub-fase 1–2 (fondasi + penjadwalan/akademik). Capsule mandiri:
+lockfile + workspace sendiri; `recharts`/`sonner` dipin di `apps/web` (bukan
+root catalog).
 
 ## `apps/site` — website publik El-Kayyisa
 

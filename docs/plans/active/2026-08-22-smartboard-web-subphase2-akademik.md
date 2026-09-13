@@ -3,7 +3,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-- **Status:** PROPOSED — menunggu persetujuan Chief sebelum Task 1 dieksekusi.
+- **Status:** ACTIVE — disetujui Chief 2026-09-13; eksekusi TDD di capsule mandiri (tanpa root `catalog:`).
 - **Owner:** Chief
 - **Roadmap:** `docs/plans/active/2026-08-21-smartboard-web-roadmap.md` (baris 2/5)
 - **Pendahulu:** `docs/plans/completed/2026-08-21-smartboard-web-subphase1-foundation.md` (COMPLETED — scaffold, auth, shell, Master › Murid)
