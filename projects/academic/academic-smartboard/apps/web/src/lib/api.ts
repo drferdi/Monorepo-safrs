@@ -127,8 +127,32 @@ export type LearningSession = {
   notes?: string;
   created_at?: string;
   student_attendance?: StudentAttendance[];
-  tutor_attendance?: Record<string, unknown>;
-  evaluations?: Record<string, unknown>[];
+  tutor_attendance?: {
+    check_in?: string | null;
+    check_out?: string | null;
+    actual_duration_min?: number;
+    status?: string;
+    substitute_tutor_id?: string | null;
+  };
+  evaluations?: Array<{
+    eval_id?: string;
+    student_id: string;
+    competence_status?: string;
+    understanding?: number;
+    focus?: number;
+    participation?: number;
+    independence?: number;
+    overall_score?: number;
+    parent_note?: string;
+    internal_note?: string;
+    [key: string]: unknown;
+  }>;
+  earnings?: {
+    base_amount?: number;
+    incentive?: number;
+    transport?: number;
+    total?: number;
+  };
 };
 
 export type CurriculumStatus = {
@@ -353,10 +377,16 @@ export async function getCurriculumStructure(): Promise<CurriculumStructure> {
   return data;
 }
 
+export type CurriculumOutcomesPage = {
+  items?: CurriculumOutcome[];
+  total_cp?: number;
+  page_size?: number;
+};
+
 export async function listCurriculumOutcomes(
-  query: Record<string, string | undefined> = {},
-): Promise<{ items?: CurriculumOutcome[] } | CurriculumOutcome[]> {
-  const { data } = await apiClient.get<{ items?: CurriculumOutcome[] } | CurriculumOutcome[]>(
+  query: Record<string, string | number | undefined> = {},
+): Promise<CurriculumOutcomesPage | CurriculumOutcome[]> {
+  const { data } = await apiClient.get<CurriculumOutcomesPage | CurriculumOutcome[]>(
     `/curriculum/outcomes${buildQuery(query)}`,
   );
   return data;
