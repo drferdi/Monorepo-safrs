@@ -14,12 +14,14 @@ describe("filterByRole", () => {
   });
 });
 
-describe("NAV_GROUPS sub-fase 2", () => {
-  it("berisi grup Master, Operasional, dan Akademik", () => {
+describe("NAV_GROUPS sub-fase 2+3", () => {
+  it("berisi grup Master, Operasional, Akademik, Pengajar, Keuangan", () => {
     expect(NAV_GROUPS.map((g) => g.label)).toEqual([
       "Master",
       "Operasional",
       "Akademik",
+      "Pengajar",
+      "Keuangan",
     ]);
   });
 
@@ -28,9 +30,17 @@ describe("NAV_GROUPS sub-fase 2", () => {
     expect(jadwal?.roles).toEqual(["owner", "admin_akademik", "tentor"]);
   });
 
-  it("filterByRole: finance melihat kurikulum, tidak melihat jadwal", () => {
+  it("filterByRole: finance melihat kurikulum dan payroll, tidak melihat jadwal", () => {
     const finance = filterByRole(NAV_ITEMS, "finance");
     expect(finance.some((i) => i.href === "/akademik/kurikulum")).toBe(true);
+    expect(finance.some((i) => i.href === "/keuangan/payroll")).toBe(true);
     expect(finance.some((i) => i.href === "/jadwal")).toBe(false);
+  });
+
+  it("tentor melihat rekap honor dan lembur, tidak payroll", () => {
+    const tentor = filterByRole(NAV_ITEMS, "tentor");
+    expect(tentor.some((i) => i.href === "/keuangan/honor")).toBe(true);
+    expect(tentor.some((i) => i.href === "/lembur")).toBe(true);
+    expect(tentor.some((i) => i.href === "/keuangan/payroll")).toBe(false);
   });
 });

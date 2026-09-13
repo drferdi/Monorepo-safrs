@@ -1,24 +1,20 @@
-Last updated: 2026-09-13 (Smartboard web sub-fase 2 CLOSED)
+Last updated: 2026-09-14 (Smartboard web sub-fase 3 payroll CLOSED)
 
 ## Current state
 
-- **Sub-fase 2 `apps/web`:** COMPLETED (port + Task 16 docs/verify). Plan di
-  `docs/plans/completed/2026-08-22-smartboard-web-subphase2-akademik.md`.
-  Roadmap baris 2 COMPLETED.
-- **Commits lokal (belum push):** `fa5dcdb`, `d1f4c97`, `791f02d`, `cedf8a1`.
-- **Verifikasi capsule:** unit **59 PASS**, typecheck PASS, build PASS,
-  `test:build` **12 PASS**. Grep keamanan: bersih; `process.env` hanya
-  `NEXT_PUBLIC_BACKEND_URL` + `NEXT_PUBLIC_DEV_TENANT_SLUG`.
-- **Smartboard produk tetap BELUM complete:** sub-fase 3–5 web, `apps/api`,
+- **Sub-fase 2–3 `apps/web`:** COMPLETED (migrasi dari arsip).
+  - Plan S2: `docs/plans/completed/2026-08-22-smartboard-web-subphase2-akademik.md`
+  - Plan S3: `docs/plans/completed/2026-09-14-smartboard-web-subphase3-payroll.md`
+- **Routes baru:** `/keuangan/honor|payroll|pembayaran|tarif`, `/lembur`
+- **Verifikasi capsule:** unit **71 PASS**, typecheck PASS, build PASS,
+  `test:build` **17 PASS**.
+- **Smartboard produk tetap BELUM complete:** sub-fase 4–5 web, `apps/api`,
   `apps/demo`, orphan Dashboard/Pengajar/Tutorial.
-- Local `main` vs `origin/main` unrelated setelah rewrite; **jangan push**
-  tanpa filtered publish + capsule gate.
-- Working tree bisa kotor di path **luar** smartboard — jangan campur commit.
+- **Jangan push** tanpa filtered publish + capsule gate.
 
 ## Next action
 
-1. Chief: E2E manual vs backend FastAPI arsip (login → jadwal → sesi → eval →
-   perkembangan → trio kurikulum); uji negatif role `murid_ortu`.
-2. Tulis/eksekusi plan **sub-fase 3** (payroll + finance), atau isolation
-   install ulang di `%TEMP%` bila ingin bukti install-from-copy.
+1. Chief: E2E manual vs backend arsip (honor → payroll generate/lock →
+   pembayaran → tarif → lembur approve).
+2. Tulis/eksekusi plan **sub-fase 4** (komunikasi + operasional + sisa master).
 3. Jangan `git push origin main` tanpa BOUNDARIES filtered publish.

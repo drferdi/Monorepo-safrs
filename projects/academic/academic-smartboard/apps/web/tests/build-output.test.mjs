@@ -18,6 +18,11 @@ const ROUTES = [
   "akademik/cakupan",
   "akademik/perkembangan",
   "akademik/perkembangan/placeholder",
+  "keuangan/honor",
+  "keuangan/payroll",
+  "keuangan/pembayaran",
+  "keuangan/tarif",
+  "lembur",
 ];
 
 for (const route of ROUTES) {

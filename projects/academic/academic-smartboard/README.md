@@ -29,7 +29,7 @@ arsip `abyss-monorepo` (ADR 0003; spec:
 
 | App | Status |
 | --- | --- |
-| `apps/web` (aplikasi utama) | di-port (sub-fase 2/5 COMPLETED — jadwal, sesi+eval/CP, kurikulum trio+reading pane, perkembangan; sub-fase 3–5 / api / demo masih terbuka) |
+| `apps/web` (aplikasi utama) | di-port (sub-fase 3/5 COMPLETED — jadwal/akademik + keuangan/lembur; sub-fase 4–5 / api / demo masih terbuka) |
 | `apps/site` (promo/publik) | di-port |
 | `apps/api` (backend) | belum di-port |
 | `apps/demo` (environment demo) | belum dibuat |

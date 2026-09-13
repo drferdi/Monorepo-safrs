@@ -492,3 +492,228 @@ export async function getStudentProgression(
   );
   return data;
 }
+
+/** Base URL `/api` untuk link slip PDF (cookie-session di tab baru). */
+export function getApiBaseUrl(): string {
+  return `${process.env.NEXT_PUBLIC_BACKEND_URL ?? ""}/api`;
+}
+
+export type EarningSummaryRow = {
+  tutor_id: string;
+  tutor_name?: string;
+  sessions?: number;
+  base_amount?: number;
+  incentive?: number;
+  transport?: number;
+  total?: number;
+};
+
+export type EarningDetail = {
+  earning_id: string;
+  session_id?: string;
+  period_month?: string;
+  base_amount?: number;
+  incentive?: number;
+  transport?: number;
+  total?: number;
+  paid?: boolean;
+  verified?: boolean;
+};
+
+export type PayrollPeriod = {
+  period_id: string;
+  month: string;
+  status?: string;
+  total_amount?: number;
+};
+
+export type PayrollItem = {
+  item_id: string;
+  tutor_id: string;
+  tutor_name?: string;
+  sessions_count?: number;
+  sessions?: number;
+  base_total?: number;
+  base_amount?: number;
+  incentive_total?: number;
+  incentive?: number;
+  transport_total?: number;
+  transport?: number;
+  overtime_total?: number;
+  correction_total?: number;
+  total?: number;
+  paid?: boolean;
+  format?: string;
+};
+
+export type Rate = {
+  rate_id: string;
+  name: string;
+  format?: string;
+  mode?: string;
+  tutor_id?: string | null;
+  subject_id?: string | null;
+  duration_min?: number;
+  amount?: number;
+  transport_bonus?: number;
+  active?: boolean;
+};
+
+export type Payment = {
+  payment_id: string;
+  period_id?: string;
+  tutor_id?: string;
+  amount?: number;
+  method?: string;
+  paid_at?: string;
+  bank_name?: string;
+  account_last4?: string;
+  transfer_ref?: string;
+  reference?: string;
+  note?: string;
+  reconciled?: boolean;
+};
+
+export type Overtime = {
+  overtime_id: string;
+  tutor_id?: string;
+  date?: string;
+  start_time?: string;
+  end_time?: string;
+  duration_min?: number;
+  work_type?: string;
+  reason?: string;
+  amount?: number;
+  status?: string;
+};
+
+export async function listEarnings(
+  query: Record<string, string | undefined> = {},
+): Promise<EarningDetail[]> {
+  const { data } = await apiClient.get<EarningDetail[]>(
+    `/earnings${buildQuery(query)}`,
+  );
+  return data;
+}
+
+export async function getEarningsSummary(
+  query: Record<string, string | undefined> = {},
+): Promise<EarningSummaryRow[]> {
+  const { data } = await apiClient.get<EarningSummaryRow[]>(
+    `/earnings/summary${buildQuery(query)}`,
+  );
+  return data;
+}
+
+export async function listPayrollPeriods(): Promise<PayrollPeriod[]> {
+  const { data } = await apiClient.get<PayrollPeriod[]>("/payroll/periods");
+  return data;
+}
+
+export async function generatePayrollPeriod(
+  month: string,
+): Promise<{ items?: number; total?: number }> {
+  const { data } = await apiClient.post<{ items?: number; total?: number }>(
+    `/payroll/periods/${month}/generate`,
+  );
+  return data;
+}
+
+export async function listPayrollItems(
+  periodId: string,
+  query: Record<string, string | undefined> = {},
+): Promise<PayrollItem[]> {
+  const { data } = await apiClient.get<PayrollItem[]>(
+    `/payroll/periods/${periodId}/items${buildQuery(query)}`,
+  );
+  return data;
+}
+
+export async function lockPayrollPeriod(periodId: string): Promise<unknown> {
+  const { data } = await apiClient.post(`/payroll/periods/${periodId}/lock`);
+  return data;
+}
+
+export async function createPayrollCorrection(payload: {
+  period_id: string;
+  tutor_id: string;
+  amount: number;
+  reason: string;
+}): Promise<unknown> {
+  const { data } = await apiClient.post("/payroll/corrections", payload);
+  return data;
+}
+
+export async function listPayments(
+  query: Record<string, string | undefined> = {},
+): Promise<Payment[]> {
+  const { data } = await apiClient.get<Payment[]>(
+    `/payments${buildQuery(query)}`,
+  );
+  return data;
+}
+
+export async function createPayment(
+  payload: Record<string, unknown>,
+): Promise<unknown> {
+  const { data } = await apiClient.post("/payments", payload);
+  return data;
+}
+
+export async function reconcilePayment(paymentId: string): Promise<unknown> {
+  const { data } = await apiClient.post(`/payments/${paymentId}/reconcile`);
+  return data;
+}
+
+export async function listRates(): Promise<Rate[]> {
+  const { data } = await apiClient.get<Rate[]>("/rates");
+  return data;
+}
+
+export async function createRate(
+  payload: Record<string, unknown>,
+): Promise<Rate> {
+  const { data } = await apiClient.post<Rate>("/rates", payload);
+  return data;
+}
+
+export async function updateRate(
+  rateId: string,
+  payload: Record<string, unknown>,
+): Promise<Rate> {
+  const { data } = await apiClient.put<Rate>(`/rates/${rateId}`, payload);
+  return data;
+}
+
+export async function deleteRate(rateId: string): Promise<unknown> {
+  const { data } = await apiClient.delete(`/rates/${rateId}`);
+  return data;
+}
+
+export async function listOvertime(
+  query: Record<string, string | undefined> = {},
+): Promise<Overtime[]> {
+  const { data } = await apiClient.get<Overtime[]>(
+    `/overtime${buildQuery(query)}`,
+  );
+  return data;
+}
+
+export async function createOvertime(
+  payload: Record<string, unknown>,
+): Promise<unknown> {
+  const { data } = await apiClient.post("/overtime", payload);
+  return data;
+}
+
+export async function decideOvertime(
+  overtimeId: string,
+  payload: { approve: boolean; note?: string },
+): Promise<unknown> {
+  const { data } = await apiClient.post(
+    `/overtime/${overtimeId}/decision`,
+    payload,
+  );
+  return data;
+}
+

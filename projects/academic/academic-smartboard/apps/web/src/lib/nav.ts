@@ -19,7 +19,7 @@ const ALL_ROLES: Role[] = [
   "content_manager",
 ];
 
-/** Nav arsip Layout.jsx — Operasional + Akademik (+ Master dari sub-fase 1). */
+/** Nav arsip Layout.jsx — Master + Operasional + Akademik + Pengajar + Keuangan. */
 export const NAV_GROUPS: NavGroup[] = [
   {
     label: "Master",
@@ -73,6 +73,41 @@ export const NAV_GROUPS: NavGroup[] = [
         label: "Cakupan Kurikulum",
         href: "/akademik/cakupan",
         roles: ["owner", "admin_akademik", "tentor"],
+      },
+    ],
+  },
+  {
+    label: "Pengajar",
+    items: [
+      {
+        label: "Pengajuan Lembur",
+        href: "/lembur",
+        roles: ["owner", "admin_akademik", "tentor", "finance"],
+      },
+    ],
+  },
+  {
+    label: "Keuangan",
+    items: [
+      {
+        label: "Rekap Honor",
+        href: "/keuangan/honor",
+        roles: ["owner", "finance", "tentor"],
+      },
+      {
+        label: "Payroll",
+        href: "/keuangan/payroll",
+        roles: ["owner", "finance"],
+      },
+      {
+        label: "Pembayaran",
+        href: "/keuangan/pembayaran",
+        roles: ["owner", "finance"],
+      },
+      {
+        label: "Tarif",
+        href: "/keuangan/tarif",
+        roles: ["owner", "finance"],
       },
     ],
   },
