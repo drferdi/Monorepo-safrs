@@ -173,6 +173,14 @@ export type CurriculumOutcome = {
   element_name?: string;
   verification_status?: string;
   learning_outcome_text?: string;
+  source_document_title?: string;
+  source_page_start?: string;
+  source_page_end?: string;
+  license_category?: string;
+  effective_from?: string;
+  curriculum_version?: string;
+  academic_year?: string;
+  official_source_url?: string;
   objectives?: Array<{
     learning_objective_code: string;
     learning_objective_text?: string;

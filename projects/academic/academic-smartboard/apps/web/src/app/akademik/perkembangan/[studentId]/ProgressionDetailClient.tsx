@@ -13,6 +13,7 @@ import {
   YAxis,
 } from "recharts";
 import { AppShell } from "../../../../components/AppShell.tsx";
+import { CurriculumPhaseBanner } from "../../../../components/CurriculumPhaseBanner.tsx";
 import { PageHead } from "../../../../components/PageHead.tsx";
 import { ProtectedRoute } from "../../../../components/ProtectedRoute.tsx";
 import { getStudentProgression } from "../../../../lib/api.ts";
@@ -68,6 +69,9 @@ export function ProgressionDetailClient() {
             }
             lede="Ringkasan metrik per mapel. Jurnal & Kayyisa ditunda ke sub-fase 4/5."
           />
+          <CurriculumPhaseBanner gradeId={progQ.data?.student?.grade_id} />
+          {/* Jurnal Kolaboratif — sub-fase 4 */}
+          {/* Kak Kayyisa trajectory — sub-fase 5 */}
           <p data-testid="prog-thesis" className="text-secondary">
             {progQ.isPending
               ? "Memuat…"

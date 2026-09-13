@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { averageMetric, filterSessionsForEval } from "./progression";
+import {
+  averageMetric,
+  evalStatusBadge,
+  filterSessionsForEval,
+} from "./progression";
 
 describe("filterSessionsForEval", () => {
   it("hanya status evaluasi relevan", () => {
@@ -20,5 +24,19 @@ describe("averageMetric", () => {
   it("rata-rata aman untuk array kosong", () => {
     expect(averageMetric([])).toBe(0);
     expect(averageMetric([4, 5, 3])).toBe(4);
+  });
+});
+
+describe("evalStatusBadge", () => {
+  it("memakai label arsip Evaluasi.jsx", () => {
+    expect(evalStatusBadge("menunggu_evaluasi")).toEqual({
+      label: "Belum diisi",
+      tone: "warning",
+    });
+    expect(evalStatusBadge("terverifikasi")).toEqual({
+      label: "Terverifikasi",
+      tone: "success",
+    });
+    expect(evalStatusBadge("berlangsung").label).toBe("Dalam proses");
   });
 });

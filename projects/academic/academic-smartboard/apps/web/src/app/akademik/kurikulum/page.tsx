@@ -4,9 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { AppShell } from "../../../components/AppShell.tsx";
 import { ChipTabs } from "../../../components/ChipTabs.tsx";
+import { CurriculumReadingPane } from "../../../components/CurriculumReadingPane.tsx";
 import { EmptyState } from "../../../components/EmptyState.tsx";
 import { PageHead } from "../../../components/PageHead.tsx";
 import { ProtectedRoute } from "../../../components/ProtectedRoute.tsx";
+import { Button } from "../../../components/ui/button.tsx";
 import {
   getCurriculumStatus,
   getCurriculumStructure,
@@ -19,6 +21,7 @@ function KurikulumView() {
   const [phase, setPhase] = useState<string>("A");
   const [subject, setSubject] = useState("");
   const [q, setQ] = useState("");
+  const [selectedCode, setSelectedCode] = useState<string | null>(null);
 
   const statusQ = useQuery({
     queryKey: ["curriculum-status"],
@@ -46,16 +49,19 @@ function KurikulumView() {
     return raw.items ?? [];
   }, [outcomesQ.data]);
 
-  const hasData = Boolean(
-    statusQ.data?.has_data ?? structureQ.data?.phases,
+  const selectedIndex = items.findIndex(
+    (cp) => cp.learning_outcome_code === selectedCode,
   );
+  const selected = selectedIndex >= 0 ? items[selectedIndex] : null;
+
+  const hasData = Boolean(statusQ.data?.has_data ?? structureQ.data?.phases);
 
   return (
     <div className="space-y-(--space-5)">
       <PageHead
         seq="AKA"
         eyebrow="Akademik"
-        title="Kurikulum Nasional"
+        title="Kurikulum Nasional 2026"
         lede="Browser capaian pembelajaran per fase."
       />
       {statusQ.isError ? (
@@ -80,7 +86,10 @@ function KurikulumView() {
           <div data-testid="curriculum-status-panel">
             <ChipTabs
               value={phase}
-              onChange={setPhase}
+              onChange={(id) => {
+                setPhase(id);
+                setSelectedCode(null);
+              }}
               options={PHASES.map((p) => ({
                 id: p,
                 label: `Fase ${p}`,
@@ -104,33 +113,63 @@ function KurikulumView() {
               onChange={(e) => setQ(e.target.value)}
             />
           </div>
-          <div className="overflow-x-auto rounded-control border border-line-subtle">
-            <table className="w-full text-left text-(length:--font-size-body)">
-              <thead className="bg-surface text-secondary">
-                <tr>
-                  <th className="px-(--space-3) py-(--space-2)">Kode</th>
-                  <th className="px-(--space-3) py-(--space-2)">Mapel</th>
-                  <th className="px-(--space-3) py-(--space-2)">Elemen</th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.map((cp) => (
-                  <tr
-                    key={cp.learning_outcome_code}
-                    data-testid={`row-cp-${cp.learning_outcome_code}`}
-                    className="border-t border-line-subtle"
-                  >
-                    <td className="px-(--space-3) py-(--space-2)">
-                      {cp.learning_outcome_code}
-                    </td>
-                    <td className="px-(--space-3) py-(--space-2)">{cp.subject}</td>
-                    <td className="px-(--space-3) py-(--space-2)">
-                      {cp.element_name}
-                    </td>
+          <div className="grid gap-(--space-4) xl:grid-cols-[1fr_minmax(20rem,28rem)]">
+            <div className="overflow-x-auto rounded-control border border-line-subtle">
+              <table className="w-full text-left text-(length:--font-size-body)">
+                <thead className="bg-surface text-secondary">
+                  <tr>
+                    <th className="px-(--space-3) py-(--space-2)">Kode</th>
+                    <th className="px-(--space-3) py-(--space-2)">Mapel</th>
+                    <th className="px-(--space-3) py-(--space-2)">Elemen</th>
+                    <th className="px-(--space-3) py-(--space-2)">Aksi</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {items.map((cp) => (
+                    <tr
+                      key={cp.learning_outcome_code}
+                      data-testid={`row-cp-${cp.learning_outcome_code}`}
+                      className="border-t border-line-subtle"
+                    >
+                      <td className="px-(--space-3) py-(--space-2)">
+                        {cp.learning_outcome_code}
+                      </td>
+                      <td className="px-(--space-3) py-(--space-2)">{cp.subject}</td>
+                      <td className="px-(--space-3) py-(--space-2)">
+                        {cp.element_name}
+                      </td>
+                      <td className="px-(--space-3) py-(--space-2)">
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="ghost"
+                          data-testid={`btn-detail-${cp.learning_outcome_code}`}
+                          onClick={() =>
+                            setSelectedCode(cp.learning_outcome_code)
+                          }
+                        >
+                          Baca →
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <CurriculumReadingPane
+              cp={selected ?? null}
+              onClose={() => setSelectedCode(null)}
+              hasPrev={selectedIndex > 0}
+              hasNext={selectedIndex >= 0 && selectedIndex < items.length - 1}
+              onPrev={() => {
+                const prev = items[selectedIndex - 1];
+                if (prev) setSelectedCode(prev.learning_outcome_code);
+              }}
+              onNext={() => {
+                const next = items[selectedIndex + 1];
+                if (next) setSelectedCode(next.learning_outcome_code);
+              }}
+            />
           </div>
         </>
       ) : null}
