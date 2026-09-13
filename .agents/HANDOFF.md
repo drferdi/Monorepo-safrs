@@ -5,8 +5,7 @@ Last updated: 2026-09-13 (Smartboard web sub-fase 2 CLOSED)
 - **Sub-fase 2 `apps/web`:** COMPLETED (port + Task 16 docs/verify). Plan di
   `docs/plans/completed/2026-08-22-smartboard-web-subphase2-akademik.md`.
   Roadmap baris 2 COMPLETED.
-- **Commits lokal (belum push):** `fa5dcdb`, `d1f4c97`, `791f02d`, + commit
-  tutup keselarasan/cakupan + Task 16 (lihat `git log`).
+- **Commits lokal (belum push):** `fa5dcdb`, `d1f4c97`, `791f02d`, `cedf8a1`.
 - **Verifikasi capsule:** unit **59 PASS**, typecheck PASS, build PASS,
   `test:build` **12 PASS**. Grep keamanan: bersih; `process.env` hanya
   `NEXT_PUBLIC_BACKEND_URL` + `NEXT_PUBLIC_DEV_TENANT_SLUG`.
