@@ -12,6 +12,7 @@
 | 2 | Penjadwalan + akademik | Jadwal, Sesi(List/Detail), Evaluasi, Kurikulum, KurikulumSelaras, KurikulumCakupan, PerkembanganMurid | `docs/plans/completed/2026-08-22-smartboard-web-subphase2-akademik.md` | COMPLETED (2026-09-13 — port + Task 16 docs/verify; E2E manual Chief vs backend arsip; push/filtered publish terpisah) |
 | 3 | Payroll + finance | RekapHonor, Payroll, Pembayaran, Tarif, Lembur | `docs/plans/completed/2026-09-14-smartboard-web-subphase3-payroll.md` | COMPLETED (2026-09-14 — migrasi arsip; tanpa halaman tuition terpisah; E2E manual Chief vs backend arsip) |
 | 4 | Komunikasi + operasional | TutorActivation, OwnerActivation, Komunikasi, Pengumuman, JournalEntry (di dalam Perkembangan), Tasks, Laporan, sisa 6 halaman Master (`tim`, `orang-tua`, `sekolah`, `mata-pelajaran`, `jenjang`, `tahun-ajaran`) | `docs/plans/completed/2026-09-14-smartboard-web-subphase4-ops.md` | COMPLETED (2026-09-14 — migrasi arsip; TIM board visual simplified; E2E manual Chief vs backend arsip) |
+| — | Orphan home surfaces (di luar baris 1–5 semula) | Dashboard, Pengajar, TutorialPenggunaan | ditampung di commit home-surfaces 2026-09-14 | COMPLETED — `/dashboard` jadi home; Kayyisa chat stub (penuh di S5); tutorial tanpa aset gambar arsip |
 | 5 | Admin platform + Kayyisa AI | HakAkses, TutorDirectory, TemplateEvaluasi, AuditLog, Persetujuan, PlatformConsole (+AuditTab, PlansTab), widget chat Kayyisa | belum ditulis | belum dimulai |
 
 ## Keputusan lintas sub-fase (berlaku semua baris di atas)
@@ -23,7 +24,7 @@
 5. **Karantina** (selain daftar ADR 0003 / spec migrasi fondasi): `backend/scripts/cloud_tokens.env` (SUDAH terdaftar di spec baris 51 — dikonfirmasi ulang saat inventory 2026-08-21, TIDAK lolos filter naif `.env*` karena nama file tidak diawali `.env`, jadi task manapun yang menyentuh `backend/scripts/` wajib grep eksplisit nama file, bukan glob), `backend/.uvicorn-out.log`, `backend/_console_be.out`, `backend/_console_fe.out`, `backend/.venv/`.
 6. **Data pribadi nyata dikonfirmasi ADA** di arsip di luar `raw_data/` yang sudah dikarantina: tidak ditemukan tambahan per audit 2026-08-21 (seed/fixture di `backend/seed_data.py` tampak sintetis). Kalau task manapun menemukan PII nyata di `frontend/src/**` atau `backend/*.py` (bukan `raw_data/`), STOP task itu dan lapor Chief sebelum lanjut.
 
-7. **Tiga halaman arsip belum punya rumah** (ditemukan saat menulis plan sub-fase 2, 2026-08-22): `Dashboard.jsx`, `Pengajar.jsx`, `TutorialPenggunaan.jsx` tidak tercantum di baris 1–5 mana pun. `Dashboard.jsx` penting karena `App.js` arsip mengarahkan route `*` ke `/dashboard`. Menunggu Chief menentukan sub-fasenya — jangan diserap diam-diam ke sub-fase berjalan.
+7. **Tiga halaman arsip orphan (catatan historis):** `Dashboard.jsx`, `Pengajar.jsx`, `TutorialPenggunaan.jsx` semula tidak tercantum di baris 1–5. **Sudah di-port 2026-09-14** ke `/dashboard`, `/pengajar`, `/tutorial` (home redirect ke Smartboard). Chat Kayyisa penuh tetap milik sub-fase 5.
 
 ## Sizing acuan (audit 2026-08-21)
 

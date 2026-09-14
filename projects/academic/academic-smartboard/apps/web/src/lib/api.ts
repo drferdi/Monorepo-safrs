@@ -1025,3 +1025,83 @@ export async function createParentJournalMessage(
   return data;
 }
 
+export type DashboardStatsResponse = Record<string, unknown> & {
+  sessions_today?: number;
+  sessions_ongoing?: number;
+  sessions_done_today?: number;
+  missing_evaluations?: number;
+  pending_verify?: number;
+  students_present?: number;
+  students_absent?: number;
+  est_payroll_month?: number;
+  verified_sessions_month?: number;
+  attendance_sessions_today?: number;
+  honor_entries_today?: number;
+  period?: string;
+};
+
+export type DashboardSessionRow = {
+  session_id: string;
+  scheduled_start?: string;
+  scheduled_end?: string;
+  subject_name?: string;
+  tutor_name?: string;
+  format?: string;
+  status?: string;
+};
+
+export type DashboardInsights = {
+  teaching?: Record<string, unknown>;
+  finance?: Record<string, unknown>;
+  tutor_eval?: Record<string, unknown>;
+  student_eval?: Record<string, unknown>;
+};
+
+export async function getDashboardStats(): Promise<DashboardStatsResponse> {
+  const { data } = await apiClient.get<DashboardStatsResponse>(
+    "/dashboard/stats",
+  );
+  return data;
+}
+
+export async function getDashboardTodaySchedule(): Promise<
+  DashboardSessionRow[]
+> {
+  const { data } = await apiClient.get<DashboardSessionRow[]>(
+    "/dashboard/today-schedule",
+  );
+  return Array.isArray(data) ? data : [];
+}
+
+export async function getDashboardInsights(): Promise<DashboardInsights> {
+  const { data } = await apiClient.get<DashboardInsights>(
+    "/dashboard/insights",
+  );
+  return data;
+}
+
+export async function getDashboardStudentRegularity(): Promise<{
+  tidak_rutin?: number;
+} | null> {
+  const { data } = await apiClient.get<{ tidak_rutin?: number }>(
+    "/dashboard/student-regularity",
+  );
+  return data ?? null;
+}
+
+export async function listAttendanceGaps(): Promise<unknown[]> {
+  const { data } = await apiClient.get<unknown[]>("/attendance/gaps");
+  return Array.isArray(data) ? data : [];
+}
+
+export async function sendReminder(payload: {
+  student_id: string;
+  message: string;
+}): Promise<{ notified?: number }> {
+  const { data } = await apiClient.post<{ notified?: number }>(
+    "/reminders",
+    payload,
+  );
+  return data;
+}
+

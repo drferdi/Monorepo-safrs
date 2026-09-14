@@ -25,8 +25,18 @@ export const NAV_GROUPS: NavGroup[] = [
     label: "Utama",
     items: [
       {
+        label: "Smartboard",
+        href: "/dashboard",
+        roles: ALL_ROLES,
+      },
+      {
         label: "Pengumuman",
         href: "/pengumuman",
+        roles: ALL_ROLES,
+      },
+      {
+        label: "Tutorial",
+        href: "/tutorial",
         roles: ALL_ROLES,
       },
     ],
@@ -38,6 +48,11 @@ export const NAV_GROUPS: NavGroup[] = [
         label: "Murid",
         href: "/master/murid",
         roles: ["owner", "admin_akademik", "tentor", "murid_ortu"],
+      },
+      {
+        label: "Pengajar",
+        href: "/pengajar",
+        roles: ["owner", "admin_akademik"],
       },
       {
         label: "TIM",

@@ -90,7 +90,8 @@ agar capsule tetap extractable.
 evaluasi, CP picker, honor read-only, reschedule), `/evaluasi`, trio
 kurikulum (`/akademik/kurikulum|keselarasan|cakupan` + `CurriculumReadingPane`),
 `/akademik/perkembangan` + detail (grafik + kalender; jurnal/Kayyisa di-carve
-ke sub-fase 5). Belum: Dashboard/Pengajar/Tutorial, admin platform + Kayyisa.
+ke sub-fase 5). Belum: admin platform + Kayyisa chat penuh.
+  Home: `/dashboard` (bukan lagi redirect ke Master Murid).
 `apps/api`, `apps/demo`.
 
 ## Urutan port

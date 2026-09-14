@@ -338,6 +338,40 @@ export function MasterCrud({
                         })
                       }
                     />
+                  ) : f.type === "multi" ? (
+                    <div
+                      className="max-h-40 space-y-1 overflow-y-auto rounded-control border border-line-subtle p-(--space-2)"
+                      data-testid={`field-${f.name}`}
+                    >
+                      {(f.options?.(extraData) || []).map((o) => {
+                        const selected = Array.isArray(form[f.name])
+                          ? (form[f.name] as string[]).includes(o.value)
+                          : false;
+                        return (
+                          <label
+                            key={o.value}
+                            className="flex min-h-(--target-min) items-center gap-(--space-2) text-sm"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={selected}
+                              onChange={(e) => {
+                                const prev = Array.isArray(form[f.name])
+                                  ? ([...(form[f.name] as string[])] as string[])
+                                  : [];
+                                setForm({
+                                  ...form,
+                                  [f.name]: e.target.checked
+                                    ? [...prev, o.value]
+                                    : prev.filter((v) => v !== o.value),
+                                });
+                              }}
+                            />
+                            {o.label}
+                          </label>
+                        );
+                      })}
+                    </div>
                   ) : (
                     <input
                       type={f.type || "text"}

@@ -46,9 +46,12 @@ describe("NAV_GROUPS sub-fase 4", () => {
     expect(tentor.some((i) => i.href === "/keuangan/payroll")).toBe(false);
   });
 
-  it("admin melihat master jenjang dan pengumuman", () => {
+  it("admin melihat master jenjang, pengumuman, dan smartboard", () => {
     const admin = filterByRole(NAV_ITEMS, "admin_akademik");
     expect(admin.some((i) => i.href === "/master/jenjang")).toBe(true);
     expect(admin.some((i) => i.href === "/pengumuman")).toBe(true);
+    expect(admin.some((i) => i.href === "/dashboard")).toBe(true);
+    expect(admin.some((i) => i.href === "/pengajar")).toBe(true);
+    expect(admin.some((i) => i.href === "/tutorial")).toBe(true);
   });
 });

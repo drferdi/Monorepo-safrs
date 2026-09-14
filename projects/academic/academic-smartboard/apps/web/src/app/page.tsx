@@ -11,8 +11,7 @@ export default function Page() {
 
   useEffect(() => {
     if (status === "authenticated") {
-      // /master/murid is built in Task 8; typedRoutes can't see it yet.
-      router.replace("/master/murid" as Route);
+      router.replace("/dashboard" as Route);
     } else if (status === "unauthenticated") {
       router.replace("/login");
     }

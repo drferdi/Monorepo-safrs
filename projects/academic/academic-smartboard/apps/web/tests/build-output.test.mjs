@@ -8,6 +8,9 @@ const out = join(dirname(fileURLToPath(import.meta.url)), "..", "out");
 const ROUTES = [
   "",
   "login",
+  "dashboard",
+  "pengajar",
+  "tutorial",
   "master/murid",
   "master/tim",
   "master/orang-tua",
