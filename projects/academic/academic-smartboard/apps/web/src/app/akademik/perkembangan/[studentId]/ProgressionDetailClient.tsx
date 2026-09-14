@@ -13,6 +13,7 @@ import {
   YAxis,
 } from "recharts";
 import { AppShell } from "../../../../components/AppShell.tsx";
+import { CollaborativeJournal } from "../../../../components/CollaborativeJournal.tsx";
 import { CurriculumPhaseBanner } from "../../../../components/CurriculumPhaseBanner.tsx";
 import { PageHead } from "../../../../components/PageHead.tsx";
 import { ProtectedRoute } from "../../../../components/ProtectedRoute.tsx";
@@ -67,10 +68,9 @@ export function ProgressionDetailClient() {
                 {progQ.data?.student?.name ?? "Perkembangan Murid"}
               </span>
             }
-            lede="Ringkasan metrik per mapel. Jurnal & Kayyisa ditunda ke sub-fase 4/5."
+            lede="Ringkasan metrik per mapel dan jurnal kolaboratif. Kayyisa ditunda ke sub-fase 5."
           />
           <CurriculumPhaseBanner gradeId={progQ.data?.student?.grade_id} />
-          {/* Jurnal Kolaboratif — sub-fase 4 */}
           {/* Kak Kayyisa trajectory — sub-fase 5 */}
           <p data-testid="prog-thesis" className="text-secondary">
             {progQ.isPending
@@ -97,6 +97,9 @@ export function ProgressionDetailClient() {
                 </BarChart>
               </ResponsiveContainer>
             </div>
+          ) : null}
+          {studentId && studentId !== "placeholder" ? (
+            <CollaborativeJournal studentId={studentId} />
           ) : null}
         </div>
       </AppShell>

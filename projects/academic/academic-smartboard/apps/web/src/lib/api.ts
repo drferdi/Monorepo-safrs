@@ -717,3 +717,311 @@ export async function decideOvertime(
   return data;
 }
 
+/** Generic master-resource CRUD (arsip MasterCrud). */
+export async function listMasterResource<T = Record<string, unknown>>(
+  resource: string,
+): Promise<T[]> {
+  const { data } = await apiClient.get<T[]>(`/${resource}`);
+  return data;
+}
+
+export async function createMasterResource<T = Record<string, unknown>>(
+  resource: string,
+  payload: Record<string, unknown>,
+): Promise<T> {
+  const { data } = await apiClient.post<T>(`/${resource}`, payload);
+  return data;
+}
+
+export async function updateMasterResource<T = Record<string, unknown>>(
+  resource: string,
+  id: string,
+  payload: Record<string, unknown>,
+): Promise<T> {
+  const { data } = await apiClient.put<T>(`/${resource}/${id}`, payload);
+  return data;
+}
+
+export async function deleteMasterResource(
+  resource: string,
+  id: string,
+): Promise<unknown> {
+  const { data } = await apiClient.delete(`/${resource}/${id}`);
+  return data;
+}
+
+export type Announcement = {
+  announcement_id: string;
+  title?: string;
+  body?: string;
+  pinned?: boolean;
+  publish_at?: string;
+  created_at?: string;
+  audience_roles?: string[];
+};
+
+export async function listAnnouncements(): Promise<{ items?: Announcement[] }> {
+  const { data } = await apiClient.get<{ items?: Announcement[] }>(
+    "/announcements",
+  );
+  return data;
+}
+
+export async function createAnnouncement(
+  payload: Record<string, unknown>,
+): Promise<unknown> {
+  const { data } = await apiClient.post("/announcements", payload);
+  return data;
+}
+
+export async function getAnnouncementReceipts(
+  id: string,
+): Promise<Record<string, unknown>> {
+  const { data } = await apiClient.get<Record<string, unknown>>(
+    `/announcements/${id}/receipts`,
+  );
+  return data;
+}
+
+export async function previewTutorInvitation(
+  token: string,
+): Promise<{ name?: string; email?: string }> {
+  const { data } = await apiClient.post<{ name?: string; email?: string }>(
+    "/tutor-directory/invitation/preview",
+    { token },
+  );
+  return data;
+}
+
+export async function activateTutor(payload: {
+  token: string;
+  password: string;
+}): Promise<{ user: User }> {
+  const { data } = await apiClient.post<{ user: User }>(
+    "/tutor-directory/activate",
+    payload,
+  );
+  return data;
+}
+
+export async function previewOwnerInvitation(
+  token: string,
+): Promise<{ name?: string; email?: string }> {
+  const { data } = await apiClient.post<{ name?: string; email?: string }>(
+    "/platform/owner-invitation/preview",
+    { token },
+  );
+  return data;
+}
+
+export async function activateOwner(payload: {
+  token: string;
+  password: string;
+}): Promise<{ user: User }> {
+  const { data } = await apiClient.post<{ user: User }>(
+    "/platform/owner-invitation/activate",
+    payload,
+  );
+  return data;
+}
+
+export type Communication = {
+  communication_id: string;
+  title: string;
+  category: string;
+  priority: string;
+  status: string;
+  last_message_at?: string;
+};
+
+export type CommunicationMessage = {
+  message_id: string;
+  author_name: string;
+  body: string;
+  created_at: string;
+  internal?: boolean;
+};
+
+export type CommunicationDetail = {
+  communication: Communication;
+  messages: CommunicationMessage[];
+};
+
+export async function listCommunications(
+  query: Record<string, string | undefined> = {},
+): Promise<{ items: Communication[] }> {
+  const { data } = await apiClient.get<{ items: Communication[] }>(
+    `/communications${buildQuery(query)}`,
+  );
+  return data;
+}
+
+export async function getCommunication(
+  id: string,
+): Promise<CommunicationDetail> {
+  const { data } = await apiClient.get<CommunicationDetail>(
+    `/communications/${id}`,
+  );
+  return data;
+}
+
+export async function postCommunicationMessage(
+  id: string,
+  body: string,
+): Promise<unknown> {
+  const { data } = await apiClient.post(`/communications/${id}/messages`, {
+    body,
+  });
+  return data;
+}
+
+export async function patchCommunication(
+  id: string,
+  payload: Record<string, unknown>,
+): Promise<unknown> {
+  const { data } = await apiClient.patch(`/communications/${id}`, payload);
+  return data;
+}
+
+export type Task = {
+  task_id: string;
+  title: string;
+  description?: string;
+  tutor_id: string;
+  category: string;
+  priority: string;
+  due_date?: string;
+  status: string;
+  auto_generated?: boolean;
+};
+
+export async function listTasks(
+  query: Record<string, string | undefined> = {},
+): Promise<Task[]> {
+  const { data } = await apiClient.get<Task[]>(`/tasks${buildQuery(query)}`);
+  return data;
+}
+
+export async function createTask(
+  payload: Record<string, unknown>,
+): Promise<Task> {
+  const { data } = await apiClient.post<Task>("/tasks", payload);
+  return data;
+}
+
+export async function patchTask(
+  taskId: string,
+  payload: Record<string, unknown>,
+): Promise<Task> {
+  const { data } = await apiClient.patch<Task>(`/tasks/${taskId}`, payload);
+  return data;
+}
+
+export type ReportData = {
+  summary?: Record<string, unknown>;
+  rows?: Array<Record<string, unknown>>;
+};
+
+export async function getReport(
+  tab: string,
+  query: Record<string, string | undefined> = {},
+): Promise<ReportData> {
+  const { data } = await apiClient.get<ReportData>(
+    `/reports/${tab}${buildQuery(query)}`,
+  );
+  return data;
+}
+
+export type Team = {
+  team_id: string;
+  name: string;
+  head_student_id?: string | null;
+  format: string;
+  grade_order?: number | null;
+  grade_id?: string | null;
+  academic_year_id?: string | null;
+  student_ids?: string[];
+  notes?: string;
+  active?: boolean;
+};
+
+export type AcademicYear = {
+  year_id: string;
+  name: string;
+  start_date?: string;
+  end_date?: string;
+  active?: boolean;
+};
+
+export async function listTeams(): Promise<Team[]> {
+  const { data } = await apiClient.get<Team[]>("/teams");
+  return data;
+}
+
+export async function listAcademicYears(): Promise<AcademicYear[]> {
+  const { data } = await apiClient.get<AcademicYear[]>("/academic-years");
+  return data;
+}
+
+export async function createTeamRaw(payload: Record<string, unknown>) {
+  return apiClient.post<Team>("/teams", payload);
+}
+
+export async function updateTeamRaw(
+  teamId: string,
+  payload: Record<string, unknown>,
+) {
+  return apiClient.put<Team>(`/teams/${teamId}`, payload);
+}
+
+export async function deleteTeamRaw(teamId: string) {
+  return apiClient.delete(`/teams/${teamId}`);
+}
+
+export type JournalEntry = {
+  journal_id: string;
+  student_id: string;
+  observation?: string;
+  problem?: string;
+  recommendation?: string;
+  outcome?: string;
+  parent_summary?: string;
+  tags?: string[];
+  visibility?: string;
+  status?: string;
+  source?: string;
+  author_name?: string;
+  created_at?: string;
+};
+
+export async function listStudentJournal(
+  studentId: string,
+): Promise<{ items: JournalEntry[] }> {
+  const { data } = await apiClient.get<{ items?: JournalEntry[] }>(
+    `/students/${studentId}/journal`,
+  );
+  return { items: data.items ?? [] };
+}
+
+export async function createJournalEntry(payload: {
+  student_id: string;
+  observation: string;
+  recommendation?: string;
+  parent_summary?: string;
+  visibility?: string;
+}): Promise<JournalEntry> {
+  const { data } = await apiClient.post<JournalEntry>("/journal", payload);
+  return data;
+}
+
+export async function createParentJournalMessage(
+  studentId: string,
+  payload: { message: string },
+): Promise<JournalEntry> {
+  const { data } = await apiClient.post<JournalEntry>(
+    `/students/${studentId}/journal/parent-message`,
+    payload,
+  );
+  return data;
+}
+

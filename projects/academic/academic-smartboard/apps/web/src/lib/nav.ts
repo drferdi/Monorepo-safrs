@@ -19,15 +19,55 @@ const ALL_ROLES: Role[] = [
   "content_manager",
 ];
 
-/** Nav arsip Layout.jsx — Master + Operasional + Akademik + Pengajar + Keuangan. */
+/** Nav arsip Layout.jsx — diperluas sub-fase 4 (Utama, master sisa, laporan). */
 export const NAV_GROUPS: NavGroup[] = [
   {
-    label: "Master",
+    label: "Utama",
+    items: [
+      {
+        label: "Pengumuman",
+        href: "/pengumuman",
+        roles: ALL_ROLES,
+      },
+    ],
+  },
+  {
+    label: "Master Data",
     items: [
       {
         label: "Murid",
         href: "/master/murid",
         roles: ["owner", "admin_akademik", "tentor", "murid_ortu"],
+      },
+      {
+        label: "TIM",
+        href: "/master/tim",
+        roles: ["owner", "admin_akademik"],
+      },
+      {
+        label: "Orang Tua",
+        href: "/master/orang-tua",
+        roles: ["owner", "admin_akademik"],
+      },
+      {
+        label: "Sekolah",
+        href: "/master/sekolah",
+        roles: ["owner", "admin_akademik"],
+      },
+      {
+        label: "Mata Pelajaran",
+        href: "/master/mata-pelajaran",
+        roles: ["owner", "admin_akademik"],
+      },
+      {
+        label: "Jenjang / Kelas",
+        href: "/master/jenjang",
+        roles: ["owner", "admin_akademik"],
+      },
+      {
+        label: "Tahun Ajaran",
+        href: "/master/tahun-ajaran",
+        roles: ["owner", "admin_akademik"],
       },
     ],
   },
@@ -42,6 +82,11 @@ export const NAV_GROUPS: NavGroup[] = [
       {
         label: "Sesi Pembelajaran",
         href: "/sesi",
+        roles: ["owner", "admin_akademik", "tentor", "murid_ortu", "finance"],
+      },
+      {
+        label: "Percakapan",
+        href: "/komunikasi",
         roles: ["owner", "admin_akademik", "tentor", "murid_ortu", "finance"],
       },
     ],
@@ -80,6 +125,11 @@ export const NAV_GROUPS: NavGroup[] = [
     label: "Pengajar",
     items: [
       {
+        label: "Task & Rutinitas",
+        href: "/tasks",
+        roles: ["owner", "admin_akademik", "tentor"],
+      },
+      {
         label: "Pengajuan Lembur",
         href: "/lembur",
         roles: ["owner", "admin_akademik", "tentor", "finance"],
@@ -111,13 +161,22 @@ export const NAV_GROUPS: NavGroup[] = [
       },
     ],
   },
+  {
+    label: "Laporan",
+    items: [
+      {
+        label: "Laporan Terpadu",
+        href: "/laporan",
+        roles: ["owner", "admin_akademik", "finance"],
+      },
+    ],
+  },
 ];
 
 export function flattenNav(groups: NavGroup[]): NavItem[] {
   return groups.flatMap((g) => g.items);
 }
 
-/** Flat list for AppShell / filterByRole — sub-fase 1 + 2. */
 export const NAV_ITEMS: NavItem[] = flattenNav(NAV_GROUPS);
 
 export function filterByRole(items: NavItem[], role: Role): NavItem[] {

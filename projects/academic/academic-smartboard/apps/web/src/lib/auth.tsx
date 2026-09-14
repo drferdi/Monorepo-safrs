@@ -38,6 +38,8 @@ export function authReducer(_state: AuthState, action: AuthAction): AuthState {
 type AuthContextValue = AuthState & {
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  /** Setelah aktivasi undangan — cookie sudah di-set backend. */
+  acceptSession: (user: User) => void;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -64,8 +66,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  function acceptSession(user: User) {
+    dispatch({ type: "SESSION_RESOLVED", user });
+  }
+
   return (
-    <AuthContext.Provider value={{ ...state, login, logout }}>
+    <AuthContext.Provider value={{ ...state, login, logout, acceptSession }}>
       {children}
     </AuthContext.Provider>
   );

@@ -22,7 +22,8 @@ Aset yang sudah bermigrasi:
 - `ai/kayyisa/` — knowledge package Kayyisa v3.0.0 (manifest sha256-verified; path sensitif R2)
 - `data/curriculum/`, `data/reference/` — data kurikulum dan registri sumber
 - `apps/site` — website publik El-Kayyisa (Next.js 16, 10 route)
-- `apps/web` sub-fase 1–2/5 — fondasi + penjadwalan/akademik (Next.js 16 static
+- `apps/web` sub-fase 1–4/5 — fondasi + penjadwalan/akademik + payroll +
+  komunikasi/operasional/master (Next.js 16 static
   export; 12 route diekspor termasuk sentinel `/sesi/placeholder` dan
   `/akademik/perkembangan/placeholder`)
 
@@ -89,7 +90,7 @@ agar capsule tetap extractable.
 evaluasi, CP picker, honor read-only, reschedule), `/evaluasi`, trio
 kurikulum (`/akademik/kurikulum|keselarasan|cakupan` + `CurriculumReadingPane`),
 `/akademik/perkembangan` + detail (grafik + kalender; jurnal/Kayyisa di-carve
-ke sub-fase 4/5). Belum: payroll, master sisa, Dashboard/Pengajar/Tutorial,
+ke sub-fase 5). Belum: Dashboard/Pengajar/Tutorial, admin platform + Kayyisa.
 `apps/api`, `apps/demo`.
 
 ## Urutan port

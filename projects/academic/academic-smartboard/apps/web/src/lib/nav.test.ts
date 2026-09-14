@@ -14,14 +14,16 @@ describe("filterByRole", () => {
   });
 });
 
-describe("NAV_GROUPS sub-fase 2+3", () => {
-  it("berisi grup Master, Operasional, Akademik, Pengajar, Keuangan", () => {
+describe("NAV_GROUPS sub-fase 4", () => {
+  it("berisi grup Utama, Master Data, Operasional, Akademik, Pengajar, Keuangan, Laporan", () => {
     expect(NAV_GROUPS.map((g) => g.label)).toEqual([
-      "Master",
+      "Utama",
+      "Master Data",
       "Operasional",
       "Akademik",
       "Pengajar",
       "Keuangan",
+      "Laporan",
     ]);
   });
 
@@ -42,5 +44,11 @@ describe("NAV_GROUPS sub-fase 2+3", () => {
     expect(tentor.some((i) => i.href === "/keuangan/honor")).toBe(true);
     expect(tentor.some((i) => i.href === "/lembur")).toBe(true);
     expect(tentor.some((i) => i.href === "/keuangan/payroll")).toBe(false);
+  });
+
+  it("admin melihat master jenjang dan pengumuman", () => {
+    const admin = filterByRole(NAV_ITEMS, "admin_akademik");
+    expect(admin.some((i) => i.href === "/master/jenjang")).toBe(true);
+    expect(admin.some((i) => i.href === "/pengumuman")).toBe(true);
   });
 });

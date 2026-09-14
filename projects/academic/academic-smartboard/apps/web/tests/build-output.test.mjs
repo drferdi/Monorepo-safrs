@@ -9,6 +9,12 @@ const ROUTES = [
   "",
   "login",
   "master/murid",
+  "master/tim",
+  "master/orang-tua",
+  "master/sekolah",
+  "master/mata-pelajaran",
+  "master/jenjang",
+  "master/tahun-ajaran",
   "jadwal",
   "sesi",
   "sesi/placeholder",
@@ -23,6 +29,12 @@ const ROUTES = [
   "keuangan/pembayaran",
   "keuangan/tarif",
   "lembur",
+  "pengumuman",
+  "komunikasi",
+  "tasks",
+  "laporan",
+  "aktivasi-tutor",
+  "aktivasi-owner",
 ];
 
 for (const route of ROUTES) {
