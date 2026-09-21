@@ -4,14 +4,13 @@ Pusat kendali repository untuk operator non-coding.
 
 ## Untuk apa ini
 
-Aplikasi ini membaca repository Monorepo secara langsung dan menampilkan seluruh kemampuan yang
-dimilikinya, lengkap dengan status yang jujur: mana yang benar-benar terhubung, mana yang butuh
-konfigurasi, mana yang masih menunggu keputusan Anda, dan mana yang bermasalah.
+Aplikasi ini membaca repository Monorepo secara langsung dan menampilkan situasi
+SAFRS secara visual: gerbang publikasi, control plane, kesiapan mesin, dan fitur
+yang butuh perhatian — dengan status yang jujur, bukan ditulis tangan.
 
-Yang membedakannya dari papan status biasa: **tidak ada status yang ditulis tangan.** Setiap fitur
-mendaftarkan berkas yang membuktikan keberadaannya, lalu aplikasi memeriksa berkas itu setiap kali
-halaman dibuka. Fitur yang berkasnya hilang otomatis berubah statusnya tanpa ada yang perlu
-mengubah katalog.
+Setiap fitur mendaftarkan berkas yang membuktikan keberadaannya; aplikasi
+memeriksa berkas itu setiap kali halaman dibuka. Fitur yang berkasnya hilang
+otomatis berubah statusnya tanpa mengubah katalog.
 
 ## Menjalankan
 
@@ -21,13 +20,13 @@ pnpm --filter @sentra/control-center dev
 
 Lalu buka <http://localhost:3100>.
 
-Aplikasi ini sengaja dibuat agar tetap menyala meski Docker mati dan basis data belum siap —
-justru keadaan seperti itulah yang perlu ditampilkan.
+Aplikasi ini sengaja dibuat agar tetap menyala meski Docker mati dan basis data
+belum siap — justru keadaan seperti itulah yang perlu ditampilkan.
 
 ## Menunjuk ke checkout lain
 
-Secara bawaan aplikasi mencari akar repository dari direktori tempat ia dijalankan. Untuk
-mengarahkannya ke checkout atau worktree lain:
+Secara bawaan aplikasi mencari akar repository dari direktori tempat ia
+dijalankan. Untuk mengarahkannya ke checkout atau worktree lain:
 
 ```bash
 SENTRA_REPO_ROOT=D:/DEV/Monorepo pnpm --filter @sentra/control-center dev
@@ -35,12 +34,17 @@ SENTRA_REPO_ROOT=D:/DEV/Monorepo pnpm --filter @sentra/control-center dev
 
 ## Batas kewenangan
 
-- Hanya membaca. Perintah yang mengubah mesin belum tersedia dari sini.
-- Tidak pernah menyentuh produksi. Operasi R3 tidak dapat dijalankan dari halaman ini.
-- Tidak membaca atau menampilkan rahasia apa pun.
+- Membaca repository pada setiap permintaan (`force-dynamic`).
+- Perintah dalam **allowlist** (`lib/exec/commands.ts`) dapat dijalankan dari
+  papan: id saja yang menyeberang wire; argv tetap; mutasi membutuhkan frasa
+  konfirmasi exact-match; setiap percobaan diaudit.
+- Id di luar allowlist ditolak sebelum proses jalan.
+- Operasi R3 tidak ada di allowlist — produksi tidak dapat dijangkau dari sini.
+- Tidak membaca atau menampilkan rahasia (tidak membaca `.env` terisi).
 
 ## Dokumentasi terkait
 
-- `docs/feature-inventory.md` — daftar lengkap fitur repository
-- `docs/dashboard-integration.md` — bagaimana penyambungannya bekerja
+- `docs/architecture.md` — bentuk teknis dan apa yang sudah dibangun
+- `docs/design-brief.md` — aturan visual Sentraverse
+- `docs/dashboard-integration.md` di akar monorepo — peta permukaan lanjutan
 - `AGENTS.md` — aturan untuk agen yang mengubah kapsul ini

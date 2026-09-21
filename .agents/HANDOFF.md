@@ -1,14 +1,39 @@
-Last updated: 2026-09-15 (Smartboard web S5 COMPLETED)
+Last updated: 2026-09-21 (Control Center Situasi SAFRS Phase 1)
 
 ## Capsule
 
-`projects/academic/academic-smartboard` — migrasi dari arsip
-`D:\Devops\abyss-monorepo\apps\academic\smartboard` (read-only). Backend runtime
-tetap FastAPI arsip via `NEXT_PUBLIC_BACKEND_URL` sampai `apps/api` di-port.
+`projects/internal/control-center` — operator surface monorepo (bukan capsule produk).
 
 ## Current state
 
-### `apps/web` — S1–S5 COMPLETED
+### Situasi SAFRS Home — COMPLETED (Phase 1)
+
+- `lib/situation.ts` + tests: verdict dari gates/plane/health/features (derived, tidak diarang)
+- Home redesign verdict-first (grid 1–7 / 9–12), nav label **Situasi**
+- Soft refresh 30s via `router.refresh()` saat section home
+- Token scope: `packages/token/scope.txt` + path control-center
+- Docs: README + `docs/architecture.md` diselaraskan (executor/gates built)
+- Verified: **29/29** unit tests, typecheck, biome lint; smoke `http://127.0.0.1:3100` STATUS 200 berisi “Situasi SAFRS” / Verdict / Gerbang
+
+### Di luar Phase 1
+
+- Corpus UI, Expert Mode, supervised long-running, Gaffer UI
+- Prompt template Nx/Recharts/`/api/metrics` **tidak** diadopsi (bukan arsitektur repo ini)
+
+## Next action
+
+1. Chief: buka `pnpm --filter @sentra/control-center dev` → tinjau verdict Situasi
+2. Commit bila diminta (scope: control-center + scope.txt + lockfile)
+3. Opsional Wave berikutnya per `docs/dashboard-integration.md`
+
+## Owner collision
+
+Tidak ada writer aktif lain pada scope control-center saat HANDOFF ini ditulis.
+
+---
+
+## Prior notes (Smartboard / Gaffer / publish)
+
 
 | Slice | Status | Plan / commit |
 | --- | --- | --- |

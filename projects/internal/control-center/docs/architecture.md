@@ -3,17 +3,23 @@
 ## Shape
 
 One Next.js App Router deployment unit at `apps/web`, running on the Node runtime so it can read
-the filesystem and inspect git. It is a local operator surface, never deployed.
+the filesystem, inspect git, and run allowlisted repository tools. It is a local operator surface,
+never deployed.
 
 ```
 apps/web/src/
-  app/                  server components only; no client boundary yet
+  app/                  page (SSR snapshot) + client ControlCenter board
+  lib/situation.ts      pure Situasi SAFRS verdict from LiveSnapshot
+  lib/exec/             allowlisted command executor + audit log
   lib/repo/
     root.ts             repository root resolution + path containment
     types.ts            shared vocabulary
     git.ts              read-only git via execFile (never a shell string)
     catalog.ts          feature definitions with evidence paths
     registry.ts         resolves catalog against disk, derives status
+    gates.ts            saf gate --all
+    control-plane.ts    tools/status --json
+    health.ts           tools/doctor --json
 ```
 
 ## The one rule that shapes everything
@@ -29,14 +35,25 @@ apps/web/src/
 Branch detection runs *before* the partial verdict, because a feature can leave incidental traces
 in the checkout (a tracked manifest, a data directory) while its implementation is elsewhere.
 
+Home **Situasi** aggregates gates, plane, health, and feature attention via `deriveSituation` —
+still derived, never invented.
+
+## Built
+
+- Feature registry + evidence-derived status
+- Live readers: git, workspace map, doctor, status/control plane, publication gates, knowledge registry, library figures
+- Allowlisted executor (`runCommand`): fixed argv, confirmation phrases for mutations, audit trail under `database/logs/control-center.log`, R3 absent by construction
+- Situasi SAFRS home (verdict-first) using Sentra tokens (`@sentra/token`)
+- Soft refresh every 30s on Situasi via `router.refresh()` (re-runs SSR readers; no polling API)
+
 ## Boundaries
 
 - No `@safrs/env/server` import. The dashboard must render when nothing else is ready.
 - No caching: `export const dynamic = "force-dynamic"`. A cached page could report a state that no
   longer exists.
-- No database, no network, no credentials.
+- No production credentials; no R3 execution from this board.
 
 ## Not yet built
 
-Command execution (an allowlisted, confirmed, audited executor), the doctor/status/gate adapters,
-Expert Mode, and per-feature detail routes. See `docs/dashboard-integration.md`.
+Corpus browse/query UI, Expert Mode, per-feature detail routes, and a supervisor for long-running
+processes (`pnpm dev`, corpus pipeline). See root `docs/dashboard-integration.md`.

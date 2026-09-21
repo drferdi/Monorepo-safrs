@@ -300,8 +300,8 @@ export const NAV: NavItem[] = [
   {
     id: "home",
     seq: "01",
-    label: "Command Center",
-    hint: "Overview, risk, and next steps",
+    label: "Situasi",
+    hint: "Verdict SAFRS: gerbang, control plane, kesiapan, perhatian",
   },
   {
     id: "projects",

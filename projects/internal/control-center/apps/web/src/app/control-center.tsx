@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 
 import { actionStatus } from "../lib/action-status";
 import { ACTIONS, actionById } from "../lib/actions";
@@ -18,7 +19,6 @@ import {
 } from "../lib/catalog";
 import {
   type ControlAction,
-  type LiveFeature,
   type LiveSnapshot,
   NAV,
   type NavId,
@@ -27,25 +27,10 @@ import {
 } from "../lib/control-center";
 import { RECOVERY_COMMAND, runnableById } from "../lib/exec/commands";
 import { runCommand } from "../lib/exec/run";
+import { deriveSituation, type SituationLevel } from "../lib/situation";
 
-const LIVE_STATUS_LABEL: Record<string, string> = {
-  connected: "Connected",
-  "partially-connected": "Partially connected",
-  "not-yet-connected": "Not yet connected",
-  "requires-configuration": "Requires configuration",
-  "requires-human-action": "Requires human action",
-  error: "Error",
-};
-
-/** Attention first: an operator should not have to hunt for what is wrong. */
-const LIVE_STATUS_ORDER = [
-  "error",
-  "requires-human-action",
-  "requires-configuration",
-  "partially-connected",
-  "not-yet-connected",
-  "connected",
-];
+/** How often Situasi re-reads the repository via a soft RSC refresh. */
+const SITUATION_REFRESH_MS = 30_000;
 
 /**
  * Machine identities that commit to this repository. Matching on the author
@@ -54,16 +39,20 @@ const LIVE_STATUS_ORDER = [
  */
 const AGENT_AUTHORS = /codex|claude|cursor|droid|agent|bot/i;
 
-function liveStatusClass(status: string) {
-  if (status === "error") return "status status--fail";
-  if (status === "connected") return "status status--pass";
-  return "status status--warn";
+function situationVerdictClass(level: SituationLevel): string {
+  if (level === "fail") return "verdict verdict--fail";
+  if (level === "pass") return "verdict verdict--pass";
+  if (level === "attention") return "verdict verdict--warn";
+  return "verdict";
 }
 
-function byAttention(a: LiveFeature, b: LiveFeature) {
-  const delta =
-    LIVE_STATUS_ORDER.indexOf(a.status) - LIVE_STATUS_ORDER.indexOf(b.status);
-  return delta !== 0 ? delta : a.name.localeCompare(b.name, "id");
+function attentionStatusClass(
+  statusClass: "fail" | "warn" | "pass" | "idle",
+): string {
+  if (statusClass === "fail") return "status status--fail";
+  if (statusClass === "pass") return "status status--pass";
+  if (statusClass === "idle") return "status status--idle";
+  return "status status--warn";
 }
 
 const HOME_ACTION_IDS = [
@@ -492,240 +481,250 @@ function HomeSection({
     (action): action is ControlAction => Boolean(action),
   );
 
-  const attention = live.features
-    .filter((feature) => feature.status !== "connected")
-    .sort(byAttention);
-
+  const situation = deriveSituation(live);
   const nextSteps = deriveNextSteps(live);
-  const library = live.library;
+  const gateRows = live.gates.available ? live.gates.gates : [];
 
   return (
     <>
       <header className="pagehead grid">
         <div className="pagehead__id">
-          <p className="t-label">Command Center</p>
-          <h1 className="t-display">{SITE.title}</h1>
+          <p className="t-label">Situasi SAFRS</p>
+          <h1 className="t-display">Keadaan monorepo saat ini</h1>
           <p
             className="muted"
             style={{ marginTop: "var(--space-4)", maxWidth: "56ch" }}
           >
-            {SITE.promise}
+            Dibaca dari disk, git, gerbang publikasi, control plane, dan
+            pemeriksaan kesiapan — tanpa status yang ditulis tangan.
           </p>
         </div>
         <div className="pagehead__verdict">
-          <div className="verdict">
-            <p className="t-label">Current declaration</p>
-            <p className="verdict__word">{SITE.declaration}</p>
+          <div
+            className={situationVerdictClass(situation.level)}
+            role="status"
+            aria-live="polite"
+            aria-label={`Verdict situasi: ${situation.verdictWord}`}
+          >
+            <p className="t-label">Verdict</p>
+            <p className="verdict__word">{situation.verdictWord}</p>
             <p
               className="t-compact muted"
-              style={{ marginTop: "var(--space-3)" }}
+              style={{ marginTop: "var(--space-3)", maxWidth: "44ch" }}
             >
-              Controlled, Secure, and Regulated are not claimed. The main branch
-              is not yet proven to be protected.
+              {situation.verdictSentence}
             </p>
           </div>
         </div>
       </header>
 
       <section className="section">
-        <div className="alert">
-          <h2>Board limits</h2>
-          <p>{SITE.honesty}</p>
-        </div>
-      </section>
-
-      <section className="section">
         <div className="section__head">
-          <h2 className="t-section">Repository, as read just now</h2>
+          <h2 className="t-section">Ringkasan</h2>
           <span className="rulelabel">
             {live.gitAvailable
               ? `${live.branch} · ${live.head}`
               : "Git unavailable"}
+            {" · "}
+            dibaca {live.readAt}
           </span>
         </div>
         <div className="grid">
           <div className="span-7">
-            <div className="locked">
-              <p className="t-label">Read from disk and git</p>
-              <dl className="factlist">
-                <div>
-                  <dt>Working tree</dt>
-                  <dd>{live.dirtyPaths} changed paths</dd>
+            <dl
+              className="factlist factlist--counts"
+              aria-label="Hitungan gagal, peringatan, dan lolos"
+            >
+              <div>
+                <dt>Gagal</dt>
+                <dd>{situation.counts.failed}</dd>
+              </div>
+              <div>
+                <dt>Peringatan</dt>
+                <dd>{situation.counts.warned}</dd>
+              </div>
+              <div>
+                <dt>Lolos</dt>
+                <dd>{situation.counts.passed}</dd>
+              </div>
+            </dl>
+
+            {situation.primaryActionId ? (
+              <div style={{ marginTop: "var(--space-5)" }}>
+                <p className="t-label">Aksi primer</p>
+                <p
+                  className="t-compact muted"
+                  style={{ marginTop: "var(--space-2)", maxWidth: "68ch" }}
+                >
+                  {situation.primaryActionWhy}
+                </p>
+                <div style={{ marginTop: "var(--space-4)" }}>
+                  <RunStep id={situation.primaryActionId} />
                 </div>
-                <div>
-                  <dt>Checkout</dt>
-                  <dd>{live.repoRoot}</dd>
+              </div>
+            ) : (
+              <p
+                className="t-compact muted"
+                style={{ marginTop: "var(--space-5)", maxWidth: "68ch" }}
+              >
+                Tidak ada aksi primer yang diperlukan pada pembacaan ini.
+              </p>
+            )}
+
+            {gateRows.length > 0 ? (
+              <div style={{ marginTop: "var(--space-6)" }}>
+                <div className="section__head">
+                  <h3 className="t-section">Gerbang publikasi</h3>
+                  <span className="rulelabel">
+                    {situation.summary.gatesPass} lolos ·{" "}
+                    {situation.summary.gatesFail} ditolak
+                  </span>
                 </div>
-                <div>
-                  <dt>Features registered</dt>
-                  <dd>{live.features.length}</dd>
+                <div className="tablewrap">
+                  <table aria-label="Gerbang publikasi SAFRS">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Gerbang</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Alasan</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {gateRows.map((gate, index) => (
+                        <tr
+                          className={
+                            gate.verdict === "PASS" ? undefined : "row--fail"
+                          }
+                          key={gate.check_id}
+                        >
+                          <td className="t-data">
+                            {String(index + 1).padStart(2, "0")}
+                          </td>
+                          <td className="t-data">{gate.check_id}</td>
+                          <td>
+                            <span
+                              className={
+                                gate.verdict === "PASS"
+                                  ? "status status--pass"
+                                  : "status status--fail"
+                              }
+                            >
+                              {gate.verdict === "PASS" ? "Lolos" : "Ditolak"}
+                            </span>
+                          </td>
+                          <td className="t-compact">{gate.reason}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-                <div>
-                  <dt>Need attention</dt>
-                  <dd>{attention.length}</dd>
-                </div>
-                <div>
-                  <dt>Unmerged branches</dt>
-                  <dd>{live.unmergedBranches.length}</dd>
-                </div>
-              </dl>
-            </div>
+              </div>
+            ) : live.gates.problem ? (
+              <p
+                className="t-compact"
+                style={{ marginTop: "var(--space-5)", maxWidth: "68ch" }}
+              >
+                {live.gates.problem}
+              </p>
+            ) : null}
           </div>
-          <div className="span-4">
-            <div className="locked">
-              <p className="t-label">Not on main</p>
-              <dl className="factlist" style={{ marginTop: "var(--space-3)" }}>
-                {live.unmergedBranches.length === 0 ? (
-                  <div>
-                    <dt>Everything local is on main</dt>
-                    <dd>0</dd>
-                  </div>
-                ) : (
-                  live.unmergedBranches.map((item) => (
-                    <div key={item.name}>
-                      <dt>{item.name}</dt>
-                      <dd>{item.commitsAhead}</dd>
-                    </div>
-                  ))
-                )}
-              </dl>
-            </div>
-          </div>
+
+          <aside className="span-4">
+            <p className="t-label">Hitungan situasional</p>
+            <dl className="factlist" style={{ marginTop: "var(--space-3)" }}>
+              <div>
+                <dt>Gerbang lolos / ditolak</dt>
+                <dd>
+                  {situation.summary.gatesUnavailable
+                    ? "—"
+                    : `${situation.summary.gatesPass} / ${situation.summary.gatesFail}`}
+                </dd>
+              </div>
+              <div>
+                <dt>Control plane</dt>
+                <dd>{situation.summary.planeStatus}</dd>
+              </div>
+              <div>
+                <dt>Task aktif</dt>
+                <dd>{situation.summary.planeActive}</dd>
+              </div>
+              <div>
+                <dt>Konflik kepemilikan</dt>
+                <dd>{situation.summary.planeConflicts}</dd>
+              </div>
+              <div>
+                <dt>Kesiapan mesin</dt>
+                <dd>
+                  {situation.summary.healthOk === null
+                    ? "—"
+                    : situation.summary.healthOk
+                      ? "Siap"
+                      : `${situation.summary.healthBlocked} terhalang`}
+                </dd>
+              </div>
+              <div>
+                <dt>Fitur perlu perhatian</dt>
+                <dd>{situation.summary.featuresAttention}</dd>
+              </div>
+              <div>
+                <dt>Path belum di-commit</dt>
+                <dd>{situation.summary.dirtyPaths}</dd>
+              </div>
+              <div>
+                <dt>Checkout</dt>
+                <dd className="t-data">{live.repoRoot}</dd>
+              </div>
+            </dl>
+          </aside>
         </div>
       </section>
 
-      {attention.length > 0 ? (
+      <section className="section">
+        <div className="alert">
+          <h2>Batas papan</h2>
+          <p>{SITE.honesty}</p>
+        </div>
+      </section>
+
+      {situation.attention.length > 0 ? (
         <section className="section">
           <div className="section__head">
-            <h2 className="t-section">What needs attention</h2>
+            <h2 className="t-section">Yang perlu perhatian</h2>
             <span className="rulelabel">
-              Derived from evidence, not hand-authored
+              {situation.attention.length} dari bukti hidup
             </span>
           </div>
           <div className="grid">
             <div className="span-7 stack">
-              {attention.map((feature) => (
-                <div className="rule" key={feature.id}>
+              {situation.attention.map((row) => (
+                <div className="rule" key={row.id}>
                   <p className="t-label">
-                    {feature.risk} · {feature.area}
-                  </p>
-                  <h3>{feature.name}</h3>
-                  <p className="t-compact muted">{feature.purpose}</p>
-                  <p style={{ marginTop: "var(--space-3)" }}>
-                    <span className={liveStatusClass(feature.status)}>
-                      {LIVE_STATUS_LABEL[feature.status] ?? feature.status}
+                    {row.source} ·{" "}
+                    <span className={attentionStatusClass(row.statusClass)}>
+                      {row.statusWord}
                     </span>
                   </p>
+                  <h3>{row.title}</h3>
                   <p
                     className="t-compact"
-                    style={{ marginTop: "var(--space-2)" }}
+                    style={{ marginTop: "var(--space-2)", maxWidth: "68ch" }}
                   >
-                    {feature.statusReason}
+                    {row.reason}
                   </p>
-                  {feature.caveat ? (
-                    <p
-                      className="t-compact muted"
-                      style={{ marginTop: "var(--space-2)", maxWidth: "68ch" }}
-                    >
-                      {feature.caveat}
-                    </p>
-                  ) : null}
                 </div>
               ))}
             </div>
             <aside className="span-4">
-              <div className="locked">
-                <p className="t-label">Pustaka Medis</p>
-                {library.available ? (
-                  <>
-                    <dl
-                      className="factlist"
-                      style={{ marginTop: "var(--space-3)" }}
-                    >
-                      <div>
-                        <dt>Siap dipakai</dt>
-                        <dd>{library.readyToUse ?? "belum diketahui"}</dd>
-                      </div>
-                      <div>
-                        <dt>Sudah diproses</dt>
-                        <dd>{library.canonicalDocuments ?? "—"}</dd>
-                      </div>
-                      <div>
-                        <dt>Belum diproses</dt>
-                        <dd>{library.notYetParsed ?? "—"}</dd>
-                      </div>
-                      <div>
-                        <dt>Gagal</dt>
-                        <dd>{library.failed}</dd>
-                      </div>
-                      <div>
-                        <dt>PDF sumber</dt>
-                        <dd>{library.sourcePdfs ?? "—"}</dd>
-                      </div>
-                      <div>
-                        <dt>Tercatat di manifest</dt>
-                        <dd>{library.manifestEntries}</dd>
-                      </div>
-                    </dl>
-                    {library.readyUnknownReason ? (
-                      <p
-                        className="t-compact"
-                        style={{
-                          marginTop: "var(--space-4)",
-                          maxWidth: "44ch",
-                        }}
-                      >
-                        {library.readyUnknownReason}
-                      </p>
-                    ) : (
-                      <p
-                        className="t-compact muted"
-                        style={{
-                          marginTop: "var(--space-4)",
-                          maxWidth: "44ch",
-                        }}
-                      >
-                        Menghitung dokumen yang tercatat, lolos parse, dan lolos
-                        gerbang mutu.
-                      </p>
-                    )}
-                    {library.failures.length > 0 ? (
-                      <details
-                        className="disclosure"
-                        style={{ marginTop: "var(--space-3)" }}
-                      >
-                        <summary>
-                          Yang gagal ({library.failures.length})
-                        </summary>
-                        {library.failures.map((failure) => (
-                          <p className="t-compact" key={failure.docId}>
-                            <strong>{failure.docId}</strong> — {failure.error}
-                          </p>
-                        ))}
-                      </details>
-                    ) : null}
-                    {library.problems.map((problem) => (
-                      <p
-                        className="t-compact"
-                        key={problem}
-                        style={{
-                          marginTop: "var(--space-3)",
-                          maxWidth: "44ch",
-                        }}
-                      >
-                        {problem}
-                      </p>
-                    ))}
-                  </>
-                ) : (
-                  <p
-                    className="t-compact muted"
-                    style={{ marginTop: "var(--space-3)", maxWidth: "44ch" }}
-                  >
-                    {library.problems[0]}
-                  </p>
-                )}
-              </div>
+              <p className="t-label">Urutan sumber</p>
+              <p
+                className="t-compact muted"
+                style={{ marginTop: "var(--space-3)", maxWidth: "44ch" }}
+              >
+                Gerbang ditolak dulu, lalu control plane, kesiapan mesin, dan
+                fitur katalog. Perbaiki penyebabnya — barisnya hilang pada
+                pembacaan berikutnya.
+              </p>
             </aside>
           </div>
         </section>
@@ -734,7 +733,7 @@ function HomeSection({
       {live.problems.length > 0 ? (
         <section className="section">
           <div className="alert">
-            <h2>Problems while reading the repository</h2>
+            <h2>Masalah saat membaca repository</h2>
             <ul>
               {live.problems.map((problem) => (
                 <li key={problem}>{problem}</li>
@@ -746,11 +745,11 @@ function HomeSection({
 
       <section className="section">
         <div className="section__head">
-          <h2 className="t-section">Next steps</h2>
+          <h2 className="t-section">Langkah berikutnya</h2>
           <span className="rulelabel">
             {nextSteps.length === 0
-              ? "Nothing pending"
-              : `${nextSteps.length} derived from this reading`}
+              ? "Tidak ada yang tertunda"
+              : `${nextSteps.length} diturunkan dari pembacaan ini`}
           </span>
         </div>
 
@@ -760,11 +759,11 @@ function HomeSection({
               <p>Tidak ada langkah yang tertunda.</p>
               <p
                 className="t-compact muted"
-                style={{ marginTop: "var(--space-3)" }}
+                style={{ marginTop: "var(--space-3)", maxWidth: "68ch" }}
               >
                 Mesin siap, tidak ada keputusan yang menunggu, dan working tree
-                bersih. Langkah baru akan muncul di sini sendiri ketika sebuah
-                pemeriksaan gagal atau pekerjaan baru menunggu keputusan.
+                bersih. Langkah baru muncul di sini ketika pemeriksaan gagal
+                atau pekerjaan menunggu keputusan.
               </p>
             </div>
           </div>
@@ -782,7 +781,7 @@ function HomeSection({
                   <h3>{step.title}</h3>
                   <p
                     className="t-compact muted"
-                    style={{ marginTop: "var(--space-2)" }}
+                    style={{ marginTop: "var(--space-2)", maxWidth: "68ch" }}
                   >
                     {step.why}
                   </p>
@@ -794,10 +793,17 @@ function HomeSection({
                       {step.command}
                     </p>
                   ) : null}
-                  {step.runId ? (
+                  {step.runId && step.runId !== situation.primaryActionId ? (
                     <div style={{ marginTop: "var(--space-4)" }}>
                       <RunStep id={step.runId} />
                     </div>
+                  ) : step.runId && step.runId === situation.primaryActionId ? (
+                    <p
+                      className="t-compact muted"
+                      style={{ marginTop: "var(--space-3)", maxWidth: "68ch" }}
+                    >
+                      Sudah ditawarkan sebagai aksi primer di atas.
+                    </p>
                   ) : (
                     <p
                       className="t-compact muted"
@@ -810,55 +816,41 @@ function HomeSection({
               ))}
             </div>
             <aside className="span-4">
-              <div className="locked">
-                <p className="t-label">Where these come from</p>
-                <dl
-                  className="factlist"
-                  style={{ marginTop: "var(--space-3)" }}
-                >
-                  <div>
-                    <dt>Readiness checks blocking</dt>
-                    <dd>
-                      {live.health.available
-                        ? live.health.checks.filter((check) => !check.ok).length
-                        : "—"}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>Decisions waiting</dt>
-                    <dd>
-                      {
-                        live.features.filter(
-                          (feature) =>
-                            feature.status === "requires-human-action",
-                        ).length
-                      }
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>Catalog defects</dt>
-                    <dd>
-                      {
-                        live.features.filter(
-                          (feature) => feature.status === "error",
-                        ).length
-                      }
-                    </dd>
-                  </div>
-                  <div>
-                    <dt>Uncommitted paths</dt>
-                    <dd>{live.dirtyPaths}</dd>
-                  </div>
-                </dl>
-                <p
-                  className="t-compact muted"
-                  style={{ marginTop: "var(--space-4)", maxWidth: "44ch" }}
-                >
-                  Setiap langkah di kiri berasal dari salah satu hitungan ini.
-                  Tidak ada yang ditulis tangan — perbaiki penyebabnya, dan
-                  langkahnya hilang sendiri.
-                </p>
-              </div>
+              <p className="t-label">Dari mana langkah ini</p>
+              <dl className="factlist" style={{ marginTop: "var(--space-3)" }}>
+                <div>
+                  <dt>Pemeriksaan kesiapan terhalang</dt>
+                  <dd>
+                    {live.health.available
+                      ? live.health.checks.filter((check) => !check.ok).length
+                      : "—"}
+                  </dd>
+                </div>
+                <div>
+                  <dt>Keputusan menunggu</dt>
+                  <dd>
+                    {
+                      live.features.filter(
+                        (feature) => feature.status === "requires-human-action",
+                      ).length
+                    }
+                  </dd>
+                </div>
+                <div>
+                  <dt>Cacat katalog</dt>
+                  <dd>
+                    {
+                      live.features.filter(
+                        (feature) => feature.status === "error",
+                      ).length
+                    }
+                  </dd>
+                </div>
+                <div>
+                  <dt>Path belum di-commit</dt>
+                  <dd>{live.dirtyPaths}</dd>
+                </div>
+              </dl>
             </aside>
           </div>
         )}
@@ -866,8 +858,10 @@ function HomeSection({
 
       <section className="section">
         <div className="section__head">
-          <h2 className="t-section">Actions that are safe to understand</h2>
-          <span className="rulelabel">Not executed here</span>
+          <h2 className="t-section">Aksi yang aman dipahami</h2>
+          <span className="rulelabel">
+            Penjelasan; eksekusi hanya jika diizinkan
+          </span>
         </div>
         <div className="grid">
           {actions.map((action) => (
@@ -1987,12 +1981,25 @@ function KnowledgeSection({ live }: { live: LiveSnapshot }) {
 }
 
 export function ControlCenter({ live }: { live: LiveSnapshot }) {
+  const router = useRouter();
   const [section, setSection] = useState<NavId>("home");
   const [selectedAction, setSelectedAction] = useState<string | null>(null);
   const current = useMemo(
     () => NAV.find((item) => item.id === section) ?? NAV[0],
     [section],
   );
+
+  // Soft-refresh the SSR snapshot on a fixed interval while Situasi is open so
+  // gates/plane/health stay current without a new dependency or polling API.
+  useEffect(() => {
+    if (section !== "home") {
+      return;
+    }
+    const timer = window.setInterval(() => {
+      router.refresh();
+    }, SITUATION_REFRESH_MS);
+    return () => window.clearInterval(timer);
+  }, [router, section]);
 
   function openAction(id: string) {
     setSelectedAction((currentId) => (currentId === id ? null : id));
