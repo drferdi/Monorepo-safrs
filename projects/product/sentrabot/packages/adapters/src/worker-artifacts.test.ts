@@ -14,5 +14,7 @@ describe("worker artifact wiring", () => {
     expect(api).toContain("composeAgentRuntime(");
     expect(composition).toContain("new LocalArtifactStore(");
     expect(composition).toContain("artifacts,");
+    expect(worker).toContain("typesafeApiKey:");
+    expect(api).toContain("typesafeApiKey:");
   });
 });

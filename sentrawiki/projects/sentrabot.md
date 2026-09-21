@@ -43,6 +43,12 @@ No hosted vendor is required for the core product. Model providers, E2B/Daytona,
 
 `adapter-kit`, `adapters`, `auth`, `bot-templates`, `chat-ui`, `contracts`, `core`, `db`, `memory`, `testkit`, `ui-tokens`, `ui-web`.
 
+## User-intent routing
+
+`packages/contracts/src/user-intent.ts` defines a Zod-typed `UserIntent` enum (`answer`, `act`, `routine`, `connect`, `other`) with trigger detection and probability normalization. `packages/adapters/src/intent-router.ts` implements the router: it classifies a queued user-triggered run through the TypeSafe SystemOne API (`jev-latest` model) when a `TYPESAFE_API_KEY` is set, then decides `skip`, `continue`, or `clarify` against a 0.7 confidence threshold. No API key means the router skips classification; any fetch or parse failure also degrades to `skip`.
+
+The router is wired through `composeAgentRuntime` in `packages/adapters/src/agent-runtime-composition.ts`, which hands the executor a single composition of runtime, sandbox, MCP, memory, artifacts, and connectors shared by both the API process and the worker process.
+
 ## Security notes (from capsule AGENTS.md)
 
 Public repository: never commit secrets, `.env`, private URLs, or real production data. Auth, secret handling, sandbox boundaries, and host commands are security-sensitive. `SANDBOX_PROVIDER=desktop` is trusted host execution, experimental, off by default.

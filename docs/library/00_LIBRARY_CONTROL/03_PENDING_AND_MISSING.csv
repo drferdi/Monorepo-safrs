@@ -1,0 +1,6 @@
+﻿id,item,category,status,note
+P01,NIB / Business Identification Number,Corporate Legal,NOT PRESENT IN CURRENT BATCH,Add when available; verify current legal entity data.
+P02,NPWP Badan,Corporate Legal / Tax,NOT PRESENT IN CURRENT BATCH,Restricted document; add only to controlled Library scope.
+P03,Executed / legally reviewed Phantom Stock Agreement,Corporate Legal / Agreement,PENDING,Current file explicitly states subject to legal review.
+P04,Current ownership / capital record or canonical corporate register extract,Corporate Legal / Governance,VERIFY,Current incorporation statement contains initial company data; maintain later changes separately if any.
+P05,Formal Brand Sign-off for text-bearing lockups,Corporate Brand,PENDING REVIEW,Brand package README marks text-bearing source files as REVIEW.

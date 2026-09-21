@@ -16,6 +16,7 @@ export type User = {
   student_ids: string[];
   parent_id: string | null;
   active: boolean;
+  is_platform_admin?: boolean;
 };
 
 export type Student = {
@@ -1103,5 +1104,337 @@ export async function sendReminder(payload: {
     payload,
   );
   return data;
+}
+
+/* ——— Sub-fase 5: admin platform + Kayyisa ——— */
+
+export type AuthUserRow = User & Record<string, unknown>;
+
+export async function listAuthUsers(): Promise<AuthUserRow[]> {
+  const { data } = await apiClient.get<AuthUserRow[]>("/auth/users");
+  return Array.isArray(data) ? data : [];
+}
+
+export async function patchUserRole(
+  userId: string,
+  payload: { role: string; tutor_id?: string | null; student_ids?: string[] },
+): Promise<unknown> {
+  const { data } = await apiClient.patch(`/auth/users/${userId}/role`, payload);
+  return data;
+}
+
+export type TutorDirectoryRow = {
+  directory_id: string;
+  name: string;
+  email: string;
+  status: string;
+  user_id?: string | null;
+};
+
+export async function listTutorDirectory(): Promise<TutorDirectoryRow[]> {
+  const { data } = await apiClient.get<TutorDirectoryRow[]>("/tutor-directory");
+  return Array.isArray(data) ? data : [];
+}
+
+export async function importTutorDirectory(
+  form: FormData,
+): Promise<{ counts: { added: number; updated: number; pending_approval?: number } }> {
+  const { data } = await apiClient.post("/tutor-directory/import", form);
+  return data;
+}
+
+export async function inviteTutorDirectory(
+  directoryId: string,
+): Promise<{ activation_path: string }> {
+  const { data } = await apiClient.post<{ activation_path: string }>(
+    `/tutor-directory/${directoryId}/invite`,
+  );
+  return data;
+}
+
+export type EvaluationTemplateField = {
+  key: string;
+  label: string;
+  type: string;
+  options?: string[];
+  required?: boolean;
+  order?: number;
+  parent_visible?: boolean;
+};
+
+export type EvaluationTemplate = {
+  template_id: string;
+  name: string;
+  description?: string;
+  stage?: string | null;
+  subject_id?: string | null;
+  school_id?: string | null;
+  active: boolean;
+  is_default?: boolean;
+  fields?: EvaluationTemplateField[];
+};
+
+export async function listEvaluationTemplates(): Promise<EvaluationTemplate[]> {
+  const { data } = await apiClient.get<EvaluationTemplate[]>("/evaluation-templates");
+  return Array.isArray(data) ? data : [];
+}
+
+export async function createEvaluationTemplate(
+  payload: Record<string, unknown>,
+): Promise<EvaluationTemplate> {
+  const { data } = await apiClient.post<EvaluationTemplate>(
+    "/evaluation-templates",
+    payload,
+  );
+  return data;
+}
+
+export async function updateEvaluationTemplate(
+  templateId: string,
+  payload: Record<string, unknown>,
+): Promise<EvaluationTemplate> {
+  const { data } = await apiClient.put<EvaluationTemplate>(
+    `/evaluation-templates/${templateId}`,
+    payload,
+  );
+  return data;
+}
+
+export async function deleteEvaluationTemplate(templateId: string): Promise<void> {
+  await apiClient.delete(`/evaluation-templates/${templateId}`);
+}
+
+export type AuditLogRow = {
+  log_id: string;
+  timestamp?: string;
+  user_name?: string;
+  module?: string;
+  action?: string;
+  entity_id?: string;
+  reason?: string;
+};
+
+export async function listAuditLogs(limit = 200): Promise<AuditLogRow[]> {
+  const { data } = await apiClient.get<AuditLogRow[]>(
+    `/audit-logs?limit=${limit}`,
+  );
+  return Array.isArray(data) ? data : [];
+}
+
+export type ApprovalRow = {
+  approval_id: string;
+  created_at?: string;
+  requested_by?: string;
+  resource?: string;
+  action?: string;
+  resource_id?: string;
+  payload?: { name?: string };
+  status?: string;
+};
+
+export async function listApprovals(
+  params: { status?: string } = {},
+): Promise<ApprovalRow[]> {
+  const { data } = await apiClient.get<ApprovalRow[]>("/approvals", { params });
+  return Array.isArray(data) ? data : [];
+}
+
+export async function decideApproval(
+  approvalId: string,
+  payload: { decision: "approve" | "reject"; note?: string },
+): Promise<unknown> {
+  const { data } = await apiClient.post(
+    `/approvals/${approvalId}/decide`,
+    payload,
+  );
+  return data;
+}
+
+export type KayyisaChatResponse = {
+  reply?: string;
+  ai_assisted?: boolean;
+  citations?: Array<{
+    document: string;
+    subject: string;
+    phase: string;
+    url: string;
+  }>;
+};
+
+export async function postKayyisaChat(
+  message: string,
+): Promise<KayyisaChatResponse> {
+  const { data } = await apiClient.post<KayyisaChatResponse>("/kayyisa/chat", {
+    message,
+  });
+  return data;
+}
+
+export async function postProgressionSummaryDraft(
+  studentId: string,
+  subjectId?: string,
+): Promise<{
+  summary?: string;
+  source?: string;
+  ai_assisted?: boolean;
+}> {
+  const qs = subjectId
+    ? `?subject_id=${encodeURIComponent(subjectId)}`
+    : "";
+  const { data } = await apiClient.post(
+    `/students/${studentId}/progression/summary-draft${qs}`,
+  );
+  return data;
+}
+
+export type PlatformTenant = {
+  tenant_id: string;
+  name: string;
+  slug: string;
+  status: string;
+  created_at?: string;
+  branding?: { display_name?: string; accent?: string; logo_url?: string };
+  primary_contact?: { name?: string; email?: string };
+  subscription?: {
+    plan_name?: string;
+    plan_id?: string;
+    price_amount?: number;
+    currency?: string;
+    interval?: string;
+  };
+};
+
+export type PlatformPlan = {
+  plan_id: string;
+  code: string;
+  name: string;
+  price_amount: number;
+  currency?: string;
+  interval: string;
+  quotas?: Record<string, number>;
+  features?: string[];
+  status: string;
+};
+
+export type PlatformAuditRow = {
+  log_id: string;
+  timestamp?: string;
+  action?: string;
+  user_name?: string;
+  user_id?: string;
+  entity_id?: string;
+  entity_name?: string;
+  reason?: string;
+};
+
+export async function listPlatformTenants(): Promise<PlatformTenant[]> {
+  const { data } = await apiClient.get<PlatformTenant[]>("/platform/tenants");
+  return Array.isArray(data) ? data : [];
+}
+
+export async function getPlatformSummary(): Promise<Record<string, unknown> | null> {
+  try {
+    const { data } = await apiClient.get<Record<string, unknown>>(
+      "/platform/summary",
+    );
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+export async function createPlatformTenant(
+  payload: Record<string, unknown>,
+): Promise<PlatformTenant> {
+  const { data } = await apiClient.post<PlatformTenant>(
+    "/platform/tenants",
+    payload,
+  );
+  return data;
+}
+
+export async function patchPlatformTenant(
+  tenantId: string,
+  payload: Record<string, unknown>,
+): Promise<PlatformTenant> {
+  const { data } = await apiClient.patch<PlatformTenant>(
+    `/platform/tenants/${tenantId}`,
+    payload,
+  );
+  return data;
+}
+
+export async function patchPlatformTenantStatus(
+  tenantId: string,
+  payload: { status: string; reason?: string },
+): Promise<PlatformTenant> {
+  const { data } = await apiClient.patch<PlatformTenant>(
+    `/platform/tenants/${tenantId}/status`,
+    payload,
+  );
+  return data;
+}
+
+export async function assignPlatformTenantPlan(
+  tenantId: string,
+  payload: { plan_id: string; price_override?: number },
+): Promise<PlatformTenant> {
+  const { data } = await apiClient.post<PlatformTenant>(
+    `/platform/tenants/${tenantId}/plan`,
+    payload,
+  );
+  return data;
+}
+
+export async function invitePlatformOwner(
+  tenantId: string,
+  payload: { email: string; name: string },
+): Promise<{ activation_path: string; expires_at?: string }> {
+  const { data } = await apiClient.post(
+    `/platform/tenants/${tenantId}/invite-owner`,
+    payload,
+  );
+  return data;
+}
+
+export async function getPlatformTenantMetrics(
+  tenantId: string,
+): Promise<Record<string, unknown>> {
+  const { data } = await apiClient.get(
+    `/platform/tenants/${tenantId}/metrics`,
+  );
+  return data;
+}
+
+export async function listPlatformPlans(): Promise<PlatformPlan[]> {
+  const { data } = await apiClient.get<PlatformPlan[]>("/platform/plans");
+  return Array.isArray(data) ? data : [];
+}
+
+export async function createPlatformPlan(
+  payload: Record<string, unknown>,
+): Promise<PlatformPlan> {
+  const { data } = await apiClient.post<PlatformPlan>("/platform/plans", payload);
+  return data;
+}
+
+export async function patchPlatformPlan(
+  planId: string,
+  payload: Record<string, unknown>,
+): Promise<PlatformPlan> {
+  const { data } = await apiClient.patch<PlatformPlan>(
+    `/platform/plans/${planId}`,
+    payload,
+  );
+  return data;
+}
+
+export async function listPlatformAudit(
+  params: { limit?: number; entity_id?: string } = {},
+): Promise<PlatformAuditRow[]> {
+  const { data } = await apiClient.get<PlatformAuditRow[]>("/platform/audit", {
+    params,
+  });
+  return Array.isArray(data) ? data : [];
 }
 

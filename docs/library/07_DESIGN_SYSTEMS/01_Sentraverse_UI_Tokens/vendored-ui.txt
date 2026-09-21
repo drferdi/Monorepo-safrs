@@ -1,0 +1,20 @@
+# Apps that receive a vendored copy of the component layer.
+#
+# One repo-relative directory per line. `pnpm sync:ui` writes sentra-ui.css
+# into each, and `pnpm check:ui` fails if a copy has drifted from packages/sentra-ui.
+#
+# This is the sibling of vendored.txt. That file puts the token *values* within
+# reach; this one puts the component *forms* within reach — the panel that is
+# four corner marks rather than a card, the rail that does not style its own
+# scrollbar, the section that separates with a rule rather than a box. An app
+# can pass every token check and still get all of those wrong, because a card
+# built entirely from semantic tokens is invisible to a raw-value gate.
+#
+# Registering a path here does NOT change how the app looks. The file is
+# written; importing it is a separate, deliberate change made screen by screen,
+# deleting the app's own equivalent CSS as each screen moves over.
+#
+# Outstanding hand-written overlap is tracked in ui-debt.txt, which may only
+# shrink. `pnpm check:ui` fails on any selector collision that is not already
+# recorded there.
+apps/saas/smartboard/frontend/src

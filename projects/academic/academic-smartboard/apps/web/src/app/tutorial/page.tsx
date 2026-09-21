@@ -58,8 +58,9 @@ const SECTIONS = [
           operasional.
         </p>
         <p className="mt-3 text-sm text-secondary">
-          Chat Kak Kayyisa penuh menyusul di sub-fase 5; untuk Finance, kolom
-          kanan menampilkan kesiapan payroll.
+          Kak Kayyisa tersedia sebagai kolom panduan di Smartboard (atau FAB di
+          halaman lain). Untuk Finance, kolom kanan menampilkan kesiapan
+          payroll.
         </p>
       </>
     ),
@@ -71,7 +72,8 @@ const SECTIONS = [
     body: (
       <p>
         Menu dikelompokkan (Utama, Operasional, Akademik, Pengajar, Keuangan,
-        Laporan). Yang terlihat bergantung pada <strong>peran</strong> Anda.
+        Laporan, Pengaturan). Yang terlihat bergantung pada{" "}
+        <strong>peran</strong> Anda.
       </p>
     ),
   },

@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logomark in the system — Sentraverse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p-ink-900:#101312; --p-ink-500:#5A5F5C; --p-ink-300:#8B918D;
+  --p-neutral-200:#DCDCD6; --p-neutral-100:#E9E9E4; --p-neutral-050:#F7F5F1;
+  --p-white:#FFFFFF;
+  --p-vermilion:#DE4526; --p-vermilion-text:#B8351A;
+  --p-crimson:#A11208; --p-amber:#8F5A00; --p-teal:#17554E;
+
+  /* Brand product accents — authored values, unmodified */
+  --brand-mantra:#8B8CF0;
+  --brand-medlink:#5BC0D6;
+  --brand-asisten:#52C68C;
+  --brand-smartboard:#E5836B;
+  --brand-ferdi:#E0A85C;
+  /* Darkened variants — only for the direct-on-white option */
+  --brand-mantra-lt:#7576D8;
+  --brand-medlink-lt:#4B9FB1;
+  --brand-asisten-lt:#44A675;
+  --brand-smartboard-lt:#D77B64;
+  --brand-ferdi-lt:#B98B4C;
+
+  --color-background-canvas:var(--p-white);
+  --color-background-surface:var(--p-neutral-050);
+  --color-text-primary:var(--p-ink-900);
+  --color-text-secondary:var(--p-ink-500);
+  --color-text-muted:var(--p-ink-300);
+  --color-text-inverse:var(--p-white);
+  --color-border-subtle:var(--p-neutral-200);
+  --color-border-strong:var(--p-ink-900);
+  --color-mark-corner:var(--p-ink-300);
+  --color-accent:var(--p-vermilion);
+  --color-accent-text:var(--p-vermilion-text);
+  --color-status-critical:var(--p-crimson);
+  --color-status-success:var(--p-teal);
+  --color-focus-ring:var(--p-ink-900);
+
+  --font-family-sans:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --font-family-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
+  --space-5:24px; --space-6:32px; --space-7:48px; --space-8:64px;
+  --layout-gutter:24px; --layout-margin:40px; --layout-container-wide:1440px;
+  --motion-fast:90ms; --ease:cubic-bezier(.2,0,0,1);
+}
+@media (prefers-reduced-motion: reduce){ :root{--motion-fast:0ms} }
+
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--color-background-canvas);color:var(--color-text-primary);
+  font-family:var(--font-family-sans);font-variation-settings:"wdth" 100;
+  font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p,dl,dd{margin:0}
+ul{margin:0;padding:0;list-style:none}
+table{border-collapse:collapse;width:100%}
+:focus-visible{outline:2px solid var(--color-focus-ring);outline-offset:2px}
+
+.t-display{font-size:40px;line-height:1.06;font-weight:600;letter-spacing:-.022em;
+  font-variation-settings:"wdth" 112}
+.t-section{font-size:12px;font-weight:600;letter-spacing:.09em;text-transform:uppercase}
+.t-compact{font-size:13px;line-height:1.45}
+.t-label{font-family:var(--font-family-mono);font-size:11px;line-height:1.2;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-secondary)}
+.t-data{font-family:var(--font-family-mono);font-size:13px;font-variant-numeric:tabular-nums}
+.muted{color:var(--color-text-secondary)}
+.seq{font-family:var(--font-family-mono);font-size:11px;font-weight:500;letter-spacing:.06em;
+  color:var(--color-accent-text)}
+.rulelabel{display:inline-flex;align-items:center;gap:var(--space-3);
+  font-family:var(--font-family-mono);font-size:11px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--color-text-secondary)}
+.rulelabel::before{content:"";width:28px;height:1px;background:var(--color-border-subtle);flex:none}
+.rulebox{border-left:2px solid var(--color-accent);padding-left:var(--space-4);max-width:64ch}
+
+.panel{position:relative}
+.panel::before{content:"";position:absolute;inset:0;pointer-events:none;--m:var(--color-mark-corner);
+  background:
+    linear-gradient(var(--m),var(--m)) 0 0/10px 1px no-repeat,
+    linear-gradient(var(--m),var(--m)) 0 0/1px 10px no-repeat,
+    linear-gradient(var(--m),var(--m)) 100% 0/10px 1px no-repeat,
+    linear-gradient(var(--m),var(--m)) 100% 0/1px 10px no-repeat,
+    linear-gradient(var(--m),var(--m)) 0 100%/10px 1px no-repeat,
+    linear-gradient(var(--m),var(--m)) 0 100%/1px 10px no-repeat,
+    linear-gradient(var(--m),var(--m)) 100% 100%/10px 1px no-repeat,
+    linear-gradient(var(--m),var(--m)) 100% 100%/1px 10px no-repeat}
+
+.chrome{display:flex;align-items:center;gap:var(--space-4);
+  padding:var(--space-3) var(--layout-margin);border-bottom:1px solid var(--color-border-subtle)}
+.chrome__sep{width:1px;height:16px;background:var(--color-border-subtle)}
+.chrome__path{font-family:var(--font-family-mono);font-size:11px;font-weight:500;
+  letter-spacing:.13em;text-transform:uppercase}
+.chrome__path b{font-weight:500;color:var(--color-accent-text)}
+.chrome__right{margin-left:auto}
+
+main{padding:0 var(--layout-margin) var(--space-8);max-width:var(--layout-container-wide);margin-inline:auto}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--layout-gutter)}
+.pagehead{padding:var(--space-7) 0 var(--space-6);border-bottom:2px solid var(--color-border-strong)}
+.pagehead__id{grid-column:1 / span 7}.pagehead__meta{grid-column:9 / span 4}
+.section{padding:var(--space-7) 0 0}
+.section__head{display:flex;align-items:baseline;gap:var(--space-3);
+  border-bottom:1px solid var(--color-border-strong);padding-bottom:var(--space-2);
+  margin-bottom:var(--space-5)}
+.section__head .rulelabel{margin-left:auto}
+.col-12{grid-column:1 / span 12}.col-7{grid-column:1 / span 7}.col-4{grid-column:9 / span 4}
+.col-6a{grid-column:1 / span 6}.col-6b{grid-column:7 / span 6}
+
+/* ================= THE LOGOMARK ================= */
+.mark{display:block;width:40px;height:40px;flex:none;
+  --mark-neutral:var(--color-text-primary);--mark-accent:var(--color-text-primary)}
+.mark .mk-accent{fill:var(--mark-accent)}
+.mark .mk-body{fill:var(--mark-neutral)}
+.mark .mk-body{fill:var(--mark-neutral)}
+.mark .mk-arc-butt{fill:none;stroke:var(--mark-neutral);stroke-width:21.3;stroke-linecap:butt}
+.mark--180{width:180px;height:180px}
+.seam{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--layout-gutter)}
+.seam figure{margin:0}
+.seam__stage{background:var(--p-ink-900);padding:var(--space-6);display:grid;place-items:center;
+  --mark-neutral:var(--p-white)}
+.seam figcaption{margin-top:var(--space-3)}
+.mark--20{width:20px;height:20px}
+.mark--28{width:28px;height:28px}
+.mark--64{width:64px;height:64px}
+.mark--96{width:96px;height:96px}
+
+/* the tile: mark keeps its authored colour by sitting on ink */
+.tile{background:var(--p-ink-900);display:grid;place-items:center;flex:none;
+  width:64px;height:64px;--mark-neutral:var(--p-white)}
+.tile--sm{width:40px;height:40px}
+.tile--lg{width:112px;height:112px}
+
+.sizes{display:flex;align-items:flex-end;gap:var(--space-6);flex-wrap:wrap;margin-top:var(--space-4)}
+.sizes div{text-align:center}
+.sizes .t-label{display:block;margin-top:var(--space-3)}
+
+.ondark{background:var(--p-ink-900);padding:var(--space-6);display:flex;gap:var(--space-5);
+  align-items:center;justify-content:center;--mark-neutral:var(--p-white)}
+.onlight{background:var(--color-background-canvas);padding:var(--space-6);
+  border:1px solid var(--color-border-subtle);display:flex;gap:var(--space-5);
+  align-items:center;justify-content:center}
+
+/* ---------- module cards ---------- */
+.modules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--layout-gutter)}
+.module{display:block;padding:var(--space-5);text-decoration:none;color:inherit;cursor:pointer;
+  transition:background var(--motion-fast) var(--ease)}
+.module:hover{background:var(--color-background-surface)}
+.module:hover::before{--m:var(--brand)}
+.module__top{display:flex;align-items:flex-start;gap:var(--space-4)}
+.module__seq{margin-left:auto;font-family:var(--font-family-mono);font-size:11px;
+  font-weight:500;letter-spacing:.06em;color:var(--color-text-muted)}
+.module__name{font-size:22px;font-weight:600;letter-spacing:-.015em;
+  font-variation-settings:"wdth" 108;margin-top:var(--space-4)}
+.module__kind{font-family:var(--font-family-mono);font-size:10px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--color-text-secondary);margin-top:var(--space-2);display:block}
+.module__desc{font-size:13px;color:var(--color-text-secondary);margin-top:var(--space-3);max-width:40ch}
+.m-mantra{--brand:var(--brand-mantra)}
+.m-medlink{--brand:var(--brand-medlink)}
+.m-asisten{--brand:var(--brand-asisten)}
+.m-smartboard{--brand:var(--brand-smartboard)}
+.module .tile{--mark-accent:var(--brand)}
+
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:var(--layout-gutter)}
+.sw__chip{height:52px;display:grid;place-items:center;background:var(--p-ink-900);
+  --mark-neutral:var(--p-white)}
+.sw dt{font-size:13px;font-weight:500;margin-top:var(--space-2)}
+.sw dd{font-family:var(--font-family-mono);font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+
+.state{border:1px solid var(--color-border-subtle);padding:var(--space-7) var(--space-5);
+  display:grid;justify-items:center;gap:var(--space-3);text-align:center}
+.state h4{margin:0;font-size:16px;font-weight:600}
+.state p{font-size:13px;color:var(--color-text-secondary);max-width:38ch;margin:0}
+
+th,td{text-align:left;vertical-align:top;font-weight:400;
+  padding:var(--space-3) var(--space-4) var(--space-3) 0;
+  border-bottom:1px solid var(--color-border-subtle)}
+thead th{border-bottom:1px solid var(--color-border-strong);font-weight:500;font-size:13px}
+td.num{font-family:var(--font-family-mono);font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.bad{color:var(--color-status-critical)}
+.good{color:var(--color-status-success)}
+.banned li{font-size:13px;padding:var(--space-2) 0 var(--space-2) var(--space-5);
+  border-bottom:1px solid var(--color-border-subtle);position:relative;color:var(--color-text-secondary)}
+.banned li::before{content:"×";position:absolute;left:0;
+  font-family:var(--font-family-mono);color:var(--color-status-critical)}
+
+@media (max-width:1023px){
+  :root{--layout-margin:32px;--layout-gutter:20px}
+  .pagehead__id,.pagehead__meta,.col-7,.col-4,.col-6a,.col-6b{grid-column:1 / span 12}
+  .pagehead__meta,.col-4{margin-top:var(--space-6)}
+  .modules{grid-template-columns:1fr}
+}
+@media (max-width:639px){
+  :root{--layout-margin:20px;--layout-gutter:16px}
+  .t-display{font-size:30px}
+  .chrome{flex-wrap:wrap}.chrome__right{margin-left:0;width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- Production geometry, taken from Sentra_Product_Logos. Logomark only, no wordmark. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="sentra-mark" viewBox="0 0 1000 1000">
+    <g transform="translate(106.54 60.00) scale(1.08241) translate(-270 -227)">
+      <path class="mk-accent" d="M890.70 227.38 L766.99 226.87 L262.40 626.09 L386.11 626.60 Z"/>
+      <path class="mk-body" d="M262.23 869.92 L754.48 480.46 L753.02 478.60 A146.02 146.02 0 0 1 934.22 707.63 L932.76 705.78 L509.10 1040.97 L385.39 1040.45 L884.88 645.26 L880.54 639.78 A59.50 59.50 0 0 0 806.71 546.46 L802.36 540.97 L385.94 870.44 Z"/>
+    </g>
+  </symbol>
+</svg>
+
+<div class="chrome">
+  <span class="tile tile--sm" style="--mark-accent:var(--brand-asisten)">
+    <svg class="mark mark--20" aria-hidden="true"><use href="#sentra-mark"/></svg>
+  </span>
+  <span class="chrome__sep" aria-hidden="true"></span>
+  <span class="chrome__path">SENTRA / <b>DESIGN-SYSTEM</b></span>
+  <span class="rulelabel chrome__right">Logomark</span>
+</div>
+
+<main>
+  <header class="pagehead grid">
+    <div class="pagehead__id">
+      <p style="display:flex;gap:var(--space-3);align-items:baseline">
+        <span class="seq">BRD</span><span class="t-label">Production geometry · mark only</span>
+      </p>
+      <h1 class="t-display" style="margin-top:var(--space-3)">The logomark in the system</h1>
+      <p class="muted" style="margin-top:var(--space-4);max-width:58ch">
+        Two filled paths measured from the original artwork: one accent bar, and one continuous
+        body that climbs, turns, and returns. The bar is the one that takes colour. Everything on this page governs where that colour
+        is allowed to appear, not how the mark is drawn.
+      </p>
+    </div>
+    <div class="pagehead__meta">
+      <div style="border-top:2px solid var(--color-accent);padding-top:var(--space-3)">
+        <p class="t-label">Exempt from the icon spec</p>
+        <p class="t-compact muted" style="margin-top:var(--space-3)">
+          UI icons are butt-capped and 1.5 stroke. The mark is filled outline, not stroke, and its
+          ends are cut horizontally. Brand geometry is fixed and never redrawn to an internal rule. Brand geometry is fixed and is never redrawn to match an internal rule.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <!-- 01 -->
+  <section class="section">
+    <div class="section__head">
+      <span class="seq">01</span><h2 class="t-section">Provenance of this geometry</h2>
+      <span class="rulelabel">Traced from logo.png · 97.06% match</span>
+    </div>
+    <div class="grid">
+      <div class="col-7">
+        <div class="onlight" style="gap:var(--space-7)">
+          <svg class="mark mark--96" style="--mark-neutral:var(--color-text-primary);--mark-accent:var(--brand-mantra)" aria-hidden="true"><use href="#sentra-mark"/></svg>
+          <svg class="mark mark--64" style="--mark-neutral:var(--color-text-primary);--mark-accent:var(--brand-medlink)" aria-hidden="true"><use href="#sentra-mark"/></svg>
+          <svg class="mark mark--28" style="--mark-neutral:var(--color-text-primary);--mark-accent:var(--brand-asisten)" aria-hidden="true"><use href="#sentra-mark"/></svg>
+        </div>
+        <p class="t-compact rulebox" style="margin-top:var(--space-5)">
+          <b>This is a trace, not the source.</b> The SVG embedded in the product-logo file was a
+          reconstruction: 13.8% wrong on aspect ratio, 11% wrong on stroke weight, and split into
+          three loose pieces. It was discarded. The geometry here was measured directly from
+          logo.png and fitted until it overlapped the original by 97.06% of pixels. It is close, and
+          it is honest about being close. When the vector source appears, replace this and delete
+          the paragraph.
+        </p>
+      </div>
+      <div class="col-4">
+        <table>
+          <thead><tr><th scope="col">Measured</th><th scope="col">Value</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Bar angle</th><td class="num">141.65&deg;</td></tr>
+            <tr><th scope="row">Stroke width</th><td class="num">77.2 units</td></tr>
+            <tr><th scope="row">Width at the bend</th><td class="num">86.5 units</td></tr>
+            <tr><th scope="row">Bend centreline radius</th><td class="num">105.1</td></tr>
+            <tr><th scope="row">End-cut angle</th><td class="num">horizontal</td></tr>
+            <tr><th scope="row">Separate pieces</th><td class="num">2</td></tr>
+            <tr><th scope="row">Aspect ratio</th><td class="num good">0.892 / 0.894</td></tr>
+          </tbody>
+        </table>
+        <p class="t-compact muted" style="margin-top:var(--space-4);max-width:44ch">
+          Two findings worth keeping. The ends are cut <b>horizontally</b>, not square to the bar —
+          which is why no <span class="t-data">stroke-linecap</span> would ever have matched, and why
+          the mark must be filled paths rather than strokes. And the stroke <b>swells at the bend</b>,
+          77.2 to 86.5, the classic optical correction that stops a curve reading thinner than the
+          straight it joins.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section class="section">
+    <div class="section__head">
+      <span class="seq">02</span><h2 class="t-section">The finding</h2>
+      <span class="rulelabel">Measured against both canvases</span>
+    </div>
+    <div class="grid">
+      <div class="col-12">
+        <p class="t-compact rulebox">
+          <b>All five product accents sit at the same lightness.</b> They are 1.00–1.01 apart from
+          one another — authored as siblings, which is why they read as one family. The cost is that
+          every one of them lands between 2.11 and 2.95 on white, below the 3:1 that a meaningful
+          graphic requires. The palette is not wrong. It is a dark-canvas palette.
+        </p>
+      </div>
+      <div class="col-12" style="margin-top:var(--space-5)">
+        <table>
+          <thead><tr><th scope="col">Product</th><th scope="col">Accent</th>
+            <th scope="col">on ink</th><th scope="col">on white</th><th scope="col">Darkened</th><th scope="col">on white</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">MANTRA</th><td class="num">#8B8CF0</td><td class="num good">6.32</td><td class="num bad">2.95</td><td class="num">#7576D8</td><td class="num good">3.86</td></tr>
+            <tr><th scope="row">MedLink</th><td class="num">#5BC0D6</td><td class="num good">8.86</td><td class="num bad">2.11</td><td class="num">#4B9FB1</td><td class="num good">3.05</td></tr>
+            <tr><th scope="row">Asisten Medis</th><td class="num">#52C68C</td><td class="num good">8.73</td><td class="num bad">2.14</td><td class="num">#44A675</td><td class="num good">3.02</td></tr>
+            <tr><th scope="row">Smartboard</th><td class="num">#E5836B</td><td class="num good">6.93</td><td class="num bad">2.70</td><td class="num">#D77B64</td><td class="num good">3.04</td></tr>
+            <tr><th scope="row">ferdiiskandar.com</th><td class="num">#E0A85C</td><td class="num good">8.83</td><td class="num bad">2.12</td><td class="num">#B98B4C</td><td class="num good">3.06</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 -->
+  <section class="section">
+    <div class="section__head">
+      <span class="seq">03</span><h2 class="t-section">Two ways out</h2>
+      <span class="rulelabel">One preserves the brand exactly</span>
+    </div>
+    <div class="grid">
+      <div class="col-6a">
+        <p class="t-label" style="margin-bottom:var(--space-4)">Option 1 — the mark keeps its own ground</p>
+        <div class="onlight" style="gap:var(--space-6)">
+          <span class="tile" style="--mark-accent:var(--brand-mantra)"><svg class="mark" aria-hidden="true"><use href="#sentra-mark"/></svg></span>
+          <span class="tile" style="--mark-accent:var(--brand-medlink)"><svg class="mark" aria-hidden="true"><use href="#sentra-mark"/></svg></span>
+          <span class="tile" style="--mark-accent:var(--brand-asisten)"><svg class="mark" aria-hidden="true"><use href="#sentra-mark"/></svg></span>
+          <span class="tile" style="--mark-accent:var(--brand-smartboard)"><svg class="mark" aria-hidden="true"><use href="#sentra-mark"/></svg></span>
+        </div>
+        <p class="t-compact" style="margin-top:var(--space-4);max-width:46ch">
+          <b>Recommended.</b> The mark sits on an ink square wherever it appears, on any canvas.
+          Accents stay exactly as authored — 6.32 to 8.86 — and the brand never drifts. The square
+          also gives the mark a consistent optical size, which three loose bars on open white
+          never have.
+        </p>
+      </div>
+      <div class="col-6b">
+        <p class="t-label" style="margin-bottom:var(--space-4)">Option 2 — darken for white</p>
+        <div class="onlight" style="gap:var(--space-6)">
+          <svg class="mark mark--64" style="--mark-accent:var(--brand-mantra-lt)" aria-hidden="true"><use href="#sentra-mark"/></svg>
+          <svg class="mark mark--64" style="--mark-accent:var(--brand-medlink-lt)" aria-hidden="true"><use href="#sentra-mark"/></svg>
+          <svg class="mark mark--64" style="--mark-accent:var(--brand-asisten-lt)" aria-hidden="true"><use href="#sentra-mark"/></svg>
+          <svg class="mark mark--64" style="--mark-accent:var(--brand-smartboard-lt)" aria-hidden="true"><use href="#sentra-mark"/></svg>
+        </div>
+        <p class="t-compact" style="margin-top:var(--space-4);max-width:46ch">
+          The mark sits directly on white with darkened accents. It breathes more, but the colours
+          are no longer the brand's — a designer opening Figma and this screen side by side will
+          find two different greens. Every new product would need two values maintained forever.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 -->
+  <section class="section">
+    <div class="section__head">
+      <span class="seq">04</span><h2 class="t-section">Sizes</h2>
+      <span class="rulelabel">20 minimum · 96 maximum</span>
+    </div>
+    <div class="grid">
+      <div class="col-7">
+        <div class="sizes">
+          <div><span class="tile tile--sm" style="--mark-accent:var(--brand-asisten)"><svg class="mark mark--20" aria-hidden="true"><use href="#sentra-mark"/></svg></span><span class="t-label">20 in 40 · chrome</span></div>
+          <div><span class="tile" style="--mark-accent:var(--brand-asisten)"><svg class="mark mark--28" aria-hidden="true"><use href="#sentra-mark"/></svg></span><span class="t-label">28 in 64 · card</span></div>
+          <div><span class="tile tile--lg" style="--mark-accent:var(--brand-asisten)"><svg class="mark mark--64" aria-hidden="true"><use href="#sentra-mark"/></svg></span><span class="t-label">64 in 112 · launcher</span></div>
+        </div>
+        <p class="t-compact muted" style="margin-top:var(--space-5);max-width:52ch">
+          The mark occupies roughly half its tile; the rest is clear space and is not negotiable.
+          Below 20px the three bars close up and the coloured one stops reading — use the wordmark
+          instead at that size.
+        </p>
+      </div>
+      <div class="col-4">
+        <div class="ondark">
+          <svg class="mark mark--64" style="--mark-accent:var(--brand-medlink)" aria-hidden="true"><use href="#sentra-mark"/></svg>
+          <div>
+            <p class="t-label" style="color:var(--p-ink-300)">On ink directly</p>
+            <p class="t-data" style="margin-top:var(--space-2);color:var(--p-white)">no tile needed</p>
+          </div>
+        </div>
+        <p class="t-compact muted" style="margin-top:var(--space-4)">
+          On a dark surface the tile is redundant — the canvas already provides the ground.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 -->
+  <section class="section">
+    <div class="section__head">
+      <span class="seq">05</span><h2 class="t-section">Where it belongs</h2>
+      <span class="rulelabel">Hover a card</span>
+    </div>
+    <div class="grid">
+      <div class="col-12">
+        <div class="modules">
+          <a class="module panel m-mantra" href="#">
+            <div class="module__top">
+              <span class="tile"><svg class="mark mark--28" aria-hidden="true"><use href="#sentra-mark"/></svg></span>
+              <span class="module__seq">01</span>
+            </div>
+            <p class="module__name">MANTRA</p>
+            <span class="module__kind">Platform</span>
+            <p class="module__desc">Lapisan inti Sentra — orkestrasi agen, kebijakan, dan jejak keputusan lintas produk.</p>
+          </a>
+
+          <a class="module panel m-medlink" href="#">
+            <div class="module__top">
+              <span class="tile"><svg class="mark mark--28" aria-hidden="true"><use href="#sentra-mark"/></svg></span>
+              <span class="module__seq">02</span>
+            </div>
+            <p class="module__name">MedLink</p>
+            <span class="module__kind">Integration</span>
+            <p class="module__desc">Jembatan ke sistem rekam medis — pemetaan data, sinkronisasi, dan kendali akses.</p>
+          </a>
+
+          <a class="module panel m-asisten" href="#">
+            <div class="module__top">
+              <span class="tile"><svg class="mark mark--28" aria-hidden="true"><use href="#sentra-mark"/></svg></span>
+              <span class="module__seq">03</span>
+            </div>
+            <p class="module__name">Asisten Medis</p>
+            <span class="module__kind">Browser extension</span>
+            <p class="module__desc">Pendamping klinisi di browser — ekstraksi data pasien, ringkasan kasus, dan dukungan keputusan.</p>
+          </a>
+
+          <a class="module panel m-smartboard" href="#">
+            <div class="module__top">
+              <span class="tile"><svg class="mark mark--28" aria-hidden="true"><use href="#sentra-mark"/></svg></span>
+              <span class="module__seq">04</span>
+            </div>
+            <p class="module__name">Smartboard</p>
+            <span class="module__kind">Dashboard</span>
+            <p class="module__desc">Papan kendali medis — pemantauan pasien, skor risiko, dan rekomendasi klinis.</p>
+          </a>
+        </div>
+        <p class="t-compact muted" style="margin-top:var(--space-4);max-width:68ch">
+          Here the card <i>is</i> the product, so the colour is identity — information, not
+          decoration. On hover the corner marks adopt the product colour; the device was built to
+          take a variable, and this is the variable. Nothing else on the card is coloured.
+        </p>
+      </div>
+
+      <div class="col-6a" style="margin-top:var(--space-7)">
+        <p class="t-label" style="margin-bottom:var(--space-4)">Chrome — once, at the top</p>
+        <div style="border:1px solid var(--color-border-subtle)">
+          <div class="chrome" style="border-bottom:0;padding-inline:var(--space-5)">
+            <span class="tile tile--sm" style="--mark-accent:var(--brand-smartboard)">
+              <svg class="mark mark--20" aria-hidden="true"><use href="#sentra-mark"/></svg></span>
+            <span class="chrome__sep" aria-hidden="true"></span>
+            <span class="chrome__path">SENTRA / <b>SMARTBOARD</b></span>
+          </div>
+        </div>
+        <p class="t-compact muted" style="margin-top:var(--space-4);max-width:44ch">
+          Inside a product, the mark carries that product's colour and the path names it. This
+          replaces the three dots — those were a window ornament; the mark says which product you
+          are in.
+        </p>
+      </div>
+
+      <div class="col-6b" style="margin-top:var(--space-7)">
+        <p class="t-label" style="margin-bottom:var(--space-4)">Empty states — quietened</p>
+        <div class="state">
+          <svg class="mark mark--96" style="--mark-neutral:var(--color-border-subtle);--mark-accent:var(--color-text-muted)" aria-hidden="true"><use href="#sentra-mark"/></svg>
+          <h4>No runs yet</h4>
+          <p>A run pairs a source with an extractor and produces a dataset shard.</p>
+        </div>
+        <p class="t-compact muted" style="margin-top:var(--space-4);max-width:44ch">
+          Dropped to border and muted tones, with no tile. It anchors the space without competing
+          with the one sentence that matters, and this is the only place the mark exceeds 64px.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 -->
+  <section class="section">
+    <div class="section__head">
+      <span class="seq">06</span><h2 class="t-section">Where it does not belong</h2>
+      <span class="rulelabel">Needs a written exception</span>
+    </div>
+    <div class="grid">
+      <div class="col-7">
+        <ul class="banned">
+          <li>On data panels — record inspectors, crawl logs, gate tables</li>
+          <li>As a watermark behind content, at any opacity</li>
+          <li>Repeated on every row of a list or table</li>
+          <li>In any colour that is not an authored product accent</li>
+          <li>Carrying status — the mark says which product, never how it is doing</li>
+          <li>Without the product name in text beside it</li>
+          <li>Below 20px, or above 96px</li>
+          <li>Rotated, stretched, recoloured bar by bar, or redrawn to match the icon spec</li>
+        </ul>
+      </div>
+      <div class="col-4">
+        <p class="t-compact rulebox">
+          <b>The five accents are 1.00 apart from each other.</b> In greyscale, in print, or to a
+          colour-blind operator they are one colour. That is acceptable — a product colour never has
+          to be told apart from another product's colour, because only one product is on screen at a
+          time, and on the launcher every card carries its name. Colour confirms recognition here.
+          It is never asked to carry it.
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+</body>
+</html>

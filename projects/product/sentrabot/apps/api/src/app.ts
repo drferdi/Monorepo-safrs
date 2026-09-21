@@ -241,6 +241,7 @@ export async function createApp(
     messaging,
     whatsappMessaging,
     phoneLocale,
+    typesafeApiKey: env.typesafeApiKey,
   });
   const { sandbox, home, artifacts, stack, connector, executor, jobHandlers } = composition;
   const auth = createAuth(prisma, {

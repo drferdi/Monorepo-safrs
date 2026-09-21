@@ -21,6 +21,7 @@ import {
   InstalledConnectorProvider,
   type RemoteConnectorDependencies,
 } from "./installed-connectors.js";
+import { createIntentRouter } from "./intent-router.js";
 import { McpConnector } from "./mcp-connector.js";
 import { McpOAuthBroker } from "./mcp-oauth.js";
 import { WorkspaceMemoryProviderResolver } from "./memory-provider-factory.js";
@@ -56,6 +57,8 @@ export interface AgentRuntimeCompositionInput {
   messaging?: MessagingProvider;
   whatsappMessaging?: MessagingProvider;
   phoneLocale?: PhoneLocale;
+  /** Optional TypeSafe API key. Unset disables the Jev intent router. */
+  typesafeApiKey?: string;
 }
 
 export interface AgentRuntimeComposition {
@@ -121,7 +124,11 @@ export async function composeAgentRuntime(
     connector: stack.connector,
     connectors: stack.connector,
     listConnectedPluginSlugs: stack.composio?.listConnectedSlugs.bind(stack.composio),
-    secrets: [input.deploymentModelKey ?? "", input.composio.apiKey ?? ""].filter(Boolean),
+    secrets: [
+      input.deploymentModelKey ?? "",
+      input.composio.apiKey ?? "",
+      input.typesafeApiKey ?? "",
+    ].filter(Boolean),
     secretStore: secrets,
     deploymentModelKey: input.deploymentModelKey,
     dataDir,
@@ -130,6 +137,7 @@ export async function composeAgentRuntime(
     events,
     phone:
       input.messaging || input.whatsappMessaging ? createPhoneContextLoader(prisma) : undefined,
+    intentRouter: createIntentRouter({ apiKey: input.typesafeApiKey }),
   });
   const jobHandlers = createBackgroundJobHandlers({
     executor,

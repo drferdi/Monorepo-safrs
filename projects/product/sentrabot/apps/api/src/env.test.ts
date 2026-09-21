@@ -183,4 +183,11 @@ describe("loadEnv", () => {
     expect(env.openaiApiKey).toBe("test-openai-key");
     expect(env.managedAiFreeBudgetMicros).toBe(2_000_000n);
   });
+
+  it("loads an optional TypeSafe key without requiring it at boot", () => {
+    expect(loadEnv(base).typesafeApiKey).toBeUndefined();
+    expect(loadEnv({ ...base, TYPESAFE_API_KEY: "  ts-test-key  " }).typesafeApiKey).toBe(
+      "ts-test-key",
+    );
+  });
 });

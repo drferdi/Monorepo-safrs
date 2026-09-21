@@ -1,0 +1,20 @@
+# Apps that receive a vendored copy of the design tokens.
+#
+# One repo-relative directory per line. `pnpm sync:tokens` writes
+# sentra-tokens.css and sentra-tokens.json into each, and `pnpm check:tokens`
+# fails if a copy has drifted from packages/design-tokens.
+#
+# This path exists only for apps that cannot take a workspace dependency —
+# either because they are destined to become standalone repositories, or
+# because they are already excluded from pnpm-workspace.yaml
+# (clients/semayot, internal/wikirepo, healthcare/assistverse).
+#
+# Workspace members should depend on @sentra/design-tokens directly instead.
+#
+# Registering a path here does NOT change how the app looks. It only puts the
+# tokens within reach. Adopting them is a separate, deliberate change, and
+# enforcement only begins when the path also enters scope.txt.
+#
+# Nothing is registered yet — the first entry lands with the first app Boss
+# clears for adoption.
+apps/saas/smartboard/frontend/src

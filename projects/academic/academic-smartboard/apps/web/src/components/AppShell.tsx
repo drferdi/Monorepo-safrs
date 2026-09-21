@@ -9,6 +9,7 @@ import type { ReactNode } from "react";
 import { useAuth } from "../lib/auth.tsx";
 import { cn } from "../lib/cn.ts";
 import { filterByRole, NAV_ITEMS } from "../lib/nav.ts";
+import { KayyisaAgent } from "./KayyisaAgent.tsx";
 
 // next.config.ts sets trailingSlash: true, so usePathname() returns
 // "/master/murid/" while NAV_ITEMS hrefs are written without the trailing
@@ -20,7 +21,14 @@ function stripTrailingSlash(value: string): string {
   return value;
 }
 
-export function AppShell({ children }: { children: ReactNode }) {
+export function AppShell({
+  children,
+  showAssistant = true,
+}: {
+  children: ReactNode;
+  /** Arsip Layout `assistant` — false on dashboard (column already present). */
+  showAssistant?: boolean;
+}) {
   const { user, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -102,6 +110,8 @@ export function AppShell({ children }: { children: ReactNode }) {
 
         <main className="flex-1 px-(--space-4) py-(--space-5)">{children}</main>
       </div>
+
+      {showAssistant ? <KayyisaAgent /> : null}
     </div>
   );
 }

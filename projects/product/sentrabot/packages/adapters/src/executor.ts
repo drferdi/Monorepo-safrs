@@ -75,6 +75,12 @@ import {
 } from "@sentrabot/db";
 import { parse as parseShellCommand } from "shell-quote";
 import {
+  INTENT_CLARIFICATION_TEXT,
+  type IntentRouter,
+  shouldClassifyIntent,
+  userIntentTextFromBlocks,
+} from "./intent-router.js";
+import {
   connectAgent,
   messageConnectedAgent,
   respondAgentConnection,
@@ -369,6 +375,65 @@ export interface ExecutorDeps {
   /** Phone surface; absent means zero phone queries and no phone prompts. */
   phone?: { hasIdentity(botId: string): Promise<boolean> };
   listConnectedPluginSlugs?: (userId: string) => Promise<string[]>;
+  /** Optional Jev intent router. Absent or skip keeps the existing agent path. */
+  intentRouter?: IntentRouter;
+}
+
+async function maybeFinalizeClarifiedIntent(
+  deps: ExecutorDeps,
+  run: NonNullable<Awaited<ReturnType<PrismaClient["run"]["findUnique"]>>>,
+  runId: string,
+  workerId: string,
+  fence: number,
+): Promise<boolean> {
+  if (!deps.intentRouter || !shouldClassifyIntent(run)) return false;
+  const source = run.sourceMessageId
+    ? await deps.prisma.message.findUnique({
+        where: { id: run.sourceMessageId },
+        select: { blocks: true },
+      })
+    : null;
+  const text = userIntentTextFromBlocks(source?.blocks);
+  if (!text) return false;
+  const decision = await deps.intentRouter.route({ text, trigger: run.trigger });
+  if (decision.kind === "skip") return false;
+  runLog("intent.classified", {
+    runId,
+    workerId,
+    fence,
+    trigger: run.trigger,
+    intent: decision.classification.intent,
+    confidence: decision.classification.confidence,
+    routed: decision.kind,
+  });
+  if (decision.kind !== "clarify") return false;
+  const attempt = await deps.prisma.attempt.create({
+    data: { runId, fence, status: "running" },
+  });
+  const completed = await deps.events.finalizeRun({
+    workspaceId: run.workspaceId,
+    threadId: run.threadId,
+    botId: run.botId,
+    runId,
+    taskId: run.taskId,
+    attemptId: attempt.id,
+    leaseOwner: workerId,
+    leaseFence: fence,
+    outcome: "completed",
+    blocks: [{ kind: "text", text: INTENT_CLARIFICATION_TEXT }],
+  });
+  runLog(
+    "run.finalized",
+    {
+      runId,
+      workerId,
+      fence,
+      outcome: "completed",
+      routed: "clarify",
+    },
+    completed ? "info" : "warn",
+  );
+  return true;
 }
 
 export async function deferFutureRoutine(
@@ -698,6 +763,7 @@ export function createRunExecutor(deps: ExecutorDeps) {
         trigger: run.trigger,
       });
       const attemptStartedAt = Date.now();
+      if (await maybeFinalizeClarifiedIntent(deps, run, runId, workerId, fence)) return;
       const leaseTarget = await deps.prisma.bot.findUniqueOrThrow({
         where: { id: run.botId },
         select: { computerId: true, computerSwitching: true },

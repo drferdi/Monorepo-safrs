@@ -97,6 +97,7 @@ async function main() {
     messaging,
     whatsappMessaging,
     phoneLocale,
+    typesafeApiKey: process.env.TYPESAFE_API_KEY,
   });
   await jobHost.start(composition.jobHandlers);
   const reconciler = createJobReconciler({

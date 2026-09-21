@@ -17,3 +17,7 @@ Shared pre-action guard: `tools/automation/src/guard.mjs` plus vendor adapters u
 - [Claude](claude.md)
 - [Cursor](cursor.md)
 - [Codex](codex.md)
+
+## Skills
+
+`.agents/skills/` holds reusable capabilities that adapters invoke by name. Gaffer orchestration lives at `.agents/skills/gaffer-orchestration/SKILL.md` (see [Gaffer orchestration](../features/gaffer-orchestration.md)); the session protocol lives at `.agents/skills/safrs-session/SKILL.md`. The remaining skills (GSAP variants, `new-capability`, `html-build`, `prisma-migration`, `sentra-docs`, `verify`, `abyss-review`) are capability wrappers that route to canonical policy rather than defining it.

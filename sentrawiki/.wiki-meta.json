@@ -1,7 +1,8 @@
 {
-  "generatedAt": "2026-09-05T00:00:00Z",
-  "branch": "main",
-  "pageCount": 79,
+  "generatedAt": "2026-09-21T00:00:00Z",
+  "commitHash": "21f477425762c615a0c835967c2f8b7d0ab3c380",
+  "branch": "feat/gaffer-safrs-wiring",
+  "pageCount": 81,
   "note": "Derived navigation. Canonical truth remains SAFRS_SPEC.md, MONOREPO_PURPOSE.md, ADRs, and capsule docs.",
   "topLevelSections": [
     "overview",
@@ -79,6 +80,7 @@
     "tools/index.md",
     "tools/safrs.md",
     "tools/automation.md",
+    "tools/gaffer.md",
     "tools/doctor.md",
     "tools/project-wizard.md",
     "tools/project-standalone.md",
@@ -92,6 +94,7 @@
     "features/index.md",
     "features/safrs-governance.md",
     "features/automation-control-plane.md",
+    "features/gaffer-orchestration.md",
     "features/design-tokens.md",
     "features/capability-packs.md",
     "api/index.md",

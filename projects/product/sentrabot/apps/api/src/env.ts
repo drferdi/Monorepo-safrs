@@ -78,6 +78,7 @@ export interface AppEnv {
   xenditCallbackToken: string | undefined;
   xenditApiKey: string | undefined;
   openaiApiKey: string | undefined;
+  typesafeApiKey: string | undefined;
   managedAiFreeBudgetMicros: bigint | undefined;
   /**
    * Experimental hybrid control-plane relay stream (/v1/relay/*). No client consumes it yet,
@@ -155,6 +156,7 @@ export function loadEnv(source: NodeJS.ProcessEnv = process.env): AppEnv {
     xenditCallbackToken: optional(source.XENDIT_CALLBACK_TOKEN),
     xenditApiKey: optional(source.XENDIT_API_KEY),
     openaiApiKey: optional(source.OPENAI_API_KEY),
+    typesafeApiKey: optional(source.TYPESAFE_API_KEY),
     managedAiFreeBudgetMicros: positiveBigInt(
       optional(source.SENTRABOT_MANAGED_AI_FREE_BUDGET_MICROS),
     ),

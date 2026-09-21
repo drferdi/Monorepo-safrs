@@ -9,3 +9,4 @@ export * from "./platform.js";
 export * from "./rpc.js";
 export * from "./runs.js";
 export * from "./search.js";
+export * from "./user-intent.js";

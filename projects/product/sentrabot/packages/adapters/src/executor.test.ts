@@ -811,3 +811,66 @@ describe("run setup failures", () => {
     );
   });
 });
+
+describe("intent clarification", () => {
+  it("finalizes a low-confidence user run without leasing a computer", async () => {
+    const run = {
+      id: "run-1",
+      status: "queued",
+      leaseFence: 0,
+      checkpoint: null,
+      trigger: "user",
+      workspaceId: "ws-1",
+      botId: "bot-1",
+      threadId: "thread-1",
+      taskId: "task-1",
+      userId: "user-1",
+      sourceMessageId: "msg-1",
+      startedAt: null,
+    };
+    const botFind = vi.fn();
+    const finalizeRun = vi.fn(async () => true);
+    const prisma = {
+      run: {
+        findUnique: vi.fn(async () => run),
+        findUniqueOrThrow: vi.fn(async () => ({ ...run, status: "leased" })),
+        updateMany: vi.fn(async () => ({ count: 1 })),
+      },
+      message: {
+        findUnique: vi.fn(async () => ({ blocks: [{ kind: "text", text: "nanti saja" }] })),
+      },
+      attempt: {
+        create: vi.fn(async () => ({ id: "attempt-1" })),
+      },
+      bot: { findUniqueOrThrow: botFind },
+    } as unknown as PrismaClient;
+    const executor = createRunExecutor({
+      prisma,
+      secrets: [],
+      jobs: { enqueue: vi.fn(), cancel: vi.fn(), close: vi.fn() },
+      events: { finalizeRun },
+      intentRouter: {
+        route: async () => ({
+          kind: "clarify",
+          classification: {
+            intent: "answer",
+            confidence: 0.4,
+            probabilities: { answer: 0.4, act: 0.2, routine: 0.1, connect: 0.1, other: 0.2 },
+          },
+        }),
+      },
+    } as unknown as Parameters<typeof createRunExecutor>[0]);
+
+    await expect(executor.continueRun("run-1", "worker-1")).resolves.toBeUndefined();
+
+    expect(finalizeRun).toHaveBeenCalledWith(
+      expect.objectContaining({
+        outcome: "completed",
+        runId: "run-1",
+        attemptId: "attempt-1",
+        blocks: [{ kind: "text", text: expect.stringContaining("not sure") }],
+      }),
+    );
+    expect(botFind).not.toHaveBeenCalled();
+  });
+});

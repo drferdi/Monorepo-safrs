@@ -6,6 +6,7 @@
 | --- | --- | --- |
 | [SAFRS checkers](safrs.md) | `pnpm governance` | Deterministic Python governance |
 | [Automation control plane](automation.md) | `pnpm saf` | Contracts, leases, gates, evidence, publisher |
+| [Gaffer runtime](gaffer.md) | `pnpm saf gaffer run` | Cost-aware intent orchestration over SAFRS |
 | [Task CLI](task.md) | `pnpm task` | Claim / transition / close mutation tasks |
 | [Status CLI](status.md) | `pnpm status` | Registry, leases, git, live governance |
 | [Doctor](doctor.md) | `pnpm doctor` | Read-only environment diagnosis |

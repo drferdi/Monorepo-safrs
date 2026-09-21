@@ -22,7 +22,8 @@ The package is a **verification control** (classified in `.safrs/sensitive-paths
 | `tools/automation/src/evidence.mjs` | Evidence manifest build, redact, finalize, verify |
 | `tools/automation/src/publisher.mjs` | Publication eligibility (`enable_auto_merge` only) |
 | `tools/automation/src/redaction.mjs` | Deterministic evidence redaction |
-| `tools/automation/src/cli.mjs` | `publish`-agnostic `saf` command-line entry point (`pnpm saf`) |
+| `tools/automation/src/cli.mjs` | `publish`-agnostic `saf` command-line entry point (`pnpm saf`), including `gaffer run` |
+| `tools/automation/src/gaffer/*.mjs` | Gaffer orchestration runtime (see [Gaffer runtime](gaffer.md)) |
 | `tools/automation/src/adapters/claude.mjs`, `codex.mjs`, `cursor.mjs`, `droid.mjs` | Native hook payload → guard event translators |
 | `tools/automation/AGENTS.md` | Package boundary rules and local verification commands |
 | `tools/automation/package.json` | Package metadata; zero runtime dependencies |
@@ -108,6 +109,7 @@ pnpm saf lease authority-apply   (workflow only, env-driven)
 pnpm saf gate <gate-id|--all>
 pnpm saf evidence verify <manifest.json>
 pnpm saf publish evaluate <pull-request.json> <evidence.json> [platform.json]
+pnpm saf gaffer run <intent> [--capsule <id>] [--route <SOLO|DECOMPOSE>] [--json]
 ```
 
 The `gate` and `authority-apply` commands write to `GITHUB_STEP_SUMMARY` when present, and the control directory (contracts, budget ledger, lease ledger) resolves under `git-common-dir/safrs-control-plane`.
@@ -156,6 +158,7 @@ python tests/governance/test_automation_contracts.py
 
 ## Related pages
 
+- [Gaffer runtime](gaffer.md) — orchestration layer inside this package
 - [Automation control plane (features)](../features/automation-control-plane.md) — end-to-end lifecycle
 - [Architecture](../overview/architecture.md) — control plane in the six-layer model
 - [Task CLI](task.md) — claim, state, close, list

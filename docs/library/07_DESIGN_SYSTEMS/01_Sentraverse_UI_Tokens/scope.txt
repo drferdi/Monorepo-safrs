@@ -1,0 +1,14 @@
+# Paths under Sentraverse token enforcement.
+#
+# One repo-relative path per line. Everything listed here is checked by
+# scripts/check-tokens.mjs on every run: no raw hex, no non-token border-radius.
+# Everything not listed is legacy and is not checked.
+#
+# Add a path the moment its migration lands. Never remove one — a path that
+# leaves this file is a regression that stopped being visible.
+#
+# `node scripts/check-tokens.mjs --audit` lists what is still outstanding.
+#
+packages/sentra-ui
+platform/sentra-portal
+apps/saas/smartboard/frontend/src

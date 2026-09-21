@@ -186,6 +186,36 @@ export const NAV_GROUPS: NavGroup[] = [
       },
     ],
   },
+  {
+    label: "Pengaturan",
+    items: [
+      {
+        label: "Hak Akses",
+        href: "/pengaturan/hak-akses",
+        roles: ["owner"],
+      },
+      {
+        label: "Directory Tutor",
+        href: "/pengaturan/directory-tutor",
+        roles: ["owner", "admin_akademik"],
+      },
+      {
+        label: "Persetujuan",
+        href: "/persetujuan",
+        roles: ["owner"],
+      },
+      {
+        label: "Template Evaluasi",
+        href: "/pengaturan/template-evaluasi",
+        roles: ["owner", "admin_akademik", "content_manager"],
+      },
+      {
+        label: "Audit Log",
+        href: "/pengaturan/audit",
+        roles: ["owner", "admin_akademik", "finance"],
+      },
+    ],
+  },
 ];
 
 export function flattenNav(groups: NavGroup[]): NavItem[] {

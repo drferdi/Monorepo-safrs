@@ -13,7 +13,7 @@ If a wiki page disagrees with a canonical document, the canonical document wins.
 | Architecture decisions | `docs/adrs/` |
 | Capsule runtime | nearest `projects/<domain>/<capsule>/` docs |
 
-Refreshed 2026-09-05 from inspectable repository files. Leaf pages for root packages, golden-path API, tools, and how-to guides are scoped so they do not claim to be the whole monorepo. Operating model: **Human-Governed · Agent-Executed · Machine-Enforced**.
+Refreshed 2026-09-21 from inspectable repository files. Leaf pages for root packages, golden-path API, tools, and how-to guides are scoped so they do not claim to be the whole monorepo. Operating model: **Human-Governed · Agent-Executed · Machine-Enforced**.
 
 ## What this repository is
 

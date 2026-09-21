@@ -2,16 +2,8 @@
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-required = [
-    'projects/README.md',
-    'projects/_template/AGENTS.md',
-    'projects/_template/README.md',
-    'projects/_template/docs/architecture.md',
-    'projects/_template/docs/data.md',
-    'projects/_template/docs/testing.md',
-    'projects/_template/src/README.md',
-    'projects/_template/tests/README.md',
-    'projects/internal/golden-path/apps/web/AGENTS.md',
+# Always required on the control-plane tree (origin publishes without capsules).
+control_plane_required = [
     'packages/api/AGENTS.md',
     'packages/database/AGENTS.md',
     'packages/README.md',
@@ -25,7 +17,24 @@ required = [
     'docs/evidence/README.md',
     '.cursor/rules/01-safrs.mdc',
 ]
-errors = [f'missing required topology path: {item}' for item in required if not (ROOT / item).exists()]
+# Required only when this checkout contains the capsule tree.
+# Origin is published without projects/** (BOUNDARIES capsule gate).
+capsule_tree_required = [
+    'projects/README.md',
+    'projects/_template/AGENTS.md',
+    'projects/_template/README.md',
+    'projects/_template/docs/architecture.md',
+    'projects/_template/docs/data.md',
+    'projects/_template/docs/testing.md',
+    'projects/_template/src/README.md',
+    'projects/_template/tests/README.md',
+    'projects/internal/golden-path/apps/web/AGENTS.md',
+]
+errors = [
+    f'missing required topology path: {item}'
+    for item in control_plane_required
+    if not (ROOT / item).exists()
+]
 
 # Capsules live two levels deep: projects/<domain>/<capsule>.
 # A domain folder groups capsules; it owns no code, so it only carries the
@@ -51,6 +60,11 @@ def check_placeholders(folder, label, sink):
 
 projects_root = ROOT / 'projects'
 if projects_root.exists():
+    errors.extend(
+        f'missing required topology path: {item}'
+        for item in capsule_tree_required
+        if not (ROOT / item).exists()
+    )
     domains = sorted(
         p for p in projects_root.iterdir() if p.is_dir() and not p.name.startswith('_')
     )
@@ -78,4 +92,7 @@ if projects_root.exists():
 
 if errors:
     raise SystemExit('SAFRS repository topology failed:\n- ' + '\n- '.join(errors))
-print('SAFRS repository topology: OK')
+if projects_root.exists():
+    print('SAFRS repository topology: OK')
+else:
+    print('SAFRS repository topology: OK (control-plane only; projects/ absent)')

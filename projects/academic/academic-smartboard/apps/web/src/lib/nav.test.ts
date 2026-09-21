@@ -14,8 +14,8 @@ describe("filterByRole", () => {
   });
 });
 
-describe("NAV_GROUPS sub-fase 4", () => {
-  it("berisi grup Utama, Master Data, Operasional, Akademik, Pengajar, Keuangan, Laporan", () => {
+describe("NAV_GROUPS sub-fase 4–5", () => {
+  it("berisi grup Utama … Laporan + Pengaturan", () => {
     expect(NAV_GROUPS.map((g) => g.label)).toEqual([
       "Utama",
       "Master Data",
@@ -24,6 +24,7 @@ describe("NAV_GROUPS sub-fase 4", () => {
       "Pengajar",
       "Keuangan",
       "Laporan",
+      "Pengaturan",
     ]);
   });
 
@@ -53,5 +54,19 @@ describe("NAV_GROUPS sub-fase 4", () => {
     expect(admin.some((i) => i.href === "/dashboard")).toBe(true);
     expect(admin.some((i) => i.href === "/pengajar")).toBe(true);
     expect(admin.some((i) => i.href === "/tutorial")).toBe(true);
+  });
+
+  it("pengaturan: owner melihat hak akses dan persetujuan", () => {
+    const owner = filterByRole(NAV_ITEMS, "owner");
+    expect(owner.some((i) => i.href === "/pengaturan/hak-akses")).toBe(true);
+    expect(owner.some((i) => i.href === "/persetujuan")).toBe(true);
+  });
+
+  it("pengaturan: finance melihat audit, tidak hak akses", () => {
+    const finance = filterByRole(NAV_ITEMS, "finance");
+    expect(finance.some((i) => i.href === "/pengaturan/audit")).toBe(true);
+    expect(finance.some((i) => i.href === "/pengaturan/hak-akses")).toBe(
+      false,
+    );
   });
 });

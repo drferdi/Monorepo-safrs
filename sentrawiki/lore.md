@@ -38,6 +38,12 @@ Smartboard migrated from `abyss-monorepo` (ADR 0003). SentraBot public-release d
 - **2026-09-03:** SentraBot excluded from the root pnpm workspace as its own lockfile.
 - **2026-09-02:** SentraBot architecture doc frozen against code (`apps/api` is the harness on port 3100).
 
+### Era 7 — Smartboard web completion and Gaffer wiring (September 2026)
+
+- **2026-09-10:** Wiki refreshed to the control-plane + capsule topology (the `sentrawiki/` baseline this page supersedes).
+- **2026-09-13 … 09-15:** Academic Smartboard web ported through sub-phase 5 — scheduling, academics, evaluasi, payroll/overtime, ops/master data, then admin + Kayyisa (pengaturan, persetujuan, platform, Kayyisa trajectory panel).
+- **2026-09-19 … 09-21:** Gaffer orchestration lands in three phases — Ports Wiring (`tools/automation/src/gaffer/safrs-ports.mjs`), Provider Activation (`provider-codex.mjs` + `pnpm saf gaffer run`), and the accompanying architecture handoff (`docs/architecture/GAFFER_ORCHESTRATION_FRAMEWORK.md`). The current Codex provider callbacks are simulated and its default audit returns `SHIP` without independent review; Phase 4 economic validation is still open.
+
 ## Longest-standing controls
 
 - Typed demo flow (ADR 0001) still exists as the **legacy** golden-path.

@@ -8,13 +8,6 @@
       "command": "npx",
       "args": ["-y", "@playwright/mcp@0.0.79"]
     },
-    "firecrawl": {
-      "command": "npx",
-      "args": ["-y", "firecrawl-mcp@3.24.0"],
-      "env": {
-        "FIRECRAWL_API_KEY": "${env:FIRECRAWL_API_KEY}"
-      }
-    },
     "sequential-thinking": {
       "command": "npx",
       "args": [

@@ -38,6 +38,12 @@ const ROUTES = [
   "laporan",
   "aktivasi-tutor",
   "aktivasi-owner",
+  "pengaturan/hak-akses",
+  "pengaturan/directory-tutor",
+  "pengaturan/template-evaluasi",
+  "pengaturan/audit",
+  "persetujuan",
+  "platform",
 ];
 
 for (const route of ROUTES) {

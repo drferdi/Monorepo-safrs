@@ -11,6 +11,7 @@ import { FinanceActivityCard } from "../../components/dashboard/FinanceActivityC
 import { StudentEvalCard } from "../../components/dashboard/StudentEvalCard.tsx";
 import { TeachingActivityCard } from "../../components/dashboard/TeachingActivityCard.tsx";
 import { TutorEvalCard } from "../../components/dashboard/TutorEvalCard.tsx";
+import { KayyisaColumn } from "../../components/KayyisaColumn.tsx";
 import { PageHead } from "../../components/PageHead.tsx";
 import { ProtectedRoute } from "../../components/ProtectedRoute.tsx";
 import { StatusBadge } from "../../components/StatusBadge.tsx";
@@ -371,7 +372,7 @@ function DashboardView() {
               {isFinance ? (
                 <FinanceContext stats={stats} />
               ) : (
-                <KayyisaStub />
+                <KayyisaColumn />
               )}
               {isParent ? (
                 <ParentReminder
@@ -633,24 +634,7 @@ function FinanceContext({ stats }: { stats: DashboardStats }) {
   );
 }
 
-/** Chat Kayyisa penuh = sub-fase 5; stub jujur agar layout cockpit tetap. */
-function KayyisaStub() {
-  return (
-    <TerminalPanel
-      seq="01"
-      module="KAYYISA"
-      meta="Panduan"
-      title="Kak Kayyisa"
-      labelledBy="kayyisa-stub-title"
-      testId="kayyisa-stub"
-    >
-      <p className="text-sm text-secondary">
-        Asisten panduan penuh (chat + knowledge) menyusul di sub-fase 5. Panel
-        operasional Smartboard di kiri sudah aktif.
-      </p>
-    </TerminalPanel>
-  );
-}
+/** Chat Kayyisa = KayyisaColumn (sub-fase 5). */
 
 function ParentReminder({
   students,
@@ -844,7 +828,7 @@ export default function DashboardPage() {
         "content_manager",
       ]}
     >
-      <AppShell>
+      <AppShell showAssistant={false}>
         <DashboardView />
       </AppShell>
     </ProtectedRoute>

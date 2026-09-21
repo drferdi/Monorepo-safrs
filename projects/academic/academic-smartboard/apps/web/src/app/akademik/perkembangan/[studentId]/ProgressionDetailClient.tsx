@@ -15,6 +15,7 @@ import {
 import { AppShell } from "../../../../components/AppShell.tsx";
 import { CollaborativeJournal } from "../../../../components/CollaborativeJournal.tsx";
 import { CurriculumPhaseBanner } from "../../../../components/CurriculumPhaseBanner.tsx";
+import { KayyisaTrajectoryPanel } from "../../../../components/KayyisaTrajectoryPanel.tsx";
 import { PageHead } from "../../../../components/PageHead.tsx";
 import { ProtectedRoute } from "../../../../components/ProtectedRoute.tsx";
 import { getStudentProgression } from "../../../../lib/api.ts";
@@ -68,10 +69,9 @@ export function ProgressionDetailClient() {
                 {progQ.data?.student?.name ?? "Perkembangan Murid"}
               </span>
             }
-            lede="Ringkasan metrik per mapel dan jurnal kolaboratif. Kayyisa ditunda ke sub-fase 5."
+            lede="Ringkasan metrik per mapel, laporan trajektori Kak Kayyisa, dan jurnal kolaboratif."
           />
           <CurriculumPhaseBanner gradeId={progQ.data?.student?.grade_id} />
-          {/* Kak Kayyisa trajectory — sub-fase 5 */}
           <p data-testid="prog-thesis" className="text-secondary">
             {progQ.isPending
               ? "Memuat…"
@@ -91,12 +91,18 @@ export function ProgressionDetailClient() {
                   <Tooltip />
                   <Bar
                     dataKey="score"
-                    fill="var(--color-accent, #c8102e)"
+                    fill="var(--color-accent)"
                     radius={4}
                   />
                 </BarChart>
               </ResponsiveContainer>
             </div>
+          ) : null}
+          {studentId && studentId !== "placeholder" ? (
+            <KayyisaTrajectoryPanel
+              studentId={studentId}
+              hasData={chartData.length > 0}
+            />
           ) : null}
           {studentId && studentId !== "placeholder" ? (
             <CollaborativeJournal studentId={studentId} />

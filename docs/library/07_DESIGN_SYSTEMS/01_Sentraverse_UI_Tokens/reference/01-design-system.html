@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design System v1.0 — Sentraverse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p-ink-900:#101312; --p-ink-500:#5A5F5C; --p-ink-300:#8B918D;
+  --p-neutral-200:#DCDCD6; --p-neutral-100:#E9E9E4; --p-neutral-050:#F7F5F1;
+  --p-white:#FFFFFF;
+  --p-vermilion:#DE4526; --p-vermilion-text:#B8351A;
+  --p-crimson:#A11208; --p-amber:#8F5A00; --p-teal:#17554E;
+
+  --color-background-canvas:var(--p-white);
+  --color-background-surface:var(--p-neutral-050);
+  --color-text-primary:var(--p-ink-900);
+  --color-text-secondary:var(--p-ink-500);
+  --color-text-muted:var(--p-ink-300);
+  --color-text-inverse:var(--p-white);
+  --color-border-subtle:var(--p-neutral-200);
+  --color-border-strong:var(--p-ink-900);
+  --color-mark-corner:var(--p-ink-300);
+  --color-accent:var(--p-vermilion);
+  --color-accent-text:var(--p-vermilion-text);
+  --color-action-primary:var(--p-ink-900);
+  --color-status-critical:var(--p-crimson);
+  --color-status-warning:var(--p-amber);
+  --color-status-success:var(--p-teal);
+  --color-surface-accent:var(--p-tint-accent);
+  --color-surface-critical:var(--p-tint-critical);
+  --color-data-1:var(--p-ink-900);
+  --color-data-2:var(--p-plum);
+  --color-data-3:var(--p-slate);
+  --color-data-4:var(--p-sand);
+  --color-focus-ring:var(--p-ink-900);
+
+  --radius-structure:0px; --radius-control:2px;
+  --font-family-sans:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --font-family-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
+  --space-5:24px; --space-6:32px; --space-7:48px; --space-8:64px;
+  --layout-gutter:24px; --layout-margin:40px;
+  --layout-container-wide:1440px; --layout-rail-width:232px;
+  --motion-duration-default:160ms; --motion-easing-standard:cubic-bezier(.2,0,0,1);
+}
+@media (prefers-reduced-motion: reduce){ :root{ --motion-duration-default:0ms } }
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--color-background-canvas);color:var(--color-text-primary);
+  font-family:var(--font-family-sans);font-variation-settings:"wdth" 100;
+  font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p,figure,dl,dd{margin:0}
+ul{margin:0;padding:0;list-style:none}
+table{border-collapse:collapse;width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--color-focus-ring);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* type roles */
+.t-display{font-size:40px;line-height:1.06;font-weight:600;letter-spacing:-.022em;
+  font-variation-settings:"wdth" 112}
+.t-section{font-size:12px;line-height:1.2;font-weight:600;letter-spacing:.09em;text-transform:uppercase}
+.t-compact{font-size:13px;line-height:1.45}
+.t-label{font-family:var(--font-family-mono);font-size:11px;line-height:1.2;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-secondary)}
+.t-data{font-family:var(--font-family-mono);font-size:13px;font-variant-numeric:tabular-nums}
+.muted{color:var(--color-text-secondary)}
+
+/* line vocabulary */
+.seq{font-family:var(--font-family-mono);font-size:11px;font-weight:500;letter-spacing:.06em;
+  color:var(--color-accent-text);font-variant-numeric:tabular-nums}
+.rulelabel{display:inline-flex;align-items:center;gap:var(--space-3);
+  font-family:var(--font-family-mono);font-size:11px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--color-text-secondary)}
+.rulelabel::before{content:"";width:28px;height:1px;background:var(--color-border-subtle);flex:none}
+.panel{position:relative}
+.panel::before{content:"";position:absolute;inset:0;pointer-events:none;--m:var(--color-mark-corner);
+  background:
+    linear-gradient(var(--m),var(--m)) 0 0/10px 1px no-repeat,
+    linear-gradient(var(--m),var(--m)) 0 0/1px 10px no-repeat,
+    linear-gradient(var(--m),var(--m)) 100% 0/10px 1px no-repeat,
+    linear-gradient(var(--m),var(--m)) 100% 0/1px 10px no-repeat,
+    linear-gradient(var(--m),var(--m)) 0 100%/10px 1px no-repeat,
+    linear-gradient(var(--m),var(--m)) 0 100%/1px 10px no-repeat,
+    linear-gradient(var(--m),var(--m)) 100% 100%/10px 1px no-repeat,
+    linear-gradient(var(--m),var(--m)) 100% 100%/1px 10px no-repeat}
+.panel--active::before{--m:var(--color-accent)}
+.panel__body{padding:var(--space-5)}
+
+.chrome{display:flex;align-items:center;gap:var(--space-4);
+  padding:var(--space-3) var(--layout-margin);border-bottom:1px solid var(--color-border-subtle)}
+.chrome__sep{width:1px;height:16px;background:var(--color-border-subtle);flex:none}
+.chrome__path{font-family:var(--font-family-mono);font-size:11px;font-weight:500;
+  letter-spacing:.13em;text-transform:uppercase}
+.chrome__path b{font-weight:500;color:var(--color-accent-text)}
+.chrome__right{margin-left:auto}
+
+/* shell */
+.shell{display:grid;grid-template-columns:var(--layout-rail-width) minmax(0,1fr);min-height:100vh}
+.rail{border-right:1px solid var(--color-border-subtle);position:sticky;top:0;height:100vh;
+  display:flex;flex-direction:column;background:var(--color-background-canvas);overflow-y:auto}
+.rail__mark{padding:var(--space-5);border-bottom:1px solid var(--color-border-subtle)}
+.wordmark{font-size:14px;font-weight:600;letter-spacing:.16em;font-variation-settings:"wdth" 108}
+.rail__module{margin-top:var(--space-2)}
+.rail nav{padding:var(--space-5) 0;flex:1}
+.rail__group{padding:0 var(--space-5) var(--space-2)}
+.rail a{display:flex;gap:var(--space-3);align-items:baseline;
+  padding:var(--space-2) var(--space-5);font-size:14px;text-decoration:none;
+  border-left:2px solid transparent;
+  transition:background var(--motion-duration-default) var(--motion-easing-standard)}
+.rail a .seq{color:var(--color-text-muted);font-size:10px}
+.rail a:hover{background:var(--color-background-surface)}
+.rail a[aria-current="true"]{border-left-color:var(--color-accent);font-weight:600;
+  background:var(--color-background-surface)}
+.rail a[aria-current="true"] .seq{color:var(--color-accent-text)}
+.rail__foot{padding:var(--space-5);border-top:1px solid var(--color-border-subtle)}
+
+.topbar{display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-5);
+  padding:var(--space-4) var(--layout-margin);border-bottom:1px solid var(--color-border-subtle)}
+main{padding:0 var(--layout-margin) var(--space-8)}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--layout-gutter)}
+.wrap{max-width:var(--layout-container-wide);margin:0 auto}
+
+.pagehead{padding:var(--space-7) 0 var(--space-6);border-bottom:2px solid var(--color-border-strong)}
+.pagehead__id{grid-column:1 / span 7}
+.pagehead__meta{grid-column:9 / span 4}
+.eyebrow{display:flex;align-items:baseline;gap:var(--space-3)}
+.lede{margin-top:var(--space-4);max-width:58ch}
+.locked{border-top:2px solid var(--color-accent);padding-top:var(--space-3)}
+.locked dl div{display:grid;grid-template-columns:1fr auto;gap:var(--space-4);
+  padding:var(--space-2) 0;border-bottom:1px solid var(--color-border-subtle)}
+.locked dt{font-size:13px;color:var(--color-text-secondary)}
+.locked dd{font-family:var(--font-family-mono);font-size:12px;text-align:right}
+
+.section{padding:var(--space-7) 0 0;scroll-margin-top:var(--space-5)}
+.section__head{display:flex;align-items:baseline;gap:var(--space-3);
+  border-bottom:1px solid var(--color-border-strong);padding-bottom:var(--space-2);
+  margin-bottom:var(--space-5)}
+.section__head .rulelabel{margin-left:auto}
+
+/* generic bits */
+.col-7{grid-column:1 / span 7}
+.col-4{grid-column:9 / span 4}
+.col-12{grid-column:1 / span 12}
+.col-6a{grid-column:1 / span 6}
+.col-6b{grid-column:7 / span 6}
+.stack > * + *{margin-top:var(--space-4)}
+
+th,td{text-align:left;vertical-align:top;font-weight:400;
+  padding:var(--space-3) var(--space-4) var(--space-3) 0;
+  border-bottom:1px solid var(--color-border-subtle)}
+thead th{border-bottom:1px solid var(--color-border-strong);font-weight:500;white-space:nowrap;font-size:13px}
+tbody tr:hover{background:var(--color-background-surface)}
+td.num,td .mono{font-family:var(--font-family-mono);font-size:12px;
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* 01 doctrine */
+.rules{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-5) var(--layout-gutter)}
+.rule{border-top:1px solid var(--color-border-strong);padding-top:var(--space-3)}
+.rule h3{font-size:15px;font-weight:600;margin-top:var(--space-2)}
+.rule p{font-size:13px;color:var(--color-text-secondary);margin-top:var(--space-2);max-width:44ch}
+
+/* 02 grid demo */
+.griddemo{position:relative;height:112px;display:grid;
+  grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--layout-gutter)}
+.griddemo span{background:var(--p-neutral-050);border-top:1px solid var(--color-accent)}
+.griddemo b{position:absolute;top:-18px;font-family:var(--font-family-mono);font-size:10px;
+  color:var(--color-text-muted)}
+
+/* 03 type specimen */
+.spec{display:grid;grid-template-columns:150px minmax(0,1fr);gap:var(--space-4);
+  padding:var(--space-4) 0;border-bottom:1px solid var(--color-border-subtle);align-items:baseline}
+.spec:last-child{border-bottom:0}
+.spec__meta{font-family:var(--font-family-mono);font-size:11px;color:var(--color-text-secondary);
+  line-height:1.5}
+
+/* 04 colour */
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:var(--layout-gutter)}
+.sw__chip{height:56px;border:1px solid var(--color-border-subtle)}
+.sw dt{font-size:13px;font-weight:500;margin-top:var(--space-2)}
+.sw dd{font-family:var(--font-family-mono);font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.zonerule{border-left:2px solid var(--color-accent);padding-left:var(--space-4);max-width:60ch}
+
+/* 05 line vocabulary demo */
+.vocab{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-6) var(--layout-gutter)}
+.vocab__demo{background:var(--color-background-surface);padding:var(--space-6);
+  display:flex;align-items:center;justify-content:center;min-height:96px}
+
+/* 06 space scale */
+.scale div{display:grid;grid-template-columns:64px 72px minmax(0,1fr);gap:var(--space-4);
+  align-items:center;padding:var(--space-2) 0;border-bottom:1px solid var(--color-border-subtle)}
+.scale i{display:block;height:10px;background:var(--color-text-primary)}
+
+/* 07 components */
+.btn{font-family:inherit;font-size:14px;font-weight:500;padding:var(--space-3) var(--space-4);
+  min-height:44px;border:1px solid var(--color-border-strong);border-radius:var(--radius-control);
+  background:var(--color-background-canvas);color:var(--color-text-primary);cursor:pointer;
+  transition:background var(--motion-duration-default) var(--motion-easing-standard)}
+.btn:hover{background:var(--color-background-surface)}
+.btn--primary{background:var(--color-action-primary);color:var(--color-text-inverse);
+  border-color:var(--color-action-primary)}
+.btn--primary:hover{background:#000}
+.btn:disabled{border-color:var(--color-border-subtle);color:var(--color-text-muted);cursor:not-allowed;
+  background:var(--color-background-canvas)}
+.btn--primary:disabled{background:var(--p-neutral-100);border-color:var(--p-neutral-100);
+  color:var(--color-text-muted)}
+.btnrow{display:flex;gap:var(--space-2);flex-wrap:wrap;align-items:center}
+.status{display:inline-flex;align-items:center;gap:var(--space-2);white-space:nowrap;
+  font-family:var(--font-family-mono);font-size:11px;letter-spacing:.07em;
+  text-transform:uppercase;font-weight:500}
+.status::before{content:"";width:9px;height:9px;flex:none;border:1px solid currentColor}
+.status--fail{color:var(--color-status-critical)}
+.status--fail::before{background:currentColor}
+.status--warn{color:var(--color-status-warning)}
+.status--warn::before{background:linear-gradient(135deg,currentColor 0 50%,transparent 50% 100%)}
+.status--pass{color:var(--color-status-success)}
+.status--idle{color:var(--color-text-secondary)}
+.status--idle::before{border-style:dashed}
+.field{display:block;max-width:340px}
+.field input{width:100%;font-family:inherit;font-size:14px;padding:var(--space-3);
+  min-height:44px;border:1px solid var(--color-border-strong);border-radius:var(--radius-control);
+  background:var(--color-background-canvas);color:var(--color-text-primary)}
+.field input::placeholder{color:var(--color-text-muted)}
+
+/* 08 prohibitions */
+.banned{columns:2;column-gap:var(--layout-gutter)}
+.banned li{font-size:13px;padding:var(--space-2) 0 var(--space-2) var(--space-5);
+  border-bottom:1px solid var(--color-border-subtle);position:relative;
+  break-inside:avoid;color:var(--color-text-secondary)}
+.banned li::before{content:"×";position:absolute;left:0;
+  font-family:var(--font-family-mono);color:var(--color-status-critical)}
+
+.footnote{margin-top:var(--space-8);padding-top:var(--space-4);
+  border-top:1px solid var(--color-border-strong);display:grid;
+  grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--layout-gutter)}
+.footnote > div{grid-column:span 3}
+.footnote dd{font-family:var(--font-family-mono);font-size:12px;margin-top:var(--space-2)}
+
+@media (max-width:1023px){
+  :root{--layout-margin:32px;--layout-gutter:20px}
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .rail{position:static;height:auto;border-right:0;
+    border-bottom:1px solid var(--color-border-subtle);
+    flex-direction:row;align-items:center;overflow-x:auto}
+  .rail__mark{border-bottom:0;border-right:1px solid var(--color-border-subtle);
+    padding:var(--space-4) var(--space-5);white-space:nowrap}
+  .rail nav{display:flex;padding:0}
+  .rail__group{display:none}
+  .rail a{border-left:0;border-bottom:2px solid transparent;padding:var(--space-4);white-space:nowrap}
+  .rail a[aria-current="true"]{border-bottom-color:var(--color-accent)}
+  .rail__foot{display:none}
+  .pagehead__id,.pagehead__meta,.col-7,.col-4,.col-6a,.col-6b{grid-column:1 / span 12}
+  .pagehead__meta,.col-4{margin-top:var(--space-6)}
+  .footnote > div{grid-column:span 6}
+}
+@media (max-width:639px){
+  :root{--layout-margin:20px;--layout-gutter:16px}
+  .t-display{font-size:30px}
+  .chrome{flex-wrap:wrap}
+  .chrome__right{margin-left:0;width:100%}
+  .rules,.vocab{grid-template-columns:1fr}
+  .banned{columns:1}
+  .spec{grid-template-columns:1fr;gap:var(--space-2)}
+  .griddemo{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .footnote > div{grid-column:span 12}
+}
+
+/* data series demo */
+.chart{display:grid;gap:var(--space-3);margin-top:var(--space-4)}
+.chart__row{display:grid;grid-template-columns:150px minmax(0,1fr) 76px;
+  gap:var(--space-4);align-items:center}
+.chart__bar{height:18px;min-width:2px}
+.chart__val{font-family:var(--font-family-mono);font-size:12px;
+  font-variant-numeric:tabular-nums;text-align:right}
+
+/* ---------- state tints (added v0.4) ---------- */
+.panel--active .panel__body{background:var(--color-surface-accent)}
+tbody tr.row--fail{background:var(--color-surface-critical)}
+tbody tr.row--fail:hover{background:#F7E3DF}
+
+/* ---------- logomark (v1.0) ---------- */
+.mark{display:block;width:20px;height:20px;flex:none;
+  --mark-neutral:var(--p-white);--mark-accent:var(--p-white)}
+.mark .mk-accent{fill:var(--mark-accent)}
+.mark .mk-body{fill:var(--mark-neutral)}
+.tile{background:var(--p-ink-900);display:grid;place-items:center;flex:none;width:28px;height:28px}
+/* ---------- button: treatment C, hard ledge (EXC-01) ---------- */
+.btn{box-shadow:var(--button-ledge,3px) var(--button-ledge,3px) 0 0 var(--p-ink-900);
+  transition:background var(--motion-fast,90ms) var(--ease,cubic-bezier(.2,0,0,1)),
+             transform var(--motion-fast,90ms) var(--ease,cubic-bezier(.2,0,0,1)),
+             box-shadow var(--motion-fast,90ms) var(--ease,cubic-bezier(.2,0,0,1))}
+.btn--primary{box-shadow:3px 3px 0 0 var(--p-ink-300)}
+.btn:active:not(:disabled){transform:translate(3px,3px);box-shadow:0 0 0 0 rgba(0,0,0,0)}
+.btn:disabled{box-shadow:none;transform:none}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="sentra-mark" viewBox="0 0 1000 1000">
+    <g transform="translate(106.54 60.00) scale(1.08241) translate(-270 -227)">
+      <path class="mk-accent" d="M890.70 227.38 L766.99 226.87 L262.40 626.09 L386.11 626.60 Z"/>
+      <path class="mk-body" d="M262.23 869.92 L754.48 480.46 L753.02 478.60 A146.02 146.02 0 0 1 934.22 707.63 L932.76 705.78 L509.10 1040.97 L385.39 1040.45 L884.88 645.26 L880.54 639.78 A59.50 59.50 0 0 0 806.71 546.46 L802.36 540.97 L385.94 870.44 Z"/>
+    </g>
+  </symbol>
+</svg>
+
+
+<div class="chrome">
+  <span class="tile"><svg class="mark" aria-hidden="true"><use href="#sentra-mark"/></svg></span>
+  <span class="chrome__sep" aria-hidden="true"></span>
+  <span class="chrome__path">SENTRA / <b>DESIGN-SYSTEM</b></span>
+  <span class="rulelabel chrome__right">Reference</span>
+</div>
+
+<div class="shell">
+
+  <div class="rail">
+    <div class="rail__mark">
+      <div class="wordmark">SENTRAVERSE</div>
+      <div class="t-label rail__module">Design System</div>
+    </div>
+    <nav aria-label="Sections">
+      <p class="t-label rail__group">Foundations</p>
+      <ul>
+        <li><a href="#s1" aria-current="true"><span class="seq">01</span>Doctrine</a></li>
+        <li><a href="#s2"><span class="seq">02</span>Grid</a></li>
+        <li><a href="#s3"><span class="seq">03</span>Typography</a></li>
+        <li><a href="#s4"><span class="seq">04</span>Colour</a></li>
+        <li><a href="#s5"><span class="seq">05</span>Line vocabulary</a></li>
+        <li><a href="#s6"><span class="seq">06</span>Space and shape</a></li>
+      </ul>
+      <p class="t-label rail__group" style="padding-top:var(--space-5)">Applied</p>
+      <ul>
+        <li><a href="#s7"><span class="seq">07</span>Components</a></li>
+        <li><a href="#s8"><span class="seq">08</span>Prohibitions</a></li>
+      </ul>
+    </nav>
+    <div class="rail__foot">
+      <p class="t-label">Version</p>
+      <p class="t-data" style="margin-top:var(--space-2)">v1.0 · locked</p>
+    </div>
+  </div>
+
+  <div>
+    <div class="topbar">
+      <p class="t-compact muted">Design System / Foundations</p>
+      <p class="t-label">Owner · design-eng</p>
+    </div>
+
+    <main class="wrap">
+
+      <!-- ============ HEADER ============ -->
+      <header class="pagehead grid">
+        <div class="pagehead__id">
+          <p class="eyebrow"><span class="seq">SYS</span>
+            <span class="t-label">Governing reference for every Sentraverse surface</span></p>
+          <h1 class="t-display" style="margin-top:var(--space-3)">Sentraverse Design System</h1>
+          <p class="lede muted">
+            One page. Everything a designer or engineer needs before touching a Sentraverse screen.
+            If a decision is not on this page, it has not been made — raise it rather than inventing it.
+          </p>
+        </div>
+        <div class="pagehead__meta">
+          <div class="locked">
+            <p class="t-label">Locked decisions</p>
+            <dl style="margin-top:var(--space-3)">
+              <div><dt>Colour role</dt><dd>Brand + status</dd></div>
+              <div><dt>Canvas</dt><dd>Pure white</dd></div>
+              <div><dt>Typeface</dt><dd>Archivo</dd></div>
+              <div><dt>Radius</dt><dd>2px controls</dd></div>
+              <div><dt>Density</dt><dd>Comfortable</dd></div>
+              <div><dt>Button</dt><dd>C · hard ledge</dd></div>
+            </dl>
+          </div>
+        </div>
+      </header>
+
+      <!-- ============ 01 DOCTRINE ============ -->
+      <section class="section" id="s1" aria-labelledby="h1">
+        <div class="section__head">
+          <span class="seq">01</span>
+          <h2 class="t-section" id="h1">Doctrine</h2>
+          <span class="rulelabel">Six rules that settle most arguments</span>
+        </div>
+        <div class="grid">
+          <div class="col-12">
+            <div class="rules">
+              <div class="rule">
+                <span class="seq">R1</span>
+                <h3>Structure before style</h3>
+                <p>Grid, hierarchy and content order are decided before any colour or type choice. A layout that only works once it is styled is not resolved.</p>
+              </div>
+              <div class="rule">
+                <span class="seq">R2</span>
+                <h3>Every element earns its place</h3>
+                <p>An element must orient, inform, group, act, or give feedback. If it does none of these, it is removed — not made subtler.</p>
+              </div>
+              <div class="rule">
+                <span class="seq">R3</span>
+                <h3>Type does the structural work</h3>
+                <p>Hierarchy comes from size, weight, position and space. Not from boxes, fills or shadows. Containers are the last resort, never the first.</p>
+              </div>
+              <div class="rule">
+                <span class="seq">R4</span>
+                <h3>Colour is meaning, never filling</h3>
+                <p>Brand colour marks identity and state. Status colour reports condition. Neither is ever used because a region looked empty.</p>
+              </div>
+              <div class="rule">
+                <span class="seq">R5</span>
+                <h3>Never colour alone</h3>
+                <p>Every status carries a distinct glyph and a word. The interface stays fully readable in greyscale and to a colour-blind operator.</p>
+              </div>
+              <div class="rule">
+                <span class="seq">R6</span>
+                <h3>Say the true thing</h3>
+                <p>The interface reports what happened, not what is comfortable. A run that produced unusable output says so, even when every process step succeeded.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 02 GRID ============ -->
+      <section class="section" id="s2" aria-labelledby="h2">
+        <div class="section__head">
+          <span class="seq">02</span>
+          <h2 class="t-section" id="h2">Grid</h2>
+          <span class="rulelabel">12 columns · gutter 24 · margin 40</span>
+        </div>
+        <div class="grid">
+          <div class="col-7">
+            <div class="griddemo" aria-hidden="true">
+              <b style="left:0">01</b><b style="right:0">12</b>
+              <span></span><span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <p class="t-compact muted" style="margin-top:var(--space-4);max-width:52ch">
+              Content anchors on columns 1–7. Summary, verdict and side context sit on 9–12,
+              leaving column 8 empty as a deliberate gap. That gap is the system's asymmetry —
+              it is structural, not decorative, and it is not to be filled.
+            </p>
+          </div>
+          <div class="col-4">
+            <table>
+              <caption class="sr-only">Breakpoints</caption>
+              <thead><tr><th scope="col">Breakpoint</th><th scope="col">Cols</th><th scope="col">Margin</th></tr></thead>
+              <tbody>
+                <tr><th scope="row" class="t-compact">&lt; 640</th><td class="num">4</td><td class="num">20</td></tr>
+                <tr><th scope="row" class="t-compact">640 – 1023</th><td class="num">8</td><td class="num">32</td></tr>
+                <tr><th scope="row" class="t-compact">1024 – 1439</th><td class="num">12</td><td class="num">40</td></tr>
+                <tr><th scope="row" class="t-compact">&ge; 1440</th><td class="num">12</td><td class="num">centred</td></tr>
+              </tbody>
+            </table>
+            <p class="t-compact muted" style="margin-top:var(--space-4)">
+              Max content width 1440. Body text never exceeds 68 characters per line.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 03 TYPOGRAPHY ============ -->
+      <section class="section" id="s3" aria-labelledby="h3">
+        <div class="section__head">
+          <span class="seq">03</span>
+          <h2 class="t-section" id="h3">Typography</h2>
+          <span class="rulelabel">Archivo variable · JetBrains Mono</span>
+        </div>
+        <div class="grid">
+          <div class="col-7">
+            <div class="spec">
+              <p class="spec__meta">display<br>40 / 1.06 / 600<br>wdth 112</p>
+              <p class="t-display">Not fit to train</p>
+            </div>
+            <div class="spec">
+              <p class="spec__meta">section title<br>12 / 600 / caps<br>tracking .09em</p>
+              <p class="t-section">Quality gates</p>
+            </div>
+            <div class="spec">
+              <p class="spec__meta">body<br>15 / 1.5 / 400</p>
+              <p>The crawl succeeded. The dataset it produced did not.</p>
+            </div>
+            <div class="spec">
+              <p class="spec__meta">compact body<br>13 / 1.45 / 400</p>
+              <p class="t-compact">Repeated 5-word sequences across the response body.</p>
+            </div>
+            <div class="spec">
+              <p class="spec__meta">label<br>mono 11 / caps<br>tracking .07em</p>
+              <p class="t-label">Retrieved 25 Jul 2026</p>
+            </div>
+            <div class="spec">
+              <p class="spec__meta">data<br>mono 13 / tabular</p>
+              <p class="t-data">193,020 B · 51.7% · 0.59%</p>
+            </div>
+          </div>
+          <div class="col-4">
+            <p class="t-label">Why one family</p>
+            <p class="t-compact muted" style="margin-top:var(--space-3);max-width:44ch">
+              Archivo carries a width axis. The display voice comes from widening to 112,
+              not from adding a second typeface. One family, two voices, one font payload.
+            </p>
+            <p class="t-label" style="margin-top:var(--space-6)">Rules</p>
+            <ul class="t-compact muted stack" style="margin-top:var(--space-3)">
+              <li>Left aligned. Centred type only inside a modal title.</li>
+              <li>Three weights only: 400, 500, 600.</li>
+              <li>All numeric columns use tabular figures.</li>
+              <li>Uppercase is reserved for labels under four words.</li>
+              <li>Mono means machine-produced: IDs, paths, measurements, raw capture.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 04 COLOUR ============ -->
+      <section class="section" id="s4" aria-labelledby="h4">
+        <div class="section__head">
+          <span class="seq">04</span>
+          <h2 class="t-section" id="h4">Colour</h2>
+          <span class="rulelabel">Contrast measured against white</span>
+        </div>
+        <div class="grid">
+          <div class="col-12">
+            <p class="zonerule t-compact">
+              <b>The zone rule.</b> Vermilion and crimson are close in hue — 1.91:1 apart.
+              They are kept apart by location, not by hue. Vermilion lives only in chrome:
+              wordmark, sequence numbers, active navigation, panel corners. Crimson lives only in
+              content: verdicts, failed gates, defect marks. The two never appear in the same block.
+              A screen that breaks this rule is a defect, not a variation.
+            </p>
+          </div>
+
+          <div class="col-12" style="margin-top:var(--space-6)">
+            <p class="t-label" style="margin-bottom:var(--space-4)">Chrome zone</p>
+            <div class="swatches">
+              <dl class="sw"><div class="sw__chip" style="background:#DE4526"></div>
+                <dt>accent</dt><dd>#DE4526 · 4.21:1<br>graphic marks only</dd></dl>
+              <dl class="sw"><div class="sw__chip" style="background:#B8351A"></div>
+                <dt>accent.text</dt><dd>#B8351A · 5.90:1<br>small text, AA</dd></dl>
+              <dl class="sw"><div class="sw__chip" style="background:#101312"></div>
+                <dt>text.primary</dt><dd>#101312 · 18.68:1</dd></dl>
+              <dl class="sw"><div class="sw__chip" style="background:#5A5F5C"></div>
+                <dt>text.secondary</dt><dd>#5A5F5C · 6.51:1</dd></dl>
+              <dl class="sw"><div class="sw__chip" style="background:#8B918D"></div>
+                <dt>mark.corner</dt><dd>#8B918D · 3.21:1<br>non-text only</dd></dl>
+              <dl class="sw"><div class="sw__chip" style="background:#DCDCD6"></div>
+                <dt>border.subtle</dt><dd>#DCDCD6</dd></dl>
+              <dl class="sw"><div class="sw__chip" style="background:#F7F5F1"></div>
+                <dt>background.surface</dt><dd>#F7F5F1</dd></dl>
+              <dl class="sw"><div class="sw__chip" style="background:#FFFFFF"></div>
+                <dt>background.canvas</dt><dd>#FFFFFF</dd></dl>
+            </div>
+          </div>
+
+          <div class="col-12" style="margin-top:var(--space-7)">
+            <p class="t-label" style="margin-bottom:var(--space-4)">Content zone · status</p>
+            <div class="swatches">
+              <dl class="sw"><div class="sw__chip" style="background:#A11208"></div>
+                <dt>status.critical</dt><dd>#A11208 · 8.06:1<br>filled glyph</dd></dl>
+              <dl class="sw"><div class="sw__chip" style="background:#8F5A00"></div>
+                <dt>status.warning</dt><dd>#8F5A00 · 5.78:1<br>half glyph</dd></dl>
+              <dl class="sw"><div class="sw__chip" style="background:#17554E"></div>
+                <dt>status.success</dt><dd>#17554E · 8.59:1<br>outline glyph</dd></dl>
+              <dl class="sw"><div class="sw__chip" style="background:#5A5F5C"></div>
+                <dt>status.idle</dt><dd>#5A5F5C · 6.51:1<br>dashed glyph</dd></dl>
+            </div>
+          </div>
+
+          <div class="col-12" style="margin-top:var(--space-7)">
+            <p class="t-label" style="margin-bottom:var(--space-4)">Content zone · data series</p>
+            <div class="swatches">
+              <dl class="sw"><div class="sw__chip" style="background:#101312"></div>
+                <dt>data.1</dt><dd>#101312 · 18.68:1</dd></dl>
+              <dl class="sw"><div class="sw__chip" style="background:#4C3245"></div>
+                <dt>data.2</dt><dd>#4C3245 · 11.35:1</dd></dl>
+              <dl class="sw"><div class="sw__chip" style="background:#5A7480"></div>
+                <dt>data.3</dt><dd>#5A7480 · 4.95:1</dd></dl>
+              <dl class="sw"><div class="sw__chip" style="background:#D3B57E"></div>
+                <dt>data.4</dt><dd>#D3B57E · 1.97:1<br>fills only, never text</dd></dl>
+            </div>
+
+            <div class="grid" style="margin-top:var(--space-6)">
+              <div class="col-7">
+                <p class="t-label">In use · records by source type</p>
+                <div class="chart">
+                  <div class="chart__row">
+                    <span class="t-compact">Product docs</span>
+                    <span class="chart__bar" style="width:100%;background:var(--color-data-1)"></span>
+                    <span class="chart__val">1,204</span>
+                  </div>
+                  <div class="chart__row">
+                    <span class="t-compact">Clinical guidelines</span>
+                    <span class="chart__bar" style="width:71%;background:var(--color-data-2)"></span>
+                    <span class="chart__val">855</span>
+                  </div>
+                  <div class="chart__row">
+                    <span class="t-compact">Support transcripts</span>
+                    <span class="chart__bar" style="width:38%;background:var(--color-data-3)"></span>
+                    <span class="chart__val">462</span>
+                  </div>
+                  <div class="chart__row">
+                    <span class="t-compact">Marketing pages</span>
+                    <span class="chart__bar" style="width:9%;background:var(--color-data-4)"></span>
+                    <span class="chart__val">108</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-4">
+                <p class="t-label">The four-series ceiling</p>
+                <p class="t-compact muted" style="margin-top:var(--space-3);max-width:44ch">
+                  The ramp steps in lightness, not only in hue, so the series stay separable in
+                  greyscale, in print, and to a colour-blind operator. Adjacent steps are at least
+                  1.6:1 apart.
+                </p>
+                <p class="t-compact muted" style="margin-top:var(--space-4);max-width:44ch">
+                  A fifth hue cannot be added without colliding with a status colour or with
+                  vermilion. Beyond four series, label the marks directly instead. Every bar above
+                  carries its own name and value — no legend to cross-reference.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12" style="margin-top:var(--space-7)">
+            <p class="t-label" style="margin-bottom:var(--space-4)">State tints</p>
+            <div class="swatches">
+              <dl class="sw"><div class="sw__chip" style="background:#FDF3F0"></div>
+                <dt>surface.accent</dt><dd>#FDF3F0 · ink 17.13:1<br>object in focus</dd></dl>
+              <dl class="sw"><div class="sw__chip" style="background:#FBEEEC"></div>
+                <dt>surface.critical</dt><dd>#FBEEEC · ink 16.50:1<br>failing row only</dd></dl>
+            </div>
+            <p class="zonerule t-compact" style="margin-top:var(--space-5)">
+              <b>Tint only the worst state.</b> Failing rows are tinted; warnings are not. If every
+              condition gets a wash, the page is evenly coloured and nothing is urgent. The tint is a
+              second signal behind the glyph and the word — never the first, and never the only one.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 05 LINE VOCABULARY ============ -->
+      <section class="section" id="s5" aria-labelledby="h5">
+        <div class="section__head">
+          <span class="seq">05</span>
+          <h2 class="t-section" id="h5">Line vocabulary</h2>
+          <span class="rulelabel">Four devices · each has a job</span>
+        </div>
+        <div class="grid">
+          <div class="col-12">
+            <div class="vocab">
+
+              <div>
+                <div class="vocab__demo">
+                  <div class="panel" style="width:190px;height:64px"></div>
+                </div>
+                <p class="t-label" style="margin-top:var(--space-3)">Corner marks</p>
+                <p class="t-compact muted" style="margin-top:var(--space-2);max-width:44ch">
+                  Four 10px brackets imply a container without drawing one. This replaces the card.
+                  Use only for a genuinely bounded object. Brackets turn vermilion when the object is
+                  the current focus.
+                </p>
+              </div>
+
+              <div>
+                <div class="vocab__demo">
+                  <span class="chrome__path">SENTRA / <b>MODULE-NAME</b></span>
+                </div>
+                <p class="t-label" style="margin-top:var(--space-3)">App chrome</p>
+                <p class="t-compact muted" style="margin-top:var(--space-2);max-width:44ch">
+                  Identity and module path, mono, wide tracking. Appears exactly once per screen,
+                  at the top. Repeating it on panels turns a signature into decoration.
+                </p>
+              </div>
+
+              <div>
+                <div class="vocab__demo">
+                  <span class="rulelabel">Browser extension</span>
+                </div>
+                <p class="t-label" style="margin-top:var(--space-3)">Dash-rule label</p>
+                <p class="t-compact muted" style="margin-top:var(--space-2);max-width:44ch">
+                  A 28px hairline leading into a right-aligned meta label. Carries type, count or
+                  scope — never an action.
+                </p>
+              </div>
+
+              <div>
+                <div class="vocab__demo">
+                  <span class="seq" style="font-size:22px">03</span>
+                </div>
+                <p class="t-label" style="margin-top:var(--space-3)">Sequence marker</p>
+                <p class="t-compact muted" style="margin-top:var(--space-2);max-width:44ch">
+                  Vermilion, mono, tabular. Used only where order is real information: pipeline
+                  stages, ordered checklists, navigation. Never applied to an unordered set to make
+                  it look systematic.
+                </p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 06 SPACE AND SHAPE ============ -->
+      <section class="section" id="s6" aria-labelledby="h6">
+        <div class="section__head">
+          <span class="seq">06</span>
+          <h2 class="t-section" id="h6">Space and shape</h2>
+          <span class="rulelabel">4px base</span>
+        </div>
+        <div class="grid">
+          <div class="col-6a">
+            <div class="scale">
+              <div><span class="t-data">space.1</span><span class="t-label">4px</span><i style="width:4px"></i></div>
+              <div><span class="t-data">space.2</span><span class="t-label">8px</span><i style="width:8px"></i></div>
+              <div><span class="t-data">space.3</span><span class="t-label">12px</span><i style="width:12px"></i></div>
+              <div><span class="t-data">space.4</span><span class="t-label">16px</span><i style="width:16px"></i></div>
+              <div><span class="t-data">space.5</span><span class="t-label">24px</span><i style="width:24px"></i></div>
+              <div><span class="t-data">space.6</span><span class="t-label">32px</span><i style="width:32px"></i></div>
+              <div><span class="t-data">space.7</span><span class="t-label">48px</span><i style="width:48px"></i></div>
+              <div><span class="t-data">space.8</span><span class="t-label">64px</span><i style="width:64px"></i></div>
+            </div>
+          </div>
+          <div class="col-6b">
+            <p class="t-label">Shape</p>
+            <p class="t-compact muted" style="margin-top:var(--space-3);max-width:46ch">
+              Structure is square. Radius 0 on tables, dividers, panels and surfaces.
+              Radius 2px applies only to controls — buttons, inputs, selects. The curve means
+              one thing: this can be touched.
+            </p>
+            <p class="t-label" style="margin-top:var(--space-6)">Line</p>
+            <p class="t-compact muted" style="margin-top:var(--space-3);max-width:46ch">
+              1px subtle for separation inside a group. 1px strong under a section title.
+              2px strong to close a page header. 2px status to open a verdict.
+              Shadow is reserved for temporary overlays and for control affordance —
+              never for stable content. Buttons carry a 3px solid ledge, no blur, which
+              disappears as the control travels on press. Amended by EXC-01.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 07 COMPONENTS ============ -->
+      <section class="section" id="s7" aria-labelledby="h7">
+        <div class="section__head">
+          <span class="seq">07</span>
+          <h2 class="t-section" id="h7">Components</h2>
+          <span class="rulelabel">States are part of the definition</span>
+        </div>
+        <div class="grid">
+
+          <div class="col-6a">
+            <p class="t-label">Button</p>
+            <div class="btnrow" style="margin-top:var(--space-3)">
+              <button class="btn btn--primary" type="button">Re-run extraction</button>
+              <button class="btn" type="button">Open source</button>
+              <button class="btn" type="button" disabled>Export</button>
+            </div>
+            <p class="t-compact muted" style="margin-top:var(--space-3);max-width:46ch">
+              One primary action per view. Minimum target 44px. The label names the action and keeps
+              that name through the whole flow — a button that says Publish produces a message that
+              says Published.
+            </p>
+
+            <p class="t-label" style="margin-top:var(--space-6)">Text input</p>
+            <label class="field" style="margin-top:var(--space-3)">
+              <span class="t-compact" style="display:block;margin-bottom:var(--space-2)">Source URL</span>
+              <input type="url" placeholder="https://" >
+            </label>
+
+            <p class="t-label" style="margin-top:var(--space-6)">Panel</p>
+            <div class="panel" style="margin-top:var(--space-3)">
+              <div class="panel__body t-compact muted">
+                Default panel. Corner marks in grey.
+              </div>
+            </div>
+            <div class="panel panel--active" style="margin-top:var(--space-4)">
+              <div class="panel__body t-compact muted">
+                Active panel. Corner marks in vermilion.
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6b">
+            <p class="t-label">Status indicator</p>
+            <div style="margin-top:var(--space-3);display:grid;gap:var(--space-3)">
+              <span class="status status--fail">Failed</span>
+              <span class="status status--warn">Warning</span>
+              <span class="status status--pass">Passed</span>
+              <span class="status status--idle">Not run</span>
+            </div>
+            <p class="t-compact muted" style="margin-top:var(--space-4);max-width:46ch">
+              Four glyphs: filled, half, outline, dashed. Each is distinguishable without colour.
+              The word is never dropped, even where space is tight.
+            </p>
+
+            <p class="t-label" style="margin-top:var(--space-6)">Table row</p>
+            <table style="margin-top:var(--space-3)">
+              <thead><tr><th scope="col">Gate</th><th scope="col">Measured</th><th scope="col">Result</th></tr></thead>
+              <tbody>
+                <tr class="row--fail"><th scope="row" style="font-weight:500">Duplication</th><td class="num">51.7%</td><td><span class="status status--fail">Failed</span></td></tr>
+                <tr><th scope="row" style="font-weight:500">Crawl integrity</th><td class="num">0 errors</td><td><span class="status status--pass">Passed</span></td></tr>
+              </tbody>
+            </table>
+            <p class="t-compact muted" style="margin-top:var(--space-3);max-width:46ch">
+              Rows separate with a hairline, never with fills or stripes. Numbers are tabular and
+              right-readable. Hover tints the row; it does not lift it.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ============ 08 PROHIBITIONS ============ -->
+      <section class="section" id="s8" aria-labelledby="h8">
+        <div class="section__head">
+          <span class="seq">08</span>
+          <h2 class="t-section" id="h8">Prohibitions</h2>
+          <span class="rulelabel">Needs a written exception</span>
+        </div>
+        <div class="grid">
+          <div class="col-12">
+            <ul class="banned">
+              <li>Glassmorphism and background blur</li>
+              <li>Neumorphism and inset lighting <span class="t-data" style="color:var(--color-accent-text)">EXC-01: hard ledge on controls only</span></li>
+              <li>Gradients as surface treatment</li>
+              <li>Glow, halo and ambient shadow</li>
+              <li>Radius above 2px on any element</li>
+              <li>A card around every section</li>
+              <li>Centred layout as the page default</li>
+              <li>Colour as the only carrier of status</li>
+              <li>Grey text below 4.5:1 for body copy</li>
+              <li>Icon-only actions without an accessible name</li>
+              <li>Decorative 3D or AI-themed imagery</li>
+              <li>Bento grids without an ordering logic</li>
+              <li>Vermilion inside the content zone</li>
+              <li>Crimson inside the chrome zone</li>
+              <li>Motion longer than 200ms</li>
+              <li>Numbering an unordered set</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ FOOTNOTE ============ -->
+      <section class="footnote" aria-labelledby="h9">
+        <div style="grid-column:1 / span 12">
+          <h2 class="t-section" id="h9" style="margin-bottom:var(--space-4)">Status of this document</h2>
+        </div>
+        <div><dl><dt class="t-label">Version</dt><dd>v1.0</dd></dl></div>
+        <div><dl><dt class="t-label">Decisions locked</dt><dd>6 of 6</dd></dl></div>
+        <div><dl><dt class="t-label">Open</dt><dd>Dark theme · localisation · stack</dd></dl></div>
+        <div><dl><dt class="t-label">Verified</dt><dd>Contrast · markup · no browser pass</dd></dl></div>
+      </section>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

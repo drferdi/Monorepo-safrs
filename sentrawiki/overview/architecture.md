@@ -42,6 +42,10 @@ flowchart LR
 
 Identity separation: the coding agent never holds merge or production-execution authority. Publisher may only enable auto-merge for an exact verified head. R3 stays prepare-only for coding agents.
 
+### Gaffer orchestration (v0.1)
+
+On top of the automation control plane, [Gaffer orchestration](../features/gaffer-orchestration.md) routes a Chief's plain-language intent through SOLO/DECOMPOSE, cheapest-qualified worker routing (ECONOMY/STRONG), SAFRS verification, and Root semantic acceptance. Its runtime (`tools/automation/src/gaffer/`) reuses the SAFRS ports rather than re-implementing contracts, risk, leases, or evidence. The v0.1 Codex provider callbacks are simulated; economic validation is Phase 4.
+
 ## Repository topology
 
 Canonical: `SAFRS_SPEC.md` §4, ADR 0005.
