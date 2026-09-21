@@ -14,12 +14,12 @@ export type StatusBucket = {
 };
 
 const STATUS_LABEL_ID: Record<string, string> = {
-  connected: "Terhubung",
-  "partially-connected": "Sebagian",
-  "not-yet-connected": "Belum terhubung",
-  "requires-configuration": "Perlu konfigurasi",
-  "requires-human-action": "Keputusan manusia",
-  error: "Error",
+  connected: "Jalan",
+  "partially-connected": "Baru sebagian",
+  "not-yet-connected": "Belum jalan",
+  "requires-configuration": "Perlu diatur dulu",
+  "requires-human-action": "Perlu keputusan Anda",
+  error: "Rusak",
 };
 
 const STATUS_ORDER = [

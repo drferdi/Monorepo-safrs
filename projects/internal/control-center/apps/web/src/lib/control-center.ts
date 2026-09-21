@@ -125,17 +125,17 @@ export type NextAction = {
 };
 
 export const SITE = {
-  title: "Sentra Developer Control Center",
+  title: "Sentra Control Center",
   product: "Control Center",
   path: "Monorepo-safrs / Control Center",
   promise:
-    "Turn Monorepo-safrs complexity into plain-language decisions, with authority kept visible.",
+    "Menjelaskan keadaan rumah proyek dengan bahasa biasa, supaya keputusan tetap di tangan Anda.",
   honesty:
-    "Papan ini membaca repository langsung pada setiap permintaan. Status fitur diderivasi dari bukti di disk dan git — tidak pernah ditulis tangan. Perintah dalam daftar izin dapat dijalankan dari papan ini dengan konfirmasi; di luar daftar itu tidak ada yang dieksekusi.",
+    "Papan ini membaca file di komputer Anda setiap kali dibuka. Keadaan tidak ditulis tangan — diambil dari bukti yang ada. Tombol hanya menjalankan perintah yang sudah diizinkan, dan yang mengubah sesuatu minta izin dulu.",
   repo: "https://github.com/drferdii/Monorepo-safrs",
   declaration: "SAFRS Core",
-  operatingModel: "Human-Governed · Agent-Executed · Machine-Enforced",
-  observedAt: "Read live from the repository working tree.",
+  operatingModel: "You lead · Agents work · Machines enforce",
+  observedAt: "Dibaca langsung dari file proyek di komputer ini.",
 } as const;
 
 /**
@@ -300,49 +300,49 @@ export const NAV: NavItem[] = [
   {
     id: "home",
     seq: "01",
-    label: "Situasi",
-    hint: "Ringkasan: siap atau bermasalah, plus langkah berikutnya",
+    label: "Overview",
+    hint: "Semua oke atau ada yang rusak?",
   },
   {
     id: "projects",
     seq: "02",
-    label: "Proyek",
-    hint: "Kapsul produk dan paket bersama di repository",
+    label: "Projects",
+    hint: "Proyek apa saja yang ada di sini",
   },
   {
     id: "agents",
     seq: "03",
-    label: "Agen",
-    hint: "Peran manusia dan otomasi, beserta batas wewenang",
+    label: "Agents",
+    hint: "Manusia dan pembantu komputer — apa yang boleh",
   },
   {
     id: "tasks",
     seq: "04",
-    label: "Task",
-    hint: "Pekerjaan tercatat dan status control plane",
+    label: "Tasks",
+    hint: "Apa yang sedang dikerjakan sekarang",
   },
   {
     id: "health",
     seq: "05",
-    label: "Mesin",
-    hint: "Apakah komputer lokal siap menjalankan proyek",
+    label: "Health",
+    hint: "Cek mesin + Local fix (setup, Postgres, Prisma)",
   },
   {
     id: "activity",
     seq: "06",
-    label: "Aktivitas",
-    hint: "Commit terbaru dan gerbang publikasi",
+    label: "Activity",
+    hint: "Apa yang baru disimpan dan dicek",
   },
   {
     id: "governance",
     seq: "07",
-    label: "Tata kelola",
-    hint: "Arti tingkatan risiko R0 sampai R3",
+    label: "Governance",
+    hint: "Tingkat bahaya: aman sampai harus izin Anda",
   },
   {
     id: "knowledge",
     seq: "08",
-    label: "Dokumen",
-    hint: "Dokumen resmi yang mengatur cara kerja repository",
+    label: "Knowledge",
+    hint: "Dokumen resmi yang harus diikuti",
   },
 ];

@@ -129,11 +129,15 @@ test("setiap section punya nama, tujuan, dan status beralasan", () => {
     assert.ok(lead.name.length > 0, id);
     assert.ok(lead.purpose.length > 0, id);
     assert.ok(lead.statusReason.length > 0, id);
-    assert.ok(["Aktif", "Gagal", "Perlu perhatian"].includes(lead.statusLabel));
+    assert.ok(
+      ["Baik", "Rusak / belum siap", "Perlu dilihat"].includes(
+        lead.statusLabel,
+      ),
+    );
   }
 });
 
-test("health gagal menandai section Gagal", () => {
+test("health gagal menandai section Rusak / belum siap", () => {
   const lead = deriveSectionLead(
     "health",
     baseLive({
@@ -157,10 +161,10 @@ test("health gagal menandai section Gagal", () => {
     }),
   );
   assert.equal(lead.status, "failed");
-  assert.equal(lead.statusLabel, "Gagal");
+  assert.equal(lead.statusLabel, "Rusak / belum siap");
 });
 
-test("knowledge tidak terbaca = Gagal", () => {
+test("knowledge tidak terbaca = failed", () => {
   const lead = deriveSectionLead(
     "knowledge",
     baseLive({
@@ -170,8 +174,8 @@ test("knowledge tidak terbaca = Gagal", () => {
   assert.equal(lead.status, "failed");
 });
 
-test("governance selalu Aktif sebagai panduan tetap", () => {
+test("governance selalu Baik sebagai penjelasan tetap", () => {
   const lead = deriveSectionLead("governance", baseLive());
   assert.equal(lead.status, "active");
-  assert.match(lead.statusReason, /panduan tetap/i);
+  assert.match(lead.statusReason, /penjelasan tetap/i);
 });

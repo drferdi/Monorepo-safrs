@@ -74,22 +74,22 @@ function featureStatusWord(status: string): {
   statusWord: string;
 } {
   if (status === "error") {
-    return { statusClass: "fail", statusWord: "Error" };
+    return { statusClass: "fail", statusWord: "Rusak" };
   }
   if (status === "connected") {
-    return { statusClass: "pass", statusWord: "Terhubung" };
+    return { statusClass: "pass", statusWord: "Jalan" };
   }
   if (status === "requires-human-action") {
-    return { statusClass: "warn", statusWord: "Keputusan manusia" };
+    return { statusClass: "warn", statusWord: "Perlu keputusan Anda" };
   }
   if (status === "requires-configuration") {
-    return { statusClass: "warn", statusWord: "Perlu konfigurasi" };
+    return { statusClass: "warn", statusWord: "Perlu diatur dulu" };
   }
   if (status === "partially-connected") {
-    return { statusClass: "warn", statusWord: "Sebagian" };
+    return { statusClass: "warn", statusWord: "Baru sebagian" };
   }
   if (status === "not-yet-connected") {
-    return { statusClass: "idle", statusWord: "Belum terhubung" };
+    return { statusClass: "idle", statusWord: "Belum jalan" };
   }
   return { statusClass: "warn", statusWord: status };
 }
@@ -122,22 +122,22 @@ function pickPrimaryAction(
     return {
       id: "saf-gate-all",
       why: gatesUnavailable
-        ? "Gerbang publikasi tidak terbaca pada checkout ini — evaluasi ulang dari papan."
-        : `${gatesFail} gerbang publikasi ditolak. Evaluasi ulang untuk melihat alasan terbaru.`,
+        ? "Pemeriksaan sebelum dibagikan tidak terbaca di folder proyek ini. Coba cek ulang dari papan."
+        : `${gatesFail} pemeriksaan sebelum dibagikan belum lolos. Cek ulang supaya alasan terbaru terlihat.`,
     };
   }
 
   if (planeFail || (live.plane.available && live.plane.conflicts.length > 0)) {
     return {
       id: "status",
-      why: "Control plane melaporkan masalah. Baca status tata kelola untuk detail.",
+      why: "Papan pekerjaan bilang ada masalah. Baca keadaan aturan kerja untuk detailnya.",
     };
   }
 
   if (live.health.available && !live.health.ok) {
     return {
       id: "doctor",
-      why: "Mesin lokal belum siap. Jalankan pemeriksaan kesiapan untuk daftar perbaikan.",
+      why: "Komputer ini belum siap. Jalankan pemeriksaan peralatan untuk daftar perbaikan.",
     };
   }
 
@@ -150,8 +150,12 @@ export function deriveSituation(live: LiveSnapshot): SituationView {
   const gatesPass = gateRows.filter((g) => g.verdict === "PASS").length;
   const gatesFail = gateRows.filter((g) => g.verdict !== "PASS").length;
 
-  const planeFail =
-    live.plane.available && live.plane.status.toUpperCase() !== "PASS";
+  const planeStatus = live.plane.available
+    ? live.plane.status.toUpperCase()
+    : "";
+  // WARN = governance green with warnings; only FAIL is a broken board.
+  const planeFail = live.plane.available && planeStatus === "FAIL";
+  const planeWarn = live.plane.available && planeStatus === "WARN";
   const planeWarnings = live.plane.available ? live.plane.warnings.length : 0;
   const planeConflicts = live.plane.available ? live.plane.conflicts.length : 0;
 
@@ -181,6 +185,7 @@ export function deriveSituation(live: LiveSnapshot): SituationView {
     gatesUnavailable ||
     !live.plane.available ||
     !live.health.available ||
+    planeWarn ||
     planeWarnings > 0 ||
     attentionFeatures.length > 0 ||
     live.dirtyPaths > 0 ||
@@ -216,43 +221,48 @@ export function deriveSituation(live: LiveSnapshot): SituationView {
   if (level === "unknown") {
     verdictWord = "Tidak terbaca";
     verdictSentence =
-      "Gerbang, control plane, dan kesiapan mesin tidak dapat dievaluasi pada checkout ini. Periksa SENTRA_REPO_ROOT dan jalankan alat dari terminal.";
+      "Komputer ini tidak bisa dicek sekarang. Pastikan Anda membuka rumah proyek yang benar, lalu coba lagi.";
   } else if (level === "fail") {
-    verdictWord = "Tidak siap";
+    verdictWord = "Belum siap";
     const parts: string[] = [];
     if (gatesFail > 0) {
-      parts.push(`${gatesFail} gerbang publikasi ditolak`);
+      parts.push(`${gatesFail} pemeriksaan sebelum dibagikan belum lolos`);
     }
     if (planeFail) {
-      parts.push(`control plane ${live.plane.status}`);
+      parts.push("papan pekerjaan bermasalah");
     }
+    // planeWarn is handled in the attention branch below.
     if (planeConflicts > 0) {
-      parts.push(`${planeConflicts} konflik kepemilikan`);
+      parts.push(`${planeConflicts} orang/pekerjaan bentrok`);
     }
     if (healthOk === false) {
-      parts.push(`${healthBlocked} pemeriksaan kesiapan gagal`);
+      parts.push(`${healthBlocked} peralatan di komputer belum oke`);
     }
-    verdictSentence = `${parts.join("; ") || "Ada kegagalan yang harus diperbaiki"}. Lolos tidak diklaim sampai hitungan di kanan bersih.`;
+    verdictSentence = `${parts.join("; ") || "Ada yang rusak atau belum siap"}. Belum bisa bilang “semua aman” sampai angka di kanan bersih.`;
   } else if (level === "attention") {
-    verdictWord = "Perlu perhatian";
+    verdictWord = "Perlu dilihat";
     const parts: string[] = [];
     if (gatesUnavailable) {
-      parts.push("gerbang publikasi belum terbaca");
+      parts.push("pemeriksaan sebelum dibagikan belum terbaca");
     }
     if (attentionFeatures.length > 0) {
-      parts.push(`${attentionFeatures.length} fitur perlu perhatian`);
+      parts.push(`${attentionFeatures.length} fitur perlu dilihat`);
     }
     if (live.dirtyPaths > 0) {
-      parts.push(`${live.dirtyPaths} path belum di-commit`);
+      parts.push(`${live.dirtyPaths} file belum disimpan ke riwayat`);
     }
-    if (planeWarnings > 0) {
-      parts.push(`${planeWarnings} peringatan control plane`);
+    if (planeWarn || planeWarnings > 0) {
+      parts.push(
+        planeWarnings > 0
+          ? `${planeWarnings} peringatan di papan pekerjaan`
+          : "papan pekerjaan ada peringatan",
+      );
     }
-    verdictSentence = `${parts.join("; ") || "Ada sinyal yang belum selesai"}. Tidak ada kegagalan keras yang terdeteksi dari pembaca yang tersedia.`;
+    verdictSentence = `${parts.join("; ") || "Ada yang belum selesai"}. Belum ada kerusakan besar yang terlihat.`;
   } else {
     verdictWord = "Siap";
     verdictSentence =
-      "Gerbang publikasi lolos, control plane PASS, mesin lokal siap, dan tidak ada fitur yang menunggu perhatian pada pembacaan ini.";
+      "Pemeriksaan penting lolos, papan pekerjaan tertib, komputer siap, dan tidak ada fitur yang menunggu keputusan Anda.";
   }
 
   const attention: SituationAttentionRow[] = [];
@@ -262,9 +272,10 @@ export function deriveSituation(live: LiveSnapshot): SituationView {
       id: `gate-${gate.check_id}`,
       source: "gate",
       title: gate.check_id,
-      reason: gate.reason || gate.errors.join("; ") || "Ditolak tanpa alasan",
+      reason:
+        gate.reason || gate.errors.join("; ") || "Belum lolos tanpa alasan",
       statusClass: "fail",
-      statusWord: "Ditolak",
+      statusWord: "Belum lolos",
     });
   }
 
@@ -273,14 +284,26 @@ export function deriveSituation(live: LiveSnapshot): SituationView {
       attention.push({
         id: "plane-status",
         source: "plane",
-        title: "Control plane",
+        title: "Papan pekerjaan",
         reason:
           live.plane.failedChecks.length > 0
-            ? `Pemeriksa yang menolak: ${live.plane.failedChecks.join(", ")}`
+            ? `Yang menolak: ${live.plane.failedChecks.join(", ")}`
             : (live.plane.nextAction ??
               live.plane.problem ??
-              `Status ${live.plane.status}`),
+              `Keadaan: ${live.plane.status}`),
         statusClass: "fail",
+        statusWord: live.plane.status,
+      });
+    } else if (planeWarn || planeWarnings > 0) {
+      attention.push({
+        id: "plane-status",
+        source: "plane",
+        title: "Papan pekerjaan",
+        reason:
+          planeWarnings > 0
+            ? `${planeWarnings} peringatan (pemeriksaan utama lolos)`
+            : (live.plane.nextAction ?? `Keadaan: ${live.plane.status}`),
+        statusClass: "warn",
         statusWord: live.plane.status,
       });
     }
@@ -288,17 +311,17 @@ export function deriveSituation(live: LiveSnapshot): SituationView {
       attention.push({
         id: `plane-conflict-${conflict}`,
         source: "plane",
-        title: "Konflik kepemilikan",
+        title: "Ada yang bentrok",
         reason: conflict,
         statusClass: "fail",
-        statusWord: "Konflik",
+        statusWord: "Bentrok",
       });
     }
   } else if (live.plane.problem) {
     attention.push({
       id: "plane-unavailable",
       source: "plane",
-      title: "Control plane",
+      title: "Papan pekerjaan",
       reason: live.plane.problem,
       statusClass: "warn",
       statusWord: "Tidak terbaca",
@@ -320,7 +343,7 @@ export function deriveSituation(live: LiveSnapshot): SituationView {
     attention.push({
       id: "health-unavailable",
       source: "health",
-      title: "Kesiapan mesin",
+      title: "Apakah komputer siap",
       reason: live.health.problem,
       statusClass: "warn",
       statusWord: "Tidak terbaca",

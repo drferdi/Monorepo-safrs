@@ -66,8 +66,8 @@ test("project buckets hanya area apps dan berlabel Indonesia", () => {
     }),
   ]);
   assert.equal(buckets.length, 2);
-  assert.equal(buckets[0]?.label, "Terhubung");
+  assert.equal(buckets[0]?.label, "Jalan");
   assert.equal(buckets[0]?.count, 1);
-  assert.equal(buckets[1]?.label, "Sebagian");
+  assert.equal(buckets[1]?.label, "Baru sebagian");
   assert.equal(buckets[1]?.count, 1);
 });

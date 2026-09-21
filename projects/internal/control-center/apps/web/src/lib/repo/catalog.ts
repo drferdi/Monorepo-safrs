@@ -15,10 +15,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   // ─── Governance ────────────────────────────────────────────────────────────
   {
     id: "safrs-governance",
-    name: "Pemeriksa Tata Kelola SAFRS",
+    name: "SAFRS Governance",
     area: "governance",
     purpose:
-      "Menjalankan seluruh pemeriksaan tata kelola repository secara otomatis: kebijakan risiko, registry dokumen, inventaris tool, topologi, dan kepemilikan task.",
+      "Ini adalah feature di dalam Monorepo yang menjalankan pemeriksaan aturan rumah secara otomatis — apakah kebijakan dan kepemilikan masih utuh.",
     userValue:
       "Satu perintah memberi tahu apakah aturan repository masih utuh atau ada yang dilanggar — tanpa perlu membaca kode.",
     whenToUse:
@@ -35,10 +35,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   },
   {
     id: "automation-control-plane",
-    name: "Bidang Kendali Otomasi",
+    name: "Automation Control Plane",
     area: "automation",
     purpose:
-      "Kontrak task, rantai lease, delapan gerbang pull request, buku anggaran, manifest bukti, verifikasi persetujuan, dan identitas publisher.",
+      "Ini adalah feature di dalam Monorepo yang mengatur kontrak kerja agen: lease, gerbang PR, bukti, dan identitas publisher agar bisa diaudit.",
     userValue:
       "Membuat pekerjaan agen dapat diaudit: siapa mengerjakan apa, dengan otoritas apa, dan apa buktinya.",
     whenToUse:
@@ -58,10 +58,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   },
   {
     id: "task-registry",
-    name: "Registry Task",
+    name: "Task Registry",
     area: "governance",
     purpose:
-      "Mencatat siapa yang sedang memegang pekerjaan pada cakupan mana, agar dua pekerjaan tidak bertabrakan.",
+      "Ini adalah feature di dalam Monorepo yang mencatat siapa memegang pekerjaan pada cakupan mana, supaya tidak saling tabrak.",
     userValue:
       "Terlihat jelas pekerjaan apa yang sedang berjalan dan mana yang sudah selesai.",
     whenToUse: "Sebelum mulai mengubah kode, dan saat menutup pekerjaan.",
@@ -76,10 +76,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   },
   {
     id: "status-cli",
-    name: "Laporan Status Repository",
+    name: "Status CLI",
     area: "governance",
     purpose:
-      "Laporan hanya-baca berisi registry task, lease, keadaan git, dan hasil tata kelola terkini.",
+      "Ini adalah feature di dalam Monorepo yang memberi laporan hanya-baca tentang task, git, dan tata kelola terkini.",
     userValue:
       "Satu tempat untuk melihat kondisi repository tanpa menjalankan banyak perintah.",
     whenToUse:
@@ -99,10 +99,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   // ─── Tooling ───────────────────────────────────────────────────────────────
   {
     id: "doctor",
-    name: "Pemeriksa Kesiapan Mesin",
+    name: "Doctor",
     area: "tooling",
     purpose:
-      "Memeriksa Node, pnpm, Git, Docker, file lingkungan, DATABASE_URL, PostgreSQL lokal, dan Prisma Client.",
+      "Ini adalah feature di dalam Monorepo yang memeriksa apakah komputer lokal siap menjalankan proyek, plus cara memperbaikinya.",
     userValue:
       "Menjawab pertanyaan “kenapa aplikasi tidak mau jalan?” dengan solusi konkret, dalam bahasa Indonesia.",
     whenToUse:
@@ -115,9 +115,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   },
   {
     id: "project-wizard",
-    name: "Pembuat Project Baru",
+    name: "Project Wizard",
     area: "tooling",
-    purpose: "Membuat kapsul project SAFRS baru dari template resmi.",
+    purpose:
+      "Ini adalah feature di dalam Monorepo yang membuat kapsul project baru dari template resmi agar langsung ikut aturan SAFRS.",
     userValue:
       "Project baru langsung mengikuti aturan repository, tanpa menyalin manual.",
     whenToUse: "Saat memulai produk atau layanan baru.",
@@ -131,10 +132,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   },
   {
     id: "capabilities",
-    name: "Paket Kemampuan Opsional",
+    name: "Capabilities",
     area: "tooling",
     purpose:
-      "Mengaktifkan kemampuan opsional per project: ai, electron, email, python, stripe, wxt.",
+      "Ini adalah feature di dalam Monorepo yang menyalakan kemampuan opsional per project (AI, email, Stripe, dll.) hanya saat dipilih.",
     userValue:
       "Fitur tambahan hanya menyala saat benar-benar dipilih, jadi repository tetap ringan.",
     whenToUse:
@@ -159,9 +160,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   },
   {
     id: "codegen",
-    name: "Pembuat Kode dari Skema",
+    name: "Codegen",
     area: "tooling",
-    purpose: "Menghasilkan OpenAPI, mock, dan klien bertipe dari kontrak Zod.",
+    purpose:
+      "Ini adalah feature di dalam Monorepo yang menghasilkan OpenAPI, mock, dan klien bertipe dari kontrak Zod.",
     userValue:
       "Kontrak data dan kode selalu sinkron tanpa menulis ulang manual.",
     whenToUse: "Setelah kontrak data berubah.",
@@ -173,9 +175,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   },
   {
     id: "deps-graph",
-    name: "Peta Ketergantungan Paket",
+    name: "Deps Graph",
     area: "tooling",
-    purpose: "Menggambarkan hubungan antar paket di dalam monorepo.",
+    purpose:
+      "Ini adalah feature di dalam Monorepo yang menggambar hubungan antar paket supaya terlihat dampak perubahan.",
     userValue: "Terlihat paket mana yang terdampak jika satu paket diubah.",
     whenToUse: "Sebelum mengubah paket bersama.",
     entryPoint: "pnpm deps:graph",
@@ -193,10 +196,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   // ─── Packages ──────────────────────────────────────────────────────────────
   {
     id: "package-token",
-    name: "Sistem Design Token",
+    name: "Design Token",
     area: "packages",
     purpose:
-      "Satu-satunya tempat nilai warna dan radius Sentra boleh ditulis, dengan pemeriksaan kontras WCAG 2.2 AA otomatis.",
+      "Ini adalah feature di dalam Monorepo yang menjadi sumber tunggal warna dan radius Sentra, dengan cek kontras otomatis.",
     userValue:
       "Seluruh tampilan konsisten dan tetap terbaca, tanpa mengurus warna satu per satu.",
     whenToUse: "Setiap kali membangun tampilan apa pun.",
@@ -217,10 +220,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   },
   {
     id: "package-database",
-    name: "Basis Data Lokal",
+    name: "Database",
     area: "packages",
     purpose:
-      "PostgreSQL lokal, Prisma, migrasi, data contoh, dan pengaman reset.",
+      "Ini adalah feature di dalam Monorepo yang menyediakan basis data lokal (PostgreSQL + Prisma) untuk uji tanpa menyentuh produksi.",
     userValue:
       "Bisa mencoba aplikasi dengan data nyata tanpa menyentuh data produksi.",
     whenToUse: "Saat menjalankan aplikasi secara lokal.",
@@ -233,10 +236,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   },
   {
     id: "package-api",
-    name: "API Bertipe",
+    name: "API",
     area: "packages",
     purpose:
-      "Rute Hono bertipe, klien terinferensi, dan amplop error yang konsisten.",
+      "Ini adalah feature di dalam Monorepo yang menyediakan rute Hono bertipe dan klien terinferensi sebagai pintu data antar bagian.",
     userValue:
       "Perubahan kontrak langsung terdeteksi sebelum aplikasi dijalankan.",
     whenToUse: "Saat menambah atau mengubah endpoint.",
@@ -251,9 +254,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   },
   {
     id: "package-telemetry",
-    name: "Observabilitas",
+    name: "Telemetry",
     area: "packages",
-    purpose: "Jejak OpenTelemetry yang dikirim ke Jaeger lokal.",
+    purpose:
+      "Ini adalah feature di dalam Monorepo yang mengirim jejak OpenTelemetry ke Jaeger lokal untuk melihat lambat/gagal.",
     userValue: "Bisa melihat di bagian mana aplikasi melambat atau gagal.",
     whenToUse:
       "Saat menelusuri masalah performa atau error yang sulit ditangkap.",
@@ -271,10 +275,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   // ─── Apps ──────────────────────────────────────────────────────────────────
   {
     id: "golden-path",
-    name: "Golden Path (Aplikasi Rujukan)",
+    name: "Golden Path",
     area: "apps",
     purpose:
-      "Satu aplikasi Next.js yang membuktikan alur Basis Data → API bertipe → Web bekerja utuh.",
+      "Ini adalah feature di dalam Monorepo yang menjadi aplikasi rujukan: membuktikan alur Database → API → Web berjalan utuh.",
     userValue:
       "Contoh hidup yang bisa ditiru saat membangun produk berikutnya.",
     whenToUse: "Saat ingin melihat pola resmi repository bekerja.",
@@ -299,10 +303,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   },
   {
     id: "control-center",
-    name: "Control Center (Dashboard Ini)",
+    name: "Control Center",
     area: "apps",
     purpose:
-      "Pusat kendali yang membaca repository secara langsung dan menampilkan seluruh fitur beserta status kejujurannya.",
+      "Ini adalah feature di dalam Monorepo yang menjadi papan kendali operator: membaca repository dan menampilkan keadaan setiap fitur.",
     userValue:
       "Satu layar untuk memahami dan menjalankan repository tanpa membuka kode.",
     whenToUse:
@@ -322,10 +326,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   // ─── Data ──────────────────────────────────────────────────────────────────
   {
     id: "corpus-engine",
-    name: "Pustaka Medis (PDF → Basis Pengetahuan)",
+    name: "Corpus Engine",
     area: "data",
     purpose:
-      "Mengubah korpus PDF medis terkurasi menjadi basis pengetahuan yang bisa ditanya dengan sitasi: Docling → JSON kanonik → gerbang mutu → potongan → embedding BGE-M3 → PostgreSQL/pgvector.",
+      "Ini adalah feature di dalam Monorepo yang mengubah PDF medis menjadi basis pengetahuan yang bisa ditanya dengan sitasi.",
     userValue:
       "Ratusan dokumen pedoman klinis menjadi sumber jawaban yang dapat ditelusuri, bukan tumpukan PDF.",
     whenToUse:
@@ -363,10 +367,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   // ─── Knowledge ─────────────────────────────────────────────────────────────
   {
     id: "wiki",
-    name: "Wiki Repository",
+    name: "Wiki",
     area: "knowledge",
     purpose:
-      "79 halaman penjelasan repository: control plane, kapsul, kedaulatan, paket, tool, fitur, keamanan, dan istilah.",
+      "Ini adalah feature di dalam Monorepo yang berisi penjelasan manusia untuk control plane, kapsul, paket, tool, dan istilah.",
     userValue: "Penjelasan bahasa manusia untuk setiap bagian repository.",
     whenToUse: "Saat ingin memahami sesuatu sebelum menyentuhnya.",
     entryPoint: "sentrawiki/overview/index.md",
@@ -383,10 +387,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   },
   {
     id: "agent-adapters",
-    name: "Adapter Agen AI",
+    name: "Agent Adapters",
     area: "knowledge",
     purpose:
-      "Adapter netral-vendor untuk Claude Code, Cursor, dan Codex yang menunjuk ke AGENTS.md tanpa menduplikasi aturan.",
+      "Ini adalah feature di dalam Monorepo yang menyambungkan Claude, Cursor, dan Codex ke AGENTS.md tanpa menduplikasi aturan.",
     userValue: "Agen mana pun yang dipakai tetap tunduk pada aturan yang sama.",
     whenToUse: "Saat menyiapkan atau mengganti asisten AI.",
     entryPoint: "docs/bootstrap/CLAUDE_SETUP.md",
@@ -403,10 +407,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   // ─── Quality ───────────────────────────────────────────────────────────────
   {
     id: "test-suite",
-    name: "Rangkaian Uji",
+    name: "Test Suite",
     area: "quality",
     purpose:
-      "Uji kontrak, uji perilaku repository, uji tata kelola Python, uji arsitektur, dan uji integrasi basis data.",
+      "Ini adalah feature di dalam Monorepo yang menjalankan rangkaian uji sebagai bukti perubahan tidak merusak yang sudah bekerja.",
     userValue: "Bukti bahwa perubahan tidak merusak yang sudah bekerja.",
     whenToUse: "Sebelum menganggap perubahan aman.",
     entryPoint: "pnpm test",
@@ -423,10 +427,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   },
   {
     id: "ci-workflows",
-    name: "Alur CI GitHub",
+    name: "CI Workflows",
     area: "quality",
     purpose:
-      "Lima alur kerja: verifikasi umum, tata kelola, gerbang pull request, publikasi, dan kendali task.",
+      "Ini adalah feature di dalam Monorepo yang menjalankan alur GitHub Actions pada pull request secara otomatis.",
     userValue:
       "Pemeriksaan otomatis berjalan pada setiap pull request tanpa diminta.",
     whenToUse: "Saat membuka atau meninjau pull request.",
@@ -450,9 +454,10 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   },
   {
     id: "supply-chain",
-    name: "Pemeriksa Rantai Pasok",
+    name: "Supply Chain Checker",
     area: "quality",
-    purpose: "Memeriksa ketergantungan terhadap risiko rantai pasok.",
+    purpose:
+      "Ini adalah feature di dalam Monorepo yang memeriksa risiko rantai pasok pada ketergantungan pihak ketiga.",
     userValue:
       "Peringatan dini bila sebuah paket pihak ketiga menjadi berisiko.",
     whenToUse: "Sebelum menambah atau memperbarui ketergantungan.",
@@ -463,5 +468,322 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
     risk: "R2",
     actionIds: [],
     docs: ["SECURITY.md"],
+  },
+
+  // ─── Gap fill (1): Gaffer ──────────────────────────────────────────────────
+  {
+    id: "gaffer-engine",
+    name: "Gaffer Engine",
+    area: "automation",
+    purpose:
+      "Ini adalah feature di dalam Monorepo yang mengubah niat bahasa biasa menjadi hasil kerja terverifikasi, dengan rute SOLO/DECOMPOSE dan pekerja termurah yang memenuhi syarat.",
+    userValue:
+      "Chief cukup bilang mau apa; Gaffer mengatur pembagian kerja, verifikasi SAFRS, dan jejak bukti — tanpa menebak otoritas.",
+    whenToUse:
+      "Saat ingin menjalankan intent end-to-end lewat orkestrasi, bukan mengedit katalog atau menjalankan satu perintah kecil.",
+    entryPoint: "pnpm saf gaffer run",
+    evidence: [
+      {
+        path: "tools/automation/src/gaffer",
+        proves: "Runtime orkestrasi Gaffer",
+      },
+      {
+        path: "tools/automation/src/gaffer/runner.mjs",
+        proves: "Runner provider-neutral",
+      },
+      {
+        path: ".agents/skills/gaffer-orchestration/SKILL.md",
+        proves: "Skill /gaffer",
+      },
+    ],
+    risk: "R2",
+    actionIds: [],
+    docs: [
+      "sentrawiki/features/gaffer-orchestration.md",
+      "docs/architecture/GAFFER_ORCHESTRATION_FRAMEWORK.md",
+    ],
+    caveat:
+      "Provider Codex v0.1 masih punya callback tersimulasi; validasi ekonomi (Phase 4) belum selesai. Audit default belum setara review independen penuh.",
+  },
+
+  // ─── Gap fill (2): tujuh kapsul produk / internal ──────────────────────────
+  {
+    id: "capsule-sentrabot",
+    name: "SentraBot",
+    area: "apps",
+    purpose:
+      "Ini adalah feature di dalam Monorepo yang menjadi produk bot Sentra lintas web, desktop, dan mobile — dengan kontrak bersama dan adapter opsional.",
+    userValue:
+      "Satu produk bot yang bisa dirilis publik, tanpa mengikat runtime ke root Monorepo.",
+    whenToUse: "Saat mengerjakan atau merilis SentraBot.",
+    entryPoint: "projects/product/sentrabot",
+    evidence: [
+      { path: "projects/product/sentrabot/AGENTS.md", proves: "Router kapsul" },
+      { path: "projects/product/sentrabot/README.md", proves: "README produk" },
+    ],
+    risk: "R2",
+    actionIds: [],
+    docs: ["projects/product/sentrabot/AGENTS.md"],
+  },
+  {
+    id: "capsule-kediri-history",
+    name: "Kediri History",
+    area: "apps",
+    purpose:
+      "Ini adalah feature di dalam Monorepo yang menjadi pengalaman web sejarah sinematik resmi untuk Pemerintah Kota Kediri.",
+    userValue:
+      "Kapsul produk berdaulat untuk situs sejarah Kediri — install/build/test mandiri.",
+    whenToUse: "Saat mengerjakan situs Kediri History.",
+    entryPoint: "projects/product/kediri-history",
+    evidence: [
+      {
+        path: "projects/product/kediri-history/project.contract.json",
+        proves: "Kontrak lifecycle kapsul",
+      },
+      {
+        path: "projects/product/kediri-history",
+        proves: "Direktori kapsul",
+      },
+    ],
+    risk: "R2",
+    actionIds: [],
+    docs: ["projects/product/kediri-history/project.contract.json"],
+  },
+  {
+    id: "capsule-academic-smartboard",
+    name: "Academic Smartboard",
+    area: "apps",
+    purpose:
+      "Ini adalah feature di dalam Monorepo yang menjadi platform bimbingan belajar multi-tenant (penjadwalan, kurikulum, payroll tutor, agen Kayyisa).",
+    userValue:
+      "Kapsul akademik lengkap dengan site publik dan app web — berdiri sendiri dari root.",
+    whenToUse: "Saat mengerjakan El-Kayyisa / Smartboard.",
+    entryPoint: "projects/academic/academic-smartboard",
+    evidence: [
+      {
+        path: "projects/academic/academic-smartboard/AGENTS.md",
+        proves: "Router kapsul",
+      },
+      {
+        path: "projects/academic/academic-smartboard/project.contract.json",
+        proves: "Kontrak lifecycle",
+      },
+    ],
+    risk: "R2",
+    actionIds: [],
+    docs: ["projects/academic/academic-smartboard/AGENTS.md"],
+  },
+  {
+    id: "capsule-portfolio-drnovia",
+    name: "Portfolio Dr. Novia",
+    area: "apps",
+    purpose:
+      "Ini adalah feature di dalam Monorepo yang menjadi situs portofolio dr. Novia (React + Lenis), kapsul statis tanpa lockfile root.",
+    userValue:
+      "Kehadiran publik klinik/portofolio yang bisa dijalankan mandiri.",
+    whenToUse: "Saat mengubah situs portofolio Dr. Novia.",
+    entryPoint: "projects/corporate/portfolio-drnovia",
+    evidence: [
+      {
+        path: "projects/corporate/portfolio-drnovia/AGENTS.md",
+        proves: "Router kapsul",
+      },
+      {
+        path: "projects/corporate/portfolio-drnovia/project.contract.json",
+        proves: "Kontrak lifecycle",
+      },
+    ],
+    risk: "R1",
+    actionIds: [],
+    docs: ["projects/corporate/portfolio-drnovia/AGENTS.md"],
+  },
+  {
+    id: "capsule-avery",
+    name: "Avery",
+    area: "apps",
+    purpose:
+      "Ini adalah feature di dalam Monorepo yang menjadi konfigurasi terversi agen Hermes Avery — dari laptop sampai VPS — tanpa memasang ulang tiap agen baru.",
+    userValue:
+      "Agen WhatsApp/Hermes milik Sentra dikelola sebagai konfigurasi, bukan tebak-tebakan runtime.",
+    whenToUse: "Saat merawat persona, skill, atau deploy Avery.",
+    entryPoint: "projects/healthcare/avery",
+    evidence: [
+      {
+        path: "projects/healthcare/avery/AGENTS.md",
+        proves: "Router kapsul",
+      },
+      {
+        path: "projects/healthcare/avery/README.md",
+        proves: "README operasional",
+      },
+    ],
+    risk: "R2",
+    actionIds: [],
+    docs: ["projects/healthcare/avery/AGENTS.md"],
+    caveat:
+      "Kredensial, sesi WhatsApp, dan memories tidak boleh masuk git — hanya konfigurasi dan skrip yang tercatat.",
+  },
+  {
+    id: "capsule-prompt",
+    name: "Sentra Prompt",
+    area: "apps",
+    purpose:
+      "Ini adalah feature di dalam Monorepo yang menjadi workspace desktop prompt-engineering (Electron) yang berdiri sendiri dari root SAFRS.",
+    userValue:
+      "Lingkungan prompt lokal dengan IPC dan data pengguna — tanpa bergantung workspace root.",
+    whenToUse: "Saat mengerjakan aplikasi Prompt.",
+    entryPoint: "projects/internal/prompt",
+    evidence: [
+      {
+        path: "projects/internal/prompt/project.contract.json",
+        proves: "Kontrak lifecycle",
+      },
+      {
+        path: "projects/internal/prompt/AGENTS.md",
+        proves: "Router kapsul",
+      },
+    ],
+    risk: "R2",
+    actionIds: [],
+    docs: ["projects/internal/prompt/AGENTS.md"],
+  },
+  {
+    id: "capsule-unicom",
+    name: "UNICOM",
+    area: "apps",
+    purpose:
+      "Ini adalah feature di dalam Monorepo yang menjadi ruang komunikasi multi-agen warisan, sebagai kapsul Next.js mandiri.",
+    userValue:
+      "Ruang komunikasi agen lokal yang bisa dijalankan tanpa path root Monorepo.",
+    whenToUse: "Saat mengerjakan atau memverifikasi UNICOM.",
+    entryPoint: "projects/internal/unicom",
+    evidence: [
+      {
+        path: "projects/internal/unicom/project.contract.json",
+        proves: "Kontrak lifecycle",
+      },
+      {
+        path: "projects/internal/unicom/AGENTS.md",
+        proves: "Router kapsul",
+      },
+    ],
+    risk: "R1",
+    actionIds: [],
+    docs: ["projects/internal/unicom/AGENTS.md"],
+  },
+
+  // ─── Gap fill (3): paket bersama + standalone (+ template) ─────────────────
+  {
+    id: "package-schemas",
+    name: "Schemas",
+    area: "packages",
+    purpose:
+      "Ini adalah feature di dalam Monorepo yang menyimpan kontrak Zod bersama — sumber kebenaran skema untuk API dan codegen.",
+    userValue:
+      "Perubahan kontrak data terkumpul di satu tempat, bukan tersebar di tiap app.",
+    whenToUse: "Saat menambah atau mengubah kontrak data bersama.",
+    entryPoint: "packages/schemas",
+    evidence: [
+      { path: "packages/schemas/package.json", proves: "Paket @safrs/schemas" },
+    ],
+    risk: "R2",
+    actionIds: [],
+    docs: ["sentrawiki/packages/schemas.md"],
+  },
+  {
+    id: "package-env",
+    name: "Env",
+    area: "packages",
+    purpose:
+      "Ini adalah feature di dalam Monorepo yang memisahkan env server vs klien agar rahasia tidak bocor ke browser.",
+    userValue:
+      "Batas aman untuk variabel lingkungan — server-only tidak ikut ke client.",
+    whenToUse: "Saat menambah variabel lingkungan atau mengaudit batas env.",
+    entryPoint: "packages/env",
+    evidence: [
+      { path: "packages/env/package.json", proves: "Paket @safrs/env" },
+    ],
+    risk: "R2",
+    actionIds: [],
+    docs: ["sentrawiki/packages/env.md"],
+  },
+  {
+    id: "package-ui",
+    name: "UI",
+    area: "packages",
+    purpose:
+      "Ini adalah feature di dalam Monorepo yang menyediakan primitif tampilan bersama (mis. StatusCard) di atas design token Sentra.",
+    userValue:
+      "Komponen presentasi yang bisa dipakai ulang tanpa menduplikasi pola UI.",
+    whenToUse: "Saat membangun permukaan UI yang memakai paket bersama root.",
+    entryPoint: "packages/ui",
+    evidence: [{ path: "packages/ui/package.json", proves: "Paket @safrs/ui" }],
+    risk: "R2",
+    actionIds: [],
+    docs: ["sentrawiki/packages/ui.md"],
+    caveat:
+      "Saat ini masih tipis (StatusCard dan sejenisnya) — bukan design system kedua; token tetap di @sentra/token.",
+  },
+  {
+    id: "package-config",
+    name: "Config",
+    area: "packages",
+    purpose:
+      "Ini adalah feature di dalam Monorepo yang membagikan konfigurasi TypeScript bersama antar paket root.",
+    userValue:
+      "Satu dasar tsconfig supaya paket tidak masing-masing mengarang aturan kompilasi.",
+    whenToUse: "Saat menyelaraskan TypeScript antar paket @safrs/*.",
+    entryPoint: "packages/config",
+    evidence: [
+      { path: "packages/config/package.json", proves: "Paket @safrs/config" },
+    ],
+    risk: "R1",
+    actionIds: [],
+    docs: ["sentrawiki/packages/config.md"],
+  },
+  {
+    id: "project-standalone",
+    name: "Project Standalone",
+    area: "tooling",
+    purpose:
+      "Ini adalah feature di dalam Monorepo yang membuktikan kapsul bisa berdiri sendiri: cek struktural dan ekstraksi empiris tanpa bergantung root.",
+    userValue:
+      "Chief mendapat bukti mesin bahwa kapsul portable — bukan hanya janji di dokumen.",
+    whenToUse:
+      "Sebelum mengklaim kapsul mandiri, atau setelah mengubah kontrak lifecycle.",
+    entryPoint: "pnpm project:verify",
+    evidence: [
+      {
+        path: "tools/project-standalone/src/cli.mjs",
+        proves: "CLI verify/status",
+      },
+      {
+        path: "tools/project-standalone/src/extraction.mjs",
+        proves: "Verifier ekstraksi",
+      },
+    ],
+    risk: "R2",
+    actionIds: [],
+    docs: ["sentrawiki/verification/standalone.md"],
+  },
+  {
+    id: "capsule-template",
+    name: "Capsule Template",
+    area: "tooling",
+    purpose:
+      "Ini adalah feature di dalam Monorepo yang menjadi cetakan resmi untuk kapsul project baru (dipakai Project Wizard).",
+    userValue:
+      "Project baru mulai dari pola yang sudah disetujui, bukan disalin sembarangan.",
+    whenToUse: "Saat membuat kapsul baru atau memperbaiki template.",
+    entryPoint: "projects/_template",
+    evidence: [
+      {
+        path: "projects/_template/AGENTS.md",
+        proves: "Router template kapsul",
+      },
+    ],
+    risk: "R2",
+    actionIds: [],
+    docs: ["projects/_template/AGENTS.md"],
   },
 ];

@@ -54,10 +54,10 @@ export type Evidence = {
 /** A capability the repository owns, as declared by the catalog. */
 export type FeatureDefinition = {
   id: string;
-  /** Indonesian, user-facing. */
+  /** Official feature name shown on the board (English identity). */
   name: string;
   area: FeatureArea;
-  /** Indonesian: what this is for. */
+  /** Short Indonesian: "Ini adalah feature di dalam Monorepo yang…". */
   purpose: string;
   /** Indonesian: why dr. Ferdi should care. */
   userValue: string;

@@ -1,26 +1,33 @@
-﻿Last updated: 2026-09-21 (Control Center — SectionLead + Recharts)
+Last updated: 2026-09-21 (Papan pekerjaan — FAIL → WARN end-to-end)
 
 ## Capsule
 
-`projects/internal/control-center`
+`projects/internal/control-center` + gate `check_sensitive_changes`
 
 ## Current state
 
-### SectionLead + Recharts charts — COMMITTED (this commit)
+### Papan (verified)
+- topology OK · ownership OK · sensitive **approved**
+- `pnpm status` → **WARN** (governance PASS; peringatan inventori tool lama)
+- Bukan FAIL — UI Situasi harus **Perlu dilihat**, bukan Rusak
 
-- Setiap section: Fitur · Fungsi · Status (Aktif/Gagal/Perlu perhatian)
-- Grafik Situasi vertikal (Recharts): fitur bekerja vs tidak; proyek per status
-- Deps: `recharts@3.10.1`, `react-is` di `@sentra/control-center`
-- NAV bahasa ringan (Situasi, Proyek, Agen, Task, Mesin, Aktivitas, Tata kelola, Dokumen)
+### Perbaikan inti
+1. Fallback diff base lokal ke `main` bila `origin/main` bukan ancestor
+2. Graft lokal parent hilang pasca rewrite origin
+3. Segel integrity (Chief) untuk change set vs `main`
+4. Fingerprint **mengabaikan** berkas memori sesi (HANDOFF dkk.) supaya edit HANDOFF tidak merusak segel
+5. Situasi: plane WARN ≠ Rusak
 
-### Situasi Phase 1 — already on branch
-
-- `7193101` Situasi home · `7027c40` HANDOFF
+### Tasks
+- `TASK-20260921-CONTROL-CENTER-BOARD`
+- `TASK-20260921-SENSITIVE-PLANE-FIX`
+- `TASK-20260921-SENSITIVE-TEST`
 
 ## Next action
 
-1. Chief: refresh `http://127.0.0.1:3100` Situasi — cek SectionLead + chart vertikal
-2. Push / PR bila diminta (`feat/gaffer-safrs-wiring`)
+1. Chief: **hard refresh** Control Center (Ctrl+Shift+R) → cek “Keadaan sekarang”
+2. Harapan: **Perlu dilihat** + teks peringatan papan, bukan Rusak
+3. Commit bila disetujui
 
 ## Owner collision
 

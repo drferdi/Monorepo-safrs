@@ -18,9 +18,9 @@ export type SectionLeadModel = {
 };
 
 const STATUS_LABEL: Record<SectionStatusKind, string> = {
-  active: "Aktif",
-  failed: "Gagal",
-  attention: "Perlu perhatian",
+  active: "Baik",
+  failed: "Rusak / belum siap",
+  attention: "Perlu dilihat",
 };
 
 type SectionMeta = {
@@ -28,47 +28,46 @@ type SectionMeta = {
   purpose: string;
 };
 
-/** Plain-language names and purposes for each nav section. */
+/** Section titles in English; purposes stay plain Indonesian. */
 export const SECTION_META: Record<NavId, SectionMeta> = {
   home: {
-    name: "Situasi SAFRS",
-    purpose:
-      "Ringkasan cepat: apakah monorepo di komputer ini siap, apa yang bermasalah, dan langkah aman berikutnya.",
+    name: "SAFRS Dashboard",
+    purpose: 'Welcome to Sentraverse, dr Ferdi Iskandar "The Gaffer".',
   },
   projects: {
-    name: "Proyek & paket",
+    name: "Projects",
     purpose:
-      "Peta isi repository: kapsul produk dan paket bersama, serta seberapa luas dampak jika salah satunya diubah.",
+      "Menunjukkan proyek-proyek yang ada di rumah besar ini, dan apa yang ikut berubah jika salah satunya diubah.",
   },
   agents: {
-    name: "Agen & peran",
+    name: "Agents",
     purpose:
-      "Siapa boleh mengerjakan apa. Memisahkan peran manusia dari identitas otomasi, lengkap dengan batas wewenang.",
+      "Menjelaskan siapa manusia dan siapa pembantu komputer, plus apa yang boleh dan tidak boleh mereka lakukan.",
   },
   tasks: {
-    name: "Task & control plane",
+    name: "Tasks",
     purpose:
-      "Pekerjaan yang sedang tercatat di sistem, siapa yang memegangnya, dan apakah tata kelola lolos.",
+      "Melihat daftar pekerjaan yang sedang dikerjakan, siapa yang memegangnya, dan apakah aturannya masih tertib.",
   },
   health: {
-    name: "Kesiapan mesin",
+    name: "Health",
     purpose:
-      "Memeriksa apakah Node, Docker, basis data lokal, dan berkas lingkungan siap dipakai di komputer ini.",
+      "Halaman khusus untuk cek mesin lokal dan memperbaikinya: setup, Postgres, Prisma, lalu cek ulang. Docker Desktop Windows tetap dibuka manual.",
   },
   activity: {
-    name: "Aktivitas & gerbang",
+    name: "Activity",
     purpose:
-      "Apa yang baru berubah di git, dan apakah delapan gerbang publikasi SAFRS lolos pada checkout ini.",
+      "Melihat perubahan terbaru yang sudah disimpan, dan apakah pemeriksaan penting sebelum dibagikan sudah lolos.",
   },
   governance: {
-    name: "Tata kelola (risiko)",
+    name: "Governance",
     purpose:
-      "Menjelaskan tingkatan risiko R0–R3: mana yang aman dijalankan agen, mana yang wajib keputusan manusia.",
+      "Menjelaskan tingkat bahaya suatu pekerjaan: mana yang aman, mana yang perlu hati-hati, mana yang wajib izin Anda.",
   },
   knowledge: {
-    name: "Pengetahuan resmi",
+    name: "Knowledge",
     purpose:
-      "Daftar dokumen resmi repository. Jika ringkasan bentrok dengan spesifikasi, spesifikasi yang menang.",
+      "Daftar dokumen resmi. Kalau penjelasan singkat bertentangan dengan buku aturan, yang diikuti adalah buku aturan.",
   },
 };
 
@@ -101,7 +100,7 @@ export function deriveSectionLead(
         return lead(
           id,
           "active",
-          "Gerbang, control plane, dan kesiapan mesin terbaca bersih pada pembacaan ini.",
+          "Semua yang dicek terlihat baik pada pembacaan ini.",
         );
       }
       if (situation.level === "fail" || situation.level === "unknown") {
@@ -115,20 +114,20 @@ export function deriveSectionLead(
         return lead(
           id,
           "failed",
-          "Tidak ada anggota workspace yang terbaca dari pnpm-workspace.yaml.",
+          "Daftar proyek tidak ketemu. File daftar di komputer ini sepertinya kosong atau rusak.",
         );
       }
       if (problems.length > 0) {
         return lead(
           id,
           "attention",
-          `${problems.length} masalah saat membaca peta workspace. Daftar paket masih ditampilkan.`,
+          `Ada ${problems.length} masalah saat membaca daftar. Daftar tetap ditampilkan, tapi belum sempurna.`,
         );
       }
       return lead(
         id,
         "active",
-        `${members.length} paket/anggota workspace terbaca dari disk.`,
+        `Ada ${members.length} bagian proyek yang terbaca dari komputer ini.`,
       );
     }
     case "agents": {
@@ -136,13 +135,13 @@ export function deriveSectionLead(
         return lead(
           id,
           "attention",
-          "Kebijakan peran (.safrs/policy.json) tidak terbaca — daftar memakai teks katalog, bukan kebijakan live.",
+          "Aturan peran tidak terbaca. Yang ditampilkan adalah catatan umum, bukan aturan terbaru dari file kebijakan.",
         );
       }
       return lead(
         id,
         "active",
-        "Kebijakan peran terbaca dari .safrs/policy.json dan digabung dengan katalog agen.",
+        "Aturan peran terbaca dengan baik dan digabung dengan daftar orang/pembantu.",
       );
     }
     case "tasks": {
@@ -150,32 +149,36 @@ export function deriveSectionLead(
         return lead(
           id,
           "failed",
-          live.plane.problem ??
-            "Control plane tidak dapat dibaca (tools/status --json).",
+          live.plane.problem ?? "Papan pekerjaan tidak bisa dibaca sekarang.",
         );
       }
-      if (live.plane.status.toUpperCase() !== "PASS") {
+      const planeStatus = live.plane.status.toUpperCase();
+      if (planeStatus === "FAIL") {
         return lead(
           id,
           "failed",
-          `Control plane berstatus ${live.plane.status}. ${
+          `Papan pekerjaan bermasalah (status: ${live.plane.status}). ${
             live.plane.failedChecks.length > 0
-              ? `Pemeriksa yang menolak: ${live.plane.failedChecks.join(", ")}.`
+              ? `Yang menolak: ${live.plane.failedChecks.join(", ")}.`
               : (live.plane.nextAction ?? "")
           }`.trim(),
         );
       }
-      if (live.plane.conflicts.length > 0 || live.plane.warnings.length > 0) {
+      if (
+        planeStatus === "WARN" ||
+        live.plane.conflicts.length > 0 ||
+        live.plane.warnings.length > 0
+      ) {
         return lead(
           id,
           "attention",
-          `${live.plane.activeTasks.length} task aktif; ${live.plane.conflicts.length} konflik; ${live.plane.warnings.length} peringatan.`,
+          `${live.plane.activeTasks.length} pekerjaan masih jalan; ${live.plane.conflicts.length} bentrok; ${live.plane.warnings.length} peringatan.`,
         );
       }
       return lead(
         id,
         "active",
-        `Control plane PASS. ${live.plane.tasks.length} task tercatat; ${live.plane.activeTasks.length} masih aktif.`,
+        `Papan pekerjaan tertib. ${live.plane.tasks.length} pekerjaan tercatat; ${live.plane.activeTasks.length} masih aktif.`,
       );
     }
     case "health": {
@@ -184,7 +187,7 @@ export function deriveSectionLead(
           id,
           "failed",
           live.health.problem ??
-            "Pemeriksaan kesiapan (doctor) tidak dapat dijalankan pada checkout ini.",
+            "Pemeriksaan komputer tidak bisa dijalankan sekarang.",
         );
       }
       if (!live.health.ok) {
@@ -192,13 +195,13 @@ export function deriveSectionLead(
         return lead(
           id,
           "failed",
-          `${blocked} dari ${live.health.checks.length} pemeriksaan menghalangi. Perbaiki satu per satu di bawah.`,
+          `${blocked} dari ${live.health.checks.length} pemeriksaan belum oke. Perbaiki satu per satu di bawah.`,
         );
       }
       return lead(
         id,
         "active",
-        "Semua pemeriksaan kesiapan lokal lolos. Mesin siap dipakai.",
+        "Semua pemeriksaan peralatan di komputer ini lolos. Siap dipakai.",
       );
     }
     case "activity": {
@@ -208,7 +211,7 @@ export function deriveSectionLead(
         return lead(
           id,
           "failed",
-          "Git dan gerbang publikasi tidak terbaca pada checkout ini.",
+          "Riwayat perubahan dan pemeriksaan berbagi tidak terbaca.",
         );
       }
       if (gatesOk) {
@@ -219,7 +222,7 @@ export function deriveSectionLead(
           return lead(
             id,
             "failed",
-            `${failed} gerbang publikasi ditolak. Lihat tabel gerbang di bawah.`,
+            `${failed} pemeriksaan sebelum dibagikan belum lolos. Lihat tabel di bawah.`,
           );
         }
       }
@@ -228,22 +231,22 @@ export function deriveSectionLead(
           id,
           "attention",
           !gitOk
-            ? "Aktivitas git tidak lengkap; gerbang masih ditampilkan bila tersedia."
+            ? "Riwayat perubahan belum lengkap; pemeriksaan berbagi tetap ditampilkan bila ada."
             : (live.gates.problem ??
-                "Gerbang publikasi tidak lengkap; aktivitas git masih ditampilkan."),
+                "Pemeriksaan berbagi belum lengkap; riwayat perubahan tetap ditampilkan."),
         );
       }
       return lead(
         id,
         "active",
-        `${live.activity.recent.length} commit terbaru terbaca; semua gerbang publikasi yang dievaluasi lolos.`,
+        `${live.activity.recent.length} perubahan terbaru terbaca; pemeriksaan sebelum dibagikan lolos.`,
       );
     }
     case "governance": {
       return lead(
         id,
         "active",
-        "Ini panduan tetap tentang tingkatan risiko — tidak bergantung pada pembaca live. Keputusan R2/R3 tetap milik manusia.",
+        "Ini penjelasan tetap tentang tingkat bahaya — tidak berubah tiap detik. Keputusan besar tetap milik Anda.",
       );
     }
     case "knowledge": {
@@ -251,13 +254,13 @@ export function deriveSectionLead(
         return lead(
           id,
           "failed",
-          "Registry dokumen resmi (.safrs/document-registry.json) tidak terbaca.",
+          "Daftar buku aturan resmi tidak terbaca dari komputer ini.",
         );
       }
       return lead(
         id,
         "active",
-        `${live.knowledge.documents.length} dokumen resmi tercatat di registry.`,
+        `${live.knowledge.documents.length} dokumen resmi tercatat.`,
       );
     }
     default: {

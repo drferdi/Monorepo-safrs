@@ -87,7 +87,7 @@ test("semua pembaca bersih menghasilkan verdict Siap", () => {
   assert.equal(view.counts.failed, 0);
 });
 
-test("gerbang gagal menghasilkan Tidak siap dan aksi saf-gate-all", () => {
+test("gerbang gagal menghasilkan Belum siap dan aksi saf-gate-all", () => {
   const view = deriveSituation(
     baseLive({
       gates: {
@@ -106,7 +106,7 @@ test("gerbang gagal menghasilkan Tidak siap dan aksi saf-gate-all", () => {
     }),
   );
   assert.equal(view.level, "fail");
-  assert.equal(view.verdictWord, "Tidak siap");
+  assert.equal(view.verdictWord, "Belum siap");
   assert.equal(view.summary.gatesFail, 1);
   assert.equal(view.primaryActionId, "saf-gate-all");
   assert.ok(view.attention.some((row) => row.id === "gate-publish"));
@@ -139,7 +139,7 @@ test("kesiapan gagal dengan recovery memilih aksi perbaikan", () => {
   assert.match(view.primaryActionWhy ?? "", /Nyalakan basis data lokal/);
 });
 
-test("fitur non-connected tanpa kegagalan keras = Perlu perhatian", () => {
+test("fitur non-connected tanpa kegagalan keras = Perlu dilihat", () => {
   const view = deriveSituation(
     baseLive({
       features: [
@@ -161,8 +161,38 @@ test("fitur non-connected tanpa kegagalan keras = Perlu perhatian", () => {
     }),
   );
   assert.equal(view.level, "attention");
-  assert.equal(view.verdictWord, "Perlu perhatian");
+  assert.equal(view.verdictWord, "Perlu dilihat");
   assert.equal(view.summary.featuresAttention, 1);
+});
+
+test("papan WARN bukan Rusak — hanya Perlu dilihat", () => {
+  const view = deriveSituation(
+    baseLive({
+      plane: {
+        available: true,
+        status: "WARN",
+        observedAt: null,
+        tasks: [],
+        activeTasks: [],
+        ownershipOk: true,
+        conflicts: [],
+        governance: "PASS",
+        failedChecks: [],
+        leases: [],
+        nextAction: "Periksa peringatan status",
+        warnings: ["task X: allowed_tools id not in tool-inventory: pnpm"],
+        problem: null,
+      },
+    }),
+  );
+  assert.equal(view.level, "attention");
+  assert.equal(view.verdictWord, "Perlu dilihat");
+  assert.match(view.verdictSentence, /peringatan di papan pekerjaan/i);
+  assert.ok(
+    view.attention.some(
+      (row) => row.id === "plane-status" && row.statusClass === "warn",
+    ),
+  );
 });
 
 test("semua pembaca mati = Tidak terbaca", () => {

@@ -20,6 +20,22 @@ terminal operator, task-state janitor, or per-command approval service.
   test, run, package, and deploy or deploy-dry-run independently, with no runtime,
   config, path, tooling, dependency-state, or infrastructure dependency on the monorepo itself.
 - Forbidden terms: "kamu", "elu", "elo", "gua", "gue".
+- Control Center (and similar operator dashboards): English for sidebar and section titles;
+  Indonesian for explanations and status prose. Prefer plain language over unexplained jargon.
+- When listing monorepo capabilities to Chief, keep real repository names visible alongside any
+  plain-language labels.
+- Every final report MUST end with this exact three-line execution summary, including when a
+  task is blocked or only partially complete. Use the actual model and reasoning tier for each
+  active role; use `none` only when no worker was used:
+  `Orchestrator: GPT-6 Astra Light`
+  `Worker: GPT-5.6 Terra High`
+  `Result: Success / Verified`
+
+## Learned workspace facts
+
+- Control Center home is titled **SAFRS Dashboard** (not "Overview").
+- A complete Control Center feature inventory includes Gaffer orchestration, product capsules,
+  and shared packages/standalone tooling — not governance-only slices.
 
 ## Before substantial work
 

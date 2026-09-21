@@ -181,6 +181,26 @@ export const ACTIONS: ControlAction[] = [
     confirmation: "This action only starts the disposable local database.",
   },
   {
+    id: "db-generate",
+    name: "Generate Prisma Client",
+    purpose: "Build the Prisma Client from the local schema.",
+    why: "Use this when readiness says Prisma Client is missing.",
+    effect:
+      "Writes generated client files under packages/database. Does not change database data.",
+    expected: "Prisma Client is present and readiness can pass that check.",
+    next: "If the database is still down, start it, then migrate if needed.",
+    command: "pnpm db:generate",
+    source: "package.json → @safrs/database generate",
+    category: "database",
+    risk: "R1",
+    safety: "caution",
+    mutation: true,
+    approval: "Human approval is not required. Local files only.",
+    timeout: "Several minutes.",
+    confirmation:
+      "This action generates Prisma Client files locally. It does not touch production.",
+  },
+  {
     id: "db-stop",
     name: "Stop Local Database",
     purpose: "Stop local PostgreSQL without implicitly deleting the volume.",

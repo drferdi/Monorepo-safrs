@@ -32,7 +32,7 @@ export type PlaneLease = {
 
 export type ControlPlaneSnapshot = {
   available: boolean;
-  /** PASS or FAIL, as the status command reports it. */
+  /** PASS, WARN, or FAIL from tools/status. */
   status: string;
   observedAt: string | null;
   tasks: PlaneTask[];

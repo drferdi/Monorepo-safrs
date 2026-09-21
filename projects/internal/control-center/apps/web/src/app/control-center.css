@@ -150,6 +150,50 @@ a {
   background: var(--color-background-canvas);
 }
 
+.chrome__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex: none;
+  min-width: 0;
+  background: transparent;
+}
+
+.chrome__logo {
+  display: block;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  background-color: var(--color-text-primary);
+  -webkit-mask: url("/brand/sentra-logomark.svg") center / contain no-repeat;
+  mask: url("/brand/sentra-logomark.svg") center / contain no-repeat;
+}
+
+.chrome__wordmark {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  line-height: 1.15;
+}
+
+.chrome__wordmark-name {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+}
+
+.chrome__wordmark-product {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-caption);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
 .chrome__sep {
   width: 1px;
   height: 16px;
@@ -172,29 +216,6 @@ a {
 
 .chrome__right {
   margin-left: auto;
-}
-
-.mark {
-  display: block;
-  width: 20px;
-  height: 20px;
-}
-
-.mark .mk-accent {
-  fill: var(--color-accent);
-}
-
-.mark .mk-body {
-  fill: var(--color-text-inverse);
-}
-
-.tile {
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  background: var(--color-background-inverse);
-  flex: none;
 }
 
 .shell {
@@ -371,12 +392,119 @@ a {
   grid-column: 1 / span 7;
 }
 
+.span-6 {
+  grid-column: span 6;
+}
+
 .span-4 {
   grid-column: 9 / span 4;
 }
 
 .span-12 {
   grid-column: 1 / span 12;
+}
+
+.feature-board {
+  align-items: start;
+}
+
+.feature-board__col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  min-width: 0;
+}
+
+.feature-family {
+  border-top: 2px solid var(--color-border-strong);
+  padding-top: var(--space-4);
+}
+
+.feature-family__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.feature-family__item {
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-bottom: var(--space-3);
+}
+
+.feature-family__item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.feature-family__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-3);
+}
+
+.feature-family__name {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+}
+
+.feature-family__metric {
+  margin-left: auto;
+}
+
+.feature-family__purpose {
+  margin-top: var(--space-2);
+  max-width: 52ch;
+  color: var(--color-text-secondary);
+}
+
+.dashboard-welcome {
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+  min-height: 1.5em;
+}
+
+.dashboard-welcome__text {
+  white-space: pre-wrap;
+}
+
+.dashboard-welcome__caret {
+  display: inline-block;
+  width: 0.55ch;
+  height: 1.05em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: var(--color-text-primary);
+  animation: dashboard-caret-blink 1s steps(1, end) infinite;
+}
+
+.dashboard-welcome__caret--done {
+  animation: dashboard-caret-blink 1.2s steps(1, end) infinite;
+  opacity: 0.45;
+}
+
+@keyframes dashboard-caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-welcome__caret {
+    animation: none;
+    opacity: 0;
+  }
 }
 
 .panel {
@@ -627,6 +755,20 @@ tbody tr:hover {
   overflow-x: auto;
 }
 
+.local-fix-stack {
+  gap: var(--space-5);
+}
+
+.local-fix-row {
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: var(--space-4);
+}
+
+.local-fix-row:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
 .gates {
   display: flex;
   gap: 3px;
@@ -722,6 +864,7 @@ tbody tr:hover {
   .pagehead__id,
   .pagehead__verdict,
   .span-7,
+  .span-6,
   .span-4,
   .span-12 {
     grid-column: 1 / -1;

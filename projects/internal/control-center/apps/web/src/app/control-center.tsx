@@ -37,6 +37,13 @@ import {
 } from "../lib/control-center";
 import { RECOVERY_COMMAND, runnableById } from "../lib/exec/commands";
 import { runCommand } from "../lib/exec/run";
+import {
+  type FeatureBoardBucket,
+  featureEvidenceMetric,
+  featureStatusClass,
+  featureStatusLabel,
+  splitFeatureBoardColumns,
+} from "../lib/feature-board";
 import { deriveSectionLead } from "../lib/section-lead";
 import { deriveSituation, type SituationLevel } from "../lib/situation";
 
@@ -128,12 +135,12 @@ function SituationCharts({ live }: { live: LiveSnapshot }) {
 
   const featureData = [
     {
-      name: "Bekerja",
+      name: "Jalan",
       value: stats.features.working,
       fill: palette.pass,
     },
     {
-      name: "Tidak bekerja",
+      name: "Belum jalan",
       value: stats.features.notWorking,
       fill: palette.fail,
     },
@@ -154,23 +161,25 @@ function SituationCharts({ live }: { live: LiveSnapshot }) {
   return (
     <section className="section">
       <div className="section__head">
-        <h2 className="t-section">Grafik ringkas</h2>
-        <span className="rulelabel">Recharts · data live</span>
+        <h2 className="t-section">Gambar ringkas</h2>
+        <span className="rulelabel">Angka dari keadaan nyata sekarang</span>
       </div>
       <div className="grid">
         <figure className="span-7 chart-card">
-          <figcaption className="t-label">Fitur: bekerja vs tidak</figcaption>
+          <figcaption className="t-label">
+            Berapa fitur yang jalan vs yang belum
+          </figcaption>
           <p
             className="t-compact muted"
             style={{ marginTop: "var(--space-2)" }}
           >
-            Total {stats.features.total} fitur terdaftar. Bekerja = status
-            terhubung (bukti lengkap di disk).
+            Ada {stats.features.total} fitur. “Jalan” artinya semua bukti di
+            komputer sudah lengkap.
           </p>
           <div
             className="chart-frame"
             role="img"
-            aria-label={`Fitur bekerja ${stats.features.working}, tidak bekerja ${stats.features.notWorking}, dari ${stats.features.total}`}
+            aria-label={`Fitur yang jalan ${stats.features.working}, belum jalan ${stats.features.notWorking}, dari ${stats.features.total}`}
           >
             <ResponsiveContainer width="100%" height={260}>
               <BarChart
@@ -205,16 +214,16 @@ function SituationCharts({ live }: { live: LiveSnapshot }) {
         </figure>
 
         <figure className="span-4 chart-card">
-          <figcaption className="t-label">Proyek per status</figcaption>
+          <figcaption className="t-label">Proyek menurut keadaannya</figcaption>
           <p
             className="t-compact muted"
             style={{ marginTop: "var(--space-2)" }}
           >
-            Fitur area aplikasi (kapsul/proyek) — {stats.projectTotal} item.
+            Proyek aplikasi di rumah ini — {stats.projectTotal} buah.
           </p>
           {projectData.length === 0 ? (
             <p className="t-compact" style={{ marginTop: "var(--space-4)" }}>
-              Belum ada fitur area aplikasi di katalog bukti.
+              Belum ada proyek aplikasi di daftar bukti.
             </p>
           ) : (
             <div
@@ -268,13 +277,222 @@ function SituationCharts({ live }: { live: LiveSnapshot }) {
   );
 }
 
+/** Catalog on one page: two columns (projects+rules+tools | packages+…). */
+function FeatureCatalogBoard({ live }: { live: LiveSnapshot }) {
+  const { left, right } = splitFeatureBoardColumns(live.features);
+  const total = live.features.length;
+  const working = live.features.filter((f) => f.status === "connected").length;
+
+  return (
+    <section className="section">
+      <div className="section__head">
+        <h2 className="t-section">Features</h2>
+        <span className="rulelabel">
+          {working}/{total} connected · one page · two columns
+        </span>
+      </div>
+      <p
+        className="t-compact muted"
+        style={{ marginBottom: "var(--space-5)", maxWidth: "68ch" }}
+      >
+        Left: projects, rules, tools. Right: packages, data, knowledge, quality.
+      </p>
+
+      <div className="grid feature-board">
+        <div className="span-6 feature-board__col">
+          {left.map((bucket) => (
+            <FeatureFamilyBlock bucket={bucket} key={bucket.group.id} />
+          ))}
+        </div>
+        <div className="span-6 feature-board__col">
+          {right.map((bucket) => (
+            <FeatureFamilyBlock bucket={bucket} key={bucket.group.id} />
+          ))}
+        </div>
+      </div>
+
+      <p
+        className="t-compact muted"
+        style={{ marginTop: "var(--space-5)", maxWidth: "68ch" }}
+      >
+        Metrik = berapa bukti file yang ketemu di komputer. Arahkan ke status
+        untuk membaca alasan lengkap.
+      </p>
+    </section>
+  );
+}
+
+function FeatureFamilyBlock({ bucket }: { bucket: FeatureBoardBucket }) {
+  return (
+    <div className="feature-family">
+      <div className="section__head">
+        <h3 className="t-section">{bucket.group.title}</h3>
+        <span className="rulelabel">
+          {bucket.working}/{bucket.features.length} jalan
+        </span>
+      </div>
+      <p
+        className="t-compact muted"
+        style={{ marginBottom: "var(--space-3)", maxWidth: "52ch" }}
+      >
+        {bucket.group.blurb}
+      </p>
+      <ul className="feature-family__list">
+        {bucket.features.map((feature) => {
+          const metric = featureEvidenceMetric(feature);
+          const kind = featureStatusClass(feature.status);
+          return (
+            <li className="feature-family__item" key={feature.id}>
+              <div className="feature-family__row">
+                <strong className="feature-family__name">{feature.name}</strong>
+                <span
+                  className={
+                    kind === "pass"
+                      ? "status status--pass"
+                      : kind === "fail"
+                        ? "status status--fail"
+                        : kind === "idle"
+                          ? "status status--idle"
+                          : "status status--warn"
+                  }
+                  title={feature.statusReason}
+                >
+                  {featureStatusLabel(feature.status)}
+                </span>
+                <span
+                  className="t-data feature-family__metric"
+                  title={feature.statusReason}
+                >
+                  {metric.label}
+                </span>
+              </div>
+              <p className="t-compact feature-family__purpose">
+                {feature.purpose}
+              </p>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+/** Home hero: SAFRS Dashboard + typed welcome + day/date. */
+const HOME_WELCOME = 'Welcome to Sentraverse, dr Ferdi Iskandar "The Gaffer"';
+
+function formatHomeDate(now: Date): string {
+  const weekday = new Intl.DateTimeFormat("id-ID", { weekday: "long" }).format(
+    now,
+  );
+  const rest = new Intl.DateTimeFormat("id-ID", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(now);
+  const day = weekday.charAt(0).toUpperCase() + weekday.slice(1);
+  return `${day}, ${rest}`;
+}
+
+function useTypedWelcome(fullText: string): string {
+  const [shown, setShown] = useState("");
+
+  useEffect(() => {
+    const reduced =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      setShown(fullText);
+      return;
+    }
+
+    setShown("");
+    let index = 0;
+    const timer = window.setInterval(() => {
+      index += 1;
+      setShown(fullText.slice(0, index));
+      if (index >= fullText.length) {
+        window.clearInterval(timer);
+      }
+    }, 28);
+
+    return () => window.clearInterval(timer);
+  }, [fullText]);
+
+  return shown;
+}
+
+function HomeDashboardLead({ live }: { live: LiveSnapshot }) {
+  const lead = deriveSectionLead("home", live);
+  const typed = useTypedWelcome(HOME_WELCOME);
+  const todayLabel = useMemo(() => formatHomeDate(new Date()), []);
+  const typingDone = typed.length >= HOME_WELCOME.length;
+
+  return (
+    <header className="section-lead grid">
+      <div className="span-7">
+        <p className="t-label">SAFRS</p>
+        <h1 className="t-page" id="section-lead-home">
+          SAFRS Dashboard
+        </h1>
+        <p
+          className="dashboard-welcome"
+          aria-live="polite"
+          style={{ marginTop: "var(--space-4)", maxWidth: "68ch" }}
+        >
+          <span className="dashboard-welcome__text">{typed}</span>
+          <span
+            className={
+              typingDone
+                ? "dashboard-welcome__caret dashboard-welcome__caret--done"
+                : "dashboard-welcome__caret"
+            }
+            aria-hidden="true"
+          />
+        </p>
+        <p className="t-compact muted" style={{ marginTop: "var(--space-3)" }}>
+          {todayLabel}
+        </p>
+      </div>
+      <div className="span-4">
+        <div
+          className={
+            lead.status === "failed"
+              ? "verdictline verdictline--fail"
+              : lead.status === "active"
+                ? "verdictline verdictline--pass"
+                : "verdictline verdictline--warn"
+          }
+          role="status"
+          aria-label={`Status: ${lead.statusLabel}. ${lead.statusReason}`}
+        >
+          <p className="t-label">Keadaan sekarang</p>
+          <p style={{ marginTop: "var(--space-2)" }}>
+            <span className={sectionLeadStatusClass(lead.status)}>
+              {lead.statusLabel}
+            </span>
+          </p>
+          <p
+            className="t-compact"
+            style={{ marginTop: "var(--space-3)", maxWidth: "44ch" }}
+          >
+            {lead.statusReason}
+          </p>
+        </div>
+      </div>
+    </header>
+  );
+}
+
 /** Mandatory block: feature name, purpose, status + reason. */
 function SectionLead({ live, id }: { live: LiveSnapshot; id: NavId }) {
+  if (id === "home") {
+    return <HomeDashboardLead live={live} />;
+  }
   const lead = deriveSectionLead(id, live);
   return (
     <header className="section-lead grid">
       <div className="span-7">
-        <p className="t-label">Fitur</p>
+        <p className="t-label">Apa ini</p>
         <h1 className="t-page" id={`section-lead-${id}`}>
           {lead.name}
         </h1>
@@ -283,7 +501,7 @@ function SectionLead({ live, id }: { live: LiveSnapshot; id: NavId }) {
           style={{ marginTop: "var(--space-3)", maxWidth: "68ch" }}
         >
           <span className="t-label" style={{ display: "block" }}>
-            Fungsi
+            Buat apa
           </span>
           {lead.purpose}
         </p>
@@ -300,7 +518,7 @@ function SectionLead({ live, id }: { live: LiveSnapshot; id: NavId }) {
           role="status"
           aria-label={`Status: ${lead.statusLabel}. ${lead.statusReason}`}
         >
-          <p className="t-label">Status</p>
+          <p className="t-label">Keadaan sekarang</p>
           <p style={{ marginTop: "var(--space-2)" }}>
             <span className={sectionLeadStatusClass(lead.status)}>
               {lead.statusLabel}
@@ -327,20 +545,16 @@ const HOME_ACTION_IDS = [
   "deploy-production",
 ] as const;
 
-function SentraMark() {
+function SentraChromeBrand() {
   return (
-    <svg className="mark" viewBox="0 0 1000 1000" aria-hidden="true">
-      <g transform="translate(106.54 60.00) scale(1.08241) translate(-270 -227)">
-        <path
-          className="mk-accent"
-          d="M890.70 227.38 L766.99 226.87 L262.40 626.09 L386.11 626.60 Z"
-        />
-        <path
-          className="mk-body"
-          d="M262.23 869.92 L754.48 480.46 L753.02 478.60 A146.02 146.02 0 0 1 934.22 707.63 L932.76 705.78 L509.10 1040.97 L385.39 1040.45 L884.88 645.26 L880.54 639.78 A59.50 59.50 0 0 0 806.71 546.46 L802.36 540.97 L385.94 870.44 Z"
-        />
-      </g>
-    </svg>
+    <div className="chrome__brand" aria-label="Sentra Control Center">
+      {/* Official master logomark (docs/brand) — transparent, token-colored via mask. */}
+      <span className="chrome__logo" aria-hidden="true" />
+      <span className="chrome__wordmark">
+        <span className="chrome__wordmark-name">Sentra</span>
+        <span className="chrome__wordmark-product">Control Center</span>
+      </span>
+    </div>
   );
 }
 
@@ -356,6 +570,7 @@ function SentraMark() {
  * the explanation, not the gate.
  */
 function RunControl({ action }: { action: ControlAction }) {
+  const router = useRouter();
   const runnable = runnableById(action.id);
   const [phase, setPhase] = useState<
     "ready" | "confirming" | "running" | "done"
@@ -387,6 +602,7 @@ function RunControl({ action }: { action: ControlAction }) {
     const result = await runCommand(command.id, typed);
     setOutcome(result);
     setPhase("done");
+    router.refresh();
   }
 
   // The first button is always live. A mutating command opens its confirmation
@@ -754,14 +970,14 @@ function HomeSection({
 
       <header className="pagehead grid">
         <div className="pagehead__id">
-          <p className="t-label">Ringkas sekarang</p>
-          <h2 className="t-display">Keadaan monorepo saat ini</h2>
+          <p className="t-label">Sekarang</p>
+          <h2 className="t-display">Bagaimana keadaan rumah proyek</h2>
           <p
             className="muted"
             style={{ marginTop: "var(--space-4)", maxWidth: "56ch" }}
           >
-            Dibaca dari disk, git, gerbang publikasi, control plane, dan
-            pemeriksaan kesiapan — tanpa status yang ditulis tangan.
+            Dibaca dari file di komputer ini — bukan ditebak, bukan ditulis
+            tangan.
           </p>
         </div>
         <div className="pagehead__verdict">
@@ -769,9 +985,9 @@ function HomeSection({
             className={situationVerdictClass(situation.level)}
             role="status"
             aria-live="polite"
-            aria-label={`Verdict situasi: ${situation.verdictWord}`}
+            aria-label={`Kesimpulan: ${situation.verdictWord}`}
           >
-            <p className="t-label">Verdict</p>
+            <p className="t-label">Kesimpulan</p>
             <p className="verdict__word">{situation.verdictWord}</p>
             <p
               className="t-compact muted"
@@ -785,13 +1001,15 @@ function HomeSection({
 
       <SituationCharts live={live} />
 
+      <FeatureCatalogBoard live={live} />
+
       <section className="section">
         <div className="section__head">
-          <h2 className="t-section">Ringkasan</h2>
+          <h2 className="t-section">Angka singkat</h2>
           <span className="rulelabel">
             {live.gitAvailable
               ? `${live.branch} · ${live.head}`
-              : "Git unavailable"}
+              : "Riwayat perubahan tidak terbaca"}
             {" · "}
             dibaca {live.readAt}
           </span>
@@ -800,25 +1018,25 @@ function HomeSection({
           <div className="span-7">
             <dl
               className="factlist factlist--counts"
-              aria-label="Hitungan gagal, peringatan, dan lolos"
+              aria-label="Hitungan rusak, perlu dilihat, dan baik"
             >
               <div>
-                <dt>Gagal</dt>
+                <dt>Rusak</dt>
                 <dd>{situation.counts.failed}</dd>
               </div>
               <div>
-                <dt>Peringatan</dt>
+                <dt>Perlu dilihat</dt>
                 <dd>{situation.counts.warned}</dd>
               </div>
               <div>
-                <dt>Lolos</dt>
+                <dt>Baik</dt>
                 <dd>{situation.counts.passed}</dd>
               </div>
             </dl>
 
             {situation.primaryActionId ? (
               <div style={{ marginTop: "var(--space-5)" }}>
-                <p className="t-label">Aksi primer</p>
+                <p className="t-label">Langkah pertama yang disarankan</p>
                 <p
                   className="t-compact muted"
                   style={{ marginTop: "var(--space-2)", maxWidth: "68ch" }}
@@ -834,27 +1052,27 @@ function HomeSection({
                 className="t-compact muted"
                 style={{ marginTop: "var(--space-5)", maxWidth: "68ch" }}
               >
-                Tidak ada aksi primer yang diperlukan pada pembacaan ini.
+                Tidak ada langkah pertama yang perlu diambil sekarang.
               </p>
             )}
 
             {gateRows.length > 0 ? (
               <div style={{ marginTop: "var(--space-6)" }}>
                 <div className="section__head">
-                  <h3 className="t-section">Gerbang publikasi</h3>
+                  <h3 className="t-section">Pemeriksaan sebelum dibagikan</h3>
                   <span className="rulelabel">
                     {situation.summary.gatesPass} lolos ·{" "}
-                    {situation.summary.gatesFail} ditolak
+                    {situation.summary.gatesFail} belum lolos
                   </span>
                 </div>
                 <div className="tablewrap">
-                  <table aria-label="Gerbang publikasi SAFRS">
+                  <table aria-label="Pemeriksaan sebelum dibagikan">
                     <thead>
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Gerbang</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Alasan</th>
+                        <th scope="col">Nama cek</th>
+                        <th scope="col">Hasil</th>
+                        <th scope="col">Kenapa</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -877,7 +1095,9 @@ function HomeSection({
                                   : "status status--fail"
                               }
                             >
-                              {gate.verdict === "PASS" ? "Lolos" : "Ditolak"}
+                              {gate.verdict === "PASS"
+                                ? "Lolos"
+                                : "Belum lolos"}
                             </span>
                           </td>
                           <td className="t-compact">{gate.reason}</td>
@@ -898,10 +1118,10 @@ function HomeSection({
           </div>
 
           <aside className="span-4">
-            <p className="t-label">Hitungan situasional</p>
+            <p className="t-label">Angka samping</p>
             <dl className="factlist" style={{ marginTop: "var(--space-3)" }}>
               <div>
-                <dt>Gerbang lolos / ditolak</dt>
+                <dt>Cek berbagi lolos / belum</dt>
                 <dd>
                   {situation.summary.gatesUnavailable
                     ? "—"
@@ -909,37 +1129,37 @@ function HomeSection({
                 </dd>
               </div>
               <div>
-                <dt>Control plane</dt>
+                <dt>Papan pekerjaan</dt>
                 <dd>{situation.summary.planeStatus}</dd>
               </div>
               <div>
-                <dt>Task aktif</dt>
+                <dt>Pekerjaan masih jalan</dt>
                 <dd>{situation.summary.planeActive}</dd>
               </div>
               <div>
-                <dt>Konflik kepemilikan</dt>
+                <dt>Yang bentrok</dt>
                 <dd>{situation.summary.planeConflicts}</dd>
               </div>
               <div>
-                <dt>Kesiapan mesin</dt>
+                <dt>Komputer</dt>
                 <dd>
                   {situation.summary.healthOk === null
                     ? "—"
                     : situation.summary.healthOk
                       ? "Siap"
-                      : `${situation.summary.healthBlocked} terhalang`}
+                      : `${situation.summary.healthBlocked} belum oke`}
                 </dd>
               </div>
               <div>
-                <dt>Fitur perlu perhatian</dt>
+                <dt>Fitur perlu dilihat</dt>
                 <dd>{situation.summary.featuresAttention}</dd>
               </div>
               <div>
-                <dt>Path belum di-commit</dt>
+                <dt>File belum disimpan ke riwayat</dt>
                 <dd>{situation.summary.dirtyPaths}</dd>
               </div>
               <div>
-                <dt>Checkout</dt>
+                <dt>Folder proyek</dt>
                 <dd className="t-data">{live.repoRoot}</dd>
               </div>
             </dl>
@@ -949,7 +1169,7 @@ function HomeSection({
 
       <section className="section">
         <div className="alert">
-          <h2>Batas papan</h2>
+          <h2>Batas papan ini</h2>
           <p>{SITE.honesty}</p>
         </div>
       </section>
@@ -957,9 +1177,9 @@ function HomeSection({
       {situation.attention.length > 0 ? (
         <section className="section">
           <div className="section__head">
-            <h2 className="t-section">Yang perlu perhatian</h2>
+            <h2 className="t-section">Yang perlu dilihat</h2>
             <span className="rulelabel">
-              {situation.attention.length} dari bukti hidup
+              {situation.attention.length} dari keadaan nyata
             </span>
           </div>
           <div className="grid">
@@ -967,7 +1187,14 @@ function HomeSection({
               {situation.attention.map((row) => (
                 <div className="rule" key={row.id}>
                   <p className="t-label">
-                    {row.source} ·{" "}
+                    {row.source === "gate"
+                      ? "cek berbagi"
+                      : row.source === "plane"
+                        ? "papan pekerjaan"
+                        : row.source === "health"
+                          ? "komputer"
+                          : "fitur"}{" "}
+                    ·{" "}
                     <span className={attentionStatusClass(row.statusClass)}>
                       {row.statusWord}
                     </span>
@@ -983,14 +1210,14 @@ function HomeSection({
               ))}
             </div>
             <aside className="span-4">
-              <p className="t-label">Urutan sumber</p>
+              <p className="t-label">Urutan dibaca</p>
               <p
                 className="t-compact muted"
                 style={{ marginTop: "var(--space-3)", maxWidth: "44ch" }}
               >
-                Gerbang ditolak dulu, lalu control plane, kesiapan mesin, dan
-                fitur katalog. Perbaiki penyebabnya — barisnya hilang pada
-                pembacaan berikutnya.
+                Dulu yang rusak di pemeriksaan berbagi, lalu papan pekerjaan,
+                lalu komputer, lalu fitur. Perbaiki penyebabnya — barisnya
+                hilang sendiri saat dicek lagi.
               </p>
             </aside>
           </div>
@@ -1000,7 +1227,7 @@ function HomeSection({
       {live.problems.length > 0 ? (
         <section className="section">
           <div className="alert">
-            <h2>Masalah saat membaca repository</h2>
+            <h2>Masalah saat membaca rumah proyek</h2>
             <ul>
               {live.problems.map((problem) => (
                 <li key={problem}>{problem}</li>
@@ -1069,7 +1296,7 @@ function HomeSection({
                       className="t-compact muted"
                       style={{ marginTop: "var(--space-3)", maxWidth: "68ch" }}
                     >
-                      Sudah ditawarkan sebagai aksi primer di atas.
+                      Sudah ditawarkan sebagai langkah pertama di atas.
                     </p>
                   ) : (
                     <p
@@ -1172,9 +1399,9 @@ function ProjectsSection({
 
       <section className="section">
         <div className="section__head">
-          <h2 className="t-section">Peta repository</h2>
+          <h2 className="t-section">Peta rumah proyek</h2>
           <span className="rulelabel">
-            Dibaca dari pnpm-workspace.yaml dan setiap package.json
+            Dibaca dari daftar anggota dan setiap paket di komputer ini
           </span>
         </div>
 
@@ -1547,9 +1774,9 @@ function TasksSection({
 
           <section className="section">
             <div className="section__head">
-              <h2 className="t-section">Governance verdict</h2>
+              <h2 className="t-section">Kesimpulan aturan kerja</h2>
               <span className="rulelabel">
-                {plane.observedAt ?? "just now"}
+                {plane.observedAt ?? "baru saja"}
               </span>
             </div>
             <div className="grid">
@@ -1561,7 +1788,7 @@ function TasksSection({
                       : "verdictline verdictline--fail"
                   }
                 >
-                  <p className="t-label">Status</p>
+                  <p className="t-label">Keadaan sekarang</p>
                   <h3
                     className="t-display"
                     style={{ marginTop: "var(--space-2)" }}
@@ -1570,11 +1797,11 @@ function TasksSection({
                   </h3>
                   {plane.failedChecks.length > 0 ? (
                     <p className="lede">
-                      Pemeriksa yang menolak: {plane.failedChecks.join(", ")}
+                      Yang menolak: {plane.failedChecks.join(", ")}
                     </p>
                   ) : (
                     <p className="lede muted">
-                      Seluruh pemeriksa tata kelola lolos pada pembacaan ini.
+                      Semua pemeriksaan aturan kerja lolos sekarang.
                     </p>
                   )}
                   {plane.nextAction ? (
@@ -1582,7 +1809,7 @@ function TasksSection({
                       className="t-compact"
                       style={{ marginTop: "var(--space-3)" }}
                     >
-                      <strong>Langkah menurut repository:</strong>{" "}
+                      <strong>Saran dari rumah proyek:</strong>{" "}
                       {plane.nextAction}
                     </p>
                   ) : null}
@@ -1613,7 +1840,7 @@ function TasksSection({
       ) : (
         <section className="section">
           <div className="verdictline verdictline--fail">
-            <p className="t-label">Bidang kendali tidak terbaca</p>
+            <p className="t-label">Papan pekerjaan tidak terbaca</p>
             <p className="lede">{plane.problem}</p>
           </div>
         </section>
@@ -1621,29 +1848,31 @@ function TasksSection({
 
       <header className="pagehead grid">
         <div className="pagehead__id">
-          <p className="t-label">Tasks and flows</p>
-          <h1 className="t-page">Only operations that are already allowed</h1>
+          <p className="t-label">Pekerjaan dan alur</p>
+          <h1 className="t-page">Hanya perintah yang sudah diizinkan</h1>
           <p
             className="muted"
             style={{ marginTop: "var(--space-4)", maxWidth: "56ch" }}
           >
-            Every button refers to a known action identity. Free-form commands
-            from the browser are not accepted.
+            Setiap tombol punya nama yang sudah dikenal. Perintah bebas dari
+            browser tidak diterima.
           </p>
         </div>
       </header>
       <section className="section">
         <div className="section__head">
-          <h2 className="t-section">Task status</h2>
-          <span className="rulelabel">No live trail here</span>
+          <h2 className="t-section">Arti keadaan pekerjaan</h2>
+          <span className="rulelabel">
+            Ini panduan tetap — bukan jejak hidup
+          </span>
         </div>
         <div className="tablewrap">
           <table>
             <thead>
               <tr>
-                <th>Status</th>
-                <th>Meaning</th>
-                <th>Mutation</th>
+                <th>Keadaan</th>
+                <th>Artinya</th>
+                <th>Mengubah sesuatu?</th>
               </tr>
             </thead>
             <tbody>
@@ -1674,6 +1903,46 @@ function TasksSection({
   );
 }
 
+/** Local environment fix strip — allowlisted only. */
+const LOCAL_FIX_IDS = [
+  "setup",
+  "db-start",
+  "db-generate",
+  "db-migrate",
+  "db-seed",
+  "doctor",
+] as const;
+
+function LocalFixPanel({
+  title = "Local fix",
+  hint = "Docker Desktop harus sudah terbuka di Windows. Tombol di bawah hanya menjalankan perintah yang diizinkan di mesin lokal.",
+}: {
+  title?: string;
+  hint?: string;
+}) {
+  return (
+    <section className="section">
+      <div className="section__head">
+        <h2 className="t-section">{title}</h2>
+        <span className="rulelabel">setup · postgres · prisma · cek ulang</span>
+      </div>
+      <p
+        className="t-compact muted"
+        style={{ marginBottom: "var(--space-4)", maxWidth: "68ch" }}
+      >
+        {hint}
+      </p>
+      <div className="stack local-fix-stack">
+        {LOCAL_FIX_IDS.map((id) => (
+          <div className="local-fix-row" key={id}>
+            <RunStep id={id} />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function HealthSection({
   selectedAction,
   onOpen,
@@ -1684,7 +1953,15 @@ function HealthSection({
   live: LiveSnapshot;
 }) {
   const healthActions = ACTIONS.filter((action) =>
-    ["doctor", "setup", "db-start", "db-reset"].includes(action.id),
+    [
+      "doctor",
+      "setup",
+      "db-start",
+      "db-generate",
+      "db-migrate",
+      "db-seed",
+      "db-stop",
+    ].includes(action.id),
   );
 
   const health = live.health;
@@ -1700,8 +1977,10 @@ function HealthSection({
         <>
           <section className="section">
             <div className="section__head">
-              <h2 className="t-section">Hasil pemeriksaan mesin</h2>
-              <span className="rulelabel">Dijalankan oleh tools/doctor</span>
+              <h2 className="t-section">Hasil cek komputer</h2>
+              <span className="rulelabel">
+                Dicek otomatis saat papan dibuka
+              </span>
             </div>
 
             <div className="grid">
@@ -1713,7 +1992,7 @@ function HealthSection({
                       : "verdictline verdictline--warn"
                   }
                 >
-                  <p className="t-label">Verdict</p>
+                  <p className="t-label">Kesimpulan</p>
                   <h3
                     className="t-display"
                     style={{ marginTop: "var(--space-2)" }}
@@ -1722,32 +2001,32 @@ function HealthSection({
                   </h3>
                   <p className="lede muted">
                     {health.ok
-                      ? "Setiap prasyarat lokal terpenuhi. Aplikasi dapat dijalankan di komputer ini."
-                      : `${health.checks.length} pemeriksaan dijalankan. ${blocked.length} di antaranya menghalangi, dan masing-masing membawa langkah perbaikannya sendiri di bawah.`}
+                      ? "Semua peralatan yang dibutuhkan sudah oke. Proyek bisa dijalankan di komputer ini."
+                      : `${health.checks.length} pemeriksaan dijalankan. ${blocked.length} belum oke — lihat tabel, lalu pakai Local fix di bawah.`}
                   </p>
                 </div>
               </div>
               <div className="span-4">
                 <div className="locked">
-                  <p className="t-label">Counted</p>
+                  <p className="t-label">Angka</p>
                   <dl
                     className="factlist"
                     style={{ marginTop: "var(--space-3)" }}
                   >
                     <div>
-                      <dt>Passed</dt>
+                      <dt>Baik</dt>
                       <dd>{ready.length}</dd>
                     </div>
                     <div>
-                      <dt>Blocked</dt>
+                      <dt>Belum oke</dt>
                       <dd>{blocked.length}</dd>
                     </div>
                     <div>
-                      <dt>Rejected as unsafe</dt>
+                      <dt>Ditolak karena berbahaya</dt>
                       <dd>{unsafe.length}</dd>
                     </div>
                     <div>
-                      <dt>Checks run</dt>
+                      <dt>Jumlah dicek</dt>
                       <dd>{health.checks.length}</dd>
                     </div>
                   </dl>
@@ -1758,59 +2037,77 @@ function HealthSection({
 
           <section className="section">
             <div className="section__head">
-              <h2 className="t-section">Every check</h2>
+              <h2 className="t-section">Semua pemeriksaan</h2>
               <span className="rulelabel">
-                {health.checks.length} checks · recovery on the blocked ones
+                {health.checks.length} cek · tombol perbaikan di baris yang
+                belum oke
               </span>
             </div>
             <div className="tablewrap">
               <table>
-                <caption className="sr-only">Machine readiness checks</caption>
+                <caption className="sr-only">
+                  Pemeriksaan peralatan komputer
+                </caption>
                 <thead>
                   <tr>
                     <th scope="col">No.</th>
-                    <th scope="col">Area</th>
-                    <th scope="col">Result</th>
-                    <th scope="col">Reading</th>
-                    <th scope="col">Recovery</th>
+                    <th scope="col">Bagian</th>
+                    <th scope="col">Hasil</th>
+                    <th scope="col">Bacaan</th>
+                    <th scope="col">Cara perbaiki</th>
+                    <th scope="col">Aksi</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {health.checks.map((check, index) => (
-                    <tr
-                      // Tinted only when the configuration was rejected as
-                      // unsafe. A not-yet-ready check carries its glyph and
-                      // word; tinting it too would flatten the urgency.
-                      className={
-                        check.severity === "unsafe" ? "row--fail" : undefined
-                      }
-                      key={check.id}
-                    >
-                      <td className="num">
-                        {String(index + 1).padStart(2, "0")}
-                      </td>
-                      <th scope="row">{check.area}</th>
-                      <td>
-                        <span
-                          className={
-                            check.ok
-                              ? "status status--pass"
+                  {health.checks.map((check, index) => {
+                    const recoveryId = RECOVERY_COMMAND[check.id];
+                    return (
+                      <tr
+                        className={
+                          check.severity === "unsafe" ? "row--fail" : undefined
+                        }
+                        key={check.id}
+                      >
+                        <td className="num">
+                          {String(index + 1).padStart(2, "0")}
+                        </td>
+                        <th scope="row">{check.area}</th>
+                        <td>
+                          <span
+                            className={
+                              check.ok
+                                ? "status status--pass"
+                                : check.severity === "unsafe"
+                                  ? "status status--fail"
+                                  : "status status--warn"
+                            }
+                          >
+                            {check.ok
+                              ? "Siap"
                               : check.severity === "unsafe"
-                                ? "status status--fail"
-                                : "status status--warn"
-                          }
-                        >
+                                ? "Bahaya"
+                                : "Belum siap"}
+                          </span>
+                        </td>
+                        <td>{check.summary}</td>
+                        <td>
                           {check.ok
-                            ? "Siap"
-                            : check.severity === "unsafe"
-                              ? "Ditolak"
-                              : "Belum siap"}
-                        </span>
-                      </td>
-                      <td>{check.summary}</td>
-                      <td>{check.ok ? "—" : check.recovery}</td>
-                    </tr>
-                  ))}
+                            ? "—"
+                            : check.id === "docker-engine" ||
+                                check.id === "docker-installed"
+                              ? `${check.recovery} (harus dibuka manual di Windows — tidak bisa dari papan).`
+                              : check.recovery}
+                        </td>
+                        <td>
+                          {!check.ok && recoveryId ? (
+                            <RunStep id={recoveryId} />
+                          ) : (
+                            "—"
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -1819,7 +2116,7 @@ function HealthSection({
       ) : (
         <section className="section">
           <div className="section__head">
-            <h2 className="t-section">Hasil pemeriksaan mesin</h2>
+            <h2 className="t-section">Hasil cek komputer</h2>
             <span className="rulelabel">Tidak dapat dievaluasi</span>
           </div>
           <div className="verdictline verdictline--fail">
@@ -1831,6 +2128,11 @@ function HealthSection({
           </div>
         </section>
       )}
+
+      <LocalFixPanel
+        title="Local fix"
+        hint="Halaman Health khusus untuk memperbaiki mesin lokal. Docker Desktop Windows harus dibuka manual. Tombol: setup, Postgres, Prisma generate/migrate/seed, lalu cek ulang."
+      />
 
       <section className="section stack">
         {healthActions.map((action) => (
@@ -2009,32 +2311,34 @@ function ActivitySection({ live }: { live: LiveSnapshot }) {
       ) : (
         <section className="section">
           <div className="alert">
-            <h2>Git tidak terbaca</h2>
+            <h2>Riwayat perubahan tidak terbaca</h2>
             <p>
-              Riwayat perubahan tidak dapat ditampilkan karena git tidak dapat
-              dijalankan pada checkout ini.
+              Riwayat tidak bisa ditampilkan karena alat pencatat perubahan
+              tidak jalan di folder proyek ini.
             </p>
           </div>
         </section>
       )}
       <section className="section">
         <div className="section__head">
-          <h2 className="t-section">Delapan gerbang publikasi</h2>
+          <h2 className="t-section">Delapan pemeriksaan sebelum dibagikan</h2>
           <span className="rulelabel">
-            Dievaluasi oleh saf gate --all, bukan disusun tangan
+            Dicek otomatis — bukan ditulis tangan
           </span>
         </div>
         {live.gates.available ? (
           <div className="tablewrap">
             <table>
-              <caption className="sr-only">Verdict gerbang publikasi</caption>
+              <caption className="sr-only">
+                Hasil pemeriksaan sebelum dibagikan
+              </caption>
               <thead>
                 <tr>
                   <th scope="col">No.</th>
-                  <th scope="col">Gerbang</th>
-                  <th scope="col">Verdict</th>
-                  <th scope="col">Alasan</th>
-                  <th scope="col">Diperiksa</th>
+                  <th scope="col">Nama cek</th>
+                  <th scope="col">Hasil</th>
+                  <th scope="col">Kenapa</th>
+                  <th scope="col">Dicek</th>
                 </tr>
               </thead>
               <tbody>
@@ -2059,7 +2363,7 @@ function ActivitySection({ live }: { live: LiveSnapshot }) {
                             : "status status--fail"
                         }
                       >
-                        {gate.verdict === "PASS" ? "Lolos" : "Ditolak"}
+                        {gate.verdict === "PASS" ? "Lolos" : "Belum lolos"}
                       </span>
                     </td>
                     <td>
@@ -2239,17 +2543,13 @@ export function ControlCenter({ live }: { live: LiveSnapshot }) {
   return (
     <div>
       <header className="chrome">
-        <span className="tile" aria-hidden="true">
-          <SentraMark />
-        </span>
-        <span className="wordmark">SENTRA</span>
+        <SentraChromeBrand />
         <span className="chrome__sep" />
         <p className="chrome__path">
           Monorepo-safrs / <b>{current.label}</b>
         </p>
         <p className="chrome__right t-label">{SITE.operatingModel}</p>
       </header>
-
       {/* A <nav> rather than a <div>: aria-label needs a landmark role to
           attach to, and this genuinely is navigation. */}
       <nav className="mobile-nav" aria-label="Sections">
