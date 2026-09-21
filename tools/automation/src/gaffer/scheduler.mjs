@@ -1,8 +1,9 @@
-import { TaskState } from './constants.mjs';
-import { normalizeTaskContract } from './contracts.mjs';
+import { TaskState } from "./constants.mjs";
+import { normalizeTaskContract } from "./contracts.mjs";
 
 export function createTaskGraph(rawTasks) {
-  if (!Array.isArray(rawTasks) || rawTasks.length === 0) throw new Error('Task graph requires at least one task');
+  if (!Array.isArray(rawTasks) || rawTasks.length === 0)
+    throw new Error("Task graph requires at least one task");
   const tasks = new Map();
 
   for (const raw of rawTasks) {
@@ -13,8 +14,10 @@ export function createTaskGraph(rawTasks) {
 
   for (const task of tasks.values()) {
     for (const dep of task.dependencies) {
-      if (!tasks.has(dep)) throw new Error(`Task ${task.id} depends on missing task ${dep}`);
-      if (dep === task.id) throw new Error(`Task ${task.id} cannot depend on itself`);
+      if (!tasks.has(dep))
+        throw new Error(`Task ${task.id} depends on missing task ${dep}`);
+      if (dep === task.id)
+        throw new Error(`Task ${task.id} cannot depend on itself`);
     }
   }
 
@@ -31,7 +34,10 @@ function assertAcyclic(tasks) {
       children.get(dep).push(task.id);
     }
   }
-  const queue = [...indegree.entries()].filter(([, n]) => n === 0).map(([id]) => id).sort();
+  const queue = [...indegree.entries()]
+    .filter(([, n]) => n === 0)
+    .map(([id]) => id)
+    .sort();
   let visited = 0;
   while (queue.length) {
     const id = queue.shift();
@@ -44,7 +50,7 @@ function assertAcyclic(tasks) {
       }
     }
   }
-  if (visited !== tasks.size) throw new Error('Task graph contains a cycle');
+  if (visited !== tasks.size) throw new Error("Task graph contains a cycle");
 }
 
 export function refreshTaskReadiness(tasks) {
@@ -52,14 +58,22 @@ export function refreshTaskReadiness(tasks) {
   for (const task of next.values()) {
     if (![TaskState.PENDING, TaskState.BLOCKED].includes(task.state)) continue;
     const deps = task.dependencies.map((id) => next.get(id));
-    if (deps.some((dep) => [TaskState.FAILED, TaskState.BLOCKED, TaskState.CANCELLED].includes(dep.state))) {
+    if (
+      deps.some((dep) =>
+        [TaskState.FAILED, TaskState.BLOCKED, TaskState.CANCELLED].includes(
+          dep.state,
+        ),
+      )
+    ) {
       task.state = TaskState.BLOCKED;
       continue;
     }
-    if (deps.every((dep) => dep.state === TaskState.VERIFIED)) task.state = TaskState.READY;
+    if (deps.every((dep) => dep.state === TaskState.VERIFIED))
+      task.state = TaskState.READY;
   }
   for (const task of next.values()) {
-    if (task.dependencies.length === 0 && task.state === TaskState.PENDING) task.state = TaskState.READY;
+    if (task.dependencies.length === 0 && task.state === TaskState.PENDING)
+      task.state = TaskState.READY;
   }
   return next;
 }

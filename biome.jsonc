@@ -55,6 +55,7 @@
       "!!database",
       "!!docs/design-system",
       "!!docs/brand",
+      "!!docs/library",
       // Klien Prisma hasil generate.
       "!!packages/database/src/generated/prisma"
     ],
