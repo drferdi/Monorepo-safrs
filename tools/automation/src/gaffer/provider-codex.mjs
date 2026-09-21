@@ -1,6 +1,6 @@
-import { Route, WorkerClass, FailureClass } from './constants.mjs';
-import { runGaffer } from './runner.mjs';
-import { createSafrsPorts } from './safrs-ports.mjs';
+import { FailureClass, Route, WorkerClass } from "./constants.mjs";
+import { runGaffer } from "./runner.mjs";
+import { createSafrsPorts } from "./safrs-ports.mjs";
 
 /**
  * Codex Provider for Gaffer Orchestration Framework (Phase 3).
@@ -8,34 +8,46 @@ import { createSafrsPorts } from './safrs-ports.mjs';
  * reviewer auditing, and acceptance callbacks bound to Codex & SAFRS.
  */
 export function createCodexProvider(options = {}) {
-  const defaultWorkerExecution = options.executeWorkerProvider ?? (async ({ worker, workerClass, task, context = {} }) => {
-    return {
-      status: 'complete',
-      changedFiles: task.ownedPaths ?? [],
-      summary: `Codex worker [${worker.id}] executed task [${task.id}] as ${workerClass}`,
-      evidenceManifest: context.evidenceManifest ?? task.evidenceManifest,
-    };
-  });
+  const defaultWorkerExecution =
+    options.executeWorkerProvider ??
+    (async ({ worker, workerClass, task, context = {} }) => {
+      return {
+        status: "complete",
+        changedFiles: task.ownedPaths ?? [],
+        summary: `Codex worker [${worker.id}] executed task [${task.id}] as ${workerClass}`,
+        evidenceManifest: context.evidenceManifest ?? task.evidenceManifest,
+      };
+    });
 
-  const defaultRootImplement = options.rootImplementProvider ?? (async ({ intent, plan, context }) => {
-    return {
-      status: 'complete',
-      changedFiles: context.changedFiles ?? plan.ownedPaths ?? ['projects/academic/academic-smartboard/apps/web/src/components/AppShell.tsx'],
-      summary: `Root executed solo intent: ${intent}`,
-    };
-  });
+  const defaultRootImplement =
+    options.rootImplementProvider ??
+    (async ({ intent, plan, context }) => {
+      return {
+        status: "complete",
+        changedFiles: context.changedFiles ??
+          plan.ownedPaths ?? [
+            "projects/academic/academic-smartboard/apps/web/src/components/AppShell.tsx",
+          ],
+        summary: `Root executed solo intent: ${intent}`,
+      };
+    });
 
   const rootPlan = async ({ intent, project, authorization, context }) => {
     if (context.plan) return context.plan;
 
     // Route decision heuristic: SOLO for small/focused tasks, DECOMPOSE for multi-unit
-    const isMultiUnit = Boolean(context.isMultiUnit || (context.tasks && context.tasks.length > 0));
-    const forceSolo = context.route === Route.SOLO || (!isMultiUnit && context.route !== Route.DECOMPOSE);
+    const isMultiUnit = Boolean(
+      context.isMultiUnit || (context.tasks && context.tasks.length > 0),
+    );
+    const forceSolo =
+      context.route === Route.SOLO ||
+      (!isMultiUnit && context.route !== Route.DECOMPOSE);
 
     if (forceSolo) {
       return {
         route: Route.SOLO,
-        ownedPaths: context.ownedPaths ?? (project?.path ? [`${project.path}/src/`] : []),
+        ownedPaths:
+          context.ownedPaths ?? (project?.path ? [`${project.path}/src/`] : []),
         summary: `Solo plan for: ${intent}`,
         evidenceManifest: context.evidenceManifest,
       };
@@ -44,15 +56,20 @@ export function createCodexProvider(options = {}) {
     // Decompose into bounded tasks DAG
     const tasks = context.tasks ?? [
       {
-        id: 'TASK-1',
-        title: 'Core Implementation',
+        id: "TASK-1",
+        title: "Core Implementation",
         objective: intent,
-        ownedPaths: context.ownedPaths ?? (project?.path ? [`${project.path}/src/components/`] : []),
-        plannedChangedFiles: context.plannedChangedFiles ?? context.ownedPaths ?? (project?.path ? [`${project.path}/src/components/`] : []),
+        ownedPaths:
+          context.ownedPaths ??
+          (project?.path ? [`${project.path}/src/components/`] : []),
+        plannedChangedFiles:
+          context.plannedChangedFiles ??
+          context.ownedPaths ??
+          (project?.path ? [`${project.path}/src/components/`] : []),
         workerClass: context.workerClass ?? WorkerClass.ECONOMY,
         dependencies: [],
         architectureSettled: true,
-        verificationCommands: context.verificationCommands ?? ['pnpm test'],
+        verificationCommands: context.verificationCommands ?? ["pnpm test"],
         evidenceManifest: context.evidenceManifest,
       },
     ];
@@ -83,9 +100,9 @@ export function createCodexProvider(options = {}) {
     }
     // Default Codex reviewer audit pass
     return {
-      verdict: 'SHIP',
-      reviewer: '08-safrs-boundary-reviewer',
-      comments: 'Boundary and security review passed cleanly.',
+      verdict: "SHIP",
+      reviewer: "08-safrs-boundary-reviewer",
+      comments: "Boundary and security review passed cleanly.",
     };
   };
 
@@ -95,11 +112,11 @@ export function createCodexProvider(options = {}) {
     }
     // Root semantic acceptance requires verification to have passed
     if (verification && verification.passed === false) {
-      return { accepted: false, reason: 'verification_not_passed' };
+      return { accepted: false, reason: "verification_not_passed" };
     }
     return {
       accepted: true,
-      acceptedBy: 'Chief/Root',
+      acceptedBy: "Chief/Root",
       summary: `Root semantically accepted verified output for intent: ${intent}`,
     };
   };
@@ -118,7 +135,7 @@ export function createCodexProvider(options = {}) {
  */
 export async function executeGafferIntent({
   intent,
-  capsuleSelector = 'academic/academic-smartboard',
+  capsuleSelector = "academic/academic-smartboard",
   repositoryRoot = process.cwd(),
   context = {},
   policy = {},
@@ -127,23 +144,23 @@ export async function executeGafferIntent({
   controlDirectory = null,
   workerRegistry = null,
 }) {
-  if (!intent || typeof intent !== 'string') {
-    throw new TypeError('Gaffer intent string is required');
+  if (!intent || typeof intent !== "string") {
+    throw new TypeError("Gaffer intent string is required");
   }
 
   const codexProviderPorts = createCodexProvider(providerOptions);
 
   const defaultWorkerRegistry = workerRegistry ?? [
     {
-      id: 'codex-luna-economy',
-      adapterId: 'codex',
+      id: "codex-luna-economy",
+      adapterId: "codex",
       classes: [WorkerClass.ECONOMY],
       certified: true,
       expectedCost: 1,
     },
     {
-      id: 'codex-luna-strong',
-      adapterId: 'codex',
+      id: "codex-luna-strong",
+      adapterId: "codex",
       classes: [WorkerClass.STRONG],
       certified: true,
       expectedCost: 3,

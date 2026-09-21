@@ -1,21 +1,23 @@
-import { execFile } from 'node:child_process';
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { promisify } from 'node:util';
-
-import { compileTaskContract, loadCompileContext } from '../contracts.mjs';
-import { verifyManifest } from '../evidence.mjs';
-import { GATES, runGate } from '../gates.mjs';
-import { authorize as authorizeGuard } from '../guard.mjs';
-import { reconcileLease } from '../leases.mjs';
-import { evaluatePublication } from '../publisher.mjs';
-import { compareRisk } from '../risk.mjs';
-import { normalizeScope } from '../scopes.mjs';
-import { resolveCapsules, verifyCapsule } from '../../../project-standalone/src/verify.mjs';
-import { loadAndValidateContract } from '../../../project-standalone/src/contract.mjs';
-import { resolveControlPlanePaths } from '../../../task/src/storage.mjs';
-import { assertChangedFilesWithinScope } from './scope.mjs';
-import { FailureClass } from './constants.mjs';
+import { execFile } from "node:child_process";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { promisify } from "node:util";
+import { loadAndValidateContract } from "../../../project-standalone/src/contract.mjs";
+import {
+  resolveCapsules,
+  verifyCapsule,
+} from "../../../project-standalone/src/verify.mjs";
+import { resolveControlPlanePaths } from "../../../task/src/storage.mjs";
+import { compileTaskContract, loadCompileContext } from "../contracts.mjs";
+import { verifyManifest } from "../evidence.mjs";
+import { GATES, runGate } from "../gates.mjs";
+import { authorize as authorizeGuard } from "../guard.mjs";
+import { reconcileLease } from "../leases.mjs";
+import { evaluatePublication } from "../publisher.mjs";
+import { compareRisk } from "../risk.mjs";
+import { normalizeScope } from "../scopes.mjs";
+import { FailureClass } from "./constants.mjs";
+import { assertChangedFilesWithinScope } from "./scope.mjs";
 
 const execFileAsync = promisify(execFile);
 const SELECTOR_PART = /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/u;
@@ -28,7 +30,7 @@ function portError(code, message) {
 }
 
 function requireCallback(providerPorts, name) {
-  if (typeof providerPorts?.[name] !== 'function') {
+  if (typeof providerPorts?.[name] !== "function") {
     throw new TypeError(
       `Gaffer SAFRS port '${name}' requires an injected callback`,
     );
@@ -37,21 +39,21 @@ function requireCallback(providerPorts, name) {
 }
 
 function strictSelector(value) {
-  if (typeof value !== 'string' || !value.trim()) {
+  if (typeof value !== "string" || !value.trim()) {
     throw portError(
-      'PROJECT_SELECTOR_REQUIRED',
-      'Gaffer project discovery requires a domain/capsule selector',
+      "PROJECT_SELECTOR_REQUIRED",
+      "Gaffer project discovery requires a domain/capsule selector",
     );
   }
-  const normalized = value.trim().replaceAll('\\', '/');
-  const parts = normalized.split('/');
+  const normalized = value.trim().replaceAll("\\", "/");
+  const parts = normalized.split("/");
   if (
     parts.length !== 2 ||
     parts.some((part) => !SELECTOR_PART.test(part)) ||
-    normalized.startsWith('projects/')
+    normalized.startsWith("projects/")
   ) {
     throw portError(
-      'PROJECT_SELECTOR_INVALID',
+      "PROJECT_SELECTOR_INVALID",
       `project selector must use domain/capsule: ${value}`,
     );
   }
@@ -60,16 +62,12 @@ function strictSelector(value) {
 
 function loadAdapterCapabilities(repositoryRoot) {
   try {
-    const path = join(
-      repositoryRoot,
-      '.safrs',
-      'adapter-capabilities.json',
-    );
-    const data = JSON.parse(readFileSync(path, 'utf8'));
+    const path = join(repositoryRoot, ".safrs", "adapter-capabilities.json");
+    const data = JSON.parse(readFileSync(path, "utf8"));
     return data.adapters ?? {};
   } catch (error) {
     throw portError(
-      'ADAPTER_UNAVAILABLE',
+      "ADAPTER_UNAVAILABLE",
       `cannot load SAFRS adapter capabilities: ${error.message}`,
     );
   }
@@ -81,8 +79,8 @@ function activeAdapterIds(repositoryRoot) {
     Object.entries(capabilities)
       .filter(([id, capability]) => {
         return (
-          id !== 'droid' &&
-          capability?.activation === 'active' &&
+          id !== "droid" &&
+          capability?.activation === "active" &&
           capability?.enforceable_pre_action_hooks === true
         );
       })
@@ -104,12 +102,13 @@ function findEvidenceManifest(input = {}) {
     ...(input.tasks ?? []).map((task) => task?.verification?.evidenceManifest),
   ];
   return candidates.find(
-    (candidate) => candidate && typeof candidate === 'object',
+    (candidate) => candidate && typeof candidate === "object",
   );
 }
 
 function evidenceBinding(input = {}) {
-  const authorization = input.verification?.authorization ?? input.authorization;
+  const authorization =
+    input.verification?.authorization ?? input.authorization;
   const contract = authorization?.contract ?? input.plan?.contract;
   return {
     taskId:
@@ -139,19 +138,19 @@ function evidenceBinding(input = {}) {
 }
 
 function normalizeVerificationResult(value) {
-  if (typeof value === 'boolean') return { passed: value };
-  if (!value || typeof value !== 'object') {
-    return { passed: false, reason: 'verification_result_missing' };
+  if (typeof value === "boolean") return { passed: value };
+  if (!value || typeof value !== "object") {
+    return { passed: false, reason: "verification_result_missing" };
   }
   return { ...value, passed: value.passed === true };
 }
 
 async function defaultRepositoryVerification({ repositoryRoot }) {
-  const windows = process.platform === 'win32';
-  const command = windows ? 'powershell' : 'bash';
+  const windows = process.platform === "win32";
+  const command = windows ? "powershell" : "bash";
   const args = windows
-    ? ['-ExecutionPolicy', 'Bypass', '-File', 'scripts/safrs-verify.ps1']
-    : ['scripts/safrs-verify.sh'];
+    ? ["-ExecutionPolicy", "Bypass", "-File", "scripts/safrs-verify.ps1"]
+    : ["scripts/safrs-verify.sh"];
 
   try {
     await execFileAsync(command, args, {
@@ -164,8 +163,8 @@ async function defaultRepositoryVerification({ repositoryRoot }) {
   } catch (error) {
     return {
       passed: false,
-      reason: 'repository_verification_failed',
-      exitCode: typeof error?.code === 'number' ? error.code : null,
+      reason: "repository_verification_failed",
+      exitCode: typeof error?.code === "number" ? error.code : null,
     };
   }
 }
@@ -176,7 +175,10 @@ async function defaultStandaloneVerification({
   checkerPath,
 }) {
   if (!project?.id) {
-    return { passed: false, reason: 'project_missing_for_standalone_verification' };
+    return {
+      passed: false,
+      reason: "project_missing_for_standalone_verification",
+    };
   }
   try {
     const result = await verifyCapsule({
@@ -184,18 +186,13 @@ async function defaultStandaloneVerification({
       selector: project.id,
       checkerPath:
         checkerPath ??
-        join(
-          repositoryRoot,
-          'tools',
-          'safrs',
-          'check_project_independence.py',
-        ),
+        join(repositoryRoot, "tools", "safrs", "check_project_independence.py"),
     });
     return { passed: result.ok === true, result };
   } catch (error) {
     return {
       passed: false,
-      reason: 'standalone_verification_failed',
+      reason: "standalone_verification_failed",
       result: error.result ?? null,
     };
   }
@@ -216,7 +213,7 @@ function evaluateGates(repositoryRoot, controlDirectory) {
         return [
           gateId,
           {
-            verdict: 'FAIL',
+            verdict: "FAIL",
             reason: `gate_error: ${error.message}`,
           },
         ];
@@ -226,30 +223,28 @@ function evaluateGates(repositoryRoot, controlDirectory) {
 }
 
 function guardFailureCode(decision) {
-  return decision === 'stop' ? 'BUDGET_EXHAUSTED' : 'SECURITY_RISK';
+  return decision === "stop" ? "BUDGET_EXHAUSTED" : "SECURITY_RISK";
 }
 
 export function createSafrsPorts(options = {}) {
   const repositoryRoot = options.repositoryRoot ?? process.cwd();
   const configuredSelector = strictSelector(options.capsuleSelector);
   const providerPorts = options.providerPorts ?? {};
-  const rootPlan = requireCallback(providerPorts, 'rootPlan');
-  const rootImplement = requireCallback(providerPorts, 'rootImplement');
-  const rootAcceptProvider = requireCallback(providerPorts, 'rootAccept');
-  const audit = requireCallback(providerPorts, 'audit');
-  const executeWorkerProvider = requireCallback(
-    providerPorts,
-    'executeWorker',
-  );
+  const rootPlan = requireCallback(providerPorts, "rootPlan");
+  const rootImplement = requireCallback(providerPorts, "rootImplement");
+  const rootAcceptProvider = requireCallback(providerPorts, "rootAccept");
+  const audit = requireCallback(providerPorts, "audit");
+  const executeWorkerProvider = requireCallback(providerPorts, "executeWorker");
   const compileContext =
     options.compileContext ?? loadCompileContext(repositoryRoot);
   let controlDirectory = options.controlDirectory;
   if (!controlDirectory) {
     try {
-      controlDirectory = resolveControlPlanePaths(repositoryRoot).controlDirectory;
+      controlDirectory =
+        resolveControlPlanePaths(repositoryRoot).controlDirectory;
     } catch (error) {
       throw portError(
-        'CONTROL_PLANE_UNAVAILABLE',
+        "CONTROL_PLANE_UNAVAILABLE",
         `cannot resolve SAFRS control plane: ${error.message}`,
       );
     }
@@ -262,9 +257,9 @@ export function createSafrsPorts(options = {}) {
   const authorizationByTask = new Map();
 
   async function availableWorkersFor(requestedClass) {
-    return typeof options.workerRegistry === 'function'
+    return typeof options.workerRegistry === "function"
       ? await options.workerRegistry({ requestedClass })
-      : options.workerRegistry ?? [];
+      : (options.workerRegistry ?? []);
   }
 
   async function discoverProject({ context = {} } = {}) {
@@ -273,14 +268,14 @@ export function createSafrsPorts(options = {}) {
       : configuredSelector;
     if (selector !== configuredSelector) {
       throw portError(
-        'PROJECT_SELECTOR_MISMATCH',
+        "PROJECT_SELECTOR_MISMATCH",
         `context selector ${selector} does not match configured selector ${configuredSelector}`,
       );
     }
     const capsules = await resolveCapsules(repositoryRoot, selector);
     if (capsules.length !== 1) {
       throw portError(
-        'PROJECT_DISCOVERY_FAILED',
+        "PROJECT_DISCOVERY_FAILED",
         `expected exactly one capsule for ${selector}, found ${capsules.length}`,
       );
     }
@@ -297,7 +292,7 @@ export function createSafrsPorts(options = {}) {
     const taskContract =
       context.taskContract ?? task?.metadata?.taskContract ?? null;
     if (!taskContract) {
-      return { allowed: false, reason: 'contract_missing' };
+      return { allowed: false, reason: "contract_missing" };
     }
 
     let compiled;
@@ -306,7 +301,7 @@ export function createSafrsPorts(options = {}) {
     } catch (error) {
       return {
         allowed: false,
-        reason: 'contract_invalid',
+        reason: "contract_invalid",
         detail: error.message,
       };
     }
@@ -317,7 +312,7 @@ export function createSafrsPorts(options = {}) {
     if (budget?.stopped) {
       return {
         allowed: false,
-        reason: 'budget_breaker',
+        reason: "budget_breaker",
         contract: compiled.contract,
         contractDigest: compiled.contractDigest,
       };
@@ -326,14 +321,14 @@ export function createSafrsPorts(options = {}) {
     const guardEvent =
       context.guardEvent ??
       (compiled.contract.write_scopes.length > 0
-        ? { type: 'write', paths: compiled.contract.write_scopes }
-        : { type: 'read', paths: compiled.contract.read_scopes });
+        ? { type: "write", paths: compiled.contract.write_scopes }
+        : { type: "read", paths: compiled.contract.read_scopes });
     const guard = authorizeGuard(guardEvent, {
       contract: compiled.contract,
       sensitivePaths: compileContext.sensitivePaths,
       budget,
     });
-    if (guard.decision !== 'allow') {
+    if (guard.decision !== "allow") {
       return {
         allowed: false,
         reason: `guard_${guard.reasonCode.toLowerCase()}`,
@@ -345,7 +340,7 @@ export function createSafrsPorts(options = {}) {
 
     const authorization = {
       allowed: true,
-      highRisk: compareRisk(compiled.contract.effective_risk, 'R2') >= 0,
+      highRisk: compareRisk(compiled.contract.effective_risk, "R2") >= 0,
       contract: compiled.contract,
       contractDigest: compiled.contractDigest,
       guard,
@@ -383,8 +378,8 @@ export function createSafrsPorts(options = {}) {
     const lease = context.lease;
     if (!lease) {
       throw portError(
-        'BLOCKED_REQUIREMENT',
-        'worker execution requires an active SAFRS lease',
+        "BLOCKED_REQUIREMENT",
+        "worker execution requires an active SAFRS lease",
       );
     }
     const worker = input.worker;
@@ -398,8 +393,8 @@ export function createSafrsPorts(options = {}) {
       !activeAdapters.has(adapterId)
     ) {
       throw portError(
-        'ADAPTER_UNAVAILABLE',
-        `worker ${String(worker?.id ?? '<unknown>')} is not an active certified ${String(workerClass)} adapter`,
+        "ADAPTER_UNAVAILABLE",
+        `worker ${String(worker?.id ?? "<unknown>")} is not an active certified ${String(workerClass)} adapter`,
       );
     }
 
@@ -407,8 +402,8 @@ export function createSafrsPorts(options = {}) {
     const authorization = taskId ? authorizationByTask.get(taskId) : null;
     if (!taskId || !authorization) {
       throw portError(
-        'BLOCKED_REQUIREMENT',
-        'worker execution requires prior SAFRS authorization for the task',
+        "BLOCKED_REQUIREMENT",
+        "worker execution requires prior SAFRS authorization for the task",
       );
     }
     const providedContract =
@@ -422,29 +417,29 @@ export function createSafrsPorts(options = {}) {
         ).contractDigest;
       } catch (error) {
         throw portError(
-          'BLOCKED_REQUIREMENT',
+          "BLOCKED_REQUIREMENT",
           `worker TaskContractV1 is invalid: ${error.message}`,
         );
       }
       if (providedDigest !== authorization.contractDigest) {
         throw portError(
-          'BLOCKED_REQUIREMENT',
-          'worker TaskContractV1 digest does not match authorization',
+          "BLOCKED_REQUIREMENT",
+          "worker TaskContractV1 digest does not match authorization",
         );
       }
     }
     const taskContract = authorization.contract;
     if (lease.local?.task_id !== taskId) {
       throw portError(
-        'BLOCKED_REQUIREMENT',
-        'worker lease task_id does not match the Gaffer task',
+        "BLOCKED_REQUIREMENT",
+        "worker lease task_id does not match the Gaffer task",
       );
     }
     const ownedPaths = (input.task?.ownedPaths ?? []).map(normalizeScope);
     if (ownedPaths.length === 0) {
       throw portError(
-        'BLOCKED_REQUIREMENT',
-        'worker execution requires non-empty owned paths',
+        "BLOCKED_REQUIREMENT",
+        "worker execution requires non-empty owned paths",
       );
     }
     assertChangedFilesWithinScope(
@@ -457,22 +452,25 @@ export function createSafrsPorts(options = {}) {
       input.worker?.plannedChangedFiles ??
       input.task?.ownedPaths ??
       [];
-    if (!Array.isArray(plannedChangedFiles) || plannedChangedFiles.length === 0) {
+    if (
+      !Array.isArray(plannedChangedFiles) ||
+      plannedChangedFiles.length === 0
+    ) {
       throw portError(
-        'BLOCKED_REQUIREMENT',
-        'worker execution requires declared plannedChangedFiles',
+        "BLOCKED_REQUIREMENT",
+        "worker execution requires declared plannedChangedFiles",
       );
     }
     assertChangedFilesWithinScope(plannedChangedFiles, ownedPaths);
     const preGuard = authorizeGuard(
-      { type: 'write', paths: plannedChangedFiles },
+      { type: "write", paths: plannedChangedFiles },
       {
         contract: taskContract,
         sensitivePaths: compileContext.sensitivePaths,
         budget: context.budget,
       },
     );
-    if (preGuard.decision !== 'allow') {
+    if (preGuard.decision !== "allow") {
       throw portError(
         guardFailureCode(preGuard.decision),
         preGuard.message || `worker scope denied: ${preGuard.reasonCode}`,
@@ -483,8 +481,8 @@ export function createSafrsPorts(options = {}) {
       lease.remoteEvents,
       lease.now ?? new Date().toISOString(),
     );
-    if (leaseVerdict.decision !== 'allow') {
-      throw portError('BLOCKED_REQUIREMENT', leaseVerdict.reason);
+    if (leaseVerdict.decision !== "allow") {
+      throw portError("BLOCKED_REQUIREMENT", leaseVerdict.reason);
     }
 
     const registeredWorkers = await listAvailableWorkers({
@@ -498,8 +496,8 @@ export function createSafrsPorts(options = {}) {
       )
     ) {
       throw portError(
-        'ADAPTER_UNAVAILABLE',
-        `worker ${String(worker?.id ?? '<unknown>')} is not registered for ${String(workerClass)}`,
+        "ADAPTER_UNAVAILABLE",
+        `worker ${String(worker?.id ?? "<unknown>")} is not registered for ${String(workerClass)}`,
       );
     }
 
@@ -518,14 +516,14 @@ export function createSafrsPorts(options = {}) {
     assertChangedFilesWithinScope(changedFiles, ownedPaths);
 
     const postGuard = authorizeGuard(
-      { type: 'write', paths: changedFiles },
+      { type: "write", paths: changedFiles },
       {
         contract: taskContract,
         sensitivePaths: compileContext.sensitivePaths,
         budget: context.budget,
       },
     );
-    if (postGuard.decision !== 'allow') {
+    if (postGuard.decision !== "allow") {
       throw portError(
         guardFailureCode(postGuard.decision),
         postGuard.message || `worker write denied: ${postGuard.reasonCode}`,
@@ -543,7 +541,7 @@ export function createSafrsPorts(options = {}) {
     const evidenceManifest = findEvidenceManifest(input);
     const evidence = evidenceManifest
       ? verifyManifest(evidenceManifest)
-      : { valid: false, errors: ['evidence manifest missing'] };
+      : { valid: false, errors: ["evidence manifest missing"] };
 
     let repository;
     try {
@@ -556,7 +554,7 @@ export function createSafrsPorts(options = {}) {
     } catch (error) {
       repository = {
         passed: false,
-        reason: 'repository_verification_failed',
+        reason: "repository_verification_failed",
         detail: error.message,
         failureClass: error.code ?? error.failureClass ?? null,
       };
@@ -574,7 +572,7 @@ export function createSafrsPorts(options = {}) {
     } catch (error) {
       standalone = {
         passed: false,
-        reason: 'standalone_verification_failed',
+        reason: "standalone_verification_failed",
         detail: error.message,
         failureClass: error.code ?? error.failureClass ?? null,
       };
@@ -582,11 +580,15 @@ export function createSafrsPorts(options = {}) {
 
     const errors = [
       ...Object.entries(gates)
-        .filter(([, result]) => result.verdict !== 'PASS')
+        .filter(([, result]) => result.verdict !== "PASS")
         .map(([gateId, result]) => `${gateId}: ${result.reason}`),
-      ...(evidence.valid ? [] : evidence.errors ?? ['evidence invalid']),
-      ...(repository.passed ? [] : [repository.reason ?? 'repository verification failed']),
-      ...(standalone.passed ? [] : [standalone.reason ?? 'standalone verification failed']),
+      ...(evidence.valid ? [] : (evidence.errors ?? ["evidence invalid"])),
+      ...(repository.passed
+        ? []
+        : [repository.reason ?? "repository verification failed"]),
+      ...(standalone.passed
+        ? []
+        : [standalone.reason ?? "standalone verification failed"]),
     ];
 
     const failureClass =
@@ -611,18 +613,18 @@ export function createSafrsPorts(options = {}) {
   async function rootAccept(input = {}) {
     const verification = input.verification;
     if (!verification?.passed) {
-      return { accepted: false, reason: 'verification_failed' };
+      return { accepted: false, reason: "verification_failed" };
     }
     const evidenceManifest = verification.evidenceManifest;
     if (!evidenceManifest) {
-      return { accepted: false, reason: 'evidence_manifest_invalid' };
+      return { accepted: false, reason: "evidence_manifest_invalid" };
     }
     const authorization = authorizationByTask.get(evidenceManifest.task_id);
     if (!authorization) {
-      return { accepted: false, reason: 'evidence_binding_mismatch' };
+      return { accepted: false, reason: "evidence_binding_mismatch" };
     }
     const finalVerification = await verify({
-      mode: 'FINAL',
+      mode: "FINAL",
       intent: input.intent,
       project: input.project,
       plan: { ...(input.plan ?? {}), evidenceManifest },
@@ -632,7 +634,7 @@ export function createSafrsPorts(options = {}) {
     if (!finalVerification.passed) {
       return {
         accepted: false,
-        reason: 'verification_failed',
+        reason: "verification_failed",
         verification: finalVerification,
       };
     }
@@ -640,7 +642,7 @@ export function createSafrsPorts(options = {}) {
     if (!evidence.valid) {
       return {
         accepted: false,
-        reason: 'evidence_manifest_invalid',
+        reason: "evidence_manifest_invalid",
         evidence,
       };
     }
@@ -664,29 +666,27 @@ export function createSafrsPorts(options = {}) {
     ) {
       return {
         accepted: false,
-        reason: 'evidence_binding_mismatch',
+        reason: "evidence_binding_mismatch",
       };
     }
 
     const risk = evidenceManifest.effective_risk;
-    if (risk === 'R2' || risk === 'R3') {
+    if (risk === "R2" || risk === "R3") {
       if (!options.publicationContext) {
-        return { accepted: false, reason: 'publication_context_missing' };
+        return { accepted: false, reason: "publication_context_missing" };
       }
       const publication = evaluatePublication(
         options.publicationContext.pullRequest,
         evidenceManifest,
         {
           ...options.publicationContext,
-          now:
-            options.publicationContext.now ??
-            new Date().toISOString(),
+          now: options.publicationContext.now ?? new Date().toISOString(),
         },
       );
       if (!publication.eligible) {
         return {
           accepted: false,
-          reason: 'publication_ineligible',
+          reason: "publication_ineligible",
           publication,
         };
       }

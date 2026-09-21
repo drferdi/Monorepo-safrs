@@ -256,13 +256,17 @@ async function gafferCommand(action, rest) {
         }
         console.log("Outcome: Ready for Root semantic merge/review.");
       } else {
-        console.log(`Reason: ${result.reason ?? "Blocked by verification or policy"}`);
+        console.log(
+          `Reason: ${result.reason ?? "Blocked by verification or policy"}`,
+        );
       }
     }
     return result.status === "READY" ? 0 : 1;
   } catch (error) {
     if (json) {
-      console.log(JSON.stringify({ status: "ERROR", error: error.message }, null, 2));
+      console.log(
+        JSON.stringify({ status: "ERROR", error: error.message }, null, 2),
+      );
     } else {
       console.error(`GAFFER ERROR: ${error.message}`);
     }
