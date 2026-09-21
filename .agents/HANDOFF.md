@@ -1,44 +1,35 @@
-Last updated: 2026-09-21 (Control Center Situasi SAFRS Phase 1 — committed)
+Last updated: 2026-09-21 (Codex — internal capsule migrations)
 
 ## Capsule
 
-`projects/internal/control-center` — operator surface monorepo (bukan capsule produk).
+`projects/internal/prompt` dan `projects/internal/unicom`
 
 ## Current state
 
-### Situasi SAFRS Home — COMPLETED & COMMITTED
+Migrasi capsule sovereign internal selesai secara lokal untuk Prompt dan UNICOM.
 
-- Commit: `7193101` on `feat/gaffer-safrs-wiring`
-  `feat(control-center): add Situasi SAFRS live monorepo verdict home`
-- `lib/situation.ts` + tests: verdict dari gates / plane / health / features (derived)
-- Home verdict-first (grid 1–7 / 9–12), nav **Situasi**, soft refresh 30s
-- Token scope: `packages/token/scope.txt` includes control-center
-- Docs: README + `docs/architecture.md` selaras executor/gates built
-- Verified: **29/29** tests, typecheck, biome; smoke `http://127.0.0.1:3100` → 200
+- Source capsule mencakup desktop, library, Prisma schema serta migration, aset publik, skrip, tipe, test, dan data yang diperlukan.
+- Tidak ada legacy `.env`, lockfile, `node_modules`, `.next`, atau `dist-electron` yang dipindahkan.
+- `pnpm-workspace.yaml`, `pnpm-lock.yaml`, `project.contract.json`, `AGENTS.md`, `README.md`, dan dokumentasi capsule tersedia.
+- `db:generate` memakai fallback `DATABASE_URL` dan `DIRECT_URL` placeholder saat environment belum dikonfigurasi; tidak menjalankan migrasi maupun koneksi database.
+- Kontrak lifecycle argv lengkap: install, lint, typecheck, test, build, run, dan deployDryRun.
+- `projects/internal/unicom` juga memiliki workspace, lockfile, kontrak lifecycle, dokumentasi, dan bukti extraction yang berdiri sendiri.
 
-### Di luar Phase 1
+## Verification evidence
 
-- Corpus UI, Expert Mode, supervised long-running, Gaffer UI
-- Template Nx/Recharts/`/api/metrics` **tidak** diadopsi
+- Gate S / structural verification: lulus.
+- Lint dan typecheck: lulus.
+- Test: lulus — 4 suite, 17 test.
+- Build Electron, smoke runtime, dan deploy dry-run: lulus.
+- Gate E / extraction: lulus dari direktori sementara baru, termasuk install frozen lockfile, seluruh gate, build, smoke, dan deploy dry-run.
+- UNICOM: verifikasi capsule lokal dan Gate E extraction telah lulus pada sesi migrasi sebelumnya.
 
 ## Next action
 
-1. Chief: tinjau Situasi di `pnpm --filter @sentra/control-center dev` (port 3100)
-2. Push / PR bila diminta (branch `feat/gaffer-safrs-wiring`)
-3. Opsional Wave berikutnya: `docs/dashboard-integration.md`
+1. Lakukan designated R2 review untuk perubahan boundary desktop Electron dan Prisma pada Prompt sebelum integrasi.
+2. Catat defect tooling terpisah bila diprioritaskan: `pnpm capability:add` belum mendukung path capsule bertingkat `projects/internal/prompt`; `capabilities.json` dicatat lokal tanpa mengubah tooling root.
+3. Lanjutkan roadmap migrasi capsule berikutnya setelah keputusan Chief.
 
 ## Owner collision
 
-Tidak ada writer aktif lain pada scope control-center.
-
-## Uncommitted / unrelated (jangan campur tanpa keputusan Chief)
-
-- `projects/internal/unicom/` (untracked)
-- `.agents/skills/typesafe-ai/`, gaffer-orchestration skill drift
-- `.cursor/hooks/state/`
-
-## Prior (ringkas)
-
-- Smartboard web S1–S5 COMPLETED (sebelumnya)
-- Gaffer Phase 2–3 COMPLETED & VERIFIED
-- Monorepo control plane / GitHub sync / PR #29 green — lihat history HANDOFF sebelumnya di git bila perlu detail
+Tidak ada pada scope `projects/internal/prompt`.
