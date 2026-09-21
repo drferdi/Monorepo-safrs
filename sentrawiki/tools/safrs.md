@@ -4,13 +4,13 @@
 
 `tools/safrs/` contains the deterministic, machine-enforced governance gate for the repository. Each checker is a small Python 3 script that reads repository state (manifests, registries, the Git worktree, the control plane) and exits non-zero on any violation — there is no advisory mode and no bypass: *fail closed*.
 
-The gate is invoked by `pnpm governance` (and `pnpm saf:verify`), which delegates to `scripts/safrs-verify.sh` on POSIX or `scripts/safrs-verify.ps1` on Windows. The two scripts run the identical check list. Running the gate is mandatory before declaring work complete (root `AGENTS.md`, rule 10).
+The gate is invoked by `pnpm governance` (and `pnpm saf:verify`), which delegates to `scripts/safrs-verify.sh` on POSIX or `scripts/safrs-verify.ps1` on Windows. Root `AGENTS.md`: this is a **repository integration** gate. Capsule-only work uses capsule-local verification; it does not depend on this script as a lifecycle prerequisite.
 
 ## The verification gate
 
-`scripts/safrs-verify.sh` (and its `.ps1` twin) executes the **16-checker pipeline** documented repository-wide: **13 `tools/safrs/check_*.py` checkers** plus the **supporting test-backed checks** in `tests/`. The design-token contrast gate (`scripts/check-tokens.mjs`) runs in the same governance pass via `pnpm check`. The gate succeeds with `SAFRS local governance verification: PASS`.
+Authoritative list: [safrs-verify](../verification/safrs-verify.md). `scripts/safrs-verify.sh` currently runs **14 `check_*.py` files plus 5 Python test modules = 19 invocations**. `check_tokens.mjs` is **not** in that script; it runs via `pnpm check:tokens` / `pnpm check`.
 
-> **Note on the count.** The "16" figure (used across this wiki) predates the two newest automation test files; the exhaustive list below is authoritative. Concretely the gate runs the **13 checkers from `tools/safrs/` followed by the 5 test-backed checks** listed here (18 Python invocations). The three older test suites (`test_safrs_topology.py`, `test_sensitive_classification.py`, `test_task_ownership.py`) plus the 13 checkers form the original 16 named checkers.
+`check_project_independence.py` exists in `tools/safrs/` but is invoked by `tools/project-standalone`, not by `safrs-verify.sh`.
 
 ```mermaid
 graph TD
@@ -27,6 +27,7 @@ graph TD
         L["check_lifecycle.py"]
         AE["check_approval_evidence.py"]
         SC["check_sensitive_changes.py"]
+        ST["check_status_claims.py"]
         H["check_handoff.py"]
         T1["tests/architecture/test_safrs_topology.py"]
         T2["tests/governance/test_sensitive_classification.py"]
@@ -46,6 +47,7 @@ graph TD
     L --> OUT
     AE --> OUT
     SC --> OUT
+    ST --> OUT
     H --> OUT
     T1 --> OUT
     T2 --> OUT
@@ -54,9 +56,9 @@ graph TD
     T5 --> OUT
 ```
 
-## Checker inventory (13 checkers in `tools/safrs/`)
+## Checker inventory (`tools/safrs/`)
 
-The checkers grew from 8 to 13 with five additions (marked **new**) that extend governance from static policy into the automation control plane — task contracts, ownership, lifecycle, automation policy, and approval/evidence integrity.
+Python modules in this directory. Fourteen of the `check_*.py` files run in `safrs-verify.sh`. `check_project_independence.py` does not.
 
 ### Phase 1 baseline checkers
 
@@ -70,6 +72,8 @@ The checkers grew from 8 to 13 with five additions (marked **new**) that extend 
 | `tools/safrs/check_actions_pinning.py` | GitHub workflow safety — third-party actions pinned to a full 40-hex SHA, no shell-piped installers, no unrestricted autonomous flags, HTTPS-only downloads from endpoints registered in the tool inventory |
 | `tools/safrs/check_sensitive_changes.py` | Classifies changed files against `.safrs/sensitive-paths.json`, prints `SAFRS_RISK=R1|R2|R3`, and rejects coupled implementation + verification-control change sets unless a strict independent integrity-review artifact matches the exact change-set fingerprint |
 | `tools/safrs/check_handoff.py` | Session handoff — a non-trivial change set (anything beyond `.agents/` memory files) must include `.agents/HANDOFF.md` |
+| `tools/safrs/check_status_claims.py` | Fail closed when a live status-board `[x]` cites a missing path or a commit not in this repository. `docs/plans/completed/` is not audited. |
+| `tools/safrs/check_project_independence.py` | Structural capsule independence. Called from `project-standalone`, not from `safrs-verify.sh`. |
 
 ### New automation-control-plane checkers
 

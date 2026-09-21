@@ -1,16 +1,12 @@
 # Golden-path web
 
+> **Scope.** Legacy root-coupled demonstrator. **Not** the only deployable app and **not** a template for new capsules (ADR 0006). Other runtimes: [projects](../projects/index.md).
+
 ## Purpose
 
-Golden-path web is the SAFRS Monorepo's single deployable application: a
-Next.js App Router deployment unit that proves the typed Database → API → Web
-flow with one safe demo record. It renders a server-first "readiness desk" in
-Bahasa Indonesia, checks that PostgreSQL and the typed Hono API are reachable,
-and lets the user store a single validated demo record end to end.
+Next.js App Router unit that proves the typed Database → API → Web flow with one safe demo record. It renders a server-first "readiness desk" in Bahasa Indonesia, checks that PostgreSQL and the typed Hono API are reachable, and stores one validated demo record.
 
-It is the golden-path baseline from the root `AGENTS.md`: "the default
-demonstrator is `projects/internal/golden-path/apps/web`: one Next.js deployment unit
-that mounts the package-owned typed Hono API under `/api`."
+Root `AGENTS.md` names this as the **current legacy demonstrator** pending capsule migration: `projects/internal/golden-path/apps/web` mounts the package-owned Hono API under `/api`.
 
 Owner: Chief (human). Boundary: `projects/internal/golden-path/apps/web/**`. Default risk
 R1; API, dependency, environment, database, architecture, test-control, and CI

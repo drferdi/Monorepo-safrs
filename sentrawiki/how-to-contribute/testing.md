@@ -1,6 +1,6 @@
 # Testing
 
-This page describes the testing stack and patterns used across the Monorepo, and where each kind of test lives. See [Development workflow](development-workflow.md) for how tests fit into the merge gate.
+This page describes **root** test runners and the golden-path/control-plane suites. Capsule tests live in the capsule (`projects/product/sentrabot`, `kediri-history`, …) and are not run by `pnpm test` at the repo root unless that workspace includes them. See [Development workflow](development-workflow.md).
 
 ## Purpose
 
@@ -25,7 +25,7 @@ This page describes the testing stack and patterns used across the Monorepo, and
 - **Contract tests**: Cross-package contracts in `tests/contracts/`.
 - **Integration tests**: Database integration in `tests/integration/`.
 - **Governance tests**: Python in `tests/architecture/`, `tests/governance/`, `tests/repository/`.
-- **E2E tests**: Playwright in the golden-path web app with Git LFS baselines.
+- **E2E tests**: Playwright in golden-path (`projects/internal/golden-path/apps/web/e2e/`) with Git LFS baselines. SentraBot and Kediri have their own Playwright configs inside the capsule.
 
 `vitest.workspace.ts` defines the repository-contracts workspace covering `tests/contracts/**/*.test.ts` and `tests/integration/**/*.test.ts`.
 

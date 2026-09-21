@@ -1,8 +1,10 @@
 # Config (`@safrs/config`)
 
+> **Scope.** tsconfig presets for **root workspace** members (`packages/*`, `tools/*`, included `projects/*/*/apps/*`). Excluded capsules (SentraBot, Kediri, Smartboard) ship their own tsconfig.
+
 ## Purpose
 
-Shared TypeScript configuration presets so every workspace package gets identical strict compiler settings. The package ships two tsconfig presets and is consumed as a dev dependency by every package's `typecheck` script.
+Shared TypeScript presets so root-workspace packages get identical strict compiler settings. Two presets; consumed as a dev dependency by those packages' `typecheck` scripts.
 
 ## Key source files
 

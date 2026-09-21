@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Patterns — icons, states, forms, overlays — Sentraverse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p-ink-900:#101312; --p-ink-500:#5A5F5C; --p-ink-300:#8B918D;
+  --p-neutral-200:#DCDCD6; --p-neutral-100:#E9E9E4; --p-neutral-050:#F7F5F1;
+  --p-white:#FFFFFF;
+  --p-vermilion:#DE4526; --p-vermilion-text:#B8351A;
+  --p-crimson:#A11208; --p-amber:#8F5A00; --p-teal:#17554E;
+  --p-plum:#4C3245; --p-slate:#5A7480; --p-sand:#D3B57E;
+  --p-tint-accent:#FDF3F0; --p-tint-critical:#FBEEEC;
+
+  --color-background-canvas:var(--p-white);
+  --color-background-surface:var(--p-neutral-050);
+  --color-text-primary:var(--p-ink-900);
+  --color-text-secondary:var(--p-ink-500);
+  --color-text-muted:var(--p-ink-300);
+  --color-text-inverse:var(--p-white);
+  --color-border-subtle:var(--p-neutral-200);
+  --color-border-strong:var(--p-ink-900);
+  --color-mark-corner:var(--p-ink-300);
+  --color-accent:var(--p-vermilion);
+  --color-accent-text:var(--p-vermilion-text);
+  --color-action-primary:var(--p-ink-900);
+  --color-status-critical:var(--p-crimson);
+  --color-status-warning:var(--p-amber);
+  --color-status-success:var(--p-teal);
+  --color-surface-critical:var(--p-tint-critical);
+  --color-focus-ring:var(--p-ink-900);
+  --color-scrim:rgba(16,19,18,.44);
+
+  --radius-structure:0px; --radius-control:2px;
+  --icon-size-sm:16px; --icon-size-md:20px; --icon-size-lg:24px;
+  --icon-stroke:1.5;
+
+  --font-family-sans:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --font-family-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
+  --space-5:24px; --space-6:32px; --space-7:48px; --space-8:64px;
+  --layout-gutter:24px; --layout-margin:40px; --layout-container-wide:1440px;
+  --motion-fast:90ms; --motion-default:160ms; --ease:cubic-bezier(.2,0,0,1);
+  --z-sticky:100; --z-drawer:300; --z-modal:400; --z-toast:600;
+}
+@media (prefers-reduced-motion: reduce){ :root{--motion-fast:0ms;--motion-default:0ms} }
+
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--color-background-canvas);color:var(--color-text-primary);
+  font-family:var(--font-family-sans);font-variation-settings:"wdth" 100;
+  font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p,dl,dd,fieldset{margin:0}
+fieldset{border:0;padding:0;min-width:0}
+ul{margin:0;padding:0;list-style:none}
+table{border-collapse:collapse;width:100%}
+:focus-visible{outline:2px solid var(--color-focus-ring);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.t-display{font-size:40px;line-height:1.06;font-weight:600;letter-spacing:-.022em;
+  font-variation-settings:"wdth" 112}
+.t-section{font-size:12px;font-weight:600;letter-spacing:.09em;text-transform:uppercase}
+.t-compact{font-size:13px;line-height:1.45}
+.t-label{font-family:var(--font-family-mono);font-size:11px;line-height:1.2;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-secondary)}
+.t-data{font-family:var(--font-family-mono);font-size:13px;font-variant-numeric:tabular-nums}
+.muted{color:var(--color-text-secondary)}
+.seq{font-family:var(--font-family-mono);font-size:11px;font-weight:500;letter-spacing:.06em;
+  color:var(--color-accent-text)}
+.rulelabel{display:inline-flex;align-items:center;gap:var(--space-3);
+  font-family:var(--font-family-mono);font-size:11px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--color-text-secondary)}
+.rulelabel::before{content:"";width:28px;height:1px;background:var(--color-border-subtle);flex:none}
+.panel{position:relative}
+.panel::before{content:"";position:absolute;inset:0;pointer-events:none;--m:var(--color-mark-corner);
+  background:
+    linear-gradient(var(--m),var(--m)) 0 0/10px 1px no-repeat,
+    linear-gradient(var(--m),var(--m)) 0 0/1px 10px no-repeat,
+    linear-gradient(var(--m),var(--m)) 100% 0/10px 1px no-repeat,
+    linear-gradient(var(--m),var(--m)) 100% 0/1px 10px no-repeat,
+    linear-gradient(var(--m),var(--m)) 0 100%/10px 1px no-repeat,
+    linear-gradient(var(--m),var(--m)) 0 100%/1px 10px no-repeat,
+    linear-gradient(var(--m),var(--m)) 100% 100%/10px 1px no-repeat,
+    linear-gradient(var(--m),var(--m)) 100% 100%/1px 10px no-repeat}
+.panel__body{padding:var(--space-5)}
+
+.chrome{display:flex;align-items:center;gap:var(--space-4);
+  padding:var(--space-3) var(--layout-margin);border-bottom:1px solid var(--color-border-subtle)}
+.chrome__sep{width:1px;height:16px;background:var(--color-border-subtle)}
+.chrome__path{font-family:var(--font-family-mono);font-size:11px;font-weight:500;
+  letter-spacing:.13em;text-transform:uppercase}
+.chrome__path b{font-weight:500;color:var(--color-accent-text)}
+.chrome__right{margin-left:auto}
+
+main{padding:0 var(--layout-margin) var(--space-8);max-width:var(--layout-container-wide);margin-inline:auto}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--layout-gutter)}
+.pagehead{padding:var(--space-7) 0 var(--space-6);border-bottom:2px solid var(--color-border-strong)}
+.pagehead__id{grid-column:1 / span 7}
+.pagehead__meta{grid-column:9 / span 4}
+.section{padding:var(--space-7) 0 0}
+.section__head{display:flex;align-items:baseline;gap:var(--space-3);
+  border-bottom:1px solid var(--color-border-strong);padding-bottom:var(--space-2);
+  margin-bottom:var(--space-5)}
+.section__head .rulelabel{margin-left:auto}
+.col-12{grid-column:1 / span 12}.col-7{grid-column:1 / span 7}.col-4{grid-column:9 / span 4}
+.col-6a{grid-column:1 / span 6}.col-6b{grid-column:7 / span 6}
+.sub{border-top:1px solid var(--color-border-strong);padding-top:var(--space-3);
+  margin-top:var(--space-6)}
+
+/* ---------- BUTTON ---------- */
+.btn{font-family:inherit;font-size:14px;font-weight:500;padding:var(--space-3) var(--space-4);
+  min-height:44px;border:1px solid var(--color-border-strong);border-radius:var(--radius-control);
+  background:var(--color-background-canvas);color:var(--color-text-primary);cursor:pointer;
+  display:inline-flex;align-items:center;gap:var(--space-2);
+  transition:background var(--motion-fast) var(--ease)}
+.btn:hover{background:var(--color-background-surface)}
+.btn--primary{background:var(--color-action-primary);color:var(--color-text-inverse);
+  border-color:var(--color-action-primary)}
+.btn--primary:hover{background:#000}
+.btn--danger{border-color:var(--color-status-critical);color:var(--color-status-critical)}
+.btn--danger:hover{background:var(--color-surface-critical)}
+.btn:disabled{border-color:var(--color-border-subtle);color:var(--color-text-muted);cursor:not-allowed}
+.btn--icon{padding:var(--space-3);min-width:44px;justify-content:center}
+.btnrow{display:flex;gap:var(--space-3);flex-wrap:wrap;align-items:center}
+
+/* ---------- 01 ICONS ---------- */
+.icon{width:var(--icon-size-md);height:var(--icon-size-md);flex:none;display:block}
+.icon--sm{width:var(--icon-size-sm);height:var(--icon-size-sm)}
+.icon--lg{width:var(--icon-size-lg);height:var(--icon-size-lg)}
+.icon svg,svg.icon{display:block}
+svg.icon{fill:none;stroke:currentColor;stroke-width:var(--icon-stroke);
+  stroke-linecap:butt;stroke-linejoin:miter}
+svg.icon .solid{fill:currentColor;stroke:none}
+.iconset{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));
+  gap:var(--space-4);margin-top:var(--space-4)}
+.iconset figure{margin:0;border:1px solid var(--color-border-subtle);padding:var(--space-4);
+  display:grid;justify-items:center;gap:var(--space-3)}
+.iconset figcaption{font-family:var(--font-family-mono);font-size:10px;
+  color:var(--color-text-secondary);letter-spacing:.04em}
+.iconspec{display:flex;gap:var(--space-6);align-items:flex-end;flex-wrap:wrap;
+  margin-top:var(--space-4)}
+.iconspec > div{text-align:center}
+.iconspec .t-label{margin-top:var(--space-2);display:block}
+
+/* ---------- 02 STATES ---------- */
+.state{border:1px solid var(--color-border-subtle);padding:var(--space-6) var(--space-5);
+  min-height:210px;display:flex;flex-direction:column;justify-content:center;gap:var(--space-3)}
+.state h4{margin:0;font-size:16px;font-weight:600}
+.state p{font-size:13px;color:var(--color-text-secondary);max-width:38ch;margin:0}
+.state .btnrow{margin-top:var(--space-2)}
+.states3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--layout-gutter)}
+
+.skel{display:grid;gap:var(--space-3)}
+.skel i{display:block;height:12px;background:var(--p-neutral-100)}
+@media (prefers-reduced-motion: no-preference){
+  .skel i{animation:pulse 1.4s var(--ease) infinite}
+  .skel i:nth-child(2){animation-delay:.12s}
+  .skel i:nth-child(3){animation-delay:.24s}
+  .skel i:nth-child(4){animation-delay:.36s}
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+
+.progress{height:4px;background:var(--p-neutral-100);position:relative;overflow:hidden}
+.progress i{position:absolute;inset:0 auto 0 0;width:38%;background:var(--color-text-primary)}
+
+.alert{border-left:2px solid var(--color-status-critical);
+  background:var(--color-surface-critical);padding:var(--space-4)}
+.alert--warn{border-left-color:var(--color-status-warning);background:transparent;
+  border-top:1px solid var(--color-border-subtle);border-bottom:1px solid var(--color-border-subtle)}
+.alert__head{display:flex;gap:var(--space-3);align-items:center;font-weight:600;font-size:14px}
+.alert p{font-size:13px;color:var(--color-text-secondary);margin-top:var(--space-2);max-width:56ch}
+
+/* ---------- 03 FORMS ---------- */
+.field{display:block;max-width:400px;margin-bottom:var(--space-5)}
+.field__label{display:flex;align-items:baseline;gap:var(--space-3);
+  font-size:14px;font-weight:500;margin-bottom:var(--space-2)}
+.field__req{font-family:var(--font-family-mono);font-size:10px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--color-text-secondary)}
+.field__help{font-size:12px;color:var(--color-text-secondary);margin-top:var(--space-2)}
+.field__err{display:none;align-items:center;gap:var(--space-2);font-size:12px;
+  color:var(--color-status-critical);margin-top:var(--space-2)}
+.control{width:100%;font-family:inherit;font-size:14px;padding:var(--space-3);
+  min-height:44px;border:1px solid var(--color-border-strong);border-radius:var(--radius-control);
+  background:var(--color-background-canvas);color:var(--color-text-primary)}
+.control::placeholder{color:var(--color-text-muted)}
+.control[aria-invalid="true"]{border-color:var(--color-status-critical);border-width:2px;
+  background:var(--color-surface-critical)}
+.control[aria-invalid="true"] ~ .field__err{display:flex}
+.control:disabled{background:var(--color-background-surface);color:var(--color-text-muted);
+  border-color:var(--color-border-subtle);cursor:not-allowed}
+.control[readonly]{border-color:var(--color-border-subtle);background:var(--color-background-surface)}
+textarea.control{min-height:96px;resize:vertical}
+.choice{display:flex;align-items:flex-start;gap:var(--space-3);
+  padding:var(--space-2) 0;cursor:pointer}
+.choice input{width:18px;height:18px;margin:3px 0 0;accent-color:var(--color-action-primary);flex:none}
+.choice span{font-size:14px}
+.choice small{display:block;font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.formcard{max-width:440px}
+
+/* ---------- 04 OVERLAYS ---------- */
+.scrim{position:fixed;inset:0;background:var(--color-scrim);z-index:var(--z-modal);
+  display:none;align-items:center;justify-content:center;padding:var(--space-5)}
+.scrim[data-open="true"]{display:flex}
+.modal{background:var(--color-background-canvas);width:min(520px,100%);
+  border:1px solid var(--color-border-strong);
+  box-shadow:0 24px 48px -16px rgba(16,19,18,.34)}
+.modal__head{padding:var(--space-5);border-bottom:1px solid var(--color-border-subtle);
+  display:flex;align-items:baseline;gap:var(--space-3)}
+.modal__body{padding:var(--space-5)}
+.modal__foot{padding:var(--space-5);border-top:1px solid var(--color-border-subtle);
+  display:flex;gap:var(--space-3);justify-content:flex-end;flex-wrap:wrap}
+
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(400px,90vw);
+  background:var(--color-background-canvas);border-left:1px solid var(--color-border-strong);
+  z-index:var(--z-drawer);transform:translateX(100%);
+  transition:transform var(--motion-default) var(--ease);
+  display:flex;flex-direction:column}
+.drawer[data-open="true"]{transform:translateX(0)}
+.drawer__head{padding:var(--space-5);border-bottom:1px solid var(--color-border-subtle);
+  display:flex;align-items:center;gap:var(--space-3)}
+.drawer__head .btn--icon{margin-left:auto}
+.drawer__body{padding:var(--space-5);overflow-y:auto;flex:1}
+
+.toasts{position:fixed;right:var(--space-5);bottom:var(--space-5);z-index:var(--z-toast);
+  display:grid;gap:var(--space-3);width:min(360px,90vw)}
+.toast{background:var(--p-ink-900);color:var(--color-text-inverse);
+  padding:var(--space-4);display:flex;gap:var(--space-3);align-items:flex-start;
+  box-shadow:0 12px 28px -12px rgba(16,19,18,.5)}
+.toast p{font-size:13px;margin:0}
+.toast b{display:block;font-size:14px;margin-bottom:2px}
+.toast--critical{background:var(--color-status-critical)}
+.toast .btn--icon{margin-left:auto;border-color:rgba(255,255,255,.4);color:inherit;
+  background:transparent;min-height:28px;min-width:28px;padding:var(--space-1)}
+.toast .btn--icon:hover{background:rgba(255,255,255,.14)}
+
+th,td{text-align:left;vertical-align:top;font-weight:400;
+  padding:var(--space-3) var(--space-4) var(--space-3) 0;
+  border-bottom:1px solid var(--color-border-subtle)}
+thead th{border-bottom:1px solid var(--color-border-strong);font-weight:500;font-size:13px}
+td.num{font-family:var(--font-family-mono);font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rulebox{border-left:2px solid var(--color-accent);padding-left:var(--space-4);max-width:62ch}
+
+@media (max-width:1023px){
+  :root{--layout-margin:32px;--layout-gutter:20px}
+  .pagehead__id,.pagehead__meta,.col-7,.col-4,.col-6a,.col-6b{grid-column:1 / span 12}
+  .pagehead__meta,.col-4{margin-top:var(--space-6)}
+  .states3{grid-template-columns:1fr}
+}
+@media (max-width:639px){
+  :root{--layout-margin:20px;--layout-gutter:16px}
+  .t-display{font-size:30px}
+  .chrome{flex-wrap:wrap}.chrome__right{margin-left:0;width:100%}
+}
+
+/* ---------- logomark (v1.0) ---------- */
+.mark{display:block;width:20px;height:20px;flex:none;
+  --mark-neutral:var(--p-white);--mark-accent:var(--p-white)}
+.mark .mk-accent{fill:var(--mark-accent)}
+.mark .mk-body{fill:var(--mark-neutral)}
+.tile{background:var(--p-ink-900);display:grid;place-items:center;flex:none;width:28px;height:28px}
+/* ---------- button: treatment C, hard ledge (EXC-01) ---------- */
+.btn{box-shadow:var(--button-ledge,3px) var(--button-ledge,3px) 0 0 var(--p-ink-900);
+  transition:background var(--motion-fast,90ms) var(--ease,cubic-bezier(.2,0,0,1)),
+             transform var(--motion-fast,90ms) var(--ease,cubic-bezier(.2,0,0,1)),
+             box-shadow var(--motion-fast,90ms) var(--ease,cubic-bezier(.2,0,0,1))}
+.btn--primary{box-shadow:3px 3px 0 0 var(--p-ink-300)}
+.btn:active:not(:disabled){transform:translate(3px,3px);box-shadow:0 0 0 0 rgba(0,0,0,0)}
+.btn:disabled{box-shadow:none;transform:none}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="sentra-mark" viewBox="0 0 1000 1000">
+    <g transform="translate(106.54 60.00) scale(1.08241) translate(-270 -227)">
+      <path class="mk-accent" d="M890.70 227.38 L766.99 226.87 L262.40 626.09 L386.11 626.60 Z"/>
+      <path class="mk-body" d="M262.23 869.92 L754.48 480.46 L753.02 478.60 A146.02 146.02 0 0 1 934.22 707.63 L932.76 705.78 L509.10 1040.97 L385.39 1040.45 L884.88 645.26 L880.54 639.78 A59.50 59.50 0 0 0 806.71 546.46 L802.36 540.97 L385.94 870.44 Z"/>
+    </g>
+  </symbol>
+</svg>
+
+
+<div class="chrome">
+  <span class="tile"><svg class="mark" aria-hidden="true"><use href="#sentra-mark"/></svg></span>
+  <span class="chrome__sep" aria-hidden="true"></span>
+  <span class="chrome__path">SENTRA / <b>DESIGN-SYSTEM</b></span>
+  <span class="rulelabel chrome__right">Patterns</span>
+</div>
+
+<main>
+  <header class="pagehead grid">
+    <div class="pagehead__id">
+      <p style="display:flex;gap:var(--space-3);align-items:baseline">
+        <span class="seq">PAT</span><span class="t-label">Companion to the foundations page</span>
+      </p>
+      <h1 class="t-display" style="margin-top:var(--space-3)">States, forms and overlays</h1>
+      <p class="muted" style="margin-top:var(--space-4);max-width:58ch">
+        The four things every screen needs before it can ship, and the four that were missing.
+        Everything here is live — open the modal, trip the validation, dismiss a toast. Behaviour
+        that is only described is behaviour that has not been tested.
+      </p>
+    </div>
+    <div class="pagehead__meta">
+      <div style="border-top:2px solid var(--color-accent);padding-top:var(--space-3)">
+        <p class="t-label">Covered</p>
+        <dl style="margin-top:var(--space-3)">
+          <div style="display:grid;grid-template-columns:1fr auto;gap:var(--space-4);padding:var(--space-2) 0;border-bottom:1px solid var(--color-border-subtle)">
+            <dt class="t-compact">Icons</dt><dd class="t-data">spec + 10</dd></div>
+          <div style="display:grid;grid-template-columns:1fr auto;gap:var(--space-4);padding:var(--space-2) 0;border-bottom:1px solid var(--color-border-subtle)">
+            <dt class="t-compact">States</dt><dd class="t-data">3 empty · 2 loading · 3 error</dd></div>
+          <div style="display:grid;grid-template-columns:1fr auto;gap:var(--space-4);padding:var(--space-2) 0;border-bottom:1px solid var(--color-border-subtle)">
+            <dt class="t-compact">Form controls</dt><dd class="t-data">7</dd></div>
+          <div style="display:grid;grid-template-columns:1fr auto;gap:var(--space-4);padding:var(--space-2) 0;border-bottom:1px solid var(--color-border-subtle)">
+            <dt class="t-compact">Overlays</dt><dd class="t-data">4</dd></div>
+        </dl>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== 01 ICONS ==================== -->
+  <section class="section">
+    <div class="section__head">
+      <span class="seq">01</span><h2 class="t-section">Icons</h2>
+      <span class="rulelabel">20px canvas · 1.5 stroke · butt cap · miter join</span>
+    </div>
+    <div class="grid">
+      <div class="col-7">
+        <p class="t-compact rulebox">
+          <b>The spec governs, not the library.</b> Most icon sets ship with rounded caps and joins.
+          In a system built on hairlines and square corners, a rounded terminal reads as a foreign
+          object. Any library may be adopted — Lucide, Phosphor, or a drawn set — provided its
+          <span class="t-data">stroke-linecap</span> is set to butt and
+          <span class="t-data">stroke-linejoin</span> to miter. The icons below are drawn to that spec.
+        </p>
+
+        <div class="iconset">
+          <figure><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.25"/><path d="M12.4 12.4 17 17"/></svg><figcaption>search</figcaption></figure>
+          <figure><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M6 10h8M8.5 15h3"/></svg><figcaption>filter</figcaption></figure>
+          <figure><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v10M6 9.5l4 4 4-4M3.5 16.5h13"/></svg><figcaption>download</figcaption></figure>
+          <figure><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M11.5 3.5h5v5M16.5 3.5 9.5 10.5M13.5 12v4.5h-10v-10H8"/></svg><figcaption>external</figcaption></figure>
+          <figure><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="m4 10.5 4.5 4.5L16 5.5"/></svg><figcaption>check</figcaption></figure>
+          <figure><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3 17.5 16.5h-15Z"/><path d="M10 8.5v3.5"/><rect class="solid" x="9.25" y="13.5" width="1.5" height="1.5"/></svg><figcaption>alert</figcaption></figure>
+          <figure><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 4.5 15.5 15.5M15.5 4.5 4.5 15.5"/></svg><figcaption>close</figcaption></figure>
+          <figure><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M7.5 4 13.5 10l-6 6"/></svg><figcaption>chevron</figcaption></figure>
+          <figure><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 10a6.5 6.5 0 1 1-1.9-4.6"/><path d="M16.5 3v3.2h-3.2"/></svg><figcaption>refresh</figcaption></figure>
+          <figure><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><rect class="solid" x="3.5" y="9" width="2" height="2"/><rect class="solid" x="9" y="9" width="2" height="2"/><rect class="solid" x="14.5" y="9" width="2" height="2"/></svg><figcaption>more</figcaption></figure>
+        </div>
+
+        <div class="iconspec">
+          <div><svg class="icon icon--sm" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.25"/><path d="M12.4 12.4 17 17"/></svg><span class="t-label">16 · inline</span></div>
+          <div><svg class="icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.25"/><path d="M12.4 12.4 17 17"/></svg><span class="t-label">20 · default</span></div>
+          <div><svg class="icon icon--lg" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.25"/><path d="M12.4 12.4 17 17"/></svg><span class="t-label">24 · empty state</span></div>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <p class="t-label">When an icon is allowed</p>
+        <ul class="t-compact muted" style="margin-top:var(--space-3);display:grid;gap:var(--space-3)">
+          <li><b style="color:var(--color-text-primary)">With a label, always.</b> An icon reinforces a word; it does not replace one.</li>
+          <li><b style="color:var(--color-text-primary)">Alone, only when repeated.</b> Close, more, and dismiss may stand alone because they recur everywhere and the shape is learned. Everything else keeps its text.</li>
+          <li><b style="color:var(--color-text-primary)">Never alone for a destructive action.</b> Delete, revoke and block always carry a word.</li>
+          <li><b style="color:var(--color-text-primary)">Every icon-only control needs an accessible name</b> via <span class="t-data">aria-label</span>, and the SVG itself is <span class="t-data">aria-hidden</span>.</li>
+          <li><b style="color:var(--color-text-primary)">No icon carries status alone.</b> Status is glyph plus word, as set in the foundations.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 02 STATES ==================== -->
+  <section class="section">
+    <div class="section__head">
+      <span class="seq">02</span><h2 class="t-section">States</h2>
+      <span class="rulelabel">Empty · loading · error</span>
+    </div>
+    <div class="grid">
+
+      <div class="col-12">
+        <p class="t-compact rulebox">
+          <b>Empty is three different states, not one.</b> Treating them alike is the most common
+          failure in this category: a filtered list that says "Create your first run" is telling the
+          operator something false.
+        </p>
+        <div class="states3" style="margin-top:var(--space-5)">
+
+          <div class="state">
+            <span class="seq">EMPTY · A</span>
+            <svg class="icon icon--lg" style="color:var(--color-text-muted)" viewBox="0 0 20 20" aria-hidden="true"><path d="M3.5 4.5h13v11h-13Z"/><path d="M3.5 8h13"/></svg>
+            <h4>No runs yet</h4>
+            <p>A run pairs a source with an extractor and produces a dataset shard. Start by adding the source you want to crawl.</p>
+            <div class="btnrow"><button class="btn btn--primary" type="button">Add source</button></div>
+          </div>
+
+          <div class="state">
+            <span class="seq">EMPTY · B</span>
+            <svg class="icon icon--lg" style="color:var(--color-text-muted)" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M6 10h8M8.5 15h3"/></svg>
+            <h4>No runs match these filters</h4>
+            <p>412 runs exist. None of them are both failed and from this week.</p>
+            <div class="btnrow"><button class="btn" type="button">Clear filters</button></div>
+          </div>
+
+          <div class="state">
+            <span class="seq">EMPTY · C</span>
+            <svg class="icon icon--lg" style="color:var(--color-status-success)" viewBox="0 0 20 20" aria-hidden="true"><path d="m4 10.5 4.5 4.5L16 5.5"/></svg>
+            <h4>Review queue is clear</h4>
+            <p>All 27 flagged runs have been resolved. New ones will appear here as gates fail.</p>
+          </div>
+
+        </div>
+        <p class="t-compact muted" style="margin-top:var(--space-4);max-width:68ch">
+          A explains what the thing is and offers the one action that creates it.
+          B names the number that exists so the operator knows the data is not lost, and offers
+          the way back. C is a report, not an invitation — it deliberately has no button.
+        </p>
+      </div>
+
+      <!-- loading -->
+      <div class="col-6a sub">
+        <span class="seq">LOADING · A</span>
+        <h3 style="font-size:16px;font-weight:600;margin-top:var(--space-2)">Skeleton — layout known</h3>
+        <div class="skel" style="margin-top:var(--space-4)" aria-hidden="true">
+          <i style="width:38%"></i><i style="width:100%"></i><i style="width:88%"></i><i style="width:62%"></i>
+        </div>
+        <p class="t-compact muted" style="margin-top:var(--space-4);max-width:44ch">
+          Used when the shape of the result is already known — tables, lists, detail panels. The
+          skeleton mirrors the real layout so nothing jumps when data lands. A live region announces
+          <span class="t-data">Loading runs</span> to screen readers; the bars themselves are hidden from them.
+        </p>
+      </div>
+
+      <div class="col-6b sub">
+        <span class="seq">LOADING · B</span>
+        <h3 style="font-size:16px;font-weight:600;margin-top:var(--space-2)">Progress — duration known</h3>
+        <div style="margin-top:var(--space-4)">
+          <div style="display:flex;justify-content:space-between;align-items:baseline">
+            <span class="t-compact">Extracting records</span>
+            <span class="t-data">38%</span>
+          </div>
+          <div class="progress" style="margin-top:var(--space-2)" role="progressbar"
+               aria-valuenow="38" aria-valuemin="0" aria-valuemax="100" aria-label="Extracting records"><i></i></div>
+          <p class="t-data muted" style="margin-top:var(--space-2)">412 of 1,084 · started 11:09:42</p>
+        </div>
+        <p class="t-compact muted" style="margin-top:var(--space-4);max-width:44ch">
+          Used only when real progress can be measured. A bar that moves on a timer rather than on
+          work completed is a lie, and operators learn to distrust it. When progress cannot be
+          measured, use the skeleton instead — never a spinning full-page overlay.
+        </p>
+      </div>
+
+      <!-- errors -->
+      <div class="col-12 sub">
+        <span class="seq">ERROR</span>
+        <h3 style="font-size:16px;font-weight:600;margin-top:var(--space-2)">Three scopes</h3>
+        <div class="grid" style="margin-top:var(--space-4)">
+          <div class="col-6a">
+            <div class="alert" role="alert">
+              <p class="alert__head">
+                <svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 20 20"><path d="M10 3 17.5 16.5h-15Z"/><path d="M10 8.5v3.5"/><rect class="solid" x="9.25" y="13.5" width="1.5" height="1.5"/></svg>
+                Crawl log could not be loaded
+              </p>
+              <p>The run itself is unaffected and its gate results are shown above. The log service
+                returned 503 at 11:12:04.</p>
+              <div class="btnrow" style="margin-top:var(--space-4)">
+                <button class="btn" type="button">Retry</button>
+              </div>
+            </div>
+            <p class="t-compact muted" style="margin-top:var(--space-3);max-width:44ch">
+              <b>Section scope.</b> One region failed; the rest of the page still works. Say what is
+              unaffected — that sentence prevents an unnecessary escalation.
+            </p>
+          </div>
+          <div class="col-6b">
+            <div class="alert alert--warn">
+              <p class="alert__head">
+                <svg class="icon icon--sm" style="color:var(--color-status-warning)" aria-hidden="true" viewBox="0 0 20 20"><path d="M10 3 17.5 16.5h-15Z"/><path d="M10 8.5v3.5"/><rect class="solid" x="9.25" y="13.5" width="1.5" height="1.5"/></svg>
+                Showing cached results from 10:47
+              </p>
+              <p>Live gate evaluation is unavailable. Figures may be up to 25 minutes old.</p>
+            </div>
+            <p class="t-compact muted" style="margin-top:var(--space-3);max-width:44ch">
+              <b>Degraded, not failed.</b> The page works but the data is stale. This is the state
+              most systems skip, and the one that causes the worst decisions when it is skipped.
+            </p>
+            <p class="t-compact rulebox" style="margin-top:var(--space-5)">
+              <b>Never write "Something went wrong."</b> Every error states what failed, what still
+              works, when it happened, and the one action available. If none of the four is known,
+              that is a logging defect, not a copy problem.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== 03 FORMS ==================== -->
+  <section class="section">
+    <div class="section__head">
+      <span class="seq">03</span><h2 class="t-section">Forms</h2>
+      <span class="rulelabel">Validate on blur · re-validate on change</span>
+    </div>
+    <div class="grid">
+      <div class="col-6a">
+        <p class="t-label">Live — leave the field empty and tab out</p>
+        <form class="formcard" id="demoForm" novalidate style="margin-top:var(--space-4)">
+
+          <label class="field">
+            <span class="field__label">Source URL <span class="field__req">Required</span></span>
+            <input class="control" type="url" id="srcUrl" placeholder="https://" required
+                   aria-describedby="srcUrlHelp srcUrlErr">
+            <span class="field__err" id="srcUrlErr">
+              <svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 20 20"><path d="M10 3 17.5 16.5h-15Z"/><path d="M10 8.5v3.5"/><rect class="solid" x="9.25" y="13.5" width="1.5" height="1.5"/></svg>
+              Enter a full URL including https://
+            </span>
+            <span class="field__help" id="srcUrlHelp">The page the crawler starts from. Sub-pages are followed to the depth set below.</span>
+          </label>
+
+          <label class="field">
+            <span class="field__label">Crawl depth</span>
+            <select class="control" id="depth">
+              <option>0 — this page only</option>
+              <option selected>1 — page and direct links</option>
+              <option>2 — two levels</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span class="field__label">Notes <span class="field__req">Optional</span></span>
+            <textarea class="control" placeholder="Why this source is being added"></textarea>
+          </label>
+
+          <label class="field">
+            <span class="field__label">Output path</span>
+            <input class="control" type="text" readonly value="apps/internal/dataset/output/">
+            <span class="field__help">Read-only. Set by the environment.</span>
+          </label>
+
+          <fieldset style="margin-bottom:var(--space-5)">
+            <legend class="field__label" style="margin-bottom:var(--space-2)">Gate profile</legend>
+            <label class="choice"><input type="radio" name="profile" checked>
+              <span>Strict<small>All eight gates block export. Recommended for training corpora.</small></span></label>
+            <label class="choice"><input type="radio" name="profile">
+              <span>Advisory<small>Gates report but do not block. For exploratory crawls only.</small></span></label>
+          </fieldset>
+
+          <label class="choice" style="margin-bottom:var(--space-5)">
+            <input type="checkbox">
+            <span>Strip boilerplate before extraction<small>Removes navigation, footers and newsletter blocks.</small></span>
+          </label>
+
+          <div class="btnrow">
+            <button class="btn btn--primary" type="submit">Add source</button>
+            <button class="btn" type="button">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="col-6b">
+        <p class="t-label">Anatomy</p>
+        <table style="margin-top:var(--space-3)">
+          <thead><tr><th scope="col">Part</th><th scope="col">Rule</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Label</th><td class="t-compact">Always visible. Placeholder is never a substitute — it disappears exactly when it is needed.</td></tr>
+            <tr><th scope="row">Requirement</th><td class="t-compact">Marked with the word, not an asterisk. Both Required and Optional are shown when a form mixes them.</td></tr>
+            <tr><th scope="row">Help</th><td class="t-compact">Below the control, before the error. Explains the consequence, not the format.</td></tr>
+            <tr><th scope="row">Error</th><td class="t-compact">Below the control, in the error colour, with the alert glyph. Names the fix, not the violation.</td></tr>
+            <tr><th scope="row">Invalid control</th><td class="t-compact"><span class="t-data">aria-invalid</span>, 2px border and a tint — three signals, so colour is never alone.</td></tr>
+          </tbody>
+        </table>
+
+        <p class="t-compact rulebox" style="margin-top:var(--space-5)">
+          <b>Validation timing.</b> Never on keystroke for a first attempt — it scolds the operator
+          mid-word. Validate when the field is left. Once a field has errored, re-validate on every
+          change so the error clears the moment it is fixed. On submit, validate everything and move
+          focus to the first invalid field.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== 04 OVERLAYS ==================== -->
+  <section class="section">
+    <div class="section__head">
+      <span class="seq">04</span><h2 class="t-section">Overlays</h2>
+      <span class="rulelabel">One at a time · Esc always closes</span>
+    </div>
+    <div class="grid">
+      <div class="col-6a">
+        <p class="t-label">Live — open, tab around, press Esc</p>
+        <div class="btnrow" style="margin-top:var(--space-4)">
+          <button class="btn btn--danger" type="button" id="openModal">Delete source</button>
+          <button class="btn" type="button" id="openDrawer">Open filters</button>
+          <button class="btn" type="button" id="toastOk">Show confirmation</button>
+          <button class="btn" type="button" id="toastBad">Show failure</button>
+        </div>
+
+        <p class="t-compact rulebox" style="margin-top:var(--space-6)">
+          <b>Focus is the whole contract.</b> On open, focus moves into the overlay. Tab cycles
+          inside it and cannot escape. Esc closes. On close, focus returns to the exact control that
+          opened it — so a keyboard operator never loses their place. An overlay that skips the
+          return step strands them at the top of the page.
+        </p>
+
+        <p class="t-compact muted" style="margin-top:var(--space-5);max-width:46ch">
+          Modals are for decisions that must be made now, and for destructive confirmation. Drawers
+          are for secondary work that runs alongside the page — filters, details, history. Toasts
+          report what already happened. A toast never carries the only copy of important information,
+          and a failure toast never auto-dismisses.
+        </p>
+      </div>
+
+      <div class="col-6b">
+        <p class="t-label">Layer order</p>
+        <table style="margin-top:var(--space-3)">
+          <thead><tr><th scope="col">Layer</th><th scope="col">Token</th><th scope="col">Dismiss</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Sticky header</th><td class="num">100</td><td class="num">—</td></tr>
+            <tr><th scope="row">Drawer</th><td class="num">300</td><td class="num">Esc · scrim · close</td></tr>
+            <tr><th scope="row">Modal</th><td class="num">400</td><td class="num">Esc · close</td></tr>
+            <tr><th scope="row">Toast</th><td class="num">600</td><td class="num">Auto · close</td></tr>
+          </tbody>
+        </table>
+        <p class="t-compact muted" style="margin-top:var(--space-4);max-width:46ch">
+          A modal never opens another modal. If a decision needs a second decision, the flow is
+          wrong and belongs on a page. The scrim is <span class="t-data">ink 44%</span> — dark enough
+          to suppress the page behind, light enough that context is not lost.
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ---------- MODAL ---------- -->
+<div class="scrim" id="modalScrim" data-open="false">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc">
+    <div class="modal__head">
+      <span class="seq">CONFIRM</span>
+      <h2 id="modalTitle" style="font-size:18px;font-weight:600">Delete this source?</h2>
+    </div>
+    <div class="modal__body">
+      <p id="modalDesc" class="t-compact">
+        <span class="t-data">swissthemes.design/insights</span> and its 3 completed runs will be
+        removed. Dataset shards already exported are not affected.
+      </p>
+      <p class="t-compact muted" style="margin-top:var(--space-4)">This cannot be undone.</p>
+    </div>
+    <div class="modal__foot">
+      <button class="btn" type="button" data-close-modal>Keep source</button>
+      <button class="btn btn--danger" type="button" data-close-modal>Delete source</button>
+    </div>
+  </div>
+</div>
+
+<!-- ---------- DRAWER ---------- -->
+<div class="drawer" id="drawer" data-open="false" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+  <div class="drawer__head">
+    <span class="seq">FILTER</span>
+    <h2 id="drawerTitle" style="font-size:16px;font-weight:600">Filter runs</h2>
+    <button class="btn btn--icon" type="button" id="closeDrawer" aria-label="Close filters">
+      <svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 20 20"><path d="M4.5 4.5 15.5 15.5M15.5 4.5 4.5 15.5"/></svg>
+    </button>
+  </div>
+  <div class="drawer__body">
+    <fieldset style="margin-bottom:var(--space-5)">
+      <legend class="field__label">Verdict</legend>
+      <label class="choice"><input type="checkbox" checked><span>Not fit to train</span></label>
+      <label class="choice"><input type="checkbox"><span>Needs review</span></label>
+      <label class="choice"><input type="checkbox"><span>Approved</span></label>
+    </fieldset>
+    <label class="field">
+      <span class="field__label">Since</span>
+      <input class="control" type="date">
+    </label>
+    <div class="btnrow">
+      <button class="btn btn--primary" type="button" data-close-drawer>Apply filters</button>
+      <button class="btn" type="button" data-close-drawer>Reset</button>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  var FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+  var lastTrigger = null, activeOverlay = null;
+
+  function openOverlay(el, trigger){
+    if (activeOverlay) return;              // one overlay at a time
+    lastTrigger = trigger; activeOverlay = el;
+    el.dataset.open = 'true';
+    var f = el.querySelectorAll(FOCUSABLE);
+    if (f.length) f[0].focus();
+  }
+  function closeOverlay(){
+    if (!activeOverlay) return;
+    activeOverlay.dataset.open = 'false';
+    activeOverlay = null;
+    if (lastTrigger) { lastTrigger.focus(); lastTrigger = null; }
+  }
+  document.addEventListener('keydown', function(e){
+    if (!activeOverlay) return;
+    if (e.key === 'Escape') { closeOverlay(); return; }
+    if (e.key !== 'Tab') return;
+    var f = Array.prototype.slice.call(activeOverlay.querySelectorAll(FOCUSABLE));
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+
+  var scrim = document.getElementById('modalScrim');
+  var drawer = document.getElementById('drawer');
+  document.getElementById('openModal').addEventListener('click', function(){ openOverlay(scrim, this); });
+  document.getElementById('openDrawer').addEventListener('click', function(){ openOverlay(drawer, this); });
+  document.getElementById('closeDrawer').addEventListener('click', closeOverlay);
+  scrim.addEventListener('click', function(e){ if (e.target === scrim) closeOverlay(); });
+  document.querySelectorAll('[data-close-modal],[data-close-drawer]').forEach(function(b){
+    b.addEventListener('click', closeOverlay);
+  });
+
+  // toasts
+  var host = document.getElementById('toasts');
+  function toast(title, body, critical){
+    var t = document.createElement('div');
+    t.className = 'toast' + (critical ? ' toast--critical' : '');
+    t.innerHTML = '<p><b></b><span></span></p>';
+    t.querySelector('b').textContent = title;
+    t.querySelector('span').textContent = body;
+    var x = document.createElement('button');
+    x.className = 'btn btn--icon'; x.type = 'button';
+    x.setAttribute('aria-label', 'Dismiss notification');
+    x.innerHTML = '<svg class="icon icon--sm" aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="butt"><path d="M4.5 4.5 15.5 15.5M15.5 4.5 4.5 15.5"/></svg>';
+    x.addEventListener('click', function(){ t.remove(); });
+    t.appendChild(x);
+    host.appendChild(t);
+    if (!critical) setTimeout(function(){ t.remove(); }, 6000);  // failures persist
+  }
+  document.getElementById('toastOk').addEventListener('click', function(){
+    toast('Source added', 'swissthemes.design will be crawled on the next scheduled pass.', false);
+  });
+  document.getElementById('toastBad').addEventListener('click', function(){
+    toast('Export blocked', '4 gates failed. Nothing was written. This notice stays until dismissed.', true);
+  });
+
+  // validation: on blur first, then on change once errored
+  var url = document.getElementById('srcUrl');
+  function validate(){
+    var bad = !url.value.trim() || !/^https?:\/\/.+\..+/.test(url.value.trim());
+    url.setAttribute('aria-invalid', bad ? 'true' : 'false');
+    return !bad;
+  }
+  url.addEventListener('blur', function(){ validate(); url.dataset.touched = '1'; });
+  url.addEventListener('input', function(){ if (url.dataset.touched) validate(); });
+  document.getElementById('demoForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    url.dataset.touched = '1';
+    if (!validate()) { url.focus(); return; }
+    toast('Source added', 'Validation passed. In production this would post to the API.', false);
+  });
+})();
+</script>
+</body>
+</html>

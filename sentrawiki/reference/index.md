@@ -1,6 +1,8 @@
 # Reference
 
-The reference section holds factual, tool-independent documentation about the repository's static configuration and dependency landscape. Use these pages when you need exact values rather than narrative.
+> **Scope.** Root configuration and the root pnpm catalog. Capsule lockfiles are separate.
+
+The reference section holds factual documentation about the repository's **root** static configuration and dependency landscape.
 
 ## Pages
 

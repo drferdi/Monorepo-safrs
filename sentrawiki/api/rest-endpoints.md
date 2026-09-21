@@ -1,6 +1,8 @@
 # REST endpoints
 
-**Purpose**: This page documents every HTTP endpoint in the golden-path API, including request and response shapes, Zod validation rules, and the error envelope. The endpoints are defined in `packages/api/src/app.ts` and validated with schemas from `@safrs/schemas` (`packages/schemas/src/demo.ts`).
+> **Scope.** Endpoints of `@safrs/api` (golden-path). This is not an inventory of SentraBot oRPC, Kediri, or Avery.
+
+**Purpose**: Every HTTP endpoint in the golden-path API: request/response shapes, Zod rules, error envelope. Defined in `packages/api/src/app.ts`, validated with `@safrs/schemas` (`packages/schemas/src/demo.ts`).
 
 ## Base path
 
