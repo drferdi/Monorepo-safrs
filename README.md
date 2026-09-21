@@ -961,9 +961,9 @@ authoritative SAFRS repository.
 
 Everything below describes the concrete, current state of *this* repository —
 not the abstract standard above. It is repo-state, not normative SAFRS
-content, and is expected to drift; treat `.safrs/document-registry.json` and
-the plans under `docs/plans/active/` as the source of truth if it falls out of
-date.
+content, and is expected to drift; treat `.safrs/document-registry.json`,
+`docs/architecture/`, and the official [Sentra SAFRS Wiki](https://github.com/drferdi/Monorepo-safrs/wiki)
+as the source of truth if it falls out of date.
 
 ### Quick start
 
@@ -975,7 +975,7 @@ pnpm check            # governance + tokens + lint + typecheck + test + build
 ```
 
 Working on this repository as an agent (or with one) starts at
-[`AGENTS.md`](AGENTS.md), which routes to everything else.
+[`AGENTS.md`](AGENTS.md), which routes to everything else. Complete documentation and knowledge base guides are available on the [Sentra SAFRS Wiki](https://github.com/drferdi/Monorepo-safrs/wiki).
 
 ### Current capsules
 
@@ -983,7 +983,11 @@ Working on this repository as an agent (or with one) starts at
 | --- | --- | --- |
 | <sub>`golden-path`</sub> | <sub>Implemented reference flow: Next.js → typed Hono API → Prisma → local PostgreSQL</sub> | <sub>`projects/internal/golden-path/apps/web`</sub> |
 | <sub>`control-center`</sub> | <sub>Implemented local, read-only operator dashboard; remains usable when Docker or the database is unavailable</sub> | <sub>`projects/internal/control-center/apps/web`</sub> |
-| <sub>`academic-smartboard`</sub> | <sub>Governance, curriculum/reference data, and Kayyisa knowledge package migrated; application surfaces are not yet ported</sub> | <sub>`projects/academic/academic-smartboard`</sub> |
+| <sub>`academic-smartboard`</sub> | <sub>Sovereign curriculum, Kayyisa AI knowledge package, and Next.js application surfaces (Subphases 1–5 completed)</sub> | <sub>`projects/academic/academic-smartboard`</sub> |
+| <sub>`kediri-history`</sub> | <sub>Sovereign standalone capsule; digital heritage storytelling, historical archives, and GSAP scenes</sub> | <sub>`projects/product/kediri-history`</sub> |
+| <sub>`sentrabot`</sub> | <sub>Sovereign robotics and autonomous agent control suite with Next.js web cockpit and telemetry</sub> | <sub>`projects/product/sentrabot`</sub> |
+| <sub>`avery`</sub> | <sub>Sovereign clinical intelligence and healthcare automation platform</sub> | <sub>`projects/healthcare/avery`</sub> |
+| <sub>`portfolio-drnovia`</sub> | <sub>Sovereign academic and medical specialist portfolio showcase</sub> | <sub>`projects/corporate/portfolio-drnovia`</sub> |
 | <sub>`_template`</sub> | <sub>Governance scaffold for new capsules; not an active product</sub> | <sub>`projects/_template`</sub> |
 
 ### Governance and automation commands
@@ -997,14 +1001,13 @@ Working on this repository as an agent (or with one) starts at
 | <sub>`pnpm saf contract compile <input.json>`</sub> | <sub>Compile and digest a `TaskContractV1`</sub> |
 | <sub>`pnpm saf lease verify \| replay \| reconcile`</sub> | <sub>Inspect and reconcile lease event chains</sub> |
 | <sub>`pnpm saf evidence verify <manifest.json>`</sub> | <sub>Verify a sealed evidence manifest</sub> |
+| <sub>`pnpm saf gaffer run <intent>`</sub> | <sub>Autonomous Gaffer execution engine (scaffolding, testing, auto-fixing, standalone verification)</sub> |
 
 ### Automation control plane
 
-Phases 1–5 of
-[`SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md`](docs/plans/active/SAFRS_FULL_AUTOMATION_IMPLEMENTATION_PLAN.md)
-are implemented and merged. Phases 6–8 are deliberately parked: Chief resolved
-the activation decisions on 2026-08-18, but no autonomous runner has been named.
-Canonical behavior lives in
+Phases 1–5 of the SAFRS Full Automation Control Plane are implemented and merged.
+Phases 6–8 are deliberately parked: Chief resolved the activation decisions on
+2026-08-18, but no autonomous runner has been named. Canonical behavior lives in
 [`SAFRS_AUTOMATION.md`](docs/governance/SAFRS_AUTOMATION.md),
 [`SAFRS_APPROVALS.md`](docs/governance/SAFRS_APPROVALS.md), and
 [`SAFRS_EVIDENCE.md`](docs/governance/SAFRS_EVIDENCE.md); the architecture
@@ -1083,7 +1086,7 @@ See [`SAFRS_CONFORMANCE.md`](docs/governance/SAFRS_CONFORMANCE.md).
   <a href="https://reddit.com/user/SixCupaCoffee"><img src="https://img.shields.io/badge/Reddit-FF4500?style=for-the-badge&logo=reddit&logoColor=white" alt="Reddit" /></a>
   <a href="https://tiktok.com/@drferdii"><img src="https://img.shields.io/badge/TikTok-000000?style=for-the-badge&logo=tiktok&logoColor=white" alt="TikTok" /></a>
   <a href="https://x.com/ClaudesyI81047"><img src="https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white" alt="X" /></a>
-  <a href="mailto:drferdiiskadar@gmail.com"><img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" /></a>
+  <a href="mailto:drferdiiskandar@sentrahai.com"><img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" /></a>
 </p>
 
 ---
@@ -1111,6 +1114,35 @@ See [`SAFRS_CONFORMANCE.md`](docs/governance/SAFRS_CONFORMANCE.md).
   <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white" alt="GitHub Actions" />
   <img src="https://img.shields.io/badge/Docker-0DB7ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
 </p>
+
+---
+
+## GSAP Skills (Official)
+
+Repository-level GSAP guidance is provided by the official GSAP skills (MIT, from the GreenSock `gsap-skills` package), replacing the retired Sentra-GSAP standard.
+
+### Interface
+
+```text
+/gsap <animation task>
+```
+
+The `/gsap` command (`.claude/commands/gsap.md`) routes the task to the right skill(s) before any code is written.
+
+### Installed skills
+
+```text
+.claude/skills/gsap-core/            core API — to/from/fromTo, easing, stagger, matchMedia
+.claude/skills/gsap-timeline/        sequencing, position parameter, nesting, playback
+.claude/skills/gsap-scrolltrigger/   scroll-linked animation, pinning, scrub, parallax
+.claude/skills/gsap-plugins/         SplitText, Flip, Draggable, Observer, ScrollSmoother, …
+.claude/skills/gsap-react/           React/Next.js — useGSAP, refs, cleanup
+.claude/skills/gsap-frameworks/      Vue, Nuxt, Svelte, vanilla lifecycles
+.claude/skills/gsap-utils/           gsap.utils helpers
+.claude/skills/gsap-performance/     jank, layout thrashing, 60fps optimization
+```
+
+Sentra conventions still apply on top of these skills: design tokens, cleanup on unmount, and `prefers-reduced-motion` support are non-negotiable.
 
 ---
 
