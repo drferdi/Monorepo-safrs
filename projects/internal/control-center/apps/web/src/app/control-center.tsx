@@ -2,6 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import {
+  Bar,
+  BarChart,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 import { actionStatus } from "../lib/action-status";
 import { ACTIONS, actionById } from "../lib/actions";
@@ -17,6 +26,7 @@ import {
   TASK_STATES,
   UNUSED_PACKS,
 } from "../lib/catalog";
+import { chartStatsFromLive } from "../lib/chart-stats";
 import {
   type ControlAction,
   type LiveSnapshot,
@@ -27,6 +37,7 @@ import {
 } from "../lib/control-center";
 import { RECOVERY_COMMAND, runnableById } from "../lib/exec/commands";
 import { runCommand } from "../lib/exec/run";
+import { deriveSectionLead } from "../lib/section-lead";
 import { deriveSituation, type SituationLevel } from "../lib/situation";
 
 /** How often Situasi re-reads the repository via a soft RSC refresh. */
@@ -53,6 +64,258 @@ function attentionStatusClass(
   if (statusClass === "pass") return "status status--pass";
   if (statusClass === "idle") return "status status--idle";
   return "status status--warn";
+}
+
+function sectionLeadStatusClass(
+  status: "active" | "failed" | "attention",
+): string {
+  if (status === "failed") return "status status--fail";
+  if (status === "active") return "status status--pass";
+  return "status status--warn";
+}
+
+/** Resolve a CSS custom property to a concrete color for Recharts SVG fills. */
+function readCssColor(variable: string): string {
+  if (typeof document === "undefined") {
+    return "currentColor";
+  }
+  const probe = document.createElement("span");
+  probe.style.color = `var(${variable})`;
+  document.body.appendChild(probe);
+  const color = getComputedStyle(probe).color;
+  probe.remove();
+  return color || "currentColor";
+}
+
+function useChartPalette() {
+  const [palette, setPalette] = useState({
+    pass: "currentColor",
+    fail: "currentColor",
+    warn: "currentColor",
+    idle: "currentColor",
+    text: "currentColor",
+  });
+
+  useEffect(() => {
+    setPalette({
+      pass: readCssColor("--color-status-success"),
+      fail: readCssColor("--color-status-critical"),
+      warn: readCssColor("--color-status-warning"),
+      idle: readCssColor("--color-status-neutral"),
+      text: readCssColor("--color-text-secondary"),
+    });
+  }, []);
+
+  return palette;
+}
+
+function chartStatusColor(
+  status: string,
+  palette: ReturnType<typeof useChartPalette>,
+): string {
+  if (status === "connected") return palette.pass;
+  if (status === "error") return palette.fail;
+  if (status === "partially-connected" || status === "requires-configuration") {
+    return palette.warn;
+  }
+  return palette.idle;
+}
+
+/** Two live bar charts for Situasi — Recharts + Sentra status tokens. */
+function SituationCharts({ live }: { live: LiveSnapshot }) {
+  const stats = chartStatsFromLive(live);
+  const palette = useChartPalette();
+
+  const featureData = [
+    {
+      name: "Bekerja",
+      value: stats.features.working,
+      fill: palette.pass,
+    },
+    {
+      name: "Tidak bekerja",
+      value: stats.features.notWorking,
+      fill: palette.fail,
+    },
+  ];
+
+  const projectData = stats.projects.map((bucket) => ({
+    name: bucket.label,
+    value: bucket.count,
+    fill: chartStatusColor(bucket.status, palette),
+  }));
+
+  const axisStyle = {
+    fill: palette.text,
+    fontSize: 11,
+    fontFamily: "var(--font-family-mono)",
+  };
+
+  return (
+    <section className="section">
+      <div className="section__head">
+        <h2 className="t-section">Grafik ringkas</h2>
+        <span className="rulelabel">Recharts · data live</span>
+      </div>
+      <div className="grid">
+        <figure className="span-7 chart-card">
+          <figcaption className="t-label">Fitur: bekerja vs tidak</figcaption>
+          <p
+            className="t-compact muted"
+            style={{ marginTop: "var(--space-2)" }}
+          >
+            Total {stats.features.total} fitur terdaftar. Bekerja = status
+            terhubung (bukti lengkap di disk).
+          </p>
+          <div
+            className="chart-frame"
+            role="img"
+            aria-label={`Fitur bekerja ${stats.features.working}, tidak bekerja ${stats.features.notWorking}, dari ${stats.features.total}`}
+          >
+            <ResponsiveContainer width="100%" height={260}>
+              <BarChart
+                data={featureData}
+                margin={{ top: 12, right: 12, left: 8, bottom: 8 }}
+              >
+                <XAxis dataKey="name" tick={axisStyle} interval={0} />
+                <YAxis
+                  type="number"
+                  allowDecimals={false}
+                  tick={axisStyle}
+                  width={36}
+                />
+                <Tooltip
+                  cursor={{ fill: "var(--color-border-subtle)" }}
+                  contentStyle={{
+                    background: "var(--color-background-canvas)",
+                    border: "1px solid var(--color-border-strong)",
+                    borderRadius: "var(--radius-control)",
+                    fontFamily: "var(--font-family-mono)",
+                    fontSize: 12,
+                  }}
+                />
+                <Bar dataKey="value" name="Jumlah" radius={0}>
+                  {featureData.map((entry) => (
+                    <Cell key={entry.name} fill={entry.fill} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </figure>
+
+        <figure className="span-4 chart-card">
+          <figcaption className="t-label">Proyek per status</figcaption>
+          <p
+            className="t-compact muted"
+            style={{ marginTop: "var(--space-2)" }}
+          >
+            Fitur area aplikasi (kapsul/proyek) — {stats.projectTotal} item.
+          </p>
+          {projectData.length === 0 ? (
+            <p className="t-compact" style={{ marginTop: "var(--space-4)" }}>
+              Belum ada fitur area aplikasi di katalog bukti.
+            </p>
+          ) : (
+            <div
+              className="chart-frame"
+              role="img"
+              aria-label={`Proyek per status: ${projectData
+                .map((b) => `${b.name} ${b.value}`)
+                .join(", ")}`}
+            >
+              <ResponsiveContainer width="100%" height={260}>
+                <BarChart
+                  data={projectData}
+                  margin={{ top: 12, right: 12, left: 8, bottom: 48 }}
+                >
+                  <XAxis
+                    dataKey="name"
+                    tick={axisStyle}
+                    interval={0}
+                    angle={-28}
+                    textAnchor="end"
+                    height={56}
+                  />
+                  <YAxis
+                    type="number"
+                    allowDecimals={false}
+                    tick={axisStyle}
+                    width={36}
+                  />
+                  <Tooltip
+                    cursor={{ fill: "var(--color-border-subtle)" }}
+                    contentStyle={{
+                      background: "var(--color-background-canvas)",
+                      border: "1px solid var(--color-border-strong)",
+                      borderRadius: "var(--radius-control)",
+                      fontFamily: "var(--font-family-mono)",
+                      fontSize: 12,
+                    }}
+                  />
+                  <Bar dataKey="value" name="Jumlah" radius={0}>
+                    {projectData.map((entry) => (
+                      <Cell key={entry.name} fill={entry.fill} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </figure>
+      </div>
+    </section>
+  );
+}
+
+/** Mandatory block: feature name, purpose, status + reason. */
+function SectionLead({ live, id }: { live: LiveSnapshot; id: NavId }) {
+  const lead = deriveSectionLead(id, live);
+  return (
+    <header className="section-lead grid">
+      <div className="span-7">
+        <p className="t-label">Fitur</p>
+        <h1 className="t-page" id={`section-lead-${id}`}>
+          {lead.name}
+        </h1>
+        <p
+          className="muted"
+          style={{ marginTop: "var(--space-3)", maxWidth: "68ch" }}
+        >
+          <span className="t-label" style={{ display: "block" }}>
+            Fungsi
+          </span>
+          {lead.purpose}
+        </p>
+      </div>
+      <div className="span-4">
+        <div
+          className={
+            lead.status === "failed"
+              ? "verdictline verdictline--fail"
+              : lead.status === "active"
+                ? "verdictline verdictline--pass"
+                : "verdictline verdictline--warn"
+          }
+          role="status"
+          aria-label={`Status: ${lead.statusLabel}. ${lead.statusReason}`}
+        >
+          <p className="t-label">Status</p>
+          <p style={{ marginTop: "var(--space-2)" }}>
+            <span className={sectionLeadStatusClass(lead.status)}>
+              {lead.statusLabel}
+            </span>
+          </p>
+          <p
+            className="t-compact"
+            style={{ marginTop: "var(--space-3)", maxWidth: "44ch" }}
+          >
+            {lead.statusReason}
+          </p>
+        </div>
+      </div>
+    </header>
+  );
 }
 
 const HOME_ACTION_IDS = [
@@ -487,10 +750,12 @@ function HomeSection({
 
   return (
     <>
+      <SectionLead live={live} id="home" />
+
       <header className="pagehead grid">
         <div className="pagehead__id">
-          <p className="t-label">Situasi SAFRS</p>
-          <h1 className="t-display">Keadaan monorepo saat ini</h1>
+          <p className="t-label">Ringkas sekarang</p>
+          <h2 className="t-display">Keadaan monorepo saat ini</h2>
           <p
             className="muted"
             style={{ marginTop: "var(--space-4)", maxWidth: "56ch" }}
@@ -517,6 +782,8 @@ function HomeSection({
           </div>
         </div>
       </header>
+
+      <SituationCharts live={live} />
 
       <section className="section">
         <div className="section__head">
@@ -901,11 +1168,13 @@ function ProjectsSection({
 
   return (
     <>
+      <SectionLead live={live} id="projects" />
+
       <section className="section">
         <div className="section__head">
-          <h2 className="t-section">Repository map</h2>
+          <h2 className="t-section">Peta repository</h2>
           <span className="rulelabel">
-            Read from pnpm-workspace.yaml and every package.json
+            Dibaca dari pnpm-workspace.yaml dan setiap package.json
           </span>
         </div>
 
@@ -1100,19 +1369,8 @@ function AgentsSection({ live }: { live: LiveSnapshot }) {
 
   return (
     <>
-      <header className="pagehead grid">
-        <div className="pagehead__id">
-          <p className="t-label">Agents</p>
-          <h1 className="t-page">Capability is not authority</h1>
-          <p
-            className="muted"
-            style={{ marginTop: "var(--space-4)", maxWidth: "56ch" }}
-          >
-            Human roles and automation identities are kept separate. No agent
-            may deploy production from this board.
-          </p>
-        </div>
-      </header>
+      <SectionLead live={live} id="agents" />
+
       {!live.roles.available ? (
         <p className="t-compact muted">
           .safrs/policy.json tidak terbaca di checkout ini — kolom May memakai
@@ -1121,14 +1379,14 @@ function AgentsSection({ live }: { live: LiveSnapshot }) {
       ) : null}
       <section className="section">
         <div className="tablewrap">
-          <table>
+          <table aria-label="Daftar agen dan peran">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Type</th>
-                <th>May</th>
-                <th>May not</th>
-                <th>Limit</th>
+                <th>Nama</th>
+                <th>Jenis</th>
+                <th>Boleh</th>
+                <th>Tidak boleh</th>
+                <th>Batas</th>
               </tr>
             </thead>
             <tbody>
@@ -1198,13 +1456,15 @@ function TasksSection({
 
   return (
     <>
+      <SectionLead live={live} id="tasks" />
+
       {plane.available ? (
         <>
           <section className="section">
             <div className="section__head">
-              <h2 className="t-section">Task registry, as recorded now</h2>
+              <h2 className="t-section">Daftar task saat ini</h2>
               <span className="rulelabel">
-                Read through tools/status, not re-implemented here
+                Dibaca lewat tools/status, bukan dihitung ulang di sini
               </span>
             </div>
             <div className="grid">
@@ -1434,14 +1694,14 @@ function HealthSection({
 
   return (
     <>
+      <SectionLead live={live} id="health" />
+
       {health.available && health.problem === null ? (
         <>
           <section className="section">
             <div className="section__head">
-              <h2 className="t-section">Machine readiness</h2>
-              <span className="rulelabel">
-                Run by tools/doctor, not re-implemented here
-              </span>
+              <h2 className="t-section">Hasil pemeriksaan mesin</h2>
+              <span className="rulelabel">Dijalankan oleh tools/doctor</span>
             </div>
 
             <div className="grid">
@@ -1559,8 +1819,8 @@ function HealthSection({
       ) : (
         <section className="section">
           <div className="section__head">
-            <h2 className="t-section">Machine readiness</h2>
-            <span className="rulelabel">Reading failed</span>
+            <h2 className="t-section">Hasil pemeriksaan mesin</h2>
+            <span className="rulelabel">Tidak dapat dievaluasi</span>
           </div>
           <div className="verdictline verdictline--fail">
             <p className="t-label">Tidak terbaca</p>
@@ -1594,12 +1854,16 @@ function ActivitySection({ live }: { live: LiveSnapshot }) {
 
   return (
     <>
+      <SectionLead live={live} id="activity" />
+
       {activity.available ? (
         <>
           <section className="section">
             <div className="section__head">
-              <h2 className="t-section">Change flow</h2>
-              <span className="rulelabel">Last 30 days on {live.branch}</span>
+              <h2 className="t-section">Alur perubahan</h2>
+              <span className="rulelabel">
+                30 hari terakhir di {live.branch}
+              </span>
             </div>
 
             <div className="grid">
@@ -1830,34 +2094,11 @@ function ActivitySection({ live }: { live: LiveSnapshot }) {
   );
 }
 
-function GovernanceSection() {
+function GovernanceSection({ live }: { live: LiveSnapshot }) {
   return (
     <>
-      <header className="pagehead grid">
-        <div className="pagehead__id">
-          <p className="t-label">Governance</p>
-          <h1 className="t-page">Authority stays visible</h1>
-          <p
-            className="muted"
-            style={{ marginTop: "var(--space-4)", maxWidth: "56ch" }}
-          >
-            Humans govern, agents execute, and machines enforce. This board
-            explains that boundary. It does not weaken it.
-          </p>
-        </div>
-        <div className="pagehead__verdict">
-          <div className="verdict">
-            <p className="t-label">Operating model</p>
-            <p className="verdict__word">SAFRS Core</p>
-            <p
-              className="t-compact muted"
-              style={{ marginTop: "var(--space-3)" }}
-            >
-              {SITE.operatingModel}
-            </p>
-          </div>
-        </div>
-      </header>
+      <SectionLead live={live} id="governance" />
+
       <section className="section">
         <div className="grid">
           {Object.entries(RISK_COPY).map(([tier, copy]) => (
@@ -1875,11 +2116,11 @@ function GovernanceSection() {
       </section>
       <section className="section">
         <div className="alert">
-          <h2>Pending approvals</h2>
+          <h2>Persetujuan yang menunggu</h2>
           <p>
-            Not observed here. R2 approval is bound to exact content. R3
-            authorization is accepted only from an authorized human for the
-            exact operation proposed.
+            Belum diamati di papan ini. Persetujuan R2 terikat pada isi yang
+            tepat. Otorisasi R3 hanya dari manusia berwenang untuk operasi yang
+            diajukan secara eksplisit.
           </p>
         </div>
       </section>
@@ -1890,18 +2131,8 @@ function GovernanceSection() {
 function KnowledgeSection({ live }: { live: LiveSnapshot }) {
   return (
     <>
-      <header className="pagehead grid">
-        <div className="pagehead__id">
-          <p className="t-label">Knowledge</p>
-          <h1 className="t-page">Official documents first</h1>
-          <p
-            className="muted"
-            style={{ marginTop: "var(--space-4)", maxWidth: "56ch" }}
-          >
-            If a summary and the specification conflict, the specification wins.
-          </p>
-        </div>
-      </header>
+      <SectionLead live={live} id="knowledge" />
+
       <section className="section">
         {live.knowledge.available ? (
           <>
@@ -2094,7 +2325,9 @@ export function ControlCenter({ live }: { live: LiveSnapshot }) {
               />
             ) : null}
             {section === "activity" ? <ActivitySection live={live} /> : null}
-            {section === "governance" ? <GovernanceSection /> : null}
+            {section === "governance" ? (
+              <GovernanceSection live={live} />
+            ) : null}
             {section === "knowledge" ? <KnowledgeSection live={live} /> : null}
           </div>
         </main>

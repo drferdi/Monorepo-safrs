@@ -15,7 +15,9 @@
     "@sentra/token": "workspace:*",
     "next": "catalog:",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "react-is": "^19.3.0",
+    "recharts": "3.10.1"
   },
   "devDependencies": {
     "@safrs/config": "workspace:*",

@@ -296,6 +296,27 @@ a {
   border-bottom: 2px solid var(--color-border-strong);
 }
 
+.section-lead {
+  padding: var(--space-7) 0 var(--space-5);
+  border-bottom: 2px solid var(--color-border-strong);
+  margin-bottom: var(--space-2);
+}
+
+.section-lead .t-page {
+  margin-top: var(--space-2);
+}
+
+.chart-card {
+  border-top: 1px solid var(--color-border-strong);
+  padding-top: var(--space-4);
+}
+
+.chart-frame {
+  width: 100%;
+  margin-top: var(--space-4);
+  min-height: 11rem;
+}
+
 .pagehead__id {
   grid-column: 1 / span 7;
 }
