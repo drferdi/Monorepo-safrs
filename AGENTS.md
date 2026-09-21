@@ -180,7 +180,7 @@ Read only the context required for the task.
 
 - `task:decision` → `.agents/knowledge/08_DECISIONS.md`, `.agents/DECISIONS.md`
 - `task:documentation` → `.agents/knowledge/07_DOCUMENTATION.md`
-- `task:governance` → `docs/governance/AGENT_AUTONOMY_MODEL.md`
+- `task:governance` → `docs/governance/AGENT_AUTONOMY_MODEL.md`, `docs/governance/SAFRS_OPERATIONAL_SOP.md`
 - `task:implementation` → `.agents/knowledge/05_ENGINEERING.md`, `.agents/knowledge/06_CODING.md`, `docs/governance/CAPSULE_SOVEREIGNTY.md`
 - `task:planning` → `.agents/PROGRESS.md`
 - `task:product` → `.agents/knowledge/09_PRODUCTS.md`

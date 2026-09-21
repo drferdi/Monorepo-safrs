@@ -367,6 +367,14 @@
       "scope": "task:review"
     },
     {
+      "id": "safrs-operational-sop",
+      "path": "docs/governance/SAFRS_OPERATIONAL_SOP.md",
+      "type": "canonical",
+      "status": "CANONICAL",
+      "normativity": "SHOULD",
+      "scope": "task:governance"
+    },
+    {
       "id": "context-active-avery",
       "path": "docs/context/active/avery.context.md",
       "type": "reference",

@@ -85,14 +85,16 @@ Last updated: 2026-09-20 — Lead Architect (GRAV / Antigravity), `TASK-20260920
 ## Monorepo Control Plane & GitHub Sync (COMPLETED & PUBLISHED)
 
 - **Last updated**: 2026-09-21 — Lead Architect (GRAV / Antigravity), session milestone
-- **Scope**: Repository hygiene, `.gitignore` hardening, curated `docs/library/`, GitHub Wiki sync, Git tree/blob healing, and origin publication.
+- **Scope**: Repository hygiene, `.gitignore` hardening, curated `docs/library/`, GitHub Wiki sync, Git tree/blob healing, README surgical peremajaan, and origin publication.
 - **Completed Actions**:
-  1. **GitHub Wiki Synced**: Initialized `Monorepo-safrs.wiki.git` endpoint via web UI; configured global git identity (`drferdi <drferdiiskandar@sentrahai.com>`) and Git SSH bridge; successfully uploaded 83 wiki files (81 pages + `_Sidebar.md` + `Home.md` + `README.md`) synced via Factory/Droid (`52f8786`).
-  2. **Git Object & Ref Healing**: Healed broken Git trees (`git add --renormalize .` and `git write-tree`); cleaned `.git/packed-refs` from stale/missing branches and peeled tags. Local repo is 100% clean and consistent.
+  1. **GitHub Wiki Synced (100% LIVE)**: Initialized `Monorepo-safrs.wiki.git` endpoint via web UI; configured global git identity (`drferdi <drferdiiskandar@sentrahai.com>`) and Git SSH bridge (`url."git@github.com:".insteadOf "https://github.com/"`); successfully uploaded 83 wiki files (81 pages + `_Sidebar.md` + `Home.md` + `README.md`) synced via Factory/Droid under commit `52f8786`.
+  2. **Git Object & Ref Healing**: Healed broken Git trees (`git add --renormalize .` and `git write-tree`); cleaned `.git/packed-refs` from stale/missing branches and corrupted peeled tags. Local repo is 100% clean and consistent.
   3. **Internal Agent Docs Exclusion**: Hardened `.gitignore` to strictly exclude all internal agent artifacts (`docs/plans/`, `docs/superpowers/`, `docs/gaffer_note/`, `docs/workflow/`, `**/docs/superpowers/`, and `projects/**/.claude/`).
   4. **Curated Library Ingestion**: Quarantined heavy media and confidential legal/financial files (`docs/library/**/*.mp4`, `*.zip`, `01_Incorporation`, `02_Agreements_Under_Review`, `03_FINANCE_STRATEGY`); staged 40 AI-readable files (corporate legal charter, executive profile, UI tokens).
-  5. **Local Commit**: Committed cleanly on `feat/gaffer-safrs-wiring` (`2229a5d`) with full attribution.
-  6. **Origin Publication**: Pushed `publish-no-projects` branch directly to GitHub `origin` (`https://github.com/drferdi/Monorepo-safrs.git`) adhering 100% to Capsule Gate and Publish Gate with Git LFS assets uploaded.
-- **Verification**: `python tools/safrs/check_docs.py` (OK), `node --test tools/automation/test/gaffer/*.test.mjs` (41/41 PASS), `git push` to origin (0 errors).
+  5. **README Surgical Peremajaan**: Updated public `README.md` surgically with zero collateral damage to visual design system, badges, JetBrains Mono typing SVG, KaTeX formula headers, and footer dedication. Added official link to Sentra SAFRS Wiki, updated Current Capsules inventory (`sentrabot`, `avery`, `portfolio-drnovia`, `academic-smartboard`), registered `pnpm saf gaffer run <intent>`, sanitized internal paths, and updated official email to `drferdiiskandar@sentrahai.com`.
+  6. **Origin Publication**: Pushed `publish-no-projects` branch directly to GitHub `origin` (`https://github.com/drferdi/Monorepo-safrs.git`) adhering 100% to Capsule Gate and Publish Gate with Git LFS assets uploaded (`3dddaf8`).
+  7. **Institutional SOP Established**: Formalized all operational procedures into canonical governance document [`docs/governance/SAFRS_OPERATIONAL_SOP.md`](file:///d:/DEV/Monorepo/docs/governance/SAFRS_OPERATIONAL_SOP.md), registered in `.safrs/document-registry.json`, and wired into `AGENTS.md` routing table.
+- **Verification**: `python tools/safrs/check_docs.py` (OK), `python tools/safrs/check_routing.py` (OK), `node --test tools/automation/test/gaffer/*.test.mjs` (41/41 PASS), `git push` to origin (0 errors).
 - **Next Action**: Create PR or merge `publish-no-projects` into `main` on GitHub web if desired (`https://github.com/drferdi/Monorepo-safrs/pull/new/publish-no-projects`).
+
 
