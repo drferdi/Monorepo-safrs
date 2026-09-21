@@ -1,8 +1,8 @@
 {
   "brand": "Sentra Artificial Intelligence",
   "typography": {
-    "sans": "Geist",
-    "mono": "Geist Mono"
+    "sans": "Archivo",
+    "mono": "JetBrains Mono"
   },
   "colors": {
     "sentra-dark": "#0D1117",

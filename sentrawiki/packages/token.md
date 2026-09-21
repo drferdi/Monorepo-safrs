@@ -17,7 +17,7 @@ Ported from `abyss-monorepo/packages/token` (Sentraverse Foundation Tokens v1.0)
 | `packages/token/src/tokens.css` | **The only file that may contain a hex value** (`:root` + `[data-theme="dark"]` blocks) |
 | `packages/token/src/tokens.json` | Same values, machine-readable; the contrast gate reads this |
 | `packages/token/src/tailwind.css` | Tailwind v4 `@theme` bridge exposing token utilities |
-| `packages/token/src/fonts.ts` | Self-hosted Geist / Geist Mono font loading |
+| `packages/token/src/fonts.ts` | Self-hosted Archivo / JetBrains Mono font loading |
 | `packages/token/scope.txt` | Paths under enforcement; added when migrated, never removed |
 | `packages/token/AGENTS.md` | Package mandate and rules |
 | `packages/token/UI-RULES.md` | Full UI ruleset (colour zones, layout, type, states, a11y) |
@@ -53,7 +53,7 @@ Import **semantic** tokens only. Anything named `--p-*` is a private primitive; 
 - **Four data series is the ceiling** — `--color-data-1..4` step in lightness.
 - **Layout** — 12 columns, gutter 24, margin 40, max width 1440; column 8 stays empty; body text ≤ 68 chars/line.
 - **Shape** — `--radius-structure` 0 (tables, panels); `--radius-control` 2px (buttons/inputs only). No third radius. Buttons carry a 3px solid ledge, no blur.
-- **Type** — Geist + Geist Mono, self-hosted variable fonts (OFL), weights 400/500/600, left-aligned, tabular figures in numeric columns.
+- **Type** — Archivo + JetBrains Mono, self-hosted variable fonts (OFL), weights 400/500/600, display voice from Archivo's width axis (wdth 112), left-aligned, tabular figures in numeric columns.
 - **States are part of the component** — default, hover, focus-visible, active, disabled, loading, error, and empty (three distinct empty states) must all be defined.
 - **Accessibility floor** — WCAG 2.2 AA as a build condition: contrast measured (`check-tokens.mjs` recomputes every semantic pair), keyboard reachable, 44px minimum target, `prefers-reduced-motion` honoured, live regions on async content.
 

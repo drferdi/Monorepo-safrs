@@ -18,7 +18,7 @@ Root authoring lives in `packages/token`. Standalone capsules must snapshot or p
 | `packages/token/src/tokens.css` | The only file allowed to contain hex/radius values |
 | `packages/token/src/tokens.json` | Machine-readable token values (generated from CSS) |
 | `packages/token/src/tailwind.css` | Tailwind v4 `@theme` bridge |
-| `packages/token/src/fonts.ts` | Self-hosted Geist variable fonts (Next.js) |
+| `packages/token/src/fonts.ts` | Self-hosted Archivo + JetBrains Mono variable fonts (Next.js) |
 | `scripts/check-tokens.mjs` | The token gate (raw-value scan + contrast recomputation) |
 
 ## How it works
@@ -43,7 +43,7 @@ Consumption in an app root stylesheet:
 
 ### Fonts
 
-`src/fonts.ts` exports `fontSans` and `fontMono` built from self-hosted Geist variable WOFF2 files vendored in `packages/token/assets/fonts/` (OFL). Fonts are never loaded from a CDN at runtime — determinism and privacy. The golden-path layout applies them via `next/font/local` CSS variables.
+`src/fonts.ts` exports `fontSans` and `fontMono` built from self-hosted Archivo and JetBrains Mono variable WOFF2 files vendored in `packages/token/assets/fonts/` (OFL). Fonts are never loaded from a CDN at runtime — determinism and privacy. The golden-path layout applies them via `next/font/local` CSS variables.
 
 ### The token gate
 
@@ -61,7 +61,7 @@ graph TD
     CSS["tokens.css<br/>primitives + semantic tokens"]
     JSON["tokens.json<br/>machine-readable"]
     TW["tailwind.css<br/>@theme bridge"]
-    FONTS["fonts.ts<br/>Geist variable"]
+    FONTS["fonts.ts<br/>Archivo variable"]
     WEB["web globals.css<br/>@import tokens"]
     EMAIL["email/welcome.tsx<br/>imports tokens.json inline"]
     GATE["check-tokens.mjs<br/>raw scan + WCAG 2.2 AA"]

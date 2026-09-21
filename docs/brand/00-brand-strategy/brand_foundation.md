@@ -7,8 +7,8 @@
 - Primary corporate lockup: **Sentra Artificial Intelligence**
 - Secondary compact lockup: **Sentra AI**
 - Master logomark: approved reference supplied in this project; production SVG is vector-derived from that silhouette.
-- Primary typeface: **Geist Sans (Vercel)**
-- Technical typeface: **Geist Mono**
+- Primary typeface: **Archivo** (variable; the width axis carries the display voice)
+- Technical typeface: **JetBrains Mono**
 - Official dark: **#0D1117**
 - Official white: **#FFFFFF**
 - Official black: **#000000**
@@ -25,4 +25,4 @@ Black/white builds identity. Blue marks intelligence, interaction, selection, li
 - Primary full lockup minimum: **180 px digital** or **30 mm print**; increase when reproduction quality is uncertain.
 
 ## Typography implementation
-The package does not include font binaries. Install Geist from Vercel's official release or `npm i geist`. SVG lockups keep the wordmark as live Geist text to avoid substituting the approved typeface in source files.
+The package does not include font binaries. Archivo and JetBrains Mono (SIL OFL 1.1) are vendored in `packages/token/assets/fonts/`. SVG lockups keep the wordmark as live Archivo text to avoid substituting the approved typeface in source files.

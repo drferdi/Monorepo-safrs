@@ -5,9 +5,9 @@
  * specifies Archivo, chosen for its width axis: the display voice comes from
  * widening to 112, not from adding a second typeface. One family, two voices.
  *
- * Geist (`./fonts`) remains the default for surfaces already built on it. This
- * module is the opt-in alternative, not a replacement — importing it is a
- * deliberate choice per application.
+ * Archivo is now the default in `./fonts`, self-hosted from `assets/fonts/`.
+ * Prefer `./fonts` for new work. This module is kept for existing consumers
+ * (control-center); it fetches the same families from Google at build time.
  *
  * `next/font/google` downloads the files at build time and self-hosts them, so
  * no request reaches a CDN at runtime. That preserves the determinism and

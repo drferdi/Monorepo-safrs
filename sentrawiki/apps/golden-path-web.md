@@ -47,7 +47,7 @@ flowchart LR
   (Database → API → Web → aggregate result), two `StatusCard`s, and the demo
   form. Chinese/Indonesian microcopy: "Meja kesiapan", "Siap"/"Perlu perhatian".
 - **Root layout** — `src/app/layout.tsx` sets `lang="id"`, metadata, and loads
-  the Sentra Geist fonts through `@sentra/token/fonts`.
+  the Sentra fonts (Archivo + JetBrains Mono) through `@sentra/token/fonts`.
 - **API routes** — served under `/api/*` by the mounted Hono app (see below).
 
 ## API mounting

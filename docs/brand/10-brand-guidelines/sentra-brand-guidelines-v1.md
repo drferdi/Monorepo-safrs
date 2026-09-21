@@ -25,7 +25,7 @@ Minimum clear space is **1X** on every side, where X equals the approximate band
 Core colors: #0D1117, #FFFFFF, #000000. Primary accent: #5B8CFF. On dark surfaces use #5B8CFF; on white surfaces use `#315FD6` for normal-sized text links.
 
 ## 6. Typography
-Primary: **Geist Sans**. Technical/data contexts: **Geist Mono**. Do not substitute decorative futuristic fonts into the corporate wordmark.
+Primary: **Archivo**. Technical/data contexts: **JetBrains Mono**. Do not substitute decorative futuristic fonts into the corporate wordmark.
 
 ## 7. Do not
 Do not stretch, rotate, skew, redraw, recolor the master mark as default blue, add drop shadows, glow, gradients, 3D, bevels, outlines, or place it on low-contrast backgrounds.

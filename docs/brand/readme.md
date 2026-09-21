@@ -5,8 +5,8 @@ Production package for **Sentra Artificial Intelligence**.
 ## Status
 - Master logomark geometry: **APPROVED source, vector-derived production master**
 - Core colors: **APPROVED**
-- Typeface: **APPROVED - Geist**
-- Lockup spacing and text-bearing source files: **REVIEW** until visually signed off after rendering with the official Geist font.
+- Typeface: **APPROVED - Archivo** (+ JetBrains Mono), changed from Geist on 2026-09-22 by Chief
+- Lockup spacing and text-bearing source files: **REVIEW** until visually signed off after rendering with Archivo.
 
 ## Start here
 1. `00-brand-strategy/brand_foundation.md`
@@ -16,6 +16,7 @@ Production package for **Sentra Artificial Intelligence**.
 
 ## Important
 - Do not regenerate or redraw the approved mark.
-- Font files are not bundled. Install the official **Geist** typeface separately (Vercel / `npm i geist`).
-- Text-bearing SVGs intentionally keep live `Geist` text for correct future outlining/export.
+- Font files are not bundled. Archivo and JetBrains Mono (SIL OFL 1.1) are vendored in `packages/token/assets/fonts/`.
+- Text-bearing SVGs intentionally keep live `Archivo` text for correct future outlining/export.
+- PNG exports of text-bearing lockups were rendered with Geist and must be re-exported with Archivo.
 - Platform export sizes were verified on 2026-08-15; re-check platform guidance for future releases.
