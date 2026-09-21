@@ -22,14 +22,14 @@ Sentra AI products serve Indonesian communities — health workers, teachers, pa
 ### Canonical Fonts
 | Font | Role | Weight | Usage |
 |------|------|--------|-------|
-| **Geist** | Primary sans-serif | 400 (Regular), 500 (Medium), 600 (SemiBold), 700 (Bold) | Body text, headings, UI labels, buttons |
-| **Geist Mono** | Primary monospace | 400 (Regular), 500 (Medium) | Code blocks, data tables, technical values, timestamps |
+| **Archivo** | Primary sans-serif, one family | 400 (Regular), 500 (Medium), 600 (SemiBold) — three weights only | Body text, headings, UI labels, buttons. Display voice from the width axis: `wdth` 112 display, 108 wordmark/module names, 100 body |
+| **JetBrains Mono** | Primary monospace | 400 (Regular), 500 (Medium) | Machine-produced values: IDs, paths, measurements, data tables, timestamps |
 
 ### Deprecated Fonts (DO NOT USE)
 | Font | Status | Replacement | Reason |
 |------|--------|-------------|--------|
-| Plus Jakarta Sans | **DEPRECATED** | Geist | Not part of Sentra brand; inconsistent with semantic token system |
-| IBM Plex | **DEPRECATED** | Geist Mono | Not part of Sentra brand; inconsistent with semantic token system |
+| Plus Jakarta Sans | **DEPRECATED** | Archivo | Not part of Sentra brand; inconsistent with semantic token system |
+| IBM Plex | **DEPRECATED** | JetBrains Mono | Not part of Sentra brand; inconsistent with semantic token system |
 
 ### Typography Scale
 ```
@@ -229,7 +229,7 @@ Mobile-first approach: default styles target mobile; use `min-width` media queri
 
 ### DO
 - Use semantic tokens for all colors, spacing, typography, and shadows
-- Use Geist and Geist Mono exclusively
+- Use Archivo and JetBrains Mono exclusively (Geist was used 2026-08-11 → 2026-09-22 and is superseded)
 - Test contrast ratios for all color combinations
 - Respect `prefers-reduced-motion` and `prefers-color-scheme`
 - Document custom component patterns in capsule-specific design docs

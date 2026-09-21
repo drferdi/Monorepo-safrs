@@ -77,7 +77,8 @@ Web (Vite 127.0.0.1:5173), Mobile (Expo), Desktop (Electron) connect to:
 | 2024-10-15 | Voice capability via Vapi | Automated phone reminders. Indonesian elderly and low-literacy patients respond better to voice than SMS/app. | Chief | Patient engagement | Active |
 | 2025-03-20 | Monorepo native migration | Consolidate scattered repositories into unified SAFRS monorepo. Eliminates version drift. | Chief | Repository structure | Completed |
 | 2025-07-10 | Electron desktop app | RSIA Melinda staff work from fixed nursing station computers. Desktop provides persistent notifications and tray integration. | Chief | Frontend distribution | Active |
-| 2026-01-15 | @sentra/token design system | Semantic token-based design replacing ad-hoc styling. Typography: Geist + Geist Mono exclusively. | Chief | UI/UX standardization | Active |
+| 2026-01-15 | @sentra/token design system | Semantic token-based design replacing ad-hoc styling. Typography: Geist + Geist Mono exclusively. | Chief | UI/UX standardization | Superseded |
+| 2026-09-22 | Typography back to Archivo | Sentraverse UI v1.0 locks Archivo (one family, width axis for display) + JetBrains Mono; the Geist switch diverged from the reference. | Chief | UI/UX standardization | Active |
 | 2026-09-02 | apps/api IS the harness | Eliminated separate harness process on port 8799. API server already owns commands, SSE, permissions. | Chief | Runtime architecture | Completed |
 
 ## Current Focus
