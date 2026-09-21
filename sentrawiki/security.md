@@ -1,6 +1,6 @@
 # Security
 
-This page summarizes the security posture covering the trust boundary, sensitive changes, secrets, and prompt/tool injection. It is grounded in `SECURITY.md`, `SAFRS_SPEC.md` (sections 14 and 16), and the machine-enforced configuration in `.safrs/policy.json` and `.safrs/sensitive-paths.json`.
+This page summarizes the security posture covering the trust boundary, sensitive changes, secrets, and prompt/tool injection. Grounded in root `SECURITY.md`, `SAFRS_SPEC.md` (§14, §16), `.safrs/policy.json`, and `.safrs/sensitive-paths.json`. Capsule-specific secret surfaces are named in each capsule `AGENTS.md` and are stricter than this summary.
 
 ## Security model
 
@@ -44,7 +44,9 @@ Per `SAFRS_SPEC.md` section 16:
 - Enable secret scanning/push protection where available.
 - **Treat any exposed secret as compromised and rotate/revoke it.**
 
-`SECURITY.md` adds: never commit or echo secrets, and if exposure is suspected, stop using the credential and follow the owning system's rotation/revocation procedure. Agent hooks in `.claude/`, `.cursor/`, and `.codex/` are configured to deny credential writes and block reads of `.env`-style secret files.
+`SECURITY.md` adds: never commit or echo secrets; treat exposure as compromise and rotate. Agent hooks in `.claude/`, `.cursor/`, and `.codex/` deny credential writes and block `.env`-style reads.
+
+Capsule-specific never-commit lists (not exhaustive): Avery WhatsApp sessions / `auth.json` / `memories/`; SentraBot `.env` and `ENCRYPTION_KEY`; Kediri Payload secrets. Root `database/` is a gitignored clinical-guideline corpus — `git clean -xdf` at repo root deletes it.
 
 ## Prompt/tool injection boundary
 
@@ -54,8 +56,8 @@ Reproduction of the injection clause is intentional: it is the single most impor
 
 ## Trust boundaries and isolation
 
-- **Repository boundaries**: `SAFRS_SPEC.md` notes repository boundaries follow trust, confidentiality, ownership, and operational boundaries; a monorepo is one deploy unit per golden path.
-- **Package boundaries**: server-only packages (`@safrs/database`, `@safrs/telemetry`) must never be imported into browser components; `DATABASE_URL` is server-only.
+- **Repository boundaries**: follow trust, confidentiality, ownership, and operational boundaries. This monorepo holds many deploy units (capsules), not one golden-path app.
+- **Package boundaries**: server-only root packages (`@safrs/database`, `@safrs/telemetry`) must never be imported into browser components; `DATABASE_URL` is server-only. Product capsules have their own server/client splits.
 - **Execution isolation**: `.safrs/policy.json` requires parallel mutation work in dedicated worktrees (outside the repo root), and shared mutable state to be isolated or serialized.
 - **Default-deny actions**: `.safrs/policy.json` forbids production-secret reads, production-data writes, direct production deploy, R3 self-authorization, governance bypass, and transmission to unapproved endpoints.
 

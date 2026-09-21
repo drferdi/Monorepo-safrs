@@ -1,16 +1,16 @@
 # Dependencies reference
 
-This page documents the external dependency landscape: the central catalog, key pinned versions, and how packages relate.
+> **Scope.** Root `pnpm-workspace.yaml` catalog. SentraBot, Kediri, and Smartboard resolve their own lockfiles.
 
 ## The version catalog
 
-`pnpm-workspace.yaml` centralizes every dependency version in a `catalog:` block. Workspace members reference catalog entries with `catalog:` so the whole repo resolves against one version of each dependency. The catalog is the single source of truth for versions.
+Root workspace members reference `catalog:` so those packages share one version of each dependency. That catalog is **not** the version source for excluded capsules.
 
 ## Key dependencies and versions
 
 | Dependency | Catalog version |
 | --- | --- |
-| `next` | 16.2.12 |
+| `next` | 16.3.0 |
 | `hono` | 4.13.1 |
 | `zod` | 4.4.3 |
 | `@hono/zod-validator` | 0.9.0 |
@@ -61,7 +61,7 @@ graph TD
     UI["@safrs/ui"]
     TELE["@safrs/telemetry"]
     CONF["@safrs/config"]
-    TOKEN["@safrs/token"]
+    TOKEN["@sentra/token"]
 
     WEB --> API
     WEB --> ENV
@@ -75,12 +75,12 @@ graph TD
     UI --> TOKEN
 ```
 
-- **`projects/internal/golden-path/apps/web`** is the deployable unit. It mounts `@safrs/api`, and uses `@safrs/env`, `@safrs/ui`, and `@safrs/telemetry`.
+- **`projects/internal/golden-path/apps/web`** is the **legacy** deployable unit in the root workspace. It mounts `@safrs/api`, and uses `@safrs/env`, `@safrs/ui`, and `@safrs/telemetry`.
 - **`@safrs/api`** owns the typed Hono API; it consumes `@safrs/schemas` for Zod contracts, applies `@safrs/telemetry` middleware, and talks to `@safrs/database`.
 - **`@safrs/database`** wraps Prisma + PostgreSQL and depends on `@safrs/env` and `@safrs/telemetry`. It does **not** depend on `@safrs/schemas`.
 - **`@safrs/env`** validates environment with `@t3-oss/env-core`/`@t3-oss/env-nextjs` and extends `@safrs/config` presets.
 - **`@safrs/telemetry`** extends the `@safrs/config` presets and stays server-only.
-- **`@safrs/ui`** is built on the `@safrs/token` design tokens.
+- **`@safrs/ui`** is built on `@sentra/token`.
 - The **`tools/*`** packages (doctor, project-wizard, capabilities, codegen, deps-graph, safrs) are mostly standalone, with codegen depending on Zod via the catalog.
 
 ## Supply-chain posture

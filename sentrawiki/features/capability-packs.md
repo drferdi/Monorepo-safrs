@@ -1,10 +1,12 @@
 # Capability packs
 
-Optional capability activation in the SAFRS Monorepo.
+Optional capability activation for **root-scaffolded** projects.
 
 ## Purpose
 
-Capability packs are optional feature modules — **Stripe, email, Electron, WXT, AI, and Python** — that a project can activate on demand via `pnpm capability:add`. They are not part of the runtime baseline; a project declares only the packs it explicitly needs. Activation is a risk-governed operation (every pack is R2), and the tool records the selection in a project `capabilities.json` while leaving runtime integration as a separate project-scoped R2 task.
+Optional modules — **Stripe, email, Electron, WXT, AI, and Python** — activated via `pnpm capability:add`. They are not the runtime baseline. Activation is R2; the tool records selection in `capabilities.json` and leaves runtime integration as a separate project-scoped R2 task.
+
+This is **not** how SentraBot got Electron/Expo/AI. Those are first-class apps inside the SentraBot capsule. Do not run `pnpm capability:add` against an excluded sovereign capsule as if it were golden-path.
 
 ## Key source files
 

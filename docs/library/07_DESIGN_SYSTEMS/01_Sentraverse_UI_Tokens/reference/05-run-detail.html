@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Run sentra-agent-dataset-2026-swiss — Dataset Foundry — Sentraverse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ===================================================================
+   SENTRAVERSE UI — v0.3
+   Decisions locked: brand colour on · pure white · Archivo ·
+   2px control radius · comfortable density.
+   Line vocabulary derived from the Sentra module tiles.
+   =================================================================== */
+:root{
+  /* primitives */
+  --p-ink-900:#101312; --p-ink-500:#5A5F5C; --p-ink-300:#8B918D;
+  --p-neutral-200:#DCDCD6; --p-neutral-100:#E9E9E4; --p-neutral-050:#F7F5F1;
+  --p-white:#FFFFFF;
+  --p-vermilion:#DE4526;        /* brand — graphic marks and large type only */
+  --p-vermilion-text:#B8351A;   /* brand — small text, AA compliant */
+  --p-crimson:#A11208;          /* status critical — content zone only */
+  --p-amber:#8F5A00;
+  --p-teal:#17554E;
+  --p-plum:#4C3245; --p-slate:#5A7480; --p-sand:#D3B57E;
+  --p-tint-accent:#FDF3F0; --p-tint-critical:#FBEEEC;
+
+  /* semantic */
+  --color-background-canvas:var(--p-white);
+  --color-background-surface:var(--p-neutral-050);
+  --color-text-primary:var(--p-ink-900);
+  --color-text-secondary:var(--p-ink-500);
+  --color-text-muted:var(--p-ink-300);
+  --color-text-inverse:var(--p-white);
+  --color-border-subtle:var(--p-neutral-200);
+  --color-border-strong:var(--p-ink-900);
+  --color-mark-corner:var(--p-ink-300);
+  --color-accent:var(--p-vermilion);
+  --color-accent-text:var(--p-vermilion-text);
+  --color-action-primary:var(--p-ink-900);
+  --color-status-critical:var(--p-crimson);
+  --color-status-warning:var(--p-amber);
+  --color-status-success:var(--p-teal);
+  --color-surface-accent:var(--p-tint-accent);
+  --color-surface-critical:var(--p-tint-critical);
+  --color-data-1:var(--p-ink-900);
+  --color-data-2:var(--p-plum);
+  --color-data-3:var(--p-slate);
+  --color-data-4:var(--p-sand);
+  --color-focus-ring:var(--p-ink-900);
+
+  --radius-structure:0px;
+  --radius-control:2px;
+
+  --font-family-sans:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --font-family-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
+  --space-5:24px; --space-6:32px; --space-7:48px; --space-8:64px;
+  --layout-gutter:24px; --layout-margin:40px;
+  --layout-container-wide:1440px; --layout-rail-width:232px;
+  --motion-duration-default:160ms; --motion-easing-standard:cubic-bezier(.2,0,0,1);
+}
+@media (prefers-reduced-motion: reduce){ :root{ --motion-duration-default:0ms } }
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--color-background-canvas);color:var(--color-text-primary);
+  font-family:var(--font-family-sans);font-variation-settings:"wdth" 100;
+  font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p,figure,dl,dd{margin:0}
+ul{margin:0;padding:0;list-style:none}
+table{border-collapse:collapse;width:100%}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--color-focus-ring);outline-offset:2px}
+
+/* ---------- TYPE ROLES ---------- */
+.t-display{font-size:40px;line-height:1.06;font-weight:600;letter-spacing:-.022em;
+  font-variation-settings:"wdth" 112}
+.t-section{font-size:12px;line-height:1.2;font-weight:600;letter-spacing:.09em;text-transform:uppercase}
+.t-compact{font-size:13px;line-height:1.45}
+.t-label{font-family:var(--font-family-mono);font-size:11px;line-height:1.2;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-secondary)}
+.t-data{font-family:var(--font-family-mono);font-size:13px;font-variant-numeric:tabular-nums}
+.t-data-lg{font-family:var(--font-family-mono);font-size:22px;font-weight:500;
+  font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.muted{color:var(--color-text-secondary)}
+
+/* ---------- LINE VOCABULARY ---------- */
+
+/* 1. Sequence marker — accent, used only where order is real information */
+.seq{font-family:var(--font-family-mono);font-size:11px;font-weight:500;
+  letter-spacing:.06em;color:var(--color-accent-text);font-variant-numeric:tabular-nums}
+
+/* 2. Dash-rule label — a short hairline that leads into a right-side label */
+.rulelabel{display:inline-flex;align-items:center;gap:var(--space-3);
+  font-family:var(--font-family-mono);font-size:11px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--color-text-secondary)}
+.rulelabel::before{content:"";width:28px;height:1px;background:var(--color-border-subtle);flex:none}
+
+/* 3. Corner marks — an implied container drawn with four 10px brackets.
+      Replaces the card. Bounds an object without boxing it in.          */
+.panel{position:relative}
+.panel::before{content:"";position:absolute;inset:0;pointer-events:none;
+  --m:var(--color-mark-corner);
+  background:
+    linear-gradient(var(--m),var(--m)) 0 0/10px 1px no-repeat,
+    linear-gradient(var(--m),var(--m)) 0 0/1px 10px no-repeat,
+    linear-gradient(var(--m),var(--m)) 100% 0/10px 1px no-repeat,
+    linear-gradient(var(--m),var(--m)) 100% 0/1px 10px no-repeat,
+    linear-gradient(var(--m),var(--m)) 0 100%/10px 1px no-repeat,
+    linear-gradient(var(--m),var(--m)) 0 100%/1px 10px no-repeat,
+    linear-gradient(var(--m),var(--m)) 100% 100%/10px 1px no-repeat,
+    linear-gradient(var(--m),var(--m)) 100% 100%/1px 10px no-repeat}
+.panel--active::before{--m:var(--color-accent)}
+.panel__body{padding:var(--space-5)}
+
+/* 4. App chrome — the window frame. Appears once, at the top. */
+.chrome{display:flex;align-items:center;gap:var(--space-4);
+  padding:var(--space-3) var(--layout-margin);
+  border-bottom:1px solid var(--color-border-subtle)}
+.chrome__sep{width:1px;height:16px;background:var(--color-border-subtle);flex:none}
+.chrome__path{font-family:var(--font-family-mono);font-size:11px;font-weight:500;
+  letter-spacing:.13em;text-transform:uppercase}
+.chrome__path b{font-weight:500;color:var(--color-accent-text)}
+.chrome__right{margin-left:auto}
+
+/* ---------- SHELL ---------- */
+.shell{display:grid;grid-template-columns:var(--layout-rail-width) minmax(0,1fr);min-height:100vh}
+.rail{border-right:1px solid var(--color-border-subtle);position:sticky;top:0;height:100vh;
+  display:flex;flex-direction:column;background:var(--color-background-canvas)}
+.rail__mark{padding:var(--space-5);border-bottom:1px solid var(--color-border-subtle)}
+.wordmark{font-size:14px;font-weight:600;letter-spacing:.16em;font-variation-settings:"wdth" 108}
+.rail__module{margin-top:var(--space-2)}
+.rail nav{padding:var(--space-5) 0;flex:1}
+.rail__group{padding:0 var(--space-5) var(--space-2)}
+.rail a{display:flex;gap:var(--space-3);align-items:baseline;
+  padding:var(--space-2) var(--space-5);font-size:14px;text-decoration:none;
+  border-left:2px solid transparent;
+  transition:background var(--motion-duration-default) var(--motion-easing-standard)}
+.rail a .seq{color:var(--color-text-muted);font-size:10px}
+.rail a:hover{background:var(--color-background-surface)}
+.rail a[aria-current="page"]{border-left-color:var(--color-accent);font-weight:600;
+  background:var(--color-background-surface)}
+.rail a[aria-current="page"] .seq{color:var(--color-accent-text)}
+.rail__foot{padding:var(--space-5);border-top:1px solid var(--color-border-subtle)}
+
+.topbar{display:flex;align-items:baseline;justify-content:space-between;gap:var(--space-5);
+  padding:var(--space-4) var(--layout-margin);border-bottom:1px solid var(--color-border-subtle)}
+.crumbs{display:flex;gap:var(--space-2);flex-wrap:wrap}
+.crumbs li:not(:last-child)::after{content:"/";margin-left:var(--space-2);color:var(--color-text-muted)}
+
+main{padding:0 var(--layout-margin) var(--space-8)}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--layout-gutter)}
+.wrap{max-width:var(--layout-container-wide);margin:0 auto}
+
+/* ---------- PAGE HEADER ---------- */
+.pagehead{padding:var(--space-7) 0 var(--space-6);border-bottom:2px solid var(--color-border-strong)}
+.pagehead__id{grid-column:1 / span 7}
+.pagehead__verdict{grid-column:9 / span 4}
+.eyebrow{display:flex;align-items:baseline;gap:var(--space-3)}
+.runid{margin-top:var(--space-3);word-break:break-all}
+.sourceline{margin-top:var(--space-4);max-width:56ch}
+.verdict{border-top:2px solid var(--color-status-critical);padding-top:var(--space-3)}
+.verdict__word{font-size:26px;font-weight:600;letter-spacing:-.02em;
+  font-variation-settings:"wdth" 108;color:var(--color-status-critical);margin-top:var(--space-2)}
+.verdict__tally{margin-top:var(--space-3);display:flex;gap:var(--space-5)}
+.verdict__tally div{border-top:1px solid var(--color-border-subtle);padding-top:var(--space-2)}
+.actions{display:flex;gap:var(--space-2);margin-top:var(--space-5);flex-wrap:wrap}
+.btn{font-family:inherit;font-size:14px;font-weight:500;padding:var(--space-3) var(--space-4);
+  min-height:44px;border:1px solid var(--color-border-strong);border-radius:var(--radius-control);
+  background:var(--color-background-canvas);color:var(--color-text-primary);cursor:pointer;
+  transition:background var(--motion-duration-default) var(--motion-easing-standard)}
+.btn:hover{background:var(--color-background-surface)}
+.btn--primary{background:var(--color-action-primary);color:var(--color-text-inverse);
+  border-color:var(--color-action-primary)}
+.btn--primary:hover{background:#000}
+
+/* ---------- SECTIONS ---------- */
+.section{padding:var(--space-7) 0 0}
+.section__head{display:flex;align-items:baseline;gap:var(--space-3);
+  border-bottom:1px solid var(--color-border-strong);padding-bottom:var(--space-2);
+  margin-bottom:var(--space-5)}
+.section__head .rulelabel{margin-left:auto}
+
+/* ---------- YIELD LADDER ---------- */
+.ladder{grid-column:1 / span 12;display:grid;gap:var(--space-4)}
+.rung{display:grid;grid-template-columns:32px 168px minmax(0,1fr) 132px;
+  gap:var(--space-4);align-items:center}
+.rung__track{position:relative;height:26px;border-bottom:1px solid var(--color-border-subtle)}
+.rung__track::after{content:"";position:absolute;right:0;bottom:0;width:1px;height:6px;
+  background:var(--color-border-subtle)}
+.rung__ghost{position:absolute;inset:0;border-right:1px dashed var(--color-border-subtle)}
+.rung__bar{position:absolute;left:0;top:0;bottom:0;background:var(--color-text-primary)}
+.rung__bar--thin{background:var(--color-text-secondary)}
+.rung__bar--min{background:var(--color-status-critical);min-width:2px}
+.rung__val{text-align:right}
+.rung__pct{display:block;color:var(--color-text-secondary);font-size:11px;margin-top:2px}
+.ladder__note{grid-column:1 / span 12;max-width:72ch;margin-top:var(--space-3);
+  border-top:1px solid var(--color-border-subtle);padding-top:var(--space-3)}
+
+/* ---------- TABLE ---------- */
+.tablewrap{grid-column:1 / span 12;overflow-x:auto}
+caption{text-align:left;padding-bottom:var(--space-3);color:var(--color-text-secondary);font-size:13px}
+th,td{text-align:left;vertical-align:top;font-weight:400;
+  padding:var(--space-3) var(--space-4) var(--space-3) 0;
+  border-bottom:1px solid var(--color-border-subtle)}
+thead th{border-bottom:1px solid var(--color-border-strong);font-weight:500;white-space:nowrap}
+tbody tr:hover{background:var(--color-background-surface)}
+td.seqcell{width:36px;padding-right:var(--space-2)}
+td.num{font-family:var(--font-family-mono);font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.gate__name{font-weight:500}
+.gate__why{color:var(--color-text-secondary);font-size:13px;margin-top:2px;max-width:46ch}
+.status{display:inline-flex;align-items:center;gap:var(--space-2);white-space:nowrap;
+  font-family:var(--font-family-mono);font-size:11px;letter-spacing:.07em;
+  text-transform:uppercase;font-weight:500}
+.status::before{content:"";width:9px;height:9px;flex:none;border:1px solid currentColor}
+.status--fail{color:var(--color-status-critical)}
+.status--fail::before{background:currentColor}
+.status--warn{color:var(--color-status-warning)}
+.status--warn::before{background:linear-gradient(135deg,currentColor 0 50%,transparent 50% 100%)}
+.status--pass{color:var(--color-status-success)}
+
+/* ---------- LOWER SPLIT ---------- */
+.inspector{grid-column:1 / span 7}
+.evidence{grid-column:9 / span 4}
+.record{background:var(--color-background-surface);
+  font-family:var(--font-family-mono);font-size:12px;line-height:1.75}
+.record mark{background:transparent;color:inherit;
+  border-bottom:2px solid var(--color-status-critical);padding-bottom:1px}
+.record .boiler{background:var(--p-neutral-100);border-bottom:2px dotted var(--color-status-warning)}
+.legend{display:flex;gap:var(--space-5);flex-wrap:wrap;margin-top:var(--space-3)}
+.legend span::before{content:"";display:inline-block;width:18px;height:0;
+  margin-right:var(--space-2);vertical-align:middle}
+.legend .l-dup::before{border-bottom:2px solid var(--color-status-critical)}
+.legend .l-boiler::before{border-bottom:2px dotted var(--color-status-warning)}
+.factlist div{display:grid;grid-template-columns:1fr auto;gap:var(--space-4);
+  padding:var(--space-2) 0;border-bottom:1px solid var(--color-border-subtle)}
+.factlist div:last-child{border-bottom:0}
+.factlist dt{color:var(--color-text-secondary);font-size:13px}
+.factlist dd{font-family:var(--font-family-mono);font-size:12px;
+  font-variant-numeric:tabular-nums;text-align:right}
+
+.provenance{margin-top:var(--space-8);padding-top:var(--space-4);
+  border-top:1px solid var(--color-border-strong);
+  display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--layout-gutter)}
+.provenance > div{grid-column:span 3}
+.provenance dd{font-family:var(--font-family-mono);font-size:12px;margin-top:var(--space-2);word-break:break-all}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width:1023px){
+  :root{--layout-margin:32px;--layout-gutter:20px}
+  .shell{grid-template-columns:minmax(0,1fr)}
+  .rail{position:static;height:auto;border-right:0;
+    border-bottom:1px solid var(--color-border-subtle);
+    flex-direction:row;align-items:center;overflow-x:auto}
+  .rail__mark{border-bottom:0;border-right:1px solid var(--color-border-subtle);
+    padding:var(--space-4) var(--space-5);white-space:nowrap}
+  .rail nav{display:flex;padding:0}
+  .rail__group{display:none}
+  .rail a{border-left:0;border-bottom:2px solid transparent;
+    padding:var(--space-4);white-space:nowrap}
+  .rail a[aria-current="page"]{border-bottom-color:var(--color-accent)}
+  .rail__foot{display:none}
+  .pagehead__id,.pagehead__verdict,.inspector,.evidence{grid-column:1 / span 12}
+  .pagehead__verdict{margin-top:var(--space-6)}
+  .evidence{margin-top:var(--space-7)}
+  .provenance > div{grid-column:span 6}
+}
+@media (max-width:639px){
+  :root{--layout-margin:20px;--layout-gutter:16px}
+  .t-display{font-size:30px}
+  .chrome{flex-wrap:wrap;gap:var(--space-3)}
+  .chrome__right{margin-left:0;width:100%}
+  .rung{grid-template-columns:32px 1fr;gap:var(--space-2) var(--space-3)}
+  .rung__track{grid-column:1 / -1}
+  .rung__val{grid-column:1 / -1;text-align:left}
+  .provenance > div{grid-column:span 12}
+}
+
+/* ---------- state tints (added v0.4) ---------- */
+.panel--active .panel__body{background:var(--color-surface-accent)}
+tbody tr.row--fail{background:var(--color-surface-critical)}
+tbody tr.row--fail:hover{background:#F7E3DF}
+
+/* ---------- logomark (v1.0) ---------- */
+.mark{display:block;width:20px;height:20px;flex:none;
+  --mark-neutral:var(--p-white);--mark-accent:var(--p-white)}
+.mark .mk-accent{fill:var(--mark-accent)}
+.mark .mk-body{fill:var(--mark-neutral)}
+.tile{background:var(--p-ink-900);display:grid;place-items:center;flex:none;width:28px;height:28px}
+/* ---------- button: treatment C, hard ledge (EXC-01) ---------- */
+.btn{box-shadow:var(--button-ledge,3px) var(--button-ledge,3px) 0 0 var(--p-ink-900);
+  transition:background var(--motion-fast,90ms) var(--ease,cubic-bezier(.2,0,0,1)),
+             transform var(--motion-fast,90ms) var(--ease,cubic-bezier(.2,0,0,1)),
+             box-shadow var(--motion-fast,90ms) var(--ease,cubic-bezier(.2,0,0,1))}
+.btn--primary{box-shadow:3px 3px 0 0 var(--p-ink-300)}
+.btn:active:not(:disabled){transform:translate(3px,3px);box-shadow:0 0 0 0 rgba(0,0,0,0)}
+.btn:disabled{box-shadow:none;transform:none}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="sentra-mark" viewBox="0 0 1000 1000">
+    <g transform="translate(106.54 60.00) scale(1.08241) translate(-270 -227)">
+      <path class="mk-accent" d="M890.70 227.38 L766.99 226.87 L262.40 626.09 L386.11 626.60 Z"/>
+      <path class="mk-body" d="M262.23 869.92 L754.48 480.46 L753.02 478.60 A146.02 146.02 0 0 1 934.22 707.63 L932.76 705.78 L509.10 1040.97 L385.39 1040.45 L884.88 645.26 L880.54 639.78 A59.50 59.50 0 0 0 806.71 546.46 L802.36 540.97 L385.94 870.44 Z"/>
+    </g>
+  </symbol>
+</svg>
+
+
+<!-- ================= APP CHROME — appears once ================= -->
+<div class="chrome">
+  <span class="tile"><svg class="mark" aria-hidden="true"><use href="#sentra-mark"/></svg></span>
+  <span class="chrome__sep" aria-hidden="true"></span>
+  <span class="chrome__path">SENTRA / <b>DATASET-FOUNDRY</b></span>
+  <span class="rulelabel chrome__right">Internal tool</span>
+</div>
+
+<div class="shell">
+
+  <div class="rail">
+    <div class="rail__mark">
+      <div class="wordmark">SENTRAVERSE</div>
+      <div class="t-label rail__module">Dataset Foundry</div>
+    </div>
+    <nav aria-label="Dataset Foundry">
+      <p class="t-label rail__group">Pipeline</p>
+      <ul>
+        <li><a href="#" aria-current="page"><span class="seq">01</span>Runs</a></li>
+        <li><a href="#"><span class="seq">02</span>Sources</a></li>
+        <li><a href="#"><span class="seq">03</span>Extractors</a></li>
+        <li><a href="#"><span class="seq">04</span>Quality gates</a></li>
+      </ul>
+      <p class="t-label rail__group" style="padding-top:var(--space-5)">Output</p>
+      <ul>
+        <li><a href="#"><span class="seq">05</span>Datasets</a></li>
+        <li><a href="#"><span class="seq">06</span>Exports</a></li>
+        <li><a href="#"><span class="seq">07</span>Audit log</a></li>
+      </ul>
+    </nav>
+    <div class="rail__foot">
+      <p class="t-label">Environment</p>
+      <p class="t-data" style="margin-top:var(--space-2)">internal · abyss</p>
+    </div>
+  </div>
+
+  <div>
+    <div class="topbar">
+      <nav aria-label="Breadcrumb">
+        <ul class="crumbs t-compact muted">
+          <li><a href="#">Runs</a></li>
+          <li><a href="#">2026-07</a></li>
+          <li aria-current="page">sentra-agent-dataset-2026-swiss</li>
+        </ul>
+      </nav>
+      <p class="t-label">Operator · dataset-ops</p>
+    </div>
+
+    <main class="wrap">
+
+      <header class="pagehead grid">
+        <div class="pagehead__id">
+          <p class="eyebrow"><span class="seq">RUN</span>
+            <span class="t-label">Completed 25 Jul 2026, 11:09:43 WIB</span></p>
+          <h1 class="t-display runid">sentra-agent-<wbr>dataset-2026-swiss</h1>
+          <p class="sourceline muted">
+            Crawl of <span class="t-data">swissthemes.design/insights</span> converted to
+            chat-format training records for the Sentra agent corpus.
+          </p>
+        </div>
+        <div class="pagehead__verdict">
+          <div class="verdict">
+            <p class="t-label">Verdict</p>
+            <p class="verdict__word">Not fit to train</p>
+            <p class="t-compact muted" style="margin-top:var(--space-2)">
+              The crawl succeeded. The dataset it produced did not.
+            </p>
+            <div class="verdict__tally">
+              <div><p class="t-label">Failed</p><p class="t-data-lg" style="color:var(--color-status-critical)">4</p></div>
+              <div><p class="t-label">Warned</p><p class="t-data-lg" style="color:var(--color-status-warning)">2</p></div>
+              <div><p class="t-label">Passed</p><p class="t-data-lg" style="color:var(--color-status-success)">2</p></div>
+            </div>
+            <div class="actions">
+              <button class="btn btn--primary" type="button">Re-run extraction</button>
+              <button class="btn" type="button">Open source</button>
+            </div>
+            <p class="t-compact muted" style="margin-top:var(--space-3)">
+              Export is blocked while any gate fails.
+            </p>
+          </div>
+        </div>
+      </header>
+
+      <section class="section" aria-labelledby="h-yield">
+        <div class="section__head">
+          <h2 class="t-section" id="h-yield">Yield</h2>
+          <span class="rulelabel">Each bar measured against the stage above</span>
+        </div>
+        <div class="grid">
+          <div class="ladder">
+            <div class="rung">
+              <span class="seq">01</span>
+              <p class="t-compact">HTML stored</p>
+              <div class="rung__track"><div class="rung__bar" style="width:100%"></div></div>
+              <p class="t-data rung__val">193,020 B<span class="rung__pct">100% of source</span></p>
+            </div>
+            <div class="rung">
+              <span class="seq">02</span>
+              <p class="t-compact">Text extracted</p>
+              <div class="rung__track"><div class="rung__ghost"></div><div class="rung__bar rung__bar--min" style="width:0.59%"></div></div>
+              <p class="t-data rung__val">1,139 chars<span class="rung__pct">0.59% of stored</span></p>
+            </div>
+            <div class="rung">
+              <span class="seq">03</span>
+              <p class="t-compact">Unique signal</p>
+              <div class="rung__track"><div class="rung__ghost"></div><div class="rung__bar rung__bar--thin" style="width:26.2%"></div></div>
+              <p class="t-data rung__val">298 chars<span class="rung__pct">26.2% of extracted</span></p>
+            </div>
+            <div class="rung">
+              <span class="seq">04</span>
+              <p class="t-compact">Records emitted</p>
+              <div class="rung__track"><div class="rung__ghost"></div><div class="rung__bar rung__bar--min" style="width:0.2%"></div></div>
+              <p class="t-data rung__val">1 record<span class="rung__pct">500 required</span></p>
+            </div>
+          </div>
+          <p class="t-compact ladder__note muted">
+            After deduplication, 298 characters of unique text survive from 193,020 bytes of source —
+            0.15%. Of the 178 words in the emitted record, 48 are distinct.
+          </p>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="h-gates">
+        <div class="section__head">
+          <h2 class="t-section" id="h-gates">Quality gates</h2>
+          <span class="rulelabel">8 gates · evaluated at emit time</span>
+        </div>
+        <div class="grid">
+          <div class="tablewrap">
+            <table>
+              <caption>Gate results for shard <span class="t-data">agent-dataset.jsonl</span>. A failing gate blocks export.</caption>
+              <thead><tr><th scope="col"><span class="sr-only">No.</span></th><th scope="col">Gate</th><th scope="col">Measured</th><th scope="col">Threshold</th><th scope="col">Result</th></tr></thead>
+              <tbody>
+                <tr class="row--fail"><td class="seqcell"><span class="seq">01</span></td><th scope="row"><span class="gate__name">Instruction alignment</span><p class="gate__why">The prompt asks for technical rules. The response returns menu labels and article titles.</p></th><td class="num">0 rules found</td><td class="num">&ge; 1</td><td><span class="status status--fail">Failed</span></td></tr>
+                <tr class="row--fail"><td class="seqcell"><span class="seq">02</span></td><th scope="row"><span class="gate__name">Duplication</span><p class="gate__why">Repeated 5-word sequences across the response body.</p></th><td class="num">51.7%</td><td class="num">&le; 15%</td><td><span class="status status--fail">Failed</span></td></tr>
+                <tr class="row--fail"><td class="seqcell"><span class="seq">03</span></td><th scope="row"><span class="gate__name">Boilerplate removal</span><p class="gate__why">Navigation, newsletter and footer blocks reached the training text.</p></th><td class="num">5 blocks</td><td class="num">0</td><td><span class="status status--fail">Failed</span></td></tr>
+                <tr class="row--fail"><td class="seqcell"><span class="seq">04</span></td><th scope="row"><span class="gate__name">Corpus volume</span><p class="gate__why">Records in this shard.</p></th><td class="num">1</td><td class="num">&ge; 500</td><td><span class="status status--fail">Failed</span></td></tr>
+                <tr><td class="seqcell"><span class="seq">05</span></td><th scope="row"><span class="gate__name">Entity decoding</span><p class="gate__why">Undecoded HTML entities remain: <span class="t-data">&amp;amp;</span> &times;7, <span class="t-data">&amp;nbsp;</span> &times;1.</p></th><td class="num">8 defects</td><td class="num">0</td><td><span class="status status--warn">Warning</span></td></tr>
+                <tr><td class="seqcell"><span class="seq">06</span></td><th scope="row"><span class="gate__name">Extraction yield</span><p class="gate__why">Text recovered relative to stored source bytes.</p></th><td class="num">0.59%</td><td class="num">&ge; 2.0%</td><td><span class="status status--warn">Warning</span></td></tr>
+                <tr><td class="seqcell"><span class="seq">07</span></td><th scope="row"><span class="gate__name">Crawl integrity</span><p class="gate__why">Transport errors reported by the mirror agent.</p></th><td class="num">0 errors</td><td class="num">0</td><td><span class="status status--pass">Passed</span></td></tr>
+                <tr><td class="seqcell"><span class="seq">08</span></td><th scope="row"><span class="gate__name">Provenance recorded</span><p class="gate__why">Source URL, timestamp and mirror version captured for every record.</p></th><td class="num">3 of 3</td><td class="num">3</td><td><span class="status status--pass">Passed</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="h-inspect">
+        <div class="section__head">
+          <h2 class="t-section" id="h-inspect">Record and evidence</h2>
+          <span class="rulelabel">Record 1 of 1</span>
+        </div>
+        <div class="grid">
+
+          <div class="inspector">
+            <p class="t-label">Prompt</p>
+            <p class="t-compact" style="margin:var(--space-2) 0 var(--space-5)">
+              Summarize technical rules from <span class="t-data">insights.html</span>
+            </p>
+            <p class="t-label" style="margin-bottom:var(--space-2)">Response as emitted</p>
+            <div class="panel panel--active">
+              <div class="panel__body record">
+                Swiss Themes Insights – Our Blog Insights
+                <mark class="boiler">Framer Templates About &amp; Contact Insights Showcase</mark>
+                Insights
+                <mark class="boiler">Framer Templates About &amp; Contact Insights Showcase</mark>
+                Insights
+                <mark>Swiss Design Principles for Web Designers: Grids, Type &amp; White Space Read Now</mark>
+                <mark>Swiss Design Principles for Web Designers: Grids, Type &amp; White Space Read Now</mark>
+                Swiss Design Principles for Web Designers: Grids, Type &amp; White Space Read Now
+                <mark>Why Minimalism Works: Lessons from Swiss Graphic Design Read Now</mark>
+                <mark>Why Minimalism Works: Lessons from Swiss Graphic Design Read Now</mark>
+                Why Minimalism Works: Lessons from Swiss Graphic Design Read Now
+                <mark>How to Build a Freelance Portfolio That Converts Read Now</mark>
+                <mark>How to Build a Freelance Portfolio That Converts Read Now</mark>
+                How to Build a Freelance Portfolio That Converts Read Now
+                <mark class="boiler">Sign Up for the Swiss Themes Newsletter Sign Up</mark>
+                <mark class="boiler">Framer Templates About &amp; Contact Insights Showcase &copy; Swiss Themes Be an Affiliate Official Framer Pro Experts Swiss Themes</mark>
+                <mark class="boiler">Sign Up for the Swiss Themes Newsletter Sign Up Framer Templates About &amp; Contact Insights Showcase &copy; Swiss Themes Be an Affiliate Official Framer Pro Experts Swiss Themes</mark>
+              </div>
+            </div>
+            <p class="legend t-label">
+              <span class="l-dup">Repeated span</span>
+              <span class="l-boiler">Site chrome</span>
+            </p>
+          </div>
+
+          <div class="evidence">
+            <p class="t-label" style="margin-bottom:var(--space-2)">Crawl log</p>
+            <div class="panel">
+              <div class="panel__body">
+                <dl class="factlist">
+                  <div><dt>Mirror agent</dt><dd>HTTrack 3.49-2</dd></div>
+                  <div><dt>Started</dt><dd>25 Jul 2026 11:09:42</dd></div>
+                  <div><dt>Duration</dt><dd>1 s</dd></div>
+                  <div><dt>Links scanned</dt><dd>2</dd></div>
+                  <div><dt>Files written</dt><dd>1</dd></div>
+                  <div><dt>Bytes received</dt><dd>29,775</dd></div>
+                  <div><dt>Bytes stored</dt><dd>193,020</dd></div>
+                  <div><dt>Compression ratio</dt><dd>14%</dd></div>
+                  <div><dt>Errors</dt><dd>0</dd></div>
+                  <div><dt>Warnings</dt><dd>1</dd></div>
+                </dl>
+              </div>
+            </div>
+            <p class="t-compact muted" style="margin-top:var(--space-4)">
+              The single warning records that the HTML was stored without a content scan, which is
+              why site chrome reached the extractor.
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="provenance" aria-labelledby="h-prov">
+        <div style="grid-column:1 / span 12">
+          <h2 class="t-section" id="h-prov" style="margin-bottom:var(--space-4)">Provenance</h2>
+        </div>
+        <div><dl><dt class="t-label">Source</dt><dd>https://swissthemes.design/insights</dd></dl></div>
+        <div><dl><dt class="t-label">Retrieved</dt><dd>2026-07-25T11:09:42+07:00</dd></dl></div>
+        <div><dl><dt class="t-label">Output path</dt><dd>apps/internal/dataset/output/sentra-agent-dataset-2026-swiss</dd></dl></div>
+        <div><dl><dt class="t-label">Content checksum</dt><dd>Not recorded</dd></dl></div>
+      </section>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

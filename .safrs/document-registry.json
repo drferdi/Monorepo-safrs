@@ -365,6 +365,70 @@
       "status": "CANONICAL",
       "normativity": "SHOULD",
       "scope": "task:review"
+    },
+    {
+      "id": "context-active-avery",
+      "path": "docs/context/active/avery.context.md",
+      "type": "reference",
+      "status": "ACTIVE",
+      "normativity": "MAY",
+      "scope": "reference"
+    },
+    {
+      "id": "context-active-control-center",
+      "path": "docs/context/active/control-center.context.md",
+      "type": "reference",
+      "status": "ACTIVE",
+      "normativity": "MAY",
+      "scope": "reference"
+    },
+    {
+      "id": "context-active-golden-path",
+      "path": "docs/context/active/golden-path.context.md",
+      "type": "reference",
+      "status": "ACTIVE",
+      "normativity": "MAY",
+      "scope": "reference"
+    },
+    {
+      "id": "context-active-portfolio-drnovia",
+      "path": "docs/context/active/portfolio-drnovia.context.md",
+      "type": "reference",
+      "status": "ACTIVE",
+      "normativity": "MAY",
+      "scope": "reference"
+    },
+    {
+      "id": "context-active-sentrabot",
+      "path": "docs/context/active/sentrabot.context.md",
+      "type": "reference",
+      "status": "ACTIVE",
+      "normativity": "MAY",
+      "scope": "reference"
+    },
+    {
+      "id": "context-shared-api-reference",
+      "path": "docs/context/shared/api-reference.context.md",
+      "type": "reference",
+      "status": "ACTIVE",
+      "normativity": "MAY",
+      "scope": "reference"
+    },
+    {
+      "id": "context-shared-architecture",
+      "path": "docs/context/shared/architecture.context.md",
+      "type": "reference",
+      "status": "ACTIVE",
+      "normativity": "MAY",
+      "scope": "reference"
+    },
+    {
+      "id": "context-shared-design-system",
+      "path": "docs/context/shared/design-system.context.md",
+      "type": "reference",
+      "status": "ACTIVE",
+      "normativity": "MAY",
+      "scope": "reference"
     }
   ],
   "allowed_status": [

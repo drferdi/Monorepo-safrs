@@ -1,10 +1,12 @@
 # Design tokens
 
-The Sentra design token system (`@sentra/token`).
+The Sentra design token system (`@sentra/token` at root; capsule-local copies/pins elsewhere).
 
 ## Purpose
 
-The Sentra design token system is the single source of truth for every rendered surface in the repository — websites, dashboards, and email templates alike. Raw colour and radius values are forbidden outside the token package, and every semantic text/background pair is recomputed against WCAG 2.2 AA at build time. This makes brand consistency and accessibility a machine-enforced build condition rather than a review step.
+Approved Sentra tokens must be used on rendered surfaces. Raw colour and radius values are forbidden outside the owning token file. Semantic text/background pairs are recomputed against WCAG 2.2 AA.
+
+Root authoring lives in `packages/token`. Standalone capsules must snapshot or pin tokens so extraction does not resolve the root package. See [verification/tokens](../verification/tokens.md) and [packages/token](../packages/token.md).
 
 ## Key source files
 
@@ -23,7 +25,7 @@ The Sentra design token system is the single source of truth for every rendered 
 
 ### Three-layer package
 
-`packages/token/src/tokens.css` is the only source of values. It declares private **primitives** (`--p-*`) and the **semantic** tokens (`--color-*`, `--radius-*`, typography, layout) that components actually consume. Semantic tokens alias one or more primitives, so the theme can change without touching component code. A new semantic token must be added to both the `:root` and `[data-theme="dark"]` blocks — the dark theme is authored, never derived.
+In the root authoring tree, `packages/token/src/tokens.css` is the only file that may contain hex/radius values. Capsule-local token snapshots follow the same rule inside the capsule. It declares private **primitives** (`--p-*`) and the **semantic** tokens (`--color-*`, `--radius-*`, typography, layout) that components actually consume. Semantic tokens alias one or more primitives, so the theme can change without touching component code. A new semantic token must be added to both the `:root` and `[data-theme="dark"]` blocks — the dark theme is authored, never derived.
 
 The three consumption files:
 

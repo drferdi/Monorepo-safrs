@@ -37,6 +37,7 @@ function usage() {
       "  node tools/automation/src/cli.mjs gate <gate-id|--all>",
       "  node tools/automation/src/cli.mjs evidence verify <manifest.json>",
       "  node tools/automation/src/cli.mjs publish evaluate <pull-request.json> <evidence.json> [platform.json]",
+      "  node tools/automation/src/cli.mjs gaffer run <intent> [--capsule <id>] [--json]",
     ].join("\n"),
   );
   return 2;
@@ -211,10 +212,71 @@ function authorityApply() {
   return 0;
 }
 
+/* --------------------------------- gaffer -------------------------------- */
+
+async function gafferCommand(action, rest) {
+  if (action !== "run" || rest.length === 0) {
+    console.error(
+      "Usage: node tools/automation/src/cli.mjs gaffer run <intent> [--capsule <id>] [--route <SOLO|DECOMPOSE>] [--json]",
+    );
+    return 2;
+  }
+  const intent = rest[0];
+  let capsuleSelector = "academic/academic-smartboard";
+  let explicitRoute = null;
+  let json = false;
+
+  for (let i = 1; i < rest.length; i++) {
+    if (rest[i] === "--capsule" && rest[i + 1]) {
+      capsuleSelector = rest[++i];
+    } else if (rest[i] === "--route" && rest[i + 1]) {
+      explicitRoute = rest[++i];
+    } else if (rest[i] === "--json") {
+      json = true;
+    }
+  }
+
+  const { executeGafferIntent } = await import("./gaffer/provider-codex.mjs");
+  try {
+    const result = await executeGafferIntent({
+      intent,
+      capsuleSelector,
+      repositoryRoot,
+      context: explicitRoute ? { route: explicitRoute } : {},
+    });
+
+    if (json) {
+      console.log(JSON.stringify(result, null, 2));
+    } else {
+      console.log(`GAFFER: ${result.status} [route=${result.route}]`);
+      if (result.status === "READY") {
+        console.log(`Capsule: ${result.project?.path ?? capsuleSelector}`);
+        if (result.tasks) {
+          console.log(`Verified Tasks: ${result.tasks.length}`);
+        }
+        console.log("Outcome: Ready for Root semantic merge/review.");
+      } else {
+        console.log(`Reason: ${result.reason ?? "Blocked by verification or policy"}`);
+      }
+    }
+    return result.status === "READY" ? 0 : 1;
+  } catch (error) {
+    if (json) {
+      console.log(JSON.stringify({ status: "ERROR", error: error.message }, null, 2));
+    } else {
+      console.error(`GAFFER ERROR: ${error.message}`);
+    }
+    return 1;
+  }
+}
+
 /* --------------------------------- main --------------------------------- */
 
 function main(argv) {
   const [domain, action, ...rest] = argv;
+  if (domain === "gaffer") {
+    return gafferCommand(action, rest);
+  }
   if (domain === "contract" && action === "compile" && rest[0]) {
     return contractCompile(rest[0], rest.slice(1));
   }
@@ -269,4 +331,16 @@ function main(argv) {
   return usage();
 }
 
-process.exitCode = main(process.argv.slice(2));
+const outcome = main(process.argv.slice(2));
+if (outcome instanceof Promise) {
+  outcome
+    .then((code) => {
+      process.exitCode = code;
+    })
+    .catch((error) => {
+      console.error(error);
+      process.exitCode = 1;
+    });
+} else {
+  process.exitCode = outcome;
+}

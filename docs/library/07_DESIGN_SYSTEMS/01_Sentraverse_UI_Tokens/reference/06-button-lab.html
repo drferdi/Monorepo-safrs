@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Button treatments — Sentraverse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p-ink-900:#101312; --p-ink-500:#5A5F5C; --p-ink-300:#8B918D;
+  --p-neutral-200:#DCDCD6; --p-neutral-100:#E9E9E4; --p-neutral-050:#F7F5F1;
+  --p-white:#FFFFFF;
+  --p-vermilion:#DE4526; --p-vermilion-text:#B8351A;
+  --p-crimson:#A11208; --p-amber:#8F5A00; --p-teal:#17554E;
+
+  --color-background-canvas:var(--p-white);
+  --color-background-surface:var(--p-neutral-050);
+  --color-text-primary:var(--p-ink-900);
+  --color-text-secondary:var(--p-ink-500);
+  --color-text-muted:var(--p-ink-300);
+  --color-text-inverse:var(--p-white);
+  --color-border-subtle:var(--p-neutral-200);
+  --color-border-strong:var(--p-ink-900);
+  --color-mark-corner:var(--p-ink-300);
+  --color-accent:var(--p-vermilion);
+  --color-accent-text:var(--p-vermilion-text);
+  --color-action-primary:var(--p-ink-900);
+  --color-status-critical:var(--p-crimson);
+  --color-status-warning:var(--p-amber);
+  --color-status-success:var(--p-teal);
+  --color-focus-ring:var(--p-ink-900);
+
+  --radius-control:2px;
+  --font-family-sans:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --font-family-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
+  --space-5:24px; --space-6:32px; --space-7:48px; --space-8:64px;
+  --layout-gutter:24px; --layout-margin:40px; --layout-container-wide:1440px;
+  --motion-duration-fast:90ms; --motion-easing-standard:cubic-bezier(.2,0,0,1);
+}
+@media (prefers-reduced-motion: reduce){ :root{ --motion-duration-fast:0ms } }
+
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--color-background-canvas);color:var(--color-text-primary);
+  font-family:var(--font-family-sans);font-variation-settings:"wdth" 100;
+  font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p,dl,dd{margin:0}
+ul{margin:0;padding:0;list-style:none}
+:focus-visible{outline:2px solid var(--color-focus-ring);outline-offset:2px}
+
+.t-display{font-size:40px;line-height:1.06;font-weight:600;letter-spacing:-.022em;
+  font-variation-settings:"wdth" 112}
+.t-section{font-size:12px;font-weight:600;letter-spacing:.09em;text-transform:uppercase}
+.t-compact{font-size:13px;line-height:1.45}
+.t-label{font-family:var(--font-family-mono);font-size:11px;line-height:1.2;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--color-text-secondary)}
+.t-data{font-family:var(--font-family-mono);font-size:13px;font-variant-numeric:tabular-nums}
+.muted{color:var(--color-text-secondary)}
+.seq{font-family:var(--font-family-mono);font-size:11px;font-weight:500;letter-spacing:.06em;
+  color:var(--color-accent-text)}
+.rulelabel{display:inline-flex;align-items:center;gap:var(--space-3);
+  font-family:var(--font-family-mono);font-size:11px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--color-text-secondary)}
+.rulelabel::before{content:"";width:28px;height:1px;background:var(--color-border-subtle);flex:none}
+
+.chrome{display:flex;align-items:center;gap:var(--space-4);
+  padding:var(--space-3) var(--layout-margin);border-bottom:1px solid var(--color-border-subtle)}
+.chrome__sep{width:1px;height:16px;background:var(--color-border-subtle)}
+.chrome__path{font-family:var(--font-family-mono);font-size:11px;font-weight:500;
+  letter-spacing:.13em;text-transform:uppercase}
+.chrome__path b{font-weight:500;color:var(--color-accent-text)}
+.chrome__right{margin-left:auto}
+
+main{padding:0 var(--layout-margin) var(--space-8);max-width:var(--layout-container-wide);margin-inline:auto}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--layout-gutter)}
+.pagehead{padding:var(--space-7) 0 var(--space-6);border-bottom:2px solid var(--color-border-strong)}
+.pagehead__id{grid-column:1 / span 7}
+.pagehead__meta{grid-column:9 / span 4}
+.verdict{border-top:2px solid var(--color-accent);padding-top:var(--space-3)}
+.section{padding:var(--space-7) 0 0}
+.section__head{display:flex;align-items:baseline;gap:var(--space-3);
+  border-bottom:1px solid var(--color-border-strong);padding-bottom:var(--space-2);
+  margin-bottom:var(--space-5)}
+.section__head .rulelabel{margin-left:auto}
+
+/* ---------- base button ---------- */
+.btn{font-family:inherit;font-size:14px;font-weight:500;padding:var(--space-3) var(--space-4);
+  min-height:44px;border:1px solid var(--color-border-strong);border-radius:var(--radius-control);
+  background:var(--color-background-canvas);color:var(--color-text-primary);cursor:pointer;
+  transition:background var(--motion-duration-fast) var(--motion-easing-standard),
+             transform var(--motion-duration-fast) var(--motion-easing-standard),
+             box-shadow var(--motion-duration-fast) var(--motion-easing-standard)}
+.btn:hover{background:var(--color-background-surface)}
+.btn--primary{background:var(--color-action-primary);color:var(--color-text-inverse);
+  border-color:var(--color-action-primary)}
+.btn--primary:hover{background:#000}
+.btn:disabled{border-color:var(--color-border-subtle);color:var(--color-text-muted);
+  cursor:not-allowed;background:var(--color-background-canvas);box-shadow:none;transform:none}
+.btn--primary:disabled{background:var(--p-neutral-100);border-color:var(--p-neutral-100);
+  color:var(--color-text-muted)}
+
+/* ---------- treatments ---------- */
+/* B — press motion only */
+.lab-b .btn:active:not(:disabled){transform:translateY(1px)}
+
+/* C — hard ledge (recommended) */
+.lab-c .btn{box-shadow:3px 3px 0 0 var(--p-ink-900)}
+.lab-c .btn--primary{box-shadow:3px 3px 0 0 var(--p-ink-300)}
+.lab-c .btn:active:not(:disabled){transform:translate(3px,3px);box-shadow:0 0 0 0 rgba(0,0,0,0)}
+
+/* D — inner bevel hairline */
+.lab-d .btn{box-shadow:inset 0 -1px 0 0 rgba(16,19,18,.22)}
+.lab-d .btn--primary{box-shadow:inset 0 1px 0 0 rgba(255,255,255,.22),
+                                inset 0 -1px 0 0 rgba(0,0,0,.55)}
+.lab-d .btn:active:not(:disabled){box-shadow:inset 0 1px 2px 0 rgba(16,19,18,.30);transform:translateY(1px)}
+
+/* E — soft neumorphism, boundary kept by the border */
+.lab-e .btn{background:var(--p-neutral-050);
+  box-shadow:3px 3px 6px rgba(16,19,18,.10), -3px -3px 6px #FFFFFF}
+.lab-e .btn--primary{background:var(--color-action-primary);
+  box-shadow:3px 3px 6px rgba(16,19,18,.22), -3px -3px 6px rgba(255,255,255,.65)}
+.lab-e .btn:active:not(:disabled){
+  box-shadow:inset 3px 3px 6px rgba(16,19,18,.14), inset -3px -3px 6px #FFFFFF}
+.lab-e .btn--primary:active:not(:disabled){
+  box-shadow:inset 3px 3px 6px rgba(0,0,0,.5), inset -3px -3px 6px rgba(255,255,255,.12)}
+
+/* ---------- lab layout ---------- */
+.tile{grid-column:span 6;border-top:1px solid var(--color-border-strong);
+  padding-top:var(--space-4);margin-bottom:var(--space-6)}
+.tile__head{display:flex;align-items:baseline;gap:var(--space-3);flex-wrap:wrap}
+.tile__name{font-size:15px;font-weight:600}
+.btnrow{display:flex;gap:var(--space-3);flex-wrap:wrap;align-items:center;
+  margin:var(--space-5) 0 var(--space-4)}
+.tile__note{font-size:13px;color:var(--color-text-secondary);max-width:46ch}
+.badge{display:inline-flex;align-items:center;gap:var(--space-2);
+  font-family:var(--font-family-mono);font-size:10px;letter-spacing:.07em;
+  text-transform:uppercase;font-weight:500;margin-left:auto}
+.badge::before{content:"";width:9px;height:9px;border:1px solid currentColor;flex:none}
+.badge--pass{color:var(--color-status-success)}
+.badge--fail{color:var(--color-status-critical)}
+.badge--fail::before{background:currentColor}
+.ratio{font-family:var(--font-family-mono);font-size:11px;color:var(--color-text-secondary);
+  font-variant-numeric:tabular-nums}
+
+tr.row--struck{color:var(--color-text-muted)}
+tr.row--struck th,tr.row--struck td{text-decoration:line-through;
+  text-decoration-color:var(--color-status-critical);text-decoration-thickness:1px}
+th,td{text-align:left;vertical-align:top;font-weight:400;
+  padding:var(--space-3) var(--space-4) var(--space-3) 0;
+  border-bottom:1px solid var(--color-border-subtle)}
+table{border-collapse:collapse;width:100%}
+thead th{border-bottom:1px solid var(--color-border-strong);font-weight:500;font-size:13px}
+td.num{font-family:var(--font-family-mono);font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+@media (max-width:1023px){
+  :root{--layout-margin:32px;--layout-gutter:20px}
+  .pagehead__id,.pagehead__meta{grid-column:1 / span 12}
+  .pagehead__meta{margin-top:var(--space-6)}
+  .tile{grid-column:span 12}
+}
+@media (max-width:639px){
+  :root{--layout-margin:20px;--layout-gutter:16px}
+  .t-display{font-size:30px}
+  .chrome{flex-wrap:wrap}.chrome__right{margin-left:0;width:100%}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="sentra-mark" viewBox="0 0 1000 1000">
+    <g transform="translate(106.54 60.00) scale(1.08241) translate(-270 -227)">
+      <path class="mk-accent" d="M890.70 227.38 L766.99 226.87 L262.40 626.09 L386.11 626.60 Z"/>
+      <path class="mk-body" d="M262.23 869.92 L754.48 480.46 L753.02 478.60 A146.02 146.02 0 0 1 934.22 707.63 L932.76 705.78 L509.10 1040.97 L385.39 1040.45 L884.88 645.26 L880.54 639.78 A59.50 59.50 0 0 0 806.71 546.46 L802.36 540.97 L385.94 870.44 Z"/>
+    </g>
+  </symbol>
+</svg>
+
+
+<div class="chrome">
+  <span class="tile"><svg class="mark" aria-hidden="true"><use href="#sentra-mark"/></svg></span>
+  <span class="chrome__sep" aria-hidden="true"></span>
+  <span class="chrome__path">SENTRA / <b>DESIGN-SYSTEM</b></span>
+  <span class="rulelabel chrome__right">Exception request</span>
+</div>
+
+<main>
+  <header class="pagehead grid">
+    <div class="pagehead__id">
+      <p style="display:flex;gap:var(--space-3);align-items:baseline">
+        <span class="seq">EXC-01</span>
+        <span class="t-label">Against prohibition · neumorphism</span>
+      </p>
+      <h1 class="t-display" style="margin-top:var(--space-3)">Button treatments</h1>
+      <p class="muted" style="margin-top:var(--space-4);max-width:56ch">
+        Five ways to make a button feel pressable. Press each one — the difference is in the
+        moment of contact, not in the still image. Each is measured against WCAG 2.2 criterion
+        1.4.11, which requires a control's boundary to reach 3:1 against what sits next to it.
+      </p>
+    </div>
+    <div class="pagehead__meta">
+      <div class="verdict">
+        <p class="t-label">Recommendation</p>
+        <p style="font-size:22px;font-weight:600;margin-top:var(--space-2);
+                  font-variation-settings:'wdth' 108">C · Hard ledge</p>
+        <p class="t-compact muted" style="margin-top:var(--space-2)">
+          Physical, distinctive, and the boundary stays at 18.68:1. It reads as letterpress
+          rather than as soft plastic — closer to where the rest of this system already lives.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <section class="section">
+    <div class="section__head">
+      <span class="seq">01</span>
+      <h2 class="t-section">Treatments</h2>
+      <span class="rulelabel">Press to compare</span>
+    </div>
+
+    <div class="grid">
+
+      <div class="tile lab-a">
+        <div class="tile__head">
+          <span class="seq">A</span><span class="tile__name">Flat — current</span>
+          <span class="badge badge--pass">Pass</span>
+        </div>
+        <p class="ratio">boundary 18.68:1</p>
+        <div class="btnrow">
+          <button class="btn btn--primary" type="button">Re-run extraction</button>
+          <button class="btn" type="button">Open source</button>
+          <button class="btn" type="button" disabled>Export</button>
+        </div>
+        <p class="tile__note">
+          What we ship today. Nothing moves on press. Honest and calm, but the button gives no
+          physical answer when it is clicked.
+        </p>
+      </div>
+
+      <div class="tile lab-b">
+        <div class="tile__head">
+          <span class="seq">B</span><span class="tile__name">Press motion only</span>
+          <span class="badge badge--pass">Pass</span>
+        </div>
+        <p class="ratio">boundary 18.68:1</p>
+        <div class="btnrow">
+          <button class="btn btn--primary" type="button">Re-run extraction</button>
+          <button class="btn" type="button">Open source</button>
+          <button class="btn" type="button" disabled>Export</button>
+        </div>
+        <p class="tile__note">
+          Identical at rest; drops 1px while held. The tactility costs nothing because it exists
+          only during the press. Cheapest option, and it survives reduced-motion by simply not moving.
+        </p>
+      </div>
+
+      <div class="tile lab-c">
+        <div class="tile__head">
+          <span class="seq">C</span><span class="tile__name">Hard ledge</span>
+          <span class="badge badge--pass">Pass</span>
+        </div>
+        <p class="ratio">boundary 18.68:1 · ledge 3.21:1</p>
+        <div class="btnrow">
+          <button class="btn btn--primary" type="button">Re-run extraction</button>
+          <button class="btn" type="button">Open source</button>
+          <button class="btn" type="button" disabled>Export</button>
+        </div>
+        <p class="tile__note">
+          A solid 3px offset slab, no blur. On press the button travels onto its own shadow and the
+          slab disappears. This is print register, not soft plastic — it belongs to the same
+          tradition as the rest of the system.
+        </p>
+      </div>
+
+      <div class="tile lab-d">
+        <div class="tile__head">
+          <span class="seq">D</span><span class="tile__name">Inner bevel</span>
+          <span class="badge badge--pass">Pass</span>
+        </div>
+        <p class="ratio">boundary 18.68:1</p>
+        <div class="btnrow">
+          <button class="btn btn--primary" type="button">Re-run extraction</button>
+          <button class="btn" type="button">Open source</button>
+          <button class="btn" type="button" disabled>Export</button>
+        </div>
+        <p class="tile__note">
+          A 1px light line inside the top edge and a darker one at the bottom. The dimension is
+          contained entirely within the button, so nothing bleeds onto the canvas. Subtle — arguably
+          too subtle to notice.
+        </p>
+      </div>
+
+      <div class="tile lab-e">
+        <div class="tile__head">
+          <span class="seq">E</span><span class="tile__name">Soft neumorphism — border kept</span>
+          <span class="badge badge--pass">Pass</span>
+        </div>
+        <p class="ratio">boundary 18.68:1 · carried by the border, not the shadow</p>
+        <div class="btnrow">
+          <button class="btn btn--primary" type="button">Re-run extraction</button>
+          <button class="btn" type="button">Open source</button>
+          <button class="btn" type="button" disabled>Export</button>
+        </div>
+        <p class="tile__note">
+          Your request, made safe. Soft dual shadows for the extruded feel, but the 1px border stays
+          so the boundary still measures. Press inverts the shadow inward. This is the closest
+          legitimate reading of "minimal neumorphism".
+        </p>
+      </div>
+
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section__head">
+      <span class="seq">02</span>
+      <h2 class="t-section">What each treatment costs</h2>
+      <span class="rulelabel">Beyond contrast</span>
+    </div>
+    <table>
+      <thead>
+        <tr><th scope="col">Treatment</th><th scope="col">Boundary</th>
+            <th scope="col">Disabled readable</th><th scope="col">Radius rule</th>
+            <th scope="col">Shadow rule</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">A · Flat</th><td class="num">18.68:1</td><td class="num">Yes</td><td class="num">Kept</td><td class="num">Kept</td></tr>
+        <tr><th scope="row">B · Press motion</th><td class="num">18.68:1</td><td class="num">Yes</td><td class="num">Kept</td><td class="num">Kept</td></tr>
+        <tr><th scope="row">C · Hard ledge</th><td class="num">18.68:1</td><td class="num">Yes</td><td class="num">Kept</td><td class="num">Amended</td></tr>
+        <tr><th scope="row">D · Inner bevel</th><td class="num">18.68:1</td><td class="num">Yes</td><td class="num">Kept</td><td class="num">Amended</td></tr>
+        <tr><th scope="row">E · Soft, bordered</th><td class="num">18.68:1</td><td class="num">Yes</td><td class="num">Kept</td><td class="num">Amended</td></tr>
+        <tr class="row--struck"><th scope="row">F · True neumorphism</th><td class="num">1.09:1</td><td class="num">No</td><td class="num">Broken</td><td class="num">Broken</td></tr>
+      </tbody>
+    </table>
+    <p class="t-compact" style="margin-top:var(--space-5);max-width:68ch;
+       border-left:2px solid var(--color-status-critical);padding-left:var(--space-4)">
+      <b>F was evaluated and rejected.</b> Its boundary measured 1.09:1 against a required 3:1,
+      and its disabled and pressed states were visually identical. The row is kept struck rather
+      than deleted so the option is not proposed again without new evidence.
+    </p>
+    <p class="t-compact muted" style="margin-top:var(--space-5);max-width:68ch">
+      The current shadow rule reads: shadow is reserved for temporary overlays only. C, D and E all
+      need that sentence amended to allow shadow on controls. That is a one-line change and an
+      honest one — but it must be written into the system, not left as an undocumented habit.
+    </p>
+  </section>
+</main>
+</body>
+</html>

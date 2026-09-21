@@ -1,99 +1,102 @@
 # Getting started
 
-## Prerequisites
+There are two entry points. Pick the one that matches the work.
 
-- **Node.js** >= 24.18 < 25 (active LTS)
-- **pnpm** 11.21.0 (run `corepack enable` if missing)
-- **Docker Desktop** (for local PostgreSQL)
-- **Python 3** (for SAFRS governance verification scripts)
-- **Git LFS** (for Playwright visual regression baselines)
+## A. Root control plane + legacy golden-path
 
-## Setup
+Use this for governance tooling, golden-path demo, or control-center.
+
+### Prerequisites
+
+- Node.js `>= 24.18 < 25`
+- pnpm 11.21.0 (`packageManager` field; `corepack enable` if needed)
+- Docker Desktop (root Postgres on `127.0.0.1:54329`)
+- Python 3 (`safrs-verify`)
+- Git LFS (Playwright visual baselines)
+
+### Setup
 
 ```bash
 pnpm install
 pnpm run setup
 ```
 
-`pnpm run setup` runs `scripts/setup.mjs`, which validates the local environment, checks Node version, verifies Docker availability, starts PostgreSQL, generates the Prisma client, runs migrations, and seeds the database with one safe demo record.
+`pnpm run setup` runs `scripts/setup.mjs`: environment checks, Docker Postgres, Prisma generate/migrate/seed for the **root** `@safrs/database` demo.
 
-## Daily workflow
+### Daily root commands
 
 ```bash
-pnpm dev        # Start Next.js dev server (auto-starts Postgres if needed)
-pnpm doctor     # Diagnose environment readiness
-pnpm status     # Show task registry and lease state
-pnpm test       # Run contract + unit tests
-pnpm test:e2e   # Run Playwright browser smoke
-pnpm check      # Full gate: governance + tokens + lint + typecheck + test + build
+pnpm doctor      # environment diagnosis
+pnpm status      # task registry and leases
+pnpm dev         # golden-path Next.js (scripts/dev.mjs)
+pnpm test        # contract + unit tests
+pnpm test:e2e    # Playwright
+pnpm check       # governance + tokens + lint + typecheck + test + build
+pnpm governance  # SAFRS local verification
 ```
 
-## Task management
+### Task registry
 
 ```bash
-pnpm task claim --id TASK-20260813-001 --title "Fix bug" --owner-id agent --owner-label "Claude" --risk R1 --scope src/bug.ts
-pnpm task state --id TASK-20260813-001 --to EXECUTING
+pnpm task claim --id TASK-YYYYMMDD-XXX --title "..." --owner-id <id> --owner-label "<agent>" --risk R1 --scope <path>
+pnpm task state --id TASK-YYYYMMDD-XXX --to EXECUTING
 pnpm task list --active
-pnpm task close --id TASK-20260813-001
+pnpm task close --id TASK-YYYYMMDD-XXX
 ```
 
-## Automation control plane
+Registry files live under the git common directory (`.git/safrs-control-plane/`), not in the working tree.
+
+### Root database (golden-path only)
 
 ```bash
-pnpm saf contract compile task.json --write .safrs/contracts/task.json
-pnpm saf lease verify events.ndjson
-pnpm saf gate --all
-pnpm saf evidence verify manifest.json
-pnpm saf publish evaluate pr.json evidence.json
+pnpm db:start
+pnpm db:migrate
+pnpm db:seed
+pnpm db:studio
+pnpm db:reset    # blocked unless disposable (reset guard)
 ```
 
-## Database commands
+Postgres image: `postgres:17-alpine` in root `compose.yaml`. This is **not** Kediri's or SentraBot's database.
+
+## B. A sovereign capsule
+
+Work from the **capsule root**. Do not use root `pnpm --filter` as the lifecycle.
 
 ```bash
-pnpm db:start    # Start PostgreSQL via Docker Compose
-pnpm db:stop     # Stop PostgreSQL
-pnpm db:generate # Generate Prisma client
-pnpm db:migrate  # Run Prisma migrations
-pnpm db:seed     # Seed one safe demo record
-pnpm db:studio   # Open Prisma Studio
-pnpm db:reset    # Reset local database (requires disposable guard)
+cd projects/product/sentrabot          # example
+# then the capsule's own install / test / build from project.contract.json
+pnpm project:status                    # from repo root: list contracts
+pnpm project:verify product/kediri-history
 ```
 
-## Governance commands
+Standalone proof: `tools/project-standalone` copies the capsule out of the monorepo and runs declared lifecycle commands. See [Standalone verification](../verification/standalone.md).
+
+Read the capsule `AGENTS.md` before changing it. Product docs beat this wiki for runtime detail.
+
+| Capsule | Capsule docs |
+| --- | --- |
+| SentraBot | `projects/product/sentrabot/docs/architecture.md` |
+| Kediri | `projects/product/kediri-history/README.md` |
+| Avery | `projects/healthcare/avery/docs/spds/read_first.md` |
+| Smartboard | `projects/academic/academic-smartboard/docs/architecture.md` |
+| Portfolio | `projects/corporate/portfolio-drnovia/docs/quickstart.md` |
+
+## Telemetry (optional, root)
 
 ```bash
-pnpm governance      # Run SAFRS local verification (16 checkers)
-pnpm check:tokens    # Enforce design token rules (no raw colours outside packages/token)
-pnpm check:security  # Supply-chain scan (npm audit + optional osv-scanner)
+docker compose -f compose.telemetry.yaml up -d jaeger
+# UI http://localhost:16686  OTLP http://localhost:4318/v1/traces
 ```
 
-## Telemetry (optional)
+## What not to do
 
-```bash
-docker compose -f compose.telemetry.yaml up -d jaeger   # Start local Jaeger
-# Jaeger UI at http://localhost:16686
-# OTLP endpoint at http://localhost:4318/v1/traces
-```
+- Do not `git clean -xdf` at repo root — it deletes gitignored `database/` corpus data.
+- Do not read, print, or commit `.env` or production credentials.
+- Do not push without Chief's explicit session order (`CHIEF_PUSH_OK`; project paths need `CHIEF_PUSH_PROJECTS_OK`). See `.agents/BOUNDARIES.md`.
+- Do not copy golden-path's `@safrs/*` imports into a new capsule.
 
-## Project scaffolding
+## Related
 
-```bash
-pnpm project:new         # Interactive project wizard
-pnpm capability:add      # Add an optional capability pack (Stripe, email, Electron, etc.)
-pnpm deps:graph          # Render the monorepo dependency graph
-pnpm codegen             # Generate OpenAPI, mocks, and typed client from Zod schemas
-```
-
-## Environment variables
-
-The `.env` file is gitignored and never read by agents. Required variables:
-
-| Variable | Purpose | Required |
-| --- | --- | --- |
-| `DATABASE_URL` | PostgreSQL connection string | Yes |
-| `APP_URL` | Application base URL | Yes |
-| `NODE_ENV` | Environment mode | Yes |
-| `STRIPE_SECRET_KEY` | Stripe sandbox key (capability pack) | No |
-| `STRIPE_WEBHOOK_SECRET` | Stripe webhook secret (capability pack) | No |
-| `OTEL_EXPORTER_OTLP_ENDPOINT` | Jaeger OTLP endpoint | No |
-| `OTEL_SERVICE_NAME` | Service name for traces | No |
+- [How to contribute](../how-to-contribute/index.md)
+- [Tools](../tools/index.md)
+- [Capsules](../projects/index.md)

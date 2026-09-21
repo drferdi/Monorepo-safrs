@@ -1,6 +1,8 @@
 # How to monitor
 
-This page covers the shared OpenTelemetry tracing setup for the `Next.js → Hono → Prisma → PostgreSQL` chain. The instrumentation lives in the `@safrs/telemetry` package, detailed in [packages/telemetry](../packages/telemetry.md).
+> **Scope.** Optional OpenTelemetry for the **golden-path** chain. SentraBot, Kediri, and Avery have their own logs/metrics; this page does not cover them.
+
+This page covers `@safrs/telemetry` for `Next.js → Hono → Prisma → PostgreSQL`. Detail: [packages/telemetry](../packages/telemetry.md).
 
 ## OpenTelemetry tracing setup
 

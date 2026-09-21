@@ -18,17 +18,41 @@ coverage/
 .turbo/
 playwright-report/
 test-results/
+test-report/
+verify-report/
 *.tsbuildinfo
 pnpm-debug.log*
 debug-*.log
+
+# Sentra Library: quarantine heavy media and confidential legal/financial records
+docs/library/**/*.mp4
+docs/library/**/*.zip
+docs/library/01_CORPORATE_LEGAL/01_Incorporation/
+docs/library/01_CORPORATE_LEGAL/02_Agreements_Under_Review/
+docs/library/03_FINANCE_STRATEGY/
 
 # Editors and operating systems
 .idea/
 .vscode/
 .DS_Store
-Thumbs.db
 .superpowers
-# Local Cursor state; shared Project Rules / hooks / MCP / skills / agents are tracked
+.sentra-gsap
+.kilo/
+.kilo-trash/
+
+# Internal agent workflows, plans, progress, notes, and superpowers
+docs/plans/
+docs/superpowers/
+docs/gaffer_note/
+docs/workflow/
+**/docs/superpowers/
+projects/**/.claude/
+projects/**/.cursor/
+
+# Ephemeral agent caches and memories
+**/.claude/agent-memory/
+**/.cursor/hooks/state/
+
 .cursor/*
 !.cursor/rules/
 !.cursor/rules/**
@@ -50,6 +74,8 @@ Thumbs.db
 !.claude/agents/**
 !.claude/skills/
 !.claude/skills/**
+!.claude/commands/
+!.claude/commands/**
 .claude/settings.local.json
 
 # Local Codex state; shared project config, hooks, agents, and skills are tracked
