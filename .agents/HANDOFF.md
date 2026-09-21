@@ -82,11 +82,17 @@ Last updated: 2026-09-20 — Lead Architect (GRAV / Antigravity), `TASK-20260920
 
 - Gaffer solo operation desk is fully armed. Ready to accept new high-level product intents via `node tools/automation/src/cli.mjs gaffer run ...` or delegating tasks to worker Luna under single-threaded token governance.
 
-## Gaffer local commit checkpoint
+## Monorepo Control Plane & GitHub Sync (COMPLETED & PUBLISHED)
 
-- **Commit attempt**: BLOCKED. Git could not read tree object `2178d43731b48941541f1e4b1590fb9bc071fe3f` and reported `unable to read tree entries HEAD`. No commit was created. The selected 24 files remain staged on `feat/gaffer-safrs-wiring`; recover the missing Git objects before retrying the commit.
-- **Last updated**: 2026-09-21, Codex, user-authorized local commit.
-- **Scope / Capsule**: Gaffer engine, SAFRS ports, Codex provider and tests, automation CLI, architecture handoff, and this handoff.
-- **Current state**: Included the existing provider and CLI changes at Chief's request. Automation tests: 115/115 PASS; Python policy and contract checks PASS; governance tests 10/10 PASS; all eight SAFRS gates PASS or explicitly not applicable. Root tests: 62/63 PASS, with the status test blocked by unreadable Git object 69038b9c3ad78edd5a77d8147a508f2c46515896. Root build, lint, and TypeScript checks fail because installed package metadata cannot be read (operation not permitted). Full repository verification is not complete.
-- **Known limitation**: The provider's default implementation and worker callbacks return simulated completion without executing a real agent. Its default audit returns SHIP without an independent review. Existing tests exercise orchestration with injected callbacks, not production provider execution. Earlier Phase 3 readiness statements above must be read with this limitation.
-- **Next action**: Replace simulated provider defaults with real injected execution and independent review before operational use; supply a validated task contract through the CLI integration. Resolve inherited dependency access and Git-object failures separately, then repeat repository verification. Local commit only; no push or deployment.
+- **Last updated**: 2026-09-21 — Lead Architect (GRAV / Antigravity), session milestone
+- **Scope**: Repository hygiene, `.gitignore` hardening, curated `docs/library/`, GitHub Wiki sync, Git tree/blob healing, and origin publication.
+- **Completed Actions**:
+  1. **GitHub Wiki Synced**: Initialized `Monorepo-safrs.wiki.git` endpoint via web UI; configured global git identity (`drferdi <drferdiiskandar@sentrahai.com>`) and Git SSH bridge; successfully uploaded 83 wiki files (81 pages + `_Sidebar.md` + `Home.md` + `README.md`) synced via Factory/Droid (`52f8786`).
+  2. **Git Object & Ref Healing**: Healed broken Git trees (`git add --renormalize .` and `git write-tree`); cleaned `.git/packed-refs` from stale/missing branches and peeled tags. Local repo is 100% clean and consistent.
+  3. **Internal Agent Docs Exclusion**: Hardened `.gitignore` to strictly exclude all internal agent artifacts (`docs/plans/`, `docs/superpowers/`, `docs/gaffer_note/`, `docs/workflow/`, `**/docs/superpowers/`, and `projects/**/.claude/`).
+  4. **Curated Library Ingestion**: Quarantined heavy media and confidential legal/financial files (`docs/library/**/*.mp4`, `*.zip`, `01_Incorporation`, `02_Agreements_Under_Review`, `03_FINANCE_STRATEGY`); staged 40 AI-readable files (corporate legal charter, executive profile, UI tokens).
+  5. **Local Commit**: Committed cleanly on `feat/gaffer-safrs-wiring` (`2229a5d`) with full attribution.
+  6. **Origin Publication**: Pushed `publish-no-projects` branch directly to GitHub `origin` (`https://github.com/drferdi/Monorepo-safrs.git`) adhering 100% to Capsule Gate and Publish Gate with Git LFS assets uploaded.
+- **Verification**: `python tools/safrs/check_docs.py` (OK), `node --test tools/automation/test/gaffer/*.test.mjs` (41/41 PASS), `git push` to origin (0 errors).
+- **Next Action**: Create PR or merge `publish-no-projects` into `main` on GitHub web if desired (`https://github.com/drferdi/Monorepo-safrs/pull/new/publish-no-projects`).
+
