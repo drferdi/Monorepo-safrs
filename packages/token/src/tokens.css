@@ -111,7 +111,8 @@
 
   /* ===== 3. TYPOGRAPHY ===== */
   --font-family-sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
-  --font-family-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-family-mono:
+    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   /* One family, two voices. The width axis carries the display role. */
   --font-width-display: 112;
