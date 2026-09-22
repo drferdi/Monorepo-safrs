@@ -17,12 +17,12 @@ try {
   const raw = readFileSync(0, "utf8").trim();
   payload = raw ? JSON.parse(raw) : null;
 } catch {
-  respond({ permission: "allow" });
+  respond({ permission: "deny" });
 }
 
 const target = payload?.file_path ?? null;
 if (!target) {
-  respond({ permission: "allow" });
+  respond({ permission: "deny" });
 }
 
 const root = process.cwd();

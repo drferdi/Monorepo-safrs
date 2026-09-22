@@ -129,10 +129,10 @@
       "owner": "repository-maintainers",
       "purpose": "Browser automation assist for local UI verification via MCP",
       "allowed_operations": ["navigate", "snapshot", "interact-local-pages"],
-      "data_scope": "task-scoped-browser-targets-prefer-localhost",
+      "data_scope": "localhost and 127.0.0.1 origins only",
       "authentication": "none",
-      "network_endpoints": ["registry.npmjs.org"],
-      "provenance": "@playwright/mcp@0.0.79 via npx (.cursor/mcp.json)",
+      "network_endpoints": ["registry.npmjs.org", "127.0.0.1"],
+      "provenance": "@playwright/mcp@0.0.79 via npx (.cursor/mcp.json) with localhost-only allowed origins",
       "review_status": "APPROVED"
     },
     {
@@ -155,17 +155,6 @@
       "authentication": "none",
       "network_endpoints": ["registry.npmjs.org"],
       "provenance": ".cursor/mcp.json → @modelcontextprotocol/server-sequential-thinking via npx",
-      "review_status": "APPROVED"
-    },
-    {
-      "id": "filesystem-mcp",
-      "owner": "repository-maintainers",
-      "purpose": "Scoped filesystem tools under D:/DEV for monorepo agent workflows",
-      "allowed_operations": ["read", "list", "search", "write-scoped"],
-      "data_scope": "D:/DEV only as configured in .cursor/mcp.json",
-      "authentication": "os-user",
-      "network_endpoints": ["registry.npmjs.org"],
-      "provenance": ".cursor/mcp.json → @modelcontextprotocol/server-filesystem with D:/DEV root",
       "review_status": "APPROVED"
     },
     {

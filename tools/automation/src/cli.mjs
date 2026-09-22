@@ -37,7 +37,7 @@ function usage() {
       "  node tools/automation/src/cli.mjs gate <gate-id|--all>",
       "  node tools/automation/src/cli.mjs evidence verify <manifest.json>",
       "  node tools/automation/src/cli.mjs publish evaluate <pull-request.json> <evidence.json> [platform.json]",
-      "  node tools/automation/src/cli.mjs gaffer run <intent> [--capsule <id>] [--json]",
+      "  node tools/automation/src/cli.mjs gaffer run <intent> --capsule <id> [--json]",
     ].join("\n"),
   );
   return 2;
@@ -113,6 +113,22 @@ function contractCompile(inputPath, rest) {
 /* ------------------------ remote ledger (gh api) ------------------------ */
 
 const LEDGER_LABEL = "safrs-lease";
+const LEASE_ACTIONS = new Set([
+  "CLAIM",
+  "RENEW",
+  "TRANSITION",
+  "RELEASE",
+  "EXPIRE",
+  "RECLAIM",
+]);
+const AUTHORITY_PAYLOAD_FIELDS = new Set([
+  "lease_id",
+  "worktree_id",
+  "scope_prefixes",
+  "expires_at",
+  "fencing_token",
+  "next_state",
+]);
 
 function gh(args, input) {
   return execFileSync("gh", args, {
@@ -142,20 +158,53 @@ function readLedgerChain(repo, issueNumber) {
     .filter(Boolean);
 }
 
+function parseAuthorityPayload(raw) {
+  let payload;
+  try {
+    payload = JSON.parse(raw ?? "{}");
+  } catch {
+    throw new Error("lease payload must be valid JSON");
+  }
+  if (
+    typeof payload !== "object" ||
+    payload === null ||
+    Array.isArray(payload)
+  ) {
+    throw new Error("lease payload must be an object");
+  }
+  for (const field of Object.keys(payload)) {
+    if (!AUTHORITY_PAYLOAD_FIELDS.has(field)) {
+      throw new Error(`lease payload field "${field}" is not allowed`);
+    }
+  }
+  return payload;
+}
+
 function authorityApply() {
   const repo = process.env.GH_REPO;
   const action = process.env.SAFRS_LEASE_ACTION;
   const taskId = process.env.SAFRS_TASK_ID;
-  const payload = JSON.parse(process.env.SAFRS_LEASE_PAYLOAD ?? "{}");
+  const actor = process.env.SAFRS_GITHUB_ACTOR;
   const runUrl = process.env.SAFRS_AUTHORITY_RUN_URL ?? null;
-  if (!repo || !action || !taskId) {
+  if (!repo || !action || !taskId || !actor) {
     console.error(
-      "authority-apply requires GH_REPO, SAFRS_LEASE_ACTION, SAFRS_TASK_ID",
+      "authority-apply requires GH_REPO, SAFRS_GITHUB_ACTOR, SAFRS_LEASE_ACTION, SAFRS_TASK_ID",
     );
     return 2;
   }
+  if (!LEASE_ACTIONS.has(action)) {
+    console.error("DENY: invalid lease action");
+    return 1;
+  }
   if (!/^TASK-[0-9]{8}-[A-Z0-9-]+$/u.test(taskId)) {
     console.error(`invalid task id: ${taskId}`);
+    return 1;
+  }
+  let payload;
+  try {
+    payload = parseAuthorityPayload(process.env.SAFRS_LEASE_PAYLOAD);
+  } catch (error) {
+    console.error(`DENY: ${error.message}`);
     return 1;
   }
 
@@ -182,7 +231,17 @@ function authorityApply() {
   }
 
   const chain = readLedgerChain(repo, issue.number);
-  const request = { action, task_id: taskId, ...payload };
+  const request = {
+    action,
+    task_id: taskId,
+    actor,
+    lease_id: payload.lease_id,
+    worktree_id: payload.worktree_id,
+    scope_prefixes: payload.scope_prefixes,
+    expires_at: payload.expires_at,
+    fencing_token: payload.fencing_token,
+    next_state: payload.next_state,
+  };
   const outcome = nextEvent(chain, request, {
     occurred_at: new Date().toISOString().replace(/\.\d{3}Z$/u, "Z"),
     authority_run_url: runUrl,
@@ -199,13 +258,13 @@ function authorityApply() {
     `body=${canonicalize(outcome.event)}`,
   ]);
   console.log(
-    `GRANT ${action} ${taskId} sequence=${outcome.event.sequence} fencing_token=${outcome.event.fencing_token}`,
+    `GRANT ${action} ${taskId} sequence=${outcome.event.sequence} fencing_token=[REDACTED]`,
   );
   const summary = process.env.GITHUB_STEP_SUMMARY;
   if (summary) {
     appendFileSync(
       summary,
-      `GRANT \`${action}\` for \`${taskId}\`: sequence ${outcome.event.sequence}, fencing token ${outcome.event.fencing_token}\n`,
+      `GRANT \`${action}\` for \`${taskId}\`: sequence ${outcome.event.sequence}\n`,
       "utf8",
     );
   }
@@ -222,7 +281,7 @@ async function gafferCommand(action, rest) {
     return 2;
   }
   const intent = rest[0];
-  let capsuleSelector = "academic/academic-smartboard";
+  let capsuleSelector = null;
   let explicitRoute = null;
   let json = false;
 
@@ -234,6 +293,13 @@ async function gafferCommand(action, rest) {
     } else if (rest[i] === "--json") {
       json = true;
     }
+  }
+
+  if (!capsuleSelector) {
+    console.error(
+      "GAFFER ERROR: --capsule is required; no default capsule is configured.",
+    );
+    return 2;
   }
 
   const { executeGafferIntent } = await import("./gaffer/provider-codex.mjs");
