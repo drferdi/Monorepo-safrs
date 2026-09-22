@@ -22,7 +22,7 @@ on:
         required: true
         type: string
       payload:
-        description: JSON request (lease_id, actor, worktree_id, scope_prefixes, expires_at, fencing_token, next_state)
+        description: JSON request (lease_id, worktree_id, scope_prefixes, expires_at, fencing_token, next_state). Actor is taken from github.actor, not payload.
         required: true
         type: string
 
