@@ -1,4 +1,4 @@
-import { FailureClass, Route, WorkerClass } from "./constants.mjs";
+import { Route, WorkerClass } from "./constants.mjs";
 import { runGaffer } from "./runner.mjs";
 import { createSafrsPorts } from "./safrs-ports.mjs";
 
@@ -27,7 +27,7 @@ export function createCodexProvider(options = {}) {
         "Codex root implementation provider is not configured; simulated completion is disabled.",
     }));
 
-  const rootPlan = async ({ intent, project, authorization, context }) => {
+  const rootPlan = async ({ intent, project, context }) => {
     if (context.plan) return context.plan;
 
     // Route decision heuristic: SOLO for small/focused tasks, DECOMPOSE for multi-unit
@@ -104,7 +104,7 @@ export function createCodexProvider(options = {}) {
     };
   };
 
-  const rootAccept = async ({ intent, plan, verification, result }) => {
+  const rootAccept = async ({ intent, verification }) => {
     if (options.acceptanceResult !== undefined) {
       return options.acceptanceResult;
     }
