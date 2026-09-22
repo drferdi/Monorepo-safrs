@@ -242,7 +242,7 @@ test("Proof 2: SOLO route works and achieves READY when verification passes", as
       evidenceManifest: validEvidence(),
     },
     providerOptions: {
-      rootImplementProvider: async ({ intent, plan }) => {
+      rootImplementProvider: async () => {
         rootImplementCalled = true;
         return {
           status: "complete",
