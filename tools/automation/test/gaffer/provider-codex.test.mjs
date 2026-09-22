@@ -157,6 +157,45 @@ function testSetup() {
   return { controlDirectory };
 }
 
+test("Codex provider defaults never fabricate execution, audit, or human acceptance", async () => {
+  const provider = createCodexProvider();
+
+  const rootResult = await provider.rootImplement({
+    intent: "test",
+    plan: { ownedPaths: ["x"] },
+    context: {},
+  });
+  assert.equal(rootResult.status, "unavailable");
+  assert.deepEqual(rootResult.changedFiles, []);
+
+  await assert.rejects(
+    () =>
+      provider.executeWorker({
+        worker: { id: "w1" },
+        workerClass: WorkerClass.ECONOMY,
+        task: { id: "T1", ownedPaths: ["x"] },
+        context: {},
+      }),
+    /not configured/u,
+  );
+
+  const audit = await provider.audit({
+    intent: "test",
+    tasks: [],
+    verification: { passed: true },
+  });
+  assert.equal(audit.verdict, "HOLD");
+
+  const acceptance = await provider.rootAccept({
+    intent: "test",
+    plan: {},
+    verification: { passed: true },
+    result: rootResult,
+  });
+  assert.equal(acceptance.accepted, false);
+  assert.equal(acceptance.reason, "semantic_acceptance_not_configured");
+});
+
 // --------------------------------------------------------------------------
 // PROOF 1: /gaffer receives intent
 // --------------------------------------------------------------------------
