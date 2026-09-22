@@ -50,7 +50,6 @@ const SELF_GUARD_PATTERNS = [
   "tools/automation/src/adapters/codex.mjs",
 ];
 
-
 /** Template filenames are always safe; remove them before pattern tests so
  *  ".env" inside ".env.example" cannot trigger a credential match. */
 function stripTemplateNames(command) {
@@ -62,7 +61,9 @@ const COMMAND_RULES = [
     reasonCode: "SELF_AUTHORIZED_PUBLICATION",
     decision: "deny",
     test: (command) =>
-      /(?:^|[\s;&|])(?:CHIEF_PUSH_OK|CHIEF_PUSH_PROJECTS_OK)\s*=|\$env:(?:CHIEF_PUSH_OK|CHIEF_PUSH_PROJECTS_OK)\s*=|\bgit\s+push\b[^\n]*\s--no-verify\b|\bgit\s+(?:-c\s+core\.hooksPath\s*=\s*\S+\s+)?push\b[^\n]*\s--no-verify\b|\bgit\s+(?:config\s+core\.hooksPath|-c\s+core\.hooksPath=)/iu.test(command),
+      /(?:^|[\s;&|])(?:CHIEF_PUSH_OK|CHIEF_PUSH_PROJECTS_OK)\s*=|\$env:(?:CHIEF_PUSH_OK|CHIEF_PUSH_PROJECTS_OK)\s*=|\bgit\s+push\b[^\n]*\s--no-verify\b|\bgit\s+(?:-c\s+core\.hooksPath\s*=\s*\S+\s+)?push\b[^\n]*\s--no-verify\b|\bgit\s+(?:config\s+core\.hooksPath|-c\s+core\.hooksPath=)/iu.test(
+        command,
+      ),
     message:
       "publication authority and hook bypasses cannot be self-granted by an agent; use the repository's human-authorized publication path.",
   },
