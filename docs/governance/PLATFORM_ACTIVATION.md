@@ -20,9 +20,8 @@ a control.
 ## Prerequisites
 
 - Admin permission on the repository.
-- A GitHub team or user that will replace the `@sentra/safrs-maintainers`
-  placeholder in `.github/CODEOWNERS`. The team must have at least **write**
-  access to the repository, otherwise GitHub ignores it as an owner and the
+- The configured CODEOWNER, currently `@drferdii`, must have at least **write**
+  access to the repository. Otherwise GitHub ignores the owner and the
   code-owner rule silently passes.
 - A scratch branch you are willing to delete, for running the negative tests.
 
@@ -37,21 +36,18 @@ active. Do not record the step as done. Do not work around it.
 
 ---
 
-## Step 0 — Replace the CODEOWNERS placeholder
+## Step 0 — Verify the configured CODEOWNER
 
-Every rule in `.github/CODEOWNERS` currently names `@sentra/safrs-maintainers`,
-which does not exist. GitHub treats an unresolvable owner as *no owner*, so the
-code-owner requirement in Step 1 will approve trivially.
+Every rule in `.github/CODEOWNERS` currently names `@drferdii`. GitHub treats
+an unresolvable owner as *no owner*, so the code-owner requirement in Step 1
+will approve trivially if this account loses repository access.
 
-1. Create (or identify) the real reviewing team in the organization.
-2. Grant it write access to this repository.
-3. Open a pull request replacing every occurrence of `@sentra/safrs-maintainers`
-   in `.github/CODEOWNERS`. This is itself an R2 change.
-4. Open `.github/CODEOWNERS` in the GitHub web UI.
+1. Confirm that `@drferdii` has write access to this repository.
+2. Open `.github/CODEOWNERS` in the GitHub web UI.
 
-**Proof of success:** the CODEOWNERS file view shows **no** yellow "Unknown owner"
-or "not a valid owner" annotations on any line. GitHub renders a warning banner
-listing each invalid line; an empty warning list is the pass condition.
+**Proof of success:** the CODEOWNERS file view shows no yellow "Unknown owner"
+or "not a valid owner" annotation for `@drferdii`. GitHub renders a warning
+banner listing each invalid line; an empty warning list is the pass condition.
 
 **Negative test:** temporarily open a draft PR that changes `AGENTS.md`. The PR's
 "Reviewers" panel must automatically request review from the real team. If no

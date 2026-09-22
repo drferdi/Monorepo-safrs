@@ -16,9 +16,9 @@ try {
   payload = raw ? JSON.parse(raw) : null;
 } catch (error) {
   console.error(
-    `SAFRS guard: hook payload could not be parsed (${error.message}); path classification was skipped.`,
+    `SAFRS guard: hook payload could not be parsed (${error.message}).`,
   );
-  process.exit(0);
+  process.exit(2);
 }
 
 /**

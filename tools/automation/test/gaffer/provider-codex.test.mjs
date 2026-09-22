@@ -24,6 +24,16 @@ const CAPSULE = "academic/academic-smartboard";
 const NOW = "2026-09-20T15:00:00Z";
 const TASK_ID = "TASK-20260920-GAFFER-PHASE3";
 
+test("Gaffer requires an explicit capsule selector", async () => {
+  await assert.rejects(
+    executeGafferIntent({
+      intent: "verify this request",
+      repositoryRoot: ROOT,
+    }),
+    /capsule selector is required/iu,
+  );
+});
+
 const VALID_CONTRACT = {
   accountable_human: "chief@sentrahai.com",
   approval_policy: {
