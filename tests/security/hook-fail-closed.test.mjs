@@ -52,6 +52,18 @@ test("CODEOWNERS covers every sensitive adapter directory", () => {
   }
 });
 
+test("CODEOWNERS covers the task ownership verification control", () => {
+  const owners = readFileSync(
+    join(repositoryRoot, ".github/CODEOWNERS"),
+    "utf8",
+  );
+
+  assert.match(
+    owners,
+    /^\/tests\/governance\/test_task_ownership\.py\s+@drferdii$/mu,
+  );
+});
+
 function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/gu, "\\$&");
 }

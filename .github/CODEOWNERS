@@ -100,6 +100,7 @@
 /.safrs/evidence/**                             @drferdii
 /scripts/check-tokens.mjs                       @drferdii
 /tests/governance/test_automation_approvals.py  @drferdii
+/tests/governance/test_task_ownership.py        @drferdii
 /tests/fixtures/automation/**                   @drferdii
 /tests/governance/test_automation_contracts.py  @drferdii
 /tests/repository/precommit.test.mjs            @drferdii
