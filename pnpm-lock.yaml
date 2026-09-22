@@ -64,8 +64,8 @@ catalogs:
       specifier: 4.9.0
       version: 4.9.0
     hono:
-      specifier: 4.13.1
-      version: 4.13.1
+      specifier: 4.13.5
+      version: 4.13.5
     husky:
       specifier: 9.1.7
       version: 9.1.7
@@ -135,7 +135,7 @@ importers:
     dependencies:
       '@hono/zod-validator':
         specifier: 'catalog:'
-        version: 0.9.0(hono@4.13.1)(zod@4.4.3)
+        version: 0.9.0(hono@4.13.5)(zod@4.4.3)
       '@safrs/database':
         specifier: workspace:*
         version: link:../database
@@ -147,7 +147,7 @@ importers:
         version: link:../telemetry
       hono:
         specifier: 'catalog:'
-        version: 4.13.1
+        version: 4.13.5
       zod:
         specifier: 'catalog:'
         version: 4.4.3
@@ -270,7 +270,7 @@ importers:
         version: 7.9.1(@opentelemetry/api@1.9.1)
       hono:
         specifier: 'catalog:'
-        version: 4.13.1
+        version: 4.13.5
     devDependencies:
       '@safrs/config':
         specifier: workspace:*
@@ -1972,8 +1972,8 @@ packages:
   graphmatch@1.1.1:
     resolution: {integrity: sha512-5ykVn/EXM1hF0XCaWh05VbYvEiOL2lY1kBxZtaYsyvjp7cmWOU1XsAdfQBwClraEofXDT197lFbXOEVMHpvQOg==}
 
-  hono@4.13.1:
-    resolution: {integrity: sha512-kdJoFVv2xmayw6cY09H7AbMJMt8Jn5jdlEdXsP7AGBdF2DIptVlKlOLKXP41yPip4/a3yQPv9gVcJYI8YY04dw==}
+  hono@4.13.5:
+    resolution: {integrity: sha512-O6+/eCYRkzzzy0rPWwKLiGBR1nFuUPZynnwjxN1MBA62NNqbT0wQEzQyK2gSO5yDIDB336sXQleAhOHrzlYyKw==}
     engines: {node: '>=16.9.0'}
 
   husky@9.1.7:
@@ -2858,9 +2858,9 @@ snapshots:
       protobufjs: 7.6.5
       yargs: 17.7.3
 
-  '@hono/zod-validator@0.9.0(hono@4.13.1)(zod@4.4.3)':
+  '@hono/zod-validator@0.9.0(hono@4.13.5)(zod@4.4.3)':
     dependencies:
-      hono: 4.13.1
+      hono: 4.13.5
       zod: 4.4.3
 
   '@img/colour@1.1.0':
@@ -4074,7 +4074,7 @@ snapshots:
 
   graphmatch@1.1.1: {}
 
-  hono@4.13.1: {}
+  hono@4.13.5: {}
 
   husky@9.1.7: {}
 
