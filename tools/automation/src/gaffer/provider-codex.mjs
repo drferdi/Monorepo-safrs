@@ -1,4 +1,4 @@
-import { FailureClass, Route, WorkerClass } from "./constants.mjs";
+import { Route, WorkerClass } from "./constants.mjs";
 import { runGaffer } from "./runner.mjs";
 import { createSafrsPorts } from "./safrs-ports.mjs";
 
@@ -10,29 +10,24 @@ import { createSafrsPorts } from "./safrs-ports.mjs";
 export function createCodexProvider(options = {}) {
   const defaultWorkerExecution =
     options.executeWorkerProvider ??
-    (async ({ worker, workerClass, task, context = {} }) => {
-      return {
-        status: "complete",
-        changedFiles: task.ownedPaths ?? [],
-        summary: `Codex worker [${worker.id}] executed task [${task.id}] as ${workerClass}`,
-        evidenceManifest: context.evidenceManifest ?? task.evidenceManifest,
-      };
+    (async () => {
+      const error = new Error(
+        "Codex worker execution provider is not configured; refusing simulated completion.",
+      );
+      error.code = "ADAPTER_UNAVAILABLE";
+      throw error;
     });
 
   const defaultRootImplement =
     options.rootImplementProvider ??
-    (async ({ intent, plan, context }) => {
-      return {
-        status: "complete",
-        changedFiles: context.changedFiles ??
-          plan.ownedPaths ?? [
-            "projects/academic/academic-smartboard/apps/web/src/components/AppShell.tsx",
-          ],
-        summary: `Root executed solo intent: ${intent}`,
-      };
-    });
+    (async () => ({
+      status: "unavailable",
+      changedFiles: [],
+      summary:
+        "Codex root implementation provider is not configured; simulated completion is disabled.",
+    }));
 
-  const rootPlan = async ({ intent, project, authorization, context }) => {
+  const rootPlan = async ({ intent, project, context }) => {
     if (context.plan) return context.plan;
 
     // Route decision heuristic: SOLO for small/focused tasks, DECOMPOSE for multi-unit
@@ -94,19 +89,22 @@ export function createCodexProvider(options = {}) {
     return defaultWorkerExecution(args);
   };
 
-  const audit = async ({ intent, tasks, verification }) => {
+  const audit = async (args) => {
+    if (typeof options.auditProvider === "function") {
+      return options.auditProvider(args);
+    }
     if (options.auditVerdict) {
       return { verdict: options.auditVerdict };
     }
-    // Default Codex reviewer audit pass
     return {
-      verdict: "SHIP",
-      reviewer: "08-safrs-boundary-reviewer",
-      comments: "Boundary and security review passed cleanly.",
+      verdict: "HOLD",
+      reviewer: null,
+      comments:
+        "Independent audit provider is not configured; SHIP cannot be self-asserted.",
     };
   };
 
-  const rootAccept = async ({ intent, plan, verification, result }) => {
+  const rootAccept = async ({ intent, verification }) => {
     if (options.acceptanceResult !== undefined) {
       return options.acceptanceResult;
     }
@@ -115,9 +113,9 @@ export function createCodexProvider(options = {}) {
       return { accepted: false, reason: "verification_not_passed" };
     }
     return {
-      accepted: true,
-      acceptedBy: "Chief/Root",
-      summary: `Root semantically accepted verified output for intent: ${intent}`,
+      accepted: false,
+      reason: "semantic_acceptance_not_configured",
+      summary: `No explicit semantic acceptance provider/result exists for intent: ${intent}`,
     };
   };
 
