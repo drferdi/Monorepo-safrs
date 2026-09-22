@@ -70,6 +70,65 @@ describe("Hono API", () => {
     });
   });
 
+  it("does not expose demo writes in production", async () => {
+    const api = createApp({
+      environment: "production",
+      getStore: async () => ({
+        demo: {
+          create: async () => {
+            throw new Error("must not create production demos");
+          },
+          findMany: async () => [],
+        },
+      }),
+    });
+
+    const response = await api.request("/api/demos", {
+      body: JSON.stringify({ name: "Atlas" }),
+      headers: { "content-type": "application/json" },
+      method: "POST",
+    });
+
+    expect(response.status).toBe(404);
+  });
+
+  it("rate limits demo writes outside production", async () => {
+    const api = createApp({
+      demoWriteLimit: 1,
+      getStore: async () => ({
+        demo: {
+          create: async ({ data }) => ({
+            createdAt: new Date("2026-08-10T00:00:00.000Z"),
+            id: "5c2d5001-3f71-4c61-bef8-e8f55cc20cea",
+            name: data.name,
+          }),
+          findMany: async () => [],
+        },
+      }),
+    });
+    const request = {
+      body: JSON.stringify({ name: "Atlas" }),
+      headers: { "content-type": "application/json" },
+      method: "POST",
+    };
+
+    expect((await api.request("/api/demos", request)).status).toBe(201);
+    const limited = await api.request("/api/demos", request);
+    expect(limited.status).toBe(429);
+    expect(limited.headers.get("retry-after")).toBe("60");
+  });
+
+  it("sets baseline security headers", async () => {
+    const response = await app.request("/api/health");
+
+    expect(response.headers.get("content-security-policy")).toContain(
+      "default-src 'none'",
+    );
+    expect(response.headers.get("x-content-type-options")).toBe("nosniff");
+    expect(response.headers.get("x-frame-options")).toBe("DENY");
+    expect(response.headers.get("referrer-policy")).toBe("no-referrer");
+  });
+
   it("returns a standard validation error", async () => {
     const response = await app.request("/api/demos", {
       body: JSON.stringify({ name: "" }),
