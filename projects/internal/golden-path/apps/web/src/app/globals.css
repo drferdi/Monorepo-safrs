@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "@sentra/token/tokens.css";
 @import "@sentra/token/tailwind.css";
+/* Binds the family tokens to the self-hosted fonts from @sentra/token/fonts.
+   Must follow tokens.css; the font variable classes sit on <html> (layout.tsx). */
+@import "@sentra/token/archivo.css";
 
 /* Sentra design tokens only — raw colour/radius values are forbidden here and
    enforced by `node scripts/check-tokens.mjs` (see packages/token). */
