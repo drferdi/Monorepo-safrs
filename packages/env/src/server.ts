@@ -18,8 +18,8 @@ const serverSchema = {
   APP_URL: z.url(),
   /* Stripe capability pack — optional so the baseline builds without keys.
      Prefix checks catch swapped or truncated values early. */
-  STRIPE_SECRET_KEY: z.string().startsWith("sk_").optional(),
-  STRIPE_WEBHOOK_SECRET: z.string().startsWith("whsec_").optional(),
+  STRIPE_SECRET_KEY: z.string().regex(/^sk_(?:test|live)_[A-Za-z0-9]+$/u).optional(),
+  STRIPE_WEBHOOK_SECRET: z.string().regex(/^whsec_[A-Za-z0-9]+$/u).optional(),
 };
 
 export function createServerEnv(environment: ServerEnvironment) {

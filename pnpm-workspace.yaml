@@ -42,7 +42,7 @@ catalog:
   "@types/pg": 8.15.6
   "@types/react": 19.2.7
   "@types/react-dom": 19.2.3
-  "@vitest/coverage-v8": 4.1.10
+  "@vitest/coverage-v8": 4.1.11
   axios: 1.18.0
   better-auth: 1.7.1
   class-variance-authority: 0.7.1
@@ -68,7 +68,7 @@ catalog:
   tailwindcss: 4.3.3
   turbo: 2.10.9
   typescript: 7.0.2
-  vitest: 4.1.10
+  vitest: 4.1.11
   zod: 4.4.3
 
 # Minutes (pnpm unit): 1440 = 1 day. A quoted duration string crashes pnpm
@@ -81,8 +81,11 @@ minimumReleaseAgeExclude:
 
 # Force transitive copies onto patched releases (Dependabot GHSA remediation).
 overrides:
+  next: "catalog:"
   postcss: "catalog:"
-  sharp: ">=0.35.1"
+  sharp: ">=0.35.4"
+  fast-uri: ">=3.1.6"
+  mysql2: ">=3.22.0"
   # GHSA-ggr8-5vv4-36mx / CVE-2026-40345: uncontrolled recursion in
   # deepmerge-ts < 8.0.0, pulled in transitively by @prisma/config.
   deepmerge-ts: ">=8.0.1"

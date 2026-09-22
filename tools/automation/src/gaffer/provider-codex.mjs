@@ -133,7 +133,7 @@ export function createCodexProvider(options = {}) {
  */
 export async function executeGafferIntent({
   intent,
-  capsuleSelector = "academic/academic-smartboard",
+  capsuleSelector,
   repositoryRoot = process.cwd(),
   context = {},
   policy = {},
@@ -144,6 +144,11 @@ export async function executeGafferIntent({
 }) {
   if (!intent || typeof intent !== "string") {
     throw new TypeError("Gaffer intent string is required");
+  }
+  if (!capsuleSelector || typeof capsuleSelector !== "string") {
+    throw new TypeError(
+      "Gaffer capsule selector is required; no default capsule is configured",
+    );
   }
 
   const codexProviderPorts = createCodexProvider(providerOptions);

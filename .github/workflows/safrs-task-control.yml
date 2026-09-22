@@ -48,6 +48,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
+          SAFRS_GITHUB_ACTOR: ${{ github.actor }}
           SAFRS_LEASE_ACTION: ${{ inputs.action }}
           SAFRS_TASK_ID: ${{ inputs.task_id }}
           SAFRS_LEASE_PAYLOAD: ${{ inputs.payload }}

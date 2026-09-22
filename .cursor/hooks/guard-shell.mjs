@@ -18,7 +18,11 @@ try {
   const raw = readFileSync(0, "utf8").trim();
   payload = raw ? JSON.parse(raw) : null;
 } catch {
-  respond({ permission: "allow", user_message: "", agent_message: "" });
+  respond({
+    permission: "deny",
+    user_message: "Blocked: SAFRS hook payload could not be parsed.",
+    agent_message: "Denying malformed hook payload.",
+  });
 }
 
 const root = process.cwd();
@@ -32,6 +36,10 @@ const [{ authorize }, cursor] = await Promise.all([
 
 const events = cursor.translate(payload);
 if (events.length === 0) {
-  respond({ permission: "allow", user_message: "", agent_message: "" });
+  respond({
+    permission: "deny",
+    user_message: "Blocked: SAFRS could not classify this shell request.",
+    agent_message: "Denying an unclassifiable hook payload.",
+  });
 }
 respond(cursor.render(authorize(events[0], {})));

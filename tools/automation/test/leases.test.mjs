@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import test from "node:test";
+import { fileURLToPath } from "node:url";
 
 import {
   buildLeaseEvent,
@@ -16,6 +18,7 @@ const T0 = "2026-08-13T00:00:00Z";
 const T1 = "2026-08-13T01:00:00Z";
 const EXPIRY = "2026-08-13T12:00:00Z";
 const RUN_URL = "https://github.com/drferdii/Monorepo-safrs/actions/runs/1";
+const repositoryRoot = fileURLToPath(new URL("../../..", import.meta.url));
 
 function claimRequest(overrides = {}) {
   return {
@@ -229,4 +232,36 @@ test("replay reconstructs terminal state after release", () => {
   );
   assert.equal(claimAfter.denied, undefined);
   assert.equal(claimAfter.event.fencing_token, 2);
+});
+
+test("remote authority rejects client attempts to override its action or actor", () => {
+  for (const payload of [
+    { action: "RELEASE" },
+    { actor: "impersonated-user" },
+    { task_id: "TASK-20260813-OVERRIDE" },
+  ]) {
+    const result = spawnSync(
+      process.execPath,
+      [
+        "tools/automation/src/cli.mjs",
+        "lease",
+        "authority-apply",
+      ],
+      {
+        cwd: repositoryRoot,
+        encoding: "utf8",
+        env: {
+          ...process.env,
+          GH_REPO: "owner/repository",
+          SAFRS_GITHUB_ACTOR: "bound-github-actor",
+          SAFRS_LEASE_ACTION: "CLAIM",
+          SAFRS_LEASE_PAYLOAD: JSON.stringify(payload),
+          SAFRS_TASK_ID: TASK,
+        },
+      },
+    );
+
+    assert.equal(result.status, 1, result.stderr);
+    assert.match(result.stderr, /not allowed/u);
+  }
 });
