@@ -268,12 +268,6 @@
       "status": "HISTORICAL"
     },
     {
-      "id": "safrs-bootstrap-plan",
-      "path": "docs/plans/completed/SAFRS_BOOTSTRAP_IMPLEMENTATION.md",
-      "type": "plan",
-      "status": "COMPLETED"
-    },
-    {
       "id": "golden-path-execution-prompt",
       "path": "docs/bootstrap/CODEX_IMPLEMENT_GOLDEN_PATH.md",
       "type": "reference",
@@ -284,12 +278,6 @@
       "path": "docs/evidence/SAFRS_GOLDEN_PATH_VERIFICATION.md",
       "type": "historical",
       "status": "HISTORICAL"
-    },
-    {
-      "id": "safrs-governance-remediation-plan",
-      "path": "docs/plans/completed/SAFRS_GOVERNANCE_REMEDIATION_PLAN.md",
-      "type": "plan",
-      "status": "COMPLETED"
     },
     {
       "id": "handoff",
