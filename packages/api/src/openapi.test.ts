@@ -26,5 +26,12 @@ describe("OpenAPI document", () => {
     expect(response.headers.get("content-type")).toContain("text/html");
     const html = await response.text();
     expect(html).toContain("swagger-ui");
+    expect(html).toContain("swagger-ui-dist@5.30.2");
+    expect(html).toContain(
+      'integrity="sha512-eZpfl9qlKnbDvlJ2brfdx3nhlP1FMsA23w65motxKdYsUcfMcdO2bcLPr7mXhvyzmDZwuzYCJKrl/sEo1ditVQ=="',
+    );
+    expect(html).toContain(
+      'integrity="sha512-S3rkmTECRsgtsysO1CAFdy2KElfxyyEKzzQ/GudcfJ09ahsZIM3G4uvtsgCXMXsnvmSJA3O9FWQtzFyq8QMuzA=="',
+    );
   });
 });

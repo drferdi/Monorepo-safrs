@@ -115,7 +115,7 @@ The `Demo` shape (`demoSchema`) is:
 ## GET /api/docs
 
 - **Purpose**: Serve an interactive Swagger UI for exploring the API.
-- **Implementation**: `openApiDocsHtml()` in `packages/api/src/openapi.ts` returns an HTML page that loads Swagger UI from a CDN and points it at `/api/openapi.json`.
+- **Implementation**: `openApiDocsHtml()` in `packages/api/src/openapi.ts` returns an HTML page that loads a pinned Swagger UI CDN version with Subresource Integrity and points it at `/api/openapi.json`.
 - **Success 200** — `text/html` Swagger UI page. Safe for local development.
 
 ## Validation approach
