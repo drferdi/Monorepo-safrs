@@ -71,6 +71,26 @@ const MATRIX = [
     cursor: null, // cursor write hook is read/shell only today
   },
   {
+    name: "Codex Edit credential write",
+    expect: { decision: "deny", reasonCode: "CREDENTIAL_WRITE" },
+    codex: {
+      tool_name: "Edit",
+      tool_input: { file_path: ".env" },
+    },
+    claude: null,
+    cursor: null,
+  },
+  {
+    name: "Codex Write credential write",
+    expect: { decision: "deny", reasonCode: "CREDENTIAL_WRITE" },
+    codex: {
+      tool_name: "Write",
+      tool_input: { file_path: ".env" },
+    },
+    claude: null,
+    cursor: null,
+  },
+  {
     name: "template write allowed",
     expect: { decision: "allow", reasonCode: "OK" },
     codex: {
