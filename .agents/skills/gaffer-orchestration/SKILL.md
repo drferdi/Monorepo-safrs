@@ -1,3 +1,8 @@
+---
+name: gaffer-orchestration
+description: Turn a non-technical user's coding intent into a verified SAFRS-compliant outcome while minimizing expected cost per verified accepted task. Use when the user invokes /gaffer or requests end-to-end task orchestration, routing, decomposition, and verification under SAFRS.
+---
+
 # Gaffer Orchestration
 
 ## Purpose
