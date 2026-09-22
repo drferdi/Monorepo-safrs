@@ -20,13 +20,12 @@ export function createCodexProvider(options = {}) {
 
   const defaultRootImplement =
     options.rootImplementProvider ??
-    (async () => {
-      const error = new Error(
-        "Codex root implementation provider is not configured; refusing simulated completion.",
-      );
-      error.code = "ADAPTER_UNAVAILABLE";
-      throw error;
-    });
+    (async () => ({
+      status: "unavailable",
+      changedFiles: [],
+      summary:
+        "Codex root implementation provider is not configured; simulated completion is disabled.",
+    }));
 
   const rootPlan = async ({ intent, project, authorization, context }) => {
     if (context.plan) return context.plan;
