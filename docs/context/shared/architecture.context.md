@@ -172,7 +172,7 @@ Status: Experimental — may migrate to Pattern A after Golden Path validation
 | API framework | Hono | — |
 | Database | PostgreSQL + Prisma | Avery uses SQLite (development only) |
 | Styling | Tailwind CSS + @sentra/token | — |
-| Typography | Geist + Geist Mono | Never Plus Jakarta Sans, never IBM Plex (deprecated) |
+| Typography | Archivo + JetBrains Mono | Never Plus Jakarta Sans, never IBM Plex (deprecated) |
 | Build tool | Turborepo + pnpm | Portfolio Dr. Novia uses custom Node.js script |
 | Testing | Vitest + Playwright | — |
 | Lint/Format | Biome | — |

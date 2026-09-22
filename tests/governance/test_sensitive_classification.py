@@ -241,6 +241,29 @@ class SensitiveClassificationTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=approved', result.stdout)
 
+    def test_handoff_edit_does_not_invalidate_matching_integrity_seal(self):
+        """Session memory updates must not force a fresh Chief seal."""
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['tools/safrs/**', '.agents/**'],
+                'verification_control_patterns': ['tools/safrs/**'],
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            commit_baseline(repository)
+            changed = ['src/app.py', 'tools/safrs/check_extra.py']
+            write(repository, changed[0], '# implementation\n')
+            write(repository, changed[1], '# control\n')
+            write_review_evidence(repository, changed)
+            write(repository, '.agents/HANDOFF.md', '# handoff after seal\n')
+
+            result = run_checker(repository)
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=approved', result.stdout)
+
     def test_review_fingerprint_matches_windows_crlf_and_historical_git_blobs(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             repository = Path(temporary_directory)

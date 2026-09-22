@@ -8,5 +8,5 @@ These values are used by the exports in this package. Re-verify before future re
 - Instagram feed photos: width at least **1080 px** and supported aspect ratio from 1.91:1 through 3:4. Package includes 1080 square and 1080x1440 portrait masters. Source: Instagram Help.
 - YouTube banner: recommended **2560x1440 px**; minimum 2048x1152. At minimum size, safe area for text/logos is 1235x338. Profile image renders at 98x98; package uses a high-resolution square master. Source: YouTube Help.
 
-## Geist
-Official Vercel Geist repository describes Geist Sans as a typeface designed for legibility and simplicity, and supports installation via `npm i geist`. The font software is not bundled in this package.
+## Typeface
+Archivo (Omnibus-Type) and JetBrains Mono (JetBrains), both SIL Open Font License 1.1, distributed via Google Fonts. Self-hosted variable binaries live in `packages/token/assets/fonts/`; they are not bundled in this package.

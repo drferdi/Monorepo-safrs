@@ -71,7 +71,72 @@ if diff_base_result.returncode != 0:
     unavailable(diff_base_result.args, diff_base_result.returncode, diff_base_result.stderr)
 diff_base_sha = diff_base_result.stdout.strip()
 
+
+def merge_base_ok(left: str, right: str) -> bool:
+    result = subprocess.run(
+        ['git', 'merge-base', left, right],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    return result.returncode == 0
+
+
+def is_ancestor(possible_ancestor: str, commit: str) -> bool:
+    result = subprocess.run(
+        ['git', 'merge-base', '--is-ancestor', possible_ancestor, commit],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    return result.returncode == 0
+
+
+def resolve_commit(ref: str) -> str | None:
+    result = subprocess.run(
+        ['git', 'rev-parse', f'{ref}^{{commit}}'],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if result.returncode != 0:
+        return None
+    return result.stdout.strip()
+
+
 if not base:
+    # Local operator clones may retain pre-rewrite parents that make
+    # origin/main...HEAD unusable, or keep a local trunk that diverged from
+    # origin after a documented history rewrite. Prefer the local trunk when
+    # it is an ancestor of HEAD and the configured origin tip is not — CI
+    # still pins SAFRS_BASE_REF to the PR base SHA.
+    if not merge_base_ok(diff_base_sha, 'HEAD'):
+        local_main = resolve_commit('main')
+        if local_main and merge_base_ok(local_main, 'HEAD'):
+            print(
+                'SAFRS_DIFF_BASE_FALLBACK=main '
+                '(configured base merge-base unavailable)'
+            )
+            diff_base_sha = local_main
+        else:
+            unavailable(
+                ['git', 'merge-base', diff_base_sha, 'HEAD'],
+                128,
+                'merge-base with configured review base failed; local main '
+                'also unavailable',
+            )
+    elif (
+        configured_base_ref in {'origin/main', 'origin/master'}
+        and not is_ancestor(diff_base_sha, 'HEAD')
+    ):
+        local_main = resolve_commit('main')
+        if local_main and is_ancestor(local_main, 'HEAD'):
+            print(
+                'SAFRS_DIFF_BASE_FALLBACK=main '
+                '(configured origin tip is not an ancestor of HEAD)'
+            )
+            diff_base_sha = local_main
+
     # Local fallback: the reviewed branch diff plus staged, unstaged, and
     # untracked names. This keeps follow-up commits aligned with PR CI.
     cmds = [
@@ -113,6 +178,12 @@ implementation_changed=sorted(
     if p not in verification_changed
     and not p.startswith('docs/')
     and p not in MEMORY_FILES
+)
+# Integrity fingerprint ignores session memory: HANDOFF (and siblings) must
+# update every session and must not invalidate a Chief seal of the real
+# implementation + verification delta.
+integrity_fingerprint_paths = sorted(
+    p for p in classified_names if p not in MEMORY_FILES
 )
 override_matches = {
     rule['risk']: sorted(
@@ -239,7 +310,7 @@ if verification_changed:
     for p in verification_changed: print(f'  - {p}')
 
 if verification_changed and implementation_changed:
-    if integrity_review_approved(classified_names):
+    if integrity_review_approved(integrity_fingerprint_paths):
         print('SAFRS_VERIFICATION_INTEGRITY_REVIEW=approved')
         print('Independent review evidence matches the current change-set fingerprint.')
     else:

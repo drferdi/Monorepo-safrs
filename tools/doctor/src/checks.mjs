@@ -308,7 +308,7 @@ export async function runDoctor(options = {}) {
           "POSTGRES",
           "postgres-ready",
           "PostgreSQL lokal belum siap.",
-          "Buka Docker Desktop lalu jalankan pnpm run setup atau pnpm dev.",
+          "Docker sudah jalan: jalankan pnpm db:start (atau pnpm setup) dari Control Center / terminal. Docker belum jalan: buka Docker Desktop dulu, tunggu siap, lalu ulangi.",
           compactFailure(
             hostReachable ? databaseReady : hostPortPublished,
             suppliedEnvironment,
