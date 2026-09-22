@@ -11,13 +11,11 @@
   "files": {
     "includes": [
       "**",
-      // Capsule mandiri dengan konfigurasi Biome root sendiri: dilint oleh
-      // toolchain capsule itu, bukan oleh root (kontrak standalone; ketiganya
-      // juga dikecualikan dari pnpm-workspace.yaml). Tanpa ini Biome berhenti
-      // dengan "nested root configuration" sebelum memeriksa satu berkas pun.
-      "!!projects/academic/academic-smartboard",
-      "!!projects/product/kediri-history",
-      "!!projects/product/sentrabot",
+      // Setiap capsule di projects/ wajib mandiri (repo, toolchain, dan lint
+      // sendiri; AGENTS.md "Standalone project contract"). Root tidak pernah
+      // melint atau memformat kode capsule. Pengecualian projects/** di bawah
+      // ini tertutup oleh baris ini dan dipertahankan hanya sebagai catatan.
+      "!!projects",
       // Sisa pengecualian di bawah ini dilacak Git tetapi bukan sumber kanonik.
       // Kontrol plane SAFRS dan cache Turbo: dihasilkan mesin.
       "!!**/.safrs",
