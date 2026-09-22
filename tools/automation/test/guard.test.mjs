@@ -46,6 +46,21 @@ test("command verdicts: force-push deny, lease allowed, destructive db asks, aut
   );
 });
 
+test("publication authority cannot be self-granted or git hooks bypassed", () => {
+  const blocked = [
+    "CHIEF_PUSH_OK=1 git push origin feature",
+    "CHIEF_PUSH_PROJECTS_OK=1 CHIEF_PUSH_OK=1 git push origin feature",
+    '$env:CHIEF_PUSH_OK="1"; git push origin feature',
+    "git push --no-verify origin feature",
+    "git config core.hooksPath /dev/null",
+    "git -c core.hooksPath=/dev/null push origin feature",
+  ];
+  for (const command of blocked) {
+    const verdict = authorize({ type: "command", command });
+    assert.equal(verdict.decision, "deny", command);
+  }
+});
+
 test("credential commands: read/print deny, bare mention asks, templates allowed", () => {
   assert.equal(
     authorize({ type: "command", command: "cat .env" }).decision,
@@ -102,6 +117,25 @@ test("write verdicts: credential deny, template allow, escape deny, scope enforc
     ).reasonCode,
     "OUT_OF_SCOPE",
   );
+});
+
+test("Codex cannot modify its own enforcement boundary", () => {
+  const protectedPaths = [
+    ".codex/config.toml",
+    ".codex/hooks.json",
+    ".codex/hooks/guard-tool-use.mjs",
+    ".husky/pre-push",
+    "tools/automation/src/guard.mjs",
+    "tools/automation/src/adapters/codex.mjs",
+  ];
+  for (const target of protectedPaths) {
+    const verdict = authorize(
+      { type: "write", paths: [target] },
+      { sensitivePaths: SENSITIVE },
+    );
+    assert.equal(verdict.decision, "deny", target);
+    assert.equal(verdict.reasonCode, "SELF_GUARD_MODIFICATION", target);
+  }
 });
 
 test("verification/sensitive writes stay allowed but carry R2 context", () => {
