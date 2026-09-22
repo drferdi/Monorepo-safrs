@@ -1,8 +1,10 @@
 # Sentra Prompt — Optimizer Diagnostics and Model Compiler Revision
 
-**Status:** COMPLETED  
-**Date:** 2026-09-22  
-**Capsule:** `projects/internal/prompt`  
+**Status:** COMPLETED
+
+**Date:** 2026-09-22
+
+**Capsule:** `projects/internal/prompt`
 **Risk:** R2 — Electron IPC error contract changes; no provider credentials, API calls, database mutations, or new provider integration.
 
 ## Objective

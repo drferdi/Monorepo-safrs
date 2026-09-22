@@ -103,7 +103,7 @@ html, body {
   padding: 14px 16px;
   display: flex;
   flex-direction: column;
-  box-shadow: 
+  box-shadow:
     0 12px 28px rgba(0, 0, 0, 0.6),
     0 0 0 1px rgba(255, 255, 255, 0.04),
     inset 0 1px 0 var(--card-highlight);
