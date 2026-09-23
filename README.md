@@ -1,1083 +1,1441 @@
 <!--
-  Sentra Agent-First Repository Standard (SAFRS) v1.1
-  Sentra Artificial Intelligence
-  Human-Governed · Agent-Executed · Machine-Enforced
+MyPrompt — Comprehensive Repository README Repository: drferdi/Myprompt Package: sentra-prompt Version: 0.1.0 Source basis:
+  - MyPrompt technical/product dossier — 23 Sep 2026
+  - Current repository main/package contract — cross-checked 24 Sep 2026
+  - Historical comprehensive README — visual/reference only, not authority
 
-  This README is an explanatory repository entrypoint.
-  It does not replace the normative SAFRS Specification.
--->
+README DESIGN — "GAFFER" Executive engineering · terminal-native · high signal · evidence first Visual grammar follows the established Sentra engineering README language: restrained badges, semantic Mermaid diagrams, compact tables, no decorative clutter. IMPORTANT This README explains the repository. Runtime code, validators, project contracts, and applicable SAFRS controls remain authoritative when documentation disagrees. -->
 
-<!--
-  SENTRA README VISUAL SYSTEM
-  Profile-derived engineering aesthetic · compact · high signal
-  Diagram grammar: #0D1117 node fill + semantic colored strokes + white labels
-  Palette: Blue #5B8CFF · Cyan #22D3EE · Violet #8B5CF6 · Teal #14B8A6 · Amber #F59E0B · Red #F43F5E · Slate #64748B
-  Diagram type: monospace 10–12px · compact padding · transparent GitHub surface
-  Table body: compact subscript sizing while headers remain full-size
--->
+<div align="center">
+  
+<img src="https://i.ibb.co.com/4Z447tNw/myprompt2.png" alt="MyPrompt" width="260" />
 
-![SAFRS](https://i.ibb.co.com/Z1G4v477/SAFRS.png)
+### Raw idea → verified Coding Brief, Super Prompt, or deterministic model scaffold.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/HUMAN-GOVERNED-F59E0B?style=flat-square" alt="Human Governed" />
-  <img src="https://img.shields.io/badge/AGENT-EXECUTED-8B5CF6?style=flat-square" alt="Agent Executed" />
-  <img src="https://img.shields.io/badge/MACHINE-ENFORCED-14B8A6?style=flat-square" alt="Machine Enforced" />
-  <img src="https://img.shields.io/badge/RISK-R0%E2%86%92R3-F43F5E?style=flat-square" alt="Risk R0 to R3" />
-</p>
+**A terminal-native prompt engineering workspace by Sentra Artificial Intelligence.**
 
-<p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=14&duration=2200&pause=800&color=22D3EE&center=true&vCenter=true&width=900&height=30&lines=human+authority+%E2%86%92+bounded+agent+execution+%E2%86%92+machine+verification;constraint+descends+%C2%B7+authority+ascends+%C2%B7+capability+%E2%89%A0+trust" alt="Animated SAFRS operating signal" />
-</p>
+<br />
 
-### Repository Governance for AI-Native Software Engineering
+[![Package](https://img.shields.io/badge/PACKAGE-sentra--prompt-111827?style=flat-square)](#identity)
+[![Version](https://img.shields.io/badge/VERSION-0.1.0-5B8CFF?style=flat-square)](#identity)
+[![Desktop](https://img.shields.io/badge/SURFACE-ELECTRON%20DESKTOP-47848F?style=flat-square)](#desktop-console)
+[![Coding Brief](https://img.shields.io/badge/CODING%20BRIEF-v3.0-8B5CF6?style=flat-square)](#coding-brief-standard-v30)
+[![Providers](https://img.shields.io/badge/LLM%20ADAPTERS-6-22D3EE?style=flat-square)](#providers-and-models)
+[![Validation](https://img.shields.io/badge/VALIDATOR-V1%E2%86%92V14-14B8A6?style=flat-square)](#validator-v1v14)
+[![Tests](https://img.shields.io/badge/ACCEPTANCE-VERIFIED%202026--09--23-F59E0B?style=flat-square)](#verified-quality-snapshot)
 
-**Sentra Artificial Intelligence**
+<br />
 
-<p>
-  <strong>Human-Governed · Agent-Executed · Machine-Enforced</strong>
-  <br />
-  <sub><code>CONSTRAINT DESCENDS · AUTHORITY ASCENDS · CAPABILITY ≠ TRUST</code></sub>
-</p>
+<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&size=14&duration=2300&pause=850&color=22D3EE&center=true&vCenter=true&width=920&height=32&lines=type+an+idea+%E2%86%92+get+a+structured+brief+%E2%86%92+refine+only+when+needed;fill+by+default+%C2%B7+ask+only+to+refine;provider-flexible+%C2%B7+validator-backed+%C2%B7+terminal-native" alt="MyPrompt operating signal" />
 
-<p>
-  <a href="#executive-summary"><strong>Executive Summary</strong></a>
-  ·
-  <a href="#six-layer-architecture"><strong>Architecture</strong></a>
-  ·
-  <a href="#risk-model"><strong>Risk Model</strong></a>
-  ·
-  <a href="#multi-agent-execution-protocol"><strong>Execution</strong></a>
-  ·
-  <a href="#conformance-levels"><strong>Conformance</strong></a>
-  ·
-  <a href="#adoption-path"><strong>Adoption</strong></a>
-</p>
+<br />
+
+<sub><code>FILL BY DEFAULT · ASK ONLY TO REFINE</code></sub>
+
+<br />
+
+<img src="https://img.shields.io/badge/BRIEF-8B5CF6?style=for-the-badge&labelColor=0D1117" alt="Brief" />
+<img src="https://img.shields.io/badge/SUPER-22D3EE?style=for-the-badge&labelColor=0D1117" alt="Super" />
+<img src="https://img.shields.io/badge/TRANSFORM-5B8CFF?style=for-the-badge&labelColor=0D1117" alt="Transform" />
+<img src="https://img.shields.io/badge/VALIDATE-14B8A6?style=for-the-badge&labelColor=0D1117" alt="Validate" />
+<img src="https://img.shields.io/badge/REFINE-F59E0B?style=for-the-badge&labelColor=0D1117" alt="Refine" />
+<img src="https://img.shields.io/badge/SHIP-F43F5E?style=for-the-badge&labelColor=0D1117" alt="Ship" />
+
+<br />
+
+[Overview](#overview) ·
+[Quick Start](#quick-start) ·
+[How It Works](#how-prompt-generation-works) ·
+[Coding Brief](#coding-brief-standard-v30) ·
+[Console](#desktop-console) ·
+[Providers](#providers-and-models) ·
+[Architecture](#system-architecture) ·
+[Quality](#verified-quality-snapshot) ·
+[Security](#security-model)
+
+</div>
 
 ---
 
 > [!IMPORTANT]
-> This README is an **explanatory repository entrypoint**, not the normative
-> standard. SAFRS documentation follows an authority hierarchy:
-> **Specification → Explanatory Papers → Illustrative Reference Material**.
-> If this README, an essay, a template, or an example conflicts with the
-> SAFRS Specification, **the specification prevails**.
-
-## Executive Summary
-
-**SAFRS — the Sentra Agent-First Repository Standard — defines how a software
-repository should be structured, governed, and enforced when autonomous
-Artificial Intelligence agents perform a substantial share of engineering
-work.**
-
-SAFRS starts from one operational premise:
-
-> **Repository structure is a security and governance control, not a matter of
-> taste.**
-
-A disorganized repository already creates friction for human engineering teams.
-When autonomous agents are allowed to read, decide, modify, execute, and
-coordinate inside that repository, the same ambiguity can become a control
-failure: an agent can make the correct technical change under the wrong
-authority, cross a risk boundary without escalation, act on injected
-instructions, or create individually valid changes that become incoherent when
-combined.
-
-SAFRS v1.1 addresses that problem through five coupled mechanisms:
-
-1. a **six-layer repository architecture** from Trust Boundary to Human Authority;
-2. a **role-based permission model** in which capability never implies trust;
-3. a **four-tier risk model** with cumulative mandatory controls;
-4. a **multi-agent execution protocol** with explicit task states and one
-   mutation owner per bounded scope;
-5. a **knowledge governance model** that distinguishes current architecture,
-   historical decisions, execution plans, Git history, and running code.
-
-The same architecture is applied at four cumulative assurance levels:
-**SAFRS Core**, **Controlled**, **Secure**, and **Regulated**.
-
-| Dimension | Definition |
-| --- | --- |
-| <sub>Standard</sub> | <sub>Sentra Agent-First Repository Standard</sub> |
-| <sub>Version</sub> | <sub>SAFRS v1.1</sub> |
-| <sub>Organization</sub> | <sub>Sentra Artificial Intelligence</sub> |
-| <sub>Domain</sub> | <sub>AI-native software repository governance</sub> |
-| <sub>Primary control surface</sub> | <sub>Repository topology, permissions, execution, CI, documentation</sub> |
-| <sub>Trust principle</sub> | <sub>Capability does not grant authority</sub> |
-| <sub>Risk tiers</sub> | <sub>R0 · R1 · R2 · R3</sub> |
-| <sub>Conformance levels</sub> | <sub>Core · Controlled · Secure · Regulated</sub> |
-| <sub>Multi-agent invariant</sub> | <sub>One mutation owner per bounded scope</sub> |
-| <sub>Governance apex</sub> | <sub>Non-delegable human authority</sub> |
-| <sub>Documentation rule</sub> | <sub>At most one CANONICAL document per subject</sub> |
-| <sub>Strategic posture</sub> | <sub>Human-Governed · Agent-Executed · Machine-Enforced</sub> |
-
-## Standard Thesis
-
-> An AI-native repository becomes governable when authority, scope, risk,
-> execution, verification, and knowledge are explicit enough to be inspected by
-> humans and enforced by machines.
-
-SAFRS does not attempt to make agents inherently trustworthy. It makes their
-authority **bounded, visible, and auditable**.
-
-The distinction matters:
-
-```text
-Capability ≠ Trust
-Role       ≠ Identity
-Role       ≠ Model
-Role       ≠ Vendor
-Context    ≠ Permission
-Plan       ≠ Architecture
-Automation ≠ Human Authority
-```
-
-A stronger model may produce better code. That does not justify a larger blast
-radius.
-
-## Table of Contents
-
-- [Executive Summary](#executive-summary)
-- [Standard Thesis](#standard-thesis)
-- [Why SAFRS Exists](#why-safrs-exists)
-- [Authority and Documentation Hierarchy](#authority-and-documentation-hierarchy)
-- [Design Principles](#design-principles)
-- [Six-Layer Architecture](#six-layer-architecture)
-- [Trust and Permission Model](#trust-and-permission-model)
-- [Agent Roles](#agent-roles)
-- [Risk Model](#risk-model)
-- [Mandatory Controls](#mandatory-controls)
-- [Risk Escalation](#risk-escalation)
-- [Multi-Agent Execution Protocol](#multi-agent-execution-protocol)
-- [Task Contract](#task-contract)
-- [Single-Writer Rule](#single-writer-rule)
-- [Knowledge Governance](#knowledge-governance)
-- [Executable Governance](#executable-governance)
-- [Security Model](#security-model)
-- [Conformance Levels](#conformance-levels)
-- [Relationship to External Frameworks](#relationship-to-external-frameworks)
-- [Adoption Path](#adoption-path)
-- [What SAFRS Is Not](#what-safrs-is-not)
-- [Known Limitations](#known-limitations)
-- [Documentation Architecture](#documentation-architecture)
-- [Contributing](#contributing)
-- [License and Authority](#license-and-authority)
-- [Stewardship](#stewardship)
-
-## Why SAFRS Exists
-
-Coding-agent guidance such as `AGENTS.md` can tell an agent where to look, how
-a project is organized, and which commands are useful. That is necessary, but
-it does not answer the governance questions that become critical once an agent
-can act:
-
-- What may this agent read?
-- What may it modify?
-- What may it execute?
-- Which tools and network destinations may it reach?
-- Which changes require human authorization?
-- What happens when an R1 task becomes an R2 task during implementation?
-- If several agents work in parallel, who owns mutation authority?
-- When code and documentation disagree, which artifact is authoritative?
-- How can an organization later prove who authorized a high-impact action?
-
-SAFRS treats these as repository-level governance problems.
-
-### Failure Modes SAFRS Is Designed Against
-
-| Failure mode | Example | SAFRS response |
-| --- | --- | --- |
-| <sub>Structural ambiguity</sub> | <sub>A test fix silently becomes a schema change</sub> | <sub>Risk classification + mandatory escalation</sub> |
-| <sub>Capability mistaken for trust</sub> | <sub>A better model receives broader write scope</sub> | <sub>Role-bound permission envelope</sub> |
-| <sub>Parallel correctness, aggregate incoherence</sub> | <sub>Several agents produce clean but incompatible changes</sub> | <sub>Single-writer mutation authority</sub> |
-| <sub>Epistemic drift</sub> | <sub>Agents follow stale architecture documents</sub> | <sub>Document lifecycle + canonicality</sub> |
-| <sub>Context-surface injection</sub> | <sub>Issue, README, dependency, or tool output carries instructions</sub> | <sub>Trust boundary + constitutional precedence + isolation</sub> |
-| <sub>Unprovable authorization</sub> | <sub>Git shows the change but not the governing approval</sub> | <sub>Task contract + audit + human gates</sub> |
-
-## Authority and Documentation Hierarchy
-
-SAFRS uses three documentation tiers.
-
-| Tier | Artifact | Function | Authority |
-| --- | --- | --- | --- |
-| <sub>**Normative**</sub> | <sub>SAFRS Specification v1.1</sub> | <sub>Defines requirements</sub> | <sub>Binding</sub> |
-| <sub>**Explanatory**</sub> | <sub>Strategic Introduction and Papers I–V</sub> | <sub>Explains reasoning</sub> | <sub>Non-binding</sub> |
-| <sub>**Illustrative**</sub> | <sub>Reference architecture, examples, templates</sub> | <sub>Demonstrates implementation</sub> | <sub>Non-binding</sub> |
-
-```mermaid
-%%{init: {"flowchart": {"htmlLabels": false, "padding": 20}, "themeVariables": {"fontFamily": "monospace", "fontSize": "11px"}}}%%
-flowchart TB
-    Spec["SAFRS Specification v1.1<br/>Normative"]
-    Papers["Strategic Introduction + Papers I–V<br/>Explanatory"]
-    Ref["Reference Architecture<br/>Illustrative"]
-    Templates["Templates + Examples<br/>Illustrative"]
-
-    Spec --> Papers
-    Spec --> Ref
-    Spec --> Templates
-
-    classDef normative fill:#0D1117,stroke:#F59E0B,color:#ffffff,stroke-width:2px;
-    classDef explanatory fill:#0D1117,stroke:#5B8CFF,color:#ffffff,stroke-width:2px;
-    classDef illustrative fill:#0D1117,stroke:#22D3EE,color:#ffffff,stroke-width:1.5px;
-
-    class Spec normative;
-    class Papers explanatory;
-    class Ref,Templates illustrative;
-```
-
-The precedence rule is simple:
-
-```text
-SPECIFICATION
-    ↓
-EXPLANATORY MATERIAL
-    ↓
-ILLUSTRATIVE MATERIAL
-```
-
-The specification always wins.
-
-## Design Principles
-
-SAFRS v1.1 is organized around ten design principles.
-
-| Principle | Decision |
-| --- | --- |
-| <sub>**P1 · Repository topology is a control surface**</sub> | <sub>Structure is normative, not merely stylistic</sub> |
-| <sub>**P2 · Trust is orthogonal to capability**</sub> | <sub>Better model performance never grants more authority</sub> |
-| <sub>**P3 · Roles are vendor-neutral abstractions**</sub> | <sub>Permissions bind to roles, not vendors or models</sub> |
-| <sub>**P4 · Risk is a property of consequence**</sub> | <sub>Impact, reversibility, privilege, blast radius, and data sensitivity dominate</sub> |
-| <sub>**P5 · Exactly one mutation owner per bounded scope**</sub> | <sub>Parallel analysis is allowed; uncontrolled parallel writes are not</sub> |
-| <sub>**P6 · Documents are distinct epistemic objects**</sub> | <sub>ADRs, architecture, plans, Git history, and code carry different kinds of truth</sub> |
-| <sub>**P7 · Governance must be executable**</sub> | <sub>Machine-checkable controls belong in CI</sub> |
-| <sub>**P8 · Conformance is graduated**</sub> | <sub>Core, Controlled, Secure, and Regulated are cumulative</sub> |
-| <sub>**P9 · Human authority is non-delegable**</sub> | <sub>High-impact authority cannot be granted by automation</sub> |
-| <sub>**P10 · Simplicity is a control**</sub> | <sub>A usable standard is safer than an over-engineered standard nobody adopts</sub> |
-
-## Six-Layer Architecture
-
-A SAFRS-compliant repository is governed through six layers.
-
-```mermaid
-%%{init: {"flowchart": {"htmlLabels": false, "padding": 20}, "themeVariables": {"fontFamily": "monospace", "fontSize": "11px"}}}%%
-flowchart TB
-    L5["L5 · Human Authority"]
-    L4["L4 · Executable Governance"]
-    L3["L3 · Execution Isolation"]
-    L2["L2 · Context & Navigation"]
-    L1["L1 · Constitution"]
-    L0["L0 · Trust Boundary"]
-
-    L5 --> L4 --> L3 --> L2 --> L1 --> L0
-
-    classDef authority fill:#0D1117,stroke:#F59E0B,color:#ffffff,stroke-width:2px;
-    classDef governance fill:#0D1117,stroke:#14B8A6,color:#ffffff,stroke-width:2px;
-    classDef execution fill:#0D1117,stroke:#8B5CF6,color:#ffffff,stroke-width:2px;
-    classDef context fill:#0D1117,stroke:#5B8CFF,color:#ffffff,stroke-width:2px;
-    classDef constitution fill:#0D1117,stroke:#22D3EE,color:#ffffff,stroke-width:2px;
-    classDef boundary fill:#0D1117,stroke:#F43F5E,color:#ffffff,stroke-width:2px;
-
-    class L5 authority;
-    class L4 governance;
-    class L3 execution;
-    class L2 context;
-    class L1 constitution;
-    class L0 boundary;
-```
-
-The organizing rule is:
-
-> **Constraint descends. Authority ascends.**
-
-| Layer | Purpose | Typical contents | Failure without it |
-| --- | --- | --- | --- |
-| <sub>**L0 · Trust Boundary**</sub> | <sub>Define the repository perimeter</sub> | <sub>External dependencies, tool endpoints, MCP servers, network destinations, trusted/untrusted inputs</sub> | <sub>No principled way to constrain external input or egress</sub> |
-| <sub>**L1 · Constitution**</sub> | <sub>Define non-negotiable repository rules</sub> | <sub>Prohibitions, authority hierarchy, risk policy, escalation rules</sub> | <sub>Every rule becomes contextual and negotiable</sub> |
-| <sub>**L2 · Context & Navigation**</sub> | <sub>Tell agents where things are</sub> | <sub>`AGENTS.md`, capsule routing, ownership pointers, test/build entrypoints</sub> | <sub>Agents explore broadly and consume noisy context</sub> |
-| <sub>**L3 · Execution Isolation**</sub> | <sub>Make scope enforceable</sub> | <sub>Worktrees, environment separation, credential isolation, resource and egress controls</sub> | <sub>Scope remains advisory</sub> |
-| <sub>**L4 · Executable Governance**</sub> | <sub>Enforce mechanically decidable rules</sub> | <sub>Tests, lint, architecture checks, security checks, documentation integrity, verification integrity</sub> | <sub>Governance depends on reviewer vigilance</sub> |
-| <sub>**L5 · Human Authority**</sub> | <sub>Preserve non-delegable authority</sub> | <sub>R3 authorization, constitutional amendment, incident declaration, conformance changes</sub> | <sub>Governance becomes a closed machine-controlled loop</sub> |
-
-### L0 · Trust Boundary
-
-Every external dependency, tool, MCP server, network destination, and input
-channel extends the effective attack surface. SAFRS therefore treats them as
-part of repository governance, not as incidental tooling.
-
-### L1 · Constitution
-
-The constitution is intentionally small, human-authored, and non-negotiable.
-
-It should contain rules that remain true regardless of the task, model, prompt,
-or tool being used. An agent must not be able to modify the constitution that
-constrains it.
-
-### L2 · Context & Navigation
-
-Navigation tells an agent **where** to look. It does not grant permission to act.
-
-This distinction is fundamental:
-
-```text
-Navigation answers:    Where is the relevant surface?
-Permission answers:    May this role act on that surface?
-```
-
-### L3 · Execution Isolation
-
-A permission model is not real if the process can still reach everything.
-
-L3 converts a declared scope into an enforceable boundary through isolated
-worktrees, environments, credentials, resources, and network access.
-
-### L4 · Executable Governance
-
-A rule that can be mechanically checked should not depend on memory or review
-culture.
-
-### L5 · Human Authority
-
-L5 is the layer no automated system may occupy.
-
-Certain acts are intentionally non-delegable: R3 approval, constitutional
-change, incident declaration, conformance-level change, and other actions whose
-consequences exceed acceptable autonomous authority.
-
-## Trust and Permission Model
-
-Permission in SAFRS is derived rather than assigned ad hoc.
-
-```mermaid
-%%{init: {"flowchart": {"htmlLabels": false, "padding": 20}, "themeVariables": {"fontFamily": "monospace", "fontSize": "11px"}}}%%
-flowchart TB
-    Identity["Identity"]
-    Trust["Trust Level"]
-    Read["Readable Scope"]
-    Write["Writable Scope"]
-    Tools["Tool Capabilities"]
-    Network["Network Capability"]
-    Execute["Execution Authority"]
-    Approval["Approval Requirement"]
-
-    Identity --> Trust --> Read --> Write --> Tools --> Network --> Execute --> Approval
-
-    classDef chain fill:#0D1117,stroke:#5B8CFF,color:#ffffff,stroke-width:2px;
-    class Identity,Trust,Read,Write,Tools,Network,Execute,Approval chain;
-```
-
-The combined result is the **permission envelope**.
-
-The permission envelope belongs to a **role occupying a task**. It does not
-belong to a model, vendor, or chat session.
-
-### Permission Envelope
-
-```text
-Permission Envelope
-├── readable scope
-├── writable scope
-├── tool capability
-├── network capability
-├── execution authority
-└── approval requirement
-```
-
-A role cannot write outside its readable scope, invoke undeclared tools, reach
-unapproved network destinations, or perform an action above its approval
-authority.
-
-## Agent Roles
-
-| Role | Read | Write | Tools | Network | Typical approval |
-| --- | --- | --- | --- | --- | --- |
-| <sub>**Observer**</sub> | <sub>Repository-wide</sub> | <sub>None</sub> | <sub>Read-only</sub> | <sub>None</sub> | <sub>None</sub> |
-| <sub>**Analyst**</sub> | <sub>Repository-wide</sub> | <sub>None</sub> | <sub>Analysis and search</sub> | <sub>Restricted</sub> | <sub>None</sub> |
-| <sub>**Implementer**</sub> | <sub>Task scope + dependencies</sub> | <sub>Task scope only</sub> | <sub>Build, test, VCS</sub> | <sub>Restricted</sub> | <sub>PR review</sub> |
-| <sub>**Reviewer**</sub> | <sub>Task scope + related</sub> | <sub>Review artifacts only</sub> | <sub>Analysis, test</sub> | <sub>None</sub> | <sub>None</sub> |
-| <sub>**Maintainer**</sub> | <sub>Repository-wide</sub> | <sub>Broad, policy-bounded</sub> | <sub>Broad</sub> | <sub>Restricted</sub> | <sub>Per risk tier</sub> |
-| <sub>**Release Agent**</sub> | <sub>Release artifacts</sub> | <sub>Release artifacts</sub> | <sub>Build, sign, publish</sub> | <sub>Controlled egress</sub> | <sub>Explicit human</sub> |
-| <sub>**Security Agent**</sub> | <sub>Repository-wide, including sensitive surfaces</sub> | <sub>Security findings only</sub> | <sub>Scanning, analysis</sub> | <sub>Controlled</sub> | <sub>None for findings</sub> |
-
-Two asymmetries are deliberate.
-
-First, **read authority is not write authority**. Most analytical work should not
-require mutation capability.
-
-Second, a **Security Agent may detect but not silently remediate**. Broad read
-scope combined with broad mutation scope would create the ability to both
-introduce and conceal a security issue.
-
-## Risk Model
-
-SAFRS classifies risk by consequence rather than diff size.
-
-```text
-Impact
-  × Reversibility
-  × Privilege
-  × Blast Radius
-  × Data Sensitivity
-```
-
-The expression is conceptual, not a numeric formula in v1.1. The factors
-compound. A maximum on one factor can dominate the classification.
-
-| Tier | Definition | Typical examples | Human authorization |
-| --- | --- | --- | --- |
-| <sub>**R0**</sub> | <sub>Read-only</sub> | <sub>Search, analysis, dependency inspection</sub> | <sub>None</sub> |
-| <sub>**R1**</sub> | <sub>Reversible local change</sub> | <sub>Unit test, local refactor, internal helper rename</sub> | <sub>Usually not required</sub> |
-| <sub>**R2**</sub> | <sub>Boundary-affecting change</sub> | <sub>Database migration, dependency change, public API change, authorization middleware</sub> | <sub>Required</sub> |
-| <sub>**R3**</sub> | <sub>High-impact action</sub> | <sub>Production deployment, credential rotation, critical clinical logic</sub> | <sub>Mandatory explicit authorization</sub> |
-
-### Worked Classification Examples
-
-```text
-Rename internal helper              → R1
-Add database migration              → R2
-Modify authorization middleware     → R2
-Rotate production secrets           → R3
-Modify critical clinical algorithm  → R3
-```
-
-The amount of code is not the measure of risk.
-
-## Mandatory Controls
-
-Controls are cumulative.
-
-```mermaid
-%%{init: {"flowchart": {"htmlLabels": false, "padding": 20}, "themeVariables": {"fontFamily": "monospace", "fontSize": "11px"}}}%%
-flowchart TB
-    R1["R1<br/>lint · tests · CI"]
-    R2["R2<br/>R1 + integration tests · CODEOWNER · architecture checks · human review"]
-    R3["R3<br/>R2 + explicit authorization · isolation · audit · controlled deployment"]
-
-    R1 --> R2 --> R3
-
-    classDef low fill:#0D1117,stroke:#14B8A6,color:#ffffff,stroke-width:2px;
-    classDef medium fill:#0D1117,stroke:#F59E0B,color:#ffffff,stroke-width:2px;
-    classDef high fill:#0D1117,stroke:#F43F5E,color:#ffffff,stroke-width:2px;
-
-    class R1 low;
-    class R2 medium;
-    class R3 high;
-```
-
-### R1
-
-- lint;
-- relevant tests;
-- continuous integration.
-
-### R2
-
-All R1 controls, plus:
-
-- integration tests;
-- CODEOWNER approval;
-- architecture conformance checks;
-- human review.
-
-### R3
-
-All R2 controls, plus:
-
-- explicit human authorization;
-- isolated execution;
-- audit record;
-- controlled deployment.
-
-## Risk Escalation
-
-Risk classification is provisional at task creation and may only move upward
-during execution.
-
-> [!CAUTION]
-> If an agent begins an R1 task and discovers that the correct fix requires an
-> R2 or R3 action, execution must stop. The task must be reclassified and
-> re-authorized before work continues.
-
-This rule prevents the dangerous case in which a low-risk task quietly becomes a
-higher-risk task without changing its permission envelope.
-
-```mermaid
-%%{init: {"flowchart": {"htmlLabels": false, "padding": 20}, "themeVariables": {"fontFamily": "monospace", "fontSize": "11px"}}}%%
-flowchart LR
-    R1["R1 Task"]
-    Discover["Boundary-Affecting Requirement Discovered"]
-    Stop["Stop Execution"]
-    Reclassify["Reclassify to R2/R3"]
-    Human["Human Review / Authorization"]
-    Resume["Resume Under New Envelope"]
-
-    R1 --> Discover --> Stop --> Reclassify --> Human --> Resume
-
-    classDef task fill:#0D1117,stroke:#5B8CFF,color:#ffffff,stroke-width:2px;
-    classDef gate fill:#0D1117,stroke:#F43F5E,color:#ffffff,stroke-width:2px;
-    classDef approval fill:#0D1117,stroke:#14B8A6,color:#ffffff,stroke-width:2px;
-
-    class R1,Discover,Reclassify task;
-    class Stop gate;
-    class Human,Resume approval;
-```
-
-## Multi-Agent Execution Protocol
-
-The primary multi-agent risk is not necessarily one agent being wrong. It is
-several agents being locally correct while the combined result becomes
-architecturally incoherent.
-
-SAFRS addresses this with explicit lifecycle state, bounded ownership, and
-atomic handoff.
-
-### Task Lifecycle
-
-```text
-PROPOSED
-   ↓
-CLAIMED
-   ↓
-PLANNED
-   ↓
-EXECUTING
-   ↓
-VERIFYING
-   ↓
-REVIEW
-   ↓
-MERGED
-   ↓
-CLOSED
-```
-
-Exceptional or blocking states:
-
-```text
-BLOCKED · CONFLICT · FAILED · ABORTED · SUPERSEDED
-```
-
-The state model must be queryable. A governance system should be able to answer
-which agent owns mutation authority over a capsule at a given time.
-
-## Task Contract
-
-Every task carries an explicit contract.
-
-The serialization format is an implementation choice; the logical content is
-the governance requirement.
-
-```yaml
-task:
-  id: STMS-142
-  agent_role: implementer
-
-  scope:
-    - projects/stms/attendance/**
-
-  dependencies:
-    - STMS-137
-
-  risk: R2
-
-  allowed_actions:
-    - read
-    - modify
-    - test
-    - create_pr
-
-  forbidden_actions:
-    - merge
-    - deploy
-```
-
-Explicit `forbidden_actions` are important because silence is ambiguous. A
-prohibition should remain visible and auditable.
-
-## Single-Writer Rule
-
-> **Only one agent may hold mutation authority over a bounded task scope at a
-> time.**
-
-Many agents may:
-
-- read;
-- analyze;
-- test;
-- review;
-- propose alternatives.
-
-Only one may mutate the same bounded scope at a time.
-
-```mermaid
-%%{init: {"flowchart": {"htmlLabels": false, "padding": 20}, "themeVariables": {"fontFamily": "monospace", "fontSize": "11px"}}}%%
-flowchart LR
-    A1["Analyst A<br/>read"]
-    A2["Analyst B<br/>read"]
-    R["Reviewer<br/>review"]
-    I["Implementer<br/>exclusive mutation authority"]
-    Scope["Bounded Scope"]
-
-    A1 --> Scope
-    A2 --> Scope
-    R --> Scope
-    I ==> Scope
-
-    classDef read fill:#0D1117,stroke:#5B8CFF,color:#ffffff,stroke-width:2px;
-    classDef write fill:#0D1117,stroke:#F43F5E,color:#ffffff,stroke-width:2px;
-    classDef target fill:#0D1117,stroke:#22D3EE,color:#ffffff,stroke-width:2px;
-
-    class A1,A2,R read;
-    class I write;
-    class Scope target;
-```
-
-When ownership transfers from Implementer to Reviewer or Reviewer to Maintainer,
-the permission envelope changes atomically. The outgoing role does not retain
-write authority “just in case.”
-
-## Knowledge Governance
-
-SAFRS treats documentation as governed knowledge rather than undifferentiated
-files.
-
-### Epistemic Objects
-
-| Object | Question answered | Authority |
-| --- | --- | --- |
-| <sub>**Architecture documentation**</sub> | <sub>How does the system work now?</sub> | <sub>Current truth</sub> |
-| <sub>**ADR**</sub> | <sub>Why was this decision made?</sub> | <sub>Historical and immutable once accepted</sub> |
-| <sub>**Execution plan**</sub> | <sub>How will this change be performed?</sub> | <sub>Time-bounded; expires on completion</sub> |
-| <sub>**Git history**</sub> | <sub>What changed and when?</sub> | <sub>Evidential</sub> |
-| <sub>**Code**</sub> | <sub>What actually runs?</sub> | <sub>Ground truth</sub> |
-
-A completed plan is not current architecture. A superseded ADR is not a current
-decision.
-
-### Document Lifecycles
-
-```text
-Documents
-DRAFT → ACTIVE → CANONICAL → SUPERSEDED → ARCHIVED
-
-Execution Plans
-ACTIVE → COMPLETED → ARCHIVED
-
-Architecture Decision Records
-PROPOSED → ACCEPTED → SUPERSEDED
-                   ↘ REJECTED
-```
-
-### Canonicality Rule
-
-> **At most one document may hold CANONICAL status for any given subject.**
-
-Two canonical documents describing the same subject create a governance
-failure, because an agent has no principled basis for choosing between them.
-
-## Executable Governance
-
-SAFRS requires machine-checkable rules to be machine-enforced.
-
-### CI Can Enforce
-
-- broken documentation links;
-- invalid ADR references;
-- multiple CANONICAL documents for one subject;
-- missing architecture updates when protected surfaces change;
-- stale references to deleted modules;
-- invalid `AGENTS.md` routing;
-- missing project README files;
-- orphan ACTIVE plans with no owning task;
-- missing or unknown governance status;
-- missing CODEOWNER coverage for sensitive paths;
-- relevant tests and lint;
-- architecture and security checks;
-- verification-integrity checks.
-
-### CI Cannot Enforce
-
-CI cannot determine whether a document is **semantically true**.
-
-It can verify that an architecture document changed when required. It cannot
-prove that the updated document accurately describes the system.
-
-Structural enforcement reduces drift. Human review remains necessary.
-
-## Security Model
-
-SAFRS uses established security frameworks as external anchors instead of
-inventing a parallel threat taxonomy.
-
-| Area | Threat | SAFRS control |
-| --- | --- | --- |
-| <sub>**Secrets**</sub> | <sub>Credential leakage into context or output</sub> | <sub>L3 credential isolation; secrets excluded from agent-readable scope</sub> |
-| <sub>**Supply chain**</sub> | <sub>Compromised dependency or build</sub> | <sub>L0 declaration + provenance requirements at higher conformance levels</sub> |
-| <sub>**MCP / tools**</sub> | <sub>Over-broad tool capability</sub> | <sub>Tool trust bound to role and trust level</sub> |
-| <sub>**Prompt injection**</sub> | <sub>Instructions injected through context surfaces</sub> | <sub>L1 precedence, L0 input classification, bounded permissions</sub> |
-| <sub>**Data exfiltration**</sub> | <sub>Broad read scope combined with egress</sub> | <sub>Network capability constrained independently of tool capability</sub> |
-| <sub>**Credential reach**</sub> | <sub>Agent reaches credentials outside task scope</sub> | <sub>Worktree and environment isolation</sub> |
-
-### Containment, Not a Claim of Prevention
-
-SAFRS does **not** claim to solve prompt injection.
-
-Its repository-layer objective is to bound the consequence:
-
-- injected instructions cannot expand the role's permission envelope;
-- L3 isolation still constrains execution;
-- R2 changes still require review;
-- R3 actions still require explicit human authorization.
-
-The security posture is **containment plus least privilege**, not a claim of
-perfect prevention.
-
-## Conformance Levels
-
-SAFRS uses graduated conformance rather than a binary “compliant / not
-compliant” label.
-
-| Level | Requires | Intended for |
-| --- | --- | --- |
-| <sub>**SAFRS Core**</sub> | <sub>Repository topology, constitution, agent navigation, basic governance</sub> | <sub>Internal tools, low-consequence systems, early adoption</sub> |
-| <sub>**SAFRS Controlled**</sub> | <sub>Core + risk tiers, CI enforcement, permission boundaries</sub> | <sub>Production systems with reversible consequences</sub> |
-| <sub>**SAFRS Secure**</sub> | <sub>Controlled + execution sandboxing, credential isolation, supply-chain provenance, security controls</sub> | <sub>Systems handling sensitive data or privileged access</sub> |
-| <sub>**SAFRS Regulated**</sub> | <sub>Secure + full auditability, mandatory human gates, data governance, domain-specific controls</sub> | <sub>Clinical, safety-critical, and regulated environments</sub> |
-
-Each level is cumulative.
-
-```mermaid
-%%{init: {"flowchart": {"htmlLabels": false, "padding": 20}, "themeVariables": {"fontFamily": "monospace", "fontSize": "11px"}}}%%
-flowchart LR
-    Core["SAFRS Core"]
-    Controlled["SAFRS Controlled"]
-    Secure["SAFRS Secure"]
-    Regulated["SAFRS Regulated"]
-
-    Core --> Controlled --> Secure --> Regulated
-
-    classDef core fill:#0D1117,stroke:#5B8CFF,color:#ffffff,stroke-width:2px;
-    classDef controlled fill:#0D1117,stroke:#14B8A6,color:#ffffff,stroke-width:2px;
-    classDef secure fill:#0D1117,stroke:#F59E0B,color:#ffffff,stroke-width:2px;
-    classDef regulated fill:#0D1117,stroke:#F43F5E,color:#ffffff,stroke-width:2px;
-
-    class Core core;
-    class Controlled controlled;
-    class Secure secure;
-    class Regulated regulated;
-```
-
-The architecture stays consistent. The assurance intensity changes.
-
-## Relationship to External Frameworks
-
-SAFRS is designed as a **repository implementation layer**, not as a competitor
-to organizational, regulatory, application-security, or supply-chain
-frameworks.
-
-| External framework | Primary governance surface | SAFRS relationship |
-| --- | --- | --- |
-| <sub>**ISO/IEC 42001**</sub> | <sub>Organizational AI management system</sub> | <sub>Repository-level operational evidence can support organizational AI governance</sub> |
-| <sub>**EU AI Act**</sub> | <sub>High-risk AI systems</sub> | <sub>SAFRS Regulated is designed to support logging, oversight, documentation, and auditability needs</sub> |
-| <sub>**OWASP guidance for LLM / GenAI security**</sub> | <sub>Application and model risk</sub> | <sub>SAFRS constrains repository-layer authority and blast radius</sub> |
-| <sub>**SLSA**</sub> | <sub>Build and source provenance</sub> | <sub>SAFRS can bind provenance requirements to conformance level</sub> |
-| <sub>**AGENTS.md**</sub> | <sub>Agent context and navigation</sub> | <sub>SAFRS uses agent navigation as L2 and adds trust, risk, isolation, governance, and human authority</sub> |
-
-External standards and regulatory statements are time-sensitive and should be
-re-verified before external publication or compliance claims.
-
-## Adoption Path
-
-For a team starting from a conventional repository, SAFRS v1.1 recommends
-adoption in this order.
-
-1. **Declare the trust boundary — L0.** Enumerate external dependencies, tools,
-   MCP servers, and permitted network destinations.
-2. **Write the constitution — L1.** Keep it concise; non-negotiables only.
-3. **Establish navigation — L2.** Root and per-capsule, human-authored.
-4. **Classify existing surfaces by risk.** Identify R2 and R3 surfaces and attach
-   ownership controls.
-5. **Turn on inexpensive CI checks — L4.** Broken links, canonical uniqueness,
-   orphan plans, missing CODEOWNERS, and other structural checks.
-6. **Add execution isolation — L3.** Worktrees, environment separation,
-   credential isolation, and bounded egress.
-7. **Formalize task contracts and lifecycle.** Do this after the underlying
-   trust and execution controls are stable.
-8. **Declare a conformance level and hold the repository to it.**
+> **MyPrompt is a desktop-only Electron application in the current repository.**
+> The renderer is a framework-free terminal-style console. Prompt logic runs in
+> the Electron main process. Legacy Next.js-related files and dependencies still
+> exist as cleanup candidates, but there is no active Next.js web surface.
 
 > [!NOTE]
-> The source concept document describes steps 1–5 as the practical SAFRS Core
-> entry point. Steps 6–8 progressively add the controls associated with higher
-> assurance.
+> This README is an explanatory repository entrypoint. Where documentation and
+> executable behavior disagree, the current runtime code, validator contracts,
+> project contract, and applicable SAFRS controls take precedence.
 
-### Adoption Sequence
+---
+
+## 01 — Overview <img src="https://img.shields.io/badge/OVERVIEW-22D3EE?style=flat-square&labelColor=0D1117" alt="Overview" />
+
+MyPrompt turns a raw idea into an execution-ready prompt artifact.
+
+For coding work, the default path produces a **Coding Brief** governed by
+Coding Brief Standard v3.0 and validated against rules V1 through V14. For
+general prompt engineering, MyPrompt can produce a six-heading **Super Prompt**.
+For model-specific scaffolding, `transform` produces a deterministic prompt
+shape without calling an LLM.
+
+The product is deliberately narrow:
+
+```text
+RAW IDEA
+   │
+   ├── brief      → validated Coding Brief
+   │
+   ├── super      → structured Super Prompt
+   │
+   └── transform  → deterministic model-specific scaffold
+```
+
+The daily operating model is equally simple:
+
+```text
+Type an idea
+    ↓
+Generate a complete artifact
+    ↓
+Validate automatically
+    ↓
+Clarify only what remains unresolved
+    ↓
+Copy / save / evaluate / rerun
+```
+
+MyPrompt is designed for a single operator preparing briefs for coding agents
+and structured prompts for language models.
+
+### What makes it different
+
+| <sub>🟣 **COMPLETE FIRST**</sub> | <sub>🟢 **VERIFY THE SHAPE**</sub> | <sub>🟠 **REFINE, DON'T RESTART**</sub> |
+| --- | --- | --- |
+| <sub>The default Coding Brief path attempts to produce a usable brief immediately. Questions are not used to postpone the work.</sub> | <sub>Coding Brief output is parsed, normalized, and checked against a deterministic validator contract. A provider saying something plausible is not enough.</sub> | <sub>After a valid brief exists, MyPrompt may offer one clarification round of up to three questions. Answered items are carried into the refined brief instead of rebuilding intent from scratch.</sub> |
+
+---
+
+## 02 — Identity <img src="https://img.shields.io/badge/IDENTITY-5B8CFF?style=flat-square&labelColor=0D1117" alt="Identity" />
+
+| <sub>Field</sub> | <sub>Current value</sub> |
+| --- | --- |
+| <sub>**Product**</sub> | <sub>MyPrompt / Myprompt</sub> |
+| <sub>**Package**</sub> | <sub>`sentra-prompt`</sub> |
+| <sub>**Version**</sub> | <sub>`0.1.0`</sub> |
+| <sub>**Repository**</sub> | <sub>`drferdi/Myprompt`</sub> |
+| <sub>**Primary surface**</sub> | <sub>Electron desktop console</sub> |
+| <sub>**Renderer**</sub> | <sub>Framework-free text console</sub> |
+| <sub>**Default prompt outcome**</sub> | <sub>Coding Brief</sub> |
+| <sub>**Other outcomes**</sub> | <sub>Super Prompt · deterministic Transform</sub> |
+| <sub>**Primary language model mode**</sub> | <sub>Bring-your-own-provider</sub> |
+| <sub>**Node.js**</sub> | <sub>22 or later</sub> |
+| <sub>**Package manager**</sub> | <sub>`pnpm@11.21.0`</sub> |
+| <sub>**Development model**</sub> | <sub>Standalone SAFRS capsule</sub> |
+| <sub>**Governance status**</sub> | <sub>Active capsule · R2 review required before integration or release</sub> |
+| <sub>**Creator**</sub> | <sub>Dr. Ferdi Iskandar</sub> |
+| <sub>**Organization**</sub> | <sub>Sentra Artificial Intelligence</sub> |
+
+### Naming map
+
+The repository, package, and shell use intentionally related names:
+
+<code>GitHub repository     drferdi/Myprompt</code> · <code>npm package name      sentra-prompt</code> · <code>desktop prompt        sentra ~/myprompt $</code> · <code>product display       MyPrompt</code>
+
+---
+
+## 03 — Quick Start <img src="https://img.shields.io/badge/START-14B8A6?style=flat-square&labelColor=0D1117" alt="Start" />
+
+### Prerequisites
+
+Current development/build scripts require:
+
+<code>Node.js &gt;= 22</code> · <code>pnpm 11.21.0</code> · <code>Windows / PowerShell for the current desktop build scripts</code>
+
+A provider key is optional for opening the console, but required for:
+
+<code>brief</code> · <code>super</code> · <code>/evaluate</code>
+
+Database configuration is only required for account-backed features.
+
+### Clone and run
+
+```bash
+git clone https://github.com/drferdi/Myprompt.git
+cd Myprompt
+pnpm install --frozen-lockfile
+# Optional: configure only the integrations you need.
+cp .env.example .env.local
+pnpm start
+```
+
+> [!TIP]
+> The application can open without database credentials and without an LLM key.
+> Provider-backed commands become available when a supported provider is
+> configured.
+
+### Full local verification
+
+```bash
+pnpm verify
+```
+
+The verification contract runs the repository checks required by the standalone
+capsule rather than relying on a parent monorepo.
+
+---
+
+## 04 — Product Modes <img src="https://img.shields.io/badge/MODES-8B5CF6?style=flat-square&labelColor=0D1117" alt="Modes" />
+
+### Brief
+
+<code>brief &lt;raw idea&gt;</code>
+
+Or simply type text that is not another command. The default route produces a **Coding Brief**.
+
+```text
+Raw idea
+   ↓
+Coding Brief prompt
+   ↓
+LLM generation
+   ↓
+canonical REPORT
+   ↓
+validator V1–V14
+   ↓
+valid?
+ ┌─┴─────────────┐
+yes              no
+ │                │
+brief          one repair call
+ │                │
+clarify?       validate again
+ │                │
+ready        valid / degraded
+```
+
+### Super
+
+<code>super &lt;raw idea&gt;</code>
+
+Produces a structured six-heading Super Prompt:
+
+<code>ROLE</code> · <code>TASK</code> · <code>CONTEXT</code> · <code>APPROACH        optional</code> · <code>CONSTRAINTS</code> · <code>OUTPUT FORMAT</code>
+
+The Super route supports two lanes:
+
+<code>INTERACTIVE</code> · <code>DEEP</code>
+
+### Transform
+
+<code>transform &lt;text&gt;</code>
+
+Transform is intentionally different. It is a **pure deterministic string-building path**. It does not call an LLM.
+
+The transformer:
+
+<code>detects intent</code> · <code>selects a profile</code> · <code>applies a mode</code> · <code>applies an effort budget</code> · <code>compiles the scaffold</code>
+
+Supported intent classes include:
+
+<code>translation</code> · <code>summarization</code> · <code>analysis</code> · <code>comparison</code> · <code>debugging</code> · <code>explanation</code> · <code>generation</code> · <code>general</code>
+
+---
+
+## 05 — How Prompt Generation Works <img src="https://img.shields.io/badge/ENGINE-F43F5E?style=flat-square&labelColor=0D1117" alt="Engine" />
+
+The optimizer is the main LLM-backed engine.
+
+```mermaid
+%%{init: {"flowchart": {"htmlLabels": false, "padding": 20}, "themeVariables": {"fontFamily": "monospace", "fontSize": "11px"}}}%%
+flowchart TD
+    A["RAW IDEA"]
+    B{"outputKind / taskType"}
+    C["CODING BRIEF<br/>7 authored headings + canonical REPORT"]
+    D["LLM<br/>1200 tokens · temp 0.3"]
+    E["applyCanonicalReport<br/>validate V1–V14"]
+    F["VALID BRIEF<br/>+ up to 3 clarification questions"]
+    G["ONE REPAIR CALL"]
+    H{"VALID?"}
+    I["DEGRADED<br/>parse_failed / invalid_brief"]
+    J["SUPER PROMPT<br/>template context + strategy hints"]
+    K["LLM<br/>INTERACTIVE 900/0.4<br/>DEEP 2200/0.7"]
+    L["6-HEADING PARSER"]
+    M["TRANSFORM<br/>deterministic compiler"]
+    N["NO LLM CALL"]
+
+    A --> B
+    B -->|CODING_BRIEF or CODING| C --> D --> E
+    E -->|valid| F
+    E -->|invalid| G --> H
+    H -->|yes| F
+    H -->|no| I
+    B -->|SUPER_PROMPT| J --> K --> L
+    A -->|transform command| M --> N
+
+    classDef input fill:#111827,stroke:#22D3EE,color:#E6FFFB,stroke-width:2px;
+    classDef brief fill:#1F1735,stroke:#A78BFA,color:#F5F3FF,stroke-width:2px;
+    classDef verify fill:#0F2E2A,stroke:#2DD4BF,color:#ECFDF5,stroke-width:2px;
+    classDef warn fill:#33230B,stroke:#FBBF24,color:#FFF7ED,stroke-width:2px;
+    classDef fail fill:#35151B,stroke:#FB7185,color:#FFF1F2,stroke-width:2px;
+    classDef transform fill:#172554,stroke:#60A5FA,color:#EFF6FF,stroke-width:2px;
+
+    class A,B input;
+    class C,D,J,K,L brief;
+    class E,F,H verify;
+    class G warn;
+    class I fail;
+    class M,N transform;
+```
+
+### Route selection
+
+`lib/optimizer/engine.ts` selects:
+
+<code>CODING_BRIEF</code>
+
+when explicitly requested or when:
+
+<code>taskType = CODING</code>
+
+Otherwise it selects:
+
+<code>SUPER_PROMPT</code>
+
+The `transform` command bypasses the optimizer engine.
+
+---
+
+## 06 — Coding Brief Standard v3.0 <img src="https://img.shields.io/badge/CODING%20BRIEF-8B5CF6?style=flat-square&labelColor=0D1117" alt="Coding Brief" />
+
+> [!NOTE]
+> The repository dossier identifies Coding Brief Standard v3.0 as a **draft**.
+> Executable validator behavior remains authoritative where prose and code differ.
+
+The Coding Brief standard is built around one operating principle:
+
+> **Fill by default; ask only to refine.**
+
+The engine should make the most conventional defensible proposal instead of
+turning every unknown into a blocking question.
+
+### Canonical brief shape
+
+The complete brief is ordered as:
+
+```markdown
+## GOAL
+
+## CONTEXT
+
+## SCOPE
+
+## STACK
+
+## OUT OF SCOPE
+
+## DONE WHEN
+
+## ASSUMPTIONS
+
+## REPORT
+```
+
+`ASSUMPTIONS` is required when the engine has made proposals. `REPORT` is canonical text controlled by the engine rather than freely authored by the provider.
+
+### Section contract
+
+| <sub>Section</sub> | <sub>Requirement</sub> |
+| --- | --- |
+| <sub>**GOAL**</sub> | <sub>One sentence, maximum 40 words</sub> |
+| <sub>**CONTEXT**</sub> | <sub>Real path, filled `New project: <dir>`, or `Explore first:`</sub> |
+| <sub>**SCOPE**</sub> | <sub>At least two concrete items unless unresolved TODO handling applies</sub> |
+| <sub>**STACK**</sub> | <sub>Includes technologies explicitly mentioned by the operator</sub> |
+| <sub>**OUT OF SCOPE**</sub> | <sub>Explicitly bounds what should not be done</sub> |
+| <sub>**DONE WHEN**</sub> | <sub>Runnable command, test identifier, or accepted verification fallback</sub> |
+| <sub>**ASSUMPTIONS**</sub> | <sub>One readable line per proposal; present when proposals exist</sub> |
+| <sub>**REPORT**</sub> | <sub>Exact canonical text appended by the engine</sub> |
+
+### Generation contract
+
+For the Coding Brief route:
+
+<code>provider budget        1200 tokens</code> · <code>temperature            0.3</code> · <code>maximum provider calls 2</code> · <code>repair policy           exactly one repair opportunity</code> · <code>clarification           after a valid brief, not before</code> · <code>maximum questions       3</code>
+
+The user prompt given to the provider is intentionally narrow:
+
+<code>RAW IDEA: &quot;...&quot;</code>
+
+Optimizer settings are not injected into the Coding Brief itself.
+
+---
+
+## 07 — Validator V1–V14 <img src="https://img.shields.io/badge/VALIDATOR-14B8A6?style=flat-square&labelColor=0D1117" alt="Validator" />
+
+A Coding Brief is not accepted based on visual plausibility alone. `lib/prompt-quality/contract.ts` validates the contract.
+
+| <sub>Rule</sub> | <sub>What it checks</sub> |
+| --- | --- |
+| <sub>**V1**</sub> | <sub>Required headings exist, are ordered, and contain no foreign/duplicate `##` headings</sub> |
+| <sub>**V2**</sub> | <sub>No required section is empty</sub> |
+| <sub>**V3**</sub> | <sub>GOAL is one sentence and no more than 40 words</sub> |
+| <sub>**V4**</sub> | <sub>CONTEXT contains a usable path or accepted exploration marker</sub> |
+| <sub>**V5**</sub> | <sub>SCOPE has at least two items unless an accepted TODO condition applies</sub> |
+| <sub>**V6**</sub> | <sub>DONE WHEN contains a runnable/verifiable signal</sub> |
+| <sub>**V7**</sub> | <sub>DONE WHEN is not merely vague language such as "works" or "runs well"</sub> |
+| <sub>**V8**</sub> | <sub>REPORT exactly matches the canonical engine-controlled text</sub> |
+| <sub>**V9**</sub> | <sub>Optimizer-control labels such as `Target LLM:` do not leak into the brief</sub> |
+| <sub>**V10**</sub> | <sub>Technologies named in the request are represented in STACK</sub> |
+| <sub>**V11**</sub> | <sub>Detects a thin brief when both CONTEXT and DONE WHEN are deferred</sub> |
+| <sub>**V12**</sub> | <sub>Placeholder language does not simply paraphrase the instruction</sub> |
+| <sub>**V13**</sub> | <sub>Greenfield briefs do not retain unresolved `[TODO: ...]` placeholders</sub> |
+| <sub>**V14**</sub> | <sub>ASSUMPTIONS is present when the system introduced proposals</sub> |
+
+### Quality verdicts
+
+The Coding Brief metadata can report:
+
+<code>complete</code> · <code>thin</code> · <code>degraded</code>
+
+`thin` is valid but warns that both working context and verification are still deferred. `degraded` can carry:
+
+<code>parse_failed</code> · <code>invalid_brief</code>
+
+A failed refinement does **not** replace the last valid brief already shown to
+the operator.
+
+---
+
+## 08 — Clarification Round <img src="https://img.shields.io/badge/REFINE-F59E0B?style=flat-square&labelColor=0D1117" alt="Refine" />
+
+Clarification is a refinement phase, not a prerequisite for producing a draft. Questions are derived mechanically rather than by another LLM call.
+
+Priority order:
+
+```text
+1. CONTEXT → Explore first:
+2. DONE WHEN → Propose a check first:
+3. [TODO: ...] items in SCOPE
+4. ASSUMPTIONS
+```
+
+The list is capped at three questions.
+
+### Console behavior
+
+```text
+type an answer  → apply the answer
+press Enter     → keep the proposal
+type skip       → end clarification
+```
+
+If every answer is empty:
+
+<code>additional provider calls = 0</code>
+
+A refinement sends:
+
+<code>RAW IDEA</code> · <code>PREVIOUS BRIEF</code> · <code>ANSWERS FROM THE USER</code>
+
+The refinement is instructed to change only what was answered, carry user answers verbatim, and remove resolved assumptions. A rerun of a refined brief reuses those same answers.
+
+---
+
+## 09 — Super Prompt <img src="https://img.shields.io/badge/SUPER%20PROMPT-22D3EE?style=flat-square&labelColor=0D1117" alt="Super Prompt" />
+
+The Super Prompt route uses six structural anchors:
+
+```markdown
+## ROLE
+## TASK
+## CONTEXT
+## APPROACH
+## CONSTRAINTS
+## OUTPUT FORMAT
+```
+
+`APPROACH` is optional. The remaining anchors are required by the parser.
+
+### INTERACTIVE
+
+Designed for normal prompt work.
+
+<code>max tokens   900</code> · <code>temperature  0.4</code>
+
+If the result is truncated or cannot be parsed, INTERACTIVE gets one recovery
+generation with a larger 2200-token budget.
+
+### DEEP
+
+Designed for richer prompt construction.
+
+<code>max tokens   2200</code> · <code>temperature  0.7</code>
+
+DEEP can use template context selected through embeddings and cosine similarity. If embedding retrieval fails, matching falls back to keywords. DEEP does not use the INTERACTIVE parse-recovery behavior.
+
+### Language behavior
+
+When the input is Indonesian:
+
+```text
+content language  → Indonesian
+heading anchors   → English
+```
+
+The English anchors remain stable because parser behavior depends on them.
+
+---
+
+## 10 — Transform Compiler <img src="https://img.shields.io/badge/TRANSFORM-5B8CFF?style=flat-square&labelColor=0D1117" alt="Transform" />
+
+`transform` is model-aware but provider-free. It builds prompt scaffolds for these profiles:
+
+| <sub>Profile</sub> | <sub>Output shape</sub> |
+| --- | --- |
+| <sub>**default**</sub> | <sub>XML-style sections for Claude-like targets, Markdown sections otherwise</sub> |
+| <sub>**claude**</sub> | <sub>`<instructions>` · `<context>` · `<task>` · `<constraints>` · `<output_format>`</sub> |
+| <sub>**codex**</sub> | <sub>`# Task` · `## Repository context` · `## Constraints` · `## Acceptance criteria` · `## Verification`</sub> |
+| <sub>**gemini**</sub> | <sub>`## System instruction` · `## Context` · `## Task` · `## Constraints` · `## Output schema`</sub> |
+| <sub>**grok**</sub> | <sub>`## Objective` · `## Context` · `## Evidence and uncertainty` · `## Constraints` · `## Output`</sub> |
+
+### Effort
+
+Supported levels:
+
+<code>low</code> · <code>medium</code> · <code>high</code> · <code>xhigh</code> · <code>max</code>
+
+Current token ceilings:
+
+| <sub>Effort</sub> | <sub>Max tokens</sub> |
+| --- | ---: |
+| <sub>`low`</sub> | <sub>700</sub> |
+| <sub>`medium`</sub> | <sub>1,200</sub> |
+| <sub>`high`</sub> | <sub>1,800</sub> |
+| <sub>`xhigh`</sub> | <sub>2,600</sub> |
+| <sub>`max`</sub> | <sub>3,200</sub> |
+
+`xhigh` and `max` add a constraint that each deliverable appears exactly once. In the current console path, Transform is pinned to:
+
+<code>model     claude-sonnet</code> · <code>mode      professional</code> · <code>locale    id</code> · <code>target    general</code>
+
+---
+
+## 11 — Evaluator <img src="https://img.shields.io/badge/EVALUATOR-F59E0B?style=flat-square&labelColor=0D1117" alt="Evaluator" />
+
+<code>/evaluate &lt;text&gt;</code>
+
+The evaluator uses an LLM as a judge. It scores four dimensions from `0` to `10`:
+
+<code>structure</code> · <code>clarity</code> · <code>completeness</code> · <code>specificity</code>
+
+Default weight:
+
+<code>0.25 each</code>
+
+Weights can be configured with:
+
+<code>EVAL_WEIGHT_STRUCTURE</code> · <code>EVAL_WEIGHT_CLARITY</code> · <code>EVAL_WEIGHT_COMPLETENESS</code> · <code>EVAL_WEIGHT_SPECIFICITY</code>
+
+The final score is normalized to one decimal place.
+
+| <sub>Score</sub> | <sub>Label</sub> |
+| ---: | --- |
+| <sub>`>= 9`</sub> | <sub>Exceptional</sub> |
+| <sub>`>= 7`</sub> | <sub>Good</sub> |
+| <sub>`>= 5`</sub> | <sub>Adequate</sub> |
+| <sub>`>= 3`</sub> | <sub>Below Average</sub> |
+| <sub>`< 3`</sub> | <sub>Poor</sub> |
+
+Unparseable evaluator JSON returns:
+
+<code>EVALUATION_PARSE_FAILED</code>
+
+> [!NOTE]
+> Evaluator scores and benchmark results are different things. Benchmarks test
+> operational budgets; the Evaluator and Coding Brief validator assess quality.
+
+---
+
+## 12 — Providers and Models <img src="https://img.shields.io/badge/PROVIDERS-22D3EE?style=flat-square&labelColor=0D1117" alt="Providers" />
+
+Six provider adapters implement a shared contract:
+
+<code>generate</code> · <code>generateStream</code> · <code>validateApiKey</code>
+
+The optimizer therefore does not need provider-specific generation logic.
+
+| <sub>Provider code</sub> | <sub>Adapter</sub> | <sub>Default model</sub> | <sub>Credential</sub> |
+| --- | --- | --- | --- |
+| <sub>`CLAUDE`</sub> | <sub>Anthropic provider</sub> | <sub>`claude-sonnet-4-20250514`</sub> | <sub>`ANTHROPIC_API_KEY`</sub> |
+| <sub>`OPENAI`</sub> | <sub>OpenAI provider</sub> | <sub>`gpt-4o`</sub> | <sub>`OPENAI_API_KEY`</sub> |
+| <sub>`GROK`</sub> | <sub>OpenAI-compatible xAI provider</sub> | <sub>`grok-3-fast`</sub> | <sub>`XAI_API_KEY`</sub> |
+| <sub>`MISTRAL`</sub> | <sub>Mistral provider</sub> | <sub>`mistral-large-latest`</sub> | <sub>`MISTRAL_API_KEY`</sub> |
+| <sub>`QWEN`</sub> | <sub>OpenAI-compatible Qwen provider</sub> | <sub>`qwen-plus`</sub> | <sub>`QWEN_API_KEY`</sub> |
+| <sub>`LOCAL`</sub> | <sub>Ollama `/api/chat`</sub> | <sub>`llama3`</sub> | <sub>no key required</sub> |
+
+### Guest provider readiness
+
+At startup, the guest provider is selected from available keys in this order:
+
+<code>xAI</code> · <code>OpenAI</code> · <code>Anthropic</code> · <code>Mistral</code> · <code>Qwen</code>
+
+If none is available, the console shows a provider-missing state.
+
+### OpenAI-compatible overrides
+
+OpenAI-compatible routes support scoped model/base-URL overrides. Conceptual precedence:
+
+```text
+per-lane
+   ↓
+per-scope
+   ↓
+global
+```
+
+This allows OpenAI-compatible endpoints to be used without changing the
+optimizer engine.
+
+### Key resolution
+
+Provider credentials remain outside the renderer. For guest/local execution, explicit configuration and environment values are used.
+
+For signed-in account workflows, provider keys can be stored encrypted in the database and resolved by the main process. Stored keys use AES-256-GCM encryption.
+
+---
+
+## 13 — Desktop Console <img src="https://img.shields.io/badge/CONSOLE-8B5CF6?style=flat-square&labelColor=0D1117" alt="Console" />
+
+The entire UI is one terminal-style transcript under a desktop title bar. There are no application forms or navigation menus.
+
+The interaction model is:
+
+<code>sentra ~/myprompt $ &lt;command or idea&gt;</code>
+
+Any normal text that is not another recognized command becomes a Coding Brief.
+
+### Basic commands
+
+| <sub>Command</sub> | <sub>Function</sub> |
+| --- | --- |
+| <sub>`brief <text>`</sub> | <sub>Build a Coding Brief</sub> |
+| <sub>`super <text>`</sub> | <sub>Build a Super Prompt</sub> |
+| <sub>`transform <text>`</sub> | <sub>Build a deterministic scaffold</sub> |
+| <sub>`lane <interactive</sub> | <sub>deep>`</sub> | <sub>Select optimizer lane</sub> |
+| <sub>`profile <default</sub> | <sub>claude</sub> | <sub>codex</sub> | <sub>gemini</sub> | <sub>grok>`</sub> | <sub>Select transform profile</sub> |
+| <sub>`effort <low</sub> | <sub>medium</sub> | <sub>high</sub> | <sub>xhigh</sub> | <sub>max>`</sub> | <sub>Select transform effort</sub> |
+| <sub>`log`</sub> | <sub>Show recent runs and saved benchmarks</sub> |
+| <sub>`key <PROVIDER> <apiKey>`</sub> | <sub>Save a provider key or inspect status</sub> |
+| <sub>`stat`</sub> | <sub>Show one-time desktop process telemetry</sub> |
+| <sub>`mode`</sub> | <sub>Show active mode, lane, profile, effort, and output</sub> |
+| <sub>`copy`</sub> | <sub>Copy the latest result</sub> |
+| <sub>`clear`</sub> | <sub>Clear the transcript</sub> |
+| <sub>`help`</sub> | <sub>List commands</sub> |
+| <sub>`quit`</sub> | <sub>Close MyPrompt</sub> |
+
+### Slash commands
+
+```text
+/help
+/evaluate <text>
+/library
+/library search <query>
+/library save
+/draft save
+/recent
+/benchmark list
+/benchmark save
+/benchmark run <id>
+/provider
+/usage
+/subscription upgrade <tier> <interval>
+```
+
+Library, usage, and subscription operations require an authenticated session.
+
+### Result actions
+
+After a generated result, keyboard actions can include:
+
+<code>[c] copy</code> · <code>[l] library</code> · <code>[d] draft</code> · <code>[b] benchmark</code> · <code>[r] rerun</code> · <code>[e] evaluate</code>
+
+Benchmark rows use:
+
+<code>[b] run</code>
+
+---
+
+## 14 — Console Visual Contract <img src="https://img.shields.io/badge/VISUAL%20SYSTEM-F43F5E?style=flat-square&labelColor=0D1117" alt="Visual System" />
+
+MyPrompt's visual language is intentionally terminal-native. The UI uses **JetBrains Mono** throughout.
+
+| <sub>Aspect</sub> | <sub>Value</sub> |
+| --- | --- |
+| <sub>**Font**</sub> | <sub>JetBrains Mono 400 / 500 / 600 / 700</sub> |
+| <sub>**Body weight**</sub> | <sub>500</sub> |
+| <sub>**Strong weight**</sub> | <sub>700</sub> |
+| <sub>**Size**</sub> | <sub>11px</sub> |
+| <sub>**Line height**</sub> | <sub>1.45</sub> |
+| <sub>**Window/app**</sub> | <sub>`#16191d`</sub> |
+| <sub>**Chrome**</sub> | <sub>`#111316`</sub> |
+| <sub>**Primary text**</sub> | <sub>`#c5cad3`</sub> |
+| <sub>**Strong text**</sub> | <sub>`#ffffff`</sub> |
+| <sub>**Dim text**</sub> | <sub>`#8a929e`</sub> |
+| <sub>**Prompt/success**</sub> | <sub>`#89ca78`</sub> |
+| <sub>**Warning**</sub> | <sub>`#d19a66`</sub> |
+| <sub>**Error**</sub> | <sub>`#ef596f`</sub> |
+| <sub>**Path**</sub> | <sub>`#61afef`</sub> |
+| <sub>**Heading**</sub> | <sub>`#d55fde`</sub> |
+| <sub>**Accent**</sub> | <sub>`#2bbac5`</sub> |
+| <sub>**Yellow**</sub> | <sub>`#e5c07b`</sub> |
+
+Hierarchy comes primarily from:
+
+<code>color</code> · <code>spacing</code> · <code>alignment</code>
+
+—not larger typography.
+
+### Window geometry
+
+First launch:
+
+<code>80 columns × 20 rows</code>
+
+The window is measured against the renderer's real character cell and then persists the operator's chosen size. The stored window-state format is currently:
+
+<code>version: 7</code>
+
+On Windows, the surface remains opaque so ClearType rendering stays active.
+
+---
+
+## 15 — System Architecture <img src="https://img.shields.io/badge/ARCHITECTURE-5B8CFF?style=flat-square&labelColor=0D1117" alt="Architecture" />
 
 ```mermaid
 %%{init: {"flowchart": {"htmlLabels": false, "padding": 20}, "themeVariables": {"fontFamily": "monospace", "fontSize": "11px"}}}%%
 flowchart LR
-    L0["1 · Trust Boundary"]
-    L1["2 · Constitution"]
-    L2["3 · Navigation"]
-    Risk["4 · Risk Surfaces"]
-    CI["5 · CI Governance"]
-    L3["6 · Isolation"]
-    Task["7 · Task Protocol"]
-    Conf["8 · Conformance Level"]
+    R["Renderer<br/>terminal console"]
+    P["Preload<br/>window.sentraDesktop"]
+    I["IPC Main<br/>desktop:command + optimize:*"]
+    O["lib/optimizer<br/>brief · super"]
+    T["lib/transform<br/>compiler profiles"]
+    E["lib/evaluator"]
+    Q["lib/prompt-quality<br/>validator + clarification"]
+    L["lib/llm<br/>registry + adapters"]
+    W["workspace-store<br/>JSON in userData"]
+    D[("PostgreSQL via Prisma<br/>account features")]
 
-    L0 --> L1 --> L2 --> Risk --> CI --> L3 --> Task --> Conf
+    R --> P --> I
+    I --> O
+    I --> T
+    I --> E
+    O --> Q
+    O --> L
+    E --> L
+    I --> W
+    I --> D
 
-    classDef stage fill:#0D1117,stroke:#5B8CFF,color:#ffffff,stroke-width:2px;
-    class L0,L1,L2,Risk,CI,L3,Task,Conf stage;
+    classDef renderer fill:#082F49,stroke:#22D3EE,color:#ECFEFF,stroke-width:2px;
+    classDef boundary fill:#3A2507,stroke:#FBBF24,color:#FFFBEB,stroke-width:2px;
+    classDef engine fill:#2E1065,stroke:#A78BFA,color:#F5F3FF,stroke-width:2px;
+    classDef verify fill:#0F2E2A,stroke:#2DD4BF,color:#ECFDF5,stroke-width:2px;
+    classDef data fill:#172554,stroke:#60A5FA,color:#EFF6FF,stroke-width:2px;
+
+    class R renderer;
+    class P,I boundary;
+    class O,T,E,L engine;
+    class Q verify;
+    class W,D data;
 ```
 
-## What SAFRS Is Not
+### Process boundary
 
-SAFRS should not be represented as:
+The renderer does not import `lib/`. It communicates through:
 
-- a certification scheme;
-- a model evaluation benchmark;
-- a replacement for security engineering;
-- a replacement for ISO/IEC 42001;
-- a replacement for the EU AI Act or sector-specific regulation;
-- a replacement for SLSA;
-- a guarantee against prompt injection;
-- a claim that every autonomous agent is safe;
-- a mandate to govern every repository at the highest possible intensity.
+<code>window.sentraDesktop</code>
 
-Its scope is narrower: **repository-level governance for agentic software
-engineering**.
+and receives optimizer events such as:
 
-## Known Limitations
+<code>optimize:status</code> · <code>optimize:chunk</code> · <code>optimize:done</code> · <code>optimize:error</code>
 
-SAFRS v1.1 explicitly acknowledges unresolved questions.
+Electron is configured with:
 
-| Limitation | Current boundary |
-| --- | --- |
-| <sub>No controlled empirical validation yet</sub> | <sub>v1.1 is a design standard; claims about drift reduction remain to be measured</sub> |
-| <sub>Risk classification remains partly judgmental</sub> | <sub>The five-factor derivation is conceptual, not a numeric decision function</sub> |
-| <sub>Agent identity is asserted, not cryptographically proven</sub> | <sub>Role attestation remains a future design question</sub> |
-| <sub>Single-writer may be stricter than necessary</sub> | <sub>Finer-grained safe partitioning requires evidence before relaxation</sub> |
-| <sub>Cross-capsule tasks are underspecified</sub> | <sub>Ownership across multiple bounded scopes needs a cleaner protocol</sub> |
-| <sub>CI checks are structural, not semantic</sub> | <sub>Human review remains necessary for truthfulness</sub> |
-| <sub>Prompt injection is contained, not solved</sub> | <sub>Least privilege and isolation limit consequence</sub> |
-| <sub>Conformance is self-assessed</sub> | <sub>Independent verification is not defined in v1.1</sub> |
+<code>contextIsolation: true</code> · <code>nodeIntegration: false</code>
 
-These are candidates for future revision, not hidden implementation assumptions.
+---
 
-## Documentation Architecture
+## 16 — IPC and Runtime <img src="https://img.shields.io/badge/RUNTIME-F59E0B?style=flat-square&labelColor=0D1117" alt="Runtime" />
 
-SAFRS separates authoritative requirements from explanation and implementation
-examples.
-
-### Asset Model
+The main `desktop:command` surface handles operations including:
 
 ```text
-SAFRS Specification v1.1
+transform:run
+optimize:run
+evaluate:run
+library:*
+draft:save
+recent:list
+benchmark:list
+benchmark:save
+benchmark:run
+templates:list
+usage:summary
+provider:list
+provider:save
+provider:delete
+subscription:upgrade
+```
+
+Separate IPC families handle:
+
+<code>workspace:*</code> · <code>app:get-shell-state</code> · <code>system:stats</code> · <code>window:*</code> · <code>auth:*</code>
+
+### Streaming
+
+`optimize:run` returns immediately with a request identifier. Progress then arrives through events:
+
+<code>preparing</code> · <code>waiting</code> · <code>streaming</code>
+
+During Coding Brief repair the console can also show:
+
+```text
+Correcting the Coding Brief against the validator...
+```
+
+A run finishes through:
+
+<code>optimize:done</code>
+
+or:
+
+<code>optimize:error</code>
+
+### Provider failure classes
+
+Optimizer failures are normalized as:
+
+<code>PROVIDER_AUTH</code> · <code>RATE_LIMIT</code> · <code>NETWORK</code> · <code>TIMEOUT</code> · <code>UPSTREAM</code> · <code>QUOTA_EXCEEDED</code> · <code>MODEL_ACCESS</code> · <code>UNKNOWN</code>
+
+---
+
+## 17 — Data and Storage <img src="https://img.shields.io/badge/DATA-14B8A6?style=flat-square&labelColor=0D1117" alt="Data" />
+
+Guest operation is local-first. Normal guest use stores workspace output in Electron's `userData` directory and does not require PostgreSQL.
+
+### Local files
+
+| <sub>File</sub> | <sub>Purpose</sub> |
+| --- | --- |
+| <sub>`sentra-desktop-workspace.json`</sub> | <sub>Drafts, recent runs, refinements, benchmarks</sub> |
+| <sub>`session.json`</sub> | <sub>Signed-in Supabase session</sub> |
+| <sub>`sentra-desktop-window-state.json`</sub> | <sub>Window position, dimensions, state version</sub> |
+
+Workspace writes are serialized and atomic:
+
+```text
+write temporary file
+    ↓
+rename into place
+```
+
+Reads and writes are parsed with Zod.
+
+### Database-backed account features
+
+PostgreSQL/Prisma is used for account features such as:
+
+<code>user resolution</code> · <code>tier / quota checks</code> · <code>prompt library</code> · <code>stored provider keys</code> · <code>usage summaries</code> · <code>subscription operations</code>
+
+The schema includes models for:
+
+```text
+User
+UserApiKey
+Prompt
+Evaluation
+PromptTemplate
+Subscription
+Payment
+UsageRecord
+FeatureFlag
+RateLimitCounter
+EmailJob
+```
+
+---
+
+## 18 — Repository Structure <img src="https://img.shields.io/badge/REPOSITORY-64748B?style=flat-square&labelColor=0D1117" alt="Repository" />
+
+Key surfaces:
+
+```text
+Myprompt/
+├── desktop/
+│   ├── bootstrap.ts
+│   ├── main.ts
+│   ├── preload.ts
+│   ├── ipc/
+│   └── renderer/
 │
-├── Strategic Introduction
-├── Papers I–V
-├── Reference Architecture
-├── Templates
-└── Conformance Checklist
+├── lib/
+│   ├── optimizer/
+│   ├── prompt-quality/
+│   ├── transform/
+│   ├── evaluator/
+│   ├── llm/
+│   ├── templates/
+│   ├── embeddings/
+│   ├── billing/
+│   ├── auth/
+│   ├── desktop/
+│   ├── supabase/
+│   ├── email/
+│   └── db/
+│
+├── types/
+│   └── index.ts
+│
+├── prisma/
+│   ├── schema.prisma
+│   └── migrations/
+│
+├── data/
+│   └── templates/
+│
+├── docs/
+│   └── CODING_BRIEF_STANDARD.md
+│
+├── __tests__/
+├── e2e/
+├── scripts/
+├── project.contract.json
+├── package.json
+└── README.md
 ```
 
-### Explanatory Paper Sequence
+The browser extension described in project history is a separate WXT + React
+surface and is **not part of the current standalone capsule tree**.
 
-| Paper | Subject | Defines |
-| --- | --- | --- |
-| <sub>**Paper I**</sub> | <sub>Repository topology</sub> | <sub>The system</sub> |
-| <sub>**Paper II**</sub> | <sub>Trust, identity, authority, permission</sub> | <sub>Who may act</sub> |
-| <sub>**Paper III**</sub> | <sub>Risk tiers and mandatory controls</sub> | <sub>When they may act</sub> |
-| <sub>**Paper IV**</sub> | <sub>Multi-agent coordination</sub> | <sub>How agents act together</sub> |
-| <sub>**Paper V**</sub> | <sub>Documentation lifecycle and CI governance</sub> | <sub>How knowledge stays trustworthy</sub> |
+---
 
-The conceptual progression is:
+## 19 — Testing and Quality Gates <img src="https://img.shields.io/badge/QUALITY-14B8A6?style=flat-square&labelColor=0D1117" alt="Quality" />
+
+MyPrompt separates several kinds of evidence.
 
 ```text
-TOPOLOGY → TRUST → RISK → EXECUTION → KNOWLEDGE
+unit / contract tests
+lint
+typecheck
+build
+Electron E2E
+standalone capsule verification
+optimizer acceptance budgets
+evaluator quality scoring
+Coding Brief contract validation
 ```
 
-### Documentation Governance Rule
+### Commands
 
-The README is a discovery surface. It must remain concise enough to orient
-humans and agents without becoming a shadow specification.
+| <sub>Gate</sub> | <sub>Command</sub> | <sub>Purpose</sub> |
+| --- | --- | --- |
+| <sub>Unit / contract</sub> | <sub>`pnpm test`</sub> | <sub>Vitest suite</sub> |
+| <sub>Desktop subset</sub> | <sub>`pnpm test:desktop`</sub> | <sub>Desktop-focused Vitest</sub> |
+| <sub>Lint</sub> | <sub>`pnpm lint`</sub> | <sub>ESLint</sub> |
+| <sub>Typecheck</sub> | <sub>`pnpm typecheck`</sub> | <sub>Prisma generation + strict TypeScript check</sub> |
+| <sub>Build</sub> | <sub>`pnpm build`</sub> | <sub>Electron desktop build</sub> |
+| <sub>E2E</sub> | <sub>`pnpm test:e2e`</sub> | <sub>Playwright Electron</sub> |
+| <sub>Structure</sub> | <sub>`pnpm verify:structure`</sub> | <sub>Capsule boundary</sub> |
+| <sub>Extraction</sub> | <sub>`pnpm verify:extraction`</sub> | <sub>Fresh-copy standalone proof</sub> |
+| <sub>Deploy dry run</sub> | <sub>`pnpm deploy:dry-run`</sub> | <sub>Non-production deployment check</sub> |
+| <sub>Full suite</sub> | <sub>`pnpm verify`</sub> | <sub>Repository verification contract</sub> |
 
-Normative requirements belong in the specification.
+### Standalone proof
 
-Detailed reasoning belongs in the explanatory papers.
+`verify:structure` enforces the capsule boundary. `verify:extraction` proves that a fresh extracted copy can perform the required lifecycle without depending on the containing monorepo.
 
-Implementation examples belong in reference material and templates.
-
-## Contributing
-
-Changes to SAFRS should preserve its authority hierarchy and knowledge
-lifecycles.
-
-Minimum contribution workflow:
-
-1. identify whether the change is **normative**, **explanatory**, or
-   **illustrative**;
-2. identify the affected architecture, trust, risk, execution, security, or
-   knowledge-governance surface;
-3. classify the change risk before editing;
-4. preserve the single-writer rule for the bounded mutation scope;
-5. update the canonical architecture documentation when current behavior
-   changes;
-6. create a new ADR instead of modifying a merged historical decision;
-7. run all applicable documentation, architecture, security, lint, and test
-   checks;
-8. escalate immediately if the required work crosses into a higher risk tier;
-9. obtain explicit human authorization for R3 actions and constitutional
-   changes.
-
-> [!IMPORTANT]
-> A contribution must not weaken or bypass the controls used to verify that
-> contribution.
-
-## License and Authority
-
-SAFRS v1.1 is an official concept and standards-development work of
-**Sentra Artificial Intelligence**.
-
-The exact license, redistribution rights, trademark policy, certification use,
-and external conformance-claim policy should be defined by the authoritative
-repository policy before public distribution.
-
-Until such policy is explicitly declared, this README must not be interpreted as
-granting certification rights or permission to represent third-party systems as
-independently verified SAFRS conformant.
-
-## Stewardship
-
-**Dr. Ferdi Iskandar**  
-Lead, CEO & Full Stack Developer  
-Sentra Artificial Intelligence
-
-For standards interpretation, repository governance, or formal conformance
-questions, use the approved Sentra governance channel associated with the
-authoritative SAFRS repository.
+That distinction is fundamental to this repository.
 
 ---
 
-## Repository State
+## 20 — Verified Quality Snapshot <img src="https://img.shields.io/badge/VERIFIED-14B8A6?style=flat-square&labelColor=0D1117" alt="Verified" />
 
-Everything below describes the concrete, current state of *this* repository —
-not the abstract standard above. It is repo-state, not normative SAFRS
-content, and is expected to drift; treat `.safrs/document-registry.json`,
-`docs/architecture/`, and the official [Sentra SAFRS Wiki](https://github.com/drferdi/Monorepo-safrs/wiki)
-as the source of truth if it falls out of date.
+The latest acceptance snapshot documented for **23 September 2026** reported all
+four primary gates green:
 
-### Quick start
+<code>191 Vitest tests</code> · <code>clean lint</code> · <code>typecheck + build exit code 0</code> · <code>5 Playwright Electron E2E tests</code>
 
-```bash
-pnpm install          # Node 24.18.x, pnpm 11
-pnpm setup            # .env from template + local Postgres (Docker) + migrate + seed
-pnpm dev              # golden-path app on http://localhost:3000
-pnpm check            # governance + tokens + lint + typecheck + test + build
+The E2E suite covered:
+
+<code>compiler profiles in a real Electron renderer</code> · <code>window overflow / extreme-output containment</code> · <code>optimizer-stage provider-call isolation</code> · <code>80 × 20 first-launch geometry + persisted sizing</code> · <code>mechanical console color/token matching</code>
+
+### Mechanical UI verification
+
+The visual contract is not checked by subjective screenshot review alone. Computed renderer styles are compared against the canonical terminal reference for properties including:
+
+```text
+window background
+transcript background
+chrome
+text
+status colors
+radius
+padding
+font size
+line height
+directory/file colors
 ```
 
-Working on this repository as an agent (or with one) starts at
-[`AGENTS.md`](AGENTS.md), which routes to everything else. Complete documentation and knowledge base guides are available on the [Sentra SAFRS Wiki](https://github.com/drferdi/Monorepo-safrs/wiki).
+A mismatch fails the check.
 
-### Current capsules
+> [!IMPORTANT]
+> The counts above are a dated acceptance snapshot, not a promise that future
+> revisions will always contain exactly the same number of tests.
 
-| Capsule | Current state | Entry point |
-| --- | --- | --- |
-| <sub>`golden-path`</sub> | <sub>Implemented reference flow: Next.js → typed Hono API → Prisma → local PostgreSQL</sub> | <sub>`projects/internal/golden-path/apps/web`</sub> |
-| <sub>`control-center`</sub> | <sub>Implemented local, read-only operator dashboard; remains usable when Docker or the database is unavailable</sub> | <sub>`projects/internal/control-center/apps/web`</sub> |
-| <sub>`academic-smartboard`</sub> | <sub>Sovereign curriculum, Kayyisa AI knowledge package, and Next.js application surfaces (Subphases 1–5 completed)</sub> | <sub>`projects/academic/academic-smartboard`</sub> |
-| <sub>`kediri-history`</sub> | <sub>Sovereign standalone capsule; digital heritage storytelling, historical archives, and GSAP scenes</sub> | <sub>`projects/product/kediri-history`</sub> |
-| <sub>`sentrabot`</sub> | <sub>Sovereign robotics and autonomous agent control suite with Next.js web cockpit and telemetry</sub> | <sub>`projects/product/sentrabot`</sub> |
-| <sub>`avery`</sub> | <sub>Sovereign clinical intelligence and healthcare automation platform</sub> | <sub>`projects/healthcare/avery`</sub> |
-| <sub>`portfolio-drnovia`</sub> | <sub>Sovereign academic and medical specialist portfolio showcase</sub> | <sub>`projects/corporate/portfolio-drnovia`</sub> |
-| <sub>`_template`</sub> | <sub>Governance scaffold for new capsules; not an active product</sub> | <sub>`projects/_template`</sub> |
+---
 
-### Governance and automation commands
+## 21 — Benchmarks <img src="https://img.shields.io/badge/BENCHMARK-F59E0B?style=flat-square&labelColor=0D1117" alt="Benchmark" />
 
-| Command | What it does |
+MyPrompt benchmarks are **budget checks, not quality scores**. A benchmark case passes when output:
+
+<code>is visible</code> · <code>meets latency budget</code> · <code>meets expected length budget</code>
+
+The acceptance harness records:
+
+<code>firstVisibleMs</code> · <code>totalLatencyMs</code> · <code>promptChars</code> · <code>hasVisibleOutput</code>
+
+Failure classes include:
+
+<code>visible-output</code> · <code>first-visible</code> · <code>total-latency</code> · <code>prompt-too-short</code> · <code>prompt-too-long</code>
+
+### Lane budgets
+
+| <sub>Lane</sub> | <sub>Max first visible</sub> | <sub>Max total</sub> | <sub>Output length</sub> |
+| --- | ---: | ---: | --- |
+| <sub>**INTERACTIVE**</sub> | <sub>5,000 ms</sub> | <sub>12,000 ms</sub> | <sub>240–2,400 characters</sub> |
+| <sub>**DEEP**</sub> | <sub>15,000 ms</sub> | <sub>45,000 ms</sub> | <sub>at least 320 characters</sub> |
+
+The live acceptance artifacts documented on 23 September 2026 used the OpenAI
+provider through an OpenAI-compatible route. Every stored output in that run
+was a Coding Brief, completed in one provider attempt, with no repair call
+required.
+
+---
+
+## 22 — Security Model <img src="https://img.shields.io/badge/SECURITY-F43F5E?style=flat-square&labelColor=0D1117" alt="Security" />
+
+### Renderer isolation
+
+<code>contextIsolation = true</code> · <code>nodeIntegration  = false</code>
+
+The renderer does not receive provider secrets.
+
+### Secret handling
+
+<code>.env</code> · <code>.env.local</code>
+
+are gitignored. Provider keys are not logged and are not passed into the renderer.
+
+Signed-in stored provider keys use AES-256-GCM encryption.
+
+### Boundary validation
+
+Current prompt and workspace boundaries use Zod validation for:
+
+<code>OptimizeRequest</code> · <code>EvaluateRequest</code> · <code>TransformRequest</code> · <code>template payloads</code> · <code>workspace reads / writes</code>
+
+### Known validation gaps
+
+The current dossier identifies several boundaries that still need tightening:
+
+<code>DesktopCommandEnvelopeSchema exists but is not invoked</code> · <code>auth:* payloads are not all schema-validated</code> · <code>window:set-pos is not yet schema-validated</code> · <code>desktop:toggle-mini is not yet schema-validated</code>
+
+These are documented gaps, not features.
+
+---
+
+## 23 — Account vs Guest Operation <img src="https://img.shields.io/badge/SESSION-8B5CF6?style=flat-square&labelColor=0D1117" alt="Session" />
+
+### Guest
+
+Without a signed-in session:
+
+<code>provider configuration comes from local environment/configuration</code> · <code>database-backed account features are not required</code> · <code>workspace remains local</code>
+
+### Signed in
+
+With a Supabase session, account-backed requests can pass through:
+
+<code>tier checks</code> · <code>quota checks</code> · <code>model-access checks</code> · <code>stored provider-key resolution</code>
+
+These controls live in the Electron/main-process side rather than the renderer.
+
+---
+
+## 24 — Development Commands <img src="https://img.shields.io/badge/DEVELOPMENT-5B8CFF?style=flat-square&labelColor=0D1117" alt="Development" />
+
+### Run
+
+```bash
+pnpm start
+pnpm dev
+pnpm desktop:dev
+```
+
+### Build
+
+```bash
+pnpm build
+pnpm desktop:build
+```
+
+### Test
+
+```bash
+pnpm test
+pnpm test:desktop
+pnpm test:watch
+pnpm test:coverage
+pnpm test:e2e
+pnpm desktop:smoke
+```
+
+### Quality
+
+```bash
+pnpm lint
+pnpm typecheck
+pnpm verify
+pnpm verify:structure
+pnpm verify:extraction
+pnpm deploy:dry-run
+```
+
+### Acceptance
+
+```bash
+pnpm optimizer:acceptance
+pnpm desktop:benchmark
+```
+
+### Database
+
+```bash
+pnpm db:generate
+pnpm db:migrate
+pnpm db:migrate:deploy
+pnpm db:migrate:resolve:init
+pnpm db:migrate:apply
+pnpm db:seed
+```
+
+> [!WARNING]
+> `db:seed` currently points to `prisma/seed.ts`, which the source review found
+> missing. Treat that command as a known gap until the seed file or script
+> contract is corrected.
+
+---
+
+## 25 — Environment Configuration <img src="https://img.shields.io/badge/ENVIRONMENT-22D3EE?style=flat-square&labelColor=0D1117" alt="Environment" />
+
+Configure only the integrations required for the current workflow.
+
+### LLM providers
+
+```text
+OPENAI_API_KEY
+OPENAI_BASE_URL
+OPENAI_MODEL
+
+ANTHROPIC_API_KEY
+XAI_API_KEY
+MISTRAL_API_KEY
+QWEN_API_KEY
+
+OLLAMA_MODEL
+LOCAL_MODEL
+```
+
+### Database and encryption
+
+<code>DATABASE_URL</code> · <code>DIRECT_URL</code> · <code>ENCRYPTION_KEY</code>
+
+### Supabase
+
+<code>NEXT_PUBLIC_SUPABASE_URL</code> · <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> · <code>SUPABASE_SERVICE_ROLE_KEY</code>
+
+### Optional services
+
+<code>RESEND_API_KEY</code> · <code>RESEND_FROM_EMAIL</code> · <code>XENDIT_SECRET_KEY</code> · <code>XENDIT_CALLBACK_TOKEN</code> · <code>NEXT_PUBLIC_SENTRY_DSN</code> · <code>NEXT_PUBLIC_APP_URL</code>
+
+### Desktop runtime
+
+<code>SENTRA_DESKTOP_DEBUG</code> · <code>SENTRA_DESKTOP_SMOKE</code> · <code>SENTRA_DESKTOP_USER_DATA</code> · <code>SENTRA_DESKTOP_PROVIDER</code>
+
+> [!NOTE]
+> The source review found that `MISTRAL_API_KEY` and `QWEN_API_KEY` are consumed
+> by runtime code but were not yet represented in the example environment file
+> at the time of the review.
+
+---
+
+## 26 — Standalone Capsule Contract <img src="https://img.shields.io/badge/SAFRS-F59E0B?style=flat-square&labelColor=0D1117" alt="SAFRS" />
+
+MyPrompt is developed as a standalone SAFRS capsule. Current repository governance status:
+
+<code>active SAFRS capsule</code> · <code>R2 review required before integration or release</code>
+
+The current lifecycle boundary treats live database migration, provider-side actions, payment actions, real email delivery, and production packaging/deployment as outside normal capsule verification scope. The governing rule is:
+
+> **The project may live inside a monorepo for coordinated development, but it
+> must not depend on the monorepo to install, build, test, or run.**
+
+The repository contract therefore treats these as project-local responsibilities:
+
+<code>install</code> · <code>lint</code> · <code>typecheck</code> · <code>test</code> · <code>build</code> · <code>run</code> · <code>deploy dry run</code>
+
+### Publication model
+
+The documented publication flow from the containing development repository is:
+
+```text
+projects/internal/prompt
+        ↓
+git subtree split
+        ↓
+capsule-only history
+        ↓
+credential / boundary scan
+        ↓
+project-specific push
+        ↓
+drferdi/Myprompt
+```
+
+Project code is published to its own repository, not to the framework
+repository as a substitute.
+
+---
+
+## 27 — Publication Safety <img src="https://img.shields.io/badge/PUBLISH-F43F5E?style=flat-square&labelColor=0D1117" alt="Publish" />
+
+Before publishing a capsule split, the documented workflow checks for:
+
+<code>no committed .env files except .env.example</code> · <code>no strings shaped like API keys</code> · <code>no paths outside the capsule</code>
+
+The development repository's pre-push protection also prevents project capsule ranges from being pushed to the wrong remote without explicit operator authorization. This exists to preserve one simple boundary:
+
+<code>framework repository ≠ project publication repository</code>
+
+---
+
+## 28 — Known Gaps and Cleanup Candidates <img src="https://img.shields.io/badge/KNOWN%20GAPS-F43F5E?style=flat-square&labelColor=0D1117" alt="Known Gaps" />
+
+The source review intentionally records unresolved issues rather than hiding
+them behind a polished README.
+
+| <sub>Area</sub> | <sub>Current gap</sub> |
 | --- | --- |
-| <sub>`pnpm governance`</sub> | <sub>All deterministic SAFRS checks (policy, registry, routing, inventory, topology, action pins, ownership, lifecycle, contracts, approvals/evidence, sensitive-change classification)</sub> |
-| <sub>`pnpm saf:status`</sub> | <sub>Plain-language repository status and the single next action</sub> |
-| <sub>`pnpm task claim \| state \| close \| list`</sub> | <sub>Task lifecycle and exclusive scope ownership</sub> |
-| <sub>`pnpm saf gate --all`</sub> | <sub>The eight publication gates, locally</sub> |
-| <sub>`pnpm saf contract compile <input.json>`</sub> | <sub>Compile and digest a `TaskContractV1`</sub> |
-| <sub>`pnpm saf lease verify \| replay \| reconcile`</sub> | <sub>Inspect and reconcile lease event chains</sub> |
-| <sub>`pnpm saf evidence verify <manifest.json>`</sub> | <sub>Verify a sealed evidence manifest</sub> |
-| <sub>`pnpm saf gaffer run <intent>`</sub> | <sub>Autonomous Gaffer execution engine (scaffolding, testing, auto-fixing, standalone verification)</sub> |
+| <sub>**IPC validation**</sub> | <sub>Several auth/window/mini-mode payloads are not yet schema-validated</sub> |
+| <sub>**Command envelope**</sub> | <sub>`DesktopCommandEnvelopeSchema` exists but is not currently invoked</sub> |
+| <sub>**Coding Brief docs**</sub> | <sub>V6 runtime behavior is stricter than the prose standard</sub> |
+| <sub>**Brownfield rules**</sub> | <sub>V4/V11 documentation and implementation scope do not fully align</sub> |
+| <sub>**Stale doc reference**</sub> | <sub>A historical prompt-quality document is referenced from docs but absent from the current capsule</sub> |
+| <sub>**Window comments**</sub> | <sub>Some comments still mention 120×30 although runtime target is 80×20</sub> |
+| <sub>**Benchmark fixture**</sub> | <sub>`deep-architecture-review` currently routes as Coding Brief although its budget originated as a Super Prompt case</sub> |
+| <sub>**Database seed**</sub> | <sub>`db:seed` references a missing `prisma/seed.ts`</sub> |
+| <sub>**Generated Prisma client**</sub> | <sub>Generated client is committed although schema output configuration does not explicitly explain it</sub> |
+| <sub>**Workspace concurrency**</sub> | <sub>`main.ts` and `core.ts` create separate stores for the same workspace file, so write queues are not shared</sub> |
+| <sub>**Legacy web dependencies**</sub> | <sub>Next.js, Radix, Sentry Next.js, Vercel Analytics, and related remnants remain although no active web surface uses them</sub> |
 
-### Automation control plane
-
-Phases 1–5 of the SAFRS Full Automation Control Plane are implemented and merged.
-Phases 6–8 are deliberately parked: Chief resolved the activation decisions on
-2026-08-18, but no autonomous runner has been named. Canonical behavior lives in
-[`SAFRS_AUTOMATION.md`](docs/governance/SAFRS_AUTOMATION.md),
-[`SAFRS_APPROVALS.md`](docs/governance/SAFRS_APPROVALS.md), and
-[`SAFRS_EVIDENCE.md`](docs/governance/SAFRS_EVIDENCE.md); the architecture
-decision is [ADR 0002](docs/adrs/0002-safrs-automation-control-plane.md).
-
-| Layer | Delivered | Where |
-| --- | --- | --- |
-| <sub>Contracts and risk</sub> | <sub>`TaskContractV1` plus six sibling schemas, canonical JSON digests, monotonic risk (agents may raise it, never lower it)</sub> | <sub>`.safrs/schemas/`, `tools/automation/src/`</sub> |
-| <sub>Leases</sub> | <sub>Serialized remote lease authority with fencing tokens; one GitHub issue per task as an append-only ledger</sub> | <sub>`.github/workflows/safrs-task-control.yml`</sub> |
-| <sub>Guard and budgets</sub> | <sub>One vendor-neutral `authorize()` shared by every adapter, plus a task-wide budget ledger with a circuit breaker</sub> | <sub>`tools/automation/src/{guard,budgets}.mjs`</sub> |
-| <sub>Publication gates</sub> | <sub>Eight stable checks — `SAFRS Contract · Lease · Risk · Budgets · Verification · Review · Evidence · Platform`</sub> | <sub>`.github/workflows/safrs-pr-gates.yml`</sub> |
-| <sub>Evidence and approvals</sub> | <sub>Sealed, redacted, content-addressed manifests; approvals bound to exact head SHA, diff digest, and reviewer authority</sub> | <sub>`docs/evidence/automation/`</sub> |
-
-Two properties are worth knowing before relying on it:
-
-- **A gate validates the artifacts that exist.** When a gate's artifacts are
-  genuinely absent — a human-authored pull request carries no run evidence —
-  it reports `not_applicable` and passes. The same code becomes enforcing once
-  Phases 6–7 produce those artifacts.
-- **Digests must agree across languages.** Every contract and manifest is
-  verified by both Node and Python; disagreement fails governance. Canonical
-  JSON therefore accepts only safe integers, because engines spell floats
-  differently.
-
-Vendor adapters (Codex, Claude, Cursor) are thin translators into the shared
-guard, so all three reach the same verdict for the same behavior. Droid
-remains `read_only_disabled`; Chief resolved on 2026-08-18 that no unattended
-Droid workflow will be introduced without a separately reviewed artifact and
-installer.
-
-### Capability status
-
-| Capability | Status | Command | Requires |
-| --- | --- | --- | --- |
-| <sub>Single-command local bootstrap</sub> | <sub>Verified</sub> | <sub>`pnpm dev`</sub> | <sub>Docker (Postgres)</sub> |
-| <sub>Local email development (`golden-path`)</sub> | <sub>Installed; needs credentials</sub> | <sub>`pnpm dev:email`</sub> | <sub>`EMAIL_FROM`, `RESEND_API_KEY`</sub> |
-| <sub>Stripe sandbox webhooks (`golden-path`)</sub> | <sub>Installed; needs credentials</sub> | <sub>`pnpm stripe:listen`</sub> | <sub>`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, local Stripe CLI</sub> |
-| <sub>Renovate</sub> | <sub>Patch, minor, pin, digest, and lockfile updates auto-merge only after tests pass; major updates wait for Chief</sub> | <sub>—</sub> | <sub>Dependency dashboard enabled; GitHub-native auto-merge is disabled</sub> |
-| <sub>GitHub security</sub> | <sub>Secret scanning, push protection, Dependabot alerts and security updates, and dependency graph enabled</sub> | <sub>—</sub> | <sub>Live GitHub API check on 2026-08-20; continuous drift audit is not implemented</sub> |
-| <sub>CODEOWNERS R2/R3 enforcement</sub> | <sub>Declared, **not yet enforced**</sub> | <sub>—</sub> | <sub>Branch protection on `main` (checklist in [`PLATFORM_ACTIVATION.md`](docs/governance/PLATFORM_ACTIVATION.md))</sub> |
-| <sub>Publisher auto-merge</sub> | <sub>Evaluation-only</sub> | <sub>—</sub> | <sub>`SAFRS_PUBLISHER_ENABLED` stays false until Phase 6 activates the required identity and controls</sub> |
-
-> [!IMPORTANT]
-> `main` currently has **no branch protection**, so the eight gates above are
-> published but not required. Requiring them, together with creating the
-> auditor and publisher identities, is parked Phase 6 work. Chief resolved the
-> activation policy on 2026-08-18; activation waits for a named runner and the
-> Phase 6 reviewed change.
-
-Additional optional capabilities (see `tools/capabilities/manifests/` for the
-full catalog) can be previewed and recorded per project with:
-
-```bash
-pnpm capability:add --capability <id> --project <project> --preview
-pnpm capability:add --capability <id> --project <project> --apply --confirm "ENABLE <id> FOR <project>"
-```
-
-Recording a capability does not install its runtime integration — see the
-manifest's `sideEffects` and `removal` fields for what that entails.
-
-### Declared conformance
-
-This repository declares **SAFRS Core**. It does not claim Controlled, Secure,
-or Regulated: those require live platform evidence that does not exist yet.
-See [`SAFRS_CONFORMANCE.md`](docs/governance/SAFRS_CONFORMANCE.md).
+These are backlog material. They should not be rebranded as product features.
 
 ---
 
-## ── OPEN CHANNEL
+## 29 — Documentation vs Runtime <img src="https://img.shields.io/badge/AUTHORITY-F59E0B?style=flat-square&labelColor=0D1117" alt="Authority" />
 
+The Coding Brief standard and validator are intended to evolve together. Where they diverge today, the repository review identified the runtime validator as the behavioral authority.
+
+That means contributors should verify both:
+
+<code>docs/CODING_BRIEF_STANDARD.md</code> · <code>lib/prompt-quality/contract.ts</code>
+
+before changing prompt-contract semantics. The same principle applies more broadly:
+
+```text
+written intent
+    ↓
+runtime contract
+    ↓
+executable verification
+```
+
+A README is not a substitute for executable behavior.
+
+---
+
+## 30 — Design Principles <img src="https://img.shields.io/badge/PRINCIPLES-8B5CF6?style=flat-square&labelColor=0D1117" alt="Principles" />
+
+MyPrompt's current implementation can be summarized with six operating
+principles:
+
+```text
+P1  Carry forward what the operator stated.
+P2  When a choice is required, propose the conventional option.
+P3  Make each proposal explicit and readable by a non-programmer.
+P4  Do not propose code that already exists.
+P5  Ask questions only to refine an already complete brief.
+P6  When ambiguity remains, choose one interpretation and expose alternatives.
+```
+
+These principles are why the Coding Brief flow does not begin with an interrogation. It begins with an attempt to be useful.
+
+---
+
+## 31 — What MyPrompt Is Not <img src="https://img.shields.io/badge/NON--GOALS-64748B?style=flat-square&labelColor=0D1117" alt="Non Goals" />
+
+MyPrompt is not currently:
+
+<code>a web SaaS interface</code> · <code>a generic chat client</code> · <code>an autonomous coding agent</code> · <code>a replacement for repository governance</code> · <code>a hidden-key proxy service</code> · <code>a benchmark leaderboard</code> · <code>a prompt-quality oracle</code>
+
+It is a focused desktop tool for turning intent into structured prompt
+artifacts and checking that those artifacts satisfy explicit contracts.
+
+---
+
+## 32 — Contributor Orientation <img src="https://img.shields.io/badge/CONTRIBUTOR-22D3EE?style=flat-square&labelColor=0D1117" alt="Contributor" />
+
+If changing prompt behavior, start with the contract.
+
+```text
+Coding Brief
+→ docs/CODING_BRIEF_STANDARD.md
+→ lib/optimizer/
+→ lib/prompt-quality/
+→ __tests__/optimizer/
+
+Super Prompt
+→ lib/optimizer/super-prompt-format.ts
+→ lib/templates/
+→ lib/embeddings/
+
+Transform
+→ lib/transform/
+→ lib/transform/compiler/
+
+Providers
+→ lib/llm/providers/
+
+Desktop interaction
+→ desktop/ipc/
+→ desktop/preload.ts
+→ desktop/renderer/
+
+Persistence
+→ desktop workspace store
+→ prisma/
+```
+
+Before widening an interface, check whether the existing contract can be
+extended without weakening the standalone boundary.
+
+---
+
+## 33 — Verification Philosophy <img src="https://img.shields.io/badge/VERIFY-14B8A6?style=flat-square&labelColor=0D1117" alt="Verify" />
+
+MyPrompt does not treat one type of test as a universal substitute.
+
+```text
+tsc passes
+    ≠
+application verified
+
+unit tests pass
+    ≠
+desktop interaction verified
+
+benchmark passes
+    ≠
+prompt quality proven
+
+provider output looks good
+    ≠
+Coding Brief contract satisfied
+```
+
+The system combines:
+
+<code>static checks</code> · <code>contract tests</code> · <code>runtime tests</code> · <code>real Electron E2E</code> · <code>acceptance budgets</code> · <code>deterministic validators</code>
+
+Each proves something different.
+
+---
+
+## 34 — Current Source-of-Truth Map <img src="https://img.shields.io/badge/SOURCE%20OF%20TRUTH-F59E0B?style=flat-square&labelColor=0D1117" alt="Source of Truth" />
+
+| <sub>Concern</sub> | <sub>Primary authority</sub> |
+| --- | --- |
+| <sub>Package identity / lifecycle</sub> | <sub>`package.json`</sub> |
+| <sub>Standalone project contract</sub> | <sub>`project.contract.json`</sub> |
+| <sub>Coding Brief prose standard</sub> | <sub>`docs/CODING_BRIEF_STANDARD.md`</sub> |
+| <sub>Coding Brief executable validation</sub> | <sub>`lib/prompt-quality/contract.ts`</sub> |
+| <sub>Optimizer routing</sub> | <sub>`lib/optimizer/engine.ts`</sub> |
+| <sub>Super Prompt parsing</sub> | <sub>`lib/optimizer/super-prompt-format.ts`</sub> |
+| <sub>Transform behavior</sub> | <sub>`lib/transform/`</sub> |
+| <sub>Provider adapters</sub> | <sub>`lib/llm/providers/`</sub> |
+| <sub>Desktop IPC</sub> | <sub>`desktop/ipc/`</sub> |
+| <sub>Renderer behavior</sub> | <sub>`desktop/renderer/`</sub> |
+| <sub>Data model</sub> | <sub>`prisma/schema.prisma`</sub> |
+| <sub>Acceptance harness</sub> | <sub>`scripts/optimizer-acceptance.ts`</sub> |
+| <sub>Standalone verification</sub> | <sub>`scripts/verify-structure.mjs` · `scripts/verify-extraction.mjs`</sub> |
+
+---
+
+## 35 — Status <img src="https://img.shields.io/badge/STATUS-5B8CFF?style=flat-square&labelColor=0D1117" alt="Status" />
+
+```text
+Repository      drferdi/Myprompt
+Package         sentra-prompt
+Version         0.1.0
+Surface         Electron desktop
+Default output  Coding Brief
+Standard        Coding Brief Standard v3.0
+Validator       V1–V14
+Lanes           INTERACTIVE · DEEP
+Transform       deterministic
+Providers       Anthropic · OpenAI · xAI · Mistral · Qwen · Local/Ollama
+Node            >= 22
+pnpm            11.21.0
+```
+
+The repository is active. The latest documented quality snapshot in the supplied technical dossier is dated **23 September 2026**.
+
+---
+
+## 36 — The Short Version <img src="https://img.shields.io/badge/TL%3BDR-8B5CF6?style=flat-square&labelColor=0D1117" alt="TLDR" />
+
+```text
+An idea enters as text.
+
+MyPrompt decides whether it should become:
+a Coding Brief,
+a Super Prompt,
+or a deterministic model scaffold.
+
+If an LLM is involved, the output is parsed.
+If it is a Coding Brief, it is validated.
+If something important is still unresolved, clarification happens after the
+first complete brief—not before it.
+
+The operator stays in one terminal-like window.
+Provider keys stay outside the renderer.
+Guest work stays local.
+Account features use the database only when needed.
+The project remains capable of standing on its own outside the monorepo.
+```
+
+## - Lets Connect
 <p align="center">
   <a href="https://discord.gg/1511829076313374745"><img src="https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord" /></a>
   <a href="https://linkedin.com/in/dr-ferdi-iskandar-1b620a3b5"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>
@@ -1087,67 +1445,36 @@ See [`SAFRS_CONFORMANCE.md`](docs/governance/SAFRS_CONFORMANCE.md).
   <a href="https://tiktok.com/@drferdii"><img src="https://img.shields.io/badge/TikTok-000000?style=for-the-badge&logo=tiktok&logoColor=white" alt="TikTok" /></a>
   <a href="https://x.com/ClaudesyI81047"><img src="https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white" alt="X" /></a>
   <a href="mailto:drferdiiskandar@sentrahai.com"><img src="https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white" alt="Email" /></a>
-</p>
 
----
+<div align="center">
+<img src="https://i.ibb.co.com/4Z447tNw/myprompt2.png" alt="MyPrompt" width="64" />
 
-## ── TECHNOLOGY
+### Built by Sentra Artificial Intelligence
+**Prompt Engineering · Multi-LLM Optimization · AI-Native Tooling**
+<br />
 
-<p align="center">
-  <img src="https://img.shields.io/badge/PowerShell-5391FE?style=for-the-badge&logo=powershell&logoColor=white" alt="PowerShell" />
-  <img src="https://img.shields.io/badge/Python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54" alt="Python" />
-  <img src="https://img.shields.io/badge/pnpm-F69220?style=for-the-badge&logo=pnpm&logoColor=white" alt="pnpm" />
-  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/Turborepo-EF4444?style=for-the-badge&logo=turborepo&logoColor=white" alt="Turborepo" />
-  <img src="https://img.shields.io/badge/Biome-60A5FA?style=for-the-badge&logo=biome&logoColor=white" alt="Biome" />
-  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js" />
-  <img src="https://img.shields.io/badge/Node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js" />
-  <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=000000" alt="React" />
-  <img src="https://img.shields.io/badge/Hono-E36002?style=for-the-badge&logo=hono&logoColor=white" alt="Hono" />
-  <img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="TailwindCSS" />
-  <img src="https://img.shields.io/badge/Postgres-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="Postgres" />
-  <img src="https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma" />
-  <img src="https://img.shields.io/badge/Vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white" alt="Vitest" />
-  <img src="https://img.shields.io/badge/Playwright-2EAD33?style=for-the-badge&logo=playwright&logoColor=white" alt="Playwright" />
-  <img src="https://img.shields.io/badge/OpenTelemetry-000000?style=for-the-badge&logo=opentelemetry&logoColor=white" alt="OpenTelemetry" />
-  <img src="https://img.shields.io/badge/Git-F05033?style=for-the-badge&logo=git&logoColor=white" alt="Git" />
-  <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white" alt="GitHub Actions" />
-  <img src="https://img.shields.io/badge/Docker-0DB7ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
-</p>
+[Sentra Artificial Intelligence](https://sentrahai.com)
+·
+[Repository](https://github.com/drferdi/Myprompt)
+·
+[Wiki](https://github.com/drferdi/Myprompt/wiki)
+·
+[Issues](https://github.com/drferdi/Myprompt/issues)
 
----
+<br />
 
-## GSAP Skills (Official)
+<sub>
+MyPrompt · <code>sentra-prompt</code> · v0.1.0
+</sub>
 
-Repository-level GSAP guidance is provided by the official GSAP skills (MIT, from the GreenSock `gsap-skills` package), replacing the retired Sentra-GSAP standard.
+<br />
+<sub><code>TYPE AN IDEA · GET A STRUCTURE · VERIFY THE CONTRACT</code></sub>
+<br />
 
-### Interface
+<img src="https://img.shields.io/badge/IDEA-22D3EE?style=flat-square&labelColor=0D1117" alt="Idea" />
+<img src="https://img.shields.io/badge/STRUCTURE-8B5CF6?style=flat-square&labelColor=0D1117" alt="Structure" />
+<img src="https://img.shields.io/badge/VALIDATE-14B8A6?style=flat-square&labelColor=0D1117" alt="Validate" />
+<img src="https://img.shields.io/badge/REFINE-F59E0B?style=flat-square&labelColor=0D1117" alt="Refine" />
+<img src="https://img.shields.io/badge/READY-F43F5E?style=flat-square&labelColor=0D1117" alt="Ready" />
 
-```text
-/gsap <animation task>
-```
-
-The `/gsap` command (`.claude/commands/gsap.md`) routes the task to the right skill(s) before any code is written.
-
-### Installed skills
-
-```text
-.claude/skills/gsap-core/            core API — to/from/fromTo, easing, stagger, matchMedia
-.claude/skills/gsap-timeline/        sequencing, position parameter, nesting, playback
-.claude/skills/gsap-scrolltrigger/   scroll-linked animation, pinning, scrub, parallax
-.claude/skills/gsap-plugins/         SplitText, Flip, Draggable, Observer, ScrollSmoother, …
-.claude/skills/gsap-react/           React/Next.js — useGSAP, refs, cleanup
-.claude/skills/gsap-frameworks/      Vue, Nuxt, Svelte, vanilla lifecycles
-.claude/skills/gsap-utils/           gsap.utils helpers
-.claude/skills/gsap-performance/     jank, layout thrashing, 60fps optimization
-```
-
-Sentra conventions still apply on top of these skills: design tokens, cleanup on unmount, and `prefers-reduced-motion` support are non-negotiable.
-
----
-
-<p align="center">
-  <b>Dedicated to Aldebaran, Aimee, Audrey, and Del — & the Indonesia Healthcare Ecosystem.</b><br />
-  <sub>Sentra Artificial Intelligence · Built in the depth, deployed at the bedside.</sub><br />
-  <sub><code>// the surface is documentation. the depth is running.</code></sub>
-</p>
+</div>
