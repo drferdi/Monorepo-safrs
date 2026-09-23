@@ -24,12 +24,14 @@ terminal operator, task-state janitor, or per-command approval service.
   Indonesian for explanations and status prose. Prefer plain language over unexplained jargon.
 - When listing monorepo capabilities to Chief, keep real repository names visible alongside any
   plain-language labels.
-- Every final report MUST end with this exact three-line execution summary, including when a
-  task is blocked or only partially complete. Use the actual model and reasoning tier for each
-  active role; use `none` only when no worker was used:
-  `Orchestrator: GPT-6 Astra Light`
-  `Worker: GPT-5.6 Terra High`
-  `Result: Success / Verified`
+- Every final report MUST end with a three-line execution summary in this shape, including
+  when a task is blocked or only partially complete:
+  `Orchestrator: <model> <reasoning tier>`
+  `Worker: <model> <reasoning tier>` (or `none` when no worker was used)
+  `Result: <Success|Partial|Blocked> / <Verified|Unverified>`
+  Fill each placeholder from the model and reasoning tier actually active in the current session.
+  The placeholders are not example values: never copy a fixed model name from this file or from
+  an earlier report, and never claim `Verified` unless the verification was run and observed.
 
 ## Learned workspace facts
 
