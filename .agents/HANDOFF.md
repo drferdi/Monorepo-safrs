@@ -45,8 +45,15 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
   - `product/kediri-history`: build fails with "Invalid environment variables" while collecting
     `/api/graphql-playground` in the extraction.
   - `corporate/portfolio-drnovia` and `internal/unicom` pass every stage.
-- Verifier backlog: after a `run` timeout on Windows, cleanup failed with EPERM because child
-  processes still held the extraction; `stopManagedProcess` waits only for the top process.
+- Verifier backlog: on Windows, after the `internal/prompt` `run` timeout and `taskkill /T /F`,
+  the rename to quarantine failed with EPERM and the extraction stayed in `%TEMP%`; no process
+  referencing it remained afterwards. `stopManagedProcess` waits only for the top process, so
+  a still-exiting descendant is one possible cause (not confirmed).
+- Integrity gate backlog (for Codex): `check_sensitive_changes.py` classifies with the config of
+  the change set under review, so a change set that adds its own implementation paths to
+  `verification_control_patterns` no longer counts them as implementation. WP-C did this for
+  `tools/project-standalone/**` (as the brief required): at `4e1cf629` the gate says
+  `SAFRS_VERIFICATION_INTEGRITY_REVIEW=required` (exit 1); from `a2605e28` on it exits 0.
 - Backlog outside WP-C: the strict `prisma migrate diff` proof for WP-E; the missing migrations
   for `user`, `session`, `account`, and `verification` (golden-path migration).
 
