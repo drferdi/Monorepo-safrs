@@ -244,6 +244,23 @@ test("command arguments follow the shared path-classification vectors", async ()
   assert.deepEqual(mismatches, []);
 });
 
+test("command arguments and programs containing NUL are rejected", () => {
+  const candidate = contract();
+  candidate.commands.build.args = ["dist\u0000x", "--out=dist\u0000"];
+  candidate.commands.test.program = "node\u0000";
+  const errors = validateContract(candidate);
+  for (const field of [
+    "$.commands.build.args[0]",
+    "$.commands.build.args[1]",
+    "$.commands.test.program",
+  ]) {
+    assert.ok(
+      errors.some((error) => error.includes(field)),
+      `${field} accepted NUL`,
+    );
+  }
+});
+
 test("contract loader rejects invalid JSON with an actionable path", async () => {
   const root = await temporaryDirectory();
   try {

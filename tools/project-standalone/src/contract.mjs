@@ -125,6 +125,10 @@ function validateProgram(program, field, errors) {
     errors.push(`${field} must be a non-empty string.`);
     return;
   }
+  if (program.includes("\0")) {
+    errors.push(`${field} must not contain NUL.`);
+    return;
+  }
   const basename = path.win32.basename(program).toLowerCase();
   if (/\.(?:bat|cmd)$/iu.test(basename)) {
     errors.push(`${field} must not execute a batch file.`);
@@ -146,6 +150,10 @@ function validateProgram(program, field, errors) {
 function validateArgument(argument, field, errors) {
   if (typeof argument !== "string") {
     errors.push(`${field} must be a string.`);
+    return;
+  }
+  if (argument.includes("\0")) {
+    errors.push(`${field} must not contain NUL.`);
     return;
   }
   const candidates = [argument];

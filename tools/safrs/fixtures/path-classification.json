@@ -21,5 +21,11 @@
   { "value": "link:../pkg", "expect": "reject" },
   { "value": "link:C:\\outside", "expect": "reject" },
   { "value": "ftp://example.com/x", "expect": "reject" },
-  { "value": "https://user:pass@example.com", "expect": "reject" }
+  { "value": "https://user:pass@example.com", "expect": "reject" },
+  { "value": "x/..", "expect": "reject" },
+  { "value": "a/../b", "expect": "reject" },
+  { "value": "a/./../b", "expect": "reject" },
+  { "value": "x\\..", "expect": "reject" },
+  { "value": "dist\u0000x", "expect": "reject" },
+  { "value": "build\u0000", "expect": "reject" }
 ]

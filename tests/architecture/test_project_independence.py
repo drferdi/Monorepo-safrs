@@ -163,6 +163,22 @@ class ProjectIndependenceTests(unittest.TestCase):
         ]
         self.assertEqual(mismatches, [], result.stderr)
 
+    def test_contract_fields_reject_parent_segments_and_nul(self):
+        contract = self.read_json("project.contract.json")
+        contract["artifacts"] = ["dist/..", "dist\0x"]
+        contract["mutableStatePaths"] = ["state\\..\\cache"]
+        contract["commands"]["test"]["program"] = "node\0"
+        self.write_json("project.contract.json", contract)
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 1, result.stderr)
+        for field in (
+            "[artifacts[0]]:",
+            "[artifacts[1]]:",
+            "[mutableStatePaths[0]]:",
+            "[commands.test.program]:",
+        ):
+            self.assertIn(field, result.stderr)
+
     def test_root_tool_and_script_names_require_capsule_owned_targets(self):
         contract = self.read_json("project.contract.json")
         contract["commands"]["install"]["args"] = ["tools/safrs/root-only.py"]

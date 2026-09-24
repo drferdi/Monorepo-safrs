@@ -102,6 +102,15 @@ def path_escapes(value: str, base: Path, capsule: Path) -> bool:
     return not is_within(candidate, capsule.resolve(strict=False))
 
 
+def contract_path_rejected(value: str, base: Path, capsule: Path) -> bool:
+    if "\0" in value:
+        return True
+    target = PACKAGE_PROTOCOL.sub("", value, count=1)
+    if ".." in target.replace("\\", "/").split("/"):
+        return True
+    return path_escapes(value, base, capsule)
+
+
 def missing_capsule_owned_reference(value: str, base: Path) -> bool:
     normalized = value.replace("\\", "/").removeprefix("./")
     root_like = normalized.startswith(ROOT_COUPLING_PREFIXES) or Path(normalized).name in ROOT_METADATA_NAMES
@@ -173,7 +182,7 @@ def check_contract_paths(
         if not isinstance(values, list):
             continue
         for index, value in enumerate(values):
-            if isinstance(value, str) and path_escapes(value, capsule, capsule):
+            if isinstance(value, str) and contract_path_rejected(value, capsule, capsule):
                 suffix = f"[{index}]" if field != "packageManager.lockfile" else ""
                 findings.append(
                     Finding(
@@ -191,8 +200,17 @@ def check_contract_paths(
         if not isinstance(command, dict) or command.get("program") is None:
             continue
         program = command.get("program")
-        if isinstance(program, str) and any(marker in program for marker in ("/", "\\")):
-            if path_escapes(program, capsule, capsule):
+        if isinstance(program, str) and "\0" in program:
+            findings.append(
+                Finding(
+                    capsule_label,
+                    relative_file,
+                    f"commands.{name}.program",
+                    "command program contains NUL",
+                )
+            )
+        elif isinstance(program, str) and any(marker in program for marker in ("/", "\\")):
+            if contract_path_rejected(program, capsule, capsule):
                 findings.append(
                     Finding(
                         capsule_label,
@@ -216,6 +234,16 @@ def check_contract_paths(
         for index, argument in enumerate(args):
             if not isinstance(argument, str):
                 continue
+            if "\0" in argument:
+                findings.append(
+                    Finding(
+                        capsule_label,
+                        relative_file,
+                        f"commands.{name}.args[{index}]",
+                        "command argument contains NUL",
+                    )
+                )
+                continue
             for candidate in argument_path_candidates(argument):
                 if credentialed_url(candidate):
                     findings.append(
@@ -236,7 +264,7 @@ def check_contract_paths(
                     or bool(PACKAGE_PROTOCOL.match(candidate))
                     or Path(candidate).name in ROOT_METADATA_NAMES
                 )
-                if path_like and path_escapes(candidate, capsule, capsule):
+                if path_like and contract_path_rejected(candidate, capsule, capsule):
                     findings.append(
                         Finding(
                             capsule_label,
@@ -261,7 +289,7 @@ def check_contract_paths(
             positional = [item for item in args[args.index("build") + 1 :] if not item.startswith("-")]
             if positional:
                 context = positional[-1]
-                if path_escapes(context, capsule, capsule):
+                if contract_path_rejected(context, capsule, capsule):
                     findings.append(
                         Finding(
                             capsule_label,

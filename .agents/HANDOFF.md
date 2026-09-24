@@ -73,6 +73,11 @@ Tidak ada.
   `deploy:dry-run`); unicom `scripts.verify` (`verify:structure`, `smoke:production`,
   `deploy:dry-run`); both `commands.deployDryRun.args[1]` (`deploy:dry-run`). These are the
   false positives decision 3 removes; no path-shaped token moved to accept.
+- Codex review fix (rebased on `main` d0a24a96): contract fields and command arguments reject any
+  `..` segment (`x/..`, `a/../b`, `..\x`) and any NUL, identically in Node and Python;
+  `check_packages` dependency resolution is unchanged. Red: 2 Node tests (NUL arguments), 2
+  Python tests (6 vectors; NUL crashed the checker with `ValueError`) → green Node 16/16, Python
+  18/18. Parity harness over 50 adversarial inputs: 0 disagreements, 0 accepted escapes.
 - Gate: `check_sensitive_changes.py` (and so `pnpm governance`) requires Chief integrity review,
   because verification controls and implementation change together. No review record created.
-- Next: independent review by Codex, then Claude. Do not merge before review.
+- Next: Chief integrity review, then merge. Codex verdict was CHANGES REQUESTED on `x/..` and NUL.
