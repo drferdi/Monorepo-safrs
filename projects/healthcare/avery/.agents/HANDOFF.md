@@ -25,8 +25,8 @@ Junction `Hermes Studio` di abyss **bukan junction** (hasil installer). Start **
 
 ## Insiden yang tidak boleh diulang
 
-1. **2026-08-28 00:18** — setelah pin cron, `member-watch` menyambut Pak Guru Karel di 4 grup karena snapshot menganggapnya baru. Skill/prompt lama memerintahkan sambut di grup.
-2. Karel dan Asyraf **DM ditolak** `Unauthorized user`: `.env` hanya 2 nomor Chief, chat masuk sebagai LID. Diperbaiki dengan menggabungkan `allow_from` ke env (8 identitas). Jangan dump ID di git/chat.
+1. **2026-08-28 00:18** — setelah pin cron, `member-watch` menyambut `<member>` di 4 grup karena snapshot menganggapnya baru. Skill/prompt lama memerintahkan sambut di grup.
+2. Dua anggota (`<member>`) **DM ditolak** `Unauthorized user`: `.env` hanya 2 nomor Chief, chat masuk sebagai LID. Diperbaiki dengan menggabungkan `allow_from` ke env (8 identitas). Jangan dump ID di git/chat.
 3. Laporan Avery bahwa lima grup ada di `free_response_chats` **salah** terhadap config hidup (daftar kosong). Percayai YAML+log, bukan klaim agen.
 
 ## Jangan

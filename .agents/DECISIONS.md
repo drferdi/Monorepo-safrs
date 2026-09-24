@@ -5,26 +5,7 @@ Major architectural decisions also get an ADR in `docs/adrs/`.
 
 ## 2026-09-13 - Smartboard web sub-fase 2 closed; capsule-local deps + sentinel dynamic routes
 
-Chief closed `apps/web` sub-fase 2 (penjadwalan + akademik). Durable choices:
-
-1. **`recharts@3.6.0` / `sonner@2.0.3`** dipin di
-   `projects/academic/academic-smartboard/apps/web/package.json` (+ capsule
-   lockfile), **bukan** root `catalog:` — agar capsule tetap extractable
-   (ADR 0006 / independence).
-2. **Route dinamis** `/sesi/[id]` dan `/akademik/perkembangan/[studentId]`
-   memakai `generateStaticParams()` sentinel `placeholder` + client fetch by
-   `useParams()` (bukan query-string fallback) agar URL arsip tetap.
-3. **Carve-out:** panel Jurnal Kolaboratif dan Kayyisa trajectory tidak di-port
-   di sub-fase 2; penanda komentar di detail perkembangan menuju sub-fase 4/5.
-4. **Keselarasan/cakupan** memuat matriks/coverage + `CurriculumReadingPane`;
-   mapel cakupan dari `GET /curriculum/structure` (korpus nasional), bukan
-   master bimbel saja.
-
-Evidence: plan
-`docs/plans/completed/2026-08-22-smartboard-web-subphase2-akademik.md`,
-roadmap baris 2 COMPLETED, commits lokal `fa5dcdb`…`791f02d` + commit tutup
-Task 16. E2E manual vs backend arsip dan filtered publish tetap milik Chief.
-Smartboard produk keseluruhan **belum** complete (sub-fase 3–5, api, demo).
+Moved to `projects/academic/academic-smartboard/.agents/DECISIONS.md` (ADR 0007 WP-G).
 
 ## 2026-08-24 - Project capsules are standalone products; the monorepo is their control plane
 
@@ -97,32 +78,23 @@ worktree_id), corrected as `TASK-20260822-SMARTBOARD-WEB-TOKEN-GATE-V2` from ins
 
 ## 2026-08-21 - Portfolio late scaffold + Lenis on Framer Content-Wrapper
 
-`projects/portfolio/` is an active capsule with Diátaxis docs and community files
-(lean AGENTS Always/Ask First/Never). NOVIA STUDIO stays a static React 18 + Node
-server site (no pnpm workspace join, no Vite/Next rewrite). Lenis 1.3.26 is vendored
-and attached to `.framer-bpy7lj` with first child as `content` — not `window` — because
-the Framer Content-Wrapper owns `overflow: auto` / `100vh`. Root Biome excludes
-portfolio vendor, assets, `167eyhs`, `framer.css`, and `portfolio-markup.js`. Evidence:
-`projects/portfolio/AGENTS.md`, `projects/portfolio/docs/architecture.md`,
-`projects/portfolio/novia-studio-react/src/app.js`, `biome.jsonc`.
+Moved to `projects/corporate/portfolio-drnovia/.agents/DECISIONS.md` (ADR 0007 WP-G).
 
 ## 2026-08-21 - Sentra Bot capsule CURRENT docs match wired auth and web host
 
-Capsule documentation was realigned to implementation: Better Auth is mounted at `/api/auth/[...all]` (signup still closed by default), `@safrs/api` is mounted same-origin at `/api/sentrabot` on sentrabot-web, Electron is in the root catalog with IPC tests (no signed artifact), Playwright e2e lives in `apps/web`, and the product landing is `apps/web` `/` (`home.html`). `apps/site` remains a Cora Vite shell, not the product origin. Pin `d17a138` stays blocked. Evidence: `projects/sentrabot/AGENTS.md`, `projects/sentrabot/README.md`, `projects/sentrabot/docs/release-parity.md`.
+Moved to `projects/product/sentrabot/.agents/DECISIONS.md` (ADR 0007 WP-G).
 
 ## 2026-08-21 - Sentra Bot Webflow marketing HTML is excluded from Biome
 
-Imported Webflow snapshots under `projects/sentrabot/apps/web/src/content/marketing/` stay byte-faithful to the source design (inline minified JS/CSS). Biome must not lint or reformat them — hundreds of false positives (`noAssignInExpressions`, a11y on SVG, `!important`, etc.) are expected vendor noise, not product defects. Exclude via root `biome.jsonc` `files.includes` negation (`!!…/content/marketing`), same pattern as kayyisa. Do not “fix” the HTML to silence the linter. Evidence: `biome.jsonc`, IDE diagnostics cleared on `intake.html`.
+Moved to `projects/product/sentrabot/.agents/DECISIONS.md` (ADR 0007 WP-G).
 
 ## 2026-08-21 - Sentra Bot capsule docs follow Diátaxis and a lean AGENTS.md
 
-Late documentation scaffold for `projects/sentrabot/` is the SSOT for humans and agents: Diátaxis map in `docs/README.md`, OpenSSF-style community files at the capsule root, C4/STRIDE/API reference as explanation and lookup, and a command-first nested `AGENTS.md` (Always / Ask First / Never). No nested Cursor rules, skills, GitHub templates, MkDocs, or claimed OpenSSF/SLSA badges. Evidence: `projects/sentrabot/docs/README.md`, `projects/sentrabot/AGENTS.md`.
+Moved to `projects/product/sentrabot/.agents/DECISIONS.md` (ADR 0007 WP-G).
 
 ## 2026-08-21 - Sentra Bot intake remains pinned and blocked
 
-Sentra Bot is established as the official capsule at `projects/sentrabot/` with the Monorepo stack, a private worker control plane, closed self-host signup, per-user BYOK/OAuth, and a staged public-source/self-hosted release train. The requested source snapshot remains exactly `D:/DEV/Sentraverse/sentrabot@d17a138`; the available source refs expose `origin/main@7f08da5`, so `HEAD` is not substituted and no source files or runtime data are copied. Evidence: `docs/adrs/0004-sentrabot-public-release.md`, `projects/sentrabot/docs/provenance.md`, and `projects/sentrabot/docs/migration-ledger.md`.
-
-Chief instructed end-to-end continuation. Therefore `7f08da5` is the provisional technical-port baseline, while `d17a138` remains the locked acceptance pin and its absence remains a release blocker.
+Moved to `projects/product/sentrabot/.agents/DECISIONS.md` (ADR 0007 WP-G).
 
 ## 2026-08-18 - Next production builds ignore leaked NODE_ENV
 
@@ -254,18 +226,11 @@ Chief approved option B and Approach 1. `TASK-20260813-CONTROL-CENTER` is CLOSED
 
 ## 2026-08-17 - TASK-20260813-CONTROL-CENTER MERGED and CLOSED
 
-Chief authorized `REVIEW → MERGED → CLOSED`. Executed via `tools/task/src/cli.mjs state --to MERGED --yes` then `close --yes`, both from the owning worktree. Final record confirmed `state: CLOSED`, `updated_at: 2026-08-17T10:18:41Z`. `docs/` is no longer owned by any active task — `RECONCILE-GOVERNANCE` may now claim it. (`close` emitted a non-fatal warning: no local lease-ledger RELEASE event existed for this task, since it predates this session's lease ledger; state file itself updated correctly.)
+Moved to `projects/internal/control-center/.agents/DECISIONS.md` (ADR 0007 WP-G).
 
 ## 2026-08-17 - TASK-20260813-CONTROL-CENTER reconciled to REVIEW
 
-Checked the task against the control plane and its owning worktree instead of assuming staleness:
-
-- Control-plane record showed `EXECUTING`, `updated_at` unchanged since claim (2026-08-13T15:33:54Z) — looked stale but code delivery had actually landed.
-- Worktree `worktrees/feat-control-center` @ `4e07ddf` is clean (no uncommitted changes) and `git merge-base --is-ancestor` confirms it is an ancestor of `main` — the work shipped via PR #26 (merge commit `9565b48`), outside the task's own lifecycle bookkeeping.
-- Ran `scripts/safrs-verify.ps1` fresh inside the owning worktree: PASS, 0 changed files, all governance and test suites green.
-- Advanced state through the legal chain `EXECUTING → VERIFYING → REVIEW` via `tools/task/src/cli.mjs state` (ownership guard requires running from the owning worktree, not `main`).
-- Did not advance to `MERGED`/`CLOSED`: that is Chief's call (R2, designated review) even though the code is already on `main` — the task record and the git reality should agree before closing.
-- Consequence: `REVIEW` is still `MUTATION_ACTIVE`, so `docs/` stays owned by this task and `RECONCILE-GOVERNANCE` remains blocked until Chief authorizes the close.
+Moved to `projects/internal/control-center/.agents/DECISIONS.md` (ADR 0007 WP-G).
 
 ## 2026-08-17 - Master remediation authorization decisions
 
@@ -452,18 +417,7 @@ Supersedes the legacy `apps/{healthcare,internal,academic,...}` topology.
 
 ## 2026-08-24 — Avery FIX-01…06 and FULL AUTO target
 
-- Hermes core is patched only where a native switch does not exist (WhatsApp ingress reason codes);
-  every vendored patch lives in `projects/healthcare/avery/patches/` with SHA-256 manifest and an
-  idempotent apply/revert script. Prose in `SOUL.md` is the last resort, after config and patch.
-- `agent.verify_on_stop` stays `false` for Avery: the nudge drives `hermes verify`, which walks to the
-  monorepo git root through the runtime junction and runs `pnpm install`. Mutation read-back is covered
-  by `agent.execution_guidance` (forced `true` — Hermes `auto` excludes gemini) and the SOUL Execution rule.
-- Target is FULL AUTO (Chief): learning loop at Hermes defaults (`write_approval` off, guard off);
-  freedom is reduced by Chief afterwards, not pre-emptively by agents. Group-wide response requires
-  `WHATSAPP_ALLOW_ALL_USERS`, which also opens DMs — decision reserved for Chief.
-- Subagent lanes are one-way pipes treated as the worst model in the world: 6-part spec, explicit
-  prohibitions, 10-minute budget, reports never trusted without the architect re-running verification.
-  Incidents and the fixes applied to lane definitions are tracked in Claude's memory ledger.
+Moved to `projects/healthcare/avery/.agents/DECISIONS.md` (ADR 0007 WP-G).
 
 ## 2026-08-24 — Session boundaries after the public-push incident
 

@@ -29,9 +29,8 @@ Authority and read order are **not defined here** — the single source is the P
 ## Repository Shape
 
 ```
-projects/     academic/academic-smartboard, corporate/portfolio-drnovia,
-              healthcare/avery, internal/{control-center,golden-path},
-              product/sentrabot — six active capsules plus _template
+projects/     capsules at projects/*/* plus _template; list them with `pnpm project:status`.
+              Each capsule owns its state in projects/<domain>/<capsule>/.agents/
 packages/     api config database env schemas telemetry token ui — shared boundaries;
               never import server/db code into browser components
 tools/        automation capabilities codegen deps-graph doctor project-wizard safrs status task
