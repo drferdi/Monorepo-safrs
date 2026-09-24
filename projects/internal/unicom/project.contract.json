@@ -18,15 +18,26 @@
     "typecheck": { "program": "pnpm", "args": ["run", "typecheck"] },
     "test": { "program": "pnpm", "args": ["run", "test"] },
     "build": { "program": "pnpm", "args": ["run", "build"] },
-    "run": { "program": "pnpm", "args": ["run", "start"] },
+    "run": { "program": "pnpm", "args": ["run", "start", "--hostname", "127.0.0.1", "--port", "4330"] },
     "deployDryRun": { "program": "pnpm", "args": ["run", "deploy:dry-run"] }
   },
   "smoke": {
     "kind": "http",
-    "command": { "program": "pnpm", "args": ["run", "smoke:production"] },
-    "path": "/"
+    "host": "127.0.0.1",
+    "port": 4330,
+    "path": "/",
+    "expectedStatus": 200,
+    "startupTimeoutSeconds": 60
   },
   "artifacts": [".next/BUILD_ID"],
-  "externalDependencies": ["npm registry", "optional AI model provider selected by the operator"],
+  "externalDependencies": [
+    { "kind": "registry", "name": "npm registry", "locator": "https://registry.npmjs.org", "required": true },
+    {
+      "kind": "service",
+      "name": "Vercel AI Gateway (model anthropic/claude-sonnet-4.6, selected by the operator)",
+      "locator": "https://ai-gateway.vercel.sh/v3/ai",
+      "required": false
+    }
+  ],
   "mutableStatePaths": []
 }

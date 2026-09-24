@@ -81,3 +81,23 @@ Tidak ada.
 - Gate: `check_sensitive_changes.py` (and so `pnpm governance`) requires Chief integrity review,
   because verification controls and implementation change together. No review record created.
 - Next: Chief integrity review, then merge. Codex verdict was CHANGES REQUESTED on `x/..` and NUL.
+
+## ADR 0007 WP-B — valid contracts for prompt and unicom (2026-09-25, Claude Code)
+
+- Change: `internal/prompt` and `internal/unicom` contracts now use `{kind, name, locator,
+  required}` dependencies (prompt locators are `.env.example` variable names, never values;
+  unicom has no `.env.example` and reads no environment, so its locators are public endpoints).
+  Prompt `smoke` is `none` (desktop Electron app) and `mutableStatePaths` is `[]`. Unicom smoke is
+  a loopback HTTP probe on `127.0.0.1:4330`, and `run` serves there. Prompt `db:generate` is
+  plain `prisma generate`; the schema already reads `env("DATABASE_URL")`, and generate succeeds
+  with `DATABASE_URL`/`DIRECT_URL` unset. The placeholder `postgresql://` URL is gone.
+- Evidence vs `main` eb287e65: `status` for both capsules went from invalid contract to
+  `contract: PASS`, `structural: PASS`. `check_project_independence.py` went from 1 finding
+  (prompt `scripts.db:generate`) to `OK`. Prompt `pnpm run typecheck` with no DB variables: exit
+  0; `pnpm run build` exit 0. Unicom `pnpm run start --hostname 127.0.0.1 --port 4330` answers
+  200 on `/` (pnpm 11 passes a literal `--` to `next start`, so `run` has none). Tooling tests
+  unchanged: Node 16/16, Python 24/24.
+- Inherited: `verify` for both capsules fails at the install stage with "Capsule tree contains a
+  symbolic link or reparse point" under `node_modules/.pnpm`, because pnpm's default layout uses
+  links on Windows. On `main`, `verify` could not start because the contracts were invalid.
+- Next: Codex review.
