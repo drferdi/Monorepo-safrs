@@ -19,6 +19,8 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
+from memory_files import is_memory_file
+
 ROOT = Path(__file__).resolve().parents[2]
 config = json.loads((ROOT/'.safrs/sensitive-paths.json').read_text(encoding='utf-8'))
 base = os.environ.get('SAFRS_BASE_REF')
@@ -166,24 +168,21 @@ def match(path, pattern):
 sensitive=sorted(p for p in classified_names if any(match(p, pat) for pat in patterns))
 verification_changed=sorted(p for p in classified_names if any(match(p, pat) for pat in verification))
 # Session memory is neither implementation nor verification. The handoff gate
-# *requires* .agents/HANDOFF.md in every non-trivial change set, so counting it
-# as implementation made every pure verification-control change look coupled
-# and demanded an integrity review that nothing had actually earned.
-MEMORY_FILES = {
-    '.agents/HANDOFF.md', '.agents/PROGRESS.md', '.agents/DECISIONS.md',
-    '.agents/CONTEXT.md', '.agents/knowledge/12_LESSONS.md',
-}
+# *requires* a HANDOFF.md in every non-trivial change set, so counting it as
+# implementation made every pure verification-control change look coupled and
+# demanded an integrity review that nothing had actually earned. The memory set
+# (root files plus every capsule .agents/**) is shared with check_handoff.py.
 implementation_changed=sorted(
     p for p in classified_names
     if p not in verification_changed
     and not p.startswith('docs/')
-    and p not in MEMORY_FILES
+    and not is_memory_file(p)
 )
 # Integrity fingerprint ignores session memory: HANDOFF (and siblings) must
 # update every session and must not invalidate a Chief seal of the real
 # implementation + verification delta.
 integrity_fingerprint_paths = sorted(
-    p for p in classified_names if p not in MEMORY_FILES
+    p for p in classified_names if not is_memory_file(p)
 )
 override_matches = {
     rule['risk']: sorted(

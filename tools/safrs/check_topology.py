@@ -28,6 +28,10 @@ capsule_tree_required = [
     'projects/_template/docs/testing.md',
     'projects/_template/src/README.md',
     'projects/_template/tests/README.md',
+    # Capsule agent context (ADR 0007 decision 7); new capsules inherit it.
+    'projects/_template/.agents/HANDOFF.md',
+    'projects/_template/.agents/DECISIONS.md',
+    'projects/_template/.agents/CONTEXT.md',
     'projects/internal/golden-path/apps/web/AGENTS.md',
 ]
 errors = [
@@ -48,6 +52,9 @@ CAPSULE_REQUIRED = [
     'docs/testing.md',
     'src',
     'tests',
+    '.agents/HANDOFF.md',
+    '.agents/DECISIONS.md',
+    '.agents/CONTEXT.md',
 ]
 
 

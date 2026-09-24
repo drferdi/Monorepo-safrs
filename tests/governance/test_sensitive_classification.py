@@ -11,6 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 CHECKER = 'tools/safrs/check_sensitive_changes.py'
+MEMORY_MODULE = 'tools/safrs/memory_files.py'
 REVIEW_EVIDENCE = '.safrs/reviews/verification-integrity.json'
 
 
@@ -19,6 +20,9 @@ def install_checker(repository, config=None):
     (repository / 'tools/safrs').mkdir(parents=True, exist_ok=True)
     (repository / '.safrs').mkdir(exist_ok=True)
     shutil.copy2(ROOT / CHECKER, repository / CHECKER)
+    shutil.copy2(ROOT / MEMORY_MODULE, repository / MEMORY_MODULE)
+    # Importing the shared module writes __pycache__/, which the real repository ignores.
+    (repository / '.gitignore').write_text('__pycache__/\n', encoding='utf-8')
     if config is None:
         shutil.copy2(ROOT / '.safrs/sensitive-paths.json', repository / '.safrs/sensitive-paths.json')
     else:
@@ -194,6 +198,28 @@ class SensitiveClassificationTests(unittest.TestCase):
             write(repository, 'tools/safrs/check_extra.py', '# control\n')
             write(repository, '.agents/HANDOFF.md', '# handoff\n')
             write(repository, '.agents/PROGRESS.md', '# progress\n')
+
+            result = run_checker(repository)
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertNotIn('INTEGRITY_REVIEW=required', result.stdout)
+
+    def test_capsule_agent_files_do_not_count_as_implementation(self):
+        """Capsule .agents/** is session memory (ADR 0007 decision 7), so a
+        capsule handoff next to a control change must not demand review."""
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['tools/safrs/**', 'projects/**'],
+                'verification_control_patterns': ['tools/safrs/**'],
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            commit_baseline(repository)
+            write(repository, 'tools/safrs/check_extra.py', '# control\n')
+            write(repository, 'projects/internal/unicom/.agents/HANDOFF.md', '# handoff\n')
+            write(repository, 'projects/internal/unicom/.agents/DECISIONS.md', '# decisions\n')
 
             result = run_checker(repository)
 

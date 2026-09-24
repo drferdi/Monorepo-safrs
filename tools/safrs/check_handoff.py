@@ -1,21 +1,18 @@
 #!/usr/bin/env python3
-"""Enforce the session-handoff protocol.
+"""Enforce the scope-aware session-handoff protocol (ADR 0007 decision 7).
 
-If the current change set (staged + unstaged vs HEAD) contains non-trivial
-work, HANDOFF.md must be part of it. Memory-file-only change sets are exempt,
-so updating the handoff itself never demands another handoff.
+Each substantive file in the current change set (staged + unstaged + untracked
+vs HEAD) maps to an owner scope: a file under projects/<domain>/<capsule>/
+belongs to that capsule, anything else to the root. Every touched scope must
+update its own HANDOFF.md in the same change set. Memory-file-only change sets
+are exempt, so updating a handoff never demands another handoff.
 """
 import subprocess
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+from memory_files import handoff_for, is_memory_file
 
-# Changes to these files alone do not require a handoff update.
-MEMORY_FILES = {
-    '.agents/HANDOFF.md', '.agents/PROGRESS.md', '.agents/DECISIONS.md',
-    '.agents/CONTEXT.md', '.agents/knowledge/12_LESSONS.md',
-}
-HANDOFF = '.agents/HANDOFF.md'
+ROOT = Path(__file__).resolve().parents[2]
 
 
 def changed_files() -> set:
@@ -34,12 +31,14 @@ def changed_files() -> set:
 
 def main() -> None:
     files = changed_files()
-    substantive = files - MEMORY_FILES
-    if substantive and HANDOFF not in files:
+    required = {handoff_for(path) for path in files if not is_memory_file(path)}
+    missing = sorted(handoff for handoff in required if handoff not in files)
+    if missing:
         raise SystemExit(
-            'SAFRS session handoff failed: change set contains work but '
-            f'{HANDOFF} was not updated.\nOverwrite it with current state, work in '
-            'flight, blockers, and next actions (see AGENTS.md — Session protocol).')
+            'SAFRS session handoff failed: change set contains work but these handoffs '
+            'were not updated:\n- ' + '\n- '.join(missing) + '\nOverwrite each with '
+            'current state, work in flight, blockers, and next actions (see AGENTS.md — '
+            'Session protocol).')
     print('SAFRS session handoff: OK')
 
 
