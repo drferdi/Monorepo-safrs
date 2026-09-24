@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """The shell and PowerShell verifiers run one checker list (ADR 0007 WP-C)."""
+import fnmatch
+import json
 import re
 import unittest
 from pathlib import Path
@@ -28,6 +30,13 @@ class VerifierParityTests(unittest.TestCase):
     def test_verifiers_run_the_blocking_independence_checker(self):
         self.assertIn(INDEPENDENCE_CHECKER, shell_checks())
         self.assertIn(INDEPENDENCE_CHECKER, powershell_checks())
+
+    def test_project_standalone_is_a_classified_verification_control(self):
+        config = json.loads((ROOT / '.safrs/sensitive-paths.json').read_text(encoding='utf-8'))
+        path = 'tools/project-standalone/src/verify.mjs'
+        for key in ('patterns', 'verification_control_patterns'):
+            with self.subTest(key=key):
+                self.assertTrue(any(fnmatch.fnmatch(path, pattern) for pattern in config[key]))
 
     def test_governance_workflow_runs_the_checker_and_its_test(self):
         workflow = (ROOT / '.github/workflows/safrs-governance.yml').read_text(encoding='utf-8')

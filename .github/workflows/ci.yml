@@ -78,7 +78,11 @@ jobs:
         run: pnpm test
       - name: Test control-plane packages
         if: hashFiles('projects/internal/golden-path/apps/web/package.json') == ''
-        run: pnpm turbo run test --filter=!@safrs/project-wizard --filter=!@safrs/project-standalone --filter=!@safrs/database --filter=!@safrs/api
+        # This step runs only on a checkout without projects/ (origin). The project wizard
+        # renders projects/_template, which origin does not publish, so its tests cannot run
+        # here. @safrs/project-standalone builds its fixtures in temporary directories and
+        # runs. The @safrs/database and @safrs/api exclusions predate ADR 0007 and are unchanged.
+        run: pnpm turbo run test --filter=!@safrs/project-wizard --filter=!@safrs/database --filter=!@safrs/api
       - name: Build
         run: pnpm build
       - name: Browser smoke
