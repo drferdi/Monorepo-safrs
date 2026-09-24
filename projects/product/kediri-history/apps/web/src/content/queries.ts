@@ -99,6 +99,13 @@ function collectClaimIds(
 /** Kedalaman relasi yang dibutuhkan agar DTO dapat dipetakan penuh. */
 const DEEP = 3;
 
+/**
+ * Rute publik dirender saat request, jadi setiap bacaan publik di-cache dan
+ * disegarkan paling lama tiap lima menit. Pencarian tidak di-cache: kuncinya
+ * masukan bebas pengunjung.
+ */
+const REVALIDATE_SECONDS = 300;
+
 export const getJourneyManifest = unstable_cache(
   async (): Promise<JourneyManifestDto> => {
     const payload = await client();
@@ -152,211 +159,247 @@ export const getJourneyManifest = unstable_cache(
     return { acts: actDtos, sceneCount: sceneDtos.length };
   },
   ["journey-manifest"],
-  { tags: [CACHE_TAGS.journey] },
+  { tags: [CACHE_TAGS.journey], revalidate: REVALIDATE_SECONDS },
 );
 
-export async function getSceneBySlug(
-  slug: string,
-): Promise<SceneDto | undefined> {
-  const payload = await client();
-  const result = await payload.find({
-    collection: "scenes",
-    where: { slug: { equals: slug }, _status: { equals: "published" } },
-    limit: 1,
-    depth: DEEP,
-  });
-  const scene = result.docs[0];
-  if (!scene) return undefined;
-  const linksByClaim = await fetchLinksByClaim(
-    payload,
-    collectClaimIds([
-      scene.featuredClaims as (number | { id: number })[] | null,
-      (typeof scene.primaryEvent === "object" && scene.primaryEvent !== null
-        ? scene.primaryEvent.claims
-        : null) as (number | { id: number })[] | null,
-    ]),
-  );
-  return toSceneDto(scene, linksByClaim);
-}
+export const getSceneBySlug = unstable_cache(
+  async (slug: string): Promise<SceneDto | undefined> => {
+    const payload = await client();
+    const result = await payload.find({
+      collection: "scenes",
+      where: { slug: { equals: slug }, _status: { equals: "published" } },
+      limit: 1,
+      depth: DEEP,
+    });
+    const scene = result.docs[0];
+    if (!scene) return undefined;
+    const linksByClaim = await fetchLinksByClaim(
+      payload,
+      collectClaimIds([
+        scene.featuredClaims as (number | { id: number })[] | null,
+        (typeof scene.primaryEvent === "object" && scene.primaryEvent !== null
+          ? scene.primaryEvent.claims
+          : null) as (number | { id: number })[] | null,
+      ]),
+    );
+    return toSceneDto(scene, linksByClaim);
+  },
+  ["get-scene-by-slug"],
+  { revalidate: REVALIDATE_SECONDS },
+);
 
-export async function getEventBySlug(
-  slug: string,
-): Promise<EventDto | undefined> {
-  const payload = await client();
-  const result = await payload.find({
-    collection: "events",
-    where: { slug: { equals: slug }, _status: { equals: "published" } },
-    limit: 1,
-    depth: DEEP,
-  });
-  const event = result.docs[0];
-  if (!event) return undefined;
-  const linksByClaim = await fetchLinksByClaim(
-    payload,
-    collectClaimIds([event.claims as (number | { id: number })[] | null]),
-  );
-  return toEventDto(event, linksByClaim);
-}
+export const getEventBySlug = unstable_cache(
+  async (slug: string): Promise<EventDto | undefined> => {
+    const payload = await client();
+    const result = await payload.find({
+      collection: "events",
+      where: { slug: { equals: slug }, _status: { equals: "published" } },
+      limit: 1,
+      depth: DEEP,
+    });
+    const event = result.docs[0];
+    if (!event) return undefined;
+    const linksByClaim = await fetchLinksByClaim(
+      payload,
+      collectClaimIds([event.claims as (number | { id: number })[] | null]),
+    );
+    return toEventDto(event, linksByClaim);
+  },
+  ["get-event-by-slug"],
+  { revalidate: REVALIDATE_SECONDS },
+);
 
-export async function getPersonBySlug(
-  slug: string,
-): Promise<PersonDto | undefined> {
-  const payload = await client();
-  const result = await payload.find({
-    collection: "people",
-    where: { slug: { equals: slug }, _status: { equals: "published" } },
-    limit: 1,
-    depth: 1,
-  });
-  return toPersonDto(result.docs[0]);
-}
+export const getPersonBySlug = unstable_cache(
+  async (slug: string): Promise<PersonDto | undefined> => {
+    const payload = await client();
+    const result = await payload.find({
+      collection: "people",
+      where: { slug: { equals: slug }, _status: { equals: "published" } },
+      limit: 1,
+      depth: 1,
+    });
+    return toPersonDto(result.docs[0]);
+  },
+  ["get-person-by-slug"],
+  { revalidate: REVALIDATE_SECONDS },
+);
 
-export async function getPlaceBySlug(
-  slug: string,
-): Promise<PlaceDto | undefined> {
-  const payload = await client();
-  const result = await payload.find({
-    collection: "places",
-    where: { slug: { equals: slug }, _status: { equals: "published" } },
-    limit: 1,
-    depth: 1,
-  });
-  return toPlaceDto(result.docs[0]);
-}
+export const getPlaceBySlug = unstable_cache(
+  async (slug: string): Promise<PlaceDto | undefined> => {
+    const payload = await client();
+    const result = await payload.find({
+      collection: "places",
+      where: { slug: { equals: slug }, _status: { equals: "published" } },
+      limit: 1,
+      depth: 1,
+    });
+    return toPlaceDto(result.docs[0]);
+  },
+  ["get-place-by-slug"],
+  { revalidate: REVALIDATE_SECONDS },
+);
 
-export async function getArtifactBySlug(
-  slug: string,
-): Promise<ArtifactDto | undefined> {
-  const payload = await client();
-  const result = await payload.find({
-    collection: "artifacts",
-    where: { slug: { equals: slug }, _status: { equals: "published" } },
-    limit: 1,
-    depth: 2,
-  });
-  return toArtifactDto(result.docs[0]);
-}
+export const getArtifactBySlug = unstable_cache(
+  async (slug: string): Promise<ArtifactDto | undefined> => {
+    const payload = await client();
+    const result = await payload.find({
+      collection: "artifacts",
+      where: { slug: { equals: slug }, _status: { equals: "published" } },
+      limit: 1,
+      depth: 2,
+    });
+    return toArtifactDto(result.docs[0]);
+  },
+  ["get-artifact-by-slug"],
+  { revalidate: REVALIDATE_SECONDS },
+);
 
-export async function getSourceById(
-  id: string,
-): Promise<SourceDto | undefined> {
-  const payload = await client();
-  const result = await payload.find({
-    collection: "sources",
-    where: { id: { equals: id }, _status: { equals: "published" } },
-    limit: 1,
-    depth: 0,
-  });
-  return toSourceDto(result.docs[0]);
-}
+export const getSourceById = unstable_cache(
+  async (id: string): Promise<SourceDto | undefined> => {
+    const payload = await client();
+    const result = await payload.find({
+      collection: "sources",
+      where: { id: { equals: id }, _status: { equals: "published" } },
+      limit: 1,
+      depth: 0,
+    });
+    return toSourceDto(result.docs[0]);
+  },
+  ["get-source-by-id"],
+  { revalidate: REVALIDATE_SECONDS },
+);
 
-export async function listSources(): Promise<readonly SourceDto[]> {
-  const payload = await client();
-  const result = await payload.find({
-    collection: "sources",
-    where: { _status: { equals: "published" } },
-    sort: "title",
-    limit: 500,
-    depth: 0,
-  });
-  return result.docs
-    .map(toSourceDto)
-    .filter((source): source is SourceDto => source !== undefined);
-}
+export const listSources = unstable_cache(
+  async (): Promise<readonly SourceDto[]> => {
+    const payload = await client();
+    const result = await payload.find({
+      collection: "sources",
+      where: { _status: { equals: "published" } },
+      sort: "title",
+      limit: 500,
+      depth: 0,
+    });
+    return result.docs
+      .map(toSourceDto)
+      .filter((source): source is SourceDto => source !== undefined);
+  },
+  ["list-sources"],
+  { revalidate: REVALIDATE_SECONDS },
+);
 
-export async function listThemes(): Promise<readonly ThemeDto[]> {
-  const payload = await client();
-  const result = await payload.find({
-    collection: "themes",
-    where: { _status: { equals: "published" } },
-    sort: "order",
-    limit: 50,
-    depth: 0,
-  });
-  return result.docs
-    .map(toThemeDto)
-    .filter((theme): theme is ThemeDto => theme !== undefined);
-}
+export const listThemes = unstable_cache(
+  async (): Promise<readonly ThemeDto[]> => {
+    const payload = await client();
+    const result = await payload.find({
+      collection: "themes",
+      where: { _status: { equals: "published" } },
+      sort: "order",
+      limit: 50,
+      depth: 0,
+    });
+    return result.docs
+      .map(toThemeDto)
+      .filter((theme): theme is ThemeDto => theme !== undefined);
+  },
+  ["list-themes"],
+  { revalidate: REVALIDATE_SECONDS },
+);
 
 /** Kronologi lengkap untuk /explore/timeline. */
-export async function listEventsChronologically(): Promise<
-  readonly EventDto[]
-> {
-  const payload = await client();
-  const result = await payload.find({
-    collection: "events",
-    where: { _status: { equals: "published" } },
-    sort: "chronology.startYear",
-    limit: 500,
-    depth: 2,
-  });
-  const linksByClaim = await fetchLinksByClaim(
-    payload,
-    collectClaimIds(
-      result.docs.map(
-        (doc) => doc.claims as (number | { id: number })[] | null,
+export const listEventsChronologically = unstable_cache(
+  async (): Promise<readonly EventDto[]> => {
+    const payload = await client();
+    const result = await payload.find({
+      collection: "events",
+      where: { _status: { equals: "published" } },
+      sort: "chronology.startYear",
+      limit: 500,
+      depth: 2,
+    });
+    const linksByClaim = await fetchLinksByClaim(
+      payload,
+      collectClaimIds(
+        result.docs.map(
+          (doc) => doc.claims as (number | { id: number })[] | null,
+        ),
       ),
-    ),
-  );
-  return result.docs
-    .map((doc) => toEventDto(doc, linksByClaim))
-    .filter((event): event is EventDto => event !== undefined);
-}
+    );
+    return result.docs
+      .map((doc) => toEventDto(doc, linksByClaim))
+      .filter((event): event is EventDto => event !== undefined);
+  },
+  ["list-events-chronologically"],
+  { revalidate: REVALIDATE_SECONDS },
+);
 
-export async function listPlaces(): Promise<readonly PlaceDto[]> {
-  const payload = await client();
-  const result = await payload.find({
-    collection: "places",
-    where: { _status: { equals: "published" } },
-    sort: "canonicalName",
-    limit: 500,
-    depth: 0,
-  });
-  return result.docs
-    .map(toPlaceDto)
-    .filter((place): place is PlaceDto => place !== undefined);
-}
+export const listPlaces = unstable_cache(
+  async (): Promise<readonly PlaceDto[]> => {
+    const payload = await client();
+    const result = await payload.find({
+      collection: "places",
+      where: { _status: { equals: "published" } },
+      sort: "canonicalName",
+      limit: 500,
+      depth: 0,
+    });
+    return result.docs
+      .map(toPlaceDto)
+      .filter((place): place is PlaceDto => place !== undefined);
+  },
+  ["list-places"],
+  { revalidate: REVALIDATE_SECONDS },
+);
 
-export async function listPeople(): Promise<readonly PersonDto[]> {
-  const payload = await client();
-  const result = await payload.find({
-    collection: "people",
-    where: { _status: { equals: "published" } },
-    sort: "canonicalName",
-    limit: 500,
-    depth: 0,
-  });
-  return result.docs
-    .map(toPersonDto)
-    .filter((person): person is PersonDto => person !== undefined);
-}
+export const listPeople = unstable_cache(
+  async (): Promise<readonly PersonDto[]> => {
+    const payload = await client();
+    const result = await payload.find({
+      collection: "people",
+      where: { _status: { equals: "published" } },
+      sort: "canonicalName",
+      limit: 500,
+      depth: 0,
+    });
+    return result.docs
+      .map(toPersonDto)
+      .filter((person): person is PersonDto => person !== undefined);
+  },
+  ["list-people"],
+  { revalidate: REVALIDATE_SECONDS },
+);
 
-export async function listArtifacts(): Promise<readonly ArtifactDto[]> {
-  const payload = await client();
-  const result = await payload.find({
-    collection: "artifacts",
-    where: { _status: { equals: "published" } },
-    sort: "canonicalName",
-    limit: 500,
-    depth: 1,
-  });
-  return result.docs
-    .map(toArtifactDto)
-    .filter((artifact): artifact is ArtifactDto => artifact !== undefined);
-}
+export const listArtifacts = unstable_cache(
+  async (): Promise<readonly ArtifactDto[]> => {
+    const payload = await client();
+    const result = await payload.find({
+      collection: "artifacts",
+      where: { _status: { equals: "published" } },
+      sort: "canonicalName",
+      limit: 500,
+      depth: 1,
+    });
+    return result.docs
+      .map(toArtifactDto)
+      .filter((artifact): artifact is ArtifactDto => artifact !== undefined);
+  },
+  ["list-artifacts"],
+  { revalidate: REVALIDATE_SECONDS },
+);
 
-export async function getClaimBySlug(
-  slug: string,
-): Promise<ClaimDto | undefined> {
-  const payload = await client();
-  const result = await payload.find({
-    collection: "evidence-claims",
-    where: { slug: { equals: slug }, _status: { equals: "published" } },
-    limit: 1,
-    depth: 2,
-  });
-  return toClaimDto(result.docs[0]);
-}
+export const getClaimBySlug = unstable_cache(
+  async (slug: string): Promise<ClaimDto | undefined> => {
+    const payload = await client();
+    const result = await payload.find({
+      collection: "evidence-claims",
+      where: { slug: { equals: slug }, _status: { equals: "published" } },
+      limit: 1,
+      depth: 2,
+    });
+    return toClaimDto(result.docs[0]);
+  },
+  ["get-claim-by-slug"],
+  { revalidate: REVALIDATE_SECONDS },
+);
 
 /**
  * Pencarian arsip.

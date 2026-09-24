@@ -21,6 +21,13 @@ import {
 import "./globals.css";
 
 /**
+ * Rute publik dirender saat request, bukan saat build (keputusan Chief
+ * 2026-09-25): build tidak boleh membutuhkan database. Beban CMS ditahan oleh
+ * cache data di `content/queries.ts`.
+ */
+export const dynamic = "force-dynamic";
+
+/**
  * Tiga peran tipografi, bukan tiga selera (Bible 04 bagian 7):
  *   - Newsreader membawa suara naratif dan pernyataan historis dengan optical
  *     sizing variable yang tenang di layar;

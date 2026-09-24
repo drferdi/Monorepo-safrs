@@ -1,21 +1,22 @@
 # HANDOFF
 
-Last updated: 2026-09-25 (Claude Code, branch `integration/post-adr-0007-2`, claim `KEDIRI-STANDALONE-NO-ENV`)
+Last updated: 2026-09-25 (Claude Code, branch `integration/post-adr-0007-3`, claim `KEDIRI-REQUEST-TIME`)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Durable decisions go
 to `DECISIONS.md`.
 
 ## Current state
 
-- `project.contract.json`: `build` and `run` run through `scripts/skip-env-validation.mjs`
-  (Chief decision, see `DECISIONS.md`); `externalDependencies` now declares `DATABASE_URL` and
-  `PAYLOAD_SECRET`.
-- `node tools/project-standalone/src/cli.mjs verify product/kediri-history` (2026-09-25): install,
-  lint, typecheck, test PASS; build FAIL. Env validation no longer stops it. Next Payload itself
-  fails while prerendering `/sources`: "missing secret key. A secret key is needed to secure
-  Payload." The public pages (`apps/web/src/app/(public)/**`) read content through
-  `apps/web/src/content/queries.ts` from Payload at build time, so a static build needs a
-  database with content.
+- Public routes render at request time (Chief decision, see `DECISIONS.md`):
+  `apps/web/src/app/(public)/layout.tsx` and `apps/web/src/app/sitemap.ts` export
+  `dynamic = "force-dynamic"`. Every public read in `apps/web/src/content/queries.ts` except
+  `searchArchive` is wrapped in `unstable_cache` with `revalidate: 300`.
+- New guard `apps/web/tests/architecture/request-time-rendering.test.ts`: every `src/app` file
+  that imports `content/queries` must sit under a `force-dynamic` segment. It failed on the 10
+  reader routes before the change and passes after it.
+- `node tools/project-standalone/src/cli.mjs verify product/kediri-history` (2026-09-25): every
+  stage PASS (install, lint, typecheck, test, build, artifacts, deployDryRun, run, smoke `/` 200,
+  cleanup). Before the change, build failed prerendering `/sources` ("missing secret key").
 
 ## Work in flight
 
@@ -23,12 +24,13 @@ None.
 
 ## Blockers
 
-- Chief decision (touches `docs/ARCHITECTURE_LOCK.md` territory): either the public content pages
-  render at request time (no database at build; every request hits Payload), or the standalone
-  proof provides a disposable PostgreSQL plus a throwaway `PAYLOAD_SECRET` (the contract schema
-  has no way to start a service today, so this needs a verifier or contract change).
+None.
 
 ## Next action
 
-- After Chief decides, implement that option and rerun `verify product/kediri-history` until every
-  stage passes.
+- Not yet observed: that the data cache cuts database reads at runtime. That needs a running app
+  with a content database; check it on the next session that has one.
+- `revalidateTag` is still never called, so edits in the CMS show on public pages after at most
+  five minutes. Publish hooks that call it would make updates immediate.
+- The brief's `docs/ARCHITECTURE_LOCK.md` does not exist; the capsule's architecture doc is
+  `docs/architecture.md`.

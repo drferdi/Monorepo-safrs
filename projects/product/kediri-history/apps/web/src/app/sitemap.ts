@@ -8,6 +8,9 @@ import {
 } from "../content/queries";
 import { SITE_URL } from "../site";
 
+/** Sitemap membaca CMS, jadi ia juga dirender saat request (lihat layout publik). */
+export const dynamic = "force-dynamic";
+
 const LAST_UPDATED = new Date("2026-09-04T00:00:00.000Z");
 
 const PUBLIC_PATHS = [
