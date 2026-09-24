@@ -41,6 +41,7 @@ const fixturePath = path.join(
 );
 const input = {
   name: "Atlas Demo",
+  domain: "internal",
   problem: "Membantu tim sekolah mengelola kegiatan belajar.",
   kind: "web",
   capabilities: ["ai", "file storage"],
@@ -49,7 +50,7 @@ const input = {
 
 async function createTemporaryRepo() {
   const root = await mkdtemp(path.join(tmpdir(), "safrs-project-wizard-"));
-  await mkdir(path.join(root, "projects"), { recursive: true });
+  await mkdir(path.join(root, "projects", "internal"), { recursive: true });
   await cp(templateRoot, path.join(root, "projects", "_template"), {
     recursive: true,
   });
@@ -110,6 +111,9 @@ test("renders a deterministic complete capsule without template markers", () => 
       "docs/testing.md",
       "src/README.md",
       "tests/README.md",
+      ".agents/HANDOFF.md",
+      ".agents/DECISIONS.md",
+      ".agents/CONTEXT.md",
     ],
   );
   assert.equal(
@@ -123,20 +127,9 @@ test("renders a deterministic complete capsule without template markers", () => 
 test("renders the capsule-owned .agents files from the template", async () => {
   const root = await createTemporaryRepo();
   try {
-    const copiedTemplate = path.join(root, "projects", "_template");
-    // Inherited defect (3a6188fe): the wizard does not yet fill <replace-with-domain>,
-    // so the copy neutralises it to reach the file list under test.
-    const agentsPath = path.join(copiedTemplate, "AGENTS.md");
-    await writeFile(
-      agentsPath,
-      (await readFile(agentsPath, "utf8")).replaceAll(
-        "<replace-with-domain>",
-        "internal",
-      ),
-    );
     const files = renderProjectCapsule(
       normalizeProjectAnswers(input),
-      copiedTemplate,
+      path.join(root, "projects", "_template"),
     );
     const agentFiles = files.filter((file) =>
       file.relativePath.startsWith(".agents/"),
@@ -149,6 +142,13 @@ test("renders the capsule-owned .agents files from the template", async () => {
   } finally {
     await rm(root, { recursive: true, force: true });
   }
+});
+
+test("fills the capsule domain and nested owned scope into AGENTS.md", () => {
+  const files = renderProjectCapsule(normalizeProjectAnswers(input), templateRoot);
+  const agents = files.find((file) => file.relativePath === "AGENTS.md");
+  assert.match(agents.content, /\(domain: `internal`\)/);
+  assert.equal(agents.content.includes("<replace-with-domain>"), false);
 });
 
 test("rejects a symlinked template file instead of following it", async () => {
@@ -264,11 +264,11 @@ test("preview prints exact capsule files and performs no writes", async () => {
     const result = runCli(root, ["--input", inputPath, "--preview"]);
 
     assert.equal(result.status, 0, result.stderr);
-    assert.match(result.stdout, /Destination: projects\/atlas-demo/);
-    assert.match(result.stdout, /projects\/atlas-demo\/AGENTS\.md/);
+    assert.match(result.stdout, /Destination: projects\/internal\/atlas-demo/);
+    assert.match(result.stdout, /projects\/internal\/atlas-demo\/AGENTS\.md/);
     assert.match(result.stdout, /App binding: apps\/web/);
     assert.match(result.stdout, /Computed risk: R1/);
-    await assert.rejects(lstat(path.join(root, "projects", "atlas-demo")));
+    await assert.rejects(lstat(path.join(root, "projects", "internal", "atlas-demo")));
   } finally {
     await rm(root, { recursive: true, force: true });
   }
@@ -295,7 +295,7 @@ test("root project:new command accepts pnpm argument separator and remains write
         );
 
   assert.equal(result.status, 0, result.stderr);
-  assert.match(result.stdout, /Destination: projects\/atlas-demo/);
+  assert.match(result.stdout, /Destination: projects\/internal\/atlas-demo/);
 });
 
 test("apply requires exact confirmation and creates a complete capsule atomically", async () => {
@@ -312,7 +312,7 @@ test("apply requires exact confirmation and creates a complete capsule atomicall
       "yes",
     ]);
     assert.equal(rejected.status, 1);
-    await assert.rejects(lstat(path.join(root, "projects", "atlas-demo")));
+    await assert.rejects(lstat(path.join(root, "projects", "internal", "atlas-demo")));
 
     const applied = runCli(root, [
       "--input",
@@ -323,7 +323,7 @@ test("apply requires exact confirmation and creates a complete capsule atomicall
     ]);
     assert.equal(applied.status, 0, applied.stderr);
     const readme = await readFile(
-      path.join(root, "projects", "atlas-demo", "README.md"),
+      path.join(root, "projects", "internal", "atlas-demo", "README.md"),
       "utf8",
     );
     assert.match(readme, /Atlas Demo/);
@@ -335,10 +335,10 @@ test("apply requires exact confirmation and creates a complete capsule atomicall
       "src",
       "tests",
     ]) {
-      await lstat(path.join(root, "projects", "atlas-demo", relativePath));
+      await lstat(path.join(root, "projects", "internal", "atlas-demo", relativePath));
     }
     const entries = await (await import("node:fs/promises")).readdir(
-      path.join(root, "projects"),
+      path.join(root, "projects", "internal"),
       { withFileTypes: true },
     );
     assert.equal(
@@ -515,11 +515,33 @@ test("quarantines a swapped cleanup candidate and still releases the slug lock",
   }
 });
 
+test("refuses a domain folder that does not exist and writes nothing", async () => {
+  const root = await createTemporaryRepo();
+  try {
+    const inputPath = path.join(root, "input.json");
+    await writeFile(inputPath, JSON.stringify({ ...input, domain: "missing" }));
+
+    const result = runCli(root, [
+      "--input",
+      inputPath,
+      "--apply",
+      "--confirm",
+      "CREATE atlas-demo",
+    ]);
+
+    assert.equal(result.status, 1, result.stdout);
+    assert.match(result.stderr, /domain directory/i);
+    await assert.rejects(lstat(path.join(root, "projects", "missing")));
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("refuses an existing destination without modifying it", async () => {
   const root = await createTemporaryRepo();
   try {
     const inputPath = path.join(root, "input.json");
-    const destination = path.join(root, "projects", "atlas-demo");
+    const destination = path.join(root, "projects", "internal", "atlas-demo");
     await mkdir(destination);
     await writeFile(path.join(destination, "sentinel.txt"), "preserve");
     await writeFile(inputPath, JSON.stringify(input));

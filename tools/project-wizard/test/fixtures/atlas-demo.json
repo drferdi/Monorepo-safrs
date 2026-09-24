@@ -1,7 +1,13 @@
 {
   "name": "Atlas Demo",
+  "domain": "internal",
   "problem": "Membantu tim sekolah mengelola kegiatan belajar.",
   "kind": "web",
-  "capabilities": ["ai", "file storage"],
-  "sensitiveDomains": ["education"]
+  "capabilities": [
+    "ai",
+    "file storage"
+  ],
+  "sensitiveDomains": [
+    "education"
+  ]
 }

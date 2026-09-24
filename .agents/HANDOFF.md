@@ -21,7 +21,7 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
   becomes scope-aware; `check_topology.py` enforces the three files; the session protocol writes
   capsule state to the capsule `.agents/`.
   Commits: `732f6662` (G1, G2 content), `6aee6a70` (G3 migration), `ac7d7d5f` (G4, G5
-  gates), then G6 (session protocol). Integrity packet:
+  gates), `3433d8e8` (G6 session protocol), then the wizard repair. Integrity packet:
   `docs/plans/active/2026-09-25-adr-0007-wave-7-integrity-packet.md` (gitignored).
 
 ## Blockers
@@ -33,13 +33,12 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
 
 - Codex review of WP-G, then Chief integrity review and merge.
 - WP-C (fail-closed coverage and blocking gate). Its backlog includes `project-standalone verify`
-  rejecting pnpm's Windows links under `node_modules/.pnpm`, and the project wizard defect below.
+  rejecting pnpm's Windows links under `node_modules/.pnpm`.
 - Backlog outside WP-C: the strict `prisma migrate diff` proof for WP-E; the missing migrations
   for `user`, `session`, `account`, and `verification` (golden-path migration).
-- Project wizard (inherited, since `3a6188fe`): `_template/AGENTS.md` carries
-  `<replace-with-domain>`, which the wizard never fills, and the wizard still writes flat
-  `projects/slug` paths; 9 of its 35 tests fail on `main`. `pnpm project:new` cannot create a
-  capsule until this is repaired.
+- Project wizard: repaired on this branch. It takes a required `domain`, fills
+  `<replace-with-domain>`, and publishes into an existing `projects/domain` folder; on `main`,
+  9 of 35 wizard tests failed since `3a6188fe`, and now 39/39 pass.
 
 ## Owner collision
 

@@ -90,6 +90,23 @@ function slugify(value) {
   return slug;
 }
 
+/**
+ * A domain is an existing projects/<domain> folder name: lowercase kebab text that
+ * never names the template, a path, or a reserved Windows device.
+ */
+function normalizeDomain(value) {
+  if (
+    typeof value !== "string" ||
+    !/^[a-z][a-z0-9-]*$/.test(value) ||
+    RESERVED_WINDOWS_NAMES.has(value)
+  ) {
+    throw new TypeError(
+      "domain must name one projects/<domain> folder in lowercase kebab case.",
+    );
+  }
+  return value;
+}
+
 function normalizeChoices(value, field) {
   if (value === undefined) return [];
   if (
@@ -147,6 +164,7 @@ export function normalizeProjectAnswers(input) {
     input.slug === undefined ? name : asNonEmptyText(input.slug, "slug");
   assertSafeSlugSource(slugSource);
   const slug = slugify(slugSource);
+  const domain = normalizeDomain(input.domain);
   const problem = asNonEmptyText(input.problem, "problem");
   const kind = typeof input.kind === "string" ? input.kind.toLowerCase() : "";
   if (!["web", "desktop", "extension"].includes(kind)) {
@@ -177,6 +195,7 @@ export function normalizeProjectAnswers(input) {
   return {
     name,
     slug,
+    domain,
     problem,
     kind,
     capabilities,

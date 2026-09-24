@@ -110,6 +110,9 @@ async function askForInput() {
   const prompt = createInterface({ input: stdin, output: stdout });
   try {
     const name = await prompt.question("Nama proyek: ");
+    const domain = await prompt.question(
+      "Domain (folder di projects/, misalnya internal): ",
+    );
     const problem = await prompt.question("Masalah yang diselesaikan: ");
     const kind = await prompt.question("Jenis (web/desktop/extension): ");
     const capabilities = await prompt.question(
@@ -120,6 +123,7 @@ async function askForInput() {
     );
     return {
       name,
+      domain: domain.trim(),
       problem,
       kind,
       capabilities: capabilities.trim()
@@ -135,7 +139,7 @@ async function askForInput() {
 }
 
 export function previewText(model, files) {
-  const destination = `projects/${model.slug}`;
+  const destination = `projects/${model.domain}/${model.slug}`;
   return [
     "Pratinjau kapsul proyek SAFRS",
     `Destination: ${destination}`,
@@ -644,8 +648,19 @@ export async function run(options) {
       `Confirmation must exactly equal CREATE ${model.slug}. No files were written.`,
     );
   }
-  await applyProjectCapsule(files, projectsRoot, model.slug);
-  stdout.write(`Created: projects/${model.slug}\n`);
+  // The capsule is published inside an existing domain folder; the wizard never
+  // creates a domain, because a domain folder needs its own AGENTS.md and README.md.
+  const domainRoot = await canonicalDirectory(
+    path.join(projectsRoot, model.domain),
+    "domain directory",
+  ).catch((error) => {
+    if (error.code !== "ENOENT") throw error;
+    throw new Error(
+      `domain directory projects/${model.domain} does not exist; the wizard does not create domains. No files were written.`,
+    );
+  });
+  await applyProjectCapsule(files, domainRoot, model.slug);
+  stdout.write(`Created: projects/${model.domain}/${model.slug}\n`);
   return 0;
 }
 
