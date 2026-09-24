@@ -114,8 +114,13 @@ does not travel with it when it is extracted.
      the remainder is evaluated as a path.
 
    A path-like value is accepted only if it stays inside the capsule: it is not absolute on any
-   platform, has no `..` segment that escapes, and is not a non-http(s) scheme value that contains
-   a separator (for example `ftp://example.com/x`), which is rejected. `http:` and `https:` URLs
+   platform, has no `..` segment at all, and is not a non-http(s) scheme value that contains a
+   separator (for example `ftp://example.com/x`), which is rejected. Any `..` segment is rejected
+   even when the value would resolve inside the capsule (`x/..`, `a/../b`, `..\x`), because
+   contract commands run from the capsule root and never need one. Any contract field or command
+   argument that contains a NUL character is rejected. These two rules apply to contract fields and
+   command arguments; `file:` and `link:` dependencies in `package.json` keep their containment
+   check, where capsule-local workspace links with `..` are legitimate. `http:` and `https:` URLs
    are handled as URLs. A URL that embeds credentials is rejected by both the Node validator and
    the Python checker. Every other value, including multi-letter script names such as
    `deploy:dry-run`, is an opaque argument. The Node validator and the Python checker implement
