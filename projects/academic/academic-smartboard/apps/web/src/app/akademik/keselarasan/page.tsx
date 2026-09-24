@@ -10,23 +10,23 @@ import { PageHead } from "../../../components/PageHead.tsx";
 import { ProtectedRoute } from "../../../components/ProtectedRoute.tsx";
 import { Button } from "../../../components/ui/button.tsx";
 import {
-  getCurriculumAlignment,
-  listCurriculumOutcomes,
   type CurriculumAlignmentCell,
   type CurriculumAlignmentGrade,
   type CurriculumAlignmentSubject,
   type CurriculumOutcome,
+  getCurriculumAlignment,
+  listCurriculumOutcomes,
 } from "../../../lib/api.ts";
 import {
-  CELL_STATE,
-  STAGES,
   buildCellIndex,
+  CELL_STATE,
   cellMeterFill,
   computeViewStats,
   coveragePct,
   filterByStageFilter,
-  stateFor,
+  STAGES,
   type StageFilterId,
+  stateFor,
 } from "../../../lib/curriculumAlignment.ts";
 
 type SelectedCell = {
@@ -130,7 +130,11 @@ function KeselarasanView() {
           title="Peta belum dapat dimuat"
           lede="Gagal memuat peta keselarasan."
           action={
-            <Button type="button" variant="outline" onClick={() => alignQ.refetch()}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => alignQ.refetch()}
+            >
               Coba lagi
             </Button>
           }
@@ -196,7 +200,9 @@ function KeselarasanView() {
           <li>
             <span className="text-secondary">Tanpa panduan</span>{" "}
             <strong className="text-primary">{viewStats.gaps}</strong>
-            <span className="ml-(--space-2) text-secondary">Perlu perhatian</span>
+            <span className="ml-(--space-2) text-secondary">
+              Perlu perhatian
+            </span>
           </li>
           <li>
             <span className="text-secondary">Panduan tipis</span>{" "}
@@ -211,7 +217,8 @@ function KeselarasanView() {
               {grid.totals?.national_cp ?? "—"}
             </strong>
             <span className="ml-(--space-2) text-secondary">
-              {grid.totals?.national_subjects ?? "—"} mapel · {globalPct}% global
+              {grid.totals?.national_subjects ?? "—"} mapel · {globalPct}%
+              global
             </span>
           </li>
         </ul>
@@ -251,7 +258,10 @@ function KeselarasanView() {
           ) : null}
         </div>
       ) : (
-        <p role="status" className="text-(length:--font-size-body) text-secondary">
+        <p
+          role="status"
+          className="text-(length:--font-size-body) text-secondary"
+        >
           Semua sel penawaran pada filter ini sudah punya panduan di korpus.
         </p>
       )}
@@ -284,7 +294,9 @@ function KeselarasanView() {
 
       <section aria-label="Matriks keselarasan" className="space-y-(--space-3)">
         <div className="flex flex-wrap items-baseline gap-(--space-3)">
-          <span className="text-(length:--font-size-label) text-secondary">01</span>
+          <span className="text-(length:--font-size-label) text-secondary">
+            01
+          </span>
           <h2 className="text-(length:--font-size-title-section) font-semibold text-primary">
             Matriks penawaran × panduan
           </h2>
@@ -301,7 +313,10 @@ function KeselarasanView() {
             </caption>
             <thead>
               <tr className="border-b border-line-subtle bg-surface">
-                <th scope="col" className="px-(--space-3) py-(--space-2) text-left">
+                <th
+                  scope="col"
+                  className="px-(--space-3) py-(--space-2) text-left"
+                >
                   Mata pelajaran
                 </th>
                 {grades.map((g) => (
@@ -310,7 +325,9 @@ function KeselarasanView() {
                     scope="col"
                     className="px-(--space-3) py-(--space-2) text-left"
                   >
-                    <span className="block font-medium text-primary">{g.name}</span>
+                    <span className="block font-medium text-primary">
+                      {g.name}
+                    </span>
                     <span className="block text-secondary">
                       Fase {g.phase || "—"}
                     </span>
@@ -326,7 +343,9 @@ function KeselarasanView() {
                     className="px-(--space-3) py-(--space-2) text-left font-medium text-primary"
                   >
                     {s.name}
-                    <span className="ml-(--space-2) text-secondary">{s.stage}</span>
+                    <span className="ml-(--space-2) text-secondary">
+                      {s.stage}
+                    </span>
                   </th>
                   {grades.map((g) => {
                     const cell = cellIndex[`${s.subject_id}|${g.grade_id}`];
@@ -346,7 +365,10 @@ function KeselarasanView() {
                       selected?.grade.grade_id === g.grade_id;
                     const fill = cellMeterFill(state);
                     return (
-                      <td key={g.grade_id} className="px-(--space-2) py-(--space-2)">
+                      <td
+                        key={g.grade_id}
+                        className="px-(--space-2) py-(--space-2)"
+                      >
                         <button
                           type="button"
                           data-testid={`align-cell-${s.subject_id}-${g.grade_id}`}
@@ -355,7 +377,9 @@ function KeselarasanView() {
                           className="min-h-(--target-min) w-full rounded-control border border-line-subtle bg-canvas px-(--space-2) py-(--space-2) text-left hover:bg-surface"
                         >
                           <span className="flex items-center gap-(--space-2)">
-                            <span aria-hidden="true">{CELL_STATE[state].glyph}</span>
+                            <span aria-hidden="true">
+                              {CELL_STATE[state].glyph}
+                            </span>
                             <span className="font-medium text-primary">
                               {CELL_STATE[state].short}
                             </span>

@@ -1,5 +1,10 @@
-import type { CurriculumOutcome, GradeLevel, LearningSession, Subject } from "./api";
-import { phaseForGrade, type Phase } from "./curriculumPhase";
+import type {
+  CurriculumOutcome,
+  GradeLevel,
+  LearningSession,
+  Subject,
+} from "./api";
+import { type Phase, phaseForGrade } from "./curriculumPhase";
 
 export type CpContext = {
   ready: boolean;

@@ -10,11 +10,11 @@ import { ProtectedRoute } from "../../../components/ProtectedRoute.tsx";
 import { StatusBadge } from "../../../components/StatusBadge.tsx";
 import { Button } from "../../../components/ui/button.tsx";
 import {
+  type AuthUserRow,
   listAuthUsers,
   listStudents,
   listTutors,
   patchUserRole,
-  type AuthUserRow,
 } from "../../../lib/api.ts";
 import { ROLE_LABEL } from "../../../lib/labels.ts";
 

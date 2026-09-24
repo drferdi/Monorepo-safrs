@@ -3,13 +3,13 @@ import {
   ATTEND_LABEL,
   COMPETENCE_LABEL,
   FORMAT_LABEL,
-  MODE_LABEL,
-  ROLE_LABEL,
-  SESSION_STATUS_LABEL,
-  STATUS_BADGE,
   fmtDate,
   fmtDateShort,
+  MODE_LABEL,
+  ROLE_LABEL,
   rupiah,
+  SESSION_STATUS_LABEL,
+  STATUS_BADGE,
 } from "./labels";
 
 describe("ROLE_LABEL", () => {

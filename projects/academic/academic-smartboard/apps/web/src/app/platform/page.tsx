@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { ChipTabs } from "../../components/ChipTabs.tsx";
 import { PlatformProtectedRoute } from "../../components/PlatformProtectedRoute.tsx";
+import { AuditTab } from "../../components/platform/AuditTab.tsx";
 import { InstitutionsTab } from "../../components/platform/InstitutionsTab.tsx";
 import { PlansTab } from "../../components/platform/PlansTab.tsx";
-import { AuditTab } from "../../components/platform/AuditTab.tsx";
-import { useAuth } from "../../lib/auth.tsx";
 import { Button } from "../../components/ui/button.tsx";
+import { useAuth } from "../../lib/auth.tsx";
 
 const TABS = [
   { id: "institutions", label: "Institusi", testId: "pc-tab-institutions" },

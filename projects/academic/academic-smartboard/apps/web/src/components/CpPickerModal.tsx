@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import {
-  listCurriculumOutcomes,
   type CurriculumOutcome,
   type CurriculumOutcomesPage,
+  listCurriculumOutcomes,
 } from "../lib/api.ts";
 import { Button } from "./ui/button.tsx";
 
@@ -108,7 +108,12 @@ export function CpPickerModal({
               {subjectLabel} · {gradeLabel} · Fase {lockedPhase}
             </p>
           </div>
-          <Button type="button" variant="ghost" aria-label="Tutup" onClick={onClose}>
+          <Button
+            type="button"
+            variant="ghost"
+            aria-label="Tutup"
+            onClick={onClose}
+          >
             ✕
           </Button>
         </div>
@@ -139,14 +144,20 @@ export function CpPickerModal({
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={3} className="px-(--space-3) py-(--space-4) text-secondary">
+                  <td
+                    colSpan={3}
+                    className="px-(--space-3) py-(--space-4) text-secondary"
+                  >
                     Memuat…
                   </td>
                 </tr>
               ) : null}
               {!loading && items.length === 0 ? (
                 <tr>
-                  <td colSpan={3} className="px-(--space-3) py-(--space-4) text-secondary">
+                  <td
+                    colSpan={3}
+                    className="px-(--space-3) py-(--space-4) text-secondary"
+                  >
                     Tidak ada CP untuk {lockedSubject} Fase {lockedPhase}.
                   </td>
                 </tr>

@@ -1,7 +1,13 @@
 "use client";
 
 import { Edit2, Plus, Search, Trash2, X } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { toast } from "sonner";
 import {
   createMasterResource,
@@ -12,9 +18,9 @@ import {
 import {
   filterMasterRows,
   initMasterForm,
+  type MasterField,
   resolveRowIdKey,
   validateRequiredFields,
-  type MasterField,
 } from "../lib/masterCrud.ts";
 import { PageHead } from "./PageHead.tsx";
 import { Button } from "./ui/button.tsx";
@@ -92,11 +98,7 @@ export function MasterCrud({
         const idKey =
           fields[0]?._idKey || resolveRowIdKey(editing) || undefined;
         if (!idKey) throw new Error("missing id");
-        await updateMasterResource(
-          resource,
-          String(editing[idKey]),
-          form,
-        );
+        await updateMasterResource(resource, String(editing[idKey]), form);
         toast.success(`${title} berhasil diperbarui.`);
       } else {
         await createMasterResource(resource, form);
@@ -117,7 +119,9 @@ export function MasterCrud({
   }
 
   async function del(row: Record<string, unknown>): Promise<void> {
-    if (!window.confirm(`Hapus ${title}? Tindakan ini tidak dapat dibatalkan.`)) {
+    if (
+      !window.confirm(`Hapus ${title}? Tindakan ini tidak dapat dibatalkan.`)
+    ) {
       return;
     }
     const idKey = resolveRowIdKey(row);
@@ -278,7 +282,11 @@ export function MasterCrud({
               {fields.map((f) => (
                 <div
                   key={f.name}
-                  className={f.wide ? "space-y-(--space-1) sm:col-span-2" : "space-y-(--space-1)"}
+                  className={
+                    f.wide
+                      ? "space-y-(--space-1) sm:col-span-2"
+                      : "space-y-(--space-1)"
+                  }
                 >
                   <label className="text-(length:--font-size-label) text-secondary">
                     {f.label}
@@ -357,7 +365,9 @@ export function MasterCrud({
                               checked={selected}
                               onChange={(e) => {
                                 const prev = Array.isArray(form[f.name])
-                                  ? ([...(form[f.name] as string[])] as string[])
+                                  ? ([
+                                      ...(form[f.name] as string[]),
+                                    ] as string[])
                                   : [];
                                 setForm({
                                   ...form,

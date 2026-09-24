@@ -9,18 +9,18 @@ import { PageHead } from "../../../components/PageHead.tsx";
 import { ProtectedRoute } from "../../../components/ProtectedRoute.tsx";
 import { Button } from "../../../components/ui/button.tsx";
 import {
+  type CurriculumOutcome,
   getCurriculumCoverage,
   getCurriculumStructure,
   listCurriculumOutcomes,
   listGradeLevels,
-  type CurriculumOutcome,
 } from "../../../lib/api.ts";
 import {
-  ROW_STATE,
   coverageProgressPct,
   formatTaughtAt,
   isCoverageComplete,
   isCoveragePartial,
+  ROW_STATE,
   rowStateFor,
   taughtCountSuffix,
 } from "../../../lib/curriculumCoverage.ts";
@@ -303,9 +303,10 @@ function CakupanView() {
 
               {coverage.subject?.offered === false ? (
                 <p className="rounded-control border border-line-subtle p-(--space-3) text-(length:--font-size-body) text-secondary">
-                  Mata pelajaran ini tercantum pada panduan nasional, namun belum
-                  terdaftar pada master bimbel. Perhitungan status mengikuti
-                  penandaan Capaian Pembelajaran pada sesi di jenjang ini.
+                  Mata pelajaran ini tercantum pada panduan nasional, namun
+                  belum terdaftar pada master bimbel. Perhitungan status
+                  mengikuti penandaan Capaian Pembelajaran pada sesi di jenjang
+                  ini.
                 </p>
               ) : null}
 
@@ -316,7 +317,10 @@ function CakupanView() {
                   {coverage.grade?.phase || "—"}.
                 </p>
               ) : (
-                <section aria-label="Daftar capaian" className="space-y-(--space-3)">
+                <section
+                  aria-label="Daftar capaian"
+                  className="space-y-(--space-3)"
+                >
                   <div className="flex flex-wrap items-baseline gap-(--space-3)">
                     <span className="text-(length:--font-size-label) text-secondary">
                       01
@@ -397,7 +401,9 @@ function CakupanView() {
                                   variant="outline"
                                   size="sm"
                                   data-testid={`coverage-cp-${cp.learning_outcome_code}`}
-                                  onClick={() => void openCp(cp.learning_outcome_code)}
+                                  onClick={() =>
+                                    void openCp(cp.learning_outcome_code)
+                                  }
                                 >
                                   Buka capaian
                                 </Button>

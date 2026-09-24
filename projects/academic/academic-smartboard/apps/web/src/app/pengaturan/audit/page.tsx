@@ -20,9 +20,7 @@ function AuditLogView() {
     const rows = logsQ.data ?? [];
     if (!q) return rows;
     const needle = q.toLowerCase();
-    return rows.filter((l) =>
-      JSON.stringify(l).toLowerCase().includes(needle),
-    );
+    return rows.filter((l) => JSON.stringify(l).toLowerCase().includes(needle));
   }, [logsQ.data, q]);
 
   return (

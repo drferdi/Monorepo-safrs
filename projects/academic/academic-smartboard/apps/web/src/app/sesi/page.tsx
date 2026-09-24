@@ -1,8 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import type { Route } from "next";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { AppShell } from "../../components/AppShell.tsx";
 import { PageHead } from "../../components/PageHead.tsx";
@@ -38,7 +38,8 @@ function SesiListView() {
     const needle = q.trim().toLowerCase();
     if (!needle) return data;
     return data.filter((s) => {
-      const tut = tutorsQ.data?.find((t) => t.tutor_id === s.tutor_id)?.name ?? "";
+      const tut =
+        tutorsQ.data?.find((t) => t.tutor_id === s.tutor_id)?.name ?? "";
       const sub =
         subjectsQ.data?.find((x) => x.subject_id === s.subject_id)?.name ?? "";
       return (
@@ -117,9 +118,14 @@ function SesiListView() {
             </thead>
             <tbody>
               {rows.map((s) => {
-                const tone = (STATUS_BADGE[s.status] ?? "neutral") as StatusBadgeTone;
-                const tut = tutorsQ.data?.find((t) => t.tutor_id === s.tutor_id);
-                const sub = subjectsQ.data?.find((x) => x.subject_id === s.subject_id);
+                const tone = (STATUS_BADGE[s.status] ??
+                  "neutral") as StatusBadgeTone;
+                const tut = tutorsQ.data?.find(
+                  (t) => t.tutor_id === s.tutor_id,
+                );
+                const sub = subjectsQ.data?.find(
+                  (x) => x.subject_id === s.subject_id,
+                );
                 return (
                   <tr
                     key={s.session_id}
@@ -127,8 +133,12 @@ function SesiListView() {
                     className="border-t border-line-subtle"
                   >
                     <td className="px-(--space-3) py-(--space-2)">{s.date}</td>
-                    <td className="px-(--space-3) py-(--space-2)">{sub?.name}</td>
-                    <td className="px-(--space-3) py-(--space-2)">{tut?.name}</td>
+                    <td className="px-(--space-3) py-(--space-2)">
+                      {sub?.name}
+                    </td>
+                    <td className="px-(--space-3) py-(--space-2)">
+                      {tut?.name}
+                    </td>
                     <td className="px-(--space-3) py-(--space-2)">
                       <StatusBadge tone={tone}>
                         {SESSION_STATUS_LABEL[

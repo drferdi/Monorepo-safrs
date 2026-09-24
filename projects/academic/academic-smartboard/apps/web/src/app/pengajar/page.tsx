@@ -20,10 +20,11 @@ function PengajarView() {
       label: "Mata Pelajaran",
       type: "multi",
       options: (d) => {
-        const subjects = (d.subjects as Array<{
-          subject_id: string;
-          name: string;
-        }>) || [];
+        const subjects =
+          (d.subjects as Array<{
+            subject_id: string;
+            name: string;
+          }>) || [];
         return subjects.map((x) => ({
           value: x.subject_id,
           label: x.name,
@@ -34,8 +35,7 @@ function PengajarView() {
       name: "stages",
       label: "Jenjang Dikuasai",
       type: "multi",
-      options: () =>
-        ["SD", "SMP", "SMA"].map((s) => ({ value: s, label: s })),
+      options: () => ["SD", "SMP", "SMA"].map((s) => ({ value: s, label: s })),
     },
     {
       name: "base_rate",
@@ -70,8 +70,7 @@ function PengajarView() {
           label: "Mapel",
           render: (r, d) => {
             const subjects =
-              (d.subjects as Array<{ subject_id: string; name: string }>) ||
-              [];
+              (d.subjects as Array<{ subject_id: string; name: string }>) || [];
             const ids = (r.subject_ids as string[]) || [];
             return (
               ids

@@ -7,12 +7,12 @@ import { PageHead } from "../../components/PageHead.tsx";
 import { ProtectedRoute } from "../../components/ProtectedRoute.tsx";
 import { Button } from "../../components/ui/button.tsx";
 import {
+  type Communication,
+  type CommunicationDetail,
   getCommunication,
   listCommunications,
   patchCommunication,
   postCommunicationMessage,
-  type Communication,
-  type CommunicationDetail,
 } from "../../lib/api.ts";
 import { useAuth } from "../../lib/auth.tsx";
 
@@ -187,7 +187,11 @@ function KomunikasiView() {
           ) : error ? (
             <p className="text-(length:--font-size-body) text-secondary">
               {error}{" "}
-              <button type="button" className="text-accent-text" onClick={() => void load()}>
+              <button
+                type="button"
+                className="text-accent-text"
+                onClick={() => void load()}
+              >
                 Coba lagi
               </button>
             </p>
@@ -200,26 +204,44 @@ function KomunikasiView() {
               <table className="min-w-full border-collapse text-(length:--font-size-body)">
                 <thead>
                   <tr className="border-b border-line-subtle bg-surface">
-                    <th className="px-(--space-3) py-(--space-2) text-left" scope="col">
+                    <th
+                      className="px-(--space-3) py-(--space-2) text-left"
+                      scope="col"
+                    >
                       Judul
                     </th>
-                    <th className="px-(--space-3) py-(--space-2) text-left" scope="col">
+                    <th
+                      className="px-(--space-3) py-(--space-2) text-left"
+                      scope="col"
+                    >
                       Kategori
                     </th>
-                    <th className="px-(--space-3) py-(--space-2) text-left" scope="col">
+                    <th
+                      className="px-(--space-3) py-(--space-2) text-left"
+                      scope="col"
+                    >
                       Prioritas
                     </th>
-                    <th className="px-(--space-3) py-(--space-2) text-left" scope="col">
+                    <th
+                      className="px-(--space-3) py-(--space-2) text-left"
+                      scope="col"
+                    >
                       Status
                     </th>
-                    <th className="px-(--space-3) py-(--space-2) text-right" scope="col">
+                    <th
+                      className="px-(--space-3) py-(--space-2) text-right"
+                      scope="col"
+                    >
                       Aktivitas terakhir
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {items.map((c) => (
-                    <tr key={c.communication_id} className="border-b border-line-subtle">
+                    <tr
+                      key={c.communication_id}
+                      className="border-b border-line-subtle"
+                    >
                       <td className="px-(--space-3) py-(--space-2)">
                         <button
                           type="button"
@@ -236,7 +258,9 @@ function KomunikasiView() {
                         {PRIORITY_LABEL[c.priority] || c.priority}
                       </td>
                       <td className="px-(--space-3) py-(--space-2)">
-                        <span aria-hidden="true">{STATUS_GLYPH[c.status] || "○"}</span>{" "}
+                        <span aria-hidden="true">
+                          {STATUS_GLYPH[c.status] || "○"}
+                        </span>{" "}
                         {STATUS_LABEL[c.status] || c.status}
                       </td>
                       <td className="px-(--space-3) py-(--space-2) text-right tabular-nums">
@@ -264,11 +288,16 @@ function KomunikasiView() {
                       {m.author_name} · {formatWhen(m.created_at)}
                       {m.internal ? " · catatan internal" : ""}
                     </p>
-                    <p className="text-(length:--font-size-body) text-primary">{m.body}</p>
+                    <p className="text-(length:--font-size-body) text-primary">
+                      {m.body}
+                    </p>
                   </li>
                 ))}
               </ol>
-              <form onSubmit={(e) => void sendReply(e)} className="space-y-(--space-3)">
+              <form
+                onSubmit={(e) => void sendReply(e)}
+                className="space-y-(--space-3)"
+              >
                 <div className="space-y-(--space-1)">
                   <label
                     className="text-(length:--font-size-label) text-secondary"

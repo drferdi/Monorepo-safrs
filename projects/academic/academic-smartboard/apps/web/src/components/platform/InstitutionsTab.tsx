@@ -1,10 +1,8 @@
 "use client";
 
-import { useMemo, useState, type FormEvent, type ReactNode } from "react";
-import { toast } from "sonner";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button } from "../ui/button.tsx";
-import { StatusBadge } from "../StatusBadge.tsx";
+import { type FormEvent, type ReactNode, useMemo, useState } from "react";
+import { toast } from "sonner";
 import {
   assignPlatformTenantPlan,
   createPlatformTenant,
@@ -14,9 +12,9 @@ import {
   listPlatformAudit,
   listPlatformPlans,
   listPlatformTenants,
+  type PlatformTenant,
   patchPlatformTenant,
   patchPlatformTenantStatus,
-  type PlatformTenant,
 } from "../../lib/api.ts";
 import { downloadCsv, stamp, toCsv } from "../../lib/csv.ts";
 import { fmtDate } from "../../lib/labels.ts";
@@ -26,6 +24,8 @@ import {
   INTERVAL_LABEL,
   QUOTA_LABEL,
 } from "../../lib/platform/pricing.ts";
+import { StatusBadge } from "../StatusBadge.tsx";
+import { Button } from "../ui/button.tsx";
 
 const STATUS_LABEL: Record<string, string> = {
   draft: "Draft",
@@ -77,11 +77,7 @@ function LogoMark({ tenant }: { tenant: PlatformTenant }) {
       />
     );
   }
-  const initial = (
-    tenant.branding?.display_name ||
-    tenant.name ||
-    "?"
-  )
+  const initial = (tenant.branding?.display_name || tenant.name || "?")
     .slice(0, 1)
     .toUpperCase();
   return (
@@ -338,7 +334,10 @@ export function InstitutionsTab() {
       </div>
 
       {tenantsQ.isError ? (
-        <div className="mb-(--space-4) rounded-control border border-line-subtle p-(--space-3)" role="alert">
+        <div
+          className="mb-(--space-4) rounded-control border border-line-subtle p-(--space-3)"
+          role="alert"
+        >
           <p className="text-critical">Gagal memuat daftar institusi</p>
         </div>
       ) : null}
@@ -359,23 +358,32 @@ export function InstitutionsTab() {
           <tbody>
             {tenantsQ.isPending ? (
               <tr>
-                <td colSpan={7} className="px-(--space-3) py-(--space-4) text-secondary">
+                <td
+                  colSpan={7}
+                  className="px-(--space-3) py-(--space-4) text-secondary"
+                >
                   Memuat…
                 </td>
               </tr>
             ) : null}
             {!tenantsQ.isPending && tenants.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-(--space-3) py-(--space-4) text-secondary">
+                <td
+                  colSpan={7}
+                  className="px-(--space-3) py-(--space-4) text-secondary"
+                >
                   Belum ada institusi. Klik “Buat Institusi”.
                 </td>
               </tr>
             ) : null}
             {!tenantsQ.isPending &&
-              tenants.length > 0 &&
-              visible.length === 0 ? (
+            tenants.length > 0 &&
+            visible.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-(--space-3) py-(--space-4) text-secondary">
+                <td
+                  colSpan={7}
+                  className="px-(--space-3) py-(--space-4) text-secondary"
+                >
                   Tidak ada institusi yang cocok dengan filter.
                 </td>
               </tr>
@@ -443,8 +451,16 @@ export function InstitutionsTab() {
                         key={a.to}
                         type="button"
                         size="sm"
-                        variant={a.kind === "ghost" ? "ghost" : a.kind === "danger" ? "outline" : "default"}
-                        className={a.kind === "danger" ? "text-critical" : undefined}
+                        variant={
+                          a.kind === "ghost"
+                            ? "ghost"
+                            : a.kind === "danger"
+                              ? "outline"
+                              : "default"
+                        }
+                        className={
+                          a.kind === "danger" ? "text-critical" : undefined
+                        }
                         onClick={() =>
                           setConfirm({ tenant: t, to: a.to, label: a.label })
                         }
@@ -474,7 +490,9 @@ export function InstitutionsTab() {
         <DetailModal
           tenant={detail}
           onClose={() => setDetail(null)}
-          onChanged={() => void qc.invalidateQueries({ queryKey: ["platform"] })}
+          onChanged={() =>
+            void qc.invalidateQueries({ queryKey: ["platform"] })
+          }
         />
       ) : null}
       {confirm ? (
@@ -514,7 +532,13 @@ function Modal({
           <h2 className="text-(length:--font-size-title-section) font-bold text-primary">
             {title}
           </h2>
-          <Button type="button" variant="ghost" size="sm" onClick={onClose} aria-label="Tutup">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={onClose}
+            aria-label="Tutup"
+          >
             ✕
           </Button>
         </div>
@@ -574,8 +598,8 @@ function CreateModal({
     } catch (err: unknown) {
       const detail =
         err && typeof err === "object" && "response" in err
-          ? (err as { response?: { data?: { detail?: string } } }).response?.data
-              ?.detail
+          ? (err as { response?: { data?: { detail?: string } } }).response
+              ?.data?.detail
           : undefined;
       toast.error(detail || "Gagal membuat institusi");
     } finally {
@@ -603,7 +627,11 @@ function CreateModal({
         </>
       }
     >
-      <form id="pc-create-form" onSubmit={(e) => void submit(e)} className="flex flex-col gap-(--space-3)">
+      <form
+        id="pc-create-form"
+        onSubmit={(e) => void submit(e)}
+        className="flex flex-col gap-(--space-3)"
+      >
         <p className="text-(length:--font-size-body) text-secondary">
           Institusi baru dibuat berstatus <strong>Draft</strong> — belum bisa
           dipakai sampai diaktifkan.
@@ -746,7 +774,10 @@ function DetailModal({
   const sub = tenant.subscription;
 
   return (
-    <Modal title={tenant.branding?.display_name || tenant.name} onClose={onClose}>
+    <Modal
+      title={tenant.branding?.display_name || tenant.name}
+      onClose={onClose}
+    >
       <div className="mb-(--space-4) space-y-(--space-2) text-(length:--font-size-body) text-primary">
         <p>
           <span className="text-secondary">Slug · </span>
@@ -760,7 +791,9 @@ function DetailModal({
         </p>
       </div>
 
-      <h3 className="mb-(--space-2) font-semibold text-primary">Ubah Institusi</h3>
+      <h3 className="mb-(--space-2) font-semibold text-primary">
+        Ubah Institusi
+      </h3>
       <div className="mb-(--space-3) grid gap-(--space-3) sm:grid-cols-2">
         <input
           className="min-h-(--target-min) rounded-control border border-line-subtle bg-canvas px-(--space-3) text-primary"
@@ -799,10 +832,9 @@ function DetailModal({
                 name: editName.trim(),
                 branding: {
                   display_name: editDisplay.trim() || null,
-                  accent:
-                    editAccent.trim().startsWith("var(")
-                      ? editAccent.trim()
-                      : null,
+                  accent: editAccent.trim().startsWith("var(")
+                    ? editAccent.trim()
+                    : null,
                 },
               });
               toast.success("Institusi diperbarui");

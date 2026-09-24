@@ -1,8 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import type { Route } from "next";
+import Link from "next/link";
 import { AppShell } from "../../components/AppShell.tsx";
 import { EmptyState } from "../../components/EmptyState.tsx";
 import { PageHead } from "../../components/PageHead.tsx";
@@ -15,7 +15,10 @@ import {
   listTutors,
 } from "../../lib/api.ts";
 import { useAuth } from "../../lib/auth.tsx";
-import { evalStatusBadge, filterSessionsForEval } from "../../lib/progression.ts";
+import {
+  evalStatusBadge,
+  filterSessionsForEval,
+} from "../../lib/progression.ts";
 
 function EvaluasiView() {
   const { user } = useAuth();
@@ -53,7 +56,9 @@ function EvaluasiView() {
             <thead className="bg-surface text-secondary">
               <tr>
                 <th className="px-(--space-3) py-(--space-2)">Tanggal</th>
-                <th className="px-(--space-3) py-(--space-2)">Mata pelajaran</th>
+                <th className="px-(--space-3) py-(--space-2)">
+                  Mata pelajaran
+                </th>
                 <th className="px-(--space-3) py-(--space-2)">Pengajar</th>
                 <th className="px-(--space-3) py-(--space-2)">Murid</th>
                 <th className="px-(--space-3) py-(--space-2)">Status</th>
@@ -65,21 +70,32 @@ function EvaluasiView() {
                 const sub = subjectsQ.data?.find(
                   (x) => x.subject_id === s.subject_id,
                 );
-                const tut = tutorsQ.data?.find((t) => t.tutor_id === s.tutor_id);
+                const tut = tutorsQ.data?.find(
+                  (t) => t.tutor_id === s.tutor_id,
+                );
                 const muridNames = (s.student_ids ?? [])
                   .map(
                     (id) =>
-                      studentsQ.data?.find((st) => st.student_id === id)?.name ??
-                      id,
+                      studentsQ.data?.find((st) => st.student_id === id)
+                        ?.name ?? id,
                   )
                   .join(", ");
                 const badge = evalStatusBadge(s.status);
                 return (
-                  <tr key={s.session_id} className="border-t border-line-subtle">
+                  <tr
+                    key={s.session_id}
+                    className="border-t border-line-subtle"
+                  >
                     <td className="px-(--space-3) py-(--space-2)">{s.date}</td>
-                    <td className="px-(--space-3) py-(--space-2)">{sub?.name}</td>
-                    <td className="px-(--space-3) py-(--space-2)">{tut?.name}</td>
-                    <td className="px-(--space-3) py-(--space-2)">{muridNames}</td>
+                    <td className="px-(--space-3) py-(--space-2)">
+                      {sub?.name}
+                    </td>
+                    <td className="px-(--space-3) py-(--space-2)">
+                      {tut?.name}
+                    </td>
+                    <td className="px-(--space-3) py-(--space-2)">
+                      {muridNames}
+                    </td>
                     <td className="px-(--space-3) py-(--space-2)">
                       <StatusBadge tone={badge.tone}>{badge.label}</StatusBadge>
                     </td>

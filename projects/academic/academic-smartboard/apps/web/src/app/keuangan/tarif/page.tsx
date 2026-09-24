@@ -144,9 +144,7 @@ function TarifView() {
   }
 
   function handleDelete(row: Rate): void {
-    if (
-      !window.confirm("Hapus Tarif? Tindakan ini tidak dapat dibatalkan.")
-    ) {
+    if (!window.confirm("Hapus Tarif? Tindakan ini tidak dapat dibatalkan.")) {
       return;
     }
     deleteM.mutate(row.rate_id);
@@ -208,14 +206,20 @@ function TarifView() {
           <thead>
             <tr className="border-b border-line-subtle bg-surface">
               <th className="px-(--space-3) py-(--space-2) text-left">Nama</th>
-              <th className="px-(--space-3) py-(--space-2) text-left">Format</th>
+              <th className="px-(--space-3) py-(--space-2) text-left">
+                Format
+              </th>
               <th className="px-(--space-3) py-(--space-2) text-left">Mode</th>
-              <th className="px-(--space-3) py-(--space-2) text-left">Durasi</th>
+              <th className="px-(--space-3) py-(--space-2) text-left">
+                Durasi
+              </th>
               <th className="px-(--space-3) py-(--space-2) text-left">Tarif</th>
               <th className="px-(--space-3) py-(--space-2) text-left">
                 Transport
               </th>
-              <th className="px-(--space-3) py-(--space-2) text-left">Status</th>
+              <th className="px-(--space-3) py-(--space-2) text-left">
+                Status
+              </th>
               <th className="px-(--space-3) py-(--space-2) text-left">Aksi</th>
             </tr>
           </thead>
@@ -233,16 +237,14 @@ function TarifView() {
               </tr>
             ) : (
               filtered.map((row) => (
-                <tr
-                  key={row.rate_id}
-                  className="border-b border-line-subtle"
-                >
+                <tr key={row.rate_id} className="border-b border-line-subtle">
                   <td className="px-(--space-3) py-(--space-2) font-medium">
                     {row.name}
                   </td>
                   <td className="px-(--space-3) py-(--space-2)">
-                    {(FORMAT_LABEL as Record<string, string>)[row.format ?? ""] ??
-                      "—"}
+                    {(FORMAT_LABEL as Record<string, string>)[
+                      row.format ?? ""
+                    ] ?? "—"}
                   </td>
                   <td className="px-(--space-3) py-(--space-2)">
                     {(MODE_LABEL as Record<string, string>)[row.mode ?? ""] ??

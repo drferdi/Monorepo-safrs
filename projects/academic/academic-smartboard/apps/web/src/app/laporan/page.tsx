@@ -61,7 +61,11 @@ const COLS: Record<TabKey, ReportColumn[]> = {
     { key: "sessions", label: "Sesi" },
     { key: "base", label: "Base", render: (v) => rupiah(v as number) },
     { key: "incentive", label: "Insentif", render: (v) => rupiah(v as number) },
-    { key: "transport", label: "Transport", render: (v) => rupiah(v as number) },
+    {
+      key: "transport",
+      label: "Transport",
+      render: (v) => rupiah(v as number),
+    },
     { key: "total", label: "Total", render: (v) => rupiah(v as number) },
   ],
   compliance: [
@@ -77,7 +81,9 @@ function LaporanView() {
   const [tab, setTab] = useState<TabKey>("operational");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
-  const [period, setPeriod] = useState(() => new Date().toISOString().slice(0, 7));
+  const [period, setPeriod] = useState(() =>
+    new Date().toISOString().slice(0, 7),
+  );
 
   const queryParams = useMemo(() => {
     const params: Record<string, string> = {};
@@ -167,7 +173,9 @@ function LaporanView() {
                   data-testid="report-from"
                   className="min-h-(--target-min) rounded-control border border-line-subtle px-(--space-3)"
                 />
-                <span className="text-(length:--font-size-label) text-secondary">—</span>
+                <span className="text-(length:--font-size-label) text-secondary">
+                  —
+                </span>
                 <input
                   type="date"
                   value={dateTo}
@@ -248,7 +256,10 @@ function LaporanView() {
             <thead>
               <tr className="border-b border-line-subtle bg-surface">
                 {cols.map((c) => (
-                  <th key={c.key} className="px-(--space-3) py-(--space-2) text-left">
+                  <th
+                    key={c.key}
+                    className="px-(--space-3) py-(--space-2) text-left"
+                  >
                     {c.label}
                   </th>
                 ))}

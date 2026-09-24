@@ -2,8 +2,8 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, ChevronRight, RefreshCw } from "lucide-react";
-import Link from "next/link";
 import type { Route } from "next";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { AppShell } from "../../components/AppShell.tsx";
@@ -18,26 +18,26 @@ import { StatusBadge } from "../../components/StatusBadge.tsx";
 import { TerminalPanel } from "../../components/TerminalPanel.tsx";
 import { Button } from "../../components/ui/button.tsx";
 import {
+  type DashboardSessionRow,
+  type DashboardStatsResponse,
   getDashboardInsights,
   getDashboardStats,
   getDashboardStudentRegularity,
   getDashboardTodaySchedule,
   listAttendanceGaps,
   listStudents,
-  sendReminder,
-  type DashboardSessionRow,
-  type DashboardStatsResponse,
   type Student,
+  sendReminder,
 } from "../../lib/api.ts";
 import { useAuth } from "../../lib/auth.tsx";
 import {
   ANALYTICS_ORDER,
   buildDashboardProblems,
+  type DashboardStats,
   formatMetric,
   greetingName,
   ROLE_VIEW,
   STARTED_STATUSES,
-  type DashboardStats,
 } from "../../lib/dashboard.ts";
 import {
   SESSION_STATUS_LABEL,
@@ -258,8 +258,7 @@ function DashboardView() {
     },
   };
 
-  const error =
-    coreQ.isError ? "Data ringkasan belum tersedia." : "";
+  const error = coreQ.isError ? "Data ringkasan belum tersedia." : "";
   const insightsError = insightsQ.isError
     ? "Analitik belum tersedia. Ringkasan operasional tetap dapat digunakan."
     : "";
@@ -369,11 +368,7 @@ function DashboardView() {
               <SessionChain stats={stats} today={today} />
             </div>
             <aside className="space-y-(--space-4)" aria-label="Konteks role">
-              {isFinance ? (
-                <FinanceContext stats={stats} />
-              ) : (
-                <KayyisaColumn />
-              )}
+              {isFinance ? <FinanceContext stats={stats} /> : <KayyisaColumn />}
               {isParent ? (
                 <ParentReminder
                   students={parentStudents}
@@ -542,11 +537,14 @@ function SessionChain({
   const evaluated = today.filter((s) =>
     ["menunggu_verifikasi", "terverifikasi"].includes(String(s.status || "")),
   ).length;
-  const verified = today.filter(
-    (s) => s.status === "terverifikasi",
-  ).length;
+  const verified = today.filter((s) => s.status === "terverifikasi").length;
   const stages = [
-    { key: "schedule", label: "Jadwal", value: today.length, unit: "sesi disusun" },
+    {
+      key: "schedule",
+      label: "Jadwal",
+      value: today.length,
+      unit: "sesi disusun",
+    },
     { key: "session", label: "Check-in", value: started, unit: "sesi dimulai" },
     {
       key: "attendance",
@@ -554,8 +552,18 @@ function SessionChain({
       value: Number(stats.attendance_sessions_today || 0),
       unit: "sesi terabsen",
     },
-    { key: "evaluation", label: "Evaluasi", value: evaluated, unit: "sesi lengkap" },
-    { key: "verification", label: "Verifikasi", value: verified, unit: "sesi sah" },
+    {
+      key: "evaluation",
+      label: "Evaluasi",
+      value: evaluated,
+      unit: "sesi lengkap",
+    },
+    {
+      key: "verification",
+      label: "Verifikasi",
+      value: verified,
+      unit: "sesi sah",
+    },
     {
       key: "honor",
       label: "Honor",

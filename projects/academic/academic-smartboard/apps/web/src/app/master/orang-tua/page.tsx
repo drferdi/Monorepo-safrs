@@ -37,9 +37,7 @@ export default function OrangTuaPage() {
               key: "student_ids",
               label: "Anak",
               render: (r) =>
-                String(
-                  Array.isArray(r.student_ids) ? r.student_ids.length : 0,
-                ),
+                String(Array.isArray(r.student_ids) ? r.student_ids.length : 0),
             },
           ]}
         />

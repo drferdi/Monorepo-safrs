@@ -125,9 +125,7 @@ function ScoreLine({
         viewBox={`0 0 ${W} ${H}`}
         preserveAspectRatio="none"
         role="img"
-        aria-label={scores
-          .map((b) => `Skor ${b.score}: ${b.count}`)
-          .join(", ")}
+        aria-label={scores.map((b) => `Skor ${b.score}: ${b.count}`).join(", ")}
       >
         <line
           x1="0"
@@ -150,7 +148,9 @@ function ScoreLine({
       </svg>
       <div
         className="mt-1 grid text-center text-xs"
-        style={{ gridTemplateColumns: `repeat(${scores.length}, minmax(0, 1fr))` }}
+        style={{
+          gridTemplateColumns: `repeat(${scores.length}, minmax(0, 1fr))`,
+        }}
       >
         {points.map((p) => (
           <div key={p.score}>

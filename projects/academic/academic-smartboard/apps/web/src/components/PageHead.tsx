@@ -41,7 +41,9 @@ export function PageHead({
           </p>
         ) : null}
       </div>
-      {actions ? <div className="flex flex-wrap gap-(--space-2)">{actions}</div> : null}
+      {actions ? (
+        <div className="flex flex-wrap gap-(--space-2)">{actions}</div>
+      ) : null}
     </header>
   );
 }

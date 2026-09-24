@@ -9,9 +9,24 @@ export function WindowLights() {
       viewBox="0 0 38 10"
       aria-hidden="true"
     >
-      <circle cx="5" cy="5" r="5" fill="var(--color-mark-corner, currentColor)" />
-      <circle cx="19" cy="5" r="5" fill="var(--color-mark-corner, currentColor)" />
-      <circle cx="33" cy="5" r="5" fill="var(--color-mark-corner, currentColor)" />
+      <circle
+        cx="5"
+        cy="5"
+        r="5"
+        fill="var(--color-mark-corner, currentColor)"
+      />
+      <circle
+        cx="19"
+        cy="5"
+        r="5"
+        fill="var(--color-mark-corner, currentColor)"
+      />
+      <circle
+        cx="33"
+        cy="5"
+        r="5"
+        fill="var(--color-mark-corner, currentColor)"
+      />
     </svg>
   );
 }
@@ -57,10 +72,7 @@ export function TerminalPanel({
             {seq}
           </span>
         ) : null}
-        <h3
-          className="text-base font-semibold text-primary"
-          id={labelledBy}
-        >
+        <h3 className="text-base font-semibold text-primary" id={labelledBy}>
           {title}
         </h3>
         {children}

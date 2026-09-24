@@ -89,7 +89,10 @@ export type Schedule = {
   created_at?: string;
 };
 
-export type ScheduleCreate = Omit<Schedule, "schedule_id" | "status" | "created_at"> & {
+export type ScheduleCreate = Omit<
+  Schedule,
+  "schedule_id" | "status" | "created_at"
+> & {
   status?: string;
 };
 
@@ -291,7 +294,9 @@ export function buildQuery(
   );
   if (entries.length === 0) return "";
   const qs = entries
-    .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
+    .map(
+      ([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`,
+    )
     .join("&");
   return `?${qs}`;
 }
@@ -323,7 +328,9 @@ export async function listSchedules(): Promise<Schedule[]> {
   return data;
 }
 
-export async function createSchedule(payload: ScheduleCreate): Promise<Schedule> {
+export async function createSchedule(
+  payload: ScheduleCreate,
+): Promise<Schedule> {
   const { data } = await apiClient.post<Schedule>("/schedules", payload);
   return data;
 }
@@ -367,7 +374,10 @@ export async function verifySession(id: string): Promise<unknown> {
   return data;
 }
 
-export async function cancelSession(id: string, reason: string): Promise<unknown> {
+export async function cancelSession(
+  id: string,
+  reason: string,
+): Promise<unknown> {
   const { data } = await apiClient.post(`/sessions/${id}/cancel`, { reason });
   return data;
 }
@@ -399,12 +409,16 @@ export async function draftEvaluation(
   return data;
 }
 
-export async function tutorCheckIn(payload: Record<string, unknown>): Promise<unknown> {
+export async function tutorCheckIn(
+  payload: Record<string, unknown>,
+): Promise<unknown> {
   const { data } = await apiClient.post("/tutor/check-in", payload);
   return data;
 }
 
-export async function tutorCheckOut(payload: Record<string, unknown>): Promise<unknown> {
+export async function tutorCheckOut(
+  payload: Record<string, unknown>,
+): Promise<unknown> {
   const { data } = await apiClient.post("/tutor/check-out", payload);
   return data;
 }
@@ -462,9 +476,9 @@ export type CurriculumOutcomesPage = {
 export async function listCurriculumOutcomes(
   query: Record<string, string | number | undefined> = {},
 ): Promise<CurriculumOutcomesPage | CurriculumOutcome[]> {
-  const { data } = await apiClient.get<CurriculumOutcomesPage | CurriculumOutcome[]>(
-    `/curriculum/outcomes${buildQuery(query)}`,
-  );
+  const { data } = await apiClient.get<
+    CurriculumOutcomesPage | CurriculumOutcome[]
+  >(`/curriculum/outcomes${buildQuery(query)}`);
   return data;
 }
 
@@ -1059,9 +1073,8 @@ export type DashboardInsights = {
 };
 
 export async function getDashboardStats(): Promise<DashboardStatsResponse> {
-  const { data } = await apiClient.get<DashboardStatsResponse>(
-    "/dashboard/stats",
-  );
+  const { data } =
+    await apiClient.get<DashboardStatsResponse>("/dashboard/stats");
   return data;
 }
 
@@ -1138,7 +1151,9 @@ export async function listTutorDirectory(): Promise<TutorDirectoryRow[]> {
 
 export async function importTutorDirectory(
   form: FormData,
-): Promise<{ counts: { added: number; updated: number; pending_approval?: number } }> {
+): Promise<{
+  counts: { added: number; updated: number; pending_approval?: number };
+}> {
   const { data } = await apiClient.post("/tutor-directory/import", form);
   return data;
 }
@@ -1175,7 +1190,9 @@ export type EvaluationTemplate = {
 };
 
 export async function listEvaluationTemplates(): Promise<EvaluationTemplate[]> {
-  const { data } = await apiClient.get<EvaluationTemplate[]>("/evaluation-templates");
+  const { data } = await apiClient.get<EvaluationTemplate[]>(
+    "/evaluation-templates",
+  );
   return Array.isArray(data) ? data : [];
 }
 
@@ -1200,7 +1217,9 @@ export async function updateEvaluationTemplate(
   return data;
 }
 
-export async function deleteEvaluationTemplate(templateId: string): Promise<void> {
+export async function deleteEvaluationTemplate(
+  templateId: string,
+): Promise<void> {
   await apiClient.delete(`/evaluation-templates/${templateId}`);
 }
 
@@ -1278,9 +1297,7 @@ export async function postProgressionSummaryDraft(
   source?: string;
   ai_assisted?: boolean;
 }> {
-  const qs = subjectId
-    ? `?subject_id=${encodeURIComponent(subjectId)}`
-    : "";
+  const qs = subjectId ? `?subject_id=${encodeURIComponent(subjectId)}` : "";
   const { data } = await apiClient.post(
     `/students/${studentId}/progression/summary-draft${qs}`,
   );
@@ -1332,11 +1349,13 @@ export async function listPlatformTenants(): Promise<PlatformTenant[]> {
   return Array.isArray(data) ? data : [];
 }
 
-export async function getPlatformSummary(): Promise<Record<string, unknown> | null> {
+export async function getPlatformSummary(): Promise<Record<
+  string,
+  unknown
+> | null> {
   try {
-    const { data } = await apiClient.get<Record<string, unknown>>(
-      "/platform/summary",
-    );
+    const { data } =
+      await apiClient.get<Record<string, unknown>>("/platform/summary");
     return data;
   } catch {
     return null;
@@ -1400,9 +1419,7 @@ export async function invitePlatformOwner(
 export async function getPlatformTenantMetrics(
   tenantId: string,
 ): Promise<Record<string, unknown>> {
-  const { data } = await apiClient.get(
-    `/platform/tenants/${tenantId}/metrics`,
-  );
+  const { data } = await apiClient.get(`/platform/tenants/${tenantId}/metrics`);
   return data;
 }
 
@@ -1414,7 +1431,10 @@ export async function listPlatformPlans(): Promise<PlatformPlan[]> {
 export async function createPlatformPlan(
   payload: Record<string, unknown>,
 ): Promise<PlatformPlan> {
-  const { data } = await apiClient.post<PlatformPlan>("/platform/plans", payload);
+  const { data } = await apiClient.post<PlatformPlan>(
+    "/platform/plans",
+    payload,
+  );
   return data;
 }
 
@@ -1437,4 +1457,3 @@ export async function listPlatformAudit(
   });
   return Array.isArray(data) ? data : [];
 }
-

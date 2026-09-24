@@ -69,14 +69,16 @@ function PengumumanView() {
       setAudience([]);
       setPinned(false);
       setPublishAt("");
-      toast.success(publishAt ? "Pengumuman dijadwalkan." : "Pengumuman terbit.");
+      toast.success(
+        publishAt ? "Pengumuman dijadwalkan." : "Pengumuman terbit.",
+      );
       void qc.invalidateQueries({ queryKey: ["announcements"] });
     },
     onError: (err: unknown) => {
       const detail =
         err && typeof err === "object" && "response" in err
-          ? (err as { response?: { data?: { detail?: string } } }).response?.data
-              ?.detail
+          ? (err as { response?: { data?: { detail?: string } } }).response
+              ?.data?.detail
           : undefined;
       toast.error(detail || "Pengumuman gagal disimpan.");
     },
@@ -146,7 +148,10 @@ function PengumumanView() {
               </legend>
               <div className="flex flex-wrap gap-(--space-3)">
                 {AUDIENCE_ROLES.map((role) => (
-                  <label key={role} className="flex items-center gap-(--space-2)">
+                  <label
+                    key={role}
+                    className="flex items-center gap-(--space-2)"
+                  >
                     <input
                       type="checkbox"
                       checked={audience.includes(role)}
@@ -188,9 +193,7 @@ function PengumumanView() {
               <Button
                 type="submit"
                 size="sm"
-                disabled={
-                  publishM.isPending || !title.trim() || !body.trim()
-                }
+                disabled={publishM.isPending || !title.trim() || !body.trim()}
               >
                 {publishM.isPending ? "Menyimpan…" : "Terbitkan"}
               </Button>
@@ -204,7 +207,12 @@ function PengumumanView() {
       ) : listQ.isError ? (
         <p role="alert" className="text-critical">
           Gagal memuat pengumuman.{" "}
-          <Button type="button" variant="outline" size="sm" onClick={() => void listQ.refetch()}>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => void listQ.refetch()}
+          >
             Coba lagi
           </Button>
         </p>

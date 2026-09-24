@@ -2,9 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   filterMasterRows,
   initMasterForm,
+  type MasterField,
   resolveRowIdKey,
   validateRequiredFields,
-  type MasterField,
 } from "./masterCrud.ts";
 
 describe("resolveRowIdKey", () => {
@@ -35,7 +35,9 @@ describe("validateRequiredFields", () => {
     expect(validateRequiredFields(fields, { name: "", stage: "SD" })).toBe(
       "Kolom Nama wajib diisi.",
     );
-    expect(validateRequiredFields(fields, { name: "A", stage: "SD" })).toBeNull();
+    expect(
+      validateRequiredFields(fields, { name: "A", stage: "SD" }),
+    ).toBeNull();
   });
 });
 

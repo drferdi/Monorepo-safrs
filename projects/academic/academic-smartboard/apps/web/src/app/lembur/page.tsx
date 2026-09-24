@@ -16,8 +16,8 @@ import {
   listTutors,
 } from "../../lib/api.ts";
 import { useAuth } from "../../lib/auth.tsx";
-import { rupiah } from "../../lib/labels.ts";
 import type { StatusBadgeTone } from "../../lib/labels.ts";
+import { rupiah } from "../../lib/labels.ts";
 import {
   canApproveOvertime,
   OT_STATUS_LABEL,
@@ -46,7 +46,10 @@ function LemburView() {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(emptyForm);
 
-  const overtimeQ = useQuery({ queryKey: ["overtime"], queryFn: () => listOvertime() });
+  const overtimeQ = useQuery({
+    queryKey: ["overtime"],
+    queryFn: () => listOvertime(),
+  });
   const tutorsQ = useQuery({ queryKey: ["tutors"], queryFn: listTutors });
 
   const rows = overtimeQ.data ?? [];
@@ -134,14 +137,24 @@ function LemburView() {
         <table className="min-w-full border-collapse text-(length:--font-size-body)">
           <thead>
             <tr className="border-b border-line-subtle bg-surface">
-              <th className="px-(--space-3) py-(--space-2) text-left">Tanggal</th>
-              <th className="px-(--space-3) py-(--space-2) text-left">Pengajar</th>
+              <th className="px-(--space-3) py-(--space-2) text-left">
+                Tanggal
+              </th>
+              <th className="px-(--space-3) py-(--space-2) text-left">
+                Pengajar
+              </th>
               <th className="px-(--space-3) py-(--space-2) text-left">Jam</th>
-              <th className="px-(--space-3) py-(--space-2) text-left">Durasi</th>
+              <th className="px-(--space-3) py-(--space-2) text-left">
+                Durasi
+              </th>
               <th className="px-(--space-3) py-(--space-2) text-left">Jenis</th>
-              <th className="px-(--space-3) py-(--space-2) text-left">Alasan</th>
+              <th className="px-(--space-3) py-(--space-2) text-left">
+                Alasan
+              </th>
               <th className="px-(--space-3) py-(--space-2) text-left">Nilai</th>
-              <th className="px-(--space-3) py-(--space-2) text-left">Status</th>
+              <th className="px-(--space-3) py-(--space-2) text-left">
+                Status
+              </th>
               <th className="px-(--space-3) py-(--space-2) text-left">Aksi</th>
             </tr>
           </thead>
@@ -173,8 +186,9 @@ function LemburView() {
                     {r.duration_min} mnt
                   </td>
                   <td className="px-(--space-3) py-(--space-2)">
-                    {(OT_TYPE_LABEL as Record<string, string>)[r.work_type ?? ""] ??
-                      r.work_type}
+                    {(OT_TYPE_LABEL as Record<string, string>)[
+                      r.work_type ?? ""
+                    ] ?? r.work_type}
                   </td>
                   <td className="px-(--space-3) py-(--space-2)">{r.reason}</td>
                   <td className="px-(--space-3) py-(--space-2) font-semibold">
@@ -188,8 +202,9 @@ function LemburView() {
                         ] ?? "neutral"
                       }
                     >
-                      {(OT_STATUS_LABEL as Record<string, string>)[r.status ?? ""] ??
-                        r.status}
+                      {(OT_STATUS_LABEL as Record<string, string>)[
+                        r.status ?? ""
+                      ] ?? r.status}
                     </StatusBadge>
                   </td>
                   <td className="px-(--space-3) py-(--space-2)">
@@ -387,9 +402,7 @@ function LemburView() {
 
 export default function LemburPage() {
   return (
-    <ProtectedRoute
-      roles={["owner", "admin_akademik", "tentor", "finance"]}
-    >
+    <ProtectedRoute roles={["owner", "admin_akademik", "tentor", "finance"]}>
       <AppShell>
         <LemburView />
       </AppShell>

@@ -10,10 +10,10 @@ import { PageHead } from "../../../components/PageHead.tsx";
 import { ProtectedRoute } from "../../../components/ProtectedRoute.tsx";
 import { Button } from "../../../components/ui/button.tsx";
 import {
+  type CurriculumOutcome,
   getCurriculumStatus,
   getCurriculumStructure,
   listCurriculumOutcomes,
-  type CurriculumOutcome,
 } from "../../../lib/api.ts";
 import { PHASES } from "../../../lib/curriculumPhase.ts";
 
@@ -134,7 +134,9 @@ function KurikulumView() {
                       <td className="px-(--space-3) py-(--space-2)">
                         {cp.learning_outcome_code}
                       </td>
-                      <td className="px-(--space-3) py-(--space-2)">{cp.subject}</td>
+                      <td className="px-(--space-3) py-(--space-2)">
+                        {cp.subject}
+                      </td>
                       <td className="px-(--space-3) py-(--space-2)">
                         {cp.element_name}
                       </td>

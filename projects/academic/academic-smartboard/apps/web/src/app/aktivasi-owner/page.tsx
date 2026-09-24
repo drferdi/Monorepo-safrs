@@ -6,10 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "../../components/ui/button.tsx";
-import {
-  activateOwner,
-  previewOwnerInvitation,
-} from "../../lib/api.ts";
+import { activateOwner, previewOwnerInvitation } from "../../lib/api.ts";
 import { useAuth } from "../../lib/auth.tsx";
 
 function readTokenFromFragment(): string {
@@ -32,9 +29,10 @@ export default function OwnerActivationPage() {
   const [token] = useState(readTokenFromFragment);
   const router = useRouter();
   const { acceptSession } = useAuth();
-  const [invite, setInvite] = useState<{ name?: string; email?: string } | null>(
-    null,
-  );
+  const [invite, setInvite] = useState<{
+    name?: string;
+    email?: string;
+  } | null>(null);
   const [password, setPassword] = useState("");
   const [confirmation, setConfirmation] = useState("");
   const [busy, setBusy] = useState(false);
@@ -100,7 +98,10 @@ export default function OwnerActivationPage() {
           </p>
         )}
         {invite ? (
-          <form onSubmit={(e) => void activate(e)} className="space-y-(--space-3)">
+          <form
+            onSubmit={(e) => void activate(e)}
+            className="space-y-(--space-3)"
+          >
             <label className="block space-y-(--space-1)">
               <span className="text-(length:--font-size-label) text-secondary">
                 Kata sandi baru

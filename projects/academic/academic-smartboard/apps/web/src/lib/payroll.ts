@@ -64,10 +64,10 @@ export function sumEarningsSummary(
   };
 }
 
-export function earningRowStatus(row: {
-  paid?: boolean;
-  verified?: boolean;
-}): { label: string; tone: StatusBadgeTone } {
+export function earningRowStatus(row: { paid?: boolean; verified?: boolean }): {
+  label: string;
+  tone: StatusBadgeTone;
+} {
   if (row.paid) return { label: "Dibayar", tone: "success" };
   if (row.verified) return { label: "Terverifikasi", tone: "info" };
   return { label: "Draft", tone: "neutral" };
@@ -82,9 +82,7 @@ export function buildSlipUrl(
   return `${base}/payroll/periods/${periodId}/slip/${tutorId}`;
 }
 
-export function sumPaymentTotal(
-  payments: Array<{ amount?: number }>,
-): number {
+export function sumPaymentTotal(payments: Array<{ amount?: number }>): number {
   return payments.reduce((a, b) => a + (b.amount || 0), 0);
 }
 
@@ -122,13 +120,12 @@ export function canApproveOvertime(role: Role | string | undefined): boolean {
 export function payrollStatusTone(status: string | undefined): StatusBadgeTone {
   if (!status) return "neutral";
   return (
-    (PAYROLL_STATUS_TONE as Record<string, StatusBadgeTone>)[status] ?? "neutral"
+    (PAYROLL_STATUS_TONE as Record<string, StatusBadgeTone>)[status] ??
+    "neutral"
   );
 }
 
 export function payrollStatusLabel(status: string | undefined): string {
   if (!status) return "—";
-  return (
-    (PAYROLL_STATUS_LABEL as Record<string, string>)[status] ?? status
-  );
+  return (PAYROLL_STATUS_LABEL as Record<string, string>)[status] ?? status;
 }

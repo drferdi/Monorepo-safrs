@@ -14,8 +14,8 @@ import {
   listPayrollItems,
   listPayrollPeriods,
   listTutors,
-  reconcilePayment,
   type PayrollItem,
+  reconcilePayment,
 } from "../../../lib/api.ts";
 import { rupiah } from "../../../lib/labels.ts";
 import {
@@ -166,7 +166,9 @@ function PembayaranView() {
               <th className="px-(--space-3) py-(--space-2) text-left">
                 Periode
               </th>
-              <th className="px-(--space-3) py-(--space-2) text-left">Jumlah</th>
+              <th className="px-(--space-3) py-(--space-2) text-left">
+                Jumlah
+              </th>
               <th className="px-(--space-3) py-(--space-2) text-left">
                 Metode
               </th>
@@ -201,8 +203,8 @@ function PembayaranView() {
                     {tutors.find((t) => t.tutor_id === p.tutor_id)?.name || "—"}
                   </td>
                   <td className="px-(--space-3) py-(--space-2)">
-                    {periods.find((pp) => pp.period_id === p.period_id)?.month ||
-                      "—"}
+                    {periods.find((pp) => pp.period_id === p.period_id)
+                      ?.month || "—"}
                   </td>
                   <td className="px-(--space-3) py-(--space-2) font-semibold">
                     {rupiah(p.amount)}

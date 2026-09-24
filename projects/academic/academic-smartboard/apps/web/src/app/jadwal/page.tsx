@@ -18,9 +18,9 @@ import {
   listStudents,
   listSubjects,
   listTutors,
-  updateSchedule,
   type Schedule,
   type ScheduleCreate,
+  updateSchedule,
 } from "../../lib/api.ts";
 import { useAuth } from "../../lib/auth.tsx";
 import { FORMAT_LABEL } from "../../lib/labels.ts";
@@ -55,8 +55,7 @@ function initForm(): ScheduleCreate {
 
 function JadwalView() {
   const { user } = useAuth();
-  const canManage =
-    user?.role === "owner" || user?.role === "admin_akademik";
+  const canManage = user?.role === "owner" || user?.role === "admin_akademik";
   const queryClient = useQueryClient();
   const [view, setView] = useState<"week" | "list">("week");
   const [anchor, setAnchor] = useState(() => new Date());
@@ -64,7 +63,10 @@ function JadwalView() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState<ScheduleCreate>(initForm);
 
-  const schedulesQ = useQuery({ queryKey: ["schedules"], queryFn: listSchedules });
+  const schedulesQ = useQuery({
+    queryKey: ["schedules"],
+    queryFn: listSchedules,
+  });
   const tutorsQ = useQuery({ queryKey: ["tutors"], queryFn: listTutors });
   const studentsQ = useQuery({ queryKey: ["students"], queryFn: listStudents });
   const subjectsQ = useQuery({ queryKey: ["subjects"], queryFn: listSubjects });
@@ -77,7 +79,9 @@ function JadwalView() {
   const saveMut = useMutation({
     mutationFn: async () => {
       if (!form.tutor_id || !form.subject_id || form.student_ids.length === 0) {
-        throw new Error("Lengkapi tentor, mata pelajaran, dan minimal 1 murid.");
+        throw new Error(
+          "Lengkapi tentor, mata pelajaran, dan minimal 1 murid.",
+        );
       }
       if (editingId) return updateSchedule(editingId, form);
       return createSchedule(form);
@@ -190,7 +194,11 @@ function JadwalView() {
             >
               ›
             </Button>
-            <Button type="button" variant="ghost" onClick={() => setAnchor(new Date())}>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setAnchor(new Date())}
+            >
               Hari Ini
             </Button>
           </div>
@@ -205,11 +213,15 @@ function JadwalView() {
                 >
                   <div className="mb-(--space-2) text-(length:--font-size-label) text-secondary">
                     {DAY_NAMES[d.getDay()]}{" "}
-                    <span className="font-semibold text-primary">{d.getDate()}</span>
+                    <span className="font-semibold text-primary">
+                      {d.getDate()}
+                    </span>
                   </div>
                   <div className="space-y-(--space-2)">
                     {items.map((s) => {
-                      const tut = tutorsQ.data?.find((t) => t.tutor_id === s.tutor_id);
+                      const tut = tutorsQ.data?.find(
+                        (t) => t.tutor_id === s.tutor_id,
+                      );
                       const sub = subjectsQ.data?.find(
                         (x) => x.subject_id === s.subject_id,
                       );
@@ -225,8 +237,9 @@ function JadwalView() {
                           <div className="text-primary">{sub?.name ?? "?"}</div>
                           <div className="text-secondary">{tut?.name}</div>
                           <div className="text-secondary">
-                            {FORMAT_LABEL[s.format as keyof typeof FORMAT_LABEL] ??
-                              s.format}
+                            {FORMAT_LABEL[
+                              s.format as keyof typeof FORMAT_LABEL
+                            ] ?? s.format}
                           </div>
                         </div>
                       );
@@ -253,8 +266,12 @@ function JadwalView() {
             </thead>
             <tbody>
               {schedules.map((s) => {
-                const tut = tutorsQ.data?.find((t) => t.tutor_id === s.tutor_id);
-                const sub = subjectsQ.data?.find((x) => x.subject_id === s.subject_id);
+                const tut = tutorsQ.data?.find(
+                  (t) => t.tutor_id === s.tutor_id,
+                );
+                const sub = subjectsQ.data?.find(
+                  (x) => x.subject_id === s.subject_id,
+                );
                 return (
                   <tr
                     key={s.schedule_id}
@@ -265,8 +282,12 @@ function JadwalView() {
                     <td className="px-(--space-3) py-(--space-2)">
                       {s.start_time}—{s.end_time}
                     </td>
-                    <td className="px-(--space-3) py-(--space-2)">{sub?.name}</td>
-                    <td className="px-(--space-3) py-(--space-2)">{tut?.name}</td>
+                    <td className="px-(--space-3) py-(--space-2)">
+                      {sub?.name}
+                    </td>
+                    <td className="px-(--space-3) py-(--space-2)">
+                      {tut?.name}
+                    </td>
                     {canManage ? (
                       <td className="px-(--space-3) py-(--space-2)">
                         <Button
@@ -330,7 +351,9 @@ function JadwalView() {
                   data-testid="select-tutor"
                   className="mt-(--space-1) w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
                   value={form.tutor_id}
-                  onChange={(e) => setForm({ ...form, tutor_id: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, tutor_id: e.target.value })
+                  }
                 >
                   <option value="">Pilih</option>
                   {(tutorsQ.data ?? []).map((t) => (
@@ -346,7 +369,9 @@ function JadwalView() {
                   data-testid="select-subject"
                   className="mt-(--space-1) w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
                   value={form.subject_id}
-                  onChange={(e) => setForm({ ...form, subject_id: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, subject_id: e.target.value })
+                  }
                 >
                   <option value="">Pilih</option>
                   {(subjectsQ.data ?? []).map((s) => (
@@ -373,7 +398,9 @@ function JadwalView() {
                         onChange={(e) => {
                           const next = e.target.checked
                             ? [...form.student_ids, st.student_id]
-                            : form.student_ids.filter((id) => id !== st.student_id);
+                            : form.student_ids.filter(
+                                (id) => id !== st.student_id,
+                              );
                           setForm({ ...form, student_ids: next });
                         }}
                       />

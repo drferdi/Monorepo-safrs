@@ -6,8 +6,8 @@ import { toast } from "sonner";
 import {
   createJournalEntry,
   createParentJournalMessage,
-  listStudentJournal,
   type JournalEntry,
+  listStudentJournal,
 } from "../lib/api.ts";
 import { useAuth } from "../lib/auth.tsx";
 import {
@@ -90,7 +90,9 @@ export function CollaborativeJournal({ studentId }: CollaborativeJournalProps) {
     >
       <div>
         <p className="text-xs tracking-wide text-secondary uppercase">05</p>
-        <h2 className="text-lg font-semibold text-primary">Jurnal Kolaboratif</h2>
+        <h2 className="text-lg font-semibold text-primary">
+          Jurnal Kolaboratif
+        </h2>
         <p className="mt-1 text-sm text-secondary">
           Catatan internal staf tidak ditampilkan ke orang tua. Orang tua hanya
           melihat ringkasan yang disetujui dan pesan yang mereka kirim sendiri.
@@ -191,7 +193,9 @@ export function CollaborativeJournal({ studentId }: CollaborativeJournalProps) {
             saveParent.mutate();
           }}
         >
-          <p className="text-sm font-medium text-primary">Pesan kepada pengajar</p>
+          <p className="text-sm font-medium text-primary">
+            Pesan kepada pengajar
+          </p>
           <label className="block space-y-1 text-sm">
             <span className="text-secondary">Pesan · wajib</span>
             <textarea
@@ -245,7 +249,9 @@ function JournalThreadItem({ entry, isAuthor }: JournalThreadItemProps) {
             <p className="text-secondary">Dugaan: {entry.problem}</p>
           ) : null}
           {entry.recommendation ? (
-            <p className="text-secondary">Rekomendasi: {entry.recommendation}</p>
+            <p className="text-secondary">
+              Rekomendasi: {entry.recommendation}
+            </p>
           ) : null}
           {entry.outcome ? (
             <p className="text-secondary">Hasil: {entry.outcome}</p>

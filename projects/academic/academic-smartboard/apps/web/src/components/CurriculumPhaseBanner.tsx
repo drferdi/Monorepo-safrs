@@ -1,21 +1,17 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import type { Route } from "next";
-import {
-  getCurriculumStructure,
-  listGradeLevels,
-} from "../lib/api.ts";
+import Link from "next/link";
+import { getCurriculumStructure, listGradeLevels } from "../lib/api.ts";
 import { phaseForGrade } from "../lib/curriculumPhase.ts";
 
-function structureHasPhase(
-  structure: unknown,
-  phase: string,
-): boolean {
+function structureHasPhase(structure: unknown, phase: string): boolean {
   if (!structure || typeof structure !== "object") return false;
   const data = structure as {
-    phases?: Array<{ phase?: string; subjects?: unknown[] }> | Record<string, unknown>;
+    phases?:
+      | Array<{ phase?: string; subjects?: unknown[] }>
+      | Record<string, unknown>;
   };
   if (Array.isArray(data.phases)) {
     return data.phases.some(

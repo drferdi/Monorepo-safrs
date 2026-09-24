@@ -51,9 +51,7 @@ export function validateRequiredFields(
   return null;
 }
 
-export function initMasterForm(
-  fields: MasterField[],
-): Record<string, unknown> {
+export function initMasterForm(fields: MasterField[]): Record<string, unknown> {
   const init: Record<string, unknown> = {};
   for (const f of fields) {
     if (f.default !== undefined) {

@@ -6,7 +6,13 @@ import { attendanceCatchUp } from "../lib/api.ts";
 import { ATTEND_LABEL } from "../lib/labels.ts";
 import { Button } from "./ui/button.tsx";
 
-const ATT_STATUS = ["hadir", "terlambat", "izin", "sakit", "tidak_hadir"] as const;
+const ATT_STATUS = [
+  "hadir",
+  "terlambat",
+  "izin",
+  "sakit",
+  "tidak_hadir",
+] as const;
 
 export function AttendanceCatchUp({
   sessionId,
@@ -64,8 +70,8 @@ export function AttendanceCatchUp({
         Absensi Susulan
       </h2>
       <p className="mb-(--space-3) text-(length:--font-size-body) text-secondary">
-        Sesi ini sudah lewat dan sebagian murid belum diabsen. Isi status murid di
-        bawah, lalu jelaskan alasan keterlambatan sebelum menyimpan.
+        Sesi ini sudah lewat dan sebagian murid belum diabsen. Isi status murid
+        di bawah, lalu jelaskan alasan keterlambatan sebelum menyimpan.
       </p>
       <div className="mb-(--space-3) space-y-(--space-2)">
         {students.map((s) => {
@@ -77,7 +83,9 @@ export function AttendanceCatchUp({
               data-testid={`catchup-row-${s.student_id}`}
               className="flex flex-wrap items-center gap-(--space-3)"
             >
-              <span className="min-w-40 text-primary">{s.name || s.student_id}</span>
+              <span className="min-w-40 text-primary">
+                {s.name || s.student_id}
+              </span>
               <select
                 className="rounded-control border border-line-subtle px-(--space-2) py-(--space-1)"
                 value={row.status}

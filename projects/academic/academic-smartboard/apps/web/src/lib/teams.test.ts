@@ -27,9 +27,9 @@ describe("isPendingApproval", () => {
   });
 
   it("true bila data.status pending", () => {
-    expect(isPendingApproval({ status: 200, data: { status: "pending" } })).toBe(
-      true,
-    );
+    expect(
+      isPendingApproval({ status: 200, data: { status: "pending" } }),
+    ).toBe(true);
   });
 
   it("false untuk respons sukses biasa", () => {

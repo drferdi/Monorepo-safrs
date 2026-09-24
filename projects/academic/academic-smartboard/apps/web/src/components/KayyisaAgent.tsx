@@ -1,8 +1,8 @@
 "use client";
 
+import { Send, X } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
-import { Send, X } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import { KAYYISA_QUICK_PROMPTS } from "../lib/kayyisaGuide.ts";
 import { useKayyisaChat } from "../lib/useKayyisaChat.ts";

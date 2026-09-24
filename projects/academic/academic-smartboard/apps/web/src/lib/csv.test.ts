@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { toCsvCell, toCsv } from "./csv";
+import { toCsv, toCsvCell } from "./csv";
 
 describe("toCsvCell", () => {
   it("passes through plain values", () => {
@@ -26,7 +26,7 @@ describe("toCsvCell", () => {
   });
 
   it("quotes a formula that also contains a comma", () => {
-    expect(toCsvCell("=A1,B1")).toBe("\"'=A1,B1\"");
+    expect(toCsvCell("=A1,B1")).toBe('"\'=A1,B1"');
   });
 });
 

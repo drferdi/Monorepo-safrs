@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { filterByRole, NAV_GROUPS, NAV_ITEMS, flattenNav } from "./nav";
+import { filterByRole, flattenNav, NAV_GROUPS, NAV_ITEMS } from "./nav";
 
 describe("filterByRole", () => {
   it("owner melihat semua item", () => {
@@ -65,8 +65,6 @@ describe("NAV_GROUPS sub-fase 4–5", () => {
   it("pengaturan: finance melihat audit, tidak hak akses", () => {
     const finance = filterByRole(NAV_ITEMS, "finance");
     expect(finance.some((i) => i.href === "/pengaturan/audit")).toBe(true);
-    expect(finance.some((i) => i.href === "/pengaturan/hak-akses")).toBe(
-      false,
-    );
+    expect(finance.some((i) => i.href === "/pengaturan/hak-akses")).toBe(false);
   });
 });

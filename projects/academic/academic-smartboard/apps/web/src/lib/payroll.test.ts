@@ -1,17 +1,17 @@
 import { describe, expect, it } from "vitest";
 import {
-  METHOD_LABEL,
-  PAYROLL_STATUS_LABEL,
-  PAYROLL_STATUS_TONE,
   buildSlipUrl,
-  earningRowStatus,
-  sumEarningsSummary,
-  sumPaymentTotal,
-  validatePaymentForm,
   canApproveOvertime,
+  earningRowStatus,
+  METHOD_LABEL,
   OT_STATUS_LABEL,
   OT_STATUS_TONE,
   OT_TYPE_LABEL,
+  PAYROLL_STATUS_LABEL,
+  PAYROLL_STATUS_TONE,
+  sumEarningsSummary,
+  sumPaymentTotal,
+  validatePaymentForm,
 } from "./payroll.ts";
 
 describe("sumEarningsSummary", () => {

@@ -27,7 +27,9 @@ export const KAYYISA_WELCOME: KayyisaMessage = {
 };
 
 export function useKayyisaChat() {
-  const [messages, setMessages] = useState<KayyisaMessage[]>(() => [KAYYISA_WELCOME]);
+  const [messages, setMessages] = useState<KayyisaMessage[]>(() => [
+    KAYYISA_WELCOME,
+  ]);
   const [busy, setBusy] = useState(false);
 
   const ask = useCallback(

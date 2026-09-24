@@ -17,7 +17,9 @@ export function displayValue(value: string | null | undefined): string {
 
 const VERIFIED = new Set(["verified_current", "verified_supplementary"]);
 
-export function isUnreviewedCp(verificationStatus: string | undefined): boolean {
+export function isUnreviewedCp(
+  verificationStatus: string | undefined,
+): boolean {
   return !VERIFIED.has(verificationStatus ?? "");
 }
 

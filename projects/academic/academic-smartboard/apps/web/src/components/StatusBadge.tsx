@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import type { StatusBadgeTone } from "../lib/labels.ts";
 import { cn } from "../lib/cn.ts";
+import type { StatusBadgeTone } from "../lib/labels.ts";
 
 const TONE_CLASS: Record<StatusBadgeTone, string> = {
   info: "bg-surface text-accent-text",

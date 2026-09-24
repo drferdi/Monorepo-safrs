@@ -1,6 +1,12 @@
 "use client";
 
-import { AlertTriangle, ChevronLeft, ChevronRight, ExternalLink, X } from "lucide-react";
+import {
+  AlertTriangle,
+  ChevronLeft,
+  ChevronRight,
+  ExternalLink,
+  X,
+} from "lucide-react";
 import type { KeyboardEvent } from "react";
 import type { CurriculumOutcome } from "../lib/api.ts";
 import {
@@ -57,7 +63,9 @@ export function CurriculumReadingPane({
           <p className="text-(length:--font-size-label) text-secondary">
             {cp.subject} · Fase {cp.phase}
           </p>
-          <p className="font-semibold text-primary">{cp.learning_outcome_code}</p>
+          <p className="font-semibold text-primary">
+            {cp.learning_outcome_code}
+          </p>
           <p className="text-(length:--font-size-body) text-secondary">
             {cp.element_name}
           </p>
@@ -83,16 +91,27 @@ export function CurriculumReadingPane({
           Asal Dokumen
         </p>
         <div className="grid gap-(--space-2) sm:grid-cols-2">
-          <Kpi label="Dokumen sumber" value={displayValue(cp.source_document_title)} />
+          <Kpi
+            label="Dokumen sumber"
+            value={displayValue(cp.source_document_title)}
+          />
           <Kpi label="Halaman" value={displayValue(pageRange(cp))} mono />
           <Kpi label="Lisensi" value={displayValue(cp.license_category)} />
-          <Kpi label="Berlaku sejak" value={displayValue(cp.effective_from)} mono />
+          <Kpi
+            label="Berlaku sejak"
+            value={displayValue(cp.effective_from)}
+            mono
+          />
           <Kpi
             label="Versi kurikulum"
             value={displayValue(cp.curriculum_version)}
             mono
           />
-          <Kpi label="Tahun ajaran" value={displayValue(cp.academic_year)} mono />
+          <Kpi
+            label="Tahun ajaran"
+            value={displayValue(cp.academic_year)}
+            mono
+          />
         </div>
       </section>
 
@@ -107,9 +126,9 @@ export function CurriculumReadingPane({
             Teks belum diverifikasi manusia
           </p>
           <p className="text-(length:--font-size-body) text-secondary">
-            Teks di bawah diekstrak mesin dari dokumen resmi dan belum ditinjau orang.
-            Periksa ke dokumen sumber sebelum dipakai untuk menyusun rencana atau
-            penilaian.
+            Teks di bawah diekstrak mesin dari dokumen resmi dan belum ditinjau
+            orang. Periksa ke dokumen sumber sebelum dipakai untuk menyusun
+            rencana atau penilaian.
           </p>
         </div>
       ) : null}
@@ -128,8 +147,8 @@ export function CurriculumReadingPane({
           </p>
         ) : (
           <p className="text-(length:--font-size-body) text-secondary">
-            Teks resmi menunggu konfirmasi lisensi dokumen. Silakan dibaca langsung dari
-            sumber:{" "}
+            Teks resmi menunggu konfirmasi lisensi dokumen. Silakan dibaca
+            langsung dari sumber:{" "}
             {cp.official_source_url ? (
               <a
                 href={cp.official_source_url}
@@ -165,7 +184,8 @@ export function CurriculumReadingPane({
                 <span className="font-mono text-(length:--font-size-label)">
                   {tp.learning_objective_code}
                 </span>{" "}
-                {"learning_objective_text" in tp && tp.learning_objective_text ? (
+                {"learning_objective_text" in tp &&
+                tp.learning_objective_text ? (
                   tp.learning_objective_text
                 ) : (
                   <span className="text-secondary">
@@ -207,7 +227,8 @@ export function CurriculumReadingPane({
             className="inline-flex items-center gap-(--space-1) text-accent-text underline"
             data-testid="pane-source"
           >
-            Buka sumber asli <ExternalLink size={14} strokeWidth={1.5} aria-hidden />
+            Buka sumber asli{" "}
+            <ExternalLink size={14} strokeWidth={1.5} aria-hidden />
           </a>
         ) : null}
       </footer>
@@ -227,7 +248,9 @@ function Kpi({
   return (
     <div className="rounded-control bg-surface px-(--space-3) py-(--space-2)">
       <p className="text-(length:--font-size-label) text-secondary">{label}</p>
-      <p className={mono ? "font-mono text-primary" : "text-primary"}>{value}</p>
+      <p className={mono ? "font-mono text-primary" : "text-primary"}>
+        {value}
+      </p>
     </div>
   );
 }

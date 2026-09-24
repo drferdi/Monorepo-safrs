@@ -9,12 +9,7 @@ import { PageHead } from "../../components/PageHead.tsx";
 import { ProtectedRoute } from "../../components/ProtectedRoute.tsx";
 import { StatusBadge } from "../../components/StatusBadge.tsx";
 import { Button } from "../../components/ui/button.tsx";
-import {
-  createTask,
-  listTasks,
-  listTutors,
-  patchTask,
-} from "../../lib/api.ts";
+import { createTask, listTasks, listTutors, patchTask } from "../../lib/api.ts";
 import { useAuth } from "../../lib/auth.tsx";
 import type { StatusBadgeTone } from "../../lib/labels.ts";
 
@@ -159,11 +154,21 @@ function TasksView() {
           <thead>
             <tr className="border-b border-line-subtle bg-surface">
               <th className="px-(--space-3) py-(--space-2) text-left">Judul</th>
-              <th className="px-(--space-3) py-(--space-2) text-left">Pengajar</th>
-              <th className="px-(--space-3) py-(--space-2) text-left">Kategori</th>
-              <th className="px-(--space-3) py-(--space-2) text-left">Prioritas</th>
-              <th className="px-(--space-3) py-(--space-2) text-left">Tenggat</th>
-              <th className="px-(--space-3) py-(--space-2) text-left">Status</th>
+              <th className="px-(--space-3) py-(--space-2) text-left">
+                Pengajar
+              </th>
+              <th className="px-(--space-3) py-(--space-2) text-left">
+                Kategori
+              </th>
+              <th className="px-(--space-3) py-(--space-2) text-left">
+                Prioritas
+              </th>
+              <th className="px-(--space-3) py-(--space-2) text-left">
+                Tenggat
+              </th>
+              <th className="px-(--space-3) py-(--space-2) text-left">
+                Status
+              </th>
               <th className="px-(--space-3) py-(--space-2) text-left">Aksi</th>
             </tr>
           </thead>
@@ -188,7 +193,9 @@ function TasksView() {
                     <div className="font-semibold text-primary">{t.title}</div>
                     {t.auto_generated ? (
                       <StatusBadge tone="info">
-                        <span className="text-(length:--font-size-label)">Otomatis</span>
+                        <span className="text-(length:--font-size-label)">
+                          Otomatis
+                        </span>
                       </StatusBadge>
                     ) : null}
                     {t.description ? (

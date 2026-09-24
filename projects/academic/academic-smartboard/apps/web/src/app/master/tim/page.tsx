@@ -16,9 +16,9 @@ import {
   listGradeLevels,
   listStudents,
   listTeams,
-  updateTeamRaw,
   type Student,
   type Team,
+  updateTeamRaw,
 } from "../../../lib/api.ts";
 import { FORMAT_LABEL } from "../../../lib/labels.ts";
 import { getTeamHeadLabel, isPendingApproval } from "../../../lib/teams.ts";
@@ -50,8 +50,14 @@ function TimView() {
 
   const teamsQ = useQuery({ queryKey: ["teams"], queryFn: listTeams });
   const studentsQ = useQuery({ queryKey: ["students"], queryFn: listStudents });
-  const gradesQ = useQuery({ queryKey: ["grade-levels"], queryFn: listGradeLevels });
-  const yearsQ = useQuery({ queryKey: ["academic-years"], queryFn: listAcademicYears });
+  const gradesQ = useQuery({
+    queryKey: ["grade-levels"],
+    queryFn: listGradeLevels,
+  });
+  const yearsQ = useQuery({
+    queryKey: ["academic-years"],
+    queryFn: listAcademicYears,
+  });
 
   const teams = teamsQ.data ?? [];
   const students = studentsQ.data ?? [];
@@ -63,10 +69,7 @@ function TimView() {
     gradesQ.isPending ||
     yearsQ.isPending;
   const loadError =
-    teamsQ.isError ||
-    studentsQ.isError ||
-    gradesQ.isError ||
-    yearsQ.isError;
+    teamsQ.isError || studentsQ.isError || gradesQ.isError || yearsQ.isError;
 
   const studentsById = useMemo(
     () =>
@@ -120,7 +123,8 @@ function TimView() {
     const have = new Set(form.student_ids || []);
     return students
       .filter(
-        (s) => !have.has(s.student_id) && (s.name || "").toLowerCase().includes(qn),
+        (s) =>
+          !have.has(s.student_id) && (s.name || "").toLowerCase().includes(qn),
       )
       .slice(0, 8);
   }, [memberAddQ, students, form.student_ids]);
@@ -168,8 +172,7 @@ function TimView() {
     }
     const payload = {
       ...form,
-      grade_order:
-        form.grade_order === null ? null : Number(form.grade_order),
+      grade_order: form.grade_order === null ? null : Number(form.grade_order),
       head_student_id: form.head_student_id || null,
       grade_id: form.grade_id || null,
       academic_year_id: form.academic_year_id || null,
@@ -269,22 +272,40 @@ function TimView() {
         <table className="min-w-full border-collapse text-(length:--font-size-body)">
           <thead>
             <tr className="border-b border-line-subtle bg-surface">
-              <th className="px-(--space-3) py-(--space-2) text-left" scope="col">
+              <th
+                className="px-(--space-3) py-(--space-2) text-left"
+                scope="col"
+              >
                 Nama
               </th>
-              <th className="px-(--space-3) py-(--space-2) text-left" scope="col">
+              <th
+                className="px-(--space-3) py-(--space-2) text-left"
+                scope="col"
+              >
                 Kepala
               </th>
-              <th className="px-(--space-3) py-(--space-2) text-left" scope="col">
+              <th
+                className="px-(--space-3) py-(--space-2) text-left"
+                scope="col"
+              >
                 Format
               </th>
-              <th className="px-(--space-3) py-(--space-2) text-left" scope="col">
+              <th
+                className="px-(--space-3) py-(--space-2) text-left"
+                scope="col"
+              >
                 Kelas
               </th>
-              <th className="px-(--space-3) py-(--space-2) text-left" scope="col">
+              <th
+                className="px-(--space-3) py-(--space-2) text-left"
+                scope="col"
+              >
                 Anggota
               </th>
-              <th className="px-(--space-3) py-(--space-2) text-left" scope="col">
+              <th
+                className="px-(--space-3) py-(--space-2) text-left"
+                scope="col"
+              >
                 Status
               </th>
               <th
@@ -306,10 +327,21 @@ function TimView() {
               </tr>
             ) : loadError ? (
               <tr>
-                <td colSpan={7} className="px-(--space-3) py-(--space-4) text-center">
-                  <div role="alert" className="space-y-(--space-2) text-secondary">
+                <td
+                  colSpan={7}
+                  className="px-(--space-3) py-(--space-4) text-center"
+                >
+                  <div
+                    role="alert"
+                    className="space-y-(--space-2) text-secondary"
+                  >
                     Data TIM gagal dimuat. Tidak ada data yang diubah.{" "}
-                    <Button type="button" variant="outline" size="sm" onClick={() => void reload()}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => void reload()}
+                    >
                       Coba lagi
                     </Button>
                   </div>
@@ -321,14 +353,25 @@ function TimView() {
                   colSpan={7}
                   className="px-(--space-3) py-(--space-4) text-center text-secondary"
                 >
-                  Belum ada TIM. Gunakan tombol Tambah untuk membuat TIM pertama.
+                  Belum ada TIM. Gunakan tombol Tambah untuk membuat TIM
+                  pertama.
                 </td>
               </tr>
             ) : filtered.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-(--space-3) py-(--space-4) text-center">
-                  <span className="text-secondary">Tidak ada TIM yang cocok. </span>
-                  <Button type="button" variant="outline" size="sm" onClick={() => setQ("")}>
+                <td
+                  colSpan={7}
+                  className="px-(--space-3) py-(--space-4) text-center"
+                >
+                  <span className="text-secondary">
+                    Tidak ada TIM yang cocok.{" "}
+                  </span>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setQ("")}
+                  >
                     Hapus filter
                   </Button>
                 </td>
@@ -397,7 +440,10 @@ function TimView() {
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-(--space-4)"
           onClick={(event) => {
-            if (event.target === event.currentTarget && !saveInFlightRef.current) {
+            if (
+              event.target === event.currentTarget &&
+              !saveInFlightRef.current
+            ) {
               closeForm();
             }
           }}
@@ -466,7 +512,8 @@ function TimView() {
                   }}
                 >
                   <option value="">— Pilih dari daftar murid —</option>
-                  {form.head_student_id && !studentsById[form.head_student_id] ? (
+                  {form.head_student_id &&
+                  !studentsById[form.head_student_id] ? (
                     <option value={form.head_student_id}>
                       Murid tidak ditemukan ·{" "}
                       {form.head_student_id.slice(0, 12)}
@@ -527,7 +574,9 @@ function TimView() {
                   id="tim-grade"
                   className="min-h-(--target-min) w-full rounded-control border border-line-subtle bg-canvas px-(--space-3)"
                   value={form.grade_id || ""}
-                  onChange={(e) => setForm({ ...form, grade_id: e.target.value })}
+                  onChange={(e) =>
+                    setForm({ ...form, grade_id: e.target.value })
+                  }
                 >
                   <option value="">— Pilih —</option>
                   {grades.map((g) => (
@@ -564,11 +613,15 @@ function TimView() {
                   id="tim-members-label"
                   className="text-(length:--font-size-label) text-secondary"
                 >
-                  Anggota TIM {teamMembers.length ? `(${teamMembers.length})` : ""}
+                  Anggota TIM{" "}
+                  {teamMembers.length ? `(${teamMembers.length})` : ""}
                 </div>
-                <p id="tim-members-hint" className="text-(length:--font-size-label) text-secondary">
-                  Hanya murid di bawah kepala TIM ini (dari roster kuning). Bukan
-                  seluruh database.
+                <p
+                  id="tim-members-hint"
+                  className="text-(length:--font-size-label) text-secondary"
+                >
+                  Hanya murid di bawah kepala TIM ini (dari roster kuning).
+                  Bukan seluruh database.
                 </p>
                 <ul
                   className="space-y-(--space-2) rounded-control border border-line-subtle p-(--space-3)"
@@ -619,7 +672,10 @@ function TimView() {
                     })
                   )}
                 </ul>
-                <label className="block space-y-(--space-1)" htmlFor="tim-add-member">
+                <label
+                  className="block space-y-(--space-1)"
+                  htmlFor="tim-add-member"
+                >
                   <span className="text-(length:--font-size-label) text-secondary">
                     Tambah anggota
                   </span>
@@ -644,7 +700,10 @@ function TimView() {
                           onClick={() => {
                             setForm({
                               ...form,
-                              student_ids: [...(form.student_ids || []), s.student_id],
+                              student_ids: [
+                                ...(form.student_ids || []),
+                                s.student_id,
+                              ],
                               head_student_id:
                                 form.head_student_id || s.student_id,
                             });

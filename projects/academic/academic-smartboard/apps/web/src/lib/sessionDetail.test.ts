@@ -44,15 +44,15 @@ describe("buildCpContext", () => {
 
 describe("studentsMissingAttendance / shouldShowCatchUp", () => {
   it("mengembalikan murid tanpa absensi", () => {
-    expect(
-      studentsMissingAttendance(baseSes, { a: "Ani", b: "Budi" }),
-    ).toEqual([{ student_id: "b", name: "Budi" }]);
+    expect(studentsMissingAttendance(baseSes, { a: "Ani", b: "Budi" })).toEqual(
+      [{ student_id: "b", name: "Budi" }],
+    );
   });
 
   it("catch-up hanya jika sesi sudah due", () => {
-    expect(
-      shouldShowCatchUp(baseSes, 1, new Date("2026-08-02T12:00:00")),
-    ).toBe(true);
+    expect(shouldShowCatchUp(baseSes, 1, new Date("2026-08-02T12:00:00"))).toBe(
+      true,
+    );
     expect(
       shouldShowCatchUp(
         { ...baseSes, date: "2099-01-01" },

@@ -100,10 +100,7 @@ export function FinanceActivityCard({
                   isAnimationActive={false}
                 >
                   {breakdown.map((entry, i) => (
-                    <Cell
-                      key={entry.name}
-                      fill={COLORS[i % COLORS.length]}
-                    />
+                    <Cell key={entry.name} fill={COLORS[i % COLORS.length]} />
                   ))}
                 </Pie>
                 <Tooltip formatter={(v) => rupiah(Number(v))} />

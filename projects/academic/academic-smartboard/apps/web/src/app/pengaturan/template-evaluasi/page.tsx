@@ -12,12 +12,12 @@ import { Button } from "../../../components/ui/button.tsx";
 import {
   createEvaluationTemplate,
   deleteEvaluationTemplate,
+  type EvaluationTemplate,
+  type EvaluationTemplateField,
   listEvaluationTemplates,
   listSchools,
   listSubjects,
   updateEvaluationTemplate,
-  type EvaluationTemplate,
-  type EvaluationTemplateField,
 } from "../../../lib/api.ts";
 
 const FIELD_TYPES = [
@@ -590,9 +590,7 @@ function TemplateEvaluasiView() {
 
 export default function TemplateEvaluasiPage() {
   return (
-    <ProtectedRoute
-      roles={["owner", "admin_akademik", "content_manager"]}
-    >
+    <ProtectedRoute roles={["owner", "admin_akademik", "content_manager"]}>
       <TemplateEvaluasiView />
     </ProtectedRoute>
   );

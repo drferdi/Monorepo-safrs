@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { answerKayyisa, KAYYISA_QUICK_PROMPTS, KAYYISA_TOPICS } from "./kayyisaGuide";
+import {
+  answerKayyisa,
+  KAYYISA_QUICK_PROMPTS,
+  KAYYISA_TOPICS,
+} from "./kayyisaGuide";
 
 describe("kayyisaGuide", () => {
   it("has guide topics and quick prompts", () => {

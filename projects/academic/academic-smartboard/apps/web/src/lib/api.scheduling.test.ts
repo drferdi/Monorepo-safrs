@@ -1,9 +1,15 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
 import axios from "axios";
-import { buildQuery, listSessions, listCurriculumOutcomes } from "./api";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { buildQuery, listCurriculumOutcomes, listSessions } from "./api";
 
 vi.mock("axios", () => {
-  const instance = { get: vi.fn(), post: vi.fn(), put: vi.fn(), delete: vi.fn(), defaults: {} };
+  const instance = {
+    get: vi.fn(),
+    post: vi.fn(),
+    put: vi.fn(),
+    delete: vi.fn(),
+    defaults: {},
+  };
   return { default: { create: vi.fn(() => instance) } };
 });
 
@@ -19,7 +25,9 @@ const mockedInstance = (
 describe("buildQuery", () => {
   it("menghilangkan kunci kosong dan meng-encode nilai", () => {
     expect(buildQuery({})).toBe("");
-    expect(buildQuery({ status: "terjadwal", q: "" })).toBe("?status=terjadwal");
+    expect(buildQuery({ status: "terjadwal", q: "" })).toBe(
+      "?status=terjadwal",
+    );
     expect(buildQuery({ q: "a b", phase: "A" })).toBe("?q=a%20b&phase=A");
     expect(buildQuery({ a: null, b: undefined, c: "x" })).toBe("?c=x");
   });

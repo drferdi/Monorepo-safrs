@@ -93,7 +93,10 @@ export function KayyisaTrajectoryPanel({
       ) : null}
 
       {busy && !summary ? (
-        <p className="text-(length:--font-size-body) text-secondary" role="status">
+        <p
+          className="text-(length:--font-size-body) text-secondary"
+          role="status"
+        >
           Menyusun laporan…
         </p>
       ) : null}

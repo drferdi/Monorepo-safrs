@@ -1,8 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import type { Route } from "next";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { AppShell } from "../../../components/AppShell.tsx";
 import { PageHead } from "../../../components/PageHead.tsx";

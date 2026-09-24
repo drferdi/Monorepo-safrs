@@ -1,14 +1,13 @@
 "use client";
 
-import type { ReactNode } from "react";
-import Link from "next/link";
+import { Maximize2, Minimize2, Send } from "lucide-react";
 import type { Route } from "next";
-import { Fragment } from "react";
+import Link from "next/link";
+import type { ReactNode } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import type { GuideTopic } from "../lib/kayyisaGuide.ts";
 import { KAYYISA_QUICK_PROMPTS } from "../lib/kayyisaGuide.ts";
 import { useKayyisaChat } from "../lib/useKayyisaChat.ts";
-import { Maximize2, Minimize2, Send } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
 import { TerminalPanel, WindowLights } from "./TerminalPanel.tsx";
 import { Button } from "./ui/button.tsx";
 

@@ -9,10 +9,10 @@ import { ProtectedRoute } from "../../components/ProtectedRoute.tsx";
 import { StatusBadge } from "../../components/StatusBadge.tsx";
 import { Button } from "../../components/ui/button.tsx";
 import {
+  type ApprovalRow,
+  decideApproval,
   listApprovals,
   listAuthUsers,
-  decideApproval,
-  type ApprovalRow,
 } from "../../lib/api.ts";
 import { fmtDate } from "../../lib/labels.ts";
 

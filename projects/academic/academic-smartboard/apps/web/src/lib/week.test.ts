@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { addDays, startOfWeek, weekDays, schedulesInDay } from "./week";
 import type { Schedule } from "./api";
+import { addDays, schedulesInDay, startOfWeek, weekDays } from "./week";
 
 describe("week helpers", () => {
   it("startOfWeek mengembalikan Senin lokal untuk tanggal acuan", () => {
@@ -52,8 +52,8 @@ describe("week helpers", () => {
         status: "active",
       },
     ];
-    expect(schedulesInDay(rows, "2026-08-05").map((r) => r.schedule_id)).toEqual([
-      "1",
-    ]);
+    expect(
+      schedulesInDay(rows, "2026-08-05").map((r) => r.schedule_id),
+    ).toEqual(["1"]);
   });
 });

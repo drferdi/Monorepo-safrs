@@ -28,8 +28,8 @@ import {
 
 function PayrollView() {
   const qc = useQueryClient();
-  const [month, setMonth] = useState(
-    () => new Date().toISOString().slice(0, 7),
+  const [month, setMonth] = useState(() =>
+    new Date().toISOString().slice(0, 7),
   );
   const [formatFilter, setFormatFilter] = useState("");
   const [showCorrection, setShowCorrection] = useState<PayrollItem | null>(
@@ -237,8 +237,12 @@ function PayrollView() {
                 <th className="px-(--space-3) py-(--space-2) text-left">
                   Pengajar
                 </th>
-                <th className="px-(--space-3) py-(--space-2) text-left">Sesi</th>
-                <th className="px-(--space-3) py-(--space-2) text-left">Base</th>
+                <th className="px-(--space-3) py-(--space-2) text-left">
+                  Sesi
+                </th>
+                <th className="px-(--space-3) py-(--space-2) text-left">
+                  Base
+                </th>
                 <th className="px-(--space-3) py-(--space-2) text-left">
                   Insentif
                 </th>
@@ -257,7 +261,9 @@ function PayrollView() {
                 <th className="px-(--space-3) py-(--space-2) text-left">
                   Status
                 </th>
-                <th className="px-(--space-3) py-(--space-2) text-left">Aksi</th>
+                <th className="px-(--space-3) py-(--space-2) text-left">
+                  Aksi
+                </th>
               </tr>
             </thead>
             <tbody>

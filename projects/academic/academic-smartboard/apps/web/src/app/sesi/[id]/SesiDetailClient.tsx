@@ -1,19 +1,20 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import Link from "next/link";
 import type { Route } from "next";
+import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { AttendanceCatchUp } from "../../../components/AttendanceCatchUp.tsx";
 import { AppShell } from "../../../components/AppShell.tsx";
+import { AttendanceCatchUp } from "../../../components/AttendanceCatchUp.tsx";
 import { CpPickerModal } from "../../../components/CpPickerModal.tsx";
 import { PageHead } from "../../../components/PageHead.tsx";
 import { ProtectedRoute } from "../../../components/ProtectedRoute.tsx";
 import { StatusBadge } from "../../../components/StatusBadge.tsx";
 import { Button } from "../../../components/ui/button.tsx";
 import {
+  type CurriculumOutcome,
   cancelSession,
   draftEvaluation,
   getSession,
@@ -23,13 +24,12 @@ import {
   listSubjects,
   listTutors,
   rescheduleSession,
+  type StudentAttendance,
   saveAttendance,
   submitEvaluation,
   tutorCheckIn,
   tutorCheckOut,
   verifySession,
-  type CurriculumOutcome,
-  type StudentAttendance,
 } from "../../../lib/api.ts";
 import { useAuth } from "../../../lib/auth.tsx";
 import {
@@ -37,23 +37,29 @@ import {
   COMPETENCE_LABEL,
   FORMAT_LABEL,
   MODE_LABEL,
+  rupiah,
   SESSION_STATUS_LABEL,
   STATUS_BADGE,
-  rupiah,
   type StatusBadgeTone,
 } from "../../../lib/labels.ts";
 import {
   buildCpContext,
   buildEvalSubmitBody,
   canSubmitDraft,
+  type EvalFormState,
   initialEvalForm,
   needsParentNoteConfirm,
   shouldShowCatchUp,
   studentsMissingAttendance,
-  type EvalFormState,
 } from "../../../lib/sessionDetail.ts";
 
-const ATT_STATUS = ["hadir", "terlambat", "izin", "sakit", "tidak_hadir"] as const;
+const ATT_STATUS = [
+  "hadir",
+  "terlambat",
+  "izin",
+  "sakit",
+  "tidak_hadir",
+] as const;
 const SCORE_KEYS = [
   "understanding",
   "focus",
@@ -98,7 +104,10 @@ export function SesiDetailClient() {
   });
 
   const [attForm, setAttForm] = useState<
-    Record<string, { student_id: string; status: string; note: string; reason?: string }>
+    Record<
+      string,
+      { student_id: string; status: string; note: string; reason?: string }
+    >
   >({});
   const [showEvalFor, setShowEvalFor] = useState<string | null>(null);
   const [evalForm, setEvalForm] = useState<EvalFormState>(initialEvalForm);
@@ -129,7 +138,9 @@ export function SesiDetailClient() {
     if (!ses) return;
     const next: typeof attForm = {};
     for (const sid of ses.student_ids ?? []) {
-      const existing = ses.student_attendance?.find((a) => a.student_id === sid);
+      const existing = ses.student_attendance?.find(
+        (a) => a.student_id === sid,
+      );
       next[sid] = {
         student_id: sid,
         status: existing?.status ?? "hadir",
@@ -221,7 +232,9 @@ export function SesiDetailClient() {
         status: markSubstitute ? "digantikan" : "hadir",
         substitute_tutor_id: markSubstitute ? substituteId : null,
       });
-      toast.success(markSubstitute ? `Check-in pengganti ${now}` : `Check-in ${now}`);
+      toast.success(
+        markSubstitute ? `Check-in pengganti ${now}` : `Check-in ${now}`,
+      );
       setMarkSubstitute(false);
       invalidate();
     } catch {
@@ -303,7 +316,8 @@ export function SesiDetailClient() {
     }
   }
 
-  const tone = (STATUS_BADGE[ses?.status ?? ""] ?? "neutral") as StatusBadgeTone;
+  const tone = (STATUS_BADGE[ses?.status ?? ""] ??
+    "neutral") as StatusBadgeTone;
   const locked =
     ses?.status === "terverifikasi" || ses?.status === "dibatalkan";
 
@@ -319,7 +333,9 @@ export function SesiDetailClient() {
             eyebrow="Operasional"
             title="Detail Sesi"
             lede={
-              ses ? `${ses.date} · ${ses.scheduled_start}–${ses.scheduled_end}` : "…"
+              ses
+                ? `${ses.date} · ${ses.scheduled_start}–${ses.scheduled_end}`
+                : "…"
             }
             actions={
               isStaff && ses && !locked ? (
@@ -369,7 +385,9 @@ export function SesiDetailClient() {
             }
           />
 
-          {sessionQ.isPending ? <p className="text-secondary">Memuat sesi…</p> : null}
+          {sessionQ.isPending ? (
+            <p className="text-secondary">Memuat sesi…</p>
+          ) : null}
           {sessionQ.isError ? (
             <p role="alert" className="text-critical">
               Gagal memuat sesi
@@ -404,7 +422,8 @@ export function SesiDetailClient() {
                     <Info
                       label="Mode Pembelajaran"
                       value={
-                        MODE_LABEL[ses.mode as keyof typeof MODE_LABEL] ?? ses.mode
+                        MODE_LABEL[ses.mode as keyof typeof MODE_LABEL] ??
+                        ses.mode
                       }
                     />
                     <Info
@@ -419,7 +438,10 @@ export function SesiDetailClient() {
                           : "—"
                       }
                     />
-                    <Info label="Jumlah Murid" value={String(ses.student_ids.length)} />
+                    <Info
+                      label="Jumlah Murid"
+                      value={String(ses.student_ids.length)}
+                    />
                     <Info
                       label="Status Verifikasi"
                       value={ses.verified ? "Terverifikasi" : "Belum"}
@@ -454,7 +476,8 @@ export function SesiDetailClient() {
                         Digantikan ·{" "}
                         {tutorsQ.data?.find(
                           (t) =>
-                            t.tutor_id === ses.tutor_attendance?.substitute_tutor_id,
+                            t.tutor_id ===
+                            ses.tutor_attendance?.substitute_tutor_id,
                         )?.name || ses.tutor_attendance.substitute_tutor_id}
                       </p>
                     ) : null}
@@ -466,7 +489,9 @@ export function SesiDetailClient() {
                               <input
                                 type="checkbox"
                                 checked={markSubstitute}
-                                onChange={(e) => setMarkSubstitute(e.target.checked)}
+                                onChange={(e) =>
+                                  setMarkSubstitute(e.target.checked)
+                                }
                                 data-testid="chk-substitute"
                               />
                               Digantikan pengajar lain
@@ -476,7 +501,9 @@ export function SesiDetailClient() {
                                 data-testid="select-substitute"
                                 className="rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
                                 value={substituteId}
-                                onChange={(e) => setSubstituteId(e.target.value)}
+                                onChange={(e) =>
+                                  setSubstituteId(e.target.value)
+                                }
                               >
                                 <option value="">— Pilih pengganti —</option>
                                 {(tutorsQ.data ?? [])
@@ -538,15 +565,25 @@ export function SesiDetailClient() {
                   <table className="w-full text-left text-(length:--font-size-body)">
                     <thead className="bg-surface text-secondary">
                       <tr>
-                        <th className="px-(--space-3) py-(--space-2)">Nama Murid</th>
-                        <th className="px-(--space-3) py-(--space-2)">Status</th>
-                        <th className="px-(--space-3) py-(--space-2)">Alasan / Catatan</th>
-                        <th className="px-(--space-3) py-(--space-2)">Evaluasi</th>
+                        <th className="px-(--space-3) py-(--space-2)">
+                          Nama Murid
+                        </th>
+                        <th className="px-(--space-3) py-(--space-2)">
+                          Status
+                        </th>
+                        <th className="px-(--space-3) py-(--space-2)">
+                          Alasan / Catatan
+                        </th>
+                        <th className="px-(--space-3) py-(--space-2)">
+                          Evaluasi
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
                       {(ses.student_ids ?? []).map((sid) => {
-                        const student = studentsQ.data?.find((s) => s.student_id === sid);
+                        const student = studentsQ.data?.find(
+                          (s) => s.student_id === sid,
+                        );
                         const att = attForm[sid] ?? {
                           student_id: sid,
                           status: "hadir",
@@ -589,9 +626,9 @@ export function SesiDetailClient() {
                                   ))}
                                 </select>
                               ) : (
-                                ATTEND_LABEL[
+                                (ATTEND_LABEL[
                                   att.status as keyof typeof ATTEND_LABEL
-                                ] ?? att.status
+                                ] ?? att.status)
                               )}
                             </td>
                             <td className="px-(--space-3) py-(--space-2)">
@@ -666,7 +703,9 @@ export function SesiDetailClient() {
                           className="rounded-control border border-line-subtle bg-surface p-(--space-3)"
                         >
                           <div className="mb-(--space-2) flex items-center justify-between gap-(--space-2)">
-                            <span className="font-medium">{s?.name ?? ev.student_id}</span>
+                            <span className="font-medium">
+                              {s?.name ?? ev.student_id}
+                            </span>
                             <StatusBadge tone="info">
                               {COMPETENCE_LABEL[
                                 ev.competence_status as keyof typeof COMPETENCE_LABEL
@@ -764,8 +803,12 @@ export function SesiDetailClient() {
                   <Field label="Capaian Pembelajaran (konteks draf AI, opsional)">
                     {cpPicked ? (
                       <div className="flex flex-wrap items-center gap-(--space-3)">
-                        <span data-testid="cp-picked-label" className="text-primary">
-                          {cpPicked.learning_outcome_code} — {cpPicked.element_name}
+                        <span
+                          data-testid="cp-picked-label"
+                          className="text-primary"
+                        >
+                          {cpPicked.learning_outcome_code} —{" "}
+                          {cpPicked.element_name}
                         </span>
                         <button
                           type="button"
@@ -795,8 +838,8 @@ export function SesiDetailClient() {
                           Pilih CP →
                         </Button>
                         <p className="text-(length:--font-size-label) text-secondary">
-                          Filter: {cpContext.subjectName} · {cpContext.gradeLabel} ·
-                          Fase {cpContext.phase}
+                          Filter: {cpContext.subjectName} ·{" "}
+                          {cpContext.gradeLabel} · Fase {cpContext.phase}
                         </p>
                       </div>
                     ) : (
@@ -825,7 +868,10 @@ export function SesiDetailClient() {
                   </div>
 
                   {aiMeta?.cp_used ? (
-                    <p data-testid="ai-cp-badge" className="text-(length:--font-size-label) text-secondary">
+                    <p
+                      data-testid="ai-cp-badge"
+                      className="text-(length:--font-size-label) text-secondary"
+                    >
                       {aiMeta.cp_text_injected
                         ? `Draf AI memakai CP: ${aiMeta.cp_used.code}`
                         : `(CP dipilih tapi teks tertahan lisensi: ${aiMeta.cp_used.code})`}
@@ -838,7 +884,10 @@ export function SesiDetailClient() {
                       className="w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
                       value={String(evalForm.target_learning ?? "")}
                       onChange={(e) =>
-                        setEvalForm((f) => ({ ...f, target_learning: e.target.value }))
+                        setEvalForm((f) => ({
+                          ...f,
+                          target_learning: e.target.value,
+                        }))
                       }
                     />
                   </Field>
@@ -848,7 +897,10 @@ export function SesiDetailClient() {
                       className="w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
                       value={String(evalForm.material_taught ?? "")}
                       onChange={(e) =>
-                        setEvalForm((f) => ({ ...f, material_taught: e.target.value }))
+                        setEvalForm((f) => ({
+                          ...f,
+                          material_taught: e.target.value,
+                        }))
                       }
                     />
                   </Field>
@@ -860,7 +912,10 @@ export function SesiDetailClient() {
                           className="w-full rounded-control border border-line-subtle px-(--space-2) py-(--space-1)"
                           value={Number(evalForm[k] ?? 3)}
                           onChange={(e) =>
-                            setEvalForm((f) => ({ ...f, [k]: Number(e.target.value) }))
+                            setEvalForm((f) => ({
+                              ...f,
+                              [k]: Number(e.target.value),
+                            }))
                           }
                         >
                           {[1, 2, 3, 4, 5].map((n) => (
@@ -876,7 +931,9 @@ export function SesiDetailClient() {
                     <select
                       data-testid="eval-competence"
                       className="w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
-                      value={String(evalForm.competence_status ?? "cukup_memahami")}
+                      value={String(
+                        evalForm.competence_status ?? "cukup_memahami",
+                      )}
                       onChange={(e) =>
                         setEvalForm((f) => ({
                           ...f,
@@ -898,7 +955,10 @@ export function SesiDetailClient() {
                       className="w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
                       value={String(evalForm.difficulties ?? "")}
                       onChange={(e) =>
-                        setEvalForm((f) => ({ ...f, difficulties: e.target.value }))
+                        setEvalForm((f) => ({
+                          ...f,
+                          difficulties: e.target.value,
+                        }))
                       }
                     />
                   </Field>
@@ -909,7 +969,10 @@ export function SesiDetailClient() {
                       className="w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
                       value={String(evalForm.exercises ?? "")}
                       onChange={(e) =>
-                        setEvalForm((f) => ({ ...f, exercises: e.target.value }))
+                        setEvalForm((f) => ({
+                          ...f,
+                          exercises: e.target.value,
+                        }))
                       }
                     />
                   </Field>
@@ -944,7 +1007,10 @@ export function SesiDetailClient() {
                       className="w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
                       value={String(evalForm.parent_note ?? "")}
                       onChange={(e) => {
-                        setEvalForm((f) => ({ ...f, parent_note: e.target.value }));
+                        setEvalForm((f) => ({
+                          ...f,
+                          parent_note: e.target.value,
+                        }));
                         setParentNoteConfirmed(false);
                       }}
                     />
@@ -954,12 +1020,14 @@ export function SesiDetailClient() {
                       <input
                         type="checkbox"
                         checked={parentNoteConfirmed}
-                        onChange={(e) => setParentNoteConfirmed(e.target.checked)}
+                        onChange={(e) =>
+                          setParentNoteConfirmed(e.target.checked)
+                        }
                         data-testid="eval-parent-confirm"
                       />
                       <span>
-                        Saya sudah memeriksa catatan untuk orang tua dan setuju dikirim
-                        apa adanya.
+                        Saya sudah memeriksa catatan untuk orang tua dan setuju
+                        dikirim apa adanya.
                       </span>
                     </label>
                   ) : null}
@@ -1047,7 +1115,9 @@ export function SesiDetailClient() {
                 data-testid="reschedule-modal"
                 onClick={(e) => e.stopPropagation()}
               >
-                <h2 className="mb-(--space-4) font-semibold">Jadwalkan Ulang Sesi</h2>
+                <h2 className="mb-(--space-4) font-semibold">
+                  Jadwalkan Ulang Sesi
+                </h2>
                 <div className="space-y-(--space-3)">
                   <label className="block text-(length:--font-size-label) text-secondary">
                     Tanggal
@@ -1085,7 +1155,10 @@ export function SesiDetailClient() {
                         className="mt-(--space-1) w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
                         value={reschedule.end_time}
                         onChange={(e) =>
-                          setReschedule({ ...reschedule, end_time: e.target.value })
+                          setReschedule({
+                            ...reschedule,
+                            end_time: e.target.value,
+                          })
                         }
                       />
                     </label>
@@ -1143,19 +1216,15 @@ export function SesiDetailClient() {
 function Info({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <div className="text-(length:--font-size-label) text-secondary">{label}</div>
+      <div className="text-(length:--font-size-label) text-secondary">
+        {label}
+      </div>
       <div className="text-primary">{value}</div>
     </div>
   );
 }
 
-function Field({
-  label,
-  children,
-}: {
-  label: string;
-  children: ReactNode;
-}) {
+function Field({ label, children }: { label: string; children: ReactNode }) {
   return (
     <label className="block text-(length:--font-size-label) text-secondary">
       {label}

@@ -1,8 +1,8 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import type { Route } from "next";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
   Bar,
@@ -89,11 +89,7 @@ export function ProgressionDetailClient() {
                   <XAxis dataKey="name" />
                   <YAxis domain={[0, 5]} />
                   <Tooltip />
-                  <Bar
-                    dataKey="score"
-                    fill="var(--color-accent)"
-                    radius={4}
-                  />
+                  <Bar dataKey="score" fill="var(--color-accent)" radius={4} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

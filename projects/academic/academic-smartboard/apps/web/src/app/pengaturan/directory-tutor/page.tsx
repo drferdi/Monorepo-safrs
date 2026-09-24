@@ -134,7 +134,9 @@ function TutorDirectoryView() {
             className="rounded-control border border-line-subtle bg-canvas p-(--space-4)"
             role="status"
           >
-            <strong className="text-primary">Link aktivasi siap dibagikan</strong>
+            <strong className="text-primary">
+              Link aktivasi siap dibagikan
+            </strong>
             <p className="mt-(--space-2) break-all text-(length:--font-size-body-compact) text-secondary">
               {inviteLink}
             </p>

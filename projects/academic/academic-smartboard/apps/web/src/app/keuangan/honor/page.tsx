@@ -8,14 +8,11 @@ import { ProtectedRoute } from "../../../components/ProtectedRoute.tsx";
 import { StatusBadge } from "../../../components/StatusBadge.tsx";
 import { getEarningsSummary, listEarnings } from "../../../lib/api.ts";
 import { rupiah } from "../../../lib/labels.ts";
-import {
-  earningRowStatus,
-  sumEarningsSummary,
-} from "../../../lib/payroll.ts";
+import { earningRowStatus, sumEarningsSummary } from "../../../lib/payroll.ts";
 
 function HonorView() {
-  const [period, setPeriod] = useState(
-    () => new Date().toISOString().slice(0, 7),
+  const [period, setPeriod] = useState(() =>
+    new Date().toISOString().slice(0, 7),
   );
 
   const summaryQ = useQuery({
@@ -132,7 +129,9 @@ function HonorView() {
                     <td className="px-(--space-3) py-(--space-2) font-medium text-primary">
                       {row.tutor_name}
                     </td>
-                    <td className="px-(--space-3) py-(--space-2)">{row.sessions}</td>
+                    <td className="px-(--space-3) py-(--space-2)">
+                      {row.sessions}
+                    </td>
                     <td className="px-(--space-3) py-(--space-2)">
                       {rupiah(row.base_amount)}
                     </td>
@@ -161,18 +160,24 @@ function HonorView() {
           <table className="min-w-full border-collapse text-(length:--font-size-body)">
             <thead>
               <tr className="border-b border-line-subtle bg-surface">
-                <th className="px-(--space-3) py-(--space-2) text-left">Sesi</th>
+                <th className="px-(--space-3) py-(--space-2) text-left">
+                  Sesi
+                </th>
                 <th className="px-(--space-3) py-(--space-2) text-left">
                   Periode
                 </th>
-                <th className="px-(--space-3) py-(--space-2) text-left">Base</th>
+                <th className="px-(--space-3) py-(--space-2) text-left">
+                  Base
+                </th>
                 <th className="px-(--space-3) py-(--space-2) text-left">
                   Insentif
                 </th>
                 <th className="px-(--space-3) py-(--space-2) text-left">
                   Transport
                 </th>
-                <th className="px-(--space-3) py-(--space-2) text-left">Total</th>
+                <th className="px-(--space-3) py-(--space-2) text-left">
+                  Total
+                </th>
                 <th className="px-(--space-3) py-(--space-2) text-left">
                   Status
                 </th>

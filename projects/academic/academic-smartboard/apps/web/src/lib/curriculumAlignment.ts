@@ -2,7 +2,10 @@ export const CELL_STATE = {
   rich: { glyph: "▣", word: "Panduan lengkap", short: "Lengkap" },
   thin: { glyph: "▤", word: "Panduan tipis", short: "Tipis" },
   gap: { glyph: "○", word: "Tanpa panduan", short: "Kosong" },
-} as const satisfies Record<string, { glyph: string; word: string; short: string }>;
+} as const satisfies Record<
+  string,
+  { glyph: string; word: string; short: string }
+>;
 
 export type CellStateKey = keyof typeof CELL_STATE;
 
@@ -47,9 +50,7 @@ export interface AlignmentTotals {
   cells_with_guidance: number;
 }
 
-export function stateFor(
-  cell: AlignmentCell | null | undefined,
-): CellStateKey {
+export function stateFor(cell: AlignmentCell | null | undefined): CellStateKey {
   if (!cell || cell.cp_count === 0) return "gap";
   return cell.element_count > 0 ? "rich" : "thin";
 }
@@ -60,7 +61,9 @@ export function cellMeterFill(state: CellStateKey): number {
   return 0;
 }
 
-export function coveragePct(totals: AlignmentTotals | null | undefined): number {
+export function coveragePct(
+  totals: AlignmentTotals | null | undefined,
+): number {
   if (!totals?.cells) return 0;
   return Math.round((100 * (totals.cells_with_guidance || 0)) / totals.cells);
 }
