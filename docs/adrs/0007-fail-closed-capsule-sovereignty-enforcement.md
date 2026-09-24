@@ -107,13 +107,20 @@ does not travel with it when it is extracted.
 3. **Path classification has one definition.** In contracts, a value is path-like only if it:
    - is `.` or `..`;
    - contains `/` or `\`;
-   - is a drive reference matching `^[A-Za-z]:([\\/]|$)`;
+   - is a drive reference: any value that begins with a single letter followed by `:`
+     (`^[A-Za-z]:`). Drive references are always rejected, including `C:`, the drive-relative
+     forms `C:x` and `C:outside.exe`, and `C:\x`;
    - carries a package-protocol prefix (`file:`, `link:`, `portal:`, `workspace:`), in which case
      the remainder is evaluated as a path.
 
-   `http:` and `https:` URLs are handled as URLs. Every other value, including script names such
-   as `deploy:dry-run`, is an opaque argument. The Node validator and the Python checker implement
-   this definition and share one set of test vectors.
+   A path-like value is accepted only if it stays inside the capsule: it is not absolute on any
+   platform, has no `..` segment that escapes, and is not a non-http(s) scheme value that contains
+   a separator (for example `ftp://example.com/x`), which is rejected. `http:` and `https:` URLs
+   are handled as URLs. A URL that embeds credentials is rejected by both the Node validator and
+   the Python checker. Every other value, including multi-letter script names such as
+   `deploy:dry-run`, is an opaque argument. The Node validator and the Python checker implement
+   this definition and share one set of test vectors
+   (`tools/safrs/fixtures/path-classification.json`).
 4. **Agent doctrine has one source of truth.** Agent-facing knowledge must not contradict
    `MONOREPO_PURPOSE.md` or ADR 0006. `.agents/knowledge/03_ARCHITECTURE.md` is rewritten to
    describe the control-plane and capsule model. It lists golden-path only as legacy
@@ -163,6 +170,9 @@ does not travel with it when it is extracted.
   blocking. The work package sequences this so that no gate turns red on inherited state.
 - Re-enabling full type checking may surface existing type errors in `@safrs/database` and
   `@safrs/api`. They are inherited baseline, to be fixed or tracked, never suppressed.
+- Decision 3 was corrected after the test-driven WP-A run: the originally stated drive pattern
+  `^[A-Za-z]:([\\/]|$)` would have accepted drive-relative paths such as `C:outside.exe`, which
+  the existing test vectors reject.
 - Agents stop receiving contradictory doctrine at session start, which removes the most likely
   driver of recurring root coupling.
 - The known-nonconformance record makes remediation debt visible. Initial entries are
