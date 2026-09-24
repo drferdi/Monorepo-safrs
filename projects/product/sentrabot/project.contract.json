@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "id": "product/sentrabot",
+  "owner": "Chief",
+  "risk": "R2",
+  "runtime": { "name": "node", "version": "24.18.0" },
+  "packageManager": { "name": "pnpm", "version": "9.15.0", "lockfile": "pnpm-lock.yaml" },
+  "commands": {
+    "install": { "program": "node", "args": ["scripts/pnpm.mjs", "install", "--frozen-lockfile"] },
+    "lint": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "lint"] },
+    "typecheck": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "check"] },
+    "test": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "test"] },
+    "build": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "build"] },
+    "run": {
+      "program": "node",
+      "args": [
+        "scripts/pnpm.mjs",
+        "--filter",
+        "@sentrabot/web",
+        "exec",
+        "cross-env",
+        "SENTRABOT_ALLOW_DEV_SECRETS=1",
+        "vite",
+        "preview",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "4390",
+        "--strictPort"
+      ]
+    },
+    "deployDryRun": { "program": "node", "args": ["scripts/deploy-dry-run.mjs"] }
+  },
+  "smoke": {
+    "kind": "http",
+    "host": "127.0.0.1",
+    "port": 4390,
+    "path": "/",
+    "expectedStatus": 200,
+    "startupTimeoutSeconds": 60
+  },
+  "artifacts": ["apps/web/dist"],
+  "externalDependencies": [
+    {
+      "kind": "registry",
+      "name": "npm registry",
+      "locator": "https://registry.npmjs.org",
+      "required": true
+    },
+    { "kind": "database", "name": "PostgreSQL", "locator": "DATABASE_URL", "required": true },
+    {
+      "kind": "service",
+      "name": "Sandbox supervisor (Docker)",
+      "locator": "SANDBOX_SUPERVISOR_URL",
+      "required": false
+    },
+    { "kind": "service", "name": "OpenAI", "locator": "OPENAI_API_KEY", "required": false },
+    { "kind": "service", "name": "Composio", "locator": "COMPOSIO_API_KEY", "required": false },
+    { "kind": "service", "name": "Xendit", "locator": "XENDIT_API_KEY", "required": false },
+    {
+      "kind": "service",
+      "name": "WhatsApp Business",
+      "locator": "WHATSAPP_ACCESS_TOKEN",
+      "required": false
+    },
+    { "kind": "service", "name": "Sendblue", "locator": "SENDBLUE_API_KEY_ID", "required": false }
+  ],
+  "mutableStatePaths": [
+    "node_modules",
+    ".turbo",
+    "coverage",
+    "apps/desktop/dist",
+    "apps/site/dist",
+    "packages/bot-templates/dist",
+    "packages/db/src/generated",
+    "infra/sandboxes/supervisor/dist"
+  ]
+}

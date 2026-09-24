@@ -1,8 +1,8 @@
 import {
+  isUserIntentTrigger,
   type UserIntent,
   type UserIntentClassification,
   UserIntentSchema,
-  isUserIntentTrigger,
   userIntentProbabilitiesFrom,
 } from "@sentrabot/contracts";
 import * as z from "zod";

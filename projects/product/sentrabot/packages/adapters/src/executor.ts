@@ -75,12 +75,6 @@ import {
 } from "@sentrabot/db";
 import { parse as parseShellCommand } from "shell-quote";
 import {
-  INTENT_CLARIFICATION_TEXT,
-  type IntentRouter,
-  shouldClassifyIntent,
-  userIntentTextFromBlocks,
-} from "./intent-router.js";
-import {
   connectAgent,
   messageConnectedAgent,
   respondAgentConnection,
@@ -150,6 +144,12 @@ import {
   selectCompactedHistory,
   shouldEnqueueCompaction,
 } from "./history-compaction.js";
+import {
+  INTENT_CLARIFICATION_TEXT,
+  type IntentRouter,
+  shouldClassifyIntent,
+  userIntentTextFromBlocks,
+} from "./intent-router.js";
 import {
   buildMcpCredentialBlob,
   needsOAuthProbe,

@@ -1,46 +1,34 @@
-# HANDOFF — WhatsApp Business Bridge Public Beta
+# HANDOFF — Sentra Bot standalone contract
 
-Copied from the gitignored `.agent/HANDOFF.md` by ADR 0007 WP-G on 2026-09-25; content unchanged. The old `.agent/` folder and its database dump stay in place for Chief to remove.
+Last updated: 2026-09-25 (Cursor, branch `feat/sentrabot-standalone`, worktree
+`D:\DEV\Monorepo.worktrees\feat\sentrabot-standalone`, task `TASK-20260925-SENTRABOT-STANDALONE`, state BLOCKED)
 
-Last updated: 2026-09-01
+The previous handoff (WhatsApp Business Bridge public beta, worktree `codex-whatsapp-bridge`) is unchanged in
+git history; its open items still apply.
 
-## Status
+## Done in this branch (uncommitted)
 
-- Worktree implementasi aktif: `D:\DEV\Monorepo.worktrees\codex-whatsapp-bridge`
-  pada branch `codex/whatsapp-bridge`. Perubahan belum di-commit, di-push, atau
-  dideploy.
-- Arsitektur yang disetujui: `apps/whatsapp-bridge` adalah bridge Meta yang
-  tipis; API tetap memiliki identitas, otorisasi tenant, run, dan persistence.
-- Selesai secara lokal: kontrak/migrasi/retensi receipt 30 hari, ingress HMAC
-  raw-body yang idempoten, endpoint internal bridge-to-API, penghapusan jalur
-  Meta langsung di API, state machine Embedded Signup, token terenkripsi,
-  RPC onboarding, serta UI pilihan coexistence atau nomor baru.
-- UI memuat SDK Meta saat diperlukan, menerima callback hanya dari domain
-  Facebook HTTPS, dan completion membutuhkan OAuth code, WABA ID, dan
-  phone-number ID.
+- `project.contract.json`: argv through `scripts/pnpm.mjs`; `run` serves the built web client with
+  `vite preview` on 127.0.0.1:4390 (the same serving path as `docker-compose.prod.yml`), smoke `GET /` -> 200.
+- `scripts/deploy-dry-run.mjs`: offline check of the inputs `publish-server-image.yml` hands to `docker build`.
+- Package `test` scripts now name their folder as `../../packages/<name>/src` (same 32 files selected for core);
+  the structural checker read `packages/<name>/src` as a root reference.
+- Biome: import order and format fixed in `packages/adapters`; the misplaced `biome-ignore` in
+  `infra/updater/src/compose-service.test.ts` removed (template literal instead). `pnpm run lint` passes.
+- Root `.safrs/known-nonconformance.json`: sentrabot entry removed; `check_project_independence.py` OK.
 
-## Bukti verifikasi terakhir
+- Chief decisions 2026-09-25: the two `bash` tests skip on win32 (existing capsule pattern; they still run on
+  Linux CI); 17 Expo packages raised to the patch versions `expo install --check` expects (lockfile updated).
+- Local gates pass from the capsule root: lint, `check`, test (2095 passed, 115 skipped), build, deploy dry run.
 
-- Contracts check: PASS.
-- API: 178 test dan typecheck PASS.
-- Web: 152 test dan typecheck PASS.
-- WhatsApp Bridge: 15 test dan typecheck PASS.
-- Scoped Biome dan `git diff --check`: PASS.
-- Migration `20260831210754_whatsapp_bridge_connections` sudah diterapkan pada
-  PostgreSQL Docker lokal; tidak ada akses data/credential produksi.
+## Blocker (root control plane, Chief chose a root fix)
 
-## Pekerjaan berikutnya
+`project-standalone verify` fails at install:
+1. The verifier environment drops `LOCALAPPDATA`/`APPDATA`; `koffi` (runtime dependency of
+   `packages/adapters`) fails its Windows install script without them.
+2. Cold install in the extraction takes about 127 s; the verifier allows 120 s per stage.
 
-1. Media inbound melalui bridge tanpa API menerima token WABA.
-2. Outbound delivery dan approval interaktif melalui bridge.
-3. Test RPC/UI onboarding, katalog lokalisasi Indonesia/Inggris.
-4. Compose bridge, deploy dry-run tanpa side effect, dan dokumentasi beta.
-5. Verifikasi akhir dan review R2 sebelum menganggap public beta siap.
+## Next action
 
-## Keputusan yang tidak boleh berubah
-
-- Beta bersifat account-first; webhook tidak boleh membuat akun Sentra.
-- Pelanggan memiliki WABA dan membayar Meta langsung.
-- Coexistence didukung untuk nomor WhatsApp Business App yang memenuhi syarat.
-- Token tidak boleh mencapai browser, respons API, log, prompt, atau fixture.
-- Tidak ada otorisasi deployment melalui handoff ini.
+After the verifier fix lands on `main`, rebase this branch, delete every `node_modules` folder in the capsule,
+and run `node tools/project-standalone/src/cli.mjs verify product/sentrabot`.

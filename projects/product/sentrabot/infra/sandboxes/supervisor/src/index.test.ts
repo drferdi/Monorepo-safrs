@@ -408,11 +408,14 @@ describe("sandbox supervisor input containment", () => {
     );
   });
 
-  it("generates syntactically valid shell to start an extra display", () => {
-    const result = spawnSync("bash", ["-n"], { input: ensureScreenCommand(1) });
-    expect(result.status).toBe(0);
-    expect(result.stderr.toString()).toBe("");
-  });
+  it.skipIf(process.platform === "win32")(
+    "generates syntactically valid shell to start an extra display",
+    () => {
+      const result = spawnSync("bash", ["-n"], { input: ensureScreenCommand(1) });
+      expect(result.status).toBe(0);
+      expect(result.stderr.toString()).toBe("");
+    },
+  );
 
   it("frees a released screen slot so a ninth Team bot can reuse it", () => {
     const assigned = new Map<string, ScreenAssignment>();
