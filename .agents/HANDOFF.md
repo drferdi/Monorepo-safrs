@@ -21,8 +21,11 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
   it as a control. Before, a change set could exempt its own implementation by adding it to
   `verification_control_patterns` (WP-C did this for `tools/project-standalone/**`: at
   `4e1cf629` the gate said review required, from `a2605e28` it exited 0). On the WP-C range the
-  fixed gate says `required` and accepts Chief's record from `c4daa98c`. Tests 20/20; the new
-  test was red first.
+  fixed gate says `required` and accepts Chief's record from `c4daa98c`. An independent
+  reviewer then found two more escapes, both fixed here with tests that were red first:
+  shrinking the head config (classification now uses head and base patterns together) and
+  renaming a control out of its pattern (`--no-renames`). A base config whose pattern lists
+  are not lists of strings now exits 2. Suite 23/23.
 - `PROMPT-RUN-SMOKE`: the prompt contract `run` starts the built app with `--smoke`; verify
   passes every stage.
 - `SMARTBOARD-LINT` and `KEDIRI-BUILD-ENV`: findings recorded in the capsule handoffs, no code
@@ -45,6 +48,9 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
   the rename to quarantine failed with EPERM and the extraction stayed in `%TEMP%`; no process
   referencing it remained afterwards. `stopManagedProcess` waits only for the top process, so
   a still-exiting descendant is one possible cause (not confirmed).
+- Gate backlog from the same review: CI and the verifiers run the checker from the change set
+  under review, so a change set can edit the checker itself. Running the base's checker in CI
+  would close this.
 - Classify the gate's own tests (`tests/governance/test_sensitive_classification.py`,
   `test_handoff_scope.py`) as verification controls, in a change set of their own.
 - The four known non-conformance capsules (golden-path, control-center, avery, sentrabot) are

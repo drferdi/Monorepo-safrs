@@ -211,6 +211,88 @@ class SensitiveClassificationTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0, result.stdout)
             self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=required', result.stdout)
 
+    def test_declassifying_a_control_still_requires_review(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['.safrs/**', 'tools/verifier/**'],
+                'verification_control_patterns': ['.safrs/**', 'tools/verifier/**'],
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            write(repository, 'tools/verifier/check.mjs', 'export const strict = true;\n')
+            write(repository, 'src/app.mjs', 'export {};\n')
+            commit_baseline(repository)
+            config['patterns'] = []
+            config['verification_control_patterns'] = []
+            write(repository, '.safrs/sensitive-paths.json', json.dumps(config))
+            write(repository, 'tools/verifier/check.mjs', 'export const strict = false;\n')
+            write(repository, 'src/app.mjs', 'export const changed = true;\n')
+            git(repository, 'add', '.')
+            git(repository, 'commit', '-qm', 'declassify the verifier')
+
+            result = run_checker(
+                repository,
+                {'SAFRS_BASE_REF': 'HEAD~1', 'SAFRS_HEAD_REF': 'HEAD'},
+            )
+
+            self.assertNotEqual(result.returncode, 0, result.stdout)
+            self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=required', result.stdout)
+            self.assertIn('SAFRS_RISK=R2', result.stdout)
+
+    def test_renaming_a_control_out_of_its_pattern_still_requires_review(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['tools/verifier/**'],
+                'verification_control_patterns': ['tools/verifier/**'],
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            write(repository, 'tools/verifier/check.mjs', 'export const strict = true;\n' * 20)
+            write(repository, 'src/app.mjs', 'export {};\n')
+            commit_baseline(repository)
+            git(repository, 'mv', 'tools/verifier/check.mjs', 'src/check.mjs')
+            write(repository, 'src/app.mjs', 'export const changed = true;\n')
+            git(repository, 'add', '.')
+            git(repository, 'commit', '-qm', 'move the verifier')
+
+            result = run_checker(
+                repository,
+                {'SAFRS_BASE_REF': 'HEAD~1', 'SAFRS_HEAD_REF': 'HEAD'},
+            )
+
+            self.assertNotEqual(result.returncode, 0, result.stdout)
+            self.assertIn('  - tools/verifier/check.mjs', result.stdout)
+            self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=required', result.stdout)
+
+    def test_base_control_patterns_must_be_a_list_of_strings(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['.safrs/**'],
+                'verification_control_patterns': '*',
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            commit_baseline(repository)
+            config['verification_control_patterns'] = ['.safrs/**']
+            write(repository, '.safrs/sensitive-paths.json', json.dumps(config))
+            write(repository, 'src/app.mjs', 'export const changed = true;\n')
+            git(repository, 'add', '.')
+            git(repository, 'commit', '-qm', 'repair the config')
+
+            result = run_checker(
+                repository,
+                {'SAFRS_BASE_REF': 'HEAD~1', 'SAFRS_HEAD_REF': 'HEAD'},
+            )
+
+            self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+            self.assertIn('review base', result.stderr)
+
     def test_control_already_classified_at_base_needs_no_review_alone(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             repository = Path(temporary_directory)

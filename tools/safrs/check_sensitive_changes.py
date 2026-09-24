@@ -142,35 +142,37 @@ if not base:
     # Local fallback: the reviewed branch diff plus staged, unstaged, and
     # untracked names. This keeps follow-up commits aligned with PR CI.
     cmds = [
-        ['git','diff','--name-only',f'{diff_base_sha}...HEAD'],
-        ['git','diff','--name-only','HEAD'],
-        ['git','diff','--cached','--name-only'],
+        ['git','diff','--name-only','--no-renames',f'{diff_base_sha}...HEAD'],
+        ['git','diff','--name-only','--no-renames','HEAD'],
+        ['git','diff','--cached','--name-only','--no-renames'],
         ['git','ls-files','--others','--exclude-standard']
     ]
     names=set()
     for cmd in cmds:
         names.update(git_names(cmd))
 else:
-    names=git_names(['git','diff','--name-only',f'{diff_base_sha}...{head}'])
+    names=git_names(['git','diff','--name-only','--no-renames',f'{diff_base_sha}...{head}'])
 
 # The attestation describes the other changed files. Excluding it avoids a
 # circular fingerprint while still validating its exact schema and content.
 classified_names = names - {review_evidence_path}
 
-patterns=config['patterns']
-verification=config['verification_control_patterns']
 risk_overrides=config.get('risk_overrides', [])
 
 def match(path, pattern):
     # fnmatch handles ** sufficiently for repository path classification.
     return fnmatch.fnmatch(path, pattern)
 
-sensitive=sorted(p for p in classified_names if any(match(p, pat) for pat in patterns))
-verification_changed=sorted(p for p in classified_names if any(match(p, pat) for pat in verification))
+
+def pattern_list(source, key):
+    value = source.get(key) if isinstance(source, dict) else None
+    if not isinstance(value, list) or not all(isinstance(item, str) for item in value):
+        return None
+    return value
 
 
-def base_verification_patterns():
-    """The review base's control patterns; none when the base has no config."""
+def base_config():
+    """The review base's policy; empty when the base has no config file."""
     result = subprocess.run(
         ['git', 'show', f'{diff_base_sha}:.safrs/sensitive-paths.json'],
         cwd=ROOT,
@@ -178,17 +180,38 @@ def base_verification_patterns():
         capture_output=True,
     )
     if result.returncode != 0:
-        return []
+        return {'patterns': [], 'verification_control_patterns': []}
     try:
-        return json.loads(result.stdout)['verification_control_patterns']
-    except (json.JSONDecodeError, KeyError, TypeError) as error:
-        raise SystemExit(f'SAFRS sensitive-path config at the review base is invalid: {error}')
+        loaded = json.loads(result.stdout)
+    except json.JSONDecodeError as error:
+        loaded = error
+    lists = {
+        key: pattern_list(loaded, key)
+        for key in ('patterns', 'verification_control_patterns')
+    }
+    if any(value is None for value in lists.values()):
+        print(
+            'SAFRS sensitive-path config at the review base is invalid: '
+            'patterns and verification_control_patterns must be lists of strings.',
+            file=sys.stderr,
+        )
+        raise SystemExit(2)
+    return lists
 
 
-# A path is exempt from "implementation" only when the review base already
-# classified it as a control. Otherwise a change set could exempt its own
-# implementation by adding it to verification_control_patterns.
-base_verification = base_verification_patterns()
+# Classification uses the head config and the review base config together, so
+# a change set can neither exempt its own implementation by adding it to
+# verification_control_patterns nor hide a control by removing its pattern.
+base_policy = base_config()
+patterns=config['patterns'] + base_policy['patterns']
+head_verification=config['verification_control_patterns']
+base_verification=base_policy['verification_control_patterns']
+
+sensitive=sorted(p for p in classified_names if any(match(p, pat) for pat in patterns))
+verification_changed=sorted(
+    p for p in classified_names
+    if any(match(p, pat) for pat in head_verification + base_verification)
+)
 # Session memory is neither implementation nor verification. The handoff gate
 # *requires* a HANDOFF.md in every non-trivial change set, so counting it as
 # implementation made every pure verification-control change look coupled and
@@ -196,8 +219,9 @@ base_verification = base_verification_patterns()
 # (root files plus every capsule .agents/**) is shared with check_handoff.py.
 implementation_changed=sorted(
     p for p in classified_names
+    # Exempt only a control under both configs.
     if not (
-        p in verification_changed
+        any(match(p, pat) for pat in head_verification)
         and any(match(p, pat) for pat in base_verification)
     )
     and not p.startswith('docs/')
