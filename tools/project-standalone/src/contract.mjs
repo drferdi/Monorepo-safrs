@@ -69,12 +69,14 @@ function requireKeys(value, required, field, errors) {
   }
 }
 
+const packageProtocol = /^(?:file|link|portal|workspace):/u;
+
 function isAbsoluteOnAnyPlatform(value) {
   return (
     path.posix.isAbsolute(value.replaceAll("\\", "/")) ||
     path.win32.isAbsolute(value) ||
     /^[A-Za-z]:/u.test(value) ||
-    /^[A-Za-z][A-Za-z0-9+.-]*:/u.test(value)
+    (/^[A-Za-z][A-Za-z0-9+.-]*:/u.test(value) && /[/\\]/u.test(value))
   );
 }
 
@@ -102,8 +104,9 @@ function isUrl(value) {
 
 export function safeRelativePath(value) {
   if (!nonEmptyString(value) || value.includes("\0")) return false;
-  if (isAbsoluteOnAnyPlatform(value) || hasParentSegment(value)) return false;
-  const normalized = path.posix.normalize(value.replaceAll("\\", "/"));
+  const target = value.replace(packageProtocol, "");
+  if (isAbsoluteOnAnyPlatform(target) || hasParentSegment(target)) return false;
+  const normalized = path.posix.normalize(target.replaceAll("\\", "/"));
   return (
     normalized !== "." && normalized !== ".." && !normalized.startsWith("../")
   );
@@ -170,7 +173,7 @@ function validateArgument(argument, field, errors) {
       pathCandidate === ".." ||
       /[/\\]/u.test(pathCandidate) ||
       /^[A-Za-z]:/u.test(pathCandidate) ||
-      /^[A-Za-z][A-Za-z0-9+.-]*:/u.test(pathCandidate);
+      packageProtocol.test(pathCandidate);
     if (pathLike && !safeRelativePath(pathCandidate)) {
       errors.push(`${field} contains an absolute or parent-escaping path.`);
       return;

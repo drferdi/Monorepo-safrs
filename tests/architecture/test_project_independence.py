@@ -16,6 +16,7 @@ CHECKER = ROOT / "tools" / "safrs" / "check_project_independence.py"
 FIXTURE = ROOT / "tests" / "fixtures" / "project-independence" / "valid"
 CAPSULE_RELATIVE = Path("projects/product/portable")
 CONTRACT_SCHEMA = ROOT / ".safrs" / "schemas" / "project-contract.schema.json"
+PATH_VECTORS = ROOT / "tools" / "safrs" / "fixtures" / "path-classification.json"
 
 
 class ProjectIndependenceTests(unittest.TestCase):
@@ -147,6 +148,20 @@ class ProjectIndependenceTests(unittest.TestCase):
         self.assertIn("commands.install.args[0]", result.stderr)
         self.assertIn("commands.test.args[0]", result.stderr)
         self.assertIn("commands.build.args[0]", result.stderr)
+
+    def test_command_arguments_follow_shared_path_classification_vectors(self):
+        vectors = json.loads(PATH_VECTORS.read_text(encoding="utf-8"))
+        contract = self.read_json("project.contract.json")
+        contract["commands"]["build"]["args"] = [vector["value"] for vector in vectors]
+        self.write_json("project.contract.json", contract)
+        result = self.run_checker()
+        mismatches = [
+            vector["value"]
+            for index, vector in enumerate(vectors)
+            if (f"[commands.build.args[{index}]]:" in result.stderr)
+            != (vector["expect"] == "reject")
+        ]
+        self.assertEqual(mismatches, [], result.stderr)
 
     def test_root_tool_and_script_names_require_capsule_owned_targets(self):
         contract = self.read_json("project.contract.json")

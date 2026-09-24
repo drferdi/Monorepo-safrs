@@ -10,9 +10,11 @@ import shlex
 import sys
 from dataclasses import dataclass
 from pathlib import Path, PureWindowsPath
+from urllib.parse import urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[2]
+PACKAGE_PROTOCOL = re.compile(r"^(?:file|link|portal|workspace):")
 DEPENDENCY_FIELDS = (
     "dependencies",
     "devDependencies",
@@ -80,11 +82,20 @@ def is_windows_or_posix_absolute(value: str) -> bool:
         or normalized.startswith("//")
         or PureWindowsPath(value).is_absolute()
         or bool(re.match(r"^[A-Za-z]:", value))
-        or bool(re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", value))
+        or (bool(re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", value)) and bool(re.search(r"[/\\]", value)))
     )
 
 
+def credentialed_url(value: str) -> bool:
+    try:
+        parts = urlsplit(value)
+    except ValueError:
+        return False
+    return bool(parts.username or parts.password)
+
+
 def path_escapes(value: str, base: Path, capsule: Path) -> bool:
+    value = PACKAGE_PROTOCOL.sub("", value, count=1)
     if is_windows_or_posix_absolute(value):
         return True
     candidate = (base / value.replace("\\", "/")).resolve(strict=False)
@@ -206,12 +217,23 @@ def check_contract_paths(
             if not isinstance(argument, str):
                 continue
             for candidate in argument_path_candidates(argument):
+                if credentialed_url(candidate):
+                    findings.append(
+                        Finding(
+                            capsule_label,
+                            relative_file,
+                            f"commands.{name}.args[{index}]",
+                            "command argument embeds URL credentials",
+                        )
+                    )
+                    break
                 if candidate.startswith(("http://", "https://")):
                     continue
                 path_like = (
                     candidate in {".", ".."}
                     or any(marker in candidate for marker in ("/", "\\"))
-                    or bool(re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", candidate))
+                    or bool(re.match(r"^[A-Za-z]:", candidate))
+                    or bool(PACKAGE_PROTOCOL.match(candidate))
                     or Path(candidate).name in ROOT_METADATA_NAMES
                 )
                 if path_like and path_escapes(candidate, capsule, capsule):

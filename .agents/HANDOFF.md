@@ -49,3 +49,30 @@ Tidak ada.
   and no migration mentions them. Inherited drift remains: the migrations end at `demos` only,
   so `user`, `session`, `account` and `verification` have no migration.
 - Next: independent review by Codex, then Claude. Do not merge before review.
+
+---
+
+## ADR 0007 WP-A (2026-09-24, Claude Code, branch `fix/adr-0007-wp-a`)
+
+- Scope: `tools/project-standalone/src/contract.mjs`, `tools/safrs/check_project_independence.py`,
+  shared vectors `tools/safrs/fixtures/path-classification.json`, both test suites.
+- Change: one path-classification rule (ADR 0007 decision 3, as corrected on `main`). Script
+  names such as `deploy:dry-run` are opaque; `file:`/`link:`/`portal:`/`workspace:` remainders
+  are evaluated as paths; any `X:` drive prefix (including drive-relative `C:x`) and non-http
+  scheme values with a separator stay rejected. The Python checker gained the URL-credential
+  check the Node validator already had.
+- Evidence (rebased on `main` c1dbbb70): red 3 vectors (Node) and 4 (Python) → green; Node
+  15/15, Python 17/17, `safeRelativePath` one-liner `true false false` (baseline `false false
+  false`). `check_project_independence.py` findings drop from 13 to 1 inherited finding:
+  `projects/internal/prompt/package.json [scripts.db:generate]` (placeholder `postgresql://`
+  URL with a separator; rejected by the rule, capsule-side follow-up).
+- The 12 findings that moved to accept were each triggered only by opaque `word:word` script
+  tokens with no `/`, `\`, `..` or drive prefix: prompt `scripts.build`, `desktop:dev`,
+  `desktop:smoke`, `test:e2e` (`desktop:build`), `dev`, `start` (`desktop:dev`),
+  `desktop:build`, `typecheck` (`db:generate`), `verify` (`verify:structure`, `desktop:smoke`,
+  `deploy:dry-run`); unicom `scripts.verify` (`verify:structure`, `smoke:production`,
+  `deploy:dry-run`); both `commands.deployDryRun.args[1]` (`deploy:dry-run`). These are the
+  false positives decision 3 removes; no path-shaped token moved to accept.
+- Gate: `check_sensitive_changes.py` (and so `pnpm governance`) requires Chief integrity review,
+  because verification controls and implementation change together. No review record created.
+- Next: independent review by Codex, then Claude. Do not merge before review.

@@ -14,7 +14,11 @@ import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 import { runCli } from "../src/cli.mjs";
-import { loadAndValidateContract, validateContract } from "../src/contract.mjs";
+import {
+  loadAndValidateContract,
+  safeRelativePath,
+  validateContract,
+} from "../src/contract.mjs";
 import { assertSafeTree, copyCapsule } from "../src/extraction.mjs";
 import { createSanitizedEnvironment, runCommand } from "../src/process.mjs";
 import { statusCapsules, verifyCapsule } from "../src/verify.mjs";
@@ -206,6 +210,38 @@ test("contract validation reports precise fields and rejects unsafe argv", async
         error.includes("at most 300"),
     ),
   );
+});
+
+test("command arguments follow the shared path-classification vectors", async () => {
+  const vectors = JSON.parse(
+    await readFile(
+      path.join(
+        repositoryRoot,
+        "tools",
+        "safrs",
+        "fixtures",
+        "path-classification.json",
+      ),
+      "utf8",
+    ),
+  );
+  const mismatches = [];
+  for (const { value, expect } of vectors) {
+    const candidate = contract();
+    candidate.commands.build.args = [value];
+    const rejected = validateContract(candidate).some((error) =>
+      error.includes("$.commands.build.args[0]"),
+    );
+    if (rejected !== (expect === "reject"))
+      mismatches.push(`argument ${value}`);
+    if (
+      !/^https?:/u.test(value) &&
+      safeRelativePath(value) !== (expect === "accept")
+    ) {
+      mismatches.push(`safeRelativePath ${value}`);
+    }
+  }
+  assert.deepEqual(mismatches, []);
 });
 
 test("contract loader rejects invalid JSON with an actionable path", async () => {
