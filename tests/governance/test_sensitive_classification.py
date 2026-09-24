@@ -182,6 +182,59 @@ class SensitiveClassificationTests(unittest.TestCase):
             self.assertNotEqual(result.returncode, 0, result.stdout)
             self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=required', result.stdout)
 
+    def test_reclassifying_implementation_as_a_control_still_requires_review(self):
+        """A change set cannot exempt its own implementation by adding it to
+        verification_control_patterns in the same change set."""
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['.safrs/**'],
+                'verification_control_patterns': ['.safrs/**'],
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            write(repository, 'tools/verifier/run.mjs', 'export {};\n')
+            commit_baseline(repository)
+            config['patterns'].append('tools/verifier/**')
+            config['verification_control_patterns'].append('tools/verifier/**')
+            write(repository, '.safrs/sensitive-paths.json', json.dumps(config))
+            write(repository, 'tools/verifier/run.mjs', 'export const changed = true;\n')
+            git(repository, 'add', '.')
+            git(repository, 'commit', '-qm', 'reclassify the verifier')
+
+            result = run_checker(
+                repository,
+                {'SAFRS_BASE_REF': 'HEAD~1', 'SAFRS_HEAD_REF': 'HEAD'},
+            )
+
+            self.assertNotEqual(result.returncode, 0, result.stdout)
+            self.assertIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW=required', result.stdout)
+
+    def test_control_already_classified_at_base_needs_no_review_alone(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            repository = Path(temporary_directory)
+            config = {
+                'minimum_risk': 'R2',
+                'patterns': ['.safrs/**', 'tools/verifier/**'],
+                'verification_control_patterns': ['.safrs/**', 'tools/verifier/**'],
+                'risk_overrides': [],
+            }
+            install_checker(repository, config)
+            write(repository, 'tools/verifier/run.mjs', 'export {};\n')
+            commit_baseline(repository)
+            write(repository, 'tools/verifier/run.mjs', 'export const changed = true;\n')
+            git(repository, 'add', '.')
+            git(repository, 'commit', '-qm', 'change the verifier')
+
+            result = run_checker(
+                repository,
+                {'SAFRS_BASE_REF': 'HEAD~1', 'SAFRS_HEAD_REF': 'HEAD'},
+            )
+
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            self.assertNotIn('SAFRS_VERIFICATION_INTEGRITY_REVIEW', result.stdout)
+
     def test_memory_files_do_not_count_as_implementation(self):
         """The handoff gate forces HANDOFF.md into every change set; counting
         it as implementation made pure control changes look coupled."""

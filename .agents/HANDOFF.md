@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-09-25 (ADR 0007 WP-C, Claude Code, branch `feat/adr-0007-wp-c`)
+Last updated: 2026-09-25 (integrity gate base config, Claude Code, branch `fix/safrs-integrity-base-config`)
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
 cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>/.agents/`.
@@ -49,7 +49,14 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
   the rename to quarantine failed with EPERM and the extraction stayed in `%TEMP%`; no process
   referencing it remained afterwards. `stopManagedProcess` waits only for the top process, so
   a still-exiting descendant is one possible cause (not confirmed).
-- Integrity gate backlog (for Codex): `check_sensitive_changes.py` classifies with the config of
+- Integrity gate fix on `fix/safrs-integrity-base-config` (claim `SAFRS-INTEGRITY-BASE-CONFIG`):
+  a path counts as a control, not implementation, only when the review base's
+  `.safrs/sensitive-paths.json` already classifies it. The WP-C range (`ba9760f1..6f8df7c7`)
+  now says `SAFRS_VERIFICATION_INTEGRITY_REVIEW=required` and is satisfied by the Chief record
+  committed in `c4daa98c`. This fix needs its own Chief integrity review: the gate's own tests
+  (`tests/governance/test_sensitive_classification.py`, `test_handoff_scope.py`) are not
+  classified as controls, so they count as implementation.
+- Integrity gate backlog (closed by the fix above once merged): `check_sensitive_changes.py` classifies with the config of
   the change set under review, so a change set that adds its own implementation paths to
   `verification_control_patterns` no longer counts them as implementation. WP-C did this for
   `tools/project-standalone/**` (as the brief required): at `4e1cf629` the gate says

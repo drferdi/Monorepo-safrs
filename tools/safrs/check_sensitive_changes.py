@@ -167,6 +167,28 @@ def match(path, pattern):
 
 sensitive=sorted(p for p in classified_names if any(match(p, pat) for pat in patterns))
 verification_changed=sorted(p for p in classified_names if any(match(p, pat) for pat in verification))
+
+
+def base_verification_patterns():
+    """The review base's control patterns; none when the base has no config."""
+    result = subprocess.run(
+        ['git', 'show', f'{diff_base_sha}:.safrs/sensitive-paths.json'],
+        cwd=ROOT,
+        text=True,
+        capture_output=True,
+    )
+    if result.returncode != 0:
+        return []
+    try:
+        return json.loads(result.stdout)['verification_control_patterns']
+    except (json.JSONDecodeError, KeyError, TypeError) as error:
+        raise SystemExit(f'SAFRS sensitive-path config at the review base is invalid: {error}')
+
+
+# A path is exempt from "implementation" only when the review base already
+# classified it as a control. Otherwise a change set could exempt its own
+# implementation by adding it to verification_control_patterns.
+base_verification = base_verification_patterns()
 # Session memory is neither implementation nor verification. The handoff gate
 # *requires* a HANDOFF.md in every non-trivial change set, so counting it as
 # implementation made every pure verification-control change look coupled and
@@ -174,7 +196,10 @@ verification_changed=sorted(p for p in classified_names if any(match(p, pat) for
 # (root files plus every capsule .agents/**) is shared with check_handoff.py.
 implementation_changed=sorted(
     p for p in classified_names
-    if p not in verification_changed
+    if not (
+        p in verification_changed
+        and any(match(p, pat) for pat in base_verification)
+    )
     and not p.startswith('docs/')
     and not is_memory_file(p)
 )
