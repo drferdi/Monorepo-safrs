@@ -28,6 +28,15 @@ const FIELD_TYPES = [
   { value: "boolean", label: "Ya/Tidak" },
 ] as const;
 
+/** A field row being edited; `uid` is a client-only React key and is never sent to the API. */
+type FormField = EvaluationTemplateField & { uid: string };
+
+let fieldUidCounter = 0;
+function nextFieldUid(): string {
+  fieldUidCounter += 1;
+  return `field-${fieldUidCounter}`;
+}
+
 interface TemplateForm {
   name: string;
   description: string;
@@ -35,7 +44,7 @@ interface TemplateForm {
   subject_id: string;
   school_id: string;
   active: boolean;
-  fields: EvaluationTemplateField[];
+  fields: FormField[];
 }
 
 function initForm(): TemplateForm {
@@ -81,7 +90,10 @@ function TemplateEvaluasiView() {
       subject_id: row.subject_id || "",
       school_id: row.school_id || "",
       active: row.active,
-      fields: row.fields || [],
+      fields: (row.fields || []).map((field) => ({
+        ...field,
+        uid: nextFieldUid(),
+      })),
     });
     setEditing(row);
     setShowForm(true);
@@ -93,6 +105,7 @@ function TemplateEvaluasiView() {
       fields: [
         ...(f.fields || []),
         {
+          uid: nextFieldUid(),
           key: `field_${(f.fields || []).length + 1}`,
           label: "",
           type: "text",
@@ -126,6 +139,7 @@ function TemplateEvaluasiView() {
       stage: form.stage || null,
       subject_id: form.subject_id || null,
       school_id: form.school_id || null,
+      fields: form.fields.map(({ uid, ...field }) => field),
     };
     try {
       if (editing) {
@@ -313,14 +327,16 @@ function TemplateEvaluasiView() {
       </div>
 
       {showForm ? (
-        <div
-          className="fixed inset-0 z-(--z-drawer) flex items-center justify-center bg-overlay/40 p-(--space-4)"
-          onClick={() => setShowForm(false)}
-          role="presentation"
-        >
+        <div className="fixed inset-0 z-(--z-drawer) flex items-center justify-center bg-overlay/40 p-(--space-4)">
+          <button
+            type="button"
+            aria-label="Tutup"
+            tabIndex={-1}
+            className="absolute inset-0 cursor-default"
+            onClick={() => setShowForm(false)}
+          />
           <div
-            className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-control border border-line-subtle bg-canvas p-(--space-4) shadow-overlay"
-            onClick={(e) => e.stopPropagation()}
+            className="relative max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-control border border-line-subtle bg-canvas p-(--space-4) shadow-overlay"
             role="dialog"
             aria-modal="true"
             aria-label={
@@ -453,7 +469,7 @@ function TemplateEvaluasiView() {
               </div>
               {(form.fields || []).map((f, i) => (
                 <div
-                  key={i}
+                  key={f.uid}
                   className="mb-(--space-3) rounded-control border border-line-subtle p-(--space-3)"
                   data-testid={`field-row-${i}`}
                 >

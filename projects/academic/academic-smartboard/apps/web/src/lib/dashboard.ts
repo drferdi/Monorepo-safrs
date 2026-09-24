@@ -85,12 +85,13 @@ export function greetingName(fullName: string | undefined | null): string {
     .trim()
     .split(/\s+/)
     .filter(Boolean);
-  if (!parts.length) return "Anda";
-  const head = parts[0]!.replace(/\.$/, "");
-  if (HONORIFICS.has(head.toLowerCase()) && parts[1]) {
-    return `${head}. ${parts[1]}`;
+  const [first, second] = parts;
+  if (!first) return "Anda";
+  const head = first.replace(/\.$/, "");
+  if (HONORIFICS.has(head.toLowerCase()) && second) {
+    return `${head}. ${second}`;
   }
-  return parts[0]!;
+  return first;
 }
 
 export interface DashboardStats {

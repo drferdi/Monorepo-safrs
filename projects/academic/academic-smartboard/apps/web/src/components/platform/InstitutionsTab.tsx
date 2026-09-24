@@ -1,7 +1,15 @@
 "use client";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { type FormEvent, type ReactNode, useMemo, useState } from "react";
+import Image from "next/image";
+import {
+  type FormEvent,
+  type ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { toast } from "sonner";
 import {
   assignPlatformTenantPlan,
@@ -56,7 +64,7 @@ const ACTIONS_BY_STATUS: Record<
 function accentStyle(
   accent?: string,
 ): { borderColor?: string; color?: string } | undefined {
-  if (accent && accent.startsWith("var(")) {
+  if (accent?.startsWith("var(")) {
     return { borderColor: accent, color: accent };
   }
   return undefined;
@@ -66,11 +74,12 @@ function LogoMark({ tenant }: { tenant: PlatformTenant }) {
   const logo = tenant.branding?.logo_url;
   if (logo) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
+      <Image
         className="h-8 w-8 rounded-control object-cover"
         src={logo}
         alt=""
+        width={32}
+        height={32}
         onError={(e) => {
           e.currentTarget.style.display = "none";
         }}
@@ -518,15 +527,18 @@ function Modal({
   footer?: ReactNode;
 }) {
   return (
-    <div
-      className="fixed inset-0 z-(--z-drawer) flex items-center justify-center bg-overlay/40 p-(--space-4)"
-      onMouseDown={onClose}
-    >
+    <div className="fixed inset-0 z-(--z-drawer) flex items-center justify-center bg-overlay/40 p-(--space-4)">
+      <button
+        type="button"
+        aria-label="Tutup"
+        tabIndex={-1}
+        className="absolute inset-0 cursor-default"
+        onClick={onClose}
+      />
       <div
-        className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-control border border-line-subtle bg-canvas shadow-overlay"
+        className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-control border border-line-subtle bg-canvas shadow-overlay"
         role="dialog"
         aria-modal="true"
-        onMouseDown={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-line-subtle px-(--space-4) py-(--space-3)">
           <h2 className="text-(length:--font-size-title-section) font-bold text-primary">
@@ -568,6 +580,12 @@ function CreateModal({
   const [ownerName, setOwnerName] = useState("");
   const [ownerEmail, setOwnerEmail] = useState("");
   const [busy, setBusy] = useState(false);
+  const nameRef = useRef<HTMLInputElement>(null);
+
+  // Focus the first field when the dialog opens.
+  useEffect(() => {
+    nameRef.current?.focus();
+  }, []);
   const effectiveSlug = slugTouched ? slug : slugify(name);
 
   const submit = async (e: FormEvent) => {
@@ -645,7 +663,7 @@ function CreateModal({
             value={name}
             onChange={(e) => setName(e.target.value)}
             data-testid="pc-f-name"
-            autoFocus
+            ref={nameRef}
           />
         </label>
         <label className="flex flex-col gap-(--space-1)">

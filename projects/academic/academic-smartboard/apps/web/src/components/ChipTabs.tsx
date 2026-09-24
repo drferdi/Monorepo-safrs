@@ -25,7 +25,7 @@ export function ChipTabs({
             key={opt.id}
             type="button"
             role="tab"
-            aria-pressed={pressed}
+            aria-selected={pressed}
             data-testid={opt.testId}
             onClick={() => onChange(opt.id)}
             className={cn(

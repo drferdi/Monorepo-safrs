@@ -170,7 +170,7 @@ function KeselarasanView() {
         lede="Peta cepat: mana penawaran bimbel yang sudah punya panduan nasional, mana yang masih kosong — per mata pelajaran dan jenjang."
       />
 
-      <div
+      <section
         data-testid="align-thesis"
         aria-label="Ringkasan keselarasan"
         className="grid gap-(--space-4) rounded-control border border-line-subtle bg-surface p-(--space-4) md:grid-cols-[1.4fr_1fr]"
@@ -222,7 +222,7 @@ function KeselarasanView() {
             </span>
           </li>
         </ul>
-      </div>
+      </section>
 
       {viewStats.gaps > 0 ? (
         <div

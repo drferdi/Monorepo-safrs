@@ -105,6 +105,18 @@ function LaporanView() {
   const data = reportQ.data ?? { summary: {}, rows: [] };
   const cols = COLS[tab];
 
+  // Report rows carry no id: key each row by its visible cells, with an
+  // occurrence count so identical rows stay distinct.
+  const keyedRows = useMemo(() => {
+    const seen = new Map<string, number>();
+    return (data.rows ?? []).map((row) => {
+      const content = cols.map((c) => String(row[c.key] ?? "")).join("|");
+      const occurrence = seen.get(content) ?? 0;
+      seen.set(content, occurrence + 1);
+      return { row, key: `${content}#${occurrence}` };
+    });
+  }, [data.rows, cols]);
+
   const visibleTabs = TABS.filter(
     (t) => user?.role !== "admin_akademik" || t.key !== "finance",
   );
@@ -276,8 +288,8 @@ function LaporanView() {
                   </td>
                 </tr>
               ) : (
-                data.rows.map((row, i) => (
-                  <tr key={i} className="border-b border-line-subtle">
+                keyedRows.map(({ row, key }) => (
+                  <tr key={key} className="border-b border-line-subtle">
                     {cols.map((c) => (
                       <td key={c.key} className="px-(--space-3) py-(--space-2)">
                         {c.render

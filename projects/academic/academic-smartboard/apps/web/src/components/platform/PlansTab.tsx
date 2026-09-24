@@ -253,15 +253,18 @@ function PlanModal({
   };
 
   return (
-    <div
-      className="fixed inset-0 z-(--z-drawer) flex items-center justify-center bg-overlay/40 p-(--space-4)"
-      onMouseDown={onClose}
-    >
+    <div className="fixed inset-0 z-(--z-drawer) flex items-center justify-center bg-overlay/40 p-(--space-4)">
+      <button
+        type="button"
+        aria-label="Tutup"
+        tabIndex={-1}
+        className="absolute inset-0 cursor-default"
+        onClick={onClose}
+      />
       <div
-        className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-control border border-line-subtle bg-canvas shadow-overlay"
+        className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-control border border-line-subtle bg-canvas shadow-overlay"
         role="dialog"
         aria-modal="true"
-        onMouseDown={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-line-subtle px-(--space-4) py-(--space-3)">
           <h2 className="text-(length:--font-size-title-section) font-bold text-primary">

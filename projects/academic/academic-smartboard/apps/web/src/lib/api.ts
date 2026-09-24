@@ -1149,9 +1149,7 @@ export async function listTutorDirectory(): Promise<TutorDirectoryRow[]> {
   return Array.isArray(data) ? data : [];
 }
 
-export async function importTutorDirectory(
-  form: FormData,
-): Promise<{
+export async function importTutorDirectory(form: FormData): Promise<{
   counts: { added: number; updated: number; pending_approval?: number };
 }> {
   const { data } = await apiClient.post("/tutor-directory/import", form);

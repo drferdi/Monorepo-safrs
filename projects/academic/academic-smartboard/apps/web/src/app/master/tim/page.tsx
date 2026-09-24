@@ -437,20 +437,23 @@ function TimView() {
       </div>
 
       {showForm ? (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-(--space-4)"
-          onClick={(event) => {
-            if (
-              event.target === event.currentTarget &&
-              !saveInFlightRef.current
-            ) {
-              closeForm();
-            }
-          }}
-          role="presentation"
-        >
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-(--space-4)">
+          <button
+            type="button"
+            aria-label="Tutup"
+            tabIndex={-1}
+            className="absolute inset-0 cursor-default"
+            onClick={(event) => {
+              if (
+                event.target === event.currentTarget &&
+                !saveInFlightRef.current
+              ) {
+                closeForm();
+              }
+            }}
+          />
           <div
-            className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-control border border-line-subtle bg-canvas p-(--space-4)"
+            className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-control border border-line-subtle bg-canvas p-(--space-4)"
             role="dialog"
             aria-modal="true"
             aria-labelledby="tim-dialog-title"

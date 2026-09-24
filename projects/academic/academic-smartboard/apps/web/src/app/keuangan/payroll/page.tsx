@@ -47,10 +47,12 @@ function PayrollView() {
 
   const itemsQ = useQuery({
     queryKey: ["payroll-items", period?.period_id, formatFilter],
-    queryFn: () =>
-      listPayrollItems(period!.period_id, {
+    queryFn: () => {
+      if (!period) throw new Error("No payroll period selected");
+      return listPayrollItems(period.period_id, {
         format: formatFilter || undefined,
-      }),
+      });
+    },
     enabled: Boolean(period?.period_id),
   });
 
@@ -81,7 +83,10 @@ function PayrollView() {
   });
 
   const lockM = useMutation({
-    mutationFn: () => lockPayrollPeriod(period!.period_id),
+    mutationFn: () => {
+      if (!period) throw new Error("No payroll period selected");
+      return lockPayrollPeriod(period.period_id);
+    },
     onSuccess: () => {
       toast.success("Periode dikunci");
       void qc.invalidateQueries({ queryKey: ["payroll-periods"] });
@@ -97,13 +102,17 @@ function PayrollView() {
   });
 
   const correctionM = useMutation({
-    mutationFn: () =>
-      createPayrollCorrection({
-        period_id: period!.period_id,
-        tutor_id: showCorrection!.tutor_id,
+    mutationFn: () => {
+      if (!period || !showCorrection) {
+        throw new Error("No payroll period or tutor selected");
+      }
+      return createPayrollCorrection({
+        period_id: period.period_id,
+        tutor_id: showCorrection.tutor_id,
         amount: correction.amount,
         reason: correction.reason,
-      }),
+      });
+    },
     onSuccess: () => {
       toast.success("Koreksi dicatat");
       setShowCorrection(null);
@@ -367,14 +376,16 @@ function PayrollView() {
       </section>
 
       {showCorrection ? (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-(--space-4)"
-          onClick={() => setShowCorrection(null)}
-          role="presentation"
-        >
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-(--space-4)">
+          <button
+            type="button"
+            aria-label="Tutup"
+            tabIndex={-1}
+            className="absolute inset-0 cursor-default"
+            onClick={() => setShowCorrection(null)}
+          />
           <div
-            className="w-full max-w-md rounded-control border border-line-subtle bg-canvas p-(--space-4)"
-            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-md rounded-control border border-line-subtle bg-canvas p-(--space-4)"
             role="dialog"
             aria-modal="true"
             aria-label={`Koreksi payroll ${showCorrection.tutor_name}`}

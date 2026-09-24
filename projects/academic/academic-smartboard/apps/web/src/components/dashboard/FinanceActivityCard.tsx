@@ -131,7 +131,11 @@ export function FinanceActivityCard({
             </div>
             <div
               className="h-2 overflow-hidden rounded-control bg-surface"
+              role="progressbar"
               aria-label={`Honor dibayar ${paidPct} persen`}
+              aria-valuenow={paidPct}
+              aria-valuemin={0}
+              aria-valuemax={100}
             >
               <i
                 className="block h-full bg-accent"

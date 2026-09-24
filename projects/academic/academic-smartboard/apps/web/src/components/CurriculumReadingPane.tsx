@@ -55,7 +55,7 @@ export function CurriculumReadingPane({
       data-testid="curriculum-reading-pane"
       aria-label={`Bacaan Capaian Pembelajaran ${cp.learning_outcome_code}`}
       aria-live="polite"
-      tabIndex={0}
+      tabIndex={-1}
       onKeyDown={handleKeyDown}
     >
       <header className="mb-(--space-4) flex items-start justify-between gap-(--space-3)">

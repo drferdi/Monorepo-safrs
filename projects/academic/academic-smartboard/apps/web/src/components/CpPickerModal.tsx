@@ -87,17 +87,21 @@ export function CpPickerModal({
   return (
     <div
       className="fixed inset-0 z-(--z-drawer) flex items-center justify-center bg-black/40 p-(--space-4)"
-      role="presentation"
-      onClick={onClose}
       style={{ zIndex: 410 }}
     >
+      <button
+        type="button"
+        aria-label="Tutup"
+        tabIndex={-1}
+        className="absolute inset-0 cursor-default"
+        onClick={onClose}
+      />
       <div
-        className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-control border border-line-subtle bg-canvas p-(--space-5)"
+        className="relative max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-control border border-line-subtle bg-canvas p-(--space-5)"
         role="dialog"
         aria-modal="true"
         aria-label="Pilih Capaian Pembelajaran"
         data-testid="cp-picker-modal"
-        onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-(--space-4) flex items-start justify-between gap-(--space-3)">
           <div>

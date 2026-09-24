@@ -53,6 +53,13 @@ function CakupanView() {
     [structureQ.data, phase],
   );
 
+  // Changing grade or subject invalidates the outcome open in the reading pane.
+  function resetOutcome(): void {
+    setSelectedCode(null);
+    setCps([]);
+    setCpError("");
+  }
+
   useEffect(() => {
     if (
       subjectName &&
@@ -60,6 +67,9 @@ function CakupanView() {
       !nationalSubjects.includes(subjectName)
     ) {
       setSubjectName("");
+      setSelectedCode(null);
+      setCps([]);
+      setCpError("");
     }
   }, [subjectName, nationalSubjects]);
 
@@ -72,12 +82,6 @@ function CakupanView() {
       }),
     enabled: Boolean(subjectName && gradeId),
   });
-
-  useEffect(() => {
-    setSelectedCode(null);
-    setCps([]);
-    setCpError("");
-  }, [gradeId, subjectName]);
 
   async function openCp(code: string): Promise<void> {
     const coverage = coverageQ.data;
@@ -163,7 +167,10 @@ function CakupanView() {
                   data-testid="coverage-grade"
                   className="min-h-(--target-min) rounded-control border border-line-subtle bg-canvas px-(--space-3) py-(--space-2)"
                   value={gradeId}
-                  onChange={(e) => setGradeId(e.target.value)}
+                  onChange={(e) => {
+                    setGradeId(e.target.value);
+                    resetOutcome();
+                  }}
                 >
                   <option value="">Pilih jenjang</option>
                   {(gradesQ.data ?? []).map((g) => {
@@ -186,7 +193,10 @@ function CakupanView() {
                   data-testid="coverage-subject"
                   className="min-h-(--target-min) rounded-control border border-line-subtle bg-canvas px-(--space-3) py-(--space-2)"
                   value={subjectName}
-                  onChange={(e) => setSubjectName(e.target.value)}
+                  onChange={(e) => {
+                    setSubjectName(e.target.value);
+                    resetOutcome();
+                  }}
                   disabled={!gradeId || !phase}
                 >
                   <option value="">
@@ -231,7 +241,7 @@ function CakupanView() {
             />
           ) : (
             <div className="space-y-(--space-5)">
-              <div
+              <section
                 data-testid="coverage-thesis"
                 aria-label="Ringkasan cakupan"
                 className="grid gap-(--space-4) rounded-control border border-line-subtle bg-surface p-(--space-4) md:grid-cols-[1.4fr_1fr]"
@@ -285,7 +295,7 @@ function CakupanView() {
                     </strong>
                   </li>
                 </ul>
-              </div>
+              </section>
 
               <ul
                 aria-label="Legenda status cakupan"

@@ -5,6 +5,7 @@ import {
   type ReactNode,
   useCallback,
   useEffect,
+  useId,
   useMemo,
   useState,
 } from "react";
@@ -49,6 +50,7 @@ export function MasterCrud({
   columns: MasterColumn[];
   extraFetch?: () => Promise<Record<string, unknown>>;
 }) {
+  const fieldIdBase = useId();
   const [rows, setRows] = useState<Record<string, unknown>[]>([]);
   const [q, setQ] = useState("");
   const [form, setForm] = useState<Record<string, unknown>>({});
@@ -252,16 +254,19 @@ export function MasterCrud({
       </div>
 
       {showForm ? (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-(--space-4)"
-          role="dialog"
-          aria-modal="true"
-          aria-label={`${editing ? "Ubah" : "Tambah"} ${title}`}
-          onClick={() => setShowForm(false)}
-        >
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-(--space-4)">
+          <button
+            type="button"
+            aria-label="Tutup"
+            tabIndex={-1}
+            className="absolute inset-0 cursor-default"
+            onClick={() => setShowForm(false)}
+          />
           <div
-            className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-control border border-line-subtle bg-canvas p-(--space-4)"
-            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${editing ? "Ubah" : "Tambah"} ${title}`}
+            className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-control border border-line-subtle bg-canvas p-(--space-4)"
           >
             <div className="mb-(--space-3) flex items-center justify-between">
               <h2 className="font-semibold text-primary">
@@ -288,12 +293,18 @@ export function MasterCrud({
                       : "space-y-(--space-1)"
                   }
                 >
-                  <label className="text-(length:--font-size-label) text-secondary">
-                    {f.label}
-                    {f.required ? " *" : ""}
-                  </label>
+                  {f.type === "multi" ? null : (
+                    <label
+                      htmlFor={`${fieldIdBase}-${f.name}`}
+                      className="text-(length:--font-size-label) text-secondary"
+                    >
+                      {f.label}
+                      {f.required ? " *" : ""}
+                    </label>
+                  )}
                   {f.type === "select" ? (
                     <select
+                      id={`${fieldIdBase}-${f.name}`}
                       data-testid={`field-${f.name}`}
                       className="min-h-(--target-min) w-full rounded-control border border-line-subtle px-(--space-3)"
                       value={String(form[f.name] ?? "")}
@@ -311,6 +322,7 @@ export function MasterCrud({
                   ) : f.type === "textarea" ? (
                     <textarea
                       rows={3}
+                      id={`${fieldIdBase}-${f.name}`}
                       data-testid={`field-${f.name}`}
                       className="w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
                       value={String(form[f.name] ?? "")}
@@ -320,6 +332,7 @@ export function MasterCrud({
                     />
                   ) : f.type === "boolean" ? (
                     <select
+                      id={`${fieldIdBase}-${f.name}`}
                       data-testid={`field-${f.name}`}
                       className="min-h-(--target-min) w-full rounded-control border border-line-subtle px-(--space-3)"
                       value={form[f.name] ? "1" : "0"}
@@ -336,6 +349,7 @@ export function MasterCrud({
                   ) : f.type === "number" ? (
                     <input
                       type="number"
+                      id={`${fieldIdBase}-${f.name}`}
                       data-testid={`field-${f.name}`}
                       className="min-h-(--target-min) w-full rounded-control border border-line-subtle px-(--space-3)"
                       value={Number(form[f.name] ?? 0)}
@@ -347,44 +361,51 @@ export function MasterCrud({
                       }
                     />
                   ) : f.type === "multi" ? (
-                    <div
-                      className="max-h-40 space-y-1 overflow-y-auto rounded-control border border-line-subtle p-(--space-2)"
-                      data-testid={`field-${f.name}`}
-                    >
-                      {(f.options?.(extraData) || []).map((o) => {
-                        const selected = Array.isArray(form[f.name])
-                          ? (form[f.name] as string[]).includes(o.value)
-                          : false;
-                        return (
-                          <label
-                            key={o.value}
-                            className="flex min-h-(--target-min) items-center gap-(--space-2) text-sm"
-                          >
-                            <input
-                              type="checkbox"
-                              checked={selected}
-                              onChange={(e) => {
-                                const prev = Array.isArray(form[f.name])
-                                  ? ([
-                                      ...(form[f.name] as string[]),
-                                    ] as string[])
-                                  : [];
-                                setForm({
-                                  ...form,
-                                  [f.name]: e.target.checked
-                                    ? [...prev, o.value]
-                                    : prev.filter((v) => v !== o.value),
-                                });
-                              }}
-                            />
-                            {o.label}
-                          </label>
-                        );
-                      })}
-                    </div>
+                    <fieldset className="min-w-0 space-y-(--space-1)">
+                      <legend className="text-(length:--font-size-label) text-secondary">
+                        {f.label}
+                        {f.required ? " *" : ""}
+                      </legend>
+                      <div
+                        className="max-h-40 space-y-1 overflow-y-auto rounded-control border border-line-subtle p-(--space-2)"
+                        data-testid={`field-${f.name}`}
+                      >
+                        {(f.options?.(extraData) || []).map((o) => {
+                          const selected = Array.isArray(form[f.name])
+                            ? (form[f.name] as string[]).includes(o.value)
+                            : false;
+                          return (
+                            <label
+                              key={o.value}
+                              className="flex min-h-(--target-min) items-center gap-(--space-2) text-sm"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={selected}
+                                onChange={(e) => {
+                                  const prev = Array.isArray(form[f.name])
+                                    ? ([
+                                        ...(form[f.name] as string[]),
+                                      ] as string[])
+                                    : [];
+                                  setForm({
+                                    ...form,
+                                    [f.name]: e.target.checked
+                                      ? [...prev, o.value]
+                                      : prev.filter((v) => v !== o.value),
+                                  });
+                                }}
+                              />
+                              {o.label}
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </fieldset>
                   ) : (
                     <input
                       type={f.type || "text"}
+                      id={`${fieldIdBase}-${f.name}`}
                       data-testid={`field-${f.name}`}
                       className="min-h-(--target-min) w-full rounded-control border border-line-subtle px-(--space-3)"
                       placeholder={f.placeholder}

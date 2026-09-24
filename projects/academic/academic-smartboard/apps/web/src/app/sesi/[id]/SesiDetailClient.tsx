@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Route } from "next";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { type ReactNode, useEffect, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useId, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { AppShell } from "../../../components/AppShell.tsx";
 import { AttendanceCatchUp } from "../../../components/AttendanceCatchUp.tsx";
@@ -75,6 +75,7 @@ const SCORE_LABELS: Record<(typeof SCORE_KEYS)[number], string> = {
 };
 
 export function SesiDetailClient() {
+  const fieldId = useId();
   const params = useParams<{ id: string }>();
   const id = params?.id ?? "";
   const { user } = useAuth();
@@ -99,7 +100,10 @@ export function SesiDetailClient() {
   const subject = subjectsQ.data?.find((s) => s.subject_id === ses?.subject_id);
   const tutorQ = useQuery({
     queryKey: ["tutor", ses?.tutor_id],
-    queryFn: () => getTutor(ses!.tutor_id),
+    queryFn: () => {
+      if (!ses?.tutor_id) throw new Error("Session has no tutor");
+      return getTutor(ses.tutor_id);
+    },
     enabled: Boolean(ses?.tutor_id),
   });
 
@@ -762,17 +766,19 @@ export function SesiDetailClient() {
           ) : null}
 
           {showEvalFor ? (
-            <div
-              className="fixed inset-0 z-(--z-drawer) flex items-center justify-center bg-black/40 p-(--space-4)"
-              role="presentation"
-              onClick={() => setShowEvalFor(null)}
-            >
+            <div className="fixed inset-0 z-(--z-drawer) flex items-center justify-center bg-black/40 p-(--space-4)">
+              <button
+                type="button"
+                aria-label="Tutup"
+                tabIndex={-1}
+                className="absolute inset-0 cursor-default"
+                onClick={() => setShowEvalFor(null)}
+              />
               <div
-                className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-control border border-line-subtle bg-canvas p-(--space-5)"
+                className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-control border border-line-subtle bg-canvas p-(--space-5)"
                 role="dialog"
                 aria-modal="true"
                 aria-label={`Evaluasi untuk ${studentNames[showEvalFor] || "murid"}`}
-                onClick={(e) => e.stopPropagation()}
               >
                 <div className="mb-(--space-4) flex items-start justify-between">
                   <h2 className="text-(length:--font-size-title-section) font-semibold">
@@ -789,8 +795,12 @@ export function SesiDetailClient() {
                 </div>
 
                 <div className="space-y-(--space-3)">
-                  <Field label="Catatan sesi (untuk draf AI)">
+                  <Field
+                    htmlFor={`${fieldId}-session-note`}
+                    label="Catatan sesi (untuk draf AI)"
+                  >
                     <textarea
+                      id={`${fieldId}-session-note`}
                       rows={3}
                       data-testid="eval-draft-notes"
                       className="w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
@@ -878,8 +888,12 @@ export function SesiDetailClient() {
                     </p>
                   ) : null}
 
-                  <Field label="Target Pembelajaran">
+                  <Field
+                    htmlFor={`${fieldId}-target`}
+                    label="Target Pembelajaran"
+                  >
                     <input
+                      id={`${fieldId}-target`}
                       data-testid="eval-target"
                       className="w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
                       value={String(evalForm.target_learning ?? "")}
@@ -891,8 +905,12 @@ export function SesiDetailClient() {
                       }
                     />
                   </Field>
-                  <Field label="Materi yang Diajarkan">
+                  <Field
+                    htmlFor={`${fieldId}-material`}
+                    label="Materi yang Diajarkan"
+                  >
                     <input
+                      id={`${fieldId}-material`}
                       data-testid="eval-material"
                       className="w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
                       value={String(evalForm.material_taught ?? "")}
@@ -906,8 +924,13 @@ export function SesiDetailClient() {
                   </Field>
                   <div className="grid grid-cols-2 gap-(--space-2) md:grid-cols-4">
                     {SCORE_KEYS.map((k) => (
-                      <Field key={k} label={SCORE_LABELS[k]}>
+                      <Field
+                        key={k}
+                        htmlFor={`${fieldId}-score-${k}`}
+                        label={SCORE_LABELS[k]}
+                      >
                         <select
+                          id={`${fieldId}-score-${k}`}
                           data-testid={`eval-${k}`}
                           className="w-full rounded-control border border-line-subtle px-(--space-2) py-(--space-1)"
                           value={Number(evalForm[k] ?? 3)}
@@ -927,8 +950,12 @@ export function SesiDetailClient() {
                       </Field>
                     ))}
                   </div>
-                  <Field label="Status Kompetensi">
+                  <Field
+                    htmlFor={`${fieldId}-competence`}
+                    label="Status Kompetensi"
+                  >
                     <select
+                      id={`${fieldId}-competence`}
                       data-testid="eval-competence"
                       className="w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
                       value={String(
@@ -948,8 +975,9 @@ export function SesiDetailClient() {
                       ))}
                     </select>
                   </Field>
-                  <Field label="Kesulitan">
+                  <Field htmlFor={`${fieldId}-difficulty`} label="Kesulitan">
                     <textarea
+                      id={`${fieldId}-difficulty`}
                       rows={2}
                       data-testid="eval-difficulties"
                       className="w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
@@ -962,8 +990,12 @@ export function SesiDetailClient() {
                       }
                     />
                   </Field>
-                  <Field label="Latihan di kelas">
+                  <Field
+                    htmlFor={`${fieldId}-practice`}
+                    label="Latihan di kelas"
+                  >
                     <textarea
+                      id={`${fieldId}-practice`}
                       rows={2}
                       data-testid="eval-exercises"
                       className="w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
@@ -976,8 +1008,9 @@ export function SesiDetailClient() {
                       }
                     />
                   </Field>
-                  <Field label="Tugas Rumah">
+                  <Field htmlFor={`${fieldId}-homework`} label="Tugas Rumah">
                     <input
+                      id={`${fieldId}-homework`}
                       data-testid="eval-homework"
                       className="w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
                       value={String(evalForm.homework ?? "")}
@@ -986,8 +1019,12 @@ export function SesiDetailClient() {
                       }
                     />
                   </Field>
-                  <Field label="Rekomendasi pertemuan berikutnya">
+                  <Field
+                    htmlFor={`${fieldId}-next-meeting`}
+                    label="Rekomendasi pertemuan berikutnya"
+                  >
                     <textarea
+                      id={`${fieldId}-next-meeting`}
                       rows={2}
                       data-testid="eval-next"
                       className="w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
@@ -1000,8 +1037,12 @@ export function SesiDetailClient() {
                       }
                     />
                   </Field>
-                  <Field label="Catatan untuk Orang Tua">
+                  <Field
+                    htmlFor={`${fieldId}-parent-note`}
+                    label="Catatan untuk Orang Tua"
+                  >
                     <textarea
+                      id={`${fieldId}-parent-note`}
                       rows={2}
                       data-testid="eval-parent-note"
                       className="w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
@@ -1032,8 +1073,12 @@ export function SesiDetailClient() {
                     </label>
                   ) : null}
                   {!isParent ? (
-                    <Field label="Catatan Internal (tidak tampil ke ortu)">
+                    <Field
+                      htmlFor={`${fieldId}-internal-note`}
+                      label="Catatan Internal (tidak tampil ke ortu)"
+                    >
                       <textarea
+                        id={`${fieldId}-internal-note`}
                         rows={2}
                         data-testid="eval-internal-note"
                         className="w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
@@ -1047,8 +1092,12 @@ export function SesiDetailClient() {
                       />
                     </Field>
                   ) : null}
-                  <Field label="Skor Keseluruhan (1-5)">
+                  <Field
+                    htmlFor={`${fieldId}-overall-score`}
+                    label="Skor Keseluruhan (1-5)"
+                  >
                     <select
+                      id={`${fieldId}-overall-score`}
                       data-testid="eval-overall"
                       className="w-full rounded-control border border-line-subtle px-(--space-3) py-(--space-2)"
                       value={Number(evalForm.overall_score ?? 3)}
@@ -1102,18 +1151,20 @@ export function SesiDetailClient() {
           />
 
           {showReschedule ? (
-            <div
-              className="fixed inset-0 z-(--z-drawer) flex items-center justify-center bg-black/40 p-(--space-4)"
-              role="presentation"
-              onClick={() => setShowReschedule(false)}
-            >
+            <div className="fixed inset-0 z-(--z-drawer) flex items-center justify-center bg-black/40 p-(--space-4)">
+              <button
+                type="button"
+                aria-label="Tutup"
+                tabIndex={-1}
+                className="absolute inset-0 cursor-default"
+                onClick={() => setShowReschedule(false)}
+              />
               <div
-                className="w-full max-w-md rounded-control border border-line-subtle bg-canvas p-(--space-5)"
+                className="relative w-full max-w-md rounded-control border border-line-subtle bg-canvas p-(--space-5)"
                 role="dialog"
                 aria-modal="true"
                 aria-label="Jadwalkan ulang sesi"
                 data-testid="reschedule-modal"
-                onClick={(e) => e.stopPropagation()}
               >
                 <h2 className="mb-(--space-4) font-semibold">
                   Jadwalkan Ulang Sesi
@@ -1224,11 +1275,24 @@ function Info({ label, value }: { label: string; value: string }) {
   );
 }
 
-function Field({ label, children }: { label: string; children: ReactNode }) {
+function Field({
+  label,
+  htmlFor,
+  children,
+}: {
+  label: string;
+  /** Id of the single control inside; omit when the field holds several controls. */
+  htmlFor?: string;
+  children: ReactNode;
+}) {
   return (
-    <label className="block text-(length:--font-size-label) text-secondary">
-      {label}
+    <div className="block text-(length:--font-size-label) text-secondary">
+      {htmlFor ? (
+        <label htmlFor={htmlFor}>{label}</label>
+      ) : (
+        <span>{label}</span>
+      )}
       <div className="mt-(--space-1)">{children}</div>
-    </label>
+    </div>
   );
 }

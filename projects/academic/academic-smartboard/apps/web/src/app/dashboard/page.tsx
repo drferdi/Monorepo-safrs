@@ -586,9 +586,9 @@ function SessionChain({
           Jadwal → check-in → absensi → evaluasi → verifikasi → honor
         </p>
       </div>
-      <div className="grid grid-cols-2 gap-(--space-2) md:grid-cols-3 xl:grid-cols-6">
+      <ul className="grid grid-cols-2 gap-(--space-2) md:grid-cols-3 xl:grid-cols-6">
         {stages.map((stage, index) => (
-          <div
+          <li
             key={stage.key}
             data-testid="session-chain-stage"
             aria-label={`${stage.label}: ${stage.value} ${stage.unit}`}
@@ -602,9 +602,9 @@ function SessionChain({
             <div className="text-sm text-primary">{stage.label}</div>
             <div className="text-xl font-semibold">{stage.value}</div>
             <div className="text-xs text-secondary">{stage.unit}</div>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </section>
   );
 }

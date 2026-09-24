@@ -46,9 +46,9 @@ export function fmtRupiah(
   currency = "IDR",
 ): string {
   const n = Number(amount || 0);
-  if (currency !== "IDR") return currency + " " + n.toLocaleString("id-ID");
+  if (currency !== "IDR") return `${currency} ${n.toLocaleString("id-ID")}`;
   if (n === 0) return "Gratis";
-  return "Rp" + n.toLocaleString("id-ID");
+  return `Rp${n.toLocaleString("id-ID")}`;
 }
 
 export const AUDIT_ACTION_LABEL: Record<string, string> = {
@@ -65,7 +65,7 @@ export function auditLabel(action: string | null | undefined): string {
   if (AUDIT_ACTION_LABEL[action]) return AUDIT_ACTION_LABEL[action];
   if (action.startsWith("tenant_status:")) {
     const pair = action.split(":")[1] ?? "";
-    return "Ubah status (" + pair + ")";
+    return `Ubah status (${pair})`;
   }
   return action;
 }

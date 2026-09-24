@@ -27,9 +27,11 @@ export function KayyisaAgent() {
     return () => window.clearTimeout(t);
   }, [open]);
 
+  // Follow the conversation: scroll to the newest message whenever the panel is open.
   useEffect(() => {
     const log = listRef.current;
-    if (log) log.scrollTop = log.scrollHeight;
+    if (!open || !log || (messages.length === 0 && !busy)) return;
+    log.scrollTop = log.scrollHeight;
   }, [messages, busy, open]);
 
   const submit = (query: string) => {
@@ -100,9 +102,8 @@ export function KayyisaAgent() {
             ) : null}
           </div>
 
-          <div
-            className="flex flex-wrap gap-(--space-2) border-t border-line-subtle px-(--space-3) py-(--space-2)"
-            role="group"
+          <fieldset
+            className="min-w-0 flex flex-wrap gap-(--space-2) border-t border-line-subtle px-(--space-3) py-(--space-2)"
             aria-label="Saran cepat"
           >
             {KAYYISA_QUICK_PROMPTS.map((p) => (
@@ -115,7 +116,7 @@ export function KayyisaAgent() {
                 {p.label}
               </button>
             ))}
-          </div>
+          </fieldset>
 
           <form
             className="flex gap-(--space-2) border-t border-line-subtle p-(--space-3)"

@@ -77,7 +77,11 @@ export function TutorEvalCard({
         </div>
         <div
           className="h-2 overflow-hidden rounded-control bg-surface"
+          role="progressbar"
           aria-label={`Kelengkapan evaluasi ${rate} persen`}
+          aria-valuenow={Math.min(100, rate)}
+          aria-valuemin={0}
+          aria-valuemax={100}
         >
           <i
             className="block h-full bg-accent"

@@ -13,15 +13,20 @@ import { Button } from "./ui/button.tsx";
 
 /** Guide replies mark emphasis with `**…**`; nothing else is parsed. */
 export function renderKayyisaEmphasis(text: string): ReactNode {
+  // Key each part by its character offset in the text: unique once empty parts are dropped.
+  let offset = 0;
   return String(text)
     .split(/(\*\*[^*]+\*\*)/g)
-    .map((part, i) =>
-      part.startsWith("**") && part.endsWith("**") ? (
-        <strong key={i}>{part.slice(2, -2)}</strong>
+    .filter(Boolean)
+    .map((part) => {
+      const key = offset;
+      offset += part.length;
+      return part.startsWith("**") && part.endsWith("**") ? (
+        <strong key={key}>{part.slice(2, -2)}</strong>
       ) : (
-        <Fragment key={i}>{part}</Fragment>
-      ),
-    );
+        <Fragment key={key}>{part}</Fragment>
+      );
+    });
 }
 
 function TopicLink({ topic }: { topic: GuideTopic }) {
@@ -46,9 +51,11 @@ export function KayyisaColumn() {
   const { messages, busy, ask } = useKayyisaChat();
   const logRef = useRef<HTMLDivElement>(null);
 
+  // Follow the conversation: scroll to the newest message or the thinking line.
   useEffect(() => {
     const log = logRef.current;
-    if (log) log.scrollTop = log.scrollHeight;
+    if (!log || (messages.length === 0 && !busy)) return;
+    log.scrollTop = log.scrollHeight;
   }, [messages, busy]);
 
   const submit = (query: string) => {
@@ -95,7 +102,6 @@ export function KayyisaColumn() {
         role="log"
         aria-live="polite"
         aria-label="Percakapan"
-        tabIndex={0}
       >
         {messages.map((m) => (
           <div
@@ -139,9 +145,8 @@ export function KayyisaColumn() {
         ) : null}
       </div>
 
-      <div
-        className="mb-(--space-3) flex flex-wrap gap-(--space-2)"
-        role="group"
+      <fieldset
+        className="min-w-0 mb-(--space-3) flex flex-wrap gap-(--space-2)"
         aria-label="Saran cepat"
       >
         {KAYYISA_QUICK_PROMPTS.map((p) => (
@@ -154,7 +159,7 @@ export function KayyisaColumn() {
             {p.label}
           </button>
         ))}
-      </div>
+      </fieldset>
 
       <form
         className="flex gap-(--space-2)"
