@@ -157,7 +157,11 @@ async function capsuleAt(projectsRoot, domain, name) {
   return { id, capsule: canonicalCapsule, contract, contractPath };
 }
 
-export async function resolveCapsules(root, selector) {
+/**
+ * With `collectInvalid`, an invalid contract becomes `{ id, error }` for that
+ * capsule instead of aborting discovery of the others.
+ */
+export async function resolveCapsules(root, selector, { collectInvalid = false } = {}) {
   const canonicalRoot = await assertRealDirectory(root, "Repository root");
   const projectsRoot = path.join(canonicalRoot, "projects");
   await assertRealDirectory(projectsRoot, "Projects root");
@@ -196,9 +200,17 @@ export async function resolveCapsules(root, selector) {
       try {
         const info = await lstat(contractPath);
         if (info.isFile() && !info.isSymbolicLink()) {
-          capsules.push(
-            await capsuleAt(projectsRoot, domain.name, candidate.name),
-          );
+          try {
+            capsules.push(
+              await capsuleAt(projectsRoot, domain.name, candidate.name),
+            );
+          } catch (error) {
+            if (!collectInvalid || !(error instanceof ContractError)) throw error;
+            capsules.push({
+              id: `${domain.name}/${candidate.name}`,
+              error: error.message,
+            });
+          }
         }
       } catch (error) {
         if (error?.code !== "ENOENT") throw error;
@@ -227,14 +239,21 @@ async function structuralReadiness(root, checkerPath) {
 }
 
 export async function statusCapsules({ root, selector, checkerPath }) {
-  const capsules = await resolveCapsules(root, selector);
+  const capsules = await resolveCapsules(root, selector, {
+    collectInvalid: !selector,
+  });
   await structuralReadiness(root, checkerPath);
-  return capsules.map(({ id, contract }) => ({
-    id,
-    risk: contract.risk,
-    runtime: `${contract.runtime.name}@${contract.runtime.version}`,
-    structural: "PASS",
-  }));
+  return capsules.map(({ id, contract, error }) =>
+    error
+      ? { id, ok: false, error }
+      : {
+          id,
+          ok: true,
+          risk: contract.risk,
+          runtime: `${contract.runtime.name}@${contract.runtime.version}`,
+          structural: "PASS",
+        },
+  );
 }
 
 export class VerificationError extends Error {

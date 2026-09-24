@@ -301,6 +301,103 @@ test("safe extraction copies only capsule files and excludes outputs", async () 
   }
 });
 
+test("status reports an invalid contract as one failed capsule and checks the rest", async () => {
+  const { root } = await createRepository();
+  const broken = path.join(root, "projects", "internal", "broken");
+  await mkdir(broken, { recursive: true });
+  await writeFile(
+    path.join(broken, "project.contract.json"),
+    `${JSON.stringify(contract({ id: "internal/broken", risk: "R9" }), null, 2)}\n`,
+  );
+  let output = "";
+  try {
+    const exitCode = await runCli(["status"], {
+      root,
+      checkerPath,
+      stdout: {
+        write: (chunk) => {
+          output += chunk;
+        },
+      },
+    });
+    assert.notEqual(exitCode, 0);
+    assert.match(output, /^CAPSULE internal\/broken$/mu);
+    assert.match(output, /^ {2}contract: FAIL — .*risk/mu);
+    assert.match(output, /^CAPSULE internal\/example$/mu);
+    assert.match(output, /^ {2}contract: PASS \(R1\)$/mu);
+    assert.match(output, /^ {2}structural: PASS$/mu);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("safe tree accepts a link that resolves inside the capsule", async (context) => {
+  const { root, capsule } = await createRepository();
+  try {
+    await mkdir(path.join(capsule, "store", "pkg"), { recursive: true });
+    await writeFile(path.join(capsule, "store", "pkg", "index.js"), "ok\n");
+    try {
+      await symlink(
+        path.join(capsule, "store", "pkg"),
+        path.join(capsule, "linked-pkg"),
+        "junction",
+      );
+      await symlink(path.join("store", "pkg", "index.js"), path.join(capsule, "linked-file"));
+    } catch (error) {
+      if (error?.code === "EPERM") {
+        context.skip("This Windows account cannot create test symlinks.");
+        return;
+      }
+      throw error;
+    }
+    await assertSafeTree(capsule);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("safe tree rejects links that resolve outside the capsule, directly or through a chain", async (context) => {
+  const { root, capsule } = await createRepository();
+  try {
+    const outside = path.join(root, "outside");
+    await mkdir(outside);
+    const cases = [
+      ["parent", async (link) => symlink("..", link, "dir")],
+      ["absolute", async (link) => symlink(outside, link, "dir")],
+      ["junction", async (link) => symlink(outside, link, "junction")],
+      [
+        "chain",
+        async (link) => {
+          await symlink(outside, path.join(capsule, "hop"), "junction");
+          await symlink(path.join(capsule, "hop"), link, "junction");
+        },
+      ],
+      ["dangling", async (link) => symlink(path.join(capsule, "missing"), link, "junction")],
+    ];
+    for (const [label, create] of cases) {
+      const link = path.join(capsule, `escape-${label}`);
+      try {
+        await create(link);
+      } catch (error) {
+        if (error?.code === "EPERM") {
+          context.skip("This Windows account cannot create test symlinks.");
+          return;
+        }
+        throw error;
+      }
+      await assert.rejects(
+        assertSafeTree(capsule),
+        /symbolic link|reparse point/iu,
+        label,
+      );
+      await rm(link, { recursive: false, force: true });
+      await rm(path.join(capsule, "hop"), { recursive: false, force: true });
+    }
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("safe tree rejects source symlinks without following them", async (context) => {
   const { root, capsule } = await createRepository();
   const outside = path.join(root, "outside.txt");

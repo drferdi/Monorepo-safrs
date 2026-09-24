@@ -37,12 +37,18 @@ function formatStatus(results) {
   if (!results.length) return "No active project capsules.";
   return results
     .map((result) =>
-      [
-        `CAPSULE ${result.id}`,
-        `  contract: PASS (${result.risk})`,
-        `  runtime: ${result.runtime}`,
-        `  structural: ${result.structural}`,
-      ].join("\n"),
+      (result.ok === false
+        ? [
+            `CAPSULE ${result.id}`,
+            `  contract: FAIL — ${result.error.split("\n").join(" ")}`,
+          ]
+        : [
+            `CAPSULE ${result.id}`,
+            `  contract: PASS (${result.risk})`,
+            `  runtime: ${result.runtime}`,
+            `  structural: ${result.structural}`,
+          ]
+      ).join("\n"),
     )
     .join("\n");
 }
@@ -71,7 +77,7 @@ export async function runCli(
   if (command === "status") {
     const results = await statusCapsules({ root, selector, checkerPath });
     stdout.write(`${formatStatus(results)}\n`);
-    return 0;
+    return results.some((result) => result.ok === false) ? 1 : 0;
   }
   const result = await verifyCapsule({ root, selector, checkerPath });
   stdout.write(`${formatVerification(result)}\n`);
