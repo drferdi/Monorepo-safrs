@@ -1,6 +1,7 @@
 # ADR 0001: Adopt the SAFRS solo-developer golden path
 
-- Status: ACCEPTED
+- Status: SUPERSEDED
+- Superseded by: ADR 0006 (structure). Stack guidance restated in ADR 0007 decision 4.
 - Date: 2026-08-10
 - Decision owner: Chief
 - Risk: R2 (shared architecture, packages, database, CI, and governance)

@@ -970,7 +970,7 @@ as the source of truth if it falls out of date.
 ```bash
 pnpm install          # Node 24.18.x, pnpm 11
 pnpm setup            # .env from template + local Postgres (Docker) + migrate + seed
-pnpm dev              # golden-path app on http://localhost:3000
+pnpm dev              # golden-path app (legacy, pending capsule migration) on http://localhost:3000
 pnpm check            # governance + tokens + lint + typecheck + test + build
 ```
 
@@ -981,7 +981,7 @@ Working on this repository as an agent (or with one) starts at
 
 | Capsule | Current state | Entry point |
 | --- | --- | --- |
-| <sub>`golden-path`</sub> | <sub>Implemented reference flow: Next.js → typed Hono API → Prisma → local PostgreSQL</sub> | <sub>`projects/internal/golden-path/apps/web`</sub> |
+| <sub>`golden-path`</sub> | <sub>Legacy, pending capsule migration. Reference flow: Next.js → typed Hono API → Prisma → local PostgreSQL</sub> | <sub>`projects/internal/golden-path/apps/web`</sub> |
 | <sub>`control-center`</sub> | <sub>Implemented local, read-only operator dashboard; remains usable when Docker or the database is unavailable</sub> | <sub>`projects/internal/control-center/apps/web`</sub> |
 | <sub>`academic-smartboard`</sub> | <sub>Sovereign curriculum, Kayyisa AI knowledge package, and Next.js application surfaces (Subphases 1–5 completed)</sub> | <sub>`projects/academic/academic-smartboard`</sub> |
 | <sub>`kediri-history`</sub> | <sub>Sovereign standalone capsule; digital heritage storytelling, historical archives, and GSAP scenes</sub> | <sub>`projects/product/kediri-history`</sub> |

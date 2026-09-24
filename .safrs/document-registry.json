@@ -253,6 +253,19 @@
       "id": "golden-path-adr-0001",
       "path": "docs/adrs/0001-solo-developer-golden-path.md",
       "type": "adr",
+      "status": "SUPERSEDED",
+      "superseded_by": "standalone-capsules-adr-0006"
+    },
+    {
+      "id": "standalone-capsules-adr-0006",
+      "path": "docs/adrs/0006-standalone-project-capsules.md",
+      "type": "adr",
+      "status": "ACCEPTED"
+    },
+    {
+      "id": "capsule-sovereignty-adr-0007",
+      "path": "docs/adrs/0007-fail-closed-capsule-sovereignty-enforcement.md",
+      "type": "adr",
       "status": "ACCEPTED"
     },
     {

@@ -101,3 +101,17 @@ Tidak ada.
   symbolic link or reparse point" under `node_modules/.pnpm`, because pnpm's default layout uses
   links on Windows. On `main`, `verify` could not start because the contracts were invalid.
 - Next: Codex review.
+
+## ADR 0007 WP-D — doctrine alignment (2026-09-25, Claude Code)
+
+- Change: `.agents/knowledge/03_ARCHITECTURE.md` now says to reuse within a capsule and share
+  across capsules only through versioned, independently distributable artifacts. The
+  "Implemented solo-developer baseline" section became a short "Repository shape" section (root
+  as optional control plane, sovereign capsules, golden-path as legacy non-conformance). ADR 0001
+  is `SUPERSEDED` by ADR 0006. `08_DECISIONS.md` lists ADR 0006 and ADR 0007 instead of ADR 0001.
+  The registry adds ADR 0006 and ADR 0007 and marks ADR 0001 superseded. README labels
+  golden-path "legacy, pending capsule migration".
+- Evidence: the acceptance grep for the old baseline phrase in `.agents` goes from 1 hit to none. `check_docs.py` and
+  `check_routing.py` are OK before and after. `generate_routing.py` output is identical, so the
+  `AGENTS.md` routing block is unchanged.
+- Next: Codex review. Merge WP-D and WP-G one after the other (both edit routed knowledge).

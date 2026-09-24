@@ -39,4 +39,5 @@ Recommendations should be transparent, logically justified, and aligned with the
 
 ## Accepted baseline decisions
 
-- [ADR 0001](docs/adrs/0001-solo-developer-golden-path.md) establishes the Next.js + Hono + Zod + PostgreSQL + Prisma solo-developer golden path and its optional-capability boundary.
+- [ADR 0006](docs/adrs/0006-standalone-project-capsules.md) makes every project a standalone capsule; it supersedes ADR 0001.
+- [ADR 0007](docs/adrs/0007-fail-closed-capsule-sovereignty-enforcement.md) enforces capsule sovereignty fail-closed and keeps the ADR 0001 stack as a recommended default inside each capsule.
