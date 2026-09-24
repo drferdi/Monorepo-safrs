@@ -1,5 +1,7 @@
 # Portfolio Dr. Novia — Capsule Agent Router
 
+Read `.agents/HANDOFF.md` first, then `.agents/CONTEXT.md`.
+
 This file is the machine README for the NOVIA STUDIO project. Humans start at
 [README.md](README.md). It is sufficient after this directory is extracted. When nested in a
 governed repository, enclosing contribution controls still apply, but no lifecycle command or

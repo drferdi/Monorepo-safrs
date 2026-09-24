@@ -1,5 +1,7 @@
 # Golden Path Capsule
 
+Read `.agents/HANDOFF.md` first, then `.agents/CONTEXT.md`.
+
 Read the repository [AGENTS.md](../../../AGENTS.md), [SAFRS_SPEC.md](../../SAFRS_SPEC.md), and [SECURITY.md](../../SECURITY.md) first; they remain canonical.
 
 ## Objective and owner

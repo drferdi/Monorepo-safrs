@@ -19,6 +19,9 @@ const REQUIRED_TEMPLATE_FILES = [
   "docs/testing.md",
   "src/README.md",
   "tests/README.md",
+  ".agents/HANDOFF.md",
+  ".agents/DECISIONS.md",
+  ".agents/CONTEXT.md",
 ];
 
 const MARKER_PATTERN =

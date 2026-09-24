@@ -16,6 +16,10 @@ projects/<domain>/
 ├── AGENTS.md
 ├── README.md
 └── <capsule>/
+    ├── .agents/
+    │   ├── HANDOFF.md
+    │   ├── DECISIONS.md
+    │   └── CONTEXT.md
     ├── AGENTS.md
     ├── README.md
     ├── docs/
@@ -29,6 +33,23 @@ projects/<domain>/
 Capsules are always two levels deep. The domain folder groups capsules that share a compliance and data-handling context — `healthcare`, `academic`, `corporate`, `internal`, `product` — and owns no code of its own, so it carries only `AGENTS.md` and `README.md`. Creating a domain folder without a capsule inside it is an error.
 
 Start from `projects/_template/`. Replace every explicit placeholder before the capsule is considered active.
+
+## Capsule agent context
+
+Every capsule, including `_template`, owns a tracked `.agents/` folder (ADR 0007 decision 7):
+
+| File | Purpose | Rule |
+| --- | --- | --- |
+| `HANDOFF.md` | Current state, work in flight, blockers, next action | Overwritten each session, kept under about 1k tokens |
+| `DECISIONS.md` | Durable decisions that concern this capsule only | Append-only, dated entries |
+| `CONTEXT.md` | Purpose, owner, stack, where the contract and commands live, protected areas | Rarely changed; facts only, sourced from capsule files |
+
+`knowledge/` and `skills/` are optional. A capsule has no `PROGRESS.md`. The capsule `AGENTS.md`
+tells agents to read `.agents/HANDOFF.md` first. Capsule-scoped work writes these files; the root
+`.agents/` is written only for control-plane work. The folder publishes with the capsule, so treat
+it as public: no secrets, credentials, tokens, phone numbers, messaging identifiers, personal data,
+or database dumps. Name environment variables, never their values. The project wizard renders the
+three files from `projects/_template/.agents/`.
 
 ## Required capsule content
 

@@ -12,7 +12,11 @@ test-results/
 .turbo/
 
 # State kerja AI dan automation bersifat lokal dan tidak ikut rilis.
-.agents/
+# Exception: the three agent-context files are tracked (ADR 0007 decision 7).
+.agents/*
+!.agents/HANDOFF.md
+!.agents/DECISIONS.md
+!.agents/CONTEXT.md
 .claude/
 .playwright-cli/
 .playwright-mcp/

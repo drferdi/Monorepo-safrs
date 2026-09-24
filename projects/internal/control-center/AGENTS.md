@@ -1,5 +1,7 @@
 # AGENTS.md — `projects/internal/control-center`
 
+Read `.agents/HANDOFF.md` first, then `.agents/CONTEXT.md`.
+
 Root `AGENTS.md` governs. This capsule narrows scope; it does not weaken any root control.
 
 ## What this capsule is

@@ -45,6 +45,8 @@ infrastructure dependency.
 
 ## Required context
 
+Read `.agents/HANDOFF.md` first, then `.agents/CONTEXT.md`.
+
 1. `README.md`
 2. `docs/architecture.md`
 3. `docs/data.md`

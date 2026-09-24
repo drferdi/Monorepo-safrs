@@ -120,6 +120,37 @@ test("renders a deterministic complete capsule without template markers", () => 
   );
 });
 
+test("renders the capsule-owned .agents files from the template", async () => {
+  const root = await createTemporaryRepo();
+  try {
+    const copiedTemplate = path.join(root, "projects", "_template");
+    // Inherited defect (3a6188fe): the wizard does not yet fill <replace-with-domain>,
+    // so the copy neutralises it to reach the file list under test.
+    const agentsPath = path.join(copiedTemplate, "AGENTS.md");
+    await writeFile(
+      agentsPath,
+      (await readFile(agentsPath, "utf8")).replaceAll(
+        "<replace-with-domain>",
+        "internal",
+      ),
+    );
+    const files = renderProjectCapsule(
+      normalizeProjectAnswers(input),
+      copiedTemplate,
+    );
+    const agentFiles = files.filter((file) =>
+      file.relativePath.startsWith(".agents/"),
+    );
+    assert.deepEqual(
+      agentFiles.map((file) => file.relativePath),
+      [".agents/HANDOFF.md", ".agents/DECISIONS.md", ".agents/CONTEXT.md"],
+    );
+    for (const file of agentFiles) assert.notEqual(file.content.trim(), "");
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("rejects a symlinked template file instead of following it", async () => {
   const root = await createTemporaryRepo();
   try {
