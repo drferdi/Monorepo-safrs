@@ -115,3 +115,14 @@ Tidak ada.
   `check_routing.py` are OK before and after. `generate_routing.py` output is identical, so the
   `AGENTS.md` routing block is unchanged.
 - Next: Codex review. Merge WP-D and WP-G one after the other (both edit routed knowledge).
+
+## ADR 0007 WP-F — visible type-check gate (2026-09-25, Claude Code)
+
+- Change: in `.github/workflows/ci.yml`, "Type check" and its "control-plane packages" fallback
+  now key on `projects/internal/golden-path/apps/web/package.json`, the condition the test and
+  browser smoke steps already use, instead of the removed `packages/database/src/sentrabot/bots.ts`.
+  Full `pnpm typecheck` now runs whenever golden-path exists. The fallback step and its filters
+  are unchanged and run only when golden-path is absent.
+- Evidence: local `pnpm typecheck` exit 0, 8/8 tasks, before and after, including
+  `@safrs/database:typecheck` and `@safrs/api:typecheck`. No type errors to record.
+- Next: Codex review; confirm on the pull request that "Type check" runs and is not skipped.
