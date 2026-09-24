@@ -35,3 +35,6 @@ apps/*/CLAUDE.md
 
 .vercel
 .env*
+
+# Local wiki drafts, never part of the capsule history
+droid-wiki/

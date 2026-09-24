@@ -31,11 +31,11 @@
     },
     "build": {
       "program": "node",
-      "args": ["scripts/pnpm.mjs", "run", "build"]
+      "args": ["scripts/skip-env-validation.mjs", "scripts/pnpm.mjs", "run", "build"]
     },
     "run": {
       "program": "node",
-      "args": ["scripts/serve.mjs"]
+      "args": ["scripts/skip-env-validation.mjs", "scripts/serve.mjs"]
     },
     "deployDryRun": {
       "program": "node",
@@ -51,7 +51,10 @@
     "startupTimeoutSeconds": 120
   },
   "artifacts": ["apps/web/.next"],
-  "externalDependencies": [],
+  "externalDependencies": [
+    { "kind": "database", "name": "PostgreSQL for Payload CMS", "locator": "DATABASE_URL", "required": true },
+    { "kind": "service", "name": "Payload CMS secret", "locator": "PAYLOAD_SECRET", "required": true }
+  ],
   "mutableStatePaths": [
     "node_modules",
     "apps/web/node_modules",
