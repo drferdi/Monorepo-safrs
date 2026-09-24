@@ -1,31 +1,34 @@
 # HANDOFF
 
-Last updated: 2026-09-25 (Claude Code, branch `fix/smartboard-lint`, claim `SMARTBOARD-LINT`)
+Last updated: 2026-09-25 (Claude Code, branch `fix/smartboard-lint-repair`, claim `SMARTBOARD-LINT-REPAIR`)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Durable decisions go
 to `DECISIONS.md`.
 
 ## Current state
 
-- `node tools/project-standalone/src/cli.mjs verify academic/academic-smartboard` (run from the
-  Monorepo root on 2026-09-25) passes install and fails lint. Later stages did not run.
-- The capsule's own Biome 2.5.7 (`pnpm run lint`, `biome check src` in `apps/web`) reports 136
-  errors in `apps/web/src`. `biome check --write` (safe fixes only) fixes formatting and import
-  order in 67 files and leaves 45 errors, 10 warnings, and 3 infos:
-  - 14 `a11y/noStaticElementInteractions` and 12 `a11y/useKeyWithClickEvents`: click handlers
-    on `div`/`span` without keyboard support;
-  - 5 `a11y/useAriaPropsSupportedByRole` (for example `aria-label` on a plain `div` in
-    `akademik/cakupan/page.tsx` and `akademik/keselarasan/page.tsx`), 2
-    `a11y/useSemanticElements`, 2 `a11y/noNoninteractiveTabindex`, 2
-    `a11y/noLabelWithoutControl`, 1 `a11y/noAutofocus`;
-  - 7 `style/noNonNullAssertion`, 4 `suspicious/noArrayIndexKey`, 3 `style/useTemplate`,
-    3 `correctness/useExhaustiveDependencies`, and single findings for `noImgElement`,
-    `noUnusedImports`, and `useOptionalChain`.
-- `apps/web` and `apps/site` typecheck and tests pass.
+- Lint repaired in two commits on `fix/smartboard-lint-repair`:
+  - `5f21af33` style: `biome check --write src` in `apps/web` (safe fixes only, 67 files).
+  - `e2209818` fix: the remaining a11y and correctness findings fixed in code, with no
+    suppression. Modal backdrops close through a sibling `<button tabIndex={-1}>` instead of a
+    clickable `div`; labelled regions use `section`, `ul`/`li`, `fieldset`, or
+    `role="progressbar"`; labels are tied to controls with `htmlFor`/`id`; non-null assertions
+    became guards; index keys became a client-only uid (template fields, stripped before save),
+    content keys (report rows), or character offsets (emphasis parts). In
+    `akademik/cakupan/page.tsx` the outcome reset moved into the grade and subject change handlers
+    and the effect that clears an unavailable subject.
+- Biome in `apps/web/src`: 138 errors, 10 warnings, 3 infos before; 0 of each after.
+- Capsule root `pnpm run lint`, `pnpm run typecheck`, `pnpm run test` exit 0 (web 103 tests,
+  site 2 tests, token gate passes).
+- `node tools/project-standalone/src/cli.mjs verify academic/academic-smartboard` (worktree root,
+  2026-09-25) passes every stage: install, lint, typecheck, test, build, artifacts (2 declared),
+  deployDryRun, run, smoke (`/` -> 200), cleanup. RESULT PASS.
+- The capsule `node_modules` folders were deleted for the verify run; run
+  `pnpm install --frozen-lockfile` before working locally again.
 
 ## Work in flight
 
-None. The lint repair was not started: it changes interaction markup across many pages.
+None. The branch is not pushed or merged.
 
 ## Blockers
 
@@ -33,10 +36,6 @@ None.
 
 ## Next action
 
-- Repair lint in two commits: first the mechanical `biome check --write` (format and imports),
-  then the a11y and correctness findings by fixing markup (buttons for clickable elements,
-  roles for labelled regions), never by suppression.
-- The `useExhaustiveDependencies` finding in `akademik/cakupan/page.tsx:76` is an intentional
-  reset of the selected outcome when grade or subject changes. Do not apply Biome's unsafe fix,
-  which removes the dependencies; move the reset into the grade and subject change handlers.
-- Then rerun `verify academic/academic-smartboard` until every stage passes.
+- Chief reviews the two commits, then decides on push and merge.
+- Visual check of the modal backdrops and the Kayyisa quick-prompt fieldsets in a browser was not
+  done; no UI tests cover them.
