@@ -41,6 +41,12 @@ jobs:
       - name: Validate monorepo topology and project capsules
         run: python tools/safrs/check_topology.py
 
+      - name: Enforce fail-closed capsule independence
+        run: python tools/safrs/check_project_independence.py
+
+      - name: Test capsule independence invariants
+        run: python tests/architecture/test_project_independence.py
+
       - name: Enforce immutable GitHub Action pins
         run: python tools/safrs/check_actions_pinning.py
 
@@ -76,3 +82,9 @@ jobs:
 
       - name: Test risk classification invariants
         run: python tests/governance/test_sensitive_classification.py
+
+      - name: Test scope-aware handoff invariants
+        run: python tests/governance/test_handoff_scope.py
+
+      - name: Test verifier parity
+        run: python tests/architecture/test_verifier_parity.py

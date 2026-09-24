@@ -28,6 +28,7 @@ $checks = @(
     'tools/safrs/check_routing.py',
     'tools/safrs/check_tool_inventory.py',
     'tools/safrs/check_topology.py',
+    'tools/safrs/check_project_independence.py',
     'tools/safrs/check_actions_pinning.py',
     'tools/safrs/check_automation_policy.py',
     'tools/safrs/check_task_contract.py',
@@ -35,12 +36,16 @@ $checks = @(
     'tools/safrs/check_lifecycle.py',
     'tools/safrs/check_approval_evidence.py',
     'tools/safrs/check_sensitive_changes.py',
+    'tools/safrs/check_status_claims.py',
     'tools/safrs/check_handoff.py',
     'tests/architecture/test_safrs_topology.py',
     'tests/governance/test_sensitive_classification.py',
     'tests/governance/test_task_ownership.py',
     'tests/governance/test_automation_contracts.py',
-    'tests/governance/test_automation_approvals.py'
+    'tests/governance/test_automation_approvals.py',
+    'tests/governance/test_handoff_scope.py',
+    'tests/architecture/test_project_independence.py',
+    'tests/architecture/test_verifier_parity.py'
 )
 
 foreach ($check in $checks) {
