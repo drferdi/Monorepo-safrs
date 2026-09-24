@@ -32,3 +32,20 @@ Last updated: 2026-09-21 (Papan pekerjaan — FAIL → WARN end-to-end)
 ## Owner collision
 
 Tidak ada.
+
+---
+
+## ADR 0007 WP-E (2026-09-24, Claude Code, branch `fix/adr-0007-wp-e`)
+
+- Scope: `packages/database/prisma/schema.prisma` only. Removed the six `SentraBot*` models
+  (ADR 0007 decision 5: product models do not live in the root schema). `Demo`, `User`,
+  `Session`, `Account` and `Verification` untouched; no migration added. `packages/token/scope.txt`
+  still names the SentraBot capsule path; that belongs to the token-gate backlog, not WP-E.
+- Grep: outside the schema, the only `sentrabot` reference in `packages`, golden-path, `tools`
+  and `tests` is `packages/token/scope.txt:10`. `pnpm db:generate` exit 0.
+- Drift: `prisma migrate diff --from-migrations` could not run (no `migration_lock.toml`, no
+  `shadowDatabaseUrl` in `prisma.config.ts`, Docker daemon down; `pnpm db:start` exit 1).
+  Substitute: schema-to-schema diff against `main` is exactly six `DROP TABLE "sentrabot_*"`,
+  and no migration mentions them. Inherited drift remains: the migrations end at `demos` only,
+  so `user`, `session`, `account` and `verification` have no migration.
+- Next: independent review by Codex, then Claude. Do not merge before review.
