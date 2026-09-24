@@ -251,6 +251,9 @@ repository surfaces until a task is assigned and needs them.
 Before substantial task execution, additionally load the canonical Monorepo purpose and
 task-relevant architecture as required above.
 
+For capsule-scoped work, read that capsule's `.agents/HANDOFF.md` first, then its
+`.agents/CONTEXT.md` (ADR 0007 decision 7).
+
 Optional: one `git status -sb` for situational awareness. Do not use Git history as
 architectural truth.
 
@@ -260,9 +263,15 @@ Project-scoped workers MUST NOT broaden their mutation scope merely to update gl
 `.agents/*` bookkeeping.
 
 - Update task-local state/evidence using the repository's task mechanism when applicable.
-- Update `.agents/HANDOFF.md`, `.agents/DECISIONS.md`, `.agents/PROGRESS.md`, or global knowledge
-  only when the assigned task or role explicitly includes repository-wide coordination,
-  governance, documentation, maintainer, or handoff responsibility.
+- Capsule-scoped work writes the capsule's own `.agents/`: overwrite
+  `projects/<domain>/<capsule>/.agents/HANDOFF.md`, and append durable capsule-only decisions to
+  that capsule's `.agents/DECISIONS.md`. `check_handoff.py` requires the handoff of every scope a
+  change set touches, and a capsule-only change set never requires the root handoff.
+- The root `.agents/` is written only for control-plane work (root tooling, governance, CI,
+  `packages/`, cross-capsule orchestration). Update `.agents/HANDOFF.md`, `.agents/DECISIONS.md`,
+  `.agents/PROGRESS.md`, or global knowledge only when the assigned task or role explicitly
+  includes repository-wide coordination, governance, documentation, maintainer, or handoff
+  responsibility.
 - `.agents/knowledge/12_LESSONS.md` is updated only per its own rules for real repeated mistakes,
   not aspirational policy.
 - If current verification mechanically requires an unrelated global bookkeeping mutation for a

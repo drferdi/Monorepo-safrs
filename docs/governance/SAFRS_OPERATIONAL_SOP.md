@@ -193,4 +193,6 @@ Sebelum mendeklarasikan sesi selesai (*session closing*):
 - [ ] Pemeriksaan dokumen valid (`python tools/safrs/check_docs.py` lolos `OK`).
 - [ ] Commit menyertakan *attribution trailer* resmi (`Co-Authored-By: ...`).
 - [ ] Publikasi remote selaras dengan `origin publish-no-projects` via Capsule Gate.
-- [ ] `.agents/HANDOFF.md` diperbarui dengan rekam jejak terkini dan referensi SOP ini.
+- [ ] HANDOFF setiap scope yang disentuh diperbarui dengan rekam jejak terkini dan referensi SOP ini:
+  `projects/<domain>/<capsule>/.agents/HANDOFF.md` untuk kerja capsule, `.agents/HANDOFF.md` root
+  hanya untuk kerja control plane.

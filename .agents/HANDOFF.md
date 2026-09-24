@@ -20,6 +20,9 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
   `DECISIONS.md`, and `CONTEXT.md`; capsule state moves out of the root; `check_handoff.py`
   becomes scope-aware; `check_topology.py` enforces the three files; the session protocol writes
   capsule state to the capsule `.agents/`.
+  Commits: `732f6662` (G1, G2 content), `6aee6a70` (G3 migration), `ac7d7d5f` (G4, G5
+  gates), then G6 (session protocol). Integrity packet:
+  `docs/plans/active/2026-09-25-adr-0007-wave-7-integrity-packet.md` (gitignored).
 
 ## Blockers
 
