@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "capsule": "healthcare/avery",
+      "reason": "No project.contract.json; console/package.json uses catalog: for electron without a capsule-local workspace.",
+      "reference": "docs/adrs/0007-fail-closed-capsule-sovereignty-enforcement.md",
+      "owner": "Chief",
+      "reviewBy": "2026-12-31"
+    },
+    {
+      "capsule": "internal/control-center",
+      "reason": "Pending the placement decision (ADR 0007); apps/web tsconfig extends ../../../../../packages/config, the build script runs ../../../../../scripts/next-production-build.mjs, and dependencies use workspace:* and catalog:.",
+      "reference": "docs/adrs/0007-fail-closed-capsule-sovereignty-enforcement.md",
+      "owner": "Chief",
+      "reviewBy": "2026-12-31"
+    },
+    {
+      "capsule": "internal/golden-path",
+      "reason": "Legacy root-integrated demonstrator (ADR 0006 decision 5); apps/web depends on root packages through workspace:* and catalog:.",
+      "reference": "docs/adrs/0006-standalone-project-capsules.md",
+      "owner": "Chief",
+      "reviewBy": "2026-12-31"
+    },
+    {
+      "capsule": "product/sentrabot",
+      "reason": "Own pnpm workspace (pnpm-workspace.yaml) but no project.contract.json.",
+      "reference": "docs/adrs/0007-fail-closed-capsule-sovereignty-enforcement.md",
+      "owner": "Chief",
+      "reviewBy": "2026-12-31"
+    }
+  ]
+}

@@ -275,6 +275,156 @@ class ProjectIndependenceTests(unittest.TestCase):
         self.assertEqual(len(findings), 2, result.stderr)
         self.assertIn("Dockerfile", result.stderr)
 
+    # ADR 0007 decision 1: coverage is fail-closed.
+
+    def write_known(self, entries, version=1):
+        path = self.fixture_root / ".safrs" / "known-nonconformance.json"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(
+            json.dumps({"version": version, "entries": entries}, indent=2) + "\n",
+            encoding="utf-8",
+        )
+
+    def reference(self):
+        document = self.fixture_root / "docs" / "adrs" / "0007.md"
+        document.parent.mkdir(parents=True, exist_ok=True)
+        document.write_text("# ADR\n", encoding="utf-8")
+        return "docs/adrs/0007.md"
+
+    def entry(self, capsule, **overrides):
+        value = {
+            "capsule": capsule,
+            "reason": "Fixture capsule without a contract.",
+            "reference": self.reference(),
+            "owner": "Chief",
+            "reviewBy": "2999-12-31",
+        }
+        value.update(overrides)
+        return value
+
+    def add_uncontracted_capsule(self, relative="projects/product/legacy"):
+        capsule = self.fixture_root / relative
+        capsule.mkdir(parents=True)
+        (capsule / "README.md").write_text("# Legacy\n", encoding="utf-8")
+        return capsule
+
+    def test_capsule_without_contract_or_entry_fails(self):
+        self.add_uncontracted_capsule()
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 1, result.stdout)
+        self.assertIn(
+            "product/legacy: projects/product/legacy [$]: capsule has neither "
+            "project.contract.json nor a known-nonconformance entry",
+            result.stderr,
+        )
+
+    def test_empty_capsule_directory_is_still_a_capsule(self):
+        (self.fixture_root / "projects" / "product" / "empty").mkdir()
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 1, result.stdout)
+        self.assertIn("product/empty", result.stderr)
+
+    def test_recorded_capsule_without_contract_passes_and_is_counted(self):
+        self.add_uncontracted_capsule()
+        self.write_known([self.entry("product/legacy")])
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            result.stdout.strip(),
+            "SAFRS project independence: OK (1 active capsules, 1 known non-conformance)",
+        )
+
+    def test_template_domain_and_domain_files_are_not_capsules(self):
+        template = self.fixture_root / "projects" / "_template" / "docs"
+        template.mkdir(parents=True)
+        (self.fixture_root / "projects" / "product" / "AGENTS.md").write_text(
+            "# Domain\n", encoding="utf-8"
+        )
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_entry_for_missing_directory_fails(self):
+        self.write_known([self.entry("product/gone")])
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 1, result.stdout)
+        self.assertIn("product/gone", result.stderr)
+        self.assertIn("entry names a capsule directory that does not exist", result.stderr)
+
+    def test_entry_for_contracted_capsule_fails(self):
+        self.write_known([self.entry("product/portable")])
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 1, result.stdout)
+        self.assertIn("entry names a capsule that has project.contract.json", result.stderr)
+
+    def test_malformed_known_nonconformance_fails(self):
+        self.add_uncontracted_capsule()
+        base = self.entry("product/legacy")
+        cases = {
+            "missing field": [{k: v for k, v in base.items() if k != "reviewBy"}],
+            "extra field": [dict(base, waiver=True)],
+            "empty reason": [dict(base, reason=" ")],
+            "bad date": [dict(base, reviewBy="31-12-2026")],
+            "impossible date": [dict(base, reviewBy="2026-02-30")],
+            "parent segment": [dict(base, capsule="../legacy")],
+            "template": [dict(base, capsule="_template/legacy")],
+            "missing reference": [dict(base, reference="docs/missing.md")],
+            "escaping reference": [dict(base, reference="../outside.md")],
+            "duplicate": [base, dict(base)],
+            "not an object": ["product/legacy"],
+        }
+        for label, entries in cases.items():
+            with self.subTest(label=label):
+                self.write_known(entries)
+                result = self.run_checker()
+                self.assertEqual(result.returncode, 1, result.stdout)
+                self.assertIn("known-nonconformance", result.stderr)
+        with self.subTest(label="version"):
+            self.write_known([base], version=2)
+            self.assertEqual(self.run_checker().returncode, 1)
+        with self.subTest(label="invalid JSON"):
+            (self.fixture_root / ".safrs" / "known-nonconformance.json").write_text(
+                "{", encoding="utf-8"
+            )
+            self.assertEqual(self.run_checker().returncode, 1)
+
+    def test_overdue_review_date_warns_without_failing(self):
+        self.add_uncontracted_capsule()
+        self.write_known([self.entry("product/legacy", reviewBy="2000-01-01")])
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("warning", result.stderr.lower())
+        self.assertIn("product/legacy", result.stderr)
+        self.assertIn("2000-01-01", result.stderr)
+
+    def test_capsule_nested_one_level_deeper_is_not_covered_by_its_contract(self):
+        nested = self.fixture_root / "projects" / "product" / "group" / "inner"
+        shutil.copytree(self.capsule, nested)
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 1, result.stdout)
+        self.assertIn("product/group", result.stderr)
+
+    def test_symlinked_capsule_directory_is_rejected(self):
+        target = self.fixture_root / "elsewhere"
+        target.mkdir()
+        try:
+            os.symlink(target, self.fixture_root / "projects" / "product" / "linked",
+                       target_is_directory=True)
+        except OSError as error:
+            self.skipTest(f"symlinks unavailable: {error}")
+        self.write_known([self.entry("product/linked")])
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 1, result.stdout)
+        self.assertIn("capsule directory is a symbolic link", result.stderr)
+
+    def test_skipped_directories_are_pruned_from_traversal(self):
+        blocked = self.capsule / "node_modules" / "pkg"
+        blocked.mkdir(parents=True)
+        (blocked / "package.json").write_text(
+            json.dumps({"name": "pkg", "dependencies": {"x": "catalog:"}}), encoding="utf-8"
+        )
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 0, result.stderr)
+
     def test_multiple_findings_are_sorted_and_repeatable(self):
         contract = self.read_json("project.contract.json")
         contract["artifacts"] = ["../z", "../a"]
