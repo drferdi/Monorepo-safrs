@@ -46,6 +46,12 @@
 - **R2:** Boundary-affecting (deps, shared APIs, non-prod auth, migrations, CI/CD, governance). Review per boundary work package, not per command. Token schema change = R2.
 - **R3:** High-impact / irreversible (prod infra/data, prod credentials, clinical logic, prod deploy). Requires explicit Chief approval prior to execution.
 
+## Jev Decision Layer
+- Before substantial browser research, repeating a failed approach, loading several tools or skills, spawning agents, choosing between materially different execution routes, or proposing a consequential action, consider whether a small bounded Jev decision would change the next step. If yes, build a compact English state without secrets, call the installed router, interpret its action, and continue the original task. Skip Jev for simple answers, deterministic calculations, routine file edits, and situations where the call adds no useful decision. Respect `bypass jev`. Keep irreversible actions behind human confirmation.
+- On Windows, run `.venv/Scripts/python.exe -c "from src.router import route_task; ..."` with working directory `.kilo/jev/muse-jev-playbook`. Do not use the JSON CLI entry point because this shell strips its quotes.
+- Honor `route.action` only when a live call returns `jev_used: true` and `mode: active`. Jev never grants authority to expose secrets, change permissions, execute production actions, or perform irreversible operations. On error or timeout, continue through the normal safe path.
+- Review the first 20–50 active decisions. Demote or rewrite the pack if high-confidence accuracy is below 9/10, accuracy is below 90% over at least 30 decisions, or routing cost/latency exceeds the work it gates.
+
 ## Task Lifecycle & Documentation
 - Lifecycle: `PROPOSED → CLAIMED → PLANNED → EXECUTING → VERIFYING → REVIEW → MERGED → CLOSED`.
 - Exceptions: `BLOCKED`, `CONFLICT`, `FAILED`, `ABORTED`, `SUPERSEDED`.
