@@ -139,37 +139,40 @@ describe("sandbox conformance", () => {
     await desktop.destroy(computer, ctx);
   });
 
-  it("desktop executor times out and kills descendants that inherited its pipes", async () => {
-    const root = mkdtempSync(path.join(tmpdir(), "sentrabot-desktop-timeout-"));
-    const desktop = new DesktopSandboxProvider({ root });
-    const computer = await desktop.provision({ botId: "timeout", homePath: "/unused" }, ctx);
-    const marker = path.join(computer.providerRef, "descendant-survived");
-    const events: ProcessEvent[] = [];
-    const startedAt = Date.now();
+  it.skipIf(process.platform === "win32")(
+    "desktop executor times out and kills descendants that inherited its pipes",
+    async () => {
+      const root = mkdtempSync(path.join(tmpdir(), "sentrabot-desktop-timeout-"));
+      const desktop = new DesktopSandboxProvider({ root });
+      const computer = await desktop.provision({ botId: "timeout", homePath: "/unused" }, ctx);
+      const marker = path.join(computer.providerRef, "descendant-survived");
+      const events: ProcessEvent[] = [];
+      const startedAt = Date.now();
 
-    for await (const event of desktop.execute(
-      computer,
-      {
-        argv: ["bash", "-lc", "(sleep 0.2; printf survived > descendant-survived) & wait"],
-        timeoutMs: 40,
-      },
-      ctx,
-    )) {
-      events.push(event);
-    }
+      for await (const event of desktop.execute(
+        computer,
+        {
+          argv: ["bash", "-lc", "(sleep 0.2; printf survived > descendant-survived) & wait"],
+          timeoutMs: 40,
+        },
+        ctx,
+      )) {
+        events.push(event);
+      }
 
-    expect(Date.now() - startedAt).toBeLessThan(1_000);
-    expect(events).toContainEqual({ type: "exit", code: 124 });
-    expect(events).toContainEqual({
-      type: "stderr",
-      data: "command timed out after 40 ms\n",
-    });
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    expect(() => readFileSync(marker)).toThrow();
+      expect(Date.now() - startedAt).toBeLessThan(1_000);
+      expect(events).toContainEqual({ type: "exit", code: 124 });
+      expect(events).toContainEqual({
+        type: "stderr",
+        data: "command timed out after 40 ms\n",
+      });
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      expect(() => readFileSync(marker)).toThrow();
 
-    await desktop.destroy(computer, ctx);
-    rmSync(root, { recursive: true, force: true });
-  });
+      await desktop.destroy(computer, ctx);
+      rmSync(root, { recursive: true, force: true });
+    },
+  );
 
   it("desktop executor aborts and kills a running command", async () => {
     const root = mkdtempSync(path.join(tmpdir(), "sentrabot-desktop-abort-"));

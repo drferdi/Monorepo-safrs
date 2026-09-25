@@ -1,0 +1,28 @@
+{
+  "name": "@safrs/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts"
+  },
+  "scripts": {
+    "lint": "biome check src",
+    "test": "vitest run",
+    "typecheck": "tsc --project tsconfig.json"
+  },
+  "dependencies": {
+    "@hono/zod-validator": "0.9.0",
+    "@safrs/database": "workspace:*",
+    "@safrs/schemas": "workspace:*",
+    "@safrs/telemetry": "workspace:*",
+    "hono": "4.13.1",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@safrs/config": "workspace:*",
+    "typescript": "7.0.2",
+    "vitest": "4.1.10"
+  }
+}

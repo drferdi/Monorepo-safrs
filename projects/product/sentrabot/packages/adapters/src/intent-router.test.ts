@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 import {
-  INTENT_CONFIDENCE_THRESHOLD,
-  TYPESAFE_JEV_MODEL,
-  TYPESAFE_SYSTEMONE_URL,
   createIntentRouter,
   decideIntentRoute,
+  INTENT_CONFIDENCE_THRESHOLD,
   shouldClassifyIntent,
+  TYPESAFE_JEV_MODEL,
+  TYPESAFE_SYSTEMONE_URL,
   userIntentTextFromBlocks,
 } from "./intent-router.js";
 
@@ -130,6 +130,8 @@ describe("createIntentRouter", () => {
   it("skips on HTTP or parse failure so the existing agent still runs", async () => {
     const fetch = vi.fn().mockResolvedValue(new Response("nope", { status: 529 }));
     const router = createIntentRouter({ apiKey: "test-key", fetch });
-    await expect(router.route({ text: "hello", trigger: "user" })).resolves.toEqual({ kind: "skip" });
+    await expect(router.route({ text: "hello", trigger: "user" })).resolves.toEqual({
+      kind: "skip",
+    });
   });
 });

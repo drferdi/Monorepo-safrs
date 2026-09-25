@@ -12,7 +12,8 @@
     "dev": "cross-env COREPACK_ENABLE_DOWNLOAD_PROMPT=0 turbo dev --filter=@sentrabot/api --filter=@sentrabot/worker --filter=@sentrabot/web --filter=@sentrabot/sandbox-supervisor",
     "build": "turbo build",
     "check": "turbo check",
-    "lint": "biome check .",
+    "lint": "biome check . && node scripts/check-tokens.mjs",
+    "check:tokens": "node scripts/check-tokens.mjs",
     "format": "biome check --write .",
     "db:generate": "pnpm --filter @sentrabot/db generate",
     "db:migrate": "pnpm --filter @sentrabot/db migrate",
@@ -36,5 +37,13 @@
     "turbo": "^2.5.6",
     "typescript": "^5.9.2",
     "vitest": "^4.1.10"
+  },
+  "pnpm": {
+    "overrides": {
+      "deepmerge-ts": ">=8.0.1",
+      "mysql2": "^3.22.0",
+      "fast-uri": "^3.1.6",
+      "sharp": ">=0.35.4"
+    }
   }
 }

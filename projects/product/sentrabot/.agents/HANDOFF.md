@@ -1,46 +1,34 @@
-# HANDOFF — WhatsApp Business Bridge Public Beta
+# HANDOFF — Sentra Bot standalone contract
 
-Copied from the gitignored `.agent/HANDOFF.md` by ADR 0007 WP-G on 2026-09-25; content unchanged. The old `.agent/` folder and its database dump stay in place for Chief to remove.
+Last updated: 2026-09-25 (Cursor, branch `integration/capsules-standalone`, worktree
+`D:\DEV\Monorepo.worktrees\integration\capsules-standalone`, task
+`TASK-20260925-CAPSULES-STANDALONE-INTEGRATION`, state REVIEW)
 
-Last updated: 2026-09-01
+The previous handoff (WhatsApp Business Bridge public beta, worktree `codex-whatsapp-bridge`) is unchanged in
+git history; its open items still apply.
 
-## Status
+## Done in this branch
 
-- Worktree implementasi aktif: `D:\DEV\Monorepo.worktrees\codex-whatsapp-bridge`
-  pada branch `codex/whatsapp-bridge`. Perubahan belum di-commit, di-push, atau
-  dideploy.
-- Arsitektur yang disetujui: `apps/whatsapp-bridge` adalah bridge Meta yang
-  tipis; API tetap memiliki identitas, otorisasi tenant, run, dan persistence.
-- Selesai secara lokal: kontrak/migrasi/retensi receipt 30 hari, ingress HMAC
-  raw-body yang idempoten, endpoint internal bridge-to-API, penghapusan jalur
-  Meta langsung di API, state machine Embedded Signup, token terenkripsi,
-  RPC onboarding, serta UI pilihan coexistence atau nomor baru.
-- UI memuat SDK Meta saat diperlukan, menerima callback hanya dari domain
-  Facebook HTTPS, dan completion membutuhkan OAuth code, WABA ID, dan
-  phone-number ID.
+- `project.contract.json`: argv through `scripts/pnpm.mjs`; `install` has `timeoutSeconds: 300`; `run`
+  serves the built web client with `vite preview` on 127.0.0.1:4390, smoke `GET /` -> 200.
+- `scripts/deploy-dry-run.mjs`: offline check of the inputs `publish-server-image.yml` hands to `docker build`.
+- Capsule token gate `scripts/check-tokens.mjs` in `lint`: ratchet over `apps/web/src` with the 1268 legacy
+  raw values locked per file in `scripts/token-baseline.json` (see `DECISIONS.md`).
+- Security: `pnpm.overrides` in `package.json` (deepmerge-ts, mysql2, fast-uri, sharp); `pnpm audit` 0 high,
+  3 moderate.
+- Root `.safrs/known-nonconformance.json`: sentrabot entry removed.
 
-## Bukti verifikasi terakhir
+## Verification (base `main` de9e91bb, after deleting every `node_modules`)
 
-- Contracts check: PASS.
-- API: 178 test dan typecheck PASS.
-- Web: 152 test dan typecheck PASS.
-- WhatsApp Bridge: 15 test dan typecheck PASS.
-- Scoped Biome dan `git diff --check`: PASS.
-- Migration `20260831210754_whatsapp_bridge_connections` sudah diterapkan pada
-  PostgreSQL Docker lokal; tidak ada akses data/credential produksi.
+- `node tools/project-standalone/src/cli.mjs verify product/sentrabot` -> RESULT PASS (all stages).
+- `pnpm governance`: every check passes except `check_sensitive_changes.py` (`.safrs/**` plus capsule
+  implementation in one change set).
 
-## Pekerjaan berikutnya
+## Open
 
-1. Media inbound melalui bridge tanpa API menerima token WABA.
-2. Outbound delivery dan approval interaktif melalui bridge.
-3. Test RPC/UI onboarding, katalog lokalisasi Indonesia/Inggris.
-4. Compose bridge, deploy dry-run tanpa side effect, dan dokumentasi beta.
-5. Verifikasi akhir dan review R2 sebelum menganggap public beta siap.
+- The `react`, `react-dom`, `better-auth` overrides in `pnpm-workspace.yaml` have no effect under pnpm 9.15.0.
+- Legacy raw colour values in `apps/web/src` still need migrating to tokens (UI work, Chief scope).
 
-## Keputusan yang tidak boleh berubah
+## Next action
 
-- Beta bersifat account-first; webhook tidak boleh membuat akun Sentra.
-- Pelanggan memiliki WABA dan membayar Meta langsung.
-- Coexistence didukung untuk nomor WhatsApp Business App yang memenuhi syarat.
-- Token tidak boleh mencapai browser, respons API, log, prompt, atau fixture.
-- Tidak ada otorisasi deployment melalui handoff ini.
+Chief: integrity review (`.safrs/reviews/verification-integrity.json`), then merge the integration branch.

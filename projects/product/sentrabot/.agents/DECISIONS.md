@@ -28,3 +28,9 @@ Migrated from root .agents/DECISIONS.md (original date kept).
 Sentra Bot is established as the official capsule at `projects/sentrabot/` with the Monorepo stack, a private worker control plane, closed self-host signup, per-user BYOK/OAuth, and a staged public-source/self-hosted release train. The requested source snapshot remains exactly `D:/DEV/Sentraverse/sentrabot@d17a138`; the available source refs expose `origin/main@7f08da5`, so `HEAD` is not substituted and no source files or runtime data are copied. Evidence: `docs/adrs/0004-sentrabot-public-release.md`, `projects/sentrabot/docs/provenance.md`, and `projects/sentrabot/docs/migration-ledger.md`.
 
 Chief instructed end-to-end continuation. Therefore `7f08da5` is the provisional technical-port baseline, while `d17a138` remains the locked acceptance pin and its absence remains a release blocker.
+
+## 2026-09-25 - Capsule token gate as a ratchet; security overrides in package.json
+
+- Token gate: `scripts/check-tokens.mjs` (run by `lint`) applies the root raw-value rule to `apps/web/src`. The root gate never passed on this path (1277 raw values at `main` 481801fc), so the 1268 existing values are recorded per file in `scripts/token-baseline.json`. A file above its baseline, or a new file with raw values, fails; `--lower-baseline` only records reductions. Migrating the legacy values to tokens is open UI work.
+- Security: `pnpm.overrides` in `package.json` pins `deepmerge-ts >=8.0.1`, `mysql2 ^3.22.0`, `fast-uri ^3.1.6`, `sharp >=0.35.4` (high advisories via prisma 7.10.0). pnpm 9.15.0 ignores `overrides` in `pnpm-workspace.yaml`, so the existing `react`, `react-dom`, and `better-auth` overrides there have no effect.
+- Evidence: `pnpm audit` 0 high (3 moderate: uuid via @testcontainers/postgresql, decode-uri-component); gate negative test fails on one added `#123456`.

@@ -1,0 +1,26 @@
+{
+  "name": "@safrs/env",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./client": "./src/client.ts",
+    "./server": "./src/server.ts"
+  },
+  "scripts": {
+    "lint": "biome check src",
+    "test": "vitest run",
+    "typecheck": "tsc --project tsconfig.json"
+  },
+  "dependencies": {
+    "@t3-oss/env-core": "0.13.8",
+    "@t3-oss/env-nextjs": "0.13.8",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@safrs/config": "workspace:*",
+    "@types/node": "24.10.13",
+    "typescript": "7.0.2",
+    "vitest": "4.1.10"
+  }
+}
