@@ -7,8 +7,12 @@ to `DECISIONS.md`.
 
 ## Current state
 
-- Branch `feat/golden-path-standalone`, tasks `TASK-20260925-GOLDEN-PATH-STANDALONE` and
-  `TASK-20260925-GOLDEN-PATH-NONCONFORMANCE` (R2, Cursor).
+- Branch `feat/golden-path-standalone`, task `TASK-20260925-GOLDEN-PATH-STANDALONE` (R2, Cursor,
+  BLOCKED). `TASK-20260925-GOLDEN-PATH-NONCONFORMANCE` is SUPERSEDED (single-writer collision on
+  `.safrs/known-nonconformance.json`; ownership only checks uncommitted paths, so it was not needed).
+- Rebased on `main` 481801fc; verify rerun from a clean tree: RESULT PASS.
+- `pnpm governance` also fails `check_sensitive_changes.py` (`.safrs/**` plus capsule implementation
+  in one change set); needs Chief integrity review.
 - `project.contract.json` added; root packages localized under `packages/` (see `DECISIONS.md`).
 - Standalone verify: RESULT PASS on every stage from a clean tree (install, lint, typecheck,
   test 64 passed / 2 skipped seed-integration, build, artifacts, deployDryRun, run, smoke `/` 200).
