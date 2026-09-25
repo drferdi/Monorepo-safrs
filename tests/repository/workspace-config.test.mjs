@@ -69,3 +69,49 @@ test("root follows canonical SAFRS topology and excludes protected paths from Bi
   // Root has no demonstrator (Chief, 2026-09-25): golden-path stays out of the root workspace.
   assert.match(workspace, /- '!projects\/internal\/golden-path\/\*\*'/);
 });
+
+// Capsules the root workspace excludes ('!<path>/**' lines in pnpm-workspace.yaml).
+function excludedCapsules() {
+  const workspace = fs.readFileSync("pnpm-workspace.yaml", "utf8");
+  return [...workspace.matchAll(/^\s*- '!(.+)\/\*\*'\s*$/gmu)].map(
+    (match) => `${match[1]}/`,
+  );
+}
+
+test("the lockfile keeps no importer for a capsule the workspace excludes", () => {
+  // pnpm 11 keeps a stale importer after an exclusion and still passes --frozen-lockfile.
+  const lockfile = fs.readFileSync("pnpm-lock.yaml", "utf8");
+  const importers = lockfile
+    .slice(
+      lockfile.indexOf("\nimporters:\n"),
+      lockfile.indexOf("\npackages:\n"),
+    )
+    .split("\n")
+    .flatMap((line) => line.match(/^ {2}([^\s'][^:]*):/u)?.[1] ?? []);
+  assert.ok(importers.includes("."));
+  const excluded = excludedCapsules();
+  assert.ok(excluded.length > 0);
+  assert.deepEqual(
+    importers.filter((importer) =>
+      excluded.some((capsule) => `${importer}/`.startsWith(capsule)),
+    ),
+    [],
+  );
+});
+
+test("the root token gate never scans a capsule the workspace excludes", () => {
+  // Chief, 2026-09-25: a standalone capsule owns its own token gate.
+  const scope = fs
+    .readFileSync("packages/token/scope.txt", "utf8")
+    .split("\n")
+    .map((line) => line.replace(/#.*$/u, "").trim())
+    .filter(Boolean);
+  assert.ok(scope.includes("packages/token"));
+  const excluded = excludedCapsules();
+  assert.deepEqual(
+    scope.filter((entry) =>
+      excluded.some((capsule) => `${entry}/`.startsWith(capsule)),
+    ),
+    [],
+  );
+});

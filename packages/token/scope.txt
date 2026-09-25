@@ -1,10 +1,8 @@
 # Paths under token enforcement. One path per line, repo-root relative.
-# A path enters when it is migrated to @sentra/token and never leaves.
+# A path enters when it is migrated to @sentra/token and never leaves, unless
+# its capsule leaves the root workspace: a standalone capsule owns its own
+# token gate (Chief, 2026-09-25).
 # Comments start with #.
 packages/token
 packages/ui
-projects/internal/golden-path/apps/web/src
 projects/internal/control-center/apps/web/src
-projects/academic/academic-smartboard/apps/site/src
-projects/academic/academic-smartboard/apps/web/src
-projects/product/sentrabot/apps/web/src
