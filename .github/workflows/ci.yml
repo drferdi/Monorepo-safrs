@@ -56,44 +56,23 @@ jobs:
           pnpm db:generate
           pnpm db:migrate
           pnpm db:seed
-      - name: Install browser engine
-        run: pnpm exec playwright install --with-deps chromium
       - name: Verify SAFRS governance
         run: pnpm governance
       - name: Verify automation policy
         run: node --test tests/repository/automation-policy.test.mjs
+      - name: Verify workspace, lockfile and token scope
+        run: node --test tests/repository/workspace-config.test.mjs
       - name: Verify supply chain
-        if: hashFiles('projects/internal/golden-path/apps/web/package.json') != ''
         run: pnpm check:security
       - name: Lint
         run: pnpm lint
-      - name: Type check
-        if: hashFiles('projects/internal/golden-path/apps/web/package.json') != ''
-        run: pnpm typecheck
       - name: Type check control-plane packages
-        if: hashFiles('projects/internal/golden-path/apps/web/package.json') == ''
         run: pnpm turbo run typecheck --filter=!@safrs/database --filter=!@safrs/api
-      - name: Test contracts and runtime
-        if: hashFiles('projects/internal/golden-path/apps/web/package.json') != ''
-        run: pnpm test
       - name: Test control-plane packages
-        if: hashFiles('projects/internal/golden-path/apps/web/package.json') == ''
-        # This step runs only on a checkout without projects/ (origin). The project wizard
-        # renders projects/_template, which origin does not publish, so its tests cannot run
+        # The root has no demonstrator (Chief, 2026-09-25); capsules verify themselves. The project
+        # wizard renders projects/_template, which origin does not publish, so its tests cannot run
         # here. @safrs/project-standalone builds its fixtures in temporary directories and
         # runs. The @safrs/database and @safrs/api exclusions predate ADR 0007 and are unchanged.
         run: pnpm turbo run test --filter=!@safrs/project-wizard --filter=!@safrs/database --filter=!@safrs/api
       - name: Build
         run: pnpm build
-      - name: Browser smoke
-        if: hashFiles('projects/internal/golden-path/apps/web/package.json') != ''
-        run: pnpm test:e2e
-      - name: Preserve browser evidence on failure
-        if: failure()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        with:
-          if-no-files-found: ignore
-          name: playwright-results
-          path: |
-            projects/internal/golden-path/apps/web/playwright-report
-            projects/internal/golden-path/apps/web/test-results

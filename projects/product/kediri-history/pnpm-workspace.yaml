@@ -17,3 +17,10 @@ allowBuilds:
 # ditegakkan mekanis oleh apps/web/tests/architecture/module-boundaries.test.ts
 # (keputusan Chief G03, 2026-08-26).
 nodeLinker: hoisted
+
+# Advisori keamanan (pnpm audit 2026-09-25): next < 16.3.3 RCE (juga lewat peer
+# @payloadcms/ui), sharp < 0.35.4 libheif, js-yaml < 4.3.2 merge-key CPU.
+overrides:
+  next: 16.3.6
+  sharp: ">=0.35.4"
+  js-yaml: "^4.3.2"

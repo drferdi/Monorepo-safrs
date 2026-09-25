@@ -1,11 +1,17 @@
 # HANDOFF
 
-Last updated: 2026-09-25 (Claude Code, branch `integration/post-adr-0007-3`, claim `KEDIRI-REQUEST-TIME`)
+Last updated: 2026-09-25 (Claude Code, branch `integration/post-adr-0007-4`, claim `KEDIRI-NEXT-SECURITY-BUMP`)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Durable decisions go
 to `DECISIONS.md`.
 
 ## Current state
+
+- Security patch (2026-09-25): `apps/web` pins `next` 16.3.6 (was 16.3.0, RCE advisories
+  GHSA-p293-qw3h-jr36 and GHSA-2xp9-vwfh-vxw4 below 16.3.3); `pnpm-workspace.yaml` overrides
+  `next` 16.3.6 (also the `@payloadcms/ui` peer), `sharp >=0.35.4`, `js-yaml ^4.3.2`. Capsule
+  `pnpm audit --audit-level=high` exit 0 (2 low, 6 moderate remain). `project-standalone verify
+  product/kediri-history` PASS on every stage after the change.
 
 - Public routes render at request time (Chief decision, see `DECISIONS.md`):
   `apps/web/src/app/(public)/layout.tsx` and `apps/web/src/app/sitemap.ts` export

@@ -89,7 +89,7 @@ Then read the nearest nested `AGENTS.md` for the project/module being modified.
 
 ## Known Non-Conformance & Remediation
 - Root-coupled repos/demonstrators are current-state defects, not templates or precedents.
-- Legacy demonstrator: `projects/internal/golden-path/apps/web`. Optional debug commands: `pnpm run doctor` -> `pnpm run setup` -> `pnpm dev` (governance: `pnpm run governance`). Never treat as dependency.
+- Root has no demonstrator (Chief, 2026-09-25): `projects/internal/golden-path` is excluded from the root workspace and is a capsule like any other. Optional root debug commands: `pnpm run doctor` -> `pnpm run setup` -> `pnpm dev` (governance: `pnpm run governance`).
 - Remediation sequence: Isolate dependency closure -> localize/pin external dependencies -> local verification -> empirical extraction verification -> declare standalone.
 
 ## Completion & Verification Gate

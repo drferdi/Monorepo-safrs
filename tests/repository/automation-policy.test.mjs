@@ -266,11 +266,11 @@ test("CI proves the full safe verification path without deployment", () => {
   for (const command of [
     "pnpm governance",
     "pnpm install --frozen-lockfile",
+    "pnpm check:security",
     "pnpm lint",
-    "pnpm typecheck",
-    "pnpm test",
+    "pnpm turbo run typecheck",
+    "pnpm turbo run test",
     "pnpm build",
-    "pnpm test:e2e",
   ]) {
     assert.match(
       workflow,
@@ -290,6 +290,11 @@ test("CI proves the full safe verification path without deployment", () => {
   assert.match(
     workflow,
     /node --test tests\/repository\/automation-policy\.test\.mjs/u,
+  );
+  // The lockfile and token-scope guards need no database or .env, so CI runs them directly.
+  assert.match(
+    workflow,
+    /node --test tests\/repository\/workspace-config\.test\.mjs/u,
   );
   assert.doesNotMatch(workflow, /\bdeploy\b/iu);
 

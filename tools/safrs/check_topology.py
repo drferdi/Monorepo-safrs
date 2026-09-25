@@ -32,7 +32,6 @@ capsule_tree_required = [
     'projects/_template/.agents/HANDOFF.md',
     'projects/_template/.agents/DECISIONS.md',
     'projects/_template/.agents/CONTEXT.md',
-    'projects/internal/golden-path/apps/web/AGENTS.md',
 ]
 errors = [
     f'missing required topology path: {item}'

@@ -10,3 +10,9 @@ allowBuilds:
 # menghasilkan node_modules datar tanpa symlink; @sentra/token dikonsumsi
 # sebagai tarball vendor/ (bukan workspace link) untuk alasan yang sama.
 nodeLinker: hoisted
+
+# Advisori keamanan (pnpm audit 2026-09-25): next < 16.3.3 RCE (juga lewat peer
+# opsional @sentra/token dari vendor/), sharp < 0.35.4 libheif.
+overrides:
+  next: 16.3.6
+  sharp: ">=0.35.4"
