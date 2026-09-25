@@ -33,11 +33,6 @@ class SafrsTopologyTests(unittest.TestCase):
             'packages/database/AGENTS.md': '../../AGENTS.md',
             'tools/AGENTS.md': '../AGENTS.md',
         }
-        if (ROOT / 'projects').is_dir():
-            expected.update({
-                'projects/internal/golden-path/AGENTS.md': '../../../AGENTS.md',
-                'projects/internal/golden-path/apps/web/AGENTS.md': '../../../../../AGENTS.md',
-            })
         for path, canonical_link in expected.items():
             with self.subTest(path=path):
                 document = ROOT / path
@@ -77,7 +72,6 @@ class SafrsTopologyTests(unittest.TestCase):
                 'docs/plans/archived/README.md', 'docs/evidence/README.md',
                 '.cursor/rules/01-safrs.mdc', 'projects/README.md',
                 'projects/internal/AGENTS.md', 'projects/internal/README.md',
-                'projects/internal/golden-path/apps/web/AGENTS.md',
             ]
             capsule_files = ['AGENTS.md', 'README.md', 'docs/architecture.md', 'docs/data.md',
                              'docs/testing.md', 'src/README.md', 'tests/README.md',

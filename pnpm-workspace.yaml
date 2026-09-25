@@ -12,6 +12,9 @@ packages:
   # biome, dan CI sendiri; glob projects/*/*/apps/* tidak boleh menyerap
   # apps-nya ke workspace root (keputusan kemandirian produk 2026-09-03).
   - '!projects/product/sentrabot/**'
+  # golden-path bukan lagi demonstrator root; capsule ini menjadi standalone
+  # dengan workspace pnpm sendiri (keputusan Chief 2026-09-25, ADR 0007).
+  - '!projects/internal/golden-path/**'
   - packages/*
   - tools/*
 

@@ -36,12 +36,6 @@ test("root exposes the solo-developer command contract", () => {
 
 test("root follows canonical SAFRS topology and excludes protected paths from Biome", () => {
   const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
-  const webPackage = JSON.parse(
-    fs.readFileSync(
-      "projects/internal/golden-path/apps/web/package.json",
-      "utf8",
-    ),
-  );
   const workspace = fs.readFileSync("pnpm-workspace.yaml", "utf8");
   // biome.jsonc carries // comments, so it needs the JSONC parser, not JSON.parse.
   const biome = parseJsonc(fs.readFileSync("biome.jsonc", "utf8"));
@@ -72,6 +66,6 @@ test("root follows canonical SAFRS topology and excludes protected paths from Bi
   assert.ok(biome.files.includes.includes("!!**/.turbo"));
   assert.ok(biome.files.includes.includes("!!**/.next"));
   assert.ok(biome.files.includes.includes("!!**/next-env.d.ts"));
-  assert.equal(webPackage.scripts.dev, "next dev -H 127.0.0.1");
-  assert.equal(webPackage.scripts.start, "next start");
+  // Root has no demonstrator (Chief, 2026-09-25): golden-path stays out of the root workspace.
+  assert.match(workspace, /- '!projects\/internal\/golden-path\/\*\*'/);
 });

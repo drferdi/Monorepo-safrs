@@ -3,6 +3,19 @@
 Append-only, newest first. Each entry: date, decision, brief rationale, evidence/status.
 Major architectural decisions also get an ADR in `docs/adrs/`.
 
+## 2026-09-25 - Root has no demonstrator; golden-path leaves the root workspace
+
+Asked whether the root still needs a demonstrator once golden-path becomes standalone (Cursor
+capsule-independence report), Chief answered "yes tidak", recorded as: the root needs no
+demonstrator. `projects/internal/golden-path/**` is excluded in `pnpm-workspace.yaml` like
+smartboard, kediri, and sentrabot, and the lockfile drops its importer. Root CI runs the
+control-plane steps unconditionally (no golden-path typecheck, full test, or browser smoke);
+`check_topology.py` and `check_routing.py` no longer require golden-path paths; root tests that
+exercised golden-path internals (`build-time-environment`, `playwright-environment`,
+`lfs-snapshots`) are removed, and their claims belong in the capsule. Root `dev:email` and
+`stripe:listen` are removed; `doctor`, `setup`, `dev`, and `test:e2e` stay. Complements ADR 0007
+("the golden-path capsule migration" was deferred there).
+
 ## 2026-09-13 - Smartboard web sub-fase 2 closed; capsule-local deps + sentinel dynamic routes
 
 Moved to `projects/academic/academic-smartboard/.agents/DECISIONS.md` (ADR 0007 WP-G).

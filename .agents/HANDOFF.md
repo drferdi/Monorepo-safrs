@@ -1,15 +1,15 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-09-25 (Claude Code, branch `fix/standalone-verifier-env-timeout`)
+Last updated: 2026-09-25 (Claude Code, branch `fix/root-drop-golden-path-demonstrator`)
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
 cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>/.agents/`.
 
 ## Current state
 
-- `main` at `662e695f` carries `integration/post-adr-0007-3`: `demos.id` default follows the
-  database (`dbgenerated("gen_random_uuid()")`), and kediri public pages render at request time
-  with a data cache. `pnpm governance` PASS on `main`.
+- `main` at `481801fc`: `project-standalone verify` isolates `APPDATA`/`LOCALAPPDATA` and honours
+  a contract `timeoutSeconds` (1-600, default 120) on finite lifecycle commands. `pnpm governance`
+  PASS on `main`.
 - `project-standalone verify` passes for `corporate/portfolio-drnovia`, `internal/unicom`,
   `internal/prompt`, `academic/academic-smartboard`, and `product/kediri-history`.
 - The main checkout's stale ADR 0007 drafts are stashed at `stash@{0}` (superseded; do not
@@ -17,32 +17,39 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
 
 ## Work in flight
 
-`fix/standalone-verifier-env-timeout`, base `662e695f`, claim `STANDALONE-VERIFIER-ENV-TIMEOUT`
-(raised by the Cursor sentrabot work: native `koffi` failed to install without `LOCALAPPDATA`,
-and a cold sentrabot install takes about 127 seconds):
-- The sanitized lifecycle environment sets `APPDATA` and `LOCALAPPDATA` to
-  `<isolated home>/AppData/Roaming` and `<isolated home>/AppData/Local`; extraction creates both
-  directories. The real user profile still never reaches a lifecycle command.
-- Finite lifecycle commands (`install`, `lint`, `typecheck`, `test`, `build`, `deployDryRun`) take
-  an optional `timeoutSeconds`, an integer from 1 to 600; the default stays 120. `run` rejects it
-  (its bound is `smoke.startupTimeoutSeconds`). `.safrs/schemas/project-contract.schema.json` has a
-  matching `finiteCommand` definition.
-- Tests: four new cases in `tools/project-standalone/test/project-standalone.test.mjs`; they failed
-  before the change and the suite passes 23/23 after it.
+`fix/root-drop-golden-path-demonstrator`, base `481801fc`, claim
+`ROOT-DROP-GOLDEN-PATH-DEMONSTRATOR` (Chief, 2026-09-25: "yes tidak" = the root needs no
+demonstrator; see `.agents/DECISIONS.md`):
+- `pnpm-workspace.yaml` excludes `projects/internal/golden-path/**`. `pnpm install --lockfile-only`
+  (with `optimistic-repeat-install=false`; the default reported "Already up to date" and kept the
+  stale importer) drops only the golden-path importer and packages used by it alone; every other
+  importer is byte-identical.
+- Root CI runs the control-plane typecheck/test steps and `check:security` unconditionally; the
+  golden-path typecheck, full `pnpm test`, browser engine install, browser smoke, and Playwright
+  artifact steps are removed.
+- `check_topology.py` and `check_routing.py` no longer require golden-path paths; `AGENTS.md`
+  "Known Non-Conformance" says the root has no demonstrator; `test_safrs_topology.py` and
+  `workspace-config.test.mjs` follow (the latter asserts the exclusion).
+- Removed root tests bound to golden-path internals: `tests/contracts/build-time-environment`,
+  `tests/contracts/playwright-environment`, `tests/repository/lfs-snapshots`. Their claims belong
+  in the capsule (Cursor's golden-path standalone work).
+- Root `dev:email` and `stripe:listen` removed (they filtered `@safrs/web`); `doctor`, `setup`,
+  `dev`, `test:e2e` stay. After the exclusion `pnpm dev` starts only control-center.
+- Stale claim `TASK-20260821-SENTRABOT-WORKSPACE-CATALOG-OWNERSHIP` (Kilo, `pnpm-workspace.yaml`)
+  was superseded: its work landed in `88268a73` (sentrabot exclusion).
 
 ## Blockers
 
-None for this branch.
+None for this branch. Cursor's golden-path claims (`projects/internal/golden-path/`,
+`.safrs/known-nonconformance.json`) are untouched.
 
 ## Next action
 
-- Chief: merge `fix/standalone-verifier-env-timeout`; then Cursor resumes the sentrabot capsule
-  and may set `"timeoutSeconds"` on its `install` command.
-- Cursor brief for the four non-conformance capsules:
-  `docs/plans/active/2026-09-25-cursor-capsule-independence-prompt.md` (gitignored).
-  Control-center placement is still a Chief decision (ADR 0007).
-- Kediri: the data cache's effect on database reads is not yet observed at runtime (needs a content
-  database); see that capsule's handoff.
+- Chief: integrity review and merge `fix/root-drop-golden-path-demonstrator`.
+- Follow-ups: decide whether root `test:e2e`, `scripts/test.mjs` (needs `.env`), and
+  `scripts/dev.mjs` still earn their place; ADR 0007 addendum for this decision if Chief wants it
+  in the ADR itself; control-center placement (ADR 0007, separate R2 package).
+- Kediri: the data cache's effect on database reads is not yet observed at runtime.
 - Gate backlog: CI and the verifiers run the checker from the change set under review; classify
   `tests/governance/test_sensitive_classification.py` and `test_handoff_scope.py` as controls.
 - Verifier backlog: Windows cleanup EPERM after a `run` timeout (not reproduced since).
