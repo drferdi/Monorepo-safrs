@@ -65,7 +65,7 @@ catalog:
   hono: 4.13.1
   husky: 9.1.7
   lucide-react: 0.516.0
-  next: 16.3.0
+  next: 16.3.6
   pg: 8.16.3
   playwright: 1.62.1
   postcss: 8.5.26
@@ -94,7 +94,14 @@ minimumReleaseAgeExclude:
 # Force transitive copies onto patched releases (Dependabot GHSA remediation).
 overrides:
   postcss: "catalog:"
-  sharp: ">=0.35.1"
+  # @sentra/token has an optional next peer; without this it resolves an older,
+  # vulnerable next (GHSA-p293-qw3h-jr36, GHSA-2xp9-vwfh-vxw4 < 16.3.3).
+  next: "catalog:"
+  sharp: ">=0.35.4"
   # GHSA-ggr8-5vv4-36mx / CVE-2026-40345: uncontrolled recursion in
   # deepmerge-ts < 8.0.0, pulled in transitively by @prisma/config.
   deepmerge-ts: ">=8.0.1"
+  # Security advisories on prisma transitive dependencies (pnpm audit 2026-09-25):
+  # mysql2 < 3.22.0 auth plugin downgrade; fast-uri < 3.1.6 SSRF and host confusion.
+  mysql2: "^3.22.0"
+  fast-uri: "^3.1.6"

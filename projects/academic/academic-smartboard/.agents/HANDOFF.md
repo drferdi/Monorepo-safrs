@@ -1,11 +1,19 @@
 # HANDOFF
 
-Last updated: 2026-09-25 (Claude Code, branch `fix/smartboard-lint-repair`, claim `SMARTBOARD-LINT-REPAIR`)
+Last updated: 2026-09-25 (Claude Code, branch `integration/post-adr-0007-4`, claim `SMARTBOARD-NEXT-SECURITY-BUMP`)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Durable decisions go
 to `DECISIONS.md`.
 
 ## Current state
+
+- Security patch (2026-09-25): `apps/site` and `apps/web` pin `next` 16.3.6 (was 16.3.0, RCE
+  advisories below 16.3.3); `pnpm-workspace.yaml` overrides `next` 16.3.6 (also the optional peer
+  of the vendored `@sentra/token`) and `sharp >=0.35.4`. Capsule `pnpm audit --audit-level=high`
+  exit 0 (2 moderate remain). `project-standalone verify academic/academic-smartboard` PASS on
+  every stage after the change.
+- The root token gate no longer scans this capsule (Chief, 2026-09-25); the capsule's own gate
+  (`node scripts/check-tokens.mjs` in `pnpm test`) remains the enforcement.
 
 - Lint repaired in two commits on `fix/smartboard-lint-repair`:
   - `5f21af33` style: `biome check --write src` in `apps/web` (safe fixes only, 67 files).
