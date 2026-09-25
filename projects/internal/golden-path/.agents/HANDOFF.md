@@ -7,17 +7,22 @@ to `DECISIONS.md`.
 
 ## Current state
 
-- This `.agents/` folder was created by ADR 0007 WP-G on 2026-09-25. No capsule-scoped session
-  has been recorded here yet.
-
-## Work in flight
-
-None recorded.
+- Branch `feat/golden-path-standalone`, tasks `TASK-20260925-GOLDEN-PATH-STANDALONE` and
+  `TASK-20260925-GOLDEN-PATH-NONCONFORMANCE` (R2, Cursor).
+- `project.contract.json` added; root packages localized under `packages/` (see `DECISIONS.md`).
+- Standalone verify: RESULT PASS on every stage from a clean tree (install, lint, typecheck,
+  test 64 passed / 2 skipped seed-integration, build, artifacts, deployDryRun, run, smoke `/` 200).
+- The known-nonconformance entry for this capsule is removed; independence check OK.
 
 ## Blockers
 
-None recorded.
+- `pnpm governance` fails outside this capsule: root `pnpm-workspace.yaml` still includes
+  `projects/*/*/apps/*`, so the root install rewrites root `pnpm-lock.yaml` (specifiers changed from
+  `catalog:` to exact versions), and task ownership rejects that root change. Needs Chief: exclude
+  `projects/internal/golden-path/**` from the root workspace and refresh the root lockfile, plus
+  update root CI, tests, and tools that still treat golden-path as a root demonstrator.
 
 ## Next action
 
-None recorded.
+- After the root change lands on `main`: rebase, rerun verify and `pnpm governance`, then move the
+  tasks to VERIFYING → REVIEW.

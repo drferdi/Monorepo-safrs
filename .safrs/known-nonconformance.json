@@ -14,13 +14,6 @@
       "reference": "docs/adrs/0007-fail-closed-capsule-sovereignty-enforcement.md",
       "owner": "Chief",
       "reviewBy": "2026-12-31"
-    },
-    {
-      "capsule": "internal/golden-path",
-      "reason": "Legacy root-integrated demonstrator (ADR 0006 decision 5); apps/web depends on root packages through workspace:* and catalog:.",
-      "reference": "docs/adrs/0006-standalone-project-capsules.md",
-      "owner": "Chief",
-      "reviewBy": "2026-12-31"
     }
   ]
 }

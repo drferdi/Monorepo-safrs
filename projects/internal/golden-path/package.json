@@ -1,0 +1,22 @@
+{
+  "name": "golden-path",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.21.0",
+  "engines": {
+    "node": ">=24.18.0 <25"
+  },
+  "scripts": {
+    "generate": "pnpm --filter @safrs/database generate",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm generate && pnpm -r typecheck",
+    "test": "pnpm generate && pnpm -r test",
+    "build": "pnpm generate && pnpm --filter @safrs/web build"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.7",
+    "@types/node": "24.10.13",
+    "typescript": "7.0.2",
+    "vitest": "4.1.10"
+  }
+}
