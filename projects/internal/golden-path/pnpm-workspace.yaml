@@ -17,10 +17,15 @@ minimumReleaseAgeExclude:
   - resend@6.19.0
   - stripe@22.5.0
 
-# Force transitive copies onto patched releases (Dependabot GHSA remediation).
+# Force transitive copies onto patched releases (Dependabot GHSA remediation):
+# next < 16.3.3 (also the optional @sentra/token peer), sharp < 0.35.4 libheif,
+# mysql2 < 3.22.0 and fast-uri < 3.1.6 via prisma.
 overrides:
   postcss: 8.5.26
-  sharp: ">=0.35.1"
+  next: 16.3.6
+  sharp: ">=0.35.4"
+  mysql2: "^3.22.0"
+  fast-uri: "^3.1.6"
   # GHSA-ggr8-5vv4-36mx / CVE-2026-40345: uncontrolled recursion in
   # deepmerge-ts < 8.0.0, pulled in transitively by @prisma/config.
   deepmerge-ts: ">=8.0.1"
