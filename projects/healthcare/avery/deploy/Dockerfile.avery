@@ -21,16 +21,20 @@ COPY patches/hermes-0.20.5/ /opt/avery-patches/
 # apt-get dan menulis ke pohon paket Python di sini.
 #
 # Alur skrip Python inline di bawah:
-#   1. Baca /opt/avery-patches/manifest.json (field "files": list objek
+#   1. Baca /opt/avery-patches/manifest.json. Field "patches" berisi daftar
+#      berurutan {patch, files}; manifest lama tanpa "patches" dibaca sebagai
+#      satu entri ({patch, files} di tingkat atas), sama seperti
+#      scripts/apply-hermes-patches.ps1. "files" = list objek
 #      {path, sha256_before, sha256_after}; path relatif terhadap root
-#      paket Hermes di dalam image, lokasi absolutnya tidak diketahui).
+#      paket Hermes di dalam image, lokasi absolutnya tidak diketahui.
 #   2. Untuk tiap file target, cari kandidat lewat `find / -path
 #      '*<path>'` (suffix match). Wajib tepat satu kandidat — 0 atau >1
 #      kandidat = build gagal dengan pesan jelas.
-#   3. Verifikasi sha256 file saat ini == sha256_before; mismatch = build
-#      gagal (jangan menambal file versi yang salah).
-#   4. Terapkan patch unified diff dengan `patch -p1` SATU KALI (berkas
-#      patch berisi hunk untuk kedua file sekaligus) di direktori root
+#   3. Per entri, berurutan: verifikasi sha256 file saat ini ==
+#      sha256_before (entri berikutnya mulai dari sha256_after entri
+#      sebelumnya); mismatch = build gagal (jangan menambal versi yang salah).
+#   4. Terapkan berkas patch entri itu dengan `patch -p1` SATU KALI (satu
+#      berkas patch bisa berisi hunk untuk beberapa file) di direktori root
 #      paket yang ditemukan (root paket = parent dari komponen path
 #      relatif, mis. untuk kandidat
 #      ".../site-packages/gateway/platforms/whatsapp_common.py" dengan
@@ -38,11 +42,12 @@ COPY patches/hermes-0.20.5/ /opt/avery-patches/
 #      ".../site-packages"). Berkas patch memakai prefiks git standar
 #      "a/gateway/..." dan "b/plugins/..." sehingga -p1 (strip 1 komponen)
 #      menghasilkan path relatif yang persis cocok dengan root paket ini.
-#      Kedua file target harus berbagi satu root paket yang sama; kalau
+#      Semua file target harus berbagi satu root paket yang sama; kalau
 #      tidak, build gagal.
-#   5. Verifikasi sha256 hasil == sha256_after; mismatch = build gagal.
+#   5. Verifikasi sha256 hasil == sha256_after entri itu; mismatch = build
+#      gagal.
 #   6. Tulis marker /opt/avery-patches/APPLIED berisi versi Hermes yang
-#      ditambal + tanggal build (UTC).
+#      ditambal, daftar patch, + tanggal build (UTC).
 RUN set -eu \
     && apt-get update \
     && apt-get install -y --no-install-recommends patch \
@@ -59,7 +64,7 @@ PATCH_DIR = Path("/opt/avery-patches")
 MANIFEST = PATCH_DIR / "manifest.json"
 
 manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
-patch_file = PATCH_DIR / manifest["patch"]
+specs = manifest.get("patches") or [manifest]
 hermes_version = manifest["hermes_version"]
 
 
@@ -85,66 +90,71 @@ def find_one(suffix: str) -> Path:
     return Path(candidates[0])
 
 
-# Berkas patch berisi hunk untuk KEDUA file sekaligus, jadi verifikasi
-# sha256_before dan cari root paket untuk semua entri dulu, baru terapkan
-# `patch -p1` SATU KALI untuk seluruh berkas (menjalankannya per-entri akan
-# membuat entri kedua gagal karena berkas pertama sudah ikut ditambal).
-resolved = []
-for entry in manifest["files"]:
-    rel_path = entry["path"]
-    sha_before = entry["sha256_before"]
+# Cari tiap file target sekali; root paket = target minus komponen relatif
+# dari suffix yang dicari.
+targets = {}
+for spec in specs:
+    for entry in spec["files"]:
+        rel_path = entry["path"]
+        if rel_path not in targets:
+            target = find_one(rel_path)
+            pkg_root = target
+            for _ in Path(rel_path).parts:
+                pkg_root = pkg_root.parent
+            targets[rel_path] = (target, pkg_root)
 
-    target = find_one(rel_path)
-
-    actual_before = sha256_of(target)
-    if actual_before != sha_before:
-        sys.exit(
-            f"BOOT FAIL: sha256 mismatch before patch for {target} "
-            f"(expected {sha_before}, got {actual_before}) — wrong Hermes "
-            f"version, refusing to patch"
-        )
-
-    # Root paket = target minus komponen relatif dari suffix yang dicari.
-    pkg_root = target
-    for _ in Path(rel_path).parts:
-        pkg_root = pkg_root.parent
-
-    resolved.append((entry, target, pkg_root))
-
-pkg_roots = {str(r[2]) for r in resolved}
+pkg_roots = {str(pkg_root) for _target, pkg_root in targets.values()}
 if len(pkg_roots) != 1:
     sys.exit(
         f"BOOT FAIL: expected all patched files under one package root, "
         f"found multiple: {sorted(pkg_roots)}"
     )
-common_root = resolved[0][2]
+common_root = next(iter(targets.values()))[1]
 
-apply_result = subprocess.run(
-    ["patch", "-p1", "--forward", "--input", str(patch_file)],
-    cwd=str(common_root),
-    capture_output=True,
-    text=True,
-    check=False,
-)
-if apply_result.returncode != 0:
-    sys.exit(
-        f"BOOT FAIL: patch -p1 failed in {common_root}\n"
-        f"stdout: {apply_result.stdout}\nstderr: {apply_result.stderr}"
+# Satu berkas patch bisa berisi hunk untuk beberapa file, jadi per entri
+# verifikasi sha256_before semua filenya dulu, baru `patch -p1` SATU KALI
+# (menjalankannya per-file akan membuat file kedua gagal karena sudah ikut
+# ditambal).
+for spec in specs:
+    patch_file = PATCH_DIR / spec["patch"]
+    for entry in spec["files"]:
+        target = targets[entry["path"]][0]
+        sha_before = entry["sha256_before"]
+        actual_before = sha256_of(target)
+        if actual_before != sha_before:
+            sys.exit(
+                f"BOOT FAIL: sha256 mismatch before {spec['patch']} for {target} "
+                f"(expected {sha_before}, got {actual_before}) — wrong Hermes "
+                f"version, refusing to patch"
+            )
+
+    apply_result = subprocess.run(
+        ["patch", "-p1", "--forward", "--input", str(patch_file)],
+        cwd=str(common_root),
+        capture_output=True,
+        text=True,
+        check=False,
     )
-
-for entry, target, _pkg_root in resolved:
-    sha_after = entry["sha256_after"]
-    actual_after = sha256_of(target)
-    if actual_after != sha_after:
+    if apply_result.returncode != 0:
         sys.exit(
-            f"BOOT FAIL: sha256 mismatch after patch for {target} "
-            f"(expected {sha_after}, got {actual_after})"
+            f"BOOT FAIL: patch -p1 {spec['patch']} failed in {common_root}\n"
+            f"stdout: {apply_result.stdout}\nstderr: {apply_result.stderr}"
         )
+
+    for entry in spec["files"]:
+        target = targets[entry["path"]][0]
+        sha_after = entry["sha256_after"]
+        actual_after = sha256_of(target)
+        if actual_after != sha_after:
+            sys.exit(
+                f"BOOT FAIL: sha256 mismatch after {spec['patch']} for {target} "
+                f"(expected {sha_after}, got {actual_after})"
+            )
 
 marker = PATCH_DIR / "APPLIED"
 marker.write_text(
     f"hermes_version={hermes_version}\n"
-    f"patch={manifest['patch']}\n"
+    f"patches={','.join(spec['patch'] for spec in specs)}\n"
     f"built_at={datetime.now(timezone.utc).isoformat()}\n",
     encoding="utf-8",
 )
