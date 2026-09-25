@@ -82,6 +82,8 @@ export function createSanitizedEnvironment(
     environment.TEMP = `${isolatedHome}/tmp`;
     environment.TMP = `${isolatedHome}/tmp`;
     environment.TMPDIR = `${isolatedHome}/tmp`;
+    environment.APPDATA = `${isolatedHome}/AppData/Roaming`;
+    environment.LOCALAPPDATA = `${isolatedHome}/AppData/Local`;
   }
   environment.CI = "1";
   environment.NO_COLOR = "1";

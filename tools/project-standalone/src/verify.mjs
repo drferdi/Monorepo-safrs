@@ -17,7 +17,7 @@ import {
 } from "./process.mjs";
 
 const lifecycleOrder = ["install", "lint", "typecheck", "test", "build"];
-const commandTimeoutMs = 120_000;
+const defaultCommandTimeoutSeconds = 120;
 
 function isWithin(candidate, boundary) {
   const relative = path.relative(boundary, candidate);
@@ -272,15 +272,16 @@ async function executeLifecycle(name, command, state) {
     record(state.stages, name, "SKIP", command.notApplicableReason);
     return;
   }
+  const timeoutSeconds = command.timeoutSeconds ?? defaultCommandTimeoutSeconds;
   const result = await runCommand(command.program, command.args, {
     cwd: state.extraction.capsule,
     env: state.environment,
-    timeoutMs: commandTimeoutMs,
+    timeoutMs: timeoutSeconds * 1000,
   });
   if (result.timedOut) {
     record(state.stages, name, "FAIL", "timeout");
     throw new VerificationError(
-      `${name} timed out after ${commandTimeoutMs / 1000} seconds.`,
+      `${name} timed out after ${timeoutSeconds} seconds.`,
     );
   }
   if (result.exitCode !== 0) {

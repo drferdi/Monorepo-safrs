@@ -221,8 +221,27 @@ function validateCommand(value, name, errors) {
     }
     return;
   }
-  rejectUnknownKeys(value, new Set(["program", "args"]), field, errors);
+  rejectUnknownKeys(
+    value,
+    new Set(
+      name === "run"
+        ? ["program", "args"]
+        : ["program", "args", "timeoutSeconds"],
+    ),
+    field,
+    errors,
+  );
   requireKeys(value, ["program", "args"], field, errors);
+  if (
+    hasOwn(value, "timeoutSeconds") &&
+    (!Number.isInteger(value.timeoutSeconds) ||
+      value.timeoutSeconds < 1 ||
+      value.timeoutSeconds > 600)
+  ) {
+    errors.push(
+      `${field}.timeoutSeconds must be a positive integer of at most 600 seconds.`,
+    );
+  }
   validateProgram(value.program, `${field}.program`, errors);
   if (!Array.isArray(value.args)) {
     errors.push(`${field}.args must be an array.`);

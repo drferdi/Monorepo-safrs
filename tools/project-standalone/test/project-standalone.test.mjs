@@ -450,6 +450,88 @@ test("sanitized environment is a strict allowlist with an isolated home", () => 
   assert.ok(!environment.PATH.includes(forbiddenRoot));
 });
 
+test("isolated home also carries the Windows APPDATA and LOCALAPPDATA roots", () => {
+  const isolatedHome = path.join(os.tmpdir(), "safrs-isolated-home");
+  const environment = createSanitizedEnvironment(
+    {},
+    {
+      APPDATA: "C:Users\realAppDataRoaming",
+      LOCALAPPDATA: "C:Users\realAppDataLocal",
+    },
+    isolatedHome,
+  );
+  assert.equal(environment.APPDATA, `${isolatedHome}/AppData/Roaming`);
+  assert.equal(environment.LOCALAPPDATA, `${isolatedHome}/AppData/Local`);
+});
+
+test("lifecycle commands see existing APPDATA and LOCALAPPDATA directories inside the isolated home", async () => {
+  const probing = contract();
+  probing.commands.test = {
+    program: "node",
+    args: [
+      "-e",
+      "const fs = require('node:fs'); for (const name of ['APPDATA', 'LOCALAPPDATA']) { const value = process.env[name]; if (!value || !value.startsWith(process.env.HOME) || !fs.statSync(value).isDirectory()) process.exit(9); }",
+    ],
+  };
+  const { root } = await createRepository(probing);
+  try {
+    const result = await verifyCapsule({
+      root,
+      selector: "internal/example",
+      checkerPath,
+    });
+    assert.equal(result.ok, true);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
+test("contract timeoutSeconds is an optional integer from 1 to 600 on finite commands", () => {
+  const valid = contract();
+  valid.commands.install.timeoutSeconds = 600;
+  valid.commands.build.timeoutSeconds = 1;
+  assert.deepEqual(validateContract(valid), []);
+
+  for (const bad of [0, 601, 1.5, "120"]) {
+    const invalid = contract();
+    invalid.commands.install.timeoutSeconds = bad;
+    assert.ok(
+      validateContract(invalid).some((error) =>
+        error.includes("$.commands.install.timeoutSeconds"),
+      ),
+      `timeoutSeconds ${JSON.stringify(bad)} must be rejected`,
+    );
+  }
+
+  const onRun = contract();
+  onRun.commands.run.timeoutSeconds = 30;
+  assert.ok(
+    validateContract(onRun).some((error) =>
+      error.includes("$.commands.run.timeoutSeconds"),
+    ),
+  );
+});
+
+test("verify stops a lifecycle stage at its contract timeoutSeconds", {
+  timeout: 30_000,
+}, async () => {
+  const hanging = contract();
+  hanging.commands.test = {
+    program: "node",
+    args: ["-e", "setInterval(() => {}, 1000)"],
+    timeoutSeconds: 1,
+  };
+  const { root } = await createRepository(hanging);
+  try {
+    await assert.rejects(
+      verifyCapsule({ root, selector: "internal/example", checkerPath }),
+      /test timed out after 1 seconds/u,
+    );
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
+});
+
 test("status validates structural readiness without lifecycle execution", async () => {
   const { root, capsule } = await createRepository();
   try {

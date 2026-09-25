@@ -174,6 +174,8 @@ export async function createExtraction() {
   await mkdir(capsule);
   await mkdir(home);
   await mkdir(path.join(home, "tmp"));
+  await mkdir(path.join(home, "AppData", "Roaming"), { recursive: true });
+  await mkdir(path.join(home, "AppData", "Local"));
   return {
     root: temporaryRoot,
     rootIdentity,

@@ -170,6 +170,30 @@
         }
       }
     },
+    "finiteCommand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "program",
+        "args"
+      ],
+      "properties": {
+        "program": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "args": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "timeoutSeconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 600
+        }
+      }
+    },
     "notApplicableCommand": {
       "type": "object",
       "additionalProperties": false,
@@ -194,7 +218,7 @@
     "optionalCommand": {
       "oneOf": [
         {
-          "$ref": "#/$defs/executableCommand"
+          "$ref": "#/$defs/finiteCommand"
         },
         {
           "$ref": "#/$defs/notApplicableCommand"
@@ -215,7 +239,7 @@
       ],
       "properties": {
         "install": {
-          "$ref": "#/$defs/executableCommand"
+          "$ref": "#/$defs/finiteCommand"
         },
         "lint": {
           "$ref": "#/$defs/optionalCommand"
@@ -224,16 +248,16 @@
           "$ref": "#/$defs/optionalCommand"
         },
         "test": {
-          "$ref": "#/$defs/executableCommand"
+          "$ref": "#/$defs/finiteCommand"
         },
         "build": {
-          "$ref": "#/$defs/executableCommand"
+          "$ref": "#/$defs/finiteCommand"
         },
         "run": {
           "$ref": "#/$defs/executableCommand"
         },
         "deployDryRun": {
-          "$ref": "#/$defs/executableCommand"
+          "$ref": "#/$defs/finiteCommand"
         }
       }
     },

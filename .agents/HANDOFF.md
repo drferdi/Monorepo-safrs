@@ -1,32 +1,34 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-09-25 (Claude Code, branch `integration/post-adr-0007-3`)
+Last updated: 2026-09-25 (Claude Code, branch `fix/standalone-verifier-env-timeout`)
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
 cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>/.agents/`.
 
 ## Current state
 
-- ADR 0007 is complete; `main` at `e01f5969` carries `integration/post-adr-0007-2` (condensed
-  root `AGENTS.md`, smartboard lint repair, prompt README and CI, kediri env wrapper, root DB
-  migration `0003_add_auth_tables`).
+- `main` at `662e695f` carries `integration/post-adr-0007-3`: `demos.id` default follows the
+  database (`dbgenerated("gen_random_uuid()")`), and kediri public pages render at request time
+  with a data cache. `pnpm governance` PASS on `main`.
 - `project-standalone verify` passes for `corporate/portfolio-drnovia`, `internal/unicom`,
-  `internal/prompt`, and `academic/academic-smartboard`.
+  `internal/prompt`, `academic/academic-smartboard`, and `product/kediri-history`.
 - The main checkout's stale ADR 0007 drafts are stashed at `stash@{0}` (superseded; do not
   re-apply without Chief).
 
 ## Work in flight
 
-`integration/post-adr-0007-3`, base `e01f5969`, one merge for Chief:
-- `DB-DEMOS-ID-DEFAULT` (Chief, 2026-09-25: "pilihan 1"): `Demo.id` in
-  `packages/database/prisma/schema.prisma` is now `@default(dbgenerated("gen_random_uuid()"))`,
-  matching migration 0002. No new migration. Proof on a disposable PostgreSQL 16: after
-  `migrate deploy`, `migrate diff --from-config-datasource --to-schema` printed
-  `ALTER TABLE "demos" ALTER COLUMN "id" DROP DEFAULT;` before the change and an empty migration
-  after it; an insert without `id` got a UUID. `generate`, `typecheck`, `lint` pass; `vitest` 22/22
-  with `DATABASE_INTEGRATION_TESTS=1` on a disposable database (port 54329, `_local`).
-- `KEDIRI-REQUEST-TIME`: capsule scope, see
-  `projects/product/kediri-history/.agents/HANDOFF.md`.
+`fix/standalone-verifier-env-timeout`, base `662e695f`, claim `STANDALONE-VERIFIER-ENV-TIMEOUT`
+(raised by the Cursor sentrabot work: native `koffi` failed to install without `LOCALAPPDATA`,
+and a cold sentrabot install takes about 127 seconds):
+- The sanitized lifecycle environment sets `APPDATA` and `LOCALAPPDATA` to
+  `<isolated home>/AppData/Roaming` and `<isolated home>/AppData/Local`; extraction creates both
+  directories. The real user profile still never reaches a lifecycle command.
+- Finite lifecycle commands (`install`, `lint`, `typecheck`, `test`, `build`, `deployDryRun`) take
+  an optional `timeoutSeconds`, an integer from 1 to 600; the default stays 120. `run` rejects it
+  (its bound is `smoke.startupTimeoutSeconds`). `.safrs/schemas/project-contract.schema.json` has a
+  matching `finiteCommand` definition.
+- Tests: four new cases in `tools/project-standalone/test/project-standalone.test.mjs`; they failed
+  before the change and the suite passes 23/23 after it.
 
 ## Blockers
 
@@ -34,10 +36,13 @@ None for this branch.
 
 ## Next action
 
-- Chief: merge `integration/post-adr-0007-3`.
+- Chief: merge `fix/standalone-verifier-env-timeout`; then Cursor resumes the sentrabot capsule
+  and may set `"timeoutSeconds"` on its `install` command.
 - Cursor brief for the four non-conformance capsules:
   `docs/plans/active/2026-09-25-cursor-capsule-independence-prompt.md` (gitignored).
   Control-center placement is still a Chief decision (ADR 0007).
+- Kediri: the data cache's effect on database reads is not yet observed at runtime (needs a content
+  database); see that capsule's handoff.
 - Gate backlog: CI and the verifiers run the checker from the change set under review; classify
   `tests/governance/test_sensitive_classification.py` and `test_handoff_scope.py` as controls.
 - Verifier backlog: Windows cleanup EPERM after a `run` timeout (not reproduced since).
