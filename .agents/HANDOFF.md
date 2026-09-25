@@ -41,7 +41,8 @@ renamed from `fix/root-drop-golden-path-demonstrator`), base `481801fc`, one mer
    and control-center; golden-path, smartboard, and sentrabot left (Chief, 2026-09-25). New tests
    in `workspace-config.test.mjs`: the token scope never covers an excluded capsule, and the
    lockfile keeps no importer for one. Both failed first (scope on 4 capsule paths; `main`'s lockfile
-   on the golden-path importer).
+   on the golden-path importer). CI runs `workspace-config.test.mjs` directly (it needs no `.env`);
+   `automation-policy.test.mjs` asserts that step and failed first without it.
 - Stale claims superseded with evidence: `TASK-20260821-SENTRABOT-WORKSPACE-CATALOG-OWNERSHIP`
   (landed in `88268a73`), `TASK-20260822-DOMAIN-LAYERING-TOKEN-SCOPE` (landed in `3371d9e5`).
 
