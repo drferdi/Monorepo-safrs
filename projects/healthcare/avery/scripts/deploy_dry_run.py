@@ -1,12 +1,11 @@
-"""Deploy dry-run offline untuk `project.contract.json`.
+"""Offline deploy dry-run for `project.contract.json`.
 
-Tanpa efek samping: tidak memanggil docker, tidak membuka jaringan, tidak
-membaca kredensial, dan tidak menulis apa pun. Memeriksa bahwa masukan yang
-dipakai `deploy/scripts/deploy.sh` tersedia di capsule: file compose produksi,
-Dockerfile overlay, skrip backup/smoke/rollback, serta manifest patch Hermes
-dalam bentuk yang dibaca `deploy/Dockerfile.avery` (`patches[]` berisi
-`{patch, files}`, atau satu entri di tingkat atas) beserta berkas patch yang
-dirujuknya.
+No side effects: never calls docker, opens the network, reads credentials, or
+writes anything. Checks that the inputs used by `deploy/scripts/deploy.sh`
+exist in the capsule: the production compose file, the overlay Dockerfile, the
+backup/smoke/rollback scripts, and the Hermes patch manifest in the shape
+`deploy/Dockerfile.avery` reads (`patches[]` of `{patch, files}`, or a single
+top-level entry) together with the patch files it references.
 """
 
 import json
@@ -23,22 +22,22 @@ inputs = [
     "patches/hermes-0.20.5/manifest.json",
 ]
 
-failures = [f"{item} tidak ada." for item in inputs if not (root / item).is_file()]
+failures = [f"{item} is missing." for item in inputs if not (root / item).is_file()]
 
 manifest_path = root / "patches/hermes-0.20.5/manifest.json"
 if manifest_path.is_file():
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     if not manifest.get("hermes_version"):
-        failures.append("Dockerfile.avery membaca manifest['hermes_version'], tetapi nilainya kosong.")
+        failures.append("Dockerfile.avery reads manifest['hermes_version'], but it is empty.")
     for index, spec in enumerate(manifest.get("patches") or [manifest]):
         patch = spec.get("patch")
         if not patch or not (manifest_path.parent / patch).is_file():
-            failures.append(f"Entri patch #{index}: berkas patch tidak ada: {patch}")
+            failures.append(f"Patch entry #{index}: patch file is missing: {patch}")
         if not spec.get("files"):
-            failures.append(f"Entri patch #{index} ({patch}): daftar 'files' kosong.")
+            failures.append(f"Patch entry #{index} ({patch}): 'files' is empty.")
 
 for failure in failures:
-    print(f"GAGAL {failure}", file=sys.stderr)
+    print(f"FAIL {failure}", file=sys.stderr)
 if failures:
     sys.exit(1)
-print("deploy dry-run lolos: masukan deploy lengkap, tanpa efek samping.")
+print("deploy dry-run passed: deploy inputs complete, no side effects.")

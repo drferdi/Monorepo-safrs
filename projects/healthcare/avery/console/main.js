@@ -12,7 +12,7 @@ const LOGS_DIR = path.join(HERMES_HOME, 'logs');
 const DB_PATH = path.join(HERMES_HOME, 'state.db');
 const AVATAR_PATH = process.env.AVERY_AVATAR_PATH || '';
 const SCRIPTS_DIR = process.env.AVERY_SCRIPTS_DIR || path.join(USER_HOME, 'Documents', 'scripts');
-// --smoke: jendela tersembunyi, keluar 0 setelah renderer termuat (project.contract.json run).
+// --smoke: hidden window, exits 0 once the renderer has loaded (project.contract.json run).
 const SMOKE = process.argv.includes('--smoke');
 
 const KNOWN_SCRIPTS = [

@@ -1,8 +1,8 @@
-"""Jalankan test suite stdlib unittest capsule Avery tanpa PowerShell.
+"""Run the Avery capsule's stdlib unittest suite without PowerShell.
 
-Setara dengan `scripts/test.ps1`: `PYTHONPATH` diarahkan ke `src`, lalu
-`python -m unittest discover -s tests -t .` dijalankan dari akar capsule.
-Dipakai oleh `project.contract.json`, yang hanya menerima argv tanpa shell.
+Equivalent to `scripts/test.ps1`: `PYTHONPATH` points at `src`, then
+`python -m unittest discover -s tests -t .` runs from the capsule root.
+Used by `project.contract.json`, which accepts argv only, without a shell.
 """
 
 import os
