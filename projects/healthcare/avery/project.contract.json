@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "healthcare/avery",
+  "owner": "Chief (dr. Ferdi Iskandar)",
+  "risk": "R2",
+  "runtime": { "name": "python", "version": "3.12" },
+  "packageManager": { "name": "pnpm", "version": "11.21.0", "lockfile": "pnpm-lock.yaml" },
+  "commands": {
+    "install": { "program": "node", "args": ["scripts/pnpm.mjs", "install", "--frozen-lockfile"] },
+    "lint": {
+      "program": null,
+      "args": [],
+      "notApplicableReason": "No linter is installed for the standard-library Python package or the Electron console (AGENTS.md Commands)."
+    },
+    "typecheck": {
+      "program": null,
+      "args": [],
+      "notApplicableReason": "No type checker is installed; the Python package has no type annotations contract and the console is plain JavaScript (AGENTS.md Commands)."
+    },
+    "test": { "program": "python", "args": ["scripts/run_tests.py"] },
+    "build": { "program": "python", "args": ["-m", "compileall", "-q", "src"] },
+    "run": { "program": "node", "args": ["scripts/pnpm.mjs", "--dir", "console", "exec", "electron", "main.js", "--smoke"] },
+    "deployDryRun": { "program": "python", "args": ["scripts/deploy_dry_run.py"] }
+  },
+  "smoke": {
+    "kind": "none",
+    "notApplicableReason": "The agent runtime is the separately installed Hermes Studio; the capsule's own surface is the Electron Living Console, and the contract schema has no desktop probe. run starts it with --smoke (hidden window, exits 0 after the renderer loads)."
+  },
+  "artifacts": ["src/avery_outbound/__pycache__"],
+  "externalDependencies": [
+    { "kind": "registry", "name": "npm registry", "locator": "https://registry.npmjs.org", "required": true },
+    { "kind": "service", "name": "Hermes Studio WhatsApp bridge health", "locator": "http://127.0.0.1:3000/health", "required": false },
+    { "kind": "registry", "name": "Hermes base image", "locator": "https://hub.docker.com/r/nousresearch/hermes-agent", "required": false }
+  ],
+  "mutableStatePaths": ["node_modules", "console/node_modules", "tests/__pycache__", "scripts/__pycache__"]
+}

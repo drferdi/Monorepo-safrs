@@ -49,6 +49,10 @@ ai/profiles/*.bak-*/
 # alasannya. Backup tinggal di disk lokal saja.
 backups/
 
-# Dependensi lokal Living Console Electron
+# Dependensi lokal Living Console Electron dan workspace pnpm capsule
 console/node_modules/
+node_modules/
+
+# Bytecode Python hasil test dan build
+__pycache__/
 

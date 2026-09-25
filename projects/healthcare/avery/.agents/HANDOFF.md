@@ -1,8 +1,19 @@
 # HANDOFF — Avery (WhatsApp Home Agent)
 
-Last updated: 2026-08-28
+Last updated: 2026-09-25
 
 Baca ini di setiap sesi Avery. **Ditimpa**, bukan ditambah. Keputusan durable: `DECISIONS.md`.
+
+## Standalone contract (branch `feat/avery-standalone`, task `TASK-20260925-AVERY-STANDALONE`, BLOCKED)
+
+Kontrak `project.contract.json` + pnpm lokal + `scripts/run_tests.py` / `deploy_dry_run.py` / `pnpm.mjs` + mode `--smoke` di `console/main.js`. Entri known-nonconformance avery dihapus; `check_project_independence.py` OK. Di ekstraksi verifier: install, build lolos; test lolos bila `APPDATA` ada.
+
+Blocker (bukan di kapsul):
+
+1. Verifier root (`tools/project-standalone`) tidak memberi `APPDATA`/`LOCALAPPDATA`. Test gagal (`%APPDATA%\hermes-studio` tidak terekspansi). Electron crash `0xC0000005` bila `USERPROFILE` terisolasi tanpa folder `AppData\Roaming` dan `AppData\Local` yang **ada**; lolos bila folder dibuat dan dua variabel diarahkan ke sana. Menunggu perbaikan root (keputusan Chief: `root_fix`).
+2. `deploy/Dockerfile.avery` membaca `manifest["patch"]`/`manifest["files"]`, sedangkan `patches/hermes-0.20.5/manifest.json` memakai `patches:[5 entri]`. Build image deploy nyata akan gagal. Deploy dry-run menolak sampai Chief memutuskan (image produksi = R3).
+
+Berikutnya: setelah dua blocker selesai, rebase ke `main`, hapus `node_modules`, `node tools/project-standalone/src/cli.mjs verify healthcare/avery`, `pnpm governance`, task → VERIFYING.
 
 ## Keadaan sekarang
 

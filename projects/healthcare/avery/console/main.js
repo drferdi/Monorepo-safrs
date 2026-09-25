@@ -12,6 +12,8 @@ const LOGS_DIR = path.join(HERMES_HOME, 'logs');
 const DB_PATH = path.join(HERMES_HOME, 'state.db');
 const AVATAR_PATH = process.env.AVERY_AVATAR_PATH || '';
 const SCRIPTS_DIR = process.env.AVERY_SCRIPTS_DIR || path.join(USER_HOME, 'Documents', 'scripts');
+// --smoke: jendela tersembunyi, keluar 0 setelah renderer termuat (project.contract.json run).
+const SMOKE = process.argv.includes('--smoke');
 
 const KNOWN_SCRIPTS = [
   { name: 'Restart Hermes Gateway.bat', label: 'Restart Gateway', tag: 'SYSTEM', desc: 'Restart service dan pembersihan bridge yatim' },
@@ -36,6 +38,7 @@ function createWindow() {
     x: 24,
     y: 24,
     frame: false,
+    show: !SMOKE,
     backgroundColor: '#0D0F14',
     title: 'Avery Sentra — Living Console',
     webPreferences: {
@@ -46,6 +49,10 @@ function createWindow() {
     },
   });
 
+  if (SMOKE) {
+    mainWindow.webContents.once('did-finish-load', () => app.exit(0));
+    mainWindow.webContents.once('did-fail-load', () => app.exit(1));
+  }
   mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));
 
   mainWindow.on('maximize', () => {

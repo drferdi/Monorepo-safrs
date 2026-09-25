@@ -1,0 +1,4 @@
+packages:
+  - console
+allowBuilds:
+  electron: true
