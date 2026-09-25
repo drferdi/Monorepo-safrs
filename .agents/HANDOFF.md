@@ -30,6 +30,11 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
   this branch is merged.
 - Because `AGENTS.md` is a verification control and `.kilo/*` is implementation, the expected
   integrity-review record is Chief-only. Final verification evidence belongs here once available.
+- Verification evidence: `git diff --name-status 5901a8d3...HEAD` lists exactly the four requested
+  files; `git diff --check` exited 0. `pnpm governance` exited 1 only because the expected integrity
+  gate reported `SAFRS_VERIFICATION_INTEGRITY_REVIEW=required`; all preceding governance checks passed.
+- The Python and PowerShell/`sha256sum` fingerprints match:
+  `0eb4fb47e59a658a71f6c526a989134638a116b0b3eff97917798ab45eea3636`.
 
 ## Open items
 
