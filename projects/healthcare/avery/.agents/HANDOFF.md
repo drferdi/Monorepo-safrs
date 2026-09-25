@@ -4,17 +4,15 @@ Last updated: 2026-09-25
 
 Baca ini di setiap sesi Avery. **Ditimpa**, bukan ditambah. Keputusan durable: `DECISIONS.md`.
 
-## Standalone contract (branch `feat/avery-standalone`, task `TASK-20260925-AVERY-STANDALONE`, BLOCKED)
+## Standalone contract (branch `feat/avery-standalone`, task `TASK-20260925-AVERY-STANDALONE`, REVIEW)
 
-Kontrak `project.contract.json` + pnpm lokal + `scripts/run_tests.py` / `deploy_dry_run.py` / `pnpm.mjs` + mode `--smoke` di `console/main.js`. Entri known-nonconformance avery dihapus; `check_project_independence.py` OK. Di ekstraksi verifier: install, build lolos; test lolos bila `APPDATA` ada.
+Kontrak `project.contract.json` + pnpm lokal + `scripts/run_tests.py` / `deploy_dry_run.py` / `pnpm.mjs` + mode `--smoke` di `console/main.js`. Entri known-nonconformance avery dihapus.
 
-Blocker tersisa (bukan di kapsul):
+`deploy/Dockerfile.avery` kini menerapkan `patches[]` berurutan (izin Chief 2026-09-25); diuji dengan simulasi patch berantai, **belum** diuji `docker build` nyata, belum dideploy.
 
-1. Verifier root (`tools/project-standalone`) tidak memberi `APPDATA`/`LOCALAPPDATA`. Test gagal (`%APPDATA%\hermes-studio` tidak terekspansi). Electron crash `0xC0000005` bila `USERPROFILE` terisolasi tanpa folder `AppData\Roaming` dan `AppData\Local` yang **ada**; lolos bila folder dibuat dan dua variabel diarahkan ke sana. Menunggu perbaikan root (keputusan Chief: `root_fix`).
+Verifikasi (rebase ke `main` 481801fc, tanpa `node_modules`): `verify healthcare/avery` → RESULT PASS (lint/typecheck SKIP beralasan). `pnpm governance`: semua lolos kecuali `check_sensitive_changes.py`, karena change set menyentuh `.safrs/known-nonconformance.json` bersama implementasi kapsul.
 
-Diperbaiki atas izin Chief (2026-09-25): `deploy/Dockerfile.avery` sebelumnya membaca `manifest["patch"]`/`["files"]` padahal manifest memakai `patches:[5 entri]` (build image akan gagal). Sekarang menerapkan `patches[]` berurutan (fallback skema lama), diuji dengan simulasi patch berantai + `patch.exe`; **belum** diuji `docker build` nyata, belum dideploy. Deploy dry-run lolos.
-
-Berikutnya: setelah perbaikan verifier root masuk, rebase ke `main`, hapus `node_modules`, `node tools/project-standalone/src/cli.mjs verify healthcare/avery`, `pnpm governance`, task → VERIFYING.
+Berikutnya: integrity review Chief (`.safrs/reviews/verification-integrity.json`), lalu merge.
 
 ## Keadaan sekarang
 
