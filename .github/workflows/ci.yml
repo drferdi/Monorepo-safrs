@@ -60,6 +60,8 @@ jobs:
         run: pnpm governance
       - name: Verify automation policy
         run: node --test tests/repository/automation-policy.test.mjs
+      - name: Verify workspace, lockfile and token scope
+        run: node --test tests/repository/workspace-config.test.mjs
       - name: Verify supply chain
         run: pnpm check:security
       - name: Lint

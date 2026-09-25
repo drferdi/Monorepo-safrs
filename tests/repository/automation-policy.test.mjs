@@ -291,6 +291,11 @@ test("CI proves the full safe verification path without deployment", () => {
     workflow,
     /node --test tests\/repository\/automation-policy\.test\.mjs/u,
   );
+  // The lockfile and token-scope guards need no database or .env, so CI runs them directly.
+  assert.match(
+    workflow,
+    /node --test tests\/repository\/workspace-config\.test\.mjs/u,
+  );
   assert.doesNotMatch(workflow, /\bdeploy\b/iu);
 
   const governance = readFileSync(governanceFile, "utf8");
