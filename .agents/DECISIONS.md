@@ -3,6 +3,18 @@
 Append-only, newest first. Each entry: date, decision, brief rationale, evidence/status.
 Major architectural decisions also get an ADR in `docs/adrs/`.
 
+## 2026-09-25 - Root token gate scans only the root workspace; lockfile guard
+
+Chief approved ("implement Point 1-2-3"): the root token gate (`packages/token/scope.txt`) no
+longer scans capsules the root workspace excludes; a standalone capsule owns its own token gate
+(smartboard already runs one; sentrabot and golden-path do not yet). `scope.txt` keeps
+`packages/token`, `packages/ui`, and control-center. A repository test enforces the rule, and a
+second one fails when `pnpm-lock.yaml` keeps an importer for an excluded capsule, because pnpm 11
+keeps such an importer and still passes `--frozen-lockfile`. Security: root `next` 16.3.6 (also
+forced over the optional `next` peer of `@sentra/token`), overrides for `sharp`, `mysql2`,
+`fast-uri`; kediri and smartboard patch `next` and `sharp` in their own lockfiles (kediri also
+`js-yaml`). `pnpm audit` reports no high or critical advisory in the root or either capsule.
+
 ## 2026-09-25 - Root has no demonstrator; golden-path leaves the root workspace
 
 Asked whether the root still needs a demonstrator once golden-path becomes standalone (Cursor
