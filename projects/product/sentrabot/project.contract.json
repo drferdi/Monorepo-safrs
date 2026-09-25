@@ -6,7 +6,11 @@
   "runtime": { "name": "node", "version": "24.18.0" },
   "packageManager": { "name": "pnpm", "version": "9.15.0", "lockfile": "pnpm-lock.yaml" },
   "commands": {
-    "install": { "program": "node", "args": ["scripts/pnpm.mjs", "install", "--frozen-lockfile"] },
+    "install": {
+      "program": "node",
+      "args": ["scripts/pnpm.mjs", "install", "--frozen-lockfile"],
+      "timeoutSeconds": 300
+    },
     "lint": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "lint"] },
     "typecheck": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "check"] },
     "test": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "test"] },
