@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/"
+title = "Sentra AI Dashboard"
+version = "1.0.0"
+id = "artifacts/stride-dashboard"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19964
+
+[services.development]
+run = "pnpm --filter @workspace/stride-dashboard run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/stride-dashboard", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/stride-dashboard/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19964"
+BASE_PATH = "/"

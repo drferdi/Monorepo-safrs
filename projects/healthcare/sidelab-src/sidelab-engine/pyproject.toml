@@ -1,0 +1,42 @@
+# Blueprinted & built by codieverse+.
+[project]
+name = "sidelab"
+version = "0.1.0"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+cache_dir = ".cache/pytest"
+testpaths = ["tests"]
+markers = [
+    "live: tests that require live backend credentials (DeepSeek API key)",
+    "regression: regression tests covering milestone features",
+    "performance: performance regression tests requiring live LLM backend (slow)",
+]
+addopts = "--cov=sidelab --cov-report=term-missing --cov-fail-under=80"
+
+[tool.black]
+line-length = 88
+target-version = ['py312']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+exclude = [
+    "build/",
+    "dist/",
+    "installer/",
+    ".cache/",
+    ".venv/",
+]

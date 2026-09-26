@@ -1,0 +1,22 @@
+{
+  "_meta": {
+    "schema_version": "1.0",
+    "updated_at": "2026-06-19",
+    "description": "Threshold regression SIDELAB. max_disruption=14 adalah baseline pre-fix session; tighten setelah E2E fresh dengan fix tablet/split-line."
+  },
+  "panel_rates": {
+    "max_disruption_panel_per_20_skenario": 14,
+    "max_lint_alert_per_20_skenario": 6,
+    "min_lint_alert_per_20_with_pasien": 1,
+    "max_per_skenario_lint_alerts": 4
+  },
+  "verification_rates": {
+    "min_lintas_skenario_verified_rate": 0.55,
+    "min_fornas_verified_rate": 0.3
+  },
+  "ttft_latency": {
+    "max_p95_seconds": 15.0,
+    "max_avg_seconds": 8.0,
+    "max_minute_factor": 12.0
+  }
+}

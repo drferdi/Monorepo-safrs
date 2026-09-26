@@ -1,0 +1,8 @@
+{
+  "files": [],
+  "references": [
+    { "path": "lib/api-zod" },
+    { "path": "lib/api-client-react" },
+    { "path": "lib/db" }
+  ]
+}

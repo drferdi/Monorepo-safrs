@@ -1,0 +1,27 @@
+kind = "web"
+previewPath = "/sidelab-video"
+title = "CDSS FKTP — Sidelab Video"
+version = "1.0.0"
+id = "artifacts/sidelab-video"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/sidelab-video" ]
+localPort = 19965
+
+[services.development]
+run = "pnpm --filter sidelab-video run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "sidelab-video", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/sidelab-video/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19965"
+BASE_PATH = "/sidelab-video"

@@ -1,0 +1,146 @@
+{
+  "paracetamol": {
+    "ddi": "Warfarin ↑ INR; alkohol kronis ↑ hepatotoksisitas",
+    "ki": "Gagal hati berat, alergi paracetamol"
+  },
+  "parasetamol": {
+    "ddi": "Warfarin ↑ INR; alkohol kronis ↑ hepatotoksisitas",
+    "ki": "Gagal hati berat, alergi parasetamol"
+  },
+  "ibuprofen": {
+    "ddi": "Aspirin ↓ efektivitas; antikoagulan ↑ risiko perdarahan; ACE-I/ARB/diuretik ↓ efek antihipertensi",
+    "ki": "Asma NSAID-sensitif, ulkus peptikum aktif, gagal ginjal berat, hamil trimester 3"
+  },
+  "amitriptyline": {
+    "ddi": "MAOI ↑ risiko serotonin syndrome; CNS depressants ↑ sedasi; antikolinergik ↑ efek AC",
+    "ki": "Infark miokard akut, aritmia, glaukoma sudut sempit, retensi urine"
+  },
+  "amitriptilin": {
+    "ddi": "MAOI ↑ risiko serotonin syndrome; CNS depressants ↑ sedasi; antikolinergik ↑ efek AC",
+    "ki": "Infark miokard akut, aritmia, glaukoma sudut sempit, retensi urine"
+  },
+  "methylergometrine": {
+    "ddi": "⚠ Oksitosin (sinergis — risiko tetani uterus); CYP3A4 inhibitors ↑ kadar ergot; MAOI ↑ risiko krisis hipertensi",
+    "ki": "Hipertensi, preeklampsia/eclampsia, penyakit jantung iskemik, sepsis, alergi ergot"
+  },
+  "methylergometrin": {
+    "ddi": "⚠ Oksitosin (sinergis — risiko tetani uterus); CYP3A4 inhibitors ↑ kadar ergot; MAOI ↑ risiko krisis hipertensi",
+    "ki": "Hipertensi, preeklampsia/eclampsia, penyakit jantung iskemik, sepsis, alergi ergot"
+  },
+  "amoxicillin": {
+    "ddi": "⚠ Allopurinol ↑ risiko rash; probenesid ↑ kadar amoksisilin; antikoagulan oral ↑ INR; metotreksat ↑ toksisitas",
+    "ki": "Hipersensitivitas penisilin/beta-laktam, mononukleosis, asma dengan riwayat alergi antibiotik"
+  },
+  "amoxicillin-clavulanate": {
+    "ddi": "⚠ Allopurinol ↑ risiko rash; probenesid ↑ kadar amoksisilin; antikoagulan oral ↑ INR; metotreksat ↑ toksisitas",
+    "ki": "Hipersensitivitas penisilin/beta-laktam, gangguan hati terkait amoksiklav, mononukleosis"
+  },
+  "amoksisilin-klavulanat": {
+    "ddi": "⚠ Allopurinol ↑ risiko rash; probenesid ↑ kadar amoksisilin; antikoagulan oral ↑ INR; metotreksat ↑ toksisitas",
+    "ki": "Hipersensitivitas penisilin/beta-laktam, gangguan hati terkait amoksiklav, mononukleosis"
+  },
+  "amoksisilin": {
+    "ddi": "⚠ Allopurinol ↑ risiko rash; probenesid ↑ kadar amoksisilin; antikoagulan oral ↑ INR; metotreksat ↑ toksisitas",
+    "ki": "Hipersensitivitas penisilin/beta-laktam, mononukleosis, asma dengan riwayat alergi antibiotik"
+  },
+  "kotrimoksazol": {
+    "ddi": "⚠ Warfarin ↑ INR; metotreksat ↑ toksisitas; ACE-I/ARB ↑ hiperkalemia; diuretik ↑ hiperkalemia",
+    "ki": "Alergi sulfa, kehamilan trimester 3, defisiensi G6PD, anemia megaloblastik"
+  },
+  "cotrimoxazole": {
+    "ddi": "⚠ Warfarin ↑ INR; metotreksat ↑ toksisitas; ACE-I/ARB ↑ hiperkalemia; diuretik ↑ hiperkalemia",
+    "ki": "Alergi sulfa, kehamilan trimester 3, defisiensi G6PD, anemia megaloblastik"
+  },
+  "trimethoprim": {
+    "ddi": "⚠ Warfarin ↑ INR; metotreksat ↑ toksisitas; ACE-I/ARB ↑ hiperkalemia",
+    "ki": "Alergi sulfa, kehamilan trimester 3, defisiensi G6PD, anemia megaloblastik"
+  },
+  "sulfamethoxazole": {
+    "ddi": "⚠ Warfarin ↑ INR; metotreksat ↑ toksisitas; ACE-I/ARB ↑ hiperkalemia",
+    "ki": "Alergi sulfa, kehamilan trimester 3, defisiensi G6PD, anemia megaloblastik"
+  },
+  "fe": {
+    "ddi": "⚠ Antasida/PPI/H2-blocker ↓ absorpsi; levotiroksin ↓ absorpsi; tetrasiklin/quinolone (khelasi Fe ↓ efektivitas)",
+    "ki": "Hemokromatosis, talasemia major, anemia hemolitik, ulkus GI aktif berdarah"
+  },
+  "ferrous": {
+    "ddi": "⚠ Antasida/PPI/H2-blocker ↓ absorpsi; levotiroksin ↓ absorpsi; tetrasiklin/quinolone (khelasi Fe ↓ efektivitas)",
+    "ki": "Hemokromatosis, talasemia major, anemia hemolitik, ulkus GI aktif berdarah"
+  },
+  "albendazol": {
+    "ddi": "⚠ Cimetidine/praziquantel ↑ kadar albendazol; dexamethasone/antikonvulsan (fenitoin, karbamazepin, fenobarbital) ↓ kadar albendazol",
+    "ki": "Kehamilan trimester 1, hipersensitivitas benzimidazol, kerusakan retina (neurocysticercosis)"
+  },
+  "albendazole": {
+    "ddi": "⚠ Cimetidine/praziquantel ↑ kadar albendazol; dexamethasone/antikonvulsan (fenitoin, karbamazepin, fenobarbital) ↓ kadar albendazol",
+    "ki": "Kehamilan trimester 1, hipersensitivitas benzimidazol, kerusakan retina (neurocysticercosis)"
+  },
+  "diethylcarbamazine": {
+    "ddi": "⚠ Ivermectin (↑ risiko encephalopathy jika ko-infeksi Loa loa); alkohol/CNS depressants ↑ sedasi",
+    "ki": "Kehamilan, riwayat epilepsi, infeksi Loa loa, gagal ginjal berat, hipertensi tak terkontrol"
+  },
+  "dec": {
+    "ddi": "⚠ Ivermectin (↑ risiko encephalopathy jika ko-infeksi Loa loa); alkohol/CNS depressants ↑ sedasi",
+    "ki": "Kehamilan, riwayat epilepsi, infeksi Loa loa, gagal ginjal berat, hipertensi tak terkontrol"
+  },
+  "vitamin c": {
+    "ddi": "Aluminium antasida ↑ absorpsi aluminium; warfarin dapat mengubah INR bila dosis tinggi",
+    "ki": "Nefrolitiasis oksalat berulang, hemokromatosis relatif, hipersensitivitas"
+  },
+  "asam askorbat": {
+    "ddi": "Aluminium antasida ↑ absorpsi aluminium; warfarin dapat mengubah INR bila dosis tinggi",
+    "ki": "Nefrolitiasis oksalat berulang, hemokromatosis relatif, hipersensitivitas"
+  },
+  "zinc": {
+    "ddi": "Quinolone/tetrasiklin ↓ absorpsi (khelasi); penicillamine ↓ kadar zinc",
+    "ki": "Hipersensitivitas, penggunaan jangka panjang dosis tinggi berisiko defisiensi tembaga"
+  },
+  "vitamin b kompleks": {
+    "ddi": "Levodopa tanpa carbidopa dapat ↓ efek karena pyridoxine; chloramphenicol dapat ↓ respons hematologis folat/B12",
+    "ki": "Hipersensitivitas, neuropati sensorik pada pyridoxine dosis tinggi jangka panjang"
+  },
+  "b complex": {
+    "ddi": "Levodopa tanpa carbidopa dapat ↓ efek karena pyridoxine; chloramphenicol dapat ↓ respons hematologis folat/B12",
+    "ki": "Hipersensitivitas, neuropati sensorik pada pyridoxine dosis tinggi jangka panjang"
+  },
+  "bromhexine": {
+    "ddi": "Antibiotik (amoksisilin, eritromisin, doksisiklin) ↑ penetrasi ke jaringan paru via peningkatan sekresi",
+    "ki": "Hipersensitivitas bromhexine; tukak lambung aktif (gunakan hati-hati)"
+  },
+  "bromheksin": {
+    "ddi": "Antibiotik (amoksisilin, eritromisin, doksisiklin) ↑ penetrasi ke jaringan paru via peningkatan sekresi",
+    "ki": "Hipersensitivitas bromhexine; tukak lambung aktif (gunakan hati-hati)"
+  },
+  "erdosteine": {
+    "ddi": "Tidak ada interaksi signifikan yang diketahui pada dosis terapeutik",
+    "ki": "Hipersensitivitas, gagal ginjal/hati berat, kehamilan trimester 1"
+  },
+  "erdostein": {
+    "ddi": "Tidak ada interaksi signifikan yang diketahui pada dosis terapeutik",
+    "ki": "Hipersensitivitas, gagal ginjal/hati berat, kehamilan trimester 1"
+  },
+  "n-acetylcysteine": {
+    "ddi": "Nitrat: vasodilatasi ↑ (dapat menyebabkan hipotensi); tidak dicampur dengan antibiotik dalam larutan IV",
+    "ki": "Hipersensitivitas, riwayat bronkospasme (gunakan hati-hati pada asma)"
+  },
+  "n-asetilsistein": {
+    "ddi": "Nitrat: vasodilatasi ↑ (dapat menyebabkan hipotensi); tidak dicampur dengan antibiotik dalam larutan IV",
+    "ki": "Hipersensitivitas, riwayat bronkospasme (gunakan hati-hati pada asma)"
+  },
+  "salbutamol": {
+    "ddi": "Beta-blocker ↓ efek bronkodilatasi; teofilin + salbutamol ↑ risiko hipokalemia; digoxin ↑ aritmia",
+    "ki": "Hipersensitivitas, takikardia, tirotoksikosis tidak terkontrol"
+  },
+  "dextromethorphan": {
+    "ddi": "MAO inhibitor: sindrom serotonin mengancam jiwa; SSRI: ↑ risiko serotonin; codein concurrent: depresi SSP",
+    "ki": "Penggunaan MAO inhibitor, batuk produktif banyak dahak, anak <2 tahun"
+  },
+  "deksametazon": {
+    "ddi": "NSAID ↑ risiko ulkus; antidiabetik: ↓ kontrol gula; digoxin ↑ toksisitas; rifampisin ↓ kadar kortikosteroid",
+    "ki": "Infeksi sistemik tidak terkontrol, ulkus peptikum aktif, osteoporosis berat"
+  },
+  "dexamethasone": {
+    "ddi": "NSAID ↑ risiko ulkus; antidiabetik: ↓ kontrol gula; digoxin ↑ toksisitas; rifampisin ↓ kadar kortikosteroid",
+    "ki": "Infeksi sistemik tidak terkontrol, ulkus peptikum aktif, osteoporosis berat"
+  }
+}

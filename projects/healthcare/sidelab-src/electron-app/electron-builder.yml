@@ -1,0 +1,63 @@
+appId: com.ferdiiskandar.cdss-fktp
+productName: CDSS FKTP - Sidelab
+copyright: "© dr Ferdi Iskandar"
+
+# Output directory for installers
+directories:
+  output: dist-electron
+  buildResources: build-resources
+
+# Files to include from electron-app/ itself
+files:
+  - main.js
+  - preload.js
+
+# Extra resources bundled alongside the app executable
+# These land at  <app>/Resources/  (mac/linux) or  <app>/resources/  (win)
+# Accessed at runtime via  process.resourcesPath
+extraResources:
+  - from: "../sidelab-engine"
+    to: "engine"
+    filter:
+      - "**/*"
+      - "!**/__pycache__"
+      - "!**/*.pyc"
+      - "!**/*.pyo"
+  - from: "../artifacts/api-server/dist"
+    to: "api"
+  - from: "../artifacts/stride-dashboard/dist/public"
+    to: "ui"
+
+# ── Windows ────────────────────────────────────────────────────────────────
+win:
+  target:
+    - target: nsis
+      arch: [x64]
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: "CDSS FKTP"
+
+# ── macOS ──────────────────────────────────────────────────────────────────
+mac:
+  target:
+    - target: dmg
+      arch: [x64, arm64]
+  category: public.app-category.medical
+  darkModeSupport: true
+
+dmg:
+  window:
+    width: 540
+    height: 380
+
+# ── Linux ──────────────────────────────────────────────────────────────────
+linux:
+  target:
+    - target: AppImage
+      arch: [x64]
+  category: Medical
+  synopsis: "CDSS FKTP berbasis Sidelab"
