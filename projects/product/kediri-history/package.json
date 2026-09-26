@@ -14,6 +14,8 @@
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test && node scripts/check-tokens.mjs",
     "test:e2e": "pnpm --filter @kediri/web e2e",
+    "test:e2e:production": "pnpm --filter @kediri/web e2e:production",
+    "test:e2e:production:built": "node scripts/check-production-journey.mjs && pnpm --filter @kediri/web e2e:production:built",
     "build": "pnpm -r build",
     "start": "node scripts/serve.mjs",
     "deploy:dry-run": "node scripts/deploy-dry-run.mjs",

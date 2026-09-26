@@ -89,6 +89,11 @@ jobs:
       - name: Install browser engine
         run: pnpm exec playwright install --with-deps chromium
 
+      # Jalankan terhadap `.next` dari build di atas, sebelum E2E dev dapat
+      # menggantinya. Ini menangkap gagal hidrasi, chunk, dan motion production.
+      - name: Production motion evidence
+        run: pnpm run test:e2e:production:built
+
       - name: Browser evidence
         run: pnpm run test:e2e
 
