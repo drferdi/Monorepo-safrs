@@ -3,6 +3,31 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-27 — Referral sender from the environment; engine reads only its own .env
+
+- Decision (Chief, R3 approved): `format_referral` takes the sender from
+  `SIDELAB_REFERRAL_SENDER_NAME`, `SIDELAB_REFERRAL_SENDER_FACILITY`, and
+  `SIDELAB_REFERRAL_SENDER_CITY` (each `-` when unset) instead of a named clinician and
+  puskesmas in code.
+- `sidelab/notify/config.py` loads only `sidelab-engine/.env` (`ENGINE_ENV_PATH`); it no longer
+  searches upward into the Monorepo. Keys such as `DEEPSEEK_API_KEY` must live in that file.
+- Evidence: `tests/notify/test_referral_sender_and_env.py` failed 4/4 before the change and
+  passes after it; the engine suite passes (1062 tests, coverage 96.87%).
+
+## 2026-09-27 — Tests isolated from real services; coverage gate met
+
+- Decision: `deepseek-v4-flash` is the correct default model (Chief's default for decision B).
+  The code and tests already agreed; `deepseek-chat` came from the Monorepo root `.env`, which
+  `load_dotenv()` in `sidelab/notify/config.py` finds by searching upward from the capsule.
+- `tests/conftest.py` now fakes `ollama` ("no server"), disables that upward `.env` search
+  during tests, and sets a fake `DEEPSEEK_API_KEY` per test. Before this, the machine's real key
+  made 22 `main()` flow tests pass only on this computer, and `import ollama` failed with an
+  SSL error when a test had emptied `os.environ`.
+- 14 new characterization test files (298 tests) raise coverage from 65% to about 97%; the 80%
+  gate is unchanged. Production code (`sidelab/**`, R3) was not changed. Behaviour that looked
+  wrong was left out of the tests and listed in `HANDOFF.md` for Chief.
+- Evidence: `node scripts/pnpm.mjs run test`: 1058 passed, coverage 96.87%.
+
 ## 2026-09-27 — Migrated from abyss-monorepo into SAFRS
 
 - Decision: The legacy folder `abyss-monorepo/apps/healthcare/sidelab-src` was copied as it is

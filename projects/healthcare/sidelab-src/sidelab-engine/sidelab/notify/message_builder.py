@@ -1,4 +1,5 @@
 # Architected and built by codieverse+.
+import os
 from datetime import datetime
 
 
@@ -30,8 +31,21 @@ def format_normal(response_text: str, session_id: str) -> str:
     return header + response_text[:3800]
 
 
+def _referral_sender() -> tuple[str, str, str]:
+    """Pengirim rujukan dari environment; tidak ada nama orang atau fasilitas di kode."""
+    return tuple(
+        os.getenv(name, "").strip() or "-"
+        for name in (
+            "SIDELAB_REFERRAL_SENDER_NAME",
+            "SIDELAB_REFERRAL_SENDER_FACILITY",
+            "SIDELAB_REFERRAL_SENDER_CITY",
+        )
+    )
+
+
 def format_referral(response_text: str, pasien: dict, session_id: str) -> str:
     greeting = _greeting()
+    sender, facility, city = _referral_sender()
     nama = pasien.get("nama", "-")
     umur = pasien.get("umur", "-")
     jk = pasien.get("jk", "-")
@@ -53,7 +67,7 @@ def format_referral(response_text: str, pasien: dict, session_id: str) -> str:
 
     body = f"""Selamat {greeting} dokter,
 
-Saya dr Ferdi Iskandar dari Puskesmas Balowerti kota Kediri ijin mengirimkan pasien :
+Saya {sender} dari {facility} {city} ijin mengirimkan pasien :
 
 Atas nama: {nama}
 Umur: {umur} tahun
@@ -67,8 +81,8 @@ Alergi: {alergi}
 Mohon arahan dan tindak lanjut lebih lanjut dokter.
 
 Terima kasih.
-dr Ferdi Iskandar
-Puskesmas Balowerti
-Kota Kediri
+{sender}
+{facility}
+{city}
 """
     return body[:4000]

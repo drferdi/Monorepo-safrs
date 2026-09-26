@@ -7,9 +7,9 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 
 ## Current state
 
-Migrated from abyss-monorepo on 2026-09-27 (see `DECISIONS.md`). Install, typecheck, build,
-`start:local`, and the deploy dry run work from the capsule root. The 317 clinical tests and
-`run_safety_tests.py` pass. The full `test` fails, exactly as in legacy (below).
+Install, typecheck, test, build, `start:local`, and the deploy dry run work from the capsule
+root. The engine suite passes (1058 tests) with coverage about 97% against the 80% gate; tests
+are isolated from Ollama, the machine's `.env`, and real API keys (see `DECISIONS.md`).
 
 ## Work in flight
 
@@ -17,16 +17,26 @@ None.
 
 ## Blockers
 
-`test` is red with inherited failures, left as they were on Chief's instruction (2026-09-27).
+None.
 
 ## Next action
 
-Fix these in the new Monorepo, with Chief's approval where clinical code is touched:
+Needs Chief's approval (`sidelab/**` is R3); none of these is encoded in the tests:
 
-1. Isolate tests that reach real services (local Ollama, provider readiness): on 2026-09-27
-   the suite had 5 failures in this folder and 24 in the verifier's fresh extraction, many with
-   network or SSL errors.
-2. Three `startup_disclosure` tests expect the model name `deepseek-v4-flash`; the code shows
-   `deepseek-chat`. Decide which is correct, then align code or tests.
-3. The pytest coverage gate (`--cov-fail-under=80` in `sidelab-engine/pyproject.toml`) reports
-   about 65%. Add tests; do not lower the gate without Chief's decision.
+1. Add the referral sender variables to `sidelab-engine/.env.example` (agents cannot edit
+   `.env*` files): `SIDELAB_REFERRAL_SENDER_NAME=`, `SIDELAB_REFERRAL_SENDER_FACILITY=`,
+   `SIDELAB_REFERRAL_SENDER_CITY=`; put real values and `DEEPSEEK_API_KEY` in
+   `sidelab-engine/.env`, which is now the only `.env` the engine reads.
+2. `llm/local_client.available_models()` catches only `ImportError`; an SSL error while
+   importing `ollama` escapes.
+3. Clinical logic suspected wrong: `tui._update_sidebar_from_text` labels "belum definitif" and
+   "tidak pasti" as DEFINITIVE; `intelligence` aliases never apply, `normalize_query` expands
+   "dd" to diabetes and "utk" to ulkus traumatik, vital-sign regexes read "sesak napas 3 hari"
+   as RR 3, and free-text vitals discard documented ones; `message_builder.is_referral` treats
+   "tidak perlu rujuk" as a referral; `pharma` drops the tablets-per-dose of "3x2";
+   `fornas_loader.find_interactions` drops interactions with an unknown level.
+4. Config parsing: bool threshold overrides become the string "false" (truthy); nested
+   threshold env names drop the parent prefix; `validator_config` replaces a configured 0 with
+   3 or 5; explicit-path loads overwrite the module cache.
+5. `test_short_query_without_red_flags_down_ranks_severe_disease_name` locks in a 10-point
+   penalty for severe diagnoses on short complaints without red-flag cues; confirm or remove.

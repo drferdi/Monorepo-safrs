@@ -9,14 +9,12 @@
   (pharmacology guardrails, no fabrication, red flags, emergency referral, drug interactions).
 - `sidelab-engine/tests/clinical/` — clinical tests (317 passing on 2026-09-27).
 
-## Known gaps (left as in legacy, Chief 2026-09-27)
+## Test isolation (2026-09-27)
 
-- The suite is red, and how red depends on the machine. On 2026-09-27: 5 failures when run in
-  this folder, 24 in the verifier's fresh extraction. Several tests reach real services (the
-  local Ollama server, model provider readiness) and fail with network or SSL errors when those
-  are unavailable; they need to be isolated with fakes.
-- Three `startup_disclosure` tests expect the model name `deepseek-v4-flash`; the code shows
-  `deepseek-chat`.
-- Coverage is about 65% against the gate of 80%.
+`sidelab-engine/tests/conftest.py` keeps every test away from real services and machine
+configuration: a fake `ollama` module that behaves like "no server", a no-op for the
+`.env` loader in `sidelab/notify/config.py` (it searches upward and would otherwise read a
+`.env` above the capsule), and a fake `DEEPSEEK_API_KEY` per test (tests of a missing key set
+their own value). The suite passes (1058 tests) with coverage about 97% against the 80% gate.
 
 The clinical tests and `run_safety_tests.py` pass.
