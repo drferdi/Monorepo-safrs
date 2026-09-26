@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-09-26 (Claude Code, branch `fix/independence-skip-ignored`)
+Last updated: 2026-09-27 (Claude Code, branch `migrate/healthcare`)
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
 cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>/.agents/`.
@@ -21,6 +21,20 @@ cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>
   `pnpm-store-never-at-drive-root`).
 
 ## Work in flight
+
+`migrate/healthcare` (local only, not pushed): brief
+`docs/plans/active/2026-09-26-healthcare-migration-brief.md`, one commit per capsule.
+- Migrated from abyss-monorepo as standalone capsules: sentraverse, assistverse, referralink,
+  healthsphere, med-assist, medboard, sidelab-src. The root workspace excludes
+  `projects/healthcare/**`.
+- Clinical paths registered in `.safrs/sensitive-paths.json` as R3 (medboard CDSS, med-assist
+  diagnosis engine, emergency detector, clinical lib and `penyakit.json`, sidelab engine and its
+  clinical tests, mantra hospital and integrations apps).
+- Left for the new Monorepo on Chief's instruction (2026-09-27): medboard's 4 hidden CDSS test
+  failures, sidelab's 3 failing tests and coverage gate (its `test` is red), and mantra, which
+  waits in the gitignored `docs/plans/active/healthcare-migration-tools/mantra-staging` without a
+  contract. Melinda is deferred and untouched.
+- Chief: re-point Railway/Vercel to the new capsule folders and decide whether to push the branch.
 
 `fix/independence-skip-ignored`, base `dba377cd`, claim `INDEPENDENCE-SKIP-GIT-IGNORED` (R2):
 - `check_project_independence.py` read every file on disk, so the ignored avery `runtime/` (3.1 GB of
