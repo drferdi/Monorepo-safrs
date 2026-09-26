@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+
+/* Tokens live in style.css :root (imported before this file) */
+
+@layer base {
+  body {
+    @apply antialiased;
+    background-color: var(--sentra-bg);
+    color: var(--text-main);
+  }
+}
+
+@layer components {
+  .sidepanel-shell {
+    @apply min-h-screen font-sans antialiased;
+  }
+
+  .sentra-card {
+    @apply bg-sentra-card border border-sentra-border rounded-xl overflow-hidden shadow-neu-card transition-colors duration-500;
+    position: relative;
+  }
+
+  .sentra-card::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: var(--neu-highlight-line);
+    pointer-events: none;
+  }
+  .light .sentra-card {
+    background: var(--sentra-card);
+    border-color: var(--sentra-border);
+    color: var(--text-main);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.04),
+      0 20px 40px -10px rgba(0, 0, 0, 0.5);
+  }
+
+  .sentra-card--inset {
+    @apply bg-gray-900/50 border border-sentra-border rounded-lg;
+  }
+  .light .sentra-card--inset {
+    background: var(--bg-inset);
+    border-color: var(--sentra-border);
+    color: var(--text-main);
+    @apply shadow-none;
+  }
+
+  .sentra-card--elevated {
+    @apply bg-sentra-card border border-sentra-green rounded-xl;
+    box-shadow: 0 0 15px var(--accent-glow-soft);
+  }
+  .light .sentra-card--elevated {
+    background: var(--bg-elevated);
+    border-color: rgba(16, 185, 129, 0.25);
+    box-shadow: 0 0 15px var(--accent-glow-soft);
+  }
+
+  .engine-btn {
+    @apply bg-sentra-card text-sentra-muted border border-sentra-border rounded-lg px-3 py-1.5 text-[10px] font-semibold tracking-wider transition-all duration-200 ease-out;
+  }
+  .light .engine-btn {
+    background: var(--sentra-card);
+    color: var(--text-muted);
+    border-color: var(--sentra-border);
+  }
+
+  .engine-btn:hover {
+    @apply text-platinum border-sentra-green/50 transform -translate-y-px;
+  }
+  .light .engine-btn:hover {
+    color: var(--text-main);
+    border-color: rgba(16, 185, 129, 0.35);
+  }
+
+  .engine-btn.active {
+    @apply text-sentra-green border-sentra-green bg-sentra-green/10;
+  }
+  /* Light = illuminated dark — active state harus glow teal, bukan emerald-50 putih */
+  .light .engine-btn.active {
+    color: #7ab8a4;
+    background: rgba(16, 185, 129, 0.15);
+    border-color: rgba(16, 185, 129, 0.45);
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.2);
+  }
+
+  .neu-input {
+    @apply bg-gray-900/50 border border-sentra-border rounded-lg px-4 py-3 w-full shadow-inner;
+    @apply text-platinum placeholder-sentra-muted transition-all duration-200;
+  }
+  .light .neu-input {
+    background: var(--bg-inset);
+    color: var(--text-main);
+    border-color: var(--sentra-border);
+    @apply placeholder-light-text-muted shadow-none;
+  }
+
+  .neu-input:focus {
+    @apply outline-none border-sentra-green/80 bg-black/50;
+  }
+  .light .neu-input:focus {
+    background: var(--bg-inset);
+    border-color: rgba(16, 185, 129, 0.45);
+    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.15);
+    @apply outline-none;
+  }
+
+  .cta-primary {
+    @apply bg-white text-black font-bold py-3 px-6 rounded-lg text-center w-full;
+    @apply transition-all duration-200 ease-in-out;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+  }
+  .light .cta-primary {
+    background: rgba(16, 185, 129, 0.9);
+    @apply text-white;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
+  }
+
+  .cta-primary:hover {
+    @apply transform -translate-y-[2px];
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.25);
+  }
+
+  .cta-primary:active {
+    @apply transform translate-y-0 scale-95 opacity-90;
+  }
+}

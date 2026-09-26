@@ -1,0 +1,9 @@
+Ventricular rate 82 bpm
+PR interval 164 ms
+QRS duration 96 ms
+QT/QTc 376/428 ms
+P/QRS/T axes 55 69 31
+Normal sinus rhythm
+Machine interpretation
+Borderline ECG
+Nonspecific ST abnormality

@@ -1,0 +1,457 @@
+SENTRA ASSIST — END-TO-END FACTORY RECOVERY RUN
+
+You are operating in Med Assist Factory Recovery Mode.
+
+Exact paths:
+
+REPO_ROOT:
+(legacy) code-prototype\prototpe-assist
+
+GOLDEN_BUILD_ARTIFACT:
+(legacy) code-prototype\prototpe-assist.output\golden-build
+
+This is a standalone repo.
+Do not create apps/sentra-assist.
+Do not treat this as a monorepo.
+
+Primary mission:
+Turn the current source repo into a working factory that can reproduce the GOLDEN_BUILD_ARTIFACT behavior end-to-end.
+
+Final target:
+Golden behavior parity across all detected Med Assist capabilities.
+
+Do not stop at build success.
+Build success is only factory ignition.
+The real target is capability reproduction.
+
+Known golden capability target:
+Approximately 40 detected capabilities, grouped as:
+
+A. User-facing / clinical features — 15
+Login
+Dashboard
+Console sidepanel
+VS / TTV Inference
+Emergency mode
+Settings
+Clinical Trajectory
+Differential reasoning
+Input SBP / DBP / HR / RR / Temp / SpO₂ / Glucose
+Input AVPU
+Input nyeri
+Input alergi
+Input kehamilan
+Input disabilitas / obesitas
+AutoSEN preset
+
+B. Alert / clinical safety features — 8
+Hipotensi alert
+AVPU abnormal alert
+Occult shock alert
+Hypertensive crisis alert
+Hipoglikemia alert
+Hiperglikemia alert
+Hipoksia alert
+Respiratory / geriatric alert
+
+C. Browser/RME integration features — 6
+Scrape data pasien
+Scrape riwayat kunjungan
+Scrape tenaga medis
+Sentra Uplink ke RME
+Picker dokter online
+Forward to Doctor
+
+D. Governance / safety logic — 5
+Disclaimer clinical support
+review_required
+authoritative_engine
+Local preview sebagai pendukung, bukan final engine
+Low-risk truncation 255 karakter untuk field RME
+
+E. Factory / extension infrastructure — 6
+MV3 Chrome extension
+Background service worker
+Content script
+Main-world inject
+Sidepanel runtime
+Auth-client / bridge-client
+
+Non-negotiable rules:
+1. Perform at high performance
+2. Do not discuss history recovery.
+3. Do not depend on git restoration.
+4. Do not broadly refactor.
+5. Do not rewrite the app from imagination.
+6. Do not create new product concepts.
+7. Do not remove clinical safety guardrails.
+8. Do not claim the system diagnoses patients.
+9. Preserve physician final decision-making.
+10. Use GOLDEN_BUILD_ARTIFACT as source of truth.
+11. Current repo is only the factory candidate.
+12. Today’s newer intelligence is not the source of truth until golden parity is recovered.
+13. Work surgically, but complete the full factory recovery run.
+
+Important path reconciliation:
+The owner-provided golden path is:
+(legacy) code-prototype\prototpe-assist.output\golden-build
+
+If .output/assist-7days also exists, compare it with .output/golden-build.
+Report whether they are identical, duplicate, or different.
+Use .output/golden-build as GOLDEN_BUILD_ARTIFACT unless it does not exist.
+
+Run sequence:
+
+PHASE 1 — Verify workspace and artifact
+
+Confirm:
+
+* Current working directory is REPO_ROOT.
+* GOLDEN_BUILD_ARTIFACT exists.
+* This is a standalone repo.
+* package.json exists.
+* lockfile exists or does not exist.
+* package manager is inferred from lockfile:
+
+  * pnpm-lock.yaml = pnpm
+  * package-lock.json = npm
+  * yarn.lock = yarn
+  * bun.lockb or bun.lock = bun
+
+If golden build path does not exist, stop and report exactly:
+"GOLDEN_BUILD_ARTIFACT_NOT_FOUND"
+
+If package manager is ambiguous, infer from scripts and existing files. Do not ask unless impossible.
+
+PHASE 2 — Create recovery contract
+
+Create at repo root:
+
+_recovery/
+golden/
+extracted/
+gap/
+factory/
+tests/
+reports/
+
+Reference or copy the golden build into:
+
+_recovery/golden/golden-build-artifact/
+
+Do not modify the golden artifact.
+
+Generate these documents:
+
+1. _recovery/GOLDEN_BUILD_FACTORY_TARGET.md
+2. _recovery/extracted/GOLDEN_EXTENSION_SPEC.md
+3. _recovery/extracted/GOLDEN_UI_SPEC.md
+4. _recovery/extracted/GOLDEN_CLINICAL_BEHAVIOR_SPEC.md
+5. _recovery/extracted/GOLDEN_API_STORAGE_SPEC.md
+6. _recovery/gap/GOLDEN_FACTORY_GAP_MATRIX.md
+7. _recovery/tests/GOLDEN_ACCEPTANCE_TEST.md
+8. _recovery/factory/GOLDEN_REBUILD_SEQUENCE.md
+9. _recovery/reports/RECOVERY_STATUS.md
+
+PHASE 3 — Extract golden behavior
+
+Inspect GOLDEN_BUILD_ARTIFACT and extract:
+
+Extension:
+
+* manifest version
+* permissions
+* host permissions
+* content scripts
+* background/service worker
+* sidepanel configuration
+* oauth2 or identity settings
+* externally visible URLs
+* Google API access if present
+
+Runtime:
+
+* background boot behavior
+* content script behavior
+* main-world injection behavior
+* bridge-client behavior
+* auth-client behavior
+* browser messaging
+* storage keys
+* local/session/chrome storage usage
+* API/model call patterns
+
+UI:
+
+* login flow
+* dashboard flow
+* console sidepanel flow
+* VS/TTV inference screen
+* Emergency screen
+* Settings screen
+* Clinical Trajectory screen
+* Differential reasoning screen
+* visible labels
+* buttons
+* forms
+* error states
+* standby mode behavior
+
+Clinical:
+
+* vital sign inputs
+* AVPU
+* pain
+* allergy
+* pregnancy
+* disability
+* obesity
+* AutoSEN preset if present
+* alert thresholds
+* hypotension
+* AVPU abnormal
+* occult shock
+* hypertensive crisis
+* hypoglycemia
+* hyperglycemia
+* hypoxia
+* respiratory/geriatric alert
+* clinical trajectory logic
+* differential reasoning logic
+* review_required behavior
+* authoritative_engine behavior
+* local preview behavior
+* disclaimer wording
+* uncertainty wording
+* red flag wording
+* escalation wording
+
+RME / Browser integration:
+
+* patient scraping
+* visit history scraping
+* medical staff scraping
+* Sentra Uplink behavior
+* doctor picker behavior
+* Forward to Doctor behavior
+* anamnesa page behavior
+* RME field fill behavior
+* max length safety behavior
+* 255-character truncation behavior
+
+PHASE 4 — Compare current repo to golden artifact
+
+Build a complete gap matrix with columns:
+
+* Capability ID
+* Capability name
+* Golden artifact behavior
+* Current repo behavior
+* Gap
+* Recoverability confidence
+* Priority
+* Fix strategy
+* Candidate files to change
+* Acceptance check
+
+Use priority:
+
+* BLOCKER = factory cannot build or cannot load extension
+* CORE = required for golden behavior parity
+* SAFETY = clinical/governance/RME safety behavior
+* INTEGRATION = browser/RME/live DOM behavior
+* POLISH = visual/performance parity
+
+Do not mark any capability as recovered unless source factory can produce it.
+
+PHASE 5 — Restore factory build health
+
+Known blockers from previous assessment:
+
+* npm run build fails because node_modules/wxt/bin/wxt.mjs is missing.
+* npm run typecheck fails because node_modules/typescript/bin/tsc is missing.
+* entrypoints/content.ts imports missing handler:
+  @/lib/handlers/page-anamnesa
+* RME 255-character truncation safety is missing or not wired.
+* Current package.json appears older than golden handoff.
+* Golden artifact appears to represent Med Assist 2.1.0 behavior.
+
+Tasks:
+
+1. Restore dependency/toolchain health.
+2. Ensure WXT is installed as a compatible dev dependency.
+3. Ensure TypeScript is installed as a compatible dev dependency.
+4. Do not randomly upgrade major versions.
+5. Do not change package manager unnecessarily.
+6. Run install using detected package manager.
+7. Run build.
+8. Run typecheck.
+
+If dependency install fails:
+
+* Diagnose exact package or version conflict.
+* Apply the smallest compatible fix.
+* Retry.
+
+PHASE 6 — Restore missing anamnesa handler
+
+Locate expected API from:
+entrypoints/content.ts
+
+Restore or create:
+lib/handlers/page-anamnesa/*
+
+Rules:
+
+* Match the import contract used by entrypoints/content.ts.
+* Prefer typed interfaces.
+* Keep behavior minimal but functional.
+* If exact DOM selector is unknown, implement guarded selector strategy.
+* Never write to uncertain fields without validation.
+* Log safe diagnostic warnings instead of silent failure.
+* Preserve browser extension runtime safety.
+
+PHASE 7 — Restore RME 255-character truncation safety
+
+Create:
+lib/rme/truncate.ts
+
+Implement:
+
+* safe truncation to maximum 255 characters
+* preserve meaning as much as possible
+* avoid undefined/null errors
+* support empty string safely
+* deterministic output
+* unit-testable utility
+
+Wire it into existing paths only:
+lib/rme/payload-mapper.ts
+lib/filler/filler-core.ts
+
+Do not modify unrelated clinical reasoning logic.
+
+Acceptance:
+
+* No RME fill value exceeds 255 characters where golden behavior requires max 255.
+* Truncation is explicit and safe.
+* No silent crash on null/undefined.
+
+PHASE 8 — Restore golden capability parity
+
+For each of the 40 capabilities, inspect source and golden behavior, then restore source-owned implementation until the factory can produce the golden behavior.
+
+Do not treat copied build artifacts as source recovery.
+The source repo must own the implementation.
+
+Capability restoration rules:
+
+* If the source component exists, repair wiring.
+* If source component is missing but golden artifact contains behavior, reconstruct minimal equivalent source.
+* If behavior depends on live DOM, implement guarded selectors and document validation needs.
+* If behavior has clinical safety implications, preserve disclaimer, uncertainty, review_required, and physician-control framing.
+* If behavior is unclear, implement safe fallback and document the unresolved part in RECOVERY_STATUS.md.
+
+Special focus files from previous assessment:
+
+* package.json
+* wxt.config.ts
+* entrypoints/content.ts
+* entrypoints/background.ts
+* entrypoints/sidepanel/main.tsx
+* entrypoints/sidepanel/style.css
+* tailwind.config.cjs
+* components/clinical/ClinicalTrajectory.tsx
+* components or files related to TTVInferenceUI
+* lib/handlers/page-anamnesa/*
+* lib/rme/truncate.ts
+* lib/rme/payload-mapper.ts
+* lib/filler/filler-core.ts
+* lib/api/auth-client.ts
+* lib/api/bridge-client.ts
+* packages/shared-types/* only if the repo already expects this structure
+* pnpm-workspace.yaml only if the current source clearly requires workspace packages
+
+PHASE 9 — Validate extension factory
+
+Run all available validation commands:
+
+* install
+* build
+* typecheck
+* lint if script exists
+* test if script exists
+
+Do not invent scripts.
+Use package.json scripts.
+
+Then validate output:
+
+* extension build folder exists
+* manifest exists
+* background/service worker exists
+* content script exists
+* sidepanel/popup assets exist
+* generated output resembles golden artifact structure
+
+Compare generated build output against GOLDEN_BUILD_ARTIFACT:
+
+* manifest parity
+* entrypoint parity
+* major asset parity
+* sidepanel route/screen parity
+* content/background wiring parity
+* visible behavior parity where statically inferable
+
+PHASE 10 — Create final recovery report
+
+Update:
+
+_recovery/reports/RECOVERY_STATUS.md
+
+Include:
+
+1. Golden path verification result
+2. Package manager detected
+3. Commands run
+4. Dependency changes
+5. Source files changed
+6. Capability recovery table 1–40:
+
+   * Recovered
+   * Partially recovered
+   * Blocked
+   * Needs live validation
+7. Build result
+8. Typecheck result
+9. Remaining blockers
+10. Live validation checklist
+11. Next command recommended
+
+Capability status definitions:
+
+* Recovered = source factory builds and produces equivalent golden behavior.
+* Partially recovered = implementation exists but needs live validation.
+* Blocked = cannot be restored from current repo + golden artifact.
+* Needs live validation = depends on actual ePuskesmas/RME DOM or external auth/API state.
+
+Final output required in chat:
+Return a compact executive report:
+
+1. Golden artifact used
+2. Build status
+3. Typecheck status
+4. Number of capabilities recovered out of 40
+5. Number partially recovered
+6. Number blocked
+7. Files changed
+8. Remaining risks
+9. Exact next step for live validation
+
+Do not stop after documentation.
+Do not stop after build ignition.
+Continue until the factory has recovered as many of the 40 golden capabilities as possible without unsafe speculation.
+
+Work end-to-end.
+Factory first.
+Golden parity target: 40/40.

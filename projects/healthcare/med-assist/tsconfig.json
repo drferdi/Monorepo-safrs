@@ -1,0 +1,50 @@
+{
+  "_brand": "Masterplan and masterpiece by Drferdi.",
+  "extends": "./.wxt/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "types": ["vitest/globals", "@testing-library/jest-dom"],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+
+    "paths": {
+      "@/*": ["./*"],
+      "~/*": ["./*"],
+      "react": ["./node_modules/@types/react"],
+      "react/jsx-runtime": ["./node_modules/@types/react/jsx-runtime"],
+      "react/jsx-dev-runtime": ["./node_modules/@types/react/jsx-dev-runtime"],
+      "react-dom": ["./node_modules/@types/react-dom"],
+      "react-dom/test-utils": ["./node_modules/@types/react-dom/test-utils"],
+      "@types/react": ["./node_modules/@types/react"],
+      "@types/react-dom": ["./node_modules/@types/react-dom"],
+      "@types/react/*": ["./node_modules/@types/react/*"],
+      "@types/react-dom/*": ["./node_modules/@types/react-dom/*"]
+    }
+  },
+  "include": [
+    "entrypoints",
+    "utils",
+    "data",
+    "lib",
+    "types",
+    "components",
+    "hooks",
+    "tests",
+    ".wxt/wxt.d.ts"
+  ],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

@@ -1,0 +1,361 @@
+{
+  "clusters": [
+    {
+      "id": "respirasi",
+      "label": "Respirasi",
+      "keywords": [
+        "batuk",
+        "pilek",
+        "sesak",
+        "napas",
+        "nyeri tenggorokan",
+        "tenggorokan",
+        "wheezing",
+        "dahak"
+      ],
+      "templates": [
+        "Pasien datang mengeluhkan gangguan pernapasan berupa [Gejala Utama] sejak [Durasi], yang turut disertai [Gejala Penyerta].",
+        "Keluhan dominan pada saluran napas berupa [Gejala Utama] telah dialami pasien selama [Durasi], bersamaan dengan keluhan [Gejala Penyerta].",
+        "Selama [Durasi] terakhir, pasien mengalami [Gejala Utama], diikuti gejala penyerta berupa [Gejala Penyerta].",
+        "Pasien mengeluhkan [Gejala Utama] yang mulai dirasakan sejak [Durasi]. Kondisi ini turut dibarengi dengan munculnya [Gejala Penyerta].",
+        "Terdapat riwayat keluhan pernapasan yakni [Gejala Utama] sejak [Durasi], dengan gejala tambahan berupa [Gejala Penyerta].",
+        "Keluhan bernapas berupa [Gejala Utama] dialami sejak [Durasi], serta diikuti dengan keluhan penyerta [Gejala Penyerta]."
+      ]
+    },
+    {
+      "id": "gastrointestinal",
+      "label": "Gastrointestinal",
+      "keywords": [
+        "mual",
+        "muntah",
+        "diare",
+        "mencret",
+        "nyeri perut",
+        "sakit perut",
+        "mulas",
+        "kembung",
+        "ulu hati",
+        "konstipasi"
+      ],
+      "templates": [
+        "Pasien datang mengeluhkan ketidaknyamanan pada area perut berupa [Gejala Utama] sejak [Durasi], yang juga disertai [Gejala Penyerta].",
+        "Keluhan dominan pencernaan meliputi [Gejala Utama] selama [Durasi], dengan gejala tambahan berupa [Gejala Penyerta].",
+        "Sejak [Durasi], pasien merasakan gangguan saluran cerna yakni [Gejala Utama], yang diikuti dengan keluhan penyerta [Gejala Penyerta].",
+        "Pasien mengeluhkan [Gejala Utama] sejak [Durasi]. Kondisi pencernaan ini turut dibarengi dengan [Gejala Penyerta].",
+        "Riwayat gangguan saluran cerna berupa [Gejala Utama] dilaporkan sejak [Durasi], beserta gejala penyerta [Gejala Penyerta].",
+        "Masalah pada area perut berupa [Gejala Utama] mulai dirasakan pasien sejak [Durasi], bersama dengan munculnya [Gejala Penyerta]."
+      ]
+    },
+    {
+      "id": "neurologis",
+      "label": "Neurologis",
+      "keywords": [
+        "pusing",
+        "sakit kepala",
+        "nyeri kepala",
+        "lemas",
+        "kesemutan",
+        "baal",
+        "kejang",
+        "vertigo",
+        "migrain"
+      ],
+      "templates": [
+        "Pasien datang dengan keluhan utama seputar area kepala atau saraf berupa [Gejala Utama] sejak [Durasi], yang disertai dengan [Gejala Penyerta].",
+        "Keluhan dominan neurologis yang dirasakan adalah [Gejala Utama] sejak [Durasi], bersamaan dengan munculnya [Gejala Penyerta].",
+        "Selama [Durasi], pasien mengalami [Gejala Utama], diikuti dengan keluhan penyerta [Gejala Penyerta].",
+        "Pasien mengeluhkan ketidaknyamanan berupa [Gejala Utama] yang bermula sejak [Durasi], dibarengi dengan keluhan [Gejala Penyerta].",
+        "Telah terjadi keluhan [Gejala Utama] selama [Durasi] terakhir, dengan gejala penyerta dominan berupa [Gejala Penyerta].",
+        "Sejak [Durasi] yang lalu, pasien mengeluhkan [Gejala Utama], serta melaporkan adanya [Gejala Penyerta]."
+      ]
+    },
+    {
+      "id": "urinary",
+      "label": "Urinary",
+      "keywords": [
+        "bak nyeri",
+        "nyeri bak",
+        "sering bak",
+        "anyang",
+        "nyeri pinggang",
+        "kencing",
+        "urin",
+        "hematuria",
+        "susah bak"
+      ],
+      "templates": [
+        "Pasien datang mengeluhkan gangguan berkemih berupa [Gejala Utama] sejak [Durasi], yang turut disertai [Gejala Penyerta].",
+        "Keluhan dominan pada saluran kemih adalah [Gejala Utama] selama [Durasi], dengan gejala tambahan berupa [Gejala Penyerta].",
+        "Sejak [Durasi], pasien mengeluhkan masalah berkemih yakni [Gejala Utama], yang diikuti dengan [Gejala Penyerta].",
+        "Pasien mengeluhkan [Gejala Utama] sejak [Durasi]. Masalah saluran kemih ini turut dibarengi dengan keluhan [Gejala Penyerta].",
+        "Terdapat keluhan di sekitar area kemih atau panggul berupa [Gejala Utama] sejak [Durasi], beserta [Gejala Penyerta].",
+        "Ketidaknyamanan saat berkemih berupa [Gejala Utama] mulai dirasakan pasien sejak [Durasi], bersama dengan [Gejala Penyerta]."
+      ]
+    },
+    {
+      "id": "muskuloskeletal",
+      "label": "Muskuloskeletal",
+      "keywords": [
+        "nyeri lutut",
+        "nyeri sendi",
+        "pegal",
+        "sendi bengkak",
+        "lutut bengkak",
+        "pergelangan bengkak",
+        "nyeri otot",
+        "nyeri punggung",
+        "nyeri pinggang",
+        "kaku",
+        "kram",
+        "linu"
+      ],
+      "templates": [
+        "Pasien datang dengan keluhan fisik pada alat gerak berupa [Gejala Utama] sejak [Durasi], yang disertai [Gejala Penyerta].",
+        "Keluhan dominan pada sendi atau otot yang dirasakan pasien adalah [Gejala Utama] selama [Durasi], bersamaan dengan [Gejala Penyerta].",
+        "Sejak [Durasi], pasien mengeluhkan gangguan muskuloskeletal berupa [Gejala Utama], yang diikuti gejala penyerta [Gejala Penyerta].",
+        "Pasien mengeluhkan masalah gerak atau postur berupa [Gejala Utama] sejak [Durasi], dibarengi dengan munculnya [Gejala Penyerta].",
+        "Terdapat riwayat keluhan fisik berupa [Gejala Utama] sejak [Durasi], beserta gejala tambahan [Gejala Penyerta].",
+        "Keterbatasan atau nyeri berupa [Gejala Utama] mulai dirasakan pasien semenjak [Durasi] lalu, bersama dengan [Gejala Penyerta]."
+      ]
+    },
+    {
+      "id": "febrile_general",
+      "label": "Febrile/General",
+      "keywords": [
+        "demam",
+        "panas",
+        "menggigil",
+        "meriang",
+        "lemas",
+        "lemah",
+        "tidak enak badan",
+        "malaise"
+      ],
+      "templates": [
+        "Pasien datang dengan keluhan sistemik berupa [Gejala Utama] sejak [Durasi], yang disertai dengan [Gejala Penyerta].",
+        "Keluhan dominan berupa [Gejala Utama] telah dialami pasien selama [Durasi], dengan gejala penyerta [Gejala Penyerta].",
+        "Selama [Durasi], pasien mengalami keluhan umum berupa [Gejala Utama], yang diikuti dengan [Gejala Penyerta].",
+        "Pasien mengeluhkan kondisi [Gejala Utama] yang mulai dirasakan sejak [Durasi]. Keluhan umum ini turut dibarengi [Gejala Penyerta].",
+        "Terdapat keluhan sistemik berupa [Gejala Utama] sejak [Durasi], beserta gejala penyerta [Gejala Penyerta].",
+        "Kondisi umum berupa [Gejala Utama] mulai dialami pasien sejak [Durasi], bersama dengan keluhan tambahan [Gejala Penyerta]."
+      ]
+    },
+    {
+      "id": "dermatologi",
+      "label": "Dermatologi/Integumen",
+      "keywords": [
+        "ruam",
+        "gatal",
+        "bentol",
+        "kulit mengelupas",
+        "luka",
+        "lesi",
+        "kemerahan",
+        "biduran",
+        "koreng"
+      ],
+      "templates": [
+        "Pasien datang mengeluhkan masalah pada kulit berupa [Gejala Utama] sejak [Durasi], yang juga disertai [Gejala Penyerta].",
+        "Keluhan dominan dermatologis meliputi [Gejala Utama] selama [Durasi], dengan gejala tambahan berupa [Gejala Penyerta].",
+        "Sejak [Durasi], pasien merasakan gangguan pada area permukaan tubuh yakni [Gejala Utama], yang diikuti dengan keluhan penyerta [Gejala Penyerta].",
+        "Pasien mengeluhkan [Gejala Utama] pada area kulit sejak [Durasi]. Kondisi ini turut dibarengi dengan munculnya [Gejala Penyerta].",
+        "Terdapat riwayat lesi atau gangguan kulit berupa [Gejala Utama] yang dilaporkan sejak [Durasi], beserta gejala penyerta [Gejala Penyerta].",
+        "Masalah pada area kulit berupa [Gejala Utama] mulai dirasakan pasien semenjak [Durasi], bersama dengan munculnya [Gejala Penyerta]."
+      ]
+    },
+    {
+      "id": "kardiovaskular",
+      "label": "Kardiovaskular",
+      "keywords": [
+        "berdebar",
+        "nyeri dada",
+        "dada kiri",
+        "sesak saat beraktivitas",
+        "kaki bengkak",
+        "jantung",
+        "palpitasi"
+      ],
+      "templates": [
+        "Pasien datang mengeluhkan ketidaknyamanan pada area dada berupa [Gejala Utama] sejak [Durasi], yang turut disertai dengan [Gejala Penyerta].",
+        "Keluhan dominan terkait sistem kardiovaskular berupa [Gejala Utama] telah dialami pasien selama [Durasi], bersamaan dengan keluhan [Gejala Penyerta].",
+        "Selama [Durasi] terakhir, pasien mengalami gangguan sirkulasi atau dada yakni [Gejala Utama], diikuti gejala penyerta berupa [Gejala Penyerta].",
+        "Pasien mengeluhkan [Gejala Utama] yang mulai dirasakan di area dada sejak [Durasi]. Kondisi ini dibarengi dengan munculnya [Gejala Penyerta].",
+        "Terdapat riwayat keluhan dada berupa [Gejala Utama] sejak [Durasi], dengan keluhan tambahan yakni [Gejala Penyerta].",
+        "Sensasi tidak nyaman pada dada berupa [Gejala Utama] dialami sejak [Durasi], serta diikuti dengan keluhan penyerta [Gejala Penyerta]."
+      ]
+    },
+    {
+      "id": "oftalmologi",
+      "label": "Oftalmologi",
+      "keywords": [
+        "mata merah",
+        "gatal mata",
+        "pandangan kabur",
+        "kotoran mata",
+        "nyeri mata",
+        "mata berair",
+        "penglihatan"
+      ],
+      "templates": [
+        "Pasien datang dengan keluhan pada indra penglihatan berupa [Gejala Utama] sejak [Durasi], yang disertai dengan [Gejala Penyerta].",
+        "Keluhan dominan pada area mata yang dirasakan adalah [Gejala Utama] sejak [Durasi], bersamaan dengan munculnya [Gejala Penyerta].",
+        "Selama [Durasi], pasien mengalami ketidaknyamanan pada area mata berupa [Gejala Utama], diikuti dengan keluhan penyerta [Gejala Penyerta].",
+        "Pasien mengeluhkan gangguan visual atau mata berupa [Gejala Utama] yang bermula sejak [Durasi], dibarengi dengan keluhan [Gejala Penyerta].",
+        "Telah terjadi keluhan oftalmologis berupa [Gejala Utama] selama [Durasi] terakhir, dengan gejala penyerta dominan berupa [Gejala Penyerta].",
+        "Sejak [Durasi] yang lalu, pasien mengeluhkan masalah pada mata yakni [Gejala Utama], serta melaporkan adanya [Gejala Penyerta]."
+      ]
+    },
+    {
+      "id": "tht",
+      "label": "THT Khusus",
+      "keywords": [
+        "nyeri telinga",
+        "telinga berdenging",
+        "hidung mampet",
+        "mimisan",
+        "telinga",
+        "hidung tersumbat",
+        "sinus",
+        "pendengaran"
+      ],
+      "templates": [
+        "Pasien datang mengeluhkan masalah pada area telinga atau hidung berupa [Gejala Utama] sejak [Durasi], yang turut disertai [Gejala Penyerta].",
+        "Keluhan dominan THT adalah [Gejala Utama] selama [Durasi], dengan gejala tambahan berupa [Gejala Penyerta].",
+        "Sejak [Durasi], pasien mengeluhkan gangguan pada telinga atau hidung yakni [Gejala Utama], yang diikuti dengan [Gejala Penyerta].",
+        "Pasien mengeluhkan [Gejala Utama] sejak [Durasi]. Masalah pada area THT ini turut dibarengi dengan keluhan [Gejala Penyerta].",
+        "Terdapat keluhan di sekitar area pendengaran atau saluran napas atas berupa [Gejala Utama] sejak [Durasi], beserta [Gejala Penyerta].",
+        "Ketidaknyamanan pada telinga atau hidung berupa [Gejala Utama] mulai dirasakan pasien sejak [Durasi], bersama dengan [Gejala Penyerta]."
+      ]
+    },
+    {
+      "id": "obstetri_ginekologi",
+      "label": "Obstetri/Ginekologi",
+      "femaleOnly": true,
+      "keywords": [
+        "nyeri haid",
+        "keputihan",
+        "haid",
+        "menstruasi",
+        "siklus haid",
+        "perdarahan jalan lahir",
+        "perdarahan vagina",
+        "hamil",
+        "kewanitaan"
+      ],
+      "templates": [
+        "Pasien datang mengeluhkan gangguan pada area kewanitaan atau reproduksi berupa [Gejala Utama] sejak [Durasi], yang disertai [Gejala Penyerta].",
+        "Keluhan dominan ginekologis yang dirasakan pasien adalah [Gejala Utama] selama [Durasi], bersamaan dengan [Gejala Penyerta].",
+        "Sejak [Durasi], pasien mengeluhkan area reproduksi berupa [Gejala Utama], yang diikuti gejala penyerta [Gejala Penyerta].",
+        "Pasien mengeluhkan masalah pada siklus atau area kewanitaan berupa [Gejala Utama] sejak [Durasi], dibarengi dengan munculnya [Gejala Penyerta].",
+        "Terdapat riwayat keluhan ginekologis berupa [Gejala Utama] sejak [Durasi], beserta gejala tambahan [Gejala Penyerta].",
+        "Ketidaknyamanan pada area organ reproduksi berupa [Gejala Utama] mulai dirasakan pasien semenjak [Durasi] lalu, bersama dengan [Gejala Penyerta]."
+      ]
+    },
+    {
+      "id": "psikiatri_psikososial",
+      "label": "Psikiatri/Psikososial",
+      "keywords": [
+        "cemas",
+        "ansietas",
+        "sulit tidur",
+        "insomnia",
+        "mood",
+        "halusinasi",
+        "gelisah",
+        "panik",
+        "stres"
+      ],
+      "templates": [
+        "Pasien datang mengeluhkan perubahan kondisi psikologis atau suasana hati berupa [Gejala Utama] sejak [Durasi], yang juga disertai [Gejala Penyerta].",
+        "Keluhan dominan terkait mental-emosional meliputi [Gejala Utama] selama [Durasi], dengan keluhan penyerta berupa [Gejala Penyerta].",
+        "Sejak [Durasi], pasien merasakan gangguan pola perilaku atau tidur yakni [Gejala Utama], yang diikuti dengan keluhan penyerta [Gejala Penyerta].",
+        "Pasien mengeluhkan [Gejala Utama] yang memengaruhi aktivitas sehari-hari sejak [Durasi]. Kondisi ini turut dibarengi dengan munculnya [Gejala Penyerta].",
+        "Terdapat riwayat keluhan psikososial berupa [Gejala Utama] yang dilaporkan sejak [Durasi], beserta gejala penyerta [Gejala Penyerta].",
+        "Ketidaknyamanan terkait kondisi emosional berupa [Gejala Utama] mulai dirasakan pasien semenjak [Durasi], bersama dengan munculnya [Gejala Penyerta]."
+      ]
+    },
+    {
+      "id": "endokrin_metabolik",
+      "label": "Endokrin/Metabolik",
+      "keywords": [
+        "sering haus",
+        "banyak minum",
+        "penurunan berat badan",
+        "berat badan turun",
+        "benjolan di leher",
+        "keringat berlebih",
+        "sering lapar",
+        "sering kencing"
+      ],
+      "templates": [
+        "Pasien datang dengan keluhan terkait gangguan metabolik berupa [Gejala Utama] sejak [Durasi], yang disertai dengan [Gejala Penyerta].",
+        "Keluhan dominan pada sistem endokrin yang dirasakan adalah [Gejala Utama] sejak [Durasi], bersamaan dengan munculnya [Gejala Penyerta].",
+        "Selama [Durasi], pasien mengalami perubahan fungsi metabolisme berupa [Gejala Utama], diikuti dengan keluhan penyerta [Gejala Penyerta].",
+        "Pasien mengeluhkan gejala metabolik berupa [Gejala Utama] yang bermula sejak [Durasi], dibarengi dengan keluhan [Gejala Penyerta].",
+        "Telah terjadi keluhan spesifik berupa [Gejala Utama] selama [Durasi] terakhir, dengan gejala penyerta dominan berupa [Gejala Penyerta].",
+        "Sejak [Durasi] yang lalu, pasien mengeluhkan kondisi [Gejala Utama], serta melaporkan adanya keluhan [Gejala Penyerta]."
+      ]
+    },
+    {
+      "id": "trauma",
+      "label": "Trauma/Cedera Fisik Akut",
+      "requiresTraumaCue": true,
+      "keywords": [
+        "luka lecet",
+        "pasca benturan",
+        "benturan",
+        "luka robek",
+        "memar",
+        "cedera",
+        "jatuh",
+        "terpeleset",
+        "kecelakaan",
+        "trauma"
+      ],
+      "templates": [
+        "Pasien datang pasca mengalami insiden dengan keluhan utama [Gejala Utama] sejak [Durasi], yang turut disertai [Gejala Penyerta].",
+        "Terdapat riwayat cedera atau trauma dengan keluhan dominan [Gejala Utama] selama [Durasi], dengan gejala tambahan berupa [Gejala Penyerta].",
+        "Sejak [Durasi], pasca kejadian trauma, pasien mengeluhkan [Gejala Utama], yang diikuti dengan [Gejala Penyerta].",
+        "Pasien mengeluhkan kondisi cedera berupa [Gejala Utama] sejak [Durasi]. Masalah fisik ini turut dibarengi dengan keluhan [Gejala Penyerta].",
+        "Terdapat keluhan akibat trauma berupa [Gejala Utama] sejak [Durasi], beserta [Gejala Penyerta].",
+        "Dampak dari insiden berupa [Gejala Utama] mulai dirasakan atau terlihat sejak [Durasi], bersama dengan [Gejala Penyerta]."
+      ]
+    },
+    {
+      "id": "oral_maksilofasial",
+      "label": "Oral/Maksilofasial",
+      "keywords": [
+        "nyeri gigi",
+        "sakit gigi",
+        "gusi bengkak",
+        "sariawan",
+        "rahang kaku",
+        "mulut",
+        "gigi",
+        "gusi",
+        "lidah"
+      ],
+      "templates": [
+        "Pasien datang mengeluhkan ketidaknyamanan pada area mulut atau gigi berupa [Gejala Utama] sejak [Durasi], yang disertai [Gejala Penyerta].",
+        "Keluhan dominan dental atau oral yang dirasakan pasien adalah [Gejala Utama] selama [Durasi], bersamaan dengan [Gejala Penyerta].",
+        "Sejak [Durasi], pasien mengeluhkan area rongga mulut berupa [Gejala Utama], yang diikuti gejala penyerta [Gejala Penyerta].",
+        "Pasien mengeluhkan masalah pada gigi atau gusi berupa [Gejala Utama] sejak [Durasi], dibarengi dengan munculnya [Gejala Penyerta].",
+        "Terdapat riwayat keluhan oral berupa [Gejala Utama] sejak [Durasi], beserta gejala tambahan [Gejala Penyerta].",
+        "Rasa nyeri atau ketidaknyamanan pada struktur mulut berupa [Gejala Utama] mulai dirasakan pasien semenjak [Durasi] lalu, bersama dengan [Gejala Penyerta]."
+      ]
+    }
+  ],
+  "fallback": {
+    "id": "multisystem",
+    "label": "Multisistem",
+    "keywords": [],
+    "templates": [
+      "Pasien datang dengan keluhan multisistem berupa [Gejala Utama] sejak [Durasi], yang juga disertai keluhan pada sistem lain yakni [Gejala Penyerta].",
+      "Keluhan utama berupa [Gejala Utama] telah dirasakan selama [Durasi], dengan keluhan penyerta lintas sistem berupa [Gejala Penyerta].",
+      "Sejak [Durasi], pasien melaporkan keluhan multiorgan berupa [Gejala Utama], disertai keluhan lain yakni [Gejala Penyerta].",
+      "Pasien mengeluhkan [Gejala Utama] sejak [Durasi], bersamaan dengan keluhan pada sistem lain berupa [Gejala Penyerta].",
+      "Terdapat keluhan multisistem dengan gejala utama [Gejala Utama] sejak [Durasi], serta gejala penyerta [Gejala Penyerta].",
+      "Keluhan multisistem lintas sistem berupa [Gejala Utama] mulai dirasakan pasien sejak [Durasi], bersama dengan [Gejala Penyerta]."
+    ]
+  }
+}

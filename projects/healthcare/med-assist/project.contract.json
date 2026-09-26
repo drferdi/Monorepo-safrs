@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "healthcare/med-assist",
+  "owner": "Chief (dr. Ferdi Iskandar)",
+  "risk": "R2",
+  "runtime": {
+    "name": "node",
+    "version": "24"
+  },
+  "packageManager": {
+    "name": "pnpm",
+    "version": "11.21.0",
+    "lockfile": "pnpm-lock.yaml"
+  },
+  "commands": {
+    "install": { "program": "node", "args": ["scripts/pnpm.mjs", "install", "--frozen-lockfile"], "timeoutSeconds": 600 },
+    "lint": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "lint"], "timeoutSeconds": 600 },
+    "typecheck": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "typecheck"], "timeoutSeconds": 600 },
+    "test": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "test"], "timeoutSeconds": 600 },
+    "build": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "build"], "timeoutSeconds": 600 },
+    "run": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "run:check"] },
+    "deployDryRun": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "deploy:dry-run"], "timeoutSeconds": 600 }
+  },
+  "smoke": {
+    "kind": "none",
+    "notApplicableReason": "Browser extension with no server to probe; `run` loads the built MV3 output and checks that every file the manifest and extension pages reference exists."
+  },
+  "artifacts": [".output/chrome-mv3-dev/manifest.json"],
+  "externalDependencies": [
+    { "kind": "registry", "name": "npm registry", "locator": "https://registry.npmjs.org", "required": true },
+    { "kind": "service", "name": "Sentra platform API used by the side panel", "locator": "VITE_SENTRA_API_URL", "required": false },
+    { "kind": "service", "name": "Sentra platform API key compiled into the extension", "locator": "VITE_SENTRA_API_KEY", "required": false },
+    { "kind": "service", "name": "Facility identifier for the platform API", "locator": "VITE_FACILITY_ID", "required": false },
+    { "kind": "service", "name": "OpenAI-compatible model for diagnosis reranking", "locator": "SENTRA_OPENAI_MODEL", "required": false },
+    { "kind": "service", "name": "ePuskesmas web RME (content scripts run on *.epuskesmas.id)", "locator": "https://epuskesmas.id", "required": false },
+    { "kind": "service", "name": "Sentra crew portal for passkey sign-in", "locator": "https://crew.puskesmasbalowerti.com", "required": false }
+  ],
+  "mutableStatePaths": ["node_modules", ".output", ".wxt", "test-results", "playwright-report"]
+}
