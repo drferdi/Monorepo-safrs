@@ -1,59 +1,59 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-09-26 (Cursor, branch `docs/golden-path-context`; previous entry Kilo GPT-5.6 Sol,
-branch `integration/jev-active`)
-
-## Latest change (Cursor)
-
-- `main` `01587ee3` merged `integration/capsules-standalone`: sentrabot and golden-path pass standalone
-  verify, have capsule-local token gates and security patches, and left known non-conformance.
-- Branch `docs/golden-path-context` (task `TASK-20260925-GOLDEN-PATH-CONTEXT-DOC-2`, R1):
-  `docs/context/active/golden-path.context.md` now describes golden-path as a standalone capsule with
-  local package snapshots, not a root demonstrator (commit `e6c11659`).
-- Same branch, task `TASK-20260926-AGENTS-SHELL-QUIRKS` (R2): root `AGENTS.md` gains two notes (RTK `git`
-  wrapper and CRLF-only worktree noise; pnpm 9 ignores `pnpm-workspace.yaml` overrides). `AGENTS.md` is a
-  verification control, so this commit carries no implementation change.
+Last updated: 2026-09-26 (Claude Code, branch `fix/independence-skip-ignored`)
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
 cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>/.agents/`.
 
 ## Current state
 
-- `main` is `5901a8d3`, including the merge of `integration/post-adr-0007-4`; its `pnpm governance`
-  baseline passed.
-- `integration/jev-active` is based on that exact main and contains the cherry-picked Jev activation
-  (`.kilo/instructions/jev-active.md`, `.kilo/kilo.jsonc`), the root `AGENTS.md` active decision layer,
-  and the current integration claim.
-- `JEV-ACTIVE-INTEGRATION` is R2, `EXECUTING`, owned by `agent:kilo:gpt-5.6-sol` / `Kilo GPT-5.6 Sol`,
-  with scopes `AGENTS.md`, `.agents/HANDOFF.md`, `.kilo/instructions/`, and `.kilo/kilo.jsonc`.
+- `main` at `dba377cd`. Landed since 2026-09-25: root without demonstrator and security patches
+  (`5901a8d3`), Jev active (`de9e91bb`), sentrabot and golden-path standalone (`01587ee3`), golden-path
+  context doc and `AGENTS.md` shell notes, sentrabot overrides in `package.json`, avery standalone
+  with a retroactive Chief integrity review (`46da5ed4`), kediri GSAP production hardening
+  (`884f7ea0`, cherry-picked from the `kediri` remote where it merged on 2026-09-12).
+- `project-independence`: 8 active capsules, 1 known non-conformance (`internal/control-center`).
+- `pnpm dev` proven (2026-09-25): Postgres healthy, control-center `http://127.0.0.1:3100` HTTP 200.
+- Housekeeping (2026-09-26): `D:\DEV\Monorepo.worktrees` removed; `core.longpaths=true` (node_modules
+  paths exceed 260 characters); local branches trimmed from 48 to 4 (`main`,
+  `feat/coding-brief-v2`, `feat/auth-foundation`, `codex/release-baseline-recovery`). Worktrees go in
+  a temporary location outside `D:\DEV` until Chief settles AGENTS.md rule 8 (see memory
+  `pnpm-store-never-at-drive-root`).
 
-## Pre-activation observations
+## Work in flight
 
-- The local Jev playbook is ignored; one official TypeSafe skill copy is present.
-- Five kill-switch dry runs returned `proceed_full` with `jev_used: false`.
-- Live routing returned `jev_used: true`; observed outcomes include `allow_subagent`, `proceed_full`,
-  and `stop_retry`.
-- The decision log baseline had 13 lines. These are pre-activation observations governed by active
-  mode now, not proof of 20–50-decision accuracy.
+`fix/independence-skip-ignored`, base `dba377cd`, claim `INDEPENDENCE-SKIP-GIT-IGNORED` (R2):
+- `check_project_independence.py` read every file on disk, so the ignored avery `runtime/` (3.1 GB of
+  third-party Hermes files with invalid `tsconfig` JSON) failed `pnpm governance` in the main checkout
+  once avery left known non-conformance. Inside a git work tree the checker now reads only files git
+  does not ignore (`git ls-files --cached --others --exclude-standard`); outside one it walks the disk
+  as before.
+- Tests: `test_git_ignored_files_are_not_checked` failed before the change and passes after it;
+  `test_untracked_files_that_git_does_not_ignore_are_still_checked` guards against over-skipping.
+  The file passes 31/31. The checker on the main checkout now passes in 0.3 s.
 
-## Review and handoff
+## Blockers
 
-- `stash@{0}` was intentionally untouched and conflicts with active mode; Chief may drop it only after
-  this branch is merged.
-- Because `AGENTS.md` is a verification control and `.kilo/*` is implementation, the expected
-  integrity-review record is Chief-only. Final verification evidence belongs here once available.
-- Verification evidence: `git diff --name-status 5901a8d3...HEAD` lists exactly the four requested
-  files; `git diff --check` exited 0. `pnpm governance` exited 1 only because the expected integrity
-  gate reported `SAFRS_VERIFICATION_INTEGRITY_REVIEW=required`; all preceding governance checks passed.
-- The Python and PowerShell/`sha256sum` fingerprints match:
-  `0eb4fb47e59a658a71f6c526a989134638a116b0b3eff97917798ab45eea3636`.
+None for this branch; the checker is a verification control, so Chief's integrity review is needed.
 
-## Open items
+## Next action
 
-- Done (`01587ee3`): capsule-local token gates and `next`/`sharp` patches for sentrabot and golden-path.
-  Sentrabot's gate is a per-file ratchet over 1268 legacy raw values; migrating them is open UI work.
-- First origin CI run for `check:security`.
-- `pnpm dev` proof once Docker runs.
+- Chief: integrity review and merge `fix/independence-skip-ignored`.
+- Chief decision: `feat/auth-foundation` (sentrabot email verification, password reset, rate
+  limiting) and `codex/release-baseline-recovery` (2026-09-10) never landed anywhere; copies live on
+  the `sentrabot` remote. Default: keep them there and delete locally; landing needs a large rebase
+  onto the rebuilt capsule.
+- Claim `KEDIRI-GSAP-PRODUCTION-HARDENING` stays REVIEW: it is bound to a removed worktree, so the
+  task CLI refuses the transition. Close it when the CLI can.
+- The Monorepo kediri capsule and `kediri/main` may still differ beyond the GSAP commit; compare
+  before the next kediri publish.
+- Origin is far behind `main`; the first origin CI run (`check:security`, workspace guards) is still
+  unproven. Publishing to origin strips `projects/`.
+- Control-center placement (ADR 0007) is the last known non-conformance.
+- Gate backlog: CI and the verifiers run the checker from the change set under review; classify
+  `tests/governance/test_sensitive_classification.py` and `test_handoff_scope.py` as controls.
+- `check_handoff.py` still points to "AGENTS.md § Session protocol", a heading the condensed
+  `AGENTS.md` no longer has.
 
 ## Owner collision
 
