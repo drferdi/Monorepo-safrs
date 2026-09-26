@@ -1,0 +1,67 @@
+# Standalone repo security audit (drferdii/sentraverse) — pnpm.
+# Architected and built by Drferdi.
+name: Security — Dependency Audit
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  schedule:
+    # Mingguan, Senin 08:00 UTC
+    - cron: '0 8 * * 1'
+
+jobs:
+  audit:
+    name: Dependency Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.21.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Audit (production deps, high+)
+        run: pnpm audit --prod --audit-level high
+
+  license-check:
+    name: License Compliance
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.21.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: License report + guard copyleft kuat
+        run: |
+          pnpm licenses list --prod --long > licenses.txt || true
+          head -60 licenses.txt
+          # (?<!L) — pastikan tidak mencocokkan LGPL-3.0 (Lesser GPL, aman untuk
+          # dependensi terpakai/linked seperti libvips di balik sharp).
+          if grep -P "(?<!L)GPL-3\.0|AGPL" licenses.txt; then
+            echo "::error::Strong copyleft license (GPL-3.0/AGPL) terdeteksi pada dependensi produksi"
+            exit 1
+          fi

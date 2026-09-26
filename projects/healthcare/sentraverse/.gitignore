@@ -1,0 +1,59 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Next.js
+/.next/
+/out/
+# Auto-generated tiap `next dev/build` — jangan di-track (template resmi Next 15+)
+next-env.d.ts
+
+# Production
+/build
+
+# Testing & coverage
+/coverage
+
+# TypeScript
+*.tsbuildinfo
+
+# Misc
+.DS_Store
+*.pem
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Local env
+.env*.local
+
+# Vercel
+.vercel
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# ---- AI GOVERNANCE — SENTRA INTERNAL (JANGAN PUSH) ----
+# Ditambahkan oleh guardian-apply.ps1 — 2026-06-21
+# AGENTS.md tracked via monorepo root .gitignore — do not re-ignore
+AGENTS.override.md
+CLAUDE.md
+GEMINI.md
+.agent/
+.claude/
+.codex/
+.gemini/
+.cursor/
+.clinerules
+.mcp.json
+.qoder/
+.qoderignore
+.superpowers/
+.roomodes
+.playwright-mcp/

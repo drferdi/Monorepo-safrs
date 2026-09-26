@@ -1,0 +1,35 @@
+# Sentra AI — Clinical Decision Support System
+
+Sentra AI is a production-grade Clinical Decision Support System (CDSS) powered by artificial intelligence, specifically designed for doctors and healthcare providers in frontline facilities across Indonesia (Puskesmas, clinics, and hospitals). Developed in collaboration with RSIA Melinda DHAI, Sentra reads fragmented patient records, models clinical pathways, and provides evidence-based diagnostic recommendations in real-time.
+
+---
+
+## 🗝️ Core Clinical Protocols
+
+Sentra AI's clinical engine runs on 7 key protocols:
+1. **NLP Anamnesis Synthesis:** Summarizes free-text doctor notes and patient complaints into structured clinical data.
+2. **Bayesian Diagnostic Probabilities:** Calculates potential diagnoses mapped to ICD-10 codes using probabilistic clinical algorithms.
+3. **Clinical Trajectory Modeling:** Visualizes patient disease pathways to help intercept deviations or deterioration early.
+4. **OCR Clinical Extraction:** Digitizes physical lab reports, EKGs, and referral sheets.
+5. **Pharmaceutical Guidance:** Screens drug-drug interactions, contraindications, and dosage guidelines for safety.
+6. **Referral Automation:** Streamlines communication and protocols between primary care (Puskesmas) and referral hospitals.
+7. **Prognostic Modeling:** Forecasts patient risk scores and outcomes for chronic or critical conditions.
+
+---
+
+## 🔒 Security, Compliance & Governance
+
+- **Zero PHI in Logs:** Patient Health Information is strictly filtered and never stored in system logs or analytics.
+- **Immutable Audit Trail:** All clinical recommendations and doctor decisions are logged in an unalterable database with a 10-year retention policy for malpractice analysis.
+- **Stewardship:** Guided by the principal *“The doctor decides, Sentra clarifies.”* The system functions solely as a clinical co-pilot; final diagnostic and therapeutic responsibility remains with the licensed medical professional.
+
+---
+
+## 🗺️ Key Navigation Map
+
+- **Homepage:** `https://sentrahai.com/` — General product overview, dynamic simulations, and pilot results.
+- **Our Story:** `https://sentrahai.com/story` — Narrative on the founding by Dr. Ferdi Iskandar and how Sentra addresses maternal mortality in Indonesia.
+- **Ekosistem Modul:** `https://sentrahai.com/ekosistem` — Detailed directory of the modular product grid.
+- **Sentrapedia:** `https://sentrahai.com/sentrapedia` — Medical dictionary and reference guide mapped to ICD-10.
+- **SentraWiki:** `https://sentrahai.com/sentrawiki` — Technical specifications, data schemas, compliance metrics, and CLI developer guides.
+- **Insights:** `https://sentrahai.com/insights` — Scientific papers, hypotheses, and clinical trajectory research by Dr. Ferdi Iskandar.
