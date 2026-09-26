@@ -16,10 +16,11 @@ Healthcare systems that share compliance context and patient-data handling.
 | [`med-assist`](./med-assist/README.md) | Chrome side-panel extension for FKTP clinicians in ePuskesmas (WXT) |
 | [`medboard`](./medboard/README.md) | Clinical intelligence dashboard: CDSS, trajectory, NEWS2, safety gates (Next.js) |
 | [`sidelab-src`](./sidelab-src/README.md) | SideLab research-prototype clinical decision support (Python engine, API, dashboard) |
+| [`mantra`](./mantra/README.md) | Sentra MANTRA hospital management custom apps on Frappe Bench v15 (static SAFRS contract) |
 
-Not yet migrated from abyss-monorepo: `mantra` (Frappe Bench) and `melinda` (deferred).
+Not yet migrated from abyss-monorepo: `melinda` (deferred by Chief).
 
-Every healthcare capsule is standalone: its own lockfile, `pnpm-workspace.yaml`, and `project.contract.json`. The root workspace excludes `projects/healthcare/**`.
+Every healthcare capsule is standalone with its own `project.contract.json`; the Node capsules also have their own lockfile and `pnpm-workspace.yaml`, and `mantra` pins its upstream Frappe apps in `bench-apps.lock.json`. The root workspace excludes `projects/healthcare/**`.
 
 ## Layout
 

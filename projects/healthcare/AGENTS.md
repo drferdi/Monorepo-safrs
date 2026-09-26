@@ -27,8 +27,9 @@ It therefore holds only two files: `AGENTS.md` (this file) and `README.md`.
 | [`med-assist`](./med-assist/AGENTS.md) | Chrome side-panel extension for FKTP clinicians in ePuskesmas (WXT) |
 | [`medboard`](./medboard/AGENTS.md) | Clinical intelligence dashboard: CDSS, trajectory, NEWS2, safety gates (Next.js) |
 | [`sidelab-src`](./sidelab-src/AGENTS.md) | SideLab research-prototype clinical decision support (Python engine, API, dashboard) |
+| [`mantra`](./mantra/AGENTS.md) | Sentra MANTRA hospital management custom apps on Frappe Bench v15 (static SAFRS contract) |
 
-Not yet migrated from abyss-monorepo: `mantra` (Frappe Bench; its bench lifecycle cannot run in the standalone verifier yet) and `melinda` (deferred by Chief).
+Not yet migrated from abyss-monorepo: `melinda` (deferred by Chief). `mantra` has a static contract: its bench runtime runs only in its dev container.
 
 Open the `AGENTS.md` of the capsule you are working on; it holds the real build, lint, type-check, and test commands.
 
