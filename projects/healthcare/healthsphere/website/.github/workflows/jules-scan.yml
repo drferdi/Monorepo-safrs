@@ -1,0 +1,18 @@
+# Architected and built by the one and only Drferdi.
+name: Jules Scan
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Jules Quality Scan
+        run: |
+          echo "Starting document integrity and branding scan..."
+          grep -r "Architected and built by the one and only Drferdi." .

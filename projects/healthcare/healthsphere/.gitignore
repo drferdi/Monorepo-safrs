@@ -1,0 +1,144 @@
+# ============================================================
+# primary-healthcare — .gitignore
+# Sentra AI Repository Guardian Standard v1.0
+# ============================================================
+
+# ---- AI GOVERNANCE — SENTRA INTERNAL (JANGAN PUSH) ----
+# Per UU Kesehatan No. 17/2023: AI session files berpotensi
+# mengandung data pasien. File governance adalah rahasia Sentra.
+# AGENTS.md tracked via monorepo root .gitignore — do not re-ignore
+AGENTS.override.md
+CLAUDE.md
+GEMINI.md
+.agent/
+.claude/
+.codex/
+.gemini/
+.cursor/
+.clinerules
+.mcp.json
+.qoder/
+.qoderignore
+.aider*
+.continue/
+.copilot/
+.roo/
+.windsurf/
+.kilo/
+.roomodes
+.superpowers/
+.playwright-mcp/
+
+# ---- SECRETS & ENV (TIDAK PERNAH DI-COMMIT) ----
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.cert
+*.crt
+secrets.json
+secrets.yaml
+credentials.json
+service-account*.json
+*-service-account.json
+
+# ---- DEPENDENCIES ----
+node_modules/
+.pnp
+.pnp.js
+.pnpm-store/
+
+# ---- BUILD ARTIFACTS ----
+dist/
+build/
+out/
+.output/
+.next/
+.nuxt/
+.turbo/
+.cache/
+.wxt/
+*.tsbuildinfo
+.eslintcache
+.stylelintcache
+
+# ---- LOGS ----
+*.log
+logs/
+npm-debug.log*
+pnpm-debug.log*
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+
+# ---- IDE ----
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.shared.json
+
+# ---- TEST & COVERAGE ----
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+
+# ---- DATABASE & LOCAL STORES ----
+*.sqlite
+*.sqlite3
+*.db
+vector-store/local/
+embeddings-cache/
+
+# ---- PHI & DATA KLINIS (UU Kesehatan No. 17/2023) ----
+# Data identitas pasien TIDAK BOLEH masuk repo dalam bentuk apapun
+*.dicom
+*.dcm
+*.hl7
+*.hl7v2
+*.fhir.json
+data/phi/
+data/patient/
+data/clinical/
+data/clinical-raw/
+fixtures/phi/
+tests/fixtures/phi/
+repository/medical-raw/
+training-data/
+dataset/
+datasets/
+
+# ---- ML MODEL WEIGHTS ----
+# Jika model dilatih dengan data pasien, wajib blok
+*.pt
+*.pth
+*.onnx
+*.safetensors
+*.h5
+*.hdf5
+*.pkl
+*.joblib
+*.npy
+*.npz
+*.gguf
+*.ggml
+models/weights/
+checkpoints/
+
+# ---- REVIEW & PLANNING ARTIFACTS (local only) ----
+code-review.md
+PLANS.md
+PROJECTS.md
+

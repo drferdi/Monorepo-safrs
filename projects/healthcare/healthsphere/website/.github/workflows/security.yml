@@ -1,0 +1,65 @@
+# Architected and built by the one and only Drferdi.
+name: Security Scan
+
+on:
+  push:
+    branches: ["master", "main"]
+  pull_request:
+    branches: ["master", "main"]
+  schedule:
+    # Run every Monday at 08:00 UTC (15:00 WIB)
+    - cron: "0 8 * * 1"
+
+jobs:
+  dependency-audit:
+    name: Dependency Vulnerability Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run npm audit (HIGH + CRITICAL only)
+        run: npm audit --audit-level=high
+
+  secrets-scan:
+    name: Secrets Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for hardcoded secrets
+        run: |
+          echo "Scanning for potential hardcoded secrets..."
+          # Check for common secret patterns — API keys, tokens, passwords
+          PATTERNS=(
+            "AAAA[0-9A-Za-z_-]{27}"
+            "sk-[a-zA-Z0-9]{40}"
+            "ghp_[a-zA-Z0-9]{36}"
+            "AIza[0-9A-Za-z\\-_]{35}"
+            "password\s*=\s*['\"][^'\"]{6,}"
+          )
+          FOUND=0
+          for pattern in "${PATTERNS[@]}"; do
+            if grep -rE "$pattern" . \
+               --include="*.ts" --include="*.tsx" --include="*.js" \
+               --include="*.mjs" --include="*.json" \
+               --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist \
+               --exclude="*.example" 2>/dev/null | grep -v "test\|mock\|example\|sample"; then
+              FOUND=1
+            fi
+          done
+          if [ $FOUND -eq 1 ]; then
+            echo "WARNING: Potential secrets detected. Please review the above matches."
+            exit 1
+          fi
+          echo "No hardcoded secrets detected."

@@ -1,0 +1,12 @@
+# Workspace pnpm milik capsule healthsphere (aplikasi di folder website/),
+# lockfile di folder ini.
+packages: []
+
+# Kontrak standalone menolak symlink di pohon capsule; linker hoisted membuat
+# node_modules datar tanpa symlink.
+nodeLinker: hoisted
+
+# esbuild (Vite) dan sharp (skrip optimasi gambar) butuh build script.
+allowBuilds:
+  esbuild: true
+  sharp: true

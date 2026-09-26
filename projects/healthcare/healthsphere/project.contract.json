@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "healthcare/healthsphere",
+  "owner": "Chief (dr. Ferdi Iskandar)",
+  "risk": "R1",
+  "runtime": {
+    "name": "node",
+    "version": "24"
+  },
+  "packageManager": {
+    "name": "pnpm",
+    "version": "11.21.0",
+    "lockfile": "website/pnpm-lock.yaml"
+  },
+  "commands": {
+    "install": { "program": "node", "args": ["scripts/pnpm.mjs", "--dir", "website", "install", "--frozen-lockfile"], "timeoutSeconds": 600 },
+    "lint": { "program": "node", "args": ["scripts/pnpm.mjs", "--dir", "website", "run", "lint"], "timeoutSeconds": 300 },
+    "typecheck": { "program": "node", "args": ["scripts/pnpm.mjs", "--dir", "website", "run", "typecheck"], "timeoutSeconds": 300 },
+    "test": { "program": "node", "args": ["scripts/pnpm.mjs", "--dir", "website", "run", "test", "--run"], "timeoutSeconds": 300 },
+    "build": { "program": "node", "args": ["scripts/pnpm.mjs", "--dir", "website", "run", "build"], "timeoutSeconds": 600 },
+    "run": { "program": "node", "args": ["scripts/pnpm.mjs", "--dir", "website", "run", "start"] },
+    "deployDryRun": { "program": "node", "args": ["scripts/deploy-dry-run.mjs"] }
+  },
+  "smoke": {
+    "kind": "http",
+    "host": "127.0.0.1",
+    "port": 4343,
+    "path": "/",
+    "expectedStatus": 200,
+    "startupTimeoutSeconds": 120
+  },
+  "artifacts": ["website/dist/index.html"],
+  "externalDependencies": [
+    { "kind": "registry", "name": "npm registry", "locator": "https://registry.npmjs.org", "required": true },
+    { "kind": "service", "name": "Crew portal link shown on the site", "locator": "VITE_CREW_PORTAL_URL", "required": false },
+    { "kind": "service", "name": "Dashboard link shown on the site", "locator": "VITE_DASHBOARD_URL", "required": false },
+    { "kind": "service", "name": "Google Places API for the review sync script (manual, not in the lifecycle)", "locator": "GOOGLE_MAPS_API_KEY", "required": false }
+  ],
+  "mutableStatePaths": ["website/node_modules", "website/dist", "website/tsconfig.tsbuildinfo", "website/tsconfig.app.tsbuildinfo", "website/tsconfig.node.tsbuildinfo"]
+}

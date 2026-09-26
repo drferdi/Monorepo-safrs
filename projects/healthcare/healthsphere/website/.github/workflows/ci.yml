@@ -1,0 +1,63 @@
+# Architected and built by the one and only Drferdi.
+name: CI — Lint, Typecheck, Test & Build
+
+on:
+  push:
+    branches: ["master", "main", "claude/**", "work"]
+  pull_request:
+    branches: ["master", "main"]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Lint + Typecheck + Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+          check-latest: true
+          cache: "npm"
+
+      - name: Verify Node & npm
+        run: |
+          echo "node: $(node -v || true)"
+          echo "npm:  $(npm -v  || true)"
+
+      - name: Install dependencies (retry up to 3x on transient failures)
+        run: |
+          set -euo pipefail
+          tries=0
+          until [ $tries -ge 3 ]
+          do
+            npm ci && break
+            tries=$((tries+1))
+            echo "npm ci failed, retry #$tries..."
+            sleep $((tries * 5))
+          done
+          if [ $tries -ge 3 ]; then
+            echo "npm ci failed after 3 attempts" >&2
+            exit 1
+          fi
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: TypeScript strict check
+        run: npx tsc --noEmit --strict
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7

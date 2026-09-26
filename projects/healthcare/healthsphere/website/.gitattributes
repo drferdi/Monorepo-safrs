@@ -1,0 +1,37 @@
+# Drferdi's vision, brought to life.
+# Git Attributes — https://git-scm.com/docs/gitattributes
+# Ensures consistent line endings and proper diff drivers.
+
+# Default: normalize all text files to LF on checkout
+* text=auto eol=lf
+
+# Explicitly set text files
+*.ts    text eol=lf
+*.tsx   text eol=lf
+*.js    text eol=lf
+*.mjs   text eol=lf
+*.json  text eol=lf
+*.css   text eol=lf
+*.html  text eol=lf
+*.md    text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.toml  text eol=lf
+*.sh    text eol=lf
+
+# Binary files — do not modify
+*.avif  binary
+*.webp  binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.svg   text eol=lf
+*.ico   binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.pdf   binary
+
+# Diff drivers for lock files
+package-lock.json   linguist-generated=true
