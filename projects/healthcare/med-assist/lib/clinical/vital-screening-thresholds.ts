@@ -8,13 +8,7 @@
 
 export interface VitalScreeningProfile {
   cohort:
-    | 'infant'
-    | 'toddler'
-    | 'preschool'
-    | 'school_age'
-    | 'adolescent'
-    | 'adult'
-    | 'older_adult';
+    'infant' | 'toddler' | 'preschool' | 'school_age' | 'adolescent' | 'adult' | 'older_adult';
   label: string;
   isPediatric: boolean;
   isOlderAdult: boolean;

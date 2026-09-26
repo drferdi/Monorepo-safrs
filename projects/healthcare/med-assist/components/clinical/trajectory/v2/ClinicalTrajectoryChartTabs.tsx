@@ -84,10 +84,7 @@ function ClinicalLensAnimationAnchor() {
   );
 }
 
-function renderActivePanel(
-  activeTab: ChartTabId,
-  viewModel: TrajectoryVisualizationViewModel
-) {
+function renderActivePanel(activeTab: ChartTabId, viewModel: TrajectoryVisualizationViewModel) {
   if (activeTab === 'clinical-timeline') {
     return <TrajectoryClinicalTimelinePanel viewModel={viewModel} />;
   }
@@ -125,10 +122,7 @@ export function ClinicalTrajectoryChartTabs({
   const [activeTab, setActiveTab] = useState<ChartTabId>(DEFAULT_CHART_TAB_ID);
 
   return (
-    <section
-      className="ct-v2-primary-trajectory"
-      data-testid="trajectory-chart-tabs"
-    >
+    <section className="ct-v2-primary-trajectory" data-testid="trajectory-chart-tabs">
       <ClinicalLensAnimationAnchor />
 
       <div

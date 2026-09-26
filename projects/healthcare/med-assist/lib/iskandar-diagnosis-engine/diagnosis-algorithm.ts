@@ -321,14 +321,16 @@ export function runDiagnosisAlgorithm(input: DiagnosisAlgorithmInput): RankedDia
       2
     );
 
-    const adjustedConfidence = round(clamp(diagnosisScore / 100, 0, 1), 2);
+    // Display confidence follows engine suggestion confidence (single ranking authority).
+    // Composite diagnosisScore remains in scoreBreakdown for audit/transparency only.
+    const adjustedConfidence = round(clamp(suggestion.confidence, 0, 1), 2);
 
     return {
       rank: 0,
       suggestion,
       diagnosisScore,
       adjustedConfidence,
-      confidenceBand: confidenceBand(diagnosisScore),
+      confidenceBand: confidenceBand(adjustedConfidence * 100),
       scoreBreakdown: {
         baseConfidence,
         symptomFit,
@@ -343,23 +345,21 @@ export function runDiagnosisAlgorithm(input: DiagnosisAlgorithmInput): RankedDia
     };
   });
 
-  // Tiered display: threshold lowered to 0.10 (from 0.25) to prevent
-  // hiding all LLM suggestions when symptoms are not explicitly provided (e.g. only TTV).
-  // PRIMARY (>= 0.60): High confidence | SECONDARY (0.10-0.59): Show with caution
-  // FILTERED (< 0.10): Don't show
-  const MIN_ADJUSTED_CONFIDENCE = 0.10; // Lowered from 0.25
+  // Filter only obvious junk using engine confidence (do not drop via UI composite).
+  const MIN_ENGINE_CONFIDENCE = 0.1;
 
-  const finalList = ranked.filter((item) => item.adjustedConfidence >= MIN_ADJUSTED_CONFIDENCE);
+  const finalList = ranked.filter((item) => item.adjustedConfidence >= MIN_ENGINE_CONFIDENCE);
 
-  return finalList
-    .sort((a, b) => b.diagnosisScore - a.diagnosisScore)
-    .slice(0, maxResults)
-    .map((item, index) => ({
+  // Preserve engine / input order — UI must not re-sort the differential.
+  return finalList.slice(0, maxResults).map((item, index) => {
+    const rank = index + 1;
+    return {
       ...item,
-      rank: index + 1,
+      rank,
       suggestion: {
         ...item.suggestion,
-        rank: index + 1,
+        rank,
       },
-    }));
+    };
+  });
 }

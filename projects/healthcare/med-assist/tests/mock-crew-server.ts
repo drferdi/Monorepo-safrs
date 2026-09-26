@@ -58,7 +58,9 @@ function sendJson(res: ServerResponse, status: number, payload: unknown): void {
 }
 
 function isMultipartUpload(req: IncomingMessage): boolean {
-  return String(req.headers['content-type'] || '').toLowerCase().includes('multipart/form-data');
+  return String(req.headers['content-type'] || '')
+    .toLowerCase()
+    .includes('multipart/form-data');
 }
 
 function hasMultipartFileField(rawBody: string): boolean {
@@ -75,17 +77,15 @@ export async function startMockCrewServer(
   options: MockCrewServerOptions = {}
 ): Promise<MockCrewServer> {
   const requests: MockCrewRecordedRequest[] = [];
-  const doctors =
-    options.doctors ??
-    [
-      {
-        id: 'doctor-1',
-        name: 'ferdi',
-        professional_name: 'dr. Ferdi Iskandar',
-        role: 'dokter',
-        availability_status: 'online',
-      },
-    ];
+  const doctors = options.doctors ?? [
+    {
+      id: 'doctor-1',
+      name: 'ferdi',
+      professional_name: 'dr. Ferdi Iskandar',
+      role: 'dokter',
+      availability_status: 'online',
+    },
+  ];
   const loginUser = options.loginUser ?? {
     username: 'drferdi',
     displayName: 'dr. Ferdi Iskandar',

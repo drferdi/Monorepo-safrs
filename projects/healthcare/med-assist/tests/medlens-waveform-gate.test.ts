@@ -5,20 +5,7 @@ import {
 import { MEDLENS_WAVEFORM_NOT_IMPLEMENTED_REASON } from '@/lib/clinical/medlens/ecg-types';
 
 const hash = 'a'.repeat(64);
-const leads = [
-  'I',
-  'II',
-  'III',
-  'aVR',
-  'aVL',
-  'aVF',
-  'V1',
-  'V2',
-  'V3',
-  'V4',
-  'V5',
-  'V6',
-] as const;
+const leads = ['I', 'II', 'III', 'aVR', 'aVL', 'aVF', 'V1', 'V2', 'V3', 'V4', 'V5', 'V6'] as const;
 
 function makeValidPacket() {
   return {

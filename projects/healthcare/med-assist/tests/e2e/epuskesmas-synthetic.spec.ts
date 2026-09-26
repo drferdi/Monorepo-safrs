@@ -1,6 +1,7 @@
-import fs from 'fs';
 import path from 'path';
-import { chromium, expect, test, type BrowserContext, type Page } from '@playwright/test';
+import { expect, test, type BrowserContext, type Page } from '@playwright/test';
+
+import { getExtensionId, launchExtensionContext } from './chrome-extension-launch';
 
 type ChromeRuntimeApi = {
   runtime: {
@@ -21,14 +22,6 @@ type ChromeRuntimeApi = {
 };
 
 const EXTENSION_PATH = path.resolve(__dirname, '../../.output/chrome-mv3-dev');
-const LOCAL_BROWSER_CANDIDATES = [
-  'C:\\Users\\drfer\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
-  'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-  'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-  'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
-  'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
-];
-const localBrowserExecutable = LOCAL_BROWSER_CANDIDATES.find((candidate) => fs.existsSync(candidate));
 
 const SYNTHETIC_VISIT_HTML = `
   <div class="modal-content">
@@ -98,10 +91,10 @@ function buildSyntheticAnamnesaPage(): string {
           <a class="riwayat btn btn-default" data-id="69915" onclick="showRiwayatPelayanan(this)">25-03-2026 Kunjungan Lama</a>
         </div>
 
-        <textarea name="Anamnesa[keluhan_utama]"></textarea>
-        <textarea name="Anamnesa[keluhan_tambahan]"></textarea>
+        <textarea name="Anamnesa[keluhan_utama]" maxlength="250"></textarea>
+        <textarea name="Anamnesa[keluhan_tambahan]" maxlength="250"></textarea>
         <input name="Anamnesa[lama_sakit_hari]" />
-        <textarea name="MRiwayatPasien[Riwayat Penyakit Sekarang][value]" id="text_rps"></textarea>
+        <textarea name="MRiwayatPasien[Riwayat Penyakit Sekarang][value]" id="text_rps" maxlength="250"></textarea>
         <textarea name="MRiwayatPasien[Riwayat Penyakit Dulu][value]" id="text_rpd"></textarea>
         <textarea name="MRiwayatPasien[Riwayat Penyakit Keluarga][value]" id="text_rpk"></textarea>
         <textarea name="MAlergiPasien[Obat][value]" id="text_alergiobat"></textarea>
@@ -429,30 +422,6 @@ function buildSyntheticResepPage(): string {
   `;
 }
 
-async function launchExtensionContext(): Promise<BrowserContext> {
-  return chromium.launchPersistentContext('', {
-    ...(localBrowserExecutable ? { executablePath: localBrowserExecutable } : {}),
-    headless: false,
-    args: [
-      `--load-extension=${EXTENSION_PATH}`,
-      `--disable-extensions-except=${EXTENSION_PATH}`,
-      '--no-first-run',
-    ],
-  });
-}
-
-async function getExtensionId(context: BrowserContext): Promise<string> {
-  const deadline = Date.now() + 15_000;
-  while (Date.now() < deadline) {
-    const worker = context.serviceWorkers()[0];
-    if (worker) {
-      return new URL(worker.url()).host;
-    }
-    await new Promise((resolve) => setTimeout(resolve, 500));
-  }
-  throw new Error('Extension service worker did not appear within 15 seconds.');
-}
-
 async function openExtensionPage(
   context: BrowserContext,
   extensionId: string,
@@ -487,26 +456,32 @@ async function sendMessageToEpuskesmasTab<TResponse>(
 ): Promise<{ response: TResponse; lastError: string | null }> {
   return page.evaluate(async (message) => {
     const chromeApi = (window as unknown as { chrome: ChromeRuntimeApi }).chrome;
-    return await new Promise<{ response: TResponse; lastError: string | null }>((resolve, reject) => {
-      chromeApi.tabs.query({}, (tabs) => {
-        const target = tabs.find((tab) => (tab.url || '').includes('epuskesmas.id'));
-        if (!target?.id) {
-          reject(new Error('No synthetic ePuskesmas tab found'));
-          return;
-        }
-        chromeApi.tabs.sendMessage(target.id, message, (response: unknown) => {
-          resolve({
-            response: response as TResponse,
-            lastError: chromeApi.runtime.lastError?.message ?? null,
+    return await new Promise<{ response: TResponse; lastError: string | null }>(
+      (resolve, reject) => {
+        chromeApi.tabs.query({}, (tabs) => {
+          const target = tabs.find((tab) => (tab.url || '').includes('epuskesmas.id'));
+          if (!target?.id) {
+            reject(new Error('No synthetic ePuskesmas tab found'));
+            return;
+          }
+          chromeApi.tabs.sendMessage(target.id, message, (response: unknown) => {
+            resolve({
+              response: response as TResponse,
+              lastError: chromeApi.runtime.lastError?.message ?? null,
+            });
           });
         });
-      });
-    });
+      }
+    );
   }, payload);
 }
 
 function unwrapMessagingResponse<T>(response: unknown): T {
-  if (typeof response === 'object' && response !== null && 'res' in (response as Record<string, unknown>)) {
+  if (
+    typeof response === 'object' &&
+    response !== null &&
+    'res' in (response as Record<string, unknown>)
+  ) {
     return (response as { res: T }).res;
   }
   return response as T;
@@ -516,7 +491,7 @@ test.describe.serial('Synthetic ePuskesmas integration', () => {
   let context: BrowserContext;
 
   test.beforeAll(async () => {
-    context = await launchExtensionContext();
+    context = await launchExtensionContext({ extensionPath: EXTENSION_PATH });
   });
 
   test.afterEach(async () => {
@@ -544,7 +519,9 @@ test.describe.serial('Synthetic ePuskesmas integration', () => {
 
     const extensionId = await getExtensionId(context);
     const epPage = await context.newPage();
-    await epPage.goto('https://kotakediri.epuskesmas.id/anamnesa/create/82594?from=pelayanan&action=edit');
+    await epPage.goto(
+      'https://kotakediri.epuskesmas.id/anamnesa/create/82594?from=pelayanan&action=edit'
+    );
     await epPage.waitForLoadState('domcontentloaded');
     await epPage.waitForTimeout(2500);
 
@@ -572,7 +549,15 @@ test.describe.serial('Synthetic ePuskesmas integration', () => {
 
     const patientPayload = unwrapMessagingResponse<{
       success: boolean;
-      patient: { name: string; gender: string; age: number; rm: string; bpjsStatus: string; kelurahan: string; dob: string };
+      patient: {
+        name: string;
+        gender: string;
+        age: number;
+        rm: string;
+        bpjsStatus: string;
+        kelurahan: string;
+        dob: string;
+      };
     }>(patientInfo.response);
     const medicalPayload = unwrapMessagingResponse<{
       success: boolean;
@@ -676,7 +661,9 @@ test.describe.serial('Synthetic ePuskesmas integration', () => {
 
     const extensionId = await getExtensionId(context);
     const epPage = await context.newPage();
-    await epPage.goto('https://kotakediri.epuskesmas.id/anamnesa/create/82594?from=pelayanan&action=edit');
+    await epPage.goto(
+      'https://kotakediri.epuskesmas.id/anamnesa/create/82594?from=pelayanan&action=edit'
+    );
     await epPage.waitForLoadState('domcontentloaded');
     await epPage.waitForTimeout(2500);
 
@@ -720,16 +707,31 @@ test.describe.serial('Synthetic ePuskesmas integration', () => {
     expect(transferPayload.steps.anamnesa.state).toBe('success');
 
     await expect(epPage.locator('textarea[name="Anamnesa[keluhan_utama]"]')).toHaveValue('Demam');
-    await expect(epPage.locator('textarea[name="Anamnesa[keluhan_tambahan]"]')).toHaveValue('Batuk pilek');
+    await expect(epPage.locator('textarea[name="Anamnesa[keluhan_tambahan]"]')).toHaveValue(
+      'Batuk pilek'
+    );
+    await expect(epPage.locator('textarea[name="Anamnesa[keluhan_utama]"]')).toHaveAttribute(
+      'maxlength',
+      '250'
+    );
+    const utamaLen = await epPage
+      .locator('textarea[name="Anamnesa[keluhan_utama]"]')
+      .inputValue()
+      .then((value) => value.length);
+    expect(utamaLen).toBeLessThanOrEqual(250);
     await expect(epPage.locator('input[name="Anamnesa[lama_sakit_hari]"]')).toHaveValue('3');
-    await expect(epPage.locator('textarea[name="MAlergiPasien[Obat][value]"]')).toHaveValue('Amoxicillin');
+    await expect(epPage.locator('textarea[name="MAlergiPasien[Obat][value]"]')).toHaveValue(
+      'Amoxicillin'
+    );
     await expect(epPage.locator('input[name="PeriksaFisik[sistole]"]')).toHaveValue('120');
     await expect(epPage.locator('input[name="PeriksaFisik[diastole]"]')).toHaveValue('80');
     await expect(epPage.locator('input[name="PeriksaFisik[detak_nadi]"]')).toHaveValue('90');
     await expect(epPage.locator('input[name="PeriksaFisik[nafas]"]')).toHaveValue('18');
     await expect(epPage.locator('input[name="PeriksaFisik[suhu]"]')).toHaveValue('37.2');
     await expect(epPage.locator('input[name="PeriksaFisik[gula_darah]"]')).toHaveValue('110');
-    await expect(epPage.locator('select[name="PeriksaFisik[kesadaran]"]')).toHaveValue('COMPOS MENTIS');
+    await expect(epPage.locator('select[name="PeriksaFisik[kesadaran]"]')).toHaveValue(
+      'COMPOS MENTIS'
+    );
   });
 
   test('fills synthetic diagnosa page through transferRME only-step flow', async () => {
@@ -744,7 +746,9 @@ test.describe.serial('Synthetic ePuskesmas integration', () => {
 
     const extensionId = await getExtensionId(context);
     const epPage = await context.newPage();
-    await epPage.goto('https://kotakediri.epuskesmas.id/diagnosa/create/82594?from=pelayanan&action=edit');
+    await epPage.goto(
+      'https://kotakediri.epuskesmas.id/diagnosa/create/82594?from=pelayanan&action=edit'
+    );
     await epPage.waitForLoadState('domcontentloaded');
     await epPage.waitForTimeout(2500);
 
@@ -802,7 +806,9 @@ test.describe.serial('Synthetic ePuskesmas integration', () => {
 
     const extensionId = await getExtensionId(context);
     const epPage = await context.newPage();
-    await epPage.goto('https://kotakediri.epuskesmas.id/resep/create/82594?from=pelayanan&action=edit');
+    await epPage.goto(
+      'https://kotakediri.epuskesmas.id/resep/create/82594?from=pelayanan&action=edit'
+    );
     await epPage.waitForLoadState('domcontentloaded');
     await epPage.waitForTimeout(2500);
 

@@ -11,7 +11,7 @@
 <table>
   <tr>
     <td width="30%" align="center" valign="middle">
-      <img src="https://github.com/drferdii/med-assist/blob/master/public/assist.png?raw=true" alt="Med Assist" width="200"/>
+      <img src="https://github.com/drferdi/Medassist/blob/main/public/assist.png?raw=true" alt="Med Assist" width="200"/>
       <br/><br/>
       <strong>SENTRA ASSIST</strong>
     </td>
@@ -30,12 +30,12 @@
 
 [![Version](https://img.shields.io/badge/version-1.0.1-blue?style=for-the-badge)](package.json)
 [![License](https://img.shields.io/badge/License-Community%20%2F%20Enterprise-orange?style=for-the-badge)](LICENSE)
-[![CI](https://img.shields.io/github/actions/workflow/status/drferdii/med-assist/ci.yml?label=CI&logo=github&style=for-the-badge)](https://github.com/drferdii/med-assist/actions)
+[![CI](https://img.shields.io/github/actions/workflow/status/drferdi/Medassist/ci.yml?label=CI&logo=github&style=for-the-badge)](https://github.com/drferdi/Medassist/actions)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![Built with WXT](https://img.shields.io/badge/Built%20with-WXT-7C3AED?style=for-the-badge)](https://wxt.dev/)
 [![Platform](https://img.shields.io/badge/Platform-Sentra%20AI-FE4900?style=for-the-badge)](https://sentrahai.com)
 
-_Designed and built by [Drferdi](https://github.com/drferdii) (dr. Ferdi Iskandar)_
+_Designed and built by [Drferdi](https://github.com/drferdi) (dr. Ferdi Iskandar)_
 
 > **"Diagnosis bukan tebakan — setiap keputusan klinis harus bisa dipertanggungjawabkan."** — dr. Ferdi Iskandar, Founder
 
@@ -570,19 +570,19 @@ npm run zip:firefox
 
 ## Troubleshooting
 
-| Issue                            | Solution                                                                                                   |
-| -------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| Extension not loading            | Enable Developer Mode at `chrome://extensions/`, load unpacked from `.output/chrome-mv3-dev/`              |
-| `npm install` fails              | Verify Node.js ≥22 and npm ≥10 via `node -v` and `npm -v`                                                  |
-| Dashboard / Bridge auth errors   | Check Crew/Dashboard base URL in Settings, valid magic-link session, or automation token                   |
-| Sidepanel shows "Login required" | Check Dashboard base URL in Settings — auth uses magic-link polling against the configured server          |
-| Form not auto-filling            | DAS may need a re-scan or content reinjection — click **Inisialisasi** in the header                       |
-| Word limit error on submit       | ePuskesmas field limit is 225 words — Sentra caps keluhan automatically at 220 words                       |
-| MedLens local unavailable        | The local ECG harness is internal-only; start `node services/medlens-local/server.mjs` only for dev/test   |
-| TypeScript errors                | Run `npm run typecheck` for full output                                                                    |
-| LLM reasoning not working        | Check `SENTRA_OPENAI_API_KEY` is set; without it, system falls back to KB-only deterministic mode          |
-| SYMPHONY alerts not appearing    | Check `SENTRA_DISABLE_TRAJECTORY_BRIDGE=false`; ensure trajectory analysis has `high`/`critical` severity  |
-| Vital guardrails not blocking    | Verify `vital-guardrails.ts` is imported in TTVInferenceUI; check field values are within hard-stop ranges |
+| Issue                             | Solution                                                                                                                |
+| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Extension not loading             | Enable Developer Mode at `chrome://extensions/`, load unpacked from `.output/chrome-mv3-dev/`                           |
+| `npm install` fails               | Verify Node.js ≥22 and npm ≥10 via `node -v` and `npm -v`                                                               |
+| Dashboard / Bridge auth errors    | Check Crew/Dashboard base URL in Settings, valid magic-link session, or automation token                                |
+| Sidepanel shows "Login required"  | Check Dashboard base URL in Settings — auth uses magic-link polling against the configured server                       |
+| Form not auto-filling             | DAS may need a re-scan or content reinjection — click **Inisialisasi** in the header                                    |
+| Word / char limit error on submit | ePuskesmas rejects oversize keluhan — Sentra caps at **220 words** and **250 characters** (SSOT: `lib/rme/truncate.ts`) |
+| MedLens local unavailable         | The local ECG harness is internal-only; start `node services/medlens-local/server.mjs` only for dev/test                |
+| TypeScript errors                 | Run `npm run typecheck` for full output                                                                                 |
+| LLM reasoning not working         | Check `SENTRA_OPENAI_API_KEY` is set; without it, system falls back to KB-only deterministic mode                       |
+| SYMPHONY alerts not appearing     | Check `SENTRA_DISABLE_TRAJECTORY_BRIDGE=false`; ensure trajectory analysis has `high`/`critical` severity               |
+| Vital guardrails not blocking     | Verify `vital-guardrails.ts` is imported in TTVInferenceUI; check field values are within hard-stop ranges              |
 
 ---
 
@@ -614,7 +614,7 @@ If CI or local verification fails due to style-level issues:
 
 <div align="center">
 
-Designed and built by **[Drferdi](https://github.com/drferdii)** (dr. Ferdi Iskandar)
+Designed and built by **[Drferdi](https://github.com/drferdi)** (dr. Ferdi Iskandar)
 Maintained by **Sentra Artificial Intelligence**
 
 </div>

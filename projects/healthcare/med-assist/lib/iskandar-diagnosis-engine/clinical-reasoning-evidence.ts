@@ -1,8 +1,5 @@
 import type { ClinicalTrajectorySignal } from './clinical-trajectory-intelligence';
-import type {
-  HybridTrajectoryRedFlag,
-  HybridTrajectoryResult,
-} from './hybrid-trajectory';
+import type { HybridTrajectoryRedFlag, HybridTrajectoryResult } from './hybrid-trajectory';
 import type {
   PriorityTrajectoryCoverageItem,
   TrajectoryDriverContribution,
@@ -205,9 +202,7 @@ function appendSourceMap(
   sourceMap.set(sourceRef, current);
 }
 
-function buildClinicalFacts(
-  signals: ClinicalTrajectorySignal[]
-): {
+function buildClinicalFacts(signals: ClinicalTrajectorySignal[]): {
   facts: ClinicalFact[];
   sourceMap: ReasoningEvidenceSourceMapEntry[];
 } {
@@ -257,9 +252,8 @@ export function buildReasoningEvidencePackFromTrajectoryV2({
   hybridResult,
   viewModel,
 }: BuildReasoningEvidencePackInput): ReasoningEvidencePack {
-  const activeTrajectorySignals = hybridResult.clinicalIntelligence.trajectorySignals.filter(
-    isActiveSignal
-  );
+  const activeTrajectorySignals =
+    hybridResult.clinicalIntelligence.trajectorySignals.filter(isActiveSignal);
   const { facts, sourceMap } = buildClinicalFacts(activeTrajectorySignals);
   const factKeys = new Set(facts.map((fact) => fact.key));
 
@@ -284,8 +278,7 @@ export function buildReasoningEvidencePackFromTrajectoryV2({
       mustNotMissPresent: factKeys.has('critical_deterioration') || factKeys.has('shock_watch'),
       unstablePatient: facts.some(
         (fact) =>
-          fact.acuteDeterioration &&
-          (fact.severity === 'high' || fact.severity === 'critical')
+          fact.acuteDeterioration && (fact.severity === 'high' || fact.severity === 'critical')
       ),
       treatmentResponseConflict:
         factKeys.has('treatment_response_good') && factKeys.has('treatment_response_poor'),

@@ -27,10 +27,7 @@ import type {
   MedlensWaveformOutput,
   MedlensWaveformTraceEvidence,
 } from './ecg-types';
-import {
-  MEDLENS_ECG_DISCLAIMER,
-  MEDLENS_ECG_FAIL_CLOSED_MESSAGE,
-} from './ecg-types';
+import { MEDLENS_ECG_DISCLAIMER, MEDLENS_ECG_FAIL_CLOSED_MESSAGE } from './ecg-types';
 
 export { MEDLENS_ECG_DISCLAIMER, MEDLENS_ECG_FAIL_CLOSED_MESSAGE };
 
@@ -57,11 +54,7 @@ function readNumberArray(value: unknown): number[] | undefined {
 
 function preserveRawOcrText(value: unknown): string {
   if (typeof value !== 'string') return '';
-  return value
-    .split(/\r?\n/)
-    .map(sanitizeEcgTextLine)
-    .filter(Boolean)
-    .join('\n');
+  return value.split(/\r?\n/).map(sanitizeEcgTextLine).filter(Boolean).join('\n');
 }
 
 function normalizeImageQuality(value: unknown): MedlensEcgImageQuality {
@@ -134,11 +127,7 @@ function inferExtractionMethod(value: unknown, ocrMetadata: MedlensEcgOcrMetadat
   return 'unsupported' as const;
 }
 
-function inferSourceType(
-  value: unknown,
-  rawLines: string[],
-  imageQuality: MedlensEcgImageQuality
-) {
+function inferSourceType(value: unknown, rawLines: string[], imageQuality: MedlensEcgImageQuality) {
   if (
     value === 'machine_report_text' ||
     value === 'ecg_image_with_printed_result' ||
@@ -217,9 +206,10 @@ function normalizeGridCalibration(value: unknown): MedlensGridCalibrationEvidenc
 
   return {
     calibrated: Boolean(value.calibrated),
-    paperSpeedMmPerSec: value.paperSpeedMmPerSec === 25 || value.paperSpeedMmPerSec === 50
-      ? value.paperSpeedMmPerSec
-      : undefined,
+    paperSpeedMmPerSec:
+      value.paperSpeedMmPerSec === 25 || value.paperSpeedMmPerSec === 50
+        ? value.paperSpeedMmPerSec
+        : undefined,
     gainMmPerMv:
       value.gainMmPerMv === 10 || value.gainMmPerMv === 5 || value.gainMmPerMv === 20
         ? value.gainMmPerMv
@@ -280,22 +270,22 @@ function normalizeWaveformTraces(value: unknown): MedlensWaveformTraceEvidence[]
   if (!Array.isArray(value)) return [];
 
   const traces: Array<MedlensWaveformTraceEvidence | null> = value.map((candidate) => {
-      if (!isRecord(candidate)) return null;
-      const lead = leadFromUnknown(candidate.lead);
-      if (!lead) return null;
+    if (!isRecord(candidate)) return null;
+    const lead = leadFromUnknown(candidate.lead);
+    if (!lead) return null;
 
-      return {
-        lead,
-        traceExtracted: candidate.traceExtracted === true,
-        signalSamples: readNumberArray(candidate.signalSamples),
-        baselineSamples: readNumberArray(candidate.baselineSamples),
-        confidence: confidenceFromUnknown(candidate.confidence),
-        failureReason:
-          typeof candidate.failureReason === 'string' && candidate.failureReason.trim()
-            ? candidate.failureReason.trim()
-            : undefined,
-      };
-    });
+    return {
+      lead,
+      traceExtracted: candidate.traceExtracted === true,
+      signalSamples: readNumberArray(candidate.signalSamples),
+      baselineSamples: readNumberArray(candidate.baselineSamples),
+      confidence: confidenceFromUnknown(candidate.confidence),
+      failureReason:
+        typeof candidate.failureReason === 'string' && candidate.failureReason.trim()
+          ? candidate.failureReason.trim()
+          : undefined,
+    };
+  });
 
   return traces.filter((entry): entry is MedlensWaveformTraceEvidence => entry !== null);
 }
@@ -304,19 +294,19 @@ function normalizeFiducials(value: unknown): MedlensFiducialEvidence[] {
   if (!Array.isArray(value)) return [];
 
   const fiducials: Array<MedlensFiducialEvidence | null> = value.map((candidate) => {
-      if (!isRecord(candidate)) return null;
-      const lead = leadFromUnknown(candidate.lead);
-      if (!lead) return null;
+    if (!isRecord(candidate)) return null;
+    const lead = leadFromUnknown(candidate.lead);
+    if (!lead) return null;
 
-      return {
-        lead,
-        pOnsetMs: readFiniteNumber(candidate.pOnsetMs),
-        qrsOnsetMs: readFiniteNumber(candidate.qrsOnsetMs),
-        jPointMs: readFiniteNumber(candidate.jPointMs),
-        tEndMs: readFiniteNumber(candidate.tEndMs),
-        confidence: confidenceFromUnknown(candidate.confidence),
-      };
-    });
+    return {
+      lead,
+      pOnsetMs: readFiniteNumber(candidate.pOnsetMs),
+      qrsOnsetMs: readFiniteNumber(candidate.qrsOnsetMs),
+      jPointMs: readFiniteNumber(candidate.jPointMs),
+      tEndMs: readFiniteNumber(candidate.tEndMs),
+      confidence: confidenceFromUnknown(candidate.confidence),
+    };
+  });
 
   return fiducials.filter((entry): entry is MedlensFiducialEvidence => entry !== null);
 }
@@ -325,36 +315,37 @@ function normalizeLeadMeasurements(value: unknown): MedlensLeadMeasurementEviden
   if (!Array.isArray(value)) return [];
 
   const measurements: Array<MedlensLeadMeasurementEvidence | null> = value.map((candidate) => {
-      if (!isRecord(candidate)) return null;
-      const lead = leadFromUnknown(candidate.lead);
-      if (!lead) return null;
+    if (!isRecord(candidate)) return null;
+    const lead = leadFromUnknown(candidate.lead);
+    if (!lead) return null;
 
-      return {
-        lead,
-        stDeviationMm: readFiniteNumber(candidate.stDeviationMm),
-        qrsPolarity:
-          candidate.qrsPolarity === 'positive' ||
-          candidate.qrsPolarity === 'negative' ||
-          candidate.qrsPolarity === 'biphasic' ||
-          candidate.qrsPolarity === 'unknown'
-            ? candidate.qrsPolarity
-            : undefined,
-        tWavePattern:
-          candidate.tWavePattern === 'upright' ||
-          candidate.tWavePattern === 'inverted' ||
-          candidate.tWavePattern === 'hyperacute' ||
-          candidate.tWavePattern === 'flat' ||
-          candidate.tWavePattern === 'unknown'
-            ? candidate.tWavePattern
-            : undefined,
-        qWavePresent: typeof candidate.qWavePresent === 'boolean' ? candidate.qWavePresent : undefined,
-        confidence: confidenceFromUnknown(candidate.confidence),
-        evidenceRef:
-          typeof candidate.evidenceRef === 'string' && candidate.evidenceRef.trim()
-            ? candidate.evidenceRef.trim()
-            : `waveform:${lead}`,
-      };
-    });
+    return {
+      lead,
+      stDeviationMm: readFiniteNumber(candidate.stDeviationMm),
+      qrsPolarity:
+        candidate.qrsPolarity === 'positive' ||
+        candidate.qrsPolarity === 'negative' ||
+        candidate.qrsPolarity === 'biphasic' ||
+        candidate.qrsPolarity === 'unknown'
+          ? candidate.qrsPolarity
+          : undefined,
+      tWavePattern:
+        candidate.tWavePattern === 'upright' ||
+        candidate.tWavePattern === 'inverted' ||
+        candidate.tWavePattern === 'hyperacute' ||
+        candidate.tWavePattern === 'flat' ||
+        candidate.tWavePattern === 'unknown'
+          ? candidate.tWavePattern
+          : undefined,
+      qWavePresent:
+        typeof candidate.qWavePresent === 'boolean' ? candidate.qWavePresent : undefined,
+      confidence: confidenceFromUnknown(candidate.confidence),
+      evidenceRef:
+        typeof candidate.evidenceRef === 'string' && candidate.evidenceRef.trim()
+          ? candidate.evidenceRef.trim()
+          : `waveform:${lead}`,
+    };
+  });
 
   return measurements.filter((entry): entry is MedlensLeadMeasurementEvidence => entry !== null);
 }
@@ -388,7 +379,9 @@ function normalizeRhythmEvidence(value: unknown): MedlensRhythmEvidence | undefi
   };
 }
 
-function extractPrintedMeasurements(input: Record<string, unknown>): Record<string, string> | undefined {
+function extractPrintedMeasurements(
+  input: Record<string, unknown>
+): Record<string, string> | undefined {
   const values = isRecord(input.ocr_extracted_values) ? input.ocr_extracted_values : null;
   if (!values) return undefined;
 
@@ -411,7 +404,9 @@ function extractPrintedMachineInterpretation(
     return explicit;
   }
 
-  const interpretationLine = rawLines.find((line) => /machine interpretation|diagnosis/i.test(line));
+  const interpretationLine = rawLines.find((line) =>
+    /machine interpretation|diagnosis/i.test(line)
+  );
   return interpretationLine ? sanitizeEcgTextLine(interpretationLine) : undefined;
 }
 
@@ -421,19 +416,17 @@ function buildSecondaryOcr(
   rawLines: string[]
 ) {
   const provided = isRecord(packetInput.secondaryOcr) ? packetInput.secondaryOcr : null;
-  const rawText =
-    preserveRawOcrText(provided?.rawText) || rawLines.join('\n').trim();
+  const rawText = preserveRawOcrText(provided?.rawText) || rawLines.join('\n').trim();
   const leadLabels = Array.isArray(provided?.leadLabels)
     ? provided.leadLabels.map(sanitizeEcgTextLine).filter(Boolean)
     : undefined;
-  const printedMeasurements =
-    isRecord(provided?.printedMeasurements)
-      ? Object.fromEntries(
-          Object.entries(provided.printedMeasurements)
-            .map(([key, value]) => [key, sanitizeEcgTextLine(value)] as const)
-            .filter(([, value]) => Boolean(value))
-        )
-      : extractPrintedMeasurements(input);
+  const printedMeasurements = isRecord(provided?.printedMeasurements)
+    ? Object.fromEntries(
+        Object.entries(provided.printedMeasurements)
+          .map(([key, value]) => [key, sanitizeEcgTextLine(value)] as const)
+          .filter(([, value]) => Boolean(value))
+      )
+    : extractPrintedMeasurements(input);
   const printedMachineInterpretation =
     sanitizeEcgTextLine(provided?.printedMachineInterpretation) ||
     extractPrintedMachineInterpretation(input, rawLines);
@@ -462,13 +455,17 @@ function collectRejectedLegacyClinicalText(input: Record<string, unknown>): stri
     rejected.push(...readStringArray(clinicalSupport.red_flags));
   }
 
-  const extractedObservations = isRecord(input.extracted_observations) ? input.extracted_observations : null;
+  const extractedObservations = isRecord(input.extracted_observations)
+    ? input.extracted_observations
+    : null;
   if (extractedObservations) {
     rejected.push(...readStringArray(extractedObservations.notable_findings));
     rejected.push(...readStringArray(extractedObservations.st_t_changes));
   }
 
-  const providedClinicalOutput = isRecord(input.ecg_clinical_output) ? input.ecg_clinical_output : null;
+  const providedClinicalOutput = isRecord(input.ecg_clinical_output)
+    ? input.ecg_clinical_output
+    : null;
   if (providedClinicalOutput) {
     const findings = Array.isArray(providedClinicalOutput.findings)
       ? providedClinicalOutput.findings
@@ -492,14 +489,15 @@ function synthesizeWaveformPacket(
   rawLines: string[],
   auditInput: Record<string, unknown> | null
 ): MedlensWaveformEvidencePacket {
-  const packetInput = isRecord(input.waveform_evidence_packet) ? input.waveform_evidence_packet : {};
+  const packetInput = isRecord(input.waveform_evidence_packet)
+    ? input.waveform_evidence_packet
+    : {};
   const sourceImageInput = isRecord(packetInput.sourceImage) ? packetInput.sourceImage : {};
   const auditPacket = isRecord(packetInput.audit) ? packetInput.audit : {};
   const packet = {
     packetType: 'medlens.ecg.waveform.evidence_packet.v1' as const,
     sourceImage: {
-      sha256:
-        sanitizeEcgTextLine(sourceImageInput.sha256) || sourceFile.sourceHash,
+      sha256: sanitizeEcgTextLine(sourceImageInput.sha256) || sourceFile.sourceHash,
       mimeType:
         typeof sourceImageInput.mimeType === 'string' && sourceImageInput.mimeType.trim()
           ? sourceImageInput.mimeType.trim()
@@ -600,10 +598,7 @@ function resolvePreservedRawLines(
     return [];
   }
 
-  return secondaryText
-    .split(/\r?\n/)
-    .map(sanitizeEcgTextLine)
-    .filter(Boolean);
+  return secondaryText.split(/\r?\n/).map(sanitizeEcgTextLine).filter(Boolean);
 }
 
 export function normalizeMedlensEcgAnalyzeResponse(

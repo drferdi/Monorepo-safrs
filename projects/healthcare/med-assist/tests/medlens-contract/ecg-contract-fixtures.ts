@@ -11,8 +11,7 @@ import {
   type MedlensWaveformOutput,
 } from '@/lib/clinical/medlens/ecg-types';
 
-const BASE_SOURCE_HASH =
-  '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+const BASE_SOURCE_HASH = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
 const BASE_SOURCE_FILE_ID = `ecg-${BASE_SOURCE_HASH.slice(0, 12)}`;
 const BASE_RAW_ECG_LINES = [
   'Ventricular rate 82 bpm',
@@ -21,20 +20,7 @@ const BASE_RAW_ECG_LINES = [
   'QT/QTc 376/428 ms',
   'Machine interpretation: Nonspecific ST abnormality',
 ] as const;
-const LEADS = [
-  'I',
-  'II',
-  'III',
-  'aVR',
-  'aVL',
-  'aVF',
-  'V1',
-  'V2',
-  'V3',
-  'V4',
-  'V5',
-  'V6',
-] as const;
+const LEADS = ['I', 'II', 'III', 'aVR', 'aVL', 'aVF', 'V1', 'V2', 'V3', 'V4', 'V5', 'V6'] as const;
 
 type MedlensFixtureOverrides = Partial<MedlensEcgAnalyzeResponse> & {
   image_quality?: Partial<MedlensEcgAnalyzeResponse['image_quality']>;
@@ -54,8 +40,10 @@ function buildDefaultWaveformPacket(
   },
   overrides?: Partial<MedlensWaveformEvidencePacket>
 ): MedlensWaveformEvidencePacket {
-  const defaultImageStatus: MedlensWaveformEvidencePacket['imageQuality']['status'] =
-    response.image_quality.readable ? 'readable' : 'unreadable';
+  const defaultImageStatus: MedlensWaveformEvidencePacket['imageQuality']['status'] = response
+    .image_quality.readable
+    ? 'readable'
+    : 'unreadable';
   const packet: MedlensWaveformEvidencePacket = {
     packetType: 'medlens.ecg.waveform.evidence_packet.v1' as const,
     sourceImage: {
@@ -86,24 +74,22 @@ function buildDefaultWaveformPacket(
         labelDetectedBy: 'layout' as const,
         confidence: 'medium' as const,
       })),
-    waveformTraces:
-      overrides?.waveformTraces ??
-      [
-        ...LEADS.map((lead) => ({
-          lead,
-          traceExtracted: true,
-          signalSamples: [0, 1, 0, -1, 0],
-          baselineSamples: [0, 0, 0, 0, 0],
-          confidence: 'medium' as const,
-        })),
-        {
-          lead: 'RHYTHM_II' as const,
-          traceExtracted: true,
-          signalSamples: [0, 1, 0, -1, 0],
-          baselineSamples: [0, 0, 0, 0, 0],
-          confidence: 'medium' as const,
-        },
-      ],
+    waveformTraces: overrides?.waveformTraces ?? [
+      ...LEADS.map((lead) => ({
+        lead,
+        traceExtracted: true,
+        signalSamples: [0, 1, 0, -1, 0],
+        baselineSamples: [0, 0, 0, 0, 0],
+        confidence: 'medium' as const,
+      })),
+      {
+        lead: 'RHYTHM_II' as const,
+        traceExtracted: true,
+        signalSamples: [0, 1, 0, -1, 0],
+        baselineSamples: [0, 0, 0, 0, 0],
+        confidence: 'medium' as const,
+      },
+    ],
     fiducials:
       overrides?.fiducials ??
       LEADS.map((lead) => ({
@@ -131,11 +117,10 @@ function buildDefaultWaveformPacket(
       confidence: 'medium' as const,
       evidenceRef: 'waveform:RHYTHM_II',
     },
-    secondaryOcr:
-      overrides?.secondaryOcr ?? {
-        rawText: response.raw_ecg_relevant_text.join('\n'),
-        printedMachineInterpretation: 'Nonspecific ST abnormality',
-      },
+    secondaryOcr: overrides?.secondaryOcr ?? {
+      rawText: response.raw_ecg_relevant_text.join('\n'),
+      printedMachineInterpretation: 'Nonspecific ST abnormality',
+    },
     audit: {
       pipelineVersion: 'medlens-waveform-fixture-v1',
       evidenceGateVersion: MEDLENS_WAVEFORM_GATE_VERSION,
@@ -154,9 +139,7 @@ function buildLegacyQuarantinedClinicalOutput(
     status: 'insufficient_evidence',
     findings: [],
     redFlags: [],
-    limitations: [
-      'Legacy ecg_clinical_output is quarantined. Use waveform_review_output only.',
-    ],
+    limitations: ['Legacy ecg_clinical_output is quarantined. Use waveform_review_output only.'],
     clinicianReviewRequired: true,
     ...overrides,
   };
@@ -190,8 +173,7 @@ export function makeMedlensEcgAnalyzeResponse(
       full_image_ocr_used: false,
       ...overrides.ocr_metadata,
     },
-    raw_ecg_relevant_text:
-      overrides.raw_ecg_relevant_text ?? Array.from(BASE_RAW_ECG_LINES),
+    raw_ecg_relevant_text: overrides.raw_ecg_relevant_text ?? Array.from(BASE_RAW_ECG_LINES),
     ignored_or_redacted_identifiers_detected:
       overrides.ignored_or_redacted_identifiers_detected ?? false,
     physician_verification_required: true as const,
@@ -205,19 +187,18 @@ export function makeMedlensEcgAnalyzeResponse(
     ...buildMedLensWaveformReviewOutput(waveformEvidencePacket, []),
     ...overrides.waveform_review_output,
   } as MedlensWaveformOutput;
-  const ecgClinicalOutput = buildLegacyQuarantinedClinicalOutput(
-    overrides.ecg_clinical_output
-  );
+  const ecgClinicalOutput = buildLegacyQuarantinedClinicalOutput(overrides.ecg_clinical_output);
   const auditLog = {
     uploadedSourceHash:
       overrides.audit_log?.uploadedSourceHash ?? responseBase.source_file.sourceHash,
-    extractionMethod:
-      overrides.audit_log?.extractionMethod ?? responseBase.extraction_method,
-    rawExtractedText:
-      overrides.audit_log?.rawExtractedText ?? responseBase.raw_ecg_relevant_text,
+    extractionMethod: overrides.audit_log?.extractionMethod ?? responseBase.extraction_method,
+    rawExtractedText: overrides.audit_log?.rawExtractedText ?? responseBase.raw_ecg_relevant_text,
     rejectedLlmAdditions: overrides.audit_log?.rejectedLlmAdditions ?? [],
     finalRenderedOutput: overrides.audit_log?.finalRenderedOutput ?? {
-      status: waveformReviewOutput.status === 'ready_for_physician_review' ? 'source_grounded' : 'insufficient_evidence',
+      status:
+        waveformReviewOutput.status === 'ready_for_physician_review'
+          ? 'source_grounded'
+          : 'insufficient_evidence',
       findingsCount:
         waveformReviewOutput.status === 'ready_for_physician_review'
           ? waveformEvidencePacket.leadMeasurements.length

@@ -5,6 +5,8 @@ import { MEDLENS_ECG_DISCLAIMER } from '@/lib/clinical/medlens/ecg-types';
 import type { MedlensEcgAnalyzeResponse } from '@/lib/clinical/medlens/ecg-types';
 import { makeMedlensEcgAnalyzeResponse } from '@/tests/medlens-contract/ecg-contract-fixtures';
 
+import { EcgDiagnosticAssist } from './EcgDiagnosticAssist';
+
 const { analyzeEcgImageMock } = vi.hoisted(() => ({
   analyzeEcgImageMock: vi.fn(),
 }));
@@ -14,8 +16,6 @@ vi.mock('@/lib/api/medlens-client', () => ({
     analyzeEcgImage: analyzeEcgImageMock,
   },
 }));
-
-import { EcgDiagnosticAssist } from './EcgDiagnosticAssist';
 
 function makeBlockedResponse() {
   return makeMedlensEcgAnalyzeResponse({
@@ -109,7 +109,9 @@ describe('EcgDiagnosticAssist', () => {
 
     expect(await screen.findByText(/Waveform Evidence Incomplete/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/MedLens cannot produce ECG review output because waveform evidence is incomplete\./i)
+      screen.getByText(
+        /MedLens cannot produce ECG review output because waveform evidence is incomplete\./i
+      )
     ).toBeInTheDocument();
     expect(screen.getByText(/Required missing evidence/i)).toBeInTheDocument();
     expect(screen.getByText(/grid calibration/i)).toBeInTheDocument();
@@ -158,7 +160,9 @@ describe('EcgDiagnosticAssist', () => {
 
     expect(await screen.findByText(/Waveform Evidence Incomplete/i)).toBeInTheDocument();
     expect(screen.getByText(/raw OCR text/i)).toBeInTheDocument();
-    expect(screen.queryByRole('heading', { name: /Physician-Review Packet/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('heading', { name: /Physician-Review Packet/i })
+    ).not.toBeInTheDocument();
     expect(screen.queryByText(/Sinus Bradycardia/i)).not.toBeInTheDocument();
   });
 
@@ -214,9 +218,13 @@ describe('EcgDiagnosticAssist', () => {
     });
     fireEvent.click(screen.getByRole('button', { name: /Analyze ECG Image/i }));
 
-    expect(await screen.findByText(/MedLens belum tersedia untuk workspace ini/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/MedLens belum tersedia untuk workspace ini/i)
+    ).toBeInTheDocument();
     expect(screen.getByText(/^MedLens belum tersedia$/i)).toBeInTheDocument();
-    expect(screen.queryByText(/node services\/medlens-local\/server\.mjs/i)).not.toBeInTheDocument();
+    expect(
+      screen.queryByText(/node services\/medlens-local\/server\.mjs/i)
+    ).not.toBeInTheDocument();
   });
 
   it('shows runtime guidance but still allows a manual analysis attempt when runtime is not ready yet', async () => {
@@ -228,7 +236,8 @@ describe('EcgDiagnosticAssist', () => {
       <EcgDiagnosticAssist
         runtimeStatus={{
           readiness: 'unavailable',
-          message: 'MedLens belum tersedia untuk workspace ini. Coba lagi nanti atau hubungi admin.',
+          message:
+            'MedLens belum tersedia untuk workspace ini. Coba lagi nanti atau hubungi admin.',
           serverReachable: true,
           serverAuthorized: true,
         }}

@@ -96,7 +96,9 @@ async function computeUploadedSourceHash(file: File): Promise<string | null> {
         ? await file.arrayBuffer()
         : await new Response(file).arrayBuffer();
     const digest = await globalThis.crypto.subtle.digest('SHA-256', input);
-    return Array.from(new Uint8Array(digest), (value) => value.toString(16).padStart(2, '0')).join('');
+    return Array.from(new Uint8Array(digest), (value) => value.toString(16).padStart(2, '0')).join(
+      ''
+    );
   } catch {
     return null;
   }
@@ -176,11 +178,7 @@ function normalizeMedlensRequestError(error: unknown): Error {
 }
 
 export type MedlensRuntimeReadiness =
-  | 'ready'
-  | 'auth_required'
-  | 'unavailable'
-  | 'server_unreachable'
-  | 'server_error';
+  'ready' | 'auth_required' | 'unavailable' | 'server_unreachable' | 'server_error';
 
 export interface MedlensRuntimeStatus {
   readiness: MedlensRuntimeReadiness;
@@ -195,7 +193,9 @@ function isMedlensRouteValidationError(error: BridgeApiError): boolean {
   }
 
   const message = error.message.toLowerCase();
-  return message.includes('field file') || message.includes('gambar ekg') || message.includes('png');
+  return (
+    message.includes('field file') || message.includes('gambar ekg') || message.includes('png')
+  );
 }
 
 function mapLocalRuntimeFailure(error: unknown): MedlensRuntimeStatus {
@@ -251,7 +251,10 @@ export async function getMedlensRuntimeStatus(): Promise<MedlensRuntimeStatus> {
         serverAuthorized: true,
       };
     } catch (localFirstError) {
-      if (localFirstError instanceof BridgeApiError && isMedlensRouteValidationError(localFirstError)) {
+      if (
+        localFirstError instanceof BridgeApiError &&
+        isMedlensRouteValidationError(localFirstError)
+      ) {
         return {
           readiness: 'ready',
           message: MEDLENS_RUNTIME_READY_MESSAGE,

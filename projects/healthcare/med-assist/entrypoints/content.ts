@@ -31,6 +31,7 @@ import {
   extractPatientInfoFromDocument,
   extractTenagaMedisFromDocument,
 } from '@/lib/scraper/page-context';
+import { isReliablePatientExtract } from '@/lib/scraper/patient-extract-reliability';
 import { RME_STATISTIC_PAGES } from '@/lib/scraper/rme-statistic-mapping';
 import {
   extractMappedTableRows,
@@ -707,14 +708,23 @@ export default defineContentScript({
        */
       getPatientInfo: () => {
         debug('Scraping patient info from page...');
-        const result = extractPatientInfoFromDocument(document);
-
         try {
+          const result = extractPatientInfoFromDocument(document);
+          // Fail closed: incomplete OCR must not be treated as a successful
+          // patient load (age:0 defaults were previously scored as infant).
+          if (!isReliablePatientExtract(result)) {
+            debug('Patient info incomplete — fail closed:', result);
+            return {
+              success: false,
+              error: 'Incomplete patient extract',
+              patient: result,
+            };
+          }
           debug('Patient info scraped:', result);
           return { success: true, patient: result };
         } catch (error) {
           debug('Error scraping patient info:', error);
-          return { success: false, error: String(error), patient: result };
+          return { success: false, error: String(error), patient: undefined };
         }
       },
 

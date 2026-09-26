@@ -103,7 +103,9 @@ function createAuditRecord({
   encounterId,
   now,
   idFactory,
-}: Required<Pick<PersistClinicalReasoningWorkflowAuditInput, 'workflow' | 'encounterId' | 'now' | 'idFactory'>>): ClinicalReasoningWorkflowAuditRecord {
+}: Required<
+  Pick<PersistClinicalReasoningWorkflowAuditInput, 'workflow' | 'encounterId' | 'now' | 'idFactory'>
+>): ClinicalReasoningWorkflowAuditRecord {
   const selected = workflow.arbiterResult.selectedWorkingDiagnosis;
 
   return {

@@ -6,36 +6,33 @@ import type { CDSSEngineResult } from './engine';
 import { runGetSuggestionsFlow } from './get-suggestions-flow';
 
 vi.mock('./engine', () => ({
-  runDiagnosisEngine: vi.fn(
-    async (): Promise<CDSSEngineResult> => ({
-      suggestions: [
-        {
-          rank: 1,
-          diagnosis_name: 'Pneumonia',
-          icd10_code: 'J18.9',
-          confidence: 0.72,
-          reasoning:
-            'Uji kontrak: demam, menggigil, dan sesak sesuai diferensial infeksi respirasi.',
-          red_flags: [],
-          recommended_actions: ['Pantau saturasi dan frekuensi napas'],
-          rag_verified: true,
-          confidence_adjusted: false,
-          validation_flags: [],
-        },
-      ],
-      red_flags: [],
-      alerts: [],
-      processing_time_ms: 42,
-      source: 'local',
-      model_version: 'IDE-V1-contract',
-      validation_summary: {
-        total_raw: 1,
-        total_validated: 1,
-        unverified_codes: [],
-        warnings: [],
+  runDiagnosisEngine: vi.fn(async (): Promise<CDSSEngineResult> => ({
+    suggestions: [
+      {
+        rank: 1,
+        diagnosis_name: 'Pneumonia',
+        icd10_code: 'J18.9',
+        confidence: 0.72,
+        reasoning: 'Uji kontrak: demam, menggigil, dan sesak sesuai diferensial infeksi respirasi.',
+        red_flags: [],
+        recommended_actions: ['Pantau saturasi dan frekuensi napas'],
+        rag_verified: true,
+        confidence_adjusted: false,
+        validation_flags: [],
       },
-    })
-  ),
+    ],
+    red_flags: [],
+    alerts: [],
+    processing_time_ms: 42,
+    source: 'local',
+    model_version: 'IDE-V1-contract',
+    validation_summary: {
+      total_raw: 1,
+      total_validated: 1,
+      unverified_codes: [],
+      warnings: [],
+    },
+  })),
 }));
 
 vi.mock('./validation', () => ({

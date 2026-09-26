@@ -7,6 +7,7 @@ import {
   fillRangeSlider,
 } from '@/lib/filler/filler-core';
 import { fillViaMainWorld, type MainWorldFieldMapping } from '@/lib/filler/main-world-bridge';
+import { sanitizeRMEAnamnesaText } from '@/lib/rme/truncate';
 import { createLogger } from '@/utils/logger';
 import type { AnamnesaFillPayload } from '@/utils/types';
 
@@ -217,14 +218,6 @@ function toSentenceCase(value: string): string {
   const normalized = value.replace(/\s+/g, ' ').trim();
   if (!normalized) return '';
   return normalized.charAt(0).toUpperCase() + normalized.slice(1);
-}
-
-function capWords(value: string, maxWords: number): string {
-  const normalized = value.replace(/\s+/g, ' ').trim();
-  if (!normalized) return '';
-  const words = normalized.split(' ');
-  if (words.length <= maxWords) return normalized;
-  return words.slice(0, maxWords).join(' ').trim();
 }
 
 function pushIfValue(
@@ -1045,7 +1038,7 @@ function buildAnamnesaMappings(
     pushIfValue(
       mappings,
       'textarea[name="Anamnesa[keluhan_utama]"], textarea#keluhan',
-      toSentenceCase(payload.keluhan_utama),
+      toSentenceCase(sanitizeRMEAnamnesaText(payload.keluhan_utama)),
       'textarea',
       true
     );
@@ -1055,7 +1048,7 @@ function buildAnamnesaMappings(
     pushIfValue(
       mappings,
       'textarea[name="Anamnesa[keluhan_tambahan]"], textarea#keluhan-tambahan',
-      capWords(payload.keluhan_tambahan, 90),
+      sanitizeRMEAnamnesaText(payload.keluhan_tambahan),
       'textarea',
       true
     );
@@ -1084,7 +1077,7 @@ function buildAnamnesaMappings(
     mappings,
     'textarea[name="MRiwayatPasien[Riwayat Penyakit Sekarang][value]"], textarea#text_rps',
     payload.riwayat_penyakit?.sekarang
-      ? capWords(payload.riwayat_penyakit.sekarang, 90)
+      ? sanitizeRMEAnamnesaText(payload.riwayat_penyakit.sekarang)
       : undefined,
     'textarea'
   );

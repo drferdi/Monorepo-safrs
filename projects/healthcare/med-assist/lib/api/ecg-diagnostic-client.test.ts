@@ -1,9 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const {
-  analyzeEcgImageMock,
-  isAcceptedEcgImageFileMock,
-} = vi.hoisted(() => ({
+const { analyzeEcgImageMock, isAcceptedEcgImageFileMock } = vi.hoisted(() => ({
   analyzeEcgImageMock: vi.fn(),
   isAcceptedEcgImageFileMock: vi.fn(),
 }));
@@ -16,7 +13,11 @@ vi.mock('./medlens-client', () => ({
   },
 }));
 
-import { analyzeEcgDiagnosticFile, isAcceptedEcgFile, medlensClient } from './ecg-diagnostic-client';
+import {
+  analyzeEcgDiagnosticFile,
+  isAcceptedEcgFile,
+  medlensClient,
+} from './ecg-diagnostic-client';
 
 describe('ecg-diagnostic-client compatibility wrapper', () => {
   beforeEach(() => {

@@ -16,6 +16,7 @@
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,json,md}\"",
     "test": "vitest run",
     "test:contract": "vitest run lib/api/bridge-client.test.ts",
     "test:ui": "vitest --ui",

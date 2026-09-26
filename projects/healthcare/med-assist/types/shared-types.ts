@@ -99,5 +99,4 @@ export interface PlatformTrajectoryErrorResponse {
 }
 
 export type PlatformTrajectoryResponse =
-  | PlatformTrajectorySuccessResponse
-  | PlatformTrajectoryErrorResponse;
+  PlatformTrajectorySuccessResponse | PlatformTrajectoryErrorResponse;

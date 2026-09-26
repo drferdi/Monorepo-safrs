@@ -14,6 +14,11 @@
 >
 > Total: **19 entri** (10 fragmen + 2 tipis + 1 nama + 6 grup duplikat).
 > KB total 159 penyakit.
+>
+> **Status 2026-09-21:** Chief GO — perbaikan italic diterapkan ke
+> `public/data/penyakit.json` (23 id). Changelog:
+> [`docs/kb-repair-applied-2026-09-21.md`](./kb-repair-applied-2026-09-21.md).
+> Contract: `lib/iskandar-diagnosis-engine/penyakit-kb.contract.test.ts`.
 
 ---
 

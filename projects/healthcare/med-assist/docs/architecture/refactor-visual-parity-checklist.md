@@ -8,15 +8,15 @@ CSS splitting may move selectors, but it must not change class names, rendered c
 
 ## Surfaces
 
-| Surface | Entry | Validation |
-| --- | --- | --- |
-| Login | `entrypoints/login/index.html` | Manual smoke or Playwright screenshot |
-| Dashboard | `entrypoints/sidepanel/main.tsx` dashboard view | Existing dashboard unit test plus screenshot |
-| TTV | `TTVInferenceUI` tab | Existing TTV tests plus screenshot |
-| Trajectory | `ClinicalTrajectory` view | Existing trajectory flow plus screenshot |
-| Differential | `ClinicalDifferential` view | Existing tests plus screenshot |
-| Settings | `SettingsConsole` view | Existing settings tests plus screenshot |
-| Emergency | Sidepanel Emergency tab / `EmergencyDashboard` state | Manual smoke or Playwright screenshot |
+| Surface      | Entry                                                | Validation                                   |
+| ------------ | ---------------------------------------------------- | -------------------------------------------- |
+| Login        | `entrypoints/login/index.html`                       | Manual smoke or Playwright screenshot        |
+| Dashboard    | `entrypoints/sidepanel/main.tsx` dashboard view      | Existing dashboard unit test plus screenshot |
+| TTV          | `TTVInferenceUI` tab                                 | Existing TTV tests plus screenshot           |
+| Trajectory   | `ClinicalTrajectory` view                            | Existing trajectory flow plus screenshot     |
+| Differential | `ClinicalDifferential` view                          | Existing tests plus screenshot               |
+| Settings     | `SettingsConsole` view                               | Existing settings tests plus screenshot      |
+| Emergency    | Sidepanel Emergency tab / `EmergencyDashboard` state | Manual smoke or Playwright screenshot        |
 
 ## Visual Evidence Criteria
 

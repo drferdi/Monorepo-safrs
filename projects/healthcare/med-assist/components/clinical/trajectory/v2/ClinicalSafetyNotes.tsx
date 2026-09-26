@@ -37,12 +37,7 @@ function isRedundantWithVisibleText(text: string, visibleTexts: string[]): boole
   });
 }
 
-function SafetyCard({
-  title,
-  summary,
-  items,
-  toneClass = 'text-muted',
-}: SafetyCardProps) {
+function SafetyCard({ title, summary, items, toneClass = 'text-muted' }: SafetyCardProps) {
   const unique = uniqueItems(items);
   if (unique.length === 0) return null;
   const visibleItems = unique.slice(0, 2);
@@ -54,10 +49,7 @@ function SafetyCard({
       <p className="text-small text-muted leading-relaxed">{summary}</p>
       <div className="mt-2 grid gap-2">
         {visibleItems.map((item) => (
-          <div
-            key={item}
-            className="ct-v2-safety-item text-small text-muted leading-relaxed"
-          >
+          <div key={item} className="ct-v2-safety-item text-small text-muted leading-relaxed">
             {item}
           </div>
         ))}
@@ -94,10 +86,7 @@ export function ClinicalSafetyNotes({
   }
 
   return (
-    <section
-      className="ct-v2-panel ct-v2-panel--safety"
-      data-testid="clinical-safety-notes"
-    >
+    <section className="ct-v2-panel ct-v2-panel--safety" data-testid="clinical-safety-notes">
       <div className="ct-v2-panel-head">
         <div className="max-w-[62ch]">
           <div className="ttv-section-title mb-1">Catatan Keselamatan</div>

@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-const registeredHandlers = new Map<string, (message: { data: unknown; sender?: unknown }) => unknown>();
+const registeredHandlers = new Map<
+  string,
+  (message: { data: unknown; sender?: unknown }) => unknown
+>();
 const sendMessage = vi.fn();
 const sendMessageToTabWithTimeout = vi.fn();
 const getEncounter = vi.fn();
@@ -71,9 +74,11 @@ vi.mock('~/utils/messaging', () => ({
     visitFetch: 15000,
     ai: 30000,
   },
-  onMessage: vi.fn((messageType: string, handler: (message: { data: unknown; sender?: unknown }) => unknown) => {
-    registeredHandlers.set(messageType, handler);
-  }),
+  onMessage: vi.fn(
+    (messageType: string, handler: (message: { data: unknown; sender?: unknown }) => unknown) => {
+      registeredHandlers.set(messageType, handler);
+    }
+  ),
   parseAnamnesaData,
   parseDiagnosaData: vi.fn(),
   parseResepData: vi.fn(),
@@ -196,7 +201,8 @@ describe('background pageReady execScrape relay', () => {
   });
 
   it('scrapes anamnesa payload when pageReady arrives from an anamnesa tab', async () => {
-    const backgroundMain = (await import('../../entrypoints/background')).default as unknown as () => void;
+    const backgroundMain = (await import('../../entrypoints/background'))
+      .default as unknown as () => void;
     backgroundMain();
 
     const pageReadyHandler = registeredHandlers.get('pageReady');

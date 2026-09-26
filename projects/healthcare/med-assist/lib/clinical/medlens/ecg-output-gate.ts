@@ -116,7 +116,10 @@ export function normalizeFindingFromRawText(rawText: string): string | null {
   return line;
 }
 
-export function isGroundedNormalizedFinding(rawText: string, normalizedFinding: string | null): boolean {
+export function isGroundedNormalizedFinding(
+  rawText: string,
+  normalizedFinding: string | null
+): boolean {
   if (!normalizedFinding) return true;
 
   const raw = sanitizeEcgTextLine(rawText).toLowerCase();
@@ -294,7 +297,11 @@ export function outputPassesEvidenceGate(output: EcgClinicalOutput): boolean {
 export function deriveWaveformQualityStatus(
   imageQuality: MedlensEcgImageQuality
 ): 'readable' | 'limited' | 'unreadable' {
-  if (imageQuality.status === 'readable' || imageQuality.status === 'limited' || imageQuality.status === 'unreadable') {
+  if (
+    imageQuality.status === 'readable' ||
+    imageQuality.status === 'limited' ||
+    imageQuality.status === 'unreadable'
+  ) {
     return imageQuality.status;
   }
 
@@ -324,8 +331,7 @@ function hasUsableRhythmTrace(packet: Partial<MedlensWaveformEvidencePacket>): b
   return Boolean(
     packet.waveformTraces?.some(
       (trace) =>
-        trace.lead === packet.rhythmEvidence?.rhythmStripLead &&
-        trace.traceExtracted === true
+        trace.lead === packet.rhythmEvidence?.rhythmStripLead && trace.traceExtracted === true
     )
   );
 }
@@ -335,7 +341,9 @@ function hasUsableRawOcrText(packet: Partial<MedlensWaveformEvidencePacket>): bo
 }
 
 function hasUnsupportedStClaim(packet: Partial<MedlensWaveformEvidencePacket>): boolean {
-  if (!packet.leadMeasurements?.some((measurement) => typeof measurement.stDeviationMm === 'number')) {
+  if (
+    !packet.leadMeasurements?.some((measurement) => typeof measurement.stDeviationMm === 'number')
+  ) {
     return false;
   }
 
@@ -348,8 +356,7 @@ function hasUnsupportedStClaim(packet: Partial<MedlensWaveformEvidencePacket>): 
       (trace) => trace.lead === measurement.lead && trace.traceExtracted === true
     );
     const matchingFiducial = packet.fiducials?.find(
-      (fiducial) =>
-        fiducial.lead === measurement.lead && Number.isFinite(fiducial.jPointMs)
+      (fiducial) => fiducial.lead === measurement.lead && Number.isFinite(fiducial.jPointMs)
     );
 
     return !matchingTrace?.baselineSamples?.length || !matchingFiducial;

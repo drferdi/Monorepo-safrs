@@ -211,8 +211,12 @@ export function scanMedicalHistoryFromRoot(root: ParentNode): MedicalHistoryScan
   );
 
   const riwayatRows = Array.from(root.querySelectorAll('table tr'))
-    .map((row) => Array.from(row.querySelectorAll('td, th')).map((cell) => cleanText(cell.textContent)))
-    .filter((cells) => cells.length >= 2 && matchesLoosePattern(cells[0] || '', 'riwayat penyakit'));
+    .map((row) =>
+      Array.from(row.querySelectorAll('td, th')).map((cell) => cleanText(cell.textContent))
+    )
+    .filter(
+      (cells) => cells.length >= 2 && matchesLoosePattern(cells[0] || '', 'riwayat penyakit')
+    );
   scanCandidateTexts(riwayatRows.map((cells) => cells[1] || ''));
 
   let specificTable: Element | null = null;
@@ -261,8 +265,7 @@ export function scanMedicalHistoryFromRoot(root: ParentNode): MedicalHistoryScan
 
   if (history.length === 0 && rootText) {
     const treeWalkerRoot = root as Node;
-    const ownerDocument =
-      root instanceof Document ? root : root.ownerDocument || document;
+    const ownerDocument = root instanceof Document ? root : root.ownerDocument || document;
     const walker = ownerDocument.createTreeWalker(treeWalkerRoot, NodeFilter.SHOW_TEXT);
     let node = walker.nextNode();
     while (node) {
@@ -272,7 +275,8 @@ export function scanMedicalHistoryFromRoot(root: ParentNode): MedicalHistoryScan
         foundLabels.add('HT');
         history.push({
           code: 'I10',
-          description: extractCellText(node.parentElement?.nextElementSibling) || 'Essential hypertension',
+          description:
+            extractCellText(node.parentElement?.nextElementSibling) || 'Essential hypertension',
           shortLabel: 'HT',
         });
         log('icd:I10:treewalker');

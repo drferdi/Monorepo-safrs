@@ -116,8 +116,7 @@ export function TrajectoryVitalSignsPanel({
                       content={({ active, payload }) => {
                         if (!active || !payload?.length) return null;
                         const point = payload[0]?.payload as
-                          | TrajectoryVisualizationViewModel['vitalTrends'][number]
-                          | undefined;
+                          TrajectoryVisualizationViewModel['vitalTrends'][number] | undefined;
                         if (!point) return null;
 
                         return (

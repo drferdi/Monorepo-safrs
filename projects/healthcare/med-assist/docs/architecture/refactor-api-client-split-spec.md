@@ -8,14 +8,14 @@ Keep `@/lib/api/bridge-client` as the public import path. Move internals behind 
 
 ## Proposed Internal Modules
 
-| New module | Responsibility | Public exports preserved by `bridge-client.ts` |
-| --- | --- | --- |
-| `lib/api/bridge-config.ts` | Bridge config and runtime readiness | `getBridgeConfig`, `saveBridgeConfig`, `getBridgeRuntimeStatus`, `isBridgeReady` |
-| `lib/api/bridge-consult.ts` | Online doctors and consult send | `getOnlineDoctors`, `sendConsultToDoctor` |
-| `lib/api/bridge-canonical.ts` | Canonical clinical and differential evaluate | `evaluateCanonicalClinicalEngine`, `evaluateCanonicalDifferential`, schema guards |
-| `lib/api/bridge-entry-lifecycle.ts` | Inbound bridge entry lifecycle | `fetchPendingEntries`, `fetchEntryDetail`, `claimEntry`, `reportProcessing`, `reportComplete`, `reportFailed` |
-| `lib/api/bridge-patient-sync.ts` | Patient sync outbound call | `syncPatientToDashboard` |
-| `lib/api/bridge-clinical-utils.ts` | Display filtering and clinical extraction helpers | `filterDoctorsForDisplay`, `extractClinicalAnamnesis` |
+| New module                          | Responsibility                                    | Public exports preserved by `bridge-client.ts`                                                                |
+| ----------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `lib/api/bridge-config.ts`          | Bridge config and runtime readiness               | `getBridgeConfig`, `saveBridgeConfig`, `getBridgeRuntimeStatus`, `isBridgeReady`                              |
+| `lib/api/bridge-consult.ts`         | Online doctors and consult send                   | `getOnlineDoctors`, `sendConsultToDoctor`                                                                     |
+| `lib/api/bridge-canonical.ts`       | Canonical clinical and differential evaluate      | `evaluateCanonicalClinicalEngine`, `evaluateCanonicalDifferential`, schema guards                             |
+| `lib/api/bridge-entry-lifecycle.ts` | Inbound bridge entry lifecycle                    | `fetchPendingEntries`, `fetchEntryDetail`, `claimEntry`, `reportProcessing`, `reportComplete`, `reportFailed` |
+| `lib/api/bridge-patient-sync.ts`    | Patient sync outbound call                        | `syncPatientToDashboard`                                                                                      |
+| `lib/api/bridge-clinical-utils.ts`  | Display filtering and clinical extraction helpers | `filterDoctorsForDisplay`, `extractClinicalAnamnesis`                                                         |
 
 ## Current Behavior
 

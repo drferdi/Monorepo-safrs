@@ -33,8 +33,7 @@ function DriverTooltip({ active, payload }: TooltipContentProps) {
   if (!active || !payload?.length) return null;
 
   const point = payload[0]?.payload as
-    | KeyDriverContributionChartProps['viewModel']['keyDriverContributions'][number]
-    | undefined;
+    KeyDriverContributionChartProps['viewModel']['keyDriverContributions'][number] | undefined;
   if (!point) return null;
 
   const tone = DRIVER_SEVERITY_META[point.severity];
@@ -118,7 +117,9 @@ export function KeyDriverContributionChart({
               <div className="mb-2 flex flex-wrap items-start justify-between gap-2">
                 <div>
                   <div className="ttv-label text-tertiary">{item.driver}</div>
-                  <div className="text-small text-platinum">{item.contribution.toFixed(0)} poin kontribusi</div>
+                  <div className="text-small text-platinum">
+                    {item.contribution.toFixed(0)} poin kontribusi
+                  </div>
                 </div>
                 <MetaPill
                   label={tone.label}

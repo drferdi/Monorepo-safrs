@@ -16,16 +16,10 @@ export type ClinicalReasoningWorkflowStage =
   | 'physician_selection'
   | 'therapy_reasoning';
 
-export type ClinicalReasoningWorkflowAuditStatus =
-  | 'completed'
-  | 'ready'
-  | 'locked'
-  | 'skipped';
+export type ClinicalReasoningWorkflowAuditStatus = 'completed' | 'ready' | 'locked' | 'skipped';
 
 export type ClinicalReasoningWorkflowStatus =
-  | 'insufficient_evidence'
-  | 'awaiting_physician_selection'
-  | 'therapy_reasoning_ready';
+  'insufficient_evidence' | 'awaiting_physician_selection' | 'therapy_reasoning_ready';
 
 export interface ClinicalReasoningWorkflowAuditEvent {
   id: string;
@@ -111,7 +105,9 @@ function buildAuditTrail(input: {
   const selectedRefs = arbiterResult.selectedWorkingDiagnosis
     ? candidateSourceRefs([arbiterResult.selectedWorkingDiagnosis])
     : [];
-  const therapyRefs = uniqueStrings(therapyReasoningPack.actions.flatMap((action) => action.sourceRefs));
+  const therapyRefs = uniqueStrings(
+    therapyReasoningPack.actions.flatMap((action) => action.sourceRefs)
+  );
 
   const events: Omit<ClinicalReasoningWorkflowAuditEvent, 'id' | 'sequence'>[] = [
     {

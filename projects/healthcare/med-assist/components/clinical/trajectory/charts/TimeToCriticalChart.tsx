@@ -35,8 +35,7 @@ function TimeToCriticalTooltip({ active, payload }: TooltipContentProps) {
   if (!active || !payload?.length) return null;
 
   const point = payload[0]?.payload as
-    | TimeToCriticalChartProps['viewModel']['timeToCritical'][number]
-    | undefined;
+    TimeToCriticalChartProps['viewModel']['timeToCritical'][number] | undefined;
   if (!point) return null;
 
   return (
@@ -46,7 +45,8 @@ function TimeToCriticalTooltip({ active, payload }: TooltipContentProps) {
         {point.hoursBestEstimate.toFixed(1)} jam ke critical
       </div>
       <div className="mt-1 text-tiny text-muted">
-        Saat ini {formatValue(point.currentValue)} | Threshold {formatValue(point.criticalThreshold)}
+        Saat ini {formatValue(point.currentValue)} | Threshold{' '}
+        {formatValue(point.criticalThreshold)}
       </div>
       {point.confidenceIntervalHours !== null ? (
         <div className="mt-1 text-tiny text-muted">
@@ -57,10 +57,7 @@ function TimeToCriticalTooltip({ active, payload }: TooltipContentProps) {
   );
 }
 
-export function TimeToCriticalChart({
-  viewModel,
-  className,
-}: TimeToCriticalChartProps) {
+export function TimeToCriticalChart({ viewModel, className }: TimeToCriticalChartProps) {
   if (viewModel.timeToCritical.length === 0) {
     return (
       <TrajectoryChartSection

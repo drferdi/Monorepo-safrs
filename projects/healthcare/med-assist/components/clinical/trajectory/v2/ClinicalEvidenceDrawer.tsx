@@ -239,9 +239,7 @@ export function ClinicalEvidenceDrawer({
 
         <div className="ct-v2-detail-card ct-v2-detail-card--wide">
           <div className="ttv-label text-tertiary mb-2">Sumber data dan tim klinis</div>
-          <div className="ct-v2-copy-detail">
-            {formatSourceContext(hybridResult)}
-          </div>
+          <div className="ct-v2-copy-detail">{formatSourceContext(hybridResult)}</div>
         </div>
 
         {canonicalSummary ? (

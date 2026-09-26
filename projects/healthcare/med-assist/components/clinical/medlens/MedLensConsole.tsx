@@ -53,7 +53,11 @@ export function MedLensConsole(): JSX.Element {
                 : runtimeToneClass
             }`}
           >
-            {isCheckingRuntime ? 'Runtime: loading' : moduleEnabled ? 'Runtime: ready' : 'Runtime: attention'}
+            {isCheckingRuntime
+              ? 'Runtime: loading'
+              : moduleEnabled
+                ? 'Runtime: ready'
+                : 'Runtime: attention'}
           </span>
         </div>
 
@@ -70,9 +74,7 @@ export function MedLensConsole(): JSX.Element {
               }`}
             >
               <span className={`${MEDLENS_LABEL_CLASS} block`}>{module.label}</span>
-              <span className={`${MEDLENS_NOTE_CLASS} mt-1 block leading-4`}>
-                {moduleDetail}
-              </span>
+              <span className={`${MEDLENS_NOTE_CLASS} mt-1 block leading-4`}>{moduleDetail}</span>
             </button>
           ))}
         </div>

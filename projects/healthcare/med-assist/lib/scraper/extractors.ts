@@ -165,7 +165,15 @@ const getFieldValue = (
 
 const VISIT_DOKTER_KEYWORDS = ['dokter / tenaga medi', 'dokter / tenaga medis', 'dokter'];
 const VISIT_PERAWAT_KEYWORDS = ['perawat / bidan', 'perawat', 'bidan'];
-const VISIT_TERAPI_OBAT_KEYWORDS = ['terapi obat', 'terapi', 'farmakoterapi', 'penatalaksanaan', 'rencana penatalaksanaan', 'resep obat', 'resep'];
+const VISIT_TERAPI_OBAT_KEYWORDS = [
+  'terapi obat',
+  'terapi',
+  'farmakoterapi',
+  'penatalaksanaan',
+  'rencana penatalaksanaan',
+  'resep obat',
+  'resep',
+];
 
 function escapeRegex(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

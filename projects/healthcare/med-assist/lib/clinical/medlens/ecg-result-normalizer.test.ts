@@ -126,8 +126,7 @@ describe('normalizeMedlensEcgAnalyzeResponse', () => {
         },
       } as Partial<MedlensEcgAnalyzeResponse>,
       {
-        trustedSourceHash:
-          '9f2e7f8f7b8e1e7d50f74f55f91bb3c0eb505d1a4d4bf11f0e0d4b7f1c2a3d4e',
+        trustedSourceHash: '9f2e7f8f7b8e1e7d50f74f55f91bb3c0eb505d1a4d4bf11f0e0d4b7f1c2a3d4e',
       }
     );
 

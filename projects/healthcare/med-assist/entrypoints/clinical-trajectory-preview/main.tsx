@@ -80,7 +80,8 @@ const PREVIEW_CASES: Record<PreviewCaseKey, PreviewScenario> = {
   },
   worsening: {
     label: 'Kasus Memburuk',
-    summary: 'Riwayat menunjukkan worsening physiology dan context klinis untuk memunculkan panel hybrid.',
+    summary:
+      'Riwayat menunjukkan worsening physiology dan context klinis untuk memunculkan panel hybrid.',
     keluhanUtama: 'Nyeri dada menjalar dan sesak',
     keluhanTambahan: 'Demam dan batuk',
     vitals: {
@@ -124,7 +125,8 @@ const PREVIEW_CASES: Record<PreviewCaseKey, PreviewScenario> = {
   },
   partial: {
     label: 'Data Parsial',
-    summary: 'Riwayat vital tidak lengkap untuk memastikan visualisasi menampilkan warning, bukan reassurance.',
+    summary:
+      'Riwayat vital tidak lengkap untuk memastikan visualisasi menampilkan warning, bukan reassurance.',
     keluhanUtama: 'Lemas',
     keluhanTambahan: '',
     vitals: {

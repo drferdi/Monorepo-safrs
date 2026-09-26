@@ -315,3 +315,107 @@ export function buildDifferentialInsight(
     supportingExamPlan,
   };
 }
+
+function icdPrefix(icd: string): string {
+  const normalized = icd.toUpperCase().trim();
+  const match = normalized.match(/^[A-Z][0-9]{1,2}/);
+  return match ? match[0] : normalized.slice(0, 3);
+}
+
+export interface DeriveAgainstSignalsInput {
+  suggestion: DiagnosisSuggestion;
+  matchedSymptoms: string[];
+  keluhanUtama: string;
+  keluhanTambahan?: string;
+  vitals: DifferentialVitals;
+  max?: number;
+}
+
+/**
+ * Deterministic opposing evidence for differential UI ("against" column).
+ * Backed by unmatched complaint signals, ICD-class mismatch heuristics, and
+ * vital discordance — does not invent unsupported clinical facts.
+ */
+export function deriveAgainstSignals(input: DeriveAgainstSignalsInput): string[] {
+  const max = input.max ?? 4;
+  const against: string[] = [];
+  const suggestion = input.suggestion;
+  const prefix = icdPrefix(suggestion.icd_x || '');
+  const label = (suggestion.nama || '').toLowerCase();
+  const complaintSignals = extractComplaintSignals(input.keluhanUtama, input.keluhanTambahan, 10);
+  const matchedSet = new Set(
+    [...input.matchedSymptoms, ...matchSuggestionSignals(suggestion, complaintSignals)].map(
+      (item) => normalizeText(item)
+    )
+  );
+  const complaintText = complaintSignals.join(' ').toLowerCase();
+
+  for (const signal of complaintSignals) {
+    if (matchedSet.has(normalizeText(signal))) continue;
+    // Skip ultra-generic tokens that add noise without clinical opposition.
+    if (/^(badan|enak|lemas|sakit|nyeri)$/i.test(signal)) continue;
+    against.push(`Keluhan "${signal}" belum dijelaskan diagnosis ini`);
+    if (against.length >= 2) break;
+  }
+
+  const isParasitic =
+    /^B7[0-9]/.test(prefix) || /(cacing|helmin|hookworm|ancylostoma|parasit)/.test(label);
+  const hasParasiticClue =
+    /(cacing|cacingan|gatal\s+anus|ground\s+itch|diare|nyeri\s+perut|bab|anemia|pucat|tanah)/.test(
+      complaintText
+    );
+  if (isParasitic && !hasParasiticClue) {
+    against.push('Tidak ada petunjuk klinis parasit/cacing pada anamnesis');
+  }
+
+  const isToxicology =
+    /^T[3-9]/.test(prefix) || /(keracunan|intoksikasi|overdosis|poisoning)/.test(label);
+  const hasToxicologyClue = /(keracunan|intoksikasi|overdosis|racun|paparan|obat\s+berlebih)/.test(
+    complaintText
+  );
+  if (isToxicology && !hasToxicologyClue) {
+    against.push('Tidak ada petunjuk keracunan/intoksikasi pada anamnesis');
+  }
+
+  const vitals = input.vitals;
+  const isHypertension =
+    /^I1[0-5]/.test(prefix) || /hipertensi/.test(label);
+  if (
+    isHypertension &&
+    vitals.sbp > 0 &&
+    vitals.dbp > 0 &&
+    vitals.sbp < 140 &&
+    vitals.dbp < 90
+  ) {
+    against.push(
+      `Tekanan darah ${vitals.sbp}/${vitals.dbp} mmHg tidak mendukung hipertensi akut`
+    );
+  }
+
+  const isDiabetes = /^E1[0-4]/.test(prefix) || /diabetes|hiperglik/.test(label);
+  if (isDiabetes && vitals.glucose > 0 && vitals.glucose < 140 && vitals.glucose >= 70) {
+    against.push(
+      `Gula darah ${vitals.glucose} mg/dL tidak mendukung hiperglikemia saat ini`
+    );
+  }
+
+  const isFebrileInfection =
+    /^(J0|J1|A0|A1|A2|A3|A4|A9|B0|R50)/.test(prefix) ||
+    /(ispa|pneumonia|infeksi|demam|influenza|dengue)/.test(label);
+  if (isFebrileInfection && vitals.temp > 0 && vitals.temp < 37.5) {
+    against.push(`Suhu ${vitals.temp.toFixed(1)}°C tidak mendukung demam saat ini`);
+  }
+
+  const seen = new Set<string>();
+  const unique: string[] = [];
+  for (const line of against) {
+    const cleaned = line.replace(/\s+/g, ' ').trim();
+    if (cleaned.length < 8) continue;
+    const key = cleaned.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    unique.push(cleaned);
+    if (unique.length >= max) break;
+  }
+  return unique;
+}

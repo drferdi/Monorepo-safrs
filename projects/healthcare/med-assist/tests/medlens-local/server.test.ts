@@ -68,7 +68,8 @@ describe('MedLens local ECG service', () => {
   it('accepts PNG upload and returns waveform-review payloads', async () => {
     const { createMedlensLocalServer } = await loadServerModule();
     const instance = createMedlensLocalServer({
-      analyzeFile: async () => makeMedlensEcgAnalyzeResponse() as unknown as Record<string, unknown>,
+      analyzeFile: async () =>
+        makeMedlensEcgAnalyzeResponse() as unknown as Record<string, unknown>,
     });
     runningServers.push(instance);
     await instance.start(0, '127.0.0.1');

@@ -14,8 +14,7 @@ export type ClinicalReasoningArbiterDecision =
 export type ClinicalReasoningTherapyGateStatus = 'locked' | 'ready';
 
 export type ClinicalReasoningTherapyGateReason =
-  | 'physician_selected_working_diagnosis_required'
-  | 'physician_confirmed_working_diagnosis';
+  'physician_selected_working_diagnosis_required' | 'physician_confirmed_working_diagnosis';
 
 export interface ClinicalReasoningTherapyGate {
   status: ClinicalReasoningTherapyGateStatus;
@@ -143,13 +142,15 @@ export function runClinicalReasoningArbiter({
 
   if (evidencePack.safetyDominance.treatmentResponseConflict) {
     blockingFactors.push('conflicting_treatment_response_requires_review');
-    rationale.push('Treatment response conflict must be reconciled before relying on therapy support.');
+    rationale.push(
+      'Treatment response conflict must be reconciled before relying on therapy support.'
+    );
   }
 
   rationale.push('Top candidate has the highest review priority from trajectory-linked evidence.');
 
   const selectedWorkingDiagnosis = physicianConfirmedCandidateId
-    ? reviewQueue.find((candidate) => candidate.id === physicianConfirmedCandidateId) ?? null
+    ? (reviewQueue.find((candidate) => candidate.id === physicianConfirmedCandidateId) ?? null)
     : null;
 
   if (physicianConfirmedCandidateId && !selectedWorkingDiagnosis) {

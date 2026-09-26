@@ -86,149 +86,169 @@ describe('medlens client real loopback waveform integration', () => {
   });
 
   const realNormalFixtureTest = existsSync(REAL_NORMAL_ECG_FIXTURE_PATH) ? it : it.skip;
-  realNormalFixtureTest('uploads a real ECG image through medlensClient and returns a waveform-ready packet', async () => {
-    const { createMedlensLocalServer } = await loadServerModule();
-    const instance = createMedlensLocalServer();
-    runningServers.push(instance);
-    await instance.start(0, '127.0.0.1');
-    const port = (instance.server.address() as AddressInfo).port;
-    const localStorageArea = createStorageArea();
-    const sessionStorageArea = createStorageArea();
+  realNormalFixtureTest(
+    'uploads a real ECG image through medlensClient and returns a waveform-ready packet',
+    async () => {
+      const { createMedlensLocalServer } = await loadServerModule();
+      const instance = createMedlensLocalServer();
+      runningServers.push(instance);
+      await instance.start(0, '127.0.0.1');
+      const port = (instance.server.address() as AddressInfo).port;
+      const localStorageArea = createStorageArea();
+      const sessionStorageArea = createStorageArea();
 
-    (
-      globalThis as typeof globalThis & {
-        browser?: {
-          storage: {
-            local: StorageAreaMock;
-            session: StorageAreaMock;
+      (
+        globalThis as typeof globalThis & {
+          browser?: {
+            storage: {
+              local: StorageAreaMock;
+              session: StorageAreaMock;
+            };
           };
-        };
-      }
-    ).browser = {
-      storage: {
-        local: localStorageArea,
-        session: sessionStorageArea,
-      },
-    };
+        }
+      ).browser = {
+        storage: {
+          local: localStorageArea,
+          session: sessionStorageArea,
+        },
+      };
 
-    await localStorageArea.set({
-      'sentra:auth-config': {
-        baseUrl: `http://127.0.0.1:${port}`,
-        automationToken: '',
-      },
-    });
+      await localStorageArea.set({
+        'sentra:auth-config': {
+          baseUrl: `http://127.0.0.1:${port}`,
+          automationToken: '',
+        },
+      });
 
-    const status = await getMedlensRuntimeStatus();
-    expect(status).toMatchObject({
-      readiness: 'ready',
-      serverReachable: true,
-      serverAuthorized: true,
-    });
+      const status = await getMedlensRuntimeStatus();
+      expect(status).toMatchObject({
+        readiness: 'ready',
+        serverReachable: true,
+        serverAuthorized: true,
+      });
 
-    const result = await analyzeEcgImage(
-      createFixtureFile(REAL_NORMAL_ECG_FIXTURE_PATH, 'ecg-normal.png')
-    );
+      const result = await analyzeEcgImage(
+        createFixtureFile(REAL_NORMAL_ECG_FIXTURE_PATH, 'ecg-normal.png')
+      );
 
-    expect(result.extraction_method).toBe('waveform');
-    expect(result.waveform_review_output.status).toBe('ready_for_physician_review');
-    expect(result.waveform_review_output.clinicalOutputAllowed).toBe(true);
-    expect(result.waveform_evidence_packet.gridCalibration.calibrated).toBe(true);
-    expect(result.waveform_evidence_packet.leadMeasurements.length).toBeGreaterThanOrEqual(12);
-    expect(result.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm).toBeGreaterThanOrEqual(60);
-    expect(result.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm).toBeLessThanOrEqual(80);
-    expect(result.raw_ecg_relevant_text).toEqual([]);
-    expect(result.audit_log.outputPassedEvidenceGate).toBe(true);
-  }, 30000);
+      expect(result.extraction_method).toBe('waveform');
+      expect(result.waveform_review_output.status).toBe('ready_for_physician_review');
+      expect(result.waveform_review_output.clinicalOutputAllowed).toBe(true);
+      expect(result.waveform_evidence_packet.gridCalibration.calibrated).toBe(true);
+      expect(result.waveform_evidence_packet.leadMeasurements.length).toBeGreaterThanOrEqual(12);
+      expect(
+        result.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm
+      ).toBeGreaterThanOrEqual(60);
+      expect(result.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm).toBeLessThanOrEqual(
+        80
+      );
+      expect(result.raw_ecg_relevant_text).toEqual([]);
+      expect(result.audit_log.outputPassedEvidenceGate).toBe(true);
+    },
+    30000
+  );
 
   const realInfarctFixtureTest = existsSync(REAL_INFARCT_ECG_FIXTURE_PATH) ? it : it.skip;
-  realInfarctFixtureTest('keeps medlensClient waveform-ready on a second real ECG case', async () => {
-    const { createMedlensLocalServer } = await loadServerModule();
-    const instance = createMedlensLocalServer();
-    runningServers.push(instance);
-    await instance.start(0, '127.0.0.1');
-    const port = (instance.server.address() as AddressInfo).port;
-    const localStorageArea = createStorageArea();
-    const sessionStorageArea = createStorageArea();
+  realInfarctFixtureTest(
+    'keeps medlensClient waveform-ready on a second real ECG case',
+    async () => {
+      const { createMedlensLocalServer } = await loadServerModule();
+      const instance = createMedlensLocalServer();
+      runningServers.push(instance);
+      await instance.start(0, '127.0.0.1');
+      const port = (instance.server.address() as AddressInfo).port;
+      const localStorageArea = createStorageArea();
+      const sessionStorageArea = createStorageArea();
 
-    (
-      globalThis as typeof globalThis & {
-        browser?: {
-          storage: {
-            local: StorageAreaMock;
-            session: StorageAreaMock;
+      (
+        globalThis as typeof globalThis & {
+          browser?: {
+            storage: {
+              local: StorageAreaMock;
+              session: StorageAreaMock;
+            };
           };
-        };
-      }
-    ).browser = {
-      storage: {
-        local: localStorageArea,
-        session: sessionStorageArea,
-      },
-    };
+        }
+      ).browser = {
+        storage: {
+          local: localStorageArea,
+          session: sessionStorageArea,
+        },
+      };
 
-    await localStorageArea.set({
-      'sentra:auth-config': {
-        baseUrl: `http://127.0.0.1:${port}`,
-        automationToken: '',
-      },
-    });
+      await localStorageArea.set({
+        'sentra:auth-config': {
+          baseUrl: `http://127.0.0.1:${port}`,
+          automationToken: '',
+        },
+      });
 
-    const result = await analyzeEcgImage(
-      createFixtureFile(REAL_INFARCT_ECG_FIXTURE_PATH, 'infmi_2x.png')
-    );
+      const result = await analyzeEcgImage(
+        createFixtureFile(REAL_INFARCT_ECG_FIXTURE_PATH, 'infmi_2x.png')
+      );
 
-    expect(result.extraction_method).toBe('waveform');
-    expect(result.waveform_review_output.status).toBe('ready_for_physician_review');
-    expect(result.waveform_review_output.clinicalOutputAllowed).toBe(true);
-    expect(result.waveform_evidence_packet.gridCalibration.calibrated).toBe(true);
-    expect(result.waveform_evidence_packet.leadMeasurements.length).toBeGreaterThanOrEqual(12);
-    expect(result.audit_log.outputPassedEvidenceGate).toBe(true);
-  }, 30000);
+      expect(result.extraction_method).toBe('waveform');
+      expect(result.waveform_review_output.status).toBe('ready_for_physician_review');
+      expect(result.waveform_review_output.clinicalOutputAllowed).toBe(true);
+      expect(result.waveform_evidence_packet.gridCalibration.calibrated).toBe(true);
+      expect(result.waveform_evidence_packet.leadMeasurements.length).toBeGreaterThanOrEqual(12);
+      expect(result.audit_log.outputPassedEvidenceGate).toBe(true);
+    },
+    30000
+  );
 
-  realInfarctFixtureTest('keeps medlensClient waveform-first on a lightly rotated infarct ECG image', async () => {
-    const { createMedlensLocalServer } = await loadServerModule();
-    const instance = createMedlensLocalServer();
-    runningServers.push(instance);
-    await instance.start(0, '127.0.0.1');
-    const port = (instance.server.address() as AddressInfo).port;
-    const localStorageArea = createStorageArea();
-    const sessionStorageArea = createStorageArea();
+  realInfarctFixtureTest(
+    'keeps medlensClient waveform-first on a lightly rotated infarct ECG image',
+    async () => {
+      const { createMedlensLocalServer } = await loadServerModule();
+      const instance = createMedlensLocalServer();
+      runningServers.push(instance);
+      await instance.start(0, '127.0.0.1');
+      const port = (instance.server.address() as AddressInfo).port;
+      const localStorageArea = createStorageArea();
+      const sessionStorageArea = createStorageArea();
 
-    (
-      globalThis as typeof globalThis & {
-        browser?: {
-          storage: {
-            local: StorageAreaMock;
-            session: StorageAreaMock;
+      (
+        globalThis as typeof globalThis & {
+          browser?: {
+            storage: {
+              local: StorageAreaMock;
+              session: StorageAreaMock;
+            };
           };
-        };
-      }
-    ).browser = {
-      storage: {
-        local: localStorageArea,
-        session: sessionStorageArea,
-      },
-    };
+        }
+      ).browser = {
+        storage: {
+          local: localStorageArea,
+          session: sessionStorageArea,
+        },
+      };
 
-    await localStorageArea.set({
-      'sentra:auth-config': {
-        baseUrl: `http://127.0.0.1:${port}`,
-        automationToken: '',
-      },
-    });
+      await localStorageArea.set({
+        'sentra:auth-config': {
+          baseUrl: `http://127.0.0.1:${port}`,
+          automationToken: '',
+        },
+      });
 
-    const result = await analyzeEcgImage(
-      await createRotatedFixtureFile(REAL_INFARCT_ECG_FIXTURE_PATH, 'infmi_2x-rotate-05.png')
-    );
+      const result = await analyzeEcgImage(
+        await createRotatedFixtureFile(REAL_INFARCT_ECG_FIXTURE_PATH, 'infmi_2x-rotate-05.png')
+      );
 
-    expect(result.extraction_method).toBe('waveform');
-    expect(result.waveform_review_output.status).toBe('ready_for_physician_review');
-    expect(result.waveform_review_output.clinicalOutputAllowed).toBe(true);
-    expect(result.waveform_evidence_packet.gridCalibration.calibrated).toBe(true);
-    expect(result.waveform_evidence_packet.leadMeasurements.length).toBeGreaterThanOrEqual(12);
-    expect(result.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm).toBeGreaterThanOrEqual(40);
-    expect(result.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm).toBeLessThanOrEqual(80);
-    expect(result.raw_ecg_relevant_text).toEqual([]);
-    expect(result.audit_log.outputPassedEvidenceGate).toBe(true);
-  }, 30000);
+      expect(result.extraction_method).toBe('waveform');
+      expect(result.waveform_review_output.status).toBe('ready_for_physician_review');
+      expect(result.waveform_review_output.clinicalOutputAllowed).toBe(true);
+      expect(result.waveform_evidence_packet.gridCalibration.calibrated).toBe(true);
+      expect(result.waveform_evidence_packet.leadMeasurements.length).toBeGreaterThanOrEqual(12);
+      expect(
+        result.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm
+      ).toBeGreaterThanOrEqual(40);
+      expect(result.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm).toBeLessThanOrEqual(
+        80
+      );
+      expect(result.raw_ecg_relevant_text).toEqual([]);
+      expect(result.audit_log.outputPassedEvidenceGate).toBe(true);
+    },
+    30000
+  );
 });

@@ -287,10 +287,7 @@ describe('buildClinicalReasoningWorkflowFromTrajectoryV2', () => {
     expect(workflow.arbiterResult.selectedWorkingDiagnosis?.id).toBe('candidate-sepsis-concern');
     expect(workflow.therapyReasoningPack.status).toBe('ready');
     expect(workflow.therapyReasoningPack.actions.map((action) => action.id)).toEqual(
-      expect.arrayContaining([
-        'safety-stabilization-review',
-        'protocol-antimicrobial-review',
-      ])
+      expect.arrayContaining(['safety-stabilization-review', 'protocol-antimicrobial-review'])
     );
     expect(workflow.auditTrail.find((event) => event.stage === 'physician_selection')?.status).toBe(
       'completed'

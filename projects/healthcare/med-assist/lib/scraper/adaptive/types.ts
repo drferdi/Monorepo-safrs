@@ -20,15 +20,7 @@
  * Supported form field types
  */
 export type FieldType =
-  | 'text'
-  | 'number'
-  | 'select'
-  | 'textarea'
-  | 'radio'
-  | 'checkbox'
-  | 'date'
-  | 'time'
-  | 'hidden';
+  'text' | 'number' | 'select' | 'textarea' | 'radio' | 'checkbox' | 'date' | 'time' | 'hidden';
 
 // ============================================================================
 // FIELD ATTRIBUTES

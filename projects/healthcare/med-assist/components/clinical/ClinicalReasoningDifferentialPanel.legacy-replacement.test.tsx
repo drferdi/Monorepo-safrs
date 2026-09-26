@@ -152,13 +152,13 @@ describe('DiagnosisSuggestions legacy surface replacement', () => {
 
     const panel = screen.getByTestId('clinical-reasoning-differential-panel');
     expect(within(panel).getByText('Physician action')).toBeInTheDocument();
-    expect(
-      within(panel).getByRole('button', { name: 'Open diagnosis review' })
-    ).toBeEnabled();
+    expect(within(panel).getByRole('button', { name: 'Open diagnosis review' })).toBeEnabled();
     expect(
       within(panel).getByText('Therapy support locked until physician selection.')
     ).toBeInTheDocument();
     expect(within(panel).queryByText(/confidence|probability|percentage/i)).not.toBeInTheDocument();
-    expect(within(panel).queryByText(/fill diagnosa|sekunder|refresh suggestions/i)).not.toBeInTheDocument();
+    expect(
+      within(panel).queryByText(/fill diagnosa|sekunder|refresh suggestions/i)
+    ).not.toBeInTheDocument();
   });
 });

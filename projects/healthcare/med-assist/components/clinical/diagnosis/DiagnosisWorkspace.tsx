@@ -34,11 +34,7 @@ export interface DiagnosisManualMedicationDraftView {
 }
 
 export type DiagnosisTriageOutcome =
-  | 'emergency'
-  | 'urgent_review'
-  | 'refer'
-  | 'insufficient'
-  | 'treat_locally';
+  'emergency' | 'urgent_review' | 'refer' | 'insufficient' | 'treat_locally';
 
 export interface DiagnosisTriageView {
   outcome: DiagnosisTriageOutcome;

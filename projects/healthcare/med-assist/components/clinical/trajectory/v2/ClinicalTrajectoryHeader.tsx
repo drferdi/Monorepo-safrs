@@ -14,18 +14,19 @@ const STATE_META: Record<
   critical: { label: 'Prioritas tinggi' },
 };
 
-const URGENCY_META: Record<
-  PhysicianSafeTrajectoryPresentation['urgencyTier'],
-  { label: string }
-> = {
-  low: { label: 'Review rutin 24 jam' },
-  moderate: { label: 'Review hari ini' },
-  high: { label: 'Review segera < 6 jam' },
-  immediate: { label: 'Review segera sekarang' },
-};
+const URGENCY_META: Record<PhysicianSafeTrajectoryPresentation['urgencyTier'], { label: string }> =
+  {
+    low: { label: 'Review rutin 24 jam' },
+    moderate: { label: 'Review hari ini' },
+    high: { label: 'Review segera < 6 jam' },
+    immediate: { label: 'Review segera sekarang' },
+  };
 
 function stripTrailingDetails(text: string): string {
-  return text.replace(/[:.;].*$/, '').replace(/\s+/g, ' ').trim();
+  return text
+    .replace(/[:.;].*$/, '')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 function lowerCaseFirst(text: string): string {

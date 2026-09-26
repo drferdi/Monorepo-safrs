@@ -32,8 +32,7 @@ function BaselineTooltip({ active, payload }: TooltipContentProps) {
   if (!active || !payload?.length) return null;
 
   const point = payload[0]?.payload as
-    | BaselineDeviationChartProps['viewModel']['baselineDeviation'][number]
-    | undefined;
+    BaselineDeviationChartProps['viewModel']['baselineDeviation'][number] | undefined;
   if (!point) return null;
 
   const tone = DEVIATION_META[point.deviationLabel];
@@ -52,10 +51,7 @@ function BaselineTooltip({ active, payload }: TooltipContentProps) {
   );
 }
 
-export function BaselineDeviationChart({
-  viewModel,
-  className,
-}: BaselineDeviationChartProps) {
+export function BaselineDeviationChart({ viewModel, className }: BaselineDeviationChartProps) {
   if (!viewModel.baselineAvailability.available) {
     return (
       <TrajectoryChartSection

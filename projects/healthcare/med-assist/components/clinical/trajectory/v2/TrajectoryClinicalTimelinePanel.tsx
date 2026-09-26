@@ -132,7 +132,7 @@ export function TrajectoryClinicalTimelinePanel({
         result={
           timeline.length > 0 ? (
             <div className="ct-v2-visit-timeline" data-testid="trajectory-result-timeline">
-              {timeline.map((item, index) => (
+              {timeline.map((item, index) =>
                 (() => {
                   const therapySummary = summarizeTherapySummary(item.therapySummary);
 
@@ -200,7 +200,7 @@ export function TrajectoryClinicalTimelinePanel({
                     </article>
                   );
                 })()
-              ))}
+              )}
             </div>
           ) : (
             <div className="text-small text-muted">

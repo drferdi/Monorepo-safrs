@@ -5,17 +5,10 @@ import type {
 } from './clinical-reasoning-evidence';
 
 export type DifferentialCandidateCategory =
-  | 'most_compatible'
-  | 'possible'
-  | 'less_likely'
-  | 'must_not_miss';
+  'most_compatible' | 'possible' | 'less_likely' | 'must_not_miss';
 
 export type DifferentialFitBand =
-  | 'highly_compatible'
-  | 'compatible'
-  | 'possible'
-  | 'less_likely'
-  | 'must_not_miss';
+  'highly_compatible' | 'compatible' | 'possible' | 'less_likely' | 'must_not_miss';
 
 export interface DiagnosisPack {
   id: string;
@@ -66,7 +59,11 @@ const ASSIST_DIAGNOSIS_PACKS: DiagnosisPack[] = [
       'Apakah ada batuk produktif, nyeri dada pleuritik, atau sesak progresif?',
       'Apakah ada respons terhadap oksigen atau terapi awal?',
     ],
-    suggestedExam: ['Auskultasi paru terarah', 'Work of breathing', 'SpO2 repeat / oxygen response'],
+    suggestedExam: [
+      'Auskultasi paru terarah',
+      'Work of breathing',
+      'SpO2 repeat / oxygen response',
+    ],
     suggestedInvestigations: ['Pertimbangkan imaging/lab sesuai setting dan protokol lokal'],
   },
   {
@@ -90,9 +87,7 @@ const ASSIST_DIAGNOSIS_PACKS: DiagnosisPack[] = [
     supportKeys: ['respiratory_worsening'],
     weakenKeys: ['infection_or_physiologic_burden'],
     mustNotMissKeys: ['critical_deterioration'],
-    nextBestQuestions: [
-      'Apakah ada wheezing, riwayat asma, atau pencetus alergi/aktivitas?',
-    ],
+    nextBestQuestions: ['Apakah ada wheezing, riwayat asma, atau pencetus alergi/aktivitas?'],
     suggestedExam: ['Wheezing', 'Work of breathing', 'Kemampuan bicara'],
     suggestedInvestigations: ['Peak flow bila tersedia dan sesuai setting'],
   },
@@ -103,9 +98,7 @@ const ASSIST_DIAGNOSIS_PACKS: DiagnosisPack[] = [
     supportKeys: ['respiratory_worsening'],
     weakenKeys: [],
     mustNotMissKeys: ['critical_deterioration'],
-    nextBestQuestions: [
-      'Apakah usia dan pola wheeze/rhinorrhea mendukung bronchiolitis?',
-    ],
+    nextBestQuestions: ['Apakah usia dan pola wheeze/rhinorrhea mendukung bronchiolitis?'],
     suggestedExam: ['Retraction', 'Wheezing/crackles', 'Hydration status'],
     suggestedInvestigations: ['Investigasi tambahan hanya bila setting dan red flag mendukung'],
   },
@@ -140,7 +133,9 @@ function findFacts(
   factsByKey: Map<ClinicalReasoningFactKey, ClinicalFact>,
   keys: ClinicalReasoningFactKey[]
 ): ClinicalFact[] {
-  return keys.map((key) => factsByKey.get(key)).filter((item): item is ClinicalFact => Boolean(item));
+  return keys
+    .map((key) => factsByKey.get(key))
+    .filter((item): item is ClinicalFact => Boolean(item));
 }
 
 function toEvidenceItem(fact: ClinicalFact): DifferentialEvidenceItem {
@@ -222,7 +217,10 @@ function buildCandidate(
     fitBand: fitBandFromCategory(category),
     evidenceFor,
     evidenceAgainst,
-    missingToConfirm: uniqueStrings([...pack.suggestedExam, ...evidencePack.missingCriticalInputs]).slice(0, 6),
+    missingToConfirm: uniqueStrings([
+      ...pack.suggestedExam,
+      ...evidencePack.missingCriticalInputs,
+    ]).slice(0, 6),
     redFlagsLinked: evidencePack.redFlags.map((flag) => flag.id),
     trajectorySignalsLinked,
     nextQuestions: [...pack.nextBestQuestions],

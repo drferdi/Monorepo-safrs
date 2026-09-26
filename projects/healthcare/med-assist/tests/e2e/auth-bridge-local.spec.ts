@@ -1,9 +1,12 @@
-import fs from 'fs';
 import path from 'path';
 
-import { chromium, expect, test, type BrowserContext, type Page } from '@playwright/test';
+import { expect, test, type BrowserContext, type Page } from '@playwright/test';
 
 import { startMockCrewServer, type MockCrewServer } from '../mock-crew-server';
+import {
+  getExtensionId,
+  launchExtensionContext,
+} from './chrome-extension-launch';
 
 type ChromeRuntimeApi = {
   runtime: {
@@ -31,40 +34,6 @@ type ChromeRuntimeApi = {
 };
 
 const EXTENSION_PATH = path.resolve(__dirname, '../../.output/chrome-mv3-dev');
-const LOCAL_BROWSER_CANDIDATES = [
-  'C:\\Users\\drfer\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
-  'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-  'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-  'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
-  'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
-];
-const localBrowserExecutable = LOCAL_BROWSER_CANDIDATES.find((candidate) =>
-  fs.existsSync(candidate)
-);
-
-async function launchExtensionContext(): Promise<BrowserContext> {
-  return chromium.launchPersistentContext('', {
-    ...(localBrowserExecutable ? { executablePath: localBrowserExecutable } : {}),
-    headless: false,
-    args: [
-      `--load-extension=${EXTENSION_PATH}`,
-      `--disable-extensions-except=${EXTENSION_PATH}`,
-      '--no-first-run',
-    ],
-  });
-}
-
-async function getExtensionId(context: BrowserContext): Promise<string> {
-  const deadline = Date.now() + 30_000;
-  while (Date.now() < deadline) {
-    const worker = context.serviceWorkers()[0];
-    if (worker) {
-      return new URL(worker.url()).host;
-    }
-    await new Promise((resolve) => setTimeout(resolve, 500));
-  }
-  throw new Error('Extension service worker did not appear within 15 seconds.');
-}
 
 async function openExtensionPage(
   context: BrowserContext,
@@ -120,7 +89,7 @@ test.describe.serial('Sentra Assist auth + bridge local mock', () => {
   let server: MockCrewServer;
 
   test.beforeAll(async () => {
-    context = await launchExtensionContext();
+    context = await launchExtensionContext({ extensionPath: EXTENSION_PATH });
     server = await startMockCrewServer();
   });
 
@@ -164,21 +133,30 @@ test.describe.serial('Sentra Assist auth + bridge local mock', () => {
     await expect(page.getByPlaceholder('PASSWORD')).toBeVisible();
   });
 
-  test('sidepanel launches into the V2 clinical workbench with local Crew bridge config', async () => {
+  test('sidepanel launches into the V2 clinical workbench after local Crew login', async () => {
     const extensionId = await getExtensionId(context);
-    const page = await openExtensionPage(context, extensionId, 'sidepanel.html');
+    const loginPage = await openExtensionPage(context, extensionId, 'login.html');
 
-    await setAuthConfig(page, {
+    await setAuthConfig(loginPage, {
       baseUrl: server.baseUrl,
       automationToken: 'local-automation-token',
     });
+    await loginPage.getByPlaceholder('USERNAME').fill('drferdi');
+    await loginPage.getByPlaceholder('PASSWORD').fill('secret-crew');
+    await loginPage.getByPlaceholder('PASSWORD').press('Enter');
+    await expect(loginPage.getByText('dr. Ferdi Iskandar • Puskesmas Balowerti')).toBeVisible();
+    await loginPage.close();
 
-    await expect(page.getByRole('button', { name: 'INFEREN' })).toBeVisible();
-    await expect(page.getByText('GEJALA / KELUHAN')).toBeVisible();
-    await expect(page.getByTestId('clinical-reasoning-workbench')).toBeVisible();
-    await expect(page.getByText('First Glance Clinical Status')).toBeVisible();
-    await expect(page.locator('#sidepanel-tabpanel-ttv')).toHaveCount(0);
-    await expect(page.getByText('Data dokter online belum tersedia.')).toHaveCount(0);
+    const page = await openExtensionPage(context, extensionId, 'sidepanel.html');
+    await expect(page.getByRole('button', { name: /Masuk ke ASSIST/i })).toBeVisible();
+    await page.getByRole('button', { name: /Masuk ke ASSIST/i }).click();
+
+    // Current sidepanel authority mounts the clinical console (START tab),
+    // not the legacy INFEREN tab label from ApprovedSentraAssistPanel.
+    await expect(page.getByRole('tab', { name: /^START$/i })).toBeVisible();
+    await expect(page.getByText(/Gejala\s*\/\s*Keluhan/i)).toBeVisible();
+    await expect(page.getByText(/Vital Signs/i)).toBeVisible();
+    await expect(page.getByRole('tabpanel', { name: /^START$/i })).toBeVisible();
     await expect(page.getByText('ERROR DIAGNOSTICS')).toHaveCount(0);
     await expect(page.locator('pre')).toHaveCount(0);
   });

@@ -8,12 +8,10 @@ export const MEDLENS_ECG_FAIL_CLOSED_MESSAGE =
 export const MEDLENS_WAVEFORM_NOT_IMPLEMENTED_REASON = 'WAVEFORM_EXTRACTION_NOT_IMPLEMENTED';
 
 export type EcgSourceType =
-  | 'machine_report_text'
-  | 'ecg_image_with_printed_result'
-  | 'waveform_only'
-  | 'unknown';
+  'machine_report_text' | 'ecg_image_with_printed_result' | 'waveform_only' | 'unknown';
 
-export type EcgExtractionMethod = 'native_text' | 'ocr' | 'waveform' | 'manual_user_text' | 'unsupported';
+export type EcgExtractionMethod =
+  'native_text' | 'ocr' | 'waveform' | 'manual_user_text' | 'unsupported';
 
 export interface EcgEvidenceLocation {
   page?: number;
@@ -38,11 +36,7 @@ export interface EcgEvidence {
 }
 
 export interface EcgClinicalOutput {
-  status:
-    | 'source_grounded'
-    | 'insufficient_evidence'
-    | 'unsupported_source'
-    | 'extraction_failed';
+  status: 'source_grounded' | 'insufficient_evidence' | 'unsupported_source' | 'extraction_failed';
   findings: EcgEvidence[];
   redFlags: EcgEvidence[];
   limitations: string[];
@@ -228,8 +222,7 @@ export interface MedlensWaveformPhysicianReviewOutput {
 }
 
 export type MedlensWaveformOutput =
-  | MedlensBlockedWaveformOutput
-  | MedlensWaveformPhysicianReviewOutput;
+  MedlensBlockedWaveformOutput | MedlensWaveformPhysicianReviewOutput;
 
 export interface MedlensEcgAnalyzeResponse {
   status: 'ok';

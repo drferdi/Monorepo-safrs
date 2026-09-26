@@ -119,9 +119,7 @@ function humanizeFailedAssertion(assertion: string): string {
   }
 }
 
-function buildBlockedPanelState(
-  output: MedlensWaveformOutput | null | undefined
-): {
+function buildBlockedPanelState(output: MedlensWaveformOutput | null | undefined): {
   title: string;
   guidance: string;
   requiredEvidence: string[];
@@ -202,13 +200,7 @@ function FieldCard({
   );
 }
 
-function ReviewBlock({
-  title,
-  children,
-}: {
-  title: string;
-  children: ReactNode;
-}): JSX.Element {
+function ReviewBlock({ title, children }: { title: string; children: ReactNode }): JSX.Element {
   return (
     <div className="rounded-lg border border-[var(--sentra-border)] bg-[var(--neu-inset-bg)] p-3 shadow-light-soft-inset">
       <h3 className={MEDLENS_SECTION_TITLE_CLASS}>{title}</h3>
@@ -225,10 +217,18 @@ function LeadMeasurementCard({
   return (
     <div className="rounded-lg border border-[var(--sentra-border)] bg-[var(--sentra-card)] p-3 shadow-light-soft">
       <div className={MEDLENS_LABEL_CLASS}>Lead {measurement.lead}</div>
-      <div className={`${MEDLENS_NOTE_CLASS} mt-2`}>ST deviation: {formatNullable(measurement.stDeviationMm)} mm</div>
-      <div className={MEDLENS_NOTE_CLASS}>QRS polarity: {formatNullable(measurement.qrsPolarity)}</div>
-      <div className={MEDLENS_NOTE_CLASS}>T-wave pattern: {formatNullable(measurement.tWavePattern)}</div>
-      <div className={MEDLENS_NOTE_CLASS}>Q wave present: {formatNullable(measurement.qWavePresent)}</div>
+      <div className={`${MEDLENS_NOTE_CLASS} mt-2`}>
+        ST deviation: {formatNullable(measurement.stDeviationMm)} mm
+      </div>
+      <div className={MEDLENS_NOTE_CLASS}>
+        QRS polarity: {formatNullable(measurement.qrsPolarity)}
+      </div>
+      <div className={MEDLENS_NOTE_CLASS}>
+        T-wave pattern: {formatNullable(measurement.tWavePattern)}
+      </div>
+      <div className={MEDLENS_NOTE_CLASS}>
+        Q wave present: {formatNullable(measurement.qWavePresent)}
+      </div>
       <div className={MEDLENS_NOTE_CLASS}>Evidence ref: {measurement.evidenceRef}</div>
     </div>
   );
@@ -299,7 +299,10 @@ export function EcgDiagnosticAssist({
   }
 
   return (
-    <div className="flex flex-col gap-3 text-[var(--text-main)]" data-testid="ekg-diagnostic-assist">
+    <div
+      className="flex flex-col gap-3 text-[var(--text-main)]"
+      data-testid="ekg-diagnostic-assist"
+    >
       <section className="rounded-xl border border-[var(--sentra-border)] bg-[var(--sentra-card)] p-4 shadow-light-soft">
         <div className="flex items-start justify-between gap-3">
           <div>
@@ -343,8 +346,8 @@ export function EcgDiagnosticAssist({
         </button>
 
         <p className={`${MEDLENS_NOTE_CLASS} mt-3`}>
-          MedLens ECG sekarang bersifat waveform-first. Jika evidence waveform belum lengkap,
-          hasil akan fail-closed tanpa interpretasi klinis.
+          MedLens ECG sekarang bersifat waveform-first. Jika evidence waveform belum lengkap, hasil
+          akan fail-closed tanpa interpretasi klinis.
         </p>
 
         {runtimeStatus && runtimeState ? (
@@ -392,9 +395,15 @@ export function EcgDiagnosticAssist({
 
             <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-4">
               <FieldCard label="Output status" value={waveformOutput.status} />
-              <FieldCard label="Clinical output allowed" value={formatBoolean(waveformOutput.clinicalOutputAllowed)} />
+              <FieldCard
+                label="Clinical output allowed"
+                value={formatBoolean(waveformOutput.clinicalOutputAllowed)}
+              />
               <FieldCard label="Image quality" value={waveformPacket.imageQuality.status} />
-              <FieldCard label="Grid calibrated" value={formatBoolean(waveformPacket.gridCalibration.calibrated)} />
+              <FieldCard
+                label="Grid calibrated"
+                value={formatBoolean(waveformPacket.gridCalibration.calibrated)}
+              />
             </div>
 
             {previewUrl ? (
@@ -452,9 +461,16 @@ export function EcgDiagnosticAssist({
                   <ReviewBlock title="Rhythm Review">
                     <div className={`${MEDLENS_NOTE_CLASS} space-y-1 text-[var(--text-main)]`}>
                       <div>Lead: {waveformOutput.rhythmEvidence.rhythmStripLead}</div>
-                      <div>Regularity: {formatNullable(waveformOutput.rhythmEvidence.regularity)}</div>
-                      <div>Estimated rate: {formatNullable(waveformOutput.rhythmEvidence.estimatedRateBpm)}</div>
-                      <div>P before QRS: {formatNullable(waveformOutput.rhythmEvidence.pBeforeQrs)}</div>
+                      <div>
+                        Regularity: {formatNullable(waveformOutput.rhythmEvidence.regularity)}
+                      </div>
+                      <div>
+                        Estimated rate:{' '}
+                        {formatNullable(waveformOutput.rhythmEvidence.estimatedRateBpm)}
+                      </div>
+                      <div>
+                        P before QRS: {formatNullable(waveformOutput.rhythmEvidence.pBeforeQrs)}
+                      </div>
                     </div>
                   </ReviewBlock>
                 ) : null}
@@ -464,12 +480,20 @@ export function EcgDiagnosticAssist({
             <ReviewBlock title="Waveform Packet">
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 <FieldCard label="Source image hash" value={waveformPacket.sourceImage.sha256} />
-                <FieldCard label="Lead regions detected" value={waveformPacket.leadRegions.length} />
+                <FieldCard
+                  label="Lead regions detected"
+                  value={waveformPacket.leadRegions.length}
+                />
                 <FieldCard
                   label="Waveform traces extracted"
-                  value={waveformPacket.waveformTraces.filter((trace) => trace.traceExtracted).length}
+                  value={
+                    waveformPacket.waveformTraces.filter((trace) => trace.traceExtracted).length
+                  }
                 />
-                <FieldCard label="Lead measurements" value={waveformPacket.leadMeasurements.length} />
+                <FieldCard
+                  label="Lead measurements"
+                  value={waveformPacket.leadMeasurements.length}
+                />
               </div>
             </ReviewBlock>
 
@@ -501,7 +525,10 @@ export function EcgDiagnosticAssist({
 
             <ReviewBlock title="Audit Gate">
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                <FieldCard label="Uploaded source hash" value={result.audit_log.uploadedSourceHash} />
+                <FieldCard
+                  label="Uploaded source hash"
+                  value={result.audit_log.uploadedSourceHash}
+                />
                 <FieldCard
                   label="Evidence gate passed"
                   value={formatBoolean(result.audit_log.outputPassedEvidenceGate)}

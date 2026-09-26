@@ -3,7 +3,6 @@ import { render, screen, within } from '@testing-library/react';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 vi.mock('recharts', async (importOriginal) => {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-imports -- vitest importOriginal typing
   const actual = await importOriginal<typeof import('recharts')>();
 
   return {
@@ -131,9 +130,9 @@ describe('Trajectory clinical core panels', () => {
     expect(within(timelinePanel).getByTestId('trajectory-simple-chart')).toBeInTheDocument();
     expect(within(timelinePanel).getByTestId('trajectory-simple-result')).toBeInTheDocument();
     expect(within(timelinePanel).getByTestId('trajectory-result-timeline')).toBeInTheDocument();
-    expect(
-      within(timelinePanel).getAllByTestId('trajectory-result-entry').length
-    ).toBeGreaterThan(0);
+    expect(within(timelinePanel).getAllByTestId('trajectory-result-entry').length).toBeGreaterThan(
+      0
+    );
     const visitEntries = within(timelinePanel).getAllByTestId('trajectory-result-entry');
     expect(
       visitEntries[0]?.querySelector('[data-testid="trajectory-visit-rail"]')
@@ -159,20 +158,14 @@ describe('Trajectory clinical core panels', () => {
     expect(vitalPanel).toBeInTheDocument();
     expect(within(vitalPanel).getByTestId('trajectory-simple-chart')).toBeInTheDocument();
     expect(within(vitalPanel).getByTestId('trajectory-simple-result')).toBeInTheDocument();
-    expect(
-      within(vitalPanel)
-        .getAllByTestId(/vital-series-/)
-        .length
-    ).toBeGreaterThan(0);
+    expect(within(vitalPanel).getAllByTestId(/vital-series-/).length).toBeGreaterThan(0);
 
     const redFlagPanel = screen.getByTestId('trajectory-red-flag-timeline-panel');
     expect(redFlagPanel).toBeInTheDocument();
     expect(within(redFlagPanel).getByTestId('trajectory-simple-chart')).toBeInTheDocument();
     expect(within(redFlagPanel).getByTestId('trajectory-simple-result')).toBeInTheDocument();
     expect(within(redFlagPanel).getByText('Kunjungan 3')).toBeInTheDocument();
-    expect(
-      within(redFlagPanel).getByText(/Respiratory worsening concern/i)
-    ).toBeInTheDocument();
+    expect(within(redFlagPanel).getByText(/Respiratory worsening concern/i)).toBeInTheDocument();
 
     const deltaPanel = screen.getByTestId('trajectory-visit-delta-panel');
     expect(deltaPanel).toBeInTheDocument();
@@ -186,7 +179,9 @@ describe('Trajectory clinical core panels', () => {
     expect(within(diagnosticPanel).getByTestId('trajectory-simple-chart')).toBeInTheDocument();
     expect(within(diagnosticPanel).getByTestId('trajectory-simple-result')).toBeInTheDocument();
     expect(within(diagnosticPanel).getByText(/Diabetes melitus tipe 2/i)).toBeInTheDocument();
-    expect(within(diagnosticPanel).getByText(/Respiratory worsening concern|Pneumonia/i)).toBeInTheDocument();
+    expect(
+      within(diagnosticPanel).getByText(/Respiratory worsening concern|Pneumonia/i)
+    ).toBeInTheDocument();
   });
 
   it('renders per-visit red-flag fallback when timeline rows exist but labels are empty', () => {
@@ -198,22 +193,20 @@ describe('Trajectory clinical core panels', () => {
     expect(redFlagPanel).toBeInTheDocument();
     expect(within(redFlagPanel).getByText('Kunjungan 1')).toBeInTheDocument();
     expect(within(redFlagPanel).getByText('No safety-critical flag recorded.')).toBeInTheDocument();
-    expect(
-      within(redFlagPanel).queryByText('No red flags recorded')
-    ).not.toBeInTheDocument();
+    expect(within(redFlagPanel).queryByText('No red flags recorded')).not.toBeInTheDocument();
   });
 
   it('summarizes long therapy regimens in visit cards', () => {
     const viewModel = {
       ...worseningTrajectoryVisualizationFixture,
-      clinicalTimeline: worseningTrajectoryVisualizationFixture.clinicalTimeline?.map((item, index) =>
-        index === 2
-          ? {
-              ...item,
-              therapySummary:
-                'Clopidogrel, Nitrat, Furosemide, Metformin, Ceftriaxone',
-            }
-          : item
+      clinicalTimeline: worseningTrajectoryVisualizationFixture.clinicalTimeline?.map(
+        (item, index) =>
+          index === 2
+            ? {
+                ...item,
+                therapySummary: 'Clopidogrel, Nitrat, Furosemide, Metformin, Ceftriaxone',
+              }
+            : item
       ),
     };
 
@@ -223,7 +216,9 @@ describe('Trajectory clinical core panels', () => {
     expect(within(timelinePanel).getByText(/Clopidogrel,\s*Nitrat/i)).toBeInTheDocument();
     expect(within(timelinePanel).getByText('+3 terapi')).toBeInTheDocument();
     expect(
-      within(timelinePanel).queryByText(/Clopidogrel,\s*Nitrat,\s*Furosemide,\s*Metformin,\s*Ceftriaxone/i)
+      within(timelinePanel).queryByText(
+        /Clopidogrel,\s*Nitrat,\s*Furosemide,\s*Metformin,\s*Ceftriaxone/i
+      )
     ).not.toBeInTheDocument();
   });
 });

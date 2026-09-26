@@ -71,9 +71,7 @@ describe('medlens-client', () => {
 
   it('accepts only PNG and JPEG family for ECG image upload', () => {
     expect(isAcceptedEcgImageFile(new File(['x'], 'ekg.jpg', { type: 'image/jpeg' }))).toBe(true);
-    expect(isAcceptedEcgImageFile(new File(['x'], 'ekg.jpeg', { type: 'image/jpeg' }))).toBe(
-      true
-    );
+    expect(isAcceptedEcgImageFile(new File(['x'], 'ekg.jpeg', { type: 'image/jpeg' }))).toBe(true);
     expect(isAcceptedEcgImageFile(new File(['x'], 'ekg.png', { type: 'image/png' }))).toBe(true);
     expect(isAcceptedEcgImageFile(new File(['x'], 'ekg.gif', { type: 'image/gif' }))).toBe(false);
   });
@@ -147,9 +145,11 @@ describe('medlens-client', () => {
   });
 
   it('prefers the local MedLens route before Crew auth when local MedLens is reachable', async () => {
-    const fetchMock = vi.fn().mockResolvedValueOnce(
-      new Response(JSON.stringify(makeMedlensEcgAnalyzeResponse()), { status: 200 })
-    );
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify(makeMedlensEcgAnalyzeResponse()), { status: 200 })
+      );
     vi.stubGlobal('fetch', fetchMock);
 
     const result = await analyzeEcgImage(new File(['binary'], 'ekg.png', { type: 'image/png' }));
@@ -242,7 +242,9 @@ describe('medlens-client', () => {
       message = error instanceof Error ? error.message : '';
     }
 
-    expect(message).toBe('MedLens belum dapat dijangkau saat ini. Coba lagi nanti atau hubungi admin.');
+    expect(message).toBe(
+      'MedLens belum dapat dijangkau saat ini. Coba lagi nanti atau hubungi admin.'
+    );
   });
 
   it('does not surface developer service details from backend errors', async () => {
@@ -257,7 +259,9 @@ describe('medlens-client', () => {
       message = error instanceof Error ? error.message : '';
     }
 
-    expect(message).toBe('Analisis MedLens belum dapat diproses. Coba lagi nanti atau hubungi admin.');
+    expect(message).toBe(
+      'Analisis MedLens belum dapat diproses. Coba lagi nanti atau hubungi admin.'
+    );
   });
 
   it('reports runtime ready when the MedLens route responds with a file-validation error', async () => {
@@ -294,6 +298,8 @@ describe('medlens-client', () => {
       message = error instanceof Error ? error.message : '';
     }
 
-    expect(message).toBe('MedLens belum dapat dijangkau saat ini. Coba lagi nanti atau hubungi admin.');
+    expect(message).toBe(
+      'MedLens belum dapat dijangkau saat ini. Coba lagi nanti atau hubungi admin.'
+    );
   });
 });

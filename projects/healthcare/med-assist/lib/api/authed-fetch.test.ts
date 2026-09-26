@@ -2,12 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { AuthSession } from './auth-store';
 
-const {
-  clearSessionMock,
-  fetchMock,
-  getAuthConfigMock,
-  getStoredSessionMock,
-} = vi.hoisted(() => ({
+const { clearSessionMock, fetchMock, getAuthConfigMock, getStoredSessionMock } = vi.hoisted(() => ({
   clearSessionMock: vi.fn(),
   fetchMock: vi.fn(),
   getAuthConfigMock: vi.fn(),

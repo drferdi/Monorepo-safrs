@@ -1,12 +1,4 @@
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 import {
   TRAJECTORY_CHART_PALETTE,
@@ -63,9 +55,7 @@ export function TrajectoryDiagnosticEvolutionPanel({
                       return (
                         <div className="neu-card-inset min-w-44 p-3">
                           <div className="ttv-label text-tertiary">{point.visitLabel}</div>
-                          <div className="text-small text-platinum">
-                            {point.labelCount} label
-                          </div>
+                          <div className="text-small text-platinum">{point.labelCount} label</div>
                           <div className="mt-1 text-tiny text-muted">
                             {formatChartDate(point.date)}
                           </div>

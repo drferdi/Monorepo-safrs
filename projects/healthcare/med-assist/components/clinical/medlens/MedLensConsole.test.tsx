@@ -3,6 +3,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { makeMedlensEcgAnalyzeResponse } from '@/tests/medlens-contract/ecg-contract-fixtures';
 
+import { MedLensConsole } from './MedLensConsole';
+
 const { analyzeEcgImageMock, getRuntimeStatusMock } = vi.hoisted(() => ({
   analyzeEcgImageMock: vi.fn(),
   getRuntimeStatusMock: vi.fn(),
@@ -14,8 +16,6 @@ vi.mock('@/lib/api/medlens-client', () => ({
     getRuntimeStatus: getRuntimeStatusMock,
   },
 }));
-
-import { MedLensConsole } from './MedLensConsole';
 
 function makeBlockedResponse() {
   return makeMedlensEcgAnalyzeResponse({
@@ -70,7 +70,7 @@ function makeBlockedResponse() {
         redFlagsCount: 0,
       },
     },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as any);
 }
 
@@ -121,9 +121,7 @@ describe('MedLensConsole', () => {
     expect(await screen.findByTestId('medlens-ecg-review-surface')).toBeInTheDocument();
     expect(analyzeEcgImageMock).toHaveBeenCalledWith(file);
     expect(screen.getByText('Sentra MedLens')).toBeInTheDocument();
-    expect(
-      screen.getByRole('heading', { name: /Physician-Review Packet/i })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Physician-Review Packet/i })).toBeInTheDocument();
     expect(screen.getByText(/Waveform Packet/i)).toBeInTheDocument();
     expect(screen.queryByText(/Extracted ECG Result/i)).not.toBeInTheDocument();
   });

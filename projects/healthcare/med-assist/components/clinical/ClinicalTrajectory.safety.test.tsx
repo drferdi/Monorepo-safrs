@@ -227,9 +227,10 @@ describe('ClinicalTrajectory physician safety', () => {
 
     expect(await screen.findByTestId('clinical-trajectory-v2')).toBeInTheDocument();
     expect(screen.getByTestId('trajectory-chart-tabs')).toBeInTheDocument();
-    expect(
-      screen.getByRole('tab', { name: 'Patient Clinical Timeline' })
-    ).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('tab', { name: 'Patient Clinical Timeline' })).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
     expect(screen.getByTestId('trajectory-chart-tabpanel-clinical-timeline')).toBeInTheDocument();
     expect(screen.queryByTestId('compact-trajectory-mini-chart')).not.toBeInTheDocument();
     expect(screen.queryByText('Grafik trajectory compact')).not.toBeInTheDocument();
@@ -529,7 +530,9 @@ describe('ClinicalTrajectory physician safety', () => {
 
     expect(await screen.findByTestId('clinical-trajectory-v2-error')).toBeInTheDocument();
     expect(screen.getByText('Data trajectory tidak cukup')).toBeInTheDocument();
-    expect(screen.getByText(/Data trajectory belum cukup untuk review terstruktur/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/Data trajectory belum cukup untuk review terstruktur/i)
+    ).toBeInTheDocument();
     expect(screen.queryByTestId('clinical-trajectory-v2')).not.toBeInTheDocument();
     expect(screen.queryByTestId('trajectory-chart-tabs')).not.toBeInTheDocument();
     expect(mockFns.evaluateCanonicalClinicalEngine).not.toHaveBeenCalled();

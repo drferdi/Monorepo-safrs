@@ -907,7 +907,19 @@ function buildIntegratedRationale(
 function buildLongitudinalFrameRedFlagTitles(
   intelligence: ClinicalTrajectoryIntelligenceResult
 ): string[] {
-  const prioritizedSignals = ['T-45', 'T-46', 'T-59', 'T-13', 'T-16', 'T-50', 'T-54', 'T-52', 'T-58', 'T-38', 'T-25'];
+  const prioritizedSignals = [
+    'T-45',
+    'T-46',
+    'T-59',
+    'T-13',
+    'T-16',
+    'T-50',
+    'T-54',
+    'T-52',
+    'T-58',
+    'T-38',
+    'T-25',
+  ];
   const titles = [
     ...(intelligence.shockIndex?.severity === 'high' ||
     intelligence.shockIndex?.severity === 'critical'
@@ -916,8 +928,7 @@ function buildLongitudinalFrameRedFlagTitles(
     ...intelligence.trajectorySignals
       .filter((signal) => signal.severity === 'high' || signal.severity === 'critical')
       .sort(
-        (left, right) =>
-          prioritizedSignals.indexOf(left.id) - prioritizedSignals.indexOf(right.id)
+        (left, right) => prioritizedSignals.indexOf(left.id) - prioritizedSignals.indexOf(right.id)
       )
       .map((signal) => sanitizeTrajectoryPresentationText(signal.label)),
     ...intelligence.earlyWarnings
@@ -1182,13 +1193,11 @@ function buildLegacyRecommendations(result: HybridTrajectoryResult): TrajectoryR
           : 'medium',
       text: result.integratedAssessment.recommendedAction,
     },
-    ...result.redFlags.slice(0, 3).map(
-      (flag): TrajectoryRecommendation => ({
-        category: 'concern',
-        priority: flag.severity === 'critical' || flag.severity === 'high' ? 'high' : 'medium',
-        text: `${flag.title}: ${flag.rationale}`,
-      })
-    ),
+    ...result.redFlags.slice(0, 3).map((flag): TrajectoryRecommendation => ({
+      category: 'concern',
+      priority: flag.severity === 'critical' || flag.severity === 'high' ? 'high' : 'medium',
+      text: `${flag.title}: ${flag.rationale}`,
+    })),
   ];
 
   if (result.uncertaintyNotes.length > 0) {

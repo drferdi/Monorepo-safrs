@@ -10,13 +10,13 @@ Before moving any route group, add a route-registration parity test that proves 
 
 ## Proposed Internal Modules
 
-| New module | Responsibility | Messages |
-| --- | --- | --- |
-| `entrypoints/background/transfer-routes.ts` | RME transfer and cancellation | `transferRME`, `cancelRMETransfer`, `RME_TRANSFER_PROGRESS` |
-| `entrypoints/background/scan-routes.ts` | Field, history, context, and visit scans | `scanFields`, `scanMedicalHistory`, `scanClinicalContext`, `scanVisitHistory`, `resolveTenagaMedis`, `pageReady`, `scrapeResult`, `visitHistoryScraped` |
-| `entrypoints/background/fill-routes.ts` | Direct fill commands | `fillResep`, `fillAnamnesa`, `fillDiagnosa`, `fillAnamnesa` native response path |
-| `entrypoints/background/cdss-routes.ts` | CDSS engine and API calls | `getSuggestions`, `getRecommendations`, `checkInteractions`, `checkAllergies`, `calculatePediatricDose`, `getCDSSStatus`, `initializeCDSS` |
-| `entrypoints/background/bridge-sync-routes.ts` | Bridge poller and patient sync callbacks | `BRIDGE_SYNC_RESULT` |
+| New module                                     | Responsibility                           | Messages                                                                                                                                                |
+| ---------------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `entrypoints/background/transfer-routes.ts`    | RME transfer and cancellation            | `transferRME`, `cancelRMETransfer`, `RME_TRANSFER_PROGRESS`                                                                                             |
+| `entrypoints/background/scan-routes.ts`        | Field, history, context, and visit scans | `scanFields`, `scanMedicalHistory`, `scanClinicalContext`, `scanVisitHistory`, `resolveTenagaMedis`, `pageReady`, `scrapeResult`, `visitHistoryScraped` |
+| `entrypoints/background/fill-routes.ts`        | Direct fill commands                     | `fillResep`, `fillAnamnesa`, `fillDiagnosa`, `fillAnamnesa` native response path                                                                        |
+| `entrypoints/background/cdss-routes.ts`        | CDSS engine and API calls                | `getSuggestions`, `getRecommendations`, `checkInteractions`, `checkAllergies`, `calculatePediatricDose`, `getCDSSStatus`, `initializeCDSS`              |
+| `entrypoints/background/bridge-sync-routes.ts` | Bridge poller and patient sync callbacks | `BRIDGE_SYNC_RESULT`                                                                                                                                    |
 
 ## Native Message Handlers
 

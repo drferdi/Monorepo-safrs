@@ -1,12 +1,4 @@
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 import {
   TRAJECTORY_CHART_PALETTE,
@@ -27,11 +19,7 @@ function deltaLabel(label: string, value: number | undefined): string | null {
   return `${label} ${direction}${Math.abs(value)}`;
 }
 
-function deltaLabelWithUnit(
-  label: string,
-  value: number | undefined,
-  unit: string
-): string | null {
+function deltaLabelWithUnit(label: string, value: number | undefined, unit: string): string | null {
   const formatted = deltaLabel(label, value);
   return formatted ? `${formatted} ${unit}` : null;
 }
@@ -94,9 +82,7 @@ export function TrajectoryVisitDeltaPanel({
                       return (
                         <div className="neu-card-inset min-w-44 p-3">
                           <div className="ttv-label text-tertiary">{point.label}</div>
-                          <div className="text-small text-platinum">
-                            {point.changeCount} delta
-                          </div>
+                          <div className="text-small text-platinum">{point.changeCount} delta</div>
                           <div className="mt-1 text-tiny text-muted">{point.summary}</div>
                         </div>
                       );

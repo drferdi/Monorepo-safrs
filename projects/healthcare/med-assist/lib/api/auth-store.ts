@@ -78,16 +78,11 @@ function getPromiseStorageArea(scope: StorageScope): PromiseStorageArea | null {
   return browserApi?.storage?.[scope] ?? null;
 }
 
-function getChromeStorageArea(scope: StorageScope):
-  | {
-      get(
-        key: string,
-        callback: (items: Record<string, unknown>) => void
-      ): void;
-      set(items: Record<string, unknown>, callback?: () => void): void;
-      remove(key: string, callback?: () => void): void;
-    }
-  | null {
+function getChromeStorageArea(scope: StorageScope): {
+  get(key: string, callback: (items: Record<string, unknown>) => void): void;
+  set(items: Record<string, unknown>, callback?: () => void): void;
+  remove(key: string, callback?: () => void): void;
+} | null {
   const chromeApi = (
     globalThis as typeof globalThis & {
       chrome?: {

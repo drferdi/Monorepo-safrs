@@ -8,10 +8,7 @@ import type {
 import { buildDifferentialCandidatesFromEvidencePack } from './clinical-reasoning-differential';
 import { runClinicalReasoningArbiter } from './clinical-reasoning-arbiter';
 
-function fact(
-  key: ClinicalReasoningFactKey,
-  overrides: Partial<ClinicalFact> = {}
-): ClinicalFact {
+function fact(key: ClinicalReasoningFactKey, overrides: Partial<ClinicalFact> = {}): ClinicalFact {
   const acuteDeterioration =
     key !== 'baseline_or_planning_risk_context' && key !== 'treatment_response_good';
 
@@ -88,10 +85,7 @@ function makePack(facts: ClinicalFact[]): ReasoningEvidencePack {
   };
 }
 
-function runWithFacts(
-  facts: ClinicalFact[],
-  physicianConfirmedCandidateId?: string
-) {
+function runWithFacts(facts: ClinicalFact[], physicianConfirmedCandidateId?: string) {
   const evidencePack = makePack(facts);
   const candidates = buildDifferentialCandidatesFromEvidencePack(evidencePack);
 

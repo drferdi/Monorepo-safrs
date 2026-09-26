@@ -24,6 +24,7 @@
 import { anonymize, validateAnonymization } from './anonymizer';
 import { auditLogger, logDiagnosisRequest, logSuggestionDisplayed } from './audit-logger';
 import { applyEpidemiologyWeights, getEpidemiologyMeta } from './epidemiology-weights';
+import { applyDiagnosisBandingSoftPenalty } from './diagnosis-banding-penalty';
 import { getDiagnosisEngineConfig } from './feature-flags';
 import { buildKBOnlySuggestions, runLLMReasoning } from './llm-reasoner';
 import type { RedFlag } from './red-flags';
@@ -319,6 +320,9 @@ export async function runDiagnosisEngine(
   // =========================================================================
 
   candidates = await applyEpidemiologyWeights(candidates, patientGender);
+
+  // Soft differential exclusion via KB diagnosis_banding (H9) — no invent / no hard drop.
+  candidates = applyDiagnosisBandingSoftPenalty(candidates);
 
   // =========================================================================
   // STEP 5: LLM REASONER (with KB-only fallback + high-confidence skip)

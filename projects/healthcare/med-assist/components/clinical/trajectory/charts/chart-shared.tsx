@@ -144,13 +144,7 @@ export function TrajectoryChartSection({
   );
 }
 
-export function TrajectoryEmptyState({
-  title,
-  message,
-}: {
-  title: string;
-  message: string;
-}) {
+export function TrajectoryEmptyState({ title, message }: { title: string; message: string }) {
   return (
     <div className="neu-card-inset flex min-h-48 flex-col items-start justify-center gap-2 p-4">
       <div className="ttv-label text-tertiary">{title}</div>
@@ -159,20 +153,12 @@ export function TrajectoryEmptyState({
   );
 }
 
-export function WarningPills({
-  title,
-  items,
-}: {
-  title: string;
-  items: string[];
-}) {
+export function WarningPills({ title, items }: { title: string; items: string[] }) {
   if (items.length === 0) return null;
 
   return (
     <div className="neu-card-inset mb-3 px-3 py-3">
-      <div className="mb-1 text-tiny font-bold uppercase tracking-wide text-muted">
-        {title}
-      </div>
+      <div className="mb-1 text-tiny font-bold uppercase tracking-wide text-muted">{title}</div>
       <div className="flex flex-wrap gap-1">
         {items.map((item) => (
           <span key={item} className="ct-neu-chip ct-neu-chip--muted">
@@ -208,10 +194,7 @@ export function TrajectorySimplePanel({
         {chart}
       </div>
 
-      <div
-        className="neu-card-inset p-4 md:p-5"
-        data-testid="trajectory-simple-result"
-      >
+      <div className="neu-card-inset p-4 md:p-5" data-testid="trajectory-simple-result">
         <div className="mb-3">
           <div className="ttv-label text-tertiary">Hasil</div>
         </div>
@@ -236,11 +219,7 @@ export function TrajectoryResultTimeline({
   return (
     <div className="ct-v2-result-timeline" data-testid="trajectory-result-timeline">
       {items.map((item) => (
-        <article
-          key={item.id}
-          className="ct-v2-result-entry"
-          data-testid="trajectory-result-entry"
-        >
+        <article key={item.id} className="ct-v2-result-entry" data-testid="trajectory-result-entry">
           <div className="ct-v2-result-entry__meta-block">
             {item.eyebrow ? (
               <div className="ct-v2-result-entry__eyebrow">{item.eyebrow}</div>
@@ -251,13 +230,9 @@ export function TrajectoryResultTimeline({
           <div className="ct-v2-result-entry__body">
             <div className="ct-v2-result-entry__title">{item.title}</div>
 
-            {item.detail ? (
-              <p className="ct-v2-result-entry__detail">{item.detail}</p>
-            ) : null}
+            {item.detail ? <p className="ct-v2-result-entry__detail">{item.detail}</p> : null}
 
-            {item.note ? (
-              <p className="ct-v2-result-entry__note">{item.note}</p>
-            ) : null}
+            {item.note ? <p className="ct-v2-result-entry__note">{item.note}</p> : null}
           </div>
         </article>
       ))}

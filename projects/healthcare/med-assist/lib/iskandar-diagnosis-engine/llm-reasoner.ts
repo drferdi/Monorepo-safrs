@@ -3,8 +3,9 @@
  * Iskandar Diagnosis Engine V1 — LLM Reasoner (Constrained)
  * LLM is COPILOT, not PILOT. It ranks/enriches candidates from KB.
  * It does NOT generate diagnoses from nothing.
+ * Hard-gate: any LLM ICD outside the KB candidate set is dropped (reranker only).
  *
- * Fallback: If LLM fails, returns KB-only results (no reasoning text).
+ * Fallback: If LLM fails (or all suggestions invented), returns KB-only results.
  *
  * @module lib/iskandar-diagnosis-engine/llm-reasoner
  */
@@ -78,8 +79,7 @@ function buildUserPrompt(input: ReasonerInput): string {
     .map((c, i) => {
       const text = `${i + 1}. [${c.icd10}] ${c.nama} (match: ${(c.matchScore * 100).toFixed(1)}%, gejala cocok: ${c.matchedSymptoms.join(', ')})`;
       const guideline = c.advancedGuideline as
-        | { pengobatan?: unknown; red_alert?: unknown }
-        | undefined;
+        { pengobatan?: unknown; red_alert?: unknown } | undefined;
 
       if (guideline) {
         guidelinesText += `\n>>> PANDUAN KLINIS RESMI UNTUK ${c.nama} (${c.icd10}) <<<\n`;
@@ -221,6 +221,38 @@ export function buildKBOnlySuggestions(candidates: MatchedCandidate[]): AIDiagno
   }));
 }
 
+/** ICD stem (letter + 2 digits), e.g. J06.9 → J06. Empty if unparseable. */
+function icdStem(code: string | undefined): string {
+  const match = String(code || '')
+    .toUpperCase()
+    .replace(/\s+/g, '')
+    .match(/^[A-Z][0-9]{2}/);
+  return match?.[0] ?? '';
+}
+
+/**
+ * Resolve an LLM ICD to a KB matcher candidate (reranker membership gate).
+ * Exact code match preferred; otherwise same ICD-10 category stem as a candidate.
+ */
+function findKbCandidate(
+  candidates: MatchedCandidate[],
+  icd10Code: string | undefined
+): MatchedCandidate | undefined {
+  const raw = String(icd10Code || '')
+    .toUpperCase()
+    .replace(/\s+/g, '')
+    .trim();
+  if (!raw) return undefined;
+
+  const exact = candidates.find((c) => c.icd10.toUpperCase().replace(/\s+/g, '') === raw);
+  if (exact) return exact;
+
+  const stem = icdStem(raw);
+  if (!stem) return undefined;
+
+  return candidates.find((c) => icdStem(c.icd10) === stem);
+}
+
 function buildRecommendedActions(c: MatchedCandidate): string[] {
   const actions: string[] = [];
   actions.push('Lakukan pemeriksaan fisik terarah dan monitoring TTV serial');
@@ -263,25 +295,46 @@ export async function runLLMReasoning(input: ReasonerInput): Promise<ReasonerOut
   const llmResult = await callLLM(systemPrompt, userPrompt);
 
   if (llmResult.success && llmResult.data) {
-    // Merge LLM reasoning with KB data
-    const enriched = llmResult.data.suggestions.map((s, i) => {
-      // Find matching KB candidate to enrich
-      const kbMatch = input.candidates.find(
-        (c) => c.icd10 === s.icd10_code || c.icd10.startsWith(s.icd10_code.split('.')[0])
-      );
-      return {
-        ...s,
-        rank: i + 1,
-        // Use LLM confidence but cap at KB score + 0.1
-        confidence: kbMatch ? Math.min(s.confidence, kbMatch.matchScore + 0.1) : s.confidence,
-        red_flags: s.red_flags || kbMatch?.redFlags?.slice(0, 3) || [],
-        recommended_actions:
-          s.recommended_actions || (kbMatch ? buildRecommendedActions(kbMatch) : []),
-      };
+    // Merge LLM reasoning with KB data — hard-gate: drop invented ICDs (reranker only).
+    const inventedCodes: string[] = [];
+    const enriched = llmResult.data.suggestions.flatMap((s) => {
+      const kbMatch = findKbCandidate(input.candidates, s.icd10_code);
+      if (!kbMatch) {
+        if (s.icd10_code) inventedCodes.push(String(s.icd10_code));
+        return [];
+      }
+      return [
+        {
+          ...s,
+          icd10_code: kbMatch.icd10,
+          rank: 0,
+          // Cap LLM confidence at KB score + 0.1 (always have kbMatch here)
+          confidence: Math.min(s.confidence, kbMatch.matchScore + 0.1),
+          red_flags: s.red_flags || kbMatch.redFlags?.slice(0, 3) || [],
+          recommended_actions: s.recommended_actions || buildRecommendedActions(kbMatch),
+        },
+      ];
     });
 
+    if (inventedCodes.length > 0) {
+      warnings.push(
+        `Dropped ${inventedCodes.length} invented ICD(s) outside KB candidate set: ${inventedCodes.join(', ')}.`
+      );
+    }
+
+    if (enriched.length === 0) {
+      warnings.push('All LLM suggestions were outside KB candidates. Using KB-only results.');
+      return {
+        suggestions: buildKBOnlySuggestions(input.candidates),
+        source: 'local',
+        modelVersion: 'IDE-V1-KB',
+        latencyMs: Date.now() - startTime,
+        dataQualityWarnings: warnings,
+      };
+    }
+
     return {
-      suggestions: enriched.slice(0, 5),
+      suggestions: enriched.slice(0, 5).map((s, i) => ({ ...s, rank: i + 1 })),
       source: 'ai',
       modelVersion: 'IDE-V1-LLM',
       latencyMs: Date.now() - startTime,

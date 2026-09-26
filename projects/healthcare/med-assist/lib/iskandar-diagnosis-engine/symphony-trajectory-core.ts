@@ -8,24 +8,11 @@
 
 export type SymphonyTrajectoryRiskLevel = 'low' | 'moderate' | 'high' | 'critical';
 export type SymphonyGlobalDeteriorationState =
-  | 'improving'
-  | 'stable'
-  | 'deteriorating'
-  | 'critical';
+  'improving' | 'stable' | 'deteriorating' | 'critical';
 export type SymphonyMomentumLevel =
-  | 'INSUFFICIENT_DATA'
-  | 'STABLE'
-  | 'DRIFTING'
-  | 'ACCELERATING'
-  | 'CONVERGING'
-  | 'CRITICAL_MOMENTUM';
+  'INSUFFICIENT_DATA' | 'STABLE' | 'DRIFTING' | 'ACCELERATING' | 'CONVERGING' | 'CRITICAL_MOMENTUM';
 export type SymphonyConvergencePattern =
-  | 'cardiovascular'
-  | 'shock'
-  | 'sepsis_like'
-  | 'respiratory'
-  | 'multi_system'
-  | 'none';
+  'cardiovascular' | 'shock' | 'sepsis_like' | 'respiratory' | 'multi_system' | 'none';
 export type SymphonyConsciousnessLevel = 'alert' | 'voice' | 'pain' | 'unresponsive' | 'unknown';
 export type SymphonyTrajectoryDirection = 'worsening' | 'improving' | 'stable' | 'unknown';
 
@@ -130,11 +117,7 @@ export interface SymphonyMomentumParam {
 }
 
 export type SymphonyTreatmentResponseInterpretation =
-  | 'effective'
-  | 'partially_effective'
-  | 'ineffective'
-  | 'worsening'
-  | 'unknown';
+  'effective' | 'partially_effective' | 'ineffective' | 'worsening' | 'unknown';
 
 export interface SymphonyTreatmentResponse {
   detected: boolean;
@@ -238,9 +221,7 @@ function median(values: number[]): number | undefined {
   if (values.length === 0) return undefined;
   const sorted = [...values].sort((left, right) => left - right);
   const midpoint = Math.floor(sorted.length / 2);
-  return sorted.length % 2 === 0
-    ? (sorted[midpoint - 1] + sorted[midpoint]) / 2
-    : sorted[midpoint];
+  return sorted.length % 2 === 0 ? (sorted[midpoint - 1] + sorted[midpoint]) / 2 : sorted[midpoint];
 }
 
 function standardDeviation(values: number[]): number {
@@ -258,7 +239,9 @@ function getValue(vitals: SymphonyVitalsInput, key: SymphonyVitalKey): number | 
 function sortedVitals(vitals: SymphonyVitalsInput[]): SymphonyVitalsInput[] {
   return [...vitals]
     .filter((item) => VITAL_KEYS.some((key) => getValue(item, key) !== undefined))
-    .sort((left, right) => new Date(left.observedAt).getTime() - new Date(right.observedAt).getTime())
+    .sort(
+      (left, right) => new Date(left.observedAt).getTime() - new Date(right.observedAt).getTime()
+    )
     .slice(-5);
 }
 
@@ -314,10 +297,7 @@ function isWorseningDirection(key: SymphonyVitalKey, delta: number): boolean {
   return delta > 0;
 }
 
-function detectTrend(
-  values: number[],
-  key: SymphonyVitalKey
-): SymphonyVitalTrend['trend'] {
+function detectTrend(values: number[], key: SymphonyVitalKey): SymphonyVitalTrend['trend'] {
   if (values.length < 2) return 'insufficient_data';
   const firstDeviation = deviationScore(values[0], key);
   const lastDeviation = deviationScore(values[values.length - 1], key);
@@ -345,8 +325,7 @@ function buildVitalTrends(vitals: SymphonyVitalsInput[]): SymphonyVitalTrend[] {
       values,
       trend: detectTrend(values, key),
       risk: values.length > 0 ? assessRisk(key, lastValue) : 'low',
-      changePercent:
-        firstValue > 0 ? round(((lastValue - firstValue) / firstValue) * 100, 1) : 0,
+      changePercent: firstValue > 0 ? round(((lastValue - firstValue) / firstValue) * 100, 1) : 0,
     };
   });
 }
@@ -418,7 +397,9 @@ function buildTrajectoryVolatility(
     { cv: 0, signFlips: 0 }
   );
   const volatilityIndex = clamp(
-    round(total.cv / active.length + total.signFlips * 5 + Math.min(20, burden.totalBreachesLast5 * 2)),
+    round(
+      total.cv / active.length + total.signFlips * 5 + Math.min(20, burden.totalBreachesLast5 * 2)
+    ),
     0,
     100
   );
@@ -450,7 +431,10 @@ function buildAcuteRisk(latest: SymphonyVitalsInput | undefined): SymphonyAcuteA
   else if ((latest.systolicBp ?? 0) >= 140 || (latest.diastolicBp ?? 0) >= 90) hypertensive = 45;
 
   let glycemic = 15;
-  if ((latest.glucoseMgDl ?? 0) >= 400 || ((latest.glucoseMgDl ?? 0) > 0 && (latest.glucoseMgDl ?? 0) < 54)) {
+  if (
+    (latest.glucoseMgDl ?? 0) >= 400 ||
+    ((latest.glucoseMgDl ?? 0) > 0 && (latest.glucoseMgDl ?? 0) < 54)
+  ) {
     glycemic = 92;
   } else if (
     (latest.glucoseMgDl ?? 0) >= 300 ||
@@ -490,7 +474,10 @@ function buildAcuteRisk(latest: SymphonyVitalsInput | undefined): SymphonyAcuteA
 
   let strokeAcs = 10;
   if ((latest.systolicBp ?? 0) >= 180 || (latest.diastolicBp ?? 0) >= 120) strokeAcs += 32;
-  if ((latest.heartRate ?? 0) > 120 || ((latest.heartRate ?? 0) > 0 && (latest.heartRate ?? 0) < 50)) {
+  if (
+    (latest.heartRate ?? 0) > 120 ||
+    ((latest.heartRate ?? 0) > 0 && (latest.heartRate ?? 0) < 50)
+  ) {
     strokeAcs += 10;
   }
   if ((latest.spo2 ?? 100) < 92) strokeAcs += 8;
@@ -532,7 +519,9 @@ function acceleration(vitals: SymphonyVitalsInput[], key: SymphonyVitalKey): num
 }
 
 function getSeries(vitals: SymphonyVitalsInput[], key: SymphonyVitalKey): number[] {
-  return vitals.map((item) => getValue(item, key)).filter((value): value is number => value !== undefined);
+  return vitals
+    .map((item) => getValue(item, key))
+    .filter((value): value is number => value !== undefined);
 }
 
 function buildMomentumParams(vitals: SymphonyVitalsInput[]): SymphonyMomentumParam[] {
@@ -760,7 +749,8 @@ function buildMomentum(vitals: SymphonyVitalsInput[]): SymphonyMomentumAnalysis 
     visitCount: vitals.length,
     params,
     convergence,
-    narrative: level === 'STABLE' ? 'Momentum klinis stabil.' : `${level}: ${convergence.narrative}`,
+    narrative:
+      level === 'STABLE' ? 'Momentum klinis stabil.' : `${level}: ${convergence.narrative}`,
   };
 }
 
@@ -769,25 +759,24 @@ export function buildSymphonyPersonalBaseline(
   computedAt = new Date().toISOString()
 ): SymphonyPersonalBaseline {
   const sorted = sortedVitals(vitals);
-  const params = VITAL_KEYS.reduce<Partial<Record<SymphonyVitalKey, SymphonyPersonalBaselineParam>>>(
-    (acc, key) => {
-      const values = sorted
-        .map((item) => getValue(item, key))
-        .filter((value): value is number => value !== undefined);
-      if (values.length < 2) return acc;
-      const mean = average(values);
-      const med = median(values);
-      const sd = standardDeviation(values);
-      const current = values[values.length - 1];
-      acc[key] = {
-        mean: mean !== undefined ? round(mean, 2) : undefined,
-        median: med !== undefined ? round(med, 2) : undefined,
-        currentZScore: sd > 0 ? round((current - (mean ?? current)) / sd, 2) : 0,
-      };
-      return acc;
-    },
-    {}
-  );
+  const params = VITAL_KEYS.reduce<
+    Partial<Record<SymphonyVitalKey, SymphonyPersonalBaselineParam>>
+  >((acc, key) => {
+    const values = sorted
+      .map((item) => getValue(item, key))
+      .filter((value): value is number => value !== undefined);
+    if (values.length < 2) return acc;
+    const mean = average(values);
+    const med = median(values);
+    const sd = standardDeviation(values);
+    const current = values[values.length - 1];
+    acc[key] = {
+      mean: mean !== undefined ? round(mean, 2) : undefined,
+      median: med !== undefined ? round(med, 2) : undefined,
+      currentZScore: sd > 0 ? round((current - (mean ?? current)) / sd, 2) : 0,
+    };
+    return acc;
+  }, {});
 
   return {
     computedAt,
@@ -849,7 +838,9 @@ function buildClinicalSafeOutput(
   };
 }
 
-export function analyzeSymphonyTrajectory(vitals: SymphonyVitalsInput[]): SymphonyTrajectoryAnalysis {
+export function analyzeSymphonyTrajectory(
+  vitals: SymphonyVitalsInput[]
+): SymphonyTrajectoryAnalysis {
   const sorted = sortedVitals(vitals);
   const trends = buildVitalTrends(sorted);
   const overallTrend = deriveOverallTrend(trends, sorted.length);
@@ -899,8 +890,7 @@ export function analyzeSymphonyTrajectory(vitals: SymphonyVitalsInput[]): Sympho
         acutePeak * 0.35 +
         Math.min(100, burden.totalBreachesLast5 * 20) * 0.15 +
         volatility.volatilityIndex * 0.15 +
-        (acuteRisk.sepsisLikeDeteriorationRisk >= 70 ||
-        acuteRisk.shockDecompensationRisk >= 70
+        (acuteRisk.sepsisLikeDeteriorationRisk >= 70 || acuteRisk.shockDecompensationRisk >= 70
           ? 10
           : 0)
     ),

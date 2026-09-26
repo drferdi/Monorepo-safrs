@@ -4,6 +4,8 @@ export interface ExtractedPatientInfo {
   name: string;
   gender: 'L' | 'P';
   age: number;
+  /** True when Umur/Usia was parsed from the page (age 0 can be a real infant). */
+  ageParsed: boolean;
   rm: string;
   bpjsStatus: 'aktif' | 'nonaktif' | 'mandiri' | null;
   kelurahan: string;
@@ -356,6 +358,7 @@ export function extractPatientInfoFromDocument(root: Document): ExtractedPatient
     name: '',
     gender: 'L',
     age: 0,
+    ageParsed: false,
     rm: '',
     bpjsStatus: null,
     kelurahan: '',
@@ -385,6 +388,7 @@ export function extractPatientInfoFromDocument(root: Document): ExtractedPatient
     const ageMatch = umurMatch[1].match(/(\d+)/);
     if (ageMatch?.[1]) {
       result.age = Number.parseInt(ageMatch[1], 10);
+      result.ageParsed = true;
     }
   }
 

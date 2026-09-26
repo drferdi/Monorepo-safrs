@@ -104,19 +104,22 @@ export const trajectoryVisualizationPreviewCases: Array<{
   {
     id: 'stable',
     label: 'Stabil',
-    summary: 'Kontrol rutin dengan baseline personal yang cukup dan perubahan ringan antar kunjungan.',
+    summary:
+      'Kontrol rutin dengan baseline personal yang cukup dan perubahan ringan antar kunjungan.',
     viewModel: stableTrajectoryVisualizationFixture,
   },
   {
     id: 'worsening',
     label: 'Memburuk',
-    summary: 'Vital memburuk dengan konteks keluhan, diagnosis, dan terapi yang meningkatkan prioritas review.',
+    summary:
+      'Vital memburuk dengan konteks keluhan, diagnosis, dan terapi yang meningkatkan prioritas review.',
     viewModel: worseningTrajectoryVisualizationFixture,
   },
   {
     id: 'partial',
     label: 'Data terbatas',
-    summary: 'Data vital dan riwayat tidak lengkap, sehingga chart harus menonjolkan uncertainty dan missing data.',
+    summary:
+      'Data vital dan riwayat tidak lengkap, sehingga chart harus menonjolkan uncertainty dan missing data.',
     viewModel: partialTrajectoryVisualizationFixture,
   },
 ];

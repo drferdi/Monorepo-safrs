@@ -75,8 +75,8 @@ describe('runGetSuggestionsFlow engine-only differential', () => {
     expect(result.data?.diagnosis_suggestions).toEqual([]);
     expect(result.data?.medication_recommendations).toEqual([]);
     expect(
-      result.data?.diagnosis_suggestions.some(
-        (item) => /ispa|infeksi saluran napas/i.test(item.nama)
+      result.data?.diagnosis_suggestions.some((item) =>
+        /ispa|infeksi saluran napas/i.test(item.nama)
       )
     ).toBe(false);
     expect(result.data?.clinical_reasoning?.status).toBe('no_safe_match');

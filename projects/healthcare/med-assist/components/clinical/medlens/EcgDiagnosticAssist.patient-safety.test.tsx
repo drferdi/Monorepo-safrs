@@ -3,6 +3,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { makeMedlensEcgAnalyzeResponse } from '@/tests/medlens-contract/ecg-contract-fixtures';
 
+import { EcgDiagnosticAssist } from './EcgDiagnosticAssist';
+
 const { analyzeEcgImageMock } = vi.hoisted(() => ({
   analyzeEcgImageMock: vi.fn(),
 }));
@@ -12,8 +14,6 @@ vi.mock('@/lib/api/medlens-client', () => ({
     analyzeEcgImage: analyzeEcgImageMock,
   },
 }));
-
-import { EcgDiagnosticAssist } from './EcgDiagnosticAssist';
 
 describe('EcgDiagnosticAssist patient safety rendering', () => {
   beforeEach(() => {
@@ -43,8 +43,7 @@ describe('EcgDiagnosticAssist patient safety rendering', () => {
       makeMedlensEcgAnalyzeResponse({
         waveform_evidence_packet: {
           sourceImage: {
-            sha256:
-              'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+            sha256: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
           },
           gridCalibration: {
             calibrated: false,
@@ -61,7 +60,7 @@ describe('EcgDiagnosticAssist patient safety rendering', () => {
           leadRegions: [],
           leadMeasurements: [],
           fiducials: [],
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any,
         waveform_review_output: {
           outputType: 'medlens.ecg.waveform.physician_review_output.v1',
@@ -78,7 +77,7 @@ describe('EcgDiagnosticAssist patient safety rendering', () => {
           warnings: ['WAVEFORM_EXTRACTION_NOT_IMPLEMENTED'],
           physicianActionRequired: true,
         },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any)
     );
 
@@ -94,7 +93,9 @@ describe('EcgDiagnosticAssist patient safety rendering', () => {
 
     expect(await screen.findByText(/Waveform Evidence Incomplete/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/MedLens cannot produce ECG review output because waveform evidence is incomplete\./i)
+      screen.getByText(
+        /MedLens cannot produce ECG review output because waveform evidence is incomplete\./i
+      )
     ).toBeInTheDocument();
     expect(screen.getByText(/grid calibration/i)).toBeInTheDocument();
     expect(screen.queryByText(/Sinus Bradycardia/i)).not.toBeInTheDocument();

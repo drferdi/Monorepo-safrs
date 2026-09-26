@@ -282,8 +282,7 @@ describe('Sentra Assist sidepanel latest design route', () => {
     expect(screen.queryByTestId('mock-ttv-controller')).toBeNull();
     expect(mockClinicalDifferential).toHaveBeenCalled();
     const latestProps = mockClinicalDifferential.mock.calls.at(-1)?.[0] as
-      | { keluhanUtama?: string; keluhanTambahan?: string }
-      | undefined;
+      { keluhanUtama?: string; keluhanTambahan?: string } | undefined;
     expect(latestProps?.keluhanUtama).toBe('Keluhan dari encounter cache');
     expect(latestProps?.keluhanTambahan).toBe('Batuk sejak 3 hari');
   });
@@ -401,6 +400,47 @@ describe('Sentra Assist sidepanel latest design route', () => {
     expect(lastCallProps.vitalWarnings).toEqual(
       expect.arrayContaining([expect.objectContaining({ label: 'TD' })])
     );
+  });
+
+  it('keeps triage standby and shows extract error when OCR patient extract fails (even if vitals scrape)', async () => {
+    Object.defineProperty(globalThis, 'chrome', {
+      configurable: true,
+      value: {
+        tabs: {
+          query: vi.fn(async () => [{ id: 77 }]),
+          sendMessage: vi.fn(async () => ({
+            success: false,
+            error: 'Incomplete patient extract',
+            patient: { name: '', gender: 'L', age: 0, ageParsed: false, rm: '', dob: '' },
+          })),
+        },
+      },
+    });
+
+    render(<SentraAssistSidepanelApp />);
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(500);
+    });
+    await act(async () => undefined);
+
+    fireEvent.click(screen.getByRole('button', { name: /Masuk ke ASSIST/i }));
+    await act(async () => undefined);
+
+    fireEvent.click(screen.getByRole('button', { name: /OCR/i }));
+    await act(async () => undefined);
+
+    expect(screen.getByTestId('patient-extract-error').textContent).toMatch(/OCR gagal/i);
+
+    const headerProps = mockSidePanelHeader.mock.calls.at(-1)?.[0] as Record<string, unknown>;
+    expect(headerProps.triageZone).toBe('standby');
+    expect(headerProps.vitalWarnings).toEqual([]);
+    expect(headerProps.alertCount).toBe(0);
+
+    const ttvProps = mockTTVInferenceUI.mock.calls.at(-1)?.[0] as Record<string, unknown>;
+    expect(ttvProps.rmeVitalFieldKeys).toEqual([]);
+    expect(ttvProps.patientAgeKnown).toBe(false);
+    expect(ttvProps.ttvState).toMatchObject({ sbp: '', dbp: '', hr: '' });
   });
 
   it('shows ConsoleLogin (not DashboardView or console) when no session is stored', async () => {

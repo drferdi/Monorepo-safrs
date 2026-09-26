@@ -109,7 +109,12 @@ export function serializePhysicianSafeTrajectoryPresentation(
 export function buildPhysicianSafeTrajectoryPresentation(
   analysis: Pick<
     TrajectoryAnalysis,
-    'summary' | 'clinical_safe_output' | 'recommendations' | 'global_deterioration' | 'overallRisk' | 'time_to_critical_estimate'
+    | 'summary'
+    | 'clinical_safe_output'
+    | 'recommendations'
+    | 'global_deterioration'
+    | 'overallRisk'
+    | 'time_to_critical_estimate'
   >
 ): PhysicianSafeTrajectoryPresentation {
   const clinicalSafeOutput: ClinicalSafeOutput = analysis.clinical_safe_output;

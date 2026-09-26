@@ -52,10 +52,7 @@ function renderAuditTrail(auditTrail: ClinicalReasoningWorkflowAuditEvent[]) {
   return (
     <div className="grid gap-2">
       {auditTrail.map((event) => (
-        <div
-          key={event.id}
-          className="ct-v2-detail-card px-3 py-2"
-        >
+        <div key={event.id} className="ct-v2-detail-card px-3 py-2">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="text-[10px] font-bold uppercase tracking-[0.05em] text-platinum">
               Step {event.sequence}
@@ -128,9 +125,7 @@ export function ClinicalReasoningDifferentialPanel({
             </div>
             <span
               className={`ct-neu-chip ct-v2-review-action-chip whitespace-nowrap ${
-                therapyReasoningPack.status === 'ready'
-                  ? 'sentra-state-safe'
-                  : 'ct-neu-chip--muted'
+                therapyReasoningPack.status === 'ready' ? 'sentra-state-safe' : 'ct-neu-chip--muted'
               }`}
             >
               {therapyReasoningPack.status === 'ready'
@@ -164,9 +159,9 @@ export function ClinicalReasoningAuditTrail({
   viewModel: TrajectoryVisualizationViewModel;
   workflowAuditSessionId?: string;
 }) {
-  const [auditPersistenceStatus, setAuditPersistenceStatus] = useState<
-    'persisted' | 'unavailable'
-  >('persisted');
+  const [auditPersistenceStatus, setAuditPersistenceStatus] = useState<'persisted' | 'unavailable'>(
+    'persisted'
+  );
   const workflow = useMemo(
     () =>
       buildClinicalReasoningWorkflowFromTrajectoryV2({
@@ -193,10 +188,7 @@ export function ClinicalReasoningAuditTrail({
   }, [workflow, workflowAuditSessionId]);
 
   return (
-    <details
-      className="ct-v2-panel"
-      data-testid="clinical-reasoning-audit-trail"
-    >
+    <details className="ct-v2-panel" data-testid="clinical-reasoning-audit-trail">
       <summary className="cursor-pointer list-none">
         <div className="ct-v2-panel-head">
           <div className="min-w-0">

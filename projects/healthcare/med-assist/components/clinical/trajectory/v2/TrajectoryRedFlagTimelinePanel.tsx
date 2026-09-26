@@ -1,12 +1,4 @@
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 import {
   TRAJECTORY_CHART_PALETTE,
@@ -64,9 +56,7 @@ export function TrajectoryRedFlagTimelinePanel({
                       return (
                         <div className="neu-card-inset min-w-44 p-3">
                           <div className="ttv-label text-tertiary">{point.visitLabel}</div>
-                          <div className="text-small text-platinum">
-                            {point.flagCount} red flag
-                          </div>
+                          <div className="text-small text-platinum">{point.flagCount} red flag</div>
                           <div className="mt-1 text-tiny text-muted">
                             {formatChartDate(point.date)}
                           </div>
@@ -74,7 +64,11 @@ export function TrajectoryRedFlagTimelinePanel({
                       );
                     }}
                   />
-                  <Bar dataKey="flagCount" fill={TRAJECTORY_CHART_PALETTE.high} radius={[6, 6, 0, 0]} />
+                  <Bar
+                    dataKey="flagCount"
+                    fill={TRAJECTORY_CHART_PALETTE.high}
+                    radius={[6, 6, 0, 0]}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -92,8 +86,7 @@ export function TrajectoryRedFlagTimelinePanel({
                 id: `${item.visitLabel}-${item.date}`,
                 eyebrow: item.visitLabel,
                 title: formatChartDate(item.date),
-                detail:
-                  item.redFlagLabels.join(' · ') || 'No safety-critical flag recorded.',
+                detail: item.redFlagLabels.join(' · ') || 'No safety-critical flag recorded.',
               }))}
             />
           ) : (

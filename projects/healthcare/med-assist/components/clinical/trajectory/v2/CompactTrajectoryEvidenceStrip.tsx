@@ -11,20 +11,14 @@ export function CompactTrajectoryEvidenceStrip({
   const latestVisits = viewModel.trajectoryTimeline.slice(-5);
 
   return (
-    <section
-      className="ct-v2-primary-trajectory"
-      data-testid="compact-trajectory-evidence-strip"
-    >
+    <section className="ct-v2-primary-trajectory" data-testid="compact-trajectory-evidence-strip">
       <div className="ct-v2-primary-trajectory__head">
         <div className="ttv-section-title">Trajectory</div>
       </div>
 
       <div className="ct-v2-primary-trajectory__chart">
         {latestVisits.length >= 2 ? (
-          <TrajectoryStateTimelineChart
-            viewModel={{ trajectoryTimeline: latestVisits }}
-            compact
-          />
+          <TrajectoryStateTimelineChart viewModel={{ trajectoryTimeline: latestVisits }} compact />
         ) : (
           <TrajectoryEmptyState
             title="Insufficient trajectory data"

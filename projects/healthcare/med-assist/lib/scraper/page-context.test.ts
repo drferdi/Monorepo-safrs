@@ -24,10 +24,26 @@ describe('page context extractors', () => {
       name: 'Ny. Siti Aminah',
       gender: 'P',
       age: 34,
+      ageParsed: true,
       rm: '00001033231',
       bpjsStatus: 'aktif',
       kelurahan: 'Balowerti',
       dob: '13-08-1991',
+    });
+  });
+
+  it('marks empty-page extracts as unreliable (ageParsed false, blank identity)', () => {
+    document.body.innerHTML = `<div class="login">Silakan masuk</div>`;
+
+    expect(extractPatientInfoFromDocument(document)).toEqual({
+      name: '',
+      gender: 'L',
+      age: 0,
+      ageParsed: false,
+      rm: '',
+      bpjsStatus: null,
+      kelurahan: '',
+      dob: '',
     });
   });
 

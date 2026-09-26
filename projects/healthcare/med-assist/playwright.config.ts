@@ -4,21 +4,15 @@ import path from 'path';
 import { defineConfig } from '@playwright/test';
 
 const EXTENSION_PATH = path.resolve(__dirname, '.output/chrome-mv3-dev');
-const _TEST_PROFILE = path.resolve(__dirname, 'tests/e2e/.test-profile');
 const AUTH_FILE = path.resolve(__dirname, 'tests/e2e/auth.json');
-const LOCAL_BROWSER_CANDIDATES = [
-  'C:\\Users\\drfer\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
-  'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-  'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-  'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
-  'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
-];
 
 const storageState = fs.existsSync(AUTH_FILE) ? AUTH_FILE : undefined;
-const localBrowserExecutable = LOCAL_BROWSER_CANDIDATES.find((candidate) =>
-  fs.existsSync(candidate)
-);
 
+/**
+ * Extension e2e must use Playwright Chromium (`channel: 'chromium'`).
+ * Branded Chrome 137+ ignores `--load-extension`. Specs call
+ * `launchExtensionContext()` from `tests/e2e/chrome-extension-launch.ts`.
+ */
 export default defineConfig({
   testDir: './tests/e2e',
   timeout: 30_000,
@@ -37,7 +31,7 @@ export default defineConfig({
       use: {
         browserName: 'chromium',
         launchOptions: {
-          ...(localBrowserExecutable ? { executablePath: localBrowserExecutable } : {}),
+          channel: 'chromium',
           headless: false,
           args: [
             `--load-extension=${EXTENSION_PATH}`,

@@ -158,7 +158,7 @@ describe('diagnosis-v2 comparator', () => {
     expect(JSON.stringify(metadata)).not.toContain('Dr');
   });
 
-  it('reprioritizes chest-pain differential toward ACS when vital instability is present', () => {
+  it('keeps engine chest-pain order (H3 — shadow does not re-sort differentials)', () => {
     const v1Suggestions: DiagnosisSuggestion[] = [
       {
         rank: 1,
@@ -212,11 +212,14 @@ describe('diagnosis-v2 comparator', () => {
     });
 
     expect(comparison.v1_top5_icd[0]).toBe('K21.9');
-    expect(comparison.v2_top5_icd[0]).toBe('I20.9');
-    expect(comparison.top1_changed).toBe(true);
+    expect(comparison.v2_top5_icd[0]).toBe('K21.9');
+    expect(comparison.v2_top5_icd).toEqual(comparison.v1_top5_icd);
+    expect(comparison.top1_changed).toBe(false);
+    // ACS remains in list with engine confidence; vital context no longer reorders.
+    expect(v2.suggestions.map((s) => s.icd_x)).toEqual(['K21.9', 'I20.9', 'M94.0']);
   });
 
-  it('pulls a critical sepsis differential into the top 5 when systemic inflammatory signals are present', () => {
+  it('keeps critical sepsis at engine rank (does not inject/reorder into top 5)', () => {
     const v1Suggestions: DiagnosisSuggestion[] = [
       {
         rank: 1,
@@ -298,8 +301,16 @@ describe('diagnosis-v2 comparator', () => {
     });
 
     expect(comparison.v1_top5_icd).not.toContain('A41.9');
-    expect(comparison.v2_top5_icd).toContain('A41.9');
-    expect(comparison.critical_differential_added).toBe(true);
+    expect(comparison.v2_top5_icd).not.toContain('A41.9');
+    expect(comparison.critical_differential_added).toBe(false);
+    // Shadow maps top-5 only; engine rank-6 sepsis stays out (no UI promotion).
+    expect(v2.suggestions.map((s) => s.icd_x)).toEqual([
+      'J18.9',
+      'J06.9',
+      'R50.9',
+      'J20.9',
+      'E86',
+    ]);
   });
 
   it('marks ambiguous low-separation respiratory differentials as abstained', () => {

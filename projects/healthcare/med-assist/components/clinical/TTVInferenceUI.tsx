@@ -295,6 +295,12 @@ interface TTVInferenceUIProps {
   onSentraUplink?: () => void | Promise<void>;
   bootSequenceActive?: boolean;
   rmeVitalFieldKeys?: VitalFieldKey[];
+  /**
+   * When false, triage stays standby even if vital fields are filled.
+   * Prevents age:0 (unknown / failed OCR) from being scored as infant.
+   * Defaults to patientAge > 0 for backward compatibility.
+   */
+  patientAgeKnown?: boolean;
 }
 
 export interface TTVInferenceUIHandle {
@@ -1569,6 +1575,7 @@ export const TTVInferenceUI = forwardRef<TTVInferenceUIHandle, TTVInferenceUIPro
       onSentraUplink,
       bootSequenceActive = false,
       rmeVitalFieldKeys = [],
+      patientAgeKnown,
       onAccessEmergency,
     },
     ref
@@ -1928,17 +1935,20 @@ export const TTVInferenceUI = forwardRef<TTVInferenceUIHandle, TTVInferenceUIPro
       ]
     );
 
-    useEffect(() => {
-      onAlertsChange?.(alerts);
-    }, [alerts, onAlertsChange]);
-
     const hasVitalsEntered = Boolean(
       state.sbp || state.dbp || state.hr || state.rr || state.temp || state.spo2 || state.glucose
     );
+    // Fail closed: unknown age must not activate triage zones (age 0 ≠ confirmed infant).
+    const ageKnownForTriage = patientAgeKnown ?? patientAge > 0;
+    const triageReady = hasVitalsEntered && ageKnownForTriage;
+
+    useEffect(() => {
+      onAlertsChange?.(ageKnownForTriage ? alerts : []);
+    }, [alerts, onAlertsChange, ageKnownForTriage]);
 
     const triageVerdict = useMemo(
-      () => computeTriageVerdict(alerts, hasVitalsEntered),
-      [alerts, hasVitalsEntered]
+      () => computeTriageVerdict(alerts, triageReady),
+      [alerts, triageReady]
     );
 
     useEffect(() => {

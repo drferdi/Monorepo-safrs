@@ -15,7 +15,8 @@
  * Layer 1: Syntax - JSON format and required fields
  * Layer 2: Schema - ICD-10 code existence in RAG database
  * Layer 3: Clinical - Medical plausibility (age, gender, pregnancy)
- * Layer 4: Safety - Red flag integration and override
+ * Layer 4: Safety - Enrich matched suggestions with KB red-flag text;
+ *           emergency red flags remain on ValidationResult (alerts), not dx inject
  * Layer 5: Confidence - Threshold filtering and adjustment
  */
 
@@ -218,36 +219,19 @@ function validateClinical(
 /**
  * Integrate red flags into suggestions
  * Sources:
- * 1. Hardcoded red flags from vital signs (emergency detection)
+ * 1. Hardcoded red flags from vital signs (emergency detection) — stay as
+ *    ValidationResult.red_flags / engine alerts; do NOT inject into dx list.
  * 2. Disease-specific red flags from penyakit.json (144 Penyakit Puskesmas)
+ *    enrich text on already-matched suggestions only.
  */
 function integrateSafety(
   suggestions: AIDiagnosisSuggestion[],
-  redFlags: RedFlag[],
+  _emergencyRedFlags: RedFlag[],
   icd10Entries: Map<string, ICD10Entry>
 ): AIDiagnosisSuggestion[] {
-  // Add red flag conditions to suggestions if not already present
-  const existingCodes = new Set(suggestions.map((s) => s.icd10_code));
-
-  // 1. Add hardcoded red flag diagnoses (sepsis, ACS, etc.)
-  for (const flag of redFlags) {
-    for (const code of flag.icd_codes) {
-      if (!existingCodes.has(code)) {
-        suggestions.unshift({
-          rank: 0, // Will be re-ranked
-          diagnosis_name: flag.condition,
-          icd10_code: code,
-          confidence: 0.95, // High confidence for safety flags
-          reasoning: `RED FLAG: ${flag.criteria_met.join(', ')}`,
-          red_flags: [flag.action],
-          recommended_actions: [flag.action],
-        });
-        existingCodes.add(code);
-      }
-    }
-  }
-
-  // 2. Enrich suggestions with disease-specific red flags from penyakit.json
+  // Fail-closed ranking: emergency red-flag ICDs must not pollute differential.
+  // Engine already maps `existing_red_flags` → CDSS alerts (redFlagsToAlerts).
+  // Enrich suggestions with disease-specific red flags from penyakit.json
   for (const suggestion of suggestions) {
     const entry = icd10Entries.get(suggestion.icd10_code);
 
@@ -478,7 +462,9 @@ export async function runValidationPipeline(
     passed: true,
     affected_count: context.existing_red_flags.length + diseaseRedFlagCount,
     details: [
-      ...context.existing_red_flags.map((f) => `Emergency red flag: ${f.condition}`),
+      ...context.existing_red_flags.map(
+        (f) => `Emergency red flag (alert-only, not dx inject): ${f.condition}`
+      ),
       ...(diseaseRedFlagCount > 0
         ? [`${diseaseRedFlagCount} disease-specific red flags dari PPK`]
         : []),

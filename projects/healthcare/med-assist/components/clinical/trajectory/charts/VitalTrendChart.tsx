@@ -48,7 +48,8 @@ const VITAL_SERIES: VitalSeriesMeta[] = [
     unit: '%',
     stroke: TRAJECTORY_CHART_PALETTE.info,
     emptyMessage: 'Data SpO2 belum cukup untuk divisualisasikan.',
-    isActualValue: (value) => typeof value === 'number' && Number.isFinite(value) && value >= 50 && value <= 100,
+    isActualValue: (value) =>
+      typeof value === 'number' && Number.isFinite(value) && value >= 50 && value <= 100,
   },
   {
     key: 'pulse',
@@ -56,7 +57,8 @@ const VITAL_SERIES: VitalSeriesMeta[] = [
     unit: ' bpm',
     stroke: TRAJECTORY_CHART_PALETTE.stable,
     emptyMessage: 'Data nadi belum cukup untuk divisualisasikan.',
-    isActualValue: (value) => typeof value === 'number' && Number.isFinite(value) && value >= 20 && value <= 250,
+    isActualValue: (value) =>
+      typeof value === 'number' && Number.isFinite(value) && value >= 20 && value <= 250,
   },
   {
     key: 'respiratoryRate',
@@ -64,7 +66,8 @@ const VITAL_SERIES: VitalSeriesMeta[] = [
     unit: ' /menit',
     stroke: TRAJECTORY_CHART_PALETTE.warning,
     emptyMessage: 'Data laju napas belum cukup untuk divisualisasikan.',
-    isActualValue: (value) => typeof value === 'number' && Number.isFinite(value) && value >= 5 && value <= 80,
+    isActualValue: (value) =>
+      typeof value === 'number' && Number.isFinite(value) && value >= 5 && value <= 80,
   },
   {
     key: 'temperature',
@@ -72,7 +75,8 @@ const VITAL_SERIES: VitalSeriesMeta[] = [
     unit: ' °C',
     stroke: TRAJECTORY_CHART_PALETTE.warning,
     emptyMessage: 'Data suhu belum cukup untuk divisualisasikan.',
-    isActualValue: (value) => typeof value === 'number' && Number.isFinite(value) && value >= 30 && value <= 45,
+    isActualValue: (value) =>
+      typeof value === 'number' && Number.isFinite(value) && value >= 30 && value <= 45,
   },
   {
     key: 'systolic',
@@ -80,7 +84,8 @@ const VITAL_SERIES: VitalSeriesMeta[] = [
     unit: ' mmHg',
     stroke: TRAJECTORY_CHART_PALETTE.high,
     emptyMessage: 'Data sistolik belum cukup untuk divisualisasikan.',
-    isActualValue: (value) => typeof value === 'number' && Number.isFinite(value) && value >= 40 && value <= 300,
+    isActualValue: (value) =>
+      typeof value === 'number' && Number.isFinite(value) && value >= 40 && value <= 300,
   },
   {
     key: 'diastolic',
@@ -88,7 +93,8 @@ const VITAL_SERIES: VitalSeriesMeta[] = [
     unit: ' mmHg',
     stroke: TRAJECTORY_CHART_PALETTE.high,
     emptyMessage: 'Data diastolik belum cukup untuk divisualisasikan.',
-    isActualValue: (value) => typeof value === 'number' && Number.isFinite(value) && value >= 20 && value <= 200,
+    isActualValue: (value) =>
+      typeof value === 'number' && Number.isFinite(value) && value >= 20 && value <= 200,
   },
 ];
 
@@ -183,7 +189,7 @@ export function VitalTrendChart({ viewModel, className }: VitalTrendChartProps) 
                         <Tooltip
                           content={({ active, payload }) => {
                             if (!active || !payload?.length) return null;
-                            const point = payload[0]?.payload as typeof rows[number] | undefined;
+                            const point = payload[0]?.payload as (typeof rows)[number] | undefined;
                             if (!point) return null;
 
                             return (
@@ -206,8 +212,16 @@ export function VitalTrendChart({ viewModel, className }: VitalTrendChartProps) 
                           stroke={series.stroke}
                           strokeWidth={2.5}
                           connectNulls={false}
-                          dot={{ r: 3.5, stroke: TRAJECTORY_CHART_PALETTE.dotStroke, strokeWidth: 1.5 }}
-                          activeDot={{ r: 5, stroke: TRAJECTORY_CHART_PALETTE.dotStroke, strokeWidth: 2 }}
+                          dot={{
+                            r: 3.5,
+                            stroke: TRAJECTORY_CHART_PALETTE.dotStroke,
+                            strokeWidth: 1.5,
+                          }}
+                          activeDot={{
+                            r: 5,
+                            stroke: TRAJECTORY_CHART_PALETTE.dotStroke,
+                            strokeWidth: 2,
+                          }}
                         />
                       </LineChart>
                     </ResponsiveContainer>

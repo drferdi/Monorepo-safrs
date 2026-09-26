@@ -9,10 +9,7 @@ import { runClinicalReasoningArbiter } from './clinical-reasoning-arbiter';
 import { buildDifferentialCandidatesFromEvidencePack } from './clinical-reasoning-differential';
 import { buildTherapyReasoningPackFromArbiter } from './clinical-reasoning-therapy';
 
-function fact(
-  key: ClinicalReasoningFactKey,
-  overrides: Partial<ClinicalFact> = {}
-): ClinicalFact {
+function fact(key: ClinicalReasoningFactKey, overrides: Partial<ClinicalFact> = {}): ClinicalFact {
   const acuteDeterioration =
     key !== 'baseline_or_planning_risk_context' && key !== 'treatment_response_good';
 
@@ -89,10 +86,7 @@ function makePack(facts: ClinicalFact[]): ReasoningEvidencePack {
   };
 }
 
-function buildArbiterForFacts(
-  facts: ClinicalFact[],
-  physicianConfirmedCandidateId?: string
-) {
+function buildArbiterForFacts(facts: ClinicalFact[], physicianConfirmedCandidateId?: string) {
   const evidencePack = makePack(facts);
   const candidates = buildDifferentialCandidatesFromEvidencePack(evidencePack);
   const arbiterResult = runClinicalReasoningArbiter({
@@ -174,11 +168,7 @@ describe('buildTherapyReasoningPackFromArbiter', () => {
     const pack = buildTherapyReasoningPackFromArbiter({ evidencePack, arbiterResult });
 
     expect(pack.status).toBe('ready');
-    expect(pack.actions.map((action) => action.id)).toContain(
-      'treatment-response-reassessment'
-    );
-    expect(pack.safetyChecks.map((check) => check.id)).toContain(
-      'response-conflict-review'
-    );
+    expect(pack.actions.map((action) => action.id)).toContain('treatment-response-reassessment');
+    expect(pack.safetyChecks.map((check) => check.id)).toContain('response-conflict-review');
   });
 });

@@ -35,6 +35,10 @@ import { formatRecommendationLines } from '@/lib/emergency-detector/recommendati
 import type { TriageVerdict } from '@/lib/emergency-detector/triage-verdict';
 import type { VisitRecord } from '@/lib/iskandar-diagnosis-engine/visit-history-store';
 import { buildRMETransferPayload } from '@/lib/rme/payload-mapper';
+import {
+  isReliablePatientExtract,
+  PATIENT_EXTRACT_FAILURE_MESSAGE,
+} from '@/lib/scraper/patient-extract-reliability';
 import { bootstrapThemeDocument } from '@/lib/theme-store';
 import { createLogger } from '@/utils/logger';
 import { sendMessage } from '@/utils/messaging';
@@ -70,15 +74,23 @@ type PrefetchedVisitHistory = {
 };
 type PatientInfoResponse = {
   success?: boolean;
+  error?: string;
   patient?: {
     name: string;
     gender: 'L' | 'P';
     age: number;
+    ageParsed?: boolean;
     rm: string;
     dob: string;
     bpjsStatus: PatientData['bpjsStatus'];
     kelurahan: string;
   };
+};
+
+const STANDBY_TRIAGE_VERDICT: TriageVerdict<ScreeningAlert> = {
+  zone: 'standby',
+  headlineAlert: null,
+  sortedAlerts: [],
 };
 type ExtractedClinicalContext = {
   facilityName: string;
@@ -387,6 +399,8 @@ export function SentraAssistSidepanelApp(): JSX.Element {
   const [patientData, setPatientData] = useState<PatientData>(defaultPatient);
   const [rmeVitalFieldKeys, setRmeVitalFieldKeys] = useState<RmeVitalFieldKey[]>([]);
   const [isLoadingPatient, setIsLoadingPatient] = useState(true);
+  const [patientAgeKnown, setPatientAgeKnown] = useState(false);
+  const [patientExtractError, setPatientExtractError] = useState<string | null>(null);
   const [patientHistorySummary, setPatientHistorySummary] = useState('Menunggu Input');
   const [prefilledHistoryFlags, setPrefilledHistoryFlags] =
     useState<PrefilledHistoryFlags>(createEmptyHistoryFlags);
@@ -398,15 +412,15 @@ export function SentraAssistSidepanelApp(): JSX.Element {
   const [encounterComplaint, setEncounterComplaint] =
     useState<EncounterComplaintSnapshot>(emptyEncounterComplaint);
   const [emergencyAlerts, setEmergencyAlerts] = useState<ScreeningAlert[]>([]);
-  const [triageVerdict, setTriageVerdict] = useState<TriageVerdict<ScreeningAlert>>({
-    zone: 'standby',
-    headlineAlert: null,
-    sortedAlerts: [],
-  });
+  const [triageVerdict, setTriageVerdict] =
+    useState<TriageVerdict<ScreeningAlert>>(STANDBY_TRIAGE_VERDICT);
 
   const visiblePatientName = normalizePatientNameForDisplay(patientData.name);
 
   const vitalWarnings = useMemo(() => {
+    // Fail closed: never score vitals against unknown age (age:0 ≈ infant).
+    if (!patientAgeKnown) return [];
+
     const assessment = assessVitalGuardrails(
       {
         sbp: ttvState.sbp,
@@ -430,20 +444,25 @@ export function SentraAssistSidepanelApp(): JSX.Element {
     ttvState.glucose,
     patientData.age,
     patientData.gender,
+    patientAgeKnown,
   ]);
 
   const demographicStatus = isLoadingPatient
     ? 'syncing'
-    : visiblePatientName !== '---' && patientData.rm !== '-'
-      ? 'ready'
-      : 'standby';
+    : patientExtractError
+      ? 'insufficient'
+      : visiblePatientName !== '---' && patientData.rm !== '-'
+        ? 'ready'
+        : 'standby';
   const historyStatus = isLoadingPatient
     ? 'syncing'
-    : prefetchedVisitHistory?.status === 'ready'
-      ? 'ready'
-      : prefetchedVisitHistory?.status === 'insufficient'
-        ? 'insufficient'
-        : 'standby';
+    : patientExtractError
+      ? 'insufficient'
+      : prefetchedVisitHistory?.status === 'ready'
+        ? 'ready'
+        : prefetchedVisitHistory?.status === 'insufficient'
+          ? 'insufficient'
+          : 'standby';
   const headerVisitHistorySections = useMemo(
     () => buildHeaderVisitHistorySections(prefetchedVisitHistory?.visits),
     [prefetchedVisitHistory?.visits]
@@ -598,13 +617,33 @@ export function SentraAssistSidepanelApp(): JSX.Element {
     setPrefilledHistoryFlags(createEmptyHistoryFlags());
     setPatientHistorySummary('Menunggu Input');
     setClinicalContext(defaultClinicalContext);
+    setPatientExtractError(null);
+
+    const failClosedPatientExtract = (message: string) => {
+      // Incomplete OCR must not feed vitals into infant-default age:0 triage.
+      setPatientData(defaultPatient);
+      setPatientAgeKnown(false);
+      setTTVState(initialTTVState);
+      setRmeVitalFieldKeys([]);
+      setEmergencyAlerts([]);
+      setTriageVerdict(STANDBY_TRIAGE_VERDICT);
+      setPrefetchedVisitHistory(null);
+      setPatientExtractError(message);
+      setOcrLightingActive(false);
+    };
 
     try {
       const chromeTabs = getChromeTabsApi();
-      if (!chromeTabs) return;
+      if (!chromeTabs) {
+        failClosedPatientExtract(PATIENT_EXTRACT_FAILURE_MESSAGE);
+        return;
+      }
 
       const [tab] = await chromeTabs.query({ active: true, currentWindow: true });
-      if (!tab?.id) return;
+      if (!tab?.id) {
+        failClosedPatientExtract(PATIENT_EXTRACT_FAILURE_MESSAGE);
+        return;
+      }
 
       const [
         patientResponse,
@@ -621,12 +660,16 @@ export function SentraAssistSidepanelApp(): JSX.Element {
       ]);
 
       let resolvedPatientRM = defaultPatient.rm;
+      let patientExtractOk = false;
 
       if (patientResponse.status === 'fulfilled') {
         const payload = patientResponse.value as PatientInfoResponse;
-        if (payload.success && payload.patient) {
+        if (payload.success && payload.patient && isReliablePatientExtract(payload.patient)) {
           const patient = payload.patient;
           resolvedPatientRM = patient.rm;
+          patientExtractOk = true;
+          setPatientAgeKnown(true);
+          setPatientExtractError(null);
           setPatientData({
             name: patient.name,
             gender: patient.gender,
@@ -642,6 +685,11 @@ export function SentraAssistSidepanelApp(): JSX.Element {
           }
           setOcrLightingActive(false);
         }
+      }
+
+      if (!patientExtractOk) {
+        failClosedPatientExtract(PATIENT_EXTRACT_FAILURE_MESSAGE);
+        return;
       }
 
       if (medicalHistoryResponse.status === 'fulfilled' && medicalHistoryResponse.value?.success) {
@@ -712,6 +760,7 @@ export function SentraAssistSidepanelApp(): JSX.Element {
       sidepanelLog.warn('fetchPatientData failed', {
         message: error instanceof Error ? error.message : 'unknown error',
       });
+      failClosedPatientExtract(PATIENT_EXTRACT_FAILURE_MESSAGE);
     } finally {
       setIsLoadingPatient(false);
     }
@@ -879,13 +928,27 @@ export function SentraAssistSidepanelApp(): JSX.Element {
                   onInitialisasi={() => {
                     setOcrLightingActive(true);
                     setPatientData(defaultPatient);
+                    setPatientAgeKnown(false);
+                    setPatientExtractError(null);
                     setTTVState(initialTTVState);
                     setRmeVitalFieldKeys([]);
+                    setEmergencyAlerts([]);
+                    setTriageVerdict(STANDBY_TRIAGE_VERDICT);
                     setAnamnesaDraft(null);
                     setActiveInferenceSurface('main');
                     void fetchPatientData({ patientLoadedSound: true });
                   }}
                 />
+                {patientExtractError ? (
+                  <div
+                    role="alert"
+                    data-testid="patient-extract-error"
+                    className="px-4 pt-2 text-sm"
+                    style={{ color: 'var(--danger, #b42318)' }}
+                  >
+                    {patientExtractError}
+                  </div>
+                ) : null}
                 <section
                   className="flex-1 min-h-0 overflow-y-auto p-4 relative"
                   aria-label="Konten tab engine"
@@ -908,6 +971,7 @@ export function SentraAssistSidepanelApp(): JSX.Element {
                             patientName={visiblePatientName}
                             patientGender={patientData.gender}
                             patientAge={patientData.age}
+                            patientAgeKnown={patientAgeKnown}
                             patientRM={patientData.rm}
                             patientDOB={patientData.dob}
                             patientBloodType={patientData.bloodType}

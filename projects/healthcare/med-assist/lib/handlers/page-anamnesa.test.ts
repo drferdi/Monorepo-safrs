@@ -61,6 +61,35 @@ describe('fillAnamnesaForm live parity selectors', () => {
     expect(pregnancyMapping?.selector).toContain('value="1"');
   });
 
+  it('caps keluhan_utama, keluhan_tambahan, and RPS via RME SSOT (≤220 words / ≤250 chars)', async () => {
+    const longUtama = `demam ${Array.from({ length: 240 }, (_, i) => `suhu${i + 1}`).join(' ')}`;
+    const longTambahan = Array.from({ length: 230 }, (_, i) => `tambahan${i + 1}`).join(' ');
+    const longRps = Array.from({ length: 230 }, (_, i) => `rps${i + 1}`).join(' ');
+
+    await fillAnamnesaForm({
+      keluhan_utama: longUtama,
+      keluhan_tambahan: longTambahan,
+      lama_sakit: { thn: 0, bln: 0, hr: 1 },
+      alergi: { obat: [], makanan: [], udara: [], lainnya: [] },
+      riwayat_penyakit: { sekarang: longRps, dahulu: '', keluarga: '' },
+    });
+
+    const mappings = fillFieldsMock.mock.calls[0][0] as Array<{
+      selector: string;
+      value: string;
+    }>;
+
+    const utama = mappings.find((item) => item.selector.includes('keluhan_utama'));
+    const tambahan = mappings.find((item) => item.selector.includes('keluhan_tambahan'));
+    const rps = mappings.find((item) => item.selector.includes('Riwayat Penyakit Sekarang'));
+
+    expect(utama?.value.charAt(0)).toBe('D'); // sentence-case preserved
+    for (const field of [utama, tambahan, rps]) {
+      expect(field?.value.split(/\s+/).length).toBeLessThanOrEqual(220);
+      expect(field?.value.length).toBeLessThanOrEqual(250);
+    }
+  });
+
   it('does not count autocomplete dokter/perawat as failure when direct fill already succeeded', async () => {
     fillFieldsMock
       .mockResolvedValueOnce([

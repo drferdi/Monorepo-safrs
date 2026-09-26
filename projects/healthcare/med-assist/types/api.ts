@@ -71,12 +71,7 @@ export interface MedicationRecommendation {
 }
 
 export type ClinicalReasoningStatusCode =
-  | 'ok'
-  | 'insufficient_data'
-  | 'kb_load_error'
-  | 'mock_blocked'
-  | 'no_safe_match'
-  | 'engine_error';
+  'ok' | 'insufficient_data' | 'kb_load_error' | 'mock_blocked' | 'no_safe_match' | 'engine_error';
 
 export type ClinicalDataPresenceState = 'present' | 'absent' | 'unknown' | 'insufficient';
 
@@ -104,11 +99,7 @@ export interface ClinicalReasoningPayload {
 }
 
 export type AturanPakaiText =
-  | 'Sebelum makan'
-  | 'Sesudah makan'
-  | 'Pemakaian luar'
-  | 'Jika diperlukan'
-  | 'Saat makan';
+  'Sebelum makan' | 'Sesudah makan' | 'Pemakaian luar' | 'Jika diperlukan' | 'Saat makan';
 
 export type SafetyStatus = 'safe' | 'caution' | 'contraindicated';
 
@@ -205,11 +196,7 @@ export interface PediatricDose {
 }
 
 export type PediatricDosingMethod =
-  | 'weight_based'
-  | 'age_based'
-  | 'bsa_based'
-  | 'clarks_rule'
-  | 'youngs_rule';
+  'weight_based' | 'age_based' | 'bsa_based' | 'clarks_rule' | 'youngs_rule';
 
 // =============================================================================
 // API RESPONSE TYPES
@@ -257,10 +244,7 @@ export interface PharmacotherapyExplainability {
   review_window: '6h' | '24h' | '48h';
   /** Trace of pipeline branch used */
   pathway:
-    | 'knowledge-only'
-    | 'knowledge+syndrome-intent'
-    | 'syndrome-intent-only'
-    | 'legacy-fallback';
+    'knowledge-only' | 'knowledge+syndrome-intent' | 'syndrome-intent-only' | 'legacy-fallback';
 }
 
 export interface CDSSResponseMeta {

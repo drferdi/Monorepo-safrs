@@ -54,9 +54,7 @@ export type GlucoseCategory =
  * Crisis type for hyperglycemia
  */
 export type HyperglycemiaCrisisType =
-  | 'NOT_HYPERGLYCEMIA'
-  | 'HYPERGLYCEMIA_NO_CRISIS'
-  | 'HYPERGLYCEMIC_CRISIS'; // DKA/HHS suspected
+  'NOT_HYPERGLYCEMIA' | 'HYPERGLYCEMIA_NO_CRISIS' | 'HYPERGLYCEMIC_CRISIS'; // DKA/HHS suspected
 
 /**
  * DKA/HHS red flags

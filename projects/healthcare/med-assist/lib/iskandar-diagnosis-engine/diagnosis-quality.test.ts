@@ -49,7 +49,13 @@ describe('Kasus 1 — Pasien Jantung', () => {
     const top3Icds = results.slice(0, 3).map((r) => r.icd10);
     const hasCardiac = top3Icds.some((icd) => /^I2/.test(icd));
 
-    console.warn('[KUALITAS] Jantung top-3:', results.slice(0, 3).map((r) => `${r.icd10} ${r.nama} (${(r.matchScore * 100).toFixed(1)}%)`).join(', '));
+    console.warn(
+      '[KUALITAS] Jantung top-3:',
+      results
+        .slice(0, 3)
+        .map((r) => `${r.icd10} ${r.nama} (${(r.matchScore * 100).toFixed(1)}%)`)
+        .join(', ')
+    );
 
     expect(hasCardiac).toBe(true);
   });
@@ -62,7 +68,10 @@ describe('Kasus 1 — Pasien Jantung', () => {
     });
 
     const top1 = results[0];
-    console.warn('[KUALITAS] Jantung top-1:', `${top1.icd10} ${top1.nama} (${(top1.matchScore * 100).toFixed(1)}%)`);
+    console.warn(
+      '[KUALITAS] Jantung top-1:',
+      `${top1.icd10} ${top1.nama} (${(top1.matchScore * 100).toFixed(1)}%)`
+    );
 
     // Should NOT be parasitic, nutritional, or ENT as top result
     expect(top1.icd10).not.toMatch(/^B[67]/); // Parasites (Taeniasis, cacing)
@@ -87,7 +96,13 @@ describe('Kasus 2 — Pasien Diabetes', () => {
     const top5Icds = results.slice(0, 5).map((r) => r.icd10);
     const hasDiabetes = top5Icds.some((icd) => /^E1[0-4]/.test(icd));
 
-    console.warn('[KUALITAS] Diabetes top-5:', results.slice(0, 5).map((r) => `${r.icd10} ${r.nama} (${(r.matchScore * 100).toFixed(1)}%)`).join(', '));
+    console.warn(
+      '[KUALITAS] Diabetes top-5:',
+      results
+        .slice(0, 5)
+        .map((r) => `${r.icd10} ${r.nama} (${(r.matchScore * 100).toFixed(1)}%)`)
+        .join(', ')
+    );
 
     expect(hasDiabetes).toBe(true);
   });
@@ -116,15 +131,15 @@ describe('Kasus 2 — Pasien Diabetes', () => {
     expect(hasMetformin).toBe(true);
 
     // Wajib ada Vitamin B (adjuvan)
-    const hasVitB = plan.medications.some((m) =>
-      m.nama_obat.toLowerCase().includes('vitamin b') || m.nama_obat.toLowerCase().includes('b komplek')
+    const hasVitB = plan.medications.some(
+      (m) =>
+        m.nama_obat.toLowerCase().includes('vitamin b') ||
+        m.nama_obat.toLowerCase().includes('b komplek')
     );
     expect(hasVitB).toBe(true);
 
     // Wajib ada Vitamin C (vitamin)
-    const hasVitC = plan.medications.some((m) =>
-      m.nama_obat.toLowerCase().includes('vitamin c')
-    );
+    const hasVitC = plan.medications.some((m) => m.nama_obat.toLowerCase().includes('vitamin c'));
     expect(hasVitC).toBe(true);
   });
 });
@@ -143,7 +158,13 @@ describe('Kasus 3 — Pasien ISPA', () => {
     const top5Icds = results.slice(0, 5).map((r) => r.icd10);
     const hasIspa = top5Icds.some((icd) => /^J0/.test(icd) || /^J1/.test(icd));
 
-    console.warn('[KUALITAS] ISPA top-5:', results.slice(0, 5).map((r) => `${r.icd10} ${r.nama} (${(r.matchScore * 100).toFixed(1)}%)`).join(', '));
+    console.warn(
+      '[KUALITAS] ISPA top-5:',
+      results
+        .slice(0, 5)
+        .map((r) => `${r.icd10} ${r.nama} (${(r.matchScore * 100).toFixed(1)}%)`)
+        .join(', ')
+    );
 
     expect(hasIspa).toBe(true);
   });
@@ -160,8 +181,65 @@ describe('Kasus 4 — Kontrol rutin (keluhan generik, KB-only edge case)', () =>
       usia: 45,
     });
 
-    console.warn('[KUALITAS] Generik top-3:', results.slice(0, 3).map((r) => `${r.icd10} ${r.nama} (${(r.matchScore * 100).toFixed(1)}%)`).join(', '));
+    console.warn(
+      '[KUALITAS] Generik top-3:',
+      results
+        .slice(0, 3)
+        .map((r) => `${r.icd10} ${r.nama} (${(r.matchScore * 100).toFixed(1)}%)`)
+        .join(', ')
+    );
 
     expect(results.length).toBeGreaterThan(0);
+  });
+
+  it('keluhan generik "lemas pusing tidak enak badan" TIDAK boleh top-1 parasit (B76/B6x/B7x)', async () => {
+    const results = await matchSymptoms({
+      keluhanUtama: 'lemas pusing tidak enak badan',
+      usia: 45,
+    });
+
+    expect(results.length).toBeGreaterThan(0);
+    const top1 = results[0];
+    console.warn(
+      '[KUALITAS] Generik top-1 guard:',
+      `${top1.icd10} ${top1.nama} (${(top1.matchScore * 100).toFixed(1)}%)`
+    );
+
+    // Hookworm / helminth / other parasites must not win on nonspecific malaise alone.
+    expect(top1.icd10).not.toMatch(/^B7[0-9]/); // B76 cacing tambang, etc.
+    expect(top1.icd10).not.toMatch(/^B6[0-9]/); // B65/B68 schisto/taenia, etc.
+    expect(top1.icd10).not.toBe('B76');
+  });
+
+  it('keluhan generik TIDAK boleh top-1 R57/A91/T75 tanpa petunjuk spesifik', async () => {
+    const results = await matchSymptoms({
+      keluhanUtama: 'lemas pusing tidak enak badan',
+      usia: 45,
+    });
+
+    expect(results.length).toBeGreaterThan(0);
+    const top1 = results[0];
+    console.warn(
+      '[KUALITAS] Generik residual top-1 guard:',
+      `${top1.icd10} ${top1.nama} (${(top1.matchScore * 100).toFixed(1)}%)`
+    );
+
+    // Residual H1: bare lemas/pusing/pusing-travel phrases must not dominate malaise.
+    expect(top1.icd10).not.toBe('R57');
+    expect(top1.icd10).not.toMatch(/^A91/);
+    expect(top1.icd10).not.toBe('T75');
+  });
+
+  it('keluhan DM spesifik TIDAK boleh top-3 taeniasis (B68) dari token berat badan saja', async () => {
+    const results = await matchSymptoms({
+      keluhanUtama: 'poliuri polidipsi polifagi penurunan berat badan lemas',
+      usia: 50,
+      jenisKelamin: 'P',
+    });
+
+    const top3 = results.slice(0, 3).map((r) => r.icd10);
+    console.warn('[KUALITAS] Diabetes top-3 residual:', top3.join(', '));
+    expect(top3.some((icd) => /^E1[0-4]/.test(icd))).toBe(true);
+    expect(top3).not.toContain('B68');
   });
 });

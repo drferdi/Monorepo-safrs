@@ -303,9 +303,7 @@ describe('buildReasoningEvidencePackFromTrajectoryV2', () => {
       ])
     );
 
-    const respiratoryFact = pack.clinicalFacts.find(
-      (fact) => fact.key === 'respiratory_worsening'
-    );
+    const respiratoryFact = pack.clinicalFacts.find((fact) => fact.key === 'respiratory_worsening');
     expect(respiratoryFact?.evidence).toEqual(expect.arrayContaining(['RR naik', 'SpO2 turun']));
     expect(respiratoryFact?.sourceRefs).toEqual(expect.arrayContaining(['trajectory_signal:T-45']));
     expect(pack.sourceMap).toEqual(

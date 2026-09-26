@@ -119,8 +119,7 @@ describe('messaging runtime hardening', () => {
     expect(result.success).toBe(true);
     expect(mockSendMessage).toHaveBeenCalledTimes(1);
     const outboundMessage = mockSendMessage.mock.calls[0]?.[1] as
-      | { timestamp?: unknown; type?: unknown }
-      | undefined;
+      { timestamp?: unknown; type?: unknown } | undefined;
     expect(outboundMessage?.type).toBe('execFill');
     expect(typeof outboundMessage?.timestamp).toBe('number');
   });

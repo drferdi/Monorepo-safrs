@@ -9,11 +9,7 @@ import type {
 } from '@/types/api';
 
 type SyndromeId =
-  | 'ischemic_cardiac'
-  | 'hypertension'
-  | 'diabetes'
-  | 'respiratory_infection'
-  | 'generic';
+  'ischemic_cardiac' | 'hypertension' | 'diabetes' | 'respiratory_infection' | 'generic';
 
 type RiskTier = 'routine' | 'urgent' | 'emergency';
 type ReviewWindow = '6h' | '24h' | '48h';

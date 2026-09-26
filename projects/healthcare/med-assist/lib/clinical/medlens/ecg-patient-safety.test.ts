@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
 import { makeMedlensEcgAnalyzeResponse } from '@/tests/medlens-contract/ecg-contract-fixtures';
-import { MEDLENS_ECG_DISCLAIMER, normalizeMedlensEcgAnalyzeResponse } from './ecg-result-normalizer';
+import {
+  MEDLENS_ECG_DISCLAIMER,
+  normalizeMedlensEcgAnalyzeResponse,
+} from './ecg-result-normalizer';
 
 function makeLegacyPayload(overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return {
@@ -40,15 +43,14 @@ describe('normalizeMedlensEcgAnalyzeResponse patient safety gate', () => {
       makeLegacyPayload({
         source_file: {
           sourceFileId: 'src-ocr-1',
-          sourceHash:
-            'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+          sourceHash: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
           sourceType: 'ecg_image_with_printed_result',
         },
         raw_ecg_relevant_text: ['Machine interpretation: Sinus Bradycardia'],
         ocr_extracted_values: {
           machine_interpretation_text: 'Sinus Bradycardia',
         },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       }) as any
     );
 
@@ -63,18 +65,16 @@ describe('normalizeMedlensEcgAnalyzeResponse patient safety gate', () => {
   });
 
   it('blocks unsafe legacy diagnosis text even if waveform packet is otherwise present', () => {
-    const normalized = normalizeMedlensEcgAnalyzeResponse(
-      {
-        ...makeMedlensEcgAnalyzeResponse(),
-        clinical_support: {
-          summary: 'Inferior STEMI',
-          possible_considerations: [],
-          red_flags: ['Acute MI'],
-          recommended_physician_checks: [],
-        },
+    const normalized = normalizeMedlensEcgAnalyzeResponse({
+      ...makeMedlensEcgAnalyzeResponse(),
+      clinical_support: {
+        summary: 'Inferior STEMI',
+        possible_considerations: [],
+        red_flags: ['Acute MI'],
+        recommended_physician_checks: [],
+      },
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as any
-    );
+    } as any);
 
     expect(normalized.waveform_review_output.status).toBe('blocked');
     if (normalized.waveform_review_output.status !== 'blocked') {

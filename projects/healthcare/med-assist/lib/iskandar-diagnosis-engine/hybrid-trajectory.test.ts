@@ -101,7 +101,9 @@ describe('hybrid-trajectory', () => {
 
     expect(legacy.visitCount).toBe(3);
     expect(legacy.recommendations.length).toBeGreaterThan(0);
-    expect(legacy.clinical_safe_output.risk_tier).toBe(hybrid.integratedAssessment.calibratedSeverity);
+    expect(legacy.clinical_safe_output.risk_tier).toBe(
+      hybrid.integratedAssessment.calibratedSeverity
+    );
     expect(legacy.confirmed_chronic_diagnoses).toEqual(
       hybrid.clinicalContext.confirmedChronicDiagnoses
     );
@@ -149,21 +151,33 @@ describe('hybrid-trajectory', () => {
   it('adds selected CP expansion for severe respiratory distress, ACS risk, geriatric delirium, and diabetic infection risk', () => {
     const result = analyzeHybridTrajectory({
       visits: [
-        makeVisit(1, { sbp: 146, dbp: 90, hr: 98, rr: 20, temp: 37.2, glucose: 210 }, {
-          keluhan_utama: 'Kontrol diabetes',
-          diagnosa: { icd_x: 'E11.9', nama: 'Diabetes melitus tipe 2' },
-          terapi_obat: 'Metformin',
-        }),
-        makeVisit(2, { sbp: 158, dbp: 96, hr: 108, rr: 24, temp: 38.2, glucose: 260 }, {
-          keluhan_utama: 'Demam batuk dan nyeri dada',
-          diagnosa: { icd_x: 'J18.9', nama: 'Pneumonia' },
-          terapi_obat: 'Antibiotik oral',
-        }),
-        makeVisit(3, { sbp: 170, dbp: 104, hr: 126, rr: 28, temp: 38.8, glucose: 318 }, {
-          keluhan_utama: 'Sesak, bingung, nyeri dada',
-          diagnosa: { icd_x: 'J18.9', nama: 'Pneumonia' },
-          terapi_obat: 'Antibiotik oral',
-        }),
+        makeVisit(
+          1,
+          { sbp: 146, dbp: 90, hr: 98, rr: 20, temp: 37.2, glucose: 210 },
+          {
+            keluhan_utama: 'Kontrol diabetes',
+            diagnosa: { icd_x: 'E11.9', nama: 'Diabetes melitus tipe 2' },
+            terapi_obat: 'Metformin',
+          }
+        ),
+        makeVisit(
+          2,
+          { sbp: 158, dbp: 96, hr: 108, rr: 24, temp: 38.2, glucose: 260 },
+          {
+            keluhan_utama: 'Demam batuk dan nyeri dada',
+            diagnosa: { icd_x: 'J18.9', nama: 'Pneumonia' },
+            terapi_obat: 'Antibiotik oral',
+          }
+        ),
+        makeVisit(
+          3,
+          { sbp: 170, dbp: 104, hr: 126, rr: 28, temp: 38.8, glucose: 318 },
+          {
+            keluhan_utama: 'Sesak, bingung, nyeri dada',
+            diagnosa: { icd_x: 'J18.9', nama: 'Pneumonia' },
+            terapi_obat: 'Antibiotik oral',
+          }
+        ),
       ],
       currentEncounter: {
         keluhanUtama: 'Sesak berat, nyeri dada, bingung, luka kaki diabetes tampak infeksi',
@@ -177,29 +191,41 @@ describe('hybrid-trajectory', () => {
     expect(result.clinicalIntelligence.selectedPatterns.map((item) => item.id)).toEqual(
       expect.arrayContaining(['CP-014', 'CP-063', 'CP-064', 'CP-066'])
     );
-    expect(JSON.stringify(result.clinicalIntelligence.selectedPatterns).toLowerCase()).not.toContain(
-      certaintyPhrase
-    );
+    expect(
+      JSON.stringify(result.clinicalIntelligence.selectedPatterns).toLowerCase()
+    ).not.toContain(certaintyPhrase);
   });
 
   it('builds longitudinal clinical frames for timeline, red-flag, delta, and hypothesis visuals', () => {
     const result = analyzeHybridTrajectory({
       visits: [
-        makeVisit(3, { sbp: 170, dbp: 104, hr: 126, rr: 28, temp: 38.8, glucose: 318 }, {
-          keluhan_utama: 'Sesak, bingung, nyeri dada',
-          diagnosa: { icd_x: 'J18.9', nama: 'Pneumonia' },
-          terapi_obat: 'Antibiotik oral',
-        }),
-        makeVisit(1, { sbp: 146, dbp: 90, hr: 98, rr: 20, temp: 37.2, glucose: 210 }, {
-          keluhan_utama: 'Kontrol diabetes',
-          diagnosa: { icd_x: 'E11.9', nama: 'Diabetes melitus tipe 2' },
-          terapi_obat: 'Metformin',
-        }),
-        makeVisit(2, { sbp: 158, dbp: 96, hr: 108, rr: 24, temp: 38.2, glucose: 260 }, {
-          keluhan_utama: 'Demam batuk dan nyeri dada',
-          diagnosa: { icd_x: 'J18.9', nama: 'Pneumonia' },
-          terapi_obat: 'Antibiotik oral',
-        }),
+        makeVisit(
+          3,
+          { sbp: 170, dbp: 104, hr: 126, rr: 28, temp: 38.8, glucose: 318 },
+          {
+            keluhan_utama: 'Sesak, bingung, nyeri dada',
+            diagnosa: { icd_x: 'J18.9', nama: 'Pneumonia' },
+            terapi_obat: 'Antibiotik oral',
+          }
+        ),
+        makeVisit(
+          1,
+          { sbp: 146, dbp: 90, hr: 98, rr: 20, temp: 37.2, glucose: 210 },
+          {
+            keluhan_utama: 'Kontrol diabetes',
+            diagnosa: { icd_x: 'E11.9', nama: 'Diabetes melitus tipe 2' },
+            terapi_obat: 'Metformin',
+          }
+        ),
+        makeVisit(
+          2,
+          { sbp: 158, dbp: 96, hr: 108, rr: 24, temp: 38.2, glucose: 260 },
+          {
+            keluhan_utama: 'Demam batuk dan nyeri dada',
+            diagnosa: { icd_x: 'J18.9', nama: 'Pneumonia' },
+            terapi_obat: 'Antibiotik oral',
+          }
+        ),
       ],
       currentEncounter: {
         keluhanUtama: 'Sesak berat, nyeri dada, bingung, luka kaki diabetes tampak infeksi',
@@ -249,14 +275,22 @@ describe('hybrid-trajectory', () => {
 
     const nonCriticalShockResult = analyzeHybridTrajectory({
       visits: [
-        makeVisit(1, { sbp: 128, dbp: 82, hr: 88, rr: 18, temp: 36.9, glucose: 138 }, {
-          keluhan_utama: 'Batuk ringan',
-          diagnosa: { icd_x: 'J06.9', nama: 'Infeksi saluran napas atas' },
-        }),
-        makeVisit(2, { sbp: 122, dbp: 78, hr: 104, rr: 24, temp: 38.1, glucose: 166 }, {
-          keluhan_utama: 'Demam dan sesak',
-          diagnosa: { icd_x: 'J18.9', nama: 'Pneumonia' },
-        }),
+        makeVisit(
+          1,
+          { sbp: 128, dbp: 82, hr: 88, rr: 18, temp: 36.9, glucose: 138 },
+          {
+            keluhan_utama: 'Batuk ringan',
+            diagnosa: { icd_x: 'J06.9', nama: 'Infeksi saluran napas atas' },
+          }
+        ),
+        makeVisit(
+          2,
+          { sbp: 122, dbp: 78, hr: 104, rr: 24, temp: 38.1, glucose: 166 },
+          {
+            keluhan_utama: 'Demam dan sesak',
+            diagnosa: { icd_x: 'J18.9', nama: 'Pneumonia' },
+          }
+        ),
       ],
       currentEncounter: {
         keluhanUtama: 'Demam dan sesak memberat',
@@ -293,7 +327,9 @@ describe('hybrid-trajectory', () => {
       },
     });
 
-    const t45Signal = result.clinicalIntelligence.trajectorySignals.find((item) => item.id === 'T-45');
+    const t45Signal = result.clinicalIntelligence.trajectorySignals.find(
+      (item) => item.id === 'T-45'
+    );
 
     expect(t45Signal).toMatchObject({
       label: 'Respiratory worsening concern',
@@ -319,9 +355,13 @@ describe('hybrid-trajectory', () => {
       visits: [
         makeVisit(1, { sbp: 122, dbp: 78, hr: 82, rr: 18, temp: 36.8, glucose: 132 }),
         makeVisit(2, { sbp: 106, dbp: 70, hr: 112, rr: 22, temp: 37.2, glucose: 148 }),
-        makeVisit(3, { sbp: 92, dbp: 58, hr: 126, rr: 24, temp: 37.8, glucose: 166 }, {
-          keluhan_utama: 'Lemas, pusing, keringat dingin',
-        }),
+        makeVisit(
+          3,
+          { sbp: 92, dbp: 58, hr: 126, rr: 24, temp: 37.8, glucose: 166 },
+          {
+            keluhan_utama: 'Lemas, pusing, keringat dingin',
+          }
+        ),
       ],
       currentEncounter: {
         keluhanUtama: 'Lemas berat dan keringat dingin',
@@ -330,7 +370,9 @@ describe('hybrid-trajectory', () => {
       },
     });
 
-    const t46Signal = result.clinicalIntelligence.trajectorySignals.find((item) => item.id === 'T-46');
+    const t46Signal = result.clinicalIntelligence.trajectorySignals.find(
+      (item) => item.id === 'T-46'
+    );
 
     expect(t46Signal).toMatchObject({
       label: 'Hemodynamic instability concern',
@@ -356,9 +398,13 @@ describe('hybrid-trajectory', () => {
       visits: [
         makeVisit(1, { sbp: 122, dbp: 78, hr: 82, rr: 18, temp: 36.8, glucose: 132 }),
         makeVisit(2, { sbp: 106, dbp: 70, hr: 112, rr: 22, temp: 37.2, glucose: 148 }),
-        makeVisit(3, { sbp: 92, dbp: 58, hr: 126, rr: 24, temp: 37.8, glucose: 166 }, {
-          keluhan_utama: 'Lemas, pusing, keringat dingin',
-        }),
+        makeVisit(
+          3,
+          { sbp: 92, dbp: 58, hr: 126, rr: 24, temp: 37.8, glucose: 166 },
+          {
+            keluhan_utama: 'Lemas, pusing, keringat dingin',
+          }
+        ),
       ],
       currentEncounter: {
         keluhanUtama: 'Lemas berat dan keringat dingin',
@@ -367,7 +413,9 @@ describe('hybrid-trajectory', () => {
       },
     });
 
-    const t59Signal = result.clinicalIntelligence.trajectorySignals.find((item) => item.id === 'T-59');
+    const t59Signal = result.clinicalIntelligence.trajectorySignals.find(
+      (item) => item.id === 'T-59'
+    );
 
     expect(result.clinicalIntelligence.selectedPatterns.map((item) => item.id)).toEqual(
       expect.arrayContaining(['CP-010'])
@@ -396,9 +444,13 @@ describe('hybrid-trajectory', () => {
       visits: [
         makeVisit(1, { sbp: 122, dbp: 78, hr: 82, rr: 18, temp: 36.8, glucose: 132 }),
         makeVisit(2, { sbp: 106, dbp: 70, hr: 112, rr: 22, temp: 37.2, glucose: 148 }),
-        makeVisit(3, { sbp: 92, dbp: 58, hr: 126, rr: 24, temp: 37.8, glucose: 166 }, {
-          keluhan_utama: 'Lemas, pusing, keringat dingin',
-        }),
+        makeVisit(
+          3,
+          { sbp: 92, dbp: 58, hr: 126, rr: 24, temp: 37.8, glucose: 166 },
+          {
+            keluhan_utama: 'Lemas, pusing, keringat dingin',
+          }
+        ),
       ],
       currentEncounter: {
         keluhanUtama: 'Lemas berat dan keringat dingin',
@@ -407,7 +459,9 @@ describe('hybrid-trajectory', () => {
       },
     });
 
-    const t13Signal = result.clinicalIntelligence.trajectorySignals.find((item) => item.id === 'T-13');
+    const t13Signal = result.clinicalIntelligence.trajectorySignals.find(
+      (item) => item.id === 'T-13'
+    );
 
     expect(result.clinicalIntelligence.selectedPatterns.map((item) => item.id)).toEqual(
       expect.arrayContaining(['CP-010'])
@@ -434,18 +488,30 @@ describe('hybrid-trajectory', () => {
   it('adds T-13 imminent cardiac arrest proxy signal from critical respiratory collapse-risk CP evidence', () => {
     const result = analyzeHybridTrajectory({
       visits: [
-        makeVisit(1, { sbp: 128, dbp: 82, hr: 92, rr: 20, temp: 37.1, glucose: 142 }, {
-          keluhan_utama: 'Batuk dan sesak ringan',
-          diagnosa: { icd_x: 'J18.9', nama: 'Pneumonia' },
-        }),
-        makeVisit(2, { sbp: 122, dbp: 78, hr: 106, rr: 24, temp: 37.8, glucose: 166 }, {
-          keluhan_utama: 'Sesak memberat',
-          diagnosa: { icd_x: 'J18.9', nama: 'Pneumonia' },
-        }),
-        makeVisit(3, { sbp: 116, dbp: 74, hr: 118, rr: 28, temp: 38.2, glucose: 188 }, {
-          keluhan_utama: 'Napas berat dan sulit bicara',
-          diagnosa: { icd_x: 'J18.9', nama: 'Pneumonia' },
-        }),
+        makeVisit(
+          1,
+          { sbp: 128, dbp: 82, hr: 92, rr: 20, temp: 37.1, glucose: 142 },
+          {
+            keluhan_utama: 'Batuk dan sesak ringan',
+            diagnosa: { icd_x: 'J18.9', nama: 'Pneumonia' },
+          }
+        ),
+        makeVisit(
+          2,
+          { sbp: 122, dbp: 78, hr: 106, rr: 24, temp: 37.8, glucose: 166 },
+          {
+            keluhan_utama: 'Sesak memberat',
+            diagnosa: { icd_x: 'J18.9', nama: 'Pneumonia' },
+          }
+        ),
+        makeVisit(
+          3,
+          { sbp: 116, dbp: 74, hr: 118, rr: 28, temp: 38.2, glucose: 188 },
+          {
+            keluhan_utama: 'Napas berat dan sulit bicara',
+            diagnosa: { icd_x: 'J18.9', nama: 'Pneumonia' },
+          }
+        ),
       ],
       currentEncounter: {
         keluhanUtama: 'Sesak berat, napas cepat, sulit bicara',
@@ -455,7 +521,9 @@ describe('hybrid-trajectory', () => {
     });
 
     const selectedPatternIds = result.clinicalIntelligence.selectedPatterns.map((item) => item.id);
-    const t13Signal = result.clinicalIntelligence.trajectorySignals.find((item) => item.id === 'T-13');
+    const t13Signal = result.clinicalIntelligence.trajectorySignals.find(
+      (item) => item.id === 'T-13'
+    );
 
     expect(selectedPatternIds).toEqual(expect.arrayContaining(['CP-014']));
     expect(t13Signal).toMatchObject({
@@ -481,12 +549,20 @@ describe('hybrid-trajectory', () => {
     const result = analyzeHybridTrajectory({
       visits: [
         makeVisit(1, { sbp: 124, dbp: 78, hr: 94, rr: 20, temp: 37.4, glucose: 132 }),
-        makeVisit(2, { sbp: 120, dbp: 76, hr: 108, rr: 22, temp: 38.7, glucose: 148 }, {
-          keluhan_utama: 'Demam dan menggigil',
-        }),
-        makeVisit(3, { sbp: 116, dbp: 74, hr: 116, rr: 23, temp: 39.2, glucose: 166 }, {
-          keluhan_utama: 'Demam masih tinggi',
-        }),
+        makeVisit(
+          2,
+          { sbp: 120, dbp: 76, hr: 108, rr: 22, temp: 38.7, glucose: 148 },
+          {
+            keluhan_utama: 'Demam dan menggigil',
+          }
+        ),
+        makeVisit(
+          3,
+          { sbp: 116, dbp: 74, hr: 116, rr: 23, temp: 39.2, glucose: 166 },
+          {
+            keluhan_utama: 'Demam masih tinggi',
+          }
+        ),
       ],
       currentEncounter: {
         keluhanUtama: 'Demam berulang dan menggigil',
@@ -495,7 +571,9 @@ describe('hybrid-trajectory', () => {
       },
     });
 
-    const t54Signal = result.clinicalIntelligence.trajectorySignals.find((item) => item.id === 'T-54');
+    const t54Signal = result.clinicalIntelligence.trajectorySignals.find(
+      (item) => item.id === 'T-54'
+    );
 
     expect(t54Signal).toMatchObject({
       label: 'Fever burden concern',
@@ -521,9 +599,13 @@ describe('hybrid-trajectory', () => {
       visits: [
         makeVisit(1, { sbp: 124, dbp: 78, hr: 88, rr: 18, temp: 36.8, glucose: 132 }),
         makeVisit(2, { sbp: 110, dbp: 70, hr: 116, rr: 24, temp: 38.2, glucose: 188 }),
-        makeVisit(3, { sbp: 94, dbp: 60, hr: 128, rr: 28, temp: 38.6, glucose: 224 }, {
-          keluhan_utama: 'Demam, sesak, lemas',
-        }),
+        makeVisit(
+          3,
+          { sbp: 94, dbp: 60, hr: 128, rr: 28, temp: 38.6, glucose: 224 },
+          {
+            keluhan_utama: 'Demam, sesak, lemas',
+          }
+        ),
       ],
       currentEncounter: {
         keluhanUtama: 'Demam dan sesak memberat',
@@ -532,7 +614,9 @@ describe('hybrid-trajectory', () => {
       },
     });
 
-    const t50Signal = result.clinicalIntelligence.trajectorySignals.find((item) => item.id === 'T-50');
+    const t50Signal = result.clinicalIntelligence.trajectorySignals.find(
+      (item) => item.id === 'T-50'
+    );
 
     expect(result.clinicalIntelligence.news2.riskLevel).toBe('high');
     expect(t50Signal).toMatchObject({
@@ -558,13 +642,21 @@ describe('hybrid-trajectory', () => {
     const result = analyzeHybridTrajectory({
       visits: [
         makeVisit(1, { sbp: 126, dbp: 80, hr: 88, rr: 18, temp: 36.9, glucose: 138 }),
-        makeVisit(2, { sbp: 112, dbp: 72, hr: 108, rr: 23, temp: 38.2, glucose: 172 }, {
-          keluhan_utama: 'Demam dan batuk',
-        }),
-        makeVisit(3, { sbp: 94, dbp: 60, hr: 126, rr: 28, temp: 38.9, glucose: 226 }, {
-          keluhan_utama: 'Demam, batuk, lemas',
-          diagnosa: { icd_x: 'J18.9', nama: 'Pneumonia' },
-        }),
+        makeVisit(
+          2,
+          { sbp: 112, dbp: 72, hr: 108, rr: 23, temp: 38.2, glucose: 172 },
+          {
+            keluhan_utama: 'Demam dan batuk',
+          }
+        ),
+        makeVisit(
+          3,
+          { sbp: 94, dbp: 60, hr: 126, rr: 28, temp: 38.9, glucose: 226 },
+          {
+            keluhan_utama: 'Demam, batuk, lemas',
+            diagnosa: { icd_x: 'J18.9', nama: 'Pneumonia' },
+          }
+        ),
       ],
       currentEncounter: {
         keluhanUtama: 'Demam, batuk, lemas, napas cepat',
@@ -573,7 +665,9 @@ describe('hybrid-trajectory', () => {
       },
     });
 
-    const t16Signal = result.clinicalIntelligence.trajectorySignals.find((item) => item.id === 'T-16');
+    const t16Signal = result.clinicalIntelligence.trajectorySignals.find(
+      (item) => item.id === 'T-16'
+    );
 
     expect(result.clinicalIntelligence.selectedPatterns.map((item) => item.id)).toEqual(
       expect.arrayContaining(['CP-002'])
@@ -600,10 +694,14 @@ describe('hybrid-trajectory', () => {
   it('keeps selected CP expansion boundaries narrow for SpO2, dizziness, and diabetes context', () => {
     const respiratoryBoundary = analyzeHybridTrajectory({
       visits: [
-        makeVisit(1, { sbp: 132, dbp: 84, hr: 106, rr: 28, temp: 37.4, glucose: 160 }, {
-          keluhan_utama: 'Sesak dan batuk',
-          diagnosa: { icd_x: 'J18.9', nama: 'Pneumonia' },
-        }),
+        makeVisit(
+          1,
+          { sbp: 132, dbp: 84, hr: 106, rr: 28, temp: 37.4, glucose: 160 },
+          {
+            keluhan_utama: 'Sesak dan batuk',
+            diagnosa: { icd_x: 'J18.9', nama: 'Pneumonia' },
+          }
+        ),
       ],
       currentEncounter: {
         keluhanUtama: 'Sesak dan napas berat',
@@ -611,30 +709,38 @@ describe('hybrid-trajectory', () => {
         consciousness: 'alert',
       },
     });
-    expect(respiratoryBoundary.clinicalIntelligence.selectedPatterns.map((item) => item.id)).not.toContain(
-      'CP-014'
-    );
+    expect(
+      respiratoryBoundary.clinicalIntelligence.selectedPatterns.map((item) => item.id)
+    ).not.toContain('CP-014');
 
     const dizzinessOnly = analyzeHybridTrajectory({
       visits: [
-        makeVisit(1, { sbp: 170, dbp: 102, hr: 112, rr: 20, temp: 37.1, glucose: 145 }, {
-          keluhan_utama: 'Pusing',
-        }),
+        makeVisit(
+          1,
+          { sbp: 170, dbp: 102, hr: 112, rr: 20, temp: 37.1, glucose: 145 },
+          {
+            keluhan_utama: 'Pusing',
+          }
+        ),
       ],
       currentEncounter: {
         keluhanUtama: 'Pusing dan tekanan darah tinggi',
         spo2: 97,
       },
     });
-    expect(dizzinessOnly.clinicalIntelligence.selectedPatterns.map((item) => item.id)).not.toContain(
-      'CP-063'
-    );
+    expect(
+      dizzinessOnly.clinicalIntelligence.selectedPatterns.map((item) => item.id)
+    ).not.toContain('CP-063');
 
     const woundWithoutLongitudinalDiabetes = analyzeHybridTrajectory({
       visits: [
-        makeVisit(1, { sbp: 136, dbp: 86, hr: 104, rr: 22, temp: 38.4, glucose: 286 }, {
-          keluhan_utama: 'Demam luka kaki',
-        }),
+        makeVisit(
+          1,
+          { sbp: 136, dbp: 86, hr: 104, rr: 22, temp: 38.4, glucose: 286 },
+          {
+            keluhan_utama: 'Demam luka kaki',
+          }
+        ),
       ],
       currentEncounter: {
         keluhanUtama: 'Luka kaki tampak infeksi',
@@ -648,9 +754,13 @@ describe('hybrid-trajectory', () => {
 
     const alteredConsciousnessWithoutElderlyAge = analyzeHybridTrajectory({
       visits: [
-        makeVisit(1, { sbp: 134, dbp: 84, hr: 102, rr: 22, temp: 37.9, glucose: 168 }, {
-          keluhan_utama: 'Bingung dan demam',
-        }),
+        makeVisit(
+          1,
+          { sbp: 134, dbp: 84, hr: 102, rr: 22, temp: 37.9, glucose: 168 },
+          {
+            keluhan_utama: 'Bingung dan demam',
+          }
+        ),
       ],
       currentEncounter: {
         keluhanUtama: 'Bingung sejak pagi',
@@ -661,7 +771,9 @@ describe('hybrid-trajectory', () => {
       },
     });
     expect(
-      alteredConsciousnessWithoutElderlyAge.clinicalIntelligence.selectedPatterns.map((item) => item.id)
+      alteredConsciousnessWithoutElderlyAge.clinicalIntelligence.selectedPatterns.map(
+        (item) => item.id
+      )
     ).not.toContain('CP-064');
   });
 
@@ -718,18 +830,26 @@ describe('hybrid-trajectory', () => {
     expect(result.clinicalIntelligence.trajectorySignals.map((item) => item.id)).toEqual(
       expect.arrayContaining(['T-52', 'T-58', 'T-38', 'T-25'])
     );
-    expect(result.clinicalIntelligence.trajectorySignals.map((item) => item.id)).not.toContain('T-51');
+    expect(result.clinicalIntelligence.trajectorySignals.map((item) => item.id)).not.toContain(
+      'T-51'
+    );
     expect(result.clinicalIntelligence.trajectorySignals).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           id: 'T-25',
           label: 'DM-to-renal baseline proxy',
-          evidence: expect.arrayContaining(['Riwayat diabetes terdeteksi', 'Riwayat CKD terdeteksi']),
+          evidence: expect.arrayContaining([
+            'Riwayat diabetes terdeteksi',
+            'Riwayat CKD terdeteksi',
+          ]),
         }),
         expect.objectContaining({
           id: 'T-38',
           label: '30-day readmission risk proxy',
-          evidence: expect.arrayContaining(['4 kunjungan dalam 3 hari', 'Diagnosis berulang 1 kali']),
+          evidence: expect.arrayContaining([
+            '4 kunjungan dalam 3 hari',
+            'Diagnosis berulang 1 kali',
+          ]),
         }),
         expect.objectContaining({
           id: 'T-58',
@@ -749,7 +869,11 @@ describe('hybrid-trajectory', () => {
     expect(
       result.redFlags
         .filter((flag) =>
-          ['clinical-trajectory-t58', 'clinical-trajectory-t38', 'clinical-trajectory-t25'].includes(flag.id)
+          [
+            'clinical-trajectory-t58',
+            'clinical-trajectory-t38',
+            'clinical-trajectory-t25',
+          ].includes(flag.id)
         )
         .map((flag) => ({ id: flag.id, source: flag.source, severity: flag.severity }))
     ).toEqual(
@@ -771,9 +895,9 @@ describe('hybrid-trajectory', () => {
         }),
       ])
     );
-    expect(JSON.stringify(result.clinicalIntelligence.trajectorySignals).toLowerCase()).not.toContain(
-      certaintyPhrase
-    );
+    expect(
+      JSON.stringify(result.clinicalIntelligence.trajectorySignals).toLowerCase()
+    ).not.toContain(certaintyPhrase);
   });
 
   it('produces compare-mode evaluation notes when data quality limits confidence', () => {

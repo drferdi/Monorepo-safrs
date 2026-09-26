@@ -23,11 +23,7 @@ import { runRedFlagChecks } from './red-flags';
 import type { VitalSigns } from '@/types/api';
 
 export type TriageOutcome =
-  | 'emergency'
-  | 'urgent_review'
-  | 'refer'
-  | 'insufficient'
-  | 'treat_locally';
+  'emergency' | 'urgent_review' | 'refer' | 'insufficient' | 'treat_locally';
 
 export type ConfidenceTier = 'high' | 'moderate' | 'low' | 'insufficient';
 

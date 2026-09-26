@@ -1,12 +1,14 @@
 // Designed and constructed by Drferdi.
 import React, { useEffect, useMemo, useState } from 'react';
 
+import {
+  resolveDifferentialListErrorMessage,
+} from './differential-fetch-error';
 import type { ClinicalImpressionViewItem } from './ClinicalImpressionPanel';
 import { createDiagnosisPageViewModel } from './diagnosis/diagnosisViewModel';
 import { DiagnosisWorkspace, type DiagnosisTriageView } from './diagnosis/DiagnosisWorkspace';
 
 import {
-  evaluateCanonicalDifferential,
   type CanonicalClinicalEngineOutput,
 } from '@/lib/api/bridge-client';
 import { classifyChronicDisease } from '@/lib/iskandar-diagnosis-engine/chronic-disease-classifier';
@@ -14,7 +16,10 @@ import {
   runDiagnosisAlgorithm,
   type RankedDiagnosis,
 } from '@/lib/iskandar-diagnosis-engine/diagnosis-algorithm';
-import type { DifferentialVitals } from '@/lib/iskandar-diagnosis-engine/differential-diagnosis';
+import {
+  deriveAgainstSignals,
+  type DifferentialVitals,
+} from '@/lib/iskandar-diagnosis-engine/differential-diagnosis';
 import {
   getPenyakitByIcd,
   searchPenyakitByName,
@@ -62,8 +67,6 @@ type TherapyState = 'idle' | 'loading' | 'ready' | 'error';
 type TransferUiState = 'idle' | 'running' | 'partial' | 'success' | 'failed';
 const MAX_DIAGNOSIS_SELECTION = 2;
 const EMPTY_CHRONIC_THERAPIES: string[] = [];
-const LOCAL_DIAGNOSIS_FALLBACK_MESSAGE =
-  'Diagnosis spesifik belum dapat ditetapkan karena hasil canonical/CDSS tidak tersedia atau bukti klinis belum cukup.';
 
 // Permukaan diagnosis legacy (pre-workspace) disimpan sebagai basis re-skin;
 // jangan dihidupkan tanpa keputusan Chief.
@@ -482,8 +485,20 @@ function confidenceBandPresentation(item: RankedDiagnosis): {
   return { label: 'Low', tone: 'low' };
 }
 
-function buildAgainstSignals(_item: RankedDiagnosis): string[] {
-  return [];
+function buildAgainstSignals(
+  item: RankedDiagnosis,
+  keluhanUtama: string,
+  keluhanTambahan: string | undefined,
+  vitals: DifferentialVitals
+): string[] {
+  return deriveAgainstSignals({
+    suggestion: item.suggestion,
+    matchedSymptoms: item.insight.matchedSymptoms,
+    keluhanUtama,
+    keluhanTambahan,
+    vitals,
+    max: 4,
+  });
 }
 
 function buildMissingSignals(item: RankedDiagnosis): string[] {
@@ -674,60 +689,12 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       setSelectedMedicationKeys([]);
 
       try {
-        let canonicalFallbackNote = '';
-
-        try {
-          const canonicalResponse = await evaluateCanonicalDifferential({
-            request_id: `assist-diff-${patientRM || 'anon'}-${Date.now()}`,
-            patient: {
-              age: patientAge > 0 ? patientAge : 30,
-              gender: patientGender,
-            },
-            narrative: {
-              keluhan_utama: keluhanUtama,
-              keluhan_tambahan: keluhanTambahan || '',
-            },
-            vitals: {
-              sbp: vitals.sbp || undefined,
-              dbp: vitals.dbp || undefined,
-              hr: vitals.hr || undefined,
-              rr: vitals.rr || undefined,
-              temp: vitals.temp || undefined,
-              glucose: vitals.glucose || undefined,
-            },
-            context: {
-              allergies: allergies.filter((item) => item.toLowerCase() !== 'tidak ada'),
-              chronic_diseases: confirmedChronicDiagnoses.map((item) => item.nama),
-              is_pregnant: patientGender === 'P' ? pregnancyStatus === true : undefined,
-            },
-            canonical_clinical: canonicalOutput?.trajectory?.raw_context
-              ? {
-                  trajectory_context: canonicalOutput.trajectory.raw_context.trajectory_context,
-                  deterioration_summary_text:
-                    canonicalOutput.trajectory.raw_context.deterioration_summary_text,
-                }
-              : undefined,
-          });
-
-          if (cancelled) return;
-
-          let canonicalSuggestionCount = 0;
-          for (const item of (canonicalResponse.diagnosis_suggestions || []).slice(0, 5)) {
-            const normalizedCode = normalizeIcdCode(item.icd_x || item.icd10_code);
-            if (!isLikelyIcdCode(normalizedCode)) continue;
-            canonicalSuggestionCount += 1;
-          }
-
-          canonicalFallbackNote =
-            canonicalSuggestionCount > 0 ? '' : LOCAL_DIAGNOSIS_FALLBACK_MESSAGE;
-        } catch {
-          canonicalFallbackNote = LOCAL_DIAGNOSIS_FALLBACK_MESSAGE;
-        }
-
+        // Single dx source = engine getSuggestions (H6). Skip discarded canonical
+        // dual-fetch that previously set a conflicting fallback banner.
         const response = await sendMessage('getSuggestions', {
           keluhan_utama: keluhanUtama,
           keluhan_tambahan: keluhanTambahan || '',
-          patient_age: patientAge > 0 ? patientAge : 30,
+          patient_age: patientAge > 0 ? patientAge : 0,
           patient_gender: patientGender === 'P' ? 'F' : 'M',
           vital_signs: {
             systolic: vitals.sbp || undefined,
@@ -741,25 +708,24 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         if (cancelled) return;
 
         if (!response.success || !response.data) {
-          setErrorMsg(canonicalFallbackNote || LOCAL_DIAGNOSIS_FALLBACK_MESSAGE);
+          setErrorMsg(resolveDifferentialListErrorMessage(0));
           setSuggestions(buildUiFallbackDiagnoses(keluhanUtama, vitals));
           setPhase('ready');
           return;
         }
 
         const incomingSuggestions = (response.data.diagnosis_suggestions || []).slice(0, 5);
+        setErrorMsg(resolveDifferentialListErrorMessage(incomingSuggestions.length));
         if (incomingSuggestions.length === 0) {
-          setErrorMsg(canonicalFallbackNote || LOCAL_DIAGNOSIS_FALLBACK_MESSAGE);
           setSuggestions(buildUiFallbackDiagnoses(keluhanUtama, vitals));
         } else {
-          setErrorMsg(canonicalFallbackNote);
           setSuggestions(incomingSuggestions);
         }
         setProcessingTimeMs(response.data.meta?.processing_time_ms ?? null);
         setPhase('ready');
       } catch {
         if (cancelled) return;
-        setErrorMsg(LOCAL_DIAGNOSIS_FALLBACK_MESSAGE);
+        setErrorMsg(resolveDifferentialListErrorMessage(0));
         setSuggestions(buildUiFallbackDiagnoses(keluhanUtama, vitals));
         setPhase('ready');
       }
@@ -774,17 +740,11 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     keluhanTambahan,
     patientAge,
     patientGender,
-    patientRM,
-    allergies,
-    canonicalOutput,
     vitals.dbp,
-    vitals.glucose,
     vitals.hr,
     vitals.rr,
     vitals.sbp,
     vitals.temp,
-    confirmedChronicDiagnoses,
-    pregnancyStatus,
   ]);
 
   const normalizedSuggestions = useMemo<DiagnosisSuggestion[]>(() => {
@@ -852,6 +812,8 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       return rankedDiagnoses;
     }
 
+    // Annotate scores for transparency when canonical context exists, but do not
+    // re-sort — engine order remains the single ranking authority (audit H3).
     const immediateActions = canonicalOutput.recommendations.immediate_actions.map((item) =>
       item.toLowerCase()
     );
@@ -864,45 +826,31 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     }, undefined);
     const globalSeverityBoost = canonicalSeverityWeight(maxSeverity);
 
-    return [...rankedDiagnoses]
-      .map((item) => {
-        const redFlagBoost =
-          (item.suggestion.red_flags?.length || 0) * (globalSeverityBoost > 0 ? 8 : 2);
-        const requiresExamBoost =
-          item.insight.supportingExamPlan.needLevel === 'required'
-            ? globalSeverityBoost > 0
-              ? 18
-              : 6
-            : item.insight.supportingExamPlan.needLevel === 'recommended'
-              ? 6
-              : 0;
-        const actionText = (item.suggestion.recommended_actions || []).join(' ').toLowerCase();
-        const matchesImmediateAction = immediateActions.some((action) => {
-          const [firstToken] = action.split(' ');
-          return firstToken ? actionText.includes(firstToken) : false;
-        });
-        const canonicalActionBoost = matchesImmediateAction ? 20 : 0;
-        const canonicalScore =
-          item.diagnosisScore + redFlagBoost + requiresExamBoost + canonicalActionBoost;
+    return rankedDiagnoses.map((item) => {
+      const redFlagBoost =
+        (item.suggestion.red_flags?.length || 0) * (globalSeverityBoost > 0 ? 8 : 2);
+      const requiresExamBoost =
+        item.insight.supportingExamPlan.needLevel === 'required'
+          ? globalSeverityBoost > 0
+            ? 18
+            : 6
+          : item.insight.supportingExamPlan.needLevel === 'recommended'
+            ? 6
+            : 0;
+      const actionText = (item.suggestion.recommended_actions || []).join(' ').toLowerCase();
+      const matchesImmediateAction = immediateActions.some((action) => {
+        const [firstToken] = action.split(' ');
+        return firstToken ? actionText.includes(firstToken) : false;
+      });
+      const canonicalActionBoost = matchesImmediateAction ? 20 : 0;
+      const canonicalScore =
+        item.diagnosisScore + redFlagBoost + requiresExamBoost + canonicalActionBoost;
 
-        return {
-          ...item,
-          diagnosisScore: canonicalScore,
-        };
-      })
-      .sort((left, right) => {
-        if (right.diagnosisScore !== left.diagnosisScore) {
-          return right.diagnosisScore - left.diagnosisScore;
-        }
-        if (right.adjustedConfidence !== left.adjustedConfidence) {
-          return right.adjustedConfidence - left.adjustedConfidence;
-        }
-        return left.rank - right.rank;
-      })
-      .map((item, index) => ({
+      return {
         ...item,
-        rank: index + 1,
-      }));
+        diagnosisScore: canonicalScore,
+      };
+    });
   }, [canonicalOutput, rankedDiagnoses]);
 
   const diagnosisKey = (diagnosis: SelectedDiagnosis): string =>
@@ -944,7 +892,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         confidenceLabel: confidence.label,
         confidenceTone: confidence.tone,
         supports,
-        against: buildAgainstSignals(item),
+        against: buildAgainstSignals(item, keluhanUtama, keluhanTambahan, vitals),
         missing: buildMissingSignals(item),
         reviewItems: buildReviewSignals(item),
         doNotMissReason: buildDoNotMissReason(item),
@@ -972,7 +920,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         raw: item,
       };
     });
-  }, [displayedDiagnoses, selectedDiagnoses]);
+  }, [displayedDiagnoses, selectedDiagnoses, keluhanUtama, keluhanTambahan, vitals]);
 
   const primaryImpression = impressionItems[0] || null;
 
@@ -1122,7 +1070,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
             try {
               const response = await sendMessage('getRecommendations', {
                 icd_x: diagnosis.icd_x,
-                patient_age: patientAge > 0 ? patientAge : 30,
+                patient_age: patientAge > 0 ? patientAge : 0,
                 alergi: allergies.filter((item) => item.toLowerCase() !== 'tidak ada'),
                 penyakit_kronis: [],
                 current_medications: chronicTherapies,

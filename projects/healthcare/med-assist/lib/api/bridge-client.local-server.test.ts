@@ -194,13 +194,14 @@ describe('bridge client local Crew integration', () => {
     expect(syncRequest?.headers['x-crew-access-token']).toBe('local-automation-token');
 
     expect(
-      (consultRequest?.jsonBody as { target_doctor_id?: string; event_id?: string })?.target_doctor_id
+      (consultRequest?.jsonBody as { target_doctor_id?: string; event_id?: string })
+        ?.target_doctor_id
     ).toBe('doctor-1');
-    expect(
-      (consultRequest?.jsonBody as { event_id?: string })?.event_id
-    ).toBe(consultResult.eventId);
-    expect(
-      (syncRequest?.jsonBody as { patient?: { rm?: string } })?.patient?.rm
-    ).toBe('patientrefhashalpha');
+    expect((consultRequest?.jsonBody as { event_id?: string })?.event_id).toBe(
+      consultResult.eventId
+    );
+    expect((syncRequest?.jsonBody as { patient?: { rm?: string } })?.patient?.rm).toBe(
+      'patientrefhashalpha'
+    );
   });
 });

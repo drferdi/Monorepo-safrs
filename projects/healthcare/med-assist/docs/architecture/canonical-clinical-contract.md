@@ -99,11 +99,7 @@ interface TriageInput {
     keluhan_tambahan?: string;
     autocomplete_summary?: string;
     autosen_preset?:
-      | 'hypertension'
-      | 'hyperglycemia'
-      | 'hypoglycemia'
-      | 'glucose_tolerance'
-      | 'adl';
+      'hypertension' | 'hyperglycemia' | 'hypoglycemia' | 'glucose_tolerance' | 'adl';
   };
   context: {
     chronic_diseases: string[];

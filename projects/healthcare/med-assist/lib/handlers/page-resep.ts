@@ -699,13 +699,11 @@ function findAddResepButton(): ResepAddControl | null {
     Array.from(
       root.querySelectorAll('button, a.btn, input[type="button"], input[type="submit"]')
     ).filter((el): el is ResepAddControl => {
-      if (
-        !(
-          el instanceof HTMLButtonElement ||
-          el instanceof HTMLAnchorElement ||
-          el instanceof HTMLInputElement
-        )
-      ) {
+      if (!(
+        el instanceof HTMLButtonElement ||
+        el instanceof HTMLAnchorElement ||
+        el instanceof HTMLInputElement
+      )) {
         return false;
       }
       if (!isVisibleElement(el)) return false;
@@ -1537,9 +1535,7 @@ export async function scrapeResepForm(): Promise<ScrapedResepData> {
     }
 
     const ketEl = document.querySelector(sel.obat_keterangan) as
-      | HTMLInputElement
-      | HTMLTextAreaElement
-      | null;
+      HTMLInputElement | HTMLTextAreaElement | null;
     if (ketEl && ketEl.value) med.keterangan = ketEl.value;
 
     data.medications.push(med);

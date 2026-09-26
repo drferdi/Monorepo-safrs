@@ -10,11 +10,9 @@ import {
   getAssistDiagnosisPacks,
 } from './clinical-reasoning-differential';
 
-function fact(
-  key: ClinicalReasoningFactKey,
-  overrides: Partial<ClinicalFact> = {}
-): ClinicalFact {
-  const acuteDeterioration = key !== 'baseline_or_planning_risk_context' && key !== 'treatment_response_good';
+function fact(key: ClinicalReasoningFactKey, overrides: Partial<ClinicalFact> = {}): ClinicalFact {
+  const acuteDeterioration =
+    key !== 'baseline_or_planning_risk_context' && key !== 'treatment_response_good';
   return {
     key,
     label: key.replace(/_/g, ' '),
@@ -79,7 +77,8 @@ function makePack(facts: ClinicalFact[]): ReasoningEvidencePack {
         (item) => item.key === 'critical_deterioration' || item.key === 'shock_watch'
       ),
       unstablePatient: facts.some((item) => item.acuteDeterioration && item.severity !== 'low'),
-      treatmentResponseConflict: facts.some((item) => item.key === 'treatment_response_good') &&
+      treatmentResponseConflict:
+        facts.some((item) => item.key === 'treatment_response_good') &&
         facts.some((item) => item.key === 'treatment_response_poor'),
     },
     therapySupportReady: false,
@@ -143,7 +142,8 @@ describe('buildDifferentialCandidatesFromEvidencePack', () => {
     expect(sepsis).toMatchObject({
       category: 'must_not_miss',
       fitBand: 'must_not_miss',
-      safetyNote: 'Must-not-miss consideration; verify source, perfusion, mental status, and escalation need.',
+      safetyNote:
+        'Must-not-miss consideration; verify source, perfusion, mental status, and escalation need.',
     });
     expect(sepsis?.evidenceFor.map((item) => item.factKey)).toEqual(
       expect.arrayContaining([

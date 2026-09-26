@@ -63,11 +63,7 @@ vi.mock('@/lib/iskandar-diagnosis-engine/trajectory-visualization-view-model', (
 }));
 
 vi.mock('@/components/clinical/trajectory/v2', () => ({
-  ClinicalTrajectoryV2: ({
-    patientContext,
-  }: {
-    patientContext?: { name?: string };
-  }) => (
+  ClinicalTrajectoryV2: ({ patientContext }: { patientContext?: { name?: string } }) => (
     <div
       data-testid="mock-trajectory-v2"
       data-has-patient-context={patientContext ? 'yes' : 'no'}

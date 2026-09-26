@@ -10,10 +10,7 @@ import {
   getAssistDiagnosisPacks,
 } from '@/lib/iskandar-diagnosis-engine/clinical-reasoning-differential';
 
-function fact(
-  key: ClinicalReasoningFactKey,
-  overrides: Partial<ClinicalFact> = {}
-): ClinicalFact {
+function fact(key: ClinicalReasoningFactKey, overrides: Partial<ClinicalFact> = {}): ClinicalFact {
   const acuteDeterioration =
     key !== 'baseline_or_planning_risk_context' && key !== 'treatment_response_good';
 

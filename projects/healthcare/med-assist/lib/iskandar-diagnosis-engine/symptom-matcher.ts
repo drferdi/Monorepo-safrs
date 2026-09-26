@@ -38,6 +38,13 @@ export interface MatchedCandidate {
   definisi: string;
   diagnosisBanding: string[];
   advancedGuideline?: unknown;
+  /** Applied epidemiology multiplier (1 when gated). */
+  epidemiologyWeight?: number;
+  localPrevalence?: number;
+  /** True when epi boost was skipped due to weak raw score (H8). */
+  epiGated?: boolean;
+  /** Soft penalty multiplier from diagnosis_banding peers (H9); 1 = none. */
+  bandingSoftPenalty?: number;
 }
 
 interface PenyakitEntry {

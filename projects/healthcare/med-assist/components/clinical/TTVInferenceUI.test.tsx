@@ -200,6 +200,35 @@ describe('TTVInferenceUI triage verdict callback', () => {
       );
     });
   });
+
+  it('keeps triage standby when age is unknown even if adult-normal vitals are filled (failed OCR)', async () => {
+    const onTriageVerdictChange = vi.fn();
+    const onAlertsChange = vi.fn();
+    render(
+      <TTVInferenceUI
+        ttvState={makeState({
+          sbp: '120',
+          dbp: '80',
+          hr: '80',
+          rr: '18',
+          temp: '36.5',
+          spo2: '98',
+        })}
+        onTriageVerdictChange={onTriageVerdictChange}
+        onAlertsChange={onAlertsChange}
+        patientAge={0}
+        patientAgeKnown={false}
+        patientGender="L"
+      />
+    );
+
+    await waitFor(() => {
+      expect(onTriageVerdictChange).toHaveBeenCalledWith(
+        expect.objectContaining({ zone: 'standby', headlineAlert: null, sortedAlerts: [] })
+      );
+    });
+    expect(onAlertsChange).toHaveBeenCalledWith([]);
+  });
 });
 
 describe('buildSummary headline priority', () => {

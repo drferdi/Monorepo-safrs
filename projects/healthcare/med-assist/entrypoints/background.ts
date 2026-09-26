@@ -218,8 +218,7 @@ async function readRecentDirectPatientSync(): Promise<RecentPatientSyncSnapshot 
   try {
     const raw = await browser.storage.local.get(DIRECT_PATIENT_SYNC_CACHE_KEY);
     const cached = raw[DIRECT_PATIENT_SYNC_CACHE_KEY] as
-      | Partial<RecentPatientSyncSnapshot>
-      | undefined;
+      Partial<RecentPatientSyncSnapshot> | undefined;
     if (!cached?.rm || !cached?.syncedAt) return null;
     return {
       rm: String(cached.rm).trim(),

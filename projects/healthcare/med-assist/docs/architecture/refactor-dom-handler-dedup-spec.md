@@ -16,11 +16,11 @@ Do not change selector order or fallback semantics unless a failing test proves 
 
 Extract shared utilities only after tests cover the current selector behavior:
 
-| New module | Responsibility |
-| --- | --- |
-| `lib/handlers/dom-field-resolution.ts` | visible element lookup and selector attempt metadata |
-| `lib/handlers/fill-result-builder.ts` | consistent `mapped`, `skipped`, and reason-code assembly |
-| `lib/handlers/autocomplete-fill.ts` | shared autocomplete wait and retry behavior |
+| New module                             | Responsibility                                           |
+| -------------------------------------- | -------------------------------------------------------- |
+| `lib/handlers/dom-field-resolution.ts` | visible element lookup and selector attempt metadata     |
+| `lib/handlers/fill-result-builder.ts`  | consistent `mapped`, `skipped`, and reason-code assembly |
+| `lib/handlers/autocomplete-fill.ts`    | shared autocomplete wait and retry behavior              |
 
 ## Acceptance Checklist
 

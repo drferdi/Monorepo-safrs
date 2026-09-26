@@ -9,9 +9,10 @@
     "total_diseases": 159,
     "with_clinical_data": 159,
     "coverage_percentage": 100,
-    "last_updated": "2026-06-26T12:51:11.833Z",
+    "last_updated": "2026-09-23T13:39:05.000Z",
     "author": "Sentra Healthcare Solutions",
-    "v2_guidelines_count": 21
+    "v2_guidelines_count": 21,
+    "kb_repair_note": "gejala_klinis/nama repaired per docs/kb-repair-list.md (Chief GO 2026-09-21); KB hygiene 2026-09-23: DIS-054 B76 gejala_klinis de-genericized (see docs/kb-hygiene-2026-09-23.md); KB residual hygiene 2026-09-23: DIS-001/008/026/032/003/041/058/083/090/092 (docs/kb-hygiene-residual-2026-09-23.md)"
   },
   "penyakit": [
     {
@@ -25,11 +26,11 @@
       "can_refer": false,
       "definisi": "Kejang Demam (KD) adalah bangkitan kejang yang terjadi pada kenaikan suhu tubuh (suhu\nrektal > 38o C) akibat dari suatu proses ekstra kranial. Kejang berhubungan dengan demam,\ntetapi tidak terbukti adanya infeksi intrakranial atau penyebab lain.",
       "gejala_klinis": [
-        "Anamnesis dimulai dari riwayat perjalanan penyakit sampai",
-        "Umumnya kejang demam pada anak dan berlangsung pada permulaan demam akut,",
-        "tanda",
-        "Penting untuk ditanyakan riwayat kejang sebelumnya, kondisi medis yang berhubungan,",
-        "obatan, trauma, gejala infeksi, keluhan neurologis, nyeri atau cedera akibat kejang."
+        "Kejang pada anak dengan demam akut (suhu > 38°C)",
+        "Kejang biasanya pada permulaan demam",
+        "Tanpa tanda infeksi intrakranial yang jelas",
+        "Usia tipikal 6 bulan hingga 5 tahun",
+        "Riwayat kejang demam sebelumnya bila ada"
       ],
       "pemeriksaan_fisik": [
         "tanda vital, mencari tanda-tanda trauma akut kepala,",
@@ -73,13 +74,22 @@
               "type": "treatment_note",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["neonatus"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "neonatus"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "nervous system",
-                "anatomy": ["central nervous system"],
+                "anatomy": [
+                  "central nervous system"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "severe",
-                "context": ["emergency"]
+                "context": [
+                  "emergency"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -141,13 +151,22 @@
               "type": "symptom",
               "specificity": "supportive",
               "axis": {
-                "age_group": ["neonatus"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "neonatus"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "nervous system",
-                "anatomy": ["central nervous system"],
+                "anatomy": [
+                  "central nervous system"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "moderate",
-                "context": ["diagnostic"]
+                "context": [
+                  "diagnostic"
+                ]
               },
               "patient_language_synonyms": [
                 "pemeriksaan CT-scan atau MRI diperlukan jika ada kejang fokal"
@@ -213,7 +232,9 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["child"],
+                "age_group": [
+                  "child"
+                ],
                 "sex": [],
                 "body_system": "nervous system",
                 "anatomy": [],
@@ -281,7 +302,9 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["child"],
+                "age_group": [
+                  "child"
+                ],
                 "sex": [],
                 "body_system": "nervous system",
                 "anatomy": [],
@@ -349,10 +372,14 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["pediatric"],
+                "age_group": [
+                  "pediatric"
+                ],
                 "sex": [],
                 "body_system": "nervous",
-                "anatomy": ["central nervous system"],
+                "anatomy": [
+                  "central nervous system"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -419,7 +446,9 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["child"],
+                "age_group": [
+                  "child"
+                ],
                 "sex": [],
                 "body_system": "nervous system",
                 "anatomy": [],
@@ -487,7 +516,9 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["child"],
+                "age_group": [
+                  "child"
+                ],
                 "sex": [],
                 "body_system": "nervous system",
                 "anatomy": [],
@@ -627,7 +658,9 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "nervous system",
-                "anatomy": ["muscle"],
+                "anatomy": [
+                  "muscle"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -835,7 +868,7 @@
       "definisi": "HIV adalah Human Immunodeficiency Virus (HIV) yang menyerang sel-sel kekebalan tubuh.\nAIDS atau Acquired Immunodefficiency Syndrome adalah kumpulan gejala akibat penurunan\nkekebalan tubuh yang disebabkan oleh infeksi HIV.",
       "gejala_klinis": [
         "Demam berulang lebih dari satu bulan",
-        "Penurunan berat badan lebih dari 10%",
+        "Malnutrisi atau BB menurun lebih dari 10%",
         "Diare kronis lebih dari satu bulan",
         "Kandidiasis oral",
         "Limfadenopati generalisata",
@@ -847,7 +880,12 @@
         "Penurunan berat badan signifikan",
         "Infeksi oportunistik"
       ],
-      "diagnosis_banding": ["Mumps", "Kista Duktus Tiroglosus", "Kista Dermoid", "Hemangioma"],
+      "diagnosis_banding": [
+        "Mumps",
+        "Kista Duktus Tiroglosus",
+        "Kista Dermoid",
+        "Hemangioma"
+      ],
       "komplikasi": [
         "ICPC II: B90 HIV-infection/AIDS",
         "ICD X: Z21 Asymptomatic human immunodeficiency virus (HIV) infection status",
@@ -891,7 +929,10 @@
         "Tidak ada defisit neurologis",
         "Tidak ada papiledema"
       ],
-      "diagnosis_banding": ["Migren", "Cluster-type hedache (nyeri kepala kluster)"],
+      "diagnosis_banding": [
+        "Migren",
+        "Cluster-type hedache (nyeri kepala kluster)"
+      ],
       "komplikasi": [],
       "red_flags": [
         "Nyeri kepala petir mendadak",
@@ -1082,10 +1123,18 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["female", "male"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "female",
+                  "male"
+                ],
                 "body_system": "nervous",
-                "anatomy": ["head", "neck"],
+                "anatomy": [
+                  "head",
+                  "neck"
+                ],
                 "temporal_pattern": "episodic",
                 "severity": "mild to moderate",
                 "context": []
@@ -1150,10 +1199,18 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["female", "male"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "female",
+                  "male"
+                ],
                 "body_system": "nervous",
-                "anatomy": ["neck", "head"],
+                "anatomy": [
+                  "neck",
+                  "head"
+                ],
                 "temporal_pattern": "episodic",
                 "severity": "mild to moderate",
                 "context": []
@@ -1220,10 +1277,17 @@
               "type": "treatment_note",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["female", "male"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "female",
+                  "male"
+                ],
                 "body_system": "nervous",
-                "anatomy": ["head"],
+                "anatomy": [
+                  "head"
+                ],
                 "temporal_pattern": "episodic",
                 "severity": "mild to moderate",
                 "context": []
@@ -1310,7 +1374,10 @@
         "Cahaya kilat atau berkelip.",
         "Banyak tidur atau kurang tidur"
       ],
-      "pemeriksaan_fisik": ["Temuan-", "sebab sekunder, yang memerlukan pendekatan"],
+      "pemeriksaan_fisik": [
+        "Temuan-",
+        "sebab sekunder, yang memerlukan pendekatan"
+      ],
       "diagnosis_banding": [
         "Arteriovenous Malformations",
         "Atypical Facial Pain",
@@ -1575,7 +1642,9 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "nervous system",
-                "anatomy": ["head"],
+                "anatomy": [
+                  "head"
+                ],
                 "temporal_pattern": "episodic",
                 "severity": "moderate to severe",
                 "context": []
@@ -1646,11 +1715,11 @@
       "can_refer": false,
       "definisi": "Bells’palsy adalah paralisis fasialis idiopatik, merupakan penyebab tersering dari paralisis\nfasialis unilateral. Bells’ palsy merupakan kejadian akut, unilateral, paralisis saraf fasial type\nLMN (perifer), yang secara gradual mengalami perbaikan pada 80-90% kasus.\nPenyebab Bells’ palsy tidak diketahui, diduga penyakit ini bentuk polineuritis dengan\nkemungkinan virus, inflamasi, auto imun dan etiologi iskemik.\nPeningkatan kejadian berimplikasi pada kemungkinan infeksi HSV type I dan reaktivasi\nherpes zoster dari ganglia nervus kranialis.\nBells’ palsy merupakan satu dari penyakit neurologis tersering yang melibatkan saraf\nkranialis, dan penyebab tersering (60-75% dari kasus paralisis fasialis unilateral akut)\nparalisis fasial di dunia.\nBells’ palsy lebih sering ditemukan pada usia dewasa, orang dengan DM, dan wanita hamil.\n3 05",
       "gejala_klinis": [
-        "jam)",
-        "jam. Gejala",
-        "Karena kondisi ini",
-        "Kebanyakan",
-        "Kebanyakan kasus paresis mulai terjadi selama"
+        "Kelemahan/paralisis otot wajah satu sisi mendadak",
+        "Mulut mencong",
+        "Mata sulit menutup sisi terkena",
+        "Hilangnya lipatan dahi",
+        "Nyeri belakang telinga"
       ],
       "pemeriksaan_fisik": [
         "- Kelemahan atau paralisis yang melibatkan saraf fasial (N VII) melibatkan kelemahan",
@@ -1712,15 +1781,25 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["all"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "all"
+                ],
                 "body_system": "nervous",
-                "anatomy": ["facial nerve"],
+                "anatomy": [
+                  "facial nerve"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild",
-                "context": ["Bell's palsy"]
+                "context": [
+                  "Bell's palsy"
+                ]
               },
-              "patient_language_synonyms": ["kelumpuhan wajah"],
+              "patient_language_synonyms": [
+                "kelumpuhan wajah"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -1780,15 +1859,25 @@
               "type": "symptom",
               "specificity": "supportive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["all"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "all"
+                ],
                 "body_system": "nervous",
-                "anatomy": ["ear"],
+                "anatomy": [
+                  "ear"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild",
-                "context": ["Bell's palsy"]
+                "context": [
+                  "Bell's palsy"
+                ]
               },
-              "patient_language_synonyms": ["nyeri telinga belakang"],
+              "patient_language_synonyms": [
+                "nyeri telinga belakang"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -1848,15 +1937,25 @@
               "type": "symptom",
               "specificity": "supportive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["all"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "all"
+                ],
                 "body_system": "auditory",
-                "anatomy": ["ear"],
+                "anatomy": [
+                  "ear"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild",
-                "context": ["Bell's palsy"]
+                "context": [
+                  "Bell's palsy"
+                ]
               },
-              "patient_language_synonyms": ["sensitivitas suara"],
+              "patient_language_synonyms": [
+                "sensitivitas suara"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -1919,7 +2018,9 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "nervous system",
-                "anatomy": ["facial nerve"],
+                "anatomy": [
+                  "facial nerve"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "",
                 "context": []
@@ -1987,7 +2088,9 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "ear",
-                "anatomy": ["ear"],
+                "anatomy": [
+                  "ear"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -2055,7 +2158,9 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "eye",
-                "anatomy": ["eye"],
+                "anatomy": [
+                  "eye"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -2123,7 +2228,9 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "ear",
-                "anatomy": ["ear"],
+                "anatomy": [
+                  "ear"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -2191,7 +2298,9 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "taste",
-                "anatomy": ["tongue"],
+                "anatomy": [
+                  "tongue"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -2258,15 +2367,25 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["all"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "all"
+                ],
                 "body_system": "nervous",
-                "anatomy": ["general"],
+                "anatomy": [
+                  "general"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild",
-                "context": ["Bell's palsy"]
+                "context": [
+                  "Bell's palsy"
+                ]
               },
-              "patient_language_synonyms": ["diagnosis Bell's palsy"],
+              "patient_language_synonyms": [
+                "diagnosis Bell's palsy"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -2379,9 +2498,10 @@
       "can_refer": false,
       "definisi": "Gangguan yang ditandai oleh adanya gejala-gejala anxietas (kecemasan) dan depresi\nbersama-sama, dan masing-masing gejala tidak menunjukkan rangkaian gejala yang cukup\nberat untuk dapat ditegakkannya suatu diagnosis tersendiri. Untuk gejala anxietas, beberapa\ngejala autonomik harus ditemukan, walaupun tidak terus menerus, di samping rasa cemas\natau khawatir berlebihan.",
       "gejala_klinis": [
-        "Allo dan Auto Anamnesis tambahan:",
-        " Keluhan biasanya sering terjadi, atau berlangsung lama, dan terdapat stresor kehidupan.",
-        "lain)"
+        "Keluhan fisik berulang tanpa temuan organik yang memadai",
+        "Keluhan berlangsung lama disertai stresor kehidupan",
+        "Perhatian berlebih terhadap gejala tubuh",
+        "Gangguan fungsi sehari-hari akibat keluhan"
       ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [
@@ -2407,15 +2527,28 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "nervous system",
-                "anatomy": ["general"],
+                "anatomy": [
+                  "general"
+                ],
                 "temporal_pattern": "chronic",
                 "severity": "mild",
-                "context": ["clinical"]
+                "context": [
+                  "clinical"
+                ]
               },
-              "patient_language_synonyms": ["gejala fisik", "nyeri", "kelelahan"],
+              "patient_language_synonyms": [
+                "gejala fisik",
+                "nyeri",
+                "kelelahan"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -2553,7 +2686,10 @@
       "gejala_klinis": [
         "Sulit masuk tidur, sering terbangun di malam hari atau mempertahankan tidur yang optimal,\natau kualitas tidur yang buruk."
       ],
-      "pemeriksaan_fisik": ["Bila terdapat gangguan organik,", "3 15"],
+      "pemeriksaan_fisik": [
+        "Bila terdapat gangguan organik,",
+        "3 15"
+      ],
       "diagnosis_banding": [
         "Gangguan psikiatri.",
         "Gangguan medik umum.",
@@ -2805,7 +2941,11 @@
       ],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["Penurunan visus", "Perforasi bola mata", "Benda asing menembus kornea"],
+      "red_flags": [
+        "Penurunan visus",
+        "Perforasi bola mata",
+        "Benda asing menembus kornea"
+      ],
       "terapi": [],
       "kriteria_rujukan": "Bila terjadi penurunan visus.",
       "source": "PPK IDI 2013 + 144 Diagnosis KKI"
@@ -2882,10 +3022,14 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["all"],
+                "age_group": [
+                  "all"
+                ],
                 "sex": [],
                 "body_system": "eye",
-                "anatomy": ["conjunctiva"],
+                "anatomy": [
+                  "conjunctiva"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -2952,10 +3096,14 @@
               "type": "prognostic_marker",
               "specificity": "supportive",
               "axis": {
-                "age_group": ["all"],
+                "age_group": [
+                  "all"
+                ],
                 "sex": [],
                 "body_system": "eye",
-                "anatomy": ["conjunctiva"],
+                "anatomy": [
+                  "conjunctiva"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -3045,7 +3193,11 @@
         "Debris pada tear film",
         "Berkurangnya meniskus air mata di tepi kelopak bawah"
       ],
-      "diagnosis_banding": ["Konjungtivitis alergi", "Blefaritis", "Konjungtivitis viral"],
+      "diagnosis_banding": [
+        "Konjungtivitis alergi",
+        "Blefaritis",
+        "Konjungtivitis viral"
+      ],
       "komplikasi": [
         "Keratitis",
         "Penipisan kornea",
@@ -3091,8 +3243,16 @@
         "Skuama berminyak pada tepi kelopak"
       ],
       "diagnosis_banding": [],
-      "komplikasi": ["Blefarokonjungtivitis", "Madarosis", "Trikiasis"],
-      "red_flags": ["Ulkus kornea", "Trikiasis progresif", "Blefaritis tidak responsif terapi"],
+      "komplikasi": [
+        "Blefarokonjungtivitis",
+        "Madarosis",
+        "Trikiasis"
+      ],
+      "red_flags": [
+        "Ulkus kornea",
+        "Trikiasis progresif",
+        "Blefaritis tidak responsif terapi"
+      ],
       "terapi": [
         {
           "obat": "eritromisin",
@@ -3266,9 +3426,20 @@
         "Nyeri tekan pada area bengkak",
         "Pseudoptosis akibat edema"
       ],
-      "diagnosis_banding": ["Selulitis preseptal", "Kalazion", "Granuloma piogenik"],
-      "komplikasi": ["Selulitis palpebra.", "Abses palpebra."],
-      "red_flags": ["Selulitis orbita", "Abses yang meluas", "Penurunan visus"],
+      "diagnosis_banding": [
+        "Selulitis preseptal",
+        "Kalazion",
+        "Granuloma piogenik"
+      ],
+      "komplikasi": [
+        "Selulitis palpebra.",
+        "Abses palpebra."
+      ],
+      "red_flags": [
+        "Selulitis orbita",
+        "Abses yang meluas",
+        "Penurunan visus"
+      ],
       "terapi": [
         {
           "obat": "eritromisin",
@@ -3288,15 +3459,26 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["all"],
-                "sex": ["all"],
+                "age_group": [
+                  "all"
+                ],
+                "sex": [
+                  "all"
+                ],
                 "body_system": "ocular",
-                "anatomy": ["eyelid"],
+                "anatomy": [
+                  "eyelid"
+                ],
                 "temporal_pattern": "",
                 "severity": "mild",
-                "context": ["acute"]
+                "context": [
+                  "acute"
+                ]
               },
-              "patient_language_synonyms": ["mata bengkak", "rasa sakit pada kelopak mata"],
+              "patient_language_synonyms": [
+                "mata bengkak",
+                "rasa sakit pada kelopak mata"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -3356,10 +3538,14 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
+                "age_group": [
+                  "adult"
+                ],
                 "sex": [],
                 "body_system": "ocular",
-                "anatomy": ["eye"],
+                "anatomy": [
+                  "eye"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -3426,15 +3612,26 @@
               "type": "physical_exam",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["all"],
-                "sex": ["all"],
+                "age_group": [
+                  "all"
+                ],
+                "sex": [
+                  "all"
+                ],
                 "body_system": "ocular",
-                "anatomy": ["eyelid"],
+                "anatomy": [
+                  "eyelid"
+                ],
                 "temporal_pattern": "",
                 "severity": "mild",
-                "context": ["acute"]
+                "context": [
+                  "acute"
+                ]
               },
-              "patient_language_synonyms": ["kelopak mata bengkak", "kelopak mata merah"],
+              "patient_language_synonyms": [
+                "kelopak mata bengkak",
+                "kelopak mata merah"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -3494,10 +3691,14 @@
               "type": "physical_exam",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
+                "age_group": [
+                  "adult"
+                ],
                 "sex": [],
                 "body_system": "ocular",
-                "anatomy": ["conjunctiva"],
+                "anatomy": [
+                  "conjunctiva"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -3562,10 +3763,14 @@
               "type": "diagnostic_test",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
+                "age_group": [
+                  "adult"
+                ],
                 "sex": [],
                 "body_system": "ocular",
-                "anatomy": ["eye"],
+                "anatomy": [
+                  "eye"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -3635,7 +3840,12 @@
       "body_system": "SISTEM INDERA",
       "can_refer": false,
       "definisi": "Pertumbuhan bulu mata yang abnormal ke arah dalam sehingga menggores kornea",
-      "gejala_klinis": ["Iritasi mata", "Mata merah", "Epifora", "Sensasi benda asing"],
+      "gejala_klinis": [
+        "Iritasi mata",
+        "Mata merah",
+        "Epifora",
+        "Sensasi benda asing"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -3659,10 +3869,14 @@
               "type": "complication",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["all"],
+                "age_group": [
+                  "all"
+                ],
                 "sex": [],
                 "body_system": "eye",
-                "anatomy": ["eyelid"],
+                "anatomy": [
+                  "eyelid"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -3732,7 +3946,11 @@
       "body_system": "SISTEM INDERA",
       "can_refer": false,
       "definisi": "Peradangan pada episklera, lapisan antara sklera dan konjungtiva",
-      "gejala_klinis": ["Mata merah sektoral", "Nyeri ringan", "Fotofobia ringan"],
+      "gejala_klinis": [
+        "Mata merah sektoral",
+        "Nyeri ringan",
+        "Fotofobia ringan"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -3756,15 +3974,21 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["20-50"],
+                "age_group": [
+                  "20-50"
+                ],
                 "sex": [],
                 "body_system": "eye",
-                "anatomy": ["episklera"],
+                "anatomy": [
+                  "episklera"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild",
                 "context": []
               },
-              "patient_language_synonyms": ["mata merah"],
+              "patient_language_synonyms": [
+                "mata merah"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -3824,15 +4048,21 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["20-50"],
+                "age_group": [
+                  "20-50"
+                ],
                 "sex": [],
                 "body_system": "eye",
-                "anatomy": ["episklera"],
+                "anatomy": [
+                  "episklera"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild",
                 "context": []
               },
-              "patient_language_synonyms": ["tidak ada gangguan penglihatan"],
+              "patient_language_synonyms": [
+                "tidak ada gangguan penglihatan"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -3892,15 +4122,21 @@
               "type": "symptom",
               "specificity": "supportive",
               "axis": {
-                "age_group": ["20-50"],
+                "age_group": [
+                  "20-50"
+                ],
                 "sex": [],
                 "body_system": "eye",
-                "anatomy": ["episklera"],
+                "anatomy": [
+                  "episklera"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild",
                 "context": []
               },
-              "patient_language_synonyms": ["keluhan satu mata"],
+              "patient_language_synonyms": [
+                "keluhan satu mata"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -3962,15 +4198,21 @@
               "type": "physical_exam",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["20-50"],
+                "age_group": [
+                  "20-50"
+                ],
                 "sex": [],
                 "body_system": "eye",
-                "anatomy": ["episklera"],
+                "anatomy": [
+                  "episklera"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild",
                 "context": []
               },
-              "patient_language_synonyms": ["kemerahan episklera"],
+              "patient_language_synonyms": [
+                "kemerahan episklera"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -4032,10 +4274,14 @@
               "type": "diagnostic_test",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["20-50"],
+                "age_group": [
+                  "20-50"
+                ],
                 "sex": [],
                 "body_system": "eye",
-                "anatomy": ["episklera"],
+                "anatomy": [
+                  "episklera"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild",
                 "context": []
@@ -4152,7 +4398,11 @@
       "body_system": "SISTEM INDERA",
       "can_refer": false,
       "definisi": "Miopia ringan adalahkelainan refraksi dimana sinar sejajar yang masuk ke mata dalam\nkeadaan istirahat (tanpa akomodasi) akan dibiaskan membentuk bayangan di depan retina.\nDapat dikoreksi dengan lensa sferis negative S – 0.25 sampai S – 3.00 D",
-      "gejala_klinis": ["Tidak terdapat riwayat kelainan sistemik seperti;"],
+      "gejala_klinis": [
+        "Penglihatan jauh kabur",
+        "Menyipitkan mata",
+        "Sakit kepala"
+      ],
       "pemeriksaan_fisik": [
         "Penderita duduk menghadap kartu snellen pada jarak 6 meter.",
         "Pada mata dipasang bingkai percobaan. Satu mata ditutup, biasanya mata kiri ditutup",
@@ -4185,10 +4435,17 @@
         "Nyeri kepala setelah membaca atau melihat dekat",
         "Kelelahan mata"
       ],
-      "pemeriksaan_fisik": ["Visus menurun", "Refraksi silinder positif", "Uji pin hole membaik"],
+      "pemeriksaan_fisik": [
+        "Visus menurun",
+        "Refraksi silinder positif",
+        "Uji pin hole membaik"
+      ],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["Penurunan visus mendadak", "Nyeri mata disertai kemerahan"],
+      "red_flags": [
+        "Penurunan visus mendadak",
+        "Nyeri mata disertai kemerahan"
+      ],
       "terapi": [],
       "kriteria_rujukan": "Apabila visus tidak dapat mencapai 6/6.",
       "source": "PPK IDI 2013 + 144 Diagnosis KKI"
@@ -4217,7 +4474,11 @@
       ],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["Penurunan visus jauh bersamaan", "Nyeri mata mendadak", "Diplopia"],
+      "red_flags": [
+        "Penurunan visus jauh bersamaan",
+        "Nyeri mata mendadak",
+        "Diplopia"
+      ],
       "terapi": [],
       "kriteria_rujukan": "",
       "source": "PPK IDI 2013 + 144 Diagnosis KKI"
@@ -4318,9 +4579,20 @@
         "Bila telah terjadi perforasi, maka sekret akan berkurang dan",
         " Pada pemeriksaan penala yang dilakukan pada anak yang lebih besar dapat ditemukan tuli"
       ],
-      "diagnosis_banding": ["Otitis media serosa akut", "Otitis eksterna"],
-      "komplikasi": ["Otitis Media Supuratif Kronik", "Abses sub-periosteal", "Mastoiditis akut"],
-      "red_flags": ["Otitis Media Supuratif Kronik", "Abses sub-periosteal", "Mastoiditis akut"],
+      "diagnosis_banding": [
+        "Otitis media serosa akut",
+        "Otitis eksterna"
+      ],
+      "komplikasi": [
+        "Otitis Media Supuratif Kronik",
+        "Abses sub-periosteal",
+        "Mastoiditis akut"
+      ],
+      "red_flags": [
+        "Otitis Media Supuratif Kronik",
+        "Abses sub-periosteal",
+        "Mastoiditis akut"
+      ],
       "terapi": [
         {
           "obat": "Eritromisin",
@@ -4360,13 +4632,21 @@
               "type": "diagnostic_criterion",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["pediatric"],
-                "sex": ["both"],
+                "age_group": [
+                  "pediatric"
+                ],
+                "sex": [
+                  "both"
+                ],
                 "body_system": "ear",
-                "anatomy": ["middle ear"],
+                "anatomy": [
+                  "middle ear"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild to moderate",
-                "context": ["clinical"]
+                "context": [
+                  "clinical"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -4439,7 +4719,10 @@
         "Beberapa pasien",
         "Rasa nyeri timbul apabila serumen keras membatu"
       ],
-      "pemeriksaan_fisik": ["Konsistensi dari serumen dapat bervariasi.", "2 13"],
+      "pemeriksaan_fisik": [
+        "Konsistensi dari serumen dapat bervariasi.",
+        "2 13"
+      ],
       "diagnosis_banding": [],
       "komplikasi": [],
       "red_flags": [],
@@ -4457,7 +4740,13 @@
       "body_system": "SISTEM INDERA",
       "can_refer": false,
       "definisi": "Motion sickness akibat konflik sensorik vestibular-visual",
-      "gejala_klinis": ["Mual", "Muntah", "Pusing", "Berkeringat dingin", "Pucat"],
+      "gejala_klinis": [
+        "Mual",
+        "Muntah",
+        "Pusing atau vertigo terkait gerakan/kendaraan",
+        "Berkeringat dingin",
+        "Pucat"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -4499,7 +4788,11 @@
         "2. Abses.",
         "Vestibulitis."
       ],
-      "red_flags": ["Selulitis menyebar ke wajah", "Trombosis sinus kavernosus", "Demam tinggi"],
+      "red_flags": [
+        "Selulitis menyebar ke wajah",
+        "Trombosis sinus kavernosus",
+        "Demam tinggi"
+      ],
       "terapi": [
         {
           "obat": "Eritromisin",
@@ -4521,14 +4814,10 @@
       "can_refer": false,
       "definisi": "Rhinitis akut adalah peradangan pada mukosa hidung yangberlangsung akut(<12 minggu).\nHal ini dapat disebabkan oleh infeksi virus, bakteri, ataupun iritan. Radang sering ditemukan\nkarena manifestasi dari rhinitis simpleks (common cold), influenza, penyakit eksantem\n(seperti morbili, variola, varicella, pertusis), penyakit spesifik, serta sekunder dari iritasi lokal\natau trauma.\nRhinitis akut merupakan penyebab morbiditas yang signifikan walaupun sering dianggap\nsepele oleh para praktisi. Gejala-gejala rhinitis secara signifikan mempengaruhi kualitas\nhidup pasien karena gejala-gejala sistemik yang menyertainya seperti fatigue dan sakit\nkepala.",
       "gejala_klinis": [
-        "- Rhinitis simpleks: gejala berupa rasa panas di daerah belakang hidung pada awalnya, lalu",
-        "ulang. Pasien",
-        "Pada infeksi bakteri ingus menjadi",
-        "3 40",
-        "Rhinitis influenza: gejala sistemik umumnya lebih berat disertai sakit pada otot.",
-        "Rhinitis eksantematous: gejala terjadi sebelum tanda karakteristik atau ruam muncul.",
-        "Rhinitis iritan: gejala berupa ingus yang sangat banyak dan bersin.",
-        "Rhinitis difteria: gejala berupa demam, toksemia, terdapat limfadenitis, dan mungkin ada"
+        "Hidung tersumbat",
+        "Ingus/rinore",
+        "Bersin berulang",
+        "Rasa panas/gatal di hidung"
       ],
       "pemeriksaan_fisik": [
         " Pada pemeriksaan rinoskopi anterior tampak kavum nasi sempit, terdapat sekret serous",
@@ -4579,14 +4868,11 @@
       "can_refer": false,
       "definisi": "Rhinitis akut adalah peradangan pada mukosa hidung yangberlangsung akut(<12 minggu).\nHal ini dapat disebabkan oleh infeksi virus, bakteri, ataupun iritan. Radang sering ditemukan\nkarena manifestasi dari rhinitis simpleks (common cold), influenza, penyakit eksantem\n(seperti morbili, variola, varicella, pertusis), penyakit spesifik, serta sekunder dari iritasi lokal\natau trauma.\nRhinitis akut merupakan penyebab morbiditas yang signifikan walaupun sering dianggap\nsepele oleh para praktisi. Gejala-gejala rhinitis secara signifikan mempengaruhi kualitas\nhidup pasien karena gejala-gejala sistemik yang menyertainya seperti fatigue dan sakit\nkepala.",
       "gejala_klinis": [
-        "- Rhinitis simpleks: gejala berupa rasa panas di daerah belakang hidung pada awalnya, lalu",
-        "ulang. Pasien",
-        "Pada infeksi bakteri ingus menjadi",
-        "3 40",
-        "Rhinitis influenza: gejala sistemik umumnya lebih berat disertai sakit pada otot.",
-        "Rhinitis eksantematous: gejala terjadi sebelum tanda karakteristik atau ruam muncul.",
-        "Rhinitis iritan: gejala berupa ingus yang sangat banyak dan bersin.",
-        "Rhinitis difteria: gejala berupa demam, toksemia, terdapat limfadenitis, dan mungkin ada"
+        "Hidung tersumbat",
+        "Rinore encer",
+        "Bersin berulang",
+        "Rasa panas di hidung",
+        "Pemicu non-alergi (udara dingin, asap, bau menyengat)"
       ],
       "pemeriksaan_fisik": [
         " Pada pemeriksaan rinoskopi anterior tampak kavum nasi sempit, terdapat sekret serous",
@@ -4649,9 +4935,20 @@
         "Sekret hidung encer bening",
         "Konka edema"
       ],
-      "diagnosis_banding": ["Rhinitis vasomotor", "Rhinitis akut"],
-      "komplikasi": ["Polip hidung", "Sinusitis paranasal", "Otitis media"],
-      "red_flags": ["Polip nasi", "Sinusitis kronik komplikasi", "Sesak napas berat"],
+      "diagnosis_banding": [
+        "Rhinitis vasomotor",
+        "Rhinitis akut"
+      ],
+      "komplikasi": [
+        "Polip hidung",
+        "Sinusitis paranasal",
+        "Otitis media"
+      ],
+      "red_flags": [
+        "Polip nasi",
+        "Sinusitis kronik komplikasi",
+        "Sesak napas berat"
+      ],
       "terapi": [
         {
           "obat": "difenhidramin",
@@ -4695,7 +4992,10 @@
       ],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["Epistaksis berat", "Aspirasi ke saluran napas bawah"],
+      "red_flags": [
+        "Epistaksis berat",
+        "Aspirasi ke saluran napas bawah"
+      ],
       "terapi": [],
       "kriteria_rujukan": "Bila terjadi penurunan visus.",
       "source": "PPK IDI 2013 + 144 Diagnosis KKI"
@@ -4711,13 +5011,16 @@
       "can_refer": false,
       "definisi": "Epistaksis adalah perdarahan akut yang berasal dari lubang hidung, rongga hidung atau\nnasofaring. Epistaksis bukan suatu penyakit, melainkan gejala dari suatu kelainan yang\nhampir 90% dapat berhenti sendiri. Perdarahan dari hidung dapat merupakan gejala yang\nsangat mengganggu. Faktor etiologi dapat lokal atau sistemik. Sumber perdarahan harus\ndicari dan dikoreksi untuk mengobati epistaksis secara efektif.",
       "gejala_klinis": [
-        " Pasien sering menyatakan bahwa perdarahan berasal dari bagian depan dan belakang",
-        "Perhatian ditujukan pada bagian hidung tempat awal terjadinya perdarahan",
-        " Pada anamnesis harus ditanyakan secara spesifik mengenai banyaknya perdarahan,",
-        "Penting mendapatkan riwayat trauma terperinci. Riwayat",
-        "Riwayat penyakit sistemik seperti riwayat alergi"
+        "Perdarahan dari hidung (anterior atau posterior)",
+        "Volume perdarahan bervariasi",
+        "Dapat berhubungan dengan trauma hidung",
+        "Riwayat alergi atau penyakit sistemik relevan"
       ],
-      "pemeriksaan_fisik": ["Vestibulum,", " Rinoskopi posterior:", " Pengukuran tekanan darah:"],
+      "pemeriksaan_fisik": [
+        "Vestibulum,",
+        " Rinoskopi posterior:",
+        " Pengukuran tekanan darah:"
+      ],
       "diagnosis_banding": [],
       "komplikasi": [
         "Akibat pemasangan tampon anterior dapat timbul sinusitis (karena ostium sinus",
@@ -4742,15 +5045,21 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["pediatric"],
+                "age_group": [
+                  "pediatric"
+                ],
                 "sex": [],
                 "body_system": "ENT",
-                "anatomy": ["nose"],
+                "anatomy": [
+                  "nose"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
               },
-              "patient_language_synonyms": ["cara menghentikan perdarahan hidung"],
+              "patient_language_synonyms": [
+                "cara menghentikan perdarahan hidung"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -4813,7 +5122,9 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "ENT",
-                "anatomy": ["nose"],
+                "anatomy": [
+                  "nose"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -4883,12 +5194,16 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "ENT",
-                "anatomy": ["nose"],
+                "anatomy": [
+                  "nose"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
               },
-              "patient_language_synonyms": ["kaustik untuk perdarahan hidung anterior"],
+              "patient_language_synonyms": [
+                "kaustik untuk perdarahan hidung anterior"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -4951,12 +5266,16 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "ENT",
-                "anatomy": ["nose"],
+                "anatomy": [
+                  "nose"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
               },
-              "patient_language_synonyms": ["pemasangan tampon posterior untuk perdarahan hidung"],
+              "patient_language_synonyms": [
+                "pemasangan tampon posterior untuk perdarahan hidung"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -5021,7 +5340,9 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "ENT",
-                "anatomy": ["nose"],
+                "anatomy": [
+                  "nose"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -5100,10 +5421,26 @@
         "Nyeri kepala",
         "Lemas dan malaise"
       ],
-      "pemeriksaan_fisik": ["Demam", "Faringitis", "Rinore", "Konjungtivitis ringan"],
-      "diagnosis_banding": ["Faringitis", "Tonsilitis", "Laringitis"],
-      "komplikasi": ["Infeksi sekunder oleh bakteri", "Pneumonia"],
-      "red_flags": ["Sesak napas atau dispnea", "Penurunan kesadaran", "Tanda pneumonia"],
+      "pemeriksaan_fisik": [
+        "Demam",
+        "Faringitis",
+        "Rinore",
+        "Konjungtivitis ringan"
+      ],
+      "diagnosis_banding": [
+        "Faringitis",
+        "Tonsilitis",
+        "Laringitis"
+      ],
+      "komplikasi": [
+        "Infeksi sekunder oleh bakteri",
+        "Pneumonia"
+      ],
+      "red_flags": [
+        "Sesak napas atau dispnea",
+        "Penurunan kesadaran",
+        "Tanda pneumonia"
+      ],
       "terapi": [
         {
           "obat": "parasetamol",
@@ -5550,14 +5887,10 @@
       "can_refer": false,
       "definisi": "Pertusis adalah penyakit infeksi saluran pernafasan akut yang sangat menular ditandai dengan\nsuatu sindrom yang berupa batuk yang bersifat spasmodik dan paroksismal disertai nada yang\nmeninggi karena penderita berupaya keras untuk menarik nafas sehingga pada akhir batuk\nsering disertai bunyi yang khas (whoop).",
       "gejala_klinis": [
-        "stadium yaitu:",
-        "Stadium Kataralis (stadium prodormal)",
-        "minggu. Gejalanya berupa : infeksi saluran pernafasan atas ringan, panas",
-        "2. Stadium Akut paroksismal (stadium spasmodik)",
-        "minggu atau lebih. Gejalanya berupa : batuk sering 5-10 kali, selama batuk",
-        "3. Stadium konvalesen",
-        "Batuk biasanya menetap untuk beberapa",
-        "minggu."
+        "Batuk paroksismal berat",
+        "Batuk diakhiri whoop/tarikan napas melengking",
+        "Muntah setelah batuk",
+        "Infeksi saluran napas atas ringan pada fase awal"
       ],
       "pemeriksaan_fisik": [
         "Batuk berat yang berlangsung lama",
@@ -5566,8 +5899,16 @@
         "Sianosis"
       ],
       "diagnosis_banding": [],
-      "komplikasi": ["Pneumonia", "Encephalitis", "Malnutrisi"],
-      "red_flags": ["Pneumonia", "Encephalitis", "Malnutrisi"],
+      "komplikasi": [
+        "Pneumonia",
+        "Encephalitis",
+        "Malnutrisi"
+      ],
+      "red_flags": [
+        "Pneumonia",
+        "Encephalitis",
+        "Malnutrisi"
+      ],
       "terapi": [
         {
           "obat": "Eritromisin",
@@ -5617,7 +5958,11 @@
         "Glomerulonefritis",
         "Demam rematik akut"
       ],
-      "red_flags": ["Sesak napas akibat edema faring", "Trismus", "Abses peritonsil"],
+      "red_flags": [
+        "Sesak napas akibat edema faring",
+        "Trismus",
+        "Abses peritonsil"
+      ],
       "terapi": [
         {
           "obat": "Amoksisilin",
@@ -5898,7 +6243,10 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "child"],
+                "age_group": [
+                  "adult",
+                  "child"
+                ],
                 "sex": [],
                 "body_system": "lymphatic",
                 "anatomy": [],
@@ -5966,7 +6314,10 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "child"],
+                "age_group": [
+                  "adult",
+                  "child"
+                ],
                 "sex": [],
                 "body_system": "immune",
                 "anatomy": [],
@@ -6034,7 +6385,10 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "child"],
+                "age_group": [
+                  "adult",
+                  "child"
+                ],
                 "sex": [],
                 "body_system": "respiratory",
                 "anatomy": [],
@@ -6120,9 +6474,19 @@
         "Eksudat purulen pada tonsil",
         "Pembesaran kelenjar leher"
       ],
-      "diagnosis_banding": ["Faringitis.", "Tumor tonsil."],
-      "komplikasi": ["Komplikasi lokal", "Komplikasi sistemik"],
-      "red_flags": ["Abses peritonsil", "Trismus", "Sesak napas akibat obstruksi"],
+      "diagnosis_banding": [
+        "Faringitis.",
+        "Tumor tonsil."
+      ],
+      "komplikasi": [
+        "Komplikasi lokal",
+        "Komplikasi sistemik"
+      ],
+      "red_flags": [
+        "Abses peritonsil",
+        "Trismus",
+        "Sesak napas akibat obstruksi"
+      ],
       "terapi": [
         {
           "obat": "Amoksisilin",
@@ -6424,8 +6788,15 @@
         "Pneumonia",
         "Tumor pada laring"
       ],
-      "komplikasi": ["Pneumonia", "Bronkhitis"],
-      "red_flags": ["Stridor berat dengan retraksi dada", "Sesak napas progresif", "Sianosis"],
+      "komplikasi": [
+        "Pneumonia",
+        "Bronkhitis"
+      ],
+      "red_flags": [
+        "Stridor berat dengan retraksi dada",
+        "Sesak napas progresif",
+        "Sianosis"
+      ],
       "terapi": [
         {
           "obat": "ibuprofen",
@@ -6462,7 +6833,11 @@
         "Padaseranganberatdigunakanotot bantu napas (retraksi supraklavikula, interkostal, dan",
         "Faktor Predisposisi"
       ],
-      "diagnosis_banding": ["Obstruksi jalan napas.", "Bronkitis kronik.", "Bronkiektasis."],
+      "diagnosis_banding": [
+        "Obstruksi jalan napas.",
+        "Bronkitis kronik.",
+        "Bronkiektasis."
+      ],
       "komplikasi": [
         "Pneumotoraks.",
         "Pneumomediastinum.",
@@ -6495,13 +6870,22 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "respiratory",
-                "anatomy": ["lungs"],
+                "anatomy": [
+                  "lungs"
+                ],
                 "temporal_pattern": "variable",
                 "severity": "mild_to_severe",
-                "context": ["exacerbation"]
+                "context": [
+                  "exacerbation"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -6563,13 +6947,22 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "respiratory",
-                "anatomy": ["lungs"],
+                "anatomy": [
+                  "lungs"
+                ],
                 "temporal_pattern": "nocturnal",
                 "severity": "mild_to_severe",
-                "context": ["exacerbation"]
+                "context": [
+                  "exacerbation"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -6631,13 +7024,22 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "respiratory",
-                "anatomy": ["lungs"],
+                "anatomy": [
+                  "lungs"
+                ],
                 "temporal_pattern": "variable",
                 "severity": "mild_to_severe",
-                "context": ["exacerbation"]
+                "context": [
+                  "exacerbation"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -6699,13 +7101,22 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "respiratory",
-                "anatomy": ["lungs"],
+                "anatomy": [
+                  "lungs"
+                ],
                 "temporal_pattern": "triggered",
                 "severity": "mild_to_severe",
-                "context": ["exacerbation"]
+                "context": [
+                  "exacerbation"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -6769,13 +7180,22 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "respiratory",
-                "anatomy": ["lungs"],
+                "anatomy": [
+                  "lungs"
+                ],
                 "temporal_pattern": "during_examination",
                 "severity": "mild_to_severe",
-                "context": ["diagnostic"]
+                "context": [
+                  "diagnostic"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -6839,13 +7259,22 @@
               "type": "diagnostic_test",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "respiratory",
-                "anatomy": ["lungs"],
+                "anatomy": [
+                  "lungs"
+                ],
                 "temporal_pattern": "before_and_after_inhalation",
                 "severity": "mild_to_severe",
-                "context": ["diagnostic"]
+                "context": [
+                  "diagnostic"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -6913,16 +7342,11 @@
       "can_refer": false,
       "definisi": "Bronkitis adalah suatu peradangan pada bronkus (saluran udara ke paru-paru). Radang dapat\nberupa hipersekresi mukus dan batuk produktif kronis berulang-ulang minimal selama 3\n3 62\n\nbulan pertahun atau paling sedikit dalam 2 tahun berturut-turut pada pasien yang diketahui\ntidak terdapat penyebab lain. Penyakit ini biasanya bersifat ringan dan pada akhirnya akan\nsembuh sempurna, namun pada penderita yang memiliki penyakit menahun (misalnya\npenyakit jantung atau penyakit paru-paru) dan pada usia lanjut, bronkitis bisa bersifat\nserius.Ada 3 faktor utama yang mempengaruhi timbulnya bronchitis yaitu rokok, infeksi\ndaripolusi. Selain itu terdapat pula hubungan dengan faktor keturunan dan status sosial.\nBronkhitis akutadalah peradangan pada bronkus yang disebabkan oleh infeksi saluran napas\nyang ditandai dengan batuk (berdahak maupun tidak berdahak) dan berlangsung hingga 3\nminggu.\nBronkitis akut dapat disebabkan oleh beberapa hal, yaitu: infeksi virus, yang paling umum\ninfluenza A dan B, para",
       "gejala_klinis": [
-        "minggu.Dahak dapat berwarna jernih,",
-        "kuningan atau kehijauan. Keluhan disertai demam (biasanya ringan), rasa",
-        "Batuk biasanya merupakan tanda dimulainya bronkitis. Pada awalnya batuk tidak berdahak,",
-        "hari kemudian akan mengeluarkan dahak berwarna putih atau kuning. Selanjutnya",
-        "Pada bronkitis berat, setelah sebagian besar gejala lainnya membaik, kadang terjadi demam",
-        "hari dan batuk bisa menetap selama beberapa minggu.",
-        "Bila iritasi saluran terjadi, maka dapat",
-        "Bronkitis bisa menjadi pneumonia.",
-        "batuk setiap hari disertai pengeluaran dahak,",
-        "kurangnya 3 bulan berturut-turut dalam 1 tahun, dan paling sedikit selama 2 tahun."
+        "Batuk (awalnya kering lalu berdahak)",
+        "Dahak jernih/putih/kuning/hijau",
+        "Demam ringan",
+        "Rasa tidak nyaman di dada",
+        "Sesak ringan"
       ],
       "pemeriksaan_fisik": [
         "Fremitus taktil dada tidak ada atau berkurang.",
@@ -7252,15 +7676,28 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["child", "adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "child",
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "respiratory",
-                "anatomy": ["bronchi"],
+                "anatomy": [
+                  "bronchi"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild",
-                "context": ["clinical"]
+                "context": [
+                  "clinical"
+                ]
               },
-              "patient_language_synonyms": ["batuk berdahak", "batuk tidak berdahak"],
+              "patient_language_synonyms": [
+                "batuk berdahak",
+                "batuk tidak berdahak"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -7320,15 +7757,29 @@
               "type": "symptom",
               "specificity": "supportive",
               "axis": {
-                "age_group": ["child", "adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "child",
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "respiratory",
-                "anatomy": ["bronchi"],
+                "anatomy": [
+                  "bronchi"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild",
-                "context": ["clinical"]
+                "context": [
+                  "clinical"
+                ]
               },
-              "patient_language_synonyms": ["dahak jernih", "dahak kuning", "dahak hijau"],
+              "patient_language_synonyms": [
+                "dahak jernih",
+                "dahak kuning",
+                "dahak hijau"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -7388,15 +7839,25 @@
               "type": "symptom",
               "specificity": "supportive",
               "axis": {
-                "age_group": ["child", "adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "child",
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "systemic",
                 "anatomy": [],
                 "temporal_pattern": "acute",
                 "severity": "mild",
-                "context": ["clinical"]
+                "context": [
+                  "clinical"
+                ]
               },
-              "patient_language_synonyms": ["demam ringan"],
+              "patient_language_synonyms": [
+                "demam ringan"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -7456,15 +7917,28 @@
               "type": "symptom",
               "specificity": "supportive",
               "axis": {
-                "age_group": ["child", "adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "child",
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "respiratory",
-                "anatomy": ["chest"],
+                "anatomy": [
+                  "chest"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild",
-                "context": ["clinical"]
+                "context": [
+                  "clinical"
+                ]
               },
-              "patient_language_synonyms": ["berat di dada", "tidak nyaman di dada"],
+              "patient_language_synonyms": [
+                "berat di dada",
+                "tidak nyaman di dada"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -7524,15 +7998,27 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["child", "adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "child",
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "respiratory",
-                "anatomy": ["lungs"],
+                "anatomy": [
+                  "lungs"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "moderate",
-                "context": ["clinical"]
+                "context": [
+                  "clinical"
+                ]
               },
-              "patient_language_synonyms": ["sesak napas"],
+              "patient_language_synonyms": [
+                "sesak napas"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -7607,7 +8093,11 @@
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["SpO2 < 90%", "RR > 30x/menit", "Penurunan kesadaran"],
+      "red_flags": [
+        "SpO2 < 90%",
+        "RR > 30x/menit",
+        "Penurunan kesadaran"
+      ],
       "terapi": [
         {
           "obat": "Amoxicillin",
@@ -7633,7 +8123,7 @@
         "Dahak bercampur darah (hemoptisis)",
         "Demam sore atau malam hari",
         "Keringat malam berlebih",
-        "Penurunan berat badan",
+        "Malnutrisi atau BB menurun",
         "Nyeri dada"
       ],
       "pemeriksaan_fisik": [
@@ -7641,7 +8131,12 @@
         "Perkusi redup",
         "Cachexia pada kasus lanjut"
       ],
-      "diagnosis_banding": ["Mumps", "Kista Duktus Tiroglosus", "Kista Dermoid", "Hemangioma"],
+      "diagnosis_banding": [
+        "Mumps",
+        "Kista Duktus Tiroglosus",
+        "Kista Dermoid",
+        "Hemangioma"
+      ],
       "komplikasi": [
         "ICPC II: B90 HIV-infection/AIDS",
         "ICD X: Z21 Asymptomatic human immunodeficiency virus (HIV) infection status",
@@ -7654,7 +8149,11 @@
         "Virus, seperti herpes zoster berulang atau lebih dari satu dermatom, herpes genital",
         "Gangguan napas, seperti tuberculosis, batuk >1 bulan, sesak napas, pneumonia berulang,"
       ],
-      "red_flags": ["Hemoptisis masif", "Sesak napas berat", "Tanda gagal napas"],
+      "red_flags": [
+        "Hemoptisis masif",
+        "Sesak napas berat",
+        "Tanda gagal napas"
+      ],
       "terapi": [],
       "kriteria_rujukan": " Rujukan horizontal bila fasilitas untuk pemeriksaan HIV tidak dapat dilakukan di layanan\nprimer.\n Rujukan vertikal bila terdapat pasien HIV/AIDS dengan komplikasi.",
       "source": "PPK IDI 2013 + 144 Diagnosis KKI"
@@ -7669,11 +8168,20 @@
       "body_system": "KARDIOVASKULAR",
       "can_refer": false,
       "definisi": "Peningkatan tekanan darah sistolik >= 140 mmHg dan/atau diastolik >= 90 mmHg",
-      "gejala_klinis": ["Sering asimptomatik", "Nyeri kepala pagi", "Pusing", "Pandangan kabur"],
+      "gejala_klinis": [
+        "Sering asimptomatik",
+        "Nyeri kepala pagi",
+        "Pusing",
+        "Pandangan kabur"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["TD > 180/120", "Nyeri dada", "Defisit neurologis"],
+      "red_flags": [
+        "TD > 180/120",
+        "Nyeri dada",
+        "Defisit neurologis"
+      ],
       "terapi": [
         {
           "obat": "Amlodipine",
@@ -7928,7 +8436,11 @@
       "body_system": "SALURAN PENCERNAAN",
       "can_refer": false,
       "definisi": "Infeksi jamur Candida albicans pada mukosa mulut",
-      "gejala_klinis": ["Plak putih di lidah/mukosa", "Nyeri mulut", "Sulit menelan"],
+      "gejala_klinis": [
+        "Plak putih di lidah/mukosa",
+        "Nyeri mulut",
+        "Sulit menelan"
+      ],
       "pemeriksaan_fisik": [
         " Guam atau oral thrush yang diselaputi pseudomembran pada mukosa mulut."
       ],
@@ -7955,7 +8467,11 @@
       "body_system": "SALURAN PENCERNAAN",
       "can_refer": false,
       "definisi": "Lesi ulseratif pada mukosa mulut yang nyeri",
-      "gejala_klinis": ["Luka di mulut", "Nyeri saat makan", "Batas jelas dengan dasar kekuningan"],
+      "gejala_klinis": [
+        "Luka di mulut",
+        "Nyeri saat makan",
+        "Batas jelas dengan dasar kekuningan"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -8004,8 +8520,14 @@
         "Neoplasma kelenjar saliva",
         "Pembesaran kelenjar getah bening karena penyebab lain"
       ],
-      "komplikasi": ["Infeksi gigi dan karies", "Infeksi ke kelenjar gonad"],
-      "red_flags": ["Infeksi gigi dan karies", "Infeksi ke kelenjar gonad"],
+      "komplikasi": [
+        "Infeksi gigi dan karies",
+        "Infeksi ke kelenjar gonad"
+      ],
+      "red_flags": [
+        "Infeksi gigi dan karies",
+        "Infeksi ke kelenjar gonad"
+      ],
       "terapi": [],
       "kriteria_rujukan": "Bila kasus tidak membaik dengan pengobatan adekuat di layanan primer, segera rujuk ke\nlayanan sekunder dengan dokter spesialis anak atau dokter spesialis penyakit dalam.",
       "source": "PPK IDI 2013 + 144 Diagnosis KKI",
@@ -8019,13 +8541,23 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "children"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "children"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "salivary glands",
-                "anatomy": ["parotid gland"],
+                "anatomy": [
+                  "parotid gland"
+                ],
                 "temporal_pattern": "",
                 "severity": "mild to moderate",
-                "context": ["acute"]
+                "context": [
+                  "acute"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -8092,7 +8624,12 @@
       "body_system": "SALURAN PENCERNAAN",
       "can_refer": false,
       "definisi": "Infeksi saluran kemih merupakan salah satu masalah kesehatan akut yang sering terjadi pada\nperempuan. Masalah infeksi saluran kemih tersering adalah sistitis akut, sistitis kronik, dan\nuretritis. Sebagai tambahan, pielonefritis diklasifikasikan sebagai kasus komplikasi.",
-      "gejala_klinis": ["anyangan, nyeri pinggang dan nyeri suprapubik."],
+      "gejala_klinis": [
+        "Kemerahan/edema sekitar umbilikus neonatus",
+        "Sekret purulen/berbau",
+        "Demam",
+        "Rewel"
+      ],
       "pemeriksaan_fisik": [
         "Demam",
         "„Flank pain‟ (Nyeri ketok pinggang belakang/costovertebral angle)",
@@ -8132,11 +8669,21 @@
       "body_system": "SALURAN PENCERNAAN",
       "can_refer": false,
       "definisi": "Inflamasi mukosa lambung yang dapat akut atau kronik",
-      "gejala_klinis": ["Nyeri ulu hati", "Mual", "Muntah", "Kembung", "Cepat kenyang"],
+      "gejala_klinis": [
+        "Nyeri ulu hati",
+        "Mual",
+        "Muntah",
+        "Kembung",
+        "Cepat kenyang"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["Hematemesis", "Melena", "Penurunan BB"],
+      "red_flags": [
+        "Hematemesis",
+        "Melena",
+        "Penurunan BB"
+      ],
       "terapi": [
         {
           "obat": "Omeprazole",
@@ -8389,11 +8936,21 @@
       "body_system": "SALURAN PENCERNAAN",
       "can_refer": false,
       "definisi": "Peradangan saluran cerna dengan diare dan/atau muntah",
-      "gejala_klinis": ["Diare cair", "Mual muntah", "Nyeri perut", "Demam", "Dehidrasi"],
+      "gejala_klinis": [
+        "Diare cair",
+        "Mual muntah",
+        "Nyeri perut",
+        "Demam",
+        "Dehidrasi"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["Dehidrasi berat", "Diare berdarah", "Tidak bisa minum"],
+      "red_flags": [
+        "Dehidrasi berat",
+        "Diare berdarah",
+        "Tidak bisa minum"
+      ],
       "terapi": [
         {
           "obat": "Oralit",
@@ -8419,7 +8976,12 @@
       "body_system": "SALURAN PENCERNAAN",
       "can_refer": false,
       "definisi": "Aliran balik isi lambung ke esofagus yang menyebabkan gejala",
-      "gejala_klinis": ["Heartburn", "Regurgitasi", "Disfagia", "Batuk kronik"],
+      "gejala_klinis": [
+        "Heartburn",
+        "Regurgitasi",
+        "Disfagia",
+        "Batuk kronik"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -8676,11 +9238,20 @@
       "body_system": "SALURAN PENCERNAAN",
       "can_refer": false,
       "definisi": "Infeksi sistemik akut oleh Salmonella typhi",
-      "gejala_klinis": ["Demam step ladder", "Nyeri kepala", "Lidah kotor", "Hepatosplenomegali"],
+      "gejala_klinis": [
+        "Demam step ladder",
+        "Nyeri kepala",
+        "Lidah kotor",
+        "Hepatosplenomegali"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["Perdarahan GI", "Perforasi usus", "Penurunan kesadaran"],
+      "red_flags": [
+        "Perdarahan GI",
+        "Perforasi usus",
+        "Penurunan kesadaran"
+      ],
       "terapi": [
         {
           "obat": "Cefixime",
@@ -8700,15 +9271,29 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "pediatric"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "pediatric"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "general",
-                "anatomy": ["general"],
+                "anatomy": [
+                  "general"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "moderate",
-                "context": ["hospital", "community"]
+                "context": [
+                  "hospital",
+                  "community"
+                ]
               },
-              "patient_language_synonyms": ["demam tinggi", "demam terus menerus"],
+              "patient_language_synonyms": [
+                "demam tinggi",
+                "demam terus menerus"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -8768,15 +9353,29 @@
               "type": "symptom",
               "specificity": "supportive",
               "axis": {
-                "age_group": ["adult", "pediatric"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "pediatric"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "nervous",
-                "anatomy": ["head"],
+                "anatomy": [
+                  "head"
+                ],
                 "temporal_pattern": "intermittent",
                 "severity": "mild",
-                "context": ["hospital", "community"]
+                "context": [
+                  "hospital",
+                  "community"
+                ]
               },
-              "patient_language_synonyms": ["sakit kepala", "pusing-pusing"],
+              "patient_language_synonyms": [
+                "sakit kepala",
+                "pusing-pusing"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -8836,15 +9435,31 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "pediatric"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "pediatric"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "gastrointestinal",
-                "anatomy": ["abdomen"],
+                "anatomy": [
+                  "abdomen"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "moderate",
-                "context": ["hospital", "community"]
+                "context": [
+                  "hospital",
+                  "community"
+                ]
               },
-              "patient_language_synonyms": ["gangguan pencernaan", "konstipasi", "mual", "muntah"],
+              "patient_language_synonyms": [
+                "gangguan pencernaan",
+                "konstipasi",
+                "mual",
+                "muntah"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -8906,13 +9521,21 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["all"],
-                "sex": ["all"],
+                "age_group": [
+                  "all"
+                ],
+                "sex": [
+                  "all"
+                ],
                 "body_system": "immune",
-                "anatomy": ["general"],
+                "anatomy": [
+                  "general"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "severe",
-                "context": ["hospitalization"]
+                "context": [
+                  "hospitalization"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -8974,13 +9597,21 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["all"],
-                "sex": ["all"],
+                "age_group": [
+                  "all"
+                ],
+                "sex": [
+                  "all"
+                ],
                 "body_system": "immune",
-                "anatomy": ["general"],
+                "anatomy": [
+                  "general"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "severe",
-                "context": ["hospitalization"]
+                "context": [
+                  "hospitalization"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -9042,13 +9673,21 @@
               "type": "treatment_note",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["all"],
-                "sex": ["all"],
+                "age_group": [
+                  "all"
+                ],
+                "sex": [
+                  "all"
+                ],
                 "body_system": "immune",
-                "anatomy": ["general"],
+                "anatomy": [
+                  "general"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "severe",
-                "context": ["hospitalization"]
+                "context": [
+                  "hospitalization"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -9112,13 +9751,21 @@
               "type": "complication",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["all"],
-                "sex": ["all"],
+                "age_group": [
+                  "all"
+                ],
+                "sex": [
+                  "all"
+                ],
                 "body_system": "immune",
-                "anatomy": ["general"],
+                "anatomy": [
+                  "general"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "severe",
-                "context": ["hospitalization"]
+                "context": [
+                  "hospitalization"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -9459,8 +10106,15 @@
       "body_system": "SALURAN PENCERNAAN",
       "can_refer": false,
       "definisi": "Reaksi non-imunologis terhadap makanan tertentu",
-      "gejala_klinis": ["Kembung", "Diare", "Nyeri perut", "Mual"],
-      "pemeriksaan_fisik": ["tanda dehidrasi."],
+      "gejala_klinis": [
+        "Kembung",
+        "Diare",
+        "Nyeri perut",
+        "Mual"
+      ],
+      "pemeriksaan_fisik": [
+        "tanda dehidrasi."
+      ],
       "diagnosis_banding": [
         "Pankreatitis",
         "Penyakitt Chrons pada illeum terminalis",
@@ -9507,7 +10161,11 @@
       ],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["Anafilaksis", "Bronkospasme berat", "Hipotensi"],
+      "red_flags": [
+        "Anafilaksis",
+        "Bronkospasme berat",
+        "Hipotensi"
+      ],
       "terapi": [],
       "kriteria_rujukan": "Pasien dirujuk apabila pemeriksaan uji kulit, uji provokasi dan eliminasi makanan terjadi\nreaksi anafilaksis",
       "source": "PPK IDI 2013 + 144 Diagnosis KKI"
@@ -9523,10 +10181,11 @@
       "can_refer": false,
       "definisi": "Keracunan makanan merupakan suatu kondisi gangguan pencernaan yang disebabkan oleh\nkonsumsi makanan atau air yang terkontaminasi dengan zat patogen dan atau bahan kimia,\nmisalnya Norovirus, Salmonella, Clostridium perfringens, Campylobacter, dan\nStaphylococcus aureus.",
       "gejala_klinis": [
-        "Diare akut. Pada keracunan makanan biasanya berlangsung kurang dari 2 minggu.",
-        "- Nyeri perut.",
-        "Nyeri kram otot perut; menunjukkan hilangnya elektrolit yang mendasari, seperti pada",
-        "- Kembung."
+        "Diare akut",
+        "Nyeri perut",
+        "Kram perut",
+        "Kembung",
+        "Mual/muntah"
       ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [
@@ -9562,7 +10221,10 @@
                 "severity": "",
                 "context": []
               },
-              "patient_language_synonyms": ["sakit perut", "buang air besar cair"],
+              "patient_language_synonyms": [
+                "sakit perut",
+                "buang air besar cair"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -9630,7 +10292,9 @@
                 "severity": "",
                 "context": []
               },
-              "patient_language_synonyms": ["sakit perut"],
+              "patient_language_synonyms": [
+                "sakit perut"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -9698,7 +10362,9 @@
                 "severity": "",
                 "context": []
               },
-              "patient_language_synonyms": ["kram perut"],
+              "patient_language_synonyms": [
+                "kram perut"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -9764,16 +10430,16 @@
       "can_refer": false,
       "definisi": "Penyakit cacing tambang adalah suatu penyakit yang disebabkan oleh infestasi parasit\nNecator americanus dan Ancylostoma duodenale.Hospes parasit ini adalah manusia, cacing\nini menyebabkan nekatoriasis dan ankilostomiasis. Diperkirakan sekitar 576 – 740 juta orang\ndi dunia terinfeksi dengan cacing tambang. Di Indonesia insiden tertinggi ditemukan\nterutama didaerah pedesaan khususnya perkebunan. Seringkali golongan pekerja perkebunan\nyang langsung berhubungan dengan tanah, mendapat infeksi lebih dari 70%.",
       "gejala_klinis": [
-        "Lemas dan mudah lelah",
         "Pucat",
+        "Mudah lelah kronis dengan tanda anemia",
         "Mual",
         "Nyeri perut terutama epigastrium",
         "Diare yang kadang disertai darah",
         "Nafsu makan menurun",
-        "Penurunan berat badan",
+        "Malnutrisi atau BB menurun pada infeksi kronis",
         "Ground itch: gatal dan ruam pada kulit telapak kaki tempat larva masuk",
-        "Batuk (saat migrasi larva melalui paru)",
-        "Pusing dan sakit kepala"
+        "Batuk saat migrasi larva melalui paru",
+        "Riwayat kontak tanah tanpa alas kaki di daerah endemis"
       ],
       "pemeriksaan_fisik": [
         "Konjungtiva pucat (tanda anemia)",
@@ -9795,7 +10461,11 @@
         "Malnutrisi",
         "Gangguan pertumbuhan pada anak"
       ],
-      "red_flags": ["Anemia berat (Hb <7 g/dL)", "Gagal jantung", "Gangguan pertumbuhan pada anak"],
+      "red_flags": [
+        "Anemia berat (Hb <7 g/dL)",
+        "Gagal jantung",
+        "Gangguan pertumbuhan pada anak"
+      ],
       "terapi": [
         {
           "obat": "Albendazole",
@@ -9829,10 +10499,17 @@
         "Ruam merah bergerak pada kulit",
         "Batuk pada fase larva paru"
       ],
-      "pemeriksaan_fisik": ["Nyeri epigastrium", "Larva currens pada kulit", "Eosinofilia"],
+      "pemeriksaan_fisik": [
+        "Nyeri epigastrium",
+        "Larva currens pada kulit",
+        "Eosinofilia"
+      ],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["Hiperinfeksi pada imunodefisiensi", "Sepsis gram negatif"],
+      "red_flags": [
+        "Hiperinfeksi pada imunodefisiensi",
+        "Sepsis gram negatif"
+      ],
       "terapi": [],
       "kriteria_rujukan": "",
       "source": "PPK IDI 2013 + 144 Diagnosis KKI",
@@ -9846,10 +10523,18 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "children"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "children"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "integumentary",
-                "anatomy": ["skin"],
+                "anatomy": [
+                  "skin"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -9914,10 +10599,18 @@
               "type": "symptom",
               "specificity": "supportive",
               "axis": {
-                "age_group": ["adult", "children"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "children"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "gastrointestinal",
-                "anatomy": ["stomach"],
+                "anatomy": [
+                  "stomach"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -9982,10 +10675,18 @@
               "type": "symptom",
               "specificity": "supportive",
               "axis": {
-                "age_group": ["adult", "children"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "children"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "gastrointestinal",
-                "anatomy": ["intestines"],
+                "anatomy": [
+                  "intestines"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -10052,10 +10753,18 @@
               "type": "physical_exam",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "children"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "children"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "integumentary",
-                "anatomy": ["skin"],
+                "anatomy": [
+                  "skin"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -10132,7 +10841,11 @@
         "Cacing keluar dari mulut atau dubur",
         "Batuk dan demam pada fase larva paru"
       ],
-      "pemeriksaan_fisik": ["Nyeri perut difus", "Distensi abdomen", "Eosinofilia"],
+      "pemeriksaan_fisik": [
+        "Nyeri perut difus",
+        "Distensi abdomen",
+        "Eosinofilia"
+      ],
       "diagnosis_banding": [],
       "komplikasi": [],
       "red_flags": [
@@ -10153,13 +10866,21 @@
               "type": "diagnostic_criterion",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["all"],
-                "sex": ["all"],
+                "age_group": [
+                  "all"
+                ],
+                "sex": [
+                  "all"
+                ],
                 "body_system": "gastrointestinal",
-                "anatomy": ["intestine"],
+                "anatomy": [
+                  "intestine"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild",
-                "context": ["diagnostic"]
+                "context": [
+                  "diagnostic"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -10221,13 +10942,21 @@
               "type": "diagnostic_criterion",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["all"],
-                "sex": ["all"],
+                "age_group": [
+                  "all"
+                ],
+                "sex": [
+                  "all"
+                ],
                 "body_system": "gastrointestinal",
-                "anatomy": ["intestine"],
+                "anatomy": [
+                  "intestine"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild",
-                "context": ["diagnostic"]
+                "context": [
+                  "diagnostic"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -10295,16 +11024,14 @@
       "can_refer": false,
       "definisi": "Schistosoma adalah salah satu penyakit infeksi parasit yang disebabkan oleh cacing\ntrematoda dari genus schistosoma (blood fluke). Terdapat tiga spesies cacing trematoda\nutama yang menjadi penyebab skistosomiasis yaitu Schistosoma japonicum, schistosoma\nhaematobium dan schistosoma mansoni. Spesies yang kurang dikenal yaitu Schistosoma\nmekongi dan Schistosoma intercalatum. Di Indonesia spesies yang paling sering ditemukan\nadalah Schistosoma japonicum khususnya di daerah lembah Napu dan sekitar danau Lindu di\nSulawesi Tengah. Untuk menginfeksi manusia, Schistosoma memerlukan keong sebagai\nintermediate host. Penularan Schistosoma terjadi melalui serkaria yang berkembang dari host\ndan menembus kulit pasien dalam air. Skistosomiasis terjadi karena reaksi imunologis\nterhadap telur cacing yang terperangkap dalam jaringan.",
       "gejala_klinis": [
-        "Pada fase akut, pasien biasanya datang dengan keluhan demam, nyeri kepala, nyeri",
-        "Biasanya terdapat riwayat terpapar dengan",
-        "minggu sebelumnya, yang kemudian berkembang",
-        "Pada fase kronis, keluhan pasien tergantung pada letak lesi misalnya:",
-        "Buang air kecil darah (hematuria), rasa tak nyaman hingga nyeri saat berkemih,",
-        "hematobium.",
-        "nyeri abdomen dan diare berdarah biasanya disebabkan oleh intestinal",
-        "mansoni, S. Japonicum juga S.",
-        "- Pembesaran perut, kuning pada kulit dan mata disebabkan oleh hepatosplenic",
-        "Japonicum."
+        "Demam",
+        "Nyeri kepala",
+        "Nyeri otot",
+        "Hematuria",
+        "Nyeri berkemih",
+        "Nyeri abdomen",
+        "Diare berdarah",
+        "Hepatosplenomegali"
       ],
       "pemeriksaan_fisik": [
         "Limfadenopati",
@@ -10408,7 +11135,9 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "gastrointestinal",
-                "anatomy": ["intestine"],
+                "anatomy": [
+                  "intestine"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -10478,7 +11207,9 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "urinary",
-                "anatomy": ["bladder"],
+                "anatomy": [
+                  "bladder"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -10546,7 +11277,9 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "gastrointestinal",
-                "anatomy": ["intestine"],
+                "anatomy": [
+                  "intestine"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -10620,13 +11353,19 @@
         "Nyeri perut tidak spesifik",
         "Mual",
         "Proglotid cacing keluar dari dubur",
-        "Penurunan berat badan",
+        "Malnutrisi atau BB menurun",
         "Gatal pada dubur"
       ],
-      "pemeriksaan_fisik": ["Nyeri perut ringan", "Proglotid pada feses"],
+      "pemeriksaan_fisik": [
+        "Nyeri perut ringan",
+        "Proglotid pada feses"
+      ],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["Sistiserkosis serebri (T. solium)", "Kejang akibat neurosistiserkosis"],
+      "red_flags": [
+        "Sistiserkosis serebri (T. solium)",
+        "Kejang akibat neurosistiserkosis"
+      ],
       "terapi": [],
       "kriteria_rujukan": "Bila ditemukan tanda-tanda yang mengarah pada sistiserkosis",
       "source": "PPK IDI 2013 + 144 Diagnosis KKI"
@@ -10664,8 +11403,18 @@
         "Sirrosishepar",
         "Hepatitis virus lainnya"
       ],
-      "komplikasi": ["Hepatitis A Fulminan", "Sirosis Hati", "Ensefalopati Hepatik", "Koagulopati"],
-      "red_flags": ["Hepatitis A Fulminan", "Sirosis Hati", "Ensefalopati Hepatik", "Koagulopati"],
+      "komplikasi": [
+        "Hepatitis A Fulminan",
+        "Sirosis Hati",
+        "Ensefalopati Hepatik",
+        "Koagulopati"
+      ],
+      "red_flags": [
+        "Hepatitis A Fulminan",
+        "Sirosis Hati",
+        "Ensefalopati Hepatik",
+        "Koagulopati"
+      ],
       "terapi": [
         {
           "obat": "Domperidon",
@@ -10753,7 +11502,12 @@
       "body_system": "SALURAN PENCERNAAN",
       "can_refer": false,
       "definisi": "Pelebaran vena hemoroidalis dengan atau tanpa prolaps",
-      "gejala_klinis": ["Perdarahan saat BAB", "Gatal anus", "Benjolan di anus", "Nyeri"],
+      "gejala_klinis": [
+        "Perdarahan saat BAB",
+        "Gatal anus",
+        "Benjolan di anus",
+        "Nyeri"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -10778,7 +11532,14 @@
       "body_system": "SISTEM GINJAL",
       "can_refer": false,
       "definisi": "Infeksi saluran kemih merupakan salah satu masalah kesehatan akut yang sering terjadi pada\nperempuan. Masalah infeksi saluran kemih tersering adalah sistitis akut, sistitis kronik, dan\nuretritis. Sebagai tambahan, pielonefritis diklasifikasikan sebagai kasus komplikasi.",
-      "gejala_klinis": ["anyangan, nyeri pinggang dan nyeri suprapubik."],
+      "gejala_klinis": [
+        "Disuria/anyang-anyangan",
+        "Frekuensi berkemih meningkat",
+        "Urgensi",
+        "Nyeri suprapubik",
+        "Nyeri pinggang bila infeksi naik ke atas",
+        "Urin keruh/berbau"
+      ],
       "pemeriksaan_fisik": [
         "Demam",
         "„Flank pain‟ (Nyeri ketok pinggang belakang/costovertebral angle)",
@@ -10871,7 +11632,12 @@
         "Demam",
         "Nyeri tekan suprapubik"
       ],
-      "diagnosis_banding": ["Mumps", "Kista Duktus Tiroglosus", "Kista Dermoid", "Hemangioma"],
+      "diagnosis_banding": [
+        "Mumps",
+        "Kista Duktus Tiroglosus",
+        "Kista Dermoid",
+        "Hemangioma"
+      ],
       "komplikasi": [
         "ICPC II: B90 HIV-infection/AIDS",
         "ICD X: Z21 Asymptomatic human immunodeficiency virus (HIV) infection status",
@@ -10884,7 +11650,11 @@
         "Virus, seperti herpes zoster berulang atau lebih dari satu dermatom, herpes genital",
         "Gangguan napas, seperti tuberculosis, batuk >1 bulan, sesak napas, pneumonia berulang,"
       ],
-      "red_flags": ["Sepsis urologis", "Abses ginjal", "Pielonefritis pada kehamilan"],
+      "red_flags": [
+        "Sepsis urologis",
+        "Abses ginjal",
+        "Pielonefritis pada kehamilan"
+      ],
       "terapi": [],
       "kriteria_rujukan": " Rujukan horizontal bila fasilitas untuk pemeriksaan HIV tidak dapat dilakukan di layanan\nprimer.\n Rujukan vertikal bila terdapat pasien HIV/AIDS dengan komplikasi.",
       "source": "PPK IDI 2013 + 144 Diagnosis KKI"
@@ -10899,7 +11669,11 @@
       "body_system": "SISTEM GINJAL",
       "can_refer": false,
       "definisi": "Ketidakmampuan prepusium untuk diretraksi ke belakang glans penis",
-      "gejala_klinis": ["Prepusium tidak bisa ditarik", "Nyeri saat ereksi", "Ballooning saat BAK"],
+      "gejala_klinis": [
+        "Prepusium tidak bisa ditarik",
+        "Nyeri saat ereksi",
+        "Ballooning saat BAK"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -10923,15 +11697,24 @@
               "type": "physical_exam",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["child"],
-                "sex": ["male"],
+                "age_group": [
+                  "child"
+                ],
+                "sex": [
+                  "male"
+                ],
                 "body_system": "genitourinary",
-                "anatomy": ["prepuce"],
+                "anatomy": [
+                  "prepuce"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
               },
-              "patient_language_synonyms": ["kulup tidak bisa ditarik", "kulup tidak bisa dibuka"],
+              "patient_language_synonyms": [
+                "kulup tidak bisa ditarik",
+                "kulup tidak bisa dibuka"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -10996,11 +11779,18 @@
       "body_system": "SISTEM GINJAL",
       "can_refer": false,
       "definisi": "Prepusium yang tertarik tidak dapat dikembalikan dan menyebabkan konstriksi",
-      "gejala_klinis": ["Nyeri hebat", "Edema glans", "Konstriksi penis"],
+      "gejala_klinis": [
+        "Nyeri hebat",
+        "Edema glans",
+        "Konstriksi penis"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["Iskemia glans", "Gangren"],
+      "red_flags": [
+        "Iskemia glans",
+        "Gangren"
+      ],
       "terapi": [
         {
           "obat": "Manual reduction",
@@ -11014,7 +11804,7 @@
     {
       "id": "DIS-067",
       "kki_no": 67,
-      "nama": "nongonore)",
+      "nama": "Uretritis gonore dan nongonore",
       "nama_en": "GONOCOCCAL INFECTION",
       "icd10": "A54",
       "kompetensi": "4A",
@@ -11027,7 +11817,10 @@
         "Frekuensi kencing meningkat",
         "Kemerahan pada meatus uretra"
       ],
-      "pemeriksaan_fisik": ["Sekret uretra", "Meatus uretra hiperemis"],
+      "pemeriksaan_fisik": [
+        "Sekret uretra",
+        "Meatus uretra hiperemis"
+      ],
       "diagnosis_banding": [
         "Infeksi saluran kemih.",
         "Faringitis.",
@@ -11039,7 +11832,11 @@
         "Asendens: prostatitis, vesikulitis, funikulitis, vas deferentitis, epididimitis, trigonitis.",
         "Asendens: salfingitis, Pelvic Inflammatory Diseases (PID)."
       ],
-      "red_flags": ["Epididimitis", "Prostatitis", "Servisitis pada perempuan"],
+      "red_flags": [
+        "Epididimitis",
+        "Prostatitis",
+        "Servisitis pada perempuan"
+      ],
       "terapi": [],
       "kriteria_rujukan": "1. Apabila tidak dapat melakukan tes laboratorium\n5 59\n\n2. Apabila pengobatan di atas tidak menunjukkan perbaikan dalam jangka waktu 2 minggu,\npenderita dirujuk ke dokter spesialis karena kemungkinan terdapat resistensi obat.",
       "source": "PPK IDI 2013 + 144 Diagnosis KKI"
@@ -11054,7 +11851,13 @@
       "body_system": "SISTEM REPRODUKSI",
       "can_refer": false,
       "definisi": "Infeksi saluran kemih merupakan salah satu masalah kesehatan akut yang sering terjadi pada\nperempuan. Masalah infeksi saluran kemih tersering adalah sistitis akut, sistitis kronik, dan\nuretritis. Sebagai tambahan, pielonefritis diklasifikasikan sebagai kasus komplikasi.",
-      "gejala_klinis": ["anyangan, nyeri pinggang dan nyeri suprapubik."],
+      "gejala_klinis": [
+        "Disuria/anyang-anyangan",
+        "Frekuensi berkemih meningkat",
+        "Urgensi",
+        "Nyeri suprapubik",
+        "Urin keruh/berbau"
+      ],
       "pemeriksaan_fisik": [
         "Demam",
         "„Flank pain‟ (Nyeri ketok pinggang belakang/costovertebral angle)",
@@ -11106,8 +11909,16 @@
         "Ekskoriasi akibat garukan"
       ],
       "diagnosis_banding": [],
-      "komplikasi": ["Infertilitas", "Infeksi sekunder karena sering digaruk", "Vulva distrofi"],
-      "red_flags": ["Ulkus vulva", "Limfadenopati inguinal", "Curiga keganasan"],
+      "komplikasi": [
+        "Infertilitas",
+        "Infeksi sekunder karena sering digaruk",
+        "Vulva distrofi"
+      ],
+      "red_flags": [
+        "Ulkus vulva",
+        "Limfadenopati inguinal",
+        "Curiga keganasan"
+      ],
       "terapi": [],
       "kriteria_rujukan": "Pasien dirujuk ke dokter spesialis kulit dan kelamin jika pemberian salep Kortison tidak\nmemberikan respon.",
       "source": "PPK IDI 2013 + 144 Diagnosis KKI",
@@ -11191,15 +12002,24 @@
               "type": "physical_exam",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "female"
+                ],
                 "body_system": "reproductive",
-                "anatomy": ["vulva", "vagina"],
+                "anatomy": [
+                  "vulva",
+                  "vagina"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
               },
-              "patient_language_synonyms": ["rasa terbakar di kemaluan"],
+              "patient_language_synonyms": [
+                "rasa terbakar di kemaluan"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -11259,15 +12079,24 @@
               "type": "physical_exam",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "female"
+                ],
                 "body_system": "reproductive",
-                "anatomy": ["vulva", "vagina"],
+                "anatomy": [
+                  "vulva",
+                  "vagina"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
               },
-              "patient_language_synonyms": ["kemerahan dan iritasi"],
+              "patient_language_synonyms": [
+                "kemerahan dan iritasi"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -11327,15 +12156,24 @@
               "type": "physical_exam",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "female"
+                ],
                 "body_system": "reproductive",
-                "anatomy": ["vulva", "vagina"],
+                "anatomy": [
+                  "vulva",
+                  "vagina"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
               },
-              "patient_language_synonyms": ["cairan kental dari kemaluan yang berbau"],
+              "patient_language_synonyms": [
+                "cairan kental dari kemaluan yang berbau"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -11406,14 +12244,21 @@
         "Rasa panas pada vagina",
         "Nyeri saat berhubungan seksual (dispareunia)"
       ],
-      "pemeriksaan_fisik": ["Sekret vagina abnormal", "Vagina hiperemis", "pH vagina abnormal"],
+      "pemeriksaan_fisik": [
+        "Sekret vagina abnormal",
+        "Vagina hiperemis",
+        "pH vagina abnormal"
+      ],
       "diagnosis_banding": [
         "Vaginosis Bakterialis",
         "Vaginosis Trikomonas",
         "Vulvovaginitis Kandida"
       ],
       "komplikasi": [],
-      "red_flags": ["Demam disertai nyeri panggul", "Curiga pelvic inflammatory disease"],
+      "red_flags": [
+        "Demam disertai nyeri panggul",
+        "Curiga pelvic inflammatory disease"
+      ],
       "terapi": [
         {
           "obat": "Metronidazol",
@@ -11433,15 +12278,24 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["female"],
-                "sex": ["female"],
+                "age_group": [
+                  "female"
+                ],
+                "sex": [
+                  "female"
+                ],
                 "body_system": "reproductive",
-                "anatomy": ["vagina"],
+                "anatomy": [
+                  "vagina"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
               },
-              "patient_language_synonyms": ["peradangan vagina", "infeksi vagina"],
+              "patient_language_synonyms": [
+                "peradangan vagina",
+                "infeksi vagina"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -11506,7 +12360,11 @@
       "body_system": "SISTEM REPRODUKSI",
       "can_refer": false,
       "definisi": "Ketidakseimbangan flora vagina dengan dominasi bakteri anaerob",
-      "gejala_klinis": ["Discharge berbau amis", "Gatal ringan", "pH vagina > 4.5"],
+      "gejala_klinis": [
+        "Discharge berbau amis",
+        "Gatal ringan",
+        "pH vagina > 4.5"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -11531,11 +12389,19 @@
       "body_system": "SISTEM REPRODUKSI",
       "can_refer": false,
       "definisi": "Infeksi pada tuba fallopii, sering bagian dari PID",
-      "gejala_klinis": ["Nyeri perut bawah", "Demam", "Discharge abnormal", "Dispareunia"],
+      "gejala_klinis": [
+        "Nyeri perut bawah",
+        "Demam",
+        "Discharge abnormal",
+        "Dispareunia"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["Peritonitis", "Abses tubo-ovarian"],
+      "red_flags": [
+        "Peritonitis",
+        "Abses tubo-ovarian"
+      ],
       "terapi": [
         {
           "obat": "Ceftriaxone",
@@ -11561,7 +12427,12 @@
       "body_system": "SISTEM REPRODUKSI",
       "can_refer": false,
       "definisi": "Kehamilan fisiologis tanpa komplikasi",
-      "gejala_klinis": ["Amenorrhea", "Mual pagi", "Pembesaran perut", "Gerakan janin"],
+      "gejala_klinis": [
+        "Amenorrhea",
+        "Mual pagi",
+        "Pembesaran perut",
+        "Gerakan janin"
+      ],
       "pemeriksaan_fisik": [
         "Pada trimester 1, bila LLA> 33 cm, maka diduga obesitas, memiliki risiko Pre-eklampsia dan",
         "cm, maka diduga undernutrisi atau memiliki penyakit kronis, biasanya memiliki bayi yang",
@@ -11636,13 +12507,21 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "female"
+                ],
                 "body_system": "reproductive",
-                "anatomy": ["uterus"],
+                "anatomy": [
+                  "uterus"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "severe",
-                "context": ["pregnancy"]
+                "context": [
+                  "pregnancy"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -11744,13 +12623,21 @@
               "type": "diagnostic_test",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["pregnant"],
-                "sex": ["female"],
+                "age_group": [
+                  "pregnant"
+                ],
+                "sex": [
+                  "female"
+                ],
                 "body_system": "hematologic",
-                "anatomy": ["blood"],
+                "anatomy": [
+                  "blood"
+                ],
                 "temporal_pattern": "trimester",
                 "severity": "mild to moderate",
-                "context": ["pregnancy"]
+                "context": [
+                  "pregnancy"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -11817,7 +12704,11 @@
       "body_system": "SISTEM REPRODUKSI",
       "can_refer": false,
       "definisi": "Robekan perineum saat persalinan grade 1 (kulit) atau 2 (otot perineum)",
-      "gejala_klinis": ["Laserasi perineum", "Perdarahan", "Nyeri"],
+      "gejala_klinis": [
+        "Laserasi perineum",
+        "Perdarahan",
+        "Nyeri"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -11842,7 +12733,11 @@
       "body_system": "SISTEM REPRODUKSI",
       "can_refer": false,
       "definisi": "Infeksi supuratif pada folikel rambut atau kelenjar sebasea",
-      "gejala_klinis": ["Benjolan merah nyeri", "Fluktuasi", "Discharge purulen"],
+      "gejala_klinis": [
+        "Benjolan merah nyeri",
+        "Fluktuasi",
+        "Discharge purulen"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -11886,7 +12781,11 @@
       ],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["Abses payudara", "Sepsis", "Gagal respons antibiotik 48-72 jam"],
+      "red_flags": [
+        "Abses payudara",
+        "Sepsis",
+        "Gagal respons antibiotik 48-72 jam"
+      ],
       "terapi": [
         {
           "obat": "eritromisin",
@@ -11911,15 +12810,26 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "female"
+                ],
                 "body_system": "breast",
-                "anatomy": ["breast"],
+                "anatomy": [
+                  "breast"
+                ],
                 "temporal_pattern": "postpartum",
                 "severity": "mild to moderate",
-                "context": ["nursing mothers"]
+                "context": [
+                  "nursing mothers"
+                ]
               },
-              "patient_language_synonyms": ["radang payudara", "infeksi payudara"],
+              "patient_language_synonyms": [
+                "radang payudara",
+                "infeksi payudara"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -11979,15 +12889,25 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "female"
+                ],
                 "body_system": "breast",
-                "anatomy": ["breast"],
+                "anatomy": [
+                  "breast"
+                ],
                 "temporal_pattern": "postpartum",
                 "severity": "mild",
-                "context": ["postpartum"]
+                "context": [
+                  "postpartum"
+                ]
               },
-              "patient_language_synonyms": ["demam tinggi"],
+              "patient_language_synonyms": [
+                "demam tinggi"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -12047,15 +12967,26 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "female"
+                ],
                 "body_system": "breast",
-                "anatomy": ["breast"],
+                "anatomy": [
+                  "breast"
+                ],
                 "temporal_pattern": "postpartum",
                 "severity": "mild",
-                "context": ["postpartum"]
+                "context": [
+                  "postpartum"
+                ]
               },
-              "patient_language_synonyms": ["nyeri payudara", "bengkak payudara"],
+              "patient_language_synonyms": [
+                "nyeri payudara",
+                "bengkak payudara"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -12115,15 +13046,23 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "female"
+                ],
                 "body_system": "general",
                 "anatomy": [],
                 "temporal_pattern": "postpartum",
                 "severity": "mild",
-                "context": ["postpartum"]
+                "context": [
+                  "postpartum"
+                ]
               },
-              "patient_language_synonyms": ["demam menggigil"],
+              "patient_language_synonyms": [
+                "demam menggigil"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -12183,15 +13122,25 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "female"
+                ],
                 "body_system": "breast",
-                "anatomy": ["breast"],
+                "anatomy": [
+                  "breast"
+                ],
                 "temporal_pattern": "postpartum",
                 "severity": "mild",
-                "context": ["postpartum"]
+                "context": [
+                  "postpartum"
+                ]
               },
-              "patient_language_synonyms": ["nyeri payudara"],
+              "patient_language_synonyms": [
+                "nyeri payudara"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -12256,7 +13205,11 @@
       "body_system": "SISTEM REPRODUKSI",
       "can_refer": false,
       "definisi": "Luka/fisura pada puting susu, sering terjadi saat menyusui",
-      "gejala_klinis": ["Nyeri puting", "Luka/pecah-pecah", "Perdarahan minimal"],
+      "gejala_klinis": [
+        "Nyeri puting",
+        "Luka/pecah-pecah",
+        "Perdarahan minimal"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -12280,15 +13233,26 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "female"
+                ],
                 "body_system": "breast",
-                "anatomy": ["nipple"],
+                "anatomy": [
+                  "nipple"
+                ],
                 "temporal_pattern": "",
                 "severity": "mild",
-                "context": ["lactation"]
+                "context": [
+                  "lactation"
+                ]
               },
-              "patient_language_synonyms": ["nyeri puting", "sakit puting"],
+              "patient_language_synonyms": [
+                "nyeri puting",
+                "sakit puting"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -12348,15 +13312,26 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "female"
+                ],
                 "body_system": "breast",
-                "anatomy": ["nipple"],
+                "anatomy": [
+                  "nipple"
+                ],
                 "temporal_pattern": "",
                 "severity": "mild",
-                "context": ["lactation"]
+                "context": [
+                  "lactation"
+                ]
               },
-              "patient_language_synonyms": ["puting lecet", "puting terluka"],
+              "patient_language_synonyms": [
+                "puting lecet",
+                "puting terluka"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -12421,7 +13396,10 @@
       "body_system": "SISTEM REPRODUKSI",
       "can_refer": false,
       "definisi": "Puting yang tertarik ke dalam, dapat mengganggu menyusui",
-      "gejala_klinis": ["Puting masuk ke dalam", "Kesulitan menyusui"],
+      "gejala_klinis": [
+        "Puting masuk ke dalam",
+        "Kesulitan menyusui"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -12446,11 +13424,20 @@
       "body_system": "SISTEM ENDOKRIN",
       "can_refer": false,
       "definisi": "Diabetes akibat destruksi sel beta pankreas, ketergantungan insulin",
-      "gejala_klinis": ["Poliuri", "Polidipsi", "Polifagi", "Penurunan BB", "Ketoasidosis"],
+      "gejala_klinis": [
+        "Poliuri",
+        "Polidipsi",
+        "Polifagi",
+        "Penurunan BB",
+        "Ketoasidosis"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["Ketoasidosis diabetik", "Hipoglikemia berat"],
+      "red_flags": [
+        "Ketoasidosis diabetik",
+        "Hipoglikemia berat"
+      ],
       "terapi": [
         {
           "obat": "Insulin",
@@ -12630,7 +13617,9 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["pediatric"],
+                "age_group": [
+                  "pediatric"
+                ],
                 "sex": [],
                 "body_system": "endocrine",
                 "anatomy": [],
@@ -12703,11 +13692,20 @@
       "body_system": "SISTEM ENDOKRIN",
       "can_refer": false,
       "definisi": "Diabetes akibat resistensi insulin dan/atau defek sekresi insulin",
-      "gejala_klinis": ["Poliuri", "Polidipsi", "Polifagi", "Lemas", "Pandangan kabur"],
+      "gejala_klinis": [
+        "Poliuri",
+        "Polidipsi",
+        "Polifagi",
+        "Lemas",
+        "Pandangan kabur"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["Hiperglikemia berat", "Hipoglikemia"],
+      "red_flags": [
+        "Hiperglikemia berat",
+        "Hipoglikemia"
+      ],
       "terapi": [
         {
           "obat": "Metformin",
@@ -12976,7 +13974,7 @@
         "Jantung berdebar (palpitasi)",
         "Tremor atau gemetar",
         "Lapar tiba-tiba",
-        "Lemas dan pusing",
+        "Bingung ringan atau sulit konsentrasi saat gula rendah",
         "Pucat"
       ],
       "pemeriksaan_fisik": [
@@ -12985,8 +13983,15 @@
         "Gula darah sewaktu rendah kurang dari 70 mg/dL",
         "Takikardia"
       ],
-      "diagnosis_banding": ["Syncope vagal.", "Stroke/TIA."],
-      "komplikasi": ["Kerusakan otak.", "Koma.", "Kematian."],
+      "diagnosis_banding": [
+        "Syncope vagal.",
+        "Stroke/TIA."
+      ],
+      "komplikasi": [
+        "Kerusakan otak.",
+        "Koma.",
+        "Kematian."
+      ],
       "red_flags": [
         "Penurunan kesadaran",
         "Kejang akibat hipoglikemia berat",
@@ -13017,7 +14022,10 @@
         "atau sendi tarsal",
         "Sendi yang mengalami inflamasi tampak kemerahan dan bengkak."
       ],
-      "diagnosis_banding": ["Sepsis arthritis", "Rheumatoid arthritis"],
+      "diagnosis_banding": [
+        "Sepsis arthritis",
+        "Rheumatoid arthritis"
+      ],
       "komplikasi": [
         "Anoreksia",
         "Pneumonia berat",
@@ -13030,7 +14038,13 @@
         "Hiperpireksia",
         "Penurunan kesadaran"
       ],
-      "red_flags": ["Anoreksia", "Pneumonia berat", "Anemia berat", "Infeksi", "Dehidrasi berat"],
+      "red_flags": [
+        "Anoreksia",
+        "Pneumonia berat",
+        "Anemia berat",
+        "Infeksi",
+        "Dehidrasi berat"
+      ],
       "terapi": [],
       "kriteria_rujukan": "1. Bila terjadi komplikasi, seperti: sepsis, dehidrasi berat, anemia berat, penurunan\nkesadaran.\n2. Bila terdapat penyakit komorbid, seperti: pneumonia berat.",
       "source": "PPK IDI 2013 + 144 Diagnosis KKI"
@@ -13046,12 +14060,9 @@
       "can_refer": false,
       "definisi": "Anemia dalam kehamilan adalah kelainan pada ibu hamil dengan kadar haemoglobin <11g/dl\npada trimester II dan III atau <10,5 g/dl pada trimester II. Penyebab tersering anemia pada\nkehamilan adalah defisiensi besi, perdarahan akut, dan defisiensi asam folat.",
       "gejala_klinis": [
-        "Badan lemah, lesu",
-        "Mudah lelah",
-        "Mata berkunang-kunang",
-        "Tampak pucat",
-        "Telinga mendenging",
-        "Pica: keinginan untuk memakan bahan-bahan yang tidak lazim"
+        "Rabun senja (defisiensi vitamin A)",
+        "Gusi mudah berdarah (defisiensi vitamin C)",
+        "Mudah lelah"
       ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [
@@ -13082,12 +14093,10 @@
       "can_refer": false,
       "definisi": "Anemia dalam kehamilan adalah kelainan pada ibu hamil dengan kadar haemoglobin <11g/dl\npada trimester II dan III atau <10,5 g/dl pada trimester II. Penyebab tersering anemia pada\nkehamilan adalah defisiensi besi, perdarahan akut, dan defisiensi asam folat.",
       "gejala_klinis": [
-        "Badan lemah, lesu",
+        "Kram otot",
+        "Kesemutan",
         "Mudah lelah",
-        "Mata berkunang-kunang",
-        "Tampak pucat",
-        "Telinga mendenging",
-        "Pica: keinginan untuk memakan bahan-bahan yang tidak lazim"
+        "Rambut atau kuku rapuh"
       ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [
@@ -13130,7 +14139,10 @@
         "Arkus kornea pada pasien muda"
       ],
       "diagnosis_banding": [],
-      "komplikasi": ["Penyakit jantung koroner", "Stroke"],
+      "komplikasi": [
+        "Penyakit jantung koroner",
+        "Stroke"
+      ],
       "red_flags": [
         "Pankreatitis akut akibat trigliserida sangat tinggi",
         "Infark miokard",
@@ -13150,7 +14162,11 @@
       "body_system": "SISTEM ENDOKRIN",
       "can_refer": false,
       "definisi": "Kadar asam urat darah meningkat (>7 mg/dL pria, >6 mg/dL wanita)",
-      "gejala_klinis": ["Sering asimptomatik", "Artritis gout", "Nefrolitiasis"],
+      "gejala_klinis": [
+        "Sering asimptomatik",
+        "Artritis gout",
+        "Nefrolitiasis"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -13182,7 +14198,9 @@
         "obatan (beberapa obat seperti steroid, KB",
         "depresan memiliki efek samping penambahan berat badan dan retensi"
       ],
-      "pemeriksaan_fisik": ["Risiko meningkat bila laki-laki > 85 cm dan perempuan >80cm."],
+      "pemeriksaan_fisik": [
+        "Risiko meningkat bila laki-laki > 85 cm dan perempuan >80cm."
+      ],
       "diagnosis_banding": [],
       "komplikasi": [
         "Sumber lain mengatakan bahwa hiperurisemia, gangguan",
@@ -13219,7 +14237,14 @@
       "body_system": "HEMATOLOGI DAN IMUNOLOGI",
       "can_refer": false,
       "definisi": "Penurunan kadar Hemoglobin yang menyebabkan penurunan kadar oksigen yang\ndidistribusikan ke seluruh tubuh sehingga menimbulkan berbagai keluhan (sindrom anemia).",
-      "gejala_klinis": ["kunang, pusing, telinga berdenging dan penurunan konsentrasi."],
+      "gejala_klinis": [
+        "Lemah/lesu",
+        "Mudah lelah",
+        "Mata berkunang-kunang",
+        "Tampak pucat",
+        "Telinga berdenging",
+        "Penurunan konsentrasi"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [
         "Anemia defesiensi besi",
@@ -13228,8 +14253,14 @@
         "Anemia Hemolitik",
         "Anemia pada penyakit kronik"
       ],
-      "komplikasi": ["Gagal jantung", "Syncope"],
-      "red_flags": ["Gagal jantung", "Syncope"],
+      "komplikasi": [
+        "Gagal jantung",
+        "Syncope"
+      ],
+      "red_flags": [
+        "Gagal jantung",
+        "Syncope"
+      ],
       "terapi": [],
       "kriteria_rujukan": " Anemia berat dengan indikasi transfusi (Hb < 6 mg%).\n Untuk anemia karena penyebab yang tidak termasuk kompetensi dokter layanan primer,\ndirujuk ke dokter spesialis penyakit dalam.",
       "source": "PPK IDI 2013 + 144 Diagnosis KKI",
@@ -13243,13 +14274,23 @@
               "type": "diagnostic_criterion",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "child"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "child"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "hematologic",
-                "anatomy": ["blood"],
+                "anatomy": [
+                  "blood"
+                ],
                 "temporal_pattern": "chronic",
                 "severity": "mild to severe",
-                "context": ["clinical"]
+                "context": [
+                  "clinical"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -13316,7 +14357,12 @@
       "body_system": "HEMATOLOGI DAN IMUNOLOGI",
       "can_refer": false,
       "definisi": "Peradangan kelenjar getah bening, biasanya akibat infeksi",
-      "gejala_klinis": ["Pembesaran KGB", "Nyeri tekan", "Eritema", "Demam"],
+      "gejala_klinis": [
+        "Pembesaran KGB",
+        "Nyeri tekan",
+        "Eritema",
+        "Demam"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -13345,13 +14391,13 @@
         "Demam tinggi mendadak terus-menerus selama 2-7 hari",
         "Nyeri kepala hebat",
         "Nyeri retroorbital (nyeri di belakang bola mata)",
-        "Mialgia (nyeri otot seluruh badan)",
+        "Mialgia (nyeri otot generalisata)",
         "Artralgia (nyeri sendi)",
         "Mual dan muntah",
         "Nyeri perut",
         "Ruam kulit (skin rash) makulopapular",
         "Perdarahan: petekie, epistaksis, gusi berdarah",
-        "Lemas dan lesu",
+        "Kelelahan hebat selama demam",
         "Nafsu makan menurun",
         "Tanda bahaya: nyeri perut hebat, muntah persisten, perdarahan mukosa, gelisah"
       ],
@@ -13468,7 +14514,12 @@
       "body_system": "HEMATOLOGI DAN IMUNOLOGI",
       "can_refer": false,
       "definisi": "Infeksi Leptospira yang ditularkan melalui kontak dengan urin hewan terinfeksi",
-      "gejala_klinis": ["Demam tinggi mendadak", "Nyeri otot betis", "Mata merah", "Ikterik"],
+      "gejala_klinis": [
+        "Demam tinggi mendadak",
+        "Nyeri otot betis",
+        "Mata merah",
+        "Ikterik"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [
         "Demam dengue,",
@@ -13486,7 +14537,10 @@
         "bahan yang telah terkontaminasi dengan kemih",
         " Keluarga harus melakukan pencegahan leptospirosis dengan menyimpan makanan dan"
       ],
-      "red_flags": ["Gagal ginjal", "Perdarahan paru"],
+      "red_flags": [
+        "Gagal ginjal",
+        "Perdarahan paru"
+      ],
       "terapi": [
         {
           "obat": "Doxycycline",
@@ -14073,7 +15127,11 @@
       ],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["Henti jantung", "Henti napas", "Syok refrakter"],
+      "red_flags": [
+        "Henti jantung",
+        "Henti napas",
+        "Syok refrakter"
+      ],
       "terapi": [
         {
           "obat": "difenhidramin",
@@ -14246,7 +15304,12 @@
       "body_system": "SISTEM MUSKULOSKELETAL",
       "can_refer": false,
       "definisi": "Luka kronik pada tungkai bawah, sering akibat insufisiensi vena atau arterial",
-      "gejala_klinis": ["Luka tidak sembuh", "Nyeri", "Edema tungkai", "Perubahan kulit"],
+      "gejala_klinis": [
+        "Luka tidak sembuh",
+        "Nyeri",
+        "Edema tungkai",
+        "Perubahan kulit"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -14277,7 +15340,12 @@
         "Untuk tempat predileksi seperti di leher bisa menimbulkan keluhan"
       ],
       "pemeriksaan_fisik": [],
-      "diagnosis_banding": ["Epidermoidkista", "Abses", "Liposarcoma", "Limfadenitis tuberkulosis"],
+      "diagnosis_banding": [
+        "Epidermoidkista",
+        "Abses",
+        "Liposarcoma",
+        "Limfadenitis tuberkulosis"
+      ],
       "komplikasi": [],
       "red_flags": [],
       "terapi": [],
@@ -14293,15 +15361,28 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "children"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "children"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "integumentary",
-                "anatomy": ["skin"],
+                "anatomy": [
+                  "skin"
+                ],
                 "temporal_pattern": "chronic",
                 "severity": "mild",
-                "context": ["asymptomatic"]
+                "context": [
+                  "asymptomatic"
+                ]
               },
-              "patient_language_synonyms": ["benjolan di kulit", "tumor jinak"],
+              "patient_language_synonyms": [
+                "benjolan di kulit",
+                "tumor jinak"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -14363,15 +15444,27 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "integumentary",
-                "anatomy": ["skin"],
+                "anatomy": [
+                  "skin"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "moderate",
-                "context": ["symptomatic"]
+                "context": [
+                  "symptomatic"
+                ]
               },
-              "patient_language_synonyms": ["massa besar", "benjolan besar"],
+              "patient_language_synonyms": [
+                "massa besar",
+                "benjolan besar"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -14431,15 +15524,27 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "integumentary",
-                "anatomy": ["skin"],
+                "anatomy": [
+                  "skin"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "moderate",
-                "context": ["symptomatic"]
+                "context": [
+                  "symptomatic"
+                ]
               },
-              "patient_language_synonyms": ["nyeri pada benjolan", "rasa sakit"],
+              "patient_language_synonyms": [
+                "nyeri pada benjolan",
+                "rasa sakit"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -14499,15 +15604,27 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "integumentary",
-                "anatomy": ["skin"],
+                "anatomy": [
+                  "skin"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "moderate",
-                "context": ["symptomatic"]
+                "context": [
+                  "symptomatic"
+                ]
               },
-              "patient_language_synonyms": ["lokasi berisiko", "benjolan di area sensitif"],
+              "patient_language_synonyms": [
+                "lokasi berisiko",
+                "benjolan di area sensitif"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -14572,7 +15689,9 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Veruka vulgaris merupakan hiperplasia epidermis yang disebabkan oleh Human papilloma\nvirus (HPV). Penularan melalui kontak langsung dengan agen penyebab. Veruka ini sering\ndijumpai pada anak-anak dan remaja.",
-      "gejala_klinis": ["Adanya kutil pada kulit dan mukosa."],
+      "gejala_klinis": [
+        "Adanya kutil pada kulit dan mukosa."
+      ],
       "pemeriksaan_fisik": [
         "Papul ini dapat dijumpai",
         "Apabila permukaannya rata, disebut dengan veruka plana."
@@ -14628,7 +15747,11 @@
         "Gambar41.Moluskum kontagiosum",
         "Sumber: http://health.detik.com/read/2009/11/12/105627/1240281/770/"
       ],
-      "diagnosis_banding": ["Komedo", "Milia", "Karsinoma sel basal nodular"],
+      "diagnosis_banding": [
+        "Komedo",
+        "Milia",
+        "Karsinoma sel basal nodular"
+      ],
       "komplikasi": [
         "Jika moluskum mengenai kelopak mata (jarang",
         "Pada individu dengan AIDS, moluskum seringkali"
@@ -14725,12 +15848,18 @@
         "Koplik spots pada mukosa bukal",
         "Konjungtivitis"
       ],
-      "diagnosis_banding": ["pneumoniae."],
+      "diagnosis_banding": [
+        "pneumoniae."
+      ],
       "komplikasi": [
         "Komplikasi berupa otitis media,",
         "Pada anak HIV yang tidak diimunisasi, pneumonia"
       ],
-      "red_flags": ["Pneumonia morbili", "Ensefalitis morbili", "Otitis media komplikasi"],
+      "red_flags": [
+        "Pneumonia morbili",
+        "Ensefalitis morbili",
+        "Otitis media komplikasi"
+      ],
       "terapi": [],
       "kriteria_rujukan": "Perawatan di Rumah Sakit untuk campak dengan komplikasi (superinfeksi bakteri,\npneumonia, dehidrasi, croup, ensefalitis)",
       "source": "PPK IDI 2013 + 144 Diagnosis KKI"
@@ -14793,12 +15922,11 @@
       "can_refer": false,
       "definisi": "Infeksi akut yang disebabkan oleh virus herpes simpleks tipe I atau tipe II, yang ditandai oleh\nadanya vesikel yang berkelompok di atas kulit yang sembab dan eritematosa pada daerah\nmukokutan. Penularan melalui kontak langsung dengan agen penyebab.",
       "gejala_klinis": [
-        "biasanya terjadi pada anak dan subklinis pada 90% kasus, biasanya",
-        "Pada 10% sisanya, dapat terjadi gingivostomatitis akut.",
-        "terjadi setelah kontak seksual pada remaja dan dewasa, menyebabkan",
-        "Infeksi primer biasanya",
-        "Infeksi HSV-2 dapat juga mengenai bibir.",
-        "Prodromal ini biasanya terjadi mulai dari 24 jam sebelum"
+        "Vesikel berkelompok di atas dasar eritema",
+        "Nyeri/rasa terbakar/gatal lokal",
+        "Gejala prodromal sebelum lesi",
+        "Gingivostomatitis pada anak",
+        "Lesi genital pada dewasa"
       ],
       "pemeriksaan_fisik": [
         "Vesikel ini dapat cepat menjadi keruh, yang kemudian pecah, membasah, dan berkrusta.",
@@ -14874,7 +16002,11 @@
         "Limfadenitis supuratif",
         "Bakteremia (sepsis)"
       ],
-      "red_flags": ["Penyebaran luas", "Demam dan selulitis", "Ektima (impetigo dalam)"],
+      "red_flags": [
+        "Penyebaran luas",
+        "Demam dan selulitis",
+        "Ektima (impetigo dalam)"
+      ],
       "terapi": [
         {
           "obat": "Amoksisilin",
@@ -14902,12 +16034,17 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "Integumentary",
-                "anatomy": ["skin"],
+                "anatomy": [
+                  "skin"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
               },
-              "patient_language_synonyms": ["koreng", "luka di kulit"],
+              "patient_language_synonyms": [
+                "koreng",
+                "luka di kulit"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -14972,12 +16109,16 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "Integumentary",
-                "anatomy": ["hair follicle"],
+                "anatomy": [
+                  "hair follicle"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
               },
-              "patient_language_synonyms": ["peradangan folikel rambut"],
+              "patient_language_synonyms": [
+                "peradangan folikel rambut"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -15040,12 +16181,16 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "Integumentary",
-                "anatomy": ["hair follicle"],
+                "anatomy": [
+                  "hair follicle"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
               },
-              "patient_language_synonyms": ["peradangan folikel rambut dan jaringan sekitarnya"],
+              "patient_language_synonyms": [
+                "peradangan folikel rambut dan jaringan sekitarnya"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -15110,7 +16255,11 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Infeksi kulit bakteri yang lebih dalam dari impetigo biasa",
-      "gejala_klinis": ["Ulkus dengan krusta tebal", "Nyeri", "Sering di tungkai"],
+      "gejala_klinis": [
+        "Ulkus dengan krusta tebal",
+        "Nyeri",
+        "Sering di tungkai"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -15135,7 +16284,11 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Infeksi superfisial pada folikel rambut",
-      "gejala_klinis": ["Papul/pustul folikular", "Gatal", "Nyeri ringan"],
+      "gejala_klinis": [
+        "Papul/pustul folikular",
+        "Gatal",
+        "Nyeri ringan"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -15160,7 +16313,11 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Infeksi dalam folikel rambut (furunkel) atau multiple furunkel (karbunkel)",
-      "gejala_klinis": ["Benjolan merah nyeri", "Fluktuasi", "Demam (karbunkel)"],
+      "gejala_klinis": [
+        "Benjolan merah nyeri",
+        "Fluktuasi",
+        "Demam (karbunkel)"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -15185,7 +16342,11 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Infeksi kulit superfisial oleh Corynebacterium minutissimum",
-      "gejala_klinis": ["Bercak coklat-merah di lipatan", "Batas tegas", "Skuama halus"],
+      "gejala_klinis": [
+        "Bercak coklat-merah di lipatan",
+        "Batas tegas",
+        "Skuama halus"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -15209,10 +16370,17 @@
               "type": "diagnostic_criterion",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "integumentary",
-                "anatomy": ["skin"],
+                "anatomy": [
+                  "skin"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -15282,7 +16450,12 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Infeksi kulit superfisial oleh Streptococcus dengan keterlibatan limfatik",
-      "gejala_klinis": ["Plak eritema berbatas tegas", "Demam tinggi", "Nyeri", "Edema"],
+      "gejala_klinis": [
+        "Plak eritema berbatas tegas",
+        "Demam tinggi",
+        "Nyeri",
+        "Edema"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -15306,15 +16479,28 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "pediatric"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "pediatric"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "integumentary",
-                "anatomy": ["skin"],
+                "anatomy": [
+                  "skin"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild to moderate",
-                "context": ["infection"]
+                "context": [
+                  "infection"
+                ]
               },
-              "patient_language_synonyms": ["demam", "rasa tidak enak badan"],
+              "patient_language_synonyms": [
+                "demam",
+                "rasa tidak enak badan"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -15374,15 +16560,27 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "pediatric"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "pediatric"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "integumentary",
-                "anatomy": ["skin"],
+                "anatomy": [
+                  "skin"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild to moderate",
-                "context": ["infection"]
+                "context": [
+                  "infection"
+                ]
               },
-              "patient_language_synonyms": ["kemerahan pada kulit"],
+              "patient_language_synonyms": [
+                "kemerahan pada kulit"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -15447,7 +16645,12 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "TB kulit akibat penyebaran dari kelenjar limfe yang terinfeksi",
-      "gejala_klinis": ["Nodul subkutan", "Fistula", "Discharge", "Sikatriks"],
+      "gejala_klinis": [
+        "Nodul subkutan",
+        "Fistula",
+        "Discharge",
+        "Sikatriks"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -15471,15 +16674,29 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "pediatric"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "pediatric"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "lymphatic",
-                "anatomy": ["cervical", "axillary", "inguinal"],
+                "anatomy": [
+                  "cervical",
+                  "axillary",
+                  "inguinal"
+                ],
                 "temporal_pattern": "chronic",
                 "severity": "mild",
-                "context": ["initial presentation"]
+                "context": [
+                  "initial presentation"
+                ]
               },
-              "patient_language_synonyms": ["pembengkakan kelenjar getah bening"],
+              "patient_language_synonyms": [
+                "pembengkakan kelenjar getah bening"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -15541,15 +16758,27 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "pediatric"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "pediatric"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "integumentary",
-                "anatomy": ["general"],
+                "anatomy": [
+                  "general"
+                ],
                 "temporal_pattern": "chronic",
                 "severity": "mild",
-                "context": ["healing criteria"]
+                "context": [
+                  "healing criteria"
+                ]
               },
-              "patient_language_synonyms": ["fistel dan luka sudah sembuh"],
+              "patient_language_synonyms": [
+                "fistel dan luka sudah sembuh"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -15609,15 +16838,27 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "pediatric"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "pediatric"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "lymphatic",
-                "anatomy": ["general"],
+                "anatomy": [
+                  "general"
+                ],
                 "temporal_pattern": "chronic",
                 "severity": "mild",
-                "context": ["healing criteria"]
+                "context": [
+                  "healing criteria"
+                ]
               },
-              "patient_language_synonyms": ["kelenjar getah bening sudah kecil"],
+              "patient_language_synonyms": [
+                "kelenjar getah bening sudah kecil"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -15766,7 +17007,11 @@
         "Stadium II"
       ],
       "komplikasi": [],
-      "red_flags": ["Neurosifilis", "Sifilis kardiovaskular", "Sifilis kongenital"],
+      "red_flags": [
+        "Neurosifilis",
+        "Sifilis kardiovaskular",
+        "Sifilis kongenital"
+      ],
       "terapi": [
         {
           "obat": "amoksisilin",
@@ -15787,7 +17032,11 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Dermatofitosis adalah infeksi jamur dermatofita yang memiliki sifat mencernakan keratin di\njaringan yang mengandung zat tanduk, misalnya stratum korneum pada epidermis, rambut,\ndan kuku.\nPenularan melalui kontak langsung dengan agen penyebab. Sumber penularan dapat berasal\ndari manusia (jamur antropofilik), binatang (jamur zoofilik) atau dari tanah (jamur geofilik).",
-      "gejala_klinis": ["Adanya riwayat kontak dengan orang yang mengalami dermatofitosis."],
+      "gejala_klinis": [
+        "Bercak botak dengan skuama di kulit kepala",
+        "Gatal",
+        "Rambut mudah patah"
+      ],
       "pemeriksaan_fisik": [
         "Lesi dapat dijumpai di daerah kulit",
         "4 04",
@@ -15838,7 +17087,11 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Dermatofitosis pada daerah janggut dan kumis",
-      "gejala_klinis": ["Papul, pustul folikular", "Krusta", "Alopesia"],
+      "gejala_klinis": [
+        "Papul, pustul folikular",
+        "Krusta",
+        "Alopesia"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -15863,7 +17116,11 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Dermatofitosis pada wajah di luar area janggut",
-      "gejala_klinis": ["Plak eritematosa", "Tepi aktif", "Central healing"],
+      "gejala_klinis": [
+        "Plak eritematosa",
+        "Tepi aktif",
+        "Central healing"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -15888,7 +17145,11 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Dermatofitosis adalah infeksi jamur dermatofita yang memiliki sifat mencernakan keratin di\njaringan yang mengandung zat tanduk, misalnya stratum korneum pada epidermis, rambut,\ndan kuku.\nPenularan melalui kontak langsung dengan agen penyebab. Sumber penularan dapat berasal\ndari manusia (jamur antropofilik), binatang (jamur zoofilik) atau dari tanah (jamur geofilik).",
-      "gejala_klinis": ["Adanya riwayat kontak dengan orang yang mengalami dermatofitosis."],
+      "gejala_klinis": [
+        "Lesi anular tepi aktif meninggi",
+        "Central healing",
+        "Gatal"
+      ],
       "pemeriksaan_fisik": [
         "Lesi dapat dijumpai di daerah kulit",
         "4 04",
@@ -15939,7 +17200,12 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Dermatofitosis pada tangan",
-      "gejala_klinis": ["Skuama kering", "Fisura", "Gatal", "Unilateral"],
+      "gejala_klinis": [
+        "Skuama kering",
+        "Fisura",
+        "Gatal",
+        "Unilateral"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -15964,7 +17230,12 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Dermatofitosis pada kuku (onikomikosis)",
-      "gejala_klinis": ["Kuku menebal", "Warna kekuningan", "Rapuh", "Debris subungual"],
+      "gejala_klinis": [
+        "Kuku menebal",
+        "Warna kekuningan",
+        "Rapuh",
+        "Debris subungual"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -15989,7 +17260,12 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Dermatofitosis pada lipat paha",
-      "gejala_klinis": ["Plak eritematosa", "Tepi aktif", "Gatal", "Bilateral"],
+      "gejala_klinis": [
+        "Plak eritematosa",
+        "Tepi aktif",
+        "Gatal",
+        "Bilateral"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -16014,7 +17290,12 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Dermatofitosis pada kaki (athlete's foot)",
-      "gejala_klinis": ["Skuama di sela jari", "Maserasi", "Gatal", "Bau"],
+      "gejala_klinis": [
+        "Skuama di sela jari",
+        "Maserasi",
+        "Gatal",
+        "Bau"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -16058,7 +17339,9 @@
         "Eritrasma"
       ],
       "komplikasi": [],
-      "red_flags": ["Infeksi luas pada pasien imunodefisiensi"],
+      "red_flags": [
+        "Infeksi luas pada pasien imunodefisiensi"
+      ],
       "terapi": [
         {
           "obat": "Ketokonazol",
@@ -16084,7 +17367,12 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Miopia ringan adalahkelainan refraksi dimana sinar sejajar yang masuk ke mata dalam\nkeadaan istirahat (tanpa akomodasi) akan dibiaskan membentuk bayangan di depan retina.\nDapat dikoreksi dengan lensa sferis negative S – 0.25 sampai S – 3.00 D",
-      "gejala_klinis": ["Tidak terdapat riwayat kelainan sistemik seperti;"],
+      "gejala_klinis": [
+        "Bercak putih di mukosa",
+        "Eritema",
+        "Gatal",
+        "Maserasi lipatan kulit"
+      ],
       "pemeriksaan_fisik": [
         "Penderita duduk menghadap kartu snellen pada jarak 6 meter.",
         "Pada mata dipasang bingkai percobaan. Satu mata ditutup, biasanya mata kiri ditutup",
@@ -16122,9 +17410,16 @@
         "Papul eritematosa",
         "Lokasi sering di kaki atau bokong"
       ],
-      "diagnosis_banding": ["Dermatofitosis", "Dermatitis", "Dermatosis"],
+      "diagnosis_banding": [
+        "Dermatofitosis",
+        "Dermatitis",
+        "Dermatosis"
+      ],
       "komplikasi": [],
-      "red_flags": ["Infeksi sekunder pada lesi garukan", "Impetigo komplikasi"],
+      "red_flags": [
+        "Infeksi sekunder pada lesi garukan",
+        "Impetigo komplikasi"
+      ],
       "terapi": [],
       "kriteria_rujukan": "Pasien dirujuk apabila dalam waktu 8 minggu tidak membaik dengan terapi.",
       "source": "PPK IDI 2013 + 144 Diagnosis KKI"
@@ -16192,13 +17487,26 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "lymphatic",
-                "anatomy": ["lower extremity", "upper extremity", "scrotum", "vulva", "breast"],
+                "anatomy": [
+                  "lower extremity",
+                  "upper extremity",
+                  "scrotum",
+                  "vulva",
+                  "breast"
+                ],
                 "temporal_pattern": "chronic",
                 "severity": "severe",
-                "context": ["endemic area"]
+                "context": [
+                  "endemic area"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -16260,13 +17568,23 @@
               "type": "symptom",
               "specificity": "supportive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "urinary",
-                "anatomy": ["kidney", "urinary system"],
+                "anatomy": [
+                  "kidney",
+                  "urinary system"
+                ],
                 "temporal_pattern": "chronic",
                 "severity": "mild",
-                "context": ["endemic area"]
+                "context": [
+                  "endemic area"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -16328,15 +17646,28 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "children"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "children"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "immune",
-                "anatomy": ["general"],
+                "anatomy": [
+                  "general"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild",
-                "context": ["endemic areas"]
+                "context": [
+                  "endemic areas"
+                ]
               },
-              "patient_language_synonyms": ["demam berulang", "demam hilang timbul"],
+              "patient_language_synonyms": [
+                "demam berulang",
+                "demam hilang timbul"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -16396,13 +17727,24 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "children"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "children"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "lymphatic",
-                "anatomy": ["inguinal", "axillary"],
+                "anatomy": [
+                  "inguinal",
+                  "axillary"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "moderate",
-                "context": ["endemic areas"]
+                "context": [
+                  "endemic areas"
+                ]
               },
               "patient_language_synonyms": [
                 "pembengkakan kelenjar getah bening",
@@ -16467,13 +17809,24 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "children"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "children"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "lymphatic",
-                "anatomy": ["lower extremity", "upper extremity"],
+                "anatomy": [
+                  "lower extremity",
+                  "upper extremity"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "moderate",
-                "context": ["endemic areas"]
+                "context": [
+                  "endemic areas"
+                ]
               },
               "patient_language_synonyms": [
                 "radang kelenjar getah bening",
@@ -16538,15 +17891,30 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "children"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "children"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "lymphatic",
-                "anatomy": ["lower extremity", "upper extremity", "genital"],
+                "anatomy": [
+                  "lower extremity",
+                  "upper extremity",
+                  "genital"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "moderate",
-                "context": ["endemic areas"]
+                "context": [
+                  "endemic areas"
+                ]
               },
-              "patient_language_synonyms": ["pembesaran tungkai", "pembesaran lengan"],
+              "patient_language_synonyms": [
+                "pembesaran tungkai",
+                "pembesaran lengan"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -16606,15 +17974,30 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "children"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "children"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "lymphatic",
-                "anatomy": ["lower extremity", "upper extremity", "genital"],
+                "anatomy": [
+                  "lower extremity",
+                  "upper extremity",
+                  "genital"
+                ],
                 "temporal_pattern": "chronic",
                 "severity": "severe",
-                "context": ["endemic areas"]
+                "context": [
+                  "endemic areas"
+                ]
               },
-              "patient_language_synonyms": ["pembesaran menetap", "kaki gajah"],
+              "patient_language_synonyms": [
+                "pembesaran menetap",
+                "kaki gajah"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -16690,9 +18073,15 @@
         "Kutu dewasa pada kulit kepala",
         "Ekskoriasi kulit kepala"
       ],
-      "diagnosis_banding": ["Tinea kapitis", "Impetigo krustosa (pioderma)", "Dermatitis seboroik"],
+      "diagnosis_banding": [
+        "Tinea kapitis",
+        "Impetigo krustosa (pioderma)",
+        "Dermatitis seboroik"
+      ],
       "komplikasi": [],
-      "red_flags": ["Infeksi sekunder dengan limfadenopati"],
+      "red_flags": [
+        "Infeksi sekunder dengan limfadenopati"
+      ],
       "terapi": [
         {
           "obat": "Permetrin",
@@ -16723,9 +18112,15 @@
         "Nit pada batang rambut pubis",
         "Ekskoriasi"
       ],
-      "diagnosis_banding": ["Tinea kapitis", "Impetigo krustosa (pioderma)", "Dermatitis seboroik"],
+      "diagnosis_banding": [
+        "Tinea kapitis",
+        "Impetigo krustosa (pioderma)",
+        "Dermatitis seboroik"
+      ],
       "komplikasi": [],
-      "red_flags": ["Infeksi menular seksual bersamaan"],
+      "red_flags": [
+        "Infeksi menular seksual bersamaan"
+      ],
       "terapi": [
         {
           "obat": "Permetrin",
@@ -16745,15 +18140,30 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "child"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "child"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "integumentary",
-                "anatomy": ["pubis", "abdomen", "chest"],
+                "anatomy": [
+                  "pubis",
+                  "abdomen",
+                  "chest"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild",
-                "context": ["symptomatic"]
+                "context": [
+                  "symptomatic"
+                ]
               },
-              "patient_language_synonyms": ["gatal di area kemaluan", "gatal di daerah pubis"],
+              "patient_language_synonyms": [
+                "gatal di area kemaluan",
+                "gatal di daerah pubis"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -16813,15 +18223,27 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "child"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "child"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "integumentary",
-                "anatomy": ["pubis"],
+                "anatomy": [
+                  "pubis"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild",
-                "context": ["symptomatic"]
+                "context": [
+                  "symptomatic"
+                ]
               },
-              "patient_language_synonyms": ["tanda bercak hitam di celana dalam"],
+              "patient_language_synonyms": [
+                "tanda bercak hitam di celana dalam"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -16883,15 +18305,27 @@
               "type": "physical_exam",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "child"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "child"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "integumentary",
-                "anatomy": ["pubis"],
+                "anatomy": [
+                  "pubis"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild",
-                "context": ["clinical examination"]
+                "context": [
+                  "clinical examination"
+                ]
               },
-              "patient_language_synonyms": ["bercak abu-abu di daerah kemaluan"],
+              "patient_language_synonyms": [
+                "bercak abu-abu di daerah kemaluan"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -16956,7 +18390,12 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Infeksi kulit oleh tungau Sarcoptes scabiei",
-      "gejala_klinis": ["Gatal malam hari", "Papul di sela jari", "Terowongan", "Riwayat kontak"],
+      "gejala_klinis": [
+        "Gatal malam hari",
+        "Papul di sela jari",
+        "Terowongan",
+        "Riwayat kontak"
+      ],
       "pemeriksaan_fisik": [
         "abu dengan panjang rata-",
         "cm. Ujung terowongan terdapat papul, vesikel, dan bila terjadi infeksi sekunder, maka",
@@ -16971,8 +18410,13 @@
         "Dermatitis",
         "Pedikulosis korporis"
       ],
-      "komplikasi": ["aureus sering terjadi, terutama pada anak. Komplikasi"],
-      "red_flags": ["Skabies berkrusta", "Infeksi sekunder"],
+      "komplikasi": [
+        "aureus sering terjadi, terutama pada anak. Komplikasi"
+      ],
+      "red_flags": [
+        "Skabies berkrusta",
+        "Infeksi sekunder"
+      ],
       "terapi": [
         {
           "obat": "Permetrin 5% krim",
@@ -16995,7 +18439,9 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "integumentary",
-                "anatomy": ["skin"],
+                "anatomy": [
+                  "skin"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -17264,10 +18710,14 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["children"],
+                "age_group": [
+                  "children"
+                ],
                 "sex": [],
                 "body_system": "skin",
-                "anatomy": ["head"],
+                "anatomy": [
+                  "head"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -17547,13 +18997,19 @@
         "Papul atau urtika pada area gigitan",
         "Rasa nyeri ringan"
       ],
-      "pemeriksaan_fisik": ["Papul eritematosa atau urtika pada area gigitan", "Edema lokal"],
+      "pemeriksaan_fisik": [
+        "Papul eritematosa atau urtika pada area gigitan",
+        "Edema lokal"
+      ],
       "diagnosis_banding": [],
       "komplikasi": [
         "Infeksi sekunder akibat garukan.",
         "Bila disertai keluhan sistemik, dapat terjadi: syok anafilaktik hingga kematian."
       ],
-      "red_flags": ["Anafilaksis pada gigitan lebah atau tawon", "Infeksi sekunder"],
+      "red_flags": [
+        "Anafilaksis pada gigitan lebah atau tawon",
+        "Infeksi sekunder"
+      ],
       "terapi": [
         {
           "obat": "Prednison",
@@ -17772,15 +19228,30 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["child", "adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "child",
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "integumentary",
-                "anatomy": ["skin"],
+                "anatomy": [
+                  "skin"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild",
-                "context": ["after insect bite"]
+                "context": [
+                  "after insect bite"
+                ]
               },
-              "patient_language_synonyms": ["gatal", "nyeri", "kemerahan", "bengkak"],
+              "patient_language_synonyms": [
+                "gatal",
+                "nyeri",
+                "kemerahan",
+                "bengkak"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -17842,13 +19313,23 @@
               "type": "diagnostic_test",
               "specificity": "supportive",
               "axis": {
-                "age_group": ["child", "adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "child",
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "integumentary",
-                "anatomy": ["skin"],
+                "anatomy": [
+                  "skin"
+                ],
                 "temporal_pattern": "delayed",
                 "severity": "mild",
-                "context": ["after insect bite"]
+                "context": [
+                  "after insect bite"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -17928,7 +19409,10 @@
       ],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["Infeksi sekunder", "Ulserasi pada iritan kuat"],
+      "red_flags": [
+        "Infeksi sekunder",
+        "Ulserasi pada iritan kuat"
+      ],
       "terapi": [
         {
           "obat": "Loratadin",
@@ -18145,12 +19629,17 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "skin",
-                "anatomy": ["skin"],
+                "anatomy": [
+                  "skin"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
               },
-              "patient_language_synonyms": ["gatal", "bercak kemerahan"],
+              "patient_language_synonyms": [
+                "gatal",
+                "bercak kemerahan"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -18213,12 +19702,18 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "skin",
-                "anatomy": ["skin"],
+                "anatomy": [
+                  "skin"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
               },
-              "patient_language_synonyms": ["eritema", "edema", "bula"],
+              "patient_language_synonyms": [
+                "eritema",
+                "edema",
+                "bula"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -18281,12 +19776,16 @@
                 "age_group": [],
                 "sex": [],
                 "body_system": "skin",
-                "anatomy": ["skin"],
+                "anatomy": [
+                  "skin"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
               },
-              "patient_language_synonyms": ["kelainan baru muncul setelah kontak"],
+              "patient_language_synonyms": [
+                "kelainan baru muncul setelah kontak"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -18376,8 +19875,14 @@
         "Sindrom imunodefisiensi (misalnya sindrom Wiskott-Aldrich),",
         "Sindrom hiper IgE."
       ],
-      "komplikasi": ["Infeksi sekunder", "Perluasan penyakit (eritroderma)"],
-      "red_flags": ["Infeksi sekunder impetiginisasi", "Eritroderma"],
+      "komplikasi": [
+        "Infeksi sekunder",
+        "Perluasan penyakit (eritroderma)"
+      ],
+      "red_flags": [
+        "Infeksi sekunder impetiginisasi",
+        "Eritroderma"
+      ],
       "terapi": [
         {
           "obat": "Loratadin",
@@ -18622,7 +20127,10 @@
         "Djuanda, A. Hamzah, M. Aisah, S. Buku Ajar Ilmu Penyakit Kulit dan Kelamin, 5th Ed.",
         "Jakarta. 2007."
       ],
-      "red_flags": ["Infeksi sekunder", "Penyebaran luas refrakter terapi"],
+      "red_flags": [
+        "Infeksi sekunder",
+        "Penyebaran luas refrakter terapi"
+      ],
       "terapi": [
         {
           "obat": "Loratadin",
@@ -18837,7 +20345,12 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Napkin eczema atau sering disebut juga dengan dermatitis popok/ diaper rash adalah\ndermatitis di daerah genito-krural sesuai dengan tempat kontak popok. Umumnya pada bayi\npemakai popok dan juga orang dewasa yang sakit dan memakai popok. Dermatitis ini\nmerupakan salah satu dermatitis kontak iritan akibat isi napkin (popok).",
-      "gejala_klinis": ["kadang membasah dan membentuk luka."],
+      "gejala_klinis": [
+        "Ruam eritema di area popok",
+        "Kulit lecet/membasah",
+        "Bisa membentuk luka",
+        "Rewel pada bayi"
+      ],
       "pemeriksaan_fisik": [
         "Penyakit dimulai dengan lesi pertama (herald patch), umumnya di badan, soliter, berbentuk",
         "cm. Lesi terdiri atas eritema dan skuama halus di",
@@ -18875,15 +20388,28 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["pediatric"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "pediatric"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "integumentary",
-                "anatomy": ["genital", "gluteal"],
+                "anatomy": [
+                  "genital",
+                  "gluteal"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "mild to moderate",
-                "context": ["diaper use"]
+                "context": [
+                  "diaper use"
+                ]
               },
-              "patient_language_synonyms": ["ruam popok", "dermatitis popok"],
+              "patient_language_synonyms": [
+                "ruam popok",
+                "dermatitis popok"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -18948,7 +20474,12 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Dermatitis Seboroik (DS) merupakan istilah yang digunakan untuk segolongan kelainan kulit\nyang didasari oleh faktor konstitusi (predileksi di tempat-tempatkelenjar sebum). DS\nberhubungan erat dengan keaktifan glandula sebasea.",
-      "gejala_klinis": ["Kelainan awal hanya"],
+      "gejala_klinis": [
+        "Skuama berminyak kekuningan",
+        "Eritema di area seboroik: kulit kepala/alis/lipat nasolabial",
+        "Gatal",
+        "Ketombe"
+      ],
       "pemeriksaan_fisik": [
         "Papul sampai plak eritema.",
         "Skuama berminyak agak kekuningan.",
@@ -18996,8 +20527,14 @@
               "type": "physical_exam",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["bayi", "dewasa"],
-                "sex": ["pria", "wanita"],
+                "age_group": [
+                  "bayi",
+                  "dewasa"
+                ],
+                "sex": [
+                  "pria",
+                  "wanita"
+                ],
                 "body_system": "integumentary",
                 "anatomy": [
                   "kulit kepala",
@@ -19080,8 +20617,14 @@
               "type": "physical_exam",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["bayi", "dewasa"],
-                "sex": ["pria", "wanita"],
+                "age_group": [
+                  "bayi",
+                  "dewasa"
+                ],
+                "sex": [
+                  "pria",
+                  "wanita"
+                ],
                 "body_system": "integumentary",
                 "anatomy": [
                   "kulit kepala",
@@ -19164,8 +20707,14 @@
               "type": "physical_exam",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["bayi", "dewasa"],
-                "sex": ["pria", "wanita"],
+                "age_group": [
+                  "bayi",
+                  "dewasa"
+                ],
+                "sex": [
+                  "pria",
+                  "wanita"
+                ],
                 "body_system": "integumentary",
                 "anatomy": [
                   "kulit kepala",
@@ -19272,7 +20821,10 @@
         "Eritrasma"
       ],
       "komplikasi": [],
-      "red_flags": ["Pitiriasis rosea atipikal luas", "Perlu singkirkan sifilis sekunder"],
+      "red_flags": [
+        "Pitiriasis rosea atipikal luas",
+        "Perlu singkirkan sifilis sekunder"
+      ],
       "terapi": [
         {
           "obat": "Ketokonazol",
@@ -19298,7 +20850,11 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Miopia ringan adalahkelainan refraksi dimana sinar sejajar yang masuk ke mata dalam\nkeadaan istirahat (tanpa akomodasi) akan dibiaskan membentuk bayangan di depan retina.\nDapat dikoreksi dengan lensa sferis negative S – 0.25 sampai S – 3.00 D",
-      "gejala_klinis": ["Tidak terdapat riwayat kelainan sistemik seperti;"],
+      "gejala_klinis": [
+        "Komedo",
+        "Papul/pustul di wajah",
+        "Kulit berminyak"
+      ],
       "pemeriksaan_fisik": [
         "Penderita duduk menghadap kartu snellen pada jarak 6 meter.",
         "Pada mata dipasang bingkai percobaan. Satu mata ditutup, biasanya mata kiri ditutup",
@@ -19325,7 +20881,11 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Inflamasi kronik kelenjar apokrin dengan pembentukan abses",
-      "gejala_klinis": ["Nodul nyeri di aksila/inguinal", "Abses berulang", "Sinus tract"],
+      "gejala_klinis": [
+        "Nodul nyeri di aksila/inguinal",
+        "Abses berulang",
+        "Sinus tract"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -19350,7 +20910,11 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Dermatitis Seboroik (DS) merupakan istilah yang digunakan untuk segolongan kelainan kulit\nyang didasari oleh faktor konstitusi (predileksi di tempat-tempatkelenjar sebum). DS\nberhubungan erat dengan keaktifan glandula sebasea.",
-      "gejala_klinis": ["Kelainan awal hanya"],
+      "gejala_klinis": [
+        "Papul/pustul eritematosa di sekitar mulut",
+        "Rasa terbakar/gatal ringan",
+        "Menyisakan zona bebas lesi di tepi bibir"
+      ],
       "pemeriksaan_fisik": [
         "Papul sampai plak eritema.",
         "Skuama berminyak agak kekuningan.",
@@ -19398,15 +20962,24 @@
               "type": "physical_exam",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["children"],
-                "sex": ["all"],
+                "age_group": [
+                  "children"
+                ],
+                "sex": [
+                  "all"
+                ],
                 "body_system": "integumentary",
-                "anatomy": ["perioral"],
+                "anatomy": [
+                  "perioral"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
               },
-              "patient_language_synonyms": ["ruam merah", "lesi merah di sekitar mulut"],
+              "patient_language_synonyms": [
+                "ruam merah",
+                "lesi merah di sekitar mulut"
+              ],
               "exclusion_clues": [],
               "review_status": "approved"
             },
@@ -19471,7 +21044,11 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Obstruksi kelenjar keringat menyebabkan erupsi vesikular",
-      "gejala_klinis": ["Papul/vesikel kecil", "Gatal", "Lokasi predileksi: punggung, dada"],
+      "gejala_klinis": [
+        "Papul/vesikel kecil",
+        "Gatal",
+        "Lokasi predileksi: punggung, dada"
+      ],
       "pemeriksaan_fisik": [
         "Lihat klasifikasi.",
         "Miliaria rubra",
@@ -19507,10 +21084,18 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["children", "adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "children",
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "integumentary",
-                "anatomy": ["skin"],
+                "anatomy": [
+                  "skin"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -19575,10 +21160,18 @@
               "type": "symptom",
               "specificity": "supportive",
               "axis": {
-                "age_group": ["children", "adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "children",
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "integumentary",
-                "anatomy": ["skin"],
+                "anatomy": [
+                  "skin"
+                ],
                 "temporal_pattern": "",
                 "severity": "",
                 "context": []
@@ -19666,7 +21259,11 @@
         "Eritema multiforme (lesi urtika, umumnya terdapat pada ekstremitas bawah)."
       ],
       "komplikasi": [],
-      "red_flags": ["Angioedema laring", "Anafilaksis", "Urtikaria kronik refrakter"],
+      "red_flags": [
+        "Angioedema laring",
+        "Anafilaksis",
+        "Urtikaria kronik refrakter"
+      ],
       "terapi": [],
       "kriteria_rujukan": "1. Rujukan ke spesialis bila ditemukan fokus infeksi.\n2. Jika urtikaria berlangsung kronik dan rekuren.\n3. Jika pengobatan first-line therapygagal.\n4. Jika kondisi memburuk, yang ditandai dengan makin bertambahnyapatch eritema, timbul\nbula, atau bahkan disertai sesak.",
       "source": "PPK IDI 2013 + 144 Diagnosis KKI"
@@ -19911,7 +21508,11 @@
       "body_system": "SISTEM INTEGUMEN",
       "can_refer": false,
       "definisi": "Luka terbuka akibat trauma tajam (laserasi) atau tusuk (punctum)",
-      "gejala_klinis": ["Luka terbuka", "Perdarahan", "Nyeri"],
+      "gejala_klinis": [
+        "Luka terbuka",
+        "Perdarahan",
+        "Nyeri"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
@@ -19984,11 +21585,19 @@
       "body_system": "FORENSIK DAN MEDIKOLEGAL",
       "can_refer": false,
       "definisi": "Trauma akibat benturan benda tumpul",
-      "gejala_klinis": ["Memar/kontusi", "Hematoma", "Nyeri", "Edema"],
+      "gejala_klinis": [
+        "Memar/kontusi",
+        "Hematoma",
+        "Nyeri",
+        "Edema"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["Trauma kepala berat", "Perdarahan internal"],
+      "red_flags": [
+        "Trauma kepala berat",
+        "Perdarahan internal"
+      ],
       "terapi": [
         {
           "obat": "Analgesik",
@@ -20009,11 +21618,18 @@
       "body_system": "FORENSIK DAN MEDIKOLEGAL",
       "can_refer": false,
       "definisi": "Trauma akibat benda tajam menyebabkan luka iris/tusuk",
-      "gejala_klinis": ["Luka terbuka", "Perdarahan", "Tepi luka rata"],
+      "gejala_klinis": [
+        "Luka terbuka",
+        "Perdarahan",
+        "Tepi luka rata"
+      ],
       "pemeriksaan_fisik": [],
       "diagnosis_banding": [],
       "komplikasi": [],
-      "red_flags": ["Perdarahan masif", "Cedera organ vital"],
+      "red_flags": [
+        "Perdarahan masif",
+        "Cedera organ vital"
+      ],
       "terapi": [
         {
           "obat": "Wound care + suturing",
@@ -20060,7 +21676,12 @@
         "Bronkitis akut (J20)",
         "Pneumonia (J18)"
       ],
-      "komplikasi": ["Otitis media akut", "Sinusitis", "Bronkitis", "Pneumonia"],
+      "komplikasi": [
+        "Otitis media akut",
+        "Sinusitis",
+        "Bronkitis",
+        "Pneumonia"
+      ],
       "red_flags": [
         "Sesak nafas berat",
         "Stridor",
@@ -20380,7 +22001,11 @@
         "ISPA (J06)",
         "Influenza (J11)"
       ],
-      "komplikasi": ["Sinusitis akut", "Otitis media akut", "Eksaserbasi asma"],
+      "komplikasi": [
+        "Sinusitis akut",
+        "Otitis media akut",
+        "Eksaserbasi asma"
+      ],
       "red_flags": [
         "Demam tinggi >39°C persisten",
         "Sekret hidung purulen >10 hari (curiga sinusitis)",
@@ -21046,13 +22671,23 @@
               "type": "symptom",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult", "elderly"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult",
+                  "elderly"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "mental",
-                "anatomy": ["general"],
+                "anatomy": [
+                  "general"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "severe",
-                "context": ["psychiatric"]
+                "context": [
+                  "psychiatric"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -21826,7 +23461,11 @@
         "Infeksi virus (dengue, chikungunya)",
         "Hipotiroid"
       ],
-      "komplikasi": ["Nyeri kronik", "Gangguan tidur", "Penurunan produktivitas"],
+      "komplikasi": [
+        "Nyeri kronik",
+        "Gangguan tidur",
+        "Penurunan produktivitas"
+      ],
       "red_flags": [
         "Kelemahan otot progresif",
         "Urine berwarna gelap (curiga rhabdomiolisis)",
@@ -22088,7 +23727,12 @@
         "Sirosis hepatis (K74)",
         "Asma bronkial (J45)"
       ],
-      "komplikasi": ["Edema paru akut", "Syok kardiogenik", "Aritmia", "Gagal ginjal akut"],
+      "komplikasi": [
+        "Edema paru akut",
+        "Syok kardiogenik",
+        "Aritmia",
+        "Gagal ginjal akut"
+      ],
       "red_flags": [
         "Sesak nafas berat saat istirahat",
         "Edema paru akut (sputum berbuih merah muda)",
@@ -22228,7 +23872,12 @@
         "Pneumotoraks (J93)",
         "Emboli paru (I26)"
       ],
-      "komplikasi": ["Infark miokard akut", "Aritmia", "Gagal jantung akut", "Kematian mendadak"],
+      "komplikasi": [
+        "Infark miokard akut",
+        "Aritmia",
+        "Gagal jantung akut",
+        "Kematian mendadak"
+      ],
       "red_flags": [
         "Nyeri dada saat istirahat >20 menit",
         "Nyeri dada disertai keringat dingin dan sesak berat",
@@ -22545,13 +24194,22 @@
               "type": "complication",
               "specificity": "strongly_suggestive",
               "axis": {
-                "age_group": ["adult"],
-                "sex": ["male", "female"],
+                "age_group": [
+                  "adult"
+                ],
+                "sex": [
+                  "male",
+                  "female"
+                ],
                 "body_system": "nervous system",
-                "anatomy": ["brain"],
+                "anatomy": [
+                  "brain"
+                ],
                 "temporal_pattern": "acute",
                 "severity": "severe",
-                "context": ["post-TIA"]
+                "context": [
+                  "post-TIA"
+                ]
               },
               "patient_language_synonyms": [],
               "exclusion_clues": [],
@@ -22989,8 +24647,15 @@
         "Abses periodontal (K05.2)",
         "Nekrosis pulpa (K04.1)"
       ],
-      "komplikasi": ["Kehilangan gigi", "Abses periodontal", "Penyebaran infeksi sistemik"],
-      "red_flags": ["Demam tinggi dengan pembengkakan gusi luas", "Trismus (sulit buka mulut)"],
+      "komplikasi": [
+        "Kehilangan gigi",
+        "Abses periodontal",
+        "Penyebaran infeksi sistemik"
+      ],
+      "red_flags": [
+        "Demam tinggi dengan pembengkakan gusi luas",
+        "Trismus (sulit buka mulut)"
+      ],
       "terapi": [
         {
           "obat": "Amoksisilin",
@@ -23040,7 +24705,12 @@
         "Selulitis fasial",
         "Sialadenitis (K11.2)"
       ],
-      "komplikasi": ["Selulitis fasial", "Ludwig angina", "Osteomielitis rahang", "Sepsis"],
+      "komplikasi": [
+        "Selulitis fasial",
+        "Ludwig angina",
+        "Osteomielitis rahang",
+        "Sepsis"
+      ],
       "red_flags": [
         "Pembengkakan wajah menyebar ke leher (curiga Ludwig angina)",
         "Sesak nafas (obstruksi jalan napas)",
@@ -23095,8 +24765,15 @@
         "Abses periapikal (K04.7)",
         "Kista dentigerous"
       ],
-      "komplikasi": ["Perikoronitis berulang", "Kista dentigerous", "Resorpsi gigi sebelahnya"],
-      "red_flags": ["Trismus berat (buka mulut <2 cm)", "Pembengkakan menyebar ke submandibular"],
+      "komplikasi": [
+        "Perikoronitis berulang",
+        "Kista dentigerous",
+        "Resorpsi gigi sebelahnya"
+      ],
+      "red_flags": [
+        "Trismus berat (buka mulut <2 cm)",
+        "Pembengkakan menyebar ke submandibular"
+      ],
       "terapi": [
         {
           "obat": "Amoksisilin",

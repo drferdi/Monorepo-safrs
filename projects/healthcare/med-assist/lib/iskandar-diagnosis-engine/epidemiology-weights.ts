@@ -12,6 +12,39 @@
 
 import type { MatchedCandidate } from './symptom-matcher';
 
+/**
+ * Raw matcher score below this does not receive epidemiology boost (H8).
+ * Prevents endemic priors from lifting weak token matches to top-1.
+ */
+export const EPI_BOOST_MIN_RAW_SCORE = 0.25;
+
+export interface EpiAdjustedScore {
+  matchScore: number;
+  appliedWeight: number;
+  epiGated: boolean;
+}
+
+/**
+ * Resolve final match score after epidemiology prior, with weak-score gate.
+ */
+export function resolveEpiAdjustedScore(
+  rawMatchScore: number,
+  genderAdjustedWeight: number
+): EpiAdjustedScore {
+  if (rawMatchScore < EPI_BOOST_MIN_RAW_SCORE) {
+    return {
+      matchScore: rawMatchScore,
+      appliedWeight: 1,
+      epiGated: true,
+    };
+  }
+  return {
+    matchScore: Math.min(1, rawMatchScore * genderAdjustedWeight),
+    appliedWeight: genderAdjustedWeight,
+    epiGated: false,
+  };
+}
+
 // =============================================================================
 // TYPES
 // =============================================================================
@@ -129,7 +162,7 @@ export async function getEpidemiologyWeight(
 
 /**
  * Apply epidemiology weights to all candidates.
- * Mutates matchScore and adds epidemiologyWeight field.
+ * Weak raw matcher scores are gated (no epi boost) — H8.
  */
 export async function applyEpidemiologyWeights(
   candidates: MatchedCandidate[],
@@ -138,11 +171,13 @@ export async function applyEpidemiologyWeights(
   const weighted = await Promise.all(
     candidates.map(async (c) => {
       const epi = await getEpidemiologyWeight(c.icd10, patientGender);
+      const adjusted = resolveEpiAdjustedScore(c.rawMatchScore, epi.genderAdjusted);
       return {
         ...c,
-        matchScore: Math.min(1, c.rawMatchScore * epi.genderAdjusted),
-        epidemiologyWeight: epi.genderAdjusted,
+        matchScore: adjusted.matchScore,
+        epidemiologyWeight: adjusted.appliedWeight,
         localPrevalence: epi.localPrevalence,
+        epiGated: adjusted.epiGated,
       };
     })
   );

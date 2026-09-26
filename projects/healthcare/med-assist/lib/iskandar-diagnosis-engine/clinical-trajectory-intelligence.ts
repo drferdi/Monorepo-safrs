@@ -159,7 +159,8 @@ function hasDiabeticInfectionContext(text: string): boolean {
 }
 
 function scoreRespiratoryRate(rr: number | undefined): ClinicalNEWS2ParameterScore {
-  if (rr === undefined) return { parameter: 'respiratory_rate', value: undefined, score: 0, unit: 'x/mnt' };
+  if (rr === undefined)
+    return { parameter: 'respiratory_rate', value: undefined, score: 0, unit: 'x/mnt' };
   let score = 0;
   if (rr <= 8) score = 3;
   else if (rr <= 11) score = 1;
@@ -179,7 +180,8 @@ function scoreSpo2Scale1(spo2: number | undefined): ClinicalNEWS2ParameterScore 
 }
 
 function scoreSpo2Scale2(spo2: number | undefined): ClinicalNEWS2ParameterScore {
-  if (spo2 === undefined) return { parameter: 'spo2_scale2', value: undefined, score: 0, unit: '%' };
+  if (spo2 === undefined)
+    return { parameter: 'spo2_scale2', value: undefined, score: 0, unit: '%' };
   let score = 0;
   if (spo2 <= 83) score = 3;
   else if (spo2 <= 85) score = 2;
@@ -192,7 +194,8 @@ function scoreSpo2Scale2(spo2: number | undefined): ClinicalNEWS2ParameterScore 
 }
 
 function scoreSystolic(systolic: number | undefined): ClinicalNEWS2ParameterScore {
-  if (systolic === undefined) return { parameter: 'systolic', value: undefined, score: 0, unit: 'mmHg' };
+  if (systolic === undefined)
+    return { parameter: 'systolic', value: undefined, score: 0, unit: 'mmHg' };
   let score = 0;
   if (systolic <= 90) score = 3;
   else if (systolic <= 100) score = 2;
@@ -214,7 +217,8 @@ function scoreHeartRate(hr: number | undefined): ClinicalNEWS2ParameterScore {
 }
 
 function scoreTemperature(temp: number | undefined): ClinicalNEWS2ParameterScore {
-  if (temp === undefined) return { parameter: 'temperature', value: undefined, score: 0, unit: 'C' };
+  if (temp === undefined)
+    return { parameter: 'temperature', value: undefined, score: 0, unit: 'C' };
   let score = 0;
   if (temp <= 35) score = 3;
   else if (temp <= 36) score = 1;
@@ -348,9 +352,12 @@ function checkSepsisPatterns(
 ): ClinicalEarlyWarningMatch[] {
   const matches: ClinicalEarlyWarningMatch[] = [];
   const qsofaCriteria: string[] = [];
-  if ((vitals.respiratoryRate ?? 0) >= 22) qsofaCriteria.push(`RR ${vitals.respiratoryRate}/menit >=22`);
-  if ((vitals.systolicBp ?? 999) <= 100) qsofaCriteria.push(`Sistolik ${vitals.systolicBp} mmHg <=100`);
-  if (isAlteredConsciousness(vitals.consciousness)) qsofaCriteria.push(`Kesadaran berubah: ${vitals.consciousness}`);
+  if ((vitals.respiratoryRate ?? 0) >= 22)
+    qsofaCriteria.push(`RR ${vitals.respiratoryRate}/menit >=22`);
+  if ((vitals.systolicBp ?? 999) <= 100)
+    qsofaCriteria.push(`Sistolik ${vitals.systolicBp} mmHg <=100`);
+  if (isAlteredConsciousness(vitals.consciousness))
+    qsofaCriteria.push(`Kesadaran berubah: ${vitals.consciousness}`);
 
   if (qsofaCriteria.length >= 2) {
     matches.push(
@@ -372,7 +379,8 @@ function checkSepsisPatterns(
     sirsCriteria.push(`Suhu ${vitals.temperatureC}C`);
   }
   if ((vitals.heartRate ?? 0) > 90) sirsCriteria.push(`HR ${vitals.heartRate} bpm >90`);
-  if ((vitals.respiratoryRate ?? 0) > 20) sirsCriteria.push(`RR ${vitals.respiratoryRate}/menit >20`);
+  if ((vitals.respiratoryRate ?? 0) > 20)
+    sirsCriteria.push(`RR ${vitals.respiratoryRate}/menit >20`);
 
   if (sirsCriteria.length >= 2 && hasInfectionContext(text, input.medicalHistory)) {
     matches.push(
@@ -422,7 +430,11 @@ function checkRespiratoryDeterioration(
       'critical',
       'Trias respirasi: takipnea + hipoksia + takikardia',
       'Oksigenasi segera, posisi optimal, terapi penyebab, dan rujuk emergensi bila sesuai indikasi.',
-      [`RR ${vitals.respiratoryRate}/menit`, `SpO2 ${vitals.spo2}% <94`, `HR ${vitals.heartRate} bpm`],
+      [
+        `RR ${vitals.respiratoryRate}/menit`,
+        `SpO2 ${vitals.spo2}% <94`,
+        `HR ${vitals.heartRate} bpm`,
+      ],
       'Menit hingga jam sebelum gagal napas total',
       'Respiratory deterioration pathway; Jewel parity slice.'
     );
@@ -449,7 +461,9 @@ function checkRespiratoryDeterioration(
   return null;
 }
 
-function calculateShockIndex(vitals: SymphonyVitalsInput | undefined): ClinicalShockIndexResult | undefined {
+function calculateShockIndex(
+  vitals: SymphonyVitalsInput | undefined
+): ClinicalShockIndexResult | undefined {
   if (
     vitals?.heartRate === undefined ||
     vitals.systolicBp === undefined ||
@@ -461,7 +475,8 @@ function calculateShockIndex(vitals: SymphonyVitalsInput | undefined): ClinicalS
 
   const value = round(vitals.heartRate / vitals.systolicBp, 2);
   if (value < 0.9) return undefined;
-  const severity: ClinicalEarlyWarningSeverity = value >= 1.2 ? 'critical' : value >= 1 ? 'high' : 'warning';
+  const severity: ClinicalEarlyWarningSeverity =
+    value >= 1.2 ? 'critical' : value >= 1 ? 'high' : 'warning';
   return {
     value,
     severity,
@@ -589,7 +604,11 @@ function buildHemodynamicTrajectorySignals(
   if (!shockIndex) return [];
 
   const severity: ClinicalTrajectorySignalSeverity =
-    shockIndex.severity === 'critical' ? 'critical' : shockIndex.severity === 'high' ? 'high' : 'moderate';
+    shockIndex.severity === 'critical'
+      ? 'critical'
+      : shockIndex.severity === 'high'
+        ? 'high'
+        : 'moderate';
 
   return [
     makeTrajectorySignal(
@@ -613,15 +632,15 @@ function buildCardiovascularShockTrajectorySignals(
 
   const hasCritical = shockPatterns.some((pattern) => pattern.severity === 'critical');
   const hasHigh = shockPatterns.some((pattern) => pattern.severity === 'high');
-  const severity: ClinicalTrajectorySignalSeverity = hasCritical || shockIndex?.severity === 'critical'
-    ? 'critical'
-    : hasHigh || shockIndex?.severity === 'high'
-      ? 'high'
-      : 'moderate';
-  const selectedPatternEvidence = uniqueStrings(shockPatterns.map((pattern) => `Selected CP ${pattern.id}`)).slice(
-    0,
-    3
-  );
+  const severity: ClinicalTrajectorySignalSeverity =
+    hasCritical || shockIndex?.severity === 'critical'
+      ? 'critical'
+      : hasHigh || shockIndex?.severity === 'high'
+        ? 'high'
+        : 'moderate';
+  const selectedPatternEvidence = uniqueStrings(
+    shockPatterns.map((pattern) => `Selected CP ${pattern.id}`)
+  ).slice(0, 3);
   const criteriaEvidence = uniqueStrings([
     ...(shockIndex?.criteriaMet ?? []),
     ...shockPatterns.flatMap((pattern) => pattern.criteriaMet),
@@ -649,10 +668,9 @@ function buildImminentCardiacArrestTrajectorySignals(
   const selectedPatternEvidence = uniqueStrings(
     criticalCollapsePatterns.map((pattern) => `Selected CP ${pattern.id}`)
   ).slice(0, 3);
-  const criteriaEvidence = uniqueStrings(criticalCollapsePatterns.flatMap((pattern) => pattern.criteriaMet)).slice(
-    0,
-    4
-  );
+  const criteriaEvidence = uniqueStrings(
+    criticalCollapsePatterns.flatMap((pattern) => pattern.criteriaMet)
+  ).slice(0, 4);
 
   return [
     makeTrajectorySignal(
@@ -665,13 +683,19 @@ function buildImminentCardiacArrestTrajectorySignals(
   ];
 }
 
-function buildFeverTrajectorySignals(input: ClinicalTrajectoryIntelligenceInput): ClinicalTrajectorySignal[] {
+function buildFeverTrajectorySignals(
+  input: ClinicalTrajectoryIntelligenceInput
+): ClinicalTrajectorySignal[] {
   const feverCount = input.earlyWarningBurden?.breachBreakdown.tempGe385Count ?? 0;
   const latestTemperature = input.latestVitals?.temperatureC;
   if (feverCount <= 0 && (latestTemperature === undefined || latestTemperature < 38)) return [];
 
   const severity: ClinicalTrajectorySignalSeverity =
-    (latestTemperature ?? 0) >= 40 || feverCount >= 3 ? 'critical' : feverCount >= 2 ? 'high' : 'moderate';
+    (latestTemperature ?? 0) >= 40 || feverCount >= 3
+      ? 'critical'
+      : feverCount >= 2
+        ? 'high'
+        : 'moderate';
   const evidence = [
     feverCount > 0 ? `Suhu >=38.5C pada ${feverCount} titik` : '',
     latestTemperature !== undefined ? `Suhu terbaru ${latestTemperature}C` : '',
@@ -704,7 +728,11 @@ function buildNews2TrajectorySignals(news2: ClinicalNEWS2Result): ClinicalTrajec
       'NEWS2 aggregate proxy concern',
       severity,
       'NEWS2 aggregate non-rendah mendukung proxy acute deterioration burden; gunakan sebagai prioritas review, bukan diagnosis otomatis.',
-      [`NEWS2 aggregate ${news2.aggregateScore}`, `Risk level ${news2.riskLevel}`, ...activeParameters]
+      [
+        `NEWS2 aggregate ${news2.aggregateScore}`,
+        `Risk level ${news2.riskLevel}`,
+        ...activeParameters,
+      ]
     ),
   ];
 }
@@ -727,11 +755,12 @@ function buildSepsisNoReturnTrajectorySignals(
     : hasHigh || news2.riskLevel === 'high'
       ? 'high'
       : 'moderate';
-  const selectedPatternEvidence = uniqueStrings(sepsisPatterns.map((pattern) => `Selected CP ${pattern.id}`)).slice(
-    0,
-    3
-  );
-  const criteriaEvidence = uniqueStrings(sepsisPatterns.flatMap((pattern) => pattern.criteriaMet)).slice(0, 3);
+  const selectedPatternEvidence = uniqueStrings(
+    sepsisPatterns.map((pattern) => `Selected CP ${pattern.id}`)
+  ).slice(0, 3);
+  const criteriaEvidence = uniqueStrings(
+    sepsisPatterns.flatMap((pattern) => pattern.criteriaMet)
+  ).slice(0, 3);
 
   return [
     makeTrajectorySignal(
@@ -910,7 +939,11 @@ function buildSelectedParityPatterns(
     }
   }
 
-  if ((vitals.heartRate ?? 0) >= 120 && (vitals.systolicBp ?? 999) >= 60 && (vitals.systolicBp ?? 999) <= 100) {
+  if (
+    (vitals.heartRate ?? 0) >= 120 &&
+    (vitals.systolicBp ?? 999) >= 60 &&
+    (vitals.systolicBp ?? 999) <= 100
+  ) {
     matches.push(
       makeSelectedPattern(
         'CP-011',
@@ -1036,7 +1069,9 @@ function buildSelectedParityPatterns(
     high: 1,
     warning: 2,
   };
-  return matches.sort((left, right) => severityOrder[left.severity] - severityOrder[right.severity]);
+  return matches.sort(
+    (left, right) => severityOrder[left.severity] - severityOrder[right.severity]
+  );
 }
 
 export function buildClinicalTrajectoryIntelligence(
@@ -1060,7 +1095,9 @@ export function buildClinicalTrajectoryIntelligence(
 
   return {
     news2,
-    earlyWarnings: earlyWarnings.sort((left, right) => severityOrder[left.severity] - severityOrder[right.severity]),
+    earlyWarnings: earlyWarnings.sort(
+      (left, right) => severityOrder[left.severity] - severityOrder[right.severity]
+    ),
     selectedPatterns,
     trajectorySignals: [
       ...buildRespiratoryTrajectorySignals(input, text),

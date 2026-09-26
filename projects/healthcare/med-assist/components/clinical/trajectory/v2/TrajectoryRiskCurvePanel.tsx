@@ -110,7 +110,9 @@ export function TrajectoryRiskCurvePanel({
               }))}
             />
           ) : (
-            <div className="text-small text-muted">No visit-to-visit risk trajectory is available.</div>
+            <div className="text-small text-muted">
+              No visit-to-visit risk trajectory is available.
+            </div>
           )
         }
       />

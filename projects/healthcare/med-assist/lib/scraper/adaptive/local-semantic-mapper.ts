@@ -41,18 +41,25 @@ function scoreField(payloadKey: string, payloadValue: unknown, field: FieldSigna
   const label = normalizeText(field.label);
   const placeholder = normalizeText(field.attributes.placeholder);
   const ariaLabel = normalizeText(field.attributes.ariaLabel);
-  const contextBits = normalizeText(field.context.sectionHeader) + normalizeText(field.context.formId);
+  const contextBits =
+    normalizeText(field.context.sectionHeader) + normalizeText(field.context.formId);
   const valueHint = normalizeText(
-    typeof payloadValue === 'string' ? payloadValue : payloadValue == null ? '' : String(payloadValue)
+    typeof payloadValue === 'string'
+      ? payloadValue
+      : payloadValue == null
+        ? ''
+        : String(payloadValue)
   );
 
   let score = 0;
 
   if (name && name === normalizedKey) score = Math.max(score, 0.97);
-  else if (name && (name.includes(normalizedKey) || normalizedKey.includes(name))) score = Math.max(score, 0.84);
+  else if (name && (name.includes(normalizedKey) || normalizedKey.includes(name)))
+    score = Math.max(score, 0.84);
 
   if (id && id === normalizedKey) score = Math.max(score, 0.96);
-  else if (id && (id.includes(normalizedKey) || normalizedKey.includes(id))) score = Math.max(score, 0.8);
+  else if (id && (id.includes(normalizedKey) || normalizedKey.includes(id)))
+    score = Math.max(score, 0.8);
 
   if (label && label === normalizedKey) score = Math.max(score, 0.93);
   else if (label && label.includes(normalizedKey)) score = Math.max(score, 0.76);
@@ -82,10 +89,7 @@ function buildMapping(payloadKey: string, field: FieldSignature, score: number):
   };
 }
 
-function mapFieldsLocal(
-  payload: Record<string, unknown>,
-  fields: FieldSignature[]
-): MappingResult {
+function mapFieldsLocal(payload: Record<string, unknown>, fields: FieldSignature[]): MappingResult {
   const startTime = Date.now();
   const mappings: FieldMapping[] = [];
   const unmapped: string[] = [];

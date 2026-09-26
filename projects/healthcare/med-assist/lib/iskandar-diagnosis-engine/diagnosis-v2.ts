@@ -19,8 +19,7 @@ export interface DiagnosisV2ShadowResult {
   suggestions: DiagnosisSuggestion[];
   uncertaintyLevel: DiagnosisV2UncertaintyLevel;
   primaryAbstained: boolean;
-  guidance:
-    'support diagnostic reasoning; differential considerations; physician remains final decision-maker';
+  guidance: 'support diagnostic reasoning; differential considerations; physician remains final decision-maker';
 }
 
 const MIN_PRIMARY_CONFIDENCE = 0.45;
@@ -80,7 +79,10 @@ function getTop5Icd(suggestions: DiagnosisSuggestion[]): string[] {
     .filter(Boolean);
 }
 
-function buildShadowRationale(item: RankedDiagnosis, uncertaintyLevel: DiagnosisV2UncertaintyLevel): string {
+function buildShadowRationale(
+  item: RankedDiagnosis,
+  uncertaintyLevel: DiagnosisV2UncertaintyLevel
+): string {
   const anchors: string[] = [];
 
   if (item.insight.matchedSymptoms.length > 0) {
@@ -125,7 +127,9 @@ function shouldAbstainPrimary(
 ): boolean {
   if (ranked.length === 0) return true;
   if (uncertaintyLevel === 'high') return true;
-  return ranked[0].insight.supportingExamPlan.needLevel === 'required' && uncertaintyLevel !== 'low';
+  return (
+    ranked[0].insight.supportingExamPlan.needLevel === 'required' && uncertaintyLevel !== 'low'
+  );
 }
 
 function mapRankedToSuggestions(
@@ -187,7 +191,11 @@ export function compareDiagnosisVersions(input: {
 
   const criticalDifferentialAdded = input.v2Suggestions
     .slice(0, 5)
-    .some((suggestion) => isCriticalSuggestion(suggestion) && !v1TopSet.has(normalizeIcd(suggestion.icd_x || suggestion.icd10_code)));
+    .some(
+      (suggestion) =>
+        isCriticalSuggestion(suggestion) &&
+        !v1TopSet.has(normalizeIcd(suggestion.icd_x || suggestion.icd10_code))
+    );
 
   return {
     v1_top5_icd: v1Top5,

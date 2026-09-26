@@ -29,7 +29,10 @@ const LEAD_LAYOUT = [
 ] as const;
 
 async function loadAnalyzerModule(): Promise<{
-  analyzeEcgImageFile: (file: File, options?: { ocrEnabled?: boolean }) => Promise<Record<string, unknown>>;
+  analyzeEcgImageFile: (
+    file: File,
+    options?: { ocrEnabled?: boolean }
+  ) => Promise<Record<string, unknown>>;
 }> {
   // @ts-expect-error runtime-only local service
   return import('../../services/medlens-local/ecg-analyzer.mjs');
@@ -172,11 +175,7 @@ function createRealNormalEcgFixtureFile(): File {
 }
 
 async function createRealNormalVariantFile(
-  variant:
-    | 'jpeg_q60'
-    | 'downscale_70'
-    | 'grayscale'
-    | 'rotate_05'
+  variant: 'jpeg_q60' | 'downscale_70' | 'grayscale' | 'rotate_05'
 ): Promise<File> {
   const source = readFileSync(REAL_NORMAL_ECG_FIXTURE_PATH);
   let pipeline = sharp(source);
@@ -192,9 +191,11 @@ async function createRealNormalVariantFile(
   } else if (variant === 'grayscale') {
     pipeline = pipeline.grayscale().png();
   } else if (variant === 'rotate_05') {
-    pipeline = pipeline.rotate(0.5, {
-      background: { r: 255, g: 255, b: 255, alpha: 1 },
-    }).png();
+    pipeline = pipeline
+      .rotate(0.5, {
+        background: { r: 255, g: 255, b: 255, alpha: 1 },
+      })
+      .png();
   }
 
   const buffer = await pipeline.toBuffer();
@@ -202,11 +203,7 @@ async function createRealNormalVariantFile(
 }
 
 async function createRealInfarctVariantFile(
-  variant:
-    | 'jpeg_q60'
-    | 'downscale_70'
-    | 'grayscale'
-    | 'rotate_05'
+  variant: 'jpeg_q60' | 'downscale_70' | 'grayscale' | 'rotate_05'
 ): Promise<File> {
   const source = readFileSync(REAL_ECG_FIXTURE_PATH);
   let pipeline = sharp(source);
@@ -222,9 +219,11 @@ async function createRealInfarctVariantFile(
   } else if (variant === 'grayscale') {
     pipeline = pipeline.grayscale().png();
   } else if (variant === 'rotate_05') {
-    pipeline = pipeline.rotate(0.5, {
-      background: { r: 255, g: 255, b: 255, alpha: 1 },
-    }).png();
+    pipeline = pipeline
+      .rotate(0.5, {
+        background: { r: 255, g: 255, b: 255, alpha: 1 },
+      })
+      .png();
   }
 
   const buffer = await pipeline.toBuffer();
@@ -284,8 +283,12 @@ describe('MedLens waveform extraction end-to-end', () => {
     expect(result.waveform_evidence_packet.leadRegions.length).toBeGreaterThanOrEqual(12);
     expect(extractedTraces.length).toBeGreaterThanOrEqual(12);
     expect(result.waveform_evidence_packet.leadMeasurements.length).toBeGreaterThanOrEqual(12);
-    expect(result.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm).toBeGreaterThanOrEqual(68);
-    expect(result.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm).toBeLessThanOrEqual(76);
+    expect(result.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm).toBeGreaterThanOrEqual(
+      68
+    );
+    expect(result.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm).toBeLessThanOrEqual(
+      76
+    );
     expect(result.raw_ecg_relevant_text).toEqual([]);
     expect(result.audit_log.outputPassedEvidenceGate).toBe(false);
   });
@@ -346,8 +349,12 @@ describe('MedLens waveform extraction end-to-end', () => {
     expect(payload.waveform_review_output.clinicalOutputAllowed).toBe(false);
     expect(payload.waveform_review_output.failedAssertions).toContain('MISSING_RAW_OCR_TEXT');
     expect(payload.waveform_evidence_packet.gridCalibration.calibrated).toBe(true);
-    expect(payload.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm).toBeGreaterThanOrEqual(112);
-    expect(payload.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm).toBeLessThanOrEqual(124);
+    expect(
+      payload.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm
+    ).toBeGreaterThanOrEqual(112);
+    expect(payload.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm).toBeLessThanOrEqual(
+      124
+    );
     expect(payload.audit_log.outputPassedEvidenceGate).toBe(false);
   }, 15000);
 
@@ -362,8 +369,12 @@ describe('MedLens waveform extraction end-to-end', () => {
     expect(result.waveform_review_output.clinicalOutputAllowed).toBe(false);
     expect(result.waveform_review_output.failedAssertions).toContain('MISSING_RAW_OCR_TEXT');
     expect(result.waveform_evidence_packet.gridCalibration.calibrated).toBe(true);
-    expect(result.waveform_evidence_packet.gridCalibration.pixelsPerSmallBox).toBeGreaterThanOrEqual(3);
-    expect(result.waveform_evidence_packet.gridCalibration.pixelsPerSmallBox).toBeLessThanOrEqual(12);
+    expect(
+      result.waveform_evidence_packet.gridCalibration.pixelsPerSmallBox
+    ).toBeGreaterThanOrEqual(3);
+    expect(result.waveform_evidence_packet.gridCalibration.pixelsPerSmallBox).toBeLessThanOrEqual(
+      12
+    );
     expect(result.waveform_evidence_packet.leadMeasurements.length).toBeGreaterThanOrEqual(12);
     expect(
       result.waveform_evidence_packet.waveformTraces.filter(
@@ -373,103 +384,138 @@ describe('MedLens waveform extraction end-to-end', () => {
     expect(result.audit_log.outputPassedEvidenceGate).toBe(false);
   });
 
-  realFixtureTest('keeps infarct-case rhythm estimation plausible under minor rotation', async () => {
-    const { analyzeEcgImageFile } = await loadAnalyzerModule();
-    const file = await createRealInfarctVariantFile('rotate_05');
+  realFixtureTest(
+    'keeps infarct-case rhythm estimation plausible under minor rotation',
+    async () => {
+      const { analyzeEcgImageFile } = await loadAnalyzerModule();
+      const file = await createRealInfarctVariantFile('rotate_05');
 
-    const result = (await analyzeEcgImageFile(file, { ocrEnabled: false })) as LocalWaveformResult;
+      const result = (await analyzeEcgImageFile(file, {
+        ocrEnabled: false,
+      })) as LocalWaveformResult;
 
-    expect(result.waveform_review_output.status).toBe('blocked');
-    expect(result.waveform_review_output.failedAssertions).toContain('MISSING_RAW_OCR_TEXT');
-    expect(result.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm).toBeGreaterThanOrEqual(40);
-    expect(result.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm).toBeLessThanOrEqual(80);
-    expect(result.audit_log.outputPassedEvidenceGate).toBe(false);
-  });
+      expect(result.waveform_review_output.status).toBe('blocked');
+      expect(result.waveform_review_output.failedAssertions).toContain('MISSING_RAW_OCR_TEXT');
+      expect(
+        result.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm
+      ).toBeGreaterThanOrEqual(40);
+      expect(result.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm).toBeLessThanOrEqual(
+        80
+      );
+      expect(result.audit_log.outputPassedEvidenceGate).toBe(false);
+    }
+  );
 
   const realNormalFixtureTest = existsSync(REAL_NORMAL_ECG_FIXTURE_PATH) ? it : it.skip;
-  realNormalFixtureTest('reads a second real ECG image and estimates rhythm from waveform', async () => {
-    const { analyzeEcgImageFile } = await loadAnalyzerModule();
-    const file = createRealNormalEcgFixtureFile();
+  realNormalFixtureTest(
+    'reads a second real ECG image and estimates rhythm from waveform',
+    async () => {
+      const { analyzeEcgImageFile } = await loadAnalyzerModule();
+      const file = createRealNormalEcgFixtureFile();
 
-    const result = (await analyzeEcgImageFile(file, { ocrEnabled: false })) as LocalWaveformResult;
+      const result = (await analyzeEcgImageFile(file, {
+        ocrEnabled: false,
+      })) as LocalWaveformResult;
 
-    expect(result.waveform_review_output.status).toBe('blocked');
-    expect(result.waveform_review_output.failedAssertions).toContain('MISSING_RAW_OCR_TEXT');
-    expect(result.waveform_evidence_packet.gridCalibration.calibrated).toBe(true);
-    expect(result.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm).toBeGreaterThanOrEqual(60);
-    expect(result.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm).toBeLessThanOrEqual(80);
-    expect(result.waveform_evidence_packet.leadMeasurements.length).toBeGreaterThanOrEqual(12);
-    expect(result.audit_log.outputPassedEvidenceGate).toBe(false);
-  });
-
-  realNormalFixtureTest('returns a waveform-ready packet for a real ECG image via HTTP upload', async () => {
-    const { analyzeEcgImageFile } = await loadAnalyzerModule();
-    const { createMedlensLocalServer } = await loadServerModule();
-    const instance = createMedlensLocalServer({
-      analyzeFile: (file) => analyzeEcgImageFile(file, { ocrEnabled: false }),
-    });
-    runningServers.push(instance);
-    await instance.start(0, '127.0.0.1');
-    const port = (instance.server.address() as AddressInfo).port;
-    const file = createRealNormalEcgFixtureFile();
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    const response = await fetch(`http://127.0.0.1:${port}/api/medlens/ecg/analyze`, {
-      method: 'POST',
-      body: formData,
-    });
-    const payload = (await response.json()) as LocalWaveformResult;
-
-    expect(response.status).toBe(200);
-    expect(payload.waveform_review_output.status).toBe('blocked');
-    expect(payload.waveform_review_output.failedAssertions).toContain('MISSING_RAW_OCR_TEXT');
-    expect(payload.waveform_evidence_packet.gridCalibration.calibrated).toBe(true);
-    expect(payload.waveform_evidence_packet.leadMeasurements.length).toBeGreaterThanOrEqual(12);
-    expect(payload.audit_log.outputPassedEvidenceGate).toBe(false);
-  }, 15000);
-
-  realNormalFixtureTest('stays waveform-ready across realistic image transforms', async () => {
-    const { analyzeEcgImageFile } = await loadAnalyzerModule();
-    const variants = ['jpeg_q60', 'downscale_70', 'grayscale', 'rotate_05'] as const;
-
-    for (const variant of variants) {
-      const file = await createRealNormalVariantFile(variant);
-      const result = (await analyzeEcgImageFile(file, { ocrEnabled: false })) as LocalWaveformResult;
-
-      expect(result.waveform_review_output.status, variant).toBe('blocked');
-      expect(result.waveform_review_output.failedAssertions, variant).toContain(
-        'MISSING_RAW_OCR_TEXT'
+      expect(result.waveform_review_output.status).toBe('blocked');
+      expect(result.waveform_review_output.failedAssertions).toContain('MISSING_RAW_OCR_TEXT');
+      expect(result.waveform_evidence_packet.gridCalibration.calibrated).toBe(true);
+      expect(
+        result.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm
+      ).toBeGreaterThanOrEqual(60);
+      expect(result.waveform_evidence_packet.rhythmEvidence?.estimatedRateBpm).toBeLessThanOrEqual(
+        80
       );
-      expect(result.waveform_evidence_packet.gridCalibration.calibrated, variant).toBe(true);
-      expect(result.waveform_evidence_packet.leadMeasurements.length, variant).toBeGreaterThanOrEqual(12);
-      expect(result.audit_log.outputPassedEvidenceGate, variant).toBe(false);
+      expect(result.waveform_evidence_packet.leadMeasurements.length).toBeGreaterThanOrEqual(12);
+      expect(result.audit_log.outputPassedEvidenceGate).toBe(false);
     }
-  }, 20000);
+  );
 
-  realNormalFixtureTest('keeps the default local server waveform-first on a real ECG image', async () => {
-    const { createMedlensLocalServer } = await loadServerModule();
-    const instance = createMedlensLocalServer();
-    runningServers.push(instance);
-    await instance.start(0, '127.0.0.1');
-    const port = (instance.server.address() as AddressInfo).port;
-    const file = createRealNormalEcgFixtureFile();
+  realNormalFixtureTest(
+    'returns a waveform-ready packet for a real ECG image via HTTP upload',
+    async () => {
+      const { analyzeEcgImageFile } = await loadAnalyzerModule();
+      const { createMedlensLocalServer } = await loadServerModule();
+      const instance = createMedlensLocalServer({
+        analyzeFile: (file) => analyzeEcgImageFile(file, { ocrEnabled: false }),
+      });
+      runningServers.push(instance);
+      await instance.start(0, '127.0.0.1');
+      const port = (instance.server.address() as AddressInfo).port;
+      const file = createRealNormalEcgFixtureFile();
 
-    const formData = new FormData();
-    formData.append('file', file);
+      const formData = new FormData();
+      formData.append('file', file);
 
-    const response = await fetch(`http://127.0.0.1:${port}/api/medlens/ecg/analyze`, {
-      method: 'POST',
-      body: formData,
-    });
-    const payload = (await response.json()) as LocalWaveformResult;
+      const response = await fetch(`http://127.0.0.1:${port}/api/medlens/ecg/analyze`, {
+        method: 'POST',
+        body: formData,
+      });
+      const payload = (await response.json()) as LocalWaveformResult;
 
-    expect(response.status).toBe(200);
-    expect(payload.waveform_review_output.status).toBe('blocked');
-    expect(payload.waveform_review_output.clinicalOutputAllowed).toBe(false);
-    expect(payload.waveform_review_output.failedAssertions).toContain('MISSING_RAW_OCR_TEXT');
-    expect(payload.raw_ecg_relevant_text).toEqual([]);
-    expect(payload.audit_log.outputPassedEvidenceGate).toBe(false);
-  }, 30000);
+      expect(response.status).toBe(200);
+      expect(payload.waveform_review_output.status).toBe('blocked');
+      expect(payload.waveform_review_output.failedAssertions).toContain('MISSING_RAW_OCR_TEXT');
+      expect(payload.waveform_evidence_packet.gridCalibration.calibrated).toBe(true);
+      expect(payload.waveform_evidence_packet.leadMeasurements.length).toBeGreaterThanOrEqual(12);
+      expect(payload.audit_log.outputPassedEvidenceGate).toBe(false);
+    },
+    15000
+  );
+
+  realNormalFixtureTest(
+    'stays waveform-ready across realistic image transforms',
+    async () => {
+      const { analyzeEcgImageFile } = await loadAnalyzerModule();
+      const variants = ['jpeg_q60', 'downscale_70', 'grayscale', 'rotate_05'] as const;
+
+      for (const variant of variants) {
+        const file = await createRealNormalVariantFile(variant);
+        const result = (await analyzeEcgImageFile(file, {
+          ocrEnabled: false,
+        })) as LocalWaveformResult;
+
+        expect(result.waveform_review_output.status, variant).toBe('blocked');
+        expect(result.waveform_review_output.failedAssertions, variant).toContain(
+          'MISSING_RAW_OCR_TEXT'
+        );
+        expect(result.waveform_evidence_packet.gridCalibration.calibrated, variant).toBe(true);
+        expect(
+          result.waveform_evidence_packet.leadMeasurements.length,
+          variant
+        ).toBeGreaterThanOrEqual(12);
+        expect(result.audit_log.outputPassedEvidenceGate, variant).toBe(false);
+      }
+    },
+    20000
+  );
+
+  realNormalFixtureTest(
+    'keeps the default local server waveform-first on a real ECG image',
+    async () => {
+      const { createMedlensLocalServer } = await loadServerModule();
+      const instance = createMedlensLocalServer();
+      runningServers.push(instance);
+      await instance.start(0, '127.0.0.1');
+      const port = (instance.server.address() as AddressInfo).port;
+      const file = createRealNormalEcgFixtureFile();
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch(`http://127.0.0.1:${port}/api/medlens/ecg/analyze`, {
+        method: 'POST',
+        body: formData,
+      });
+      const payload = (await response.json()) as LocalWaveformResult;
+
+      expect(response.status).toBe(200);
+      expect(payload.waveform_review_output.status).toBe('blocked');
+      expect(payload.waveform_review_output.clinicalOutputAllowed).toBe(false);
+      expect(payload.waveform_review_output.failedAssertions).toContain('MISSING_RAW_OCR_TEXT');
+      expect(payload.raw_ecg_relevant_text).toEqual([]);
+      expect(payload.audit_log.outputPassedEvidenceGate).toBe(false);
+    },
+    30000
+  );
 });

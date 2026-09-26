@@ -16,11 +16,7 @@ import {
 } from './symphony-trajectory-core';
 
 export type TrajectoryTimelineState =
-  | 'stable'
-  | 'mild_concern'
-  | 'worsening'
-  | 'high_concern'
-  | 'critical_concern';
+  'stable' | 'mild_concern' | 'worsening' | 'high_concern' | 'critical_concern';
 
 export interface TrajectoryTimelinePoint {
   visitLabel: string;
@@ -334,8 +330,7 @@ function formatMomentumLabel(
   if (!previousFrame) return sanitizeLine('Titik awal trajectory');
 
   const scoreDelta =
-    frame.trajectorySummary.deteriorationScore -
-    previousFrame.trajectorySummary.deteriorationScore;
+    frame.trajectorySummary.deteriorationScore - previousFrame.trajectorySummary.deteriorationScore;
   if (
     frame.trajectorySummary.riskLevel !== previousFrame.trajectorySummary.riskLevel ||
     frame.trajectorySummary.physiologyState !== previousFrame.trajectorySummary.physiologyState ||
@@ -388,7 +383,10 @@ function buildRedFlagTimeline(
   }));
 }
 
-function deltaNumber(current: number | undefined, previous: number | undefined): number | undefined {
+function deltaNumber(
+  current: number | undefined,
+  previous: number | undefined
+): number | undefined {
   if (current === undefined || previous === undefined) return undefined;
   return round(current - previous, 1);
 }

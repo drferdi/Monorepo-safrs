@@ -34,6 +34,8 @@ export default defineConfig({
       // Required so the extension can act as a WebAuthn client with rpID
       // crew.puskesmasbalowerti.com for passkey login (lib/api/auth-client.ts).
       'https://crew.puskesmasbalowerti.com/*',
+      // ePuskesmas RME surfaces (content scripts + tabs.query URL visibility).
+      '*://*.epuskesmas.id/*',
     ],
     action: {
       default_title: 'Asisten Medis',

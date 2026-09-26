@@ -65,7 +65,8 @@ export function buildDiagnosisRequestPayload(
   return {
     keluhan_utama: input.keluhanUtama,
     keluhan_tambahan: input.keluhanTambahan || '',
-    patient_age: input.patientAge > 0 ? input.patientAge : 30,
+    // Unknown age stays 0 (neutral) — never invent adult default 30 (H7).
+    patient_age: input.patientAge > 0 ? input.patientAge : 0,
     patient_gender: input.patientGender === 'P' ? 'F' : 'M',
     ...(vitalSigns ? { vital_signs: vitalSigns } : {}),
     allergies: uniqueStrings(input.allergies),

@@ -119,7 +119,8 @@ describe('runDiagnosisAlgorithm', () => {
     expect(result).toEqual([]);
   });
 
-  it('prioritizes diagnosis that fits symptom + vital context', () => {
+  it('preserves engine suggestion order (single ranking authority — no UI re-sort)', () => {
+    // Engine ranked ISPA first; metabolic vitals would previously boost E11 above J06.
     const result = runDiagnosisAlgorithm({
       suggestions: baseSuggestions,
       keluhanUtama: 'Sering kencing, haus terus, lemas, mual',
@@ -127,9 +128,12 @@ describe('runDiagnosisAlgorithm', () => {
       vitals: vitalsCriticalMetabolic,
     });
 
-    expect(result[0]?.suggestion.icd_x).toBe('E11.65');
-    expect(result[0]?.diagnosisScore).toBeGreaterThan(result[1]?.diagnosisScore ?? 0);
-    expect(result[0]?.scoreBreakdown.vitalFit).toBeGreaterThan(60);
+    expect(result.map((item) => item.suggestion.icd_x)).toEqual(['J06.9', 'E11.65', 'I10']);
+    expect(result.map((item) => item.rank)).toEqual([1, 2, 3]);
+    // Display metadata still computed (E11 vital fit high) without changing order.
+    const diabetes = result.find((item) => item.suggestion.icd_x === 'E11.65');
+    expect(diabetes?.scoreBreakdown.vitalFit).toBeGreaterThan(60);
+    expect(diabetes?.adjustedConfidence).toBeCloseTo(0.72, 2);
   });
 
   it('keeps score in 0..100 and adjustedConfidence in 0..1', () => {
@@ -167,7 +171,7 @@ describe('runDiagnosisAlgorithm', () => {
     expect(result[1].rank).toBe(2);
   });
 
-  it('prioritizes exact chronic confirmed diagnosis as top differential', () => {
+  it('keeps chronic/vital score breakdown without reordering engine list', () => {
     const result = runDiagnosisAlgorithm({
       suggestions: [
         {
@@ -201,12 +205,13 @@ describe('runDiagnosisAlgorithm', () => {
       trajectory: chronicConfirmedTrajectory,
     });
 
-    expect(result[0]?.suggestion.icd_x).toBe('I10');
-    expect(result[0]?.scoreBreakdown.confirmedChronicFit).toBe(100);
-    expect(result[0]?.scoreBreakdown.chronicPriorityBonus).toBe(35);
+    expect(result.map((item) => item.suggestion.icd_x)).toEqual(['J06.9', 'I10']);
+    const hypertension = result.find((item) => item.suggestion.icd_x === 'I10');
+    expect(hypertension?.scoreBreakdown.confirmedChronicFit).toBe(100);
+    expect(hypertension?.scoreBreakdown.chronicPriorityBonus).toBe(35);
   });
 
-  it('penalizes helminth differential when CKD is confirmed and complaint lacks GI/parasitic clues', () => {
+  it('records helminth mismatch penalty without dropping or reordering engine suggestions', () => {
     const ckdTrajectory: TrajectoryAnalysis = {
       ...chronicConfirmedTrajectory,
       confirmed_chronic_diagnoses: [
@@ -252,7 +257,8 @@ describe('runDiagnosisAlgorithm', () => {
       trajectory: ckdTrajectory,
     });
 
-    expect(result[0]?.suggestion.icd_x).toBe('N18.5');
-    expect(result.some((item) => item.suggestion.icd_x === 'B76')).toBe(false);
+    expect(result.map((item) => item.suggestion.icd_x)).toEqual(['B76', 'N18.5']);
+    const helminth = result.find((item) => item.suggestion.icd_x === 'B76');
+    expect(helminth?.scoreBreakdown.clinicalMismatchPenalty).toBeGreaterThan(0);
   });
 });

@@ -426,13 +426,7 @@ export type RMETransferStepStatus = 'anamnesa' | 'diagnosa' | 'resep';
  */
 
 export type RMETransferStepState =
-  | 'pending'
-  | 'running'
-  | 'success'
-  | 'partial'
-  | 'failed'
-  | 'skipped'
-  | 'cancelled';
+  'pending' | 'running' | 'success' | 'partial' | 'failed' | 'skipped' | 'cancelled';
 
 /**
  * RMETransferErrorClass type

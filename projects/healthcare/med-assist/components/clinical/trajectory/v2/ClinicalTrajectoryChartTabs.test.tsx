@@ -3,7 +3,10 @@ import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { ClinicalTrajectoryChartTabs } from './ClinicalTrajectoryChartTabs';
 
-import { analyzeHybridTrajectory, type HybridTrajectoryResult } from '@/lib/iskandar-diagnosis-engine/hybrid-trajectory';
+import {
+  analyzeHybridTrajectory,
+  type HybridTrajectoryResult,
+} from '@/lib/iskandar-diagnosis-engine/hybrid-trajectory';
 import {
   buildTrajectoryVisualizationViewModel,
   type TrajectoryVisualizationViewModel,
@@ -157,23 +160,18 @@ describe('ClinicalTrajectoryChartTabs', () => {
     );
 
     const tablist = screen.getByRole('tablist', { name: 'Clinical trajectory charts' });
-    expect(
-      within(tablist).getByRole('tab', { name: 'Patient Clinical Timeline' })
-    ).toHaveAttribute('aria-selected', 'true');
+    expect(within(tablist).getByRole('tab', { name: 'Patient Clinical Timeline' })).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
     expect(
       within(tablist).getByRole('tab', {
         name: 'Risk Trajectory / Deterioration Curve',
       })
     ).toBeInTheDocument();
-    expect(
-      within(tablist).getByRole('tab', { name: 'Vital Signs Trend' })
-    ).toBeInTheDocument();
-    expect(
-      within(tablist).getByRole('tab', { name: 'Red Flag Timeline' })
-    ).toBeInTheDocument();
-    expect(
-      within(tablist).getByRole('tab', { name: 'Visit-to-Visit Delta' })
-    ).toBeInTheDocument();
+    expect(within(tablist).getByRole('tab', { name: 'Vital Signs Trend' })).toBeInTheDocument();
+    expect(within(tablist).getByRole('tab', { name: 'Red Flag Timeline' })).toBeInTheDocument();
+    expect(within(tablist).getByRole('tab', { name: 'Visit-to-Visit Delta' })).toBeInTheDocument();
     expect(
       within(tablist).getByRole('tab', { name: 'Diagnostic Hypothesis Evolution' })
     ).toBeInTheDocument();
@@ -214,20 +212,14 @@ describe('ClinicalTrajectoryChartTabs', () => {
     expect(riskTab).toHaveAttribute('aria-selected', 'true');
     expect(defaultTab).toHaveAttribute('aria-selected', 'false');
     expect(tabpanel).toHaveAttribute('id', 'trajectory-chart-tabpanel-risk-curve');
-    expect(tabpanel).toHaveAttribute(
-      'aria-labelledby',
-      'trajectory-chart-tab-risk-curve'
-    );
+    expect(tabpanel).toHaveAttribute('aria-labelledby', 'trajectory-chart-tab-risk-curve');
     expect(screen.getByTestId('trajectory-risk-curve-panel')).toBeInTheDocument();
 
     fireEvent.click(vitalsTab);
     expect(vitalsTab).toHaveAttribute('aria-selected', 'true');
     expect(riskTab).toHaveAttribute('aria-selected', 'false');
     expect(tabpanel).toHaveAttribute('id', 'trajectory-chart-tabpanel-vital-signs');
-    expect(tabpanel).toHaveAttribute(
-      'aria-labelledby',
-      'trajectory-chart-tab-vital-signs'
-    );
+    expect(tabpanel).toHaveAttribute('aria-labelledby', 'trajectory-chart-tab-vital-signs');
     expect(screen.getByTestId('trajectory-vital-signs-panel')).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('tab', { name: 'Red Flag Timeline' }));

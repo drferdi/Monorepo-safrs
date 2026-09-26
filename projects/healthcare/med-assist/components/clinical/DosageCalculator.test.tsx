@@ -11,10 +11,7 @@ import { buildTherapyReasoningPackFromArbiter } from '@/lib/iskandar-diagnosis-e
 import { generatePharmacotherapyPlan } from '@/lib/iskandar-diagnosis-engine/pharmacotherapy-reasoner';
 import type { PrescriptionRequestContext } from '@/types/api';
 
-function fact(
-  key: ClinicalReasoningFactKey,
-  overrides: Partial<ClinicalFact> = {}
-): ClinicalFact {
+function fact(key: ClinicalReasoningFactKey, overrides: Partial<ClinicalFact> = {}): ClinicalFact {
   const acuteDeterioration =
     key !== 'baseline_or_planning_risk_context' && key !== 'treatment_response_good';
 
@@ -126,9 +123,7 @@ describe('DosageCalculator legacy surface replacement', () => {
       inventory
     );
 
-    expect(
-      plan.medications.some((med) => /isosorbid|nitro/i.test(med.nama_obat))
-    ).toBe(false);
+    expect(plan.medications.some((med) => /isosorbid|nitro/i.test(med.nama_obat))).toBe(false);
     expect(plan.alerts.some((alert) => alert.title.includes('Diblok Safety'))).toBe(true);
   });
 });

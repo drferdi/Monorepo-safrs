@@ -1,12 +1,6 @@
 export type StatisticSourcePage = 'pendaftaran' | 'rujukanexternal' | 'stokobat';
 export type StatisticFailureStage =
-  | 'load'
-  | 'redirect'
-  | 'receiver'
-  | 'parse'
-  | 'pagination'
-  | 'complete'
-  | 'unknown';
+  'load' | 'redirect' | 'receiver' | 'parse' | 'pagination' | 'complete' | 'unknown';
 
 export interface StatisticDiagnosticEvent {
   stage: StatisticFailureStage;

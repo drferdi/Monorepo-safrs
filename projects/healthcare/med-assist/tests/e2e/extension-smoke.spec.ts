@@ -1,7 +1,9 @@
-import fs from 'fs';
-import path from 'path';
+import { expect, test, type BrowserContext, type Page } from '@playwright/test';
 
-import { chromium, expect, test, type BrowserContext, type Page } from '@playwright/test';
+import {
+  getExtensionId,
+  launchExtensionContext,
+} from './chrome-extension-launch';
 
 type ChromeRuntimeApi = {
   runtime: {
@@ -19,45 +21,6 @@ type ChromeRuntimeApi = {
     sendMessage(payload: Record<string, unknown>, callback: (response: unknown) => void): void;
   };
 };
-
-const EXTENSION_PATH = path.resolve(__dirname, '../../.output/chrome-mv3-dev');
-const LOCAL_BROWSER_CANDIDATES = [
-  'C:\\Users\\drfer\\AppData\\Local\\Google\\Chrome\\Application\\chrome.exe',
-  'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-  'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
-  'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
-  'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
-];
-
-const localBrowserExecutable = LOCAL_BROWSER_CANDIDATES.find((candidate) =>
-  fs.existsSync(candidate)
-);
-
-async function launchExtensionContext(): Promise<BrowserContext> {
-  return await chromium.launchPersistentContext('', {
-    ...(localBrowserExecutable ? { executablePath: localBrowserExecutable } : {}),
-    headless: false,
-    args: [
-      `--load-extension=${EXTENSION_PATH}`,
-      `--disable-extensions-except=${EXTENSION_PATH}`,
-      '--no-first-run',
-    ],
-  });
-}
-
-async function getExtensionId(context: BrowserContext): Promise<string> {
-  const deadline = Date.now() + 15_000;
-
-  while (Date.now() < deadline) {
-    const worker = context.serviceWorkers()[0];
-    if (worker) {
-      return new URL(worker.url()).host;
-    }
-    await new Promise((resolve) => setTimeout(resolve, 500));
-  }
-
-  throw new Error('Extension service worker did not appear within 15 seconds.');
-}
 
 async function openExtensionPage(
   context: BrowserContext,
@@ -137,7 +100,7 @@ test.describe.serial('Sentra Assist extension smoke', () => {
     expect(pageErrors).toEqual([]);
     expect(extensionId).toBeTruthy();
     expect(manifest.manifest_version).toBe(3);
-    expect(manifest.name).toBe('Sentra Assist');
+    expect(manifest.name).toBe('Asisten Medis');
     expect(manifest.version).toBe('2.1.0');
     expect(manifest.background?.service_worker).toBe('background.js');
     expect(manifest.side_panel?.default_path).toBe('sidepanel.html');
@@ -145,7 +108,11 @@ test.describe.serial('Sentra Assist extension smoke', () => {
       expect.arrayContaining(['activeTab', 'storage', 'sidePanel', 'identity', 'scripting'])
     );
     expect(manifest.host_permissions).toEqual(
-      expect.arrayContaining(['https://kotakediri.epuskesmas.id/*', 'https://*.googleapis.com/*'])
+      expect.arrayContaining([
+        'https://*.googleapis.com/*',
+        'https://crew.puskesmasbalowerti.com/*',
+        '*://*.epuskesmas.id/*',
+      ])
     );
     expect(manifest.oauth2?.client_id).toBeTruthy();
     expect(manifest.oauth2?.scopes).toEqual(
@@ -160,24 +127,15 @@ test.describe.serial('Sentra Assist extension smoke', () => {
     expect(pageErrors).toEqual([]);
   });
 
-  test('launches dashboard into V2 clinical workbench instead of the legacy TTV panel', async () => {
+  test('shows console login gate on sidepanel when session is missing', async () => {
     const extensionId = await getExtensionId(context);
     const { page, pageErrors } = await openExtensionPage(context, extensionId, 'sidepanel.html');
 
-    await expect(page.getByRole('heading', { name: 'Sentra Assist' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'INFEREN' })).toBeVisible();
-    await expect(page.getByText('GEJALA / KELUHAN')).toBeVisible();
-    await expect(page.getByTestId('clinical-reasoning-workbench')).toBeVisible();
-    await expect(page.getByTestId('clinical-trajectory-v2')).toBeVisible();
-    await expect(page.getByText('First Glance Clinical Status')).toBeVisible();
-    await expect(page.getByText('Trajectory Coverage Strip')).toBeVisible();
-    await expect(page.getByText('Differential Diagnosis Board')).toBeVisible();
-    await expect(page.getByText('Therapy Support Panel')).toBeVisible();
+    await expect(page.getByText(/ASISTEN MEDIS/i)).toBeVisible();
+    await expect(page.getByPlaceholder('USERNAME')).toBeVisible();
+    await expect(page.getByPlaceholder('PASSWORD')).toBeVisible();
+    await expect(page.getByTestId('clinical-reasoning-workbench')).toHaveCount(0);
     await expect(page.locator('#sidepanel-tabpanel-ttv')).toHaveCount(0);
-    await expect(page.getByText('VITAL SIGNS - CARDIOPULMONARY METRICS')).toBeVisible();
-    await expect(page.getByText('ERROR DIAGNOSTICS')).toHaveCount(0);
-    await expect(page.locator('pre')).toHaveCount(0);
-
     expect(pageErrors).toEqual([]);
   });
 

@@ -36,15 +36,7 @@ type TimelineRow = {
   compactLabel: string;
 };
 
-function TimelineDot({
-  cx,
-  cy,
-  payload,
-}: {
-  cx?: number;
-  cy?: number;
-  payload?: TimelineRow;
-}) {
+function TimelineDot({ cx, cy, payload }: { cx?: number; cy?: number; payload?: TimelineRow }) {
   if (cx === undefined || cy === undefined || !payload) {
     return <g />;
   }
@@ -111,7 +103,9 @@ export function TrajectoryStateTimelineChart({
       { y: top, label: 'Urgent', color: TRAJECTORY_CHART_PALETTE.high },
     ];
     const points = chartData.map((point, index) => {
-      const x = left + (chartData.length === 1 ? trackWidth / 2 : (trackWidth * index) / (chartData.length - 1));
+      const x =
+        left +
+        (chartData.length === 1 ? trackWidth / 2 : (trackWidth * index) / (chartData.length - 1));
       const normalized = (point.stateValue - 1) / 4;
       const y = top + trackHeight - normalized * trackHeight;
       return { ...point, x, y };
@@ -147,11 +141,7 @@ export function TrajectoryStateTimelineChart({
                   stroke="var(--neu-border-medium)"
                   strokeDasharray="3 5"
                 />
-                <text
-                  className="ct-v2-compact-gridlabel"
-                  x={left}
-                  y={state.y - 6}
-                >
+                <text className="ct-v2-compact-gridlabel" x={left} y={state.y - 6}>
                   {state.label}
                 </text>
               </g>
@@ -279,8 +269,8 @@ export function TrajectoryStateTimelineChart({
               domain={[1, 5]}
               ticks={[1, 2, 3, 4, 5]}
               tickFormatter={(value) =>
-                Object.values(TRAJECTORY_STATE_META).find((entry) => entry.value === value)?.label ||
-                ''
+                Object.values(TRAJECTORY_STATE_META).find((entry) => entry.value === value)
+                  ?.label || ''
               }
               tick={{ fill: TRAJECTORY_CHART_PALETTE.textMuted, fontSize: 10 }}
               axisLine={false}

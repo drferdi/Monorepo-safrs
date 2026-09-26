@@ -79,4 +79,30 @@ describe('Diagnosis UI request payload builder', () => {
     });
     expect(payload.vital_signs).not.toHaveProperty('glucose');
   });
+
+  it('does not invent patient_age 30 when age is 0 or missing (H7)', () => {
+    const zeroAge = buildDiagnosisRequestPayload({
+      keluhanUtama: 'Batuk',
+      keluhanTambahan: '',
+      patientAge: 0,
+      patientGender: 'L',
+      allergies: [],
+      chronicDiseases: [],
+      vitals: { sbp: 120, dbp: 80, hr: 72, rr: 16, temp: 36.5 },
+    });
+    expect(zeroAge.patient_age).toBe(0);
+    expect(zeroAge.patient_age).not.toBe(30);
+
+    const negativeAge = buildDiagnosisRequestPayload({
+      keluhanUtama: 'Batuk',
+      keluhanTambahan: '',
+      patientAge: -1,
+      patientGender: 'P',
+      allergies: [],
+      chronicDiseases: [],
+      vitals: { sbp: 110, dbp: 70, hr: 80, rr: 18, temp: 36.8 },
+    });
+    expect(negativeAge.patient_age).toBe(0);
+    expect(negativeAge.patient_age).not.toBe(30);
+  });
 });

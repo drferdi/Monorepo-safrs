@@ -125,11 +125,7 @@ export type BridgeAuthSource = 'none' | 'dashboard-session' | 'automation-token'
  */
 
 export type BridgeRuntimeReadiness =
-  | 'ready'
-  | 'disabled'
-  | 'auth_required'
-  | 'server_unreachable'
-  | 'server_error';
+  'ready' | 'disabled' | 'auth_required' | 'server_unreachable' | 'server_error';
 
 /**
  * BridgeRuntimeStatus interface

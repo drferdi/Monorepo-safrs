@@ -29,30 +29,30 @@ Make the source factory reproduce the golden build UI, not merely compile the ol
 
 Extract from golden build:
 
-* layout
-* spacing
-* panel structure
-* color behavior
-* typography behavior
-* component hierarchy
-* screen order
-* navigation flow
-* button labels
-* button placement
-* card structure
-* alert visual hierarchy
-* clinical trajectory presentation
-* differential reasoning presentation
-* emergency screen presentation
-* VS/TTV inference presentation
-* standby mode presentation
-* settings screen presentation
-* login/dashboard presentation
-* sidepanel width/behavior
-* popup/sidepanel runtime behavior
-* CSS assets
-* generated class names where useful
-* any hotfix CSS/JS such as trajectory-card-hotfix.css or emergency-step-hotfix.js
+- layout
+- spacing
+- panel structure
+- color behavior
+- typography behavior
+- component hierarchy
+- screen order
+- navigation flow
+- button labels
+- button placement
+- card structure
+- alert visual hierarchy
+- clinical trajectory presentation
+- differential reasoning presentation
+- emergency screen presentation
+- VS/TTV inference presentation
+- standby mode presentation
+- settings screen presentation
+- login/dashboard presentation
+- sidepanel width/behavior
+- popup/sidepanel runtime behavior
+- CSS assets
+- generated class names where useful
+- any hotfix CSS/JS such as trajectory-card-hotfix.css or emergency-step-hotfix.js
 
 Implementation rule:
 Use old source components only as logic holders.
@@ -60,10 +60,10 @@ If old components render a rejected UI, refactor their presentation to match the
 
 Do not mark a feature as recovered if:
 
-* the logic works but UI is from rejected old factory design
-* the screen exists but visual hierarchy differs from golden
-* the flow works but layout does not match golden
-* emergency/trajectory/differential UI is not golden-equivalent
+- the logic works but UI is from rejected old factory design
+- the screen exists but visual hierarchy differs from golden
+- the flow works but layout does not match golden
+- emergency/trajectory/differential UI is not golden-equivalent
 
 Add to recovery docs:
 
@@ -73,25 +73,25 @@ Add to recovery docs:
 
 UI acceptance criteria:
 
-* Login matches golden.
-* Dashboard matches golden.
-* Sidepanel console matches golden.
-* VS/TTV inference screen matches golden.
-* Emergency screen matches golden.
-* Settings screen matches golden.
-* Clinical Trajectory screen matches golden.
-* Differential reasoning screen matches golden.
-* Alert visual hierarchy matches golden.
-* Standby mode matches golden.
-* Old rejected UI is not visible in final build.
+- Login matches golden.
+- Dashboard matches golden.
+- Sidepanel console matches golden.
+- VS/TTV inference screen matches golden.
+- Emergency screen matches golden.
+- Settings screen matches golden.
+- Clinical Trajectory screen matches golden.
+- Differential reasoning screen matches golden.
+- Alert visual hierarchy matches golden.
+- Standby mode matches golden.
+- Old rejected UI is not visible in final build.
 
 Final report must include:
 
-* UI parity status
-* Screens matched to golden
-* Screens still using rejected old UI
-* CSS/TSX files changed for golden parity
-* Remaining UI blockers
+- UI parity status
+- Screens matched to golden
+- Screens still using rejected old UI
+- CSS/TSX files changed for golden parity
+- Remaining UI blockers
 
 Factory recovery target is now:
 Buildable source factory + golden behavior parity + golden UI parity.

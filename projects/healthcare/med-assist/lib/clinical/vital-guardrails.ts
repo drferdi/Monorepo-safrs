@@ -7,13 +7,7 @@ import {
 export type VitalFieldKey = 'sbp' | 'dbp' | 'hr' | 'rr' | 'temp' | 'spo2' | 'glucose';
 export type VitalSeverity = 'normal' | 'warning' | 'critical' | 'blocked';
 export type VitalGuardrailIssueField =
-  | VitalFieldKey
-  | 'pain'
-  | 'pregnancy'
-  | 'symptom'
-  | 'obesity'
-  | 'disability'
-  | 'autosen';
+  VitalFieldKey | 'pain' | 'pregnancy' | 'symptom' | 'obesity' | 'disability' | 'autosen';
 
 export interface VitalGuardrailState {
   sbp: string;

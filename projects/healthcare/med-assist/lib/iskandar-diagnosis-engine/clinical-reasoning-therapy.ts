@@ -93,7 +93,8 @@ function baseSafetyChecks(evidencePack: ReasoningEvidencePack): TherapyReasoning
       id: 'local-protocol-review',
       label: 'Cocokkan dengan protokol lokal',
       required: true,
-      rationale: 'Pack ini hanya review support; order final mengikuti protokol dan judgment dokter.',
+      rationale:
+        'Pack ini hanya review support; order final mengikuti protokol dan judgment dokter.',
     },
   ];
 
@@ -102,7 +103,8 @@ function baseSafetyChecks(evidencePack: ReasoningEvidencePack): TherapyReasoning
       id: 'response-conflict-review',
       label: 'Rekonsiliasi respons terapi yang konflik',
       required: true,
-      rationale: 'Respons terapi baik dan buruk muncul bersamaan sehingga perlu reassessment klinis.',
+      rationale:
+        'Respons terapi baik dan buruk muncul bersamaan sehingga perlu reassessment klinis.',
     });
   }
 
@@ -246,10 +248,7 @@ function buildConditionActions(
 function buildReassessmentActions(evidencePack: ReasoningEvidencePack): TherapyReasoningAction[] {
   if (!evidencePack.safetyDominance.treatmentResponseConflict) return [];
 
-  const keys: ClinicalReasoningFactKey[] = [
-    'treatment_response_good',
-    'treatment_response_poor',
-  ];
+  const keys: ClinicalReasoningFactKey[] = ['treatment_response_good', 'treatment_response_poor'];
 
   return [
     {
@@ -270,8 +269,7 @@ export function buildTherapyReasoningPackFromArbiter({
   arbiterResult,
 }: BuildTherapyReasoningPackInput): TherapyReasoningPack {
   const selectedWorkingDiagnosis = arbiterResult.selectedWorkingDiagnosis;
-  const locked =
-    arbiterResult.therapyGate.status !== 'ready' || selectedWorkingDiagnosis === null;
+  const locked = arbiterResult.therapyGate.status !== 'ready' || selectedWorkingDiagnosis === null;
 
   if (locked) {
     return {

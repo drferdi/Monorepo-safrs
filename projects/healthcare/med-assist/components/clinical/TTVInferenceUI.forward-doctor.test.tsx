@@ -318,15 +318,25 @@ describe('TTVInferenceUI forward consult', () => {
 
     const disabilityGroup = screen.getByText('Disabilitas').closest('.form-group') as HTMLElement;
     fireEvent.click(within(disabilityGroup).getByRole('button', { name: 'Pilih di sini' }));
-    expect(within(document.getElementById('disabilitas-panel') as HTMLElement).queryByText('Pilih di sini')).not.toBeInTheDocument();
+    expect(
+      within(document.getElementById('disabilitas-panel') as HTMLElement).queryByText(
+        'Pilih di sini'
+      )
+    ).not.toBeInTheDocument();
 
     const obesityGroup = screen.getByText('Obesitas').closest('.form-group') as HTMLElement;
     fireEvent.click(within(obesityGroup).getByRole('button', { name: 'Pilih di sini' }));
-    expect(within(document.getElementById('obesitas-panel') as HTMLElement).queryByText('Pilih di sini')).not.toBeInTheDocument();
+    expect(
+      within(document.getElementById('obesitas-panel') as HTMLElement).queryByText('Pilih di sini')
+    ).not.toBeInTheDocument();
 
     const painGroup = screen.getByText('Skala Nyeri').closest('.form-group') as HTMLElement;
     fireEvent.click(within(painGroup).getByRole('button', { name: 'Pilih di sini' }));
-    expect(within(document.getElementById('pain-score-panel') as HTMLElement).queryByText('Pilih di sini')).not.toBeInTheDocument();
+    expect(
+      within(document.getElementById('pain-score-panel') as HTMLElement).queryByText(
+        'Pilih di sini'
+      )
+    ).not.toBeInTheDocument();
   });
 
   it('membuka dropdown skala nyeri dan mengisi skor terpilih', () => {

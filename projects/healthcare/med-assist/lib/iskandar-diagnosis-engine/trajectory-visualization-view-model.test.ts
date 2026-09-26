@@ -520,11 +520,7 @@ describe('trajectory-visualization-view-model', () => {
       '2026-02-03',
       '2026-02-04',
     ]);
-    expect(clinicalTimeline.map((item) => item.source)).toEqual([
-      'scrape',
-      'scrape',
-      'scrape',
-    ]);
+    expect(clinicalTimeline.map((item) => item.source)).toEqual(['scrape', 'scrape', 'scrape']);
     expect(clinicalTimeline[0]).toEqual(
       expect.objectContaining({
         visitLabel: 'Kunjungan 1',

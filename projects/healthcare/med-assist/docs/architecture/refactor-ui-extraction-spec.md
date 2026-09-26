@@ -11,6 +11,7 @@ After each extraction pass, run the validation commands for the affected compone
 ## `components/clinical/TTVInferenceUI.tsx`
 
 Current behavior:
+
 - Renders the vital screening UI.
 - Builds screening alerts.
 - Builds canonical triage input.
@@ -29,6 +30,7 @@ Canonical triage input builder and bridge evaluation side-effect stay in the `TT
 Pure request-id/payload shaping may move only after `canonical-triage-builder.test.ts` is included in validation.
 
 Validation:
+
 - `npm run test -- components/clinical/TTVInferenceUI.test.tsx components/clinical/TTVInferenceUI.forward-doctor.test.tsx components/clinical/buildAlerts.extended.test.ts lib/clinical/vital-autocomplete.test.ts`
 - `npm run typecheck`
 - `npm run lint`
@@ -36,6 +38,7 @@ Validation:
 ## `components/clinical/ClinicalDifferential.tsx`
 
 Current behavior:
+
 - Renders differential diagnosis UI.
 - Calls canonical differential and local fallback.
 - Promotes chronic and fallback diagnosis candidates.
@@ -50,6 +53,7 @@ Extraction order:
 4. Keep `ClinicalDifferential` as the public component facade.
 
 Validation:
+
 - `npm run test -- components/clinical/ClinicalDifferential.helpers.test.ts lib/rme/payload-mapper.test.ts lib/rme/transfer-orchestrator.test.ts`
 - `npm run typecheck`
 - `npm run lint`

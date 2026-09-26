@@ -146,6 +146,8 @@ describe('medlens client local Crew integration', () => {
       message = error instanceof Error ? error.message : '';
     }
 
-    expect(message).toBe('MedLens belum tersedia untuk workspace ini. Coba lagi nanti atau hubungi admin.');
+    expect(message).toBe(
+      'MedLens belum tersedia untuk workspace ini. Coba lagi nanti atau hubungi admin.'
+    );
   });
 });

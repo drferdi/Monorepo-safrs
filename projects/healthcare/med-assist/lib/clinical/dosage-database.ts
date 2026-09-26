@@ -12,12 +12,7 @@
  */
 
 export type DrugCategory =
-  | 'antibiotic'
-  | 'antipyretic'
-  | 'antihistamine'
-  | 'cardiovascular'
-  | 'respiratory'
-  | 'analgesic';
+  'antibiotic' | 'antipyretic' | 'antihistamine' | 'cardiovascular' | 'respiratory' | 'analgesic';
 /**
  * AgeGroup type
  *

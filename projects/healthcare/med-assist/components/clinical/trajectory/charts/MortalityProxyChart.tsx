@@ -11,11 +11,7 @@ import {
 
 import type { TrajectoryVisualizationViewModel } from '@/lib/iskandar-diagnosis-engine/trajectory-visualization-view-model';
 
-import {
-  TRAJECTORY_CHART_PALETTE,
-  MetaPill,
-  TrajectoryChartSection,
-} from './chart-shared';
+import { TRAJECTORY_CHART_PALETTE, MetaPill, TrajectoryChartSection } from './chart-shared';
 
 type MortalityProxyChartProps = {
   viewModel: Pick<TrajectoryVisualizationViewModel, 'mortalityProxy'>;
@@ -77,10 +73,7 @@ function MortalityProxyTooltip({ active, payload }: TooltipContentProps) {
   );
 }
 
-export function MortalityProxyChart({
-  viewModel,
-  className,
-}: MortalityProxyChartProps) {
+export function MortalityProxyChart({ viewModel, className }: MortalityProxyChartProps) {
   const proxy = viewModel.mortalityProxy;
   const score = Math.max(0, Math.min(100, proxy.score));
   const tone = TIER_META[proxy.tier];

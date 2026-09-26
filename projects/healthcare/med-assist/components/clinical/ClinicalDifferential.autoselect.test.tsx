@@ -210,10 +210,7 @@ describe('ClinicalDifferential legacy auto-promote replacement', () => {
     const viewModel = makeViewModel();
 
     render(
-      <ClinicalReasoningDifferentialPanel
-        hybridResult={hybridResult}
-        viewModel={viewModel}
-      />
+      <ClinicalReasoningDifferentialPanel hybridResult={hybridResult} viewModel={viewModel} />
     );
 
     const panel = screen.getByTestId('clinical-reasoning-differential-panel');
@@ -236,9 +233,7 @@ describe('ClinicalDifferential legacy auto-promote replacement', () => {
       physicianConfirmedCandidateId: 'candidate-sepsis-concern',
     });
 
-    expect(workflow.arbiterResult.selectedWorkingDiagnosis?.id).toBe(
-      'candidate-sepsis-concern'
-    );
+    expect(workflow.arbiterResult.selectedWorkingDiagnosis?.id).toBe('candidate-sepsis-concern');
     expect(workflow.therapyReasoningPack.status).toBe('ready');
     expect(workflow.therapyReasoningPack.actions.map((action) => action.id)).toEqual(
       expect.arrayContaining([
