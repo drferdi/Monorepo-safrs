@@ -126,6 +126,46 @@ test('canonical differential route rejects non-clinical roles with 403 before en
   assert.deepEqual(callOrder, ['writeSecurityAudit'])
 })
 
+test('canonical differential route rejects a non-clinical role even when the profession is clinical', async () => {
+  const { createCanonicalDifferentialPostHandler } = await loadCanonicalDifferentialRouteModule()
+  const callOrder: string[] = []
+
+  const handler = createCanonicalDifferentialPostHandler({
+    getIp: () => null,
+    getSession: () => ({
+      username: 'admin-a',
+      role: 'ADMIN',
+      profession: 'Perawat',
+    }),
+    getAuthorizationMode: () => 'session',
+    isClinicalRole: (role) => role === 'DOKTER' || role === 'Perawat',
+    runDiagnosis: async () => {
+      callOrder.push('runDiagnosis')
+      throw new Error('should not be called')
+    },
+    writeClinicalAudit: async () => {
+      callOrder.push('writeClinicalAudit')
+    },
+    writeSecurityAudit: async () => {
+      callOrder.push('writeSecurityAudit')
+    },
+  })
+
+  const response = await handler(
+    new Request('http://localhost/api/clinical/differential/evaluate', {
+      method: 'POST',
+      body: JSON.stringify({
+        patient: { age: 52, gender: 'L' },
+        narrative: { keluhan_utama: 'Nyeri dada' },
+      }),
+      headers: { 'content-type': 'application/json' },
+    })
+  )
+
+  assert.equal(response.status, 403)
+  assert.deepEqual(callOrder, ['writeSecurityAudit'])
+})
+
 test('canonical differential route maps glucose and writes both clinical plus security audit on success', async () => {
   const { createCanonicalDifferentialPostHandler } = await loadCanonicalDifferentialRouteModule()
   const callOrder: string[] = []

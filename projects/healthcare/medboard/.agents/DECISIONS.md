@@ -3,6 +3,28 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-27 — Autocomplete tests send a clinician session
+
+- The three "Autocomplete klinis" tests failed with 401, not with a wrong chain:
+  `/api/cdss/autocomplete` requires a crew session (`isCrewAuthorizedRequest`) and the tests sent
+  none. With a DOKTER session the route returns the chains the tests claim (Nyeri Pinggang with
+  CVA Test; Nyeri Punggung), so only the request header changed, no assertion.
+- Every failing test in `scripts/test-cdss.ts` now sets exit code 1 (27/27 pass).
+
+## 2026-09-27 — CDSS diagnosis access comes from the clinical role only
+
+- Decision (Chief, option A): `POST /api/cdss/diagnose` and
+  `POST /api/clinical/differential/evaluate` admit a session only when its role is clinical
+  (`DOKTER`, `DOKTER_GIGI`, `PERAWAT`, `BIDAN`, `APOTEKER`, `TRIAGE_OFFICER`). The profession no
+  longer grants access.
+- Rationale: every profession in `CREW_ACCESS_PROFESSIONS` is clinical and a missing profession
+  defaults to `Bidan`, so the old "role or profession" rule let ADMIN, CEO, and ADMINISTRATOR
+  sessions run diagnoses. The behaviour was inherited unchanged from legacy.
+- Evidence: `scripts/test-cdss.ts` "Auth CDSS diagnose" tests (ADMIN/CEO/ADMINISTRATOR with a
+  clinical profession get 403; DOKTER_GIGI and TRIAGE_OFFICER get 200) and the differential test
+  in `src/app/api/clinical/anamnesis/extract/route.test.ts` failed before the change and pass
+  after it. A failing `Auth ` test now sets exit code 1.
+
 ## 2026-09-27 — Migrated from abyss-monorepo into SAFRS
 
 - Decision: The legacy folder `abyss-monorepo/apps/healthcare/medboard` was copied as it is

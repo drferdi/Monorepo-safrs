@@ -63,7 +63,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  if (!isClinicalCrewRole(session.role) && !isClinicalCrewRole(session.profession)) {
+  if (!isClinicalCrewRole(session.role)) {
     await writeSecurityAuditLog({
       endpoint: '/api/cdss/diagnose',
       action: 'CDSS_DIAGNOSE',

@@ -600,6 +600,61 @@ async function main(): Promise<void> {
       assert.equal(securityAuditEntries[0]?.userId, 'admin.user')
     })
 
+    const postDiagnoseAs = (role: string, profession: string) =>
+      diagnoseRoute.POST(
+        new Request('http://localhost/api/cdss/diagnose', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            cookie: `${cookieName}=${
+              createCrewSession({
+                username: `${role.toLowerCase()}.user`,
+                displayName: `${role} User`,
+                email: `${role.toLowerCase()}@example.com`,
+                institution: 'Puskesmas Balowerti Kota Kediri',
+                profession,
+                role,
+              }).token
+            }`,
+          },
+          body: JSON.stringify({
+            keluhan_utama: 'demam',
+            usia: 30,
+            jenis_kelamin: 'L',
+            session_id: `access-${role}`,
+          }),
+        })
+      )
+
+    test('Auth CDSS diagnose: role non-klinis dengan profesi klinis tetap ditolak 403', async () => {
+      for (const role of ['ADMIN', 'CEO', 'ADMINISTRATOR']) {
+        for (const profession of ['Dokter', 'Perawat', 'Bidan', 'Apoteker']) {
+          diagnosisEngineCalls.length = 0
+          securityAuditEntries.length = 0
+
+          const response = await postDiagnoseAs(role, profession)
+
+          assert.equal(response.status, 403, `${role} + ${profession}`)
+          assert.equal(diagnosisEngineCalls.length, 0, `${role} + ${profession}`)
+          assert.equal(securityAuditEntries[0]?.result, 'forbidden', `${role} + ${profession}`)
+        }
+      }
+    })
+
+    test('Auth CDSS diagnose: role DOKTER_GIGI dan TRIAGE_OFFICER tetap diizinkan', async () => {
+      for (const [role, profession] of [
+        ['DOKTER_GIGI', 'Dokter Gigi'],
+        ['TRIAGE_OFFICER', 'Triage Officer'],
+      ]) {
+        diagnosisEngineCalls.length = 0
+
+        const response = await postDiagnoseAs(role, profession)
+
+        assert.equal(response.status, 200, role)
+        assert.equal(diagnosisEngineCalls.length, 1, role)
+      }
+    })
+
     test('Synthesia narrative: input dengan spasi tersembunyi tetap tersanitasi dan stabil', () => {
       const narrative = generateNarrative('nyeri\u00A0pinggang  kanan\u200B')
 
@@ -1033,6 +1088,7 @@ async function main(): Promise<void> {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            cookie: `${cookieName}=${doctorToken}`,
           },
           body: JSON.stringify({
             query: 'nyeri pinggang',
@@ -1066,6 +1122,7 @@ async function main(): Promise<void> {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            cookie: `${cookieName}=${doctorToken}`,
           },
           body: JSON.stringify({
             query: 'nyeri pinggang kanan',
@@ -1089,6 +1146,7 @@ async function main(): Promise<void> {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            cookie: `${cookieName}=${doctorToken}`,
           },
           body: JSON.stringify({
             query: 'nyeri punggung',
@@ -1460,7 +1518,7 @@ async function main(): Promise<void> {
     await writeTestReport('test-cdss-report.txt', 'Safety Net Test Report', results)
 
     if (results.some(result => result.status === 'FAIL')) {
-      // process.exitCode = 1;
+      process.exitCode = 1
     }
   } finally {
     restoreModuleMocks()

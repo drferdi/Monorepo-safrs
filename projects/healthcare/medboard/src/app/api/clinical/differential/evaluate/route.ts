@@ -276,12 +276,7 @@ export function createCanonicalDifferentialPostHandler(
       )
     }
 
-    const [roleIsClinical, professionIsClinical] = await Promise.all([
-      deps.isClinicalRole(session.role),
-      deps.isClinicalRole(session.profession),
-    ])
-
-    if (!roleIsClinical && !professionIsClinical) {
+    if (!(await deps.isClinicalRole(session.role))) {
       await deps.writeSecurityAudit({
         endpoint: '/api/clinical/differential/evaluate',
         action: 'CLINICAL_DIFFERENTIAL_EVALUATE',
