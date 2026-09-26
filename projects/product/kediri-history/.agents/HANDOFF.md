@@ -1,11 +1,19 @@
 # HANDOFF
 
-Last updated: 2026-09-25 (Claude Code, branch `integration/post-adr-0007-4`, claim `KEDIRI-NEXT-SECURITY-BUMP`)
+Last updated: 2026-09-26 (Claude Code, branch `fix/kediri-gsap-hardening`, claim `KEDIRI-GSAP-PRODUCTION-HARDENING`)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Durable decisions go
 to `DECISIONS.md`.
 
 ## Current state
+
+- GSAP production hardening (2026-09-26): commit `800f0dff` (merged on the `kediri` remote as PR #2
+  on 2026-09-12, never brought into the Monorepo) is cherry-picked: production motion canary
+  workflow, `e2e/production-motion.spec.ts`, `playwright.production.config.ts`,
+  `tests/motion-gsap-registration.test.ts`, `scripts/run-production-motion.mjs`. Files match the
+  `kediri` remote except `apps/web/package.json`, which keeps `next` 16.3.6. `verify` PASS on
+  every stage after the cherry-pick. The Monorepo capsule and `kediri/main` may still differ
+  elsewhere; compare before the next publish.
 
 - Security patch (2026-09-25): `apps/web` pins `next` 16.3.6 (was 16.3.0, RCE advisories
   GHSA-p293-qw3h-jr36 and GHSA-2xp9-vwfh-vxw4 below 16.3.3); `pnpm-workspace.yaml` overrides
