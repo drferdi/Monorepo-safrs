@@ -14,6 +14,7 @@ import json
 import os
 import re
 import shlex
+import subprocess
 import sys
 from dataclasses import dataclass
 from datetime import date
@@ -151,8 +152,36 @@ def argument_path_candidates(argument: str):
             yield path_candidate
 
 
+def git_capsule_files(capsule: Path) -> list[Path] | None:
+    """Tracked and untracked files git does not ignore, or None outside a git work tree.
+
+    Ignored local state (for example a capsule's downloaded runtime) is not capsule source.
+    """
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(capsule), "ls-files", "-z", "--cached", "--others", "--exclude-standard"],
+            capture_output=True,
+            check=False,
+        )
+    except OSError:
+        return None
+    if result.returncode != 0:
+        return None
+    files = set()
+    for name in result.stdout.decode("utf-8").split("\0"):
+        if not name or SKIP_DIRECTORIES.intersection(Path(name).parts[:-1]):
+            continue
+        path = capsule / name
+        if path.is_file():
+            files.add(path)
+    return sorted(files)
+
+
 def walk_capsule(capsule: Path) -> list[Path]:
     """Every regular file in the capsule, found in one pass that never enters skipped directories."""
+    git_files = git_capsule_files(capsule)
+    if git_files is not None:
+        return git_files
     files = []
     for directory, directory_names, file_names in os.walk(capsule):
         directory_names[:] = sorted(name for name in directory_names if name not in SKIP_DIRECTORIES)

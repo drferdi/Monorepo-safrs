@@ -425,6 +425,29 @@ class ProjectIndependenceTests(unittest.TestCase):
         result = self.run_checker()
         self.assertEqual(result.returncode, 0, result.stderr)
 
+    def init_git(self):
+        subprocess.run(["git", "init", "-q", str(self.fixture_root)], check=True)
+
+    def test_git_ignored_files_are_not_checked(self):
+        # A capsule's ignored local runtime (avery runtime/, 3 GB of third-party files) is not
+        # capsule source; its invalid tsconfig files must not fail the checker.
+        self.init_git()
+        (self.capsule / ".gitignore").write_text("runtime/\n", encoding="utf-8")
+        vendor = self.capsule / "runtime" / "vendor"
+        vendor.mkdir(parents=True)
+        (vendor / "tsconfig.json").write_text("{ not json", encoding="utf-8")
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_untracked_files_that_git_does_not_ignore_are_still_checked(self):
+        self.init_git()
+        extra = self.capsule / "extra"
+        extra.mkdir()
+        (extra / "tsconfig.json").write_text("{ not json", encoding="utf-8")
+        result = self.run_checker()
+        self.assertEqual(result.returncode, 1, result.stdout)
+        self.assertIn("cannot safely read valid JSON", result.stderr)
+
     def test_multiple_findings_are_sorted_and_repeatable(self):
         contract = self.read_json("project.contract.json")
         contract["artifacts"] = ["../z", "../a"]
