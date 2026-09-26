@@ -1,6 +1,6 @@
 # HANDOFF — Monorepo control plane
 
-Last updated: 2026-09-25 (Cursor, branch `docs/golden-path-context`; previous entry Kilo GPT-5.6 Sol,
+Last updated: 2026-09-26 (Cursor, branch `docs/golden-path-context`; previous entry Kilo GPT-5.6 Sol,
 branch `integration/jev-active`)
 
 ## Latest change (Cursor)
@@ -9,7 +9,10 @@ branch `integration/jev-active`)
   verify, have capsule-local token gates and security patches, and left known non-conformance.
 - Branch `docs/golden-path-context` (task `TASK-20260925-GOLDEN-PATH-CONTEXT-DOC-2`, R1):
   `docs/context/active/golden-path.context.md` now describes golden-path as a standalone capsule with
-  local package snapshots, not a root demonstrator. Not committed; awaiting Chief.
+  local package snapshots, not a root demonstrator (commit `e6c11659`).
+- Same branch, task `TASK-20260926-AGENTS-SHELL-QUIRKS` (R2): root `AGENTS.md` gains two notes (RTK `git`
+  wrapper and CRLF-only worktree noise; pnpm 9 ignores `pnpm-workspace.yaml` overrides). `AGENTS.md` is a
+  verification control, so this commit carries no implementation change.
 
 Root `.agents/` holds control-plane state only: root tooling, governance, CI, `packages/`, and
 cross-capsule orchestration. Capsule state lives in `projects/<domain>/<capsule>/.agents/`.
