@@ -34,3 +34,8 @@ Chief instructed end-to-end continuation. Therefore `7f08da5` is the provisional
 - Token gate: `scripts/check-tokens.mjs` (run by `lint`) applies the root raw-value rule to `apps/web/src`. The root gate never passed on this path (1277 raw values at `main` 481801fc), so the 1268 existing values are recorded per file in `scripts/token-baseline.json`. A file above its baseline, or a new file with raw values, fails; `--lower-baseline` only records reductions. Migrating the legacy values to tokens is open UI work.
 - Security: `pnpm.overrides` in `package.json` pins `deepmerge-ts >=8.0.1`, `mysql2 ^3.22.0`, `fast-uri ^3.1.6`, `sharp >=0.35.4` (high advisories via prisma 7.10.0). pnpm 9.15.0 ignores `overrides` in `pnpm-workspace.yaml`, so the existing `react`, `react-dom`, and `better-auth` overrides there have no effect.
 - Evidence: `pnpm audit` 0 high (3 moderate: uuid via @testcontainers/postgresql, decode-uri-component); gate negative test fails on one added `#123456`.
+
+## 2026-09-26 - All pnpm overrides in package.json
+
+- Decision (Chief): the `react` 19.2.3, `react-dom` 19.2.3, `better-auth` 1.6.27 overrides move from `pnpm-workspace.yaml` to `package.json` `pnpm.overrides`, so every override is in the one place pnpm 9.15.0 reads.
+- Evidence: lockfile keeps all 2833 resolved package entries; only react/react-dom/better-auth specifiers and peer ranges change.

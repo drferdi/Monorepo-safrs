@@ -38,6 +38,8 @@
   - *Inherited Failures:* Log baseline -> evaluate delta -> prevent new regressions -> proceed.
   - *Active Collision:* Halt mutations on conflicting path -> identify conflict -> resolve ownership. Single-writer applies per bounded scope, not globally.
 - **Git Worktrees:** Create parallel worktrees strictly under `../Monorepo.worktrees/<branch-name>`. Never inside repo root.
+- **Windows Shell Quirks:** A user-level RTK hook rewrites Shell `git` to `rtk git` and may filter output; use `git.exe` for raw diffs. Worktree "uncommitted edits" are often CRLF-only; confirm with `git.exe diff --ignore-cr-at-eol --stat` before discarding.
+- **pnpm Overrides:** pnpm 9.x ignores `overrides` in `pnpm-workspace.yaml`; capsules on pnpm 9 put overrides in `package.json` `pnpm.overrides`.
 - **Attribution:** Every agent git commit must include trailer: `Co-Authored-By: <Agent/Vendor> <email>`.
 
 ## Risk Tiers (`.safrs/policy.json`)

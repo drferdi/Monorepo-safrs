@@ -2,6 +2,14 @@
 
 Append-only. Terbaru di atas.
 
+## 2026-09-25 — Dockerfile.avery mengikuti skema `patches[]`
+
+Chief mengizinkan: overlay image menerapkan setiap entri `patches[]` di `manifest.json` berurutan (sha256 before → `patch -p1` sekali per entri → sha256 after), fallback ke skema lama satu entri, setara `scripts/apply-hermes-patches.ps1`. Marker `APPLIED` mencatat daftar patch. Tanpa deploy.
+
+## 2026-09-25 — Kontrak standalone kapsul (packaging saja)
+
+Avery punya `project.contract.json` sendiri: pnpm lokal (`package.json` + `pnpm-workspace.yaml` + lockfile, Electron dipin `43.4.1`, tanpa `catalog:`), test Python stdlib lewat `scripts/run_tests.py`, build `compileall`, run = konsol Electron `--smoke` (keluar 0 setelah renderer termuat), deploy dry-run offline `scripts/deploy_dry_run.py`. Perilaku klinis/agen tidak diubah. Deploy dry-run sengaja memeriksa kecocokan skema `patches/hermes-0.20.5/manifest.json` dengan `deploy/Dockerfile.avery`.
+
 ## 2026-08-28 — DM Founding Core lewat LID
 
 Chief: anggota boleh **DM** Avery. Otorisasi Hermes memakai `.env` `WHATSAPP_ALLOWED_USERS` (bukan hanya YAML `allow_from`). Env harus berisi nomor **dan** LID. Daftar yang sama juga mengizinkan sebut nama di grup; bila grup harus Chief-only, itu keputusan terpisah yang belum diambil.

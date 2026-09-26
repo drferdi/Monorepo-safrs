@@ -1,8 +1,18 @@
 # HANDOFF — Avery (WhatsApp Home Agent)
 
-Last updated: 2026-08-28
+Last updated: 2026-09-25
 
 Baca ini di setiap sesi Avery. **Ditimpa**, bukan ditambah. Keputusan durable: `DECISIONS.md`.
+
+## Standalone contract (branch `feat/avery-standalone`, task `TASK-20260925-AVERY-STANDALONE`, REVIEW)
+
+Kontrak `project.contract.json` + pnpm lokal + `scripts/run_tests.py` / `deploy_dry_run.py` / `pnpm.mjs` + mode `--smoke` di `console/main.js`. Entri known-nonconformance avery dihapus.
+
+`deploy/Dockerfile.avery` kini menerapkan `patches[]` berurutan (izin Chief 2026-09-25); diuji dengan simulasi patch berantai, **belum** diuji `docker build` nyata, belum dideploy.
+
+Verifikasi (rebase ke `main` 481801fc, tanpa `node_modules`): `verify healthcare/avery` → RESULT PASS (lint/typecheck SKIP beralasan). `pnpm governance`: semua lolos kecuali `check_sensitive_changes.py`, karena change set menyentuh `.safrs/known-nonconformance.json` bersama implementasi kapsul.
+
+Berikutnya: integrity review Chief (`.safrs/reviews/verification-integrity.json`), lalu merge.
 
 ## Keadaan sekarang
 

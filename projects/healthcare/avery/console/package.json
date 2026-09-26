@@ -16,6 +16,6 @@
   "author": "Sentra Artificial Intelligence",
   "license": "UNLICENSED",
   "devDependencies": {
-    "electron": "catalog:"
+    "electron": "43.4.1"
   }
 }

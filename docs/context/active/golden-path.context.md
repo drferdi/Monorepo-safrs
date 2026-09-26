@@ -1,9 +1,10 @@
 # Context: Golden Path
 
 ## Metadata
+
 - Slug: golden-path
 - Created: 2025-2026 (TBD exact date from git history)
-- Lead Agent: Cursor / Claude + shared @safrs/* packages
+- Lead Agent: Cursor / Claude
 - Domain: internal / infrastructure / reference implementation
 - Status: active
 - Priority: p1 (reference implementation — enables all other SAFRS migrations)
@@ -17,9 +18,11 @@ Golden Path is the reference implementation and proof-of-concept that demonstrat
 The project has one explicit purpose and four explicit non-goals:
 
 **Purpose:**
-- Prove that the `@safrs/*` shared package ecosystem can support a full-stack application with end-to-end type safety from database schema to frontend props
+
+- Prove that the `@safrs/*` package set can support a full-stack application with end-to-end type safety from database schema to frontend props, inside one standalone capsule
 
 **Non-Goals (explicitly out of scope):**
+
 1. NOT a product with branding, marketing, or external users
 2. NOT a production deployment with real traffic or SLAs
 3. NOT an authentication system (no login, no users, no sessions)
@@ -27,6 +30,7 @@ The project has one explicit purpose and four explicit non-goals:
 5. NOT payment, email, AI, or capability-pack integration (stripped to core stack only)
 
 Success criteria:
+
 - Database schema defined in Prisma and auto-generating TypeScript types
 - API endpoints in Hono with full type safety (request validation, response types)
 - Next.js frontend consuming typed API with compile-time type checking
@@ -35,11 +39,12 @@ Success criteria:
 
 ## Architecture Overview
 
-Golden Path is the canonical implementation of the SAFRS typed stack. It consumes the shared `@safrs/*` packages and demonstrates how all capsules should eventually be structured.
+Golden Path is a reference implementation of the SAFRS typed stack and a capsule like any other: it is not a root demonstrator, it is excluded from the root pnpm workspace, and root CI does not run it (Chief, 2026-09-25). It owns its pnpm workspace, lockfile, and `project.contract.json`, and carries local snapshots of the `@safrs/*` and `@sentra/token` packages it uses under `packages/`; it never consumes root `packages/`.
 
 ### Technology Stack
+
 | Layer | Technology | Package | Purpose |
-|-------|-----------|---------|---------|
+| --- | --- | --- | --- |
 | Frontend | Next.js | `@safrs/web` | React framework with SSR/SSG support |
 | API Adapter | Hono | `@safrs/api` | Type-safe HTTP API framework |
 | Environment | Config management | `@safrs/env` | Type-safe environment variable validation |
@@ -48,7 +53,8 @@ Golden Path is the canonical implementation of the SAFRS typed stack. It consume
 | Type Safety | TypeScript | Cross-cutting | End-to-end: Prisma schema -> API types -> frontend props |
 
 ### Type Safety Flow
-```
+
+```text
 Prisma Schema (schema.prisma)
     ↓ prisma generate
 Prisma Client (TypeScript types)
@@ -61,14 +67,14 @@ UI Elements with full type safety at compile time
 ```
 
 ### Project Structure
-```
+
+```text
 golden-path/
   apps/
-    web/              → Next.js frontend (consumes @safrs/web)
-  packages/
-    (none — uses monorepo root packages)
-  prisma/
-    schema.prisma     → Database schema definition
+    web/              → Next.js frontend (@safrs/web)
+  packages/           → capsule-local snapshots: api, config, database, env, schemas, telemetry, token, ui
+    database/prisma/  → Database schema definition
+  scripts/            → pnpm wrapper, Next.js production build, deploy dry run, token gate
   src/
     api/              → Hono API routes
     lib/              → Shared utilities
@@ -77,27 +83,25 @@ golden-path/
 ```
 
 ### Quality Gates
-Golden Path enforces strict quality gates that all SAFRS-based capsules must pass:
+
+All commands run from the capsule root (`projects/internal/golden-path/`), as declared in `project.contract.json`:
 
 ```bash
-# First-run diagnosis
-pnpm run doctor
-
-# Quality gates (must all pass)
-pnpm --filter @safrs/web lint        # Code style and formatting
-pnpm --filter @safrs/web typecheck   # TypeScript compilation
-pnpm --filter @safrs/web test        # Unit and integration tests
-pnpm --filter @safrs/web build       # Production build
-
-# End-to-end browser journey
-pnpm test:e2e                         # Playwright or similar E2E tests
+node scripts/pnpm.mjs install --frozen-lockfile
+node scripts/pnpm.mjs run lint        # Biome
+node scripts/pnpm.mjs run typecheck   # prisma generate + TypeScript
+node scripts/pnpm.mjs run test        # unit tests + capsule token gate
+node scripts/pnpm.mjs run build       # Next.js production build
 ```
+
+Standalone proof (from the Monorepo root): `node tools/project-standalone/src/cli.mjs verify internal/golden-path` extracts the capsule and runs install, lint, typecheck, test, build, deploy dry run, `next start` on 127.0.0.1:3390, and a smoke `GET /` -> 200.
 
 ## Key Decisions
 
 | Date | Decision | Rationale | Owner | Impact | Status |
-|------|----------|-----------|-------|--------|--------|
-| 2026 | Use @safrs/* shared packages | Centralizes common functionality (auth, database, API patterns, UI components) across all capsules. Reduces duplication and ensures consistency. | Chief | Architecture standard | Enforced |
+| --- | --- | --- | --- | --- | --- |
+| 2026 | Use @safrs/* shared packages | Centralizes common functionality (auth, database, API patterns, UI components) across all capsules. Reduces duplication and ensures consistency. | Chief | Architecture standard | Superseded 2026-09-25 |
+| 2026-09-25 | Standalone capsule with localized package snapshots | Root packages are private and unpublished; capsules may not consume root `packages/`. Golden Path is excluded from the root workspace and root CI and passes standalone verify. Evidence: `projects/internal/golden-path/.agents/DECISIONS.md`. | Chief | Capsule standalone contract | Enforced |
 | 2026 | No production deploy | Explicitly scoped as proof-of-concept. Production concerns (scaling, monitoring, security hardening) add complexity that distracts from the core type-safety demonstration. | Chief | Scope boundary | Enforced |
 | 2026 | No authentication system | Auth is a complex domain (sessions, JWT, OAuth, password hashing). Adding auth to a POC creates noise. Auth will be added as a separate reference implementation after Golden Path passes. | Chief | Scope boundary | Enforced |
 | 2026 | Synthetic demo data only | Using real data in a POC creates privacy and compliance risks. Synthetic data enables free experimentation and public sharing of the codebase. | Chief | Data strategy | Enforced |
@@ -137,8 +141,8 @@ pnpm test:e2e                         # Playwright or similar E2E tests
 ## Blockers & Dependencies
 
 | # | Blocker | Severity | Dependency | ETA | Owner | Impact if Unresolved | Mitigation |
-|---|---------|----------|------------|-----|-------|---------------------|------------|
-| 1 | Shared package stability | High | @safrs/api, @safrs/database, @safrs/web must be stable and documented | TBD | Chief | Golden Path cannot demonstrate type safety if shared packages are broken or changing | Freeze shared package APIs for Golden Path duration; version lock |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Shared package stability | Resolved 2026-09-25 | Packages are now capsule-local snapshots | — | Chief | Root package changes no longer affect Golden Path | Snapshots evolve with the capsule |
 | 2 | Type generation pipeline | High | Prisma -> TypeScript types auto-generation must work reliably | TBD | Chief | Manual type maintenance defeats the purpose; introduces human error | Automate `prisma generate` in pre-build hook; fail build if generation fails |
 | 3 | E2E test environment | Medium | Headless browser + test database setup in CI | TBD | Chief | Cannot verify end-to-end flow automatically; relies on manual testing | Use Playwright with `playwright-test` and testcontainers for PostgreSQL |
 | 4 | Documentation for other capsules | Medium | Clear runbook showing how to replicate Golden Path pattern | TBD | Chief | Other capsule developers cannot learn from Golden Path; adoption blocked | Document every step in `docs/golden-path-runbook.md`; include video walkthrough |
@@ -146,24 +150,25 @@ pnpm test:e2e                         # Playwright or similar E2E tests
 ## Related Projects
 
 | Project | Relationship | Data Flow | Notes |
-|---------|-------------|-----------|-------|
+| --- | --- | --- | --- |
 | [SentraBot](sentrabot.context.md) | Primary migration target | SentraBot will gradually adopt @safrs/* patterns from Golden Path | SentraBot is the highest-value migration because it is the core revenue product. Priority order: packages/contracts -> packages/db -> packages/ui-tokens. |
 | [Avery](avery.context.md) | Secondary migration target | Avery (Hermes/SQLite) will evaluate migration to @safrs/* after Golden Path validation | Decision pending: absorb Hermes into @safrs/* layer or maintain as domain-specific framework. Golden Path success supports convergence. |
 | [Control Center](control-center.context.md) | Monitoring consumer | Control Center will consume Golden Path health metrics as the canonical SAFRS health endpoint pattern | Golden Path must implement the standard health endpoint that Control Center expects. |
-| [Portfolio Dr. Novia](portfolio-drnovia.context.md) | Architectural contrast | None | Dr. Novia uses standalone vendored approach; Golden Path uses full @safrs/* stack. Both are valid patterns for different project types. |
+| [Portfolio Dr. Novia](portfolio-drnovia.context.md) | Architectural contrast | None | Both are standalone capsules with vendored dependencies; Golden Path vendors the full @safrs/* stack as local snapshots. |
 
 ## Session Log
 
 | # | Date | Agent | Mode | Summary | Outcomes |
-|---|------|-------|------|---------|----------|
+| --- | --- | --- | --- | --- | --- |
 | 001 | 2026-09-14 | Vida (external) | Observation | Discovered during workspace scan as internal infrastructure/reference capsule | Confirmed Next.js + Hono + PostgreSQL + @safrs/* stack; identified as proof-of-concept |
+| 002 | 2026-09-25 | Cursor | Implementation | Standalone capsule merged to `main` (`01587ee3`): localized packages, `project.contract.json`, next 16.3.6 | Standalone verify PASS; removed from root workspace, root CI, and known non-conformance |
 
 ## Knowledge Base
 
 ### Key Documents
 
 | # | Document | Path | Type | Sensitivity | Last Modified |
-|---|----------|------|------|-----------|---------------|
+| --- | --- | --- | --- | --- | --- |
 | 1 | Golden Path README | `projects/internal/golden-path/README.md` | Product | Internal | 2026-09-02 |
 | 2 | Golden Path AGENTS.md | `projects/internal/golden-path/AGENTS.md` | Governance | Internal | 2026-09-02 |
 
@@ -172,4 +177,4 @@ pnpm test:e2e                         # Playwright or similar E2E tests
 - **Reference Implementation as Force Multiplier**: Golden Path's value is not in the demo application itself but in the pattern it establishes. Every subsequent SAFRS-based capsule will copy its structure, its quality gates, and its type-safety patterns. A well-designed Golden Path accelerates all future development; a poorly designed one propagates technical debt.
 - **Type Safety as Quality Gate**: The requirement that all type mismatches be caught at compile time (not runtime) is a fundamental architectural principle. It eliminates an entire class of bugs (API contract violations) that traditionally require integration testing to catch. This shifts the "tax" from testing to type design.
 - **Scope Discipline**: The explicit non-goals (no auth, no production deploy, no real data) demonstrate mature product management. Scope creep is the primary killer of proof-of-concept projects. Golden Path's narrow focus maximizes the probability of delivering a working demonstration.
-- **Package Ecosystem Dependency**: Golden Path's success is inseparable from the stability of the `@safrs/*` packages. If those packages are unstable or poorly documented, Golden Path fails regardless of its own code quality. This creates a critical path: stabilize shared packages -> validate with Golden Path -> migrate other capsules.
+- **Package Independence**: Golden Path no longer depends on root `packages/`; it carries local snapshots, so root package changes cannot break it and the capsule can be extracted and run on its own.
