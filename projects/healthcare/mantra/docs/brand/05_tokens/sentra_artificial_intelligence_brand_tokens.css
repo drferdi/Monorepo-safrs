@@ -1,0 +1,15 @@
+/* Sentra Artificial Intelligence Brand Tokens - v1.0 */
+:root {
+  --sentra-ai-black: #000000;
+  --sentra-ai-white: #FFFFFF;
+  --sentra-ai-ink: #0A0A0A;
+  --sentra-ai-muted: #A3A3A3;
+  --sentra-ai-surface: #111111;
+  --sentra-ai-radius-sm: 8px;
+  --sentra-ai-radius-md: 16px;
+  --sentra-ai-radius-lg: 28px;
+  --sentra-ai-font-sans: Inter, Geist, Satoshi, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --sentra-ai-logo-clearspace: 0.5em;
+}
+.sentra-ai-brand-dark { background: var(--sentra-ai-black); color: var(--sentra-ai-white); }
+.sentra-ai-brand-light { background: var(--sentra-ai-white); color: var(--sentra-ai-black); }

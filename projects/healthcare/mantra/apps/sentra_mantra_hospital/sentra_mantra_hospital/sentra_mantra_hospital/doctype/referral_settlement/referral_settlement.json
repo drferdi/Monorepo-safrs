@@ -1,0 +1,267 @@
+{
+ "actions": [],
+ "autoname": "format:REF-SETTLEMENT-{YYYY}-{#####}",
+ "creation": "2026-07-26 00:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Document",
+ "engine": "InnoDB",
+ "field_order": [
+  "referral_handover",
+  "referral_partner",
+  "company",
+  "amount",
+  "payment_channel",
+  "mode_of_payment",
+  "payment_status",
+  "workflow_state",
+  "evidence_section",
+  "cash_receiver_name",
+  "cash_received_at",
+  "cash_receipt_attachment",
+  "transfer_reference",
+  "transfer_proof_attachment",
+  "accounting_section",
+  "service_item",
+  "expense_account",
+  "cost_center",
+  "purchase_invoice",
+  "payment_entry",
+  "verification_section",
+  "verified_by",
+  "verified_at",
+  "paid_by",
+  "paid_at",
+  "exception_reason"
+ ],
+ "fields": [
+  {
+   "fieldname": "referral_handover",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Referral Handover",
+   "options": "Referral Handover",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "referral_partner",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Referral Partner",
+   "options": "Referral Partner",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "payment_channel",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Payment Channel",
+   "options": "Cash\nTransfer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "mode_of_payment",
+   "fieldtype": "Link",
+   "label": "Mode of Payment",
+   "options": "Mode of Payment"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "payment_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Payment Status",
+   "options": "Pending\nException\nUnreconciled\nPayment Failed\nPaid\nRejected",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "default": "Draft",
+   "fieldname": "workflow_state",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Workflow State",
+   "options": "Draft\nFinance Review\nException\nDirector Approved\nReady to Pay\nPayment Failed\nPaid\nRejected",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "evidence_section",
+   "fieldtype": "Section Break",
+   "label": "Payment Evidence"
+  },
+  {
+   "depends_on": "eval:doc.payment_channel == 'Cash'",
+   "fieldname": "cash_receiver_name",
+   "fieldtype": "Data",
+   "label": "Cash Receiver Name"
+  },
+  {
+   "depends_on": "eval:doc.payment_channel == 'Cash'",
+   "fieldname": "cash_received_at",
+   "fieldtype": "Datetime",
+   "label": "Cash Received At"
+  },
+  {
+   "depends_on": "eval:doc.payment_channel == 'Cash'",
+   "fieldname": "cash_receipt_attachment",
+   "fieldtype": "Attach",
+   "label": "Cash Receipt Attachment"
+  },
+  {
+   "depends_on": "eval:doc.payment_channel == 'Transfer'",
+   "fieldname": "transfer_reference",
+   "fieldtype": "Data",
+   "label": "Transfer Reference"
+  },
+  {
+   "depends_on": "eval:doc.payment_channel == 'Transfer'",
+   "fieldname": "transfer_proof_attachment",
+   "fieldtype": "Attach",
+   "label": "Transfer Proof Attachment"
+  },
+  {
+   "fieldname": "accounting_section",
+   "fieldtype": "Section Break",
+   "label": "Accounting"
+  },
+  {
+   "fieldname": "service_item",
+   "fieldtype": "Link",
+   "label": "Service Item Snapshot",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "expense_account",
+   "fieldtype": "Link",
+   "label": "Expense Account Snapshot",
+   "options": "Account",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center Snapshot",
+   "options": "Cost Center",
+   "read_only": 1
+  },
+  {
+   "fieldname": "purchase_invoice",
+   "fieldtype": "Link",
+   "label": "Purchase Invoice",
+   "options": "Purchase Invoice",
+   "read_only": 1
+  },
+  {
+   "fieldname": "payment_entry",
+   "fieldtype": "Link",
+   "label": "Payment Entry",
+   "options": "Payment Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "verification_section",
+   "fieldtype": "Section Break",
+   "label": "Verification"
+  },
+  {
+   "fieldname": "verified_by",
+   "fieldtype": "Link",
+   "label": "Verified By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "verified_at",
+   "fieldtype": "Datetime",
+   "label": "Verified At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "paid_by",
+   "fieldtype": "Link",
+   "label": "Paid By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "paid_at",
+   "fieldtype": "Datetime",
+   "label": "Paid At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "exception_reason",
+   "fieldtype": "Small Text",
+   "label": "Exception Reason"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-07-26 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Sentra MANTRA Hospital",
+ "name": "Referral Settlement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Nursing User"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Accounts User",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Accounts Manager",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "MANTRA Director",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

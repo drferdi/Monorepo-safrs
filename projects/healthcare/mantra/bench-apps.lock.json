@@ -1,0 +1,119 @@
+{
+  "$comment": "Upstream Frappe apps for Sentra MANTRA, read on 2026-09-27 from the bench checkouts in abyss-monorepo apps/healthcare/mantra/apps and from sites/apps.json. `commit` is the checked-out HEAD (authoritative); `appsJson` is what bench recorded. Local changes in the checkouts were file-mode or yarn.lock only; no upstream code was patched. `repository` is the `upstream` remote of each checkout, written as its public HTTPS URL (2026-09-27).",
+  "bench": {
+    "frappeVersion": "15.114.0",
+    "python": ">=3.10,<3.15"
+  },
+  "apps": [
+    {
+      "name": "frappe",
+      "repository": "https://github.com/frappe/frappe.git",
+      "ref": "version-15",
+      "commit": "105b17938839f4e5c6cdff817d42afc40c3bcc32",
+      "version": "15.114.0",
+      "appsJson": {
+        "branch": null,
+        "commit": null
+      }
+    },
+    {
+      "name": "erpnext",
+      "repository": "https://github.com/frappe/erpnext.git",
+      "ref": "version-15",
+      "commit": "41038979ec51a7f4f3f0cabd6d308751da8dd5c9",
+      "version": "15.116.0",
+      "appsJson": {
+        "branch": "version-15",
+        "commit": "41038979ec51a7f4f3f0cabd6d308751da8dd5c9"
+      }
+    },
+    {
+      "name": "hrms",
+      "repository": "https://github.com/frappe/hrms.git",
+      "ref": "version-15",
+      "commit": "ec01cc9755876de48b84de5f3bf20fbc3d7d8ab3",
+      "version": "15.62.2",
+      "appsJson": {
+        "branch": "version-15",
+        "commit": "ec01cc9755876de48b84de5f3bf20fbc3d7d8ab3"
+      }
+    },
+    {
+      "name": "healthcare",
+      "repository": "https://github.com/earthians/marley.git",
+      "ref": "version-15",
+      "commit": "2ed7b0c9a35b57aa80816058d601da932d110b7e",
+      "version": "15.2.0",
+      "appsJson": {
+        "branch": "version-15",
+        "commit": "2ed7b0c9a35b57aa80816058d601da932d110b7e"
+      }
+    },
+    {
+      "name": "helpdesk",
+      "repository": "https://github.com/frappe/helpdesk.git",
+      "ref": "v1.27.0",
+      "commit": "518c1c97588f6d586c72cb343f9b079840e94a35",
+      "version": "1.27.0",
+      "appsJson": {
+        "branch": "v1.27.0",
+        "commit": "518c1c97588f6d586c72cb343f9b079840e94a35"
+      }
+    },
+    {
+      "name": "insights",
+      "repository": "https://github.com/frappe/insights.git",
+      "ref": "v3.12.2",
+      "commit": "db795c4be3395d7ab5d7a081f168dbe66af8e003",
+      "version": "3.12.2",
+      "appsJson": {
+        "branch": "v3.12.2",
+        "commit": "db795c4be3395d7ab5d7a081f168dbe66af8e003"
+      }
+    },
+    {
+      "name": "telephony",
+      "repository": "https://github.com/frappe/telephony.git",
+      "ref": "develop",
+      "commit": "e04272a4d6b78862cfdbde4256a06b2cab79a607",
+      "version": "0.0.1",
+      "appsJson": {
+        "branch": "develop",
+        "commit": "e04272a4d6b78862cfdbde4256a06b2cab79a607"
+      }
+    },
+    {
+      "name": "wiki",
+      "repository": "https://github.com/frappe/wiki.git",
+      "ref": "v2.0.1",
+      "commit": "7fe4ab2acfc9ac48abef85efdb2e5aeacccaecfb",
+      "version": "2.0.0",
+      "appsJson": {
+        "branch": "v2.0.1",
+        "commit": "3b894f5fe8d1f6e0dd630dea96d1787c8c576b1a"
+      }
+    },
+    {
+      "name": "pdf_on_submit",
+      "repository": "https://github.com/alyf-de/erpnext_pdf-on-submit.git",
+      "ref": "v15.6.0",
+      "commit": "b38047157acf58a8a5a6fd3f230f394fbcdc02d7",
+      "version": "15.6.0",
+      "appsJson": {
+        "branch": "v15.6.0",
+        "commit": "b38047157acf58a8a5a6fd3f230f394fbcdc02d7"
+      }
+    },
+    {
+      "name": "erpnext_indonesia_localization",
+      "repository": "https://github.com/agile-technica/erpnext-indonesia-localization.git",
+      "ref": "v1.4.1",
+      "commit": "b0a26a1fdcbb23f69e4b043565a96e78eddc766d",
+      "version": "1.4.1",
+      "appsJson": {
+        "branch": "v1.4.1",
+        "commit": "b0a26a1fdcbb23f69e4b043565a96e78eddc766d"
+      }
+    }
+  ]
+}

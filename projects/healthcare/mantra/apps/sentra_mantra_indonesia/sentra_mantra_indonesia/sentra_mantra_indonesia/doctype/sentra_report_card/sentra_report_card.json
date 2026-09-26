@@ -1,0 +1,53 @@
+{
+ "doctype": "DocType",
+ "name": "Sentra Report Card",
+ "module": "Sentra MANTRA Indonesia",
+ "autoname": "field:report_code",
+ "engine": "InnoDB",
+ "custom": 0,
+ "track_changes": 1,
+ "field_order": [
+  "report_code", "report_name", "kategori", "divisi", "jenis", "deskripsi",
+  "sec_regulasi", "dasar_hukum", "penerbit", "form_versi", "tanggal_berlaku",
+  "tanggal_review", "status", "report_group",
+  "sec_akuntabilitas", "role_penyusun", "role_validator", "role_penyetuju", "role_pengirim",
+  "sec_jadwal", "frekuensi", "tenggat_internal_hari", "deadline_eksternal_hari",
+  "sec_tujuan", "portal_name", "portal_url", "sumber_data", "bukti_wajib", "kerahasiaan"
+ ],
+ "fields": [
+  {"fieldname": "report_code", "fieldtype": "Data", "label": "Kode Laporan", "reqd": 1, "unique": 1},
+  {"fieldname": "report_name", "fieldtype": "Data", "label": "Nama Laporan", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "kategori", "fieldtype": "Select", "label": "Kategori Taksonomi", "reqd": 1, "in_list_view": 1, "options": "A - Pelaporan nasional RS\nB - Mutu & keselamatan pasien\nC - Surveilans maternal-neonatal-anak\nD - Program klinis & kesmas\nE - Keuangan/klaim/statutory\nF - SDM/fasilitas/peralatan\nG - Pemda & akreditasi\nH - Manajemen internal"},
+  {"fieldname": "divisi", "fieldtype": "Select", "label": "Divisi Penanggung Jawab", "reqd": 1, "options": "01 - Rekam Medis (RM) & SIMRS\n02 - Komite Mutu, PPI, & Keselamatan Pasien\n03 - Pelayanan Medis, Keperawatan, & Kebidanan\n04 - Instalasi Farmasi\n05 - Sanitasi / K3RS\n06 - Bagian SDM / Kepegawaian (HRD)\n07 - Keuangan"},
+  {"fieldname": "jenis", "fieldtype": "Select", "label": "Jenis", "options": "Eksternal\nInternal", "default": "Eksternal"},
+  {"fieldname": "deskripsi", "fieldtype": "Small Text", "label": "Deskripsi"},
+  {"fieldname": "sec_regulasi", "fieldtype": "Section Break", "label": "Kendali Regulasi"},
+  {"fieldname": "dasar_hukum", "fieldtype": "Small Text", "label": "Dasar Hukum / Teknis"},
+  {"fieldname": "penerbit", "fieldtype": "Data", "label": "Penerbit Ketentuan"},
+  {"fieldname": "form_versi", "fieldtype": "Data", "label": "Form / Versi"},
+  {"fieldname": "tanggal_berlaku", "fieldtype": "Date", "label": "Tanggal Berlaku"},
+  {"fieldname": "tanggal_review", "fieldtype": "Date", "label": "Tanggal Review Berikutnya"},
+  {"fieldname": "status", "fieldtype": "Select", "label": "Status Register", "reqd": 1, "in_list_view": 1, "in_standard_filter": 1, "options": "Perlu Verifikasi\nAktif\nRetired", "default": "Perlu Verifikasi"},
+  {"fieldname": "report_group", "fieldtype": "Data", "label": "Grup Versi Laporan", "description": "Card se-grup = versi dari laporan yang sama; hanya satu boleh Aktif."},
+  {"fieldname": "sec_akuntabilitas", "fieldtype": "Section Break", "label": "Akuntabilitas (per jabatan/role)"},
+  {"fieldname": "role_penyusun", "fieldtype": "Link", "label": "Role Penyusun", "options": "Role"},
+  {"fieldname": "role_validator", "fieldtype": "Link", "label": "Role Validator", "options": "Role"},
+  {"fieldname": "role_penyetuju", "fieldtype": "Link", "label": "Role Penyetuju", "options": "Role"},
+  {"fieldname": "role_pengirim", "fieldtype": "Link", "label": "Role Pengirim", "options": "Role"},
+  {"fieldname": "sec_jadwal", "fieldtype": "Section Break", "label": "Jadwal"},
+  {"fieldname": "frekuensi", "fieldtype": "Select", "label": "Frekuensi", "reqd": 1, "options": "Harian\nBulanan\nTriwulanan\nTahunan\nEvent-based", "default": "Bulanan"},
+  {"fieldname": "tenggat_internal_hari", "fieldtype": "Int", "label": "Tenggat Internal (hari setelah akhir periode)", "default": "5"},
+  {"fieldname": "deadline_eksternal_hari", "fieldtype": "Int", "label": "Deadline Eksternal (hari setelah akhir periode)", "default": "10"},
+  {"fieldname": "sec_tujuan", "fieldtype": "Section Break", "label": "Tujuan, Sumber, dan Bukti"},
+  {"fieldname": "portal_name", "fieldtype": "Data", "label": "Nama Portal Tujuan"},
+  {"fieldname": "portal_url", "fieldtype": "Data", "label": "URL Portal", "options": "URL", "description": "Link resmi saja. Password portal TIDAK PERNAH disimpan di sistem ini."},
+  {"fieldname": "sumber_data", "fieldtype": "Small Text", "label": "Sumber Data Otoritatif"},
+  {"fieldname": "bukti_wajib", "fieldtype": "Small Text", "label": "Bukti yang Dipersyaratkan"},
+  {"fieldname": "kerahasiaan", "fieldtype": "Select", "label": "Kelas Kerahasiaan", "options": "Biasa\nTerbatas", "default": "Biasa"}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "export": 1, "report": 1}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

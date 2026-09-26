@@ -1,0 +1,197 @@
+/* Sidebar workspace jadi bar horizontal di atas halaman (Chief, 2026-07-15).
+   Scoped ke #page-Workspaces saja — sidebar form/list view tidak tersentuh.
+   Hapus file ini + hook app_include_css untuk kembali ke sidebar kiri. */
+
+#page-Workspaces .layout-side-section,
+#page-Workspaces .layout-main-section-wrapper {
+	flex: 0 0 100%;
+	width: 100%;
+	max-width: 100%;
+}
+
+#page-Workspaces .layout-side-section {
+	position: static !important;
+	height: auto !important;
+	max-height: none !important;
+	overflow: visible !important;
+	padding-bottom: 0;
+	border-bottom: 3px double var(--border-color);
+	margin-bottom: var(--margin-md);
+}
+
+/* sidebar bawaan sticky setinggi layar — netralkan supaya konten tidak
+   terdorong ke bawah lipatan */
+#page-Workspaces .layout-side-section .list-sidebar,
+#page-Workspaces .layout-side-section .overlay-sidebar {
+	position: static !important;
+	height: auto !important;
+	max-height: none !important;
+	min-height: 0 !important;
+	overflow: visible !important;
+	opacity: 1;
+	pointer-events: auto;
+	padding-bottom: 0;
+}
+
+#page-Workspaces .desk-sidebar,
+#page-Workspaces .standard-sidebar-section {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 2px 4px;
+}
+
+#page-Workspaces .standard-sidebar-section {
+	margin: 0 0 var(--margin-sm) 0;
+}
+
+/* label seksi ("Public" dst.) tidak relevan di bar horizontal */
+#page-Workspaces .standard-sidebar-label {
+	display: none;
+}
+
+#page-Workspaces .sidebar-item-container {
+	width: auto;
+	flex: none;
+	position: relative;
+	/* sidebar vertikal bawaan memakai margin negatif (efek bleed) —
+	   di bar horizontal ini membuat item saling menimpa 6px */
+	margin: 0 !important;
+}
+
+#page-Workspaces .desk-sidebar-item {
+	white-space: nowrap;
+	margin: 0;
+	position: relative;
+}
+
+/* tombol kontrol workspace (drag/duplicate/edit) melebarkan pil item aktif
+   sampai menimpa tetangganya — tidak relevan di bar horizontal */
+#page-Workspaces .sidebar-item-control {
+	display: none !important;
+}
+
+/* aksen: 3 bulatan mac di kiri bar (sejajar baris pertama) */
+#page-Workspaces .desk-sidebar {
+	position: relative;
+	height: auto !important;
+	max-height: none !important;
+	min-height: 0 !important;
+	overflow: visible !important;
+	padding-left: 46px;
+	padding-bottom: 0;
+}
+#page-Workspaces .desk-sidebar::before {
+	content: "";
+	position: absolute;
+	left: 10px;
+	top: 12px;
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background: #ec6a5e;
+	box-shadow: 11px 0 0 #f4bf4f, 22px 0 0 #61c554;
+	opacity: 0.75;
+}
+
+/* aksen motion: garis tipis tumbuh dari kiri saat hover; penuh saat aktif */
+#page-Workspaces .desk-sidebar-item::after {
+	content: "";
+	position: absolute;
+	left: 8px;
+	right: 8px;
+	bottom: -1px;
+	height: 1px;
+	background: var(--text-muted, #888);
+	transform: scaleX(0);
+	transform-origin: left center;
+	transition: transform 160ms ease;
+}
+#page-Workspaces .desk-sidebar-item:hover::after {
+	transform: scaleX(1);
+}
+#page-Workspaces .desk-sidebar-item.selected::after {
+	transform: scaleX(1);
+	background: var(--primary-color, var(--primary, #888));
+}
+
+/* kontainer anak yang kosong ikut dirender sebagai "pil" — sembunyikan */
+#page-Workspaces .sidebar-child-item:empty {
+	display: none;
+}
+
+/* anak grup tampil sebagai dropdown di bawah item induknya */
+#page-Workspaces .sidebar-child-item.nested-container:not(.hidden) {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	z-index: 100;
+	min-width: 200px;
+	padding: var(--padding-xs);
+	background: var(--card-bg);
+	border: 1px solid var(--border-color);
+	border-radius: var(--border-radius-md);
+	box-shadow: var(--shadow-md);
+}
+
+/* Tombol "+ Baru" (buat Workspace) di kanan bawah terlalu generik untuk
+   pengguna akhir (Chief, 2026-07-15) — workspace dikelola lewat kode
+   (workspace_nav.py), bukan dari UI. Tombol Edit tetap ada. */
+.workspace-footer .btn-new-workspace {
+	display: none !important;
+}
+
+/* Nama resmi RS di samping logo navbar kiri atas (Chief, 2026-07-15) */
+header.navbar .navbar-brand::after, .navbar .navbar-brand::after {
+	content: "RSIA Melinda dr. H. Achmad Iskandar";
+	margin-left: 10px;
+	font-size: 14px;
+	font-weight: 600;
+	letter-spacing: .01em;
+	color: var(--heading-color, var(--text-color));
+	white-space: nowrap;
+}
+@media (max-width: 991px) {
+	header.navbar .navbar-brand::after, .navbar .navbar-brand::after { content: "RSIA Melinda"; }
+}
+
+/* Attribution footer — Desk (Chief 2026-07-17) */
+.sentra-attribution {
+	position: fixed;
+	z-index: 102;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	pointer-events: none;
+	text-align: center;
+	padding: 8px 16px 10px;
+	font-size: 15px;
+	line-height: 22px;
+	letter-spacing: 0.01em;
+	color: var(--text-muted, #7c7c7c);
+	background: linear-gradient(
+		to top,
+		var(--bg-color, #f3f3f3) 55%,
+		transparent
+	);
+	pointer-events: none;
+}
+.sentra-attribution a {
+	pointer-events: auto;
+	color: inherit;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+.sentra-attribution a:hover {
+	color: var(--text-color, #171717);
+}
+body.has-sentra-attribution {
+	padding-bottom: 36px;
+}
+@media (max-width: 767px) {
+	.sentra-attribution {
+		font-size: 13px;
+		line-height: 20px;
+		padding: 6px 10px 8px;
+	}
+}

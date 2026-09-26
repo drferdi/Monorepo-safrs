@@ -1,0 +1,36 @@
+{
+ "doctype": "DocType",
+ "name": "Sentra Agent Definition",
+ "module": "Sentra MANTRA Core",
+ "autoname": "field:agent_code",
+ "engine": "InnoDB",
+ "custom": 0,
+ "track_changes": 1,
+ "field_order": [
+  "agent_code", "agent_name", "domain", "enabled",
+  "sec_jadwal", "schedule", "run_time", "max_cards_per_run", "audience_role",
+  "sec_read_scope", "read_scope",
+  "sec_rules", "rules"
+ ],
+ "fields": [
+  {"fieldname": "agent_code", "fieldtype": "Data", "label": "Kode Agen", "reqd": 1, "unique": 1, "in_list_view": 1},
+  {"fieldname": "agent_name", "fieldtype": "Data", "label": "Nama Agen", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "domain", "fieldtype": "Data", "label": "Bidang"},
+  {"fieldname": "enabled", "fieldtype": "Check", "label": "Aktif", "default": "0", "in_list_view": 1, "in_standard_filter": 1},
+  {"fieldname": "sec_jadwal", "fieldtype": "Section Break", "label": "Jadwal"},
+  {"fieldname": "schedule", "fieldtype": "Select", "label": "Jadwal", "options": "Harian\nMingguan\nBulanan", "default": "Harian", "reqd": 1, "in_standard_filter": 1},
+  {"fieldname": "run_time", "fieldtype": "Time", "label": "Jam Eksekusi", "default": "05:30:00"},
+  {"fieldname": "max_cards_per_run", "fieldtype": "Int", "label": "Batas Kartu per Eksekusi", "default": "3"},
+  {"fieldname": "audience_role", "fieldtype": "Link", "label": "Peran Penerima Kartu", "options": "Role", "reqd": 1},
+  {"fieldname": "sec_read_scope", "fieldtype": "Section Break", "label": "Izin Baca (daftar putih)"},
+  {"fieldname": "read_scope", "fieldtype": "Table", "label": "Read Scope", "options": "Sentra Agent Read Scope"},
+  {"fieldname": "sec_rules", "fieldtype": "Section Break", "label": "Aturan Pemicu"},
+  {"fieldname": "rules", "fieldtype": "Table", "label": "Rules", "options": "Sentra Agent Rule"}
+ ],
+ "permissions": [
+  {"role": "System Manager", "read": 1, "write": 1, "create": 1, "delete": 1, "export": 1, "report": 1, "print": 1, "email": 1, "share": 1}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "agent_name"
+}

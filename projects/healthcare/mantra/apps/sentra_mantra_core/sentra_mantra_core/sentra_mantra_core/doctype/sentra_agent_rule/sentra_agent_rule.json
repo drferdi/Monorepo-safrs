@@ -1,0 +1,24 @@
+{
+ "doctype": "DocType",
+ "name": "Sentra Agent Rule",
+ "module": "Sentra MANTRA Core",
+ "istable": 1,
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "custom": 0,
+ "field_order": ["rule_code", "description", "handler_path", "threshold_value", "threshold_unit", "threshold_secondary", "threshold_secondary_unit", "severity", "enabled"],
+ "fields": [
+  {"fieldname": "rule_code", "fieldtype": "Data", "label": "Kode Aturan", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "description", "fieldtype": "Data", "label": "Penjelasan", "in_list_view": 1},
+  {"fieldname": "handler_path", "fieldtype": "Data", "label": "Dotted Path Detektor", "reqd": 1, "description": "Wajib berada di bawah sentra_mantra_core.agents.detectors"},
+  {"fieldname": "threshold_value", "fieldtype": "Float", "label": "Ambang", "precision": "2"},
+  {"fieldname": "threshold_unit", "fieldtype": "Select", "label": "Satuan Ambang", "options": "IDR\nPersen\nHari\nJumlah", "default": "Jumlah"},
+  {"fieldname": "threshold_secondary", "fieldtype": "Float", "label": "Ambang Kedua", "precision": "2", "description": "Sebagian kondisi ditentukan dua angka, mis. 90 hari DAN nilai di atas Rp 5.000.000. Kosongkan bila aturan hanya butuh satu ambang."},
+  {"fieldname": "threshold_secondary_unit", "fieldtype": "Select", "label": "Satuan Ambang Kedua", "options": "\nIDR\nPersen\nHari\nJumlah"},
+  {"fieldname": "severity", "fieldtype": "Select", "label": "Tingkat Kartu", "options": "Mendesak\nPerlu Tinjauan\nPerlu Keputusan\nInformasi", "default": "Perlu Tinjauan", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "enabled", "fieldtype": "Check", "label": "Aktif", "default": "1", "in_list_view": 1}
+ ],
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

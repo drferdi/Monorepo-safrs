@@ -1,0 +1,40 @@
+services:
+  mariadb:
+    image: docker.io/mariadb:11.8.9
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:?Set MARIADB_ROOT_PASSWORD in the environment}
+      MARIADB_AUTO_UPGRADE: 1
+    volumes:
+      - mariadb-data:/var/lib/mysql
+
+  redis-cache:
+    image: docker.io/redis:8.8.3-alpine
+
+  redis-queue:
+    image: docker.io/redis:8.8.3-alpine
+
+  # Local SMTP catcher for dev: all outgoing mail lands in the Mailpit inbox
+  # at http://localhost:8025 — nothing is ever delivered externally.
+  mailpit:
+    image: docker.io/axllent/mailpit:v1.31.2
+    ports:
+      - 8025:8025
+
+  frappe:
+    image: docker.io/frappe/bench:v5.31.0
+    command: sleep infinity
+    environment:
+      - SHELL=/bin/bash
+    volumes:
+      - ..:/workspace:cached
+    working_dir: /workspace
+    ports:
+      - 8000-8005:8000-8005
+      - 9000-9005:9000-9005
+
+volumes:
+  mariadb-data:

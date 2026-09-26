@@ -1,0 +1,21 @@
+{
+ "doctype": "DocType",
+ "name": "Sentra Decision Evidence",
+ "module": "Sentra MANTRA Core",
+ "istable": 1,
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "custom": 0,
+ "field_order": ["label", "value", "raw_value", "source_doctype", "source_name", "tone"],
+ "fields": [
+  {"fieldname": "label", "fieldtype": "Data", "label": "Label Fakta", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "value", "fieldtype": "Data", "label": "Nilai Terformat", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "raw_value", "fieldtype": "Float", "label": "Nilai Mentah", "precision": "6"},
+  {"fieldname": "source_doctype", "fieldtype": "Data", "label": "DocType Sumber", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "source_name", "fieldtype": "Data", "label": "Nama Dokumen Sumber"},
+  {"fieldname": "tone", "fieldtype": "Select", "label": "Nada", "options": "Netral\nPositif\nPeringatan\nBahaya", "default": "Netral"}
+ ],
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

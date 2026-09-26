@@ -1,0 +1,18 @@
+{
+ "doctype": "DocType",
+ "name": "Sentra Report Defect",
+ "module": "Sentra MANTRA Indonesia",
+ "istable": 1,
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "custom": 0,
+ "field_order": ["deskripsi", "status", "resolved_note"],
+ "fields": [
+  {"fieldname": "deskripsi", "fieldtype": "Small Text", "label": "Deskripsi Defect", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "status", "fieldtype": "Select", "label": "Status", "options": "Open\nResolved", "default": "Open", "reqd": 1, "in_list_view": 1},
+  {"fieldname": "resolved_note", "fieldtype": "Data", "label": "Catatan Penyelesaian", "in_list_view": 1}
+ ],
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

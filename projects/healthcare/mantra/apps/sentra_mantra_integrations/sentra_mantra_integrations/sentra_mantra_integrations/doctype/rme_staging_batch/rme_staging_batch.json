@@ -1,0 +1,152 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "format:RME-BATCH-{YYYY}-{#####}",
+ "creation": "2026-07-19 00:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Document",
+ "engine": "InnoDB",
+ "field_order": [
+  "source_kind",
+  "connection_label",
+  "entity",
+  "capture_mode",
+  "status",
+  "started_at",
+  "finished_at",
+  "totals_section",
+  "total_records",
+  "new_records",
+  "matched_records",
+  "conflict_records",
+  "failed_records",
+  "notes"
+ ],
+ "fields": [
+  {
+   "fieldname": "source_kind",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Source Kind",
+   "reqd": 1
+  },
+  {
+   "fieldname": "connection_label",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Connection Label"
+  },
+  {
+   "fieldname": "entity",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Entity",
+   "options": "patient\nvisit",
+   "reqd": 1
+  },
+  {
+   "default": "Records",
+   "fieldname": "capture_mode",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Capture Mode",
+   "options": "Records\nAggregate",
+   "reqd": 1
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Draft\nRunning\nCompleted\nFailed",
+   "reqd": 1
+  },
+  {
+   "fieldname": "started_at",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Started At"
+  },
+  {
+   "fieldname": "finished_at",
+   "fieldtype": "Datetime",
+   "label": "Finished At"
+  },
+  {
+   "fieldname": "totals_section",
+   "fieldtype": "Section Break",
+   "label": "Totals"
+  },
+  {
+   "default": "0",
+   "fieldname": "total_records",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Total Records",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "new_records",
+   "fieldtype": "Int",
+   "label": "New Records",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "matched_records",
+   "fieldtype": "Int",
+   "label": "Matched Records",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "conflict_records",
+   "fieldtype": "Int",
+   "label": "Conflict Records",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "failed_records",
+   "fieldtype": "Int",
+   "label": "Failed Records",
+   "read_only": 1
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-07-19 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Sentra MANTRA Integrations",
+ "name": "RME Staging Batch",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "entity"
+}
