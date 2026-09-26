@@ -1,0 +1,37 @@
+[
+  {
+    "code": "L02.433",
+    "display": "Carbuncle of right upper limb",
+    "legacyCode": "L02"
+  },
+  {
+    "code": "K64.0",
+    "display": "Internal haemorrhoids, grade I (ICD-10-CM)",
+    "legacyCode": "I84"
+  },
+  {
+    "code": "K64.1",
+    "display": "Internal haemorrhoids, grade II (ICD-10-CM)",
+    "legacyCode": "I84"
+  },
+  {
+    "code": "N47.2",
+    "display": "Paraphimosis (ICD-10-CM)",
+    "legacyCode": "N47"
+  },
+  {
+    "code": "A03.9",
+    "display": "Shigellosis, unspecified (secondary code for Disentri Basiler)",
+    "legacyCode": "A03"
+  },
+  {
+    "code": "O70.1",
+    "display": "Second degree perineal laceration during delivery",
+    "legacyCode": "O70"
+  },
+  {
+    "code": "A91",
+    "display": "Dengue haemorrhagic fever (secondary, use when DHF confirmed)",
+    "legacyCode": "A90"
+  }
+]

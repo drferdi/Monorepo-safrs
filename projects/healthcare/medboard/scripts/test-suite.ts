@@ -1,0 +1,159 @@
+// Architected and built by Drferdi.
+import { spawn } from 'node:child_process'
+
+type Suite = {
+  name: string
+  aliases?: string[]
+  command: string
+  args: string[]
+}
+
+const suites: Suite[] = [
+  {
+    name: 'auth-hardening',
+    aliases: ['auth', 'security'],
+    command: process.execPath,
+    args: ['./node_modules/tsx/dist/cli.mjs', 'scripts/test-auth-hardening.ts'],
+  },
+  {
+    name: 'passkey-helpers',
+    aliases: ['passkey', 'webauthn'],
+    command: process.execPath,
+    args: ['./node_modules/tsx/dist/cli.mjs', '--test', 'scripts/test-passkey-helpers.ts'],
+  },
+  {
+    name: 'safety-net',
+    aliases: ['cdss', 'diagnosis'],
+    command: process.execPath,
+    args: ['./node_modules/tsx/dist/cli.mjs', 'scripts/test-cdss.ts'],
+  },
+  {
+    name: 'intelligence-route',
+    aliases: ['intelligence', 'trajectory', 'dashboard'],
+    command: process.execPath,
+    args: [
+      './node_modules/tsx/dist/cli.mjs',
+      '--test',
+      'src/hooks/useEncounterQueue.test.ts',
+      'src/hooks/useOperationalMetrics.test.ts',
+      'src/hooks/useTrajectoryAnalysis.test.ts',
+      'src/lib/clinical/trajectory-analyzer.test.ts',
+      'src/lib/cdss/diagnose-parser.test.ts',
+      'src/lib/emr/visit-history.test.ts',
+      'src/lib/vitals/composite-deterioration.test.ts',
+      'src/lib/vitals/instant-red-alerts.test.ts',
+      'src/lib/intelligence/ai-insights.test.ts',
+      'src/lib/intelligence/observability.test.ts',
+      'src/lib/intelligence/server.test.ts',
+      'src/lib/intelligence/socket-payload.test.ts',
+      'src/lib/telemedicine/consult-to-bridge.test.ts',
+      'src/lib/telemedicine/consult-accepted.test.ts',
+      'src/lib/telemedicine/consult-api-validation.test.ts',
+      'src/lib/audit/screening-audit-service.test.ts',
+      'src/app/api/clinical/anamnesis/extract/route.test.ts',
+      'src/app/api/dashboard/intelligence/routes.test.ts',
+      'src/app/api/dashboard/intelligence/observability-handler.test.ts',
+      'src/app/api/dashboard/intelligence/alerts/acknowledge/acknowledge-handler.test.ts',
+      'src/app/emr/emergency-override.test.ts',
+      'src/app/dashboard/intelligence/AIDisclosureBadge.test.tsx',
+      'src/app/dashboard/intelligence/AIInsightsPanel.test.tsx',
+      'src/app/dashboard/intelligence/ClinicalSafetyAlertBanner.test.tsx',
+      'src/app/dashboard/intelligence/IntelligenceDashboardScaffold.test.tsx',
+      'src/app/dashboard/intelligence/IntelligenceSocketProvider.test.tsx',
+      'src/app/dashboard/intelligence/OperationalSummaryPanel.test.tsx',
+      'src/app/dashboard/intelligence/loading.test.tsx',
+      'src/app/dashboard/intelligence/error.test.tsx',
+    ],
+  },
+]
+
+function parseFilters(argv: string[]): string[] {
+  const filters: string[] = []
+
+  for (let i = 0; i < argv.length; i += 1) {
+    const arg = argv[i]
+    if (arg === '--filter') {
+      const next = argv[i + 1]
+      if (next) {
+        filters.push(next.toLowerCase())
+        i += 1
+      }
+      continue
+    }
+
+    if (arg.startsWith('--filter=')) {
+      const value = arg.slice('--filter='.length).trim()
+      if (value) filters.push(value.toLowerCase())
+    }
+  }
+
+  return filters
+}
+
+function matchesFilter(suite: Suite, filter: string): boolean {
+  const haystacks = [suite.name, ...(suite.aliases ?? [])].map((value) => value.toLowerCase())
+  return haystacks.some((value) => value.includes(filter) || filter.includes(value))
+}
+
+function selectSuites(argv: string[]): Suite[] {
+  const filters = parseFilters(argv)
+  if (filters.length === 0) return suites
+
+  const selected = suites.filter((suite) => filters.some((filter) => matchesFilter(suite, filter)))
+  if (selected.length === 0) {
+    const available = suites.map((suite) => suite.name).join(', ')
+    throw new Error(`Filter suite tidak cocok. Gunakan salah satu: ${available}`)
+  }
+
+  return selected
+}
+
+async function runSuite(suite: Suite): Promise<void> {
+  // All suite commands are process.execPath — validate before spawning.
+  // spawn() with a pre-validated binary path and a static arg array (not shell) is not injectable.
+  if (suite.command !== process.execPath) {
+    throw new Error(`Unexpected suite command: ${suite.command}. Only process.execPath is allowed.`)
+  }
+  const env: NodeJS.ProcessEnv = { ...process.env }
+  if (
+    suite.name === 'auth-hardening' &&
+    !process.env.DATABASE_URL?.trim() &&
+    process.env.SKIP_AUTH_HARDENING !== '0' &&
+    process.env.REQUIRE_AUTH_HARDENING !== '1'
+  ) {
+    console.warn(
+      '[test-suite] DATABASE_URL is unset — skipping auth-hardening (set DATABASE_URL or REQUIRE_AUTH_HARDENING=1 to force).'
+    )
+    env.SKIP_AUTH_HARDENING = '1'
+  }
+  await new Promise<void>((resolve, reject) => {
+    // Binary is always process.execPath (validated above); do not pass suite.command to spawn (Semgrep child_process taint).
+    const child = spawn(process.execPath, suite.args, {
+      cwd: process.cwd(),
+      env,
+      stdio: 'inherit',
+    })
+
+    child.on('exit', (code) => {
+      if (code === 0) {
+        resolve()
+        return
+      }
+      reject(
+        new Error(
+          `Test suite "${suite.name}" failed with exit code ${code ?? 'unknown'}. Command: ${suite.command} ${suite.args.join(' ')}`
+        )
+      )
+    })
+
+    child.on('error', reject)
+  })
+}
+
+async function main(): Promise<void> {
+  for (const suite of selectSuites(process.argv.slice(2))) {
+    await runSuite(suite)
+  }
+}
+
+void main()

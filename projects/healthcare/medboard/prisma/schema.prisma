@@ -1,0 +1,428 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model TelemedicineAppointment {
+  id                   String                   @id @default(cuid())
+  patientId            String
+  doctorId             String
+  createdByStaffId     String
+  scheduledAt          DateTime
+  durationMinutes      Int                      @default(15)
+  consultationType     ConsultationType         @default(VIDEO)
+  status               AppointmentStatus        @default(PENDING)
+  bpjsNomorSEP         String?
+  pCareNoKunjungan     String?
+  diagnosaICD10        String?
+  diagnosaInaCBGs      String?
+  keluhanUtama         String?
+  riwayatPenyakit      String?
+  anamnesis            String?
+  pemeriksaan          String?
+  diagnosis            String?
+  tatalaksana          String?
+  resepDigital         Json?
+  rujukan              Boolean                  @default(false)
+  rujukanTujuan        String?
+  livekitRoomName      String?                  @unique
+  livekitRoomId        String?
+  satusehatEncounterId String?
+  startedAt            DateTime?
+  endedAt              DateTime?
+  createdAt            DateTime                 @default(now())
+  updatedAt            DateTime                 @updatedAt
+  deletedAt            DateTime?
+  patientPhone         String?
+  patientJoinToken     String?                  @unique
+  attachments          TelemedicineAttachment[]
+  auditLogs            TelemedicineAuditLog[]
+  session              TelemedicineSession?
+
+  @@index([patientId])
+  @@index([doctorId])
+  @@index([scheduledAt])
+  @@index([status])
+  @@map("telemedicine_appointments")
+}
+
+model TelemedicineSession {
+  id                    String                    @id @default(cuid())
+  appointmentId         String                    @unique
+  roomName              String                    @unique
+  roomSid               String?
+  recordingEnabled      Boolean                   @default(false)
+  recordingUrl          String?
+  recordingConsent      Boolean                   @default(false)
+  actualStartAt         DateTime?
+  actualEndAt           DateTime?
+  actualDurationSeconds Int?
+  avgNetworkQuality     Json?
+  createdAt             DateTime                  @default(now())
+  updatedAt             DateTime                  @updatedAt
+  participants          TelemedicineParticipant[]
+  appointment           TelemedicineAppointment   @relation(fields: [appointmentId], references: [id])
+
+  @@map("telemedicine_sessions")
+}
+
+model TelemedicineParticipant {
+  id              String                 @id @default(cuid())
+  sessionId       String
+  userId          String
+  role            SessionParticipantRole
+  livekitIdentity String
+  joinedAt        DateTime?
+  leftAt          DateTime?
+  session         TelemedicineSession    @relation(fields: [sessionId], references: [id])
+
+  @@unique([sessionId, userId])
+  @@index([sessionId])
+  @@map("telemedicine_participants")
+}
+
+model TelemedicineAttachment {
+  id               String                  @id @default(cuid())
+  appointmentId    String
+  uploadedByUserId String
+  fileName         String
+  fileType         String
+  fileSizeBytes    Int
+  storagePath      String
+  encryptionKeyId  String
+  category         String
+  createdAt        DateTime                @default(now())
+  deletedAt        DateTime?
+  appointment      TelemedicineAppointment @relation(fields: [appointmentId], references: [id])
+
+  @@index([appointmentId])
+  @@map("telemedicine_attachments")
+}
+
+model TelemedicineAuditLog {
+  id            String                  @id @default(cuid())
+  appointmentId String
+  userId        String
+  action        String
+  metadata      Json?
+  createdAt     DateTime                @default(now())
+  appointment   TelemedicineAppointment @relation(fields: [appointmentId], references: [id])
+
+  @@index([appointmentId])
+  @@index([userId])
+  @@map("telemedicine_audit_logs")
+}
+
+model Staff {
+  id            String   @id @default(cuid())
+  staffId       String   @unique
+  name          String
+  role          String
+  color         String   @default("#E67E22")
+  gender        String   @default("male")
+  locationLat   Float    @default(-7.8166)
+  locationLng   Float    @default(112.0116)
+  locationLabel String   @default("Puskesmas")
+  canChat       Boolean  @default(true)
+  canVideo      Boolean  @default(true)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("staff")
+}
+
+model DoctorStatus {
+  id         String   @id @default(cuid())
+  doctorName String   @unique
+  isOnline   Boolean  @default(false)
+  updatedAt  DateTime @updatedAt
+
+  @@map("doctor_status")
+}
+
+model TelemedicineRequest {
+  id        String            @id @default(cuid())
+  nama      String
+  usia      String
+  hp        String
+  poli      String
+  bpjs      String?
+  keluhan   String
+  status    TeleRequestStatus @default(PENDING)
+  createdAt DateTime          @default(now())
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("telemedicine_requests")
+}
+
+model CDSSAuditLog {
+  id               String   @id
+  timestamp        DateTime @default(now())
+  sessionHash      String   @map("session_hash")
+  action           String
+  inputHash        String   @default("") @map("input_hash")
+  outputSummary    Json     @map("output_summary")
+  modelVersion     String   @map("model_version")
+  latencyMs        Int      @default(0) @map("latency_ms")
+  validationStatus String   @map("validation_status")
+  metadata         Json?
+
+  @@index([sessionHash])
+  @@index([action])
+  @@index([validationStatus])
+  @@index([timestamp])
+  @@map("cdss_audit_logs")
+}
+
+model CDSSOutcomeFeedback {
+  id                 String   @id @default(cuid())
+  timestamp          DateTime @default(now())
+  sessionHash        String   @map("session_hash")
+  selectedIcd        String   @map("selected_icd")
+  selectedConfidence Float    @map("selected_confidence")
+  finalIcd           String   @map("final_icd")
+  outcomeConfirmed   Boolean? @map("outcome_confirmed")
+  followUpNote       String?  @map("follow_up_note")
+  doctorUserId       String?  @map("doctor_user_id")
+  overrideReason     String?  @map("override_reason")
+  daysToFollowUp     Int?     @map("days_to_follow_up")
+  metadata           Json?
+
+  @@index([sessionHash])
+  @@index([timestamp])
+  @@index([finalIcd])
+  @@index([outcomeConfirmed])
+  @@map("cdss_outcome_feedback")
+}
+
+model AssistantKnowledgeEntry {
+  id            String   @id @default(cuid())
+  assistantName String   @map("assistant_name")
+  scope         String   @default("GLOBAL")
+  title         String
+  content       String
+  priority      Int      @default(100)
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@index([assistantName, scope, isActive], map: "assistant_knowledge_entries_lookup_idx")
+  @@index([priority])
+  @@map("assistant_knowledge_entries")
+}
+
+model ClinicalReport {
+  id                  String    @id
+  nomor               Int       @unique
+  doctorName          String?   @map("doctor_name")
+  patientMrn          String?   @map("patient_mrn")
+  patientName         String?   @map("patient_name")
+  diagnosisKerja      String?   @map("diagnosis_kerja")
+  auditTrail          Json      @map("audit_trail")
+  pasien              Json
+  anamnesa            Json
+  pemeriksaanFisik    Json      @map("pemeriksaan_fisik")
+  asesmen             Json
+  tataLaksana         Json      @map("tata_laksana")
+  penutup             Json
+  pdfStoragePath      String?   @map("pdf_storage_path")
+  pdfGeneratedAt      DateTime? @map("pdf_generated_at")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+  sourceAppointmentId String?   @map("source_appointment_id")
+  sourceConsultId     String?   @map("source_consult_id")
+  sourceOrigin        String?   @map("source_origin")
+
+  @@index([createdAt])
+  @@index([doctorName])
+  @@index([patientMrn])
+  @@index([sourceAppointmentId])
+  @@index([sourceConsultId])
+  @@map("clinical_reports")
+}
+
+model ConsultLog {
+  id              String    @id @default(cuid())
+  consultId       String    @unique @map("consult_id")
+  status          String    @default("received")
+  patientName     String?   @map("patient_name")
+  patientRm       String?   @map("patient_rm")
+  patientAge      Int?      @map("patient_age")
+  patientGender   String?   @map("patient_gender")
+  keluhanUtama    String?   @map("keluhan_utama")
+  ttv             Json?
+  riskFactors     Json?     @map("risk_factors")
+  penyakitKronis  Json?     @map("penyakit_kronis")
+  anthropometrics Json?
+  visitHistory    Json?     @map("visit_history")
+  senderUserId    String?   @map("sender_user_id")
+  senderName      String?   @map("sender_name")
+  targetDoctorId  String?   @map("target_doctor_id")
+  acceptedBy      String?   @map("accepted_by")
+  acceptedAt      DateTime? @map("accepted_at")
+  bridgeEntryId   String?   @map("bridge_entry_id")
+  transferredAt   DateTime? @map("transferred_at")
+  completedAt     DateTime? @map("completed_at")
+  sentAt          DateTime? @map("sent_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@index([targetDoctorId], map: "consult_logs_target_doctor_idx")
+  @@index([patientRm])
+  @@index([createdAt])
+  @@map("consult_logs")
+}
+
+model ClinicalCaseAuditEvent {
+  id            String   @id @default(cuid())
+  eventType     String   @map("event_type")
+  actorUserId   String?  @map("actor_user_id")
+  actorName     String?  @map("actor_name")
+  appointmentId String?  @map("appointment_id")
+  consultId     String?  @map("consult_id")
+  reportId      String?  @map("report_id")
+  sourceOrigin  String?  @map("source_origin")
+  payload       Json
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@index([eventType])
+  @@index([appointmentId])
+  @@index([consultId])
+  @@index([reportId])
+  @@index([createdAt])
+  @@map("clinical_case_audit_events")
+}
+
+model ScreeningAuditLog {
+  id                   String    @id @default(cuid())
+  eventId              String    @unique @map("event_id")
+  assistId             String    @map("assist_id")
+  consultId            String?   @map("consult_id")
+  patientId            String    @map("patient_id")
+  screeningId          String    @map("screening_id")
+  doctorId             String    @map("doctor_id")
+  facilityId           String    @map("facility_id")
+  screeningStatus      String    @map("screening_status")
+  riskLevel            String?   @map("risk_level")
+  score                Int?
+  resultSummary        String?   @map("result_summary")
+  deliveryStatus       String    @map("delivery_status")
+  deliveryTimestamp    DateTime  @map("delivery_timestamp")
+  acknowledgedByDoctor Boolean   @default(false) @map("acknowledged_by_doctor")
+  ackTimestamp         DateTime? @map("ack_timestamp")
+  appVersion           String?   @map("app_version")
+  senderUserId         String?   @map("sender_user_id")
+  metaJson             Json?     @map("meta_json")
+  immutableHash        String    @map("immutable_hash")
+  createdAt            DateTime  @default(now()) @map("created_at")
+
+  @@index([doctorId])
+  @@index([facilityId])
+  @@index([createdAt(sort: Desc)])
+  @@index([deliveryStatus, screeningStatus])
+  @@map("screening_audit_logs")
+}
+
+model VitalRecord {
+  id               String            @id @default(cuid())
+  patientIdentifier String           @map("patient_identifier")
+  encounterId      String?           @map("encounter_id")
+  vitals           Json
+  news2Score       Int               @map("news2_score")
+  news2Risk        String            @map("news2_risk")
+  avpu             String?
+  flags            Json?
+  source           VitalRecordSource @default(ASSIST_TRIAGE)
+  recordedAt       DateTime          @map("recorded_at")
+  recordedByUserId String?           @map("recorded_by_user_id")
+  createdAt        DateTime          @default(now()) @map("created_at")
+
+  @@index([patientIdentifier])
+  @@index([encounterId])
+  @@index([recordedAt])
+  @@map("vital_records")
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum ConsultationType {
+  VIDEO
+  AUDIO
+  CHAT
+}
+
+enum SessionParticipantRole {
+  DOCTOR
+  NURSE
+  PATIENT
+  OBSERVER
+}
+
+enum TeleRequestStatus {
+  PENDING
+  SEEN
+  HANDLED
+}
+
+enum VitalRecordSource {
+  ASSIST_TRIAGE
+  EMR_SYNC
+  MANUAL_ENTRY
+}
+
+model User {
+  id            String    @id @default(cuid())
+  username      String    @unique
+  passwordHash  String
+  displayName   String
+  email         String?   @unique
+  institution   String    @default("Puskesmas Balowerti Kota Kediri")
+  profession    String    @default("Dokter")
+  role          String    @default("DOKTER")
+  status        String    @default("ACTIVE")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  deletedAt     DateTime? @map("deleted_at")
+  deletedBy     String?   @map("deleted_by")
+  deactivatedAt DateTime? @map("deactivated_at")
+  deactivatedBy String?   @map("deactivated_by")
+
+  passkeys Passkey[]
+
+  @@index([username])
+  @@index([status])
+  @@map("crew_users")
+}
+
+model Passkey {
+  id           String    @id @default(cuid())
+  userId       String    @map("user_id")
+  user         User      @relation(fields: [userId], references: [id])
+  credentialId String    @unique @map("credential_id")
+  publicKey    Bytes     @map("public_key")
+  counter      Int       @default(0)
+  transports   String?
+  deviceType   String    @map("device_type")
+  backedUp     Boolean   @default(false) @map("backed_up")
+  name         String?
+  createdAt    DateTime  @default(now()) @map("created_at")
+  lastUsedAt   DateTime? @map("last_used_at")
+
+  @@index([userId])
+  @@map("crew_passkeys")
+}

@@ -1,0 +1,128 @@
+INTELLIGENCEBOARD — DUAL LICENSE
+
+Copyright (c) 2024–2026 Drferdi (dr. Ferdi Iskandar)
+All rights reserved.
+
+================================================================================
+INTELLIGENCEBOARD IS DUAL-LICENSED:
+
+  1. COMMUNITY LICENSE (Apache 2.0)   — for individual and non-commercial use
+  2. ENTERPRISE LICENSE               — for commercial and organizational use
+
+Read both sections below to determine which applies to you.
+================================================================================
+
+
+────────────────────────────────────────────────────────────────────────────────
+PART 1 — COMMUNITY LICENSE (Apache License, Version 2.0)
+────────────────────────────────────────────────────────────────────────────────
+
+This license applies if ALL of the following are true:
+
+  (a) You are an individual clinician, researcher, or student
+  (b) Your use is non-commercial (no revenue, no client billing, no resale)
+  (c) You are not deploying on behalf of a healthcare organization or facility
+  (d) You are not integrating IntelligenceBoard into a commercial product or service
+
+If the above conditions apply, IntelligenceBoard is licensed to you under the
+Apache License, Version 2.0 (the "Apache License").
+
+You may obtain a copy of the Apache License at:
+https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed
+under the Apache License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
+OR CONDITIONS OF ANY KIND, either express or implied. See the Apache License for
+the specific language governing permissions and limitations.
+
+
+────────────────────────────────────────────────────────────────────────────────
+PART 2 — ENTERPRISE LICENSE (Proprietary Commercial)
+────────────────────────────────────────────────────────────────────────────────
+
+This license applies if ANY of the following are true:
+
+  (a) You are deploying IntelligenceBoard at or on behalf of a healthcare facility,
+      clinic, hospital, puskesmas, or any healthcare organization
+  (b) You are integrating IntelligenceBoard into a commercial product or service
+  (c) You are using IntelligenceBoard to generate revenue, directly or indirectly
+  (d) You are a vendor, system integrator, or reseller
+
+Commercial use requires a separate written Enterprise License Agreement executed
+with the Licensor. Unauthorized commercial use is a violation of this License.
+
+
+ENTERPRISE LICENSE TERMS
+
+1. GRANT OF LICENSE
+
+   Subject to the terms of an executed Enterprise License Agreement, the
+   Licensor grants the Licensee a limited, non-exclusive, non-transferable
+   license to install and use the Software at the Authorized Deployment(s)
+   specified in that agreement.
+
+2. RESTRICTIONS
+
+   The Licensee shall NOT:
+
+   (a) Redistribute or resell the Software or any portion thereof
+   (b) Sublicense, transfer, or assign any rights under this License
+   (c) Reverse engineer, decompile, or create derivative works for commercial
+       purposes
+   (d) Remove or alter any proprietary notices or marks
+   (e) Use the Software to build a competing clinical intelligence platform
+   (f) Deploy at locations beyond those specified in the license agreement
+   (g) Provide the Software as a hosted or managed service to third parties
+       without a separate agreement
+
+3. INTELLECTUAL PROPERTY
+
+   The IntelligenceBoard clinical analytics engine, epidemiology dashboards,
+   population health metrics derived from Indonesian clinical case data, and
+   the integrated Sentra Healthcare AI platform architecture are the exclusive
+   proprietary intellectual property of the Licensor. No ownership is transferred.
+
+4. CLINICAL DISCLAIMER
+
+   THE SOFTWARE IS A CLINICAL INTELLIGENCE AND ANALYTICS PLATFORM. IT DOES NOT
+   REPLACE CLINICAL JUDGMENT. ALL CLINICAL DECISIONS REMAIN THE SOLE
+   RESPONSIBILITY OF THE TREATING HEALTHCARE PROFESSIONAL.
+
+5. DATA PRIVACY
+
+   The Licensee is solely responsible for compliance with Indonesia's Personal
+   Data Protection Law (UU PDP No. 27/2022) and applicable Ministry of Health
+   regulations governing patient health information.
+
+6. WARRANTY DISCLAIMER
+
+   THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND. THE LICENSOR
+   DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED.
+
+7. LIMITATION OF LIABILITY
+
+   THE LICENSOR'S TOTAL LIABILITY SHALL NOT EXCEED THE AMOUNTS PAID BY THE
+   LICENSEE IN THE TWELVE (12) MONTHS PRECEDING THE CLAIM.
+
+8. GOVERNING LAW
+
+   This License is governed by the laws of the Republic of Indonesia.
+
+
+================================================================================
+WHICH LICENSE APPLIES TO ME?
+
+  Individual doctor using for personal practice     → Community (Apache 2.0)
+  Medical student or researcher                     → Community (Apache 2.0)
+  Puskesmas or clinic deployment                    → Enterprise License required
+  Hospital or health system                         → Enterprise License required
+  Vendor bundling into a product                    → Enterprise License required
+  Government health program (Dinkes, Kemenkes)      → Enterprise License required
+
+================================================================================
+Enterprise licensing inquiries:
+
+  Drferdi — dr. Ferdi Iskandar
+  Sentra Artificial Intelligence
+  https://sentra-dfi.com
+================================================================================

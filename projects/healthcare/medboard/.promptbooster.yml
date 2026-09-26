@@ -1,0 +1,25 @@
+# PromptWizard — .promptbooster.yml
+#
+# Place this file at your project root to control which files
+# PromptWizard sends as context when refining your prompts.
+# All paths are relative to this file (the project root).
+
+# Files that are ALWAYS sent as context with every prompt.
+# Use for core files most prompts need (layouts, shared types, config).
+always_include: []
+#   - "src/components/Layout.tsx"
+#   - "src/types/index.ts"
+
+# Keyword-triggered context: when your prompt matches a regex
+# pattern (case-insensitive), the listed files are included.
+patterns: {}
+#   "auth|login|signup": ["src/context/AuthContext.tsx"]
+#   "sidebar|nav": ["src/components/Sidebar.tsx"]
+
+# Glob patterns for files that should NEVER be sent as context.
+exclude:
+  - "**/*.test.ts"
+  - "**/*.stories.tsx"
+
+# Monorepos only: the app folder you usually work in.
+# default_app: "apps/web"

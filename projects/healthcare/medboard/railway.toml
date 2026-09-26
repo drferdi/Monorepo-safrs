@@ -1,0 +1,19 @@
+# Architected and built by Drferdi.
+[build]
+builder = "nixpacks"
+buildCommand = "npm run build:railway"
+
+[build.nixpacksPlan.phases.setup]
+nixPkgs = ["nodejs_22"]
+
+[deploy]
+startCommand = "npx prisma migrate deploy && npm run start"
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
+
+[deploy.volumes]
+# Persistent storage for bridge queue — survives deploys & restarts
+"/app/runtime/bridge-queue" = "bridge_queue_data"
+
+[environments.production]
+NODE_ENV = "production"

@@ -1,0 +1,2012 @@
+{
+  "routeParityStatus": "partial",
+  "productionImportReplacementAllowed": false,
+  "reason": "chief_go_required_for_production_import_replacement",
+  "generatedAt": "2026-04-27T15:04:49.088Z",
+  "cpCoverage": {
+    "required": 70,
+    "presentInRouteFixtures": 70,
+    "routeLevelCoverageSatisfied": true,
+    "adapterFixturesPresent": 70,
+    "adapterFixturesExpected": 70
+  },
+  "fixtureResults": [
+    {
+      "id": "adult-sepsis-respiratory-route",
+      "description": "Adult respiratory/sepsis bedside route with qSOFA, NEWS2 high risk, and respiratory gates.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=4 symphony_critical=7",
+          "symphony_news2_score=13",
+          "symphony-only topic (unwired) sepsis_qsofa",
+          "symphony-only topic (unwired) respiratory_hypoxemia",
+          "symphony-only topic (unwired) news2_high"
+        ]
+      },
+      "symphonyCritical": 7,
+      "dashboardEmergency": 4,
+      "symphonyNews2": 13,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "A41.9",
+        "I26.9",
+        "I50",
+        "J06",
+        "J18",
+        "J45",
+        "R65.1"
+      ],
+      "symphonyTopics": [
+        "news2_high",
+        "pe_suspect",
+        "respiratory_hypoxemia",
+        "sepsis_qsofa"
+      ],
+      "dashboardTopics": [
+        "pe_suspect"
+      ],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "obstetric-glucose-route",
+      "description": "Pregnant patient route with severe hypertension, tachycardia, and severe hypoglycemia.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=2",
+          "symphony_news2_score=2",
+          "symphony-only topic (unwired) glucose_severe_hypoglycemia",
+          "symphony-only topic (unwired) obstetric_severe_htn",
+          "symphony-only topic (unwired) obstetric_tachycardia"
+        ]
+      },
+      "symphonyCritical": 2,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 2,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "O00.1",
+        "O03",
+        "O13",
+        "O14.0"
+      ],
+      "symphonyTopics": [
+        "glucose_severe_hypoglycemia",
+        "obstetric_severe_htn",
+        "obstetric_tachycardia"
+      ],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "pe-suspect-route",
+      "description": "Adult with sudden pleuritic chest pain, tachycardia, hypoxia, and immobilization history — PE suspect gate (GATE_9_PE) should fire.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=5 symphony_critical=6",
+          "symphony_news2_score=8",
+          "symphony-only topic (unwired) news2_high"
+        ]
+      },
+      "symphonyCritical": 6,
+      "dashboardEmergency": 5,
+      "symphonyNews2": 8,
+      "expectedIcds": [
+        "I26.9"
+      ],
+      "dashboardIcds": [
+        "I26.9",
+        "I50",
+        "J18",
+        "J45",
+        "J96.0",
+        "K92.0",
+        "R65.0"
+      ],
+      "symphonyTopics": [
+        "news2_high",
+        "pe_suspect"
+      ],
+      "dashboardTopics": [
+        "pe_suspect",
+        "respiratory_hypoxemia"
+      ],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "anaphylaxis-route",
+      "description": "Adult with rash, swelling, and airway compromise minutes after seafood exposure — anaphylaxis gate (GATE_10_ANAPHYLAXIS) should fire.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=7 symphony_critical=8",
+          "symphony_news2_score=11",
+          "symphony-only topic (unwired) respiratory_hypoxemia",
+          "symphony-only topic (unwired) news2_high"
+        ]
+      },
+      "symphonyCritical": 8,
+      "dashboardEmergency": 7,
+      "symphonyNews2": 11,
+      "expectedIcds": [
+        "T78.2"
+      ],
+      "dashboardIcds": [
+        "A41.9",
+        "I26.9",
+        "I50",
+        "J18",
+        "J45",
+        "J96.0",
+        "R65.1",
+        "T78.2"
+      ],
+      "symphonyTopics": [
+        "anaphylaxis",
+        "news2_high",
+        "pe_suspect",
+        "respiratory_hypoxemia"
+      ],
+      "dashboardTopics": [
+        "anaphylaxis",
+        "hypotension_shock",
+        "pe_suspect"
+      ],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "trajectory-diagnosis-route",
+      "description": "Multi-visit route with worsening trajectory and grounded hybrid diagnosis suggestions.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=5 symphony_critical=6",
+          "symphony_news2_score=12",
+          "symphony-only topic (unwired) respiratory_hypoxemia",
+          "symphony-only topic (unwired) news2_high"
+        ]
+      },
+      "symphonyCritical": 6,
+      "dashboardEmergency": 5,
+      "symphonyNews2": 12,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "A41.9",
+        "I26.9",
+        "I50",
+        "J18",
+        "J45",
+        "J96.0",
+        "R65.1"
+      ],
+      "symphonyTopics": [
+        "news2_high",
+        "pe_suspect",
+        "respiratory_hypoxemia"
+      ],
+      "dashboardTopics": [
+        "pe_suspect"
+      ],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-001-route",
+      "description": "Assist clinical pattern CP-001 route-level coverage: Sepsis suspected — qSOFA {rr}/{sbp}.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=1 symphony_critical=3",
+          "symphony_news2_score=7",
+          "symphony-only topic (unwired) sepsis_qsofa",
+          "symphony-only topic (unwired) news2_high"
+        ]
+      },
+      "symphonyCritical": 3,
+      "dashboardEmergency": 1,
+      "symphonyNews2": 7,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "A41.9",
+        "R65.1"
+      ],
+      "symphonyTopics": [
+        "news2_high",
+        "sepsis_qsofa"
+      ],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-002-route",
+      "description": "Assist clinical pattern CP-002 route-level coverage: Sepsis suspected + tanda infeksi — qSOFA {rr}/{sbp}.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=1 symphony_critical=3",
+          "symphony_news2_score=7",
+          "symphony-only topic (unwired) sepsis_qsofa",
+          "symphony-only topic (unwired) news2_high"
+        ]
+      },
+      "symphonyCritical": 3,
+      "dashboardEmergency": 1,
+      "symphonyNews2": 7,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "A41.9",
+        "R65.1"
+      ],
+      "symphonyTopics": [
+        "news2_high",
+        "sepsis_qsofa"
+      ],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-003-route",
+      "description": "Assist clinical pattern CP-003 route-level coverage: Infeksi sistemik / sepsis awal — Demam + HR >90 + RR >=20.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=1"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 1,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-004-route",
+      "description": "Assist clinical pattern CP-004 route-level coverage: Sepsis afebrile pada lansia — RR & HR meningkat tanpa demam.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=3"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 3,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "A41.9",
+        "R65.0"
+      ],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-005-route",
+      "description": "Assist clinical pattern CP-005 route-level coverage: Hipotermia + vital abnormal — curiga sepsis berat / syok.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=2 symphony_critical=3",
+          "symphony_news2_score=8",
+          "symphony-only topic (unwired) sepsis_qsofa",
+          "symphony-only topic (unwired) news2_high"
+        ]
+      },
+      "symphonyCritical": 3,
+      "dashboardEmergency": 2,
+      "symphonyNews2": 8,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "A41.9",
+        "R65.1"
+      ],
+      "symphonyTopics": [
+        "news2_high",
+        "sepsis_qsofa"
+      ],
+      "dashboardTopics": [
+        "hypothermia"
+      ],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-006-route",
+      "description": "Assist clinical pattern CP-006 route-level coverage: Septic shock suspected — SBP {sbp}, MAP {map}.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=2 symphony_critical=2",
+          "symphony_news2_score=5",
+          "symphony-only topic (unwired) sepsis_qsofa",
+          "symphony-only topic (unwired) news2_medium"
+        ]
+      },
+      "symphonyCritical": 2,
+      "dashboardEmergency": 2,
+      "symphonyNews2": 5,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "A41.9",
+        "R65.1"
+      ],
+      "symphonyTopics": [
+        "news2_medium",
+        "sepsis_qsofa"
+      ],
+      "dashboardTopics": [
+        "hypotension_shock"
+      ],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-007-route",
+      "description": "Assist clinical pattern CP-007 route-level coverage: Sepsis berat — bingung + RR tinggi + HR tinggi.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=3"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 3,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "A41.9",
+        "R65.0"
+      ],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-008-route",
+      "description": "Assist clinical pattern CP-008 route-level coverage: Hemodynamic risk — Shock Index {shockIndex}.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=2"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 2,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-009-route",
+      "description": "Assist clinical pattern CP-009 route-level coverage: Hemodynamic instability — Shock Index {shockIndex}.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=3"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 3,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-010-route",
+      "description": "Assist clinical pattern CP-010 route-level coverage: Syok hemodinamik — Shock Index {shockIndex}.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=4"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 4,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-011-route",
+      "description": "Assist clinical pattern CP-011 route-level coverage: Syok — HR {hr} + SBP {sbp}.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=1 symphony_critical=1",
+          "symphony_news2_score=5",
+          "symphony-only topic (unwired) news2_medium"
+        ]
+      },
+      "symphonyCritical": 1,
+      "dashboardEmergency": 1,
+      "symphonyNews2": 5,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [
+        "news2_medium"
+      ],
+      "dashboardTopics": [
+        "hypotension_shock"
+      ],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-012-route",
+      "description": "Assist clinical pattern CP-012 route-level coverage: Gagal napas akut — RR {rr}, SpO2 {spo2}%.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=2 symphony_critical=4",
+          "symphony_news2_score=8",
+          "symphony-only topic (unwired) news2_high"
+        ]
+      },
+      "symphonyCritical": 4,
+      "dashboardEmergency": 2,
+      "symphonyNews2": 8,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "J06",
+        "J18",
+        "J45"
+      ],
+      "symphonyTopics": [
+        "news2_high"
+      ],
+      "dashboardTopics": [
+        "respiratory_hypoxemia"
+      ],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-013-route",
+      "description": "Assist clinical pattern CP-013 route-level coverage: Distress respirasi — RR {rr}, SpO2 {spo2}%.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=5",
+          "symphony-only topic (unwired) respiratory_hypoxemia",
+          "symphony-only topic (unwired) news2_medium"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 5,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "J06",
+        "J18",
+        "J45"
+      ],
+      "symphonyTopics": [
+        "news2_medium",
+        "respiratory_hypoxemia"
+      ],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-014-route",
+      "description": "Assist clinical pattern CP-014 route-level coverage: Gagal napas berat — sulit bicara + otot bantu napas.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=6",
+          "symphony-only topic (unwired) respiratory_hypoxemia",
+          "symphony-only topic (unwired) news2_medium"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 6,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "J06",
+        "J18",
+        "J45"
+      ],
+      "symphonyTopics": [
+        "news2_medium",
+        "respiratory_hypoxemia"
+      ],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-015-route",
+      "description": "Assist clinical pattern CP-015 route-level coverage: Deteriorasi berat — RR naik + SpO2 turun + kesadaran menurun.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=3",
+          "symphony_news2_score=7",
+          "symphony-only topic (unwired) sepsis_qsofa",
+          "symphony-only topic (unwired) respiratory_hypoxemia",
+          "symphony-only topic (unwired) news2_high"
+        ]
+      },
+      "symphonyCritical": 3,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 7,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [
+        "news2_high",
+        "respiratory_hypoxemia",
+        "sepsis_qsofa"
+      ],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-016-route",
+      "description": "Assist clinical pattern CP-016 route-level coverage: PE suspected — sesak mendadak + SpO2 {spo2}%.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=5",
+          "symphony-only topic (unwired) respiratory_hypoxemia",
+          "symphony-only topic (unwired) news2_medium"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 5,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "R65.0"
+      ],
+      "symphonyTopics": [
+        "news2_medium",
+        "respiratory_hypoxemia"
+      ],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-017-route",
+      "description": "Assist clinical pattern CP-017 route-level coverage: PE high probability — sesak mendadak + faktor risiko.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=1 symphony_critical=0",
+          "symphony_news2_score=6",
+          "symphony-only topic (unwired) respiratory_hypoxemia",
+          "symphony-only topic (unwired) news2_medium"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 1,
+      "symphonyNews2": 6,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [
+        "news2_medium",
+        "respiratory_hypoxemia"
+      ],
+      "dashboardTopics": [
+        "hypotension_shock"
+      ],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-018-route",
+      "description": "Assist clinical pattern CP-018 route-level coverage: ACS / MI suspected — nyeri dada tipikal + vital abnormal.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=2 symphony_critical=1",
+          "symphony_news2_score=4"
+        ]
+      },
+      "symphonyCritical": 1,
+      "dashboardEmergency": 2,
+      "symphonyNews2": 4,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "I20",
+        "I21"
+      ],
+      "symphonyTopics": [],
+      "dashboardTopics": [
+        "hypotension_shock"
+      ],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-019-route",
+      "description": "Assist clinical pattern CP-019 route-level coverage: Hipertensi berat + nyeri dada — curiga ACS/Stroke.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=1"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 1,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-020-route",
+      "description": "Assist clinical pattern CP-020 route-level coverage: ACS atipikal — nyeri dada + vital sign normal.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=0"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 0,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-021-route",
+      "description": "Assist clinical pattern CP-021 route-level coverage: Stroke suspected — defisit neurologis fokal mendadak.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=0"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 0,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-022-route",
+      "description": "Assist clinical pattern CP-022 route-level coverage: Stroke + hipertensi — SBP {sbp}.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=0"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 0,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-023-route",
+      "description": "Assist clinical pattern CP-023 route-level coverage: Perdarahan subaraknoid — nyeri kepala thunderclap + BP tinggi.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=0"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 0,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-024-route",
+      "description": "Assist clinical pattern CP-024 route-level coverage: Anafilaksis — EMERGENCY.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=2 symphony_critical=2",
+          "symphony_news2_score=7",
+          "symphony-only topic (unwired) respiratory_hypoxemia",
+          "symphony-only topic (unwired) news2_high"
+        ]
+      },
+      "symphonyCritical": 2,
+      "dashboardEmergency": 2,
+      "symphonyNews2": 7,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "J06",
+        "J18",
+        "J45"
+      ],
+      "symphonyTopics": [
+        "news2_high",
+        "respiratory_hypoxemia"
+      ],
+      "dashboardTopics": [
+        "hypotension_shock"
+      ],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-025-route",
+      "description": "Assist clinical pattern CP-025 route-level coverage: Reaksi alergi — pantau eskalasi ke anafilaksis.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=0"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 0,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-026-route",
+      "description": "Assist clinical pattern CP-026 route-level coverage: DKA/HHS suspected — glucose {glucose}, RR {rr}.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=3"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 3,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-027-route",
+      "description": "Assist clinical pattern CP-027 route-level coverage: HHS suspected — glucose {glucose} (sangat tinggi).",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=1",
+          "symphony_news2_score=0"
+        ]
+      },
+      "symphonyCritical": 1,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 0,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-028-route",
+      "description": "Assist clinical pattern CP-028 route-level coverage: Early DKA — glucose {glucose} + gejala metabolik.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=0"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 0,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-029-route",
+      "description": "Assist clinical pattern CP-029 route-level coverage: Eksaserbasi asma/COPD — RR {rr}, SpO2 {spo2}%.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=4",
+          "symphony-only topic (unwired) respiratory_hypoxemia"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 4,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [
+        "respiratory_hypoxemia"
+      ],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-030-route",
+      "description": "Assist clinical pattern CP-030 route-level coverage: Status asthmaticus — sulit bicara / silent chest.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=3",
+          "symphony-only topic (unwired) respiratory_hypoxemia"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 3,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [
+        "respiratory_hypoxemia"
+      ],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-031-route",
+      "description": "Assist clinical pattern CP-031 route-level coverage: Anemia sedang-berat / perdarahan kronis.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=1"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 1,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "K92.0"
+      ],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-032-route",
+      "description": "Assist clinical pattern CP-032 route-level coverage: Anemia berat + tanda syok — HR {hr}, SBP {sbp}.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=4"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 4,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-033-route",
+      "description": "Assist clinical pattern CP-033 route-level coverage: RR meningkat ringan — RR {rr}, SpO2 {spo2}% (normal).",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=3"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 3,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-034-route",
+      "description": "Assist clinical pattern CP-034 route-level coverage: Takikardia ringan — HR {hr}, penyebab belum jelas.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=3"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 3,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-035-route",
+      "description": "Assist clinical pattern CP-035 route-level coverage: Bradikardia signifikan — HR {hr}.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=3"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 3,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-036-route",
+      "description": "Assist clinical pattern CP-036 route-level coverage: Kode MERAH — AVPU != A mendadak.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=3"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 3,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-037-route",
+      "description": "Assist clinical pattern CP-037 route-level coverage: Borderline vitals — jangan tertipu angka \"masih normal\".",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=5",
+          "symphony-only topic (unwired) respiratory_hypoxemia",
+          "symphony-only topic (unwired) news2_medium"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 5,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [
+        "news2_medium",
+        "respiratory_hypoxemia"
+      ],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-038-route",
+      "description": "Assist clinical pattern CP-038 route-level coverage: Deteriorasi progresif — tren vital memburuk.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=2 symphony_critical=3",
+          "symphony_news2_score=7",
+          "symphony-only topic (unwired) sepsis_qsofa",
+          "symphony-only topic (unwired) respiratory_hypoxemia",
+          "symphony-only topic (unwired) news2_high"
+        ]
+      },
+      "symphonyCritical": 3,
+      "dashboardEmergency": 2,
+      "symphonyNews2": 7,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "A41.9",
+        "R65.1"
+      ],
+      "symphonyTopics": [
+        "news2_high",
+        "respiratory_hypoxemia",
+        "sepsis_qsofa"
+      ],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-039-route",
+      "description": "Assist clinical pattern CP-039 route-level coverage: Pneumonia ringan/moderat — RR {rr}, SpO2 {spo2}%.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=3"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 3,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-040-route",
+      "description": "Assist clinical pattern CP-040 route-level coverage: Infeksi ringan — demam tanpa red flag vital.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=5",
+          "symphony-only topic (unwired) news2_medium"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 5,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "A41.9",
+        "R65.0"
+      ],
+      "symphonyTopics": [
+        "news2_medium"
+      ],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-041-route",
+      "description": "Assist clinical pattern CP-041 route-level coverage: Infeksi sedang — RR {rr}, HR {hr}, demam.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=1 symphony_critical=2",
+          "symphony_news2_score=5",
+          "symphony-only topic (unwired) sepsis_qsofa",
+          "symphony-only topic (unwired) news2_medium"
+        ]
+      },
+      "symphonyCritical": 2,
+      "dashboardEmergency": 1,
+      "symphonyNews2": 5,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "A41.9",
+        "R65.1"
+      ],
+      "symphonyTopics": [
+        "news2_medium",
+        "sepsis_qsofa"
+      ],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-042-route",
+      "description": "Assist clinical pattern CP-042 route-level coverage: Kejang demam — demam tinggi + kejang.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=1"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 1,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-043-route",
+      "description": "Assist clinical pattern CP-043 route-level coverage: Depresi napas akibat obat — RR {rr}, SpO2 {spo2}%.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=6",
+          "symphony-only topic (unwired) respiratory_hypoxemia",
+          "symphony-only topic (unwired) news2_medium"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 6,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [
+        "news2_medium",
+        "respiratory_hypoxemia"
+      ],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-044-route",
+      "description": "Assist clinical pattern CP-044 route-level coverage: Frailty + vital naik pelan — high risk.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=2"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 2,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-045-route",
+      "description": "Assist clinical pattern CP-045 route-level coverage: Meningitis/ensefalitis suspected.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=1"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 1,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-046-route",
+      "description": "Assist clinical pattern CP-046 route-level coverage: Sepsis meningokokus — demam + petekie + toksik.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=3"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 3,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-047-route",
+      "description": "Assist clinical pattern CP-047 route-level coverage: Dengue berat / syok dengue — HR {hr}, SBP {sbp}.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=1 symphony_critical=2",
+          "symphony_news2_score=5",
+          "symphony-only topic (unwired) sepsis_qsofa",
+          "symphony-only topic (unwired) news2_medium"
+        ]
+      },
+      "symphonyCritical": 2,
+      "dashboardEmergency": 1,
+      "symphonyNews2": 5,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "A41.9",
+        "R65.1"
+      ],
+      "symphonyTopics": [
+        "news2_medium",
+        "sepsis_qsofa"
+      ],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-048-route",
+      "description": "Assist clinical pattern CP-048 route-level coverage: Cedera kepala berat — peningkatan TIK.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=3"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 3,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-049-route",
+      "description": "Assist clinical pattern CP-049 route-level coverage: Nyeri dada pleuritik — curiga pneumonia/PE.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=3"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 3,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "A41.9",
+        "R65.0"
+      ],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-050-route",
+      "description": "Assist clinical pattern CP-050 route-level coverage: PE/kardiomiopati postpartum — wanita hamil + sesak + nyeri dada.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=1 symphony_critical=1",
+          "symphony_news2_score=3"
+        ]
+      },
+      "symphonyCritical": 1,
+      "dashboardEmergency": 1,
+      "symphonyNews2": 3,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "I26.9",
+        "O00.1",
+        "O03"
+      ],
+      "symphonyTopics": [
+        "pe_suspect"
+      ],
+      "dashboardTopics": [
+        "pe_suspect"
+      ],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-051-route",
+      "description": "Assist clinical pattern CP-051 route-level coverage: Sepsis pada pasien DM — risiko tinggi.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=3"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 3,
+      "expectedIcds": [],
+      "dashboardIcds": [
+        "A41.9",
+        "R65.0"
+      ],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-052-route",
+      "description": "Assist clinical pattern CP-052 route-level coverage: Eksaserbasi asma — riwayat asma + sesak + RR tinggi.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=2"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 2,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-053-route",
+      "description": "Assist clinical pattern CP-053 route-level coverage: Eksaserbasi COPD — riwayat COPD + sesak + RR tinggi.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=5",
+          "symphony-only topic (unwired) news2_medium"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 5,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [
+        "news2_medium"
+      ],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-054-route",
+      "description": "Assist clinical pattern CP-054 route-level coverage: DKA pada pasien DM — glucose {glucose} + Kussmaul.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=0"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 0,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-055-route",
+      "description": "Assist clinical pattern CP-055 route-level coverage: Emergensi abdomen — nyeri perut hebat + hemodinamik tidak stabil.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=3"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 3,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-056-route",
+      "description": "Assist clinical pattern CP-056 route-level coverage: KET / abortus — hamil + nyeri perut + perdarahan.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=0"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 0,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-057-route",
+      "description": "Assist clinical pattern CP-057 route-level coverage: Pneumonia berat anak — RR tinggi + retraksi + SpO2 turun.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=2",
+          "symphony-only topic (unwired) respiratory_hypoxemia"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 2,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [
+        "respiratory_hypoxemia"
+      ],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-058-route",
+      "description": "Assist clinical pattern CP-058 route-level coverage: Eksaserbasi asma anak.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=0"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 0,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-059-route",
+      "description": "Assist clinical pattern CP-059 route-level coverage: Neutropenic sepsis — kanker + demam ringan.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=0"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 0,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-060-route",
+      "description": "Assist clinical pattern CP-060 route-level coverage: Cauda equina syndrome — emergensi neurologis.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=0"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 0,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-061-route",
+      "description": "Assist clinical pattern CP-061 route-level coverage: Hipoglikemia berat — glucose {glucose} + kesadaran menurun.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=3"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 3,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-062-route",
+      "description": "Assist clinical pattern CP-062 route-level coverage: Hipertiroid / thyroid storm — HR {hr}.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=2"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 2,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-063-route",
+      "description": "Assist clinical pattern CP-063 route-level coverage: Aritmia intermiten — palpitasi + near-syncope.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=1"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 1,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-064-route",
+      "description": "Assist clinical pattern CP-064 route-level coverage: Delirium akut — lansia + bingung + vital hampir normal.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=0"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 0,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-065-route",
+      "description": "Assist clinical pattern CP-065 route-level coverage: Red flag kardiak pada remaja — pingsan saat olahraga.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=0"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 0,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-066-route",
+      "description": "Assist clinical pattern CP-066 route-level coverage: Infeksi jaringan dalam pada DM — risiko gangren.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=0"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 0,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-067-route",
+      "description": "Assist clinical pattern CP-067 route-level coverage: Diseksi aorta — nyeri punggung/dada hebat mendadak.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=0"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 0,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-068-route",
+      "description": "Assist clinical pattern CP-068 route-level coverage: Overdosis obat — RR borderline + mengantuk berat.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=4"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 4,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-069-route",
+      "description": "Assist clinical pattern CP-069 route-level coverage: Epiglotitis / obstruksi laring — sulit napas + suara serak.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=2"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 2,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    },
+    {
+      "id": "cp-070-route",
+      "description": "Assist clinical pattern CP-070 route-level coverage: Kekhawatiran klinis — pasien tampak lebih sakit dari angka.",
+      "passed": true,
+      "layerMismatches": {
+        "critical_count": [],
+        "news2": [],
+        "icd": [],
+        "topics": [],
+        "info_only": [
+          "critical_count dashboard_emergency=0 symphony_critical=0",
+          "symphony_news2_score=0"
+        ]
+      },
+      "symphonyCritical": 0,
+      "dashboardEmergency": 0,
+      "symphonyNews2": 0,
+      "expectedIcds": [],
+      "dashboardIcds": [],
+      "symphonyTopics": [],
+      "dashboardTopics": [],
+      "dashboardSource": "error"
+    }
+  ],
+  "summary": {
+    "total": 75,
+    "passedPartial": 75,
+    "failedPartial": 0,
+    "hardFailures": 0
+  }
+}

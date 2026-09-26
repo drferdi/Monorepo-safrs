@@ -1,0 +1,32 @@
+═══ NEWS2 & Early Warning Pattern Tests ═══
+Generated: 2026-04-19T13:19:42.572Z
+Total: 28 | PASS: 28 | FAIL: 0
+
+[PASS] NEWS2: normal vitals → score 0
+[PASS] NEWS2: borderline tachycardia HR 95 → score 1
+[PASS] NEWS2: severe tachycardia HR 135 → score 3
+[PASS] NEWS2: hypothermia 34.5°C → score 3
+[PASS] NEWS2: mild fever 38.5°C → score 1
+[PASS] NEWS2: high fever 39.5°C → score 2
+[PASS] NEWS2: SpO2 93% → score 2
+[PASS] NEWS2: systolic 95 mmHg → score 2
+[PASS] NEWS2: systolic 225 mmHg → score 3
+[PASS] NEWS2: RR 8 → score 3 (bradypnea)
+[PASS] NEWS2: RR 22 → score 2 (tachypnea)
+[PASS] NEWS2: aggregate 5 → medium risk
+[PASS] NEWS2: aggregate 7+ → high risk
+[PASS] NEWS2: single param score 3 → low_medium risk
+[PASS] NEWS2: no vitals → score 0, 0 scoreable
+[PASS] NEWS2: medium+ risk generates red flags
+[PASS] NEWS2: low risk does NOT generate red flags
+[PASS] DHF: temp dropping + tachycardia → dengue shock warning
+[PASS] DHF: no dengue context → no DHF warning
+[PASS] Sepsis: SIRS ≥2 + infection context → sepsis warning
+[PASS] Sepsis: qSOFA ≥2 → emergency sepsis
+[PASS] Respiratory: tachypnea + low SpO2 + tachycardia → respiratory failure
+[PASS] ACS: chest pain + tachycardia + hypotension → ACS shock
+[PASS] Hemorrhagic: tachycardia + bleeding context → compensated shock
+[PASS] Preeclampsia: hypertension + pregnant + headache → preeclampsia warning
+[PASS] Preeclampsia: male patient → no preeclampsia warning
+[PASS] Malaria: high fever + tachycardia + malaria context → malaria worsening
+[PASS] CRITICAL GAP: subtle multi-param deviation caught by NEWS2 (HR 100, RR 22, temp 38.5, sys 105)

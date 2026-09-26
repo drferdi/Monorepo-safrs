@@ -1,0 +1,1311 @@
+{
+  "DIS-004": {
+    "pemeriksaan_fisik": [
+      "Nyeri tekan perikranial (temporal, frontal, oksipital)",
+      "Otot leher dan bahu tegang",
+      "Tidak ada defisit neurologis fokal",
+      "Tanda vital normal",
+      "Tidak ada papiledema"
+    ],
+    "red_flags": [
+      "Nyeri kepala thunderclap (onset mendadak sangat hebat)",
+      "Demam + kaku kuduk",
+      "Defisit neurologis fokal baru",
+      "Perubahan tingkat kesadaran",
+      "Nyeri kepala progresif memburuk setiap hari"
+    ]
+  },
+  "DIS-006": {
+    "red_flags": [
+      "Kelumpuhan N. fasialis bilateral",
+      "Keterlibatan nervus kranial lain",
+      "Riwayat trauma kepala",
+      "Tanda otitis media atau massa parotis",
+      "Tidak ada perbaikan dalam 3 minggu"
+    ]
+  },
+  "DIS-007": {
+    "red_flags": [
+      "Nistagmus vertikal atau tidak berespons terhadap manuver Epley",
+      "Defisit neurologis fokal (disartria, diplopia, disfagia)",
+      "Tanda serebelum (dismetria, ataksia)",
+      "Nyeri kepala hebat bersamaan",
+      "Gangguan pendengaran mendadak"
+    ]
+  },
+  "DIS-008": {
+    "pemeriksaan_fisik": [
+      "Tidak ditemukan kelainan organik yang menjelaskan keluhan",
+      "Status mental: cemas atau depresi mungkin ada",
+      "Tanda vital normal",
+      "Pemeriksaan fisik umum dalam batas normal"
+    ],
+    "red_flags": [
+      "Penurunan berat badan signifikan tanpa sebab jelas",
+      "Tanda organik baru",
+      "Ide bunuh diri atau menyakiti diri",
+      "Gejala psikotik",
+      "Ketidakmampuan fungsional berat"
+    ]
+  },
+  "DIS-009": {
+    "pemeriksaan_fisik": [
+      "Tidak ada kelainan fisik spesifik",
+      "Tanda-tanda kelelahan kronis",
+      "Tekanan darah mungkin sedikit meningkat",
+      "Status mental: cemas atau depresi mungkin ditemukan"
+    ],
+    "red_flags": [
+      "Apnea saat tidur (mendengkur keras + henti napas saksi)",
+      "Narkolepsi (serangan tidur mendadak siang hari)",
+      "Insomnia berat > 3 bulan + gejala psikiatri berat",
+      "Penyakit organik underlying tidak terkontrol"
+    ]
+  },
+  "DIS-010": {
+    "red_flags": [
+      "Benda asing penetrans (menembus atau dicurigai menembus bola mata)",
+      "Visus menurun mendadak",
+      "Hipopion (pus di anterior chamber)",
+      "Perforasi bola mata dicurigai"
+    ]
+  },
+  "DIS-011": {
+    "pemeriksaan_fisik": [
+      "Injeksi konjungtiva (mata merah)",
+      "Sekret serous, mukoid, atau purulen",
+      "Edema palpebra mungkin ada",
+      "Visus normal atau sedikit menurun",
+      "Papil atau folikel di konjungtiva tarsal"
+    ],
+    "red_flags": [
+      "Penurunan visus mendadak",
+      "Nyeri bola mata dalam",
+      "Fotofobia berat",
+      "Edema atau kekeruhan kornea",
+      "Sekret purulen profus (gonore okuli)"
+    ]
+  },
+  "DIS-012": {
+    "red_flags": [
+      "Trauma okuli mayor bersamaan (perlu eksklusi perforasi)",
+      "Visus menurun",
+      "Nyeri bola mata dalam",
+      "Riwayat gangguan koagulasi atau antikoagulan",
+      "Perdarahan berulang tanpa sebab jelas"
+    ]
+  },
+  "DIS-015": {
+    "pemeriksaan_fisik": [
+      "Benjolan merah dan nyeri pada kelopak mata",
+      "Edema palpebra lokal",
+      "Pus terlihat di ujung folikel bulu mata (eksternum) atau konjungtiva palpebra (internum)",
+      "Nyeri tekan lokal"
+    ]
+  },
+  "DIS-016": {
+    "pemeriksaan_fisik": [
+      "Bulu mata tumbuh ke arah dalam menyentuh kornea",
+      "Injeksi konjungtiva",
+      "Epifora (mata berair berlebih)",
+      "Lecet atau kekeruhan kornea superfisial mungkin ada"
+    ],
+    "red_flags": [
+      "Ulkus kornea",
+      "Penurunan visus mendadak",
+      "Kekeruhan kornea progresif",
+      "Infeksi sekunder berat"
+    ]
+  },
+  "DIS-017": {
+    "pemeriksaan_fisik": [
+      "Kemerahan sektoral atau difus di konjungtiva bulbi anterior",
+      "Tidak ada sekret",
+      "Nyeri ringan atau tidak nyeri",
+      "Visus normal",
+      "Episklera dapat digerakkan dari sklera di bawahnya"
+    ],
+    "red_flags": [
+      "Nyeri bola mata dalam yang berat (curigai skleritis)",
+      "Penurunan visus",
+      "Fotofobia",
+      "Tidak membaik dalam 2 minggu",
+      "Tanda penyakit autoimun sistemik (artritis, SLE)"
+    ]
+  },
+  "DIS-019": {
+    "red_flags": [
+      "Floaters baru mendadak dalam jumlah banyak",
+      "Kilatan cahaya (fotopsi)",
+      "Tirai atau bayangan hitam di lapang pandang (ablasio retina)",
+      "Penurunan visus mendadak"
+    ]
+  },
+  "DIS-020": {
+    "pemeriksaan_fisik": [
+      "Visus menurun yang membaik dengan koreksi kacamata",
+      "Uji pinhole positif (visus membaik)",
+      "Pemeriksaan refraksi menunjukkan silinder",
+      "Tidak ada kelainan organik bola mata"
+    ],
+    "red_flags": [
+      "Penurunan visus mendadak",
+      "Nyeri bola mata",
+      "Anisometropia tinggi",
+      "Astigmatism ireguler (curigai keratokonus)"
+    ]
+  },
+  "DIS-021": {
+    "pemeriksaan_fisik": [
+      "Visus jauh normal, visus dekat menurun",
+      "Pasien menjauhkan objek bacaan untuk melihat lebih jelas",
+      "Usia > 40 tahun",
+      "Tidak ada kelainan organik bola mata"
+    ],
+    "red_flags": [
+      "Penurunan visus jauh mendadak",
+      "Diplopia",
+      "Nyeri bola mata",
+      "Tanda katarak atau glaukoma bersamaan"
+    ]
+  },
+  "DIS-022": {
+    "red_flags": [
+      "Penurunan visus siang hari",
+      "Perubahan lapang pandang (menyempit progresif)",
+      "Tidak ada perbaikan setelah suplementasi vitamin A",
+      "Penyakit metabolik tidak terkontrol sebagai etiologi"
+    ]
+  },
+  "DIS-023": {
+    "red_flags": [
+      "Selulitis meluas ke wajah atau leher",
+      "Otitis eksterna maligna (imunokompromis, DM: nyeri hebat, granulasi di liang telinga)",
+      "Paralisis N. fasialis",
+      "Demam tinggi dengan tanda sepsis",
+      "Tidak membaik dalam 48 jam terapi"
+    ]
+  },
+  "DIS-024": {
+    "pemeriksaan_fisik": [
+      "Membran timpani hiperemis, bulging, atau perforasi",
+      "Otoskopi: cairan di telinga tengah (air-fluid level)",
+      "Nyeri tekan tragus",
+      "Demam mungkin ada",
+      "Pendengaran menurun (tes Rinne negatif sisi sakit, Weber lateralisasi ke sisi sakit)"
+    ]
+  },
+  "DIS-025": {
+    "pemeriksaan_fisik": [
+      "Otoskopi: serumen memenuhi atau menutup seluruh lumen kanalis auditorius eksternus",
+      "Pendengaran menurun (tuli konduksi)",
+      "Tidak ada tanda perforasi membran timpani sebelum irigasi"
+    ],
+    "red_flags": [
+      "Perforasi membran timpani (kontraindikasi irigasi telinga)",
+      "Nyeri yang sangat berat atau dikeluarkan darah",
+      "Pusing hebat setelah manuver ekstraksi",
+      "Otitis media aktif bersamaan"
+    ]
+  },
+  "DIS-026": {
+    "pemeriksaan_fisik": [
+      "Mual dan muntah aktif",
+      "Pucat",
+      "Keringat dingin",
+      "Nistagmus mungkin ada saat episode",
+      "Tanda vital biasanya normal di luar episode"
+    ],
+    "red_flags": [
+      "Dehidrasi berat akibat muntah terus-menerus",
+      "Vertigo berat bukan karena gerakan (bukan mabuk perjalanan)",
+      "Gejala neurologis fokal (diplopia, disartria)",
+      "Tidak membaik dengan obat standar"
+    ]
+  },
+  "DIS-027": {
+    "pemeriksaan_fisik": [
+      "Benjolan eritematosa dan fluktuatif di vestibulum nasi",
+      "Nyeri tekan lokal",
+      "Edema hidung luar",
+      "Demam jika infeksi meluas",
+      "Selulitis perinasal mungkin ada pada kasus berat"
+    ]
+  },
+  "DIS-031": {
+    "red_flags": [
+      "Benda asing tajam atau penetrans yang tidak dapat dikeluarkan di klinik",
+      "Perdarahan aktif yang tidak terkontrol",
+      "Distress napas",
+      "Sekret purulen berbau (benda asing lama)",
+      "Komplikasi sinusitis berat"
+    ]
+  },
+  "DIS-036": {
+    "pemeriksaan_fisik": [
+      "Tonsil membesar dan hiperemis",
+      "Eksudat purulen keputihan atau membran putih keabuan di tonsil",
+      "Limfadenopati servikal anterior nyeri tekan",
+      "Faring hiperemis",
+      "Demam, uvula mungkin edema"
+    ]
+  },
+  "DIS-040": {
+    "pemeriksaan_fisik": [
+      "Demam",
+      "Takipnea",
+      "Perkusi redup di area konsolidasi",
+      "Suara napas bronkial atau ronki basah kasar di daerah konsolidasi",
+      "Fremitus taktil meningkat",
+      "Saturasi oksigen mungkin menurun",
+      "Penggunaan otot bantu napas pada kasus berat"
+    ]
+  },
+  "DIS-042": {
+    "pemeriksaan_fisik": [
+      "Tekanan darah ≥140/90 mmHg pada dua kali pengukuran terpisah",
+      "Bruit karotis mungkin ada (aterosklerosis)",
+      "Funduskopi: retinopati hipertensi (AV nicking, flame hemorrhage, papilledema pada krisis)",
+      "S4 gallop pada auskultasi jantung (LVH)",
+      "Edema perifer bilateral jika ada gagal jantung kongestif"
+    ]
+  },
+  "DIS-043": {
+    "red_flags": [
+      "Disfagia (kandidiasis esofagus)",
+      "Imunokompromis berat (HIV/AIDS, kemoterapi, steroid lama)",
+      "Tidak membaik dengan terapi standar 2 minggu",
+      "Infeksi diseminata atau kandidemia dicurigai"
+    ]
+  },
+  "DIS-044": {
+    "pemeriksaan_fisik": [
+      "Ulkus dangkal dengan tepi eritematosa di mukosa mulut",
+      "Pseudomembran putih keabuan pada dasar ulkus",
+      "Nyeri tekan lokal",
+      "Limfadenopati submandibular ipsilateral mungkin ada",
+      "Vesikel berkelompok di sekitar bibir jika herpes labialis"
+    ],
+    "red_flags": [
+      "Ulkus tidak sembuh > 3 minggu (eksklusi keganasan)",
+      "Massa atau indurasi di sekitar ulkus",
+      "Limfadenopati servikal tidak nyeri",
+      "Riwayat perokok berat + alkohol + ulkus tidak sembuh"
+    ]
+  },
+  "DIS-047": {
+    "pemeriksaan_fisik": [
+      "Nyeri tekan epigastrium",
+      "Bising usus normal atau meningkat",
+      "Tidak ada defence musculaire (perut kaku)",
+      "Tidak ada massa abdomen teraba",
+      "Tanda vital normal kecuali takikardia jika nyeri hebat"
+    ]
+  },
+  "DIS-049": {
+    "pemeriksaan_fisik": [
+      "Nyeri tekan epigastrium ringan",
+      "Tidak ada disfagia obstruktif",
+      "Tidak ada massa abdomen",
+      "Tanda vital normal",
+      "Berat badan stabil atau menurun pada kasus kronis"
+    ],
+    "red_flags": [
+      "Disfagia atau odinofagia",
+      "Penurunan berat badan tidak disengaja",
+      "Hematemesis atau melena",
+      "Anemia",
+      "Tidak membaik dengan terapi PPI 4-8 minggu"
+    ]
+  },
+  "DIS-050": {
+    "pemeriksaan_fisik": [
+      "Febris stepladder (naik bertahap mencapai 40°C di akhir minggu pertama)",
+      "Lidah tifoid (tengah berselaput kotor, tepi hiperemis)",
+      "Splenomegali dan atau hepatomegali",
+      "Bradikardi relatif (nadi tidak secepat yang diperkirakan dari tingginya suhu)",
+      "Nyeri tekan perut difus atau periumbilikal",
+      "Rose spot (bintik merah di abdomen, jarang ditemukan)"
+    ]
+  },
+  "DIS-051": {
+    "pemeriksaan_fisik": [
+      "Distensi abdomen ringan",
+      "Bising usus meningkat",
+      "Nyeri tekan perut difus tanpa rebound tenderness",
+      "Tanda dehidrasi jika diare signifikan",
+      "Tanda vital biasanya normal"
+    ],
+    "red_flags": [
+      "Darah di tinja",
+      "Penurunan berat badan signifikan",
+      "Malnutrisi berat",
+      "Diare kronik > 4 minggu",
+      "Gejala sistemik (demam, artritis, skin rash)"
+    ]
+  },
+  "DIS-052": {
+    "red_flags": [
+      "Anafilaksis (urtikaria + hipotensi + bronkospasme)",
+      "Bronkospasme berat atau stridor",
+      "Angioedema jalan napas (suara serak, stridor)",
+      "Syok anafilaktik",
+      "Reaksi berat berulang setelah paparan minimal"
+    ]
+  },
+  "DIS-053": {
+    "pemeriksaan_fisik": [
+      "Nyeri tekan abdomen difus",
+      "Bising usus meningkat",
+      "Tanda dehidrasi (turgor menurun, mukosa kering, mata cekung)",
+      "Suhu normal atau subfebris",
+      "Tanda vital sesuai tingkat dehidrasi"
+    ],
+    "red_flags": [
+      "Tanda botulisme (diplopia, disfagia, paralisis descending tanpa demam)",
+      "Dehidrasi berat + gangguan elektrolit",
+      "Demam tinggi + diare berdarah (kolitis)",
+      "Gejala neurologis",
+      "Penurunan kesadaran"
+    ]
+  },
+  "DIS-055": {
+    "red_flags": [
+      "Sindrom hiperinfeksi pada imunokompromis (larva diseminata)",
+      "Meningitis bakterial sekunder",
+      "Perforasi usus",
+      "Sepsis gram-negatif",
+      "Tidak respons terapi ivermektin"
+    ]
+  },
+  "DIS-056": {
+    "pemeriksaan_fisik": [
+      "Perut kembung",
+      "Nyeri tekan periumbilikal ringan",
+      "Massa cacing teraba pada anak dengan infestasi berat (jarang)",
+      "Tanda malnutrisi pada kasus kronis",
+      "Tanda vital normal pada kasus ringan"
+    ],
+    "red_flags": [
+      "Obstruksi usus (distensi masif, tidak flatus, mual muntah berat)",
+      "Ikterus (invasi ke saluran empedu)",
+      "Peritonitis",
+      "Pneumonia Loeffler (stadium larva: batuk + eosinofilia)"
+    ]
+  },
+  "DIS-057": {
+    "red_flags": [
+      "Hematemesis varises esofagus (hipertensi portal)",
+      "Asites masif",
+      "Gagal hati",
+      "Keterlibatan sistem saraf pusat (neurosistosomiasis)",
+      "Gejala berat + imunokompromis"
+    ]
+  },
+  "DIS-058": {
+    "pemeriksaan_fisik": [
+      "Biasanya tidak ada temuan fisik bermakna pada infeksi ringan",
+      "Nyeri perut ringan atau kram periumbilikal",
+      "Proglotid (segmen cacing) terlihat di tinja atau anus",
+      "Tanda malnutrisi pada infeksi berat kronis",
+      "Perut kembung"
+    ],
+    "red_flags": [
+      "Sistiserkosis serebral (kejang baru, nyeri kepala peningkatan TIK)",
+      "Neurosistiserkosis",
+      "Sistiserkus di mata (penurunan visus, floaters)",
+      "Gejala neurologis baru pada pasien taeniasis"
+    ]
+  },
+  "DIS-061": {
+    "pemeriksaan_fisik": [
+      "Inspeksi perianal: hemoroid interna tidak terlihat saat istirahat grade 1-2",
+      "Hemoroid grade 2: prolaps saat mengejan, retraksi spontan",
+      "Colok dubur: teraba massa lunak di atas linea dentata (jika besar)",
+      "Perdarahan merah segar menetes setelah BAB, tanpa nyeri",
+      "Tidak ada nyeri kecuali ada trombosis atau prolaps terjepit"
+    ],
+    "red_flags": [
+      "Perdarahan rektal masif",
+      "Prolaps ireponibel (grade 4) atau terjepit",
+      "Trombosis hemoroid eksterna akut dengan nyeri hebat",
+      "Perdarahan tanpa riwayat hemoroid jelas (eksklusi keganasan kolorektal)",
+      "Anemia berat akibat perdarahan kronis"
+    ]
+  },
+  "DIS-063": {
+    "pemeriksaan_fisik": [
+      "Sekret uretra purulen atau mukopurulen",
+      "Disuria dan polakisuria",
+      "Uretra eritematosa",
+      "Pada wanita: sekret serviks purulen, nyeri goyang serviks (cervical motion tenderness)",
+      "Limfadenopati inguinal bilateral mungkin ada"
+    ]
+  },
+  "DIS-065": {
+    "pemeriksaan_fisik": [
+      "Preputium tidak dapat diretraksi ke belakang glans penis",
+      "Ostium preputii tampak menyempit",
+      "Tidak ada tanda infeksi sekunder pada kasus tanpa komplikasi",
+      "Pada kasus berat: obstruksi aliran urin (urin menetes, disuria)"
+    ],
+    "red_flags": [
+      "Retensi urin akut",
+      "Infeksi sekunder aktif (posthitis, balanitis: kemerahan dan discharge)",
+      "Parafimosis (preputium terjepit di belakang glans)",
+      "Tidak bisa berkemih sama sekali"
+    ]
+  },
+  "DIS-066": {
+    "pemeriksaan_fisik": [
+      "Preputium terjepit di belakang glans penis (cincin konstriksi terlihat)",
+      "Edema glans (membengkak, kemerahan, nyeri)",
+      "Nyeri hebat",
+      "Pada kasus lanjut: iskemia dan sianosis atau nekrosis glans"
+    ]
+  },
+  "DIS-067": {
+    "pemeriksaan_fisik": [
+      "Sekret uretra mukoid atau serous (lebih encer dari gonore)",
+      "Disuria ringan",
+      "Uretra sedikit eritematosa",
+      "Gejala lebih ringan dibanding gonore",
+      "Mungkin asimtomatik terutama pada wanita"
+    ]
+  },
+  "DIS-069": {
+    "pemeriksaan_fisik": [
+      "Eritema dan edema vulva",
+      "Gatal dan rasa terbakar vulva",
+      "Sekret vagina berlebih",
+      "Ekskoriasi dari garukan",
+      "Discharge keputihan seperti cottage cheese (kandida) atau kehijauan berbau (trikomonas)"
+    ]
+  },
+  "DIS-070": {
+    "pemeriksaan_fisik": [
+      "Sekret vagina abnormal (warna, konsistensi, bau tidak normal)",
+      "Dinding vagina hiperemis",
+      "Whiff test positif (bau amis dengan KOH 10%) jika bakterial vaginosis",
+      "pH vagina > 4.5 jika BV atau trikomonas",
+      "Tidak ada nyeri tekan adneksa kecuali ada komplikasi PID"
+    ],
+    "red_flags": [
+      "Nyeri panggul bawah + demam + sekret purulen (PID)",
+      "Nyeri goyang serviks (cervical motion tenderness)",
+      "Perdarahan abnormal uterus bersamaan",
+      "Tidak membaik setelah 2 siklus terapi standar"
+    ]
+  },
+  "DIS-071": {
+    "pemeriksaan_fisik": [
+      "Sekret vagina homogen putih keabu-abuan encer",
+      "Bau amis khas (fishy odor)",
+      "Whiff test positif",
+      "pH vagina > 4.5",
+      "Clue cells pada pemeriksaan mikroskopis discharge"
+    ],
+    "red_flags": [
+      "Demam dan nyeri panggul (PID)",
+      "Pada kehamilan: risiko persalinan preterm tinggi",
+      "Tidak membaik setelah 2 siklus terapi",
+      "Perdarahan abnormal bersamaan"
+    ]
+  },
+  "DIS-072": {
+    "pemeriksaan_fisik": [
+      "Nyeri tekan adneksa bilateral atau unilateral",
+      "Cervical motion tenderness (nyeri goyang serviks)",
+      "Sekret serviks purulen atau mukopurulen",
+      "Demam > 38.3°C",
+      "Nyeri perut bawah bilateral",
+      "Massa adneksa jika sudah ada abses tuba-ovarium"
+    ]
+  },
+  "DIS-073": {
+    "pemeriksaan_fisik": [
+      "Tinggi fundus uteri sesuai usia gestasi",
+      "Denyut jantung janin positif (> 12 minggu dengan Doppler)",
+      "Gerakan janin teraba (> 20 minggu)",
+      "Edema fisiologis tungkai bawah mungkin ada di trimester III",
+      "Tekanan darah dalam batas normal (< 140/90 mmHg)",
+      "Kenaikan berat badan sesuai trimester"
+    ],
+    "red_flags": [
+      "Tekanan darah ≥ 140/90 mmHg (preeklampsia)",
+      "Perdarahan pervaginam aktif",
+      "Nyeri kepala hebat + gangguan penglihatan + edema masif (ancaman eklampsia)",
+      "Gerakan janin berkurang atau tidak terasa",
+      "Demam tinggi",
+      "Tanda persalinan preterm (kontraksi < 37 minggu)"
+    ]
+  },
+  "DIS-074": {
+    "pemeriksaan_fisik": [
+      "Serviks tertutup",
+      "Uterus lebih kecil dari usia gestasi atau sudah tidak teraba",
+      "Perdarahan berkurang atau berhenti",
+      "Nyeri perut mereda",
+      "Tanda vital stabil (nadi dan tekanan darah normal)"
+    ],
+    "red_flags": [
+      "Perdarahan masif berkelanjutan (aborsi inkomplit)",
+      "Demam + sekret berbau busuk (aborsi septik)",
+      "Nyeri perut berat menetap",
+      "Tanda syok (hipotensi, takikardia, kulit dingin)",
+      "Serviks masih terbuka (aborsi inkomplit atau inevitabilis)"
+    ]
+  },
+  "DIS-075": {
+    "pemeriksaan_fisik": [
+      "Konjungtiva palpebra pucat",
+      "Mukosa oral pucat",
+      "Telapak tangan pucat",
+      "Takikardia kompensasi",
+      "Koilonychia (kuku sendok) pada kasus lanjut",
+      "Stomatitis angularis",
+      "Tanda vital dapat normal atau takikardia"
+    ],
+    "red_flags": [
+      "Hb < 7 g/dL (anemia berat pada kehamilan)",
+      "Gejala gagal jantung (sesak napas, edema paru)",
+      "Janin IUGR atau gawat janin",
+      "Tidak respons terapi besi oral setelah 4 minggu",
+      "Perdarahan aktif bersamaan"
+    ]
+  },
+  "DIS-076": {
+    "pemeriksaan_fisik": [
+      "Laserasi perineum terlihat langsung setelah persalinan",
+      "Tingkat 1: mukosa vagina dan kulit perineum saja",
+      "Tingkat 2: otot perineum terlibat (bulbokavernosus, transversus perinei superfisialis)",
+      "Perdarahan aktif dari laserasi",
+      "Sfingter ani eksterna intak (beda dengan tingkat 3-4)"
+    ],
+    "red_flags": [
+      "Laserasi meluas ke sfingter ani eksterna (tingkat 3)",
+      "Laserasi meluas ke mukosa rektum (tingkat 4)",
+      "Perdarahan masif tidak terkontrol",
+      "Hematoma perineum membesar",
+      "Tanda syok hipovolemik"
+    ]
+  },
+  "DIS-077": {
+    "pemeriksaan_fisik": [
+      "Nodul eritematosa fluktuatif",
+      "Nyeri tekan lokal signifikan",
+      "Pus tampak atau teraba",
+      "Edema jaringan sekitar",
+      "Demam jika infeksi meluas",
+      "Limfadenopati regional mungkin ada"
+    ],
+    "red_flags": [
+      "Selulitis meluas luas dari fokus abses",
+      "Fasciitis nekrotikans (batas tidak tegas, nyeri tidak proporsional, krepitasi gas)",
+      "Tanda sepsis sistemik",
+      "Abses multipel rekuren (curigai DM atau imunokompromis)",
+      "Demam tinggi + leukositosis berat"
+    ]
+  },
+  "DIS-078": {
+    "pemeriksaan_fisik": [
+      "Area payudara merah, bengkak, hangat, dan nyeri tekan lokal",
+      "Demam > 38.5°C",
+      "Fluktuasi jika sudah terbentuk abses",
+      "Limfadenopati aksila ipsilateral",
+      "Celah atau lecet pada puting mungkin ada sebagai port d'entree"
+    ],
+    "red_flags": [
+      "Abses payudara (fluktuasi jelas, perlu insisi drainase)",
+      "Sepsis (demam tinggi, takikardia, leukositosis)",
+      "Tidak membaik dalam 48-72 jam antibiotik",
+      "Mastitis tidak berkaitan laktasi pada wanita dewasa (eksklusi karsinoma inflamasi)",
+      "Massa tidak hilang setelah mastitis sembuh"
+    ]
+  },
+  "DIS-079": {
+    "pemeriksaan_fisik": [
+      "Fisura atau retakan pada puting susu",
+      "Kemerahan dan nyeri lokal di puting",
+      "Perdarahan ringan dari fisura mungkin ada",
+      "Posisi menyusui tidak optimal sering ditemukan",
+      "Tidak ada tanda selulitis atau abses payudara"
+    ],
+    "red_flags": [
+      "Tanda mastitis (kemerahan meluas, demam, nyeri berdenyut)",
+      "Abses payudara (fluktuasi)",
+      "Tidak sembuh setelah 1-2 minggu koreksi posisi menyusui",
+      "Discharge purulen dari puting"
+    ]
+  },
+  "DIS-080": {
+    "pemeriksaan_fisik": [
+      "Puting masuk ke dalam areola",
+      "Grade 1-2: dapat dikeluarkan dengan stimulasi manual",
+      "Grade 3: tidak dapat dikeluarkan meski distimulasi",
+      "Tidak ada massa retroaureolar teraba",
+      "Kesulitan menyusui atau melekatkan bayi"
+    ],
+    "red_flags": [
+      "Inversi puting baru pada wanita dewasa tanpa riwayat sebelumnya (wajib eksklusi keganasan)",
+      "Discharge dari puting",
+      "Massa payudara teraba",
+      "Perubahan kulit payudara (peau d'orange, retraksi kulit)",
+      "Inversi progresif"
+    ]
+  },
+  "DIS-081": {
+    "pemeriksaan_fisik": [
+      "Penurunan berat badan signifikan",
+      "Tanda dehidrasi (turgor kulit menurun, mukosa kering)",
+      "Napas berbau keton (jika ketoasidosis diabetik)",
+      "Kulit kering",
+      "Takikardia jika KAD",
+      "Tanda infeksi kulit berulang atau tidak sembuh-sembuh"
+    ]
+  },
+  "DIS-082": {
+    "pemeriksaan_fisik": [
+      "Tekanan darah sering meningkat (hipertensi sebagai komorbid)",
+      "BMI tinggi atau obesitas sentral",
+      "Acanthosis nigricans di leher atau aksila (resistensi insulin)",
+      "Pemeriksaan kaki: ulkus neuropatik, refleks menurun, sensasi berkurang (monofilamen)",
+      "Funduskopi: retinopati diabetik jika sudah ada komplikasi"
+    ]
+  },
+  "DIS-083": {
+    "pemeriksaan_fisik": [
+      "Tremor atau gemetar",
+      "Keringat dingin (diaforesis)",
+      "Pucat",
+      "Takikardia",
+      "Kesadaran masih baik pada hipoglikemia ringan",
+      "Akral dingin"
+    ]
+  },
+  "DIS-085": {
+    "pemeriksaan_fisik": [
+      "Tanda defisiensi spesifik: angular stomatitis dan glossitis (B2, B12), koilonychia (B12), gusi berdarah (C), buta senja (A), osteomalasia (D)",
+      "Kulit kering atau dermatitis (B3, B6)",
+      "Rambut mudah rontok",
+      "Tanda anemia mungkin ada (pucat, takikardia)"
+    ],
+    "red_flags": [
+      "Ensefalopati Wernicke (B1): ataksia, nistagmus, kebingungan akut",
+      "Pellagra berat (B3): dermatitis + diare + demensia",
+      "Skorbut berat (C): perdarahan gusi masif, purpura luas",
+      "Hipokalsemia berat (D): tetani, kejang",
+      "Penurunan berat badan tidak disengaja berat"
+    ]
+  },
+  "DIS-086": {
+    "pemeriksaan_fisik": [
+      "Tanda defisiensi spesifik: kram otot dan tetani (kalsium atau magnesium), koilonychia (besi), gondok (iodium), kulit kering rambut rontok (zinc)",
+      "Tanda vital biasanya normal",
+      "Goiter jika defisiensi iodium",
+      "Tanda anemia jika defisiensi besi bersamaan"
+    ],
+    "red_flags": [
+      "Tetani berat atau kejang (hipokalsemia)",
+      "Aritmia jantung (hipokalemia atau hipomagnesemia)",
+      "Krisis tiroid atau hipotiroid berat (defisiensi iodium)",
+      "Malabsorbsi berat sebagai penyebab underlying",
+      "Keterlambatan perkembangan pada anak (defisiensi besi berat)"
+    ]
+  },
+  "DIS-087": {
+    "pemeriksaan_fisik": [
+      "Biasanya tidak ada temuan fisik khusus pada stadium awal",
+      "Xanthelasma (deposit lipid di kelopak mata)",
+      "Xanthoma tendon (hiperlipidemia familial berat)",
+      "Arkus kornea pada pasien muda (curigai dislipidemia familial)",
+      "Tanda komplikasi aterosklerosis: bruit karotis, tekanan darah tinggi, tanda PJK"
+    ]
+  },
+  "DIS-088": {
+    "pemeriksaan_fisik": [
+      "Sendi metatarsophalangeal I merah, bengkak, panas, nyeri tekan (gout akut)",
+      "Tofus (deposit kristal urat subkutan) di helix telinga, olekranon, tendon Achilles pada gout kronik",
+      "Nyeri tekan sendi yang terlibat",
+      "Efusi sendi pada sendi besar mungkin ada"
+    ],
+    "red_flags": [
+      "Gout berat tidak respons NSAID atau kolkisin standar",
+      "Tofi besar mengganggu fungsi sendi atau menekan saraf",
+      "Kolik ginjal atau batu urat (nefrolitiasis)",
+      "Gagal ginjal kronik akibat nefropati urat",
+      "Artritis sepsis (eksklusi infeksi sendi dengan aspirasi)"
+    ]
+  },
+  "DIS-089": {
+    "pemeriksaan_fisik": [
+      "BMI ≥ 30 kg/m² (atau ≥ 27 untuk kriteria Asia)",
+      "Lingkar pinggang > 90 cm pria atau > 80 cm wanita (obesitas sentral)",
+      "Tekanan darah sering meningkat",
+      "Acanthosis nigricans di leher atau aksila (resistensi insulin)",
+      "Tanda sleep apnea obstruktif: mengantuk siang hari, riwayat mendengkur keras"
+    ]
+  },
+  "DIS-090": {
+    "pemeriksaan_fisik": [
+      "Konjungtiva palpebra pucat",
+      "Mukosa oral pucat",
+      "Telapak tangan pucat",
+      "Takikardia kompensasi",
+      "Koilonychia (kuku sendok) pada kasus lanjut",
+      "Glossitis dan stomatitis angularis",
+      "Bising sistolik fungsional jika anemia berat"
+    ]
+  },
+  "DIS-091": {
+    "pemeriksaan_fisik": [
+      "KGB membesar, nyeri tekan, hangat, merah jika akut dan supuratif",
+      "Fluktuasi jika sudah terbentuk abses",
+      "Limfadenopati regional sesuai area drainase",
+      "Tanda infeksi primer di sekitarnya (tonsilitis, selulitis, infeksi gigi)",
+      "Demam mungkin ada"
+    ],
+    "red_flags": [
+      "KGB keras, tidak nyeri, melekat ke jaringan sekitar atau kulit (curigai keganasan)",
+      "Ukuran > 2 cm, tidak mengecil dalam 4-6 minggu tanpa sebab jelas",
+      "Limfadenopati generalisata + demam + penurunan BB (limfoma atau HIV)",
+      "Abses besar memerlukan drainase",
+      "Gejala B: demam berulang, keringat malam, penurunan BB > 10%"
+    ]
+  },
+  "DIS-094": {
+    "pemeriksaan_fisik": [
+      "Demam mendadak tinggi",
+      "Nyeri otot terutama betis (myalgia calf, patognomonik)",
+      "Injeksi konjungtiva (mata merah tanpa sekret)",
+      "Hepatomegali ringan mungkin ada",
+      "Ikterus ringan pada fase imun (Weil disease)",
+      "Nyeri tekan sudut costovertebral (keterlibatan ginjal)"
+    ]
+  },
+  "DIS-095": {
+    "red_flags": [
+      "Syok anafilaktik (hipotensi + takikardia + penurunan kesadaran)",
+      "Bronkospasme berat atau stridor inspirasi",
+      "Angioedema laring (suara serak, stridor, sulit menelan)",
+      "Sianosis",
+      "Henti jantung dan napas",
+      "Tidak respons epinefrin dosis pertama"
+    ]
+  },
+  "DIS-096": {
+    "pemeriksaan_fisik": [
+      "Ulkus kronik dengan tepi tidak teratur atau undermined",
+      "Dasar ulkus: jaringan granulasi, nekrotik, atau slough",
+      "Nyeri (ulkus vena) atau tidak nyeri (ulkus neuropatik diabetik)",
+      "Edema tungkai (ulkus vena)",
+      "Gambaran vena varikosa",
+      "Neuropati perifer pada DM (hipestesia, refleks berkurang)"
+    ],
+    "red_flags": [
+      "Infeksi berat: selulitis meluas atau fasciitis nekrotikans",
+      "Probe-to-bone positif (curigai osteomielitis)",
+      "Sepsis dari fokus ulkus",
+      "Iskemia tungkai berat (ABI < 0.4, nyeri istirahat, jari hitam)",
+      "Keganasan pada ulkus kronis (Marjolin ulcer)"
+    ]
+  },
+  "DIS-097": {
+    "pemeriksaan_fisik": [
+      "Benjolan lunak, lobulated, mobile, tidak nyeri",
+      "Kulit di atas normal (tidak lengket ke kulit)",
+      "Berbatas tegas, konsistensi kenyal lunak",
+      "Ukuran bervariasi 1-10 cm",
+      "Tidak melekat ke jaringan dalam"
+    ],
+    "red_flags": [
+      "Pertumbuhan cepat dalam waktu singkat",
+      "Konsistensi keras atau tidak mobile sama sekali",
+      "Nyeri spontan atau nyeri tekan",
+      "Ukuran > 5 cm (perlu evaluasi kemungkinan liposarkoma)",
+      "Melekat ke jaringan dalam atau kulit"
+    ]
+  },
+  "DIS-098": {
+    "pemeriksaan_fisik": [
+      "Papul atau plak hiperkeratotik kasar berbenjol-benjol (verrucous surface)",
+      "Permukaan kasar dengan proyeksi filiform atau villous",
+      "Titik-titik hitam (thrombosed capillaries) terlihat jika dikerik atau dengan dermoskopi",
+      "Lokasi: tangan, jari, lutut, plantar kaki",
+      "Tidak nyeri kecuali di plantar (area tekanan)"
+    ]
+  },
+  "DIS-100": {
+    "pemeriksaan_fisik": [
+      "Erupsi unilateral mengikuti dermatom (tidak melewati garis tengah)",
+      "Vesikel berkelompok di atas dasar eritematosa",
+      "Nyeri neuropatik atau rasa terbakar pada dermatom yang terlibat",
+      "Limfadenopati regional mungkin ada",
+      "Demam ringan mungkin ada prodromal"
+    ]
+  },
+  "DIS-101": {
+    "pemeriksaan_fisik": [
+      "Bercak Koplik (titik putih di mukosa bukal, patognomonik) pada fase prodromal",
+      "Demam tinggi (40-41°C)",
+      "Ruam makulopapular mulai dari belakang telinga menyebar ke bawah",
+      "Konjungtivitis bilateral",
+      "Coryza dan batuk"
+    ]
+  },
+  "DIS-102": {
+    "pemeriksaan_fisik": [
+      "Ruam pleomorfik: makula, papul, vesikel, pustul, dan krusta terdapat bersamaan (polimorfik)",
+      "Distribusi sentripetal (lebih banyak di batang tubuh)",
+      "Vesikel juga ditemukan di kulit kepala",
+      "Pruritus kuat",
+      "Demam ringan hingga sedang"
+    ]
+  },
+  "DIS-104": {
+    "pemeriksaan_fisik": [
+      "Vesikel atau bulla yang mudah pecah meninggalkan erosi dangkal",
+      "Krusta kuning keemasan seperti madu (honey-colored crust) pada impetigo non-bulosa",
+      "Bulla besar lembek pada impetigo bulosa",
+      "Lokasi: wajah, sekitar hidung dan mulut, area terbuka",
+      "Pruritus ringan",
+      "Limfadenopati regional mungkin ada"
+    ]
+  },
+  "DIS-105": {
+    "pemeriksaan_fisik": [
+      "Ulkus dangkal dengan krusta tebal kecoklatan yang menutupi dasar ulkus",
+      "Ulkus menggali lebih dalam dari impetigo biasa hingga epidermis bawah",
+      "Edema jaringan sekitar",
+      "Nyeri tekan",
+      "Lokasi terutama tungkai bawah",
+      "Limfadenopati regional"
+    ],
+    "red_flags": [
+      "Selulitis meluas dari tepi ulkus",
+      "Limfangitis (garis merah mengikuti saluran limfe ke atas)",
+      "Limfadenitis supuratif",
+      "Tanda sepsis sistemik",
+      "Imunokompromis (perlu eskalasi antibiotik sistemik)"
+    ]
+  },
+  "DIS-106": {
+    "pemeriksaan_fisik": [
+      "Papul atau pustul folikular (berpusat di folikel rambut)",
+      "Eritema perifolikular",
+      "Lokasi: kulit kepala, leher, wajah, aksila, paha",
+      "Nyeri atau gatal ringan",
+      "Tidak ada fluktuasi (karena superfisial)"
+    ],
+    "red_flags": [
+      "Berkembang menjadi furunkel atau karbunkel (infeksi lebih dalam)",
+      "Selulitis perilesional",
+      "Folikulitis rekuren (curigai DM atau imunosupresi)",
+      "Tidak respons antibiotik topikal dalam 1 minggu",
+      "Curigai MRSA (tidak respons terapi metisilin)"
+    ]
+  },
+  "DIS-107": {
+    "pemeriksaan_fisik": [
+      "Nodul eritematosa dengan pusat pustular atau nekrotik",
+      "Fluktuasi teraba",
+      "Nyeri tekan lokal signifikan",
+      "Edema jaringan sekitar",
+      "Karbunkel: beberapa orifisium dengan discharge purulen",
+      "Demam jika infeksi meluas"
+    ],
+    "red_flags": [
+      "Selulitis meluas dari fokus",
+      "Fasciitis nekrotikans (batas tidak tegas, krepitasi gas, nyeri tidak proporsional)",
+      "Tanda sepsis sistemik",
+      "Furunkel di area segitiga bahaya wajah (bibir atas, hidung: risiko trombosis sinus kavernosus)",
+      "Rekuren dengan tidak respons terapi (curigai DM, MRSA, atau imunosupresi)"
+    ]
+  },
+  "DIS-108": {
+    "pemeriksaan_fisik": [
+      "Bercak eritematosa atau kecoklatan di daerah intertriginosa",
+      "Permukaan halus, berbatas tegas (berbeda dari tinea yang bersisik)",
+      "Lokasi: aksila, inguinal, inframammae, antara jari kaki",
+      "Fluoresensi merah koral dengan lampu Wood (patognomonik Corynebacterium minutissimum)",
+      "Pruritus ringan"
+    ],
+    "red_flags": [
+      "Infeksi sekunder bakteri (superinfeksi)",
+      "Tidak respons terapi topikal setelah 4 minggu",
+      "Imunokompromis (infeksi lebih luas atau dalam)",
+      "Infeksi diseminata pada pasien imunokompromis berat"
+    ]
+  },
+  "DIS-109": {
+    "pemeriksaan_fisik": [
+      "Plak merah terang, edema, hangat, berbatas tegas dan meninggi (tepi raised, membedakan dari selulitis)",
+      "Batas lesi jelas dan tegas",
+      "Vesikel atau bulla di atas plak mungkin ada pada kasus berat",
+      "Demam tinggi dan menggigil (mendahului ruam)",
+      "Nyeri tekan lokal",
+      "Limfadenopati regional",
+      "Limfangitis (garis merah dari lesi ke KGB)"
+    ],
+    "red_flags": [
+      "Selulitis profunda atau fasciitis nekrotikans",
+      "Sepsis (demam tinggi, takikardia, gangguan kesadaran)",
+      "Bulla hemoragik atau gangren",
+      "Tidak respons antibiotik dalam 48 jam",
+      "Imunokompromis berat"
+    ]
+  },
+  "DIS-110": {
+    "pemeriksaan_fisik": [
+      "Nodul atau plak di atas KGB yang membesar (paling sering servikal atau submandibular)",
+      "KGB keras, tidak nyeri, melekat",
+      "Fluktuasi pada KGB yang sudah melunak",
+      "Fistel (sinus tract) mengeluarkan discharge purulen atau kaseosa",
+      "Ulkus dengan tepi undermined di sekitar fistel",
+      "Skar atrofik di area lesi lama"
+    ],
+    "red_flags": [
+      "TB paru aktif bersamaan (perlu isolasi dan terapi OAT segera)",
+      "Limfadenopati generalisata (eksklusi limfoma)",
+      "Tidak respons OAT setelah 2 bulan terapi intensif",
+      "Osteomielitis TB di tulang sekitar",
+      "Uji tuberkulin negatif palsu (imunokompromis berat atau HIV)"
+    ]
+  },
+  "DIS-112": {
+    "pemeriksaan_fisik": [
+      "Sifilis primer: chancre (ulkus keras, tidak nyeri, dasar bersih) di genitalia, anus, atau mulut; limfadenopati inguinal tidak nyeri bilateral",
+      "Sifilis sekunder: ruam makulopapular generalisata termasuk telapak tangan dan kaki (patognomonik), kondiloma lata, alopesia difus, limfadenopati generalisata, lesi mukosa"
+    ],
+    "red_flags": [
+      "Sifilis kongenital pada bayi",
+      "Neurosifilis (gejala neurologis: meningitis, stroke, demensia)",
+      "Sifilis pada kehamilan (terapi penisilin segera)",
+      "Koinfeksi HIV (respons terapi berbeda)",
+      "Jarisch-Herxheimer reaction berat setelah terapi penisilin pertama"
+    ]
+  },
+  "DIS-113": {
+    "red_flags": [
+      "Kerion celsi (inflamasi berat dengan massa boggy penuh pus, nyeri, alopesia)",
+      "Tidak respons terapi topikal (perlu antijamur sistemik)",
+      "Limfadenopati oksipital atau servikal besar",
+      "Alopesia permanen yang mulai terjadi",
+      "Tinea kapitis pada imunokompromis"
+    ]
+  },
+  "DIS-114": {
+    "red_flags": [
+      "Infeksi bakteri sekunder berat (folikulitis supuratif, selulitis)",
+      "Selulitis wajah dari fokus tinea barbe",
+      "Tidak respons terapi antijamur topikal 4 minggu (perlu sistemik)",
+      "Imunokompromis"
+    ]
+  },
+  "DIS-115": {
+    "red_flags": [
+      "Superinfeksi bakteri",
+      "Eksaserbasi setelah penggunaan steroid topikal (tinea incognito: gambaran atipikal)",
+      "Tidak respons terapi topikal 4 minggu",
+      "Lesi meluas dengan cepat"
+    ]
+  },
+  "DIS-116": {
+    "red_flags": [
+      "Lesi luas atau progresif cepat",
+      "Tidak respons terapi topikal 2-4 minggu",
+      "Imunokompromis (lesi lebih berat dan luas)",
+      "Tinea profunda (infeksi folikular dalam, nodul)"
+    ]
+  },
+  "DIS-117": {
+    "red_flags": [
+      "Infeksi sekunder bakteri",
+      "Tidak respons terapi topikal 4-8 minggu",
+      "Imunokompromis",
+      "Menyertai tinea unguium yang tidak diobati"
+    ]
+  },
+  "DIS-118": {
+    "red_flags": [
+      "Tidak respons terapi antijamur sistemik setelah 3-6 bulan",
+      "Selulitis periungual dari infeksi sekunder bakteri",
+      "Infeksi sekunder bakteri pada kuku dan jaringan sekitar",
+      "Imunokompromis (perlu durasi terapi lebih lama)"
+    ]
+  },
+  "DIS-119": {
+    "red_flags": [
+      "Selulitis inguinal dari superinfeksi bakteri",
+      "Infeksi sekunder luas",
+      "Rekuren terus-menerus (curigai resistensi atau sumber re-infeksi seperti tinea pedis atau unguium)"
+    ]
+  },
+  "DIS-120": {
+    "red_flags": [
+      "Selulitis tungkai (tinea pedis sebagai port d'entree bakteri)",
+      "Dermatophytid reaction atau id reaction sistemik",
+      "Infeksi sekunder bakteri",
+      "Tidak respons terapi topikal 4 minggu (perlu sistemik)"
+    ]
+  },
+  "DIS-121": {
+    "pemeriksaan_fisik": [
+      "Makula hipopigmentasi (lebih jelas pada kulit gelap) atau hiperpigmentasi di area berpigmen rendah",
+      "Sisik halus yang terlihat jika digaruk (coup d'ongle)",
+      "Distribusi: bahu, dada atas, punggung, leher",
+      "Fluoresensi kuning kehijauan dengan lampu Wood (Malassezia)",
+      "Tidak ada inflamasi aktif"
+    ],
+    "red_flags": [
+      "Pitiriasis versikolor berat atau rekuren pada imunokompromis",
+      "Tidak respons terapi standar antijamur",
+      "Diagnosis banding vitiligo atau hipopigmentasi lain (perlu diferensiasi)"
+    ]
+  },
+  "DIS-122": {
+    "red_flags": [
+      "Kandidiasis esofagus (disfagia atau odinofagia)",
+      "Kandidemia pada imunokompromis berat (demam persisten, tanda sepsis)",
+      "Tidak respons terapi azol standar",
+      "Infeksi rekuren (DM tidak terkontrol, HIV, penggunaan antibiotik lama)",
+      "Penyebaran sistemik dicurigai"
+    ]
+  },
+  "DIS-123": {
+    "red_flags": [
+      "Infeksi sekunder bakteri pada area migrasi larva (impetigo, selulitis)",
+      "Tidak respons dalam 2 minggu terapi ivermektin atau albendazol",
+      "Komplikasi inflamasi berat atau luas",
+      "Imunokompromis"
+    ]
+  },
+  "DIS-124": {
+    "red_flags": [
+      "Limfedema berat (elephantiasis) yang mengganggu fungsi tungkai",
+      "Chyluria (urin seperti susu)",
+      "Limfangitis akut berulang dengan demam dan nyeri ekstremitas",
+      "Hidrokele masif",
+      "Komplikasi paru: sindrom eosinofilia paru tropis (batuk, bronkospasme, eosinofilia tinggi)"
+    ]
+  },
+  "DIS-125": {
+    "pemeriksaan_fisik": [
+      "Telur (nit) melekat erat pada rambut, terutama area oksipital dan retroaurikular",
+      "Kutu dewasa (lice) mungkin terlihat bergerak di kulit kepala",
+      "Pruritus skalp signifikan",
+      "Ekskoriasi dari garukan",
+      "Papul eritematosa di kulit kepala atau tengkuk"
+    ],
+    "red_flags": [
+      "Infeksi sekunder dari garukan: impetigo, selulitis, folikulitis",
+      "Dermatitis luas di kulit kepala",
+      "Rekuren terus-menerus (source re-infeksi dari kontak rumah tangga)"
+    ]
+  },
+  "DIS-126": {
+    "pemeriksaan_fisik": [
+      "Nit dan kutu terlihat di rambut pubis (dan mungkin aksila, bulu dada, alis, bulu mata)",
+      "Pruritus pubis kuat",
+      "Makula serulae (bintik biru abu-abu) di kulit sekitar akibat gigitan kutu",
+      "Ekskoriasi dari garukan"
+    ],
+    "red_flags": [
+      "Infeksi sekunder kulit dari garukan",
+      "Kemungkinan IMS lain bersamaan (skrining IMS)",
+      "Pada anak-anak: perlu pertimbangan kemungkinan pelecehan seksual"
+    ]
+  },
+  "DIS-129": {
+    "pemeriksaan_fisik": [
+      "Eritema, edema, papul, vesikel jika akut; likenifikasi dan fisura jika kronis",
+      "Batas lesi sesuai area kontak iritan (geometric pattern)",
+      "Kulit kering dan pecah-pecah pada kasus kronis",
+      "Lokasi sesuai paparan (tangan paling sering, wajah, leher)",
+      "Pruritus atau nyeri terbakar tergantung jenis iritan"
+    ],
+    "red_flags": [
+      "Tidak membaik setelah eliminasi iritan dan terapi standar",
+      "Infeksi sekunder bakteri (krusta, pus)",
+      "Dermatitis kerja berat yang mengganggu pekerjaan",
+      "Alergi kontak bersamaan (perlu patch test untuk konfirmasi)"
+    ]
+  },
+  "DIS-131": {
+    "pemeriksaan_fisik": [
+      "Plak atau papul berbentuk koin (nummular) eritematosa",
+      "Krusta dan sisik di atas lesi",
+      "Pruritus intensif",
+      "Lokasi: tungkai bawah, batang tubuh",
+      "Likenifikasi pada lesi kronis yang sudah lama"
+    ]
+  },
+  "DIS-132": {
+    "pemeriksaan_fisik": [
+      "Eritema dan papul di konveksitas area popok (genital, bokong, paha bagian dalam)",
+      "Sparring di lipatan kulit dalam (beda dengan kandidiasis yang mengenai lipatan)",
+      "Pada kasus berat: vesikel, erosi, kulit maserasi",
+      "Tidak ada vesikel satelit di luar area utama"
+    ],
+    "red_flags": [
+      "Superinfeksi kandida: vesikel satelit di luar batas lesi utama, lesi di lipatan",
+      "Superinfeksi bakteri: krusta kuning, pus",
+      "Impetigo di area popok",
+      "Tidak membaik dalam 2-3 hari dengan terapi topikal standar"
+    ]
+  },
+  "DIS-133": {
+    "red_flags": [
+      "Dermatitis seboroik berat dan refrakter pada HIV (perlu evaluasi HIV)",
+      "Infeksi sekunder bakteri pada lesi yang tereksoriasi",
+      "Tidak respons terapi antijamur dan steroid ringan standar 4 minggu",
+      "Kerontokan rambut progresif dan permanen"
+    ]
+  },
+  "DIS-134": {
+    "pemeriksaan_fisik": [
+      "Herald patch: satu plak oval eritematosa lebih besar, muncul 1-2 minggu sebelum erupsi generalisata",
+      "Erupsi generalisata oval mengikuti garis Langer (Christmas tree pattern di punggung)",
+      "Sisik collarette (cincin sisik mengarah ke dalam di tepi lesi)",
+      "Pruritus sedang",
+      "Lokasi: batang tubuh dan proksimal ekstremitas; wajah, tangan, dan kaki biasanya tidak terkena"
+    ],
+    "red_flags": [
+      "Tidak ada herald patch atau pola atipikal (lakukan biopsi untuk eksklusi sifilis sekunder)",
+      "Tidak sembuh spontan dalam 8-10 minggu",
+      "Lesi mukosa yang berat",
+      "Presentasi atipikal pada pasien imunokompromis"
+    ]
+  },
+  "DIS-135": {
+    "red_flags": [
+      "Akne berat nodulokistik (risiko skar permanen, perlu isotretinoin)",
+      "Akne fulminans (akne berat + demam + artralgia)",
+      "Tanda hiperandrogenisme pada perempuan (PCOS: haid tidak teratur, hirsutisme)",
+      "Tidak respons terapi topikal dan oral standar 3 bulan"
+    ]
+  },
+  "DIS-136": {
+    "pemeriksaan_fisik": [
+      "Nodul atau abses nyeri di area apokrin (aksila, inguinal, perianal, inframammae)",
+      "Sinus tract kronik mengeluarkan discharge purulen",
+      "Skar fibrotik di area terlibat",
+      "Pada kasus berat: keterlibatan luas (Hurley stage III)"
+    ],
+    "red_flags": [
+      "Karsinoma skuamosa pada lesi kronik sangat lama (jarang)",
+      "Sepsis dari infeksi berat",
+      "Deformitas dan kontraktur berat mengganggu fungsi",
+      "Tidak respons antibiotik dan drainase berulang (perlu rujuk dermatologis atau bedah)"
+    ]
+  },
+  "DIS-137": {
+    "red_flags": [
+      "Tidak respons setelah penghentian semua steroid topikal wajah",
+      "Rebound berat setelah penghentian steroid",
+      "Infeksi sekunder bakteri",
+      "Tidak sembuh dalam 6-8 minggu terapi metronidazol topikal"
+    ]
+  },
+  "DIS-138": {
+    "pemeriksaan_fisik": [
+      "Vesikel atau papul kecil non-folikular dalam jumlah banyak di atas kulit eritematosa",
+      "Miliaria kristalina: vesikel superfisial jernih mudah pecah tanpa reaksi radang",
+      "Miliaria rubra: papul eritematosa dan pruritus (prickly heat)",
+      "Miliaria profunda: papul skin-colored lebih dalam (jarang)",
+      "Lokasi: dada, punggung, leher, area tertutup pakaian"
+    ],
+    "red_flags": [
+      "Infeksi sekunder (folikulitis, impetigo pada lesi yang digaruk)",
+      "Miliaria berat pada bayi (risiko dehidrasi dan hiperpirexia)",
+      "Tidak membaik setelah penurunan suhu lingkungan dan pakaian longgar",
+      "Tanda heat stroke bersamaan (suhu > 40°C, kebingungan, tidak berkeringat)"
+    ]
+  },
+  "DIS-139": {
+    "pemeriksaan_fisik": [
+      "Wheals eritematosa dengan flare, timbul tiba-tiba dan hilang < 24 jam per lesi",
+      "Pruritus kuat",
+      "Ukuran bervariasi dari mm hingga cm, dapat bergabung",
+      "Dermografisme positif mungkin ditemukan",
+      "Angioedema bibir, kelopak mata, atau lidah mungkin bersamaan"
+    ],
+    "red_flags": [
+      "Angioedema laring (stridor, sulit menelan, suara serak)",
+      "Bronkospasme atau sesak napas",
+      "Hipotensi atau sinkop (anafilaksis)",
+      "Urtikaria + sesak + hipotensi = anafilaksis, berikan epinefrin segera"
+    ]
+  },
+  "DIS-140": {
+    "pemeriksaan_fisik": [
+      "Ruam makulopapular simetris dimulai dari batang tubuh dan menyebar (morbiliform eruption)",
+      "Fixed drug eruption: plak eritematosa atau bulla di tempat yang sama berulang setiap terpapar obat yang sama",
+      "Pruritus",
+      "Minimal gejala sistemik pada kasus ringan"
+    ],
+    "red_flags": [
+      "DRESS syndrome: ruam luas + demam tinggi + limfadenopati + eosinofilia + keterlibatan organ",
+      "Stevens-Johnson syndrome: lesi mukosa + epidermolisis < 10% BSA",
+      "Toxic Epidermal Necrolysis: epidermolisis > 30% BSA, Nikolsky sign positif",
+      "Bulla, erosi mukosa luas (mulut, mata, genital)",
+      "Demam tinggi + tanda sistemik berat"
+    ]
+  },
+  "DIS-141": {
+    "pemeriksaan_fisik": [
+      "Laserasi atau luka tusuk dengan tepi yang dapat dinilai",
+      "Kedalaman luka (superfisial atau menembus fascia atau lebih dalam)",
+      "Perdarahan aktif atau sudah terkontrol",
+      "Tanda kontaminasi (kotoran, debris, atau benda asing)",
+      "Evaluasi struktur vital sekitar: tendon, pembuluh darah, saraf"
+    ],
+    "red_flags": [
+      "Cedera pembuluh darah besar (perdarahan masif, pulse deficit distal)",
+      "Cedera tendon (pasien tidak dapat menggerakkan sendi atau jari)",
+      "Cedera saraf (parestesia, kelemahan motorik distal)",
+      "Luka terkontaminasi berat dengan tanda infeksi progresif (gas gangren, selulitis cepat meluas)",
+      "Luka gigitan manusia atau hewan (risiko infeksi, rabies)"
+    ]
+  },
+  "DIS-143": {
+    "pemeriksaan_fisik": [
+      "Memar (kontusio) dengan batas tidak tegas, warna ungu kebiruan",
+      "Edema lokal di area trauma",
+      "Nyeri tekan",
+      "Hematoma subkutan atau sub-galeal pada cedera kepala",
+      "Range of motion terbatas jika sendi terlibat",
+      "Tanda fraktur harus dieksklusi (deformitas, krepitasi, nyeri tekan tulang)"
+    ]
+  },
+  "DIS-144": {
+    "pemeriksaan_fisik": [
+      "Luka potong dengan tepi rata dan tajam",
+      "Kedalaman bervariasi dari superfisial hingga menembus struktur dalam",
+      "Perdarahan sesuai kedalaman dan pembuluh darah yang terlibat",
+      "Evaluasi pembuluh darah (perdarahan pulsatil, hematoma ekspansif)",
+      "Evaluasi tendon dan saraf di sekitar luka"
+    ]
+  },
+  "DIS-148": {
+    "pemeriksaan_fisik": [
+      "Status mental: halusinasi auditorik (mendengar suara yang tidak ada)",
+      "Waham (keyakinan aneh yang tidak dapat dibantah)",
+      "Bicara tidak teratur atau disorganisasi pikiran",
+      "Afek datar atau tumpul",
+      "Perawatan diri buruk",
+      "Tanda ekstrapiramidal jika sudah dalam terapi antipsikotik (tremor, rigiditas, tardive dyskinesia)"
+    ]
+  },
+  "DIS-150": {
+    "pemeriksaan_fisik": [
+      "Distensi vena jugularis (JVP meningkat)",
+      "Kardiomegali (ictus cordis bergeser lateral)",
+      "Ronki basah basal bilateral (edema paru atau gagal jantung kiri)",
+      "Edema tungkai bilateral pitting",
+      "S3 gallop pada auskultasi jantung",
+      "Hepatomegali dan hepatojugular reflux (gagal jantung kanan)",
+      "Efusi pleura (perkusi redup basal)"
+    ]
+  }
+}

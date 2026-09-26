@@ -1,0 +1,261 @@
+/* AdminDevUpdates — tokens from sentra-design-tokens.ts */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-2xl);
+}
+
+.statusMessage {
+  padding: var(--gap-4xl);
+  text-align: center;
+}
+
+.loadingMessage {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+
+.feedback {
+  padding: var(--gap-sm) var(--gap-md);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-xs);
+}
+
+.feedbackError {
+  border: 1px solid var(--c-critical-border-strong);
+  background: var(--c-critical-soft);
+  color: var(--c-critical);
+}
+
+.feedbackSuccess {
+  border: 1px solid var(--c-asesmen-border);
+  background: var(--c-asesmen-soft);
+  color: var(--c-asesmen);
+}
+
+.panel {
+  border: 1px solid var(--line-base);
+  border-radius: var(--radius-xl);
+  padding: var(--gap-xl);
+  background: var(--bg-nav);
+}
+
+.sectionKick {
+  margin: 0 0 var(--gap-md);
+  color: var(--c-asesmen);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--ls-2xl);
+}
+
+.sectionKickMuted {
+  color: var(--text-muted);
+}
+
+.formStack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-md);
+}
+
+.label {
+  display: block;
+  margin-bottom: var(--gap-xs);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--ls-wide);
+}
+
+.input {
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid var(--line-base);
+  border-radius: var(--radius-lg);
+  padding: var(--gap-sm) var(--gap-sm);
+  outline: none;
+  background: var(--bg-canvas);
+  color: var(--text-main);
+  font: inherit;
+  font-size: var(--text-xs);
+}
+
+.textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.formRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-md);
+}
+
+.formField {
+  flex: 1 1 220px;
+}
+
+.primaryButton {
+  align-self: flex-start;
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: var(--gap-sm) var(--gap-xl);
+  background: var(--c-asesmen);
+  color: var(--text-on-accent);
+  cursor: pointer;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  transition: background 0.15s;
+}
+
+.primaryButton:disabled {
+  cursor: not-allowed;
+  background: var(--c-asesmen-muted);
+}
+
+.emptyState {
+  border: 1px solid var(--line-base);
+  border-radius: var(--radius-xl);
+  padding: var(--gap-2xl) var(--gap-xl);
+  background: var(--bg-nav);
+  color: var(--text-muted);
+  text-align: center;
+  font-size: var(--text-xs);
+}
+
+.cardList,
+.historyList {
+  display: flex;
+  flex-direction: column;
+}
+
+.cardList {
+  gap: var(--gap-sm);
+}
+
+.historyList {
+  gap: var(--gap-sm);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gap-md);
+}
+
+.cardBody {
+  flex: 1;
+}
+
+.cardTitleRow,
+.historyTitleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  flex-wrap: wrap;
+}
+
+.cardTitleRow {
+  margin-bottom: var(--gap-xs);
+}
+
+.cardTitle {
+  color: var(--text-main);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+.cardText {
+  margin: 0 0 var(--gap-sm);
+  color: var(--text-main);
+  font-size: var(--text-xs);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.metaRow,
+.historyMetaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-lg);
+  color: var(--text-muted);
+}
+
+.metaRow {
+  font-size: var(--text-xs);
+}
+
+.historyMetaRow {
+  font-size: var(--text-xs);
+}
+
+.dangerButton {
+  white-space: nowrap;
+  border: 1px solid var(--c-critical-border-strong);
+  border-radius: var(--radius-md);
+  padding: var(--gap-xs) var(--gap-md);
+  background: var(--c-critical-soft);
+  color: var(--c-critical);
+  cursor: pointer;
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+.dangerButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.historyPanel {
+  opacity: 0.5;
+}
+
+.historyTitle {
+  color: var(--text-main);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+.historyBadge {
+  display: inline-block;
+  border-radius: var(--radius-sm);
+  padding: 1px var(--gap-xs);
+  background: var(--bg-surface-soft);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+.historyText {
+  margin: 0 0 var(--gap-xs);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.badge {
+  display: inline-block;
+  border-radius: var(--radius-md);
+  padding: 2px var(--gap-sm);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: var(--ls-wider);
+}
+
+.badgeRelease {
+  background: var(--c-asesmen-soft);
+  color: var(--c-asesmen);
+}
+
+.badgeMaintenance {
+  background: rgba(143, 161, 132, 0.15);
+  color: var(--c-sage);
+}
+
+.badgeDefault {
+  background: var(--bg-surface-soft);
+  color: var(--text-muted);
+}

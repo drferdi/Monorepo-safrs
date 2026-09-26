@@ -1,0 +1,230 @@
+/* AdminOperationalSummary.module.css */
+
+/* ─── Layout ─────────────────────────────────────────────── */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ─── Header ─────────────────────────────────────────────── */
+
+.sectionKick {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--c-asesmen);
+  margin: 0 0 0.25rem;
+}
+
+.headerTitle {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--text-main);
+  margin: 0 0 0.5rem;
+}
+
+.headerDescription {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ─── Live Status Row ─────────────────────────────────────── */
+
+.liveStatusRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--text-muted);
+}
+
+.liveIndicator {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.liveIndicatorOnline {
+  background: var(--c-ok);
+  box-shadow: 0 0 0 2px var(--c-ok-border);
+}
+
+.liveIndicatorReconnecting {
+  background: var(--c-asesmen);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+.liveIndicatorOffline {
+  background: var(--text-muted);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.liveStatusMeta {
+  margin-left: auto;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* ─── KPI Grid ────────────────────────────────────────────── */
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .kpiGrid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.kpiCard {
+  border: 1px solid var(--line-base);
+  border-radius: 0.375rem;
+  background: var(--bg-card);
+  padding: 0.875rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.kpiValue {
+  font-size: 1.375rem;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1;
+}
+
+.kpiValueSuccess {
+  color: var(--c-ok);
+}
+
+.kpiValueCritical {
+  color: var(--c-critical);
+}
+
+.kpiValueAccent {
+  color: var(--c-asesmen);
+}
+
+.kpiLabel {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+/* ─── Breakdown Card ──────────────────────────────────────── */
+
+.breakdownCard {
+  border: 1px solid var(--line-base);
+  border-radius: 0.375rem;
+  background: var(--bg-card);
+  overflow: hidden;
+}
+
+.breakdownHeader {
+  border-bottom: 1px solid var(--line-base);
+  padding: 0.625rem 1rem;
+}
+
+.breakdownTitle {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+}
+
+.breakdownBody {
+  padding: 0.5rem 0;
+}
+
+/* ─── Status Row ──────────────────────────────────────────── */
+
+.statusRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.375rem 1rem;
+}
+
+.statusLabel {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  width: 9rem;
+  flex-shrink: 0;
+}
+
+.statusProgress {
+  flex: 1;
+  height: 0.25rem;
+  border-radius: 9999px;
+  border: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background: color-mix(in srgb, var(--line-base) 50%, transparent);
+  overflow: hidden;
+}
+
+.statusProgress::-webkit-progress-bar {
+  background: color-mix(in srgb, var(--line-base) 50%, transparent);
+  border-radius: 9999px;
+}
+
+.statusProgress::-webkit-progress-value {
+  background: var(--c-asesmen);
+  border-radius: 9999px;
+}
+
+.statusProgress::-moz-progress-bar {
+  background: var(--c-asesmen);
+  border-radius: 9999px;
+}
+
+.statusCount {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-main);
+  width: 2rem;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ─── Status Messages ─────────────────────────────────────── */
+
+.statusMessage {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  padding: 2rem;
+  text-align: center;
+}
+
+.loadingMessage {
+  color: var(--text-muted);
+}
+
+.errorMessage {
+  color: var(--c-critical);
+}

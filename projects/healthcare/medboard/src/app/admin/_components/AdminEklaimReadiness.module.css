@@ -1,0 +1,311 @@
+/* AdminEklaimReadiness.module.css */
+
+/* ─── Layout ─────────────────────────────────────────────── */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ─── Header ─────────────────────────────────────────────── */
+
+.eyebrow {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--c-asesmen);
+  margin: 0 0 0.25rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--text-main);
+  margin: 0 0 0.5rem;
+}
+
+.description {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ─── KPI Grid ────────────────────────────────────────────── */
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .kpiGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.kpiCard {
+  border: 1px solid var(--line-base);
+  border-radius: 0.375rem;
+  background: var(--bg-card);
+  padding: 0.875rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.kpiValue {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1;
+}
+
+.kpiValueReady {
+  color: var(--c-ok);
+}
+
+.kpiValueProblem {
+  color: var(--c-critical);
+}
+
+.kpiValueAccent {
+  color: var(--c-asesmen);
+}
+
+.kpiLabel {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+/* ─── List Card ───────────────────────────────────────────── */
+
+.listCard {
+  border: 1px solid var(--line-base);
+  border-radius: 0.375rem;
+  background: var(--bg-card);
+  overflow: hidden;
+}
+
+.listHeader {
+  border-bottom: 1px solid var(--line-base);
+  padding: 0.625rem 1rem;
+}
+
+.listHeaderLabel {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+}
+
+/* ─── Encounter Row ───────────────────────────────────────── */
+
+.encounterRow {
+  border-bottom: 1px solid var(--line-base);
+}
+
+.encounterRow:last-child {
+  border-bottom: none;
+}
+
+.encounterButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.1s ease;
+}
+
+.encounterButton:hover {
+  background: color-mix(in srgb, var(--bg-nav) 60%, transparent);
+}
+
+.encounterButton:focus-visible {
+  outline: 2px solid var(--c-asesmen);
+  outline-offset: -2px;
+}
+
+/* ─── Readiness Dot ───────────────────────────────────────── */
+
+.readinessDot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.readinessDotReady {
+  background: var(--c-ok);
+}
+
+.readinessDotProblem {
+  background: var(--c-critical);
+}
+
+/* ─── Patient Label ───────────────────────────────────────── */
+
+.patientLabel {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ─── Checked At ──────────────────────────────────────────── */
+
+.checkedAt {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ─── Status Badge ────────────────────────────────────────── */
+
+.statusBadge {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  border: 1px solid var(--line-base);
+  border-radius: 9999px;
+  padding: 0.125rem 0.5rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ─── Readiness Badge ─────────────────────────────────────── */
+
+.readinessBadge {
+  font-size: 0.625rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: 9999px;
+  padding: 0.125rem 0.5rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.readinessBadgeReady {
+  background: var(--c-ok-soft);
+  color: var(--c-ok);
+  border: 1px solid var(--c-ok-border);
+}
+
+.readinessBadgeProblem {
+  background: var(--c-critical-soft);
+  color: var(--c-critical);
+  border: 1px solid var(--c-critical-border);
+}
+
+/* ─── Expand Arrow ────────────────────────────────────────── */
+
+.expandArrow {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: transform 0.15s ease;
+  display: inline-block;
+  line-height: 1;
+}
+
+.expandArrowExpanded {
+  transform: rotate(180deg);
+}
+
+/* ─── Issue List ──────────────────────────────────────────── */
+
+.issueList {
+  padding: 0.25rem 1rem 0.75rem 2.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.emptyIssues {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ─── Issue Card ──────────────────────────────────────────── */
+
+.issueCard {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.375rem 0.625rem;
+  border-radius: 0.25rem;
+  border-left: 2px solid;
+}
+
+.issueCardCritical {
+  background: var(--c-critical-soft);
+  border-left-color: var(--c-critical);
+}
+
+.issueCardWarning {
+  background: var(--c-asesmen-soft);
+  border-left-color: var(--c-asesmen);
+}
+
+.issueCode {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.issueCodeCritical {
+  color: var(--c-critical);
+}
+
+.issueCodeWarning {
+  color: var(--c-asesmen);
+}
+
+.issueMessage {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+/* ─── States ──────────────────────────────────────────────── */
+
+.statusState {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+  padding: 2rem;
+  text-align: center;
+}
+
+.errorState {
+  color: var(--c-critical);
+}
+
+.emptyState {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  padding: 2rem;
+  text-align: center;
+}

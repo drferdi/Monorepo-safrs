@@ -1,0 +1,96 @@
+/* AdminAnalytics — tokens from sentra-design-tokens.ts */
+
+.statusMessage {
+  padding: var(--gap-4xl);
+}
+
+.loadingMessage {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  letter-spacing: var(--ls-wider);
+}
+
+.errorMessage {
+  color: var(--c-critical);
+  font-size: var(--text-xs);
+}
+
+.analyticsRoot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-2xl);
+}
+
+.card {
+  border: 1px solid var(--line-base);
+  border-radius: var(--radius-xl);
+  padding: var(--gap-xl);
+  background: var(--bg-nav);
+}
+
+.sectionTitle {
+  margin-bottom: var(--gap-md);
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+}
+
+.lineChartPanel {
+  height: 280px;
+}
+
+.sectionRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-xl);
+}
+
+.emrCard {
+  flex: 1;
+  min-width: 260px;
+}
+
+.doughnutPanel {
+  max-width: 260px;
+  margin: 0 auto;
+}
+
+.peakHoursCard {
+  flex: 2;
+  min-width: 320px;
+}
+
+.barChartPanel {
+  height: 480px;
+}
+
+.kpiRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-lg);
+}
+
+.kpiCard {
+  flex: 1;
+  min-width: 140px;
+  text-align: center;
+}
+
+.kpiValue {
+  margin-bottom: var(--gap-xs);
+  color: var(--c-asesmen);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+}
+
+.kpiValueHealthy {
+  color: var(--text-main);
+}
+
+.kpiLabel {
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  letter-spacing: var(--ls-wide);
+}

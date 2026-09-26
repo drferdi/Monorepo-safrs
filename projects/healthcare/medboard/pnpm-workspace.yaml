@@ -1,0 +1,24 @@
+# Capsule standalone: workspace pnpm milik medboard sendiri, lockfile di folder ini.
+packages: []
+
+# Kontrak standalone menolak symlink di pohon capsule; linker hoisted membuat
+# node_modules datar tanpa symlink.
+nodeLinker: hoisted
+
+# pnpm 11 wajib keputusan eksplisit. Prisma (engine dan client), esbuild, dan
+# sharp butuh build script; @sentry/cli hanya untuk unggah sourcemap, tidak dipakai.
+allowBuilds:
+  '@prisma/client': true
+  '@prisma/engines': true
+  prisma: true
+  esbuild: true
+  sharp: true
+  '@sentry/cli': false
+
+# Advisori keamanan (pnpm audit 2026-09-26): transitif lewat next/@sentry/nextjs
+# (postcss, sharp) dan lewat @prisma/config (deepmerge-ts, effect).
+overrides:
+  postcss: ">=8.5.23"
+  sharp: ">=0.35.4"
+  deepmerge-ts: ">=8.0.1"
+  effect: ">=3.20.0"

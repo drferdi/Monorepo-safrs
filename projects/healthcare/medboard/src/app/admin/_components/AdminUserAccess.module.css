@@ -1,0 +1,819 @@
+.statusMessage {
+  padding: 40px 0;
+}
+
+.loadingMessage {
+  color: var(--text-muted);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+}
+
+.errorMessage {
+  color: var(--c-critical);
+  font-size: 14px;
+}
+
+.roleCardsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.roleCard,
+.kpiCard,
+.tablePanel,
+.editPanel {
+  border: 1px solid var(--line-base);
+  border-radius: var(--radius-xl);
+  background: var(--bg-nav);
+}
+
+.roleCard {
+  flex: 1 1 120px;
+  min-width: 120px;
+  padding: 14px 20px;
+}
+
+.roleLabel,
+.kpiLabel,
+.pendingTitle,
+.resultCount,
+.panelSectionLabel,
+.panelSectionLabelBlock,
+.panelSectionLabelTight,
+.logbookTitle,
+.selectorGroupTitle {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.roleLabel,
+.kpiLabel {
+  margin-bottom: 6px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+
+.roleValue,
+.kpiValue {
+  color: var(--text-main);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.roleValue {
+  font-size: 22px;
+}
+
+.roleValueMuted {
+  color: var(--text-muted);
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.kpiCard {
+  padding: 14px 20px;
+}
+
+.kpiCardPending {
+  border-color: var(--c-asesmen-border);
+  border-left: 3px solid var(--c-asesmen);
+}
+
+.kpiValueRow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.kpiValue {
+  margin-bottom: 4px;
+  font-size: 26px;
+}
+
+.kpiValueAccent {
+  color: var(--c-asesmen);
+}
+
+.kpiBadge {
+  border-radius: var(--radius-xl);
+  padding: 1px 6px;
+  background: var(--c-asesmen-soft);
+  color: var(--c-asesmen);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.kpiSub {
+  color: var(--text-muted);
+  opacity: 0.7;
+  font-size: 10px;
+}
+
+.pendingPanel {
+  margin-bottom: 28px;
+  border: 1px solid var(--c-asesmen-border);
+  border-left: 4px solid var(--c-asesmen);
+  border-radius: var(--radius-xl);
+  padding: 20px 24px;
+  background: var(--bg-nav);
+}
+
+.pendingHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.pendingTitle {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+}
+
+.pendingCountText {
+  color: var(--c-asesmen);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.pendingGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.searchInput,
+.filterSelect,
+.fieldInput,
+.fieldSelect {
+  border: 1px solid var(--line-base);
+  outline: none;
+  color: var(--text-main);
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 200px;
+  border-radius: var(--radius-lg);
+  padding: 8px 12px;
+  background: var(--bg-nav);
+  font-size: 12px;
+}
+
+.filterSelect {
+  cursor: pointer;
+  border-radius: var(--radius-lg);
+  padding: 8px 10px;
+  background: var(--bg-nav);
+  font-size: 11px;
+}
+
+.resultCount {
+  margin: 0 0 14px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+
+.tablePanel {
+  overflow: hidden;
+}
+
+.tablePanelWithMargin {
+  margin-bottom: 20px;
+}
+
+.emptyState {
+  padding: 32px;
+  color: var(--text-muted);
+  opacity: 0.5;
+  text-align: center;
+  font-size: 12px;
+}
+
+.table,
+.logbookTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableHeaderRow,
+.logbookRow {
+  border-bottom: 1px solid var(--line-base);
+}
+
+.tableHeaderCell,
+.thCenter,
+.thLeft,
+.thRight {
+  padding: 10px 14px;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-align: left;
+}
+
+.tableRow {
+  cursor: pointer;
+  border-bottom: 1px solid var(--line-base);
+}
+
+.tableRowSelected {
+  background: var(--c-asesmen-soft);
+}
+
+.tableRowInactive {
+  opacity: 0.5;
+}
+
+.tableCell {
+  padding: 10px 14px;
+}
+
+.userIdentity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.userAvatar,
+.pendingAvatar {
+  object-fit: cover;
+  background: var(--bg-canvas);
+  border: 1px solid var(--line-base);
+}
+
+.userAvatar {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-lg);
+}
+
+.userFullName {
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.userHandle {
+  color: var(--text-muted);
+  font-size: 10px;
+}
+
+.primaryTextCell {
+  color: var(--text-main);
+  font-size: 12px;
+}
+
+.secondaryTextCell {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.statusBadge {
+  display: inline-block;
+  border-radius: var(--radius-md);
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.statusBadgeActive {
+  background: var(--c-ok-soft);
+  color: var(--c-status-ok);
+}
+
+.statusBadgeInactive {
+  background: var(--c-critical-soft);
+  color: var(--c-critical);
+}
+
+.pendingCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid var(--line-base);
+  border-radius: var(--radius-xl);
+  padding: 16px;
+  background: var(--bg-surface-soft);
+}
+
+.pendingCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pendingAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-xl);
+}
+
+.pendingCardBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.pendingName {
+  color: var(--text-main);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.pendingMeta,
+.pendingDetails {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.pendingDetails {
+  display: grid;
+  gap: 4px;
+}
+
+.pendingTimestamp {
+  opacity: 0.6;
+}
+
+.pendingActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.primaryButtonBlock,
+.primaryButtonWide {
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--c-asesmen);
+  color: var(--text-on-accent);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.primaryButtonBlock {
+  flex: 1;
+  padding: 7px 0;
+}
+
+.primaryButtonWide {
+  margin-top: 4px;
+  padding: 8px 0;
+}
+
+.primaryButtonBlock:disabled,
+.primaryButtonWide:disabled {
+  cursor: not-allowed;
+  background: var(--c-asesmen-border);
+}
+
+.secondaryButton,
+.outlineButton,
+.outlineButtonCompact,
+.paginationButton,
+.chipToggle {
+  border: 1px solid var(--line-base);
+  background: transparent;
+}
+
+.secondaryButton {
+  border-radius: var(--radius-lg);
+  padding: 7px 14px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.secondaryButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.editPanel {
+  overflow: hidden;
+  border-color: var(--c-asesmen-border);
+}
+
+.toastBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+}
+
+.toastBannerSuccess {
+  border-bottom: 1px solid var(--c-ok-border);
+  background: var(--c-ok-soft);
+}
+
+.toastBannerError {
+  border-bottom: 1px solid var(--c-critical-border-strong);
+  background: var(--c-critical-soft);
+}
+
+.toastMessage {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.toastMessageSuccess {
+  color: var(--c-status-ok);
+}
+
+.toastMessageError {
+  color: var(--c-critical);
+}
+
+.iconButton,
+.closeButton,
+.selectedChipButton {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.iconButton {
+  padding: 0 4px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.editPanelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--line-base);
+}
+
+.panelSectionLabel,
+.panelSectionLabelBlock,
+.panelSectionLabelTight,
+.logbookTitle,
+.selectorGroupTitle {
+  letter-spacing: 0.15em;
+  font-size: 10px;
+}
+
+.panelUsername {
+  margin-left: 12px;
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.closeButton {
+  padding: 0 4px;
+  color: var(--text-muted);
+  font-size: 18px;
+}
+
+.editPanelGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  padding: 20px;
+}
+
+.panelSectionLabelBlock {
+  margin: 0 0 14px;
+}
+
+.formGrid {
+  display: grid;
+  gap: 10px;
+}
+
+.fieldLabel {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.fieldInput,
+.fieldSelect {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 5px;
+  padding: 7px 10px;
+  background: var(--bg-canvas);
+  font-size: 12px;
+}
+
+.fieldSelect {
+  cursor: pointer;
+}
+
+.actionsSection {
+  display: grid;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.panelSectionLabelTight {
+  margin: 0 0 6px;
+}
+
+.outlineButton,
+.outlineButtonCompact {
+  color: var(--text-main);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.outlineButton {
+  border-radius: var(--radius-lg);
+  padding: 7px 0;
+}
+
+.outlineButtonCompact {
+  border-radius: var(--radius-lg);
+  padding: 7px 14px;
+  font-size: 10px;
+}
+
+.outlineButtonMuted {
+  color: var(--text-muted);
+}
+
+.outlineButtonSuccess {
+  border-color: var(--c-ok-border);
+  color: var(--c-status-ok);
+}
+
+.outlineButtonDanger {
+  border-color: var(--c-critical-border-strong);
+  color: var(--c-critical);
+}
+
+.passwordRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.inlineMessage {
+  margin: 0;
+  font-size: 11px;
+}
+
+.inlineMessageSuccess {
+  color: var(--c-status-ok);
+}
+
+.inlineMessageError {
+  color: var(--c-critical);
+}
+
+.twoColumnGrid,
+.threeColumnGrid {
+  display: grid;
+  gap: 10px;
+}
+
+.twoColumnGrid {
+  grid-template-columns: 1fr 1fr;
+}
+
+.threeColumnGrid {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.chipRow,
+.selectedChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.selectedChips {
+  margin-bottom: 8px;
+}
+
+.selectedChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid var(--c-asesmen-border);
+  border-radius: var(--radius-md);
+  padding: 3px 8px;
+  background: rgba(230, 126, 34, 0.12);
+  color: var(--c-asesmen);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.selectedChipButton {
+  padding: 0;
+  color: var(--c-asesmen);
+  font-size: 12px;
+}
+
+.selectorPanel {
+  display: grid;
+  gap: 8px;
+  max-height: 180px;
+  overflow-y: auto;
+  border: 1px solid var(--line-base);
+  border-radius: var(--radius-lg);
+  padding: 10px;
+  background: var(--bg-canvas);
+}
+
+.selectorGroupTitle {
+  margin: 0 0 4px;
+  color: var(--text-muted);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}
+
+.topSpacing {
+  margin-top: 6px;
+}
+
+.logbookSection {
+  padding: 0 20px 20px;
+}
+
+.logbookTitle {
+  margin: 0 0 10px;
+  color: var(--c-asesmen);
+}
+
+.logbookLoading,
+.logbookEmpty {
+  color: var(--text-muted);
+  text-align: center;
+  font-size: 12px;
+}
+
+.logbookLoading {
+  padding: 20px;
+}
+
+.logbookEmpty {
+  border: 1px solid var(--line-base);
+  border-radius: var(--radius-lg);
+  padding: 20px 16px;
+}
+
+.logbookTable {
+  border: 1px solid var(--line-base);
+  border-radius: var(--radius-lg);
+  font-size: 11px;
+}
+
+.logbookHeaderRow {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.thCenter,
+.thLeft,
+.thRight {
+  padding: 6px 8px;
+  font-size: 9px;
+}
+
+.thCenter {
+  text-align: center;
+}
+
+.thRight {
+  text-align: right;
+}
+
+.tdDefault,
+.tdCenter,
+.tdCenterMuted,
+.tdEndpoint,
+.tdRightMuted {
+  padding: 6px 8px;
+  color: var(--text-main);
+}
+
+.tdCenter,
+.tdCenterMuted {
+  text-align: center;
+}
+
+.tdCenterMuted,
+.tdRightMuted {
+  color: var(--text-muted);
+}
+
+.tdRightMuted {
+  text-align: right;
+  font-size: 10px;
+}
+
+.tdEndpoint {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.resultBadge {
+  display: inline-block;
+  border-radius: 3px;
+  padding: 1px 6px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.resultBadgeSuccess {
+  background: var(--c-ok-soft);
+  color: var(--c-status-ok);
+}
+
+.resultBadgeError {
+  background: rgba(220, 53, 69, 0.12);
+  color: var(--c-critical);
+}
+
+.resultBadgeDefault {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+}
+
+.paginationRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.paginationInfo {
+  color: var(--text-muted);
+  font-size: 10px;
+}
+
+.paginationActions {
+  display: flex;
+  gap: 4px;
+}
+
+.paginationButton {
+  border-radius: var(--radius-md);
+  padding: 4px 10px;
+  background: rgba(230, 126, 34, 0.08);
+  color: var(--c-asesmen);
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.paginationButtonDisabled {
+  background: transparent;
+  color: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.chipToggle {
+  border-radius: var(--radius-md);
+  padding: 3px 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.chipToggleActive {
+  border-color: rgba(230, 126, 34, 0.4);
+  background: rgba(230, 126, 34, 0.1);
+  color: var(--c-asesmen);
+  font-weight: 600;
+}
+
+.chipToggleDisabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+}

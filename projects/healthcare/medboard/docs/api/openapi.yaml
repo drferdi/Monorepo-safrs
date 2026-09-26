@@ -1,0 +1,45 @@
+openapi: 3.1.0
+info:
+  title: Puskesmas Dashboard API
+  version: 0.1.0
+  description: |
+    Stub OpenAPI 3.1 document for the Next.js App Router API surface (`/api/*`).
+    Hand-maintained overview lives in `docs/API.md`. Expand paths here as contracts stabilize and CI publishes rendered docs.
+  license:
+    name: MIT
+    identifier: MIT
+  contact:
+    name: Sentra Healthcare Solutions
+servers:
+  - url: https://REPLACE_WITH_DEPLOYMENT_HOST
+    description: Production (replace)
+  - url: http://localhost:7000
+    description: Local development (default PORT from README)
+paths:
+  /api/auth/session:
+    get:
+      summary: Validate crew session cookie
+      operationId: getAuthSession
+      responses:
+        '200':
+          description: Session valid or unauthenticated response per handler
+        '401':
+          description: Unauthorized
+  /health:
+    get:
+      summary: Liveness check (if exposed by deployment)
+      operationId: getHealth
+      responses:
+        '200':
+          description: Service is reachable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+components: {}
+
+# Architected and built by Claudsey.

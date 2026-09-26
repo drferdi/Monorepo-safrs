@@ -1,0 +1,99 @@
+/* Section eyebrow — EMR Clinical Flow style (moved from inline in page.tsx) */
+.sectionEyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-asesmen);
+}
+
+.sectionEyebrowMuted {
+  color: var(--text-muted);
+}
+
+/* OverviewMetric — theme via globals, tone via variant class */
+.overviewMetric {
+  padding: 14px 16px;
+  border: 1px solid var(--line-base);
+  background: rgba(255, 255, 255, 0.015);
+  min-height: 92px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.overviewMetricHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.overviewMetricLabel {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.overviewMetricToneDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.overviewMetricToneDotGreen {
+  background: #4ade80;
+  box-shadow: 0 0 0 4px #4ade8018;
+}
+
+.overviewMetricToneDotMuted {
+  background: var(--text-muted);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--text-muted) 10%, transparent);
+}
+
+.overviewMetricToneDotAccent {
+  background: var(--c-asesmen);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--c-asesmen) 10%, transparent);
+}
+
+.overviewMetricToneDotGold {
+  background: #c2a46f;
+  box-shadow: 0 0 0 4px #c2a46f18;
+}
+
+.overviewMetricValue {
+  font-size: 28px;
+  line-height: 1;
+  color: var(--text-main);
+  margin-bottom: 6px;
+}
+
+.overviewMetricHint {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* PatientFlowDiagram — wrapper padding/height (replaces inline style on blueprint-wrapper) */
+.flowDiagramWrapper {
+  padding: 20px 24px;
+  height: 100%;
+}
+
+/* PatientFlowDiagram Step Number */
+.flowStepNumber {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+  flex-shrink: 0;
+}

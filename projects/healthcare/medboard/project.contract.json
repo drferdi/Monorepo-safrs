@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "id": "healthcare/medboard",
+  "owner": "Chief (dr. Ferdi Iskandar)",
+  "risk": "R2",
+  "runtime": {
+    "name": "node",
+    "version": "24"
+  },
+  "packageManager": {
+    "name": "pnpm",
+    "version": "11.21.0",
+    "lockfile": "pnpm-lock.yaml"
+  },
+  "commands": {
+    "install": { "program": "node", "args": ["scripts/pnpm.mjs", "install", "--frozen-lockfile"], "timeoutSeconds": 600 },
+    "lint": {
+      "program": null,
+      "args": [],
+      "notApplicableReason": "The project has no linter configuration; its `lint` script is the TypeScript check, which runs as `typecheck`."
+    },
+    "typecheck": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "lint"], "timeoutSeconds": 600 },
+    "test": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "test:capsule"], "timeoutSeconds": 600 },
+    "build": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "build"], "timeoutSeconds": 600 },
+    "run": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "start:local"] },
+    "deployDryRun": { "program": "node", "args": ["scripts/pnpm.mjs", "run", "deploy:dry-run"] }
+  },
+  "smoke": {
+    "kind": "http",
+    "host": "127.0.0.1",
+    "port": 4344,
+    "path": "/",
+    "expectedStatus": 200,
+    "startupTimeoutSeconds": 120
+  },
+  "artifacts": [".next/BUILD_ID"],
+  "externalDependencies": [
+    { "kind": "registry", "name": "npm registry", "locator": "https://registry.npmjs.org", "required": true },
+    { "kind": "database", "name": "PostgreSQL through Prisma", "locator": "DATABASE_URL", "required": false },
+    { "kind": "service", "name": "Crew session signing secret (required in production)", "locator": "CREW_ACCESS_SECRET", "required": false },
+    { "kind": "service", "name": "Automation token for the Med Assist bridge", "locator": "CREW_ACCESS_AUTOMATION_TOKEN", "required": false },
+    { "kind": "service", "name": "WebAuthn relying-party id for passkeys", "locator": "CREW_ACCESS_WEBAUTHN_RP_ID", "required": false },
+    { "kind": "service", "name": "DeepSeek model provider", "locator": "DEEPSEEK_API_KEY", "required": false },
+    { "kind": "service", "name": "Groq model provider", "locator": "GROQ_API_KEY", "required": false },
+    { "kind": "service", "name": "Perplexity model provider", "locator": "PERPLEXITY_API_KEY", "required": false },
+    { "kind": "service", "name": "LiveKit telemedicine video", "locator": "LIVEKIT_URL", "required": false },
+    { "kind": "service", "name": "LiveKit API key", "locator": "LIVEKIT_API_KEY", "required": false },
+    { "kind": "service", "name": "LiveKit API secret", "locator": "LIVEKIT_API_SECRET", "required": false },
+    { "kind": "service", "name": "Resend email", "locator": "RESEND_API_KEY", "required": false },
+    { "kind": "service", "name": "WhatsApp Cloud API", "locator": "WHATSAPP_CLOUD_API_TOKEN", "required": false },
+    { "kind": "service", "name": "Sentry error reporting", "locator": "SENTRY_DSN", "required": false }
+  ],
+  "mutableStatePaths": ["node_modules", ".next", "next-env.d.ts", "tsconfig.tsbuildinfo", "test-results", "output/playwright", "runtime/bridge-queue"]
+}
