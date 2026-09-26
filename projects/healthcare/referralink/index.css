@@ -1,0 +1,116 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=Newsreader:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&display=swap');
+
+:root {
+  /* FONT SYSTEM - Sentra DNA */
+  --font-display: 'Newsreader', serif;
+  --font-body:    'IBM Plex Mono', monospace;
+  --font-mono:    'IBM Plex Mono', monospace;
+
+  /* COLOR SYSTEM - Sentra DNA */
+  --bg:      #F4F2EC;              /* Warm cream background */
+  --surface: #FFFFFF;             /* Pure white surface */
+  --fg:      #000000;             /* Pure black foreground */
+  --muted:   rgba(0, 0, 0, 0.6);  /* Soft black text */
+  --border:  #999999;             /* Gray separator */
+  --accent:  #000000;             /* Black accent (clinical) */
+
+  /* CLINICAL CHART COLORS */
+  --chart-1: #000000;             /* Primary clinical */
+  --chart-2: #333333;             /* Secondary clinical */
+  --chart-3: #666666;             /* Tertiary clinical */
+  --chart-4: #999999;             /* Quaternary clinical */
+
+  /* MEDICAL SEVERITY COLORS */
+  --severity-critical: #C0392B;   /* Critical red */
+  --severity-urgent: #E74C3C;     /* Urgent orange-red */
+  --severity-warning: #F39C12;   /* Warning yellow */
+  --severity-info: #3498DB;      /* Info blue */
+  --severity-safe: #27AE60;      /* Safe green */
+}
+
+* {
+  font-family: var(--font-body);
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* TYPOGRAPHY UTILITIES */
+.font-display { font-family: var(--font-display); }
+.font-body { font-family: var(--font-body); }
+.font-mono { font-family: var(--font-mono); }
+
+/* Typography Scale */
+.title-primary {
+  font-size: 2.25rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  font-family: var(--font-display);
+  font-weight: 400;
+}
+
+.subtitle {
+  font-size: 1rem;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+
+.body-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Screen reader only - hidden visually but accessible to search engines and screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* CUSTOM SCROLLBAR */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* Pulse glow for loading button */
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
+  50% { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12); }
+}
+
+/* Marquee animation for scrolling text */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+/* CSS Grid for background patterns */
+.m3-grid-bg {
+  background-image: radial-gradient(var(--border) 1px, transparent 1px);
+  background-size: 32px 32px;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}

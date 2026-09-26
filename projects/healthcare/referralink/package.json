@@ -1,0 +1,43 @@
+{
+  "name": "medlink",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "packageManager": "pnpm@11.21.0",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "tsc --noEmit",
+    "test": "node scripts/run-tests.mjs",
+    "test:browser": "playwright test",
+    "start": "vite preview --host 127.0.0.1 --port 4342 --strictPort",
+    "deploy:dry-run": "node scripts/deploy-dry-run.mjs"
+  },
+  "dependencies": {
+    "@carbon/icons-react": "^11.83.0",
+    "@carbon/react": "^1.111.1",
+    "@vercel/node": "^16.0.1",
+    "openai": "^6.16.0",
+    "react": "^19.2.1",
+    "react-dom": "^19.2.1",
+    "sass": "^1.101.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/node": "^22.14.0",
+    "@types/react": "^19.2.10",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.0.0",
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18",
+    "tsx": "^4.21.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  }
+}

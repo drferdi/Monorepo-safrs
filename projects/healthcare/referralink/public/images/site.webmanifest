@@ -1,0 +1,26 @@
+{
+  "name": "MEDLINK",
+  "short_name": "MEDLINK",
+  "description": "Rujukan Cerdas untuk Diagnosis & Fasilitas Rujukan",
+  "theme_color": "#0d2c75",
+  "background_color": "#0d2c75",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "/images/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/images/android-chrome-maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
