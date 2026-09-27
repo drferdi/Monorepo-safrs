@@ -25,6 +25,7 @@ import requestSchema from './mira-step-request.schema.json';
 import responseSchema from './mira-step-response.schema.json';
 import { SUPPORTED_KEYWORDS, validateJson, type JsonSchema } from './validate-json';
 
+import { assertNoPII } from '@/lib/api/pii-guard';
 import type { APIResponse, CDSSResponse } from '@/types/api';
 
 const EXAMPLES_DIR = resolve(__dirname, 'examples');
@@ -108,6 +109,10 @@ describe('MIRA request contract', () => {
     const example = readJson(REQUEST_EXAMPLE);
     expect(example).toEqual(syntheticRequest());
     expect(validateJson(example, requestSchema as JsonSchema)).toEqual([]);
+  });
+
+  it('the committed request example passes the PII guard the client runs before sending', () => {
+    expect(() => assertNoPII(readFileSync(REQUEST_EXAMPLE, 'utf-8'))).not.toThrow();
   });
 
   it.each(GOLDEN_CASES)('the request for golden case $id is valid', (goldenCase) => {

@@ -37,9 +37,11 @@ const PII_PATTERNS = {
   PHONE_62: /\+?62\d{9,12}\b/g,
   PHONE_GENERAL: /\b(?:\+62|62|0)[\s.-]?\d{2,4}[\s.-]?\d{3,4}[\s.-]?\d{3,4}\b/g,
 
-  // Names with Indonesian honorifics
+  // Names with Indonesian honorifics. The title is case-insensitive through character classes;
+  // no `i` flag, so the name must stay capitalised ("Ibu pasien" is not a name). All-caps names
+  // only after dotted titles, because "Ibu" is also a common noun ("IBU HAMIL").
   HONORIFIC_NAME:
-    /\b(?:Tn\.|Ny\.|Nn\.|An\.|dr\.|Dr\.|Bpk\.|Ibu)\s*[A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3}/gi,
+    /\b(?:(?:[Tt][Nn]|[Nn][Yy]|[Nn][Nn]|[Aa][Nn]|[Dd][Rr]|[Bb][Pp][Kk])\.\s*(?:[A-Z][a-z]+|[A-Z]{2,})(?:\s+(?:[A-Z][a-z]+|[A-Z]{2,})){0,3}|[Ii][Bb][Uu]\s+[A-Z][a-z]+(?:\s+[A-Z][a-z]+){0,3})/g,
 
   // Email addresses
   EMAIL: /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g,
@@ -53,8 +55,9 @@ const PII_PATTERNS = {
   // BPJS number (13 digits)
   BPJS: /\b\d{13}\b/g,
 
-  // Rekam Medis number (various formats)
-  RM_NUMBER: /\b(?:RM|No\.?\s*RM)\s*:?\s*[A-Z0-9-]+\b/gi,
+  // Rekam Medis number: "RM" / "No. RM" as a whole token, followed by an identifier that
+  // contains a digit (so "normal" and "RM: pasien baru" do not match).
+  RM_NUMBER: /\b(?:No(?:\.\s*|\s+))?RM(?![A-Z])\s*:?\s*(?=[A-Z0-9-]*\d)[A-Z0-9-]+\b/gi,
 };
 
 /**

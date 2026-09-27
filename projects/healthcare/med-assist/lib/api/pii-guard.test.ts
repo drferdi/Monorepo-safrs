@@ -67,6 +67,34 @@ describe('pii-guard :: assertNoPII', () => {
     }
   });
 
+  it('still catches lower-case and all-caps titles and a lower-case RM label', () => {
+    const cases = [
+      { patient: 'tn. Budi' },
+      { patient: 'TN. BUDI' },
+      { patient: 'Ibu Siti' },
+      { header: 'No. RM: 12-34-56' },
+      { header: 'no rm 123456' },
+    ];
+    for (const body of cases) {
+      expect(() => assertNoPII(body), JSON.stringify(body)).toThrow(PIILeakError);
+    }
+  });
+
+  it('does NOT false-positive on "normal", "Ibu pasien" or drug names', () => {
+    const cases = [
+      { exam: 'bising usus normal' },
+      { exam: 'abdomen supel, normal' },
+      { exam: 'NORMAL' },
+      { anamnesis: 'Ibu pasien mengatakan demam' },
+      { anamnesis: 'IBU HAMIL' },
+      { medication: 'Ibuprofen 400 mg' },
+      { header: 'RM: pasien baru' },
+    ];
+    for (const body of cases) {
+      expect(() => assertNoPII(body), JSON.stringify(body)).not.toThrow();
+    }
+  });
+
   it('passes through an already-anonymized AnonymizedClinicalContext', () => {
     const ctx: AnonymizedClinicalContext = {
       keluhan_utama: 'Demam tinggi 3 hari',
