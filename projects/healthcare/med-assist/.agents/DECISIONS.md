@@ -3,6 +3,17 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-27 — RME practitioner names come from the signed-in Assist user
+
+- Decision (Chief): the "Dokter / Tenaga Medis" and "Perawat / Bidan / Nutrisionist /
+  Sanitarian" fields take the name of the user signed in to Assist, chosen by crew profession
+  (Dokter, Dokter Gigi → doctor field; Perawat, Bidan, Apoteker, Triage Officer → nurse field).
+  The other field, local accounts and unknown professions keep `DOKTER_NAMA` / `PERAWAT_NAMA`.
+  This reverses the earlier directive "always used, never dynamic" in `lib/clinical/tenaga-medis.ts` (R3).
+- Profession, not `role`, decides, because `normalizeRole` maps bidan to `doctor`.
+- ePuskesmas autocomplete for these fields selects only a single exact name match; otherwise the
+  field is cleared and the step reports "Nama tenaga medis tidak cocok persis di ePuskesmas".
+
 ## 2026-09-27 — Real cases may reach MIRA through OpenRouter zero data retention
 
 - Decision (Chief, in chat): the reasoning service runs with `MIRA_DATA_POLICY=openrouter-zdr`

@@ -719,8 +719,8 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
       const scrapedNames = scrapeDoctorNurseNames();
       console.warn('[Diagnosa Handler] Scraped names from RME:', scrapedNames);
 
-      // Doctor name — hardcoded per Chief directive
-      const dokterName = DOKTER_NAMA;
+      // Doctor name — signed-in user or constant (DECISIONS 2026-09-27)
+      const dokterName = payload.tenaga_medis?.dokter_nama || DOKTER_NAMA;
       if (dokterName) {
         const dokterInput = findBestStaffInput('dokter');
         if (dokterInput) {
@@ -737,6 +737,9 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
                   timeout: 1800,
                   retries: 1,
                   typeDelay: 35,
+                  requireExactMatch: true,
+                  allowFirstItemFallback: false,
+                  requireDropdownSelection: true,
                 }
               : undefined,
           });
@@ -751,8 +754,8 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
         skipped.push('dokter_nama: source unavailable');
       }
 
-      // Nurse name — hardcoded per Chief directive
-      const perawatName = PERAWAT_NAMA;
+      // Nurse name — signed-in user or constant (DECISIONS 2026-09-27)
+      const perawatName = payload.tenaga_medis?.perawat_nama || PERAWAT_NAMA;
       if (perawatName) {
         const perawatInput = findBestStaffInput('perawat');
         if (perawatInput) {
@@ -769,6 +772,9 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
                   timeout: 1800,
                   retries: 1,
                   typeDelay: 35,
+                  requireExactMatch: true,
+                  allowFirstItemFallback: false,
+                  requireDropdownSelection: true,
                 }
               : undefined,
           });

@@ -345,6 +345,7 @@ export interface DiagnosaFillPayload {
   kasus: DiagnosaKasus;
   prognosa: string;
   penyakit_kronis: string[];
+  tenaga_medis?: { dokter_nama: string; perawat_nama: string };
 }
 
 // Fill result (Section 17.2)

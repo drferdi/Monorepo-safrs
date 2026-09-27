@@ -1086,19 +1086,21 @@ export async function fillResepForm(payload: ResepFillPayload): Promise<{
     }
 
     // 0b. Fill AJAX global fields through MAIN world bridge (jQuery-aware).
-    // Dokter/perawat hardcoded per Chief directive — always override payload.
+    // Dokter/perawat: signed-in user or constant (DECISIONS 2026-09-27), exact name match only.
     const ajaxMappings: MainWorldFieldMapping[] = [
       {
         selector: RESEP_FIELDS.dokter_nama_bpjs.selector,
-        value: DOKTER_NAMA,
+        value: payload.ajax?.dokter || DOKTER_NAMA,
         type: 'autocomplete',
         autocompleteTimeout: 4000,
+        requireExactMatch: true,
       },
       {
         selector: RESEP_FIELDS.perawat_nama.selector,
-        value: PERAWAT_NAMA,
+        value: payload.ajax?.perawat || PERAWAT_NAMA,
         type: 'autocomplete',
         autocompleteTimeout: 4000,
+        requireExactMatch: true,
       },
     ];
 
@@ -1114,10 +1116,24 @@ export async function fillResepForm(payload: ResepFillPayload): Promise<{
       }
 
       for (const failedBridge of bridgeResult.failed) {
-        const fallbackResult = await fillAutocomplete(failedBridge.field, failedBridge.value, {
+        // Retry with the configured name and the exact-match rule: an exact-match failure from the
+        // bridge carries an empty value, and a plain retry would select the first practitioner.
+        const mapping = ajaxMappings.find((m) => m.selector === failedBridge.field);
+        if (!mapping) {
+          result.failed.push({
+            success: false,
+            field: failedBridge.field,
+            value: failedBridge.value,
+            method: 'autocomplete',
+            error: failedBridge.error || 'Bridge fill failed',
+          });
+          continue;
+        }
+        const fallbackResult = await fillAutocomplete(mapping.selector, mapping.value, {
           timeout: 2500,
           typeDelay: 60,
           retries: 2,
+          requireExactMatch: true,
         });
         if (fallbackResult.success) {
           result.success.push(fallbackResult);

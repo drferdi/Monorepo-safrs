@@ -1527,12 +1527,14 @@ async function fillTenagaMedis(
       value: dokterNama,
       type: 'autocomplete',
       autocompleteTimeout: 4000,
+      requireExactMatch: true,
     },
     {
       selector: 'input[name="perawat_nama"], input[name="perawat"], input[name*="bidan"]',
       value: perawatNama,
       type: 'autocomplete',
       autocompleteTimeout: 4000,
+      requireExactMatch: true,
     },
   ];
 

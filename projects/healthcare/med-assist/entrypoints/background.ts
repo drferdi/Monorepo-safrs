@@ -9,7 +9,7 @@
 // Handles: message routing, state management, side panel site-lock, CDSS API routing
 
 import { auditService } from '@/lib/api/audit-service';
-import { AUTH_STORE_KEYS } from '@/lib/api/auth-store';
+import { AUTH_STORE_KEYS, getSession } from '@/lib/api/auth-store';
 import { syncPatientToDashboard } from '@/lib/api/bridge-client';
 import {
   registerBridgeExecutor,
@@ -21,6 +21,7 @@ import { SentraAPI } from '@/lib/api/sentra-api';
 import { migrateLegacyAppStorageKeys } from '@/lib/app-identity';
 import { runDiagnosisSuggestions } from '@/lib/diagnosis-engine/run-diagnosis';
 import { getCDSSEngineStatus, initCDSSEngine } from '@/lib/iskandar-diagnosis-engine';
+import { assistStaffFromSession, withResepStaff, withStaffNames } from '@/lib/rme/assist-staff';
 import { RMETransferOrchestrator } from '@/lib/rme/transfer-orchestrator';
 import { isStepUrl, selectBestTransferTab } from '@/lib/rme/transfer-targeting';
 import { saveShiftOverviewCache } from '@/lib/statistics/cache';
@@ -361,6 +362,28 @@ async function hydrateTenagaMedisPayload<TStep extends RMETransferStepStatus>(
   } as RMETransferStepPayload[TStep];
 }
 
+async function applyAssistStaffPayload<TStep extends RMETransferStepStatus>(
+  step: TStep,
+  payload: RMETransferStepPayload[TStep]
+): Promise<RMETransferStepPayload[TStep]> {
+  if (!payload) return payload;
+  const staff = assistStaffFromSession(await getSession());
+  if (!staff) return payload;
+  if (step === 'anamnesa') {
+    const anamnesaPayload = payload as NonNullable<RMETransferPayload['anamnesa']>;
+    return withStaffNames(anamnesaPayload, staff) as RMETransferStepPayload[TStep];
+  }
+  if (step === 'diagnosa') {
+    const diagnosaPayload = payload as NonNullable<RMETransferPayload['diagnosa']>;
+    return withStaffNames(diagnosaPayload, staff) as RMETransferStepPayload[TStep];
+  }
+  if (step === 'resep') {
+    const resepPayload = payload as NonNullable<RMETransferPayload['resep']>;
+    return withResepStaff(resepPayload, staff) as RMETransferStepPayload[TStep];
+  }
+  return payload;
+}
+
 function toTabCommunicationError(error: unknown, fallbackMessage: string): string {
   const kind = classifyTabMessageError(error);
   if (kind === 'TIMEOUT') {
@@ -603,6 +626,7 @@ async function executeRMEFillStep<TStep extends RMETransferStepStatus>(
   }
 
   const hydratedPayload = await hydrateTenagaMedisPayload(step, payload, tabId);
+  const staffPayload = await applyAssistStaffPayload(step, hydratedPayload);
 
   await ensureTransferStepPage(tabId, step);
   transferLog.debug('transfer step page ready', { step, tabId });
@@ -611,7 +635,7 @@ async function executeRMEFillStep<TStep extends RMETransferStepStatus>(
     type: 'execFill',
     data: {
       type: step,
-      encounter: hydratedPayload,
+      encounter: staffPayload,
     },
   } as const;
   const timeout = step === 'anamnesa' ? 45000 : step === 'resep' ? 30000 : 18000;
