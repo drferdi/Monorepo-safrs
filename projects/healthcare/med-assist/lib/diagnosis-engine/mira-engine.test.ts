@@ -64,6 +64,8 @@ describe('MIRA engine client', () => {
     vi.stubGlobal('fetch', () => {
       throw new Error('real fetch must not be called in MIRA tests');
     });
+    // A developer's .env.local may set a real dev token; header tests must not depend on it.
+    vi.stubEnv('VITE_MIRA_DEV_TOKEN', '');
   });
 
   afterEach(() => {
