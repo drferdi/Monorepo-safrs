@@ -1,4 +1,10 @@
+import type { DiagnosisPageViewModel } from './diagnosisViewModel';
+
 export type DiagnosisConfidenceTier = 'high' | 'moderate' | 'low' | 'unknown';
+
+export function isDiagnosisChosen(viewModel: DiagnosisPageViewModel): boolean {
+  return viewModel.therapy.selectedDiagnosisCount > 0;
+}
 
 export function compactText(value: string | undefined, fallback = '-'): string {
   const cleaned = String(value || '')

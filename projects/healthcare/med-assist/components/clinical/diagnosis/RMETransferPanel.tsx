@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
 
-import { formatClinicalText, formatTransferState } from './diagnosisDisplayUtils';
+import { formatClinicalText, formatTransferState, isDiagnosisChosen } from './diagnosisDisplayUtils';
 import type { DiagnosisWorkspaceProps } from './DiagnosisWorkspace';
+import { StagedSection } from './StagedSection';
 
 export function RMETransferPanel({
   viewModel,
@@ -29,8 +30,12 @@ export function RMETransferPanel({
   const isRunning = transfer.state === 'running';
 
   return (
-    <section className="form-group diagnosis-block" aria-label="RME Transfer">
-      <SectionHeader title="RME Transfer" status={formatTransferState(transfer.state)} />
+    <StagedSection
+      label="RME Transfer"
+      stageIndex={4}
+      open={isDiagnosisChosen(viewModel)}
+      header={<SectionHeader title="RME Transfer" status={formatTransferState(transfer.state)} />}
+    >
       <div className="form-row-dual form-row-dual--symmetric diagnosis-field-grid">
         <StaticField value={diagnosisReady ? 'Diagnosis siap' : 'Diagnosis belum siap'} />
         <StaticField value={resepReady ? 'Resep siap' : 'Resep belum siap'} />
@@ -121,7 +126,7 @@ export function RMETransferPanel({
           ))}
         </div>
       </details>
-    </section>
+    </StagedSection>
   );
 }
 

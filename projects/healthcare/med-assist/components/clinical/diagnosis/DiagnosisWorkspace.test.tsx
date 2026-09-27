@@ -265,6 +265,68 @@ describe('DiagnosisWorkspace', () => {
     fireEvent.click(within(workspace).getByRole('button', { name: /Lengkapi Data Diagnosis/i }));
     expect(onCompleteData).toHaveBeenCalledTimes(1);
   });
+
+  const STAGED = ['Pemeriksaan Penunjang', 'Therapy + Resep', 'Edukasi', 'RME Transfer'];
+
+  it('keeps the late sections collapsed with a one-line summary until a diagnosis is chosen', () => {
+    const viewModel = makeViewModel();
+    viewModel.therapy = { ...viewModel.therapy, selectedDiagnosisCount: 0, selectedMedicationCount: 0 };
+    const { rerender } = render(<DiagnosisWorkspace {...makeProps({ viewModel })} />);
+
+    STAGED.forEach((label) => {
+      const details = screen.getByLabelText(label).querySelector('details.diagnosis-stage__details');
+      expect(details).not.toHaveAttribute('open');
+    });
+    expect(
+      within(screen.getByLabelText('Therapy + Resep')).getByText('pilih diagnosis dulu')
+    ).toBeInTheDocument();
+    expect(
+      within(screen.getByLabelText('Pemeriksaan Penunjang')).getByText('1 disarankan')
+    ).toBeInTheDocument();
+
+    const chosen = makeViewModel();
+    rerender(<DiagnosisWorkspace {...makeProps({ viewModel: chosen })} />);
+    STAGED.forEach((label) => {
+      const details = screen.getByLabelText(label).querySelector('details.diagnosis-stage__details');
+      expect(details).toHaveAttribute('open');
+    });
+
+    rerender(<DiagnosisWorkspace {...makeProps({ viewModel })} />);
+    STAGED.forEach((label) => {
+      const details = screen.getByLabelText(label).querySelector('details.diagnosis-stage__details');
+      expect(details).not.toHaveAttribute('open');
+    });
+  });
+
+  it('numbers the staged sections for the opening stagger', () => {
+    render(<DiagnosisWorkspace {...makeProps()} />);
+    STAGED.forEach((label, index) =>
+      expect(screen.getByLabelText(label)).toHaveClass(`diagnosis-stage--i${index + 1}`)
+    );
+  });
+
+  it('drops the repeated therapy notices', () => {
+    const viewModel = makeViewModel();
+    viewModel.therapy = { ...viewModel.therapy, selectedDiagnosisCount: 0, groups: [] };
+    render(<DiagnosisWorkspace {...makeProps({ viewModel })} />);
+    const therapy = screen.getByLabelText('Therapy + Resep');
+    expect(therapy).not.toHaveTextContent(/Hanya untuk ditinjau/);
+    expect(therapy).not.toHaveTextContent(/Pilih diagnosis terlebih dahulu/);
+  });
+
+  it('does not repeat supporting-exam items in Edukasi', () => {
+    const viewModel = makeViewModel();
+    viewModel.evidence = {
+      ...viewModel.evidence,
+      missing: ['SpO2 dan auskultasi paru'],
+      review: ['SpO2 dan auskultasi paru', 'Minum cukup air'],
+    };
+    render(<DiagnosisWorkspace {...makeProps({ viewModel })} />);
+    const education = screen.getByLabelText('Edukasi');
+    expect(within(education).queryByText('SpO2 dan auskultasi paru')).toBeNull();
+    expect(within(education).getByText('Minum cukup air')).toBeInTheDocument();
+    expect(within(education).getByText('1 catatan')).toBeInTheDocument();
+  });
 });
 
 describe('splitReferralGuidance', () => {

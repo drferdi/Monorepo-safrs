@@ -4,6 +4,7 @@ import {
   formatClinicalText,
   formatSafetyLabel,
   formatSourceLabel,
+  isDiagnosisChosen,
   isInsufficientDiagnosisLabel,
 } from './diagnosisDisplayUtils';
 import type {
@@ -15,6 +16,7 @@ import type {
   DiagnosisManualMedicationDraftView,
   DiagnosisWorkspaceProps,
 } from './DiagnosisWorkspace';
+import { StagedSection } from './StagedSection';
 
 export function TherapyReviewPanel({
   viewModel,
@@ -51,15 +53,22 @@ export function TherapyReviewPanel({
         (group) => !isInsufficientDiagnosisLabel(group.diagnosisLabel)
       );
   const hasDiagnosisBasis = !viewModel.primary.isInsufficient && therapyGroups.length > 0;
-  const status =
-    viewModel.therapy.state === 'loading'
+  const chosen = isDiagnosisChosen(viewModel);
+  const status = !chosen
+    ? 'pilih diagnosis dulu'
+    : viewModel.therapy.state === 'loading'
       ? 'Memuat terapi'
-      : `${viewModel.therapy.selectedMedicationCount}/${viewModel.therapy.candidateMedicationCount} obat dipilih`;
+      : hasDiagnosisBasis
+        ? `${viewModel.therapy.selectedMedicationCount}/${viewModel.therapy.candidateMedicationCount} obat dipilih`
+        : 'belum ada rekomendasi';
 
   return (
-    <section className="form-group diagnosis-block" aria-label="Therapy + Resep">
-      <SectionHeader title="Therapy + Resep" status={status} />
-      <ReadOnlyPanel>Hanya untuk ditinjau. Dokter tetap pengambil keputusan akhir.</ReadOnlyPanel>
+    <StagedSection
+      label="Therapy + Resep"
+      stageIndex={2}
+      open={chosen}
+      header={<SectionHeader title="Therapy + Resep" status={status} />}
+    >
       {viewModel.therapy.diagnosisBasisLabel ? (
         <StaticField
           value={`Basis: ${formatClinicalText(viewModel.therapy.diagnosisBasisLabel)}`}
@@ -116,12 +125,8 @@ export function TherapyReviewPanel({
             />
           ))}
         </div>
-      ) : (
-        <ReadOnlyPanel tone="warning">
-          Pilih diagnosis terlebih dahulu agar rekomendasi farmakoterapi ditampilkan.
-        </ReadOnlyPanel>
-      )}
-    </section>
+      ) : null}
+    </StagedSection>
   );
 }
 

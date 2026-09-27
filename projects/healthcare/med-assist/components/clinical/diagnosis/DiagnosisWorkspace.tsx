@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react';
 
+import { isDiagnosisChosen } from './diagnosisDisplayUtils';
 import type { DiagnosisCandidateView, DiagnosisPageViewModel } from './diagnosisViewModel';
 import { RMETransferPanel } from './RMETransferPanel';
+import { StagedSection } from './StagedSection';
 import { TherapyReviewPanel } from './TherapyReviewPanel';
 
 const MAX_CLINICAL_SIGNAL_ITEMS = 10;
@@ -535,10 +537,19 @@ function SupportingExamSection({
     viewModel.evidence.doNotMiss
   );
   const items = needsExam ? examItems : ['Tidak rutin dari data saat ini.'];
+  const examStatus = isInsufficient
+    ? 'menunggu diagnosis'
+    : needsExam
+      ? `${examItems.length} disarankan`
+      : 'Tidak rutin';
 
   return (
-    <section className="form-group diagnosis-block" aria-label="Pemeriksaan Penunjang">
-      <SectionHeader title="Pemeriksaan Penunjang" status={needsExam ? 'Perlu' : 'Tidak rutin'} />
+    <StagedSection
+      label="Pemeriksaan Penunjang"
+      stageIndex={1}
+      open={isDiagnosisChosen(viewModel)}
+      header={<SectionHeader title="Pemeriksaan Penunjang" status={examStatus} />}
+    >
       {isInsufficient ? (
         <ReadOnlyPanel>Lengkapi data diagnosis lebih dulu.</ReadOnlyPanel>
       ) : (
@@ -551,20 +562,35 @@ function SupportingExamSection({
       {showSafetyItems && safetyItems.length > 0 ? (
         <LineList title="Tanda bahaya" items={safetyItems} tone="danger" />
       ) : null}
-    </section>
+    </StagedSection>
   );
 }
 
 function EducationSection({ viewModel }: { viewModel: DiagnosisPageViewModel }) {
   const isInsufficient = viewModel.primary.isInsufficient;
+  const examKeys = new Set(
+    getVisibleExamItems(viewModel.evidence.missing).map((item) => item.toLowerCase())
+  );
+  const reviewItems = viewModel.evidence.review.filter(
+    (item) => !examKeys.has(cleanClinicalSummary(item).toLowerCase())
+  );
   const educationItems =
-    viewModel.evidence.review.length > 0
-      ? viewModel.evidence.review.slice(0, 3)
+    reviewItems.length > 0
+      ? reviewItems.slice(0, 3)
       : ['Edukasi disesuaikan setelah diagnosis utama dipilih.'];
+  const status = isInsufficient
+    ? 'menunggu diagnosis'
+    : reviewItems.length > 0
+      ? `${reviewItems.length} catatan`
+      : 'belum ada';
 
   return (
-    <section className="form-group diagnosis-block" aria-label="Edukasi">
-      <SectionHeader title="Edukasi" />
+    <StagedSection
+      label="Edukasi"
+      stageIndex={3}
+      open={isDiagnosisChosen(viewModel)}
+      header={<SectionHeader title="Edukasi" status={status} />}
+    >
       {isInsufficient ? (
         <ReadOnlyPanel>
           Edukasi final mengikuti diagnosis utama setelah data dilengkapi.
@@ -572,16 +598,13 @@ function EducationSection({ viewModel }: { viewModel: DiagnosisPageViewModel }) 
       ) : (
         <LineList title="Edukasi pasien" items={educationItems} />
       )}
-      {viewModel.evidence.review.length > educationItems.length ? (
+      {reviewItems.length > educationItems.length ? (
         <details className="diagnosis-details diagnosis-details--inline">
           <summary>Rincian edukasi</summary>
-          <LineList
-            title="Catatan tambahan"
-            items={viewModel.evidence.review.slice(educationItems.length)}
-          />
+          <LineList title="Catatan tambahan" items={reviewItems.slice(educationItems.length)} />
         </details>
       ) : null}
-    </section>
+    </StagedSection>
   );
 }
 
