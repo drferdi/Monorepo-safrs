@@ -3,6 +3,26 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-28 — UI sounds play from decoded Web Audio buffers; sound files trimmed
+
+- Decision: `utils/sound.ts` decodes each sound once into a shared `AudioContext`
+  (`latencyHint: 'interactive'`) and plays it from the buffer, starting past the file's leading
+  silence (first sample at or above 0.01) and fading capped sounds with a gain ramp. The first
+  play of a sound that is not decoded yet still goes through an `<audio>` element and starts the
+  decode. Sound files are cut at MP3 frame boundaries without re-encoding: `opening.mp3` keeps
+  its first 2.6 s (1.05 MB to 84 KB; every caller caps it at 2.2 s, and the toolbar
+  `action.onClicked` path never fires because `openPanelOnActionClick` is true), and leading
+  silence is cut from `hello.mp3` (919 ms to 83 ms), `beep.mp3` (204 ms to 60 ms) and
+  `message.mp3` (108 ms to 56 ms).
+- Rationale: Chief reported button sounds arriving late. Each click built a new `<audio>` element
+  (9–63 ms to "playing" on an idle machine, more under load) and every file began with silence
+  (34 ms for `button5.mp3`). Decoded buffers start in the same task as the click. A 32.7 s
+  opening track decoded into memory would cost about 12 MB; trimmed, under 1 MB.
+- Evidence: `utils/sound.webaudio.test.ts` (red before, green after); in the built side panel
+  (Edge), clicks 2–6 started Web Audio playback 0 ms after the click event with no new `<audio>`
+  element; a sample comparison of the trimmed files against the originals showed zero
+  difference over the played part of `opening.mp3` and no click at any cut.
+
 ## 2026-09-28 — Review details reads as one narrative with ABCD primary survey advice
 
 - Decision: the "Review next" checklist in `ClinicalReasoningDifferentialPanel` becomes one

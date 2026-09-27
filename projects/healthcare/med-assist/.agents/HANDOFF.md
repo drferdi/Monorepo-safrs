@@ -20,6 +20,13 @@ Branch `feat/sidepanel-ui-batch`, local only, not pushed, no PR.
   the vitals object and the two sanitised objects. No R3 or protected file touched. See
   `DECISIONS.md` "Clinical Trajectory must not reload or persist on equal re-renders".
 
+- Later the same day: end-to-end leak probe (Edge, synthetic ePuskesmas page, all outside
+  requests blocked) — current build: 1 audit write per Trajectory open, side-panel heap flat at
+  8.1 MB over 3 minutes on Trajectory and 1 minute on Diagnosis; the same probe on a pre-fix
+  build recorded 4,286 audit writes in 75 s and the browser growing 240 MB. Button sounds moved
+  to Web Audio and sound files trimmed (see DECISIONS "UI sounds play from decoded Web Audio
+  buffers"). Probe scripts live only in the session scratchpad.
+
 ## Verification (capsule root)
 
 - New tests red before the fix (audit persisted 2×; canonical engine called 2×), green after.
@@ -45,6 +52,9 @@ Branch `feat/sidepanel-ui-batch`, local only, not pushed, no PR.
    item, sub-AA `--text-muted` summaries); parked a11y minors (focus ring clipping, stepper
    landmark/colour-only state, `<div>` in `<summary>`, "Pilih" `aria-pressed`, primary card
    selected border); "MIRA tidak tersedia" investigation.
+5. Pending Chief approval (protected `main.tsx`): play the button sound on `pointerdown`
+   instead of `click`, and prime `button5.mp3` when the console launches; plus the "smooth and
+   soft" UX pack (see the chat proposal of 2026-09-28).
 4. Defence in depth (not done): `main.tsx` re-renders on every storage key; filtering its
    `onChanged` listener to the keys it reads would need a protected-file approval.
 
