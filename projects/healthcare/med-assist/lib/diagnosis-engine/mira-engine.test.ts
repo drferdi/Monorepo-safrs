@@ -94,6 +94,26 @@ describe('MIRA engine client', () => {
     expect(result.meta.traceId).toBe(body.traceId);
   });
 
+  it('sends the picked planning model as X-MIRA-Plan-Model', async () => {
+    const fetchFn = vi.fn<typeof fetch>(async () => jsonResponse(OK_RESPONSE));
+    const engine = createMiraEngine({
+      fetchFn,
+      baseUrl: () => SERVICE_URL,
+      planModel: async () => 'inception/mercury-2',
+    });
+    await engine.step(CASE);
+    expect(fetchFn.mock.calls[0][1]?.headers).toEqual({
+      'Content-Type': 'application/json',
+      'X-MIRA-Plan-Model': 'inception/mercury-2',
+    });
+  });
+
+  it('sends no planning-model header when none is picked', async () => {
+    const fetchFn = vi.fn<typeof fetch>(async () => jsonResponse(OK_RESPONSE));
+    await createMiraEngine({ fetchFn, baseUrl: () => SERVICE_URL, planModel: async () => undefined }).step(CASE);
+    expect(fetchFn.mock.calls[0][1]?.headers).toEqual({ 'Content-Type': 'application/json' });
+  });
+
   it('maps a valid response to an EngineResult', async () => {
     const result = await engineWith(async () => jsonResponse(OK_RESPONSE)).step(CASE);
     expect(result.status).toBe('ok');

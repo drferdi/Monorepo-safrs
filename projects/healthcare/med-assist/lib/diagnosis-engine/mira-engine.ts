@@ -17,6 +17,7 @@
 import responseSchema from './contract/mira-step-response.schema.json';
 import { validateJson, type JsonSchema } from './contract/validate-json';
 import { createTraceId, createUnavailableResult } from './engine-result';
+import { MIRA_PLAN_MODEL_HEADER, getMiraPlanModel } from './mira-plan-model';
 import type { CaseState, DiagnosisEngine, EngineResult } from './types';
 
 import { assertNoPII } from '@/lib/api/pii-guard';
@@ -50,11 +51,13 @@ export function createMiraEngine(
     fetchFn?: typeof fetch;
     baseUrl?: () => string | undefined;
     timeoutMs?: number;
+    planModel?: () => Promise<string | undefined>;
   } = {}
 ): DiagnosisEngine {
   const fetchFn = deps.fetchFn ?? ((...args: Parameters<typeof fetch>) => fetch(...args));
   const readBaseUrl = deps.baseUrl ?? (() => import.meta.env.VITE_MIRA_SERVICE_URL);
   const timeoutMs = deps.timeoutMs ?? MIRA_REQUEST_TIMEOUT_MS;
+  const readPlanModel = deps.planModel ?? getMiraPlanModel;
 
   return {
     id: 'mira',
@@ -84,6 +87,11 @@ export function createMiraEngine(
         return unavailable('PII_BLOCKED', 'Payload blocked by the PII guard; nothing was sent');
       }
 
+      // A developer or admin may pick the planning model; the service checks it against its allowlist.
+      const planModel = await readPlanModel();
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (planModel) headers[MIRA_PLAN_MODEL_HEADER] = planModel;
+
       const controller = new AbortController();
       const onAbort = () => controller.abort();
       opts?.signal?.addEventListener('abort', onAbort, { once: true });
@@ -96,7 +104,7 @@ export function createMiraEngine(
       try {
         const response = await fetchFn(`${baseUrl}${MIRA_STEP_PATH}`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers,
           body,
           credentials: 'omit',
           signal: controller.signal,

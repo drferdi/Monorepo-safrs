@@ -3,6 +3,8 @@
 
 import React from 'react';
 
+import { MiraPlanModelPicker } from './MiraPlanModelPicker';
+
 interface SidePanelFooterProps {
   workspace: string;
   section: string;
@@ -19,6 +21,7 @@ export const SidePanelFooter: React.FC<SidePanelFooterProps> = ({ onShowCredits 
       >
         Doctors retains final authority over all clinical decisions
       </div>
+      <MiraPlanModelPicker />
     </div>
   );
 };

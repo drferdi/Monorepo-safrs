@@ -9501,3 +9501,25 @@ textarea:read-only,
     animation: none;
   }
 }
+
+/* MIRA planning-model picker in the footer: developer/admin builds only (MiraPlanModelPicker) */
+.footer-model-picker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-field);
+  font-size: 8.5px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+}
+
+.footer-model-picker select {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  color: var(--text-main);
+  background: var(--neu-inset-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  padding: 2px 4px;
+}
