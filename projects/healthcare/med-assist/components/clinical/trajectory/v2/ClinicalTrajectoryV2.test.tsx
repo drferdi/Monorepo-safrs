@@ -342,11 +342,16 @@ describe('ClinicalTrajectoryV2', () => {
     expect(
       interpretation.textContent?.split('.').filter((part) => part.trim().length > 0).length
     ).toBeLessThanOrEqual(2);
-    expect(within(reasoningPanel).getByText('Review next')).toBeInTheDocument();
-    expect(within(reasoningPanel).getByText(/Latest complaint/i)).toBeInTheDocument();
-    expect(within(reasoningPanel).getByText(/Vital trend/i)).toBeInTheDocument();
-    expect(within(reasoningPanel).getByText(/Active diagnosis/i)).toBeInTheDocument();
-    expect(within(reasoningPanel).getByText(/Active therapy/i)).toBeInTheDocument();
+    expect(within(reasoningPanel).getByText('Penjelasan')).toBeInTheDocument();
+    const narrative = within(reasoningPanel).getByTestId('clinical-review-narrative');
+    const { complaintSignals, historicalDiagnosisSignals, therapySignals } =
+      scenario.hybridResult.clinicalContext;
+    expect(narrative).toHaveTextContent(
+      `Pada pasien ditemukan adanya ${complaintSignals[0].label.toLowerCase()}.`
+    );
+    expect(narrative).toHaveTextContent(/Tren tanda vital/);
+    expect(narrative).toHaveTextContent(historicalDiagnosisSignals[0].label);
+    expect(narrative).toHaveTextContent(therapySignals[0].label);
     expect(within(reasoningPanel).getByText('Physician action')).toBeInTheDocument();
     expect(
       within(reasoningPanel).getByText('Select a working diagnosis to unlock therapy support.')
@@ -381,7 +386,6 @@ describe('ClinicalTrajectoryV2', () => {
     expect(evidenceDrawer.querySelector('.ct-v2-evidence-grid')).not.toBeNull();
     expect(evidenceDrawer.querySelectorAll('.ct-v2-detail-card--wide').length).toBeGreaterThan(0);
     expect(screen.getByText('Diagnosis historis')).toBeInTheDocument();
-    expect(reasoningPanel.querySelector('.ct-v2-copy-label')).not.toBeNull();
     expect(reasoningPanel.querySelector('.ct-v2-copy-detail')).not.toBeNull();
     expect(evidenceDrawer.querySelector('.ct-v2-copy-label')).not.toBeNull();
     expect(evidenceDrawer.querySelector('.ct-v2-copy-detail')).not.toBeNull();

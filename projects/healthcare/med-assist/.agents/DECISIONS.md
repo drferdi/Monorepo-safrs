@@ -3,6 +3,24 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-28 — Review details reads as one narrative with ABCD primary survey advice
+
+- Decision: the "Review next" checklist in `ClinicalReasoningDifferentialPanel` becomes one
+  Indonesian paragraph under "Penjelasan": "Pada pasien ditemukan adanya <complaint signal>.",
+  the first visit whose complaint contains the signal's matched keywords ("Keluhan ini muncul
+  sejak kunjungan ke-N (date)." or "…tercatat pada kunjungan saat ini."), the engine rationale,
+  vital drivers, diagnosis and therapy signals, and "Sentra menyarankan survei primer A-B-C-D
+  (Airway, Breathing, Circulation, Disability)." whenever any complaint signal exists or the
+  final state is deteriorating or critical. Chief chose the ABCD primary-survey meaning and the
+  whole-section scope on 2026-09-28.
+- Rationale: Chief asked for an explanation a doctor reads at once instead of four labelled
+  items. Every complaint signal the engine emits is a safety pattern (stroke, ACS, respiratory
+  with physiology, infection with sepsis-like risk), so advising the primary survey for any of
+  them, or for a worsening trajectory, matches Chief's chest-pain example without advising it
+  for routine visits. Display only: the gate reads existing engine fields (SAFRS R2).
+- Evidence: the commit after `ba789530`; `ClinicalReasoningDifferentialPanel.narrative.test.tsx`
+  was red before the change and green after.
+
 ## 2026-09-28 — Clinical Trajectory top card copy in Indonesian
 
 - Decision: on Chief's request the Trajectory top card reads in Indonesian. Status chip:

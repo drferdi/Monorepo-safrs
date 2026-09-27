@@ -214,7 +214,7 @@ describe('ClinicalDifferential legacy auto-promote replacement', () => {
     );
 
     const panel = screen.getByTestId('clinical-reasoning-differential-panel');
-    expect(within(panel).getByText('Review next')).toBeInTheDocument();
+    expect(within(panel).getByText('Penjelasan')).toBeInTheDocument();
     expect(
       within(panel).getByText('Select a working diagnosis to unlock therapy support.')
     ).toBeInTheDocument();

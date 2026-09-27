@@ -31,13 +31,15 @@ Branch `feat/sidepanel-ui-batch`, local only, not pushed, no PR.
 
 ## Open for Chief
 
-1. Review details narrative (Chief's example: "pada pasien ditemukan … Sentra sarankan untuk
-   melakukan A-B-C-D"): what "A-B-C-D" means (default: the ABCD primary survey) and scope
-   (default: the whole "Review next" becomes one paragraph).
+1. Review details: "Review next" is now one Indonesian paragraph ("Penjelasan"): complaint
+   signal, the visit it first appeared (kunjungan ke-N, date), the engine rationale, vital
+   drivers, diagnosis and therapy signals, and "Sentra menyarankan survei primer A-B-C-D" when a
+   complaint signal exists or the trajectory is worsening/critical (Chief chose ABCD + whole
+   section). Chief checks the wording live. "Physician action", "Evidence map", "Audit trail"
+   stay English. `.ct-v2-review-checklist` in `style.css` is now unused (append-only file, left).
 2. Trajectory top card now in Indonesian (headline, chips, six chart tabs and their panel
    titles and empty states, "N kunjungan ditinjau · Kunjungan terakhir …", state-chart axis).
-   Chief checks the wording; "Review details" and the details section stay English until the
-   narrative rework (item 1). Copy inside R3 engine output (e.g. complaint rationale) unchanged.
+   Chief checks the wording. Copy inside R3 engine output (e.g. complaint rationale) unchanged.
 3. Carried: a–g from the side panel batch (R3 test file ack, profession→field mapping,
    ≤4-letter suffix rule, medboard contacts R2 review, landing order, parked "Diagnosis utama"
    item, sub-AA `--text-muted` summaries); parked a11y minors (focus ring clipping, stepper
@@ -48,5 +50,5 @@ Branch `feat/sidepanel-ui-batch`, local only, not pushed, no PR.
 
 ## Next action
 
-Chief reloads the extension and tests Trajectory; then answers item 1 so the narrative and the
-Indonesian top card can be built.
+Chief reloads the extension, tests Trajectory with Chrome's Task Manager open, and reviews the
+Indonesian top card and the "Penjelasan" narrative.

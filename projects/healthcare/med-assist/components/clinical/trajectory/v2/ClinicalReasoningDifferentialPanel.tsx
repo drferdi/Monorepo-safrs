@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 
+import { formatChartDate } from '../charts/chart-shared';
+
 import { DisclosureHint } from './DisclosureHint';
 
 import type { HybridTrajectoryResult } from '@/lib/iskandar-diagnosis-engine/hybrid-trajectory';
@@ -16,38 +18,50 @@ function sentenceCase(text: string): string {
   return `${normalized.charAt(0).toUpperCase()}${normalized.slice(1)}`;
 }
 
-function buildReviewChecklist(
+function findComplaintOnsetSentence(
+  hybridResult: HybridTrajectoryResult,
+  matchedKeywords: string[]
+): string {
+  const onsetIndex = hybridResult.longitudinalFrames.findIndex((frame) => {
+    const complaint = frame.complaint?.toLowerCase() ?? '';
+    return matchedKeywords.some((keyword) => complaint.includes(keyword));
+  });
+  if (onsetIndex < 0) return 'Keluhan ini tercatat pada kunjungan saat ini.';
+  const onsetFrame = hybridResult.longitudinalFrames[onsetIndex];
+  return `Keluhan ini muncul sejak kunjungan ke-${onsetIndex + 1} (${formatChartDate(onsetFrame.observedAt)}).`;
+}
+
+function buildReviewNarrative(
   hybridResult: HybridTrajectoryResult,
   viewModel: TrajectoryVisualizationViewModel
-): Array<{ label: string; detail: string }> {
-  const latestComplaint = hybridResult.clinicalContext.complaintSignals[0];
-  const latestDiagnosis = hybridResult.clinicalContext.historicalDiagnosisSignals[0];
-  const latestTherapy = hybridResult.clinicalContext.therapySignals[0];
-  const vitalDriver = viewModel.vitalTrendMeta.primaryVitalDrivers[0];
+): string {
+  const { complaintSignals, historicalDiagnosisSignals, therapySignals } =
+    hybridResult.clinicalContext;
+  const latestComplaint = complaintSignals[0];
+  const latestDiagnosis = historicalDiagnosisSignals[0];
+  const latestTherapy = therapySignals[0];
+  const vitalDrivers = viewModel.vitalTrendMeta.primaryVitalDrivers;
+  const { finalState } = hybridResult.integratedAssessment;
+  const needsPrimarySurvey =
+    complaintSignals.length > 0 || finalState === 'deteriorating' || finalState === 'critical';
+
   return [
-    {
-      label: 'Latest complaint',
-      detail: latestComplaint
-        ? `${latestComplaint.label}. ${latestComplaint.rationale}`
-        : 'Review the latest complaint directly from the current visit.',
-    },
-    {
-      label: 'Vital trend',
-      detail: vitalDriver || 'Review vital trend directly from the chart tabs.',
-    },
-    {
-      label: 'Active diagnosis',
-      detail: latestDiagnosis
-        ? `${latestDiagnosis.label}. ${latestDiagnosis.rationale}`
-        : 'No active diagnosis signal extracted yet.',
-    },
-    {
-      label: 'Active therapy',
-      detail: latestTherapy
-        ? `${latestTherapy.label}. ${latestTherapy.rationale}`
-        : 'No active therapy signal extracted yet.',
-    },
-  ].slice(0, 4);
+    ...(latestComplaint
+      ? [
+          `Pada pasien ditemukan adanya ${latestComplaint.label.toLowerCase()}.`,
+          findComplaintOnsetSentence(hybridResult, latestComplaint.matchedKeywords),
+          latestComplaint.rationale,
+        ]
+      : ['Belum ada sinyal keluhan yang menonjol; tinjau keluhan terakhir pada kunjungan saat ini.']),
+    vitalDrivers.length > 0
+      ? `Tren tanda vital yang perlu diperhatikan: ${vitalDrivers.join(', ')}.`
+      : 'Tren tanda vital belum menunjukkan perubahan yang menonjol.',
+    ...(latestDiagnosis ? [`${latestDiagnosis.label}. ${latestDiagnosis.rationale}`] : []),
+    ...(latestTherapy ? [`${latestTherapy.label}. ${latestTherapy.rationale}`] : []),
+    ...(needsPrimarySurvey
+      ? ['Sentra menyarankan survei primer A-B-C-D (Airway, Breathing, Circulation, Disability).']
+      : []),
+  ].join(' ');
 }
 
 function renderAuditTrail(auditTrail: ClinicalReasoningWorkflowAuditEvent[]) {
@@ -94,7 +108,7 @@ export function ClinicalReasoningDifferentialPanel({
     [hybridResult, viewModel]
   );
   const { arbiterResult, therapyReasoningPack } = workflow;
-  const checklist = buildReviewChecklist(hybridResult, viewModel);
+  const narrative = buildReviewNarrative(hybridResult, viewModel);
   const selectedWorkingDiagnosis = arbiterResult.selectedWorkingDiagnosis;
 
   const actionMessage = selectedWorkingDiagnosis
@@ -109,17 +123,12 @@ export function ClinicalReasoningDifferentialPanel({
     <section className="ct-v2-review-details" data-testid="clinical-reasoning-differential-panel">
       <div className="grid gap-4">
         <div>
-          <div className="ttv-section-title mb-2">Review next</div>
-          <ol className="ct-v2-review-checklist">
-            {checklist.map((item, index) => (
-              <li key={item.label} className="ct-v2-review-item">
-                <div className="ct-v2-copy-label">
-                  {index + 1}. {item.label}
-                </div>
-                <div className="ct-v2-copy-detail">{item.detail}</div>
-              </li>
-            ))}
-          </ol>
+          <div className="ttv-section-title mb-2">Penjelasan</div>
+          <div className="ct-v2-review-item">
+            <p className="ct-v2-copy-detail" data-testid="clinical-review-narrative">
+              {narrative}
+            </p>
+          </div>
         </div>
 
         <div className="ct-v2-review-action">
