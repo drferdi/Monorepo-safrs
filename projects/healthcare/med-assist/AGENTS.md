@@ -30,7 +30,7 @@ script, tool, package, or another capsule. External services are declared in
 Read `.agents/HANDOFF.md` first, then `.agents/CONTEXT.md`.
 
 1. `README.md`
-2. `docs/architecture.md`
+2. `docs/ARCHITECTURE.md`
 3. `docs/data.md`
 4. `docs/testing.md`
 5. `docs/clinical-rules.md` before touching clinical reference logic
