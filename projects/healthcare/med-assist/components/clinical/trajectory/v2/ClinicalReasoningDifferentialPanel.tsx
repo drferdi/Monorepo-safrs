@@ -52,23 +52,26 @@ function buildReviewChecklist(
 
 function renderAuditTrail(auditTrail: ClinicalReasoningWorkflowAuditEvent[]) {
   return (
-    <div className="grid gap-2">
+    <ol className="ct-audit-timeline">
       {auditTrail.map((event) => (
-        <div key={event.id} className="ct-v2-detail-card px-3 py-2">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-[0.05em] text-platinum">
-              Step {event.sequence}
-            </span>
-            <span className="text-[10px] uppercase tracking-[0.04em] text-muted">
-              {sentenceCase(event.stage)} · {sentenceCase(event.status)}
-            </span>
+        <li key={event.id} className="ct-audit-timeline__event">
+          <span className="ct-audit-timeline__node" aria-hidden="true" />
+          <div className="ct-v2-detail-card px-3 py-2">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <span className="text-[10px] font-bold uppercase tracking-[0.05em] text-platinum">
+                Step {event.sequence}
+              </span>
+              <span className="text-[10px] uppercase tracking-[0.04em] text-muted">
+                {sentenceCase(event.stage)} · {sentenceCase(event.status)}
+              </span>
+            </div>
+            <div className="mt-1 text-small leading-relaxed text-muted">
+              {sentenceCase(event.summary)}
+            </div>
           </div>
-          <div className="mt-1 text-small leading-relaxed text-muted">
-            {sentenceCase(event.summary)}
-          </div>
-        </div>
+        </li>
       ))}
-    </div>
+    </ol>
   );
 }
 

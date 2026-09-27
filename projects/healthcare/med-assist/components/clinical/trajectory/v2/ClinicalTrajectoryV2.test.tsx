@@ -238,6 +238,12 @@ describe('ClinicalTrajectoryV2', () => {
     const reasoningPanel = screen.getByTestId('clinical-reasoning-differential-panel');
     const evidenceDrawer = screen.getByTestId('clinical-evidence-drawer');
     const auditTrail = screen.getByTestId('clinical-reasoning-audit-trail');
+    const timeline = auditTrail.querySelector('ol.ct-audit-timeline');
+    expect(timeline).not.toBeNull();
+    const events = Array.from((timeline as HTMLElement).querySelectorAll(':scope > li.ct-audit-timeline__event'));
+    expect(events.length).toBeGreaterThan(0);
+    expect(events.length).toBe(within(auditTrail).getAllByText(/^Step \d+$/).length);
+    events.forEach((event) => expect(event.querySelector('.ct-audit-timeline__node')).not.toBeNull());
     const interpretation = within(header).getByText(
       /Trajectory suggests|Trajectory is relatively stable/i
     );
