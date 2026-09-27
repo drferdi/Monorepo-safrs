@@ -1,6 +1,7 @@
 # Side panel UI batch (2026-09-27) — Design
 
 Status: approved by Chief on 2026-09-27. Branch `feat/sidepanel-ui-batch` (from `e2de54d0`).
+Updated 2026-09-27 after implementation.
 
 ## Intent
 
@@ -79,23 +80,38 @@ describes it), any change to diagnosis ranking, triage decision logic, or emerge
 - Message: zone only, e.g. "Sentra Assist: konsul triase KUNING. Mohon cek Sentra Assist." No
   patient name, RM, age, vital signs or alert title.
 - Numbers live in memory for the open list only; never stored, logged, or written to tracked
-  files. No contacts or crew API not configured → "Belum ada nomor WhatsApp dokter di crew portal".
+  files. When the crew API is not signed in or not configured (`getBridgeAuthSource` returns
+  `none`), the button shows the bridge sign-in message instead of loading contacts. When the crew
+  API responds but the list is empty, it shows "Belum ada nomor WhatsApp dokter di crew portal".
 - The action bar keeps exactly three buttons.
 - `project.contract.json`: the crew portal entry also names the doctor-contact lookup.
 
 ## WP6 — RME practitioner autofill
 
-- `lib/clinical/tenaga-medis.ts` gains a pure resolver: given the Assist session user, return
-  `{ dokter_nama, perawat_nama }`. Profession (`session.user.poli`, the crew profession) Dokter or
-  Dokter Gigi → the user's name goes to the doctor field; any other crew profession → nurse
-  field. Local accounts or no profession → the existing constants. The other field keeps its
-  constant.
+- `lib/clinical/tenaga-medis.ts` gains a pure resolver (`resolveTenagaMedisNames`): given the
+  Assist session user as `{ name, profession }`, return `{ dokter_nama, perawat_nama }`.
+  Profession (`session.user.poli`, the crew profession) maps by an explicit list: Dokter, Dokter
+  Gigi → the user's name goes to the doctor field; Perawat, Bidan, Apoteker, Triage Officer → the
+  user's name goes to the nurse field. Any other or unknown profession, and local accounts
+  (`session.user.id` starting `local:`), keep the constant names (`DOKTER_NAMA`, `PERAWAT_NAMA`)
+  in both fields; the field not matched by the resolved profession also keeps its constant.
 - Profession is used instead of `role` because `normalizeRole` maps bidan to `doctor`.
-- The resolved names replace the hard-coded constants in `lib/rme/payload-mapper.ts`
-  (anamnesa and resep) and in `lib/handlers/page-diagnosa.ts` (diagnosa, through the payload).
+- The resolved names are not written by `lib/rme/payload-mapper.ts`; that module keeps building
+  `DOKTER_NAMA` / `PERAWAT_NAMA` as its defaults. `entrypoints/background.ts`
+  (`applyAssistStaffPayload`, via `assistStaffFromSession` / `withStaffNames` / `withResepStaff`
+  in `lib/rme/assist-staff.ts`) overwrites `tenaga_medis` (anamnesa, diagnosa) and
+  `ajax.dokter` / `ajax.perawat` (resep) with the resolved names immediately before each RME
+  transfer fill step (`executeRMEFillStep`) runs — the Uplink/transfer path only. Direct
+  `fillAnamnesa` / `fillResep` messages outside the transfer path, and native messaging, still
+  send the payload-mapper constants unchanged.
 - ePuskesmas autocomplete: practitioner fields use a new `requireExactMatch` option in the
-  MAIN-world bridge. The normalised name (lower case, titles and punctuation removed) must match
-  exactly one menu item; zero or several matches leave the field empty and report a reason. Other
+  MAIN-world bridge (`lib/filler/filler-core.ts`, matching via `lib/filler/staff-match.ts`). A
+  menu item matches when, after stripping menu suffixes and normalising both names (lower case,
+  leading titles, degrees after a comma, and punctuation removed), the item's normalised name
+  equals the practitioner's, or the two differ only by trailing words of at most 4 letters on the
+  longer side (e.g. "s kep", "amd", "sp pd" — degree abbreviations), with the shorter name at
+  least two words. Exactly one menu item must match this way; zero or several matches leave the
+  field empty and report a reason ("Nama tenaga medis tidak cocok persis di ePuskesmas"). Other
   autocomplete fields keep the current behaviour.
 
 ## Error handling

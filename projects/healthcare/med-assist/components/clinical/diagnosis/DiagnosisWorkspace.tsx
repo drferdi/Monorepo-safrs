@@ -484,26 +484,26 @@ function TriageSummarySection({
   return (
     <section className="form-group diagnosis-block" aria-label="Triase & Rujukan">
       <SectionHeader title="Triase & Rujukan" status={triage.headline} />
-      <details className="diagnosis-details diagnosis-details--inline">
+      <details className="diagnosis-details diagnosis-details--inline diagnosis-details--triage">
         <summary>Saran</summary>
         <ReadOnlyPanel tone={triage.tone}>
           <strong>{triage.headline}</strong>
         </ReadOnlyPanel>
       </details>
       {triage.firedCriteria.length > 0 ? (
-        <details className="diagnosis-details diagnosis-details--inline">
+        <details className="diagnosis-details diagnosis-details--inline diagnosis-details--triage">
           <summary>Alasan</summary>
           <LineList title="Dasar keputusan" items={triage.firedCriteria} tone={listTone} />
         </details>
       ) : null}
       {triage.referralGuidance ? (
-        <details className="diagnosis-details diagnosis-details--inline">
+        <details className="diagnosis-details diagnosis-details--inline diagnosis-details--triage">
           <summary>Indikasi rujukan</summary>
           <LineList title="Indikasi rujukan" items={splitReferralGuidance(triage.referralGuidance)} />
         </details>
       ) : null}
       {safetyItems.length > 0 ? (
-        <details className="diagnosis-details diagnosis-details--inline">
+        <details className="diagnosis-details diagnosis-details--inline diagnosis-details--triage">
           <summary>Tanda bahaya</summary>
           <LineList title="Tanda bahaya" items={safetyItems} tone="danger" />
         </details>

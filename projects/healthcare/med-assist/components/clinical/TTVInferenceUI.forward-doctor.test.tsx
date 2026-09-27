@@ -166,6 +166,7 @@ describe('TTVInferenceUI forward consult', () => {
     const css = readFileSync(resolve(process.cwd(), 'entrypoints/sidepanel/style.css'), 'utf8');
     expect(css).toMatch(/\.form-group-header--wrap\s*\{[^}]*flex-wrap:\s*wrap/);
     expect(css).toMatch(/\.form-group-header--wrap\s+\.field-extracted-indicator[^{]*\{[^}]*flex-shrink:\s*0/);
+    expect(css).toMatch(/\.form-group--inline\s+\.form-group-header--wrap\s*\{[^}]*row-gap:\s*2px/);
   });
 
   it('memberi jarak horizontal khusus antar kolom vital sign', () => {

@@ -1,3 +1,6 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -264,7 +267,8 @@ describe('DiagnosisWorkspace triage section', () => {
     render(<DiagnosisWorkspace {...props} />);
 
     const section = screen.getByLabelText('Triase & Rujukan');
-    expect(within(section).getAllByText('Pertimbangkan rujukan').length).toBeGreaterThan(0);
+    const statusChip = section.querySelector('.form-group-header .field-extracted-indicator');
+    expect(statusChip).toHaveTextContent('Pertimbangkan rujukan');
     const summaries = Array.from(section.querySelectorAll('details > summary')).map((s) => s.textContent);
     expect(summaries).toEqual(['Saran', 'Alasan', 'Indikasi rujukan', 'Tanda bahaya']);
     section.querySelectorAll('details').forEach((d) => expect(d).not.toHaveAttribute('open'));
@@ -272,6 +276,26 @@ describe('DiagnosisWorkspace triage section', () => {
     expect(
       within(screen.getByLabelText('Pemeriksaan Penunjang')).queryByText('Tanda bahaya')
     ).toBeNull();
+  });
+
+  it('raises the triage summary contrast to AA via a dedicated modifier class', () => {
+    const props = makeProps({ triage });
+    props.viewModel.evidence.redFlags = ['Penurunan kesadaran'];
+    render(<DiagnosisWorkspace {...props} />);
+
+    const section = screen.getByLabelText('Triase & Rujukan');
+    const details = Array.from(section.querySelectorAll('details'));
+    expect(details).toHaveLength(4);
+    details.forEach((d) => {
+      expect(d).toHaveClass('diagnosis-details--inline');
+      expect(d).toHaveClass('diagnosis-details--triage');
+    });
+
+    const css = readFileSync(
+      resolve(process.cwd(), 'entrypoints/sidepanel/style.css'),
+      'utf8'
+    );
+    expect(css).toMatch(/\.diagnosis-details--triage\s*>\s*summary\s*\{[^}]*color:\s*var\(--text-main\)/);
   });
 
   it('keeps red flags in Pemeriksaan Penunjang when there is no triage result', () => {

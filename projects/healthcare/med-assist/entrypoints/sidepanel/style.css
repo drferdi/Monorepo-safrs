@@ -9616,3 +9616,13 @@ details[open] > summary .ct-disclosure-hint__close {
   font-size: 11px;
   color: var(--text-main);
 }
+
+/* ── Triage details summaries: raise contrast to AA (2026-09-27) ── */
+.diagnosis-details--triage > summary {
+  color: var(--text-main);
+}
+
+/* ── Status Kehamilan header wrap: win specificity over .form-group--inline .form-group-header (2026-09-27) ── */
+.form-group--inline .form-group-header--wrap {
+  row-gap: 2px;
+}

@@ -1256,7 +1256,9 @@ function buildAnamnesaPayload(input: RMETransferMapperInput): {
 
     anatomi_tubuh: buildAnatomiTubuhPayload(clinicalComplaintText),
 
-    // tenaga_medis — hardcoded per Chief directive
+    // tenaga_medis — these are the default constants; when the signed-in Assist user resolves to
+    // a doctor or nurse profession, entrypoints/background.ts (applyAssistStaffPayload) overwrites
+    // dokter_nama/perawat_nama on the transfer payload before it is sent (DECISIONS 2026-09-27).
     tenaga_medis: {
       dokter_nama: DOKTER_NAMA,
       perawat_nama: PERAWAT_NAMA,
