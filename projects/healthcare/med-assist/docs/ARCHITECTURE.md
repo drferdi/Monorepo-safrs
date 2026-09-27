@@ -159,7 +159,8 @@ This is the main journey. Each step is **[Verified]** in code unless marked othe
    [section 5](#5-the-clinical-brain-r3-chief-approval-needed-to-change)).
 6. **Diagnosis suggestions:**
    - The panel asks the background for suggestions (`ClinicalDifferential.tsx:694-706` →
-     `background.ts:1728`).
+     `background.ts:1728`). The background passes the request to the engine registry
+     (`lib/diagnosis-engine/run-diagnosis.ts`; see §5.6).
    - The **Iskandar Diagnosis Engine** runs inside the background and returns up to five
      ranked diagnoses with ICD-10 codes.
    - The panel then re-scores them locally, but keeps the engine's order and confidence
@@ -199,9 +200,9 @@ correct.
 
 **[Verified]** The stages, in order:
 
-1. **Anonymise** the visit data. The engine's anonymiser removes identifiers from the complaint
-   text with `redactPII` (`anonymizer.ts:148-151`), and the engine stops if it detects a leak
-   (`engine.ts:248-266`).
+1. **Anonymise** the visit data (`anonymizer.ts:148-151`). The side panel's own complaint text
+   then replaces the redacted copy (`engine.ts:566-567`), so the check that matters is the leak
+   detector: the engine stops if it finds an identifier pattern (`engine.ts:259-266`).
 2. **Red flags:** sepsis (qSOFA), heart attack, pre-eclampsia, stroke (FAST), low blood sugar
    and anaphylaxis (`red-flags.ts:494-540`). These produce **warnings only**.
 3. **Symptom matching** against the 159-disease library (`symptom-matcher.ts:249-333`). The
@@ -290,6 +291,48 @@ two small differences:
 The panel shows the tree's result for the active diagnosis but doesn't re-order anything
 (`ClinicalDifferential.tsx:939-964`).
 
+### 5.6 Pluggable diagnosis engine: `lib/diagnosis-engine/` (added 2026-09-27)
+
+The diagnosis step can now be served by more than one engine. For physicians nothing has changed
+yet. The decision to change that is proposed in
+[ADR-005](adr/ADR-005-pluggable-diagnosis-engine-mira-candidate.md) and has not been accepted.
+
+**[Verified]** How the parts fit:
+
+```
+side panel ──getSuggestions──► background.ts:1728 ──► run-diagnosis.ts
+                                                        │
+               ┌────────────────────────────────────────┴───────────────────────────┐
+               ▼ always                                                             ▼ only if flag = 'mira'
+     legacy-engine.ts ─► runGetSuggestionsFlow (unchanged)             mira-engine.ts ─► pii-guard ─► Sentra
+     result goes to the physician                                      reasoning service (VITE_MIRA_SERVICE_URL);
+                                                                       outcome goes to the audit log only
+```
+
+- **Contract** (`types.ts`): every engine takes a de-identified `CaseState` and returns an
+  `EngineResult`. The result holds the differential (`likely`, `alternatives`, `cannotMiss`),
+  evidence, missing information, next best actions, a treat-or-refer suggestion and `meta`.
+  Anything an engine cannot fill is left empty and listed in `unfilled`.
+- **Flag:** `SENTRA_DIAGNOSIS_ENGINE`. The default is `legacy`; only the exact value `mira`
+  switches (`feature-flags.ts`, `registry.ts`). With `mira`, the physician still sees the legacy
+  result. MIRA runs alongside, is capped at 20 s, and only its status, ICD codes and latency are
+  written to the audit log.
+- **Where safety sits:** outside every engine. Red flags, the emergency gates (4-Gate and
+  Pattern-Engine v2), the triage verdict and the triage/referral tree import nothing from the
+  diagnosis pipeline. They produce their full output while an engine throws, hangs or is broken
+  (`safety-independence.test.ts`).
+  - Note: the legacy engine also computes red-flag and traffic-light alerts internally, but the
+    panel does not display them (§5.1).
+- **Proof of no behaviour change:** `legacy-golden.test.ts` compares 12 synthetic cases against
+  outputs recorded _before_ the caller was switched (`__golden__/legacy-outputs.json`). Only
+  timestamps, durations and generated alert ids are masked.
+- **MIRA contract** for the future Python service: JSON Schema plus examples in `contract/`.
+- **Benchmark (Gate 1):** `scripts/benchmark/run-legacy-engine.mjs` exports legacy results for
+  case files in the MIRA case format.
+  - **[Verified]** The legacy knowledge base matches Indonesian terms only, so cases must be
+    written in Indonesian to be compared fairly. The English synthetic case gets an empty
+    differential.
+
 ---
 
 ## 6. Where data is kept and where it goes
@@ -328,13 +371,14 @@ the machine after Chrome is closed.
 
 **[Verified]**
 
-| Destination                                                            | When                                                                    | What is sent                                       | Screening                                    |
-| ---------------------------------------------------------------------- | ----------------------------------------------------------------------- | -------------------------------------------------- | -------------------------------------------- |
-| Crew dashboard `/api/emr/patient-sync`                                 | automatically, on the anamnesa page                                     | name, age, RM, BPJS number, vitals, complaint      | `assertNoPII` (`bridge-client.ts:231-233`)   |
-| Crew dashboard (bridge jobs, online doctors, consult, clinical engine) | polling and panel actions                                               | clinical context and results                       | `assertNoPII`                                |
-| Crew dashboard login                                                   | sign-in                                                                 | password or passkey                                | none                                         |
-| Sentra API `/v1/cdss/*` (address from `VITE_SENTRA_API_URL`)           | prescription, allergy and paediatric-dose checks when not in mock mode  | clinical context plus an API key                   | `assertNoPII`                                |
-| `api.openai.com`                                                       | diagnosis re-ordering, only when a key is set and the library is unsure | anonymised complaint, age, sex, candidate diseases | the engine's own anonymiser, not `pii-guard` |
+| Destination                                                            | When                                                                    | What is sent                                                                                    | Screening                                                             |
+| ---------------------------------------------------------------------- | ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Crew dashboard `/api/emr/patient-sync`                                 | automatically, on the anamnesa page                                     | name, age, RM, BPJS number, vitals, complaint                                                   | `assertNoPII` (`bridge-client.ts:231-233`)                            |
+| Crew dashboard (bridge jobs, online doctors, consult, clinical engine) | polling and panel actions                                               | clinical context and results                                                                    | `assertNoPII`                                                         |
+| Crew dashboard login                                                   | sign-in                                                                 | password or passkey                                                                             | none                                                                  |
+| Sentra API `/v1/cdss/*` (address from `VITE_SENTRA_API_URL`)           | prescription, allergy and paediatric-dose checks when not in mock mode  | clinical context plus an API key                                                                | `assertNoPII`                                                         |
+| `api.openai.com`                                                       | diagnosis re-ordering, only when a key is set and the library is unsure | the complaint as typed, age, sex, chronic diseases, candidate diseases and their guideline text | the engine's leak detector (`validateAnonymization`), not `pii-guard` |
+| Sentra reasoning service for MIRA (`VITE_MIRA_SERVICE_URL`)            | only when `SENTRA_DIAGNOSIS_ENGINE=mira` (off by default)               | de-identified `CaseState` (§5.6)                                                                | `assertNoPII`; a blocked payload is not sent                          |
 
 - **[Inferred]** `assertNoPII` is a pattern check (`anonymizer.ts:31-57`): it looks for ID
   numbers, phone numbers, "title + name" and 13-digit BPJS numbers. A bare name would pass. A
@@ -353,16 +397,17 @@ All commands run from this folder. **[Verified]** The official commands live in
 `project.contract.json:15-23`. Each goes through `scripts/pnpm.mjs`, a small wrapper that makes
 `pnpm` work on Windows.
 
-| Goal              | Command                                           | What it does                                                                                                                                                         |
-| ----------------- | ------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Install           | `node scripts/pnpm.mjs install --frozen-lockfile` | installs packages, then `wxt prepare` generates `.wxt/tsconfig.json`, which type-checking needs                                                                      |
-| Develop           | `node scripts/pnpm.mjs run dev`                   | live rebuild into `.output/chrome-mv3-dev`. **No browser opens** (`wxt.config.ts:66-68`); load that folder in `chrome://extensions` → Developer mode → Load unpacked |
-| Build             | `node scripts/pnpm.mjs run build`                 | production build into the same `.output/chrome-mv3-dev` folder                                                                                                       |
-| "Run" check       | `node scripts/pnpm.mjs run run:check`             | checks the built manifest and that every referenced file exists (`scripts/check-extension.mjs:13-44`). It does **not** start anything                                |
-| Test              | `node scripts/pnpm.mjs run test`                  | full Vitest suite (`vitest.config.ts`, browser-like jsdom setup)                                                                                                     |
-| Type-check / lint | `… run typecheck` / `… run lint`                  | `tsc --noEmit` / ESLint                                                                                                                                              |
-| Package (dry run) | `node scripts/pnpm.mjs run deploy:dry-run`        | `wxt zip`, which creates the store zip without uploading                                                                                                             |
-| Browser tests     | `… run test:e2e`                                  | Playwright with a visible Chromium. Needs a build first (`playwright.config.ts`)                                                                                     |
+| Goal              | Command                                                                  | What it does                                                                                                                                                         |
+| ----------------- | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Install           | `node scripts/pnpm.mjs install --frozen-lockfile`                        | installs packages, then `wxt prepare` generates `.wxt/tsconfig.json`, which type-checking needs                                                                      |
+| Develop           | `node scripts/pnpm.mjs run dev`                                          | live rebuild into `.output/chrome-mv3-dev`. **No browser opens** (`wxt.config.ts:66-68`); load that folder in `chrome://extensions` → Developer mode → Load unpacked |
+| Build             | `node scripts/pnpm.mjs run build`                                        | production build into the same `.output/chrome-mv3-dev` folder                                                                                                       |
+| "Run" check       | `node scripts/pnpm.mjs run run:check`                                    | checks the built manifest and that every referenced file exists (`scripts/check-extension.mjs:13-44`). It does **not** start anything                                |
+| Test              | `node scripts/pnpm.mjs run test`                                         | full Vitest suite (`vitest.config.ts`, browser-like jsdom setup)                                                                                                     |
+| Type-check / lint | `… run typecheck` / `… run lint`                                         | `tsc --noEmit` / ESLint                                                                                                                                              |
+| Package (dry run) | `node scripts/pnpm.mjs run deploy:dry-run`                               | `wxt zip`, which creates the store zip without uploading                                                                                                             |
+| Browser tests     | `… run test:e2e`                                                         | Playwright with a visible Chromium. Needs a build first (`playwright.config.ts`)                                                                                     |
+| Benchmark export  | `node scripts/benchmark/run-legacy-engine.mjs --cases <dir> --out <dir>` | writes one legacy `EngineResult` per case (Gate 1, §5.6). Both folders stay outside the repository; the runner refuses an output folder inside the capsule           |
 
 Details:
 
@@ -389,20 +434,20 @@ Details:
 
 **[Verified]**
 
-| Folder                    | Status                     | Contents                                                                                                                                                                                  |
-| ------------------------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `entrypoints/`            | live                       | the four running pieces, plus the login and preview pages                                                                                                                                 |
-| `lib/`                    | live, the core (218 files) | `iskandar-diagnosis-engine/`, `emergency-detector/`, `clinical/`, `api/` (servers), `handlers/` + `scraper/` + `filler/` + `rme/` (reading and filling ePuskesmas), `rag/`, `statistics/` |
-| `components/`             | live (105 files)           | React screens, mostly `components/clinical/`                                                                                                                                              |
-| `utils/`                  | live                       | logger, message contract, storage, sound                                                                                                                                                  |
-| `types/`                  | partly live                | `api.ts` is used; `shared-types.ts` is not                                                                                                                                                |
-| `public/`, `data/`        | live                       | icons, sounds, reference JSON                                                                                                                                                             |
-| `tests/`                  | live                       | shared test setup, Playwright specs, test helpers                                                                                                                                         |
-| `services/medlens-local/` | development only           | a local Node server for ECG OCR testing; the extension never imports it                                                                                                                   |
-| `src/`                    | empty                      | contains only a README saying it is intentionally empty                                                                                                                                   |
-| `scripts/`                | mixed                      | the build wrapper and check script, plus risky developer scripts                                                                                                                          |
-| `.agents/`                | live                       | handoff, context and decision notes; public                                                                                                                                               |
-| `docs/`                   | mixed                      | real references alongside stale plans and agent prompts                                                                                                                                   |
+| Folder                    | Status                                       | Contents                                                                                                                                                                                                                                                                               |
+| ------------------------- | -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `entrypoints/`            | live                                         | the four running pieces, plus the login and preview pages                                                                                                                                                                                                                              |
+| `lib/`                    | live, the core (218 files before 2026-09-27) | `iskandar-diagnosis-engine/`, `diagnosis-engine/` (engine contract, registry, legacy and MIRA adapters, since 2026-09-27), `emergency-detector/`, `clinical/`, `api/` (servers), `handlers/` + `scraper/` + `filler/` + `rme/` (reading and filling ePuskesmas), `rag/`, `statistics/` |
+| `components/`             | live (105 files)                             | React screens, mostly `components/clinical/`                                                                                                                                                                                                                                           |
+| `utils/`                  | live                                         | logger, message contract, storage, sound                                                                                                                                                                                                                                               |
+| `types/`                  | partly live                                  | `api.ts` is used; `shared-types.ts` is not                                                                                                                                                                                                                                             |
+| `public/`, `data/`        | live                                         | icons, sounds, reference JSON                                                                                                                                                                                                                                                          |
+| `tests/`                  | live                                         | shared test setup, Playwright specs, test helpers                                                                                                                                                                                                                                      |
+| `services/medlens-local/` | development only                             | a local Node server for ECG OCR testing; the extension never imports it                                                                                                                                                                                                                |
+| `src/`                    | empty                                        | contains only a README saying it is intentionally empty                                                                                                                                                                                                                                |
+| `scripts/`                | mixed                                        | the build wrapper and check script, plus risky developer scripts                                                                                                                                                                                                                       |
+| `.agents/`                | live                                         | handoff, context and decision notes; public                                                                                                                                                                                                                                            |
+| `docs/`                   | mixed                                        | real references alongside stale plans and agent prompts                                                                                                                                                                                                                                |
 
 ### 8.2 Conventions observed
 
