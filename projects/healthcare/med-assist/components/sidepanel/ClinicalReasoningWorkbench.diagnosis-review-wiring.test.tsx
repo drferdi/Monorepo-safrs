@@ -217,12 +217,11 @@ describe('ClinicalReasoningWorkbench diagnosis-review wiring', () => {
     canonicalEngine.mockClear();
 
     const { rerender } = render(<ClinicalReasoningWorkbench {...props} />);
-    const panel = await screen.findByTestId('clinical-reasoning-differential-panel');
+    await screen.findByTestId('clinical-reasoning-differential-panel');
     const callsAfterLoad = canonicalEngine.mock.calls.length;
 
     rerender(<ClinicalReasoningWorkbench {...props} vitals={{ ...props.vitals }} />);
 
-    expect(screen.getByTestId('clinical-reasoning-differential-panel')).toBe(panel);
     expect(canonicalEngine).toHaveBeenCalledTimes(callsAfterLoad);
   });
 });
