@@ -3,6 +3,27 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-27 — Diagnosis engine isolated behind an interface; MIRA slot off by default
+
+- Decision (Chief approved the direction and the Step A inventory): diagnosis ranking goes
+  through `lib/diagnosis-engine/` (`DiagnosisEngine.step(CaseState) → EngineResult`). The legacy
+  engine is wrapped unchanged and stays the comparator and fallback; deleting it is a later task,
+  allowed only after the Gate 1 benchmark passes.
+- Flag `diagnosisEngine` lives in `lib/iskandar-diagnosis-engine/feature-flags.ts` (Chief's
+  choice); only the exact value `mira` selects the candidate, anything else is `legacy`.
+- With `mira`, physicians still see only the legacy result; MIRA runs in shadow mode, capped at
+  20 s, and only its outcome is audit-logged. Showing MIRA in the side panel is a separate UI
+  task under the freeze rules.
+- The MIRA client talks only to a Sentra-side service (`VITE_MIRA_SERVICE_URL`), sends no
+  credentials, screens every payload with `lib/api/pii-guard.ts`, and never holds an OpenAI key.
+- The safety layer (red flags, emergency gates, triage verdict, triage/referral tree) stays
+  deterministic and outside every engine; a test enforces that it imports no diagnosis pipeline
+  and still produces output when an engine throws, hangs or breaks.
+- "The LLM is a reranker only" stays in force until Chief accepts ADR-005 (Proposed).
+- Evidence: golden recordings of 12 synthetic cases (`lib/diagnosis-engine/__golden__/`) match
+  before and after the switch; a 0.0001 change in one confidence value fails them. Test run:
+  1098 passing, 17 skipped (baseline 961/16).
+
 ## 2026-09-27 — Brought in Chief's GitHub updates (drferdi/Medassist PR #1–#10)
 
 - Decision (Chief): the ten commits on `drferdi/Medassist` `main` after `de780e3b` (the commit
