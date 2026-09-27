@@ -50,6 +50,7 @@ const suites: Suite[] = [
       'src/lib/telemedicine/consult-accepted.test.ts',
       'src/lib/telemedicine/consult-api-validation.test.ts',
       'src/lib/audit/screening-audit-service.test.ts',
+      'src/lib/server/doctor-contacts.test.ts',
       'src/app/api/clinical/anamnesis/extract/route.test.ts',
       'src/app/api/dashboard/intelligence/routes.test.ts',
       'src/app/api/dashboard/intelligence/observability-handler.test.ts',

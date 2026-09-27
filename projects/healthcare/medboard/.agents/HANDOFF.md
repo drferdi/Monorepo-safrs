@@ -13,6 +13,13 @@ pnpm 11.21.0 and Node 24. CDSS diagnosis access comes from the clinical role onl
 option A). `scripts/test-cdss.ts` reports `PASS: 27 | FAIL: 0`, and any failure sets exit
 code 1.
 
+Added `GET /api/doctors/contacts` (crew-authorised, CORS via `handleCorsPreflight`/`jsonWithCors`
+like `/api/doctors/online`): lists active doctors (`Dokter`/`Dokter Gigi`, status `ACTIVE`) whose
+crew profile has a WhatsApp number, digits normalised (`toWhatsappDigits` — leading `0` becomes
+`62`), sorted by username. Backs Assist's "Send to Doctors". A doctor only appears once their
+crew profile's WhatsApp number field is filled in. Its test is registered in
+`scripts/test-suite.ts` under `intelligence-route`; `pnpm run test` and `pnpm run lint` are green.
+
 ## Work in flight
 
 None.
