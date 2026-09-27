@@ -97,10 +97,10 @@ export function TrajectoryStateTimelineChart({
     const trackWidth = chartWidth - left - right;
     const trackHeight = chartHeight - top - bottom;
     const states = [
-      { y: top + trackHeight, label: 'Low concern', color: TRAJECTORY_CHART_PALETTE.stable },
-      { y: top + trackHeight * 0.66, label: 'Watch', color: TRAJECTORY_CHART_PALETTE.info },
-      { y: top + trackHeight * 0.33, label: 'Concern', color: TRAJECTORY_CHART_PALETTE.warning },
-      { y: top, label: 'Urgent', color: TRAJECTORY_CHART_PALETTE.high },
+      { y: top + trackHeight, label: 'Rendah', color: TRAJECTORY_CHART_PALETTE.stable },
+      { y: top + trackHeight * 0.66, label: 'Pantau', color: TRAJECTORY_CHART_PALETTE.info },
+      { y: top + trackHeight * 0.33, label: 'Perhatian', color: TRAJECTORY_CHART_PALETTE.warning },
+      { y: top, label: 'Mendesak', color: TRAJECTORY_CHART_PALETTE.high },
     ];
     const points = chartData.map((point, index) => {
       const x =

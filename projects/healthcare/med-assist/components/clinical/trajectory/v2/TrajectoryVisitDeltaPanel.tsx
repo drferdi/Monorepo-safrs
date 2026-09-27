@@ -51,7 +51,7 @@ export function TrajectoryVisitDeltaPanel({
   return (
     <div data-testid="trajectory-visit-delta-panel">
       <TrajectorySimplePanel
-        title="Visit-to-Visit Delta"
+        title="Selisih Antar Kunjungan"
         chart={
           rows.length > 0 ? (
             <div className="h-56 w-full">
@@ -98,8 +98,8 @@ export function TrajectoryVisitDeltaPanel({
             </div>
           ) : (
             <TrajectoryEmptyState
-              title="Visit deltas unavailable"
-              message="At least two visits are needed to render consecutive delta summaries."
+              title="Selisih kunjungan belum tersedia"
+              message="Minimal dua kunjungan diperlukan untuk menampilkan selisih antar kunjungan."
             />
           )
         }
@@ -110,18 +110,18 @@ export function TrajectoryVisitDeltaPanel({
                 const changes = concreteChanges(item);
                 return {
                   id: `${item.fromVisitLabel}-${item.toVisitLabel}`,
-                  eyebrow: `${item.fromVisitLabel} to ${item.toVisitLabel}`,
+                  eyebrow: `${item.fromVisitLabel} ke ${item.toVisitLabel}`,
                   title: item.summary,
-                  meta: `${formatChartDate(item.fromDate)} to ${formatChartDate(item.toDate)}`,
+                  meta: `${formatChartDate(item.fromDate)} ke ${formatChartDate(item.toDate)}`,
                   detail:
                     changes.join(' · ') ||
-                    'No concrete vital sign delta recorded for this interval.',
+                    'Tidak ada selisih tanda vital tercatat pada interval ini.',
                 };
               })}
             />
           ) : (
             <div className="text-small text-muted">
-              At least two visits are needed to render consecutive delta summaries.
+              Minimal dua kunjungan diperlukan untuk menampilkan selisih antar kunjungan.
             </div>
           )
         }

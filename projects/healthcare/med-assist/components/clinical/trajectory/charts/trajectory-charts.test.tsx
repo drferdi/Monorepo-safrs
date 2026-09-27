@@ -251,7 +251,7 @@ describe('trajectory charts', () => {
     );
 
     expect(screen.getByRole('img', { name: 'Trajectory clinical rail' })).toBeInTheDocument();
-    expect(screen.getByText('Urgent')).toBeInTheDocument();
+    expect(screen.getByText('Mendesak')).toBeInTheDocument();
     expect(screen.queryByText('Grafik trajectory compact')).not.toBeInTheDocument();
   });
 

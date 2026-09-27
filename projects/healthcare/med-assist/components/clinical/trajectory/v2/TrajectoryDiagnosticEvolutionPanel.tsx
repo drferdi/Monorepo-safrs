@@ -24,7 +24,7 @@ export function TrajectoryDiagnosticEvolutionPanel({
   return (
     <div data-testid="trajectory-diagnostic-evolution-panel">
       <TrajectorySimplePanel
-        title="Diagnostic Evolution"
+        title="Evolusi Diagnosis"
         chart={
           rows.length > 0 ? (
             <div className="h-56 w-full">
@@ -73,8 +73,8 @@ export function TrajectoryDiagnosticEvolutionPanel({
             </div>
           ) : (
             <TrajectoryEmptyState
-              title="Diagnostic evolution unavailable"
-              message="No diagnosis or hypothesis evolution is available for review."
+              title="Evolusi diagnosis belum tersedia"
+              message="Belum ada evolusi diagnosis atau hipotesis untuk ditinjau."
             />
           )
         }
@@ -87,7 +87,7 @@ export function TrajectoryDiagnosticEvolutionPanel({
                 title: formatChartDate(item.date),
                 detail:
                   item.labels.join(' · ') ||
-                  'No diagnostic hypothesis label recorded for this visit.',
+                  'Belum ada hipotesis diagnosis tercatat pada kunjungan ini.',
               }))}
             />
           ) : (

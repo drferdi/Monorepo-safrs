@@ -227,7 +227,7 @@ describe('ClinicalTrajectory physician safety', () => {
 
     expect(await screen.findByTestId('clinical-trajectory-v2')).toBeInTheDocument();
     expect(screen.getByTestId('trajectory-chart-tabs')).toBeInTheDocument();
-    expect(screen.getByRole('tab', { name: 'Patient Clinical Timeline' })).toHaveAttribute(
+    expect(screen.getByRole('tab', { name: 'Linimasa Klinis Pasien' })).toHaveAttribute(
       'aria-selected',
       'true'
     );
@@ -379,7 +379,7 @@ describe('ClinicalTrajectory physician safety', () => {
     expect(screen.queryByText('First Glance Clinical Status')).not.toBeInTheDocument();
     expect(within(header).queryByText('Kualitas data')).not.toBeInTheDocument();
     expect(
-      within(header).getByText(/Trajectory suggests|Trajectory is relatively stable/i)
+      within(header).getByText(/Trajektori menunjukkan|Trajektori relatif stabil/i)
     ).toBeInTheDocument();
     expect(screen.queryByText('Driver Klinis Utama')).not.toBeInTheDocument();
     expect(screen.queryByText('Catatan Keselamatan')).not.toBeInTheDocument();
@@ -390,7 +390,7 @@ describe('ClinicalTrajectory physician safety', () => {
     expect(screen.queryByText('Perhatian klinis')).not.toBeInTheDocument();
     expect(screen.queryByText('Data terbatas')).not.toBeInTheDocument();
     expect(
-      within(chartSection).getByRole('tab', { name: 'Patient Clinical Timeline' })
+      within(chartSection).getByRole('tab', { name: 'Linimasa Klinis Pasien' })
     ).toHaveAttribute('aria-selected', 'true');
     expect(screen.getByTestId('trajectory-chart-tabpanel-clinical-timeline')).toBeInTheDocument();
     expect(screen.getByTestId('trajectory-clinical-timeline-panel')).toBeInTheDocument();
@@ -608,7 +608,7 @@ describe('ClinicalTrajectory physician safety', () => {
     expect(screen.getByTestId('trajectory-chart-tabpanel-clinical-timeline')).toBeInTheDocument();
     expect(screen.getByTestId('trajectory-clinical-timeline-panel')).toBeInTheDocument();
     expect(
-      within(chartSection).getByRole('tab', { name: 'Patient Clinical Timeline' })
+      within(chartSection).getByRole('tab', { name: 'Linimasa Klinis Pasien' })
     ).toHaveAttribute('aria-selected', 'true');
     expect(screen.queryByText('Trajectory Antar Kunjungan')).not.toBeInTheDocument();
     expect(findForbiddenPhysicianTrajectoryTerms(container.textContent || '')).toEqual([]);

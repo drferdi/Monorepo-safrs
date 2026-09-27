@@ -62,7 +62,7 @@ export function TrajectoryClinicalTimelinePanel({
   return (
     <div data-testid="trajectory-clinical-timeline-panel">
       <TrajectorySimplePanel
-        title="Patient Clinical Timeline"
+        title="Linimasa Klinis Pasien"
         chart={
           chartRows.length > 0 ? (
             <div className="h-56 w-full">
@@ -124,8 +124,8 @@ export function TrajectoryClinicalTimelinePanel({
             </div>
           ) : (
             <TrajectoryEmptyState
-              title="Clinical timeline unavailable"
-              message="No longitudinal clinical summary is available for review."
+              title="Linimasa klinis belum tersedia"
+              message="Belum ada ringkasan klinis antar kunjungan untuk ditinjau."
             />
           )
         }

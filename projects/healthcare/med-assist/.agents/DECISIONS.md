@@ -3,6 +3,19 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-28 — Clinical Trajectory top card copy in Indonesian
+
+- Decision: on Chief's request the Trajectory top card reads in Indonesian. Status chip:
+  Prioritas tinggi / Perlu perhatian / Stabil / Pantau; trend chip: Eskalasi / Memburuk / Tetap /
+  Membaik; priority chip: Tinjau sekarang / Mendesak / Hari ini / Rutin. Tabs (long / short):
+  Linimasa Klinis Pasien / LINIMASA, Kurva Risiko / Perburukan / PERBURUKAN, Tren Tanda Vital /
+  TREN TTV, Linimasa Tanda Bahaya / TANDA BAHAYA, Selisih Antar Kunjungan / SELISIH, Evolusi
+  Hipotesis Diagnosis / EVOLUSI DX. "Trajectory" becomes "Trajektori" in running text.
+- Rationale: Chief's users are Indonesian doctors and nakes; the rest of the side panel is
+  already Indonesian. No short label is longer than the old longest word (DETERIORATION).
+- Evidence: the commit after `78439d22`; test expectations swapped string for string (named in
+  its message); token-guard PASS, SAFRS R1.
+
 ## 2026-09-28 — Clinical Trajectory must not reload or persist on equal re-renders
 
 - Decision: objects that feed the trajectory pipeline and the reasoning-audit write keep their

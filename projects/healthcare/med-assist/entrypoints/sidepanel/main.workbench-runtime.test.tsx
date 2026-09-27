@@ -471,7 +471,7 @@ describe('Sentra Assist sidepanel workbench runtime smoke', () => {
     expect(screen.getByTestId('clinical-reasoning-workbench')).toBeTruthy();
     expect(screen.getByTestId('clinical-trajectory-v2')).toBeTruthy();
     expect(screen.queryByText('Data not available')).toBeNull();
-    expect(screen.getByText(/4 visits reviewed/i)).toBeTruthy();
+    expect(screen.getByText(/4 kunjungan ditinjau/i)).toBeTruthy();
     expect(screen.getByText('Evidence map')).toBeTruthy();
     expect(findForbiddenPhysicianTrajectoryTerms(container.textContent || '')).toEqual([]);
   }, 15000);

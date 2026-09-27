@@ -29,7 +29,7 @@ export function TrajectoryRiskCurvePanel({
   return (
     <div data-testid="trajectory-risk-curve-panel">
       <TrajectorySimplePanel
-        title="Deterioration Curve"
+        title="Kurva Perburukan"
         chart={
           riskRows.length > 0 ? (
             <div className="h-56 w-full">
@@ -90,8 +90,8 @@ export function TrajectoryRiskCurvePanel({
             </div>
           ) : (
             <TrajectoryEmptyState
-              title="Risk curve unavailable"
-              message="No visit-to-visit risk trajectory is available."
+              title="Kurva risiko belum tersedia"
+              message="Belum ada kurva risiko antar kunjungan."
             />
           )
         }

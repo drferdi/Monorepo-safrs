@@ -138,7 +138,7 @@ function buildScenario(
 }
 
 describe('ClinicalTrajectoryChartTabs', () => {
-  it('renders six clinical tabs with Patient Clinical Timeline selected by default', () => {
+  it('renders six clinical tabs with Linimasa Klinis Pasien selected by default', () => {
     const scenario = buildScenario(
       [
         makeVisit(1, { sbp: 148, dbp: 92, hr: 94, rr: 20, temp: 37.4, glucose: 188 }),
@@ -159,21 +159,21 @@ describe('ClinicalTrajectoryChartTabs', () => {
       />
     );
 
-    const tablist = screen.getByRole('tablist', { name: 'Clinical trajectory charts' });
-    expect(within(tablist).getByRole('tab', { name: 'Patient Clinical Timeline' })).toHaveAttribute(
+    const tablist = screen.getByRole('tablist', { name: 'Grafik trajektori klinis' });
+    expect(within(tablist).getByRole('tab', { name: 'Linimasa Klinis Pasien' })).toHaveAttribute(
       'aria-selected',
       'true'
     );
     expect(
       within(tablist).getByRole('tab', {
-        name: 'Risk Trajectory / Deterioration Curve',
+        name: 'Kurva Risiko / Perburukan',
       })
     ).toBeInTheDocument();
-    expect(within(tablist).getByRole('tab', { name: 'Vital Signs Trend' })).toBeInTheDocument();
-    expect(within(tablist).getByRole('tab', { name: 'Red Flag Timeline' })).toBeInTheDocument();
-    expect(within(tablist).getByRole('tab', { name: 'Visit-to-Visit Delta' })).toBeInTheDocument();
+    expect(within(tablist).getByRole('tab', { name: 'Tren Tanda Vital' })).toBeInTheDocument();
+    expect(within(tablist).getByRole('tab', { name: 'Linimasa Tanda Bahaya' })).toBeInTheDocument();
+    expect(within(tablist).getByRole('tab', { name: 'Selisih Antar Kunjungan' })).toBeInTheDocument();
     expect(
-      within(tablist).getByRole('tab', { name: 'Diagnostic Hypothesis Evolution' })
+      within(tablist).getByRole('tab', { name: 'Evolusi Hipotesis Diagnosis' })
     ).toBeInTheDocument();
     expect(screen.queryByText(/^Trajectory$/i)).not.toBeInTheDocument();
     expect(screen.getByTestId('trajectory-chart-tabpanel-clinical-timeline')).toBeInTheDocument();
@@ -201,11 +201,11 @@ describe('ClinicalTrajectoryChartTabs', () => {
       />
     );
 
-    const defaultTab = screen.getByRole('tab', { name: 'Patient Clinical Timeline' });
+    const defaultTab = screen.getByRole('tab', { name: 'Linimasa Klinis Pasien' });
     const riskTab = screen.getByRole('tab', {
-      name: 'Risk Trajectory / Deterioration Curve',
+      name: 'Kurva Risiko / Perburukan',
     });
-    const vitalsTab = screen.getByRole('tab', { name: 'Vital Signs Trend' });
+    const vitalsTab = screen.getByRole('tab', { name: 'Tren Tanda Vital' });
     const tabpanel = screen.getByRole('tabpanel');
 
     fireEvent.click(riskTab);
@@ -222,14 +222,14 @@ describe('ClinicalTrajectoryChartTabs', () => {
     expect(tabpanel).toHaveAttribute('aria-labelledby', 'trajectory-chart-tab-vital-signs');
     expect(screen.getByTestId('trajectory-vital-signs-panel')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('tab', { name: 'Red Flag Timeline' }));
+    fireEvent.click(screen.getByRole('tab', { name: 'Linimasa Tanda Bahaya' }));
     expect(vitalsTab).toHaveAttribute('aria-selected', 'false');
     expect(screen.getByTestId('trajectory-red-flag-timeline-panel')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('tab', { name: 'Visit-to-Visit Delta' }));
+    fireEvent.click(screen.getByRole('tab', { name: 'Selisih Antar Kunjungan' }));
     expect(screen.getByTestId('trajectory-visit-delta-panel')).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('tab', { name: 'Diagnostic Hypothesis Evolution' }));
+    fireEvent.click(screen.getByRole('tab', { name: 'Evolusi Hipotesis Diagnosis' }));
     expect(screen.getByTestId('trajectory-diagnostic-evolution-panel')).toBeInTheDocument();
   });
 });

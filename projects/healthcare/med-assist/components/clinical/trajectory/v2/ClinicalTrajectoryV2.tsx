@@ -71,29 +71,29 @@ function sanitizeHybridSafety(result: HybridTrajectoryResult): HybridTrajectoryR
 
 function buildStatusChip(finalState: HybridTrajectoryResult['integratedAssessment']['finalState']) {
   if (finalState === 'critical') {
-    return { label: 'High Concern', className: 'sentra-state-danger' };
+    return { label: 'Prioritas tinggi', className: 'sentra-state-danger' };
   }
   if (finalState === 'deteriorating') {
-    return { label: 'Concern', className: 'sentra-state-warning' };
+    return { label: 'Perlu perhatian', className: 'sentra-state-warning' };
   }
   if (finalState === 'stable') {
-    return { label: 'Stable', className: 'sentra-state-safe' };
+    return { label: 'Stabil', className: 'sentra-state-safe' };
   }
-  return { label: 'Watch', className: 'sentra-state-info' };
+  return { label: 'Pantau', className: 'sentra-state-info' };
 }
 
 function buildTrendChip(finalState: HybridTrajectoryResult['integratedAssessment']['finalState']) {
-  if (finalState === 'critical') return 'Escalating';
-  if (finalState === 'deteriorating') return 'Worsening';
-  if (finalState === 'stable') return 'Flat';
-  return 'Improving';
+  if (finalState === 'critical') return 'Eskalasi';
+  if (finalState === 'deteriorating') return 'Memburuk';
+  if (finalState === 'stable') return 'Tetap';
+  return 'Membaik';
 }
 
 function buildPriorityChip(urgencyTier: PhysicianSafeTrajectoryPresentation['urgencyTier']) {
-  if (urgencyTier === 'immediate') return 'Immediate';
-  if (urgencyTier === 'high') return 'Urgent';
-  if (urgencyTier === 'moderate') return 'Today';
-  return 'Routine';
+  if (urgencyTier === 'immediate') return 'Tinjau sekarang';
+  if (urgencyTier === 'high') return 'Mendesak';
+  if (urgencyTier === 'moderate') return 'Hari ini';
+  return 'Rutin';
 }
 
 function countUniqueLongitudinalPoints(result: HybridTrajectoryResult): number {
@@ -265,9 +265,7 @@ export function ClinicalTrajectoryV2({
           <span className="ct-v2-status-separator" aria-hidden="true">
             ·
           </span>
-          <span className="ct-v2-status-token">
-            {priorityChip === 'Immediate' ? 'Review now' : priorityChip}
-          </span>
+          <span className="ct-v2-status-token">{priorityChip}</span>
         </div>
         <ClinicalTrajectoryHeader
           hybridResult={safeHybridResult}
@@ -285,9 +283,9 @@ export function ClinicalTrajectoryV2({
           <div className="ct-v2-context-line">
             <div className="ct-v2-context-line__item">
               {[
-                `${visitCount} visits reviewed`,
+                `${visitCount} kunjungan ditinjau`,
                 latestTrajectoryPoint?.date
-                  ? `Last visit ${formatChartDate(latestTrajectoryPoint.date)}`
+                  ? `Kunjungan terakhir ${formatChartDate(latestTrajectoryPoint.date)}`
                   : null,
                 patientContext?.payerLabel,
               ]

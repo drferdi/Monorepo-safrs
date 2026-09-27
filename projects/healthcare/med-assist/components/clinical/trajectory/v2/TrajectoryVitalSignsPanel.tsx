@@ -75,7 +75,7 @@ export function TrajectoryVitalSignsPanel({
   return (
     <div data-testid="trajectory-vital-signs-panel">
       <TrajectorySimplePanel
-        title="Vital Signs Trend"
+        title="Tren Tanda Vital"
         chart={
           hasPoints && selectedSeries.length > 0 ? (
             <div className="space-y-3">
@@ -155,8 +155,8 @@ export function TrajectoryVitalSignsPanel({
             </div>
           ) : (
             <TrajectoryEmptyState
-              title="Vital signs unavailable"
-              message="No objective vital trajectory is available for chart review."
+              title="Tanda vital belum tersedia"
+              message="Belum ada tren tanda vital objektif untuk ditinjau."
             />
           )
         }

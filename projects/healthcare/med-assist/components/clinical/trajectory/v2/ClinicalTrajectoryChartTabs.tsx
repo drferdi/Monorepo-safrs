@@ -27,33 +27,33 @@ const CHART_TABS: Array<{
 }> = [
   {
     id: DEFAULT_CHART_TAB_ID,
-    label: 'Patient Clinical Timeline',
-    shortLabel: 'PTC',
+    label: 'Linimasa Klinis Pasien',
+    shortLabel: 'LINIMASA',
   },
   {
     id: 'risk-curve',
-    label: 'Risk Trajectory / Deterioration Curve',
-    shortLabel: 'DETERIORATION',
+    label: 'Kurva Risiko / Perburukan',
+    shortLabel: 'PERBURUKAN',
   },
   {
     id: 'vital-signs',
-    label: 'Vital Signs Trend',
-    shortLabel: 'VS TREND',
+    label: 'Tren Tanda Vital',
+    shortLabel: 'TREN TTV',
   },
   {
     id: 'red-flag-timeline',
-    label: 'Red Flag Timeline',
-    shortLabel: 'RED FLAGS',
+    label: 'Linimasa Tanda Bahaya',
+    shortLabel: 'TANDA BAHAYA',
   },
   {
     id: 'visit-delta',
-    label: 'Visit-to-Visit Delta',
-    shortLabel: 'VISIT DELTA',
+    label: 'Selisih Antar Kunjungan',
+    shortLabel: 'SELISIH',
   },
   {
     id: 'diagnostic-evolution',
-    label: 'Diagnostic Hypothesis Evolution',
-    shortLabel: 'DX EVOLUTION',
+    label: 'Evolusi Hipotesis Diagnosis',
+    shortLabel: 'EVOLUSI DX',
   },
 ];
 
@@ -128,7 +128,7 @@ export function ClinicalTrajectoryChartTabs({
       <div
         className="ct-v2-primary-trajectory__tablist"
         role="tablist"
-        aria-label="Clinical trajectory charts"
+        aria-label="Grafik trajektori klinis"
       >
         {CHART_TABS.map((tab) => {
           const selected = tab.id === activeTab;

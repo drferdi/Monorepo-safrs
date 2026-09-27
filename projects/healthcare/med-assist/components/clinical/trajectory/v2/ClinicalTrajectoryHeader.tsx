@@ -108,17 +108,17 @@ function buildBriefInterpretation(
 
   const opening =
     finalState === 'critical'
-      ? 'Trajectory suggests a high-concern pattern on the latest visit'
+      ? 'Trajektori menunjukkan pola prioritas tinggi pada kunjungan terakhir'
       : finalState === 'deteriorating'
-        ? 'Trajectory suggests a worsening pattern on the latest visit'
+        ? 'Trajektori menunjukkan pola memburuk pada kunjungan terakhir'
         : finalState === 'stable'
-          ? 'Trajectory is relatively stable on the latest visit'
-          : 'Trajectory shows a watch pattern on the latest visit';
+          ? 'Trajektori relatif stabil pada kunjungan terakhir'
+          : 'Trajektori menunjukkan pola perlu dipantau pada kunjungan terakhir';
 
   const followUp =
     confidence < 0.6 || physicianPresentation.urgencyTier === 'moderate'
-      ? 'review latest complaint, vital trend, diagnosis, therapy, and escalation cues directly.'
-      : 'review latest complaint, vital trend, active diagnosis, and current therapy.';
+      ? 'tinjau langsung keluhan terakhir, tren tanda vital, diagnosis, terapi, dan tanda eskalasi'
+      : 'tinjau keluhan terakhir, tren tanda vital, diagnosis aktif, dan terapi saat ini';
 
   return `${opening}; ${followUp}.`;
 }

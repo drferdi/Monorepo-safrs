@@ -286,7 +286,7 @@ describe('ClinicalTrajectoryV2', () => {
     expect(events.length).toBe(within(auditTrail).getAllByText(/^Step \d+$/).length);
     events.forEach((event) => expect(event.querySelector('.ct-audit-timeline__node')).not.toBeNull());
     const interpretation = within(header).getByText(
-      /Trajectory suggests|Trajectory is relatively stable/i
+      /Trajektori menunjukkan|Trajektori relatif stabil/i
     );
 
     expect(screen.getByTestId('clinical-trajectory-v2')).toBeInTheDocument();
@@ -296,10 +296,10 @@ describe('ClinicalTrajectoryV2', () => {
     expect(screen.queryByText('Patient briefing')).not.toBeInTheDocument();
     expect(screen.queryByText('Siti Rahmawati')).not.toBeInTheDocument();
     expect(screen.queryByText(/54 tahun/i)).not.toBeInTheDocument();
-    expect(within(statusRow).getByText(/Concern|Stable|Watch|High Concern/i)).toBeInTheDocument();
-    expect(within(statusRow).getByText(/Worsening|Flat|Improving|Escalating/i)).toBeInTheDocument();
+    expect(within(statusRow).getByText(/Perlu perhatian|Stabil|Pantau|Prioritas tinggi/i)).toBeInTheDocument();
+    expect(within(statusRow).getByText(/Memburuk|Tetap|Membaik|Eskalasi/i)).toBeInTheDocument();
     expect(
-      within(statusRow).getByText(/Urgent|Routine|Immediate|Today|Review now/i)
+      within(statusRow).getByText(/Mendesak|Rutin|Hari ini|Tinjau sekarang/i)
     ).toBeInTheDocument();
     expect(interpretation).toHaveStyle({ marginBottom: '8px' });
     expect(
@@ -315,24 +315,24 @@ describe('ClinicalTrajectoryV2', () => {
       })
     ).not.toBeInTheDocument();
     expect(
-      within(chartSection).getByRole('tab', { name: 'Patient Clinical Timeline' })
+      within(chartSection).getByRole('tab', { name: 'Linimasa Klinis Pasien' })
     ).toHaveAttribute('aria-selected', 'true');
     expect(
       within(chartSection).getByRole('tab', {
-        name: 'Risk Trajectory / Deterioration Curve',
+        name: 'Kurva Risiko / Perburukan',
       })
     ).toBeInTheDocument();
     expect(
-      within(chartSection).getByRole('tab', { name: 'Vital Signs Trend' })
+      within(chartSection).getByRole('tab', { name: 'Tren Tanda Vital' })
     ).toBeInTheDocument();
     expect(
-      within(chartSection).getByRole('tab', { name: 'Red Flag Timeline' })
+      within(chartSection).getByRole('tab', { name: 'Linimasa Tanda Bahaya' })
     ).toBeInTheDocument();
     expect(
-      within(chartSection).getByRole('tab', { name: 'Visit-to-Visit Delta' })
+      within(chartSection).getByRole('tab', { name: 'Selisih Antar Kunjungan' })
     ).toBeInTheDocument();
     expect(
-      within(chartSection).getByRole('tab', { name: 'Diagnostic Hypothesis Evolution' })
+      within(chartSection).getByRole('tab', { name: 'Evolusi Hipotesis Diagnosis' })
     ).toBeInTheDocument();
     expect(screen.getByTestId('trajectory-chart-tabpanel-clinical-timeline')).toBeInTheDocument();
     expect(screen.getByTestId('trajectory-clinical-timeline-panel')).toBeInTheDocument();
@@ -472,10 +472,10 @@ describe('ClinicalTrajectoryV2', () => {
 
     expect(header.querySelectorAll('p')).toHaveLength(1);
     expect(
-      within(header).getByText(/Trajectory suggests|Trajectory is relatively stable/i)
+      within(header).getByText(/Trajektori menunjukkan|Trajektori relatif stabil/i)
     ).toBeInTheDocument();
     expect(screen.queryByText(headline.mainConcern)).not.toBeInTheDocument();
-    expect(screen.getByText(/visits reviewed/i)).toBeInTheDocument();
+    expect(screen.getByText(/kunjungan ditinjau/i)).toBeInTheDocument();
   });
 
   it('renders T-13 respiratory collapse evidence from CP-014 through the collapsed evidence map', () => {
@@ -748,12 +748,12 @@ describe('ClinicalTrajectoryV2', () => {
 
     renderTrajectoryV2(scenario, { visitCount: 4 });
 
-    const defaultTab = screen.getByRole('tab', { name: 'Patient Clinical Timeline' });
+    const defaultTab = screen.getByRole('tab', { name: 'Linimasa Klinis Pasien' });
     const riskTab = screen.getByRole('tab', {
-      name: 'Risk Trajectory / Deterioration Curve',
+      name: 'Kurva Risiko / Perburukan',
     });
     const diagnosticTab = screen.getByRole('tab', {
-      name: 'Diagnostic Hypothesis Evolution',
+      name: 'Evolusi Hipotesis Diagnosis',
     });
 
     fireEvent.click(riskTab);

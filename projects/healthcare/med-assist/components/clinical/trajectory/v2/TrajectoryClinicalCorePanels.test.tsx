@@ -176,7 +176,7 @@ describe('Trajectory clinical core panels', () => {
     expect(deltaPanel).toBeInTheDocument();
     expect(within(deltaPanel).getByTestId('trajectory-simple-chart')).toBeInTheDocument();
     expect(within(deltaPanel).getByTestId('trajectory-simple-result')).toBeInTheDocument();
-    expect(within(deltaPanel).getByText('Kunjungan 2 to Kunjungan 3')).toBeInTheDocument();
+    expect(within(deltaPanel).getByText('Kunjungan 2 ke Kunjungan 3')).toBeInTheDocument();
     expect(within(deltaPanel).getByText(/Laju napas \+5 \/min/i)).toBeInTheDocument();
 
     const diagnosticPanel = screen.getByTestId('trajectory-diagnostic-evolution-panel');
@@ -197,8 +197,8 @@ describe('Trajectory clinical core panels', () => {
     const redFlagPanel = screen.getByTestId('trajectory-red-flag-timeline-panel');
     expect(redFlagPanel).toBeInTheDocument();
     expect(within(redFlagPanel).getByText('Kunjungan 1')).toBeInTheDocument();
-    expect(within(redFlagPanel).getByText('No safety-critical flag recorded.')).toBeInTheDocument();
-    expect(within(redFlagPanel).queryByText('No red flags recorded')).not.toBeInTheDocument();
+    expect(within(redFlagPanel).getByText('Tidak ada tanda bahaya tercatat.')).toBeInTheDocument();
+    expect(within(redFlagPanel).queryByText('Belum ada tanda bahaya tercatat')).not.toBeInTheDocument();
   });
 
   it('summarizes long therapy regimens in visit cards', () => {

@@ -24,7 +24,7 @@ export function TrajectoryRedFlagTimelinePanel({
   return (
     <div data-testid="trajectory-red-flag-timeline-panel">
       <TrajectorySimplePanel
-        title="Red Flag Timeline"
+        title="Linimasa Tanda Bahaya"
         chart={
           rows.length > 0 ? (
             <div className="h-56 w-full">
@@ -74,8 +74,8 @@ export function TrajectoryRedFlagTimelinePanel({
             </div>
           ) : (
             <TrajectoryEmptyState
-              title="No red flags recorded"
-              message="No red-flag timeline data is available for this trajectory."
+              title="Belum ada tanda bahaya tercatat"
+              message="Belum ada data linimasa tanda bahaya untuk trajektori ini."
             />
           )
         }
@@ -86,7 +86,7 @@ export function TrajectoryRedFlagTimelinePanel({
                 id: `${item.visitLabel}-${item.date}`,
                 eyebrow: item.visitLabel,
                 title: formatChartDate(item.date),
-                detail: item.redFlagLabels.join(' · ') || 'No safety-critical flag recorded.',
+                detail: item.redFlagLabels.join(' · ') || 'Tidak ada tanda bahaya tercatat.',
               }))}
             />
           ) : (
