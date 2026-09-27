@@ -121,6 +121,7 @@ export function DiagnosisWorkspace({
   const clinicalCandidateCount = getClinicalCandidates(viewModel.candidates).length;
   const hasDifferentialSet = clinicalCandidateCount > 0;
   const visibleErrorMessage = getVisibleErrorMessage(errorMessage);
+  const safetyItems = getVisibleSafetyItems(viewModel.evidence.redFlags, viewModel.evidence.doNotMiss);
 
   return (
     <div
@@ -175,8 +176,10 @@ export function DiagnosisWorkspace({
             onManualNameChange={onManualNameChange}
             onSubmitManualDiagnosis={onSubmitManualDiagnosis}
           />
-          {triage ? <TriageSummarySection triage={triage} /> : null}
-          <SupportingExamSection viewModel={viewModel} />
+          {triage ? (
+            <TriageSummarySection triage={triage} safetyItems={safetyItems} />
+          ) : null}
+          <SupportingExamSection viewModel={viewModel} showSafetyItems={!triage} />
           <TherapyReviewPanel
             viewModel={viewModel}
             showManualMedicationInput={showManualMedicationInput}
@@ -217,8 +220,8 @@ function ClinicalContextPanel({
   secondaryComplaint?: string;
 }) {
   return (
-    <section className="form-group diagnosis-block" aria-label="Konteks Klinis">
-      <SectionHeader title="Konteks Klinis" />
+    <section className="form-group diagnosis-block" aria-label="Clinical Finding">
+      <SectionHeader title="Clinical Finding" />
       <ClinicalSignalPanel
         complaintSummary={complaintSummary}
         secondaryComplaint={secondaryComplaint}
@@ -452,27 +455,70 @@ function CandidateRow({
   );
 }
 
-function TriageSummarySection({ triage }: { triage: DiagnosisTriageView }) {
+const REFERRAL_ITEM_START = /^(\s+\S|\s*\d+[.)]\s|\s*[-•·]\s)/;
+
+export function splitReferralGuidance(text: string): string[] {
+  const items: string[] = [];
+  text.split(/\r?\n/).forEach((line, index) => {
+    if (!line.trim()) return;
+    const cleaned = line.replace(/^\s*(\d+[.)]|[-•·])\s*/, '').trim();
+    if (index === 0 || REFERRAL_ITEM_START.test(line) || items.length === 0) {
+      items.push(cleaned);
+    } else {
+      items[items.length - 1] = `${items[items.length - 1]} ${cleaned}`;
+    }
+  });
+  return items;
+}
+
+function TriageSummarySection({
+  triage,
+  safetyItems,
+}: {
+  triage: DiagnosisTriageView;
+  safetyItems: string[];
+}) {
   const listTone =
     triage.tone === 'danger' ? 'danger' : triage.tone === 'warning' ? 'warning' : 'default';
 
   return (
     <section className="form-group diagnosis-block" aria-label="Triase & Rujukan">
       <SectionHeader title="Triase & Rujukan" status={triage.headline} />
-      <ReadOnlyPanel tone={triage.tone}>
-        <strong>{triage.headline}</strong>
-      </ReadOnlyPanel>
+      <details className="diagnosis-details diagnosis-details--inline">
+        <summary>Saran</summary>
+        <ReadOnlyPanel tone={triage.tone}>
+          <strong>{triage.headline}</strong>
+        </ReadOnlyPanel>
+      </details>
       {triage.firedCriteria.length > 0 ? (
-        <LineList title="Dasar keputusan" items={triage.firedCriteria} tone={listTone} />
+        <details className="diagnosis-details diagnosis-details--inline">
+          <summary>Alasan</summary>
+          <LineList title="Dasar keputusan" items={triage.firedCriteria} tone={listTone} />
+        </details>
       ) : null}
       {triage.referralGuidance ? (
-        <LineList title="Indikasi rujukan" items={[triage.referralGuidance]} />
+        <details className="diagnosis-details diagnosis-details--inline">
+          <summary>Indikasi rujukan</summary>
+          <LineList title="Indikasi rujukan" items={splitReferralGuidance(triage.referralGuidance)} />
+        </details>
+      ) : null}
+      {safetyItems.length > 0 ? (
+        <details className="diagnosis-details diagnosis-details--inline">
+          <summary>Tanda bahaya</summary>
+          <LineList title="Tanda bahaya" items={safetyItems} tone="danger" />
+        </details>
       ) : null}
     </section>
   );
 }
 
-function SupportingExamSection({ viewModel }: { viewModel: DiagnosisPageViewModel }) {
+function SupportingExamSection({
+  viewModel,
+  showSafetyItems,
+}: {
+  viewModel: DiagnosisPageViewModel;
+  showSafetyItems: boolean;
+}) {
   const isInsufficient = viewModel.primary.isInsufficient;
   const examItems = getVisibleExamItems(viewModel.evidence.missing);
   const needsExam = !isInsufficient && examItems.length > 0;
@@ -494,7 +540,7 @@ function SupportingExamSection({ viewModel }: { viewModel: DiagnosisPageViewMode
           tone={needsExam ? 'warning' : 'default'}
         />
       )}
-      {safetyItems.length > 0 ? (
+      {showSafetyItems && safetyItems.length > 0 ? (
         <LineList title="Tanda bahaya" items={safetyItems} tone="danger" />
       ) : null}
       <details className="diagnosis-details diagnosis-details--inline">

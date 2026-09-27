@@ -294,7 +294,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
       );
     }
     const expectedOrder = [
-      'Konteks Klinis',
+      'Clinical Finding',
       'Diagnosis Banding',
       'Diagnosis Utama',
       'Pemeriksaan Penunjang',
@@ -303,7 +303,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     positions.forEach((position) => expect(position).toBeGreaterThanOrEqual(0));
     expect(positions).toEqual([...positions].sort((a, b) => a - b));
 
-    const clinicalContext = within(workspace).getByLabelText('Konteks Klinis');
+    const clinicalContext = within(workspace).getByLabelText('Clinical Finding');
     const contextText = clinicalContext.textContent || '';
     expect(contextText.indexOf('Sinyal klinis')).toBeGreaterThanOrEqual(0);
     expect(within(clinicalContext).getByTestId('diagnosis-clinical-signals')).toHaveTextContent(
@@ -420,7 +420,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     );
 
     const workspace = await screen.findByTestId('diagnosis-workspace');
-    const clinicalContext = within(workspace).getByLabelText('Konteks Klinis');
+    const clinicalContext = within(workspace).getByLabelText('Clinical Finding');
     const clinicalSignals = within(clinicalContext).getByTestId('diagnosis-clinical-signals');
 
     expect(clinicalSignals).toHaveTextContent(/HT/i);
@@ -466,7 +466,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     );
 
     const workspace = await screen.findByTestId('diagnosis-workspace');
-    const clinicalContext = within(workspace).getByLabelText('Konteks Klinis');
+    const clinicalContext = within(workspace).getByLabelText('Clinical Finding');
     const clinicalSignals = within(clinicalContext).getByTestId('diagnosis-clinical-signals');
 
     expect(clinicalSignals).toHaveTextContent(/Batuk/i);

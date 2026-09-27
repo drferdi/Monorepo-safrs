@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { DiagnosisWorkspace, type DiagnosisWorkspaceProps } from './DiagnosisWorkspace';
+import { DiagnosisWorkspace, splitReferralGuidance, type DiagnosisWorkspaceProps } from './DiagnosisWorkspace';
 
 function makeViewModel(
   overrides: Partial<DiagnosisWorkspaceProps['viewModel']> = {}
@@ -165,7 +165,7 @@ describe('DiagnosisWorkspace', () => {
 
     const workspace = screen.getByTestId('diagnosis-workspace');
     const orderedLabels = [
-      'Konteks Klinis',
+      'Clinical Finding',
       'Diagnosis Banding',
       'Diagnosis Utama',
       'Pemeriksaan Penunjang',
@@ -221,5 +221,65 @@ describe('DiagnosisWorkspace', () => {
 
     fireEvent.click(within(workspace).getByRole('button', { name: /Lengkapi Data Diagnosis/i }));
     expect(onCompleteData).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('splitReferralGuidance', () => {
+  it('splits numbered items and joins wrapped lines', () => {
+    expect(
+      splitReferralGuidance(
+        '1. Bila tidak membaik maka dirujuk ke fasilitas sekunder\nyang memiliki dokter spesialis saraf.\n2. Bila depresi berat.'
+      )
+    ).toEqual([
+      'Bila tidak membaik maka dirujuk ke fasilitas sekunder yang memiliki dokter spesialis saraf.',
+      'Bila depresi berat.',
+    ]);
+  });
+
+  it('treats a leading space as a lost bullet', () => {
+    expect(
+      splitReferralGuidance('Apabila kejang tidak membaik.\n Apabila kejang demam sering berulang.')
+    ).toEqual(['Apabila kejang tidak membaik.', 'Apabila kejang demam sering berulang.']);
+  });
+
+  it('keeps a wrapped paragraph as one item', () => {
+    expect(
+      splitReferralGuidance('Pasien perlu dirujuk jika migren berlanjut dan tidak hilang dengan\nanalgesik.')
+    ).toEqual(['Pasien perlu dirujuk jika migren berlanjut dan tidak hilang dengan analgesik.']);
+  });
+});
+
+describe('DiagnosisWorkspace triage section', () => {
+  const triage = {
+    outcome: 'refer' as const,
+    headline: 'Pertimbangkan rujukan',
+    tone: 'warning' as const,
+    firedCriteria: ['Kompetensi SKDI 3A'],
+    referralGuidance: '1. Bila tidak membaik.\n2. Bila komplikasi.',
+  };
+
+  it('keeps the headline visible and folds advice, reasons, referral and red flags into dropdowns', () => {
+    const props = makeProps({ triage });
+    props.viewModel.evidence.redFlags = ['Penurunan kesadaran'];
+    render(<DiagnosisWorkspace {...props} />);
+
+    const section = screen.getByLabelText('Triase & Rujukan');
+    expect(within(section).getAllByText('Pertimbangkan rujukan').length).toBeGreaterThan(0);
+    const summaries = Array.from(section.querySelectorAll('details > summary')).map((s) => s.textContent);
+    expect(summaries).toEqual(['Saran', 'Alasan', 'Indikasi rujukan', 'Tanda bahaya']);
+    section.querySelectorAll('details').forEach((d) => expect(d).not.toHaveAttribute('open'));
+    expect(within(section).getByText('Bila komplikasi.')).toBeInTheDocument();
+    expect(
+      within(screen.getByLabelText('Pemeriksaan Penunjang')).queryByText('Tanda bahaya')
+    ).toBeNull();
+  });
+
+  it('keeps red flags in Pemeriksaan Penunjang when there is no triage result', () => {
+    const props = makeProps({ triage: null });
+    props.viewModel.evidence.redFlags = ['Penurunan kesadaran'];
+    render(<DiagnosisWorkspace {...props} />);
+    expect(
+      within(screen.getByLabelText('Pemeriksaan Penunjang')).getByText('Tanda bahaya')
+    ).toBeInTheDocument();
   });
 });
