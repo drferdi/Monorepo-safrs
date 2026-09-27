@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
+import { DiagnosisProgressStepper, resolveDiagnosisSteps } from './DiagnosisProgressStepper';
 import { DiagnosisWorkspace, splitReferralGuidance, type DiagnosisWorkspaceProps } from './DiagnosisWorkspace';
 
 function makeViewModel(
@@ -327,6 +328,14 @@ describe('DiagnosisWorkspace', () => {
     expect(within(education).getByText('Minum cukup air')).toBeInTheDocument();
     expect(within(education).getByText('1 catatan')).toBeInTheDocument();
   });
+
+  it('shows the stepper first and a skeleton while loading', () => {
+    render(<DiagnosisWorkspace {...makeProps({ phase: 'loading' })} />);
+    const workspace = screen.getByTestId('diagnosis-workspace');
+    expect(workspace.firstElementChild).toHaveAttribute('aria-label', 'Langkah diagnosis');
+    expect(workspace.querySelectorAll('.diagnosis-skeleton__card')).toHaveLength(2);
+    expect(screen.getByText('Menyusun diagnosis banding...')).toBeInTheDocument();
+  });
 });
 
 describe('splitReferralGuidance', () => {
@@ -351,6 +360,39 @@ describe('splitReferralGuidance', () => {
     expect(
       splitReferralGuidance('Pasien perlu dirujuk jika migren berlanjut dan tidak hilang dengan\nanalgesik.')
     ).toEqual(['Pasien perlu dirujuk jika migren berlanjut dan tidak hilang dengan analgesik.']);
+  });
+});
+
+function stepperModel(selectedDiagnosisCount: number, selectedMedicationCount: number, state: string) {
+  const viewModel = makeViewModel();
+  viewModel.therapy = { ...viewModel.therapy, selectedDiagnosisCount, selectedMedicationCount };
+  viewModel.transfer = { ...viewModel.transfer, state };
+  return viewModel;
+}
+
+describe('resolveDiagnosisSteps', () => {
+  it('marks steps done from phase, diagnosis, medication and transfer state', () => {
+    expect(resolveDiagnosisSteps('ready', stepperModel(1, 1, 'success')).map((s) => s.done)).toEqual([true, true, true, true]);
+    expect(resolveDiagnosisSteps('ready', stepperModel(1, 0, 'idle')).map((s) => s.done)).toEqual([true, true, false, false]);
+    expect(resolveDiagnosisSteps('loading', stepperModel(0, 0, 'idle')).map((s) => s.done)).toEqual([false, false, false, false]);
+    expect(resolveDiagnosisSteps('ready', stepperModel(0, 0, 'idle')).map((s) => s.label)).toEqual(['Temuan', 'Diagnosis', 'Terapi', 'RME']);
+  });
+});
+
+describe('DiagnosisProgressStepper', () => {
+  it('marks the first unfinished step as current and fills the line to it', () => {
+    const { rerender } = render(<DiagnosisProgressStepper phase="ready" viewModel={stepperModel(0, 0, 'idle')} />);
+    const nav = screen.getByRole('navigation', { name: 'Langkah diagnosis' });
+    expect(within(nav).getByText('Diagnosis').closest('li')).toHaveAttribute('aria-current', 'step');
+    expect(nav.querySelector('.diagnosis-stepper__fill')).toHaveAttribute('data-filled', '1');
+
+    rerender(<DiagnosisProgressStepper phase="ready" viewModel={stepperModel(1, 1, 'idle')} />);
+    expect(within(nav).getByText('RME').closest('li')).toHaveAttribute('aria-current', 'step');
+    expect(nav.querySelector('.diagnosis-stepper__fill')).toHaveAttribute('data-filled', '3');
+
+    rerender(<DiagnosisProgressStepper phase="ready" viewModel={stepperModel(0, 1, 'idle')} />);
+    expect(within(nav).getByText('Diagnosis').closest('li')).toHaveAttribute('aria-current', 'step');
+    expect(nav.querySelector('.diagnosis-stepper__fill')).toHaveAttribute('data-filled', '1');
   });
 });
 

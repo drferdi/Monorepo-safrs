@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import { DiagnosisProgressStepper } from './DiagnosisProgressStepper';
 import { isDiagnosisChosen } from './diagnosisDisplayUtils';
 import type { DiagnosisCandidateView, DiagnosisPageViewModel } from './diagnosisViewModel';
 import { RMETransferPanel } from './RMETransferPanel';
@@ -132,6 +133,8 @@ export function DiagnosisWorkspace({
       data-diagnosis-medication-count={viewModel.transfer.medicationSelectionLabel}
       data-diagnosis-transfer-state={viewModel.transfer.state}
     >
+      <DiagnosisProgressStepper phase={phase} viewModel={viewModel} />
+
       <ClinicalContextPanel
         viewModel={viewModel}
         complaintSummary={complaintSummary}
@@ -139,9 +142,18 @@ export function DiagnosisWorkspace({
       />
 
       {phase === 'loading' ? (
-        <section className="form-group diagnosis-block" aria-live="polite">
+        <section className="form-group diagnosis-block" aria-live="polite" aria-busy="true">
           <SectionHeader title="Diagnosis Utama" />
-          <ReadOnlyPanel>Menyusun diagnosis banding...</ReadOnlyPanel>
+          <span className="sr-only">Menyusun diagnosis banding...</span>
+          <div className="diagnosis-skeleton" aria-hidden="true">
+            {[0, 1].map((index) => (
+              <div key={index} className="diagnosis-skeleton__card">
+                <span className="diagnosis-skeleton__bar diagnosis-skeleton__bar--title" />
+                <span className="diagnosis-skeleton__bar diagnosis-skeleton__bar--tally" />
+                <span className="diagnosis-skeleton__bar diagnosis-skeleton__bar--button" />
+              </div>
+            ))}
+          </div>
         </section>
       ) : null}
 
