@@ -272,6 +272,10 @@ describe('DiagnosisWorkspace', () => {
   it('keeps the late sections collapsed with a one-line summary until a diagnosis is chosen', () => {
     const viewModel = makeViewModel();
     viewModel.therapy = { ...viewModel.therapy, selectedDiagnosisCount: 0, selectedMedicationCount: 0 };
+    // Isolated from the F1 fallback-danger-signs behavior (covered by its own
+    // tests above): no red flags/do-not-miss here, so Pemeriksaan Penunjang
+    // collapses purely on "no diagnosis chosen" like the other staged sections.
+    viewModel.evidence = { ...viewModel.evidence, redFlags: [], doNotMiss: [] };
     const { rerender } = render(<DiagnosisWorkspace {...makeProps({ viewModel })} />);
 
     STAGED.forEach((label) => {
@@ -335,6 +339,46 @@ describe('DiagnosisWorkspace', () => {
     expect(workspace.firstElementChild).toHaveAttribute('aria-label', 'Langkah diagnosis');
     expect(workspace.querySelectorAll('.diagnosis-skeleton__card')).toHaveLength(2);
     expect(screen.getByText('Menyusun diagnosis banding...')).toBeInTheDocument();
+  });
+
+  it('does not pair aria-busy with aria-live on the loading section, which can suppress the announcement', () => {
+    render(<DiagnosisWorkspace {...makeProps({ phase: 'loading' })} />);
+    const workspace = screen.getByTestId('diagnosis-workspace');
+    const loadingSection = within(workspace).getByText('Menyusun diagnosis banding...').closest('section');
+    expect(loadingSection).toHaveAttribute('aria-live', 'polite');
+    expect(loadingSection).not.toHaveAttribute('aria-busy');
+  });
+
+  it('surfaces evidence.review through the Alasan dropdown even when the primary diagnosis is insufficient', () => {
+    render(
+      <DiagnosisWorkspace
+        {...makeProps({
+          viewModel: makeViewModel({
+            primary: {
+              canLock: false,
+              isInsufficient: true,
+              candidateLabel: 'Data diagnosis belum lengkap',
+              confidenceLabel: 'Insufficient data',
+              safestNextAction: 'Lengkapi anamnesis dan pemeriksaan fisik',
+              primaryCtaLabel: 'Lengkapi Data Diagnosis',
+              missingEvidence: ['Lengkapi anamnesis'],
+            },
+            evidence: {
+              supports: [],
+              against: [],
+              missing: [],
+              review: ['Review fisik'],
+              redFlags: [],
+              doNotMiss: [],
+            },
+          }),
+        })}
+      />
+    );
+
+    const primary = screen.getByTestId('clinical-diagnosis-primary-card');
+    expect(within(primary).getByText('Alasan')).toBeInTheDocument();
+    expect(within(primary).getByText('Review fisik')).toBeInTheDocument();
   });
 });
 
@@ -466,6 +510,33 @@ describe('DiagnosisWorkspace triage section', () => {
       within(screen.getByLabelText('Pemeriksaan Penunjang')).getByText('Tanda bahaya')
     ).toBeInTheDocument();
   });
+
+  it('opens Pemeriksaan Penunjang for fallback danger signs when no diagnosis is chosen and there is no triage', () => {
+    const props = makeProps({ triage: null });
+    props.viewModel.therapy = { ...props.viewModel.therapy, selectedDiagnosisCount: 0 };
+    props.viewModel.evidence = {
+      ...props.viewModel.evidence,
+      redFlags: ['Penurunan kesadaran', 'Hipoksemia perlu dinilai'],
+      doNotMiss: [],
+    };
+    render(<DiagnosisWorkspace {...props} />);
+
+    const section = screen.getByLabelText('Pemeriksaan Penunjang');
+    const details = section.querySelector('details.diagnosis-stage__details');
+    expect(details).toHaveAttribute('open');
+    expect(within(section).getByText(/Tanda bahaya \(2\)/)).toBeInTheDocument();
+  });
+
+  it('keeps Pemeriksaan Penunjang closed when a triage result is present, even with no diagnosis chosen', () => {
+    const props = makeProps({ triage });
+    props.viewModel.therapy = { ...props.viewModel.therapy, selectedDiagnosisCount: 0 };
+    props.viewModel.evidence.redFlags = ['Penurunan kesadaran'];
+    render(<DiagnosisWorkspace {...props} />);
+
+    const section = screen.getByLabelText('Pemeriksaan Penunjang');
+    const details = section.querySelector('details.diagnosis-stage__details');
+    expect(details).not.toHaveAttribute('open');
+  });
 });
 
 function extractBalancedBlocks(css: string, needle: string): string[] {
@@ -519,5 +590,52 @@ describe('diagnosis page motion stylesheet', () => {
     const transitionValue = transitionMatch![1];
     expect(transitionValue).not.toMatch(/block-size/);
     expect(transitionValue).toMatch(/opacity/);
+  });
+
+  it('raises the stepper step label contrast to AA (F3)', () => {
+    expect(css).toMatch(
+      /\.diagnosis-stepper\s+\.diagnosis-stepper__step\s*\{[^}]*color:\s*var\(--text-main\)/
+    );
+  });
+
+  it('neutralises the autofill label opacity fade under reduced motion (F4)', () => {
+    const reducedMotionBlocks = extractBalancedBlocks(css, '@media (prefers-reduced-motion: reduce)');
+    const targetBlock = reducedMotionBlocks.find((block) =>
+      block.includes('.diagnosis-autofill-btn .diagnosis-autofill-btn__label')
+    );
+    expect(targetBlock).toBeDefined();
+    expect(targetBlock).toMatch(
+      /\.diagnosis-autofill-btn \.diagnosis-autofill-btn__label\s*\{[^}]*transition:\s*none/
+    );
+  });
+
+  it('beats the audit-timeline stagger delays under reduced motion with higher specificity (F5)', () => {
+    const reducedMotionBlocks = extractBalancedBlocks(css, '@media (prefers-reduced-motion: reduce)');
+    const targetBlock = reducedMotionBlocks.find((block) =>
+      block.includes(".ct-audit-timeline .ct-audit-timeline__event:nth-child(n)")
+    );
+    expect(targetBlock).toBeDefined();
+    expect(targetBlock).toMatch(
+      /details\[open\] \.ct-audit-timeline \.ct-audit-timeline__event:nth-child\(n\)\s*\{[^}]*animation-delay:\s*0ms/
+    );
+  });
+
+  it('lets the selected-card border win over hover and the base transition duration (F6)', () => {
+    expect(css).toMatch(
+      /\.diagnosis-candidate-row\.neu-select\[data-selected='true'\]\s*\{[^}]*border-color:\s*var\(--sentra-safe\)/
+    );
+    expect(css).toMatch(
+      /\.diagnosis-candidate-row\.neu-select\[data-selected='true'\]:hover\s*\{[^}]*border-color:\s*var\(--sentra-safe\)/
+    );
+    expect(css).toMatch(
+      /\.diagnosis-block\[data-selected='true'\]\s*\.diagnosis-readonly-field--primary\.neu-textarea\s*\{[^}]*border-color:\s*var\(--sentra-safe\)/
+    );
+
+    const reducedMotionBlocks = extractBalancedBlocks(css, '@media (prefers-reduced-motion: reduce)');
+    const targetBlock = reducedMotionBlocks.find((block) =>
+      block.includes(".diagnosis-candidate-row.neu-select[data-selected='true']:hover")
+    );
+    expect(targetBlock).toBeDefined();
+    expect(targetBlock).toMatch(/transition:\s*none/);
   });
 });

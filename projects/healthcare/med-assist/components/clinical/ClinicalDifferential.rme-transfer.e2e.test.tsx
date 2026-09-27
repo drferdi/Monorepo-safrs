@@ -202,6 +202,14 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
     const selectPrimary = await screen.findByRole('button', { name: /Pilih Diagnosis Utama/i });
     fireEvent.click(selectPrimary);
 
+    // Choosing a diagnosis must open all four staged sections container-wide,
+    // not just render their one-line summaries.
+    await waitFor(() => {
+      const stagedDetails = document.querySelectorAll('details.diagnosis-stage__details');
+      expect(stagedDetails.length).toBe(4);
+      stagedDetails.forEach((details) => expect(details).toHaveAttribute('open'));
+    });
+
     // Therapy for the selected diagnosis must render on the live surface.
     const medicationLabel = await screen.findByText('Amoksisilin 500mg');
     expect(medicationLabel).toBeInTheDocument();

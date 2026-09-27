@@ -10117,3 +10117,45 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
     to { opacity: 1; }
   }
 }
+
+/* ── Diagnosis page: fix-wave F3 — stepper label AA contrast (2026-09-27) ── */
+.diagnosis-stepper .diagnosis-stepper__step {
+  color: var(--text-main);
+}
+
+/* ── Diagnosis page: fix-wave F4 — autofill label fade under reduced motion (2026-09-27) ── */
+@media (prefers-reduced-motion: reduce) {
+  .diagnosis-autofill-btn .diagnosis-autofill-btn__label {
+    transition: none;
+  }
+}
+
+/* ── Clinical Trajectory: fix-wave F5 — audit-timeline stagger under reduced motion (2026-09-27) ── */
+@media (prefers-reduced-motion: reduce) {
+  details[open] .ct-audit-timeline .ct-audit-timeline__event:nth-child(n) {
+    animation-delay: 0ms;
+  }
+}
+
+/* ── Diagnosis page: fix-wave F6 — selected-card border specificity (2026-09-27) ── */
+.diagnosis-candidate-row.neu-select[data-selected='true'] {
+  transition: border-color 150ms cubic-bezier(0.23, 1, 0.32, 1);
+  border-color: var(--sentra-safe);
+}
+
+.diagnosis-candidate-row.neu-select[data-selected='true']:hover {
+  border-color: var(--sentra-safe);
+}
+
+.diagnosis-block[data-selected='true'] .diagnosis-readonly-field--primary.neu-textarea {
+  transition: border-color 150ms cubic-bezier(0.23, 1, 0.32, 1);
+  border-color: var(--sentra-safe);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diagnosis-candidate-row.neu-select[data-selected='true'],
+  .diagnosis-candidate-row.neu-select[data-selected='true']:hover,
+  .diagnosis-block[data-selected='true'] .diagnosis-readonly-field--primary.neu-textarea {
+    transition: none;
+  }
+}

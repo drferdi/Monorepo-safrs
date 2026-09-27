@@ -142,7 +142,7 @@ export function DiagnosisWorkspace({
       />
 
       {phase === 'loading' ? (
-        <section className="form-group diagnosis-block" aria-live="polite" aria-busy="true">
+        <section className="form-group diagnosis-block" aria-live="polite">
           <SectionHeader title="Diagnosis Utama" />
           <span className="sr-only">Menyusun diagnosis banding...</span>
           <div className="diagnosis-skeleton" aria-hidden="true">
@@ -354,7 +354,9 @@ function MainDiagnosisSection({
         </button>
       </div>
 
-      {!primary.isInsufficient ? (
+      {viewModel.evidence.supports.length > 0 ||
+      viewModel.evidence.against.length > 0 ||
+      viewModel.evidence.review.length > 0 ? (
         <details className="diagnosis-details diagnosis-details--inline">
           <summary>Alasan</summary>
           <div className="diagnosis-evidence-grid">
@@ -549,18 +551,22 @@ function SupportingExamSection({
     viewModel.evidence.doNotMiss
   );
   const items = needsExam ? examItems : ['Tidak rutin dari data saat ini.'];
+  const fallbackSafetyShown = showSafetyItems && safetyItems.length > 0;
   const examStatus = isInsufficient
     ? 'menunggu diagnosis'
     : needsExam
       ? `${examItems.length} disarankan`
       : 'Tidak rutin';
+  const status = fallbackSafetyShown
+    ? `${examStatus} · Tanda bahaya (${safetyItems.length})`
+    : examStatus;
 
   return (
     <StagedSection
       label="Pemeriksaan Penunjang"
       stageIndex={1}
-      open={isDiagnosisChosen(viewModel)}
-      header={<SectionHeader title="Pemeriksaan Penunjang" status={examStatus} />}
+      open={isDiagnosisChosen(viewModel) || fallbackSafetyShown}
+      header={<SectionHeader title="Pemeriksaan Penunjang" status={status} />}
     >
       {isInsufficient ? (
         <ReadOnlyPanel>Lengkapi data diagnosis lebih dulu.</ReadOnlyPanel>
