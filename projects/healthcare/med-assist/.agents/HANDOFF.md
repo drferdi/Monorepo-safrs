@@ -20,15 +20,14 @@ Branch `feat/diagnosis-engine-interface` (from `migrate/healthcare`, not pushed,
   `MIRA_PLAN_MODEL_CHOICES` and the header (`bb3fe85`); default planning model for now
   `google/gemini-3.1-flash-lite:nitro` via OpenRouter (one synthetic live step: 9.6 s, US$0.019).
 
-Verification on 2026-09-27, all exit 0: typecheck; lint and test with `.claude/**` excluded
-(lint: 1 pre-existing warning; test: 147 files, 1109 passing, 17 skipped; baseline 1098); build;
-`run:check`. Token gate PASS; SAFRS R2.
+Verification on 2026-09-27, all exit 0: typecheck; lint (1 pre-existing warning); test (147
+files, 1109 passing, 17 skipped; baseline 1098); build; `run:check`. Token gate PASS; SAFRS R2.
 
 ## Blockers
 
-- The plain `lint` and `test` scripts fail only because they scan a stray worktree
-  `.claude/worktrees/mystifying-feistel-46fd5c` (branch `claude/mystifying-feistel-46fd5c`,
-  another session's). Not removed; Chief decides.
+- PII false positives in `anonymizer.ts` (R3): a proposal waits for Chief's approval in the
+  archived session "Fix false positives in the med-assist PII patterns"; its worktree was removed
+  on Chief's order (no edits were lost), so the work would continue on this branch.
 - The client still cannot reach the service: no `Authorization` header, and real cases are not
   synthetic, so the service (`MIRA_DATA_POLICY=synthetic-only`) refuses them by design.
   Authentication and the data policy are Chief's decisions.
