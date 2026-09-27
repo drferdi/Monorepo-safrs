@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import { ClinicalTrajectory } from '@/components/clinical/ClinicalTrajectory';
 import type { ScreeningAlert } from '@/components/clinical/TTVInferenceUI';
 import type { ComposedAnamnesaDraft } from '@/lib/clinical/anamnesa-composer';
@@ -87,19 +89,26 @@ export function ClinicalReasoningWorkbench({
   const keluhanUtama = anamnesaDraft?.payload.keluhan_utama || symptomText || '-';
   const keluhanTambahan = anamnesaDraft?.payload.keluhan_tambahan || '';
   const durationLabel = anamnesaDraft?.metadata.durationLabel || '';
+  // The trajectory reloads whenever this object changes identity, and the side panel
+  // re-renders on every storage write, so it must change only when a vital changes.
+  const { sbp, dbp, hr, rr, temp, spo2, glucose } = vitals;
+  const trajectoryVitals = useMemo(
+    () => ({
+      sbp: toInt(sbp),
+      dbp: toInt(dbp),
+      hr: toInt(hr),
+      rr: toInt(rr),
+      temp: toFloat(temp),
+      spo2: toInt(spo2),
+      glucose: toInt(glucose),
+    }),
+    [sbp, dbp, hr, rr, temp, spo2, glucose]
+  );
 
   return (
     <ClinicalTrajectory
       shellMode="embedded"
-      vitals={{
-        sbp: toInt(vitals.sbp),
-        dbp: toInt(vitals.dbp),
-        hr: toInt(vitals.hr),
-        rr: toInt(vitals.rr),
-        temp: toFloat(vitals.temp),
-        spo2: toInt(vitals.spo2),
-        glucose: toInt(vitals.glucose),
-      }}
+      vitals={trajectoryVitals}
       keluhanUtama={keluhanUtama}
       keluhanTambahan={keluhanTambahan}
       narrative={{

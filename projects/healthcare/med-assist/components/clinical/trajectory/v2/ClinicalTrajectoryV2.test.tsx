@@ -4,6 +4,7 @@ import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { buildPhysicianTrajectoryHeadline } from './ClinicalTrajectoryHeader';
 import { ClinicalTrajectoryV2 } from './ClinicalTrajectoryV2';
 
+import { persistClinicalReasoningWorkflowAudit } from '@/lib/iskandar-diagnosis-engine';
 import {
   analyzeHybridTrajectory,
   mapHybridTrajectoryToLegacyAnalysis,
@@ -19,6 +20,14 @@ import {
   type TrajectoryVisualizationViewModel,
 } from '@/lib/iskandar-diagnosis-engine/trajectory-visualization-view-model';
 import type { VisitRecord } from '@/lib/iskandar-diagnosis-engine/visit-history-store';
+
+vi.mock('@/lib/iskandar-diagnosis-engine', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('@/lib/iskandar-diagnosis-engine')>();
+  return {
+    ...actual,
+    persistClinicalReasoningWorkflowAudit: vi.fn(actual.persistClinicalReasoningWorkflowAudit),
+  };
+});
 
 beforeAll(() => {
   vi.stubGlobal(
@@ -192,6 +201,38 @@ function renderTrajectoryV2(
 }
 
 describe('ClinicalTrajectoryV2', () => {
+  it('persists the reasoning audit once when re-rendered with the same props', () => {
+    // A re-render with unchanged inputs must not write the audit again: every write fires
+    // storage.onChanged, which re-renders the side panel and would loop without end.
+    const persistAudit = vi.mocked(persistClinicalReasoningWorkflowAudit);
+    const scenario = buildScenario(
+      [
+        makeVisit(1, { sbp: 130, dbp: 85, hr: 88, rr: 18, temp: 36.8, glucose: 110 }),
+        makeVisit(2, { sbp: 150, dbp: 95, hr: 104, rr: 22, temp: 37.2, glucose: 120 }),
+      ],
+      { keluhanUtama: 'Nyeri dada dan sesak' }
+    );
+    persistAudit.mockClear();
+
+    const { rerender } = renderTrajectoryV2(scenario);
+    const callsAfterMount = persistAudit.mock.calls.length;
+    rerender(
+      <ClinicalTrajectoryV2
+        hybridResult={scenario.hybridResult}
+        viewModel={scenario.viewModel}
+        physicianPresentation={scenario.physicianPresentation}
+        canonicalOutput={null}
+        canonicalError=""
+        isCanonicalLoading={false}
+        visitCount={scenario.viewModel.trajectoryTimeline.length}
+        patientContext={DEFAULT_PATIENT_CONTEXT}
+      />
+    );
+
+    expect(callsAfterMount).toBe(1);
+    expect(persistAudit).toHaveBeenCalledTimes(1);
+  });
+
   it('renders a single-flow physician briefing without stacked cards or duplicate patient identity', () => {
     const scenario = buildScenario(
       [

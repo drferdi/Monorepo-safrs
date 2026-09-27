@@ -3,6 +3,7 @@ import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { ClinicalReasoningWorkbench } from './ClinicalReasoningWorkbench';
 
+import { evaluateCanonicalClinicalEngine } from '@/lib/api/bridge-client';
 import type { VisitRecord } from '@/lib/iskandar-diagnosis-engine/visit-history-store';
 
 /**
@@ -179,5 +180,49 @@ describe('ClinicalReasoningWorkbench diagnosis-review wiring', () => {
 
     fireEvent.click(actionButton);
     expect(onOpenDifferential).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps the loaded trajectory when the side panel re-renders with the same vitals', async () => {
+    // main.tsx rebuilds the vitals object on every render, and any storage write re-renders
+    // it. Equal vitals must not restart the trajectory pipeline, or the page reloads forever.
+    const props = {
+      vitals: { sbp: '182', dbp: '116', hr: '124', rr: '30', temp: '39.1', spo2: '91', glucose: '344' },
+      symptomText: 'Nyeri dada menjalar dan sesak berat',
+      allergies: [],
+      pregnancyStatus: null,
+      disabilityType: '',
+      obesityConfirmation: '',
+      autosenPreset: '',
+      patient: {
+        name: 'Tn. Sentra',
+        gender: 'L',
+        age: 57,
+        rm: 'RM-WB-001',
+        dob: '1969-03-10',
+        bpjsStatus: 'aktif',
+        kelurahan: 'Cempaka Putih',
+      },
+      clinicalContext: {
+        facilityName: 'Puskesmas Sentra',
+        payerLabel: 'BPJS aktif',
+        specialConditions: [],
+        pregnancyRisk: '',
+      },
+      chronicHistorySummary: '',
+      anamnesaDraft: null,
+      emergencyAlerts: [],
+      prefetchedVisitHistory: { visits: PREFETCHED_VISITS, diagnostics: ['OK'], status: 'ready' },
+    } satisfies React.ComponentProps<typeof ClinicalReasoningWorkbench>;
+    const canonicalEngine = vi.mocked(evaluateCanonicalClinicalEngine);
+    canonicalEngine.mockClear();
+
+    const { rerender } = render(<ClinicalReasoningWorkbench {...props} />);
+    const panel = await screen.findByTestId('clinical-reasoning-differential-panel');
+    const callsAfterLoad = canonicalEngine.mock.calls.length;
+
+    rerender(<ClinicalReasoningWorkbench {...props} vitals={{ ...props.vitals }} />);
+
+    expect(screen.getByTestId('clinical-reasoning-differential-panel')).toBe(panel);
+    expect(canonicalEngine).toHaveBeenCalledTimes(callsAfterLoad);
   });
 });

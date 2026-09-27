@@ -3,6 +3,24 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-28 — Clinical Trajectory must not reload or persist on equal re-renders
+
+- Decision: objects that feed the trajectory pipeline and the reasoning-audit write keep their
+  identity across re-renders with equal inputs. `ClinicalReasoningWorkbench` memoises the vitals
+  object it passes to `ClinicalTrajectory` (whose load effect depends on it), and
+  `ClinicalTrajectoryV2` memoises its sanitised view model and hybrid result (which feed the
+  audit trail's persistence effect). Tests pin both: an equal re-render neither restarts the
+  pipeline (no second canonical-engine call) nor writes the audit again.
+- Rationale: the side panel (`main.tsx`, protected) re-renders on every
+  `browser.storage.onChanged` event for any key, and the audit trail writes up to 100 records to
+  `browser.storage.local` each time its inputs change. With fresh objects on every render this
+  formed an endless loop — reload, canonical call, audit write, storage event, re-render — that
+  grew Chrome's extension renderer from about 97 MB to 679 MB and the browser process from
+  126 MB to 887 MB within five minutes on Chief's machine, then hung the Trajectory page and the
+  PC. The loop's links date from the migration commit `809101cf`, not this branch.
+- Evidence: see the commit after `88ccf25c` on `feat/sidepanel-ui-batch`; both new tests failed
+  before the fix (audit persisted 2 times; canonical engine called 2 times) and pass after it.
+
 ## 2026-09-28 — Staged diagnosis page: order, collapse, and safety-first danger signs
 
 - Decision: Diagnosis Utama renders above Diagnosis Banding (reverses the earlier order), each

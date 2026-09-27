@@ -1,5 +1,5 @@
 import { useAnimate, useReducedMotion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { formatChartDate } from '../charts/chart-shared';
 
@@ -133,8 +133,10 @@ export function ClinicalTrajectoryV2({
   const [clinicalLensTarget, setClinicalLensTarget] = useState<ClinicalLensTarget>(null);
   const [clinicalLensRun, setClinicalLensRun] = useState(0);
   const reduceMotion = useReducedMotion() === true;
-  const safeViewModel = sanitizeDriverExplanations(viewModel);
-  const safeHybridResult = sanitizeHybridSafety(hybridResult);
+  // Memoised so re-renders keep the same objects: the audit trail persists whenever these
+  // change, and each write re-renders the side panel through storage.onChanged.
+  const safeViewModel = useMemo(() => sanitizeDriverExplanations(viewModel), [viewModel]);
+  const safeHybridResult = useMemo(() => sanitizeHybridSafety(hybridResult), [hybridResult]);
   const latestTrajectoryPoint = safeViewModel.trajectoryTimeline.at(-1);
   const statusChip = buildStatusChip(safeHybridResult.integratedAssessment.finalState);
   const trendChip = buildTrendChip(safeHybridResult.integratedAssessment.finalState);
