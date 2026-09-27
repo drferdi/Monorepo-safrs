@@ -9626,3 +9626,92 @@ details[open] > summary .ct-disclosure-hint__close {
 .form-group--inline .form-group-header--wrap {
   row-gap: 2px;
 }
+
+/* ── Diagnosis page: RME transfer status line and morphing autofill button (2026-09-27) ── */
+.diagnosis-transfer-status {
+  margin: 0;
+  font-size: 11px;
+  color: var(--text-main);
+}
+
+.diagnosis-transfer-primary,
+.diagnosis-transfer-secondary {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.diagnosis-autofill-btn {
+  position: relative;
+  max-width: 100%;
+  transition: max-width 250ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.diagnosis-autofill-btn__label {
+  transition: opacity 150ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.diagnosis-autofill-btn[data-state='running'] {
+  max-width: 44px;
+}
+
+.diagnosis-autofill-btn[data-state='running'] .diagnosis-autofill-btn__label {
+  opacity: 0;
+}
+
+.diagnosis-autofill-btn[data-state='running'] .diagnosis-autofill-btn__icon {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border-subtle);
+  border-top-color: var(--sentra-safe);
+  border-radius: 50%;
+  animation: diagnosis-autofill-spin 700ms linear infinite;
+}
+
+.diagnosis-autofill-btn[data-state='success'] .diagnosis-autofill-btn__icon::before {
+  content: '✓';
+  margin-left: 6px;
+  color: var(--sentra-safe);
+  display: inline-block;
+  animation: diagnosis-autofill-check 250ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.diagnosis-autofill-btn[data-state='failed'],
+.diagnosis-autofill-btn[data-state='error'] {
+  animation: diagnosis-autofill-shake 300ms cubic-bezier(0.23, 1, 0.32, 1) 1;
+}
+
+@keyframes diagnosis-autofill-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes diagnosis-autofill-check {
+  from { opacity: 0; transform: scale(0.6); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes diagnosis-autofill-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diagnosis-autofill-btn,
+  .diagnosis-autofill-btn[data-state='failed'],
+  .diagnosis-autofill-btn[data-state='error'] {
+    transition: none;
+    animation: none;
+  }
+
+  .diagnosis-autofill-btn[data-state='running'] .diagnosis-autofill-btn__icon {
+    animation: none;
+  }
+
+  .diagnosis-autofill-btn[data-state='success'] .diagnosis-autofill-btn__icon::before {
+    animation: none;
+  }
+}

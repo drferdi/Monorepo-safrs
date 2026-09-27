@@ -116,23 +116,52 @@ function makeProps(
 }
 
 describe('RMETransferPanel', () => {
-  it('disables transfer actions while running and keeps cancel available', () => {
+  it('while running shows only the morphing primary button and Batal', () => {
     const onCancelTransfer = vi.fn();
-    const props = makeProps({ onCancelTransfer }, makeViewModel({ state: 'running' }));
-
-    render(<RMETransferPanel {...props} />);
+    render(<RMETransferPanel {...makeProps({ onCancelTransfer }, makeViewModel({ state: 'running' }))} />);
 
     const panel = screen.getByLabelText('RME Transfer');
-    expect(within(panel).getByRole('button', { name: /Isi otomatis RME/i })).toBeDisabled();
+    const primary = within(panel).getByRole('button', { name: /Isi otomatis RME/i });
+    expect(primary).toBeDisabled();
+    expect(primary).toHaveAttribute('data-state', 'running');
     expect(within(panel).getByRole('button', { name: /Kirim diagnosis/i })).toBeDisabled();
     expect(within(panel).getByRole('button', { name: /Kirim resep/i })).toBeDisabled();
     expect(within(panel).getByRole('button', { name: /Anamnesis/i })).toBeDisabled();
-    expect(within(panel).getByRole('button', { name: /Ulangi/i })).toBeDisabled();
+    expect(within(panel).queryByRole('button', { name: /Ulangi/i })).toBeNull();
 
-    const cancelButton = within(panel).getByRole('button', { name: /Batal/i });
-    expect(cancelButton).toBeEnabled();
-    fireEvent.click(cancelButton);
+    fireEvent.click(within(panel).getByRole('button', { name: /Batal/i }));
     expect(onCancelTransfer).toHaveBeenCalledTimes(1);
+  });
+
+  it.each(['failed', 'error', 'partial'])('offers Ulangi beside the primary button when %s', (state) => {
+    const onRetryTransfer = vi.fn();
+    render(<RMETransferPanel {...makeProps({ onRetryTransfer }, makeViewModel({ state }))} />);
+    const panel = screen.getByLabelText('RME Transfer');
+    fireEvent.click(within(panel).getByRole('button', { name: /Ulangi/i }));
+    expect(onRetryTransfer).toHaveBeenCalledTimes(1);
+    expect(within(panel).queryByRole('button', { name: /Batal/i })).toBeNull();
+  });
+
+  it.each(['idle', 'success', 'cancelled'])('shows neither Ulangi nor Batal when %s', (state) => {
+    render(<RMETransferPanel {...makeProps({}, makeViewModel({ state }))} />);
+    const panel = screen.getByLabelText('RME Transfer');
+    expect(within(panel).queryByRole('button', { name: /Ulangi/i })).toBeNull();
+    expect(within(panel).queryByRole('button', { name: /Batal/i })).toBeNull();
+    expect(within(panel).getByRole('button', { name: /Isi otomatis RME/i })).toBeEnabled();
+  });
+
+  it('puts the readiness in one line and the single-payload actions inside Rincian transfer', () => {
+    render(<RMETransferPanel {...makeProps({}, makeViewModel())} />);
+    const panel = screen.getByLabelText('RME Transfer');
+    expect(panel.querySelector('.diagnosis-transfer-status')).toHaveTextContent(
+      'Diagnosis siap · Resep siap · Obat 1/1'
+    );
+    expect(panel.querySelectorAll('.diagnosis-static-field')).toHaveLength(0);
+    const details = within(panel).getByText('Rincian transfer').closest('details');
+    expect(details).not.toBeNull();
+    ['Kirim diagnosis', 'Kirim resep', 'Anamnesis'].forEach((name) =>
+      expect(within(details as HTMLElement).getByRole('button', { name })).toBeInTheDocument()
+    );
   });
 
   it('shows readiness and step details without enabling payload actions when diagnosis is incomplete', () => {
