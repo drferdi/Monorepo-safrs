@@ -1,78 +1,98 @@
 # HANDOFF
 
-Last updated: 2026-09-27 (night)
+Last updated: 2026-09-28
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
 
 ## Current state
 
-Branch `feat/sidepanel-ui-batch`, from `e2de54d0` (on top of `feat/diagnosis-engine-interface`),
-local only: not pushed, no PR. Spec: `docs/specs/2026-09-27-sidepanel-ui-batch-design.md`. Plan:
-`docs/plans/2026-09-27-sidepanel-ui-batch-plan.md`. Ledger:
-`.superpowers/sdd/2026-09-27-sidepanel-ui-batch-plan/progress.md`.
+Branch `feat/sidepanel-ui-batch`. This session closes the staged diagnosis page + motion batch,
+range `ff193e0e..7a07560d` (spec `bd97f827`, plan `e8830026`), local only, not pushed, no PR.
+Spec: `docs/specs/2026-09-27-diagnosis-page-staged-design.md`. Ledger:
+`.superpowers/sdd/2026-09-27-diagnosis-page-staged-plan/progress.md`.
 
-Work packages (one commit set each):
-- WP1 Clinical Trajectory "Hasil" panel as `<details>`: `48b76c4e`.
-- WP2 Diagnosis page reorder + English "Clinical Finding" heading + folded triage dropdowns:
-  `d30f6fac`.
-- WP3 Pregnancy header wrap fix: `ed639140`.
-- WP4 Emergency verdict card restructure (seven sections, Indonesian headings): `91181d9b`,
-  `16e3a20b`.
-- WP5 Send to Doctors (WhatsApp): medboard `GET /api/doctors/contacts` `392b04df` + `92d5adb5`
-  (route test); Assist button `f6a5f637`, `5171abc8`.
-- WP6 RME practitioner autofill (signed-in-user names + exact-match autocomplete): `22b816a1`,
-  `c5252691`, `961b1963`.
-- Final fixes (contrast, specificity, docs, medboard 401 test): `c7efc51f`, `92d5adb5`.
+Tasks (one commit set each):
+- T1 Danger signs single & uncapped: `169c9ab2`.
+- T2 Diagnosis Utama above Banding, one tally line, Alasan dropdown: `d1073b5a`.
+- T3 Collapse Penunjang/Therapy/Edukasi/RME as closed `<details>`, open on diagnosis chosen:
+  `47db122e`.
+- T4 RME Transfer one status line + one primary action: `49d7ba6c`.
+- T5 RME Transfer step tracker: `2dfbe20e`.
+- T6 Progress stepper + loading skeleton: `72b12c5e`.
+- T7 Unfold motion, chevrons, stagger, selection style: `dac5b071`; reduced-motion test scoped
+  to its own block: `78a45e88`.
+- T8 Clinical Trajectory audit trail as activity timeline: `6d9bc247`.
+- Final review fix wave (F1, F2, F6, F7, F8): `7a07560d`.
 
-Protected files (`main.tsx`, `TTVInferenceUI.tsx`, `style.css`) changed only in the
-Chief-approved areas (emergency verdict card, pregnancy header, new append-only classes);
-`style.css` stayed append-only throughout.
+Protected files: `style.css` stayed append-only throughout (+491/-0 across the range, single
+hunk after the prior EOF); no other protected file (`main.tsx`, `TTVInferenceUI.tsx`,
+`SentraAssistPanel.tsx`, `ApprovedSentraAssistApp.tsx`) touched.
 
-## Verification (on `92d5adb5`, controller run, all exit 0)
+## Verification (this session, capsule root, all exit 0)
 
-- med-assist: lint (1 pre-existing warning), typecheck, test (154 files, 1175 passed, 17 skipped;
-  baseline 1138), build, `run:check`.
-- medboard: `tsc`, `doctor-contacts` 2/2, contacts route 4/4.
-- Token-guard: all findings fixed — three contrast fixes to `var(--text-main)` (verdict-card
-  heading, Send to Doctors note, the four new triage summaries) and one specificity fix
-  (`.form-group--inline .form-group-header--wrap` row-gap).
-- SAFRS: range R3; the only R3 files touched are `lib/clinical/tenaga-medis.ts` (approved) and
-  its new test; no verification-control file in range.
+- lint: exit 0 (1 pre-existing warning — unused eslint-disable in
+  `lib/api/platform-api-client.test.ts` — unchanged from baseline).
+- typecheck: exit 0.
+- test: exit 0 — 155 files passed + 1 skipped (156), 1215 passed + 17 skipped (1232); prior
+  baseline was 154 files / 1175 passed / 17 skipped.
+- build (`wxt build`): exit 0.
+- `run:check` (`scripts/check-extension.mjs`): exit 0, "Extension loads: Asisten Medis 2.1.0
+  (MV3), all referenced files present."
+- `deploy:dry-run` (`wxt zip`, no upload): exit 0, produced `.output/*-chrome.zip` (3.77 MB),
+  not committed.
+- `git status` after every gate: clean, no tracked file rewritten.
+- Token-guard (`ff193e0e..6d9bc247`): 3 findings — TG1 stepper non-current label contrast, TG2
+  autofill-btn label opacity transition not neutralised under reduced motion, TG3 audit-timeline
+  `animation-delay` beating the reduced-motion delay — all fixed as appended `style.css` rules in
+  `7a07560d`.
+- SAFRS audit (`ff193e0e..6d9bc247`): R2 (capsule default), no R3 path touched, no
+  verification-control file in range, protected-file rule held.
 
-## Open for Chief (decisions)
+## Rulings Chief should know
 
-a. Acknowledge the new R3 test file `lib/clinical/tenaga-medis.test.ts`.
-b. Profession list: Dokter, Dokter Gigi → doctor field; Perawat, Bidan, Apoteker, Triage Officer
-   → nurse field; other/unknown professions and local accounts keep the constants — confirm.
-c. The exact-match rule for autofilled practitioner names accepts a trailing suffix of ≤4 letters
-   as a degree abbreviation, so "Budi Santoso" could uniquely select "BUDI SANTOSO ADI" — accept
-   or tighten.
-d. R2 review of medboard `GET /api/doctors/contacts` (returns staff WhatsApp numbers to
-   crew-authorised callers).
+- Utama above Banding reverses the earlier "Banding then Utama" order; confidence word now
+  appears once, in the section header.
+- Late sections (Penunjang, Therapy, Edukasi, RME Transfer) render closed and open only once a
+  diagnosis is chosen — except Penunjang forces itself open (F1) whenever it is carrying the
+  fallback danger-sign list (no triage data), because safety information must not hide behind a
+  click.
+- Danger signs ("Tanda bahaya") are uncapped and shown once, de-duplicated from
+  `redFlags` + `doNotMiss`.
+- Therapy panel's "Hanya untuk ditinjau… Dokter tetap pengambil keputusan akhir" disclaimer is
+  removed; the global footer already states physician authority.
+- F2: the primary card's "Alasan" dropdown renders whenever evidence has items, including the
+  insufficient-evidence state.
+
+## Parked a11y minors (not fixed this batch)
+
+- Focus ring clipped by `overflow: hidden` on stage containers.
+- Progress stepper: no landmark role; "done" state is colour-only; `aria-current` not set once
+  every step is done.
+- Stage `<summary>` elements contain a `<div>`; no `:focus-visible` style on stage summaries.
+- "Pilih" button on Diagnosis Banding cards has no `aria-pressed`.
+- Primary card's "selected" border styling ignores a manually chosen diagnosis.
+
+## Live checks for Chief
+
+- Motion (staged open/close, stagger) needs Chrome 131+ for the `<details>` unfold; older Chrome
+  shows an instant snap instead.
+- Walk a real ePuskesmas case end to end (Temuan → Diagnosis → Terapi → RME) to confirm the
+  stepper, tracker and timeline read correctly against live data.
+
+## Open for Chief (decisions, carried from the sidepanel-ui-batch, still open)
+
+a. Acknowledge the R3 test file `lib/clinical/tenaga-medis.test.ts`.
+b. Profession→field mapping (Dokter/Dokter Gigi → doctor; Perawat/Bidan/Apoteker/Triage Officer
+   → nurse) — confirm.
+c. Exact-match practitioner-name rule accepts a ≤4-letter trailing suffix as a degree
+   abbreviation — accept or tighten.
+d. R2 review of medboard `GET /api/doctors/contacts`.
 e. Landing order: update `origin/main`, land `migrate/healthcare` with its integrity review, then
-   this batch.
-f. Chief's "Logic: Diagnosis utama" request item had no content — parked, out of scope.
-g. Older diagnosis-page summaries ("Alasan", "Rincian edukasi") keep sub-AA `--text-muted`; not in
-   this batch's scope.
-
-## Live checks Chief must do on a real ePuskesmas page
-
-- Whether hidden `dokter_id`/`perawat_id` fields clear when an exact practitioner match fails.
-- How real practitioner autocomplete menu items are formatted (degree suffixes, casing).
-- That the constant names (`DOKTER_NAMA`, `PERAWAT_NAMA`) still find exactly one autocomplete
-  match.
-- Send to Doctors once medboard is deployed and crew profiles carry WhatsApp numbers.
-
-## Known limits
-
-- Only the transfer/Uplink RME path applies the signed-in user's name; direct `fillAnamnesa` /
-  `fillResep` messages and native messaging keep the constants.
-- No test pins the background wiring (`applyAssistStaffPayload`).
-- A failed anamnesa exact match still lists the direct-text-fill step as success next to the
-  match failure (cosmetic).
-- `getSession` does not check session expiry: on a shared workstation, whoever is signed in is
-  the name written to the RME.
+   this batch (now including the staged diagnosis page batch too).
+f. Chief's "Logic: Diagnosis utama" request item had no content — still parked, out of scope.
+g. Older diagnosis-page summaries ("Alasan", "Rincian edukasi") keep sub-AA `--text-muted`; not
+   in this batch's scope.
 
 ## Carried over from before (unchanged, kept short)
 
@@ -85,5 +105,5 @@ re-injected after an extension reload (fix touches protected `main.tsx`); PII tr
 
 ## Next action
 
-Chief reviews the open decisions above (a–g), does the live ePuskesmas checks, then picks the
-landing order (item e) before this branch merges anywhere.
+Chief reviews the rulings and parked a11y minors above, does the live checks, then folds this
+batch into the landing-order decision (item e).

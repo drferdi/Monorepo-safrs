@@ -83,6 +83,11 @@ the flag; a doctor can still close one by hand). They open in order with a 40 ms
   that used to show the rest is gone. Dropping danger signs is not acceptable.
 - The summary shows the count: "Tanda bahaya (N)".
 
+Updated after implementation: Pemeriksaan Penunjang forces itself open (overriding D1.6's
+"closed until diagnosis chosen" default) whenever it is carrying the fallback danger-sign list
+(no triage data) — safety information must not hide behind a click. See DECISIONS.md,
+2026-09-28.
+
 ## D4 — Loading
 
 The "Menyusun diagnosis banding…" text panel becomes a skeleton of two diagnosis cards (title

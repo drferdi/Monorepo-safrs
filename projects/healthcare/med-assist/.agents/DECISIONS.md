@@ -3,6 +3,43 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-28 — Staged diagnosis page: order, collapse, and safety-first danger signs
+
+- Decision: Diagnosis Utama renders above Diagnosis Banding (reverses the earlier order), each
+  card shows its confidence word once, in the header, with one evidence tally line and no
+  `ConfidenceRail`; the primary card's "Alasan" dropdown renders whenever evidence has items,
+  including the insufficient-evidence state. Pemeriksaan Penunjang, Therapy + Resep, Edukasi and
+  RME Transfer render as closed one-line `<details>` summaries until "diagnosis chosen"
+  (`therapy.selectedDiagnosisCount > 0`), then open with a 40 ms stagger — except Pemeriksaan
+  Penunjang, which forces itself open regardless of that flag whenever it is carrying the
+  fallback "Tanda bahaya" list (no triage data), because safety information must not hide behind
+  a click. Danger signs are built once from `redFlags` + `doNotMiss`, de-duplicated, and the
+  3-item cap is removed (the separate Safety-net list that used to show the rest is gone). The
+  Therapy panel's "Hanya untuk ditinjau… Dokter tetap pengambil keputusan akhir" disclaimer is
+  removed; the global footer already states physician authority.
+- Rationale: a doctor reads each fact once and sees only the sections useful at their current
+  step, but safety-critical content is never gated behind an extra click.
+- Evidence: commits `169c9ab2` (danger signs single/uncapped), `d1073b5a` (Utama above Banding),
+  `47db122e` (collapse Penunjang/Therapy/Edukasi/RME), `7a07560d` (final review fix wave: F1
+  Penunjang auto-open for fallback danger signs, F2 primary Alasan renders in the insufficient
+  state). Spec `docs/specs/2026-09-27-diagnosis-page-staged-design.md` (`bd97f827`) D1–D3, with
+  an "Updated after implementation" note for the F1 deviation.
+
+## 2026-09-28 — Motion policy for the diagnosis page: CSS only, no framer-motion
+
+- Decision: every new motion on the diagnosis page (stage open/close, stepper, stagger,
+  selection, RME order tracker, Clinical Trajectory activity timeline) is plain CSS: open
+  transitions run 250 ms, close 200 ms, both on the shared curve
+  `cubic-bezier(0.23, 1, 0.32, 1)`; every new motion rule has a matching
+  `@media (prefers-reduced-motion: reduce)` block that keeps only an opacity change. No new
+  dependency was added; `framer-motion`, already a capsule dependency, is not used for any
+  motion in this batch.
+- Rationale: keeps the motion budget declarative and inspectable in `style.css`, and predictable
+  under reduced motion, without pulling animation JS into the render path.
+- Evidence: commits `49d7ba6c`, `2dfbe20e`, `72b12c5e`, `dac5b071`, `78a45e88` (reduced-motion
+  test tightened to its own balanced `@media` block), `7a07560d` (TG2/TG3 reduced-motion fixes
+  for the autofill-button label opacity transition and the audit-timeline `animation-delay`).
+
 ## 2026-09-27 — Send to Doctors opens a patient-free WhatsApp link
 
 - Decision (Chief): the alert is a `wa.me` link whose text names only the triage zone (merah/
