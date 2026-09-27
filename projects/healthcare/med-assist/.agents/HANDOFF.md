@@ -31,7 +31,8 @@ no R3 file outside the approved list.
 - Chief set the service to `MIRA_DATA_POLICY=openrouter-zdr` on 2026-09-27 (DECISIONS). Verified end
   to end on a temporary instance (port 8788, since stopped): the extension's MIRA client with the
   synthetic request example and no synthetic marker got `ok` (K35.3, 7.9 s, US$0.018). Chief's
-  service on 8787 still runs `synthetic-only` until Chief restarts it (the agent may not stop it).
+  service on 8787 was restarted with it, and the first side-panel request returned `ok` (4
+  diagnoses incl. one cannot-miss, 9.7 s, US$0.016).
 - The service's documented port is 8765; Chief's setup uses 8787, so start uvicorn with
   `--port 8787` or set `VITE_MIRA_SERVICE_URL` to the port in use.
 - `.safrs/sensitive-paths.json` does not classify `lib/diagnosis-engine/**` as R3 although it now
