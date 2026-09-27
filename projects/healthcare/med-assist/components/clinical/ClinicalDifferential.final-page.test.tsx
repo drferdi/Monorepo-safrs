@@ -295,8 +295,8 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     }
     const expectedOrder = [
       'Clinical Finding',
-      'Diagnosis Banding',
       'Diagnosis Utama',
+      'Diagnosis Banding',
       'Pemeriksaan Penunjang',
     ];
     const positions = expectedOrder.map((label) => workspace.textContent?.indexOf(label) ?? -1);
@@ -322,7 +322,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     const primaryCard = within(workspace).getByTestId('clinical-diagnosis-primary-card');
     expect(primaryCard).toHaveTextContent(/J18\.9 - Community Acquired Pneumonia/i);
     expect(primaryCard).not.toHaveTextContent(
-      /Siap ditinjau dokter|diagnosis dipilih|Review red flags|Korelasikan keluhan|SpO2 dan auskultasi paru|Perlu dilengkapi/i
+      /Siap ditinjau dokter|diagnosis dipilih|Review red flags|Korelasikan keluhan|Perlu dilengkapi/i
     );
     const supportingExam = within(workspace).getByLabelText('Pemeriksaan Penunjang');
     expect(supportingExam).toHaveTextContent(/SpO2 dan auskultasi paru/i);
@@ -344,7 +344,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     );
     expect(sidePanelStyle).toMatch(/\.diagnosis-chip[\s\S]*overflow-wrap:\s*anywhere/);
     expect(sidePanelStyle).toMatch(/\.diagnosis-row-meta[\s\S]*overflow-wrap:\s*anywhere/);
-    expect(within(workspace).getByRole('button', { name: /Buka Diagnosis Manual/i })).toBeTruthy();
+    expect(within(workspace).getByRole('button', { name: /Diagnosis manual/i })).toBeTruthy();
     // Temuan #1 restore (2026-07-05): therapy, education, and RME transfer now
     // render on the focused surface (fail-closed until a diagnosis is selected).
     expect(within(workspace).getByLabelText('Therapy + Resep')).toBeTruthy();
@@ -356,7 +356,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     expect(within(workspace).queryByText(/Paracetamol 500 mg/i)).toBeNull();
 
     expect(
-      within(differentialSection).getAllByText(/Pilih sebagai diagnosis utama/i).length
+      within(differentialSection).getAllByRole('button', { name: 'Pilih' }).length
     ).toBeGreaterThan(0);
     expect(primaryCard).toHaveTextContent(/Pilih Diagnosis Utama/i);
 
@@ -585,9 +585,9 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     });
 
     const workspace = screen.getByTestId('diagnosis-workspace');
-    expect(within(workspace).getByRole('button', { name: /Buka Diagnosis Manual/i })).toBeTruthy();
+    expect(within(workspace).getByRole('button', { name: /Diagnosis manual/i })).toBeTruthy();
 
-    fireEvent.click(within(workspace).getByRole('button', { name: /Buka Diagnosis Manual/i }));
+    fireEvent.click(within(workspace).getByRole('button', { name: /Diagnosis manual/i }));
     fireEvent.change(within(workspace).getByPlaceholderText(/ICD-X manual/i), {
       target: { value: 'Z99.9' },
     });

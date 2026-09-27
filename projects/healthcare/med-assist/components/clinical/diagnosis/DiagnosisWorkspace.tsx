@@ -23,8 +23,6 @@ const CLINICAL_SIGNAL_PATTERNS: Array<{ label: string; pattern: RegExp }> = [
   { label: 'Nafsu makan turun', pattern: /nafsu makan (menurun|turun|berkurang)/i },
 ];
 
-type ConfidenceTier = 'high' | 'moderate' | 'low' | 'unknown';
-
 export interface DiagnosisManualMedicationDraftView {
   nama_obat: string;
   dosis: string;
@@ -159,11 +157,6 @@ export function DiagnosisWorkspace({
           {visibleErrorMessage ? (
             <ReadOnlyPanel tone="warning">{visibleErrorMessage}</ReadOnlyPanel>
           ) : null}
-          <DifferentialDiagnosisSection
-            viewModel={viewModel}
-            hasDifferentialSet={hasDifferentialSet}
-            onToggleCandidate={onToggleCandidate}
-          />
           <MainDiagnosisSection
             viewModel={viewModel}
             showManualDiagnosisInput={showManualDiagnosisInput}
@@ -175,6 +168,11 @@ export function DiagnosisWorkspace({
             onManualIcdChange={onManualIcdChange}
             onManualNameChange={onManualNameChange}
             onSubmitManualDiagnosis={onSubmitManualDiagnosis}
+          />
+          <DifferentialDiagnosisSection
+            viewModel={viewModel}
+            hasDifferentialSet={hasDifferentialSet}
+            onToggleCandidate={onToggleCandidate}
           />
           {triage ? (
             <TriageSummarySection triage={triage} safetyItems={safetyItems} />
@@ -295,17 +293,19 @@ function MainDiagnosisSection({
   const primaryTitle = primary.isInsufficient
     ? 'Data belum cukup untuk menetapkan diagnosis utama'
     : formatClinicalText(primary.candidateLabel);
+  const primarySelected =
+    viewModel.candidates.find((candidate) => candidate.rank === 1)?.isSelected === true;
 
   return (
     <section
       className="form-group diagnosis-block"
       data-testid="clinical-diagnosis-primary-card"
+      data-selected={primarySelected ? 'true' : 'false'}
       aria-label="Diagnosis Utama"
     >
       <SectionHeader title="Diagnosis Utama" status={statusLabel} />
       <ReadOnlyPanel tone={primary.isInsufficient ? 'warning' : 'primary'}>
         <strong>{primaryTitle}</strong>
-        {!primary.isInsufficient ? <ConfidenceRail label={primary.confidenceLabel} /> : null}
         {!primary.isInsufficient ? (
           <EvidenceTally
             supports={viewModel.evidence.supports}
@@ -322,7 +322,7 @@ function MainDiagnosisSection({
         <LineList title="Perlu dilengkapi" items={primary.missingEvidence} tone="warning" />
       ) : null}
 
-      <div className="action-bar action-bar--split">
+      <div className="diagnosis-primary-actions">
         <button
           type="button"
           className="action-btn action-btn--primary"
@@ -333,12 +333,23 @@ function MainDiagnosisSection({
         </button>
         <button
           type="button"
-          className="action-btn action-btn--secondary"
+          className="diagnosis-text-button"
           onClick={onToggleManualDiagnosisInput}
         >
-          {showManualDiagnosisInput ? 'Tutup Diagnosis Manual' : 'Buka Diagnosis Manual'}
+          {showManualDiagnosisInput ? 'Tutup diagnosis manual' : 'Diagnosis manual ›'}
         </button>
       </div>
+
+      {!primary.isInsufficient ? (
+        <details className="diagnosis-details diagnosis-details--inline">
+          <summary>Alasan</summary>
+          <div className="diagnosis-evidence-grid">
+            <LineList title="Mendukung" items={viewModel.evidence.supports} />
+            <LineList title="Yang tidak mendukung" items={viewModel.evidence.against} />
+            <LineList title="Catatan" items={viewModel.evidence.review} />
+          </div>
+        </details>
+      ) : null}
 
       {showManualDiagnosisInput ? (
         <div className="diagnosis-form-grid">
@@ -420,13 +431,16 @@ function CandidateRow({
       : formatConfidenceLabel(candidate.confidenceLabel);
 
   return (
-    <article className="neu-select diagnosis-candidate-row" data-testid="diagnosis-candidate-row">
+    <article
+      className="neu-select diagnosis-candidate-row"
+      data-testid="diagnosis-candidate-row"
+      data-selected={candidate.isSelected ? 'true' : 'false'}
+    >
       <div className="diagnosis-row-head">
         <span className="diagnosis-rank-label">{rankLabel}</span>
         <span className="diagnosis-row-meta">{confidenceLabel}</span>
       </div>
       <div className="diagnosis-row-title">{formatClinicalText(candidate.displayLabel)}</div>
-      <ConfidenceRail label={candidate.confidenceLabel} />
       <EvidenceTally
         supports={candidate.supports}
         against={candidate.against}
@@ -439,7 +453,7 @@ function CandidateRow({
           disabled={candidate.isSelectionBlocked}
           onClick={() => onToggleCandidate(candidate.id)}
         >
-          Pilih sebagai diagnosis utama
+          Pilih
         </button>
       ) : null}
       <details className="diagnosis-details diagnosis-details--inline">
@@ -537,14 +551,6 @@ function SupportingExamSection({
       {showSafetyItems && safetyItems.length > 0 ? (
         <LineList title="Tanda bahaya" items={safetyItems} tone="danger" />
       ) : null}
-      <details className="diagnosis-details diagnosis-details--inline">
-        <summary>Alasan</summary>
-        <div className="diagnosis-evidence-grid">
-          <LineList title="Mendukung" items={viewModel.evidence.supports} />
-          <LineList title="Yang tidak mendukung" items={viewModel.evidence.against} />
-          <LineList title="Catatan" items={viewModel.evidence.review} />
-        </div>
-      </details>
     </section>
   );
 }
@@ -576,27 +582,6 @@ function EducationSection({ viewModel }: { viewModel: DiagnosisPageViewModel }) 
         </details>
       ) : null}
     </section>
-  );
-}
-
-function resolveConfidenceTier(label: string): ConfidenceTier {
-  const normalized = label.trim().toLowerCase();
-  if (/^very high|^high|^tinggi|^sangat tinggi/.test(normalized)) return 'high';
-  if (/^moderate|^sedang/.test(normalized)) return 'moderate';
-  if (/^low|^rendah/.test(normalized)) return 'low';
-  return 'unknown';
-}
-
-/* Panjang isian = tier keyakinan engine (diskrit, bukan persentase);
-   kata tier tetap tercetak sebagai teks di samping rail. */
-function ConfidenceRail({ label }: { label: string }) {
-  const tier = resolveConfidenceTier(label);
-  if (tier === 'unknown') return null;
-
-  return (
-    <div className="diagnosis-confidence-rail" data-tier={tier} aria-hidden="true">
-      <span className="diagnosis-confidence-rail__fill" />
-    </div>
   );
 }
 

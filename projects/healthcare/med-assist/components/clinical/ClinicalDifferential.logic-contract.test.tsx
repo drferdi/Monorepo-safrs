@@ -430,7 +430,7 @@ describe('ClinicalDifferential secure logic contract', () => {
     renderClinicalDifferential({ onDiagnosisChange });
 
     const primaryCard = await screen.findByTestId('clinical-diagnosis-primary-card');
-    fireEvent.click(within(primaryCard).getByRole('button', { name: /buka diagnosis manual/i }));
+    fireEvent.click(within(primaryCard).getByRole('button', { name: /diagnosis manual/i }));
     const manualCodeInput = screen.getByPlaceholderText(/ICD-X manual/i);
     const manualInputPanel = manualCodeInput.parentElement;
     expect(manualInputPanel).toBeTruthy();

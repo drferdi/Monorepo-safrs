@@ -162,20 +162,59 @@ function makeProps(overrides: Partial<DiagnosisWorkspaceProps> = {}): DiagnosisW
 }
 
 describe('DiagnosisWorkspace', () => {
-  it('renders the clinical workspace in the expected order and wires actions', () => {
-    const props = makeProps();
-    render(<DiagnosisWorkspace {...props} />);
-
+  it('renders sections in clinical order with Diagnosis Utama above Diagnosis Banding', () => {
+    render(<DiagnosisWorkspace {...makeProps()} />);
     const workspace = screen.getByTestId('diagnosis-workspace');
-    const orderedLabels = [
+    const labels = Array.from(workspace.querySelectorAll(':scope > section[aria-label]')).map((s) =>
+      s.getAttribute('aria-label')
+    );
+    expect(labels).toEqual([
       'Clinical Finding',
-      'Diagnosis Banding',
       'Diagnosis Utama',
+      'Diagnosis Banding',
       'Pemeriksaan Penunjang',
+      'Therapy + Resep',
+      'Edukasi',
+      'RME Transfer',
+    ]);
+  });
+
+  it('states confidence once per card, without a confidence rail', () => {
+    render(<DiagnosisWorkspace {...makeProps()} />);
+    const workspace = screen.getByTestId('diagnosis-workspace');
+    expect(workspace.querySelector('.diagnosis-confidence-rail')).toBeNull();
+    const primary = screen.getByTestId('clinical-diagnosis-primary-card');
+    expect(within(primary).getAllByText('Tinggi')).toHaveLength(1);
+    const row = screen.getByTestId('diagnosis-candidate-row');
+    expect(within(row).getAllByText('Sedang')).toHaveLength(1);
+  });
+
+  it('gives each card one action and moves the primary evidence into the primary card', () => {
+    const onToggleCandidate = vi.fn();
+    const onToggleManualDiagnosisInput = vi.fn();
+    render(<DiagnosisWorkspace {...makeProps({ onToggleCandidate, onToggleManualDiagnosisInput })} />);
+
+    const row = screen.getByTestId('diagnosis-candidate-row');
+    fireEvent.click(within(row).getByRole('button', { name: 'Pilih' }));
+    expect(onToggleCandidate).toHaveBeenCalledWith('2-J06.9');
+    expect(screen.queryByText(/Pilih sebagai diagnosis utama/i)).toBeNull();
+
+    const primary = screen.getByTestId('clinical-diagnosis-primary-card');
+    fireEvent.click(within(primary).getByRole('button', { name: /Diagnosis manual/ }));
+    expect(onToggleManualDiagnosisInput).toHaveBeenCalledTimes(1);
+    expect(within(primary).getByText('Alasan')).toBeInTheDocument();
+    expect(within(screen.getByLabelText('Pemeriksaan Penunjang')).queryByText('Alasan')).toBeNull();
+  });
+
+  it('marks the selected cards for the selection style', () => {
+    const viewModel = makeViewModel();
+    viewModel.candidates = [
+      { ...viewModel.candidates[0], id: '1-J18.9', rank: 1, code: 'J18.9', isSelected: true },
+      { ...viewModel.candidates[0], isSelected: true },
     ];
-    const positions = orderedLabels.map((label) => workspace.textContent?.indexOf(label) ?? -1);
-    positions.forEach((position) => expect(position).toBeGreaterThanOrEqual(0));
-    expect(positions).toEqual([...positions].sort((a, b) => a - b));
+    render(<DiagnosisWorkspace {...makeProps({ viewModel })} />);
+    expect(screen.getByTestId('clinical-diagnosis-primary-card')).toHaveAttribute('data-selected', 'true');
+    expect(screen.getByTestId('diagnosis-candidate-row')).toHaveAttribute('data-selected', 'true');
   });
 
   it('keeps insufficient data unmistakable without presenting R69 as confirmed', () => {
@@ -221,6 +260,7 @@ describe('DiagnosisWorkspace', () => {
     expect(workspace).toHaveTextContent(/Lengkapi Data Diagnosis/i);
     expect(workspace).toHaveTextContent(/Lengkapi anamnesis/i);
     expect(workspace).not.toHaveTextContent(/R69/i);
+    expect(within(workspace).queryByRole('button', { name: 'Pilih' })).toBeNull();
 
     fireEvent.click(within(workspace).getByRole('button', { name: /Lengkapi Data Diagnosis/i }));
     expect(onCompleteData).toHaveBeenCalledTimes(1);
