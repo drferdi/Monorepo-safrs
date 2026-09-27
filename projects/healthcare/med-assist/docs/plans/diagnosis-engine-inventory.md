@@ -94,8 +94,9 @@ not in the repository.
   types.
 - `lib/clinical/canonical-triage-builder.ts` and `lib/clinical/visit-history-format.ts` import
   visit-history types.
-- 31 React component and helper files under `components/**` and
-  `entrypoints/sidepanel/**` import engine modules.
+- 30 React component and helper files under `components/**` and `entrypoints/sidepanel/**`
+  import engine modules. So does one fixtures file,
+  `components/clinical/trajectory/trajectory-visualization.fixtures.ts`.
 - **Nothing in `lib/handlers/` imports the engine.**
 
 ## 3. The current diagnosis entry point and its output (verified)
@@ -130,6 +131,23 @@ The panel then works on these suggestions locally:
 - It re-scores them with `runDiagnosisAlgorithm` (`:800`), keeping the engine's order.
 - It builds the differential insight with `differential-diagnosis.ts`.
 - It runs the triage/referral tree for the active diagnosis (`:939-964`).
+
+**There is no second diagnosis source in production (verified).**
+
+- **The crew-side canonical engine returns triage, not diagnoses.** It is called as
+  `evaluateCanonicalClinicalEngine` at `POST /api/clinical/engine/evaluate`
+  (`lib/api/bridge-client.ts:1188`) from `TTVInferenceUI.tsx:2989` and
+  `ClinicalTrajectory.tsx:413`. Its output (`CanonicalClinicalEngineOutput`,
+  `bridge-client.ts:574`) has scoring (NEWS2, MAP, occult shock), alerts, early-warning
+  patterns, trajectory, recommendations and governance. It has **no differential**.
+- **The panel's canonical re-scoring branch never runs.** `ClinicalDifferential` accepts a
+  `canonicalOutput` prop and would re-score with it (`:811-854`). `entrypoints/sidepanel/main.tsx`
+  never passes that prop, so the branch is inactive.
+- **A dormant client already exists for a crew-side differential endpoint.** The client is
+  `evaluateCanonicalDifferential` at `POST /api/clinical/differential/evaluate`
+  (`bridge-client.ts:1212`). It has **no production caller**.
+- _Inferred:_ Step C and the ADR should say whether the MIRA service extends this existing
+  endpoint or replaces it.
 
 ## 4. Findings on the OpenAI key and the LLM payload
 
@@ -243,8 +261,12 @@ The panel then works on these suggestions locally:
      `diagnosisEngine: 'legacy' | 'mira'` with default `'legacy'`.
    - Everything else is new code in `lib/diagnosis-engine/` or the non-R3 caller
      `entrypoints/background.ts:1728`.
-   - Alternative: keep the flag in `lib/diagnosis-engine/` and touch no R3 file. The trade-off
-     is a second flag mechanism.
+   - **Default (as the brief asks):** add the field to the existing `getDiagnosisEngineConfig()`.
+     This is one field plus one test, with no other R3 edit.
+   - Alternative: keep the flag in `lib/diagnosis-engine/` and touch no R3 file.
+     - Downside: engine configuration would then live in two places.
+     - Both places read the same env variables, so a future change could update one and miss
+       the other.
 5. **Other things to know:**
    - `docs/architecture.md` is now `docs/ARCHITECTURE.md`. It was renamed earlier today and the
      rename is staged, not committed.
