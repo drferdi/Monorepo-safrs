@@ -27,6 +27,7 @@ export interface MainWorldFieldMapping {
   value: string;
   type: 'text' | 'select' | 'autocomplete';
   autocompleteTimeout?: number;
+  requireExactMatch?: boolean;
 }
 
 /**

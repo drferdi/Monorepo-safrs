@@ -1,7 +1,7 @@
 // Designed and constructed by Drferdi.
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 
-import { fillFields, fillSelect } from '@/lib/filler/filler-core';
+import { fillAutocomplete, fillFields, fillSelect } from '@/lib/filler/filler-core';
 
 describe('filler core select compatibility', () => {
   beforeEach(() => {
@@ -88,5 +88,20 @@ describe('filler core select compatibility', () => {
     });
     expect(highlightStyleAppends).toHaveLength(1);
     expect(document.querySelectorAll('style#sentra-autosen-animation')).toHaveLength(1);
+  });
+
+  it('with requireExactMatch, clears the field and fails instead of taking the first item', async () => {
+    document.body.innerHTML = `
+      <input id="dokter" />
+      <ul class="ui-autocomplete" style="display:block"><li class="ui-menu-item">EKO PRASETYO</li></ul>`;
+    const result = await fillAutocomplete('#dokter', 'Dian Sunardi', {
+      requireExactMatch: true,
+      timeout: 200,
+      retries: 0,
+      typeDelay: 0,
+      dropdownSelector: '.ui-autocomplete .ui-menu-item',
+    });
+    expect(result.success).toBe(false);
+    expect((document.getElementById('dokter') as HTMLInputElement).value).toBe('');
   });
 });

@@ -15,6 +15,7 @@
  * - AJAX autocomplete: focus → input → keydown → wait → click item
  */
 
+import { pickExactStaffMatch, staffSearchTerm } from '@/lib/filler/staff-match';
 import { truncateRMEText } from '@/lib/rme/truncate';
 import { waitForElement } from '@/lib/scraper/dom-utils';
 import { createLogger } from '@/utils/logger';
@@ -49,6 +50,7 @@ export interface AutocompleteOptions {
   allowFirstItemFallback?: boolean;
   requireDropdownSelection?: boolean;
   ignoreExistingDropdown?: boolean;
+  requireExactMatch?: boolean;
 }
 
 // ============================================================================
@@ -547,6 +549,7 @@ export async function fillAutocomplete(
     allowFirstItemFallback = true,
     requireDropdownSelection = false,
     ignoreExistingDropdown = false,
+    requireExactMatch = false,
   } = options;
 
   const field = 'autocomplete:' + selector;
@@ -582,10 +585,11 @@ export async function fillAutocomplete(
       await dispatchEventChain(input, ['focus'], 0);
 
       // 3. Simulate typing character by character
-      fillerLog.debug(`[Filler] Typing: "${safeValue}"`);
-      for (let i = 0; i < safeValue.length; i++) {
-        const current = safeValue.substring(0, i + 1);
-        const typedChar = safeValue[i] || '';
+      const typedValue = requireExactMatch ? staffSearchTerm(safeValue) : safeValue;
+      fillerLog.debug(`[Filler] Typing: "${typedValue}"`);
+      for (let i = 0; i < typedValue.length; i++) {
+        const current = typedValue.substring(0, i + 1);
+        const typedChar = typedValue[i] || '';
         setNativeValue(input, current);
         await dispatchEventChain(input, ['input'], 0);
         dispatchKeyboardEvent(
@@ -607,13 +611,24 @@ export async function fillAutocomplete(
       const dropdown = await waitForDropdown(dropdownSelector, timeout, ignoreExistingDropdown);
 
       if (!dropdown) {
-        if (requireDropdownSelection) {
+        if (requireDropdownSelection || requireExactMatch) {
           if (attempt < retries) {
             fillerLog.warn(
               `[Filler] Dropdown required but missing, retry ${attempt + 1}/${retries}...`
             );
             await sleep(300);
             continue;
+          }
+          if (requireExactMatch) {
+            setNativeValue(input, '');
+            await dispatchEventChain(input, ['input', 'change', 'blur']);
+            return {
+              success: false,
+              field,
+              value: safeValue,
+              method: 'autocomplete',
+              error: 'Nama tenaga medis tidak cocok persis di ePuskesmas',
+            };
           }
           return {
             success: false,
@@ -641,18 +656,24 @@ export async function fillAutocomplete(
       const items = document.querySelectorAll(dropdownSelector);
       let matchedItem: HTMLElement | null = null;
 
-      for (const item of items) {
-        const text = item.textContent?.toLowerCase() || '';
-        if (text.includes(safeValue.toLowerCase())) {
-          matchedItem = item as HTMLElement;
-          break;
+      if (requireExactMatch) {
+        const itemTexts = Array.from(items).map((item) => item.textContent ?? '');
+        const matchIndex = pickExactStaffMatch(itemTexts, safeValue);
+        matchedItem = matchIndex >= 0 ? (items[matchIndex] as HTMLElement) : null;
+      } else {
+        for (const item of items) {
+          const text = item.textContent?.toLowerCase() || '';
+          if (text.includes(safeValue.toLowerCase())) {
+            matchedItem = item as HTMLElement;
+            break;
+          }
         }
-      }
 
-      if (!matchedItem && allowFirstItemFallback && items.length > 0) {
-        // Take first item if no exact match
-        matchedItem = items[0] as HTMLElement;
-        fillerLog.debug(`[Filler] No exact match, using first item`);
+        if (!matchedItem && allowFirstItemFallback && items.length > 0) {
+          // Take first item if no exact match
+          matchedItem = items[0] as HTMLElement;
+          fillerLog.debug(`[Filler] No exact match, using first item`);
+        }
       }
 
       if (!matchedItem) {
@@ -660,6 +681,17 @@ export async function fillAutocomplete(
           fillerLog.warn(`[Filler] No matching dropdown item, retry ${attempt + 1}/${retries}...`);
           await sleep(250);
           continue;
+        }
+        if (requireExactMatch) {
+          setNativeValue(input, '');
+          await dispatchEventChain(input, ['input', 'change', 'blur']);
+          return {
+            success: false,
+            field,
+            value: safeValue,
+            method: 'autocomplete',
+            error: 'Nama tenaga medis tidak cocok persis di ePuskesmas',
+          };
         }
         return {
           success: false,

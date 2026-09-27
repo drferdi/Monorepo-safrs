@@ -11,6 +11,7 @@
  * @module entrypoints/inject.content
  */
 
+import { pickExactStaffMatch, staffSearchTerm } from '@/lib/filler/staff-match';
 import { riwayatDebugLog, riwayatDebugWarn } from '@/utils/debug-flags';
 import { createLogger } from '@/utils/logger';
 
@@ -360,6 +361,7 @@ export default defineContentScript({
         value: string;
         type: 'text' | 'select' | 'autocomplete';
         autocompleteTimeout?: number;
+        requireExactMatch?: boolean;
       },
       _requestId: string
     ): Promise<{
@@ -445,9 +447,13 @@ export default defineContentScript({
             typeof $el.autocomplete === 'function' && $el.data('ui-autocomplete');
 
           if (hasAutocomplete) {
-            // Clear and set value
-            $el.val(field.value);
-            $el.autocomplete('search', field.value);
+            // Clear and set value — the exact-match mode types only the core name so the
+            // server-side search returns candidates, then matches those against the full name.
+            const searchValue = field.requireExactMatch
+              ? staffSearchTerm(field.value)
+              : field.value;
+            $el.val(searchValue);
+            $el.autocomplete('search', searchValue);
 
             // Wait for dropdown to appear
             const result = await new Promise<{ success: boolean; selectedValue: string }>(
@@ -457,9 +463,22 @@ export default defineContentScript({
                 // Listen for autocomplete select/response
                 const checkDropdown = () => {
                   const $menu = $('.ui-autocomplete:visible .ui-menu-item');
-                  if ($menu.length > 0) {
-                    // Find best match
-                    let $best = $menu.first();
+                  if ($menu.length === 0) return;
+
+                  // Find best match
+                  let $best = $menu.first();
+                  let hasMatch = true;
+
+                  if (field.requireExactMatch) {
+                    const itemTexts = $menu.toArray().map((el: HTMLElement) => $(el).text() || '');
+                    const index = pickExactStaffMatch(itemTexts, field.value);
+                    if (index < 0) {
+                      // No single exact match yet — keep polling until one appears or timeout.
+                      hasMatch = false;
+                    } else {
+                      $best = $menu.eq(index);
+                    }
+                  } else {
                     const searchLower = field.value.toLowerCase();
                     $menu.each(function (this: HTMLElement) {
                       const text = ($(this).text() || '').toLowerCase();
@@ -468,19 +487,22 @@ export default defineContentScript({
                         return false; // break — found match
                       }
                     });
-                    // Click the item via jQuery UI menu
-                    $best
-                      .find('a, .ui-menu-item-wrapper')
-                      .first()
-                      .trigger('mouseenter')
-                      .trigger('click');
-                    if (!resolved) {
-                      resolved = true;
-                      // Give time for hidden fields to populate
-                      setTimeout(() => {
-                        resolve({ success: true, selectedValue: String($el.val()) });
-                      }, 300);
-                    }
+                  }
+
+                  if (!hasMatch) return;
+
+                  // Click the item via jQuery UI menu
+                  $best
+                    .find('a, .ui-menu-item-wrapper')
+                    .first()
+                    .trigger('mouseenter')
+                    .trigger('click');
+                  if (!resolved) {
+                    resolved = true;
+                    // Give time for hidden fields to populate
+                    setTimeout(() => {
+                      resolve({ success: true, selectedValue: String($el.val()) });
+                    }, 300);
                   }
                 };
 
@@ -492,9 +514,16 @@ export default defineContentScript({
                   clearInterval(interval);
                   if (!resolved) {
                     resolved = true;
-                    // Last resort: just trigger change on whatever we typed
-                    $el.trigger('change').trigger('blur');
-                    resolve({ success: false, selectedValue: String($el.val()) });
+                    if (field.requireExactMatch) {
+                      // No exact match found in time — clear the field rather than risk the
+                      // wrong practitioner being written into the record.
+                      $el.val('').trigger('change').trigger('blur');
+                      resolve({ success: false, selectedValue: '' });
+                    } else {
+                      // Last resort: just trigger change on whatever we typed
+                      $el.trigger('change').trigger('blur');
+                      resolve({ success: false, selectedValue: String($el.val()) });
+                    }
                   }
                 }, timeout);
               }
@@ -511,8 +540,10 @@ export default defineContentScript({
             return {
               success: false,
               field: field.selector,
-              value: field.value,
-              error: 'Autocomplete dropdown not appeared',
+              value: result.selectedValue,
+              error: field.requireExactMatch
+                ? 'Nama tenaga medis tidak cocok persis di ePuskesmas'
+                : 'Autocomplete dropdown not appeared',
               method: 'jq-autocomplete-fail',
             };
           }
