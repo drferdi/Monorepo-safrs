@@ -468,6 +468,27 @@ describe('DiagnosisWorkspace triage section', () => {
   });
 });
 
+function extractBalancedBlocks(css: string, needle: string): string[] {
+  const blocks: string[] = [];
+  let searchFrom = 0;
+  for (;;) {
+    const start = css.indexOf(needle, searchFrom);
+    if (start === -1) break;
+    const braceStart = css.indexOf('{', start);
+    if (braceStart === -1) break;
+    let depth = 1;
+    let i = braceStart + 1;
+    while (i < css.length && depth > 0) {
+      if (css[i] === '{') depth++;
+      else if (css[i] === '}') depth--;
+      i++;
+    }
+    blocks.push(css.slice(braceStart + 1, i - 1));
+    searchFrom = i;
+  }
+  return blocks;
+}
+
 describe('diagnosis page motion stylesheet', () => {
   const css = readFileSync(resolve(process.cwd(), 'entrypoints/sidepanel/style.css'), 'utf8');
 
@@ -482,7 +503,21 @@ describe('diagnosis page motion stylesheet', () => {
   });
 
   it('keeps only opacity under reduced motion for the unfold', () => {
-    const reduced = css.split('@media (prefers-reduced-motion: reduce)').slice(1).join('\n');
-    expect(reduced).toMatch(/\.diagnosis-stage__details::details-content/);
+    const reducedMotionBlocks = extractBalancedBlocks(css, '@media (prefers-reduced-motion: reduce)');
+    const targetBlock = reducedMotionBlocks.find((block) =>
+      block.includes('.diagnosis-stage__details::details-content')
+    );
+    expect(targetBlock).toBeDefined();
+
+    const ruleMatch = targetBlock!.match(/\.diagnosis-stage__details::details-content[^{]*\{([^}]*)\}/);
+    expect(ruleMatch).not.toBeNull();
+    const ruleBody = ruleMatch![1];
+    expect(ruleBody).toMatch(/block-size:\s*auto/);
+
+    const transitionMatch = ruleBody.match(/\btransition:\s*([^;]+);/);
+    expect(transitionMatch).not.toBeNull();
+    const transitionValue = transitionMatch![1];
+    expect(transitionValue).not.toMatch(/block-size/);
+    expect(transitionValue).toMatch(/opacity/);
   });
 });
