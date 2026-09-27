@@ -467,3 +467,22 @@ describe('DiagnosisWorkspace triage section', () => {
     ).toBeInTheDocument();
   });
 });
+
+describe('diagnosis page motion stylesheet', () => {
+  const css = readFileSync(resolve(process.cwd(), 'entrypoints/sidepanel/style.css'), 'utf8');
+
+  it('unfolds details content with the shared curve and staggers the staged sections', () => {
+    expect(css).toMatch(/\.diagnosis-content\s*\{[^}]*interpolate-size:\s*allow-keywords/);
+    expect(css).toMatch(/\.diagnosis-stage__details::details-content/);
+    expect(css).toMatch(/\.diagnosis-details::details-content/);
+    expect(css).toMatch(/cubic-bezier\(0\.23, 1, 0\.32, 1\)/);
+    expect(css).toMatch(/\.diagnosis-stage--i2[^{]*\{[^}]*transition-delay:\s*40ms/);
+    expect(css).toMatch(/\.diagnosis-stage--i4[^{]*\{[^}]*transition-delay:\s*120ms/);
+    expect(css).toMatch(/\[data-selected='true'\][^{]*\{[^}]*var\(--sentra-safe\)/);
+  });
+
+  it('keeps only opacity under reduced motion for the unfold', () => {
+    const reduced = css.split('@media (prefers-reduced-motion: reduce)').slice(1).join('\n');
+    expect(reduced).toMatch(/\.diagnosis-stage__details::details-content/);
+  });
+});
