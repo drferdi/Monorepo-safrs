@@ -52,9 +52,9 @@ Branch `feat/sidepanel-ui-batch`, local only, not pushed, no PR.
    item, sub-AA `--text-muted` summaries); parked a11y minors (focus ring clipping, stepper
    landmark/colour-only state, `<div>` in `<summary>`, "Pilih" `aria-pressed`, primary card
    selected border); "MIRA tidak tersedia" investigation.
-5. Pending Chief approval (protected `main.tsx`): play the button sound on `pointerdown`
-   instead of `click`, and prime `button5.mp3` when the console launches; plus the "smooth and
-   soft" UX pack (see the chat proposal of 2026-09-28).
+5. Button sound on press is done (Chief approved the `main.tsx` edit). Not chosen, not built:
+   composited pulse for `engine-alert-pulse` / breathe animations (the alert pulse costs about
+   165 style recalculations per second while idle), page-switch fade, softer press transition.
 4. Defence in depth (not done): `main.tsx` re-renders on every storage key; filtering its
    `onChanged` listener to the keys it reads would need a protected-file approval.
 

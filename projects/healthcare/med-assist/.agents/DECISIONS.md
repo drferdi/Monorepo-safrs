@@ -3,6 +3,20 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-28 — Button sound plays on press (protected main.tsx, Chief approved)
+
+- Decision: the side panel's global button-sound listener in `entrypoints/sidepanel/main.tsx`
+  plays on `pointerdown` (primary button only) instead of `click`, still plays for keyboard
+  activation (a `click` with `detail === 0`), and primes `button5.mp3` as soon as button sounds
+  are enabled at launch. Chief approved this protected-file edit in chat on 2026-09-28 (option
+  "A. Suara saat ditekan"); the other proposed UX items (composited pulse, page transitions,
+  softer press transition) were not chosen and are not built.
+- Rationale: a mouse click fires on release, about 100 ms after the press; priming makes the
+  first click play from a decoded buffer too.
+- Evidence: new test in `main.controller.test.tsx` (red before, green after); in the built side
+  panel (Edge) all six probe clicks, the first included, started Web Audio playback 0 ms after
+  `pointerdown` with no `<audio>` element created.
+
 ## 2026-09-28 — UI sounds play from decoded Web Audio buffers; sound files trimmed
 
 - Decision: `utils/sound.ts` decodes each sound once into a shared `AudioContext`

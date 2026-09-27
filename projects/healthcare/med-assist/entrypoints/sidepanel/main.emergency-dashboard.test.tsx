@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 vi.mock('@/utils/messaging', () => ({ sendMessage: vi.fn() }));
-vi.mock('@/utils/sound', () => ({ playSound: vi.fn() }));
+vi.mock('@/utils/sound', () => ({ playSound: vi.fn(), primeSound: vi.fn() }));
 vi.mock('@/components/sidepanel/ClinicalReasoningWorkbench', () => ({
   ClinicalReasoningWorkbench: () => null,
 }));

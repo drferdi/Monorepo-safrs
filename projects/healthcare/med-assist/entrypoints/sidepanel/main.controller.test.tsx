@@ -9,6 +9,11 @@ const { mockSendMessage } = vi.hoisted(() => ({
   mockSendMessage: vi.fn(),
 }));
 
+const { mockPlaySound, mockPrimeSound } = vi.hoisted(() => ({
+  mockPlaySound: vi.fn(),
+  mockPrimeSound: vi.fn(),
+}));
+
 const { mockClinicalDifferential } = vi.hoisted(() => ({
   mockClinicalDifferential: vi.fn(),
 }));
@@ -40,7 +45,8 @@ vi.mock('@/utils/messaging', () => ({
 }));
 
 vi.mock('@/utils/sound', () => ({
-  playSound: vi.fn(),
+  playSound: mockPlaySound,
+  primeSound: mockPrimeSound,
 }));
 
 vi.mock('@/components/sidepanel/ClinicalReasoningWorkbench', () => ({
@@ -261,6 +267,35 @@ describe('Sentra Assist sidepanel latest design route', () => {
     expect(screen.queryByTestId('mock-workbench')).toBeNull();
     expect(screen.queryByRole('button', { name: /Masuk ke ASSIST/i })).toBeNull();
     expect(screen.getByRole('tab', { name: 'START' })).toBeTruthy();
+  });
+
+  it('plays the button sound when the button is pressed, once per mouse click, and primes it on launch', async () => {
+    render(<SentraAssistSidepanelApp />);
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(500);
+    });
+
+    await act(async () => undefined);
+
+    fireEvent.click(screen.getByRole('button', { name: /Masuk ke ASSIST/i }));
+
+    await act(async () => undefined);
+
+    expect(mockPrimeSound).toHaveBeenCalledWith('button5.mp3');
+    mockPlaySound.mockClear();
+    const diagnosisButton = screen.getByRole('button', { name: /DIAGNOSIS/i });
+
+    fireEvent.pointerDown(diagnosisButton, { button: 0 });
+    expect(mockPlaySound).toHaveBeenCalledTimes(1);
+    expect(mockPlaySound).toHaveBeenLastCalledWith('button5.mp3');
+
+    fireEvent.click(diagnosisButton, { detail: 1 });
+    expect(mockPlaySound).toHaveBeenCalledTimes(1);
+
+    // A keyboard-activated click (Enter/Space) has detail 0 and no pointerdown before it.
+    fireEvent.click(screen.getByRole('tab', { name: 'START' }), { detail: 0 });
+    expect(mockPlaySound).toHaveBeenCalledTimes(2);
   });
 
   it('opens Diagnosis & Therapy from the new header diagnosis action row', async () => {

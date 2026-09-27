@@ -43,7 +43,7 @@ import { bootstrapThemeDocument } from '@/lib/theme-store';
 import { createLogger } from '@/utils/logger';
 import { sendMessage } from '@/utils/messaging';
 import { SendToDoctorsButton } from './components/SendToDoctorsButton';
-import { playSound } from '@/utils/sound';
+import { playSound, primeSound } from '@/utils/sound';
 import type { RMETransferResult } from '@/utils/types';
 
 migrateLegacyAppStorageKeys();
@@ -528,9 +528,9 @@ export function SentraAssistSidepanelApp(): JSX.Element {
 
   useEffect(() => {
     if (!buttonSoundsEnabled) return;
+    primeSound('button5.mp3');
 
-    const handleButtonSound = (event: MouseEvent) => {
-      const target = event.target;
+    const playButtonSound = (target: EventTarget | null) => {
       if (!(target instanceof Element)) return;
 
       const button = target.closest('button');
@@ -541,9 +541,22 @@ export function SentraAssistSidepanelApp(): JSX.Element {
 
       playSound(sound);
     };
+    // Sound on press, not on release: a mouse click ends ~100 ms after the button goes down.
+    const handlePointerDown = (event: PointerEvent) => {
+      if (event.button > 0) return; // right or middle button
+      playButtonSound(event.target);
+    };
+    // Keyboard activation (Enter/Space) fires a click with detail 0 and no pointerdown.
+    const handleKeyboardClick = (event: MouseEvent) => {
+      if (event.detail === 0) playButtonSound(event.target);
+    };
 
-    document.addEventListener('click', handleButtonSound, true);
-    return () => document.removeEventListener('click', handleButtonSound, true);
+    document.addEventListener('pointerdown', handlePointerDown, true);
+    document.addEventListener('click', handleKeyboardClick, true);
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown, true);
+      document.removeEventListener('click', handleKeyboardClick, true);
+    };
   }, [buttonSoundsEnabled]);
 
   const runLaunchSequence = useCallback(() => {

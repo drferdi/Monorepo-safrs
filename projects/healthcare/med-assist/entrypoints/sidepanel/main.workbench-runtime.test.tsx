@@ -44,6 +44,7 @@ vi.mock('@/utils/messaging', () => ({
 
 vi.mock('@/utils/sound', () => ({
   playSound: mockPlaySound,
+  primeSound: vi.fn(),
 }));
 
 vi.mock('@/lib/api/auth-client', () => ({
