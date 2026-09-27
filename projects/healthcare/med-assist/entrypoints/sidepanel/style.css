@@ -9715,3 +9715,99 @@ details[open] > summary .ct-disclosure-hint__close {
     animation: none;
   }
 }
+
+/* ── Diagnosis page: transfer step order tracker (2026-09-27) ── */
+.transfer-tracker {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.transfer-tracker__step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 14px 1fr;
+  gap: 8px;
+}
+
+.transfer-tracker__step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 16px;
+  bottom: -10px;
+  width: 2px;
+  background: var(--border-subtle);
+  transition: background-color 250ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.transfer-tracker__step--reached:not(:last-child)::after {
+  background: var(--sentra-safe);
+}
+
+.transfer-tracker__node {
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+  border-radius: 50%;
+  border: 2px solid var(--border-subtle);
+  display: grid;
+  place-items: center;
+  font-size: 9px;
+  line-height: 1;
+}
+
+.transfer-tracker__step[data-mark='done'] .transfer-tracker__node,
+.transfer-tracker__step[data-mark='failed'] .transfer-tracker__node,
+.transfer-tracker__step[data-mark='skipped'] .transfer-tracker__node {
+  animation: transfer-tracker-stamp 150ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.transfer-tracker__step[data-mark='done'] .transfer-tracker__node {
+  border-color: var(--sentra-safe);
+  color: var(--sentra-safe);
+}
+
+.transfer-tracker__step[data-mark='done'] .transfer-tracker__node::before {
+  content: '✓';
+}
+
+.transfer-tracker__step[data-mark='failed'] .transfer-tracker__node {
+  border-color: var(--sentra-danger);
+  color: var(--sentra-danger);
+}
+
+.transfer-tracker__step[data-mark='failed'] .transfer-tracker__node::before {
+  content: '✕';
+}
+
+.transfer-tracker__step[data-mark='skipped'] .transfer-tracker__node::before {
+  content: '–';
+  color: var(--text-muted);
+}
+
+.transfer-tracker__step[data-mark='running'] .transfer-tracker__node {
+  border-color: var(--sentra-warning);
+  animation: transfer-tracker-pulse 1s ease-in-out infinite;
+}
+
+@keyframes transfer-tracker-stamp {
+  from { transform: scale(0.8); opacity: 0.4; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes transfer-tracker-pulse {
+  50% { opacity: 0.45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .transfer-tracker__step:not(:last-child)::after {
+    transition: none;
+  }
+
+  .transfer-tracker__step[data-mark] .transfer-tracker__node {
+    animation: none;
+  }
+}

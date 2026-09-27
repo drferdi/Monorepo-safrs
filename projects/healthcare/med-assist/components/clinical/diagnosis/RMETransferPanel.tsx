@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { formatClinicalText, formatTransferState, isDiagnosisChosen } from './diagnosisDisplayUtils';
 import type { DiagnosisWorkspaceProps } from './DiagnosisWorkspace';
 import { StagedSection } from './StagedSection';
+import { TransferStepTracker } from './TransferStepTracker';
 
 export function RMETransferPanel({
   viewModel,
@@ -106,24 +107,7 @@ export function RMETransferPanel({
             Anamnesis
           </button>
         </div>
-        <div className="diagnosis-list">
-          {transfer.steps.map((step) => (
-            <div key={step.key} className="neu-select diagnosis-selected-row">
-              <div>
-                <div className="diagnosis-row-title">{formatClinicalText(step.label)}</div>
-                <div className="diagnosis-row-meta">
-                  {formatTransferState(step.state)} | {formatClinicalText(step.detail)}
-                </div>
-                {step.reason ? (
-                  <div className="diagnosis-warning">{formatClinicalText(step.reason)}</div>
-                ) : null}
-                {step.message ? (
-                  <div className="diagnosis-row-meta">{formatClinicalText(step.message)}</div>
-                ) : null}
-              </div>
-            </div>
-          ))}
-        </div>
+        <TransferStepTracker steps={transfer.steps} />
       </details>
     </StagedSection>
   );
