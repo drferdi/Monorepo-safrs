@@ -1,0 +1,3072 @@
+{
+  "cardiac-chest-pain": {
+    "success": true,
+    "data": {
+      "diagnosis_suggestions": [
+        {
+          "rank": 1,
+          "icd_x": "I20",
+          "nama": "Angina Pektoris",
+          "confidence": 0.42831791452594425,
+          "rationale": "Angina pektoris adalah nyeri dada akibat iskemia miokard yang bersifat sementara. Angina stabil terjadi saat aktivitas dan hilang dengan istirahat atau nitrogliserin. Angina tidak stabil (nyeri saat i...",
+          "red_flags": [
+            "Nyeri dada saat istirahat >20 menit",
+            "Nyeri dada disertai keringat dingin dan sesak berat",
+            "Hipotensi atau syok",
+            "Penurunan kesadaran"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: SEGERA rujuk: angina tidak stabil (nyeri saat istirahat, crescendo), curiga infark miokard akut, nyeri dada disertai ses",
+            "Diagnosis banding: Infark miokard akut (I21), GERD (K21), Kostokondritis (M94.0)",
+            "Terapi PPK: ISDN sublingual 5 mg sublingual saat nyeri dada; Aspirin 160-320 mg dosis loading kunyah (jika curiga ACS); Oksigen 2-4 L/menit nasal kanul jika SpO2 <94%"
+          ]
+        },
+        {
+          "rank": 2,
+          "icd_x": "J18",
+          "nama": "Pneumonia, bronkopneumonia",
+          "confidence": 0.37194698792797803,
+          "rationale": "Infeksi parenkim paru yang menyebabkan konsolidasi",
+          "red_flags": ["SpO2 < 90%", "RR > 30x/menit", "Penurunan kesadaran"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: Amoxicillin 500-1000 mg 3x sehari 5-7 hari"
+          ]
+        },
+        {
+          "rank": 3,
+          "icd_x": "I25",
+          "nama": "Penyakit Jantung Iskemik Kronik",
+          "confidence": 0.3536360932234172,
+          "rationale": "Penyakit jantung iskemik kronik adalah penyakit jantung akibat insufisiensi suplai darah koroner yang berlangsung lama, biasanya akibat aterosklerosis. Pasien memiliki riwayat angina stabil, riwayat i...",
+          "red_flags": [
+            "Nyeri dada baru onset atau berubah pola (crescendo)",
+            "Nyeri dada saat istirahat >20 menit",
+            "Sesak nafas berat mendadak",
+            "Sinkop"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Rujuk ke kardiolog untuk: evaluasi awal dan treadmill test, perburukan gejala, angina tidak terkontrol, curiga ACS, eval",
+            "Diagnosis banding: Angina pektoris tidak stabil (I20), GERD (K21), Kostokondritis (M94.0)",
+            "Terapi PPK: Aspirin 80 mg 1x sehari; Simvastatin 20 mg 1x malam hari; ISDN 5 mg 3x sehari atau sublingual saat nyeri"
+          ]
+        },
+        {
+          "rank": 4,
+          "icd_x": "R57",
+          "nama": "Hipoglikemia ringan",
+          "confidence": 0.29628155584130234,
+          "rationale": "Hipoglikemia adalah keadaan dimana kadar glukosa darah <60 mg/dL, atau dengan gejala\nklinis dan kadar glukosa darah <80 mg/dL. Hipoglikemia merupakan komplikasi akut dari\npenyandang diabetes melitus d...",
+          "red_flags": [
+            "Penurunan kesadaran",
+            "Kejang akibat hipoglikemia berat",
+            "GDS kurang dari 50 mg/dL"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Pasien hipoglikemia dengan penurunan kesadaran harus dirujuk ke layanan sekunder\n(spesialis penyakit dalam) setelah dibe",
+            "Diagnosis banding: Syncope vagal., Stroke/TIA."
+          ]
+        },
+        {
+          "rank": 5,
+          "icd_x": "E78",
+          "nama": "Dislipidemia",
+          "confidence": 0.24163483722942308,
+          "rationale": "Dislipidemia adalah kelainan metabolisme lipid yang ditandai oleh peningkatan kolesterol total, LDL, trigliserida, dan/atau penurunan HDL. Merupakan faktor risiko utama penyakit kardiovaskular aterosk...",
+          "red_flags": [
+            "Trigliserida >500 mg/dL (risiko pankreatitis akut)",
+            "Dislipidemia familial berat pada usia muda",
+            "Riwayat PJK prematur di keluarga"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Rujuk jika: dislipidemia familial berat, tidak mencapai target LDL setelah terapi 3 bulan, intoleransi statin, TG >500 m",
+            "Diagnosis banding: Hipotiroid (dislipidemia sekunder), Sindrom nefrotik (dislipidemia sekunder), Diabetes mellitus (E11)",
+            "Terapi PPK: Simvastatin 20 mg 1x malam hari; Atorvastatin 20 mg 1x sehari; Gemfibrozil 300 mg 2x sehari (jika TG tinggi)"
+          ]
+        }
+      ],
+      "medication_recommendations": [
+        {
+          "nama_obat": "Isosorbid dinitrat tablet sublingual 5 mg",
+          "dosis": "1 tablet SL, ulang tiap 5 menit bila perlu (maks 3 dosis)",
+          "aturan_pakai": "Jika diperlukan",
+          "durasi": "Saat nyeri dada akut",
+          "rationale": "Dipilih melalui reasoning intent \"antianginal\" berbasis sindrom + ketersediaan formulary.",
+          "safety_check": "safe",
+          "contraindications": [
+            "Hipotensi (SBP < 90 mmHg)",
+            "Penggunaan PDE5 inhibitor dalam 24-48 jam"
+          ]
+        },
+        {
+          "nama_obat": "Simvastatin tablet 20 mg",
+          "dosis": "1x1 malam",
+          "aturan_pakai": "Sesudah makan",
+          "durasi": "3-30 hari sesuai evaluasi klinis",
+          "rationale": "Dipilih melalui reasoning intent \"lipid_support\" berbasis sindrom + ketersediaan formulary.",
+          "safety_check": "safe",
+          "contraindications": []
+        }
+      ],
+      "alerts": [
+        {
+          "id": "alert-<volatile>",
+          "type": "red_flag",
+          "severity": "emergency",
+          "title": "SUSPEK SINDROM KORONER AKUT (ACS)",
+          "message": "Keluhan: \"nyeri dada\"; Takikardia (HR 110 bpm)",
+          "icd_codes": ["I21.9", "I20.0", "I20.9"],
+          "action": "EKG 12-lead SEGERA. Aspirin 320mg kunyah (jika tidak alergi). Oksigen jika SpO2 <94%. RUJUK RS dengan fasilitas kateterisasi."
+        },
+        {
+          "id": "alert-<volatile>",
+          "type": "red_flag",
+          "severity": "high",
+          "title": "Perhatian: Rujukan Segera Direkomendasikan",
+          "message": "Red flags: Nyeri dada saat istirahat >20 menit; Nyeri dada disertai keringat dingin dan sesak berat | Kompetensi 3B: SEGERA rujuk: angina tidak stabil (nyeri saat istirahat, crescendo), curiga infark miokard akut, nye | Emergency red flag: SUSPEK SINDROM KORONER AKUT (ACS)",
+          "action": "Stabilisasi dan rujuk ke fasilitas yang lebih tinggi."
+        },
+        {
+          "id": "alert-<volatile>",
+          "type": "guideline",
+          "severity": "info",
+          "title": "Disclaimer",
+          "message": "Ini adalah alat bantu keputusan klinis. Keputusan akhir ada pada dokter."
+        }
+      ],
+      "validation_summary": {
+        "total_raw": 5,
+        "total_validated": 5,
+        "unverified_codes": [],
+        "warnings": [
+          "External LLM blocked: OpenAI belum dikonfigurasi: isi API key OpenAI di menu Pengaturan.. Using KB-only results."
+        ]
+      },
+      "clinical_reasoning": {
+        "status": "ok",
+        "differentialDiagnosis": [
+          {
+            "rank": 1,
+            "icd_x": "I20",
+            "nama": "Angina Pektoris",
+            "confidence": 0.42831791452594425,
+            "rationale": "Angina pektoris adalah nyeri dada akibat iskemia miokard yang bersifat sementara. Angina stabil terjadi saat aktivitas dan hilang dengan istirahat atau nitrogliserin. Angina tidak stabil (nyeri saat i...",
+            "red_flags": [
+              "Nyeri dada saat istirahat >20 menit",
+              "Nyeri dada disertai keringat dingin dan sesak berat",
+              "Hipotensi atau syok",
+              "Penurunan kesadaran"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: SEGERA rujuk: angina tidak stabil (nyeri saat istirahat, crescendo), curiga infark miokard akut, nyeri dada disertai ses",
+              "Diagnosis banding: Infark miokard akut (I21), GERD (K21), Kostokondritis (M94.0)",
+              "Terapi PPK: ISDN sublingual 5 mg sublingual saat nyeri dada; Aspirin 160-320 mg dosis loading kunyah (jika curiga ACS); Oksigen 2-4 L/menit nasal kanul jika SpO2 <94%"
+            ]
+          },
+          {
+            "rank": 2,
+            "icd_x": "J18",
+            "nama": "Pneumonia, bronkopneumonia",
+            "confidence": 0.37194698792797803,
+            "rationale": "Infeksi parenkim paru yang menyebabkan konsolidasi",
+            "red_flags": ["SpO2 < 90%", "RR > 30x/menit", "Penurunan kesadaran"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Terapi PPK: Amoxicillin 500-1000 mg 3x sehari 5-7 hari"
+            ]
+          },
+          {
+            "rank": 3,
+            "icd_x": "I25",
+            "nama": "Penyakit Jantung Iskemik Kronik",
+            "confidence": 0.3536360932234172,
+            "rationale": "Penyakit jantung iskemik kronik adalah penyakit jantung akibat insufisiensi suplai darah koroner yang berlangsung lama, biasanya akibat aterosklerosis. Pasien memiliki riwayat angina stabil, riwayat i...",
+            "red_flags": [
+              "Nyeri dada baru onset atau berubah pola (crescendo)",
+              "Nyeri dada saat istirahat >20 menit",
+              "Sesak nafas berat mendadak",
+              "Sinkop"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: Rujuk ke kardiolog untuk: evaluasi awal dan treadmill test, perburukan gejala, angina tidak terkontrol, curiga ACS, eval",
+              "Diagnosis banding: Angina pektoris tidak stabil (I20), GERD (K21), Kostokondritis (M94.0)",
+              "Terapi PPK: Aspirin 80 mg 1x sehari; Simvastatin 20 mg 1x malam hari; ISDN 5 mg 3x sehari atau sublingual saat nyeri"
+            ]
+          },
+          {
+            "rank": 4,
+            "icd_x": "R57",
+            "nama": "Hipoglikemia ringan",
+            "confidence": 0.29628155584130234,
+            "rationale": "Hipoglikemia adalah keadaan dimana kadar glukosa darah <60 mg/dL, atau dengan gejala\nklinis dan kadar glukosa darah <80 mg/dL. Hipoglikemia merupakan komplikasi akut dari\npenyandang diabetes melitus d...",
+            "red_flags": [
+              "Penurunan kesadaran",
+              "Kejang akibat hipoglikemia berat",
+              "GDS kurang dari 50 mg/dL"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: Pasien hipoglikemia dengan penurunan kesadaran harus dirujuk ke layanan sekunder\n(spesialis penyakit dalam) setelah dibe",
+              "Diagnosis banding: Syncope vagal., Stroke/TIA."
+            ]
+          },
+          {
+            "rank": 5,
+            "icd_x": "E78",
+            "nama": "Dislipidemia",
+            "confidence": 0.24163483722942308,
+            "rationale": "Dislipidemia adalah kelainan metabolisme lipid yang ditandai oleh peningkatan kolesterol total, LDL, trigliserida, dan/atau penurunan HDL. Merupakan faktor risiko utama penyakit kardiovaskular aterosk...",
+            "red_flags": [
+              "Trigliserida >500 mg/dL (risiko pankreatitis akut)",
+              "Dislipidemia familial berat pada usia muda",
+              "Riwayat PJK prematur di keluarga"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: Rujuk jika: dislipidemia familial berat, tidak mencapai target LDL setelah terapi 3 bulan, intoleransi statin, TG >500 m",
+              "Diagnosis banding: Hipotiroid (dislipidemia sekunder), Sindrom nefrotik (dislipidemia sekunder), Diabetes mellitus (E11)",
+              "Terapi PPK: Simvastatin 20 mg 1x malam hari; Atorvastatin 20 mg 1x sehari; Gemfibrozil 300 mg 2x sehari (jika TG tinggi)"
+            ]
+          }
+        ],
+        "workingDiagnosis": {
+          "icd_x": "I20",
+          "nama": "Angina Pektoris"
+        },
+        "input_data_state": {
+          "chief_complaint": "present",
+          "additional_complaint": "absent",
+          "vitals": "present",
+          "age": "present",
+          "gender": "present",
+          "allergies": "unknown"
+        },
+        "supportingExaminations": {
+          "laboratory": [],
+          "additional": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: SEGERA rujuk: angina tidak stabil (nyeri saat istirahat, crescendo), curiga infark miokard akut, nyeri dada disertai ses",
+            "Diagnosis banding: Infark miokard akut (I21), GERD (K21), Kostokondritis (M94.0)",
+            "Terapi PPK: ISDN sublingual 5 mg sublingual saat nyeri dada; Aspirin 160-320 mg dosis loading kunyah (jika curiga ACS); Oksigen 2-4 L/menit nasal kanul jika SpO2 <94%",
+            "Terapi PPK: Amoxicillin 500-1000 mg 3x sehari 5-7 hari",
+            "Pertimbangkan rujukan: Rujuk ke kardiolog untuk: evaluasi awal dan treadmill test, perburukan gejala, angina tidak terkontrol, curiga ACS, eval"
+          ]
+        },
+        "pharmacotherapy": [
+          {
+            "nama_obat": "Isosorbid dinitrat tablet sublingual 5 mg",
+            "dosis": "1 tablet SL, ulang tiap 5 menit bila perlu (maks 3 dosis)",
+            "aturan_pakai": "Jika diperlukan",
+            "durasi": "Saat nyeri dada akut",
+            "rationale": "Dipilih melalui reasoning intent \"antianginal\" berbasis sindrom + ketersediaan formulary.",
+            "safety_check": "safe",
+            "contraindications": [
+              "Hipotensi (SBP < 90 mmHg)",
+              "Penggunaan PDE5 inhibitor dalam 24-48 jam"
+            ]
+          },
+          {
+            "nama_obat": "Simvastatin tablet 20 mg",
+            "dosis": "1x1 malam",
+            "aturan_pakai": "Sesudah makan",
+            "durasi": "3-30 hari sesuai evaluasi klinis",
+            "rationale": "Dipilih melalui reasoning intent \"lipid_support\" berbasis sindrom + ketersediaan formulary.",
+            "safety_check": "safe",
+            "contraindications": []
+          }
+        ],
+        "redFlags": [
+          "Nyeri dada saat istirahat >20 menit",
+          "Nyeri dada disertai keringat dingin dan sesak berat",
+          "Hipotensi atau syok",
+          "Penurunan kesadaran",
+          "SpO2 < 90%",
+          "RR > 30x/menit"
+        ],
+        "message": "Clinical reasoning tersedia dari KB matcher lokal."
+      },
+      "meta": {
+        "model_version": "IDE-V1-KB",
+        "is_local": true,
+        "is_mock": false
+      }
+    }
+  },
+  "diabetes-classic": {
+    "success": true,
+    "data": {
+      "diagnosis_suggestions": [
+        {
+          "rank": 1,
+          "icd_x": "E10",
+          "nama": "Diabetes melitus tipe 1",
+          "confidence": 0.6739452775634162,
+          "rationale": "Diabetes akibat destruksi sel beta pankreas, ketergantungan insulin",
+          "red_flags": ["Ketoasidosis diabetik", "Hipoglikemia berat"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: Insulin Sesuai kebutuhan Multiple daily injection"
+          ]
+        },
+        {
+          "rank": 2,
+          "icd_x": "E11",
+          "nama": "Diabetes melitus tipe 2",
+          "confidence": 0.6669769618159929,
+          "rationale": "Diabetes akibat resistensi insulin dan/atau defek sekresi insulin",
+          "red_flags": ["Hiperglikemia berat", "Hipoglikemia"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: Metformin 500 mg 2-3x sehari bersama makan"
+          ]
+        },
+        {
+          "rank": 3,
+          "icd_x": "I64",
+          "nama": "Stroke",
+          "confidence": 0.26142101747924196,
+          "rationale": "Stroke adalah gangguan fungsi otak fokal atau global yang timbul mendadak akibat gangguan aliran darah otak (iskemik atau hemoragik), berlangsung >24 jam atau menyebabkan kematian. Merupakan kegawatan...",
+          "red_flags": [
+            "Penurunan kesadaran progresif",
+            "Tanda herniasi otak (pupil anisokor, postur dekortikasi)",
+            "Kejang berulang",
+            "Muntah proyektil (curiga perdarahan)"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: SEGERA rujuk ke RS dengan fasilitas CT-Scan setelah stabilisasi ABC. Posisi head-up 30°, oksigenasi, akses IV, catat ons",
+            "Diagnosis banding: TIA (G45), Tumor otak (C71), Hipoglikemia",
+            "Terapi PPK: Oksigen 2-4 L/menit jika SpO2 <94%; Posisi head-up 30° - segera; NaCl 0.9% 500 mL IV maintenance"
+          ]
+        },
+        {
+          "rank": 4,
+          "icd_x": "I50",
+          "nama": "Gagal Jantung Kongestif",
+          "confidence": 0.1719335988131363,
+          "rationale": "Gagal jantung adalah sindrom klinis dimana jantung tidak mampu memompa darah secara adekuat untuk memenuhi kebutuhan metabolik tubuh. Ditandai oleh gejala sesak nafas, kelelahan, dan retensi cairan. K...",
+          "red_flags": [
+            "Sesak nafas berat saat istirahat",
+            "Edema paru akut (sputum berbuih merah muda)",
+            "Syok kardiogenik (hipotensi, kulit dingin lembab)",
+            "Aritmia berat"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: SEGERA rujuk setelah stabilisasi awal. Rujuk jika: NYHA III-IV, edema paru akut, syok kardiogenik, aritmia, tidak respon",
+            "Diagnosis banding: PPOK eksaserbasi (J44), Pneumonia (J18), Sindrom nefrotik (N04)",
+            "Terapi PPK: Furosemid 20-40 mg 1-2x sehari; Captopril 6.25-25 mg 2-3x sehari; Bisoprolol 1.25-5 mg 1x sehari"
+          ]
+        },
+        {
+          "rank": 5,
+          "icd_x": "E66",
+          "nama": "Obesitas",
+          "confidence": 0.15838795986790305,
+          "rationale": "Obesitas merupakan keadaan dimana seseorang memiliki kelebihan kandungan lemak (body\nfat) sehingga orang tersebut memiliki risiko kesehatan. Obesitas terjadi disebabkan oleh\nadanya ketidakseimbangan a...",
+          "red_flags": [
+            "Sumber lain mengatakan bahwa hiperurisemia, gangguan",
+            "Risiko absolut pada obesitas bila selain obesitas telah ditegakkan pula penyakit jantung",
+            "dan gangguan tidur (sleep apnea).",
+            "atau lebih keadaan di bawah ini, maka",
+            "Keadaannya adalah hipertensi, perokok, kadar"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: 1. Konsultasi pada dokter spesialis penyakit dalam bila pasien merupakan obesitas dengan\nrisiko tinggi dan risiko absolu",
+            "Terapi PPK: ors - Sesuai PPK"
+          ]
+        }
+      ],
+      "medication_recommendations": [
+        {
+          "nama_obat": "Metformin HCl tablet 500 mg",
+          "dosis": "2-3x1",
+          "aturan_pakai": "Sesudah makan",
+          "durasi": "3-30 hari sesuai evaluasi klinis",
+          "rationale": "Dipilih melalui reasoning intent \"glycemic_primary\" berbasis sindrom + ketersediaan formulary.",
+          "safety_check": "safe",
+          "contraindications": []
+        },
+        {
+          "nama_obat": "Vitamin B Komplek Tablet",
+          "dosis": "1x1",
+          "aturan_pakai": "Sesudah makan",
+          "durasi": "3-30 hari sesuai evaluasi klinis",
+          "rationale": "Dipilih melalui reasoning intent \"neurotropic\" berbasis sindrom + ketersediaan formulary.",
+          "safety_check": "safe",
+          "contraindications": []
+        },
+        {
+          "nama_obat": "Asam Askorbat (Vitamin C) tablet 50 mg",
+          "dosis": "1 tablet (50mg)",
+          "aturan_pakai": "Sesudah makan",
+          "durasi": "3-30 hari sesuai evaluasi klinis",
+          "rationale": "Dipilih melalui reasoning intent \"vitamin_support\" berbasis sindrom + ketersediaan formulary.",
+          "safety_check": "safe",
+          "contraindications": []
+        }
+      ],
+      "alerts": [
+        {
+          "id": "alert-<volatile>",
+          "type": "vital_sign",
+          "severity": "medium",
+          "title": "Perhatian: Monitor Ketat Diperlukan",
+          "message": "Red flags: Ketoasidosis diabetik; Hipoglikemia berat",
+          "action": "Monitor TTV serial, pertimbangkan pemeriksaan penunjang."
+        },
+        {
+          "id": "alert-<volatile>",
+          "type": "guideline",
+          "severity": "info",
+          "title": "Disclaimer",
+          "message": "Ini adalah alat bantu keputusan klinis. Keputusan akhir ada pada dokter."
+        }
+      ],
+      "validation_summary": {
+        "total_raw": 5,
+        "total_validated": 5,
+        "unverified_codes": [],
+        "warnings": ["LLM skipped: KB confidence 67% >= threshold"]
+      },
+      "clinical_reasoning": {
+        "status": "ok",
+        "differentialDiagnosis": [
+          {
+            "rank": 1,
+            "icd_x": "E10",
+            "nama": "Diabetes melitus tipe 1",
+            "confidence": 0.6739452775634162,
+            "rationale": "Diabetes akibat destruksi sel beta pankreas, ketergantungan insulin",
+            "red_flags": ["Ketoasidosis diabetik", "Hipoglikemia berat"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Terapi PPK: Insulin Sesuai kebutuhan Multiple daily injection"
+            ]
+          },
+          {
+            "rank": 2,
+            "icd_x": "E11",
+            "nama": "Diabetes melitus tipe 2",
+            "confidence": 0.6669769618159929,
+            "rationale": "Diabetes akibat resistensi insulin dan/atau defek sekresi insulin",
+            "red_flags": ["Hiperglikemia berat", "Hipoglikemia"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Terapi PPK: Metformin 500 mg 2-3x sehari bersama makan"
+            ]
+          },
+          {
+            "rank": 3,
+            "icd_x": "I64",
+            "nama": "Stroke",
+            "confidence": 0.26142101747924196,
+            "rationale": "Stroke adalah gangguan fungsi otak fokal atau global yang timbul mendadak akibat gangguan aliran darah otak (iskemik atau hemoragik), berlangsung >24 jam atau menyebabkan kematian. Merupakan kegawatan...",
+            "red_flags": [
+              "Penurunan kesadaran progresif",
+              "Tanda herniasi otak (pupil anisokor, postur dekortikasi)",
+              "Kejang berulang",
+              "Muntah proyektil (curiga perdarahan)"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: SEGERA rujuk ke RS dengan fasilitas CT-Scan setelah stabilisasi ABC. Posisi head-up 30°, oksigenasi, akses IV, catat ons",
+              "Diagnosis banding: TIA (G45), Tumor otak (C71), Hipoglikemia",
+              "Terapi PPK: Oksigen 2-4 L/menit jika SpO2 <94%; Posisi head-up 30° - segera; NaCl 0.9% 500 mL IV maintenance"
+            ]
+          },
+          {
+            "rank": 4,
+            "icd_x": "I50",
+            "nama": "Gagal Jantung Kongestif",
+            "confidence": 0.1719335988131363,
+            "rationale": "Gagal jantung adalah sindrom klinis dimana jantung tidak mampu memompa darah secara adekuat untuk memenuhi kebutuhan metabolik tubuh. Ditandai oleh gejala sesak nafas, kelelahan, dan retensi cairan. K...",
+            "red_flags": [
+              "Sesak nafas berat saat istirahat",
+              "Edema paru akut (sputum berbuih merah muda)",
+              "Syok kardiogenik (hipotensi, kulit dingin lembab)",
+              "Aritmia berat"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: SEGERA rujuk setelah stabilisasi awal. Rujuk jika: NYHA III-IV, edema paru akut, syok kardiogenik, aritmia, tidak respon",
+              "Diagnosis banding: PPOK eksaserbasi (J44), Pneumonia (J18), Sindrom nefrotik (N04)",
+              "Terapi PPK: Furosemid 20-40 mg 1-2x sehari; Captopril 6.25-25 mg 2-3x sehari; Bisoprolol 1.25-5 mg 1x sehari"
+            ]
+          },
+          {
+            "rank": 5,
+            "icd_x": "E66",
+            "nama": "Obesitas",
+            "confidence": 0.15838795986790305,
+            "rationale": "Obesitas merupakan keadaan dimana seseorang memiliki kelebihan kandungan lemak (body\nfat) sehingga orang tersebut memiliki risiko kesehatan. Obesitas terjadi disebabkan oleh\nadanya ketidakseimbangan a...",
+            "red_flags": [
+              "Sumber lain mengatakan bahwa hiperurisemia, gangguan",
+              "Risiko absolut pada obesitas bila selain obesitas telah ditegakkan pula penyakit jantung",
+              "dan gangguan tidur (sleep apnea).",
+              "atau lebih keadaan di bawah ini, maka",
+              "Keadaannya adalah hipertensi, perokok, kadar"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: 1. Konsultasi pada dokter spesialis penyakit dalam bila pasien merupakan obesitas dengan\nrisiko tinggi dan risiko absolu",
+              "Terapi PPK: ors - Sesuai PPK"
+            ]
+          }
+        ],
+        "workingDiagnosis": {
+          "icd_x": "E10",
+          "nama": "Diabetes melitus tipe 1"
+        },
+        "input_data_state": {
+          "chief_complaint": "present",
+          "additional_complaint": "absent",
+          "vitals": "unknown",
+          "age": "present",
+          "gender": "present",
+          "allergies": "unknown"
+        },
+        "supportingExaminations": {
+          "laboratory": [],
+          "additional": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: Insulin Sesuai kebutuhan Multiple daily injection",
+            "Terapi PPK: Metformin 500 mg 2-3x sehari bersama makan",
+            "Pertimbangkan rujukan: SEGERA rujuk ke RS dengan fasilitas CT-Scan setelah stabilisasi ABC. Posisi head-up 30°, oksigenasi, akses IV, catat ons",
+            "Diagnosis banding: TIA (G45), Tumor otak (C71), Hipoglikemia",
+            "Terapi PPK: Oksigen 2-4 L/menit jika SpO2 <94%; Posisi head-up 30° - segera; NaCl 0.9% 500 mL IV maintenance"
+          ]
+        },
+        "pharmacotherapy": [
+          {
+            "nama_obat": "Metformin HCl tablet 500 mg",
+            "dosis": "2-3x1",
+            "aturan_pakai": "Sesudah makan",
+            "durasi": "3-30 hari sesuai evaluasi klinis",
+            "rationale": "Dipilih melalui reasoning intent \"glycemic_primary\" berbasis sindrom + ketersediaan formulary.",
+            "safety_check": "safe",
+            "contraindications": []
+          },
+          {
+            "nama_obat": "Vitamin B Komplek Tablet",
+            "dosis": "1x1",
+            "aturan_pakai": "Sesudah makan",
+            "durasi": "3-30 hari sesuai evaluasi klinis",
+            "rationale": "Dipilih melalui reasoning intent \"neurotropic\" berbasis sindrom + ketersediaan formulary.",
+            "safety_check": "safe",
+            "contraindications": []
+          },
+          {
+            "nama_obat": "Asam Askorbat (Vitamin C) tablet 50 mg",
+            "dosis": "1 tablet (50mg)",
+            "aturan_pakai": "Sesudah makan",
+            "durasi": "3-30 hari sesuai evaluasi klinis",
+            "rationale": "Dipilih melalui reasoning intent \"vitamin_support\" berbasis sindrom + ketersediaan formulary.",
+            "safety_check": "safe",
+            "contraindications": []
+          }
+        ],
+        "redFlags": [
+          "Ketoasidosis diabetik",
+          "Hipoglikemia berat",
+          "Hiperglikemia berat",
+          "Hipoglikemia",
+          "Penurunan kesadaran progresif",
+          "Tanda herniasi otak (pupil anisokor, postur dekortikasi)"
+        ],
+        "message": "Clinical reasoning tersedia dari KB matcher lokal."
+      },
+      "meta": {
+        "model_version": "IDE-V1-KB-fast",
+        "is_local": true,
+        "is_mock": false
+      }
+    }
+  },
+  "ari-fever-cough": {
+    "success": true,
+    "data": {
+      "diagnosis_suggestions": [
+        {
+          "rank": 1,
+          "icd_x": "J06",
+          "nama": "Infeksi Saluran Pernafasan Akut Atas (ISPA)",
+          "confidence": 0.8676923076923075,
+          "rationale": "Infeksi Saluran Pernafasan Akut (ISPA) bagian atas adalah infeksi akut yang menyerang saluran pernafasan atas meliputi hidung, sinus paranasal, faring, dan laring. Penyebab tersering adalah virus (rhi...",
+          "red_flags": [
+            "Sesak nafas berat",
+            "Stridor",
+            "Demam tinggi >39°C tidak turun dengan antipiretik",
+            "Tanda dehidrasi berat pada anak"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Rujuk jika terdapat tanda komplikasi (otitis media, sinusitis berat, pneumonia), sesak nafas berat, atau tidak membaik s",
+            "Diagnosis banding: Faringitis (J02), Tonsilitis (J03), Influenza (J11)",
+            "Terapi PPK: Parasetamol 500 mg 3x sehari (dewasa); Ambroxol 30 mg 3x sehari; CTM (Chlorpheniramine) 4 mg 3x sehari"
+          ]
+        },
+        {
+          "rank": 2,
+          "icd_x": "J00",
+          "nama": "Nasofaringitis Akut (Common Cold)",
+          "confidence": 0.6803053083451989,
+          "rationale": "Nasofaringitis akut atau common cold adalah infeksi virus self-limiting pada saluran napas atas yang terutama mengenai mukosa hidung dan nasofaring. Penyebab tersering adalah rhinovirus (30-50%), coro...",
+          "red_flags": [
+            "Demam tinggi >39°C persisten",
+            "Sekret hidung purulen >10 hari (curiga sinusitis)",
+            "Sesak nafas"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Umumnya tidak perlu rujukan. Rujuk jika gejala menetap >10 hari atau terdapat komplikasi sinusitis/otitis.",
+            "Diagnosis banding: Rinitis alergi (J30), Sinusitis akut (J01), ISPA (J06)",
+            "Terapi PPK: Parasetamol 500 mg 3x sehari (jika demam); Pseudoefedrin 60 mg 3x sehari (dekongestan); CTM (Chlorpheniramine) 4 mg 3x sehari (antihistamin)"
+          ]
+        },
+        {
+          "rank": 3,
+          "icd_x": "J11",
+          "nama": "Influenza",
+          "confidence": 0.2805213191334767,
+          "rationale": "Influenza, sering dikenal dengan flu adalah penyakit menular disebabkan oleh virus RNA\nyaitu virus influenza A, B dan lebih jarang C. Virus influenza terus mengalami perubahan,\nsehingga dalam beberapa...",
+          "red_flags": ["Sesak napas atau dispnea", "Penurunan kesadaran", "Tanda pneumonia"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Diagnosis banding: Faringitis, Tonsilitis, Laringitis",
+            "Terapi PPK: parasetamol - Sesuai PPK; ibuprofen - Sesuai PPK; cetirizin - Sesuai PPK"
+          ]
+        },
+        {
+          "rank": 4,
+          "icd_x": "B05",
+          "nama": "Morbili tanpa komplikasi",
+          "confidence": 0.27141608460544386,
+          "rationale": "Suatu penyakit infeksi virus, yang ditandai dengan gejala prodromal berupa demam, batuk,\npilek, konjungtivitis, eksantem patognomonik, diikuti dengan lesi makulopapular eritem pada\nhari ketiga hingga ...",
+          "red_flags": ["Pneumonia morbili", "Ensefalitis morbili", "Otitis media komplikasi"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Perawatan di Rumah Sakit untuk campak dengan komplikasi (superinfeksi bakteri,\npneumonia, dehidrasi, croup, ensefalitis)",
+            "Diagnosis banding: pneumoniae."
+          ]
+        },
+        {
+          "rank": 5,
+          "icd_x": "J30",
+          "nama": "Rhinitis alergika",
+          "confidence": 0.2576193565789226,
+          "rationale": "Rhinitis alergiadalah penyakit inflamasi yang disebabkanoleh reaksialergi pada pasien atopi\nyang sebelumnya sudah tersensitisasi oleh alergen yang sama serta dilepaskan suatu mediator\nkimia ketika ter...",
+          "red_flags": ["Polip nasi", "Sinusitis kronik komplikasi", "Sesak napas berat"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: 1. Bila perlu dilakukan Prick Test untuk mengetahui jenis alergen.\n2. Bila perlu dilakukan tindakan operatif.",
+            "Diagnosis banding: Rhinitis vasomotor, Rhinitis akut",
+            "Terapi PPK: difenhidramin - Sesuai PPK; cetirizin - Sesuai PPK; loratadin - Sesuai PPK"
+          ]
+        }
+      ],
+      "medication_recommendations": [
+        {
+          "nama_obat": "Parasetamol tablet 500 mg",
+          "dosis": "1 tablet (500mg)",
+          "aturan_pakai": "Sesudah makan",
+          "durasi": "3-30 hari sesuai evaluasi klinis",
+          "rationale": "Dipilih melalui reasoning intent \"symptom_control\" berbasis sindrom + ketersediaan formulary.",
+          "safety_check": "safe",
+          "contraindications": []
+        },
+        {
+          "nama_obat": "Klorfeniramin Maleat ( CTM ) tablet 4 mg",
+          "dosis": "1 tablet (4mg)",
+          "aturan_pakai": "Sesudah makan",
+          "durasi": "3-30 hari sesuai evaluasi klinis",
+          "rationale": "Dipilih melalui reasoning intent \"antihistamine\" berbasis sindrom + ketersediaan formulary.",
+          "safety_check": "safe",
+          "contraindications": []
+        },
+        {
+          "nama_obat": "Vitamin B Kompleks",
+          "dosis": "1x1",
+          "aturan_pakai": "Sesudah makan",
+          "durasi": "30 hari",
+          "rationale": "Suplementasi vitamin B sebagai terapi suportif.",
+          "safety_check": "safe",
+          "contraindications": []
+        }
+      ],
+      "alerts": [
+        {
+          "id": "alert-<volatile>",
+          "type": "vital_sign",
+          "severity": "medium",
+          "title": "Perhatian: Monitor Ketat Diperlukan",
+          "message": "Red flags: Sesak nafas berat; Stridor",
+          "action": "Monitor TTV serial, pertimbangkan pemeriksaan penunjang."
+        },
+        {
+          "id": "alert-<volatile>",
+          "type": "guideline",
+          "severity": "info",
+          "title": "Disclaimer",
+          "message": "Ini adalah alat bantu keputusan klinis. Keputusan akhir ada pada dokter."
+        }
+      ],
+      "validation_summary": {
+        "total_raw": 5,
+        "total_validated": 5,
+        "unverified_codes": [],
+        "warnings": ["LLM skipped: KB confidence 87% >= threshold"]
+      },
+      "clinical_reasoning": {
+        "status": "ok",
+        "differentialDiagnosis": [
+          {
+            "rank": 1,
+            "icd_x": "J06",
+            "nama": "Infeksi Saluran Pernafasan Akut Atas (ISPA)",
+            "confidence": 0.8676923076923075,
+            "rationale": "Infeksi Saluran Pernafasan Akut (ISPA) bagian atas adalah infeksi akut yang menyerang saluran pernafasan atas meliputi hidung, sinus paranasal, faring, dan laring. Penyebab tersering adalah virus (rhi...",
+            "red_flags": [
+              "Sesak nafas berat",
+              "Stridor",
+              "Demam tinggi >39°C tidak turun dengan antipiretik",
+              "Tanda dehidrasi berat pada anak"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: Rujuk jika terdapat tanda komplikasi (otitis media, sinusitis berat, pneumonia), sesak nafas berat, atau tidak membaik s",
+              "Diagnosis banding: Faringitis (J02), Tonsilitis (J03), Influenza (J11)",
+              "Terapi PPK: Parasetamol 500 mg 3x sehari (dewasa); Ambroxol 30 mg 3x sehari; CTM (Chlorpheniramine) 4 mg 3x sehari"
+            ]
+          },
+          {
+            "rank": 2,
+            "icd_x": "J00",
+            "nama": "Nasofaringitis Akut (Common Cold)",
+            "confidence": 0.6803053083451989,
+            "rationale": "Nasofaringitis akut atau common cold adalah infeksi virus self-limiting pada saluran napas atas yang terutama mengenai mukosa hidung dan nasofaring. Penyebab tersering adalah rhinovirus (30-50%), coro...",
+            "red_flags": [
+              "Demam tinggi >39°C persisten",
+              "Sekret hidung purulen >10 hari (curiga sinusitis)",
+              "Sesak nafas"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: Umumnya tidak perlu rujukan. Rujuk jika gejala menetap >10 hari atau terdapat komplikasi sinusitis/otitis.",
+              "Diagnosis banding: Rinitis alergi (J30), Sinusitis akut (J01), ISPA (J06)",
+              "Terapi PPK: Parasetamol 500 mg 3x sehari (jika demam); Pseudoefedrin 60 mg 3x sehari (dekongestan); CTM (Chlorpheniramine) 4 mg 3x sehari (antihistamin)"
+            ]
+          },
+          {
+            "rank": 3,
+            "icd_x": "J11",
+            "nama": "Influenza",
+            "confidence": 0.2805213191334767,
+            "rationale": "Influenza, sering dikenal dengan flu adalah penyakit menular disebabkan oleh virus RNA\nyaitu virus influenza A, B dan lebih jarang C. Virus influenza terus mengalami perubahan,\nsehingga dalam beberapa...",
+            "red_flags": ["Sesak napas atau dispnea", "Penurunan kesadaran", "Tanda pneumonia"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Diagnosis banding: Faringitis, Tonsilitis, Laringitis",
+              "Terapi PPK: parasetamol - Sesuai PPK; ibuprofen - Sesuai PPK; cetirizin - Sesuai PPK"
+            ]
+          },
+          {
+            "rank": 4,
+            "icd_x": "B05",
+            "nama": "Morbili tanpa komplikasi",
+            "confidence": 0.27141608460544386,
+            "rationale": "Suatu penyakit infeksi virus, yang ditandai dengan gejala prodromal berupa demam, batuk,\npilek, konjungtivitis, eksantem patognomonik, diikuti dengan lesi makulopapular eritem pada\nhari ketiga hingga ...",
+            "red_flags": ["Pneumonia morbili", "Ensefalitis morbili", "Otitis media komplikasi"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: Perawatan di Rumah Sakit untuk campak dengan komplikasi (superinfeksi bakteri,\npneumonia, dehidrasi, croup, ensefalitis)",
+              "Diagnosis banding: pneumoniae."
+            ]
+          },
+          {
+            "rank": 5,
+            "icd_x": "J30",
+            "nama": "Rhinitis alergika",
+            "confidence": 0.2576193565789226,
+            "rationale": "Rhinitis alergiadalah penyakit inflamasi yang disebabkanoleh reaksialergi pada pasien atopi\nyang sebelumnya sudah tersensitisasi oleh alergen yang sama serta dilepaskan suatu mediator\nkimia ketika ter...",
+            "red_flags": ["Polip nasi", "Sinusitis kronik komplikasi", "Sesak napas berat"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: 1. Bila perlu dilakukan Prick Test untuk mengetahui jenis alergen.\n2. Bila perlu dilakukan tindakan operatif.",
+              "Diagnosis banding: Rhinitis vasomotor, Rhinitis akut",
+              "Terapi PPK: difenhidramin - Sesuai PPK; cetirizin - Sesuai PPK; loratadin - Sesuai PPK"
+            ]
+          }
+        ],
+        "workingDiagnosis": {
+          "icd_x": "J06",
+          "nama": "Infeksi Saluran Pernafasan Akut Atas (ISPA)"
+        },
+        "input_data_state": {
+          "chief_complaint": "present",
+          "additional_complaint": "absent",
+          "vitals": "present",
+          "age": "present",
+          "gender": "present",
+          "allergies": "unknown"
+        },
+        "supportingExaminations": {
+          "laboratory": [],
+          "additional": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Rujuk jika terdapat tanda komplikasi (otitis media, sinusitis berat, pneumonia), sesak nafas berat, atau tidak membaik s",
+            "Diagnosis banding: Faringitis (J02), Tonsilitis (J03), Influenza (J11)",
+            "Terapi PPK: Parasetamol 500 mg 3x sehari (dewasa); Ambroxol 30 mg 3x sehari; CTM (Chlorpheniramine) 4 mg 3x sehari",
+            "Pertimbangkan rujukan: Umumnya tidak perlu rujukan. Rujuk jika gejala menetap >10 hari atau terdapat komplikasi sinusitis/otitis.",
+            "Diagnosis banding: Rinitis alergi (J30), Sinusitis akut (J01), ISPA (J06)"
+          ]
+        },
+        "pharmacotherapy": [
+          {
+            "nama_obat": "Parasetamol tablet 500 mg",
+            "dosis": "1 tablet (500mg)",
+            "aturan_pakai": "Sesudah makan",
+            "durasi": "3-30 hari sesuai evaluasi klinis",
+            "rationale": "Dipilih melalui reasoning intent \"symptom_control\" berbasis sindrom + ketersediaan formulary.",
+            "safety_check": "safe",
+            "contraindications": []
+          },
+          {
+            "nama_obat": "Klorfeniramin Maleat ( CTM ) tablet 4 mg",
+            "dosis": "1 tablet (4mg)",
+            "aturan_pakai": "Sesudah makan",
+            "durasi": "3-30 hari sesuai evaluasi klinis",
+            "rationale": "Dipilih melalui reasoning intent \"antihistamine\" berbasis sindrom + ketersediaan formulary.",
+            "safety_check": "safe",
+            "contraindications": []
+          },
+          {
+            "nama_obat": "Vitamin B Kompleks",
+            "dosis": "1x1",
+            "aturan_pakai": "Sesudah makan",
+            "durasi": "30 hari",
+            "rationale": "Suplementasi vitamin B sebagai terapi suportif.",
+            "safety_check": "safe",
+            "contraindications": []
+          }
+        ],
+        "redFlags": [
+          "Sesak nafas berat",
+          "Stridor",
+          "Demam tinggi >39°C tidak turun dengan antipiretik",
+          "Tanda dehidrasi berat pada anak",
+          "Demam tinggi >39°C persisten",
+          "Sekret hidung purulen >10 hari (curiga sinusitis)"
+        ],
+        "message": "Clinical reasoning tersedia dari KB matcher lokal."
+      },
+      "meta": {
+        "model_version": "IDE-V1-KB-fast",
+        "is_local": true,
+        "is_mock": false
+      }
+    }
+  },
+  "generic-malaise": {
+    "success": true,
+    "data": {
+      "diagnosis_suggestions": [
+        {
+          "rank": 1,
+          "icd_x": "E11",
+          "nama": "Diabetes melitus tipe 2",
+          "confidence": 0.2027793091706754,
+          "rationale": "Diabetes akibat resistensi insulin dan/atau defek sekresi insulin",
+          "red_flags": ["Hiperglikemia berat", "Hipoglikemia"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: Metformin 500 mg 2-3x sehari bersama makan"
+          ]
+        },
+        {
+          "rank": 2,
+          "icd_x": "I10",
+          "nama": "Hipertensi esensial",
+          "confidence": 0.19341422980559603,
+          "rationale": "Peningkatan tekanan darah sistolik >= 140 mmHg dan/atau diastolik >= 90 mmHg",
+          "red_flags": ["TD > 180/120", "Nyeri dada", "Defisit neurologis"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: Amlodipine 5-10 mg sekali sehari"
+          ]
+        },
+        {
+          "rank": 3,
+          "icd_x": "T75",
+          "nama": "Mabuk perjalanan",
+          "confidence": 0.17594170233306858,
+          "rationale": "Motion sickness akibat konflik sensorik vestibular-visual",
+          "red_flags": [],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: Dimenhydrinate 50 mg 30 menit sebelum perjalanan"
+          ]
+        },
+        {
+          "rank": 4,
+          "icd_x": "J11",
+          "nama": "Influenza",
+          "confidence": 0.1582041457719826,
+          "rationale": "Influenza, sering dikenal dengan flu adalah penyakit menular disebabkan oleh virus RNA\nyaitu virus influenza A, B dan lebih jarang C. Virus influenza terus mengalami perubahan,\nsehingga dalam beberapa...",
+          "red_flags": ["Sesak napas atau dispnea", "Penurunan kesadaran", "Tanda pneumonia"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Diagnosis banding: Faringitis, Tonsilitis, Laringitis",
+            "Terapi PPK: parasetamol - Sesuai PPK; ibuprofen - Sesuai PPK; cetirizin - Sesuai PPK"
+          ]
+        },
+        {
+          "rank": 5,
+          "icd_x": "H52",
+          "nama": "Hipermetropia ringan",
+          "confidence": 0.15317613456750082,
+          "rationale": "Hipermetropia merupakan keadaan gangguan kekuatan pembiasan mata dimana sinar sejajar\njauh tidak cukup kuat dibiaskan sehingga titik fokusnya terletak di belakang retina.\n1 92\n\nKelainan ini menyebar m...",
+          "red_flags": [
+            "Esotropia atau juling ke dalam terjadi akibat pasien selamanya melakukan akomodasi.",
+            "Glaukoma sekunder terjadi akibat hipertrofi otot siliar pada badan siliar yang akan",
+            "3. Ambliopia",
+            "Penurunan visus jauh bersamaan",
+            "Nyeri mata mendadak",
+            "Diplopia"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Rujukan dilakukan jika timbul komplikasi."
+          ]
+        }
+      ],
+      "medication_recommendations": [
+        {
+          "nama_obat": "Metformin HCl tablet 500 mg",
+          "dosis": "2-3x1",
+          "aturan_pakai": "Sesudah makan",
+          "durasi": "3-30 hari sesuai evaluasi klinis",
+          "rationale": "Dipilih melalui reasoning intent \"glycemic_primary\" berbasis sindrom + ketersediaan formulary.",
+          "safety_check": "safe",
+          "contraindications": []
+        },
+        {
+          "nama_obat": "Vitamin B Komplek Tablet",
+          "dosis": "1x1",
+          "aturan_pakai": "Sesudah makan",
+          "durasi": "3-30 hari sesuai evaluasi klinis",
+          "rationale": "Dipilih melalui reasoning intent \"neurotropic\" berbasis sindrom + ketersediaan formulary.",
+          "safety_check": "safe",
+          "contraindications": []
+        },
+        {
+          "nama_obat": "Asam Askorbat (Vitamin C) tablet 50 mg",
+          "dosis": "1 tablet (50mg)",
+          "aturan_pakai": "Sesudah makan",
+          "durasi": "3-30 hari sesuai evaluasi klinis",
+          "rationale": "Dipilih melalui reasoning intent \"vitamin_support\" berbasis sindrom + ketersediaan formulary.",
+          "safety_check": "safe",
+          "contraindications": []
+        }
+      ],
+      "alerts": [
+        {
+          "id": "alert-<volatile>",
+          "type": "vital_sign",
+          "severity": "medium",
+          "title": "Perhatian: Monitor Ketat Diperlukan",
+          "message": "Red flags: Hiperglikemia berat; Hipoglikemia | Low confidence: 20%",
+          "action": "Monitor TTV serial, pertimbangkan pemeriksaan penunjang."
+        },
+        {
+          "id": "alert-<volatile>",
+          "type": "low_confidence",
+          "severity": "info",
+          "title": "Kepercayaan Rendah",
+          "message": "Saran diagnosis memiliki tingkat kepercayaan rendah. Pertimbangkan anamnesis tambahan."
+        },
+        {
+          "id": "alert-<volatile>",
+          "type": "guideline",
+          "severity": "info",
+          "title": "Disclaimer",
+          "message": "Ini adalah alat bantu keputusan klinis. Keputusan akhir ada pada dokter."
+        }
+      ],
+      "validation_summary": {
+        "total_raw": 5,
+        "total_validated": 5,
+        "unverified_codes": [],
+        "warnings": [
+          "External LLM blocked: OpenAI belum dikonfigurasi: isi API key OpenAI di menu Pengaturan.. Using KB-only results."
+        ]
+      },
+      "clinical_reasoning": {
+        "status": "ok",
+        "differentialDiagnosis": [
+          {
+            "rank": 1,
+            "icd_x": "E11",
+            "nama": "Diabetes melitus tipe 2",
+            "confidence": 0.2027793091706754,
+            "rationale": "Diabetes akibat resistensi insulin dan/atau defek sekresi insulin",
+            "red_flags": ["Hiperglikemia berat", "Hipoglikemia"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Terapi PPK: Metformin 500 mg 2-3x sehari bersama makan"
+            ]
+          },
+          {
+            "rank": 2,
+            "icd_x": "I10",
+            "nama": "Hipertensi esensial",
+            "confidence": 0.19341422980559603,
+            "rationale": "Peningkatan tekanan darah sistolik >= 140 mmHg dan/atau diastolik >= 90 mmHg",
+            "red_flags": ["TD > 180/120", "Nyeri dada", "Defisit neurologis"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Terapi PPK: Amlodipine 5-10 mg sekali sehari"
+            ]
+          },
+          {
+            "rank": 3,
+            "icd_x": "T75",
+            "nama": "Mabuk perjalanan",
+            "confidence": 0.17594170233306858,
+            "rationale": "Motion sickness akibat konflik sensorik vestibular-visual",
+            "red_flags": [],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Terapi PPK: Dimenhydrinate 50 mg 30 menit sebelum perjalanan"
+            ]
+          },
+          {
+            "rank": 4,
+            "icd_x": "J11",
+            "nama": "Influenza",
+            "confidence": 0.1582041457719826,
+            "rationale": "Influenza, sering dikenal dengan flu adalah penyakit menular disebabkan oleh virus RNA\nyaitu virus influenza A, B dan lebih jarang C. Virus influenza terus mengalami perubahan,\nsehingga dalam beberapa...",
+            "red_flags": ["Sesak napas atau dispnea", "Penurunan kesadaran", "Tanda pneumonia"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Diagnosis banding: Faringitis, Tonsilitis, Laringitis",
+              "Terapi PPK: parasetamol - Sesuai PPK; ibuprofen - Sesuai PPK; cetirizin - Sesuai PPK"
+            ]
+          },
+          {
+            "rank": 5,
+            "icd_x": "H52",
+            "nama": "Hipermetropia ringan",
+            "confidence": 0.15317613456750082,
+            "rationale": "Hipermetropia merupakan keadaan gangguan kekuatan pembiasan mata dimana sinar sejajar\njauh tidak cukup kuat dibiaskan sehingga titik fokusnya terletak di belakang retina.\n1 92\n\nKelainan ini menyebar m...",
+            "red_flags": [
+              "Esotropia atau juling ke dalam terjadi akibat pasien selamanya melakukan akomodasi.",
+              "Glaukoma sekunder terjadi akibat hipertrofi otot siliar pada badan siliar yang akan",
+              "3. Ambliopia",
+              "Penurunan visus jauh bersamaan",
+              "Nyeri mata mendadak",
+              "Diplopia"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: Rujukan dilakukan jika timbul komplikasi."
+            ]
+          }
+        ],
+        "workingDiagnosis": {
+          "icd_x": "E11",
+          "nama": "Diabetes melitus tipe 2"
+        },
+        "input_data_state": {
+          "chief_complaint": "present",
+          "additional_complaint": "absent",
+          "vitals": "unknown",
+          "age": "present",
+          "gender": "present",
+          "allergies": "unknown"
+        },
+        "supportingExaminations": {
+          "laboratory": [],
+          "additional": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: Metformin 500 mg 2-3x sehari bersama makan",
+            "Terapi PPK: Amlodipine 5-10 mg sekali sehari",
+            "Terapi PPK: Dimenhydrinate 50 mg 30 menit sebelum perjalanan"
+          ]
+        },
+        "pharmacotherapy": [
+          {
+            "nama_obat": "Metformin HCl tablet 500 mg",
+            "dosis": "2-3x1",
+            "aturan_pakai": "Sesudah makan",
+            "durasi": "3-30 hari sesuai evaluasi klinis",
+            "rationale": "Dipilih melalui reasoning intent \"glycemic_primary\" berbasis sindrom + ketersediaan formulary.",
+            "safety_check": "safe",
+            "contraindications": []
+          },
+          {
+            "nama_obat": "Vitamin B Komplek Tablet",
+            "dosis": "1x1",
+            "aturan_pakai": "Sesudah makan",
+            "durasi": "3-30 hari sesuai evaluasi klinis",
+            "rationale": "Dipilih melalui reasoning intent \"neurotropic\" berbasis sindrom + ketersediaan formulary.",
+            "safety_check": "safe",
+            "contraindications": []
+          },
+          {
+            "nama_obat": "Asam Askorbat (Vitamin C) tablet 50 mg",
+            "dosis": "1 tablet (50mg)",
+            "aturan_pakai": "Sesudah makan",
+            "durasi": "3-30 hari sesuai evaluasi klinis",
+            "rationale": "Dipilih melalui reasoning intent \"vitamin_support\" berbasis sindrom + ketersediaan formulary.",
+            "safety_check": "safe",
+            "contraindications": []
+          }
+        ],
+        "redFlags": [
+          "Hiperglikemia berat",
+          "Hipoglikemia",
+          "TD > 180/120",
+          "Nyeri dada",
+          "Defisit neurologis"
+        ],
+        "message": "Clinical reasoning tersedia dari KB matcher lokal."
+      },
+      "meta": {
+        "model_version": "IDE-V1-KB",
+        "is_local": true,
+        "is_mock": false
+      }
+    }
+  },
+  "chest-pain-young-normal-vitals": {
+    "success": true,
+    "data": {
+      "diagnosis_suggestions": [
+        {
+          "rank": 1,
+          "icd_x": "J18",
+          "nama": "Pneumonia, bronkopneumonia",
+          "confidence": 0.5920909090909091,
+          "rationale": "Infeksi parenkim paru yang menyebabkan konsolidasi",
+          "red_flags": ["SpO2 < 90%", "RR > 30x/menit", "Penurunan kesadaran"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: Amoxicillin 500-1000 mg 3x sehari 5-7 hari"
+          ]
+        },
+        {
+          "rank": 2,
+          "icd_x": "I25",
+          "nama": "Penyakit Jantung Iskemik Kronik",
+          "confidence": 0.5803846153846155,
+          "rationale": "Penyakit jantung iskemik kronik adalah penyakit jantung akibat insufisiensi suplai darah koroner yang berlangsung lama, biasanya akibat aterosklerosis. Pasien memiliki riwayat angina stabil, riwayat i...",
+          "red_flags": [
+            "Nyeri dada baru onset atau berubah pola (crescendo)",
+            "Nyeri dada saat istirahat >20 menit",
+            "Sesak nafas berat mendadak",
+            "Sinkop"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Rujuk ke kardiolog untuk: evaluasi awal dan treadmill test, perburukan gejala, angina tidak terkontrol, curiga ACS, eval",
+            "Diagnosis banding: Angina pektoris tidak stabil (I20), GERD (K21), Kostokondritis (M94.0)",
+            "Terapi PPK: Aspirin 80 mg 1x sehari; Simvastatin 20 mg 1x malam hari; ISDN 5 mg 3x sehari atau sublingual saat nyeri"
+          ]
+        },
+        {
+          "rank": 3,
+          "icd_x": "A15",
+          "nama": "Tuberkulosis paru tanpa komplikasi",
+          "confidence": 0.5709375,
+          "rationale": "HIV adalah Human Immunodeficiency Virus (HIV) yang menyerang sel-sel kekebalan tubuh.\nAIDS atau Acquired Immunodefficiency Syndrome adalah kumpulan gejala akibat penurunan\nkekebalan tubuh yang disebab...",
+          "red_flags": ["Hemoptisis masif", "Sesak napas berat", "Tanda gagal napas"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan:  Rujukan horizontal bila fasilitas untuk pemeriksaan HIV tidak dapat dilakukan di layanan\nprimer.\n Rujukan vertikal bi",
+            "Diagnosis banding: Mumps, Kista Duktus Tiroglosus, Kista Dermoid"
+          ]
+        },
+        {
+          "rank": 4,
+          "icd_x": "E78",
+          "nama": "Dislipidemia",
+          "confidence": 0.5700666666666666,
+          "rationale": "Dislipidemia adalah kelainan metabolisme lipid yang ditandai oleh peningkatan kolesterol total, LDL, trigliserida, dan/atau penurunan HDL. Merupakan faktor risiko utama penyakit kardiovaskular aterosk...",
+          "red_flags": [
+            "Trigliserida >500 mg/dL (risiko pankreatitis akut)",
+            "Dislipidemia familial berat pada usia muda",
+            "Riwayat PJK prematur di keluarga"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Rujuk jika: dislipidemia familial berat, tidak mencapai target LDL setelah terapi 3 bulan, intoleransi statin, TG >500 m",
+            "Diagnosis banding: Hipotiroid (dislipidemia sekunder), Sindrom nefrotik (dislipidemia sekunder), Diabetes mellitus (E11)",
+            "Terapi PPK: Simvastatin 20 mg 1x malam hari; Atorvastatin 20 mg 1x sehari; Gemfibrozil 300 mg 2x sehari (jika TG tinggi)"
+          ]
+        },
+        {
+          "rank": 5,
+          "icd_x": "I20",
+          "nama": "Angina Pektoris",
+          "confidence": 0.4805156249999999,
+          "rationale": "Angina pektoris adalah nyeri dada akibat iskemia miokard yang bersifat sementara. Angina stabil terjadi saat aktivitas dan hilang dengan istirahat atau nitrogliserin. Angina tidak stabil (nyeri saat i...",
+          "red_flags": [
+            "Nyeri dada saat istirahat >20 menit",
+            "Nyeri dada disertai keringat dingin dan sesak berat",
+            "Hipotensi atau syok",
+            "Penurunan kesadaran"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: SEGERA rujuk: angina tidak stabil (nyeri saat istirahat, crescendo), curiga infark miokard akut, nyeri dada disertai ses",
+            "Diagnosis banding: Infark miokard akut (I21), GERD (K21), Kostokondritis (M94.0)",
+            "Terapi PPK: ISDN sublingual 5 mg sublingual saat nyeri dada; Aspirin 160-320 mg dosis loading kunyah (jika curiga ACS); Oksigen 2-4 L/menit nasal kanul jika SpO2 <94%"
+          ]
+        }
+      ],
+      "medication_recommendations": [
+        {
+          "nama_obat": "Parasetamol tablet 500 mg",
+          "dosis": "1 tablet (500mg)",
+          "aturan_pakai": "Sesudah makan",
+          "durasi": "3-30 hari sesuai evaluasi klinis",
+          "rationale": "Dipilih melalui reasoning intent \"symptom_control\" berbasis sindrom + ketersediaan formulary.",
+          "safety_check": "safe",
+          "contraindications": []
+        },
+        {
+          "nama_obat": "Vitamin B Kompleks",
+          "dosis": "1x1",
+          "aturan_pakai": "Sesudah makan",
+          "durasi": "30 hari",
+          "rationale": "Suplementasi vitamin B sebagai terapi suportif.",
+          "safety_check": "safe",
+          "contraindications": []
+        },
+        {
+          "nama_obat": "Vitamin C 100mg",
+          "dosis": "1x1",
+          "aturan_pakai": "Sesudah makan",
+          "durasi": "30 hari",
+          "rationale": "Antioksidan dan pendukung imunitas.",
+          "safety_check": "safe",
+          "contraindications": []
+        }
+      ],
+      "alerts": [
+        {
+          "id": "alert-<volatile>",
+          "type": "vital_sign",
+          "severity": "medium",
+          "title": "Perhatian: Monitor Ketat Diperlukan",
+          "message": "Red flags: SpO2 < 90%; RR > 30x/menit",
+          "action": "Monitor TTV serial, pertimbangkan pemeriksaan penunjang."
+        },
+        {
+          "id": "alert-<volatile>",
+          "type": "guideline",
+          "severity": "info",
+          "title": "Disclaimer",
+          "message": "Ini adalah alat bantu keputusan klinis. Keputusan akhir ada pada dokter."
+        }
+      ],
+      "validation_summary": {
+        "total_raw": 5,
+        "total_validated": 5,
+        "unverified_codes": [],
+        "warnings": [
+          "External LLM blocked: OpenAI belum dikonfigurasi: isi API key OpenAI di menu Pengaturan.. Using KB-only results."
+        ]
+      },
+      "clinical_reasoning": {
+        "status": "ok",
+        "differentialDiagnosis": [
+          {
+            "rank": 1,
+            "icd_x": "J18",
+            "nama": "Pneumonia, bronkopneumonia",
+            "confidence": 0.5920909090909091,
+            "rationale": "Infeksi parenkim paru yang menyebabkan konsolidasi",
+            "red_flags": ["SpO2 < 90%", "RR > 30x/menit", "Penurunan kesadaran"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Terapi PPK: Amoxicillin 500-1000 mg 3x sehari 5-7 hari"
+            ]
+          },
+          {
+            "rank": 2,
+            "icd_x": "I25",
+            "nama": "Penyakit Jantung Iskemik Kronik",
+            "confidence": 0.5803846153846155,
+            "rationale": "Penyakit jantung iskemik kronik adalah penyakit jantung akibat insufisiensi suplai darah koroner yang berlangsung lama, biasanya akibat aterosklerosis. Pasien memiliki riwayat angina stabil, riwayat i...",
+            "red_flags": [
+              "Nyeri dada baru onset atau berubah pola (crescendo)",
+              "Nyeri dada saat istirahat >20 menit",
+              "Sesak nafas berat mendadak",
+              "Sinkop"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: Rujuk ke kardiolog untuk: evaluasi awal dan treadmill test, perburukan gejala, angina tidak terkontrol, curiga ACS, eval",
+              "Diagnosis banding: Angina pektoris tidak stabil (I20), GERD (K21), Kostokondritis (M94.0)",
+              "Terapi PPK: Aspirin 80 mg 1x sehari; Simvastatin 20 mg 1x malam hari; ISDN 5 mg 3x sehari atau sublingual saat nyeri"
+            ]
+          },
+          {
+            "rank": 3,
+            "icd_x": "A15",
+            "nama": "Tuberkulosis paru tanpa komplikasi",
+            "confidence": 0.5709375,
+            "rationale": "HIV adalah Human Immunodeficiency Virus (HIV) yang menyerang sel-sel kekebalan tubuh.\nAIDS atau Acquired Immunodefficiency Syndrome adalah kumpulan gejala akibat penurunan\nkekebalan tubuh yang disebab...",
+            "red_flags": ["Hemoptisis masif", "Sesak napas berat", "Tanda gagal napas"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan:  Rujukan horizontal bila fasilitas untuk pemeriksaan HIV tidak dapat dilakukan di layanan\nprimer.\n Rujukan vertikal bi",
+              "Diagnosis banding: Mumps, Kista Duktus Tiroglosus, Kista Dermoid"
+            ]
+          },
+          {
+            "rank": 4,
+            "icd_x": "E78",
+            "nama": "Dislipidemia",
+            "confidence": 0.5700666666666666,
+            "rationale": "Dislipidemia adalah kelainan metabolisme lipid yang ditandai oleh peningkatan kolesterol total, LDL, trigliserida, dan/atau penurunan HDL. Merupakan faktor risiko utama penyakit kardiovaskular aterosk...",
+            "red_flags": [
+              "Trigliserida >500 mg/dL (risiko pankreatitis akut)",
+              "Dislipidemia familial berat pada usia muda",
+              "Riwayat PJK prematur di keluarga"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: Rujuk jika: dislipidemia familial berat, tidak mencapai target LDL setelah terapi 3 bulan, intoleransi statin, TG >500 m",
+              "Diagnosis banding: Hipotiroid (dislipidemia sekunder), Sindrom nefrotik (dislipidemia sekunder), Diabetes mellitus (E11)",
+              "Terapi PPK: Simvastatin 20 mg 1x malam hari; Atorvastatin 20 mg 1x sehari; Gemfibrozil 300 mg 2x sehari (jika TG tinggi)"
+            ]
+          },
+          {
+            "rank": 5,
+            "icd_x": "I20",
+            "nama": "Angina Pektoris",
+            "confidence": 0.4805156249999999,
+            "rationale": "Angina pektoris adalah nyeri dada akibat iskemia miokard yang bersifat sementara. Angina stabil terjadi saat aktivitas dan hilang dengan istirahat atau nitrogliserin. Angina tidak stabil (nyeri saat i...",
+            "red_flags": [
+              "Nyeri dada saat istirahat >20 menit",
+              "Nyeri dada disertai keringat dingin dan sesak berat",
+              "Hipotensi atau syok",
+              "Penurunan kesadaran"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: SEGERA rujuk: angina tidak stabil (nyeri saat istirahat, crescendo), curiga infark miokard akut, nyeri dada disertai ses",
+              "Diagnosis banding: Infark miokard akut (I21), GERD (K21), Kostokondritis (M94.0)",
+              "Terapi PPK: ISDN sublingual 5 mg sublingual saat nyeri dada; Aspirin 160-320 mg dosis loading kunyah (jika curiga ACS); Oksigen 2-4 L/menit nasal kanul jika SpO2 <94%"
+            ]
+          }
+        ],
+        "workingDiagnosis": {
+          "icd_x": "J18",
+          "nama": "Pneumonia, bronkopneumonia"
+        },
+        "input_data_state": {
+          "chief_complaint": "present",
+          "additional_complaint": "absent",
+          "vitals": "present",
+          "age": "present",
+          "gender": "present",
+          "allergies": "unknown"
+        },
+        "supportingExaminations": {
+          "laboratory": [],
+          "additional": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: Amoxicillin 500-1000 mg 3x sehari 5-7 hari",
+            "Pertimbangkan rujukan: Rujuk ke kardiolog untuk: evaluasi awal dan treadmill test, perburukan gejala, angina tidak terkontrol, curiga ACS, eval",
+            "Diagnosis banding: Angina pektoris tidak stabil (I20), GERD (K21), Kostokondritis (M94.0)",
+            "Terapi PPK: Aspirin 80 mg 1x sehari; Simvastatin 20 mg 1x malam hari; ISDN 5 mg 3x sehari atau sublingual saat nyeri",
+            "Pertimbangkan rujukan:  Rujukan horizontal bila fasilitas untuk pemeriksaan HIV tidak dapat dilakukan di layanan\nprimer.\n Rujukan vertikal bi"
+          ]
+        },
+        "pharmacotherapy": [
+          {
+            "nama_obat": "Parasetamol tablet 500 mg",
+            "dosis": "1 tablet (500mg)",
+            "aturan_pakai": "Sesudah makan",
+            "durasi": "3-30 hari sesuai evaluasi klinis",
+            "rationale": "Dipilih melalui reasoning intent \"symptom_control\" berbasis sindrom + ketersediaan formulary.",
+            "safety_check": "safe",
+            "contraindications": []
+          },
+          {
+            "nama_obat": "Vitamin B Kompleks",
+            "dosis": "1x1",
+            "aturan_pakai": "Sesudah makan",
+            "durasi": "30 hari",
+            "rationale": "Suplementasi vitamin B sebagai terapi suportif.",
+            "safety_check": "safe",
+            "contraindications": []
+          },
+          {
+            "nama_obat": "Vitamin C 100mg",
+            "dosis": "1x1",
+            "aturan_pakai": "Sesudah makan",
+            "durasi": "30 hari",
+            "rationale": "Antioksidan dan pendukung imunitas.",
+            "safety_check": "safe",
+            "contraindications": []
+          }
+        ],
+        "redFlags": [
+          "SpO2 < 90%",
+          "RR > 30x/menit",
+          "Penurunan kesadaran",
+          "Nyeri dada baru onset atau berubah pola (crescendo)",
+          "Nyeri dada saat istirahat >20 menit",
+          "Sesak nafas berat mendadak"
+        ],
+        "message": "Clinical reasoning tersedia dari KB matcher lokal."
+      },
+      "meta": {
+        "model_version": "IDE-V1-KB",
+        "is_local": true,
+        "is_mock": false
+      }
+    }
+  },
+  "chest-pain-no-vitals": {
+    "success": true,
+    "data": {
+      "diagnosis_suggestions": [
+        {
+          "rank": 1,
+          "icd_x": "A15",
+          "nama": "Tuberkulosis paru tanpa komplikasi",
+          "confidence": 0.5990624999999999,
+          "rationale": "HIV adalah Human Immunodeficiency Virus (HIV) yang menyerang sel-sel kekebalan tubuh.\nAIDS atau Acquired Immunodefficiency Syndrome adalah kumpulan gejala akibat penurunan\nkekebalan tubuh yang disebab...",
+          "red_flags": ["Hemoptisis masif", "Sesak napas berat", "Tanda gagal napas"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan:  Rujukan horizontal bila fasilitas untuk pemeriksaan HIV tidak dapat dilakukan di layanan\nprimer.\n Rujukan vertikal bi",
+            "Diagnosis banding: Mumps, Kista Duktus Tiroglosus, Kista Dermoid"
+          ]
+        },
+        {
+          "rank": 2,
+          "icd_x": "J18",
+          "nama": "Pneumonia, bronkopneumonia",
+          "confidence": 0.5920909090909091,
+          "rationale": "Infeksi parenkim paru yang menyebabkan konsolidasi",
+          "red_flags": ["SpO2 < 90%", "RR > 30x/menit", "Penurunan kesadaran"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: Amoxicillin 500-1000 mg 3x sehari 5-7 hari"
+          ]
+        },
+        {
+          "rank": 3,
+          "icd_x": "I25",
+          "nama": "Penyakit Jantung Iskemik Kronik",
+          "confidence": 0.5803846153846155,
+          "rationale": "Penyakit jantung iskemik kronik adalah penyakit jantung akibat insufisiensi suplai darah koroner yang berlangsung lama, biasanya akibat aterosklerosis. Pasien memiliki riwayat angina stabil, riwayat i...",
+          "red_flags": [
+            "Nyeri dada baru onset atau berubah pola (crescendo)",
+            "Nyeri dada saat istirahat >20 menit",
+            "Sesak nafas berat mendadak",
+            "Sinkop"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Rujuk ke kardiolog untuk: evaluasi awal dan treadmill test, perburukan gejala, angina tidak terkontrol, curiga ACS, eval",
+            "Diagnosis banding: Angina pektoris tidak stabil (I20), GERD (K21), Kostokondritis (M94.0)",
+            "Terapi PPK: Aspirin 80 mg 1x sehari; Simvastatin 20 mg 1x malam hari; ISDN 5 mg 3x sehari atau sublingual saat nyeri"
+          ]
+        },
+        {
+          "rank": 4,
+          "icd_x": "E78",
+          "nama": "Dislipidemia",
+          "confidence": 0.5700666666666666,
+          "rationale": "Dislipidemia adalah kelainan metabolisme lipid yang ditandai oleh peningkatan kolesterol total, LDL, trigliserida, dan/atau penurunan HDL. Merupakan faktor risiko utama penyakit kardiovaskular aterosk...",
+          "red_flags": [
+            "Trigliserida >500 mg/dL (risiko pankreatitis akut)",
+            "Dislipidemia familial berat pada usia muda",
+            "Riwayat PJK prematur di keluarga"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Rujuk jika: dislipidemia familial berat, tidak mencapai target LDL setelah terapi 3 bulan, intoleransi statin, TG >500 m",
+            "Diagnosis banding: Hipotiroid (dislipidemia sekunder), Sindrom nefrotik (dislipidemia sekunder), Diabetes mellitus (E11)",
+            "Terapi PPK: Simvastatin 20 mg 1x malam hari; Atorvastatin 20 mg 1x sehari; Gemfibrozil 300 mg 2x sehari (jika TG tinggi)"
+          ]
+        },
+        {
+          "rank": 5,
+          "icd_x": "I20",
+          "nama": "Angina Pektoris",
+          "confidence": 0.4805156249999999,
+          "rationale": "Angina pektoris adalah nyeri dada akibat iskemia miokard yang bersifat sementara. Angina stabil terjadi saat aktivitas dan hilang dengan istirahat atau nitrogliserin. Angina tidak stabil (nyeri saat i...",
+          "red_flags": [
+            "Nyeri dada saat istirahat >20 menit",
+            "Nyeri dada disertai keringat dingin dan sesak berat",
+            "Hipotensi atau syok",
+            "Penurunan kesadaran"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: SEGERA rujuk: angina tidak stabil (nyeri saat istirahat, crescendo), curiga infark miokard akut, nyeri dada disertai ses",
+            "Diagnosis banding: Infark miokard akut (I21), GERD (K21), Kostokondritis (M94.0)",
+            "Terapi PPK: ISDN sublingual 5 mg sublingual saat nyeri dada; Aspirin 160-320 mg dosis loading kunyah (jika curiga ACS); Oksigen 2-4 L/menit nasal kanul jika SpO2 <94%"
+          ]
+        }
+      ],
+      "medication_recommendations": [
+        {
+          "nama_obat": "Isosorbid dinitrat tablet sublingual 5 mg",
+          "dosis": "1 tablet SL, ulang tiap 5 menit bila perlu (maks 3 dosis)",
+          "aturan_pakai": "Jika diperlukan",
+          "durasi": "Saat nyeri dada akut",
+          "rationale": "Dipilih melalui reasoning intent \"antianginal\" berbasis sindrom + ketersediaan formulary.",
+          "safety_check": "safe",
+          "contraindications": [
+            "Hipotensi (SBP < 90 mmHg)",
+            "Penggunaan PDE5 inhibitor dalam 24-48 jam"
+          ]
+        },
+        {
+          "nama_obat": "Simvastatin tablet 20 mg",
+          "dosis": "1x1 malam",
+          "aturan_pakai": "Sesudah makan",
+          "durasi": "3-30 hari sesuai evaluasi klinis",
+          "rationale": "Dipilih melalui reasoning intent \"lipid_support\" berbasis sindrom + ketersediaan formulary.",
+          "safety_check": "safe",
+          "contraindications": []
+        }
+      ],
+      "alerts": [
+        {
+          "id": "alert-<volatile>",
+          "type": "vital_sign",
+          "severity": "medium",
+          "title": "Perhatian: Monitor Ketat Diperlukan",
+          "message": "Red flags: Hemoptisis masif; Sesak napas berat",
+          "action": "Monitor TTV serial, pertimbangkan pemeriksaan penunjang."
+        },
+        {
+          "id": "alert-<volatile>",
+          "type": "guideline",
+          "severity": "info",
+          "title": "Disclaimer",
+          "message": "Ini adalah alat bantu keputusan klinis. Keputusan akhir ada pada dokter."
+        }
+      ],
+      "validation_summary": {
+        "total_raw": 5,
+        "total_validated": 5,
+        "unverified_codes": [],
+        "warnings": [
+          "External LLM blocked: OpenAI belum dikonfigurasi: isi API key OpenAI di menu Pengaturan.. Using KB-only results."
+        ]
+      },
+      "clinical_reasoning": {
+        "status": "ok",
+        "differentialDiagnosis": [
+          {
+            "rank": 1,
+            "icd_x": "A15",
+            "nama": "Tuberkulosis paru tanpa komplikasi",
+            "confidence": 0.5990624999999999,
+            "rationale": "HIV adalah Human Immunodeficiency Virus (HIV) yang menyerang sel-sel kekebalan tubuh.\nAIDS atau Acquired Immunodefficiency Syndrome adalah kumpulan gejala akibat penurunan\nkekebalan tubuh yang disebab...",
+            "red_flags": ["Hemoptisis masif", "Sesak napas berat", "Tanda gagal napas"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan:  Rujukan horizontal bila fasilitas untuk pemeriksaan HIV tidak dapat dilakukan di layanan\nprimer.\n Rujukan vertikal bi",
+              "Diagnosis banding: Mumps, Kista Duktus Tiroglosus, Kista Dermoid"
+            ]
+          },
+          {
+            "rank": 2,
+            "icd_x": "J18",
+            "nama": "Pneumonia, bronkopneumonia",
+            "confidence": 0.5920909090909091,
+            "rationale": "Infeksi parenkim paru yang menyebabkan konsolidasi",
+            "red_flags": ["SpO2 < 90%", "RR > 30x/menit", "Penurunan kesadaran"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Terapi PPK: Amoxicillin 500-1000 mg 3x sehari 5-7 hari"
+            ]
+          },
+          {
+            "rank": 3,
+            "icd_x": "I25",
+            "nama": "Penyakit Jantung Iskemik Kronik",
+            "confidence": 0.5803846153846155,
+            "rationale": "Penyakit jantung iskemik kronik adalah penyakit jantung akibat insufisiensi suplai darah koroner yang berlangsung lama, biasanya akibat aterosklerosis. Pasien memiliki riwayat angina stabil, riwayat i...",
+            "red_flags": [
+              "Nyeri dada baru onset atau berubah pola (crescendo)",
+              "Nyeri dada saat istirahat >20 menit",
+              "Sesak nafas berat mendadak",
+              "Sinkop"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: Rujuk ke kardiolog untuk: evaluasi awal dan treadmill test, perburukan gejala, angina tidak terkontrol, curiga ACS, eval",
+              "Diagnosis banding: Angina pektoris tidak stabil (I20), GERD (K21), Kostokondritis (M94.0)",
+              "Terapi PPK: Aspirin 80 mg 1x sehari; Simvastatin 20 mg 1x malam hari; ISDN 5 mg 3x sehari atau sublingual saat nyeri"
+            ]
+          },
+          {
+            "rank": 4,
+            "icd_x": "E78",
+            "nama": "Dislipidemia",
+            "confidence": 0.5700666666666666,
+            "rationale": "Dislipidemia adalah kelainan metabolisme lipid yang ditandai oleh peningkatan kolesterol total, LDL, trigliserida, dan/atau penurunan HDL. Merupakan faktor risiko utama penyakit kardiovaskular aterosk...",
+            "red_flags": [
+              "Trigliserida >500 mg/dL (risiko pankreatitis akut)",
+              "Dislipidemia familial berat pada usia muda",
+              "Riwayat PJK prematur di keluarga"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: Rujuk jika: dislipidemia familial berat, tidak mencapai target LDL setelah terapi 3 bulan, intoleransi statin, TG >500 m",
+              "Diagnosis banding: Hipotiroid (dislipidemia sekunder), Sindrom nefrotik (dislipidemia sekunder), Diabetes mellitus (E11)",
+              "Terapi PPK: Simvastatin 20 mg 1x malam hari; Atorvastatin 20 mg 1x sehari; Gemfibrozil 300 mg 2x sehari (jika TG tinggi)"
+            ]
+          },
+          {
+            "rank": 5,
+            "icd_x": "I20",
+            "nama": "Angina Pektoris",
+            "confidence": 0.4805156249999999,
+            "rationale": "Angina pektoris adalah nyeri dada akibat iskemia miokard yang bersifat sementara. Angina stabil terjadi saat aktivitas dan hilang dengan istirahat atau nitrogliserin. Angina tidak stabil (nyeri saat i...",
+            "red_flags": [
+              "Nyeri dada saat istirahat >20 menit",
+              "Nyeri dada disertai keringat dingin dan sesak berat",
+              "Hipotensi atau syok",
+              "Penurunan kesadaran"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: SEGERA rujuk: angina tidak stabil (nyeri saat istirahat, crescendo), curiga infark miokard akut, nyeri dada disertai ses",
+              "Diagnosis banding: Infark miokard akut (I21), GERD (K21), Kostokondritis (M94.0)",
+              "Terapi PPK: ISDN sublingual 5 mg sublingual saat nyeri dada; Aspirin 160-320 mg dosis loading kunyah (jika curiga ACS); Oksigen 2-4 L/menit nasal kanul jika SpO2 <94%"
+            ]
+          }
+        ],
+        "workingDiagnosis": {
+          "icd_x": "A15",
+          "nama": "Tuberkulosis paru tanpa komplikasi"
+        },
+        "input_data_state": {
+          "chief_complaint": "present",
+          "additional_complaint": "absent",
+          "vitals": "unknown",
+          "age": "present",
+          "gender": "present",
+          "allergies": "unknown"
+        },
+        "supportingExaminations": {
+          "laboratory": [],
+          "additional": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan:  Rujukan horizontal bila fasilitas untuk pemeriksaan HIV tidak dapat dilakukan di layanan\nprimer.\n Rujukan vertikal bi",
+            "Diagnosis banding: Mumps, Kista Duktus Tiroglosus, Kista Dermoid",
+            "Terapi PPK: Amoxicillin 500-1000 mg 3x sehari 5-7 hari",
+            "Pertimbangkan rujukan: Rujuk ke kardiolog untuk: evaluasi awal dan treadmill test, perburukan gejala, angina tidak terkontrol, curiga ACS, eval",
+            "Diagnosis banding: Angina pektoris tidak stabil (I20), GERD (K21), Kostokondritis (M94.0)"
+          ]
+        },
+        "pharmacotherapy": [
+          {
+            "nama_obat": "Isosorbid dinitrat tablet sublingual 5 mg",
+            "dosis": "1 tablet SL, ulang tiap 5 menit bila perlu (maks 3 dosis)",
+            "aturan_pakai": "Jika diperlukan",
+            "durasi": "Saat nyeri dada akut",
+            "rationale": "Dipilih melalui reasoning intent \"antianginal\" berbasis sindrom + ketersediaan formulary.",
+            "safety_check": "safe",
+            "contraindications": [
+              "Hipotensi (SBP < 90 mmHg)",
+              "Penggunaan PDE5 inhibitor dalam 24-48 jam"
+            ]
+          },
+          {
+            "nama_obat": "Simvastatin tablet 20 mg",
+            "dosis": "1x1 malam",
+            "aturan_pakai": "Sesudah makan",
+            "durasi": "3-30 hari sesuai evaluasi klinis",
+            "rationale": "Dipilih melalui reasoning intent \"lipid_support\" berbasis sindrom + ketersediaan formulary.",
+            "safety_check": "safe",
+            "contraindications": []
+          }
+        ],
+        "redFlags": [
+          "Hemoptisis masif",
+          "Sesak napas berat",
+          "Tanda gagal napas",
+          "SpO2 < 90%",
+          "RR > 30x/menit",
+          "Penurunan kesadaran"
+        ],
+        "message": "Clinical reasoning tersedia dari KB matcher lokal."
+      },
+      "meta": {
+        "model_version": "IDE-V1-KB",
+        "is_local": true,
+        "is_mock": false
+      }
+    }
+  },
+  "headache": {
+    "success": true,
+    "data": {
+      "diagnosis_suggestions": [
+        {
+          "rank": 1,
+          "icd_x": "H52",
+          "nama": "Miopia ringan",
+          "confidence": 0.6428571428571429,
+          "rationale": "Miopia ringan adalahkelainan refraksi dimana sinar sejajar yang masuk ke mata dalam\nkeadaan istirahat (tanpa akomodasi) akan dibiaskan membentuk bayangan di depan retina.\nDapat dikoreksi dengan lensa ...",
+          "red_flags": ["Penurunan visus jauh bersamaan", "Nyeri mata mendadak", "Diplopia"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Kelainan refraksi yang progresif, tidak maju dengan koreksi dan tidak maju dengan pinhole."
+          ]
+        },
+        {
+          "rank": 2,
+          "icd_x": "J06",
+          "nama": "Infeksi Saluran Pernafasan Akut Atas (ISPA)",
+          "confidence": 0.621923076923077,
+          "rationale": "Infeksi Saluran Pernafasan Akut (ISPA) bagian atas adalah infeksi akut yang menyerang saluran pernafasan atas meliputi hidung, sinus paranasal, faring, dan laring. Penyebab tersering adalah virus (rhi...",
+          "red_flags": [
+            "Sesak nafas berat",
+            "Stridor",
+            "Demam tinggi >39°C tidak turun dengan antipiretik",
+            "Tanda dehidrasi berat pada anak"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Rujuk jika terdapat tanda komplikasi (otitis media, sinusitis berat, pneumonia), sesak nafas berat, atau tidak membaik s",
+            "Diagnosis banding: Faringitis (J02), Tonsilitis (J03), Influenza (J11)",
+            "Terapi PPK: Parasetamol 500 mg 3x sehari (dewasa); Ambroxol 30 mg 3x sehari; CTM (Chlorpheniramine) 4 mg 3x sehari"
+          ]
+        },
+        {
+          "rank": 3,
+          "icd_x": "A09",
+          "nama": "Disentri basiler, disentri amuba",
+          "confidence": 0.5592631578947368,
+          "rationale": "Kesesuaian gejala: sakit, kepala. Match score: 56%.",
+          "red_flags": [
+            "Haemolytic uremic syndrome (HUS).",
+            "Hiponatremia berat.",
+            "Hipoglikemia berat.",
+            "Susunan saraf pusat sampai terjadi ensefalopati.",
+            "Komplikasi intestinal seperti toksik megakolon, prolaps rektal, peritonitis dan perforasi"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Pada pasien dengan kasus berat perlu dirawat intensif dan konsultasi ke pelayanan sekunder\n(spesialis penyakit dalam).",
+            "Diagnosis banding: Infeksi Eschericiae coli, Infeksi Escherichia coli Enteroinvasive (EIEC), Infeksi Escherichia coli Enterohemoragik (EHEC)",
+            "Terapi PPK: metronidazol - Sesuai PPK"
+          ]
+        },
+        {
+          "rank": 4,
+          "icd_x": "B54",
+          "nama": "Malaria",
+          "confidence": 0.5588235294117647,
+          "rationale": "Merupakan suatu penyakit infeksi akut maupun kronik yang disebabkan oleh\nparasit Plasmodium yang menyerang eritrosit dan ditandai dengan ditemukannya\nbentuk aseksual dalam darah, dengan gejala demam, ...",
+          "red_flags": [
+            "Malaria serebral.",
+            "Anemia berat.",
+            "Gagal ginjal akut.",
+            "Edema paru atau ARDS (Acute Respiratory Distress Syndrome).",
+            "Hipoglikemia."
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan:  Malaria dengan komplikasi\n Malaria berat, namun pasien harus terlebih dahulu diberi dosis awal Artemisinin atau\nArtes",
+            "Diagnosis banding: Demam Dengue, Demam Tifoid, Leptospirosis",
+            "Terapi PPK: Doksisiklin - Sesuai PPK"
+          ]
+        },
+        {
+          "rank": 5,
+          "icd_x": "G43",
+          "nama": "Migren",
+          "confidence": 0.5159,
+          "rationale": "Migren adalah suatu istilah yang digunakan untuk nyeri kepala primer dengan kualitas\nvaskular (berdenyut), diawali unilateral yang diikuti oleh mual, fotofobia, fonofobia,\ngangguan tidur dan depresi. ...",
+          "red_flags": [
+            "Stroke iskemik dapat terjadi sebagai komplikasi yang jarang namun sangat serius dari",
+            "Hal ini dipengaruhi oleh faktor risiko seperti aura, jenis kelamin wanita,",
+            "2. Pada migren komplikata dapat menyebabkan hemiparesis."
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Pasien perlu dirujuk jika migren terus berlanjut dan tidak hilang dengan pengobatan\nanalgesik non-spesifik. Pasien diruj",
+            "Diagnosis banding: Arteriovenous Malformations, Atypical Facial Pain, Cerebral Aneurysms"
+          ]
+        }
+      ],
+      "medication_recommendations": [],
+      "alerts": [
+        {
+          "id": "alert-<volatile>",
+          "type": "guideline",
+          "severity": "info",
+          "title": "Disclaimer",
+          "message": "Ini adalah alat bantu keputusan klinis. Keputusan akhir ada pada dokter."
+        }
+      ],
+      "validation_summary": {
+        "total_raw": 5,
+        "total_validated": 5,
+        "unverified_codes": [],
+        "warnings": [
+          "External LLM blocked: OpenAI belum dikonfigurasi: isi API key OpenAI di menu Pengaturan.. Using KB-only results."
+        ]
+      },
+      "clinical_reasoning": {
+        "status": "ok",
+        "differentialDiagnosis": [
+          {
+            "rank": 1,
+            "icd_x": "H52",
+            "nama": "Miopia ringan",
+            "confidence": 0.6428571428571429,
+            "rationale": "Miopia ringan adalahkelainan refraksi dimana sinar sejajar yang masuk ke mata dalam\nkeadaan istirahat (tanpa akomodasi) akan dibiaskan membentuk bayangan di depan retina.\nDapat dikoreksi dengan lensa ...",
+            "red_flags": ["Penurunan visus jauh bersamaan", "Nyeri mata mendadak", "Diplopia"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: Kelainan refraksi yang progresif, tidak maju dengan koreksi dan tidak maju dengan pinhole."
+            ]
+          },
+          {
+            "rank": 2,
+            "icd_x": "J06",
+            "nama": "Infeksi Saluran Pernafasan Akut Atas (ISPA)",
+            "confidence": 0.621923076923077,
+            "rationale": "Infeksi Saluran Pernafasan Akut (ISPA) bagian atas adalah infeksi akut yang menyerang saluran pernafasan atas meliputi hidung, sinus paranasal, faring, dan laring. Penyebab tersering adalah virus (rhi...",
+            "red_flags": [
+              "Sesak nafas berat",
+              "Stridor",
+              "Demam tinggi >39°C tidak turun dengan antipiretik",
+              "Tanda dehidrasi berat pada anak"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: Rujuk jika terdapat tanda komplikasi (otitis media, sinusitis berat, pneumonia), sesak nafas berat, atau tidak membaik s",
+              "Diagnosis banding: Faringitis (J02), Tonsilitis (J03), Influenza (J11)",
+              "Terapi PPK: Parasetamol 500 mg 3x sehari (dewasa); Ambroxol 30 mg 3x sehari; CTM (Chlorpheniramine) 4 mg 3x sehari"
+            ]
+          },
+          {
+            "rank": 3,
+            "icd_x": "A09",
+            "nama": "Disentri basiler, disentri amuba",
+            "confidence": 0.5592631578947368,
+            "rationale": "Kesesuaian gejala: sakit, kepala. Match score: 56%.",
+            "red_flags": [
+              "Haemolytic uremic syndrome (HUS).",
+              "Hiponatremia berat.",
+              "Hipoglikemia berat.",
+              "Susunan saraf pusat sampai terjadi ensefalopati.",
+              "Komplikasi intestinal seperti toksik megakolon, prolaps rektal, peritonitis dan perforasi"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: Pada pasien dengan kasus berat perlu dirawat intensif dan konsultasi ke pelayanan sekunder\n(spesialis penyakit dalam).",
+              "Diagnosis banding: Infeksi Eschericiae coli, Infeksi Escherichia coli Enteroinvasive (EIEC), Infeksi Escherichia coli Enterohemoragik (EHEC)",
+              "Terapi PPK: metronidazol - Sesuai PPK"
+            ]
+          },
+          {
+            "rank": 4,
+            "icd_x": "B54",
+            "nama": "Malaria",
+            "confidence": 0.5588235294117647,
+            "rationale": "Merupakan suatu penyakit infeksi akut maupun kronik yang disebabkan oleh\nparasit Plasmodium yang menyerang eritrosit dan ditandai dengan ditemukannya\nbentuk aseksual dalam darah, dengan gejala demam, ...",
+            "red_flags": [
+              "Malaria serebral.",
+              "Anemia berat.",
+              "Gagal ginjal akut.",
+              "Edema paru atau ARDS (Acute Respiratory Distress Syndrome).",
+              "Hipoglikemia."
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan:  Malaria dengan komplikasi\n Malaria berat, namun pasien harus terlebih dahulu diberi dosis awal Artemisinin atau\nArtes",
+              "Diagnosis banding: Demam Dengue, Demam Tifoid, Leptospirosis",
+              "Terapi PPK: Doksisiklin - Sesuai PPK"
+            ]
+          },
+          {
+            "rank": 5,
+            "icd_x": "G43",
+            "nama": "Migren",
+            "confidence": 0.5159,
+            "rationale": "Migren adalah suatu istilah yang digunakan untuk nyeri kepala primer dengan kualitas\nvaskular (berdenyut), diawali unilateral yang diikuti oleh mual, fotofobia, fonofobia,\ngangguan tidur dan depresi. ...",
+            "red_flags": [
+              "Stroke iskemik dapat terjadi sebagai komplikasi yang jarang namun sangat serius dari",
+              "Hal ini dipengaruhi oleh faktor risiko seperti aura, jenis kelamin wanita,",
+              "2. Pada migren komplikata dapat menyebabkan hemiparesis."
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: Pasien perlu dirujuk jika migren terus berlanjut dan tidak hilang dengan pengobatan\nanalgesik non-spesifik. Pasien diruj",
+              "Diagnosis banding: Arteriovenous Malformations, Atypical Facial Pain, Cerebral Aneurysms"
+            ]
+          }
+        ],
+        "workingDiagnosis": {
+          "icd_x": "H52",
+          "nama": "Miopia ringan"
+        },
+        "input_data_state": {
+          "chief_complaint": "present",
+          "additional_complaint": "absent",
+          "vitals": "unknown",
+          "age": "present",
+          "gender": "present",
+          "allergies": "unknown"
+        },
+        "supportingExaminations": {
+          "laboratory": [],
+          "additional": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Kelainan refraksi yang progresif, tidak maju dengan koreksi dan tidak maju dengan pinhole.",
+            "Pertimbangkan rujukan: Rujuk jika terdapat tanda komplikasi (otitis media, sinusitis berat, pneumonia), sesak nafas berat, atau tidak membaik s",
+            "Diagnosis banding: Faringitis (J02), Tonsilitis (J03), Influenza (J11)",
+            "Terapi PPK: Parasetamol 500 mg 3x sehari (dewasa); Ambroxol 30 mg 3x sehari; CTM (Chlorpheniramine) 4 mg 3x sehari",
+            "Pertimbangkan rujukan: Pada pasien dengan kasus berat perlu dirawat intensif dan konsultasi ke pelayanan sekunder\n(spesialis penyakit dalam)."
+          ]
+        },
+        "pharmacotherapy": [],
+        "redFlags": [
+          "Penurunan visus jauh bersamaan",
+          "Nyeri mata mendadak",
+          "Diplopia",
+          "Sesak nafas berat",
+          "Stridor",
+          "Demam tinggi >39°C tidak turun dengan antipiretik"
+        ],
+        "message": "Clinical reasoning tersedia dari KB matcher lokal."
+      },
+      "meta": {
+        "model_version": "IDE-V1-KB",
+        "is_local": true,
+        "is_mock": false
+      }
+    }
+  },
+  "sepsis-like-with-history": {
+    "success": true,
+    "data": {
+      "diagnosis_suggestions": [
+        {
+          "rank": 1,
+          "icd_x": "J18",
+          "nama": "Pneumonia, bronkopneumonia",
+          "confidence": 0.42365635441056365,
+          "rationale": "Infeksi parenkim paru yang menyebabkan konsolidasi",
+          "red_flags": ["SpO2 < 90%", "RR > 30x/menit", "Penurunan kesadaran"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: Amoxicillin 500-1000 mg 3x sehari 5-7 hari"
+          ]
+        },
+        {
+          "rank": 2,
+          "icd_x": "N12",
+          "nama": "Pielonefritis tanpa komplikasi",
+          "confidence": 0.2831694661923563,
+          "rationale": "HIV adalah Human Immunodeficiency Virus (HIV) yang menyerang sel-sel kekebalan tubuh.\nAIDS atau Acquired Immunodefficiency Syndrome adalah kumpulan gejala akibat penurunan\nkekebalan tubuh yang disebab...",
+          "red_flags": ["Sepsis urologis", "Abses ginjal", "Pielonefritis pada kehamilan"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan:  Rujukan horizontal bila fasilitas untuk pemeriksaan HIV tidak dapat dilakukan di layanan\nprimer.\n Rujukan vertikal bi",
+            "Diagnosis banding: Mumps, Kista Duktus Tiroglosus, Kista Dermoid"
+          ]
+        },
+        {
+          "rank": 3,
+          "icd_x": "J11",
+          "nama": "Influenza",
+          "confidence": 0.2800051336884664,
+          "rationale": "Influenza, sering dikenal dengan flu adalah penyakit menular disebabkan oleh virus RNA\nyaitu virus influenza A, B dan lebih jarang C. Virus influenza terus mengalami perubahan,\nsehingga dalam beberapa...",
+          "red_flags": ["Sesak napas atau dispnea", "Penurunan kesadaran", "Tanda pneumonia"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Diagnosis banding: Faringitis, Tonsilitis, Laringitis",
+            "Terapi PPK: parasetamol - Sesuai PPK; ibuprofen - Sesuai PPK; cetirizin - Sesuai PPK"
+          ]
+        },
+        {
+          "rank": 4,
+          "icd_x": "J45",
+          "nama": "Asma bronkial",
+          "confidence": 0.21928629150309037,
+          "rationale": "Asma bronkial adalah gangguan inflamasikronik saluran napas yang melibatkan banyak sel\ninflamasi dan mediator. Inflamasikronik menyebabkan peningkatan hiperesponsif jalan napas\nterhadap bermacam-macam...",
+          "red_flags": [
+            "Pneumotoraks.",
+            "Pneumomediastinum.",
+            "Gagalnapas.",
+            "Asmaresistenterhadap steroid.",
+            "obatan dan mengetahui kapanharusmemintapertolongandokter."
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: 1. Bila sering terjadi eksaserbasi.\n2. Padaserangan asma akut sedangdanberat.\n3. Asma dengan komplikasi.\nCatatan\nPersiap",
+            "Diagnosis banding: Obstruksi jalan napas., Bronkitis kronik., Bronkiektasis."
+          ]
+        },
+        {
+          "rank": 5,
+          "icd_x": "A46",
+          "nama": "Erisipelas",
+          "confidence": 0.21658931774175433,
+          "rationale": "Infeksi kulit superfisial oleh Streptococcus dengan keterlibatan limfatik",
+          "red_flags": [],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: Amoxicillin 500 mg 3x sehari 7-10 hari"
+          ]
+        }
+      ],
+      "medication_recommendations": [
+        {
+          "nama_obat": "Parasetamol tablet 500 mg",
+          "dosis": "1 tablet (500mg)",
+          "aturan_pakai": "Sesudah makan",
+          "durasi": "3-30 hari sesuai evaluasi klinis",
+          "rationale": "Dipilih melalui reasoning intent \"symptom_control\" berbasis sindrom + ketersediaan formulary.",
+          "safety_check": "safe",
+          "contraindications": []
+        },
+        {
+          "nama_obat": "Vitamin B Kompleks",
+          "dosis": "1x1",
+          "aturan_pakai": "Sesudah makan",
+          "durasi": "30 hari",
+          "rationale": "Suplementasi vitamin B sebagai terapi suportif.",
+          "safety_check": "safe",
+          "contraindications": []
+        },
+        {
+          "nama_obat": "Vitamin C 100mg",
+          "dosis": "1x1",
+          "aturan_pakai": "Sesudah makan",
+          "durasi": "30 hari",
+          "rationale": "Antioksidan dan pendukung imunitas.",
+          "safety_check": "safe",
+          "contraindications": []
+        }
+      ],
+      "alerts": [
+        {
+          "id": "alert-<volatile>",
+          "type": "red_flag",
+          "severity": "emergency",
+          "title": "SUSPEK SEPSIS - qSOFA Score 3/3",
+          "message": "RR 30 x/menit (>=22); Sistolik 85 mmHg (<=100); GCS 14 (<15)",
+          "icd_codes": ["A41.9", "R65.20"],
+          "action": "RUJUK SEGERA ke IGD RS. Pasang IV line, ambil kultur darah, berikan antibiotik empiris."
+        },
+        {
+          "id": "alert-<volatile>",
+          "type": "red_flag",
+          "severity": "high",
+          "title": "Perhatian: Rujukan Segera Direkomendasikan",
+          "message": "Red flags: SpO2 < 90%; RR > 30x/menit | Emergency red flag: SUSPEK SEPSIS - qSOFA Score 3/3",
+          "action": "Stabilisasi dan rujuk ke fasilitas yang lebih tinggi."
+        },
+        {
+          "id": "alert-<volatile>",
+          "type": "low_confidence",
+          "severity": "info",
+          "title": "Kepercayaan Rendah",
+          "message": "Saran diagnosis memiliki tingkat kepercayaan rendah. Pertimbangkan anamnesis tambahan."
+        },
+        {
+          "id": "alert-<volatile>",
+          "type": "guideline",
+          "severity": "info",
+          "title": "Disclaimer",
+          "message": "Ini adalah alat bantu keputusan klinis. Keputusan akhir ada pada dokter."
+        }
+      ],
+      "validation_summary": {
+        "total_raw": 5,
+        "total_validated": 5,
+        "unverified_codes": [],
+        "warnings": [
+          "External LLM blocked: OpenAI belum dikonfigurasi: isi API key OpenAI di menu Pengaturan.. Using KB-only results."
+        ]
+      },
+      "clinical_reasoning": {
+        "status": "ok",
+        "differentialDiagnosis": [
+          {
+            "rank": 1,
+            "icd_x": "J18",
+            "nama": "Pneumonia, bronkopneumonia",
+            "confidence": 0.42365635441056365,
+            "rationale": "Infeksi parenkim paru yang menyebabkan konsolidasi",
+            "red_flags": ["SpO2 < 90%", "RR > 30x/menit", "Penurunan kesadaran"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Terapi PPK: Amoxicillin 500-1000 mg 3x sehari 5-7 hari"
+            ]
+          },
+          {
+            "rank": 2,
+            "icd_x": "N12",
+            "nama": "Pielonefritis tanpa komplikasi",
+            "confidence": 0.2831694661923563,
+            "rationale": "HIV adalah Human Immunodeficiency Virus (HIV) yang menyerang sel-sel kekebalan tubuh.\nAIDS atau Acquired Immunodefficiency Syndrome adalah kumpulan gejala akibat penurunan\nkekebalan tubuh yang disebab...",
+            "red_flags": ["Sepsis urologis", "Abses ginjal", "Pielonefritis pada kehamilan"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan:  Rujukan horizontal bila fasilitas untuk pemeriksaan HIV tidak dapat dilakukan di layanan\nprimer.\n Rujukan vertikal bi",
+              "Diagnosis banding: Mumps, Kista Duktus Tiroglosus, Kista Dermoid"
+            ]
+          },
+          {
+            "rank": 3,
+            "icd_x": "J11",
+            "nama": "Influenza",
+            "confidence": 0.2800051336884664,
+            "rationale": "Influenza, sering dikenal dengan flu adalah penyakit menular disebabkan oleh virus RNA\nyaitu virus influenza A, B dan lebih jarang C. Virus influenza terus mengalami perubahan,\nsehingga dalam beberapa...",
+            "red_flags": ["Sesak napas atau dispnea", "Penurunan kesadaran", "Tanda pneumonia"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Diagnosis banding: Faringitis, Tonsilitis, Laringitis",
+              "Terapi PPK: parasetamol - Sesuai PPK; ibuprofen - Sesuai PPK; cetirizin - Sesuai PPK"
+            ]
+          },
+          {
+            "rank": 4,
+            "icd_x": "J45",
+            "nama": "Asma bronkial",
+            "confidence": 0.21928629150309037,
+            "rationale": "Asma bronkial adalah gangguan inflamasikronik saluran napas yang melibatkan banyak sel\ninflamasi dan mediator. Inflamasikronik menyebabkan peningkatan hiperesponsif jalan napas\nterhadap bermacam-macam...",
+            "red_flags": [
+              "Pneumotoraks.",
+              "Pneumomediastinum.",
+              "Gagalnapas.",
+              "Asmaresistenterhadap steroid.",
+              "obatan dan mengetahui kapanharusmemintapertolongandokter."
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: 1. Bila sering terjadi eksaserbasi.\n2. Padaserangan asma akut sedangdanberat.\n3. Asma dengan komplikasi.\nCatatan\nPersiap",
+              "Diagnosis banding: Obstruksi jalan napas., Bronkitis kronik., Bronkiektasis."
+            ]
+          },
+          {
+            "rank": 5,
+            "icd_x": "A46",
+            "nama": "Erisipelas",
+            "confidence": 0.21658931774175433,
+            "rationale": "Infeksi kulit superfisial oleh Streptococcus dengan keterlibatan limfatik",
+            "red_flags": [],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Terapi PPK: Amoxicillin 500 mg 3x sehari 7-10 hari"
+            ]
+          }
+        ],
+        "workingDiagnosis": {
+          "icd_x": "J18",
+          "nama": "Pneumonia, bronkopneumonia"
+        },
+        "input_data_state": {
+          "chief_complaint": "present",
+          "additional_complaint": "present",
+          "vitals": "present",
+          "age": "present",
+          "gender": "present",
+          "allergies": "unknown"
+        },
+        "supportingExaminations": {
+          "laboratory": [],
+          "additional": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: Amoxicillin 500-1000 mg 3x sehari 5-7 hari",
+            "Pertimbangkan rujukan:  Rujukan horizontal bila fasilitas untuk pemeriksaan HIV tidak dapat dilakukan di layanan\nprimer.\n Rujukan vertikal bi",
+            "Diagnosis banding: Mumps, Kista Duktus Tiroglosus, Kista Dermoid",
+            "Diagnosis banding: Faringitis, Tonsilitis, Laringitis",
+            "Terapi PPK: parasetamol - Sesuai PPK; ibuprofen - Sesuai PPK; cetirizin - Sesuai PPK"
+          ]
+        },
+        "pharmacotherapy": [
+          {
+            "nama_obat": "Parasetamol tablet 500 mg",
+            "dosis": "1 tablet (500mg)",
+            "aturan_pakai": "Sesudah makan",
+            "durasi": "3-30 hari sesuai evaluasi klinis",
+            "rationale": "Dipilih melalui reasoning intent \"symptom_control\" berbasis sindrom + ketersediaan formulary.",
+            "safety_check": "safe",
+            "contraindications": []
+          },
+          {
+            "nama_obat": "Vitamin B Kompleks",
+            "dosis": "1x1",
+            "aturan_pakai": "Sesudah makan",
+            "durasi": "30 hari",
+            "rationale": "Suplementasi vitamin B sebagai terapi suportif.",
+            "safety_check": "safe",
+            "contraindications": []
+          },
+          {
+            "nama_obat": "Vitamin C 100mg",
+            "dosis": "1x1",
+            "aturan_pakai": "Sesudah makan",
+            "durasi": "30 hari",
+            "rationale": "Antioksidan dan pendukung imunitas.",
+            "safety_check": "safe",
+            "contraindications": []
+          }
+        ],
+        "redFlags": [
+          "SpO2 < 90%",
+          "RR > 30x/menit",
+          "Penurunan kesadaran",
+          "Sepsis urologis",
+          "Abses ginjal",
+          "Pielonefritis pada kehamilan"
+        ],
+        "message": "Clinical reasoning tersedia dari KB matcher lokal."
+      },
+      "meta": {
+        "model_version": "IDE-V1-KB",
+        "is_local": true,
+        "is_mock": false
+      }
+    }
+  },
+  "appendicitis-like": {
+    "success": true,
+    "data": {
+      "diagnosis_suggestions": [
+        {
+          "rank": 1,
+          "icd_x": "B54",
+          "nama": "Malaria",
+          "confidence": 0.44455965886077903,
+          "rationale": "Merupakan suatu penyakit infeksi akut maupun kronik yang disebabkan oleh\nparasit Plasmodium yang menyerang eritrosit dan ditandai dengan ditemukannya\nbentuk aseksual dalam darah, dengan gejala demam, ...",
+          "red_flags": [
+            "Malaria serebral.",
+            "Anemia berat.",
+            "Gagal ginjal akut.",
+            "Edema paru atau ARDS (Acute Respiratory Distress Syndrome).",
+            "Hipoglikemia."
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan:  Malaria dengan komplikasi\n Malaria berat, namun pasien harus terlebih dahulu diberi dosis awal Artemisinin atau\nArtes",
+            "Diagnosis banding: Demam Dengue, Demam Tifoid, Leptospirosis",
+            "Terapi PPK: Doksisiklin - Sesuai PPK"
+          ]
+        },
+        {
+          "rank": 2,
+          "icd_x": "A09",
+          "nama": "Gastroenteritis (termasuk kolera, giardiasis)",
+          "confidence": 0.4129699038270083,
+          "rationale": "Peradangan saluran cerna dengan diare dan/atau muntah",
+          "red_flags": [
+            "Dehidrasi berat",
+            "Diare berdarah",
+            "Tidak bisa minum",
+            "Haemolytic uremic syndrome (HUS).",
+            "Hiponatremia berat.",
+            "Hipoglikemia berat.",
+            "Susunan saraf pusat sampai terjadi ensefalopati.",
+            "Komplikasi intestinal seperti toksik megakolon, prolaps rektal, peritonitis dan perforasi"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: metronidazol - Sesuai PPK",
+            "Kriteria Rujukan: Pada pasien dengan kasus berat perlu dirawat intensif dan konsultasi ke pelayanan sekunder\n(spesialis penyakit dalam)."
+          ]
+        },
+        {
+          "rank": 3,
+          "icd_x": "N70",
+          "nama": "Salpingitis",
+          "confidence": 0.3599717590809968,
+          "rationale": "Infeksi pada tuba fallopii, sering bagian dari PID",
+          "red_flags": ["Peritonitis", "Abses tubo-ovarian"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: Ceftriaxone 250 mg IM dosis tunggal; Doxycycline 100 mg 2x sehari 14 hari"
+          ]
+        },
+        {
+          "rank": 4,
+          "icd_x": "B15",
+          "nama": "Hepatitis A",
+          "confidence": 0.3572937122935609,
+          "rationale": "Hepatitis A adalahsebuahkondisipenyakitinfeksiakut di liver yang disebabkan oleh hepatitis\nA virus (HAV), sebuah virus RNA yang disebarkan melalui rute fecal oral. Periode inkubasi\n1 47\n\nrata-rata 28 ...",
+          "red_flags": [
+            "Hepatitis A Fulminan",
+            "Sirosis Hati",
+            "Ensefalopati Hepatik",
+            "Koagulopati"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan:  Penderita Hepatitis A dengan keluhan ikterik yang menetap tanpa disertai keluhan yang\nlain.\n Penderita Hepatitis A de",
+            "Diagnosis banding: Kolesistitis, Abseshepar, Sirrosishepar",
+            "Terapi PPK: Domperidon - Sesuai PPK; Omeprazol - Sesuai PPK; ibuprofen - Sesuai PPK"
+          ]
+        },
+        {
+          "rank": 5,
+          "icd_x": "T78",
+          "nama": "Alergi makanan",
+          "confidence": 0.32971102643481925,
+          "rationale": "- Alergi makanan adalah suatu respons normal terhadap makanan yang dicetuskan oleh\nsuatu reaksi yang spesifik didalam suatu sistem imun dan diekspresikan dalam berbagai\ngejala yang muncul dalam hitung...",
+          "red_flags": [
+            "Anafilaksis",
+            "Bronkospasme berat",
+            "Hipotensi",
+            "Henti jantung",
+            "Henti napas",
+            "Syok refrakter"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Pasien dirujuk apabila pemeriksaan uji kulit, uji provokasi dan eliminasi makanan terjadi\nreaksi anafilaksis",
+            "Terapi PPK: difenhidramin - Sesuai PPK; aminofilin - Sesuai PPK; Aminofilin - Sesuai PPK"
+          ]
+        }
+      ],
+      "medication_recommendations": [],
+      "alerts": [
+        {
+          "id": "alert-<volatile>",
+          "type": "vital_sign",
+          "severity": "medium",
+          "title": "Perhatian: Monitor Ketat Diperlukan",
+          "message": "Red flags: Malaria serebral.; Anemia berat.",
+          "action": "Monitor TTV serial, pertimbangkan pemeriksaan penunjang."
+        },
+        {
+          "id": "alert-<volatile>",
+          "type": "guideline",
+          "severity": "info",
+          "title": "Disclaimer",
+          "message": "Ini adalah alat bantu keputusan klinis. Keputusan akhir ada pada dokter."
+        }
+      ],
+      "validation_summary": {
+        "total_raw": 5,
+        "total_validated": 5,
+        "unverified_codes": [],
+        "warnings": [
+          "External LLM blocked: OpenAI belum dikonfigurasi: isi API key OpenAI di menu Pengaturan.. Using KB-only results."
+        ]
+      },
+      "clinical_reasoning": {
+        "status": "ok",
+        "differentialDiagnosis": [
+          {
+            "rank": 1,
+            "icd_x": "B54",
+            "nama": "Malaria",
+            "confidence": 0.44455965886077903,
+            "rationale": "Merupakan suatu penyakit infeksi akut maupun kronik yang disebabkan oleh\nparasit Plasmodium yang menyerang eritrosit dan ditandai dengan ditemukannya\nbentuk aseksual dalam darah, dengan gejala demam, ...",
+            "red_flags": [
+              "Malaria serebral.",
+              "Anemia berat.",
+              "Gagal ginjal akut.",
+              "Edema paru atau ARDS (Acute Respiratory Distress Syndrome).",
+              "Hipoglikemia."
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan:  Malaria dengan komplikasi\n Malaria berat, namun pasien harus terlebih dahulu diberi dosis awal Artemisinin atau\nArtes",
+              "Diagnosis banding: Demam Dengue, Demam Tifoid, Leptospirosis",
+              "Terapi PPK: Doksisiklin - Sesuai PPK"
+            ]
+          },
+          {
+            "rank": 2,
+            "icd_x": "A09",
+            "nama": "Gastroenteritis (termasuk kolera, giardiasis)",
+            "confidence": 0.4129699038270083,
+            "rationale": "Peradangan saluran cerna dengan diare dan/atau muntah",
+            "red_flags": [
+              "Dehidrasi berat",
+              "Diare berdarah",
+              "Tidak bisa minum",
+              "Haemolytic uremic syndrome (HUS).",
+              "Hiponatremia berat.",
+              "Hipoglikemia berat.",
+              "Susunan saraf pusat sampai terjadi ensefalopati.",
+              "Komplikasi intestinal seperti toksik megakolon, prolaps rektal, peritonitis dan perforasi"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Terapi PPK: metronidazol - Sesuai PPK",
+              "Kriteria Rujukan: Pada pasien dengan kasus berat perlu dirawat intensif dan konsultasi ke pelayanan sekunder\n(spesialis penyakit dalam)."
+            ]
+          },
+          {
+            "rank": 3,
+            "icd_x": "N70",
+            "nama": "Salpingitis",
+            "confidence": 0.3599717590809968,
+            "rationale": "Infeksi pada tuba fallopii, sering bagian dari PID",
+            "red_flags": ["Peritonitis", "Abses tubo-ovarian"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Terapi PPK: Ceftriaxone 250 mg IM dosis tunggal; Doxycycline 100 mg 2x sehari 14 hari"
+            ]
+          },
+          {
+            "rank": 4,
+            "icd_x": "B15",
+            "nama": "Hepatitis A",
+            "confidence": 0.3572937122935609,
+            "rationale": "Hepatitis A adalahsebuahkondisipenyakitinfeksiakut di liver yang disebabkan oleh hepatitis\nA virus (HAV), sebuah virus RNA yang disebarkan melalui rute fecal oral. Periode inkubasi\n1 47\n\nrata-rata 28 ...",
+            "red_flags": [
+              "Hepatitis A Fulminan",
+              "Sirosis Hati",
+              "Ensefalopati Hepatik",
+              "Koagulopati"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan:  Penderita Hepatitis A dengan keluhan ikterik yang menetap tanpa disertai keluhan yang\nlain.\n Penderita Hepatitis A de",
+              "Diagnosis banding: Kolesistitis, Abseshepar, Sirrosishepar",
+              "Terapi PPK: Domperidon - Sesuai PPK; Omeprazol - Sesuai PPK; ibuprofen - Sesuai PPK"
+            ]
+          },
+          {
+            "rank": 5,
+            "icd_x": "T78",
+            "nama": "Alergi makanan",
+            "confidence": 0.32971102643481925,
+            "rationale": "- Alergi makanan adalah suatu respons normal terhadap makanan yang dicetuskan oleh\nsuatu reaksi yang spesifik didalam suatu sistem imun dan diekspresikan dalam berbagai\ngejala yang muncul dalam hitung...",
+            "red_flags": [
+              "Anafilaksis",
+              "Bronkospasme berat",
+              "Hipotensi",
+              "Henti jantung",
+              "Henti napas",
+              "Syok refrakter"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: Pasien dirujuk apabila pemeriksaan uji kulit, uji provokasi dan eliminasi makanan terjadi\nreaksi anafilaksis",
+              "Terapi PPK: difenhidramin - Sesuai PPK; aminofilin - Sesuai PPK; Aminofilin - Sesuai PPK"
+            ]
+          }
+        ],
+        "workingDiagnosis": {
+          "icd_x": "B54",
+          "nama": "Malaria"
+        },
+        "input_data_state": {
+          "chief_complaint": "present",
+          "additional_complaint": "present",
+          "vitals": "present",
+          "age": "present",
+          "gender": "present",
+          "allergies": "unknown"
+        },
+        "supportingExaminations": {
+          "laboratory": [],
+          "additional": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan:  Malaria dengan komplikasi\n Malaria berat, namun pasien harus terlebih dahulu diberi dosis awal Artemisinin atau\nArtes",
+            "Diagnosis banding: Demam Dengue, Demam Tifoid, Leptospirosis",
+            "Terapi PPK: Doksisiklin - Sesuai PPK",
+            "Terapi PPK: metronidazol - Sesuai PPK",
+            "Kriteria Rujukan: Pada pasien dengan kasus berat perlu dirawat intensif dan konsultasi ke pelayanan sekunder\n(spesialis penyakit dalam)."
+          ]
+        },
+        "pharmacotherapy": [],
+        "redFlags": [
+          "Malaria serebral.",
+          "Anemia berat.",
+          "Gagal ginjal akut.",
+          "Edema paru atau ARDS (Acute Respiratory Distress Syndrome).",
+          "Hipoglikemia.",
+          "Dehidrasi berat"
+        ],
+        "message": "Clinical reasoning tersedia dari KB matcher lokal."
+      },
+      "meta": {
+        "model_version": "IDE-V1-KB",
+        "is_local": true,
+        "is_mock": false
+      }
+    }
+  },
+  "hypertension-headache-with-history": {
+    "success": true,
+    "data": {
+      "diagnosis_suggestions": [
+        {
+          "rank": 1,
+          "icd_x": "I10",
+          "nama": "Hipertensi esensial",
+          "confidence": 0.586145530080804,
+          "rationale": "Peningkatan tekanan darah sistolik >= 140 mmHg dan/atau diastolik >= 90 mmHg",
+          "red_flags": ["TD > 180/120", "Nyeri dada", "Defisit neurologis"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: Amlodipine 5-10 mg sekali sehari"
+          ]
+        },
+        {
+          "rank": 2,
+          "icd_x": "H52",
+          "nama": "Miopia ringan",
+          "confidence": 0.4532810169458537,
+          "rationale": "Miopia ringan adalahkelainan refraksi dimana sinar sejajar yang masuk ke mata dalam\nkeadaan istirahat (tanpa akomodasi) akan dibiaskan membentuk bayangan di depan retina.\nDapat dikoreksi dengan lensa ...",
+          "red_flags": ["Penurunan visus jauh bersamaan", "Nyeri mata mendadak", "Diplopia"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Kelainan refraksi yang progresif, tidak maju dengan koreksi dan tidak maju dengan pinhole."
+          ]
+        },
+        {
+          "rank": 3,
+          "icd_x": "E11",
+          "nama": "Diabetes melitus tipe 2",
+          "confidence": 0.396015246570068,
+          "rationale": "Diabetes akibat resistensi insulin dan/atau defek sekresi insulin",
+          "red_flags": ["Hiperglikemia berat", "Hipoglikemia"],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: Metformin 500 mg 2-3x sehari bersama makan"
+          ]
+        },
+        {
+          "rank": 4,
+          "icd_x": "A09",
+          "nama": "Disentri basiler, disentri amuba",
+          "confidence": 0.33735045151066667,
+          "rationale": "Kesesuaian gejala: sakit, kepala, berat. Match score: 34%.",
+          "red_flags": [
+            "Haemolytic uremic syndrome (HUS).",
+            "Hiponatremia berat.",
+            "Hipoglikemia berat.",
+            "Susunan saraf pusat sampai terjadi ensefalopati.",
+            "Komplikasi intestinal seperti toksik megakolon, prolaps rektal, peritonitis dan perforasi"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Pada pasien dengan kasus berat perlu dirawat intensif dan konsultasi ke pelayanan sekunder\n(spesialis penyakit dalam).",
+            "Diagnosis banding: Infeksi Eschericiae coli, Infeksi Escherichia coli Enteroinvasive (EIEC), Infeksi Escherichia coli Enterohemoragik (EHEC)",
+            "Terapi PPK: metronidazol - Sesuai PPK"
+          ]
+        },
+        {
+          "rank": 5,
+          "icd_x": "G43",
+          "nama": "Migren",
+          "confidence": 0.2816601622443473,
+          "rationale": "Migren adalah suatu istilah yang digunakan untuk nyeri kepala primer dengan kualitas\nvaskular (berdenyut), diawali unilateral yang diikuti oleh mual, fotofobia, fonofobia,\ngangguan tidur dan depresi. ...",
+          "red_flags": [
+            "Stroke iskemik dapat terjadi sebagai komplikasi yang jarang namun sangat serius dari",
+            "Hal ini dipengaruhi oleh faktor risiko seperti aura, jenis kelamin wanita,",
+            "2. Pada migren komplikata dapat menyebabkan hemiparesis."
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Pasien perlu dirujuk jika migren terus berlanjut dan tidak hilang dengan pengobatan\nanalgesik non-spesifik. Pasien diruj",
+            "Diagnosis banding: Arteriovenous Malformations, Atypical Facial Pain, Cerebral Aneurysms"
+          ]
+        }
+      ],
+      "medication_recommendations": [
+        {
+          "nama_obat": "Amlodipin tablet 10 mg",
+          "dosis": "1x1",
+          "aturan_pakai": "Sesudah makan",
+          "durasi": "3-30 hari sesuai evaluasi klinis",
+          "rationale": "Dipilih melalui reasoning intent \"bp_primary\" berbasis sindrom + ketersediaan formulary.",
+          "safety_check": "safe",
+          "contraindications": []
+        },
+        {
+          "nama_obat": "Captopril 25 mg",
+          "dosis": "2x1",
+          "aturan_pakai": "Sesudah makan",
+          "durasi": "3-30 hari sesuai evaluasi klinis",
+          "rationale": "Dipilih melalui reasoning intent \"bp_urgent_bridge\" berbasis sindrom + ketersediaan formulary.",
+          "safety_check": "caution",
+          "contraindications": ["Kehamilan", "Hiperkalemia signifikan"]
+        },
+        {
+          "nama_obat": "Lisinopril tablet 10 mg",
+          "dosis": "1x1",
+          "aturan_pakai": "Sesudah makan",
+          "durasi": "3-30 hari sesuai evaluasi klinis",
+          "rationale": "Dipilih melalui reasoning intent \"bp_secondary\" berbasis sindrom + ketersediaan formulary.",
+          "safety_check": "safe",
+          "contraindications": ["Kehamilan", "Hiperkalemia signifikan"]
+        }
+      ],
+      "alerts": [
+        {
+          "id": "alert-<volatile>",
+          "type": "vital_sign",
+          "severity": "medium",
+          "title": "Perhatian: Monitor Ketat Diperlukan",
+          "message": "Red flags: TD > 180/120; Nyeri dada",
+          "action": "Monitor TTV serial, pertimbangkan pemeriksaan penunjang."
+        },
+        {
+          "id": "alert-<volatile>",
+          "type": "guideline",
+          "severity": "info",
+          "title": "Disclaimer",
+          "message": "Ini adalah alat bantu keputusan klinis. Keputusan akhir ada pada dokter."
+        }
+      ],
+      "validation_summary": {
+        "total_raw": 5,
+        "total_validated": 5,
+        "unverified_codes": [],
+        "warnings": [
+          "External LLM blocked: OpenAI belum dikonfigurasi: isi API key OpenAI di menu Pengaturan.. Using KB-only results."
+        ]
+      },
+      "clinical_reasoning": {
+        "status": "ok",
+        "differentialDiagnosis": [
+          {
+            "rank": 1,
+            "icd_x": "I10",
+            "nama": "Hipertensi esensial",
+            "confidence": 0.586145530080804,
+            "rationale": "Peningkatan tekanan darah sistolik >= 140 mmHg dan/atau diastolik >= 90 mmHg",
+            "red_flags": ["TD > 180/120", "Nyeri dada", "Defisit neurologis"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Terapi PPK: Amlodipine 5-10 mg sekali sehari"
+            ]
+          },
+          {
+            "rank": 2,
+            "icd_x": "H52",
+            "nama": "Miopia ringan",
+            "confidence": 0.4532810169458537,
+            "rationale": "Miopia ringan adalahkelainan refraksi dimana sinar sejajar yang masuk ke mata dalam\nkeadaan istirahat (tanpa akomodasi) akan dibiaskan membentuk bayangan di depan retina.\nDapat dikoreksi dengan lensa ...",
+            "red_flags": ["Penurunan visus jauh bersamaan", "Nyeri mata mendadak", "Diplopia"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: Kelainan refraksi yang progresif, tidak maju dengan koreksi dan tidak maju dengan pinhole."
+            ]
+          },
+          {
+            "rank": 3,
+            "icd_x": "E11",
+            "nama": "Diabetes melitus tipe 2",
+            "confidence": 0.396015246570068,
+            "rationale": "Diabetes akibat resistensi insulin dan/atau defek sekresi insulin",
+            "red_flags": ["Hiperglikemia berat", "Hipoglikemia"],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Terapi PPK: Metformin 500 mg 2-3x sehari bersama makan"
+            ]
+          },
+          {
+            "rank": 4,
+            "icd_x": "A09",
+            "nama": "Disentri basiler, disentri amuba",
+            "confidence": 0.33735045151066667,
+            "rationale": "Kesesuaian gejala: sakit, kepala, berat. Match score: 34%.",
+            "red_flags": [
+              "Haemolytic uremic syndrome (HUS).",
+              "Hiponatremia berat.",
+              "Hipoglikemia berat.",
+              "Susunan saraf pusat sampai terjadi ensefalopati.",
+              "Komplikasi intestinal seperti toksik megakolon, prolaps rektal, peritonitis dan perforasi"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: Pada pasien dengan kasus berat perlu dirawat intensif dan konsultasi ke pelayanan sekunder\n(spesialis penyakit dalam).",
+              "Diagnosis banding: Infeksi Eschericiae coli, Infeksi Escherichia coli Enteroinvasive (EIEC), Infeksi Escherichia coli Enterohemoragik (EHEC)",
+              "Terapi PPK: metronidazol - Sesuai PPK"
+            ]
+          },
+          {
+            "rank": 5,
+            "icd_x": "G43",
+            "nama": "Migren",
+            "confidence": 0.2816601622443473,
+            "rationale": "Migren adalah suatu istilah yang digunakan untuk nyeri kepala primer dengan kualitas\nvaskular (berdenyut), diawali unilateral yang diikuti oleh mual, fotofobia, fonofobia,\ngangguan tidur dan depresi. ...",
+            "red_flags": [
+              "Stroke iskemik dapat terjadi sebagai komplikasi yang jarang namun sangat serius dari",
+              "Hal ini dipengaruhi oleh faktor risiko seperti aura, jenis kelamin wanita,",
+              "2. Pada migren komplikata dapat menyebabkan hemiparesis."
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: Pasien perlu dirujuk jika migren terus berlanjut dan tidak hilang dengan pengobatan\nanalgesik non-spesifik. Pasien diruj",
+              "Diagnosis banding: Arteriovenous Malformations, Atypical Facial Pain, Cerebral Aneurysms"
+            ]
+          }
+        ],
+        "workingDiagnosis": {
+          "icd_x": "I10",
+          "nama": "Hipertensi esensial"
+        },
+        "input_data_state": {
+          "chief_complaint": "present",
+          "additional_complaint": "present",
+          "vitals": "present",
+          "age": "present",
+          "gender": "present",
+          "allergies": "unknown"
+        },
+        "supportingExaminations": {
+          "laboratory": [],
+          "additional": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: Amlodipine 5-10 mg sekali sehari",
+            "Pertimbangkan rujukan: Kelainan refraksi yang progresif, tidak maju dengan koreksi dan tidak maju dengan pinhole.",
+            "Terapi PPK: Metformin 500 mg 2-3x sehari bersama makan"
+          ]
+        },
+        "pharmacotherapy": [
+          {
+            "nama_obat": "Amlodipin tablet 10 mg",
+            "dosis": "1x1",
+            "aturan_pakai": "Sesudah makan",
+            "durasi": "3-30 hari sesuai evaluasi klinis",
+            "rationale": "Dipilih melalui reasoning intent \"bp_primary\" berbasis sindrom + ketersediaan formulary.",
+            "safety_check": "safe",
+            "contraindications": []
+          },
+          {
+            "nama_obat": "Captopril 25 mg",
+            "dosis": "2x1",
+            "aturan_pakai": "Sesudah makan",
+            "durasi": "3-30 hari sesuai evaluasi klinis",
+            "rationale": "Dipilih melalui reasoning intent \"bp_urgent_bridge\" berbasis sindrom + ketersediaan formulary.",
+            "safety_check": "caution",
+            "contraindications": ["Kehamilan", "Hiperkalemia signifikan"]
+          },
+          {
+            "nama_obat": "Lisinopril tablet 10 mg",
+            "dosis": "1x1",
+            "aturan_pakai": "Sesudah makan",
+            "durasi": "3-30 hari sesuai evaluasi klinis",
+            "rationale": "Dipilih melalui reasoning intent \"bp_secondary\" berbasis sindrom + ketersediaan formulary.",
+            "safety_check": "safe",
+            "contraindications": ["Kehamilan", "Hiperkalemia signifikan"]
+          }
+        ],
+        "redFlags": [
+          "TD > 180/120",
+          "Nyeri dada",
+          "Defisit neurologis",
+          "Penurunan visus jauh bersamaan",
+          "Nyeri mata mendadak",
+          "Diplopia"
+        ],
+        "message": "Clinical reasoning tersedia dari KB matcher lokal."
+      },
+      "meta": {
+        "model_version": "IDE-V1-KB",
+        "is_local": true,
+        "is_mock": false
+      }
+    }
+  },
+  "pediatric-diarrhoea": {
+    "success": true,
+    "data": {
+      "diagnosis_suggestions": [
+        {
+          "rank": 1,
+          "icd_x": "A09",
+          "nama": "Gastroenteritis (termasuk kolera, giardiasis)",
+          "confidence": 0.49717948288564184,
+          "rationale": "Peradangan saluran cerna dengan diare dan/atau muntah",
+          "red_flags": [
+            "Dehidrasi berat",
+            "Diare berdarah",
+            "Tidak bisa minum",
+            "Haemolytic uremic syndrome (HUS).",
+            "Hiponatremia berat.",
+            "Hipoglikemia berat.",
+            "Susunan saraf pusat sampai terjadi ensefalopati.",
+            "Komplikasi intestinal seperti toksik megakolon, prolaps rektal, peritonitis dan perforasi"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: metronidazol - Sesuai PPK",
+            "Kriteria Rujukan: Pada pasien dengan kasus berat perlu dirawat intensif dan konsultasi ke pelayanan sekunder\n(spesialis penyakit dalam)."
+          ]
+        },
+        {
+          "rank": 2,
+          "icd_x": "T47",
+          "nama": "Keracunan makanan",
+          "confidence": 0.2911502934561328,
+          "rationale": "Keracunan makanan merupakan suatu kondisi gangguan pencernaan yang disebabkan oleh\nkonsumsi makanan atau air yang terkontaminasi dengan zat patogen dan atau bahan kimia,\nmisalnya Norovirus, Salmonella...",
+          "red_flags": [],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: 1. Gejala keracunan tidak berhenti setelah 3 hari ditangani dengan adekuat.\n2. Pasien mengalami perburukan.\nDirujuk ke l",
+            "Diagnosis banding: Intoleransi, Diare spesifik seperti disentri, kolera dan lain-lain.",
+            "Terapi PPK: oralit - Sesuai PPK"
+          ]
+        },
+        {
+          "rank": 3,
+          "icd_x": "T78",
+          "nama": "Alergi makanan",
+          "confidence": 0.24789632520216454,
+          "rationale": "- Alergi makanan adalah suatu respons normal terhadap makanan yang dicetuskan oleh\nsuatu reaksi yang spesifik didalam suatu sistem imun dan diekspresikan dalam berbagai\ngejala yang muncul dalam hitung...",
+          "red_flags": [
+            "Anafilaksis",
+            "Bronkospasme berat",
+            "Hipotensi",
+            "Henti jantung",
+            "Henti napas",
+            "Syok refrakter"
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan: Pasien dirujuk apabila pemeriksaan uji kulit, uji provokasi dan eliminasi makanan terjadi\nreaksi anafilaksis",
+            "Terapi PPK: difenhidramin - Sesuai PPK; aminofilin - Sesuai PPK; Aminofilin - Sesuai PPK"
+          ]
+        },
+        {
+          "rank": 4,
+          "icd_x": "B78",
+          "nama": "Strongiloidiasis",
+          "confidence": 0.24031696012279946,
+          "rationale": "Strongyloidiasis adalah penyakit kecacingan yang disebabkan oleh Strongyloides stercoralis,\ncacing yang biasanya hidup di kawasan tropic dan subtropik. Sekitar 300 juta orang\ndiperkirakan terkena peny...",
+          "red_flags": ["Hiperinfeksi pada imunodefisiensi", "Sepsis gram negatif"],
+          "recommended_actions": ["Lakukan pemeriksaan fisik terarah dan monitoring TTV serial"]
+        },
+        {
+          "rank": 5,
+          "icd_x": "B54",
+          "nama": "Malaria",
+          "confidence": 0.2371586968174773,
+          "rationale": "Merupakan suatu penyakit infeksi akut maupun kronik yang disebabkan oleh\nparasit Plasmodium yang menyerang eritrosit dan ditandai dengan ditemukannya\nbentuk aseksual dalam darah, dengan gejala demam, ...",
+          "red_flags": [
+            "Malaria serebral.",
+            "Anemia berat.",
+            "Gagal ginjal akut.",
+            "Edema paru atau ARDS (Acute Respiratory Distress Syndrome).",
+            "Hipoglikemia."
+          ],
+          "recommended_actions": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Pertimbangkan rujukan:  Malaria dengan komplikasi\n Malaria berat, namun pasien harus terlebih dahulu diberi dosis awal Artemisinin atau\nArtes",
+            "Diagnosis banding: Demam Dengue, Demam Tifoid, Leptospirosis",
+            "Terapi PPK: Doksisiklin - Sesuai PPK"
+          ]
+        }
+      ],
+      "medication_recommendations": [],
+      "alerts": [
+        {
+          "id": "alert-<volatile>",
+          "type": "vital_sign",
+          "severity": "medium",
+          "title": "Perhatian: Monitor Ketat Diperlukan",
+          "message": "Red flags: Dehidrasi berat; Diare berdarah",
+          "action": "Monitor TTV serial, pertimbangkan pemeriksaan penunjang."
+        },
+        {
+          "id": "alert-<volatile>",
+          "type": "guideline",
+          "severity": "info",
+          "title": "Disclaimer",
+          "message": "Ini adalah alat bantu keputusan klinis. Keputusan akhir ada pada dokter."
+        }
+      ],
+      "validation_summary": {
+        "total_raw": 5,
+        "total_validated": 5,
+        "unverified_codes": [],
+        "warnings": [
+          "External LLM blocked: OpenAI belum dikonfigurasi: isi API key OpenAI di menu Pengaturan.. Using KB-only results."
+        ]
+      },
+      "clinical_reasoning": {
+        "status": "ok",
+        "differentialDiagnosis": [
+          {
+            "rank": 1,
+            "icd_x": "A09",
+            "nama": "Gastroenteritis (termasuk kolera, giardiasis)",
+            "confidence": 0.49717948288564184,
+            "rationale": "Peradangan saluran cerna dengan diare dan/atau muntah",
+            "red_flags": [
+              "Dehidrasi berat",
+              "Diare berdarah",
+              "Tidak bisa minum",
+              "Haemolytic uremic syndrome (HUS).",
+              "Hiponatremia berat.",
+              "Hipoglikemia berat.",
+              "Susunan saraf pusat sampai terjadi ensefalopati.",
+              "Komplikasi intestinal seperti toksik megakolon, prolaps rektal, peritonitis dan perforasi"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Terapi PPK: metronidazol - Sesuai PPK",
+              "Kriteria Rujukan: Pada pasien dengan kasus berat perlu dirawat intensif dan konsultasi ke pelayanan sekunder\n(spesialis penyakit dalam)."
+            ]
+          },
+          {
+            "rank": 2,
+            "icd_x": "T47",
+            "nama": "Keracunan makanan",
+            "confidence": 0.2911502934561328,
+            "rationale": "Keracunan makanan merupakan suatu kondisi gangguan pencernaan yang disebabkan oleh\nkonsumsi makanan atau air yang terkontaminasi dengan zat patogen dan atau bahan kimia,\nmisalnya Norovirus, Salmonella...",
+            "red_flags": [],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: 1. Gejala keracunan tidak berhenti setelah 3 hari ditangani dengan adekuat.\n2. Pasien mengalami perburukan.\nDirujuk ke l",
+              "Diagnosis banding: Intoleransi, Diare spesifik seperti disentri, kolera dan lain-lain.",
+              "Terapi PPK: oralit - Sesuai PPK"
+            ]
+          },
+          {
+            "rank": 3,
+            "icd_x": "T78",
+            "nama": "Alergi makanan",
+            "confidence": 0.24789632520216454,
+            "rationale": "- Alergi makanan adalah suatu respons normal terhadap makanan yang dicetuskan oleh\nsuatu reaksi yang spesifik didalam suatu sistem imun dan diekspresikan dalam berbagai\ngejala yang muncul dalam hitung...",
+            "red_flags": [
+              "Anafilaksis",
+              "Bronkospasme berat",
+              "Hipotensi",
+              "Henti jantung",
+              "Henti napas",
+              "Syok refrakter"
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan: Pasien dirujuk apabila pemeriksaan uji kulit, uji provokasi dan eliminasi makanan terjadi\nreaksi anafilaksis",
+              "Terapi PPK: difenhidramin - Sesuai PPK; aminofilin - Sesuai PPK; Aminofilin - Sesuai PPK"
+            ]
+          },
+          {
+            "rank": 4,
+            "icd_x": "B78",
+            "nama": "Strongiloidiasis",
+            "confidence": 0.24031696012279946,
+            "rationale": "Strongyloidiasis adalah penyakit kecacingan yang disebabkan oleh Strongyloides stercoralis,\ncacing yang biasanya hidup di kawasan tropic dan subtropik. Sekitar 300 juta orang\ndiperkirakan terkena peny...",
+            "red_flags": ["Hiperinfeksi pada imunodefisiensi", "Sepsis gram negatif"],
+            "recommended_actions": ["Lakukan pemeriksaan fisik terarah dan monitoring TTV serial"]
+          },
+          {
+            "rank": 5,
+            "icd_x": "B54",
+            "nama": "Malaria",
+            "confidence": 0.2371586968174773,
+            "rationale": "Merupakan suatu penyakit infeksi akut maupun kronik yang disebabkan oleh\nparasit Plasmodium yang menyerang eritrosit dan ditandai dengan ditemukannya\nbentuk aseksual dalam darah, dengan gejala demam, ...",
+            "red_flags": [
+              "Malaria serebral.",
+              "Anemia berat.",
+              "Gagal ginjal akut.",
+              "Edema paru atau ARDS (Acute Respiratory Distress Syndrome).",
+              "Hipoglikemia."
+            ],
+            "recommended_actions": [
+              "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+              "Pertimbangkan rujukan:  Malaria dengan komplikasi\n Malaria berat, namun pasien harus terlebih dahulu diberi dosis awal Artemisinin atau\nArtes",
+              "Diagnosis banding: Demam Dengue, Demam Tifoid, Leptospirosis",
+              "Terapi PPK: Doksisiklin - Sesuai PPK"
+            ]
+          }
+        ],
+        "workingDiagnosis": {
+          "icd_x": "A09",
+          "nama": "Gastroenteritis (termasuk kolera, giardiasis)"
+        },
+        "input_data_state": {
+          "chief_complaint": "present",
+          "additional_complaint": "present",
+          "vitals": "insufficient",
+          "age": "present",
+          "gender": "present",
+          "allergies": "unknown"
+        },
+        "supportingExaminations": {
+          "laboratory": [],
+          "additional": [
+            "Lakukan pemeriksaan fisik terarah dan monitoring TTV serial",
+            "Terapi PPK: metronidazol - Sesuai PPK",
+            "Kriteria Rujukan: Pada pasien dengan kasus berat perlu dirawat intensif dan konsultasi ke pelayanan sekunder\n(spesialis penyakit dalam).",
+            "Pertimbangkan rujukan: 1. Gejala keracunan tidak berhenti setelah 3 hari ditangani dengan adekuat.\n2. Pasien mengalami perburukan.\nDirujuk ke l",
+            "Diagnosis banding: Intoleransi, Diare spesifik seperti disentri, kolera dan lain-lain.",
+            "Terapi PPK: oralit - Sesuai PPK"
+          ]
+        },
+        "pharmacotherapy": [],
+        "redFlags": [
+          "Dehidrasi berat",
+          "Diare berdarah",
+          "Tidak bisa minum",
+          "Haemolytic uremic syndrome (HUS).",
+          "Hiponatremia berat.",
+          "Hipoglikemia berat."
+        ],
+        "message": "Clinical reasoning tersedia dari KB matcher lokal."
+      },
+      "meta": {
+        "model_version": "IDE-V1-KB",
+        "is_local": true,
+        "is_mock": false
+      }
+    }
+  },
+  "missing-chief-complaint": {
+    "success": true,
+    "data": {
+      "diagnosis_suggestions": [],
+      "medication_recommendations": [],
+      "alerts": [],
+      "clinical_reasoning": {
+        "status": "insufficient_data",
+        "differentialDiagnosis": [],
+        "workingDiagnosis": null,
+        "input_data_state": {
+          "chief_complaint": "absent",
+          "additional_complaint": "absent",
+          "vitals": "unknown",
+          "age": "present",
+          "gender": "present",
+          "allergies": "unknown"
+        },
+        "supportingExaminations": {
+          "laboratory": [],
+          "additional": []
+        },
+        "pharmacotherapy": [],
+        "redFlags": [],
+        "message": "Clinical reasoning is unavailable or insufficient for this case. Physician assessment remains required."
+      },
+      "meta": {
+        "model_version": "IDE-V1-fail-closed",
+        "is_local": true,
+        "is_mock": false
+      }
+    }
+  }
+}
