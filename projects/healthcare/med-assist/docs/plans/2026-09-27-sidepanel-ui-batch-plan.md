@@ -123,12 +123,12 @@ export function DisclosureHint() {
 ```tsx
       <details className="neu-card-inset p-4 md:p-5" data-testid="trajectory-simple-result">
         <summary className="cursor-pointer list-none">
-          <div className="mb-3 flex items-center justify-between gap-3">
+          <div className="flex items-center justify-between gap-3">
             <div className="ttv-label text-tertiary">Hasil</div>
             <DisclosureHint />
           </div>
         </summary>
-        {result}
+        <div className="mt-3">{result}</div>
       </details>
 ```
 
@@ -167,7 +167,8 @@ Run the Step 2 command, then the whole trajectory folder:
 `node scripts/pnpm.mjs exec vitest run components/clinical/trajectory components/clinical/ClinicalTrajectory.safety.test.tsx entrypoints/sidepanel/main.workbench-runtime.test.tsx`
 Expected: PASS. If an existing test asserts the exact text of a summary (e.g. `getByText('Evidence map')`), it still passes because the title text is unchanged.
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 5: Token check and commit** (Tasks 1, 3, 4 and 6 change rendered UI: run the
+  token-guard agent over the task's diff before committing and fix what it flags)
 
 ```bash
 git add components/clinical/trajectory/v2/DisclosureHint.tsx components/clinical/trajectory/v2/DisclosureHint.test.tsx components/clinical/trajectory/charts/chart-shared.tsx components/clinical/trajectory/v2/ClinicalTrajectoryV2.tsx components/clinical/trajectory/v2/ClinicalEvidenceDrawer.tsx components/clinical/trajectory/v2/ClinicalReasoningDifferentialPanel.tsx components/clinical/trajectory/v2/TrajectoryClinicalCorePanels.test.tsx entrypoints/sidepanel/style.css
@@ -400,7 +401,7 @@ Append to `style.css`:
 Run the Step 2 command and `node scripts/pnpm.mjs exec vitest run entrypoints/sidepanel/ui-authority.smoke.test.tsx`.
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 5: Token check and commit** (run the token-guard agent over the task's diff first)
 
 ```bash
 git add components/clinical/TTVInferenceUI.tsx components/clinical/TTVInferenceUI.forward-doctor.test.tsx entrypoints/sidepanel/style.css
@@ -505,7 +506,8 @@ headings, with one line noting the 2026-09-27 change.
 Run the Step 2 command and `node scripts/pnpm.mjs exec vitest run entrypoints/sidepanel`.
 Expected: PASS.
 
-- [ ] **Step 5: Commit** (message names the six replaced label assertions)
+- [ ] **Step 5: Token check and commit** (run the token-guard agent over the task's diff first;
+  the message names the six replaced label assertions)
 
 ```bash
 git add entrypoints/sidepanel/main.tsx entrypoints/sidepanel/main.emergency-dashboard.test.tsx entrypoints/sidepanel/style.css docs/specs/2026-07-07-emergency-verdict-card-design.md
@@ -542,7 +544,7 @@ test('toWhatsappDigits keeps digits and turns a leading 0 into 62', () => {
   assert.equal(toWhatsappDigits('  '), '')
 })
 
-test('buildDoctorContacts lists active doctors with a number, sorted by name', () => {
+test('buildDoctorContacts lists active doctors with a number, sorted by username', () => {
   const users = [
     { username: 'b', displayName: 'dr. Budi', profession: 'Dokter', status: 'ACTIVE' },
     { username: 'a', displayName: 'drg. Ani', profession: 'Dokter Gigi', status: 'ACTIVE' },
@@ -558,13 +560,13 @@ test('buildDoctorContacts lists active doctors with a number, sorted by name', (
     ['e', { whatsappNumber: '' }],
   ])
   assert.deepEqual(buildDoctorContacts(users, profiles), [
-    { id: 'b', name: 'dr. Budi', whatsappNumber: '6280000000002' },
     { id: 'a', name: 'drg. Ani', whatsappNumber: '6280000000001' },
+    { id: 'b', name: 'dr. Budi', whatsappNumber: '6280000000002' },
   ])
 })
 ```
 
-(Sorted by `name` with `localeCompare`: "dr. Budi" < "drg. Ani".)
+(Sorted by `id` = username, so the order does not depend on locale collation.)
 
 - [ ] **Step 2: Run to verify it fails**
 
@@ -602,7 +604,7 @@ export function buildDoctorContacts(
       whatsappNumber: toWhatsappDigits(profiles.get(user.username)?.whatsappNumber ?? ''),
     }))
     .filter(contact => contact.whatsappNumber.length > 0)
-    .sort((a, b) => a.name.localeCompare(b.name))
+    .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
 }
 ```
 
@@ -646,10 +648,14 @@ Add `'src/lib/server/doctor-contacts.test.ts',` to the file list in `scripts/tes
 Run (in medboard): the Step 2 command, then `pnpm run lint` (medboard's `lint` is `tsc --noEmit`).
 Expected: PASS, exit 0. If medboard dependencies are not installed, report it instead of installing.
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 5: Handoff and commit**
+
+Overwrite medboard's `.agents/HANDOFF.md` (read it first; keep its format): new route
+`GET /api/doctors/contacts` (crew auth, CORS), its test in the suite, deployment is Chief's, and
+crew profiles need a WhatsApp number filled for a doctor to appear.
 
 ```bash
-git add src/lib/server/doctor-contacts.ts src/lib/server/doctor-contacts.test.ts src/app/api/doctors/contacts/route.ts scripts/test-suite.ts
+git add src/lib/server/doctor-contacts.ts src/lib/server/doctor-contacts.test.ts src/app/api/doctors/contacts/route.ts scripts/test-suite.ts .agents/HANDOFF.md
 git commit -m "feat(medboard): list active doctors with a WhatsApp number for Assist (R2)"
 ```
 
@@ -910,7 +916,7 @@ Append to `style.css`:
 Run the Step 2 command and `node scripts/pnpm.mjs exec vitest run lib/api entrypoints/sidepanel`.
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 5: Token check and commit** (run the token-guard agent over the task's diff first)
 
 ```bash
 git add lib/api/bridge-client.ts lib/consult/whatsapp-link.ts lib/consult/whatsapp-link.test.ts entrypoints/sidepanel/components/SendToDoctorsButton.tsx entrypoints/sidepanel/components/SendToDoctorsButton.test.tsx entrypoints/sidepanel/main.tsx entrypoints/sidepanel/main.emergency-dashboard.test.tsx entrypoints/sidepanel/style.css project.contract.json
@@ -929,14 +935,27 @@ git commit -m "feat(med-assist): send a patient-free triage alert to a registere
 - Test: `lib/filler/filler-core.test.ts`
 
 **Interfaces:**
-- Produces: `normalizeStaffName(value: string): string`; `pickExactStaffMatch(itemTexts: string[], name: string): number` (index of the single match, else `-1`); `AutocompleteOptions.requireExactMatch?: boolean`; `MainWorldFieldMapping.requireExactMatch?: boolean`.
+- Produces: `normalizeStaffName(value: string): string`; `staffSearchTerm(value: string): string` (what is typed into the ePuskesmas search: leading titles and anything after the first comma removed, original case kept); `pickExactStaffMatch(itemTexts: string[], name: string): number` (index of the single match, else `-1`); `AutocompleteOptions.requireExactMatch?: boolean`; `MainWorldFieldMapping.requireExactMatch?: boolean`.
+- Why the search term: ePuskesmas searches staff server-side with the typed text. Typing a full
+  crew display name with titles and degrees ("dr. Budi Santoso, Sp.PD") returns no items, so the
+  exact-match step would never see candidates. Type the core name, then match the returned items
+  against the full name.
 
 - [ ] **Step 1: Write the failing tests** (`lib/filler/staff-match.test.ts`)
 
 ```ts
 import { describe, expect, it } from 'vitest';
 
-import { normalizeStaffName, pickExactStaffMatch } from './staff-match';
+import { normalizeStaffName, pickExactStaffMatch, staffSearchTerm } from './staff-match';
+
+describe('staffSearchTerm', () => {
+  it('types the core name without titles or degrees, keeping case', () => {
+    expect(staffSearchTerm('dr. Budi Santoso, Sp.PD')).toBe('Budi Santoso');
+    expect(staffSearchTerm('JOSEP ARIANTO, A.Md')).toBe('JOSEP ARIANTO');
+    expect(staffSearchTerm('Ns.  Dian   Sunardi')).toBe('Dian Sunardi');
+    expect(staffSearchTerm('dr. Ferdi Iskandar, S.H., M.Kn., C.LM., CMDC')).toBe('Ferdi Iskandar');
+  });
+});
 
 describe('normalizeStaffName', () => {
   it('drops titles, degrees after a comma, case and punctuation', () => {
@@ -1006,6 +1025,15 @@ export function normalizeStaffName(value: string): string {
   return name.replace(/\./g, ' ').replace(/\s+/g, ' ').trim();
 }
 
+const LEADING_TITLE_ANY_CASE = /^(dr|drg|ns|bd|apt|prof|ir|hj|h)\.?\s+/i;
+
+/** Text typed into the ePuskesmas staff search: the core name, case kept. */
+export function staffSearchTerm(value: string): string {
+  let term = (value.split(',')[0] ?? '').replace(/\s+/g, ' ').trim();
+  while (LEADING_TITLE_ANY_CASE.test(term)) term = term.replace(LEADING_TITLE_ANY_CASE, '');
+  return term;
+}
+
 function containsWords(haystack: string, needle: string): boolean {
   return ` ${haystack} `.includes(` ${needle} `);
 }
@@ -1035,6 +1063,7 @@ before comparing; with that, `'DIAN SUNARDI (Bidan)'` also normalises to `dian s
 `filler-core.ts`: add `requireExactMatch?: boolean;` to `AutocompleteOptions`; in
 `fillAutocomplete` destructure `requireExactMatch = false`. When it is true:
 - treat `allowFirstItemFallback` as false and `requireDropdownSelection` as true;
+- type `staffSearchTerm(safeValue)` instead of `safeValue` into the input;
 - choose the item with `pickExactStaffMatch(Array.from(items).map((i) => i.textContent ?? ''), safeValue)`
   instead of the `includes` loop;
 - before every `return { success: false, ... }` in this mode, set `input.value = ''` and
@@ -1045,7 +1074,9 @@ before comparing; with that, `'DIAN SUNARDI (Bidan)'` also normalises to `dian s
 sure the field objects it forwards keep that property.
 
 `inject.content.ts`: add `requireExactMatch?: boolean;` to the `fillFieldJQ` field type; import
-`pickExactStaffMatch` from `@/lib/filler/staff-match`. In `checkDropdown`, when
+`pickExactStaffMatch` and `staffSearchTerm` from `@/lib/filler/staff-match`. When
+`field.requireExactMatch` is true, the value put in the input and passed to
+`$el.autocomplete('search', ...)` is `staffSearchTerm(field.value)`. In `checkDropdown`, when
 `field.requireExactMatch` is true, compute
 `const index = pickExactStaffMatch($menu.toArray().map((el: HTMLElement) => $(el).text() || ''), field.value);`
 and click only when `index >= 0` (`$best = $menu.eq(index)`); otherwise keep polling. In the
@@ -1084,7 +1115,11 @@ git commit -m "feat(med-assist): select a practitioner in ePuskesmas only on an 
 - Produces: `resolveStaffField(profession: string | undefined): 'dokter' | 'perawat' | null`;
   `resolveTenagaMedisNames(staff: AssistStaff | null): { dokter_nama: string; perawat_nama: string }`
   with `export interface AssistStaff { name: string; profession: string }` (both in `tenaga-medis.ts`);
-  `withAssistStaff<T>(step: 'anamnesa' | 'diagnosa' | 'resep', payload: T, staff: AssistStaff | null): T` in `lib/rme/assist-staff.ts`;
+  `withStaffNames<T extends { tenaga_medis?: TenagaMedisNames }>(payload: T, staff: AssistStaff | null): T`
+  (anamnesa and diagnosa) and
+  `withResepStaff<T extends { ajax: { dokter: string; perawat: string } }>(payload: T, staff: AssistStaff | null): T`
+  (resep) in `lib/rme/assist-staff.ts`, with
+  `export interface TenagaMedisNames { dokter_nama: string; perawat_nama: string }` in `tenaga-medis.ts`;
   `assistStaffFromSession(session: AuthSession | null): AssistStaff | null` in `lib/rme/assist-staff.ts`.
 
 - [ ] **Step 1: Write the failing tests**
@@ -1144,7 +1179,7 @@ import { describe, expect, it } from 'vitest';
 
 import type { AuthSession } from '@/lib/api/auth-store';
 import { DOKTER_NAMA, PERAWAT_NAMA } from '@/lib/clinical/tenaga-medis';
-import { assistStaffFromSession, withAssistStaff } from './assist-staff';
+import { assistStaffFromSession, withResepStaff, withStaffNames } from './assist-staff';
 
 const crewSession = (profession: string, id = 'budi'): AuthSession => ({
   user: { id, username: id, name: 'dr. Budi', role: 'doctor', facilityId: 'F', facilityName: 'F', poli: profession },
@@ -1163,27 +1198,30 @@ describe('assistStaffFromSession', () => {
   });
 });
 
-describe('withAssistStaff', () => {
+describe('withStaffNames / withResepStaff', () => {
   const doctor = { name: 'dr. Budi', profession: 'Dokter' };
 
   it('overrides anamnesa tenaga_medis', () => {
-    const out = withAssistStaff('anamnesa', { tenaga_medis: { dokter_nama: DOKTER_NAMA, perawat_nama: PERAWAT_NAMA } }, doctor);
+    const out = withStaffNames({ tenaga_medis: { dokter_nama: DOKTER_NAMA, perawat_nama: PERAWAT_NAMA } }, doctor);
     expect(out.tenaga_medis).toEqual({ dokter_nama: 'dr. Budi', perawat_nama: PERAWAT_NAMA });
   });
 
-  it('overrides resep ajax dokter/perawat', () => {
-    const out = withAssistStaff('resep', { ajax: { ruangan: '', dokter: DOKTER_NAMA, perawat: PERAWAT_NAMA } }, doctor);
-    expect(out.ajax).toEqual({ ruangan: '', dokter: 'dr. Budi', perawat: PERAWAT_NAMA });
+  it('adds tenaga_medis to a diagnosa payload that has none', () => {
+    const payload: { icd_x: string; tenaga_medis?: { dokter_nama: string; perawat_nama: string } } = { icd_x: 'J18.9' };
+    expect(withStaffNames(payload, doctor)).toEqual({
+      icd_x: 'J18.9',
+      tenaga_medis: { dokter_nama: 'dr. Budi', perawat_nama: PERAWAT_NAMA },
+    });
   });
 
-  it('adds tenaga_medis to diagnosa', () => {
-    const out = withAssistStaff('diagnosa', { icd_x: 'J18.9' }, doctor);
-    expect(out).toEqual({ icd_x: 'J18.9', tenaga_medis: { dokter_nama: 'dr. Budi', perawat_nama: PERAWAT_NAMA } });
+  it('overrides resep ajax dokter/perawat', () => {
+    const out = withResepStaff({ ajax: { ruangan: '', dokter: DOKTER_NAMA, perawat: PERAWAT_NAMA } }, doctor);
+    expect(out.ajax).toEqual({ ruangan: '', dokter: 'dr. Budi', perawat: PERAWAT_NAMA });
   });
 
   it('returns the payload untouched without staff', () => {
     const payload = { ajax: { ruangan: '', dokter: DOKTER_NAMA, perawat: PERAWAT_NAMA } };
-    expect(withAssistStaff('resep', payload, null)).toBe(payload);
+    expect(withResepStaff(payload, null)).toBe(payload);
   });
 });
 ```
@@ -1248,42 +1286,70 @@ export function assistStaffFromSession(session: AuthSession | null): AssistStaff
   return { name: user.name, profession: user.poli ?? '' };
 }
 
-/** Writes the signed-in user's name into the step payload's practitioner fields. */
-export function withAssistStaff<T>(
-  step: 'anamnesa' | 'diagnosa' | 'resep',
+/** Anamnesa and diagnosa: the signed-in user's name in `tenaga_medis`. */
+export function withStaffNames<T extends { tenaga_medis?: TenagaMedisNames }>(
   payload: T,
   staff: AssistStaff | null
 ): T {
-  if (!staff || payload === null || typeof payload !== 'object') return payload;
+  if (!staff) return payload;
+  return { ...payload, tenaga_medis: resolveTenagaMedisNames(staff) };
+}
+
+/** Resep: the signed-in user's name in `ajax.dokter` / `ajax.perawat`. */
+export function withResepStaff<T extends { ajax: { dokter: string; perawat: string } }>(
+  payload: T,
+  staff: AssistStaff | null
+): T {
+  if (!staff) return payload;
   const names = resolveTenagaMedisNames(staff);
-  if (step === 'resep') {
-    const resep = payload as T & { ajax?: Record<string, string> };
-    return { ...resep, ajax: { ...resep.ajax, dokter: names.dokter_nama, perawat: names.perawat_nama } };
-  }
-  return { ...payload, tenaga_medis: names };
+  return { ...payload, ajax: { ...payload.ajax, dokter: names.dokter_nama, perawat: names.perawat_nama } };
 }
 ```
 
-(Check the exact export name of the session type in `lib/api/auth-store.ts`; use it.)
+Import `type TenagaMedisNames` alongside `resolveTenagaMedisNames`, and in `tenaga-medis.ts`
+export `TenagaMedisNames` and use it as the return type of `resolveTenagaMedisNames`.
+`AuthSession` is exported from `lib/api/auth-store.ts` (interface at line 52).
 
 `utils/types.ts`: add `tenaga_medis?: { dokter_nama: string; perawat_nama: string };` to the
 diagnosa fill payload interface (`DiagnosaFillPayload`).
 
-`background.ts`, right after line ~605
-`const hydratedPayload = await hydrateTenagaMedisPayload(step, payload, tabId);`:
+`background.ts`: add a function next to `hydrateTenagaMedisPayload` (~312) that uses the same
+per-step narrowing idiom that function already uses (the step payload is the generic
+`RMETransferStepPayload[TStep]`, so narrowing it per step needs the same
+`as NonNullable<RMETransferPayload[...]>` / `as RMETransferStepPayload[TStep]` pair the file uses
+today; state in the commit message that it mirrors `hydrateTenagaMedisPayload`):
 
 ```ts
-  const staffPayload =
-    step === 'anamnesa' || step === 'diagnosa' || step === 'resep'
-      ? withAssistStaff(step, hydratedPayload, assistStaffFromSession(await getSession()))
-      : hydratedPayload;
+async function applyAssistStaffPayload<TStep extends RMETransferStepStatus>(
+  step: TStep,
+  payload: RMETransferStepPayload[TStep]
+): Promise<RMETransferStepPayload[TStep]> {
+  if (!payload) return payload;
+  const staff = assistStaffFromSession(await getSession());
+  if (!staff) return payload;
+  if (step === 'anamnesa') {
+    const anamnesaPayload = payload as NonNullable<RMETransferPayload['anamnesa']>;
+    return withStaffNames(anamnesaPayload, staff) as RMETransferStepPayload[TStep];
+  }
+  if (step === 'diagnosa') {
+    const diagnosaPayload = payload as NonNullable<RMETransferPayload['diagnosa']>;
+    return withStaffNames(diagnosaPayload, staff) as RMETransferStepPayload[TStep];
+  }
+  if (step === 'resep') {
+    const resepPayload = payload as NonNullable<RMETransferPayload['resep']>;
+    return withResepStaff(resepPayload, staff) as RMETransferStepPayload[TStep];
+  }
+  return payload;
+}
 ```
 
-and put `encounter: staffPayload` in `fillMessage` (the only later use of `hydratedPayload`).
-Import `getSession` from `@/lib/api/auth-store` and the two helpers from
-`@/lib/rme/assist-staff`. If the step union has other members, keep them unchanged. If
-`withAssistStaff` needs a type argument to satisfy `RMETransferStepPayload[TStep]`, give it the
-type explicitly; do not cast.
+Right after `const hydratedPayload = await hydrateTenagaMedisPayload(step, payload, tabId);`
+(~605) add `const staffPayload = await applyAssistStaffPayload(step, hydratedPayload);` and put
+`encounter: staffPayload` in `fillMessage` (the only later use of `hydratedPayload`). Import
+`getSession` from `@/lib/api/auth-store` and `assistStaffFromSession`, `withStaffNames`,
+`withResepStaff` from `@/lib/rme/assist-staff`. If the resep payload's `ajax` type is not
+`{ dokter: string; perawat: string; ... }`, adjust the `withResepStaff` constraint to the real
+type rather than casting.
 
 Handlers:
 - `page-diagnosa.ts`: `const dokterName = payload.tenaga_medis?.dokter_nama || DOKTER_NAMA;` and
