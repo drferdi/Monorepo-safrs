@@ -17,8 +17,13 @@ Branch `feat/diagnosis-engine-interface` (from `migrate/healthcare`, not pushed,
   terlewat", legacy alerts kept, note "MIRA tidak tersedia" on failure. `VITE_MIRA_DEV_TOKEN` is
   sent as `Authorization: Bearer`. Manifest unchanged (`http://127.0.0.1:*/*` already allowed).
 
+- `da5e99cf`: MIRA header tests no longer read a developer's `.env.local` token.
+- `20a0a16d` (R2): the patient extractor reads the RM number from the "Data Pasien" table
+  ("No. eRM" followed by "No. RM Lama"); before, the side panel failed closed with "OCR gagal".
+  Not yet confirmed by Chief on a live RME page.
+
 Verification on 2026-09-27, all exit 0: lint (1 pre-existing warning); typecheck; test (147
-files, 1137 passing, 17 skipped; baseline 1109); build; `run:check`. Token gate PASS; SAFRS R3,
+files, 1138 passing, 17 skipped; baseline 1109); build; `run:check`. Token gate PASS; SAFRS R3,
 no R3 file outside the approved list.
 
 ## Blockers
