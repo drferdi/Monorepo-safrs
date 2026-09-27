@@ -618,10 +618,9 @@ describe('TTVInferenceUI forward consult', () => {
     ).not.toBeInTheDocument();
     expect(mockGetOnlineDoctors).not.toHaveBeenCalled();
     for (const actionName of ['Uplink', 'Doctor', 'Trajectory']) {
-      expect(screen.getByRole('button', { name: actionName })).toHaveAttribute(
-        'data-sound',
-        'button5.mp3'
-      );
+      const action = screen.getByRole('button', { name: actionName });
+      expect(action).toHaveAttribute('data-action-state', 'idle');
+      expect(action).toHaveAttribute('data-sound', 'button5.mp3');
     }
 
     fireEvent.change(screen.getByLabelText('Keluhan utama pasien'), {
@@ -645,6 +644,13 @@ describe('TTVInferenceUI forward consult', () => {
 
     await waitFor(() => expect(mockGetOnlineDoctors).toHaveBeenCalledTimes(1));
     await waitFor(() => expect(mockSendConsultToDoctor).toHaveBeenCalledTimes(1));
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'Doctor' })).toHaveAttribute(
+        'data-action-state',
+        'completed'
+      )
+    );
+    expect(screen.getByRole('button', { name: 'Doctor' })).toHaveTextContent('✓');
     expect(mockSendConsultToDoctor).toHaveBeenCalledWith(
       expect.objectContaining({
         target_doctor_id: 'doctor-1',
@@ -699,6 +705,11 @@ describe('TTVInferenceUI forward consult', () => {
 
     await waitFor(() => expect(onSentraUplink).toHaveBeenCalledTimes(1));
     expect(screen.getByRole('button', { name: 'Uplink' }).textContent).not.toBe('Uplink');
+    expect(screen.getByRole('button', { name: 'Uplink' })).toHaveAttribute(
+      'data-action-state',
+      'processing'
+    );
+    expect(screen.getByRole('button', { name: 'Uplink' })).toHaveAttribute('aria-busy', 'true');
 
     if (resolveUplink) {
       resolveUplink();
@@ -707,5 +718,34 @@ describe('TTVInferenceUI forward consult', () => {
     await waitFor(() =>
       expect(screen.getByRole('button', { name: 'Uplink' })).toHaveTextContent('UPLINKED')
     );
+    expect(screen.getByRole('button', { name: 'Uplink' })).toHaveAttribute(
+      'data-action-state',
+      'completed'
+    );
+  });
+
+  it('keeps a failed Uplink visibly retryable with its error message', async () => {
+    const onSentraUplink = vi.fn().mockRejectedValue(new Error('Uplink belum tersedia'));
+    render(
+      <TTVInferenceUI
+        patientName="Tn. Budi"
+        patientGender="L"
+        patientAge={45}
+        patientRM="RM-001"
+        patientBPJSStatus="aktif"
+        extractedSpecialConditions={[]}
+        extractedPregnancyRisk=""
+        extractedAllergies={[]}
+        onSentraUplink={onSentraUplink}
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Uplink' }));
+    await waitFor(() => expect(screen.getByText('Uplink belum tersedia')).toBeInTheDocument());
+    expect(screen.getByRole('button', { name: 'Uplink' })).toHaveAttribute(
+      'data-action-state',
+      'idle'
+    );
+    expect(screen.getByRole('button', { name: 'Uplink' })).not.toHaveAttribute('aria-busy');
   });
 });

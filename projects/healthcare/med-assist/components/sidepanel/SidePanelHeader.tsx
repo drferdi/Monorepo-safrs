@@ -5,6 +5,7 @@ import { ChevronDown } from 'lucide-react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import ThemeToggle from '../ui/ThemeToggle';
+import { ConsoleAmbientLights } from '../../entrypoints/sidepanel/components/ConsoleAmbientLights';
 
 import type { VitalWarningSlot } from '@/lib/clinical/vital-warning-selector';
 import type { TriageZone } from '@/lib/emergency-detector/triage-verdict';
@@ -203,6 +204,7 @@ export const SidePanelHeader: React.FC<SidePanelHeaderProps> = ({
             <em>Primum non nocere</em>
           </p>
         </div>
+        <ConsoleAmbientLights suspended={triageZone === 'merah'} />
       </div>
 
       {/* Engine tabs — paired with tabpanels in main.tsx (sidepanel-tabpanel-*) */}
@@ -257,11 +259,15 @@ export const SidePanelHeader: React.FC<SidePanelHeaderProps> = ({
         <button
           type="button"
           className={`engine-btn engine-tab ${isReady ? 'active' : ''}`}
-          aria-label={`SYN PATIENT: ${isReady ? 'Siap' : 'Sinkronisasi'}`}
+          aria-label={
+            demographicStatus === 'insufficient'
+              ? 'CEK ULANG: Sinkronisasi pasien'
+              : `SYN PATIENT: ${isReady ? 'Siap' : 'Sinkronisasi'}`
+          }
           onClick={() => void onRefreshPatient?.()}
           disabled={!onRefreshPatient || isLoadingPatient}
         >
-          SYN PATIENT
+          {demographicStatus === 'insufficient' ? 'CEK ULANG' : 'SYN PATIENT'}
         </button>
 
         <button

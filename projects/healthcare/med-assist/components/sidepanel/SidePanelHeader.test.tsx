@@ -11,6 +11,34 @@ vi.mock('../ui/ThemeToggle', () => ({
 import { SidePanelHeader } from './SidePanelHeader';
 
 describe('SidePanelHeader patient strip', () => {
+  it('shows CEK ULANG only for an insufficient patient sync and keeps refresh available', () => {
+    const onRefreshPatient = vi.fn();
+    const { rerender } = render(
+      <SidePanelHeader
+        activeEngine="vs"
+        onEngineChange={vi.fn()}
+        onRefreshPatient={onRefreshPatient}
+        demographicStatus="insufficient"
+      />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /CEK ULANG/i }));
+    expect(onRefreshPatient).toHaveBeenCalledTimes(1);
+
+    for (const demographicStatus of ['standby', 'syncing', 'ready'] as const) {
+      rerender(
+        <SidePanelHeader
+          activeEngine="vs"
+          onEngineChange={vi.fn()}
+          onRefreshPatient={onRefreshPatient}
+          demographicStatus={demographicStatus}
+        />
+      );
+      expect(screen.getByRole('button', { name: /SYN PATIENT/i })).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /CEK ULANG/i })).not.toBeInTheDocument();
+    }
+  });
+
   it('renders MEDLENS as the third engine tab instead of SETTING', () => {
     render(
       <SidePanelHeader

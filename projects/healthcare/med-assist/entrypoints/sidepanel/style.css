@@ -9616,3 +9616,151 @@ details[open] > summary .ct-disclosure-hint__close {
   font-size: 11px;
   color: var(--text-main);
 }
+
+/* Side-panel surface light: one source at the upper-left theme control. */
+:root {
+  --surface-light-x: 8%;
+  --surface-light-y: 6%;
+}
+
+.sentra-card {
+  --surface-shadow-shell: var(--neu-shadow-card-elevation);
+  --surface-shadow-control: var(--neu-shadow-chip);
+  --surface-shadow-inset: var(--neu-shadow-inset-bullet);
+}
+
+.sentra-card .action-bar--tri-tabs .engine-btn[data-action-state='idle'] {
+  box-shadow: var(--surface-shadow-control);
+}
+
+.sentra-card .vitals-grid--redesign .vital-item:not(.vital-item--ghost-active) {
+  box-shadow: var(--surface-shadow-inset);
+}
+
+html.theme-lamp-transition[data-theme-direction='to-light'] #root::after {
+  transform-origin: var(--surface-light-x) var(--surface-light-y);
+  background: radial-gradient(
+    circle farthest-corner at var(--surface-light-x) var(--surface-light-y),
+    rgba(255, 252, 246, 0.5) 0%,
+    rgba(255, 248, 238, 0.14) 32%,
+    transparent 58%
+  );
+}
+
+@keyframes theme-darkness-from-lamp {
+  0% {
+    clip-path: circle(0px at var(--surface-light-x) var(--surface-light-y));
+    opacity: 0;
+  }
+  12% { opacity: 0.88; }
+  88% {
+    clip-path: circle(135vmax at var(--surface-light-x) var(--surface-light-y));
+    opacity: 0.45;
+  }
+  100% {
+    clip-path: circle(150vmax at var(--surface-light-x) var(--surface-light-y));
+    opacity: 0;
+  }
+}
+
+html.theme-lamp-transition[data-theme-direction='to-dark'] #root::after {
+  clip-path: circle(0px at var(--surface-light-x) var(--surface-light-y));
+}
+
+.sentra-card:has(.action-bar--tri-tabs [data-action-state='processing']) {
+  outline: 1px solid var(--accent-border-soft);
+  outline-offset: -1px;
+}
+
+.sentra-card:has(.engine-btn--triage-merah) {
+  outline: 1px solid var(--sentra-danger-border);
+  outline-offset: -1px;
+}
+
+.sentra-card .action-bar--tri-tabs .engine-btn[data-action-state] {
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+.sentra-card .action-bar--tri-tabs .engine-btn[data-action-state='processing'] {
+  border-color: var(--accent-border-strong);
+  box-shadow: 0 0 0 1px var(--accent-border-soft), var(--surface-shadow-control);
+}
+
+.sentra-card .action-bar--tri-tabs .engine-btn[data-action-state='completed'] {
+  border-color: var(--sentra-safe-border);
+  box-shadow: inset 0 0 0 1px var(--sentra-safe-bg), var(--surface-shadow-control);
+}
+
+.sentra-card .action-bar--tri-tabs .engine-btn:disabled:not([data-action-state='processing']) {
+  box-shadow: none;
+}
+
+.clinical-form-stack {
+  container: clinical-form / inline-size;
+}
+
+.action-bar--tri-tabs .engine-btn {
+  min-height: 40px;
+}
+
+@container clinical-form (max-width: 340px) {
+  .vitals-grid--redesign .vitals-row--3col {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vitals-grid--redesign .vitals-row--3col > :nth-child(3) {
+    grid-column: 1 / -1;
+  }
+}
+
+.console-ambient-lights {
+  position: absolute;
+  top: 8px;
+  right: 0;
+  display: flex;
+  gap: 5px;
+  pointer-events: none;
+}
+
+.console-ambient-light {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  opacity: 0.4;
+  box-shadow: inset 0 1px 1px var(--neu-border);
+  transition: opacity 0.16s ease, box-shadow 0.16s ease;
+}
+
+.console-ambient-light[data-lit='true'] {
+  background: var(--text-main);
+  opacity: 0.85;
+  box-shadow: 0 0 5px var(--border-glow), 0 0 1px var(--text-main);
+}
+
+@media (max-width: 360px) {
+  .card-header .console-ambient-lights {
+    top: 2px;
+    right: -6px;
+    gap: 3px;
+  }
+}
+
+.sentra-card .vital-input:focus-visible,
+.sentra-card .action-bar--tri-tabs .engine-btn:focus-visible {
+  outline: 2px solid var(--text-input-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sentra-card .sentra-uplink--processing,
+  .sentra-card .vital-item--ghost-active::after,
+  .sentra-card .alert-timeline-preview__label--pulse {
+    animation: none;
+  }
+
+  .console-ambient-light,
+  .sentra-card .action-bar--tri-tabs .engine-btn[data-action-state] {
+    transition: none;
+  }
+}
