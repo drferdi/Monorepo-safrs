@@ -9,35 +9,35 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 
 Branch `feat/diagnosis-engine-interface` (from `migrate/healthcare`, not pushed, no PR).
 
-- Done earlier (`72a08801`..`d17ffa33`): legacy engine behind `lib/diagnosis-engine/`, MIRA
-  client off by default (flag `SENTRA_DIAGNOSIS_ENGINE`, shadow mode), JSON Schema contract,
-  benchmark export, ADR-005 (Proposed), `docs/ARCHITECTURE.md` §5.6.
-- New (`e07983ce`, R2): developer/admin-only MIRA planning-model picker in the side panel footer
-  (`components/sidepanel/MiraPlanModelPicker.tsx`, options `VITE_MIRA_PLAN_MODELS`, choice in
-  `browser.storage.local`), sent as `X-MIRA-Plan-Model` by `mira-engine.ts`. No protected
-  side-panel file and no R3 file changed (`style.css` only gains classes).
-- Service side (`D:\DEV\gafferverse\mira-system`, local commits, never pushed): allowlist
-  `MIRA_PLAN_MODEL_CHOICES` and the header (`bb3fe85`); default planning model for now
-  `google/gemini-3.1-flash-lite:nitro` via OpenRouter (one synthetic live step: 9.6 s, US$0.019).
+- Earlier (`72a08801`..`e07983ce`): legacy engine behind `lib/diagnosis-engine/`, JSON Schema
+  contract, ADR-005 (Proposed), developer/admin MIRA planning-model picker.
+- `b5b875a1` (R3, Chief approved): PII false positives fixed in `anonymizer.ts`.
+- `3e1b94d4` (R3, Chief approved): `SENTRA_DIAGNOSIS_ENGINE` = `legacy` (default) | `shadow` |
+  `mira`. `mira` shows MIRA's list in the existing diagnosis list, tagged "MIRA" / "MIRA · jangan
+  terlewat", legacy alerts kept, note "MIRA tidak tersedia" on failure. `VITE_MIRA_DEV_TOKEN` is
+  sent as `Authorization: Bearer`. Manifest unchanged (`http://127.0.0.1:*/*` already allowed).
 
-Verification on 2026-09-27, all exit 0: typecheck; lint (1 pre-existing warning); test (147
-files, 1109 passing, 17 skipped; baseline 1098); build; `run:check`. Token gate PASS; SAFRS R2.
+Verification on 2026-09-27, all exit 0: lint (1 pre-existing warning); typecheck; test (147
+files, 1137 passing, 17 skipped; baseline 1109); build; `run:check`. Token gate PASS; SAFRS R3,
+no R3 file outside the approved list.
 
 ## Blockers
 
-- PII false positives in `anonymizer.ts` (R3): a proposal waits for Chief's approval in the
-  archived session "Fix false positives in the med-assist PII patterns"; its worktree was removed
-  on Chief's order (no edits were lost), so the work would continue on this branch.
-- The client still cannot reach the service: no `Authorization` header, and real cases are not
-  synthetic, so the service (`MIRA_DATA_POLICY=synthetic-only`) refuses them by design.
-  Authentication and the data policy are Chief's decisions.
-- CORS: the client already sends `Content-Type: application/json`, so a preflight is needed
-  unless `host_permissions` covers the service; the new header does not change that. Undecided.
-- ADR-005 and Gate 1 cases and thresholds wait for Chief. Dead-code deletion waits for approval.
+- The service runs with `MIRA_DATA_POLICY=synthetic-only`, so it refuses real cases
+  (`DATA_POLICY`); in `mira` mode the panel then shows "MIRA tidak tersedia". The client does not
+  send `X-MIRA-Case-Origin`. Changing the data policy is Chief's decision.
+- The service's documented port is 8765; Chief's setup uses 8787, so start uvicorn with
+  `--port 8787` or set `VITE_MIRA_SERVICE_URL` to the port in use.
+- `.safrs/sensitive-paths.json` does not classify `lib/diagnosis-engine/**` as R3 although it now
+  decides what the physician sees; adding it is a verification-control change for Chief.
+- Confirmed chronic diagnoses share the five places ahead of the engine list and can push a MIRA
+  entry, including a cannot-miss one, out of view (`diagnosis-algorithm.ts` is R3, not changed).
+- ADR-005 and Gate 1 cases and thresholds wait for Chief.
 
 ## Next action
 
-- Chief: decide service authentication, `host_permissions` or CORS, and Gate 1; review ADR-005.
-- Load `.output/chrome-mv3-dev` in Chrome with `SENTRA_DIAGNOSIS_ENGINE=mira` and
-  `VITE_MIRA_PLAN_MODELS` set; check the footer picker as admin.
+- Chief: try `mira` with a synthetic case once the data policy allows it; decide the R3
+  registration for `lib/diagnosis-engine/**`; review ADR-005.
+- Put local settings in `.env.production.local` (gitignored; `wxt build` reads it, Vitest does
+  not), then build and reload the extension.
 - Repair or delete `vitest.clinical.config.ts` and `vitest.unit.config.ts` (broken since legacy).

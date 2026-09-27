@@ -3,6 +3,39 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-27 — Diagnosis engine modes legacy | shadow | mira; MIRA shown in the existing list
+
+- Decision (Chief, in chat, with R3 approval for `feature-flags.ts`, `run-diagnosis.ts` and
+  `lib/diagnosis-engine/`): `SENTRA_DIAGNOSIS_ENGINE` = `legacy` (default) | `shadow` (MIRA in the
+  background, not awaited, audited) | `mira` (MIRA's list shown; on failure, timeout or an empty
+  list the legacy list is shown with the note "MIRA tidak tersedia"). Only these exact values
+  switch; anything else is `legacy`.
+- In `mira` mode MIRA replaces only `diagnosis_suggestions` (likely, alternatives, then
+  cannotMiss, tagged "MIRA" / "MIRA · jangan terlewat"); alerts and every other field stay the
+  legacy engine's, and the safety layer is untouched. ICD codes stay as MIRA sent them, even when
+  the local knowledge base lacks them. Cannot-miss entries always get one of the five places.
+- This supersedes the 2026-09-27 lines "with `mira`, physicians still see only the legacy result"
+  and "showing MIRA in the side panel is a separate UI task" for the `mira` value only. `mira` is
+  off by default and meant for development; "the local knowledge base wins; the LLM is a reranker
+  only" still holds for physicians until Chief accepts ADR-005.
+- Development authentication (Chief): `VITE_MIRA_DEV_TOKEN` is sent as `Authorization: Bearer`
+  and must equal the service's `MIRA_DEV_TOKEN`. It is inlined into the build, so it is a
+  throwaway local value only; production authentication stays undecided. `host_permissions`
+  already allow `http://127.0.0.1:*/*`, so no manifest change was needed.
+- Evidence: commit `3e1b94d4`; full suite 1137 passing, 17 skipped (baseline 1109).
+
+## 2026-09-27 — PII pattern false positives fixed (R3, Chief approved)
+
+- Decision: `RM_NUMBER` needs "RM" / "No. RM" as a whole token plus an identifier with a digit;
+  `HONORIFIC_NAME` keeps the title case-insensitive but requires a capitalised name (all-caps
+  names only after dotted titles). "normal", "Ibu pasien", "Ibuprofen" and "RM: pasien baru" no
+  longer block payloads.
+- Accepted trade-off (the approved design's defaults): an all-caps name after "Ibu", a lower-case
+  name after a title ("tn. budi") and an RM number without digits are no longer caught. The same
+  patterns drive the redaction before the optional OpenAI reranker.
+- Evidence: commit `b5b875a1`; the new tests fail on the old patterns (2 failing) and pass on the
+  new ones.
+
 ## 2026-09-27 — MIRA planning model picked in the side panel by developers and admins
 
 - Decision (Chief chose each option): the MIRA planning model is picked in the side panel
