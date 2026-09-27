@@ -42,6 +42,7 @@ import {
 import { bootstrapThemeDocument } from '@/lib/theme-store';
 import { createLogger } from '@/utils/logger';
 import { sendMessage } from '@/utils/messaging';
+import { SendToDoctorsButton } from './components/SendToDoctorsButton';
 import { playSound } from '@/utils/sound';
 import type { RMETransferResult } from '@/utils/types';
 
@@ -1242,6 +1243,9 @@ export function EmergencyDashboard({
                 </>
               );
             })()}
+            {verdict.zone === 'merah' || verdict.zone === 'kuning' ? (
+              <SendToDoctorsButton zone={verdict.zone} />
+            ) : null}
           </>
         ) : (
           <div className="emg-verdict__empty">

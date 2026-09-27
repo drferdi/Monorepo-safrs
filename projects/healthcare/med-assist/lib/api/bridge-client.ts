@@ -1132,6 +1132,31 @@ export async function getOnlineDoctors(): Promise<OnlineDoctor[]> {
   return filterDoctorsForDisplay(res.doctors);
 }
 
+export interface DoctorContact {
+  id: string;
+  name: string;
+  whatsappNumber: string;
+}
+
+interface DoctorContactsResponse {
+  ok: boolean;
+  doctors: DoctorContact[];
+  error?: string;
+}
+
+/** Active doctors with a WhatsApp number from the crew portal; numbers are kept in memory only. */
+export async function getDoctorContacts(): Promise<DoctorContact[]> {
+  const authSource = await getBridgeAuthSource();
+  if (authSource === 'none') {
+    throw new AuthRequiredError(BRIDGE_TOKEN_REQUIRED_MESSAGE);
+  }
+  const res = await bridgeFetch<DoctorContactsResponse>('/api/doctors/contacts');
+  if (!res.ok) {
+    throw new Error(res.error || 'Gagal memuat kontak dokter dari server.');
+  }
+  return res.doctors;
+}
+
 /**
  * sendConsultToDoctor
  *

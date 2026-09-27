@@ -43,6 +43,9 @@ vi.mock('@/components/clinical/TTVInferenceUI', () => ({
 vi.mock('@/components/clinical/ClinicalDifferential', () => ({
   ClinicalDifferential: () => null,
 }));
+vi.mock('./components/SendToDoctorsButton', () => ({
+  SendToDoctorsButton: ({ zone }: { zone: string }) => <button>Send to Doctors {zone}</button>,
+}));
 
 import { EmergencyDashboard } from './main';
 
@@ -84,7 +87,7 @@ describe('EmergencyDashboard Verdict Card', () => {
   it('renders all 7 sections when the headline alert has a fully-populated protocol', () => {
     render(<EmergencyDashboard alerts={[baseAlert]} verdict={criticalVerdict} />);
 
-    expect(screen.getByText(/MERAH/i)).toBeInTheDocument();
+    expect(screen.getByText('MERAH')).toBeInTheDocument();
     expect(screen.getAllByText(baseAlert.reasoning).length).toBeGreaterThan(0);
     expect(screen.getByText(/Reevaluasi dalam 5 menit/i)).toBeInTheDocument();
   });
@@ -153,5 +156,12 @@ describe('EmergencyDashboard Verdict Card', () => {
 
     expect(screen.getByText(/HIJAU/i)).toBeInTheDocument();
     expect(screen.queryByText(/Lakukan sekarang|Reevaluasi/i)).not.toBeInTheDocument();
+  });
+
+  it('offers Send to Doctors only while triage is lit (merah or kuning)', () => {
+    const { rerender } = render(<EmergencyDashboard alerts={[baseAlert]} verdict={criticalVerdict} />);
+    expect(screen.getByText('Send to Doctors merah')).toBeInTheDocument();
+    rerender(<EmergencyDashboard alerts={[]} verdict={standbyVerdict} />);
+    expect(screen.queryByText(/Send to Doctors/)).toBeNull();
   });
 });
