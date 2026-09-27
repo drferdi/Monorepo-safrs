@@ -156,7 +156,10 @@ This is the main journey. Each step is **[Verified]** in code unless marked othe
 
 5. **Vital-sign triage runs in the panel** (`TTVInferenceUI.tsx`, `buildAlerts`, roughly lines
    860-1426). It combines emergency rules into a red, yellow or green verdict (see
-   [section 5](#5-the-clinical-brain-r3-chief-approval-needed-to-change)).
+   [section 5](#5-the-clinical-brain-r3-chief-approval-needed-to-change)). **[Doc only]** For a
+   red or yellow verdict, the emergency verdict card in `main.tsx` also offers a "Send to
+   Doctors" action that opens a `wa.me` link (zone only, no patient data) to an on-duty doctor
+   looked up from the crew dashboard (`.agents/DECISIONS.md`, 2026-09-27).
 6. **Diagnosis suggestions:**
    - The panel asks the background for suggestions (`ClinicalDifferential.tsx:694-706` →
      `background.ts:1728`). The background passes the request to the engine registry
@@ -186,8 +189,17 @@ background polls the crew dashboard at least every 30 seconds for pending fill j
 reports the result back (`bridge-poller.ts:169-208`). In plain terms, **the crew server can ask
 the extension to fill forms in the clinician's open ePuskesmas tab.**
 
-**[Verified]** If a form arrives without clinician names, fallback doctor and nurse names that
-are hard-coded in `lib/clinical/tenaga-medis.ts` are typed in (`page-anamnesa.ts:1501-1502`).
+**[Verified]** On this Uplink/transfer path only, `applyAssistStaffPayload`
+(`background.ts:365-382`) overwrites `tenaga_medis` (anamnesa, diagnosa) and `ajax.dokter` /
+`ajax.perawat` (resep) with the signed-in Assist user's name just before each fill step, using
+`resolveTenagaMedisNames` (`lib/clinical/tenaga-medis.ts:31-37`): the user's crew profession
+(Dokter, Dokter Gigi → doctor field; Perawat, Bidan, Apoteker, Triage Officer → nurse field)
+picks which field gets the live name; the other field, unknown professions, and local accounts
+keep the fallback constants `DOKTER_NAMA` / `PERAWAT_NAMA` (`tenaga-medis.ts:8-9`). Direct
+`fillAnamnesa` / `fillResep` messages outside the transfer path, and native messaging, still send
+the payload-mapper's constant names unchanged. ePuskesmas autocomplete for these fields requires
+a single exact name match (degree-suffix tolerant); zero or several matches leave the field
+empty rather than typing a wrong clinician in.
 
 ---
 

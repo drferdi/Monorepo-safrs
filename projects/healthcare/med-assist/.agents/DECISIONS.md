@@ -3,6 +3,27 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-27 — Send to Doctors opens a patient-free WhatsApp link
+
+- Decision (Chief): the alert is a `wa.me` link whose text names only the triage zone (merah/
+  kuning) — no patient name, RM, age, vitals, or alert title. Numbers come from medboard crew
+  profiles via `GET /api/doctors/contacts` (crew auth, active Dokter/Dokter Gigi with a number),
+  are held in memory only for the open list, and are never stored or logged. The button appears
+  only in the emergency card, only for merah/kuning zones; the action bar stays three buttons.
+- Evidence: commits `392b04df`, `92d5adb5` (medboard endpoint + route test), `f6a5f637`,
+  `5171abc8` (Assist button and message text).
+
+## 2026-09-27 — Emergency card and diagnosis page layout
+
+- Decision (Chief): the verdict card keeps seven sections with Indonesian headings (Mengapa
+  penting, Lakukan sekarang, Jangan lakukan, Pemicu rujukan, Evaluasi ulang, Dasar bukti). The
+  diagnosis page order is Clinical Finding → Diagnosis Banding → Diagnosis Utama → Triase &
+  Rujukan, with triage details folded into dropdowns (Saran, Alasan, Indikasi rujukan, Tanda
+  bahaya). Clinical Trajectory results are folded into a "Hasil" dropdown with green Open/Close
+  hints.
+- Evidence: commits `91181d9b`, `16e3a20b` (verdict card), `d30f6fac` (diagnosis page), `48b76c4e`
+  (trajectory "Hasil" dropdown).
+
 ## 2026-09-27 — RME practitioner names come from the signed-in Assist user
 
 - Decision (Chief): the "Dokter / Tenaga Medis" and "Perawat / Bidan / Nutrisionist /
