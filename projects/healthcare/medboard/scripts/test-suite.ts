@@ -10,6 +10,21 @@ type Suite = {
 
 const suites: Suite[] = [
   {
+    name: 'doctors-contacts-route',
+    aliases: ['doctors-contacts', 'send-to-doctors'],
+    command: process.execPath,
+    // Uses --import (not the tsx CLI wrapper) with --conditions react-server so the route's
+    // server-only import chain (crew-access-auth -> prisma) resolves under node --test.
+    args: [
+      '--conditions',
+      'react-server',
+      '--import',
+      'tsx',
+      '--test',
+      'src/app/api/doctors/contacts/route.test.ts',
+    ],
+  },
+  {
     name: 'auth-hardening',
     aliases: ['auth', 'security'],
     command: process.execPath,
