@@ -327,6 +327,11 @@ side panel ──getSuggestions──► background.ts:1728 ──► run-diagno
   outputs recorded _before_ the caller was switched (`__golden__/legacy-outputs.json`). Only
   timestamps, durations and generated alert ids are masked.
 - **MIRA contract** for the future Python service: JSON Schema plus examples in `contract/`.
+- **Planning-model choice (added 2026-09-27):** a developer or admin may pick the MIRA planning
+  model in the side panel footer (`components/sidepanel/MiraPlanModelPicker.tsx`; options from
+  `VITE_MIRA_PLAN_MODELS`, choice in `browser.storage.local`). The client sends it as the header
+  `X-MIRA-Plan-Model`, outside the JSON contract; the service accepts only its own allowlist.
+  The picker is hidden from physicians and when the MIRA engine is off.
 - **Benchmark (Gate 1):** `scripts/benchmark/run-legacy-engine.mjs` exports legacy results for
   case files in the MIRA case format.
   - **[Verified]** The legacy knowledge base matches Indonesian terms only, so cases must be

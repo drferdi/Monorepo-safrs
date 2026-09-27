@@ -3,6 +3,19 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-27 — MIRA planning model picked in the side panel by developers and admins
+
+- Decision (Chief chose each option): the MIRA planning model is picked in the side panel
+  (footer), only in development builds or by an admin; physicians never see the picker. The
+  choice travels as the header `X-MIRA-Plan-Model`, so request contract v1 is unchanged. The
+  reasoning service enforces its own allowlist (`MIRA_PLAN_MODEL_CHOICES`) and refuses any other
+  value before a model call (`MODEL_NOT_ALLOWED`).
+- Offered models (Chief's list): `google/gemini-3.1-flash-lite:nitro` (the service default for
+  now), `inception/mercury-2`, `openai/gpt-6-luna`.
+- Rationale: compare planning models on synthetic cases without rebuilding; the client-side role
+  check only hides the picker, the service allowlist is the control.
+- Evidence: commit `e07983ce`; 11 new tests; full suite 1109 passing, 17 skipped.
+
 ## 2026-09-27 — Diagnosis engine isolated behind an interface; MIRA slot off by default
 
 - Decision (Chief approved the direction and the Step A inventory): diagnosis ranking goes
