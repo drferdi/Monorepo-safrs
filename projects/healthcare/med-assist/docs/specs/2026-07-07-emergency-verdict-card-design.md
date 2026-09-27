@@ -9,6 +9,11 @@
 > awal" fix) — that spec's pure logic (`computeTriageVerdict`,
 > `resolveActionProtocolId`) was built and tested in isolation but never
 > wired into any UI file until this sub-project.
+> Update 2026-09-27: section headings render in Bahasa Indonesia — Mengapa
+> penting / Lakukan sekarang / Jangan lakukan / Pemicu rujukan / Evaluasi
+> ulang / Dasar bukti — each as its own `section.emg-verdict__section` block
+> under a new `.emg-verdict__header` (zone + title); section names below are
+> updated to match.
 
 ## Problem
 
@@ -21,8 +26,8 @@ connected to any UI — `grep` confirms zero references to either function
 outside their own test files.
 
 Chief's original clinical spec asked for a 7-part structure per finding:
-Verdict / Why this matters / Do now / Do not do / Refer trigger /
-Reassessment timer / Evidence gate. Applying all 7 sections to every single
+Verdict / Mengapa penting / Lakukan sekarang / Jangan lakukan / Pemicu rujukan /
+Evaluasi ulang / Dasar bukti. Applying all 7 sections to every single
 alert (including low-severity ones) would bury the most urgent action under
 repeated boilerplate — an alarm-fatigue risk. Confirmed with Chief: the
 7-section structure applies only to the **headline alert** (the single
@@ -57,7 +62,7 @@ format unchanged, undeleted, unhidden.
 
 **Out of scope (explicitly deferred):**
 
-- Reassessment timer as a real countdown/stateful timer — this sub-project
+- Evaluasi ulang as a real countdown/stateful timer — this sub-project
   uses a static text label per severity tier only (`critical` → "Reevaluasi
   dalam 5 menit", `high` → "15 menit", `warning` → "30 menit"). No new
   `setInterval`/timer state.
@@ -172,12 +177,12 @@ prop.
 | #   | Section            | Source                                                                                                                              | When missing                                                                                                                                  |
 | --- | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1   | Verdict            | `verdict.zone` (label: MERAH/KUNING/HIJAU/STANDBY) + `headlineAlert.title` + `.severity`                                            | `headlineAlert === null` → zone-only message ("Standby — belum ada data vital" / "Hijau — tidak ada temuan aktif"), sections 2–7 not rendered |
-| 2   | Why this matters   | `headlineAlert.reasoning`                                                                                                           | — (always present when headline exists)                                                                                                       |
-| 3   | Do now             | `getActionProtocol(headlineAlert.actionProtocolId)?.steps`, grouped by `phase` (A/B/C/D/E/other, in that order)                     | Protocol doesn't resolve → render `headlineAlert.recommendations` via the existing `formatRecommendationLines()` instead                      |
-| 4   | Do not do          | `.contraindications`                                                                                                                | Protocol resolves but has no contraindications, or doesn't resolve → sub-section omitted entirely (not rendered), never a placeholder         |
-| 5   | Refer trigger      | `.referralCriteria`                                                                                                                 | Protocol doesn't resolve → sub-section omitted                                                                                                |
-| 6   | Reassessment timer | Static text keyed on `headlineAlert.severity`: `critical` → "Reevaluasi dalam 5 menit", `high` → "15 menit", `warning` → "30 menit" | — (always derivable, severity is a required field)                                                                                            |
-| 7   | Evidence gate      | `.source`                                                                                                                           | Protocol doesn't resolve → sub-section omitted                                                                                                |
+| 2   | Mengapa penting   | `headlineAlert.reasoning`                                                                                                           | — (always present when headline exists)                                                                                                       |
+| 3   | Lakukan sekarang             | `getActionProtocol(headlineAlert.actionProtocolId)?.steps`, grouped by `phase` (A/B/C/D/E/other, in that order)                     | Protocol doesn't resolve → render `headlineAlert.recommendations` via the existing `formatRecommendationLines()` instead                      |
+| 4   | Jangan lakukan          | `.contraindications`                                                                                                                | Protocol resolves but has no contraindications, or doesn't resolve → sub-section omitted entirely (not rendered), never a placeholder         |
+| 5   | Pemicu rujukan      | `.referralCriteria`                                                                                                                 | Protocol doesn't resolve → sub-section omitted                                                                                                |
+| 6   | Evaluasi ulang | Static text keyed on `headlineAlert.severity`: `critical` → "Reevaluasi dalam 5 menit", `high` → "15 menit", `warning` → "30 menit" | — (always derivable, severity is a required field)                                                                                            |
+| 7   | Dasar bukti      | `.source`                                                                                                                           | Protocol doesn't resolve → sub-section omitted                                                                                                |
 
 `getActionProtocol` imports from `@/lib/emergency-detector/action-protocols`
 (already built, zero changes to that file's data).
@@ -250,11 +255,11 @@ buildAlerts() [unchanged gates, now fills actionProtocolId via resolveActionProt
   Verdict Card shows zone message only, sections 2–7 not rendered — no
   placeholder text like "no findings".
 - `getActionProtocol(id)` returns `undefined` (stale/typo'd id, or id itself
-  `undefined`) → Do now falls back to `recommendations`; Do not
-  do/Refer/Evidence sections omitted — identical fallback whether the id was
-  never set or doesn't resolve.
+  `undefined`) → Lakukan sekarang falls back to `recommendations`; Jangan
+  lakukan/Pemicu rujukan/Dasar bukti sections omitted — identical fallback
+  whether the id was never set or doesn't resolve.
 - `.contraindications` is `undefined` or `[]` even when the protocol resolves
-  (9 of 22 protocols) → Do not do section omitted, not shown as empty.
+  (9 of 22 protocols) → Jangan lakukan section omitted, not shown as empty.
 - Unknown/future `gate` string reaching `computeTriageVerdict` — already
   handled by that function (sorts last, never throws); no new handling
   needed here.
@@ -269,11 +274,11 @@ buildAlerts() [unchanged gates, now fills actionProtocolId via resolveActionProt
   bug (a lower-severity alert pushed before a critical one must not win).
 - `EmergencyDashboard` Verdict Card, four render states: (a) headline with a
   fully-populated protocol (steps + contraindications + referral + source
-  all render), (b) headline with a protocol missing contraindications (Do
-  not do section absent, other sections present), (c) headline with no
-  resolvable protocol (Do now shows recommendations, Do not
-  do/Refer/Evidence all absent), (d) `headlineAlert === null` (zone message
-  only, no sub-sections).
+  all render), (b) headline with a protocol missing contraindications
+  (Jangan lakukan section absent, other sections present), (c) headline with
+  no resolvable protocol (Lakukan sekarang shows recommendations, Jangan
+  lakukan/Pemicu rujukan/Dasar bukti all absent), (d) `headlineAlert ===
+  null` (zone message only, no sub-sections).
 - `SidePanelHeader`: tab label reads "TRIAGE"; correct modifier class for
   each of the 4 zone values, including no-modifier-and-no-dot for
   `'standby'`.
@@ -287,6 +292,6 @@ buildAlerts() [unchanged gates, now fills actionProtocolId via resolveActionProt
 - Exact amber/emerald CSS values are pulled from already-existing tokens in
   `style.css` (`.emg-entry__dot--high`'s amber, `--login-emerald`) rather
   than inventing new colors — confirmed during exploration, not guessed.
-- "Do now" phase grouping order is fixed A → B → C → D → E → other,
+- "Lakukan sekarang" phase grouping order is fixed A → B → C → D → E → other,
   matching `ABCDEPhase`'s natural reading order; no protocol has ever
   ordered steps differently in `action-protocols.ts`.

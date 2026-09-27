@@ -76,16 +76,34 @@ const baseAlert: ScreeningAlert = {
 
 describe('EmergencyDashboard Verdict Card', () => {
   it('renders all 7 sections when the headline alert has a fully-populated protocol', () => {
-    const verdict: TriageVerdict<ScreeningAlert> = {
+    const criticalVerdict: TriageVerdict<ScreeningAlert> = {
       zone: 'merah',
       headlineAlert: baseAlert,
       sortedAlerts: [baseAlert],
     };
-    render(<EmergencyDashboard alerts={[baseAlert]} verdict={verdict} />);
+    render(<EmergencyDashboard alerts={[baseAlert]} verdict={criticalVerdict} />);
 
     expect(screen.getByText(/MERAH/i)).toBeInTheDocument();
     expect(screen.getAllByText(baseAlert.reasoning).length).toBeGreaterThan(0);
     expect(screen.getByText(/Reevaluasi dalam 5 menit/i)).toBeInTheDocument();
+  });
+
+  it('renders each verdict section as its own block with an Indonesian heading', () => {
+    const criticalVerdict: TriageVerdict<ScreeningAlert> = {
+      zone: 'merah',
+      headlineAlert: baseAlert,
+      sortedAlerts: [baseAlert],
+    };
+    const { container } = render(<EmergencyDashboard alerts={[baseAlert]} verdict={criticalVerdict} />);
+    const header = container.querySelector('.emg-verdict__header');
+    expect(header?.textContent).toContain('MERAH');
+    expect(header?.textContent).toContain('Syok Hipovolemik');
+    const headings = Array.from(
+      container.querySelectorAll('.emg-verdict__section > h4.emg-verdict__heading')
+    ).map((h) => h.textContent);
+    expect(headings[0]).toBe('Mengapa penting');
+    expect(headings).toContain('Lakukan sekarang');
+    expect(headings).toContain('Evaluasi ulang');
   });
 
   it('omits Do not do when the resolved protocol has no contraindications', () => {
@@ -102,7 +120,7 @@ describe('EmergencyDashboard Verdict Card', () => {
     };
     render(<EmergencyDashboard alerts={[respFailureAlert]} verdict={verdict} />);
 
-    expect(screen.queryByText(/Do not do|Jangan lakukan/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Jangan lakukan/i)).not.toBeInTheDocument();
   });
 
   it('falls back to recommendations for Do now when no protocol resolves, and hides Refer/Evidence', () => {
@@ -125,8 +143,8 @@ describe('EmergencyDashboard Verdict Card', () => {
     expect(
       screen.getAllByText('Gunakan manset ukuran sesuai lingkar lengan.').length
     ).toBeGreaterThan(0);
-    expect(screen.queryByText(/Refer trigger|Rujuk bila/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/Evidence gate|Sumber:/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Pemicu rujukan/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Dasar bukti/i)).not.toBeInTheDocument();
   });
 
   it('shows only the zone message when there is no headline alert', () => {
@@ -138,6 +156,6 @@ describe('EmergencyDashboard Verdict Card', () => {
     render(<EmergencyDashboard alerts={[]} verdict={verdict} />);
 
     expect(screen.getByText(/HIJAU/i)).toBeInTheDocument();
-    expect(screen.queryByText(/Do now|Reevaluasi/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Lakukan sekarang|Reevaluasi/i)).not.toBeInTheDocument();
   });
 });

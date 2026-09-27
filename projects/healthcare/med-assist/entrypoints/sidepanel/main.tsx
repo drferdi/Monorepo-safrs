@@ -1170,22 +1170,26 @@ export function EmergencyDashboard({
   return (
     <div className="emg-timeline mt-4" data-testid="sentra-emergency-surface">
       <div className={`emg-verdict emg-verdict--${verdict.zone}`}>
-        <div className="emg-verdict__zone">{ZONE_LABEL[verdict.zone]}</div>
+        <div className="emg-verdict__header">
+          <div className="emg-verdict__zone">{ZONE_LABEL[verdict.zone]}</div>
+          {verdict.headlineAlert ? (
+            <div className="emg-verdict__title">{verdict.headlineAlert.title}</div>
+          ) : null}
+        </div>
         {verdict.headlineAlert ? (
           <>
-            <div className="emg-verdict__title">{verdict.headlineAlert.title}</div>
-            <div className="emg-verdict__why">
-              <span className="emg-verdict__label">Why this matters</span>
+            <section className="emg-verdict__why emg-verdict__section">
+              <h4 className="emg-verdict__label emg-verdict__heading">Mengapa penting</h4>
               <span>{verdict.headlineAlert.reasoning}</span>
-            </div>
+            </section>
             {(() => {
               const protocol = verdict.headlineAlert.actionProtocolId
                 ? getActionProtocol(verdict.headlineAlert.actionProtocolId)
                 : undefined;
               return (
                 <>
-                  <div className="emg-verdict__donow">
-                    <span className="emg-verdict__label">Do now</span>
+                  <section className="emg-verdict__donow emg-verdict__section">
+                    <h4 className="emg-verdict__label emg-verdict__heading">Lakukan sekarang</h4>
                     {protocol ? (
                       groupStepsByPhase(protocol.steps).map((group) => (
                         <div key={group.phase} className="emg-verdict__phase-group">
@@ -1204,36 +1208,36 @@ export function EmergencyDashboard({
                         ))}
                       </ul>
                     )}
-                  </div>
+                  </section>
                   {protocol?.contraindications && protocol.contraindications.length > 0 ? (
-                    <div className="emg-verdict__donot">
-                      <span className="emg-verdict__label">Do not do</span>
+                    <section className="emg-verdict__donot emg-verdict__section">
+                      <h4 className="emg-verdict__label emg-verdict__heading">Jangan lakukan</h4>
                       <ul>
                         {protocol.contraindications.map((item, i) => (
                           <li key={i}>{item}</li>
                         ))}
                       </ul>
-                    </div>
+                    </section>
                   ) : null}
                   {protocol ? (
-                    <div className="emg-verdict__refer">
-                      <span className="emg-verdict__label">Refer trigger</span>
+                    <section className="emg-verdict__refer emg-verdict__section">
+                      <h4 className="emg-verdict__label emg-verdict__heading">Pemicu rujukan</h4>
                       <ul>
                         {protocol.referralCriteria.map((item, i) => (
                           <li key={i}>{item}</li>
                         ))}
                       </ul>
-                    </div>
+                    </section>
                   ) : null}
-                  <div className="emg-verdict__timer">
-                    <span className="emg-verdict__label">Reassessment timer</span>
+                  <section className="emg-verdict__timer emg-verdict__section">
+                    <h4 className="emg-verdict__label emg-verdict__heading">Evaluasi ulang</h4>
                     <span>{REASSESSMENT_TIMER_BY_SEVERITY[verdict.headlineAlert.severity]}</span>
-                  </div>
+                  </section>
                   {protocol ? (
-                    <div className="emg-verdict__evidence">
-                      <span className="emg-verdict__label">Evidence gate</span>
+                    <section className="emg-verdict__evidence emg-verdict__section">
+                      <h4 className="emg-verdict__label emg-verdict__heading">Dasar bukti</h4>
                       <span>{protocol.source}</span>
-                    </div>
+                    </section>
                   ) : null}
                 </>
               );

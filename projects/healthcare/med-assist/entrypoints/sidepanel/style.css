@@ -9557,3 +9557,31 @@ details[open] > summary .ct-disclosure-hint__close {
   flex-shrink: 0;
   white-space: nowrap;
 }
+
+/* ── Emergency verdict card: header and section blocks (2026-09-27) ── */
+.emg-verdict__header {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.emg-verdict__section {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.emg-verdict__section:last-child {
+  border-bottom: none;
+}
+
+.emg-verdict__heading {
+  margin: 0 0 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
