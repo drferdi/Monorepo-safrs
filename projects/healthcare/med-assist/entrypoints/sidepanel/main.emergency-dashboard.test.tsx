@@ -75,12 +75,13 @@ const baseAlert: ScreeningAlert = {
 };
 
 describe('EmergencyDashboard Verdict Card', () => {
+  const criticalVerdict: TriageVerdict<ScreeningAlert> = {
+    zone: 'merah',
+    headlineAlert: baseAlert,
+    sortedAlerts: [baseAlert],
+  };
+
   it('renders all 7 sections when the headline alert has a fully-populated protocol', () => {
-    const criticalVerdict: TriageVerdict<ScreeningAlert> = {
-      zone: 'merah',
-      headlineAlert: baseAlert,
-      sortedAlerts: [baseAlert],
-    };
     render(<EmergencyDashboard alerts={[baseAlert]} verdict={criticalVerdict} />);
 
     expect(screen.getByText(/MERAH/i)).toBeInTheDocument();
@@ -89,11 +90,6 @@ describe('EmergencyDashboard Verdict Card', () => {
   });
 
   it('renders each verdict section as its own block with an Indonesian heading', () => {
-    const criticalVerdict: TriageVerdict<ScreeningAlert> = {
-      zone: 'merah',
-      headlineAlert: baseAlert,
-      sortedAlerts: [baseAlert],
-    };
     const { container } = render(<EmergencyDashboard alerts={[baseAlert]} verdict={criticalVerdict} />);
     const header = container.querySelector('.emg-verdict__header');
     expect(header?.textContent).toContain('MERAH');
