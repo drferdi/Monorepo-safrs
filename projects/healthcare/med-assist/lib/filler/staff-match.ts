@@ -18,23 +18,42 @@ export function staffSearchTerm(value: string): string {
   return term;
 }
 
-function containsWords(haystack: string, needle: string): boolean {
-  return ` ${haystack} `.includes(` ${needle} `);
+const DEGREE_TOKEN_MAX_LETTERS = 4;
+
+/**
+ * True when the shorter of the two word lists is a whole-word prefix of the longer one (at least
+ * two words long) and every word the longer one adds beyond that prefix is short enough to be a
+ * degree abbreviation (e.g. "s", "kep", "amd", "sp", "pd", "mkn") rather than another person's
+ * name.
+ */
+function isDegreeLikeSuffixMatch(itemWords: string[], targetWords: string[]): boolean {
+  const [shorter, longer] =
+    itemWords.length <= targetWords.length ? [itemWords, targetWords] : [targetWords, itemWords];
+  if (shorter.length < 2) return false;
+  for (let i = 0; i < shorter.length; i++) {
+    if (shorter[i] !== longer[i]) return false;
+  }
+  return longer.slice(shorter.length).every((token) => token.length <= DEGREE_TOKEN_MAX_LETTERS);
 }
 
 /**
- * Index of the single menu item that names this practitioner, or -1. An item matches when it
- * contains the whole name, or when the name (with trailing degrees) contains the whole item of at
- * least two words. Zero or several matches return -1 so no wrong clinician is selected.
+ * Index of the single menu item that names this practitioner, or -1. An item matches the name
+ * when, after stripping menu suffixes (" - ...", " (...)") and normalising both, they are equal,
+ * or one is a whole-word prefix of the other (the shorter side must be at least two words) and
+ * every extra trailing word on the longer side is at most 4 letters — a degree abbreviation such
+ * as "s kep", "amd", "sp pd", "mkn" — rather than a different person's given or family name. Zero
+ * or several matches return -1 so no wrong clinician is selected.
  */
 export function pickExactStaffMatch(itemTexts: string[], name: string): number {
   const target = normalizeStaffName(name);
   if (!target) return -1;
+  const targetWords = target.split(' ');
   const matches = itemTexts
     .map((text, index) => ({ index, item: normalizeStaffName(text.replace(/\s[-–(].*$/, '')) }))
-    .filter(({ item }) =>
-      item.length > 0 &&
-      (containsWords(item, target) || (item.split(' ').length >= 2 && containsWords(target, item)))
+    .filter(
+      ({ item }) =>
+        item.length > 0 &&
+        (item === target || isDegreeLikeSuffixMatch(item.split(' '), targetWords))
     );
   return matches.length === 1 ? matches[0].index : -1;
 }

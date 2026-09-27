@@ -555,11 +555,12 @@ export async function fillAutocomplete(
   const field = 'autocomplete:' + selector;
 
   for (let attempt = 0; attempt <= retries; attempt++) {
+    let input: HTMLInputElement | null = null;
     try {
       // 1. Find input field
-      const input = await waitForElement(selector, 3000);
+      const found = await waitForElement(selector, 3000);
 
-      if (!input || !(input instanceof HTMLInputElement)) {
+      if (!found || !(found instanceof HTMLInputElement)) {
         return {
           success: false,
           field,
@@ -568,6 +569,8 @@ export async function fillAutocomplete(
           error: 'Input not found',
         };
       }
+
+      input = found;
 
       if (isFieldReadonly(input)) {
         return {
@@ -718,6 +721,10 @@ export async function fillAutocomplete(
     } catch (error) {
       fillerLog.error(`[Filler] Error in autocomplete attempt ${attempt + 1}:`, error);
       if (attempt === retries) {
+        if (requireExactMatch && input) {
+          setNativeValue(input, '');
+          await dispatchEventChain(input, ['input', 'change', 'blur']);
+        }
         return {
           success: false,
           field,

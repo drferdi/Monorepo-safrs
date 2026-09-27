@@ -35,4 +35,15 @@ describe('pickExactStaffMatch', () => {
     expect(pickExactStaffMatch(['DIAN'], 'Dian Sunardi')).toBe(-1);
     expect(pickExactStaffMatch(['DIAN SUNARDI'], '')).toBe(-1);
   });
+
+  it('rejects a different clinician whose name merely shares a word with the target', () => {
+    expect(pickExactStaffMatch(['ANDI BUDI SANTOSO'], 'Budi Santoso')).toBe(-1);
+    expect(pickExactStaffMatch(['BUDI SANTOSO'], 'Muhammad Budi Santoso')).toBe(-1);
+    expect(pickExactStaffMatch(['BUDI SANTOSO WIJAYA'], 'Budi Santoso')).toBe(-1);
+  });
+
+  it('accepts a degree-abbreviation suffix but not a real extra surname', () => {
+    expect(pickExactStaffMatch(['Budi Santoso Sp PD'], 'dr. Budi Santoso')).toBe(0);
+    expect(pickExactStaffMatch(['JOSEP ARIANTO, A.Md'], 'JOSEP ARIANTO, A.Md')).toBe(0);
+  });
 });

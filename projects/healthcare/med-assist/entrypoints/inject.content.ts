@@ -540,7 +540,7 @@ export default defineContentScript({
             return {
               success: false,
               field: field.selector,
-              value: result.selectedValue,
+              value: field.requireExactMatch ? result.selectedValue : field.value,
               error: field.requireExactMatch
                 ? 'Nama tenaga medis tidak cocok persis di ePuskesmas'
                 : 'Autocomplete dropdown not appeared',
