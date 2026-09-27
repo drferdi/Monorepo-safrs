@@ -293,8 +293,9 @@ The panel shows the tree's result for the active diagnosis but doesn't re-order 
 
 ### 5.6 Pluggable diagnosis engine: `lib/diagnosis-engine/` (added 2026-09-27)
 
-The diagnosis step can now be served by more than one engine. For physicians nothing has changed
-yet. The decision to change that is proposed in
+The diagnosis step can now be served by more than one engine. By default physicians see only the
+legacy engine; the `mira` flag value (development, added 2026-09-27) shows MIRA's list instead.
+The decision to use MIRA for physicians is proposed in
 [ADR-005](adr/ADR-005-pluggable-diagnosis-engine-mira-candidate.md) and has not been accepted.
 
 **[Verified]** How the parts fit:
@@ -303,20 +304,32 @@ yet. The decision to change that is proposed in
 side panel ──getSuggestions──► background.ts:1728 ──► run-diagnosis.ts
                                                         │
                ┌────────────────────────────────────────┴───────────────────────────┐
-               ▼ always                                                             ▼ only if flag = 'mira'
+               ▼ always                                                             ▼ only if flag = 'shadow' or 'mira'
      legacy-engine.ts ─► runGetSuggestionsFlow (unchanged)             mira-engine.ts ─► pii-guard ─► Sentra
-     result goes to the physician                                      reasoning service (VITE_MIRA_SERVICE_URL);
-                                                                       outcome goes to the audit log only
+     alerts and all other fields always come from here;                reasoning service (VITE_MIRA_SERVICE_URL);
+     diagnosis list too, unless flag = 'mira' and MIRA answered        outcome always goes to the audit log
 ```
 
 - **Contract** (`types.ts`): every engine takes a de-identified `CaseState` and returns an
   `EngineResult`. The result holds the differential (`likely`, `alternatives`, `cannotMiss`),
   evidence, missing information, next best actions, a treat-or-refer suggestion and `meta`.
   Anything an engine cannot fill is left empty and listed in `unfilled`.
-- **Flag:** `SENTRA_DIAGNOSIS_ENGINE`. The default is `legacy`; only the exact value `mira`
-  switches (`feature-flags.ts`, `registry.ts`). With `mira`, the physician still sees the legacy
-  result. MIRA runs alongside, is capped at 20 s, and only its status, ICD codes and latency are
-  written to the audit log.
+- **Flag:** `SENTRA_DIAGNOSIS_ENGINE` (`feature-flags.ts`, `run-diagnosis.ts`); only the exact
+  values below switch, anything else is `legacy`. MIRA is capped at 20 s, and only its status,
+  ICD codes and latency are written to the audit log.
+  - `legacy` (default): the legacy result only.
+  - `shadow`: the legacy result, returned without waiting for MIRA, which runs in the background.
+  - `mira`: MIRA's `likely`, `alternatives`, then `cannotMiss` replace `diagnosis_suggestions`,
+    each tagged "MIRA" (cannot-miss: "MIRA · jangan terlewat") next to the name. ICD codes stay as
+    MIRA sent them, even when the local knowledge base lacks them; cannot-miss entries always get
+    one of the five places. Alerts and every other field stay the legacy engine's. When MIRA
+    fails, times out or returns no diagnosis, the panel shows the legacy list and the note
+    "MIRA tidak tersedia".
+  - **[Verified]** Confirmed chronic diagnoses are merged in ahead of the engine list and share
+    the five places (`ClinicalDifferential.tsx`), so a patient with several of them can push a
+    MIRA entry, including a cannot-miss one, out of view.
+  - Development token: `VITE_MIRA_DEV_TOKEN` is sent as `Authorization: Bearer`. It is inlined
+    into the build, so it must stay a throwaway local value.
 - **Where safety sits:** outside every engine. Red flags, the emergency gates (4-Gate and
   Pattern-Engine v2), the triage verdict and the triage/referral tree import nothing from the
   diagnosis pipeline. They produce their full output while an engine throws, hangs or is broken
@@ -383,9 +396,9 @@ the machine after Chrome is closed.
 | Crew dashboard login                                                   | sign-in                                                                 | password or passkey                                                                             | none                                                                  |
 | Sentra API `/v1/cdss/*` (address from `VITE_SENTRA_API_URL`)           | prescription, allergy and paediatric-dose checks when not in mock mode  | clinical context plus an API key                                                                | `assertNoPII`                                                         |
 | `api.openai.com`                                                       | diagnosis re-ordering, only when a key is set and the library is unsure | the complaint as typed, age, sex, chronic diseases, candidate diseases and their guideline text | the engine's leak detector (`validateAnonymization`), not `pii-guard` |
-| Sentra reasoning service for MIRA (`VITE_MIRA_SERVICE_URL`)            | only when `SENTRA_DIAGNOSIS_ENGINE=mira` (off by default)               | de-identified `CaseState` (§5.6)                                                                | `assertNoPII`; a blocked payload is not sent                          |
+| Sentra reasoning service for MIRA (`VITE_MIRA_SERVICE_URL`)            | only when `SENTRA_DIAGNOSIS_ENGINE` is `shadow` or `mira` (off by default) | de-identified `CaseState` (§5.6)                                                                | `assertNoPII`; a blocked payload is not sent                          |
 
-- **[Inferred]** `assertNoPII` is a pattern check (`anonymizer.ts:31-57`): it looks for ID
+- **[Inferred]** `assertNoPII` is a pattern check (`anonymizer.ts:31-61`): it looks for ID
   numbers, phone numbers, "title + name" and 13-digit BPJS numbers. A bare name would pass. A
   real 13-digit BPJS number in the patient-sync payload would make the sync **fail**. The
   design intent here is unclear; **please confirm with the crew-dashboard side.**

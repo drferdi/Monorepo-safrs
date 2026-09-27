@@ -1,11 +1,18 @@
 /**
- * The diagnosis step the background runs for the side panel's `getSuggestions` request.
+ * The diagnosis step the background runs for the side panel's `getSuggestions` request, by the
+ * `diagnosisEngine` flag (`feature-flags.ts`):
  *
- * The physician always sees the legacy engine's response, unchanged. When the flag selects a
- * candidate engine (MIRA), it runs alongside on the same de-identified case, and only its
- * outcome (status, ICD codes, latency; no clinical text) is written to the audit log for
- * comparison. A candidate failure never changes what the physician sees and never touches the
- * safety layer; the response waits for the candidate at most `candidateTimeoutMs`.
+ * - `legacy` (default): the legacy engine's response, unchanged.
+ * - `shadow`: the legacy response, returned without waiting for MIRA. MIRA runs in the background
+ *   on the same de-identified case and only its outcome (status, ICD codes, latency; no clinical
+ *   text) is written to the audit log.
+ * - `mira`: MIRA's differential replaces `diagnosis_suggestions` in the legacy response
+ *   (likely, alternatives, then cannot-miss, each tagged "MIRA"); every other field, including
+ *   the alerts, stays the legacy engine's. When MIRA fails, times out or returns no diagnosis,
+ *   the legacy response is returned with `engine_notice` set to "MIRA tidak tersedia".
+ *
+ * The safety layer (red flags, emergency gates, triage/referral) runs outside this step, and a
+ * candidate never waits longer than `candidateTimeoutMs`.
  *
  * @module lib/diagnosis-engine/run-diagnosis
  */
@@ -14,10 +21,19 @@ import { encounterToCaseState } from './case-state';
 import { createTraceId, createUnavailableResult } from './engine-result';
 import type { LegacyDiagnosisEngine } from './legacy-engine';
 import { getActiveDiagnosisEngine, getLegacyEngine } from './registry';
-import type { CaseState, DiagnosisEngine, EngineResult } from './types';
+import type { CaseState, ConfidenceTier, DiagnosisEngine, EngineResult } from './types';
 
 import { logShadowComparison } from '@/lib/iskandar-diagnosis-engine/audit-logger';
-import type { APIResponse, CDSSResponse, DiagnosisRequestContext } from '@/types/api';
+import {
+  getDiagnosisEngineConfig,
+  type DiagnosisEngineMode,
+} from '@/lib/iskandar-diagnosis-engine/feature-flags';
+import type {
+  APIResponse,
+  CDSSResponse,
+  DiagnosisRequestContext,
+  DiagnosisSuggestion,
+} from '@/types/api';
 import { createLogger } from '@/utils/logger';
 import type { Encounter } from '~/utils/types';
 
@@ -25,6 +41,22 @@ const log = createLogger('DiagnosisEngine', 'global');
 
 /** Upper bound for a candidate engine, whatever its own client timeout is. */
 export const CANDIDATE_TIMEOUT_MS = 20_000;
+
+export const MIRA_TAG = 'MIRA';
+export const MIRA_CANNOT_MISS_TAG = 'MIRA · jangan terlewat';
+export const MIRA_UNAVAILABLE_NOTICE = 'MIRA tidak tersedia';
+
+/** The side panel shows at most five diagnoses (`ClinicalDifferential.tsx`). */
+const MAX_SHOWN_DIAGNOSES = 5;
+/** `runDiagnosisAlgorithm` hides suggestions below this confidence. */
+const MIN_SHOWN_CONFIDENCE = 0.1;
+/** Inside the side panel's bands (≥ 0.7 high, ≥ 0.45 moderate, else low); used without a score. */
+const TIER_CONFIDENCE: Record<ConfidenceTier, number> = {
+  high: 0.8,
+  moderate: 0.55,
+  low: 0.3,
+  unknown: MIN_SHOWN_CONFIDENCE,
+};
 
 async function stepWithTimeout(
   engine: DiagnosisEngine,
@@ -96,26 +128,83 @@ async function recordCandidateRun(result: EngineResult, engine: DiagnosisEngine)
   }
 }
 
+/**
+ * MIRA's differential as side-panel suggestions: likely, alternatives, then cannot-miss, one entry
+ * per ICD-10 code (a code also listed as cannot-miss keeps its first place and the cannot-miss
+ * tag). Codes are kept as MIRA sent them, whether or not the local knowledge base has them.
+ * Cannot-miss entries always get a slot; the other slots go to the earliest entries.
+ */
+export function miraDifferentialToSuggestions(result: EngineResult): DiagnosisSuggestion[] {
+  const { likely, alternatives, cannotMiss } = result.differential;
+  const codeOf = (item: { icd10: string }) => item.icd10.trim().toUpperCase();
+  const cannotMissCodes = new Set(cannotMiss.map(codeOf));
+
+  const seen = new Set<string>();
+  const entries = [...likely, ...alternatives, ...cannotMiss]
+    .filter((item) => {
+      const code = codeOf(item);
+      if (seen.has(code)) return false;
+      seen.add(code);
+      return true;
+    })
+    .map((item) => ({ item, cannotMiss: cannotMissCodes.has(codeOf(item)) }));
+
+  const keptCannotMiss = entries.filter((entry) => entry.cannotMiss).slice(0, MAX_SHOWN_DIAGNOSES);
+  let room = MAX_SHOWN_DIAGNOSES - keptCannotMiss.length;
+  const kept = entries.filter((entry) =>
+    entry.cannotMiss ? keptCannotMiss.includes(entry) : room-- > 0
+  );
+
+  return kept.map(({ item, cannotMiss: isCannotMiss }, index) => ({
+    rank: index + 1,
+    icd_x: item.icd10,
+    icd10_code: item.icd10,
+    nama: item.label,
+    confidence: Math.min(
+      1,
+      Math.max(MIN_SHOWN_CONFIDENCE, item.score ?? TIER_CONFIDENCE[item.confidenceTier])
+    ),
+    rationale:
+      result.evidence.find((entry) => codeOf(entry) === codeOf(item))?.supporting.join('; ') ?? '',
+    engine_tag: isCannotMiss ? MIRA_CANNOT_MISS_TAG : MIRA_TAG,
+  }));
+}
+
 export async function runDiagnosisSuggestions(
   encounter: Encounter,
   context: DiagnosisRequestContext,
   options: {
     engines?: { legacy: LegacyDiagnosisEngine; active: DiagnosisEngine };
+    mode?: DiagnosisEngineMode;
     candidateTimeoutMs?: number;
   } = {}
 ): Promise<APIResponse<CDSSResponse>> {
+  const mode = options.mode ?? getDiagnosisEngineConfig().diagnosisEngine;
   const legacy = options.engines?.legacy ?? getLegacyEngine();
-  const active = options.engines?.active ?? getActiveDiagnosisEngine();
 
   const physicianResponse = legacy.runSuggestions(encounter, context);
-  if (active.id === 'legacy') return physicianResponse;
+  if (mode === 'legacy') return physicianResponse;
 
+  const candidate = options.engines?.active ?? getActiveDiagnosisEngine('mira');
   const candidateRun = stepWithTimeout(
-    active,
+    candidate,
     encounterToCaseState(encounter, context),
     options.candidateTimeoutMs ?? CANDIDATE_TIMEOUT_MS
-  ).then((result) => recordCandidateRun(result, active));
+  ).then(async (result) => {
+    await recordCandidateRun(result, candidate);
+    return result;
+  });
+  if (mode === 'shadow') return physicianResponse;
 
-  const [response] = await Promise.all([physicianResponse, candidateRun]);
-  return response;
+  const [response, result] = await Promise.all([physicianResponse, candidateRun]);
+  if (!response.success || !response.data) return response;
+
+  const suggestions = result.status === 'ok' ? miraDifferentialToSuggestions(result) : [];
+  return {
+    ...response,
+    data:
+      suggestions.length > 0
+        ? { ...response.data, diagnosis_suggestions: suggestions }
+        : { ...response.data, engine_notice: MIRA_UNAVAILABLE_NOTICE },
+  };
 }

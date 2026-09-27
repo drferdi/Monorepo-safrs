@@ -1,5 +1,6 @@
 /**
- * Picks the diagnosis engine from the `diagnosisEngine` flag (default `'legacy'`).
+ * Picks the diagnosis engine from the `diagnosisEngine` flag (default `'legacy'`): both
+ * `'shadow'` and `'mira'` select MIRA; `run-diagnosis.ts` decides whether the physician sees it.
  *
  * @module lib/diagnosis-engine/registry
  */
@@ -20,7 +21,9 @@ export function getLegacyEngine(): LegacyDiagnosisEngine {
 }
 
 export function getActiveDiagnosisEngine(
-  engineId: DiagnosisEngineId = getDiagnosisEngineConfig().diagnosisEngine
+  engineId: DiagnosisEngineId = getDiagnosisEngineConfig().diagnosisEngine === 'legacy'
+    ? 'legacy'
+    : 'mira'
 ): DiagnosisEngine {
   switch (engineId) {
     case 'legacy':

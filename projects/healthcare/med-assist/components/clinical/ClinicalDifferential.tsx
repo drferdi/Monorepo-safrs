@@ -715,7 +715,10 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         }
 
         const incomingSuggestions = (response.data.diagnosis_suggestions || []).slice(0, 5);
-        setErrorMsg(resolveDifferentialListErrorMessage(incomingSuggestions.length));
+        setErrorMsg(
+          response.data.engine_notice ||
+            resolveDifferentialListErrorMessage(incomingSuggestions.length)
+        );
         if (incomingSuggestions.length === 0) {
           setSuggestions(buildUiFallbackDiagnoses(keluhanUtama, vitals));
         } else {
@@ -888,7 +891,9 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         rank: item.rank,
         icd_x: selectedDiagnosis.icd_x,
         nama: selectedDiagnosis.nama,
-        displayLabel: `${selectedDiagnosis.icd_x} - ${humanize(selectedDiagnosis.nama)}`,
+        displayLabel: `${selectedDiagnosis.icd_x} - ${humanize(selectedDiagnosis.nama)}${
+          item.suggestion.engine_tag ? ` · ${item.suggestion.engine_tag}` : ''
+        }`,
         confidenceLabel: confidence.label,
         confidenceTone: confidence.tone,
         supports,

@@ -1,3 +1,9 @@
+export type DiagnosisEngineMode = 'legacy' | 'shadow' | 'mira';
+
+function parseDiagnosisEngineMode(value: unknown): DiagnosisEngineMode {
+  return value === 'shadow' || value === 'mira' ? value : 'legacy';
+}
+
 export interface DiagnosisEngineFeatureConfig {
   enableTrajectoryBridge: boolean;
   enableTherapy: boolean;
@@ -9,9 +15,10 @@ export interface DiagnosisEngineFeatureConfig {
   fallbackToKBOnly: boolean;
   // If KB top-1 matchScore >= this threshold, skip LLM call entirely
   llmSkipHighConfidenceThreshold: number;
-  // Which diagnosis engine runs (lib/diagnosis-engine/registry.ts). Only the exact value
-  // 'mira' selects the candidate engine; anything else, including unset, stays 'legacy'.
-  diagnosisEngine: 'legacy' | 'mira';
+  // Which diagnosis engine the physician sees (lib/diagnosis-engine/run-diagnosis.ts):
+  // 'legacy' only; 'shadow' runs MIRA in the background (audited, not awaited); 'mira' shows
+  // MIRA and falls back to legacy when MIRA fails. Anything else, including unset, is 'legacy'.
+  diagnosisEngine: DiagnosisEngineMode;
 }
 
 export function getDiagnosisEngineConfig(): DiagnosisEngineFeatureConfig {
@@ -22,6 +29,6 @@ export function getDiagnosisEngineConfig(): DiagnosisEngineFeatureConfig {
     openaiTimeoutMs: parseInt(import.meta.env.SENTRA_OPENAI_TIMEOUT_MS || '12000', 10),
     fallbackToKBOnly: true,
     llmSkipHighConfidenceThreshold: parseFloat(import.meta.env.SENTRA_LLM_SKIP_THRESHOLD || '0.65'),
-    diagnosisEngine: import.meta.env.SENTRA_DIAGNOSIS_ENGINE === 'mira' ? 'mira' : 'legacy',
+    diagnosisEngine: parseDiagnosisEngineMode(import.meta.env.SENTRA_DIAGNOSIS_ENGINE),
   };
 }

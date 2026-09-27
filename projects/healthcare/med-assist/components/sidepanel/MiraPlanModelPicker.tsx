@@ -28,7 +28,7 @@ async function mayPickModel(): Promise<boolean> {
 
 export const MiraPlanModelPicker: React.FC = () => {
   const models = listMiraPlanModels();
-  const offered = models.length > 0 && getDiagnosisEngineConfig().diagnosisEngine === 'mira';
+  const offered = models.length > 0 && getDiagnosisEngineConfig().diagnosisEngine !== 'legacy';
   const [allowed, setAllowed] = useState(false);
   const [selected, setSelected] = useState('');
 

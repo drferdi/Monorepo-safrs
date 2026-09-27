@@ -8,14 +8,22 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vite
 
 import { GOLDEN_CASES } from './__golden__/cases';
 import { encounterToCaseState } from './case-state';
+import { createUnavailableResult } from './engine-result';
 import { MIRA_STEP_PATH, createMiraEngine, validateMiraStepResponse } from './mira-engine';
 import { getActiveDiagnosisEngine, getLegacyEngine } from './registry';
-import { runDiagnosisSuggestions } from './run-diagnosis';
+import {
+  MIRA_CANNOT_MISS_TAG,
+  MIRA_TAG,
+  MIRA_UNAVAILABLE_NOTICE,
+  miraDifferentialToSuggestions,
+  runDiagnosisSuggestions,
+} from './run-diagnosis';
 import { readGoldenRecording, stripVolatileFields } from './testing/golden';
 import { installLegacyRuntime } from './testing/legacy-runtime';
-import type { CaseState } from './types';
+import type { CaseState, DiagnosisEngine, DiagnosisItem, EngineResult } from './types';
 
 import * as auditLogger from '@/lib/iskandar-diagnosis-engine/audit-logger';
+import type { APIResponse, CDSSResponse } from '@/types/api';
 
 vi.mock('@/lib/rag/icd10-db', () => import('./testing/memory-icd10-db'));
 
@@ -111,6 +119,33 @@ describe('MIRA engine client', () => {
   it('sends no planning-model header when none is picked', async () => {
     const fetchFn = vi.fn<typeof fetch>(async () => jsonResponse(OK_RESPONSE));
     await createMiraEngine({ fetchFn, baseUrl: () => SERVICE_URL, planModel: async () => undefined }).step(CASE);
+    expect(fetchFn.mock.calls[0][1]?.headers).toEqual({ 'Content-Type': 'application/json' });
+  });
+
+  it('sends VITE_MIRA_DEV_TOKEN as a bearer token', async () => {
+    const fetchFn = vi.fn<typeof fetch>(async () => jsonResponse(OK_RESPONSE));
+    const engine = createMiraEngine({
+      fetchFn,
+      baseUrl: () => SERVICE_URL,
+      planModel: async () => undefined,
+      devToken: () => 'local-dev-token',
+    });
+    await engine.step(CASE);
+    expect(fetchFn.mock.calls[0][1]?.headers).toEqual({
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer local-dev-token',
+    });
+  });
+
+  it('sends no Authorization header when no dev token is set', async () => {
+    const fetchFn = vi.fn<typeof fetch>(async () => jsonResponse(OK_RESPONSE));
+    const engine = createMiraEngine({
+      fetchFn,
+      baseUrl: () => SERVICE_URL,
+      planModel: async () => undefined,
+      devToken: () => ' ',
+    });
+    await engine.step(CASE);
     expect(fetchFn.mock.calls[0][1]?.headers).toEqual({ 'Content-Type': 'application/json' });
   });
 
@@ -232,7 +267,7 @@ describe('MIRA behind the registry', () => {
     expect(getActiveDiagnosisEngine('mira').id).toBe('mira');
   });
 
-  it('with MIRA active and answering, the physician still gets the legacy output and the MIRA outcome is audited', async () => {
+  it('in shadow mode with MIRA answering, the physician still gets the legacy output and the MIRA outcome is audited', async () => {
     if (!APPENDICITIS) throw new Error('appendicitis golden case missing');
     const auditSpy = vi.spyOn(auditLogger, 'logShadowComparison');
     const mira = engineWith(async () => jsonResponse(OK_RESPONSE));
@@ -240,11 +275,11 @@ describe('MIRA behind the registry', () => {
     const response = await runDiagnosisSuggestions(
       structuredClone(APPENDICITIS.encounter),
       APPENDICITIS.context,
-      { engines: { legacy: getLegacyEngine(), active: mira } }
+      { engines: { legacy: getLegacyEngine(), active: mira }, mode: 'shadow' }
     );
 
     expect(stripVolatileFields(response)).toEqual(readGoldenRecording()['appendicitis-like']);
-    expect(auditSpy).toHaveBeenCalledTimes(1);
+    await vi.waitFor(() => expect(auditSpy).toHaveBeenCalledTimes(1));
     expect(auditSpy.mock.calls[0][0].metadata).toMatchObject({
       engine_id: 'mira',
       status: 'ok',
@@ -253,7 +288,7 @@ describe('MIRA behind the registry', () => {
     });
   });
 
-  it('with MIRA active but its service down, the legacy output is unchanged', async () => {
+  it('in shadow mode with its service down, the legacy output is unchanged', async () => {
     if (!APPENDICITIS) throw new Error('appendicitis golden case missing');
     const auditSpy = vi.spyOn(auditLogger, 'logShadowComparison');
     const mira = engineWith(async () => {
@@ -263,13 +298,146 @@ describe('MIRA behind the registry', () => {
     const response = await runDiagnosisSuggestions(
       structuredClone(APPENDICITIS.encounter),
       APPENDICITIS.context,
-      { engines: { legacy: getLegacyEngine(), active: mira } }
+      { engines: { legacy: getLegacyEngine(), active: mira }, mode: 'shadow' }
     );
 
     expect(stripVolatileFields(response)).toEqual(readGoldenRecording()['appendicitis-like']);
+    await vi.waitFor(() => expect(auditSpy).toHaveBeenCalledTimes(1));
     expect(auditSpy.mock.calls[0][0].metadata).toMatchObject({
       status: 'unavailable',
       error_code: 'NETWORK_ERROR',
     });
+  });
+
+  it('in shadow mode, the physician does not wait for MIRA', async () => {
+    if (!APPENDICITIS) throw new Error('appendicitis golden case missing');
+    const hanging: DiagnosisEngine = {
+      id: 'mira',
+      version: 'fake-hanging',
+      step: () => new Promise(() => undefined),
+    };
+
+    const response = await runDiagnosisSuggestions(
+      structuredClone(APPENDICITIS.encounter),
+      APPENDICITIS.context,
+      {
+        engines: { legacy: getLegacyEngine(), active: hanging },
+        mode: 'shadow',
+        candidateTimeoutMs: 60_000,
+      }
+    );
+
+    expect(stripVolatileFields(response)).toEqual(readGoldenRecording()['appendicitis-like']);
+  });
+
+  it('in mira mode, MIRA replaces only the diagnosis list, tagged MIRA, and the alerts stay legacy', async () => {
+    if (!APPENDICITIS) throw new Error('appendicitis golden case missing');
+    const mira = engineWith(async () => jsonResponse(OK_RESPONSE));
+
+    const response = await runDiagnosisSuggestions(
+      structuredClone(APPENDICITIS.encounter),
+      APPENDICITIS.context,
+      { engines: { legacy: getLegacyEngine(), active: mira }, mode: 'mira' }
+    );
+
+    const legacy = readGoldenRecording()['appendicitis-like'] as APIResponse<CDSSResponse>;
+    const shown = stripVolatileFields(response) as APIResponse<CDSSResponse>;
+    const { diagnosis_suggestions: miraList, ...rest } = shown.data ?? {};
+    const { diagnosis_suggestions: _legacyList, ...legacyRest } = legacy.data ?? {};
+    expect(rest).toEqual(legacyRest);
+    expect(miraList?.map((entry) => [entry.icd_x, entry.engine_tag])).toEqual([
+      ['K35.8', MIRA_TAG],
+      ['A09', MIRA_TAG],
+      ['K65.0', MIRA_CANNOT_MISS_TAG],
+    ]);
+  });
+
+  it('in mira mode with its service down, the physician gets the legacy output and the notice', async () => {
+    if (!APPENDICITIS) throw new Error('appendicitis golden case missing');
+    const mira = engineWith(async () => {
+      throw new TypeError('Failed to fetch');
+    });
+
+    const response = await runDiagnosisSuggestions(
+      structuredClone(APPENDICITIS.encounter),
+      APPENDICITIS.context,
+      { engines: { legacy: getLegacyEngine(), active: mira }, mode: 'mira' }
+    );
+
+    const legacy = readGoldenRecording()['appendicitis-like'] as APIResponse<CDSSResponse>;
+    expect(stripVolatileFields(response)).toEqual({
+      ...legacy,
+      data: { ...legacy.data, engine_notice: MIRA_UNAVAILABLE_NOTICE },
+    });
+  });
+});
+
+describe('MIRA differential as side-panel suggestions', () => {
+  const item = (
+    icd10: string,
+    confidenceTier: DiagnosisItem['confidenceTier'] = 'low',
+    score?: number
+  ): DiagnosisItem => ({
+    icd10,
+    label: `Label ${icd10}`,
+    confidenceTier,
+    ...(score === undefined ? {} : { score }),
+  });
+  const resultWith = (differential: EngineResult['differential']): EngineResult => ({
+    ...createUnavailableResult({
+      engineId: 'mira',
+      version: 't',
+      code: 'X',
+      message: '',
+      latencyMs: 0,
+      traceId: 't',
+    }),
+    status: 'ok',
+    differential,
+  });
+
+  it('keeps ICD codes the local knowledge base does not have', () => {
+    const shown = miraDifferentialToSuggestions(
+      resultWith({ likely: [item('Z99.9', 'high')], alternatives: [], cannotMiss: [] })
+    );
+    expect(shown).toMatchObject([
+      { icd_x: 'Z99.9', nama: 'Label Z99.9', engine_tag: MIRA_TAG, rank: 1 },
+    ]);
+  });
+
+  it('lists a code once, keeping its first place and the cannot-miss tag', () => {
+    const shown = miraDifferentialToSuggestions(
+      resultWith({
+        likely: [item('K35.8', 'high')],
+        alternatives: [item('A09')],
+        cannotMiss: [item('k35.8')],
+      })
+    );
+    expect(shown.map((entry) => [entry.icd_x, entry.engine_tag])).toEqual([
+      ['K35.8', MIRA_CANNOT_MISS_TAG],
+      ['A09', MIRA_TAG],
+    ]);
+  });
+
+  it('always keeps cannot-miss entries within the five shown', () => {
+    const shown = miraDifferentialToSuggestions(
+      resultWith({
+        likely: [item('A01'), item('A02'), item('A03')],
+        alternatives: [item('B01'), item('B02'), item('B03')],
+        cannotMiss: [item('C01'), item('C02')],
+      })
+    );
+    expect(shown.map((entry) => entry.icd_x)).toEqual(['A01', 'A02', 'A03', 'C01', 'C02']);
+  });
+
+  it('never drops an entry below the side panel confidence floor', () => {
+    const shown = miraDifferentialToSuggestions(
+      resultWith({
+        likely: [item('A01', 'high', 0.02)],
+        alternatives: [item('A02', 'unknown')],
+        cannotMiss: [],
+      })
+    );
+    expect(shown.map((entry) => entry.confidence)).toEqual([0.1, 0.1]);
   });
 });

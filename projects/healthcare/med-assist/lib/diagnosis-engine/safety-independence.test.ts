@@ -12,7 +12,7 @@ import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { GOLDEN_CASES } from './__golden__/cases';
 import { createLegacyEngine } from './legacy-engine';
 import { getLegacyEngine } from './registry';
-import { runDiagnosisSuggestions } from './run-diagnosis';
+import { MIRA_UNAVAILABLE_NOTICE, runDiagnosisSuggestions } from './run-diagnosis';
 import { readGoldenRecording, stripVolatileFields } from './testing/golden';
 import { installLegacyRuntime } from './testing/legacy-runtime';
 import type { DiagnosisEngine } from './types';
@@ -133,29 +133,51 @@ describe('safety output survives engine failure', () => {
   });
 
   it.each(GOLDEN_CASES)(
-    'a throwing candidate engine leaves the physician output identical: $id',
+    'a throwing candidate engine in shadow mode leaves the physician output identical: $id',
     async (goldenCase) => {
       const response = await runDiagnosisSuggestions(
         structuredClone(goldenCase.encounter),
         goldenCase.context,
-        { engines: { legacy: getLegacyEngine(), active: throwingEngine } }
+        { engines: { legacy: getLegacyEngine(), active: throwingEngine }, mode: 'shadow' }
       );
       expect(stripVolatileFields(response)).toEqual(readGoldenRecording()[goldenCase.id]);
     }
   );
 
-  it('a hanging candidate engine is cut off by the timeout and changes nothing', async () => {
+  it.each(GOLDEN_CASES)(
+    'a throwing candidate engine in mira mode gives the legacy output plus the notice: $id',
+    async (goldenCase) => {
+      const response = await runDiagnosisSuggestions(
+        structuredClone(goldenCase.encounter),
+        goldenCase.context,
+        { engines: { legacy: getLegacyEngine(), active: throwingEngine }, mode: 'mira' }
+      );
+      const recorded = readGoldenRecording()[goldenCase.id] as APIResponse<CDSSResponse>;
+      expect(stripVolatileFields(response)).toEqual({
+        ...recorded,
+        data: { ...recorded.data, engine_notice: MIRA_UNAVAILABLE_NOTICE },
+      });
+    }
+  );
+
+  it('a hanging candidate engine in mira mode is cut off by the timeout; only the notice is added', async () => {
     if (!SEPSIS_CASE) throw new Error('sepsis golden case missing');
     const startedAt = Date.now();
     const response = await runDiagnosisSuggestions(
       structuredClone(SEPSIS_CASE.encounter),
       SEPSIS_CASE.context,
-      { engines: { legacy: getLegacyEngine(), active: hangingEngine }, candidateTimeoutMs: 50 }
+      {
+        engines: { legacy: getLegacyEngine(), active: hangingEngine },
+        mode: 'mira',
+        candidateTimeoutMs: 50,
+      }
     );
     expect(Date.now() - startedAt).toBeLessThan(5_000);
-    expect(stripVolatileFields(response)).toEqual(
-      readGoldenRecording()['sepsis-like-with-history']
-    );
+    const recorded = readGoldenRecording()['sepsis-like-with-history'] as APIResponse<CDSSResponse>;
+    expect(stripVolatileFields(response)).toEqual({
+      ...recorded,
+      data: { ...recorded.data, engine_notice: MIRA_UNAVAILABLE_NOTICE },
+    });
   });
 
   it('red flags, emergency gates and triage/referral run in full while the engine is broken', async () => {

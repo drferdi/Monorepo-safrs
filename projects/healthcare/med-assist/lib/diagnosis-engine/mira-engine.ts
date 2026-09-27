@@ -3,13 +3,16 @@
  *
  * - The extension never holds an OpenAI key for MIRA; it only talks to the service at
  *   `VITE_MIRA_SERVICE_URL` (unset = engine unavailable, no request).
+ * - Development only: `VITE_MIRA_DEV_TOKEN` is sent as `Authorization: Bearer <token>` (the
+ *   service's development token check). A `VITE_` value is inlined into the bundle, so never
+ *   put a production secret there. Unset = no header.
  * - Every payload passes `assertNoPII` (`lib/api/pii-guard.ts`); if it is blocked, nothing is
  *   sent.
  * - Timeouts, network errors, HTTP errors and responses that break the contract
  *   (`contract/mira-step-response.schema.json`) all return a flagged "unavailable" result.
  *
- * Off by default: the registry returns this engine only when `diagnosisEngine` is `'mira'`, and
- * even then the physician still sees the legacy result (`run-diagnosis.ts`).
+ * Off by default: the registry returns this engine only when `diagnosisEngine` is `'shadow'` or
+ * `'mira'`; `run-diagnosis.ts` decides whether the physician sees its result.
  *
  * @module lib/diagnosis-engine/mira-engine
  */
@@ -52,12 +55,14 @@ export function createMiraEngine(
     baseUrl?: () => string | undefined;
     timeoutMs?: number;
     planModel?: () => Promise<string | undefined>;
+    devToken?: () => string | undefined;
   } = {}
 ): DiagnosisEngine {
   const fetchFn = deps.fetchFn ?? ((...args: Parameters<typeof fetch>) => fetch(...args));
   const readBaseUrl = deps.baseUrl ?? (() => import.meta.env.VITE_MIRA_SERVICE_URL);
   const timeoutMs = deps.timeoutMs ?? MIRA_REQUEST_TIMEOUT_MS;
   const readPlanModel = deps.planModel ?? getMiraPlanModel;
+  const readDevToken = deps.devToken ?? (() => import.meta.env.VITE_MIRA_DEV_TOKEN);
 
   return {
     id: 'mira',
@@ -91,6 +96,8 @@ export function createMiraEngine(
       const planModel = await readPlanModel();
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (planModel) headers[MIRA_PLAN_MODEL_HEADER] = planModel;
+      const devToken = readDevToken()?.trim();
+      if (devToken) headers.Authorization = `Bearer ${devToken}`;
 
       const controller = new AbortController();
       const onAbort = () => controller.abort();

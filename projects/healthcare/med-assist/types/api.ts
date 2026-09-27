@@ -40,6 +40,8 @@ export interface DiagnosisSuggestion {
   red_flags?: string[];
   /** Recommended actions */
   recommended_actions?: string[];
+  /** Which engine proposed it, shown next to the name (e.g. "MIRA"); unset for the legacy engine */
+  engine_tag?: string;
 }
 
 // =============================================================================
@@ -229,6 +231,8 @@ export interface CDSSResponse {
   meta?: CDSSResponseMeta;
   /** Fail-closed clinical reasoning summary */
   clinical_reasoning?: ClinicalReasoningPayload;
+  /** Note for the physician about the diagnosis engine (e.g. "MIRA tidak tersedia") */
+  engine_notice?: string;
 }
 
 export interface PharmacotherapyExplainability {

@@ -66,7 +66,12 @@ describe('getDiagnosisEngineConfig().diagnosisEngine', () => {
     expect(getDiagnosisEngineConfig().diagnosisEngine).toBe('mira');
   });
 
-  it.each(['MIRA', 'true', 'legacy', ''])('stays legacy for %j', (value) => {
+  it('selects shadow only for the exact value "shadow"', () => {
+    vi.stubEnv('SENTRA_DIAGNOSIS_ENGINE', 'shadow');
+    expect(getDiagnosisEngineConfig().diagnosisEngine).toBe('shadow');
+  });
+
+  it.each(['MIRA', 'SHADOW', 'true', 'legacy', ''])('stays legacy for %j', (value) => {
     vi.stubEnv('SENTRA_DIAGNOSIS_ENGINE', value);
     expect(getDiagnosisEngineConfig().diagnosisEngine).toBe('legacy');
   });

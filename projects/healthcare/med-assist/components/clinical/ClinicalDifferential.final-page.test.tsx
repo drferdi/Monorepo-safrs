@@ -831,4 +831,81 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     expect(advancedReasoning).toBeTruthy();
     expect(advancedReasoning).not.toHaveAttribute('open');
   });
+
+  function renderWithSuggestions(data: Record<string, unknown>) {
+    const base = mockSendMessage.getMockImplementation();
+    mockSendMessage.mockImplementation(async (type: string, payload?: Record<string, unknown>) =>
+      type === 'getSuggestions' ? { success: true, data } : base?.(type, payload)
+    );
+    render(
+      <ClinicalDifferential
+        keluhanUtama="Nyeri perut kanan bawah sejak 1 hari"
+        keluhanTambahan="Mual"
+        patientAge={24}
+        patientGender="L"
+        patientRM="RM-2026-001"
+        allergies={[]}
+        confirmedPregnancyStatus={false}
+        vitals={{ sbp: 118, dbp: 76, hr: 96, rr: 18, temp: 37.9, glucose: 0 }}
+        canonicalOutput={null}
+        hasVisitHistory={false}
+        onBack={() => undefined}
+        onDiagnosisChange={() => undefined}
+        onMedicationsChange={() => undefined}
+      />
+    );
+  }
+
+  it('labels MIRA diagnoses and marks cannot-miss ones, keeping codes outside the local list', async () => {
+    renderWithSuggestions({
+      diagnosis_suggestions: [
+        {
+          rank: 1,
+          icd_x: 'K35.8',
+          nama: 'Acute appendicitis',
+          confidence: 0.82,
+          rationale: '',
+          engine_tag: 'MIRA',
+        },
+        {
+          rank: 2,
+          icd_x: 'Z99.9',
+          nama: 'Code outside the local list',
+          confidence: 0.3,
+          rationale: '',
+          engine_tag: 'MIRA',
+        },
+        {
+          rank: 3,
+          icd_x: 'K65.0',
+          nama: 'Acute peritonitis',
+          confidence: 0.3,
+          rationale: '',
+          engine_tag: 'MIRA · jangan terlewat',
+        },
+      ],
+      alerts: [],
+    });
+
+    await waitFor(() => {
+      expect(screen.getAllByText(/K35\.8 - .* · MIRA$/i).length).toBeGreaterThan(0);
+    });
+    expect(screen.getAllByText(/Z99\.9 - .* · MIRA$/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/K65\.0 - .* · MIRA · jangan terlewat$/i).length).toBeGreaterThan(0);
+  });
+
+  it('shows "MIRA tidak tersedia" when the engine fell back to the legacy list', async () => {
+    renderWithSuggestions({
+      diagnosis_suggestions: [
+        { rank: 1, icd_x: 'K35.8', nama: 'Apendisitis akut', confidence: 0.7, rationale: '' },
+      ],
+      alerts: [],
+      engine_notice: 'MIRA tidak tersedia',
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('MIRA tidak tersedia')).toBeTruthy();
+    });
+    expect(screen.queryByText(/· MIRA/)).toBeNull();
+  });
 });
