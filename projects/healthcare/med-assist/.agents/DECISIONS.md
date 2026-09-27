@@ -3,6 +3,20 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-27 — Real cases may reach MIRA through OpenRouter zero data retention
+
+- Decision (Chief, in chat): the reasoning service runs with `MIRA_DATA_POLICY=openrouter-zdr`
+  (set in the service's gitignored `src/.env`), so de-identified real cases from Med Assist in
+  `mira` mode are answered instead of refused with `DATA_POLICY`. Every OpenRouter request keeps
+  the fixed policy (zero data retention, data collection denied, parameters required).
+- Each diagnosis request in `mira` mode is one live step (about US$0.015–0.02 and 10 s with the
+  current planning model); Chief waived the per-run "jalankan" rule for this mode only.
+- Unchanged: the client PII guard and the service's PII re-check still run first; `legacy` stays
+  the default; the local knowledge base still wins for physicians until ADR-005 is accepted.
+- Evidence: before the change the service audit log held four `DATA_POLICY` refusals from the
+  extension (token accepted, cost 0); `load_settings()` now reports `openrouter-zdr` with no
+  policy problem.
+
 ## 2026-09-27 — Diagnosis engine modes legacy | shadow | mira; MIRA shown in the existing list
 
 - Decision (Chief, in chat, with R3 approval for `feature-flags.ts`, `run-diagnosis.ts` and

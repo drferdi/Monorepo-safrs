@@ -28,9 +28,8 @@ no R3 file outside the approved list.
 
 ## Blockers
 
-- The service runs with `MIRA_DATA_POLICY=synthetic-only`, so it refuses real cases
-  (`DATA_POLICY`); in `mira` mode the panel then shows "MIRA tidak tersedia". The client does not
-  send `X-MIRA-Case-Origin`. Changing the data policy is Chief's decision.
+- Chief set the service to `MIRA_DATA_POLICY=openrouter-zdr` on 2026-09-27 (DECISIONS). The running
+  service must be restarted to pick it up; a real `mira` step has not been observed yet.
 - The service's documented port is 8765; Chief's setup uses 8787, so start uvicorn with
   `--port 8787` or set `VITE_MIRA_SERVICE_URL` to the port in use.
 - `.safrs/sensitive-paths.json` does not classify `lib/diagnosis-engine/**` as R3 although it now
