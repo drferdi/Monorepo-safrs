@@ -14,8 +14,8 @@ Steps A–E, in commits `72a08801`..`c8f3ae0a` plus this handoff:
 - `lib/diagnosis-engine/`: engine contract, legacy adapter, registry, `run-diagnosis.ts` (shadow
   mode), MIRA client (`mira-engine.ts`, off by default), JSON Schema contract with examples,
   benchmark export (`scripts/benchmark/run-legacy-engine.mjs`).
-- Flag `diagnosisEngine` (`SENTRA_DIAGNOSIS_ENGINE`) in `feature-flags.ts`, default `legacy`. This
-  is the only R3 file changed (approved by Chief at the Step A stop).
+- Flag `diagnosisEngine` (`SENTRA_DIAGNOSIS_ENGINE`) in `feature-flags.ts`, default `legacy`. It
+  and its test `feature-flags.test.ts` are the only R3 files changed (approved at the Step A stop).
 - `entrypoints/background.ts` `getSuggestions` now calls `runDiagnosisSuggestions`.
 - ADR-005 (Proposed), `docs/ARCHITECTURE.md` §5.6, inventory in
   `docs/plans/diagnosis-engine-inventory.md`.
