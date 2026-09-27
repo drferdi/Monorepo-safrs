@@ -144,6 +144,30 @@ describe('TTVInferenceUI forward consult', () => {
     expect(pregnancyGroup?.querySelector('.field-context-note')?.textContent).not.toContain('RME:');
   });
 
+  it('lets the pregnancy risk indicator wrap below the label instead of overlapping it', () => {
+    render(
+      <TTVInferenceUI
+        patientName="Ny. Sari"
+        patientGender="P"
+        patientAge={31}
+        patientRM="RM-031"
+        patientBPJSStatus="aktif"
+        extractedSpecialConditions={[]}
+        extractedPregnancyRisk="Trimester perlu dikonfirmasi"
+        extractedAllergies={['Makanan', 'Debu']}
+      />
+    );
+
+    const label = screen.getByText('Status Kehamilan');
+    const header = label.closest('.form-group-header');
+    expect(header).toHaveClass('form-group-header--wrap');
+    expect(within(header as HTMLElement).getByText('risiko terdeteksi')).toBeInTheDocument();
+
+    const css = readFileSync(resolve(process.cwd(), 'entrypoints/sidepanel/style.css'), 'utf8');
+    expect(css).toMatch(/\.form-group-header--wrap\s*\{[^}]*flex-wrap:\s*wrap/);
+    expect(css).toMatch(/\.form-group-header--wrap\s+\.field-extracted-indicator[^{]*\{[^}]*flex-shrink:\s*0/);
+  });
+
   it('memberi jarak horizontal khusus antar kolom vital sign', () => {
     render(
       <TTVInferenceUI

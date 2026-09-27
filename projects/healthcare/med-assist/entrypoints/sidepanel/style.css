@@ -9545,3 +9545,15 @@ details[open] > summary .ct-disclosure-hint__open {
 details[open] > summary .ct-disclosure-hint__close {
   display: inline;
 }
+
+/* ── Status Kehamilan header: indicator wraps instead of overlapping (2026-09-27) ── */
+.form-group-header--wrap {
+  flex-wrap: wrap;
+  row-gap: 2px;
+}
+
+.form-group-header--wrap .field-extracted-indicator,
+.form-group-header--wrap .field-placeholder-hint {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
