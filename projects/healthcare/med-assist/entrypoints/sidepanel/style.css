@@ -9523,3 +9523,25 @@ textarea:read-only,
   border-radius: var(--radius-card);
   padding: 2px 4px;
 }
+
+/* ── Disclosure hint: green Open/Close on trajectory dropdowns (2026-09-27) ── */
+.ct-disclosure-hint {
+  color: var(--sentra-safe);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.ct-disclosure-hint__close {
+  display: none;
+}
+
+details[open] > summary .ct-disclosure-hint__open {
+  display: none;
+}
+
+details[open] > summary .ct-disclosure-hint__close {
+  display: inline;
+}

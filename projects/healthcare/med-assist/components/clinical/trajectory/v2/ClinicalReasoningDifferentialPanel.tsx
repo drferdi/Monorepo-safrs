@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 
+import { DisclosureHint } from './DisclosureHint';
+
 import type { HybridTrajectoryResult } from '@/lib/iskandar-diagnosis-engine/hybrid-trajectory';
 import {
   buildClinicalReasoningWorkflowFromTrajectoryV2,
@@ -197,6 +199,7 @@ export function ClinicalReasoningAuditTrail({
           <div className="text-tiny text-muted whitespace-nowrap">
             {auditPersistenceStatus === 'persisted' ? 'Audit stored' : 'Audit unavailable'}
           </div>
+          <DisclosureHint />
         </div>
       </summary>
 

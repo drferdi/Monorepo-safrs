@@ -1,3 +1,5 @@
+import { DisclosureHint } from './DisclosureHint';
+
 import type { CanonicalClinicalEngineOutput } from '@/lib/api/bridge-client';
 import type { HybridTrajectoryResult } from '@/lib/iskandar-diagnosis-engine/hybrid-trajectory';
 import type { TrajectoryVisualizationViewModel } from '@/lib/iskandar-diagnosis-engine/trajectory-visualization-view-model';
@@ -164,6 +166,7 @@ export function ClinicalEvidenceDrawer({
           <div className="text-tiny text-muted whitespace-nowrap">
             Supporting facts · {visitCount} visits
           </div>
+          <DisclosureHint />
         </div>
       </summary>
 

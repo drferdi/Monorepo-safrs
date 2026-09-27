@@ -10,6 +10,7 @@ import {
 } from './ClinicalReasoningDifferentialPanel';
 import { ClinicalTrajectoryChartTabs } from './ClinicalTrajectoryChartTabs';
 import { ClinicalTrajectoryHeader } from './ClinicalTrajectoryHeader';
+import { DisclosureHint } from './DisclosureHint';
 
 import type { CanonicalClinicalEngineOutput } from '@/lib/api/bridge-client';
 import type { HybridTrajectoryResult } from '@/lib/iskandar-diagnosis-engine/hybrid-trajectory';
@@ -312,6 +313,7 @@ export function ClinicalTrajectoryV2({
         <summary className="cursor-pointer list-none">
           <div className="ct-v2-panel-head">
             <div className="ttv-section-title">Review details</div>
+            <DisclosureHint />
           </div>
         </summary>
         <div className="mt-3 ct-v2-lens-reveal-shell">

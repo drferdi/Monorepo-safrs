@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { DisclosureHint } from '../v2/DisclosureHint';
+
 import type {
   TrajectoryBaselineDeviation,
   TrajectoryDriverContribution,
@@ -194,12 +196,15 @@ export function TrajectorySimplePanel({
         {chart}
       </div>
 
-      <div className="neu-card-inset p-4 md:p-5" data-testid="trajectory-simple-result">
-        <div className="mb-3">
-          <div className="ttv-label text-tertiary">Hasil</div>
-        </div>
-        {result}
-      </div>
+      <details className="neu-card-inset p-4 md:p-5" data-testid="trajectory-simple-result">
+        <summary className="cursor-pointer list-none">
+          <div className="flex items-center justify-between gap-3">
+            <div className="ttv-label text-tertiary">Hasil</div>
+            <DisclosureHint />
+          </div>
+        </summary>
+        <div className="mt-3">{result}</div>
+      </details>
     </section>
   );
 }

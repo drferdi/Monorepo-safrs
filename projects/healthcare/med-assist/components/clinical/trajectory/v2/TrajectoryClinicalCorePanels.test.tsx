@@ -129,6 +129,11 @@ describe('Trajectory clinical core panels', () => {
     expect(timelinePanel).toBeInTheDocument();
     expect(within(timelinePanel).getByTestId('trajectory-simple-chart')).toBeInTheDocument();
     expect(within(timelinePanel).getByTestId('trajectory-simple-result')).toBeInTheDocument();
+    const timelineResult = within(timelinePanel).getByTestId('trajectory-simple-result');
+    expect(timelineResult.tagName).toBe('DETAILS');
+    expect(timelineResult).not.toHaveAttribute('open');
+    expect(within(timelineResult).getByText('Hasil')).toBeInTheDocument();
+    expect(within(timelineResult).getByText('Open')).toBeInTheDocument();
     expect(within(timelinePanel).getByTestId('trajectory-result-timeline')).toBeInTheDocument();
     expect(within(timelinePanel).getAllByTestId('trajectory-result-entry').length).toBeGreaterThan(
       0
