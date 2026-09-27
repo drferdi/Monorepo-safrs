@@ -261,7 +261,7 @@ describe('DiagnosisWorkspace triage section', () => {
     referralGuidance: '1. Bila tidak membaik.\n2. Bila komplikasi.',
   };
 
-  it('keeps the headline visible and folds advice, reasons, referral and red flags into dropdowns', () => {
+  it('keeps the headline visible and folds reasons, referral and red flags into dropdowns', () => {
     const props = makeProps({ triage });
     props.viewModel.evidence.redFlags = ['Penurunan kesadaran'];
     render(<DiagnosisWorkspace {...props} />);
@@ -270,12 +270,28 @@ describe('DiagnosisWorkspace triage section', () => {
     const statusChip = section.querySelector('.form-group-header .field-extracted-indicator');
     expect(statusChip).toHaveTextContent('Pertimbangkan rujukan');
     const summaries = Array.from(section.querySelectorAll('details > summary')).map((s) => s.textContent);
-    expect(summaries).toEqual(['Saran', 'Alasan', 'Indikasi rujukan', 'Tanda bahaya']);
+    expect(summaries).toEqual(['Alasan', 'Indikasi rujukan', 'Tanda bahaya (2)']);
     section.querySelectorAll('details').forEach((d) => expect(d).not.toHaveAttribute('open'));
     expect(within(section).getByText('Bila komplikasi.')).toBeInTheDocument();
     expect(
       within(screen.getByLabelText('Pemeriksaan Penunjang')).queryByText('Tanda bahaya')
     ).toBeNull();
+  });
+
+  it('shows every de-duplicated danger sign once, with no cap', () => {
+    const props = makeProps({ triage });
+    props.viewModel.evidence.redFlags = ['SpO2 < 90%', 'RR > 30x/menit', 'Penurunan kesadaran', 'Hemoptisis masif'];
+    props.viewModel.evidence.doNotMiss = ['SpO2 < 90%', 'Tanda gagal napas'];
+    render(<DiagnosisWorkspace {...props} />);
+
+    const workspace = screen.getByTestId('diagnosis-workspace');
+    const section = screen.getByLabelText('Triase & Rujukan');
+    expect(within(section).getByText('Tanda bahaya (5)')).toBeInTheDocument();
+    ['SpO2 < 90%', 'RR > 30x/menit', 'Penurunan kesadaran', 'Hemoptisis masif', 'Tanda gagal napas'].forEach(
+      (item) => expect(within(workspace).getAllByText(item)).toHaveLength(1)
+    );
+    expect(workspace).not.toHaveTextContent(/Safety-net/);
+    expect(workspace).not.toHaveTextContent(/Jangan lewatkan:/);
   });
 
   it('raises the triage summary contrast to AA via a dedicated modifier class', () => {
@@ -285,7 +301,7 @@ describe('DiagnosisWorkspace triage section', () => {
 
     const section = screen.getByLabelText('Triase & Rujukan');
     const details = Array.from(section.querySelectorAll('details'));
-    expect(details).toHaveLength(4);
+    expect(details).toHaveLength(3);
     details.forEach((d) => {
       expect(d).toHaveClass('diagnosis-details--inline');
       expect(d).toHaveClass('diagnosis-details--triage');

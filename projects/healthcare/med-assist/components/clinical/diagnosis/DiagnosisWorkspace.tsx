@@ -484,12 +484,6 @@ function TriageSummarySection({
   return (
     <section className="form-group diagnosis-block" aria-label="Triase & Rujukan">
       <SectionHeader title="Triase & Rujukan" status={triage.headline} />
-      <details className="diagnosis-details diagnosis-details--inline diagnosis-details--triage">
-        <summary>Saran</summary>
-        <ReadOnlyPanel tone={triage.tone}>
-          <strong>{triage.headline}</strong>
-        </ReadOnlyPanel>
-      </details>
       {triage.firedCriteria.length > 0 ? (
         <details className="diagnosis-details diagnosis-details--inline diagnosis-details--triage">
           <summary>Alasan</summary>
@@ -504,7 +498,7 @@ function TriageSummarySection({
       ) : null}
       {safetyItems.length > 0 ? (
         <details className="diagnosis-details diagnosis-details--inline diagnosis-details--triage">
-          <summary>Tanda bahaya</summary>
+          <summary>{`Tanda bahaya (${safetyItems.length})`}</summary>
           <LineList title="Tanda bahaya" items={safetyItems} tone="danger" />
         </details>
       ) : null}
@@ -561,10 +555,6 @@ function EducationSection({ viewModel }: { viewModel: DiagnosisPageViewModel }) 
     viewModel.evidence.review.length > 0
       ? viewModel.evidence.review.slice(0, 3)
       : ['Edukasi disesuaikan setelah diagnosis utama dipilih.'];
-  const safetyItems = [
-    ...viewModel.evidence.redFlags.map((item) => `Tanda bahaya: ${item}`),
-    ...viewModel.evidence.doNotMiss.map((item) => `Jangan lewatkan: ${item}`),
-  ];
 
   return (
     <section className="form-group diagnosis-block" aria-label="Edukasi">
@@ -576,9 +566,6 @@ function EducationSection({ viewModel }: { viewModel: DiagnosisPageViewModel }) 
       ) : (
         <LineList title="Edukasi pasien" items={educationItems} />
       )}
-      {safetyItems.length > 0 ? (
-        <LineList title="Safety-net" items={safetyItems} tone="danger" />
-      ) : null}
       {viewModel.evidence.review.length > educationItems.length ? (
         <details className="diagnosis-details diagnosis-details--inline">
           <summary>Rincian edukasi</summary>
@@ -726,7 +713,7 @@ function getVisibleSafetyItems(redFlags: string[], doNotMissItems: string[]): st
       .map(cleanClinicalSummary)
       .map((item) => item.replace(/^Do not miss:\s*/i, '').trim())
       .filter((item) => item && !isGenericDiagnosisUiText(item) && !isChronicRiskContextOnly(item))
-  ).slice(0, 3);
+  );
 }
 
 function isGenericDiagnosisUiText(value: string): boolean {
