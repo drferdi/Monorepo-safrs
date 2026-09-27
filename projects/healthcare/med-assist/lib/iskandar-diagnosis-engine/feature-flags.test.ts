@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { afterEach, describe, it, expect, vi } from 'vitest';
 
 import { getDiagnosisEngineConfig } from './feature-flags';
 
@@ -48,5 +48,26 @@ describe('getDiagnosisEngineConfig', () => {
     const config = getDiagnosisEngineConfig();
     expect(config.openaiModel).toBe('gpt-4o');
     process.env.SENTRA_OPENAI_MODEL = original;
+  });
+});
+
+describe('getDiagnosisEngineConfig().diagnosisEngine', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it('defaults to the legacy engine when SENTRA_DIAGNOSIS_ENGINE is unset', () => {
+    vi.stubEnv('SENTRA_DIAGNOSIS_ENGINE', undefined);
+    expect(getDiagnosisEngineConfig().diagnosisEngine).toBe('legacy');
+  });
+
+  it('selects mira only for the exact value "mira"', () => {
+    vi.stubEnv('SENTRA_DIAGNOSIS_ENGINE', 'mira');
+    expect(getDiagnosisEngineConfig().diagnosisEngine).toBe('mira');
+  });
+
+  it.each(['MIRA', 'true', 'legacy', ''])('stays legacy for %j', (value) => {
+    vi.stubEnv('SENTRA_DIAGNOSIS_ENGINE', value);
+    expect(getDiagnosisEngineConfig().diagnosisEngine).toBe('legacy');
   });
 });

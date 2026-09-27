@@ -9,6 +9,9 @@ export interface DiagnosisEngineFeatureConfig {
   fallbackToKBOnly: boolean;
   // If KB top-1 matchScore >= this threshold, skip LLM call entirely
   llmSkipHighConfidenceThreshold: number;
+  // Which diagnosis engine runs (lib/diagnosis-engine/registry.ts). Only the exact value
+  // 'mira' selects the candidate engine; anything else, including unset, stays 'legacy'.
+  diagnosisEngine: 'legacy' | 'mira';
 }
 
 export function getDiagnosisEngineConfig(): DiagnosisEngineFeatureConfig {
@@ -19,5 +22,6 @@ export function getDiagnosisEngineConfig(): DiagnosisEngineFeatureConfig {
     openaiTimeoutMs: parseInt(import.meta.env.SENTRA_OPENAI_TIMEOUT_MS || '12000', 10),
     fallbackToKBOnly: true,
     llmSkipHighConfidenceThreshold: parseFloat(import.meta.env.SENTRA_LLM_SKIP_THRESHOLD || '0.65'),
+    diagnosisEngine: import.meta.env.SENTRA_DIAGNOSIS_ENGINE === 'mira' ? 'mira' : 'legacy',
   };
 }
