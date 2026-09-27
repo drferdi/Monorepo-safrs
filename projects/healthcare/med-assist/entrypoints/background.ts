@@ -19,8 +19,8 @@ import {
 import { buildPatientSyncPayload } from '@/lib/api/patient-sync-payload';
 import { SentraAPI } from '@/lib/api/sentra-api';
 import { migrateLegacyAppStorageKeys } from '@/lib/app-identity';
+import { runDiagnosisSuggestions } from '@/lib/diagnosis-engine/run-diagnosis';
 import { getCDSSEngineStatus, initCDSSEngine } from '@/lib/iskandar-diagnosis-engine';
-import { runGetSuggestionsFlow } from '@/lib/iskandar-diagnosis-engine/get-suggestions-flow';
 import { RMETransferOrchestrator } from '@/lib/rme/transfer-orchestrator';
 import { isStepUrl, selectBestTransferTab } from '@/lib/rme/transfer-targeting';
 import { saveShiftOverviewCache } from '@/lib/statistics/cache';
@@ -1723,9 +1723,9 @@ export default defineBackground(() => {
         };
       }
 
-      // Run REAL CDSS Engine
+      // Run REAL CDSS Engine (via the engine registry; physician output is the legacy flow's)
       bgLog.debug('Running CDSS Engine for encounter:', encounter.id);
-      return await runGetSuggestionsFlow(encounter, context);
+      return await runDiagnosisSuggestions(encounter, context);
     } catch (error) {
       bgLog.error('CDSS Engine failed:', error);
       return {
