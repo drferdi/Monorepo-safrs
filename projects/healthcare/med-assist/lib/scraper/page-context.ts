@@ -29,7 +29,9 @@ export interface ExtractedTenagaMedis {
 
 const PATIENT_LABEL_BOUNDARY =
   '(?:RM|No\\.?\\s*RM|Usia|Umur|JK|Jenis\\s*Kelamin|Kelurahan|Alamat|BPJS|Tgl\\.?\\s*Lahir|Tanggal\\s*Lahir|TTL)';
-const PATIENT_LABEL_LOOKAHEAD = `(?=\\s+${PATIENT_LABEL_BOUNDARY}\\s*[-:]|\\s*$)`;
+// A value ends at the next known label, at a line break (table rows such as "No. eRM" followed by
+// "No. RM Lama"), or at the end of the text.
+const PATIENT_LABEL_LOOKAHEAD = `(?=\\s+${PATIENT_LABEL_BOUNDARY}\\s*[-:]|[ \\t]*(?:[\\r\\n]|$))`;
 
 const NAME_SELECTORS = [
   '[class*="nama"]',

@@ -32,6 +32,40 @@ describe('page context extractors', () => {
     });
   });
 
+  it('extracts patient info from the "Data Pasien" table, one label per row (synthetic values)', () => {
+    const rows = [
+      ['ID Pelayanan', '11111'],
+      ['No. eRM', '00000001'],
+      ['No. RM Lama', '12345'],
+      ['No. Dokumen RM', ''],
+      ['Nama KK', 'CONTOH KK'],
+      ['Nama', 'PASIEN CONTOH'],
+      ['Jenis Kelamin', 'Perempuan'],
+      ['Umur', '46 Thn 0 Bln 0 Hr'],
+    ];
+    document.body.innerHTML = `<table>${rows
+      .map(([label, value]) => `<tr><td>${label}</td><td>:</td><td>${value}</td></tr>`)
+      .join('')}</table>`;
+    // jsdom has no layout, so give the body Chrome's innerText for a table: tabs between cells,
+    // newlines between rows.
+    Object.defineProperty(document.body, 'innerText', {
+      configurable: true,
+      value: rows.map(([label, value]) => `${label}\t:\t${value}`).join('\n'),
+    });
+
+    try {
+      expect(extractPatientInfoFromDocument(document)).toMatchObject({
+        name: 'PASIEN CONTOH',
+        rm: '00000001',
+        age: 46,
+        ageParsed: true,
+        gender: 'P',
+      });
+    } finally {
+      Reflect.deleteProperty(document.body, 'innerText');
+    }
+  });
+
   it('marks empty-page extracts as unreliable (ageParsed false, blank identity)', () => {
     document.body.innerHTML = `<div class="login">Silakan masuk</div>`;
 
