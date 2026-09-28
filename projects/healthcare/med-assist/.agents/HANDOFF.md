@@ -11,6 +11,10 @@ Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** Thi
 implemented plan `docs/plans/2026-09-28-mira-autostart-recurrent-dx-step-flow-plan.md` (16 tasks,
 all reviews approved) on top of `873d5b7d`, in three parts:
 
+**SAFRS**: risk tier R3, driven only by `lib/clinical/recurrent-diagnosis.ts` + its test (Chief's
+prior approval); no verification-control path, no protected file, no secrets; integrity review not
+required.
+
 - **Part 1 — MIRA auto-start**: a native messaging host in the MIRA repository
   (`D:\DEV\gafferverse\mira-system`, branch `feat/reasoning-service`, commits `a842f4a`,
   `986b0bf`, `ee6fcb7`, `15f87b4` under `assist/host/`) that the extension asks to start the
@@ -99,6 +103,27 @@ MIRA repository: `src\.venv\Scripts\python.exe -m pytest assist/host/tests -q` �
 4. Defence in depth (not done): `main.tsx`'s `storage.onChanged` listener re-renders on every key;
    filtering it to only the keys it reads would need a protected-file approval.
 
+## Open for Chief — decisions from this session's SAFRS audit (code must not change for these)
+
+5. Durable R3 acknowledgement for `lib/clinical/recurrent-diagnosis.*` and a review of
+   `CHRONIC_ICD_ROOTS` as clinical content: the approval so far is verbal, in this session; the
+   `DECISIONS.md` entry cites it but needs Chief's durable sign-off.
+6. ADR-005 is Accepted by Chief's decision without the Gate 1 benchmark evidence; if the ADR's
+   "Decision Maker … pending" header line is still present, closing it is Chief's to do.
+7. `VITE_MIRA_SERVICE_URL` has no default in `.env.example`: a production build without
+   `.env.local` reports MIRA `down` after the 30 s poll even though `mira` is now the default
+   engine. Chief decides whether the extension gets the same default the host hard-codes
+   (`http://127.0.0.1:8787`) or keeps `.env.local` as the single source.
+8. The host starts the service with `MIRA_SERVICE_ENV=development` (same as `run_local.ps1`)
+   while the extension's production build now defaults to `mira`; Chief decides the environment
+   name.
+9. Capsule `AGENTS.md` still says "penyakit.json wins; the LLM is a reranker only", which accepted
+   ADR-005 supersedes for the differential; `projects/**/AGENTS.md` is an R2 verification control,
+   so that edit is a separate change set for Chief to authorise.
+10. Minor: a host `failed.reason` is `str(OSError)` and may surface a local path in the header
+    status dot's title.
+
 ## Next action
 
-Chief runs the one-time host install, reloads the extension, and walks the live checks above.
+Chief runs the one-time host install, reloads the extension, and walks the live checks above; then
+weighs in on the SAFRS items above (5–10).
