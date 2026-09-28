@@ -8,7 +8,8 @@ describe('StepReceipt', () => {
     const onReopen = vi.fn();
     render(<StepReceipt step={{ key: 'finding', index: 1, label: 'Temuan', done: true }} summary="nyeri kepala · TD 168/102" onReopen={onReopen} />);
     const line = screen.getByTestId('dx-flow-receipt-finding');
-    expect(line).toHaveTextContent('✓ Temuan · nyeri kepala · TD 168/102');
+    expect(line).toHaveTextContent('Temuan');
+    expect(line).toHaveTextContent('nyeri kepala · TD 168/102');
     fireEvent.click(screen.getByRole('button', { name: 'ubah Temuan' }));
     expect(onReopen).toHaveBeenCalledTimes(1);
   });

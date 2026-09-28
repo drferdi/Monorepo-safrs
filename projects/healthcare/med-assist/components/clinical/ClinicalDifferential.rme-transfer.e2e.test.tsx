@@ -209,7 +209,7 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
     // Choosing a diagnosis must move the flow on to Terapi, rendered in full,
     // not just leave it as a one-line ghost.
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: 'Terapi apa?' })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Terapi' })).toBeInTheDocument();
       expect(screen.queryByTestId('dx-flow-ghost-therapy')).toBeNull();
     });
 

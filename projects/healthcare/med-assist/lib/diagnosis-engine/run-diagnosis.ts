@@ -26,7 +26,7 @@ import { encounterToCaseState } from './case-state';
 import { createTraceId, createUnavailableResult } from './engine-result';
 import type { LegacyDiagnosisEngine } from './legacy-engine';
 import { MIRA_UNAVAILABLE_NOTICE, miraNoticeFor } from './mira-notice';
-import { getLastMiraStatus, type MiraStatus } from './mira-supervisor';
+import { ensureMira, getLastMiraStatus, type MiraStatus } from './mira-supervisor';
 import { CANDIDATE_TIMEOUT_MS, peekPrefetch } from './prefetch-store';
 import { getActiveDiagnosisEngine, getLegacyEngine } from './registry';
 import { hashCanonical } from './request-context';
@@ -245,6 +245,11 @@ export async function runDiagnosisSuggestions(
   if (!response.success || !response.data) return response;
 
   const suggestions = result.status === 'ok' ? miraDifferentialToSuggestions(result) : [];
+  // A network failure means the service is not up (yet): ask the supervisor to bring it up so the
+  // panel's re-request, or the next run, finds it running instead of a stale status.
+  if (result.status !== 'ok' && (result.error?.code === 'NETWORK_ERROR' || result.error?.code === 'NOT_CONFIGURED')) {
+    void ensureMira().catch(() => undefined);
+  }
   return {
     ...response,
     data:

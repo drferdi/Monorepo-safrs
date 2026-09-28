@@ -28,8 +28,11 @@ export function RmeStep({
   onCancelTransfer,
 }: Props) {
   return (
-    <section className="dx-flow-step" aria-label="RME">
-      <h2 className="dx-flow-step__heading">RME</h2>
+    <section className="ct-v2-panel flex flex-col gap-3" aria-label="RME">
+      <div className="ct-v2-panel-head">
+        <h2 className="ttv-section-title">RME</h2>
+        <span className="ttv-label">4 / 4</span>
+      </div>
       <RMETransferPanel
         viewModel={viewModel}
         onAutoFillRME={onAutoFillRME}

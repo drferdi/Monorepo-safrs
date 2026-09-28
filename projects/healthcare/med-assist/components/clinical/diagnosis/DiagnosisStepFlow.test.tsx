@@ -165,29 +165,30 @@ function makeProps(overrides: Partial<DiagnosisPageProps> = {}): DiagnosisPagePr
 }
 
 describe('DiagnosisStepFlow', () => {
-  it('shows the safety strip, the finished Temuan as a receipt, Diagnosis active and Terapi/RME as ghosts', () => {
+  it('shows no danger-sign list, the finished Temuan as a receipt, Diagnosis active and Terapi/RME as ghosts', () => {
     const vm = makeViewModel({ therapy: { ...makeViewModel().therapy, selectedDiagnosisCount: 0, selectedMedicationCount: 0 } });
     render(<DiagnosisStepFlow {...makeProps({ viewModel: vm })} />);
-    expect(screen.getByTestId('dx-flow-danger')).toHaveTextContent('⚠ 2 tanda bahaya');
-    expect(screen.getByTestId('dx-flow-receipt-finding')).toHaveTextContent('✓ Temuan · Demam · Batuk · Sesak');
-    expect(screen.getByRole('heading', { name: 'Apa diagnosis utama hari ini?' })).toBeInTheDocument();
+    expect(screen.queryByText(/tanda bahaya/)).toBeNull();
+    expect(screen.getByTestId('dx-flow-receipt-finding')).toHaveTextContent('Temuan');
+    expect(screen.getByTestId('dx-flow-receipt-finding')).toHaveTextContent('Demam · Batuk · Sesak');
+    expect(screen.getByRole('heading', { name: 'Diagnosis' })).toBeInTheDocument();
     expect(screen.getByTestId('dx-flow-ghost-therapy')).toHaveTextContent('3 · Terapi');
     expect(screen.getByTestId('dx-flow-ghost-rme')).toHaveTextContent('4 · RME');
-    expect(screen.queryByRole('heading', { name: 'Terapi apa?' })).toBeNull();
+    expect(screen.queryByRole('heading', { name: 'Terapi' })).toBeNull();
   });
 
   it('moves the focus to Terapi once a diagnosis is chosen and shows Diagnosis as a receipt', () => {
     const vm = makeViewModel({ therapy: { ...makeViewModel().therapy, selectedMedicationCount: 0 } });
     render(<DiagnosisStepFlow {...makeProps({ viewModel: vm })} />);
-    expect(screen.getByTestId('dx-flow-receipt-diagnosis')).toHaveTextContent('✓ Diagnosis · J18.9 - Community Acquired Pneumonia');
-    expect(screen.getByRole('heading', { name: 'Terapi apa?' })).toBeInTheDocument();
+    expect(screen.getByTestId('dx-flow-receipt-diagnosis')).toHaveTextContent('J18.9 - Community Acquired Pneumonia');
+    expect(screen.getByRole('heading', { name: 'Terapi' })).toBeInTheDocument();
   });
 
   it('reopens a finished step from "ubah" and returns to the flow from "selesai"', () => {
     render(<DiagnosisStepFlow {...makeProps()} />);
     fireEvent.click(screen.getByRole('button', { name: 'Lanjut' }));
     fireEvent.click(screen.getByRole('button', { name: 'ubah Diagnosis' }));
-    expect(screen.getByRole('heading', { name: 'Apa diagnosis utama hari ini?' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Diagnosis' })).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'selesai' }));
     expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
   });
@@ -202,8 +203,8 @@ describe('DiagnosisStepFlow', () => {
     expect(screen.queryByTestId('dx-flow-receipt-finding')).toBeNull();
     const diagnosisReceipt = screen.getByTestId('dx-flow-receipt-diagnosis');
     const therapyReceipt = screen.getByTestId('dx-flow-receipt-therapy');
-    expect(diagnosisReceipt).toHaveTextContent('✓ Diagnosis · J18.9 - Community Acquired Pneumonia');
-    expect(therapyReceipt).toHaveTextContent('✓ Terapi · Paracetamol 500 mg');
+    expect(diagnosisReceipt).toHaveTextContent('J18.9 - Community Acquired Pneumonia');
+    expect(therapyReceipt).toHaveTextContent('Paracetamol 500 mg');
     // In step order, below the reopened step.
     const temuan = screen.getByRole('heading', { name: 'Temuan' });
     expect(temuan.compareDocumentPosition(diagnosisReceipt) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
@@ -215,10 +216,10 @@ describe('DiagnosisStepFlow', () => {
   it('shows Temuan as a receipt and only the Diagnosis step, with its skeleton, while loading', () => {
     const vm = makeViewModel({ therapy: { ...makeViewModel().therapy, selectedDiagnosisCount: 0, selectedMedicationCount: 0 } });
     render(<DiagnosisStepFlow {...makeProps({ phase: 'loading', viewModel: vm })} />);
-    expect(screen.getByTestId('dx-flow-receipt-finding')).toHaveTextContent('✓ Temuan · Demam · Batuk · Sesak');
+    expect(screen.getByTestId('dx-flow-receipt-finding')).toHaveTextContent('Demam · Batuk · Sesak');
     expect(document.querySelectorAll('.diagnosis-skeleton__card')).toHaveLength(2);
     expect(screen.getByText('Menyusun diagnosis banding...')).toHaveClass('sr-only');
-    expect(screen.getAllByRole('heading').map((heading) => heading.textContent)).toEqual(['Apa diagnosis utama hari ini?']);
+    expect(screen.getAllByRole('heading').map((heading) => heading.textContent)).toEqual(['Diagnosis']);
     expect(screen.getByTestId('dx-flow-ghost-therapy')).toBeInTheDocument();
     expect(screen.getByTestId('dx-flow-ghost-rme')).toBeInTheDocument();
   });
@@ -248,26 +249,26 @@ describe('DiagnosisStepFlow', () => {
     fireEvent.click(screen.getAllByTestId('dx-flow-med')[0]);
     expect(onToggleMedication).toHaveBeenLastCalledWith('paracetamol');
     rerender(<DiagnosisStepFlow {...makeProps({ viewModel: withSelected(['paracetamol']), onToggleMedication })} />);
-    expect(screen.getByRole('heading', { name: 'Terapi apa?' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Terapi' })).toBeInTheDocument();
     fireEvent.click(screen.getAllByTestId('dx-flow-med')[1]);
     expect(onToggleMedication).toHaveBeenLastCalledWith('ambroxol');
     rerender(<DiagnosisStepFlow {...makeProps({ viewModel: withSelected(['paracetamol', 'ambroxol']), onToggleMedication })} />);
-    expect(screen.getByRole('heading', { name: 'Terapi apa?' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Terapi' })).toBeInTheDocument();
     expect(screen.queryByTestId('dx-flow-receipt-therapy')).toBeNull();
 
     fireEvent.click(screen.getByRole('button', { name: 'Lanjut' }));
-    expect(screen.getByTestId('dx-flow-receipt-therapy')).toHaveTextContent('✓ Terapi · Paracetamol 500 mg, Ambroxol 30 mg');
+    expect(screen.getByTestId('dx-flow-receipt-therapy')).toHaveTextContent('Paracetamol 500 mg, Ambroxol 30 mg');
     expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
-    expect(screen.queryByRole('heading', { name: 'Terapi apa?' })).toBeNull();
+    expect(screen.queryByRole('heading', { name: 'Terapi' })).toBeNull();
   });
 
   it('continues to RME without medication and shows Terapi as a "tanpa obat" receipt', () => {
     const vm = makeViewModel({ therapy: { ...makeViewModel().therapy, selectedMedicationCount: 0 } });
     render(<DiagnosisStepFlow {...makeProps({ viewModel: vm })} />);
     fireEvent.click(screen.getByRole('button', { name: 'Lanjut tanpa obat' }));
-    expect(screen.getByTestId('dx-flow-receipt-therapy')).toHaveTextContent('✓ Terapi · tanpa obat');
+    expect(screen.getByTestId('dx-flow-receipt-therapy')).toHaveTextContent('tanpa obat');
     expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
-    expect(screen.queryByRole('heading', { name: 'Terapi apa?' })).toBeNull();
+    expect(screen.queryByRole('heading', { name: 'Terapi' })).toBeNull();
   });
 
   it('keeps Penunjang and Edukasi as one-line links under the active step', () => {
@@ -278,17 +279,19 @@ describe('DiagnosisStepFlow', () => {
     expect(screen.getByText('Review auskultasi paru')).toBeInTheDocument();
   });
 
-  it('shows the danger strip with no triage result (safety never hides)', () => {
+  it('renders no safety section at all without a triage result', () => {
     render(<DiagnosisStepFlow {...makeProps({ triage: null })} />);
-    expect(screen.getByTestId('dx-flow-danger')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Keselamatan')).toBeNull();
+    expect(screen.queryByText(/tanda bahaya/)).toBeNull();
   });
 
-  it('keeps one body size and no stepper', () => {
-    const css = readFileSync(resolve(__dirname, '../../../entrypoints/sidepanel/style.css'), 'utf-8');
-    const block = css.slice(css.indexOf('Diagnosis page step flow'));
-    expect(block).toMatch(/\.dx-flow \{[^}]*font-size: 13px/);
+  it('inherits the side panel type scale from the Trajectory panels: no page-level font size, no stepper', () => {
     render(<DiagnosisStepFlow {...makeProps()} />);
-    expect(document.querySelector('.diagnosis-stepper')).toBeNull();
+    const workspace = screen.getByTestId('diagnosis-workspace');
+    expect(workspace).toHaveClass('ct-v2-layout');
+    expect(workspace).not.toHaveClass('dx-flow');
+    expect(workspace.querySelector('.dx-flow-step__heading')).toBeNull();
+    expect(workspace.querySelector('[class*="stepper"]')).toBeNull();
   });
 });
 
@@ -367,17 +370,17 @@ describe('DiagnosisStepFlow migrated assertions', () => {
     expect(screen.getByText('Review fisik')).toBeInTheDocument();
   });
 
-  // Migrated from DiagnosisWorkspace triage section "shows every de-duplicated danger sign once, with no cap".
-  it('counts every de-duplicated danger sign once, with no cap', () => {
+  // The Triage page owns the danger-sign list; the diagnosis page never repeats it (Chief, 2026-09-28).
+  it('never lists the red flags on the diagnosis page', () => {
     const props = makeProps({ triage: null });
     props.viewModel.evidence.redFlags = ['SpO2 < 90%', 'RR > 30x/menit', 'Penurunan kesadaran', 'Hemoptisis masif'];
     props.viewModel.evidence.doNotMiss = ['SpO2 < 90%', 'Tanda gagal napas'];
     render(<DiagnosisStepFlow {...props} />);
-    expect(screen.getByTestId('dx-flow-danger')).toHaveTextContent('⚠ 5 tanda bahaya');
-    fireEvent.click(screen.getByRole('button', { name: 'lihat' }));
     const workspace = screen.getByTestId('diagnosis-workspace');
-    ['SpO2 < 90%', 'RR > 30x/menit', 'Penurunan kesadaran', 'Hemoptisis masif', 'Tanda gagal napas'].forEach(
-      (item) => expect(within(workspace).getAllByText(item)).toHaveLength(1)
+    expect(workspace).not.toHaveTextContent(/tanda bahaya/);
+    expect(screen.queryByRole('button', { name: 'lihat' })).toBeNull();
+    ['RR > 30x/menit', 'Penurunan kesadaran', 'Hemoptisis masif'].forEach((item) =>
+      expect(within(workspace).queryByText(item)).toBeNull()
     );
     expect(workspace).not.toHaveTextContent(/Safety-net/);
     expect(workspace).not.toHaveTextContent(/Jangan lewatkan:/);

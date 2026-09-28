@@ -1,21 +1,36 @@
 import { buildClinicalSignals } from '../diagnosisDisplayUtils';
 
-export function findingSummary(signals: string[]): string {
-  if (signals.length === 0) return 'belum ada sinyal';
-  const head = signals.slice(0, 4).join(' · ');
-  return signals.length > 4 ? `${head} · +${signals.length - 4}` : head;
-}
+/** The page shows at most three findings; everything else stays on the Syn Patient page. */
+export const MAX_FINDINGS = 3;
 
-export function FindingStep(props: {
+type FindingInput = {
   complaintSummary: string;
   secondaryComplaint?: string;
   allergySummary: string;
   chronicDiagnosisSummary: string;
-}) {
-  const signals = buildClinicalSignals(props);
+};
+
+/** Signals in reading order: what the patient came with first, then allergy and chronic context. */
+export function findingSignals(input: FindingInput): string[] {
+  const fromComplaint = buildClinicalSignals({ ...input, allergySummary: '', chronicDiagnosisSummary: '' });
+  const all = buildClinicalSignals(input);
+  return [...fromComplaint, ...all.filter((signal) => !fromComplaint.includes(signal))];
+}
+
+export function findingSummary(signals: string[]): string {
+  if (signals.length === 0) return 'belum ada sinyal';
+  const head = signals.slice(0, MAX_FINDINGS).join(' · ');
+  return signals.length > MAX_FINDINGS ? `${head} · +${signals.length - MAX_FINDINGS}` : head;
+}
+
+export function FindingStep(props: FindingInput) {
+  const signals = findingSignals(props).slice(0, MAX_FINDINGS);
   return (
-    <section className="dx-flow-step" aria-label="Temuan">
-      <h2 className="dx-flow-step__heading">Temuan</h2>
+    <section className="ct-v2-panel flex flex-col gap-3" aria-label="Temuan">
+      <div className="ct-v2-panel-head">
+        <h2 className="ttv-section-title">Temuan</h2>
+        <span className="ttv-label">1 / 4</span>
+      </div>
       <div className="diagnosis-context__grid" data-testid="diagnosis-clinical-signals">
         {signals.map((signal) => (
           <span key={signal} className="diagnosis-chip">

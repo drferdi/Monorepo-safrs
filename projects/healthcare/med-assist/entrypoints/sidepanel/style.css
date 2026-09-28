@@ -10208,3 +10208,40 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 .dx-flow .diagnosis-chip { font-size: 13px; font-weight: 400; background: none; box-shadow: none; }
 .dx-flow-card__select { display: flex; flex-direction: column; gap: 4px; cursor: pointer; }
 .dx-flow-card:has(> .dx-flow-card__select[aria-pressed='true']) { border-color: var(--sentra-safe); }
+
+/* Diagnosis step flow (2026-09-28): the steps sit on the Trajectory panel surface; only the
+   selected state of a candidate/medication row and the not-yet-reached ghost step are new. */
+.dx-step--ghost { opacity: 0.45; }
+.diagnosis-candidate-row.neu-select:has(> [aria-pressed='true']) { border-color: var(--sentra-safe-border); box-shadow: inset 2px 0 0 var(--sentra-safe); }
+.diagnosis-medication-row.neu-select[aria-pressed='true'] { border-color: var(--sentra-safe-border); box-shadow: inset 2px 0 0 var(--sentra-safe); }
+.diagnosis-medication-row.neu-select .diagnosis-rank-label { gap: 6px; }
+
+/* Header tabs (2026-09-28): the triage zone is carried by the tab dot; only MERAH may recolour a
+   whole tab, so a selected tab and a triage-coloured tab no longer read as two "active" styles. */
+.engine-btn.engine-tab.engine-btn--triage-hijau,
+.engine-btn.engine-tab.engine-btn--triage-kuning {
+  color: var(--text-muted) !important;
+  background: var(--bg-card) !important;
+  border-color: var(--border-subtle) !important;
+}
+.engine-btn.engine-tab.engine-btn--triage-hijau.active,
+.engine-btn.engine-tab.engine-btn--triage-kuning.active {
+  color: var(--text-main) !important;
+  border-color: var(--accent-med) !important;
+}
+
+/* Text buttons on the diagnosis page ("alasan", "ubah", "Lainnya"): plain text, never a bordered
+   chip. Wins over the `.sentra-card button` chrome rules above by specificity and !important. */
+.sentra-card .diagnosis-text-button,
+.sentra-card .diagnosis-text-button:not(:hover):not(:focus-visible):not(.active) {
+  border: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+  padding: 0;
+  height: auto;
+  min-height: 0;
+  color: var(--accent-med);
+  text-decoration: none;
+}
+.sentra-card .diagnosis-text-button:hover { color: var(--text-main); }
+.sentra-card .diagnosis-text-button:disabled { opacity: 0.45; }

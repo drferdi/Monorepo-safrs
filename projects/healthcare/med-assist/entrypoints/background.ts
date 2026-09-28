@@ -2354,6 +2354,13 @@ export default defineBackground(() => {
 
   // Panel → Worker: make sure the MIRA service is up (native messaging host com.sentra.mira)
   onMessage('miraEnsure', async () => ensureMira());
+  // Browser start / extension reload: bring the service up before the panel is even opened.
+  if (getDiagnosisEngineConfig().diagnosisEngine !== 'legacy') {
+    browser.runtime.onStartup.addListener(() => {
+      void ensureMira().catch(() => undefined);
+    });
+    void ensureMira().catch(() => undefined);
+  }
 
   // Panel (Trajectory stage) → Worker: run the MIRA step ahead of the diagnosis page
   onMessage('prefetchDiagnosis', async (message) => {

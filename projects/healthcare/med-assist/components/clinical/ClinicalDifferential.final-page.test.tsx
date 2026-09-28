@@ -307,8 +307,8 @@ describe('ClinicalDifferential final diagnosis support page', () => {
       );
     }
     const expectedOrder = [
-      '✓ Temuan',
-      'Apa diagnosis utama hari ini?',
+      'Temuan',
+      'Diagnosis',
       'Penunjang (',
       '3 · Terapi',
       '4 · RME',
@@ -345,8 +345,9 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     );
     fireEvent.click(within(workspace).getByRole('button', { name: /^Penunjang \(/ }));
     expect(within(workspace).getByTestId('dx-flow-exams')).toHaveTextContent(/SpO2 dan auskultasi paru/i);
-    fireEvent.click(within(workspace).getByRole('button', { name: 'lihat' }));
-    expect(within(workspace).getByLabelText('Keselamatan')).toHaveTextContent(/Hipoksemia perlu dinilai/i);
+    // The danger-sign list belongs to the Triage page; the diagnosis page never repeats it.
+    expect(within(workspace).queryByRole('button', { name: 'lihat' })).toBeNull();
+    expect(within(workspace).queryByText(/tanda bahaya/)).toBeNull();
     expect(differentialCards.length).toBeGreaterThanOrEqual(3);
     differentialCards.forEach((card) =>
       expect(card).not.toHaveTextContent(/J18\.9 - Community Acquired Pneumonia/i)
@@ -450,12 +451,10 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     const clinicalContext = within(workspace).getByLabelText('Temuan');
     const clinicalSignals = within(clinicalContext).getByTestId('diagnosis-clinical-signals');
 
-    expect(clinicalSignals).toHaveTextContent(/HT/i);
-    expect(clinicalSignals).toHaveTextContent(/DM/i);
-    expect(clinicalSignals).toHaveTextContent(/Pusing/i);
-    expect(clinicalSignals).toHaveTextContent(/Batuk/i);
-    expect(clinicalSignals).toHaveTextContent(/Nyeri kaki/i);
-    expect(clinicalSignals).toHaveTextContent(/Alergi/i);
+    // Temuan shows the first three signals only (Chief, 2026-09-28); the rest stays on Syn Patient.
+    const chips = within(clinicalSignals).getAllByText(/./, { selector: '.diagnosis-chip' });
+    expect(chips).toHaveLength(3);
+    chips.forEach((chip) => expect(chip.textContent).toMatch(/HT|DM|Pusing|Batuk|Nyeri kaki|Alergi/i));
     expect(clinicalSignals).not.toHaveTextContent(/Terapi kronis|Amlodipine|Metformin/i);
     expect(clinicalContext.textContent).not.toMatch(
       /Keluhan panjang ini tidak perlu ditampilkan utuh/i
@@ -868,7 +867,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
   function card(title: RegExp): HTMLElement {
     const found = screen
       .getAllByTestId('dx-flow-card')
-      .find((element) => title.test(element.querySelector('.dx-flow-card__title')?.textContent ?? ''));
+      .find((element) => title.test(element.querySelector('.diagnosis-row-title')?.textContent ?? ''));
     if (!found) throw new Error(`No diagnosis card titled ${title}`);
     return found;
   }
@@ -948,7 +947,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
       expect(screen.getByText('MIRA tidak tersedia')).toBeTruthy();
     });
     expect(
-      Array.from(document.querySelectorAll('.dx-flow-chip')).filter((chip) => /MIRA/.test(chip.textContent ?? ''))
+      Array.from(document.querySelectorAll('.diagnosis-rank-label')).filter((chip) => /MIRA/.test(chip.textContent ?? ''))
     ).toHaveLength(0);
   });
 

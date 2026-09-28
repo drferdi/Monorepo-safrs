@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
+import { motion, useReducedMotion, type Variants } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 
 import {
-  buildClinicalSignals,
   cleanClinicalSummary,
   dedupeSignals,
-  getVisibleSafetyItems,
   isGenericDiagnosisUiText,
 } from './diagnosisDisplayUtils';
 import type { DiagnosisPageProps } from './diagnosisPageProps';
@@ -13,9 +12,31 @@ import type { DiagnosisPageViewModel } from './diagnosisViewModel';
 import { SafetyStrip } from './SafetyStrip';
 import { StepGhost, StepReceipt } from './StepReceipt';
 import { DiagnosisStep, diagnosisSummary } from './steps/DiagnosisStep';
-import { FindingStep, findingSummary } from './steps/FindingStep';
+import { FindingStep, findingSignals, findingSummary } from './steps/FindingStep';
 import { RmeStep, rmeSummary } from './steps/RmeStep';
 import { TherapyStep, therapySummary } from './steps/TherapyStep';
+
+// Motion after the "Multi-step form" experiment on lab.xevrion.dev: the incoming step slides in
+// from the side it comes from, slightly blurred, and settles with an ease-out. Reduced motion
+// keeps only the cross-fade.
+const EASE_OUT = [0.23, 1, 0.32, 1] as const;
+const SHIFT = 36;
+const slide: Variants = {
+  enter: (direction: number) => ({ x: direction * SHIFT, opacity: 0, filter: 'blur(4px)' }),
+  // `transitionEnd` drops the filter once settled, so the step's text is not rasterised on a
+  // compositing layer for the rest of its life.
+  center: {
+    x: 0,
+    opacity: 1,
+    filter: 'blur(0px)',
+    transition: { duration: 0.3, ease: EASE_OUT },
+    transitionEnd: { filter: 'none' },
+  },
+};
+const fade: Variants = {
+  enter: { opacity: 0 },
+  center: { opacity: 1, transition: { duration: 0.2, ease: EASE_OUT } },
+};
 
 function getVisibleExamItems(items: string[]): string[] {
   return dedupeSignals(
@@ -25,6 +46,7 @@ function getVisibleExamItems(items: string[]): string[] {
 
 export function DiagnosisStepFlow(props: DiagnosisPageProps) {
   const { viewModel, phase, triage } = props;
+  const reduceMotion = useReducedMotion();
   const [therapySkipped, setTherapySkipped] = useState(false);
   const [therapyConfirmed, setTherapyConfirmed] = useState(false);
   // Temuan is the doctor's own input, so it is a receipt even while the engine is loading.
@@ -36,8 +58,7 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
   });
   const [reopened, setReopened] = useState<DiagnosisStepKey | null>(null);
   const active = resolveActiveStep(steps, reopened);
-  const safetyItems = getVisibleSafetyItems(viewModel.evidence.redFlags, viewModel.evidence.doNotMiss);
-  const signals = buildClinicalSignals({
+  const signals = findingSignals({
     complaintSummary: props.complaintSummary,
     secondaryComplaint: props.secondaryComplaint,
     allergySummary: viewModel.context.allergySummary,
@@ -69,49 +90,67 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
   }, [medicationChosen]);
 
   const activeIndex = steps.find((s) => s.key === active)?.index ?? 2;
+  // Slide direction follows the step order: forward from the right, back (a reopened step) from the left.
+  const previousIndex = useRef(activeIndex);
+  const direction = activeIndex >= previousIndex.current ? 1 : -1;
+  useEffect(() => {
+    previousIndex.current = activeIndex;
+  }, [activeIndex]);
+
   // Every finished step other than the active one is a receipt, in step order around it.
   const receipt = (s: (typeof steps)[number]) => (
     <StepReceipt key={s.key} step={s} summary={summaries[s.key]} onReopen={() => setReopened(s.key)} />
   );
   return (
     <div
-      className="dx-flow diagnosis-content"
+      className="diagnosis-content ct-v2-layout"
       data-testid="diagnosis-workspace"
       data-diagnosis-view-state={viewModel.primary.isInsufficient ? 'insufficient' : 'review'}
       data-diagnosis-selected-count={viewModel.therapy.selectedDiagnosisCount}
       data-diagnosis-medication-count={viewModel.transfer.medicationSelectionLabel}
       data-diagnosis-transfer-state={viewModel.transfer.state}
     >
-      <SafetyStrip safetyItems={safetyItems} triage={triage ?? null} />
+      <SafetyStrip triage={triage ?? null} />
       {steps.filter((s) => s.done && s.index < activeIndex).map(receipt)}
-      {active === 'finding' ? (
-        <FindingStep
-          complaintSummary={props.complaintSummary}
-          secondaryComplaint={props.secondaryComplaint}
-          allergySummary={viewModel.context.allergySummary}
-          chronicDiagnosisSummary={viewModel.context.chronicDiagnosisSummary}
-        />
-      ) : null}
-      {active === 'diagnosis' ? <DiagnosisStep {...props} /> : null}
-      {active === 'therapy' ? (
-        <TherapyStep
-          {...props}
-          onConfirm={() => {
-            setTherapyConfirmed(true);
-            setReopened(null);
-          }}
-          onSkip={() => {
-            setTherapySkipped(true);
-            setReopened(null);
-          }}
-        />
-      ) : null}
-      {active === 'rme' ? <RmeStep {...props} /> : null}
-      {reopened ? (
-        <button type="button" className="dx-flow-link" onClick={() => setReopened(null)}>
-          selesai
-        </button>
-      ) : null}
+      <motion.div
+        key={active}
+        className="flex flex-col gap-3"
+        custom={direction}
+        variants={reduceMotion ? fade : slide}
+        initial="enter"
+        animate="center"
+      >
+        {active === 'finding' ? (
+          <FindingStep
+            complaintSummary={props.complaintSummary}
+            secondaryComplaint={props.secondaryComplaint}
+            allergySummary={viewModel.context.allergySummary}
+            chronicDiagnosisSummary={viewModel.context.chronicDiagnosisSummary}
+          />
+        ) : null}
+        {active === 'diagnosis' ? <DiagnosisStep {...props} /> : null}
+        {active === 'therapy' ? (
+          <TherapyStep
+            {...props}
+            onConfirm={() => {
+              setTherapyConfirmed(true);
+              setReopened(null);
+            }}
+            onSkip={() => {
+              setTherapySkipped(true);
+              setReopened(null);
+            }}
+          />
+        ) : null}
+        {active === 'rme' ? <RmeStep {...props} /> : null}
+        {reopened ? (
+          <div className="flex">
+            <button type="button" className="btn-ac-inline btn-ac-inline--sharp" onClick={() => setReopened(null)}>
+              selesai
+            </button>
+          </div>
+        ) : null}
+      </motion.div>
       {steps.filter((s) => s.done && s.index > activeIndex).map(receipt)}
       <SideLinks viewModel={viewModel} />
       {steps
@@ -135,11 +174,11 @@ function SideLinks({ viewModel }: { viewModel: DiagnosisPageViewModel }) {
 
   return (
     <>
-      <div className="dx-flow-links">
+      <div className="flex flex-wrap gap-3">
         {examItems.length > 0 ? (
           <button
             type="button"
-            className="dx-flow-link"
+            className="diagnosis-text-button"
             aria-expanded={showExams}
             onClick={() => setShowExams((v) => !v)}
           >
@@ -149,7 +188,7 @@ function SideLinks({ viewModel }: { viewModel: DiagnosisPageViewModel }) {
         {educationItems.length > 0 ? (
           <button
             type="button"
-            className="dx-flow-link"
+            className="diagnosis-text-button"
             aria-expanded={showEducation}
             onClick={() => setShowEducation((v) => !v)}
           >
@@ -158,14 +197,14 @@ function SideLinks({ viewModel }: { viewModel: DiagnosisPageViewModel }) {
         ) : null}
       </div>
       {showExams ? (
-        <ul className="dx-flow-list" data-testid="dx-flow-exams">
+        <ul className="diagnosis-line-list text-small text-muted" data-testid="dx-flow-exams">
           {examItems.map((item) => (
             <li key={item}>{item}</li>
           ))}
         </ul>
       ) : null}
       {showEducation ? (
-        <ul className="dx-flow-list" data-testid="dx-flow-education">
+        <ul className="diagnosis-line-list text-small text-muted" data-testid="dx-flow-education">
           {educationItems.map((item) => (
             <li key={item}>{item}</li>
           ))}

@@ -57,7 +57,7 @@ function MedicationRow({
     <div
       role="button"
       tabIndex={0}
-      className="dx-flow-row"
+      className="neu-select diagnosis-medication-row"
       data-testid="dx-flow-med"
       aria-pressed={medication.isSelected}
       onClick={() => onToggleMedication(medication.key)}
@@ -68,15 +68,16 @@ function MedicationRow({
         }
       }}
     >
-      <span>
-        {medication.name} · {formatClinicalText(medication.doseLine)}
-      </span>
-      <span>
+      <div className="min-w-0">
+        <div className="diagnosis-row-title">{medication.name}</div>
+        <div className="diagnosis-row-meta">{formatClinicalText(medication.doseLine)}</div>
+      </div>
+      <span className="diagnosis-rank-label">
         {medicationStatusWord(medication, chronicTherapySummary)}
         {medication.sourceLabel === 'MANUAL' ? (
           <button
             type="button"
-            className="dx-flow-link"
+            className="diagnosis-text-button"
             onClick={(event) => {
               event.stopPropagation();
               onRemoveManualMedication(medication.key);
@@ -167,17 +168,20 @@ export function TherapyStep({
     : viewModel.therapy.groups.filter((group) => !isInsufficientDiagnosisLabel(group.diagnosisLabel));
 
   return (
-    <section className="dx-flow-step" aria-label="Terapi">
-      <h2 className="dx-flow-step__heading">Terapi apa?</h2>
+    <section className="ct-v2-panel flex flex-col gap-3" aria-label="Terapi">
+      <div className="ct-v2-panel-head">
+        <h2 className="ttv-section-title">Terapi</h2>
+        <span className="ttv-label">3 / 4</span>
+      </div>
 
       {viewModel.selectedDiagnoses.length > 0 ? (
-        <p className="dx-flow-muted">
-          {`Basis: ${viewModel.selectedDiagnoses.map((diagnosis) => diagnosis.displayLabel).join(', ')}`}{' '}
+        <p className="text-small text-muted flex flex-wrap items-center gap-2">
+          <span>{`Basis: ${viewModel.selectedDiagnoses.map((diagnosis) => diagnosis.displayLabel).join(', ')}`}</span>
           {viewModel.selectedDiagnoses.map((diagnosis) => (
             <button
               key={diagnosis.key}
               type="button"
-              className="dx-flow-link"
+              className="diagnosis-text-button"
               onClick={() => onRemoveDiagnosis(diagnosis.key)}
             >
               hapus
@@ -186,13 +190,13 @@ export function TherapyStep({
         </p>
       ) : null}
 
-      <div className="dx-flow-links">
-        <button type="button" className="dx-flow-link" onClick={onToggleManualMedicationInput}>
+      <div className="flex flex-wrap items-center gap-3">
+        <button type="button" className="diagnosis-text-button" onClick={onToggleManualMedicationInput}>
           + Obat
         </button>
         <button
           type="button"
-          className="dx-flow-link"
+          className="diagnosis-text-button"
           disabled={viewModel.therapy.candidateMedicationCount === 0}
           onClick={onSelectAllMedications}
         >
@@ -200,21 +204,12 @@ export function TherapyStep({
         </button>
         <button
           type="button"
-          className="dx-flow-link"
+          className="diagnosis-text-button"
           disabled={viewModel.therapy.selectedMedicationCount === 0}
           onClick={onClearMedications}
         >
           Reset
         </button>
-        {viewModel.therapy.selectedMedicationCount > 0 ? (
-          <button type="button" className="dx-flow-link" onClick={onConfirm}>
-            Lanjut
-          </button>
-        ) : (
-          <button type="button" className="dx-flow-link" onClick={onSkip}>
-            Lanjut tanpa obat
-          </button>
-        )}
       </div>
 
       {showManualMedicationInput ? (
@@ -226,17 +221,31 @@ export function TherapyStep({
         />
       ) : null}
 
-      {therapyGroups.map((group) =>
-        group.medications.map((medication) => (
-          <MedicationRow
-            key={medication.key}
-            medication={medication}
-            chronicTherapySummary={chronicTherapySummary}
-            onToggleMedication={onToggleMedication}
-            onRemoveManualMedication={onRemoveManualMedication}
-          />
-        ))
-      )}
+      <div className="diagnosis-list">
+        {therapyGroups.map((group) =>
+          group.medications.map((medication) => (
+            <MedicationRow
+              key={medication.key}
+              medication={medication}
+              chronicTherapySummary={chronicTherapySummary}
+              onToggleMedication={onToggleMedication}
+              onRemoveManualMedication={onRemoveManualMedication}
+            />
+          ))
+        )}
+      </div>
+
+      <div className="flex">
+        {viewModel.therapy.selectedMedicationCount > 0 ? (
+          <button type="button" className="btn-ac-inline btn-ac-inline--sharp" onClick={onConfirm}>
+            Lanjut
+          </button>
+        ) : (
+          <button type="button" className="btn-ac-inline btn-ac-inline--sharp" onClick={onSkip}>
+            Lanjut tanpa obat
+          </button>
+        )}
+      </div>
     </section>
   );
 }

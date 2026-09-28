@@ -4,8 +4,8 @@ import { describe, expect, it } from 'vitest';
 import { FindingStep, findingSummary } from './FindingStep';
 
 describe('FindingStep', () => {
-  it('summarises the first four signals and counts the rest', () => {
-    expect(findingSummary(['Pusing', 'Demam', 'Batuk', 'Sesak', 'Mual', 'Lemas'])).toBe('Pusing · Demam · Batuk · Sesak · +2');
+  it('summarises the first three signals and counts the rest', () => {
+    expect(findingSummary(['Pusing', 'Demam', 'Batuk', 'Sesak', 'Mual', 'Lemas'])).toBe('Pusing · Demam · Batuk · +3');
     expect(findingSummary([])).toBe('belum ada sinyal');
   });
 

@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { useState } from 'react';
 
 import {
@@ -103,9 +104,9 @@ function Card({ card, onToggle }: { card: DiagnosisCandidateView; onToggle: (id:
   // The select control and the "alasan" button are siblings: a role="button" element's
   // children are presentational, so a nested button would be unreachable for assistive tech.
   return (
-    <div className="dx-flow-card">
+    <div className="neu-select diagnosis-candidate-row">
       <div
-        className="dx-flow-card__select"
+        className="flex flex-col gap-1"
         data-testid="dx-flow-card"
         role="button"
         tabIndex={0}
@@ -123,27 +124,34 @@ function Card({ card, onToggle }: { card: DiagnosisCandidateView; onToggle: (id:
           }
         }}
       >
-        <div className="dx-flow-card__head">
-          <p className="dx-flow-card__title">{title}</p>
-          {chip ? <span className="dx-flow-chip">{chip}</span> : null}
+        <div className="diagnosis-row-head">
+          <div className="diagnosis-row-title">{title}</div>
+          {chip ? <span className="diagnosis-rank-label">{chip}</span> : null}
         </div>
-        <p className="dx-flow-muted">{historyLine(card) ?? tallyLine(card)}</p>
+        <div className="diagnosis-row-meta">{historyLine(card) ?? tallyLine(card)}</div>
       </div>
-      <button
-        type="button"
-        className="dx-flow-link"
-        aria-expanded={open}
-        onClick={() => setOpen((v) => !v)}
-      >
-        alasan
-      </button>
+      <div className="flex">
+        <button
+          type="button"
+          className="diagnosis-text-button"
+          aria-expanded={open}
+          onClick={() => setOpen((v) => !v)}
+        >
+          alasan
+        </button>
+      </div>
       {open ? (
-        <div className="diagnosis-evidence-grid">
+        <motion.div
+          className="diagnosis-evidence-grid"
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, ease: 'easeOut' }}
+        >
           <List title="Mendukung" items={card.supports} />
           <List title="Yang tidak mendukung" items={card.against} />
           <List title="Data kurang" items={card.missing} />
           <List title="Catatan" items={card.review} />
-        </div>
+        </motion.div>
       ) : null}
     </div>
   );
@@ -192,8 +200,11 @@ export function DiagnosisStep({
   const visibleNotice = getVisibleErrorMessage(errorMessage);
 
   return (
-    <section className="dx-flow-step" aria-label="Diagnosis" aria-live="polite">
-      <h2 className="dx-flow-step__heading">Apa diagnosis utama hari ini?</h2>
+    <section className="ct-v2-panel flex flex-col gap-3" aria-label="Diagnosis" aria-live="polite">
+      <div className="ct-v2-panel-head">
+        <h2 className="ttv-section-title">Diagnosis</h2>
+        <span className="ttv-label">2 / 4</span>
+      </div>
 
       {phase === 'loading' ? (
         <>
@@ -218,14 +229,14 @@ export function DiagnosisStep({
 
       {phase === 'ready' ? (
         <>
-          {recurrentOnlyMessage ? <p className="dx-flow-muted">{recurrentOnlyMessage}</p> : null}
-          {visibleNotice ? <p className="dx-flow-muted">{visibleNotice}</p> : null}
+          {recurrentOnlyMessage ? <p className="text-small text-muted">{recurrentOnlyMessage}</p> : null}
+          {visibleNotice ? <p className="text-small text-muted">{visibleNotice}</p> : null}
 
           {viewModel.primary.isInsufficient ? (
             <>
-              <p className="dx-flow-muted">Data belum cukup untuk menetapkan diagnosis utama</p>
+              <p className="text-small text-muted">Data belum cukup untuk menetapkan diagnosis utama</p>
               {viewModel.primary.safestNextAction ? (
-                <p className="dx-flow-muted">{formatClinicalText(viewModel.primary.safestNextAction)}</p>
+                <p className="text-small text-muted">{formatClinicalText(viewModel.primary.safestNextAction)}</p>
               ) : null}
               <List title="Perlu dilengkapi" items={viewModel.primary.missingEvidence} tone="warning" />
               <button
@@ -246,17 +257,19 @@ export function DiagnosisStep({
           </div>
 
           {!showAll && moreCards.length > 0 ? (
-            <button type="button" className="dx-flow-link" onClick={() => setShowAll(true)}>
-              {`Lainnya (${moreCards.length})`}
-            </button>
+            <div className="flex">
+              <button type="button" className="diagnosis-text-button" onClick={() => setShowAll(true)}>
+                {`Lainnya (${moreCards.length})`}
+              </button>
+            </div>
           ) : null}
 
           {doNotMissItems.map((item) => (
-            <p key={item} className="dx-flow-muted">{`Jangan terlewat: ${item}`}</p>
+            <p key={item} className="text-small ct-v2-danger-text">{`Jangan terlewat: ${item}`}</p>
           ))}
 
-          <div className="dx-flow-links">
-            <button type="button" className="dx-flow-link" onClick={onToggleManualDiagnosisInput}>
+          <div className="flex flex-wrap gap-3">
+            <button type="button" className="diagnosis-text-button" onClick={onToggleManualDiagnosisInput}>
               {showManualDiagnosisInput ? 'Tutup diagnosis manual' : 'Diagnosis manual ›'}
             </button>
           </div>

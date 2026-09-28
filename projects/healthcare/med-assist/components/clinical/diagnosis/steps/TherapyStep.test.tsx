@@ -32,10 +32,10 @@ function vm(): DiagnosisPageViewModel {
 const handlers = () => ({ onRemoveDiagnosis: vi.fn(), onSelectAllMedications: vi.fn(), onClearMedications: vi.fn(), onToggleManualMedicationInput: vi.fn(), onManualMedicationDraftChange: vi.fn(), onAddManualMedication: vi.fn(), onToggleMedication: vi.fn(), onRemoveManualMedication: vi.fn(), onConfirm: vi.fn(), onSkip: vi.fn() });
 
 describe('TherapyStep', () => {
-  it('asks "Terapi apa?" and shows one row per medication with one status word', () => {
+  it('is headed "Terapi" and shows one row per medication with one status word', () => {
     const h = handlers();
     render(<TherapyStep viewModel={vm()} showManualMedicationInput={false} manualMedicationDraft={{ nama_obat: '', dosis: '', aturan_pakai: 'Sesudah makan', durasi: '', rationale: '' }} manualMedicationOptions={['Sesudah makan']} {...h} />);
-    expect(screen.getByRole('heading', { name: 'Terapi apa?' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Terapi' })).toBeInTheDocument();
     const rows = screen.getAllByTestId('dx-flow-med');
     expect(rows).toHaveLength(3);
     expect(rows[0]).toHaveTextContent('Amlodipin 10 mg');
