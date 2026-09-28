@@ -10444,3 +10444,26 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 @media (prefers-reduced-motion: reduce) {
   .diagnosis-input.neu-select { transition: none; }
 }
+
+/* Selected card (Chief, 2026-09-29, on the green frame: "Gunakan motion futuristic single line
+   bergerak mengitari kotak"): no green border or left bar; one line travels the card's inner edge
+   at an even pace (pathLength 100). Reduced motion keeps the whole line still. */
+.diagnosis-candidate-row.neu-select:has(> [aria-pressed='true']) { border-color: var(--border-subtle); box-shadow: none; }
+.dx-trace { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.dx-trace rect {
+  x: 0.75px;
+  y: 0.75px;
+  width: calc(100% - 1.5px);
+  height: calc(100% - 1.5px);
+  rx: 8.25px;
+  fill: none;
+  stroke: var(--accent-med);
+  stroke-width: 1.5px;
+  stroke-linecap: round;
+  stroke-dasharray: 16 84;
+  animation: dx-trace 4s linear infinite;
+}
+@keyframes dx-trace { to { stroke-dashoffset: -100; } }
+@media (prefers-reduced-motion: reduce) {
+  .dx-trace rect { animation: none; stroke-dasharray: none; stroke-width: 1px; }
+}

@@ -74,6 +74,21 @@ export function PenCheck({
   );
 }
 
+// ---- Selection trace: one line circling a selected card. ----
+
+/**
+ * Chief, 2026-09-29, on the green frame of a selected card: "Gunakan motion futuristic single line
+ * bergerak mengitari kotak". One segment travels the card's inner edge at an even pace (pathLength
+ * 100, whatever the card's size); the frame and the left bar are gone.
+ */
+export function SelectionTrace() {
+  return (
+    <svg className="dx-trace" aria-hidden="true">
+      <rect pathLength={100} />
+    </svg>
+  );
+}
+
 // ---- Hold to confirm ("Hold to delete"): fills while held, snaps back when let go. ----
 
 /**

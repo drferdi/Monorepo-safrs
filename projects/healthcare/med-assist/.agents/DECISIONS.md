@@ -3,6 +3,21 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — A selected card is circled by one moving line, not framed in green
+
+- Decision (Chief, on a selected Tatalaksana card: "Ini jg efek visual yg saya gak suka. Gunakan
+  motion futuristic single line bergerak mengitari kotak"): a selected `.diagnosis-candidate-row`
+  (Tatalaksana therapy cards and Diagnosis page cards, one shared rule) keeps its plain
+  `--border-subtle` border and no left bar; `SelectionTrace` (`labMotion.tsx`) draws one
+  `--accent-med` segment (16 % of the edge) that travels the card's inner edge once every 4 s, at
+  an even pace whatever the card's size (`pathLength` 100). Reduced motion shows the whole line
+  still. The Temuan finding chips (`.diagnosis-medication-row`) keep their pressed style.
+- Like the focus underline, this is motion Chief asked for; the steady-console rule still bars
+  elastic layout motion.
+- Evidence: TatalaksanaStep test (only the selected card has the trace); harness J20.9 and
+  `?step=diagnosis` → "ubah": border rgba(255,255,255,0.06), box-shadow none, one running
+  `dx-trace` animation, rect length ≈ card perimeter (1072 px on a 382 × 165 card).
+
 ## 2026-09-29 — Tatalaksana: a picked stock medicine brings its standard dose and signa
 
 - Decision (Chief: "keduanya terisi otomatis dengan dosis minimal dan standard sesudah/ sebelum

@@ -21,6 +21,7 @@ import type {
   DiagnosisNextBestActionView,
   DiagnosisPageProps,
 } from '../diagnosisPageProps';
+import { SelectionTrace } from '../labMotion';
 import { PixelLoader } from '../PixelLoader';
 import { ReasonTimeline, type ReasonGroup } from '../ReasonTimeline';
 import { diseaseNoteFor, useDiseaseNotes, type DiseaseNote } from '../useDiseaseNotes';
@@ -306,6 +307,7 @@ function Card({
   // only this card's reasons panel, in place; nothing moves, grows or sinks.
   return (
     <div className="neu-select diagnosis-candidate-row">
+      {card.isSelected ? <SelectionTrace /> : null}
       <div
         className="flex flex-col gap-1"
         data-testid="dx-flow-card"

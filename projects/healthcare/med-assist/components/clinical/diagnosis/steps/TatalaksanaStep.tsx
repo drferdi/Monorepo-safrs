@@ -3,7 +3,7 @@ import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { formatClinicalText, formatShortDate, isInsufficientDiagnosisLabel } from '../diagnosisDisplayUtils';
 import type { DiagnosisManualMedicationDraftView, DiagnosisPageProps } from '../diagnosisPageProps';
 import type { DiagnosisMedicationView, DiagnosisPageViewModel } from '../diagnosisViewModel';
-import { HoldButton, PenCheck } from '../labMotion';
+import { HoldButton, PenCheck, SelectionTrace } from '../labMotion';
 import { PixelLoader } from '../PixelLoader';
 import { standardDoseFor } from '../standardDose';
 import {
@@ -440,6 +440,7 @@ function VisitCard({
   const serious = hasSeriousInteraction(medication.name, interactionCheck.interactions);
   return (
     <div className="neu-select diagnosis-candidate-row">
+      {medication.isSelected ? <SelectionTrace /> : null}
       <div
         className="flex flex-col gap-1"
         data-testid="dx-tx-visit-med"

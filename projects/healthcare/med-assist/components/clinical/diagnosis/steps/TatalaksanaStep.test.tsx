@@ -259,6 +259,15 @@ describe('TatalaksanaStep', () => {
     expect(dose).toHaveValue('');
   });
 
+  // Chief, 2026-09-29: "Gunakan motion futuristic single line bergerak mengitari kotak", instead
+  // of a green frame.
+  it('circles only the selected therapy card with one line', () => {
+    render(<TatalaksanaStep {...props({ viewModel: vm([med('amox', 'Amoksisilin 500 mg', true), med('paracetamol', 'Paracetamol 500 mg', false)]) })} />);
+    const [chosen, other] = screen.getAllByTestId('dx-tx-visit-med').map((card) => card.parentElement as HTMLElement);
+    expect(chosen.querySelectorAll('.dx-trace rect')).toHaveLength(1);
+    expect(other.querySelector('.dx-trace')).toBeNull();
+  });
+
   it('uses every proposal from "Gunakan semua usulan"', () => {
     const p = props();
     render(<TatalaksanaStep {...p} />);

@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange, stock search, steady UI, focus underline, standard dose prefill)
+Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange, stock search, steady UI, focus underline, standard dose prefill, selection trace)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
@@ -8,7 +8,7 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 ## Current state
 
 Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEAD is the
-standard-dose prefill commit after `525f40bf` (DECISIONS 2026-09-29, nine Tatalaksana entries):
+selection-trace commit after `0e3c99a7` (DECISIONS 2026-09-29, ten Tatalaksana entries):
 
 - Four steps, three pages: Temuan 1/4 + Diagnosis 2/4 | Tatalaksana 3/4 | RME 4/4.
 - `steps/TatalaksanaStep.tsx` (replaces TherapyStep and EducationStep): Terapi kronis (visit
@@ -22,7 +22,8 @@ standard-dose prefill commit after `525f40bf` (DECISIONS 2026-09-29, nine Tatala
   "Nama obat" searches the Puskesmas stock `stok_obat.json` as typed (`searchStock`).
 - Steady UI (Chief: no rubbery motion): no springs, height/layout glides, slides, stagger or scale
   on any diagnosis page; only the hold-to-Hapus fill and the pixel loader cycle remain; a focused
-  field shows one green underline that grows smoothly (no green frame).
+  field shows one green underline that grows smoothly (no green frame); a selected card has no
+  green frame either, one line travels around its edge (`SelectionTrace`).
 - "Tambah obat" / "Ganti obat" is disabled until name and dose are filled ("Isi nama obat dan dosis.");
   before, an add without a dose failed silently in ClinicalDifferential.
 - A picked stock medicine fills Dosis and Aturan pakai (Durasi "1 hari" for a single dose) from
@@ -47,6 +48,7 @@ standard-dose prefill commit after `525f40bf` (DECISIONS 2026-09-29, nine Tatala
 4. "+ Tambah obat" → type "Am": Puskesmas stock list with counts; pick with mouse or arrows + Enter.
 5. Pick Amlodipin 10 mg → "1x1", "Sesudah makan"; Omeprazol 20 mg → "Sebelum makan"; Permetrin →
    "1x aplikasi", "Pemakaian luar", "1 hari"; Haloperidol → dose empty.
+6. Tick a therapy card (or a diagnosis card): no green frame, one line circles it.
 
 ## Verification (capsule root, final tree)
 
@@ -54,14 +56,14 @@ standard-dose prefill commit after `525f40bf` (DECISIONS 2026-09-29, nine Tatala
 |---|---|---|
 | `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`) |
 | `typecheck` | 0 | clean |
-| `test` | 0 | 180 files passed, 1 skipped; 1445 passed, 17 skipped (was 1437) |
+| `test` | 0 | 180 files passed, 1 skipped; 1446 passed, 17 skipped (was 1445) |
 | `exec wxt build --mode development` | 0 | clean |
 | `run:check` | 0 | "Extension loads: Asisten Medis 2.1.0 (MV3), all referenced files present." |
 
 Vite harness (`dx-harness`; `?dx=3-J20.9` major DDI, `&ddi=none`, `&ddi=unavailable`,
 `&therapy=error&chronic=none`): viewed; toggling a card moves no other part (0 px); short hold
 does not delete, full hold does; Ganti replaces; Selesai → RME; `getAnimations()` 0 after every
-open (Review, education, form, stock list, "Lihat alasan" on `?step=diagnosis`). Not tested: live MIRA, the real
+open apart from the selected card's `dx-trace` (Review, education, form, stock list, "Lihat alasan" on `?step=diagnosis`). Not tested: live MIRA, the real
 Sentra prescription API, the ePuskesmas fields themselves, real DDInter lookup in the extension.
 
 ## Open for Chief (code must not change for these)
