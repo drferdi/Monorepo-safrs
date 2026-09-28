@@ -1638,8 +1638,9 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     const namaObat = manualMedicationDraft.nama_obat.trim();
     const dosis = manualMedicationDraft.dosis.trim();
 
+    // A rejected manual entry leaves the prescription service's state alone: 'error' would read
+    // as "no proposal from the prescription service" on the Tatalaksana page.
     if (!namaObat || !dosis) {
-      setTherapyState('error');
       setTherapyError('Obat manual butuh minimal Nama Obat dan Dosis.');
       return;
     }
@@ -1657,7 +1658,6 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     const medKey = medicationSelectionKey(manualMedication);
     const hasDuplicate = manualMedications.some((item) => medicationSelectionKey(item) === medKey);
     if (hasDuplicate) {
-      setTherapyState('error');
       setTherapyError('Obat manual dengan regimen yang sama sudah ada.');
       return;
     }

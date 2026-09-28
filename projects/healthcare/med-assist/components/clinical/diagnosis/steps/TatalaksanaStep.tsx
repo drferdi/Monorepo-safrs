@@ -320,6 +320,8 @@ function ManualMedicationForm({
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
   const matches = open ? searchStock(draft.nama_obat) : [];
+  // The prescription takes a medicine only with its dose; the button says so instead of failing silently.
+  const complete = draft.nama_obat.trim() !== '' && draft.dosis.trim() !== '';
   const pick = (name: string) => {
     onChange('nama_obat', name);
     setOpen(false);
@@ -397,9 +399,10 @@ function ManualMedicationForm({
         placeholder="Durasi (contoh: 3 hari)"
         className="neu-select diagnosis-input"
       />
-      <button type="button" className="btn-ac-inline btn-ac-inline--sharp" onClick={onSubmit}>
+      <button type="button" className="btn-ac-inline btn-ac-inline--sharp" disabled={!complete} onClick={onSubmit}>
         {submitLabel}
       </button>
+      {complete ? null : <p className="diagnosis-row-meta">Isi nama obat dan dosis.</p>}
     </div>
   );
 }

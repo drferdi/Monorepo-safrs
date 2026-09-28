@@ -160,7 +160,8 @@ describe('TatalaksanaStep', () => {
   });
 
   it('replaces a card from "Ganti": the form opens under it and the card goes once the new medication is added', () => {
-    const p = props();
+    // A filled draft: "Ganti obat" takes a medicine only with its name and dose (2026-09-29).
+    const p = props({ manualMedicationDraft: { nama_obat: 'Ibuprofen tablet 400 mg', dosis: '3x1', aturan_pakai: 'Sesudah makan', durasi: '', rationale: '' } });
     const { rerender } = render(<TatalaksanaStep {...p} />);
     fireEvent.click(within(visitCard('Paracetamol').parentElement!).getByRole('button', { name: 'Ganti' }));
     expect(screen.getByTestId('dx-tx-med-form')).toBeInTheDocument();
@@ -177,6 +178,22 @@ describe('TatalaksanaStep', () => {
     expect(screen.queryByTestId('dx-tx-med-form')).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: '+ Tambah obat' }));
     expect(screen.getByTestId('dx-tx-med-form')).toBeInTheDocument();
+  });
+
+  // Chief, 2026-09-29: "tambah obat belum jalan?" — without a dose the add failed silently.
+  it('adds a medicine only with its name and dose, and says what is missing', () => {
+    const { rerender } = render(<TatalaksanaStep {...props()} />);
+    fireEvent.click(screen.getByRole('button', { name: '+ Tambah obat' }));
+    expect(screen.getByRole('button', { name: 'Tambah obat' })).toBeDisabled();
+    expect(screen.getByText('Isi nama obat dan dosis.')).toBeInTheDocument();
+    const named = props({ manualMedicationDraft: { nama_obat: 'Amlodipin tablet 10 mg', dosis: '', aturan_pakai: 'Sesudah makan', durasi: '', rationale: '' } });
+    rerender(<TatalaksanaStep {...named} />);
+    expect(screen.getByRole('button', { name: 'Tambah obat' })).toBeDisabled();
+    const p = props({ manualMedicationDraft: { ...named.manualMedicationDraft, dosis: '1x1' } });
+    rerender(<TatalaksanaStep {...p} />);
+    expect(screen.queryByText('Isi nama obat dan dosis.')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Tambah obat' }));
+    expect(p.onAddManualMedication).toHaveBeenCalledTimes(1);
   });
 
   // Chief, 2026-09-29: "ketik Am... keluar lodipin", the name comes from the Puskesmas stock.

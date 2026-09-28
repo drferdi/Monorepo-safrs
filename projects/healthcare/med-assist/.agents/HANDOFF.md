@@ -23,6 +23,8 @@ focus-underline commit after `26606213` (DECISIONS 2026-09-29, seven Tatalaksana
 - Steady UI (Chief: no rubbery motion): no springs, height/layout glides, slides, stagger or scale
   on any diagnosis page; only the hold-to-Hapus fill and the pixel loader cycle remain; a focused
   field shows one green underline that grows smoothly (no green frame).
+- "Tambah obat" / "Ganti obat" is disabled until name and dose are filled ("Isi nama obat dan dosis.");
+  before, an add without a dose failed silently in ClinicalDifferential.
 - Logic: `tatalaksana.ts`, `usePatientVisits.ts`, `labMotion.tsx` (tick and hold-to-delete);
   ClinicalDifferential runs `checkInteractions`, keeps dismissed proposals out of the
   prescription, sends the follow-up to RME `rencana_tindakan`.
@@ -46,7 +48,7 @@ focus-underline commit after `26606213` (DECISIONS 2026-09-29, seven Tatalaksana
 |---|---|---|
 | `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`) |
 | `typecheck` | 0 | clean |
-| `test` | 0 | 179 files passed, 1 skipped; 1435 passed, 17 skipped (was 1431) |
+| `test` | 0 | 179 files passed, 1 skipped; 1437 passed, 17 skipped (was 1435) |
 | `exec wxt build --mode development` | 0 | clean |
 | `run:check` | 0 | "Extension loads: Asisten Medis 2.1.0 (MV3), all referenced files present." |
 

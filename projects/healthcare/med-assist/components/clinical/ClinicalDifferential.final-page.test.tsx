@@ -436,6 +436,51 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     expect(within(rmeStep).getByRole('button', { name: 'Kirim resep' })).toBeDisabled();
   });
 
+  // Chief, 2026-09-29: "tambah obat belum jalan?" — through the real page state, a manual
+  // medicine with its dose reaches Tatalaksana once; the same regimen again adds nothing.
+  it('adds a manual medicine on Tatalaksana once, its dose written as 3x400mg', async () => {
+    render(
+      <ClinicalDifferential
+        keluhanUtama="Demam, batuk, dan sesak sejak 3 hari"
+        keluhanTambahan="Nafsu makan menurun"
+        patientAge={54}
+        patientGender="P"
+        patientRM="RM-2026-001"
+        allergies={[]}
+        confirmedPregnancyStatus={false}
+        vitals={{ sbp: 108, dbp: 68, hr: 112, rr: 26, temp: 38.5, glucose: 124 }}
+        canonicalOutput={null}
+        hasVisitHistory={false}
+        onBack={() => undefined}
+        onDiagnosisChange={() => undefined}
+        onMedicationsChange={() => undefined}
+      />
+    );
+    const workspace = await screen.findByTestId('diagnosis-workspace');
+    const primaryCard = within(workspace)
+      .getByTestId('dx-flow-primary-label')
+      .parentElement?.querySelector<HTMLElement>('[data-testid="dx-flow-card"]');
+    if (!primaryCard) throw new Error('no card under the primary label');
+    fireEvent.click(primaryCard);
+    await within(workspace).findByText('Paracetamol');
+
+    const add = () => {
+      if (!within(workspace).queryByTestId('dx-tx-med-form')) {
+        fireEvent.click(within(workspace).getByRole('button', { name: '+ Tambah obat' }));
+      }
+      fireEvent.change(within(workspace).getByPlaceholderText('Nama obat'), { target: { value: 'Ibuprofen tablet 400 mg' } });
+      fireEvent.change(within(workspace).getByPlaceholderText('Dosis (contoh: 3x1)'), { target: { value: '3x1' } });
+      fireEvent.click(within(workspace).getByRole('button', { name: 'Tambah obat' }));
+    };
+    add();
+    const manual = () => within(workspace).getAllByTestId('dx-tx-visit-med').filter((card) => card.textContent?.includes('Ibuprofen'));
+    await waitFor(() => expect(manual()).toHaveLength(1));
+    expect(manual()[0]).toHaveTextContent('3x400mg');
+
+    add();
+    expect(manual()).toHaveLength(1);
+  });
+
   it('extracts only important clinical signals instead of dumping the full clinical narrative', async () => {
     render(
       <ClinicalDifferential
