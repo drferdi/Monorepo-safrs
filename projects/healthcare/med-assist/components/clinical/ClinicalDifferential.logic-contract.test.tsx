@@ -162,6 +162,12 @@ const therapyMedication: MedicationRecommendation = {
   safety_check: 'safe',
 };
 
+/** The banding cards come first on the Diagnosis step; the proposed primary is the last card. */
+async function findPrimaryCard(): Promise<HTMLElement> {
+  const cards = await screen.findAllByTestId('dx-flow-card');
+  return cards[cards.length - 1];
+}
+
 function renderClinicalDifferential(
   overrides: Partial<React.ComponentProps<typeof ClinicalDifferential>> = {}
 ) {
@@ -337,7 +343,7 @@ describe('ClinicalDifferential secure logic contract', () => {
 
     renderClinicalDifferential();
 
-    const [primaryCard] = await screen.findAllByTestId('dx-flow-card');
+    const primaryCard = await findPrimaryCard();
     expect(primaryCard).toHaveTextContent(/J18\.9 - Community Acquired Pneumonia/i);
     expect(primaryCard).not.toHaveTextContent(/J06\.9 - Infeksi Saluran Napas Atas/i);
   });
@@ -419,7 +425,7 @@ describe('ClinicalDifferential secure logic contract', () => {
   it('keeps successful engine-backed diagnosis results instead of replacing them with fallback', async () => {
     renderClinicalDifferential();
 
-    const [primaryCard] = await screen.findAllByTestId('dx-flow-card');
+    const primaryCard = await findPrimaryCard();
     expect(primaryCard).toHaveTextContent(/J06\.9 - Infeksi Saluran Napas Atas/i);
     expect(primaryCard).not.toHaveTextContent(/Data belum cukup untuk diagnosis spesifik/i);
     expect(primaryCard).not.toHaveTextContent(/\bR69\b/i);

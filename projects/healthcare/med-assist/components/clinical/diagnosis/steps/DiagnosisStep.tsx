@@ -208,7 +208,9 @@ function visibleDoNotMissItems(doNotMiss: string[], cardCodes: Set<string>): str
 /**
  * The primary is the chosen diagnosis; before the doctor agrees it is the strongest proposal
  * (the patient's own recurrent diagnosis first, else the engine's top card) and is labelled as a
- * proposal. Everything else is the differential list.
+ * proposal. Everything else is the differential list. On the page the differentials come first,
+ * numbered, and the primary slot follows them as the outcome (Chief's order: Temuan, Diagnosis
+ * banding 1, Diagnosis banding 2, Diagnosis).
  */
 function splitPrimary(cards: DiagnosisCandidateView[]): {
   primary: DiagnosisCandidateView | null;
@@ -311,28 +313,17 @@ export function DiagnosisStep({
             </>
           ) : null}
 
-          {primary ? (
-            <>
-              <span className="ttv-label" data-testid="dx-flow-primary-label">
-                {primary.isSelected ? 'Diagnosis utama' : 'Usulan diagnosis utama'}
-              </span>
-              <div className="diagnosis-list">
-                <Card key={primary.id} card={primary} index={0} onToggle={onToggleCandidate} />
-              </div>
-            </>
-          ) : null}
-
           {visibleDifferentials.length > 0 ? (
-            <>
-              <span className="ttv-label" data-testid="dx-flow-differential-label">
-                Diagnosis banding
-              </span>
-              <div className="diagnosis-list">
-                {visibleDifferentials.map((card, index) => (
-                  <Card key={card.id} card={card} index={index + 1} onToggle={onToggleCandidate} />
-                ))}
-              </div>
-            </>
+            <div className="diagnosis-list">
+              {visibleDifferentials.map((card, index) => (
+                <div key={card.id} className="flex flex-col gap-1">
+                  <span className="ttv-label" data-testid="dx-flow-differential-label">
+                    {`Diagnosis banding ${index + 1}`}
+                  </span>
+                  <Card card={card} index={index} onToggle={onToggleCandidate} />
+                </div>
+              ))}
+            </div>
           ) : null}
 
           {!showAll && moreCards.length > 0 ? (
@@ -340,6 +331,15 @@ export function DiagnosisStep({
               <button type="button" className="diagnosis-text-button" onClick={() => setShowAll(true)}>
                 {`Lainnya (${moreCards.length})`}
               </button>
+            </div>
+          ) : null}
+
+          {primary ? (
+            <div className="flex flex-col gap-1">
+              <span className="ttv-label" data-testid="dx-flow-primary-label">
+                {primary.isSelected ? 'Diagnosis utama' : 'Usulan diagnosis utama'}
+              </span>
+              <Card card={primary} index={visibleDifferentials.length} onToggle={onToggleCandidate} />
             </div>
           ) : null}
 

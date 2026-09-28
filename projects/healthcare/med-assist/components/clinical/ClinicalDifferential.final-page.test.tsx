@@ -338,7 +338,10 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     const diagnosisStep = within(workspace).getByLabelText('Diagnosis');
     const lainnya = within(diagnosisStep).queryByRole('button', { name: /^Lainnya \(/ });
     if (lainnya) fireEvent.click(lainnya);
-    const [primaryCard, ...differentialCards] = within(diagnosisStep).getAllByTestId('dx-flow-card');
+    // The banding cards come first; the proposed primary is the last card.
+    const diagnosisCards = within(diagnosisStep).getAllByTestId('dx-flow-card');
+    const primaryCard = diagnosisCards[diagnosisCards.length - 1];
+    const differentialCards = diagnosisCards.slice(0, -1);
     expect(primaryCard).toHaveTextContent(/J18\.9 - Community Acquired Pneumonia/i);
     expect(primaryCard).not.toHaveTextContent(
       /Siap ditinjau dokter|diagnosis dipilih|Review red flags|Korelasikan keluhan|Perlu dilengkapi/i
