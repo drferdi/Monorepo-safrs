@@ -46,8 +46,26 @@ export function encounterToCaseState(
     physicalExam: [],
     results: [],
     currentMedications: [],
-    knownConditions: [...(encounter.diagnosa?.penyakit_kronis ?? [])],
+    knownConditions: mergeKnownConditions(
+      encounter.diagnosa?.penyakit_kronis ?? [],
+      context.recurrent_diagnoses ?? []
+    ),
     allergies: [...(encounter.anamnesa?.alergi?.obat ?? [])],
     facilityCapabilities: [],
   };
+}
+
+function mergeKnownConditions(
+  chronic: string[],
+  recurrent: Array<{ icd: string; name: string }>
+): string[] {
+  const merged = [...chronic];
+  const seen = new Set(merged.map((item) => item.trim().toLowerCase()));
+  for (const item of recurrent) {
+    const label = `${item.name} (${item.icd})`;
+    if (seen.has(label.toLowerCase())) continue;
+    seen.add(label.toLowerCase());
+    merged.push(label);
+  }
+  return merged;
 }
