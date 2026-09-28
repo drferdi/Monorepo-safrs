@@ -219,6 +219,7 @@ PORT = 8787
 HEALTH_URL = f"http://127.0.0.1:{PORT}/healthz"
 SYNCHRONIZE = 0x00100000
 WAIT_OBJECT_0 = 0x00000000
+WAIT_FAILED = 0xFFFFFFFF
 INFINITE = 0xFFFFFFFF
 
 
@@ -261,14 +262,29 @@ def spawn_service(repo_root: str):
 
 
 def wait_for_parent_exit(pid: int | None = None) -> None:
-    """Block until the parent (Chrome browser) process exits. Windows only."""
+    """Block until the parent (Chrome browser) process exits. Windows only.
+
+    HANDLE is pointer-sized: without explicit restype/argtypes ctypes truncates it on 64-bit
+    and WaitForSingleObject fails at once, which would kill the service as soon as the
+    service worker suspends.
+    """
+    import time
+
     pid = os.getppid() if pid is None else pid
     kernel32 = ctypes.windll.kernel32
+    kernel32.OpenProcess.restype = ctypes.c_void_p
+    kernel32.OpenProcess.argtypes = [ctypes.c_uint, ctypes.c_int, ctypes.c_uint]
+    kernel32.WaitForSingleObject.restype = ctypes.c_uint
+    kernel32.WaitForSingleObject.argtypes = [ctypes.c_void_p, ctypes.c_uint]
+    kernel32.CloseHandle.argtypes = [ctypes.c_void_p]
     handle = kernel32.OpenProcess(SYNCHRONIZE, False, pid)
     if not handle:
         return
     try:
-        kernel32.WaitForSingleObject(handle, INFINITE)
+        if kernel32.WaitForSingleObject(handle, INFINITE) == WAIT_FAILED:
+            # Fall back to polling: the parent is gone when OpenProcess returns NULL.
+            while kernel32.OpenProcess(SYNCHRONIZE, False, pid):
+                time.sleep(5)
     finally:
         kernel32.CloseHandle(handle)
 
@@ -321,6 +337,12 @@ def serve(supervisor: Supervisor, stdin, stdout, wait_for_parent_exit=wait_for_p
 
 
 def main() -> None:
+    if sys.platform == "win32":
+        # Chrome frames are binary; the CRT must not translate 0x0A/0x0D inside a length prefix.
+        import msvcrt
+
+        msvcrt.setmode(sys.stdin.fileno(), os.O_BINARY)
+        msvcrt.setmode(sys.stdout.fileno(), os.O_BINARY)
     repo_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
     serve(Supervisor(repo_root), sys.stdin.buffer, sys.stdout.buffer)
 
@@ -332,7 +354,7 @@ if __name__ == "__main__":
 - [ ] **Step 4: Run the tests to verify they pass**
 
 Run: `src\.venv\Scripts\python.exe -m pytest assist/host/tests -q`
-Expected: 7 passed.
+Expected: 7 passed. (Binary stdio and the parent wait are Windows runtime behaviour, not unit-tested; they are part of Chief's live check in Task 16.)
 
 - [ ] **Step 5: Commit (MIRA repository, local only)**
 
@@ -790,8 +812,8 @@ with `import { ensureMira } from '@/lib/diagnosis-engine/mira-supervisor';`.
 
 - [ ] **Step 4: Run tests, typecheck**
 
-Run: `node scripts/pnpm.mjs exec vitest run lib/diagnosis-engine/mira-supervisor.test.ts utils/messaging.test.ts` then `node scripts/pnpm.mjs run typecheck`
-Expected: PASS, exit 0 (if `utils/messaging.test.ts` pins the message-name list, add `miraEnsure` there and name it in the commit).
+Run: `node scripts/pnpm.mjs exec vitest run lib/diagnosis-engine/mira-supervisor.test.ts utils/messaging.test.ts` then `node scripts/pnpm.mjs run typecheck`, `run build` and `run run:check` (the manifest gained a permission)
+Expected: PASS, exit 0 for all (if `utils/messaging.test.ts` pins the message-name list, add `miraEnsure` there and name it in the commit).
 
 - [ ] **Step 5: Commit**
 
@@ -918,14 +940,16 @@ export const MiraStatusDot: React.FC = () => {
 };
 ```
 
-`SidePanelHeader.tsx`: import `MiraStatusDot` and `sendMessage`; add
+`SidePanelHeader.tsx`: import `MiraStatusDot`, `sendMessage` and `getDiagnosisEngineConfig`; add
 
 ```tsx
   useEffect(() => {
+    if (getDiagnosisEngineConfig().diagnosisEngine === 'legacy') return;
     sendMessage('miraEnsure', undefined).catch(() => undefined);
   }, []);
 ```
-and render `<MiraStatusDot />` inside the `absolute left-0 top-0` div after `<ThemeToggle />`. In `SidePanelHeader.test.tsx` add at the top `vi.mock('@/utils/messaging', () => ({ sendMessage: vi.fn(async () => ({ state: 'ready', checkedAt: 't' })) }));` and one test: "asks the background to ensure MIRA once on mount" asserting `sendMessage` called once with `('miraEnsure', undefined)` across a rerender.
+(so a legacy or dev build never attempts native messaging nor writes a `not-installed` status)
+and render `<MiraStatusDot />` inside the `absolute left-0 top-0` div after `<ThemeToggle />`. In `SidePanelHeader.test.tsx` add at the top `vi.mock('@/utils/messaging', () => ({ sendMessage: vi.fn(async () => ({ state: 'ready', checkedAt: 't' })) }));` and two tests: "asks the background to ensure MIRA once on mount" (with `vi.stubEnv('SENTRA_DIAGNOSIS_ENGINE', 'mira')`) asserting `sendMessage` called once with `('miraEnsure', undefined)` across a rerender, and "does not ask in legacy mode" asserting no call.
 
 Append to `style.css`:
 
@@ -963,7 +987,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 ### Task 6: Prefetch MIRA from the Trajectory stage
 
 **Files:**
-- Create: `lib/diagnosis-engine/request-context.ts`, `lib/diagnosis-engine/mira-prefetch.ts`
+- Create: `lib/diagnosis-engine/request-context.ts`, `lib/diagnosis-engine/prefetch-store.ts` (the map only: `peekPrefetch`, `rememberPrefetch`, `resetPrefetchMemory`, `MIRA_PREFETCH_READY_KEY`, `PrefetchEntry`; no imports), `lib/diagnosis-engine/mira-prefetch.ts` (`runMiraPrefetch`, re-exports the store)
 - Test: `lib/diagnosis-engine/request-context.test.ts`, `lib/diagnosis-engine/mira-prefetch.test.ts`
 - Modify: `types/api.ts` (`engine_pending`, `recurrent_diagnoses`), `lib/diagnosis-engine/run-diagnosis.ts` (export `stepWithTimeout`; consult the prefetch map), `utils/messaging.ts` (`prefetchDiagnosis`), `entrypoints/background.ts` (handler), `components/sidepanel/ClinicalReasoningWorkbench.tsx` (send prefetch), `components/clinical/ClinicalDifferential.tsx` (build the context through the shared builder; re-request once on `sentra:mira-prefetch-ready`)
 
@@ -1202,29 +1226,11 @@ import type { DiagnosisEngine, EngineResult } from './types';
 import type { DiagnosisRequestContext } from '@/types/api';
 import type { Encounter } from '~/utils/types';
 
-export const MIRA_PREFETCH_READY_KEY = 'sentra:mira-prefetch-ready';
-const MAX_ENTRIES = 20;
+import { MIRA_PREFETCH_READY_KEY, peekPrefetch, rememberPrefetch as remember } from './prefetch-store';
 
-export type PrefetchEntry = { status: 'pending' } | { status: 'done'; result: EngineResult };
-
-const entries = new Map<string, PrefetchEntry>();
-
-export function resetPrefetchMemory(): void {
-  entries.clear();
-}
-
-export function peekPrefetch(hash: string): PrefetchEntry | undefined {
-  return entries.get(hash);
-}
-
-function remember(hash: string, entry: PrefetchEntry): void {
-  entries.delete(hash);
-  entries.set(hash, entry);
-  while (entries.size > MAX_ENTRIES) {
-    const oldest = entries.keys().next().value as string;
-    entries.delete(oldest);
-  }
-}
+export { MIRA_PREFETCH_READY_KEY, peekPrefetch, resetPrefetchMemory, type PrefetchEntry } from './prefetch-store';
+// prefetch-store.ts holds exactly the block that used to live here: the 20-entry Map,
+// `peekPrefetch`, `rememberPrefetch` (delete + set + evict oldest) and `resetPrefetchMemory`.
 
 export async function runMiraPrefetch(
   encounter: Encounter,
@@ -1247,7 +1253,7 @@ export async function runMiraPrefetch(
 }
 ```
 
-`run-diagnosis.ts`: `export` both `stepWithTimeout` and `recordCandidateRun`; import `peekPrefetch` from `./mira-prefetch` and `hashDiagnosisContext` from `./request-context` (the import cycle is type-safe because `mira-prefetch` only uses run-diagnosis functions at call time). Replace the tail of `runDiagnosisSuggestions` for `mira` mode:
+`run-diagnosis.ts`: `export` both `stepWithTimeout` and `recordCandidateRun`; import `peekPrefetch` from `./prefetch-store` (not from `mira-prefetch`, so there is no import cycle) and `hashDiagnosisContext` from `./request-context`. Replace the tail of `runDiagnosisSuggestions` for `mira` mode:
 
 ```ts
   const candidate = options.engines?.active ?? getActiveDiagnosisEngine('mira');
@@ -1302,9 +1308,9 @@ export async function runMiraPrefetch(
   }, [requestContext, patient.rm]);
 ```
 
-`ClinicalDifferential.tsx`: in `fetchDifferential`, build the payload with `buildDiagnosisRequestContext({ keluhanUtama, keluhanTambahan: keluhanTambahan || '', patientAge, patientGender, vitals, recurrent: recurrentForRequest })` (where `recurrentForRequest` is `[]` until Task 9) and keep the hash in a ref. After a response with `engine_pending`, register a `browser.storage.onChanged` listener that, when `changes[MIRA_PREFETCH_READY_KEY]?.newValue?.hash` equals the ref, removes itself and calls `fetchDifferential()` again (only once; the second answer has no `engine_pending`). Remove the listener in the effect cleanup.
+`ClinicalDifferential.tsx`: split `fetchDifferential` into the existing reset block plus an inner `loadSuggestions()` that only sets `suggestions`, `errorMsg`, `processingTimeMs` and `phase`; the initial path calls both, the prefetch re-request calls only `loadSuggestions()` so a diagnosis the doctor already tapped survives. In `loadSuggestions`, build the payload with `buildDiagnosisRequestContext({ keluhanUtama, keluhanTambahan: keluhanTambahan || '', patientAge, patientGender, vitals, recurrent: recurrentForRequest })` (where `recurrentForRequest` is `[]` until Task 9) and keep the hash in a ref. After a response with `engine_pending`, register a `browser.storage.onChanged` listener that, when `changes[MIRA_PREFETCH_READY_KEY]?.newValue?.hash` equals the ref, removes itself and calls `fetchDifferential()` again (only once; the second answer has no `engine_pending`). Remove the listener in the effect cleanup.
 
-Add a test in `components/clinical/ClinicalDifferential.final-page.test.tsx` (it already mocks `sendMessage`): "re-requests once when the prefetch for the same hash becomes ready" — first `getSuggestions` reply carries `engine_pending: true`, fire the stubbed `browser.storage.onChanged` listener with the matching hash, assert `getSuggestions` was sent twice and the list shows the second reply's suggestion.
+Add a test in `components/clinical/ClinicalDifferential.final-page.test.tsx` (it already mocks `sendMessage`): "re-requests once when the prefetch for the same hash becomes ready" — first `getSuggestions` reply carries `engine_pending: true`, fire the stubbed `browser.storage.onChanged` listener with the matching hash, assert `getSuggestions` was sent twice, the list shows the second reply's suggestion, and a candidate selected between the two replies is still selected (`aria-pressed="true"` or the workspace's `data-diagnosis-selected-count="1"`).
 
 - [ ] **Step 6: Run tests, typecheck**
 
@@ -1314,7 +1320,7 @@ Expected: PASS, exit 0 (the workbench wiring test must mock `@/utils/messaging` 
 - [ ] **Step 7: Commit**
 
 ```bash
-git add lib/diagnosis-engine/request-context.ts lib/diagnosis-engine/request-context.test.ts lib/diagnosis-engine/mira-prefetch.ts lib/diagnosis-engine/mira-prefetch.test.ts lib/diagnosis-engine/run-diagnosis.ts types/api.ts utils/messaging.ts entrypoints/background.ts components/sidepanel/ClinicalReasoningWorkbench.tsx components/clinical/ClinicalDifferential.tsx components/clinical/ClinicalDifferential.final-page.test.tsx && git commit -m "feat(med-assist): prefetch the MIRA step from the Trajectory stage and serve it to the diagnosis page
+git add lib/diagnosis-engine/request-context.ts lib/diagnosis-engine/request-context.test.ts lib/diagnosis-engine/prefetch-store.ts lib/diagnosis-engine/mira-prefetch.ts lib/diagnosis-engine/mira-prefetch.test.ts lib/diagnosis-engine/run-diagnosis.ts types/api.ts utils/messaging.ts entrypoints/background.ts components/sidepanel/ClinicalReasoningWorkbench.tsx components/clinical/ClinicalDifferential.tsx components/clinical/ClinicalDifferential.final-page.test.tsx && git commit -m "feat(med-assist): prefetch the MIRA step from the Trajectory stage and serve it to the diagnosis page
 
 Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 ```
@@ -1335,11 +1341,11 @@ In `wxt.config.ts` `vite: () => ({ … })` add:
         ? { 'import.meta.env.SENTRA_DIAGNOSIS_ENGINE': JSON.stringify('mira') }
         : {},
 ```
-(`wxt build` sets `NODE_ENV=production`; `.env.production.local` still wins because WXT loads it into `process.env` before this function runs.)
+Verify the assumption before relying on it: WXT is expected to load `.env.production.local` into `process.env` before the `vite()` function runs. Put a temporary `console.log('engine env', process.env.SENTRA_DIAGNOSIS_ENGINE)` in the function, run `node scripts/pnpm.mjs run build` once, and remove it. If it prints `undefined` although `.env.production.local` sets the variable, read it explicitly instead: `const env = loadEnv(configEnv.mode, process.cwd(), ['SENTRA_'])` (from `vite`; the `vite` option receives `configEnv`) and use `env.SENTRA_DIAGNOSIS_ENGINE`.
 
 - [ ] **Step 2: Verify**
 
-Run: `node scripts/pnpm.mjs exec vitest run lib/iskandar-diagnosis-engine/feature-flags.test.ts` (PASS, unchanged) and `node scripts/pnpm.mjs run build` (exit 0); then `grep -c "Menunggu MIRA" .output/chrome-mv3-dev/background.js` (≥ 1).
+Run: `node scripts/pnpm.mjs exec vitest run lib/iskandar-diagnosis-engine/feature-flags.test.ts` (PASS, unchanged). Then, with `SENTRA_DIAGNOSIS_ENGINE` temporarily commented out in `.env.production.local` (restore it afterwards), `node scripts/pnpm.mjs run build` (exit 0) and `grep -c "SENTRA_DIAGNOSIS_ENGINE" .output/chrome-mv3-dev/background.js` → 0 (the define inlined the literal).
 
 - [ ] **Step 3: Docs**
 
@@ -1559,7 +1565,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
   ```ts
   export function useRecurrentDiagnoses(patientRM: string, deps?: { load?: (rm: string) => Promise<VisitRecord[]>; today?: () => Date }): RecurrentDiagnosisCandidate[];
   // diagnosisViewModel.ts
-  export interface DiagnosisHistoryView { label: 'Kronis' | 'Berulang'; count: number; visitsConsidered: number; lastSeen: string; engineAgrees: boolean }
+  export interface DiagnosisHistoryView { label: 'Kronis' | 'Berulang'; count: number; visitsConsidered: number; lastSeen: string; engineAgrees: boolean; engineSource: 'mira' | 'legacy' | null }
   // DiagnosisCandidateViewModelInput / DiagnosisCandidateView gain `history?: DiagnosisHistoryView`
   // ClinicalDifferential.tsx (exported helpers)
   export function buildRecurrentSuggestion(candidate: RecurrentDiagnosisCandidate): DiagnosisSuggestion; // rank 0, confidence 0.9 Kronis / 0.6 Berulang, engine_tag = label
@@ -1625,9 +1631,9 @@ In `diagnosisViewModel.test.ts` add:
 ```ts
   it('carries the history line on candidates and marks engine agreement', () => {
     const input = makeInput(); // the file's existing fixture builder
-    input.candidates[0].history = { label: 'Kronis', count: 3, visitsConsidered: 5, lastSeen: '2026-08-12', engineAgrees: true };
+    input.candidates[0].history = { label: 'Kronis', count: 3, visitsConsidered: 5, lastSeen: '2026-08-12', engineAgrees: true, engineSource: 'mira' };
     const view = createDiagnosisPageViewModel(input);
-    expect(view.candidates[0].history).toEqual({ label: 'Kronis', count: 3, visitsConsidered: 5, lastSeen: '2026-08-12', engineAgrees: true });
+    expect(view.candidates[0].history).toEqual({ label: 'Kronis', count: 3, visitsConsidered: 5, lastSeen: '2026-08-12', engineAgrees: true, engineSource: 'mira' });
     expect(view.candidates[1]?.history).toBeUndefined();
   });
 ```
@@ -1686,7 +1692,7 @@ export function useRecurrentDiagnoses(
 ```
 (If `react-hooks/exhaustive-deps` flags `load`/`today`, hold them in `useRef` and read `.current` inside the effect; never add a lint suppression comment.)
 
-`diagnosisViewModel.ts`: add `export interface DiagnosisHistoryView { label: 'Kronis' | 'Berulang'; count: number; visitsConsidered: number; lastSeen: string; engineAgrees: boolean }`, add `history?: DiagnosisHistoryView` to `DiagnosisCandidateViewModelInput` and `DiagnosisCandidateView`, and copy it in `buildCandidateViews` (`history: candidate.history ? { ...candidate.history } : undefined`).
+`diagnosisViewModel.ts`: add `export interface DiagnosisHistoryView { label: 'Kronis' | 'Berulang'; count: number; visitsConsidered: number; lastSeen: string; engineAgrees: boolean; engineSource: 'mira' | 'legacy' | null }`, add `history?: DiagnosisHistoryView` to `DiagnosisCandidateViewModelInput` and `DiagnosisCandidateView`, and copy it in `buildCandidateViews` (`history: candidate.history ? { ...candidate.history } : undefined`).
 
 `ClinicalImpressionPanel.tsx`: add `history?: DiagnosisHistoryView;` to `ClinicalImpressionViewItem` (import the type).
 
@@ -1694,7 +1700,8 @@ export function useRecurrentDiagnoses(
 - `const recurrent = useRecurrentDiagnoses(patientRM);` and `const recurrentByIcd = useMemo(() => new Map(recurrent.map((c) => [c.icd, c])), [recurrent]);`
 - Export `buildRecurrentSuggestion` (rank 0, `confidence: label === 'Kronis' ? 0.9 : 0.6`, `rationale: 'Tercatat <count> kali dalam 12 bulan terakhir.'`, `engine_tag: label`, `red_flags: []`, `recommended_actions: []`) and `resolveBaseSuggestions`.
 - In `normalizedSuggestions`: `const baseSuggestions = resolveBaseSuggestions(Array.isArray(suggestions) ? suggestions : [], recurrent.length > 0, () => buildUiFallbackDiagnoses(keluhanUtama, vitals));` and, before the loop over `sanitizedBaseSuggestions`, seed `mergedByIcd` with `buildRecurrentSuggestion(c)` for each recurrent candidate (after the chronic seeding, skipping ICDs already seeded). When a base suggestion matches a seeded recurrent ICD, keep the engine's `rationale` and `engine_tag` but the max confidence (existing merge branch already does this; make sure the recurrent's `engine_tag` is replaced by the engine's tag when present so the "MIRA" tag survives).
-- In `impressionItems`: `history: recurrentByIcd.get(selectedDiagnosis.icd_x) ? { label, count, visitsConsidered, lastSeen, engineAgrees: item.suggestion.rank > 0 } : undefined` (rank 0 means the row came only from history).
+- In `normalizedSuggestions` also build `engineIcds = new Set(sanitizedBaseSuggestions.map((s) => s.icd_x))` and expose it from the same `useMemo` (return `{ list, engineIcds }`); `normalizedSuggestions` re-ranks every item, so rank cannot tell history-only rows apart.
+- In `impressionItems`: `history: recurrentByIcd.get(selectedDiagnosis.icd_x) ? { label, count, visitsConsidered, lastSeen, engineAgrees: engineIcds.has(selectedDiagnosis.icd_x), engineSource: engineIcds.has(selectedDiagnosis.icd_x) ? (/^MIRA/.test(item.suggestion.engine_tag ?? '') ? 'mira' : 'legacy') : null } : undefined`.
 - In the view-model candidate mapping add `history: item.history`.
 - In `selectSuggestedDiagnosis`, after the selection updates and when the item has history: `void auditLogger.log('suggestion_selected', { session_id: patientRM ? `rm-${patientRM}` : 'rm-unknown', suggestions: [{ icd10_code: diagnosis.icd_x, confidence: item.suggestion.confidence }], metadata: { selected_icd: diagnosis.icd_x, source: 'riwayat', history_label: history.label, history_count: history.count, visits_considered: history.visitsConsidered } })` with `import { auditLogger } from '@/lib/iskandar-diagnosis-engine/audit-logger';` (the logger hashes the session id itself; the existing `logSuggestionSelected` wrapper cannot carry metadata and its file is R3, so the generic `log` is used).
 - Pass `recurrent.map((c) => ({ icd: c.icd, name: c.name }))` as `recurrent` into `buildDiagnosisRequestContext` (Task 6 placeholder).
@@ -2133,7 +2140,7 @@ const handlers = () => ({ onToggleCandidate: vi.fn(), onToggleManualDiagnosisInp
 describe('DiagnosisStep', () => {
   it('asks one question, shows at most three cards, history first, and the rest behind Lainnya', () => {
     const cards = [
-      candidate({ id: '1-I10', rank: 1, code: 'I10', name: 'Hipertensi', displayLabel: 'I10 - Hipertensi', history: { label: 'Kronis', count: 3, visitsConsidered: 5, lastSeen: '2026-08-12', engineAgrees: true } }),
+      candidate({ id: '1-I10', rank: 1, code: 'I10', name: 'Hipertensi', displayLabel: 'I10 - Hipertensi', history: { label: 'Kronis', count: 3, visitsConsidered: 5, lastSeen: '2026-08-12', engineAgrees: true, engineSource: 'mira' } }),
       candidate({}),
       candidate({ id: '3-G44.2', rank: 3, code: 'G44.2', name: 'Sakit kepala tegang', displayLabel: 'G44.2 - Sakit kepala tegang' }),
       candidate({ id: '4-R51', rank: 4, code: 'R51', name: 'Nyeri kepala', displayLabel: 'R51 - Nyeri kepala' }),
@@ -2164,7 +2171,7 @@ describe('DiagnosisStep', () => {
   });
 
   it('lists cannot-miss items uncapped and shows the history-only message when the engine had nothing', () => {
-    const cards = [candidate({ id: '0-I10', rank: 1, code: 'I10', name: 'Hipertensi', displayLabel: 'I10 - Hipertensi', history: { label: 'Kronis', count: 2, visitsConsidered: 3, lastSeen: '2026-08-12', engineAgrees: false } })];
+    const cards = [candidate({ id: '0-I10', rank: 1, code: 'I10', name: 'Hipertensi', displayLabel: 'I10 - Hipertensi', history: { label: 'Kronis', count: 2, visitsConsidered: 3, lastSeen: '2026-08-12', engineAgrees: false, engineSource: null } })];
     render(<DiagnosisStep viewModel={vm(cards)} phase="ready" errorMessage="" recurrentOnlyMessage="Data hari ini belum cukup untuk engine; riwayat menunjukkan pola berikut." showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
     expect(screen.getByText('Jangan terlewat: Krisis hipertensi (I16)')).toBeInTheDocument();
     expect(screen.getByText('Data hari ini belum cukup untuk engine; riwayat menunjukkan pola berikut.')).toBeInTheDocument();
@@ -2205,7 +2212,7 @@ describe('FindingStep', () => {
 
 - [ ] **Step 3: Implement**
 
-`diagnosisDisplayUtils.ts`: move `CLINICAL_SIGNAL_PATTERNS`, `MAX_CLINICAL_SIGNAL_ITEMS` and `buildClinicalSignals` (exported) from `DiagnosisWorkspace.tsx`; have `DiagnosisWorkspace.tsx` import `buildClinicalSignals` until Task 15 deletes it. Add `export function formatShortDate(iso: string): string` returning `d MMM yyyy` in Indonesian (`['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des']`), `''` for an invalid date.
+`diagnosisDisplayUtils.ts`: move `CLINICAL_SIGNAL_PATTERNS`, `MAX_CLINICAL_SIGNAL_ITEMS` and `buildClinicalSignals` (exported) from `DiagnosisWorkspace.tsx`; have `DiagnosisWorkspace.tsx` import `buildClinicalSignals` until Task 15 deletes it. Add `export function formatShortDate(iso: string): string` returning `d MMM yyyy` in Indonesian (`['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des']`) using `getUTCDate`/`getUTCMonth`/`getUTCFullYear` (a date-only ISO string parses as UTC midnight; local getters would give the previous day west of UTC), `''` for an invalid date.
 
 ```tsx
 // components/clinical/diagnosis/steps/FindingStep.tsx
@@ -2251,7 +2258,7 @@ function historyLine(card: DiagnosisCandidateView): string | null {
   if (!card.history) return null;
   const base = `${card.history.count} dari ${card.history.visitsConsidered} kunjungan · terakhir ${formatShortDate(card.history.lastSeen)}`;
   if (!card.history.engineAgrees) return base;
-  return `${base} · ${/MIRA/.test(card.displayLabel) ? 'MIRA setuju' : 'engine setuju'}`;
+  return `${base} · ${card.history.engineSource === 'mira' ? 'MIRA setuju' : 'engine setuju'}`;
 }
 
 function tallyLine(card: DiagnosisCandidateView): string {
@@ -2303,7 +2310,7 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 **Files:**
 - Create: `components/clinical/diagnosis/steps/TherapyStep.tsx`, `components/clinical/diagnosis/steps/RmeStep.tsx`
 - Test: `components/clinical/diagnosis/steps/TherapyStep.test.tsx`, `components/clinical/diagnosis/RMETransferPanel.test.tsx` (kept; one assertion may change, see step 3)
-- Modify: `components/clinical/diagnosis/RMETransferPanel.tsx` (drop the `StagedSection` wrapper; render a fragment; the `SectionHeader` goes away)
+- Modify: nothing else in this task. `RMETransferPanel.tsx` keeps its `StagedSection` wrapper and `TherapyReviewPanel.tsx` stays until Task 15, so the old workspace and its tests stay green at this commit.
 
 **Interfaces:**
 - Produces:
@@ -2369,20 +2376,16 @@ describe('TherapyStep', () => {
 
 - [ ] **Step 3: Implement**
 
-`TherapyStep.tsx`: heading "Terapi apa?"; `viewModel.selectedDiagnoses` as one `dx-flow-muted` line "Basis: <labels>" with a "hapus" link per diagnosis (calls `onRemoveDiagnosis`); rows: for each group medication a `<button type="button" className="dx-flow-row" data-testid="dx-flow-med" aria-pressed={isSelected} onClick={() => onToggleMedication(key)}>` with name + dose left and the status word right: `'manual'` when `sourceLabel === 'MANUAL'`, else `'lanjut'` when the medication name (case-insensitive, first word) appears in `viewModel.context.chronicTherapySummary`, else `isSelected ? 'dipilih' : 'usulan'`; a "hapus" link on manual rows (`onRemoveManualMedication`, `stopPropagation`). Buttons row: "+ Obat" (`onToggleManualMedicationInput`), "Pilih semua", "Reset". Manual form = the existing `ManualMedicationForm` markup moved here. `therapySummary`: selected medication names from all groups, first two joined by ", ", `+N` for the rest, or `'belum ada obat'`.
+`TherapyStep.tsx`: heading "Terapi apa?"; `viewModel.selectedDiagnoses` as one `dx-flow-muted` line "Basis: <labels>" with a "hapus" link per diagnosis (calls `onRemoveDiagnosis`); rows: for each group medication a `<div role="button" tabIndex={0} className="dx-flow-row" data-testid="dx-flow-med" aria-pressed={isSelected} onClick={() => onToggleMedication(key)} onKeyDown={Enter/Space → same}>` (a `div`, not a `button`, because the manual rows contain a nested "hapus" button) with name + dose left and the status word right: `'manual'` when `sourceLabel === 'MANUAL'`, else `'lanjut'` when the medication name (case-insensitive, first word) appears in `viewModel.context.chronicTherapySummary`, else `isSelected ? 'dipilih' : 'usulan'`; a "hapus" link on manual rows (`onRemoveManualMedication`, `stopPropagation`). Buttons row: "+ Obat" (`onToggleManualMedicationInput`), "Pilih semua", "Reset". Manual form = the existing `ManualMedicationForm` markup moved here. `therapySummary`: selected medication names from all groups, first two joined by ", ", `+N` for the rest, or `'belum ada obat'`.
 
-`RmeStep.tsx`: `<section className="dx-flow-step" aria-label="RME"><h2 className="dx-flow-step__heading">RME</h2><RMETransferPanel …/></section>`; `rmeSummary(vm)` returns `'terkirim'` when `transfer.state === 'success'` else `formatTransferState(transfer.state)`.
-
-`RMETransferPanel.tsx`: replace the `<StagedSection …>` wrapper with `<>…</>`, delete its `SectionHeader`. In `RMETransferPanel.test.tsx`, if an assertion queried the section summary "RME Transfer · …", replace it with the same readiness assertion on `.diagnosis-transfer-status` and name it in the commit. Delete `TherapyReviewPanel.tsx` (its markup now lives in `TherapyStep.tsx`).
+`RmeStep.tsx`: `<section className="dx-flow-step" aria-label="RME"><h2 className="dx-flow-step__heading">RME</h2><RMETransferPanel …/></section>`; `rmeSummary(vm)` returns `'terkirim'` when `transfer.state === 'success'` else `formatTransferState(transfer.state)`. Until Task 15 the panel still renders its `StagedSection`; `RmeStep` passes it through unchanged.
 
 - [ ] **Step 4: Run tests, token-guard** — `node scripts/pnpm.mjs exec vitest run components/clinical/diagnosis` → PASS; token-guard → PASS.
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add components/clinical/diagnosis/steps/TherapyStep.tsx components/clinical/diagnosis/steps/TherapyStep.test.tsx components/clinical/diagnosis/steps/RmeStep.tsx components/clinical/diagnosis/RMETransferPanel.tsx components/clinical/diagnosis/RMETransferPanel.test.tsx && git rm -q components/clinical/diagnosis/TherapyReviewPanel.tsx && git commit -m "feat(med-assist): Terapi and RME steps; RME panel without its staged wrapper
-
-<name any changed RMETransferPanel.test assertion here>
+git add components/clinical/diagnosis/steps/TherapyStep.tsx components/clinical/diagnosis/steps/TherapyStep.test.tsx components/clinical/diagnosis/steps/RmeStep.tsx && git commit -m "feat(med-assist): Terapi and RME steps for the step-flow diagnosis page
 
 Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 ```
@@ -2393,7 +2396,8 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
 - Create: `components/clinical/diagnosis/DiagnosisStepFlow.tsx`
 - Test: `components/clinical/diagnosis/DiagnosisStepFlow.test.tsx`
 - Modify: `components/clinical/ClinicalDifferential.tsx` (render `DiagnosisStepFlow`, pass `recurrentOnlyMessage`)
-- Delete: `components/clinical/diagnosis/DiagnosisWorkspace.tsx`, `DiagnosisWorkspace.test.tsx`, `DiagnosisProgressStepper.tsx`, `StagedSection.tsx`
+- Modify: `components/clinical/diagnosis/RMETransferPanel.tsx` (replace the `<StagedSection …>` wrapper with a fragment, delete its `SectionHeader`), `RMETransferPanel.test.tsx` (if an assertion queried the section summary "RME Transfer · …", replace it with the same readiness assertion on `.diagnosis-transfer-status` and name it in the commit)
+- Delete: `components/clinical/diagnosis/DiagnosisWorkspace.tsx`, `DiagnosisWorkspace.test.tsx`, `DiagnosisProgressStepper.tsx`, `StagedSection.tsx`, `TherapyReviewPanel.tsx` (its markup moved into `TherapyStep.tsx` in Task 14)
 
 **Interfaces:**
 - Produces: `<DiagnosisStepFlow {...DiagnosisPageProps} />` with root `data-testid="diagnosis-workspace"` and the same `data-diagnosis-*` attributes as before (other tests read them).
@@ -2518,7 +2522,7 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
   );
 }
 ```
-`SideLinks`: two `dx-flow-link` buttons "Penunjang (N)" (N = `getVisibleExamItems(evidence.missing).length`, hidden when 0 and no safety fallback needed) and "Edukasi (N)" (N = review items not in the exam list, as `EducationSection` computed), each toggling its `dx-flow-list` in place. Receipts for done steps that come *after* the active one (a reopened earlier step) are also shown, below the active step, so the doctor keeps the context; ghosts are only for not-done later steps.
+`SideLinks`: two `dx-flow-link` buttons "Penunjang (N)" (N = `getVisibleExamItems(evidence.missing).length`, hidden when 0 and no safety fallback needed) and "Edukasi (N)" (N = review items not in the exam list, as `EducationSection` computed), each toggling its `dx-flow-list` in place. Receipts are shown only for done steps *before* the active one (the `s.index < activeIndex` filter); while an earlier step is reopened, later done steps are hidden until "selesai", and ghosts are only for not-done later steps.
 
 `ClinicalDifferential.tsx`: import `DiagnosisStepFlow` instead of `DiagnosisWorkspace`; add `recurrentOnlyMessage={suggestions.length === 0 && recurrent.length > 0 ? 'Data hari ini belum cukup untuk engine; riwayat menunjukkan pola berikut.' : undefined}`.
 
@@ -2532,7 +2536,7 @@ Expected: all exit 0; SAFRS R2 (Part 3 touches no R3 path).
 - [ ] **Step 5: Commit**
 
 ```bash
-git add components/clinical/diagnosis/DiagnosisStepFlow.tsx components/clinical/diagnosis/DiagnosisStepFlow.test.tsx components/clinical/diagnosis/steps/DiagnosisStep.test.tsx components/clinical/ClinicalDifferential.tsx && git rm -q components/clinical/diagnosis/DiagnosisWorkspace.tsx components/clinical/diagnosis/DiagnosisWorkspace.test.tsx components/clinical/diagnosis/DiagnosisProgressStepper.tsx components/clinical/diagnosis/StagedSection.tsx && git commit -m "feat(med-assist): diagnosis page as a step flow: one step at a time, receipts and ghosts
+git add components/clinical/diagnosis/DiagnosisStepFlow.tsx components/clinical/diagnosis/DiagnosisStepFlow.test.tsx components/clinical/diagnosis/steps/DiagnosisStep.test.tsx components/clinical/diagnosis/RMETransferPanel.tsx components/clinical/diagnosis/RMETransferPanel.test.tsx components/clinical/ClinicalDifferential.tsx && git rm -q components/clinical/diagnosis/DiagnosisWorkspace.tsx components/clinical/diagnosis/DiagnosisWorkspace.test.tsx components/clinical/diagnosis/DiagnosisProgressStepper.tsx components/clinical/diagnosis/StagedSection.tsx components/clinical/diagnosis/TherapyReviewPanel.tsx && git commit -m "feat(med-assist): diagnosis page as a step flow: one step at a time, receipts and ghosts
 
 Replaces DiagnosisWorkspace and the progress stepper. Assertions migrated or dropped:
 <list every one, as enumerated in the plan's Task 15 step 3>
