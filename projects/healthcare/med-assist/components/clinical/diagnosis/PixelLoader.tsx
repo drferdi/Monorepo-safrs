@@ -29,7 +29,8 @@ export const PIXEL_FRAMES: number[][] = [
 
 const CELLS = Array.from({ length: 16 }, (_, index) => index);
 
-export function PixelLoader() {
+/** A tone colours the cells: `accent` the page green, `danger` red; none keeps the title colour. */
+export function PixelLoader({ tone }: { tone?: 'accent' | 'danger' } = {}) {
   const reduceMotion = useReducedMotion();
   const [frame, setFrame] = useState(0);
 
@@ -41,7 +42,11 @@ export function PixelLoader() {
 
   const litCells = new Set(reduceMotion ? INNER : PIXEL_FRAMES[frame]);
   return (
-    <span className="dx-pixel-loader" data-testid="dx-pixel-loader" aria-hidden="true">
+    <span
+      className={tone ? `dx-pixel-loader dx-pixel-loader--${tone}` : 'dx-pixel-loader'}
+      data-testid="dx-pixel-loader"
+      aria-hidden="true"
+    >
       {CELLS.map((cell) => {
         const on = litCells.has(cell);
         return (

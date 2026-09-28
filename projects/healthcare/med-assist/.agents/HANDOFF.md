@@ -24,9 +24,11 @@ Reasoning loop (Chief's specification):
   "Tidak lagi disarankan", "Berubah setelah:" on the Next best step.
 - The MUST NOT MISS and NEXT BEST STEP labels carry the same 4x4 pixel loader as the
   Diagnosis title (Chief, after lab.xevrion.dev/lab/pixel-loader); `Section` in
-  `DiagnosisStep.tsx`, the label row holds the section test id.
+  `DiagnosisStep.tsx`, the label row holds the section test id. Cells are green beside
+  Diagnosis (`--accent-med`) and red beside MUST NOT MISS (`--sentra-danger`); two rules
+  appended to `style.css`.
 
-No CSS change, no R3 path, no protected file. **SAFRS**: R2 UI and R2 engine code; the branch
+CSS: only the two appended loader-tone rules. No R3 path, no protected file. **SAFRS**: R2 UI and R2 engine code; the branch
 stays R3 through `lib/clinical/recurrent-diagnosis.ts` (Chief's prior approval).
 
 ## What Chief tests now
@@ -43,7 +45,7 @@ stays R3 through `lib/clinical/recurrent-diagnosis.ts` (Chief's prior approval).
 |---|---|---|
 | `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`) |
 | `typecheck` | 0 | clean |
-| `test` | 0 | 176 files passed, 1 skipped; 1386 tests passed, 17 skipped |
+| `test` | 0 | 176 files passed, 1 skipped; 1387 tests passed, 17 skipped |
 | `exec wxt build --mode development` | 0 | clean |
 | `run:check` | 0 | "Extension loads: Asisten Medis 2.1.0 (MV3), all referenced files present." |
 | MIRA `pytest` (assist/service) | 0 | 126 passed, 1 skipped |

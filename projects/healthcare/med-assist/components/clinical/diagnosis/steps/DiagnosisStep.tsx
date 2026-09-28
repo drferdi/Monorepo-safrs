@@ -455,11 +455,13 @@ function Card({
 function Section({
   label,
   testId,
+  tone,
   divider,
   children,
 }: {
   label?: string;
   testId?: string;
+  tone?: 'accent' | 'danger';
   divider: boolean;
   children: ReactNode;
 }) {
@@ -470,7 +472,7 @@ function Section({
         {/* A named section carries the same pixel loader as the Diagnosis title (Chief, 2026-09-28). */}
         {label ? (
           <div className="flex items-center gap-2" data-testid={testId}>
-            <PixelLoader />
+            <PixelLoader tone={tone} />
             <span className="ttv-label">{label}</span>
           </div>
         ) : null}
@@ -570,7 +572,7 @@ export function DiagnosisStep({
     <section className="ct-v2-panel flex flex-col gap-3" aria-label="Diagnosis" aria-live="polite">
       <div className="ct-v2-panel-head">
         <div className="flex items-center gap-2">
-          <PixelLoader />
+          <PixelLoader tone="accent" />
           <h2 className="ttv-section-title">Diagnosis</h2>
         </div>
         <span className="ttv-label">2 / 4</span>
@@ -642,7 +644,7 @@ export function DiagnosisStep({
 
           {/* The MUST NOT MISS label is the only cannot-miss marker; these cards carry no cannot-miss chip. */}
           {mustNotMiss.length > 0 ? (
-            <Section label="Must not miss" testId="dx-flow-mnm-label" divider={primary !== null || chosen !== null}>
+            <Section label="Must not miss" testId="dx-flow-mnm-label" tone="danger" divider={primary !== null || chosen !== null}>
               <div className="diagnosis-list">
                 {mustNotMiss.map((candidate, index) => (
                   <div key={candidate.id}>{card(candidate, index + 1, true)}</div>

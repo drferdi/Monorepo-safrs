@@ -10304,3 +10304,12 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
   width: 11px;
   height: 11px;
 }
+
+/* Pixel loader tones (Chief, 2026-09-28): green beside Diagnosis (the page's accent green), red
+   beside MUST NOT MISS; Next best step keeps the title colour. */
+.dx-pixel-loader--accent > span {
+  background: var(--accent-med);
+}
+.dx-pixel-loader--danger > span {
+  background: var(--sentra-danger);
+}

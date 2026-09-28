@@ -541,6 +541,14 @@ describe('DiagnosisStep', () => {
     expect(loader.compareDocumentPosition(label) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
+  it('colours the loaders: green beside Diagnosis, red beside Must not miss, the title colour beside Next best step', () => {
+    render(<DiagnosisStep viewModel={vm([candidate({}), candidate({ id: '3-K65.0', rank: 3, code: 'K65.0', name: 'Acute peritonitis', displayLabel: 'K65.0 - Acute peritonitis · MIRA · jangan terlewat' })])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" enginePlan={{ actions: [{ kind: 'exam', item: 'Palpasi abdomen', reason: 'Menilai defans.' }], missing: [] }} {...handlers()} />);
+    const heading = screen.getByRole('heading', { name: 'Diagnosis' });
+    expect(within(heading.parentElement as HTMLElement).getByTestId('dx-pixel-loader')).toHaveClass('dx-pixel-loader--accent');
+    expect(within(screen.getByTestId('dx-flow-mnm-label')).getByTestId('dx-pixel-loader')).toHaveClass('dx-pixel-loader--danger');
+    expect(within(screen.getByTestId('dx-flow-next-label')).getByTestId('dx-pixel-loader').className).toBe('dx-pixel-loader');
+  });
+
   it('shows a two-card skeleton with a live text while loading', () => {
     render(<DiagnosisStep viewModel={vm([])} phase="loading" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
     expect(screen.getByText('Menyusun diagnosis banding...')).toHaveClass('sr-only');
