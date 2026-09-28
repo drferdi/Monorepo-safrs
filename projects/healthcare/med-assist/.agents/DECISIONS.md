@@ -15,8 +15,10 @@ has a dated heading, the decision, a short rationale, and its evidence.
   3. At most two "Diagnosis banding" cards; no "Lainnya".
   4. Terapi and RME are the second page. The first page (Temuan, Diagnosis, Penunjang and
      Edukasi) carries nothing of them, not even ghosts; the second keeps the Temuan and
-     Diagnosis receipts on top, whose "ubah" goes back. The "Basis:" line in Terapi, which
-     repeated the Diagnosis receipt right above it, was removed with its "hapus" button.
+     Diagnosis receipts on top, whose "ubah" goes back. The "Basis:" line in Terapi stays
+     although it repeats the Diagnosis receipt right above it: removing it (`e309efd0`) left a
+     manual diagnosis with no way to be removed and a second chosen diagnosis shown nowhere,
+     so `400c94ca` restored it; how to drop the repeat is open for Chief.
   5. "Masukkan hasil" on a next best step opens options to tick instead of a text field
      (`components/clinical/diagnosis/bedsideFindings.ts`: lung sounds, heart, abdomen, CVA,
      pharynx, meningeal, hydration, JVP/edema, neuro, skin, ear, sinus; CBC, CRP, glucose,
@@ -32,9 +34,9 @@ has a dated heading, the decision, a short rationale, and its evidence.
   wording is for Chief's review. Codes absent from the knowledge base (K65, K35) fall back to
   MIRA's plan, which covers the whole differential, not that card alone; per-code checks need
   knowledge-base entries (R3, Chief) or a MIRA contract field. The legacy engine ignores
-  `bedside_findings`. Saving a finding asks the engine again and clears a chosen diagnosis. A
-  manual diagnosis can now be replaced from "ubah" but no longer cleared to none.
-- Evidence: `e753ad58`, `4e65703d`, `44c43b40`, `e309efd0`; Vite harness
+  `bedside_findings`. Saving a finding asks the engine again (a new case key, so MIRA runs
+  live) and clears a chosen diagnosis and manual medications.
+- Evidence: `e753ad58`, `4e65703d`, `44c43b40`, `e309efd0`, `400c94ca`; Vite harness
   checked (tick list, receipt, MUST NOT MISS panel, both pages; a MutationObserver shows only
   the opening panel changes style when "Masukkan hasil" opens).
 

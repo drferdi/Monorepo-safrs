@@ -8,7 +8,7 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 ## Current state
 
 Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEAD is the docs
-commit after `e309efd0`. Earlier work today is in `DECISIONS.md` and the commit bodies.
+commit after `400c94ca`. Earlier work today is in `DECISIONS.md` and the commit bodies.
 
 Tonight (Chief's revision, all points done):
 
@@ -20,7 +20,9 @@ Tonight (Chief's revision, all points done):
   MUST NOT MISS "Apa yang perlu diperiksa" ticks the knowledge base's `pemeriksaan_fisik`, or
   MIRA's remaining plan when the code has none; MIRA's `missingInformation` joins Data kurang.
 - `e753ad58` — two banding cards, no "Lainnya".
-- `e309efd0` — Terapi and RME on the second page; the repeated "Basis:" line is gone.
+- `e309efd0` — Terapi and RME on the second page. It also removed the "Basis:" line in Terapi
+  (it repeats the Diagnosis receipt); `400c94ca` restores it, because without its "hapus" a
+  manual diagnosis could not be removed and a second diagnosis was shown nowhere.
 
 No CSS change, no R3 path, no protected file. **SAFRS**: R2 UI and R2 engine code
 (`lib/diagnosis-engine/**`, `types/api.ts`); the branch stays R3 through
@@ -58,8 +60,9 @@ by hand).
 - The tick catalogue (`bedsideFindings.ts`) is input vocabulary for Chief's clinical review.
 - K65, K35 have no knowledge-base entry; their checks are MIRA's plan for the whole
   differential. Per-code checks need KB entries (R3) or a MIRA contract field.
-- Legacy engine ignores `bedside_findings`; saving a finding clears a chosen diagnosis; a
-  manual diagnosis can be replaced from "ubah" but not cleared to none.
+- Legacy engine ignores `bedside_findings`; saving a finding clears a chosen diagnosis and
+  manual medications (it is a new request). A re-request with findings has a new case key, so
+  MIRA runs live (read in `run-diagnosis.ts`); not live-tested, the service was down.
 
 ## Open for Chief (code must not change for these)
 
@@ -68,6 +71,8 @@ by hand).
 3. Host starts the service with `MIRA_SERVICE_ENV=development`; the environment name is Chief's.
 4. Capsule `AGENTS.md` still says "penyakit.json wins; the LLM is a reranker only".
 5. Clinical review of the tick catalogue wording.
+6. The "Basis: … hapus" line in Terapi repeats the Diagnosis receipt above it. Default: keep.
+   Dropping it needs the receipt to list every chosen diagnosis and a remove action elsewhere.
 
 ## Next action
 
