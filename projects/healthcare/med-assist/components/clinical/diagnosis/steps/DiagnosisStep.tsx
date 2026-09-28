@@ -8,6 +8,7 @@ import {
   getVisibleErrorMessage,
 } from '../diagnosisDisplayUtils';
 import type { DiagnosisPageProps } from '../diagnosisPageProps';
+import { PixelLoader } from '../PixelLoader';
 import type { DiagnosisCandidateView, DiagnosisPageViewModel } from '../diagnosisViewModel';
 
 /** Cards on the page: the primary plus the differentials; the rest waits behind "Lainnya". */
@@ -265,7 +266,10 @@ export function DiagnosisStep({
   return (
     <section className="ct-v2-panel flex flex-col gap-3" aria-label="Diagnosis" aria-live="polite">
       <div className="ct-v2-panel-head">
-        <h2 className="ttv-section-title">Diagnosis</h2>
+        <div className="flex items-center gap-2">
+          <PixelLoader />
+          <h2 className="ttv-section-title">Diagnosis</h2>
+        </div>
         <span className="ttv-label">2 / 4</span>
       </div>
 

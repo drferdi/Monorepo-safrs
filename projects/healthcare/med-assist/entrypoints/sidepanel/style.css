@@ -10245,3 +10245,18 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 }
 .sentra-card .diagnosis-text-button:hover { color: var(--text-main); }
 .sentra-card .diagnosis-text-button:disabled { opacity: 0.45; }
+
+/* Pixel loader beside the Diagnosis step title (2026-09-28, after the 4x4 "Pixel loader" on
+   lab.xevrion.dev): a 15 px grid, just under the title line. Opacity and scale are animated
+   by framer-motion in PixelLoader.tsx; the cells take the panel title colour. */
+.dx-pixel-loader {
+  display: grid;
+  flex: 0 0 auto;
+  grid-template-columns: repeat(4, 3px);
+  grid-auto-rows: 3px;
+  gap: 1px;
+}
+.dx-pixel-loader > span {
+  border-radius: 0;
+  background: var(--ct-v2-text-soft-strong);
+}

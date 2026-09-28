@@ -173,6 +173,14 @@ describe('DiagnosisStep', () => {
     expect(screen.getByText('2× dalam 12 bulan · terakhir 12 Agu 2026')).toBeInTheDocument();
   });
 
+  it('puts the pixel loader to the left of the "Diagnosis" title', () => {
+    render(<DiagnosisStep viewModel={vm([candidate({})])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
+    const heading = screen.getByRole('heading', { name: 'Diagnosis' });
+    const loader = screen.getByTestId('dx-pixel-loader');
+    expect(loader.parentElement).toBe(heading.parentElement);
+    expect(loader.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
   it('shows a two-card skeleton with a live text while loading', () => {
     render(<DiagnosisStep viewModel={vm([])} phase="loading" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
     expect(screen.getByText('Menyusun diagnosis banding...')).toHaveClass('sr-only');
