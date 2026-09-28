@@ -156,7 +156,9 @@ describe('ClinicalDifferential chronic therapy context', () => {
 
     // Auto-promote diagnosis utama sudah dihapus dari desain: dokter harus
     // memilih aktif sebelum farmakoterapi diambil.
-    const selectPrimary = await screen.findByRole('button', { name: /Pilih Diagnosis Utama/i });
+    const selectPrimary = (await screen.findByText('I10 - Hipertensi esensial')).closest(
+      '[data-testid="dx-flow-card"]'
+    ) as HTMLElement;
     fireEvent.click(selectPrimary);
 
     await waitFor(() => {

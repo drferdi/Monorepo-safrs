@@ -337,7 +337,7 @@ describe('ClinicalDifferential secure logic contract', () => {
 
     renderClinicalDifferential();
 
-    const primaryCard = await screen.findByTestId('clinical-diagnosis-primary-card');
+    const [primaryCard] = await screen.findAllByTestId('dx-flow-card');
     expect(primaryCard).toHaveTextContent(/J18\.9 - Community Acquired Pneumonia/i);
     expect(primaryCard).not.toHaveTextContent(/J06\.9 - Infeksi Saluran Napas Atas/i);
   });
@@ -408,7 +408,7 @@ describe('ClinicalDifferential secure logic contract', () => {
 
     renderClinicalDifferential();
 
-    const primaryCard = await screen.findByTestId('clinical-diagnosis-primary-card');
+    const primaryCard = await screen.findByLabelText('Diagnosis');
     expect(primaryCard).toBeInTheDocument();
     expect(primaryCard).toHaveTextContent(/Data belum cukup/i);
     expect(primaryCard).toHaveTextContent(/Data belum cukup untuk menetapkan diagnosis utama/i);
@@ -418,7 +418,7 @@ describe('ClinicalDifferential secure logic contract', () => {
   it('keeps successful engine-backed diagnosis results instead of replacing them with fallback', async () => {
     renderClinicalDifferential();
 
-    const primaryCard = await screen.findByTestId('clinical-diagnosis-primary-card');
+    const [primaryCard] = await screen.findAllByTestId('dx-flow-card');
     expect(primaryCard).toHaveTextContent(/J06\.9 - Infeksi Saluran Napas Atas/i);
     expect(primaryCard).not.toHaveTextContent(/Data belum cukup untuk diagnosis spesifik/i);
     expect(primaryCard).not.toHaveTextContent(/\bR69\b/i);
@@ -429,8 +429,8 @@ describe('ClinicalDifferential secure logic contract', () => {
 
     renderClinicalDifferential({ onDiagnosisChange });
 
-    const primaryCard = await screen.findByTestId('clinical-diagnosis-primary-card');
-    fireEvent.click(within(primaryCard).getByRole('button', { name: /diagnosis manual/i }));
+    const diagnosisStep = await screen.findByLabelText('Diagnosis');
+    fireEvent.click(within(diagnosisStep).getByRole('button', { name: /diagnosis manual/i }));
     const manualCodeInput = screen.getByPlaceholderText(/ICD-X manual/i);
     const manualInputPanel = manualCodeInput.parentElement;
     expect(manualInputPanel).toBeTruthy();
@@ -463,8 +463,8 @@ describe('ClinicalDifferential secure logic contract', () => {
     renderClinicalDifferential();
 
     const workspace = await screen.findByTestId('diagnosis-workspace');
-    // Therapy review section is present on the surface...
-    expect(within(workspace).getByLabelText('Therapy + Resep')).toBeTruthy();
+    // Therapy review step is present on the surface...
+    expect(within(workspace).getByTestId('dx-flow-ghost-therapy')).toHaveTextContent('3 · Terapi');
     // ...but no medication is proposed until a working diagnosis is selected.
     expect(within(workspace).queryByText(/Paracetamol 500 mg/i)).toBeNull();
   });
@@ -473,10 +473,11 @@ describe('ClinicalDifferential secure logic contract', () => {
     renderClinicalDifferential();
 
     const workspace = await screen.findByTestId('diagnosis-workspace');
-    expect(within(workspace).getByLabelText('RME Transfer')).toBeTruthy();
-    // Resep uplink stays fail-closed until the physician selects a medication,
+    expect(within(workspace).getByTestId('dx-flow-ghost-rme')).toHaveTextContent('4 · RME');
+    // Resep uplink stays fail-closed until the physician selects a medication (the
+    // RME step, and with it "Kirim resep", renders only once it is reached),
     // and no transfer is dispatched merely by rendering the surface.
-    expect(within(workspace).getByRole('button', { name: 'Kirim resep' })).toBeDisabled();
+    expect(within(workspace).queryByRole('button', { name: 'Kirim resep' })).toBeNull();
     expect(mockSendMessage).not.toHaveBeenCalledWith('transferRME', expect.anything());
   });
 });

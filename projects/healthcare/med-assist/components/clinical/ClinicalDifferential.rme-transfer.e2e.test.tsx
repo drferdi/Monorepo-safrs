@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -7,7 +7,7 @@ import { ClinicalDifferential } from './ClinicalDifferential';
 /**
  * Acceptance regression for Temuan #1 (audit E2E): the live Diagnosis surface
  * must let a physician send diagnosis + resep to RME. Drives the REAL
- * ClinicalDifferential -> DiagnosisWorkspace subtree from suggestion data
+ * ClinicalDifferential -> DiagnosisStepFlow subtree from suggestion data
  * through diagnosis selection, therapy load, medication selection, to the RME
  * transfer buttons — proving the data path reaches "ready", not just that a
  * hand-built view model renders. (Follows LESSONS [2026-07-05]: drive the real
@@ -199,20 +199,27 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
     renderSurface();
 
     // Select the working diagnosis.
-    const selectPrimary = await screen.findByRole('button', { name: /Pilih Diagnosis Utama/i });
+    const selectPrimary = (await screen.findByText('J02 - Faringitis akut')).closest(
+      '[data-testid="dx-flow-card"]'
+    ) as HTMLElement;
     fireEvent.click(selectPrimary);
 
-    // Choosing a diagnosis must open all four staged sections container-wide,
-    // not just render their one-line summaries.
+    // Choosing a diagnosis must move the flow on to Terapi, rendered in full,
+    // not just leave it as a one-line ghost.
     await waitFor(() => {
-      const stagedDetails = document.querySelectorAll('details.diagnosis-stage__details');
-      expect(stagedDetails.length).toBe(4);
-      stagedDetails.forEach((details) => expect(details).toHaveAttribute('open'));
+      expect(screen.getByRole('heading', { name: 'Terapi apa?' })).toBeInTheDocument();
+      expect(screen.queryByTestId('dx-flow-ghost-therapy')).toBeNull();
     });
 
     // Therapy for the selected diagnosis must render on the live surface.
-    const medicationLabel = await screen.findByText('Amoksisilin 500mg');
-    expect(medicationLabel).toBeInTheDocument();
+    const findMedicationRow = async () =>
+      (await screen.findAllByTestId('dx-flow-med')).find((row) =>
+        /Amoksisilin 500mg/.test(row.textContent ?? '')
+      ) as HTMLElement;
+    expect(await findMedicationRow()).toBeInTheDocument();
+
+    // A diagnosis-only transfer stays reachable: continue without medication to RME.
+    fireEvent.click(screen.getByRole('button', { name: 'Lanjut tanpa obat' }));
 
     // "Kirim diagnosis" is enabled once a valid diagnosis is selected.
     const kirimDiagnosis = screen.getByRole('button', { name: 'Kirim diagnosis' });
@@ -223,8 +230,8 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
     expect(kirimResep).toBeDisabled();
 
     // Select the proposed medication.
-    const medRow = medicationLabel.closest('label') as HTMLLabelElement;
-    fireEvent.click(within(medRow).getByRole('checkbox'));
+    fireEvent.click(screen.getByRole('button', { name: 'ubah Terapi' }));
+    fireEvent.click(await findMedicationRow());
 
     await waitFor(() => expect(screen.getByRole('button', { name: 'Kirim resep' })).toBeEnabled());
 

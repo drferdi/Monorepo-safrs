@@ -17,7 +17,7 @@ function vm(): DiagnosisPageViewModel {
   };
 }
 
-const handlers = () => ({ onRemoveDiagnosis: vi.fn(), onSelectAllMedications: vi.fn(), onClearMedications: vi.fn(), onToggleManualMedicationInput: vi.fn(), onManualMedicationDraftChange: vi.fn(), onAddManualMedication: vi.fn(), onToggleMedication: vi.fn(), onRemoveManualMedication: vi.fn() });
+const handlers = () => ({ onRemoveDiagnosis: vi.fn(), onSelectAllMedications: vi.fn(), onClearMedications: vi.fn(), onToggleManualMedicationInput: vi.fn(), onManualMedicationDraftChange: vi.fn(), onAddManualMedication: vi.fn(), onToggleMedication: vi.fn(), onRemoveManualMedication: vi.fn(), onSkip: vi.fn() });
 
 describe('TherapyStep', () => {
   it('asks "Terapi apa?" and shows one row per medication with one status word', () => {
@@ -41,5 +41,12 @@ describe('TherapyStep', () => {
     fireEvent.click(screen.getByRole('button', { name: '+ Obat' }));
     expect(h.onToggleManualMedicationInput).toHaveBeenCalledTimes(1);
     expect(therapySummary(vm())).toBe('Amlodipin 10 mg');
+  });
+
+  it('continues without medication from "Lanjut tanpa obat"', () => {
+    const h = handlers();
+    render(<TherapyStep viewModel={vm()} showManualMedicationInput={false} manualMedicationDraft={{ nama_obat: '', dosis: '', aturan_pakai: 'Sesudah makan', durasi: '', rationale: '' }} manualMedicationOptions={['Sesudah makan']} {...h} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Lanjut tanpa obat' }));
+    expect(h.onSkip).toHaveBeenCalledTimes(1);
   });
 });

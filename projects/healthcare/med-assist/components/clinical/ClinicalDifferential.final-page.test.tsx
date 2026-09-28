@@ -306,18 +306,20 @@ describe('ClinicalDifferential final diagnosis support page', () => {
       );
     }
     const expectedOrder = [
-      'Clinical Finding',
-      'Diagnosis Utama',
-      'Diagnosis Banding',
-      'Pemeriksaan Penunjang',
+      '✓ Temuan',
+      'Apa diagnosis utama hari ini?',
+      'Penunjang (',
+      '3 · Terapi',
+      '4 · RME',
     ];
     const positions = expectedOrder.map((label) => workspace.textContent?.indexOf(label) ?? -1);
     positions.forEach((position) => expect(position).toBeGreaterThanOrEqual(0));
     expect(positions).toEqual([...positions].sort((a, b) => a - b));
 
-    const clinicalContext = within(workspace).getByLabelText('Clinical Finding');
+    fireEvent.click(within(workspace).getByRole('button', { name: 'ubah Temuan' }));
+    const clinicalContext = within(workspace).getByLabelText('Temuan');
     const contextText = clinicalContext.textContent || '';
-    expect(contextText.indexOf('Sinyal klinis')).toBeGreaterThanOrEqual(0);
+    expect(within(clinicalContext).getByRole('heading', { name: 'Temuan' })).toBeInTheDocument();
     expect(within(clinicalContext).getByTestId('diagnosis-clinical-signals')).toHaveTextContent(
       /Demam/i
     );
@@ -330,23 +332,26 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     expect(clinicalContext).not.toHaveTextContent(/Data pasien|Terapi kronis/i);
     expect(clinicalContext).not.toHaveTextContent(/RM RM-2026-001/i);
     expect(contextText).not.toMatch(/Demam, batuk, dan sesak sejak 3 hari Nafsu makan menurun/i);
+    fireEvent.click(within(workspace).getByRole('button', { name: 'selesai' }));
 
-    const primaryCard = within(workspace).getByTestId('clinical-diagnosis-primary-card');
+    const diagnosisStep = within(workspace).getByLabelText('Diagnosis');
+    const lainnya = within(diagnosisStep).queryByRole('button', { name: /^Lainnya \(/ });
+    if (lainnya) fireEvent.click(lainnya);
+    const [primaryCard, ...differentialCards] = within(diagnosisStep).getAllByTestId('dx-flow-card');
     expect(primaryCard).toHaveTextContent(/J18\.9 - Community Acquired Pneumonia/i);
     expect(primaryCard).not.toHaveTextContent(
       /Siap ditinjau dokter|diagnosis dipilih|Review red flags|Korelasikan keluhan|Perlu dilengkapi/i
     );
-    const supportingExam = within(workspace).getByLabelText('Pemeriksaan Penunjang');
-    expect(supportingExam).toHaveTextContent(/SpO2 dan auskultasi paru/i);
-    expect(supportingExam).toHaveTextContent(/Hipoksemia perlu dinilai/i);
-    const differentialSection = within(workspace).getByLabelText('Diagnosis Banding');
-    expect(
-      within(differentialSection).getAllByTestId('diagnosis-candidate-row').length
-    ).toBeGreaterThanOrEqual(3);
-    expect(differentialSection).not.toHaveTextContent(/J18\.9 - Community Acquired Pneumonia/i);
-    expect(differentialSection).not.toHaveTextContent(/Batalkan Diagnosis Utama/i);
-    expect(within(differentialSection).queryByText(/^Utama$/i)).toBeNull();
-    expect(differentialSection).toHaveClass('diagnosis-differential-section');
+    fireEvent.click(within(workspace).getByRole('button', { name: /^Penunjang \(/ }));
+    expect(within(workspace).getByTestId('dx-flow-exams')).toHaveTextContent(/SpO2 dan auskultasi paru/i);
+    fireEvent.click(within(workspace).getByRole('button', { name: 'lihat' }));
+    expect(within(workspace).getByLabelText('Keselamatan')).toHaveTextContent(/Hipoksemia perlu dinilai/i);
+    expect(differentialCards.length).toBeGreaterThanOrEqual(3);
+    differentialCards.forEach((card) =>
+      expect(card).not.toHaveTextContent(/J18\.9 - Community Acquired Pneumonia/i)
+    );
+    expect(diagnosisStep).not.toHaveTextContent(/Batalkan Diagnosis Utama/i);
+    expect(within(diagnosisStep).queryByText(/^Utama$/i)).toBeNull();
     const sidePanelStyle = readFileSync(SIDE_PANEL_STYLE_PATH, 'utf8');
     expect(sidePanelStyle).toMatch(
       /\.diagnosis-differential-section\s+>\s+\.form-group-header\s+\.console-label[\s\S]*color:\s*var\(--accent-med\)/
@@ -358,30 +363,32 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     expect(sidePanelStyle).toMatch(/\.diagnosis-row-meta[\s\S]*overflow-wrap:\s*anywhere/);
     expect(within(workspace).getByRole('button', { name: /Diagnosis manual/i })).toBeTruthy();
     // Temuan #1 restore (2026-07-05): therapy, education, and RME transfer now
-    // render on the focused surface (fail-closed until a diagnosis is selected).
-    expect(within(workspace).getByLabelText('Therapy + Resep')).toBeTruthy();
-    expect(within(workspace).getByLabelText('Edukasi')).toBeTruthy();
-    expect(within(workspace).getByLabelText('RME Transfer')).toBeTruthy();
-    expect(within(workspace).getByRole('button', { name: 'Kirim diagnosis' })).toBeTruthy();
-    expect(within(workspace).getByRole('button', { name: 'Kirim resep' })).toBeTruthy();
+    // render on the focused surface (fail-closed until a diagnosis is selected):
+    // Terapi and RME as the next steps, Edukasi as a one-line link. The transfer
+    // buttons render with the RME step once it is reached (rme-transfer e2e test).
+    expect(within(workspace).getByTestId('dx-flow-ghost-therapy')).toHaveTextContent('3 · Terapi');
+    expect(within(workspace).getByRole('button', { name: /^Edukasi \(/ })).toBeTruthy();
+    expect(within(workspace).getByTestId('dx-flow-ghost-rme')).toHaveTextContent('4 · RME');
+    expect(within(workspace).queryByRole('button', { name: 'Kirim diagnosis' })).toBeNull();
+    expect(within(workspace).queryByRole('button', { name: 'Kirim resep' })).toBeNull();
     // No medication is proposed until the physician selects a working diagnosis.
     expect(within(workspace).queryByText(/Paracetamol 500 mg/i)).toBeNull();
 
-    expect(
-      within(differentialSection).getAllByRole('button', { name: 'Pilih' }).length
-    ).toBeGreaterThan(0);
-    expect(primaryCard).toHaveTextContent(/Pilih Diagnosis Utama/i);
+    differentialCards.forEach((card) => {
+      expect(card).toHaveAttribute('role', 'button');
+      expect(card).toHaveAttribute('aria-pressed', 'false');
+    });
+    expect(primaryCard).toHaveAttribute('role', 'button');
+    expect(primaryCard).toHaveAttribute('aria-pressed', 'false');
 
-    const triageSection = await within(workspace).findByLabelText('Triase & Rujukan');
+    const triageSection = await within(workspace).findByTestId('dx-flow-triage');
     expect(triageSection.textContent || '').toMatch(
       /darurat|segera|rujukan|layanan primer|belum cukup/i
     );
 
-    const advanced = within(workspace)
-      .getAllByText(/Alasan/i)[0]
-      .closest('details');
+    const advanced = within(primaryCard).getByRole('button', { name: 'alasan' });
     expect(advanced).toBeTruthy();
-    expect(advanced).not.toHaveAttribute('open');
+    expect(advanced).toHaveAttribute('aria-expanded', 'false');
     expect(workspace.textContent).not.toMatch(LONG_PRIMARY_RATIONALE);
     expect(workspace.textContent).not.toMatch(
       /Kriteria Rujukan|konsultasi dengan spesialis|Pemeriksaan penunjang wajib segera|Dukungan tanda vital belum dominan|Gejala khas belum menonjol/i
@@ -432,7 +439,8 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     );
 
     const workspace = await screen.findByTestId('diagnosis-workspace');
-    const clinicalContext = within(workspace).getByLabelText('Clinical Finding');
+    fireEvent.click(await within(workspace).findByRole('button', { name: 'ubah Temuan' }));
+    const clinicalContext = within(workspace).getByLabelText('Temuan');
     const clinicalSignals = within(clinicalContext).getByTestId('diagnosis-clinical-signals');
 
     expect(clinicalSignals).toHaveTextContent(/HT/i);
@@ -478,7 +486,8 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     );
 
     const workspace = await screen.findByTestId('diagnosis-workspace');
-    const clinicalContext = within(workspace).getByLabelText('Clinical Finding');
+    fireEvent.click(await within(workspace).findByRole('button', { name: 'ubah Temuan' }));
+    const clinicalContext = within(workspace).getByLabelText('Temuan');
     const clinicalSignals = within(clinicalContext).getByTestId('diagnosis-clinical-signals');
 
     expect(clinicalSignals).toHaveTextContent(/Batuk/i);
@@ -731,21 +740,18 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     );
 
     const workspace = await screen.findByTestId('diagnosis-workspace');
-    const primaryCard = await screen.findByTestId('clinical-diagnosis-primary-card');
-    const differentialSection = within(workspace).getByLabelText('Diagnosis Banding');
-    expect(workspace).toHaveTextContent(/Diagnosis Banding/i);
-    expect(differentialSection).toHaveClass('diagnosis-differential-section');
+    const primaryCard = await within(workspace).findByLabelText('Diagnosis');
     expect(workspace).not.toHaveTextContent(/Kandidat Sementara|Sementara|kandidat/i);
     expect(workspace).not.toHaveTextContent(/Diagnosis banding belum lengkap/i);
     expect(workspace).not.toHaveTextContent(/R69/i);
     expect(primaryCard).toHaveTextContent(/Data belum cukup untuk menetapkan diagnosis utama/i);
-    expect(primaryCard).toHaveTextContent(/Lengkapi Data Diagnosis/i);
+    expect(within(primaryCard).getByTestId('dx-flow-complete-data')).toHaveTextContent(
+      /Lengkapi Data Diagnosis/i
+    );
     expect(primaryCard).toHaveTextContent(/Anamnesis terarah/i);
     expect(primaryCard).not.toHaveTextContent(/R69/i);
     expect(primaryCard).not.toHaveTextContent(/Dapat dikunci|Belum dapat dikunci/i);
-    expect(
-      within(primaryCard).queryByRole('button', { name: /Pilih Diagnosis Utama/i })
-    ).toBeNull();
+    expect(within(primaryCard).queryAllByTestId('dx-flow-card')).toHaveLength(0);
     expect(within(primaryCard).queryByRole('button', { name: /Setuju/i })).toBeNull();
   });
 
@@ -837,12 +843,20 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     });
 
     const workspace = screen.getByTestId('diagnosis-workspace');
-    const advancedReasoning = within(workspace)
-      .getAllByText(/Alasan/i)[0]
-      .closest('details');
+    const [primaryCard] = await within(workspace).findAllByTestId('dx-flow-card');
+    const advancedReasoning = within(primaryCard).getByRole('button', { name: 'alasan' });
     expect(advancedReasoning).toBeTruthy();
-    expect(advancedReasoning).not.toHaveAttribute('open');
+    expect(advancedReasoning).toHaveAttribute('aria-expanded', 'false');
   });
+
+  // A diagnosis card found by its title; the engine tag sits in the card's chip.
+  function card(title: RegExp): HTMLElement {
+    const found = screen
+      .getAllByTestId('dx-flow-card')
+      .find((element) => title.test(element.querySelector('.dx-flow-card__title')?.textContent ?? ''));
+    if (!found) throw new Error(`No diagnosis card titled ${title}`);
+    return found;
+  }
 
   function renderWithSuggestions(data: Record<string, unknown>) {
     const base = mockSendMessage.getMockImplementation();
@@ -900,10 +914,10 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getAllByText(/K35\.8 - .* · MIRA$/i).length).toBeGreaterThan(0);
+      expect(within(card(/^K35\.8 - /)).getByText('MIRA')).toBeTruthy();
     });
-    expect(screen.getAllByText(/Z99\.9 - .* · MIRA$/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/K65\.0 - .* · MIRA · jangan terlewat$/i).length).toBeGreaterThan(0);
+    expect(within(card(/^Z99\.9 - /)).getByText('MIRA')).toBeTruthy();
+    expect(within(card(/^K65\.0 - /)).getByText('MIRA · jangan terlewat')).toBeTruthy();
   });
 
   it('shows "MIRA tidak tersedia" when the engine fell back to the legacy list', async () => {
@@ -918,7 +932,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     await waitFor(() => {
       expect(screen.getByText('MIRA tidak tersedia')).toBeTruthy();
     });
-    expect(screen.queryByText(/· MIRA/)).toBeNull();
+    expect(screen.queryByText('MIRA')).toBeNull();
   });
 
   describe('MIRA prefetch', () => {
@@ -1014,17 +1028,19 @@ describe('ClinicalDifferential final diagnosis support page', () => {
       await waitFor(() => expect(screen.getByText('Menunggu MIRA…')).toBeTruthy());
       await waitFor(() => expect(listeners).toHaveLength(1));
 
-      fireEvent.click(await screen.findByRole('button', { name: /Pilih Diagnosis Utama/i }));
+      fireEvent.click((await screen.findAllByTestId('dx-flow-card'))[0]);
       await waitFor(() =>
         expect(screen.getByTestId('diagnosis-workspace')).toHaveAttribute('data-diagnosis-selected-count', '1')
       );
+      // The candidate list lives on the Diagnosis step; reopen it to watch the refresh.
+      fireEvent.click(screen.getByRole('button', { name: 'ubah Diagnosis' }));
 
       fireStorageChange({ hash: 'ffffffff', at: 't' });
       expect(getSuggestionsCalls()).toBe(1);
 
       fireStorageChange({ hash: pageHash(), at: 't' });
       await waitFor(() =>
-        expect(screen.getAllByText(/K65\.0 - .* · MIRA · jangan terlewat$/i).length).toBeGreaterThan(0)
+        expect(within(card(/^K65\.0 - /)).getByText('MIRA · jangan terlewat')).toBeTruthy()
       );
       expect(getSuggestionsCalls()).toBe(2);
       expect(listeners).toHaveLength(0);
@@ -1045,7 +1061,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
       };
       renderPage();
       await waitFor(() =>
-        expect(screen.getAllByText(/K65\.0 - .* · MIRA · jangan terlewat$/i).length).toBeGreaterThan(0)
+        expect(within(card(/^K65\.0 - /)).getByText('MIRA · jangan terlewat')).toBeTruthy()
       );
       expect(getSuggestionsCalls()).toBe(2);
       expect(listeners).toHaveLength(0);

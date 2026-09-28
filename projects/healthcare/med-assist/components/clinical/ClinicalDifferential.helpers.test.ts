@@ -7,7 +7,7 @@ import {
   ClinicalDifferential,
   resolveBaseSuggestions,
 } from './ClinicalDifferential';
-import type { DiagnosisWorkspaceProps } from './diagnosis/DiagnosisWorkspace';
+import type { DiagnosisPageProps } from './diagnosis/diagnosisPageProps';
 
 import type { RecurrentDiagnosisCandidate } from '@/lib/clinical/recurrent-diagnosis';
 import { auditLogger } from '@/lib/iskandar-diagnosis-engine/audit-logger';
@@ -27,7 +27,7 @@ const mocks = vi.hoisted(() => ({
     candidates: RecurrentDiagnosisCandidate[];
     loaded: boolean;
   },
-  workspace: [] as DiagnosisWorkspaceProps[],
+  workspace: [] as DiagnosisPageProps[],
 }));
 
 // ClinicalDifferential imports the extension messaging client, which refuses to load outside
@@ -36,8 +36,8 @@ vi.mock('@/utils/messaging', () => ({ sendMessage: mocks.sendMessage }));
 vi.mock('./diagnosis/useRecurrentDiagnoses', () => ({
   useRecurrentDiagnoses: () => mocks.recurrent,
 }));
-vi.mock('./diagnosis/DiagnosisWorkspace', () => ({
-  DiagnosisWorkspace: (props: DiagnosisWorkspaceProps) => {
+vi.mock('./diagnosis/DiagnosisStepFlow', () => ({
+  DiagnosisStepFlow: (props: DiagnosisPageProps) => {
     mocks.workspace.push(props);
     return null;
   },

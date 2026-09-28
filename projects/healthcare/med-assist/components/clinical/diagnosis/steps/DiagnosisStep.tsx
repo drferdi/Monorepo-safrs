@@ -44,9 +44,11 @@ function tallyLine(card: DiagnosisCandidateView): string {
   return [`mendukung ${card.supports.length}`, `tidak ${card.against.length}`, `? ${card.missing.length}`].join(' · ');
 }
 
+const ENGINE_TAG = /\s·\s(MIRA(?: · jangan terlewat)?)$/;
+
 function chipFor(card: DiagnosisCandidateView): string | null {
   if (card.history) return card.history.label;
-  return /MIRA/.test(card.displayLabel) ? 'MIRA' : null;
+  return formatClinicalText(card.displayLabel).match(ENGINE_TAG)?.[1] ?? null;
 }
 
 function sortHistoryFirst(candidates: DiagnosisCandidateView[]): DiagnosisCandidateView[] {
@@ -199,14 +201,21 @@ export function DiagnosisStep({
           {visibleNotice ? <p className="dx-flow-muted">{visibleNotice}</p> : null}
 
           {viewModel.primary.isInsufficient ? (
-            <button
-              type="button"
-              className="btn-ac-inline btn-ac-inline--sharp"
-              data-testid="dx-flow-complete-data"
-              onClick={onCompleteData}
-            >
-              {viewModel.primary.primaryCtaLabel}
-            </button>
+            <>
+              <p className="dx-flow-muted">Data belum cukup untuk menetapkan diagnosis utama</p>
+              {viewModel.primary.safestNextAction ? (
+                <p className="dx-flow-muted">{formatClinicalText(viewModel.primary.safestNextAction)}</p>
+              ) : null}
+              <List title="Perlu dilengkapi" items={viewModel.primary.missingEvidence} tone="warning" />
+              <button
+                type="button"
+                className="btn-ac-inline btn-ac-inline--sharp"
+                data-testid="dx-flow-complete-data"
+                onClick={onCompleteData}
+              >
+                {viewModel.primary.primaryCtaLabel}
+              </button>
+            </>
           ) : null}
 
           <div className="diagnosis-list">

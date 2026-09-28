@@ -1,8 +1,7 @@
 import type { ReactNode } from 'react';
 
-import { formatClinicalText, formatTransferState, isDiagnosisChosen } from './diagnosisDisplayUtils';
+import { formatClinicalText } from './diagnosisDisplayUtils';
 import type { DiagnosisPageProps } from './diagnosisPageProps';
-import { StagedSection } from './StagedSection';
 import { TransferStepTracker } from './TransferStepTracker';
 
 export function RMETransferPanel({
@@ -32,12 +31,7 @@ export function RMETransferPanel({
   const canRetry = ['failed', 'error', 'partial'].includes(transfer.state);
 
   return (
-    <StagedSection
-      label="RME Transfer"
-      stageIndex={4}
-      open={isDiagnosisChosen(viewModel)}
-      header={<SectionHeader title="RME Transfer" status={formatTransferState(transfer.state)} />}
-    >
+    <>
       <p className="diagnosis-transfer-status">
         {[
           diagnosisReady ? 'Diagnosis siap' : 'Diagnosis belum siap',
@@ -109,18 +103,7 @@ export function RMETransferPanel({
         </div>
         <TransferStepTracker steps={transfer.steps} />
       </details>
-    </StagedSection>
-  );
-}
-
-function SectionHeader({ title, status }: { title: string; status?: string }) {
-  return (
-    <div className="form-group-header form-group-header--cta">
-      <div className="form-group-header__title-block">
-        <div className="console-label console-label-prominent">{title}</div>
-      </div>
-      {status ? <span className="field-extracted-indicator">{status}</span> : null}
-    </div>
+    </>
   );
 }
 

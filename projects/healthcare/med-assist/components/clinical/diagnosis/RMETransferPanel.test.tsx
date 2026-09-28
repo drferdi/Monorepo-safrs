@@ -1,13 +1,13 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { fireEvent, render, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { DiagnosisWorkspaceProps } from './DiagnosisWorkspace';
+import type { DiagnosisPageProps } from './diagnosisPageProps';
 import { RMETransferPanel } from './RMETransferPanel';
 
 function makeViewModel(
-  transferOverrides: Partial<DiagnosisWorkspaceProps['viewModel']['transfer']> = {},
-  primaryOverrides: Partial<DiagnosisWorkspaceProps['viewModel']['primary']> = {}
-): DiagnosisWorkspaceProps['viewModel'] {
+  transferOverrides: Partial<DiagnosisPageProps['viewModel']['transfer']> = {},
+  primaryOverrides: Partial<DiagnosisPageProps['viewModel']['primary']> = {}
+): DiagnosisPageProps['viewModel'] {
   return {
     context: {
       patientSummary: 'RM RM-TEST · 44th · P · Tidak hamil terkonfirmasi',
@@ -83,7 +83,7 @@ function makeViewModel(
 function makeProps(
   overrides: Partial<
     Pick<
-      DiagnosisWorkspaceProps,
+      DiagnosisPageProps,
       | 'onAutoFillRME'
       | 'onTransferDiagnosis'
       | 'onTransferResep'
@@ -94,7 +94,7 @@ function makeProps(
   > = {},
   viewModel = makeViewModel()
 ): Pick<
-  DiagnosisWorkspaceProps,
+  DiagnosisPageProps,
   | 'viewModel'
   | 'onAutoFillRME'
   | 'onTransferDiagnosis'
@@ -118,9 +118,8 @@ function makeProps(
 describe('RMETransferPanel', () => {
   it('while running shows only the morphing primary button and Batal', () => {
     const onCancelTransfer = vi.fn();
-    render(<RMETransferPanel {...makeProps({ onCancelTransfer }, makeViewModel({ state: 'running' }))} />);
+    const { container: panel } = render(<RMETransferPanel {...makeProps({ onCancelTransfer }, makeViewModel({ state: 'running' }))} />);
 
-    const panel = screen.getByLabelText('RME Transfer');
     const primary = within(panel).getByRole('button', { name: /Isi otomatis RME/i });
     expect(primary).toBeDisabled();
     expect(primary).toHaveAttribute('data-state', 'running');
@@ -135,24 +134,21 @@ describe('RMETransferPanel', () => {
 
   it.each(['failed', 'error', 'partial'])('offers Ulangi beside the primary button when %s', (state) => {
     const onRetryTransfer = vi.fn();
-    render(<RMETransferPanel {...makeProps({ onRetryTransfer }, makeViewModel({ state }))} />);
-    const panel = screen.getByLabelText('RME Transfer');
+    const { container: panel } = render(<RMETransferPanel {...makeProps({ onRetryTransfer }, makeViewModel({ state }))} />);
     fireEvent.click(within(panel).getByRole('button', { name: /Ulangi/i }));
     expect(onRetryTransfer).toHaveBeenCalledTimes(1);
     expect(within(panel).queryByRole('button', { name: /Batal/i })).toBeNull();
   });
 
   it.each(['idle', 'success', 'cancelled'])('shows neither Ulangi nor Batal when %s', (state) => {
-    render(<RMETransferPanel {...makeProps({}, makeViewModel({ state }))} />);
-    const panel = screen.getByLabelText('RME Transfer');
+    const { container: panel } = render(<RMETransferPanel {...makeProps({}, makeViewModel({ state }))} />);
     expect(within(panel).queryByRole('button', { name: /Ulangi/i })).toBeNull();
     expect(within(panel).queryByRole('button', { name: /Batal/i })).toBeNull();
     expect(within(panel).getByRole('button', { name: /Isi otomatis RME/i })).toBeEnabled();
   });
 
   it('puts the readiness in one line and the single-payload actions inside Rincian transfer', () => {
-    render(<RMETransferPanel {...makeProps({}, makeViewModel())} />);
-    const panel = screen.getByLabelText('RME Transfer');
+    const { container: panel } = render(<RMETransferPanel {...makeProps({}, makeViewModel())} />);
     expect(panel.querySelector('.diagnosis-transfer-status')).toHaveTextContent(
       'Diagnosis siap · Resep siap · Obat 1/1'
     );
@@ -186,9 +182,8 @@ describe('RMETransferPanel', () => {
       )
     );
 
-    render(<RMETransferPanel {...props} />);
+    const { container: panel } = render(<RMETransferPanel {...props} />);
 
-    const panel = screen.getByLabelText('RME Transfer');
     expect(panel).toHaveTextContent(/Diagnosis belum siap/i);
     expect(panel).toHaveTextContent(/Resep belum siap/i);
     expect(panel).toHaveTextContent(/Obat 0\/2/i);

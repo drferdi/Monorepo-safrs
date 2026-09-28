@@ -6,7 +6,8 @@ import {
 } from './differential-fetch-error';
 import type { ClinicalImpressionViewItem } from './ClinicalImpressionPanel';
 import { createDiagnosisPageViewModel } from './diagnosis/diagnosisViewModel';
-import { DiagnosisWorkspace, type DiagnosisTriageView } from './diagnosis/DiagnosisWorkspace';
+import type { DiagnosisTriageView } from './diagnosis/diagnosisPageProps';
+import { DiagnosisStepFlow } from './diagnosis/DiagnosisStepFlow';
 import { useRecurrentDiagnoses } from './diagnosis/useRecurrentDiagnoses';
 
 import {
@@ -2123,10 +2124,11 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
 
   return (
     <>
-      <DiagnosisWorkspace
+      <DiagnosisStepFlow
         viewModel={diagnosisViewModel}
         phase={phase}
         triage={triageView}
+        recurrentOnlyMessage={suggestions.length === 0 && recurrent.length > 0 ? 'Data hari ini belum cukup untuk engine; riwayat menunjukkan pola berikut.' : undefined}
         errorMessage={errorMsg}
         complaintSummary={keluhanUtama}
         secondaryComplaint={keluhanTambahan}
