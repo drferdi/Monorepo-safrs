@@ -3,6 +3,59 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-28 — Diagnosis page is a step flow (form B)
+
+- Decision: `DiagnosisStepFlow.tsx` replaces `DiagnosisWorkspace.tsx` as the diagnosis page
+  component (mockup form B, "fokus berjalan"): a `SafetyStrip` (danger signs and triase, never
+  behind a click, rendered whenever it has content) at the top, one receipt line per finished
+  step ("✓ <Step> · <chips> · ubah"), one active step in full, then ghost lines for the remaining
+  steps ("3 · Terapi"). Steps are Temuan (Finding), Diagnosis, Terapi, RME, derived by
+  `diagnosisSteps.ts` and read by `createDiagnosisPageViewModel`'s `steps` array, replacing
+  `DiagnosisProgressStepper.tsx` and `StagedSection` (both deleted, along with
+  `TherapyReviewPanel.tsx`, whose content moved into `TherapyStep.tsx`). Terapi advances only on
+  an explicit "Lanjut" (with at least one medication selected) or "Lanjut tanpa obat" — not
+  merely because a medication was tapped — so the step ends on the doctor's confirmation, not as
+  a side effect (controller ruling; the plan's original "done when a medication is selected" rule
+  was a defect that would have hidden the step after the first tap). Temuan is forced done in the
+  flow (mockup B) so Diagnosis is the active step immediately, with its own loading skeleton and
+  screen-reader text while data is not yet ready. The page uses one body size (13 px) throughout;
+  step heading 14 px semibold; receipts and ghosts 11 px.
+- Rationale: a doctor works one question at a time instead of scanning a fully expanded page, but
+  safety-critical content (danger signs, triage) must never be gated behind a click or a step
+  boundary — the safety strip sits outside the step sequence and is never collapsed.
+- Evidence: commits `399c9937`, `792b9bf2`, `b6a67cd7`, `f22a222b`, `7ed5ed2c`. Tests:
+  `DiagnosisStepFlow.test.tsx` (active step render, receipts, ghosts, "ubah" re-open, safety strip
+  always present and uncapped), `SafetyStrip.test.tsx`, `StepReceipt.test.tsx`,
+  `TherapyStep.test.tsx` ("Lanjut" / "Lanjut tanpa obat"); the six old page test files
+  (`ClinicalDifferential.helpers.test.ts`, `.final-page.test.tsx`, `.logic-contract.test.tsx`,
+  `.rme-transfer.e2e.test.tsx`, `.chronic-therapy.test.tsx`, and `DiagnosisStep.test.tsx`) were
+  migrated with every replaced assertion named in the commit bodies, none weakened.
+
+## 2026-09-28 — Recurrent diagnoses from the record are offered first; the doctor promotes them
+
+- Decision: `lib/clinical/recurrent-diagnosis.ts` finds ICDs recorded at least twice (`minCount`
+  default 2) within the last 12 months, grouped by the ICD's 3-character root (so `E11` and
+  `E11.9` count as one diagnosis), deduplicated by `encounter_id`. Roots listed in
+  `CHRONIC_ICD_ROOTS` — a plain data array in that module Chief may edit at any time (`I10`-`I15`
+  hipertensi, `E10`-`E14` diabetes, `E78`, `I25`, `I50`, `J44`, `J45`, `N18`, `G40`, `F20`,
+  `E03`/`E05`, `M06`) — are labelled "Kronis", everything else "Berulang". `useRecurrentDiagnoses`
+  returns `{ candidates, loaded }`; on the Diagnosis step, history-derived candidates are seeded
+  first in the card list and both display caps (candidates shown, cannot-miss slot) are widened
+  by the unmatched-history count so an engine cannot-miss row is never pushed out. Selecting a
+  recurrent candidate goes through the same selection path as any differential card and is never
+  auto-selected; the audit records it via `auditLogger.log('suggestion_selected', …)` with
+  metadata `selected_icd`, `source: 'riwayat'`, `history_label`, `history_count`,
+  `visits_considered`. Recurrent candidates' names/ICDs are also appended to `knownConditions`
+  sent to MIRA, de-duplicated against `penyakit_kronis`.
+- Rationale: a doctor should see a patient's own recurring pattern — especially for chronic
+  follow-up — before ranking a fresh differential, but the record only ever offers a candidate; it
+  never overrides the doctor's own judgement.
+- Evidence: commits `33ce64e2`, `11190856` (Task 8), `4ccf99cb`, `5f604855`, `affae82f` (Task 9),
+  `e1ac23c7` (Task 10). Tests: `lib/clinical/recurrent-diagnosis.test.ts` (threshold, 12-month
+  window edge, ICD normalisation, chronic label, ordering, current-visit excluded, missing ICD
+  ignored), `ClinicalDifferential` history-seeding and audit-metadata tests, `case-state.test.ts`
+  (`knownConditions` dedupe).
+
 ## 2026-09-28 — MIRA starts with Assist through a native messaging host; mira is the production default
 
 - Decision: the extension starts the MIRA reasoning service itself, through a native messaging
