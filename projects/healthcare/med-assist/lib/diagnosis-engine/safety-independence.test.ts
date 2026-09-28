@@ -11,8 +11,9 @@ import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 import { GOLDEN_CASES } from './__golden__/cases';
 import { createLegacyEngine } from './legacy-engine';
+import { miraNoticeFor } from './mira-notice';
 import { getLegacyEngine } from './registry';
-import { MIRA_UNAVAILABLE_NOTICE, runDiagnosisSuggestions } from './run-diagnosis';
+import { runDiagnosisSuggestions } from './run-diagnosis';
 import { readGoldenRecording, stripVolatileFields } from './testing/golden';
 import { installLegacyRuntime } from './testing/legacy-runtime';
 import type { DiagnosisEngine } from './types';
@@ -155,7 +156,7 @@ describe('safety output survives engine failure', () => {
       const recorded = readGoldenRecording()[goldenCase.id] as APIResponse<CDSSResponse>;
       expect(stripVolatileFields(response)).toEqual({
         ...recorded,
-        data: { ...recorded.data, engine_notice: MIRA_UNAVAILABLE_NOTICE },
+        data: { ...recorded.data, engine_notice: miraNoticeFor('ENGINE_ERROR') },
       });
     }
   );
@@ -176,7 +177,7 @@ describe('safety output survives engine failure', () => {
     const recorded = readGoldenRecording()['sepsis-like-with-history'] as APIResponse<CDSSResponse>;
     expect(stripVolatileFields(response)).toEqual({
       ...recorded,
-      data: { ...recorded.data, engine_notice: MIRA_UNAVAILABLE_NOTICE },
+      data: { ...recorded.data, engine_notice: miraNoticeFor('TIMEOUT') },
     });
   });
 

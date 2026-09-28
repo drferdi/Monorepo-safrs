@@ -9,7 +9,8 @@
  * - `mira`: MIRA's differential replaces `diagnosis_suggestions` in the legacy response
  *   (likely, alternatives, then cannot-miss, each tagged "MIRA"); every other field, including
  *   the alerts, stays the legacy engine's. When MIRA fails, times out or returns no diagnosis,
- *   the legacy response is returned with `engine_notice` set to "MIRA tidak tersedia".
+ *   the legacy response is returned with `engine_notice` set to a reason-specific notice (see
+ *   `mira-notice.ts`).
  *
  * The safety layer (red flags, emergency gates, triage/referral) runs outside this step, and a
  * candidate never waits longer than `candidateTimeoutMs`.
@@ -20,6 +21,7 @@
 import { encounterToCaseState } from './case-state';
 import { createTraceId, createUnavailableResult } from './engine-result';
 import type { LegacyDiagnosisEngine } from './legacy-engine';
+import { MIRA_UNAVAILABLE_NOTICE, miraNoticeFor } from './mira-notice';
 import { getActiveDiagnosisEngine, getLegacyEngine } from './registry';
 import type { CaseState, ConfidenceTier, DiagnosisEngine, EngineResult } from './types';
 
@@ -44,7 +46,7 @@ export const CANDIDATE_TIMEOUT_MS = 20_000;
 
 export const MIRA_TAG = 'MIRA';
 export const MIRA_CANNOT_MISS_TAG = 'MIRA · jangan terlewat';
-export const MIRA_UNAVAILABLE_NOTICE = 'MIRA tidak tersedia';
+export { MIRA_UNAVAILABLE_NOTICE };
 
 /** The side panel shows at most five diagnoses (`ClinicalDifferential.tsx`). */
 const MAX_SHOWN_DIAGNOSES = 5;
@@ -205,6 +207,9 @@ export async function runDiagnosisSuggestions(
     data:
       suggestions.length > 0
         ? { ...response.data, diagnosis_suggestions: suggestions }
-        : { ...response.data, engine_notice: MIRA_UNAVAILABLE_NOTICE },
+        : {
+            ...response.data,
+            engine_notice: miraNoticeFor(result.status === 'ok' ? undefined : result.error?.code),
+          },
   };
 }

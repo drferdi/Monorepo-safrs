@@ -14,7 +14,6 @@ import { getActiveDiagnosisEngine, getLegacyEngine } from './registry';
 import {
   MIRA_CANNOT_MISS_TAG,
   MIRA_TAG,
-  MIRA_UNAVAILABLE_NOTICE,
   miraDifferentialToSuggestions,
   runDiagnosisSuggestions,
 } from './run-diagnosis';
@@ -369,7 +368,7 @@ describe('MIRA behind the registry', () => {
     const legacy = readGoldenRecording()['appendicitis-like'] as APIResponse<CDSSResponse>;
     expect(stripVolatileFields(response)).toEqual({
       ...legacy,
-      data: { ...legacy.data, engine_notice: MIRA_UNAVAILABLE_NOTICE },
+      data: { ...legacy.data, engine_notice: 'MIRA mati' },
     });
   });
 });
