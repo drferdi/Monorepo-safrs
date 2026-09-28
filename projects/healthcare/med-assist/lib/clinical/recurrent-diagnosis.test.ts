@@ -60,4 +60,32 @@ describe('findRecurrentDiagnoses', () => {
     const result = findRecurrentDiagnoses([visit('2026-08-01', 'I10', 'Hipertensi esensial'), visit('2026-05-01', 'I10', 'HT')], TODAY);
     expect(result[0].name).toBe('Hipertensi esensial');
   });
+
+  it('groups by ICD root so sub-code variants of the same diagnosis merge', () => {
+    const result = findRecurrentDiagnoses(
+      [visit('2026-08-12', 'E11.9', 'Diabetes melitus tipe 2'), visit('2026-03-01', 'E11', 'Diabetes')],
+      TODAY
+    );
+    expect(result).toEqual([
+      { icd: 'E11.9', name: 'Diabetes melitus tipe 2', count: 2, visitsConsidered: 2, lastSeen: '2026-08-12', label: 'Kronis' },
+    ]);
+  });
+
+  it('dedupes a repeated encounter_id so it only counts once', () => {
+    const result = findRecurrentDiagnoses(
+      [visit('2026-08-01', 'I10', 'Hipertensi', 'dup-1'), visit('2026-08-01', 'I10', 'Hipertensi', 'dup-1')],
+      TODAY
+    );
+    expect(result).toEqual([]);
+  });
+
+  it('includes a visit exactly on the window start (inclusive lower boundary)', () => {
+    const result = findRecurrentDiagnoses(
+      [visit('2026-08-01', 'I10', 'Hipertensi'), visit('2025-09-28T00:00:00.000Z', 'I10', 'Hipertensi')],
+      TODAY
+    );
+    expect(result).toEqual([
+      { icd: 'I10', name: 'Hipertensi', count: 2, visitsConsidered: 2, lastSeen: '2026-08-01', label: 'Kronis' },
+    ]);
+  });
 });

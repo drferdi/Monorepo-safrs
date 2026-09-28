@@ -38,8 +38,12 @@ export function normalizeRecurrentIcd(value: string | undefined): string {
   return String(value ?? '').replace(/\s+/g, '').toUpperCase();
 }
 
+function icdRoot(icd: string): string {
+  return icd.slice(0, 3);
+}
+
 function labelFor(icd: string): RecurrentLabel {
-  return CHRONIC_ICD_ROOTS.includes(icd.slice(0, 3)) ? 'Kronis' : 'Berulang';
+  return CHRONIC_ICD_ROOTS.includes(icdRoot(icd)) ? 'Kronis' : 'Berulang';
 }
 
 export function findRecurrentDiagnoses(
@@ -59,21 +63,29 @@ export function findRecurrentDiagnoses(
     })
     .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
-  const groups = new Map<string, { name: string; count: number; lastSeen: string }>();
-  for (const visit of inWindow) {
+  const seenEncounters = new Set<string>();
+  const deduped = inWindow.filter((visit) => {
+    if (seenEncounters.has(visit.encounter_id)) return false;
+    seenEncounters.add(visit.encounter_id);
+    return true;
+  });
+
+  const groups = new Map<string, { icd: string; name: string; count: number; lastSeen: string }>();
+  for (const visit of deduped) {
     const icd = normalizeRecurrentIcd(visit.diagnosa?.icd_x);
     if (!icd) continue;
-    const existing = groups.get(icd);
+    const root = icdRoot(icd);
+    const existing = groups.get(root);
     if (existing) {
       existing.count += 1;
     } else {
-      groups.set(icd, { name: (visit.diagnosa?.nama ?? '').trim() || icd, count: 1, lastSeen: visit.timestamp });
+      groups.set(root, { icd, name: (visit.diagnosa?.nama ?? '').trim() || icd, count: 1, lastSeen: visit.timestamp });
     }
   }
 
   const rank = (label: RecurrentLabel) => (label === 'Kronis' ? 0 : 1);
-  return [...groups.entries()]
-    .filter(([, group]) => group.count >= minCount)
-    .map(([icd, group]) => ({ icd, name: group.name, count: group.count, visitsConsidered: inWindow.length, lastSeen: group.lastSeen, label: labelFor(icd) }))
+  return [...groups.values()]
+    .filter((group) => group.count >= minCount)
+    .map((group) => ({ icd: group.icd, name: group.name, count: group.count, visitsConsidered: deduped.length, lastSeen: group.lastSeen, label: labelFor(group.icd) }))
     .sort((a, b) => rank(a.label) - rank(b.label) || b.count - a.count || b.lastSeen.localeCompare(a.lastSeen));
 }
