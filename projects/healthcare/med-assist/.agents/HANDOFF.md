@@ -49,6 +49,14 @@ Vite harness (synthetic fixture, simulated second answer): three-state panel, ch
 "Tidak lagi disarankan", "Berubah setelah" viewed. **Live MIRA not tested**: nothing answered
 on 127.0.0.1:8787; the service picks up the new prompt rule when it next starts.
 
+E2E (outside the repo, session scratchpad): the real extension, built with the MIRA URL pointed at
+a fake service on 127.0.0.1:18787, loaded in Edge 153; `getSuggestions` sent from an extension
+page. 21/21 checks: Bearer dev token, contract request, "— DITEMUKAN" / "— TIDAK DITEMUKAN",
+unknown never sent, yes/no as qa "Ya", legacy tick as present, MIRA mapping (primary,
+"MIRA · jangan terlewat", next best action, missing information), rerun changes the answer, a
+contract breach shows "MIRA: hasil tidak valid". Harness UI loop driven by DOM clicks (the
+browser pane was hidden). Not covered: login, scrape, side-panel shell, live MIRA.
+
 ## Limits to keep in mind
 
 - Only the latest two assessments are compared; no history.
