@@ -22,9 +22,19 @@ describe('FindingStep', () => {
       secondaryComplaint: '',
       allergySummary: 'Tidak ada alergi',
       chronicDiagnosisSummary: 'Hipertensi',
-      bedsideFindings: [{ kind: 'exam', item: 'Auskultasi paru', findings: ['Ronki basah halus', 'Wheezing'] }],
+      bedsideFindings: [
+        {
+          kind: 'exam',
+          item: 'Auskultasi paru',
+          findings: [
+            { name: 'Ronki basah halus', state: 'present' },
+            { name: 'Wheezing', state: 'absent' },
+            { name: 'Stridor', state: 'unknown' },
+          ],
+        },
+      ],
     });
-    expect(signals.slice(0, 3)).toEqual(['Demam', 'Auskultasi paru: Ronki basah halus, Wheezing', 'Batuk']);
+    expect(signals.slice(0, 3)).toEqual(['Demam', 'Auskultasi paru: + Ronki basah halus, − Wheezing', 'Batuk']);
     expect(signals.indexOf('Hipertensi')).toBeGreaterThan(2);
   });
 });

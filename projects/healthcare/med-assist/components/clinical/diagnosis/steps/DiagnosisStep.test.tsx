@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
+import { snapshotAssessment } from '../assessmentDelta';
 import { formatShortDate } from '../diagnosisDisplayUtils';
 import { DiagnosisStep } from './DiagnosisStep';
 import { resetDiseaseNotesCache } from '../useDiseaseNotes';
@@ -44,6 +45,9 @@ const mustNotMissTitles = () =>
   [...(screen.getByTestId('dx-flow-mnm-label').parentElement?.querySelectorAll('[data-testid="dx-flow-card"] .diagnosis-row-title') ?? [])].map((el) => el.textContent);
 const openReasons = (select: HTMLElement, name = 'Lihat alasan') =>
   fireEvent.click(within(cardOf(select)).getByRole('button', { name }));
+/** A finding button in a three-state list, found by its name whatever its state. */
+const finding = (group: HTMLElement, name: string) => within(group).getByRole('button', { name: (accessible) => accessible.startsWith(`${name}: `) });
+const findingNames = (group: HTMLElement) => within(group).getAllByRole('button').map((el) => el.getAttribute('aria-label')?.split(': ')[0]);
 
 describe('formatShortDate', () => {
   it('formats a date-only ISO string using UTC getters', () => {
@@ -259,7 +263,7 @@ describe('DiagnosisStep', () => {
     expect(cardOf(screen.getByTestId('dx-flow-card')).querySelector('.line-clamp-3')).toBeNull();
   });
 
-  it('opens a MUST NOT MISS card with why it matters and, without a knowledge-base exam, its own missing data to tick, with no second "Masukkan hasil"', async () => {
+  it('opens a MUST NOT MISS card with why it matters and, without a knowledge-base exam, its own missing data to record, with no second "Masukkan hasil"', async () => {
     resetDiseaseNotesCache();
     vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ penyakit: [{ icd10: 'K65', definisi: 'Peradangan peritoneum.', komplikasi: ['Sepsis', 'Syok'] }] }))));
     try {
@@ -292,12 +296,26 @@ describe('DiagnosisStep', () => {
       const panel = cardOf(mnm);
       fireEvent.click(within(panel).getByRole('button', { name: 'Apa yang perlu diperiksa' }));
       const group = within(panel).getByRole('group', { name: 'Hasil Pemeriksaan K65.0 - Acute peritonitis' });
-      expect(within(group).getAllByRole('button').map((el) => el.textContent)).toEqual(['Tidak ditemukan', 'Nyeri tekan abdomen', 'Defans muskular', 'Riwayat demam']);
+      expect(findingNames(group)).toEqual(['Nyeri tekan abdomen', 'Defans muskular', 'Riwayat demam']);
       expect(within(panel).queryByText('Rovsing sign')).toBeNull();
       expect(screen.getAllByRole('button', { name: 'Masukkan hasil' })).toHaveLength(1);
-      fireEvent.click(within(group).getByRole('button', { name: 'Defans muskular' }));
+      // Defans muskular ditemukan, nyeri tekan examined and absent, riwayat demam left unexamined.
+      fireEvent.click(finding(group, 'Defans muskular'));
+      fireEvent.click(finding(group, 'Nyeri tekan abdomen'));
+      fireEvent.click(finding(group, 'Nyeri tekan abdomen'));
       fireEvent.click(within(panel).getByRole('button', { name: 'Simpan' }));
-      expect(h.onRecordBedsideFinding).toHaveBeenCalledWith({ kind: 'exam', item: 'Pemeriksaan K65.0 - Acute peritonitis', findings: ['Defans muskular'] });
+      expect(h.onRecordBedsideFinding).toHaveBeenCalledWith(
+        {
+          kind: 'exam',
+          item: 'Pemeriksaan K65.0 - Acute peritonitis',
+          findings: [
+            { name: 'Nyeri tekan abdomen', state: 'absent' },
+            { name: 'Defans muskular', state: 'present' },
+            { name: 'Riwayat demam', state: 'unknown' },
+          ],
+        },
+        expect.objectContaining({ nextStep: 'Palpasi abdomen' })
+      );
       expect(h.onCompleteData).not.toHaveBeenCalled();
     } finally {
       vi.unstubAllGlobals();
@@ -311,10 +329,10 @@ describe('DiagnosisStep', () => {
     openReasons(mnm, 'Mengapa perlu dipertimbangkan');
     expect(within(cardOf(mnm)).queryByRole('list', { name: 'Alasan' })).toBeNull();
     fireEvent.click(within(cardOf(mnm)).getByRole('button', { name: 'Apa yang perlu diperiksa' }));
-    expect(within(cardOf(mnm)).getByRole('button', { name: 'Nyeri tekan abdomen' })).toBeInTheDocument();
+    expect(within(cardOf(mnm)).getByRole('button', { name: 'Nyeri tekan abdomen: Belum diperiksa' })).toBeInTheDocument();
   });
 
-  it('opens a MUST NOT MISS card\'s checks as the knowledge base\'s bedside findings to tick, with "Tidak ditemukan" first', async () => {
+  it('opens a MUST NOT MISS card\'s checks as the knowledge base\'s bedside findings, each belum diperiksa until set', async () => {
     resetDiseaseNotesCache();
     vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ penyakit: [{ icd10: 'I16', definisi: 'Tekanan darah sangat tinggi.', pemeriksaan_fisik: ['Papiledema.', 'Defisit neurologis fokal'] }] }))));
     try {
@@ -326,16 +344,27 @@ describe('DiagnosisStep', () => {
       openReasons(mnm, 'Mengapa perlu dipertimbangkan');
       fireEvent.click(within(cardOf(mnm)).getByRole('button', { name: 'Apa yang perlu diperiksa' }));
       const group = within(cardOf(mnm)).getByRole('group', { name: /^Hasil Pemeriksaan / });
-      expect(within(group).getAllByRole('button').map((el) => el.textContent)).toEqual(['Tidak ditemukan', 'Papiledema', 'Defisit neurologis fokal']);
-      fireEvent.click(within(group).getByRole('button', { name: 'Papiledema' }));
+      expect(findingNames(group)).toEqual(['Papiledema', 'Defisit neurologis fokal']);
+      expect(finding(group, 'Papiledema')).toHaveAccessibleName('Papiledema: Belum diperiksa');
+      // "Semua tidak ditemukan" is the doctor's explicit word that every listed finding is absent.
+      fireEvent.click(within(cardOf(mnm)).getByRole('button', { name: 'Semua tidak ditemukan' }));
       fireEvent.click(within(cardOf(mnm)).getByRole('button', { name: 'Simpan' }));
-      expect(h.onRecordBedsideFinding).toHaveBeenCalledWith(expect.objectContaining({ kind: 'exam', findings: ['Papiledema'] }));
+      expect(h.onRecordBedsideFinding).toHaveBeenCalledWith(
+        expect.objectContaining({
+          kind: 'exam',
+          findings: [
+            { name: 'Papiledema', state: 'absent' },
+            { name: 'Defisit neurologis fokal', state: 'absent' },
+          ],
+        }),
+        expect.anything()
+      );
     } finally {
       vi.unstubAllGlobals();
     }
   });
 
-  it('shows the engine next best step with a tick list behind "Masukkan hasil" instead of a text field, and no section without one', () => {
+  it('shows the engine next best step with three-state findings behind "Masukkan hasil" instead of a text field, and no section without one', () => {
     const h = handlers();
     const plan = { actions: [{ kind: 'exam' as const, item: 'Auskultasi paru', reason: 'Membedakan CAP dan ISPA.' }], missing: [] };
     const { rerender } = render(<DiagnosisStep viewModel={vm([candidate({})])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" enginePlan={plan} {...h} />);
@@ -348,17 +377,148 @@ describe('DiagnosisStep', () => {
     expect(enter).toHaveAttribute('aria-expanded', 'true');
     expect(within(section).queryByRole('textbox')).toBeNull();
     const group = within(section).getByRole('group', { name: 'Hasil Auskultasi paru' });
-    expect(within(group).getByRole('button', { name: 'Wheezing' })).toBeInTheDocument();
+    // Every finding starts belum diperiksa; nothing can be saved until one is set.
+    expect(finding(group, 'Wheezing')).toHaveAccessibleName('Wheezing: Belum diperiksa');
     const save = within(section).getByRole('button', { name: 'Simpan' });
     expect(save).toBeDisabled();
-    fireEvent.click(within(group).getByRole('button', { name: 'Ronki basah halus' }));
-    fireEvent.click(within(group).getByRole('button', { name: 'Wheezing' }));
-    expect(within(group).getByRole('button', { name: 'Wheezing' })).toHaveAttribute('aria-pressed', 'true');
+    fireEvent.click(finding(group, 'Ronki basah halus'));
+    expect(finding(group, 'Ronki basah halus')).toHaveAccessibleName('Ronki basah halus: Ditemukan');
+    fireEvent.click(finding(group, 'Wheezing'));
+    fireEvent.click(finding(group, 'Wheezing'));
+    expect(finding(group, 'Wheezing')).toHaveAccessibleName('Wheezing: Tidak ditemukan');
     fireEvent.click(save);
-    expect(h.onRecordBedsideFinding).toHaveBeenCalledWith({ kind: 'exam', item: 'Auskultasi paru', findings: ['Ronki basah halus', 'Wheezing'] });
+    const [record] = h.onRecordBedsideFinding.mock.calls[0];
+    expect(record.findings).toEqual([
+      { name: 'Ronki basah halus', state: 'present' },
+      { name: 'Ronki basah kasar', state: 'unknown' },
+      { name: 'Wheezing', state: 'absent' },
+      { name: 'Suara napas menurun', state: 'unknown' },
+      { name: 'Stridor', state: 'unknown' },
+    ]);
     expect(h.onCompleteData).not.toHaveBeenCalled();
     rerender(<DiagnosisStep viewModel={vm([candidate({})])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" enginePlan={null} {...h} />);
     expect(screen.queryByTestId('dx-flow-next-label')).toBeNull();
+  });
+
+  it('answers a question step Ya or Tidak as one finding, the question itself; a second tap clears it', () => {
+    const h = handlers();
+    const plan = { actions: [{ kind: 'question' as const, item: 'Nyeri berpindah dari pusar?', reason: 'Khas apendisitis.' }], missing: [] };
+    render(<DiagnosisStep viewModel={vm([candidate({})])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" enginePlan={plan} {...h} />);
+    const section = screen.getByTestId('dx-flow-next-label').parentElement as HTMLElement;
+    fireEvent.click(within(section).getByRole('button', { name: 'Masukkan hasil' }));
+    const tidak = within(section).getByRole('button', { name: 'Tidak' });
+    fireEvent.click(tidak);
+    fireEvent.click(tidak);
+    expect(within(section).getByRole('button', { name: 'Simpan' })).toBeDisabled();
+    fireEvent.click(tidak);
+    fireEvent.click(within(section).getByRole('button', { name: 'Simpan' }));
+    expect(h.onRecordBedsideFinding.mock.calls[0][0]).toEqual({
+      kind: 'question',
+      item: 'Nyeri berpindah dari pusar?',
+      findings: [{ name: 'Nyeri berpindah dari pusar?', state: 'absent' }],
+    });
+  });
+
+  describe('after a recorded finding', () => {
+    const I50 = candidate({ id: 'm-I50', code: 'I50', name: 'Heart failure', displayLabel: 'I50 - Heart failure · MIRA', supports: ['Edema tungkai'], missing: ['EKG'] });
+    const J18 = candidate({ id: 'm-J18.9', code: 'J18.9', name: 'Community Acquired Pneumonia', displayLabel: 'J18.9 - Community Acquired Pneumonia · MIRA', supports: ['Demam'], missing: ['Auskultasi paru', 'SpO2'] });
+    const J06 = candidate({ id: 'm-J06.9', code: 'J06.9', name: 'ISPA', displayLabel: 'J06.9 - ISPA · MIRA', supports: [], missing: [] });
+    const lung = {
+      kind: 'exam' as const,
+      item: 'Auskultasi paru',
+      findings: [
+        { name: 'Ronki basah halus', state: 'present' as const },
+        { name: 'Wheezing', state: 'absent' as const },
+        { name: 'Stridor', state: 'unknown' as const },
+      ],
+    };
+    const before = snapshotAssessment({ primary: I50, mustNotMiss: [], differentials: [J18, J06] }, 'Auskultasi paru');
+    const newCards = [
+      { ...J18, supports: ['Demam', 'Ronki basah halus'], missing: ['SpO2'] },
+      { ...I50, against: ['Tidak ditemukan edema perifer'] },
+    ];
+    const plan = { actions: [{ kind: 'test' as const, item: 'SpO2', reason: 'Menilai beratnya pneumonia.' }], missing: [] };
+    const renderAfter = (over: Partial<DiagnosisPageViewModel> = {}, cards = newCards, notice = '') =>
+      render(<DiagnosisStep viewModel={vm(cards, over)} phase="ready" errorMessage={notice} showManualDiagnosisInput={false} manualIcd="" manualName="" enginePlan={plan} previousAssessment={{ snapshot: before, finding: lung }} {...handlers()} />);
+
+    it('marks the card that moved up, its new supporting finding and its smaller Data kurang', () => {
+      renderAfter();
+      const j18 = primaryCard();
+      expect(within(j18).getByTestId('dx-flow-change-place')).toHaveTextContent('↑ sebelumnya Diagnosis banding 1');
+      expect(within(j18).getByTestId('dx-flow-tally')).toHaveTextContent('? Data kurang 2 → 1');
+      const evidence = within(j18).getByTestId('dx-flow-change-evidence');
+      expect(evidence).toHaveTextContent('+ Ronki basah halus');
+      expect(evidence).toHaveTextContent('Temuan baru yang mendukung');
+      expect(evidence).not.toHaveTextContent('Demam');
+    });
+
+    it('marks the card that moved down with its new opposing finding', () => {
+      renderAfter();
+      const i50 = screen.getAllByTestId('dx-flow-card')[1];
+      expect(within(i50).getByTestId('dx-flow-change-place')).toHaveTextContent('↓ sebelumnya Diagnosis utama');
+      expect(within(i50).getByTestId('dx-flow-change-evidence')).toHaveTextContent('− Tidak ditemukan edema perifer');
+      expect(within(i50).getByTestId('dx-flow-tally')).toHaveTextContent('? Data kurang 1');
+      expect(within(i50).getByTestId('dx-flow-tally')).not.toHaveTextContent('→');
+    });
+
+    it('names a diagnosis no longer on the page, and says the Next best step changed after the recorded findings', () => {
+      renderAfter();
+      expect(screen.getByTestId('dx-flow-gone')).toHaveTextContent('Tidak lagi disarankan: J06.9 - ISPA (sebelumnya Diagnosis banding 2)');
+      const changed = screen.getByTestId('dx-flow-next-changed');
+      expect(changed).toHaveTextContent('Berubah setelah:');
+      expect(changed).toHaveTextContent('✓ Ronki basah halus ditemukan');
+      expect(changed).toHaveTextContent('− Wheezing tidak ditemukan');
+      expect(changed).not.toHaveTextContent('Stridor');
+    });
+
+    it('shows no change marks when nothing changed, or when the answer is the fallback list', () => {
+      const { unmount } = renderAfter({}, [I50, J18, J06]);
+      expect(screen.queryByTestId('dx-flow-change-place')).toBeNull();
+      expect(screen.queryByTestId('dx-flow-change-evidence')).toBeNull();
+      expect(screen.queryByTestId('dx-flow-gone')).toBeNull();
+      unmount();
+      renderAfter({}, newCards, 'MIRA tidak tersedia');
+      expect(screen.queryByTestId('dx-flow-change-place')).toBeNull();
+      expect(screen.queryByTestId('dx-flow-next-changed')).toBeNull();
+    });
+
+    it('keeps the doctor\'s chosen diagnosis as primary and shows what MIRA now recommends instead', () => {
+      const chosen = [
+        { ...J18, supports: ['Demam', 'Ronki basah halus'], missing: ['SpO2'] },
+        { ...I50, isSelected: true, against: ['Tidak ditemukan edema perifer'] },
+      ];
+      renderAfter({ selectedDiagnoses: [{ key: 'suggested:I50', displayLabel: 'I50 - Heart failure', sourceLabel: 'Rekomendasi sistem' }] }, chosen);
+      expect(screen.getByTestId('dx-flow-primary-label')).toHaveTextContent('Diagnosis utama');
+      expect(titles()[0]).toBe('I50 - Heart failure');
+      expect(primaryCard()).toHaveAttribute('aria-pressed', 'true');
+      expect(within(primaryCard()).queryByTestId('dx-flow-change-place')).toBeNull();
+      expect(screen.getByTestId('dx-flow-mira-suggests')).toHaveTextContent('MIRA sekarang menyarankan: J18.9 - Community Acquired Pneumonia');
+      // Places are MIRA's, the page is the doctor's: no place mark could contradict its label,
+      // while the new evidence still shows.
+      expect(screen.queryByTestId('dx-flow-change-place')).toBeNull();
+      expect(within(screen.getAllByTestId('dx-flow-card')[1]).getByTestId('dx-flow-change-evidence')).toHaveTextContent('+ Ronki basah halus');
+    });
+
+    it('keeps a chosen diagnosis MIRA no longer lists in the primary slot, with no proposal in its place', () => {
+      renderAfter({ selectedDiagnoses: [{ key: 'manual:R50.9', displayLabel: 'R50.9 - Demam', sourceLabel: 'Input dokter' }] });
+      expect(screen.getByTestId('dx-flow-primary-label')).toHaveTextContent('Diagnosis utama');
+      expect(screen.getByTestId('dx-flow-chosen')).toHaveTextContent('R50.9 - Demam');
+      expect(screen.getByTestId('dx-flow-mira-suggests')).toHaveTextContent('MIRA sekarang menyarankan: J18.9 - Community Acquired Pneumonia');
+      expect(differentialLabels()).toEqual(['Diagnosis banding 1', 'Diagnosis banding 2']);
+    });
+
+    it('records a finding with MIRA\'s arrangement as shown, whatever the doctor chose', () => {
+      const h = handlers();
+      const chosen = [J18, { ...I50, isSelected: true }];
+      render(<DiagnosisStep viewModel={vm(chosen, { selectedDiagnoses: [{ key: 'suggested:I50', displayLabel: 'I50 - Heart failure', sourceLabel: 'Rekomendasi sistem' }] })} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" enginePlan={plan} {...h} />);
+      const section = screen.getByTestId('dx-flow-next-label').parentElement as HTMLElement;
+      fireEvent.click(within(section).getByRole('button', { name: 'Masukkan hasil' }));
+      fireEvent.click(within(section).getByRole('button', { name: /^SpO2 < 90%: / }));
+      fireEvent.click(within(section).getByRole('button', { name: 'Simpan' }));
+      const [, shown] = h.onRecordBedsideFinding.mock.calls[0];
+      expect(shown.cards.map((c: { code: string }) => c.code)).toEqual(['J18.9', 'I50']);
+      expect(shown.nextStep).toBe('SpO2');
+    });
   });
 
   it('puts the pixel loader to the left of the "Diagnosis" title', () => {

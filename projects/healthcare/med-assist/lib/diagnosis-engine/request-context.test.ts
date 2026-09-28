@@ -33,7 +33,9 @@ describe('request-context', () => {
     const plain = buildDiagnosisRequestContext(source);
     expect(buildDiagnosisRequestContext({ ...source, bedsideFindings: [] })).toEqual(plain);
     expect('bedside_findings' in plain).toBe(false);
-    const findings = [{ kind: 'exam' as const, item: 'Auskultasi paru', findings: ['Ronki basah halus'] }];
+    const findings = [
+      { kind: 'exam' as const, item: 'Auskultasi paru', findings: [{ name: 'Ronki basah halus', state: 'present' as const }] },
+    ];
     const withFindings = buildDiagnosisRequestContext({ ...source, bedsideFindings: findings });
     expect(withFindings.bedside_findings).toEqual(findings);
     expect(hashDiagnosisContext(withFindings)).not.toBe(hashDiagnosisContext(plain));

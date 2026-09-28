@@ -889,6 +889,10 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     mockSendMessage.mockImplementation(async (type: string, payload?: Record<string, unknown>) =>
       type === 'getSuggestions' ? { success: true, data } : base?.(type, payload)
     );
+    renderWithSuggestionsRendered();
+  }
+
+  function renderWithSuggestionsRendered() {
     render(
       <ClinicalDifferential
         keluhanUtama="Nyeri perut kanan bawah sejak 1 hari"
@@ -965,7 +969,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     expect(within(section).queryByText('Leukosit')).toBeNull();
   });
 
-  it('asks the engine again with the ticked next best step findings and lists them in the Temuan receipt', async () => {
+  it('asks the engine again with the recorded next best step finding and lists it in the Temuan receipt', async () => {
     renderWithSuggestions({
       diagnosis_suggestions: [
         { rank: 1, icd_x: 'K35.8', nama: 'Acute appendicitis', confidence: 0.82, rationale: '', engine_tag: 'MIRA' },
@@ -985,11 +989,65 @@ describe('ClinicalDifferential final diagnosis support page', () => {
       expect(requests().length).toBe(before + 1);
     });
     expect(requests().at(-1)?.[1]).toMatchObject({
-      bedside_findings: [{ kind: 'exam', item: 'Rovsing sign', findings: ['Positif'] }],
+      bedside_findings: [{ kind: 'exam', item: 'Rovsing sign', findings: [{ name: 'Rovsing sign', state: 'present' }] }],
     });
     await waitFor(() => {
-      expect(screen.getByTestId('dx-flow-receipt-finding').textContent).toContain('Rovsing sign: Positif');
+      expect(screen.getByTestId('dx-flow-receipt-finding').textContent).toContain('+ Rovsing sign');
     });
+  });
+
+  it('keeps the doctor\'s diagnosis through the reassessment a finding triggers, and shows what MIRA now recommends', async () => {
+    const replies = [
+      {
+        diagnosis_suggestions: [
+          { rank: 1, icd_x: 'K35.8', nama: 'Acute appendicitis', confidence: 0.82, rationale: '', engine_tag: 'MIRA' },
+          { rank: 2, icd_x: 'N83.2', nama: 'Ovarian cyst', confidence: 0.4, rationale: '', engine_tag: 'MIRA' },
+        ],
+        alerts: [],
+        next_best_actions: [{ kind: 'exam', item: 'Rovsing sign', reason: 'Mendukung apendisitis.' }],
+      },
+      {
+        // MIRA reranks after Rovsing negative: the cyst first, appendicitis second.
+        diagnosis_suggestions: [
+          { rank: 1, icd_x: 'N83.2', nama: 'Ovarian cyst', confidence: 0.6, rationale: 'Rovsing sign negative', engine_tag: 'MIRA' },
+          { rank: 2, icd_x: 'K35.8', nama: 'Acute appendicitis', confidence: 0.5, rationale: '', engine_tag: 'MIRA' },
+        ],
+        alerts: [],
+        next_best_actions: [{ kind: 'test', item: 'USG abdomen', reason: 'Menilai adneksa.' }],
+      },
+    ];
+    let reply = 0;
+    const base = mockSendMessage.getMockImplementation();
+    mockSendMessage.mockImplementation(async (type: string, payload?: Record<string, unknown>) =>
+      type === 'getSuggestions' ? { success: true, data: replies[Math.min(reply++, replies.length - 1)] } : base?.(type, payload)
+    );
+    renderWithSuggestionsRendered();
+    const requests = () => mockSendMessage.mock.calls.filter(([type]) => type === 'getSuggestions');
+
+    // The doctor chooses appendicitis, then goes back to Diagnosis to record the next best step.
+    fireEvent.click(await screen.findByText(/^K35\.8 - /));
+    fireEvent.click(await screen.findByRole('button', { name: 'ubah Diagnosis' }));
+    const section = (await screen.findByTestId('dx-flow-next-label')).parentElement as HTMLElement;
+    const before = requests().length;
+    fireEvent.click(within(section).getByRole('button', { name: 'Masukkan hasil' }));
+    fireEvent.click(within(section).getByRole('button', { name: 'Negatif' }));
+    fireEvent.click(within(section).getByRole('button', { name: 'Simpan' }));
+
+    await waitFor(() => {
+      expect(requests().length).toBe(before + 1);
+    });
+    expect(requests().at(-1)?.[1]).toMatchObject({
+      bedside_findings: [{ kind: 'exam', item: 'Rovsing sign', findings: [{ name: 'Rovsing sign', state: 'absent' }] }],
+    });
+    const suggests = await screen.findByTestId('dx-flow-mira-suggests');
+    expect(suggests.textContent).toMatch(/^MIRA sekarang menyarankan: N83\.2 - /);
+    // The doctor's choice is still the diagnosis: primary, pressed, and in the request's selection.
+    expect(screen.getByTestId('dx-flow-primary-label')).toHaveTextContent('Diagnosis utama');
+    expect(card(/^K35\.8 - /)).toHaveAttribute('aria-pressed', 'true');
+    // With a diagnosis chosen, no place mark (it could contradict the doctor's arrangement); the
+    // new step still says after what it changed.
+    expect(screen.queryByTestId('dx-flow-change-place')).toBeNull();
+    expect(screen.getByTestId('dx-flow-next-changed')).toHaveTextContent('− Rovsing sign tidak ditemukan');
   });
 
   it('shows no next best step when the engine reply carries none', async () => {

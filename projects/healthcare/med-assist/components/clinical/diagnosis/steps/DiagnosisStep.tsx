@@ -1,8 +1,15 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState, type ReactNode } from 'react';
 
+import {
+  cardTitle,
+  compareAssessments,
+  placeLabel,
+  snapshotAssessment,
+  type CardChange,
+} from '../assessmentDelta';
 import { BedsideCheck } from '../BedsideCheck';
-import { findingChoicesFor, type FindingChoice } from '../bedsideFindings';
+import { findingChoicesFor, recordedFindingLines, type FindingChoice } from '../bedsideFindings';
 import {
   cleanClinicalSummary,
   formatClinicalText,
@@ -46,6 +53,7 @@ type Props = Pick<
   | 'errorMessage'
   | 'recurrentOnlyMessage'
   | 'enginePlan'
+  | 'previousAssessment'
   | 'onRecordBedsideFinding'
   | 'showManualDiagnosisInput'
   | 'manualIcd'
@@ -179,8 +187,6 @@ function mustNotMissGroups(card: DiagnosisCandidateView, note: DiseaseNote | nul
   ];
 }
 
-const NOT_FOUND = 'Tidak ditemukan';
-
 /**
  * What "Apa yang perlu diperiksa" offers to tick on a MUST NOT MISS card (Chief, 2026-09-28: it
  * had no data): the knowledge base's bedside findings for the code when it has them, otherwise
@@ -191,7 +197,7 @@ function checksFor(note: DiseaseNote | null, missing: string[]): FindingChoice |
   const items = hasExam(note)
     ? (note?.exam ?? []).map(trailingPunctuation)
     : missing.map(cleanClinicalSummary).filter(Boolean);
-  return items.length > 0 ? { options: [NOT_FOUND, ...items], normal: NOT_FOUND, single: false } : null;
+  return items.length > 0 ? { type: 'list', findings: items } : null;
 }
 
 /**
@@ -200,9 +206,12 @@ function checksFor(note: DiseaseNote | null, missing: string[]): FindingChoice |
  */
 function StepToTake({
   action,
+  changedAfter,
   onRecord,
 }: {
   action: DiagnosisNextBestActionView;
+  /** The findings recorded just before the engine changed this step; said as timing, not cause. */
+  changedAfter?: string[];
   onRecord: (record: BedsideFindingRecord) => void;
 }) {
   const [entering, setEntering] = useState(false);
@@ -210,6 +219,16 @@ function StepToTake({
     <div className="flex flex-col gap-1">
       <div className="diagnosis-row-title">{formatClinicalText(action.item)}</div>
       {action.reason ? <div className="diagnosis-row-meta">{formatClinicalText(action.reason)}</div> : null}
+      {changedAfter && changedAfter.length > 0 ? (
+        <div className="flex flex-col" data-testid="dx-flow-next-changed">
+          <div className="diagnosis-row-meta">Berubah setelah:</div>
+          {changedAfter.map((line) => (
+            <div key={line} className="diagnosis-row-meta">
+              {line}
+            </div>
+          ))}
+        </div>
+      ) : null}
       <div>
         <div className="flex">
           <button
@@ -240,6 +259,29 @@ function StepToTake({
   );
 }
 
+/** Where the engine had this card before the last recorded finding, when that changed. */
+function moveLine(change: CardChange | undefined): string | null {
+  if (!change || change.move === 'same') return null;
+  if (change.move === 'new' || !change.before) return 'Baru muncul';
+  const arrow = change.move === 'up' ? '↑ ' : change.move === 'down' ? '↓ ' : '';
+  return `${arrow}sebelumnya ${placeLabel(change.before)}`;
+}
+
+/** At most two new evidence lines per side; the rest is in the reasons. */
+function NewEvidence({ sign, items, caption }: { sign: string; items: string[]; caption: string }) {
+  if (items.length === 0) return null;
+  return (
+    <>
+      {items.slice(0, 2).map((item) => (
+        <div key={item} className="diagnosis-row-meta">
+          {`${sign} ${formatClinicalText(cleanClinicalSummary(item))}`}
+        </div>
+      ))}
+      <div className="diagnosis-row-meta">{caption}</div>
+    </>
+  );
+}
+
 function Card({
   card,
   index,
@@ -247,11 +289,14 @@ function Card({
   mustNotMiss = false,
   selectionKey,
   plan,
+  change,
   onToggle,
   onRecord,
 }: {
   card: DiagnosisCandidateView;
   index: number;
+  /** What changed for this card since the last recorded finding; absent when nothing to compare. */
+  change?: CardChange;
   /** Changes only when the chosen diagnosis changes: the one time cards move on the page. */
   selectionKey: string;
   /** The knowledge base's notes for this code: explanation, Catatan and, for MUST NOT MISS, the complications and bedside findings. */
@@ -264,11 +309,11 @@ function Card({
 }) {
   const [open, setOpen] = useState(false);
   const [checking, setChecking] = useState(false);
-  const title = formatClinicalText(card.displayLabel).replace(
-    /\s·\s(MIRA(?: · jangan terlewat)?|Kronis|Berulang)$/,
-    ''
-  );
+  const title = cardTitle(card);
   const chip = chipFor(card);
+  const moved = moveLine(change);
+  const missingNow = card.missing.length;
+  const missingChanged = change?.missingBefore != null && change.missingBefore !== missingNow;
   const toggleLabel = mustNotMiss ? 'Mengapa perlu dipertimbangkan' : 'Lihat alasan';
   const missing = mustNotMiss ? mustNotMissMissing(card, plan?.missing ?? []) : [];
   const checks = mustNotMiss ? checksFor(note, missing) : null;
@@ -313,12 +358,23 @@ function Card({
           <div className="diagnosis-row-title">{title}</div>
           {chip ? <span className="diagnosis-rank-label">{chip}</span> : null}
         </div>
+        {moved ? (
+          <div className="diagnosis-row-meta" data-testid="dx-flow-change-place">
+            {moved}
+          </div>
+        ) : null}
         {note?.definition ? <div className="diagnosis-row-meta line-clamp-3">{note.definition}</div> : null}
         <div className="diagnosis-row-meta flex flex-wrap gap-x-3" data-testid="dx-flow-tally">
           <span>{`✓ Mendukung ${card.supports.length}`}</span>
           <span>{`− Menentang ${card.against.length}`}</span>
-          <span>{`? Data kurang ${card.missing.length}`}</span>
+          <span>{missingChanged ? `? Data kurang ${change?.missingBefore} → ${missingNow}` : `? Data kurang ${missingNow}`}</span>
         </div>
+        {change && (change.newSupports.length > 0 || change.newAgainst.length > 0) ? (
+          <div className="flex flex-col" data-testid="dx-flow-change-evidence">
+            <NewEvidence sign="+" items={change.newSupports} caption="Temuan baru yang mendukung" />
+            <NewEvidence sign="−" items={change.newAgainst} caption="Temuan baru yang menentang" />
+          </div>
+        ) : null}
       </motion.div>
       {/* One grid child for the button and its reasons: a reasons panel added as its own child
           would add the card's 8 px grid gap at once on open and drop it at once on close. */}
@@ -429,17 +485,23 @@ function Section({
  * Order on the page (Chief's mockup, 2026-09-28): primary, MUST NOT MISS, Diagnosis banding,
  * NEXT BEST STEP.
  */
-function splitPrimary(cards: DiagnosisCandidateView[]): {
-  primary: DiagnosisCandidateView | null;
-  rest: DiagnosisCandidateView[];
-} {
+function arrangeCards(candidates: DiagnosisCandidateView[], choiceOffPage = false) {
+  const sorted = sortHistoryFirst(candidates.filter((candidate) => candidate.code !== 'R69'));
   // An engine cannot-miss card is a warning, not a proposal: it is never promoted on its own.
+  // A choice with no card (manual, or no longer listed) holds the primary slot itself.
   const primary =
-    cards.find((card) => card.isSelected) ??
-    cards.find((card) => card.history || !hasCannotMissTag(card)) ??
-    null;
-  return { primary, rest: cards.filter((card) => card !== primary) };
+    sorted.find((card) => card.isSelected) ??
+    (choiceOffPage ? null : (sorted.find((card) => card.history || !hasCannotMissTag(card)) ?? null));
+  const rest = sorted.filter((card) => card !== primary);
+  return {
+    primary,
+    // Cannot-miss cards never count against the cap: every one stands in MUST NOT MISS.
+    mustNotMiss: rest.filter(hasCannotMissTag),
+    differentials: rest.filter((card) => !hasCannotMissTag(card)).slice(0, MAX_BANDING),
+  };
 }
+
+const isMiraCard = (card: DiagnosisCandidateView) => engineTagOf(card) !== null || card.history?.engineSource === 'mira';
 
 export function DiagnosisStep({
   viewModel,
@@ -447,6 +509,7 @@ export function DiagnosisStep({
   errorMessage,
   recurrentOnlyMessage,
   enginePlan,
+  previousAssessment,
   onRecordBedsideFinding,
   showManualDiagnosisInput,
   manualIcd,
@@ -460,14 +523,33 @@ export function DiagnosisStep({
 }: Props) {
   const notes = useDiseaseNotes();
 
-  const sortedCards = sortHistoryFirst(viewModel.candidates.filter((candidate) => candidate.code !== 'R69'));
-  const selectionKey = sortedCards.filter((candidate) => candidate.isSelected).map((candidate) => candidate.id).join('|');
-  const { primary, rest } = splitPrimary(sortedCards);
-  // Cannot-miss cards never count against the cap: every one stands in MUST NOT MISS.
-  const mustNotMiss = rest.filter(hasCannotMissTag);
-  const differentials = rest.filter((card) => !hasCannotMissTag(card)).slice(0, MAX_BANDING);
+  const selectionKey = viewModel.candidates.filter((candidate) => candidate.isSelected).map((candidate) => candidate.id).join('|');
+  // The doctor's choice and the engine's recommendation are kept apart: the page is arranged
+  // around the choice, the change indicators and "MIRA sekarang menyarankan" read the engine's own.
+  const chosen = viewModel.selectedDiagnoses[0] ?? null;
+  const chosenOnPage = viewModel.candidates.some((candidate) => candidate.isSelected);
+  const { primary, mustNotMiss, differentials } = arrangeCards(viewModel.candidates, chosen !== null && !chosenOnPage);
+  const recommended = arrangeCards(viewModel.candidates.map((candidate) => ({ ...candidate, isSelected: false })));
   const visibleNotice = getVisibleErrorMessage(errorMessage);
   const nextBestAction = enginePlan?.actions[0] ?? null;
+  const shown = snapshotAssessment(recommended, nextBestAction?.item ?? null);
+  // No comparison against a fallback list: an engine notice means this is not MIRA's answer.
+  const delta = previousAssessment && !visibleNotice ? compareAssessments(previousAssessment.snapshot, shown) : null;
+  const chosenCodes = viewModel.selectedDiagnoses.map((diagnosis) => formatClinicalText(diagnosis.displayLabel).split(' - ')[0].trim());
+  const miraSuggests =
+    chosen && recommended.primary && isMiraCard(recommended.primary) && !chosenCodes.includes(recommended.primary.code)
+      ? cardTitle(recommended.primary)
+      : null;
+  const record = (finding: BedsideFindingRecord) => onRecordBedsideFinding(finding, shown);
+  // Places are MIRA's; once the doctor has chosen, the page is arranged around the choice, so a
+  // place mark could contradict the label above the card. Evidence and Data kurang marks stay, and
+  // "MIRA sekarang menyarankan" carries MIRA's primary.
+  const changeFor = (code: string): CardChange | undefined => {
+    const change = delta?.cards[code];
+    return change && chosen ? { ...change, move: 'same' } : change;
+  };
+  const onPage = new Set([primary, ...mustNotMiss, ...differentials].map((candidate) => candidate?.code));
+  const gone = delta?.gone.filter((entry) => !onPage.has(entry.code)) ?? [];
   const card = (candidate: DiagnosisCandidateView, index: number, isMustNotMiss = false) => (
     <Card
       card={candidate}
@@ -476,8 +558,9 @@ export function DiagnosisStep({
       mustNotMiss={isMustNotMiss}
       selectionKey={selectionKey}
       plan={enginePlan}
+      change={changeFor(candidate.code)}
       onToggle={onToggleCandidate}
-      onRecord={onRecordBedsideFinding}
+      onRecord={record}
     />
   );
 
@@ -535,18 +618,29 @@ export function DiagnosisStep({
             </>
           ) : null}
 
-          {primary ? (
+          {primary || chosen ? (
             <div className="flex flex-col gap-2">
               <span className="ttv-label" data-testid="dx-flow-primary-label">
-                {primary.isSelected ? 'Diagnosis utama' : 'Usulan diagnosis utama'}
+                {primary && !primary.isSelected ? 'Usulan diagnosis utama' : 'Diagnosis utama'}
               </span>
-              {card(primary, 0)}
+              {primary ? (
+                card(primary, 0)
+              ) : chosen ? (
+                <div className="neu-select diagnosis-candidate-row" data-testid="dx-flow-chosen">
+                  <div className="diagnosis-row-title">{formatClinicalText(chosen.displayLabel)}</div>
+                </div>
+              ) : null}
+              {miraSuggests ? (
+                <div className="diagnosis-row-meta" data-testid="dx-flow-mira-suggests">
+                  {`MIRA sekarang menyarankan: ${miraSuggests}`}
+                </div>
+              ) : null}
             </div>
           ) : null}
 
           {/* The MUST NOT MISS label is the only cannot-miss marker; these cards carry no cannot-miss chip. */}
           {mustNotMiss.length > 0 ? (
-            <Section label="Must not miss" testId="dx-flow-mnm-label" divider={primary !== null}>
+            <Section label="Must not miss" testId="dx-flow-mnm-label" divider={primary !== null || chosen !== null}>
               <div className="diagnosis-list">
                 {mustNotMiss.map((candidate, index) => (
                   <div key={candidate.id}>{card(candidate, index + 1, true)}</div>
@@ -557,7 +651,7 @@ export function DiagnosisStep({
 
           {differentials.length > 0 ? (
             // "Diagnosis banding N" on each card names this part; a section title would repeat it.
-            <Section divider={primary !== null || mustNotMiss.length > 0}>
+            <Section divider={primary !== null || chosen !== null || mustNotMiss.length > 0}>
               <div className="diagnosis-list">
                 {differentials.map((candidate, index) => (
                   <div key={candidate.id} className="flex flex-col gap-1">
@@ -571,9 +665,20 @@ export function DiagnosisStep({
             </Section>
           ) : null}
 
+          {gone.length > 0 ? (
+            <p className="diagnosis-row-meta" data-testid="dx-flow-gone">
+              {`Tidak lagi disarankan: ${gone.map((entry) => `${entry.label} (sebelumnya ${placeLabel(entry.before)})`).join('; ')}`}
+            </p>
+          ) : null}
+
           {nextBestAction ? (
             <Section label="Next best step" testId="dx-flow-next-label" divider>
-              <StepToTake key={nextBestAction.item} action={nextBestAction} onRecord={onRecordBedsideFinding} />
+              <StepToTake
+                key={nextBestAction.item}
+                action={nextBestAction}
+                changedAfter={delta?.nextStep && previousAssessment ? recordedFindingLines(previousAssessment.finding) : undefined}
+                onRecord={record}
+              />
             </Section>
           ) : null}
 

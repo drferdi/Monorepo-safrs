@@ -1,30 +1,35 @@
 /**
- * What a doctor can tick after a next best step instead of typing (Chief, 2026-09-28: "dokter
+ * What a doctor records after a next best step instead of typing (Chief, 2026-09-28: "dokter
  * cukup centang apa temuannya, system provide misal Ronki, Wheezing"). This is input
- * vocabulary for the checklist, not diagnostic logic: the ticked findings go back to the engine
- * as they are, and the engine interprets them. Clinical wording is for Chief's review.
+ * vocabulary, not diagnostic logic: the recorded findings go back to the engine as they are, and
+ * the engine interprets them. Clinical wording is for Chief's review.
+ *
+ * Every finding has three states: ditemukan (present), tidak ditemukan (examined and absent) and
+ * belum diperiksa (unknown, the start). An untouched finding stays unknown; it is never read as
+ * absent.
  *
  * Algorithm for one step ({kind, item} as MIRA sends it, in Indonesian or English):
- * 1. a named clinical sign (Rovsing, Murphy, ...) is answered Positif or Negatif;
- * 2. an exam or test that matches the catalogue offers its typical findings, with "Normal"
- *    first, which clears the others when ticked;
- * 3. anything else falls back by kind: exam or test "Normal" or "Abnormal", question "Ya" or
- *    "Tidak".
+ * 1. a question is answered Ya or Tidak, a named clinical sign (Rovsing, Murphy, ...) Positif or
+ *    Negatif: one finding, the step itself;
+ * 2. an exam or test that matches the catalogue lists its typical findings, each set on its own;
+ * 3. anything else is one finding, "Kelainan", answered Abnormal or Normal.
  */
 
-import type { BedsideFindingRecord } from '@/types/api';
+import type { BedsideFindingRecord, BedsideFindingState } from '@/types/api';
 
 export type BedsideKind = BedsideFindingRecord['kind'];
 
-export interface FindingChoice {
-  options: string[];
-  /** The option that means "nothing found"; ticking it clears the others. */
-  normal: string | null;
-  /** Exactly one option may be ticked. */
-  single: boolean;
-}
+export type FindingChoice =
+  /** Several findings, each set to ditemukan, tidak ditemukan or belum diperiksa. */
+  | { type: 'list'; findings: string[] }
+  /** One finding answered with two words: `present` means ditemukan, `absent` tidak ditemukan. */
+  | { type: 'answer'; finding: string; present: string; absent: string };
 
-const NORMAL = 'Normal';
+export const STATE_LABEL: Record<BedsideFindingState, string> = {
+  present: 'Ditemukan',
+  absent: 'Tidak ditemukan',
+  unknown: 'Belum diperiksa',
+};
 
 const SIGNS =
   /\b(rovsing|mcburney|mc burney|psoas|obturator|murphy|blumberg|kernig|brudzinski|homan|lasegue|tinel|phalen)\b|\w+ sign\b/i;
@@ -103,23 +108,42 @@ const TESTS: Array<{ match: RegExp; findings: string[] }> = [
 ];
 
 export function findingChoicesFor(step: { kind: BedsideKind; item: string }): FindingChoice {
-  if (step.kind === 'question') return { options: ['Ya', 'Tidak'], normal: null, single: true };
+  if (step.kind === 'question') return { type: 'answer', finding: step.item, present: 'Ya', absent: 'Tidak' };
   const catalogue = step.kind === 'test' ? TESTS : EXAMS;
-  if (step.kind === 'exam' && SIGNS.test(step.item)) return { options: ['Positif', 'Negatif'], normal: null, single: true };
+  if (step.kind === 'exam' && SIGNS.test(step.item)) {
+    return { type: 'answer', finding: step.item, present: 'Positif', absent: 'Negatif' };
+  }
   const entry = catalogue.find((candidate) => candidate.match.test(step.item));
-  if (entry) return { options: [NORMAL, ...entry.findings], normal: NORMAL, single: false };
-  return { options: [NORMAL, 'Abnormal'], normal: null, single: true };
+  if (entry) return { type: 'list', findings: entry.findings };
+  return { type: 'answer', finding: 'Kelainan', present: 'Abnormal', absent: 'Normal' };
 }
 
-/** The ticked options after the doctor taps `option`. */
-export function toggleFinding(choice: FindingChoice, selected: string[], option: string): string[] {
-  if (selected.includes(option)) return selected.filter((item) => item !== option);
-  if (choice.single) return [option];
-  if (option === choice.normal) return [option];
-  return [...selected.filter((item) => item !== choice.normal), option];
+/** A list finding's state after a tap: belum diperiksa, then ditemukan, then tidak ditemukan. */
+export function nextState(state: BedsideFindingState): BedsideFindingState {
+  if (state === 'unknown') return 'present';
+  if (state === 'present') return 'absent';
+  return 'unknown';
 }
 
-/** One line per recorded step, as the Temuan receipt shows it. */
-export function bedsideFindingLine(finding: BedsideFindingRecord): string {
-  return `${finding.item}: ${finding.findings.join(', ')}`;
+const recorded = (record: BedsideFindingRecord) => record.findings.filter((f) => f.state !== 'unknown');
+
+// The finding as a doctor reads it: a one-finding answer that is not the step itself names the step.
+function findingName(record: BedsideFindingRecord, name: string): string {
+  return name !== record.item && record.findings.length === 1 ? `${record.item}: ${name}` : name;
+}
+
+/** One line per recorded step, as the Temuan receipt shows it: "+" ditemukan, "−" tidak ditemukan. */
+export function bedsideFindingLine(record: BedsideFindingRecord): string {
+  const sign = (state: BedsideFindingState) => (state === 'present' ? '+' : '−');
+  if (record.findings.length === 1) {
+    return recorded(record).map((f) => `${sign(f.state)} ${findingName(record, f.name)}`).join('');
+  }
+  return `${record.item}: ${recorded(record).map((f) => `${sign(f.state)} ${f.name}`).join(', ')}`;
+}
+
+/** The recorded findings, one line each, as "Berubah setelah" lists them. */
+export function recordedFindingLines(record: BedsideFindingRecord): string[] {
+  return recorded(record).map((f) =>
+    f.state === 'present' ? `✓ ${findingName(record, f.name)} ditemukan` : `− ${findingName(record, f.name)} tidak ditemukan`
+  );
 }

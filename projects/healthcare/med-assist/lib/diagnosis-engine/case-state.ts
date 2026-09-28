@@ -11,7 +11,11 @@
 
 import type { CaseState } from './types';
 
-import type { DiagnosisRequestContext } from '@/types/api';
+import type {
+  BedsideFindingRecord,
+  DiagnosisRequestContext,
+  LegacyBedsideFindingRecord,
+} from '@/types/api';
 import type { Encounter } from '~/utils/types';
 
 export function encounterToCaseState(
@@ -20,10 +24,25 @@ export function encounterToCaseState(
 ): CaseState {
   const vitals = context.vital_signs ?? {};
   const additional = context.keluhan_tambahan || encounter.anamnesa?.keluhan_tambahan || '';
-  // Next best step results the doctor ticked, each where the engine contract expects it.
-  const bedside = context.bedside_findings ?? [];
-  const answers = (kind: 'question' | 'exam' | 'test') => bedside.filter((entry) => entry.kind === kind);
-  const qa = answers('question').map((entry) => ({ question: entry.item, answer: entry.findings.join(', ') }));
+  // Next best step results the doctor recorded, each where the engine contract expects it.
+  // Only findings marked present or absent are sent; "belum diperiksa" is left out, so it can
+  // never read as negative evidence.
+  const bedside = (context.bedside_findings ?? []).map(normalizeBedsideFinding);
+  const answers = (kind: 'question' | 'exam' | 'test') =>
+    bedside
+      .filter((entry) => entry.kind === kind)
+      .map((entry) => ({
+        item: entry.item,
+        recorded: entry.findings.filter((f): f is { name: string; state: 'present' | 'absent' } => f.state !== 'unknown'),
+      }))
+      .filter((entry) => entry.recorded.length > 0);
+  const qa = answers('question').flatMap(({ item, recorded }) =>
+    recorded.map((f) => ({
+      question: item,
+      // A yes/no step records the question itself; a legacy record holds the ticked answer.
+      answer: f.name === item ? (f.state === 'present' ? 'Ya' : 'Tidak') : f.name,
+    }))
+  );
 
   return {
     demographics: {
@@ -47,11 +66,16 @@ export function encounterToCaseState(
       spo2: vitals.spo2,
       gcs: vitals.gcs,
     },
-    physicalExam: answers('exam').map((entry) => `${entry.item}: ${entry.findings.join(', ')}`),
-    results: answers('test').map((entry) => ({
-      name: entry.item,
-      value: entry.findings.join(', '),
-      flag: entry.findings.every((finding) => finding === 'Normal') ? ('normal' as const) : ('abnormal' as const),
+    physicalExam: answers('exam').flatMap(({ item, recorded }) =>
+      recorded.map((f) => (f.name === item ? `${item} — ${MARK[f.state]}` : `${item}: ${f.name} — ${MARK[f.state]}`))
+    ),
+    results: answers('test').map(({ item, recorded }) => ({
+      name: item,
+      value: recorded.map((f) => `${f.name} — ${MARK[f.state]}`).join('; '),
+      // "Normal" ticked in a legacy record is a normal result, not an abnormal finding.
+      flag: recorded.every((f) => f.state === 'absent' || f.name === 'Normal')
+        ? ('normal' as const)
+        : ('abnormal' as const),
     })),
     currentMedications: [],
     knownConditions: mergeKnownConditions(
@@ -60,6 +84,30 @@ export function encounterToCaseState(
     ),
     allergies: [...(encounter.anamnesa?.alergi?.obat ?? [])],
     facilityCapabilities: [],
+  };
+}
+
+/**
+ * The words MIRA reads for a recorded finding (`assist/service/prompts.py` states what they
+ * mean): present, or examined and absent. There is no word for "belum diperiksa" because such a
+ * finding is not sent.
+ */
+export const MARK = { present: 'DITEMUKAN', absent: 'TIDAK DITEMUKAN' } as const;
+
+/**
+ * A recorded finding in the three-state form. An earlier checkbox record holds only the ticked
+ * names: each becomes present, and nothing is assumed about the names it does not hold (they
+ * stay "belum diperiksa", never absent).
+ */
+export function normalizeBedsideFinding(
+  record: BedsideFindingRecord | LegacyBedsideFindingRecord
+): BedsideFindingRecord {
+  return {
+    kind: record.kind,
+    item: record.item,
+    findings: record.findings.map((finding) =>
+      typeof finding === 'string' ? { name: finding, state: 'present' as const } : finding
+    ),
   };
 }
 

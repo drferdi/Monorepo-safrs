@@ -3,6 +3,44 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-28 — Clinical reasoning loop: three-state findings, the doctor's diagnosis kept, what changed shown
+
+- Decision (Chief's specification, same night):
+  1. Every recorded finding has three states: ditemukan (present), tidak ditemukan (examined,
+     absent) and belum diperiksa (unknown, the start). A list finding cycles through them on a
+     tap; a question, a named sign or an unmatched step is one finding answered with two words
+     (Ya/Tidak, Positif/Negatif, Abnormal/Normal for "Kelainan"). "Semua/Sisanya tidak
+     ditemukan" is the doctor's explicit word, never implied by an untouched item.
+  2. `encounterToCaseState` sends present as "— DITEMUKAN" and absent as "— TIDAK DITEMUKAN"
+     (physicalExam, results; a yes/no question as qa Ya/Tidak) and leaves unknown out, so it can
+     never become negative evidence. MIRA's assessment rules (`assist/service/prompts.py`) say
+     what the two words mean and that an unlisted finding was not examined. An earlier checkbox
+     record (`findings: string[]`) reads as present for the ticked names and unknown for the
+     rest, never absent.
+  3. A rerun caused only by a recorded finding keeps the doctor's diagnosis, therapy and
+     medications; other input changes still start over. The selection key is by ICD code, not
+     rank, so a reranked card stays chosen. When MIRA's proposal differs from the choice, the
+     primary slot keeps the choice and says "MIRA sekarang menyarankan: …"; a choice with no
+     card (manual, or no longer listed) holds the primary slot as a plain row.
+  4. On "Simpan" the page keeps the assessment it showed (MIRA's own arrangement: proposal,
+     MUST NOT MISS, two banding cards, the Next best step) and compares it with the next answer
+     (`assessmentDelta.ts`, deterministic, no model call). Cards show "↑/↓ sebelumnya <place>",
+     "Baru muncul", up to two new supporting/opposing findings, and "Data kurang a → b"; a card
+     gone from the page is named once; a changed Next best step lists "Berubah setelah:" with
+     the recorded findings (timing, not cause). Nothing is compared against a fallback list.
+     While the doctor has a diagnosis chosen the page is arranged around it, so no place mark is
+     shown (it could contradict the label above a card) and a card still on the page is never
+     named as gone; evidence and Data kurang marks stay. "MIRA sekarang menyarankan" shows
+     whenever MIRA's proposal differs from the choice, also before a rerun.
+- Rationale: Chief: "Not documented, not checked and not present are three different clinical
+  states"; the physician remains the final decision-maker; show what changed after a finding.
+- Limits: tested with mocks and the synthetic Vite harness only; the MIRA service was not
+  running, so whether MIRA uses the negative findings as intended is not verified live. The
+  delta only compares the latest two assessments (no history). Present and absent share the
+  pressed style; the state word tells them apart.
+- Evidence: Med Assist commit after `c8dccf33`; MIRA repo commit on `feat/reasoning-service`
+  (prompt rule and test).
+
 ## 2026-09-28 — Diagnosis page revision: ticked findings, real MUST NOT MISS checks, two pages
 
 - Decision (Chief's six-point revision, same evening):

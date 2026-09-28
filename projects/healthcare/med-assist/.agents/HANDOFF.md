@@ -1,45 +1,38 @@
 # HANDOFF
 
-Last updated: 2026-09-28 (night, Chief's six-point revision of the diagnosis page)
+Last updated: 2026-09-28 (night, clinical reasoning loop)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
 
 ## Current state
 
-Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEAD is the docs
-commit after `400c94ca`. Earlier work today is in `DECISIONS.md` and the commit bodies.
+Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEAD is the
+reasoning-loop commit after `c8dccf33`. Earlier tonight: two banding cards, practical Catatan,
+tick lists, MUST NOT MISS checks, Terapi/RME on page 2, one "Masukkan hasil" (see DECISIONS).
 
-Tonight (Chief's revision, all points done):
+Reasoning loop (Chief's specification):
 
-- `4e65703d` — Catatan: practical bedside guidance from `penyakit.json` (what to examine, when
-  to refer), not "Review faring".
-- `44c43b40` — "Masukkan hasil" opens options to tick (Ronki, Wheezing, ...; signs
-  Positif/Negatif); "Simpan" asks MIRA again with `bedside_findings` (CaseState `qa`,
-  `physicalExam`, `results`); the Temuan receipt lists the result after the main complaint.
-  MUST NOT MISS "Apa yang perlu diperiksa" ticks the knowledge base's `pemeriksaan_fisik`, or
-  the card's own Data kurang (plus MIRA's `missingInformation`) when the code has none; the
-  last commit keeps "Masukkan hasil" to one place, the Next best step (Chief: "kok ada 2?").
-- `e753ad58` — two banding cards, no "Lainnya".
-- `e309efd0` — Terapi and RME on the second page. It also removed the "Basis:" line in Terapi
-  (it repeats the Diagnosis receipt); `400c94ca` restores it, because without its "hapus" a
-  manual diagnosis could not be removed and a second diagnosis was shown nowhere.
+- Findings have three states (ditemukan, tidak ditemukan, belum diperiksa); unknown is never
+  sent. `case-state.ts` marks present/absent "— DITEMUKAN" / "— TIDAK DITEMUKAN"; old
+  checkbox records read as present only. MIRA repo `af7ca77` explains the words in the
+  assessment rules (`assist/service/prompts.py`).
+- A finding-only rerun keeps the doctor's diagnosis, therapy and medications; selection key is
+  by ICD code. "MIRA sekarang menyarankan: …" when MIRA's proposal differs from the choice.
+- `assessmentDelta.ts` compares the assessment shown at "Simpan" with the next one:
+  ↑/↓ sebelumnya, Baru muncul, new supporting/opposing findings, Data kurang a → b,
+  "Tidak lagi disarankan", "Berubah setelah:" on the Next best step.
 
-No CSS change, no R3 path, no protected file. **SAFRS**: R2 UI and R2 engine code
-(`lib/diagnosis-engine/**`, `types/api.ts`); the branch stays R3 through
-`lib/clinical/recurrent-diagnosis.ts` (Chief's prior approval).
-
-MIRA: nothing answered on 127.0.0.1:8787/health tonight; the host `com.sentra.mira` starts it
-when the side panel opens (unchanged).
+No CSS change, no R3 path, no protected file. **SAFRS**: R2 UI and R2 engine code; the branch
+stays R3 through `lib/clinical/recurrent-diagnosis.ts` (Chief's prior approval).
 
 ## What Chief tests now
 
-1. `chrome://extensions` → reload "Asisten Medis" (`.output\chrome-mv3-dev`, built on the final
-   tree), side panel, Trajectory → Diagnosis.
-2. Next best step → "Masukkan hasil" → tick → "Simpan": the page reloads the diagnosis, Temuan
-   shows the result.
-3. A MUST NOT MISS card → "Mengapa perlu dipertimbangkan" → "Apa yang perlu diperiksa".
-4. Choose a diagnosis: Terapi and RME appear on their own page; "ubah" on Diagnosis goes back.
+1. Reload "Asisten Medis" (`.output\chrome-mv3-dev`, built on the final tree) → Diagnosis.
+2. Next best step → "Masukkan hasil": tap a finding once = Ditemukan, twice = Tidak ditemukan,
+   three times = back to Belum diperiksa → "Simpan". After MIRA answers: change marks on the
+   cards and "Berubah setelah" on the new step.
+3. Choose a diagnosis, "ubah Diagnosis", record a finding: the choice stays "Diagnosis utama".
 
 ## Verification (capsule root, final tree)
 
@@ -47,23 +40,21 @@ when the side panel opens (unchanged).
 |---|---|---|
 | `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`) |
 | `typecheck` | 0 | clean |
-| `test` | 0 | 175 files passed, 1 skipped; 1362 tests passed, 17 skipped |
+| `test` | 0 | 176 files passed, 1 skipped; 1384 tests passed, 17 skipped |
 | `exec wxt build --mode development` | 0 | clean |
 | `run:check` | 0 | "Extension loads: Asisten Medis 2.1.0 (MV3), all referenced files present." |
+| MIRA `pytest` (assist/service) | 0 | 126 passed, 1 skipped |
 
-Vite harness (synthetic fixture): tick list, receipt, MUST NOT MISS panel, both pages viewed;
-MutationObserver: opening "Masukkan hasil" changes only its panel. Token-guard: PASS three times
-(`check-tokens` exit 0; its raw-value scan does not cover this capsule, the diff was searched
-by hand).
+Vite harness (synthetic fixture, simulated second answer): three-state panel, change marks,
+"Tidak lagi disarankan", "Berubah setelah" viewed. **Live MIRA not tested**: nothing answered
+on 127.0.0.1:8787; the service picks up the new prompt rule when it next starts.
 
 ## Limits to keep in mind
 
-- The tick catalogue (`bedsideFindings.ts`) is input vocabulary for Chief's clinical review.
-- K65, K35 have no knowledge-base entry; their checks are the card's Data kurang. Bedside
-  exams per code need KB entries (R3) or a MIRA contract field.
-- Legacy engine ignores `bedside_findings`; saving a finding clears a chosen diagnosis and
-  manual medications (it is a new request). A re-request with findings has a new case key, so
-  MIRA runs live (read in `run-diagnosis.ts`); not live-tested, the service was down.
+- Only the latest two assessments are compared; no history.
+- Present and absent share the pressed style; the state word tells them apart.
+- Input changes other than a finding (complaint, vitals) still reset the doctor's choice.
+- Tick catalogue wording and K65/K35 knowledge-base gaps: as before, Chief's review.
 
 ## Open for Chief (code must not change for these)
 
@@ -73,8 +64,7 @@ by hand).
 4. Capsule `AGENTS.md` still says "penyakit.json wins; the LLM is a reranker only".
 5. Clinical review of the tick catalogue wording.
 6. The "Basis: … hapus" line in Terapi repeats the Diagnosis receipt above it. Default: keep.
-   Dropping it needs the receipt to list every chosen diagnosis and a remove action elsewhere.
 
 ## Next action
 
-Chief reloads the extension and tests points 2–4 above.
+Chief tests points 2–3 above with MIRA running.

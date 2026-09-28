@@ -296,12 +296,25 @@ export interface DiagnosisRequestContext {
   chronic_diseases?: string[];
   /** Diagnoses recorded at earlier visits of this patient */
   recurrent_diagnoses?: Array<{ icd: string; name: string }>;
-  /** Results the doctor ticked for a next best step; absent until one is recorded */
-  bedside_findings?: BedsideFindingRecord[];
+  /** Results the doctor recorded for a next best step; absent until one is recorded */
+  bedside_findings?: Array<BedsideFindingRecord | LegacyBedsideFindingRecord>;
 }
 
-/** One next best step's result: the step as the engine named it and the ticked findings */
+/**
+ * What the doctor recorded for one finding. "Belum diperiksa" (unknown) is its own state and is
+ * never read as "tidak ditemukan" (absent).
+ */
+export type BedsideFindingState = 'present' | 'absent' | 'unknown';
+
+/** One next best step's result: the step as the engine named it and every finding's state */
 export interface BedsideFindingRecord {
+  kind: 'question' | 'exam' | 'test';
+  item: string;
+  findings: Array<{ name: string; state: BedsideFindingState }>;
+}
+
+/** The earlier checkbox record: only the ticked names, so nothing is known about the others */
+export interface LegacyBedsideFindingRecord {
   kind: 'question' | 'exam' | 'test';
   item: string;
   findings: string[];

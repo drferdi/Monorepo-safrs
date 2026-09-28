@@ -1,3 +1,4 @@
+import type { AssessmentSnapshot } from './assessmentDelta';
 import type { DiagnosisPageViewModel } from './diagnosisViewModel';
 
 import type { BedsideFindingRecord } from '@/types/api';
@@ -33,6 +34,12 @@ export interface DiagnosisEnginePlanView {
   missing: string[];
 }
 
+/** The assessment shown when the doctor last pressed "Simpan", and what was recorded then. */
+export interface PreviousAssessment {
+  snapshot: AssessmentSnapshot;
+  finding: BedsideFindingRecord;
+}
+
 export interface DiagnosisPageProps {
   viewModel: DiagnosisPageViewModel;
   phase: 'loading' | 'error' | 'ready';
@@ -51,8 +58,10 @@ export interface DiagnosisPageProps {
   enginePlan?: DiagnosisEnginePlanView | null;
   /** Next best step results the doctor ticked for this request, shown in the Temuan receipt. */
   bedsideFindings: BedsideFindingRecord[];
-  /** Records a ticked result; the page asks the engine again with it. */
-  onRecordBedsideFinding: (record: BedsideFindingRecord) => void;
+  /** Set after a finding is recorded, so the page can show what the engine changed. */
+  previousAssessment?: PreviousAssessment | null;
+  /** Records a result with the assessment shown at that moment; the page asks the engine again. */
+  onRecordBedsideFinding: (record: BedsideFindingRecord, shown: AssessmentSnapshot) => void;
   onCompleteData: () => void;
   onTogglePrimaryCandidate: () => void;
   onToggleManualDiagnosisInput: () => void;

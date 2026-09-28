@@ -1,12 +1,16 @@
 // Designed and constructed by Drferdi.
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import {
   resolveDifferentialListErrorMessage,
 } from './differential-fetch-error';
 import type { ClinicalImpressionViewItem } from './ClinicalImpressionPanel';
 import { createDiagnosisPageViewModel } from './diagnosis/diagnosisViewModel';
-import type { DiagnosisEnginePlanView, DiagnosisTriageView } from './diagnosis/diagnosisPageProps';
+import type {
+  DiagnosisEnginePlanView,
+  DiagnosisTriageView,
+  PreviousAssessment,
+} from './diagnosis/diagnosisPageProps';
 import { DiagnosisStepFlow } from './diagnosis/DiagnosisStepFlow';
 import { useRecurrentDiagnoses } from './diagnosis/useRecurrentDiagnoses';
 
@@ -618,6 +622,10 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
   // Results the doctor ticked for next best steps; they go into every later request of this
   // encounter, so they are not cleared when the engine is asked again.
   const [bedsideFindings, setBedsideFindings] = useState<BedsideFindingRecord[]>([]);
+  // The assessment on screen when the last finding was saved, to show what the engine changed.
+  const [previousAssessment, setPreviousAssessment] = useState<PreviousAssessment | null>(null);
+  // The request inputs other than the recorded findings, as of the last request.
+  const lastRequestInputs = useRef<string | null>(null);
   const [selectedDiagnoses, setSelectedDiagnoses] = useState<SelectedDiagnosis[]>([]);
   const [triageResult, setTriageResult] = useState<TriageDecisionResult | null>(null);
   const [manualIcd, setManualIcd] = useState('');
@@ -740,11 +748,30 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     let cancelled = false;
     let reRequested = false;
     let stopListening: (() => void) | null = null;
+    // Only a newly recorded finding changed since the last request: the engine reassesses the
+    // same visit, so the doctor's diagnosis, therapy and medications stay as they are.
+    const requestInputs = JSON.stringify([
+      keluhanUtama,
+      keluhanTambahan,
+      patientAge,
+      patientGender,
+      vitals.dbp,
+      vitals.hr,
+      vitals.rr,
+      vitals.sbp,
+      vitals.temp,
+      recurrentForRequest,
+      patientRM,
+    ]);
+    const findingOnly = lastRequestInputs.current === requestInputs;
+    lastRequestInputs.current = requestInputs;
 
     const resetForNewRequest = () => {
       setPhase('loading');
       setErrorMsg('');
       setEnginePlan(null);
+      if (findingOnly) return;
+      setPreviousAssessment(null);
       setSelectedDiagnoses([]);
       setManualIcd('');
       setManualName('');
@@ -1043,10 +1070,9 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     });
   }, [canonicalOutput, rankedDiagnoses]);
 
+  // By code, not rank: the doctor's choice must still match its card after the engine reranks.
   const diagnosisKey = (diagnosis: SelectedDiagnosis): string =>
-    diagnosis.source === 'manual'
-      ? `manual:${diagnosis.icd_x}`
-      : `suggested:${diagnosis.rank ?? 0}:${diagnosis.icd_x}`;
+    diagnosis.source === 'manual' ? `manual:${diagnosis.icd_x}` : `suggested:${diagnosis.icd_x}`;
 
   const isDiagnosisSelected = (diagnosis: SelectedDiagnosis): boolean =>
     selectedDiagnoses.some((item) => diagnosisKey(item) === diagnosisKey(diagnosis));
@@ -2154,9 +2180,11 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         }
         enginePlan={enginePlan}
         bedsideFindings={bedsideFindings}
-        onRecordBedsideFinding={(record) =>
-          setBedsideFindings((current) => [...current.filter((entry) => entry.item !== record.item), record])
-        }
+        previousAssessment={previousAssessment}
+        onRecordBedsideFinding={(record, shown) => {
+          setPreviousAssessment({ snapshot: shown, finding: record });
+          setBedsideFindings((current) => [...current.filter((entry) => entry.item !== record.item), record]);
+        }}
         errorMessage={errorMsg}
         complaintSummary={keluhanUtama}
         secondaryComplaint={keluhanTambahan}
