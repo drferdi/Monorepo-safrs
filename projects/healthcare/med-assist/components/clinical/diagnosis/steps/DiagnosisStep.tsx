@@ -467,10 +467,12 @@ function Section({
     <>
       {divider ? <div className="console-divider" aria-hidden="true" /> : null}
       <div className="flex flex-col gap-2">
+        {/* A named section carries the same pixel loader as the Diagnosis title (Chief, 2026-09-28). */}
         {label ? (
-          <span className="ttv-label" data-testid={testId}>
-            {label}
-          </span>
+          <div className="flex items-center gap-2" data-testid={testId}>
+            <PixelLoader />
+            <span className="ttv-label">{label}</span>
+          </div>
         ) : null}
         {children}
       </div>

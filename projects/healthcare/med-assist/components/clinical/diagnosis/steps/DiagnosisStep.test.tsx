@@ -529,6 +529,18 @@ describe('DiagnosisStep', () => {
     expect(loader.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
+  it.each([
+    ['Must not miss', 'dx-flow-mnm-label'],
+    ['Next best step', 'dx-flow-next-label'],
+  ])('puts a pixel loader to the left of the "%s" label', (name, testId) => {
+    render(<DiagnosisStep viewModel={vm([candidate({}), candidate({ id: '3-K65.0', rank: 3, code: 'K65.0', name: 'Acute peritonitis', displayLabel: 'K65.0 - Acute peritonitis · MIRA · jangan terlewat' })])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" enginePlan={{ actions: [{ kind: 'exam', item: 'Palpasi abdomen', reason: 'Menilai defans.' }], missing: [] }} {...handlers()} />);
+    const row = screen.getByTestId(testId);
+    const label = within(row).getByText(name);
+    const loader = within(row).getByTestId('dx-pixel-loader');
+    expect(label).toHaveClass('ttv-label');
+    expect(loader.compareDocumentPosition(label) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
   it('shows a two-card skeleton with a live text while loading', () => {
     render(<DiagnosisStep viewModel={vm([])} phase="loading" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
     expect(screen.getByText('Menyusun diagnosis banding...')).toHaveClass('sr-only');
