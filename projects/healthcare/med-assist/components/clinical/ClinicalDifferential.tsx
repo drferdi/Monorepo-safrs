@@ -900,30 +900,35 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     }
 
     // History candidates come next, one row per ICD root; a root already held by a confirmed
-    // chronic diagnosis is not repeated.
+    // chronic diagnosis is not repeated. Each sits in its own "history:<root>" slot, so an
+    // engine code equal to the recorded one (E11.9) can still arrive later as its own row.
     const seededRoots = new Set(Array.from(mergedByIcd.keys(), icdRoot));
-    const recurrentSeedByRoot = new Map<string, { key: string; seed: DiagnosisSuggestion }>();
+    const recurrentSeedByRoot = new Map<string, { slot: string; seed: DiagnosisSuggestion }>();
     for (const candidate of recurrent) {
       const key = normalizeIcdCode(candidate.icd);
       if (!isLikelyIcdCode(key) || seededRoots.has(icdRoot(key))) continue;
       const seed = buildRecurrentSuggestion({ ...candidate, icd: key });
+      const slot = `history:${icdRoot(key)}`;
       seededRoots.add(icdRoot(key));
-      recurrentSeedByRoot.set(icdRoot(key), { key, seed });
-      mergedByIcd.set(key, seed);
+      recurrentSeedByRoot.set(icdRoot(key), { slot, seed });
+      mergedByIcd.set(slot, seed);
     }
+
+    // Engine codes merged into a history slot, so a repeat of the same code merges there too.
+    const slotByEngineKey = new Map<string, string>();
 
     for (const suggestion of sanitizedBaseSuggestions) {
       const key = suggestion.icd_x?.trim().toUpperCase();
       if (!key || !isLikelyIcdCode(key)) continue;
 
-      // The first engine row on a history root replaces the history row: the engine's code,
-      // rationale and tag (so "MIRA" survives), with the higher confidence of the two, stored
-      // under the engine's own code so a later engine row on that root stays its own row.
+      // The first engine row on a history root merges into the history row in place (it stays
+      // on top, as agreed history): the engine's code, rationale and tag (so "MIRA" survives),
+      // with the higher confidence of the two. A later engine row on that root is its own row.
       const recurrentSeed = recurrentSeedByRoot.get(icdRoot(key));
       if (recurrentSeed) {
         recurrentSeedByRoot.delete(icdRoot(key));
-        mergedByIcd.delete(recurrentSeed.key);
-        mergedByIcd.set(key, {
+        slotByEngineKey.set(key, recurrentSeed.slot);
+        mergedByIcd.set(recurrentSeed.slot, {
           ...suggestion,
           confidence: Math.max(recurrentSeed.seed.confidence, suggestion.confidence),
           rationale: suggestion.rationale || recurrentSeed.seed.rationale,
@@ -932,13 +937,14 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         continue;
       }
 
-      const existing = mergedByIcd.get(key);
+      const slot = slotByEngineKey.get(key) ?? key;
+      const existing = mergedByIcd.get(slot);
       if (!existing) {
-        mergedByIcd.set(key, suggestion);
+        mergedByIcd.set(slot, suggestion);
         continue;
       }
 
-      mergedByIcd.set(key, {
+      mergedByIcd.set(slot, {
         ...suggestion,
         confidence: Math.max(existing.confidence, suggestion.confidence),
         rationale: existing.rationale || suggestion.rationale,

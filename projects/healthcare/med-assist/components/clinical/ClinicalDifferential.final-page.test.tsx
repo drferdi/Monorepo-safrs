@@ -38,6 +38,13 @@ vi.mock('@/lib/api/bridge-client', () => ({
   evaluateCanonicalDifferential: mockEvaluateCanonicalDifferential,
 }));
 
+// The page waits for the visit-store read before its request; these tests have no visit
+// record, so the store has answered "no history". One object, so the page's memos stay stable.
+vi.mock('./diagnosis/useRecurrentDiagnoses', () => {
+  const noHistory = { candidates: [], loaded: true };
+  return { useRecurrentDiagnoses: () => noHistory };
+});
+
 vi.mock('@/components/ui/AssistShell', () => ({
   AssistShell: ({ children }: { children: React.ReactNode }) => (
     <div className="assist-shell" data-testid="assist-shell-wrapper">

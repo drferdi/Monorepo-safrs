@@ -26,12 +26,9 @@ export function useRecurrentDiagnoses(
   const load = deps.load ?? ((rm: string) => getPatientVisits(rm, VISITS_TO_READ));
   const today = deps.today ?? (() => new Date());
 
-  // Without IndexedDB (and no injected loader) the store can never answer: nothing to wait for.
-  const storeMissing = !deps.load && typeof indexedDB === 'undefined';
-
   useEffect(() => {
     const rm = patientRM.trim();
-    if (!rm || storeMissing) return;
+    if (!rm) return;
     let active = true;
     // Deferred so a loader that throws synchronously still lands in the catch below.
     Promise.resolve()
@@ -52,7 +49,7 @@ export function useRecurrentDiagnoses(
   }, [patientRM]);
 
   const rm = patientRM.trim();
-  const loaded = !rm || storeMissing || read.rm === rm;
+  const loaded = !rm || read.rm === rm;
   const candidates = read.rm === rm ? read.candidates : EMPTY;
   return useMemo(() => ({ candidates, loaded }), [candidates, loaded]);
 }

@@ -87,10 +87,4 @@ describe('useRecurrentDiagnoses', () => {
     rerender({ rm: 'RM-SYN-2' });
     expect(result.current).toEqual({ candidates: [], loaded: false });
   });
-
-  it('reads as loaded at once when there is no IndexedDB to ask (jsdom) and no loader is injected', () => {
-    expect(typeof indexedDB).toBe('undefined');
-    const { result } = renderHook(() => useRecurrentDiagnoses('RM-SYN-1'));
-    expect(result.current).toEqual({ candidates: [], loaded: true });
-  });
 });

@@ -286,15 +286,18 @@ describe('recurrent candidates on the diagnosis page', () => {
     expect(candidates[5].displayLabel).toMatch(/jangan terlewat$/);
   });
 
-  it('keeps a second engine code on the same root as its own row', async () => {
+  it('keeps the agreed history row first and a second engine code on the same root as its own row', async () => {
     mocks.recurrent = { candidates: [DIABETES], loaded: true };
     renderPage([
-      { rank: 1, icd_x: 'E11', nama: 'Diabetes melitus tipe 2', confidence: 0.7, rationale: '', engine_tag: 'MIRA' },
-      { rank: 2, icd_x: 'E11.9', nama: 'Diabetes melitus tipe 2 tanpa komplikasi', confidence: 0.5, rationale: '', engine_tag: 'MIRA' },
+      { rank: 1, icd_x: 'A09', nama: 'Gastroenteritis', confidence: 0.8, rationale: '', engine_tag: 'MIRA' },
+      { rank: 2, icd_x: 'E11', nama: 'Diabetes melitus tipe 2', confidence: 0.7, rationale: '', engine_tag: 'MIRA' },
+      { rank: 3, icd_x: 'E11.9', nama: 'Diabetes melitus tipe 2 tanpa komplikasi', confidence: 0.5, rationale: '', engine_tag: 'MIRA' },
     ]);
     await ready();
 
-    expect(latest().viewModel.candidates.map((item) => item.code)).toEqual(['E11', 'E11.9']);
+    const candidates = latest().viewModel.candidates;
+    expect(candidates.map((item) => item.code)).toEqual(['E11', 'A09', 'E11.9']);
+    expect(candidates[0].history).toMatchObject({ label: 'Kronis', engineAgrees: true, engineSource: 'mira' });
   });
 
   it('sends getSuggestions once, after the visit store has answered', async () => {
