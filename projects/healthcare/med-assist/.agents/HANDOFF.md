@@ -136,7 +136,9 @@ with a test):
   after that read. Before this, nothing wrote the visit store and Part 2 was inert in production.
 - **F2** MIRA cannot-miss cards render outside the three-card cap, before "Lainnya (n)"; the
   do-not-miss line filter compares against the visible cards only.
-  History cards always stay in the top group, even when their merged engine tag is cannot-miss.
+  History cards always stay in the top group, even when their merged engine tag is cannot-miss;
+  such a card is also exempt from the cap, so it is never behind "Lainnya" (next commit,
+  `fix(med-assist): never hide a history card MIRA flags cannot-miss behind Lainnya`).
 - **F3** Reopening an earlier step keeps every finished later step as a receipt below it.
 - **F4** The prefetch is stored and found by case key (hash of `encounterToCaseState`, which applies
   the request-or-encounter fallbacks); the pending reply carries `prefetch_key`, the ready record is
@@ -149,7 +151,10 @@ For Chief to confirm:
 
 - **Patient data at rest**: scanned visits (RM, dates, complaints, diagnoses, therapy text,
   clinician names) are now persisted in the extension's IndexedDB `sentra-visit-history`
-  (`source: 'scrape'`, the store built for it). No expiry or purge exists.
+  (`source: 'scrape'`, the store built for it). No expiry or purge exists. `saveVisit` keeps the
+  first write for an `encounter_id` and never updates it, so a diagnosis corrected later in
+  ePuskesmas, or a row saved under the wrong patient by a stale scan, stays until Chief decides a
+  purge or correction path.
 - **Scan cap**: `main.tsx` keeps 5 rows, so the 12-month window sees at most five visits (protected
   file; Chief's call).
 - **`currentEncounterId`**: not passed; the content scanner already drops today's rows
@@ -171,8 +176,10 @@ Deferred minors (final review), none blocking:
   the second, with history, is the one the page matches.
 - The diagnosis page's own history read does not wait for the Trajectory stage's write; opening the
   page before the write lands misses the prefetch once.
-- A scanned row found only by `href` has `encounter_id: ''`; the store and the recurrent grouping
-  dedupe by it, so such rows collapse to one.
+- A scanned row found only by `href` has `encounter_id: ''`. The store's `encounter_id` index is
+  unique across patients, so once any patient has a row with an empty `encounter_id`, every later
+  href-only row is dropped, whichever patient it belongs to; the recurrent grouping also dedupes by
+  it.
 - `request-context.ts`'s module comment still says both paths "produce the same … hash"; the hash
   is no longer the prefetch key (file outside this fix's set).
 

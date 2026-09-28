@@ -93,11 +93,30 @@ describe('DiagnosisStep', () => {
     ];
     render(<DiagnosisStep viewModel={vm(cards)} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
     const shown = screen.getAllByTestId('dx-flow-card');
-    expect(shown).toHaveLength(3);
+    // Exempt from the cap too: the three engine cards stay visible after it.
+    expect(shown).toHaveLength(4);
     expect(shown[0].querySelector('.dx-flow-card__title')?.textContent).toBe('I16 - Krisis hipertensi');
     expect(within(shown[0]).getByText('Kronis')).toHaveClass('dx-flow-chip');
     expect(within(shown[0]).getByText('3 dari 5 kunjungan · terakhir 12 Agu 2026 · MIRA setuju')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Lainnya (1)' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^Lainnya/ })).toBeNull();
+  });
+
+  it('never hides a history card tagged cannot-miss behind "Lainnya", keeping it in the history group', () => {
+    const hist = (code: string, name: string, tag: string) =>
+      candidate({ id: `h-${code}`, code, name, displayLabel: `${code} - ${name}${tag}`, history: { label: 'Berulang', count: 2, visitsConsidered: 5, lastSeen: '2026-08-12', engineAgrees: false, engineSource: null } });
+    const cards = [
+      hist('J06.9', 'ISPA', ''),
+      hist('K29.7', 'Gastritis', ''),
+      hist('M54.5', 'Nyeri punggung bawah', ''),
+      hist('I16', 'Krisis hipertensi', ' · MIRA · jangan terlewat'),
+      candidate({ id: 'm-G44.2', code: 'G44.2', name: 'Sakit kepala tegang', displayLabel: 'G44.2 - Sakit kepala tegang · MIRA' }),
+      candidate({ id: 'm-G43.9', code: 'G43.9', name: 'Migren', displayLabel: 'G43.9 - Migren · MIRA' }),
+    ];
+    render(<DiagnosisStep viewModel={vm(cards)} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
+    const titles = () => screen.getAllByTestId('dx-flow-card').map((el) => el.querySelector('.dx-flow-card__title')?.textContent);
+    expect(titles()).toEqual(['J06.9 - ISPA', 'K29.7 - Gastritis', 'M54.5 - Nyeri punggung bawah', 'I16 - Krisis hipertensi']);
+    fireEvent.click(screen.getByRole('button', { name: 'Lainnya (2)' }));
+    expect(titles()).toEqual(['J06.9 - ISPA', 'K29.7 - Gastritis', 'M54.5 - Nyeri punggung bawah', 'I16 - Krisis hipertensi', 'G44.2 - Sakit kepala tegang', 'G43.9 - Migren']);
   });
 
   it('selects on tap, marks aria-pressed, and opens the reasons only from "alasan"', () => {

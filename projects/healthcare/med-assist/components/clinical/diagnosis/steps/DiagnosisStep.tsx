@@ -58,9 +58,9 @@ function chipFor(card: DiagnosisCandidateView): string | null {
   return engineTagOf(card);
 }
 
-/** An engine card MIRA marks as cannot-miss; history cards stay in the top group regardless. */
-function isCannotMiss(card: DiagnosisCandidateView): boolean {
-  return !card.history && engineTagOf(card) === CANNOT_MISS_TAG;
+/** A card MIRA marks as cannot-miss, including a history card merged with that engine row. */
+function hasCannotMissTag(card: DiagnosisCandidateView): boolean {
+  return engineTagOf(card) === CANNOT_MISS_TAG;
 }
 
 function sortHistoryFirst(candidates: DiagnosisCandidateView[]): DiagnosisCandidateView[] {
@@ -177,12 +177,16 @@ export function DiagnosisStep({
   const [showAll, setShowAll] = useState(false);
 
   const sortedCards = sortHistoryFirst(viewModel.candidates.filter((candidate) => candidate.code !== 'R69'));
-  // Cannot-miss cards are never capped and never hidden behind "Lainnya".
-  const cannotMissCards = sortedCards.filter(isCannotMiss);
-  const otherCards = sortedCards.filter((card) => !isCannotMiss(card));
-  const cappedCards = otherCards.slice(0, MAX_CARDS);
-  const moreCards = otherCards.slice(MAX_CARDS);
-  const visibleCards = [...cappedCards, ...cannotMissCards, ...(showAll ? moreCards : [])];
+  // Cannot-miss cards are never capped and never hidden behind "Lainnya". A history card keeps
+  // its place in the history group on top; an engine card goes after the capped cards.
+  const cappable = sortedCards.filter((card) => !hasCannotMissTag(card));
+  const cappedCards = new Set(cappable.slice(0, MAX_CARDS));
+  const moreCards = cappable.slice(MAX_CARDS);
+  const topCards = sortedCards.filter(
+    (card) => cappedCards.has(card) || (card.history && hasCannotMissTag(card))
+  );
+  const cannotMissCards = sortedCards.filter((card) => !card.history && hasCannotMissTag(card));
+  const visibleCards = [...topCards, ...cannotMissCards, ...(showAll ? moreCards : [])];
   const cardCodes = new Set(visibleCards.map((candidate) => candidate.code.toUpperCase()));
   const doNotMissItems = visibleDoNotMissItems(viewModel.evidence.doNotMiss, cardCodes);
   const visibleNotice = getVisibleErrorMessage(errorMessage);
