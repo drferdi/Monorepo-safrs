@@ -10,8 +10,10 @@ has a dated heading, the decision, a short rationale, and its evidence.
      refer) instead of a bare "Review faring"; generic engine notes are dropped.
   2. "Apa yang perlu diperiksa" on a MUST NOT MISS card opens a tick list: the knowledge
      base's `pemeriksaan_fisik` for the code ("Tidak ditemukan" first) when it has them,
-     otherwise MIRA's remaining next best actions. MIRA's `missingInformation` joins the
-     card's Data kurang.
+     otherwise the card's own Data kurang (its gaps plus MIRA's `missingInformation`), which
+     then is not listed in the reasons as well. "Masukkan hasil" appears once on the page, on
+     the Next best step: a first build listed MIRA's other next best actions under MUST NOT
+     MISS, each with its own "Masukkan hasil", and Chief asked why there were two.
   3. At most two "Diagnosis banding" cards; no "Lainnya".
   4. Terapi and RME are the second page. The first page (Temuan, Diagnosis, Penunjang and
      Edukasi) carries nothing of them, not even ghosts; the second keeps the Temuan and
@@ -31,12 +33,12 @@ has a dated heading, the decision, a short rationale, and its evidence.
   Wheezing"; "Apa yang perlu diperiksa → belum ada data?? carikan data, wiring it"; "Terapi
   dan RME masuk halaman selanjutnya".
 - Limits: the option catalogue is input vocabulary, not diagnostic logic, and its clinical
-  wording is for Chief's review. Codes absent from the knowledge base (K65, K35) fall back to
-  MIRA's plan, which covers the whole differential, not that card alone; per-code checks need
-  knowledge-base entries (R3, Chief) or a MIRA contract field. The legacy engine ignores
+  wording is for Chief's review. Codes absent from the knowledge base (K65, K35) offer the card's
+  Data kurang; bedside exams per code need knowledge-base entries (R3, Chief) or a MIRA
+  contract field. The legacy engine ignores
   `bedside_findings`. Saving a finding asks the engine again (a new case key, so MIRA runs
   live) and clears a chosen diagnosis and manual medications.
-- Evidence: `e753ad58`, `4e65703d`, `44c43b40`, `e309efd0`, `400c94ca`; Vite harness
+- Evidence: `e753ad58`, `4e65703d`, `44c43b40`, `e309efd0`, `400c94ca` and the one-entry fix after it; Vite harness
   checked (tick list, receipt, MUST NOT MISS panel, both pages; a MutationObserver shows only
   the opening panel changes style when "Masukkan hasil" opens).
 

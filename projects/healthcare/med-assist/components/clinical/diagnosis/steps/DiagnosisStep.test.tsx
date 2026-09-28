@@ -259,7 +259,7 @@ describe('DiagnosisStep', () => {
     expect(cardOf(screen.getByTestId('dx-flow-card')).querySelector('.line-clamp-3')).toBeNull();
   });
 
-  it('opens a MUST NOT MISS card with why it matters, its missing data and, without a knowledge-base exam, the rest of MIRA\'s plan to tick', async () => {
+  it('opens a MUST NOT MISS card with why it matters and, without a knowledge-base exam, its own missing data to tick, with no second "Masukkan hasil"', async () => {
     resetDiseaseNotesCache();
     vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ penyakit: [{ icd10: 'K65', definisi: 'Peradangan peritoneum.', komplikasi: ['Sepsis', 'Syok'] }] }))));
     try {
@@ -280,28 +280,38 @@ describe('DiagnosisStep', () => {
       await within(cardOf(mnm)).findByText('Peradangan peritoneum.');
       openReasons(mnm, 'Mengapa perlu dipertimbangkan');
       const list = within(cardOf(mnm)).getByRole('list', { name: 'Alasan' });
-      // The groups answer the button's question without repeating it.
-      expect([...list.querySelectorAll('.diagnosis-list-title')].map((el) => el.textContent)).toEqual(['Temuan yang relevan', 'Bila terlewat', 'Data kurang']);
+      // The groups answer the button's question without repeating it. Without a knowledge-base
+      // exam the missing data is what "Apa yang perlu diperiksa" lists, so it is not listed here too.
+      expect([...list.querySelectorAll('.diagnosis-list-title')].map((el) => el.textContent)).toEqual(['Temuan yang relevan', 'Bila terlewat']);
       expect(within(list).getByText('Nyeri perut kanan bawah')).toBeInTheDocument();
       expect(within(list).getByText('Sepsis')).toBeInTheDocument();
       expect(within(list).getByText('Syok')).toBeInTheDocument();
-      expect(within(list).getByText('Defans muskular')).toBeInTheDocument();
-      // What MIRA still lacks joins the card's own gaps.
-      expect(within(list).getByText('Riwayat demam')).toBeInTheDocument();
-      // The knowledge base has no exam for K65, so the checks are MIRA's plan after its first
-      // step (that one is the page's Next best step and is not repeated here).
-      fireEvent.click(within(cardOf(mnm)).getByRole('button', { name: 'Apa yang perlu diperiksa' }));
+      expect(within(list).queryByText('Defans muskular')).toBeNull();
+      // The checks are this card's own gaps plus what MIRA still lacks, ticked as found; MIRA's
+      // plan for the whole differential stays the page's one Next best step.
       const panel = cardOf(mnm);
-      expect(within(panel).getByText('Rovsing sign')).toHaveClass('diagnosis-row-title');
-      expect(within(panel).queryByText('Palpasi abdomen')).toBeNull();
-      fireEvent.click(within(panel).getByRole('button', { name: 'Masukkan hasil' }));
-      fireEvent.click(within(within(panel).getByRole('group', { name: 'Hasil Rovsing sign' })).getByRole('button', { name: 'Positif' }));
+      fireEvent.click(within(panel).getByRole('button', { name: 'Apa yang perlu diperiksa' }));
+      const group = within(panel).getByRole('group', { name: 'Hasil Pemeriksaan K65.0 - Acute peritonitis' });
+      expect(within(group).getAllByRole('button').map((el) => el.textContent)).toEqual(['Tidak ditemukan', 'Nyeri tekan abdomen', 'Defans muskular', 'Riwayat demam']);
+      expect(within(panel).queryByText('Rovsing sign')).toBeNull();
+      expect(screen.getAllByRole('button', { name: 'Masukkan hasil' })).toHaveLength(1);
+      fireEvent.click(within(group).getByRole('button', { name: 'Defans muskular' }));
       fireEvent.click(within(panel).getByRole('button', { name: 'Simpan' }));
-      expect(h.onRecordBedsideFinding).toHaveBeenCalledWith({ kind: 'exam', item: 'Rovsing sign', findings: ['Positif'] });
+      expect(h.onRecordBedsideFinding).toHaveBeenCalledWith({ kind: 'exam', item: 'Pemeriksaan K65.0 - Acute peritonitis', findings: ['Defans muskular'] });
       expect(h.onCompleteData).not.toHaveBeenCalled();
     } finally {
       vi.unstubAllGlobals();
     }
+  });
+
+  it('still offers a MUST NOT MISS card\'s checks when it has nothing else to explain', () => {
+    const cards = [candidate({}), candidate({ id: 'm-K65.0', code: 'K65.0', name: 'Acute peritonitis', displayLabel: 'K65.0 - Acute peritonitis · MIRA · jangan terlewat', supports: [], missing: ['Nyeri tekan abdomen'] })];
+    render(<DiagnosisStep viewModel={vm(cards)} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
+    const mnm = screen.getAllByTestId('dx-flow-card')[1];
+    openReasons(mnm, 'Mengapa perlu dipertimbangkan');
+    expect(within(cardOf(mnm)).queryByRole('list', { name: 'Alasan' })).toBeNull();
+    fireEvent.click(within(cardOf(mnm)).getByRole('button', { name: 'Apa yang perlu diperiksa' }));
+    expect(within(cardOf(mnm)).getByRole('button', { name: 'Nyeri tekan abdomen' })).toBeInTheDocument();
   });
 
   it('opens a MUST NOT MISS card\'s checks as the knowledge base\'s bedside findings to tick, with "Tidak ditemukan" first', async () => {

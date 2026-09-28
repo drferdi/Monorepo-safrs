@@ -1,8 +1,8 @@
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useState, type ReactNode } from 'react';
 
 import { BedsideCheck } from '../BedsideCheck';
-import { findingChoicesFor } from '../bedsideFindings';
+import { findingChoicesFor, type FindingChoice } from '../bedsideFindings';
 import {
   cleanClinicalSummary,
   formatClinicalText,
@@ -16,7 +16,7 @@ import type {
   DiagnosisPageProps,
 } from '../diagnosisPageProps';
 import { PixelLoader } from '../PixelLoader';
-import { PANEL_CLOSE, PANEL_OPEN, ReasonTimeline, type ReasonGroup } from '../ReasonTimeline';
+import { ReasonTimeline, type ReasonGroup } from '../ReasonTimeline';
 import { diseaseNoteFor, useDiseaseNotes, type DiseaseNote } from '../useDiseaseNotes';
 import type { DiagnosisCandidateView, DiagnosisPageViewModel } from '../diagnosisViewModel';
 
@@ -157,37 +157,41 @@ function reasonGroups(card: DiagnosisCandidateView, note: DiseaseNote | null): R
   ];
 }
 
+/** A MUST NOT MISS card's unknowns: its own gaps plus what MIRA says it lacks, deduplicated. */
+function mustNotMissMissing(card: DiagnosisCandidateView, planMissing: string[]): string[] {
+  const seen = new Set(card.missing.map((item) => cleanClinicalSummary(item).toLowerCase()));
+  return [...card.missing, ...planMissing.filter((item) => !seen.has(cleanClinicalSummary(item).toLowerCase()))];
+}
+
+const hasExam = (note: DiseaseNote | null) => (note?.exam.length ?? 0) > 0;
+
 /**
  * Why a MUST NOT MISS card matters, answering its "Mengapa perlu dipertimbangkan" button without
- * repeating it: the findings that point to it, what missing it risks, and what is still unknown
- * (the card's own gaps plus what MIRA says it lacks).
+ * repeating it: the findings that point to it, what missing it risks, and what is still unknown.
+ * Without a knowledge-base exam the unknowns are what "Apa yang perlu diperiksa" lists to tick,
+ * so they are not listed here as well.
  */
-function mustNotMissGroups(card: DiagnosisCandidateView, note: DiseaseNote | null, planMissing: string[]): ReasonGroup[] {
-  const seen = new Set(card.missing.map((item) => cleanClinicalSummary(item).toLowerCase()));
-  const extra = planMissing.filter((item) => !seen.has(cleanClinicalSummary(item).toLowerCase()));
+function mustNotMissGroups(card: DiagnosisCandidateView, note: DiseaseNote | null, missing: string[]): ReasonGroup[] {
   return [
     { key: 'supports', title: 'Temuan yang relevan', items: card.supports },
     { key: 'why', title: 'Bila terlewat', items: note?.complications ?? [] },
-    { key: 'missing', title: 'Data kurang', items: [...card.missing, ...extra] },
+    { key: 'missing', title: 'Data kurang', items: hasExam(note) ? missing : [] },
   ];
 }
 
 const NOT_FOUND = 'Tidak ditemukan';
 
 /**
- * What "Apa yang perlu diperiksa" offers on a MUST NOT MISS card (Chief, 2026-09-28: it had no
- * data). The knowledge base's bedside findings for the code, ticked as found, when it has them;
- * otherwise the rest of MIRA's plan (its first step is the page's Next best step and is not
- * repeated). MIRA's plan is for the whole differential, not for this card alone.
+ * What "Apa yang perlu diperiksa" offers to tick on a MUST NOT MISS card (Chief, 2026-09-28: it
+ * had no data): the knowledge base's bedside findings for the code when it has them, otherwise
+ * the card's own unknowns. Both are for this card only; MIRA's plan for the whole differential is
+ * the page's Next best step, the one "Masukkan hasil" on the page.
  */
-function checksFor(note: DiseaseNote | null, plan: DiagnosisEnginePlanView | null | undefined) {
-  if (note && note.exam.length > 0) {
-    return {
-      findings: { options: [NOT_FOUND, ...note.exam.map(trailingPunctuation)], normal: NOT_FOUND, single: false },
-      actions: [] as DiagnosisNextBestActionView[],
-    };
-  }
-  return { findings: null, actions: plan?.actions.slice(1) ?? [] };
+function checksFor(note: DiseaseNote | null, missing: string[]): FindingChoice | null {
+  const items = hasExam(note)
+    ? (note?.exam ?? []).map(trailingPunctuation)
+    : missing.map(cleanClinicalSummary).filter(Boolean);
+  return items.length > 0 ? { options: [NOT_FOUND, ...items], normal: NOT_FOUND, single: false } : null;
 }
 
 /**
@@ -236,56 +240,6 @@ function StepToTake({
   );
 }
 
-/** The panel under "Apa yang perlu diperiksa" on a MUST NOT MISS card. */
-function MustNotMissChecks({
-  title,
-  checks,
-  onRecord,
-  onClose,
-}: {
-  title: string;
-  checks: ReturnType<typeof checksFor>;
-  onRecord: (record: BedsideFindingRecord) => void;
-  onClose: () => void;
-}) {
-  const reduceMotion = useReducedMotion();
-  if (checks.findings) {
-    return (
-      <BedsideCheck
-        step={{ kind: 'exam', item: `Pemeriksaan ${title}` }}
-        choice={checks.findings}
-        onSave={(record) => {
-          onClose();
-          onRecord(record);
-        }}
-        onCancel={onClose}
-      />
-    );
-  }
-  return (
-    <motion.div
-      className="overflow-hidden"
-      initial={{ height: 0, opacity: 0 }}
-      animate={{
-        height: 'auto',
-        opacity: 1,
-        transition: reduceMotion ? { duration: 0.2 } : { height: PANEL_OPEN, opacity: { duration: 0.25 } },
-      }}
-      exit={{
-        height: 0,
-        opacity: 0,
-        transition: reduceMotion ? { duration: 0.15 } : { height: PANEL_CLOSE, opacity: { duration: 0.18 } },
-      }}
-    >
-      <div className="flex flex-col gap-3 pt-2">
-        {checks.actions.map((action) => (
-          <StepToTake key={action.item} action={action} onRecord={onRecord} />
-        ))}
-      </div>
-    </motion.div>
-  );
-}
-
 function Card({
   card,
   index,
@@ -316,8 +270,8 @@ function Card({
   );
   const chip = chipFor(card);
   const toggleLabel = mustNotMiss ? 'Mengapa perlu dipertimbangkan' : 'Lihat alasan';
-  const checks = mustNotMiss ? checksFor(note, plan) : null;
-  const hasChecks = checks !== null && (checks.findings !== null || checks.actions.length > 0);
+  const missing = mustNotMiss ? mustNotMissMissing(card, plan?.missing ?? []) : [];
+  const checks = mustNotMiss ? checksFor(note, missing) : null;
   // The select control and the reasons button are siblings: a role="button" element's
   // children are presentational, so a nested button would be unreachable for assistive tech.
   // The column behaves like a console (Chief, 2026-09-28): opening the reasons grows only this
@@ -391,9 +345,9 @@ function Card({
           {open ? (
             <ReasonTimeline
               key="reasons"
-              groups={mustNotMiss ? mustNotMissGroups(card, note, plan?.missing ?? []) : reasonGroups(card, note)}
+              groups={mustNotMiss ? mustNotMissGroups(card, note, missing) : reasonGroups(card, note)}
               footer={
-                checks && hasChecks ? (
+                checks ? (
                   <div className="flex-1">
                     <div className="flex">
                       <button
@@ -415,12 +369,15 @@ function Card({
                     </div>
                     <AnimatePresence initial={false}>
                       {checking ? (
-                        <MustNotMissChecks
+                        <BedsideCheck
                           key="checks"
-                          title={title}
-                          checks={checks}
-                          onRecord={onRecord}
-                          onClose={() => setChecking(false)}
+                          step={{ kind: 'exam', item: `Pemeriksaan ${title}` }}
+                          choice={checks}
+                          onSave={(record) => {
+                            setChecking(false);
+                            onRecord(record);
+                          }}
+                          onCancel={() => setChecking(false)}
                         />
                       ) : null}
                     </AnimatePresence>

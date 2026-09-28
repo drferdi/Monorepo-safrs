@@ -18,7 +18,8 @@ Tonight (Chief's revision, all points done):
   Positif/Negatif); "Simpan" asks MIRA again with `bedside_findings` (CaseState `qa`,
   `physicalExam`, `results`); the Temuan receipt lists the result after the main complaint.
   MUST NOT MISS "Apa yang perlu diperiksa" ticks the knowledge base's `pemeriksaan_fisik`, or
-  MIRA's remaining plan when the code has none; MIRA's `missingInformation` joins Data kurang.
+  the card's own Data kurang (plus MIRA's `missingInformation`) when the code has none; the
+  last commit keeps "Masukkan hasil" to one place, the Next best step (Chief: "kok ada 2?").
 - `e753ad58` — two banding cards, no "Lainnya".
 - `e309efd0` — Terapi and RME on the second page. It also removed the "Basis:" line in Terapi
   (it repeats the Diagnosis receipt); `400c94ca` restores it, because without its "hapus" a
@@ -46,20 +47,20 @@ when the side panel opens (unchanged).
 |---|---|---|
 | `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`) |
 | `typecheck` | 0 | clean |
-| `test` | 0 | 175 files passed, 1 skipped; 1361 tests passed, 17 skipped |
+| `test` | 0 | 175 files passed, 1 skipped; 1362 tests passed, 17 skipped |
 | `exec wxt build --mode development` | 0 | clean |
 | `run:check` | 0 | "Extension loads: Asisten Medis 2.1.0 (MV3), all referenced files present." |
 
 Vite harness (synthetic fixture): tick list, receipt, MUST NOT MISS panel, both pages viewed;
-MutationObserver: opening "Masukkan hasil" changes only its panel. Token-guard: PASS twice
+MutationObserver: opening "Masukkan hasil" changes only its panel. Token-guard: PASS three times
 (`check-tokens` exit 0; its raw-value scan does not cover this capsule, the diff was searched
 by hand).
 
 ## Limits to keep in mind
 
 - The tick catalogue (`bedsideFindings.ts`) is input vocabulary for Chief's clinical review.
-- K65, K35 have no knowledge-base entry; their checks are MIRA's plan for the whole
-  differential. Per-code checks need KB entries (R3) or a MIRA contract field.
+- K65, K35 have no knowledge-base entry; their checks are the card's Data kurang. Bedside
+  exams per code need KB entries (R3) or a MIRA contract field.
 - Legacy engine ignores `bedside_findings`; saving a finding clears a chosen diagnosis and
   manual medications (it is a new request). A re-request with findings has a new case key, so
   MIRA runs live (read in `run-diagnosis.ts`); not live-tested, the service was down.

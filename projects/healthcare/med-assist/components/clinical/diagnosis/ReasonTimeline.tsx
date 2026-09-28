@@ -49,7 +49,8 @@ export function ReasonTimeline({ groups, footer }: { groups: ReasonGroup[]; foot
   const shown = groups
     .map((group) => ({ ...group, items: group.items.map(cleanClinicalSummary).filter(Boolean) }))
     .filter((group) => group.items.length > 0);
-  if (shown.length === 0) return null;
+  // A footer (a MUST NOT MISS card's checks) still shows when no reason group has items.
+  if (shown.length === 0 && !footer) return null;
 
   return (
     <motion.div
@@ -66,44 +67,46 @@ export function ReasonTimeline({ groups, footer }: { groups: ReasonGroup[]; foot
         transition: reduceMotion ? { duration: 0.15 } : { height: PANEL_CLOSE, opacity: { duration: 0.18 } },
       }}
     >
-      <ol className="dx-timeline pt-2" aria-label="Alasan">
-        {shown.map((group, index) => (
-          <motion.li
-            key={group.key}
-            className="dx-timeline__item"
-            custom={index}
-            variants={reduceMotion ? entryReduced : entry}
-            initial="hidden"
-            animate="shown"
-          >
-            {index < shown.length - 1 ? (
-              <motion.span
-                aria-hidden="true"
-                className="dx-timeline__line"
-                initial={{ scaleY: reduceMotion ? 1 : 0 }}
-                animate={{ scaleY: 1 }}
-                transition={{ duration: 0.42, ease: EASE_OUT, delay: 0.16 + index * STAGGER }}
-              />
-            ) : null}
-            <span aria-hidden="true" className="dx-timeline__node">
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d={ICONS[group.key] ?? ICONS.review} />
-              </svg>
-            </span>
-            <div className="min-w-0 flex-1 pt-1">
-              {/* No count: the card's tally row, just above, already carries it. */}
-              <div className="diagnosis-list-title">{group.title}</div>
-              <ul className="mt-1 flex flex-col gap-0.5">
-                {group.items.map((item) => (
-                  <li key={item} className="diagnosis-row-meta">
-                    {formatClinicalText(item)}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </motion.li>
-        ))}
-      </ol>
+      {shown.length > 0 ? (
+        <ol className="dx-timeline pt-2" aria-label="Alasan">
+          {shown.map((group, index) => (
+            <motion.li
+              key={group.key}
+              className="dx-timeline__item"
+              custom={index}
+              variants={reduceMotion ? entryReduced : entry}
+              initial="hidden"
+              animate="shown"
+            >
+              {index < shown.length - 1 ? (
+                <motion.span
+                  aria-hidden="true"
+                  className="dx-timeline__line"
+                  initial={{ scaleY: reduceMotion ? 1 : 0 }}
+                  animate={{ scaleY: 1 }}
+                  transition={{ duration: 0.42, ease: EASE_OUT, delay: 0.16 + index * STAGGER }}
+                />
+              ) : null}
+              <span aria-hidden="true" className="dx-timeline__node">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d={ICONS[group.key] ?? ICONS.review} />
+                </svg>
+              </span>
+              <div className="min-w-0 flex-1 pt-1">
+                {/* No count: the card's tally row, just above, already carries it. */}
+                <div className="diagnosis-list-title">{group.title}</div>
+                <ul className="mt-1 flex flex-col gap-0.5">
+                  {group.items.map((item) => (
+                    <li key={item} className="diagnosis-row-meta">
+                      {formatClinicalText(item)}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </motion.li>
+          ))}
+        </ol>
+      ) : null}
       {footer ? <div className="flex pt-3">{footer}</div> : null}
     </motion.div>
   );
