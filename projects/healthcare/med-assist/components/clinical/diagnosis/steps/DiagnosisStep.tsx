@@ -93,10 +93,15 @@ function Card({ card, onToggle }: { card: DiagnosisCandidateView; onToggle: (id:
       role="button"
       tabIndex={0}
       aria-pressed={card.isSelected}
-      onClick={() => onToggle(card.id)}
+      aria-disabled={card.isSelectionBlocked || undefined}
+      onClick={() => {
+        if (card.isSelectionBlocked) return;
+        onToggle(card.id);
+      }}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
+          if (card.isSelectionBlocked) return;
           onToggle(card.id);
         }
       }}
@@ -197,6 +202,7 @@ export function DiagnosisStep({
             <button
               type="button"
               className="btn-ac-inline btn-ac-inline--sharp"
+              data-testid="dx-flow-complete-data"
               onClick={onCompleteData}
             >
               {viewModel.primary.primaryCtaLabel}

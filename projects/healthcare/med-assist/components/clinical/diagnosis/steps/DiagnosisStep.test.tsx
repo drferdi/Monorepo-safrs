@@ -80,4 +80,40 @@ describe('DiagnosisStep', () => {
     expect(screen.getByText('Menyusun diagnosis banding...')).toHaveClass('sr-only');
     expect(document.querySelectorAll('.diagnosis-skeleton__card')).toHaveLength(2);
   });
+
+  it('does not toggle a selection-blocked candidate on tap or on Enter, and marks it aria-disabled', () => {
+    const h = handlers();
+    render(<DiagnosisStep viewModel={vm([candidate({ isSelectionBlocked: true })])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...h} />);
+    const [card] = screen.getAllByTestId('dx-flow-card');
+    expect(card).toHaveAttribute('aria-disabled', 'true');
+    fireEvent.click(card);
+    expect(h.onToggleCandidate).not.toHaveBeenCalled();
+    fireEvent.keyDown(card, { key: 'Enter' });
+    expect(h.onToggleCandidate).not.toHaveBeenCalled();
+  });
+
+  it('shows the complete-data CTA and calls onCompleteData exactly once when the primary diagnosis is insufficient', () => {
+    const h = handlers();
+    const insufficientVm = vm([], {
+      primary: {
+        canLock: false,
+        isInsufficient: true,
+        candidateLabel: 'Data diagnosis belum lengkap',
+        confidenceLabel: 'Pending review',
+        safestNextAction: 'Lengkapi data diagnosis dan bukti klinis sebelum menetapkan diagnosis utama.',
+        primaryCtaLabel: 'Lengkapi Data Diagnosis',
+        missingEvidence: [],
+      },
+    });
+    render(<DiagnosisStep viewModel={insufficientVm} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...h} />);
+    const cta = screen.getByTestId('dx-flow-complete-data');
+    expect(cta).toHaveTextContent('Lengkapi Data Diagnosis');
+    fireEvent.click(cta);
+    expect(h.onCompleteData).toHaveBeenCalledTimes(1);
+  });
+
+  it('hides the complete-data CTA when the primary diagnosis is not insufficient', () => {
+    render(<DiagnosisStep viewModel={vm([candidate({})])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
+    expect(screen.queryByTestId('dx-flow-complete-data')).toBeNull();
+  });
 });
