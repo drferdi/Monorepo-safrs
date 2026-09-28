@@ -6,11 +6,12 @@ import type { DiagnosisManualMedicationDraftView, DiagnosisPageProps } from '../
 import type { DiagnosisMedicationView, DiagnosisPageViewModel } from '../diagnosisViewModel';
 import { HoldButton, PenCheck, RollingNumber } from '../labMotion';
 import { PixelLoader } from '../PixelLoader';
-import { PANEL_CLOSE, PANEL_OPEN } from '../ReasonTimeline';
+import { PANEL_CLOSE, PANEL_OPEN, TIMELINE_STAGGER, timelineEntry, timelineEntryReduced } from '../ReasonTimeline';
 import {
   ROLE_ORDER,
   allergyMatches,
   interactionsFor,
+  nameBesideDose,
   reviewSafety,
   roleOf,
   type ChronicMedicationView,
@@ -176,6 +177,68 @@ function Kv({ rows }: { rows: Array<{ term: string; value: ReactNode; tone?: 'da
   );
 }
 
+type TherapyStepKey = 'obat' | 'dosis' | 'indikasi' | 'ddi' | 'kontra';
+
+const STEP_ICONS: Record<TherapyStepKey, string> = {
+  obat: 'M3.4 9.2l5.8-5.8a2.9 2.9 0 0 1 4.1 4.1l-5.8 5.8a2.9 2.9 0 0 1-4.1-4.1ZM6.3 6.3l3.4 3.4',
+  dosis: 'M8 4.5V8l2.2 1.4M13.25 8a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z',
+  indikasi: 'M4 4.5h8M4 8h8M4 11.5h5',
+  ddi: 'M6.5 5.2a2.8 2.8 0 1 0 0 5.6M9.5 5.2a2.8 2.8 0 1 1 0 5.6M6.5 8h3',
+  kontra: 'M8 5.5v3.2M8 11h.01M7.1 2.6 1.9 11.6a1 1 0 0 0 .9 1.5h10.4a1 1 0 0 0 .9-1.5L8.9 2.6a1 1 0 0 0-1.8 0Z',
+};
+
+type TherapyStepRow = { key: TherapyStepKey; label?: string; value: ReactNode; tone?: 'danger' };
+
+/**
+ * A therapy card as the "Activity timeline" of lab.xevrion.dev (Chief, 2026-09-29): name, dose,
+ * (indication,) DDI and contraindication are nodes joined by a hairline. Entries settle one after
+ * another from a small blur and lift and each line grows to the next node, once, when the card
+ * appears; nothing moves again when a value changes (the DDI check answering).
+ */
+function TherapyTimeline({ rows }: { rows: TherapyStepRow[] }) {
+  const reduceMotion = useReducedMotion();
+  return (
+    <ol className="dx-timeline dx-tx-timeline">
+      {rows.map((row, index) => (
+        <motion.li
+          key={row.key}
+          className="dx-timeline__item"
+          data-step={row.key}
+          custom={index}
+          variants={reduceMotion ? timelineEntryReduced : timelineEntry}
+          initial="hidden"
+          animate="shown"
+        >
+          {index < rows.length - 1 ? (
+            <motion.span
+              aria-hidden="true"
+              className="dx-timeline__line"
+              initial={{ scaleY: reduceMotion ? 1 : 0 }}
+              animate={{ scaleY: 1 }}
+              transition={{ duration: 0.42, ease: EASE_OUT, delay: 0.16 + index * TIMELINE_STAGGER }}
+            />
+          ) : null}
+          <span aria-hidden="true" className={row.tone === 'danger' ? 'dx-timeline__node dx-tx-node--danger' : 'dx-timeline__node'}>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d={STEP_ICONS[row.key]} />
+            </svg>
+          </span>
+          {row.label ? (
+            <div className="dx-tx-step min-w-0 flex-1">
+              <span className="diagnosis-row-meta dx-tx-step-label">{row.label}</span>
+              <span className={row.tone === 'danger' ? 'diagnosis-row-meta dx-tx-danger min-w-0' : 'diagnosis-row-meta dx-tx-step-value min-w-0'}>
+                {row.value}
+              </span>
+            </div>
+          ) : (
+            <div className="dx-tx-step-head min-w-0 flex-1">{row.value}</div>
+          )}
+        </motion.li>
+      ))}
+    </ol>
+  );
+}
+
 function interactionText(name: string, interactions: DrugInteraction[], state: DiagnosisPageProps['interactionCheck']['state']): string {
   if (state === 'checking') return 'memeriksa…';
   if (state === 'unavailable') return 'tidak dapat dicek';
@@ -201,41 +264,46 @@ function ChronicCard({
   const allergy = allergyMatches(medication.name, allergies);
   return (
     <div className="neu-select diagnosis-candidate-row" data-testid="dx-tx-chronic">
-      <div className="flex flex-col gap-1">
-        <div className="diagnosis-row-head">
-          <div className="diagnosis-row-title">{medication.name}</div>
-          <button
-            type="button"
-            className="diagnosis-text-button inline-flex items-center gap-1"
-            aria-expanded={open}
-            onClick={() => setOpen((value) => !value)}
-          >
-            Review
-            <Chevron open={open} />
-          </button>
-        </div>
-        {medication.doseLine ? <div className="diagnosis-row-meta">{medication.doseLine}</div> : null}
-        <Kv
-          rows={[
-            { term: 'Indikasi', value: medication.indication || 'tidak tercatat' },
-            {
-              term: 'DDI',
-              value: interactionText(medication.name, interactionCheck.interactions, interactionCheck.state),
-              tone: hasSeriousInteraction(medication.name, interactionCheck.interactions) ? 'danger' : undefined,
-            },
-            {
-              term: 'Kontraindikasi',
-              value: allergy.length > 0 ? allergy.map((item) => `alergi ${item}`).join(', ') : 'tidak terdeteksi',
-              tone: allergy.length > 0 ? 'danger' : undefined,
-            },
-          ]}
-        />
-      </div>
+      <TherapyTimeline
+        rows={[
+          {
+            key: 'obat',
+            value: (
+              <div className="diagnosis-row-head">
+                <div className="diagnosis-row-title">{nameBesideDose(medication.name, medication.doseLine)}</div>
+                <button
+                  type="button"
+                  className="diagnosis-text-button inline-flex items-center gap-1"
+                  aria-expanded={open}
+                  onClick={() => setOpen((value) => !value)}
+                >
+                  Review
+                  <Chevron open={open} />
+                </button>
+              </div>
+            ),
+          },
+          { key: 'dosis', label: 'Dosis', value: medication.doseLine || 'tidak tercatat' },
+          { key: 'indikasi', label: 'Indikasi', value: medication.indication || 'tidak tercatat' },
+          {
+            key: 'ddi',
+            label: 'DDI',
+            value: interactionText(medication.name, interactionCheck.interactions, interactionCheck.state),
+            tone: hasSeriousInteraction(medication.name, interactionCheck.interactions) ? 'danger' : undefined,
+          },
+          {
+            key: 'kontra',
+            label: 'Kontraindikasi',
+            value: allergy.length > 0 ? allergy.map((item) => `alergi ${item}`).join(', ') : 'tidak terdeteksi',
+            tone: allergy.length > 0 ? 'danger' : undefined,
+          },
+        ]}
+      />
       <AnimatePresence initial={false}>
         {open ? (
           <Collapse key="review" testId="dx-tx-chronic-review">
             {medication.visits.length > 0 ? (
-              <ul className="diagnosis-line-list">
+              <ul className="diagnosis-line-list dx-tx-review">
                 {medication.visits.map((visit, index) => (
                   <li key={`${visit.date}-${index}`}>
                     {[formatShortDate(visit.date), visit.dose, visit.diagnosis].filter(Boolean).join(' · ')}
@@ -353,21 +421,30 @@ function VisitCard({
           }
         }}
       >
-        <div className="diagnosis-row-head">
-          <div className="diagnosis-row-title">{medication.name}</div>
-          <PenCheck checked={medication.isSelected} seedText={medication.key} />
-        </div>
-        <div className="diagnosis-row-meta">{formatClinicalText(medication.doseLine)}</div>
-        {medication.sourceLabel === 'MANUAL' ? <div className="diagnosis-row-meta">input dokter</div> : null}
-        <Kv
+        <TherapyTimeline
           rows={[
             {
-              term: 'DDI',
+              key: 'obat',
+              value: (
+                <>
+                  <div className="diagnosis-row-head">
+                    <div className="diagnosis-row-title">{nameBesideDose(medication.name, medication.doseLine)}</div>
+                    <PenCheck checked={medication.isSelected} seedText={medication.key} />
+                  </div>
+                  {medication.sourceLabel === 'MANUAL' ? <div className="diagnosis-row-meta">input dokter</div> : null}
+                </>
+              ),
+            },
+            { key: 'dosis', label: 'Dosis', value: formatClinicalText(medication.doseLine) },
+            {
+              key: 'ddi',
+              label: 'DDI',
               value: interactionText(medication.name, interactionCheck.interactions, interactionCheck.state),
               tone: serious ? 'danger' : undefined,
             },
             {
-              term: 'Kontraindikasi',
+              key: 'kontra',
+              label: 'Kontraindikasi',
               value: contraindications.length > 0 ? contraindications.join(', ') : 'tidak terdeteksi',
               tone: contraindications.length > 0 ? 'danger' : undefined,
             },

@@ -107,6 +107,18 @@ describe('TatalaksanaStep', () => {
     expect(within(screen.getByTestId('dx-tx-chronic-review')).getAllByRole('listitem')).toHaveLength(2);
   });
 
+  // Chief, 2026-09-29: each therapy runs name, dose, DDI, contraindication as an activity timeline.
+  it('draws each therapy as a timeline: name, dose, (indication,) DDI, contraindication', () => {
+    render(<TatalaksanaStep {...props({ viewModel: vm([med('amoks', 'Amoksisilin 500 mg', false, 'PROPOSAL', { doseLine: '3x500mg • Sesudah makan • 5 hari' })]) })} />);
+    const steps = (card: HTMLElement) => [...card.closest('.diagnosis-candidate-row')!.querySelectorAll('.dx-tx-timeline > li')].map((li) => li.getAttribute('data-step'));
+    expect(steps(screen.getByTestId('dx-tx-chronic').querySelector('li')!)).toEqual(['obat', 'dosis', 'indikasi', 'ddi', 'kontra']);
+    const visit = visitCard('Amoksisilin');
+    expect(steps(visit)).toEqual(['obat', 'dosis', 'ddi', 'kontra']);
+    // The dose carries the strength, so the name does not repeat it.
+    expect(within(visit).getByText('Amoksisilin')).toHaveClass('diagnosis-row-title');
+    expect(visit).toHaveTextContent('Dosis3x500mg • Sesudah makan • 5 hari');
+  });
+
   it('says so when the visit history holds no chronic medication', () => {
     render(<TatalaksanaStep {...props({ chronicMedications: [] })} />);
     expect(screen.getByText('Tidak ada terapi kronis dalam riwayat kunjungan.')).toBeInTheDocument();

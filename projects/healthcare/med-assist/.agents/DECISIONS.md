@@ -3,6 +3,26 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — Tatalaksana revision: dose notation "1x10mg" and therapy cards as a timeline
+
+- Decision (Chief: "Penulisan dosis yang saya suka : 1x10mg (misal)" and "masing masing terapi
+  antar nama obat-dosis-ddi-kontra beri motion https://lab.xevrion.dev/lab/activity-timeline"):
+  1. Doses read frequency x strength per take: `formatDose` (tatalaksana.ts) compacts a dose that
+     names its strength ("2x500 mg" → "2x500mg") and turns "3x1" into "3x500mg" from the name's
+     strength, times the amount per take ("3x2" of 500 mg → "3x1000mg"); anything else stays as
+     written. Used for proposals and manual entries (ClinicalDifferential) and the chronic
+     history fallback; the history parser already wrote "1x10mg". The dose text turns off Inter's
+     contextual alternates so "x" is not drawn as "×". The card title drops the strength when the
+     dose line carries it (`nameBesideDose`).
+  2. Each therapy card is the Activity timeline already used for the diagnosis reasons: nodes for
+     name, dose, (indication for chronic,) DDI and contraindication, joined by a hairline; the
+     entries settle one after another and each line grows to the next node, once, when the card
+     appears (the ReasonTimeline variants, now exported). A serious DDI or a contraindication
+     turns its node red. Nothing moves again when a value changes.
+- Evidence: Med Assist commit after `fa873492`; harness viewed (J20.9: "1x10mg", "3x500mg", the
+  hairline 12 px between nodes; a newly added card starts at opacity 0 and line scale 0 and
+  settles at 1).
+
 ## 2026-09-29 — Tatalaksana: one page for therapy, safety, education, follow-up and safety net
 
 - Decision (Chief's layout, same day: "Seperti ini urutan nya … TATALAKSANA", "push to the Max.

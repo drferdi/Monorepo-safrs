@@ -17,6 +17,7 @@ import {
   buildChronicMedications,
   buildFollowUp,
   buildSafetyNet,
+  formatDose,
   type InteractionCheckView,
 } from './diagnosis/tatalaksana';
 import { useDiseaseNotes } from './diagnosis/useDiseaseNotes';
@@ -1822,7 +1823,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
             key: medicationSelectionKey(med),
             name: med.nama_obat,
             role: med.role,
-            doseLine: `${med.dosis} • ${med.aturan_pakai} • ${med.durasi || '-'}`,
+            doseLine: `${formatDose(med.nama_obat, med.dosis)} • ${med.aturan_pakai} • ${med.durasi || '-'}`,
             rationale: humanize(med.rationale),
             safetyLabel: med.safety_check.toUpperCase(),
             contraindications: (med.contraindications || []).map((item) => humanize(item)),
@@ -1832,7 +1833,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
           const manualMedicationViews = manualMedications.map((med) => ({
             key: medicationSelectionKey(med),
             name: med.nama_obat,
-            doseLine: `${med.dosis} • ${med.aturan_pakai} • ${med.durasi || '-'}`,
+            doseLine: `${formatDose(med.nama_obat, med.dosis)} • ${med.aturan_pakai} • ${med.durasi || '-'}`,
             rationale: humanize(med.rationale),
             safetyLabel: med.safety_check.toUpperCase(),
             contraindications: (med.contraindications || []).map((item) => humanize(item)),

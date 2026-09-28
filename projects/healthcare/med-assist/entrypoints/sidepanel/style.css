@@ -10378,3 +10378,17 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 @media (prefers-reduced-motion: reduce) {
   .dx-hold-fill { transition-timing-function: step-end; }
 }
+
+/* Tatalaksana therapy cards as the "Activity timeline" (Chief, 2026-09-29): name, dose, DDI and
+   contraindication are nodes on the diagnosis-card timeline (.dx-timeline), a little tighter. */
+.dx-tx-timeline .dx-timeline__item { padding-bottom: 12px; }
+.dx-tx-timeline .dx-timeline__item:last-child { padding-bottom: 0; }
+/* The hairline spans the whole gap from one node to the next, so its growth can be seen. */
+.dx-tx-timeline .dx-timeline__line { top: 21px; bottom: 0; }
+/* Inter's contextual alternates draw "1x10" as "1×10"; Chief writes the dose "1x10mg". */
+.dx-tx-step { display: flex; align-items: baseline; gap: 10px; padding-top: 3px; }
+.dx-tx-step, .dx-tx-review { font-variant-ligatures: no-contextual; }
+.dx-tx-step-label { flex: 0 0 84px; }
+.dx-tx-step-value { color: var(--text-main); }
+.dx-tx-step-head { padding-top: 2px; }
+.dx-timeline__node.dx-tx-node--danger { color: var(--sentra-danger); border-color: var(--sentra-danger); }

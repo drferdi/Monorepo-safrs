@@ -4,7 +4,9 @@ import {
   buildChronicMedications,
   buildFollowUp,
   buildSafetyNet,
+  formatDose,
   interactionsFor,
+  nameBesideDose,
   reviewSafety,
   roleOf,
 } from './tatalaksana';
@@ -124,5 +126,29 @@ describe('buildFollowUp and buildSafetyNet', () => {
   it('lists the chosen diagnoses\' red flags verbatim, each once, and nothing for a code without them', () => {
     expect(buildSafetyNet(['J06.9', 'J02'], notes)).toEqual(['Sesak nafas berat', 'Stridor', 'Trismus']);
     expect(buildSafetyNet(['K65.0'], notes)).toEqual([]);
+  });
+});
+
+describe('formatDose', () => {
+  // Chief, 2026-09-29: "Penulisan dosis yang saya suka : 1x10mg".
+  it('writes frequency x strength per take, taking the strength from the name when the dose has none', () => {
+    expect(formatDose('Amlodipin 10 mg', '1x1')).toBe('1x10mg');
+    expect(formatDose('Amoksisilin 500 mg', '3x1')).toBe('3x500mg');
+    expect(formatDose('Paracetamol 500mg', '3x2')).toBe('3x1000mg');
+    expect(formatDose('Amoksisilin', '2x500 mg')).toBe('2x500mg');
+    expect(formatDose('Salbutamol 0,5 mg', '3 x 1')).toBe('3x0.5mg');
+  });
+
+  it('leaves a dose it cannot read, or a name without strength, as written', () => {
+    expect(formatDose('Vitamin B kompleks', '1x1')).toBe('1x1');
+    expect(formatDose('Amlodipin 10 mg', 'bila perlu')).toBe('bila perlu');
+  });
+});
+
+describe('nameBesideDose', () => {
+  it('drops the strength from the name only when the dose line already says it', () => {
+    expect(nameBesideDose('Amlodipin 10 mg', '1x10mg · Sesudah makan')).toBe('Amlodipin');
+    expect(nameBesideDose('Amlodipin 10 mg', '1x1 · Sesudah makan')).toBe('Amlodipin 10 mg');
+    expect(nameBesideDose('Vitamin B', '1x1')).toBe('Vitamin B');
   });
 });

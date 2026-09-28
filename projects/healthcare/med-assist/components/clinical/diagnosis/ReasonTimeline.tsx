@@ -111,3 +111,6 @@ export function ReasonTimeline({ groups, footer }: { groups: ReasonGroup[]; foot
     </motion.div>
   );
 }
+
+/** The entry motion, shared with the Tatalaksana therapy cards (same reference). */
+export { entry as timelineEntry, entryReduced as timelineEntryReduced, STAGGER as TIMELINE_STAGGER };

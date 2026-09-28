@@ -217,9 +217,12 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
 
     // Therapy for the selected diagnosis must render on the live surface.
     const findMedicationRow = async () => {
-      const row = (await screen.findByText(/Amoksisilin 500mg/)).closest('[data-testid="dx-tx-visit-med"]');
+      // Migrated (2026-09-29): the strength moved from the title into Chief's dose notation, so
+      // "Amoksisilin 500mg" reads as the title "Amoksisilin" over the dose "3x500mg".
+      const row = (await screen.findByText('Amoksisilin')).closest('[data-testid="dx-tx-visit-med"]');
       expect(row).not.toBeNull();
       if (!row) throw new Error('medication row not found');
+      expect(row).toHaveTextContent('3x500mg');
       return row;
     };
     expect(await findMedicationRow()).toBeInTheDocument();

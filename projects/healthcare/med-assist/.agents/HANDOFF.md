@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-09-29 (Tatalaksana page)
+Last updated: 2026-09-29 (Tatalaksana page, revision: dose "1x10mg", timeline cards)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
@@ -8,7 +8,7 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 ## Current state
 
 Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEAD is the
-Tatalaksana commit after `4db92cdb` (DECISIONS 2026-09-29 "Tatalaksana"):
+Tatalaksana revision after `fa873492` (DECISIONS 2026-09-29 "Tatalaksana" and its revision):
 
 - Four steps, three pages: Temuan 1/4 + Diagnosis 2/4 | Tatalaksana 3/4 | RME 4/4.
 - `steps/TatalaksanaStep.tsx` (replaces TherapyStep and EducationStep): Terapi kronis (visit
@@ -16,6 +16,8 @@ Tatalaksana commit after `4db92cdb` (DECISIONS 2026-09-29 "Tatalaksana"):
   "+ Tambah obat", "Gunakan semua usulan" / "Lanjut tanpa terapi tambahan"), Keamanan (duplicates,
   DDInter major, allergy/contraindication), Edukasi, Tindak lanjut (KB `kontrol`, routine per
   chronic condition), Safety net (KB `red_flags`), Ringkasan, "Selesai".
+- Revision: doses "1x10mg" (`formatDose`), each therapy card an activity timeline
+  (name → dose → [indication] → DDI → contraindication).
 - Logic: `tatalaksana.ts`, `usePatientVisits.ts`, `labMotion.tsx` (lab.xevrion.dev motion);
   ClinicalDifferential runs `checkInteractions`, keeps dismissed proposals out of the
   prescription, sends the follow-up to RME `rencana_tindakan`.
@@ -38,7 +40,7 @@ Tatalaksana commit after `4db92cdb` (DECISIONS 2026-09-29 "Tatalaksana"):
 |---|---|---|
 | `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`) |
 | `typecheck` | 0 | clean |
-| `test` | 0 | 179 files passed, 1 skipped; 1423 passed, 17 skipped (was 1400) |
+| `test` | 0 | 179 files passed, 1 skipped; 1427 passed, 17 skipped (was 1423) |
 | `exec wxt build --mode development` | 0 | clean |
 | `run:check` | 0 | "Extension loads: Asisten Medis 2.1.0 (MV3), all referenced files present." |
 

@@ -34,6 +34,39 @@ export interface FollowUpView {
   routine: Array<{ name: string; text: string }>;
 }
 
+const STRENGTH = /(\d+(?:[.,]\d+)?)\s*(mg|mcg|µg|g|ml|iu|%)(?![a-z])/i;
+
+/** The strength a name carries, compact ("Amlodipin 10 mg" → { value: 10, unit: 'mg' }). */
+function strengthOf(name: string): { value: number; unit: string } | null {
+  const match = STRENGTH.exec(name);
+  return match ? { value: Number(match[1].replace(',', '.')), unit: match[2].toLowerCase() } : null;
+}
+
+/**
+ * Chief's dose notation (2026-09-29): frequency x strength per take, "1x10mg". A dose that
+ * already names its strength is only compacted ("2x500 mg" → "2x500mg"); "3x1" takes the
+ * strength from the name, times the amount per take ("3x2" of 500 mg → "3x1000mg"); anything
+ * else stays as written.
+ */
+export function formatDose(name: string, dosis: string): string {
+  const written = dosis.trim();
+  if (STRENGTH.test(written)) return written.replace(/(\d)\s+(?=(mg|mcg|µg|g|ml|iu|%)(?![a-z]))/gi, '$1');
+  const frequency = /^(\d+)\s*[x×]\s*(\d+)?$/i.exec(written);
+  const strength = strengthOf(name);
+  if (!frequency || !strength) return written;
+  const perTake = strength.value * Number(frequency[2] ?? 1);
+  return `${frequency[1]}x${Number(perTake.toFixed(3))}${strength.unit}`;
+}
+
+/** The name without its strength when the dose line already carries it (one telling per card). */
+export function nameBesideDose(name: string, doseLine: string): string {
+  const strength = strengthOf(name);
+  if (!strength) return name;
+  const compactDose = doseLine.toLowerCase().replace(/\s+/g, '');
+  if (!compactDose.includes(`${strength.value}${strength.unit}`)) return name;
+  return name.replace(STRENGTH, '').replace(/\s+/g, ' ').trim() || name;
+}
+
 /** Same drug when the first word matches ("Amlodipin 10 mg" and "Amlodipin 5mg"). */
 export const drugKey = (name: string): string => name.trim().split(/\s+/)[0]?.toLowerCase() ?? '';
 
@@ -50,7 +83,7 @@ export function buildChronicMedications(names: string[], visits: VisitRecord[]):
         (entry) => drugKey(entry.displayName) === key
       );
       return medication
-        ? [{ date: visit.timestamp, dose: `${medication.doseLabel} · ${medication.aturanPakai}`, diagnosis: visit.diagnosa?.nama?.trim() ?? '' }]
+        ? [{ date: visit.timestamp, dose: `${formatDose(name, medication.doseLabel)} · ${medication.aturanPakai}`, diagnosis: visit.diagnosa?.nama?.trim() ?? '' }]
         : [];
     });
     const counts = new Map<string, number>();
