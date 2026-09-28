@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { ClinicalTrajectory } from '@/components/clinical/ClinicalTrajectory';
 import { useRecurrentDiagnoses } from '@/components/clinical/diagnosis/useRecurrentDiagnoses';
@@ -10,7 +10,10 @@ import type {
   ObesityConfirmation,
 } from '@/lib/clinical/autosen-types';
 import { buildDiagnosisRequestContext } from '@/lib/diagnosis-engine/request-context';
-import type { VisitRecord } from '@/lib/iskandar-diagnosis-engine/visit-history-store';
+import {
+  saveScrapedVisits,
+  type VisitRecord,
+} from '@/lib/iskandar-diagnosis-engine/visit-history-store';
 import { sendMessage } from '@/utils/messaging';
 
 export interface ClinicalReasoningWorkbenchVitals {
@@ -63,6 +66,8 @@ export interface ClinicalReasoningWorkbenchProps {
   onOpenDifferential?: () => void;
 }
 
+const NO_VISITS: VisitRecord[] = [];
+
 function toInt(value: string): number {
   const parsed = Number.parseInt(value, 10);
   return Number.isFinite(parsed) ? parsed : 0;
@@ -107,10 +112,37 @@ export function ClinicalReasoningWorkbench({
     }),
     [sbp, dbp, hr, rr, temp, spo2, glucose]
   );
-  // The hook keeps one array identity per RM, so this memo (and the request below) changes
-  // only when the patient's history does.
+  // The scanned rows go into the visit store the recurrent-diagnosis read (here and on the
+  // diagnosis page) uses. Written once per patient and scan result, not on every render.
+  const scannedVisits =
+    prefetchedVisitHistory?.status === 'ready' ? prefetchedVisitHistory.visits : NO_VISITS;
+  const [persistedFor, setPersistedFor] = useState<{ rm: string; visits: VisitRecord[] } | null>(
+    null
+  );
+  useEffect(() => {
+    const rm = patient.rm;
+    if (scannedVisits.length === 0) {
+      setPersistedFor({ rm, visits: scannedVisits });
+      return;
+    }
+    let active = true;
+    saveScrapedVisits(scannedVisits)
+      // A failed write leaves the store as it was; the read below still answers.
+      .catch(() => 0)
+      .then(() => {
+        if (active) setPersistedFor({ rm, visits: scannedVisits });
+      });
+    return () => {
+      active = false;
+    };
+  }, [patient.rm, scannedVisits]);
+  const persisted = persistedFor?.rm === patient.rm && persistedFor.visits === scannedVisits;
+
+  // Read only after the write lands (an empty RM reads nothing and counts as loaded), so the
+  // prefetch carries the same history as the diagnosis page's request. The hook keeps one array
+  // identity per RM, so this memo (and the request below) changes only when the history does.
   const { candidates: recurrentCandidates, loaded: recurrentLoaded } = useRecurrentDiagnoses(
-    patient.rm
+    persisted ? patient.rm : ''
   );
   const recurrent = useMemo(
     () => recurrentCandidates.map((candidate) => ({ icd: candidate.icd, name: candidate.name })),
@@ -138,13 +170,13 @@ export function ClinicalReasoningWorkbench({
   );
   useEffect(() => {
     if (!requestContext.keluhan_utama || requestContext.keluhan_utama === '-' || !patient.rm) return;
-    // Only prefetch once the history is known, so the prefetch hashes like the page's request.
-    if (!recurrentLoaded) return;
+    // Only prefetch once the history is written and read, so the prefetch has the page's case key.
+    if (!persisted || !recurrentLoaded) return;
     const timer = setTimeout(() => {
       sendMessage('prefetchDiagnosis', requestContext).catch(() => undefined);
     }, 2000);
     return () => clearTimeout(timer);
-  }, [requestContext, patient.rm, recurrentLoaded]);
+  }, [requestContext, patient.rm, persisted, recurrentLoaded]);
 
   return (
     <ClinicalTrajectory

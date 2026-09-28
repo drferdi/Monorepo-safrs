@@ -123,6 +123,54 @@ MIRA repository: `src\.venv\Scripts\python.exe -m pytest assist/host/tests -q` �
 10. Minor: a host `failed.reason` is `str(OSError)` and may surface a local path in the header
     status dot's title.
 
+## Final review (whole branch) — fixes and what stays open
+
+Fixed in the commit `fix(med-assist): final review: persist scanned visits, uncapped cannot-miss,
+receipts around a reopened step, prefetch by case key` (TDD, each with a test):
+
+- **F1** The Trajectory stage (`ClinicalReasoningWorkbench.tsx`) now writes the scanned visit rows
+  with `saveScrapedVisits` (once per patient and scan result; a failed write still lets the read
+  run), reads the recurrent history only after the write lands, and sends `prefetchDiagnosis` only
+  after that read. Before this, nothing wrote the visit store and Part 2 was inert in production.
+- **F2** MIRA cannot-miss cards render outside the three-card cap, before "Lainnya (n)"; the
+  do-not-miss line filter compares against the visible cards only.
+- **F3** Reopening an earlier step keeps every finished later step as a receipt below it.
+- **F4** The prefetch is stored and found by case key (hash of `encounterToCaseState`, which applies
+  the request-or-encounter fallbacks); the pending reply carries `prefetch_key`, the ready record is
+  `{ key, at }`, and the page matches on that key. The `prefetchDiagnosis` reply's `hash` field now
+  carries the case key; its no-encounter early return in `background.ts` still sends the request
+  hash (unused by the panel).
+- **F9** The history-only message needs a successful engine reply (not the fetch-error path).
+
+For Chief to confirm:
+
+- **Patient data at rest**: scanned visits (RM, dates, complaints, diagnoses, therapy text,
+  clinician names) are now persisted in the extension's IndexedDB `sentra-visit-history`
+  (`source: 'scrape'`, the store built for it). No expiry or purge exists.
+- **Scan cap**: `main.tsx` keeps 5 rows, so the 12-month window sees at most five visits (protected
+  file; Chief's call).
+- **`currentEncounterId`**: not passed; the content scanner already drops today's rows
+  (`entrypoints/content.ts`, `pastCandidates`), so the current encounter never reaches the store.
+
+Deferred minors (final review), none blocking:
+
+- Header status dot is never re-checked mid-session: it stays green if MIRA dies until the header
+  remounts.
+- `getLastMiraStatus()` is `null` after a service-worker restart, so the notice reads "MIRA mati"
+  instead of "belum terpasang".
+- The host reply is cast `as HostReply` without validation.
+- Audit `session_id: rm-<RM>` is hashed with a 32-bit `simpleHash` (enumerable); other callers use
+  `session-<encounter.id>`.
+- Case keys can still differ when there is no anamnesa draft and the typed `symptomText` differs
+  from the encounter's `keluhan_utama` (the page prefers the encounter's, the Trajectory stage the
+  typed text; `main.tsx` is protected). The page then runs its own MIRA step.
+- The diagnosis page's own history read does not wait for the Trajectory stage's write; opening the
+  page before the write lands misses the prefetch once.
+- A scanned row found only by `href` has `encounter_id: ''`; the store and the recurrent grouping
+  dedupe by it, so such rows collapse to one.
+- `request-context.ts`'s module comment still says both paths "produce the same … hash"; the hash
+  is no longer the prefetch key (file outside this fix's set).
+
 ## Next action
 
 Chief runs the one-time host install, reloads the extension, and walks the live checks above; then

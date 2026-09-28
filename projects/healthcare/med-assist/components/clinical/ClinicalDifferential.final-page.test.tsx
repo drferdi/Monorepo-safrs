@@ -6,12 +6,9 @@ import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ClinicalDifferential } from './ClinicalDifferential';
+import type { RecurrentDiagnosesState } from './diagnosis/useRecurrentDiagnoses';
 
 import { MIRA_PREFETCH_READY_KEY } from '@/lib/diagnosis-engine/prefetch-store';
-import {
-  buildDiagnosisRequestContext,
-  hashDiagnosisContext,
-} from '@/lib/diagnosis-engine/request-context';
 import { findForbiddenPhysicianTrajectoryTerms } from '@/lib/iskandar-diagnosis-engine/presentation-safety';
 import { clearMatcherCache } from '@/lib/iskandar-diagnosis-engine/symptom-matcher';
 
@@ -38,12 +35,15 @@ vi.mock('@/lib/api/bridge-client', () => ({
   evaluateCanonicalDifferential: mockEvaluateCanonicalDifferential,
 }));
 
-// The page waits for the visit-store read before its request; these tests have no visit
-// record, so the store has answered "no history". One object, so the page's memos stay stable.
-vi.mock('./diagnosis/useRecurrentDiagnoses', () => {
-  const noHistory = { candidates: [], loaded: true };
-  return { useRecurrentDiagnoses: () => noHistory };
+// The page waits for the visit-store read before its request; unless a test sets a history,
+// the store has answered "no history". One object per test, so the page's memos stay stable.
+const { recurrentHistory } = vi.hoisted(() => {
+  const noHistory: RecurrentDiagnosesState = { candidates: [], loaded: true };
+  return { recurrentHistory: { noHistory, state: noHistory } };
 });
+vi.mock('./diagnosis/useRecurrentDiagnoses', () => ({
+  useRecurrentDiagnoses: () => recurrentHistory.state,
+}));
 
 vi.mock('@/components/ui/AssistShell', () => ({
   AssistShell: ({ children }: { children: React.ReactNode }) => (
@@ -269,6 +269,7 @@ beforeEach(() => {
 afterEach(() => {
   vi.unstubAllGlobals();
   vi.clearAllMocks();
+  recurrentHistory.state = recurrentHistory.noHistory;
 });
 
 describe('ClinicalDifferential final diagnosis support page', () => {
@@ -951,6 +952,55 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     ).toHaveLength(0);
   });
 
+  describe('history-only message', () => {
+    const MESSAGE = 'Data hari ini belum cukup untuk engine; riwayat menunjukkan pola berikut.';
+
+    function renderWithHistory(reply: () => Promise<unknown>) {
+      recurrentHistory.state = {
+        candidates: [
+          { icd: 'I10', name: 'Hipertensi esensial', count: 3, visitsConsidered: 4, lastSeen: '2026-08-12', label: 'Kronis' },
+        ],
+        loaded: true,
+      };
+      const base = mockSendMessage.getMockImplementation();
+      mockSendMessage.mockImplementation(async (type: string, payload?: Record<string, unknown>) =>
+        type === 'getSuggestions' ? reply() : base?.(type, payload)
+      );
+      render(
+        <ClinicalDifferential
+          keluhanUtama="Nyeri kepala"
+          keluhanTambahan=""
+          patientAge={54}
+          patientGender="L"
+          patientRM="RM-2026-001"
+          allergies={[]}
+          confirmedPregnancyStatus={false}
+          vitals={{ sbp: 168, dbp: 102, hr: 88, rr: 18, temp: 36.7, glucose: 0 }}
+          canonicalOutput={null}
+          hasVisitHistory
+          onBack={() => undefined}
+          onDiagnosisChange={() => undefined}
+          onMedicationsChange={() => undefined}
+        />
+      );
+    }
+
+    it('shows the message when the engine answered with no diagnosis and the record has history', async () => {
+      renderWithHistory(async () => ({ success: true, data: { diagnosis_suggestions: [], alerts: [] } }));
+      await waitFor(() => expect(card(/^I10 - /)).toBeTruthy());
+      expect(screen.getByText(MESSAGE)).toBeInTheDocument();
+    });
+
+    it.each([
+      ['an unsuccessful reply', async () => ({ success: false, error: { code: 'X', message: 'x' } })],
+      ['a thrown request', async () => Promise.reject(new Error('worker gone'))],
+    ])('does not show the message after %s', async (_label, reply) => {
+      renderWithHistory(reply);
+      await waitFor(() => expect(card(/^I10 - /)).toBeTruthy());
+      expect(screen.queryByText(MESSAGE)).toBeNull();
+    });
+  });
+
   describe('MIRA prefetch', () => {
     type StorageListener = (changes: Record<string, { newValue?: unknown }>, area: string) => void;
     const listeners: StorageListener[] = [];
@@ -964,8 +1014,8 @@ describe('ClinicalDifferential final diagnosis support page', () => {
       patientGender: 'L' as const,
       vitals: { sbp: 118, dbp: 76, hr: 96, rr: 18, temp: 37.9, glucose: 0 },
     };
-    const pageHash = () =>
-      hashDiagnosisContext(buildDiagnosisRequestContext({ ...PAGE, recurrent: [] }));
+    // The background's case key for the running prefetch, returned with the pending reply.
+    const PREFETCH_KEY = '1a2b3c4d';
     const getSuggestionsCalls = () =>
       mockSendMessage.mock.calls.filter(([type]) => type === 'getSuggestions').length;
     const fireStorageChange = (value: unknown) =>
@@ -1008,6 +1058,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
                 alerts: [],
                 engine_notice: 'Menunggu MIRA…',
                 engine_pending: true,
+                prefetch_key: PREFETCH_KEY,
               },
             }
           : {
@@ -1039,7 +1090,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
       );
     }
 
-    it('re-requests once when the prefetch for the same hash becomes ready', async () => {
+    it('re-requests once when the prefetch for the returned key becomes ready', async () => {
       renderPage();
       await waitFor(() => expect(screen.getByText('Menunggu MIRA…')).toBeTruthy());
       await waitFor(() => expect(listeners).toHaveLength(1));
@@ -1051,10 +1102,10 @@ describe('ClinicalDifferential final diagnosis support page', () => {
       // The candidate list lives on the Diagnosis step; reopen it to watch the refresh.
       fireEvent.click(screen.getByRole('button', { name: 'ubah Diagnosis' }));
 
-      fireStorageChange({ hash: 'ffffffff', at: 't' });
+      fireStorageChange({ key: 'ffffffff', at: 't' });
       expect(getSuggestionsCalls()).toBe(1);
 
-      fireStorageChange({ hash: pageHash(), at: 't' });
+      fireStorageChange({ key: PREFETCH_KEY, at: 't' });
       await waitFor(() =>
         expect(within(card(/^K65\.0 - /)).getByText('MIRA · jangan terlewat')).toBeTruthy()
       );
@@ -1063,7 +1114,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
       expect(screen.queryByText('Menunggu MIRA…')).toBeNull();
       expect(screen.getByTestId('diagnosis-workspace')).toHaveAttribute('data-diagnosis-selected-count', '1');
 
-      fireStorageChange({ hash: pageHash(), at: 't2' });
+      fireStorageChange({ key: PREFETCH_KEY, at: 't2' });
       expect(getSuggestionsCalls()).toBe(2);
     });
 
@@ -1073,7 +1124,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
 
     it('re-requests when the prefetch finished before the page started listening', async () => {
       onFirstReply = () => {
-        stored[MIRA_PREFETCH_READY_KEY] = { hash: pageHash(), at: new Date().toISOString() };
+        stored[MIRA_PREFETCH_READY_KEY] = { key: PREFETCH_KEY, at: new Date().toISOString() };
       };
       renderPage();
       await waitFor(() =>
@@ -1084,7 +1135,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     });
 
     it('ignores a ready record older than the request and keeps listening', async () => {
-      stored[MIRA_PREFETCH_READY_KEY] = { hash: pageHash(), at: '2020-01-01T00:00:00.000Z' };
+      stored[MIRA_PREFETCH_READY_KEY] = { key: PREFETCH_KEY, at: '2020-01-01T00:00:00.000Z' };
       renderPage();
       await waitFor(() => expect(screen.getByText('Menunggu MIRA…')).toBeTruthy());
       await waitFor(() => expect(listeners).toHaveLength(1));

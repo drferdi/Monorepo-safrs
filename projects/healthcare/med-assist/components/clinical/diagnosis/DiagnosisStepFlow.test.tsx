@@ -192,6 +192,26 @@ describe('DiagnosisStepFlow', () => {
     expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
   });
 
+  it('keeps every later finished step as a receipt below a reopened earlier step', () => {
+    render(<DiagnosisStepFlow {...makeProps()} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Lanjut' }));
+    expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'ubah Temuan' }));
+    expect(screen.getByRole('heading', { name: 'Temuan' })).toBeInTheDocument();
+    expect(screen.getByTestId('diagnosis-clinical-signals')).toHaveTextContent('Sesak');
+    expect(screen.queryByTestId('dx-flow-receipt-finding')).toBeNull();
+    const diagnosisReceipt = screen.getByTestId('dx-flow-receipt-diagnosis');
+    const therapyReceipt = screen.getByTestId('dx-flow-receipt-therapy');
+    expect(diagnosisReceipt).toHaveTextContent('✓ Diagnosis · J18.9 - Community Acquired Pneumonia');
+    expect(therapyReceipt).toHaveTextContent('✓ Terapi · Paracetamol 500 mg');
+    // In step order, below the reopened step.
+    const temuan = screen.getByRole('heading', { name: 'Temuan' });
+    expect(temuan.compareDocumentPosition(diagnosisReceipt) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(diagnosisReceipt.compareDocumentPosition(therapyReceipt) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(screen.queryByTestId('dx-flow-ghost-therapy')).toBeNull();
+    expect(screen.getByTestId('dx-flow-ghost-rme')).toBeInTheDocument();
+  });
+
   it('shows Temuan as a receipt and only the Diagnosis step, with its skeleton, while loading', () => {
     const vm = makeViewModel({ therapy: { ...makeViewModel().therapy, selectedDiagnosisCount: 0, selectedMedicationCount: 0 } });
     render(<DiagnosisStepFlow {...makeProps({ phase: 'loading', viewModel: vm })} />);

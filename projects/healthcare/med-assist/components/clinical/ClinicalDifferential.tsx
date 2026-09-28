@@ -21,10 +21,7 @@ import {
   MIRA_PREFETCH_READY_KEY,
   PREFETCH_FALLBACK_MS,
 } from '@/lib/diagnosis-engine/prefetch-store';
-import {
-  buildDiagnosisRequestContext,
-  hashDiagnosisContext,
-} from '@/lib/diagnosis-engine/request-context';
+import { buildDiagnosisRequestContext } from '@/lib/diagnosis-engine/request-context';
 import { auditLogger } from '@/lib/iskandar-diagnosis-engine/audit-logger';
 import { classifyChronicDisease } from '@/lib/iskandar-diagnosis-engine/chronic-disease-classifier';
 import {
@@ -83,10 +80,10 @@ type TransferUiState = 'idle' | 'running' | 'partial' | 'success' | 'failed';
 const MAX_DIAGNOSIS_SELECTION = 2;
 const EMPTY_CHRONIC_THERAPIES: string[] = [];
 
-/** The request hash in the background's `{ hash, at }` prefetch-ready record, if any. */
-function readyPrefetchHash(value: unknown): string | undefined {
-  return value && typeof value === 'object' && 'hash' in value && typeof value.hash === 'string'
-    ? value.hash
+/** The case key in the background's `{ key, at }` prefetch-ready record, if any. */
+function readyPrefetchKey(value: unknown): string | undefined {
+  return value && typeof value === 'object' && 'key' in value && typeof value.key === 'string'
+    ? value.key
     : undefined;
 }
 
@@ -612,6 +609,9 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
   const [phase, setPhase] = useState<LoadState>('loading');
   const [errorMsg, setErrorMsg] = useState('');
   const [suggestions, setSuggestions] = useState<DiagnosisSuggestion[]>([]);
+  // The last getSuggestions request failed (no reply, or an unsuccessful one), as opposed to an
+  // engine that answered with no diagnosis; both leave the list empty.
+  const [suggestionsFailed, setSuggestionsFailed] = useState(false);
   const [selectedDiagnoses, setSelectedDiagnoses] = useState<SelectedDiagnosis[]>([]);
   const [triageResult, setTriageResult] = useState<TriageDecisionResult | null>(null);
   const [manualIcd, setManualIcd] = useState('');
@@ -697,7 +697,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     () => new Map(recurrent.map((candidate) => [icdRoot(candidate.icd), candidate])),
     [recurrent]
   );
-  // Same mapping and order as the Trajectory stage's prefetch, so both requests hash alike.
+  // Same mapping and order as the Trajectory stage's prefetch, so both requests give one case key.
   const recurrentForRequest = useMemo(
     () => recurrent.map((candidate) => ({ icd: candidate.icd, name: candidate.name })),
     [recurrent]
@@ -728,8 +728,8 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
   }, [patientRM]);
 
   useEffect(() => {
-    // Wait for the visit store so the one request carries the history (and hashes like the
-    // Trajectory stage's prefetch) instead of a history-less request that starts its own MIRA step.
+    // Wait for the visit store so the one request carries the history (and has the Trajectory
+    // stage's prefetch case key) instead of a history-less request that starts its own MIRA step.
     if (patientRM.trim() && !recurrentLoaded) return;
     let cancelled = false;
     let reRequested = false;
@@ -762,10 +762,10 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       setSelectedMedicationKeys([]);
     };
 
-    // The background answered before MIRA's prefetch of this same request finished: ask once
-    // more when it is ready, or after PREFETCH_FALLBACK_MS if no ready record arrives. The
-    // re-request keeps the doctor's selection (no reset).
-    const reRequestWhenPrefetchReady = (hash: string, sentAt: number) => {
+    // The background answered before MIRA's prefetch of this case finished: ask once more when
+    // the ready record for its case key (`prefetch_key`) arrives, or after PREFETCH_FALLBACK_MS if
+    // none does. The re-request keeps the doctor's selection (no reset).
+    const reRequestWhenPrefetchReady = (prefetchKey: string, sentAt: number) => {
       if (reRequested || stopListening) return;
       const storage = browser.storage;
       const reRequest = () => {
@@ -776,7 +776,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       };
       const onChanged = (changes: Record<string, { newValue?: unknown }>, area: string) => {
         if (area !== 'local') return;
-        if (readyPrefetchHash(changes[MIRA_PREFETCH_READY_KEY]?.newValue) === hash) reRequest();
+        if (readyPrefetchKey(changes[MIRA_PREFETCH_READY_KEY]?.newValue) === prefetchKey) reRequest();
       };
       storage.onChanged.addListener(onChanged);
       const fallback = setTimeout(reRequest, PREFETCH_FALLBACK_MS);
@@ -791,7 +791,9 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         .get(MIRA_PREFETCH_READY_KEY)
         .then((raw) => {
           const record = raw[MIRA_PREFETCH_READY_KEY];
-          if (readyPrefetchHash(record) === hash && readyPrefetchTime(record) >= sentAt) reRequest();
+          if (readyPrefetchKey(record) === prefetchKey && readyPrefetchTime(record) >= sentAt) {
+            reRequest();
+          }
         })
         .catch(() => undefined);
     };
@@ -816,6 +818,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         if (!response.success || !response.data) {
           setErrorMsg(resolveDifferentialListErrorMessage(0));
           setSuggestions([]);
+          setSuggestionsFailed(true);
           setPhase('ready');
           return;
         }
@@ -827,15 +830,18 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         );
         // An empty list falls back in normalizedSuggestions, which knows about history.
         setSuggestions(incomingSuggestions);
+        setSuggestionsFailed(false);
         setProcessingTimeMs(response.data.meta?.processing_time_ms ?? null);
         setPhase('ready');
         if (response.data.engine_pending) {
-          reRequestWhenPrefetchReady(hashDiagnosisContext(request), sentAt);
+          // A reply without a key matches no ready record; the fallback timer still asks again.
+          reRequestWhenPrefetchReady(response.data.prefetch_key ?? '', sentAt);
         }
       } catch {
         if (cancelled) return;
         setErrorMsg(resolveDifferentialListErrorMessage(0));
         setSuggestions([]);
+        setSuggestionsFailed(true);
         setPhase('ready');
       }
     };
@@ -865,16 +871,17 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     patientRM,
   ]);
 
+  // A history candidate with a usable code always yields a row (its own, or the confirmed
+  // chronic row sharing its root), so the page is never empty without the fallback.
+  const hasRecurrent = useMemo(
+    () => recurrent.some((candidate) => isLikelyIcdCode(normalizeIcdCode(candidate.icd))),
+    [recurrent]
+  );
   const normalizedSuggestions = useMemo<{
     list: DiagnosisSuggestion[];
     engineIcds: Set<string>;
     historyOnlyCount: number;
   }>(() => {
-    // A history candidate with a usable code always yields a row (its own, or the confirmed
-    // chronic row sharing its root), so the page is never empty without the fallback.
-    const hasRecurrent = recurrent.some((candidate) =>
-      isLikelyIcdCode(normalizeIcdCode(candidate.icd))
-    );
     const baseSuggestions = resolveBaseSuggestions(
       Array.isArray(suggestions) ? suggestions : [],
       hasRecurrent,
@@ -964,7 +971,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       // one) off the page.
       historyOnlyCount: recurrentSeedByRoot.size,
     };
-  }, [suggestions, keluhanUtama, vitals, confirmedChronicDiagnoses, recurrent]);
+  }, [suggestions, keluhanUtama, vitals, confirmedChronicDiagnoses, recurrent, hasRecurrent]);
 
   const rankedDiagnoses: RankedDiagnosis[] = useMemo(
     () =>
@@ -2128,7 +2135,11 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         viewModel={diagnosisViewModel}
         phase={phase}
         triage={triageView}
-        recurrentOnlyMessage={suggestions.length === 0 && recurrent.length > 0 ? 'Data hari ini belum cukup untuk engine; riwayat menunjukkan pola berikut.' : undefined}
+        recurrentOnlyMessage={
+          phase === 'ready' && !suggestionsFailed && suggestions.length === 0 && hasRecurrent
+            ? 'Data hari ini belum cukup untuk engine; riwayat menunjukkan pola berikut.'
+            : undefined
+        }
         errorMessage={errorMsg}
         complaintSummary={keluhanUtama}
         secondaryComplaint={keluhanTambahan}

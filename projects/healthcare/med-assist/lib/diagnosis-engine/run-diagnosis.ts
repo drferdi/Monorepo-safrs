@@ -10,10 +10,11 @@
  *   (likely, alternatives, then cannot-miss, each tagged "MIRA"); every other field, including
  *   the alerts, stays the legacy engine's. When MIRA fails, times out or returns no diagnosis,
  *   the legacy response is returned with `engine_notice` set to a reason-specific notice (see
- *   `mira-notice.ts`). When the Trajectory stage already prefetched this exact request
- *   (`mira-prefetch.ts`, by `hashDiagnosisContext`), its finished result is used instead of a new
- *   step; while that prefetch is still running, the legacy response is returned at once with
- *   `engine_pending: true` and the panel asks again when the prefetch is ready.
+ *   `mira-notice.ts`). When the Trajectory stage already prefetched this case (`mira-prefetch.ts`,
+ *   by the case key: the hash of `encounterToCaseState`), its finished result is used instead of a
+ *   new step; while that prefetch is still running, the legacy response is returned at once with
+ *   `engine_pending: true` and `prefetch_key` (the case key), and the panel asks again when the
+ *   ready record for that key arrives.
  *
  * The safety layer (red flags, emergency gates, triage/referral) runs outside this step, and a
  * candidate never waits longer than `candidateTimeoutMs`.
@@ -28,7 +29,7 @@ import { MIRA_UNAVAILABLE_NOTICE, miraNoticeFor } from './mira-notice';
 import { getLastMiraStatus, type MiraStatus } from './mira-supervisor';
 import { CANDIDATE_TIMEOUT_MS, peekPrefetch } from './prefetch-store';
 import { getActiveDiagnosisEngine, getLegacyEngine } from './registry';
-import { hashCanonical, hashDiagnosisContext } from './request-context';
+import { hashCanonical } from './request-context';
 import type { CaseState, ConfidenceTier, DiagnosisEngine, EngineResult } from './types';
 
 import { logShadowComparison } from '@/lib/iskandar-diagnosis-engine/audit-logger';
@@ -210,16 +211,20 @@ export async function runDiagnosisSuggestions(
 
   const candidate = options.engines?.active ?? getActiveDiagnosisEngine('mira');
   const caseState = encounterToCaseState(encounter, context);
-  const entry = mode === 'mira' ? peekPrefetch(hashDiagnosisContext(context)) : undefined;
-  // An entry made for another patient with the same request is treated as absent.
-  const prefetched = entry && entry.caseKey === hashCanonical(caseState) ? entry : undefined;
+  const caseKey = hashCanonical(caseState);
+  const prefetched = mode === 'mira' ? peekPrefetch(caseKey) : undefined;
 
   if (prefetched?.status === 'pending') {
     const response = await physicianResponse;
     if (!response.success || !response.data) return response;
     return {
       ...response,
-      data: { ...response.data, engine_notice: 'Menunggu MIRA…', engine_pending: true },
+      data: {
+        ...response.data,
+        engine_notice: 'Menunggu MIRA…',
+        engine_pending: true,
+        prefetch_key: caseKey,
+      },
     };
   }
 

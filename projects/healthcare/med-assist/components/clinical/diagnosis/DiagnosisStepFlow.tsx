@@ -69,6 +69,10 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
   }, [medicationChosen]);
 
   const activeIndex = steps.find((s) => s.key === active)?.index ?? 2;
+  // Every finished step other than the active one is a receipt, in step order around it.
+  const receipt = (s: (typeof steps)[number]) => (
+    <StepReceipt key={s.key} step={s} summary={summaries[s.key]} onReopen={() => setReopened(s.key)} />
+  );
   return (
     <div
       className="dx-flow diagnosis-content"
@@ -79,16 +83,7 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
       data-diagnosis-transfer-state={viewModel.transfer.state}
     >
       <SafetyStrip safetyItems={safetyItems} triage={triage ?? null} />
-      {steps
-        .filter((s) => s.done && s.key !== active && s.index < activeIndex)
-        .map((s) => (
-          <StepReceipt
-            key={s.key}
-            step={s}
-            summary={summaries[s.key]}
-            onReopen={() => setReopened(s.key)}
-          />
-        ))}
+      {steps.filter((s) => s.done && s.index < activeIndex).map(receipt)}
       {active === 'finding' ? (
         <FindingStep
           complaintSummary={props.complaintSummary}
@@ -117,6 +112,7 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
           selesai
         </button>
       ) : null}
+      {steps.filter((s) => s.done && s.index > activeIndex).map(receipt)}
       <SideLinks viewModel={viewModel} />
       {steps
         .filter((s) => s.index > activeIndex && !s.done)

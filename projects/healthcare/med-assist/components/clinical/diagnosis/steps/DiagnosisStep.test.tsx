@@ -61,6 +61,29 @@ describe('DiagnosisStep', () => {
     expect(screen.getAllByTestId('dx-flow-card')).toHaveLength(4);
   });
 
+  it('keeps a MIRA cannot-miss card outside the three-card cap, before "Lainnya"', () => {
+    const mira = (code: string, name: string, tag: string) =>
+      candidate({ id: `m-${code}`, code, name, displayLabel: `${code} - ${name} · ${tag}` });
+    const cards = [
+      candidate({ id: '0-I10', rank: 1, code: 'I10', name: 'Hipertensi', displayLabel: 'I10 - Hipertensi', history: { label: 'Kronis', count: 3, visitsConsidered: 5, lastSeen: '2026-08-12', engineAgrees: false, engineSource: null } }),
+      mira('G44.2', 'Sakit kepala tegang', 'MIRA'),
+      mira('G43.9', 'Migren', 'MIRA'),
+      mira('R51', 'Nyeri kepala', 'MIRA'),
+      mira('J01.9', 'Sinusitis akut', 'MIRA'),
+      mira('I16', 'Krisis hipertensi', 'MIRA · jangan terlewat'),
+    ];
+    render(<DiagnosisStep viewModel={vm(cards, { evidence: { supports: [], against: [], missing: [], review: [], redFlags: [], doNotMiss: ['Krisis hipertensi (I16)', 'Sinusitis komplikasi (J01.9)'] } })} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
+    const titles = () => screen.getAllByTestId('dx-flow-card').map((el) => el.querySelector('.dx-flow-card__title')?.textContent);
+    expect(titles()).toEqual(['I10 - Hipertensi', 'G44.2 - Sakit kepala tegang', 'G43.9 - Migren', 'I16 - Krisis hipertensi']);
+    expect(within(screen.getAllByTestId('dx-flow-card')[3]).getByText('MIRA · jangan terlewat')).toBeInTheDocument();
+    // The cannot-miss card is shown, so its do-not-miss line is not repeated; the hidden card's is.
+    expect(screen.queryByText('Jangan terlewat: Krisis hipertensi (I16)')).toBeNull();
+    expect(screen.getByText('Jangan terlewat: Sinusitis komplikasi (J01.9)')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Lainnya (2)' }));
+    expect(titles()).toEqual(['I10 - Hipertensi', 'G44.2 - Sakit kepala tegang', 'G43.9 - Migren', 'I16 - Krisis hipertensi', 'R51 - Nyeri kepala', 'J01.9 - Sinusitis akut']);
+    expect(screen.queryByText('Jangan terlewat: Sinusitis komplikasi (J01.9)')).toBeNull();
+  });
+
   it('selects on tap, marks aria-pressed, and opens the reasons only from "alasan"', () => {
     const h = handlers();
     render(<DiagnosisStep viewModel={vm([candidate({ isSelected: true }), candidate({ id: '3-G44.2', rank: 3, code: 'G44.2', name: 'x', displayLabel: 'G44.2 - x' })])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...h} />);
@@ -165,7 +188,8 @@ describe('DiagnosisStep', () => {
 
   it('shows the full engine tag, including the cannot-miss word, in the card chip', () => {
     render(<DiagnosisStep viewModel={vm([candidate({ id: '3-K65.0', rank: 3, code: 'K65.0', name: 'Acute peritonitis', displayLabel: 'K65.0 - Acute peritonitis · MIRA · jangan terlewat' }), candidate({ id: '1-K35.8', rank: 1, code: 'K35.8', name: 'Acute appendicitis', displayLabel: 'K35.8 - Acute appendicitis · MIRA' })])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
-    const [cannotMiss, mira] = screen.getAllByTestId('dx-flow-card');
+    // Cannot-miss cards render after the capped cards, so the MIRA card comes first.
+    const [mira, cannotMiss] = screen.getAllByTestId('dx-flow-card');
     expect(within(cannotMiss).getByText('K65.0 - Acute peritonitis')).toHaveClass('dx-flow-card__title');
     expect(within(cannotMiss).getByText('MIRA · jangan terlewat')).toHaveClass('dx-flow-chip');
     expect(within(mira).getByText('MIRA')).toHaveClass('dx-flow-chip');

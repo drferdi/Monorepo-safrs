@@ -45,10 +45,22 @@ function tallyLine(card: DiagnosisCandidateView): string {
 }
 
 const ENGINE_TAG = /\s·\s(MIRA(?: · jangan terlewat)?)$/;
+// `MIRA_CANNOT_MISS_TAG` in lib/diagnosis-engine/run-diagnosis.ts; not imported, so the side
+// panel does not pull the background's engine modules in.
+const CANNOT_MISS_TAG = 'MIRA · jangan terlewat';
+
+function engineTagOf(card: DiagnosisCandidateView): string | null {
+  return formatClinicalText(card.displayLabel).match(ENGINE_TAG)?.[1] ?? null;
+}
 
 function chipFor(card: DiagnosisCandidateView): string | null {
   if (card.history) return card.history.label;
-  return formatClinicalText(card.displayLabel).match(ENGINE_TAG)?.[1] ?? null;
+  return engineTagOf(card);
+}
+
+/** A card MIRA marks as cannot-miss, including a history card merged with that engine row. */
+function isCannotMiss(card: DiagnosisCandidateView): boolean {
+  return engineTagOf(card) === CANNOT_MISS_TAG;
 }
 
 function sortHistoryFirst(candidates: DiagnosisCandidateView[]): DiagnosisCandidateView[] {
@@ -165,9 +177,13 @@ export function DiagnosisStep({
   const [showAll, setShowAll] = useState(false);
 
   const sortedCards = sortHistoryFirst(viewModel.candidates.filter((candidate) => candidate.code !== 'R69'));
-  const hiddenCount = Math.max(sortedCards.length - MAX_CARDS, 0);
-  const visibleCards = showAll ? sortedCards : sortedCards.slice(0, MAX_CARDS);
-  const cardCodes = new Set(sortedCards.map((candidate) => candidate.code.toUpperCase()));
+  // Cannot-miss cards are never capped and never hidden behind "Lainnya".
+  const cannotMissCards = sortedCards.filter(isCannotMiss);
+  const otherCards = sortedCards.filter((card) => !isCannotMiss(card));
+  const cappedCards = otherCards.slice(0, MAX_CARDS);
+  const moreCards = otherCards.slice(MAX_CARDS);
+  const visibleCards = [...cappedCards, ...cannotMissCards, ...(showAll ? moreCards : [])];
+  const cardCodes = new Set(visibleCards.map((candidate) => candidate.code.toUpperCase()));
   const doNotMissItems = visibleDoNotMissItems(viewModel.evidence.doNotMiss, cardCodes);
   const visibleNotice = getVisibleErrorMessage(errorMessage);
 
@@ -225,9 +241,9 @@ export function DiagnosisStep({
             ))}
           </div>
 
-          {!showAll && hiddenCount > 0 ? (
+          {!showAll && moreCards.length > 0 ? (
             <button type="button" className="dx-flow-link" onClick={() => setShowAll(true)}>
-              {`Lainnya (${hiddenCount})`}
+              {`Lainnya (${moreCards.length})`}
             </button>
           ) : null}
 

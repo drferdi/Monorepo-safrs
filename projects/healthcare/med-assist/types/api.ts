@@ -235,6 +235,8 @@ export interface CDSSResponse {
   engine_notice?: string;
   /** True while a MIRA prefetch for this request is still running; the panel asks again once it is ready */
   engine_pending?: boolean;
+  /** With `engine_pending`: the case key of the running prefetch, matched against its ready record */
+  prefetch_key?: string;
 }
 
 export interface PharmacotherapyExplainability {
