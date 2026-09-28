@@ -381,10 +381,9 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     expect(primaryCard).toHaveAttribute('role', 'button');
     expect(primaryCard).toHaveAttribute('aria-pressed', 'false');
 
-    const triageSection = await within(workspace).findByTestId('dx-flow-triage');
-    expect(triageSection.textContent || '').toMatch(
-      /darurat|segera|rujukan|layanan primer|belum cukup/i
-    );
+    // The header's TRIAGE tab carries the zone; the diagnosis page repeats no triage text.
+    expect(within(workspace).queryByTestId('dx-flow-triage')).toBeNull();
+    expect(within(workspace).queryByLabelText('Keselamatan')).toBeNull();
 
     const advanced = within(cardOf(primaryCard)).getByRole('button', { name: 'alasan' });
     expect(advanced).toBeTruthy();

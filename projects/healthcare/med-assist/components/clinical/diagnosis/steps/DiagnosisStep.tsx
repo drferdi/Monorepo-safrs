@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
 
 import {
@@ -10,8 +10,23 @@ import {
 import type { DiagnosisPageProps } from '../diagnosisPageProps';
 import type { DiagnosisCandidateView, DiagnosisPageViewModel } from '../diagnosisViewModel';
 
+/** Cards on the page: the primary plus the differentials; the rest waits behind "Lainnya". */
 const MAX_CARDS = 3;
 const ICD_IN_TEXT = /\(([A-Z]\d{2}(?:\.\d+)?)\)/i;
+/** `windowMonths` default in lib/clinical/recurrent-diagnosis.ts; shown so the rule is visible. */
+const HISTORY_WINDOW_MONTHS = 12;
+
+// Motion after lab.xevrion.dev: cards arrive one after another ("Reorder list"), sink slightly
+// under the finger ("Keycap hint"), and the reasons unfold under their card ("Accordion").
+const EASE_OUT = [0.23, 1, 0.32, 1] as const;
+const cardEnter = {
+  hidden: { opacity: 0, y: 10 },
+  shown: (index: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.28, ease: EASE_OUT, delay: index * 0.06 },
+  }),
+};
 
 type Props = Pick<
   DiagnosisPageProps,
@@ -36,7 +51,7 @@ export function diagnosisSummary(viewModel: DiagnosisPageViewModel): string {
 
 function historyLine(card: DiagnosisCandidateView): string | null {
   if (!card.history) return null;
-  const base = `${card.history.count} dari ${card.history.visitsConsidered} kunjungan · terakhir ${formatShortDate(card.history.lastSeen)}`;
+  const base = `${card.history.count}× dalam ${HISTORY_WINDOW_MONTHS} bulan · terakhir ${formatShortDate(card.history.lastSeen)}`;
   if (!card.history.engineAgrees) return base;
   return `${base} · ${card.history.engineSource === 'mira' ? 'MIRA setuju' : 'engine setuju'}`;
 }
@@ -94,7 +109,15 @@ function List({
   );
 }
 
-function Card({ card, onToggle }: { card: DiagnosisCandidateView; onToggle: (id: string) => void }) {
+function Card({
+  card,
+  index,
+  onToggle,
+}: {
+  card: DiagnosisCandidateView;
+  index: number;
+  onToggle: (id: string) => void;
+}) {
   const [open, setOpen] = useState(false);
   const title = formatClinicalText(card.displayLabel).replace(
     /\s·\s(MIRA(?: · jangan terlewat)?|Kronis|Berulang)$/,
@@ -104,7 +127,16 @@ function Card({ card, onToggle }: { card: DiagnosisCandidateView; onToggle: (id:
   // The select control and the "alasan" button are siblings: a role="button" element's
   // children are presentational, so a nested button would be unreachable for assistive tech.
   return (
-    <div className="neu-select diagnosis-candidate-row">
+    <motion.div
+      layout
+      layoutId={`dx-card-${card.id}`}
+      className="neu-select diagnosis-candidate-row"
+      custom={index}
+      variants={cardEnter}
+      initial="hidden"
+      animate="shown"
+      whileTap={card.isSelectionBlocked ? undefined : { scale: 0.985 }}
+    >
       <div
         className="flex flex-col gap-1"
         data-testid="dx-flow-card"
@@ -140,20 +172,26 @@ function Card({ card, onToggle }: { card: DiagnosisCandidateView; onToggle: (id:
           alasan
         </button>
       </div>
-      {open ? (
-        <motion.div
-          className="diagnosis-evidence-grid"
-          initial={{ opacity: 0, y: -4 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.2, ease: 'easeOut' }}
-        >
-          <List title="Mendukung" items={card.supports} />
-          <List title="Yang tidak mendukung" items={card.against} />
-          <List title="Data kurang" items={card.missing} />
-          <List title="Catatan" items={card.review} />
-        </motion.div>
-      ) : null}
-    </div>
+      <AnimatePresence initial={false}>
+        {open ? (
+          <motion.div
+            key="reasons"
+            className="overflow-hidden"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.24, ease: EASE_OUT }}
+          >
+            <div className="diagnosis-evidence-grid">
+              <List title="Mendukung" items={card.supports} />
+              <List title="Yang tidak mendukung" items={card.against} />
+              <List title="Data kurang" items={card.missing} />
+              <List title="Catatan" items={card.review} />
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </motion.div>
   );
 }
 
@@ -165,6 +203,23 @@ function visibleDoNotMissItems(doNotMiss: string[], cardCodes: Set<string>): str
       const match = item.match(ICD_IN_TEXT);
       return !match || !cardCodes.has(match[1].toUpperCase());
     });
+}
+
+/**
+ * The primary is the chosen diagnosis; before the doctor agrees it is the strongest proposal
+ * (the patient's own recurrent diagnosis first, else the engine's top card) and is labelled as a
+ * proposal. Everything else is the differential list.
+ */
+function splitPrimary(cards: DiagnosisCandidateView[]): {
+  primary: DiagnosisCandidateView | null;
+  rest: DiagnosisCandidateView[];
+} {
+  // An engine cannot-miss card is a warning, not a proposal: it is never promoted on its own.
+  const primary =
+    cards.find((card) => card.isSelected) ??
+    cards.find((card) => card.history || !hasCannotMissTag(card)) ??
+    null;
+  return { primary, rest: cards.filter((card) => card !== primary) };
 }
 
 export function DiagnosisStep({
@@ -185,16 +240,22 @@ export function DiagnosisStep({
   const [showAll, setShowAll] = useState(false);
 
   const sortedCards = sortHistoryFirst(viewModel.candidates.filter((candidate) => candidate.code !== 'R69'));
-  // Cannot-miss cards are never capped and never hidden behind "Lainnya". A history card keeps
-  // its place in the history group on top; an engine card goes after the capped cards.
-  const cappable = sortedCards.filter((card) => !hasCannotMissTag(card));
-  const cappedCards = new Set(cappable.slice(0, MAX_CARDS));
-  const moreCards = cappable.slice(MAX_CARDS);
-  const topCards = sortedCards.filter(
-    (card) => cappedCards.has(card) || (card.history && hasCannotMissTag(card))
-  );
-  const cannotMissCards = sortedCards.filter((card) => !card.history && hasCannotMissTag(card));
-  const visibleCards = [...topCards, ...cannotMissCards, ...(showAll ? moreCards : [])];
+  const { primary, rest } = splitPrimary(sortedCards);
+  // Cannot-miss cards never count against the cap and are never hidden behind "Lainnya": a
+  // history card tagged cannot-miss stays with the history group, an engine one closes the list.
+  const cappable = rest.filter((card) => !hasCannotMissTag(card));
+  const differentialCap = Math.max(MAX_CARDS - (primary && !hasCannotMissTag(primary) ? 1 : 0), 0);
+  const differentials = cappable.slice(0, differentialCap);
+  const moreCards = cappable.slice(differentialCap);
+  const historyCannotMiss = rest.filter((card) => card.history && hasCannotMissTag(card));
+  const engineCannotMiss = rest.filter((card) => !card.history && hasCannotMissTag(card));
+  const visibleDifferentials = [
+    ...differentials,
+    ...historyCannotMiss,
+    ...engineCannotMiss,
+    ...(showAll ? moreCards : []),
+  ];
+  const visibleCards = [...(primary ? [primary] : []), ...visibleDifferentials];
   const cardCodes = new Set(visibleCards.map((candidate) => candidate.code.toUpperCase()));
   const doNotMissItems = visibleDoNotMissItems(viewModel.evidence.doNotMiss, cardCodes);
   const visibleNotice = getVisibleErrorMessage(errorMessage);
@@ -250,11 +311,29 @@ export function DiagnosisStep({
             </>
           ) : null}
 
-          <div className="diagnosis-list">
-            {visibleCards.map((card) => (
-              <Card key={card.id} card={card} onToggle={onToggleCandidate} />
-            ))}
-          </div>
+          {primary ? (
+            <>
+              <span className="ttv-label" data-testid="dx-flow-primary-label">
+                {primary.isSelected ? 'Diagnosis utama' : 'Usulan diagnosis utama'}
+              </span>
+              <div className="diagnosis-list">
+                <Card key={primary.id} card={primary} index={0} onToggle={onToggleCandidate} />
+              </div>
+            </>
+          ) : null}
+
+          {visibleDifferentials.length > 0 ? (
+            <>
+              <span className="ttv-label" data-testid="dx-flow-differential-label">
+                Diagnosis banding
+              </span>
+              <div className="diagnosis-list">
+                {visibleDifferentials.map((card, index) => (
+                  <Card key={card.id} card={card} index={index + 1} onToggle={onToggleCandidate} />
+                ))}
+              </div>
+            </>
+          ) : null}
 
           {!showAll && moreCards.length > 0 ? (
             <div className="flex">

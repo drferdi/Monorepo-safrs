@@ -54,9 +54,10 @@ describe('DiagnosisStep', () => {
     const shown = screen.getAllByTestId('dx-flow-card');
     expect(shown).toHaveLength(3);
     expect(within(shown[0]).getByText('Kronis')).toBeInTheDocument();
-    expect(within(shown[0]).getByText('3 dari 5 kunjungan · terakhir 12 Agu 2026 · MIRA setuju')).toBeInTheDocument();
-    expect(screen.queryByText('Diagnosis Utama')).toBeNull();
-    expect(screen.queryByText('Diagnosis Banding')).toBeNull();
+    expect(within(shown[0]).getByText('3× dalam 12 bulan · terakhir 12 Agu 2026 · MIRA setuju')).toBeInTheDocument();
+    // The history card is the proposed primary until the doctor agrees; the rest is the banding list.
+    expect(screen.getByTestId('dx-flow-primary-label')).toHaveTextContent('Usulan diagnosis utama');
+    expect(screen.getByTestId('dx-flow-differential-label')).toHaveTextContent('Diagnosis banding');
     fireEvent.click(screen.getByRole('button', { name: 'Lainnya (1)' }));
     expect(screen.getAllByTestId('dx-flow-card')).toHaveLength(4);
   });
@@ -97,7 +98,7 @@ describe('DiagnosisStep', () => {
     expect(shown).toHaveLength(4);
     expect(shown[0].querySelector('.diagnosis-row-title')?.textContent).toBe('I16 - Krisis hipertensi');
     expect(within(shown[0]).getByText('Kronis')).toHaveClass('diagnosis-rank-label');
-    expect(within(shown[0]).getByText('3 dari 5 kunjungan · terakhir 12 Agu 2026 · MIRA setuju')).toBeInTheDocument();
+    expect(within(shown[0]).getByText('3× dalam 12 bulan · terakhir 12 Agu 2026 · MIRA setuju')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /^Lainnya/ })).toBeNull();
   });
 
@@ -124,6 +125,7 @@ describe('DiagnosisStep', () => {
     render(<DiagnosisStep viewModel={vm([candidate({ isSelected: true }), candidate({ id: '3-G44.2', rank: 3, code: 'G44.2', name: 'x', displayLabel: 'G44.2 - x' })])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...h} />);
     const [first] = screen.getAllByTestId('dx-flow-card');
     expect(first).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByTestId('dx-flow-primary-label')).toHaveTextContent('Diagnosis utama');
     fireEvent.click(first);
     expect(h.onToggleCandidate).toHaveBeenCalledWith('2-J06.9');
     expect(screen.queryByText('Auskultasi')).toBeNull();
@@ -137,7 +139,7 @@ describe('DiagnosisStep', () => {
     render(<DiagnosisStep viewModel={vm(cards)} phase="ready" errorMessage="" recurrentOnlyMessage="Data hari ini belum cukup untuk engine; riwayat menunjukkan pola berikut." showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
     expect(screen.getByText('Jangan terlewat: Krisis hipertensi (I16)')).toBeInTheDocument();
     expect(screen.getByText('Data hari ini belum cukup untuk engine; riwayat menunjukkan pola berikut.')).toBeInTheDocument();
-    expect(screen.getByText('2 dari 3 kunjungan · terakhir 12 Agu 2026')).toBeInTheDocument();
+    expect(screen.getByText('2× dalam 12 bulan · terakhir 12 Agu 2026')).toBeInTheDocument();
   });
 
   it('shows a two-card skeleton with a live text while loading', () => {

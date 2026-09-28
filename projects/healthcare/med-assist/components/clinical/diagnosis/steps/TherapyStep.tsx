@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion';
+
 import { formatClinicalText, isInsufficientDiagnosisLabel } from '../diagnosisDisplayUtils';
 import type { DiagnosisManualMedicationDraftView, DiagnosisPageProps } from '../diagnosisPageProps';
 import type { DiagnosisMedicationView, DiagnosisPageViewModel } from '../diagnosisViewModel';
@@ -44,17 +46,24 @@ function medicationStatusWord(
 
 function MedicationRow({
   medication,
+  index,
   chronicTherapySummary,
   onToggleMedication,
   onRemoveManualMedication,
 }: {
   medication: DiagnosisMedicationView;
+  index: number;
   chronicTherapySummary: string;
   onToggleMedication: (key: string) => void;
   onRemoveManualMedication: (key: string) => void;
 }) {
   return (
-    <div
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.28, delay: index * 0.06 }}
+      whileTap={{ scale: 0.985 }}
       role="button"
       tabIndex={0}
       className="neu-select diagnosis-medication-row"
@@ -87,7 +96,7 @@ function MedicationRow({
           </button>
         ) : null}
       </span>
-    </div>
+    </motion.div>
   );
 }
 
@@ -222,17 +231,16 @@ export function TherapyStep({
       ) : null}
 
       <div className="diagnosis-list">
-        {therapyGroups.map((group) =>
-          group.medications.map((medication) => (
+        {therapyGroups.flatMap((group) => group.medications).map((medication, index) => (
             <MedicationRow
               key={medication.key}
               medication={medication}
+              index={index}
               chronicTherapySummary={chronicTherapySummary}
               onToggleMedication={onToggleMedication}
               onRemoveManualMedication={onRemoveManualMedication}
             />
-          ))
-        )}
+        ))}
       </div>
 
       <div className="flex">

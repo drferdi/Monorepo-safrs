@@ -1,4 +1,4 @@
-import { motion, useReducedMotion, type Variants } from 'framer-motion';
+import { LayoutGroup, motion, useReducedMotion, type Variants } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 
 import {
@@ -9,16 +9,16 @@ import {
 import type { DiagnosisPageProps } from './diagnosisPageProps';
 import { resolveActiveStep, resolveDiagnosisSteps, type DiagnosisStepKey } from './diagnosisSteps';
 import type { DiagnosisPageViewModel } from './diagnosisViewModel';
-import { SafetyStrip } from './SafetyStrip';
-import { StepGhost, StepReceipt } from './StepReceipt';
+import { StepGhost, StepReceipt, stepLayoutId } from './StepReceipt';
 import { DiagnosisStep, diagnosisSummary } from './steps/DiagnosisStep';
 import { FindingStep, findingSignals, findingSummary } from './steps/FindingStep';
 import { RmeStep, rmeSummary } from './steps/RmeStep';
 import { TherapyStep, therapySummary } from './steps/TherapyStep';
 
-// Motion after the "Multi-step form" experiment on lab.xevrion.dev: the incoming step slides in
-// from the side it comes from, slightly blurred, and settles with an ease-out. Reduced motion
-// keeps only the cross-fade.
+// Motion after lab.xevrion.dev: the open step and its receipt share a layoutId, so a finished
+// panel folds into its receipt and unfolds again on "ubah" ("Expanding card"); the step's content
+// slides in from the side it comes from, slightly blurred, and settles with an ease-out
+// ("Multi-step form"). Reduced motion keeps only the cross-fade.
 const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 const SHIFT = 36;
 const slide: Variants = {
@@ -45,7 +45,7 @@ function getVisibleExamItems(items: string[]): string[] {
 }
 
 export function DiagnosisStepFlow(props: DiagnosisPageProps) {
-  const { viewModel, phase, triage } = props;
+  const { viewModel, phase } = props;
   const reduceMotion = useReducedMotion();
   const [therapySkipped, setTherapySkipped] = useState(false);
   const [therapyConfirmed, setTherapyConfirmed] = useState(false);
@@ -110,54 +110,56 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
       data-diagnosis-medication-count={viewModel.transfer.medicationSelectionLabel}
       data-diagnosis-transfer-state={viewModel.transfer.state}
     >
-      <SafetyStrip triage={triage ?? null} />
-      {steps.filter((s) => s.done && s.index < activeIndex).map(receipt)}
-      <motion.div
-        key={active}
-        className="flex flex-col gap-3"
-        custom={direction}
-        variants={reduceMotion ? fade : slide}
-        initial="enter"
-        animate="center"
-      >
-        {active === 'finding' ? (
-          <FindingStep
-            complaintSummary={props.complaintSummary}
-            secondaryComplaint={props.secondaryComplaint}
-            allergySummary={viewModel.context.allergySummary}
-            chronicDiagnosisSummary={viewModel.context.chronicDiagnosisSummary}
-          />
-        ) : null}
-        {active === 'diagnosis' ? <DiagnosisStep {...props} /> : null}
-        {active === 'therapy' ? (
-          <TherapyStep
-            {...props}
-            onConfirm={() => {
-              setTherapyConfirmed(true);
-              setReopened(null);
-            }}
-            onSkip={() => {
-              setTherapySkipped(true);
-              setReopened(null);
-            }}
-          />
-        ) : null}
-        {active === 'rme' ? <RmeStep {...props} /> : null}
-        {reopened ? (
-          <div className="flex">
-            <button type="button" className="btn-ac-inline btn-ac-inline--sharp" onClick={() => setReopened(null)}>
-              selesai
-            </button>
-          </div>
-        ) : null}
-      </motion.div>
-      {steps.filter((s) => s.done && s.index > activeIndex).map(receipt)}
-      <SideLinks viewModel={viewModel} />
-      {steps
-        .filter((s) => s.index > activeIndex && !s.done)
-        .map((s) => (
-          <StepGhost key={s.key} step={s} />
-        ))}
+      <LayoutGroup>
+        {steps.filter((s) => s.done && s.index < activeIndex).map(receipt)}
+        <motion.div key={active} layout layoutId={stepLayoutId(active)} className="flex flex-col gap-3">
+          <motion.div
+            className="flex flex-col gap-3"
+            custom={direction}
+            variants={reduceMotion ? fade : slide}
+            initial="enter"
+            animate="center"
+          >
+            {active === 'finding' ? (
+              <FindingStep
+                complaintSummary={props.complaintSummary}
+                secondaryComplaint={props.secondaryComplaint}
+                allergySummary={viewModel.context.allergySummary}
+                chronicDiagnosisSummary={viewModel.context.chronicDiagnosisSummary}
+              />
+            ) : null}
+            {active === 'diagnosis' ? <DiagnosisStep {...props} /> : null}
+            {active === 'therapy' ? (
+              <TherapyStep
+                {...props}
+                onConfirm={() => {
+                  setTherapyConfirmed(true);
+                  setReopened(null);
+                }}
+                onSkip={() => {
+                  setTherapySkipped(true);
+                  setReopened(null);
+                }}
+              />
+            ) : null}
+            {active === 'rme' ? <RmeStep {...props} /> : null}
+            {reopened ? (
+              <div className="flex">
+                <button type="button" className="btn-ac-inline btn-ac-inline--sharp" onClick={() => setReopened(null)}>
+                  selesai
+                </button>
+              </div>
+            ) : null}
+          </motion.div>
+        </motion.div>
+        {steps.filter((s) => s.done && s.index > activeIndex).map(receipt)}
+        <SideLinks viewModel={viewModel} />
+        {steps
+          .filter((s) => s.index > activeIndex && !s.done)
+          .map((s) => (
+            <StepGhost key={s.key} step={s} />
+          ))}
+      </LayoutGroup>
     </div>
   );
 }
