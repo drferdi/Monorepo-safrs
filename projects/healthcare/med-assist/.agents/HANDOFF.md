@@ -1,13 +1,13 @@
 # HANDOFF
 
-Last updated: 2026-09-28 (evening, order, pixel loader, card explanation)
+Last updated: 2026-09-28 (evening, order, pixel loader, card explanation, reasons timeline)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
 
 ## Current state
 
-Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEAD `12ec57c6`.
+Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEAD `3b360c00`.
 Morning: plan `docs/plans/2026-09-28-mira-autostart-recurrent-dx-step-flow-plan.md` landed as
 `40f3b80c..9b355bfe` (MIRA auto-start via native host in `D:\DEV\gafferverse\mira-system`,
 branch `feat/reasoning-service`, never pushed; recurrent diagnoses from the record; step-flow
@@ -41,8 +41,16 @@ line, then "Tap here" (was "alasan") which opens the reasons. "· MIRA setuju" i
 the history line. Codes absent from the knowledge base (MIRA-only, e.g. K65.0) show no
 explanation.
 
+Reasons timeline (`3b360c00`): "Tap here" now opens the reasons as the "Activity timeline" from
+https://lab.xevrion.dev/lab/activity-timeline (`ReasonTimeline.tsx`): one entry per non-empty
+group (Mendukung, Yang tidak mendukung, Data kurang, Catatan) with an icon node, a hairline
+between nodes, group name + count, then the items. Opens on a no-bounce spring (0.5 s), entries
+70 ms apart from a 4 px blur and 6 px lift, each line grows down after its entry; closes on a
+0.32 s spring. The card animates position only (`layout="position"`): its size layout animation
+had made the open end with a 10 px snap.
+
 MIRA host and service: unchanged since `1cdbd1f8` (host `com.sentra.mira` registered under HKCU,
-service on 127.0.0.1:8787). `.output/chrome-mv3-dev` rebuilt at `12ec57c6`.
+service on 127.0.0.1:8787). `.output/chrome-mv3-dev` rebuilt at `3b360c00`.
 
 **SAFRS**: this change set is R2 UI (`components/clinical/diagnosis/steps/DiagnosisStep.tsx` and
 tests). The branch as a whole remains R3 through `lib/clinical/recurrent-diagnosis.ts` (Chief's
@@ -52,7 +60,8 @@ prior approval).
 
 1. `chrome://extensions` → reload "Asisten Medis" (bundle `.output\chrome-mv3-dev`).
 2. Trajectory → Diagnosis: the pixel loader animates left of the DIAGNOSIS title; each card
-   shows a three-line explanation under its title and "Tap here" at the bottom.
+   shows a three-line explanation under its title and "Tap here" at the bottom; "Tap here"
+   opens the reasons timeline smoothly and closes it again.
    Temuan receipt (3 findings), then the DIAGNOSIS panel reads top to
    bottom: "Diagnosis banding 1", "Diagnosis banding 2" (a third only for a MIRA cannot-miss
    card), "Lainnya (n)" if more, then "Usulan diagnosis utama" with the patient's Kronis/Berulang
@@ -63,13 +72,13 @@ prior approval).
 4. If Chief wanted the primary slot labelled plain "Diagnosis" instead of "Diagnosis utama", that
    is a one-string change in `DiagnosisStep.tsx` plus the label assertions in its test.
 
-## Verification (capsule root, `node scripts/pnpm.mjs run <script>`, at `12ec57c6`)
+## Verification (capsule root, `node scripts/pnpm.mjs run <script>`, at `3b360c00`)
 
 | Gate | Exit | Result |
 |---|---|---|
 | `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`) |
 | `typecheck` | 0 | clean |
-| `test` | 0 | 173 files passed, 1 skipped; 1333 tests passed, 17 skipped |
+| `test` | 0 | 174 files passed, 1 skipped; 1336 tests passed, 17 skipped |
 | `exec wxt build --mode development` | 0 | clean |
 | `run:check` | 0 | "Extension loads: Asisten Medis 2.1.0 (MV3), all referenced files present." |
 
@@ -78,11 +87,15 @@ tap, receipt, "ubah" reopened state; loader beside the title, centred on it, sam
 frames matching the reference). Token-guard: order change clean; loader flagged a literal 1 px
 radius (fixed to 0) and "design invention" (Chief asked for it in chat). This capsule has no
 `check:tokens` script, a pre-existing gap. All five gates in the table ran on the final tree;
-token-guard found no violation in the card change. The harness
+token-guard found no violation in the card or timeline change. Timeline motion measured frame
+by frame in the harness (open rises to 168.9 px of 169 with no jump; close monotonic, ~320 ms). The harness
 (`scratchpad/harness`, `.claude/launch.json`) was session-only and removed.
 
 ## Deferred minors (none blocking)
 
+- `.diagnosis-evidence-grid` rules are now unused (the timeline replaced the boxed reasons);
+  style.css is append-only, so they stay. The new timeline line uses 1 px
+  `--neu-border-medium`, the Trajectory audit timeline 2 px `--border-subtle` (design choice).
 - Carried from the afternoon: `read_message` no truncated-body guard; `askHost` disconnect path
   and `publishMiraStatus` restart hydration untested; StrictMode double-fires `miraEnsure` in
   dev; `knownConditions` dedupe is exact-string; orphaned `dx-flow-*` CSS block (append-only
