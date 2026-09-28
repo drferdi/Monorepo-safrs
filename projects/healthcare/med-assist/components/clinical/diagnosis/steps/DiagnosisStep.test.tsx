@@ -162,6 +162,8 @@ describe('DiagnosisStep', () => {
     expect(screen.queryByText('Auskultasi')).toBeNull();
     fireEvent.click(within(cardOf(chosen)).getByRole('button', { name: 'Tap here' }));
     expect(screen.getByText('Auskultasi')).toBeInTheDocument();
+    // The reasons open as the activity timeline, inside the card.
+    expect(within(cardOf(chosen)).getByRole('list', { name: 'Alasan' })).toContainElement(screen.getByText('Auskultasi'));
     expect(h.onToggleCandidate).toHaveBeenCalledTimes(1);
   });
 

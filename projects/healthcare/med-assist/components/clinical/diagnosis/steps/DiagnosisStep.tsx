@@ -9,6 +9,7 @@ import {
 } from '../diagnosisDisplayUtils';
 import type { DiagnosisPageProps } from '../diagnosisPageProps';
 import { PixelLoader } from '../PixelLoader';
+import { ReasonTimeline } from '../ReasonTimeline';
 import { definitionFor, useDiseaseDefinitions } from '../useDiseaseDefinitions';
 import type { DiagnosisCandidateView, DiagnosisPageViewModel } from '../diagnosisViewModel';
 
@@ -19,7 +20,7 @@ const ICD_IN_TEXT = /\(([A-Z]\d{2}(?:\.\d+)?)\)/i;
 const HISTORY_WINDOW_MONTHS = 12;
 
 // Motion after lab.xevrion.dev: cards arrive one after another ("Reorder list"), sink slightly
-// under the finger ("Keycap hint"), and the reasons unfold under their card ("Accordion").
+// under the finger ("Keycap hint"); the reasons open as the "Activity timeline" (ReasonTimeline).
 const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 const cardEnter = {
   hidden: { opacity: 0, y: 10 },
@@ -133,7 +134,9 @@ function Card({
   // children are presentational, so a nested button would be unreachable for assistive tech.
   return (
     <motion.div
-      layout
+      // Position only: the card's height change is animated by the reasons timeline itself, and
+      // a size layout animation would scale the card (and distort that measurement) meanwhile.
+      layout="position"
       layoutId={`dx-card-${card.id}`}
       className="neu-select diagnosis-candidate-row"
       custom={index}
@@ -180,21 +183,15 @@ function Card({
       </div>
       <AnimatePresence initial={false}>
         {open ? (
-          <motion.div
+          <ReasonTimeline
             key="reasons"
-            className="overflow-hidden"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.24, ease: EASE_OUT }}
-          >
-            <div className="diagnosis-evidence-grid">
-              <List title="Mendukung" items={card.supports} />
-              <List title="Yang tidak mendukung" items={card.against} />
-              <List title="Data kurang" items={card.missing} />
-              <List title="Catatan" items={card.review} />
-            </div>
-          </motion.div>
+            groups={[
+              { key: 'supports', title: 'Mendukung', items: card.supports },
+              { key: 'against', title: 'Yang tidak mendukung', items: card.against },
+              { key: 'missing', title: 'Data kurang', items: card.missing },
+              { key: 'review', title: 'Catatan', items: card.review },
+            ]}
+          />
         ) : null}
       </AnimatePresence>
     </motion.div>

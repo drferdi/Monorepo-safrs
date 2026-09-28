@@ -10260,3 +10260,47 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
   border-radius: 0;
   background: var(--ct-v2-text-soft-strong);
 }
+
+/* Reasons timeline inside a diagnosis card (2026-09-28, after the "Activity timeline" on
+   lab.xevrion.dev): an icon node per reason group, joined by a hairline that grows down to the
+   next node. Motion lives in ReasonTimeline.tsx (framer-motion). */
+.dx-timeline {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding-left: 0;
+  list-style: none;
+}
+.dx-timeline__item {
+  position: relative;
+  display: flex;
+  gap: 10px;
+  padding-bottom: 12px;
+}
+.dx-timeline__item:last-child {
+  padding-bottom: 0;
+}
+.dx-timeline__line {
+  position: absolute;
+  top: 24px;
+  bottom: 2px;
+  left: 10px;
+  width: 1px;
+  background: var(--neu-border-medium);
+  transform-origin: top;
+}
+.dx-timeline__node {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 21px;
+  height: 21px;
+  border: 1px solid var(--neu-border-medium);
+  border-radius: var(--radius-chip);
+  background: var(--neu-inset-bg);
+  color: var(--text-muted);
+}
+.dx-timeline__node svg {
+  width: 11px;
+  height: 11px;
+}
