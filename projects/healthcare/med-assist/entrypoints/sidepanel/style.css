@@ -10159,3 +10159,18 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
     transition: none;
   }
 }
+
+/* ── MIRA status dot in the header (2026-09-28) ── */
+.mira-status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-left: 6px;
+  border-radius: var(--radius-chip);
+  background: var(--text-muted);
+  vertical-align: middle;
+}
+.mira-status-dot[data-state='ready'] { background: var(--sentra-safe); }
+.mira-status-dot[data-state='starting'] { background: var(--sentra-warning); }
+.mira-status-dot[data-state='down'],
+.mira-status-dot[data-state='failed'] { background: var(--sentra-danger); }

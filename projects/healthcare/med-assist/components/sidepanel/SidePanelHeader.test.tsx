@@ -2,15 +2,30 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('../ui/ThemeToggle', () => ({
   default: () => <div data-testid="theme-toggle" />,
 }));
 
+vi.mock('./MiraStatusDot', () => ({
+  MiraStatusDot: () => null,
+}));
+
+vi.mock('@/utils/messaging', () => ({
+  sendMessage: vi.fn(async () => ({ state: 'ready', checkedAt: 't' })),
+}));
+
+import { sendMessage } from '@/utils/messaging';
+
 import { SidePanelHeader } from './SidePanelHeader';
 
 describe('SidePanelHeader patient strip', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.mocked(sendMessage).mockClear();
+  });
+
   it('renders MEDLENS as the third engine tab instead of SETTING', () => {
     render(
       <SidePanelHeader
@@ -353,5 +368,22 @@ describe('SidePanelHeader patient strip', () => {
     const nameCell = screen.getByTitle(/RM-0099/);
     expect(nameCell).toHaveTextContent('Ferdi Iskandar');
     expect(screen.queryByText('RM-0099')).not.toBeInTheDocument();
+  });
+
+  it('asks the background to ensure MIRA once on mount', () => {
+    vi.stubEnv('SENTRA_DIAGNOSIS_ENGINE', 'mira');
+    const { rerender } = render(<SidePanelHeader activeEngine="vs" onEngineChange={vi.fn()} />);
+
+    rerender(<SidePanelHeader activeEngine="vs" onEngineChange={vi.fn()} />);
+
+    expect(sendMessage).toHaveBeenCalledTimes(1);
+    expect(sendMessage).toHaveBeenCalledWith('miraEnsure', undefined);
+  });
+
+  it('does not ask in legacy mode', () => {
+    vi.stubEnv('SENTRA_DIAGNOSIS_ENGINE', 'legacy');
+    render(<SidePanelHeader activeEngine="vs" onEngineChange={vi.fn()} />);
+
+    expect(sendMessage).not.toHaveBeenCalled();
   });
 });

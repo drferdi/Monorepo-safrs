@@ -4,10 +4,13 @@
 import { ChevronDown } from 'lucide-react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+import { MiraStatusDot } from './MiraStatusDot';
 import ThemeToggle from '../ui/ThemeToggle';
 
 import type { VitalWarningSlot } from '@/lib/clinical/vital-warning-selector';
 import type { TriageZone } from '@/lib/emergency-detector/triage-verdict';
+import { getDiagnosisEngineConfig } from '@/lib/iskandar-diagnosis-engine/feature-flags';
+import { sendMessage } from '@/utils/messaging';
 
 interface EngineButton {
   id: string;
@@ -189,12 +192,18 @@ export const SidePanelHeader: React.FC<SidePanelHeaderProps> = ({
     }
   }, [canOpenVisitHistory, isVisitHistoryOpen]);
 
+  useEffect(() => {
+    if (getDiagnosisEngineConfig().diagnosisEngine === 'legacy') return;
+    sendMessage('miraEnsure', undefined).catch(() => undefined);
+  }, []);
+
   return (
     <div className="card-header">
       {/* Title — knob kiri atas, judul tengah */}
       <div className="header-top relative flex justify-center items-start">
         <div className="absolute left-0 top-0">
           <ThemeToggle />
+          <MiraStatusDot />
         </div>
         <div className="title-group text-center">
           <h1 className="card-title-main">Sentra Assist</h1>
