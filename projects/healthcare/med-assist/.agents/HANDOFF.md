@@ -69,9 +69,9 @@ Rendering verified in a Vite harness of the real stylesheet in the browser pane 
 tap, receipt, "ubah" reopened state; loader beside the title, centred on it, same colour,
 frames matching the reference). Token-guard: order change clean; loader flagged a literal 1 px
 radius (fixed to 0) and "design invention" (Chief asked for it in chat). This capsule has no
-`check:tokens` script, a pre-existing gap. The type-scale and palette unit tests (lint, test)
-were rerun after the radius fix only for the three affected files plus build and run:check;
-the full suite ran on the 3 px tree with a 1 px radius, the only difference. The harness
+`check:tokens` script, a pre-existing gap. The table's lint, typecheck and full test run are
+from the 3 px tree before the radius fix (a one-line CSS change); after it, the three affected
+test files, the build and run:check were rerun, all exit 0. The harness
 (`scratchpad/harness`, `.claude/launch.json`) was session-only and removed.
 
 ## Deferred minors (none blocking)
