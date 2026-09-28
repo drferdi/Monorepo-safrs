@@ -388,7 +388,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     expect(within(workspace).queryByTestId('dx-flow-triage')).toBeNull();
     expect(within(workspace).queryByLabelText('Keselamatan')).toBeNull();
 
-    const advanced = within(cardOf(primaryCard)).getByRole('button', { name: 'alasan' });
+    const advanced = within(cardOf(primaryCard)).getByRole('button', { name: 'Tap here' });
     expect(advanced).toBeTruthy();
     expect(advanced).toHaveAttribute('aria-expanded', 'false');
     expect(workspace.textContent).not.toMatch(LONG_PRIMARY_RATIONALE);
@@ -853,12 +853,12 @@ describe('ClinicalDifferential final diagnosis support page', () => {
 
     const workspace = screen.getByTestId('diagnosis-workspace');
     const [primaryCard] = await within(workspace).findAllByTestId('dx-flow-card');
-    const advancedReasoning = within(cardOf(primaryCard)).getByRole('button', { name: 'alasan' });
+    const advancedReasoning = within(cardOf(primaryCard)).getByRole('button', { name: 'Tap here' });
     expect(advancedReasoning).toBeTruthy();
     expect(advancedReasoning).toHaveAttribute('aria-expanded', 'false');
   });
 
-  // The select control carries data-testid="dx-flow-card"; "alasan" sits beside it in the card.
+  // The select control carries data-testid="dx-flow-card"; "Tap here" sits beside it in the card.
   function cardOf(select: HTMLElement): HTMLElement {
     const wrapper = select.parentElement;
     if (!wrapper) throw new Error('dx-flow-card wrapper missing');

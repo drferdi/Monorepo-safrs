@@ -24,7 +24,7 @@ function vm(candidates: DiagnosisCandidateView[], over: Partial<DiagnosisPageVie
 
 const handlers = () => ({ onToggleCandidate: vi.fn(), onToggleManualDiagnosisInput: vi.fn(), onManualIcdChange: vi.fn(), onManualNameChange: vi.fn(), onSubmitManualDiagnosis: vi.fn(), onCompleteData: vi.fn() });
 
-// The select control carries data-testid="dx-flow-card"; "alasan" and the reasons sit beside it in the card.
+// The select control carries data-testid="dx-flow-card"; "Tap here" and the reasons sit beside it in the card.
 function cardOf(select: HTMLElement): HTMLElement {
   const card = select.parentElement;
   if (!card) throw new Error('dx-flow-card wrapper missing');
@@ -59,7 +59,7 @@ describe('DiagnosisStep', () => {
     // The banding cards come first, numbered; the history card is the proposed primary, last, until the doctor agrees.
     expect(differentialLabels()).toEqual(['Diagnosis banding 1', 'Diagnosis banding 2']);
     expect(within(shown[2]).getByText('Kronis')).toBeInTheDocument();
-    expect(within(shown[2]).getByText('3× dalam 12 bulan · terakhir 12 Agu 2026 · MIRA setuju')).toBeInTheDocument();
+    expect(within(shown[2]).getByText('3× dalam 12 bulan · terakhir 12 Agu 2026')).toBeInTheDocument();
     const primaryLabel = screen.getByTestId('dx-flow-primary-label');
     expect(primaryLabel).toHaveTextContent('Usulan diagnosis utama');
     expect(shown[1].compareDocumentPosition(primaryLabel) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
@@ -126,7 +126,7 @@ describe('DiagnosisStep', () => {
     expect(shown).toHaveLength(4);
     expect(shown[3].querySelector('.diagnosis-row-title')?.textContent).toBe('I16 - Krisis hipertensi');
     expect(within(shown[3]).getByText('Kronis')).toHaveClass('diagnosis-rank-label');
-    expect(within(shown[3]).getByText('3× dalam 12 bulan · terakhir 12 Agu 2026 · MIRA setuju')).toBeInTheDocument();
+    expect(within(shown[3]).getByText('3× dalam 12 bulan · terakhir 12 Agu 2026')).toBeInTheDocument();
     expect(screen.getByTestId('dx-flow-primary-label')).toHaveTextContent('Usulan diagnosis utama');
     expect(screen.queryByRole('button', { name: /^Lainnya/ })).toBeNull();
   });
@@ -149,7 +149,7 @@ describe('DiagnosisStep', () => {
     expect(titles()).toEqual(['K29.7 - Gastritis', 'M54.5 - Nyeri punggung bawah', 'I16 - Krisis hipertensi', 'G44.2 - Sakit kepala tegang', 'G43.9 - Migren', 'J06.9 - ISPA']);
   });
 
-  it('selects on tap, marks aria-pressed, and opens the reasons only from "alasan"', () => {
+  it('selects on tap, marks aria-pressed, and opens the reasons only from "Tap here"', () => {
     const h = handlers();
     render(<DiagnosisStep viewModel={vm([candidate({ isSelected: true }), candidate({ id: '3-G44.2', rank: 3, code: 'G44.2', name: 'x', displayLabel: 'G44.2 - x' })])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...h} />);
     // The chosen card sits in the primary slot, after the banding card.
@@ -160,7 +160,7 @@ describe('DiagnosisStep', () => {
     fireEvent.click(chosen);
     expect(h.onToggleCandidate).toHaveBeenCalledWith('2-J06.9');
     expect(screen.queryByText('Auskultasi')).toBeNull();
-    fireEvent.click(within(cardOf(chosen)).getByRole('button', { name: 'alasan' }));
+    fireEvent.click(within(cardOf(chosen)).getByRole('button', { name: 'Tap here' }));
     expect(screen.getByText('Auskultasi')).toBeInTheDocument();
     expect(h.onToggleCandidate).toHaveBeenCalledTimes(1);
   });
@@ -171,6 +171,32 @@ describe('DiagnosisStep', () => {
     expect(screen.getByText('Jangan terlewat: Krisis hipertensi (I16)')).toBeInTheDocument();
     expect(screen.getByText('Data hari ini belum cukup untuk engine; riwayat menunjukkan pola berikut.')).toBeInTheDocument();
     expect(screen.getByText('2× dalam 12 bulan · terakhir 12 Agu 2026')).toBeInTheDocument();
+  });
+
+  it('explains the disease in at most three lines under the title, then the rule line, then "Tap here"', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ penyakit: [{ icd10: 'I50', definisi: 'Gagal jantung adalah sindrom klinis.' }] }))));
+    try {
+      const history = { label: 'Kronis' as const, count: 4, visitsConsidered: 5, lastSeen: '2026-09-10', engineAgrees: true, engineSource: 'mira' as const };
+      render(<DiagnosisStep viewModel={vm([candidate({ id: 'h-I50', code: 'I50', name: 'Heart failure', displayLabel: 'I50 - Heart failure', history })])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
+      const card = cardOf(screen.getByTestId('dx-flow-card'));
+      const explanation = await within(card).findByText('Gagal jantung adalah sindrom klinis.');
+      expect(explanation).toHaveClass('line-clamp-3');
+      const title = within(card).getByText('I50 - Heart failure');
+      const rule = within(card).getByText('4× dalam 12 bulan · terakhir 10 Sep 2026');
+      const tap = within(card).getByRole('button', { name: 'Tap here' });
+      expect(title.compareDocumentPosition(explanation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      expect(explanation.compareDocumentPosition(rule) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      expect(rule.compareDocumentPosition(tap) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      // The engine's agreement is not repeated on the card.
+      expect(card).not.toHaveTextContent(/setuju/);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it('shows no explanation line when the knowledge base has no entry for the code', () => {
+    render(<DiagnosisStep viewModel={vm([candidate({ id: 'm-K65.0', code: 'K65.0', name: 'Acute peritonitis', displayLabel: 'K65.0 - Acute peritonitis · MIRA' })])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
+    expect(cardOf(screen.getByTestId('dx-flow-card')).querySelector('.line-clamp-3')).toBeNull();
   });
 
   it('puts the pixel loader to the left of the "Diagnosis" title', () => {
@@ -187,10 +213,10 @@ describe('DiagnosisStep', () => {
     expect(document.querySelectorAll('.diagnosis-skeleton__card')).toHaveLength(2);
   });
 
-  it('keeps "alasan" outside the role="button" select control so assistive tech can reach it', () => {
+  it('keeps "Tap here" outside the role="button" select control so assistive tech can reach it', () => {
     render(<DiagnosisStep viewModel={vm([candidate({})])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
     const [select] = screen.getAllByTestId('dx-flow-card');
-    const reasons = within(cardOf(select)).getByRole('button', { name: 'alasan' });
+    const reasons = within(cardOf(select)).getByRole('button', { name: 'Tap here' });
     expect(select).toHaveAttribute('role', 'button');
     expect(select).not.toContainElement(reasons);
     expect(select.querySelector('button')).toBeNull();

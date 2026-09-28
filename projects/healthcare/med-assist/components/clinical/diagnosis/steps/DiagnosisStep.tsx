@@ -9,6 +9,7 @@ import {
 } from '../diagnosisDisplayUtils';
 import type { DiagnosisPageProps } from '../diagnosisPageProps';
 import { PixelLoader } from '../PixelLoader';
+import { definitionFor, useDiseaseDefinitions } from '../useDiseaseDefinitions';
 import type { DiagnosisCandidateView, DiagnosisPageViewModel } from '../diagnosisViewModel';
 
 /** Cards on the page: the primary plus the differentials; the rest waits behind "Lainnya". */
@@ -50,11 +51,11 @@ export function diagnosisSummary(viewModel: DiagnosisPageViewModel): string {
   return viewModel.selectedDiagnoses[0]?.displayLabel ?? '';
 }
 
+// The rule that put a history card on the page; whether an engine agrees is not repeated here
+// (Chief, 2026-09-28: "tidak perlu ada MIRA setuju").
 function historyLine(card: DiagnosisCandidateView): string | null {
   if (!card.history) return null;
-  const base = `${card.history.count}× dalam ${HISTORY_WINDOW_MONTHS} bulan · terakhir ${formatShortDate(card.history.lastSeen)}`;
-  if (!card.history.engineAgrees) return base;
-  return `${base} · ${card.history.engineSource === 'mira' ? 'MIRA setuju' : 'engine setuju'}`;
+  return `${card.history.count}× dalam ${HISTORY_WINDOW_MONTHS} bulan · terakhir ${formatShortDate(card.history.lastSeen)}`;
 }
 
 function tallyLine(card: DiagnosisCandidateView): string {
@@ -113,10 +114,13 @@ function List({
 function Card({
   card,
   index,
+  definition,
   onToggle,
 }: {
   card: DiagnosisCandidateView;
   index: number;
+  /** The knowledge base's short explanation of the disease, clamped to three lines. */
+  definition: string | null;
   onToggle: (id: string) => void;
 }) {
   const [open, setOpen] = useState(false);
@@ -125,7 +129,7 @@ function Card({
     ''
   );
   const chip = chipFor(card);
-  // The select control and the "alasan" button are siblings: a role="button" element's
+  // The select control and the "Tap here" button are siblings: a role="button" element's
   // children are presentational, so a nested button would be unreachable for assistive tech.
   return (
     <motion.div
@@ -161,6 +165,7 @@ function Card({
           <div className="diagnosis-row-title">{title}</div>
           {chip ? <span className="diagnosis-rank-label">{chip}</span> : null}
         </div>
+        {definition ? <div className="diagnosis-row-meta line-clamp-3">{definition}</div> : null}
         <div className="diagnosis-row-meta">{historyLine(card) ?? tallyLine(card)}</div>
       </div>
       <div className="flex">
@@ -170,7 +175,7 @@ function Card({
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
-          alasan
+          Tap here
         </button>
       </div>
       <AnimatePresence initial={false}>
@@ -241,6 +246,7 @@ export function DiagnosisStep({
   onCompleteData,
 }: Props) {
   const [showAll, setShowAll] = useState(false);
+  const definitions = useDiseaseDefinitions();
 
   const sortedCards = sortHistoryFirst(viewModel.candidates.filter((candidate) => candidate.code !== 'R69'));
   const { primary, rest } = splitPrimary(sortedCards);
@@ -324,7 +330,7 @@ export function DiagnosisStep({
                   <span className="ttv-label" data-testid="dx-flow-differential-label">
                     {`Diagnosis banding ${index + 1}`}
                   </span>
-                  <Card card={card} index={index} onToggle={onToggleCandidate} />
+                  <Card card={card} index={index} definition={definitionFor(definitions, card.code)} onToggle={onToggleCandidate} />
                 </div>
               ))}
             </div>
@@ -343,7 +349,12 @@ export function DiagnosisStep({
               <span className="ttv-label" data-testid="dx-flow-primary-label">
                 {primary.isSelected ? 'Diagnosis utama' : 'Usulan diagnosis utama'}
               </span>
-              <Card card={primary} index={visibleDifferentials.length} onToggle={onToggleCandidate} />
+              <Card
+                card={primary}
+                index={visibleDifferentials.length}
+                definition={definitionFor(definitions, primary.code)}
+                onToggle={onToggleCandidate}
+              />
             </div>
           ) : null}
 
