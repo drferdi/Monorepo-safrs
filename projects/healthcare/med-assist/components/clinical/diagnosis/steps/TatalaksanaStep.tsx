@@ -1,5 +1,5 @@
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'framer-motion';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 
 import { formatClinicalText, formatShortDate, isInsufficientDiagnosisLabel } from '../diagnosisDisplayUtils';
 import type { DiagnosisManualMedicationDraftView, DiagnosisPageProps } from '../diagnosisPageProps';
@@ -15,6 +15,7 @@ import {
   nameBesideDose,
   reviewSafety,
   roleOf,
+  searchStock,
   type ChronicMedicationView,
   type SafetyReview,
 } from '../tatalaksana';
@@ -385,14 +386,65 @@ function ManualMedicationForm({
   onChange: (field: keyof DiagnosisManualMedicationDraftView, value: string) => void;
   onSubmit: () => void;
 }) {
+  // The name field searches the Puskesmas stock as it is typed; a pick fills the name and closes.
+  const listId = useId();
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(0);
+  const matches = open ? searchStock(draft.nama_obat) : [];
+  const pick = (name: string) => {
+    onChange('nama_obat', name);
+    setOpen(false);
+  };
   return (
     <div className="diagnosis-form-grid pt-2" data-testid="dx-tx-med-form">
-      <input
-        value={draft.nama_obat}
-        onChange={(event) => onChange('nama_obat', event.target.value)}
-        placeholder="Nama obat"
-        className="neu-select diagnosis-input"
-      />
+      <div className="history-dropdown">
+        <input
+          value={draft.nama_obat}
+          onChange={(event) => {
+            onChange('nama_obat', event.target.value);
+            setOpen(true);
+            setActive(0);
+          }}
+          onBlur={() => setOpen(false)}
+          onKeyDown={(event) => {
+            if (matches.length === 0) return;
+            if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+              event.preventDefault();
+              const step = event.key === 'ArrowDown' ? 1 : matches.length - 1;
+              setActive((index) => (index + step) % matches.length);
+            } else if (event.key === 'Enter') {
+              event.preventDefault();
+              pick(matches[active].name);
+            } else if (event.key === 'Escape') {
+              setOpen(false);
+            }
+          }}
+          placeholder="Nama obat"
+          className="neu-select diagnosis-input"
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded={matches.length > 0}
+          aria-controls={listId}
+        />
+        {matches.length > 0 ? (
+          <div id={listId} role="listbox" aria-label="Stok obat Puskesmas" className="history-dropdown__panel option-grid option-grid--single">
+            {matches.map((match, index) => (
+              <button
+                key={match.name}
+                type="button"
+                role="option"
+                aria-selected={index === active}
+                className={`option-item option-item--single${index === active ? ' option-item--selected' : ''}`}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => pick(match.name)}
+              >
+                <span className="min-w-0 flex-1">{match.name}</span>
+                <span className="diagnosis-row-meta">{match.available ? `${match.stock} ${match.unit}` : 'habis'}</span>
+              </button>
+            ))}
+          </div>
+        ) : null}
+      </div>
       <input
         value={draft.dosis}
         onChange={(event) => onChange('dosis', event.target.value)}

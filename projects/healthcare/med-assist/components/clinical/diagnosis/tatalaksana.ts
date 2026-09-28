@@ -4,6 +4,7 @@ import { checkMockDDI } from '@/lib/api/mocks/ddi-mock';
 import { parseTherapyHistoryText } from '@/lib/clinical/chronic-therapy-history';
 import type { VisitRecord } from '@/lib/iskandar-diagnosis-engine/visit-history-store';
 import { classifyRole, type TriadRole } from '@/lib/rme/payload-mapper';
+import stockDatabase from '@/public/data/stok_obat.json';
 import type { DrugInteraction } from '@/types/api';
 
 /** One earlier visit that prescribed a chronic medication. */
@@ -33,6 +34,40 @@ export interface FollowUpView {
   visit: string[];
   /** Routine follow-up for the patient's chronic conditions. */
   routine: Array<{ name: string; text: string }>;
+}
+
+/** A medicine in the Puskesmas stock (public/data/stok_obat.json), as the name field offers it. */
+export interface StockMatch {
+  name: string;
+  stock: number;
+  unit: string;
+  available: boolean;
+}
+
+const STOCK_MEDICINES: StockMatch[] = (
+  stockDatabase.stok_obat as Array<{ nama_obat: string; kelompok: string; satuan: string; stok_tersedia: number; status: string }>
+)
+  .filter((item) => item.kelompok === 'OBAT')
+  .map((item) => ({
+    name: item.nama_obat.trim(),
+    stock: item.stok_tersedia,
+    unit: item.satuan,
+    available: item.status === 'tersedia' && item.stok_tersedia > 0,
+  }));
+
+/**
+ * Puskesmas medicines for what is typed in the name field (Chief, 2026-09-29: "ketik Am... keluar
+ * lodipin"): every typed word begins a word of the name, from two letters on. Names that begin
+ * with the first typed word come first, then those in stock; BMHP, reagents and devices are left out.
+ */
+export function searchStock(query: string, limit = 6): StockMatch[] {
+  const typed = query.toLowerCase().split(/\s+/).filter(Boolean);
+  if (typed.join('').length < 2) return [];
+  const words = (name: string) => name.toLowerCase().split(/[\s/(),.-]+/);
+  const leads = (name: string) => Number(name.toLowerCase().startsWith(typed[0]));
+  return STOCK_MEDICINES.filter((medicine) => typed.every((part) => words(medicine.name).some((word) => word.startsWith(part))))
+    .sort((a, b) => leads(b.name) - leads(a.name) || Number(b.available) - Number(a.available) || a.name.localeCompare(b.name))
+    .slice(0, limit);
 }
 
 const STRENGTH = /(\d+(?:[.,]\d+)?)\s*(mg|mcg|µg|g|ml|iu|%)(?![a-z])/i;

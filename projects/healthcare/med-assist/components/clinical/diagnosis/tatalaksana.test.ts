@@ -10,6 +10,7 @@ import {
   nameBesideDose,
   reviewSafety,
   roleOf,
+  searchStock,
 } from './tatalaksana';
 import type { DiseaseNote } from './useDiseaseNotes';
 
@@ -166,5 +167,30 @@ describe('explainInteraction', () => {
 
   it('names no mechanism the sources do not give, and keeps DDInter\'s advice', () => {
     expect(explainInteraction(pair('Amlodipin 10 mg', 'Kandesartan 8 mg'))).toEqual({ reason: null, advice: 'Evaluasi kebutuhan terapi.' });
+  });
+});
+
+// Chief, 2026-09-29: "ketik Am... keluar lodipin", the name field searches the Puskesmas stock.
+describe('searchStock', () => {
+  it('offers the Puskesmas medicines a typed beginning names, from two letters on', () => {
+    const names = searchStock('Am').map((match) => match.name);
+    expect(names).toContain('Amlodipin tablet 10 mg');
+    expect(names.length).toBeLessThanOrEqual(6);
+    expect(names.every((name) => name.toLowerCase().startsWith('am'))).toBe(true);
+    expect(searchStock('A')).toEqual([]);
+  });
+
+  it('matches every typed word, and carries the stock', () => {
+    expect(searchStock('amlo 5')).toEqual([
+      { name: 'Amlodipin tablet 5 mg', stock: expect.any(Number), unit: 'Tablet', available: true },
+      { name: 'BLUD Amlodipn tablet 5 mg', stock: expect.any(Number), unit: 'Tablet', available: true },
+    ]);
+  });
+
+  it('leaves out BMHP, and lists what is out of stock after what is in', () => {
+    expect(searchStock('alat suntik')).toEqual([]);
+    const amoksisilin = searchStock('amoksisilin');
+    expect(amoksisilin.at(-1)).toMatchObject({ name: 'BLUD Amoksisilin tablet 500 mg', available: false });
+    expect(amoksisilin.slice(0, -1).every((match) => match.available)).toBe(true);
   });
 });

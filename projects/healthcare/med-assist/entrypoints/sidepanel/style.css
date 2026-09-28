@@ -10406,3 +10406,10 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 .dx-pen-check--warning { color: var(--sentra-warning); border-color: var(--sentra-warning); }
 .dx-pixel-loader--warning > span { background: var(--sentra-warning); }
 .dx-hold .dx-hold-fill { color: var(--sentra-warning); }
+
+/* Tatalaksana name field (Chief, 2026-09-29: the Puskesmas stock as it is typed): the stock list sits
+   in the form's flow (no overlay shadow), since the form opens inside an overflow-hidden collapse; the stock
+   count stays muted; the row the arrow keys reach keeps its border against the shell's button border rule. */
+.diagnosis-form-grid .history-dropdown__panel { position: static; margin-top: 6px; box-shadow: none; }
+.option-item .diagnosis-row-meta { color: var(--text-muted); }
+.diagnosis-form-grid .history-dropdown__panel button.option-item.option-item--selected { border-color: var(--accent-med) !important; }

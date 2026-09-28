@@ -3,6 +3,28 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — Tatalaksana: the medicine name comes from the Puskesmas stock
+
+- Decision (Chief: "saat user ketik obat ... harusnya sudah connect dengan database obat
+  puskesmas. Misal saya ketik Am...(keluar lodipin)"): the "Nama obat" field of "+ Tambah obat" and
+  "Ganti" searches `public/data/stok_obat.json` (Puskesmas Balowerti, 277 items) as it is typed:
+  `searchStock` in `tatalaksana.ts`, from two letters, every typed word must begin a word of the
+  name, group `OBAT` only (BMHP, reagents and devices left out), at most six, names that begin with
+  the first typed word first, then in stock, then A–Z. Each row shows the stock ("47884 Tablet") or
+  "habis"; out-of-stock medicines are still offered, after the rest, because a doctor may still
+  prescribe them. Mouse or ArrowUp/ArrowDown + Enter pick; Escape and blur close. Free text stays
+  allowed (a medicine not in the stock can still be written).
+- The list reuses the existing dropdown classes (`history-dropdown`, `option-item`); three rules are
+  appended to style.css: the panel sits in the form's flow without the overlay shadow (the form
+  opens inside an overflow-hidden collapse, which would clip an absolute panel), the stock count
+  stays muted, and the row the arrow keys reach keeps an `--accent-med` border (the shells'
+  `button:not(:hover)… { border-color … !important }` rule would otherwise hide it; same
+  specificity, later in the file).
+- Evidence: harness J20.9 viewed: "Am" lists Amitriptilin, Amlodipin 10 / 5 mg, Amoksilin,
+  Amoksisilin kapsul, Amoksisilin sirup with stock; picking "Amlodipin tablet 10 mg" with dose
+  "1x1" adds a card "Amlodipin tablet · 1x10mg" and Keamanan reports the duplicate with the
+  chronic Amlodipin. Tests: `searchStock` (3), TatalaksanaStep "offers the Puskesmas stock…".
+
 ## 2026-09-29 — Tatalaksana without red: findings are orange
 
 - Decision (Chief: "warna merah di ganti orange"): on the Tatalaksana page every red becomes the

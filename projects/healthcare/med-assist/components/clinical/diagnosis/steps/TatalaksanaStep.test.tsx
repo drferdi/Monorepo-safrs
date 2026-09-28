@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { DiagnosisPageProps } from '../diagnosisPageProps';
@@ -176,6 +177,28 @@ describe('TatalaksanaStep', () => {
     expect(screen.queryByTestId('dx-tx-med-form')).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: '+ Tambah obat' }));
     expect(screen.getByTestId('dx-tx-med-form')).toBeInTheDocument();
+  });
+
+  // Chief, 2026-09-29: "ketik Am... keluar lodipin", the name comes from the Puskesmas stock.
+  it('offers the Puskesmas stock as the medicine name is typed, and fills the name picked', () => {
+    function Page() {
+      const [draft, setDraft] = useState(props().manualMedicationDraft);
+      return <TatalaksanaStep {...props({ manualMedicationDraft: draft, onManualMedicationDraftChange: (field, value) => setDraft((current) => ({ ...current, [field]: value })) })} />;
+    }
+    render(<Page />);
+    fireEvent.click(screen.getByRole('button', { name: '+ Tambah obat' }));
+    const name = screen.getByPlaceholderText('Nama obat');
+    fireEvent.change(name, { target: { value: 'Am' } });
+    const option = within(screen.getByRole('listbox', { name: 'Stok obat Puskesmas' })).getByRole('option', { name: /Amlodipin tablet 10 mg/ });
+    expect(option).toHaveTextContent(/\d+ Tablet$/);
+    fireEvent.click(option);
+    expect(name).toHaveValue('Amlodipin tablet 10 mg');
+    expect(screen.queryByRole('listbox')).toBeNull();
+    // The keyboard picks too: down to the second match, Enter.
+    fireEvent.change(name, { target: { value: 'amlo' } });
+    fireEvent.keyDown(name, { key: 'ArrowDown' });
+    fireEvent.keyDown(name, { key: 'Enter' });
+    expect(name).toHaveValue('Amlodipin tablet 5 mg');
   });
 
   it('uses every proposal from "Gunakan semua usulan"', () => {
