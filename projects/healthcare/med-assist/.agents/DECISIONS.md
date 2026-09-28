@@ -3,6 +3,18 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-28 — The side-panel column holds still while one part opens ("konsol nyata")
+
+- Decision: opening a card's reasons animates only that panel (height, entries, lines, chevron);
+  no other element scales or slides. Every framer-motion `layout` animation on the page is
+  scoped with `layoutDependency` to the one event that should move it: the step wrapper,
+  receipts and ghosts to the active step, the cards to the chosen diagnosis. New content goes
+  inside an existing grid child, so no gap appears at once. Tap feedback sits only on the element
+  being tapped.
+- Rationale: Chief, on the live render: the dropdown was right but the column swayed
+  ("bergoyang", "bergelayut"); "ANGGAP KOLOM INI ADALAH CONSOL NYATA".
+- Evidence: `4df3887c`, measured with a MutationObserver on every style change in the column.
+
 ## 2026-09-28 — Diagnosis step follows Chief's mockup: utama, must not miss, banding, next best step
 
 - Decision: the Diagnosis step reads, top to bottom, "Usulan diagnosis utama" (or "Diagnosis

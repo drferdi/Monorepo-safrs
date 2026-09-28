@@ -1,48 +1,46 @@
 # HANDOFF
 
-Last updated: 2026-09-28 (late evening, diagnosis step on Chief's mockup, nothing said twice)
+Last updated: 2026-09-28 (late evening, mockup layout, no repeats, steady column, MIRA PII fix)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
 
 ## Current state
 
-Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** Today's earlier work
-(MIRA auto-start via native host, recurrent diagnoses, step-flow page, pixel loader, reasons
-timeline) is in `DECISIONS.md` and the commit bodies up to `265c488a`.
+Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEAD is the docs
+commit after `671777dc`. Today's earlier work (MIRA auto-start via native host, recurrent
+diagnoses, step-flow page, pixel loader, reasons timeline) is in `DECISIONS.md` and the commit
+bodies up to `265c488a`.
 
-Late evening, three commits:
+Late evening:
 
-- `ca874859` — Chief's mockup: "Usulan diagnosis utama" first, then MUST NOT MISS (MIRA
-  cannot-miss cards, outside the three-card cap), the numbered "Diagnosis banding N" cards with
-  "Lainnya (n) ⌄", then NEXT BEST STEP; `console-divider` between parts. Card: title and chip,
-  three-line `definisi`, tally row, "Lihat alasan ⌄" (MUST NOT MISS: "Mengapa perlu
-  dipertimbangkan ⌄" opening Temuan yang relevan, Bila terlewat from `komplikasi`, Data kurang,
-  "Apa yang perlu diperiksa →"). The recurrence rule is the Riwayat entry of the timeline.
-  `useDiseaseDefinitions` became `useDiseaseNotes`.
-- `2f2d70f2` — MIRA's `nextBestActions` now reach the page (`next_best_actions` in
-  `CDSSResponse`, filled in `run-diagnosis.ts` mira mode, first one kept in
-  `ClinicalDifferential`). No action, no section; the legacy engine sends none.
-- `c5b5ef88` — Chief flagged repeats on the live render; the page now
-  says nothing twice: no red "Jangan terlewat:" line, no chip on MUST NOT MISS cards, no
-  "Diagnosis banding" title, no counts in the timeline, one term "Data kurang".
+- `ca874859` — Chief's mockup: Usulan diagnosis utama, MUST NOT MISS, numbered Diagnosis banding
+  with "Lainnya", NEXT BEST STEP. Card: title and chip, three-line `definisi`, tally row,
+  "Lihat alasan ⌄" ("Mengapa perlu dipertimbangkan ⌄" on MUST NOT MISS).
+- `2f2d70f2` — MIRA's `nextBestActions` reach the page; no action, no section.
+- `c5b5ef88` — nothing said twice: no red "Jangan terlewat:" line, no chip on MUST NOT MISS
+  cards, no "Diagnosis banding" title, no counts in the timeline, one term "Data kurang".
+- `4df3887c` — steady column: opening the reasons moved every card, the step wrapper and the
+  ghosts (layout corrections) and added an 8 px grid gap at once. Now only the reasons panel
+  animates; layout animations run only on a step change or a selection change.
+- `671777dc` — the MIRA client blocked about 1 in 700 requests as PII because the random trace
+  id matched phone/NIK patterns; it now scans only the case. This was also the flaky
+  `mira-engine` test.
 
-No CSS change, no R3 path, no protected file. **SAFRS**: R2 UI plus R2 engine plumbing
-(`lib/diagnosis-engine/run-diagnosis.ts`, `types/api.ts`); the branch as a whole stays R3
-through `lib/clinical/recurrent-diagnosis.ts` (Chief's prior approval).
+No CSS change, no R3 path, no protected file. **SAFRS**: R2 UI and R2 engine code
+(`lib/diagnosis-engine/**`, `types/api.ts`); the branch stays R3 through
+`lib/clinical/recurrent-diagnosis.ts` (Chief's prior approval).
 
-MIRA service: nothing listened on 127.0.0.1:8787 at the end of the session (`/healthz` no
-answer). The host `com.sentra.mira` starts it when the side panel opens; that path was verified
-earlier today and was not changed.
+MIRA service: nothing listened on 127.0.0.1:8787 when checked this evening; the host
+`com.sentra.mira` starts it when the side panel opens (verified earlier today, unchanged).
 
 ## What Chief tests now
 
 1. `chrome://extensions` → reload "Asisten Medis" (`.output\chrome-mv3-dev`, rebuilt on the
-   final tree), open the side panel (MIRA starts), Trajectory → Diagnosis.
-2. Order: Usulan diagnosis utama, Must not miss (if MIRA names one), Diagnosis banding 1 and 2,
-   Lainnya, Next best step with "Masukkan hasil" (only when MIRA answered).
-3. "Lihat alasan" and "Mengapa perlu dipertimbangkan" open and close smoothly; no word, count or
-   warning appears twice.
+   final tree), open the side panel, Trajectory → Diagnosis.
+2. Press "Lihat alasan": only that card's reasons drop down; the cards above and below keep
+   their size and shape and simply make room. Close: they return exactly.
+3. Order and wording as above; nothing appears twice.
 
 ## Verification (capsule root, final tree)
 
@@ -50,21 +48,23 @@ earlier today and was not changed.
 |---|---|---|
 | `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`) |
 | `typecheck` | 0 | clean |
-| `test` | 0 | 174 files passed, 1 skipped; 1342 tests passed, 17 skipped |
+| `test` | 0 | 174 files passed, 1 skipped; 1344 tests passed, 17 skipped |
 | `exec wxt build --mode development` | 0 | clean |
 | `run:check` | 0 | "Extension loads: Asisten Medis 2.1.0 (MV3), all referenced files present." |
 
-Rendering checked in the Vite harness of the real stylesheet (closed and opened cards, next best
-step). Frame-by-frame motion could not be re-measured: the browser pane throttled animation
-frames to about 2 per second; the timeline motion itself is unchanged since `3b360c00`, where it
-was measured. Token-guard: no violations on the mockup layout.
+Motion checked in the Vite harness with a MutationObserver on every style change in the column
+and a real mouse click: open and close change only the timeline height, its entries and lines,
+and the chevron; card positions return exactly on close; selecting a card still folds the step
+into its receipt. Token-guard: no violations (three runs this evening).
 
 ## Deferred minors (none blocking)
 
-- `evidence.doNotMiss` and `buildDoNotMissReason` in `ClinicalDifferential.tsx` are now unused by
-  the page (left in place, existing code).
-- `console-divider` gives about 28 px around each divider against 12 px elsewhere; it is a
-  boot-card class and utilities cannot override it (style.css order, append-only).
+- `evidence.doNotMiss` and `buildDoNotMissReason` in `ClinicalDifferential.tsx` are unused by the
+  page now (existing code, left in place).
+- `console-divider` gives about 28 px around each divider against 12 px elsewhere; utilities
+  cannot override it (style.css order, append-only).
+- The Terapi medication rows still use `layout` and `whileTap` on the whole row; not reported as
+  a problem, same pattern as the fixed cards.
 - Carried: unused `.diagnosis-evidence-grid` and `dx-flow-*` CSS; `read_message` truncated-body
   guard; `askHost` disconnect and `publishMiraStatus` hydration untested; StrictMode double
   `miraEnsure` in dev; scanned visits never purged; `main.tsx` storage filter needs approval.
@@ -79,4 +79,4 @@ was measured. Token-guard: no violations on the mockup layout.
 
 ## Next action
 
-Chief reloads the extension and walks the checks above.
+Chief reloads the extension and presses "Lihat alasan" on a card.
