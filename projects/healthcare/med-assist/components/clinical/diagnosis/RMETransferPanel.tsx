@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 
 import { formatClinicalText, formatTransferState, isDiagnosisChosen } from './diagnosisDisplayUtils';
-import type { DiagnosisWorkspaceProps } from './DiagnosisWorkspace';
+import type { DiagnosisPageProps } from './diagnosisPageProps';
 import { StagedSection } from './StagedSection';
 import { TransferStepTracker } from './TransferStepTracker';
 
@@ -14,7 +14,7 @@ export function RMETransferPanel({
   onRetryTransfer,
   onCancelTransfer,
 }: Pick<
-  DiagnosisWorkspaceProps,
+  DiagnosisPageProps,
   | 'viewModel'
   | 'onAutoFillRME'
   | 'onTransferDiagnosis'

@@ -14,8 +14,8 @@ import type {
 } from './diagnosisViewModel';
 import type {
   DiagnosisManualMedicationDraftView,
-  DiagnosisWorkspaceProps,
-} from './DiagnosisWorkspace';
+  DiagnosisPageProps,
+} from './diagnosisPageProps';
 import { StagedSection } from './StagedSection';
 
 export function TherapyReviewPanel({
@@ -32,7 +32,7 @@ export function TherapyReviewPanel({
   onToggleMedication,
   onRemoveManualMedication,
 }: Pick<
-  DiagnosisWorkspaceProps,
+  DiagnosisPageProps,
   | 'viewModel'
   | 'showManualMedicationInput'
   | 'manualMedicationDraft'
