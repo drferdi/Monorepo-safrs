@@ -73,7 +73,7 @@ export function PenCheck({
   checked: boolean;
   seedText: string;
   delayMs?: number;
-  tone?: 'accent' | 'danger';
+  tone?: 'accent' | 'danger' | 'warning';
 }) {
   const reduceMotion = useReducedMotion();
   const stroke = checkPath(hash(seedText));

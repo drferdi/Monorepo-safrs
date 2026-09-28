@@ -251,6 +251,15 @@ describe('TatalaksanaStep', () => {
     expect(screen.getByTestId('dx-tx-summary')).toHaveTextContent('Safety check⚠ 1 perlu review');
   });
 
+  // Chief, 2026-09-29: "warna merah di ganti orange". Findings on this page are orange.
+  it('marks findings orange, never red', () => {
+    const interactions = [{ drug_a: 'Amlodipin 10 mg', drug_b: 'Kandesartan 8 mg', severity: 'major' as const, description: '', recommendation: '' }];
+    const { container } = render(<TatalaksanaStep {...props({ allergies: ['Amlodipin'], safetyNet: ['Sesak napas'], interactionCheck: { state: 'done', interactions } })} />);
+    expect(container.querySelector('[class*="danger"]')).toBeNull();
+    expect(screen.getByTestId('dx-tx-safety-warning')).toHaveClass('diagnosis-readonly-field--warning');
+    expect(container.querySelectorAll('.dx-tx-node--warning').length).toBeGreaterThan(0);
+  });
+
   it('explains a pair the curated table knows: why, and what to do', () => {
     const interactions = [{ drug_a: 'Amlodipin 10 mg', drug_b: 'Simvastatin 20 mg', severity: 'major' as const, description: 'Interaksi signifikan.', recommendation: 'Evaluasi kebutuhan terapi.' }];
     render(<TatalaksanaStep {...props({ chronicMedications: [amlodipin, { ...amlodipin, key: 'simvastatin', name: 'Simvastatin 20 mg' }], interactionCheck: { state: 'done', interactions } })} />);

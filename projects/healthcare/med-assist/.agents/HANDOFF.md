@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history)
+Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
@@ -8,7 +8,7 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 ## Current state
 
 Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEAD is the
-Tatalaksana DDI-reason commit after `fcae2482` (DECISIONS 2026-09-29, three Tatalaksana entries):
+Tatalaksana "no red" commit after `d4452590` (DECISIONS 2026-09-29, four Tatalaksana entries):
 
 - Four steps, three pages: Temuan 1/4 + Diagnosis 2/4 | Tatalaksana 3/4 | RME 4/4.
 - `steps/TatalaksanaStep.tsx` (replaces TherapyStep and EducationStep): Terapi kronis (visit
@@ -18,7 +18,7 @@ Tatalaksana DDI-reason commit after `fcae2482` (DECISIONS 2026-09-29, three Tata
   chronic condition), Safety net (KB `red_flags`), Ringkasan, "Selesai".
 - Revision: doses "1x10mg" (`formatDose`), each therapy card an activity timeline
   (name → dose → [indication] → DDI → contraindication); DDI says why (curated pair table,
-  `explainInteraction`) once per pair; "Review" history muted.
+  `explainInteraction`) once per pair; "Review" history muted; findings orange, no red.
 - Logic: `tatalaksana.ts`, `usePatientVisits.ts`, `labMotion.tsx` (lab.xevrion.dev motion);
   ClinicalDifferential runs `checkInteractions`, keeps dismissed proposals out of the
   prescription, sends the follow-up to RME `rencana_tindakan`.
@@ -41,7 +41,7 @@ Tatalaksana DDI-reason commit after `fcae2482` (DECISIONS 2026-09-29, three Tata
 |---|---|---|
 | `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`) |
 | `typecheck` | 0 | clean |
-| `test` | 0 | 179 files passed, 1 skipped; 1430 passed, 17 skipped (was 1427) |
+| `test` | 0 | 179 files passed, 1 skipped; 1431 passed, 17 skipped (was 1430) |
 | `exec wxt build --mode development` | 0 | clean |
 | `run:check` | 0 | "Extension loads: Asisten Medis 2.1.0 (MV3), all referenced files present." |
 

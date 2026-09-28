@@ -32,11 +32,12 @@ const CELLS = Array.from({ length: 16 }, (_, index) => index);
 export const PIXEL_CHECK = [8, 13, 10, 7];
 
 /**
- * A tone colours the cells: `accent` the page green, `danger` red; none keeps the title colour.
+ * A tone colours the cells: `accent` the page green, `danger` red, `warning` orange (Tatalaksana);
+ * none keeps the title colour.
  * `done` ends the cycle the way the reference does: the grid clears and the check is laid pixel by
  * pixel (120 ms, then 55 ms a pixel).
  */
-export function PixelLoader({ tone, done = false }: { tone?: 'accent' | 'danger'; done?: boolean } = {}) {
+export function PixelLoader({ tone, done = false }: { tone?: 'accent' | 'danger' | 'warning'; done?: boolean } = {}) {
   const reduceMotion = useReducedMotion();
   const [frame, setFrame] = useState(0);
 

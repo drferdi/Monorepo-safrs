@@ -10397,3 +10397,12 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
    date in the label column so the rows line up with the card's nodes above. */
 .dx-tx-review { display: flex; flex-direction: column; gap: 2px; margin: 8px 0 0; padding: 8px 0 0 31px; border-top: 1px solid var(--border-subtle); list-style: none; }
 .dx-tx-review-row { display: flex; align-items: baseline; gap: 10px; }
+
+/* Tatalaksana without red (Chief, 2026-09-29: "warna merah di ganti orange"): what needs review
+   there is orange, the warning token; MUST NOT MISS on the diagnosis page stays red. */
+.dx-tx-warning { color: var(--sentra-warning); }
+.dx-tx-kv dd.dx-tx-warning { color: var(--sentra-warning); }
+.dx-timeline__node.dx-tx-node--warning { color: var(--sentra-warning); border-color: var(--sentra-warning); }
+.dx-pen-check--warning { color: var(--sentra-warning); border-color: var(--sentra-warning); }
+.dx-pixel-loader--warning > span { background: var(--sentra-warning); }
+.dx-hold .dx-hold-fill { color: var(--sentra-warning); }

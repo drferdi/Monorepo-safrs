@@ -3,6 +3,19 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — Tatalaksana without red: findings are orange
+
+- Decision (Chief: "warna merah di ganti orange"): on the Tatalaksana page every red becomes the
+  warning token `--sentra-warning` (orange): the DDI partner and node, a contraindication, the
+  "⚠ Perlu review" box and the Safety net box (the existing `diagnosis-readonly-field--warning`),
+  the Keamanan pixel loader and pen check, the Ringkasan safety state and the "Hapus" hold fill.
+  MUST NOT MISS on the diagnosis page stays red (Chief, 2026-09-28). The earlier red rules of this
+  page (`.dx-tx-danger`, `.dx-tx-node--danger`, `.dx-pen-check--danger`) are no longer used; they
+  stay in style.css because the file is append-only.
+- Evidence: Med Assist commit after `d4452590`; harness J20.9 viewed: no element on the page
+  carries a danger class, the warning colour computes to rgb(245, 158, 11); test "marks findings
+  orange, never red".
+
 ## 2026-09-29 — Tatalaksana: why a DDI, and a muted medication history
 
 - Decision (Chief: "DDI : beri penjelasan kenapa ?" and, for the "Review" history rows, "buatkan

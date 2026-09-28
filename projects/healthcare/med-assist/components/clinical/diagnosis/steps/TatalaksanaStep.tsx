@@ -165,13 +165,13 @@ function Part({
   );
 }
 
-function Kv({ rows }: { rows: Array<{ term: string; value: ReactNode; tone?: 'danger' }> }) {
+function Kv({ rows }: { rows: Array<{ term: string; value: ReactNode; tone?: 'warning' }> }) {
   return (
     <dl className="dx-tx-kv">
       {rows.map((row, index) => (
         <div key={`${row.term}-${index}`} className="contents">
           <dt className="diagnosis-row-meta">{row.term}</dt>
-          <dd className={row.tone === 'danger' ? 'diagnosis-row-meta dx-tx-danger' : 'diagnosis-row-meta'}>{row.value}</dd>
+          <dd className={row.tone === 'warning' ? 'diagnosis-row-meta dx-tx-warning' : 'diagnosis-row-meta'}>{row.value}</dd>
         </div>
       ))}
     </dl>
@@ -189,7 +189,7 @@ const STEP_ICONS: Record<TherapyStepKey, string> = {
 };
 
 /** `tone` reds the node and the value; `ownTone` reds the node only (the value colours its parts). */
-type TherapyStepRow = { key: TherapyStepKey; label?: string; value: ReactNode; tone?: 'danger'; ownTone?: boolean };
+type TherapyStepRow = { key: TherapyStepKey; label?: string; value: ReactNode; tone?: 'warning'; ownTone?: boolean };
 
 /**
  * A therapy card as the "Activity timeline" of lab.xevrion.dev (Chief, 2026-09-29): name, dose,
@@ -220,7 +220,7 @@ function TherapyTimeline({ rows }: { rows: TherapyStepRow[] }) {
               transition={{ duration: 0.42, ease: EASE_OUT, delay: 0.16 + index * TIMELINE_STAGGER }}
             />
           ) : null}
-          <span aria-hidden="true" className={row.tone === 'danger' ? 'dx-timeline__node dx-tx-node--danger' : 'dx-timeline__node'}>
+          <span aria-hidden="true" className={row.tone === 'warning' ? 'dx-timeline__node dx-tx-node--warning' : 'dx-timeline__node'}>
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d={STEP_ICONS[row.key]} />
             </svg>
@@ -228,7 +228,7 @@ function TherapyTimeline({ rows }: { rows: TherapyStepRow[] }) {
           {row.label ? (
             <div className="dx-tx-step min-w-0 flex-1">
               <span className="diagnosis-row-meta dx-tx-step-label">{row.label}</span>
-              <span className={row.tone === 'danger' && !row.ownTone ? 'diagnosis-row-meta dx-tx-danger min-w-0' : 'diagnosis-row-meta dx-tx-step-value min-w-0'}>
+              <span className={row.tone === 'warning' && !row.ownTone ? 'diagnosis-row-meta dx-tx-warning min-w-0' : 'diagnosis-row-meta dx-tx-step-value min-w-0'}>
                 {row.value}
               </span>
             </div>
@@ -273,7 +273,7 @@ function DdiValue({
         const why = explains.has(key) ? explainInteraction(interaction) : null;
         return (
           <span key={key} className="flex flex-col" data-ddi-reason={why ? key : undefined}>
-            <span className={isSerious(interaction) ? 'dx-tx-danger' : undefined}>
+            <span className={isSerious(interaction) ? 'dx-tx-warning' : undefined}>
               {`${interaction.drug_a === name ? interaction.drug_b : interaction.drug_a} (${interaction.severity})`}
             </span>
             {why ? (
@@ -333,14 +333,14 @@ function ChronicCard({
             key: 'ddi',
             label: 'DDI',
             value: <DdiValue name={medication.name} interactionCheck={interactionCheck} explains={explains} />,
-            tone: hasSeriousInteraction(medication.name, interactionCheck.interactions) ? 'danger' : undefined,
+            tone: hasSeriousInteraction(medication.name, interactionCheck.interactions) ? 'warning' : undefined,
             ownTone: true,
           },
           {
             key: 'kontra',
             label: 'Kontraindikasi',
             value: allergy.length > 0 ? allergy.map((item) => `alergi ${item}`).join(', ') : 'tidak terdeteksi',
-            tone: allergy.length > 0 ? 'danger' : undefined,
+            tone: allergy.length > 0 ? 'warning' : undefined,
           },
         ]}
       />
@@ -494,14 +494,14 @@ function VisitCard({
               key: 'ddi',
               label: 'DDI',
               value: <DdiValue name={medication.name} interactionCheck={interactionCheck} explains={explains} />,
-              tone: serious ? 'danger' : undefined,
+              tone: serious ? 'warning' : undefined,
               ownTone: true,
             },
             {
               key: 'kontra',
               label: 'Kontraindikasi',
               value: contraindications.length > 0 ? contraindications.join(', ') : 'tidak terdeteksi',
-              tone: contraindications.length > 0 ? 'danger' : undefined,
+              tone: contraindications.length > 0 ? 'warning' : undefined,
             },
           ]}
         />
@@ -562,7 +562,7 @@ function SafetyPart({
       // No pixel check when the interaction check could not run: nothing was checked to tick.
       loader={
         interactionCheck.state === 'unavailable' ? undefined : (
-          <PixelLoader tone={findings > 0 ? 'danger' : 'accent'} done={!checking} />
+          <PixelLoader tone={findings > 0 ? 'warning' : 'accent'} done={!checking} />
         )
       }
     >
@@ -573,14 +573,14 @@ function SafetyPart({
           <ul className="flex flex-col gap-1" data-testid="dx-tx-safety-lines">
             {lines.map((line, index) => (
                 <li key={line.key} className="flex items-center gap-2 text-small">
-                  <PenCheck checked={line.ok} seedText={line.text} delayMs={180 + index * 140} tone={line.ok ? 'accent' : 'danger'} />
-                  <span className={line.ok ? '' : 'dx-tx-danger'}>{line.text}</span>
+                  <PenCheck checked={line.ok} seedText={line.text} delayMs={180 + index * 140} tone={line.ok ? 'accent' : 'warning'} />
+                  <span className={line.ok ? '' : 'dx-tx-warning'}>{line.text}</span>
                 </li>
               ))}
           </ul>
           {findings > 0 ? (
             <div
-              className="neu-textarea neu-textarea--symptom diagnosis-readonly-field diagnosis-readonly-field--danger"
+              className="neu-textarea neu-textarea--symptom diagnosis-readonly-field diagnosis-readonly-field--warning"
               data-testid="dx-tx-safety-warning"
             >
               <div className="diagnosis-row-head">
@@ -917,7 +917,7 @@ export function TatalaksanaStep({
 
       <Part order={order++} label="Safety net" testId="dx-tx-safety-net">
         {safetyNet.length > 0 ? (
-          <div className="neu-textarea neu-textarea--symptom diagnosis-readonly-field diagnosis-readonly-field--danger">
+          <div className="neu-textarea neu-textarea--symptom diagnosis-readonly-field diagnosis-readonly-field--warning">
             <div className="diagnosis-list-title">Segera kembali / rujuk bila</div>
             <ul className="diagnosis-line-list">
               {safetyNet.map((flag) => (
@@ -958,7 +958,7 @@ export function TatalaksanaStep({
                   : findings > 0
                     ? `⚠ ${findings} perlu review`
                     : '✓ Aman',
-              tone: findings > 0 ? 'danger' : undefined,
+              tone: findings > 0 ? 'warning' : undefined,
             },
           ]}
         />
