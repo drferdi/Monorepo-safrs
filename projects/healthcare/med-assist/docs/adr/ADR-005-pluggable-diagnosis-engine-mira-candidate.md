@@ -5,7 +5,7 @@
 - **Proposed**: 2026-09-27
 - **Decision Maker**: Chief (dr. Ferdi Iskandar), pending
 - **Review Date**: after the Gate 1 benchmark has run
-- **Status**: Proposed
+- **Status**: Accepted (2026-09-28)
 - **Related ADRs**: ADR-004 (dashboard as canonical clinical engine)
 - **Related work**: `docs/plans/diagnosis-engine-inventory.md` (inventory of the legacy engine),
   `lib/diagnosis-engine/` (implementation), `mira-system/assist/MIRA_ASSESSMENT.md` (outside this
@@ -13,7 +13,7 @@
 
 ## Status
 
-**Proposed. Nothing in this ADR changes clinical behaviour until Chief accepts it.**
+**Accepted on 2026-09-28: Chief made `mira` the production default. The safety layer is unchanged. ADR-004's rule "penyakit.json wins" is superseded for the differential only.**
 
 Two domain rules in `AGENTS.md` stay in force until then:
 
@@ -46,7 +46,7 @@ If the Gate 1 benchmark passes and Chief accepts this ADR, it **supersedes the f
   - its prompts and tools assume a US emergency department;
   - the published configuration uses `o1`, which OpenAI shuts down on 2026-12-11.
 
-## Decision (proposed)
+## Decision
 
 ### Implemented now, with no behaviour change
 

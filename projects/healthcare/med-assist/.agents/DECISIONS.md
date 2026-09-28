@@ -3,6 +3,36 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-28 — MIRA starts with Assist through a native messaging host; mira is the production default
+
+- Decision: the extension starts the MIRA reasoning service itself, through a native messaging
+  host (`nativeMessaging` permission, host `com.sentra.mira`, installed once with
+  `install_host.ps1 -ExtensionId <id>` in the MIRA repository) instead of requiring the service
+  to already be running, and prefetches its answer from the Trajectory stage. `SENTRA_DIAGNOSIS_ENGINE`
+  now defaults to `mira` in the production build (via a Vite `define` in `wxt.config.ts`) when the
+  variable is unset; Vitest and dev keep the `legacy` default. The deterministic safety layer is
+  unchanged.
+- Rationale: MIRA only helps if it is actually available when a physician opens a case; a
+  service the extension does not manage is a service that is sometimes not running. Chief
+  accepted ADR-005 on 2026-09-28 to make MIRA the production default now that autostart and
+  prefetch remove that gap.
+- Evidence: `assist/host/tests/test_host.py` in the MIRA repository (`D:\DEV\gafferverse\mira-system`)
+  (Task 1); `lib/diagnosis-engine/mira-supervisor.test.ts` (Task 4);
+  `lib/diagnosis-engine/mira-prefetch.test.ts` and `lib/diagnosis-engine/request-context.test.ts`
+  (Task 6).
+
+## 2026-09-28 — "MIRA tidak tersedia" on 2026-09-28 was the service not running
+
+- Decision: the "MIRA tidak tersedia" note the physician saw was not a code defect. Its cause
+  was that the MIRA reasoning service was not running when the extension called it; the
+  extension's `mira` engine correctly fell back to the legacy result and flagged the failure.
+  This is resolved by the native messaging host (Task 1): Assist now asks the host to start the
+  service and shows its status in the header, so the service is running before the panel needs
+  it.
+- Rationale: recording the cause here keeps a future "MIRA tidak tersedia" report from being
+  re-diagnosed as a client bug when the service process is simply not up yet.
+- Evidence: `assist/host/tests/test_host.py` in the MIRA repository (`D:\DEV\gafferverse\mira-system`).
+
 ## 2026-09-28 — Button sound plays on press (protected main.tsx, Chief approved)
 
 - Decision: the side panel's global button-sound listener in `entrypoints/sidepanel/main.tsx`

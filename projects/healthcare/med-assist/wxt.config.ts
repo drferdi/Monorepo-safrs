@@ -72,5 +72,9 @@ export default defineConfig({
       chunkSizeWarningLimit: 2000,
     },
     envPrefix: ['VITE_', 'SENTRA_'],
+    define:
+      process.env.NODE_ENV === 'production' && !process.env.SENTRA_DIAGNOSIS_ENGINE
+        ? { 'import.meta.env.SENTRA_DIAGNOSIS_ENGINE': JSON.stringify('mira') }
+        : {},
   }),
 });
