@@ -1,7 +1,12 @@
 import type { ReactNode } from 'react';
 
 import { DiagnosisProgressStepper } from './DiagnosisProgressStepper';
-import { isDiagnosisChosen } from './diagnosisDisplayUtils';
+import {
+  getVisibleSafetyItems,
+  isDiagnosisChosen,
+  isGenericDiagnosisUiText,
+  splitReferralGuidance,
+} from './diagnosisDisplayUtils';
 import type { DiagnosisPageProps, DiagnosisTriageView } from './diagnosisPageProps';
 import type { DiagnosisCandidateView, DiagnosisPageViewModel } from './diagnosisViewModel';
 import { RMETransferPanel } from './RMETransferPanel';
@@ -436,21 +441,7 @@ function CandidateRow({
   );
 }
 
-const REFERRAL_ITEM_START = /^(\s+\S|\s*\d+[.)]\s|\s*[-•·]\s)/;
-
-export function splitReferralGuidance(text: string): string[] {
-  const items: string[] = [];
-  text.split(/\r?\n/).forEach((line, index) => {
-    if (!line.trim()) return;
-    const cleaned = line.replace(/^\s*(\d+[.)]|[-•·])\s*/, '').trim();
-    if (index === 0 || REFERRAL_ITEM_START.test(line) || items.length === 0) {
-      items.push(cleaned);
-    } else {
-      items[items.length - 1] = `${items[items.length - 1]} ${cleaned}`;
-    }
-  });
-  return items;
-}
+export { splitReferralGuidance } from './diagnosisDisplayUtils';
 
 function TriageSummarySection({
   triage,
@@ -682,31 +673,6 @@ function getVisibleExamItems(items: string[]): string[] {
   return dedupeSignals(
     items.map(cleanClinicalSummary).filter((item) => item && !isGenericDiagnosisUiText(item))
   ).slice(0, 4);
-}
-
-function getVisibleSafetyItems(redFlags: string[], doNotMissItems: string[]): string[] {
-  return dedupeSignals(
-    [...redFlags, ...doNotMissItems]
-      .map(cleanClinicalSummary)
-      .map((item) => item.replace(/^Do not miss:\s*/i, '').trim())
-      .filter((item) => item && !isGenericDiagnosisUiText(item) && !isChronicRiskContextOnly(item))
-  );
-}
-
-function isGenericDiagnosisUiText(value: string): boolean {
-  return (
-    value.length > 96 ||
-    /^(gejala khas belum menonjol|dukungan tanda vital belum dominan|correlate with examination)$/i.test(
-      value
-    ) ||
-    /^(pemeriksaan penunjang wajib segera|evaluasi lebih lanjut terhadap|pertimbangkan konsultasi dengan spesialis|kriteria rujukan)/i.test(
-      value
-    )
-  );
-}
-
-function isChronicRiskContextOnly(value: string): boolean {
-  return /^riwayat penyakit kronis\b/i.test(value);
 }
 
 function buildClinicalSignals({

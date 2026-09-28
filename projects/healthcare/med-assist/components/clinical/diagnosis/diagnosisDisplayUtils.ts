@@ -160,3 +160,28 @@ export function getVisibleErrorMessage(message: string): string {
 
   return formatClinicalText(cleaned);
 }
+
+export function getVisibleSafetyItems(redFlags: string[], doNotMissItems: string[]): string[] {
+  return dedupeSignals(
+    [...redFlags, ...doNotMissItems]
+      .map(cleanClinicalSummary)
+      .map((item) => item.replace(/^Do not miss:\s*/i, '').trim())
+      .filter((item) => item && !isGenericDiagnosisUiText(item) && !isChronicRiskContextOnly(item))
+  );
+}
+
+const REFERRAL_ITEM_START = /^(\s+\S|\s*\d+[.)]\s|\s*[-•·]\s)/;
+
+export function splitReferralGuidance(text: string): string[] {
+  const items: string[] = [];
+  text.split(/\r?\n/).forEach((line, index) => {
+    if (!line.trim()) return;
+    const cleaned = line.replace(/^\s*(\d+[.)]|[-•·])\s*/, '').trim();
+    if (index === 0 || REFERRAL_ITEM_START.test(line) || items.length === 0) {
+      items.push(cleaned);
+    } else {
+      items[items.length - 1] = `${items[items.length - 1]} ${cleaned}`;
+    }
+  });
+  return items;
+}
