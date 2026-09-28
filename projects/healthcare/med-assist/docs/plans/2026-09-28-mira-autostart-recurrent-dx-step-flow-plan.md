@@ -1684,7 +1684,7 @@ export function useRecurrentDiagnoses(
   return candidates;
 }
 ```
-(If `react-hooks/exhaustive-deps` flags `load`/`today`, hold them in `useRef` and read `.current` inside the effect; never add an eslint-disable.)
+(If `react-hooks/exhaustive-deps` flags `load`/`today`, hold them in `useRef` and read `.current` inside the effect; never add a lint suppression comment.)
 
 `diagnosisViewModel.ts`: add `export interface DiagnosisHistoryView { label: 'Kronis' | 'Berulang'; count: number; visitsConsidered: number; lastSeen: string; engineAgrees: boolean }`, add `history?: DiagnosisHistoryView` to `DiagnosisCandidateViewModelInput` and `DiagnosisCandidateView`, and copy it in `buildCandidateViews` (`history: candidate.history ? { ...candidate.history } : undefined`).
 
