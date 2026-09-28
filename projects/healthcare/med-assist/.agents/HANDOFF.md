@@ -1,13 +1,13 @@
 # HANDOFF
 
-Last updated: 2026-09-28 (evening, differentials-first order + pixel loader)
+Last updated: 2026-09-28 (evening, order, pixel loader, card explanation)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
 
 ## Current state
 
-Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEAD `d6671533`.
+Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEAD `12ec57c6`.
 Morning: plan `docs/plans/2026-09-28-mira-autostart-recurrent-dx-step-flow-plan.md` landed as
 `40f3b80c..9b355bfe` (MIRA auto-start via native host in `D:\DEV\gafferverse\mira-system`,
 branch `feat/reasoning-service`, never pushed; recurrent diagnoses from the record; step-flow
@@ -34,8 +34,15 @@ framer-motion, decorative, cycle read from the reference's DOM: spiral 30, snake
 radius. It animates on every Diagnosis step state, as asked; the other step headers (Temuan,
 Terapi, RME) have no loader.
 
+Card face (`12ec57c6`): on Chief's request every diagnosis card reads title, the knowledge base's
+`definisi` clamped to three lines (`useDiseaseDefinitions` reads `/data/penyakit.json`;
+`getPenyakitByIcd` in R3 does not carry `definisi`, so it was not touched), the rule/tally
+line, then "Tap here" (was "alasan") which opens the reasons. "· MIRA setuju" is gone from
+the history line. Codes absent from the knowledge base (MIRA-only, e.g. K65.0) show no
+explanation.
+
 MIRA host and service: unchanged since `1cdbd1f8` (host `com.sentra.mira` registered under HKCU,
-service on 127.0.0.1:8787). `.output/chrome-mv3-dev` rebuilt at `d6671533`.
+service on 127.0.0.1:8787). `.output/chrome-mv3-dev` rebuilt at `12ec57c6`.
 
 **SAFRS**: this change set is R2 UI (`components/clinical/diagnosis/steps/DiagnosisStep.tsx` and
 tests). The branch as a whole remains R3 through `lib/clinical/recurrent-diagnosis.ts` (Chief's
@@ -44,7 +51,8 @@ prior approval).
 ## What Chief tests now
 
 1. `chrome://extensions` → reload "Asisten Medis" (bundle `.output\chrome-mv3-dev`).
-2. Trajectory → Diagnosis: the pixel loader animates left of the DIAGNOSIS title.
+2. Trajectory → Diagnosis: the pixel loader animates left of the DIAGNOSIS title; each card
+   shows a three-line explanation under its title and "Tap here" at the bottom.
    Temuan receipt (3 findings), then the DIAGNOSIS panel reads top to
    bottom: "Diagnosis banding 1", "Diagnosis banding 2" (a third only for a MIRA cannot-miss
    card), "Lainnya (n)" if more, then "Usulan diagnosis utama" with the patient's Kronis/Berulang
@@ -55,13 +63,13 @@ prior approval).
 4. If Chief wanted the primary slot labelled plain "Diagnosis" instead of "Diagnosis utama", that
    is a one-string change in `DiagnosisStep.tsx` plus the label assertions in its test.
 
-## Verification (capsule root, `node scripts/pnpm.mjs run <script>`, at `d6671533`)
+## Verification (capsule root, `node scripts/pnpm.mjs run <script>`, at `12ec57c6`)
 
 | Gate | Exit | Result |
 |---|---|---|
 | `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`) |
 | `typecheck` | 0 | clean |
-| `test` | 0 | 172 files passed, 1 skipped; 1326 tests passed, 17 skipped |
+| `test` | 0 | 173 files passed, 1 skipped; 1333 tests passed, 17 skipped |
 | `exec wxt build --mode development` | 0 | clean |
 | `run:check` | 0 | "Extension loads: Asisten Medis 2.1.0 (MV3), all referenced files present." |
 
@@ -69,9 +77,8 @@ Rendering verified in a Vite harness of the real stylesheet in the browser pane 
 tap, receipt, "ubah" reopened state; loader beside the title, centred on it, same colour,
 frames matching the reference). Token-guard: order change clean; loader flagged a literal 1 px
 radius (fixed to 0) and "design invention" (Chief asked for it in chat). This capsule has no
-`check:tokens` script, a pre-existing gap. The table's lint, typecheck and full test run are
-from the 3 px tree before the radius fix (a one-line CSS change); after it, the three affected
-test files, the build and run:check were rerun, all exit 0. The harness
+`check:tokens` script, a pre-existing gap. All five gates in the table ran on the final tree;
+token-guard found no violation in the card change. The harness
 (`scratchpad/harness`, `.claude/launch.json`) was session-only and removed.
 
 ## Deferred minors (none blocking)
@@ -108,6 +115,9 @@ a–g and parked a11y minors; `main.tsx` `storage.onChanged` filter needs a prot
   danger sign on a page Chief ruled danger-sign free; the MIRA "jangan terlewat" chip on a card
   is the cannot-miss diagnosis. Chief decides whether the red line stays.
 - Whether Temuan, Terapi and RME headers get the loader too (only Diagnosis asked).
+- "Tap here" is English on an Indonesian card (kept as Chief wrote it; "Ketuk di sini" is a
+  one-string change). The tally line "mendukung n · tidak n · ? n" still sits on engine cards;
+  it could move into the dropdown if Chief wants the face shorter.
 
 ## Next action
 
