@@ -148,7 +148,6 @@ function makeProps(overrides: Partial<DiagnosisPageProps> = {}): DiagnosisPagePr
     onManualNameChange: vi.fn(),
     onSubmitManualDiagnosis: vi.fn(),
     onToggleCandidate: vi.fn(),
-    onRemoveDiagnosis: vi.fn(),
     onSelectAllMedications: vi.fn(),
     onClearMedications: vi.fn(),
     onToggleManualMedicationInput: vi.fn(),
@@ -167,23 +166,30 @@ function makeProps(overrides: Partial<DiagnosisPageProps> = {}): DiagnosisPagePr
 }
 
 describe('DiagnosisStepFlow', () => {
-  it('shows no danger-sign list, the finished Temuan as a receipt, Diagnosis active and Terapi/RME as ghosts', () => {
+  it('shows no danger-sign list, the finished Temuan as a receipt, Diagnosis active and nothing of Terapi or RME on this first page', () => {
     const vm = makeViewModel({ therapy: { ...makeViewModel().therapy, selectedDiagnosisCount: 0, selectedMedicationCount: 0 } });
     render(<DiagnosisStepFlow {...makeProps({ viewModel: vm })} />);
     expect(screen.queryByText(/tanda bahaya/)).toBeNull();
     expect(screen.getByTestId('dx-flow-receipt-finding')).toHaveTextContent('Temuan');
     expect(screen.getByTestId('dx-flow-receipt-finding')).toHaveTextContent('Demam · Batuk · Sesak');
     expect(screen.getByRole('heading', { name: 'Diagnosis' })).toBeInTheDocument();
-    expect(screen.getByTestId('dx-flow-ghost-therapy')).toHaveTextContent('3 · Terapi');
-    expect(screen.getByTestId('dx-flow-ghost-rme')).toHaveTextContent('4 · RME');
+    // Terapi and RME are the next page (Chief, 2026-09-28), so not even their ghosts show here.
+    expect(screen.queryByTestId('dx-flow-ghost-therapy')).toBeNull();
+    expect(screen.queryByTestId('dx-flow-ghost-rme')).toBeNull();
     expect(screen.queryByRole('heading', { name: 'Terapi' })).toBeNull();
   });
 
-  it('moves the focus to Terapi once a diagnosis is chosen and shows Diagnosis as a receipt', () => {
+  it('moves to the second page once a diagnosis is chosen: Temuan and Diagnosis as receipts above Terapi, RME next', () => {
     const vm = makeViewModel({ therapy: { ...makeViewModel().therapy, selectedMedicationCount: 0 } });
     render(<DiagnosisStepFlow {...makeProps({ viewModel: vm })} />);
-    expect(screen.getByTestId('dx-flow-receipt-diagnosis')).toHaveTextContent('J18.9 - Community Acquired Pneumonia');
-    expect(screen.getByRole('heading', { name: 'Terapi' })).toBeInTheDocument();
+    const findingReceipt = screen.getByTestId('dx-flow-receipt-finding');
+    const diagnosisReceipt = screen.getByTestId('dx-flow-receipt-diagnosis');
+    expect(diagnosisReceipt).toHaveTextContent('J18.9 - Community Acquired Pneumonia');
+    const terapi = screen.getByRole('heading', { name: 'Terapi' });
+    expect(findingReceipt.compareDocumentPosition(diagnosisReceipt) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(diagnosisReceipt.compareDocumentPosition(terapi) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(screen.getByTestId('dx-flow-ghost-rme')).toHaveTextContent('4 · RME');
+    expect(screen.queryByRole('heading', { name: 'Diagnosis' })).toBeNull();
   });
 
   it('reopens a finished step from "ubah" and returns to the flow from "selesai"', () => {
@@ -195,7 +201,7 @@ describe('DiagnosisStepFlow', () => {
     expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
   });
 
-  it('keeps every later finished step as a receipt below a reopened earlier step', () => {
+  it('keeps the first page\'s later receipt below a reopened Temuan, and nothing of the second page', () => {
     render(<DiagnosisStepFlow {...makeProps()} />);
     fireEvent.click(screen.getByRole('button', { name: 'Lanjut' }));
     expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
@@ -204,15 +210,17 @@ describe('DiagnosisStepFlow', () => {
     expect(screen.getByTestId('diagnosis-clinical-signals')).toHaveTextContent('Sesak');
     expect(screen.queryByTestId('dx-flow-receipt-finding')).toBeNull();
     const diagnosisReceipt = screen.getByTestId('dx-flow-receipt-diagnosis');
-    const therapyReceipt = screen.getByTestId('dx-flow-receipt-therapy');
     expect(diagnosisReceipt).toHaveTextContent('J18.9 - Community Acquired Pneumonia');
-    expect(therapyReceipt).toHaveTextContent('Paracetamol 500 mg');
     // In step order, below the reopened step.
     const temuan = screen.getByRole('heading', { name: 'Temuan' });
     expect(temuan.compareDocumentPosition(diagnosisReceipt) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(diagnosisReceipt.compareDocumentPosition(therapyReceipt) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    // Terapi's receipt and RME belong to the second page.
+    expect(screen.queryByTestId('dx-flow-receipt-therapy')).toBeNull();
     expect(screen.queryByTestId('dx-flow-ghost-therapy')).toBeNull();
-    expect(screen.getByTestId('dx-flow-ghost-rme')).toBeInTheDocument();
+    expect(screen.queryByTestId('dx-flow-ghost-rme')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'selesai' }));
+    expect(screen.getByTestId('dx-flow-receipt-therapy')).toHaveTextContent('Paracetamol 500 mg');
+    expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
   });
 
   it('shows Temuan as a receipt and only the Diagnosis step, with its skeleton, while loading', () => {
@@ -222,8 +230,8 @@ describe('DiagnosisStepFlow', () => {
     expect(document.querySelectorAll('.diagnosis-skeleton__card')).toHaveLength(2);
     expect(screen.getByText('Menyusun diagnosis banding...')).toHaveClass('sr-only');
     expect(screen.getAllByRole('heading').map((heading) => heading.textContent)).toEqual(['Diagnosis']);
-    expect(screen.getByTestId('dx-flow-ghost-therapy')).toBeInTheDocument();
-    expect(screen.getByTestId('dx-flow-ghost-rme')).toBeInTheDocument();
+    expect(screen.queryByTestId('dx-flow-ghost-therapy')).toBeNull();
+    expect(screen.queryByTestId('dx-flow-ghost-rme')).toBeNull();
   });
 
   it('keeps Terapi open while medications are tapped and closes it only from "Lanjut"', () => {

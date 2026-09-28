@@ -306,16 +306,17 @@ describe('ClinicalDifferential final diagnosis support page', () => {
         'utf8'
       );
     }
+    // The first page ends at Penunjang; Terapi and RME are the next page.
     const expectedOrder = [
       'Temuan',
       'Diagnosis',
       'Penunjang (',
-      '3 · Terapi',
-      '4 · RME',
     ];
     const positions = expectedOrder.map((label) => workspace.textContent?.indexOf(label) ?? -1);
     positions.forEach((position) => expect(position).toBeGreaterThanOrEqual(0));
     expect(positions).toEqual([...positions].sort((a, b) => a - b));
+    expect(workspace.textContent).not.toContain('3 · Terapi');
+    expect(workspace.textContent).not.toContain('4 · RME');
 
     fireEvent.click(within(workspace).getByRole('button', { name: 'ubah Temuan' }));
     const clinicalContext = within(workspace).getByLabelText('Temuan');
@@ -370,13 +371,14 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     expect(sidePanelStyle).toMatch(/\.diagnosis-chip[\s\S]*overflow-wrap:\s*anywhere/);
     expect(sidePanelStyle).toMatch(/\.diagnosis-row-meta[\s\S]*overflow-wrap:\s*anywhere/);
     expect(within(workspace).getByRole('button', { name: /Diagnosis manual/i })).toBeTruthy();
-    // Temuan #1 restore (2026-07-05): therapy, education, and RME transfer now
+    // Temuan #1 restore (2026-07-05): therapy, education, and RME transfer
     // render on the focused surface (fail-closed until a diagnosis is selected):
-    // Terapi and RME as the next steps, Edukasi as a one-line link. The transfer
-    // buttons are asserted on the mounted RME step at the end of this test.
-    expect(within(workspace).getByTestId('dx-flow-ghost-therapy')).toHaveTextContent('3 · Terapi');
+    // Edukasi as a one-line link here, Terapi and RME on the next page
+    // (2026-09-28), so not even their ghosts show before a diagnosis. The
+    // transfer buttons are asserted on the mounted RME step at the end of this test.
+    expect(within(workspace).queryByTestId('dx-flow-ghost-therapy')).toBeNull();
     expect(within(workspace).getByRole('button', { name: /^Edukasi \(/ })).toBeTruthy();
-    expect(within(workspace).getByTestId('dx-flow-ghost-rme')).toHaveTextContent('4 · RME');
+    expect(within(workspace).queryByTestId('dx-flow-ghost-rme')).toBeNull();
     // No medication is proposed until the physician selects a working diagnosis.
     expect(within(workspace).queryByText(/Paracetamol 500 mg/i)).toBeNull();
 

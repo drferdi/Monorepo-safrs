@@ -472,17 +472,22 @@ describe('ClinicalDifferential secure logic contract', () => {
     renderClinicalDifferential();
 
     const workspace = await screen.findByTestId('diagnosis-workspace');
-    // Therapy review step is present on the surface...
-    expect(within(workspace).getByTestId('dx-flow-ghost-therapy')).toHaveTextContent('3 · Terapi');
-    // ...but no medication is proposed until a working diagnosis is selected.
+    // Therapy review is the next page, reached only once a diagnosis is selected
+    // (2026-09-28: Terapi and RME moved off the Diagnosis page)...
+    expect(within(workspace).queryByTestId('dx-flow-ghost-therapy')).toBeNull();
+    expect(within(workspace).queryByLabelText('Terapi')).toBeNull();
+    // ...so no medication is proposed until a working diagnosis is selected.
     expect(within(workspace).queryByText(/Paracetamol 500 mg/i)).toBeNull();
+    fireEvent.click((await within(workspace).findAllByTestId('dx-flow-card'))[0]);
+    expect(await within(workspace).findByLabelText('Terapi')).toBeTruthy();
   });
 
   it('renders RME transfer controls with resep fail-closed until a medication is selected', async () => {
     renderClinicalDifferential();
 
     const workspace = await screen.findByTestId('diagnosis-workspace');
-    expect(within(workspace).getByTestId('dx-flow-ghost-rme')).toHaveTextContent('4 · RME');
+    // RME is on the next page with Terapi, not on the Diagnosis page.
+    expect(within(workspace).queryByTestId('dx-flow-ghost-rme')).toBeNull();
     // Resep uplink stays fail-closed until the physician selects a medication: reach the
     // RME step with a diagnosis and no medication, and no transfer is dispatched merely
     // by rendering the surface.

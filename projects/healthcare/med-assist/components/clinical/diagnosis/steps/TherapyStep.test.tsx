@@ -29,7 +29,7 @@ function vm(): DiagnosisPageViewModel {
   };
 }
 
-const handlers = () => ({ onRemoveDiagnosis: vi.fn(), onSelectAllMedications: vi.fn(), onClearMedications: vi.fn(), onToggleManualMedicationInput: vi.fn(), onManualMedicationDraftChange: vi.fn(), onAddManualMedication: vi.fn(), onToggleMedication: vi.fn(), onRemoveManualMedication: vi.fn(), onConfirm: vi.fn(), onSkip: vi.fn() });
+const handlers = () => ({ onSelectAllMedications: vi.fn(), onClearMedications: vi.fn(), onToggleManualMedicationInput: vi.fn(), onManualMedicationDraftChange: vi.fn(), onAddManualMedication: vi.fn(), onToggleMedication: vi.fn(), onRemoveManualMedication: vi.fn(), onConfirm: vi.fn(), onSkip: vi.fn() });
 
 describe('TherapyStep', () => {
   it('is headed "Terapi" and shows one row per medication with one status word', () => {

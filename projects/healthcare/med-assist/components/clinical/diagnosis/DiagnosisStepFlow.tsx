@@ -33,6 +33,9 @@ const slide: Variants = {
     transitionEnd: { filter: 'none' },
   },
 };
+/** Diagnosis, the last step of the first page. */
+const LAST_FIRST_PAGE_INDEX = 2;
+
 const fade: Variants = {
   enter: { opacity: 0 },
   center: { opacity: 1, transition: { duration: 0.2, ease: EASE_OUT } },
@@ -98,6 +101,12 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
     previousIndex.current = activeIndex;
   }, [activeIndex]);
 
+  // Two pages (Chief, 2026-09-28): Temuan and Diagnosis, then Terapi and RME. The first page
+  // carries nothing of the second; the second keeps the first page's receipts on top, and their
+  // "ubah" goes back to it.
+  const onFirstPage = activeIndex <= LAST_FIRST_PAGE_INDEX;
+  const onThisPage = (s: (typeof steps)[number]) => !onFirstPage || s.index <= LAST_FIRST_PAGE_INDEX;
+
   // Every finished step other than the active one is a receipt, in step order around it.
   const receipt = (s: (typeof steps)[number]) => (
     <StepReceipt key={s.key} step={s} summary={summaries[s.key]} onReopen={() => setReopened(s.key)} layoutKey={active} />
@@ -162,10 +171,10 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
             ) : null}
           </motion.div>
         </motion.div>
-        {steps.filter((s) => s.done && s.index > activeIndex).map(receipt)}
+        {steps.filter((s) => s.done && s.index > activeIndex && onThisPage(s)).map(receipt)}
         <SideLinks viewModel={viewModel} />
         {steps
-          .filter((s) => s.index > activeIndex && !s.done)
+          .filter((s) => s.index > activeIndex && !s.done && onThisPage(s))
           .map((s) => (
             <StepGhost key={s.key} step={s} layoutKey={active} />
           ))}
