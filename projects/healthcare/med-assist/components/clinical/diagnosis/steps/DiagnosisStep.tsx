@@ -58,9 +58,9 @@ function chipFor(card: DiagnosisCandidateView): string | null {
   return engineTagOf(card);
 }
 
-/** A card MIRA marks as cannot-miss, including a history card merged with that engine row. */
+/** An engine card MIRA marks as cannot-miss; history cards stay in the top group regardless. */
 function isCannotMiss(card: DiagnosisCandidateView): boolean {
-  return engineTagOf(card) === CANNOT_MISS_TAG;
+  return !card.history && engineTagOf(card) === CANNOT_MISS_TAG;
 }
 
 function sortHistoryFirst(candidates: DiagnosisCandidateView[]): DiagnosisCandidateView[] {

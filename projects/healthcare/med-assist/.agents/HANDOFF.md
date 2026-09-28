@@ -125,8 +125,10 @@ MIRA repository: `src\.venv\Scripts\python.exe -m pytest assist/host/tests -q` â
 
 ## Final review (whole branch) â€” fixes and what stays open
 
-Fixed in the commit `fix(med-assist): final review: persist scanned visits, uncapped cannot-miss,
-receipts around a reopened step, prefetch by case key` (TDD, each with a test):
+Fixed in `0a0d2814` `fix(med-assist): final review: persist scanned visits, uncapped cannot-miss,
+receipts around a reopened step, prefetch by case key`, plus the re-review residual in the next
+commit, `fix(med-assist): keep history cards on top when MIRA flags them cannot-miss` (TDD, each
+with a test):
 
 - **F1** The Trajectory stage (`ClinicalReasoningWorkbench.tsx`) now writes the scanned visit rows
   with `saveScrapedVisits` (once per patient and scan result; a failed write still lets the read
@@ -134,6 +136,7 @@ receipts around a reopened step, prefetch by case key` (TDD, each with a test):
   after that read. Before this, nothing wrote the visit store and Part 2 was inert in production.
 - **F2** MIRA cannot-miss cards render outside the three-card cap, before "Lainnya (n)"; the
   do-not-miss line filter compares against the visible cards only.
+  History cards always stay in the top group, even when their merged engine tag is cannot-miss.
 - **F3** Reopening an earlier step keeps every finished later step as a receipt below it.
 - **F4** The prefetch is stored and found by case key (hash of `encounterToCaseState`, which applies
   the request-or-encounter fallbacks); the pending reply carries `prefetch_key`, the ready record is
@@ -164,6 +167,8 @@ Deferred minors (final review), none blocking:
 - Case keys can still differ when there is no anamnesa draft and the typed `symptomText` differs
   from the encounter's `keluhan_utama` (the page prefers the encounter's, the Trajectory stage the
   typed text; `main.tsx` is protected). The page then runs its own MIRA step.
+- If the scan resolves later than the 2 s debounce, one prefetch without history goes out first;
+  the second, with history, is the one the page matches.
 - The diagnosis page's own history read does not wait for the Trajectory stage's write; opening the
   page before the write lands misses the prefetch once.
 - A scanned row found only by `href` has `encounter_id: ''`; the store and the recurrent grouping

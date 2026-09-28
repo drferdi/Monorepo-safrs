@@ -84,6 +84,22 @@ describe('DiagnosisStep', () => {
     expect(screen.queryByText('Jangan terlewat: Sinusitis komplikasi (J01.9)')).toBeNull();
   });
 
+  it('keeps a history card on top even when its merged engine tag is cannot-miss', () => {
+    const cards = [
+      candidate({ id: 'm-G44.2', code: 'G44.2', name: 'Sakit kepala tegang', displayLabel: 'G44.2 - Sakit kepala tegang · MIRA' }),
+      candidate({ id: 'm-G43.9', code: 'G43.9', name: 'Migren', displayLabel: 'G43.9 - Migren · MIRA' }),
+      candidate({ id: 'm-R51', code: 'R51', name: 'Nyeri kepala', displayLabel: 'R51 - Nyeri kepala · MIRA' }),
+      candidate({ id: '0-I16', rank: 1, code: 'I16', name: 'Krisis hipertensi', displayLabel: 'I16 - Krisis hipertensi · MIRA · jangan terlewat', history: { label: 'Kronis', count: 3, visitsConsidered: 5, lastSeen: '2026-08-12', engineAgrees: true, engineSource: 'mira' } }),
+    ];
+    render(<DiagnosisStep viewModel={vm(cards)} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
+    const shown = screen.getAllByTestId('dx-flow-card');
+    expect(shown).toHaveLength(3);
+    expect(shown[0].querySelector('.dx-flow-card__title')?.textContent).toBe('I16 - Krisis hipertensi');
+    expect(within(shown[0]).getByText('Kronis')).toHaveClass('dx-flow-chip');
+    expect(within(shown[0]).getByText('3 dari 5 kunjungan · terakhir 12 Agu 2026 · MIRA setuju')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Lainnya (1)' })).toBeInTheDocument();
+  });
+
   it('selects on tap, marks aria-pressed, and opens the reasons only from "alasan"', () => {
     const h = handlers();
     render(<DiagnosisStep viewModel={vm([candidate({ isSelected: true }), candidate({ id: '3-G44.2', rank: 3, code: 'G44.2', name: 'x', displayLabel: 'G44.2 - x' })])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...h} />);
