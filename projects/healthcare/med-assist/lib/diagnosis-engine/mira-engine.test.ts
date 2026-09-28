@@ -174,6 +174,19 @@ describe('MIRA engine client', () => {
     expect(fetchFn).not.toHaveBeenCalled();
   });
 
+  it('sends the case when the random trace id happens to look like a phone number', async () => {
+    // A real crypto.randomUUID() output whose leading digits match the phone pattern.
+    const uuid = vi.spyOn(crypto, 'randomUUID').mockReturnValue('08493120-7809-4fda-b85c-cb74d3e3fb91');
+    try {
+      const fetchFn = vi.fn<typeof fetch>(async () => jsonResponse(OK_RESPONSE));
+      const result = await engineWith(fetchFn).step(CASE);
+      expect(result.status).toBe('ok');
+      expect(fetchFn).toHaveBeenCalledTimes(1);
+    } finally {
+      uuid.mockRestore();
+    }
+  });
+
   it.each([
     ['HTTP error', async () => jsonResponse({ detail: 'boom' }, 502), 'HTTP_502'],
     [

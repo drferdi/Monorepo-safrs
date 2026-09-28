@@ -86,7 +86,10 @@ export function createMiraEngine(
 
       const body = JSON.stringify(buildMiraStepRequest(input, traceId));
       try {
-        assertNoPII(body);
+        // Scan the case, the only part that carries patient-derived text. The trace id is a
+        // random UUID made here; its digit runs match the phone/NIK patterns in about 1 of 700
+        // requests, which blocked MIRA at random.
+        assertNoPII(JSON.stringify(input));
       } catch {
         // Never echo the payload: it is exactly what the guard refused to send.
         return unavailable('PII_BLOCKED', 'Payload blocked by the PII guard; nothing was sent');
