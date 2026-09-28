@@ -26,6 +26,7 @@ export default defineConfig({
       'scripting',
       'alarms',
       'offscreen',
+      'nativeMessaging',
     ],
     host_permissions: [
       'https://*.googleapis.com/*',

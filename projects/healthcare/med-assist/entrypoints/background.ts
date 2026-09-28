@@ -19,6 +19,7 @@ import {
 import { buildPatientSyncPayload } from '@/lib/api/patient-sync-payload';
 import { SentraAPI } from '@/lib/api/sentra-api';
 import { migrateLegacyAppStorageKeys } from '@/lib/app-identity';
+import { ensureMira } from '@/lib/diagnosis-engine/mira-supervisor';
 import { runDiagnosisSuggestions } from '@/lib/diagnosis-engine/run-diagnosis';
 import { getCDSSEngineStatus, initCDSSEngine } from '@/lib/iskandar-diagnosis-engine';
 import { assistStaffFromSession, withResepStaff, withStaffNames } from '@/lib/rme/assist-staff';
@@ -2347,6 +2348,9 @@ export default defineBackground(() => {
       return false;
     }
   });
+
+  // Panel → Worker: make sure the MIRA service is up (native messaging host com.sentra.mira)
+  onMessage('miraEnsure', async () => ensureMira());
 
   // ========================================
   // NATIVE MESSAGE LISTENER (for sidepanel native chrome.runtime.sendMessage)

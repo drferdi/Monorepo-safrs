@@ -37,6 +37,7 @@ describe('extension message contract names', () => {
       'calculatePediatricDose',
       'getCDSSStatus',
       'initializeCDSS',
+      'miraEnsure',
       'scanFields',
       'scanMedicalHistory',
       'scanVisitHistory',

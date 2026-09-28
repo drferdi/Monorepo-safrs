@@ -22,6 +22,7 @@ import { encounterToCaseState } from './case-state';
 import { createTraceId, createUnavailableResult } from './engine-result';
 import type { LegacyDiagnosisEngine } from './legacy-engine';
 import { MIRA_UNAVAILABLE_NOTICE, miraNoticeFor } from './mira-notice';
+import { getLastMiraStatus, type MiraStatus } from './mira-supervisor';
 import { getActiveDiagnosisEngine, getLegacyEngine } from './registry';
 import type { CaseState, ConfidenceTier, DiagnosisEngine, EngineResult } from './types';
 
@@ -59,6 +60,22 @@ const TIER_CONFIDENCE: Record<ConfidenceTier, number> = {
   low: 0.3,
   unknown: MIN_SHOWN_CONFIDENCE,
 };
+
+/**
+ * Sharpens a candidate engine's error code with the MIRA supervisor's last known state: a generic
+ * network failure or missing configuration is really "not installed" or "starting" when the
+ * supervisor already knows that. Any other code, or no supervisor status, passes through as-is.
+ */
+export function resolveMiraNoticeCode(
+  code: string | undefined,
+  status: MiraStatus | null | undefined
+): string | undefined {
+  if (code === 'NETWORK_ERROR' || code === 'NOT_CONFIGURED') {
+    if (status?.state === 'not-installed') return 'NOT_INSTALLED';
+    if (status?.state === 'starting') return 'STARTING';
+  }
+  return code;
+}
 
 async function stepWithTimeout(
   engine: DiagnosisEngine,
@@ -209,7 +226,12 @@ export async function runDiagnosisSuggestions(
         ? { ...response.data, diagnosis_suggestions: suggestions }
         : {
             ...response.data,
-            engine_notice: miraNoticeFor(result.status === 'ok' ? undefined : result.error?.code),
+            engine_notice: miraNoticeFor(
+              resolveMiraNoticeCode(
+                result.status === 'ok' ? undefined : result.error?.code,
+                getLastMiraStatus()
+              )
+            ),
           },
   };
 }

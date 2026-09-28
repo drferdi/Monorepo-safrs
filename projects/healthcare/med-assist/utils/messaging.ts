@@ -24,6 +24,7 @@ import type {
   ScrapeRequest,
 } from './types';
 
+import type { MiraStatus } from '@/lib/diagnosis-engine/mira-supervisor';
 import type { CDSSEngineStatus } from '@/lib/iskandar-diagnosis-engine/engine';
 import type {
   QueueStatisticRow,
@@ -213,6 +214,7 @@ interface ProtocolMap {
   // ========================================
   getCDSSStatus(data: undefined): Promise<CDSSEngineStatus>;
   initializeCDSS(data: undefined): Promise<boolean>;
+  miraEnsure(data: undefined): Promise<MiraStatus>;
 
   // ========================================
   // Panel → Worker → Content (Diagnostic)
@@ -351,6 +353,7 @@ export const PROTOCOL_MESSAGE_NAMES = [
   'calculatePediatricDose',
   'getCDSSStatus',
   'initializeCDSS',
+  'miraEnsure',
   'scanFields',
   'scanMedicalHistory',
   'scanVisitHistory',
