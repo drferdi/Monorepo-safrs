@@ -3,6 +3,30 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-28 — Diagnosis step follows Chief's mockup: utama, must not miss, banding, next best step
+
+- Decision: the Diagnosis step reads, top to bottom, "Usulan diagnosis utama" (or "Diagnosis
+  utama" once chosen), MUST NOT MISS (MIRA cannot-miss cards, outside the three-card cap),
+  the numbered "Diagnosis banding N" cards (the rest behind "Lainnya (n)"), and NEXT BEST STEP
+  (MIRA's first next best action, its reason, "Masukkan hasil"), separated by
+  `console-divider`. Each card: title and chip, the `penyakit.json` definisi clamped to three
+  lines, a tally row "✓ Mendukung n  − Menentang n  ? Data kurang n", and "Lihat alasan ⌄"
+  ("Mengapa perlu dipertimbangkan ⌄" on MUST NOT MISS) opening the reasons timeline (Riwayat,
+  Mendukung, Menentang, Data kurang, Catatan; on MUST NOT MISS: Temuan yang relevan, Bila
+  terlewat with the `komplikasi`, Data kurang, and "Apa yang perlu diperiksa →").
+- Nothing is said twice on the page (Chief, same evening, on the live render: "sekalian aja
+  kamu tulis 200x", "Must not miss vs jangan terlewat vs ojo lali"): the MUST NOT MISS label is
+  the only cannot-miss marker (no "Jangan terlewat" chip, no red "Jangan terlewat:" line; this
+  closes the open question on that line), no "Diagnosis banding" title above the numbered
+  labels, no count in the timeline (the tally carries it), one term "Data kurang", and a
+  toggle's text is not repeated as the first heading it opens. This overrides the mockup,
+  which showed several of these.
+- Rationale: Chief pasted the layout as a mockup; it supersedes the banding-first order of
+  `9f76dd66` and the "Tap here" label of `12ec57c6`. The next best step shows only engine data
+  (no fallback), so the legacy engine shows no such section.
+- Evidence: commits `ca874859` (layout), `2f2d70f2` (`next_best_actions` from MIRA through
+  `run-diagnosis.ts` and `ClinicalDifferential`), and `c5b5ef88` (repeat removal).
+
 ## 2026-09-28 — Diagnosis page is a step flow (form B)
 
 - Decision: `DiagnosisStepFlow.tsx` replaces `DiagnosisWorkspace.tsx` as the diagnosis page

@@ -1,137 +1,82 @@
 # HANDOFF
 
-Last updated: 2026-09-28 (evening, order, pixel loader, card explanation, reasons timeline)
+Last updated: 2026-09-28 (late evening, diagnosis step on Chief's mockup, nothing said twice)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
 
 ## Current state
 
-Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEAD `3b360c00`.
-Morning: plan `docs/plans/2026-09-28-mira-autostart-recurrent-dx-step-flow-plan.md` landed as
-`40f3b80c..9b355bfe` (MIRA auto-start via native host in `D:\DEV\gafferverse\mira-system`,
-branch `feat/reasoning-service`, never pushed; recurrent diagnoses from the record; step-flow
-diagnosis page). Afternoon (`1631880f`, `1cdbd1f8`): page rewritten on the Trajectory panel
-surface after two rejections; see `DECISIONS.md` and the commit bodies.
+Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** Today's earlier work
+(MIRA auto-start via native host, recurrent diagnoses, step-flow page, pixel loader, reasons
+timeline) is in `DECISIONS.md` and the commit bodies up to `265c488a`.
 
-Evening (`9f76dd66`): Chief wrote the page order "temuan / Diagnosis banding 1 / Diagnosis
-banding 2 / Diagnosis". The confirmation slot in his brief was left unfilled, so the literal
-order was built: the Diagnosis step renders the differential cards first, each under a
-`ttv-label` "Diagnosis banding N" (numbered by position; cannot-miss cards and the ones behind
-"Lainnya" continue the numbering), then the primary slot last as the doctor's decision ("Usulan
-diagnosis utama" — the patient's recurrent diagnosis first, else the engine's top card — until a
-card is tapped, then "Diagnosis utama"). Tapping a banding card moves it into the slot and the
-former proposal back into the banding list (shared `layoutId`, so the swap animates). Split
-logic, three-card cap, cannot-miss exemption, Temuan (3 findings), receipts, motion and the
-absence of triage text are unchanged. Only `DiagnosisStep.tsx` and three test files changed; no
-CSS, no R3 path, no protected file.
+Late evening, three commits:
 
-Pixel loader (`d6671533`): on Chief's request, the middle (4x4) "Pixel loader" from
-https://lab.xevrion.dev/lab/pixel-loader sits left of the DIAGNOSIS title (`PixelLoader.tsx`,
-framer-motion, decorative, cycle read from the reference's DOM: spiral 30, snake 2x16, pulse
-6x3, 110 ms per frame; still under reduced motion). Chief then asked for it a little smaller:
-15 px grid (3 px cells, 1 px gap), square cells after token-guard flagged a literal 1 px
-radius. It animates on every Diagnosis step state, as asked; the other step headers (Temuan,
-Terapi, RME) have no loader.
+- `ca874859` — Chief's mockup: "Usulan diagnosis utama" first, then MUST NOT MISS (MIRA
+  cannot-miss cards, outside the three-card cap), the numbered "Diagnosis banding N" cards with
+  "Lainnya (n) ⌄", then NEXT BEST STEP; `console-divider` between parts. Card: title and chip,
+  three-line `definisi`, tally row, "Lihat alasan ⌄" (MUST NOT MISS: "Mengapa perlu
+  dipertimbangkan ⌄" opening Temuan yang relevan, Bila terlewat from `komplikasi`, Data kurang,
+  "Apa yang perlu diperiksa →"). The recurrence rule is the Riwayat entry of the timeline.
+  `useDiseaseDefinitions` became `useDiseaseNotes`.
+- `2f2d70f2` — MIRA's `nextBestActions` now reach the page (`next_best_actions` in
+  `CDSSResponse`, filled in `run-diagnosis.ts` mira mode, first one kept in
+  `ClinicalDifferential`). No action, no section; the legacy engine sends none.
+- `c5b5ef88` — Chief flagged repeats on the live render; the page now
+  says nothing twice: no red "Jangan terlewat:" line, no chip on MUST NOT MISS cards, no
+  "Diagnosis banding" title, no counts in the timeline, one term "Data kurang".
 
-Card face (`12ec57c6`): on Chief's request every diagnosis card reads title, the knowledge base's
-`definisi` clamped to three lines (`useDiseaseDefinitions` reads `/data/penyakit.json`;
-`getPenyakitByIcd` in R3 does not carry `definisi`, so it was not touched), the rule/tally
-line, then "Tap here" (was "alasan") which opens the reasons. "· MIRA setuju" is gone from
-the history line. Codes absent from the knowledge base (MIRA-only, e.g. K65.0) show no
-explanation.
+No CSS change, no R3 path, no protected file. **SAFRS**: R2 UI plus R2 engine plumbing
+(`lib/diagnosis-engine/run-diagnosis.ts`, `types/api.ts`); the branch as a whole stays R3
+through `lib/clinical/recurrent-diagnosis.ts` (Chief's prior approval).
 
-Reasons timeline (`3b360c00`): "Tap here" now opens the reasons as the "Activity timeline" from
-https://lab.xevrion.dev/lab/activity-timeline (`ReasonTimeline.tsx`): one entry per non-empty
-group (Mendukung, Yang tidak mendukung, Data kurang, Catatan) with an icon node, a hairline
-between nodes, group name + count, then the items. Opens on a no-bounce spring (0.5 s), entries
-70 ms apart from a 4 px blur and 6 px lift, each line grows down after its entry; closes on a
-0.32 s spring. The card animates position only (`layout="position"`): its size layout animation
-had made the open end with a 10 px snap.
-
-MIRA host and service: unchanged since `1cdbd1f8` (host `com.sentra.mira` registered under HKCU,
-service on 127.0.0.1:8787). `.output/chrome-mv3-dev` rebuilt at `3b360c00`.
-
-**SAFRS**: this change set is R2 UI (`components/clinical/diagnosis/steps/DiagnosisStep.tsx` and
-tests). The branch as a whole remains R3 through `lib/clinical/recurrent-diagnosis.ts` (Chief's
-prior approval).
+MIRA service: nothing listened on 127.0.0.1:8787 at the end of the session (`/healthz` no
+answer). The host `com.sentra.mira` starts it when the side panel opens; that path was verified
+earlier today and was not changed.
 
 ## What Chief tests now
 
-1. `chrome://extensions` → reload "Asisten Medis" (bundle `.output\chrome-mv3-dev`).
-2. Trajectory → Diagnosis: the pixel loader animates left of the DIAGNOSIS title; each card
-   shows a three-line explanation under its title and "Tap here" at the bottom; "Tap here"
-   opens the reasons timeline smoothly and closes it again.
-   Temuan receipt (3 findings), then the DIAGNOSIS panel reads top to
-   bottom: "Diagnosis banding 1", "Diagnosis banding 2" (a third only for a MIRA cannot-miss
-   card), "Lainnya (n)" if more, then "Usulan diagnosis utama" with the patient's Kronis/Berulang
-   card when the record has one ("N× dalam 12 bulan · terakhir <date>").
-3. Tap a banding card → the panel folds into the Diagnosis receipt and Terapi opens; "ubah"
-   reopens it with the tapped card under "Diagnosis utama" (green border) and the former
-   proposal as banding 1.
-4. If Chief wanted the primary slot labelled plain "Diagnosis" instead of "Diagnosis utama", that
-   is a one-string change in `DiagnosisStep.tsx` plus the label assertions in its test.
+1. `chrome://extensions` → reload "Asisten Medis" (`.output\chrome-mv3-dev`, rebuilt on the
+   final tree), open the side panel (MIRA starts), Trajectory → Diagnosis.
+2. Order: Usulan diagnosis utama, Must not miss (if MIRA names one), Diagnosis banding 1 and 2,
+   Lainnya, Next best step with "Masukkan hasil" (only when MIRA answered).
+3. "Lihat alasan" and "Mengapa perlu dipertimbangkan" open and close smoothly; no word, count or
+   warning appears twice.
 
-## Verification (capsule root, `node scripts/pnpm.mjs run <script>`, at `3b360c00`)
+## Verification (capsule root, final tree)
 
 | Gate | Exit | Result |
 |---|---|---|
 | `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`) |
 | `typecheck` | 0 | clean |
-| `test` | 0 | 174 files passed, 1 skipped; 1336 tests passed, 17 skipped |
+| `test` | 0 | 174 files passed, 1 skipped; 1342 tests passed, 17 skipped |
 | `exec wxt build --mode development` | 0 | clean |
 | `run:check` | 0 | "Extension loads: Asisten Medis 2.1.0 (MV3), all referenced files present." |
 
-Rendering verified in a Vite harness of the real stylesheet in the browser pane (proposal state,
-tap, receipt, "ubah" reopened state; loader beside the title, centred on it, same colour,
-frames matching the reference). Token-guard: order change clean; loader flagged a literal 1 px
-radius (fixed to 0) and "design invention" (Chief asked for it in chat). This capsule has no
-`check:tokens` script, a pre-existing gap. All five gates in the table ran on the final tree;
-token-guard found no violation in the card or timeline change. Timeline motion measured frame
-by frame in the harness (open rises to 168.9 px of 169 with no jump; close monotonic, ~320 ms). The harness
-(`scratchpad/harness`, `.claude/launch.json`) was session-only and removed.
+Rendering checked in the Vite harness of the real stylesheet (closed and opened cards, next best
+step). Frame-by-frame motion could not be re-measured: the browser pane throttled animation
+frames to about 2 per second; the timeline motion itself is unchanged since `3b360c00`, where it
+was measured. Token-guard: no violations on the mockup layout.
 
 ## Deferred minors (none blocking)
 
-- `.diagnosis-evidence-grid` rules are now unused (the timeline replaced the boxed reasons);
-  style.css is append-only, so they stay. The new timeline line uses 1 px
-  `--neu-border-medium`, the Trajectory audit timeline 2 px `--border-subtle` (design choice).
-- Carried from the afternoon: `read_message` no truncated-body guard; `askHost` disconnect path
-  and `publishMiraStatus` restart hydration untested; StrictMode double-fires `miraEnsure` in
-  dev; `knownConditions` dedupe is exact-string; orphaned `dx-flow-*` CSS block (append-only
-  file); unused `triage` prop on `DiagnosisPageProps`; expand buttons lack `aria-controls`.
-- Carried from the final branch review: scanned visits persist in IndexedDB with no purge;
-  `main.tsx` keeps 5 scan rows (protected); header status dot never re-checked mid-session;
-  `getLastMiraStatus()` null after a service-worker restart; host reply cast without validation;
-  href-only scanned rows share an empty `encounter_id`.
+- `evidence.doNotMiss` and `buildDoNotMissReason` in `ClinicalDifferential.tsx` are now unused by
+  the page (left in place, existing code).
+- `console-divider` gives about 28 px around each divider against 12 px elsewhere; it is a
+  boot-card class and utilities cannot override it (style.css order, append-only).
+- Carried: unused `.diagnosis-evidence-grid` and `dx-flow-*` CSS; `read_message` truncated-body
+  guard; `askHost` disconnect and `publishMiraStatus` hydration untested; StrictMode double
+  `miraEnsure` in dev; scanned visits never purged; `main.tsx` storage filter needs approval.
 
-## Carried from the 2026-09-26 batch, still open
+## Open for Chief (code must not change for these)
 
-Trajectory "Review details" and top-card Indonesian copy (Chief checks live); side-panel items
-a–g and parked a11y minors; `main.tsx` `storage.onChanged` filter needs a protected-file approval.
-
-## Open for Chief (SAFRS items from the afternoon audit; code must not change for these)
-
-5. Durable R3 sign-off for `lib/clinical/recurrent-diagnosis.*` and `CHRONIC_ICD_ROOTS`.
-6. ADR-005 "Decision Maker … pending" header line, if still present.
-7. `VITE_MIRA_SERVICE_URL` has no default in `.env.example` (production build without
-   `.env.local` reports MIRA `down`).
-8. Host starts the service with `MIRA_SERVICE_ENV=development`; environment name is Chief's.
-9. Capsule `AGENTS.md` still says "penyakit.json wins; the LLM is a reranker only" (R2
-   verification control, separate change set).
-10. Minor: a host `failed.reason` is `str(OSError)` and may surface a local path.
-
-## Open for Chief (design questions from this session)
-
-- The red "Jangan terlewat: …" line under the cards is the engine's first red-flag phrase of up
-  to three candidates (`ClinicalDifferential.tsx` `buildDoNotMissReason`), so it is in effect a
-  danger sign on a page Chief ruled danger-sign free; the MIRA "jangan terlewat" chip on a card
-  is the cannot-miss diagnosis. Chief decides whether the red line stays.
-- Whether Temuan, Terapi and RME headers get the loader too (only Diagnosis asked).
-- "Tap here" is English on an Indonesian card (kept as Chief wrote it; "Ketuk di sini" is a
-  one-string change). The tally line "mendukung n · tidak n · ? n" still sits on engine cards;
-  it could move into the dropdown if Chief wants the face shorter.
+1. Durable R3 sign-off for `lib/clinical/recurrent-diagnosis.*` and `CHRONIC_ICD_ROOTS`.
+2. `VITE_MIRA_SERVICE_URL` has no default in `.env.example`.
+3. Host starts the service with `MIRA_SERVICE_ENV=development`; the environment name is Chief's.
+4. Capsule `AGENTS.md` still says "penyakit.json wins; the LLM is a reranker only".
+5. Whether Temuan, Terapi and RME headers get the pixel loader too.
 
 ## Next action
 
-Chief reloads the extension and walks the live checks above; then weighs in on items 5–10.
+Chief reloads the extension and walks the checks above.
