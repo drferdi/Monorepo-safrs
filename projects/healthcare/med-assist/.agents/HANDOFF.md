@@ -1,107 +1,83 @@
 # HANDOFF
 
-Last updated: 2026-09-28
+Last updated: 2026-09-28 (afternoon, second review)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
 
 ## Current state
 
-Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** This session
-implemented plan `docs/plans/2026-09-28-mira-autostart-recurrent-dx-step-flow-plan.md` (16 tasks,
-all reviews approved) on top of `873d5b7d`, in three parts:
+Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEAD `1cdbd1f8`.
+Morning: plan `docs/plans/2026-09-28-mira-autostart-recurrent-dx-step-flow-plan.md` (16 tasks)
+landed as `40f3b80c..9b355bfe` — MIRA auto-start (native host in
+`D:\DEV\gafferverse\mira-system`, branch `feat/reasoning-service`, `a3e7fef..15f87b4`, never
+pushed), recurrent diagnoses from the record, step-flow diagnosis page. See `DECISIONS.md`.
+
+Afternoon (`1631880f`, `1cdbd1f8`): Chief rejected the rendered page twice ("teks tanpa CSS",
+cluttered, fonts not matching, a triage list on a diagnosis page; then "Diagnosis banding mana?",
+red triage line duplicating the header's TRIAGE tab, "Mana motion?"). Rewritten on the existing
+design system: every step is a `ct-v2-panel` with `ttv-section-title`/`ttv-label` (Trajectory's
+panel); the Diagnosis step names a "Diagnosis utama" slot ("Usulan diagnosis utama" until the
+doctor taps; the patient's recurrent diagnosis first, else the engine's top card) and a
+"Diagnosis banding" list, three cards in total, cannot-miss exempt; history cards read
+"N× dalam 12 bulan · terakhir <date>"; Temuan shows three findings, complaint first; no
+triage/red-flag text on the page (`SafetyStrip` deleted); actions are `diagnosis-text-button` /
+`btn-ac-inline`. Motion via `framer-motion` after lab.xevrion.dev: step panel folds into its
+receipt and unfolds on "ubah" (shared `layoutId`), staggered cards/chips, tap sink, accordion
+"alasan", slide-in step. Header yellow/green triage zones colour only the tab dot. `style.css`
+is append-only, so the old `dx-flow-*` block is orphaned CSS. Rendering verified in a Vite
+harness of the real stylesheet in the browser pane (diagnosis, therapy, loading; fold/unfold).
+
+MIRA host: registry key `HKCU\Software\Google\Chrome\NativeMessagingHosts\com.sentra.mira` and
+manifest (`allowed_origins` = `chrome-extension://oeiclacedioeocjijdopioolfdbnbjgf/`, UTF-8, no
+BOM) verified; the id matches `.output\chrome-mv3-dev`. Running the host by hand with `ensure`
+started the service (`/healthz` 200). The engine re-asks the supervisor after a network failure
+and the background ensures the service at browser start, so a stale "belum terpasang" status
+cannot outlive the install. `.output/chrome-mv3-dev` rebuilt at `1cdbd1f8`.
 
 **SAFRS**: risk tier R3, driven only by `lib/clinical/recurrent-diagnosis.ts` + its test (Chief's
-prior approval); no verification-control path, no protected file, no secrets; integrity review not
-required.
+prior approval); the afternoon changes touch R2 UI, `background.ts` and `run-diagnosis.ts`
+only; no verification-control path, no protected file, no secrets.
 
-- **Part 1 — MIRA auto-start**: a native messaging host in the MIRA repository
-  (`D:\DEV\gafferverse\mira-system`, branch `feat/reasoning-service`, commits `a842f4a`,
-  `986b0bf`, `ee6fcb7`, `15f87b4` under `assist/host/`) that the extension asks to start the
-  reasoning service, plus a header status dot and a Trajectory-stage prefetch. `mira` is now the
-  production-build default engine. Details: `DECISIONS.md` "MIRA starts with Assist…" and "'MIRA
-  tidak tersedia' on 2026-09-28…".
-- **Part 2 — Recurrent diagnosis**: `lib/clinical/recurrent-diagnosis.ts` surfaces a patient's own
-  repeated diagnoses (≥2 in 12 months) first, labelled Kronis/Berulang. Details: `DECISIONS.md`
-  "Recurrent diagnoses from the record are offered first…".
-- **Part 3 — Step-flow diagnosis page**: `DiagnosisStepFlow.tsx` replaces `DiagnosisWorkspace.tsx`
-  (safety strip, receipts, one active step, ghosts). Details: `DECISIONS.md` "Diagnosis page is a
-  step flow (form B)".
+## What Chief tests now
 
-Capsule commit range `40f3b80c..7ed5ed2c` (22 commits, verified with
-`git rev-list --count 40f3b80c..HEAD`). MIRA repository commit range `a3e7fef..15f87b4`.
+1. `chrome://extensions` → reload "Asisten Medis" (the bundle in `.output\chrome-mv3-dev`).
+2. Open the side panel: header dot green, no manual server start (service is up now; after a
+   reboot the host starts it).
+3. Trajectory → Diagnosis: Temuan receipt (3 findings), DIAGNOSIS panel with "Usulan diagnosis
+   utama" + "Diagnosis banding", tap a banding card → it becomes "Diagnosis utama" and the panel
+   folds into a receipt; "ubah" unfolds it. No triage text on the page.
+4. Recurrence rule: ≥2 identical ICD roots in the last 12 months (`minCount` 2, `windowMonths`
+   12 in `lib/clinical/recurrent-diagnosis.ts`); "2 in one month" is inside this window. If
+   Chief wants a 1-month window, that is a one-constant change in that R3 file.
 
-## What Chief must run once
-
-1. In the MIRA repository, with Developer mode on at `chrome://extensions` to read the extension
-   id: `assist\host\install_host.ps1 -ExtensionId <id>`.
-2. Reload the extension.
-3. The diagnosis-engine flag in `.env.production.local` is Chief's own decision; no agent read it.
-
-No push, no PR — capsule stays local until Chief asks.
-
-## Live checks for Chief
-
-- Open the side panel: the MIRA status dot in the header turns green with no manual start.
-- Open a case, go Trajectory → Diagnosis: the MIRA-tagged suggestion list appears at once (served
-  from the Trajectory-stage prefetch).
-- Open a synthetic patient with three prior `I10` visits: the Diagnosis step shows the "Kronis"
-  history card first, above the engine candidates.
-- The diagnosis page shows one step at a time (Temuan receipt → active Diagnosis/Terapi/RME, ghost
-  lines below); tapping "ubah" on a receipt reopens that step in full.
-
-## Verification (capsule root, `node scripts/pnpm.mjs run <script>`, in order)
+## Verification (capsule root, `node scripts/pnpm.mjs run <script>`, at `1cdbd1f8`)
 
 | Gate | Exit | Result |
 |---|---|---|
-| `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`, unused eslint-disable) |
+| `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`) |
 | `typecheck` | 0 | clean |
-| `test` | 0 | 171 files passed, 1 skipped; 1312 tests passed, 17 skipped |
-| `build` | 0 | clean |
+| `test` | 0 | 171 files passed, 1 skipped; 1320 tests passed, 17 skipped |
+| `exec wxt build --mode development` | 0 | clean, `nativeMessaging` in manifest |
 | `run:check` | 0 | "Extension loads: Asisten Medis 2.1.0 (MV3), all referenced files present." |
 
-MIRA repository: `src\.venv\Scripts\python.exe -m pytest assist/host/tests -q` → exit 0, 8 passed.
+Token-guard subagent (at `1631880f`): no violations; this capsule has no `check:tokens` script
+(pre-existing gap). MIRA repository host tests: 8 passed (morning run, host unchanged since).
 
-## Deferred minors (from the plan ledger, grouped by task; none blocking)
+## Deferred minors (none blocking)
 
-- **Part 1** — T1: `read_message` doesn't guard a truncated body; `spawn_service` Popen args
-  untested. T3: a doc comment edited past its named hunk; one test hardcodes a notice string
-  instead of calling `miraNoticeFor`. T4: `askHost` onDisconnect-reject path untested;
-  `publishMiraStatus` restart-hydration path untested; `ensureMira` briefly publishes "starting"
-  even when the host says "running". T5: StrictMode double-fires `miraEnsure` on mount in dev only
-  (host-side idempotent); mount test doesn't cover unmount/remount. T6: `prefetchDiagnosis` doesn't
-  sync a cleared `keluhan_tambahan` (cache miss only, never a wrong result); the ready-key listener
-  matches on hash only, not case key (at most one redundant call for two identical concurrent
-  patients).
-- **Part 2** — T8: a literal `-` ICD would form its own group (nothing in the capsule writes `-`
-  as `icd_x`). T9: the hook interface is `{ candidates, loaded }`, not the array the brief
-  described — carry this if anything else is built against it. T10: `knownConditions` dedupe is
-  exact-string only (a chronic "Hipertensi" and a recurrent "Hipertensi (I10)" both go through); no
-  guard for an empty name/ICD.
-- **Part 3** — T12: list keys are item text; expand buttons lack `aria-controls`. T13:
-  `formatShortDate` tests live in `DiagnosisStep.test.tsx`; the "already shown" filter compares
-  against all candidates, not just the visible three; no explicit Space-key test for a blocked
-  card. T14: a bare `lanjut` first-word match can false-positive (brief's own rule); no separator
-  between multiple "hapus" links; `therapySummary` skips the insufficient-label group filter. T15:
-  an orphaned `.dx-flow-card[aria-pressed]` CSS rule and a `cursor:pointer` on the card wrapper
-  (append-only file, left); one pre-existing `as HTMLElement` cast in
-  `RMETransferPanel.test.tsx:159`.
+- Part 1 — `read_message` no truncated-body guard; `askHost` disconnect path and
+  `publishMiraStatus` restart hydration untested; StrictMode double-fires `miraEnsure` in dev.
+- Part 2 — `knownConditions` dedupe is exact-string; hook interface is `{ candidates, loaded }`.
+- Part 3 — orphaned `dx-flow-*` CSS block (append-only file); the unused `triage` prop stays on
+  `DiagnosisPageProps` (removing it touches `ClinicalDifferential.tsx`); expand buttons lack
+  `aria-controls`; "Jangan terlewat" is the only red text left; the Vite harness
+  (`scratchpad/harness`, `.claude/launch.json`) was session-only and removed.
 
-## Carried from the previous HANDOFF (2026-09-26 batch), still open
+## Carried from the 2026-09-26 batch, still open
 
-1. Trajectory "Review details" wording: now one Indonesian paragraph ("Penjelasan") — Chief checks
-   the wording live.
-2. Trajectory top card Indonesian copy (headline, chips, six chart tabs, empty states) — Chief
-   checks the wording live.
-3. Carried a–g from the side panel batch (R3 test-file ack, profession→field mapping, ≤4-letter
-   suffix rule, medboard contacts R2 review, landing order, parked "Diagnosis utama" item, sub-AA
-   `--text-muted` summaries) and parked a11y minors (focus ring clipping, stepper landmark/colour-
-   only state, `<div>` in `<summary>`, "Pilih" `aria-pressed`, primary card selected border).
-   **The "MIRA tidak tersedia" investigation carried in this slot is now resolved**: Part 1 (this
-   session) found the cause was the reasoning service simply not running, and fixed it with the
-   native messaging auto-start — see `DECISIONS.md`.
-4. Defence in depth (not done): `main.tsx`'s `storage.onChanged` listener re-renders on every key;
-   filtering it to only the keys it reads would need a protected-file approval.
+Trajectory "Review details" and top-card Indonesian copy (Chief checks live); side-panel items
+a–g and parked a11y minors; `main.tsx` `storage.onChanged` filter needs a protected-file approval.
 
 ## Open for Chief — decisions from this session's SAFRS audit (code must not change for these)
 
