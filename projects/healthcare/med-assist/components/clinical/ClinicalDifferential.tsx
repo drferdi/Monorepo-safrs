@@ -6,7 +6,7 @@ import {
 } from './differential-fetch-error';
 import type { ClinicalImpressionViewItem } from './ClinicalImpressionPanel';
 import { createDiagnosisPageViewModel } from './diagnosis/diagnosisViewModel';
-import type { DiagnosisTriageView } from './diagnosis/diagnosisPageProps';
+import type { DiagnosisNextBestActionView, DiagnosisTriageView } from './diagnosis/diagnosisPageProps';
 import { DiagnosisStepFlow } from './diagnosis/DiagnosisStepFlow';
 import { useRecurrentDiagnoses } from './diagnosis/useRecurrentDiagnoses';
 
@@ -612,6 +612,8 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
   // The last getSuggestions request failed (no reply, or an unsuccessful one), as opposed to an
   // engine that answered with no diagnosis; both leave the list empty.
   const [suggestionsFailed, setSuggestionsFailed] = useState(false);
+  // MIRA's first next best action for this request; the legacy engine sends none.
+  const [nextBestAction, setNextBestAction] = useState<DiagnosisNextBestActionView | null>(null);
   const [selectedDiagnoses, setSelectedDiagnoses] = useState<SelectedDiagnosis[]>([]);
   const [triageResult, setTriageResult] = useState<TriageDecisionResult | null>(null);
   const [manualIcd, setManualIcd] = useState('');
@@ -738,6 +740,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     const resetForNewRequest = () => {
       setPhase('loading');
       setErrorMsg('');
+      setNextBestAction(null);
       setSelectedDiagnoses([]);
       setManualIcd('');
       setManualName('');
@@ -831,6 +834,8 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         // An empty list falls back in normalizedSuggestions, which knows about history.
         setSuggestions(incomingSuggestions);
         setSuggestionsFailed(false);
+        const firstAction = response.data.next_best_actions?.[0];
+        setNextBestAction(firstAction ? { item: firstAction.item, reason: firstAction.reason } : null);
         setProcessingTimeMs(response.data.meta?.processing_time_ms ?? null);
         setPhase('ready');
         if (response.data.engine_pending) {
@@ -2140,6 +2145,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
             ? 'Data hari ini belum cukup untuk engine; riwayat menunjukkan pola berikut.'
             : undefined
         }
+        nextBestAction={nextBestAction}
         errorMessage={errorMsg}
         complaintSummary={keluhanUtama}
         secondaryComplaint={keluhanTambahan}

@@ -237,6 +237,8 @@ export interface CDSSResponse {
   engine_pending?: boolean;
   /** With `engine_pending`: the case key of the running prefetch, matched against its ready record */
   prefetch_key?: string;
+  /** MIRA's most useful next questions, exams or tests, best first; absent from the legacy engine */
+  next_best_actions?: Array<{ kind: 'question' | 'exam' | 'test'; item: string; reason: string }>;
 }
 
 export interface PharmacotherapyExplainability {

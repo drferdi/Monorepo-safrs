@@ -331,7 +331,7 @@ describe('MIRA behind the registry', () => {
     expect(stripVolatileFields(response)).toEqual(readGoldenRecording()['appendicitis-like']);
   });
 
-  it('in mira mode, MIRA replaces only the diagnosis list, tagged MIRA, and the alerts stay legacy', async () => {
+  it('in mira mode, MIRA replaces only the diagnosis list, tagged MIRA, adds its next best actions, and the alerts stay legacy', async () => {
     if (!APPENDICITIS) throw new Error('appendicitis golden case missing');
     const mira = engineWith(async () => jsonResponse(OK_RESPONSE));
 
@@ -343,7 +343,7 @@ describe('MIRA behind the registry', () => {
 
     const legacy = readGoldenRecording()['appendicitis-like'] as APIResponse<CDSSResponse>;
     const shown = stripVolatileFields(response) as APIResponse<CDSSResponse>;
-    const { diagnosis_suggestions: miraList, ...rest } = shown.data ?? {};
+    const { diagnosis_suggestions: miraList, next_best_actions: nextBest, ...rest } = shown.data ?? {};
     const { diagnosis_suggestions: _legacyList, ...legacyRest } = legacy.data ?? {};
     expect(rest).toEqual(legacyRest);
     expect(miraList?.map((entry) => [entry.icd_x, entry.engine_tag])).toEqual([
@@ -351,6 +351,7 @@ describe('MIRA behind the registry', () => {
       ['A09', MIRA_TAG],
       ['K65.0', MIRA_CANNOT_MISS_TAG],
     ]);
+    expect(nextBest).toEqual(OK_RESPONSE.nextBestActions);
   });
 
   it('in mira mode with its service down, the physician gets the legacy output and the notice', async () => {
