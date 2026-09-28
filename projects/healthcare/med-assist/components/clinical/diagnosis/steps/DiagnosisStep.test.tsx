@@ -226,6 +226,34 @@ describe('DiagnosisStep', () => {
     }
   });
 
+  it('writes Catatan as practical bedside guidance from the knowledge base: what to look for and when to refer', async () => {
+    resetDiseaseNotesCache();
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ penyakit: [{ icd10: 'J06', definisi: 'ISPA atas.', pemeriksaan_fisik: ['Faring hiperemis', 'Tonsil hiperemis atau membesar.'], kriteria_rujukan: 'Rujuk jika sesak nafas berat.' }] }))));
+    try {
+      render(<DiagnosisStep viewModel={vm([candidate({ review: ['Lakukan pemeriksaan fisik terarah dan monitoring TTV serial'] })])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
+      await within(cardOf(screen.getByTestId('dx-flow-card'))).findByText('ISPA atas.');
+      openReasons(screen.getByTestId('dx-flow-card'));
+      const list = screen.getByRole('list', { name: 'Alasan' });
+      const catatan = [...list.children].find((entry) => entry.querySelector('.diagnosis-list-title')?.textContent === 'Catatan');
+      expect([...(catatan?.querySelectorAll('li') ?? [])].map((li) => li.textContent)).toEqual([
+        'Cari saat pemeriksaan: Faring hiperemis; Tonsil hiperemis atau membesar.',
+        'Rujuk bila: sesak nafas berat.',
+      ]);
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it('without a knowledge-base entry, keeps only the engine notes that say something new', () => {
+    const review = ['Lakukan pemeriksaan fisik terarah dan monitoring TTV serial', 'Terapi PPK: amoksisilin', 'Correlate with examination', 'Auskultasi', 'Nilai ulang demam dalam 48 jam'];
+    render(<DiagnosisStep viewModel={vm([candidate({ code: 'Z99.1', displayLabel: 'Z99.1 - Uji', review })])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
+    openReasons(screen.getByTestId('dx-flow-card'));
+    const list = screen.getByRole('list', { name: 'Alasan' });
+    const catatan = [...list.children].find((entry) => entry.querySelector('.diagnosis-list-title')?.textContent === 'Catatan');
+    // Generic, therapy and already-missing ("Auskultasi" is under Data kurang) lines are dropped.
+    expect([...(catatan?.querySelectorAll('li') ?? [])].map((li) => li.textContent)).toEqual(['Nilai ulang demam dalam 48 jam']);
+  });
+
   it('shows no explanation line when the knowledge base has no entry for the code', () => {
     render(<DiagnosisStep viewModel={vm([candidate({ id: 'm-K65.0', code: 'K65.0', name: 'Acute peritonitis', displayLabel: 'K65.0 - Acute peritonitis · MIRA' })])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
     expect(cardOf(screen.getByTestId('dx-flow-card')).querySelector('.line-clamp-3')).toBeNull();

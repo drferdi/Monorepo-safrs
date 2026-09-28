@@ -6,6 +6,7 @@ import {
   formatClinicalText,
   formatShortDate,
   getVisibleErrorMessage,
+  isGenericDiagnosisUiText,
 } from '../diagnosisDisplayUtils';
 import type { DiagnosisPageProps } from '../diagnosisPageProps';
 import { PixelLoader } from '../PixelLoader';
@@ -111,15 +112,39 @@ function List({
   );
 }
 
+// Engine notes that say nothing practical, or belong to another step (therapy is Terapi's).
+const GENERIC_NOTE = /^(terapi ppk\b|lakukan pemeriksaan fisik terarah|correlate with examination)/i;
+const trailingPunctuation = (value: string) => value.replace(/[\s.,;:]+$/, '');
+
+/**
+ * Catatan in practical words (Chief, 2026-09-28: not just "review faring"). When the knowledge
+ * base has the disease: what to look for at the bedside (`pemeriksaan_fisik`) and when to refer
+ * (`kriteria_rujukan`). Otherwise the engine's own notes, minus generic lines, therapy lines and
+ * anything already listed under Data kurang.
+ */
+function practicalNotes(card: DiagnosisCandidateView, note: DiseaseNote | null): string[] {
+  const fromKb = [
+    ...(note && note.exam.length > 0
+      ? [`Cari saat pemeriksaan: ${note.exam.map(trailingPunctuation).join('; ')}.`]
+      : []),
+    ...(note?.referral ? [`Rujuk bila: ${note.referral.replace(/^rujuk (jika|bila)\s*/i, '')}`] : []),
+  ];
+  if (fromKb.length > 0) return fromKb;
+  const missing = new Set(card.missing.map((item) => cleanClinicalSummary(item).toLowerCase()));
+  return card.review
+    .map(cleanClinicalSummary)
+    .filter((item) => item && !GENERIC_NOTE.test(item) && !isGenericDiagnosisUiText(item) && !missing.has(item.toLowerCase()));
+}
+
 /** The reasons of an ordinary card, top to bottom: the history rule, then the evidence. */
-function reasonGroups(card: DiagnosisCandidateView): ReasonGroup[] {
+function reasonGroups(card: DiagnosisCandidateView, note: DiseaseNote | null): ReasonGroup[] {
   const rule = historyLine(card);
   return [
     ...(rule ? [{ key: 'history', title: 'Riwayat', items: [rule] }] : []),
     { key: 'supports', title: 'Mendukung', items: card.supports },
     { key: 'against', title: 'Menentang', items: card.against },
     { key: 'missing', title: 'Data kurang', items: card.missing },
-    { key: 'review', title: 'Catatan', items: card.review },
+    { key: 'review', title: 'Catatan', items: practicalNotes(card, note) },
   ];
 }
 
@@ -235,7 +260,7 @@ function Card({
           {open ? (
             <ReasonTimeline
               key="reasons"
-              groups={mustNotMiss ? mustNotMissGroups(card, note) : reasonGroups(card)}
+              groups={mustNotMiss ? mustNotMissGroups(card, note) : reasonGroups(card, note)}
               footer={
                 mustNotMiss ? (
                   <button type="button" className="diagnosis-text-button" onClick={onCheck}>

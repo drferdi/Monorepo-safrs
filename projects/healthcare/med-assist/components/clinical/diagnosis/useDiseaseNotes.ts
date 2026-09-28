@@ -3,15 +3,31 @@ import { useEffect, useState } from 'react';
 /**
  * Short disease notes for the diagnosis cards, from the bundled knowledge base
  * (`public/data/penyakit.json`), keyed by ICD-10 without the dot: `definisi` (the explanation
- * under a card's title) and `komplikasi` (what a MUST NOT MISS card risks when it is missed).
- * Read here rather than through `getPenyakitByIcd`, which carries neither field; the knowledge
- * base itself is not changed. Loaded once per panel and shared by every card.
+ * under a card's title), `komplikasi` (what a MUST NOT MISS card risks when it is missed),
+ * `pemeriksaan_fisik` (what to look for at the bedside) and `kriteria_rujukan` (when to refer),
+ * the last two for the card's Catatan. Read here rather than through `getPenyakitByIcd`, which
+ * carries none of these fields; the knowledge base itself is not changed. Loaded once per panel
+ * and shared by every card.
  */
 const KB_URL = '/data/penyakit.json';
 
-export type DiseaseNote = { definition: string; complications: string[] };
+export type DiseaseNote = { definition: string; complications: string[]; exam: string[]; referral: string };
 
-type KbFile = { penyakit?: Array<{ icd10?: unknown; definisi?: unknown; komplikasi?: unknown }> };
+type KbFile = {
+  penyakit?: Array<{
+    icd10?: unknown;
+    definisi?: unknown;
+    komplikasi?: unknown;
+    pemeriksaan_fisik?: unknown;
+    kriteria_rujukan?: unknown;
+  }>;
+};
+
+const strings = (value: unknown): string[] =>
+  Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === 'string').map((item) => item.trim()).filter(Boolean)
+    : [];
+const text = (value: unknown): string => (typeof value === 'string' ? value.replace(/\s+/g, ' ').trim() : '');
 
 const normalize = (code: string): string => code.trim().toUpperCase().replace(/\./g, '');
 
@@ -24,11 +40,15 @@ async function loadNotes(): Promise<Map<string, DiseaseNote>> {
   const notes = new Map<string, DiseaseNote>();
   for (const entry of data.penyakit ?? []) {
     if (typeof entry.icd10 !== 'string') continue;
-    const definition = typeof entry.definisi === 'string' ? entry.definisi.trim() : '';
-    const complications = Array.isArray(entry.komplikasi)
-      ? entry.komplikasi.filter((item): item is string => typeof item === 'string').map((item) => item.trim()).filter(Boolean)
-      : [];
-    if (definition || complications.length > 0) notes.set(normalize(entry.icd10), { definition, complications });
+    const note: DiseaseNote = {
+      definition: typeof entry.definisi === 'string' ? entry.definisi.trim() : '',
+      complications: strings(entry.komplikasi),
+      exam: strings(entry.pemeriksaan_fisik),
+      referral: text(entry.kriteria_rujukan),
+    };
+    if (note.definition || note.complications.length > 0 || note.exam.length > 0 || note.referral) {
+      notes.set(normalize(entry.icd10), note);
+    }
   }
   return notes;
 }

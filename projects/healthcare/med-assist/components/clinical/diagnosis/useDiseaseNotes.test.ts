@@ -7,15 +7,20 @@ const KB = {
   _metadata: { version: 'test' },
   penyakit: [
     { icd10: 'I50', definisi: '  Gagal jantung adalah sindrom klinis.  ', komplikasi: ['Edema paru akut', ' ', 'Syok kardiogenik'] },
-    { icd10: 'J06', definisi: 'Infeksi saluran pernafasan atas.' },
+    {
+      icd10: 'J06',
+      definisi: 'Infeksi saluran pernafasan atas.',
+      pemeriksaan_fisik: [' Faring hiperemis ', '', 'Tonsil membesar'],
+      kriteria_rujukan: 'Rujuk bila\n sesak berat.',
+    },
     { icd10: 'K29.7', definisi: '', komplikasi: [] },
   ],
 };
 
 describe('diseaseNoteFor', () => {
   const notes = new Map<string, DiseaseNote>([
-    ['I50', { definition: 'Gagal jantung adalah sindrom klinis.', complications: ['Edema paru akut'] }],
-    ['J06', { definition: 'Infeksi saluran pernafasan atas.', complications: [] }],
+    ['I50', { definition: 'Gagal jantung adalah sindrom klinis.', complications: ['Edema paru akut'], exam: [], referral: '' }],
+    ['J06', { definition: 'Infeksi saluran pernafasan atas.', complications: [], exam: [], referral: '' }],
   ]);
 
   it('matches the exact code, ignoring the dot and case', () => {
@@ -37,7 +42,7 @@ describe('useDiseaseNotes', () => {
     resetDiseaseNotesCache();
   });
 
-  it('loads definitions and complications from the bundled knowledge base, trimmed, skipping empty entries', async () => {
+  it('loads definitions, complications, bedside findings and referral criteria from the bundled knowledge base, trimmed, skipping empty entries', async () => {
     const fetchMock = vi.fn(async () => new Response(JSON.stringify(KB)));
     vi.stubGlobal('fetch', fetchMock);
     const { result } = renderHook(() => useDiseaseNotes());
@@ -46,8 +51,15 @@ describe('useDiseaseNotes', () => {
     expect(result.current.get('I50')).toEqual({
       definition: 'Gagal jantung adalah sindrom klinis.',
       complications: ['Edema paru akut', 'Syok kardiogenik'],
+      exam: [],
+      referral: '',
     });
-    expect(result.current.get('J06')).toEqual({ definition: 'Infeksi saluran pernafasan atas.', complications: [] });
+    expect(result.current.get('J06')).toEqual({
+      definition: 'Infeksi saluran pernafasan atas.',
+      complications: [],
+      exam: ['Faring hiperemis', 'Tonsil membesar'],
+      referral: 'Rujuk bila sesak berat.',
+    });
     expect(result.current.has('K297')).toBe(false);
   });
 
