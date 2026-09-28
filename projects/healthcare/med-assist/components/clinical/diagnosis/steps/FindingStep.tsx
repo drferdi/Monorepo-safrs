@@ -1,5 +1,3 @@
-import { motion } from 'framer-motion';
-
 import { bedsideFindingLine } from '../bedsideFindings';
 import { buildClinicalSignals } from '../diagnosisDisplayUtils';
 
@@ -49,16 +47,10 @@ export function FindingStep(props: FindingInput) {
         <span className="ttv-label">1 / 4</span>
       </div>
       <div className="diagnosis-context__grid" data-testid="diagnosis-clinical-signals">
-        {signals.map((signal, index) => (
-          <motion.span
-            key={signal}
-            className="diagnosis-chip"
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.24, delay: index * 0.06 }}
-          >
+        {signals.map((signal) => (
+          <span key={signal} className="diagnosis-chip">
             {signal}
-          </motion.span>
+          </span>
         ))}
       </div>
     </section>

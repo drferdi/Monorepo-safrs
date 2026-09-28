@@ -1,24 +1,13 @@
-import {
-  motion,
-  useReducedMotion,
-  useSpring,
-  useTransform,
-  useVelocity,
-  type MotionValue,
-} from 'framer-motion';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 
 /*
- * Motion adapted from lab.xevrion.dev (github.com/xevrion/ui-lab, MIT, Yash Bavadiya), picked
- * for the Tatalaksana page (Chief, 2026-09-29): the pen check of "Scribble checkbox", the wheels of
- * "Odometer", and the fill of "Hold to delete". Timings are the reference's unless noted.
+ * Adapted from lab.xevrion.dev (github.com/xevrion/ui-lab, MIT, Yash Bavadiya), picked for the
+ * Tatalaksana page (Chief, 2026-09-29): the tick of "Scribble checkbox" and the fill of "Hold to
+ * delete". Steady like a console (Chief, the same day): the tick is there or not, never drawn; the
+ * hold fill stays, it is the only way to see how long is left to hold.
  */
 
-// ---- Pen check ("Scribble checkbox"): a hand-drawn tick, a new stroke per text. ----
-
-const PEN = 'cubic-bezier(0.65,0,0.35,1)';
-const CHECK_MS = 200;
-const FADE_MS = 180;
+// ---- Pen check ("Scribble checkbox"): a hand-drawn tick, a new shape per text. ----
 
 function hash(text: string): number {
   let h = 2166136261;
@@ -63,96 +52,24 @@ function checkPath(seed: number): { d: string; width: number } {
   return { d, width: r(between(1.75, 2.3)) };
 }
 
-/** A tick in a small box; `checked` draws it with one pen stroke, unchecking fades it. */
+/** A tick in a small box, shown when `checked`. */
 export function PenCheck({
   checked,
   seedText,
-  delayMs = 0,
   tone = 'accent',
 }: {
   checked: boolean;
   seedText: string;
-  delayMs?: number;
   tone?: 'accent' | 'danger' | 'warning';
 }) {
-  const reduceMotion = useReducedMotion();
   const stroke = checkPath(hash(seedText));
-  const style = checked
-    ? {
-        strokeDashoffset: 0,
-        opacity: 1,
-        transition: reduceMotion ? `opacity ${FADE_MS}ms ease-out` : `stroke-dashoffset ${CHECK_MS}ms ${PEN} ${delayMs}ms`,
-      }
-    : {
-        strokeDashoffset: 1.04,
-        opacity: 0,
-        transition: `opacity ${FADE_MS}ms ease-out, stroke-dashoffset 0ms linear ${FADE_MS}ms`,
-      };
   return (
     <span className={`dx-pen-check dx-pen-check--${tone}`} aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none">
-        <path
-          d={stroke.d}
-          pathLength={1}
-          stroke="currentColor"
-          strokeWidth={stroke.width}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeDasharray="1 2"
-          style={style}
-        />
+        {checked ? (
+          <path d={stroke.d} stroke="currentColor" strokeWidth={stroke.width} strokeLinecap="round" strokeLinejoin="round" />
+        ) : null}
       </svg>
-    </span>
-  );
-}
-
-// ---- Rolling number ("Odometer"): each digit is a wheel that rolls the way the count moved. ----
-
-const GLYPHS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-function Glyph({ digit, position }: { digit: number; position: MotionValue<number> }) {
-  // Every glyph stays within five slots of the position, so ten nodes loop forever.
-  const transform = useTransform(position, (p) => `translateY(${(((((digit - p) % 10) + 15) % 10) - 5) * 100}%)`);
-  return (
-    <motion.span className="dx-roll-glyph" style={{ transform }}>
-      {digit}
-    </motion.span>
-  );
-}
-
-function Wheel({ turns }: { turns: number }) {
-  const reduceMotion = useReducedMotion();
-  const position = useSpring(turns, { visualDuration: 0.35, bounce: 0.15 });
-  const velocity = useVelocity(position);
-  const filter = useTransform(velocity, (v) => {
-    const blur = Math.min(Math.max((Math.abs(v) - 4) / 16, 0), 1) * 1.5;
-    return blur > 0 ? `blur(${blur}px)` : 'none';
-  });
-  useEffect(() => {
-    if (reduceMotion) position.jump(turns);
-    else position.set(turns);
-  }, [turns, reduceMotion, position]);
-  return (
-    <span className="dx-roll-wheel" aria-hidden="true">
-      <motion.span className="dx-roll-strip" style={{ filter: reduceMotion ? 'none' : filter }}>
-        {GLYPHS.map((digit) => (
-          <Glyph key={digit} digit={digit} position={position} />
-        ))}
-      </motion.span>
-    </span>
-  );
-}
-
-/** A count whose digits roll to each new value; the number itself is read from the text. */
-export function RollingNumber({ value }: { value: number }) {
-  const digits = Math.max(1, String(Math.max(0, value)).length);
-  return (
-    <span className="dx-roll">
-      <span className="sr-only">{value}</span>
-      {Array.from({ length: digits }, (_, i) => {
-        const place = 10 ** (digits - 1 - i);
-        return <Wheel key={place} turns={Math.floor(value / place)} />;
-      })}
     </span>
   );
 }

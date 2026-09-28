@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange, stock search)
+Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange, stock search, steady UI)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
@@ -8,7 +8,7 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 ## Current state
 
 Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEAD is the
-Tatalaksana stock-search commit after `883638ab` (DECISIONS 2026-09-29, five Tatalaksana entries):
+"steady like a console" commit after `ce2f5252` (DECISIONS 2026-09-29, six Tatalaksana entries):
 
 - Four steps, three pages: Temuan 1/4 + Diagnosis 2/4 | Tatalaksana 3/4 | RME 4/4.
 - `steps/TatalaksanaStep.tsx` (replaces TherapyStep and EducationStep): Terapi kronis (visit
@@ -20,7 +20,9 @@ Tatalaksana stock-search commit after `883638ab` (DECISIONS 2026-09-29, five Tat
   (name → dose → [indication] → DDI → contraindication); DDI says why (curated pair table,
   `explainInteraction`) once per pair; "Review" history muted; findings orange, no red;
   "Nama obat" searches the Puskesmas stock `stok_obat.json` as typed (`searchStock`).
-- Logic: `tatalaksana.ts`, `usePatientVisits.ts`, `labMotion.tsx` (lab.xevrion.dev motion);
+- Steady UI (Chief: no rubbery motion): no springs, height/layout glides, slides, stagger or scale
+  on any diagnosis page; only the hold-to-Hapus fill and the pixel loader cycle remain.
+- Logic: `tatalaksana.ts`, `usePatientVisits.ts`, `labMotion.tsx` (tick and hold-to-delete);
   ClinicalDifferential runs `checkInteractions`, keeps dismissed proposals out of the
   prescription, sends the follow-up to RME `rencana_tindakan`.
 - CSS appended at the end of `style.css` only. No R3 path, no protected file.
@@ -49,7 +51,8 @@ Tatalaksana stock-search commit after `883638ab` (DECISIONS 2026-09-29, five Tat
 
 Vite harness (`dx-harness`; `?dx=3-J20.9` major DDI, `&ddi=none`, `&ddi=unavailable`,
 `&therapy=error&chronic=none`): viewed; toggling a card moves no other part (0 px); short hold
-does not delete, full hold does; Ganti replaces; Selesai → RME. Not tested: live MIRA, the real
+does not delete, full hold does; Ganti replaces; Selesai → RME; `getAnimations()` 0 after every
+open (Review, education, form, stock list, "Lihat alasan" on `?step=diagnosis`). Not tested: live MIRA, the real
 Sentra prescription API, the ePuskesmas fields themselves, real DDInter lookup in the extension.
 
 ## Open for Chief (code must not change for these)

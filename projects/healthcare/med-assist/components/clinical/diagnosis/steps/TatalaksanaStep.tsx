@@ -1,12 +1,10 @@
-import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 
 import { formatClinicalText, formatShortDate, isInsufficientDiagnosisLabel } from '../diagnosisDisplayUtils';
 import type { DiagnosisManualMedicationDraftView, DiagnosisPageProps } from '../diagnosisPageProps';
 import type { DiagnosisMedicationView, DiagnosisPageViewModel } from '../diagnosisViewModel';
-import { HoldButton, PenCheck, RollingNumber } from '../labMotion';
+import { HoldButton, PenCheck } from '../labMotion';
 import { PixelLoader } from '../PixelLoader';
-import { PANEL_CLOSE, PANEL_OPEN, TIMELINE_STAGGER, timelineEntry, timelineEntryReduced } from '../ReasonTimeline';
 import {
   ROLE_ORDER,
   allergyMatches,
@@ -48,7 +46,6 @@ type Props = Pick<
   onConfirm: () => void;
 };
 
-const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 const ROLE_LABEL = { utama: 'Utama', adjuvant: 'Adjuvant', vitamin: 'Vitamin' } as const;
 const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -84,49 +81,11 @@ export function tatalaksanaSummary(
   return given > 0 ? `${head} · edukasi ${given} poin` : head;
 }
 
-/** Height-and-fade panel, the accordion springs of the diagnosis cards. */
-function Collapse({ children, testId }: { children: ReactNode; testId?: string }) {
-  const reduceMotion = useReducedMotion();
-  return (
-    <motion.div
-      className="overflow-hidden"
-      data-testid={testId}
-      initial={{ height: 0, opacity: 0 }}
-      animate={{
-        height: 'auto',
-        opacity: 1,
-        transition: reduceMotion ? { duration: 0.2 } : { height: PANEL_OPEN, opacity: { duration: 0.25 } },
-      }}
-      exit={{
-        height: 0,
-        opacity: 0,
-        transition: reduceMotion ? { duration: 0.15 } : { height: PANEL_CLOSE, opacity: { duration: 0.18 } },
-      }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-function Chevron({ open }: { open: boolean }) {
-  return (
-    <motion.span
-      aria-hidden="true"
-      className="inline-block"
-      animate={{ rotate: open ? 180 : 0 }}
-      transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
-    >
-      ⌄
-    </motion.span>
-  );
-}
-
 /**
- * One part of the page. Parts rise in once, one after another, when the page opens; after that
- * only what the doctor opens moves (the console rule, Chief 2026-09-28).
+ * One part of the page. Steady like a console (Chief, 2026-09-29: "gak suka ... gerak gerak kaya
+ * karet"): what opens appears in place and what closes is gone; nothing grows, slides or springs.
  */
 function Part({
-  order,
   label,
   count,
   loader,
@@ -134,7 +93,6 @@ function Part({
   divider = true,
   children,
 }: {
-  order: number;
   label: string;
   count?: number;
   loader?: ReactNode;
@@ -142,27 +100,18 @@ function Part({
   divider?: boolean;
   children: ReactNode;
 }) {
-  const reduceMotion = useReducedMotion();
   return (
-    <motion.div
-      className="flex flex-col gap-2"
-      data-testid={testId}
-      initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.32, ease: EASE_OUT, delay: order * 0.06 }}
-    >
+    <div className="flex flex-col gap-2" data-testid={testId}>
       {divider ? <div className="console-divider dx-tx-divider" aria-hidden="true" /> : null}
       <div className="flex items-center gap-2">
         {loader}
         <span className="ttv-label">{label}</span>
         {count !== undefined ? (
-          <span className="ttv-label dx-tx-count">
-            <RollingNumber value={count} />
-          </span>
+          <span className="ttv-label dx-tx-count">{count}</span>
         ) : null}
       </div>
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -194,33 +143,15 @@ type TherapyStepRow = { key: TherapyStepKey; label?: string; value: ReactNode; t
 
 /**
  * A therapy card as the "Activity timeline" of lab.xevrion.dev (Chief, 2026-09-29): name, dose,
- * (indication,) DDI and contraindication are nodes joined by a hairline. Entries settle one after
- * another from a small blur and lift and each line grows to the next node, once, when the card
- * appears; nothing moves again when a value changes (the DDI check answering).
+ * (indication,) DDI and contraindication are nodes joined by a hairline, drawn at once (no motion,
+ * Chief's console rule of the same day).
  */
 function TherapyTimeline({ rows }: { rows: TherapyStepRow[] }) {
-  const reduceMotion = useReducedMotion();
   return (
     <ol className="dx-timeline dx-tx-timeline">
       {rows.map((row, index) => (
-        <motion.li
-          key={row.key}
-          className="dx-timeline__item"
-          data-step={row.key}
-          custom={index}
-          variants={reduceMotion ? timelineEntryReduced : timelineEntry}
-          initial="hidden"
-          animate="shown"
-        >
-          {index < rows.length - 1 ? (
-            <motion.span
-              aria-hidden="true"
-              className="dx-timeline__line"
-              initial={{ scaleY: reduceMotion ? 1 : 0 }}
-              animate={{ scaleY: 1 }}
-              transition={{ duration: 0.42, ease: EASE_OUT, delay: 0.16 + index * TIMELINE_STAGGER }}
-            />
-          ) : null}
+        <li key={row.key} className="dx-timeline__item" data-step={row.key}>
+          {index < rows.length - 1 ? <span aria-hidden="true" className="dx-timeline__line" /> : null}
           <span aria-hidden="true" className={row.tone === 'warning' ? 'dx-timeline__node dx-tx-node--warning' : 'dx-timeline__node'}>
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d={STEP_ICONS[row.key]} />
@@ -236,7 +167,7 @@ function TherapyTimeline({ rows }: { rows: TherapyStepRow[] }) {
           ) : (
             <div className="dx-tx-step-head min-w-0 flex-1">{row.value}</div>
           )}
-        </motion.li>
+        </li>
       ))}
     </ol>
   );
@@ -323,7 +254,7 @@ function ChronicCard({
                   onClick={() => setOpen((value) => !value)}
                 >
                   Review
-                  <Chevron open={open} />
+                  <span aria-hidden="true">{open ? '⌃' : '⌄'}</span>
                 </button>
               </div>
             ),
@@ -345,30 +276,28 @@ function ChronicCard({
           },
         ]}
       />
-      <AnimatePresence initial={false}>
-        {open ? (
-          <Collapse key="review" testId="dx-tx-chronic-review">
-            {medication.visits.length > 0 ? (
-              // Muted like the timeline labels (Chief, 2026-09-29): history, not today's prescription.
-              <ul className="dx-tx-review">
-                {medication.visits.map((visit, index) => (
-                  <li key={`${visit.date}-${index}`} className="dx-tx-review-row">
-                    <span className="diagnosis-row-meta dx-tx-step-label">{formatShortDate(visit.date)}</span>
-                    {/* Dose and diagnosis each stay whole; a narrow panel breaks between them. */}
-                    <span className="diagnosis-row-meta min-w-0">
-                      <span className="whitespace-nowrap">{visit.dose}</span>
-                      {visit.dose && visit.diagnosis ? ' · ' : null}
-                      <span className="whitespace-nowrap">{visit.diagnosis}</span>
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="diagnosis-row-meta">Riwayat kunjungan tidak mencatat obat ini.</p>
-            )}
-          </Collapse>
-        ) : null}
-      </AnimatePresence>
+      {open ? (
+        <div data-testid="dx-tx-chronic-review">
+          {medication.visits.length > 0 ? (
+            // Muted like the timeline labels (Chief, 2026-09-29): history, not today's prescription.
+            <ul className="dx-tx-review">
+              {medication.visits.map((visit, index) => (
+                <li key={`${visit.date}-${index}`} className="dx-tx-review-row">
+                  <span className="diagnosis-row-meta dx-tx-step-label">{formatShortDate(visit.date)}</span>
+                  {/* Dose and diagnosis each stay whole; a narrow panel breaks between them. */}
+                  <span className="diagnosis-row-meta min-w-0">
+                    <span className="whitespace-nowrap">{visit.dose}</span>
+                    {visit.dose && visit.diagnosis ? ' · ' : null}
+                    <span className="whitespace-nowrap">{visit.diagnosis}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="diagnosis-row-meta">Riwayat kunjungan tidak mencatat obat ini.</p>
+          )}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -496,24 +425,12 @@ function VisitCard({
   onReplace: () => void;
   onRemove: () => void;
 }) {
-  const reduceMotion = useReducedMotion();
   const allergy = allergyMatches(medication.name, allergies);
   const contraindications = [...allergy.map((item) => `alergi ${item}`), ...medication.contraindications];
   const serious = hasSeriousInteraction(medication.name, interactionCheck.interactions);
   return (
-    <motion.div
-      layout="position"
-      className="neu-select diagnosis-candidate-row"
-      initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 6 }}
-      animate={{ opacity: 1, y: 0, transition: { duration: 0.24, ease: EASE_OUT } }}
-      exit={
-        reduceMotion
-          ? { opacity: 0, transition: { duration: 0.15 } }
-          : { opacity: 0, height: 0, paddingTop: 0, paddingBottom: 0, transition: { height: PANEL_CLOSE, opacity: { duration: 0.14 } } }
-      }
-    >
-      <motion.div
-        whileTap={{ scale: 0.985 }}
+    <div className="neu-select diagnosis-candidate-row">
+      <div
         className="flex flex-col gap-1"
         data-testid="dx-tx-visit-med"
         role="button"
@@ -557,7 +474,7 @@ function VisitCard({
             },
           ]}
         />
-      </motion.div>
+      </div>
       <div>
         <div className="flex items-center gap-4">
           <button type="button" className="diagnosis-text-button" aria-expanded={replacing} onClick={onReplace}>
@@ -567,29 +484,25 @@ function VisitCard({
             Hapus
           </HoldButton>
         </div>
-        <AnimatePresence initial={false}>{replacing ? <Collapse key="replace">{form}</Collapse> : null}</AnimatePresence>
+        {replacing ? form : null}
       </div>
-    </motion.div>
+    </div>
   );
 }
 
 function SafetyPart({
-  order,
   review,
   interactionCheck,
 }: {
-  order: number;
   review: SafetyReview;
   interactionCheck: DiagnosisPageProps['interactionCheck'];
 }) {
-  const reduceMotion = useReducedMotion();
   // The reason is written once, on the card; "Lihat detail" takes the doctor there.
   const showDetail = () => {
     const key = review.interactions[0] ? pairKey(review.interactions[0]) : null;
     const target = [...document.querySelectorAll('[data-ddi-reason]')].find((element) => element.getAttribute('data-ddi-reason') === key);
     if (!(target instanceof HTMLElement)) return;
-    target.scrollIntoView?.({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
-    if (!reduceMotion) target.animate?.([{ opacity: 0.35 }, { opacity: 1 }], { duration: 520, iterations: 2, easing: 'ease-out' });
+    target.scrollIntoView?.({ block: 'center' });
   };
   const checking = interactionCheck.state === 'checking';
   const findings = review.duplicates.length + review.interactions.length + review.contraindications.length;
@@ -608,7 +521,6 @@ function SafetyPart({
   ].filter((line): line is { key: string; ok: boolean; text: string } => line !== null);
   return (
     <Part
-      order={order}
       label="Keamanan terapi"
       testId="dx-tx-safety"
       // No pixel check when the interaction check could not run: nothing was checked to tick.
@@ -623,9 +535,9 @@ function SafetyPart({
       ) : (
         <>
           <ul className="flex flex-col gap-1" data-testid="dx-tx-safety-lines">
-            {lines.map((line, index) => (
+            {lines.map((line) => (
                 <li key={line.key} className="flex items-center gap-2 text-small">
-                  <PenCheck checked={line.ok} seedText={line.text} delayMs={180 + index * 140} tone={line.ok ? 'accent' : 'warning'} />
+                  <PenCheck checked={line.ok} seedText={line.text} tone={line.ok ? 'accent' : 'warning'} />
                   <span className={line.ok ? '' : 'dx-tx-warning'}>{line.text}</span>
                 </li>
               ))}
@@ -665,11 +577,9 @@ function SafetyPart({
 }
 
 function EducationPart({
-  order,
   education,
   onToggleEducation,
 }: {
-  order: number;
   education: DiagnosisPageProps['education'];
   onToggleEducation: (key: string) => void;
 }) {
@@ -683,16 +593,15 @@ function EducationPart({
   }, [rest.length, given.length]);
 
   return (
-    <Part order={order} label="Edukasi" count={given.length} testId="dx-tx-education">
+    <Part label="Edukasi" count={given.length} testId="dx-tx-education">
       {education.length === 0 ? (
         <p className="diagnosis-row-meta">Basis pengetahuan belum punya edukasi untuk diagnosis ini.</p>
       ) : (
-        // A point moves from the list below into the numbered list: one shared layout per point.
-        <LayoutGroup id="dx-tx-education">
+        <>
           {given.length > 0 ? (
             <ol className="flex flex-col gap-1" data-testid="dx-tx-education-given">
               {given.map((item, index) => (
-                <motion.li key={item.key} layoutId={`dx-edu-${item.key}`} className="flex items-start gap-2 text-small">
+                <li key={item.key} className="flex items-start gap-2 text-small">
                   <span className="ttv-label dx-tx-index">{pad(index + 1)}</span>
                   <span className="min-w-0 flex-1">{item.text}</span>
                   {editing ? (
@@ -700,7 +609,7 @@ function EducationPart({
                       hapus
                     </button>
                   ) : null}
-                </motion.li>
+                </li>
               ))}
             </ol>
           ) : (
@@ -728,29 +637,24 @@ function EducationPart({
               </button>
             ) : null}
           </div>
-          <AnimatePresence initial={false}>
-            {adding ? (
-              <Collapse key="picker" testId="dx-tx-education-picker">
-                <div className="flex flex-col gap-1">
-                  {rest.map((item) => (
-                    <motion.button
-                      key={item.key}
-                      layoutId={`dx-edu-${item.key}`}
-                      type="button"
-                      className="neu-select diagnosis-medication-row"
-                      data-testid="dx-flow-education-item"
-                      aria-pressed={false}
-                      onClick={() => onToggleEducation(item.key)}
-                    >
-                      <span className="text-small min-w-0 text-left">{item.text}</span>
-                      <PenCheck checked={false} seedText={item.key} />
-                    </motion.button>
-                  ))}
-                </div>
-              </Collapse>
-            ) : null}
-          </AnimatePresence>
-        </LayoutGroup>
+          {adding ? (
+            <div className="flex flex-col gap-1" data-testid="dx-tx-education-picker">
+              {rest.map((item) => (
+                <button
+                  key={item.key}
+                  type="button"
+                  className="neu-select diagnosis-medication-row"
+                  data-testid="dx-flow-education-item"
+                  aria-pressed={false}
+                  onClick={() => onToggleEducation(item.key)}
+                >
+                  <span className="text-small min-w-0 text-left">{item.text}</span>
+                  <PenCheck checked={false} seedText={item.key} />
+                </button>
+              ))}
+            </div>
+          ) : null}
+        </>
       )}
     </Part>
   );
@@ -782,19 +686,9 @@ export function TatalaksanaStep({
   onSkip,
   onConfirm,
 }: Props) {
-  const reduceMotion = useReducedMotion();
   // Where the manual form is open: under "+ Tambah obat", or under the card being replaced.
   const [formFor, setFormFor] = useState<string | null>(null);
-  const [finishing, setFinishing] = useState(false);
   const safetyRef = useRef<HTMLDivElement>(null);
-  // "Selesai" morphs into its check first ("Morphing button"), then the page closes.
-  const confirm = useRef(onConfirm);
-  confirm.current = onConfirm;
-  useEffect(() => {
-    if (!finishing) return undefined;
-    const id = setTimeout(() => confirm.current(), 420);
-    return () => clearTimeout(id);
-  }, [finishing]);
 
   const medications = visitMedications(viewModel);
   const manualKeys = medications
@@ -854,7 +748,6 @@ export function TatalaksanaStep({
   const remove = (medication: DiagnosisMedicationView) =>
     medication.sourceLabel === 'MANUAL' ? onRemoveManualMedication(medication.key) : onDismissMedication(medication.key);
 
-  let order = 0;
   return (
     <section className="ct-v2-panel flex flex-col gap-3" aria-label="Tatalaksana">
       <div className="ct-v2-panel-head">
@@ -862,7 +755,7 @@ export function TatalaksanaStep({
         <span className="ttv-label">3 / 4</span>
       </div>
 
-      <Part order={order++} label="Terapi kronis" count={chronicMedications.length} testId="dx-tx-chronic-part" divider={false}>
+      <Part label="Terapi kronis" count={chronicMedications.length} testId="dx-tx-chronic-part" divider={false}>
         {chronicMedications.length > 0 ? (
           <div className="diagnosis-list">
             {chronicMedications.map((medication) => (
@@ -880,13 +773,12 @@ export function TatalaksanaStep({
         )}
       </Part>
 
-      <Part order={order++} label="Terapi kunjungan ini" count={chosen.length} testId="dx-tx-visit-part">
+      <Part label="Terapi kunjungan ini" count={chosen.length} testId="dx-tx-visit-part">
         {slots.map((slot) => (
           <div key={slot.role} className="flex flex-col gap-1" data-testid={`dx-tx-slot-${slot.role}`}>
             <span className="ttv-label">{`${slot.number} · ${ROLE_LABEL[slot.role]}`}</span>
             <div className="diagnosis-list">
-              <AnimatePresence initial={false}>
-                {slot.items.map((medication) => (
+              {slot.items.map((medication) => (
                   <VisitCard
                     key={medication.key}
                     medication={medication}
@@ -900,7 +792,6 @@ export function TatalaksanaStep({
                     onRemove={() => remove(medication)}
                   />
                 ))}
-              </AnimatePresence>
             </div>
           </div>
         ))}
@@ -914,9 +805,7 @@ export function TatalaksanaStep({
           >
             + Tambah obat
           </button>
-          <AnimatePresence initial={false}>
-            {formFor === 'add' ? <Collapse key="add">{form('Tambah obat')}</Collapse> : null}
-          </AnimatePresence>
+          {formFor === 'add' ? form('Tambah obat') : null}
         </div>
         <div className="flex flex-wrap items-center gap-3">
           {/* With no proposal there is nothing to use: only the other decision is offered. */}
@@ -940,7 +829,7 @@ export function TatalaksanaStep({
             onClick={() => {
               onClearMedications();
               onSkip();
-              safetyRef.current?.scrollIntoView?.({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+              safetyRef.current?.scrollIntoView?.({ block: 'start' });
             }}
           >
             Lanjut tanpa terapi tambahan
@@ -949,12 +838,12 @@ export function TatalaksanaStep({
       </Part>
 
       <div ref={safetyRef}>
-        <SafetyPart order={order++} review={review} interactionCheck={interactionCheck} />
+        <SafetyPart review={review} interactionCheck={interactionCheck} />
       </div>
 
-      <EducationPart order={order++} education={education} onToggleEducation={onToggleEducation} />
+      <EducationPart education={education} onToggleEducation={onToggleEducation} />
 
-      <Part order={order++} label="Tindak lanjut" testId="dx-tx-follow-up">
+      <Part label="Tindak lanjut" testId="dx-tx-follow-up">
         {followUp.visit.length > 0 || followUp.routine.length > 0 ? (
           <Kv
             rows={[
@@ -967,7 +856,7 @@ export function TatalaksanaStep({
         )}
       </Part>
 
-      <Part order={order++} label="Safety net" testId="dx-tx-safety-net">
+      <Part label="Safety net" testId="dx-tx-safety-net">
         {safetyNet.length > 0 ? (
           <div className="neu-textarea neu-textarea--symptom diagnosis-readonly-field diagnosis-readonly-field--warning">
             <div className="diagnosis-list-title">Segera kembali / rujuk bila</div>
@@ -982,25 +871,23 @@ export function TatalaksanaStep({
         )}
       </Part>
 
-      <Part order={order++} label="Ringkasan" testId="dx-tx-summary">
+      <Part label="Ringkasan" testId="dx-tx-summary">
         <Kv
           rows={[
             { term: 'Diagnosis', value: viewModel.selectedDiagnoses.map((diagnosis) => diagnosis.displayLabel).join(', ') || '-' },
-            { term: 'Terapi kronis', value: <><RollingNumber value={chronicMedications.length} /> obat</> },
+            { term: 'Terapi kronis', value: `${chronicMedications.length} obat` },
             {
               term: 'Terapi kunjungan',
-              value: skipped && chosen.length === 0 ? 'tanpa terapi tambahan' : <><RollingNumber value={chosen.length} /> obat</>,
+              value: skipped && chosen.length === 0 ? 'tanpa terapi tambahan' : `${chosen.length} obat`,
             },
-            { term: 'Edukasi', value: <><RollingNumber value={given} /> poin</> },
+            { term: 'Edukasi', value: `${given} poin` },
             // A count, not the text again: Tindak lanjut above already says it (one page, one telling).
             {
               term: 'Tindak lanjut',
               value:
-                followUp.visit.length + followUp.routine.length > 0 ? (
-                  <><RollingNumber value={followUp.visit.length + followUp.routine.length} /> jadwal kontrol</>
-                ) : (
-                  '-'
-                ),
+                followUp.visit.length + followUp.routine.length > 0
+                  ? `${followUp.visit.length + followUp.routine.length} jadwal kontrol`
+                  : '-',
             },
             {
               term: 'Safety check',
@@ -1015,43 +902,15 @@ export function TatalaksanaStep({
           ]}
         />
         <div className="flex">
-          <motion.button
+          <button
             type="button"
-            layout
             className="btn-ac-inline btn-ac-inline--sharp"
             data-testid="dx-tx-finish"
-            disabled={!decided || finishing}
-            onClick={() => {
-              if (reduceMotion) {
-                onConfirm();
-                return;
-              }
-              setFinishing(true);
-            }}
+            disabled={!decided}
+            onClick={onConfirm}
           >
-            <AnimatePresence mode="popLayout" initial={false}>
-              {finishing ? (
-                <motion.span
-                  key="done"
-                  className="inline-flex items-center gap-1"
-                  initial={{ opacity: 0, y: 8, filter: 'blur(2px)' }}
-                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                  transition={{ duration: 0.22, ease: EASE_OUT }}
-                >
-                  ✓ Selesai
-                </motion.span>
-              ) : (
-                <motion.span
-                  key="finish"
-                  initial={false}
-                  exit={{ opacity: 0, y: -8, filter: 'blur(2px)' }}
-                  transition={{ duration: 0.16 }}
-                >
-                  Selesai
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </motion.button>
+            Selesai
+          </button>
         </div>
         {!decided ? (
           <p className="diagnosis-row-meta">Pilih obat kunjungan ini, atau lanjut tanpa terapi tambahan.</p>

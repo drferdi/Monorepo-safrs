@@ -1,4 +1,3 @@
-import { motion, useReducedMotion, type Transition, type Variants } from 'framer-motion';
 import type { ReactNode } from 'react';
 
 import { cleanClinicalSummary, formatClinicalText } from './diagnosisDisplayUtils';
@@ -8,32 +7,10 @@ import { cleanClinicalSummary, formatClinicalText } from './diagnosisDisplayUtil
  * on lab.xevrion.dev (Chief's reference): one entry per reason group, an icon node on the left,
  * a hairline joining the nodes, the group name, then the items.
  *
- * Motion: the panel opens on a spring with no bounce (height and opacity), the entries follow
- * one after another, each settling from a 4 px blur and a 6 px lift, and each connecting line
- * grows down to the next node once its entry has landed. Closing folds the panel on a shorter
- * spring. Reduced motion keeps only the fades.
+ * No motion (Chief, 2026-09-29: steady like a console, "gak suka ... gerak gerak kaya karet"): the
+ * panel and its entries appear in place when opened and are gone when closed.
  */
 export type ReasonGroup = { key: string; title: string; items: string[] };
-
-const EASE_OUT = [0.23, 1, 0.32, 1] as const;
-const STAGGER = 0.07;
-export const PANEL_OPEN: Transition = { type: 'spring', bounce: 0, duration: 0.5 };
-export const PANEL_CLOSE: Transition = { type: 'spring', bounce: 0, duration: 0.32 };
-
-const entry: Variants = {
-  hidden: { opacity: 0, y: -6, filter: 'blur(4px)' },
-  shown: (index: number) => ({
-    opacity: 1,
-    y: 0,
-    filter: 'blur(0px)',
-    transition: { duration: 0.38, ease: EASE_OUT, delay: 0.06 + index * STAGGER },
-    transitionEnd: { filter: 'none' },
-  }),
-};
-const entryReduced: Variants = {
-  hidden: { opacity: 0 },
-  shown: { opacity: 1, transition: { duration: 0.2 } },
-};
 
 const ICONS: Record<string, string> = {
   supports: 'M3.5 8.5l3 3 6-7',
@@ -45,7 +22,6 @@ const ICONS: Record<string, string> = {
 };
 
 export function ReasonTimeline({ groups, footer }: { groups: ReasonGroup[]; footer?: ReactNode }) {
-  const reduceMotion = useReducedMotion();
   const shown = groups
     .map((group) => ({ ...group, items: group.items.map(cleanClinicalSummary).filter(Boolean) }))
     .filter((group) => group.items.length > 0);
@@ -53,40 +29,12 @@ export function ReasonTimeline({ groups, footer }: { groups: ReasonGroup[]; foot
   if (shown.length === 0 && !footer) return null;
 
   return (
-    <motion.div
-      className="overflow-hidden"
-      initial={{ height: 0, opacity: 0 }}
-      animate={{
-        height: 'auto',
-        opacity: 1,
-        transition: reduceMotion ? { duration: 0.2 } : { height: PANEL_OPEN, opacity: { duration: 0.25 } },
-      }}
-      exit={{
-        height: 0,
-        opacity: 0,
-        transition: reduceMotion ? { duration: 0.15 } : { height: PANEL_CLOSE, opacity: { duration: 0.18 } },
-      }}
-    >
+    <div>
       {shown.length > 0 ? (
         <ol className="dx-timeline pt-2" aria-label="Alasan">
           {shown.map((group, index) => (
-            <motion.li
-              key={group.key}
-              className="dx-timeline__item"
-              custom={index}
-              variants={reduceMotion ? entryReduced : entry}
-              initial="hidden"
-              animate="shown"
-            >
-              {index < shown.length - 1 ? (
-                <motion.span
-                  aria-hidden="true"
-                  className="dx-timeline__line"
-                  initial={{ scaleY: reduceMotion ? 1 : 0 }}
-                  animate={{ scaleY: 1 }}
-                  transition={{ duration: 0.42, ease: EASE_OUT, delay: 0.16 + index * STAGGER }}
-                />
-              ) : null}
+            <li key={group.key} className="dx-timeline__item">
+              {index < shown.length - 1 ? <span aria-hidden="true" className="dx-timeline__line" /> : null}
               <span aria-hidden="true" className="dx-timeline__node">
                 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d={ICONS[group.key] ?? ICONS.review} />
@@ -103,14 +51,11 @@ export function ReasonTimeline({ groups, footer }: { groups: ReasonGroup[]; foot
                   ))}
                 </ul>
               </div>
-            </motion.li>
+            </li>
           ))}
         </ol>
       ) : null}
       {footer ? <div className="flex pt-3">{footer}</div> : null}
-    </motion.div>
+    </div>
   );
 }
-
-/** The entry motion, shared with the Tatalaksana therapy cards (same reference). */
-export { entry as timelineEntry, entryReduced as timelineEntryReduced, STAGGER as TIMELINE_STAGGER };

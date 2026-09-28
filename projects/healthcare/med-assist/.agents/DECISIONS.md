@@ -3,6 +3,33 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — Steady like a console: no rubbery motion on the diagnosis pages
+
+- Decision (Chief: "Adhu saya gak suka banget Ui gerak gerak kaya karet gini, make it steady like
+  real world console"): on every diagnosis page (Temuan, Diagnosis, Tatalaksana, the step flow and
+  its receipts) nothing animates its size, position or scale. Removed: height springs of every
+  panel (`Collapse`, ReasonTimeline, BedsideCheck; `PANEL_OPEN`/`PANEL_CLOSE` gone), `layout` /
+  `layoutId` glides (cards, receipts folding into steps, education points moving lists), step
+  slides, staggered entries (parts, cards, chips, timeline entries and their growing hairline),
+  `whileTap` squash, spring-rotating chevrons (now the glyph flips ⌄ / ⌃), the rolling-number
+  odometer (plain numbers), the drawn pen stroke (the tick is shown or not), the morphing
+  "Selesai" (it closes at once), smooth scrolls and the "Lihat detail" pulse (jumps to the reason),
+  the pixel loader's scale and ripple (cells switch on and off). Kept: the hold-to-Hapus fill (the
+  only way to see how long is left to hold) and the pixel loader's frame cycle while checking.
+- The Tatalaksana stock list under "+ Tambah obat" now opens over the fields below (a temporary
+  overlay with `--neu-shadow-card`) instead of pushing them down; under "Ganti" it stays in the
+  form's flow, because the card's own `overflow: hidden` would clip an overlay (token-guard). Its
+  entry keyframes, stagger and `transition: all` are off. A pixel-loader cell that is off is dimmed
+  by `[data-on='false']` in CSS; an unchecked PenCheck renders no path (no inline values).
+- Supersedes the motion parts of this day's entries "push to the Max. Penggunaan Motion" (lab.xevrion
+  motion) and "masing masing terapi … beri motion … activity-timeline": the timeline layout (icon
+  nodes, hairline) stays, its motion is gone. Style.css comments that still describe motion
+  (e.g. the `.dx-timeline` block) and the unused `.dx-roll*` rules stay, the file being append-only.
+- Evidence: harness viewed (`dx=3-J20.9`, `step=diagnosis`): `document.getAnimations()` is 0
+  after load, after opening Review, the education picker, the manual form, the stock list and
+  "Lihat alasan"; the Keamanan part sits at the same page offset with the stock list open and
+  closed (2449.4 px both). Tests unchanged (none asserted on motion).
+
 ## 2026-09-29 — Tatalaksana: the medicine name comes from the Puskesmas stock
 
 - Decision (Chief: "saat user ketik obat ... harusnya sudah connect dengan database obat

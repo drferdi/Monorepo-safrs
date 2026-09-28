@@ -1,4 +1,3 @@
-import { AnimatePresence, motion } from 'framer-motion';
 import { useState, type ReactNode } from 'react';
 
 import {
@@ -34,17 +33,8 @@ const MAX_BANDING = 2;
 /** `windowMonths` default in lib/clinical/recurrent-diagnosis.ts; shown so the rule is visible. */
 const HISTORY_WINDOW_MONTHS = 12;
 
-// Motion after lab.xevrion.dev: cards arrive one after another ("Reorder list"), sink slightly
-// under the finger ("Keycap hint"); the reasons open as the "Activity timeline" (ReasonTimeline).
-const EASE_OUT = [0.23, 1, 0.32, 1] as const;
-const cardEnter = {
-  hidden: { opacity: 0, y: 10 },
-  shown: (index: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.28, ease: EASE_OUT, delay: index * 0.06 },
-  }),
-};
+// No motion (Chief, 2026-09-29: steady like a console): cards stand where they are; the reasons
+// open in place as the "Activity timeline" (ReasonTimeline).
 
 type Props = Pick<
   DiagnosisPageProps,
@@ -241,20 +231,17 @@ function StepToTake({
             Masukkan hasil
           </button>
         </div>
-        <AnimatePresence initial={false}>
-          {entering ? (
-            <BedsideCheck
-              key="check"
-              step={action}
-              choice={findingChoicesFor(action)}
-              onSave={(record) => {
-                setEntering(false);
-                onRecord(record);
-              }}
-              onCancel={() => setEntering(false)}
-            />
-          ) : null}
-        </AnimatePresence>
+        {entering ? (
+          <BedsideCheck
+            step={action}
+            choice={findingChoicesFor(action)}
+            onSave={(record) => {
+              setEntering(false);
+              onRecord(record);
+            }}
+            onCancel={() => setEntering(false)}
+          />
+        ) : null}
       </div>
     </div>
   );
@@ -285,21 +272,16 @@ function NewEvidence({ sign, items, caption }: { sign: string; items: string[]; 
 
 function Card({
   card,
-  index,
   note,
   mustNotMiss = false,
-  selectionKey,
   plan,
   change,
   onToggle,
   onRecord,
 }: {
   card: DiagnosisCandidateView;
-  index: number;
   /** What changed for this card since the last recorded finding; absent when nothing to compare. */
   change?: CardChange;
-  /** Changes only when the chosen diagnosis changes: the one time cards move on the page. */
-  selectionKey: string;
   /** The knowledge base's notes for this code: explanation, Catatan and, for MUST NOT MISS, the complications and bedside findings. */
   note: DiseaseNote | null;
   mustNotMiss?: boolean;
@@ -320,23 +302,11 @@ function Card({
   const checks = mustNotMiss ? checksFor(note, missing) : null;
   // The select control and the reasons button are siblings: a role="button" element's
   // children are presentational, so a nested button would be unreachable for assistive tech.
-  // The column behaves like a console (Chief, 2026-09-28): opening the reasons grows only this
-  // card's reasons panel. Cards animate position only when the chosen diagnosis changes
-  // (`layoutDependency`), never because a card above grew, and only the select control sinks
-  // under a tap, so pressing "Lihat alasan" does not shrink the card.
+  // The column behaves like a console (Chief, 2026-09-28, 2026-09-29): opening the reasons adds
+  // only this card's reasons panel, in place; nothing moves, grows or sinks.
   return (
-    <motion.div
-      layout="position"
-      layoutId={`dx-card-${card.id}`}
-      layoutDependency={selectionKey}
-      className="neu-select diagnosis-candidate-row"
-      custom={index}
-      variants={cardEnter}
-      initial="hidden"
-      animate="shown"
-    >
-      <motion.div
-        whileTap={card.isSelectionBlocked ? undefined : { scale: 0.985 }}
+    <div className="neu-select diagnosis-candidate-row">
+      <div
         className="flex flex-col gap-1"
         data-testid="dx-flow-card"
         role="button"
@@ -376,7 +346,7 @@ function Card({
             <NewEvidence sign="−" items={change.newAgainst} caption="Temuan baru yang menentang" />
           </div>
         ) : null}
-      </motion.div>
+      </div>
       {/* One grid child for the button and its reasons: a reasons panel added as its own child
           would add the card's 8 px grid gap at once on open and drop it at once on close. */}
       <div>
@@ -388,64 +358,44 @@ function Card({
             onClick={() => setOpen((v) => !v)}
           >
             {toggleLabel}
-            <motion.span
-              aria-hidden="true"
-              className="inline-block"
-              animate={{ rotate: open ? 180 : 0 }}
-              transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
-            >
-              ⌄
-            </motion.span>
+            <span aria-hidden="true">{open ? '⌃' : '⌄'}</span>
           </button>
         </div>
-        <AnimatePresence initial={false}>
-          {open ? (
-            <ReasonTimeline
-              key="reasons"
-              groups={mustNotMiss ? mustNotMissGroups(card, note, missing) : reasonGroups(card, note)}
-              footer={
-                checks ? (
-                  <div className="flex-1">
-                    <div className="flex">
-                      <button
-                        type="button"
-                        className="diagnosis-text-button inline-flex items-center gap-1"
-                        aria-expanded={checking}
-                        onClick={() => setChecking((value) => !value)}
-                      >
-                        Apa yang perlu diperiksa
-                        <motion.span
-                          aria-hidden="true"
-                          className="inline-block"
-                          animate={{ rotate: checking ? 180 : 0 }}
-                          transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
-                        >
-                          ⌄
-                        </motion.span>
-                      </button>
-                    </div>
-                    <AnimatePresence initial={false}>
-                      {checking ? (
-                        <BedsideCheck
-                          key="checks"
-                          step={{ kind: 'exam', item: `Pemeriksaan ${title}` }}
-                          choice={checks}
-                          onSave={(record) => {
-                            setChecking(false);
-                            onRecord(record);
-                          }}
-                          onCancel={() => setChecking(false)}
-                        />
-                      ) : null}
-                    </AnimatePresence>
+        {open ? (
+          <ReasonTimeline
+            groups={mustNotMiss ? mustNotMissGroups(card, note, missing) : reasonGroups(card, note)}
+            footer={
+              checks ? (
+                <div className="flex-1">
+                  <div className="flex">
+                    <button
+                      type="button"
+                      className="diagnosis-text-button inline-flex items-center gap-1"
+                      aria-expanded={checking}
+                      onClick={() => setChecking((value) => !value)}
+                    >
+                      Apa yang perlu diperiksa
+                      <span aria-hidden="true">{checking ? '⌃' : '⌄'}</span>
+                    </button>
                   </div>
-                ) : undefined
-              }
-            />
-          ) : null}
-        </AnimatePresence>
+                  {checking ? (
+                    <BedsideCheck
+                      step={{ kind: 'exam', item: `Pemeriksaan ${title}` }}
+                      choice={checks}
+                      onSave={(record) => {
+                        setChecking(false);
+                        onRecord(record);
+                      }}
+                      onCancel={() => setChecking(false)}
+                    />
+                  ) : null}
+                </div>
+              ) : undefined
+            }
+          />
+        ) : null}
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -529,7 +479,6 @@ export function DiagnosisStep({
 }: Props) {
   const notes = useDiseaseNotes();
 
-  const selectionKey = viewModel.candidates.filter((candidate) => candidate.isSelected).map((candidate) => candidate.id).join('|');
   // The doctor's choice and the engine's recommendation are kept apart: the page is arranged
   // around the choice, the change indicators and "MIRA sekarang menyarankan" read the engine's own.
   const chosen = viewModel.selectedDiagnoses[0] ?? null;
@@ -556,13 +505,11 @@ export function DiagnosisStep({
   };
   const onPage = new Set([primary, ...mustNotMiss, ...differentials].map((candidate) => candidate?.code));
   const gone = delta?.gone.filter((entry) => !onPage.has(entry.code)) ?? [];
-  const card = (candidate: DiagnosisCandidateView, index: number, isMustNotMiss = false) => (
+  const card = (candidate: DiagnosisCandidateView, isMustNotMiss = false) => (
     <Card
       card={candidate}
-      index={index}
       note={diseaseNoteFor(notes, candidate.code)}
       mustNotMiss={isMustNotMiss}
-      selectionKey={selectionKey}
       plan={enginePlan}
       change={changeFor(candidate.code)}
       onToggle={onToggleCandidate}
@@ -630,7 +577,7 @@ export function DiagnosisStep({
                 {primary && !primary.isSelected ? 'Usulan diagnosis utama' : 'Diagnosis utama'}
               </span>
               {primary ? (
-                card(primary, 0)
+                card(primary)
               ) : chosen ? (
                 // A diagnosis chosen without a card (manual) is removed here; the Tatalaksana page no
                 // longer carries a "hapus" per diagnosis.
@@ -655,8 +602,8 @@ export function DiagnosisStep({
           {mustNotMiss.length > 0 ? (
             <Section label="Must not miss" testId="dx-flow-mnm-label" tone="danger" divider={primary !== null || chosen !== null}>
               <div className="diagnosis-list">
-                {mustNotMiss.map((candidate, index) => (
-                  <div key={candidate.id}>{card(candidate, index + 1, true)}</div>
+                {mustNotMiss.map((candidate) => (
+                  <div key={candidate.id}>{card(candidate, true)}</div>
                 ))}
               </div>
             </Section>
@@ -671,7 +618,7 @@ export function DiagnosisStep({
                     <span className="ttv-label" data-testid="dx-flow-differential-label">
                       {`Diagnosis banding ${index + 1}`}
                     </span>
-                    {card(candidate, mustNotMiss.length + index + 1)}
+                    {card(candidate)}
                   </div>
                 ))}
               </div>

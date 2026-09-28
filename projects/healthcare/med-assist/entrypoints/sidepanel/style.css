@@ -10413,3 +10413,15 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 .diagnosis-form-grid .history-dropdown__panel { position: static; margin-top: 6px; box-shadow: none; }
 .option-item .diagnosis-row-meta { color: var(--text-muted); }
 .diagnosis-form-grid .history-dropdown__panel button.option-item.option-item--selected { border-color: var(--accent-med) !important; }
+
+/* Steady like a console (Chief, 2026-09-29: "gak suka banget Ui gerak gerak kaya karet gini"): the
+   Tatalaksana stock list opens over the fields below instead of pushing them down (the form no longer
+   sits in a collapsing panel), and neither it nor its rows animate in, stagger or ease. */
+.diagnosis-form-grid .history-dropdown__panel { position: absolute; margin-top: 0; animation: none; }
+.diagnosis-form-grid .history-dropdown__panel .option-item { animation: none; transition: none; }
+/* Inside a card ("Ganti"), whose overflow is hidden, the stock list stays in the form's flow; over
+   the page ("+ Tambah obat") it is a temporary overlay and keeps the card shadow. A pixel-loader
+   cell that is off is dimmed by its data-on, not by an inline value. */
+.diagnosis-candidate-row .diagnosis-form-grid .history-dropdown__panel { position: static; margin-top: 6px; box-shadow: none; }
+.diagnosis-form-grid .history-dropdown__panel { box-shadow: var(--neu-shadow-card); }
+.dx-pixel-loader > span[data-on='false'] { opacity: 0.12; }

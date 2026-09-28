@@ -1,4 +1,4 @@
-import { motion, useReducedMotion } from 'framer-motion';
+import { useReducedMotion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 /**
@@ -6,8 +6,8 @@ import { useEffect, useState } from 'react';
  * the Diagnosis step title. Cells are numbered row by row; each frame lists the lit cells.
  * The cycle was read from the reference's DOM: a single pixel spirals in and back out, a
  * two-pixel snake crosses the grid twice, then the grid pulses inner ring / outer ring / empty
- * six times. One frame per tick; a lit cell snaps on in 90 ms and fades over 360 ms, with an
- * 18 ms delay per diagonal step, as in the reference.
+ * six times. One frame per tick; a cell switches on and off at once (Chief, 2026-09-29: steady
+ * like a console, no easing, scaling or ripple).
  */
 export const PIXEL_TICK_MS = 110;
 
@@ -34,8 +34,7 @@ export const PIXEL_CHECK = [8, 13, 10, 7];
 /**
  * A tone colours the cells: `accent` the page green, `danger` red, `warning` orange (Tatalaksana);
  * none keeps the title colour.
- * `done` ends the cycle the way the reference does: the grid clears and the check is laid pixel by
- * pixel (120 ms, then 55 ms a pixel).
+ * `done` ends the cycle: the grid clears and shows the check.
  */
 export function PixelLoader({ tone, done = false }: { tone?: 'accent' | 'danger' | 'warning'; done?: boolean } = {}) {
   const reduceMotion = useReducedMotion();
@@ -57,20 +56,7 @@ export function PixelLoader({ tone, done = false }: { tone?: 'accent' | 'danger'
       {CELLS.map((cell) => {
         const on = litCells.has(cell);
         return (
-          <motion.span
-            key={cell}
-            data-on={on}
-            initial={false}
-            animate={{ opacity: on ? 1 : 0.12, scale: on || reduceMotion ? 1 : 0.8 }}
-            transition={{
-              duration: on ? 0.09 : 0.36,
-              ease: 'easeOut',
-              delay:
-                done && on && !reduceMotion
-                  ? 0.12 + PIXEL_CHECK.indexOf(cell) * 0.055
-                  : (Math.floor(cell / 4) + (cell % 4)) * 0.018,
-            }}
-          />
+          <span key={cell} data-on={on} />
         );
       })}
     </span>
