@@ -10,6 +10,7 @@ type Props = Pick<
   | 'showManualMedicationInput'
   | 'manualMedicationDraft'
   | 'manualMedicationOptions'
+  | 'onRemoveDiagnosis'
   | 'onSelectAllMedications'
   | 'onClearMedications'
   | 'onToggleManualMedicationInput'
@@ -159,6 +160,7 @@ export function TherapyStep({
   showManualMedicationInput,
   manualMedicationDraft,
   manualMedicationOptions,
+  onRemoveDiagnosis,
   onSelectAllMedications,
   onClearMedications,
   onToggleManualMedicationInput,
@@ -181,8 +183,22 @@ export function TherapyStep({
         <span className="ttv-label">3 / 4</span>
       </div>
 
-      {/* No "Basis:" line: the Diagnosis receipt right above already names it, and its "ubah"
-          changes it (Chief, 2026-09-28: nothing said twice on a page). */}
+      {viewModel.selectedDiagnoses.length > 0 ? (
+        <p className="text-small text-muted flex flex-wrap items-center gap-2">
+          <span>{`Basis: ${viewModel.selectedDiagnoses.map((diagnosis) => diagnosis.displayLabel).join(', ')}`}</span>
+          {viewModel.selectedDiagnoses.map((diagnosis) => (
+            <button
+              key={diagnosis.key}
+              type="button"
+              className="diagnosis-text-button"
+              onClick={() => onRemoveDiagnosis(diagnosis.key)}
+            >
+              hapus
+            </button>
+          ))}
+        </p>
+      ) : null}
+
       <div className="flex flex-wrap items-center gap-3">
         <button type="button" className="diagnosis-text-button" onClick={onToggleManualMedicationInput}>
           + Obat

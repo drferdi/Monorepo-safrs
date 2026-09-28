@@ -148,6 +148,7 @@ function makeProps(overrides: Partial<DiagnosisPageProps> = {}): DiagnosisPagePr
     onManualNameChange: vi.fn(),
     onSubmitManualDiagnosis: vi.fn(),
     onToggleCandidate: vi.fn(),
+    onRemoveDiagnosis: vi.fn(),
     onSelectAllMedications: vi.fn(),
     onClearMedications: vi.fn(),
     onToggleManualMedicationInput: vi.fn(),

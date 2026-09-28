@@ -60,6 +60,7 @@ export interface DiagnosisPageProps {
   onManualNameChange: (value: string) => void;
   onSubmitManualDiagnosis: () => void;
   onToggleCandidate: (id: string) => void;
+  onRemoveDiagnosis: (key: string) => void;
   onSelectAllMedications: () => void;
   onClearMedications: () => void;
   onToggleManualMedicationInput: () => void;

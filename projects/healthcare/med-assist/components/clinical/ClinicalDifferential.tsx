@@ -2086,10 +2086,23 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     setManualName('');
   };
 
+  const removeDiagnosis = (diagnosis: SelectedDiagnosis): void => {
+    setSelectedDiagnoses((prev) =>
+      prev.filter((entry) => diagnosisKey(entry) !== diagnosisKey(diagnosis))
+    );
+    setTherapyError('');
+  };
+
   const handleToggleCandidateById = (id: string): void => {
     const item = impressionItems.find((candidate) => candidate.id === id);
     if (!item) return;
     selectSuggestedDiagnosis(item.raw);
+  };
+
+  const handleRemoveDiagnosisByKey = (key: string): void => {
+    const diagnosis = selectedDiagnoses.find((item) => diagnosisKey(item) === key);
+    if (!diagnosis) return;
+    removeDiagnosis(diagnosis);
   };
 
   const handleToggleMedicationByKey = (key: string): void => {
@@ -2162,6 +2175,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         onManualNameChange={setManualName}
         onSubmitManualDiagnosis={selectManualDiagnosis}
         onToggleCandidate={handleToggleCandidateById}
+        onRemoveDiagnosis={handleRemoveDiagnosisByKey}
         onSelectAllMedications={selectAllRecommendedMedications}
         onClearMedications={clearSelectedMedications}
         onToggleManualMedicationInput={() => setShowManualMedicationInput((prev) => !prev)}
