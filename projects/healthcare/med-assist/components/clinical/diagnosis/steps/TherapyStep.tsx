@@ -175,12 +175,16 @@ export function TherapyStep({
   const therapyGroups = viewModel.primary.isInsufficient
     ? []
     : viewModel.therapy.groups.filter((group) => !isInsufficientDiagnosisLabel(group.diagnosisLabel));
+  // The prescription service answered with nothing, or not at all: say so instead of an empty list.
+  const noProposal =
+    (viewModel.therapy.state === 'ready' || viewModel.therapy.state === 'error') &&
+    !therapyGroups.some((group) => group.medications.some((medication) => medication.sourceLabel === 'PROPOSAL'));
 
   return (
     <section className="ct-v2-panel flex flex-col gap-3" aria-label="Terapi">
       <div className="ct-v2-panel-head">
         <h2 className="ttv-section-title">Terapi</h2>
-        <span className="ttv-label">3 / 4</span>
+        <span className="ttv-label">3 / 5</span>
       </div>
 
       {viewModel.selectedDiagnoses.length > 0 ? (
@@ -242,6 +246,7 @@ export function TherapyStep({
             />
         ))}
       </div>
+      {noProposal ? <p className="diagnosis-row-meta">Tidak ada usulan obat dari layanan resep.</p> : null}
 
       <div className="flex">
         {viewModel.therapy.selectedMedicationCount > 0 ? (

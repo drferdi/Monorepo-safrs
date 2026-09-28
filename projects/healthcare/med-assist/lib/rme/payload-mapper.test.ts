@@ -364,6 +364,21 @@ describe('RME payload mapper', () => {
     }
   });
 
+  it('writes the ticked education as whole items that fit the RME text limit', () => {
+    const first = 'Minum air putih minimal 2 liter/hari (dewasa) atau sesuai BB (anak). Air hangat lebih membantu.';
+    const second = 'Istirahat cukup, jangan bekerja/sekolah dulu hingga 24 jam bebas demam.';
+    const tooLong = `Kontrol: ${'jika gejala tidak membaik dalam 7-10 hari '.repeat(3).trim()}.`;
+    const mapped = buildRMETransferPayload({
+      keluhanUtama: 'Nyeri menelan',
+      patientGender: 'L',
+      diagnosis: { icd_x: 'J02', nama: 'Faringitis' },
+      edukasi: [first, second, tooLong],
+    });
+
+    // The third item would cross 250 characters, so it is left out rather than cut in half.
+    expect(mapped.payload.anamnesa.lainnya?.edukasi).toBe(`${first} ${second}`);
+  });
+
   it('generates normal adult anthropometrics when no measured values are available', () => {
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.5);
 

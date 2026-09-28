@@ -156,6 +156,8 @@ function makeProps(overrides: Partial<DiagnosisPageProps> = {}): DiagnosisPagePr
     onAddManualMedication: vi.fn(),
     onToggleMedication: vi.fn(),
     onRemoveManualMedication: vi.fn(),
+    education: [],
+    onToggleEducation: vi.fn(),
     onAutoFillRME: vi.fn(),
     onTransferDiagnosis: vi.fn(),
     onTransferResep: vi.fn(),
@@ -180,7 +182,7 @@ describe('DiagnosisStepFlow', () => {
     expect(screen.queryByRole('heading', { name: 'Terapi' })).toBeNull();
   });
 
-  it('moves to the second page once a diagnosis is chosen: Temuan and Diagnosis as receipts above Terapi, RME next', () => {
+  it('moves to the second page once a diagnosis is chosen: Temuan and Diagnosis as receipts above Terapi, Edukasi next, nothing of RME', () => {
     const vm = makeViewModel({ therapy: { ...makeViewModel().therapy, selectedMedicationCount: 0 } });
     render(<DiagnosisStepFlow {...makeProps({ viewModel: vm })} />);
     const findingReceipt = screen.getByTestId('dx-flow-receipt-finding');
@@ -189,7 +191,8 @@ describe('DiagnosisStepFlow', () => {
     const terapi = screen.getByRole('heading', { name: 'Terapi' });
     expect(findingReceipt.compareDocumentPosition(diagnosisReceipt) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect(diagnosisReceipt.compareDocumentPosition(terapi) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(screen.getByTestId('dx-flow-ghost-rme')).toHaveTextContent('4 · RME');
+    expect(screen.getByTestId('dx-flow-ghost-education')).toHaveTextContent('4 · Edukasi');
+    expect(screen.queryByTestId('dx-flow-ghost-rme')).toBeNull();
     expect(screen.queryByRole('heading', { name: 'Diagnosis' })).toBeNull();
   });
 
@@ -199,13 +202,13 @@ describe('DiagnosisStepFlow', () => {
     fireEvent.click(screen.getByRole('button', { name: 'ubah Diagnosis' }));
     expect(screen.getByRole('heading', { name: 'Diagnosis' })).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'selesai' }));
-    expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Edukasi' })).toBeInTheDocument();
   });
 
   it('keeps the first page\'s later receipt below a reopened Temuan, and nothing of the second page', () => {
     render(<DiagnosisStepFlow {...makeProps()} />);
     fireEvent.click(screen.getByRole('button', { name: 'Lanjut' }));
-    expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Edukasi' })).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'ubah Temuan' }));
     expect(screen.getByRole('heading', { name: 'Temuan' })).toBeInTheDocument();
     expect(screen.getByTestId('diagnosis-clinical-signals')).toHaveTextContent('Sesak');
@@ -215,13 +218,13 @@ describe('DiagnosisStepFlow', () => {
     // In step order, below the reopened step.
     const temuan = screen.getByRole('heading', { name: 'Temuan' });
     expect(temuan.compareDocumentPosition(diagnosisReceipt) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    // Terapi's receipt and RME belong to the second page.
+    // Terapi's receipt and Edukasi belong to the second page.
     expect(screen.queryByTestId('dx-flow-receipt-therapy')).toBeNull();
     expect(screen.queryByTestId('dx-flow-ghost-therapy')).toBeNull();
     expect(screen.queryByTestId('dx-flow-ghost-rme')).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'selesai' }));
     expect(screen.getByTestId('dx-flow-receipt-therapy')).toHaveTextContent('Paracetamol 500 mg');
-    expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Edukasi' })).toBeInTheDocument();
   });
 
   it('shows Temuan as a receipt and only the Diagnosis step, with its skeleton, while loading', () => {
@@ -269,25 +272,46 @@ describe('DiagnosisStepFlow', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Lanjut' }));
     expect(screen.getByTestId('dx-flow-receipt-therapy')).toHaveTextContent('Paracetamol 500 mg, Ambroxol 30 mg');
-    expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Edukasi' })).toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: 'Terapi' })).toBeNull();
   });
 
-  it('continues to RME without medication and shows Terapi as a "tanpa obat" receipt', () => {
+  it('continues to Edukasi without medication and shows Terapi as a "tanpa obat" receipt', () => {
     const vm = makeViewModel({ therapy: { ...makeViewModel().therapy, selectedMedicationCount: 0 } });
     render(<DiagnosisStepFlow {...makeProps({ viewModel: vm })} />);
     fireEvent.click(screen.getByRole('button', { name: 'Lanjut tanpa obat' }));
     expect(screen.getByTestId('dx-flow-receipt-therapy')).toHaveTextContent('tanpa obat');
-    expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Edukasi' })).toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: 'Terapi' })).toBeNull();
   });
 
-  it('keeps Penunjang and Edukasi as one-line links under the active step', () => {
+  it('puts RME on a third page after Edukasi: every earlier step a receipt, Edukasi summarised by what was given', () => {
+    const education = [
+      { key: 'a', text: 'Istirahat cukup.', isSelected: true },
+      { key: 'b', text: 'Minum air putih.', isSelected: true },
+      { key: 'c', text: 'Cuci tangan.', isSelected: false },
+    ];
+    render(<DiagnosisStepFlow {...makeProps({ education })} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Lanjut' }));
+    expect(screen.queryByTestId('dx-flow-ghost-rme')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Lanjut' }));
+    expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
+    const receipts = ['finding', 'diagnosis', 'therapy', 'education'].map((key) => screen.getByTestId(`dx-flow-receipt-${key}`));
+    receipts.slice(1).forEach((receipt, i) =>
+      expect(receipts[i].compareDocumentPosition(receipt) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    );
+    expect(screen.getByTestId('dx-flow-receipt-education')).toHaveTextContent('2 poin diberikan');
+    expect(screen.queryByText('Istirahat cukup.')).toBeNull();
+  });
+
+  // Migrated (Chief, 2026-09-29): Edukasi moved to its own step on the second page, so only
+  // Penunjang stays a link.
+  it('keeps Penunjang as a one-line link under the active step, and Edukasi is no link', () => {
     render(<DiagnosisStepFlow {...makeProps()} />);
     fireEvent.click(screen.getByRole('button', { name: 'Penunjang (1)' }));
     expect(screen.getByText('SpO2')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Edukasi (1)' }));
-    expect(screen.getByText('Review auskultasi paru')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^Edukasi/ })).toBeNull();
+    expect(screen.queryByText('Review auskultasi paru')).toBeNull();
   });
 
   it('renders no safety section at all without a triage result', () => {
@@ -335,7 +359,8 @@ describe('DiagnosisStepFlow migrated assertions', () => {
     expect(therapy).not.toHaveTextContent(/Pilih diagnosis terlebih dahulu/);
   });
 
-  // Migrated from DiagnosisWorkspace "does not repeat supporting-exam items in Edukasi".
+  // Migrated from DiagnosisWorkspace "does not repeat supporting-exam items in Edukasi"; since
+  // 2026-09-29 Edukasi lists only the chosen diagnosis's education, never the review items.
   it('does not repeat supporting-exam items in Edukasi', () => {
     const viewModel = makeViewModel();
     viewModel.evidence = {
@@ -343,15 +368,20 @@ describe('DiagnosisStepFlow migrated assertions', () => {
       missing: ['SpO2 dan auskultasi paru'],
       review: ['SpO2 dan auskultasi paru', 'Minum cukup air'],
     };
-    render(<DiagnosisStepFlow {...makeProps({ viewModel })} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Edukasi (1)' }));
-    const education = screen.getByTestId('dx-flow-education');
+    render(
+      <DiagnosisStepFlow
+        {...makeProps({ viewModel, education: [{ key: 'a', text: 'Minum cukup air', isSelected: false }] })}
+      />
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Lanjut' }));
+    const education = screen.getByLabelText('Edukasi');
     expect(within(education).queryByText('SpO2 dan auskultasi paru')).toBeNull();
     expect(within(education).getByText('Minum cukup air')).toBeInTheDocument();
   });
 
-  // Migrated from DiagnosisWorkspace "surfaces evidence.review through the Alasan dropdown even when the primary diagnosis is insufficient".
-  it('surfaces evidence.review through Edukasi even when the primary diagnosis is insufficient', () => {
+  // Migrated from DiagnosisWorkspace "surfaces evidence.review through the Alasan dropdown even
+  // when the primary diagnosis is insufficient"; since 2026-09-29 the first page has no Edukasi.
+  it('shows no Edukasi on the first page, also when the primary diagnosis is insufficient', () => {
     render(
       <DiagnosisStepFlow
         {...makeProps({
@@ -377,8 +407,8 @@ describe('DiagnosisStepFlow migrated assertions', () => {
         })}
       />
     );
-    fireEvent.click(screen.getByRole('button', { name: 'Edukasi (1)' }));
-    expect(screen.getByText('Review fisik')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^Edukasi/ })).toBeNull();
+    expect(screen.queryByText('Review fisik')).toBeNull();
   });
 
   // The Triage page owns the danger-sign list; the diagnosis page never repeats it (Chief, 2026-09-28).
@@ -432,10 +462,11 @@ function stepperModel(selectedDiagnosisCount: number, selectedMedicationCount: n
 
 describe('resolveDiagnosisSteps', () => {
   it('marks steps done from phase, diagnosis, medication and transfer state', () => {
-    expect(resolveDiagnosisSteps('ready', stepperModel(1, 1, 'success')).map((s) => s.done)).toEqual([true, true, true, true]);
-    expect(resolveDiagnosisSteps('ready', stepperModel(1, 0, 'idle')).map((s) => s.done)).toEqual([true, true, false, false]);
-    expect(resolveDiagnosisSteps('loading', stepperModel(0, 0, 'idle')).map((s) => s.done)).toEqual([false, false, false, false]);
-    expect(resolveDiagnosisSteps('ready', stepperModel(0, 0, 'idle')).map((s) => s.label)).toEqual(['Temuan', 'Diagnosis', 'Terapi', 'RME']);
+    // Edukasi (2026-09-29) is ended only by the doctor's "Lanjut" in the flow, never by the view model.
+    expect(resolveDiagnosisSteps('ready', stepperModel(1, 1, 'success')).map((s) => s.done)).toEqual([true, true, true, false, true]);
+    expect(resolveDiagnosisSteps('ready', stepperModel(1, 0, 'idle')).map((s) => s.done)).toEqual([true, true, false, false, false]);
+    expect(resolveDiagnosisSteps('loading', stepperModel(0, 0, 'idle')).map((s) => s.done)).toEqual([false, false, false, false, false]);
+    expect(resolveDiagnosisSteps('ready', stepperModel(0, 0, 'idle')).map((s) => s.label)).toEqual(['Temuan', 'Diagnosis', 'Terapi', 'Edukasi', 'RME']);
   });
 });
 

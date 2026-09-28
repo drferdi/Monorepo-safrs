@@ -1,8 +1,9 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ClinicalDifferential } from './ClinicalDifferential';
+import { resetDiseaseNotesCache } from './diagnosis/useDiseaseNotes';
 
 /**
  * Acceptance regression for Temuan #1 (audit E2E): the live Diagnosis surface
@@ -193,6 +194,7 @@ function renderSurface() {
 describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
   beforeEach(() => {
     primeMessaging();
+    resetDiseaseNotesCache();
   });
 
   it('lets the physician select a diagnosis, pick a medication, and uplink diagnosis + resep to RME', async () => {
@@ -222,8 +224,9 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
     };
     expect(await findMedicationRow()).toBeInTheDocument();
 
-    // A diagnosis-only transfer stays reachable: continue without medication to RME.
+    // A diagnosis-only transfer stays reachable: continue without medication, past Edukasi, to RME.
     fireEvent.click(screen.getByRole('button', { name: 'Lanjut tanpa obat' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Lanjut' }));
 
     // "Kirim diagnosis" is enabled once a valid diagnosis is selected.
     const kirimDiagnosis = screen.getByRole('button', { name: 'Kirim diagnosis' });
@@ -262,5 +265,62 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
         })
       );
     });
+  });
+
+  it('carries the education ticked for the chosen diagnosis into the RME anamnesis, and only that', async () => {
+    const given = 'Istirahat cukup, jangan bekerja/sekolah dulu hingga 24 jam bebas demam.';
+    const notGiven = 'Minum air putih minimal 2 liter/hari.';
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        new Response(
+          JSON.stringify({
+            penyakit: [
+              {
+                icd10: 'J02',
+                definisi: 'Faringitis.',
+                advanced_guideline: {
+                  kie_edukasi: { untuk_pasien: [notGiven, given] },
+                  tindak_lanjut: { kontrol: 'Kontrol jika tidak membaik dalam 7-10 hari.' },
+                },
+              },
+            ],
+          })
+        )
+      )
+    );
+    try {
+      renderSurface();
+      const card = (await screen.findByText('J02 - Faringitis akut')).closest('[data-testid="dx-flow-card"]');
+      if (!card) throw new Error('diagnosis card not found');
+      fireEvent.click(card);
+
+      fireEvent.click(await screen.findByRole('button', { name: 'Lanjut tanpa obat' }));
+      const education = await screen.findByLabelText('Edukasi');
+      const rows = await within(education).findAllByTestId('dx-flow-education-item');
+      expect(rows.map((row) => row.textContent)).toEqual([
+        notGiven,
+        given,
+        'Kontrol: Kontrol jika tidak membaik dalam 7-10 hari.',
+      ]);
+      fireEvent.click(rows[1]);
+      await waitFor(() => expect(rows[1]).toHaveAttribute('aria-pressed', 'true'));
+
+      fireEvent.click(screen.getByRole('button', { name: 'Lanjut' }));
+      fireEvent.click(await screen.findByRole('button', { name: 'Anamnesis' }));
+
+      await waitFor(() => {
+        expect(mockSendMessage).toHaveBeenCalledWith(
+          'transferRME',
+          expect.objectContaining({
+            anamnesa: expect.objectContaining({
+              lainnya: expect.objectContaining({ edukasi: given }),
+            }),
+          })
+        );
+      });
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 });

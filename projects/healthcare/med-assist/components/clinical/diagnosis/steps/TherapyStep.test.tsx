@@ -72,4 +72,19 @@ describe('TherapyStep', () => {
     expect(h.onConfirm).toHaveBeenCalledTimes(1);
     expect(h.onSkip).not.toHaveBeenCalled();
   });
+
+  it('says the prescription service proposed nothing instead of showing an empty list', () => {
+    const base = vm();
+    const failed: DiagnosisPageViewModel = {
+      ...base,
+      therapy: { ...base.therapy, state: 'error', groups: base.therapy.groups.map((group) => ({ ...group, medications: group.medications.filter((medication) => medication.sourceLabel === 'MANUAL') })) },
+    };
+    render(<TherapyStep viewModel={failed} showManualMedicationInput={false} manualMedicationDraft={{ nama_obat: '', dosis: '', aturan_pakai: 'Sesudah makan', durasi: '', rationale: '' }} manualMedicationOptions={['Sesudah makan']} {...handlers()} />);
+    expect(screen.getByText('Tidak ada usulan obat dari layanan resep.')).toBeInTheDocument();
+  });
+
+  it('shows no such line while proposals are listed', () => {
+    render(<TherapyStep viewModel={vm()} showManualMedicationInput={false} manualMedicationDraft={{ nama_obat: '', dosis: '', aturan_pakai: 'Sesudah makan', durasi: '', rationale: '' }} manualMedicationOptions={['Sesudah makan']} {...handlers()} />);
+    expect(screen.queryByText('Tidak ada usulan obat dari layanan resep.')).toBeNull();
+  });
 });

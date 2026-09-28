@@ -5,13 +5,23 @@ import { useEffect, useState } from 'react';
  * (`public/data/penyakit.json`), keyed by ICD-10 without the dot: `definisi` (the explanation
  * under a card's title), `komplikasi` (what a MUST NOT MISS card risks when it is missed),
  * `pemeriksaan_fisik` (what to look for at the bedside) and `kriteria_rujukan` (when to refer),
- * the last two for the card's Catatan. Read here rather than through `getPenyakitByIcd`, which
+ * the last two for the card's Catatan; and, where the entry has an advanced guideline, the
+ * patient education (`kie_edukasi.untuk_pasien`) and follow-up (`tindak_lanjut.kontrol`) for the
+ * Terapi page. Read here rather than through `getPenyakitByIcd`, which
  * carries none of these fields; the knowledge base itself is not changed. Loaded once per panel
  * and shared by every card.
  */
 const KB_URL = '/data/penyakit.json';
 
-export type DiseaseNote = { definition: string; complications: string[]; exam: string[]; referral: string };
+export type DiseaseNote = {
+  definition: string;
+  complications: string[];
+  exam: string[];
+  referral: string;
+  /** Only on entries with an advanced guideline (21 of 159). */
+  education?: string[];
+  followUp?: string;
+};
 
 type KbFile = {
   penyakit?: Array<{
@@ -20,6 +30,10 @@ type KbFile = {
     komplikasi?: unknown;
     pemeriksaan_fisik?: unknown;
     kriteria_rujukan?: unknown;
+    advanced_guideline?: {
+      kie_edukasi?: { untuk_pasien?: unknown };
+      tindak_lanjut?: { kontrol?: unknown };
+    };
   }>;
 };
 
@@ -46,6 +60,10 @@ async function loadNotes(): Promise<Map<string, DiseaseNote>> {
       exam: strings(entry.pemeriksaan_fisik),
       referral: text(entry.kriteria_rujukan),
     };
+    const education = strings(entry.advanced_guideline?.kie_edukasi?.untuk_pasien);
+    const followUp = text(entry.advanced_guideline?.tindak_lanjut?.kontrol);
+    if (education.length > 0) note.education = education;
+    if (followUp) note.followUp = followUp;
     if (note.definition || note.complications.length > 0 || note.exam.length > 0 || note.referral) {
       notes.set(normalize(entry.icd10), note);
     }

@@ -4,8 +4,15 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ClinicalDifferential } from './ClinicalDifferential';
 
-const { mockSendMessage } = vi.hoisted(() => ({
+import type { RecurrentDiagnosisCandidate } from '@/lib/clinical/recurrent-diagnosis';
+
+const { mockSendMessage, recurrentState } = vi.hoisted(() => ({
   mockSendMessage: vi.fn(),
+  recurrentState: { candidates: [] as RecurrentDiagnosisCandidate[] },
+}));
+
+vi.mock('./diagnosis/useRecurrentDiagnoses', () => ({
+  useRecurrentDiagnoses: () => ({ candidates: recurrentState.candidates, loaded: true }),
 }));
 
 vi.mock('@/utils/messaging', () => ({
@@ -89,6 +96,7 @@ vi.mock('./ClinicalImpressionPanel', () => ({
 
 describe('ClinicalDifferential chronic therapy context', () => {
   beforeEach(() => {
+    recurrentState.candidates = [];
     mockSendMessage.mockReset();
     mockSendMessage.mockImplementation((type: string) => {
       if (type === 'getSuggestions') {
@@ -169,6 +177,39 @@ describe('ClinicalDifferential chronic therapy context', () => {
         expect.objectContaining({
           current_medications: ['Amlodipin', 'Metformin'],
         })
+      );
+    });
+  });
+
+  it('passes the chronic conditions the Diagnosis page shows as penyakit_kronis', async () => {
+    recurrentState.candidates = [
+      { icd: 'E11', name: 'Diabetes melitus tipe 2', count: 3, visitsConsidered: 6, lastSeen: '2026-09-01', label: 'Kronis' },
+      { icd: 'J06', name: 'ISPA', count: 3, visitsConsidered: 6, lastSeen: '2026-09-01', label: 'Berulang' },
+    ];
+    render(
+      <ClinicalDifferential
+        keluhanUtama="Kontrol tekanan darah"
+        patientAge={54}
+        patientGender="L"
+        patientRM="RM-123"
+        allergies={[]}
+        confirmedPregnancyStatus={false}
+        vitals={{ sbp: 150, dbp: 90, hr: 82, rr: 20, temp: 36.8, glucose: 0 }}
+        chronicTherapies={[]}
+        hasVisitHistory
+        onBack={() => undefined}
+      />
+    );
+
+    // The test engine keeps one row; whichever diagnosis is chosen, the request carries the history.
+    const [card] = await screen.findAllByTestId('dx-flow-card');
+    fireEvent.click(card);
+
+    // Only the history the page labels "Kronis" is a chronic condition; "Berulang" is not.
+    await waitFor(() => {
+      expect(mockSendMessage).toHaveBeenCalledWith(
+        'getRecommendations',
+        expect.objectContaining({ penyakit_kronis: ['Diabetes melitus tipe 2'] })
       );
     });
   });

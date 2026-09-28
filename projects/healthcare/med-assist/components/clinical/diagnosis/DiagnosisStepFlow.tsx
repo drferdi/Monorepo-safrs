@@ -11,6 +11,7 @@ import { resolveActiveStep, resolveDiagnosisSteps, type DiagnosisStepKey } from 
 import type { DiagnosisPageViewModel } from './diagnosisViewModel';
 import { StepGhost, StepReceipt, stepLayoutId } from './StepReceipt';
 import { DiagnosisStep, diagnosisSummary } from './steps/DiagnosisStep';
+import { EducationStep, educationSummary } from './steps/EducationStep';
 import { FindingStep, findingSignals, findingSummary } from './steps/FindingStep';
 import { RmeStep, rmeSummary } from './steps/RmeStep';
 import { TherapyStep, therapySummary } from './steps/TherapyStep';
@@ -33,8 +34,8 @@ const slide: Variants = {
     transitionEnd: { filter: 'none' },
   },
 };
-/** Diagnosis, the last step of the first page. */
-const LAST_FIRST_PAGE_INDEX = 2;
+/** Three pages: Temuan and Diagnosis; Terapi and Edukasi (Chief, 2026-09-29); RME. */
+const pageOf = (index: number): number => (index <= 2 ? 1 : index <= 4 ? 2 : 3);
 
 const fade: Variants = {
   enter: { opacity: 0 },
@@ -52,11 +53,13 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
   const reduceMotion = useReducedMotion();
   const [therapySkipped, setTherapySkipped] = useState(false);
   const [therapyConfirmed, setTherapyConfirmed] = useState(false);
+  const [educationConfirmed, setEducationConfirmed] = useState(false);
   // Temuan is the doctor's own input, so it is a receipt even while the engine is loading.
   // Terapi advances only on an explicit "Lanjut" or "Lanjut tanpa obat", never on a tap.
   const steps = resolveDiagnosisSteps(phase, viewModel).map((step) => {
     if (step.key === 'finding') return { ...step, done: true };
     if (step.key === 'therapy') return { ...step, done: therapyConfirmed || therapySkipped };
+    if (step.key === 'education') return { ...step, done: educationConfirmed };
     return step;
   });
   const [reopened, setReopened] = useState<DiagnosisStepKey | null>(null);
@@ -72,6 +75,7 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
     finding: findingSummary(signals),
     diagnosis: diagnosisSummary(viewModel),
     therapy: therapySkipped ? 'tanpa obat' : therapySummary(viewModel),
+    education: educationSummary(props.education),
     rme: rmeSummary(viewModel),
   };
 
@@ -80,13 +84,14 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
     setReopened(null);
   }, [viewModel.therapy.selectedDiagnosisCount, viewModel.transfer.state]);
 
-  // The Terapi decision holds only for the diagnosis basis it was made on. "Lanjut tanpa obat"
-  // ends when a medication is chosen, "Lanjut" when the last medication is removed.
+  // The Terapi and Edukasi decisions hold only for the diagnosis basis they were made on. "Lanjut
+  // tanpa obat" ends when a medication is chosen, "Lanjut" when the last medication is removed.
   const selectedDiagnosisKeys = viewModel.selectedDiagnoses.map((diagnosis) => diagnosis.key).join('|');
   const medicationChosen = viewModel.therapy.selectedMedicationCount > 0;
   useEffect(() => {
     setTherapySkipped(false);
     setTherapyConfirmed(false);
+    setEducationConfirmed(false);
   }, [selectedDiagnosisKeys]);
   useEffect(() => {
     if (medicationChosen) setTherapySkipped(false);
@@ -101,11 +106,9 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
     previousIndex.current = activeIndex;
   }, [activeIndex]);
 
-  // Two pages (Chief, 2026-09-28): Temuan and Diagnosis, then Terapi and RME. The first page
-  // carries nothing of the second; the second keeps the first page's receipts on top, and their
-  // "ubah" goes back to it.
-  const onFirstPage = activeIndex <= LAST_FIRST_PAGE_INDEX;
-  const onThisPage = (s: (typeof steps)[number]) => !onFirstPage || s.index <= LAST_FIRST_PAGE_INDEX;
+  // Pages (Chief, 2026-09-28, 2026-09-29): a page carries nothing of the pages after it; a later
+  // page keeps the earlier pages' receipts on top, and their "ubah" goes back.
+  const onThisPage = (s: (typeof steps)[number]) => pageOf(s.index) === pageOf(activeIndex);
 
   // Every finished step other than the active one is a receipt, in step order around it.
   const receipt = (s: (typeof steps)[number]) => (
@@ -161,6 +164,16 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
                 }}
               />
             ) : null}
+            {active === 'education' ? (
+              <EducationStep
+                education={props.education}
+                onToggleEducation={props.onToggleEducation}
+                onConfirm={() => {
+                  setEducationConfirmed(true);
+                  setReopened(null);
+                }}
+              />
+            ) : null}
             {active === 'rme' ? <RmeStep {...props} /> : null}
             {reopened ? (
               <div className="flex">
@@ -183,50 +196,27 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
   );
 }
 
+// Edukasi is its own step on the second page (Chief, 2026-09-29): it follows the chosen diagnosis.
 function SideLinks({ viewModel }: { viewModel: DiagnosisPageViewModel }) {
   const [showExams, setShowExams] = useState(false);
-  const [showEducation, setShowEducation] = useState(false);
   const examItems = getVisibleExamItems(viewModel.evidence.missing);
-  const examKeys = new Set(examItems.map((item) => item.toLowerCase()));
-  const educationItems = viewModel.evidence.review
-    .map(cleanClinicalSummary)
-    .filter((item) => item && !examKeys.has(item.toLowerCase()));
-  if (examItems.length === 0 && educationItems.length === 0) return null;
+  if (examItems.length === 0) return null;
 
   return (
     <>
       <div className="flex flex-wrap gap-3">
-        {examItems.length > 0 ? (
-          <button
-            type="button"
-            className="diagnosis-text-button"
-            aria-expanded={showExams}
-            onClick={() => setShowExams((v) => !v)}
-          >
-            {`Penunjang (${examItems.length})`}
-          </button>
-        ) : null}
-        {educationItems.length > 0 ? (
-          <button
-            type="button"
-            className="diagnosis-text-button"
-            aria-expanded={showEducation}
-            onClick={() => setShowEducation((v) => !v)}
-          >
-            {`Edukasi (${educationItems.length})`}
-          </button>
-        ) : null}
+        <button
+          type="button"
+          className="diagnosis-text-button"
+          aria-expanded={showExams}
+          onClick={() => setShowExams((v) => !v)}
+        >
+          {`Penunjang (${examItems.length})`}
+        </button>
       </div>
       {showExams ? (
         <ul className="diagnosis-line-list text-small text-muted" data-testid="dx-flow-exams">
           {examItems.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      ) : null}
-      {showEducation ? (
-        <ul className="diagnosis-line-list text-small text-muted" data-testid="dx-flow-education">
-          {educationItems.map((item) => (
             <li key={item}>{item}</li>
           ))}
         </ul>

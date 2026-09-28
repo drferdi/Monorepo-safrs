@@ -17,9 +17,10 @@ function vm(overrides: { selectedDiagnosisCount?: number; selectedMedicationCoun
 
 describe('resolveDiagnosisSteps', () => {
   it('marks steps done from phase, diagnosis, medication and transfer state', () => {
-    expect(resolveDiagnosisSteps('loading', vm()).map((s) => s.done)).toEqual([false, false, false, false]);
-    expect(resolveDiagnosisSteps('ready', vm({ selectedDiagnosisCount: 1, selectedMedicationCount: 2, transferState: 'success' })).map((s) => s.done)).toEqual([true, true, true, true]);
-    expect(resolveDiagnosisSteps('ready', vm()).map((s) => [s.index, s.label])).toEqual([[1, 'Temuan'], [2, 'Diagnosis'], [3, 'Terapi'], [4, 'RME']]);
+    expect(resolveDiagnosisSteps('loading', vm()).map((s) => s.done)).toEqual([false, false, false, false, false]);
+    // Edukasi has no view-model signal; only the doctor's "Lanjut" in the flow ends it.
+    expect(resolveDiagnosisSteps('ready', vm({ selectedDiagnosisCount: 1, selectedMedicationCount: 2, transferState: 'success' })).map((s) => s.done)).toEqual([true, true, true, false, true]);
+    expect(resolveDiagnosisSteps('ready', vm()).map((s) => [s.index, s.label])).toEqual([[1, 'Temuan'], [2, 'Diagnosis'], [3, 'Terapi'], [4, 'Edukasi'], [5, 'RME']]);
   });
 });
 
@@ -27,6 +28,9 @@ describe('resolveActiveStep', () => {
   it('is the first unfinished step, the reopened step when set, and rme when all are done', () => {
     expect(resolveActiveStep(resolveDiagnosisSteps('ready', vm()), null)).toBe('diagnosis');
     expect(resolveActiveStep(resolveDiagnosisSteps('ready', vm({ selectedDiagnosisCount: 1 })), 'finding')).toBe('finding');
-    expect(resolveActiveStep(resolveDiagnosisSteps('ready', vm({ selectedDiagnosisCount: 1, selectedMedicationCount: 1, transferState: 'success' })), null)).toBe('rme');
+    const allDone = resolveDiagnosisSteps('ready', vm({ selectedDiagnosisCount: 1, selectedMedicationCount: 1, transferState: 'success' })).map((s) =>
+      s.key === 'education' ? { ...s, done: true } : s
+    );
+    expect(resolveActiveStep(allDone, null)).toBe('rme');
   });
 });

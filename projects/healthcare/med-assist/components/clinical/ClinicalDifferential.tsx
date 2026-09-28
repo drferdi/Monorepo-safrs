@@ -12,6 +12,8 @@ import type {
   PreviousAssessment,
 } from './diagnosis/diagnosisPageProps';
 import { DiagnosisStepFlow } from './diagnosis/DiagnosisStepFlow';
+import { buildEducationItems } from './diagnosis/education';
+import { useDiseaseNotes } from './diagnosis/useDiseaseNotes';
 import { useRecurrentDiagnoses } from './diagnosis/useRecurrentDiagnoses';
 
 import {
@@ -649,6 +651,8 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     rationale: 'Input manual operator',
   });
   const [selectedMedicationKeys, setSelectedMedicationKeys] = useState<string[]>([]);
+  // Education points the doctor ticked as given (by text); only these go to the RME.
+  const [selectedEducationKeys, setSelectedEducationKeys] = useState<string[]>([]);
   const [, setProcessingTimeMs] = useState<number | null>(null);
   const [transferUiState, setTransferUiState] = useState<TransferUiState>('idle');
   const [transferRunId, setTransferRunId] = useState<string | null>(null);
@@ -715,6 +719,22 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
   const recurrentForRequest = useMemo(
     () => recurrent.map((candidate) => ({ icd: candidate.icd, name: candidate.name })),
     [recurrent]
+  );
+  // The chronic conditions the Diagnosis page shows (confirmed, and "Kronis" in the visit
+  // history), so the prescription request knows them too.
+  const chronicDiagnosisNames = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          [
+            ...confirmedChronicDiagnoses.map((item) => item.nama),
+            ...recurrent.filter((candidate) => candidate.label === 'Kronis').map((candidate) => candidate.name),
+          ]
+            .map((name) => name.trim())
+            .filter(Boolean)
+        )
+      ),
+    [confirmedChronicDiagnoses, recurrent]
   );
 
   useEffect(() => {
@@ -794,6 +814,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         rationale: 'Input manual operator',
       });
       setSelectedMedicationKeys([]);
+      setSelectedEducationKeys([]);
     };
 
     // The background answered before MIRA's prefetch of this case finished: ask once more when
@@ -1314,7 +1335,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
                 icd_x: diagnosis.icd_x,
                 patient_age: patientAge > 0 ? patientAge : 0,
                 alergi: allergies.filter((item) => item.toLowerCase() !== 'tidak ada'),
-                penyakit_kronis: [],
+                penyakit_kronis: chronicDiagnosisNames,
                 current_medications: chronicTherapies,
                 keluhan_utama: keluhanUtama,
                 selected_diagnosis_name: diagnosis.nama,
@@ -1394,6 +1415,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     patientGender,
     pregnancyStatus,
     chronicTherapies,
+    chronicDiagnosisNames,
     vitals.sbp,
     vitals.dbp,
     vitals.hr,
@@ -1484,6 +1506,19 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     );
     setSelectedMedicationKeys((prev) => prev.filter((key) => availableMedicationKeys.has(key)));
   }, [candidateTransferMedications]);
+
+  const diseaseNotes = useDiseaseNotes();
+  const educationItems = useMemo(
+    () => buildEducationItems(selectedDiagnoses.map((diagnosis) => diagnosis.icd_x), diseaseNotes),
+    [selectedDiagnoses, diseaseNotes]
+  );
+  useEffect(() => {
+    const available = new Set(educationItems.map((item) => item.key));
+    setSelectedEducationKeys((prev) => prev.filter((key) => available.has(key)));
+  }, [educationItems]);
+  const selectedEducationTexts = educationItems
+    .filter((item) => selectedEducationKeys.includes(item.key))
+    .map((item) => item.text);
 
   // Lift selected diagnosis and medications to parent (for uplink from TTVInferenceUI)
   useEffect(() => {
@@ -1885,6 +1920,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
           : undefined,
       trajectory,
       hasVisitHistory,
+      edukasi: selectedEducationTexts,
     });
 
     const scopedReasonCodes = filterReasonCodesForStep(mapped.reasonCodes, targetStep);
@@ -1979,6 +2015,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
           : undefined,
       trajectory,
       hasVisitHistory,
+      edukasi: selectedEducationTexts,
     });
 
     const requestId = `rme-auto-${Date.now()}`;
@@ -2213,6 +2250,15 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         onAddManualMedication={addManualMedication}
         onToggleMedication={handleToggleMedicationByKey}
         onRemoveManualMedication={handleRemoveManualMedicationByKey}
+        education={educationItems.map((item) => ({
+          ...item,
+          isSelected: selectedEducationKeys.includes(item.key),
+        }))}
+        onToggleEducation={(key) =>
+          setSelectedEducationKeys((prev) =>
+            prev.includes(key) ? prev.filter((entry) => entry !== key) : [...prev, key]
+          )
+        }
         onAutoFillRME={() => {
           void handleAutoFillAll(false);
         }}

@@ -34,6 +34,13 @@ export interface DiagnosisEnginePlanView {
   missing: string[];
 }
 
+/** One patient-education point for the chosen diagnoses; ticked means the doctor gave it. */
+export interface DiagnosisEducationItemView {
+  key: string;
+  text: string;
+  isSelected: boolean;
+}
+
 /** The assessment shown when the doctor last pressed "Simpan", and what was recorded then. */
 export interface PreviousAssessment {
   snapshot: AssessmentSnapshot;
@@ -80,6 +87,9 @@ export interface DiagnosisPageProps {
   onAddManualMedication: () => void;
   onToggleMedication: (key: string) => void;
   onRemoveManualMedication: (key: string) => void;
+  /** Education for the chosen diagnoses; the ticked points go to the RME's edukasi field. */
+  education: DiagnosisEducationItemView[];
+  onToggleEducation: (key: string) => void;
   onAutoFillRME: () => void;
   onTransferDiagnosis: () => void;
   onTransferResep: () => void;

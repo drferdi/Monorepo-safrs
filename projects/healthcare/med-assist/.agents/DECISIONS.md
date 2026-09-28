@@ -3,6 +3,45 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — What the Diagnosis page hands to Terapi and Edukasi
+
+- Decision (Chief: "menyambungkan informasi yg di dapat dari halaman diagnosis ke halaman
+  selanjutnya yaitu Therapy dan Edukasi"; the defaults below are mine, taken without a question):
+  1. Three pages (Chief, same session: "Saya prefer membuatkan halaman baru untk terapi dan
+     edukasi"): Temuan and Diagnosis; Terapi and Edukasi; RME. Edukasi is its own step (4 / 5)
+     after Terapi and ends on one "Lanjut"; RME (5 / 5) is the third page. Each page carries
+     nothing of the pages after it (no RME ghost on the second page) and keeps the earlier
+     receipts on top. This overrides the 2026-09-28 lines "the first page (Temuan, Diagnosis,
+     Penunjang and Edukasi)" and "Terapi and RME are the second page"; Penunjang stays a link. The
+     old Edukasi link showed the top card's review items (plus the literal "Correlate with
+     examination"), neither the doctor's chosen diagnosis nor patient education.
+  2. It lists, for the diagnoses the doctor chose, the knowledge base's
+     `advanced_guideline.kie_edukasi.untuk_pasien` and `tindak_lanjut.kontrol` (as "Kontrol: …")
+     verbatim, a point shared by two diagnoses once (`components/clinical/diagnosis/education.ts`,
+     read through `useDiseaseNotes`; the knowledge base is not changed). Nothing is composed for a
+     code without them (21 of 159 entries have them; MIRA-only codes such as K65 and K35 have no
+     entry): the page says "Basis pengetahuan belum punya edukasi untuk diagnosis ini."
+  3. The doctor ticks what was given ("diberikan"); nothing starts ticked, because an untouched
+     point is not a record that it was given. The ticked points go to the RME anamnesis `edukasi`
+     field instead of the random generic line, whole and in order, as many as fit the
+     250-character RME text limit (a cut point would record half an instruction). With nothing
+     ticked the random line stays, as before.
+  4. No "kembali bila" list from red flags: the Triage page owns the danger signs and the
+     diagnosis page never repeats them (2026-09-28 rule and its test).
+  5. The prescription request (`getRecommendations`) now carries `penyakit_kronis`: the confirmed
+     chronic diagnoses the page shows plus the visit-history diagnoses labelled "Kronis"; it was
+     always `[]`. The recorded bedside findings are not sent there (no field for them).
+  6. Terapi says "Tidak ada usulan obat dari layanan resep." when the prescription service
+     answered with no proposal or failed, instead of showing an empty list.
+- Limits: proposals come only from the remote Sentra API (`/v1/cdss/prescribe`); the local
+  pipeline in `sentra-api.ts` is unreachable (docs/ARCHITECTURE.md §5.4, R3, open for Chief). No
+  `VITE_SENTRA_API_URL` is set in the local env files, so the request goes to the default
+  `https://api.sentra.local` and is expected to fail: Terapi then shows the line from point 6.
+  What the remote engine does with `penyakit_kronis` cannot be seen from this repository.
+- Evidence: Med Assist commit after `53168078`; Vite harness viewed (J06.9 with education and
+  ticks, J18.9 without, the no-proposal line, no Edukasi on the first page, the RME page with
+  four receipts and "Edukasi · 2 poin diberikan").
+
 ## 2026-09-28 — Clinical reasoning loop: three-state findings, the doctor's diagnosis kept, what changed shown
 
 - Decision (Chief's specification, same night):

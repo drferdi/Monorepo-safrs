@@ -493,6 +493,7 @@ describe('ClinicalDifferential secure logic contract', () => {
     // by rendering the surface.
     fireEvent.click((await within(workspace).findAllByTestId('dx-flow-card'))[0]);
     fireEvent.click(await within(workspace).findByRole('button', { name: 'Lanjut tanpa obat' }));
+    fireEvent.click(within(workspace).getByRole('button', { name: 'Lanjut' }));
     const rmeStep = within(workspace).getByLabelText('RME');
     expect(within(rmeStep).getByRole('button', { name: 'Kirim resep' })).toBeDisabled();
     expect(mockSendMessage).not.toHaveBeenCalledWith('transferRME', expect.anything());

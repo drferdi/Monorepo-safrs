@@ -63,6 +63,29 @@ describe('useDiseaseNotes', () => {
     expect(result.current.has('K297')).toBe(false);
   });
 
+  it('adds patient education and follow-up from an advanced guideline, only when the entry has them', async () => {
+    const kb = {
+      penyakit: [
+        {
+          icd10: 'J02',
+          definisi: 'Faringitis.',
+          advanced_guideline: {
+            kie_edukasi: { untuk_pasien: [' Istirahat cukup. ', ''] },
+            tindak_lanjut: { kontrol: 'Kontrol jika\n tidak membaik.' },
+          },
+        },
+        { icd10: 'I50', definisi: 'Gagal jantung.' },
+      ],
+    };
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify(kb))));
+    const { result } = renderHook(() => useDiseaseNotes());
+    await waitFor(() => expect(result.current.size).toBe(2));
+    expect(result.current.get('J02')?.education).toEqual(['Istirahat cukup.']);
+    expect(result.current.get('J02')?.followUp).toBe('Kontrol jika tidak membaik.');
+    expect(result.current.get('I50')).not.toHaveProperty('education');
+    expect(result.current.get('I50')).not.toHaveProperty('followUp');
+  });
+
   it('stays empty when the knowledge base cannot be read', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => new Response('nope', { status: 500 })));
     const { result } = renderHook(() => useDiseaseNotes());

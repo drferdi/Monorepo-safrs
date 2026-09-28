@@ -373,11 +373,11 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     expect(within(workspace).getByRole('button', { name: /Diagnosis manual/i })).toBeTruthy();
     // Temuan #1 restore (2026-07-05): therapy, education, and RME transfer
     // render on the focused surface (fail-closed until a diagnosis is selected):
-    // Edukasi as a one-line link here, Terapi and RME on the next page
-    // (2026-09-28), so not even their ghosts show before a diagnosis. The
+    // Terapi and Edukasi (2026-09-29), then RME, are later pages (2026-09-28), so not even
+    // their ghosts show before a diagnosis. The
     // transfer buttons are asserted on the mounted RME step at the end of this test.
     expect(within(workspace).queryByTestId('dx-flow-ghost-therapy')).toBeNull();
-    expect(within(workspace).getByRole('button', { name: /^Edukasi \(/ })).toBeTruthy();
+    expect(within(workspace).queryByRole('button', { name: /^Edukasi/ })).toBeNull();
     expect(within(workspace).queryByTestId('dx-flow-ghost-rme')).toBeNull();
     // No medication is proposed until the physician selects a working diagnosis.
     expect(within(workspace).queryByText(/Paracetamol 500 mg/i)).toBeNull();
@@ -428,6 +428,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     // chosen and no medication, "Kirim diagnosis" is offered and "Kirim resep" is disabled.
     fireEvent.click(primaryCard);
     fireEvent.click(await within(workspace).findByRole('button', { name: 'Lanjut tanpa obat' }));
+    fireEvent.click(within(workspace).getByRole('button', { name: 'Lanjut' }));
     const rmeStep = within(workspace).getByLabelText('RME');
     expect(within(rmeStep).getByRole('button', { name: 'Kirim diagnosis' })).toBeTruthy();
     expect(within(rmeStep).getByRole('button', { name: 'Kirim resep' })).toBeDisabled();

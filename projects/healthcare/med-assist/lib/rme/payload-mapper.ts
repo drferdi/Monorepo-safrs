@@ -1,7 +1,7 @@
 // Designed and constructed by Drferdi.
 
 import { mapTrajectoryToPrognosis } from './prognosis-mapper';
-import { truncateDeepStrings } from './truncate';
+import { RME_TEXT_LIMIT, truncateDeepStrings } from './truncate';
 
 import { DOKTER_NAMA, PERAWAT_NAMA } from '@/lib/clinical/tenaga-medis';
 import { classifyChronicDisease } from '@/lib/iskandar-diagnosis-engine/chronic-disease-classifier';
@@ -61,6 +61,8 @@ export interface RMETransferMapperInput {
   obesityConfirmation?: boolean;
   // Pre-built anamnesa from anamnesa-composer (overrides lama_sakit + riwayat_penyakit)
   anamnesaDraftPayload?: RMEAnamnesaDraftPayload;
+  // Education the doctor ticked as given on the Terapi page (knowledge-base text)
+  edukasi?: string[];
 }
 
 /**
@@ -763,7 +765,22 @@ function pickRandomAskepOption(key: AskepOptionKey): string {
   return options[index] ?? options[0];
 }
 
-function buildLainnyaFromMedications(): AnamnesaFillPayload['lainnya'] {
+/**
+ * The ticked education as whole items, in order, as many as fit the RME text limit: every string
+ * is cut at RME_TEXT_LIMIT later, and a cut item would record half an instruction.
+ */
+function educationWithinLimit(items: string[]): string {
+  let text = '';
+  for (const item of items.map((value) => value.replace(/\s+/g, ' ').trim()).filter(Boolean)) {
+    const next = text ? `${text} ${item}` : item;
+    if (next.length > RME_TEXT_LIMIT) break;
+    text = next;
+  }
+  return text;
+}
+
+function buildLainnyaFromMedications(edukasi: string[] = []): AnamnesaFillPayload['lainnya'] {
+  const tickedEducation = educationWithinLimit(edukasi);
   return {
     terapi: pickRandomAskepOption('terapiObat'),
     terapi_non_obat: pickRandomAskepOption('terapiNonObat'),
@@ -772,7 +789,8 @@ function buildLainnyaFromMedications(): AnamnesaFillPayload['lainnya'] {
     merokok: '0',
     konsumsi_alkohol: '0',
     kurang_sayur_buah: '0',
-    edukasi: pickRandomAskepOption('edukasi'),
+    // What the doctor ticked; the generic line only when nothing was ticked.
+    edukasi: tickedEducation || pickRandomAskepOption('edukasi'),
     askep: pickRandomAskepOption('deskripsiAskep'),
     observasi: pickRandomAskepOption('observasi'),
     keterangan: pickRandomAskepOption('ket'),
@@ -1249,7 +1267,7 @@ function buildAnamnesaPayload(input: RMETransferMapperInput): {
     },
 
     // lainnya: semua field termasuk askep, observasi, biopsikososial, tindakan keperawatan
-    lainnya: buildLainnyaFromMedications(),
+    lainnya: buildLainnyaFromMedications(input.edukasi),
 
     // keadaan_fisik: symptom-based organ system activation
     keadaan_fisik: buildKeadaanFisikFromKeluhan(clinicalComplaintText),
