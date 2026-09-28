@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 
 import { DiagnosisProgressStepper } from './DiagnosisProgressStepper';
 import {
+  buildClinicalSignals,
   getVisibleSafetyItems,
   isDiagnosisChosen,
   isGenericDiagnosisUiText,
@@ -12,25 +13,6 @@ import type { DiagnosisCandidateView, DiagnosisPageViewModel } from './diagnosis
 import { RMETransferPanel } from './RMETransferPanel';
 import { StagedSection } from './StagedSection';
 import { TherapyReviewPanel } from './TherapyReviewPanel';
-
-const MAX_CLINICAL_SIGNAL_ITEMS = 10;
-
-const CLINICAL_SIGNAL_PATTERNS: Array<{ label: string; pattern: RegExp }> = [
-  { label: 'HT', pattern: /\b(ht|hipertensi|darah tinggi|tensi tinggi)\b/i },
-  { label: 'DM', pattern: /\b(dm|diabetes|kencing manis|gula darah)\b/i },
-  { label: 'Pusing', pattern: /\bpusing\b|nyeri kepala|sakit kepala/i },
-  { label: 'Demam', pattern: /\bdemam\b|febris|panas badan/i },
-  { label: 'Batuk', pattern: /\bbatuk\b/i },
-  { label: 'Sesak', pattern: /\bsesak\b|napas berat|nafas berat/i },
-  { label: 'Nyeri dada', pattern: /nyeri dada|dada sakit/i },
-  { label: 'Nyeri kaki', pattern: /nyeri\s*kaki|kaki nyeri|sakit kaki/i },
-  { label: 'Nyeri perut', pattern: /nyeri perut|sakit perut/i },
-  { label: 'Mual', pattern: /\bmual\b/i },
-  { label: 'Muntah', pattern: /\bmuntah\b/i },
-  { label: 'Diare', pattern: /\bdiare\b|mencret/i },
-  { label: 'Lemas', pattern: /\blemas\b/i },
-  { label: 'Nafsu makan turun', pattern: /nafsu makan (menurun|turun|berkurang)/i },
-];
 
 export type {
   DiagnosisManualMedicationDraftView,
@@ -675,56 +657,8 @@ function getVisibleExamItems(items: string[]): string[] {
   ).slice(0, 4);
 }
 
-function buildClinicalSignals({
-  complaintSummary,
-  secondaryComplaint,
-  allergySummary,
-  chronicDiagnosisSummary,
-}: {
-  complaintSummary: string;
-  secondaryComplaint?: string;
-  allergySummary: string;
-  chronicDiagnosisSummary: string;
-}): string[] {
-  const sourceText =
-    `${complaintSummary} ${secondaryComplaint || ''} ${chronicDiagnosisSummary}`.trim();
-  const signals: string[] = [];
-
-  for (const item of CLINICAL_SIGNAL_PATTERNS) {
-    if (item.pattern.test(sourceText)) {
-      signals.push(item.label);
-    }
-  }
-
-  const cleanedAllergy = cleanClinicalSummary(allergySummary);
-  if (cleanedAllergy && !/tidak ada alergi/i.test(cleanedAllergy)) {
-    signals.push(`Alergi: ${cleanedAllergy}`);
-  }
-
-  const cleanedChronicDiagnosis = cleanClinicalSummary(chronicDiagnosisSummary);
-  if (cleanedChronicDiagnosis) {
-    for (const diagnosis of cleanedChronicDiagnosis.split(',')) {
-      const signal = shortenClinicalSignal(formatClinicalText(diagnosis));
-      if (signal) signals.push(signal);
-    }
-  }
-
-  if (signals.length === 0 && sourceText) {
-    signals.push(shortenClinicalSignal(formatClinicalText(sourceText)));
-  }
-
-  return dedupeSignals(signals).slice(0, MAX_CLINICAL_SIGNAL_ITEMS);
-}
-
 function cleanClinicalSummary(value: string): string {
   return formatClinicalText(value).replace(/\s+/g, ' ').trim();
-}
-
-function shortenClinicalSignal(value: string): string {
-  const [firstSentence = value] = value.split(/[.;]/);
-  return firstSentence.length > 48
-    ? `${firstSentence.slice(0, 45).trim()}...`
-    : firstSentence.trim();
 }
 
 function dedupeSignals(values: string[]): string[] {
