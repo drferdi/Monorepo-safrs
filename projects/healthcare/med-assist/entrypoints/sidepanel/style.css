@@ -10425,3 +10425,22 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 .diagnosis-candidate-row .diagnosis-form-grid .history-dropdown__panel { position: static; margin-top: 6px; box-shadow: none; }
 .diagnosis-form-grid .history-dropdown__panel { box-shadow: var(--neu-shadow-card); }
 .dx-pixel-loader > span[data-on='false'] { opacity: 0.12; }
+
+/* Diagnosis form fields (Chief, 2026-09-29: "hilangkan garis major hijau begitu ganti dengan 1 line
+   garis di bawah berwarna hijau smooth motion"): focus draws no green frame or outline; a single
+   green line under the field grows from its middle and folds back on blur.
+   The line is a layer over the field's own fill (a gradient in dark, a colour in light), so the fill stays. */
+.diagnosis-input.neu-select {
+  background: linear-gradient(var(--accent-med), var(--accent-med)) 50% 100% / 0% 1px no-repeat, var(--neu-inset-bg);
+  transition: background-size var(--duration-engine) var(--ease-neu), color var(--duration-neu) ease;
+}
+.diagnosis-input.neu-select:focus,
+.diagnosis-input.neu-select:focus-visible {
+  outline: none;
+  border-color: var(--border-subtle);
+  box-shadow: none;
+  background-size: 100% 1px, auto;
+}
+@media (prefers-reduced-motion: reduce) {
+  .diagnosis-input.neu-select { transition: none; }
+}

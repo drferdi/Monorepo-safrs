@@ -3,6 +3,24 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — Diagnosis form fields: one green line under the field on focus
+
+- Decision (Chief: "rubah design hilangkan garis major hijau begitu ganti dengan 1 line garis di
+  bawah berwarna hijau smooth motion"): a focused `.diagnosis-input` (the Tatalaksana manual
+  medication form, the Diagnosis page's fields) draws no green frame, ring or outline; a single
+  1 px `--accent-med` line under the field grows from its middle (`--duration-engine`,
+  `--ease-neu`) and folds back on blur. Reduced motion shows it at once. The line is a background
+  layer over the field's own `--neu-inset-bg` (a gradient in dark, a colour in light), so the fill
+  stays (token-guard caught a first version that erased the dark fill). Appended to style.css;
+  the global `.diagnosis-input:focus-visible` outline and the `.neu-select:focus` ring are
+  overridden; the focused field is flat (no inset shadow).
+- This is the one smooth motion Chief asked for after the "steady like a console" rule: a focus
+  indicator, not layout motion.
+- Evidence: harness J20.9: the focused field computes outline none, box-shadow none, border
+  unchanged, both background layers present; the line's size sampled at 0 %, 66 %, 90 %, 97 %,
+  100 % over ~430 ms, the field left behind back at 0 %; with `data-theme='light'` the fill is
+  rgb(21, 23, 25) under the light accent line.
+
 ## 2026-09-29 — Steady like a console: no rubbery motion on the diagnosis pages
 
 - Decision (Chief: "Adhu saya gak suka banget Ui gerak gerak kaya karet gini, make it steady like

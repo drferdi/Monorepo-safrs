@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange, stock search, steady UI)
+Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange, stock search, steady UI, focus underline)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
@@ -8,7 +8,7 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 ## Current state
 
 Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEAD is the
-"steady like a console" commit after `ce2f5252` (DECISIONS 2026-09-29, six Tatalaksana entries):
+focus-underline commit after `26606213` (DECISIONS 2026-09-29, seven Tatalaksana entries):
 
 - Four steps, three pages: Temuan 1/4 + Diagnosis 2/4 | Tatalaksana 3/4 | RME 4/4.
 - `steps/TatalaksanaStep.tsx` (replaces TherapyStep and EducationStep): Terapi kronis (visit
@@ -21,7 +21,8 @@ Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEA
   `explainInteraction`) once per pair; "Review" history muted; findings orange, no red;
   "Nama obat" searches the Puskesmas stock `stok_obat.json` as typed (`searchStock`).
 - Steady UI (Chief: no rubbery motion): no springs, height/layout glides, slides, stagger or scale
-  on any diagnosis page; only the hold-to-Hapus fill and the pixel loader cycle remain.
+  on any diagnosis page; only the hold-to-Hapus fill and the pixel loader cycle remain; a focused
+  field shows one green underline that grows smoothly (no green frame).
 - Logic: `tatalaksana.ts`, `usePatientVisits.ts`, `labMotion.tsx` (tick and hold-to-delete);
   ClinicalDifferential runs `checkInteractions`, keeps dismissed proposals out of the
   prescription, sends the follow-up to RME `rencana_tindakan`.
