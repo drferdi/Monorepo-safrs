@@ -260,6 +260,15 @@ describe('diagnosisViewModel', () => {
     );
   });
 
+  it('carries the history line on candidates and marks engine agreement', () => {
+    const input = makeInput(); // the file's existing fixture builder
+    input.candidates.push({ ...input.candidates[0], id: '2-J06.9', rank: 2, code: 'J06.9' });
+    input.candidates[0].history = { label: 'Kronis', count: 3, visitsConsidered: 5, lastSeen: '2026-08-12', engineAgrees: true, engineSource: 'mira' };
+    const view = createDiagnosisPageViewModel(input);
+    expect(view.candidates[0].history).toEqual({ label: 'Kronis', count: 3, visitsConsidered: 5, lastSeen: '2026-08-12', engineAgrees: true, engineSource: 'mira' });
+    expect(view.candidates[1]?.history).toBeUndefined();
+  });
+
   it('does not import or call clinical engines, APIs, pharmacotherapy, search, or RME utilities', () => {
     const source = readFileSync('components/clinical/diagnosis/diagnosisViewModel.ts', 'utf8');
 

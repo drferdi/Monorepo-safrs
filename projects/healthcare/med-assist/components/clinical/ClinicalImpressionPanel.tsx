@@ -1,6 +1,8 @@
 import type { RankedDiagnosis } from '@/lib/iskandar-diagnosis-engine/diagnosis-algorithm';
 import React from 'react';
 
+import type { DiagnosisHistoryView } from './diagnosis/diagnosisViewModel';
+
 type ConfidenceTone = 'high' | 'moderate' | 'low' | 'insufficient';
 
 interface ClinicalAuditDetail {
@@ -33,6 +35,7 @@ export interface ClinicalImpressionViewItem {
   isSelected: boolean;
   isSelectionBlocked: boolean;
   audit: ClinicalAuditDetail;
+  history?: DiagnosisHistoryView;
   raw: RankedDiagnosis;
 }
 

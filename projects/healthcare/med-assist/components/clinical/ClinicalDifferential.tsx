@@ -7,10 +7,15 @@ import {
 import type { ClinicalImpressionViewItem } from './ClinicalImpressionPanel';
 import { createDiagnosisPageViewModel } from './diagnosis/diagnosisViewModel';
 import { DiagnosisWorkspace, type DiagnosisTriageView } from './diagnosis/DiagnosisWorkspace';
+import { useRecurrentDiagnoses } from './diagnosis/useRecurrentDiagnoses';
 
 import {
   type CanonicalClinicalEngineOutput,
 } from '@/lib/api/bridge-client';
+import {
+  normalizeRecurrentIcd,
+  type RecurrentDiagnosisCandidate,
+} from '@/lib/clinical/recurrent-diagnosis';
 import {
   MIRA_PREFETCH_READY_KEY,
   PREFETCH_FALLBACK_MS,
@@ -19,6 +24,7 @@ import {
   buildDiagnosisRequestContext,
   hashDiagnosisContext,
 } from '@/lib/diagnosis-engine/request-context';
+import { auditLogger } from '@/lib/iskandar-diagnosis-engine/audit-logger';
 import { classifyChronicDisease } from '@/lib/iskandar-diagnosis-engine/chronic-disease-classifier';
 import {
   runDiagnosisAlgorithm,
@@ -75,8 +81,6 @@ type TherapyState = 'idle' | 'loading' | 'ready' | 'error';
 type TransferUiState = 'idle' | 'running' | 'partial' | 'success' | 'failed';
 const MAX_DIAGNOSIS_SELECTION = 2;
 const EMPTY_CHRONIC_THERAPIES: string[] = [];
-/** Until the recurrent-diagnosis history is wired in; must match the Trajectory stage's prefetch. */
-const NO_RECURRENT: Array<{ icd: string; name: string }> = [];
 
 /** The request hash in the background's `{ hash, at }` prefetch-ready record, if any. */
 function readyPrefetchHash(value: unknown): string | undefined {
@@ -300,6 +304,35 @@ export function buildUiFallbackDiagnoses(
       recommended_actions: ['Lengkapi anamnesis terarah dan pemeriksaan fisik.'],
     },
   ];
+}
+
+/** A diagnosis from the patient's visit record, offered before the engine's list. */
+export function buildRecurrentSuggestion(candidate: RecurrentDiagnosisCandidate): DiagnosisSuggestion {
+  return {
+    rank: 0,
+    icd_x: candidate.icd,
+    nama: candidate.name,
+    confidence: candidate.label === 'Kronis' ? 0.9 : 0.6,
+    rationale: `Tercatat ${candidate.count} kali dalam 12 bulan terakhir.`,
+    engine_tag: candidate.label,
+    red_flags: [],
+    recommended_actions: [],
+  };
+}
+
+/** The engine's list; when it is empty, the UI fallback only if the record offers no history. */
+export function resolveBaseSuggestions(
+  suggestions: DiagnosisSuggestion[],
+  hasRecurrent: boolean,
+  fallback: () => DiagnosisSuggestion[]
+): DiagnosisSuggestion[] {
+  if (suggestions.length > 0) return suggestions;
+  return hasRecurrent ? [] : fallback();
+}
+
+/** History and engine codes agree when their 3-character roots do (record E11.9, engine E11). */
+function icdRoot(code: string): string {
+  return normalizeRecurrentIcd(code).slice(0, 3);
 }
 
 export function buildTransferEligibleDiagnosisInput(
@@ -658,6 +691,16 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         .filter((item): item is { icd_x: string; nama: string } => Boolean(item?.icd_x)),
     [trajectory]
   );
+  const recurrent = useRecurrentDiagnoses(patientRM);
+  const recurrentByIcd = useMemo(
+    () => new Map(recurrent.map((candidate) => [icdRoot(candidate.icd), candidate])),
+    [recurrent]
+  );
+  // Same mapping and order as the Trajectory stage's prefetch, so both requests hash alike.
+  const recurrentForRequest = useMemo(
+    () => recurrent.map((candidate) => ({ icd: candidate.icd, name: candidate.name })),
+    [recurrent]
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -759,7 +802,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
           patientAge,
           patientGender,
           vitals,
-          recurrent: NO_RECURRENT,
+          recurrent: recurrentForRequest,
         });
         const sentAt = Date.now();
         const response = await sendMessage('getSuggestions', request);
@@ -768,7 +811,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
 
         if (!response.success || !response.data) {
           setErrorMsg(resolveDifferentialListErrorMessage(0));
-          setSuggestions(buildUiFallbackDiagnoses(keluhanUtama, vitals));
+          setSuggestions([]);
           setPhase('ready');
           return;
         }
@@ -778,11 +821,8 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
           response.data.engine_notice ||
             resolveDifferentialListErrorMessage(incomingSuggestions.length)
         );
-        if (incomingSuggestions.length === 0) {
-          setSuggestions(buildUiFallbackDiagnoses(keluhanUtama, vitals));
-        } else {
-          setSuggestions(incomingSuggestions);
-        }
+        // An empty list falls back in normalizedSuggestions, which knows about history.
+        setSuggestions(incomingSuggestions);
         setProcessingTimeMs(response.data.meta?.processing_time_ms ?? null);
         setPhase('ready');
         if (response.data.engine_pending) {
@@ -791,7 +831,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       } catch {
         if (cancelled) return;
         setErrorMsg(resolveDifferentialListErrorMessage(0));
-        setSuggestions(buildUiFallbackDiagnoses(keluhanUtama, vitals));
+        setSuggestions([]);
         setPhase('ready');
       }
     };
@@ -816,13 +856,23 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     vitals.rr,
     vitals.sbp,
     vitals.temp,
+    recurrentForRequest,
   ]);
 
-  const normalizedSuggestions = useMemo<DiagnosisSuggestion[]>(() => {
-    const baseSuggestions =
-      Array.isArray(suggestions) && suggestions.length > 0
-        ? suggestions
-        : buildUiFallbackDiagnoses(keluhanUtama, vitals);
+  const normalizedSuggestions = useMemo<{
+    list: DiagnosisSuggestion[];
+    engineIcds: Set<string>;
+  }>(() => {
+    // A history candidate with a usable code always yields a row (its own, or the confirmed
+    // chronic row sharing its root), so the page is never empty without the fallback.
+    const hasRecurrent = recurrent.some((candidate) =>
+      isLikelyIcdCode(normalizeIcdCode(candidate.icd))
+    );
+    const baseSuggestions = resolveBaseSuggestions(
+      Array.isArray(suggestions) ? suggestions : [],
+      hasRecurrent,
+      () => buildUiFallbackDiagnoses(keluhanUtama, vitals)
+    );
     const sanitizedBaseSuggestions = baseSuggestions
       .map((item) => {
         const normalizedCode = normalizeIcdCode(item.icd_x);
@@ -843,9 +893,36 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       mergedByIcd.set(key, buildConfirmedChronicSuggestion(chronic));
     }
 
+    // History candidates come next, one row per ICD root; a root already held by a confirmed
+    // chronic diagnosis is not repeated.
+    const seededRoots = new Set(Array.from(mergedByIcd.keys(), icdRoot));
+    const recurrentSeedByRoot = new Map<string, { key: string; seed: DiagnosisSuggestion }>();
+    for (const candidate of recurrent) {
+      const key = normalizeIcdCode(candidate.icd);
+      if (!isLikelyIcdCode(key) || seededRoots.has(icdRoot(key))) continue;
+      const seed = buildRecurrentSuggestion({ ...candidate, icd: key });
+      seededRoots.add(icdRoot(key));
+      recurrentSeedByRoot.set(icdRoot(key), { key, seed });
+      mergedByIcd.set(key, seed);
+    }
+
     for (const suggestion of sanitizedBaseSuggestions) {
       const key = suggestion.icd_x?.trim().toUpperCase();
       if (!key || !isLikelyIcdCode(key)) continue;
+
+      // The first engine row on a history root takes over that row: the engine's code,
+      // rationale and tag (so "MIRA" survives), with the higher confidence of the two.
+      const recurrentSeed = recurrentSeedByRoot.get(icdRoot(key));
+      if (recurrentSeed) {
+        recurrentSeedByRoot.delete(icdRoot(key));
+        mergedByIcd.set(recurrentSeed.key, {
+          ...suggestion,
+          confidence: Math.max(recurrentSeed.seed.confidence, suggestion.confidence),
+          rationale: suggestion.rationale || recurrentSeed.seed.rationale,
+          engine_tag: suggestion.engine_tag ?? recurrentSeed.seed.engine_tag,
+        });
+        continue;
+      }
 
       const existing = mergedByIcd.get(key);
       if (!existing) {
@@ -860,16 +937,20 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       });
     }
 
-    return Array.from(mergedByIcd.values()).map((item, index) => ({
-      ...item,
-      rank: index + 1,
-    }));
-  }, [suggestions, keluhanUtama, vitals, confirmedChronicDiagnoses]);
+    return {
+      list: Array.from(mergedByIcd.values()).map((item, index) => ({
+        ...item,
+        rank: index + 1,
+      })),
+      // The list re-ranks every row, so rank cannot tell history-only rows apart.
+      engineIcds: new Set(sanitizedBaseSuggestions.map((item) => icdRoot(item.icd_x))),
+    };
+  }, [suggestions, keluhanUtama, vitals, confirmedChronicDiagnoses, recurrent]);
 
   const rankedDiagnoses: RankedDiagnosis[] = useMemo(
     () =>
       runDiagnosisAlgorithm({
-        suggestions: normalizedSuggestions,
+        suggestions: normalizedSuggestions.list,
         keluhanUtama,
         keluhanTambahan,
         vitals,
@@ -953,6 +1034,8 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         ],
         4
       );
+      const recurrentMatch = recurrentByIcd.get(icdRoot(selectedDiagnosis.icd_x));
+      const engineAgrees = normalizedSuggestions.engineIcds.has(icdRoot(selectedDiagnosis.icd_x));
 
       return {
         id: `${item.rank}-${selectedDiagnosis.icd_x}`,
@@ -969,6 +1052,20 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         missing: buildMissingSignals(item),
         reviewItems: buildReviewSignals(item),
         doNotMissReason: buildDoNotMissReason(item),
+        history: recurrentMatch
+          ? {
+              label: recurrentMatch.label,
+              count: recurrentMatch.count,
+              visitsConsidered: recurrentMatch.visitsConsidered,
+              lastSeen: recurrentMatch.lastSeen,
+              engineAgrees,
+              engineSource: engineAgrees
+                ? /^MIRA/.test(item.suggestion.engine_tag ?? '')
+                  ? 'mira'
+                  : 'legacy'
+                : null,
+            }
+          : undefined,
         isSelected: isDiagnosisSelected(selectedDiagnosis),
         isSelectionBlocked:
           !isDiagnosisSelected(selectedDiagnosis) &&
@@ -993,7 +1090,15 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         raw: item,
       };
     });
-  }, [displayedDiagnoses, selectedDiagnoses, keluhanUtama, keluhanTambahan, vitals]);
+  }, [
+    displayedDiagnoses,
+    selectedDiagnoses,
+    keluhanUtama,
+    keluhanTambahan,
+    vitals,
+    recurrentByIcd,
+    normalizedSuggestions,
+  ]);
 
   const primaryImpression = impressionItems[0] || null;
 
@@ -1491,6 +1596,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         against: item.against,
         missing: item.missing,
         review: item.reviewItems,
+        history: item.history,
       })),
       selectedDiagnoses: selectedDiagnoses.map((diagnosis) => ({
         key: diagnosisKey(diagnosis),
@@ -1892,6 +1998,25 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       setTherapyError(`Maksimal ${MAX_DIAGNOSIS_SELECTION} diagnosis dapat dipilih.`);
     } else {
       setTherapyError('');
+    }
+
+    // Audit the doctor's pick of a row the visit record offered (not the un-pick, not a
+    // pick refused by the selection limit). The logger hashes the session id itself.
+    const history = recurrentByIcd.get(icdRoot(diagnosis.icd_x));
+    const isNewPick =
+      !isDiagnosisSelected(diagnosis) && selectedDiagnoses.length < MAX_DIAGNOSIS_SELECTION;
+    if (history && isNewPick) {
+      void auditLogger.log('suggestion_selected', {
+        session_id: patientRM ? `rm-${patientRM}` : 'rm-unknown',
+        suggestions: [{ icd10_code: diagnosis.icd_x, confidence: item.suggestion.confidence }],
+        metadata: {
+          selected_icd: diagnosis.icd_x,
+          source: 'riwayat',
+          history_label: history.label,
+          history_count: history.count,
+          visits_considered: history.visitsConsidered,
+        },
+      });
     }
   };
 

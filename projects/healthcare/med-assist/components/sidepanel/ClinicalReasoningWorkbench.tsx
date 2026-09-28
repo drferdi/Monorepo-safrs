@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react';
 
 import { ClinicalTrajectory } from '@/components/clinical/ClinicalTrajectory';
+import { useRecurrentDiagnoses } from '@/components/clinical/diagnosis/useRecurrentDiagnoses';
 import type { ScreeningAlert } from '@/components/clinical/TTVInferenceUI';
 import type { ComposedAnamnesaDraft } from '@/lib/clinical/anamnesa-composer';
 import type {
@@ -62,9 +63,6 @@ export interface ClinicalReasoningWorkbenchProps {
   onOpenDifferential?: () => void;
 }
 
-/** Until the recurrent-diagnosis history is wired in; module-level so the memo below stays stable. */
-const NO_RECURRENT: Array<{ icd: string; name: string }> = [];
-
 function toInt(value: string): number {
   const parsed = Number.parseInt(value, 10);
   return Number.isFinite(parsed) ? parsed : 0;
@@ -109,7 +107,13 @@ export function ClinicalReasoningWorkbench({
     }),
     [sbp, dbp, hr, rr, temp, spo2, glucose]
   );
-  const recurrent = NO_RECURRENT;
+  // The hook keeps one array identity per RM, so this memo (and the request below) changes
+  // only when the patient's history does.
+  const recurrentCandidates = useRecurrentDiagnoses(patient.rm);
+  const recurrent = useMemo(
+    () => recurrentCandidates.map((candidate) => ({ icd: candidate.icd, name: candidate.name })),
+    [recurrentCandidates]
+  );
 
   // Start the MIRA step while the doctor is still here, so the diagnosis page has it ready.
   const requestContext = useMemo(

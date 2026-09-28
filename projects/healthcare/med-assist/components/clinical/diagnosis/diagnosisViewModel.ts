@@ -42,6 +42,15 @@ export interface DiagnosisEvidenceViewModelInput {
   doNotMiss: string[];
 }
 
+export interface DiagnosisHistoryView {
+  label: 'Kronis' | 'Berulang';
+  count: number;
+  visitsConsidered: number;
+  lastSeen: string;
+  engineAgrees: boolean;
+  engineSource: 'mira' | 'legacy' | null;
+}
+
 export interface DiagnosisCandidateViewModelInput {
   id: string;
   rank: number;
@@ -56,6 +65,7 @@ export interface DiagnosisCandidateViewModelInput {
   against: string[];
   missing: string[];
   review: string[];
+  history?: DiagnosisHistoryView;
 }
 
 export interface DiagnosisSelectedViewModelInput {
@@ -170,6 +180,7 @@ export interface DiagnosisCandidateView {
   against: string[];
   missing: string[];
   review: string[];
+  history?: DiagnosisHistoryView;
 }
 
 export interface DiagnosisSelectedView {
@@ -321,6 +332,7 @@ function buildCandidateViews(input: DiagnosisCandidateViewModelInput[]): Diagnos
     against: copyStrings(candidate.against),
     missing: copyStrings(candidate.missing),
     review: copyStrings(candidate.review),
+    history: candidate.history ? { ...candidate.history } : undefined,
   }));
 }
 
