@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange, stock search, steady UI, focus underline)
+Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange, stock search, steady UI, focus underline, standard dose prefill)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
@@ -8,7 +8,7 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 ## Current state
 
 Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEAD is the
-focus-underline commit after `26606213` (DECISIONS 2026-09-29, seven Tatalaksana entries):
+standard-dose prefill commit after `525f40bf` (DECISIONS 2026-09-29, nine Tatalaksana entries):
 
 - Four steps, three pages: Temuan 1/4 + Diagnosis 2/4 | Tatalaksana 3/4 | RME 4/4.
 - `steps/TatalaksanaStep.tsx` (replaces TherapyStep and EducationStep): Terapi kronis (visit
@@ -25,6 +25,10 @@ focus-underline commit after `26606213` (DECISIONS 2026-09-29, seven Tatalaksana
   field shows one green underline that grows smoothly (no green frame).
 - "Tambah obat" / "Ganti obat" is disabled until name and dose are filled ("Isi nama obat dan dosis.");
   before, an add without a dose failed silently in ClinicalDifferential.
+- A picked stock medicine fills Dosis and Aturan pakai (Durasi "1 hari" for a single dose) from
+  `standardDose.ts`: lowest standard adult regimen in whole units, signa from PIONAS / PPK 2022 /
+  BPOM labels (source per rule); topicals "2x aplikasi" / "6x1 tetes" + "Pemakaian luar"; syrups
+  signa only; injections, programme and psychiatric drugs nothing (dose cleared).
 - Logic: `tatalaksana.ts`, `usePatientVisits.ts`, `labMotion.tsx` (tick and hold-to-delete);
   ClinicalDifferential runs `checkInteractions`, keeps dismissed proposals out of the
   prescription, sends the follow-up to RME `rencana_tindakan`.
@@ -41,6 +45,8 @@ focus-underline commit after `26606213` (DECISIONS 2026-09-29, seven Tatalaksana
 3. Without a prescription service the page says "Tidak ada usulan obat dari layanan resep."; use
    "+ Tambah obat" or "Lanjut tanpa terapi tambahan".
 4. "+ Tambah obat" → type "Am": Puskesmas stock list with counts; pick with mouse or arrows + Enter.
+5. Pick Amlodipin 10 mg → "1x1", "Sesudah makan"; Omeprazol 20 mg → "Sebelum makan"; Permetrin →
+   "1x aplikasi", "Pemakaian luar", "1 hari"; Haloperidol → dose empty.
 
 ## Verification (capsule root, final tree)
 
@@ -48,7 +54,7 @@ focus-underline commit after `26606213` (DECISIONS 2026-09-29, seven Tatalaksana
 |---|---|---|
 | `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`) |
 | `typecheck` | 0 | clean |
-| `test` | 0 | 179 files passed, 1 skipped; 1437 passed, 17 skipped (was 1435) |
+| `test` | 0 | 180 files passed, 1 skipped; 1445 passed, 17 skipped (was 1437) |
 | `exec wxt build --mode development` | 0 | clean |
 | `run:check` | 0 | "Extension loads: Asisten Medis 2.1.0 (MV3), all referenced files present." |
 
@@ -71,6 +77,8 @@ Sentra prescription API, the ePuskesmas fields themselves, real DDInter lookup i
 7. "Berubah setelah:" may grow long with many findings.
 8. The stock file is a snapshot (last_updated 2026-01-30), not a live inventory feed; a live
    Puskesmas stock source would replace `stok_obat.json`.
+9. Clinical sign-off of the dose table `standardDose.ts` (conflicts listed in DECISIONS). Topical
+   doses keep the templates' "2x aplikasi"; the RME quantity estimate counts them like tablets.
 
 ## Next action
 

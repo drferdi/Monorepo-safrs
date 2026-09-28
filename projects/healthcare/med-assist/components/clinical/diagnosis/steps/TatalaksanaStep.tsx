@@ -5,6 +5,7 @@ import type { DiagnosisManualMedicationDraftView, DiagnosisPageProps } from '../
 import type { DiagnosisMedicationView, DiagnosisPageViewModel } from '../diagnosisViewModel';
 import { HoldButton, PenCheck } from '../labMotion';
 import { PixelLoader } from '../PixelLoader';
+import { standardDoseFor } from '../standardDose';
 import {
   ROLE_ORDER,
   allergyMatches,
@@ -322,8 +323,14 @@ function ManualMedicationForm({
   const matches = open ? searchStock(draft.nama_obat) : [];
   // The prescription takes a medicine only with its dose; the button says so instead of failing silently.
   const complete = draft.nama_obat.trim() !== '' && draft.dosis.trim() !== '';
+  // The picked medicine brings its standard dose and signa (standardDose.ts); one with none
+  // clears the dose, so the previous pick's never stays under a new name.
   const pick = (name: string) => {
+    const standard = standardDoseFor(name);
     onChange('nama_obat', name);
+    onChange('dosis', standard?.dosis ?? '');
+    if (standard && options.includes(standard.aturan_pakai)) onChange('aturan_pakai', standard.aturan_pakai);
+    if (standard?.durasi) onChange('durasi', standard.durasi);
     setOpen(false);
   };
   return (

@@ -3,6 +3,35 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — Tatalaksana: a picked stock medicine brings its standard dose and signa
+
+- Decision (Chief: "keduanya terisi otomatis dengan dosis minimal dan standard sesudah/ sebelum
+  makan atau signa lain", then "Cari dulu referensi"): picking a Puskesmas stock item in "Nama
+  obat" fills Dosis and Aturan pakai (and Durasi "1 hari" for a single dose) from
+  `components/clinical/diagnosis/standardDose.ts`; an item with no entry clears the dose. A
+  prefill the doctor edits, never a prescription of its own.
+- Rules: the lowest standard adult regimen the chosen strength makes in whole units ("NxM"; the
+  RME signa reads nothing else); a rule fires only for the strengths its source covers. Syrups
+  and drops by mouth get the signa only (weight-based dose). Eye, ear and skin preparations are
+  written like the prescription templates ("6x1 tetes", "2x aplikasi") with "Pemakaian luar".
+  Nothing for injections, infusions, vaccines, TB/HIV/KB programme regimens, specialist-titrated
+  psychiatric drugs, and items the sources leave open (Tablet Tambah Darah, zinc for adults,
+  vitamin B kompleks, multivitamin, fenol gliserol, nistatin vaginal).
+- Sources (one per rule, in the file): PIONAS BPOM (503 on 2026-09-29, read via the Wayback
+  Machine), PPK 2022 (KMK HK.01.07/MENKES/1186/2022), Pedoman Pengobatan Dasar di Puskesmas 2007,
+  BPOM labels; FDA DailyMed / EMC only for meal timing. Where the sources leave meal timing open,
+  "Sesudah makan" is the prescribing convention, marked "konvensi".
+- Conflicts resolved: kaptopril "Sebelum makan" (FDA) over "any time" (EMC); domperidon 3x10 mg
+  (BPOM label) over PIONAS 10-20 mg; prednison 2x5 mg (PPK) over 10-20 mg once in the morning
+  (PIONAS); metformin 1x500 mg (PIONAS start dose) while the reasoner template gives 2x1;
+  metronidazol 2x500 mg (PPK vaginosis, the lowest) though amebiasis uses 3x500 mg.
+- Not R3: `lib/clinical/dosage-database.ts` (R3, six weight-based drugs, no meal timing) is left
+  unchanged; the table is a UI prefill beside it. Clinical sign-off of the table is Chief's.
+- Evidence: `standardDose.test.ts` (8 tests, including every stock item's dose being NxM, drops or
+  applications); TatalaksanaStep test picks Amlodipin 10 → 1x1 Sesudah makan, Omeprazol 20 →
+  1x1 Sebelum makan, Permetrin → 1x aplikasi, Pemakaian luar, 1 hari, Haloperidol → dose
+  cleared; harness J20.9: Omeprazol picked → card "1x20mg • Sebelum makan".
+
 ## 2026-09-29 — Diagnosis form fields: one green line under the field on focus
 
 - Decision (Chief: "rubah design hilangkan garis major hijau begitu ganti dengan 1 line garis di

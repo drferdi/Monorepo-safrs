@@ -73,7 +73,7 @@ export function searchStock(query: string, limit = 6): StockMatch[] {
 const STRENGTH = /(\d+(?:[.,]\d+)?)\s*(mg|mcg|µg|g|ml|iu|%)(?![a-z])/i;
 
 /** The strength a name carries, compact ("Amlodipin 10 mg" → { value: 10, unit: 'mg' }). */
-function strengthOf(name: string): { value: number; unit: string } | null {
+export function strengthOf(name: string): { value: number; unit: string } | null {
   const match = STRENGTH.exec(name);
   return match ? { value: Number(match[1].replace(',', '.')), unit: match[2].toLowerCase() } : null;
 }

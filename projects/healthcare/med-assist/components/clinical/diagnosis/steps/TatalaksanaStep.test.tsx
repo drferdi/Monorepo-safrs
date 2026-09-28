@@ -218,6 +218,47 @@ describe('TatalaksanaStep', () => {
     expect(name).toHaveValue('Amlodipin tablet 5 mg');
   });
 
+  // Chief, 2026-09-29: "keduanya terisi otomatis dengan dosis minimal dan standard sesudah/ sebelum
+  // makan atau signa lain".
+  it('fills the standard dose and signa of the medicine picked, and clears a dose it has none for', () => {
+    function Page() {
+      const [draft, setDraft] = useState(props().manualMedicationDraft);
+      return (
+        <TatalaksanaStep
+          {...props({
+            manualMedicationDraft: draft,
+            manualMedicationOptions: ['Sesudah makan', 'Sebelum makan', 'Pemakaian luar'],
+            onManualMedicationDraftChange: (field, value) => setDraft((current) => ({ ...current, [field]: value })),
+          })}
+        />
+      );
+    }
+    const pick = (typed: string, stockName: RegExp) => {
+      fireEvent.change(screen.getByPlaceholderText('Nama obat'), { target: { value: typed } });
+      fireEvent.click(within(screen.getByRole('listbox', { name: 'Stok obat Puskesmas' })).getByRole('option', { name: stockName }));
+    };
+    const { container } = render(<Page />);
+    fireEvent.click(screen.getByRole('button', { name: '+ Tambah obat' }));
+    const dose = screen.getByPlaceholderText('Dosis (contoh: 3x1)');
+    const signa = container.querySelector('select');
+
+    pick('Amlo', /^Amlodipin tablet 10 mg/);
+    expect(dose).toHaveValue('1x1');
+    expect(signa).toHaveValue('Sesudah makan');
+
+    pick('Omepra', /Omeprazol kapsul\/kaplet 20 mg/);
+    expect(dose).toHaveValue('1x1');
+    expect(signa).toHaveValue('Sebelum makan');
+
+    pick('Permetrin', /Permetrin Krim 5%/);
+    expect(dose).toHaveValue('1x aplikasi');
+    expect(signa).toHaveValue('Pemakaian luar');
+    expect(screen.getByPlaceholderText('Durasi (contoh: 3 hari)')).toHaveValue('1 hari');
+
+    pick('Haloper', /^Haloperidol tablet 5 mg\b(?! \(program\))/);
+    expect(dose).toHaveValue('');
+  });
+
   it('uses every proposal from "Gunakan semua usulan"', () => {
     const p = props();
     render(<TatalaksanaStep {...p} />);
