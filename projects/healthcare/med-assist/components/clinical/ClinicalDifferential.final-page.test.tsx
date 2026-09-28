@@ -336,8 +336,6 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     fireEvent.click(within(workspace).getByRole('button', { name: 'selesai' }));
 
     const diagnosisStep = within(workspace).getByLabelText('Diagnosis');
-    const lainnya = within(diagnosisStep).queryByRole('button', { name: /^Lainnya \(/ });
-    if (lainnya) fireEvent.click(lainnya);
     // The proposed primary is the card under the primary label; every other card is a differential.
     const diagnosisCards = within(diagnosisStep).getAllByTestId('dx-flow-card');
     const primaryCard = within(diagnosisStep)
@@ -354,7 +352,9 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     // The danger-sign list belongs to the Triage page; the diagnosis page never repeats it.
     expect(within(workspace).queryByRole('button', { name: 'lihat' })).toBeNull();
     expect(within(workspace).queryByText(/tanda bahaya/)).toBeNull();
-    expect(differentialCards.length).toBeGreaterThanOrEqual(3);
+    // Two banding cards at most (Chief, 2026-09-28), with no "Lainnya" behind them.
+    expect(differentialCards).toHaveLength(2);
+    expect(within(diagnosisStep).queryByRole('button', { name: /^Lainnya/ })).toBeNull();
     differentialCards.forEach((card) =>
       expect(card).not.toHaveTextContent(/J18\.9 - Community Acquired Pneumonia/i)
     );

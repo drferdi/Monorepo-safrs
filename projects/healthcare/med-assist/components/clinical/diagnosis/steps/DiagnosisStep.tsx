@@ -13,8 +13,8 @@ import { ReasonTimeline, type ReasonGroup } from '../ReasonTimeline';
 import { diseaseNoteFor, useDiseaseNotes, type DiseaseNote } from '../useDiseaseNotes';
 import type { DiagnosisCandidateView, DiagnosisPageViewModel } from '../diagnosisViewModel';
 
-/** Cards on the page: the primary plus the differentials; the rest waits behind "Lainnya". */
-const MAX_CARDS = 3;
+/** Differential cards on the page (Chief, 2026-09-28: "cukup dua saja"); the rest is not shown. */
+const MAX_BANDING = 2;
 /** `windowMonths` default in lib/clinical/recurrent-diagnosis.ts; shown so the rule is visible. */
 const HISTORY_WINDOW_MONTHS = 12;
 
@@ -316,18 +316,14 @@ export function DiagnosisStep({
   onSubmitManualDiagnosis,
   onCompleteData,
 }: Props) {
-  const [showAll, setShowAll] = useState(false);
   const notes = useDiseaseNotes();
 
   const sortedCards = sortHistoryFirst(viewModel.candidates.filter((candidate) => candidate.code !== 'R69'));
   const selectionKey = sortedCards.filter((candidate) => candidate.isSelected).map((candidate) => candidate.id).join('|');
   const { primary, rest } = splitPrimary(sortedCards);
-  // Cannot-miss cards never count against the cap and are never hidden behind "Lainnya".
+  // Cannot-miss cards never count against the cap: every one stands in MUST NOT MISS.
   const mustNotMiss = rest.filter(hasCannotMissTag);
-  const cappable = rest.filter((card) => !hasCannotMissTag(card));
-  const differentialCap = Math.max(MAX_CARDS - (primary && !hasCannotMissTag(primary) ? 1 : 0), 0);
-  const moreCards = cappable.slice(differentialCap);
-  const differentials = [...cappable.slice(0, differentialCap), ...(showAll ? moreCards : [])];
+  const differentials = rest.filter((card) => !hasCannotMissTag(card)).slice(0, MAX_BANDING);
   const visibleNotice = getVisibleErrorMessage(errorMessage);
   const card = (candidate: DiagnosisCandidateView, index: number, isMustNotMiss = false) => (
     <Card
@@ -415,7 +411,7 @@ export function DiagnosisStep({
             </Section>
           ) : null}
 
-          {differentials.length > 0 || moreCards.length > 0 ? (
+          {differentials.length > 0 ? (
             // "Diagnosis banding N" on each card names this part; a section title would repeat it.
             <Section divider={primary !== null || mustNotMiss.length > 0}>
               <div className="diagnosis-list">
@@ -428,18 +424,6 @@ export function DiagnosisStep({
                   </div>
                 ))}
               </div>
-              {!showAll && moreCards.length > 0 ? (
-                <div className="flex">
-                  <button
-                    type="button"
-                    className="diagnosis-text-button inline-flex items-center gap-1"
-                    onClick={() => setShowAll(true)}
-                  >
-                    {`Lainnya (${moreCards.length})`}
-                    <span aria-hidden="true">⌄</span>
-                  </button>
-                </div>
-              ) : null}
             </Section>
           ) : null}
 

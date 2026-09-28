@@ -56,7 +56,7 @@ describe('formatShortDate', () => {
 });
 
 describe('DiagnosisStep', () => {
-  it('shows the history card as the proposed primary first, then two numbered banding cards, and the rest behind Lainnya', () => {
+  it('shows the history card as the proposed primary first, then two numbered banding cards and no more', () => {
     const cards = [
       candidate({ id: '1-I10', rank: 1, code: 'I10', name: 'Hipertensi', displayLabel: 'I10 - Hipertensi', history: { label: 'Kronis', count: 3, visitsConsidered: 5, lastSeen: '2026-08-12', engineAgrees: true, engineSource: 'mira' } }),
       candidate({}),
@@ -78,10 +78,9 @@ describe('DiagnosisStep', () => {
     // The recurrence rule is one tap away, as the Riwayat entry of the reasons.
     openReasons(shown[0]);
     expect(within(cardOf(shown[0])).getByText('3× dalam 12 bulan · terakhir 12 Agu 2026')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Lainnya (1)' }));
-    expect(screen.getAllByTestId('dx-flow-card')).toHaveLength(4);
-    expect(differentialLabels()).toEqual(['Diagnosis banding 1', 'Diagnosis banding 2', 'Diagnosis banding 3']);
-    expect(titles()[0]).toBe('I10 - Hipertensi');
+    // Two banding cards at most (Chief, 2026-09-28): the fourth card is not shown, and nothing hides it behind a button.
+    expect(titles()).not.toContain('R51 - Nyeri kepala');
+    expect(screen.queryByRole('button', { name: /^Lainnya/ })).toBeNull();
   });
 
   it('moves a tapped banding card into the primary slot and the former proposal back into the banding list', () => {
@@ -123,9 +122,7 @@ describe('DiagnosisStep', () => {
     // The MUST NOT MISS label is the only cannot-miss marker: no chip and no do-not-miss line repeats it (Chief, 2026-09-28).
     expect(within(screen.getAllByTestId('dx-flow-card')[1]).queryByText('Jangan terlewat')).toBeNull();
     expect(screen.queryByText(/^Jangan terlewat:/)).toBeNull();
-    fireEvent.click(screen.getByRole('button', { name: 'Lainnya (2)' }));
-    expect(titles()).toEqual(['I10 - Hipertensi', 'I16 - Krisis hipertensi', 'G44.2 - Sakit kepala tegang', 'G43.9 - Migren', 'R51 - Nyeri kepala', 'J01.9 - Sinusitis akut']);
-    expect(screen.queryByText(/^Jangan terlewat:/)).toBeNull();
+    expect(screen.queryByRole('button', { name: /^Lainnya/ })).toBeNull();
   });
 
   it('keeps a history card as the proposed primary even when its merged engine tag is cannot-miss', () => {
@@ -137,8 +134,8 @@ describe('DiagnosisStep', () => {
     ];
     render(<DiagnosisStep viewModel={vm(cards)} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
     const shown = screen.getAllByTestId('dx-flow-card');
-    // Exempt from the cap too: the three engine cards stay visible as banding after the proposal.
-    expect(shown).toHaveLength(4);
+    // The history card is the proposal; two of the three engine cards follow as banding.
+    expect(shown).toHaveLength(3);
     expect(primaryCard().querySelector('.diagnosis-row-title')?.textContent).toBe('I16 - Krisis hipertensi');
     expect(within(primaryCard()).getByText('Kronis')).toHaveClass('diagnosis-rank-label');
     openReasons(primaryCard());
@@ -148,7 +145,7 @@ describe('DiagnosisStep', () => {
     expect(screen.queryByRole('button', { name: /^Lainnya/ })).toBeNull();
   });
 
-  it('never hides a history card tagged cannot-miss behind "Lainnya": it stands in MUST NOT MISS', () => {
+  it('puts a history card tagged cannot-miss in MUST NOT MISS, outside the two-card banding cap', () => {
     const hist = (code: string, name: string, tag: string) =>
       candidate({ id: `h-${code}`, code, name, displayLabel: `${code} - ${name}${tag}`, history: { label: 'Berulang', count: 2, visitsConsidered: 5, lastSeen: '2026-08-12', engineAgrees: false, engineSource: null } });
     const cards = [
@@ -163,8 +160,7 @@ describe('DiagnosisStep', () => {
     // The first history card is the proposal; the other history cards lead the banding list.
     expect(titles()).toEqual(['J06.9 - ISPA', 'I16 - Krisis hipertensi', 'K29.7 - Gastritis', 'M54.5 - Nyeri punggung bawah']);
     expect(mustNotMissTitles()).toEqual(['I16 - Krisis hipertensi']);
-    fireEvent.click(screen.getByRole('button', { name: 'Lainnya (2)' }));
-    expect(titles()).toEqual(['J06.9 - ISPA', 'I16 - Krisis hipertensi', 'K29.7 - Gastritis', 'M54.5 - Nyeri punggung bawah', 'G44.2 - Sakit kepala tegang', 'G43.9 - Migren']);
+    expect(screen.queryByRole('button', { name: /^Lainnya/ })).toBeNull();
   });
 
   it('selects on tap, marks aria-pressed, and opens the reasons only from "Lihat alasan"', () => {
