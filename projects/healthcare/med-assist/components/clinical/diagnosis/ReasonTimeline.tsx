@@ -4,16 +4,16 @@ import type { ReactNode } from 'react';
 import { cleanClinicalSummary, formatClinicalText } from './diagnosisDisplayUtils';
 
 /**
- * The reasons behind a diagnosis card, opened from "Tap here", drawn as the "Activity timeline"
+ * The reasons behind a diagnosis card, opened from "Lihat alasan", drawn as the "Activity timeline"
  * on lab.xevrion.dev (Chief's reference): one entry per reason group, an icon node on the left,
- * a hairline joining the nodes, the group name with its count, then the items.
+ * a hairline joining the nodes, the group name, then the items.
  *
  * Motion: the panel opens on a spring with no bounce (height and opacity), the entries follow
  * one after another, each settling from a 4 px blur and a 6 px lift, and each connecting line
  * grows down to the next node once its entry has landed. Closing folds the panel on a shorter
  * spring. Reduced motion keeps only the fades.
  */
-export type ReasonGroup = { key: string; title: string; items: string[]; hideCount?: boolean };
+export type ReasonGroup = { key: string; title: string; items: string[] };
 
 const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 const STAGGER = 0.07;
@@ -91,10 +91,8 @@ export function ReasonTimeline({ groups, footer }: { groups: ReasonGroup[]; foot
               </svg>
             </span>
             <div className="min-w-0 flex-1 pt-1">
-              <div className="flex items-baseline justify-between gap-3">
-                <span className="diagnosis-list-title">{group.title}</span>
-                {group.hideCount ? null : <span className="ttv-label">{group.items.length}</span>}
-              </div>
+              {/* No count: the card's tally row, just above, already carries it. */}
+              <div className="diagnosis-list-title">{group.title}</div>
               <ul className="mt-1 flex flex-col gap-0.5">
                 {group.items.map((item) => (
                   <li key={item} className="diagnosis-row-meta">

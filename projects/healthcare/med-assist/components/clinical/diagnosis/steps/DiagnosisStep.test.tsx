@@ -67,13 +67,14 @@ describe('DiagnosisStep', () => {
     expect(screen.getByRole('heading', { name: 'Diagnosis' })).toBeInTheDocument();
     const shown = screen.getAllByTestId('dx-flow-card');
     expect(shown).toHaveLength(3);
-    // The proposed primary comes first; the banding section follows with numbered cards.
+    // The proposed primary comes first; the numbered banding cards follow, with no section title
+    // repeating "Diagnosis banding" above them.
     expect(screen.getByTestId('dx-flow-primary-label')).toHaveTextContent('Usulan diagnosis utama');
     expect(primaryCard()).toBe(shown[0]);
     expect(within(shown[0]).getByText('Kronis')).toBeInTheDocument();
-    expect(screen.getByTestId('dx-flow-banding-label')).toHaveTextContent('Diagnosis banding');
     expect(differentialLabels()).toEqual(['Diagnosis banding 1', 'Diagnosis banding 2']);
-    expect(shown[0].compareDocumentPosition(screen.getByTestId('dx-flow-banding-label')) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(shown[0].compareDocumentPosition(screen.getAllByTestId('dx-flow-differential-label')[0]) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(screen.queryByText('Diagnosis banding')).toBeNull();
     // The recurrence rule is one tap away, as the Riwayat entry of the reasons.
     openReasons(shown[0]);
     expect(within(cardOf(shown[0])).getByText('3× dalam 12 bulan · terakhir 12 Agu 2026')).toBeInTheDocument();
@@ -102,7 +103,7 @@ describe('DiagnosisStep', () => {
     expect(primaryCard()).toHaveAttribute('aria-pressed', 'true');
   });
 
-  it('puts a MIRA cannot-miss card in MUST NOT MISS, outside the three-card cap, with the do-not-miss lines of hidden cards', () => {
+  it('puts a MIRA cannot-miss card in MUST NOT MISS, outside the three-card cap, and repeats no "Jangan terlewat:" line', () => {
     const mira = (code: string, name: string, tag: string) =>
       candidate({ id: `m-${code}`, code, name, displayLabel: `${code} - ${name} · ${tag}` });
     const cards = [
@@ -119,14 +120,12 @@ describe('DiagnosisStep', () => {
     expect(screen.getByTestId('dx-flow-mnm-label')).toHaveTextContent('Must not miss');
     expect(mustNotMissTitles()).toEqual(['I16 - Krisis hipertensi']);
     expect(differentialLabels()).toEqual(['Diagnosis banding 1', 'Diagnosis banding 2']);
-    expect(within(screen.getAllByTestId('dx-flow-card')[1]).getByText('Jangan terlewat')).toHaveClass('diagnosis-rank-label');
-    // The cannot-miss card is shown, so its do-not-miss line is not repeated; the hidden card's is, in MUST NOT MISS.
-    expect(screen.queryByText('Jangan terlewat: Krisis hipertensi (I16)')).toBeNull();
-    const hiddenLine = screen.getByText('Jangan terlewat: Sinusitis komplikasi (J01.9)');
-    expect(screen.getByTestId('dx-flow-mnm-label').parentElement).toContainElement(hiddenLine);
+    // The MUST NOT MISS label is the only cannot-miss marker: no chip and no do-not-miss line repeats it (Chief, 2026-09-28).
+    expect(within(screen.getAllByTestId('dx-flow-card')[1]).queryByText('Jangan terlewat')).toBeNull();
+    expect(screen.queryByText(/^Jangan terlewat:/)).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Lainnya (2)' }));
     expect(titles()).toEqual(['I10 - Hipertensi', 'I16 - Krisis hipertensi', 'G44.2 - Sakit kepala tegang', 'G43.9 - Migren', 'R51 - Nyeri kepala', 'J01.9 - Sinusitis akut']);
-    expect(screen.queryByText('Jangan terlewat: Sinusitis komplikasi (J01.9)')).toBeNull();
+    expect(screen.queryByText(/^Jangan terlewat:/)).toBeNull();
   });
 
   it('keeps a history card as the proposed primary even when its merged engine tag is cannot-miss', () => {
@@ -198,10 +197,10 @@ describe('DiagnosisStep', () => {
     expect(within(list).getByText('4× dalam 12 bulan · terakhir 10 Sep 2026')).toBeInTheDocument();
   });
 
-  it('lists cannot-miss items uncapped and shows the history-only message when the engine had nothing', () => {
+  it('shows the history-only message when the engine had nothing, and no "Jangan terlewat:" line', () => {
     const cards = [candidate({ id: '0-I10', rank: 1, code: 'I10', name: 'Hipertensi', displayLabel: 'I10 - Hipertensi', history: { label: 'Kronis', count: 2, visitsConsidered: 3, lastSeen: '2026-08-12', engineAgrees: false, engineSource: null } })];
     render(<DiagnosisStep viewModel={vm(cards)} phase="ready" errorMessage="" recurrentOnlyMessage="Data hari ini belum cukup untuk engine; riwayat menunjukkan pola berikut." showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
-    expect(screen.getByText('Jangan terlewat: Krisis hipertensi (I16)')).toBeInTheDocument();
+    expect(screen.queryByText(/^Jangan terlewat:/)).toBeNull();
     expect(screen.getByText('Data hari ini belum cukup untuk engine; riwayat menunjukkan pola berikut.')).toBeInTheDocument();
     openReasons(primaryCard());
     expect(screen.getByText('2× dalam 12 bulan · terakhir 12 Agu 2026')).toBeInTheDocument();
@@ -218,7 +217,7 @@ describe('DiagnosisStep', () => {
       expect(explanation).toHaveClass('line-clamp-3');
       const title = within(card).getByText('I50 - Heart failure');
       const tally = within(card).getByTestId('dx-flow-tally');
-      expect([...tally.children].map((el) => el.textContent)).toEqual(['✓ Mendukung 4', '− Menentang 1', '? Belum diketahui 2']);
+      expect([...tally.children].map((el) => el.textContent)).toEqual(['✓ Mendukung 4', '− Menentang 1', '? Data kurang 2']);
       const toggle = within(card).getByRole('button', { name: 'Lihat alasan' });
       expect(title.compareDocumentPosition(explanation) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
       expect(explanation.compareDocumentPosition(tally) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
@@ -250,9 +249,11 @@ describe('DiagnosisStep', () => {
       await within(cardOf(mnm)).findByText('Peradangan peritoneum.');
       openReasons(mnm, 'Mengapa perlu dipertimbangkan');
       const list = within(cardOf(mnm)).getByRole('list', { name: 'Alasan' });
-      expect([...list.querySelectorAll('.diagnosis-list-title')].map((el) => el.textContent)).toEqual(['Mengapa perlu dipertimbangkan', 'Data kurang']);
+      // The groups answer the button's question without repeating it.
+      expect([...list.querySelectorAll('.diagnosis-list-title')].map((el) => el.textContent)).toEqual(['Temuan yang relevan', 'Bila terlewat', 'Data kurang']);
       expect(within(list).getByText('Nyeri perut kanan bawah')).toBeInTheDocument();
-      expect(within(list).getByText('Bila terlewat: Sepsis, Syok')).toBeInTheDocument();
+      expect(within(list).getByText('Sepsis')).toBeInTheDocument();
+      expect(within(list).getByText('Syok')).toBeInTheDocument();
       expect(within(list).getByText('Defans muskular')).toBeInTheDocument();
       fireEvent.click(within(cardOf(mnm)).getByRole('button', { name: 'Apa yang perlu diperiksa →' }));
       expect(h.onCompleteData).toHaveBeenCalledTimes(1);
@@ -363,13 +364,13 @@ describe('DiagnosisStep', () => {
     expect(loadingSection).not.toHaveAttribute('aria-busy');
   });
 
-  it('marks a MIRA card "MIRA" and a cannot-miss card "Jangan terlewat" in the card chip', () => {
+  it('marks a MIRA card "MIRA" in the card chip and gives a cannot-miss card no chip under the MUST NOT MISS label', () => {
     render(<DiagnosisStep viewModel={vm([candidate({ id: '3-K65.0', rank: 3, code: 'K65.0', name: 'Acute peritonitis', displayLabel: 'K65.0 - Acute peritonitis · MIRA · jangan terlewat' }), candidate({ id: '1-K35.8', rank: 1, code: 'K35.8', name: 'Acute appendicitis', displayLabel: 'K35.8 - Acute appendicitis · MIRA' })])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
     // The MIRA card is the proposed primary (first); the cannot-miss card stands in MUST NOT MISS.
     const [mira, cannotMiss] = screen.getAllByTestId('dx-flow-card');
     expect(mustNotMissTitles()).toEqual(['K65.0 - Acute peritonitis']);
     expect(within(cannotMiss).getByText('K65.0 - Acute peritonitis')).toHaveClass('diagnosis-row-title');
-    expect(within(cannotMiss).getByText('Jangan terlewat')).toHaveClass('diagnosis-rank-label');
+    expect(cannotMiss.querySelector('.diagnosis-rank-label')).toBeNull();
     expect(within(mira).getByText('MIRA')).toHaveClass('diagnosis-rank-label');
   });
 

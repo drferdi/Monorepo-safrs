@@ -7,11 +7,11 @@ const groups = [
   { key: 'supports', title: 'Mendukung', items: ['Batuk', 'Demam'] },
   { key: 'against', title: 'Menentang', items: [] },
   { key: 'missing', title: 'Data kurang', items: ['Auskultasi'] },
-  { key: 'review', title: 'Catatan', items: ['Review faring'], hideCount: true },
+  { key: 'review', title: 'Catatan', items: ['Review faring'] },
 ];
 
 describe('ReasonTimeline', () => {
-  it('renders one timeline entry per non-empty group, in order, with its count and items', () => {
+  it('renders one timeline entry per non-empty group, in order, with its items and no count', () => {
     render(<ReasonTimeline groups={groups} />);
     const list = screen.getByRole('list', { name: 'Alasan' });
     const entries = within(list).getAllByRole('listitem').filter((item) => item.parentElement === list);
@@ -20,12 +20,11 @@ describe('ReasonTimeline', () => {
       'Data kurang',
       'Catatan',
     ]);
-    expect(entries[0].querySelector('.ttv-label')).toHaveTextContent('2');
     expect(within(entries[0]).getByText('Batuk')).toHaveClass('diagnosis-row-meta');
     expect(within(entries[0]).getByText('Demam')).toBeInTheDocument();
     expect(within(entries[1]).getByText('Auskultasi')).toBeInTheDocument();
-    // A group can hide its count (Catatan, Riwayat).
-    expect(entries[2].querySelector('.ttv-label')).toBeNull();
+    // The card's tally row carries the counts; the timeline does not repeat them.
+    entries.forEach((entry) => expect(entry.querySelector('.ttv-label')).toBeNull());
   });
 
   it('gives every entry an icon node and joins the entries with a line, none after the last', () => {

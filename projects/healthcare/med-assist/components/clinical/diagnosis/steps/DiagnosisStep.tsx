@@ -15,7 +15,6 @@ import type { DiagnosisCandidateView, DiagnosisPageViewModel } from '../diagnosi
 
 /** Cards on the page: the primary plus the differentials; the rest waits behind "Lainnya". */
 const MAX_CARDS = 3;
-const ICD_IN_TEXT = /\(([A-Z]\d{2}(?:\.\d+)?)\)/i;
 /** `windowMonths` default in lib/clinical/recurrent-diagnosis.ts; shown so the rule is visible. */
 const HISTORY_WINDOW_MONTHS = 12;
 
@@ -74,9 +73,11 @@ function hasCannotMissTag(card: DiagnosisCandidateView): boolean {
   return engineTagOf(card) === CANNOT_MISS_TAG;
 }
 
+// A cannot-miss card stands under the MUST NOT MISS label, which already says it; its chip
+// would repeat that (Chief, 2026-09-28), so only a history label can show there.
 function chipFor(card: DiagnosisCandidateView): string | null {
   if (card.history) return card.history.label;
-  if (hasCannotMissTag(card)) return 'Jangan terlewat';
+  if (hasCannotMissTag(card)) return null;
   return engineTagOf(card);
 }
 
@@ -114,19 +115,22 @@ function List({
 function reasonGroups(card: DiagnosisCandidateView): ReasonGroup[] {
   const rule = historyLine(card);
   return [
-    ...(rule ? [{ key: 'history', title: 'Riwayat', items: [rule], hideCount: true }] : []),
+    ...(rule ? [{ key: 'history', title: 'Riwayat', items: [rule] }] : []),
     { key: 'supports', title: 'Mendukung', items: card.supports },
     { key: 'against', title: 'Menentang', items: card.against },
     { key: 'missing', title: 'Data kurang', items: card.missing },
-    { key: 'review', title: 'Catatan', items: card.review, hideCount: true },
+    { key: 'review', title: 'Catatan', items: card.review },
   ];
 }
 
-/** Why a MUST NOT MISS card matters: the findings that point to it, what missing it risks, and what is still unknown. */
+/**
+ * Why a MUST NOT MISS card matters, answering its "Mengapa perlu dipertimbangkan" button without
+ * repeating it: the findings that point to it, what missing it risks, and what is still unknown.
+ */
 function mustNotMissGroups(card: DiagnosisCandidateView, note: DiseaseNote | null): ReasonGroup[] {
-  const risk = note && note.complications.length > 0 ? [`Bila terlewat: ${note.complications.join(', ')}`] : [];
   return [
-    { key: 'why', title: 'Mengapa perlu dipertimbangkan', items: [...card.supports, ...risk], hideCount: true },
+    { key: 'supports', title: 'Temuan yang relevan', items: card.supports },
+    { key: 'why', title: 'Bila terlewat', items: note?.complications ?? [] },
     { key: 'missing', title: 'Data kurang', items: card.missing },
   ];
 }
@@ -197,7 +201,7 @@ function Card({
         <div className="diagnosis-row-meta flex flex-wrap gap-x-3" data-testid="dx-flow-tally">
           <span>{`✓ Mendukung ${card.supports.length}`}</span>
           <span>{`− Menentang ${card.against.length}`}</span>
-          <span>{`? Belum diketahui ${card.missing.length}`}</span>
+          <span>{`? Data kurang ${card.missing.length}`}</span>
         </div>
       </div>
       <div className="flex">
@@ -237,26 +241,30 @@ function Card({
   );
 }
 
-/** The engine's do-not-miss reasons, minus those whose ICD code already has a card on the page. */
-function visibleDoNotMissItems(doNotMiss: string[], cardCodes: Set<string>): string[] {
-  return doNotMiss
-    .map(cleanClinicalSummary)
-    .filter(Boolean)
-    .filter((item) => {
-      const match = item.match(ICD_IN_TEXT);
-      return !match || !cardCodes.has(match[1].toUpperCase());
-    });
-}
-
-/** One titled part of the Diagnosis step, after a hairline when another part precedes it. */
-function Section({ label, testId, divider, children }: { label: string; testId: string; divider: boolean; children: ReactNode }) {
+/**
+ * One part of the Diagnosis step, after a hairline when another part precedes it. A part whose
+ * items carry their own labels (the numbered banding cards) takes no title of its own.
+ */
+function Section({
+  label,
+  testId,
+  divider,
+  children,
+}: {
+  label?: string;
+  testId?: string;
+  divider: boolean;
+  children: ReactNode;
+}) {
   return (
     <>
       {divider ? <div className="console-divider" aria-hidden="true" /> : null}
       <div className="flex flex-col gap-2">
-        <span className="ttv-label" data-testid={testId}>
-          {label}
-        </span>
+        {label ? (
+          <span className="ttv-label" data-testid={testId}>
+            {label}
+          </span>
+        ) : null}
         {children}
       </div>
     </>
@@ -309,10 +317,6 @@ export function DiagnosisStep({
   const differentialCap = Math.max(MAX_CARDS - (primary && !hasCannotMissTag(primary) ? 1 : 0), 0);
   const moreCards = cappable.slice(differentialCap);
   const differentials = [...cappable.slice(0, differentialCap), ...(showAll ? moreCards : [])];
-  const cardCodes = new Set(
-    [...(primary ? [primary] : []), ...mustNotMiss, ...differentials].map((candidate) => candidate.code.toUpperCase())
-  );
-  const doNotMissItems = visibleDoNotMissItems(viewModel.evidence.doNotMiss, cardCodes);
   const visibleNotice = getVisibleErrorMessage(errorMessage);
   const card = (candidate: DiagnosisCandidateView, index: number, isMustNotMiss = false) => (
     <Card
@@ -388,27 +392,20 @@ export function DiagnosisStep({
             </div>
           ) : null}
 
-          {mustNotMiss.length > 0 || doNotMissItems.length > 0 ? (
+          {/* The MUST NOT MISS label is the only cannot-miss marker; these cards carry no cannot-miss chip. */}
+          {mustNotMiss.length > 0 ? (
             <Section label="Must not miss" testId="dx-flow-mnm-label" divider={primary !== null}>
-              {mustNotMiss.length > 0 ? (
-                <div className="diagnosis-list">
-                  {mustNotMiss.map((candidate, index) => (
-                    <div key={candidate.id}>{card(candidate, index + 1, true)}</div>
-                  ))}
-                </div>
-              ) : null}
-              {doNotMissItems.map((item) => (
-                <p key={item} className="text-small ct-v2-danger-text">{`Jangan terlewat: ${item}`}</p>
-              ))}
+              <div className="diagnosis-list">
+                {mustNotMiss.map((candidate, index) => (
+                  <div key={candidate.id}>{card(candidate, index + 1, true)}</div>
+                ))}
+              </div>
             </Section>
           ) : null}
 
           {differentials.length > 0 || moreCards.length > 0 ? (
-            <Section
-              label="Diagnosis banding"
-              testId="dx-flow-banding-label"
-              divider={primary !== null || mustNotMiss.length > 0 || doNotMissItems.length > 0}
-            >
+            // "Diagnosis banding N" on each card names this part; a section title would repeat it.
+            <Section divider={primary !== null || mustNotMiss.length > 0}>
               <div className="diagnosis-list">
                 {differentials.map((candidate, index) => (
                   <div key={candidate.id} className="flex flex-col gap-1">

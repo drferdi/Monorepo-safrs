@@ -877,6 +877,11 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     return found;
   }
 
+  // A cannot-miss card is marked by where it stands: under the MUST NOT MISS label.
+  function isMustNotMiss(title: RegExp): boolean {
+    return Boolean(screen.getByTestId('dx-flow-mnm-label').parentElement?.contains(card(title)));
+  }
+
   function renderWithSuggestions(data: Record<string, unknown>) {
     const base = mockSendMessage.getMockImplementation();
     mockSendMessage.mockImplementation(async (type: string, payload?: Record<string, unknown>) =>
@@ -936,7 +941,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
       expect(within(card(/^K35\.8 - /)).getByText('MIRA')).toBeTruthy();
     });
     expect(within(card(/^Z99\.9 - /)).getByText('MIRA')).toBeTruthy();
-    expect(within(card(/^K65\.0 - /)).getByText('Jangan terlewat')).toBeTruthy();
+    expect(isMustNotMiss(/^K65\.0 - /)).toBe(true);
   });
 
   it('shows only MIRA\'s first next best action as the next best step', async () => {
@@ -1144,7 +1149,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
 
       fireStorageChange({ key: PREFETCH_KEY, at: 't' });
       await waitFor(() =>
-        expect(within(card(/^K65\.0 - /)).getByText('Jangan terlewat')).toBeTruthy()
+        expect(isMustNotMiss(/^K65\.0 - /)).toBe(true)
       );
       expect(getSuggestionsCalls()).toBe(2);
       expect(listeners).toHaveLength(0);
@@ -1165,7 +1170,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
       };
       renderPage();
       await waitFor(() =>
-        expect(within(card(/^K65\.0 - /)).getByText('Jangan terlewat')).toBeTruthy()
+        expect(isMustNotMiss(/^K65\.0 - /)).toBe(true)
       );
       expect(getSuggestionsCalls()).toBe(2);
       expect(listeners).toHaveLength(0);
