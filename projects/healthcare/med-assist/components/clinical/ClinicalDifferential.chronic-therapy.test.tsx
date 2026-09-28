@@ -158,7 +158,9 @@ describe('ClinicalDifferential chronic therapy context', () => {
     // memilih aktif sebelum farmakoterapi diambil.
     const selectPrimary = (await screen.findByText('I10 - Hipertensi esensial')).closest(
       '[data-testid="dx-flow-card"]'
-    ) as HTMLElement;
+    );
+    expect(selectPrimary).not.toBeNull();
+    if (!selectPrimary) throw new Error('diagnosis card not found');
     fireEvent.click(selectPrimary);
 
     await waitFor(() => {

@@ -4,6 +4,18 @@ import { describe, expect, it, vi } from 'vitest';
 import { TherapyStep, therapySummary } from './TherapyStep';
 import type { DiagnosisPageViewModel } from '../diagnosisViewModel';
 
+function noMedicationVm(): DiagnosisPageViewModel {
+  const base = vm();
+  return {
+    ...base,
+    therapy: {
+      ...base.therapy,
+      selectedMedicationCount: 0,
+      groups: base.therapy.groups.map((group) => ({ ...group, medications: group.medications.map((medication) => ({ ...medication, isSelected: false })) })),
+    },
+  };
+}
+
 function vm(): DiagnosisPageViewModel {
   const med = (key: string, name: string, isSelected: boolean, sourceLabel = 'PROPOSAL') => ({ key, name, doseLine: '1x1 | Sesudah makan | 30 hari', rationale: '', safetyLabel: 'safe', contraindications: [], isSelected, sourceLabel });
   return {
@@ -17,7 +29,7 @@ function vm(): DiagnosisPageViewModel {
   };
 }
 
-const handlers = () => ({ onRemoveDiagnosis: vi.fn(), onSelectAllMedications: vi.fn(), onClearMedications: vi.fn(), onToggleManualMedicationInput: vi.fn(), onManualMedicationDraftChange: vi.fn(), onAddManualMedication: vi.fn(), onToggleMedication: vi.fn(), onRemoveManualMedication: vi.fn(), onSkip: vi.fn() });
+const handlers = () => ({ onRemoveDiagnosis: vi.fn(), onSelectAllMedications: vi.fn(), onClearMedications: vi.fn(), onToggleManualMedicationInput: vi.fn(), onManualMedicationDraftChange: vi.fn(), onAddManualMedication: vi.fn(), onToggleMedication: vi.fn(), onRemoveManualMedication: vi.fn(), onConfirm: vi.fn(), onSkip: vi.fn() });
 
 describe('TherapyStep', () => {
   it('asks "Terapi apa?" and shows one row per medication with one status word', () => {
@@ -43,10 +55,21 @@ describe('TherapyStep', () => {
     expect(therapySummary(vm())).toBe('Amlodipin 10 mg');
   });
 
-  it('continues without medication from "Lanjut tanpa obat"', () => {
+  it('continues without medication from "Lanjut tanpa obat" when none is selected, and offers no "Lanjut"', () => {
     const h = handlers();
-    render(<TherapyStep viewModel={vm()} showManualMedicationInput={false} manualMedicationDraft={{ nama_obat: '', dosis: '', aturan_pakai: 'Sesudah makan', durasi: '', rationale: '' }} manualMedicationOptions={['Sesudah makan']} {...h} />);
+    render(<TherapyStep viewModel={noMedicationVm()} showManualMedicationInput={false} manualMedicationDraft={{ nama_obat: '', dosis: '', aturan_pakai: 'Sesudah makan', durasi: '', rationale: '' }} manualMedicationOptions={['Sesudah makan']} {...h} />);
+    expect(screen.queryByRole('button', { name: 'Lanjut' })).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Lanjut tanpa obat' }));
     expect(h.onSkip).toHaveBeenCalledTimes(1);
+    expect(h.onConfirm).not.toHaveBeenCalled();
+  });
+
+  it('continues from "Lanjut" once a medication is selected, and offers no "Lanjut tanpa obat"', () => {
+    const h = handlers();
+    render(<TherapyStep viewModel={vm()} showManualMedicationInput={false} manualMedicationDraft={{ nama_obat: '', dosis: '', aturan_pakai: 'Sesudah makan', durasi: '', rationale: '' }} manualMedicationOptions={['Sesudah makan']} {...h} />);
+    expect(screen.queryByRole('button', { name: 'Lanjut tanpa obat' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Lanjut' }));
+    expect(h.onConfirm).toHaveBeenCalledTimes(1);
+    expect(h.onSkip).not.toHaveBeenCalled();
   });
 });

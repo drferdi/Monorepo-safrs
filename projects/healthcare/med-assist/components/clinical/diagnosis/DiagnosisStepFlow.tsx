@@ -26,9 +26,14 @@ function getVisibleExamItems(items: string[]): string[] {
 export function DiagnosisStepFlow(props: DiagnosisPageProps) {
   const { viewModel, phase, triage } = props;
   const [therapySkipped, setTherapySkipped] = useState(false);
-  const steps = resolveDiagnosisSteps(phase, viewModel).map((step) =>
-    step.key === 'therapy' && therapySkipped ? { ...step, done: true } : step
-  );
+  const [therapyConfirmed, setTherapyConfirmed] = useState(false);
+  // Temuan is the doctor's own input, so it is a receipt even while the engine is loading.
+  // Terapi advances only on an explicit "Lanjut" or "Lanjut tanpa obat", never on a tap.
+  const steps = resolveDiagnosisSteps(phase, viewModel).map((step) => {
+    if (step.key === 'finding') return { ...step, done: true };
+    if (step.key === 'therapy') return { ...step, done: therapyConfirmed || therapySkipped };
+    return step;
+  });
   const [reopened, setReopened] = useState<DiagnosisStepKey | null>(null);
   const active = resolveActiveStep(steps, reopened);
   const safetyItems = getVisibleSafetyItems(viewModel.evidence.redFlags, viewModel.evidence.doNotMiss);
@@ -41,28 +46,27 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
   const summaries: Record<DiagnosisStepKey, string> = {
     finding: findingSummary(signals),
     diagnosis: diagnosisSummary(viewModel),
-    therapy:
-      therapySkipped && viewModel.therapy.selectedMedicationCount === 0
-        ? 'tanpa obat'
-        : therapySummary(viewModel),
+    therapy: therapySkipped ? 'tanpa obat' : therapySummary(viewModel),
     rme: rmeSummary(viewModel),
   };
 
   // A reopened step closes itself when the flow moves past it (e.g. the doctor picked a new diagnosis).
   useEffect(() => {
     setReopened(null);
-  }, [
-    viewModel.therapy.selectedDiagnosisCount,
-    viewModel.therapy.selectedMedicationCount,
-    viewModel.transfer.state,
-  ]);
+  }, [viewModel.therapy.selectedDiagnosisCount, viewModel.transfer.state]);
 
-  // "Lanjut tanpa obat" holds only until a medication is chosen or the diagnosis basis changes.
+  // The Terapi decision holds only for the diagnosis basis it was made on. "Lanjut tanpa obat"
+  // ends when a medication is chosen, "Lanjut" when the last medication is removed.
   const selectedDiagnosisKeys = viewModel.selectedDiagnoses.map((diagnosis) => diagnosis.key).join('|');
   const medicationChosen = viewModel.therapy.selectedMedicationCount > 0;
   useEffect(() => {
     setTherapySkipped(false);
-  }, [selectedDiagnosisKeys, medicationChosen]);
+    setTherapyConfirmed(false);
+  }, [selectedDiagnosisKeys]);
+  useEffect(() => {
+    if (medicationChosen) setTherapySkipped(false);
+    else setTherapyConfirmed(false);
+  }, [medicationChosen]);
 
   const activeIndex = steps.find((s) => s.key === active)?.index ?? 2;
   return (
@@ -97,6 +101,10 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
       {active === 'therapy' ? (
         <TherapyStep
           {...props}
+          onConfirm={() => {
+            setTherapyConfirmed(true);
+            setReopened(null);
+          }}
           onSkip={() => {
             setTherapySkipped(true);
             setReopened(null);

@@ -88,44 +88,45 @@ function Card({ card, onToggle }: { card: DiagnosisCandidateView; onToggle: (id:
     ''
   );
   const chip = chipFor(card);
+  // The select control and the "alasan" button are siblings: a role="button" element's
+  // children are presentational, so a nested button would be unreachable for assistive tech.
   return (
-    <div
-      className="dx-flow-card"
-      data-testid="dx-flow-card"
-      role="button"
-      tabIndex={0}
-      aria-pressed={card.isSelected}
-      aria-disabled={card.isSelectionBlocked || undefined}
-      onClick={() => {
-        if (card.isSelectionBlocked) return;
-        onToggle(card.id);
-      }}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
+    <div className="dx-flow-card">
+      <div
+        className="dx-flow-card__select"
+        data-testid="dx-flow-card"
+        role="button"
+        tabIndex={0}
+        aria-pressed={card.isSelected}
+        aria-disabled={card.isSelectionBlocked || undefined}
+        onClick={() => {
           if (card.isSelectionBlocked) return;
           onToggle(card.id);
-        }
-      }}
-    >
-      <div className="dx-flow-card__head">
-        <p className="dx-flow-card__title">{title}</p>
-        {chip ? <span className="dx-flow-chip">{chip}</span> : null}
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            if (card.isSelectionBlocked) return;
+            onToggle(card.id);
+          }
+        }}
+      >
+        <div className="dx-flow-card__head">
+          <p className="dx-flow-card__title">{title}</p>
+          {chip ? <span className="dx-flow-chip">{chip}</span> : null}
+        </div>
+        <p className="dx-flow-muted">{historyLine(card) ?? tallyLine(card)}</p>
       </div>
-      <p className="dx-flow-muted">{historyLine(card) ?? tallyLine(card)}</p>
       <button
         type="button"
         className="dx-flow-link"
         aria-expanded={open}
-        onClick={(e) => {
-          e.stopPropagation();
-          setOpen((v) => !v);
-        }}
+        onClick={() => setOpen((v) => !v)}
       >
         alasan
       </button>
       {open ? (
-        <div className="diagnosis-evidence-grid" onClick={(e) => e.stopPropagation()}>
+        <div className="diagnosis-evidence-grid">
           <List title="Mendukung" items={card.supports} />
           <List title="Yang tidak mendukung" items={card.against} />
           <List title="Data kurang" items={card.missing} />

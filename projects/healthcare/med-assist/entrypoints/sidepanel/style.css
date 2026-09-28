@@ -10202,3 +10202,9 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 @media (prefers-reduced-motion: reduce) {
   .dx-flow-receipt, .dx-flow-step { animation: none; }
 }
+
+/* ── Diagnosis page step flow, fix round 1 (2026-09-28) ── */
+.dx-flow-chip { white-space: nowrap; flex-shrink: 0; }
+.dx-flow .diagnosis-chip { font-size: 13px; font-weight: 400; background: none; box-shadow: none; }
+.dx-flow-card__select { display: flex; flex-direction: column; gap: 4px; cursor: pointer; }
+.dx-flow-card:has(> .dx-flow-card__select[aria-pressed='true']) { border-color: var(--sentra-safe); }

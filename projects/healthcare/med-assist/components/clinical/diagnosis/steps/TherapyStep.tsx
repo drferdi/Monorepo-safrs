@@ -16,7 +16,7 @@ type Props = Pick<
   | 'onAddManualMedication'
   | 'onToggleMedication'
   | 'onRemoveManualMedication'
-> & { onSkip: () => void };
+> & { onConfirm: () => void; onSkip: () => void };
 
 export function therapySummary(viewModel: DiagnosisPageViewModel): string {
   const names = viewModel.therapy.groups.flatMap((group) =>
@@ -158,6 +158,7 @@ export function TherapyStep({
   onAddManualMedication,
   onToggleMedication,
   onRemoveManualMedication,
+  onConfirm,
   onSkip,
 }: Props) {
   const chronicTherapySummary = viewModel.context.chronicTherapySummary;
@@ -205,9 +206,15 @@ export function TherapyStep({
         >
           Reset
         </button>
-        <button type="button" className="dx-flow-link" onClick={onSkip}>
-          Lanjut tanpa obat
-        </button>
+        {viewModel.therapy.selectedMedicationCount > 0 ? (
+          <button type="button" className="dx-flow-link" onClick={onConfirm}>
+            Lanjut
+          </button>
+        ) : (
+          <button type="button" className="dx-flow-link" onClick={onSkip}>
+            Lanjut tanpa obat
+          </button>
+        )}
       </div>
 
       {showManualMedicationInput ? (

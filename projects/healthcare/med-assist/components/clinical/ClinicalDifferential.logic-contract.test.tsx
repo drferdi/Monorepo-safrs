@@ -409,6 +409,7 @@ describe('ClinicalDifferential secure logic contract', () => {
     renderClinicalDifferential();
 
     const primaryCard = await screen.findByLabelText('Diagnosis');
+    await within(primaryCard).findByTestId('dx-flow-complete-data');
     expect(primaryCard).toBeInTheDocument();
     expect(primaryCard).toHaveTextContent(/Data belum cukup/i);
     expect(primaryCard).toHaveTextContent(/Data belum cukup untuk menetapkan diagnosis utama/i);
@@ -430,7 +431,7 @@ describe('ClinicalDifferential secure logic contract', () => {
     renderClinicalDifferential({ onDiagnosisChange });
 
     const diagnosisStep = await screen.findByLabelText('Diagnosis');
-    fireEvent.click(within(diagnosisStep).getByRole('button', { name: /diagnosis manual/i }));
+    fireEvent.click(await within(diagnosisStep).findByRole('button', { name: /diagnosis manual/i }));
     const manualCodeInput = screen.getByPlaceholderText(/ICD-X manual/i);
     const manualInputPanel = manualCodeInput.parentElement;
     expect(manualInputPanel).toBeTruthy();
@@ -474,10 +475,13 @@ describe('ClinicalDifferential secure logic contract', () => {
 
     const workspace = await screen.findByTestId('diagnosis-workspace');
     expect(within(workspace).getByTestId('dx-flow-ghost-rme')).toHaveTextContent('4 · RME');
-    // Resep uplink stays fail-closed until the physician selects a medication (the
-    // RME step, and with it "Kirim resep", renders only once it is reached),
-    // and no transfer is dispatched merely by rendering the surface.
-    expect(within(workspace).queryByRole('button', { name: 'Kirim resep' })).toBeNull();
+    // Resep uplink stays fail-closed until the physician selects a medication: reach the
+    // RME step with a diagnosis and no medication, and no transfer is dispatched merely
+    // by rendering the surface.
+    fireEvent.click((await within(workspace).findAllByTestId('dx-flow-card'))[0]);
+    fireEvent.click(await within(workspace).findByRole('button', { name: 'Lanjut tanpa obat' }));
+    const rmeStep = within(workspace).getByLabelText('RME');
+    expect(within(rmeStep).getByRole('button', { name: 'Kirim resep' })).toBeDisabled();
     expect(mockSendMessage).not.toHaveBeenCalledWith('transferRME', expect.anything());
   });
 });

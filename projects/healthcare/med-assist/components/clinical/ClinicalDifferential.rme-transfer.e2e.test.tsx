@@ -201,7 +201,9 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
     // Select the working diagnosis.
     const selectPrimary = (await screen.findByText('J02 - Faringitis akut')).closest(
       '[data-testid="dx-flow-card"]'
-    ) as HTMLElement;
+    );
+    expect(selectPrimary).not.toBeNull();
+    if (!selectPrimary) throw new Error('diagnosis card not found');
     fireEvent.click(selectPrimary);
 
     // Choosing a diagnosis must move the flow on to Terapi, rendered in full,
@@ -212,10 +214,12 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
     });
 
     // Therapy for the selected diagnosis must render on the live surface.
-    const findMedicationRow = async () =>
-      (await screen.findAllByTestId('dx-flow-med')).find((row) =>
-        /Amoksisilin 500mg/.test(row.textContent ?? '')
-      ) as HTMLElement;
+    const findMedicationRow = async () => {
+      const row = (await screen.findByText(/Amoksisilin 500mg/)).closest('[data-testid="dx-flow-med"]');
+      expect(row).not.toBeNull();
+      if (!row) throw new Error('medication row not found');
+      return row;
+    };
     expect(await findMedicationRow()).toBeInTheDocument();
 
     // A diagnosis-only transfer stays reachable: continue without medication to RME.
@@ -232,6 +236,7 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
     // Select the proposed medication.
     fireEvent.click(screen.getByRole('button', { name: 'ubah Terapi' }));
     fireEvent.click(await findMedicationRow());
+    fireEvent.click(await screen.findByRole('button', { name: 'Lanjut' }));
 
     await waitFor(() => expect(screen.getByRole('button', { name: 'Kirim resep' })).toBeEnabled());
 

@@ -185,10 +185,60 @@ describe('DiagnosisStepFlow', () => {
 
   it('reopens a finished step from "ubah" and returns to the flow from "selesai"', () => {
     render(<DiagnosisStepFlow {...makeProps()} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Lanjut' }));
     fireEvent.click(screen.getByRole('button', { name: 'ubah Diagnosis' }));
     expect(screen.getByRole('heading', { name: 'Apa diagnosis utama hari ini?' })).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'selesai' }));
     expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
+  });
+
+  it('shows Temuan as a receipt and only the Diagnosis step, with its skeleton, while loading', () => {
+    const vm = makeViewModel({ therapy: { ...makeViewModel().therapy, selectedDiagnosisCount: 0, selectedMedicationCount: 0 } });
+    render(<DiagnosisStepFlow {...makeProps({ phase: 'loading', viewModel: vm })} />);
+    expect(screen.getByTestId('dx-flow-receipt-finding')).toHaveTextContent('✓ Temuan · Demam · Batuk · Sesak');
+    expect(document.querySelectorAll('.diagnosis-skeleton__card')).toHaveLength(2);
+    expect(screen.getByText('Menyusun diagnosis banding...')).toHaveClass('sr-only');
+    expect(screen.getAllByRole('heading').map((heading) => heading.textContent)).toEqual(['Apa diagnosis utama hari ini?']);
+    expect(screen.getByTestId('dx-flow-ghost-therapy')).toBeInTheDocument();
+    expect(screen.getByTestId('dx-flow-ghost-rme')).toBeInTheDocument();
+  });
+
+  it('keeps Terapi open while medications are tapped and closes it only from "Lanjut"', () => {
+    const onToggleMedication = vi.fn();
+    const base = makeViewModel();
+    const [group] = base.therapy.groups;
+    const [paracetamol] = group.medications;
+    const withSelected = (keys: string[]): DiagnosisPageProps['viewModel'] => ({
+      ...base,
+      therapy: {
+        ...base.therapy,
+        selectedMedicationCount: keys.length,
+        groups: [
+          {
+            ...group,
+            medications: [
+              { ...paracetamol, isSelected: keys.includes('paracetamol') },
+              { ...paracetamol, key: 'ambroxol', name: 'Ambroxol 30 mg', isSelected: keys.includes('ambroxol') },
+            ],
+          },
+        ],
+      },
+    });
+    const { rerender } = render(<DiagnosisStepFlow {...makeProps({ viewModel: withSelected([]), onToggleMedication })} />);
+    fireEvent.click(screen.getAllByTestId('dx-flow-med')[0]);
+    expect(onToggleMedication).toHaveBeenLastCalledWith('paracetamol');
+    rerender(<DiagnosisStepFlow {...makeProps({ viewModel: withSelected(['paracetamol']), onToggleMedication })} />);
+    expect(screen.getByRole('heading', { name: 'Terapi apa?' })).toBeInTheDocument();
+    fireEvent.click(screen.getAllByTestId('dx-flow-med')[1]);
+    expect(onToggleMedication).toHaveBeenLastCalledWith('ambroxol');
+    rerender(<DiagnosisStepFlow {...makeProps({ viewModel: withSelected(['paracetamol', 'ambroxol']), onToggleMedication })} />);
+    expect(screen.getByRole('heading', { name: 'Terapi apa?' })).toBeInTheDocument();
+    expect(screen.queryByTestId('dx-flow-receipt-therapy')).toBeNull();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Lanjut' }));
+    expect(screen.getByTestId('dx-flow-receipt-therapy')).toHaveTextContent('✓ Terapi · Paracetamol 500 mg, Ambroxol 30 mg');
+    expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Terapi apa?' })).toBeNull();
   });
 
   it('continues to RME without medication and shows Terapi as a "tanpa obat" receipt', () => {

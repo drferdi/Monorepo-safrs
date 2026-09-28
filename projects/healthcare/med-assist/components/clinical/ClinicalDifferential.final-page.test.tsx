@@ -365,12 +365,10 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     // Temuan #1 restore (2026-07-05): therapy, education, and RME transfer now
     // render on the focused surface (fail-closed until a diagnosis is selected):
     // Terapi and RME as the next steps, Edukasi as a one-line link. The transfer
-    // buttons render with the RME step once it is reached (rme-transfer e2e test).
+    // buttons are asserted on the mounted RME step at the end of this test.
     expect(within(workspace).getByTestId('dx-flow-ghost-therapy')).toHaveTextContent('3 · Terapi');
     expect(within(workspace).getByRole('button', { name: /^Edukasi \(/ })).toBeTruthy();
     expect(within(workspace).getByTestId('dx-flow-ghost-rme')).toHaveTextContent('4 · RME');
-    expect(within(workspace).queryByRole('button', { name: 'Kirim diagnosis' })).toBeNull();
-    expect(within(workspace).queryByRole('button', { name: 'Kirim resep' })).toBeNull();
     // No medication is proposed until the physician selects a working diagnosis.
     expect(within(workspace).queryByText(/Paracetamol 500 mg/i)).toBeNull();
 
@@ -386,7 +384,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
       /darurat|segera|rujukan|layanan primer|belum cukup/i
     );
 
-    const advanced = within(primaryCard).getByRole('button', { name: 'alasan' });
+    const advanced = within(cardOf(primaryCard)).getByRole('button', { name: 'alasan' });
     expect(advanced).toBeTruthy();
     expect(advanced).toHaveAttribute('aria-expanded', 'false');
     expect(workspace.textContent).not.toMatch(LONG_PRIMARY_RATIONALE);
@@ -416,6 +414,14 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     expect(workspace.querySelector('svg')).toBeNull();
     expect(workspace.innerHTML).not.toMatch(/bg-white|#fbfcfe|#f7f9fc|#eff4fb/i);
     expect(workspace.querySelectorAll('.ttv-section').length).toBe(0);
+
+    // The transfer controls render fail-closed on the mounted RME step: with a diagnosis
+    // chosen and no medication, "Kirim diagnosis" is offered and "Kirim resep" is disabled.
+    fireEvent.click(primaryCard);
+    fireEvent.click(await within(workspace).findByRole('button', { name: 'Lanjut tanpa obat' }));
+    const rmeStep = within(workspace).getByLabelText('RME');
+    expect(within(rmeStep).getByRole('button', { name: 'Kirim diagnosis' })).toBeTruthy();
+    expect(within(rmeStep).getByRole('button', { name: 'Kirim resep' })).toBeDisabled();
   });
 
   it('extracts only important clinical signals instead of dumping the full clinical narrative', async () => {
@@ -741,6 +747,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
 
     const workspace = await screen.findByTestId('diagnosis-workspace');
     const primaryCard = await within(workspace).findByLabelText('Diagnosis');
+    await within(primaryCard).findByTestId('dx-flow-complete-data');
     expect(workspace).not.toHaveTextContent(/Kandidat Sementara|Sementara|kandidat/i);
     expect(workspace).not.toHaveTextContent(/Diagnosis banding belum lengkap/i);
     expect(workspace).not.toHaveTextContent(/R69/i);
@@ -844,10 +851,17 @@ describe('ClinicalDifferential final diagnosis support page', () => {
 
     const workspace = screen.getByTestId('diagnosis-workspace');
     const [primaryCard] = await within(workspace).findAllByTestId('dx-flow-card');
-    const advancedReasoning = within(primaryCard).getByRole('button', { name: 'alasan' });
+    const advancedReasoning = within(cardOf(primaryCard)).getByRole('button', { name: 'alasan' });
     expect(advancedReasoning).toBeTruthy();
     expect(advancedReasoning).toHaveAttribute('aria-expanded', 'false');
   });
+
+  // The select control carries data-testid="dx-flow-card"; "alasan" sits beside it in the card.
+  function cardOf(select: HTMLElement): HTMLElement {
+    const wrapper = select.parentElement;
+    if (!wrapper) throw new Error('dx-flow-card wrapper missing');
+    return wrapper;
+  }
 
   // A diagnosis card found by its title; the engine tag sits in the card's chip.
   function card(title: RegExp): HTMLElement {
@@ -932,7 +946,9 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     await waitFor(() => {
       expect(screen.getByText('MIRA tidak tersedia')).toBeTruthy();
     });
-    expect(screen.queryByText('MIRA')).toBeNull();
+    expect(
+      Array.from(document.querySelectorAll('.dx-flow-chip')).filter((chip) => /MIRA/.test(chip.textContent ?? ''))
+    ).toHaveLength(0);
   });
 
   describe('MIRA prefetch', () => {

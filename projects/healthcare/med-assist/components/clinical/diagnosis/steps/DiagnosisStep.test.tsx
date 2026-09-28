@@ -24,6 +24,13 @@ function vm(candidates: DiagnosisCandidateView[], over: Partial<DiagnosisPageVie
 
 const handlers = () => ({ onToggleCandidate: vi.fn(), onToggleManualDiagnosisInput: vi.fn(), onManualIcdChange: vi.fn(), onManualNameChange: vi.fn(), onSubmitManualDiagnosis: vi.fn(), onCompleteData: vi.fn() });
 
+// The select control carries data-testid="dx-flow-card"; "alasan" and the reasons sit beside it in the card.
+function cardOf(select: HTMLElement): HTMLElement {
+  const card = select.parentElement;
+  if (!card) throw new Error('dx-flow-card wrapper missing');
+  return card;
+}
+
 describe('formatShortDate', () => {
   it('formats a date-only ISO string using UTC getters', () => {
     expect(formatShortDate('2026-08-12')).toBe('12 Agu 2026');
@@ -62,7 +69,7 @@ describe('DiagnosisStep', () => {
     fireEvent.click(first);
     expect(h.onToggleCandidate).toHaveBeenCalledWith('2-J06.9');
     expect(screen.queryByText('Auskultasi')).toBeNull();
-    fireEvent.click(within(first).getByRole('button', { name: 'alasan' }));
+    fireEvent.click(within(cardOf(first)).getByRole('button', { name: 'alasan' }));
     expect(screen.getByText('Auskultasi')).toBeInTheDocument();
     expect(h.onToggleCandidate).toHaveBeenCalledTimes(1);
   });
@@ -79,6 +86,17 @@ describe('DiagnosisStep', () => {
     render(<DiagnosisStep viewModel={vm([])} phase="loading" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
     expect(screen.getByText('Menyusun diagnosis banding...')).toHaveClass('sr-only');
     expect(document.querySelectorAll('.diagnosis-skeleton__card')).toHaveLength(2);
+  });
+
+  it('keeps "alasan" outside the role="button" select control so assistive tech can reach it', () => {
+    render(<DiagnosisStep viewModel={vm([candidate({})])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
+    const [select] = screen.getAllByTestId('dx-flow-card');
+    const reasons = within(cardOf(select)).getByRole('button', { name: 'alasan' });
+    expect(select).toHaveAttribute('role', 'button');
+    expect(select).not.toContainElement(reasons);
+    expect(select.querySelector('button')).toBeNull();
+    expect(cardOf(select)).toHaveClass('dx-flow-card');
+    expect(cardOf(select)).not.toHaveAttribute('role');
   });
 
   it('does not toggle a selection-blocked candidate on tap or on Enter, and marks it aria-disabled', () => {
