@@ -918,6 +918,8 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     type StorageListener = (changes: Record<string, { newValue?: unknown }>, area: string) => void;
     const listeners: StorageListener[] = [];
     const stored: Record<string, unknown> = {};
+    let removedListeners = 0;
+    let onFirstReply: () => void = () => undefined;
     const PAGE = {
       keluhanUtama: 'Nyeri perut kanan bawah sejak 1 hari',
       keluhanTambahan: 'Mual',
@@ -936,6 +938,8 @@ describe('ClinicalDifferential final diagnosis support page', () => {
 
     beforeEach(() => {
       listeners.length = 0;
+      removedListeners = 0;
+      onFirstReply = () => undefined;
       for (const key of Object.keys(stored)) delete stored[key];
       vi.stubGlobal('browser', {
         storage: {
@@ -944,7 +948,10 @@ describe('ClinicalDifferential final diagnosis support page', () => {
           },
           onChanged: {
             addListener: (fn: StorageListener) => listeners.push(fn),
-            removeListener: (fn: StorageListener) => listeners.splice(listeners.indexOf(fn), 1),
+            removeListener: (fn: StorageListener) => {
+              removedListeners += 1;
+              listeners.splice(listeners.indexOf(fn), 1);
+            },
           },
         },
       });
@@ -953,6 +960,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
       mockSendMessage.mockImplementation(async (type: string, payload?: Record<string, unknown>) => {
         if (type !== 'getSuggestions') return base?.(type, payload);
         replies += 1;
+        if (replies === 1) onFirstReply();
         return replies === 1
           ? {
               success: true,
@@ -1020,14 +1028,56 @@ describe('ClinicalDifferential final diagnosis support page', () => {
       expect(getSuggestionsCalls()).toBe(2);
     });
 
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
     it('re-requests when the prefetch finished before the page started listening', async () => {
-      stored[MIRA_PREFETCH_READY_KEY] = { hash: pageHash(), at: 't' };
+      onFirstReply = () => {
+        stored[MIRA_PREFETCH_READY_KEY] = { hash: pageHash(), at: new Date().toISOString() };
+      };
       renderPage();
       await waitFor(() =>
         expect(screen.getAllByText(/K65\.0 - .* · MIRA · jangan terlewat$/i).length).toBeGreaterThan(0)
       );
       expect(getSuggestionsCalls()).toBe(2);
       expect(listeners).toHaveLength(0);
+    });
+
+    it('ignores a ready record older than the request and keeps listening', async () => {
+      stored[MIRA_PREFETCH_READY_KEY] = { hash: pageHash(), at: '2020-01-01T00:00:00.000Z' };
+      renderPage();
+      await waitFor(() => expect(screen.getByText('Menunggu MIRA…')).toBeTruthy());
+      await waitFor(() => expect(listeners).toHaveLength(1));
+      await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 0));
+      });
+      expect(getSuggestionsCalls()).toBe(1);
+      expect(listeners).toHaveLength(1);
+      expect(removedListeners).toBe(0);
+    });
+
+    it('asks once more when no ready record arrives in time', async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: true });
+      renderPage();
+      await waitFor(() => expect(screen.getByText('Menunggu MIRA…')).toBeTruthy());
+      await waitFor(() => expect(listeners).toHaveLength(1));
+
+      await act(async () => {
+        vi.advanceTimersByTime(24_000);
+      });
+      expect(getSuggestionsCalls()).toBe(1);
+
+      await act(async () => {
+        vi.advanceTimersByTime(1_000);
+      });
+      await waitFor(() => expect(getSuggestionsCalls()).toBe(2));
+      expect(listeners).toHaveLength(0);
+
+      await act(async () => {
+        vi.advanceTimersByTime(60_000);
+      });
+      expect(getSuggestionsCalls()).toBe(2);
     });
   });
 });

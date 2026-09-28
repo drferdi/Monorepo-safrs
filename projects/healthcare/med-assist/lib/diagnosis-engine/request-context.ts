@@ -50,13 +50,20 @@ function canonical(value: unknown): string {
   return JSON.stringify(value ?? null);
 }
 
-/** FNV-1a 32-bit over the canonical JSON: stable, synchronous, no crypto dependency. */
-export function hashDiagnosisContext(context: DiagnosisRequestContext): string {
-  const text = canonical(context);
+/**
+ * FNV-1a 32-bit over the canonical JSON of a plain value (object keys sorted): stable,
+ * synchronous, no crypto dependency.
+ */
+export function hashCanonical(value: unknown): string {
+  const text = canonical(value);
   let hash = 0x811c9dc5;
   for (let i = 0; i < text.length; i += 1) {
     hash ^= text.charCodeAt(i);
     hash = Math.imul(hash, 0x01000193) >>> 0;
   }
   return hash.toString(16).padStart(8, '0');
+}
+
+export function hashDiagnosisContext(context: DiagnosisRequestContext): string {
+  return hashCanonical(context);
 }

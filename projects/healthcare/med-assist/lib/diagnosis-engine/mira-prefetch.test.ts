@@ -76,9 +76,48 @@ describe('mira-prefetch', () => {
   });
 
   it('ignores a done entry for a different context hash', async () => {
-    const active = engine(async () => okResult());
+    let steps = 0;
+    const active = engine(async () => (steps++, okResult()));
     await runMiraPrefetch(CASE.encounter, CASE.context, { engine: active, timeoutMs: 100 });
     const other = { ...CASE.context, keluhan_utama: 'batuk lama' };
     expect(peekPrefetch(hashDiagnosisContext(other))).toBeUndefined();
+    await runDiagnosisSuggestions(CASE.encounter, other, { mode: 'mira', engines: { legacy: (await import('./registry')).getLegacyEngine(), active } });
+    expect(steps).toBe(2);
+  });
+
+  it('never serves one patient the prefetch of another with the same request context', async () => {
+    let steps = 0;
+    const active = engine(async () => (steps++, okResult()));
+    const other: typeof CASE.encounter = {
+      ...CASE.encounter,
+      diagnosa: { ...CASE.encounter.diagnosa, penyakit_kronis: ['Diabetes melitus tipe 2'] },
+    };
+    await runMiraPrefetch(CASE.encounter, CASE.context, { engine: active, timeoutMs: 100 });
+
+    await runDiagnosisSuggestions(other, CASE.context, { mode: 'mira', engines: { legacy: (await import('./registry')).getLegacyEngine(), active } });
+    expect(steps).toBe(2);
+
+    const second = await runMiraPrefetch(other, CASE.context, { engine: active, timeoutMs: 100 });
+    expect(second.started).toBe(true);
+    expect(steps).toBe(3);
+  });
+
+  it('does not keep a failed prefetch but still tells the page it finished', async () => {
+    let steps = 0;
+    const failing = engine(async () => {
+      steps++;
+      return createUnavailableResult({ engineId: 'mira', version: 'fake', code: 'NETWORK_ERROR', message: 'down', latencyMs: 1, traceId: 't' });
+    });
+    const first = await runMiraPrefetch(CASE.encounter, CASE.context, { engine: failing, timeoutMs: 100 });
+    expect(peekPrefetch(first.hash)).toBeUndefined();
+    expect(writes).toEqual([{ [MIRA_PREFETCH_READY_KEY]: { hash: first.hash, at: expect.any(String) } }]);
+
+    const active = engine(async () => (steps++, okResult()));
+    const response = await runDiagnosisSuggestions(CASE.encounter, CASE.context, { mode: 'mira', engines: { legacy: (await import('./registry')).getLegacyEngine(), active } });
+    expect(steps).toBe(2);
+    expect(response.data?.diagnosis_suggestions[0]?.icd_x).toBe('K35.8');
+
+    const again = await runMiraPrefetch(CASE.encounter, CASE.context, { engine: failing, timeoutMs: 100 });
+    expect(again.started).toBe(true);
   });
 });

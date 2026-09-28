@@ -26,9 +26,9 @@ import { createTraceId, createUnavailableResult } from './engine-result';
 import type { LegacyDiagnosisEngine } from './legacy-engine';
 import { MIRA_UNAVAILABLE_NOTICE, miraNoticeFor } from './mira-notice';
 import { getLastMiraStatus, type MiraStatus } from './mira-supervisor';
-import { peekPrefetch } from './prefetch-store';
+import { CANDIDATE_TIMEOUT_MS, peekPrefetch } from './prefetch-store';
 import { getActiveDiagnosisEngine, getLegacyEngine } from './registry';
-import { hashDiagnosisContext } from './request-context';
+import { hashCanonical, hashDiagnosisContext } from './request-context';
 import type { CaseState, ConfidenceTier, DiagnosisEngine, EngineResult } from './types';
 
 import { logShadowComparison } from '@/lib/iskandar-diagnosis-engine/audit-logger';
@@ -47,8 +47,7 @@ import type { Encounter } from '~/utils/types';
 
 const log = createLogger('DiagnosisEngine', 'global');
 
-/** Upper bound for a candidate engine, whatever its own client timeout is. */
-export const CANDIDATE_TIMEOUT_MS = 20_000;
+export { CANDIDATE_TIMEOUT_MS };
 
 export const MIRA_TAG = 'MIRA';
 export const MIRA_CANNOT_MISS_TAG = 'MIRA · jangan terlewat';
@@ -210,7 +209,10 @@ export async function runDiagnosisSuggestions(
   if (mode === 'legacy') return physicianResponse;
 
   const candidate = options.engines?.active ?? getActiveDiagnosisEngine('mira');
-  const prefetched = mode === 'mira' ? peekPrefetch(hashDiagnosisContext(context)) : undefined;
+  const caseState = encounterToCaseState(encounter, context);
+  const entry = mode === 'mira' ? peekPrefetch(hashDiagnosisContext(context)) : undefined;
+  // An entry made for another patient with the same request is treated as absent.
+  const prefetched = entry && entry.caseKey === hashCanonical(caseState) ? entry : undefined;
 
   if (prefetched?.status === 'pending') {
     const response = await physicianResponse;
@@ -226,7 +228,7 @@ export async function runDiagnosisSuggestions(
       ? Promise.resolve(prefetched.result)
       : stepWithTimeout(
           candidate,
-          encounterToCaseState(encounter, context),
+          caseState,
           options.candidateTimeoutMs ?? CANDIDATE_TIMEOUT_MS
         ).then(async (result) => {
           await recordCandidateRun(result, candidate);

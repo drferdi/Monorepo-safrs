@@ -11,7 +11,10 @@ import { DiagnosisWorkspace, type DiagnosisTriageView } from './diagnosis/Diagno
 import {
   type CanonicalClinicalEngineOutput,
 } from '@/lib/api/bridge-client';
-import { MIRA_PREFETCH_READY_KEY } from '@/lib/diagnosis-engine/prefetch-store';
+import {
+  MIRA_PREFETCH_READY_KEY,
+  PREFETCH_FALLBACK_MS,
+} from '@/lib/diagnosis-engine/prefetch-store';
 import {
   buildDiagnosisRequestContext,
   hashDiagnosisContext,
@@ -80,6 +83,13 @@ function readyPrefetchHash(value: unknown): string | undefined {
   return value && typeof value === 'object' && 'hash' in value && typeof value.hash === 'string'
     ? value.hash
     : undefined;
+}
+
+/** When the ready record was written (ms), or NaN when it has no readable `at`. */
+function readyPrefetchTime(value: unknown): number {
+  return value && typeof value === 'object' && 'at' in value && typeof value.at === 'string'
+    ? Date.parse(value.at)
+    : Number.NaN;
 }
 
 // Permukaan diagnosis legacy (pre-workspace) disimpan sebagai basis re-skin;
@@ -706,8 +716,9 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     };
 
     // The background answered before MIRA's prefetch of this same request finished: ask once
-    // more when it is ready. The re-request keeps the doctor's selection (no reset).
-    const reRequestWhenPrefetchReady = (hash: string) => {
+    // more when it is ready, or after PREFETCH_FALLBACK_MS if no ready record arrives. The
+    // re-request keeps the doctor's selection (no reset).
+    const reRequestWhenPrefetchReady = (hash: string, sentAt: number) => {
       if (reRequested || stopListening) return;
       const storage = browser.storage;
       const reRequest = () => {
@@ -721,15 +732,19 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         if (readyPrefetchHash(changes[MIRA_PREFETCH_READY_KEY]?.newValue) === hash) reRequest();
       };
       storage.onChanged.addListener(onChanged);
+      const fallback = setTimeout(reRequest, PREFETCH_FALLBACK_MS);
       stopListening = () => {
+        clearTimeout(fallback);
         storage.onChanged.removeListener(onChanged);
         stopListening = null;
       };
-      // The prefetch may have finished between the background's reply and this listener.
+      // The prefetch may have finished between the background's reply and this listener; a
+      // record older than this request is from an earlier prefetch and is ignored.
       storage.local
         .get(MIRA_PREFETCH_READY_KEY)
         .then((raw) => {
-          if (readyPrefetchHash(raw[MIRA_PREFETCH_READY_KEY]) === hash) reRequest();
+          const record = raw[MIRA_PREFETCH_READY_KEY];
+          if (readyPrefetchHash(record) === hash && readyPrefetchTime(record) >= sentAt) reRequest();
         })
         .catch(() => undefined);
     };
@@ -746,6 +761,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
           vitals,
           recurrent: NO_RECURRENT,
         });
+        const sentAt = Date.now();
         const response = await sendMessage('getSuggestions', request);
 
         if (cancelled) return;
@@ -769,7 +785,9 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         }
         setProcessingTimeMs(response.data.meta?.processing_time_ms ?? null);
         setPhase('ready');
-        if (response.data.engine_pending) reRequestWhenPrefetchReady(hashDiagnosisContext(request));
+        if (response.data.engine_pending) {
+          reRequestWhenPrefetchReady(hashDiagnosisContext(request), sentAt);
+        }
       } catch {
         if (cancelled) return;
         setErrorMsg(resolveDifferentialListErrorMessage(0));
