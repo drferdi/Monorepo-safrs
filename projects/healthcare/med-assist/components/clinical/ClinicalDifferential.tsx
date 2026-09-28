@@ -11,6 +11,11 @@ import { DiagnosisWorkspace, type DiagnosisTriageView } from './diagnosis/Diagno
 import {
   type CanonicalClinicalEngineOutput,
 } from '@/lib/api/bridge-client';
+import { MIRA_PREFETCH_READY_KEY } from '@/lib/diagnosis-engine/prefetch-store';
+import {
+  buildDiagnosisRequestContext,
+  hashDiagnosisContext,
+} from '@/lib/diagnosis-engine/request-context';
 import { classifyChronicDisease } from '@/lib/iskandar-diagnosis-engine/chronic-disease-classifier';
 import {
   runDiagnosisAlgorithm,
@@ -67,6 +72,15 @@ type TherapyState = 'idle' | 'loading' | 'ready' | 'error';
 type TransferUiState = 'idle' | 'running' | 'partial' | 'success' | 'failed';
 const MAX_DIAGNOSIS_SELECTION = 2;
 const EMPTY_CHRONIC_THERAPIES: string[] = [];
+/** Until the recurrent-diagnosis history is wired in; must match the Trajectory stage's prefetch. */
+const NO_RECURRENT: Array<{ icd: string; name: string }> = [];
+
+/** The request hash in the background's `{ hash, at }` prefetch-ready record, if any. */
+function readyPrefetchHash(value: unknown): string | undefined {
+  return value && typeof value === 'object' && 'hash' in value && typeof value.hash === 'string'
+    ? value.hash
+    : undefined;
+}
 
 // Permukaan diagnosis legacy (pre-workspace) disimpan sebagai basis re-skin;
 // jangan dihidupkan tanpa keputusan Chief.
@@ -661,8 +675,10 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
 
   useEffect(() => {
     let cancelled = false;
+    let reRequested = false;
+    let stopListening: (() => void) | null = null;
 
-    const fetchDifferential = async () => {
+    const resetForNewRequest = () => {
       setPhase('loading');
       setErrorMsg('');
       setSelectedDiagnoses([]);
@@ -687,23 +703,50 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         rationale: 'Input manual operator',
       });
       setSelectedMedicationKeys([]);
+    };
 
+    // The background answered before MIRA's prefetch of this same request finished: ask once
+    // more when it is ready. The re-request keeps the doctor's selection (no reset).
+    const reRequestWhenPrefetchReady = (hash: string) => {
+      if (reRequested || stopListening) return;
+      const storage = browser.storage;
+      const reRequest = () => {
+        if (reRequested || cancelled) return;
+        reRequested = true;
+        stopListening?.();
+        void loadSuggestions();
+      };
+      const onChanged = (changes: Record<string, { newValue?: unknown }>, area: string) => {
+        if (area !== 'local') return;
+        if (readyPrefetchHash(changes[MIRA_PREFETCH_READY_KEY]?.newValue) === hash) reRequest();
+      };
+      storage.onChanged.addListener(onChanged);
+      stopListening = () => {
+        storage.onChanged.removeListener(onChanged);
+        stopListening = null;
+      };
+      // The prefetch may have finished between the background's reply and this listener.
+      storage.local
+        .get(MIRA_PREFETCH_READY_KEY)
+        .then((raw) => {
+          if (readyPrefetchHash(raw[MIRA_PREFETCH_READY_KEY]) === hash) reRequest();
+        })
+        .catch(() => undefined);
+    };
+
+    const loadSuggestions = async () => {
       try {
         // Single dx source = engine getSuggestions (H6). Skip discarded canonical
         // dual-fetch that previously set a conflicting fallback banner.
-        const response = await sendMessage('getSuggestions', {
-          keluhan_utama: keluhanUtama,
-          keluhan_tambahan: keluhanTambahan || '',
-          patient_age: patientAge > 0 ? patientAge : 0,
-          patient_gender: patientGender === 'P' ? 'F' : 'M',
-          vital_signs: {
-            systolic: vitals.sbp || undefined,
-            diastolic: vitals.dbp || undefined,
-            heart_rate: vitals.hr || undefined,
-            respiratory_rate: vitals.rr || undefined,
-            temperature: vitals.temp || undefined,
-          },
+        const request = buildDiagnosisRequestContext({
+          keluhanUtama,
+          keluhanTambahan: keluhanTambahan || '',
+          patientAge,
+          patientGender,
+          vitals,
+          recurrent: NO_RECURRENT,
         });
+        const response = await sendMessage('getSuggestions', request);
 
         if (cancelled) return;
 
@@ -726,6 +769,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         }
         setProcessingTimeMs(response.data.meta?.processing_time_ms ?? null);
         setPhase('ready');
+        if (response.data.engine_pending) reRequestWhenPrefetchReady(hashDiagnosisContext(request));
       } catch {
         if (cancelled) return;
         setErrorMsg(resolveDifferentialListErrorMessage(0));
@@ -734,9 +778,15 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       }
     };
 
+    const fetchDifferential = async () => {
+      resetForNewRequest();
+      await loadSuggestions();
+    };
+
     fetchDifferential();
     return () => {
       cancelled = true;
+      stopListening?.();
     };
   }, [
     keluhanUtama,

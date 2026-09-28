@@ -1,12 +1,17 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import React from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ClinicalDifferential } from './ClinicalDifferential';
 
+import { MIRA_PREFETCH_READY_KEY } from '@/lib/diagnosis-engine/prefetch-store';
+import {
+  buildDiagnosisRequestContext,
+  hashDiagnosisContext,
+} from '@/lib/diagnosis-engine/request-context';
 import { findForbiddenPhysicianTrajectoryTerms } from '@/lib/iskandar-diagnosis-engine/presentation-safety';
 import { clearMatcherCache } from '@/lib/iskandar-diagnosis-engine/symptom-matcher';
 
@@ -907,5 +912,122 @@ describe('ClinicalDifferential final diagnosis support page', () => {
       expect(screen.getByText('MIRA tidak tersedia')).toBeTruthy();
     });
     expect(screen.queryByText(/· MIRA/)).toBeNull();
+  });
+
+  describe('MIRA prefetch', () => {
+    type StorageListener = (changes: Record<string, { newValue?: unknown }>, area: string) => void;
+    const listeners: StorageListener[] = [];
+    const stored: Record<string, unknown> = {};
+    const PAGE = {
+      keluhanUtama: 'Nyeri perut kanan bawah sejak 1 hari',
+      keluhanTambahan: 'Mual',
+      patientAge: 24,
+      patientGender: 'L' as const,
+      vitals: { sbp: 118, dbp: 76, hr: 96, rr: 18, temp: 37.9, glucose: 0 },
+    };
+    const pageHash = () =>
+      hashDiagnosisContext(buildDiagnosisRequestContext({ ...PAGE, recurrent: [] }));
+    const getSuggestionsCalls = () =>
+      mockSendMessage.mock.calls.filter(([type]) => type === 'getSuggestions').length;
+    const fireStorageChange = (value: unknown) =>
+      act(() => {
+        [...listeners].forEach((fn) => fn({ [MIRA_PREFETCH_READY_KEY]: { newValue: value } }, 'local'));
+      });
+
+    beforeEach(() => {
+      listeners.length = 0;
+      for (const key of Object.keys(stored)) delete stored[key];
+      vi.stubGlobal('browser', {
+        storage: {
+          local: {
+            get: async (key: string) => (key in stored ? { [key]: stored[key] } : {}),
+          },
+          onChanged: {
+            addListener: (fn: StorageListener) => listeners.push(fn),
+            removeListener: (fn: StorageListener) => listeners.splice(listeners.indexOf(fn), 1),
+          },
+        },
+      });
+      const base = mockSendMessage.getMockImplementation();
+      let replies = 0;
+      mockSendMessage.mockImplementation(async (type: string, payload?: Record<string, unknown>) => {
+        if (type !== 'getSuggestions') return base?.(type, payload);
+        replies += 1;
+        return replies === 1
+          ? {
+              success: true,
+              data: {
+                diagnosis_suggestions: [
+                  { rank: 1, icd_x: 'K35.8', nama: 'Apendisitis akut', confidence: 0.7, rationale: '' },
+                ],
+                alerts: [],
+                engine_notice: 'Menunggu MIRA…',
+                engine_pending: true,
+              },
+            }
+          : {
+              success: true,
+              data: {
+                diagnosis_suggestions: [
+                  { rank: 1, icd_x: 'K35.8', nama: 'Acute appendicitis', confidence: 0.8, rationale: '', engine_tag: 'MIRA' },
+                  { rank: 2, icd_x: 'K65.0', nama: 'Acute peritonitis', confidence: 0.3, rationale: '', engine_tag: 'MIRA · jangan terlewat' },
+                ],
+                alerts: [],
+              },
+            };
+      });
+    });
+
+    function renderPage() {
+      render(
+        <ClinicalDifferential
+          {...PAGE}
+          patientRM="RM-2026-001"
+          allergies={[]}
+          confirmedPregnancyStatus={false}
+          canonicalOutput={null}
+          hasVisitHistory={false}
+          onBack={() => undefined}
+          onDiagnosisChange={() => undefined}
+          onMedicationsChange={() => undefined}
+        />
+      );
+    }
+
+    it('re-requests once when the prefetch for the same hash becomes ready', async () => {
+      renderPage();
+      await waitFor(() => expect(screen.getByText('Menunggu MIRA…')).toBeTruthy());
+      await waitFor(() => expect(listeners).toHaveLength(1));
+
+      fireEvent.click(await screen.findByRole('button', { name: /Pilih Diagnosis Utama/i }));
+      await waitFor(() =>
+        expect(screen.getByTestId('diagnosis-workspace')).toHaveAttribute('data-diagnosis-selected-count', '1')
+      );
+
+      fireStorageChange({ hash: 'ffffffff', at: 't' });
+      expect(getSuggestionsCalls()).toBe(1);
+
+      fireStorageChange({ hash: pageHash(), at: 't' });
+      await waitFor(() =>
+        expect(screen.getAllByText(/K65\.0 - .* · MIRA · jangan terlewat$/i).length).toBeGreaterThan(0)
+      );
+      expect(getSuggestionsCalls()).toBe(2);
+      expect(listeners).toHaveLength(0);
+      expect(screen.queryByText('Menunggu MIRA…')).toBeNull();
+      expect(screen.getByTestId('diagnosis-workspace')).toHaveAttribute('data-diagnosis-selected-count', '1');
+
+      fireStorageChange({ hash: pageHash(), at: 't2' });
+      expect(getSuggestionsCalls()).toBe(2);
+    });
+
+    it('re-requests when the prefetch finished before the page started listening', async () => {
+      stored[MIRA_PREFETCH_READY_KEY] = { hash: pageHash(), at: 't' };
+      renderPage();
+      await waitFor(() =>
+        expect(screen.getAllByText(/K65\.0 - .* · MIRA · jangan terlewat$/i).length).toBeGreaterThan(0)
+      );
+      expect(getSuggestionsCalls()).toBe(2);
+      expect(listeners).toHaveLength(0);
+    });
   });
 });

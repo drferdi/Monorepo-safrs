@@ -10,7 +10,10 @@
  *   (likely, alternatives, then cannot-miss, each tagged "MIRA"); every other field, including
  *   the alerts, stays the legacy engine's. When MIRA fails, times out or returns no diagnosis,
  *   the legacy response is returned with `engine_notice` set to a reason-specific notice (see
- *   `mira-notice.ts`).
+ *   `mira-notice.ts`). When the Trajectory stage already prefetched this exact request
+ *   (`mira-prefetch.ts`, by `hashDiagnosisContext`), its finished result is used instead of a new
+ *   step; while that prefetch is still running, the legacy response is returned at once with
+ *   `engine_pending: true` and the panel asks again when the prefetch is ready.
  *
  * The safety layer (red flags, emergency gates, triage/referral) runs outside this step, and a
  * candidate never waits longer than `candidateTimeoutMs`.
@@ -23,7 +26,9 @@ import { createTraceId, createUnavailableResult } from './engine-result';
 import type { LegacyDiagnosisEngine } from './legacy-engine';
 import { MIRA_UNAVAILABLE_NOTICE, miraNoticeFor } from './mira-notice';
 import { getLastMiraStatus, type MiraStatus } from './mira-supervisor';
+import { peekPrefetch } from './prefetch-store';
 import { getActiveDiagnosisEngine, getLegacyEngine } from './registry';
+import { hashDiagnosisContext } from './request-context';
 import type { CaseState, ConfidenceTier, DiagnosisEngine, EngineResult } from './types';
 
 import { logShadowComparison } from '@/lib/iskandar-diagnosis-engine/audit-logger';
@@ -77,7 +82,7 @@ export function resolveMiraNoticeCode(
   return code;
 }
 
-async function stepWithTimeout(
+export async function stepWithTimeout(
   engine: DiagnosisEngine,
   caseState: CaseState,
   timeoutMs: number
@@ -122,7 +127,7 @@ async function stepWithTimeout(
   }
 }
 
-async function recordCandidateRun(result: EngineResult, engine: DiagnosisEngine): Promise<void> {
+export async function recordCandidateRun(result: EngineResult, engine: DiagnosisEngine): Promise<void> {
   const ranked = [...result.differential.likely, ...result.differential.alternatives];
   try {
     await logShadowComparison({
@@ -205,14 +210,28 @@ export async function runDiagnosisSuggestions(
   if (mode === 'legacy') return physicianResponse;
 
   const candidate = options.engines?.active ?? getActiveDiagnosisEngine('mira');
-  const candidateRun = stepWithTimeout(
-    candidate,
-    encounterToCaseState(encounter, context),
-    options.candidateTimeoutMs ?? CANDIDATE_TIMEOUT_MS
-  ).then(async (result) => {
-    await recordCandidateRun(result, candidate);
-    return result;
-  });
+  const prefetched = mode === 'mira' ? peekPrefetch(hashDiagnosisContext(context)) : undefined;
+
+  if (prefetched?.status === 'pending') {
+    const response = await physicianResponse;
+    if (!response.success || !response.data) return response;
+    return {
+      ...response,
+      data: { ...response.data, engine_notice: 'Menunggu MIRA…', engine_pending: true },
+    };
+  }
+
+  const candidateRun =
+    prefetched?.status === 'done'
+      ? Promise.resolve(prefetched.result)
+      : stepWithTimeout(
+          candidate,
+          encounterToCaseState(encounter, context),
+          options.candidateTimeoutMs ?? CANDIDATE_TIMEOUT_MS
+        ).then(async (result) => {
+          await recordCandidateRun(result, candidate);
+          return result;
+        });
   if (mode === 'shadow') return physicianResponse;
 
   const [response, result] = await Promise.all([physicianResponse, candidateRun]);

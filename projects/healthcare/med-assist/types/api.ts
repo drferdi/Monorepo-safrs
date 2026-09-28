@@ -233,6 +233,8 @@ export interface CDSSResponse {
   clinical_reasoning?: ClinicalReasoningPayload;
   /** Note for the physician about the diagnosis engine (e.g. "MIRA tidak tersedia") */
   engine_notice?: string;
+  /** True while a MIRA prefetch for this request is still running; the panel asks again once it is ready */
+  engine_pending?: boolean;
 }
 
 export interface PharmacotherapyExplainability {
@@ -286,6 +288,8 @@ export interface DiagnosisRequestContext {
   allergies?: string[];
   /** Known chronic diseases */
   chronic_diseases?: string[];
+  /** Diagnoses recorded at earlier visits of this patient */
+  recurrent_diagnoses?: Array<{ icd: string; name: string }>;
 }
 
 /**

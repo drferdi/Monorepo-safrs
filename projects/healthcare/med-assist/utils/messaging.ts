@@ -215,6 +215,7 @@ interface ProtocolMap {
   getCDSSStatus(data: undefined): Promise<CDSSEngineStatus>;
   initializeCDSS(data: undefined): Promise<boolean>;
   miraEnsure(data: undefined): Promise<MiraStatus>;
+  prefetchDiagnosis(context: DiagnosisRequestContext): Promise<{ started: boolean; hash: string }>;
 
   // ========================================
   // Panel → Worker → Content (Diagnostic)
@@ -354,6 +355,7 @@ export const PROTOCOL_MESSAGE_NAMES = [
   'getCDSSStatus',
   'initializeCDSS',
   'miraEnsure',
+  'prefetchDiagnosis',
   'scanFields',
   'scanMedicalHistory',
   'scanVisitHistory',

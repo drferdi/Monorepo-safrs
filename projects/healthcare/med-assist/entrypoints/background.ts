@@ -19,9 +19,12 @@ import {
 import { buildPatientSyncPayload } from '@/lib/api/patient-sync-payload';
 import { SentraAPI } from '@/lib/api/sentra-api';
 import { migrateLegacyAppStorageKeys } from '@/lib/app-identity';
+import { runMiraPrefetch } from '@/lib/diagnosis-engine/mira-prefetch';
 import { ensureMira } from '@/lib/diagnosis-engine/mira-supervisor';
+import { hashDiagnosisContext } from '@/lib/diagnosis-engine/request-context';
 import { runDiagnosisSuggestions } from '@/lib/diagnosis-engine/run-diagnosis';
 import { getCDSSEngineStatus, initCDSSEngine } from '@/lib/iskandar-diagnosis-engine';
+import { getDiagnosisEngineConfig } from '@/lib/iskandar-diagnosis-engine/feature-flags';
 import { assistStaffFromSession, withResepStaff, withStaffNames } from '@/lib/rme/assist-staff';
 import { RMETransferOrchestrator } from '@/lib/rme/transfer-orchestrator';
 import { isStepUrl, selectBestTransferTab } from '@/lib/rme/transfer-targeting';
@@ -2351,6 +2354,16 @@ export default defineBackground(() => {
 
   // Panel → Worker: make sure the MIRA service is up (native messaging host com.sentra.mira)
   onMessage('miraEnsure', async () => ensureMira());
+
+  // Panel (Trajectory stage) → Worker: run the MIRA step ahead of the diagnosis page
+  onMessage('prefetchDiagnosis', async (message) => {
+    const context = message.data as DiagnosisRequestContext;
+    const encounter = await getEncounter().catch(() => null);
+    if (!encounter || !context.keluhan_utama || getDiagnosisEngineConfig().diagnosisEngine !== 'mira') {
+      return { started: false, hash: hashDiagnosisContext(context) };
+    }
+    return runMiraPrefetch(encounter, context);
+  });
 
   // ========================================
   // NATIVE MESSAGE LISTENER (for sidepanel native chrome.runtime.sendMessage)

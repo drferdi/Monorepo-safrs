@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import { ClinicalTrajectory } from '@/components/clinical/ClinicalTrajectory';
 import type { ScreeningAlert } from '@/components/clinical/TTVInferenceUI';
@@ -8,7 +8,9 @@ import type {
   DisabilityType,
   ObesityConfirmation,
 } from '@/lib/clinical/autosen-types';
+import { buildDiagnosisRequestContext } from '@/lib/diagnosis-engine/request-context';
 import type { VisitRecord } from '@/lib/iskandar-diagnosis-engine/visit-history-store';
+import { sendMessage } from '@/utils/messaging';
 
 export interface ClinicalReasoningWorkbenchVitals {
   sbp: string;
@@ -60,6 +62,9 @@ export interface ClinicalReasoningWorkbenchProps {
   onOpenDifferential?: () => void;
 }
 
+/** Until the recurrent-diagnosis history is wired in; module-level so the memo below stays stable. */
+const NO_RECURRENT: Array<{ icd: string; name: string }> = [];
+
 function toInt(value: string): number {
   const parsed = Number.parseInt(value, 10);
   return Number.isFinite(parsed) ? parsed : 0;
@@ -104,6 +109,34 @@ export function ClinicalReasoningWorkbench({
     }),
     [sbp, dbp, hr, rr, temp, spo2, glucose]
   );
+  const recurrent = NO_RECURRENT;
+
+  // Start the MIRA step while the doctor is still here, so the diagnosis page has it ready.
+  const requestContext = useMemo(
+    () =>
+      buildDiagnosisRequestContext({
+        keluhanUtama,
+        keluhanTambahan,
+        patientAge: patient.age,
+        patientGender: patient.gender,
+        vitals: {
+          sbp: trajectoryVitals.sbp,
+          dbp: trajectoryVitals.dbp,
+          hr: trajectoryVitals.hr,
+          rr: trajectoryVitals.rr,
+          temp: trajectoryVitals.temp,
+        },
+        recurrent,
+      }),
+    [keluhanUtama, keluhanTambahan, patient.age, patient.gender, trajectoryVitals, recurrent]
+  );
+  useEffect(() => {
+    if (!requestContext.keluhan_utama || requestContext.keluhan_utama === '-' || !patient.rm) return;
+    const timer = setTimeout(() => {
+      sendMessage('prefetchDiagnosis', requestContext).catch(() => undefined);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [requestContext, patient.rm]);
 
   return (
     <ClinicalTrajectory

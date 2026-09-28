@@ -38,6 +38,7 @@ describe('extension message contract names', () => {
       'getCDSSStatus',
       'initializeCDSS',
       'miraEnsure',
+      'prefetchDiagnosis',
       'scanFields',
       'scanMedicalHistory',
       'scanVisitHistory',
