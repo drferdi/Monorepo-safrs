@@ -1,4 +1,5 @@
 import { motion, useReducedMotion, type Transition, type Variants } from 'framer-motion';
+import type { ReactNode } from 'react';
 
 import { cleanClinicalSummary, formatClinicalText } from './diagnosisDisplayUtils';
 
@@ -12,7 +13,7 @@ import { cleanClinicalSummary, formatClinicalText } from './diagnosisDisplayUtil
  * grows down to the next node once its entry has landed. Closing folds the panel on a shorter
  * spring. Reduced motion keeps only the fades.
  */
-export type ReasonGroup = { key: string; title: string; items: string[] };
+export type ReasonGroup = { key: string; title: string; items: string[]; hideCount?: boolean };
 
 const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 const STAGGER = 0.07;
@@ -39,9 +40,11 @@ const ICONS: Record<string, string> = {
   against: 'M4.5 4.5l7 7M11.5 4.5l-7 7',
   missing: 'M6 6.2a2 2 0 1 1 2.9 1.8c-.6.3-.9.7-.9 1.3v.4M8 12.2h.01',
   review: 'M4 4.5h8M4 8h8M4 11.5h5',
+  history: 'M8 4.5V8l2.2 1.4M13.25 8a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z',
+  why: 'M8 5.5v3.2M8 11h.01M7.1 2.6 1.9 11.6a1 1 0 0 0 .9 1.5h10.4a1 1 0 0 0 .9-1.5L8.9 2.6a1 1 0 0 0-1.8 0Z',
 };
 
-export function ReasonTimeline({ groups }: { groups: ReasonGroup[] }) {
+export function ReasonTimeline({ groups, footer }: { groups: ReasonGroup[]; footer?: ReactNode }) {
   const reduceMotion = useReducedMotion();
   const shown = groups
     .map((group) => ({ ...group, items: group.items.map(cleanClinicalSummary).filter(Boolean) }))
@@ -90,7 +93,7 @@ export function ReasonTimeline({ groups }: { groups: ReasonGroup[] }) {
             <div className="min-w-0 flex-1 pt-1">
               <div className="flex items-baseline justify-between gap-3">
                 <span className="diagnosis-list-title">{group.title}</span>
-                <span className="ttv-label">{group.items.length}</span>
+                {group.hideCount ? null : <span className="ttv-label">{group.items.length}</span>}
               </div>
               <ul className="mt-1 flex flex-col gap-0.5">
                 {group.items.map((item) => (
@@ -103,6 +106,7 @@ export function ReasonTimeline({ groups }: { groups: ReasonGroup[] }) {
           </motion.li>
         ))}
       </ol>
+      {footer ? <div className="flex pt-3">{footer}</div> : null}
     </motion.div>
   );
 }

@@ -19,6 +19,11 @@ export interface DiagnosisTriageView {
   referralGuidance: string | null;
 }
 
+export interface DiagnosisNextBestActionView {
+  item: string;
+  reason: string;
+}
+
 export interface DiagnosisPageProps {
   viewModel: DiagnosisPageViewModel;
   phase: 'loading' | 'error' | 'ready';
@@ -33,6 +38,8 @@ export interface DiagnosisPageProps {
   manualMedicationOptions: string[];
   triage?: DiagnosisTriageView | null;
   recurrentOnlyMessage?: string;
+  /** The engine's most useful next question, exam or test, with why it helps; none hides the section. */
+  nextBestAction?: DiagnosisNextBestActionView | null;
   onCompleteData: () => void;
   onTogglePrimaryCandidate: () => void;
   onToggleManualDiagnosisInput: () => void;

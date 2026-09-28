@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 
 import {
   cleanClinicalSummary,
@@ -9,8 +9,8 @@ import {
 } from '../diagnosisDisplayUtils';
 import type { DiagnosisPageProps } from '../diagnosisPageProps';
 import { PixelLoader } from '../PixelLoader';
-import { ReasonTimeline } from '../ReasonTimeline';
-import { definitionFor, useDiseaseDefinitions } from '../useDiseaseDefinitions';
+import { ReasonTimeline, type ReasonGroup } from '../ReasonTimeline';
+import { diseaseNoteFor, useDiseaseNotes, type DiseaseNote } from '../useDiseaseNotes';
 import type { DiagnosisCandidateView, DiagnosisPageViewModel } from '../diagnosisViewModel';
 
 /** Cards on the page: the primary plus the differentials; the rest waits behind "Lainnya". */
@@ -37,6 +37,7 @@ type Props = Pick<
   | 'phase'
   | 'errorMessage'
   | 'recurrentOnlyMessage'
+  | 'nextBestAction'
   | 'showManualDiagnosisInput'
   | 'manualIcd'
   | 'manualName'
@@ -59,10 +60,6 @@ function historyLine(card: DiagnosisCandidateView): string | null {
   return `${card.history.count}× dalam ${HISTORY_WINDOW_MONTHS} bulan · terakhir ${formatShortDate(card.history.lastSeen)}`;
 }
 
-function tallyLine(card: DiagnosisCandidateView): string {
-  return [`mendukung ${card.supports.length}`, `tidak ${card.against.length}`, `? ${card.missing.length}`].join(' · ');
-}
-
 const ENGINE_TAG = /\s·\s(MIRA(?: · jangan terlewat)?)$/;
 // `MIRA_CANNOT_MISS_TAG` in lib/diagnosis-engine/run-diagnosis.ts; not imported, so the side
 // panel does not pull the background's engine modules in.
@@ -72,14 +69,15 @@ function engineTagOf(card: DiagnosisCandidateView): string | null {
   return formatClinicalText(card.displayLabel).match(ENGINE_TAG)?.[1] ?? null;
 }
 
-function chipFor(card: DiagnosisCandidateView): string | null {
-  if (card.history) return card.history.label;
-  return engineTagOf(card);
-}
-
 /** A card MIRA marks as cannot-miss, including a history card merged with that engine row. */
 function hasCannotMissTag(card: DiagnosisCandidateView): boolean {
   return engineTagOf(card) === CANNOT_MISS_TAG;
+}
+
+function chipFor(card: DiagnosisCandidateView): string | null {
+  if (card.history) return card.history.label;
+  if (hasCannotMissTag(card)) return 'Jangan terlewat';
+  return engineTagOf(card);
 }
 
 function sortHistoryFirst(candidates: DiagnosisCandidateView[]): DiagnosisCandidateView[] {
@@ -112,17 +110,43 @@ function List({
   );
 }
 
+/** The reasons of an ordinary card, top to bottom: the history rule, then the evidence. */
+function reasonGroups(card: DiagnosisCandidateView): ReasonGroup[] {
+  const rule = historyLine(card);
+  return [
+    ...(rule ? [{ key: 'history', title: 'Riwayat', items: [rule], hideCount: true }] : []),
+    { key: 'supports', title: 'Mendukung', items: card.supports },
+    { key: 'against', title: 'Menentang', items: card.against },
+    { key: 'missing', title: 'Data kurang', items: card.missing },
+    { key: 'review', title: 'Catatan', items: card.review, hideCount: true },
+  ];
+}
+
+/** Why a MUST NOT MISS card matters: the findings that point to it, what missing it risks, and what is still unknown. */
+function mustNotMissGroups(card: DiagnosisCandidateView, note: DiseaseNote | null): ReasonGroup[] {
+  const risk = note && note.complications.length > 0 ? [`Bila terlewat: ${note.complications.join(', ')}`] : [];
+  return [
+    { key: 'why', title: 'Mengapa perlu dipertimbangkan', items: [...card.supports, ...risk], hideCount: true },
+    { key: 'missing', title: 'Data kurang', items: card.missing },
+  ];
+}
+
 function Card({
   card,
   index,
-  definition,
+  note,
+  mustNotMiss = false,
   onToggle,
+  onCheck,
 }: {
   card: DiagnosisCandidateView;
   index: number;
-  /** The knowledge base's short explanation of the disease, clamped to three lines. */
-  definition: string | null;
+  /** The knowledge base's notes for this code: the clamped explanation and, for MUST NOT MISS, the complications. */
+  note: DiseaseNote | null;
+  mustNotMiss?: boolean;
   onToggle: (id: string) => void;
+  /** "Apa yang perlu diperiksa →" on a MUST NOT MISS card. */
+  onCheck: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const title = formatClinicalText(card.displayLabel).replace(
@@ -130,7 +154,8 @@ function Card({
     ''
   );
   const chip = chipFor(card);
-  // The select control and the "Tap here" button are siblings: a role="button" element's
+  const toggleLabel = mustNotMiss ? 'Mengapa perlu dipertimbangkan' : 'Lihat alasan';
+  // The select control and the reasons button are siblings: a role="button" element's
   // children are presentational, so a nested button would be unreachable for assistive tech.
   return (
     <motion.div
@@ -168,29 +193,43 @@ function Card({
           <div className="diagnosis-row-title">{title}</div>
           {chip ? <span className="diagnosis-rank-label">{chip}</span> : null}
         </div>
-        {definition ? <div className="diagnosis-row-meta line-clamp-3">{definition}</div> : null}
-        <div className="diagnosis-row-meta">{historyLine(card) ?? tallyLine(card)}</div>
+        {note?.definition ? <div className="diagnosis-row-meta line-clamp-3">{note.definition}</div> : null}
+        <div className="diagnosis-row-meta flex flex-wrap gap-x-3" data-testid="dx-flow-tally">
+          <span>{`✓ Mendukung ${card.supports.length}`}</span>
+          <span>{`− Menentang ${card.against.length}`}</span>
+          <span>{`? Belum diketahui ${card.missing.length}`}</span>
+        </div>
       </div>
       <div className="flex">
         <button
           type="button"
-          className="diagnosis-text-button"
+          className="diagnosis-text-button inline-flex items-center gap-1"
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
-          Tap here
+          {toggleLabel}
+          <motion.span
+            aria-hidden="true"
+            className="inline-block"
+            animate={{ rotate: open ? 180 : 0 }}
+            transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
+          >
+            ⌄
+          </motion.span>
         </button>
       </div>
       <AnimatePresence initial={false}>
         {open ? (
           <ReasonTimeline
             key="reasons"
-            groups={[
-              { key: 'supports', title: 'Mendukung', items: card.supports },
-              { key: 'against', title: 'Yang tidak mendukung', items: card.against },
-              { key: 'missing', title: 'Data kurang', items: card.missing },
-              { key: 'review', title: 'Catatan', items: card.review },
-            ]}
+            groups={mustNotMiss ? mustNotMissGroups(card, note) : reasonGroups(card)}
+            footer={
+              mustNotMiss ? (
+                <button type="button" className="diagnosis-text-button" onClick={onCheck}>
+                  Apa yang perlu diperiksa →
+                </button>
+              ) : undefined
+            }
           />
         ) : null}
       </AnimatePresence>
@@ -198,6 +237,7 @@ function Card({
   );
 }
 
+/** The engine's do-not-miss reasons, minus those whose ICD code already has a card on the page. */
 function visibleDoNotMissItems(doNotMiss: string[], cardCodes: Set<string>): string[] {
   return doNotMiss
     .map(cleanClinicalSummary)
@@ -208,12 +248,27 @@ function visibleDoNotMissItems(doNotMiss: string[], cardCodes: Set<string>): str
     });
 }
 
+/** One titled part of the Diagnosis step, after a hairline when another part precedes it. */
+function Section({ label, testId, divider, children }: { label: string; testId: string; divider: boolean; children: ReactNode }) {
+  return (
+    <>
+      {divider ? <div className="console-divider" aria-hidden="true" /> : null}
+      <div className="flex flex-col gap-2">
+        <span className="ttv-label" data-testid={testId}>
+          {label}
+        </span>
+        {children}
+      </div>
+    </>
+  );
+}
+
 /**
  * The primary is the chosen diagnosis; before the doctor agrees it is the strongest proposal
  * (the patient's own recurrent diagnosis first, else the engine's top card) and is labelled as a
- * proposal. Everything else is the differential list. On the page the differentials come first,
- * numbered, and the primary slot follows them as the outcome (Chief's order: Temuan, Diagnosis
- * banding 1, Diagnosis banding 2, Diagnosis).
+ * proposal. Cannot-miss cards stand in MUST NOT MISS; everything else is the differential list.
+ * Order on the page (Chief's mockup, 2026-09-28): primary, MUST NOT MISS, Diagnosis banding,
+ * NEXT BEST STEP.
  */
 function splitPrimary(cards: DiagnosisCandidateView[]): {
   primary: DiagnosisCandidateView | null;
@@ -232,6 +287,7 @@ export function DiagnosisStep({
   phase,
   errorMessage,
   recurrentOnlyMessage,
+  nextBestAction,
   showManualDiagnosisInput,
   manualIcd,
   manualName,
@@ -243,28 +299,31 @@ export function DiagnosisStep({
   onCompleteData,
 }: Props) {
   const [showAll, setShowAll] = useState(false);
-  const definitions = useDiseaseDefinitions();
+  const notes = useDiseaseNotes();
 
   const sortedCards = sortHistoryFirst(viewModel.candidates.filter((candidate) => candidate.code !== 'R69'));
   const { primary, rest } = splitPrimary(sortedCards);
-  // Cannot-miss cards never count against the cap and are never hidden behind "Lainnya": a
-  // history card tagged cannot-miss stays with the history group, an engine one closes the list.
+  // Cannot-miss cards never count against the cap and are never hidden behind "Lainnya".
+  const mustNotMiss = rest.filter(hasCannotMissTag);
   const cappable = rest.filter((card) => !hasCannotMissTag(card));
   const differentialCap = Math.max(MAX_CARDS - (primary && !hasCannotMissTag(primary) ? 1 : 0), 0);
-  const differentials = cappable.slice(0, differentialCap);
   const moreCards = cappable.slice(differentialCap);
-  const historyCannotMiss = rest.filter((card) => card.history && hasCannotMissTag(card));
-  const engineCannotMiss = rest.filter((card) => !card.history && hasCannotMissTag(card));
-  const visibleDifferentials = [
-    ...differentials,
-    ...historyCannotMiss,
-    ...engineCannotMiss,
-    ...(showAll ? moreCards : []),
-  ];
-  const visibleCards = [...(primary ? [primary] : []), ...visibleDifferentials];
-  const cardCodes = new Set(visibleCards.map((candidate) => candidate.code.toUpperCase()));
+  const differentials = [...cappable.slice(0, differentialCap), ...(showAll ? moreCards : [])];
+  const cardCodes = new Set(
+    [...(primary ? [primary] : []), ...mustNotMiss, ...differentials].map((candidate) => candidate.code.toUpperCase())
+  );
   const doNotMissItems = visibleDoNotMissItems(viewModel.evidence.doNotMiss, cardCodes);
   const visibleNotice = getVisibleErrorMessage(errorMessage);
+  const card = (candidate: DiagnosisCandidateView, index: number, isMustNotMiss = false) => (
+    <Card
+      card={candidate}
+      index={index}
+      note={diseaseNoteFor(notes, candidate.code)}
+      mustNotMiss={isMustNotMiss}
+      onToggle={onToggleCandidate}
+      onCheck={onCompleteData}
+    />
+  );
 
   return (
     <section className="ct-v2-panel flex flex-col gap-3" aria-label="Diagnosis" aria-live="polite">
@@ -320,44 +379,74 @@ export function DiagnosisStep({
             </>
           ) : null}
 
-          {visibleDifferentials.length > 0 ? (
-            <div className="diagnosis-list">
-              {visibleDifferentials.map((card, index) => (
-                <div key={card.id} className="flex flex-col gap-1">
-                  <span className="ttv-label" data-testid="dx-flow-differential-label">
-                    {`Diagnosis banding ${index + 1}`}
-                  </span>
-                  <Card card={card} index={index} definition={definitionFor(definitions, card.code)} onToggle={onToggleCandidate} />
-                </div>
-              ))}
-            </div>
-          ) : null}
-
-          {!showAll && moreCards.length > 0 ? (
-            <div className="flex">
-              <button type="button" className="diagnosis-text-button" onClick={() => setShowAll(true)}>
-                {`Lainnya (${moreCards.length})`}
-              </button>
-            </div>
-          ) : null}
-
           {primary ? (
-            <div className="flex flex-col gap-1">
+            <div className="flex flex-col gap-2">
               <span className="ttv-label" data-testid="dx-flow-primary-label">
                 {primary.isSelected ? 'Diagnosis utama' : 'Usulan diagnosis utama'}
               </span>
-              <Card
-                card={primary}
-                index={visibleDifferentials.length}
-                definition={definitionFor(definitions, primary.code)}
-                onToggle={onToggleCandidate}
-              />
+              {card(primary, 0)}
             </div>
           ) : null}
 
-          {doNotMissItems.map((item) => (
-            <p key={item} className="text-small ct-v2-danger-text">{`Jangan terlewat: ${item}`}</p>
-          ))}
+          {mustNotMiss.length > 0 || doNotMissItems.length > 0 ? (
+            <Section label="Must not miss" testId="dx-flow-mnm-label" divider={primary !== null}>
+              {mustNotMiss.length > 0 ? (
+                <div className="diagnosis-list">
+                  {mustNotMiss.map((candidate, index) => (
+                    <div key={candidate.id}>{card(candidate, index + 1, true)}</div>
+                  ))}
+                </div>
+              ) : null}
+              {doNotMissItems.map((item) => (
+                <p key={item} className="text-small ct-v2-danger-text">{`Jangan terlewat: ${item}`}</p>
+              ))}
+            </Section>
+          ) : null}
+
+          {differentials.length > 0 || moreCards.length > 0 ? (
+            <Section
+              label="Diagnosis banding"
+              testId="dx-flow-banding-label"
+              divider={primary !== null || mustNotMiss.length > 0 || doNotMissItems.length > 0}
+            >
+              <div className="diagnosis-list">
+                {differentials.map((candidate, index) => (
+                  <div key={candidate.id} className="flex flex-col gap-1">
+                    <span className="ttv-label" data-testid="dx-flow-differential-label">
+                      {`Diagnosis banding ${index + 1}`}
+                    </span>
+                    {card(candidate, mustNotMiss.length + index + 1)}
+                  </div>
+                ))}
+              </div>
+              {!showAll && moreCards.length > 0 ? (
+                <div className="flex">
+                  <button
+                    type="button"
+                    className="diagnosis-text-button inline-flex items-center gap-1"
+                    onClick={() => setShowAll(true)}
+                  >
+                    {`Lainnya (${moreCards.length})`}
+                    <span aria-hidden="true">⌄</span>
+                  </button>
+                </div>
+              ) : null}
+            </Section>
+          ) : null}
+
+          {nextBestAction ? (
+            <Section label="Next best step" testId="dx-flow-next-label" divider>
+              <div className="diagnosis-row-title">{formatClinicalText(nextBestAction.item)}</div>
+              {nextBestAction.reason ? (
+                <div className="diagnosis-row-meta">{formatClinicalText(nextBestAction.reason)}</div>
+              ) : null}
+              <div className="flex">
+                <button type="button" className="btn-ac-inline btn-ac-inline--sharp" onClick={onCompleteData}>
+                  Masukkan hasil
+                </button>
+              </div>
+            </Section>
+          ) : null}
 
           <div className="flex flex-wrap gap-3">
             <button type="button" className="diagnosis-text-button" onClick={onToggleManualDiagnosisInput}>

@@ -338,10 +338,13 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     const diagnosisStep = within(workspace).getByLabelText('Diagnosis');
     const lainnya = within(diagnosisStep).queryByRole('button', { name: /^Lainnya \(/ });
     if (lainnya) fireEvent.click(lainnya);
-    // The banding cards come first; the proposed primary is the last card.
+    // The proposed primary is the card under the primary label; every other card is a differential.
     const diagnosisCards = within(diagnosisStep).getAllByTestId('dx-flow-card');
-    const primaryCard = diagnosisCards[diagnosisCards.length - 1];
-    const differentialCards = diagnosisCards.slice(0, -1);
+    const primaryCard = within(diagnosisStep)
+      .getByTestId('dx-flow-primary-label')
+      .parentElement?.querySelector<HTMLElement>('[data-testid="dx-flow-card"]');
+    if (!primaryCard) throw new Error('no card under the primary label');
+    const differentialCards = diagnosisCards.filter((card) => card !== primaryCard);
     expect(primaryCard).toHaveTextContent(/J18\.9 - Community Acquired Pneumonia/i);
     expect(primaryCard).not.toHaveTextContent(
       /Siap ditinjau dokter|diagnosis dipilih|Review red flags|Korelasikan keluhan|Perlu dilengkapi/i
@@ -388,7 +391,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     expect(within(workspace).queryByTestId('dx-flow-triage')).toBeNull();
     expect(within(workspace).queryByLabelText('Keselamatan')).toBeNull();
 
-    const advanced = within(cardOf(primaryCard)).getByRole('button', { name: 'Tap here' });
+    const advanced = within(cardOf(primaryCard)).getByRole('button', { name: 'Lihat alasan' });
     expect(advanced).toBeTruthy();
     expect(advanced).toHaveAttribute('aria-expanded', 'false');
     expect(workspace.textContent).not.toMatch(LONG_PRIMARY_RATIONALE);
@@ -853,12 +856,12 @@ describe('ClinicalDifferential final diagnosis support page', () => {
 
     const workspace = screen.getByTestId('diagnosis-workspace');
     const [primaryCard] = await within(workspace).findAllByTestId('dx-flow-card');
-    const advancedReasoning = within(cardOf(primaryCard)).getByRole('button', { name: 'Tap here' });
+    const advancedReasoning = within(cardOf(primaryCard)).getByRole('button', { name: 'Lihat alasan' });
     expect(advancedReasoning).toBeTruthy();
     expect(advancedReasoning).toHaveAttribute('aria-expanded', 'false');
   });
 
-  // The select control carries data-testid="dx-flow-card"; "Tap here" sits beside it in the card.
+  // The select control carries data-testid="dx-flow-card"; "Lihat alasan" sits beside it in the card.
   function cardOf(select: HTMLElement): HTMLElement {
     const wrapper = select.parentElement;
     if (!wrapper) throw new Error('dx-flow-card wrapper missing');
@@ -933,7 +936,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
       expect(within(card(/^K35\.8 - /)).getByText('MIRA')).toBeTruthy();
     });
     expect(within(card(/^Z99\.9 - /)).getByText('MIRA')).toBeTruthy();
-    expect(within(card(/^K65\.0 - /)).getByText('MIRA · jangan terlewat')).toBeTruthy();
+    expect(within(card(/^K65\.0 - /)).getByText('Jangan terlewat')).toBeTruthy();
   });
 
   it('shows "MIRA tidak tersedia" when the engine fell back to the legacy list', async () => {
@@ -1108,7 +1111,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
 
       fireStorageChange({ key: PREFETCH_KEY, at: 't' });
       await waitFor(() =>
-        expect(within(card(/^K65\.0 - /)).getByText('MIRA · jangan terlewat')).toBeTruthy()
+        expect(within(card(/^K65\.0 - /)).getByText('Jangan terlewat')).toBeTruthy()
       );
       expect(getSuggestionsCalls()).toBe(2);
       expect(listeners).toHaveLength(0);
@@ -1129,7 +1132,7 @@ describe('ClinicalDifferential final diagnosis support page', () => {
       };
       renderPage();
       await waitFor(() =>
-        expect(within(card(/^K65\.0 - /)).getByText('MIRA · jangan terlewat')).toBeTruthy()
+        expect(within(card(/^K65\.0 - /)).getByText('Jangan terlewat')).toBeTruthy()
       );
       expect(getSuggestionsCalls()).toBe(2);
       expect(listeners).toHaveLength(0);

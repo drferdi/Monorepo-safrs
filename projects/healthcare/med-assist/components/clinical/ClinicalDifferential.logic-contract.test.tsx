@@ -162,10 +162,12 @@ const therapyMedication: MedicationRecommendation = {
   safety_check: 'safe',
 };
 
-/** The banding cards come first on the Diagnosis step; the proposed primary is the last card. */
+/** The proposed primary: the card under the primary label on the Diagnosis step. */
 async function findPrimaryCard(): Promise<HTMLElement> {
-  const cards = await screen.findAllByTestId('dx-flow-card');
-  return cards[cards.length - 1];
+  const label = await screen.findByTestId('dx-flow-primary-label');
+  const card = label.parentElement?.querySelector<HTMLElement>('[data-testid="dx-flow-card"]');
+  if (!card) throw new Error('no card under the primary label');
+  return card;
 }
 
 function renderClinicalDifferential(
