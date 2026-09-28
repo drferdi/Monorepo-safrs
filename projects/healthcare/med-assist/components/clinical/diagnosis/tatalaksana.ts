@@ -1,5 +1,6 @@
 import { diseaseNoteFor, type DiseaseNote } from './useDiseaseNotes';
 
+import { checkMockDDI } from '@/lib/api/mocks/ddi-mock';
 import { parseTherapyHistoryText } from '@/lib/clinical/chronic-therapy-history';
 import type { VisitRecord } from '@/lib/iskandar-diagnosis-engine/visit-history-store';
 import { classifyRole, type TriadRole } from '@/lib/rme/payload-mapper';
@@ -99,6 +100,25 @@ export const ROLE_ORDER: TriadRole[] = ['utama', 'adjuvant', 'vitamin'];
 
 /** The engine's role when it sent one, else the RME mapper's own keyword rule. */
 export const roleOf = (name: string, role?: TriadRole): TriadRole => role ?? classifyRole(name);
+
+export interface InteractionReason {
+  /** Why the pair interacts; null when no source here names a mechanism. */
+  reason: string | null;
+  /** What to do about it. */
+  advice: string;
+}
+
+/**
+ * Why two drugs interact (Chief, 2026-09-29: "DDI : beri penjelasan kenapa"). DDInter gives the
+ * severity only, with one generic sentence per severity, so the mechanism comes from the curated
+ * pair table in `lib/api/mocks/ddi-mock.ts` (Lexicomp / Micromedex based) when it lists the pair;
+ * otherwise nothing is composed and DDInter's own advice stands. The severity is DDInter's.
+ */
+export function explainInteraction(interaction: DrugInteraction): InteractionReason {
+  const known = checkMockDDI([interaction.drug_a, interaction.drug_b])[0];
+  if (known) return { reason: known.description, advice: known.recommendation ?? interaction.recommendation ?? '' };
+  return { reason: null, advice: interaction.recommendation ?? '' };
+}
 
 /** The interactions one medication takes part in. */
 export function interactionsFor(name: string, interactions: DrugInteraction[]): DrugInteraction[] {

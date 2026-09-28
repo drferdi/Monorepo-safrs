@@ -10,6 +10,7 @@ import { PANEL_CLOSE, PANEL_OPEN, TIMELINE_STAGGER, timelineEntry, timelineEntry
 import {
   ROLE_ORDER,
   allergyMatches,
+  explainInteraction,
   interactionsFor,
   nameBesideDose,
   reviewSafety,
@@ -187,7 +188,8 @@ const STEP_ICONS: Record<TherapyStepKey, string> = {
   kontra: 'M8 5.5v3.2M8 11h.01M7.1 2.6 1.9 11.6a1 1 0 0 0 .9 1.5h10.4a1 1 0 0 0 .9-1.5L8.9 2.6a1 1 0 0 0-1.8 0Z',
 };
 
-type TherapyStepRow = { key: TherapyStepKey; label?: string; value: ReactNode; tone?: 'danger' };
+/** `tone` reds the node and the value; `ownTone` reds the node only (the value colours its parts). */
+type TherapyStepRow = { key: TherapyStepKey; label?: string; value: ReactNode; tone?: 'danger'; ownTone?: boolean };
 
 /**
  * A therapy card as the "Activity timeline" of lab.xevrion.dev (Chief, 2026-09-29): name, dose,
@@ -226,7 +228,7 @@ function TherapyTimeline({ rows }: { rows: TherapyStepRow[] }) {
           {row.label ? (
             <div className="dx-tx-step min-w-0 flex-1">
               <span className="diagnosis-row-meta dx-tx-step-label">{row.label}</span>
-              <span className={row.tone === 'danger' ? 'diagnosis-row-meta dx-tx-danger min-w-0' : 'diagnosis-row-meta dx-tx-step-value min-w-0'}>
+              <span className={row.tone === 'danger' && !row.ownTone ? 'diagnosis-row-meta dx-tx-danger min-w-0' : 'diagnosis-row-meta dx-tx-step-value min-w-0'}>
                 {row.value}
               </span>
             </div>
@@ -239,26 +241,68 @@ function TherapyTimeline({ rows }: { rows: TherapyStepRow[] }) {
   );
 }
 
-function interactionText(name: string, interactions: DrugInteraction[], state: DiagnosisPageProps['interactionCheck']['state']): string {
-  if (state === 'checking') return 'memeriksa…';
-  if (state === 'unavailable') return 'tidak dapat dicek';
-  const own = interactionsFor(name, interactions);
-  if (own.length === 0) return 'tidak ada';
-  return own.map((interaction) => `${interaction.drug_a === name ? interaction.drug_b : interaction.drug_a} (${interaction.severity})`).join(', ');
+const NO_PAIRS: Set<string> = new Set();
+
+const isSerious = (interaction: DrugInteraction) => interaction.severity === 'major' || interaction.severity === 'contraindicated';
+
+/** One key per drug pair, whichever side it is read from. */
+const pairKey = (interaction: DrugInteraction) => [interaction.drug_a, interaction.drug_b].sort().join(' + ');
+
+/**
+ * The DDI node: each partner drug with its severity and, on the one card that explains the pair
+ * (`explains`), why and what to do (Chief, 2026-09-29: "DDI : beri penjelasan kenapa"). The pair
+ * is explained once on the page; the other card names the partner only.
+ */
+function DdiValue({
+  name,
+  interactionCheck,
+  explains,
+}: {
+  name: string;
+  interactionCheck: DiagnosisPageProps['interactionCheck'];
+  explains: Set<string>;
+}) {
+  if (interactionCheck.state === 'checking') return <>memeriksa…</>;
+  if (interactionCheck.state === 'unavailable') return <>tidak dapat dicek</>;
+  const own = interactionsFor(name, interactionCheck.interactions);
+  if (own.length === 0) return <>tidak ada</>;
+  return (
+    <span className="flex flex-col gap-1">
+      {own.map((interaction) => {
+        const key = pairKey(interaction);
+        const why = explains.has(key) ? explainInteraction(interaction) : null;
+        return (
+          <span key={key} className="flex flex-col" data-ddi-reason={why ? key : undefined}>
+            <span className={isSerious(interaction) ? 'dx-tx-danger' : undefined}>
+              {`${interaction.drug_a === name ? interaction.drug_b : interaction.drug_a} (${interaction.severity})`}
+            </span>
+            {why ? (
+              <>
+                <span className="diagnosis-row-meta">{why.reason ?? 'Mekanisme tidak tercatat di DDInter.'}</span>
+                {why.advice ? <span className="diagnosis-row-meta">{`Saran: ${why.advice}`}</span> : null}
+              </>
+            ) : null}
+          </span>
+        );
+      })}
+    </span>
+  );
 }
 
 function hasSeriousInteraction(name: string, interactions: DrugInteraction[]): boolean {
-  return interactionsFor(name, interactions).some((interaction) => interaction.severity === 'major' || interaction.severity === 'contraindicated');
+  return interactionsFor(name, interactions).some(isSerious);
 }
 
 function ChronicCard({
   medication,
   interactionCheck,
   allergies,
+  explains,
 }: {
   medication: ChronicMedicationView;
   interactionCheck: DiagnosisPageProps['interactionCheck'];
   allergies: string[];
+  explains: Set<string>;
 }) {
   const [open, setOpen] = useState(false);
   const allergy = allergyMatches(medication.name, allergies);
@@ -288,8 +332,9 @@ function ChronicCard({
           {
             key: 'ddi',
             label: 'DDI',
-            value: interactionText(medication.name, interactionCheck.interactions, interactionCheck.state),
+            value: <DdiValue name={medication.name} interactionCheck={interactionCheck} explains={explains} />,
             tone: hasSeriousInteraction(medication.name, interactionCheck.interactions) ? 'danger' : undefined,
+            ownTone: true,
           },
           {
             key: 'kontra',
@@ -303,10 +348,17 @@ function ChronicCard({
         {open ? (
           <Collapse key="review" testId="dx-tx-chronic-review">
             {medication.visits.length > 0 ? (
-              <ul className="diagnosis-line-list dx-tx-review">
+              // Muted like the timeline labels (Chief, 2026-09-29): history, not today's prescription.
+              <ul className="dx-tx-review">
                 {medication.visits.map((visit, index) => (
-                  <li key={`${visit.date}-${index}`}>
-                    {[formatShortDate(visit.date), visit.dose, visit.diagnosis].filter(Boolean).join(' · ')}
+                  <li key={`${visit.date}-${index}`} className="dx-tx-review-row">
+                    <span className="diagnosis-row-meta dx-tx-step-label">{formatShortDate(visit.date)}</span>
+                    {/* Dose and diagnosis each stay whole; a narrow panel breaks between them. */}
+                    <span className="diagnosis-row-meta min-w-0">
+                      <span className="whitespace-nowrap">{visit.dose}</span>
+                      {visit.dose && visit.diagnosis ? ' · ' : null}
+                      <span className="whitespace-nowrap">{visit.diagnosis}</span>
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -377,6 +429,7 @@ function VisitCard({
   allergies,
   replacing,
   form,
+  explains,
   onToggle,
   onReplace,
   onRemove,
@@ -384,6 +437,7 @@ function VisitCard({
   medication: DiagnosisMedicationView;
   interactionCheck: DiagnosisPageProps['interactionCheck'];
   allergies: string[];
+  explains: Set<string>;
   replacing: boolean;
   form: ReactNode;
   onToggle: () => void;
@@ -439,8 +493,9 @@ function VisitCard({
             {
               key: 'ddi',
               label: 'DDI',
-              value: interactionText(medication.name, interactionCheck.interactions, interactionCheck.state),
+              value: <DdiValue name={medication.name} interactionCheck={interactionCheck} explains={explains} />,
               tone: serious ? 'danger' : undefined,
+              ownTone: true,
             },
             {
               key: 'kontra',
@@ -475,7 +530,15 @@ function SafetyPart({
   review: SafetyReview;
   interactionCheck: DiagnosisPageProps['interactionCheck'];
 }) {
-  const [detail, setDetail] = useState(false);
+  const reduceMotion = useReducedMotion();
+  // The reason is written once, on the card; "Lihat detail" takes the doctor there.
+  const showDetail = () => {
+    const key = review.interactions[0] ? pairKey(review.interactions[0]) : null;
+    const target = [...document.querySelectorAll('[data-ddi-reason]')].find((element) => element.getAttribute('data-ddi-reason') === key);
+    if (!(target instanceof HTMLElement)) return;
+    target.scrollIntoView?.({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+    if (!reduceMotion) target.animate?.([{ opacity: 0.35 }, { opacity: 1 }], { duration: 520, iterations: 2, easing: 'ease-out' });
+  };
   const checking = interactionCheck.state === 'checking';
   const findings = review.duplicates.length + review.interactions.length + review.contraindications.length;
   // A check that passed is ticked; one that found something is listed in the warning instead.
@@ -523,14 +586,8 @@ function SafetyPart({
               <div className="diagnosis-row-head">
                 <div className="diagnosis-list-title">⚠ Perlu review</div>
                 {review.interactions.length > 0 ? (
-                  <button
-                    type="button"
-                    className="diagnosis-text-button inline-flex items-center gap-1"
-                    aria-expanded={detail}
-                    onClick={() => setDetail((value) => !value)}
-                  >
+                  <button type="button" className="diagnosis-text-button" onClick={showDetail}>
                     Lihat detail
-                    <Chevron open={detail} />
                   </button>
                 ) : null}
               </div>
@@ -547,19 +604,6 @@ function SafetyPart({
                   <li key={`${entry.drug}-${entry.reason}`}>{`Kontraindikasi: ${entry.drug} (${entry.reason})`}</li>
                 ))}
               </ul>
-              <AnimatePresence initial={false}>
-                {detail ? (
-                  <Collapse key="detail" testId="dx-tx-safety-detail">
-                    <ul className="diagnosis-line-list">
-                      {review.interactions.map((interaction) => (
-                        <li key={`${interaction.drug_a}+${interaction.drug_b}`}>
-                          {[interaction.description, interaction.recommendation].filter(Boolean).join(' ')}
-                        </li>
-                      ))}
-                    </ul>
-                  </Collapse>
-                ) : null}
-              </AnimatePresence>
             </div>
           ) : null}
         </>
@@ -737,6 +781,14 @@ export function TatalaksanaStep({
     number: pad(index + 1),
     items: medications.filter((medication) => roleOf(medication.name, medication.role) === role),
   })).filter((slot) => slot.items.length > 0);
+  // Each interacting pair is explained on the first card on the page that holds either drug.
+  const explained = new Map<string, Set<string>>();
+  const pageOrder = [...chronicMedications.map((medication) => medication.name), ...slots.flatMap((slot) => slot.items.map((medication) => medication.name))];
+  for (const interaction of interactionCheck.interactions) {
+    const owner = pageOrder.find((name) => name === interaction.drug_a || name === interaction.drug_b);
+    if (owner) explained.set(owner, new Set([...(explained.get(owner) ?? []), pairKey(interaction)]));
+  }
+  const explainsFor = (name: string) => explained.get(name) ?? NO_PAIRS;
 
   const form = (submitLabel: string) => (
     <ManualMedicationForm
@@ -762,7 +814,13 @@ export function TatalaksanaStep({
         {chronicMedications.length > 0 ? (
           <div className="diagnosis-list">
             {chronicMedications.map((medication) => (
-              <ChronicCard key={medication.key} medication={medication} interactionCheck={interactionCheck} allergies={allergies} />
+              <ChronicCard
+                key={medication.key}
+                medication={medication}
+                interactionCheck={interactionCheck}
+                allergies={allergies}
+                explains={explainsFor(medication.name)}
+              />
             ))}
           </div>
         ) : (
@@ -781,6 +839,7 @@ export function TatalaksanaStep({
                     key={medication.key}
                     medication={medication}
                     interactionCheck={interactionCheck}
+                    explains={explainsFor(medication.name)}
                     allergies={allergies}
                     replacing={formFor === medication.key}
                     form={form('Ganti obat')}

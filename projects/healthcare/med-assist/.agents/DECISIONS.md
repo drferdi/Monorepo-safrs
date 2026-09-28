@@ -3,6 +3,29 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — Tatalaksana: why a DDI, and a muted medication history
+
+- Decision (Chief: "DDI : beri penjelasan kenapa ?" and, for the "Review" history rows, "buatkan
+  design text yang seperti warna text \"kontraindikasi\" tidak terlalu terang"):
+  1. DDInter (`ddi-checker.ts`, R3, unchanged) stores the severity of a pair only; its description
+     is one generic sentence per severity. The mechanism therefore comes from the curated pair
+     table already in the capsule (`lib/api/mocks/ddi-mock.ts`, "Based on Lexicomp / Micromedex",
+     about twenty pairs, used today as DDInter's fallback) through `explainInteraction`. A pair it
+     does not list says "Mekanisme tidak tercatat di DDInter." with DDInter's advice; nothing is
+     composed. The severity shown stays DDInter's (the table rates amlodipine + simvastatin
+     moderate, DDInter major).
+  2. The reason and "Saran" sit in the DDI node, muted, once per pair: on the first card on the page
+     holding either drug (chronic cards first, then the visit slots). The other card names the
+     partner and severity only. Keamanan's "Lihat detail" no longer repeats the reason; it scrolls
+     to it and pulses it twice.
+  3. The "Review" history rows use the muted label style (`diagnosis-row-meta`), the date in the
+     label column so the rows line up with the node labels, a hairline above; dose and diagnosis
+     each stay whole when the panel is narrow.
+- Open for Chief: clinical review of the curated table's wording, and whether a larger mechanism
+  source is wanted (the table covers few pairs).
+- Evidence: Med Assist commit after `fcae2482`; harness J20.9 viewed (reason on the Amlodipin
+  card only, "Lihat detail" scrolls from the bottom to it, the history rows muted).
+
 ## 2026-09-29 — Tatalaksana revision: dose notation "1x10mg" and therapy cards as a timeline
 
 - Decision (Chief: "Penulisan dosis yang saya suka : 1x10mg (misal)" and "masing masing terapi

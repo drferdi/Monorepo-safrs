@@ -10392,3 +10392,8 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 .dx-tx-step-value { color: var(--text-main); }
 .dx-tx-step-head { padding-top: 2px; }
 .dx-timeline__node.dx-tx-node--danger { color: var(--sentra-danger); border-color: var(--sentra-danger); }
+
+/* Tatalaksana chronic "Review" history (Chief, 2026-09-29): muted like the timeline labels, the
+   date in the label column so the rows line up with the card's nodes above. */
+.dx-tx-review { display: flex; flex-direction: column; gap: 2px; margin: 8px 0 0; padding: 8px 0 0 31px; border-top: 1px solid var(--border-subtle); list-style: none; }
+.dx-tx-review-row { display: flex; align-items: baseline; gap: 10px; }

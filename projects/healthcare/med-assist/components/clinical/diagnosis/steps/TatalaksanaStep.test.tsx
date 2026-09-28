@@ -228,16 +228,35 @@ describe('TatalaksanaStep', () => {
     expect(screen.getByTestId('dx-tx-summary')).toHaveTextContent('Safety check✓ Aman');
   });
 
-  it('flags a major interaction between a chronic and a chosen medication, with its detail on "Lihat detail"', () => {
-    const interactions = [{ drug_a: 'Amlodipin 10 mg', drug_b: 'Kandesartan 8 mg', severity: 'major' as const, description: 'Hipotensi aditif.', recommendation: 'Pantau tekanan darah.' }];
+  // Migrated (Chief, 2026-09-29: "DDI : beri penjelasan kenapa"): the reason moved from the
+  // "Lihat detail" panel (dx-tx-safety-detail) to the DDI node of the first card holding the pair,
+  // written once; "Lihat detail" now scrolls to it.
+  it('flags a major interaction between a chronic and a chosen medication, explained once on the first card that holds it', () => {
+    const interactions = [{ drug_a: 'Amlodipin 10 mg', drug_b: 'Kandesartan 8 mg', severity: 'major' as const, description: 'Interaksi signifikan.', recommendation: 'Pantau tekanan darah.' }];
     render(<TatalaksanaStep {...props({ interactionCheck: { state: 'done', interactions } })} />);
     const warning = screen.getByTestId('dx-tx-safety-warning');
     expect(warning).toHaveTextContent('Interaksi major: Amlodipin 10 mg + Kandesartan 8 mg');
     expect(within(screen.getByTestId('dx-tx-safety-lines')).queryByText('Tidak ada interaksi mayor')).toBeNull();
-    expect(visitCard('Kandesartan')).toHaveTextContent('DDIAmlodipin 10 mg (major)');
-    fireEvent.click(within(warning).getByRole('button', { name: /Lihat detail/ }));
-    expect(screen.getByTestId('dx-tx-safety-detail')).toHaveTextContent('Hipotensi aditif. Pantau tekanan darah.');
+    // DDInter names no mechanism for this pair and the curated table has none: said, not composed.
+    expect(screen.getByTestId('dx-tx-chronic')).toHaveTextContent('Kandesartan 8 mg (major)Mekanisme tidak tercatat di DDInter.Saran: Pantau tekanan darah.');
+    expect(visitCard('Kandesartan')).toHaveTextContent('DDIAmlodipin 10 mg (major)Kontraindikasi');
+    expect(screen.getAllByText('Saran: Pantau tekanan darah.')).toHaveLength(1);
+    const scrollIntoView = vi.fn();
+    const reason = [...document.querySelectorAll('[data-ddi-reason]')].find(
+      (element) => element.getAttribute('data-ddi-reason') === 'Amlodipin 10 mg + Kandesartan 8 mg'
+    ) as HTMLElement;
+    reason.scrollIntoView = scrollIntoView;
+    fireEvent.click(within(warning).getByRole('button', { name: 'Lihat detail' }));
+    expect(scrollIntoView).toHaveBeenCalledTimes(1);
     expect(screen.getByTestId('dx-tx-summary')).toHaveTextContent('Safety check⚠ 1 perlu review');
+  });
+
+  it('explains a pair the curated table knows: why, and what to do', () => {
+    const interactions = [{ drug_a: 'Amlodipin 10 mg', drug_b: 'Simvastatin 20 mg', severity: 'major' as const, description: 'Interaksi signifikan.', recommendation: 'Evaluasi kebutuhan terapi.' }];
+    render(<TatalaksanaStep {...props({ chronicMedications: [amlodipin, { ...amlodipin, key: 'simvastatin', name: 'Simvastatin 20 mg' }], interactionCheck: { state: 'done', interactions } })} />);
+    const [first, second] = screen.getAllByTestId('dx-tx-chronic');
+    expect(first).toHaveTextContent('Simvastatin 20 mg (major)Amlodipine meningkatkan kadar simvastatinSaran: Batasi dosis simvastatin maksimal 20mg/hari.');
+    expect(second).toHaveTextContent('DDIAmlodipin 10 mg (major)Kontraindikasi');
   });
 
   it('never ticks the interaction check while it runs or when it could not run', () => {

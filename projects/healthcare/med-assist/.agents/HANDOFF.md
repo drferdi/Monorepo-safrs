@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-09-29 (Tatalaksana page, revision: dose "1x10mg", timeline cards)
+Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
@@ -8,7 +8,7 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 ## Current state
 
 Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEAD is the
-Tatalaksana revision after `fa873492` (DECISIONS 2026-09-29 "Tatalaksana" and its revision):
+Tatalaksana DDI-reason commit after `fcae2482` (DECISIONS 2026-09-29, three Tatalaksana entries):
 
 - Four steps, three pages: Temuan 1/4 + Diagnosis 2/4 | Tatalaksana 3/4 | RME 4/4.
 - `steps/TatalaksanaStep.tsx` (replaces TherapyStep and EducationStep): Terapi kronis (visit
@@ -17,7 +17,8 @@ Tatalaksana revision after `fa873492` (DECISIONS 2026-09-29 "Tatalaksana" and it
   DDInter major, allergy/contraindication), Edukasi, Tindak lanjut (KB `kontrol`, routine per
   chronic condition), Safety net (KB `red_flags`), Ringkasan, "Selesai".
 - Revision: doses "1x10mg" (`formatDose`), each therapy card an activity timeline
-  (name → dose → [indication] → DDI → contraindication).
+  (name → dose → [indication] → DDI → contraindication); DDI says why (curated pair table,
+  `explainInteraction`) once per pair; "Review" history muted.
 - Logic: `tatalaksana.ts`, `usePatientVisits.ts`, `labMotion.tsx` (lab.xevrion.dev motion);
   ClinicalDifferential runs `checkInteractions`, keeps dismissed proposals out of the
   prescription, sends the follow-up to RME `rencana_tindakan`.
@@ -40,7 +41,7 @@ Tatalaksana revision after `fa873492` (DECISIONS 2026-09-29 "Tatalaksana" and it
 |---|---|---|
 | `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`) |
 | `typecheck` | 0 | clean |
-| `test` | 0 | 179 files passed, 1 skipped; 1427 passed, 17 skipped (was 1423) |
+| `test` | 0 | 179 files passed, 1 skipped; 1430 passed, 17 skipped (was 1427) |
 | `exec wxt build --mode development` | 0 | clean |
 | `run:check` | 0 | "Extension loads: Asisten Medis 2.1.0 (MV3), all referenced files present." |
 
@@ -52,12 +53,14 @@ Sentra prescription API, the ePuskesmas fields themselves, real DDInter lookup i
 ## Open for Chief (code must not change for these)
 
 1. Source of Terapi proposals: remote-only (local pipeline unreachable, R3). Default: keep.
-2. KB `red_flags` for some entries are complications (J20: "Pneumonia.", "Pleuritis."), shown
+2. DDI mechanisms come from the small curated table `lib/api/mocks/ddi-mock.ts` (~20 pairs);
+   other pairs say "Mekanisme tidak tercatat di DDInter." Clinical review / larger source.
+3. KB `red_flags` for some entries are complications (J20: "Pneumonia.", "Pleuritis."), shown
    verbatim in Safety net; clinical review of the KB wording (R3 data).
-3. Durable R3 sign-off for `lib/clinical/recurrent-diagnosis.*` and `CHRONIC_ICD_ROOTS`.
-4. `VITE_MIRA_SERVICE_URL` has no default in `.env.example`; `MIRA_SERVICE_ENV=development`.
-5. Capsule `AGENTS.md` still says "penyakit.json wins; the LLM is a reranker only".
-6. "Berubah setelah:" may grow long with many findings.
+4. Durable R3 sign-off for `lib/clinical/recurrent-diagnosis.*` and `CHRONIC_ICD_ROOTS`.
+5. `VITE_MIRA_SERVICE_URL` has no default in `.env.example`; `MIRA_SERVICE_ENV=development`.
+6. Capsule `AGENTS.md` still says "penyakit.json wins; the LLM is a reranker only".
+7. "Berubah setelah:" may grow long with many findings.
 
 ## Next action
 

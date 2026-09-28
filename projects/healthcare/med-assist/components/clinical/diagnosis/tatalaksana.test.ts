@@ -4,6 +4,7 @@ import {
   buildChronicMedications,
   buildFollowUp,
   buildSafetyNet,
+  explainInteraction,
   formatDose,
   interactionsFor,
   nameBesideDose,
@@ -150,5 +151,20 @@ describe('nameBesideDose', () => {
     expect(nameBesideDose('Amlodipin 10 mg', '1x10mg · Sesudah makan')).toBe('Amlodipin');
     expect(nameBesideDose('Amlodipin 10 mg', '1x1 · Sesudah makan')).toBe('Amlodipin 10 mg');
     expect(nameBesideDose('Vitamin B', '1x1')).toBe('Vitamin B');
+  });
+});
+
+describe('explainInteraction', () => {
+  const pair = (drug_a: string, drug_b: string): DrugInteraction => ({ drug_a, drug_b, severity: 'major', description: 'Interaksi signifikan.', recommendation: 'Evaluasi kebutuhan terapi.' });
+
+  it('takes the mechanism and advice from the curated pair table, whatever the spelling and strength', () => {
+    expect(explainInteraction(pair('Simvastatin 20 mg', 'Amlodipin 10 mg'))).toEqual({
+      reason: 'Amlodipine meningkatkan kadar simvastatin',
+      advice: 'Batasi dosis simvastatin maksimal 20mg/hari.',
+    });
+  });
+
+  it('names no mechanism the sources do not give, and keeps DDInter\'s advice', () => {
+    expect(explainInteraction(pair('Amlodipin 10 mg', 'Kandesartan 8 mg'))).toEqual({ reason: null, advice: 'Evaluasi kebutuhan terapi.' });
   });
 });
