@@ -691,7 +691,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         .filter((item): item is { icd_x: string; nama: string } => Boolean(item?.icd_x)),
     [trajectory]
   );
-  const recurrent = useRecurrentDiagnoses(patientRM);
+  const { candidates: recurrent, loaded: recurrentLoaded } = useRecurrentDiagnoses(patientRM);
   const recurrentByIcd = useMemo(
     () => new Map(recurrent.map((candidate) => [icdRoot(candidate.icd), candidate])),
     [recurrent]
@@ -727,6 +727,9 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
   }, [patientRM]);
 
   useEffect(() => {
+    // Wait for the visit store so the one request carries the history (and hashes like the
+    // Trajectory stage's prefetch) instead of a history-less request that starts its own MIRA step.
+    if (patientRM.trim() && !recurrentLoaded) return;
     let cancelled = false;
     let reRequested = false;
     let stopListening: (() => void) | null = null;
@@ -857,11 +860,14 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     vitals.sbp,
     vitals.temp,
     recurrentForRequest,
+    recurrentLoaded,
+    patientRM,
   ]);
 
   const normalizedSuggestions = useMemo<{
     list: DiagnosisSuggestion[];
     engineIcds: Set<string>;
+    historyOnlyCount: number;
   }>(() => {
     // A history candidate with a usable code always yields a row (its own, or the confirmed
     // chronic row sharing its root), so the page is never empty without the fallback.
@@ -910,12 +916,14 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       const key = suggestion.icd_x?.trim().toUpperCase();
       if (!key || !isLikelyIcdCode(key)) continue;
 
-      // The first engine row on a history root takes over that row: the engine's code,
-      // rationale and tag (so "MIRA" survives), with the higher confidence of the two.
+      // The first engine row on a history root replaces the history row: the engine's code,
+      // rationale and tag (so "MIRA" survives), with the higher confidence of the two, stored
+      // under the engine's own code so a later engine row on that root stays its own row.
       const recurrentSeed = recurrentSeedByRoot.get(icdRoot(key));
       if (recurrentSeed) {
         recurrentSeedByRoot.delete(icdRoot(key));
-        mergedByIcd.set(recurrentSeed.key, {
+        mergedByIcd.delete(recurrentSeed.key);
+        mergedByIcd.set(key, {
           ...suggestion,
           confidence: Math.max(recurrentSeed.seed.confidence, suggestion.confidence),
           rationale: suggestion.rationale || recurrentSeed.seed.rationale,
@@ -944,6 +952,10 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       })),
       // The list re-ranks every row, so rank cannot tell history-only rows apart.
       engineIcds: new Set(sanitizedBaseSuggestions.map((item) => icdRoot(item.icd_x))),
+      // History rows no engine row took over sit above the engine's list; the display caps
+      // widen by this many so they never push the engine's last row (often the cannot-miss
+      // one) off the page.
+      historyOnlyCount: recurrentSeedByRoot.size,
     };
   }, [suggestions, keluhanUtama, vitals, confirmedChronicDiagnoses, recurrent]);
 
@@ -955,7 +967,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         keluhanTambahan,
         vitals,
         trajectory, // SPRINT 1 P0-2: Pass trajectory data
-        maxResults: 5,
+        maxResults: 5 + normalizedSuggestions.historyOnlyCount,
       }),
     [normalizedSuggestions, keluhanUtama, keluhanTambahan, vitals, trajectory]
   );
@@ -1014,7 +1026,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     selectedDiagnoses.some((item) => diagnosisKey(item) === diagnosisKey(diagnosis));
 
   const impressionItems = useMemo<ClinicalImpressionViewItem[]>(() => {
-    return displayedDiagnoses.slice(0, 5).map((item) => {
+    return displayedDiagnoses.slice(0, 5 + normalizedSuggestions.historyOnlyCount).map((item) => {
       const normalizedSuggestionIcd = normalizeIcdCode(item.suggestion.icd_x);
       const selectedDiagnosis: SelectedDiagnosis = {
         icd_x: normalizedSuggestionIcd || item.suggestion.icd_x,

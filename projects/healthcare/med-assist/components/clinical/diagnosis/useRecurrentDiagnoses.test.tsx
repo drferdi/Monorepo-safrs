@@ -1,6 +1,6 @@
 // components/clinical/diagnosis/useRecurrentDiagnoses.test.tsx
 import { renderHook, waitFor } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { useRecurrentDiagnoses } from './useRecurrentDiagnoses';
 
@@ -17,16 +17,18 @@ describe('useRecurrentDiagnoses', () => {
     const load = async (rm: string) => (calls.push(rm), visits);
     const today = () => new Date('2026-09-28');
     const { result, rerender } = renderHook(({ rm }) => useRecurrentDiagnoses(rm, { load, today }), { initialProps: { rm: 'RM-SYN-1' } });
-    await waitFor(() => expect(result.current).toHaveLength(1));
-    const first = result.current;
+    expect(result.current.loaded).toBe(false);
+    await waitFor(() => expect(result.current.candidates).toHaveLength(1));
+    expect(result.current.loaded).toBe(true);
+    const first = result.current.candidates;
     rerender({ rm: 'RM-SYN-1' });
-    expect(result.current).toBe(first);
+    expect(result.current.candidates).toBe(first);
     expect(calls).toEqual(['RM-SYN-1']);
   });
 
   it('returns an empty list for an empty RM or a failing store', async () => {
     const { result } = renderHook(() => useRecurrentDiagnoses('', { load: async () => { throw new Error('no db'); } }));
-    expect(result.current).toEqual([]);
+    expect(result.current.candidates).toEqual([]);
   });
 
   it('returns an empty list when the store fails for a real RM, whether it rejects or throws', async () => {
@@ -48,26 +50,30 @@ describe('useRecurrentDiagnoses', () => {
       })
     );
     await waitFor(() => expect(calls).toEqual(['RM-SYN-1', 'RM-SYN-2']));
-    expect(rejecting.result.current).toEqual([]);
-    expect(throwing.result.current).toEqual([]);
+    await waitFor(() => expect(rejecting.result.current.loaded).toBe(true));
+    await waitFor(() => expect(throwing.result.current.loaded).toBe(true));
+    expect(rejecting.result.current.candidates).toEqual([]);
+    expect(throwing.result.current.candidates).toEqual([]);
   });
 
   it('re-reads when the RM changes and ignores the stale answer for the previous RM', async () => {
     let releaseFirst: (value: VisitRecord[]) => void = () => undefined;
-    const load = (rm: string) =>
+    const load = vi.fn((rm: string) =>
       rm === 'RM-OLD'
         ? new Promise<VisitRecord[]>((resolve) => {
             releaseFirst = resolve;
           })
-        : Promise.resolve([] as VisitRecord[]);
+        : Promise.resolve([] as VisitRecord[])
+    );
     const today = () => new Date('2026-09-28');
     const { result, rerender } = renderHook(({ rm }) => useRecurrentDiagnoses(rm, { load, today }), {
       initialProps: { rm: 'RM-OLD' },
     });
     rerender({ rm: 'RM-NEW' });
     releaseFirst(visits);
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    expect(result.current).toEqual([]);
+    await waitFor(() => expect(load).toHaveBeenCalledWith('RM-NEW'));
+    await waitFor(() => expect(result.current.loaded).toBe(true));
+    expect(result.current.candidates).toEqual([]);
   });
 
   it('never shows the previous RM history while the next RM is still loading', async () => {
@@ -77,8 +83,14 @@ describe('useRecurrentDiagnoses', () => {
     const { result, rerender } = renderHook(({ rm }) => useRecurrentDiagnoses(rm, { load, today }), {
       initialProps: { rm: 'RM-SYN-1' },
     });
-    await waitFor(() => expect(result.current).toHaveLength(1));
+    await waitFor(() => expect(result.current.candidates).toHaveLength(1));
     rerender({ rm: 'RM-SYN-2' });
-    expect(result.current).toEqual([]);
+    expect(result.current).toEqual({ candidates: [], loaded: false });
+  });
+
+  it('reads as loaded at once when there is no IndexedDB to ask (jsdom) and no loader is injected', () => {
+    expect(typeof indexedDB).toBe('undefined');
+    const { result } = renderHook(() => useRecurrentDiagnoses('RM-SYN-1'));
+    expect(result.current).toEqual({ candidates: [], loaded: true });
   });
 });

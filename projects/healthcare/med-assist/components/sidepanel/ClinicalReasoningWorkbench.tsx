@@ -109,7 +109,9 @@ export function ClinicalReasoningWorkbench({
   );
   // The hook keeps one array identity per RM, so this memo (and the request below) changes
   // only when the patient's history does.
-  const recurrentCandidates = useRecurrentDiagnoses(patient.rm);
+  const { candidates: recurrentCandidates, loaded: recurrentLoaded } = useRecurrentDiagnoses(
+    patient.rm
+  );
   const recurrent = useMemo(
     () => recurrentCandidates.map((candidate) => ({ icd: candidate.icd, name: candidate.name })),
     [recurrentCandidates]
@@ -136,11 +138,13 @@ export function ClinicalReasoningWorkbench({
   );
   useEffect(() => {
     if (!requestContext.keluhan_utama || requestContext.keluhan_utama === '-' || !patient.rm) return;
+    // Only prefetch once the history is known, so the prefetch hashes like the page's request.
+    if (!recurrentLoaded) return;
     const timer = setTimeout(() => {
       sendMessage('prefetchDiagnosis', requestContext).catch(() => undefined);
     }, 2000);
     return () => clearTimeout(timer);
-  }, [requestContext, patient.rm]);
+  }, [requestContext, patient.rm, recurrentLoaded]);
 
   return (
     <ClinicalTrajectory

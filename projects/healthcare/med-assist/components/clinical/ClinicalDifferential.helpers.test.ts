@@ -23,7 +23,10 @@ import {
 
 const mocks = vi.hoisted(() => ({
   sendMessage: vi.fn(),
-  recurrent: [] as RecurrentDiagnosisCandidate[],
+  recurrent: { candidates: [], loaded: true } as {
+    candidates: RecurrentDiagnosisCandidate[];
+    loaded: boolean;
+  },
   workspace: [] as DiagnosisWorkspaceProps[],
 }));
 
@@ -174,7 +177,7 @@ describe('recurrent candidates on the diagnosis page', () => {
   const DIABETES: RecurrentDiagnosisCandidate = { icd: 'E11.9', name: 'Diabetes melitus tipe 2', count: 2, visitsConsidered: 5, lastSeen: '2026-07-01', label: 'Kronis' };
 
   afterEach(() => {
-    mocks.recurrent = [];
+    mocks.recurrent = { candidates: [], loaded: true };
     mocks.workspace.length = 0;
     mocks.sendMessage.mockReset();
     vi.restoreAllMocks();
@@ -191,7 +194,7 @@ describe('recurrent candidates on the diagnosis page', () => {
         ? { success: true, data: { diagnosis_suggestions: engineSuggestions } }
         : { success: false }
     );
-    render(
+    const page = () =>
       createElement(ClinicalDifferential, {
         keluhanUtama: 'kontrol rutin',
         patientAge: 58,
@@ -200,15 +203,19 @@ describe('recurrent candidates on the diagnosis page', () => {
         allergies: NO_ALLERGIES,
         vitals: VITALS,
         onBack: () => undefined,
-      })
-    );
+      });
+    const view = render(page());
+    return { rerender: () => view.rerender(page()) };
   }
+
+  const getSuggestionsCalls = () =>
+    mocks.sendMessage.mock.calls.filter(([type]) => type === 'getSuggestions');
 
   const latest = () => mocks.workspace[mocks.workspace.length - 1];
   const ready = () => waitFor(() => expect(latest()?.phase).toBe('ready'));
 
   it('offers the history row instead of the UI fallback when the engine finds nothing', async () => {
-    mocks.recurrent = [HYPERTENSION];
+    mocks.recurrent = { candidates: [HYPERTENSION], loaded: true };
     renderPage([]);
     await ready();
 
@@ -219,6 +226,7 @@ describe('recurrent candidates on the diagnosis page', () => {
       'getSuggestions',
       expect.objectContaining({ recurrent_diagnoses: [{ icd: 'I10', name: 'Hipertensi' }] })
     );
+    expect(getSuggestionsCalls()).toHaveLength(1);
   });
 
   it('keeps the UI fallback when the record has no history and the engine finds nothing', async () => {
@@ -231,7 +239,7 @@ describe('recurrent candidates on the diagnosis page', () => {
   });
 
   it('merges an engine code into the history row by ICD root and keeps the MIRA tag', async () => {
-    mocks.recurrent = [DIABETES];
+    mocks.recurrent = { candidates: [DIABETES], loaded: true };
     renderPage([{ rank: 1, icd_x: 'E11', nama: 'Diabetes melitus tipe 2', confidence: 0.7, rationale: 'MIRA rationale', engine_tag: 'MIRA' }]);
     await ready();
 
@@ -244,7 +252,7 @@ describe('recurrent candidates on the diagnosis page', () => {
 
   it('audits the pick of a history row with its history in metadata, and not the un-pick', async () => {
     const log = vi.spyOn(auditLogger, 'log').mockResolvedValue(undefined);
-    mocks.recurrent = [HYPERTENSION];
+    mocks.recurrent = { candidates: [HYPERTENSION], loaded: true };
     renderPage([]);
     await ready();
 
@@ -260,5 +268,47 @@ describe('recurrent candidates on the diagnosis page', () => {
       suggestions: [{ icd10_code: 'I10', confidence: 0.9 }],
       metadata: { selected_icd: 'I10', source: 'riwayat', history_label: 'Kronis', history_count: 3, visits_considered: 5 },
     });
+  });
+
+  it('widens the display cap by the history-only rows so the last MIRA row (cannot-miss) stays', async () => {
+    mocks.recurrent = { candidates: [HYPERTENSION], loaded: true };
+    renderPage([
+      { rank: 1, icd_x: 'A09', nama: 'Gastroenteritis', confidence: 0.6, rationale: '', engine_tag: 'MIRA' },
+      { rank: 2, icd_x: 'J06.9', nama: 'ISPA', confidence: 0.5, rationale: '', engine_tag: 'MIRA' },
+      { rank: 3, icd_x: 'K29.7', nama: 'Gastritis', confidence: 0.4, rationale: '', engine_tag: 'MIRA' },
+      { rank: 4, icd_x: 'K35.8', nama: 'Apendisitis akut', confidence: 0.3, rationale: '', engine_tag: 'MIRA' },
+      { rank: 5, icd_x: 'K65.0', nama: 'Peritonitis akut', confidence: 0.2, rationale: '', engine_tag: 'MIRA · jangan terlewat' },
+    ]);
+    await ready();
+
+    const candidates = latest().viewModel.candidates;
+    expect(candidates.map((item) => item.code)).toEqual(['I10', 'A09', 'J06.9', 'K29.7', 'K35.8', 'K65.0']);
+    expect(candidates[5].displayLabel).toMatch(/jangan terlewat$/);
+  });
+
+  it('keeps a second engine code on the same root as its own row', async () => {
+    mocks.recurrent = { candidates: [DIABETES], loaded: true };
+    renderPage([
+      { rank: 1, icd_x: 'E11', nama: 'Diabetes melitus tipe 2', confidence: 0.7, rationale: '', engine_tag: 'MIRA' },
+      { rank: 2, icd_x: 'E11.9', nama: 'Diabetes melitus tipe 2 tanpa komplikasi', confidence: 0.5, rationale: '', engine_tag: 'MIRA' },
+    ]);
+    await ready();
+
+    expect(latest().viewModel.candidates.map((item) => item.code)).toEqual(['E11', 'E11.9']);
+  });
+
+  it('sends getSuggestions once, after the visit store has answered', async () => {
+    mocks.recurrent = { candidates: [HYPERTENSION], loaded: false };
+    const page = renderPage([]);
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+    });
+    expect(getSuggestionsCalls()).toHaveLength(0);
+
+    mocks.recurrent = { candidates: [HYPERTENSION], loaded: true };
+    page.rerender();
+    await ready();
+    expect(getSuggestionsCalls()).toHaveLength(1);
+    expect(getSuggestionsCalls()[0][1]).toMatchObject({ recurrent_diagnoses: [{ icd: 'I10', name: 'Hipertensi' }] });
   });
 });
