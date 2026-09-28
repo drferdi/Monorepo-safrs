@@ -3,6 +3,41 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-28 — Diagnosis page revision: ticked findings, real MUST NOT MISS checks, two pages
+
+- Decision (Chief's six-point revision, same evening):
+  1. Catatan gives practical bedside guidance from `penyakit.json` (what to examine, when to
+     refer) instead of a bare "Review faring"; generic engine notes are dropped.
+  2. "Apa yang perlu diperiksa" on a MUST NOT MISS card opens a tick list: the knowledge
+     base's `pemeriksaan_fisik` for the code ("Tidak ditemukan" first) when it has them,
+     otherwise MIRA's remaining next best actions. MIRA's `missingInformation` joins the
+     card's Data kurang.
+  3. At most two "Diagnosis banding" cards; no "Lainnya".
+  4. Terapi and RME are the second page. The first page (Temuan, Diagnosis, Penunjang and
+     Edukasi) carries nothing of them, not even ghosts; the second keeps the Temuan and
+     Diagnosis receipts on top, whose "ubah" goes back. The "Basis:" line in Terapi, which
+     repeated the Diagnosis receipt right above it, was removed with its "hapus" button.
+  5. "Masukkan hasil" on a next best step opens options to tick instead of a text field
+     (`components/clinical/diagnosis/bedsideFindings.ts`: lung sounds, heart, abdomen, CVA,
+     pharynx, meningeal, hydration, JVP/edema, neuro, skin, ear, sinus; CBC, CRP, glucose,
+     urine, EKG, x-ray, SpO2, malaria, dengue, typhoid, pregnancy; a named sign is
+     Positif/Negatif, a question Ya/Tidak, anything else Normal/Abnormal). "Simpan" sends the
+     record back to the engine as `bedside_findings`, mapped into MIRA's CaseState
+     (`anamnesis.qa`, `physicalExam`, `results`); the Temuan receipt lists it right after the
+     main complaint.
+- Rationale: Chief: "dokter cukup centang apa temuannya, system provide misal Ronki,
+  Wheezing"; "Apa yang perlu diperiksa → belum ada data?? carikan data, wiring it"; "Terapi
+  dan RME masuk halaman selanjutnya".
+- Limits: the option catalogue is input vocabulary, not diagnostic logic, and its clinical
+  wording is for Chief's review. Codes absent from the knowledge base (K65, K35) fall back to
+  MIRA's plan, which covers the whole differential, not that card alone; per-code checks need
+  knowledge-base entries (R3, Chief) or a MIRA contract field. The legacy engine ignores
+  `bedside_findings`. Saving a finding asks the engine again and clears a chosen diagnosis. A
+  manual diagnosis can now be replaced from "ubah" but no longer cleared to none.
+- Evidence: `e753ad58`, `4e65703d`, `44c43b40`, `e309efd0`; Vite harness
+  checked (tick list, receipt, MUST NOT MISS panel, both pages; a MutationObserver shows only
+  the opening panel changes style when "Masukkan hasil" opens).
+
 ## 2026-09-28 — The side-panel column holds still while one part opens ("konsol nyata")
 
 - Decision: opening a card's reasons animates only that panel (height, entries, lines, chevron);
