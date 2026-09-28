@@ -63,6 +63,7 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
     secondaryComplaint: props.secondaryComplaint,
     allergySummary: viewModel.context.allergySummary,
     chronicDiagnosisSummary: viewModel.context.chronicDiagnosisSummary,
+    bedsideFindings: props.bedsideFindings,
   });
   const summaries: Record<DiagnosisStepKey, string> = {
     finding: findingSummary(signals),
@@ -134,6 +135,7 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
                 secondaryComplaint={props.secondaryComplaint}
                 allergySummary={viewModel.context.allergySummary}
                 chronicDiagnosisSummary={viewModel.context.chronicDiagnosisSummary}
+                bedsideFindings={props.bedsideFindings}
               />
             ) : null}
             {active === 'diagnosis' ? <DiagnosisStep {...props} /> : null}

@@ -20,6 +20,10 @@ export function encounterToCaseState(
 ): CaseState {
   const vitals = context.vital_signs ?? {};
   const additional = context.keluhan_tambahan || encounter.anamnesa?.keluhan_tambahan || '';
+  // Next best step results the doctor ticked, each where the engine contract expects it.
+  const bedside = context.bedside_findings ?? [];
+  const answers = (kind: 'question' | 'exam' | 'test') => bedside.filter((entry) => entry.kind === kind);
+  const qa = answers('question').map((entry) => ({ question: entry.item, answer: entry.findings.join(', ') }));
 
   return {
     demographics: {
@@ -33,7 +37,7 @@ export function encounterToCaseState(
         : {}),
     },
     chiefComplaint: context.keluhan_utama || encounter.anamnesa?.keluhan_utama || '',
-    anamnesis: additional ? { freeText: additional } : {},
+    anamnesis: { ...(additional ? { freeText: additional } : {}), ...(qa.length > 0 ? { qa } : {}) },
     vitals: {
       systolic: vitals.systolic,
       diastolic: vitals.diastolic,
@@ -43,8 +47,12 @@ export function encounterToCaseState(
       spo2: vitals.spo2,
       gcs: vitals.gcs,
     },
-    physicalExam: [],
-    results: [],
+    physicalExam: answers('exam').map((entry) => `${entry.item}: ${entry.findings.join(', ')}`),
+    results: answers('test').map((entry) => ({
+      name: entry.item,
+      value: entry.findings.join(', '),
+      flag: entry.findings.every((finding) => finding === 'Normal') ? ('normal' as const) : ('abnormal' as const),
+    })),
     currentMedications: [],
     knownConditions: mergeKnownConditions(
       encounter.diagnosa?.penyakit_kronis ?? [],

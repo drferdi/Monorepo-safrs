@@ -139,6 +139,8 @@ function makeProps(overrides: Partial<DiagnosisPageProps> = {}): DiagnosisPagePr
     },
     manualMedicationOptions: ['Sesudah makan'],
     triage: null,
+    bedsideFindings: [],
+    onRecordBedsideFinding: vi.fn(),
     onCompleteData: vi.fn(),
     onTogglePrimaryCandidate: vi.fn(),
     onToggleManualDiagnosisInput: vi.fn(),

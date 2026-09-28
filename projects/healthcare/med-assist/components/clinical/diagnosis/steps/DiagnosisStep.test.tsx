@@ -23,7 +23,7 @@ function vm(candidates: DiagnosisCandidateView[], over: Partial<DiagnosisPageVie
   };
 }
 
-const handlers = () => ({ onToggleCandidate: vi.fn(), onToggleManualDiagnosisInput: vi.fn(), onManualIcdChange: vi.fn(), onManualNameChange: vi.fn(), onSubmitManualDiagnosis: vi.fn(), onCompleteData: vi.fn() });
+const handlers = () => ({ onToggleCandidate: vi.fn(), onToggleManualDiagnosisInput: vi.fn(), onManualIcdChange: vi.fn(), onManualNameChange: vi.fn(), onSubmitManualDiagnosis: vi.fn(), onCompleteData: vi.fn(), onRecordBedsideFinding: vi.fn() });
 
 // The select control carries data-testid="dx-flow-card"; "Lihat alasan" and the reasons sit beside it in the card.
 function cardOf(select: HTMLElement): HTMLElement {
@@ -259,7 +259,7 @@ describe('DiagnosisStep', () => {
     expect(cardOf(screen.getByTestId('dx-flow-card')).querySelector('.line-clamp-3')).toBeNull();
   });
 
-  it('opens a MUST NOT MISS card with why it matters, its missing data and "Apa yang perlu diperiksa"', async () => {
+  it('opens a MUST NOT MISS card with why it matters, its missing data and, without a knowledge-base exam, the rest of MIRA\'s plan to tick', async () => {
     resetDiseaseNotesCache();
     vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ penyakit: [{ icd10: 'K65', definisi: 'Peradangan peritoneum.', komplikasi: ['Sepsis', 'Syok'] }] }))));
     try {
@@ -268,7 +268,14 @@ describe('DiagnosisStep', () => {
         candidate({ id: '1-K35.8', code: 'K35.8', name: 'Apendisitis akut', displayLabel: 'K35.8 - Apendisitis akut · MIRA' }),
         candidate({ id: '3-K65.0', code: 'K65.0', name: 'Acute peritonitis', displayLabel: 'K65.0 - Acute peritonitis · MIRA · jangan terlewat', supports: ['Nyeri perut kanan bawah'], missing: ['Nyeri tekan abdomen', 'Defans muskular'] }),
       ];
-      render(<DiagnosisStep viewModel={vm(cards)} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...h} />);
+      const enginePlan = {
+        actions: [
+          { kind: 'exam' as const, item: 'Palpasi abdomen', reason: 'Mencari nyeri tekan McBurney.' },
+          { kind: 'exam' as const, item: 'Rovsing sign', reason: 'Mendukung apendisitis.' },
+        ],
+        missing: ['Riwayat demam'],
+      };
+      render(<DiagnosisStep viewModel={vm(cards)} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" enginePlan={enginePlan} {...h} />);
       const mnm = screen.getAllByTestId('dx-flow-card')[1];
       await within(cardOf(mnm)).findByText('Peradangan peritoneum.');
       openReasons(mnm, 'Mengapa perlu dipertimbangkan');
@@ -279,23 +286,68 @@ describe('DiagnosisStep', () => {
       expect(within(list).getByText('Sepsis')).toBeInTheDocument();
       expect(within(list).getByText('Syok')).toBeInTheDocument();
       expect(within(list).getByText('Defans muskular')).toBeInTheDocument();
-      fireEvent.click(within(cardOf(mnm)).getByRole('button', { name: 'Apa yang perlu diperiksa →' }));
-      expect(h.onCompleteData).toHaveBeenCalledTimes(1);
+      // What MIRA still lacks joins the card's own gaps.
+      expect(within(list).getByText('Riwayat demam')).toBeInTheDocument();
+      // The knowledge base has no exam for K65, so the checks are MIRA's plan after its first
+      // step (that one is the page's Next best step and is not repeated here).
+      fireEvent.click(within(cardOf(mnm)).getByRole('button', { name: 'Apa yang perlu diperiksa' }));
+      const panel = cardOf(mnm);
+      expect(within(panel).getByText('Rovsing sign')).toHaveClass('diagnosis-row-title');
+      expect(within(panel).queryByText('Palpasi abdomen')).toBeNull();
+      fireEvent.click(within(panel).getByRole('button', { name: 'Masukkan hasil' }));
+      fireEvent.click(within(within(panel).getByRole('group', { name: 'Hasil Rovsing sign' })).getByRole('button', { name: 'Positif' }));
+      fireEvent.click(within(panel).getByRole('button', { name: 'Simpan' }));
+      expect(h.onRecordBedsideFinding).toHaveBeenCalledWith({ kind: 'exam', item: 'Rovsing sign', findings: ['Positif'] });
+      expect(h.onCompleteData).not.toHaveBeenCalled();
     } finally {
       vi.unstubAllGlobals();
     }
   });
 
-  it('shows the engine next best step with "Masukkan hasil", and no section without one', () => {
+  it('opens a MUST NOT MISS card\'s checks as the knowledge base\'s bedside findings to tick, with "Tidak ditemukan" first', async () => {
+    resetDiseaseNotesCache();
+    vi.stubGlobal('fetch', vi.fn(async () => new Response(JSON.stringify({ penyakit: [{ icd10: 'I16', definisi: 'Tekanan darah sangat tinggi.', pemeriksaan_fisik: ['Papiledema.', 'Defisit neurologis fokal'] }] }))));
+    try {
+      const h = handlers();
+      const cards = [candidate({}), candidate({ id: 'm-I16', code: 'I16', name: 'Krisis hipertensi', displayLabel: 'I16 - Krisis hipertensi · MIRA · jangan terlewat' })];
+      render(<DiagnosisStep viewModel={vm(cards)} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...h} />);
+      const mnm = screen.getAllByTestId('dx-flow-card')[1];
+      await within(cardOf(mnm)).findByText('Tekanan darah sangat tinggi.');
+      openReasons(mnm, 'Mengapa perlu dipertimbangkan');
+      fireEvent.click(within(cardOf(mnm)).getByRole('button', { name: 'Apa yang perlu diperiksa' }));
+      const group = within(cardOf(mnm)).getByRole('group', { name: /^Hasil Pemeriksaan / });
+      expect(within(group).getAllByRole('button').map((el) => el.textContent)).toEqual(['Tidak ditemukan', 'Papiledema', 'Defisit neurologis fokal']);
+      fireEvent.click(within(group).getByRole('button', { name: 'Papiledema' }));
+      fireEvent.click(within(cardOf(mnm)).getByRole('button', { name: 'Simpan' }));
+      expect(h.onRecordBedsideFinding).toHaveBeenCalledWith(expect.objectContaining({ kind: 'exam', findings: ['Papiledema'] }));
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it('shows the engine next best step with a tick list behind "Masukkan hasil" instead of a text field, and no section without one', () => {
     const h = handlers();
-    const { rerender } = render(<DiagnosisStep viewModel={vm([candidate({})])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" nextBestAction={{ item: 'Auskultasi paru', reason: 'Membedakan CAP dan ISPA.' }} {...h} />);
+    const plan = { actions: [{ kind: 'exam' as const, item: 'Auskultasi paru', reason: 'Membedakan CAP dan ISPA.' }], missing: [] };
+    const { rerender } = render(<DiagnosisStep viewModel={vm([candidate({})])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" enginePlan={plan} {...h} />);
     expect(screen.getByTestId('dx-flow-next-label')).toHaveTextContent('Next best step');
     const section = screen.getByTestId('dx-flow-next-label').parentElement as HTMLElement;
     expect(within(section).getByText('Auskultasi paru')).toHaveClass('diagnosis-row-title');
     expect(within(section).getByText('Membedakan CAP dan ISPA.')).toHaveClass('diagnosis-row-meta');
-    fireEvent.click(within(section).getByRole('button', { name: 'Masukkan hasil' }));
-    expect(h.onCompleteData).toHaveBeenCalledTimes(1);
-    rerender(<DiagnosisStep viewModel={vm([candidate({})])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" nextBestAction={null} {...h} />);
+    const enter = within(section).getByRole('button', { name: 'Masukkan hasil' });
+    fireEvent.click(enter);
+    expect(enter).toHaveAttribute('aria-expanded', 'true');
+    expect(within(section).queryByRole('textbox')).toBeNull();
+    const group = within(section).getByRole('group', { name: 'Hasil Auskultasi paru' });
+    expect(within(group).getByRole('button', { name: 'Wheezing' })).toBeInTheDocument();
+    const save = within(section).getByRole('button', { name: 'Simpan' });
+    expect(save).toBeDisabled();
+    fireEvent.click(within(group).getByRole('button', { name: 'Ronki basah halus' }));
+    fireEvent.click(within(group).getByRole('button', { name: 'Wheezing' }));
+    expect(within(group).getByRole('button', { name: 'Wheezing' })).toHaveAttribute('aria-pressed', 'true');
+    fireEvent.click(save);
+    expect(h.onRecordBedsideFinding).toHaveBeenCalledWith({ kind: 'exam', item: 'Auskultasi paru', findings: ['Ronki basah halus', 'Wheezing'] });
+    expect(h.onCompleteData).not.toHaveBeenCalled();
+    rerender(<DiagnosisStep viewModel={vm([candidate({})])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" enginePlan={null} {...h} />);
     expect(screen.queryByTestId('dx-flow-next-label')).toBeNull();
   });
 

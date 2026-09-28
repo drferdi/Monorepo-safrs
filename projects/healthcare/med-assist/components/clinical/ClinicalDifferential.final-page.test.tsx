@@ -963,6 +963,33 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     expect(within(section).queryByText('Leukosit')).toBeNull();
   });
 
+  it('asks the engine again with the ticked next best step findings and lists them in the Temuan receipt', async () => {
+    renderWithSuggestions({
+      diagnosis_suggestions: [
+        { rank: 1, icd_x: 'K35.8', nama: 'Acute appendicitis', confidence: 0.82, rationale: '', engine_tag: 'MIRA' },
+      ],
+      alerts: [],
+      next_best_actions: [{ kind: 'exam', item: 'Rovsing sign', reason: 'Mendukung apendisitis.' }],
+    });
+
+    const section = (await screen.findByTestId('dx-flow-next-label')).parentElement as HTMLElement;
+    const requests = () => mockSendMessage.mock.calls.filter(([type]) => type === 'getSuggestions');
+    const before = requests().length;
+    fireEvent.click(within(section).getByRole('button', { name: 'Masukkan hasil' }));
+    fireEvent.click(within(section).getByRole('button', { name: 'Positif' }));
+    fireEvent.click(within(section).getByRole('button', { name: 'Simpan' }));
+
+    await waitFor(() => {
+      expect(requests().length).toBe(before + 1);
+    });
+    expect(requests().at(-1)?.[1]).toMatchObject({
+      bedside_findings: [{ kind: 'exam', item: 'Rovsing sign', findings: ['Positif'] }],
+    });
+    await waitFor(() => {
+      expect(screen.getByTestId('dx-flow-receipt-finding').textContent).toContain('Rovsing sign: Positif');
+    });
+  });
+
   it('shows no next best step when the engine reply carries none', async () => {
     renderWithSuggestions({
       diagnosis_suggestions: [

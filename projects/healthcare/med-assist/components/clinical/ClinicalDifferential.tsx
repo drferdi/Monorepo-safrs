@@ -6,7 +6,7 @@ import {
 } from './differential-fetch-error';
 import type { ClinicalImpressionViewItem } from './ClinicalImpressionPanel';
 import { createDiagnosisPageViewModel } from './diagnosis/diagnosisViewModel';
-import type { DiagnosisNextBestActionView, DiagnosisTriageView } from './diagnosis/diagnosisPageProps';
+import type { DiagnosisEnginePlanView, DiagnosisTriageView } from './diagnosis/diagnosisPageProps';
 import { DiagnosisStepFlow } from './diagnosis/DiagnosisStepFlow';
 import { useRecurrentDiagnoses } from './diagnosis/useRecurrentDiagnoses';
 
@@ -43,6 +43,7 @@ import {
 } from '@/lib/iskandar-diagnosis-engine/triage-referral-decision-tree';
 import { buildRMETransferPayload } from '@/lib/rme/payload-mapper';
 import type {
+  BedsideFindingRecord,
   CDSSAlert,
   DiagnosisSuggestion,
   MedicationRecommendation,
@@ -612,8 +613,11 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
   // The last getSuggestions request failed (no reply, or an unsuccessful one), as opposed to an
   // engine that answered with no diagnosis; both leave the list empty.
   const [suggestionsFailed, setSuggestionsFailed] = useState(false);
-  // MIRA's first next best action for this request; the legacy engine sends none.
-  const [nextBestAction, setNextBestAction] = useState<DiagnosisNextBestActionView | null>(null);
+  // MIRA's next best actions and missing information for this request; the legacy engine sends none.
+  const [enginePlan, setEnginePlan] = useState<DiagnosisEnginePlanView | null>(null);
+  // Results the doctor ticked for next best steps; they go into every later request of this
+  // encounter, so they are not cleared when the engine is asked again.
+  const [bedsideFindings, setBedsideFindings] = useState<BedsideFindingRecord[]>([]);
   const [selectedDiagnoses, setSelectedDiagnoses] = useState<SelectedDiagnosis[]>([]);
   const [triageResult, setTriageResult] = useState<TriageDecisionResult | null>(null);
   const [manualIcd, setManualIcd] = useState('');
@@ -740,7 +744,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     const resetForNewRequest = () => {
       setPhase('loading');
       setErrorMsg('');
-      setNextBestAction(null);
+      setEnginePlan(null);
       setSelectedDiagnoses([]);
       setManualIcd('');
       setManualName('');
@@ -812,6 +816,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
           patientGender,
           vitals,
           recurrent: recurrentForRequest,
+          bedsideFindings,
         });
         const sentAt = Date.now();
         const response = await sendMessage('getSuggestions', request);
@@ -834,8 +839,9 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         // An empty list falls back in normalizedSuggestions, which knows about history.
         setSuggestions(incomingSuggestions);
         setSuggestionsFailed(false);
-        const firstAction = response.data.next_best_actions?.[0];
-        setNextBestAction(firstAction ? { item: firstAction.item, reason: firstAction.reason } : null);
+        const actions = response.data.next_best_actions ?? [];
+        const missing = response.data.missing_information ?? [];
+        setEnginePlan(actions.length || missing.length ? { actions, missing } : null);
         setProcessingTimeMs(response.data.meta?.processing_time_ms ?? null);
         setPhase('ready');
         if (response.data.engine_pending) {
@@ -874,6 +880,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     recurrentForRequest,
     recurrentLoaded,
     patientRM,
+    bedsideFindings,
   ]);
 
   // A history candidate with a usable code always yields a row (its own, or the confirmed
@@ -2145,7 +2152,11 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
             ? 'Data hari ini belum cukup untuk engine; riwayat menunjukkan pola berikut.'
             : undefined
         }
-        nextBestAction={nextBestAction}
+        enginePlan={enginePlan}
+        bedsideFindings={bedsideFindings}
+        onRecordBedsideFinding={(record) =>
+          setBedsideFindings((current) => [...current.filter((entry) => entry.item !== record.item), record])
+        }
         errorMessage={errorMsg}
         complaintSummary={keluhanUtama}
         secondaryComplaint={keluhanTambahan}

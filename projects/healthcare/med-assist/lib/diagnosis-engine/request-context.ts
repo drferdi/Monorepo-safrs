@@ -4,7 +4,7 @@
  *
  * @module lib/diagnosis-engine/request-context
  */
-import type { DiagnosisRequestContext } from '@/types/api';
+import type { BedsideFindingRecord, DiagnosisRequestContext } from '@/types/api';
 
 export interface DiagnosisContextSource {
   keluhanUtama: string;
@@ -13,6 +13,8 @@ export interface DiagnosisContextSource {
   patientGender: 'L' | 'P';
   vitals: { sbp?: number; dbp?: number; hr?: number; rr?: number; temp?: number };
   recurrent: Array<{ icd: string; name: string }>;
+  /** Only the diagnosis page records these; the Trajectory prefetch never has any. */
+  bedsideFindings?: BedsideFindingRecord[];
 }
 
 const positive = (value: number | undefined) => (value && value > 0 ? value : undefined);
@@ -36,6 +38,8 @@ export function buildDiagnosisRequestContext(source: DiagnosisContextSource): Di
     patient_gender: source.patientGender === 'P' ? 'F' : 'M',
     vital_signs,
     recurrent_diagnoses: source.recurrent.map((item) => ({ icd: item.icd, name: item.name })),
+    // Omitted when empty, so a request without findings keeps the prefetch's payload and hash.
+    ...(source.bedsideFindings?.length ? { bedside_findings: source.bedsideFindings } : {}),
   };
 }
 

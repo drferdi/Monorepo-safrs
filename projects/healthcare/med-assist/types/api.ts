@@ -239,6 +239,8 @@ export interface CDSSResponse {
   prefetch_key?: string;
   /** MIRA's most useful next questions, exams or tests, best first; absent from the legacy engine */
   next_best_actions?: Array<{ kind: 'question' | 'exam' | 'test'; item: string; reason: string }>;
+  /** MIRA's history, exam or results that would change the assessment; absent from the legacy engine */
+  missing_information?: string[];
 }
 
 export interface PharmacotherapyExplainability {
@@ -294,6 +296,15 @@ export interface DiagnosisRequestContext {
   chronic_diseases?: string[];
   /** Diagnoses recorded at earlier visits of this patient */
   recurrent_diagnoses?: Array<{ icd: string; name: string }>;
+  /** Results the doctor ticked for a next best step; absent until one is recorded */
+  bedside_findings?: BedsideFindingRecord[];
+}
+
+/** One next best step's result: the step as the engine named it and the ticked findings */
+export interface BedsideFindingRecord {
+  kind: 'question' | 'exam' | 'test';
+  item: string;
+  findings: string[];
 }
 
 /**

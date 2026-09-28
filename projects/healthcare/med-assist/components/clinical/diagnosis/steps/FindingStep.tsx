@@ -1,6 +1,9 @@
 import { motion } from 'framer-motion';
 
+import { bedsideFindingLine } from '../bedsideFindings';
 import { buildClinicalSignals } from '../diagnosisDisplayUtils';
+
+import type { BedsideFindingRecord } from '@/types/api';
 
 /** The page shows at most three findings; everything else stays on the Syn Patient page. */
 export const MAX_FINDINGS = 3;
@@ -10,13 +13,25 @@ type FindingInput = {
   secondaryComplaint?: string;
   allergySummary: string;
   chronicDiagnosisSummary: string;
+  /** Results the doctor ticked for next best steps. */
+  bedsideFindings: BedsideFindingRecord[];
 };
 
-/** Signals in reading order: what the patient came with first, then allergy and chronic context. */
+/**
+ * Signals in reading order: the main complaint first, then what the doctor found at the bedside
+ * (inside the three the page shows, so a ticked result is never hidden behind "+n"), then the
+ * rest of the complaint, allergy and chronic context.
+ */
 export function findingSignals(input: FindingInput): string[] {
   const fromComplaint = buildClinicalSignals({ ...input, allergySummary: '', chronicDiagnosisSummary: '' });
+  const fromBedside = input.bedsideFindings.map(bedsideFindingLine);
   const all = buildClinicalSignals(input);
-  return [...fromComplaint, ...all.filter((signal) => !fromComplaint.includes(signal))];
+  return [
+    ...fromComplaint.slice(0, 1),
+    ...fromBedside,
+    ...fromComplaint.slice(1),
+    ...all.filter((signal) => !fromComplaint.includes(signal)),
+  ];
 }
 
 export function findingSummary(signals: string[]): string {

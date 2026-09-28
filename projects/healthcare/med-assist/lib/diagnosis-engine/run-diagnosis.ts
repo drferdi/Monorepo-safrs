@@ -254,7 +254,12 @@ export async function runDiagnosisSuggestions(
     ...response,
     data:
       suggestions.length > 0
-        ? { ...response.data, diagnosis_suggestions: suggestions, next_best_actions: result.nextBestActions }
+        ? {
+            ...response.data,
+            diagnosis_suggestions: suggestions,
+            next_best_actions: result.nextBestActions,
+            missing_information: result.missingInformation,
+          }
         : {
             ...response.data,
             engine_notice: miraNoticeFor(

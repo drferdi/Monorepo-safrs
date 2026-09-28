@@ -1,5 +1,7 @@
 import type { DiagnosisPageViewModel } from './diagnosisViewModel';
 
+import type { BedsideFindingRecord } from '@/types/api';
+
 export interface DiagnosisManualMedicationDraftView {
   nama_obat: string;
   dosis: string;
@@ -20,8 +22,15 @@ export interface DiagnosisTriageView {
 }
 
 export interface DiagnosisNextBestActionView {
+  kind: BedsideFindingRecord['kind'];
   item: string;
   reason: string;
+}
+
+/** What MIRA asks for next: its next best actions (best first) and what it still lacks. */
+export interface DiagnosisEnginePlanView {
+  actions: DiagnosisNextBestActionView[];
+  missing: string[];
 }
 
 export interface DiagnosisPageProps {
@@ -38,8 +47,12 @@ export interface DiagnosisPageProps {
   manualMedicationOptions: string[];
   triage?: DiagnosisTriageView | null;
   recurrentOnlyMessage?: string;
-  /** The engine's most useful next question, exam or test, with why it helps; none hides the section. */
-  nextBestAction?: DiagnosisNextBestActionView | null;
+  /** MIRA's plan; its first action is the next best step, none hides the section. */
+  enginePlan?: DiagnosisEnginePlanView | null;
+  /** Next best step results the doctor ticked for this request, shown in the Temuan receipt. */
+  bedsideFindings: BedsideFindingRecord[];
+  /** Records a ticked result; the page asks the engine again with it. */
+  onRecordBedsideFinding: (record: BedsideFindingRecord) => void;
   onCompleteData: () => void;
   onTogglePrimaryCandidate: () => void;
   onToggleManualDiagnosisInput: () => void;

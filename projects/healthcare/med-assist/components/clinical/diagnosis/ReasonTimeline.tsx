@@ -17,8 +17,8 @@ export type ReasonGroup = { key: string; title: string; items: string[] };
 
 const EASE_OUT = [0.23, 1, 0.32, 1] as const;
 const STAGGER = 0.07;
-const OPEN: Transition = { type: 'spring', bounce: 0, duration: 0.5 };
-const CLOSE: Transition = { type: 'spring', bounce: 0, duration: 0.32 };
+export const PANEL_OPEN: Transition = { type: 'spring', bounce: 0, duration: 0.5 };
+export const PANEL_CLOSE: Transition = { type: 'spring', bounce: 0, duration: 0.32 };
 
 const entry: Variants = {
   hidden: { opacity: 0, y: -6, filter: 'blur(4px)' },
@@ -58,12 +58,12 @@ export function ReasonTimeline({ groups, footer }: { groups: ReasonGroup[]; foot
       animate={{
         height: 'auto',
         opacity: 1,
-        transition: reduceMotion ? { duration: 0.2 } : { height: OPEN, opacity: { duration: 0.25 } },
+        transition: reduceMotion ? { duration: 0.2 } : { height: PANEL_OPEN, opacity: { duration: 0.25 } },
       }}
       exit={{
         height: 0,
         opacity: 0,
-        transition: reduceMotion ? { duration: 0.15 } : { height: CLOSE, opacity: { duration: 0.18 } },
+        transition: reduceMotion ? { duration: 0.15 } : { height: PANEL_CLOSE, opacity: { duration: 0.18 } },
       }}
     >
       <ol className="dx-timeline pt-2" aria-label="Alasan">

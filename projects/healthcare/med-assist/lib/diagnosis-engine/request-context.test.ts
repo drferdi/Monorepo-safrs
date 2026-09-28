@@ -29,6 +29,16 @@ describe('request-context', () => {
     expect(hashDiagnosisContext(buildDiagnosisRequestContext({ ...source, keluhanUtama: 'batuk' }))).not.toBe(a);
   });
 
+  it('adds recorded bedside findings, and without any keeps the prefetch payload and hash', () => {
+    const plain = buildDiagnosisRequestContext(source);
+    expect(buildDiagnosisRequestContext({ ...source, bedsideFindings: [] })).toEqual(plain);
+    expect('bedside_findings' in plain).toBe(false);
+    const findings = [{ kind: 'exam' as const, item: 'Auskultasi paru', findings: ['Ronki basah halus'] }];
+    const withFindings = buildDiagnosisRequestContext({ ...source, bedsideFindings: findings });
+    expect(withFindings.bedside_findings).toEqual(findings);
+    expect(hashDiagnosisContext(withFindings)).not.toBe(hashDiagnosisContext(plain));
+  });
+
   it('hashes independently of key order', () => {
     const ctx = buildDiagnosisRequestContext(source);
     const { patient_age, ...rest } = ctx;
