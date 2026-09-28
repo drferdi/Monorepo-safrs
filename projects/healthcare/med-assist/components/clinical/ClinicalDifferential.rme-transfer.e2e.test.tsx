@@ -208,28 +208,29 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
     if (!selectPrimary) throw new Error('diagnosis card not found');
     fireEvent.click(selectPrimary);
 
-    // Choosing a diagnosis must move the flow on to Terapi, rendered in full,
-    // not just leave it as a one-line ghost.
+    // Choosing a diagnosis must move the flow on to Tatalaksana (was Terapi, 2026-09-29),
+    // rendered in full, not just leave it as a one-line ghost.
     await waitFor(() => {
-      expect(screen.getByRole('heading', { name: 'Terapi' })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Tatalaksana' })).toBeInTheDocument();
       expect(screen.queryByTestId('dx-flow-ghost-therapy')).toBeNull();
     });
 
     // Therapy for the selected diagnosis must render on the live surface.
     const findMedicationRow = async () => {
-      const row = (await screen.findByText(/Amoksisilin 500mg/)).closest('[data-testid="dx-flow-med"]');
+      const row = (await screen.findByText(/Amoksisilin 500mg/)).closest('[data-testid="dx-tx-visit-med"]');
       expect(row).not.toBeNull();
       if (!row) throw new Error('medication row not found');
       return row;
     };
     expect(await findMedicationRow()).toBeInTheDocument();
 
-    // A diagnosis-only transfer stays reachable: continue without medication, past Edukasi, to RME.
-    fireEvent.click(screen.getByRole('button', { name: 'Lanjut tanpa obat' }));
-    fireEvent.click(await screen.findByRole('button', { name: 'Lanjut' }));
+    // A diagnosis-only transfer stays reachable: continue without additional therapy, then
+    // "Selesai", to RME (migrated 2026-09-29 from "Lanjut tanpa obat" and Edukasi's "Lanjut").
+    fireEvent.click(screen.getByRole('button', { name: 'Lanjut tanpa terapi tambahan' }));
+    fireEvent.click(screen.getByTestId('dx-tx-finish'));
 
     // "Kirim diagnosis" is enabled once a valid diagnosis is selected.
-    const kirimDiagnosis = screen.getByRole('button', { name: 'Kirim diagnosis' });
+    const kirimDiagnosis = await screen.findByRole('button', { name: 'Kirim diagnosis' });
     expect(kirimDiagnosis).toBeEnabled();
 
     // "Kirim resep" is gated until at least one medication is selected.
@@ -237,9 +238,10 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
     expect(kirimResep).toBeDisabled();
 
     // Select the proposed medication.
-    fireEvent.click(screen.getByRole('button', { name: 'ubah Terapi' }));
+    fireEvent.click(screen.getByRole('button', { name: 'ubah Tatalaksana' }));
     fireEvent.click(await findMedicationRow());
-    fireEvent.click(await screen.findByRole('button', { name: 'Lanjut' }));
+    await waitFor(() => expect(screen.getByTestId('dx-tx-finish')).toBeEnabled());
+    fireEvent.click(screen.getByTestId('dx-tx-finish'));
 
     await waitFor(() => expect(screen.getByRole('button', { name: 'Kirim resep' })).toBeEnabled());
 
@@ -267,6 +269,9 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
     });
   });
 
+  // Migrated (2026-09-29): education is a part of Tatalaksana (points not yet given under
+  // "+ Tambah edukasi"), the Kontrol row left the education list for Tindak lanjut, and the
+  // follow-up now reaches the anamnesis as rencana_tindakan.
   it('carries the education ticked for the chosen diagnosis into the RME anamnesis, and only that', async () => {
     const given = 'Istirahat cukup, jangan bekerja/sekolah dulu hingga 24 jam bebas demam.';
     const notGiven = 'Minum air putih minimal 2 liter/hari.';
@@ -295,18 +300,16 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
       if (!card) throw new Error('diagnosis card not found');
       fireEvent.click(card);
 
-      fireEvent.click(await screen.findByRole('button', { name: 'Lanjut tanpa obat' }));
-      const education = await screen.findByLabelText('Edukasi');
+      fireEvent.click(await screen.findByRole('button', { name: 'Lanjut tanpa terapi tambahan' }));
+      const education = await screen.findByTestId('dx-tx-education');
+      fireEvent.click(await within(education).findByRole('button', { name: '+ Tambah edukasi' }));
       const rows = await within(education).findAllByTestId('dx-flow-education-item');
-      expect(rows.map((row) => row.textContent)).toEqual([
-        notGiven,
-        given,
-        'Kontrol: Kontrol jika tidak membaik dalam 7-10 hari.',
-      ]);
+      expect(rows.map((row) => row.textContent)).toEqual([notGiven, given]);
       fireEvent.click(rows[1]);
-      await waitFor(() => expect(rows[1]).toHaveAttribute('aria-pressed', 'true'));
+      await waitFor(() => expect(within(education).getByTestId('dx-tx-education-given')).toHaveTextContent(given));
+      expect(screen.getByTestId('dx-tx-follow-up')).toHaveTextContent('Kontrol jika tidak membaik dalam 7-10 hari.');
 
-      fireEvent.click(screen.getByRole('button', { name: 'Lanjut' }));
+      fireEvent.click(screen.getByTestId('dx-tx-finish'));
       fireEvent.click(await screen.findByRole('button', { name: 'Anamnesis' }));
 
       await waitFor(() => {
@@ -314,7 +317,10 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
           'transferRME',
           expect.objectContaining({
             anamnesa: expect.objectContaining({
-              lainnya: expect.objectContaining({ edukasi: given }),
+              lainnya: expect.objectContaining({
+                edukasi: given,
+                rencana_tindakan: 'Kontrol jika tidak membaik dalam 7-10 hari.',
+              }),
             }),
           })
         );

@@ -46,7 +46,7 @@ export function FindingStep(props: FindingInput) {
     <section className="ct-v2-panel flex flex-col gap-3" aria-label="Temuan">
       <div className="ct-v2-panel-head">
         <h2 className="ttv-section-title">Temuan</h2>
-        <span className="ttv-label">1 / 5</span>
+        <span className="ttv-label">1 / 4</span>
       </div>
       <div className="diagnosis-context__grid" data-testid="diagnosis-clinical-signals">
         {signals.map((signal, index) => (

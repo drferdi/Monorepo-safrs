@@ -59,6 +59,7 @@ type Props = Pick<
   | 'manualIcd'
   | 'manualName'
   | 'onToggleCandidate'
+  | 'onRemoveDiagnosis'
   | 'onToggleManualDiagnosisInput'
   | 'onManualIcdChange'
   | 'onManualNameChange'
@@ -67,7 +68,7 @@ type Props = Pick<
 >;
 
 export function diagnosisSummary(viewModel: DiagnosisPageViewModel): string {
-  return viewModel.selectedDiagnoses[0]?.displayLabel ?? '';
+  return viewModel.selectedDiagnoses.map((diagnosis) => diagnosis.displayLabel).join(', ');
 }
 
 // The rule that put a history card on the page; whether an engine agrees is not repeated here
@@ -519,6 +520,7 @@ export function DiagnosisStep({
   manualIcd,
   manualName,
   onToggleCandidate,
+  onRemoveDiagnosis,
   onToggleManualDiagnosisInput,
   onManualIcdChange,
   onManualNameChange,
@@ -575,7 +577,7 @@ export function DiagnosisStep({
           <PixelLoader tone="accent" />
           <h2 className="ttv-section-title">Diagnosis</h2>
         </div>
-        <span className="ttv-label">2 / 5</span>
+        <span className="ttv-label">2 / 4</span>
       </div>
 
       {phase === 'loading' ? (
@@ -630,8 +632,15 @@ export function DiagnosisStep({
               {primary ? (
                 card(primary, 0)
               ) : chosen ? (
+                // A diagnosis chosen without a card (manual) is removed here; the Tatalaksana page no
+                // longer carries a "hapus" per diagnosis.
                 <div className="neu-select diagnosis-candidate-row" data-testid="dx-flow-chosen">
-                  <div className="diagnosis-row-title">{formatClinicalText(chosen.displayLabel)}</div>
+                  <div className="diagnosis-row-head">
+                    <div className="diagnosis-row-title">{formatClinicalText(chosen.displayLabel)}</div>
+                    <button type="button" className="diagnosis-text-button" onClick={() => onRemoveDiagnosis(chosen.key)}>
+                      hapus
+                    </button>
+                  </div>
                 </div>
               ) : null}
               {miraSuggests ? (

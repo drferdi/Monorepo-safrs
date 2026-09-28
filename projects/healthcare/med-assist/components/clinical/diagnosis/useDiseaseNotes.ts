@@ -21,6 +21,8 @@ export type DiseaseNote = {
   /** Only on entries with an advanced guideline (21 of 159). */
   education?: string[];
   followUp?: string;
+  /** `red_flags`, for the Tatalaksana safety net; only when the entry lists any. */
+  redFlags?: string[];
 };
 
 type KbFile = {
@@ -30,6 +32,7 @@ type KbFile = {
     komplikasi?: unknown;
     pemeriksaan_fisik?: unknown;
     kriteria_rujukan?: unknown;
+    red_flags?: unknown;
     advanced_guideline?: {
       kie_edukasi?: { untuk_pasien?: unknown };
       tindak_lanjut?: { kontrol?: unknown };
@@ -64,6 +67,8 @@ async function loadNotes(): Promise<Map<string, DiseaseNote>> {
     const followUp = text(entry.advanced_guideline?.tindak_lanjut?.kontrol);
     if (education.length > 0) note.education = education;
     if (followUp) note.followUp = followUp;
+    const redFlags = strings(entry.red_flags);
+    if (redFlags.length > 0) note.redFlags = redFlags;
     if (note.definition || note.complications.length > 0 || note.exam.length > 0 || note.referral) {
       notes.set(normalize(entry.icd10), note);
     }

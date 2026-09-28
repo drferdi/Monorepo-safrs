@@ -17,7 +17,7 @@ import type {
   RMETransferReasonCode,
 } from '@/utils/types';
 
-type TriadRole = 'utama' | 'adjuvant' | 'vitamin';
+export type TriadRole = 'utama' | 'adjuvant' | 'vitamin';
 type RMEAnamnesaDraftPayload = Pick<AnamnesaFillPayload, 'lama_sakit' | 'riwayat_penyakit'> &
   Partial<Pick<AnamnesaFillPayload, 'keluhan_utama' | 'keluhan_tambahan'>>;
 
@@ -61,8 +61,10 @@ export interface RMETransferMapperInput {
   obesityConfirmation?: boolean;
   // Pre-built anamnesa from anamnesa-composer (overrides lama_sakit + riwayat_penyakit)
   anamnesaDraftPayload?: RMEAnamnesaDraftPayload;
-  // Education the doctor ticked as given on the Terapi page (knowledge-base text)
+  // Education the doctor ticked as given on the Tatalaksana page (knowledge-base text)
   edukasi?: string[];
+  // Follow-up for the chosen diagnosis from the knowledge base (tindak_lanjut.kontrol)
+  rencanaTindakan?: string[];
 }
 
 /**
@@ -410,7 +412,7 @@ function resolveMedicationNameFromStock(rawName: string): string {
   return rawName;
 }
 
-function classifyRole(medicationName: string): TriadRole {
+export function classifyRole(medicationName: string): TriadRole {
   const name = normalizeText(medicationName);
   if (VITAMIN_KEYWORDS.some((keyword) => name.includes(keyword))) return 'vitamin';
   if (ADJUVANT_KEYWORDS.some((keyword) => name.includes(keyword))) return 'adjuvant';
@@ -766,10 +768,10 @@ function pickRandomAskepOption(key: AskepOptionKey): string {
 }
 
 /**
- * The ticked education as whole items, in order, as many as fit the RME text limit: every string
- * is cut at RME_TEXT_LIMIT later, and a cut item would record half an instruction.
+ * Whole items, in order, as many as fit the RME text limit: every string is cut at RME_TEXT_LIMIT
+ * later, and a cut item would record half an instruction.
  */
-function educationWithinLimit(items: string[]): string {
+function wholeItemsWithinLimit(items: string[]): string {
   let text = '';
   for (const item of items.map((value) => value.replace(/\s+/g, ' ').trim()).filter(Boolean)) {
     const next = text ? `${text} ${item}` : item;
@@ -779,13 +781,18 @@ function educationWithinLimit(items: string[]): string {
   return text;
 }
 
-function buildLainnyaFromMedications(edukasi: string[] = []): AnamnesaFillPayload['lainnya'] {
-  const tickedEducation = educationWithinLimit(edukasi);
+function buildLainnyaFromMedications(
+  edukasi: string[] = [],
+  rencanaTindakan: string[] = []
+): AnamnesaFillPayload['lainnya'] {
+  const tickedEducation = wholeItemsWithinLimit(edukasi);
+  const followUp = wholeItemsWithinLimit(rencanaTindakan);
   return {
     terapi: pickRandomAskepOption('terapiObat'),
     terapi_non_obat: pickRandomAskepOption('terapiNonObat'),
     bmhp: pickRandomAskepOption('bmhp'),
-    rencana_tindakan: pickRandomAskepOption('rencanaTindakan'),
+    // The knowledge base's follow-up for the chosen diagnosis; the generic line only without one.
+    rencana_tindakan: followUp || pickRandomAskepOption('rencanaTindakan'),
     merokok: '0',
     konsumsi_alkohol: '0',
     kurang_sayur_buah: '0',
@@ -1267,7 +1274,7 @@ function buildAnamnesaPayload(input: RMETransferMapperInput): {
     },
 
     // lainnya: semua field termasuk askep, observasi, biopsikososial, tindakan keperawatan
-    lainnya: buildLainnyaFromMedications(input.edukasi),
+    lainnya: buildLainnyaFromMedications(input.edukasi, input.rencanaTindakan),
 
     // keadaan_fisik: symptom-based organ system activation
     keadaan_fisik: buildKeadaanFisikFromKeluhan(clinicalComplaintText),

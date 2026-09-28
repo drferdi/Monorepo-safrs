@@ -7,7 +7,7 @@ vi.mock('framer-motion', async (importOriginal) => ({
   useReducedMotion: () => reducedMotion.value,
 }));
 
-import { PIXEL_FRAMES, PIXEL_TICK_MS, PixelLoader } from './PixelLoader';
+import { PIXEL_CHECK, PIXEL_FRAMES, PIXEL_TICK_MS, PixelLoader } from './PixelLoader';
 
 const lit = (container: HTMLElement) =>
   [...container.querySelectorAll('[data-testid="dx-pixel-loader"] > span')].flatMap((cell, index) =>
@@ -58,6 +58,13 @@ describe('PixelLoader', () => {
     const { unmount } = render(<PixelLoader />);
     unmount();
     expect(vi.getTimerCount()).toBe(0);
+  });
+
+  it('ends on the pixel check when done, with no timer left running', () => {
+    const { container, rerender } = render(<PixelLoader />);
+    rerender(<PixelLoader done />);
+    expect(vi.getTimerCount()).toBe(0);
+    expect(lit(container)).toEqual([...PIXEL_CHECK].sort((a, b) => a - b));
   });
 
   it('holds one still frame under reduced motion', () => {

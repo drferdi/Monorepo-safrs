@@ -1,4 +1,5 @@
 import type { AssessmentSnapshot } from './assessmentDelta';
+import type { ChronicMedicationView, FollowUpView, InteractionCheckView } from './tatalaksana';
 import type { DiagnosisPageViewModel } from './diagnosisViewModel';
 
 import type { BedsideFindingRecord } from '@/types/api';
@@ -90,6 +91,17 @@ export interface DiagnosisPageProps {
   /** Education for the chosen diagnoses; the ticked points go to the RME's edukasi field. */
   education: DiagnosisEducationItemView[];
   onToggleEducation: (key: string) => void;
+  /** Tatalaksana: the patient's chronic medications from the visit history. */
+  chronicMedications: ChronicMedicationView[];
+  /** Drug interactions over the chronic and the proposed medications (local DDInter). */
+  interactionCheck: InteractionCheckView;
+  /** The patient's allergies, for the contraindication check. */
+  allergies: string[];
+  followUp: FollowUpView;
+  /** Red flags of the chosen diagnoses, for "Segera kembali / rujuk bila". */
+  safetyNet: string[];
+  /** Removes a proposal from the page and from the prescription ("Hapus"). */
+  onDismissMedication: (key: string) => void;
   onAutoFillRME: () => void;
   onTransferDiagnosis: () => void;
   onTransferResep: () => void;

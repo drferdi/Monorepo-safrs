@@ -3,6 +3,56 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — Tatalaksana: one page for therapy, safety, education, follow-up and safety net
+
+- Decision (Chief's layout, same day: "Seperti ini urutan nya … TATALAKSANA", "push to the Max.
+  Penggunaan Motion", "Ambil motion yang menurut kamu cocok dari sini https://lab.xevrion.dev/"):
+  1. Four steps: Temuan (1 / 4), Diagnosis (2 / 4) | Tatalaksana (3 / 4) | RME (4 / 4). Terapi
+     and Edukasi are no longer steps; `steps/TatalaksanaStep.tsx` replaces `TherapyStep` and
+     `EducationStep`. Parts in Chief's order: Terapi kronis, Terapi kunjungan ini, Keamanan
+     terapi, Edukasi, Tindak lanjut, Safety net, Ringkasan, "Selesai". The page closes only on
+     "Selesai" (enabled once a medication is chosen or "Lanjut tanpa terapi tambahan" was
+     decided); "Lanjut tanpa terapi tambahan" clears the selection and stays on the page.
+  2. Terapi kronis: the chronic therapy names already given to the page, each with its dose from
+     the latest visit that prescribed it and, as "Indikasi", the diagnosis those visits recorded
+     most often (`buildChronicMedications`, visit store via `usePatientVisits`). "Review" only
+     shows those visits (date · dose · diagnosis); it prescribes nothing and changes nothing.
+  3. Terapi kunjungan ini: slots 01 Utama / 02 Adjuvant / 03 Vitamin by the engine's `role`, else
+     the RME mapper's own keyword rule (`classifyRole`, now exported). A tap toggles; "Ganti"
+     opens the manual form under the card and drops the card once the new medication is added;
+     "Hapus" needs a 900 ms hold (the reference holds 2 s) and removes a proposal from the page
+     and the prescription for the encounter (`dismissedMedicationKeys`), a manual entry through
+     its own remove. "+ Tambah obat" is the one entry for the manual form; the "Basis: … hapus"
+     line is gone, so a diagnosis chosen without a card now has its own "hapus" on page 1.
+  4. Keamanan terapi, over the chronic and the chosen visit medications: duplicates by first word,
+     major or contraindicated interactions from the local DDInter check (`checkInteractions`,
+     chronic + every candidate, so cards show their own DDI), and contraindications from a named
+     allergy or the prescription service's list. A passed check is ticked; a found one is listed
+     under "⚠ Perlu review" with "Lihat detail"; a check that could not run is said, never ticked.
+  5. Edukasi: numbered points given; "+ Tambah edukasi" lists the rest; "ubah" removes. The
+     "Kontrol: …" row left the education list for Tindak lanjut.
+  6. Tindak lanjut: `tindak_lanjut.kontrol` for the chosen diagnoses ("Kontrol") and, for each
+     chronic condition not chosen, "Kontrol rutin · <name>", verbatim. The visit follow-up now
+     goes to the RME anamnesis `rencana_tindakan` (whole items within 250 characters; the generic
+     line only without one).
+  7. Safety net ("Segera kembali / rujuk bila"): the chosen diagnoses' knowledge-base
+     `red_flags`, verbatim. This overrides point 4 of the previous entry for this page only, on
+     Chief's layout; the diagnosis page still never lists red flags (its test now renders page 1).
+  8. Ringkasan counts, it does not repeat: diagnosis, chronic and visit medication counts,
+     education points, number of follow-up schedules, safety state.
+  9. Motion from lab.xevrion.dev (MIT, `labMotion.tsx`): pen-stroke check ("Scribble checkbox") on
+     chosen cards, safety lines and education; rolling counts ("Odometer"); hold fill ("Hold to
+     delete"); the pixel loader ends on its pixel check when the interaction check is done; the
+     accordion springs of the diagnosis cards for "Review" and "Lihat detail"; parts rise in once
+     when the page opens; "Selesai" morphs to "✓ Selesai" before the page closes. Only what the
+     doctor opens moves afterwards (checked in the harness: toggling a card moves no other part).
+- Limits: proposals still come only from the remote Sentra API (open for Chief). The knowledge
+  base's `red_flags` for some entries are complications, not return criteria (J20: "Pneumonia.",
+  "Pleuritis."); shown verbatim, for Chief's clinical review. DDInter matches names partially.
+- Evidence: Med Assist commit after `4db92cdb`; Vite harness viewed (J20.9 with two chronic
+  medications and the Amlodipin + Simvastatin major interaction, J18.9 without education, hold,
+  Ganti, Selesai to RME).
+
 ## 2026-09-29 — What the Diagnosis page hands to Terapi and Edukasi
 
 - Decision (Chief: "menyambungkan informasi yg di dapat dari halaman diagnosis ke halaman

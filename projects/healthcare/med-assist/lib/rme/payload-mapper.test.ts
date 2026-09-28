@@ -379,6 +379,29 @@ describe('RME payload mapper', () => {
     expect(mapped.payload.anamnesa.lainnya?.edukasi).toBe(`${first} ${second}`);
   });
 
+  it('writes the knowledge-base follow-up into rencana_tindakan when it fits whole', () => {
+    const followUp = 'Kontrol jika gejala tidak membaik dalam 7-10 hari, memberat, atau muncul gejala baru.';
+    const mapped = buildRMETransferPayload({
+      keluhanUtama: 'Nyeri menelan',
+      patientGender: 'L',
+      diagnosis: { icd_x: 'J02', nama: 'Faringitis' },
+      rencanaTindakan: [followUp],
+    });
+
+    expect(mapped.payload.anamnesa.lainnya?.rencana_tindakan).toBe(followUp);
+  });
+
+  it('keeps a generic rencana_tindakan line when the follow-up would not fit whole', () => {
+    const mapped = buildRMETransferPayload({
+      keluhanUtama: 'Nyeri menelan',
+      patientGender: 'L',
+      rencanaTindakan: ['kontrol '.repeat(40).trim()],
+    });
+
+    expect(mapped.payload.anamnesa.lainnya?.rencana_tindakan).not.toContain('kontrol kontrol');
+    expect(mapped.payload.anamnesa.lainnya?.rencana_tindakan).toBeTruthy();
+  });
+
   it('generates normal adult anthropometrics when no measured values are available', () => {
     const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.5);
 

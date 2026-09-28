@@ -39,7 +39,9 @@ vi.mock('@/lib/iskandar-diagnosis-engine/diagnosis-algorithm', () => ({
   runDiagnosisAlgorithm: mockRunDiagnosisAlgorithm,
 }));
 
-vi.mock('@/lib/rme/payload-mapper', () => ({
+// Only the payload builder is replaced; the Tatalaksana page reads the mapper's role rule.
+vi.mock('@/lib/rme/payload-mapper', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/rme/payload-mapper')>()),
   buildRMETransferPayload: mockBuildRMETransferPayload,
 }));
 
@@ -473,13 +475,14 @@ describe('ClinicalDifferential secure logic contract', () => {
 
     const workspace = await screen.findByTestId('diagnosis-workspace');
     // Therapy review is the next page, reached only once a diagnosis is selected
-    // (2026-09-28: Terapi and RME moved off the Diagnosis page)...
+    // (2026-09-28: Terapi and RME moved off the Diagnosis page; migrated 2026-09-29: the page
+    // is Tatalaksana, was Terapi)...
     expect(within(workspace).queryByTestId('dx-flow-ghost-therapy')).toBeNull();
-    expect(within(workspace).queryByLabelText('Terapi')).toBeNull();
+    expect(within(workspace).queryByLabelText('Tatalaksana')).toBeNull();
     // ...so no medication is proposed until a working diagnosis is selected.
     expect(within(workspace).queryByText(/Paracetamol 500 mg/i)).toBeNull();
     fireEvent.click((await within(workspace).findAllByTestId('dx-flow-card'))[0]);
-    expect(await within(workspace).findByLabelText('Terapi')).toBeTruthy();
+    expect(await within(workspace).findByLabelText('Tatalaksana')).toBeTruthy();
   });
 
   it('renders RME transfer controls with resep fail-closed until a medication is selected', async () => {
@@ -491,10 +494,11 @@ describe('ClinicalDifferential secure logic contract', () => {
     // Resep uplink stays fail-closed until the physician selects a medication: reach the
     // RME step with a diagnosis and no medication, and no transfer is dispatched merely
     // by rendering the surface.
+    // Migrated (2026-09-29): Tatalaksana's "Lanjut tanpa terapi tambahan" + "Selesai".
     fireEvent.click((await within(workspace).findAllByTestId('dx-flow-card'))[0]);
-    fireEvent.click(await within(workspace).findByRole('button', { name: 'Lanjut tanpa obat' }));
-    fireEvent.click(within(workspace).getByRole('button', { name: 'Lanjut' }));
-    const rmeStep = within(workspace).getByLabelText('RME');
+    fireEvent.click(await within(workspace).findByRole('button', { name: 'Lanjut tanpa terapi tambahan' }));
+    fireEvent.click(within(workspace).getByTestId('dx-tx-finish'));
+    const rmeStep = await within(workspace).findByLabelText('RME');
     expect(within(rmeStep).getByRole('button', { name: 'Kirim resep' })).toBeDisabled();
     expect(mockSendMessage).not.toHaveBeenCalledWith('transferRME', expect.anything());
   });

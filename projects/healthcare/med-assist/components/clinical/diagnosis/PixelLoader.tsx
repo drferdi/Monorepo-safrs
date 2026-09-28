@@ -28,19 +28,25 @@ export const PIXEL_FRAMES: number[][] = [
 ];
 
 const CELLS = Array.from({ length: 16 }, (_, index) => index);
+/** The reference's 4x4 pixel check, in stroke order: short arm down, long arm up. */
+export const PIXEL_CHECK = [8, 13, 10, 7];
 
-/** A tone colours the cells: `accent` the page green, `danger` red; none keeps the title colour. */
-export function PixelLoader({ tone }: { tone?: 'accent' | 'danger' } = {}) {
+/**
+ * A tone colours the cells: `accent` the page green, `danger` red; none keeps the title colour.
+ * `done` ends the cycle the way the reference does: the grid clears and the check is laid pixel by
+ * pixel (120 ms, then 55 ms a pixel).
+ */
+export function PixelLoader({ tone, done = false }: { tone?: 'accent' | 'danger'; done?: boolean } = {}) {
   const reduceMotion = useReducedMotion();
   const [frame, setFrame] = useState(0);
 
   useEffect(() => {
-    if (reduceMotion) return undefined;
+    if (reduceMotion || done) return undefined;
     const id = setInterval(() => setFrame((current) => (current + 1) % PIXEL_FRAMES.length), PIXEL_TICK_MS);
     return () => clearInterval(id);
-  }, [reduceMotion]);
+  }, [reduceMotion, done]);
 
-  const litCells = new Set(reduceMotion ? INNER : PIXEL_FRAMES[frame]);
+  const litCells = new Set(done ? PIXEL_CHECK : reduceMotion ? INNER : PIXEL_FRAMES[frame]);
   return (
     <span
       className={tone ? `dx-pixel-loader dx-pixel-loader--${tone}` : 'dx-pixel-loader'}
@@ -58,7 +64,10 @@ export function PixelLoader({ tone }: { tone?: 'accent' | 'danger' } = {}) {
             transition={{
               duration: on ? 0.09 : 0.36,
               ease: 'easeOut',
-              delay: (Math.floor(cell / 4) + (cell % 4)) * 0.018,
+              delay:
+                done && on && !reduceMotion
+                  ? 0.12 + PIXEL_CHECK.indexOf(cell) * 0.055
+                  : (Math.floor(cell / 4) + (cell % 4)) * 0.018,
             }}
           />
         );

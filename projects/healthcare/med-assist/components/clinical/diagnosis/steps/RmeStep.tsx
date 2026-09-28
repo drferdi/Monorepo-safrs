@@ -31,7 +31,7 @@ export function RmeStep({
     <section className="ct-v2-panel flex flex-col gap-3" aria-label="RME">
       <div className="ct-v2-panel-head">
         <h2 className="ttv-section-title">RME</h2>
-        <span className="ttv-label">5 / 5</span>
+        <span className="ttv-label">4 / 4</span>
       </div>
       <RMETransferPanel
         viewModel={viewModel}

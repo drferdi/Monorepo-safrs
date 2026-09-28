@@ -98,6 +98,8 @@ export interface DiagnosisTherapyGroupViewModelInput {
 export interface DiagnosisMedicationViewModelInput {
   key: string;
   name: string;
+  /** Regimen role when the prescription service sent one. */
+  role?: 'utama' | 'adjuvant' | 'vitamin';
   doseLine: string;
   rationale: string;
   safetyLabel: string;
@@ -213,6 +215,7 @@ export interface DiagnosisTherapyGroupView {
 export interface DiagnosisMedicationView {
   key: string;
   name: string;
+  role?: 'utama' | 'adjuvant' | 'vitamin';
   doseLine: string;
   rationale: string;
   safetyLabel: string;
@@ -365,6 +368,7 @@ function buildTherapyView(input: DiagnosisTherapyViewModelInput): DiagnosisThera
       medications: group.medications.map((medication) => ({
         key: medication.key,
         name: medication.name,
+        role: medication.role,
         doseLine: medication.doseLine,
         rationale: medication.rationale,
         safetyLabel: medication.safetyLabel,

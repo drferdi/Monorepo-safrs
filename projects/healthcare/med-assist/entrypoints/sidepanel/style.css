@@ -10313,3 +10313,68 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 .dx-pixel-loader--danger > span {
   background: var(--sentra-danger);
 }
+
+/* Tatalaksana page (Chief, 2026-09-29), motion after lab.xevrion.dev: the pen check ("Scribble
+   checkbox"), the rolling counts ("Odometer") and the hold fill ("Hold to delete") live in
+   labMotion.tsx; these rules only size and colour them. */
+.dx-tx-divider { margin: 4px 0 8px; }
+.dx-tx-count { display: inline-flex; }
+.dx-tx-index { flex: 0 0 auto; padding-top: 3px; color: var(--accent-med); }
+.dx-tx-danger { color: var(--sentra-danger); }
+.dx-tx-kv {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  column-gap: 10px;
+  row-gap: 2px;
+  margin: 2px 0 0;
+}
+.dx-tx-kv dd { margin: 0; color: var(--text-main); }
+.dx-tx-kv dd.dx-tx-danger { color: var(--sentra-danger); }
+.dx-pen-check {
+  display: inline-grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--neu-border-medium);
+  border-radius: 0;
+  background: var(--neu-inset-bg);
+}
+.dx-pen-check svg { width: 16px; height: 16px; overflow: visible; }
+.dx-pen-check--accent { color: var(--accent-med); }
+.dx-pen-check--danger { color: var(--sentra-danger); border-color: var(--sentra-danger); }
+.dx-roll { display: inline-flex; vertical-align: top; font-variant-numeric: tabular-nums; }
+.dx-roll-wheel {
+  position: relative;
+  display: inline-block;
+  width: 0.62em;
+  height: 1lh;
+  overflow: hidden;
+}
+.dx-roll-strip {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, currentColor 22%, currentColor 78%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, currentColor 22%, currentColor 78%, transparent);
+}
+.dx-roll-glyph {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sentra-card .diagnosis-text-button.dx-hold { position: relative; display: inline-grid; }
+.dx-hold > * { grid-area: 1 / 1; }
+.dx-hold-fill {
+  color: var(--sentra-danger);
+  clip-path: inset(0 100% 0 0);
+  transition-property: clip-path;
+  transition-timing-function: linear;
+  pointer-events: none;
+}
+.dx-hold-fill[data-holding='true'] { clip-path: inset(0 0 0 0); }
+.diagnosis-candidate-row.neu-select:has(> [aria-pressed='true']) .dx-pen-check { border-color: var(--sentra-safe-border); }
+@media (prefers-reduced-motion: reduce) {
+  .dx-hold-fill { transition-timing-function: step-end; }
+}

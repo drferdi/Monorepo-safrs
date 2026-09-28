@@ -24,7 +24,7 @@ function vm(candidates: DiagnosisCandidateView[], over: Partial<DiagnosisPageVie
   };
 }
 
-const handlers = () => ({ onToggleCandidate: vi.fn(), onToggleManualDiagnosisInput: vi.fn(), onManualIcdChange: vi.fn(), onManualNameChange: vi.fn(), onSubmitManualDiagnosis: vi.fn(), onCompleteData: vi.fn(), onRecordBedsideFinding: vi.fn() });
+const handlers = () => ({ onRemoveDiagnosis: vi.fn(), onToggleCandidate: vi.fn(), onToggleManualDiagnosisInput: vi.fn(), onManualIcdChange: vi.fn(), onManualNameChange: vi.fn(), onSubmitManualDiagnosis: vi.fn(), onCompleteData: vi.fn(), onRecordBedsideFinding: vi.fn() });
 
 // The select control carries data-testid="dx-flow-card"; "Lihat alasan" and the reasons sit beside it in the card.
 function cardOf(select: HTMLElement): HTMLElement {
@@ -505,6 +505,15 @@ describe('DiagnosisStep', () => {
       expect(screen.getByTestId('dx-flow-chosen')).toHaveTextContent('R50.9 - Demam');
       expect(screen.getByTestId('dx-flow-mira-suggests')).toHaveTextContent('MIRA sekarang menyarankan: J18.9 - Community Acquired Pneumonia');
       expect(differentialLabels()).toEqual(['Diagnosis banding 1', 'Diagnosis banding 2']);
+    });
+
+    // Tatalaksana no longer carries a "hapus" per diagnosis (2026-09-29), so a diagnosis chosen
+    // without a card is removed where it is shown.
+    it('removes a diagnosis chosen without a card from its own "hapus"', () => {
+      const h = handlers();
+      render(<DiagnosisStep viewModel={vm([], { selectedDiagnoses: [{ key: 'manual:R50.9', displayLabel: 'R50.9 - Demam', sourceLabel: 'Input dokter' }] })} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...h} />);
+      fireEvent.click(within(screen.getByTestId('dx-flow-chosen')).getByRole('button', { name: 'hapus' }));
+      expect(h.onRemoveDiagnosis).toHaveBeenCalledWith('manual:R50.9');
     });
 
     it('records a finding with MIRA\'s arrangement as shown, whatever the doctor chose', () => {

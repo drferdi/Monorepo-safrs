@@ -13,7 +13,14 @@ import type {
 } from './diagnosis/diagnosisPageProps';
 import { DiagnosisStepFlow } from './diagnosis/DiagnosisStepFlow';
 import { buildEducationItems } from './diagnosis/education';
+import {
+  buildChronicMedications,
+  buildFollowUp,
+  buildSafetyNet,
+  type InteractionCheckView,
+} from './diagnosis/tatalaksana';
 import { useDiseaseNotes } from './diagnosis/useDiseaseNotes';
+import { usePatientVisits } from './diagnosis/usePatientVisits';
 import { useRecurrentDiagnoses } from './diagnosis/useRecurrentDiagnoses';
 
 import {
@@ -653,6 +660,12 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
   const [selectedMedicationKeys, setSelectedMedicationKeys] = useState<string[]>([]);
   // Education points the doctor ticked as given (by text); only these go to the RME.
   const [selectedEducationKeys, setSelectedEducationKeys] = useState<string[]>([]);
+  // Proposals the doctor removed on the Tatalaksana page ("Hapus"); they leave the prescription.
+  const [dismissedMedicationKeys, setDismissedMedicationKeys] = useState<string[]>([]);
+  const [interactionCheck, setInteractionCheck] = useState<InteractionCheckView>({
+    state: 'done',
+    interactions: [],
+  });
   const [, setProcessingTimeMs] = useState<number | null>(null);
   const [transferUiState, setTransferUiState] = useState<TransferUiState>('idle');
   const [transferRunId, setTransferRunId] = useState<string | null>(null);
@@ -1479,13 +1492,14 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     }
     combined.push(...manualMedications);
 
+    const dismissed = new Set(dismissedMedicationKeys);
     const deduped = new Map<string, MedicationRecommendation>();
     for (const med of combined) {
       const key = medicationSelectionKey(med);
-      if (!deduped.has(key)) deduped.set(key, med);
+      if (!deduped.has(key) && !dismissed.has(key)) deduped.set(key, med);
     }
     return Array.from(deduped.values());
-  }, [selectedDiagnoses, therapyByDiagnosis, manualMedications]);
+  }, [selectedDiagnoses, therapyByDiagnosis, manualMedications, dismissedMedicationKeys]);
 
   const selectedMedicationKeySet = useMemo(
     () => new Set(selectedMedicationKeys),
@@ -1519,6 +1533,64 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
   const selectedEducationTexts = educationItems
     .filter((item) => selectedEducationKeys.includes(item.key))
     .map((item) => item.text);
+
+  // Tatalaksana (Chief, 2026-09-29): chronic medications read from the visit history, follow-up
+  // and safety net from the knowledge base, interactions from the local DDInter check.
+  const patientVisits = usePatientVisits(patientRM);
+  const chronicMedications = useMemo(
+    () => buildChronicMedications(chronicTherapies, patientVisits),
+    [chronicTherapies, patientVisits]
+  );
+  const chosenCodes = useMemo(() => selectedDiagnoses.map((diagnosis) => diagnosis.icd_x), [selectedDiagnoses]);
+  const followUp = useMemo(
+    () =>
+      buildFollowUp(
+        chosenCodes,
+        [
+          ...confirmedChronicDiagnoses.map((item) => ({ code: item.icd_x, name: item.nama })),
+          ...recurrent
+            .filter((candidate) => candidate.label === 'Kronis')
+            .map((candidate) => ({ code: candidate.icd, name: candidate.name })),
+        ],
+        diseaseNotes
+      ),
+    [chosenCodes, confirmedChronicDiagnoses, recurrent, diseaseNotes]
+  );
+  const safetyNet = useMemo(() => buildSafetyNet(chosenCodes, diseaseNotes), [chosenCodes, diseaseNotes]);
+  const interactionNames = useMemo(
+    () =>
+      Array.from(
+        new Set([...chronicTherapies, ...candidateTransferMedications.map((med) => med.nama_obat)])
+      ),
+    [chronicTherapies, candidateTransferMedications]
+  );
+  const interactionKey = interactionNames.join('|');
+  useEffect(() => {
+    const names = interactionKey ? interactionKey.split('|') : [];
+    if (names.length < 2) {
+      setInteractionCheck({ state: 'done', interactions: [] });
+      return undefined;
+    }
+    let cancelled = false;
+    setInteractionCheck({ state: 'checking', interactions: [] });
+    const check = async (): Promise<void> => {
+      try {
+        const response = await sendMessage('checkInteractions', names);
+        if (cancelled) return;
+        setInteractionCheck(
+          response.success
+            ? { state: 'done', interactions: response.data ?? [] }
+            : { state: 'unavailable', interactions: [] }
+        );
+      } catch {
+        if (!cancelled) setInteractionCheck({ state: 'unavailable', interactions: [] });
+      }
+    };
+    void check();
+    return () => {
+      cancelled = true;
+    };
+  }, [interactionKey]);
 
   // Lift selected diagnosis and medications to parent (for uplink from TTVInferenceUI)
   useEffect(() => {
@@ -1599,6 +1671,12 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       rationale: 'Input manual operator',
     }));
     setTherapyError('');
+  };
+
+  const dismissMedication = (key: string): void => {
+    setDismissedMedicationKeys((prev) => (prev.includes(key) ? prev : [...prev, key]));
+    setSelectedMedicationKeys((prev) => prev.filter((item) => item !== key));
+    setTransferError('');
   };
 
   const removeManualMedication = (medication: MedicationRecommendation): void => {
@@ -1738,9 +1816,12 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
               .map((alert) => `${humanize(alert.title)}: ${humanize(alert.message)}`),
             ...(therapyResult?.guidelines || []),
           ].filter((item): item is string => Boolean(item));
-          const medications = (therapyResult?.medications || []).map((med) => ({
+          const medications = (therapyResult?.medications || [])
+            .filter((med) => !dismissedMedicationKeys.includes(medicationSelectionKey(med)))
+            .map((med) => ({
             key: medicationSelectionKey(med),
             name: med.nama_obat,
+            role: med.role,
             doseLine: `${med.dosis} • ${med.aturan_pakai} • ${med.durasi || '-'}`,
             rationale: humanize(med.rationale),
             safetyLabel: med.safety_check.toUpperCase(),
@@ -1806,6 +1887,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     candidateMedicationCount,
     chronicTherapies,
     differentialRedFlagItems,
+    dismissedMedicationKeys,
     hasDiagnosisForTransfer,
     hasResepPayloadReady,
     impressionItems,
@@ -1921,6 +2003,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       trajectory,
       hasVisitHistory,
       edukasi: selectedEducationTexts,
+      rencanaTindakan: followUp.visit,
     });
 
     const scopedReasonCodes = filterReasonCodesForStep(mapped.reasonCodes, targetStep);
@@ -2016,6 +2099,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       trajectory,
       hasVisitHistory,
       edukasi: selectedEducationTexts,
+      rencanaTindakan: followUp.visit,
     });
 
     const requestId = `rme-auto-${Date.now()}`;
@@ -2259,6 +2343,12 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
             prev.includes(key) ? prev.filter((entry) => entry !== key) : [...prev, key]
           )
         }
+        chronicMedications={chronicMedications}
+        interactionCheck={interactionCheck}
+        allergies={allergies}
+        followUp={followUp}
+        safetyNet={safetyNet}
+        onDismissMedication={dismissMedication}
         onAutoFillRME={() => {
           void handleAutoFillAll(false);
         }}
