@@ -99,7 +99,7 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
 
   // Every finished step other than the active one is a receipt, in step order around it.
   const receipt = (s: (typeof steps)[number]) => (
-    <StepReceipt key={s.key} step={s} summary={summaries[s.key]} onReopen={() => setReopened(s.key)} />
+    <StepReceipt key={s.key} step={s} summary={summaries[s.key]} onReopen={() => setReopened(s.key)} layoutKey={active} />
   );
   return (
     <div
@@ -112,7 +112,15 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
     >
       <LayoutGroup>
         {steps.filter((s) => s.done && s.index < activeIndex).map(receipt)}
-        <motion.div key={active} layout layoutId={stepLayoutId(active)} className="flex flex-col gap-3">
+        {/* Layout animates only when the step changes (fold into / unfold from its receipt); a
+            card growing inside the step must not scale the whole column (Chief, 2026-09-28). */}
+        <motion.div
+          key={active}
+          layout
+          layoutId={stepLayoutId(active)}
+          layoutDependency={active}
+          className="flex flex-col gap-3"
+        >
           <motion.div
             className="flex flex-col gap-3"
             custom={direction}
@@ -157,7 +165,7 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
         {steps
           .filter((s) => s.index > activeIndex && !s.done)
           .map((s) => (
-            <StepGhost key={s.key} step={s} />
+            <StepGhost key={s.key} step={s} layoutKey={active} />
           ))}
       </LayoutGroup>
     </div>

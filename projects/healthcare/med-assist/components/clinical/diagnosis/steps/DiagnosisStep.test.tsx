@@ -289,6 +289,15 @@ describe('DiagnosisStep', () => {
     expect(document.querySelectorAll('.diagnosis-skeleton__card')).toHaveLength(2);
   });
 
+  it('opens the reasons inside the button\'s own grid child, so the card gains no grid gap on open', () => {
+    render(<DiagnosisStep viewModel={vm([candidate({})])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
+    const card = cardOf(screen.getByTestId('dx-flow-card'));
+    expect(card.children).toHaveLength(2);
+    openReasons(screen.getByTestId('dx-flow-card'));
+    expect(card.children).toHaveLength(2);
+    expect(card.children[1]).toContainElement(within(card).getByRole('list', { name: 'Alasan' }));
+  });
+
   it('keeps "Lihat alasan" outside the role="button" select control so assistive tech can reach it', () => {
     render(<DiagnosisStep viewModel={vm([candidate({})])} phase="ready" errorMessage="" showManualDiagnosisInput={false} manualIcd="" manualName="" {...handlers()} />);
     const [select] = screen.getAllByTestId('dx-flow-card');

@@ -140,11 +140,14 @@ function Card({
   index,
   note,
   mustNotMiss = false,
+  selectionKey,
   onToggle,
   onCheck,
 }: {
   card: DiagnosisCandidateView;
   index: number;
+  /** Changes only when the chosen diagnosis changes: the one time cards move on the page. */
+  selectionKey: string;
   /** The knowledge base's notes for this code: the clamped explanation and, for MUST NOT MISS, the complications. */
   note: DiseaseNote | null;
   mustNotMiss?: boolean;
@@ -161,20 +164,23 @@ function Card({
   const toggleLabel = mustNotMiss ? 'Mengapa perlu dipertimbangkan' : 'Lihat alasan';
   // The select control and the reasons button are siblings: a role="button" element's
   // children are presentational, so a nested button would be unreachable for assistive tech.
+  // The column behaves like a console (Chief, 2026-09-28): opening the reasons grows only this
+  // card's reasons panel. Cards animate position only when the chosen diagnosis changes
+  // (`layoutDependency`), never because a card above grew, and only the select control sinks
+  // under a tap, so pressing "Lihat alasan" does not shrink the card.
   return (
     <motion.div
-      // Position only: the card's height change is animated by the reasons timeline itself, and
-      // a size layout animation would scale the card (and distort that measurement) meanwhile.
       layout="position"
       layoutId={`dx-card-${card.id}`}
+      layoutDependency={selectionKey}
       className="neu-select diagnosis-candidate-row"
       custom={index}
       variants={cardEnter}
       initial="hidden"
       animate="shown"
-      whileTap={card.isSelectionBlocked ? undefined : { scale: 0.985 }}
     >
-      <div
+      <motion.div
+        whileTap={card.isSelectionBlocked ? undefined : { scale: 0.985 }}
         className="flex flex-col gap-1"
         data-testid="dx-flow-card"
         role="button"
@@ -203,40 +209,44 @@ function Card({
           <span>{`− Menentang ${card.against.length}`}</span>
           <span>{`? Data kurang ${card.missing.length}`}</span>
         </div>
-      </div>
-      <div className="flex">
-        <button
-          type="button"
-          className="diagnosis-text-button inline-flex items-center gap-1"
-          aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
-        >
-          {toggleLabel}
-          <motion.span
-            aria-hidden="true"
-            className="inline-block"
-            animate={{ rotate: open ? 180 : 0 }}
-            transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
+      </motion.div>
+      {/* One grid child for the button and its reasons: a reasons panel added as its own child
+          would add the card's 8 px grid gap at once on open and drop it at once on close. */}
+      <div>
+        <div className="flex">
+          <button
+            type="button"
+            className="diagnosis-text-button inline-flex items-center gap-1"
+            aria-expanded={open}
+            onClick={() => setOpen((v) => !v)}
           >
-            ⌄
-          </motion.span>
-        </button>
+            {toggleLabel}
+            <motion.span
+              aria-hidden="true"
+              className="inline-block"
+              animate={{ rotate: open ? 180 : 0 }}
+              transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
+            >
+              ⌄
+            </motion.span>
+          </button>
+        </div>
+        <AnimatePresence initial={false}>
+          {open ? (
+            <ReasonTimeline
+              key="reasons"
+              groups={mustNotMiss ? mustNotMissGroups(card, note) : reasonGroups(card)}
+              footer={
+                mustNotMiss ? (
+                  <button type="button" className="diagnosis-text-button" onClick={onCheck}>
+                    Apa yang perlu diperiksa →
+                  </button>
+                ) : undefined
+              }
+            />
+          ) : null}
+        </AnimatePresence>
       </div>
-      <AnimatePresence initial={false}>
-        {open ? (
-          <ReasonTimeline
-            key="reasons"
-            groups={mustNotMiss ? mustNotMissGroups(card, note) : reasonGroups(card)}
-            footer={
-              mustNotMiss ? (
-                <button type="button" className="diagnosis-text-button" onClick={onCheck}>
-                  Apa yang perlu diperiksa →
-                </button>
-              ) : undefined
-            }
-          />
-        ) : null}
-      </AnimatePresence>
     </motion.div>
   );
 }
@@ -310,6 +320,7 @@ export function DiagnosisStep({
   const notes = useDiseaseNotes();
 
   const sortedCards = sortHistoryFirst(viewModel.candidates.filter((candidate) => candidate.code !== 'R69'));
+  const selectionKey = sortedCards.filter((candidate) => candidate.isSelected).map((candidate) => candidate.id).join('|');
   const { primary, rest } = splitPrimary(sortedCards);
   // Cannot-miss cards never count against the cap and are never hidden behind "Lainnya".
   const mustNotMiss = rest.filter(hasCannotMissTag);
@@ -324,6 +335,7 @@ export function DiagnosisStep({
       index={index}
       note={diseaseNoteFor(notes, candidate.code)}
       mustNotMiss={isMustNotMiss}
+      selectionKey={selectionKey}
       onToggle={onToggleCandidate}
       onCheck={onCompleteData}
     />

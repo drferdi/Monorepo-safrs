@@ -9,11 +9,23 @@ export const stepLayoutId = (key: DiagnosisStepState['key']) => `dx-step-${key}`
  * step, so the panel visibly folds into this receipt and unfolds again on "ubah" (the
  * "Expanding card" experiment on lab.xevrion.dev).
  */
-export function StepReceipt({ step, summary, onReopen }: { step: DiagnosisStepState; summary: string; onReopen: () => void }) {
+/** `layoutKey`: the open step; the fold and unfold animate only when it changes, not when the open step grows. */
+export function StepReceipt({
+  step,
+  summary,
+  onReopen,
+  layoutKey,
+}: {
+  step: DiagnosisStepState;
+  summary: string;
+  onReopen: () => void;
+  layoutKey?: string;
+}) {
   return (
     <motion.div
       layout
       layoutId={stepLayoutId(step.key)}
+      layoutDependency={layoutKey}
       className="ct-v2-panel ct-v2-panel--secondary"
       data-testid={`dx-flow-receipt-${step.key}`}
     >
@@ -30,11 +42,12 @@ export function StepReceipt({ step, summary, onReopen }: { step: DiagnosisStepSt
   );
 }
 
-export function StepGhost({ step }: { step: DiagnosisStepState }) {
+export function StepGhost({ step, layoutKey }: { step: DiagnosisStepState; layoutKey?: string }) {
   return (
     <motion.div
       layout
       layoutId={stepLayoutId(step.key)}
+      layoutDependency={layoutKey}
       className="ct-v2-panel ct-v2-panel--secondary dx-step--ghost"
       data-testid={`dx-flow-ghost-${step.key}`}
       aria-hidden="true"
