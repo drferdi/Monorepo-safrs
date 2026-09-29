@@ -3,6 +3,17 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — The Sentra logomark on every Edukasi card
+
+- Decision (Chief, sending the white Sentra mark: "di card masing masing kasih logo Sentra"): each
+  education card shows the Sentra logomark, 56 px wide, centred between the number and the point.
+  The capsule already had the same mark (`public/icon/sentra-hai-logomark.png`), so no new asset;
+  it is decorative (`alt=""`) and takes no pointer events, so a drag that starts on it still
+  moves the card.
+- Evidence: labMotion.test.tsx "carries the Sentra logomark on every card, as decoration"
+  (red first, then green); five gates exit 0; token-guard PASS; harness: 8 cards, logo loaded
+  on each, no face overflows, a drag started on the logo brings card 02.
+
 ## 2026-09-29 — Edukasi deck in the reference's own design; the tick on a card gives
 
 - Decision (Chief, after seeing the first deck: "gunakan design asli motion

@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange, stock search, steady UI, focus underline, standard dose prefill, selection trace, Keamanan removed + audit, Edukasi swipe deck in the reference design)
+Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange, stock search, steady UI, focus underline, standard dose prefill, selection trace, Keamanan removed + audit, Edukasi swipe deck in the reference design, Sentra logo on each card)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
@@ -57,7 +57,8 @@ twelve Tatalaksana entries):
 6. Tick a therapy card (or a diagnosis card): no green frame, one line circles it.
 7. No "Keamanan terapi" part; add "BLUD Amlodipin" while chronic Amlodipin is listed → both cards
    say "duplikasi: …" in orange, Ringkasan "⚠ … perlu review".
-8. Edukasi: one card per point in the swipe-deck look (number on top, point below); swipe
+8. Edukasi: one card per point in the swipe-deck look (number on top, Sentra logo in the middle,
+   point below); swipe
    either way, the round arrows or ArrowLeft/Right → the next point; the tick on the card gives it
    (count "Edukasi N" goes up, the tick stays on when the card comes round again); no list below.
 
@@ -67,7 +68,7 @@ twelve Tatalaksana entries):
 |---|---|---|
 | `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`) |
 | `typecheck` | 0 | clean |
-| `test` | 0 | 181 files passed, 1 skipped; 1461 passed, 17 skipped (was 1466: the v1 deck tests and the "ubah" focus test went with the feature) |
+| `test` | 0 | 181 files passed, 1 skipped; 1462 passed, 17 skipped (was 1466: the v1 deck tests and the "ubah" focus test went with the feature; +1 logo test) |
 | `exec wxt build --mode development` | 0 | clean |
 | `run:check` | 0 | "Extension loads: Asisten Medis 2.1.0 (MV3), all referenced files present." |
 
