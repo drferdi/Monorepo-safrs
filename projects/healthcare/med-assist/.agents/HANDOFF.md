@@ -1,19 +1,20 @@
 # HANDOFF
 
-Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange, stock search, steady UI, focus underline, standard dose prefill, selection trace, Keamanan removed + audit)
+Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange, stock search, steady UI, focus underline, standard dose prefill, selection trace, Keamanan removed + audit, Edukasi swipe deck)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
 
 ## Current state
 
-Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEAD is the
-"Keamanan terapi removed + audit" commit after `7023b562` (DECISIONS 2026-09-29, eleven Tatalaksana entries):
+Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEAD is `9fbb52e5`, the last of four Edukasi swipe-deck commits after `2adb435c` (DECISIONS 2026-09-29,
+twelve Tatalaksana entries):
 
 - Four steps, three pages: Temuan 1/4 + Diagnosis 2/4 | Tatalaksana 3/4 | RME 4/4.
 - `steps/TatalaksanaStep.tsx` (replaces TherapyStep and EducationStep): Terapi kronis (visit
   history, "Review"), Terapi kunjungan ini (slots Utama/Adjuvant/Vitamin, Ganti, hold-to-Hapus,
-  "+ Tambah obat", "Gunakan semua usulan" / "Lanjut tanpa terapi tambahan"), Edukasi, Tindak lanjut
+  "+ Tambah obat", "Gunakan semua usulan" / "Lanjut tanpa terapi tambahan"), Edukasi (given list +
+  swipe deck of the rest: right/"Berikan" gives, left/"Lewati" skips), Tindak lanjut
   (KB `kontrol`, routine per chronic condition), Safety net (KB `red_flags`), Ringkasan, "Selesai".
   No "Keamanan terapi" part (Chief): each card's DDI node says interactions and "duplikasi: …",
   its Kontraindikasi node allergies; Ringkasan "Safety check" counts them.
@@ -56,6 +57,8 @@ Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEA
 6. Tick a therapy card (or a diagnosis card): no green frame, one line circles it.
 7. No "Keamanan terapi" part; add "BLUD Amlodipin" while chronic Amlodipin is listed → both cards
    say "duplikasi: …" in orange, Ringkasan "⚠ … perlu review".
+8. Edukasi: drag the top card right (or "Berikan") → it joins the numbered list; left (or "Lewati")
+   → it goes to the back; ArrowLeft/Right on the focused deck; after the last card focus is on "ubah".
 
 ## Verification (capsule root, final tree)
 
@@ -63,7 +66,7 @@ Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEA
 |---|---|---|
 | `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`) |
 | `typecheck` | 0 | clean |
-| `test` | 0 | 180 files passed, 1 skipped; 1451 passed, 17 skipped (was 1446) |
+| `test` | 0 | 181 files passed, 1 skipped; 1466 passed, 17 skipped (was 1451) |
 | `exec wxt build --mode development` | 0 | clean |
 | `run:check` | 0 | "Extension loads: Asisten Medis 2.1.0 (MV3), all referenced files present." |
 

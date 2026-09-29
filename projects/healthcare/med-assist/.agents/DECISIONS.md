@@ -3,6 +3,29 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — Edukasi as a swipe deck (right gives, left skips)
+
+- Decision (Chief, on the Edukasi part: "section ini gunakan motion FX
+  https://lab.xevrion.dev/lab/swipe-deck"; he chose right = berikan, left = lewati): the points
+  not yet given are a card deck (`EducationDeck` in `labMotion.tsx`, adapted from xevrion ui-lab
+  "Swipe deck", MIT). The top card is thrown right (drag/flick, "Berikan", ArrowRight) to give it
+  (`onToggleEducation`), left ("Lewati", ArrowLeft) to put it at the back; three cards show, the
+  rest step forward. It replaces "+ Tambah edukasi" and the long picker (one entry point); the
+  numbered given list with "ubah"/"hapus" is unchanged. Supersedes item 5 of the 2026-09-28 entry
+  below.
+- Details: throw at > 120 px or > 400 px/s; held keys and the second click of a double-click are
+  ignored; "Lewati" is disabled with one card; the last card flies out before the deck goes and
+  focus moves to "ubah"; flying copies take no pointer events; the deck sizes to its tallest card
+  (grid, one cell), so long knowledge-base points (up to 411 characters) never spill onto the
+  buttons; reduced motion swaps cards without flights or springs.
+- Like the focus underline and the selection trace, this motion is Chief's explicit exception to
+  "steady like a console", confined to the deck.
+- Evidence: labMotion.test.tsx (throwDirection, give/skip/keys/double-click/last card),
+  TatalaksanaStep, DiagnosisStepFlow and rme-transfer e2e tests migrated (named in d2dcd08d);
+  task review + 2 fix rounds, final review (opus) + fix wave 9fbb52e5, token-guard PASS; Chrome
+  harness: right drag gives, left drag skips, ArrowRight ×6 gives all and focus lands on "ubah",
+  a 412-character point fits at 384 px (deck 187 px) and 260 px (237 px), no horizontal overflow.
+
 ## 2026-09-29 — Tatalaksana without "Keamanan terapi"; audit of its functions
 
 - Decision (Chief: "hilangkan Keamanan terapi"): the part is gone (ticked lines, "Perlu review" box,
