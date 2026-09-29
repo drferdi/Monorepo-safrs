@@ -19,7 +19,7 @@ extension build is the same as this morning's (Tatalaksana timeline cards, Eduka
   Tatalaksana …": payload `tests/e2e/side-panel-tatalaksana-transfer.ts` (J02, Amoksisilin
   kapsul/kaplet 500 mg 3x1, one education point, "Kontrol 2 minggu") → Anamnesa[edukasi],
   Anamnesa[rencana_tindakan], diagnosa_id/nama, resep row 0. The RME page is the active tab while
-  the extension sends (Chief: "harus on the same side with RME page").
+  the extension sends (my reading of Chief's "harus on the same side with RME page", unconfirmed).
   `ClinicalDifferential.rme-transfer.e2e.test.tsx` asserts the side panel still sends that payload.
 - Migrated (named in `8707bc66`): resep e2e dokter/perawat now the payload's names (961b1963);
   trajectory e2e headline Indonesian (ba789530).

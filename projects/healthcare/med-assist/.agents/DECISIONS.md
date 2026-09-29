@@ -9,7 +9,8 @@ has a dated heading, the decision, a short rationale, and its evidence.
   through the DevTools protocol (`Extensions.loadUnpacked`, `--enable-unsafe-extension-debugging`,
   Playwright's `--disable-extensions` dropped). Chief: "sudah ada chromium" - this machine has
   Chrome 154 and no Playwright Chromium, and branded Chrome 137+ ignores `--load-extension`.
-- Decision (Chief: "harus on the same side with RME page"): a transfer test keeps the ePuskesmas
+- Decision (my reading of Chief's "harus on the same side with RME page", not yet confirmed by
+  him): a transfer test keeps the ePuskesmas
   page the active tab while the extension sends, as the real side panel sits beside it.
 - The side panel's Tatalaksana payload for the e2e lives in
   `tests/e2e/side-panel-tatalaksana-transfer.ts`; the Vitest RME-transfer test asserts the side
