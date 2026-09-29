@@ -861,10 +861,9 @@ test.describe.serial('Synthetic ePuskesmas integration', () => {
     await expect(epPage.locator('input[name="no_resep"]')).toHaveValue('AUTO-1');
     await expect(epPage.locator('textarea[name="alergi"]')).toHaveValue('Penicillin');
     await expect(epPage.locator('select[name="prioritas"]')).toHaveValue('0');
-    await expect(epPage.locator('input[name="dokter_nama_bpjs"]')).toHaveValue(
-      'dr. Ferdi Iskandar, S.H., M.Kn., C.LM., CMDC'
-    );
-    await expect(epPage.locator('input[name="perawat_nama"]')).toHaveValue('JOSEP ARIANTO, A.Md');
+    // The payload's names win over the constants (DECISIONS 2026-09-27, signed-in Assist user).
+    await expect(epPage.locator('input[name="dokter_nama_bpjs"]')).toHaveValue('dr. Test');
+    await expect(epPage.locator('input[name="perawat_nama"]')).toHaveValue('Ns. Test');
     await expect(epPage.locator('select[name="obat_racikan[0]"]')).toHaveValue('0');
     await expect(epPage.locator('input[name="obat_jumlah_permintaan[0]"]')).toHaveValue('6');
     await expect(epPage.locator('input[name="obat_nama[0]"]')).toHaveValue('Paracetamol 500mg');

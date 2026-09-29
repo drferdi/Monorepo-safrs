@@ -123,7 +123,7 @@ test.describe.serial('ClinicalTrajectory preview harness', () => {
     await expect(desktop.page.getByTestId('clinical-trajectory-v2')).toBeVisible();
     await expect(desktop.page.getByTestId('clinical-reasoning-workbench')).toBeVisible();
     await expect(desktop.page.getByTestId('clinical-trajectory-v2-header')).toContainText(
-      /Trajectory suggests/i
+      /Trajektori menunjukkan/i
     );
     await expect(desktop.page.getByTestId('clinical-trajectory-status-strip')).toBeVisible();
     await expect(desktop.page.getByRole('button', { name: 'Review details' })).toBeVisible();
