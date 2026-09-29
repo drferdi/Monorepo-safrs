@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange, stock search, steady UI, focus underline, standard dose prefill, selection trace, Keamanan removed + audit, Edukasi swipe deck in the reference design, Sentra logo on each card, Tindak lanjut "Kontrol 3 hari", Safety net timeline)
+Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange, stock search, steady UI, focus underline, standard dose prefill, selection trace, Keamanan removed + audit, Edukasi swipe deck in the reference design, Sentra logo on each card, Tindak lanjut "Kontrol 3 hari", Safety net timeline, end-to-end check)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
@@ -72,9 +72,17 @@ twelve Tatalaksana entries):
 |---|---|---|
 | `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`) |
 | `typecheck` | 0 | clean |
-| `test` | 0 | 181 files passed, 1 skipped; 1462 passed, 17 skipped (was 1466: the v1 deck tests and the "ubah" focus test went with the feature; +1 logo test; -1 `buildFollowUp` test; +1 safety-net timeline test) |
+| `test` | 0 | 181 files passed, 1 skipped; 1462 passed, 17 skipped (was 1466: the v1 deck tests and the "ubah" focus test went with the feature; +1 logo test; -1 `buildFollowUp` test; +1 safety-net timeline test; +1 "Isi otomatis RME" end-to-end test) |
 | `exec wxt build --mode development` | 0 | clean |
 | `run:check` | 0 | "Extension loads: Asisten Medis 2.1.0 (MV3), all referenced files present." |
+
+End-to-end check (2026-09-29): `ClinicalDifferential.rme-transfer.e2e.test.tsx` "sends the whole
+Tatalaksana through "Isi otomatis RME"" (diagnosis J02, Amoksisilin chosen, one education point
+given, "Kontrol 2 minggu") passes and fails when the auto-fill path drops rencana_tindakan
+(mutation checked, then restored). Harness walk: page 1 → I50 and J20.9 → card select + trace,
+stock search "Amlo" → Amlodipin 10 mg 1x1 Sesudah makan, duplicate flagged, deck swipe/tick
+(count follows), "Lanjut tanpa terapi tambahan" scrolls to Edukasi, Kontrol picker, Safety net
+nodes, Selesai → RME buttons, "ubah" keeps ticks and skip; no console errors.
 
 Vite harness (`dx-harness`; `?dx=3-J20.9` major DDI, `&ddi=none`, `&ddi=unavailable`,
 `&therapy=error&chronic=none`): viewed; toggling a card moves no other part (0 px); short hold
