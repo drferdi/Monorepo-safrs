@@ -3,6 +3,22 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — Tindak lanjut is one row: "Kontrol 3 hari"
+
+- Decision (Chief: "Tindak lanjut simplified, cukup kontrol 3 hari atau sejenisnya"): the
+  Tindak lanjut part is one row, "Kontrol" with an interval picker (`CONTROL_AFTER_OPTIONS` in
+  `tatalaksana.ts`: 3 hari, 1 minggu, 2 minggu, 1 bulan; default 3 hari). The RME anamnesis
+  gets `rencana_tindakan` "Kontrol <interval>". The knowledge-base `tindak_lanjut.kontrol`
+  paragraphs (for the chosen diagnosis and "Kontrol rutin · <chronic condition>") no longer
+  appear on the page or in the RME; `buildFollowUp`/`FollowUpView` were removed. The Ringkasan
+  row "Tindak lanjut" (a count of schedules) is gone: the value would repeat the row above.
+- Assumptions (Chief can change them): the four intervals and the 3-day default for every
+  diagnosis, chronic ones included. `DiseaseNote.followUp` in `useDiseaseNotes.ts` still parses
+  the KB field but nothing reads it.
+- Evidence: TatalaksanaStep test "says the follow-up in one short row"; rme-transfer e2e now
+  picks "1 minggu" and expects `rencana_tindakan: 'Kontrol 1 minggu'`; five gates exit 0;
+  token-guard PASS; harness: row "Kontrol [3 hari]", picker 86 px wide, "1 minggu" sticks.
+
 ## 2026-09-29 — The Sentra logomark on every Edukasi card
 
 - Decision (Chief, sending the white Sentra mark: "di card masing masing kasih logo Sentra"): each

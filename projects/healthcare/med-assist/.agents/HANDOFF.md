@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange, stock search, steady UI, focus underline, standard dose prefill, selection trace, Keamanan removed + audit, Edukasi swipe deck in the reference design, Sentra logo on each card)
+Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange, stock search, steady UI, focus underline, standard dose prefill, selection trace, Keamanan removed + audit, Edukasi swipe deck in the reference design, Sentra logo on each card, Tindak lanjut "Kontrol 3 hari")
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
@@ -48,7 +48,7 @@ twelve Tatalaksana entries):
 2. A patient with chronic therapy in the visit history, diagnosis J06/J02/J20/I10 → page 2
    Tatalaksana: chronic cards with Indikasi/DDI, Review; choose or "Gunakan semua usulan";
    tick education on its cards; "Selesai" → RME → "Isi otomatis RME": Edukasi and Rencana tindakan
-   hold the ticked points and the KB follow-up.
+   hold the ticked points and "Kontrol <interval>" from Tindak lanjut.
 3. Without a prescription service the page says "Tidak ada usulan obat dari layanan resep."; use
    "+ Tambah obat" or "Lanjut tanpa terapi tambahan".
 4. "+ Tambah obat" → type "Am": Puskesmas stock list with counts; pick with mouse or arrows + Enter.
@@ -61,6 +61,8 @@ twelve Tatalaksana entries):
    point below); swipe
    either way, the round arrows or ArrowLeft/Right → the next point; the tick on the card gives it
    (count "Edukasi N" goes up, the tick stays on when the card comes round again); no list below.
+9. Tindak lanjut: one row "Kontrol [3 hari]"; pick 1 minggu / 2 minggu / 1 bulan → the RME
+   Rencana tindakan says "Kontrol 1 minggu". The long KB follow-up text is gone.
 
 ## Verification (capsule root, final tree)
 
@@ -68,7 +70,7 @@ twelve Tatalaksana entries):
 |---|---|---|
 | `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`) |
 | `typecheck` | 0 | clean |
-| `test` | 0 | 181 files passed, 1 skipped; 1462 passed, 17 skipped (was 1466: the v1 deck tests and the "ubah" focus test went with the feature; +1 logo test) |
+| `test` | 0 | 181 files passed, 1 skipped; 1461 passed, 17 skipped (was 1466: the v1 deck tests and the "ubah" focus test went with the feature; +1 logo test; -1 `buildFollowUp` test) |
 | `exec wxt build --mode development` | 0 | clean |
 | `run:check` | 0 | "Extension loads: Asisten Medis 2.1.0 (MV3), all referenced files present." |
 
@@ -95,6 +97,9 @@ Sentra prescription API, the ePuskesmas fields themselves, real DDInter lookup i
    doses keep the templates' "2x aplikasi"; the RME quantity estimate counts them like tablets.
 10. Allergy matching is by name only: a class allergy ("penisilin") does not flag amoksisilin.
     Cross-reactivity needs a clinical class table (R3 data, Chief's decision).
+11. Tindak lanjut intervals (3 hari, 1 minggu, 2 minggu, 1 bulan; default 3 hari for every
+    diagnosis) are my assumption from "cukup kontrol 3 hari atau sejenisnya"; `DiseaseNote.followUp`
+    is parsed but unused.
 
 ## Next action
 
