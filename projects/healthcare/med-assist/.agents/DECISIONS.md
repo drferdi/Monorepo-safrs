@@ -3,6 +3,37 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — Chronic cards continue in this visit; the RME fill follows the ePuskesmas pages
+
+- Decision (Chief, on Tatalaksana with no proposals: "di stage ini saya tidak bisa memilih
+  obatnya"; he chose "Kartu kronis bisa dipilih"): a Terapi kronis card is tapped to continue the
+  medication in this visit (selection line, tick). The continuation carries the latest visit's
+  regimen as a signa (times a day x units a take; a dose written as a strength such as "1x10mg" is
+  one unit a take - my assumption), "Sesudah makan"-style signa text, durasi "30 hari" (the
+  prescription engine's own continuation length) and `isChronicContinuation`. It counts as a
+  decision for "Selesai", is named in the receipt and in Ringkasan ("2 obat · 1 dilanjutkan"),
+  is never drawn a second time under Terapi kunjungan ini, survives "Lanjut tanpa terapi
+  tambahan" (not "tambahan") and is not taken by "Gunakan semua usulan". A card whose regimen no
+  visit shows cannot be continued. The RME mapper names it by the Puskesmas stock ("Amlodipin
+  tablet 10 mg") and its existing quantity rule applies (days capped at 3, rounded to 10).
+- Decision (Chief: "Lanjut tanpa terapi tambahan -. beri breathing efek agar memberi perhatian
+  dokter"): that button breathes (opacity 1 → 0.4, 2.4 s) while the page is undecided; it stops
+  once a medication is chosen or continued or the skip is taken, on hover/focus, and under
+  prefers-reduced-motion.
+- Decision (Chief: the ePuskesmas Diagnosa page is apart from the therapy, "autofill rme harus
+  mengikuti", "baru selanjutnya masuk ke halaman terapi"; he chose "Langkah sendiri" and "Tombol
+  kedua di akhir"): five steps - Temuan 1/5, Diagnosis 2/5, RME Diagnosa 3/5 (page 1), Tatalaksana
+  4/5 (page 2), RME Terapi 5/5 (page 3). RME Diagnosa offers "Isi diagnosis ke RME" (diagnosa step
+  only) and "Lanjut tanpa mengisi"; a successful diagnosa fill moves on and stays sent through
+  later runs. RME Terapi offers "Isi resep ke RME" and "Isi anamnesa ke RME" (education,
+  "Kontrol …", vital signs), each for its own ePuskesmas page. "Isi otomatis RME" (one run for
+  all three pages) and the "Kirim diagnosis / Kirim resep / Anamnesis" row are gone.
+- Evidence: tatalaksana.test (2 new), TatalaksanaStep.test (4 new), DiagnosisStepFlow.test (4 new),
+  rme-transfer e2e (1 new; mutation: a skip that clears continuations turns it red), migrated
+  assertions named in the commit; five gates exit 0, `test:e2e` 15 passed; harness J20.9: RME
+  Diagnosa → "terkirim" → Tatalaksana, Amlodipin continued (trace, "1 dilanjutkan", Selesai
+  enabled, breathing stops), RME Terapi with the two buttons, no horizontal overflow.
+
 ## 2026-09-29 — The build Chief tests is `run build`; the native host follows the extension ID
 
 - Decision: the extension Chief reloads is built last with `node scripts/pnpm.mjs run build`
