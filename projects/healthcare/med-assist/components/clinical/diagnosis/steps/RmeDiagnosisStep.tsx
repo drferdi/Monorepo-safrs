@@ -18,7 +18,9 @@ export function RmeDiagnosisStep({ viewModel, onTransferDiagnosis, onRetryTransf
   const transfer = viewModel.transfer;
   const ready = !viewModel.primary.isInsufficient && transfer.diagnosisReady;
   const isRunning = transfer.state === 'running';
-  const canRetry = ['failed', 'error', 'partial'].includes(transfer.state);
+  // One transfer state serves both RME pages: a resep or anamnesa run is not this page's.
+  const ownRun = transfer.lastStep !== 'resep' && transfer.lastStep !== 'anamnesa';
+  const canRetry = ownRun && ['failed', 'error', 'partial'].includes(transfer.state);
   return (
     <section className="ct-v2-panel flex flex-col gap-3" aria-label="RME Diagnosa">
       <div className="ct-v2-panel-head">
@@ -26,12 +28,12 @@ export function RmeDiagnosisStep({ viewModel, onTransferDiagnosis, onRetryTransf
         <span className="ttv-label">3 / 5</span>
       </div>
       <p className="diagnosis-row-meta">Buka halaman Diagnosa di ePuskesmas, lalu isi diagnosis yang dipilih.</p>
-      {transfer.error ? <ReadOnlyPanel tone="danger">{transfer.error}</ReadOnlyPanel> : null}
+      {ownRun && transfer.error ? <ReadOnlyPanel tone="danger">{transfer.error}</ReadOnlyPanel> : null}
       <div className="diagnosis-transfer-primary">
         <button
           type="button"
           className="action-btn action-btn--primary diagnosis-autofill-btn"
-          data-state={transfer.state}
+          data-state={ownRun ? transfer.state : 'idle'}
           disabled={!ready || isRunning}
           onClick={onTransferDiagnosis}
         >

@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import type { DiagnosisPageProps } from './diagnosisPageProps';
 import { RMETransferPanel } from './RMETransferPanel';
+import { RmeDiagnosisStep } from './steps/RmeDiagnosisStep';
 
 function makeViewModel(
   transferOverrides: Partial<DiagnosisPageProps['viewModel']['transfer']> = {},
@@ -144,6 +145,24 @@ describe('RMETransferPanel', () => {
     expect(within(panel).getByRole('button', { name: /Isi resep ke RME/i })).toBeEnabled();
   });
 
+  // One transfer state serves both RME pages (Chief, 2026-09-29): a run from RME Diagnosa must not
+  // show here as a finished or failed resep.
+  it.each(['success', 'failed'])('keeps a %s RME Diagnosa run off this page', (state) => {
+    const { container: panel } = render(
+      <RMETransferPanel {...makeProps({}, makeViewModel({ state, lastStep: 'diagnosa', error: 'Diagnosa gagal' }))} />
+    );
+    expect(within(panel).getByRole('button', { name: /Isi resep ke RME/i })).toHaveAttribute('data-state', 'idle');
+    expect(within(panel).queryByRole('button', { name: /Ulangi/i })).toBeNull();
+    expect(panel).not.toHaveTextContent('Diagnosa gagal');
+  });
+
+  it('morphs the resep button for a resep run only', () => {
+    const { container: panel } = render(
+      <RMETransferPanel {...makeProps({}, makeViewModel({ state: 'success', lastStep: 'anamnesa' }))} />
+    );
+    expect(within(panel).getByRole('button', { name: /Isi resep ke RME/i })).toHaveAttribute('data-state', 'idle');
+  });
+
   // Migrated: the line no longer says "Diagnosis siap" (the diagnosis is a receipt above), and
   // Rincian transfer holds only the step tracker; its buttons became the two page actions.
   it('puts the readiness in one line, the two page actions up front and only the tracker inside Rincian transfer', () => {
@@ -192,5 +211,22 @@ describe('RMETransferPanel', () => {
     expect(panel).toHaveTextContent(/attempt:2 latency:120ms ok:0 fail:1 skip:0/i);
     expect(within(panel).getByRole('button', { name: /Isi resep ke RME/i })).toBeDisabled();
     expect(within(panel).getByRole('button', { name: /Isi anamnesa ke RME/i })).toBeDisabled();
+  });
+});
+
+describe('RmeDiagnosisStep', () => {
+  it.each(['success', 'failed'])('keeps a %s RME Terapi run off the RME Diagnosa page', (state) => {
+    const { container: page } = render(
+      <RmeDiagnosisStep
+        viewModel={makeViewModel({ state, lastStep: 'resep', error: 'Resep gagal' })}
+        onTransferDiagnosis={vi.fn()}
+        onRetryTransfer={vi.fn()}
+        onCancelTransfer={vi.fn()}
+        onSkip={vi.fn()}
+      />
+    );
+    expect(within(page).getByRole('button', { name: 'Isi diagnosis ke RME' })).toHaveAttribute('data-state', 'idle');
+    expect(within(page).queryByRole('button', { name: /Ulangi/i })).toBeNull();
+    expect(page).not.toHaveTextContent('Resep gagal');
   });
 });

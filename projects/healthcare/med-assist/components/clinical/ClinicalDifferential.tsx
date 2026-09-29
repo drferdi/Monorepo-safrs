@@ -1874,6 +1874,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       },
       transfer: {
         state: transferUiState,
+        lastStep: lastTriggeredStep,
         diagnosisReady: hasDiagnosisForTransfer,
         resepReady: hasResepPayloadReady,
         canAutoFill: transferUiState !== 'running',
@@ -1913,6 +1914,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     hasDiagnosisForTransfer,
     hasResepPayloadReady,
     impressionItems,
+    lastTriggeredStep,
     manualMedications,
     patientAge,
     patientGender,

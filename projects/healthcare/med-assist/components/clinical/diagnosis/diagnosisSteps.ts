@@ -27,7 +27,7 @@ export function resolveDiagnosisSteps(
     },
     // Tatalaksana (Chief, 2026-09-29): therapy, safety, education, follow-up and safety net on one page.
     { key: 'therapy', index: 4, label: 'Tatalaksana', done: viewModel.therapy.selectedMedicationCount > 0 },
-    { key: 'rme', index: 5, label: 'RME Terapi', done: viewModel.transfer.state === 'success' },
+    { key: 'rme', index: 5, label: 'RME Terapi', done: viewModel.transfer.steps.some((step) => step.key === 'resep' && step.state === 'success') },
   ];
 }
 

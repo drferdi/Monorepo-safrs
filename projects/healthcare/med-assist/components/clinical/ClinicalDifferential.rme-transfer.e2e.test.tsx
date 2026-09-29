@@ -261,6 +261,8 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
     // "Isi resep ke RME" (was "Kirim resep") is gated until at least one medication is selected.
     const isiResep = await screen.findByRole('button', { name: 'Isi resep ke RME' });
     expect(isiResep).toBeDisabled();
+    // The diagnosa fill that just succeeded belongs to RME Diagnosa, not to this page's resep.
+    expect(isiResep).toHaveAttribute('data-state', 'idle');
 
     // Select the proposed medication.
     fireEvent.click(screen.getByRole('button', { name: 'ubah Tatalaksana' }));

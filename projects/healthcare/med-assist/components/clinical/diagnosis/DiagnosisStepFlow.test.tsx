@@ -545,7 +545,13 @@ describe('splitReferralGuidance', () => {
 function stepperModel(selectedDiagnosisCount: number, selectedMedicationCount: number, state: string) {
   const viewModel = makeViewModel();
   viewModel.therapy = { ...viewModel.therapy, selectedDiagnosisCount, selectedMedicationCount };
-  viewModel.transfer = { ...viewModel.transfer, state };
+  // Migrated (Chief, 2026-09-29): RME Terapi is done from the resep step, not the shared transfer
+  // state, so the run's state is also the resep step's.
+  viewModel.transfer = {
+    ...viewModel.transfer,
+    state,
+    steps: [...viewModel.transfer.steps, { key: 'resep', label: 'Resep', state, detail: '', reason: null, message: null }],
+  };
   return viewModel;
 }
 

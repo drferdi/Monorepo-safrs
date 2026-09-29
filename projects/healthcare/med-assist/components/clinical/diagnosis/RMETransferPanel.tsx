@@ -23,7 +23,9 @@ export function RMETransferPanel({
   const resepReady = canTransferClinicalPayload && transfer.resepReady;
   const canAutoFill = canTransferClinicalPayload && transfer.canAutoFill;
   const isRunning = transfer.state === 'running';
-  const canRetry = ['failed', 'error', 'partial'].includes(transfer.state);
+  // One transfer state serves both RME pages: a run from RME Diagnosa is not this page's.
+  const ownRun = transfer.lastStep !== 'diagnosa';
+  const canRetry = ownRun && ['failed', 'error', 'partial'].includes(transfer.state);
 
   return (
     <>
@@ -34,7 +36,7 @@ export function RMETransferPanel({
         ].join(' · ')}
       </p>
 
-      {transfer.error ? <ReadOnlyPanel tone="danger">{transfer.error}</ReadOnlyPanel> : null}
+      {ownRun && transfer.error ? <ReadOnlyPanel tone="danger">{transfer.error}</ReadOnlyPanel> : null}
       {transfer.reasonLabels.length > 0 ? (
         <ReadOnlyPanel>
           {`Alasan: ${transfer.reasonLabels.map(formatClinicalText).join(' | ')}`}
@@ -49,7 +51,7 @@ export function RMETransferPanel({
         <button
           type="button"
           className="action-btn action-btn--primary diagnosis-autofill-btn"
-          data-state={transfer.state}
+          data-state={ownRun && transfer.lastStep !== 'anamnesa' ? transfer.state : 'idle'}
           disabled={!resepReady || isRunning}
           onClick={onTransferResep}
         >

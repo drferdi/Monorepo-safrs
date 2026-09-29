@@ -121,6 +121,8 @@ export interface DiagnosisTransferViewModelInput {
   resultSummary: string | null;
   readinessMessage: string | null;
   steps: DiagnosisTransferStepViewModelInput[];
+  /** The step the last run was for; both RME pages share one transfer state. */
+  lastStep?: string;
 }
 
 export interface DiagnosisTransferStepViewModelInput {
@@ -236,6 +238,7 @@ export interface DiagnosisTransferView {
   resultSummary: string | null;
   readinessMessage: string | null;
   steps: DiagnosisTransferStepView[];
+  lastStep?: string;
 }
 
 export interface DiagnosisTransferStepView {
@@ -400,6 +403,7 @@ function buildTransferView(input: DiagnosisTransferViewModelInput): DiagnosisTra
       reason: step.reason,
       message: step.message,
     })),
+    ...(input.lastStep ? { lastStep: input.lastStep } : {}),
   };
 }
 
