@@ -3,6 +3,16 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — Each RME page shows only its own transfer run
+
+- Decision: RME Diagnosa and RME Terapi share one transfer state, so the view model carries the
+  run's step (`transfer.lastStep`); each page shows the state, error and Ulangi of its own runs
+  only, "Isi resep ke RME" morphs for a resep run only, and RME Terapi is done once the resep step
+  succeeded (was the shared `transfer.state === 'success'`, which a diagnosa-only run reaches).
+- Rationale: a successful diagnosa fill otherwise showed the resep button already done on the
+  last page, and a failed run showed its error on the other page.
+- Evidence: commit cc67c33b; red first in `RMETransferPanel.test.tsx` and rme-transfer test 1.
+
 ## 2026-09-29 — Chronic cards continue in this visit; the RME fill follows the ePuskesmas pages
 
 - Decision (Chief, on Tatalaksana with no proposals: "di stage ini saya tidak bisa memilih
