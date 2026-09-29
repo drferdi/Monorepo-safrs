@@ -4,7 +4,6 @@ import { formatClinicalText, formatShortDate, isInsufficientDiagnosisLabel } fro
 import type { DiagnosisManualMedicationDraftView, DiagnosisPageProps } from '../diagnosisPageProps';
 import type { DiagnosisMedicationView, DiagnosisPageViewModel } from '../diagnosisViewModel';
 import { HoldButton, PenCheck, SelectionTrace } from '../labMotion';
-import { PixelLoader } from '../PixelLoader';
 import { standardDoseFor } from '../standardDose';
 import {
   ROLE_ORDER,
@@ -14,9 +13,9 @@ import {
   nameBesideDose,
   reviewSafety,
   roleOf,
+  sameDrugIn,
   searchStock,
   type ChronicMedicationView,
-  type SafetyReview,
 } from '../tatalaksana';
 
 import type { DrugInteraction } from '@/types/api';
@@ -89,14 +88,12 @@ export function tatalaksanaSummary(
 function Part({
   label,
   count,
-  loader,
   testId,
   divider = true,
   children,
 }: {
   label: string;
   count?: number;
-  loader?: ReactNode;
   testId: string;
   divider?: boolean;
   children: ReactNode;
@@ -105,7 +102,6 @@ function Part({
     <div className="flex flex-col gap-2" data-testid={testId}>
       {divider ? <div className="console-divider dx-tx-divider" aria-hidden="true" /> : null}
       <div className="flex items-center gap-2">
-        {loader}
         <span className="ttv-label">{label}</span>
         {count !== undefined ? (
           <span className="ttv-label dx-tx-count">{count}</span>
@@ -184,23 +180,30 @@ const pairKey = (interaction: DrugInteraction) => [interaction.drug_a, interacti
 /**
  * The DDI node: each partner drug with its severity and, on the one card that explains the pair
  * (`explains`), why and what to do (Chief, 2026-09-29: "DDI : beri penjelasan kenapa"). The pair
- * is explained once on the page; the other card names the partner only.
+ * is explained once on the page; the other card names the partner only. The same drug elsewhere
+ * in the plan is said here too, since the "Keamanan terapi" part is gone (Chief, 2026-09-29).
  */
 function DdiValue({
   name,
   interactionCheck,
   explains,
+  duplicates,
 }: {
   name: string;
   interactionCheck: DiagnosisPageProps['interactionCheck'];
   explains: Set<string>;
+  duplicates: string[];
 }) {
-  if (interactionCheck.state === 'checking') return <>memeriksa…</>;
-  if (interactionCheck.state === 'unavailable') return <>tidak dapat dicek</>;
-  const own = interactionsFor(name, interactionCheck.interactions);
-  if (own.length === 0) return <>tidak ada</>;
+  const own = interactionCheck.state === 'done' ? interactionsFor(name, interactionCheck.interactions) : [];
+  const status =
+    interactionCheck.state === 'checking' ? 'memeriksa…' : interactionCheck.state === 'unavailable' ? 'tidak dapat dicek' : null;
+  if (duplicates.length === 0 && own.length === 0) return <>{status ?? 'tidak ada'}</>;
   return (
     <span className="flex flex-col gap-1">
+      {duplicates.map((other, index) => (
+        <span key={`dup-${other}-${index}`} className="dx-tx-warning">{`duplikasi: ${other}`}</span>
+      ))}
+      {status ? <span>{status}</span> : null}
       {own.map((interaction) => {
         const key = pairKey(interaction);
         const why = explains.has(key) ? explainInteraction(interaction) : null;
@@ -226,16 +229,22 @@ function hasSeriousInteraction(name: string, interactions: DrugInteraction[]): b
   return interactionsFor(name, interactions).some(isSerious);
 }
 
+/** A DDI node needs review for a major interaction or the same drug twice. */
+const ddiNeedsReview = (name: string, interactions: DrugInteraction[], duplicates: string[]) =>
+  duplicates.length > 0 || hasSeriousInteraction(name, interactions);
+
 function ChronicCard({
   medication,
   interactionCheck,
   allergies,
   explains,
+  duplicates,
 }: {
   medication: ChronicMedicationView;
   interactionCheck: DiagnosisPageProps['interactionCheck'];
   allergies: string[];
   explains: Set<string>;
+  duplicates: string[];
 }) {
   const [open, setOpen] = useState(false);
   const allergy = allergyMatches(medication.name, allergies);
@@ -265,8 +274,8 @@ function ChronicCard({
           {
             key: 'ddi',
             label: 'DDI',
-            value: <DdiValue name={medication.name} interactionCheck={interactionCheck} explains={explains} />,
-            tone: hasSeriousInteraction(medication.name, interactionCheck.interactions) ? 'warning' : undefined,
+            value: <DdiValue name={medication.name} interactionCheck={interactionCheck} explains={explains} duplicates={duplicates} />,
+            tone: ddiNeedsReview(medication.name, interactionCheck.interactions, duplicates) ? 'warning' : undefined,
             ownTone: true,
           },
           {
@@ -421,6 +430,7 @@ function VisitCard({
   replacing,
   form,
   explains,
+  duplicates,
   onToggle,
   onReplace,
   onRemove,
@@ -429,6 +439,7 @@ function VisitCard({
   interactionCheck: DiagnosisPageProps['interactionCheck'];
   allergies: string[];
   explains: Set<string>;
+  duplicates: string[];
   replacing: boolean;
   form: ReactNode;
   onToggle: () => void;
@@ -437,7 +448,6 @@ function VisitCard({
 }) {
   const allergy = allergyMatches(medication.name, allergies);
   const contraindications = [...allergy.map((item) => `alergi ${item}`), ...medication.contraindications];
-  const serious = hasSeriousInteraction(medication.name, interactionCheck.interactions);
   return (
     <div className="neu-select diagnosis-candidate-row">
       {medication.isSelected ? <SelectionTrace /> : null}
@@ -473,8 +483,8 @@ function VisitCard({
             {
               key: 'ddi',
               label: 'DDI',
-              value: <DdiValue name={medication.name} interactionCheck={interactionCheck} explains={explains} />,
-              tone: serious ? 'warning' : undefined,
+              value: <DdiValue name={medication.name} interactionCheck={interactionCheck} explains={explains} duplicates={duplicates} />,
+              tone: ddiNeedsReview(medication.name, interactionCheck.interactions, duplicates) ? 'warning' : undefined,
               ownTone: true,
             },
             {
@@ -498,92 +508,6 @@ function VisitCard({
         {replacing ? form : null}
       </div>
     </div>
-  );
-}
-
-function SafetyPart({
-  review,
-  interactionCheck,
-}: {
-  review: SafetyReview;
-  interactionCheck: DiagnosisPageProps['interactionCheck'];
-}) {
-  // The reason is written once, on the card; "Lihat detail" takes the doctor there.
-  const showDetail = () => {
-    const key = review.interactions[0] ? pairKey(review.interactions[0]) : null;
-    const target = [...document.querySelectorAll('[data-ddi-reason]')].find((element) => element.getAttribute('data-ddi-reason') === key);
-    if (!(target instanceof HTMLElement)) return;
-    target.scrollIntoView?.({ block: 'center' });
-  };
-  const checking = interactionCheck.state === 'checking';
-  const findings = review.duplicates.length + review.interactions.length + review.contraindications.length;
-  // A check that passed is ticked; one that found something is listed in the warning instead.
-  // An interaction check that could not run is said plainly, never ticked.
-  const lines = [
-    review.duplicates.length === 0 ? { key: 'dup', ok: true, text: 'Tidak ada duplikasi terapi' } : null,
-    interactionCheck.state === 'unavailable'
-      ? { key: 'ddi', ok: false, text: 'Interaksi obat tidak dapat dicek saat ini' }
-      : review.interactions.length === 0
-        ? { key: 'ddi', ok: true, text: 'Tidak ada interaksi mayor' }
-        : null,
-    review.contraindications.length === 0
-      ? { key: 'ci', ok: true, text: 'Tidak ada kontraindikasi yang terdeteksi' }
-      : null,
-  ].filter((line): line is { key: string; ok: boolean; text: string } => line !== null);
-  return (
-    <Part
-      label="Keamanan terapi"
-      testId="dx-tx-safety"
-      // No pixel check when the interaction check could not run: nothing was checked to tick.
-      loader={
-        interactionCheck.state === 'unavailable' ? undefined : (
-          <PixelLoader tone={findings > 0 ? 'warning' : 'accent'} done={!checking} />
-        )
-      }
-    >
-      {checking ? (
-        <p className="diagnosis-row-meta">Memeriksa interaksi obat…</p>
-      ) : (
-        <>
-          <ul className="flex flex-col gap-1" data-testid="dx-tx-safety-lines">
-            {lines.map((line) => (
-                <li key={line.key} className="flex items-center gap-2 text-small">
-                  <PenCheck checked={line.ok} seedText={line.text} tone={line.ok ? 'accent' : 'warning'} />
-                  <span className={line.ok ? '' : 'dx-tx-warning'}>{line.text}</span>
-                </li>
-              ))}
-          </ul>
-          {findings > 0 ? (
-            <div
-              className="neu-textarea neu-textarea--symptom diagnosis-readonly-field diagnosis-readonly-field--warning"
-              data-testid="dx-tx-safety-warning"
-            >
-              <div className="diagnosis-row-head">
-                <div className="diagnosis-list-title">⚠ Perlu review</div>
-                {review.interactions.length > 0 ? (
-                  <button type="button" className="diagnosis-text-button" onClick={showDetail}>
-                    Lihat detail
-                  </button>
-                ) : null}
-              </div>
-              <ul className="diagnosis-line-list">
-                {review.interactions.map((interaction) => (
-                  <li key={`${interaction.drug_a}+${interaction.drug_b}`}>
-                    {`Interaksi ${interaction.severity}: ${interaction.drug_a} + ${interaction.drug_b}`}
-                  </li>
-                ))}
-                {review.duplicates.map((group) => (
-                  <li key={group}>{`Duplikasi: ${group}`}</li>
-                ))}
-                {review.contraindications.map((entry) => (
-                  <li key={`${entry.drug}-${entry.reason}`}>{`Kontraindikasi: ${entry.drug} (${entry.reason})`}</li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-        </>
-      )}
-    </Part>
   );
 }
 
@@ -672,8 +596,9 @@ function EducationPart({
 }
 
 /**
- * Tatalaksana (Chief's layout, 2026-09-29): chronic therapy, this visit's therapy, its safety,
- * education, follow-up, safety net and a summary, then "Selesai". Motion after lab.xevrion.dev.
+ * Tatalaksana (Chief's layout, 2026-09-29): chronic therapy, this visit's therapy, education,
+ * follow-up, safety net and a summary, then "Selesai". The safety of each medicine (DDI, the same
+ * drug twice, contraindications) is on its card; the "Keamanan terapi" part is gone (Chief, the same day).
  */
 export function TatalaksanaStep({
   viewModel,
@@ -699,7 +624,7 @@ export function TatalaksanaStep({
 }: Props) {
   // Where the manual form is open: under "+ Tambah obat", or under the card being replaced.
   const [formFor, setFormFor] = useState<string | null>(null);
-  const safetyRef = useRef<HTMLDivElement>(null);
+  const educationRef = useRef<HTMLDivElement>(null);
 
   const medications = visitMedications(viewModel);
   const manualKeys = medications
@@ -731,6 +656,8 @@ export function TatalaksanaStep({
     allergies,
   });
   const findings = review.duplicates.length + review.interactions.length + review.contraindications.length;
+  // The same drug elsewhere in the plan (chronic + chosen), said on each card's DDI node.
+  const plan = [...chronicMedications.map((medication) => medication.name), ...chosen.map((medication) => medication.name)];
   const given = education.filter((item) => item.isSelected).length;
   const decided = chosen.length > 0 || skipped;
   const slots = ROLE_ORDER.map((role, index) => ({
@@ -776,6 +703,7 @@ export function TatalaksanaStep({
                 interactionCheck={interactionCheck}
                 allergies={allergies}
                 explains={explainsFor(medication.name)}
+                duplicates={sameDrugIn(medication.name, plan, true)}
               />
             ))}
           </div>
@@ -795,6 +723,7 @@ export function TatalaksanaStep({
                     medication={medication}
                     interactionCheck={interactionCheck}
                     explains={explainsFor(medication.name)}
+                    duplicates={sameDrugIn(medication.name, plan, medication.isSelected)}
                     allergies={allergies}
                     replacing={formFor === medication.key}
                     form={form('Ganti obat')}
@@ -840,7 +769,7 @@ export function TatalaksanaStep({
             onClick={() => {
               onClearMedications();
               onSkip();
-              safetyRef.current?.scrollIntoView?.({ block: 'start' });
+              educationRef.current?.scrollIntoView?.({ block: 'start' });
             }}
           >
             Lanjut tanpa terapi tambahan
@@ -848,11 +777,9 @@ export function TatalaksanaStep({
         </div>
       </Part>
 
-      <div ref={safetyRef}>
-        <SafetyPart review={review} interactionCheck={interactionCheck} />
+      <div ref={educationRef}>
+        <EducationPart education={education} onToggleEducation={onToggleEducation} />
       </div>
-
-      <EducationPart education={education} onToggleEducation={onToggleEducation} />
 
       <Part label="Tindak lanjut" testId="dx-tx-follow-up">
         {followUp.visit.length > 0 || followUp.routine.length > 0 ? (
@@ -906,9 +833,11 @@ export function TatalaksanaStep({
                 interactionCheck.state === 'checking'
                   ? 'memeriksa…'
                   : findings > 0
-                    ? `⚠ ${findings} perlu review`
-                    : '✓ Aman',
-              tone: findings > 0 ? 'warning' : undefined,
+                    ? `⚠ ${findings} perlu review${interactionCheck.state === 'unavailable' ? ' · interaksi obat tidak dapat dicek' : ''}`
+                    : interactionCheck.state === 'unavailable'
+                      ? 'interaksi obat tidak dapat dicek'
+                      : '✓ Aman',
+              tone: findings > 0 || interactionCheck.state === 'unavailable' ? 'warning' : undefined,
             },
           ]}
         />

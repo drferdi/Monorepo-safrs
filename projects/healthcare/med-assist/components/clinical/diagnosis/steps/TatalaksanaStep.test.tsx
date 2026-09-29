@@ -91,8 +91,11 @@ describe('TatalaksanaStep', () => {
     render(<TatalaksanaStep {...props()} />);
     expect(screen.getByRole('heading', { name: 'Tatalaksana' })).toBeInTheDocument();
     expect(screen.getByText('3 / 4')).toBeInTheDocument();
-    const parts = ['dx-tx-chronic-part', 'dx-tx-visit-part', 'dx-tx-safety', 'dx-tx-education', 'dx-tx-follow-up', 'dx-tx-safety-net', 'dx-tx-summary'].map((id) => screen.getByTestId(id));
+    // Migrated (Chief, 2026-09-29: "hilangkan Keamanan terapi"): 'dx-tx-safety' left the order.
+    const parts = ['dx-tx-chronic-part', 'dx-tx-visit-part', 'dx-tx-education', 'dx-tx-follow-up', 'dx-tx-safety-net', 'dx-tx-summary'].map((id) => screen.getByTestId(id));
     parts.slice(1).forEach((part, i) => expect(parts[i].compareDocumentPosition(part) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy());
+    expect(screen.queryByTestId('dx-tx-safety')).toBeNull();
+    expect(screen.queryByText('Keamanan terapi')).toBeNull();
   });
 
   it('shows each chronic medication with its dose, indication, DDI and contraindication, and its visits under "Review"', () => {
@@ -310,12 +313,23 @@ describe('TatalaksanaStep', () => {
     expect(screen.queryByText('Tidak ada usulan obat dari layanan resep.')).toBeNull();
   });
 
-  it('ticks the three safety checks when nothing is found', () => {
+  // Migrated (Chief, 2026-09-29: "hilangkan Keamanan terapi"): the three ticked lines
+  // (dx-tx-safety-lines) and the warning box are gone; each card says it, the summary counts it.
+  it('says on each card that nothing was found, and the summary says "Aman"', () => {
     render(<TatalaksanaStep {...props()} />);
-    const lines = within(screen.getByTestId('dx-tx-safety-lines')).getAllByRole('listitem').map((line) => line.textContent);
-    expect(lines).toEqual(['Tidak ada duplikasi terapi', 'Tidak ada interaksi mayor', 'Tidak ada kontraindikasi yang terdeteksi']);
-    expect(screen.queryByTestId('dx-tx-safety-warning')).toBeNull();
+    expect(visitCard('Kandesartan')).toHaveTextContent('DDItidak adaKontraindikasitidak terdeteksi');
     expect(screen.getByTestId('dx-tx-summary')).toHaveTextContent('Safety check✓ Aman');
+  });
+
+  // Audit 2026-09-29: the same drug twice was said only in the removed part; now on the cards.
+  it('names the same drug elsewhere in the plan on the card, in orange', () => {
+    const chosenAmlodipin = med('amlo', 'BLUD Amlodipin tablet 5 mg', true);
+    render(<TatalaksanaStep {...props({ viewModel: vm([chosenAmlodipin, med('paracetamol', 'Paracetamol 500 mg', false)]) })} />);
+    expect(screen.getByTestId('dx-tx-chronic')).toHaveTextContent('DDIduplikasi: BLUD Amlodipin tablet 5 mg');
+    expect(visitCard('Amlodipin')).toHaveTextContent('DDIduplikasi: Amlodipin 10 mg');
+    expect(within(visitCard('Amlodipin')).getByText('duplikasi: Amlodipin 10 mg')).toHaveClass('dx-tx-warning');
+    expect(visitCard('Paracetamol')).toHaveTextContent('DDItidak ada');
+    expect(screen.getByTestId('dx-tx-summary')).toHaveTextContent('Safety check⚠ 1 perlu review');
   });
 
   // Migrated (Chief, 2026-09-29: "DDI : beri penjelasan kenapa"): the reason moved from the
@@ -324,20 +338,15 @@ describe('TatalaksanaStep', () => {
   it('flags a major interaction between a chronic and a chosen medication, explained once on the first card that holds it', () => {
     const interactions = [{ drug_a: 'Amlodipin 10 mg', drug_b: 'Kandesartan 8 mg', severity: 'major' as const, description: 'Interaksi signifikan.', recommendation: 'Pantau tekanan darah.' }];
     render(<TatalaksanaStep {...props({ interactionCheck: { state: 'done', interactions } })} />);
-    const warning = screen.getByTestId('dx-tx-safety-warning');
-    expect(warning).toHaveTextContent('Interaksi major: Amlodipin 10 mg + Kandesartan 8 mg');
-    expect(within(screen.getByTestId('dx-tx-safety-lines')).queryByText('Tidak ada interaksi mayor')).toBeNull();
     // DDInter names no mechanism for this pair and the curated table has none: said, not composed.
     expect(screen.getByTestId('dx-tx-chronic')).toHaveTextContent('Kandesartan 8 mg (major)Mekanisme tidak tercatat di DDInter.Saran: Pantau tekanan darah.');
     expect(visitCard('Kandesartan')).toHaveTextContent('DDIAmlodipin 10 mg (major)Kontraindikasi');
     expect(screen.getAllByText('Saran: Pantau tekanan darah.')).toHaveLength(1);
-    const scrollIntoView = vi.fn();
-    const reason = [...document.querySelectorAll('[data-ddi-reason]')].find(
-      (element) => element.getAttribute('data-ddi-reason') === 'Amlodipin 10 mg + Kandesartan 8 mg'
-    ) as HTMLElement;
-    reason.scrollIntoView = scrollIntoView;
-    fireEvent.click(within(warning).getByRole('button', { name: 'Lihat detail' }));
-    expect(scrollIntoView).toHaveBeenCalledTimes(1);
+    // Migrated (Chief, 2026-09-29: "hilangkan Keamanan terapi"): the warning box line "Interaksi
+    // major: …", its "Lihat detail" scroll and the missing "Tidak ada interaksi mayor" tick are gone
+    // with the part; the orange DDI node of both cards now carries it.
+    expect(screen.getByTestId('dx-tx-chronic').querySelector('[data-step="ddi"] .dx-tx-node--warning')).not.toBeNull();
+    expect(visitCard('Kandesartan').querySelector('[data-step="ddi"] .dx-tx-node--warning')).not.toBeNull();
     expect(screen.getByTestId('dx-tx-summary')).toHaveTextContent('Safety check⚠ 1 perlu review');
   });
 
@@ -346,7 +355,8 @@ describe('TatalaksanaStep', () => {
     const interactions = [{ drug_a: 'Amlodipin 10 mg', drug_b: 'Kandesartan 8 mg', severity: 'major' as const, description: '', recommendation: '' }];
     const { container } = render(<TatalaksanaStep {...props({ allergies: ['Amlodipin'], safetyNet: ['Sesak napas'], interactionCheck: { state: 'done', interactions } })} />);
     expect(container.querySelector('[class*="danger"]')).toBeNull();
-    expect(screen.getByTestId('dx-tx-safety-warning')).toHaveClass('diagnosis-readonly-field--warning');
+    // Migrated: the removed warning box (dx-tx-safety-warning) was the orange example; now the summary's.
+    expect(within(screen.getByTestId('dx-tx-summary')).getByText(/perlu review/)).toHaveClass('dx-tx-warning');
     expect(container.querySelectorAll('.dx-tx-node--warning').length).toBeGreaterThan(0);
   });
 
@@ -358,14 +368,20 @@ describe('TatalaksanaStep', () => {
     expect(second).toHaveTextContent('DDIAmlodipin 10 mg (major)Kontraindikasi');
   });
 
-  it('never ticks the interaction check while it runs or when it could not run', () => {
+  // Migrated (Chief, 2026-09-29: "hilangkan Keamanan terapi"): "Memeriksa interaksi obat…" and
+  // "Interaksi obat tidak dapat dicek saat ini" were the part's lines; the cards and the summary say it.
+  // Audit the same day: the summary said "✓ Aman" when the interaction check could not run.
+  it('never says the interaction check passed while it runs or when it could not run', () => {
     const { rerender } = render(<TatalaksanaStep {...props({ interactionCheck: { state: 'checking', interactions: [] } })} />);
-    expect(screen.getByText('Memeriksa interaksi obat…')).toBeInTheDocument();
-    expect(screen.queryByTestId('dx-tx-safety-lines')).toBeNull();
+    expect(visitCard('Kandesartan')).toHaveTextContent('DDImemeriksa…');
+    expect(screen.getByTestId('dx-tx-summary')).toHaveTextContent('Safety checkmemeriksa…');
     rerender(<TatalaksanaStep {...props({ interactionCheck: { state: 'unavailable', interactions: [] } })} />);
-    expect(screen.getByText('Interaksi obat tidak dapat dicek saat ini')).toBeInTheDocument();
-    expect(within(screen.getByTestId('dx-tx-safety')).queryByTestId('dx-pixel-loader')).toBeNull();
-    expect(screen.queryByText('Tidak ada interaksi mayor')).toBeNull();
+    expect(visitCard('Kandesartan')).toHaveTextContent('DDItidak dapat dicek');
+    expect(screen.getByTestId('dx-tx-summary')).toHaveTextContent('Safety checkinteraksi obat tidak dapat dicek');
+    expect(screen.getByTestId('dx-tx-summary')).not.toHaveTextContent('Aman');
+    // A finding does not hide that the interactions were not checked.
+    rerender(<TatalaksanaStep {...props({ allergies: ['Amlodipin'], interactionCheck: { state: 'unavailable', interactions: [] } })} />);
+    expect(screen.getByTestId('dx-tx-summary')).toHaveTextContent('Safety check⚠ 1 perlu review · interaksi obat tidak dapat dicek');
   });
 
   // Carries EducationStep "lists the points to tick, marking only the given ones".

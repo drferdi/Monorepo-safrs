@@ -476,6 +476,8 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     const manual = () => within(workspace).getAllByTestId('dx-tx-visit-med').filter((card) => card.textContent?.includes('Ibuprofen'));
     await waitFor(() => expect(manual()).toHaveLength(1));
     expect(manual()[0]).toHaveTextContent('3x400mg');
+    // Audit 2026-09-29: no duration was given, so the dose line ends at the signa, without "• -".
+    expect(manual()[0]).not.toHaveTextContent('• -');
 
     add();
     expect(manual()).toHaveLength(1);

@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange, stock search, steady UI, focus underline, standard dose prefill, selection trace)
+Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange, stock search, steady UI, focus underline, standard dose prefill, selection trace, Keamanan removed + audit)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
@@ -8,14 +8,15 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 ## Current state
 
 Capsule branch `feat/sidepanel-ui-batch`, **local only, not pushed, no PR.** HEAD is the
-selection-trace commit after `0e3c99a7` (DECISIONS 2026-09-29, ten Tatalaksana entries):
+"Keamanan terapi removed + audit" commit after `7023b562` (DECISIONS 2026-09-29, eleven Tatalaksana entries):
 
 - Four steps, three pages: Temuan 1/4 + Diagnosis 2/4 | Tatalaksana 3/4 | RME 4/4.
 - `steps/TatalaksanaStep.tsx` (replaces TherapyStep and EducationStep): Terapi kronis (visit
   history, "Review"), Terapi kunjungan ini (slots Utama/Adjuvant/Vitamin, Ganti, hold-to-Hapus,
-  "+ Tambah obat", "Gunakan semua usulan" / "Lanjut tanpa terapi tambahan"), Keamanan (duplicates,
-  DDInter major, allergy/contraindication), Edukasi, Tindak lanjut (KB `kontrol`, routine per
-  chronic condition), Safety net (KB `red_flags`), Ringkasan, "Selesai".
+  "+ Tambah obat", "Gunakan semua usulan" / "Lanjut tanpa terapi tambahan"), Edukasi, Tindak lanjut
+  (KB `kontrol`, routine per chronic condition), Safety net (KB `red_flags`), Ringkasan, "Selesai".
+  No "Keamanan terapi" part (Chief): each card's DDI node says interactions and "duplikasi: …",
+  its Kontraindikasi node allergies; Ringkasan "Safety check" counts them.
 - Revision: doses "1x10mg" (`formatDose`), each therapy card an activity timeline
   (name → dose → [indication] → DDI → contraindication); DDI says why (curated pair table,
   `explainInteraction`) once per pair; "Review" history muted; findings orange, no red;
@@ -30,6 +31,10 @@ selection-trace commit after `0e3c99a7` (DECISIONS 2026-09-29, ten Tatalaksana e
   `standardDose.ts`: lowest standard adult regimen in whole units, signa from PIONAS / PPK 2022 /
   BPOM labels (source per rule); topicals "2x aplikasi" / "6x1 tetes" + "Pemakaian luar"; syrups
   signa only; injections, programme and psychiatric drugs nothing (dose cleared).
+- Audit fixes: `drugKey` is the generic name (not the first word) with one spelling
+  (amoxicillin = amoksisilin); allergies match across spellings; `strengthOf` reads "100.000 IU";
+  `formatDose` never multiplies a %; summary says "interaksi obat tidak dapat dicek" instead of
+  "✓ Aman"; no "• -" for an empty duration.
 - Logic: `tatalaksana.ts`, `usePatientVisits.ts`, `labMotion.tsx` (tick and hold-to-delete);
   ClinicalDifferential runs `checkInteractions`, keeps dismissed proposals out of the
   prescription, sends the follow-up to RME `rencana_tindakan`.
@@ -49,6 +54,8 @@ selection-trace commit after `0e3c99a7` (DECISIONS 2026-09-29, ten Tatalaksana e
 5. Pick Amlodipin 10 mg → "1x1", "Sesudah makan"; Omeprazol 20 mg → "Sebelum makan"; Permetrin →
    "1x aplikasi", "Pemakaian luar", "1 hari"; Haloperidol → dose empty.
 6. Tick a therapy card (or a diagnosis card): no green frame, one line circles it.
+7. No "Keamanan terapi" part; add "BLUD Amlodipin" while chronic Amlodipin is listed → both cards
+   say "duplikasi: …" in orange, Ringkasan "⚠ … perlu review".
 
 ## Verification (capsule root, final tree)
 
@@ -56,7 +63,7 @@ selection-trace commit after `0e3c99a7` (DECISIONS 2026-09-29, ten Tatalaksana e
 |---|---|---|
 | `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`) |
 | `typecheck` | 0 | clean |
-| `test` | 0 | 180 files passed, 1 skipped; 1446 passed, 17 skipped (was 1445) |
+| `test` | 0 | 180 files passed, 1 skipped; 1451 passed, 17 skipped (was 1446) |
 | `exec wxt build --mode development` | 0 | clean |
 | `run:check` | 0 | "Extension loads: Asisten Medis 2.1.0 (MV3), all referenced files present." |
 
@@ -81,6 +88,8 @@ Sentra prescription API, the ePuskesmas fields themselves, real DDInter lookup i
    Puskesmas stock source would replace `stok_obat.json`.
 9. Clinical sign-off of the dose table `standardDose.ts` (conflicts listed in DECISIONS). Topical
    doses keep the templates' "2x aplikasi"; the RME quantity estimate counts them like tablets.
+10. Allergy matching is by name only: a class allergy ("penisilin") does not flag amoksisilin.
+    Cross-reactivity needs a clinical class table (R3 data, Chief's decision).
 
 ## Next action
 

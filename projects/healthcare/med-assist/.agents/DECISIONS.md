@@ -3,6 +3,32 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — Tatalaksana without "Keamanan terapi"; audit of its functions
+
+- Decision (Chief: "hilangkan Keamanan terapi"): the part is gone (ticked lines, "Perlu review" box,
+  "Lihat detail"). What only it said moved onto the cards: the same drug elsewhere in the plan
+  (chronic + chosen) is a "duplikasi: <name>" line in the card's DDI node, orange; "memeriksa…" /
+  "tidak dapat dicek" were already there. Ringkasan "Safety check" keeps the count. "Lanjut tanpa
+  terapi tambahan" now scrolls to Edukasi.
+- Audit (Chief: "please check the function and algorithm"), each with a test that failed first:
+  - `drugKey` was the first word: "Asam mefenamat" = "Asam folat", "Vitamin C" = "Vitamin B6",
+    "BLUD Amlodipin" ≠ "Amlodipin". Now the words before the form or strength, with "BLUD", salts
+    and form words dropped and one spelling (x→ks, c→s/k, doubled letters, final e): amoxicillin =
+    amoksisilin, paracetamol = parasetamol. Also used to match the chronic history.
+  - `allergyMatches` missed "Amoxicillin" in "Amoksisilin kapsul"; now compares the same spelling.
+  - `strengthOf` read "100.000 IU" as 100; a thousands dot is now thousands.
+  - `formatDose` multiplied a percentage ("2x1" of a 0,1 % cream → "2x0.1%"); a % stays as written.
+  - The summary said "✓ Aman" when the interaction check could not run; now "interaksi obat tidak
+    dapat dicek" (orange).
+  - ClinicalDifferential wrote "• -" for an empty duration; the part is left out.
+- Checked and left: `searchStock`, `nameBesideDose`, `buildChronicMedications`, `explainInteraction`,
+  `reviewSafety` interactions, `buildFollowUp`, `buildSafetyNet`, `standardDoseFor`. Open: a class
+  allergy (penisilin → amoksisilin) is not detected; that needs a clinical class table (R3).
+- Evidence: tatalaksana.test.ts (4 new), TatalaksanaStep test (1 new, 5 migrated),
+  final-page test (1 new assertion); harness J20.9: no "Keamanan terapi", BLUD Amlodipin added →
+  "duplikasi: Amlodipin 10 mg" on the visit card, "duplikasi: BLUD Amlodipin tablet 10 mg" on the
+  chronic card.
+
 ## 2026-09-29 — A selected card is circled by one moving line, not framed in green
 
 - Decision (Chief, on a selected Tatalaksana card: "Ini jg efek visual yg saya gak suka. Gunakan

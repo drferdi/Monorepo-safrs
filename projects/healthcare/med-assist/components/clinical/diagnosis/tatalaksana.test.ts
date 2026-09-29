@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import {
+  allergyMatches,
   buildChronicMedications,
   buildFollowUp,
   buildSafetyNet,
@@ -10,7 +11,9 @@ import {
   nameBesideDose,
   reviewSafety,
   roleOf,
+  sameDrugIn,
   searchStock,
+  strengthOf,
 } from './tatalaksana';
 import type { DiseaseNote } from './useDiseaseNotes';
 
@@ -90,6 +93,30 @@ describe('reviewSafety', () => {
     ]);
   });
 
+  // Audit 2026-09-29: the key was the first word, so "Asam mefenamat" and "Asam folat" were one
+  // drug and "BLUD Amlodipin" another than "Amlodipin".
+  it('tells drugs apart by their generic name, not their first word, and sees one drug across spellings', () => {
+    const review = (names: string[]) => reviewSafety({ chronic: [], visit: names.map((name) => ({ name, contraindications: [] })), interactions: [], allergies: [] }).duplicates;
+    expect(review(['Asam mefenamat 500 mg', 'Asam folat tablet 1 mg', 'Vitamin C 50 mg', 'Vitamin B6 50mg', 'Tablet Tambah Darah Kombinasi (program)'])).toEqual([]);
+    expect(review(['Amlodipin tablet 10 mg', 'BLUD Amlodipin tablet 5 mg'])).toEqual(['Amlodipin tablet 10 mg + BLUD Amlodipin tablet 5 mg']);
+    expect(review(['Paracetamol 500 mg', 'Parasetamol tablet 500 mg'])).toEqual(['Paracetamol 500 mg + Parasetamol tablet 500 mg']);
+    expect(review(['Amoxicillin 500 mg', 'Amoksisilin kapsul 500 mg'])).toEqual(['Amoxicillin 500 mg + Amoksisilin kapsul 500 mg']);
+  });
+
+  // Audit 2026-09-29: an allergy written the English way missed the Indonesian stock name.
+  it('sees an allergy whichever way the drug is spelled', () => {
+    expect(allergyMatches('Amoksisilin kapsul 500 mg', ['Amoxicillin'])).toEqual(['Amoxicillin']);
+    expect(allergyMatches('Paracetamol 500 mg', ['parasetamol'])).toEqual(['parasetamol']);
+    expect(allergyMatches('Amlodipin 10 mg', ['Tidak ada', 'Ibu'])).toEqual([]);
+  });
+
+  it('names the other entries of the same drug in the plan, the card itself left out', () => {
+    const plan = ['Amlodipin 10 mg', 'Simvastatin 20 mg', 'Amlodipin 10 mg'];
+    expect(sameDrugIn('Amlodipin 10 mg', plan, true)).toEqual(['Amlodipin 10 mg']);
+    expect(sameDrugIn('BLUD Amlodipin tablet 5 mg', plan, false)).toEqual(['Amlodipin 10 mg', 'Amlodipin 10 mg']);
+    expect(sameDrugIn('Simvastatin 20 mg', plan, true)).toEqual([]);
+  });
+
   it('ignores an interaction with a drug that is not in the plan', () => {
     const review = reviewSafety({ chronic: ['Amlodipin'], visit: [], interactions: [major], allergies: [] });
     expect(review).toEqual({ duplicates: [], interactions: [], contraindications: [] });
@@ -144,6 +171,16 @@ describe('formatDose', () => {
   it('leaves a dose it cannot read, or a name without strength, as written', () => {
     expect(formatDose('Vitamin B kompleks', '1x1')).toBe('1x1');
     expect(formatDose('Amlodipin 10 mg', 'bila perlu')).toBe('bila perlu');
+  });
+
+  // Audit 2026-09-29: a concentration is not an amount per take ("2x1" of a 0,1 % cream was
+  // "2x0.1%"), and "100.000 IU" is a hundred thousand, not 100.
+  it('never multiplies a percentage, and reads a thousands dot as thousands', () => {
+    expect(formatDose('Betametason krim 0,1 % (sebagai valerat)', '2x1')).toBe('2x1');
+    expect(formatDose('Nistatin tablet vaginal 100.000 IU/g', '1x1')).toBe('1x100000iu');
+    expect(strengthOf('Nistatin 100.000 ui/ml drop')).toBeNull();
+    expect(strengthOf('Nistatin tablet vaginal 100.000 IU/g')).toEqual({ value: 100000, unit: 'iu' });
+    expect(strengthOf('Bisoprolol 2.5 mg')).toEqual({ value: 2.5, unit: 'mg' });
   });
 });
 

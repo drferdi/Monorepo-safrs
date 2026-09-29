@@ -1823,7 +1823,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
             key: medicationSelectionKey(med),
             name: med.nama_obat,
             role: med.role,
-            doseLine: `${formatDose(med.nama_obat, med.dosis)} • ${med.aturan_pakai} • ${med.durasi || '-'}`,
+            doseLine: [formatDose(med.nama_obat, med.dosis), med.aturan_pakai, med.durasi].filter(Boolean).join(' • '),
             rationale: humanize(med.rationale),
             safetyLabel: med.safety_check.toUpperCase(),
             contraindications: (med.contraindications || []).map((item) => humanize(item)),
@@ -1833,7 +1833,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
           const manualMedicationViews = manualMedications.map((med) => ({
             key: medicationSelectionKey(med),
             name: med.nama_obat,
-            doseLine: `${formatDose(med.nama_obat, med.dosis)} • ${med.aturan_pakai} • ${med.durasi || '-'}`,
+            doseLine: [formatDose(med.nama_obat, med.dosis), med.aturan_pakai, med.durasi].filter(Boolean).join(' • '),
             rationale: humanize(med.rationale),
             safetyLabel: med.safety_check.toUpperCase(),
             contraindications: (med.contraindications || []).map((item) => humanize(item)),

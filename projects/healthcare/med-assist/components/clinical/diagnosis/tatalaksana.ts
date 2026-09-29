@@ -70,26 +70,29 @@ export function searchStock(query: string, limit = 6): StockMatch[] {
     .slice(0, limit);
 }
 
-const STRENGTH = /(\d+(?:[.,]\d+)?)\s*(mg|mcg|µg|g|ml|iu|%)(?![a-z])/i;
+// A thousands dot ("100.000 IU") comes first, so it is not read as a decimal (100).
+const STRENGTH = /(\d{1,3}(?:\.\d{3})+|\d+(?:[.,]\d+)?)\s*(mg|mcg|µg|g|ml|iu|%)(?![a-z])/i;
 
 /** The strength a name carries, compact ("Amlodipin 10 mg" → { value: 10, unit: 'mg' }). */
 export function strengthOf(name: string): { value: number; unit: string } | null {
   const match = STRENGTH.exec(name);
-  return match ? { value: Number(match[1].replace(',', '.')), unit: match[2].toLowerCase() } : null;
+  if (!match) return null;
+  const digits = /^\d{1,3}(\.\d{3})+$/.test(match[1]) ? match[1].replace(/\./g, '') : match[1].replace(',', '.');
+  return { value: Number(digits), unit: match[2].toLowerCase() };
 }
 
 /**
  * Chief's dose notation (2026-09-29): frequency x strength per take, "1x10mg". A dose that
  * already names its strength is only compacted ("2x500 mg" → "2x500mg"); "3x1" takes the
  * strength from the name, times the amount per take ("3x2" of 500 mg → "3x1000mg"); anything
- * else stays as written.
+ * else stays as written, and so does a percentage (a concentration, not an amount per take).
  */
 export function formatDose(name: string, dosis: string): string {
   const written = dosis.trim();
   if (STRENGTH.test(written)) return written.replace(/(\d)\s+(?=(mg|mcg|µg|g|ml|iu|%)(?![a-z]))/gi, '$1');
   const frequency = /^(\d+)\s*[x×]\s*(\d+)?$/i.exec(written);
   const strength = strengthOf(name);
-  if (!frequency || !strength) return written;
+  if (!frequency || !strength || strength.unit === '%') return written;
   const perTake = strength.value * Number(frequency[2] ?? 1);
   return `${frequency[1]}x${Number(perTake.toFixed(3))}${strength.unit}`;
 }
@@ -103,8 +106,45 @@ export function nameBesideDose(name: string, doseLine: string): string {
   return name.replace(STRENGTH, '').replace(/\s+/g, ' ').trim() || name;
 }
 
-/** Same drug when the first word matches ("Amlodipin 10 mg" and "Amlodipin 5mg"). */
-export const drugKey = (name: string): string => name.trim().split(/\s+/)[0]?.toLowerCase() ?? '';
+const NOT_THE_DRUG = /^(blud|tablet|tab|kaplet|kapsul|sirup|syrup|suspensi|drops?|tetes|salep|krim|cream|lotion|bedak|injeksi|inj|infus|serbuk|gel|forte|hcl|hidroklorida|besilat|maleat)$/;
+
+/** One spelling for Indonesian and English names: amoxicillin = amoksisilin, amlodipine = amlodipin. */
+const spell = (word: string): string =>
+  word.length < 4
+    ? word
+    : word
+        .replace(/x/g, 'ks')
+        .replace(/ph/g, 'f')
+        .replace(/c(?=[ei])/g, 's')
+        .replace(/c/g, 'k')
+        .replace(/(.)\1+/g, '$1')
+        .replace(/e$/, '');
+
+/**
+ * The generic name: the words before the form or strength, spelled one way ("BLUD Amlodipin tablet
+ * 5 mg" = "Amlodipine 10mg" = amlodipin; "Asam mefenamat" ≠ "Asam folat"). Audit 2026-09-29: the
+ * first word alone made every "Asam …" and "Vitamin …" one drug.
+ */
+export function drugKey(name: string): string {
+  const words = name.toLowerCase().replace(/\(.*?\)/g, ' ').split(/[\s/]+/).filter(Boolean);
+  const generic: string[] = [];
+  for (const word of words) {
+    if (/^\d/.test(word)) break;
+    if (NOT_THE_DRUG.test(word)) {
+      if (generic.length > 0) break;
+      continue;
+    }
+    generic.push(spell(word));
+  }
+  return generic.join(' ') || (words[0] ?? '');
+}
+
+/** The other entries of the plan that are the same drug; `inPlan` leaves the card's own entry out. */
+export function sameDrugIn(name: string, plan: string[], inPlan: boolean): string[] {
+  const same = plan.filter((other) => drugKey(other) === drugKey(name));
+  if (inPlan) same.splice(same.indexOf(name), 1);
+  return same;
+}
 
 /**
  * The chronic medications named by the visit history, each with its latest dose and the diagnosis
@@ -160,12 +200,15 @@ export function interactionsFor(name: string, interactions: DrugInteraction[]): 
   return interactions.filter((interaction) => interaction.drug_a === name || interaction.drug_b === name);
 }
 
-/** Allergies (other than "tidak ada") the medication's name contains. */
+/** Words spelled one way, so "Amoxicillin" is found in "Amoksisilin kapsul". */
+const spelled = (text: string): string => text.toLowerCase().split(/\s+/).filter(Boolean).map(spell).join(' ');
+
+/** Allergies (other than "tidak ada") the medication's name contains, whichever way either is spelled. */
 export function allergyMatches(name: string, allergies: string[]): string[] {
-  const lowered = name.toLowerCase();
+  const written = spelled(name);
   return allergies
     .map((allergy) => allergy.trim())
-    .filter((allergy) => allergy.length >= 4 && allergy.toLowerCase() !== 'tidak ada' && lowered.includes(allergy.toLowerCase()));
+    .filter((allergy) => allergy.length >= 4 && allergy.toLowerCase() !== 'tidak ada' && written.includes(spelled(allergy)));
 }
 
 export interface SafetyReview {
