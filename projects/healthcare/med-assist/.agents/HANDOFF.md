@@ -1,10 +1,27 @@
 # HANDOFF
 
-Last updated: 2026-09-29 (evening: Playwright e2e runs on Google Chrome; the side panel's
-Tatalaksana lands in ePuskesmas-shaped pages through the built extension)
+Last updated: 2026-09-29 (night: "stuck loading MIRA" fixed - production build again, native host
+re-registered for the current extension ID; earlier: e2e on Google Chrome, Tatalaksana→ePuskesmas)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
+
+## MIRA fix (2026-09-29 night)
+
+- Cause 1 (verified): the rebuild Chief asked for used `wxt build --mode development`, which bakes
+  `parseDiagnosisEngineMode` to `return "legacy"`: MIRA was never called, the page showed the
+  legacy "Data belum cukup". Fixed by `node scripts/pnpm.mjs run build` (production:
+  `.env.production.local` / Vite define → `mira`); the fold is gone from `background.js`.
+  **The build Chief tests is always `run build`, run last** (DECISIONS 2026-09-29).
+- Cause 2 (verified): the native host `com.sentra.mira` allowed only
+  `oeiclacedioeocjijdopioolfdbnbjgf`; Chrome's Default profile loads the build as
+  `bhcffleclpadneocndhembhjbemimhkm` (ID from the path), so `connectNative` answered "Access to
+  the specified native messaging host is forbidden." Re-ran `install_host.ps1 -ExtensionId
+  bhcffleclpadneocndhembhjbemimhkm`.
+- Check (verified, Chrome via Playwright, no diagnosis run so no model call): host answers
+  `running`, `/healthz` 200, `sentra:mira-status` = ready. MIRA stays up on 8787.
+- Inferred (MIRA repo, not changed): after that Chrome closed, the host did not stop the service;
+  the uv venv `python.exe` is a redirector, so the host waits on a parent that never exits.
 
 ## Current state
 
@@ -63,4 +80,5 @@ live MIRA, the real Sentra prescription API, real DDInter.
 
 ## Next action
 
-Live ePuskesmas test (open item 1) once Claude in Chrome is connected.
+Chief reloads "Asisten Medis" and opens a case: header dot green, MIRA diagnosis. Then the live
+ePuskesmas test (open item 1) once Claude in Chrome is connected.

@@ -3,6 +3,18 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — The build Chief tests is `run build`; the native host follows the extension ID
+
+- Decision: the extension Chief reloads is built last with `node scripts/pnpm.mjs run build`
+  (production mode, MIRA engine). `exec wxt build --mode development` stays a gate only: it
+  writes the same `.output/chrome-mv3-dev` but bakes the engine to `legacy`, which is why Chief
+  saw "stuck loading MIRA" after a rebuild. When the unpacked extension's ID changes (it is derived
+  from the load path), `install_host.ps1 -ExtensionId <id>` is re-run; the current ID is
+  `bhcffleclpadneocndhembhjbemimhkm`.
+- Evidence: `background.js` from the development build contains `return"legacy"` for the engine
+  parse, the production build does not; `connectNative` was "forbidden" before the re-install and
+  answered `running` after it; `/healthz` 200 and `sentra:mira-status` ready in Chrome.
+
 ## 2026-09-29 — The e2e suite runs on Google Chrome; the RME page stays active
 
 - Decision: Playwright e2e start Google Chrome (`channel: 'chrome'`) and load the unpacked build
