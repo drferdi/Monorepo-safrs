@@ -2,6 +2,8 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { SIDE_PANEL_TATALAKSANA_TRANSFER } from '../../tests/e2e/side-panel-tatalaksana-transfer';
+
 import { ClinicalDifferential } from './ClinicalDifferential';
 import { resetDiseaseNotesCache } from './diagnosis/useDiseaseNotes';
 
@@ -405,6 +407,9 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
           })
         );
       });
+      // The synthetic ePuskesmas spec (tests/e2e) sends this same payload through the built extension.
+      const sent = mockSendMessage.mock.calls.find(([type]) => type === 'transferRME')?.[1];
+      expect(sent).toMatchObject(SIDE_PANEL_TATALAKSANA_TRANSFER);
     } finally {
       vi.unstubAllGlobals();
     }

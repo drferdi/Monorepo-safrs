@@ -2,6 +2,7 @@ import path from 'path';
 import { expect, test, type BrowserContext, type Page } from '@playwright/test';
 
 import { getExtensionId, launchExtensionContext } from './chrome-extension-launch';
+import { SIDE_PANEL_TATALAKSANA_TRANSFER } from './side-panel-tatalaksana-transfer';
 
 type ChromeRuntimeApi = {
   runtime: {
@@ -94,6 +95,8 @@ function buildSyntheticAnamnesaPage(): string {
         <textarea name="Anamnesa[keluhan_utama]" maxlength="250"></textarea>
         <textarea name="Anamnesa[keluhan_tambahan]" maxlength="250"></textarea>
         <input name="Anamnesa[lama_sakit_hari]" />
+        <textarea name="Anamnesa[rencana_tindakan]"></textarea>
+        <textarea name="Anamnesa[edukasi]" id="text_edukasi"></textarea>
         <textarea name="MRiwayatPasien[Riwayat Penyakit Sekarang][value]" id="text_rps" maxlength="250"></textarea>
         <textarea name="MRiwayatPasien[Riwayat Penyakit Dulu][value]" id="text_rpd"></textarea>
         <textarea name="MRiwayatPasien[Riwayat Penyakit Keluarga][value]" id="text_rpk"></textarea>
@@ -334,7 +337,7 @@ function buildSyntheticResepPage(): string {
               window.jQuery = $;
             }
 
-            const medicationOptions = ['Paracetamol 500mg', 'Amoxicillin 500mg', 'CTM Tablet'];
+            const medicationOptions = ['Paracetamol 500mg', 'Amoxicillin 500mg', 'CTM Tablet', 'Amoksisilin kapsul/kaplet 500 mg'];
 
             function removeMenu() {
               const existing = document.querySelector('.ui-autocomplete');
@@ -872,5 +875,74 @@ test.describe.serial('Synthetic ePuskesmas integration', () => {
     await expect(epPage.locator('select[name="aturan_pakai[0]"]')).toHaveValue('2');
     await expect(epPage.locator('input[name="obat_keterangan[0]"]')).toHaveValue('Sesudah makan');
     await expect(epPage.locator('input[name="obat_nama[1]"]')).toHaveCount(1);
+  });
+  test('fills what the side panel sends for the whole Tatalaksana into anamnesa, diagnosa and resep', async () => {
+    test.setTimeout(90_000);
+    const expectations: Record<'anamnesa' | 'diagnosa' | 'resep', Array<[string, string]>> = {
+      anamnesa: [
+        [
+          'textarea[name="Anamnesa[edukasi]"]',
+          'Istirahat cukup, jangan bekerja/sekolah dulu hingga 24 jam bebas demam.',
+        ],
+        ['textarea[name="Anamnesa[rencana_tindakan]"]', 'Kontrol 2 minggu'],
+      ],
+      diagnosa: [
+        ['input[name="diagnosa_id"]', 'J02'],
+        ['input[name="diagnosa_nama"]', 'Faringitis akut'],
+      ],
+      resep: [
+        ['input[name="obat_nama[0]"]', 'Amoksisilin kapsul/kaplet 500 mg'],
+        ['input[name="obat_jumlah[0]"]', '10'],
+        ['input[name="obat_signa[0]"]', '3x1'],
+        ['select[name="aturan_pakai[0]"]', '2'],
+      ],
+    };
+    const pages = [
+      { step: 'anamnesa', body: buildSyntheticAnamnesaPage() },
+      { step: 'diagnosa', body: buildSyntheticDiagnosaPage() },
+      { step: 'resep', body: buildSyntheticResepPage() },
+    ] as const;
+    const extensionId = await getExtensionId(context);
+
+    for (const { step, body } of pages) {
+      await context.unrouteAll({ behavior: 'ignoreErrors' });
+      await context.route('https://kotakediri.epuskesmas.id/**', async (route) => {
+        await route.fulfill({ status: 200, contentType: 'text/html', body });
+      });
+      const epPage = await context.newPage();
+      await epPage.goto(
+        `https://kotakediri.epuskesmas.id/${step}/create/82594?from=pelayanan&action=edit`
+      );
+      await epPage.waitForLoadState('domcontentloaded');
+      await epPage.waitForTimeout(2500);
+
+      // The side panel sits beside the RME page: that page stays the active tab while it sends.
+      const extensionPage = await openExtensionPage(context, extensionId, 'sidepanel.html');
+      await epPage.bringToFront();
+      const transferResponse = await sendRuntimeMessage<unknown>(extensionPage, {
+        type: 'transferRME',
+        timestamp: Date.now(),
+        data: {
+          [step]: SIDE_PANEL_TATALAKSANA_TRANSFER[step],
+          options: {
+            requestId: `side-panel-tatalaksana-${step}`,
+            startFromStep: step,
+            onlyStep: step,
+          },
+        },
+      });
+      const transferPayload = unwrapMessagingResponse<{
+        steps: Record<string, { state: string }>;
+      }>(transferResponse.response);
+      expect(transferResponse.lastError).toBeNull();
+      expect(transferPayload.steps[step].state, `${step}: ${JSON.stringify(transferPayload)}`).toBe(
+        'success'
+      );
+      for (const [selector, value] of expectations[step]) {
+        await expect(epPage.locator(selector)).toHaveValue(value);
+      }
+      await extensionPage.close();
+      await epPage.close();
+    }
   });
 });
