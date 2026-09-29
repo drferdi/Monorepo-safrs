@@ -37,12 +37,12 @@ export function RMETransferPanel({
       </p>
 
       {ownRun && transfer.error ? <ReadOnlyPanel tone="danger">{transfer.error}</ReadOnlyPanel> : null}
-      {transfer.reasonLabels.length > 0 ? (
+      {ownRun && transfer.reasonLabels.length > 0 ? (
         <ReadOnlyPanel>
           {`Alasan: ${transfer.reasonLabels.map(formatClinicalText).join(' | ')}`}
         </ReadOnlyPanel>
       ) : null}
-      {transfer.resultSummary ? (
+      {ownRun && transfer.resultSummary ? (
         <ReadOnlyPanel>{formatClinicalText(transfer.resultSummary)}</ReadOnlyPanel>
       ) : null}
 

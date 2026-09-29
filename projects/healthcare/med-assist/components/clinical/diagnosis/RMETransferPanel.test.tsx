@@ -149,11 +149,19 @@ describe('RMETransferPanel', () => {
   // show here as a finished or failed resep.
   it.each(['success', 'failed'])('keeps a %s RME Diagnosa run off this page', (state) => {
     const { container: panel } = render(
-      <RMETransferPanel {...makeProps({}, makeViewModel({ state, lastStep: 'diagnosa', error: 'Diagnosa gagal' }))} />
+      <RMETransferPanel {...makeProps({}, makeViewModel({
+          state,
+          lastStep: 'diagnosa',
+          error: 'Diagnosa gagal',
+          reasonLabels: ['Diagnosa terlewat'],
+          resultSummary: 'runId: rme-1',
+        }))} />
     );
     expect(within(panel).getByRole('button', { name: /Isi resep ke RME/i })).toHaveAttribute('data-state', 'idle');
     expect(within(panel).queryByRole('button', { name: /Ulangi/i })).toBeNull();
     expect(panel).not.toHaveTextContent('Diagnosa gagal');
+    expect(panel).not.toHaveTextContent('Diagnosa terlewat');
+    expect(panel).not.toHaveTextContent('runId');
   });
 
   it('morphs the resep button for a resep run only', () => {

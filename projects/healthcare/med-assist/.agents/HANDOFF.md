@@ -10,13 +10,15 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 ## Current state
 
 Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-29 (four entries
-on top) hold the details. Commits 36077bd1, 34a4ad01, cc67c33b are ahead of `main` (e0dd9545).
+on top) hold the details. Commits 36077bd1, 34a4ad01, cc67c33b, 0130313d and the result/reason fixup after them are ahead
+of `main` (e0dd9545).
 
 - Steps: Temuan 1/5 · Diagnosis 2/5 · **RME Diagnosa 3/5** (page 1) | Tatalaksana 4/5 | **RME Terapi
   5/5** (`steps/RmeDiagnosisStep.tsx`, `diagnosisSteps.ts`, `DiagnosisStepFlow.tsx`). "Isi otomatis
   RME" is gone: "Isi diagnosis ke RME" after the pick, "Isi resep ke RME" + "Isi anamnesa ke RME"
   at the end (`RMETransferPanel.tsx`); `handleAutoFillAll` removed. Both pages share one transfer
-  state; `transfer.lastStep` keeps a run's state, error and Ulangi on its own page (cc67c33b).
+  state; `transfer.lastStep` keeps a run's state, error, Ulangi, result and reasons on its own page
+  (cc67c33b + fixup). Harness: after the diagnosa fill, RME Terapi's resep button reads `idle`.
 - Tatalaksana: a chronic card's tick (or a tap on the card) continues it (`chronicContinuation` in
   `tatalaksana.ts`, wired in `ClinicalDifferential.tsx` as a prescription candidate shown only on
   its card); "Lanjut tanpa terapi tambahan" breathes until decided (`.dx-tx-breathe`, appended).
