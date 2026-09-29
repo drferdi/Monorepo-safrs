@@ -10467,3 +10467,14 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 @media (prefers-reduced-motion: reduce) {
   .dx-trace rect { animation: none; stroke-dasharray: none; stroke-width: 1px; }
 }
+
+/* Edukasi swipe deck (Chief, 2026-09-29: "section ini gunakan motion FX … swipe-deck") */
+.dx-edu-deck { position: relative; height: 168px; outline: none; }
+.dx-edu-deck:focus-visible { outline: 1px solid var(--accent-med); outline-offset: 2px; }
+.dx-edu-card { position: absolute; inset: 0 0 24px 0; transform-origin: bottom center; cursor: grab; touch-action: pan-y; user-select: none; transition: opacity 300ms ease-out; }
+.dx-edu-card:active { cursor: grabbing; }
+.dx-edu-card[data-hidden='true'] { opacity: 0; transition: none; }
+.dx-edu-card__face { height: 100%; display: flex; flex-direction: column; gap: 8px; }
+@media (prefers-reduced-motion: reduce) {
+  .dx-edu-card { transition: none; }
+}

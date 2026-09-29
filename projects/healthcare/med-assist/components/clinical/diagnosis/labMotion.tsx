@@ -1,10 +1,13 @@
-import { useRef, useState, type ReactNode } from 'react';
+import { animate, motion, useMotionValue, useReducedMotion, useSpring, useTransform, type MotionValue } from 'framer-motion';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { flushSync } from 'react-dom';
 
 /*
  * Adapted from lab.xevrion.dev (github.com/xevrion/ui-lab, MIT, Yash Bavadiya), picked for the
  * Tatalaksana page (Chief, 2026-09-29): the tick of "Scribble checkbox" and the fill of "Hold to
  * delete". Steady like a console (Chief, the same day): the tick is there or not, never drawn; the
  * hold fill stays, it is the only way to see how long is left to hold.
+ * "Swipe deck" (same author, MIT) carries the Edukasi points: an explicit exception Chief asked for.
  */
 
 // ---- Pen check ("Scribble checkbox"): a hand-drawn tick, a new shape per text. ----
@@ -151,5 +154,275 @@ export function HoldButton({
         {children}
       </span>
     </button>
+  );
+}
+
+// ---- Swipe deck: the Edukasi points, right gives, left skips (Chief, 2026-09-29). ----
+
+const THROW_DISTANCE = 120;
+const THROW_VELOCITY = 400;
+const OFFSCREEN = 360;
+const STEP_Y = 12;
+const STEP_SCALE = 0.05;
+const VISIBLE = 3;
+const STEP_FORWARD = { stiffness: 320, damping: 30 };
+const SNAP_BACK = { type: 'spring', stiffness: 400, damping: 28 } as const;
+const THROW = { type: 'spring', stiffness: 260, damping: 36 } as const;
+const DROP = { type: 'spring', stiffness: 90, damping: 18 } as const;
+const SPIN = { type: 'spring', stiffness: 120, damping: 20 } as const;
+const SHRINK = { duration: 0.3, ease: [0.23, 1, 0.32, 1] } as const;
+
+type DeckItem = { key: string; text: string };
+type Flight = {
+  id: number;
+  item: DeckItem;
+  position: number;
+  total: number;
+  from: number;
+  direction: 1 | -1;
+  velocity: number;
+  spin: number;
+  drop: number;
+};
+
+const pad = (n: number) => String(n).padStart(2, '0');
+
+/** 1 (right) or -1 (left) when dragged far or flicked fast enough, else 0: the card springs back. */
+export function throwDirection(offset: number, velocity: number): -1 | 0 | 1 {
+  if (Math.abs(offset) <= THROW_DISTANCE && Math.abs(velocity) <= THROW_VELOCITY) return 0;
+  const sign = offset !== 0 ? offset : velocity;
+  return sign < 0 ? -1 : 1;
+}
+
+// Pivots from below, like a card held at its bottom edge.
+function tiltAt(x: number) {
+  return Math.max(-1, Math.min(x / 240, 1)) * 18;
+}
+
+// Stays solid while you are deciding, then fades on the way out.
+function useThrowStyle(x: MotionValue<number>) {
+  const rotate = useTransform(x, tiltAt);
+  const opacity = useTransform(x, [-OFFSCREEN * 0.8, -THROW_DISTANCE, THROW_DISTANCE, OFFSCREEN * 0.8], [0, 1, 1, 0]);
+  return { rotate, opacity };
+}
+
+/** Keeps the order of `order` for keys still offered and appends new keys at the end. */
+function reconcile(order: string[], keys: string[]): string[] {
+  const offered = new Set(keys);
+  const kept = order.filter((key) => offered.has(key));
+  const known = new Set(kept);
+  return [...kept, ...keys.filter((key) => !known.has(key))];
+}
+
+export function EducationDeck({ items, onGive }: { items: DeckItem[]; onGive: (key: string) => void }) {
+  const reduceMotion = !!useReducedMotion();
+  const [order, setOrder] = useState<string[]>([]);
+  const [flights, setFlights] = useState<Flight[]>([]);
+  const nextFlight = useRef(0);
+
+  const x = useMotionValue(0);
+  const { rotate, opacity } = useThrowStyle(x);
+  const still = useMotionValue(0);
+  const opaque = useMotionValue(1);
+  const progress = useTransform(x, (v) => Math.min(Math.abs(v) / THROW_DISTANCE, 1));
+  const handoff = useRef(0);
+
+  const deck = reconcile(order, items.map((item) => item.key));
+  const byKey = new Map(items.map((item) => [item.key, item]));
+  const topKey = deck[0];
+  const topItem = topKey === undefined ? undefined : byKey.get(topKey);
+
+  const throwCard = (direction: 1 | -1, velocity = 0) => {
+    if (!topItem) return;
+    const flight: Flight = {
+      id: nextFlight.current++,
+      item: topItem,
+      position: 1,
+      total: deck.length,
+      from: x.get(),
+      direction,
+      velocity,
+      spin: 8 + Math.random() * 14,
+      drop: Math.random() * 110 - 20,
+    };
+    handoff.current = progress.get();
+    flushSync(() => {
+      if (direction === 1) onGive(topItem.key);
+      else setOrder([...deck.slice(1), topItem.key]);
+      if (!reduceMotion) setFlights((f) => [...f, flight]);
+    });
+    x.jump(0);
+  };
+
+  return (
+    <div>
+      <div
+        className="dx-edu-deck"
+        role="group"
+        aria-roledescription="tumpukan kartu"
+        aria-label="Poin edukasi"
+        tabIndex={0}
+        data-testid="dx-tx-education-deck"
+        onKeyDown={(event) => {
+          if (event.key === 'ArrowLeft') throwCard(-1);
+          if (event.key === 'ArrowRight') throwCard(1);
+        }}
+      >
+        {deck.map((key, index) => {
+          const item = byKey.get(key);
+          if (!item) return null;
+          return (
+            <DeckCard
+              key={key}
+              item={item}
+              position={index + 1}
+              total={deck.length}
+              index={index}
+              x={index === 0 ? x : still}
+              rotate={index === 0 ? rotate : still}
+              opacity={index === 0 ? opacity : opaque}
+              progress={progress}
+              handoff={handoff}
+              reduceMotion={reduceMotion}
+              onRelease={(offset, velocity) => {
+                const direction = throwDirection(offset, velocity);
+                if (direction === 0) void animate(x, 0, { ...SNAP_BACK, velocity });
+                else throwCard(direction, velocity);
+              }}
+            />
+          );
+        })}
+        {flights.map((flight) => (
+          <FlyingCard
+            key={flight.id}
+            flight={flight}
+            onLanded={() => setFlights((f) => f.filter((other) => other.id !== flight.id))}
+          />
+        ))}
+      </div>
+      <div className="flex items-center gap-4">
+        <button type="button" className="diagnosis-text-button" onClick={() => throwCard(-1)}>
+          <span aria-hidden="true">← </span>Lewati
+        </button>
+        <button type="button" className="btn-ac-inline btn-ac-inline--sharp" onClick={() => throwCard(1)}>
+          Berikan<span aria-hidden="true"> →</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function DeckCard({
+  item,
+  position,
+  total,
+  index,
+  x,
+  rotate,
+  opacity,
+  progress,
+  handoff,
+  reduceMotion,
+  onRelease,
+}: {
+  item: DeckItem;
+  position: number;
+  total: number;
+  index: number;
+  x: MotionValue<number>;
+  rotate: MotionValue<number>;
+  opacity: MotionValue<number>;
+  progress: MotionValue<number>;
+  handoff: { current: number };
+  reduceMotion: boolean;
+  onRelease: (offset: number, velocity: number) => void;
+}) {
+  const top = index === 0;
+  const slot = useSpring(index, STEP_FORWARD);
+  const previous = useRef(index);
+
+  useLayoutEffect(() => {
+    const from = previous.current;
+    previous.current = index;
+    if (from === index) return;
+    if (reduceMotion) {
+      slot.jump(index);
+      return;
+    }
+    // A card entering view rises from one step further back; the others carry on from the drag.
+    if (from >= VISIBLE && index < VISIBLE) slot.jump(index + 1);
+    else slot.jump(slot.get() - handoff.current);
+    slot.set(index);
+  }, [index, reduceMotion, slot, handoff]);
+
+  const depth = useTransform(() => Math.max(slot.get() - progress.get(), 0));
+  const y = useTransform(depth, (d) => d * STEP_Y);
+  const scale = useTransform(depth, (d) => 1 - d * STEP_SCALE);
+
+  return (
+    <motion.article
+      aria-hidden={!top}
+      drag={top ? 'x' : false}
+      dragMomentum={false}
+      onDragEnd={(_, info) => onRelease(info.offset.x, info.velocity.x)}
+      style={{ x, rotate, y, scale, zIndex: 100 - index }}
+      className="dx-edu-card"
+      data-testid="dx-edu-card"
+      data-top={top}
+      data-hidden={index >= VISIBLE}
+    >
+      <CardFace text={item.text} position={position} total={total} opacity={opacity} />
+    </motion.article>
+  );
+}
+
+function FlyingCard({ flight, onLanded }: { flight: Flight; onLanded: () => void }) {
+  const x = useMotionValue(flight.from);
+  const y = useMotionValue(0);
+  const rotate = useMotionValue(tiltAt(flight.from));
+  const scale = useMotionValue(1);
+  const { opacity } = useThrowStyle(x);
+  const landed = useRef(onLanded);
+  useEffect(() => {
+    landed.current = onLanded;
+  });
+  useEffect(() => {
+    const out = animate(x, flight.direction * OFFSCREEN, { ...THROW, velocity: flight.velocity });
+    const rest = [
+      animate(y, flight.drop, DROP),
+      animate(rotate, rotate.get() + flight.direction * flight.spin, SPIN),
+      animate(scale, 0.94, SHRINK),
+    ];
+    void out.then(() => landed.current());
+    return () => [out, ...rest].forEach((controls) => controls.stop());
+  }, [x, y, rotate, scale, flight]);
+  return (
+    <motion.div
+      aria-hidden="true"
+      style={{ x, y, rotate, scale, zIndex: 200 }}
+      className="dx-edu-card"
+      data-testid="dx-edu-flying"
+    >
+      <CardFace text={flight.item.text} position={flight.position} total={flight.total} opacity={opacity} />
+    </motion.div>
+  );
+}
+
+function CardFace({
+  text,
+  position,
+  total,
+  opacity,
+}: {
+  text: string;
+  position: number;
+  total: number;
+  opacity: MotionValue<number>;
+}) {
+  return (
+    <motion.div style={{ opacity }} className="neu-select dx-edu-card__face">
+      <span className="ttv-label">{`${pad(position)} / ${pad(total)}`}</span>
+      <p className="text-small">{text}</p>
+    </motion.div>
   );
 }

@@ -3,7 +3,7 @@ import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { formatClinicalText, formatShortDate, isInsufficientDiagnosisLabel } from '../diagnosisDisplayUtils';
 import type { DiagnosisManualMedicationDraftView, DiagnosisPageProps } from '../diagnosisPageProps';
 import type { DiagnosisMedicationView, DiagnosisPageViewModel } from '../diagnosisViewModel';
-import { HoldButton, PenCheck, SelectionTrace } from '../labMotion';
+import { EducationDeck, HoldButton, PenCheck, SelectionTrace } from '../labMotion';
 import { standardDoseFor } from '../standardDose';
 import {
   ROLE_ORDER,
@@ -518,14 +518,12 @@ function EducationPart({
   education: DiagnosisPageProps['education'];
   onToggleEducation: (key: string) => void;
 }) {
-  const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState(false);
   const given = education.filter((item) => item.isSelected);
   const rest = education.filter((item) => !item.isSelected);
   useEffect(() => {
-    if (rest.length === 0) setAdding(false);
     if (given.length === 0) setEditing(false);
-  }, [rest.length, given.length]);
+  }, [given.length]);
 
   return (
     <Part label="Edukasi" count={given.length} testId="dx-tx-education">
@@ -550,18 +548,8 @@ function EducationPart({
           ) : (
             <p className="diagnosis-row-meta">Belum ada edukasi yang diberikan.</p>
           )}
-          <div className="flex flex-wrap gap-4">
-            {rest.length > 0 ? (
-              <button
-                type="button"
-                className="diagnosis-text-button"
-                aria-expanded={adding}
-                onClick={() => setAdding((value) => !value)}
-              >
-                + Tambah edukasi
-              </button>
-            ) : null}
-            {given.length > 0 ? (
+          {given.length > 0 ? (
+            <div className="flex flex-wrap gap-4">
               <button
                 type="button"
                 className="diagnosis-text-button"
@@ -570,25 +558,9 @@ function EducationPart({
               >
                 {editing ? 'selesai ubah' : 'ubah'}
               </button>
-            ) : null}
-          </div>
-          {adding ? (
-            <div className="flex flex-col gap-1" data-testid="dx-tx-education-picker">
-              {rest.map((item) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  className="neu-select diagnosis-medication-row"
-                  data-testid="dx-flow-education-item"
-                  aria-pressed={false}
-                  onClick={() => onToggleEducation(item.key)}
-                >
-                  <span className="text-small min-w-0 text-left">{item.text}</span>
-                  <PenCheck checked={false} seedText={item.key} />
-                </button>
-              ))}
             </div>
           ) : null}
+          {rest.length > 0 ? <EducationDeck items={rest} onGive={onToggleEducation} /> : null}
         </>
       )}
     </Part>

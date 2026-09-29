@@ -385,7 +385,7 @@ describe('TatalaksanaStep', () => {
   });
 
   // Carries EducationStep "lists the points to tick, marking only the given ones".
-  it('numbers the education given and adds more from "+ Tambah edukasi"; "ubah" removes', () => {
+  it('numbers the education given and gives more from the deck; "ubah" removes', () => {
     const onToggleEducation = vi.fn();
     const education: DiagnosisPageProps['education'] = [
       { key: 'a', text: 'Patuhi obat setiap hari.', isSelected: true },
@@ -395,10 +395,11 @@ describe('TatalaksanaStep', () => {
     const given = screen.getByTestId('dx-tx-education-given');
     expect(given).toHaveTextContent('01Patuhi obat setiap hari.');
     expect(within(given).queryByText('Diet rendah garam.')).toBeNull();
-    fireEvent.click(screen.getByRole('button', { name: '+ Tambah edukasi' }));
-    const [row] = screen.getAllByTestId('dx-flow-education-item');
-    expect(row).toHaveTextContent('Diet rendah garam.');
-    fireEvent.click(row);
+    expect(screen.queryByRole('button', { name: '+ Tambah edukasi' })).toBeNull();
+    const [card] = screen.getAllByTestId('dx-edu-card');
+    expect(card).toHaveAttribute('data-top', 'true');
+    expect(card).toHaveTextContent('Diet rendah garam.');
+    fireEvent.click(screen.getByRole('button', { name: 'Berikan' }));
     expect(onToggleEducation).toHaveBeenLastCalledWith('b');
     fireEvent.click(screen.getByRole('button', { name: 'ubah' }));
     fireEvent.click(within(given).getByRole('button', { name: 'hapus' }));
@@ -408,7 +409,7 @@ describe('TatalaksanaStep', () => {
   // Carries EducationStep "says so when the knowledge base has no education for the diagnosis".
   it('says so when the knowledge base has no education, follow-up or red flags, instead of composing any', () => {
     render(<TatalaksanaStep {...props()} />);
-    expect(screen.queryByTestId('dx-flow-education-item')).toBeNull();
+    expect(screen.queryByTestId('dx-tx-education-deck')).toBeNull();
     expect(screen.getByText('Basis pengetahuan belum punya edukasi untuk diagnosis ini.')).toBeInTheDocument();
     expect(screen.getByText('Basis pengetahuan belum punya jadwal kontrol untuk diagnosis ini.')).toBeInTheDocument();
     expect(screen.getByText('Basis pengetahuan belum mencatat kapan pasien harus segera kembali.')).toBeInTheDocument();

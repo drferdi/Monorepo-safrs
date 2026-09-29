@@ -273,7 +273,7 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
   });
 
   // Migrated (2026-09-29): education is a part of Tatalaksana (points not yet given under
-  // "+ Tambah edukasi"), the Kontrol row left the education list for Tindak lanjut, and the
+  // the deck: "Berikan" gives the top one, "Lewati" sends it to the back), the Kontrol row left the education list for Tindak lanjut, and the
   // follow-up now reaches the anamnesis as rencana_tindakan.
   it('carries the education ticked for the chosen diagnosis into the RME anamnesis, and only that', async () => {
     const given = 'Istirahat cukup, jangan bekerja/sekolah dulu hingga 24 jam bebas demam.';
@@ -305,10 +305,14 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
 
       fireEvent.click(await screen.findByRole('button', { name: 'Lanjut tanpa terapi tambahan' }));
       const education = await screen.findByTestId('dx-tx-education');
-      fireEvent.click(await within(education).findByRole('button', { name: '+ Tambah edukasi' }));
-      const rows = await within(education).findAllByTestId('dx-flow-education-item');
-      expect(rows.map((row) => row.textContent)).toEqual([notGiven, given]);
-      fireEvent.click(rows[1]);
+      const cards = await within(education).findAllByTestId('dx-edu-card');
+      expect(cards.map((card) => card.querySelector('p')?.textContent)).toEqual([notGiven, given]);
+      expect(cards[0]).toHaveAttribute('data-top', 'true');
+      fireEvent.click(within(education).getByRole('button', { name: 'Lewati' }));
+      await waitFor(() =>
+        expect(within(education).getAllByTestId('dx-edu-card').find((card) => card.getAttribute('data-top') === 'true')).toHaveTextContent(given)
+      );
+      fireEvent.click(within(education).getByRole('button', { name: 'Berikan' }));
       await waitFor(() => expect(within(education).getByTestId('dx-tx-education-given')).toHaveTextContent(given));
       expect(screen.getByTestId('dx-tx-follow-up')).toHaveTextContent('Kontrol jika tidak membaik dalam 7-10 hari.');
 
