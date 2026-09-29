@@ -431,9 +431,15 @@ describe('TatalaksanaStep', () => {
     fireEvent.change(interval, { target: { value: '1 minggu' } });
     expect(onControlAfterChange).toHaveBeenCalledWith('1 minggu');
     expect(screen.getByTestId('dx-tx-summary')).not.toHaveTextContent('Tindak lanjut');
+  });
+
+  // Chief, 2026-09-29, on the orange Safety net box: "Redesign"; he chose rows without a frame.
+  it('shows the safety net as one row, "Segera kembali", listing each red flag, with no frame and no second title', () => {
+    render(<TatalaksanaStep {...props({ safetyNet: ['Sesak napas', 'Penurunan kesadaran'] })} />);
     const net = screen.getByTestId('dx-tx-safety-net');
-    expect(net).toHaveTextContent('Segera kembali / rujuk bila');
-    expect(within(net).getAllByRole('listitem')).toHaveLength(2);
+    expect(net).toHaveTextContent(/^Safety netSegera kembaliSesak napasPenurunan kesadaran$/);
+    expect(within(net).getAllByRole('listitem').map((item) => item.textContent)).toEqual(['Sesak napas', 'Penurunan kesadaran']);
+    expect(net.querySelector('.diagnosis-readonly-field')).toBeNull();
   });
 });
 

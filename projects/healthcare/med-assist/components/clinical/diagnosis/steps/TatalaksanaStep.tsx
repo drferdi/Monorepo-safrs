@@ -745,14 +745,20 @@ export function TatalaksanaStep({
 
       <Part label="Safety net" testId="dx-tx-safety-net">
         {safetyNet.length > 0 ? (
-          <div className="neu-textarea neu-textarea--symptom diagnosis-readonly-field diagnosis-readonly-field--warning">
-            <div className="diagnosis-list-title">Segera kembali / rujuk bila</div>
-            <ul className="diagnosis-line-list">
-              {safetyNet.map((flag) => (
-                <li key={flag}>{formatClinicalText(flag)}</li>
-              ))}
-            </ul>
-          </div>
+          <Kv
+            rows={[
+              {
+                term: 'Segera kembali',
+                value: (
+                  <ul className="dx-tx-safety-list">
+                    {safetyNet.map((flag) => (
+                      <li key={flag}>{formatClinicalText(flag)}</li>
+                    ))}
+                  </ul>
+                ),
+              },
+            ]}
+          />
         ) : (
           <p className="diagnosis-row-meta">Basis pengetahuan belum mencatat kapan pasien harus segera kembali.</p>
         )}

@@ -10528,3 +10528,8 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 /* Tindak lanjut: one row, "Kontrol" and the interval picked (Chief, 2026-09-29: "cukup kontrol 3 hari atau sejenisnya") */
 .diagnosis-input.dx-tx-control-after { width: auto; cursor: pointer; }
 .dx-tx-kv:has(.dx-tx-control-after) { align-items: center; }
+
+/* Safety net: one row, "Segera kembali" and the red flags, no frame (Chief, 2026-09-29: "Redesign") */
+.dx-tx-safety-list { display: flex; flex-direction: column; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.dx-tx-safety-list li { display: flex; gap: 8px; }
+.dx-tx-safety-list li::before { content: ''; flex: 0 0 auto; width: 5px; height: 5px; margin-top: 0.55em; border-radius: 50%; background: var(--sentra-warning); }
