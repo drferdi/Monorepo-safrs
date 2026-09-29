@@ -10479,3 +10479,4 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
   .dx-edu-card { transition: none; }
 }
 .dx-edu-card--flying { pointer-events: none; }
+.dx-edu-card__face.neu-select { background: var(--neu-inset-bg); cursor: inherit; }
