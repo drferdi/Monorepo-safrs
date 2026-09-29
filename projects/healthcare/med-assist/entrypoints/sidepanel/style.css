@@ -10478,3 +10478,4 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 @media (prefers-reduced-motion: reduce) {
   .dx-edu-card { transition: none; }
 }
+.dx-edu-card--flying { pointer-events: none; }

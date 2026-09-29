@@ -519,6 +519,7 @@ function EducationPart({
   onToggleEducation: (key: string) => void;
 }) {
   const [editing, setEditing] = useState(false);
+  const editButton = useRef<HTMLButtonElement>(null);
   const given = education.filter((item) => item.isSelected);
   const rest = education.filter((item) => !item.isSelected);
   useEffect(() => {
@@ -551,6 +552,7 @@ function EducationPart({
           {given.length > 0 ? (
             <div className="flex flex-wrap gap-4">
               <button
+                ref={editButton}
                 type="button"
                 className="diagnosis-text-button"
                 aria-pressed={editing}
@@ -560,7 +562,7 @@ function EducationPart({
               </button>
             </div>
           ) : null}
-          {rest.length > 0 ? <EducationDeck items={rest} onGive={onToggleEducation} /> : null}
+          <EducationDeck items={rest} onGive={onToggleEducation} onExhausted={() => editButton.current?.focus()} />
         </>
       )}
     </Part>

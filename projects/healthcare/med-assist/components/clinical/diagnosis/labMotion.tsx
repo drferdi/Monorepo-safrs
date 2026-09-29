@@ -214,11 +214,24 @@ function reconcile(order: string[], keys: string[]): string[] {
   return [...kept, ...keys.filter((key) => !known.has(key))];
 }
 
-export function EducationDeck({ items, onGive }: { items: DeckItem[]; onGive: (key: string) => void }) {
+/**
+ * Stays mounted until its last flying copy has landed, then renders nothing; `onExhausted` fires
+ * once at that moment if focus was inside the deck, so the parent can place it somewhere sensible.
+ */
+export function EducationDeck({
+  items,
+  onGive,
+  onExhausted,
+}: {
+  items: DeckItem[];
+  onGive: (key: string) => void;
+  onExhausted?: () => void;
+}) {
   const reduceMotion = !!useReducedMotion();
   const [order, setOrder] = useState<string[]>([]);
   const [flights, setFlights] = useState<Flight[]>([]);
   const nextFlight = useRef(0);
+  const focusWithin = useRef(false);
 
   const x = useMotionValue(0);
   const { rotate, opacity } = useThrowStyle(x);
@@ -232,8 +245,19 @@ export function EducationDeck({ items, onGive }: { items: DeckItem[]; onGive: (k
   const topKey = deck[0];
   const topItem = topKey === undefined ? undefined : byKey.get(topKey);
 
+  const exhausted = deck.length === 0 && flights.length === 0;
+  const onExhaustedRef = useRef(onExhausted);
+  useEffect(() => {
+    onExhaustedRef.current = onExhausted;
+  });
+  useEffect(() => {
+    if (!exhausted || !focusWithin.current) return;
+    focusWithin.current = false;
+    onExhaustedRef.current?.();
+  }, [exhausted]);
+
   const throwCard = (direction: 1 | -1, velocity = 0) => {
-    if (!topItem) return;
+    if (!topItem || (direction === -1 && deck.length < 2)) return;
     const flight: Flight = {
       id: nextFlight.current++,
       item: topItem,
@@ -254,8 +278,10 @@ export function EducationDeck({ items, onGive }: { items: DeckItem[]; onGive: (k
     x.jump(0);
   };
 
+  if (exhausted) return null;
+
   return (
-    <div>
+    <div onFocus={() => (focusWithin.current = true)} onBlur={() => (focusWithin.current = false)}>
       <div
         className="dx-edu-deck"
         role="group"
@@ -264,6 +290,7 @@ export function EducationDeck({ items, onGive }: { items: DeckItem[]; onGive: (k
         tabIndex={0}
         data-testid="dx-tx-education-deck"
         onKeyDown={(event) => {
+          if (event.repeat) return;
           if (event.key === 'ArrowLeft') throwCard(-1);
           if (event.key === 'ArrowRight') throwCard(1);
         }}
@@ -286,7 +313,7 @@ export function EducationDeck({ items, onGive }: { items: DeckItem[]; onGive: (k
               reduceMotion={reduceMotion}
               onRelease={(offset, velocity) => {
                 const direction = throwDirection(offset, velocity);
-                if (direction === 0) void animate(x, 0, { ...SNAP_BACK, velocity });
+                if (direction === 0 || (direction === -1 && deck.length < 2)) void animate(x, 0, { ...SNAP_BACK, velocity });
                 else throwCard(direction, velocity);
               }}
             />
@@ -301,7 +328,7 @@ export function EducationDeck({ items, onGive }: { items: DeckItem[]; onGive: (k
         ))}
       </div>
       <div className="flex items-center gap-4">
-        <button type="button" className="diagnosis-text-button" onClick={() => throwCard(-1)}>
+        <button type="button" className="diagnosis-text-button" disabled={deck.length < 2} onClick={() => throwCard(-1)}>
           <span aria-hidden="true">← </span>Lewati
         </button>
         <button type="button" className="btn-ac-inline btn-ac-inline--sharp" onClick={() => throwCard(1)}>
@@ -400,7 +427,7 @@ function FlyingCard({ flight, onLanded }: { flight: Flight; onLanded: () => void
     <motion.div
       aria-hidden="true"
       style={{ x, y, rotate, scale, zIndex: 200 }}
-      className="dx-edu-card"
+      className="dx-edu-card dx-edu-card--flying"
       data-testid="dx-edu-flying"
     >
       <CardFace text={flight.item.text} position={flight.position} total={flight.total} opacity={opacity} />

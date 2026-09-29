@@ -406,6 +406,23 @@ describe('TatalaksanaStep', () => {
     expect(onToggleEducation).toHaveBeenLastCalledWith('a');
   });
 
+  it('gives the last point: the deck is gone and focus lands on "ubah"', () => {
+    const onToggleEducation = vi.fn();
+    const one = (isSelected: boolean): DiagnosisPageProps['education'] => [
+      { key: 'a', text: 'Patuhi obat setiap hari.', isSelected: false },
+      { key: 'b', text: 'Diet rendah garam.', isSelected },
+    ];
+    const { rerender } = render(<TatalaksanaStep {...props({ education: one(true), onToggleEducation })} />);
+    screen.getByRole('button', { name: 'Berikan' }).focus();
+    rerender(
+      <TatalaksanaStep
+        {...props({ education: [{ key: 'a', text: 'Patuhi obat setiap hari.', isSelected: true }, { key: 'b', text: 'Diet rendah garam.', isSelected: true }], onToggleEducation })}
+      />
+    );
+    expect(screen.queryByTestId('dx-tx-education-deck')).toBeNull();
+    expect(screen.getByRole('button', { name: 'ubah' })).toHaveFocus();
+  });
+
   // Carries EducationStep "says so when the knowledge base has no education for the diagnosis".
   it('says so when the knowledge base has no education, follow-up or red flags, instead of composing any', () => {
     render(<TatalaksanaStep {...props()} />);

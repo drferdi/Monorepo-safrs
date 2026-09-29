@@ -84,6 +84,45 @@ describe('EducationDeck', () => {
     expect(within(screen.getByTestId('dx-tx-education-deck')).queryByText('Patuhi obat setiap hari.')).toBeNull();
   });
 
+  it('renders no flying copy under reduced motion', () => {
+    render(<EducationDeck items={items} onGive={vi.fn()} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Berikan' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Lewati' }));
+    expect(screen.queryByTestId('dx-edu-flying')).toBeNull();
+  });
+
+  it('ignores a held key, so holding ArrowRight gives one point only', () => {
+    const onGive = vi.fn();
+    render(<EducationDeck items={items} onGive={onGive} />);
+    const deck = screen.getByTestId('dx-tx-education-deck');
+    fireEvent.keyDown(deck, { key: 'ArrowRight' });
+    fireEvent.keyDown(deck, { key: 'ArrowRight', repeat: true });
+    expect(onGive).toHaveBeenCalledTimes(1);
+  });
+
+  it('with one card left, skipping does nothing and "Lewati" is disabled', () => {
+    render(<EducationDeck items={items.slice(0, 1)} onGive={vi.fn()} />);
+    expect(screen.getByRole('button', { name: 'Lewati' })).toBeDisabled();
+    fireEvent.keyDown(screen.getByTestId('dx-tx-education-deck'), { key: 'ArrowLeft' });
+    expect(top()).toHaveTextContent('01 / 01');
+  });
+
+  it('when the last point is given the deck is gone and focus goes to onExhausted', () => {
+    const onExhausted = vi.fn();
+    const { rerender } = render(<EducationDeck items={items.slice(0, 1)} onGive={vi.fn()} onExhausted={onExhausted} />);
+    screen.getByRole('button', { name: 'Berikan' }).focus();
+    rerender(<EducationDeck items={[]} onGive={vi.fn()} onExhausted={onExhausted} />);
+    expect(screen.queryByTestId('dx-tx-education-deck')).toBeNull();
+    expect(onExhausted).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not call onExhausted when focus was elsewhere', () => {
+    const onExhausted = vi.fn();
+    const { rerender } = render(<EducationDeck items={items.slice(0, 1)} onGive={vi.fn()} onExhausted={onExhausted} />);
+    rerender(<EducationDeck items={[]} onGive={vi.fn()} onExhausted={onExhausted} />);
+    expect(onExhausted).not.toHaveBeenCalled();
+  });
+
   it('hides cards beyond the third', () => {
     const many = ['1', '2', '3', '4', '5'].map((key) => ({ key, text: `Poin ${key}` }));
     render(<EducationDeck items={many} onGive={vi.fn()} />);
