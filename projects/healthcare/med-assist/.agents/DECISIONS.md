@@ -3,6 +3,19 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — The e2e suite runs on Google Chrome; the RME page stays active
+
+- Decision: Playwright e2e start Google Chrome (`channel: 'chrome'`) and load the unpacked build
+  through the DevTools protocol (`Extensions.loadUnpacked`, `--enable-unsafe-extension-debugging`,
+  Playwright's `--disable-extensions` dropped). Chief: "sudah ada chromium" - this machine has
+  Chrome 154 and no Playwright Chromium, and branded Chrome 137+ ignores `--load-extension`.
+- Decision (Chief: "harus on the same side with RME page"): a transfer test keeps the ePuskesmas
+  page the active tab while the extension sends, as the real side panel sits beside it.
+- The side panel's Tatalaksana payload for the e2e lives in
+  `tests/e2e/side-panel-tatalaksana-transfer.ts`; the Vitest RME-transfer test asserts the side
+  panel still sends it, so the two halves stay joined.
+- Evidence: `test:e2e` 15 passed (was: could not start); commits 48ef1011, 8707bc66, 193b0a75.
+
 ## 2026-09-29 — Safety net as a timeline
 
 - Decision (Chief: "I think we better make it like diagram?"; he chose "Safety net timeline"):
