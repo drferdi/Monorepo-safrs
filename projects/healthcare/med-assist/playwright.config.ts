@@ -9,9 +9,9 @@ const AUTH_FILE = path.resolve(__dirname, 'tests/e2e/auth.json');
 const storageState = fs.existsSync(AUTH_FILE) ? AUTH_FILE : undefined;
 
 /**
- * Extension e2e must use Playwright Chromium (`channel: 'chromium'`).
- * Branded Chrome 137+ ignores `--load-extension`. Specs call
- * `launchExtensionContext()` from `tests/e2e/chrome-extension-launch.ts`.
+ * Specs call `launchExtensionContext()` from `tests/e2e/chrome-extension-launch.ts`, which starts
+ * Google Chrome and loads the unpacked build through the DevTools protocol (Chrome 137+ ignores
+ * `--load-extension`).
  */
 export default defineConfig({
   testDir: './tests/e2e',
@@ -31,7 +31,7 @@ export default defineConfig({
       use: {
         browserName: 'chromium',
         launchOptions: {
-          channel: 'chromium',
+          channel: 'chrome',
           headless: false,
           args: [
             `--load-extension=${EXTENSION_PATH}`,

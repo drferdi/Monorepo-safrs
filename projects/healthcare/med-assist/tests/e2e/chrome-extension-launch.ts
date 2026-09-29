@@ -2,8 +2,10 @@
 /**
  * Shared Playwright launch helpers for MV3 extension e2e.
  *
- * Branded Google Chrome 137+ ignores `--load-extension`. Use Playwright's
- * bundled Chromium (`channel: 'chromium'`) so unpacked extensions load.
+ * Branded Google Chrome 137+ ignores `--load-extension`, and this machine has Google Chrome
+ * rather than Playwright's bundled Chromium. The unpacked build is loaded through the DevTools
+ * protocol instead (`Extensions.loadUnpacked`, allowed by `--enable-unsafe-extension-debugging`);
+ * Playwright's default `--disable-extensions` is dropped so the loaded extension can run.
  */
 import fs from 'fs';
 import os from 'os';
@@ -36,17 +38,24 @@ export async function launchExtensionContext(
   const userDataDir =
     options.userDataDir ?? fs.mkdtempSync(path.join(os.tmpdir(), 'med-assist-e2e-'));
 
-  return chromium.launchPersistentContext(userDataDir, {
-    channel: 'chromium',
+  const context = await chromium.launchPersistentContext(userDataDir, {
+    channel: 'chrome',
     headless: false,
+    ignoreDefaultArgs: ['--disable-extensions'],
     args: [
-      `--disable-extensions-except=${extensionPath}`,
-      `--load-extension=${extensionPath}`,
+      '--enable-unsafe-extension-debugging',
       '--no-first-run',
       '--no-default-browser-check',
       ...(options.extraArgs ?? []),
     ],
   });
+  const browser = context.browser();
+  if (!browser) {
+    throw new Error('Chrome launched without a browser handle; cannot load the extension.');
+  }
+  const session = await browser.newBrowserCDPSession();
+  await session.send('Extensions.loadUnpacked', { path: extensionPath });
+  return context;
 }
 
 export async function getExtensionId(
