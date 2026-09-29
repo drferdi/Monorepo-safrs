@@ -3,6 +3,17 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — Safety net as a timeline
+
+- Decision (Chief: "I think we better make it like diagram?"; he chose "Safety net timeline"):
+  the red flags are drawn like the therapy cards' rail (`dx-timeline`): one orange warning node
+  (the Kontraindikasi triangle) per flag, joined by the hairline, the text beside it. No label
+  column ("Segera kembali") and no frame. Supersedes the row entry below; its appended
+  `.dx-tx-safety-list` rules in style.css are now unused (style.css is append-only).
+- Evidence: TatalaksanaStep test "draws the safety net as a timeline" (red first, then green);
+  five gates exit 0; token-guard PASS (existing classes only); harness: 5 warning nodes, no
+  horizontal overflow.
+
 ## 2026-09-29 — Safety net is one row without a frame
 
 - Decision (Chief, on the orange Safety net box: "Redesign"; he chose "Baris tanpa bingkai"): the
