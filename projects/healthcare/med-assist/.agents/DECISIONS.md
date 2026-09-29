@@ -3,6 +3,17 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — Safety net is one row without a frame
+
+- Decision (Chief, on the orange Safety net box: "Redesign"; he chose "Baris tanpa bingkai"): the
+  Safety net part is one Kv row like Tindak lanjut: term "Segera kembali", value the red flags,
+  one per line with a small orange dot (`--sentra-warning`). The orange framed box and its second
+  title "Segera kembali / rujuk bila" are gone. The KB text stays verbatim (through
+  `formatClinicalText`), so J20's complications ("Bronkopneumoni.", "Pneumonia.") still show as
+  they are written (HANDOFF open item 3).
+- Evidence: TatalaksanaStep test "shows the safety net as one row" (red first, then green);
+  five gates exit 0; token-guard PASS; harness: no frame, orange dots, no horizontal overflow.
+
 ## 2026-09-29 — Tindak lanjut is one row: "Kontrol 3 hari"
 
 - Decision (Chief: "Tindak lanjut simplified, cukup kontrol 3 hari atau sejenisnya"): the
