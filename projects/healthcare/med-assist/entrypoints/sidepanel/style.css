@@ -10480,3 +10480,8 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 }
 .dx-edu-card--flying { pointer-events: none; }
 .dx-edu-card__face.neu-select { background: var(--neu-inset-bg); cursor: inherit; }
+
+/* Edukasi swipe deck: cards share one grid cell, so the deck is as tall as its tallest card (hidden ones count) */
+.dx-edu-deck { display: grid; height: auto; padding-bottom: 24px; }
+.dx-edu-card { position: relative; inset: auto; grid-area: 1 / 1; }
+.dx-edu-card--flying { position: absolute; inset: 0 0 24px 0; }

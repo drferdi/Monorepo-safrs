@@ -275,6 +275,7 @@ export function EducationDeck({
       else setOrder([...deck.slice(1), topItem.key]);
       if (!reduceMotion) setFlights((f) => [...f, flight]);
     });
+    handoff.current = 0;
     x.jump(0);
   };
 
@@ -313,7 +314,10 @@ export function EducationDeck({
               reduceMotion={reduceMotion}
               onRelease={(offset, velocity) => {
                 const direction = throwDirection(offset, velocity);
-                if (direction === 0 || (direction === -1 && deck.length < 2)) void animate(x, 0, { ...SNAP_BACK, velocity });
+                if (direction === 0 || (direction === -1 && deck.length < 2)) {
+                  if (reduceMotion) x.jump(0);
+                  else void animate(x, 0, { ...SNAP_BACK, velocity });
+                }
                 else throwCard(direction, velocity);
               }}
             />
@@ -331,7 +335,12 @@ export function EducationDeck({
         <button type="button" className="diagnosis-text-button" disabled={deck.length < 2} onClick={() => throwCard(-1)}>
           <span aria-hidden="true">← </span>Lewati
         </button>
-        <button type="button" className="btn-ac-inline btn-ac-inline--sharp" onClick={() => throwCard(1)}>
+        <button type="button" className="btn-ac-inline btn-ac-inline--sharp"
+          onClick={(event) => {
+            if (event.detail > 1) return;
+            throwCard(1);
+          }}
+        >
           Berikan<span aria-hidden="true"> →</span>
         </button>
       </div>

@@ -84,6 +84,15 @@ describe('EducationDeck', () => {
     expect(within(screen.getByTestId('dx-tx-education-deck')).queryByText('Patuhi obat setiap hari.')).toBeNull();
   });
 
+  it('a double-click on "Berikan" gives one point only', () => {
+    const onGive = vi.fn();
+    render(<EducationDeck items={items} onGive={onGive} />);
+    const button = screen.getByRole('button', { name: 'Berikan' });
+    fireEvent.click(button, { detail: 1 });
+    fireEvent.click(button, { detail: 2 });
+    expect(onGive).toHaveBeenCalledTimes(1);
+  });
+
   it('renders no flying copy under reduced motion', () => {
     render(<EducationDeck items={items} onGive={vi.fn()} />);
     fireEvent.click(screen.getByRole('button', { name: 'Berikan' }));

@@ -406,7 +406,7 @@ describe('TatalaksanaStep', () => {
     expect(onToggleEducation).toHaveBeenLastCalledWith('a');
   });
 
-  it('gives the last point: the deck is gone and focus lands on "ubah"', () => {
+  it('when the last point becomes given, the deck is gone and focus lands on "ubah"', () => {
     const onToggleEducation = vi.fn();
     const one = (isSelected: boolean): DiagnosisPageProps['education'] => [
       { key: 'a', text: 'Patuhi obat setiap hari.', isSelected: false },
