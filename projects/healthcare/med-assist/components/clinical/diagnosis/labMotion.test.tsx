@@ -47,6 +47,17 @@ describe('EducationDeck', () => {
     expect(top().querySelector('.dx-edu-card__note')).toHaveTextContent('Jangan berhenti sendiri.');
   });
 
+  // Chief, 2026-09-29: "di card masing masing kasih logo Sentra".
+  it('carries the Sentra logomark on every card, as decoration', () => {
+    render(<EducationDeck items={items} onToggle={vi.fn()} />);
+    const logos = screen.getAllByTestId('dx-edu-card').map((card) => card.querySelector('img.dx-edu-card__logo'));
+    expect(logos).toHaveLength(3);
+    for (const logo of logos) {
+      expect(logo).toHaveAttribute('src', '/icon/sentra-hai-logomark.png');
+      expect(logo).toHaveAttribute('alt', '');
+    }
+  });
+
   it('a swipe either way brings the next point on top and gives nothing', () => {
     const onToggle = vi.fn();
     render(<EducationDeck items={items} onToggle={onToggle} />);

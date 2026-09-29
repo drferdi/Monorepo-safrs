@@ -421,7 +421,7 @@ function FlyingCard({ flight, onLanded }: { flight: Flight; onLanded: () => void
   );
 }
 
-/** The reference card: its number on top, the point's first sentence and the rest below; the tick gives it. */
+/** The reference card: its number on top, the Sentra logomark (Chief, 2026-09-29), the point's first sentence and the rest below; the tick gives it. */
 function CardFace({
   item,
   number,
@@ -449,6 +449,7 @@ function CardFace({
           <PenCheck checked={item.isSelected} seedText={item.key} />
         </button>
       </div>
+      <img src="/icon/sentra-hai-logomark.png" alt="" draggable={false} className="dx-edu-card__logo" />
       <div className="flex flex-col gap-2">
         <p className="diagnosis-row-title dx-edu-card__title">{title}</p>
         {note ? <p className="diagnosis-row-meta dx-edu-card__note">{note}</p> : null}

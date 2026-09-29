@@ -10521,3 +10521,6 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 .dx-edu-nav svg { width: 16px; height: 16px; }
 .dx-edu-nav:disabled { opacity: 0.4; cursor: default; }
 .dx-edu-card[data-hidden='true'] { pointer-events: none; }
+
+/* Edukasi card: the Sentra logomark between the number and the point (Chief, 2026-09-29: "di card masing masing kasih logo Sentra") */
+.dx-edu-card__logo { align-self: center; width: 56px; height: auto; pointer-events: none; }
