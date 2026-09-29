@@ -341,4 +341,72 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
       vi.unstubAllGlobals();
     }
   });
+
+  // End-to-end check (2026-09-29): one visit through "Isi otomatis RME" (the second send path)
+  // carries the diagnosis, the chosen medicine, the given education and the chosen interval.
+  it('sends the whole Tatalaksana through "Isi otomatis RME": diagnosis, medicine, education given and "Kontrol 2 minggu"', async () => {
+    const given = 'Istirahat cukup, jangan bekerja/sekolah dulu hingga 24 jam bebas demam.';
+    const notGiven = 'Minum air putih minimal 2 liter/hari.';
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () =>
+        new Response(
+          JSON.stringify({
+            penyakit: [
+              {
+                icd10: 'J02',
+                definisi: 'Faringitis.',
+                red_flags: ['Sesak napas'],
+                advanced_guideline: { kie_edukasi: { untuk_pasien: [notGiven, given] } },
+              },
+            ],
+          })
+        )
+      )
+    );
+    try {
+      renderSurface();
+      const card = (await screen.findByText('J02 - Faringitis akut')).closest('[data-testid="dx-flow-card"]');
+      if (!card) throw new Error('diagnosis card not found');
+      fireEvent.click(card);
+
+      const medication = (await screen.findByText('Amoksisilin')).closest('[data-testid="dx-tx-visit-med"]');
+      if (!medication) throw new Error('medication row not found');
+      fireEvent.click(medication);
+
+      const education = await screen.findByTestId('dx-tx-education');
+      await within(education).findAllByTestId('dx-edu-card');
+      fireEvent.click(within(education).getByRole('button', { name: 'Geser ke kanan' }));
+      await waitFor(() =>
+        expect(within(education).getAllByTestId('dx-edu-card').find((c) => c.getAttribute('data-top') === 'true')).toHaveTextContent(given)
+      );
+      fireEvent.click(within(education).getByRole('button', { name: 'Berikan edukasi ini' }));
+      fireEvent.change(within(screen.getByTestId('dx-tx-follow-up')).getByRole('combobox', { name: 'Kontrol' }), {
+        target: { value: '2 minggu' },
+      });
+      expect(screen.getByTestId('dx-tx-safety-net')).toHaveTextContent('Sesak napas');
+      expect(screen.getByTestId('dx-tx-summary')).toHaveTextContent('Edukasi1 poin');
+
+      await waitFor(() => expect(screen.getByTestId('dx-tx-finish')).toBeEnabled());
+      fireEvent.click(screen.getByTestId('dx-tx-finish'));
+      fireEvent.click(await screen.findByRole('button', { name: /Isi otomatis RME/ }));
+
+      await waitFor(() => {
+        expect(mockSendMessage).toHaveBeenCalledWith(
+          'transferRME',
+          expect.objectContaining({
+            anamnesa: expect.objectContaining({
+              lainnya: expect.objectContaining({ edukasi: given, rencana_tindakan: 'Kontrol 2 minggu' }),
+            }),
+            diagnosa: expect.objectContaining({ icd_x: expect.stringMatching(/^J02/) }),
+            resep: expect.objectContaining({
+              medications: expect.arrayContaining([expect.objectContaining({ nama_obat: expect.stringMatching(/amoksisilin/i) })]),
+            }),
+          })
+        );
+      });
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
 });
