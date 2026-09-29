@@ -15,8 +15,8 @@ import { DiagnosisStepFlow } from './diagnosis/DiagnosisStepFlow';
 import { buildEducationItems } from './diagnosis/education';
 import {
   buildChronicMedications,
-  buildFollowUp,
   buildSafetyNet,
+  CONTROL_AFTER_OPTIONS,
   formatDose,
   type InteractionCheckView,
 } from './diagnosis/tatalaksana';
@@ -661,6 +661,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
   const [selectedMedicationKeys, setSelectedMedicationKeys] = useState<string[]>([]);
   // Education points the doctor ticked as given (by text); only these go to the RME.
   const [selectedEducationKeys, setSelectedEducationKeys] = useState<string[]>([]);
+  const [controlAfter, setControlAfter] = useState<string>(CONTROL_AFTER_OPTIONS[0]);
   // Proposals the doctor removed on the Tatalaksana page ("Hapus"); they leave the prescription.
   const [dismissedMedicationKeys, setDismissedMedicationKeys] = useState<string[]>([]);
   const [interactionCheck, setInteractionCheck] = useState<InteractionCheckView>({
@@ -1543,20 +1544,6 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     [chronicTherapies, patientVisits]
   );
   const chosenCodes = useMemo(() => selectedDiagnoses.map((diagnosis) => diagnosis.icd_x), [selectedDiagnoses]);
-  const followUp = useMemo(
-    () =>
-      buildFollowUp(
-        chosenCodes,
-        [
-          ...confirmedChronicDiagnoses.map((item) => ({ code: item.icd_x, name: item.nama })),
-          ...recurrent
-            .filter((candidate) => candidate.label === 'Kronis')
-            .map((candidate) => ({ code: candidate.icd, name: candidate.name })),
-        ],
-        diseaseNotes
-      ),
-    [chosenCodes, confirmedChronicDiagnoses, recurrent, diseaseNotes]
-  );
   const safetyNet = useMemo(() => buildSafetyNet(chosenCodes, diseaseNotes), [chosenCodes, diseaseNotes]);
   const interactionNames = useMemo(
     () =>
@@ -2004,7 +1991,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       trajectory,
       hasVisitHistory,
       edukasi: selectedEducationTexts,
-      rencanaTindakan: followUp.visit,
+      rencanaTindakan: [`Kontrol ${controlAfter}`],
     });
 
     const scopedReasonCodes = filterReasonCodesForStep(mapped.reasonCodes, targetStep);
@@ -2100,7 +2087,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       trajectory,
       hasVisitHistory,
       edukasi: selectedEducationTexts,
-      rencanaTindakan: followUp.visit,
+      rencanaTindakan: [`Kontrol ${controlAfter}`],
     });
 
     const requestId = `rme-auto-${Date.now()}`;
@@ -2347,7 +2334,8 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         chronicMedications={chronicMedications}
         interactionCheck={interactionCheck}
         allergies={allergies}
-        followUp={followUp}
+        controlAfter={controlAfter}
+        onControlAfterChange={setControlAfter}
         safetyNet={safetyNet}
         onDismissMedication={dismissMedication}
         onAutoFillRME={() => {

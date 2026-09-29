@@ -6,6 +6,7 @@ import type { DiagnosisMedicationView, DiagnosisPageViewModel } from '../diagnos
 import { EducationDeck, HoldButton, PenCheck, SelectionTrace } from '../labMotion';
 import { standardDoseFor } from '../standardDose';
 import {
+  CONTROL_AFTER_OPTIONS,
   ROLE_ORDER,
   allergyMatches,
   explainInteraction,
@@ -36,7 +37,8 @@ type Props = Pick<
   | 'chronicMedications'
   | 'interactionCheck'
   | 'allergies'
-  | 'followUp'
+  | 'controlAfter'
+  | 'onControlAfterChange'
   | 'safetyNet'
   | 'onDismissMedication'
 > & {
@@ -550,7 +552,8 @@ export function TatalaksanaStep({
   chronicMedications,
   interactionCheck,
   allergies,
-  followUp,
+  controlAfter,
+  onControlAfterChange,
   safetyNet,
   onDismissMedication,
   skipped,
@@ -717,16 +720,27 @@ export function TatalaksanaStep({
       </div>
 
       <Part label="Tindak lanjut" testId="dx-tx-follow-up">
-        {followUp.visit.length > 0 || followUp.routine.length > 0 ? (
-          <Kv
-            rows={[
-              ...followUp.visit.map((text) => ({ term: 'Kontrol', value: text })),
-              ...followUp.routine.map((entry) => ({ term: `Kontrol rutin · ${entry.name}`, value: entry.text })),
-            ]}
-          />
-        ) : (
-          <p className="diagnosis-row-meta">Basis pengetahuan belum punya jadwal kontrol untuk diagnosis ini.</p>
-        )}
+        <Kv
+          rows={[
+            {
+              term: 'Kontrol',
+              value: (
+                <select
+                  aria-label="Kontrol"
+                  value={controlAfter}
+                  onChange={(event) => onControlAfterChange(event.target.value)}
+                  className="neu-select diagnosis-input dx-tx-control-after"
+                >
+                  {CONTROL_AFTER_OPTIONS.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              ),
+            },
+          ]}
+        />
       </Part>
 
       <Part label="Safety net" testId="dx-tx-safety-net">
@@ -754,14 +768,6 @@ export function TatalaksanaStep({
               value: skipped && chosen.length === 0 ? 'tanpa terapi tambahan' : `${chosen.length} obat`,
             },
             { term: 'Edukasi', value: `${given} poin` },
-            // A count, not the text again: Tindak lanjut above already says it (one page, one telling).
-            {
-              term: 'Tindak lanjut',
-              value:
-                followUp.visit.length + followUp.routine.length > 0
-                  ? `${followUp.visit.length + followUp.routine.length} jadwal kontrol`
-                  : '-',
-            },
             {
               term: 'Safety check',
               value:

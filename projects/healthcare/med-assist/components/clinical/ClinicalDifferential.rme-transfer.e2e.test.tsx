@@ -274,7 +274,8 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
 
   // Migrated (2026-09-29): education is a part of Tatalaksana (every point is a card of the
   // deck: a swipe brings the next one, the tick on a card gives it), the Kontrol row left the education list for Tindak lanjut, and the
-  // follow-up now reaches the anamnesis as rencana_tindakan.
+  // follow-up now reaches the anamnesis as rencana_tindakan: since Chief's "cukup kontrol 3 hari atau sejenisnya" it is the
+  // interval chosen under Tindak lanjut ("Kontrol 1 minggu" here), no longer the knowledge-base paragraph.
   it('carries the education ticked for the chosen diagnosis into the RME anamnesis, and only that', async () => {
     const given = 'Istirahat cukup, jangan bekerja/sekolah dulu hingga 24 jam bebas demam.';
     const notGiven = 'Minum air putih minimal 2 liter/hari.';
@@ -316,7 +317,9 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
       await waitFor(() =>
         expect(within(education).getByRole('button', { name: 'Batalkan edukasi ini' })).toHaveAttribute('aria-pressed', 'true')
       );
-      expect(screen.getByTestId('dx-tx-follow-up')).toHaveTextContent('Kontrol jika tidak membaik dalam 7-10 hari.');
+      const interval = within(screen.getByTestId('dx-tx-follow-up')).getByRole('combobox', { name: 'Kontrol' });
+      expect(interval).toHaveValue('3 hari');
+      fireEvent.change(interval, { target: { value: '1 minggu' } });
 
       fireEvent.click(screen.getByTestId('dx-tx-finish'));
       fireEvent.click(await screen.findByRole('button', { name: 'Anamnesis' }));
@@ -328,7 +331,7 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
             anamnesa: expect.objectContaining({
               lainnya: expect.objectContaining({
                 edukasi: given,
-                rencana_tindakan: 'Kontrol jika tidak membaik dalam 7-10 hari.',
+                rencana_tindakan: 'Kontrol 1 minggu',
               }),
             }),
           })

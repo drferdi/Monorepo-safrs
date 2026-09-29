@@ -29,12 +29,11 @@ export interface InteractionCheckView {
   interactions: DrugInteraction[];
 }
 
-export interface FollowUpView {
-  /** Follow-up for the diagnoses chosen at this visit. */
-  visit: string[];
-  /** Routine follow-up for the patient's chronic conditions. */
-  routine: Array<{ name: string; text: string }>;
-}
+/**
+ * The follow-up interval the doctor picks under Tindak lanjut; it reaches the RME as "Kontrol <interval>"
+ * (Chief, 2026-09-29: "Tindak lanjut simplified, cukup kontrol 3 hari atau sejenisnya"). The first is the default.
+ */
+export const CONTROL_AFTER_OPTIONS = ['3 hari', '1 minggu', '2 minggu', '1 bulan'] as const;
 
 /** A medicine in the Puskesmas stock (public/data/stok_obat.json), as the name field offers it. */
 export interface StockMatch {
@@ -246,27 +245,6 @@ export function reviewSafety(input: {
       ...input.visit.flatMap((medication) => medication.contraindications.map((reason) => ({ drug: medication.name, reason }))),
     ],
   };
-}
-
-/**
- * Follow-up from the knowledge base (`tindak_lanjut.kontrol`): for the chosen diagnoses, and as
- * routine control for each chronic condition not already chosen. Verbatim; nothing is composed.
- */
-export function buildFollowUp(
-  chosen: string[],
-  chronic: Array<{ code: string; name: string }>,
-  notes: Map<string, DiseaseNote>
-): FollowUpView {
-  const root = (code: string) => code.trim().toUpperCase().slice(0, 3);
-  const chosenRoots = new Set(chosen.map(root));
-  const visit = Array.from(new Set(chosen.flatMap((code) => diseaseNoteFor(notes, code)?.followUp ?? [])));
-  const routine = chronic
-    .filter((condition) => !chosenRoots.has(root(condition.code)))
-    .flatMap((condition) => {
-      const text = diseaseNoteFor(notes, condition.code)?.followUp;
-      return text && !visit.includes(text) ? [{ name: condition.name, text }] : [];
-    });
-  return { visit, routine };
 }
 
 /** The chosen diagnoses' red flags from the knowledge base, verbatim, each once. */

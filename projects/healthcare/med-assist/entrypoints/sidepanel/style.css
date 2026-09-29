@@ -10524,3 +10524,7 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 
 /* Edukasi card: the Sentra logomark between the number and the point (Chief, 2026-09-29: "di card masing masing kasih logo Sentra") */
 .dx-edu-card__logo { align-self: center; width: 56px; height: auto; pointer-events: none; }
+
+/* Tindak lanjut: one row, "Kontrol" and the interval picked (Chief, 2026-09-29: "cukup kontrol 3 hari atau sejenisnya") */
+.diagnosis-input.dx-tx-control-after { width: auto; cursor: pointer; }
+.dx-tx-kv:has(.dx-tx-control-after) { align-items: center; }

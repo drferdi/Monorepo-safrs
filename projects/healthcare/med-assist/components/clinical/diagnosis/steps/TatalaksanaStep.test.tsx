@@ -62,7 +62,8 @@ function props(overrides: Partial<StepProps> = {}): StepProps {
     chronicMedications: [amlodipin],
     interactionCheck: { state: 'done', interactions: [] },
     allergies: [],
-    followUp: { visit: [], routine: [] },
+    controlAfter: '3 hari',
+    onControlAfterChange: vi.fn(),
     safetyNet: [],
     onDismissMedication: vi.fn(),
     skipped: false,
@@ -411,26 +412,25 @@ describe('TatalaksanaStep', () => {
   });
 
   // Carries EducationStep "says so when the knowledge base has no education for the diagnosis".
-  it('says so when the knowledge base has no education, follow-up or red flags, instead of composing any', () => {
+  it('says so when the knowledge base has no education or red flags, instead of composing any', () => {
     render(<TatalaksanaStep {...props()} />);
     expect(screen.queryByTestId('dx-tx-education-deck')).toBeNull();
     expect(screen.getByText('Basis pengetahuan belum punya edukasi untuk diagnosis ini.')).toBeInTheDocument();
-    expect(screen.getByText('Basis pengetahuan belum punya jadwal kontrol untuk diagnosis ini.')).toBeInTheDocument();
     expect(screen.getByText('Basis pengetahuan belum mencatat kapan pasien harus segera kembali.')).toBeInTheDocument();
   });
 
-  it('shows the follow-up for this visit and the routine control per chronic condition, and the safety net', () => {
-    render(
-      <TatalaksanaStep
-        {...props({
-          followUp: { visit: ['Kontrol 3 hari bila demam menetap.'], routine: [{ name: 'Diabetes melitus tipe 2', text: 'Kontrol tiap bulan.' }] },
-          safetyNet: ['Sesak napas', 'Penurunan kesadaran'],
-        })}
-      />
-    );
+  // Chief, 2026-09-29: "Tindak lanjut simplified, cukup kontrol 3 hari atau sejenisnya".
+  it('says the follow-up in one short row, "Kontrol 3 hari", with a choice of interval, and shows the safety net', () => {
+    const onControlAfterChange = vi.fn();
+    render(<TatalaksanaStep {...props({ onControlAfterChange, safetyNet: ['Sesak napas', 'Penurunan kesadaran'] })} />);
     const followUp = screen.getByTestId('dx-tx-follow-up');
-    expect(followUp).toHaveTextContent('KontrolKontrol 3 hari bila demam menetap.');
-    expect(followUp).toHaveTextContent('Kontrol rutin · Diabetes melitus tipe 2Kontrol tiap bulan.');
+    const interval = within(followUp).getByRole('combobox', { name: 'Kontrol' });
+    expect(interval).toHaveValue('3 hari');
+    expect(within(interval).getAllByRole('option').map((option) => option.textContent)).toEqual(['3 hari', '1 minggu', '2 minggu', '1 bulan']);
+    expect(followUp).toHaveTextContent(/^Tindak lanjutKontrol/);
+    fireEvent.change(interval, { target: { value: '1 minggu' } });
+    expect(onControlAfterChange).toHaveBeenCalledWith('1 minggu');
+    expect(screen.getByTestId('dx-tx-summary')).not.toHaveTextContent('Tindak lanjut');
     const net = screen.getByTestId('dx-tx-safety-net');
     expect(net).toHaveTextContent('Segera kembali / rujuk bila');
     expect(within(net).getAllByRole('listitem')).toHaveLength(2);

@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vitest';
 import {
   allergyMatches,
   buildChronicMedications,
-  buildFollowUp,
   buildSafetyNet,
   explainInteraction,
   formatDose,
@@ -127,30 +126,13 @@ describe('reviewSafety', () => {
   });
 });
 
-describe('buildFollowUp and buildSafetyNet', () => {
+describe('buildSafetyNet', () => {
   const notes = new Map<string, DiseaseNote>([
     ['J06', note({ followUp: 'Kontrol bila tidak membaik 7-10 hari.', redFlags: ['Sesak nafas berat', 'Stridor'] })],
     ['J02', note({ followUp: 'Kontrol bila tidak membaik 7-10 hari.', redFlags: ['Stridor', 'Trismus'] })],
     ['I10', note({ followUp: 'Kontrol 2-4 minggu, lalu tiap 3 bulan.' })],
     ['E11', note({})],
   ]);
-
-  it('gives the chosen diagnosis\'s follow-up once and routine control for chronic conditions not chosen', () => {
-    expect(
-      buildFollowUp(
-        ['J06.9', 'J02'],
-        [
-          { code: 'I10', name: 'Hipertensi esensial' },
-          { code: 'E11', name: 'Diabetes melitus tipe 2' },
-          { code: 'J06', name: 'ISPA' },
-        ],
-        notes
-      )
-    ).toEqual({
-      visit: ['Kontrol bila tidak membaik 7-10 hari.'],
-      routine: [{ name: 'Hipertensi esensial', text: 'Kontrol 2-4 minggu, lalu tiap 3 bulan.' }],
-    });
-  });
 
   it('lists the chosen diagnoses\' red flags verbatim, each once, and nothing for a code without them', () => {
     expect(buildSafetyNet(['J06.9', 'J02'], notes)).toEqual(['Sesak nafas berat', 'Stridor', 'Trismus']);

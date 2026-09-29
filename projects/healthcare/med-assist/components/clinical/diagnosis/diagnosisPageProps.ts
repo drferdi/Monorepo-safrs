@@ -1,5 +1,5 @@
 import type { AssessmentSnapshot } from './assessmentDelta';
-import type { ChronicMedicationView, FollowUpView, InteractionCheckView } from './tatalaksana';
+import type { ChronicMedicationView, InteractionCheckView } from './tatalaksana';
 import type { DiagnosisPageViewModel } from './diagnosisViewModel';
 
 import type { BedsideFindingRecord } from '@/types/api';
@@ -97,7 +97,9 @@ export interface DiagnosisPageProps {
   interactionCheck: InteractionCheckView;
   /** The patient's allergies, for the contraindication check. */
   allergies: string[];
-  followUp: FollowUpView;
+  /** Tindak lanjut: the follow-up interval ("3 hari"), sent to the RME as "Kontrol 3 hari". */
+  controlAfter: string;
+  onControlAfterChange: (value: string) => void;
   /** Red flags of the chosen diagnoses, for "Segera kembali / rujuk bila". */
   safetyNet: string[];
   /** Removes a proposal from the page and from the prescription ("Hapus"). */
