@@ -6,8 +6,6 @@ import { TransferStepTracker } from './TransferStepTracker';
 
 export function RMETransferPanel({
   viewModel,
-  onAutoFillRME,
-  onTransferDiagnosis,
   onTransferResep,
   onTransferAnamnesa,
   onRetryTransfer,
@@ -15,8 +13,6 @@ export function RMETransferPanel({
 }: Pick<
   DiagnosisPageProps,
   | 'viewModel'
-  | 'onAutoFillRME'
-  | 'onTransferDiagnosis'
   | 'onTransferResep'
   | 'onTransferAnamnesa'
   | 'onRetryTransfer'
@@ -24,7 +20,6 @@ export function RMETransferPanel({
 >) {
   const transfer = viewModel.transfer;
   const canTransferClinicalPayload = !viewModel.primary.isInsufficient;
-  const diagnosisReady = canTransferClinicalPayload && transfer.diagnosisReady;
   const resepReady = canTransferClinicalPayload && transfer.resepReady;
   const canAutoFill = canTransferClinicalPayload && transfer.canAutoFill;
   const isRunning = transfer.state === 'running';
@@ -34,7 +29,6 @@ export function RMETransferPanel({
     <>
       <p className="diagnosis-transfer-status">
         {[
-          diagnosisReady ? 'Diagnosis siap' : 'Diagnosis belum siap',
           resepReady ? 'Resep siap' : 'Resep belum siap',
           `Obat ${transfer.medicationSelectionLabel}`,
         ].join(' · ')}
@@ -50,16 +44,25 @@ export function RMETransferPanel({
         <ReadOnlyPanel>{formatClinicalText(transfer.resultSummary)}</ReadOnlyPanel>
       ) : null}
 
+      {/* Each button fills one ePuskesmas page; open that page first. */}
       <div className="diagnosis-transfer-primary">
         <button
           type="button"
           className="action-btn action-btn--primary diagnosis-autofill-btn"
           data-state={transfer.state}
-          disabled={!canAutoFill || isRunning}
-          onClick={onAutoFillRME}
+          disabled={!resepReady || isRunning}
+          onClick={onTransferResep}
         >
-          <span className="diagnosis-autofill-btn__label">Isi otomatis RME</span>
+          <span className="diagnosis-autofill-btn__label">Isi resep ke RME</span>
           <span className="diagnosis-autofill-btn__icon" aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          className="action-btn action-btn--secondary"
+          disabled={!canAutoFill || isRunning}
+          onClick={onTransferAnamnesa}
+        >
+          Isi anamnesa ke RME
         </button>
         {isRunning ? (
           <button type="button" className="action-btn action-btn--secondary" onClick={onCancelTransfer}>
@@ -75,39 +78,13 @@ export function RMETransferPanel({
 
       <details className="diagnosis-details diagnosis-details--inline">
         <summary>Rincian transfer</summary>
-        <div className="diagnosis-transfer-secondary">
-          <button
-            type="button"
-            className="action-btn action-btn--secondary"
-            disabled={!diagnosisReady || isRunning}
-            onClick={onTransferDiagnosis}
-          >
-            Kirim diagnosis
-          </button>
-          <button
-            type="button"
-            className="action-btn action-btn--secondary"
-            disabled={!resepReady || isRunning}
-            onClick={onTransferResep}
-          >
-            Kirim resep
-          </button>
-          <button
-            type="button"
-            className="action-btn action-btn--secondary"
-            disabled={!canAutoFill || isRunning}
-            onClick={onTransferAnamnesa}
-          >
-            Anamnesis
-          </button>
-        </div>
         <TransferStepTracker steps={transfer.steps} />
       </details>
     </>
   );
 }
 
-function ReadOnlyPanel({
+export function ReadOnlyPanel({
   children,
   tone = 'default',
 }: {

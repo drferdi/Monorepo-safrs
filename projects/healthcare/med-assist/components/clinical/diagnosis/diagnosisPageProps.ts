@@ -93,6 +93,9 @@ export interface DiagnosisPageProps {
   onToggleEducation: (key: string) => void;
   /** Tatalaksana: the patient's chronic medications from the visit history. */
   chronicMedications: ChronicMedicationView[];
+  /** Chronic medications continued in this visit (their `key`); they go to the resep. */
+  continuedChronicKeys: string[];
+  onToggleChronicMedication: (key: string) => void;
   /** Drug interactions over the chronic and the proposed medications (local DDInter). */
   interactionCheck: InteractionCheckView;
   /** The patient's allergies, for the contraindication check. */
@@ -104,7 +107,6 @@ export interface DiagnosisPageProps {
   safetyNet: string[];
   /** Removes a proposal from the page and from the prescription ("Hapus"). */
   onDismissMedication: (key: string) => void;
-  onAutoFillRME: () => void;
   onTransferDiagnosis: () => void;
   onTransferResep: () => void;
   onTransferAnamnesa: () => void;

@@ -4,6 +4,7 @@ import {
   allergyMatches,
   buildChronicMedications,
   buildSafetyNet,
+  chronicContinuation,
   explainInteraction,
   formatDose,
   interactionsFor,
@@ -51,6 +52,28 @@ describe('buildChronicMedications', () => {
       '2026-07-10T08:00:00Z',
       '2026-06-10T08:00:00Z',
     ]);
+  });
+
+  // Chief, 2026-09-29: a chronic card can be continued in this visit, so the latest regimen is kept whole.
+  it('keeps the latest regimen, which a continuation in this visit carries to the prescription', () => {
+    const [amlodipin] = buildChronicMedications(['Amlodipin'], visits);
+    // The dose is the signa (times a day x units a take), as the RME resep takes it; the strength stays in the name.
+    expect(amlodipin.regimen).toEqual({ dosis: '1x1', aturanPakai: 'Sesudah makan' });
+    expect(chronicContinuation(amlodipin)).toEqual({
+      nama_obat: 'Amlodipin',
+      dosis: '1x1',
+      aturan_pakai: 'Sesudah makan',
+      durasi: '30 hari',
+      rationale: 'Lanjutan terapi kronis.',
+      safety_check: 'safe',
+      isChronicContinuation: true,
+    });
+  });
+
+  it('continues nothing when no visit shows the regimen', () => {
+    const [simvastatin] = buildChronicMedications(['Simvastatin'], visits);
+    expect(simvastatin.regimen).toBeUndefined();
+    expect(chronicContinuation(simvastatin)).toBeNull();
   });
 
   it('keeps a name the history text does not show, without dose or indication', () => {

@@ -428,12 +428,18 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     // chosen and no medication, "Kirim diagnosis" is offered and "Kirim resep" is disabled.
     // Migrated (2026-09-29): "Lanjut tanpa obat" + "Lanjut" became Tatalaksana's "Lanjut tanpa
     // terapi tambahan" + "Selesai".
+    // Migrated (Chief, 2026-09-29, ePuskesmas Diagnosa page apart from the therapy): the diagnosis
+    // is offered on its own RME Diagnosa step right after the pick ("Kirim diagnosis" on the RME
+    // step became "Isi diagnosis ke RME" there), passed with "Lanjut tanpa mengisi"; the last step
+    // is "RME Terapi" (was "RME") and "Kirim resep" is its "Isi resep ke RME".
     fireEvent.click(primaryCard);
+    const rmeDiagnosisStep = await within(workspace).findByLabelText('RME Diagnosa');
+    expect(within(rmeDiagnosisStep).getByRole('button', { name: 'Isi diagnosis ke RME' })).toBeEnabled();
+    fireEvent.click(within(rmeDiagnosisStep).getByRole('button', { name: 'Lanjut tanpa mengisi' }));
     fireEvent.click(await within(workspace).findByRole('button', { name: 'Lanjut tanpa terapi tambahan' }));
     fireEvent.click(within(workspace).getByTestId('dx-tx-finish'));
-    const rmeStep = await within(workspace).findByLabelText('RME');
-    expect(within(rmeStep).getByRole('button', { name: 'Kirim diagnosis' })).toBeTruthy();
-    expect(within(rmeStep).getByRole('button', { name: 'Kirim resep' })).toBeDisabled();
+    const rmeStep = await within(workspace).findByLabelText('RME Terapi');
+    expect(within(rmeStep).getByRole('button', { name: 'Isi resep ke RME' })).toBeDisabled();
   });
 
   // Chief, 2026-09-29: "tambah obat belum jalan?" — through the real page state, a manual
@@ -462,6 +468,8 @@ describe('ClinicalDifferential final diagnosis support page', () => {
       .parentElement?.querySelector<HTMLElement>('[data-testid="dx-flow-card"]');
     if (!primaryCard) throw new Error('no card under the primary label');
     fireEvent.click(primaryCard);
+    // Migrated (Chief, 2026-09-29): the RME Diagnosa step comes between the pick and Tatalaksana.
+    fireEvent.click(await within(workspace).findByRole('button', { name: 'Lanjut tanpa mengisi' }));
     await within(workspace).findByText('Paracetamol');
 
     const add = () => {

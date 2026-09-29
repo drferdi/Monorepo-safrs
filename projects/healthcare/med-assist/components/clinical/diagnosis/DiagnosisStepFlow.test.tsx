@@ -102,11 +102,13 @@ function makeViewModel(
       error: '',
       resultSummary: null,
       readinessMessage: null,
+      // Fixture (2026-09-29): the diagnosis is already in the RME (was 'idle'), so the flow goes
+      // past RME Diagnosa to Tatalaksana as before; withDiagnosaTransfer('idle') tests that step.
       steps: [
         {
           key: 'diagnosa',
           label: 'Diagnosis',
-          state: 'idle',
+          state: 'success',
           detail: 'ok:0 fail:0 skip:0',
           reason: null,
           message: null,
@@ -159,13 +161,14 @@ function makeProps(overrides: Partial<DiagnosisPageProps> = {}): DiagnosisPagePr
     education: [],
     onToggleEducation: vi.fn(),
     chronicMedications: [],
+    continuedChronicKeys: [],
+    onToggleChronicMedication: vi.fn(),
     interactionCheck: { state: 'done', interactions: [] },
     allergies: [],
     controlAfter: '3 hari',
     onControlAfterChange: vi.fn(),
     safetyNet: [],
     onDismissMedication: vi.fn(),
-    onAutoFillRME: vi.fn(),
     onTransferDiagnosis: vi.fn(),
     onTransferResep: vi.fn(),
     onTransferAnamnesa: vi.fn(),
@@ -175,6 +178,13 @@ function makeProps(overrides: Partial<DiagnosisPageProps> = {}): DiagnosisPagePr
   };
 }
 
+/** The view model with the RME diagnosa step in `state` (the last transfer run's steps). */
+function withDiagnosaTransfer(state: string): DiagnosisPageProps['viewModel'] {
+  const vm = makeViewModel();
+  vm.transfer = { ...vm.transfer, steps: vm.transfer.steps.map((step) => ({ ...step, state })) };
+  return vm;
+}
+
 /** Closes Tatalaksana from its "Selesai", which first morphs into its check. */
 async function finishTatalaksana() {
   fireEvent.click(screen.getByTestId('dx-tx-finish'));
@@ -182,6 +192,52 @@ async function finishTatalaksana() {
 }
 
 describe('DiagnosisStepFlow', () => {
+  // Chief, 2026-09-29: ePuskesmas has the Diagnosa page apart from the therapy, so the RME fill
+  // follows it - the diagnosis goes in right after it is chosen, then Tatalaksana, then the resep.
+  it('asks for the diagnosis in the RME right after it is chosen, before Tatalaksana', () => {
+    const onTransferDiagnosis = vi.fn();
+    render(<DiagnosisStepFlow {...makeProps({ viewModel: withDiagnosaTransfer('idle'), onTransferDiagnosis })} />);
+    const step = screen.getByRole('heading', { name: 'RME Diagnosa' });
+    expect(screen.getByText('3 / 5')).toBeInTheDocument();
+    const diagnosisReceipt = screen.getByTestId('dx-flow-receipt-diagnosis');
+    expect(diagnosisReceipt.compareDocumentPosition(step) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(screen.queryByRole('heading', { name: 'Tatalaksana' })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Isi diagnosis ke RME' }));
+    expect(onTransferDiagnosis).toHaveBeenCalledTimes(1);
+  });
+
+  it('moves on to Tatalaksana once the diagnosis is in the RME, and keeps that through a later transfer', () => {
+    const { rerender } = render(<DiagnosisStepFlow {...makeProps({ viewModel: withDiagnosaTransfer('idle') })} />);
+    rerender(<DiagnosisStepFlow {...makeProps({ viewModel: withDiagnosaTransfer('success') })} />);
+    expect(screen.getByRole('heading', { name: 'Tatalaksana' })).toBeInTheDocument();
+    expect(screen.getByTestId('dx-flow-receipt-rmeDiagnosis')).toHaveTextContent('terkirim');
+    // The resep run resets the step list; the diagnosis stays sent.
+    rerender(<DiagnosisStepFlow {...makeProps({ viewModel: withDiagnosaTransfer('pending') })} />);
+    expect(screen.getByRole('heading', { name: 'Tatalaksana' })).toBeInTheDocument();
+  });
+
+  it('moves on without filling from "Lanjut tanpa mengisi"', () => {
+    render(<DiagnosisStepFlow {...makeProps({ viewModel: withDiagnosaTransfer('idle') })} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Lanjut tanpa mengisi' }));
+    expect(screen.getByRole('heading', { name: 'Tatalaksana' })).toBeInTheDocument();
+    expect(screen.getByTestId('dx-flow-receipt-rmeDiagnosis')).toHaveTextContent('dilewati');
+  });
+
+  it('ends on RME Terapi: the resep and the anamnesa, each to its own ePuskesmas page, and no second door for the diagnosis', async () => {
+    const onTransferResep = vi.fn();
+    const onTransferAnamnesa = vi.fn();
+    render(<DiagnosisStepFlow {...makeProps({ onTransferResep, onTransferAnamnesa })} />);
+    await finishTatalaksana();
+    expect(screen.getByRole('heading', { name: 'RME Terapi' })).toBeInTheDocument();
+    expect(screen.getByText('5 / 5')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Isi resep ke RME' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Isi anamnesa ke RME' }));
+    expect(onTransferResep).toHaveBeenCalledTimes(1);
+    expect(onTransferAnamnesa).toHaveBeenCalledTimes(1);
+    expect(screen.queryByRole('button', { name: /Isi otomatis RME/ })).toBeNull();
+    expect(screen.queryByRole('button', { name: /diagnosis ke RME|Kirim diagnosis/ })).toBeNull();
+  });
+
   it('shows no danger-sign list, the finished Temuan as a receipt, Diagnosis active and nothing of Terapi or RME on this first page', () => {
     const vm = makeViewModel({ therapy: { ...makeViewModel().therapy, selectedDiagnosisCount: 0, selectedMedicationCount: 0 } });
     render(<DiagnosisStepFlow {...makeProps({ viewModel: vm })} />);
@@ -225,7 +281,7 @@ describe('DiagnosisStepFlow', () => {
   it('keeps the first page\'s later receipt below a reopened Temuan, and nothing of the second page', async () => {
     render(<DiagnosisStepFlow {...makeProps()} />);
     await finishTatalaksana();
-    expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'RME Terapi' })).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'ubah Temuan' }));
     expect(screen.getByRole('heading', { name: 'Temuan' })).toBeInTheDocument();
     expect(screen.getByTestId('diagnosis-clinical-signals')).toHaveTextContent('Sesak');
@@ -241,7 +297,7 @@ describe('DiagnosisStepFlow', () => {
     expect(screen.queryByTestId('dx-flow-ghost-rme')).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'selesai' }));
     expect(screen.getByTestId('dx-flow-receipt-therapy')).toHaveTextContent('Paracetamol 500 mg');
-    expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'RME Terapi' })).toBeInTheDocument();
   });
 
   it('shows Temuan as a receipt and only the Diagnosis step, with its skeleton, while loading', () => {
@@ -292,7 +348,7 @@ describe('DiagnosisStepFlow', () => {
 
     await finishTatalaksana();
     expect(screen.getByTestId('dx-flow-receipt-therapy')).toHaveTextContent('Paracetamol 500 mg, Ambroxol 30 mg');
-    expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'RME Terapi' })).toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: 'Tatalaksana' })).toBeNull();
   });
 
@@ -309,7 +365,7 @@ describe('DiagnosisStepFlow', () => {
     expect(screen.getByRole('heading', { name: 'Tatalaksana' })).toBeInTheDocument();
     await finishTatalaksana();
     expect(screen.getByTestId('dx-flow-receipt-therapy')).toHaveTextContent('tanpa terapi tambahan');
-    expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'RME Terapi' })).toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: 'Tatalaksana' })).toBeNull();
   });
 
@@ -324,7 +380,7 @@ describe('DiagnosisStepFlow', () => {
     render(<DiagnosisStepFlow {...makeProps({ education })} />);
     expect(screen.queryByTestId('dx-flow-ghost-rme')).toBeNull();
     await finishTatalaksana();
-    expect(screen.getByRole('heading', { name: 'RME' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'RME Terapi' })).toBeInTheDocument();
     const receipts = ['finding', 'diagnosis', 'therapy'].map((key) => screen.getByTestId(`dx-flow-receipt-${key}`));
     receipts.slice(1).forEach((receipt, i) =>
       expect(receipts[i].compareDocumentPosition(receipt) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
@@ -496,10 +552,12 @@ function stepperModel(selectedDiagnosisCount: number, selectedMedicationCount: n
 describe('resolveDiagnosisSteps', () => {
   it('marks steps done from phase, diagnosis, medication and transfer state', () => {
     // Migrated (2026-09-29): four steps, Terapi and Edukasi joined as Tatalaksana.
-    expect(resolveDiagnosisSteps('ready', stepperModel(1, 1, 'success')).map((s) => s.done)).toEqual([true, true, true, true]);
-    expect(resolveDiagnosisSteps('ready', stepperModel(1, 0, 'idle')).map((s) => s.done)).toEqual([true, true, false, false]);
-    expect(resolveDiagnosisSteps('loading', stepperModel(0, 0, 'idle')).map((s) => s.done)).toEqual([false, false, false, false]);
-    expect(resolveDiagnosisSteps('ready', stepperModel(0, 0, 'idle')).map((s) => s.label)).toEqual(['Temuan', 'Diagnosis', 'Tatalaksana', 'RME']);
+    // Migrated again (Chief, 2026-09-29): five steps, RME Diagnosa (done from the fixture's sent
+    // diagnosa step) after Diagnosis, and the last step is "RME Terapi" (was "RME").
+    expect(resolveDiagnosisSteps('ready', stepperModel(1, 1, 'success')).map((s) => s.done)).toEqual([true, true, true, true, true]);
+    expect(resolveDiagnosisSteps('ready', stepperModel(1, 0, 'idle')).map((s) => s.done)).toEqual([true, true, true, false, false]);
+    expect(resolveDiagnosisSteps('loading', stepperModel(0, 0, 'idle')).map((s) => s.done)).toEqual([false, false, true, false, false]);
+    expect(resolveDiagnosisSteps('ready', stepperModel(0, 0, 'idle')).map((s) => s.label)).toEqual(['Temuan', 'Diagnosis', 'RME Diagnosa', 'Tatalaksana', 'RME Terapi']);
   });
 });
 

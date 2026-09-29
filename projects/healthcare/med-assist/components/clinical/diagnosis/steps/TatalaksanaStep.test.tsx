@@ -38,6 +38,7 @@ const amlodipin: ChronicMedicationView = {
   name: 'Amlodipin 10 mg',
   doseLine: '1x1 · Sesudah makan',
   indication: 'Hipertensi esensial',
+  regimen: { dosis: '1x10mg', aturanPakai: 'Sesudah makan' },
   visits: [
     { date: '2026-09-01T08:00:00Z', dose: '1x1 · Sesudah makan', diagnosis: 'Hipertensi esensial' },
     { date: '2026-08-01T08:00:00Z', dose: '1x1 · Sesudah makan', diagnosis: 'Hipertensi esensial' },
@@ -60,6 +61,8 @@ function props(overrides: Partial<StepProps> = {}): StepProps {
     education: [],
     onToggleEducation: vi.fn(),
     chronicMedications: [amlodipin],
+    continuedChronicKeys: [],
+    onToggleChronicMedication: vi.fn(),
     interactionCheck: { state: 'done', interactions: [] },
     allergies: [],
     controlAfter: '3 hari',
@@ -88,10 +91,11 @@ function hold(button: HTMLElement) {
 }
 
 describe('TatalaksanaStep', () => {
-  it('is headed "Tatalaksana 3 / 4" and lays out Chief\'s parts in order', () => {
+  // Migrated (Chief, 2026-09-29): five steps with RME Diagnosa before it, so "4 / 5" (was "3 / 4").
+  it('is headed "Tatalaksana 4 / 5" and lays out Chief\'s parts in order', () => {
     render(<TatalaksanaStep {...props()} />);
     expect(screen.getByRole('heading', { name: 'Tatalaksana' })).toBeInTheDocument();
-    expect(screen.getByText('3 / 4')).toBeInTheDocument();
+    expect(screen.getByText('4 / 5')).toBeInTheDocument();
     // Migrated (Chief, 2026-09-29: "hilangkan Keamanan terapi"): 'dx-tx-safety' left the order.
     const parts = ['dx-tx-chronic-part', 'dx-tx-visit-part', 'dx-tx-education', 'dx-tx-follow-up', 'dx-tx-safety-net', 'dx-tx-summary'].map((id) => screen.getByTestId(id));
     parts.slice(1).forEach((part, i) => expect(parts[i].compareDocumentPosition(part) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy());
@@ -122,6 +126,34 @@ describe('TatalaksanaStep', () => {
     // The dose carries the strength, so the name does not repeat it.
     expect(within(visit).getByText('Amoksisilin')).toHaveClass('diagnosis-row-title');
     expect(visit).toHaveTextContent('Dosis3x500mg • Sesudah makan • 5 hari');
+  });
+
+  // Chief, 2026-09-29: "di stage ini saya tidak bisa memilih obatnya" - a chronic card continues it in this visit.
+  it('continues a chronic medication in this visit when its card is ticked, and that decides the page', () => {
+    const onToggleChronicMedication = vi.fn();
+    const noneChosen = vm([med('paracetamol', 'Paracetamol 500 mg', false)]);
+    const { rerender } = render(<TatalaksanaStep {...props({ viewModel: noneChosen, onToggleChronicMedication })} />);
+    expect(screen.getByTestId('dx-tx-finish')).toBeDisabled();
+    fireEvent.click(within(screen.getByTestId('dx-tx-chronic')).getByRole('button', { name: /Review/ }));
+    expect(onToggleChronicMedication).not.toHaveBeenCalled();
+    // The tick is a real button (no control inside another); a tap elsewhere on the card does the same.
+    expect(screen.getByTestId('dx-tx-chronic-pick').tagName).toBe('BUTTON');
+    expect(screen.getByTestId('dx-tx-chronic').querySelector('[role="button"]')).toBeNull();
+    fireEvent.click(screen.getByTestId('dx-tx-chronic-pick'));
+    expect(onToggleChronicMedication).toHaveBeenCalledTimes(1);
+    expect(onToggleChronicMedication).toHaveBeenCalledWith('amlodipin');
+    fireEvent.click(within(screen.getByTestId('dx-tx-chronic')).getAllByText('Hipertensi esensial')[0]);
+    expect(onToggleChronicMedication).toHaveBeenCalledTimes(2);
+    rerender(<TatalaksanaStep {...props({ viewModel: noneChosen, onToggleChronicMedication, continuedChronicKeys: ['amlodipin'] })} />);
+    expect(screen.getByTestId('dx-tx-chronic-pick')).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByTestId('dx-tx-finish')).toBeEnabled();
+    expect(screen.getByTestId('dx-tx-summary')).toHaveTextContent('Terapi kronis1 obat · 1 dilanjutkan');
+  });
+
+  it('offers no tick on a chronic card whose regimen no visit shows', () => {
+    render(<TatalaksanaStep {...props({ chronicMedications: [{ ...amlodipin, regimen: undefined }] })} />);
+    expect(screen.getByTestId('dx-tx-chronic')).toBeInTheDocument();
+    expect(screen.queryByTestId('dx-tx-chronic-pick')).toBeNull();
   });
 
   it('says so when the visit history holds no chronic medication', () => {
@@ -290,6 +322,20 @@ describe('TatalaksanaStep', () => {
     expect(p.onConfirm).not.toHaveBeenCalled();
   });
 
+  // Chief, 2026-09-29: "beri breathing efek agar memberi perhatian dokter" - only while nothing is decided.
+  it('breathes "Lanjut tanpa terapi tambahan" until the page is decided', () => {
+    const skip = () => screen.getByRole('button', { name: 'Lanjut tanpa terapi tambahan' });
+    const undecided = vm([med('paracetamol', 'Paracetamol 500 mg', false)]);
+    const { rerender } = render(<TatalaksanaStep {...props({ viewModel: undecided })} />);
+    expect(skip()).toHaveClass('dx-tx-breathe');
+    rerender(<TatalaksanaStep {...props({ viewModel: undecided, skipped: true })} />);
+    expect(skip()).not.toHaveClass('dx-tx-breathe');
+    rerender(<TatalaksanaStep {...props({ viewModel: undecided, continuedChronicKeys: ['amlodipin'] })} />);
+    expect(skip()).not.toHaveClass('dx-tx-breathe');
+    rerender(<TatalaksanaStep {...props()} />);
+    expect(skip()).not.toHaveClass('dx-tx-breathe');
+  });
+
   // Carries TherapyStep "continues from "Lanjut" once a medication is selected".
   it('closes from "Selesai" once decided, and not before', async () => {
     const undecided = props({ viewModel: vm([med('paracetamol', 'Paracetamol 500 mg', false)]) });
@@ -455,5 +501,10 @@ describe('tatalaksanaSummary', () => {
     expect(tatalaksanaSummary(vm(), education, false)).toBe('Kandesartan 8 mg · edukasi 1 poin');
     expect(tatalaksanaSummary(vm([med('p', 'Paracetamol 500 mg', false)]), [], true)).toBe('tanpa terapi tambahan');
     expect(tatalaksanaSummary(vm([med('p', 'Paracetamol 500 mg', false)]), [], false)).toBe('belum ada obat');
+  });
+
+  it('names a continued chronic medication like a chosen one', () => {
+    expect(tatalaksanaSummary(vm([med('p', 'Paracetamol 500 mg', false)]), [], false, ['Amlodipin 10 mg'])).toBe('Amlodipin 10 mg');
+    expect(tatalaksanaSummary(vm(), [], false, ['Amlodipin 10 mg'])).toBe('Kandesartan 8 mg, Amlodipin 10 mg');
   });
 });

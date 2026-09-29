@@ -84,8 +84,6 @@ function makeProps(
   overrides: Partial<
     Pick<
       DiagnosisPageProps,
-      | 'onAutoFillRME'
-      | 'onTransferDiagnosis'
       | 'onTransferResep'
       | 'onTransferAnamnesa'
       | 'onRetryTransfer'
@@ -96,8 +94,6 @@ function makeProps(
 ): Pick<
   DiagnosisPageProps,
   | 'viewModel'
-  | 'onAutoFillRME'
-  | 'onTransferDiagnosis'
   | 'onTransferResep'
   | 'onTransferAnamnesa'
   | 'onRetryTransfer'
@@ -105,8 +101,6 @@ function makeProps(
 > {
   return {
     viewModel,
-    onAutoFillRME: vi.fn(),
-    onTransferDiagnosis: vi.fn(),
     onTransferResep: vi.fn(),
     onTransferAnamnesa: vi.fn(),
     onRetryTransfer: vi.fn(),
@@ -115,17 +109,20 @@ function makeProps(
   };
 }
 
+// Migrated (Chief, 2026-09-29: the ePuskesmas Diagnosa page is apart from the therapy): this panel
+// is the last page, "RME Terapi". Its primary button is "Isi resep ke RME" (was "Isi otomatis
+// RME"), "Isi anamnesa ke RME" sits beside it (was "Anamnesis" in Rincian transfer), "Kirim resep"
+// is that primary, and "Kirim diagnosis" moved to the RME Diagnosa step.
 describe('RMETransferPanel', () => {
   it('while running shows only the morphing primary button and Batal', () => {
     const onCancelTransfer = vi.fn();
     const { container: panel } = render(<RMETransferPanel {...makeProps({ onCancelTransfer }, makeViewModel({ state: 'running' }))} />);
 
-    const primary = within(panel).getByRole('button', { name: /Isi otomatis RME/i });
+    const primary = within(panel).getByRole('button', { name: /Isi resep ke RME/i });
     expect(primary).toBeDisabled();
     expect(primary).toHaveAttribute('data-state', 'running');
-    expect(within(panel).getByRole('button', { name: /Kirim diagnosis/i })).toBeDisabled();
-    expect(within(panel).getByRole('button', { name: /Kirim resep/i })).toBeDisabled();
-    expect(within(panel).getByRole('button', { name: /Anamnesis/i })).toBeDisabled();
+    expect(within(panel).queryByRole('button', { name: /Kirim diagnosis/i })).toBeNull();
+    expect(within(panel).getByRole('button', { name: /Isi anamnesa ke RME/i })).toBeDisabled();
     expect(within(panel).queryByRole('button', { name: /Ulangi/i })).toBeNull();
 
     fireEvent.click(within(panel).getByRole('button', { name: /Batal/i }));
@@ -144,19 +141,21 @@ describe('RMETransferPanel', () => {
     const { container: panel } = render(<RMETransferPanel {...makeProps({}, makeViewModel({ state }))} />);
     expect(within(panel).queryByRole('button', { name: /Ulangi/i })).toBeNull();
     expect(within(panel).queryByRole('button', { name: /Batal/i })).toBeNull();
-    expect(within(panel).getByRole('button', { name: /Isi otomatis RME/i })).toBeEnabled();
+    expect(within(panel).getByRole('button', { name: /Isi resep ke RME/i })).toBeEnabled();
   });
 
-  it('puts the readiness in one line and the single-payload actions inside Rincian transfer', () => {
+  // Migrated: the line no longer says "Diagnosis siap" (the diagnosis is a receipt above), and
+  // Rincian transfer holds only the step tracker; its buttons became the two page actions.
+  it('puts the readiness in one line, the two page actions up front and only the tracker inside Rincian transfer', () => {
     const { container: panel } = render(<RMETransferPanel {...makeProps({}, makeViewModel())} />);
-    expect(panel.querySelector('.diagnosis-transfer-status')).toHaveTextContent(
-      'Diagnosis siap · Resep siap · Obat 1/1'
-    );
+    expect(panel.querySelector('.diagnosis-transfer-status')).toHaveTextContent('Resep siap · Obat 1/1');
+    expect(panel.querySelector('.diagnosis-transfer-status')).not.toHaveTextContent('Diagnosis');
     expect(panel.querySelectorAll('.diagnosis-static-field')).toHaveLength(0);
     const details = within(panel).getByText('Rincian transfer').closest('details');
     expect(details).not.toBeNull();
-    ['Kirim diagnosis', 'Kirim resep', 'Anamnesis'].forEach((name) =>
-      expect(within(details as HTMLElement).getByRole('button', { name })).toBeInTheDocument()
+    expect(within(details as HTMLElement).queryAllByRole('button')).toHaveLength(0);
+    ['Isi resep ke RME', 'Isi anamnesa ke RME'].forEach((name) =>
+      expect(within(panel).getByRole('button', { name })).toBeInTheDocument()
     );
   });
 
@@ -184,14 +183,14 @@ describe('RMETransferPanel', () => {
 
     const { container: panel } = render(<RMETransferPanel {...props} />);
 
-    expect(panel).toHaveTextContent(/Diagnosis belum siap/i);
+    expect(panel).not.toHaveTextContent(/Diagnosis belum siap/i);
     expect(panel).toHaveTextContent(/Resep belum siap/i);
     expect(panel).toHaveTextContent(/Obat 0\/2/i);
     expect(panel).toHaveTextContent(/Transfer RME gagal/i);
     expect(panel).toHaveTextContent(/DIAGNOSA_PAYLOAD_EMPTY/i);
     expect(panel).toHaveTextContent(/attempt:1 latency:42ms ok:1 fail:0 skip:0/i);
     expect(panel).toHaveTextContent(/attempt:2 latency:120ms ok:0 fail:1 skip:0/i);
-    expect(within(panel).getByRole('button', { name: /Kirim diagnosis/i })).toBeDisabled();
-    expect(within(panel).getByRole('button', { name: /Kirim resep/i })).toBeDisabled();
+    expect(within(panel).getByRole('button', { name: /Isi resep ke RME/i })).toBeDisabled();
+    expect(within(panel).getByRole('button', { name: /Isi anamnesa ke RME/i })).toBeDisabled();
   });
 });

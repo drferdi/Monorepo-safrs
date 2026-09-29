@@ -16,6 +16,7 @@ import { buildEducationItems } from './diagnosis/education';
 import {
   buildChronicMedications,
   buildSafetyNet,
+  chronicContinuation,
   CONTROL_AFTER_OPTIONS,
   formatDose,
   type InteractionCheckView,
@@ -1482,6 +1483,22 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
   }, [transferRunId]);
 
   const selectedDiagnosisForTransfer = selectedDiagnoses[0] || null;
+  // Tatalaksana (Chief, 2026-09-29): chronic medications read from the visit history. A chronic
+  // card can be continued in this visit; the continuation is a prescription candidate like a
+  // proposal, but it is shown only on its chronic card.
+  const patientVisits = usePatientVisits(patientRM);
+  const chronicMedications = useMemo(
+    () => buildChronicMedications(chronicTherapies, patientVisits),
+    [chronicTherapies, patientVisits]
+  );
+  const chronicContinuations = useMemo(
+    () =>
+      chronicMedications.flatMap((medication) => {
+        const continuation = chronicContinuation(medication);
+        return continuation ? [{ key: medication.key, medication: continuation }] : [];
+      }),
+    [chronicMedications]
+  );
   const candidateTransferMedications = useMemo(() => {
     const combined: MedicationRecommendation[] = [];
     if (selectedDiagnoses.length > 0) {
@@ -1493,6 +1510,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       );
     }
     combined.push(...manualMedications);
+    combined.push(...chronicContinuations.map((entry) => entry.medication));
 
     const dismissed = new Set(dismissedMedicationKeys);
     const deduped = new Map<string, MedicationRecommendation>();
@@ -1501,7 +1519,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       if (!deduped.has(key) && !dismissed.has(key)) deduped.set(key, med);
     }
     return Array.from(deduped.values());
-  }, [selectedDiagnoses, therapyByDiagnosis, manualMedications, dismissedMedicationKeys]);
+  }, [selectedDiagnoses, therapyByDiagnosis, manualMedications, chronicContinuations, dismissedMedicationKeys]);
 
   const selectedMedicationKeySet = useMemo(
     () => new Set(selectedMedicationKeys),
@@ -1536,13 +1554,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     .filter((item) => selectedEducationKeys.includes(item.key))
     .map((item) => item.text);
 
-  // Tatalaksana (Chief, 2026-09-29): chronic medications read from the visit history, follow-up
-  // and safety net from the knowledge base, interactions from the local DDInter check.
-  const patientVisits = usePatientVisits(patientRM);
-  const chronicMedications = useMemo(
-    () => buildChronicMedications(chronicTherapies, patientVisits),
-    [chronicTherapies, patientVisits]
-  );
+  // Follow-up and safety net from the knowledge base, interactions from the local DDInter check.
   const chosenCodes = useMemo(() => selectedDiagnoses.map((diagnosis) => diagnosis.icd_x), [selectedDiagnoses]);
   const safetyNet = useMemo(() => buildSafetyNet(chosenCodes, diseaseNotes), [chosenCodes, diseaseNotes]);
   const interactionNames = useMemo(
@@ -1598,17 +1610,39 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     setTransferError('');
   };
 
+  // "Gunakan semua usulan" takes the visit's candidates; a chronic medication is continued only from its own card.
   const selectAllRecommendedMedications = (): void => {
+    const continued = selectedTransferMedications
+      .filter((med) => med.isChronicContinuation)
+      .map((med) => medicationSelectionKey(med));
     const allKeys = Array.from(
-      new Set(candidateTransferMedications.map((med) => medicationSelectionKey(med)))
+      new Set([
+        ...candidateTransferMedications
+          .filter((med) => !med.isChronicContinuation)
+          .map((med) => medicationSelectionKey(med)),
+        ...continued,
+      ])
     );
     setSelectedMedicationKeys(allKeys);
     setTransferError('');
   };
 
+  // "Lanjut tanpa terapi tambahan" drops the visit's choices; a continued chronic medication is not "tambahan".
   const clearSelectedMedications = (): void => {
-    setSelectedMedicationKeys([]);
+    setSelectedMedicationKeys(
+      selectedTransferMedications
+        .filter((med) => med.isChronicContinuation)
+        .map((med) => medicationSelectionKey(med))
+    );
     setTransferError('');
+  };
+
+  const continuedChronicKeys = chronicContinuations
+    .filter((entry) => selectedMedicationKeySet.has(medicationSelectionKey(entry.medication)))
+    .map((entry) => entry.key);
+  const toggleChronicContinuation = (key: string): void => {
+    const entry = chronicContinuations.find((item) => item.key === key);
+    if (entry) toggleMedicationSelection(entry.medication);
   };
 
   const updateManualMedicationDraft = <TField extends keyof ManualMedicationDraft>(
@@ -2041,94 +2075,6 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     }
   };
 
-  const handleAutoFillAll = async (forceRun = false): Promise<void> => {
-    let resolvedTenagaMedis = tenagaMedis;
-    try {
-      const tenagaMedisResponse = await sendMessage('resolveTenagaMedis', undefined);
-      if (tenagaMedisResponse.success && tenagaMedisResponse.tenagaMedis) {
-        resolvedTenagaMedis = {
-          dokterNama: tenagaMedisResponse.tenagaMedis.dokterNama || '',
-          perawatNama: tenagaMedisResponse.tenagaMedis.perawatNama || '',
-          source: tenagaMedisResponse.tenagaMedis.source || [],
-          capturedAt: tenagaMedisResponse.tenagaMedis.capturedAt || '',
-        };
-        setTenagaMedis(resolvedTenagaMedis);
-      }
-    } catch {
-      // Keep last known value in state.
-    }
-
-    const diagnosisInput = transferEligibleDiagnosis;
-
-    const mapped = buildRMETransferPayload({
-      keluhanUtama,
-      keluhanTambahan,
-      patientGender,
-      pregnancyStatus,
-      allergies,
-      vitalSigns: {
-        sbp: vitals.sbp,
-        dbp: vitals.dbp,
-        hr: vitals.hr,
-        rr: vitals.rr,
-        temp: vitals.temp,
-        glucose: vitals.glucose,
-      },
-      diagnosis: diagnosisInput,
-      medications: selectedTransferMedications,
-      tenagaMedis:
-        resolvedTenagaMedis.dokterNama || resolvedTenagaMedis.perawatNama
-          ? {
-              dokterNama: resolvedTenagaMedis.dokterNama || undefined,
-              perawatNama: resolvedTenagaMedis.perawatNama || undefined,
-              ruangan: 'POLI UMUM',
-            }
-          : undefined,
-      trajectory,
-      hasVisitHistory,
-      edukasi: selectedEducationTexts,
-      rencanaTindakan: [`Kontrol ${controlAfter}`],
-    });
-
-    const requestId = `rme-auto-${Date.now()}`;
-    setTransferRunId(requestId);
-    setLastTriggeredStep('anamnesa');
-    setTransferUiState('running');
-    setTransferError('');
-    setTransferResult(null);
-    setTransferSteps(makeInitialTransferSteps());
-    setTransferReasonCodes(mapped.reasonCodes);
-
-    try {
-      const result = await sendMessage('transferRME', {
-        ...mapped.payload,
-        options: {
-          ...mapped.payload.options,
-          requestId,
-          forceRun,
-        },
-        meta: {
-          ...mapped.payload.meta,
-          reasonCodes: mapped.reasonCodes,
-        },
-      });
-      setTransferResult(result);
-      setTransferRunId(result.runId);
-      setTransferSteps(result.steps);
-      setTransferReasonCodes(result.reasonCodes);
-      setTransferUiState(mapTransferStateToUi(result.state));
-      if (result.state !== 'success') {
-        const firstReason = result.reasonCodes[0];
-        setTransferError(
-          firstReason ? REASON_CODE_LABELS[firstReason] : 'Transfer RME tidak sepenuhnya berhasil.'
-        );
-      }
-    } catch (error) {
-      setTransferUiState('failed');
-      setTransferError(error instanceof Error ? error.message : 'Transfer RME gagal.');
-    }
-  };
-
   const handleCancelTransfer = async (): Promise<void> => {
     if (!transferRunId) return;
     try {
@@ -2332,15 +2278,14 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
           )
         }
         chronicMedications={chronicMedications}
+        continuedChronicKeys={continuedChronicKeys}
+        onToggleChronicMedication={toggleChronicContinuation}
         interactionCheck={interactionCheck}
         allergies={allergies}
         controlAfter={controlAfter}
         onControlAfterChange={setControlAfter}
         safetyNet={safetyNet}
         onDismissMedication={dismissMedication}
-        onAutoFillRME={() => {
-          void handleAutoFillAll(false);
-        }}
         onTransferDiagnosis={() => {
           void handleTransferToRME('diagnosa', false);
         }}

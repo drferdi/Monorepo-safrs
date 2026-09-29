@@ -17,8 +17,15 @@ import { resetDiseaseNotesCache } from './diagnosis/useDiseaseNotes';
  * parent->child subtree, not the child in isolation.)
  */
 
-const { mockSendMessage } = vi.hoisted(() => ({
+const { mockSendMessage, storedVisits } = vi.hoisted(() => ({
   mockSendMessage: vi.fn(),
+  // The patient's stored visits (Tatalaksana's chronic cards); a test sets them, the rest have none.
+  storedVisits: { visits: [] as unknown[] },
+}));
+
+vi.mock('@/lib/iskandar-diagnosis-engine/visit-history-store', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/iskandar-diagnosis-engine/visit-history-store')>()),
+  getPatientVisits: vi.fn(async () => storedVisits.visits),
 }));
 
 vi.mock('@/utils/messaging', () => ({
@@ -176,7 +183,7 @@ function primeMessaging() {
   });
 }
 
-function renderSurface() {
+function renderSurface(chronicTherapies: string[] = []) {
   return render(
     <ClinicalDifferential
       keluhanUtama="Nyeri tenggorokan dan demam"
@@ -186,7 +193,7 @@ function renderSurface() {
       allergies={[]}
       confirmedPregnancyStatus={false}
       vitals={{ sbp: 118, dbp: 76, hr: 88, rr: 18, temp: 38, glucose: 0 }}
-      chronicTherapies={[]}
+      chronicTherapies={chronicTherapies}
       hasVisitHistory={false}
       onBack={() => undefined}
     />
@@ -197,6 +204,7 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
   beforeEach(() => {
     primeMessaging();
     resetDiseaseNotesCache();
+    storedVisits.visits = [];
   });
 
   it('lets the physician select a diagnosis, pick a medication, and uplink diagnosis + resep to RME', async () => {
@@ -209,6 +217,22 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
     expect(selectPrimary).not.toBeNull();
     if (!selectPrimary) throw new Error('diagnosis card not found');
     fireEvent.click(selectPrimary);
+
+    // Migrated (Chief, 2026-09-29: ePuskesmas has the Diagnosa page apart from the therapy): the
+    // diagnosis goes to the RME on its own step right after the pick. "Kirim diagnosis" (on the
+    // RME step, clicked last) became "Isi diagnosis ke RME" here, clicked first; its success
+    // moves the flow on to Tatalaksana.
+    const isiDiagnosis = await screen.findByRole('button', { name: 'Isi diagnosis ke RME' });
+    expect(isiDiagnosis).toBeEnabled();
+    fireEvent.click(isiDiagnosis);
+    await waitFor(() => {
+      expect(mockSendMessage).toHaveBeenCalledWith(
+        'transferRME',
+        expect.objectContaining({
+          options: expect.objectContaining({ onlyStep: 'diagnosa' }),
+        })
+      );
+    });
 
     // Choosing a diagnosis must move the flow on to Tatalaksana (was Terapi, 2026-09-29),
     // rendered in full, not just leave it as a one-line ghost.
@@ -234,13 +258,9 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Lanjut tanpa terapi tambahan' }));
     fireEvent.click(screen.getByTestId('dx-tx-finish'));
 
-    // "Kirim diagnosis" is enabled once a valid diagnosis is selected.
-    const kirimDiagnosis = await screen.findByRole('button', { name: 'Kirim diagnosis' });
-    expect(kirimDiagnosis).toBeEnabled();
-
-    // "Kirim resep" is gated until at least one medication is selected.
-    const kirimResep = screen.getByRole('button', { name: 'Kirim resep' });
-    expect(kirimResep).toBeDisabled();
+    // "Isi resep ke RME" (was "Kirim resep") is gated until at least one medication is selected.
+    const isiResep = await screen.findByRole('button', { name: 'Isi resep ke RME' });
+    expect(isiResep).toBeDisabled();
 
     // Select the proposed medication.
     fireEvent.click(screen.getByRole('button', { name: 'ubah Tatalaksana' }));
@@ -248,27 +268,16 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
     await waitFor(() => expect(screen.getByTestId('dx-tx-finish')).toBeEnabled());
     fireEvent.click(screen.getByTestId('dx-tx-finish'));
 
-    await waitFor(() => expect(screen.getByRole('button', { name: 'Kirim resep' })).toBeEnabled());
+    await waitFor(() => expect(screen.getByRole('button', { name: 'Isi resep ke RME' })).toBeEnabled());
 
     // Uplink resep dispatches an RME transfer for the resep step.
-    fireEvent.click(screen.getByRole('button', { name: 'Kirim resep' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Isi resep ke RME' }));
 
     await waitFor(() => {
       expect(mockSendMessage).toHaveBeenCalledWith(
         'transferRME',
         expect.objectContaining({
           options: expect.objectContaining({ onlyStep: 'resep' }),
-        })
-      );
-    });
-
-    // Uplink diagnosis dispatches an RME transfer for the diagnosa step.
-    fireEvent.click(screen.getByRole('button', { name: 'Kirim diagnosis' }));
-    await waitFor(() => {
-      expect(mockSendMessage).toHaveBeenCalledWith(
-        'transferRME',
-        expect.objectContaining({
-          options: expect.objectContaining({ onlyStep: 'diagnosa' }),
         })
       );
     });
@@ -306,6 +315,8 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
       if (!card) throw new Error('diagnosis card not found');
       fireEvent.click(card);
 
+      // Migrated (Chief, 2026-09-29): RME Diagnosa sits between the pick and Tatalaksana.
+      fireEvent.click(await screen.findByRole('button', { name: 'Lanjut tanpa mengisi' }));
       fireEvent.click(await screen.findByRole('button', { name: 'Lanjut tanpa terapi tambahan' }));
       const education = await screen.findByTestId('dx-tx-education');
       const cards = await within(education).findAllByTestId('dx-edu-card');
@@ -324,7 +335,8 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
       fireEvent.change(interval, { target: { value: '1 minggu' } });
 
       fireEvent.click(screen.getByTestId('dx-tx-finish'));
-      fireEvent.click(await screen.findByRole('button', { name: 'Anamnesis' }));
+      // Migrated: "Anamnesis" in Rincian transfer became "Isi anamnesa ke RME" on RME Terapi.
+      fireEvent.click(await screen.findByRole('button', { name: 'Isi anamnesa ke RME' }));
 
       await waitFor(() => {
         expect(mockSendMessage).toHaveBeenCalledWith(
@@ -344,9 +356,12 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
     }
   });
 
-  // End-to-end check (2026-09-29): one visit through "Isi otomatis RME" (the second send path)
-  // carries the diagnosis, the chosen medicine, the given education and the chosen interval.
-  it('sends the whole Tatalaksana through "Isi otomatis RME": diagnosis, medicine, education given and "Kontrol 2 minggu"', async () => {
+  // End-to-end check (2026-09-29): one visit carries the diagnosis, the chosen medicine, the given
+  // education and the chosen interval. Migrated (Chief, the same day: ePuskesmas has the Diagnosa
+  // page apart from the therapy): "Isi otomatis RME" (one run for all three) became three fills in
+  // page order - "Isi diagnosis ke RME" on RME Diagnosa, then "Isi resep ke RME" and "Isi anamnesa
+  // ke RME" on RME Terapi - and each call is asserted for its own step.
+  it('sends the whole visit page by page: the diagnosis on RME Diagnosa, then the resep and the anamnesa with education and "Kontrol 2 minggu"', async () => {
     const given = 'Istirahat cukup, jangan bekerja/sekolah dulu hingga 24 jam bebas demam.';
     const notGiven = 'Minum air putih minimal 2 liter/hari.';
     vi.stubGlobal(
@@ -371,6 +386,7 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
       const card = (await screen.findByText('J02 - Faringitis akut')).closest('[data-testid="dx-flow-card"]');
       if (!card) throw new Error('diagnosis card not found');
       fireEvent.click(card);
+      fireEvent.click(await screen.findByRole('button', { name: 'Isi diagnosis ke RME' }));
 
       const medication = (await screen.findByText('Amoksisilin')).closest('[data-testid="dx-tx-visit-med"]');
       if (!medication) throw new Error('medication row not found');
@@ -391,27 +407,70 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
 
       await waitFor(() => expect(screen.getByTestId('dx-tx-finish')).toBeEnabled());
       fireEvent.click(screen.getByTestId('dx-tx-finish'));
-      fireEvent.click(await screen.findByRole('button', { name: /Isi otomatis RME/ }));
+      fireEvent.click(await screen.findByRole('button', { name: 'Isi resep ke RME' }));
+      await waitFor(() => expect(screen.getByRole('button', { name: 'Isi anamnesa ke RME' })).toBeEnabled());
+      fireEvent.click(screen.getByRole('button', { name: 'Isi anamnesa ke RME' }));
 
-      await waitFor(() => {
-        expect(mockSendMessage).toHaveBeenCalledWith(
-          'transferRME',
-          expect.objectContaining({
-            anamnesa: expect.objectContaining({
-              lainnya: expect.objectContaining({ edukasi: given, rencana_tindakan: 'Kontrol 2 minggu' }),
-            }),
-            diagnosa: expect.objectContaining({ icd_x: expect.stringMatching(/^J02/) }),
-            resep: expect.objectContaining({
-              medications: expect.arrayContaining([expect.objectContaining({ nama_obat: expect.stringMatching(/amoksisilin/i) })]),
-            }),
-          })
-        );
+      const sentFor = (step: string) =>
+        mockSendMessage.mock.calls.find(([type, payload]) => type === 'transferRME' && payload?.options?.onlyStep === step)?.[1];
+      await waitFor(() => expect(sentFor('anamnesa')).toBeDefined());
+      expect(sentFor('diagnosa')).toMatchObject({ diagnosa: { icd_x: expect.stringMatching(/^J02/) } });
+      expect(sentFor('resep')).toMatchObject({
+        resep: { medications: expect.arrayContaining([expect.objectContaining({ nama_obat: expect.stringMatching(/amoksisilin/i) })]) },
+      });
+      expect(sentFor('anamnesa')).toMatchObject({
+        anamnesa: { lainnya: { edukasi: given, rencana_tindakan: 'Kontrol 2 minggu' } },
       });
       // The synthetic ePuskesmas spec (tests/e2e) sends this same payload through the built extension.
-      const sent = mockSendMessage.mock.calls.find(([type]) => type === 'transferRME')?.[1];
-      expect(sent).toMatchObject(SIDE_PANEL_TATALAKSANA_TRANSFER);
+      // Migrated: the payload of the last fill (was the one "Isi otomatis RME" run), which holds
+      // every section once Tatalaksana is decided.
+      expect(sentFor('anamnesa')).toMatchObject(SIDE_PANEL_TATALAKSANA_TRANSFER);
     } finally {
       vi.unstubAllGlobals();
     }
+  });
+  // Chief, 2026-09-29: "di stage ini saya tidak bisa memilih obatnya" - a chronic card continues
+  // the medication in this visit, and the continuation reaches the resep with its latest regimen.
+  it('sends a continued chronic medication to the resep, and keeps it through "Lanjut tanpa terapi tambahan"', async () => {
+    storedVisits.visits = [
+      {
+        patient_id: 'RM-J02',
+        encounter_id: 'v1',
+        timestamp: '2026-09-01T08:00:00Z',
+        vitals: { sbp: 130, dbp: 80, hr: 80, rr: 18, temp: 36.8, glucose: 0 },
+        keluhan_utama: 'kontrol',
+        diagnosa: { icd_x: 'I10', nama: 'Hipertensi esensial' },
+        terapi_obat: 'Amlodipin 1x10mg sesudah makan',
+        source: 'scrape',
+      },
+    ];
+    renderSurface(['Amlodipin']);
+    const card = (await screen.findByText('J02 - Faringitis akut')).closest('[data-testid="dx-flow-card"]');
+    if (!card) throw new Error('diagnosis card not found');
+    fireEvent.click(card);
+    fireEvent.click(await screen.findByRole('button', { name: 'Lanjut tanpa mengisi' }));
+
+    const pick = await screen.findByTestId('dx-tx-chronic-pick');
+    fireEvent.click(pick);
+    await waitFor(() => expect(pick).toHaveAttribute('aria-pressed', 'true'));
+    fireEvent.click(screen.getByRole('button', { name: 'Lanjut tanpa terapi tambahan' }));
+    expect(screen.getByTestId('dx-tx-chronic-pick')).toHaveAttribute('aria-pressed', 'true');
+    fireEvent.click(screen.getByTestId('dx-tx-finish'));
+    const isiResep = await screen.findByRole('button', { name: 'Isi resep ke RME' });
+    await waitFor(() => expect(isiResep).toBeEnabled());
+    fireEvent.click(isiResep);
+
+    await waitFor(() => {
+      expect(mockSendMessage).toHaveBeenCalledWith(
+        'transferRME',
+        expect.objectContaining({
+          options: expect.objectContaining({ onlyStep: 'resep' }),
+          resep: expect.objectContaining({
+            // The RME mapper names it by the Puskesmas stock; one tablet a day.
+            medications: [expect.objectContaining({ nama_obat: 'Amlodipin tablet 10 mg', signa: '1x1' })],
+          }),
+        })
+      );
+    });
   });
 });

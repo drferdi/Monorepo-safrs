@@ -526,7 +526,7 @@ export function DiagnosisStep({
           <PixelLoader tone="accent" />
           <h2 className="ttv-section-title">Diagnosis</h2>
         </div>
-        <span className="ttv-label">2 / 4</span>
+        <span className="ttv-label">2 / 5</span>
       </div>
 
       {phase === 'loading' ? (

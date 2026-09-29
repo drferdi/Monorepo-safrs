@@ -10533,3 +10533,11 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 .dx-tx-safety-list { display: flex; flex-direction: column; gap: 2px; margin: 0; padding: 0; list-style: none; }
 .dx-tx-safety-list li { display: flex; gap: 8px; }
 .dx-tx-safety-list li::before { content: ''; flex: 0 0 auto; width: 5px; height: 5px; margin-top: 0.55em; border-radius: 50%; background: var(--sentra-warning); }
+
+/* "Lanjut tanpa terapi tambahan" breathes until the page is decided (Chief, 2026-09-29: "beri breathing efek agar memberi perhatian dokter"); opacity only */
+@keyframes dx-tx-breathe { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+.dx-tx-breathe { animation: dx-tx-breathe 2.4s ease-in-out infinite; }
+.dx-tx-breathe:hover, .dx-tx-breathe:focus-visible { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .dx-tx-breathe { animation: none; }
+}

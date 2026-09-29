@@ -11,13 +11,14 @@ import type { DiagnosisPageViewModel } from './diagnosisViewModel';
 import { StepGhost, StepReceipt } from './StepReceipt';
 import { DiagnosisStep, diagnosisSummary } from './steps/DiagnosisStep';
 import { FindingStep, findingSignals, findingSummary } from './steps/FindingStep';
+import { RmeDiagnosisStep, rmeDiagnosisSummary } from './steps/RmeDiagnosisStep';
 import { RmeStep, rmeSummary } from './steps/RmeStep';
 import { TatalaksanaStep, tatalaksanaSummary } from './steps/TatalaksanaStep';
 
 // No motion (Chief, 2026-09-29: steady like a console, "gak suka ... gerak gerak kaya karet"):
 // a step replaces the one before it in place, and a finished step is its receipt at once.
-/** Three pages: Temuan and Diagnosis; Tatalaksana (Chief, 2026-09-29); RME. */
-const pageOf = (index: number): number => (index <= 2 ? 1 : index === 3 ? 2 : 3);
+/** Three pages: Temuan, Diagnosis and RME Diagnosa; Tatalaksana; RME Terapi (Chief, 2026-09-29). */
+const pageOf = (index: number): number => (index <= 3 ? 1 : index === 4 ? 2 : 3);
 
 function getVisibleExamItems(items: string[]): string[] {
   return dedupeSignals(
@@ -29,11 +30,16 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
   const { viewModel, phase } = props;
   const [therapySkipped, setTherapySkipped] = useState(false);
   const [therapyConfirmed, setTherapyConfirmed] = useState(false);
+  // RME Diagnosa ends once the diagnosa fill succeeded (kept through later transfer runs, which
+  // reset the step list) or on "Lanjut tanpa mengisi".
+  const [rmeDiagnosisSent, setRmeDiagnosisSent] = useState(false);
+  const [rmeDiagnosisSkipped, setRmeDiagnosisSkipped] = useState(false);
   // Temuan is the doctor's own input, so it is a receipt even while the engine is loading.
   // Tatalaksana ends only on its "Selesai", never on a tap; "Lanjut tanpa terapi tambahan" is a
   // decision on the page, not a way past it.
   const steps = resolveDiagnosisSteps(phase, viewModel).map((step) => {
     if (step.key === 'finding') return { ...step, done: true };
+    if (step.key === 'rmeDiagnosis') return { ...step, done: rmeDiagnosisSent || rmeDiagnosisSkipped };
     if (step.key === 'therapy') return { ...step, done: therapyConfirmed };
     return step;
   });
@@ -49,7 +55,15 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
   const summaries: Record<DiagnosisStepKey, string> = {
     finding: findingSummary(signals),
     diagnosis: diagnosisSummary(viewModel),
-    therapy: tatalaksanaSummary(viewModel, props.education, therapySkipped),
+    therapy: tatalaksanaSummary(
+      viewModel,
+      props.education,
+      therapySkipped,
+      props.chronicMedications
+        .filter((medication) => props.continuedChronicKeys.includes(medication.key))
+        .map((medication) => medication.name)
+    ),
+    rmeDiagnosis: rmeDiagnosisSummary(rmeDiagnosisSent, rmeDiagnosisSkipped),
     rme: rmeSummary(viewModel),
   };
 
@@ -65,7 +79,13 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
   useEffect(() => {
     setTherapySkipped(false);
     setTherapyConfirmed(false);
+    setRmeDiagnosisSent(false);
+    setRmeDiagnosisSkipped(false);
   }, [selectedDiagnosisKeys]);
+  const diagnosaSent = viewModel.transfer.steps.some((step) => step.key === 'diagnosa' && step.state === 'success');
+  useEffect(() => {
+    if (diagnosaSent) setRmeDiagnosisSent(true);
+  }, [diagnosaSent]);
   useEffect(() => {
     if (medicationChosen) setTherapySkipped(false);
   }, [medicationChosen]);
@@ -100,6 +120,15 @@ export function DiagnosisStepFlow(props: DiagnosisPageProps) {
           />
         ) : null}
         {active === 'diagnosis' ? <DiagnosisStep {...props} /> : null}
+        {active === 'rmeDiagnosis' ? (
+          <RmeDiagnosisStep
+            {...props}
+            onSkip={() => {
+              setRmeDiagnosisSkipped(true);
+              setReopened(null);
+            }}
+          />
+        ) : null}
         {active === 'therapy' ? (
           <TatalaksanaStep
             {...props}

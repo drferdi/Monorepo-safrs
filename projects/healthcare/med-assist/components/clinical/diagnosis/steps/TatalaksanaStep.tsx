@@ -35,6 +35,8 @@ type Props = Pick<
   | 'education'
   | 'onToggleEducation'
   | 'chronicMedications'
+  | 'continuedChronicKeys'
+  | 'onToggleChronicMedication'
   | 'interactionCheck'
   | 'allergies'
   | 'controlAfter'
@@ -68,9 +70,10 @@ function visitMedications(viewModel: DiagnosisPageViewModel): DiagnosisMedicatio
 export function tatalaksanaSummary(
   viewModel: DiagnosisPageViewModel,
   education: DiagnosisPageProps['education'],
-  skipped: boolean
+  skipped: boolean,
+  continued: string[] = []
 ): string {
-  const names = selectedMedications(viewModel).map((medication) => medication.name);
+  const names = [...selectedMedications(viewModel).map((medication) => medication.name), ...continued];
   const head =
     names.length === 0
       ? skipped
@@ -241,17 +244,26 @@ function ChronicCard({
   allergies,
   explains,
   duplicates,
+  continued,
+  onToggle,
 }: {
   medication: ChronicMedicationView;
   interactionCheck: DiagnosisPageProps['interactionCheck'];
   allergies: string[];
   explains: Set<string>;
   duplicates: string[];
+  continued: boolean;
+  /** Continues it in this visit; absent when no visit shows its regimen. */
+  onToggle?: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const allergy = allergyMatches(medication.name, allergies);
+  // The tick continues the medication in this visit; a tap elsewhere on the card does the same for
+  // the mouse, like a visit card. "Review" only opens the history.
   return (
     <div className="neu-select diagnosis-candidate-row" data-testid="dx-tx-chronic">
+      {continued ? <SelectionTrace /> : null}
+      <div className="flex flex-col gap-1" onClick={onToggle}>
       <TherapyTimeline
         rows={[
           {
@@ -259,15 +271,35 @@ function ChronicCard({
             value: (
               <div className="diagnosis-row-head">
                 <div className="diagnosis-row-title">{nameBesideDose(medication.name, medication.doseLine)}</div>
-                <button
-                  type="button"
-                  className="diagnosis-text-button inline-flex items-center gap-1"
-                  aria-expanded={open}
-                  onClick={() => setOpen((value) => !value)}
-                >
-                  Review
-                  <span aria-hidden="true">{open ? '⌃' : '⌄'}</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    className="diagnosis-text-button inline-flex items-center gap-1"
+                    aria-expanded={open}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setOpen((value) => !value);
+                    }}
+                  >
+                    Review
+                    <span aria-hidden="true">{open ? '⌃' : '⌄'}</span>
+                  </button>
+                  {onToggle ? (
+                    <button
+                      type="button"
+                      className="diagnosis-text-button"
+                      data-testid="dx-tx-chronic-pick"
+                      aria-label={`Lanjutkan ${medication.name} di kunjungan ini`}
+                      aria-pressed={continued}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        onToggle();
+                      }}
+                    >
+                      <PenCheck checked={continued} seedText={medication.key} />
+                    </button>
+                  ) : null}
+                </div>
               </div>
             ),
           },
@@ -288,6 +320,7 @@ function ChronicCard({
           },
         ]}
       />
+      </div>
       {open ? (
         <div data-testid="dx-tx-chronic-review">
           {medication.visits.length > 0 ? (
@@ -550,6 +583,8 @@ export function TatalaksanaStep({
   education,
   onToggleEducation,
   chronicMedications,
+  continuedChronicKeys,
+  onToggleChronicMedication,
   interactionCheck,
   allergies,
   controlAfter,
@@ -597,7 +632,8 @@ export function TatalaksanaStep({
   // The same drug elsewhere in the plan (chronic + chosen), said on each card's DDI node.
   const plan = [...chronicMedications.map((medication) => medication.name), ...chosen.map((medication) => medication.name)];
   const given = education.filter((item) => item.isSelected).length;
-  const decided = chosen.length > 0 || skipped;
+  const continued = chronicMedications.filter((medication) => continuedChronicKeys.includes(medication.key));
+  const decided = chosen.length > 0 || continued.length > 0 || skipped;
   const slots = ROLE_ORDER.map((role, index) => ({
     role,
     number: pad(index + 1),
@@ -628,7 +664,7 @@ export function TatalaksanaStep({
     <section className="ct-v2-panel flex flex-col gap-3" aria-label="Tatalaksana">
       <div className="ct-v2-panel-head">
         <h2 className="ttv-section-title">Tatalaksana</h2>
-        <span className="ttv-label">3 / 4</span>
+        <span className="ttv-label">4 / 5</span>
       </div>
 
       <Part label="Terapi kronis" count={chronicMedications.length} testId="dx-tx-chronic-part" divider={false}>
@@ -642,6 +678,8 @@ export function TatalaksanaStep({
                 allergies={allergies}
                 explains={explainsFor(medication.name)}
                 duplicates={sameDrugIn(medication.name, plan, true)}
+                continued={continuedChronicKeys.includes(medication.key)}
+                onToggle={medication.regimen ? () => onToggleChronicMedication(medication.key) : undefined}
               />
             ))}
           </div>
@@ -702,7 +740,8 @@ export function TatalaksanaStep({
           ) : null}
           <button
             type="button"
-            className="diagnosis-text-button"
+            // Breathes until the page is decided (Chief, 2026-09-29), so the doctor sees the way on.
+            className={`diagnosis-text-button${decided ? '' : ' dx-tx-breathe'}`}
             aria-pressed={skipped}
             onClick={() => {
               onClearMedications();
@@ -770,7 +809,10 @@ export function TatalaksanaStep({
         <Kv
           rows={[
             { term: 'Diagnosis', value: viewModel.selectedDiagnoses.map((diagnosis) => diagnosis.displayLabel).join(', ') || '-' },
-            { term: 'Terapi kronis', value: `${chronicMedications.length} obat` },
+            {
+              term: 'Terapi kronis',
+              value: `${chronicMedications.length} obat${continued.length > 0 ? ` · ${continued.length} dilanjutkan` : ''}`,
+            },
             {
               term: 'Terapi kunjungan',
               value: skipped && chosen.length === 0 ? 'tanpa terapi tambahan' : `${chosen.length} obat`,

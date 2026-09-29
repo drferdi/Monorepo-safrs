@@ -1,8 +1,9 @@
 /**
- * The Tatalaksana part of the payload the side panel sends with "Isi otomatis RME", as captured
- * from `ClinicalDifferential.rme-transfer.e2e.test.tsx` (J02, Amoksisilin, one education point
- * given, "Kontrol 2 minggu"). That test asserts the side panel still sends this; the synthetic
- * ePuskesmas spec sends it through the built extension. Synthetic data only.
+ * The Tatalaksana part of the payload the side panel sends once Tatalaksana is decided (its last
+ * fill, "Isi anamnesa ke RME"), as captured from `ClinicalDifferential.rme-transfer.e2e.test.tsx`
+ * (J02, Amoksisilin, one education point given, "Kontrol 2 minggu"). That test asserts the side
+ * panel still sends this; the synthetic ePuskesmas spec sends it through the built extension.
+ * Synthetic data only.
  */
 export const SIDE_PANEL_TATALAKSANA_TRANSFER = {
   anamnesa: {

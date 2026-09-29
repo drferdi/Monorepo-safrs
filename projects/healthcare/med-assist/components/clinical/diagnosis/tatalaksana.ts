@@ -5,7 +5,7 @@ import { parseTherapyHistoryText } from '@/lib/clinical/chronic-therapy-history'
 import type { VisitRecord } from '@/lib/iskandar-diagnosis-engine/visit-history-store';
 import { classifyRole, type TriadRole } from '@/lib/rme/payload-mapper';
 import stockDatabase from '@/public/data/stok_obat.json';
-import type { DrugInteraction } from '@/types/api';
+import type { AturanPakaiText, DrugInteraction, MedicationRecommendation } from '@/types/api';
 
 /** One earlier visit that prescribed a chronic medication. */
 export interface ChronicVisitView {
@@ -22,6 +22,8 @@ export interface ChronicMedicationView {
   /** The diagnosis most often recorded in the visits that prescribed it; empty when none. */
   indication: string;
   visits: ChronicVisitView[];
+  /** The latest visit's regimen as a signa ("1x1"), for a continuation in this visit; absent when none. */
+  regimen?: { dosis: string; aturanPakai: AturanPakaiText };
 }
 
 export interface InteractionCheckView {
@@ -153,10 +155,17 @@ export function sameDrugIn(name: string, plan: string[], inPlan: boolean): strin
 export function buildChronicMedications(names: string[], visits: VisitRecord[]): ChronicMedicationView[] {
   return names.map((name) => {
     const key = drugKey(name);
+    let regimen: ChronicMedicationView['regimen'];
     const seen = visits.flatMap((visit) => {
       const medication = parseTherapyHistoryText(visit.terapi_obat).medications.find(
         (entry) => drugKey(entry.displayName) === key
       );
+      // The signa (times a day x units a take), as the RME resep takes it; the strength is in the
+      // name. A dose written as a strength ("1x10mg") is one unit a take.
+      if (medication && !regimen) {
+        const perTake = medication.strengthUnit ? 1 : medication.amountPerTake;
+        regimen = { dosis: `${medication.frequencyPerDay}x${perTake}`, aturanPakai: medication.aturanPakai };
+      }
       return medication
         ? [{ date: visit.timestamp, dose: `${formatDose(name, medication.doseLabel)} · ${medication.aturanPakai}`, diagnosis: visit.diagnosa?.nama?.trim() ?? '' }]
         : [];
@@ -166,8 +175,26 @@ export function buildChronicMedications(names: string[], visits: VisitRecord[]):
       if (entry.diagnosis) counts.set(entry.diagnosis, (counts.get(entry.diagnosis) ?? 0) + 1);
     }
     const indication = [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? '';
-    return { key, name, doseLine: seen[0]?.dose ?? '', indication, visits: seen };
+    return { key, name, doseLine: seen[0]?.dose ?? '', indication, visits: seen, ...(regimen ? { regimen } : {}) };
   });
+}
+
+/**
+ * A chronic medication continued in this visit (Chief, 2026-09-29: the chronic cards can be
+ * chosen): its latest regimen for 30 days, the prescription engine's own continuation length.
+ * Null when no visit shows the regimen: a continuation without a dose cannot reach the resep.
+ */
+export function chronicContinuation(medication: ChronicMedicationView): MedicationRecommendation | null {
+  if (!medication.regimen) return null;
+  return {
+    nama_obat: medication.name,
+    dosis: medication.regimen.dosis,
+    aturan_pakai: medication.regimen.aturanPakai,
+    durasi: '30 hari',
+    rationale: 'Lanjutan terapi kronis.',
+    safety_check: 'safe',
+    isChronicContinuation: true,
+  };
 }
 
 export const ROLE_ORDER: TriadRole[] = ['utama', 'adjuvant', 'vitamin'];

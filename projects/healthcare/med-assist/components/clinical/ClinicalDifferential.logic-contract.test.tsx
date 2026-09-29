@@ -482,6 +482,9 @@ describe('ClinicalDifferential secure logic contract', () => {
     // ...so no medication is proposed until a working diagnosis is selected.
     expect(within(workspace).queryByText(/Paracetamol 500 mg/i)).toBeNull();
     fireEvent.click((await within(workspace).findAllByTestId('dx-flow-card'))[0]);
+    // Migrated (Chief, 2026-09-29): the RME Diagnosa step comes between the pick and Tatalaksana.
+    expect(within(workspace).queryByLabelText('Tatalaksana')).toBeNull();
+    fireEvent.click(await within(workspace).findByRole('button', { name: 'Lanjut tanpa mengisi' }));
     expect(await within(workspace).findByLabelText('Tatalaksana')).toBeTruthy();
   });
 
@@ -495,11 +498,14 @@ describe('ClinicalDifferential secure logic contract', () => {
     // RME step with a diagnosis and no medication, and no transfer is dispatched merely
     // by rendering the surface.
     // Migrated (2026-09-29): Tatalaksana's "Lanjut tanpa terapi tambahan" + "Selesai".
+    // Migrated (Chief, 2026-09-29): RME Diagnosa passed with "Lanjut tanpa mengisi"; the last step
+    // is "RME Terapi" (was "RME") and "Kirim resep" is its "Isi resep ke RME".
     fireEvent.click((await within(workspace).findAllByTestId('dx-flow-card'))[0]);
+    fireEvent.click(await within(workspace).findByRole('button', { name: 'Lanjut tanpa mengisi' }));
     fireEvent.click(await within(workspace).findByRole('button', { name: 'Lanjut tanpa terapi tambahan' }));
     fireEvent.click(within(workspace).getByTestId('dx-tx-finish'));
-    const rmeStep = await within(workspace).findByLabelText('RME');
-    expect(within(rmeStep).getByRole('button', { name: 'Kirim resep' })).toBeDisabled();
+    const rmeStep = await within(workspace).findByLabelText('RME Terapi');
+    expect(within(rmeStep).getByRole('button', { name: 'Isi resep ke RME' })).toBeDisabled();
     expect(mockSendMessage).not.toHaveBeenCalledWith('transferRME', expect.anything());
   });
 });

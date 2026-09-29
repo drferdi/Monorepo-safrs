@@ -6,8 +6,6 @@ import { RMETransferPanel } from '../RMETransferPanel';
 type Props = Pick<
   DiagnosisPageProps,
   | 'viewModel'
-  | 'onAutoFillRME'
-  | 'onTransferDiagnosis'
   | 'onTransferResep'
   | 'onTransferAnamnesa'
   | 'onRetryTransfer'
@@ -20,23 +18,21 @@ export function rmeSummary(viewModel: DiagnosisPageViewModel): string {
 
 export function RmeStep({
   viewModel,
-  onAutoFillRME,
-  onTransferDiagnosis,
   onTransferResep,
   onTransferAnamnesa,
   onRetryTransfer,
   onCancelTransfer,
 }: Props) {
   return (
-    <section className="ct-v2-panel flex flex-col gap-3" aria-label="RME">
+    // The last page fills the resep and the anamnesa (education, "Kontrol …", vital signs); the
+    // diagnosis went in on its own step (Chief, 2026-09-29).
+    <section className="ct-v2-panel flex flex-col gap-3" aria-label="RME Terapi">
       <div className="ct-v2-panel-head">
-        <h2 className="ttv-section-title">RME</h2>
-        <span className="ttv-label">4 / 4</span>
+        <h2 className="ttv-section-title">RME Terapi</h2>
+        <span className="ttv-label">5 / 5</span>
       </div>
       <RMETransferPanel
         viewModel={viewModel}
-        onAutoFillRME={onAutoFillRME}
-        onTransferDiagnosis={onTransferDiagnosis}
         onTransferResep={onTransferResep}
         onTransferAnamnesa={onTransferAnamnesa}
         onRetryTransfer={onRetryTransfer}
