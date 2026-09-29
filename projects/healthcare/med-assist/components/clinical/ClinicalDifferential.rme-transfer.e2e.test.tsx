@@ -272,8 +272,8 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
     });
   });
 
-  // Migrated (2026-09-29): education is a part of Tatalaksana (points not yet given under
-  // the deck: "Berikan" gives the top one, "Lewati" sends it to the back), the Kontrol row left the education list for Tindak lanjut, and the
+  // Migrated (2026-09-29): education is a part of Tatalaksana (every point is a card of the
+  // deck: a swipe brings the next one, the tick on a card gives it), the Kontrol row left the education list for Tindak lanjut, and the
   // follow-up now reaches the anamnesis as rencana_tindakan.
   it('carries the education ticked for the chosen diagnosis into the RME anamnesis, and only that', async () => {
     const given = 'Istirahat cukup, jangan bekerja/sekolah dulu hingga 24 jam bebas demam.';
@@ -308,12 +308,14 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
       const cards = await within(education).findAllByTestId('dx-edu-card');
       expect(cards.map((card) => card.querySelector('p')?.textContent)).toEqual([notGiven, given]);
       expect(cards[0]).toHaveAttribute('data-top', 'true');
-      fireEvent.click(within(education).getByRole('button', { name: 'Lewati' }));
+      fireEvent.click(within(education).getByRole('button', { name: 'Geser ke kiri' }));
       await waitFor(() =>
         expect(within(education).getAllByTestId('dx-edu-card').find((card) => card.getAttribute('data-top') === 'true')).toHaveTextContent(given)
       );
-      fireEvent.click(within(education).getByRole('button', { name: 'Berikan' }));
-      await waitFor(() => expect(within(education).getByTestId('dx-tx-education-given')).toHaveTextContent(given));
+      fireEvent.click(within(education).getByRole('button', { name: 'Berikan edukasi ini' }));
+      await waitFor(() =>
+        expect(within(education).getByRole('button', { name: 'Batalkan edukasi ini' })).toHaveAttribute('aria-pressed', 'true')
+      );
       expect(screen.getByTestId('dx-tx-follow-up')).toHaveTextContent('Kontrol jika tidak membaik dalam 7-10 hari.');
 
       fireEvent.click(screen.getByTestId('dx-tx-finish'));

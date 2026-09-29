@@ -390,7 +390,7 @@ describe('DiagnosisStepFlow migrated assertions', () => {
 
   // Migrated from DiagnosisWorkspace "does not repeat supporting-exam items in Edukasi"; since
   // 2026-09-29 Edukasi lists only the chosen diagnosis's education, never the review items. It is
-  // a part of Tatalaksana (no "Lanjut" to reach it); points not yet given are the cards of its deck.
+  // a part of Tatalaksana (no "Lanjut" to reach it); every point is a card of its deck.
   it('does not repeat supporting-exam items in Edukasi', () => {
     const viewModel = makeViewModel();
     viewModel.evidence = {

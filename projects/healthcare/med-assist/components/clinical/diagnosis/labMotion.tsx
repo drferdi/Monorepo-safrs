@@ -157,7 +157,9 @@ export function HoldButton({
   );
 }
 
-// ---- Swipe deck: the Edukasi points, right gives, left skips (Chief, 2026-09-29). ----
+// ---- Swipe deck: the Edukasi points (Chief, 2026-09-29: "gunakan design asli motion swipe-deck,
+// cuma isi dengan edukasi pada masing masing card, swipe ganti edukasi selanjutnya"). A swipe either
+// way only brings the next point; the tick on a card gives it. ----
 
 const THROW_DISTANCE = 120;
 const THROW_VELOCITY = 400;
@@ -172,12 +174,11 @@ const DROP = { type: 'spring', stiffness: 90, damping: 18 } as const;
 const SPIN = { type: 'spring', stiffness: 120, damping: 20 } as const;
 const SHRINK = { duration: 0.3, ease: [0.23, 1, 0.32, 1] } as const;
 
-type DeckItem = { key: string; text: string };
+type DeckItem = { key: string; text: string; isSelected: boolean };
 type Flight = {
   id: number;
   item: DeckItem;
-  position: number;
-  total: number;
+  number: number;
   from: number;
   direction: 1 | -1;
   velocity: number;
@@ -214,24 +215,17 @@ function reconcile(order: string[], keys: string[]): string[] {
   return [...kept, ...keys.filter((key) => !known.has(key))];
 }
 
-/**
- * Stays mounted until its last flying copy has landed, then renders nothing; `onExhausted` fires
- * once at that moment if focus was inside the deck, so the parent can place it somewhere sensible.
- */
-export function EducationDeck({
-  items,
-  onGive,
-  onExhausted,
-}: {
-  items: DeckItem[];
-  onGive: (key: string) => void;
-  onExhausted?: () => void;
-}) {
+/** The card's title and note as in the reference: the first sentence, then the rest. */
+function titleAndNote(text: string): { title: string; note: string } {
+  const match = /^(.+?[.!?])\s+(\S[\s\S]*)$/.exec(text.trim());
+  return match ? { title: match[1], note: match[2] } : { title: text.trim(), note: '' };
+}
+
+export function EducationDeck({ items, onToggle }: { items: DeckItem[]; onToggle: (key: string) => void }) {
   const reduceMotion = !!useReducedMotion();
   const [order, setOrder] = useState<string[]>([]);
   const [flights, setFlights] = useState<Flight[]>([]);
   const nextFlight = useRef(0);
-  const focusWithin = useRef(false);
 
   const x = useMotionValue(0);
   const { rotate, opacity } = useThrowStyle(x);
@@ -241,28 +235,17 @@ export function EducationDeck({
   const handoff = useRef(0);
 
   const deck = reconcile(order, items.map((item) => item.key));
-  const byKey = new Map(items.map((item) => [item.key, item]));
-  const topKey = deck[0];
-  const topItem = topKey === undefined ? undefined : byKey.get(topKey);
+  const byKey = new Map(items.map((item, index) => [item.key, { item, number: index + 1 }]));
+  const canSwipe = deck.length > 1;
 
-  const exhausted = deck.length === 0 && flights.length === 0;
-  const onExhaustedRef = useRef(onExhausted);
-  useEffect(() => {
-    onExhaustedRef.current = onExhausted;
-  });
-  useEffect(() => {
-    if (!exhausted || !focusWithin.current) return;
-    focusWithin.current = false;
-    onExhaustedRef.current?.();
-  }, [exhausted]);
-
+  // Either way, the top card goes to the back and the next point comes up.
   const throwCard = (direction: 1 | -1, velocity = 0) => {
-    if (!topItem || (direction === -1 && deck.length < 2)) return;
+    const top = byKey.get(deck[0]);
+    if (!top || !canSwipe) return;
     const flight: Flight = {
       id: nextFlight.current++,
-      item: topItem,
-      position: 1,
-      total: deck.length,
+      item: top.item,
+      number: top.number,
       from: x.get(),
       direction,
       velocity,
@@ -271,18 +254,15 @@ export function EducationDeck({
     };
     handoff.current = progress.get();
     flushSync(() => {
-      if (direction === 1) onGive(topItem.key);
-      else setOrder([...deck.slice(1), topItem.key]);
+      setOrder([...deck.slice(1), deck[0]]);
       if (!reduceMotion) setFlights((f) => [...f, flight]);
     });
     handoff.current = 0;
     x.jump(0);
   };
 
-  if (exhausted) return null;
-
   return (
-    <div onFocus={() => (focusWithin.current = true)} onBlur={() => (focusWithin.current = false)}>
+    <div className="dx-edu-deck-wrap">
       <div
         className="dx-edu-deck"
         role="group"
@@ -297,14 +277,13 @@ export function EducationDeck({
         }}
       >
         {deck.map((key, index) => {
-          const item = byKey.get(key);
-          if (!item) return null;
+          const entry = byKey.get(key);
+          if (!entry) return null;
           return (
             <DeckCard
               key={key}
-              item={item}
-              position={index + 1}
-              total={deck.length}
+              item={entry.item}
+              number={entry.number}
               index={index}
               x={index === 0 ? x : still}
               rotate={index === 0 ? rotate : still}
@@ -312,13 +291,12 @@ export function EducationDeck({
               progress={progress}
               handoff={handoff}
               reduceMotion={reduceMotion}
+              onToggle={() => onToggle(key)}
               onRelease={(offset, velocity) => {
                 const direction = throwDirection(offset, velocity);
-                if (direction === 0 || (direction === -1 && deck.length < 2)) {
-                  if (reduceMotion) x.jump(0);
-                  else void animate(x, 0, { ...SNAP_BACK, velocity });
-                }
-                else throwCard(direction, velocity);
+                if (direction !== 0 && canSwipe) throwCard(direction, velocity);
+                else if (reduceMotion) x.jump(0);
+                else void animate(x, 0, { ...SNAP_BACK, velocity });
               }}
             />
           );
@@ -331,17 +309,16 @@ export function EducationDeck({
           />
         ))}
       </div>
-      <div className="flex items-center gap-4">
-        <button type="button" className="diagnosis-text-button" disabled={deck.length < 2} onClick={() => throwCard(-1)}>
-          <span aria-hidden="true">← </span>Lewati
+      <div className="flex justify-center gap-3">
+        <button type="button" className="dx-edu-nav" aria-label="Geser ke kiri" disabled={!canSwipe} onClick={() => throwCard(-1)}>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M13 8H3M7 4 3 8l4 4" />
+          </svg>
         </button>
-        <button type="button" className="btn-ac-inline btn-ac-inline--sharp"
-          onClick={(event) => {
-            if (event.detail > 1) return;
-            throwCard(1);
-          }}
-        >
-          Berikan<span aria-hidden="true"> →</span>
+        <button type="button" className="dx-edu-nav" aria-label="Geser ke kanan" disabled={!canSwipe} onClick={() => throwCard(1)}>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M3 8h10M9 4l4 4-4 4" />
+          </svg>
         </button>
       </div>
     </div>
@@ -350,8 +327,7 @@ export function EducationDeck({
 
 function DeckCard({
   item,
-  position,
-  total,
+  number,
   index,
   x,
   rotate,
@@ -359,11 +335,11 @@ function DeckCard({
   progress,
   handoff,
   reduceMotion,
+  onToggle,
   onRelease,
 }: {
   item: DeckItem;
-  position: number;
-  total: number;
+  number: number;
   index: number;
   x: MotionValue<number>;
   rotate: MotionValue<number>;
@@ -371,6 +347,7 @@ function DeckCard({
   progress: MotionValue<number>;
   handoff: { current: number };
   reduceMotion: boolean;
+  onToggle: () => void;
   onRelease: (offset: number, velocity: number) => void;
 }) {
   const top = index === 0;
@@ -407,7 +384,7 @@ function DeckCard({
       data-top={top}
       data-hidden={index >= VISIBLE}
     >
-      <CardFace text={item.text} position={position} total={total} opacity={opacity} />
+      <CardFace item={item} number={number} opacity={opacity} onToggle={top ? onToggle : undefined} />
     </motion.article>
   );
 }
@@ -439,26 +416,43 @@ function FlyingCard({ flight, onLanded }: { flight: Flight; onLanded: () => void
       className="dx-edu-card dx-edu-card--flying"
       data-testid="dx-edu-flying"
     >
-      <CardFace text={flight.item.text} position={flight.position} total={flight.total} opacity={opacity} />
+      <CardFace item={flight.item} number={flight.number} opacity={opacity} />
     </motion.div>
   );
 }
 
+/** The reference card: its number on top, the point's first sentence and the rest below; the tick gives it. */
 function CardFace({
-  text,
-  position,
-  total,
+  item,
+  number,
   opacity,
+  onToggle,
 }: {
-  text: string;
-  position: number;
-  total: number;
+  item: DeckItem;
+  number: number;
   opacity: MotionValue<number>;
+  onToggle?: () => void;
 }) {
+  const { title, note } = titleAndNote(item.text);
   return (
-    <motion.div style={{ opacity }} className="neu-select dx-edu-card__face">
-      <span className="ttv-label">{`${pad(position)} / ${pad(total)}`}</span>
-      <p className="text-small">{text}</p>
+    <motion.div style={{ opacity }} className="dx-edu-card__face">
+      <div className="flex items-center justify-between">
+        <span className="ttv-label">{pad(number)}</span>
+        <button
+          type="button"
+          className="dx-edu-card__tick"
+          aria-pressed={item.isSelected}
+          aria-label={item.isSelected ? 'Batalkan edukasi ini' : 'Berikan edukasi ini'}
+          tabIndex={onToggle ? 0 : -1}
+          onClick={onToggle}
+        >
+          <PenCheck checked={item.isSelected} seedText={item.key} />
+        </button>
+      </div>
+      <div className="flex flex-col gap-2">
+        <p className="diagnosis-row-title dx-edu-card__title">{title}</p>
+        {note ? <p className="diagnosis-row-meta dx-edu-card__note">{note}</p> : null}
+      </div>
     </motion.div>
   );
 }

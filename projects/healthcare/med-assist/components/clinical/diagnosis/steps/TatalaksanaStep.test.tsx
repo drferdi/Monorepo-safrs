@@ -385,42 +385,29 @@ describe('TatalaksanaStep', () => {
   });
 
   // Carries EducationStep "lists the points to tick, marking only the given ones".
-  it('numbers the education given and gives more from the deck; "ubah" removes', () => {
+  it('holds every education point in the deck; the tick on a card marks and gives it, a swipe only moves on', () => {
     const onToggleEducation = vi.fn();
     const education: DiagnosisPageProps['education'] = [
       { key: 'a', text: 'Patuhi obat setiap hari.', isSelected: true },
       { key: 'b', text: 'Diet rendah garam.', isSelected: false },
     ];
     render(<TatalaksanaStep {...props({ education, onToggleEducation })} />);
-    const given = screen.getByTestId('dx-tx-education-given');
-    expect(given).toHaveTextContent('01Patuhi obat setiap hari.');
-    expect(within(given).queryByText('Diet rendah garam.')).toBeNull();
+    expect(screen.queryByTestId('dx-tx-education-given')).toBeNull();
     expect(screen.queryByRole('button', { name: '+ Tambah edukasi' })).toBeNull();
-    const [card] = screen.getAllByTestId('dx-edu-card');
-    expect(card).toHaveAttribute('data-top', 'true');
-    expect(card).toHaveTextContent('Diet rendah garam.');
-    fireEvent.click(screen.getByRole('button', { name: 'Berikan' }));
-    expect(onToggleEducation).toHaveBeenLastCalledWith('b');
-    fireEvent.click(screen.getByRole('button', { name: 'ubah' }));
-    fireEvent.click(within(given).getByRole('button', { name: 'hapus' }));
+    const cards = screen.getAllByTestId('dx-edu-card');
+    expect(cards).toHaveLength(2);
+    const top = () => screen.getAllByTestId('dx-edu-card').find((card) => card.getAttribute('data-top') === 'true') as HTMLElement;
+    const tick = () => top().querySelector('button.dx-edu-card__tick') as HTMLButtonElement;
+    expect(top()).toHaveTextContent('Patuhi obat setiap hari.');
+    expect(tick()).toHaveAttribute('aria-pressed', 'true');
+    fireEvent.click(tick());
     expect(onToggleEducation).toHaveBeenLastCalledWith('a');
-  });
-
-  it('when the last point becomes given, the deck is gone and focus lands on "ubah"', () => {
-    const onToggleEducation = vi.fn();
-    const one = (isSelected: boolean): DiagnosisPageProps['education'] => [
-      { key: 'a', text: 'Patuhi obat setiap hari.', isSelected: false },
-      { key: 'b', text: 'Diet rendah garam.', isSelected },
-    ];
-    const { rerender } = render(<TatalaksanaStep {...props({ education: one(true), onToggleEducation })} />);
-    screen.getByRole('button', { name: 'Berikan' }).focus();
-    rerender(
-      <TatalaksanaStep
-        {...props({ education: [{ key: 'a', text: 'Patuhi obat setiap hari.', isSelected: true }, { key: 'b', text: 'Diet rendah garam.', isSelected: true }], onToggleEducation })}
-      />
-    );
-    expect(screen.queryByTestId('dx-tx-education-deck')).toBeNull();
-    expect(screen.getByRole('button', { name: 'ubah' })).toHaveFocus();
+    fireEvent.click(screen.getByRole('button', { name: 'Geser ke kanan' }));
+    expect(top()).toHaveTextContent('Diet rendah garam.');
+    expect(tick()).toHaveAttribute('aria-pressed', 'false');
+    expect(onToggleEducation).toHaveBeenCalledTimes(1);
+    fireEvent.click(tick());
+    expect(onToggleEducation).toHaveBeenLastCalledWith('b');
   });
 
   // Carries EducationStep "says so when the knowledge base has no education for the diagnosis".

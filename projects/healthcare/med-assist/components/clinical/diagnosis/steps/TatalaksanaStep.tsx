@@ -518,52 +518,13 @@ function EducationPart({
   education: DiagnosisPageProps['education'];
   onToggleEducation: (key: string) => void;
 }) {
-  const [editing, setEditing] = useState(false);
-  const editButton = useRef<HTMLButtonElement>(null);
   const given = education.filter((item) => item.isSelected);
-  const rest = education.filter((item) => !item.isSelected);
-  useEffect(() => {
-    if (given.length === 0) setEditing(false);
-  }, [given.length]);
-
   return (
     <Part label="Edukasi" count={given.length} testId="dx-tx-education">
       {education.length === 0 ? (
         <p className="diagnosis-row-meta">Basis pengetahuan belum punya edukasi untuk diagnosis ini.</p>
       ) : (
-        <>
-          {given.length > 0 ? (
-            <ol className="flex flex-col gap-1" data-testid="dx-tx-education-given">
-              {given.map((item, index) => (
-                <li key={item.key} className="flex items-start gap-2 text-small">
-                  <span className="ttv-label dx-tx-index">{pad(index + 1)}</span>
-                  <span className="min-w-0 flex-1">{item.text}</span>
-                  {editing ? (
-                    <button type="button" className="diagnosis-text-button" onClick={() => onToggleEducation(item.key)}>
-                      hapus
-                    </button>
-                  ) : null}
-                </li>
-              ))}
-            </ol>
-          ) : (
-            <p className="diagnosis-row-meta">Belum ada edukasi yang diberikan.</p>
-          )}
-          {given.length > 0 ? (
-            <div className="flex flex-wrap gap-4">
-              <button
-                ref={editButton}
-                type="button"
-                className="diagnosis-text-button"
-                aria-pressed={editing}
-                onClick={() => setEditing((value) => !value)}
-              >
-                {editing ? 'selesai ubah' : 'ubah'}
-              </button>
-            </div>
-          ) : null}
-          <EducationDeck items={rest} onGive={onToggleEducation} onExhausted={() => editButton.current?.focus()} />
-        </>
+        <EducationDeck items={education} onToggle={onToggleEducation} />
       )}
     </Part>
   );

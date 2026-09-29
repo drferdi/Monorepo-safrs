@@ -10485,3 +10485,39 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 .dx-edu-deck { display: grid; height: auto; padding-bottom: 24px; }
 .dx-edu-card { position: relative; inset: auto; grid-area: 1 / 1; }
 .dx-edu-card--flying { position: absolute; inset: 0 0 24px 0; }
+
+/* Edukasi swipe deck, the reference's look (Chief, 2026-09-29: "gunakan design asli"): a centred
+   portrait card with its number on top and the point below, round arrow buttons under the deck */
+.dx-edu-deck-wrap { display: flex; flex-direction: column; gap: 12px; }
+.dx-edu-deck { grid-template-columns: min(256px, 100%); justify-content: center; }
+.dx-edu-card--flying { position: relative; inset: auto; grid-area: 1 / 1; }
+.dx-edu-card__face {
+  min-height: 320px;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 24px;
+  background: var(--neu-inset-bg);
+  box-shadow: var(--neu-shadow-card);
+}
+.dx-edu-card__tick { display: inline-grid; padding: 0; border: 0; background: none; color: inherit; cursor: pointer; }
+.dx-edu-card__tick[aria-pressed='true'] .dx-pen-check { border-color: var(--sentra-safe-border); }
+.dx-edu-card__tick:focus-visible, .dx-edu-nav:focus-visible { outline: 1px solid var(--accent-med); outline-offset: 2px; }
+.dx-edu-card__note { white-space: pre-line; }
+.dx-edu-nav {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: 50%;
+  background: var(--neu-inset-bg);
+  box-shadow: var(--neu-shadow-card);
+  color: var(--text-main);
+  cursor: pointer;
+}
+.dx-edu-nav svg { width: 16px; height: 16px; }
+.dx-edu-nav:disabled { opacity: 0.4; cursor: default; }
+.dx-edu-card[data-hidden='true'] { pointer-events: none; }
