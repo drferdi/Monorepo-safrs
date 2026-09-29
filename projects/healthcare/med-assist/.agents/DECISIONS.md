@@ -3,6 +3,31 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-29 — Edukasi deck in the reference's own design; the tick on a card gives
+
+- Decision (Chief, after seeing the first deck: "gunakan design asli motion
+  https://lab.xevrion.dev/lab/swipe-deck, cuma isi dengan edukasi pada masing masing card, swipe
+  ganti edukasi selanjutnya"; for giving he chose "Centang di kartu"): the deck holds every
+  education point and looks like the reference: a centred portrait card (256 px wide, at least
+  320 px tall, radius 24 px, padding 24 px) with its number ("01") on top and the point below
+  (first sentence as the title, the rest as the note), and two round arrow buttons ("Geser ke
+  kiri" / "Geser ke kanan"). A swipe either way (drag, flick, buttons, ArrowLeft/Right) only
+  brings the next point; the top card goes to the back. The tick on the card (`PenCheck`, as on
+  the therapy cards) gives or takes back the point. The numbered given list, "ubah"/"hapus" and
+  "Belum ada edukasi yang diberikan." are removed so nothing is written twice; the "Edukasi N"
+  count stays. Supersedes the 2026-09-29 entry below (right gives, left skips).
+- Details: both buttons are disabled with one point; held keys are ignored; cards beyond the
+  third are hidden and take no pointer events (in the harness the 8th card, 84 px lower,
+  covered the arrow buttons); the deck still sizes to its tallest card; reduced motion swaps
+  cards without flights or springs. Tokens only (`--neu-inset-bg`, `--border-subtle`,
+  `--neu-shadow-card`, `--text-main`, `--accent-med`, `--sentra-safe-border`); the face no longer
+  uses `neu-select`.
+- Evidence: labMotion.test.tsx (10 tests: every point, title/note, swipe moves on and gives
+  nothing, tick gives/takes back, held key, one point, reduced motion, reconcile, hidden cards);
+  TatalaksanaStep, DiagnosisStepFlow and rme-transfer e2e migrated (named in the commit); five
+  gates exit 0; token-guard PASS; harness: right ×3 → 04, left → 05, drag moves on, tick →
+  "Edukasi 1", a long point grows the deck (390 px) above the buttons, no horizontal overflow.
+
 ## 2026-09-29 — Edukasi as a swipe deck (right gives, left skips)
 
 - Decision (Chief, on the Edukasi part: "section ini gunakan motion FX

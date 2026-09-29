@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange, stock search, steady UI, focus underline, standard dose prefill, selection trace, Keamanan removed + audit, Edukasi swipe deck)
+Last updated: 2026-09-29 (Tatalaksana: dose "1x10mg", timeline cards, DDI reason, muted history, orange, stock search, steady UI, focus underline, standard dose prefill, selection trace, Keamanan removed + audit, Edukasi swipe deck in the reference design)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
@@ -47,7 +47,7 @@ twelve Tatalaksana entries):
 1. Reload "Asisten Medis" (`.output\chrome-mv3-dev`, built on the final tree).
 2. A patient with chronic therapy in the visit history, diagnosis J06/J02/J20/I10 → page 2
    Tatalaksana: chronic cards with Indikasi/DDI, Review; choose or "Gunakan semua usulan";
-   Keamanan; add education; "Selesai" → RME → "Isi otomatis RME": Edukasi and Rencana tindakan
+   tick education on its cards; "Selesai" → RME → "Isi otomatis RME": Edukasi and Rencana tindakan
    hold the ticked points and the KB follow-up.
 3. Without a prescription service the page says "Tidak ada usulan obat dari layanan resep."; use
    "+ Tambah obat" or "Lanjut tanpa terapi tambahan".
@@ -57,8 +57,9 @@ twelve Tatalaksana entries):
 6. Tick a therapy card (or a diagnosis card): no green frame, one line circles it.
 7. No "Keamanan terapi" part; add "BLUD Amlodipin" while chronic Amlodipin is listed → both cards
    say "duplikasi: …" in orange, Ringkasan "⚠ … perlu review".
-8. Edukasi: drag the top card right (or "Berikan") → it joins the numbered list; left (or "Lewati")
-   → it goes to the back; ArrowLeft/Right on the focused deck; after the last card focus is on "ubah".
+8. Edukasi: one card per point in the swipe-deck look (number on top, point below); swipe
+   either way, the round arrows or ArrowLeft/Right → the next point; the tick on the card gives it
+   (count "Edukasi N" goes up, the tick stays on when the card comes round again); no list below.
 
 ## Verification (capsule root, final tree)
 
@@ -66,7 +67,7 @@ twelve Tatalaksana entries):
 |---|---|---|
 | `lint` | 0 | 1 pre-existing warning (`lib/api/platform-api-client.test.ts:19`) |
 | `typecheck` | 0 | clean |
-| `test` | 0 | 181 files passed, 1 skipped; 1466 passed, 17 skipped (was 1451) |
+| `test` | 0 | 181 files passed, 1 skipped; 1461 passed, 17 skipped (was 1466: the v1 deck tests and the "ubah" focus test went with the feature) |
 | `exec wxt build --mode development` | 0 | clean |
 | `run:check` | 0 | "Extension loads: Asisten Medis 2.1.0 (MV3), all referenced files present." |
 
