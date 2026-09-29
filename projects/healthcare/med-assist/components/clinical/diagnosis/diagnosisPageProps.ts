@@ -100,7 +100,7 @@ export interface DiagnosisPageProps {
   /** Tindak lanjut: the follow-up interval ("3 hari"), sent to the RME as "Kontrol 3 hari". */
   controlAfter: string;
   onControlAfterChange: (value: string) => void;
-  /** Red flags of the chosen diagnoses, for the Safety net row "Segera kembali". */
+  /** Red flags of the chosen diagnoses, drawn as the Safety net timeline. */
   safetyNet: string[];
   /** Removes a proposal from the page and from the prescription ("Hapus"). */
   onDismissMedication: (key: string) => void;

@@ -433,12 +433,16 @@ describe('TatalaksanaStep', () => {
     expect(screen.getByTestId('dx-tx-summary')).not.toHaveTextContent('Tindak lanjut');
   });
 
-  // Chief, 2026-09-29, on the orange Safety net box: "Redesign"; he chose rows without a frame.
-  it('shows the safety net as one row, "Segera kembali", listing each red flag, with no frame and no second title', () => {
+  // Chief, 2026-09-29, on the orange Safety net box: "Redesign", then "make it like diagram": a
+  // timeline like the therapy cards, a warning node per red flag, no frame and no second title.
+  it('draws the safety net as a timeline, one warning node per red flag, with no frame and no second title', () => {
     render(<TatalaksanaStep {...props({ safetyNet: ['Sesak napas', 'Penurunan kesadaran'] })} />);
     const net = screen.getByTestId('dx-tx-safety-net');
-    expect(net).toHaveTextContent(/^Safety netSegera kembaliSesak napasPenurunan kesadaran$/);
-    expect(within(net).getAllByRole('listitem').map((item) => item.textContent)).toEqual(['Sesak napas', 'Penurunan kesadaran']);
+    expect(net).toHaveTextContent(/^Safety netSesak napasPenurunan kesadaran$/);
+    const items = within(net).getAllByRole('listitem');
+    expect(items.map((item) => item.textContent)).toEqual(['Sesak napas', 'Penurunan kesadaran']);
+    expect(items.map((item) => !!item.querySelector('.dx-timeline__node.dx-tx-node--warning'))).toEqual([true, true]);
+    expect(items.map((item) => !!item.querySelector('.dx-timeline__line'))).toEqual([true, false]);
     expect(net.querySelector('.diagnosis-readonly-field')).toBeNull();
   });
 });

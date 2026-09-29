@@ -745,20 +745,22 @@ export function TatalaksanaStep({
 
       <Part label="Safety net" testId="dx-tx-safety-net">
         {safetyNet.length > 0 ? (
-          <Kv
-            rows={[
-              {
-                term: 'Segera kembali',
-                value: (
-                  <ul className="dx-tx-safety-list">
-                    {safetyNet.map((flag) => (
-                      <li key={flag}>{formatClinicalText(flag)}</li>
-                    ))}
-                  </ul>
-                ),
-              },
-            ]}
-          />
+          // A timeline like the therapy cards (Chief, 2026-09-29: "make it like diagram"): a warning node per red flag.
+          <ol className="dx-timeline dx-tx-timeline">
+            {safetyNet.map((flag, index) => (
+              <li key={flag} className="dx-timeline__item">
+                {index < safetyNet.length - 1 ? <span aria-hidden="true" className="dx-timeline__line" /> : null}
+                <span aria-hidden="true" className="dx-timeline__node dx-tx-node--warning">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d={STEP_ICONS.kontra} />
+                  </svg>
+                </span>
+                <div className="dx-tx-step min-w-0 flex-1">
+                  <span className="diagnosis-row-meta dx-tx-step-value min-w-0">{formatClinicalText(flag)}</span>
+                </div>
+              </li>
+            ))}
+          </ol>
         ) : (
           <p className="diagnosis-row-meta">Basis pengetahuan belum mencatat kapan pasien harus segera kembali.</p>
         )}
