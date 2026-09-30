@@ -103,3 +103,36 @@ describe('encounterToCaseState bedside findings', () => {
     expect('qa' in state.anamnesis).toBe(false);
   });
 });
+
+// Chief, 2026-09-30: when the RME has no blood pressure yet, the engine follows the existing BP
+// algorithm (the gate thresholds of lib/emergency-detector/htn-classifier) on the latest visit's
+// reading, sent as an earlier result and never as today's vital sign.
+describe('encounterToCaseState previous blood pressure', () => {
+  const previous = { systolic: 150, diastolic: 95, when: '12 hari lalu' };
+  const rowName = 'Tekanan darah kunjungan sebelumnya (12 hari lalu); TD hari ini belum diukur';
+
+  it('sends the previous reading as a result, flagged by the BP algorithm, when today has none', () => {
+    const state = encounterToCaseState(CASE.encounter, { ...CASE.context, vital_signs: {}, previous_blood_pressure: previous });
+    expect(state.vitals.systolic).toBeUndefined();
+    expect(state.vitals.diastolic).toBeUndefined();
+    expect(state.results).toContainEqual({ name: rowName, value: '150/95', unit: 'mmHg', flag: 'abnormal' });
+  });
+
+  it('flags a previous reading below the hypertension gate as normal', () => {
+    const state = encounterToCaseState(CASE.encounter, {
+      ...CASE.context,
+      vital_signs: {},
+      previous_blood_pressure: { ...previous, systolic: 128, diastolic: 82 },
+    });
+    expect(state.results).toContainEqual({ name: rowName, value: '128/82', unit: 'mmHg', flag: 'normal' });
+  });
+
+  it('leaves the previous reading out once the blood pressure of today is measured', () => {
+    const state = encounterToCaseState(CASE.encounter, {
+      ...CASE.context,
+      vital_signs: { systolic: 132, diastolic: 84 },
+      previous_blood_pressure: previous,
+    });
+    expect(state.results.some((row) => row.name.startsWith('Tekanan darah kunjungan sebelumnya'))).toBe(false);
+  });
+});

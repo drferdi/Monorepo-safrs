@@ -103,6 +103,25 @@ describe('ClinicalReasoningWorkbench visit persistence', () => {
     expect(mockSaveScrapedVisits).toHaveBeenCalledTimes(1);
   });
 
+  // Chief, 2026-09-30: no blood pressure in the RME yet, so the prefetch carries the latest
+  // visit's reading from the history read (the page's request carries the same, one case key).
+  it('prefetches with the latest visit blood pressure from the history read', async () => {
+    const previous = { systolic: 150, diastolic: 95, when: '12 hari lalu' };
+    const withBp = { candidates: [], loaded: true, previousBloodPressure: previous };
+    const noHistory = mockUseRecurrentDiagnoses.getMockImplementation();
+    mockUseRecurrentDiagnoses.mockImplementation(() => withBp);
+    mockSaveScrapedVisits.mockResolvedValue(2);
+    render(<ClinicalReasoningWorkbench {...props({ vitals: { ...props().vitals, sbp: '', dbp: '' } })} />);
+    await act(async () => {
+      await Promise.resolve();
+    });
+    await act(async () => {
+      vi.advanceTimersByTime(2_000);
+    });
+    expect(prefetchCalls().at(-1)?.[1]).toEqual(expect.objectContaining({ previous_blood_pressure: previous }));
+    if (noHistory) mockUseRecurrentDiagnoses.mockImplementation(noHistory);
+  });
+
   it('still reads history and prefetches when the write fails', async () => {
     mockSaveScrapedVisits.mockRejectedValue(new Error('no IndexedDB'));
     render(<ClinicalReasoningWorkbench {...props()} />);

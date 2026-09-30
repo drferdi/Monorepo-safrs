@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
 
-import { buildDiagnosisRequestContext, hashDiagnosisContext } from './request-context';
+import { buildDiagnosisRequestContext, hashDiagnosisContext, latestVisitBloodPressure } from './request-context';
 
 const source = {
   keluhanUtama: 'nyeri kepala',
@@ -47,5 +47,30 @@ describe('request-context', () => {
     const reordered = { patient_age, ...rest };
     expect(Object.keys(reordered)).not.toEqual(Object.keys(ctx));
     expect(hashDiagnosisContext(reordered)).toBe(hashDiagnosisContext(ctx));
+  });
+
+  // Chief, 2026-09-30: the BP algorithm runs on the latest visit's reading when the RME has none.
+  it('carries the latest visit blood pressure, and without one keeps the payload and hash', () => {
+    const plain = buildDiagnosisRequestContext(source);
+    expect('previous_blood_pressure' in plain).toBe(false);
+    const previous = { systolic: 150, diastolic: 95, when: '12 hari lalu' };
+    expect(buildDiagnosisRequestContext({ ...source, previousBloodPressure: previous }).previous_blood_pressure).toEqual(previous);
+  });
+
+  it('takes the latest visit with a measured blood pressure', () => {
+    const visit = (timestamp: string, sbp: number, dbp: number) => ({
+      patient_id: 'RM-SYN',
+      encounter_id: timestamp,
+      timestamp,
+      vitals: { sbp, dbp, hr: 80, rr: 18, temp: 36.6, glucose: 0 },
+      keluhan_utama: 'kontrol',
+      source: 'scrape' as const,
+    });
+    const now = new Date(2026, 8, 30);
+    expect(
+      latestVisitBloodPressure([visit('2026-09-10', 140, 90), visit('2026-09-25', 0, 0), visit('2026-09-18', 150, 95)], now)
+    ).toEqual({ systolic: 150, diastolic: 95, when: '12 hari lalu' });
+    expect(latestVisitBloodPressure([visit('2026-09-25', 0, 0)], now)).toBeUndefined();
+    expect(latestVisitBloodPressure([], now)).toBeUndefined();
   });
 });

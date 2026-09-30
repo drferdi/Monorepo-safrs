@@ -11,6 +11,8 @@
 
 import type { CaseState } from './types';
 
+import { getHTNSeverity } from '@/lib/emergency-detector/htn-classifier';
+
 import type {
   BedsideFindingRecord,
   DiagnosisRequestContext,
@@ -69,14 +71,17 @@ export function encounterToCaseState(
     physicalExam: answers('exam').flatMap(({ item, recorded }) =>
       recorded.map((f) => (f.name === item ? `${item} — ${MARK[f.state]}` : `${item}: ${f.name} — ${MARK[f.state]}`))
     ),
-    results: answers('test').map(({ item, recorded }) => ({
-      name: item,
-      value: recorded.map((f) => `${f.name} — ${MARK[f.state]}`).join('; '),
-      // "Normal" ticked in a legacy record is a normal result, not an abnormal finding.
-      flag: recorded.every((f) => f.state === 'absent' || f.name === 'Normal')
-        ? ('normal' as const)
-        : ('abnormal' as const),
-    })),
+    results: [
+      ...answers('test').map(({ item, recorded }) => ({
+        name: item,
+        value: recorded.map((f) => `${f.name} — ${MARK[f.state]}`).join('; '),
+        // "Normal" ticked in a legacy record is a normal result, not an abnormal finding.
+        flag: recorded.every((f) => f.state === 'absent' || f.name === 'Normal')
+          ? ('normal' as const)
+          : ('abnormal' as const),
+      })),
+      ...previousBloodPressureResult(vitals, context.previous_blood_pressure),
+    ],
     currentMedications: [],
     knownConditions: mergeKnownConditions(
       encounter.diagnosa?.penyakit_kronis ?? [],
@@ -85,6 +90,27 @@ export function encounterToCaseState(
     allergies: [...(encounter.anamnesa?.alergi?.obat ?? [])],
     facilityCapabilities: [],
   };
+}
+
+/**
+ * No blood pressure in the RME yet (Chief, 2026-09-30): the latest visit's reading goes to the
+ * engine as an earlier result, flagged by the existing BP gate (`getHTNSeverity`: grade 1 and
+ * above is abnormal), never as today's vital sign.
+ */
+function previousBloodPressureResult(
+  vitals: NonNullable<DiagnosisRequestContext['vital_signs']>,
+  previous: DiagnosisRequestContext['previous_blood_pressure']
+): CaseState['results'] {
+  if (!previous || (vitals.systolic !== undefined && vitals.diastolic !== undefined)) return [];
+  const severity = getHTNSeverity({ sbp: previous.systolic, dbp: previous.diastolic });
+  return [
+    {
+      name: `Tekanan darah kunjungan sebelumnya (${previous.when}); TD hari ini belum diukur`,
+      value: `${previous.systolic}/${previous.diastolic}`,
+      unit: 'mmHg',
+      flag: severity === 'normal' || severity === 'prehypertension' ? 'normal' : 'abnormal',
+    },
+  ];
 }
 
 /**

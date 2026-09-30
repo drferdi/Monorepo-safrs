@@ -4,6 +4,8 @@
  *
  * @module lib/diagnosis-engine/request-context
  */
+import { formatVisitRelativeDay, getVisitTimestampMs } from '@/lib/clinical/visit-history-format';
+import type { VisitRecord } from '@/lib/iskandar-diagnosis-engine/visit-history-store';
 import type { BedsideFindingRecord, DiagnosisRequestContext } from '@/types/api';
 
 export interface DiagnosisContextSource {
@@ -15,6 +17,21 @@ export interface DiagnosisContextSource {
   recurrent: Array<{ icd: string; name: string }>;
   /** Only the diagnosis page records these; the Trajectory prefetch never has any. */
   bedsideFindings?: BedsideFindingRecord[];
+  /** The latest visit's blood pressure (`latestVisitBloodPressure`), for when today has none. */
+  previousBloodPressure?: DiagnosisRequestContext['previous_blood_pressure'];
+}
+
+/** The blood pressure of the latest visit that measured one, and how long ago. */
+export function latestVisitBloodPressure(
+  visits: VisitRecord[],
+  now: Date = new Date()
+): DiagnosisRequestContext['previous_blood_pressure'] {
+  const latest = visits
+    .filter((visit) => visit.vitals.sbp > 0 && visit.vitals.dbp > 0)
+    .sort((a, b) => getVisitTimestampMs(b.timestamp) - getVisitTimestampMs(a.timestamp))[0];
+  return latest
+    ? { systolic: latest.vitals.sbp, diastolic: latest.vitals.dbp, when: formatVisitRelativeDay(latest.timestamp, now) }
+    : undefined;
 }
 
 const positive = (value: number | undefined) => (value && value > 0 ? value : undefined);
@@ -40,6 +57,7 @@ export function buildDiagnosisRequestContext(source: DiagnosisContextSource): Di
     recurrent_diagnoses: source.recurrent.map((item) => ({ icd: item.icd, name: item.name })),
     // Omitted when empty, so a request without findings keeps the prefetch's payload and hash.
     ...(source.bedsideFindings?.length ? { bedside_findings: source.bedsideFindings } : {}),
+    ...(source.previousBloodPressure ? { previous_blood_pressure: source.previousBloodPressure } : {}),
   };
 }
 

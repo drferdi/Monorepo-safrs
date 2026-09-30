@@ -1139,6 +1139,36 @@ describe('ClinicalDifferential final diagnosis support page', () => {
     ).toHaveLength(0);
   });
 
+  // Chief, 2026-09-30: with no blood pressure in the RME yet, the request carries the latest
+  // visit's reading from the history read, as the Trajectory prefetch does.
+  it('asks for suggestions with the latest visit blood pressure when today has none', async () => {
+    const previous = { systolic: 150, diastolic: 95, when: '12 hari lalu' };
+    recurrentHistory.state = { candidates: [], loaded: true, previousBloodPressure: previous };
+    render(
+      <ClinicalDifferential
+        keluhanUtama="Nyeri kepala"
+        keluhanTambahan=""
+        patientAge={54}
+        patientGender="L"
+        patientRM="RM-2026-001"
+        allergies={[]}
+        confirmedPregnancyStatus={false}
+        vitals={{ sbp: 0, dbp: 0, hr: 88, rr: 18, temp: 36.7, glucose: 0 }}
+        canonicalOutput={null}
+        hasVisitHistory
+        onBack={() => undefined}
+        onDiagnosisChange={() => undefined}
+        onMedicationsChange={() => undefined}
+      />
+    );
+    await waitFor(() =>
+      expect(mockSendMessage).toHaveBeenCalledWith(
+        'getSuggestions',
+        expect.objectContaining({ previous_blood_pressure: previous })
+      )
+    );
+  });
+
   describe('history-only message', () => {
     const MESSAGE = 'Data hari ini belum cukup untuk engine; riwayat menunjukkan pola berikut.';
 

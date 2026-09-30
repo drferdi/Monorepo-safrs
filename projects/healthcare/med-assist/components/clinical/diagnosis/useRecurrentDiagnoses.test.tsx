@@ -87,4 +87,21 @@ describe('useRecurrentDiagnoses', () => {
     rerender({ rm: 'RM-SYN-2' });
     expect(result.current).toEqual({ candidates: [], loaded: false });
   });
+
+  // Chief, 2026-09-30: with no blood pressure in the RME yet, the request carries the latest
+  // visit's reading, read with the history both requests wait for (so both keep one case key).
+  it('gives the latest visit blood pressure with the same read, and none without one', async () => {
+    const withBp = [
+      { ...visits[0], timestamp: '2026-09-16', vitals: { ...visits[0].vitals, sbp: 150, dbp: 95 } },
+      ...visits,
+    ] as VisitRecord[];
+    const today = () => new Date(2026, 8, 28);
+    const { result } = renderHook(() => useRecurrentDiagnoses('RM-SYN-1', { load: async () => withBp, today }));
+    await waitFor(() => expect(result.current.loaded).toBe(true));
+    expect(result.current.previousBloodPressure).toEqual({ systolic: 150, diastolic: 95, when: '12 hari lalu' });
+
+    const none = renderHook(() => useRecurrentDiagnoses('RM-SYN-2', { load: async () => visits, today }));
+    await waitFor(() => expect(none.result.current.loaded).toBe(true));
+    expect(none.result.current.previousBloodPressure).toBeUndefined();
+  });
 });

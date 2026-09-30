@@ -298,6 +298,8 @@ export interface DiagnosisRequestContext {
   recurrent_diagnoses?: Array<{ icd: string; name: string }>;
   /** Results the doctor recorded for a next best step; absent until one is recorded */
   bedside_findings?: Array<BedsideFindingRecord | LegacyBedsideFindingRecord>;
+  /** The latest earlier visit's blood pressure; the engine reads it only when today has none */
+  previous_blood_pressure?: { systolic: number; diastolic: number; when: string };
 }
 
 /**

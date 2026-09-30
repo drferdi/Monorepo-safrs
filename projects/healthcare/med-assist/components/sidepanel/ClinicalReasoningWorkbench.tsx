@@ -141,7 +141,7 @@ export function ClinicalReasoningWorkbench({
   // Read only after the write lands (an empty RM reads nothing and counts as loaded), so the
   // prefetch carries the same history as the diagnosis page's request. The hook keeps one array
   // identity per RM, so this memo (and the request below) changes only when the history does.
-  const { candidates: recurrentCandidates, loaded: recurrentLoaded } = useRecurrentDiagnoses(
+  const { candidates: recurrentCandidates, loaded: recurrentLoaded, previousBloodPressure } = useRecurrentDiagnoses(
     persisted ? patient.rm : ''
   );
   const recurrent = useMemo(
@@ -165,8 +165,9 @@ export function ClinicalReasoningWorkbench({
           temp: trajectoryVitals.temp,
         },
         recurrent,
+        previousBloodPressure,
       }),
-    [keluhanUtama, keluhanTambahan, patient.age, patient.gender, trajectoryVitals, recurrent]
+    [keluhanUtama, keluhanTambahan, patient.age, patient.gender, trajectoryVitals, recurrent, previousBloodPressure]
   );
   useEffect(() => {
     if (!requestContext.keluhan_utama || requestContext.keluhan_utama === '-' || !patient.rm) return;

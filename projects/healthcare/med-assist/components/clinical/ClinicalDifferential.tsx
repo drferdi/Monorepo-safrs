@@ -726,7 +726,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         .filter((item): item is { icd_x: string; nama: string } => Boolean(item?.icd_x)),
     [trajectory]
   );
-  const { candidates: recurrent, loaded: recurrentLoaded } = useRecurrentDiagnoses(patientRM);
+  const { candidates: recurrent, loaded: recurrentLoaded, previousBloodPressure } = useRecurrentDiagnoses(patientRM);
   const recurrentByIcd = useMemo(
     () => new Map(recurrent.map((candidate) => [icdRoot(candidate.icd), candidate])),
     [recurrent]
@@ -797,6 +797,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       vitals.sbp,
       vitals.temp,
       recurrentForRequest,
+      previousBloodPressure,
       patientRM,
     ]);
     const findingOnly = lastRequestInputs.current === requestInputs;
@@ -881,6 +882,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
           vitals,
           recurrent: recurrentForRequest,
           bedsideFindings,
+          previousBloodPressure,
         });
         const sentAt = Date.now();
         const response = await sendMessage('getSuggestions', request);
@@ -943,6 +945,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     vitals.temp,
     recurrentForRequest,
     recurrentLoaded,
+    previousBloodPressure,
     patientRM,
     bedsideFindings,
   ]);
