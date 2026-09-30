@@ -3,6 +3,29 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-09-30 — No tensi in the RME: the engine gets the last visit's BP through the BP gate
+
+- Decision (Chief: "Tensi jika rme belum di isi maka system seharusnya mengikuti algoritme
+  tensi"; he chose Diagnosis / MIRA and the existing algorithm): when today's BP is not recorded,
+  the diagnosis request carries the latest visit's reading (`previous_blood_pressure`), and the
+  engine case gets one result row "Tekanan darah kunjungan sebelumnya (N hari lalu); TD hari ini
+  belum diukur", flagged by `getHTNSeverity` (grade 1 and above abnormal). It never enters
+  today's vitals and is dropped once today's BP exists. With no earlier BP nothing is added.
+- Rationale: an earlier reading is evidence the engine should weigh, but it must not read as
+  today's measurement; the results row keeps the MIRA contract unchanged. The reading comes from
+  the history read both requests wait for, so the prefetch and the page keep one case key.
+- Evidence: commit 9b8dddd9. The model-side effect was not verified (no live MIRA call).
+
+## 2026-09-30 — Visit-form labels are not chronic medications (R3, Chief approved)
+
+- Decision: the history parser (`lib/clinical/chronic-therapy-history.ts`) drops lines with no
+  letters, bare form labels (obat, resep, terapi, dr, dokter, signa, ...) and the "sesuai
+  advis(e) dokter" placeholder; the three-word fallback stays for real short entries.
+- Rationale: Chief saw cards "Obat", "Dr Dokter", ":", "Advise Dokter"; each was a 1x1 medication
+  that a tick would continue into the RME resep.
+- Evidence: commit 1b90f54d. The scraper (`lib/scraper/extractors.ts`, label-sibling read) is
+  the inferred origin of the labels; not changed without a real DOM sample.
+
 ## 2026-09-29 — Each RME page shows only its own transfer run
 
 - Decision: RME Diagnosa and RME Terapi share one transfer state, so the view model carries the

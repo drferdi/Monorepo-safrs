@@ -1,17 +1,16 @@
 # HANDOFF
 
-Last updated: 2026-09-29 (late night: chronic cards continue in this visit, "Lanjut tanpa terapi
-tambahan" breathes, the RME fill follows the ePuskesmas pages, each RME page shows only its own
-run; earlier: MIRA fix, Chrome e2e)
+Last updated: 2026-09-30 (the BP algorithm on the last visit when the RME has no tensi; visit-form
+labels no longer read as chronic medications; before: page-by-page RME fill, chronic continuation)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
 
 ## Current state
 
-Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-29 (four entries
-on top) hold the details. Commits 36077bd1, 34a4ad01, cc67c33b, 0130313d and the result/reason fixup after them are ahead
-of `main` (e0dd9545).
+Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-30 (two entries) and
+2026-09-29 hold the details. Ahead of `main` (e0dd9545): 36077bd1, 34a4ad01, cc67c33b, 0130313d, 689e4fae, 1b90f54d,
+9b8dddd9 and the docs commit after them.
 
 - Steps: Temuan 1/5 · Diagnosis 2/5 · **RME Diagnosa 3/5** (page 1) | Tatalaksana 4/5 | **RME Terapi
   5/5** (`steps/RmeDiagnosisStep.tsx`, `diagnosisSteps.ts`, `DiagnosisStepFlow.tsx`). "Isi otomatis
@@ -22,13 +21,17 @@ of `main` (e0dd9545).
 - Tatalaksana: a chronic card's tick (or a tap on the card) continues it (`chronicContinuation` in
   `tatalaksana.ts`, wired in `ClinicalDifferential.tsx` as a prescription candidate shown only on
   its card); "Lanjut tanpa terapi tambahan" breathes until decided (`.dx-tx-breathe`, appended).
+- No tensi today: the diagnosis request carries the last visit's BP (`previous_blood_pressure`,
+  from `useRecurrentDiagnoses`); `encounterToCaseState` sends it as a results row flagged by
+  `getHTNSeverity`, never as today's vitals (9b8dddd9).
+- History parser drops form labels and the advice placeholder (`lib/clinical`, R3, approved).
 - The build in `.output\chrome-mv3-dev` is the production build (`run build`, MIRA engine), last.
   MIRA on 127.0.0.1:8787 answers `/healthz` 200. Native host registered for
   `bhcffleclpadneocndhembhjbemimhkm`.
 
 ## Verification (final tree)
 
-lint 0 (1 old warning) · typecheck 0 · test 0 (181 files, 1479 passed, 17 skipped) · dev build 0
+lint 0 (1 old warning) · typecheck 0 · test 0 (181 files, 1488 passed, 17 skipped) · dev build 0
 · `test:e2e` 15 passed (on the dev build, no MIRA calls) · `run build` 0 · `run:check` 0.
 Red first for every new test; mutations: a skip that clears continuations, and the fixture set to
 "Kontrol 1 minggu", each turn a test red. token-guard PASS (its a11y note - a button inside a
@@ -50,7 +53,9 @@ Screenshots failed (Claude window hidden); checks were read from the DOM.
    Probe: "NAC", "PCT", "NASETIL" resolve to no stock name (sent as written); "CTM" and the full
    names do. No abbreviation table added (Chief's call).
 6. Dead CSS (append-only file): `.dx-tx-safety-list`, `.diagnosis-transfer-secondary`.
-7. Earlier items: proposals remote-only (R3), DDI table ~20 pairs, J20 red_flags (R3), R3 sign-off
+7. MIRA's use of the earlier-BP row is not verified live (no model call without Chief's
+   "jalankan"). The scraper origin of the form labels is inferred, not patched.
+8. Earlier items: proposals remote-only (R3), DDI table ~20 pairs, J20 red_flags (R3), R3 sign-off
    recurrent-diagnosis, dose table sign-off, class allergies (R3), Kontrol intervals assumption,
    `DiseaseNote.followUp` unused, host does not stop MIRA when Chrome closes (MIRA repo).
 
