@@ -9,8 +9,7 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 ## Current state
 
 Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-30 (two entries) and
-2026-09-29 hold the details. Ahead of `main` (e0dd9545): 36077bd1, 34a4ad01, cc67c33b, 0130313d, 689e4fae, 1b90f54d,
-9b8dddd9 and the docs commit after them.
+2026-09-29 hold the details. `main` is at 689e4fae; ahead of it: 1b90f54d, 9b8dddd9 and the docs commits after them.
 
 - Steps: Temuan 1/5 · Diagnosis 2/5 · **RME Diagnosa 3/5** (page 1) | Tatalaksana 4/5 | **RME Terapi
   5/5** (`steps/RmeDiagnosisStep.tsx`, `diagnosisSteps.ts`, `DiagnosisStepFlow.tsx`). "Isi otomatis
