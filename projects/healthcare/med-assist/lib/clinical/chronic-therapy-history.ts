@@ -1,3 +1,5 @@
+import { normalizeVisitTherapySummary } from './visit-history-format';
+
 import type { MedicationRecommendation } from '@/types/api';
 
 export interface ParsedHistoryMedication {
@@ -30,6 +32,10 @@ const NARRATIVE_THERAPY_PATTERN =
   /\b(pemberian terapi farmakologi|instruksi medis tertulis|rekam medis terintegrasi|riwayat \d+ kunjungan|obat adjuvan\/tambahan|dipilih melalui|berbasis reasoning|kontraindikasi|ddi\b|tidak ada kontraindikasi|tidak ada ddi)\b/i;
 const PROCEDURE_PATTERN =
   /\b(rawat\s*luka|perawatan\s*luka|tindakan|hecting|heating|jahit|nebulisasi|injeksi|irigasi|ganti\s*balut)\b/i;
+// Labels of the ePuskesmas visit form that reach the terapi text on their own (Chief, 2026-09-30:
+// chronic cards named "Obat", "Dr Dokter", ":"). A line that is only a label is not a therapy.
+const FORM_LABEL_PATTERN =
+  /^(obat|resep|terapi|terapi obat|signa|aturan pakai|jumlah|keterangan|dr|dokter|dr dokter|perawat|bidan|tenaga medis)\s*:?$/i;
 const EDUCATION_PATTERN =
   /\b(edukasi|anjuran|advis|kontrol|rujuk|konsul|disarankan|anjurkan|kembali bila|penanggung jawab)\b/i;
 
@@ -154,6 +160,8 @@ export function parseTherapyHistoryText(input: string | undefined): ParsedChroni
   for (const line of lines) {
     const lowered = line.toLowerCase();
     if (/^(tidak ada|belum ada|kosong|-)$/i.test(lowered)) continue;
+    // No letters (":") or a bare form label names no therapy.
+    if (!/[a-z]/.test(lowered) || FORM_LABEL_PATTERN.test(line.replace(/\./g, ''))) continue;
 
     if (isEducationLine(lowered)) {
       educations.push(line);
@@ -164,6 +172,9 @@ export function parseTherapyHistoryText(input: string | undefined): ParsedChroni
       procedures.push(line);
       continue;
     }
+
+    // "Sesuai advis(e) dokter" is a placeholder, not a medication.
+    if (!normalizeVisitTherapySummary(line)) continue;
 
     const medication = parseMedicationLine(line);
     if (medication) {

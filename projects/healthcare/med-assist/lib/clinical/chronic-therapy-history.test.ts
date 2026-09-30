@@ -73,4 +73,21 @@ describe('chronic-therapy-history', () => {
       'Pasien disarankan menjaga kebersihan luka dan kembali bila nyeri memberat',
     ]);
   });
+
+  // Chief, 2026-09-30 ("ada logic salah masa nama obatnya begitu"): form labels from the visit
+  // history became chronic cards "Obat", "Dr Dokter", ":" and "Advise Dokter", each a 1x1
+  // medication that a tick would continue into the RME resep.
+  it('never reads form labels or the "sesuai advis dokter" placeholder as a medication', () => {
+    expect(parseTherapyHistoryText('Obat, Dr Dokter, :, Advise Dokter').medications).toEqual([]);
+    expect(parseTherapyHistoryText('Obat : Sesuai Advise Dokter').medications).toEqual([]);
+    expect(parseTherapyHistoryText('Kontrol 1 minggu sesuai advis dokter').educations).toEqual([
+      'Kontrol 1 minggu sesuai advis dokter',
+    ]);
+
+    const result = extractChronicTherapiesFromHistory([
+      { timestamp: '2026-09-20', terapi_obat: 'Amlodipin 1x10mg sesudah makan; Obat; Dr Dokter; :; Advise Dokter' },
+      { timestamp: '2026-09-10', terapi_obat: 'Obat, Dr Dokter, :, Advise Dokter' },
+    ]);
+    expect(result.medications.map((item) => item.displayName)).toEqual(['Amlodipin']);
+  });
 });
