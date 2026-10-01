@@ -10,7 +10,8 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 ## Current state
 
 Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-30 (two entries) and
-2026-09-29 hold the details. `main` is at 78af4d24; ahead of it: 7f42f2d4, 82427896 and the 2026-10-02 resep commits.
+2026-09-29 hold the details. `main` is at 555e538a (Chief merged the 2026-10-02 resep fix). In flight, not mine: another session's
+uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/zz-verify-kb-rx.spec.ts` (lint red).
 
 - Steps: Temuan 1/5 · Diagnosis 2/5 · **RME Diagnosa 3/5** (page 1) | Tatalaksana 4/5 | **RME Terapi
   5/5** (`steps/RmeDiagnosisStep.tsx`, `diagnosisSteps.ts`, `DiagnosisStepFlow.tsx`). "Isi otomatis
