@@ -336,6 +336,20 @@ describe('TatalaksanaStep', () => {
     expect(skip()).not.toHaveClass('dx-tx-breathe');
   });
 
+  // Chief, 2026-10-01: "recomendation obat di buat ada motion garis hijau mengitari kolom".
+  it('runs a green line around the medication proposals until the page is decided', () => {
+    const box = () => screen.getByTestId('dx-tx-proposals');
+    const undecided = vm([med('paracetamol', 'Paracetamol 500 mg', false)]);
+    const { rerender } = render(<TatalaksanaStep {...props({ viewModel: undecided })} />);
+    expect(box()).toHaveClass('dx-tx-orbit', 'dx-tx-orbit--active');
+    expect(within(box()).getByText(/Paracetamol 500 mg/)).toBeInTheDocument();
+    rerender(<TatalaksanaStep {...props({ viewModel: undecided, skipped: true })} />);
+    expect(box()).not.toHaveClass('dx-tx-orbit--active');
+    rerender(<TatalaksanaStep {...props()} />);
+    expect(box()).not.toHaveClass('dx-tx-orbit--active');
+    expect(box()).toHaveClass('dx-tx-orbit');
+  });
+
   // Carries TherapyStep "continues from "Lanjut" once a medication is selected".
   it('closes from "Selesai" once decided, and not before', async () => {
     const undecided = props({ viewModel: vm([med('paracetamol', 'Paracetamol 500 mg', false)]) });

@@ -10541,3 +10541,24 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 @media (prefers-reduced-motion: reduce) {
   .dx-tx-breathe { animation: none; }
 }
+/* Tatalaksana: a green line runs around the medication proposals until the page is decided
+   (Chief, 2026-10-01). Drawn outside the cards, so the layout does not move. */
+@property --dx-tx-orbit-angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+@keyframes dx-tx-orbit { to { --dx-tx-orbit-angle: 360deg; } }
+.dx-tx-orbit { position: relative; }
+.dx-tx-orbit--active::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  padding: 2px;
+  border-radius: var(--radius-card);
+  background: conic-gradient(from var(--dx-tx-orbit-angle), transparent 0turn 0.55turn, var(--accent-med) 0.95turn, transparent 1turn);
+  -webkit-mask: linear-gradient(var(--accent-med) 0 0) content-box, linear-gradient(var(--accent-med) 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(var(--accent-med) 0 0) content-box exclude, linear-gradient(var(--accent-med) 0 0);
+  animation: dx-tx-orbit 2.4s linear infinite;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dx-tx-orbit--active::before { animation: none; background: var(--accent-med); }
+}

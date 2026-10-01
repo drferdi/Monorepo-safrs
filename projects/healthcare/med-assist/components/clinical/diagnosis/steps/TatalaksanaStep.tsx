@@ -689,28 +689,33 @@ export function TatalaksanaStep({
       </Part>
 
       <Part label="Terapi kunjungan ini" count={chosen.length} testId="dx-tx-visit-part">
-        {slots.map((slot) => (
-          <div key={slot.role} className="flex flex-col gap-1" data-testid={`dx-tx-slot-${slot.role}`}>
-            <span className="ttv-label">{`${slot.number} · ${ROLE_LABEL[slot.role]}`}</span>
-            <div className="diagnosis-list">
-              {slot.items.map((medication) => (
-                  <VisitCard
-                    key={medication.key}
-                    medication={medication}
-                    interactionCheck={interactionCheck}
-                    explains={explainsFor(medication.name)}
-                    duplicates={sameDrugIn(medication.name, plan, medication.isSelected)}
-                    allergies={allergies}
-                    replacing={formFor === medication.key}
-                    form={form('Ganti obat')}
-                    onToggle={() => onToggleMedication(medication.key)}
-                    onReplace={() => setFormFor((current) => (current === medication.key ? null : medication.key))}
-                    onRemove={() => remove(medication)}
-                  />
-                ))}
-            </div>
+        {slots.length > 0 ? (
+          // A green line runs around the proposals until the page is decided (Chief, 2026-10-01).
+          <div className={`dx-tx-orbit flex flex-col gap-2${decided ? '' : ' dx-tx-orbit--active'}`} data-testid="dx-tx-proposals">
+            {slots.map((slot) => (
+              <div key={slot.role} className="flex flex-col gap-1" data-testid={`dx-tx-slot-${slot.role}`}>
+                <span className="ttv-label">{`${slot.number} · ${ROLE_LABEL[slot.role]}`}</span>
+                <div className="diagnosis-list">
+                  {slot.items.map((medication) => (
+                      <VisitCard
+                        key={medication.key}
+                        medication={medication}
+                        interactionCheck={interactionCheck}
+                        explains={explainsFor(medication.name)}
+                        duplicates={sameDrugIn(medication.name, plan, medication.isSelected)}
+                        allergies={allergies}
+                        replacing={formFor === medication.key}
+                        form={form('Ganti obat')}
+                        onToggle={() => onToggleMedication(medication.key)}
+                        onReplace={() => setFormFor((current) => (current === medication.key ? null : medication.key))}
+                        onRemove={() => remove(medication)}
+                      />
+                    ))}
+                </div>
+              </div>
+            ))}
           </div>
-        ))}
+        ) : null}
         {noProposal ? <p className="diagnosis-row-meta">Tidak ada usulan obat dari layanan resep.</p> : null}
         <div>
           <button
