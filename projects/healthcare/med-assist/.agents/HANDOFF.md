@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-09-30 (the BP algorithm on the last visit when the RME has no tensi; visit-form
+Last updated: 2026-10-01 (drug abbreviations to full stock names in the resep fill; 2026-09-30: the BP algorithm on the last visit when the RME has no tensi; visit-form
 labels no longer read as chronic medications; before: page-by-page RME fill, chronic continuation)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
@@ -48,9 +48,10 @@ Screenshots failed (Claude window hidden); checks were read from the DOM.
    investigated yet (maybe earlier fills adding rows).
 4. "harus on the same side with RME page": still my reading; the page-by-page fill may be what
    Chief meant.
-5. Stock names vs the ePuskesmas autocomplete; a name it does not offer times out the resep step.
-   Probe: "NAC", "PCT", "NASETIL" resolve to no stock name (sent as written); "CTM" and the full
-   names do. No abbreviation table added (Chief's call).
+5. Stock names vs the ePuskesmas autocomplete: since 2026-10-01 (Chief) NAC/NASETIL/PCT resolve to
+   the full stock names and "tab" no longer matches a wrong drug (Metildopa); see DECISIONS. Still
+   open: NAC tablet is filled as kapsul 200 mg; live ePuskesmas acceptance not yet seen; any other
+   name the autocomplete does not offer still times out the resep step.
 6. Dead CSS (append-only file): `.dx-tx-safety-list`, `.diagnosis-transfer-secondary`.
 7. MIRA's use of the earlier-BP row is not verified live (no model call without Chief's
    "jalankan"). The scraper origin of the form labels is inferred, not patched.

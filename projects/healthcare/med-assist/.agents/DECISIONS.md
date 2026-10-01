@@ -3,6 +3,19 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-01 — Drug abbreviations resolve to the full stock name in the RME resep fill
+
+- Decision (Chief, live synthetic test: "nac gak di kenal gunakan nama lengkap. check database
+  obat"): `lib/rme/payload-mapper.ts` maps `nac`, `nasetil`, `acetylcysteine` → "N-asetilsistein
+  kapsul 200 mg" and `pct` → parasetamol, using `stok_obat.json`. `pct` and `nasetil` were added
+  by the agent alongside NAC (HANDOFF probe list); `nasetil` = N-asetilsistein is an assumption.
+- `tab` is now a lookup stopword like `tablet`: before, "NAC tab" matched "Metildopa tab 250 mg"
+  through the shared word (a wrong-drug fill). Unknown names now match nothing and go as written.
+- Evidence: 4 new mapper tests red first (NAC/NASETIL/PCT got Metildopa or nothing); removing
+  the `tab` stopword turns 2 red. Five gates exit 0 (test 1492 passed, 17 skipped); token-guard
+  PASS; SAFRS R2. Open: "NAC tab" is filled as kapsul (the stock has no tablet); live ePuskesmas
+  acceptance of the full names not yet seen.
+
 ## 2026-09-30 — No tensi in the RME: the engine gets the last visit's BP through the BP gate
 
 - Decision (Chief: "Tensi jika rme belum di isi maka system seharusnya mengikuti algoritme
