@@ -1,8 +1,8 @@
 # HANDOFF
 
-Last updated: 2026-10-01 (the RME signa chosen from its ePuskesmas suggestion, "3x sehari" as
-3x1; drug abbreviations to full stock names in the resep fill; 2026-09-30: the BP algorithm on the last visit when the RME has no tensi; visit-form
-labels no longer read as chronic medications; before: page-by-page RME fill, chronic continuation)
+Last updated: 2026-10-02 (the RME resep picks each medication from its ePuskesmas suggestion and
+presses Tambah once per row; 2026-10-01: the signa chosen from its suggestion, "3x sehari" as 3x1;
+2026-09-30: the BP algorithm on the last visit; visit-form labels no longer chronic medications)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
@@ -10,7 +10,7 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 ## Current state
 
 Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-30 (two entries) and
-2026-09-29 hold the details. `main` is at 689e4fae; ahead of it: 1b90f54d, 9b8dddd9 and the docs commits after them.
+2026-09-29 hold the details. `main` is at 78af4d24; ahead of it: 7f42f2d4, 82427896 and the 2026-10-02 resep commits.
 
 - Steps: Temuan 1/5 · Diagnosis 2/5 · **RME Diagnosa 3/5** (page 1) | Tatalaksana 4/5 | **RME Terapi
   5/5** (`steps/RmeDiagnosisStep.tsx`, `diagnosisSteps.ts`, `DiagnosisStepFlow.tsx`). "Isi otomatis
@@ -30,6 +30,10 @@ Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-
   bridge `matchMode: 'exact'`); `normalizeSignaValue` turns "3x sehari" into `3x1` (b562f747,
   bf5b1c3d). Tambah needs the hidden `obat_id` and `obat_signa`, both written only by the
   autocompletes' select.
+- Resep fill (2026-10-02, Chief "lagi lagi stuck" on the 2nd drug): Nama Obat is chosen in the
+  main world (`pickMedicationInPage`: leading words searched, the item that is the medication
+  clicked, hidden `obat_id` confirmed); the live entry-row layout is single-entry from row 1; one
+  Tambah press per row; resep step time +15 s per further medication (`resepStepTimeoutMs`).
 - E2E on a live-shaped resep page (`tests/e2e/epuskesmas-resep-page.ts`, 7f42f2d4): the J18 KB
   row lands in the table with obat_id 20012 and signa "3X1"; red before the fixes (old signa:
   "[SIGNA_INVALID]", partial; old filler: typed "3x1").
@@ -40,8 +44,10 @@ Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-
 
 ## Verification (final tree)
 
-lint 0 (1 old warning) · typecheck 0 · test 0 (181 files, 1493 passed, 17 skipped; 2026-10-01)
-· `run build` 0 · `run:check` 0 · `test:e2e` 17 passed incl. the live-shaped resep (2026-10-01). Earlier: `test:e2e` 15 passed
+2026-10-02: typecheck 0 · test 0 (185 files, 1510 passed, 17 skipped) · eslint on the touched
+files 0 (full lint 1: only the other session's untracked `zz-verify-kb-rx.spec.ts`, console.log) ·
+`run:check` 0 · e2e 17 passed (7 synthetic incl. three medications on the live-shaped page, 10 others)
+· `run build` 0, last. 2026-10-01: `test:e2e` 17 passed incl. the live-shaped resep. Earlier: `test:e2e` 15 passed
 (on the dev build, no MIRA calls).
 Red first for every new test; mutations: a skip that clears continuations, and the fixture set to
 "Kontrol 1 minggu", each turn a test red. token-guard PASS (its a11y note - a button inside a
@@ -65,7 +71,9 @@ Screenshots failed (Claude window hidden); checks were read from the DOM.
 5. Stock names vs the ePuskesmas autocomplete: since 2026-10-01 (Chief) NAC/NASETIL/PCT resolve to
    the full stock names and "tab" no longer matches a wrong drug (Metildopa); see DECISIONS. Still
    open: NAC tablet is filled as kapsul 200 mg; live ePuskesmas acceptance not yet seen; any other
-   name the autocomplete does not offer still times out the resep step.
+   name the autocomplete does not offer falls to the typed candidate loop (slow); since 2026-10-02
+   the step has 15 s more per further medication, but the orchestrator still retries a timed-out
+   resep while the first fill may run on (two fills over one form).
 6. Dead CSS (append-only file): `.dx-tx-safety-list`, `.diagnosis-transfer-secondary`.
 7. MIRA's use of the earlier-BP row is not verified live (no model call without Chief's
    "jalankan"). The scraper origin of the form labels is inferred, not patched.

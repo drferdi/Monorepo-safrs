@@ -3,6 +3,30 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-02 — The RME resep picks each medication from its suggestion; one Tambah per row
+
+- Decision (Chief: "Di bagian terapi lagi lagi stuck … selecting obat setelah kamu mengetik beberapa
+  kata, keluar suggestion, kemudian harus click obat tersebut"): `fillResepForm` first chooses the
+  medication on the ePuskesmas "Nama Obat" autocomplete in the main world (`pickMedicationInPage`,
+  bridge `matchMode: 'medication'`): it searches the leading words (`medicationSearchTerm`, e.g.
+  "Klorfeniramin Maleat"), clicks the item whose catalogue name is the medication with code, stock,
+  case, spacing and punctuation ignored (`pickMedicationSuggestion`, never a near item), and counts
+  only when the page wrote the row's hidden `obat_id`. The typed candidate loop stays as fallback.
+  A page without indexed Nama Obat inputs (the live entry-row layout) is single-entry from the first
+  row, so Tambah is no longer pressed on the empty entry row. Tambah is pressed once
+  (`clickElementLikeHuman` no longer dispatches its own click before `button.click()`). The resep
+  step gets 15 s more per further medication (`resepStepTimeoutMs`, orchestrator and tab message).
+- Rationale (reproduced on the live-shaped page, now modelled on the live `setTambahObat`: entry
+  row inside `#tabel_detail`, committed `tr_<x>` with hidden `ResepDetail[x][...]`, x = rows + 1):
+  row 2 pressed Tambah on the empty entry ("Nama obat tidak boleh kosong"), then typed long
+  candidates without "( CTM )" and the alias "chlorpheniramine", which the catalogue never offers;
+  the 30 s step limit cut it off and the retry started a second fill over the running one. The
+  double press raised the same alert after every committed row.
+- Evidence: unit tests red first (suggestion pick 3, in-page pick 3, one press 1 with 2 presses,
+  orchestrator timeout 1); e2e "adds every medication" red (STEP_TIMEOUT) then green: three rows in
+  order, ids 20144/20109/20012, signa 1X1/3X1, no alert, ~15 s. Live: the catalogue answer for
+  "Klorfeniramin Maleat" was read 2026-10-02 (read-only); a fill on Chief's form was not run.
+
 ## 2026-10-01 — The RME signa is chosen from its ePuskesmas suggestion; "3x sehari" is 3x1
 
 - Decision (Chief, live resep fill failed: "kalo tidak di tekan ya gak kepilih"): read live on the
