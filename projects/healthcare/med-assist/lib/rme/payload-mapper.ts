@@ -456,6 +456,10 @@ function normalizeSignaValue(rawDosis: string | undefined): string {
     const right = Math.max(1, Number(match[2]));
     return `${left}x${right}`;
   }
+  // A frequency alone ("3x sehari 5-7 hari", also after a strength) is one unit a take: the
+  // ePuskesmas signa list has "3X1", not the whole text (Chief, 2026-10-01).
+  const frequency = text.match(/(?:^|[^\d.,-])(\d+)\s*[xX×](?!\s*\d)/);
+  if (frequency) return `${Math.max(1, Number(frequency[1]))}x1`;
   return compact.includes('x') ? compact : '1x1';
 }
 

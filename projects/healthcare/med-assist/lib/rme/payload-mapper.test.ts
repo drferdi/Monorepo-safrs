@@ -186,6 +186,32 @@ describe('RME payload mapper', () => {
     expect(resep?.medications[0]?.aturan_pakai).toBe('1');
   });
 
+  // Chief, 2026-10-01 (live ePuskesmas, resep failed): the knowledge base writes the frequency as
+  // "3x sehari 5-7 hari", sometimes after the strength ("500-1000 mg 3x sehari 5-7 hari"); the
+  // ePuskesmas signa list has "3X1", and the old rule passed the whole text on as the signa.
+  it.each(['3x sehari 5-7 hari', '500-1000 mg 3x sehari 5-7 hari', '3 x sehari'])(
+    'reads a frequency-only dose "%s" as signa 3x1',
+    (dosis) => {
+      const mapped = buildRMETransferPayload({
+        keluhanUtama: 'Batuk berdahak',
+        patientGender: 'L',
+        diagnosis: { icd_x: 'J18.9', nama: 'Pneumonia' },
+        medications: [
+          {
+            nama_obat: 'Amoksisilin kapsul/kaplet 500 mg',
+            dosis,
+            aturan_pakai: 'Sesudah makan',
+            durasi: '',
+            rationale: 'Terapi farmakologi awal',
+            safety_check: 'safe',
+            contraindications: [],
+          },
+        ],
+      });
+      expect(mapped.payload.resep?.medications[0]?.signa).toBe('3x1');
+    }
+  );
+
   it('always fills keterangan when rationale is missing', () => {
     const mapped = buildRMETransferPayload({
       keluhanUtama: 'Demam',
