@@ -117,6 +117,10 @@ const MEDICATION_NAME_SYNONYMS: Record<string, string> = {
   parasetamol: 'parasetamol',
   acetaminophen: 'parasetamol',
   asetaminofen: 'parasetamol',
+  pct: 'parasetamol',
+  nac: 'n asetilsistein',
+  nasetil: 'n asetilsistein',
+  acetylcysteine: 'n asetilsistein',
   'acetylsalicylic acid': 'asam asetilsalisilat',
   aspirin: 'asam asetilsalisilat',
   'asam asetilsalisilat': 'asam asetilsalisilat',
@@ -258,6 +262,7 @@ function normalizeMedicationLookup(value: string): string {
 function getLookupTokens(value: string): string[] {
   const stopwords = new Set([
     'tablet',
+    'tab',
     'kapsul',
     'kaplet',
     'sirup',

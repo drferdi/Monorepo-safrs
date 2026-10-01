@@ -315,6 +315,18 @@ describe('RME payload mapper', () => {
     expect(candidates[0]?.toLowerCase()).toContain('sirup');
   });
 
+  it.each([
+    ['NAC tab', 'N-asetilsistein kapsul 200 mg'],
+    ['NASETIL 200 mg', 'N-asetilsistein kapsul 200 mg'],
+    ['PCT 500 mg', 'Parasetamol tablet 500 mg'],
+  ])('resolves the abbreviation %s to the full stock name', (input, stockName) => {
+    expect(__rmeMapperInternals.resolveMedicationCandidatesFromStock(input)[0]).toBe(stockName);
+  });
+
+  it('does not match an unknown name to another drug through the word "tab"', () => {
+    expect(__rmeMapperInternals.resolveMedicationCandidatesFromStock('XYZ tab')).toEqual([]);
+  });
+
   it('normalizes C/K spelling variant for stock scoring', () => {
     const scoreMatch = __rmeMapperInternals.scoreMedicationCandidate(
       'Captopril 25mg',
