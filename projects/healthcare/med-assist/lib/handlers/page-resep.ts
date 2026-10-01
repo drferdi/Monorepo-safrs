@@ -903,6 +903,30 @@ async function commitRowWithVerification(
 
 async function fillSignaField(selector: string, value: string): Promise<FillResult> {
   const normalizedValue = normalizeSignaInput(value);
+  // ePuskesmas writes the hidden obat_signa only when a "Cari Resep Signa" suggestion is chosen
+  // (Chief, 2026-10-01: "kalo tidak di tekan ya gak kepilih"), so choose it there, exactly.
+  const signaAutocomplete = Array.from(document.querySelectorAll<HTMLInputElement>(selector)).find(
+    (element) => element.classList.contains('ui-autocomplete-input') && element.name
+  );
+  if (signaAutocomplete) {
+    const exactAttempt = await fillViaMainWorld(
+      [
+        {
+          selector: `input[name="${signaAutocomplete.name}"]`,
+          value: normalizedValue,
+          type: 'autocomplete',
+          autocompleteTimeout: 3500,
+          matchMode: 'exact',
+        },
+      ],
+      8000,
+      120
+    );
+    const chosen = exactAttempt.success[0];
+    if (chosen) {
+      return { success: true, field: chosen.field, value: chosen.value || normalizedValue, method: 'autocomplete' };
+    }
+  }
   const bridgeAttempt = await fillViaMainWorld(
     [{ selector, value: normalizedValue, type: 'autocomplete', autocompleteTimeout: 2200 }],
     7000,
@@ -1580,4 +1604,5 @@ export const __resepInternals = {
   extractMedicationNameFromStockAlert,
   normalizeSignaInput,
   isValidSignaFormat,
+  fillSignaField,
 };

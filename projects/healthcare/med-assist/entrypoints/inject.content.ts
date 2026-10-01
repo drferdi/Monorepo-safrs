@@ -12,6 +12,7 @@
  */
 
 import { pickExactStaffMatch, staffSearchTerm } from '@/lib/filler/staff-match';
+import { pickExactSuggestion } from '@/lib/filler/suggestion-match';
 import { riwayatDebugLog, riwayatDebugWarn } from '@/utils/debug-flags';
 import { createLogger } from '@/utils/logger';
 
@@ -362,6 +363,7 @@ export default defineContentScript({
         type: 'text' | 'select' | 'autocomplete';
         autocompleteTimeout?: number;
         requireExactMatch?: boolean;
+        matchMode?: 'exact';
       },
       _requestId: string
     ): Promise<{
@@ -478,6 +480,12 @@ export default defineContentScript({
                     } else {
                       $best = $menu.eq(index);
                     }
+                  } else if (field.matchMode === 'exact') {
+                    // Only the item that is exactly the value, e.g. signa "3X1" and not "3X1/2".
+                    const itemTexts = $menu.toArray().map((el: HTMLElement) => $(el).text() || '');
+                    const index = pickExactSuggestion(itemTexts, field.value);
+                    if (index < 0) hasMatch = false;
+                    else $best = $menu.eq(index);
                   } else {
                     const searchLower = field.value.toLowerCase();
                     $menu.each(function (this: HTMLElement) {
@@ -543,7 +551,9 @@ export default defineContentScript({
               value: field.requireExactMatch ? result.selectedValue : field.value,
               error: field.requireExactMatch
                 ? 'Nama tenaga medis tidak cocok persis di ePuskesmas'
-                : 'Autocomplete dropdown not appeared',
+                : field.matchMode === 'exact'
+                  ? 'Tidak ada saran yang cocok persis'
+                  : 'Autocomplete dropdown not appeared',
               method: 'jq-autocomplete-fail',
             };
           }

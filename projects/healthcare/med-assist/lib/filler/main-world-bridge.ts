@@ -28,6 +28,8 @@ export interface MainWorldFieldMapping {
   type: 'text' | 'select' | 'autocomplete';
   autocompleteTimeout?: number;
   requireExactMatch?: boolean;
+  /** 'exact': choose only the item that is exactly the value (`pickExactSuggestion`), never the first. */
+  matchMode?: 'exact';
 }
 
 /**
