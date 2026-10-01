@@ -19,7 +19,8 @@ Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-
   (cc67c33b + fixup). Harness: after the diagnosa fill, RME Terapi's resep button reads `idle`.
 - Tatalaksana: a chronic card's tick (or a tap on the card) continues it (`chronicContinuation` in
   `tatalaksana.ts`, wired in `ClinicalDifferential.tsx` as a prescription candidate shown only on
-  its card); "Lanjut tanpa terapi tambahan" breathes until decided (`.dx-tx-breathe`, appended).
+  its card); "Lanjut tanpa terapi tambahan" breathes until decided (`.dx-tx-breathe`, appended);
+  since 2026-10-01 a green ring orbits the medication proposals until decided (`.dx-tx-orbit`).
 - No tensi today: the diagnosis request carries the last visit's BP (`previous_blood_pressure`,
   from `useRecurrentDiagnoses`); `encounterToCaseState` sends it as a results row flagged by
   `getHTNSeverity`, never as today's vitals (9b8dddd9).
@@ -30,8 +31,9 @@ Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-
 
 ## Verification (final tree)
 
-lint 0 (1 old warning) · typecheck 0 · test 0 (181 files, 1488 passed, 17 skipped) · dev build 0
-· `test:e2e` 15 passed (on the dev build, no MIRA calls) · `run build` 0 · `run:check` 0.
+lint 0 (1 old warning) · typecheck 0 · test 0 (181 files, 1493 passed, 17 skipped; 2026-10-01)
+· `run build` 0 · `run:check` 0 · resep e2e 2 passed (2026-10-01). Earlier: `test:e2e` 15 passed
+(on the dev build, no MIRA calls).
 Red first for every new test; mutations: a skip that clears continuations, and the fixture set to
 "Kontrol 1 minggu", each turn a test red. token-guard PASS (its a11y note - a button inside a
 `role="button"` card - fixed: the tick is a real button). Harness `?triage=none&dx=3-J20.9&rmedx=idle`:

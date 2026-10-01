@@ -3,6 +3,18 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-01 — A green line runs around the Tatalaksana medication proposals until decided
+
+- Decision (Chief: "recomendation obat di buat ada motion garis hijau mengitari kolom", after the
+  resep button stayed off with "Obat 0/0"): the visit-therapy proposals sit in one box
+  (`data-testid="dx-tx-proposals"`); while the page is undecided (same `decided` as the breathe
+  effect) a `var(--accent-med)` ring orbits it (`.dx-tx-orbit--active::before`, appended to
+  style.css; still under reduced motion). An exception to the "steady like a console" rule, like
+  breathe: drawn outside the cards, so nothing grows, slides or moves.
+- Evidence: new test red first (no box), then green; file 32 → 33 tests; five gates exit 0
+  (1493 passed, 17 skipped); token-guard PASS (append-only, tokens only); SAFRS R2. Visual check of
+  the built CSS in the browser pane: the ring moves around the box, cards do not shift.
+
 ## 2026-10-01 — Drug abbreviations resolve to the full stock name in the RME resep fill
 
 - Decision (Chief, live synthetic test: "nac gak di kenal gunakan nama lengkap. check database
