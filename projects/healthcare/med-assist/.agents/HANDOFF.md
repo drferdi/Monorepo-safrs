@@ -30,6 +30,9 @@ Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-
   bridge `matchMode: 'exact'`); `normalizeSignaValue` turns "3x sehari" into `3x1` (b562f747,
   bf5b1c3d). Tambah needs the hidden `obat_id` and `obat_signa`, both written only by the
   autocompletes' select.
+- E2E on a live-shaped resep page (`tests/e2e/epuskesmas-resep-page.ts`, 7f42f2d4): the J18 KB
+  row lands in the table with obat_id 20012 and signa "3X1"; red before the fixes (old signa:
+  "[SIGNA_INVALID]", partial; old filler: typed "3x1").
 - History parser drops form labels and the advice placeholder (`lib/clinical`, R3, approved).
 - The build in `.output\chrome-mv3-dev` is the production build (`run build`, MIRA engine), last.
   MIRA on 127.0.0.1:8787 answers `/healthz` 200. Native host registered for
@@ -38,7 +41,7 @@ Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-
 ## Verification (final tree)
 
 lint 0 (1 old warning) · typecheck 0 · test 0 (181 files, 1493 passed, 17 skipped; 2026-10-01)
-· `run build` 0 · `run:check` 0 · resep e2e 2 passed (2026-10-01). Earlier: `test:e2e` 15 passed
+· `run build` 0 · `run:check` 0 · `test:e2e` 17 passed incl. the live-shaped resep (2026-10-01). Earlier: `test:e2e` 15 passed
 (on the dev build, no MIRA calls).
 Red first for every new test; mutations: a skip that clears continuations, and the fixture set to
 "Kontrol 1 minggu", each turn a test red. token-guard PASS (its a11y note - a button inside a
