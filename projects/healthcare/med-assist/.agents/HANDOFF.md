@@ -1,6 +1,7 @@
 # HANDOFF
 
-Last updated: 2026-10-01 (drug abbreviations to full stock names in the resep fill; 2026-09-30: the BP algorithm on the last visit when the RME has no tensi; visit-form
+Last updated: 2026-10-01 (the RME signa chosen from its ePuskesmas suggestion, "3x sehari" as
+3x1; drug abbreviations to full stock names in the resep fill; 2026-09-30: the BP algorithm on the last visit when the RME has no tensi; visit-form
 labels no longer read as chronic medications; before: page-by-page RME fill, chronic continuation)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
@@ -24,6 +25,11 @@ Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-
 - No tensi today: the diagnosis request carries the last visit's BP (`previous_blood_pressure`,
   from `useRecurrentDiagnoses`); `encounterToCaseState` sends it as a results row flagged by
   `getHTNSeverity`, never as today's vitals (9b8dddd9).
+- Resep fill (2026-10-01, read live on the ePuskesmas resep page): Signa is chosen from the
+  "Cari Resep Signa" autocomplete with an exact match (`fillSignaField`, `pickExactSuggestion`,
+  bridge `matchMode: 'exact'`); `normalizeSignaValue` turns "3x sehari" into `3x1` (b562f747,
+  bf5b1c3d). Tambah needs the hidden `obat_id` and `obat_signa`, both written only by the
+  autocompletes' select.
 - History parser drops form labels and the advice placeholder (`lib/clinical`, R3, approved).
 - The build in `.output\chrome-mv3-dev` is the production build (`run build`, MIRA engine), last.
   MIRA on 127.0.0.1:8787 answers `/healthz` 200. Native host registered for
@@ -42,7 +48,10 @@ Screenshots failed (Claude window hidden); checks were read from the DOM.
 
 ## Open for Chief
 
-1. Live ePuskesmas test of each fill on its own page (needs Claude in Chrome connected).
+1. Live ePuskesmas test of each fill on its own page. Claude in Chrome is connected but reaches
+   only its own tab (Chief gave the resep URL once); a full fill was not run on his form.
+   Uncommitted work from another session (`lib/api/sentra-api.ts`, `tests/e2e/zz-verify-kb-rx.spec.ts`,
+   the latter fails lint with console.log) is in the working tree and in the build.
 2. Continued chronic quantity: the RME mapper caps days at 3 and rounds to 10 (Amlodipin 1x1 → 10),
    not 30 days; a PRB-style 30-day quantity is Chief's call. Signa rule "1x10mg = one unit a take"
    is my assumption.

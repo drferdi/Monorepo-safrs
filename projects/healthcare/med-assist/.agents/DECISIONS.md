@@ -3,6 +3,22 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-01 — The RME signa is chosen from its ePuskesmas suggestion; "3x sehari" is 3x1
+
+- Decision (Chief, live resep fill failed: "kalo tidak di tekan ya gak kepilih"): read live on the
+  ePuskesmas resep page (jQuery UI 1.12.1, read-only, synthetic throwaway inputs): the Signa
+  column is the "Cari Resep Signa" autocomplete (`signa_nama`) whose select alone writes the
+  hidden `ResepDetail[n][obat_signa]`, and Tambah (`setTambahObat`) refuses a row without it or
+  without `obat_id`. `fillSignaField` now chooses through that autocomplete with `matchMode:
+  'exact'` (`pickExactSuggestion`), so "3x1" takes "3X1", never "3X1/2"; no exact item falls back
+  to the earlier path. `normalizeSignaValue` reads a frequency alone ("3x sehari 5-7 hari", also
+  after a strength) as `Nx1`.
+- Rationale: the knowledge base's "500-1000 mg" + "3x sehari 5-7 hari" became the signa text
+  "500-1000mg3xsehari5-7hari", which failed the row check, so nothing was added. The drug-name pick
+  was checked live the same way and already chose the stock item (`obat_id` set).
+- Evidence: commits b562f747, bf5b1c3d; live probe: "3X1" chosen, hidden signa "3X1". A full live
+  fill (typing into Chief's form, Tambah) was not run.
+
 ## 2026-10-01 — A green line runs around the Tatalaksana medication proposals until decided
 
 - Decision (Chief: "recomendation obat di buat ada motion garis hijau mengitari kolom", after the
