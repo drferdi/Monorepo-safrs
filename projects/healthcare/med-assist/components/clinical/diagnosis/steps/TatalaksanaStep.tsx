@@ -657,6 +657,9 @@ export function TatalaksanaStep({
       onSubmit={onAddManualMedication}
     />
   );
+  const continuableChronicKeys = chronicMedications
+    .filter((medication) => medication.regimen)
+    .map((medication) => medication.key);
   const remove = (medication: DiagnosisMedicationView) =>
     medication.sourceLabel === 'MANUAL' ? onRemoveManualMedication(medication.key) : onDismissMedication(medication.key);
 
@@ -668,6 +671,23 @@ export function TatalaksanaStep({
       </div>
 
       <Part label="Terapi kronis" count={chronicMedications.length} testId="dx-tx-chronic-part" divider={false}>
+        {/* Select all (Chief, 2026-10-02): every card with a regimen not yet continued. */}
+        {continuableChronicKeys.length > 0 ? (
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              className="btn-ac-inline btn-ac-inline--sharp"
+              disabled={continuableChronicKeys.every((key) => continuedChronicKeys.includes(key))}
+              onClick={() =>
+                continuableChronicKeys
+                  .filter((key) => !continuedChronicKeys.includes(key))
+                  .forEach((key) => onToggleChronicMedication(key))
+              }
+            >
+              Lanjutkan semua
+            </button>
+          </div>
+        ) : null}
         {chronicMedications.length > 0 ? (
           <div className="diagnosis-list">
             {chronicMedications.map((medication) => (

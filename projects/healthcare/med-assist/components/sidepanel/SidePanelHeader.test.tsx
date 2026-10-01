@@ -297,6 +297,30 @@ describe('SidePanelHeader patient strip', () => {
     expect(onOpenStats).toHaveBeenCalledTimes(1);
   });
 
+  // Chief, 2026-10-02: the header button of the page on screen is lit (Trajectory, Diagnosis,
+  // Stats, and Start on the main page), the others are not.
+  it.each([
+    ['main', 'START'],
+    ['workbench', 'TRAJECTORY'],
+    ['differential', 'DIAGNOSIS'],
+    ['statistics', 'STATS'],
+  ] as const)('lights the header button of the %s page', (surface, lit) => {
+    render(<SidePanelHeader activeEngine="vs" activeSurface={surface} onEngineChange={vi.fn()} />);
+
+    const pages = {
+      START: screen.getByRole('tab', { name: 'START' }),
+      TRAJECTORY: screen.getByRole('button', { name: /TRAJECTORY/i }),
+      DIAGNOSIS: screen.getByRole('button', { name: /DIAGNOSIS/i }),
+      STATS: screen.getByRole('button', { name: /^STATS$/i }),
+    };
+    for (const [label, button] of Object.entries(pages)) {
+      expect(button.classList.contains('active'), label).toBe(label === lit);
+    }
+    expect(screen.getByRole('button', { name: /TRAJECTORY/i }).getAttribute('aria-current')).toBe(
+      lit === 'TRAJECTORY' ? 'page' : null
+    );
+  });
+
   it('keeps TRAJECTORY navigation available when doctor is online', () => {
     const onOpenDashboard = vi.fn();
 

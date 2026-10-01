@@ -917,6 +917,7 @@ export function SentraAssistSidepanelApp(): JSX.Element {
               >
                 <SidePanelHeader
                   activeEngine={activeEngine}
+                  activeSurface={activeInferenceSurface}
                   onEngineChange={handleEngineChange}
                   showPatientSummary={activeInferenceSurface === 'main'}
                   showVisitHistoryTrigger={activeInferenceSurface === 'main'}

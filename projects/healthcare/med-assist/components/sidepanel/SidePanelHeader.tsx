@@ -42,6 +42,8 @@ const ENGINE_TAB_ORDER = ['vs', 'emergency', 'medlens'] as const;
 
 interface SidePanelHeaderProps {
   activeEngine: string;
+  /** The page shown under the START engine; its header button is lit (Chief, 2026-10-02). */
+  activeSurface?: 'main' | 'workbench' | 'differential' | 'statistics';
   onEngineChange: (engineId: string) => void;
   showPatientSummary?: boolean;
   showVisitHistoryTrigger?: boolean;
@@ -75,6 +77,7 @@ const engineButtons: EngineButton[] = [
 
 export const SidePanelHeader: React.FC<SidePanelHeaderProps> = ({
   activeEngine,
+  activeSurface = 'main',
   onEngineChange,
   showPatientSummary = true,
   showVisitHistoryTrigger = true,
@@ -99,6 +102,8 @@ export const SidePanelHeader: React.FC<SidePanelHeaderProps> = ({
   triageZone = 'standby',
 }) => {
   const isReady = demographicStatus === 'ready';
+  const onPage = (surface: NonNullable<SidePanelHeaderProps['activeSurface']>) =>
+    activeEngine === 'vs' && activeSurface === surface;
   const doctorOnline = doctorOnlineCount > 0;
   const doctorStatusLabel = doctorOnline ? 'Online' : 'Offline';
   const [isVisitHistoryOpen, setIsVisitHistoryOpen] = useState(false);
@@ -218,6 +223,8 @@ export const SidePanelHeader: React.FC<SidePanelHeaderProps> = ({
       <div className="engine-row engine-tablist" role="tablist" aria-label="Modul engine klinis">
         {engineButtons.map((engine) => {
           const selected = activeEngine === engine.id;
+          // START is lit only on its own page; Trajectory, Diagnosis and Stats light their buttons.
+          const lit = engine.id === 'vs' ? onPage('main') : selected;
           const panelId = ENGINE_TAB_PANEL_ID[engine.id];
           const triggerId = ENGINE_TAB_TRIGGER_ID[engine.id];
           return (
@@ -229,7 +236,7 @@ export const SidePanelHeader: React.FC<SidePanelHeaderProps> = ({
               tabIndex={selected ? 0 : -1}
               aria-selected={selected}
               aria-controls={panelId}
-              className={`engine-btn engine-tab ${selected ? 'active' : ''}${
+              className={`engine-btn engine-tab ${lit ? 'active' : ''}${
                 engine.id === 'emergency'
                   ? triageZone === 'merah'
                     ? ' engine-btn--triage-merah'
@@ -277,7 +284,8 @@ export const SidePanelHeader: React.FC<SidePanelHeaderProps> = ({
           type="button"
           className={`engine-btn engine-tab doctor-avail-chip ${
             doctorOnline ? 'doctor-avail-chip--available' : 'doctor-avail-chip--unavailable'
-          }`}
+          }${onPage('workbench') ? ' active' : ''}`}
+          aria-current={onPage('workbench') ? 'page' : undefined}
           onClick={onOpenDashboard}
           aria-label={`TRAJECTORY - buka Clinical Trajectory; Dokter: ${doctorStatusLabel}`}
         >
@@ -288,7 +296,8 @@ export const SidePanelHeader: React.FC<SidePanelHeaderProps> = ({
       <div className="hdr-statusbar" role="group" aria-label="Aksi review klinis">
         <button
           type="button"
-          className="engine-btn engine-tab"
+          className={`engine-btn engine-tab${onPage('differential') ? ' active' : ''}`}
+          aria-current={onPage('differential') ? 'page' : undefined}
           onClick={onOpenDiagnosis}
           aria-label="DIAGNOSIS - buka Diagnosis & Therapy"
         >
@@ -297,7 +306,8 @@ export const SidePanelHeader: React.FC<SidePanelHeaderProps> = ({
 
         <button
           type="button"
-          className="engine-btn engine-tab"
+          className={`engine-btn engine-tab${onPage('statistics') ? ' active' : ''}`}
+          aria-current={onPage('statistics') ? 'page' : undefined}
           aria-label="STATS"
           onClick={onOpenStats}
         >

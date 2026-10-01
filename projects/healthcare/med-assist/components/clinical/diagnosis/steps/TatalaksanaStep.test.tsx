@@ -150,6 +150,31 @@ describe('TatalaksanaStep', () => {
     expect(screen.getByTestId('dx-tx-summary')).toHaveTextContent('Terapi kronis1 obat · 1 dilanjutkan');
   });
 
+  // Chief, 2026-10-02: "Untuk terapi buat agar ada pilihan select all" - every chronic card that
+  // can be continued is continued at once; one already continued, or one without a regimen, is left.
+  it('continues every continuable chronic medication with "Lanjutkan semua"', () => {
+    const onToggleChronicMedication = vi.fn();
+    const chronic = [
+      amlodipin,
+      { ...amlodipin, key: 'ctm', name: 'Klorfeniramin Maleat ( CTM ) tablet 4 mg' },
+      { ...amlodipin, key: 'nac', name: 'N-asetilsistein kapsul 200 mg' },
+      { ...amlodipin, key: 'nosigna', name: 'Obat tanpa signa', regimen: undefined },
+    ];
+    const { rerender } = render(
+      <TatalaksanaStep {...props({ chronicMedications: chronic, continuedChronicKeys: ['ctm'], onToggleChronicMedication })} />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Lanjutkan semua' }));
+
+    expect(onToggleChronicMedication.mock.calls.map(([key]) => key)).toEqual(['amlodipin', 'nac']);
+    rerender(
+      <TatalaksanaStep
+        {...props({ chronicMedications: chronic, continuedChronicKeys: ['amlodipin', 'ctm', 'nac'], onToggleChronicMedication })}
+      />
+    );
+    expect(screen.getByRole('button', { name: 'Lanjutkan semua' })).toBeDisabled();
+  });
+
   it('offers no tick on a chronic card whose regimen no visit shows', () => {
     render(<TatalaksanaStep {...props({ chronicMedications: [{ ...amlodipin, regimen: undefined }] })} />);
     expect(screen.getByTestId('dx-tx-chronic')).toBeInTheDocument();
