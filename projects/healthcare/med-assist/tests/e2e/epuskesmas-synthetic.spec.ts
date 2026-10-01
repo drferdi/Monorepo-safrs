@@ -2,7 +2,9 @@ import path from 'path';
 import { expect, test, type BrowserContext, type Page } from '@playwright/test';
 
 import { getExtensionId, launchExtensionContext } from './chrome-extension-launch';
+import { buildEpuskesmasShapedResepPage } from './epuskesmas-resep-page';
 import { SIDE_PANEL_TATALAKSANA_TRANSFER } from './side-panel-tatalaksana-transfer';
+import { KB_J18_RESEP_MEDICATIONS } from './side-panel-kb-resep-transfer';
 
 type ChromeRuntimeApi = {
   runtime: {
@@ -944,5 +946,52 @@ test.describe.serial('Synthetic ePuskesmas integration', () => {
       await extensionPage.close();
       await epPage.close();
     }
+  });
+
+  // Chief, 2026-10-01: the live resep fill failed ("kalo tidak di tekan ya gak kepilih"). On a
+  // page shaped like the live one (suggestions write the hidden obat_id / obat_signa; Tambah needs
+  // them), the J18 knowledge-base row must be chosen from both suggestions and land in the table.
+  test('adds the J18 knowledge-base row on a page shaped like the live ePuskesmas resep', async () => {
+    test.setTimeout(90_000);
+    await context.unrouteAll({ behavior: 'ignoreErrors' });
+    await context.route('https://kotakediri.epuskesmas.id/**', async (route) => {
+      await route.fulfill({ status: 200, contentType: 'text/html', body: buildEpuskesmasShapedResepPage() });
+    });
+    const epPage = await context.newPage();
+    await epPage.goto('https://kotakediri.epuskesmas.id/resep/create/82594?from=pelayanan&action=edit');
+    await epPage.waitForLoadState('domcontentloaded');
+    await epPage.waitForTimeout(2500);
+
+    const extensionPage = await openExtensionPage(context, await getExtensionId(context), 'sidepanel.html');
+    await epPage.bringToFront();
+    const transferResponse = await sendRuntimeMessage<unknown>(extensionPage, {
+      type: 'transferRME',
+      timestamp: Date.now(),
+      data: {
+        resep: {
+          static: { no_resep: '', alergi: '' },
+          ajax: { ruangan: '', dokter: 'dr. Test', perawat: 'Ns. Test' },
+          medications: KB_J18_RESEP_MEDICATIONS,
+          prioritas: '0',
+        },
+        options: { requestId: 'kb-j18-resep-live-shape', startFromStep: 'resep', onlyStep: 'resep' },
+      },
+    });
+    const transferPayload = unwrapMessagingResponse<{ steps: Record<string, { state: string }> }>(
+      transferResponse.response
+    );
+    expect(transferResponse.lastError).toBeNull();
+    expect(transferPayload.steps.resep.state, JSON.stringify(transferPayload)).toBe('success');
+
+    const rows = epPage.locator('#tabel_detail tr.resep-detail-row');
+    await expect(rows).toHaveCount(1);
+    await expect(rows.first()).toHaveText('Amoksisilin kapsul/kaplet 500 mg');
+    await expect(rows.first()).toHaveAttribute('data-obat-id', '20012');
+    // The signa is the suggestion "3X1", chosen; a typed "3x1" would mean nothing was chosen.
+    await expect(rows.first()).toHaveAttribute('data-signa', '3X1');
+    await expect(rows.first()).toHaveAttribute('data-jumlah', '10');
+    await expect(rows.first()).toHaveAttribute('data-aturan-pakai', '2');
+    await extensionPage.close();
+    await epPage.close();
   });
 });

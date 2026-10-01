@@ -7,6 +7,8 @@ import {
   mapPregnancyStatusToBoolean,
 } from '@/lib/rme/payload-mapper';
 
+import { KB_J18_MEDICATION, KB_J18_RESEP_MEDICATIONS } from '../../tests/e2e/side-panel-kb-resep-transfer';
+
 describe('RME payload mapper', () => {
   it('maps unknown pregnancy status to is_pregnant=false with explicit reason', () => {
     const pregnancy = mapPregnancyStatusToBoolean('P', null);
@@ -211,6 +213,16 @@ describe('RME payload mapper', () => {
       expect(mapped.payload.resep?.medications[0]?.signa).toBe('3x1');
     }
   );
+
+  it('makes the J18 knowledge-base therapy into the resep rows the ePuskesmas e2e sends', () => {
+    const mapped = buildRMETransferPayload({
+      keluhanUtama: 'Batuk berdahak dan demam',
+      patientGender: 'L',
+      diagnosis: { icd_x: 'J18.9', nama: 'Pneumonia, unspecified' },
+      medications: [KB_J18_MEDICATION],
+    });
+    expect(mapped.payload.resep?.medications).toEqual(KB_J18_RESEP_MEDICATIONS);
+  });
 
   it('always fills keterangan when rationale is missing', () => {
     const mapped = buildRMETransferPayload({
