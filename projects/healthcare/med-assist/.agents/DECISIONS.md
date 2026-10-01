@@ -3,6 +3,22 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-02 — The header lights the page on screen; "Lanjutkan semua" for chronic therapy
+
+- Decision (Chief: "saat user ada di halaman trajectory maka button di atas di bagian trajectory
+  menyala, begitu juga saat berada di halaman lain"; "Untuk terapi buat agar ada pilihan select
+  all"): `SidePanelHeader` takes `activeSurface` (main.tsx passes `activeInferenceSurface`, one
+  prop line in a protected file, at Chief's request). Under START, the button of the page on
+  screen gets the existing `active` look and `aria-current="page"`: START on the main page,
+  TRAJECTORY on the workbench, DIAGNOSIS on the differential, STATS on statistics; TRIAGE and
+  MEDLENS as before. START keeps `aria-selected` for its tab panel. Tatalaksana's Terapi kronis gets
+  "Lanjutkan semua", which continues every card with a regimen not yet continued and is disabled
+  once all are; "Terapi kunjungan ini" already had "Gunakan semua usulan". Reading "terapi" as the
+  chronic cards is my assumption (the visit proposals already had select-all).
+- Evidence: tests red first (header 3 of 4 surfaces, Tatalaksana select-all); harness: each page
+  lights only its own button (computed: text-main + accent-med border; transitions finished by hand
+  because the hidden pane does not run them), "Lanjutkan semua" continues Amlodipin and disables.
+
 ## 2026-10-02 — Chronic doses come from the riwayat Resep table; no triad warning
 
 - Decision (Chief, live resep: every row 1X1, "Pengisian dosis salah, masih ada Komponen triad
