@@ -116,6 +116,12 @@ export function buildEpuskesmasShapedResepPage(): string {
                   if (!first || (key !== 'ui-autocomplete' && key !== 'uiAutocomplete')) return undefined;
                   return instances.get(first);
                 },
+                one: function (eventName, handler) {
+                  elements.forEach(function (element) {
+                    element.addEventListener(eventName, function (event) { handler(event, event.detail); }, { once: true });
+                  });
+                  return api;
+                },
                 autocomplete: function (command, term) {
                   var instance = elements[0] && instances.get(elements[0]);
                   if (instance && command === 'search') instance.search(term);
@@ -163,6 +169,8 @@ export function buildEpuskesmasShapedResepPage(): string {
                   var items = options.catalog.filter(function (item) {
                     return item.value.toLowerCase().indexOf(query) >= 0;
                   });
+                  // jQuery UI's "response" event, also for an empty answer (an item out of stock).
+                  input.dispatchEvent(new CustomEvent('autocompleteresponse', { detail: { content: items } }));
                   menu.innerHTML = '';
                   items.forEach(function (item) {
                     var li = document.createElement('li');
@@ -184,6 +192,8 @@ export function buildEpuskesmasShapedResepPage(): string {
               input.classList.add('ui-autocomplete-input');
               input.addEventListener('input', function () {
                 clearTimeout(pending);
+                // minLength 1, as on the live page: an emptied field searches nothing.
+                if (!input.value) return;
                 pending = setTimeout(function () { instance.search(input.value); }, 1000);
               });
               input.addEventListener('keydown', function (event) {

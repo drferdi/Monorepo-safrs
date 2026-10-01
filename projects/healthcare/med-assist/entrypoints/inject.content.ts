@@ -13,6 +13,7 @@
 
 import { pickExactStaffMatch, staffSearchTerm } from '@/lib/filler/staff-match';
 import {
+  CATALOG_EMPTY_ERROR,
   medicationSearchTerm,
   pickExactSuggestion,
   pickMedicationSuggestion,
@@ -460,16 +461,35 @@ export default defineContentScript({
               : field.matchMode === 'medication'
                 ? medicationSearchTerm(field.value)
                 : field.value;
+            // jQuery UI answers every search with a "response" event, an empty one included: a
+            // medication the catalogue does not offer (out of stock) is known at once.
+            let catalogEmpty = false;
+            if (field.matchMode === 'medication' && typeof $el.one === 'function') {
+              $el.one('autocompleteresponse', (_event: unknown, ui?: { content?: unknown[] }) => {
+                if (!ui?.content?.length) catalogEmpty = true;
+              });
+            }
             $el.val(searchValue);
             $el.autocomplete('search', searchValue);
 
             // Wait for dropdown to appear
-            const result = await new Promise<{ success: boolean; selectedValue: string }>(
+            const result = await new Promise<{
+              success: boolean;
+              selectedValue: string;
+              catalogEmpty?: boolean;
+            }>(
               (resolve) => {
                 let resolved = false;
 
                 // Listen for autocomplete select/response
                 const checkDropdown = () => {
+                  if (catalogEmpty && !resolved) {
+                    resolved = true;
+                    clearInterval(interval);
+                    $el.val('');
+                    resolve({ success: false, selectedValue: '', catalogEmpty: true });
+                    return;
+                  }
                   const $menu = $('.ui-autocomplete:visible .ui-menu-item');
                   if ($menu.length === 0) return;
 
@@ -562,7 +582,9 @@ export default defineContentScript({
               success: false,
               field: field.selector,
               value: field.requireExactMatch ? result.selectedValue : field.value,
-              error: field.requireExactMatch
+              error: result.catalogEmpty
+                ? CATALOG_EMPTY_ERROR
+                : field.requireExactMatch
                 ? 'Nama tenaga medis tidak cocok persis di ePuskesmas'
                 : field.matchMode === 'exact'
                   ? 'Tidak ada saran yang cocok persis'

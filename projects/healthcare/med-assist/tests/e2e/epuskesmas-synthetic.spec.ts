@@ -1067,4 +1067,67 @@ test.describe.serial('Synthetic ePuskesmas integration', () => {
     await extensionPage.close();
     await epPage.close();
   });
+
+  // Chief, 2026-10-02 ("walah macet di vit b6"): the live catalogue offers nothing for "Vitamin B6"
+  // (out of stock); the fill typed name variants until the step timed out. A medication the
+  // catalogue does not offer is left out at once, named in the result, and the rest still land.
+  test('leaves out a medication the ePuskesmas catalogue does not offer and fills the rest', async () => {
+    test.setTimeout(150_000);
+    await context.unrouteAll({ behavior: 'ignoreErrors' });
+    await context.route('https://kotakediri.epuskesmas.id/**', async (route) => {
+      await route.fulfill({ status: 200, contentType: 'text/html', body: buildEpuskesmasShapedResepPage() });
+    });
+    const epPage = await context.newPage();
+    await epPage.goto('https://kotakediri.epuskesmas.id/resep/create/82594?from=pelayanan&action=edit');
+    await epPage.waitForLoadState('domcontentloaded');
+    await epPage.waitForTimeout(2500);
+
+    const extensionPage = await openExtensionPage(context, await getExtensionId(context), 'sidepanel.html');
+    await epPage.bringToFront();
+    const row = (nama_obat: string, signa: string) => ({
+      racikan: '0',
+      jumlah_permintaan: 10,
+      nama_obat,
+      jumlah: 10,
+      signa,
+      aturan_pakai: '2',
+      keterangan: 'Lanjutan terapi kronis.',
+    });
+    const startedAt = Date.now();
+    const transferResponse = await sendRuntimeMessage<unknown>(extensionPage, {
+      type: 'transferRME',
+      timestamp: Date.now(),
+      data: {
+        resep: {
+          static: { no_resep: '', alergi: '' },
+          ajax: { ruangan: '', dokter: 'dr. Test', perawat: 'Ns. Test' },
+          medications: [
+            row('N-asetilsistein kapsul 200 mg', '2x1'),
+            row('Vitamin B6 kapsul 10 mg', '1x1'),
+            row('Klorfeniramin Maleat ( CTM ) tablet 4 mg', '3x1'),
+          ],
+          prioritas: '0',
+        },
+        options: { requestId: 'out-of-stock-live-shape', startFromStep: 'resep', onlyStep: 'resep' },
+      },
+    });
+    const elapsedMs = Date.now() - startedAt;
+    const transferPayload = unwrapMessagingResponse<{
+      steps: Record<string, { state: string; message?: string }>;
+    }>(transferResponse.response);
+    expect(transferResponse.lastError).toBeNull();
+    expect(transferPayload.steps.resep.state, JSON.stringify(transferPayload)).toBe('partial');
+    expect(transferPayload.steps.resep.message).toContain('Vitamin B6');
+    expect(transferPayload.steps.resep.message).toContain('tidak ada di daftar stok');
+
+    const rows = epPage.locator('#tabel_detail tr.resep-detail-row');
+    await expect(rows).toHaveText(['N-asetilsistein kapsul 200 mg', 'Klorfeniramin Maleat ( CTM ) tablet 4 mg']);
+    await expect(epPage.locator('#page-alerts .alert')).toHaveCount(0);
+    await expect(epPage.locator('input[name="obat_nama"]')).toHaveValue('');
+    // Two medications at about 5 s each, the missing one in about one search.
+    expect(elapsedMs).toBeLessThan(25_000);
+    await extensionPage.close();
+    await epPage.close();
+  });
 });
+

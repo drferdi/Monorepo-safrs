@@ -9,6 +9,13 @@ export function pickExactSuggestion(itemTexts: string[], value: string): number 
   return target ? itemTexts.findIndex((text) => compact(text) === target) : -1;
 }
 
+/**
+ * The search for a medication's leading words answered with no item: the ePuskesmas catalogue,
+ * which lists what is in stock, does not offer it today (Chief, 2026-10-02: "stok obat bisa
+ * kosong sewaktu waktu").
+ */
+export const CATALOG_EMPTY_ERROR = 'Obat tidak ada di daftar stok ePuskesmas';
+
 const catalogueName = (value: string): string =>
   value
     .replace(/^\s*\d+\s*-\s*/, '')

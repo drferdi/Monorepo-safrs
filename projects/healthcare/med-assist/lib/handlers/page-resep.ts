@@ -13,6 +13,7 @@ import {
 import type { FillResult } from '@/lib/filler/filler-core';
 import { fillAutocomplete, fillSelect, fillTextField } from '@/lib/filler/filler-core';
 import { fillViaMainWorld, type MainWorldFieldMapping } from '@/lib/filler/main-world-bridge';
+import { CATALOG_EMPTY_ERROR, medicationSearchTerm } from '@/lib/filler/suggestion-match';
 import { waitForElement } from '@/lib/scraper/dom-utils';
 import { createLogger } from '@/utils/logger';
 import { DOKTER_NAMA, PERAWAT_NAMA } from '@/lib/clinical/tenaga-medis';
@@ -25,6 +26,9 @@ const DELAY_BETWEEN_ROWS = 800; // ms
 const DELAY_AFTER_ADD_ROW = 1200; // ms
 const DELAY_STOCK_CHECK = 1500; // ms (Critical for stock fetch)
 const DELAY_SIGNA_LOOKUP = 1000; // ms (Wait for signa/aturan hooks)
+// The typed name candidates of one medication stop after this: a name the catalogue never offers
+// held the step until it timed out (Chief, 2026-10-02: "macet di vit b6").
+const MEDICATION_NAME_BUDGET_MS = 12000;
 const COMMIT_VERIFY_TIMEOUT = 3200; // ms
 const COMMIT_VERIFY_POLL_INTERVAL = 160; // ms
 const COMMIT_VERIFY_MAX_RETRIES = 2;
@@ -1274,6 +1278,8 @@ export async function fillResepForm(payload: ResepFillPayload): Promise<{
           requireDropdownSelection: true,
           ignoreExistingDropdown: true,
         });
+      // The attempts below set it from a closure, which the type checker does not follow.
+      const lastNamaResult = (): FillResult | null => namaResult;
       const tryFillMedicationName = async (
         candidateSelector: string,
         pick: (candidate: string) => Promise<FillResult> = typeCandidate
@@ -1361,11 +1367,31 @@ export async function fillResepForm(payload: ResepFillPayload): Promise<{
       const pickedInPage = await tryFillMedicationName(String(med.nama_obat).trim(), (candidate) =>
         pickMedicationInPage(sel.obat_nama, candidate)
       );
-      // Not chosen in the page: every candidate, the name itself included, goes to the typed path.
+      // Not chosen in the page: every candidate, the name itself included, goes to the typed path,
+      // unless the catalogue offered nothing for the name and no candidate searches other words
+      // (an out-of-stock medication: Chief, 2026-10-02, "stok obat bisa kosong sewaktu waktu").
+      const notInCatalog = !pickedInPage && lastNamaResult()?.error === CATALOG_EMPTY_ERROR;
+      const ownTerm = medicationSearchTerm(String(med.nama_obat)).toLowerCase();
+      const typedCandidates = pickedInPage
+        ? []
+        : notInCatalog
+          ? nameCandidates.filter((candidate) => medicationSearchTerm(candidate).toLowerCase() !== ownTerm)
+          : nameCandidates;
       if (!pickedInPage) rejectedCandidates.clear();
-      for (const nameCandidate of pickedInPage ? [] : nameCandidates) {
+      const typedDeadline = Date.now() + MEDICATION_NAME_BUDGET_MS;
+      for (const nameCandidate of typedCandidates) {
+        if (Date.now() > typedDeadline) break;
         const selected = await tryFillMedicationName(nameCandidate);
         if (selected) break;
+      }
+      if (notInCatalog && !isSuccessfulFillResult(lastNamaResult())) {
+        namaResult = {
+          success: false,
+          field: sel.obat_nama,
+          value: med.nama_obat,
+          method: 'autocomplete',
+          error: `${med.nama_obat}: ${CATALOG_EMPTY_ERROR}`,
+        };
       }
 
       let namaResultOk = isSuccessfulFillResult(namaResult);
@@ -1403,6 +1429,10 @@ export async function fillResepForm(payload: ResepFillPayload): Promise<{
         );
         pushFailedResult(rowNum, fallbackFailure, reasonCode);
         console.warn(`[ResepHandler] Failed to fill nama_obat for row ${rowNum}`);
+        // Nama Obat keeps no typed words of a medication left out. No events: a blur would close
+        // the next medication's suggestions as they open.
+        const leftNameInput = document.querySelector<HTMLInputElement>(sel.obat_nama);
+        if (leftNameInput) leftNameInput.value = '';
         continue;
       }
       const confirmedNamaResult = namaResult!;
