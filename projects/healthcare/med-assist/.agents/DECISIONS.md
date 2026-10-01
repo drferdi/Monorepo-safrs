@@ -3,6 +3,27 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-02 — Chronic doses come from the riwayat Resep table; no triad warning
+
+- Decision (Chief, live resep: every row 1X1, "Pengisian dosis salah, masih ada Komponen triad
+  regimen belum lengkap"; approved: read the riwayat format masked, fix the R3 parser, drop the
+  triad warning): the visit scraper reads the riwayat modal's Resep table ("Nama Obat | Jumlah |
+  Signa | … | Aturan Pakai") as the visit therapy, "<nama> <signa> <aturan pakai>" joined by "; "
+  (`getResepTableTherapy`, first of the two copies, a comma becomes a point), else the free-text
+  "Terapi Obat". The history parser (`lib/clinical`, R3) gives a name without a signa no dose
+  (frequency 0, empty label) instead of 1x1 "Sesudah makan"; such a chronic card shows "Signa tidak
+  tercatat" and cannot be continued. The visit store (`lib/iskandar-diagnosis-engine`, R3, needed
+  for the approved fix) replaces a scanned visit whose therapy a new scan reads differently; a
+  visit recorded in this session is kept. The RME transfer no longer raises
+  `RESEP_TRIAD_INCOMPLETE`; the rule left `AGENTS.md` (the reasoner's copy is untouched).
+- Rationale: read live 2026-10-02 (names masked, nothing stored): "Terapi Obat" is free text
+  ("W3, W3", "sesuai advis") with no signa, so every history medication fell to the 1x1 fallback;
+  the same modal's Resep table holds the signa (2x1, 3X1) and the aturan pakai.
+- Evidence: tests red first (scraper table, parser no-dose, chronic card no regimen, store rescan);
+  the payload-mapper triad assertion migrated from `toContain` to `not.toContain`. Harness: the
+  CTM card from "NAC, CTM" reads "Signa tidak tercatat" with no continue button. A live fill with
+  the new history was not run.
+
 ## 2026-10-02 — The RME resep picks each medication from its suggestion; one Tambah per row
 
 - Decision (Chief: "Di bagian terapi lagi lagi stuck … selecting obat setelah kamu mengetik beberapa

@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-10-02 (the RME resep picks each medication from its ePuskesmas suggestion and
+Last updated: 2026-10-02 (chronic doses from the riwayat Resep table, no triad warning; the RME resep picks each medication from its ePuskesmas suggestion and
 presses Tambah once per row; 2026-10-01: the signa chosen from its suggestion, "3x sehari" as 3x1;
 2026-09-30: the BP algorithm on the last visit; visit-form labels no longer chronic medications)
 
@@ -35,6 +35,9 @@ uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/zz-verify-kb-rx.spe
   main world (`pickMedicationInPage`: leading words searched, the item that is the medication
   clicked, hidden `obat_id` confirmed); the live entry-row layout is single-entry from row 1; one
   Tambah press per row; resep step time +15 s per further medication (`resepStepTimeoutMs`).
+- Chronic doses (2026-10-02, Chief "Pengisian dosis salah"): the visit therapy is the riwayat Resep
+  table (name, signa, aturan pakai); a name without a signa gets no dose ("Signa tidak tercatat",
+  not continuable); the store replaces a rescanned visit's therapy. No triad warning any more.
 - E2E on a live-shaped resep page (`tests/e2e/epuskesmas-resep-page.ts`, 7f42f2d4): the J18 KB
   row lands in the table with obat_id 20012 and signa "3X1"; red before the fixes (old signa:
   "[SIGNA_INVALID]", partial; old filler: typed "3x1").
@@ -45,7 +48,8 @@ uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/zz-verify-kb-rx.spe
 
 ## Verification (final tree)
 
-2026-10-02: typecheck 0 · test 0 (185 files, 1510 passed, 17 skipped) · eslint on the touched
+2026-10-02 (dose fix): typecheck 0 · test 0 (187 files, 1516 passed, 17 skipped) · e2e 17 passed
+· `run build` 0, last. Earlier 2026-10-02: test 0 (185 files, 1510 passed, 17 skipped) · eslint on the touched
 files 0 (full lint 1: only the other session's untracked `zz-verify-kb-rx.spec.ts`, console.log) ·
 `run:check` 0 · e2e 17 passed (7 synthetic incl. three medications on the live-shaped page, 10 others)
 · `run build` 0, last. 2026-10-01: `test:e2e` 17 passed incl. the live-shaped resep. Earlier: `test:e2e` 15 passed
