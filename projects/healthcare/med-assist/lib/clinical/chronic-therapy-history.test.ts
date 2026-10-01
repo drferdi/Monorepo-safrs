@@ -90,4 +90,30 @@ describe('chronic-therapy-history', () => {
     ]);
     expect(result.medications.map((item) => item.displayName)).toEqual(['Amlodipin']);
   });
+
+  // Chief, 2026-10-02 ("Pengisian dosis salah"): a name without a signa in the history got 1x1
+  // "Sesudah makan" and reached the resep with that invented dose. It keeps its name, not a dose.
+  it('gives a medication named without a signa no dose', () => {
+    const result = parseTherapyHistoryText('NAC, CTM');
+
+    expect(
+      result.medications.map((item) => [item.displayName, item.frequencyPerDay, item.doseLabel])
+    ).toEqual([
+      ['NAC', 0, ''],
+      ['CTM', 0, ''],
+    ]);
+  });
+
+  it('reads a riwayat Resep row: name, signa, aturan pakai', () => {
+    const [medication] = parseTherapyHistoryText(
+      'Klorfeniramin Maleat ( CTM ) tablet 4 mg 2x1 Sebelum Makan'
+    ).medications;
+
+    expect(medication).toMatchObject({
+      displayName: 'Klorfeniramin Maleat ( CTM ) Tablet 4 Mg',
+      frequencyPerDay: 2,
+      amountPerTake: 1,
+      aturanPakai: 'Sebelum makan',
+    });
+  });
 });

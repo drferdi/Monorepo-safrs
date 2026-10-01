@@ -163,6 +163,37 @@ const getFieldValue = (
   return getLabelValueFromText(root, labelKeywords);
 };
 
+/**
+ * The riwayat modal's Resep table ("Nama Obat | Jumlah | Signa | … | Aturan Pakai"), one
+ * "<nama> <signa> <aturan pakai>" per medication joined by "; ", the form the history parser reads.
+ * The free-text "Terapi Obat" carries no signa (Chief, 2026-10-02: "Pengisian dosis salah"). The
+ * modal shows the table twice; the first is read. A comma ("3X1,5") would split a line, so it
+ * becomes a point.
+ */
+const getResepTableTherapy = (root: ParentNode): string => {
+  for (const table of Array.from(root.querySelectorAll('table'))) {
+    const rows = Array.from(table.querySelectorAll('tr'));
+    const header = Array.from(rows[0]?.querySelectorAll('td, th') ?? []).map((cell) =>
+      cleanText(cell.textContent).toLowerCase()
+    );
+    const nama = header.indexOf('nama obat');
+    const signa = header.indexOf('signa');
+    if (nama < 0 || signa < 0) continue;
+    const aturan = header.indexOf('aturan pakai');
+    return rows
+      .slice(1)
+      .map((row) => {
+        const cells = Array.from(row.querySelectorAll('td, th')).map((cell) =>
+          cleanText(cell.textContent).replace(/,/g, '.')
+        );
+        return cells[nama] ? [cells[nama], cells[signa], aturan >= 0 ? cells[aturan] : ''].filter(Boolean).join(' ') : '';
+      })
+      .filter(Boolean)
+      .join('; ');
+  }
+  return '';
+};
+
 const VISIT_DOKTER_KEYWORDS = ['dokter / tenaga medi', 'dokter / tenaga medis', 'dokter'];
 const VISIT_PERAWAT_KEYWORDS = ['perawat / bidan', 'perawat', 'bidan'];
 const VISIT_TERAPI_OBAT_KEYWORDS = [
@@ -264,7 +295,8 @@ export const extractVisitFromRoot = (
   const diagnosaNama =
     normalizeDiagnosisName(diagnosaNamaRaw, icd) ||
     normalizeDiagnosisName(getDiagnosisNameFromTables(root), icd);
-  const terapiObat = getFieldValue(root, [], VISIT_TERAPI_OBAT_KEYWORDS);
+  const terapiObat =
+    getResepTableTherapy(root) || getFieldValue(root, [], VISIT_TERAPI_OBAT_KEYWORDS);
   const dokterPenanganan = getFieldValue(root, [], VISIT_DOKTER_KEYWORDS);
   const perawatPenanganan = getFieldValue(root, [], VISIT_PERAWAT_KEYWORDS);
 

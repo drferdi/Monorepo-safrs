@@ -17,7 +17,8 @@ describe('RME payload mapper', () => {
     expect(pregnancy.reasonCode).toBe('PREGNANCY_UNKNOWN_DEFAULT_FALSE');
   });
 
-  it('builds payload with triad warning when regimen role is incomplete', () => {
+  // Chief, 2026-10-02: no triad rule; a regimen without an adjuvant or a vitamin is not flagged.
+  it('builds payload without a triad warning when a regimen role is missing', () => {
     const mapped = buildRMETransferPayload({
       keluhanUtama: 'Batuk berdahak',
       patientGender: 'P',
@@ -59,7 +60,7 @@ describe('RME payload mapper', () => {
     );
     expect(vitaminRow).toBeDefined();
     expect(vitaminRow?.nama_obat.toLowerCase()).not.toContain('parasetamol');
-    expect(mapped.reasonCodes).toContain('RESEP_TRIAD_INCOMPLETE');
+    expect(mapped.reasonCodes).not.toContain('RESEP_TRIAD_INCOMPLETE');
   });
 
   it('keeps up to 6 safe medications in the resep payload', () => {

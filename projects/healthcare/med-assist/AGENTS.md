@@ -58,8 +58,6 @@ All commands run from this capsule root as argv; see `project.contract.json`.
   and an ICD-10 mapping. No probabilistic guessing without explicit uncertainty flags.
 - Clinical source of truth: the local knowledge base (`public/data/penyakit.json`) wins; the
   LLM is a reranker only.
-- Prescriptions: non-emergency regimens require at least three medications (main, adjuvant,
-  vitamin).
 - Trajectory: visualise visit history from one visit onward.
 - Emergency Detector 4-Gate with Pattern-Engine v2, and Clinical Trajectory V1/V2, are
   intentional layering, not duplication to clean up.

@@ -182,16 +182,18 @@ export function parseTherapyHistoryText(input: string | undefined): ParsedChroni
       continue;
     }
 
+    // A name without a signa keeps its name and no dose: an invented 1x1 reached the resep
+    // (Chief, 2026-10-02: "Pengisian dosis salah").
     if (shouldTreatAsFallbackMedication(line)) {
       medications.push({
         displayName: normalizeMedicationDisplayName(line),
-        frequencyPerDay: 1,
-        amountPerTake: 1,
+        frequencyPerDay: 0,
+        amountPerTake: 0,
         strengthValue: 0,
         strengthUnit: '',
         aturanPakai: 'Sesudah makan',
         raw: line,
-        doseLabel: '1x1',
+        doseLabel: '',
         normalizedDrugKey: normalizeDrugKey(line),
       });
     }

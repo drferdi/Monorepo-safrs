@@ -162,12 +162,21 @@ export function buildChronicMedications(names: string[], visits: VisitRecord[]):
       );
       // The signa (times a day x units a take), as the RME resep takes it; the strength is in the
       // name. A dose written as a strength ("1x10mg") is one unit a take.
-      if (medication && !regimen) {
+      if (medication && medication.frequencyPerDay > 0 && !regimen) {
         const perTake = medication.strengthUnit ? 1 : medication.amountPerTake;
         regimen = { dosis: `${medication.frequencyPerDay}x${perTake}`, aturanPakai: medication.aturanPakai };
       }
       return medication
-        ? [{ date: visit.timestamp, dose: `${formatDose(name, medication.doseLabel)} · ${medication.aturanPakai}`, diagnosis: visit.diagnosa?.nama?.trim() ?? '' }]
+        ? [
+            {
+              date: visit.timestamp,
+              // No signa in that visit's history: nothing to tell, and nothing to continue.
+              dose: medication.doseLabel
+                ? `${formatDose(name, medication.doseLabel)} · ${medication.aturanPakai}`
+                : 'Signa tidak tercatat',
+              diagnosis: visit.diagnosa?.nama?.trim() ?? '',
+            },
+          ]
         : [];
     });
     const counts = new Map<string, number>();

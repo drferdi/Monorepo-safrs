@@ -106,4 +106,29 @@ describe('extractVisitFromRoot', () => {
       perawat_penanganan: 'DIAN SUNARDI',
     });
   });
+
+  // Chief, 2026-10-02 ("Pengisian dosis salah"): the riwayat's "Terapi Obat" is free text without a
+  // signa ("NAC, CTM"); the same modal's Resep table holds each medication's signa and aturan pakai
+  // (read live, names masked, 2026-10-02). The ePuskesmas modal shows the table twice.
+  it('reads the riwayat Resep table, with each signa and aturan pakai, as the visit therapy', () => {
+    const resepTable = (withPermintaan: boolean) => `
+      <table>
+        <tr><td>Nama Obat</td><td>Jumlah</td><td>Signa</td><td>Racikan</td>${withPermintaan ? '<td>Jumlah Permintaan</td>' : ''}<td>Aturan Pakai</td><td>Keterangan</td></tr>
+        <tr><td>N-asetilsistein kapsul 200 mg</td><td>6</td><td>2x1</td><td></td>${withPermintaan ? '<td></td>' : ''}<td>Sesudah Makan</td><td>Batuk</td></tr>
+        <tr><td>Klorfeniramin Maleat ( CTM ) tablet 4 mg</td><td>6</td><td>2x1</td><td></td>${withPermintaan ? '<td></td>' : ''}<td>Sesudah Makan</td><td>Pilek</td></tr>
+        <tr><td>Parasetamol sirup 120 mg/ 5 ml</td><td>1</td><td>3X1,5</td><td></td>${withPermintaan ? '<td></td>' : ''}<td>Sebelum Makan</td><td>Demam, nyeri</td></tr>
+      </table>`;
+    document.body.innerHTML = LIVE_RIWAYAT_HTML.replace('e uai advi dokter', 'NAC, CTM').replace(
+      '</div>',
+      `${resepTable(true)}${resepTable(false)}</div>`
+    );
+
+    const result = extractVisitFromRoot(document, '69915', '2026-03-25');
+
+    expect(result?.terapi_obat).toBe(
+      'N-asetilsistein kapsul 200 mg 2x1 Sesudah Makan; ' +
+        'Klorfeniramin Maleat ( CTM ) tablet 4 mg 2x1 Sesudah Makan; ' +
+        'Parasetamol sirup 120 mg/ 5 ml 3X1.5 Sebelum Makan'
+    );
+  });
 });

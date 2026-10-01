@@ -1374,10 +1374,8 @@ function buildResepPayload(input: RMETransferMapperInput): {
     };
   });
 
+  // The roles stay in the payload meta; a missing one is no longer a warning (Chief, 2026-10-02).
   const triadMissingRoles = (Object.keys(roles) as TriadRole[]).filter((key) => roles[key] === 0);
-  if (triadMissingRoles.length > 0) {
-    reasonCodes.push('RESEP_TRIAD_INCOMPLETE');
-  }
 
   const allergySummary = normalizeAllergies(input.allergies || []);
   const allergyText = [...allergySummary.obat, ...allergySummary.makanan, ...allergySummary.udara]

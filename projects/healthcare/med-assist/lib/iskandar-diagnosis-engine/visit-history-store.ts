@@ -110,7 +110,9 @@ function getDB(): IDBDatabase {
 // ============================================================================
 
 /**
- * Save a visit record. Skips if encounter_id already exists.
+ * Save a visit record. An encounter already saved is kept, except a scanned one whose therapy a new
+ * scan reads differently: the riwayat Resep table replaces the free-text therapy with its signa
+ * (Chief, 2026-10-02: "Pengisian dosis salah").
  */
 export async function saveVisit(record: Omit<VisitRecord, 'id'>): Promise<void> {
   await initVisitHistoryStore();
@@ -118,8 +120,22 @@ export async function saveVisit(record: Omit<VisitRecord, 'id'>): Promise<void> 
   // Check duplicate by encounter_id
   const existing = await getVisitByEncounterId(record.encounter_id);
   if (existing) {
-    console.warn('[VisitHistory] Encounter already saved:', record.encounter_id);
-    return;
+    const rescanned =
+      existing.source === 'scrape' &&
+      record.source === 'scrape' &&
+      existing.terapi_obat !== record.terapi_obat;
+    if (!rescanned) {
+      console.warn('[VisitHistory] Encounter already saved:', record.encounter_id);
+      return;
+    }
+    return new Promise((resolve, reject) => {
+      const request = getDB()
+        .transaction(STORE_NAME, 'readwrite')
+        .objectStore(STORE_NAME)
+        .put({ ...record, id: existing.id });
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
   }
 
   return new Promise((resolve, reject) => {

@@ -54,6 +54,16 @@ describe('buildChronicMedications', () => {
     ]);
   });
 
+  // Chief, 2026-10-02 ("Pengisian dosis salah"): no signa in the history, no dose invented; the
+  // card cannot be continued until a visit shows the regimen.
+  it('keeps no regimen for a medication the history names without a signa', () => {
+    const [ctm] = buildChronicMedications(['CTM'], [visit('2026-09-10T08:00:00Z', 'NAC, CTM', 'Rinitis')]);
+
+    expect(ctm.regimen).toBeUndefined();
+    expect(ctm.doseLine).toBe('Signa tidak tercatat');
+    expect(chronicContinuation(ctm)).toBeNull();
+  });
+
   // Chief, 2026-09-29: a chronic card can be continued in this visit, so the latest regimen is kept whole.
   it('keeps the latest regimen, which a continuation in this visit carries to the prescription', () => {
     const [amlodipin] = buildChronicMedications(['Amlodipin'], visits);

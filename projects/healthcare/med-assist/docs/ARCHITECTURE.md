@@ -287,6 +287,9 @@ chronic-disease inputs they need are hard-coded empty (`clinical-snapshot.ts:223
   `pharmacotherapy-reasoner.ts:989,1100-1111`, but the panel never displays that output.
 - **[Inferred]** Whether the remote endpoint applies the three-medication rule can't be seen
   from this repository.
+- **[Verified]** Chief dropped the three-medication rule on 2026-10-02: it left `AGENTS.md`, and
+  the RME transfer no longer raises `RESEP_TRIAD_INCOMPLETE` (`lib/rme/payload-mapper.ts`). The
+  reasoner's copy above was not changed.
 - **[Verified]** The drug-interaction checker (`ddi-checker.ts`, data in
   `data/ddi-clinical.json`) only knows "moderate" and "major" severities. Its "contraindicated"
   branches are unreachable (lines 144-147). A failed check lets the drug through (line 870).
