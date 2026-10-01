@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-10-02 (header lights the page on screen, "Lanjutkan semua" for chronic therapy;
+Last updated: 2026-10-02 (an out-of-stock medication is left out at once; header lights the page on screen, "Lanjutkan semua" for chronic therapy;
 chronic doses from the riwayat Resep table, no triad warning; the RME resep picks each medication from its ePuskesmas suggestion and
 presses Tambah once per row; 2026-10-01: the signa chosen from its suggestion, "3x sehari" as 3x1;
 2026-09-30: the BP algorithm on the last visit; visit-form labels no longer chronic medications)
@@ -41,6 +41,8 @@ uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/zz-verify-kb-rx.spe
   not continuable); the store replaces a rescanned visit's therapy. No triad warning any more.
 - Header (2026-10-02): `activeSurface` lights START / TRAJECTORY / DIAGNOSIS / STATS for the page on
   screen. Terapi kronis has "Lanjutkan semua" (cards with a regimen).
+- Out of stock (2026-10-02, "macet di vit b6"): an empty catalogue answer fails that medication at
+  once (`CATALOG_EMPTY_ERROR`), the rest are filled, the result is partial and names it.
 - E2E on a live-shaped resep page (`tests/e2e/epuskesmas-resep-page.ts`, 7f42f2d4): the J18 KB
   row lands in the table with obat_id 20012 and signa "3X1"; red before the fixes (old signa:
   "[SIGNA_INVALID]", partial; old filler: typed "3x1").
@@ -51,6 +53,7 @@ uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/zz-verify-kb-rx.spe
 
 ## Verification (final tree)
 
+2026-10-02 (out of stock): typecheck 0 · test 0 (1521 passed, 17 skipped) · e2e 18 · `run build` 0, last.
 2026-10-02 (header/select-all): typecheck 0 · test 0 (1521 passed, 17 skipped) · e2e 17 · `run build` 0, last.
 2026-10-02 (dose fix): typecheck 0 · test 0 (187 files, 1516 passed, 17 skipped) · e2e 17 passed
 · `run build` 0, last. Earlier 2026-10-02: test 0 (185 files, 1510 passed, 17 skipped) · eslint on the touched

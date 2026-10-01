@@ -3,6 +3,22 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-02 — A medication the ePuskesmas catalogue does not offer is left out at once
+
+- Decision (Chief: "walah macet di vit b6", "bagaimana ya agar tidak stuck melulu kan stok obat bisa
+  kosong sewaktu waktu"): read live (read-only, the autocomplete source called directly): "Vitamin
+  B6", "Piridoksin" and "B6" return no item; the catalogue lists what is in stock. The main-world
+  pick listens to jQuery UI's `autocompleteresponse`; an empty answer fails at once with
+  `CATALOG_EMPTY_ERROR` ("Obat tidak ada di daftar stok ePuskesmas") and empties Nama Obat. The
+  typed candidates then run only for those that search other words (an alias), within 12 s per
+  medication (`MEDICATION_NAME_BUDGET_MS`); the row fails as "<nama>: Obat tidak ada di daftar stok
+  ePuskesmas", the next medications are filled, and the step ends partial with that message. A
+  left-out medication's typed words are cleared without events (a blur closed the next
+  medication's suggestions).
+- Evidence: e2e red first (step timeout at 60 s, no row), then green: N-asetilsistein and
+  Klorfeniramin land, Vitamin B6 named in the partial result, no alert, under 25 s. The live-shaped
+  page now fires `autocompleteresponse` and keeps minLength 1, as live.
+
 ## 2026-10-02 — The header lights the page on screen; "Lanjutkan semua" for chronic therapy
 
 - Decision (Chief: "saat user ada di halaman trajectory maka button di atas di bagian trajectory
