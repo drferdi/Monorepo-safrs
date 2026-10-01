@@ -2,9 +2,11 @@
  * A synthetic resep page shaped like the live ePuskesmas one, as read on 2026-10-01 (jQuery UI
  * 1.12.1 autocompletes, read-only): one entry row whose "Nama Obat" and "Cari Resep Signa"
  * autocompletes write the hidden `obat_id`, `stok_obat` and `obat_signa` only when a suggestion is
- * chosen; Tambah (`setTambahObat`) refuses the row while any of them is missing and otherwise moves
- * it into `#tabel_detail` and clears the entry row. Typing alone selects nothing. The `$` here
- * implements only what the extension's main-world bridge calls. Synthetic data only.
+ * chosen; Tambah (`setTambahObat`) refuses the row while any of them is missing and otherwise
+ * appends it to `#tabel_detail` as `tr_<x>` (x = rows + 1; the entry row is the first `tr` of
+ * `#tabel_detail`) carrying hidden `ResepDetail[x][...]` inputs and no `obat_nama`, then clears
+ * the entry row (`resetForm`). Typing alone selects nothing. The `$` here implements only what the
+ * extension's main-world bridge calls. Synthetic data only.
  */
 export function buildEpuskesmasShapedResepPage(): string {
   return `
@@ -37,7 +39,7 @@ export function buildEpuskesmasShapedResepPage(): string {
                   <th>Signa</th><th>Aturan Pakai</th><th>Keterangan</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="tabel_detail">
                 <tr id="entry-row">
                   <td>
                     <select name="ResepDetail[1][obat_racikan]" data-for="obat_racikan">
@@ -69,7 +71,6 @@ export function buildEpuskesmasShapedResepPage(): string {
                   <td><input type="text" name="ResepDetail[1][obat_keterangan]" data-for="obat_keterangan" /></td>
                 </tr>
               </tbody>
-              <tbody id="tabel_detail"></tbody>
             </table>
             <button id="button_add_obat" type="button" class="btn btn-sm btn-primary">Tambah</button>
           </div>
@@ -206,6 +207,8 @@ export function buildEpuskesmasShapedResepPage(): string {
                 { id: '20011', label: '20011 - Amoksisilin sirup 125 mg/5 ml (40)', value: 'Amoksisilin sirup 125 mg/5 ml', stok: '40' },
                 { id: '20012', label: '20012 - Amoksisilin kapsul/kaplet 500 mg (832)', value: 'Amoksisilin kapsul/kaplet 500 mg', stok: '832' },
                 { id: '30001', label: '30001 - Parasetamol tablet 500 mg (900)', value: 'Parasetamol tablet 500 mg', stok: '900' },
+                { id: '20144', label: '20144 - N-asetilsistein kapsul 200 mg (1427)', value: 'N-asetilsistein kapsul 200 mg', stok: '1427' },
+                { id: '20109', label: '20109 - Klorfeniramin Maleat ( CTM ) tablet 4 mg (1051)', value: 'Klorfeniramin Maleat ( CTM ) tablet 4 mg', stok: '1051' },
               ],
               select: function (item) {
                 field('obat_id').value = item.id;
@@ -238,14 +241,35 @@ export function buildEpuskesmasShapedResepPage(): string {
               if (obatId === '') return pageAlert('Nama obat tidak boleh kosong');
               if (jumlah === '' || Number(jumlah) < 0) return pageAlert('Jumlah obat tidak boleh kosong atau minus');
               if (signa === '') return pageAlert('Signa tidak boleh kosong');
+              var detail = document.getElementById('tabel_detail');
+              var x = detail.children.length + 1;
               var row = document.createElement('tr');
+              row.id = 'tr_' + x;
               row.className = 'resep-detail-row';
               row.dataset.obatId = obatId;
               row.dataset.signa = signa;
               row.dataset.jumlah = jumlah;
               row.dataset.aturanPakai = field('aturan_pakai').value;
-              row.textContent = field('obat_nama').value;
-              document.getElementById('tabel_detail').appendChild(row);
+              var nameCell = document.createElement('td');
+              nameCell.textContent = field('obat_nama').value;
+              row.appendChild(nameCell);
+              [
+                ['obat_racikan', field('obat_racikan').value],
+                ['obat_jumlah_permintaan', field('obat_jumlah_permintaan').value],
+                ['obat_id', obatId],
+                ['obat_jumlah', jumlah],
+                ['obat_signa', signa],
+                ['aturan_pakai', field('aturan_pakai').value],
+                ['obat_keterangan', field('obat_keterangan').value],
+              ].forEach(function (pair) {
+                var hidden = document.createElement('input');
+                hidden.type = 'text';
+                hidden.style.display = 'none';
+                hidden.name = 'ResepDetail[' + x + '][' + pair[0] + ']';
+                hidden.value = pair[1];
+                row.appendChild(hidden);
+              });
+              detail.appendChild(row);
               ['obat_id', 'stok_obat', 'obat_nama', 'obat_jumlah', 'obat_jumlah_permintaan', 'obat_signa', 'signa_nama', 'obat_keterangan'].forEach(function (name) {
                 field(name).value = '';
               });

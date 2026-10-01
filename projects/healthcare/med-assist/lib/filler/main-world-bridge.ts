@@ -29,7 +29,8 @@ export interface MainWorldFieldMapping {
   autocompleteTimeout?: number;
   requireExactMatch?: boolean;
   /** 'exact': choose only the item that is exactly the value (`pickExactSuggestion`), never the first. */
-  matchMode?: 'exact';
+  /** 'medication': search the leading words, then choose the item that is the medication (`pickMedicationSuggestion`). */
+  matchMode?: 'exact' | 'medication';
 }
 
 /**

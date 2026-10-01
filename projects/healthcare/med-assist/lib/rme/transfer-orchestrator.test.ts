@@ -257,4 +257,35 @@ describe('RMETransferOrchestrator', () => {
     expect(diagnosaRun.reasonCodes).not.toContain('DUPLICATE_SUPPRESSED');
     expect(exec).toHaveBeenCalledTimes(2);
   });
+
+  // Chief, 2026-10-02 ("Di bagian terapi lagi lagi stuck"): the resep step fills one medication
+  // after another; a flat 30 s cut a visit with several medications off midway and the retry
+  // started a second fill over the one still running.
+  it('gives the resep step more time for each further medication', async () => {
+    const orchestrator = new RMETransferOrchestrator();
+    const medication = samplePayload().resep!.medications[0]!;
+    const slowResep = vi.fn(async (step: string) => {
+      if (step === 'resep') await new Promise((resolve) => setTimeout(resolve, 60));
+      return { success: [{ field: 'ok', value: 'ok', method: 'direct' }], failed: [], skipped: [] };
+    });
+    const options = { timeoutMs: { resep: 20 }, retryByStep: { resep: 0 } };
+
+    const threeMedications = await orchestrator.run(
+      samplePayload({
+        resep: { ...samplePayload().resep!, medications: [medication, medication, medication] },
+        options: { onlyStep: 'resep', requestId: 'three-medications' },
+      }),
+      slowResep,
+      options
+    );
+    const oneMedication = await orchestrator.run(
+      samplePayload({ options: { onlyStep: 'resep', requestId: 'one-medication' } }),
+      slowResep,
+      options
+    );
+
+    expect(threeMedications.steps.resep.state).toBe('success');
+    expect(oneMedication.steps.resep.state).toBe('failed');
+    expect(oneMedication.reasonCodes).toContain('STEP_TIMEOUT');
+  });
 });

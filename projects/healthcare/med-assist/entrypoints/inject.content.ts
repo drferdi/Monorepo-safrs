@@ -12,7 +12,11 @@
  */
 
 import { pickExactStaffMatch, staffSearchTerm } from '@/lib/filler/staff-match';
-import { pickExactSuggestion } from '@/lib/filler/suggestion-match';
+import {
+  medicationSearchTerm,
+  pickExactSuggestion,
+  pickMedicationSuggestion,
+} from '@/lib/filler/suggestion-match';
 import { riwayatDebugLog, riwayatDebugWarn } from '@/utils/debug-flags';
 import { createLogger } from '@/utils/logger';
 
@@ -363,7 +367,7 @@ export default defineContentScript({
         type: 'text' | 'select' | 'autocomplete';
         autocompleteTimeout?: number;
         requireExactMatch?: boolean;
-        matchMode?: 'exact';
+        matchMode?: 'exact' | 'medication';
       },
       _requestId: string
     ): Promise<{
@@ -453,7 +457,9 @@ export default defineContentScript({
             // server-side search returns candidates, then matches those against the full name.
             const searchValue = field.requireExactMatch
               ? staffSearchTerm(field.value)
-              : field.value;
+              : field.matchMode === 'medication'
+                ? medicationSearchTerm(field.value)
+                : field.value;
             $el.val(searchValue);
             $el.autocomplete('search', searchValue);
 
@@ -484,6 +490,13 @@ export default defineContentScript({
                     // Only the item that is exactly the value, e.g. signa "3X1" and not "3X1/2".
                     const itemTexts = $menu.toArray().map((el: HTMLElement) => $(el).text() || '');
                     const index = pickExactSuggestion(itemTexts, field.value);
+                    if (index < 0) hasMatch = false;
+                    else $best = $menu.eq(index);
+                  } else if (field.matchMode === 'medication') {
+                    // The item that is the medication itself, e.g. "Klorfeniramin Maleat ( CTM )
+                    // tablet 4 mg", never the first one the leading words found.
+                    const itemTexts = $menu.toArray().map((el: HTMLElement) => $(el).text() || '');
+                    const index = pickMedicationSuggestion(itemTexts, field.value);
                     if (index < 0) hasMatch = false;
                     else $best = $menu.eq(index);
                   } else {
@@ -553,7 +566,9 @@ export default defineContentScript({
                 ? 'Nama tenaga medis tidak cocok persis di ePuskesmas'
                 : field.matchMode === 'exact'
                   ? 'Tidak ada saran yang cocok persis'
-                  : 'Autocomplete dropdown not appeared',
+                  : field.matchMode === 'medication'
+                    ? 'Tidak ada saran obat yang sama dengan nama obat'
+                    : 'Autocomplete dropdown not appeared',
               method: 'jq-autocomplete-fail',
             };
           }

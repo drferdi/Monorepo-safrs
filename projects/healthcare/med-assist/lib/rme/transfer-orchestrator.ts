@@ -68,6 +68,18 @@ const DEFAULT_RETRY_BY_STEP: Record<RMETransferStepStatus, number> = {
   resep: 1,
 };
 const DEFAULT_RETRY_DELAY_MS = 900;
+/** Time the resep step gets for each medication after the first (about 5 s each, 2026-10-02). */
+const RESEP_TIMEOUT_PER_FURTHER_MEDICATION_MS = 15000;
+
+/**
+ * The resep step fills one medication after another, so its time grows with the medications:
+ * a flat limit cut a longer prescription off midway (Chief, 2026-10-02: "lagi lagi stuck").
+ */
+export function resepStepTimeoutMs(baseMs: number, resep: unknown): number {
+  const medications = (resep as { medications?: unknown } | null | undefined)?.medications;
+  const count = Array.isArray(medications) ? medications.length : 0;
+  return baseMs + RESEP_TIMEOUT_PER_FURTHER_MEDICATION_MS * Math.max(0, count - 1);
+}
 const DEFAULT_STEP_ORDER: RMETransferStepStatus[] = ['anamnesa', 'diagnosa', 'resep'];
 
 function nowIso(): string {
@@ -541,7 +553,7 @@ export class RMETransferOrchestrator {
         try {
           const raw = await withTimeout(
             executeStep(step, payload as StepPayloadMap[typeof step]),
-            timeoutMs[step]
+            step === 'resep' ? resepStepTimeoutMs(timeoutMs.resep, payload) : timeoutMs[step]
           );
           const normalized = normalizeExecutionResult(raw);
           const latencyMs = now() - startedStepMs;

@@ -653,13 +653,14 @@ function getResepAnchorElement(): Element | null {
 }
 
 function clickElementLikeHuman(target: ResepAddControl): void {
-  const events = ['pointerdown', 'mousedown', 'pointerup', 'mouseup', 'click'];
+  // The press itself is the single button.click() in clickAddResepButton: a second click on the
+  // ePuskesmas Tambah lands on the entry row it has just emptied ("Nama obat tidak boleh kosong").
+  const events = ['pointerdown', 'mousedown', 'pointerup', 'mouseup'];
   for (const type of events) {
     target.dispatchEvent(
       new MouseEvent(type, {
         bubbles: true,
         cancelable: true,
-        view: window,
       })
     );
   }
@@ -901,6 +902,49 @@ async function commitRowWithVerification(
   };
 }
 
+/**
+ * Chooses the medication on the ePuskesmas "Nama Obat" autocomplete the way a person does (Chief,
+ * 2026-10-02): type the leading words, wait for the suggestions, click the one that is the
+ * medication. Succeeds only when the page wrote the row's hidden obat_id, which Tambah needs.
+ */
+async function pickMedicationInPage(selector: string, name: string): Promise<FillResult> {
+  const nameInput = Array.from(document.querySelectorAll<HTMLInputElement>(selector)).find(
+    (element) => element.classList.contains('ui-autocomplete-input') && element.name
+  );
+  const failure = (error: string): FillResult => ({
+    success: false,
+    field: selector,
+    value: name,
+    method: 'autocomplete',
+    error,
+  });
+  if (!nameInput) return failure('Nama Obat tanpa saran jQuery UI');
+
+  const obatIdInput = nameInput
+    .closest('tr')
+    ?.querySelector<HTMLInputElement>('input[data-for="obat_id"], input[name*="[obat_id]"]');
+  if (obatIdInput) obatIdInput.value = '';
+  const attempt = await fillViaMainWorld(
+    [
+      {
+        selector: `input[name="${nameInput.name}"]`,
+        value: name,
+        type: 'autocomplete',
+        autocompleteTimeout: 5000,
+        matchMode: 'medication',
+      },
+    ],
+    9000,
+    120
+  );
+  const chosen = attempt.success[0];
+  if (!chosen) return failure(attempt.failed[0]?.error || 'Saran obat tidak dipilih');
+  if (obatIdInput && !obatIdInput.value.trim()) {
+    return failure('Saran obat diklik tetapi obat_id tidak terisi');
+  }
+  return { success: true, field: chosen.field, value: chosen.value || name, method: 'autocomplete' };
+}
+
 async function fillSignaField(selector: string, value: string): Promise<FillResult> {
   const normalizedValue = normalizeSignaInput(value);
   // ePuskesmas writes the hidden obat_signa only when a "Cari Resep Signa" suggestion is chosen
@@ -1048,7 +1092,10 @@ export async function fillResepForm(payload: ResepFillPayload): Promise<{
   const startTime = Date.now();
   const runId = createRunId();
   const totalRows = payload.medications.length;
-  let useSingleEntryFlow = false;
+  // The live ePuskesmas resep has one entry row that Tambah empties after each medication; its
+  // committed rows carry no Nama Obat. Pressing Tambah to "add a row" there only raises "Nama obat
+  // tidak boleh kosong" (Chief, 2026-10-02: "lagi lagi stuck").
+  let useSingleEntryFlow = !hasIndexedResepLayout();
   let lastCommittedMedicationName = '';
   const pushFailedResult = (
     rowIndex: number,
@@ -1219,18 +1266,23 @@ export async function fillResepForm(payload: ResepFillPayload): Promise<{
       let namaResult: FillResult | null = null;
       let selectedMedicationName = '';
 
-      const tryFillMedicationName = async (candidateSelector: string): Promise<boolean> => {
-        const normalizedCandidate = normalizeMedicationLabel(candidateSelector);
-        if (!normalizedCandidate || rejectedCandidates.has(normalizedCandidate)) return false;
-
-        const baselineNotifications = collectVisibleNotificationTexts();
-        const attempt = await fillAutocomplete(sel.obat_nama, candidateSelector, {
+      const typeCandidate = (candidateSelector: string): Promise<FillResult> =>
+        fillAutocomplete(sel.obat_nama, candidateSelector, {
           timeout: 3200,
           typeDelay: 65,
           allowFirstItemFallback: false,
           requireDropdownSelection: true,
           ignoreExistingDropdown: true,
         });
+      const tryFillMedicationName = async (
+        candidateSelector: string,
+        pick: (candidate: string) => Promise<FillResult> = typeCandidate
+      ): Promise<boolean> => {
+        const normalizedCandidate = normalizeMedicationLabel(candidateSelector);
+        if (!normalizedCandidate || rejectedCandidates.has(normalizedCandidate)) return false;
+
+        const baselineNotifications = collectVisibleNotificationTexts();
+        const attempt = await pick(candidateSelector);
         if (!attempt.success) {
           namaResult = attempt;
           const reason = inferRuntimeReasonCode(attempt.error || '', 'FORMULATION_MISMATCH');
@@ -1306,7 +1358,12 @@ export async function fillResepForm(payload: ResepFillPayload): Promise<{
         return true;
       };
 
-      for (const nameCandidate of nameCandidates) {
+      const pickedInPage = await tryFillMedicationName(String(med.nama_obat).trim(), (candidate) =>
+        pickMedicationInPage(sel.obat_nama, candidate)
+      );
+      // Not chosen in the page: every candidate, the name itself included, goes to the typed path.
+      if (!pickedInPage) rejectedCandidates.clear();
+      for (const nameCandidate of pickedInPage ? [] : nameCandidates) {
         const selected = await tryFillMedicationName(nameCandidate);
         if (selected) break;
       }
@@ -1605,4 +1662,6 @@ export const __resepInternals = {
   normalizeSignaInput,
   isValidSignaFormat,
   fillSignaField,
+  pickMedicationInPage,
+  clickAddResepButton,
 };

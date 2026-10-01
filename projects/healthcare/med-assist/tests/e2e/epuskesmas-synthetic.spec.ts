@@ -994,4 +994,77 @@ test.describe.serial('Synthetic ePuskesmas integration', () => {
     await extensionPage.close();
     await epPage.close();
   });
+
+  // Chief, 2026-10-02 ("Di bagian terapi lagi lagi stuck"): after the first medication was added,
+  // the second stayed in the entry row, name typed but not chosen, Jumlah and Signa empty. Every
+  // medication of the visit must be chosen from its suggestion and land in the table, in order.
+  test('adds every medication of a visit on a page shaped like the live ePuskesmas resep', async () => {
+    test.setTimeout(150_000);
+    await context.unrouteAll({ behavior: 'ignoreErrors' });
+    await context.route('https://kotakediri.epuskesmas.id/**', async (route) => {
+      await route.fulfill({ status: 200, contentType: 'text/html', body: buildEpuskesmasShapedResepPage() });
+    });
+    const epPage = await context.newPage();
+    await epPage.goto('https://kotakediri.epuskesmas.id/resep/create/82594?from=pelayanan&action=edit');
+    await epPage.waitForLoadState('domcontentloaded');
+    await epPage.waitForTimeout(2500);
+
+    const extensionPage = await openExtensionPage(context, await getExtensionId(context), 'sidepanel.html');
+    await epPage.bringToFront();
+    const medications = [
+      {
+        racikan: '0',
+        jumlah_permintaan: 10,
+        nama_obat: 'N-asetilsistein kapsul 200 mg',
+        jumlah: 10,
+        signa: '1x1',
+        aturan_pakai: '2',
+        keterangan: 'Lanjutan terapi kronis.',
+      },
+      {
+        racikan: '0',
+        jumlah_permintaan: 10,
+        nama_obat: 'Klorfeniramin Maleat ( CTM ) tablet 4 mg',
+        jumlah: 10,
+        signa: '3x1',
+        aturan_pakai: '2',
+        keterangan: 'Antihistamin',
+      },
+      ...KB_J18_RESEP_MEDICATIONS,
+    ];
+    const transferResponse = await sendRuntimeMessage<unknown>(extensionPage, {
+      type: 'transferRME',
+      timestamp: Date.now(),
+      data: {
+        resep: {
+          static: { no_resep: '', alergi: '' },
+          ajax: { ruangan: '', dokter: 'dr. Test', perawat: 'Ns. Test' },
+          medications,
+          prioritas: '0',
+        },
+        options: { requestId: 'three-medications-live-shape', startFromStep: 'resep', onlyStep: 'resep' },
+      },
+    });
+    const transferPayload = unwrapMessagingResponse<{ steps: Record<string, { state: string }> }>(
+      transferResponse.response
+    );
+    expect(transferResponse.lastError).toBeNull();
+    expect(transferPayload.steps.resep.state, JSON.stringify(transferPayload)).toBe('success');
+
+    const rows = epPage.locator('#tabel_detail tr.resep-detail-row');
+    await expect(rows).toHaveText([
+      'N-asetilsistein kapsul 200 mg',
+      'Klorfeniramin Maleat ( CTM ) tablet 4 mg',
+      'Amoksisilin kapsul/kaplet 500 mg',
+    ]);
+    await expect(rows.nth(0)).toHaveAttribute('data-obat-id', '20144');
+    await expect(rows.nth(0)).toHaveAttribute('data-signa', '1X1');
+    await expect(rows.nth(1)).toHaveAttribute('data-obat-id', '20109');
+    await expect(rows.nth(1)).toHaveAttribute('data-signa', '3X1');
+    await expect(rows.nth(1)).toHaveAttribute('data-jumlah', '10');
+    await expect(rows.nth(2)).toHaveAttribute('data-obat-id', '20012');
+    await expect(epPage.locator('#page-alerts .alert')).toHaveCount(0);
+    await extensionPage.close();
+    await epPage.close();
+  });
 });

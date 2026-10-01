@@ -26,7 +26,7 @@ import { runDiagnosisSuggestions } from '@/lib/diagnosis-engine/run-diagnosis';
 import { getCDSSEngineStatus, initCDSSEngine } from '@/lib/iskandar-diagnosis-engine';
 import { getDiagnosisEngineConfig } from '@/lib/iskandar-diagnosis-engine/feature-flags';
 import { assistStaffFromSession, withResepStaff, withStaffNames } from '@/lib/rme/assist-staff';
-import { RMETransferOrchestrator } from '@/lib/rme/transfer-orchestrator';
+import { RMETransferOrchestrator, resepStepTimeoutMs } from '@/lib/rme/transfer-orchestrator';
 import { isStepUrl, selectBestTransferTab } from '@/lib/rme/transfer-targeting';
 import { saveShiftOverviewCache } from '@/lib/statistics/cache';
 import { buildShiftOverviewSnapshot } from '@/lib/statistics/shift-overview';
@@ -642,7 +642,8 @@ async function executeRMEFillStep<TStep extends RMETransferStepStatus>(
       encounter: staffPayload,
     },
   } as const;
-  const timeout = step === 'anamnesa' ? 45000 : step === 'resep' ? 30000 : 18000;
+  const timeout =
+    step === 'anamnesa' ? 45000 : step === 'resep' ? resepStepTimeoutMs(30000, staffPayload) : 18000;
 
   transferLog.debug('sending transfer fill message', { step, tabId, timeout });
 
