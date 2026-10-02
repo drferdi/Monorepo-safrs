@@ -275,12 +275,36 @@ function normalizeExecutionResult(raw: unknown): NormalizedStepExecution {
   return { successCount, failedCount, skippedCount, errors };
 }
 
+// The resep handler leaves out a medication the ePuskesmas stock lacks (Chief, 2026-10-02: "stok
+// obat bisa kosong sewaktu waktu"); a second run would not find it either.
+function isOutOfStockMessage(message: string): boolean {
+  const normalized = message.toLowerCase();
+  return normalized.includes('tidak ada di daftar stok') || normalized.includes('stok tidak mencukupi');
+}
+
+// "[SIGNA_INVALID] Signa 3x1 gagal dipilih" reads as "Signa 3x1 gagal dipilih".
+function withoutRuntimeCode(message: string): string {
+  return message.replace(/^\[[A-Z_]+\]\s*/, '');
+}
+
+// Every medication left out for stock is named, not only the first.
+function describeStepFailure(errors: string[], fallback: string): string {
+  const outOfStock = errors.filter(isOutOfStockMessage);
+  if (outOfStock.length > 0 && outOfStock.length === errors.length) {
+    return outOfStock.map(withoutRuntimeCode).join('; ');
+  }
+  return withoutRuntimeCode(errors[0] || fallback);
+}
+
 function classifyFailure(message: string): {
   reasonCode: RMETransferReasonCode;
   recoverable: boolean;
 } {
   const normalized = message.toLowerCase();
 
+  if (isOutOfStockMessage(normalized)) {
+    return { reasonCode: 'RESEP_OBAT_TIDAK_TERSEDIA', recoverable: false };
+  }
   if (normalized.includes('cancel')) {
     return { reasonCode: 'USER_CANCELLED', recoverable: false };
   }
@@ -572,7 +596,7 @@ export class RMETransferOrchestrator {
           }
 
           if (normalized.successCount > 0 && normalized.failedCount > 0) {
-            const message = normalized.errors[0] || 'Sebagian field gagal diisi';
+            const message = describeStepFailure(normalized.errors, 'Sebagian field gagal diisi');
             const classified = classifyFailure(message);
             stepResult = {
               step,
@@ -611,7 +635,7 @@ export class RMETransferOrchestrator {
             break;
           }
 
-          lastError = normalized.errors[0] || 'Step gagal tanpa detail';
+          lastError = describeStepFailure(normalized.errors, 'Step gagal tanpa detail');
           const classified = classifyFailure(lastError);
           reasonCodes.add(classified.reasonCode);
           const exhausted = attempt > maxRetries;

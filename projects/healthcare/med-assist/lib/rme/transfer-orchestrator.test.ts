@@ -288,4 +288,48 @@ describe('RMETransferOrchestrator', () => {
     expect(oneMedication.steps.resep.state).toBe('failed');
     expect(oneMedication.reasonCodes).toContain('STEP_TIMEOUT');
   });
+
+  // Chief, 2026-10-02: a medication out of stock ended as "Step gagal tanpa klasifikasi spesifik".
+  // The resep step names every medication the ePuskesmas stock lacked, and does not retry.
+  it('names every medication the ePuskesmas stock lacked and gives that its own reason', async () => {
+    const orchestrator = new RMETransferOrchestrator();
+    const resep = vi.fn(async () => ({
+      success: [{ field: 'obat_nama', value: 'Ambroxol', method: 'autocomplete' }],
+      failed: [
+        { field: 'obat_nama', error: '[STOCK_INSUFFICIENT] Vitamin B6: Obat tidak ada di daftar stok ePuskesmas' },
+        { field: 'obat_nama', error: '[STOCK_INSUFFICIENT] Cetirizine: Obat tidak ada di daftar stok ePuskesmas' },
+      ],
+      skipped: [],
+    }));
+
+    const result = await orchestrator.run(
+      samplePayload({ options: { onlyStep: 'resep', requestId: 'out-of-stock' } }),
+      resep
+    );
+
+    expect(resep).toHaveBeenCalledTimes(1);
+    expect(result.state).toBe('partial');
+    expect(result.steps.resep.reasonCode).toBe('RESEP_OBAT_TIDAK_TERSEDIA');
+    expect(result.reasonCodes).not.toContain('UNKNOWN_STEP_FAILURE');
+    expect(result.steps.resep.message).toBe(
+      'Vitamin B6: Obat tidak ada di daftar stok ePuskesmas; Cetirizine: Obat tidak ada di daftar stok ePuskesmas'
+    );
+  });
+
+  it('keeps the message of a failure it cannot classify, without the runtime code', async () => {
+    const orchestrator = new RMETransferOrchestrator();
+    const resep = vi.fn(async () => ({
+      success: [],
+      failed: [{ field: 'signa', error: '[SIGNA_INVALID] Signa 3x1 gagal dipilih' }],
+      skipped: [],
+    }));
+
+    const result = await orchestrator.run(
+      samplePayload({ options: { onlyStep: 'resep', requestId: 'unclassified' } }),
+      resep
+    );
+
+    expect(result.steps.resep.reasonCode).toBe('UNKNOWN_STEP_FAILURE');
+    expect(result.steps.resep.message).toBe('Signa 3x1 gagal dipilih');
+  });
 });

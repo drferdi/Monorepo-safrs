@@ -145,6 +145,23 @@ describe('RMETransferPanel', () => {
     expect(within(panel).getByRole('button', { name: /Isi resep ke RME/i })).toBeEnabled();
   });
 
+  // Chief, 2026-10-02: a medication out of stock is left out, not a failed transfer. Ulangi would
+  // add the medications already in the resep a second time.
+  it('notes a medication left out for stock without the failure tone or Ulangi', () => {
+    const { container: panel } = render(
+      <RMETransferPanel {...makeProps({}, makeViewModel({
+          state: 'partial',
+          lastStep: 'resep',
+          outOfStockOnly: true,
+          error: 'Vitamin B6: Obat tidak ada di daftar stok ePuskesmas',
+        }))} />
+    );
+    const note = within(panel).getByText('Vitamin B6: Obat tidak ada di daftar stok ePuskesmas');
+    expect(note).toHaveClass('diagnosis-readonly-field--warning');
+    expect(panel.querySelector('.diagnosis-readonly-field--danger')).toBeNull();
+    expect(within(panel).queryByRole('button', { name: /Ulangi/i })).toBeNull();
+  });
+
   // One transfer state serves both RME pages (Chief, 2026-09-29): a run from RME Diagnosa must not
   // show here as a finished or failed resep.
   it.each(['success', 'failed'])('keeps a %s RME Diagnosa run off this page', (state) => {

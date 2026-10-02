@@ -419,8 +419,25 @@ const REASON_CODE_LABELS: Record<RMETransferReasonCode, string> = {
   RESEP_EMPTY_AFTER_SAFETY: 'Semua pilihan resep perlu ditinjau ulang karena keamanan.',
   RESEP_TRIAD_INCOMPLETE: 'Komponen triad regimen belum lengkap.',
   PREGNANCY_UNKNOWN_DEFAULT_FALSE: 'Status kehamilan tidak diketahui, default ke tidak hamil.',
+  RESEP_OBAT_TIDAK_TERSEDIA: 'Obat yang tidak ada di stok ePuskesmas dilewati; obat lain tetap diisi.',
   UNKNOWN_STEP_FAILURE: 'Step gagal tanpa klasifikasi spesifik.',
 };
+
+// The step's own message says what went wrong: the medication out of stock, the signa not taken.
+// A label instead ("Step gagal tanpa klasifikasi spesifik") told Chief nothing (2026-10-02).
+const STEP_MESSAGE_REASON_CODES: RMETransferReasonCode[] = [
+  'RESEP_OBAT_TIDAK_TERSEDIA',
+  'UNKNOWN_STEP_FAILURE',
+];
+
+function transferErrorText(result: RMETransferResult, step: RMETransferStepStatus): string {
+  const status = result.steps[step];
+  if (status.message && status.reasonCode && STEP_MESSAGE_REASON_CODES.includes(status.reasonCode)) {
+    return status.message;
+  }
+  const firstReason = result.reasonCodes[0];
+  return firstReason ? REASON_CODE_LABELS[firstReason] : 'Transfer RME tidak sepenuhnya berhasil.';
+}
 
 function filterReasonCodesForStep(
   reasonCodes: RMETransferReasonCode[],
@@ -432,7 +449,8 @@ function filterReasonCodesForStep(
       step !== 'resep' &&
       (code === 'RESEP_PAYLOAD_EMPTY' ||
         code === 'RESEP_EMPTY_AFTER_SAFETY' ||
-        code === 'RESEP_TRIAD_INCOMPLETE')
+        code === 'RESEP_TRIAD_INCOMPLETE' ||
+        code === 'RESEP_OBAT_TIDAK_TERSEDIA')
     ) {
       return false;
     }
@@ -1886,7 +1904,10 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
           : null,
         selectedMedicationCount,
         candidateMedicationCount,
-        reasonLabels: transferReasonCodes.map((code) => REASON_CODE_LABELS[code] || code),
+        reasonLabels: transferReasonCodes
+          .filter((code) => code !== 'UNKNOWN_STEP_FAILURE')
+          .map((code) => REASON_CODE_LABELS[code] || code),
+        outOfStockOnly: transferSteps.resep.reasonCode === 'RESEP_OBAT_TIDAK_TERSEDIA',
         error: transferError,
         resultSummary: transferResult
           ? `runId: ${transferResult.runId} • total: ${transferResult.totalLatencyMs}ms`
@@ -1902,7 +1923,10 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
             label: stepLabel(step),
             state: status.state,
             detail: `ok:${status.successCount} fail:${status.failedCount} skip:${status.skippedCount} • ${status.latencyMs}ms • try ${status.attempt}`,
-            reason: status.reasonCode ? REASON_CODE_LABELS[status.reasonCode] : null,
+            reason:
+              status.reasonCode && status.reasonCode !== 'UNKNOWN_STEP_FAILURE'
+                ? REASON_CODE_LABELS[status.reasonCode]
+                : null,
             message: status.message || null,
           };
         }),
@@ -2069,10 +2093,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
       setTransferReasonCodes(result.reasonCodes);
       setTransferUiState(mapTransferStateToUi(result.state));
       if (result.state !== 'success') {
-        const firstReason = result.reasonCodes[0];
-        setTransferError(
-          firstReason ? REASON_CODE_LABELS[firstReason] : 'Transfer RME tidak sepenuhnya berhasil.'
-        );
+        setTransferError(transferErrorText(result, targetStep));
       }
     } catch (error) {
       setTransferUiState('failed');

@@ -475,4 +475,84 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
       );
     });
   });
+
+  // Chief, 2026-10-02: a medication out of stock showed as "Step gagal tanpa klasifikasi spesifik".
+  // The page shows what the resep step said; a stock gap is a note without Ulangi (a second run
+  // would add the medications already in the resep again).
+  it.each([
+    {
+      reasonCode: 'RESEP_OBAT_TIDAK_TERSEDIA',
+      message: 'Vitamin B6: Obat tidak ada di daftar stok ePuskesmas',
+      retry: false,
+    },
+    { reasonCode: 'UNKNOWN_STEP_FAILURE', message: 'Signa 3x1 gagal dipilih', retry: true },
+  ])('shows what the resep step said for $reasonCode', async ({ reasonCode, message, retry }) => {
+    storedVisits.visits = [
+      {
+        patient_id: 'RM-J02',
+        encounter_id: 'v1',
+        timestamp: '2026-09-01T08:00:00Z',
+        vitals: { sbp: 130, dbp: 80, hr: 80, rr: 18, temp: 36.8, glucose: 0 },
+        keluhan_utama: 'kontrol',
+        diagnosa: { icd_x: 'I10', nama: 'Hipertensi esensial' },
+        terapi_obat: 'Amlodipin 1x10mg sesudah makan',
+        source: 'scrape',
+      },
+    ];
+    const answer = mockSendMessage.getMockImplementation();
+    mockSendMessage.mockImplementation((type: string, data?: unknown) => {
+      if (type !== 'transferRME') return answer?.(type, data);
+      const step = (name: string) => ({
+        step: name,
+        state: 'pending',
+        attempt: 0,
+        latencyMs: 0,
+        successCount: 0,
+        failedCount: 0,
+        skippedCount: 0,
+      });
+      return Promise.resolve({
+        state: 'partial',
+        runId: 'run-resep',
+        totalLatencyMs: 20,
+        // A payload code may come first; the page reads the resep step itself.
+        reasonCodes: ['PREGNANCY_UNKNOWN_DEFAULT_FALSE', reasonCode],
+        steps: {
+          anamnesa: step('anamnesa'),
+          diagnosa: step('diagnosa'),
+          resep: {
+            ...step('resep'),
+            state: 'partial',
+            attempt: 1,
+            successCount: 3,
+            failedCount: 1,
+            reasonCode,
+            message,
+          },
+        },
+      });
+    });
+    renderSurface(['Amlodipin']);
+    const card = (await screen.findByText('J02 - Faringitis akut')).closest('[data-testid="dx-flow-card"]');
+    if (!card) throw new Error('diagnosis card not found');
+    fireEvent.click(card);
+    fireEvent.click(await screen.findByRole('button', { name: 'Lanjut tanpa mengisi' }));
+    const pick = await screen.findByTestId('dx-tx-chronic-pick');
+    fireEvent.click(pick);
+    await waitFor(() => expect(pick).toHaveAttribute('aria-pressed', 'true'));
+    fireEvent.click(screen.getByRole('button', { name: 'Lanjut tanpa terapi tambahan' }));
+    fireEvent.click(screen.getByTestId('dx-tx-finish'));
+    const isiResep = await screen.findByRole('button', { name: 'Isi resep ke RME' });
+    await waitFor(() => expect(isiResep).toBeEnabled());
+    fireEvent.click(isiResep);
+
+    // The note over Alasan, not only Rincian transfer, says it.
+    await waitFor(() =>
+      expect(
+        document.querySelector('.diagnosis-readonly-field--warning, .diagnosis-readonly-field--danger')
+      ).toHaveTextContent(message)
+    );
+    expect(document.body).not.toHaveTextContent(/tanpa klasifikasi/);
+    expect(screen.queryAllByRole('button', { name: 'Ulangi' })).toHaveLength(retry ? 1 : 0);
+  });
 });

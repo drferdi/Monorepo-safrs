@@ -25,7 +25,10 @@ export function RMETransferPanel({
   const isRunning = transfer.state === 'running';
   // One transfer state serves both RME pages: a run from RME Diagnosa is not this page's.
   const ownRun = transfer.lastStep !== 'diagnosa';
-  const canRetry = ownRun && ['failed', 'error', 'partial'].includes(transfer.state);
+  // A medication out of stock is left out, not failed; Ulangi would add the others a second time.
+  const outOfStockOnly = Boolean(transfer.outOfStockOnly);
+  const canRetry =
+    ownRun && !outOfStockOnly && ['failed', 'error', 'partial'].includes(transfer.state);
 
   return (
     <>
@@ -36,7 +39,9 @@ export function RMETransferPanel({
         ].join(' · ')}
       </p>
 
-      {ownRun && transfer.error ? <ReadOnlyPanel tone="danger">{transfer.error}</ReadOnlyPanel> : null}
+      {ownRun && transfer.error ? (
+        <ReadOnlyPanel tone={outOfStockOnly ? 'warning' : 'danger'}>{transfer.error}</ReadOnlyPanel>
+      ) : null}
       {ownRun && transfer.reasonLabels.length > 0 ? (
         <ReadOnlyPanel>
           {`Alasan: ${transfer.reasonLabels.map(formatClinicalText).join(' | ')}`}

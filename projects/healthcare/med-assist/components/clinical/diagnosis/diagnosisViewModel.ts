@@ -123,6 +123,8 @@ export interface DiagnosisTransferViewModelInput {
   steps: DiagnosisTransferStepViewModelInput[];
   /** The step the last run was for; both RME pages share one transfer state. */
   lastStep?: string;
+  /** The resep left out only medications the ePuskesmas stock lacked. */
+  outOfStockOnly?: boolean;
 }
 
 export interface DiagnosisTransferStepViewModelInput {
@@ -239,6 +241,7 @@ export interface DiagnosisTransferView {
   readinessMessage: string | null;
   steps: DiagnosisTransferStepView[];
   lastStep?: string;
+  outOfStockOnly?: boolean;
 }
 
 export interface DiagnosisTransferStepView {
@@ -404,6 +407,7 @@ function buildTransferView(input: DiagnosisTransferViewModelInput): DiagnosisTra
       message: step.message,
     })),
     ...(input.lastStep ? { lastStep: input.lastStep } : {}),
+    ...(input.outOfStockOnly ? { outOfStockOnly: true } : {}),
   };
 }
 
