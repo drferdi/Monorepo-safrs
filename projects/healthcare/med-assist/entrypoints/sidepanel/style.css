@@ -11102,3 +11102,95 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 .sidepanel-shell .ct-v2-vital-lab button:not(:hover):not(:focus-visible):not(.active) {
   border: 0 !important;
 }
+
+/* Tren Tanda Vital text on the trajectory scale (Chief: "text sizing keluar jauh dari design
+   trajectory lain"): the lab card keeps its shape, its text follows the other trajectory panels:
+   labels 10px / 700 uppercase (result eyebrow), values 12px / 650 (result title), body 12px,
+   dates 10px, pills, toggle and Play as the chart tabs (10px / 700 uppercase, 28px high). */
+.ct-v2-vital-lab__hint {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.ct-v2-vital-lab__play {
+  height: 28px;
+  padding: 0 12px 0 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.ct-v2-vital-lab__play svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* In chart units: the 454-wide chart is drawn about 334px wide in the side panel, so 15 reads as
+   the 11px of the other trajectory chart ticks. */
+.ct-v2-vital-lab__tick {
+  font-size: 15px;
+}
+
+.ct-v2-vital-lab__stats dt,
+.ct-v2-vital-lab__slider-head label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--vital-lab-muted);
+}
+
+.ct-v2-vital-lab__stats dd {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.3;
+}
+
+.ct-v2-vital-lab__pill,
+.ct-v2-vital-lab__toggle-option {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.ct-v2-vital-lab__pill,
+.ct-v2-vital-lab__toggle {
+  height: 28px;
+}
+
+.ct-v2-vital-lab__toggle {
+  padding: 3px;
+}
+
+.ct-v2-vital-lab__toggle-thumb {
+  inset: 3px auto 3px 3px;
+  width: calc(50% - 3px);
+}
+
+.ct-v2-vital-lab__toggle-option {
+  padding: 0 12px;
+}
+
+.ct-v2-vital-lab__note {
+  min-height: 0;
+}
+
+.ct-v2-vital-lab__slider-head {
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.ct-v2-vital-lab__slider-head output {
+  font-weight: 650;
+}
+
+.ct-v2-vital-lab__slider-hint {
+  font-size: 10px;
+  line-height: 1.4;
+}

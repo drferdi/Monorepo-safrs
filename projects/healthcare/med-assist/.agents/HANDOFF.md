@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-10-03 (Trajectory Tren TTV as the lab spring playground; STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
+Last updated: 2026-10-03 (Tren TTV text on the trajectory scale; Trajectory Tren TTV as the lab spring playground; STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
 identity-free, CSV for pandas; a resep step says what went wrong, out of stock is a note without Ulangi; Terapi kronis drops acute-only medications; an out-of-stock medication is left out at once; header lights the page on screen, "Lanjutkan semua" for chronic therapy;
 chronic doses from the riwayat Resep table, no triad warning; the RME resep picks each medication from its ePuskesmas suggestion and
 presses Tambah once per row; 2026-10-01: the signa chosen from its suggestion, "3x sehari" as 3x1;
@@ -12,7 +12,7 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 ## Current state
 
 Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-30 (two entries) and
-2026-09-29 hold the details. `main` is at d898290b (Chief merged through the STATS design).
+2026-09-29 hold the details. `main` is at d2fa270a (Chief merged through the Tren TTV playground).
 Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/zz-verify-kb-rx.spec.ts` (lint red).
 
 - Statistik Harian (2026-10-02, Chief "konsentrasi halaman baru yaitu statistic"): first block of the
@@ -38,7 +38,10 @@ Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/z
   normal limits; SVG chart (K1..Kn, dashed limits, visit marker); Nilai / Selisih / Batas /
   Perilaku; pills Tensi / Nadi / SpO2 / Napas / Suhu, Sistolik / Diastolik segmented toggle
   (spring thumb), visit slider + Play (700 ms a step). Limits from the engine's `NORMAL_RANGES`
-  (R3 export, Chief approved); SpO2 has none. Harness `traj.html` (worsening fixture).
+  (R3 export, Chief approved); SpO2 has none. Harness `traj.html` (all six chart tabs, worsening
+  fixture). Since Chief's "text sizing keluar jauh dari design trajectory lain" the card's text is
+  on the trajectory scale (appended overrides): labels 10px/700 uppercase, values 12px/650, body
+  12px, dates 10px, pills and Play as the chart tabs (28px), chart ticks read 11px.
 - Steps: Temuan 1/5 · Diagnosis 2/5 · **RME Diagnosa 3/5** (page 1) | Tatalaksana 4/5 | **RME Terapi
   5/5** (`steps/RmeDiagnosisStep.tsx`, `diagnosisSteps.ts`, `DiagnosisStepFlow.tsx`). "Isi otomatis
   RME" is gone: "Isi diagnosis ke RME" after the pick, "Isi resep ke RME" + "Isi anamnesa ke RME"
@@ -84,6 +87,11 @@ Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/z
   `bhcffleclpadneocndhembhjbemimhkm`.
 
 ## Verification (final tree)
+
+2026-10-03 (Tren TTV text scale, CSS only): lint 1 only from the two known files · typecheck 0 ·
+test 0 (1560 passed, 17 skipped) · dev build 0 · e2e 20 · `run:check` 0 · `run build` 0, last ·
+style.css 92 added / 0 deleted since main. Harness: computed sizes match the Linimasa and
+Perburukan tabs (eyebrow 10/700, title 12/650, meta 10, chart tab 10/700 at 28px, tick 11px).
 
 2026-10-03 (Tren TTV playground): lint 1 only from `zz-verify-kb-rx.spec.ts` (other session) and
 the old `platform-api-client.test.ts` warning · typecheck 0 · test 0 (1560 passed, 17 skipped) ·

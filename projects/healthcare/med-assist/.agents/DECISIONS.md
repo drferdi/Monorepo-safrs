@@ -3,6 +3,18 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-03 — The Tren TTV card keeps the lab's shape, the trajectory's text
+
+- Decision (Chief: "Okay tapi text sizing keluar jauh dari design trajectory lain"): the spring
+  playground card keeps the lab's surfaces, ball, rings, chart, toggle and slider, but its text
+  uses the scale of the other trajectory panels as measured in the harness: labels (Nilai, Selisih,
+  Batas, Perilaku, Kunjungan) 10px / 700 uppercase like the result eyebrow, values 12px / 650 like
+  the result title, hint and note 12px, the visit date 10px, the vital pills, the Sistolik /
+  Diastolik toggle and Play 10px / 700 uppercase at 28px like the chart tabs, chart ticks 11px as
+  drawn (15 chart units in a 334px-wide chart). Appended overrides; the earlier block is in main.
+- Evidence: computed sizes read from Linimasa and Perburukan, then from the Tren TTV card after the
+  change (all equal); CSS only, the suite unchanged.
+
 ## 2026-10-03 — Tren Tanda Vital is the lab spring playground
 
 - Decision (Chief: "Sekarang bagian clinical trajectory gunakan design berikut
