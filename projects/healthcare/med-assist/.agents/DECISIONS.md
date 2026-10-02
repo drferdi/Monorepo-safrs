@@ -3,6 +3,15 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-02 — A real failure beside a stock gap keeps its own reason
+
+- Decision: when a resep step has an out-of-stock medication and another failure (a signa not
+  taken), the step is classified by the other failure (danger tone, Ulangi) and its message names
+  every failure, joined with "; ". Only a step whose every failure is a stock gap is the warning
+  note without Ulangi.
+- Evidence: orchestrator test red first (the signa failure hid under `RESEP_OBAT_TIDAK_TERSEDIA`),
+  then green; test 1528 passed, e2e 19 (18 own + the other session's spec), `run build` last.
+
 ## 2026-10-02 — A resep step says what went wrong; out of stock is a note, not a failure
 
 - Decision (Chief, screenshot of RME Terapi: "Step gagal tanpa klasifikasi spesifik" after a

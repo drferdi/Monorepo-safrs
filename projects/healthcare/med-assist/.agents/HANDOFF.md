@@ -47,8 +47,9 @@ uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/zz-verify-kb-rx.spe
   root not in `CHRONIC_ICD_ROOTS`) is no chronic card; the free-text "CTM" of an asthma visit can
   still sit beside its full stock name (not merged).
 - Transfer message (2026-10-02, "Step gagal tanpa klasifikasi spesifik"): out of stock is
-  `RESEP_OBAT_TIDAK_TERSEDIA` (all such medications named, no retry, warning note, no Ulangi); any
-  unclassified step error shows its own message. Harness `transfer.html` shows the out-of-stock note.
+  `RESEP_OBAT_TIDAK_TERSEDIA` (all such medications named, no retry, warning note, no Ulangi) only
+  when every failure is a stock gap; a real failure beside it keeps its own reason and Ulangi, and
+  the message names all of them. Any unclassified step error shows its own message. Harness `transfer.html` shows the out-of-stock note.
 - E2E on a live-shaped resep page (`tests/e2e/epuskesmas-resep-page.ts`, 7f42f2d4): the J18 KB
   row lands in the table with obat_id 20012 and signa "3X1"; red before the fixes (old signa:
   "[SIGNA_INVALID]", partial; old filler: typed "3x1").
@@ -59,8 +60,9 @@ uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/zz-verify-kb-rx.spe
 
 ## Verification (final tree)
 
-2026-10-02 (transfer message): eslint touched 0 · typecheck 0 · test 0 (1527 passed, 17 skipped) ·
-dev build 0 · e2e 19 · `run build` 0, last · `run:check` 0 · full lint 1 (only `zz-verify-kb-rx.spec.ts`).
+2026-10-02 (transfer message, incl. mixed failures): eslint touched 0 · typecheck 0 · test 0 (1528
+passed, 17 skipped) · dev build 0 · e2e 19 (18 own + the other session's `zz-verify-kb-rx.spec.ts`) ·
+`run build` 0, last · `run:check` 0 · full lint 1 (only `zz-verify-kb-rx.spec.ts`).
 
 2026-10-02 (chronic filter): typecheck 0 · test 0 (1522 passed, 17 skipped) · e2e 18 · `run build` 0, last.
 2026-10-02 (out of stock): typecheck 0 · test 0 (1521 passed, 17 skipped) · e2e 18 · `run build` 0, last.
