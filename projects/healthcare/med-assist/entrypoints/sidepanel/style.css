@@ -10700,3 +10700,88 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
   background: none !important;
   box-shadow: none !important;
 }
+
+/* Rincian harian as the lab sidebar sub-menu: the sections share one rail, the open title carries a
+   3px accent tick on it and its rows hang on a branch drawn by borders (trunk + rounded elbow per
+   row, any row count). Only colour changes; nothing slides, draws or animates a size. */
+.statistic-submenu {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-left: 14px;
+}
+
+.statistic-submenu::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 1px;
+  background: var(--ct-v2-surface-border);
+}
+
+.statistic-submenu__section {
+  position: relative;
+}
+
+.statistic-submenu__section[data-open='true']::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -15px;
+  width: 3px;
+  height: 16px;
+  border-radius: 999px;
+  background: var(--accent-med);
+}
+
+.ct-v2-panel .statistic-submenu__section:not([data-open]) .ttv-section-title {
+  color: var(--ct-v2-text-soft);
+}
+
+.statistic-submenu .ttv-section-title {
+  transition: color 150ms linear;
+}
+
+.statistic-submenu__section > p {
+  margin: 6px 0 0 16px;
+}
+
+.statistic-submenu__branch {
+  display: flex;
+  flex-direction: column;
+  margin: 6px 0 0;
+  padding: 0 0 0 16px;
+  list-style: none;
+}
+
+.statistic-submenu__item {
+  position: relative;
+  padding: 4px 0;
+}
+
+.statistic-submenu__item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  height: 13px;
+  left: -12px;
+  width: 8px;
+  border-left: 1px solid var(--ct-v2-surface-border);
+  border-bottom: 1px solid var(--ct-v2-surface-border);
+  border-bottom-left-radius: 6px;
+}
+
+.statistic-submenu__item:first-child::before {
+  top: -6px;
+  height: 19px;
+}
+
+.statistic-submenu__item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 13px;
+  bottom: 0;
+  left: -12px;
+  border-left: 1px solid var(--ct-v2-surface-border);
+}

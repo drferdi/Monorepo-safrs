@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-10-03 (STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
+Last updated: 2026-10-03 (STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
 identity-free, CSV for pandas; a resep step says what went wrong, out of stock is a note without Ulangi; Terapi kronis drops acute-only medications; an out-of-stock medication is left out at once; header lights the page on screen, "Lanjutkan semua" for chronic therapy;
 chronic doses from the riwayat Resep table, no triad warning; the RME resep picks each medication from its ePuskesmas suggestion and
 presses Tambah once per row; 2026-10-01: the signa chosen from its suggestion, "3x sehari" as 3x1;
@@ -12,7 +12,7 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 ## Current state
 
 Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-30 (two entries) and
-2026-09-29 hold the details. `main` is at f9af31e4 (Chief merged through the Terapi kronis filter).
+2026-09-29 hold the details. `main` is at d898290b (Chief merged through the STATS design).
 Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/zz-verify-kb-rx.spec.ts` (lint red).
 
 - Statistik Harian (2026-10-02, Chief "konsentrasi halaman baru yaitu statistic"): first block of the
@@ -25,6 +25,10 @@ Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/z
   Live (read-only): the built URL gives today's 136 rows, the header grid finds all 15 columns.
   Since 2026-10-03 the page uses `ct-v2-layout` / `ct-v2-panel` / `ttv-*` / `action-btn`; 10 Besar
   Penyakit opens from 5 to 10 in place, the panels below are accordions (DECISIONS).
+  Since the second 2026-10-03 entry (Chief: lab sidebar-submenu "di salah satu section") DPJP,
+  Poli / Ruangan, Asuransi, Kelompok Umur and Waktu Layanan are one `ct-v2-panel` sub-menu
+  (`StatisticSubmenu`, `shareRows` in `StatisticCharts.tsx`): one rail, a 3px accent tick at the
+  open title, its rows on a border-drawn branch; DPJP without the meter bars; colour-only change.
   Harness of this session: launch `stats-harness` (port 5180), `stats.html`, Diagnosis frame.
 
 - Steps: Temuan 1/5 · Diagnosis 2/5 · **RME Diagnosa 3/5** (page 1) | Tatalaksana 4/5 | **RME Terapi
@@ -72,6 +76,13 @@ Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/z
   `bhcffleclpadneocndhembhjbemimhkm`.
 
 ## Verification (final tree)
+
+2026-10-03 (sidebar sub-menu): lint 1 only from `zz-verify-kb-rx.spec.ts` (other session) and the
+old `platform-api-client.test.ts` warning · typecheck 0 · test 0 (1552 passed, 17 skipped) · dev
+build 0 · e2e 20 · `run:check` 0 · `run build` 0, last · style.css 85 added / 0 deleted. Red first
+(5 panels, not 1; subtitle on a closed section). Harness `stats.html`: tick 16px = title line,
+elbow on the first label line, closed titles `--ct-v2-text-soft`. Code review: ready with fixes,
+fixed (empty-state spacing, elbow on wrapped labels). token gate passed.
 
 2026-10-03 (STATS design, dropdown + accordion): eslint touched 0 · typecheck 0 · test 0 (1551
 passed, 17 skipped) · dev build 0 · e2e 20 · `run:check` 0 · `run build` 0, last. Root: governance 1
@@ -136,6 +147,8 @@ Screenshots failed (Claude window hidden); checks were read from the DOM.
 
 ## Next action
 
+Chief looks at the STATS sub-menu (harness or the extension): closed-title contrast
+(`--ct-v2-text-soft`) and the dropped DPJP bars are my calls.
 STATS → Statistik Harian → "Muat statistik harian" for today (an ePuskesmas tab signed in), then
 "Unduh CSV". Still pending from before: Chief reloads "Asisten Medis" and walks one case: pick diagnosis → Isi diagnosis ke RME (ePuskesmas
 Diagnosa page open) → Tatalaksana, tick a chronic card → Selesai → Isi resep ke RME (Resep page) →

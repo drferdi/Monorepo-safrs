@@ -3,6 +3,24 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-03 — The daily breakdown on STATS is one sidebar sub-menu
+
+- Decision (Chief: "Halaman statistik, gunakan design berikut di salah satu section",
+  lab.xevrion.dev sidebar-submenu; section chosen: the daily accordion): Pasien per DPJP, Poli /
+  Ruangan, Asuransi, Kelompok Umur and Waktu Layanan are one `ct-v2-panel` drawn as the lab's
+  sub-menu: one 1px rail, a 3px `--accent-med` tick beside the open title, the open section's rows
+  as a list on a branch drawn by borders (trunk and a rounded elbow on each row's first line, any
+  row count), closed titles in `--ct-v2-text-soft`, the subtitle only on the open title. One open
+  at a time, DPJP first (`useAccordion`). The lab's motion (height auto, blur-in items, the drawn
+  path, the sliding tick) is not taken: only the title colour changes (steady console). DPJP shows
+  counts without the meter bars; no row is highlighted (rows are counts, not navigation). 10 Besar
+  Penyakit and the shift overview are unchanged. `StatisticSubmenu` and `shareRows` live in
+  `StatisticCharts.tsx`; CSS appended.
+- Evidence: tests red first (five panels, not one; a closed section's subtitle shown), then green,
+  existing assertions untouched; harness `stats.html` read from the DOM (tick 16px on a 16.2px
+  title, elbow at the first label line, open title the Diagnosis colour). Code review: ready with
+  fixes, both applied. Not yet seen in Chief's Chrome.
+
 ## 2026-10-03 — The STATS page uses the side-panel design system
 
 - Decision (Chief: "design nya mengikuti halaman halaman lain, text colour dll"): the whole STATS

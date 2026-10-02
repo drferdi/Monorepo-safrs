@@ -161,6 +161,27 @@ describe('DailyStatisticPanel', () => {
     expect(screen.queryByText('DEWASA')).toBeNull();
   });
 
+  // Chief, 2026-10-03: "gunakan design berikut di salah satu section" (lab sidebar-submenu).
+  it('draws the panels below the diseases as one submenu, the open section rows on its branch', async () => {
+    readDailyReportMock.mockResolvedValueOnce(todayReport);
+    render(<DailyStatisticPanel />);
+    await screen.findByText('I10 · Essential (primary) hypertension');
+
+    const titles = ['Pasien per DPJP', 'Poli / Ruangan', 'Asuransi', 'Kelompok Umur', 'Waktu Layanan'];
+    const panels = new Set(
+      titles.map((title) => screen.getByRole('heading', { name: title }).closest('.ct-v2-panel'))
+    );
+    expect(panels.size).toBe(1);
+
+    const branch = screen.getByText('dr. Dua').closest('ul');
+    expect(branch).not.toBeNull();
+    expect(
+      Array.from(branch?.querySelectorAll('li') ?? []).map((item) => item.textContent)
+    ).toEqual(['dr. Dua2', 'dr. Satu1']);
+    expect(screen.getByText('pelayanan per dokter')).toBeTruthy();
+    expect(screen.queryByText('tempat pelayanan')).toBeNull();
+  });
+
   it('says what went wrong when the report cannot be read', async () => {
     sendMessageMock.mockRejectedValueOnce(
       new Error('Kolom laporan harian tidak ditemukan: Dokter / Tenaga Medis')

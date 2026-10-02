@@ -79,6 +79,77 @@ function Empty() {
   return <p className="text-small text-muted">Tidak ada data</p>;
 }
 
+export type StatisticRow = { label: string; value: string };
+
+/** Each count with its share of the whole: "12 · 40%". */
+export function shareRows(items: StatisticCountItem[]): StatisticRow[] {
+  const total = items.reduce((sum, item) => sum + item.count, 0);
+  return items.map((item) => ({
+    label: item.label,
+    value: `${item.count} · ${total > 0 ? Math.round((item.count / total) * 100) : 0}%`,
+  }));
+}
+
+export type SubmenuSection = { id: string; title: string; label: string; rows: StatisticRow[] };
+
+/**
+ * Sections on one rail, as the lab sidebar sub-menu: the open title carries the accent tick and its
+ * rows hang on a branch. One section open at a time; content appears in place, nothing slides or draws.
+ */
+export function StatisticSubmenu({
+  sections,
+  initial,
+}: {
+  sections: SubmenuSection[];
+  initial: string;
+}) {
+  const panel = useAccordion(initial);
+  return (
+    <section className="ct-v2-panel">
+      <div className="statistic-submenu">
+        {sections.map((section) => {
+          const toggle = panel(section.id);
+          return (
+            <div
+              key={section.id}
+              className="statistic-submenu__section"
+              data-open={toggle.expanded ? 'true' : undefined}
+            >
+              <div className="ct-v2-panel-head">
+                <h3 className="ttv-section-title flex-1">
+                  <button
+                    type="button"
+                    className="statistic-accordion__trigger"
+                    aria-expanded={toggle.expanded}
+                    onClick={toggle.onToggle}
+                  >
+                    {section.title}
+                  </button>
+                </h3>
+                {toggle.expanded ? <span className="ttv-label">{section.label}</span> : null}
+              </div>
+              {toggle.expanded ? (
+                section.rows.length === 0 ? (
+                  <Empty />
+                ) : (
+                  <ul className="statistic-submenu__branch">
+                    {section.rows.map((row) => (
+                      <li key={row.label} className="statistic-submenu__item statistic-row">
+                        <span className="statistic-row__label">{row.label}</span>
+                        <span className="statistic-row__value">{row.value}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )
+              ) : null}
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
 export function DonutLikeList({
   title,
   subtitle,
@@ -90,19 +161,16 @@ export function DonutLikeList({
   items: StatisticCountItem[];
   toggle?: PanelToggle;
 }) {
-  const total = items.reduce((sum, item) => sum + item.count, 0);
   return (
     <StatisticPanel title={title} label={subtitle} toggle={toggle}>
       {items.length === 0 ? (
         <Empty />
       ) : (
         <div className="flex flex-col gap-2">
-          {items.map((item) => (
-            <div key={item.label} className="statistic-row">
-              <span className="statistic-row__label">{item.label}</span>
-              <span className="statistic-row__value">
-                {item.count} · {total > 0 ? Math.round((item.count / total) * 100) : 0}%
-              </span>
+          {shareRows(items).map((row) => (
+            <div key={row.label} className="statistic-row">
+              <span className="statistic-row__label">{row.label}</span>
+              <span className="statistic-row__value">{row.value}</span>
             </div>
           ))}
         </div>

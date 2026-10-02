@@ -1,12 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import {
-  DonutLikeList,
-  RankedBars,
-  StatisticFigure,
-  StatisticPanel,
-  useAccordion,
-} from './StatisticCharts';
+import { RankedBars, shareRows, StatisticFigure, StatisticSubmenu } from './StatisticCharts';
 
 import { PixelLoader } from '@/components/clinical/diagnosis/PixelLoader';
 import { readDailyReport, readPreviousDailyReport } from '@/lib/statistics/daily-cache';
@@ -37,7 +31,6 @@ export function DailyStatisticPanel() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [allDiseases, setAllDiseases] = useState(false);
-  const panel = useAccordion('dpjp');
 
   useEffect(() => {
     let active = true;
@@ -203,47 +196,47 @@ export function DailyStatisticPanel() {
             ) : null}
             {untracked ? <p className="diagnosis-row-meta">{untracked}</p> : null}
           </RankedBars>
-          <RankedBars
-            title="Pasien per DPJP"
-            subtitle="pelayanan per dokter"
-            items={stats.perDpjp}
-            limit={10}
-            toggle={panel('dpjp')}
+          <StatisticSubmenu
+            initial="dpjp"
+            sections={[
+              {
+                id: 'dpjp',
+                title: 'Pasien per DPJP',
+                label: 'pelayanan per dokter',
+                rows: stats.perDpjp
+                  .slice(0, 10)
+                  .map((item) => ({ label: item.label, value: String(item.count) })),
+              },
+              {
+                id: 'poli',
+                title: 'Poli / Ruangan',
+                label: 'tempat pelayanan',
+                rows: shareRows(stats.perPoli),
+              },
+              {
+                id: 'asuransi',
+                title: 'Asuransi',
+                label: 'penjamin',
+                rows: shareRows(stats.perAsuransi),
+              },
+              {
+                id: 'umur',
+                title: 'Kelompok Umur',
+                label: 'tahun',
+                rows: shareRows(stats.kelompokUmur),
+              },
+              {
+                id: 'waktu',
+                title: 'Waktu Layanan',
+                label: 'median',
+                rows: [
+                  { label: 'Antrean', value: minutes(stats.medianMenit.antrean) },
+                  { label: 'Pemeriksaan', value: minutes(stats.medianMenit.pemeriksaan) },
+                  { label: 'Pelayanan obat', value: minutes(stats.medianMenit.pelayananObat) },
+                ],
+              },
+            ]}
           />
-          <DonutLikeList
-            title="Poli / Ruangan"
-            subtitle="tempat pelayanan"
-            items={stats.perPoli}
-            toggle={panel('poli')}
-          />
-          <DonutLikeList
-            title="Asuransi"
-            subtitle="penjamin"
-            items={stats.perAsuransi}
-            toggle={panel('asuransi')}
-          />
-          <DonutLikeList
-            title="Kelompok Umur"
-            subtitle="tahun"
-            items={stats.kelompokUmur}
-            toggle={panel('umur')}
-          />
-          <StatisticPanel title="Waktu Layanan" label="median" toggle={panel('waktu')}>
-            <div className="flex flex-col gap-2">
-              {(
-                [
-                  ['Antrean', stats.medianMenit.antrean],
-                  ['Pemeriksaan', stats.medianMenit.pemeriksaan],
-                  ['Pelayanan obat', stats.medianMenit.pelayananObat],
-                ] satisfies Array<[string, number | null]>
-              ).map(([label, value]) => (
-                <div key={label} className="statistic-row">
-                  <span className="statistic-row__label">{label}</span>
-                  <span className="statistic-row__value">{minutes(value)}</span>
-                </div>
-              ))}
-            </div>
-          </StatisticPanel>
         </>
       ) : null}
     </div>
