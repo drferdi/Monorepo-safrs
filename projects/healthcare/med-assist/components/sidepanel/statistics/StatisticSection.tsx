@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 
+import { DailyStatisticPanel } from './DailyStatisticPanel';
 import { StatisticCards } from './StatisticCards';
 import { StatisticCharts } from './StatisticCharts';
 
@@ -35,6 +36,8 @@ export function StatisticSection() {
 
   return (
     <section className="statistic-board" aria-labelledby="statistic-heading">
+      <DailyStatisticPanel />
+
       <div className="statistic-board__header">
         <div>
           <h2 id="statistic-heading" className="statistic-board__title">

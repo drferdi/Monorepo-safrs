@@ -27,6 +27,8 @@ import type {
 import type { MiraStatus } from '@/lib/diagnosis-engine/mira-supervisor';
 import type { CDSSEngineStatus } from '@/lib/iskandar-diagnosis-engine/engine';
 import type {
+  DailyServiceReport,
+  DailyServiceRow,
   QueueStatisticRow,
   ReferralStatisticRow,
   ShiftOverviewSnapshot,
@@ -335,6 +337,9 @@ interface ProtocolMap {
   collectShiftOverview(data: {
     phases: Array<'phase1' | 'phase2'>;
   }): Promise<ShiftOverviewSnapshot>;
+  scanDailyServiceReport(data: { page?: number }): Promise<StatisticPageScanResult<DailyServiceRow>>;
+  /** `date` is YYYY-MM-DD. */
+  collectDailyStatistics(data: { date: string }): Promise<DailyServiceReport>;
 }
 
 export const PROTOCOL_MESSAGE_NAMES = [
@@ -367,6 +372,8 @@ export const PROTOCOL_MESSAGE_NAMES = [
   'scanReferralStatistics',
   'scanStockStatistics',
   'collectShiftOverview',
+  'scanDailyServiceReport',
+  'collectDailyStatistics',
 ] as const satisfies readonly (keyof ProtocolMap)[];
 
 export type ProtocolMessageName = (typeof PROTOCOL_MESSAGE_NAMES)[number];

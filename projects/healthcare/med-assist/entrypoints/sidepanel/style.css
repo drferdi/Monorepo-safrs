@@ -10562,3 +10562,26 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
 @media (prefers-reduced-motion: reduce) {
   .dx-tx-orbit--active::before { animation: none; background: var(--accent-med); }
 }
+
+/* Statistik Harian (daily report from the RME) */
+.statistic-daily__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.statistic-daily__date {
+  border: 1px solid var(--border-subtle);
+  background: var(--sentra-card);
+  color: var(--text-main);
+  border-radius: 12px;
+  padding: 8px 10px;
+  font-size: 12px;
+  color-scheme: dark;
+}
+
+.statistic-board__refresh:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

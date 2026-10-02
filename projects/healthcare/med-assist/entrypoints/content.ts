@@ -38,7 +38,9 @@ import {
   extractNextPaginationUrl,
 } from '@/lib/scraper/rme-statistic-table';
 import { scanVitalSignsFromRoot } from '@/lib/scraper/vital-signs';
+import { extractDailyServiceRows } from '@/lib/statistics/daily-report';
 import type {
+  DailyServiceRow,
   QueueStatisticRow,
   ReferralStatisticRow,
   StatisticPageScanResult,
@@ -450,6 +452,25 @@ export default defineContentScript({
             `rows:${rows.length}`,
             `next:${extractNextPaginationUrl(document, window.location.href) || 'none'}`,
           ],
+        };
+      },
+
+      // Only identity-free columns leave the page; see lib/statistics/daily-report.ts.
+      scanDailyServiceReport: (_data: unknown): StatisticPageScanResult<DailyServiceRow> => {
+        const { rows, missingHeaders } = extractDailyServiceRows(document);
+        if (missingHeaders.length > 0) {
+          return {
+            success: false,
+            rows: [],
+            error: `Kolom laporan harian tidak ditemukan: ${missingHeaders.join(', ')}`,
+            diagnostics: [`headers_missing:${window.location.pathname}`],
+          };
+        }
+        return {
+          success: true,
+          rows,
+          nextPageUrl: null,
+          diagnostics: [`container_ok:${window.location.pathname}`, `rows:${rows.length}`],
         };
       },
 
@@ -895,6 +916,12 @@ export default defineContentScript({
 
       if (msg.type === 'scanStockStatistics') {
         const result = messageHandlers.scanStockStatistics(msg.data);
+        sendResponse(result);
+        return true;
+      }
+
+      if (msg.type === 'scanDailyServiceReport') {
+        const result = messageHandlers.scanDailyServiceReport(msg.data);
         sendResponse(result);
         return true;
       }

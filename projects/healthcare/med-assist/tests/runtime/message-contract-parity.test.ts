@@ -50,6 +50,8 @@ describe('extension message contract names', () => {
       'scanReferralStatistics',
       'scanStockStatistics',
       'collectShiftOverview',
+      'scanDailyServiceReport',
+      'collectDailyStatistics',
     ]);
   });
 });

@@ -1,4 +1,5 @@
-export type StatisticSourcePage = 'pendaftaran' | 'rujukanexternal' | 'stokobat';
+export type StatisticSourcePage =
+  'pendaftaran' | 'rujukanexternal' | 'stokobat' | 'laporanpelayananpasien';
 export type StatisticFailureStage =
   'load' | 'redirect' | 'receiver' | 'parse' | 'pagination' | 'complete' | 'unknown';
 
@@ -127,4 +128,59 @@ export interface StatisticPageScanResult<T> {
   nextPageUrl?: string | null;
   error?: string;
   diagnostics?: string[];
+}
+
+export interface DailyServiceDiagnosis {
+  icd: string;
+  nama: string;
+  jenisKasus: string;
+}
+
+/**
+ * One service row of the ePuskesmas "Laporan Harian - Pelayanan Pasien", without any identity:
+ * no name, NIK, KK, eRM, phone, address, parents, SOAP, complaint, therapy or prescription.
+ */
+export interface DailyServiceRow {
+  tanggal: string;
+  jenisKelamin: 'L' | 'P' | '';
+  umurTahun: number | null;
+  jenisKunjungan: string;
+  poli: string;
+  asuransi: string;
+  dokter: string;
+  diagnosa: DailyServiceDiagnosis[];
+  lamaAntreanMenit: number | null;
+  lamaPemeriksaanMenit: number | null;
+  lamaPelayananObatMenit: number | null;
+}
+
+export interface DailyServiceReport {
+  /** YYYY-MM-DD */
+  date: string;
+  fetchedAt: string;
+  sourceBaseUrl: string;
+  rows: DailyServiceRow[];
+}
+
+export interface DailyDiseaseItem {
+  icd: string;
+  label: string;
+  count: number;
+  kasusBaru: number;
+}
+
+export interface DailyStatistics {
+  date: string;
+  totalPelayanan: number;
+  jenisKelamin: { lakiLaki: number; perempuan: number };
+  kunjungan: { baru: number; lama: number };
+  kasusDiagnosisUtama: { baru: number; lama: number };
+  topPenyakit: DailyDiseaseItem[];
+  diagnosaTanpaKode: number;
+  pelayananTanpaDiagnosa: number;
+  perDpjp: StatisticCountItem[];
+  perPoli: StatisticCountItem[];
+  perAsuransi: StatisticCountItem[];
+  kelompokUmur: StatisticCountItem[];
+  medianMenit: { antrean: number | null; pemeriksaan: number | null; pelayananObat: number | null };
 }

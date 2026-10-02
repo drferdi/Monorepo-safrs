@@ -2,7 +2,13 @@ import path from 'path';
 import { expect, test, type BrowserContext, type Page } from '@playwright/test';
 
 import { getExtensionId, launchExtensionContext } from './chrome-extension-launch';
+import {
+  buildDailyReportPage,
+  SYNTHETIC_DAILY_SERVICES,
+  SYNTHETIC_IDENTITY,
+} from './epuskesmas-daily-report-page';
 import { buildEpuskesmasShapedResepPage } from './epuskesmas-resep-page';
+import { buildDailyReportUrl } from '../../lib/statistics/daily-report';
 import { SIDE_PANEL_TATALAKSANA_TRANSFER } from './side-panel-tatalaksana-transfer';
 import { KB_J18_RESEP_MEDICATIONS } from './side-panel-kb-resep-transfer';
 
@@ -1129,5 +1135,44 @@ test.describe.serial('Synthetic ePuskesmas integration', () => {
     await extensionPage.close();
     await epPage.close();
   });
-});
 
+  // Chief, 2026-10-02 ("Buatkan daily statistic ... yang mengambil data dari RME"): the STATS page
+  // reads the day's "Laporan Harian - Pelayanan Pasien" and keeps only the identity-free columns.
+  // The background opens that report in a hidden tab, whose first navigation Playwright cannot
+  // route (it reached the live server); so the built content script scans the same URL opened here.
+  test('scans the daily service report without any patient identity', async () => {
+    test.setTimeout(60_000);
+    await context.unrouteAll({ behavior: 'ignoreErrors' });
+    await context.route('https://kotakediri.epuskesmas.id/**', async (route) => {
+      const isReport = new URL(route.request().url()).pathname === '/laporanpelayananpasien';
+      await route.fulfill({
+        status: 200,
+        contentType: 'text/html',
+        body: isReport
+          ? buildDailyReportPage(SYNTHETIC_DAILY_SERVICES)
+          : '<!doctype html><html><body></body></html>',
+      });
+    });
+    const epPage = await context.newPage();
+    await epPage.goto(buildDailyReportUrl('https://kotakediri.epuskesmas.id', '2026-10-02'));
+    await epPage.waitForLoadState('domcontentloaded');
+    await epPage.waitForTimeout(1500);
+
+    const extensionPage = await openExtensionPage(context, await getExtensionId(context), 'sidepanel.html');
+    const scan = await sendMessageToEpuskesmasTab<{
+      success: boolean;
+      rows: Array<{ jenisKelamin: string; dokter: string; diagnosa: Array<{ icd: string }> }>;
+    }>(extensionPage, { type: 'scanDailyServiceReport' });
+
+    expect(scan.lastError).toBeNull();
+    expect(scan.response.success, JSON.stringify(scan.response)).toBe(true);
+    expect(scan.response.rows.map((row) => row.diagnosa[0]?.icd)).toEqual(['I10', 'I10', 'J06.9', '']);
+    expect(scan.response.rows.map((row) => row.dokter)).toEqual(['dr. Satu', 'dr. Satu', 'dr. Dua', '']);
+    const serialized = JSON.stringify(scan.response);
+    for (const value of Object.values(SYNTHETIC_IDENTITY)) {
+      expect(serialized).not.toContain(value);
+    }
+    await extensionPage.close();
+    await epPage.close();
+  });
+});

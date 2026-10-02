@@ -36,6 +36,11 @@ vi.mock('@/lib/statistics/cache', () => ({
   })),
 }));
 
+vi.mock('@/lib/statistics/daily-cache', () => ({
+  readDailyReport: vi.fn(async () => null),
+  readPreviousDailyReport: vi.fn(async () => null),
+}));
+
 const sendMessageMock = vi.fn();
 vi.mock('@/utils/messaging', () => ({
   sendMessage: (...args: unknown[]) => sendMessageMock(...args),
@@ -54,6 +59,13 @@ describe('StatisticSection', () => {
       expect(screen.getByText('Status Pelayanan')).toBeTruthy();
       expect(screen.getByText('Beban per Ruangan')).toBeTruthy();
     });
+  });
+
+  it('opens on the daily statistic before the shift overview', () => {
+    render(<StatisticSection />);
+
+    const headings = screen.getAllByRole('heading', { level: 2 }).map((h) => h.textContent);
+    expect(headings).toEqual(['Statistik Harian', 'Statistic']);
   });
 
   it('refreshes statistics from runtime messaging', async () => {

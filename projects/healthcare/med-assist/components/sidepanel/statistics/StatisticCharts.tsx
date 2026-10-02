@@ -4,7 +4,7 @@ import type {
   StatisticCountItem,
 } from '@/lib/statistics/types';
 
-function DonutLikeList({
+export function DonutLikeList({
   title,
   subtitle,
   items,
@@ -58,14 +58,16 @@ function ComparisonPanel({ baru, lama }: { baru: number; lama: number }) {
   );
 }
 
-function RankedBars({
+export function RankedBars({
   title,
   subtitle,
   items,
+  limit = 7,
 }: {
   title: string;
   subtitle: string;
   items: StatisticCountItem[];
+  limit?: number;
 }) {
   const max = Math.max(...items.map((item) => item.count), 1);
   return (
@@ -76,7 +78,7 @@ function RankedBars({
         <div className="statistic-empty">Tidak ada data</div>
       ) : (
         <div className="statistic-bars">
-          {items.slice(0, 7).map((item) => (
+          {items.slice(0, limit).map((item) => (
             <div key={item.label} className="statistic-bars__row">
               <div className="statistic-bars__meta">
                 <span className="statistic-bars__label">{item.label}</span>

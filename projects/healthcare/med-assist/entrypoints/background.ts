@@ -29,8 +29,12 @@ import { assistStaffFromSession, withResepStaff, withStaffNames } from '@/lib/rm
 import { RMETransferOrchestrator, resepStepTimeoutMs } from '@/lib/rme/transfer-orchestrator';
 import { isStepUrl, selectBestTransferTab } from '@/lib/rme/transfer-targeting';
 import { saveShiftOverviewCache } from '@/lib/statistics/cache';
+import { saveDailyReport } from '@/lib/statistics/daily-cache';
+import { buildDailyReportUrl, DAILY_REPORT_ROUTE } from '@/lib/statistics/daily-report';
 import { buildShiftOverviewSnapshot } from '@/lib/statistics/shift-overview';
 import type {
+  DailyServiceReport,
+  DailyServiceRow,
   QueueStatisticRow,
   ReferralStatisticRow,
   StatisticCollectorDiagnostic,
@@ -162,6 +166,7 @@ type ScanVisitHistoryResponse = {
 
 const DEFAULT_STATISTIC_BASE_URL = 'https://kotakediri.epuskesmas.id';
 const MAX_STATISTIC_PAGES = 12;
+const DAILY_REPORT_LOAD_TIMEOUT_MS = 60_000;
 
 type TenagaMedisSnapshot = {
   dokterNama: string;
@@ -779,9 +784,14 @@ async function resolveStatisticBaseUrl(): Promise<string> {
 
 async function collectStatisticRows<T>(
   url: string,
-  messageType: 'scanQueueStatistics' | 'scanReferralStatistics' | 'scanStockStatistics',
+  messageType:
+    | 'scanQueueStatistics'
+    | 'scanReferralStatistics'
+    | 'scanStockStatistics'
+    | 'scanDailyServiceReport',
   expectedRoute: string,
-  sourcePage: StatisticSourcePage
+  sourcePage: StatisticSourcePage,
+  loadTimeoutMs: number = MESSAGE_TIMEOUTS.visitFetch
 ): Promise<{ rows: T[]; error?: string; diagnostics: StatisticCollectorDiagnostic }> {
   const rows: T[] = [];
   let currentUrl: string | null = url;
@@ -811,7 +821,7 @@ async function collectStatisticRows<T>(
         url: currentUrl,
         pageNumber: pageCount + 1,
       });
-      await waitForTabComplete(tab.id!, MESSAGE_TIMEOUTS.visitFetch);
+      await waitForTabComplete(tab.id!, loadTimeoutMs);
       const loadedTab = await browser.tabs.get(tab.id!);
       const loadedUrl = loadedTab.url || '';
       if (!loadedUrl.includes(expectedRoute)) {
@@ -2299,6 +2309,33 @@ export default defineBackground(() => {
     });
 
     return snapshot;
+  });
+
+  onMessage('collectDailyStatistics', async (message) => {
+    const { date } = message.data;
+    const baseUrl = await resolveStatisticBaseUrl();
+    // The server builds the whole day's report before the page loads; give it longer than a form.
+    const scan = await collectStatisticRows<DailyServiceRow>(
+      buildDailyReportUrl(baseUrl, date),
+      'scanDailyServiceReport',
+      DAILY_REPORT_ROUTE,
+      'laporanpelayananpasien',
+      DAILY_REPORT_LOAD_TIMEOUT_MS
+    );
+    if (scan.error) {
+      throw new Error(scan.error);
+    }
+
+    const report: DailyServiceReport = {
+      date,
+      fetchedAt: new Date().toISOString(),
+      sourceBaseUrl: baseUrl,
+      rows: scan.rows,
+    };
+    await saveDailyReport(report).catch((error) => {
+      bgLog.warn('Failed to save daily statistic report', error);
+    });
+    return report;
   });
 
   // Content → Worker → Panel: Visit history scraped acknowledgment
