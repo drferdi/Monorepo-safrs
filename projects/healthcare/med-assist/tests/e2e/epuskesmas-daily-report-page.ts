@@ -2,8 +2,8 @@
  * A synthetic "Laporan Harian - Pelayanan Pasien" page shaped like the live ePuskesmas one
  * (read live 2026-10-02, structure only): a filter summary table first, then the report table
  * whose first header row has 79 cells (SOAP spans four sub-headers in the second row, the last
- * header "Jumlah Pelayanan" has no data cell), one body row of 81 cells per service. Every value
- * here is invented.
+ * header "Jumlah Pelayanan" has no data cell), one body row of 81 cells per service. The live
+ * report writes its column headers as <td> inside <thead>. Every value here is invented.
  */
 
 export const DAILY_REPORT_HEADERS = [
@@ -95,9 +95,9 @@ function buildRow(service: SyntheticDailyService, index: number): string {
 
 export function buildDailyReportPage(services: SyntheticDailyService[]): string {
   const headerRow = DAILY_REPORT_HEADERS.map((header) =>
-    header === 'SOAP' ? '<th colspan="4">SOAP</th>' : `<th rowspan="2">${header}</th>`
+    header === 'SOAP' ? '<td colspan="4">SOAP</td>' : `<td rowspan="2">${header}</td>`
   ).join('');
-  const subHeaderRow = SOAP_SUBHEADERS.map((name) => `<th>${name}</th>`).join('');
+  const subHeaderRow = SOAP_SUBHEADERS.map((name) => `<td>${name}</td>`).join('');
   const body =
     services.length > 0
       ? services.map(buildRow).join('')

@@ -27,7 +27,13 @@ has a dated heading, the decision, a short rationale, and its evidence.
   caught a race (the store read overwrote a just-loaded day). Playwright cannot route the first
   navigation of a tab the extension creates (it reached the live login/Cloudflare page), so the e2e
   scans the synthetic report in a page it opens; the hidden-tab path is the one the shift overview
-  already uses. Not yet seen: a live "Muat statistik harian" in Chief's Chrome.
+  already uses. Live, read-only after the commit: the URL `buildDailyReportUrl` emits for today
+  returned 136 rows of 81 cells on one page ("136 Data"), and the same header grid run on the live
+  page found all 15 whitelisted headers (Tanggal 1, DPJP 28, Diagnosa 1 63, Lama Pelayanan Obat
+  79). The live headers are <td> in <thead> (the fixture now matches); "freeze-table" adds three
+  full clones after the real table, which the first-best pick skips. The report URL is no clinical
+  page for `detectEpuskesmasPageType` (guard test). Not yet seen: a live "Muat statistik harian"
+  in Chief's Chrome.
 
 ## 2026-10-02 — A real failure beside a stock gap keeps its own reason
 

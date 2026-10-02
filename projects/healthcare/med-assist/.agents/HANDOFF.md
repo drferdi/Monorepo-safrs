@@ -22,6 +22,7 @@ Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/z
   keeps only identity-free columns (`lib/statistics/daily-report.ts`); counts in
   `daily-statistics.ts`; days in `sentra:statistic:daily` (31); "Unduh CSV" (`daily-csv.ts`) for
   pandas. Harness: `stats.html` (two synthetic days, 136 and 121 rows).
+  Live (read-only): the built URL gives today's 136 rows, the header grid finds all 15 columns.
 
 - Steps: Temuan 1/5 · Diagnosis 2/5 · **RME Diagnosa 3/5** (page 1) | Tatalaksana 4/5 | **RME Terapi
   5/5** (`steps/RmeDiagnosisStep.tsx`, `diagnosisSteps.ts`, `DiagnosisStepFlow.tsx`). "Isi otomatis
@@ -69,7 +70,7 @@ Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/z
 
 ## Verification (final tree)
 
-2026-10-02 (Statistik Harian): typecheck 0 · test 0 (1545 passed, 17 skipped; contract list +2
+2026-10-02 (Statistik Harian): typecheck 0 · test 0 (1546 passed, 17 skipped; contract list +2
 names) · dev build 0 · e2e 20 (incl. the daily report scan and the other session's
 `zz-verify-kb-rx.spec.ts`) · `run:check` 0 · `run build` 0, last · full lint 1 (only
 `zz-verify-kb-rx.spec.ts`; my files 0).

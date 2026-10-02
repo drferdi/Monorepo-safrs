@@ -8,6 +8,8 @@ import {
 
 import { buildDailyReportUrl, extractDailyServiceRows } from './daily-report';
 
+import { detectEpuskesmasPageType } from '@/lib/rme/transfer-targeting';
+
 function parse(html: string): Document {
   return new DOMParser().parseFromString(html, 'text/html');
 }
@@ -25,6 +27,16 @@ describe('buildDailyReportUrl', () => {
     expect(url.searchParams.get('search[ruangan_name]')).toBe('Semua');
     expect(url.searchParams.has('search[petugas_id]')).toBe(true);
     expect(url.searchParams.get('search[sampai_umur_tahun]')).toBe('0');
+  });
+});
+
+describe('the report tab beside the clinical pages', () => {
+  it('is no clinical page, so loading it never triggers an anamnesa or diagnosa scrape', () => {
+    const url = buildDailyReportUrl('https://kotakediri.epuskesmas.id', '2026-10-02');
+    const page = parse(buildDailyReportPage(SYNTHETIC_DAILY_SERVICES));
+
+    expect(detectEpuskesmasPageType(url, page)).toBeNull();
+    expect(detectEpuskesmasPageType(new URL(url).toString(), page)).toBeNull();
   });
 });
 
@@ -75,8 +87,8 @@ describe('extractDailyServiceRows', () => {
 
   it('names a required column the page no longer has instead of guessing', () => {
     const html = buildDailyReportPage(SYNTHETIC_DAILY_SERVICES).replace(
-      '<th rowspan="2">Dokter / Tenaga Medis</th>',
-      '<th rowspan="2">DPJP</th>'
+      '<td rowspan="2">Dokter / Tenaga Medis</td>',
+      '<td rowspan="2">DPJP</td>'
     );
 
     const result = extractDailyServiceRows(parse(html));
