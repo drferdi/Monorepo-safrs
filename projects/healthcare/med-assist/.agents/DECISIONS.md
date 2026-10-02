@@ -3,6 +3,31 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-03 — The STATS page uses the side-panel design system
+
+- Decision (Chief: "design nya mengikuti halaman halaman lain, text colour dll"): the whole STATS
+  page (Statistik Harian and the shift overview) is drawn like Diagnosis and Trajectory: a
+  `ct-v2-layout` root (it defines the panel text and surface colours), `ct-v2-panel` sections with
+  `ct-v2-panel-head`, `ttv-section-title` titles and a `ttv-label` on the right, `diagnosis-row-meta`
+  / `text-small text-muted` text, `action-btn--primary` / `--secondary` buttons, `PixelLoader`
+  while loading. Figures use the TTV value scale (18px / 600, tabular), bars are a 3px
+  `--accent-med` line, the date field is an underline that turns accent on focus. The surface's own
+  scale (18px titles, 28px values, blue gradients, rounded 16px glass cards) is gone; the empty
+  "Fase 2" ghost panel is dropped (no panel without data). Appended CSS only.
+- Decision (Chief, same evening: "10 besar penyakit dan bawah nya di buat random ada drop down ada
+  accordion"): 10 Besar Penyakit shows the 5 largest and opens the rest in place from "Lihat 10
+  besar" (the Diagnosis page's "Lihat alasan" text button); the panels below it (DPJP, Poli /
+  Ruangan, Asuransi, Kelompok Umur, Waktu Layanan) are one accordion, DPJP open first, and the
+  shift panels another, Status Pelayanan first. One open per group; content appears and goes in
+  place, no height animation (steady console). The trigger is the panel title (chevron drawn by
+  borders), freed from the global `.sentra-card button` edge as `.diagnosis-text-button` is.
+- Evidence: tests red first (headings not `ttv-section-title`, root without `ct-v2-layout`), then
+  green; in the harness frame of the Diagnosis page (478px, `sentra-card`) the titles compute to
+  the same `oklch(0.95 0.01 95 / 0.9)` as Diagnosis.
+- Dead CSS (append-only file): `.statistic-board*`, `.statistic-grid*`, `.statistic-card*`,
+  `.statistic-panel*`, `.statistic-list*`, `.statistic-bars*`, `.statistic-compare*`,
+  `.statistic-empty`, `.statistic-partial`, `.statistic-daily__controls`.
+
 ## 2026-10-02 — Statistik Harian reads the ePuskesmas daily service report, identity-free
 
 - Decision (Chief: "konsentrasi halaman baru yaitu statistic ... daily statistic yang mengambil

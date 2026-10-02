@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-10-02 (STATS opens with Statistik Harian from the ePuskesmas daily service report,
+Last updated: 2026-10-03 (STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
 identity-free, CSV for pandas; a resep step says what went wrong, out of stock is a note without Ulangi; Terapi kronis drops acute-only medications; an out-of-stock medication is left out at once; header lights the page on screen, "Lanjutkan semua" for chronic therapy;
 chronic doses from the riwayat Resep table, no triad warning; the RME resep picks each medication from its ePuskesmas suggestion and
 presses Tambah once per row; 2026-10-01: the signa chosen from its suggestion, "3x sehari" as 3x1;
@@ -23,6 +23,9 @@ Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/z
   `daily-statistics.ts`; days in `sentra:statistic:daily` (31); "Unduh CSV" (`daily-csv.ts`) for
   pandas. Harness: `stats.html` (two synthetic days, 136 and 121 rows).
   Live (read-only): the built URL gives today's 136 rows, the header grid finds all 15 columns.
+  Since 2026-10-03 the page uses `ct-v2-layout` / `ct-v2-panel` / `ttv-*` / `action-btn`; 10 Besar
+  Penyakit opens from 5 to 10 in place, the panels below are accordions (DECISIONS).
+  Harness of this session: launch `stats-harness` (port 5180), `stats.html`, Diagnosis frame.
 
 - Steps: Temuan 1/5 · Diagnosis 2/5 · **RME Diagnosa 3/5** (page 1) | Tatalaksana 4/5 | **RME Terapi
   5/5** (`steps/RmeDiagnosisStep.tsx`, `diagnosisSteps.ts`, `DiagnosisStepFlow.tsx`). "Isi otomatis
@@ -69,6 +72,11 @@ Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/z
   `bhcffleclpadneocndhembhjbemimhkm`.
 
 ## Verification (final tree)
+
+2026-10-03 (STATS design, dropdown + accordion): eslint touched 0 · typecheck 0 · test 0 (1551
+passed, 17 skipped) · dev build 0 · e2e 20 · `run:check` 0 · `run build` 0, last. Root: governance 1
+only from another session's uncommitted root `.agents/HANDOFF.md` (Gaffer, melindaOs, no owner);
+lint 1 (`tools/*`), test 1 (PostgreSQL 54329) as before.
 
 2026-10-02 (Statistik Harian): typecheck 0 · test 0 (1546 passed, 17 skipped; contract list +2
 names) · dev build 0 · e2e 20 (incl. the daily report scan and the other session's
@@ -118,7 +126,8 @@ Screenshots failed (Claude window hidden); checks were read from the DOM.
    name the autocomplete does not offer falls to the typed candidate loop (slow); since 2026-10-02
    the step has 15 s more per further medication, but the orchestrator still retries a timed-out
    resep while the first fill may run on (two fills over one form).
-6. Dead CSS (append-only file): `.dx-tx-safety-list`, `.diagnosis-transfer-secondary`.
+6. Dead CSS (append-only file): `.dx-tx-safety-list`, `.diagnosis-transfer-secondary`, and the old
+   statistic surface classes (list in DECISIONS 2026-10-03).
 7. MIRA's use of the earlier-BP row is not verified live (no model call without Chief's
    "jalankan"). The scraper origin of the form labels is inferred, not patched.
 8. Earlier items: proposals remote-only (R3), DDI table ~20 pairs, J20 red_flags (R3), R3 sign-off

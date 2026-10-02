@@ -10585,3 +10585,118 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* Statistic page in the side-panel system: ct-v2-panel, ttv-* titles and labels, action-btn.
+   Only what those classes cannot express; values use the TTV value scale (18px / 600). */
+.statistic-figure {
+  font-family: var(--font-ui);
+  font-variant-numeric: tabular-nums;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--text-main);
+}
+
+.statistic-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.statistic-row__label {
+  min-width: 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--text-main);
+  overflow-wrap: anywhere;
+}
+
+.statistic-row__value {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+.statistic-meter {
+  height: 3px;
+  border-radius: 999px;
+  background: var(--border-subtle);
+  overflow: hidden;
+}
+
+.statistic-meter__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent-med);
+}
+
+.statistic-daily__date {
+  font-family: var(--font-ui);
+  font-size: 11px;
+  color: var(--text-main);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--border-subtle);
+  border-radius: 0;
+  padding: 6px 2px;
+  outline: none;
+  color-scheme: dark;
+  transition: border-color 150ms linear;
+}
+
+.statistic-daily__date:focus-visible {
+  border-bottom-color: var(--accent-med);
+}
+
+/* Statistic accordion trigger: the panel title itself, chevron drawn by borders (no text in the
+   accessible name); the content appears in place, nothing animates its size. */
+.statistic-accordion__trigger {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 8px;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  text-align: left;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.statistic-accordion__trigger::after {
+  content: '';
+  width: 5px;
+  height: 5px;
+  margin-top: -3px;
+  border-right: 1.5px solid var(--text-muted);
+  border-bottom: 1.5px solid var(--text-muted);
+  transform: rotate(45deg);
+}
+
+.statistic-accordion__trigger[aria-expanded='true']::after {
+  margin-top: 3px;
+  transform: rotate(-135deg);
+}
+
+.statistic-accordion__trigger:focus-visible {
+  outline: none;
+  text-decoration: underline;
+  text-decoration-color: var(--accent-med);
+  text-underline-offset: 4px;
+}
+
+/* The accordion trigger is the panel title, never a bordered chip: wins over the global
+   `.sentra-card button` / `.sidepanel-shell button` edge, as `.diagnosis-text-button` does. */
+.sentra-card .statistic-accordion__trigger,
+.sentra-card .statistic-accordion__trigger:not(:hover):not(:focus-visible):not(.active),
+.sidepanel-shell .statistic-accordion__trigger,
+.sidepanel-shell .statistic-accordion__trigger:not(:hover):not(:focus-visible):not(.active) {
+  border: 0 !important;
+  background: none !important;
+  box-shadow: none !important;
+}

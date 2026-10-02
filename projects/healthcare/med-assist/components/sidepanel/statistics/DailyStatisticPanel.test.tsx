@@ -92,6 +92,75 @@ describe('DailyStatisticPanel', () => {
     expect(sendMessageMock).not.toHaveBeenCalled();
   });
 
+  it('draws a loaded day with the panels and titles of the other side-panel pages', async () => {
+    readDailyReportMock.mockResolvedValueOnce(todayReport);
+    const { container } = render(<DailyStatisticPanel />);
+    await screen.findByText('I10 · Essential (primary) hypertension');
+
+    const headings = Array.from(container.querySelectorAll('h2, h3'));
+    expect(headings.map((h) => h.textContent)).toEqual([
+      'Statistik Harian',
+      '10 Besar Penyakit',
+      'Pasien per DPJP',
+      'Poli / Ruangan',
+      'Asuransi',
+      'Kelompok Umur',
+      'Waktu Layanan',
+    ]);
+    for (const heading of headings) {
+      expect(heading.className).toContain('ttv-section-title');
+      expect(heading.closest('section')?.className ?? '').toContain('ct-v2-panel');
+    }
+    expect(screen.getByRole('button', { name: 'Muat statistik harian' }).className).toContain(
+      'action-btn--primary'
+    );
+  });
+
+  // Chief, 2026-10-03: "10 besar penyakit dan bawah nya di buat random ada drop down ada accordion".
+  it('opens the 10 largest diseases from the 5 largest, in place', async () => {
+    const codes = ['A01', 'B02', 'C03', 'D04', 'E05', 'F06', 'G07'];
+    readDailyReportMock.mockResolvedValueOnce({
+      ...todayReport,
+      rows: codes.map((icd) => row({ diagnosa: [{ icd, nama: `Penyakit ${icd}`, jenisKasus: 'BARU' }] })),
+    });
+    render(<DailyStatisticPanel />);
+    await screen.findByText('A01 · Penyakit A01');
+
+    expect(screen.queryByText('F06 · Penyakit F06')).toBeNull();
+    const toggle = screen.getByRole('button', { name: 'Lihat 10 besar' });
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+
+    fireEvent.click(toggle);
+
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByText('F06 · Penyakit F06')).toBeTruthy();
+    expect(screen.getByText('G07 · Penyakit G07')).toBeTruthy();
+  });
+
+  it('keeps one of the panels below open at a time, DPJP first', async () => {
+    readDailyReportMock.mockResolvedValueOnce(todayReport);
+    render(<DailyStatisticPanel />);
+    await screen.findByText('I10 · Essential (primary) hypertension');
+
+    const dpjp = screen.getByRole('button', { name: 'Pasien per DPJP' });
+    const poli = screen.getByRole('button', { name: 'Poli / Ruangan' });
+    expect(dpjp).toHaveAttribute('aria-expanded', 'true');
+    expect(poli).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.getByText('dr. Dua')).toBeTruthy();
+    expect(screen.queryByText('DEWASA')).toBeNull();
+
+    fireEvent.click(poli);
+
+    expect(poli).toHaveAttribute('aria-expanded', 'true');
+    expect(dpjp).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.getByText('DEWASA')).toBeTruthy();
+    expect(screen.queryByText('dr. Dua')).toBeNull();
+
+    fireEvent.click(poli);
+    expect(poli).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByText('DEWASA')).toBeNull();
+  });
+
   it('says what went wrong when the report cannot be read', async () => {
     sendMessageMock.mockRejectedValueOnce(
       new Error('Kolom laporan harian tidak ditemukan: Dokter / Tenaga Medis')

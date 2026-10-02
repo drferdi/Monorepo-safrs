@@ -1,60 +1,113 @@
+import { useState, type ReactNode } from 'react';
+
 import type {
   Phase1ShiftOverview,
   Phase2ShiftOverview,
   StatisticCountItem,
 } from '@/lib/statistics/types';
 
+/** Accordion state for one group of panels: opening one closes the open one. */
+export type PanelToggle = { expanded: boolean; onToggle: () => void };
+
+export function useAccordion(initial: string | null) {
+  const [open, setOpen] = useState<string | null>(initial);
+  return (id: string): PanelToggle => ({
+    expanded: open === id,
+    onToggle: () => setOpen((current) => (current === id ? null : id)),
+  });
+}
+
+/**
+ * A side-panel panel as on the Diagnosis and Trajectory pages: title left, quiet label right.
+ * Given a toggle it is an accordion item; its content appears and goes in place, nothing slides.
+ */
+export function StatisticPanel({
+  title,
+  label,
+  toggle,
+  children,
+}: {
+  title: string;
+  label?: string;
+  toggle?: PanelToggle;
+  children: ReactNode;
+}) {
+  return (
+    <section className="ct-v2-panel flex flex-col gap-3">
+      <div className="ct-v2-panel-head">
+        <h3 className="ttv-section-title flex-1">
+          {toggle ? (
+            <button
+              type="button"
+              className="statistic-accordion__trigger"
+              aria-expanded={toggle.expanded}
+              onClick={toggle.onToggle}
+            >
+              {title}
+            </button>
+          ) : (
+            title
+          )}
+        </h3>
+        {label ? <span className="ttv-label">{label}</span> : null}
+      </div>
+      {!toggle || toggle.expanded ? children : null}
+    </section>
+  );
+}
+
+/** One figure: label above, value in the TTV value scale, note below. */
+export function StatisticFigure({
+  label,
+  value,
+  note,
+}: {
+  label: string;
+  value: ReactNode;
+  note?: string;
+}) {
+  return (
+    <div className="flex flex-col gap-1" aria-label={label}>
+      <span className="ttv-label">{label}</span>
+      <span className="statistic-figure">{value}</span>
+      {note ? <span className="diagnosis-row-meta">{note}</span> : null}
+    </div>
+  );
+}
+
+function Empty() {
+  return <p className="text-small text-muted">Tidak ada data</p>;
+}
+
 export function DonutLikeList({
   title,
   subtitle,
   items,
+  toggle,
 }: {
   title: string;
   subtitle: string;
   items: StatisticCountItem[];
+  toggle?: PanelToggle;
 }) {
   const total = items.reduce((sum, item) => sum + item.count, 0);
   return (
-    <article className="statistic-panel">
-      <h3 className="statistic-panel__title">{title}</h3>
-      <p className="statistic-panel__subtitle">{subtitle}</p>
+    <StatisticPanel title={title} label={subtitle} toggle={toggle}>
       {items.length === 0 ? (
-        <div className="statistic-empty">Tidak ada data</div>
+        <Empty />
       ) : (
-        <div className="statistic-list">
-          {items.map((item) => {
-            const percent = total > 0 ? Math.round((item.count / total) * 100) : 0;
-            return (
-              <div key={item.label} className="statistic-list__row">
-                <span className="statistic-list__label">{item.label}</span>
-                <span className="statistic-list__value">
-                  {item.count} · {percent}%
-                </span>
-              </div>
-            );
-          })}
+        <div className="flex flex-col gap-2">
+          {items.map((item) => (
+            <div key={item.label} className="statistic-row">
+              <span className="statistic-row__label">{item.label}</span>
+              <span className="statistic-row__value">
+                {item.count} · {total > 0 ? Math.round((item.count / total) * 100) : 0}%
+              </span>
+            </div>
+          ))}
         </div>
       )}
-    </article>
-  );
-}
-
-function ComparisonPanel({ baru, lama }: { baru: number; lama: number }) {
-  return (
-    <article className="statistic-panel">
-      <h3 className="statistic-panel__title">Jenis Kunjungan</h3>
-      <p className="statistic-panel__subtitle">Perbandingan pasien baru dan lama</p>
-      <div className="statistic-compare">
-        <div className="statistic-compare__item">
-          <span className="statistic-compare__label">Baru</span>
-          <span className="statistic-compare__value">{baru}</span>
-        </div>
-        <div className="statistic-compare__item">
-          <span className="statistic-compare__label">Lama</span>
-          <span className="statistic-compare__value">{lama}</span>
-        </div>
-      </div>
-    </article>
+    </StatisticPanel>
   );
 }
 
@@ -63,84 +116,79 @@ export function RankedBars({
   subtitle,
   items,
   limit = 7,
+  toggle,
+  children,
 }: {
   title: string;
   subtitle: string;
   items: StatisticCountItem[];
   limit?: number;
+  toggle?: PanelToggle;
+  /** A note under the bars. */
+  children?: ReactNode;
 }) {
   const max = Math.max(...items.map((item) => item.count), 1);
   return (
-    <article className="statistic-panel">
-      <h3 className="statistic-panel__title">{title}</h3>
-      <p className="statistic-panel__subtitle">{subtitle}</p>
+    <StatisticPanel title={title} label={subtitle} toggle={toggle}>
       {items.length === 0 ? (
-        <div className="statistic-empty">Tidak ada data</div>
+        <Empty />
       ) : (
-        <div className="statistic-bars">
+        <div className="flex flex-col gap-2">
           {items.slice(0, limit).map((item) => (
-            <div key={item.label} className="statistic-bars__row">
-              <div className="statistic-bars__meta">
-                <span className="statistic-bars__label">{item.label}</span>
-                <span className="statistic-bars__value">{item.count}</span>
+            <div key={item.label} className="flex flex-col gap-1">
+              <div className="statistic-row">
+                <span className="statistic-row__label">{item.label}</span>
+                <span className="statistic-row__value">{item.count}</span>
               </div>
-              <div className="statistic-bars__track">
+              <div className="statistic-meter">
                 <div
-                  className="statistic-bars__fill"
-                  style={{ width: `${Math.max(8, (item.count / max) * 100)}%` }}
+                  className="statistic-meter__fill"
+                  style={{ width: `${Math.max(4, (item.count / max) * 100)}%` }}
                 />
               </div>
             </div>
           ))}
         </div>
       )}
-    </article>
+      {children}
+    </StatisticPanel>
   );
 }
 
-function Phase2Panels({ phase2 }: { phase2?: Phase2ShiftOverview }) {
-  if (!phase2) {
-    return (
-      <div className="statistic-grid statistic-grid--phase2">
-        <article className="statistic-panel">
-          <h3 className="statistic-panel__title">Rujukan dan Farmasi</h3>
-          <p className="statistic-panel__subtitle">
-            Fase 2 aktif saat data tambahan berhasil dimuat
-          </p>
-          <div className="statistic-empty">Fase 2</div>
-        </article>
-      </div>
-    );
-  }
-
+function Phase2Panels({
+  phase2,
+  panel,
+}: {
+  phase2: Phase2ShiftOverview;
+  panel: (id: string) => PanelToggle;
+}) {
   return (
-    <div className="statistic-grid statistic-grid--phase2">
+    <>
       <RankedBars
         title="RS Tujuan Rujukan"
-        subtitle="Rumah sakit tujuan yang paling sering dipilih"
+        subtitle="rujukan hari ini"
         items={phase2.rujukanHariIni.rsTujuanTerbanyak}
+        toggle={panel('rujukan')}
       />
-      <article className="statistic-panel">
-        <h3 className="statistic-panel__title">Stok Rendah</h3>
-        <p className="statistic-panel__subtitle">Obat yang perlu perhatian cepat</p>
+      <StatisticPanel title="Stok Rendah" label="perlu perhatian" toggle={panel('stok')}>
         {phase2.stokRendah.length === 0 ? (
-          <div className="statistic-empty">Tidak ada stok rendah terdeteksi</div>
+          <p className="text-small text-muted">Tidak ada stok rendah terdeteksi</p>
         ) : (
-          <div className="statistic-list">
+          <div className="flex flex-col gap-2">
             {phase2.stokRendah.slice(0, 5).map((item) => (
-              <div key={`${item.namaObat}-${item.ruangan}`} className="statistic-list__row">
-                <span className="statistic-list__label">
+              <div key={`${item.namaObat}-${item.ruangan}`} className="statistic-row">
+                <span className="statistic-row__label">
                   {item.namaObat} · {item.ruangan}
                 </span>
-                <span className="statistic-list__value">
+                <span className="statistic-row__value">
                   {item.stok} · {item.status}
                 </span>
               </div>
             ))}
           </div>
         )}
-      </article>
-    </div>
+      </StatisticPanel>
+    </>
   );
 }
 
@@ -151,32 +199,28 @@ export function StatisticCharts({
   phase1: Phase1ShiftOverview;
   phase2?: Phase2ShiftOverview;
 }) {
+  const panel = useAccordion('status');
   return (
     <>
-      <div className="statistic-grid statistic-grid--panels">
-        <DonutLikeList
-          title="Status Pelayanan"
-          subtitle="Posisi pasien dalam alur layanan"
-          items={phase1.statusPelayanan}
-        />
-        <ComparisonPanel
-          baru={phase1.kunjunganBaruVsLama.baru}
-          lama={phase1.kunjunganBaruVsLama.lama}
-        />
-      </div>
-      <div className="statistic-grid statistic-grid--panels">
-        <RankedBars
-          title="Beban per Ruangan"
-          subtitle="Jumlah pasien berdasarkan ruangan daftar"
-          items={phase1.pasienPerRuangan}
-        />
-        <RankedBars
-          title="Beban per Dokter"
-          subtitle="Jumlah pasien berdasarkan dokter"
-          items={phase1.pasienPerDokter}
-        />
-      </div>
-      <Phase2Panels phase2={phase2} />
+      <DonutLikeList
+        title="Status Pelayanan"
+        subtitle="alur layanan"
+        items={phase1.statusPelayanan}
+        toggle={panel('status')}
+      />
+      <RankedBars
+        title="Beban per Ruangan"
+        subtitle="ruangan daftar"
+        items={phase1.pasienPerRuangan}
+        toggle={panel('ruangan')}
+      />
+      <RankedBars
+        title="Beban per Dokter"
+        subtitle="dokter"
+        items={phase1.pasienPerDokter}
+        toggle={panel('dokter')}
+      />
+      {phase2 ? <Phase2Panels phase2={phase2} panel={panel} /> : null}
     </>
   );
 }

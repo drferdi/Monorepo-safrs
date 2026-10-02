@@ -68,6 +68,48 @@ describe('StatisticSection', () => {
     expect(headings).toEqual(['Statistik Harian', 'Statistic']);
   });
 
+  // Chief, 2026-10-02: "design nya mengikuti halaman halaman lain, text colour dll".
+  it('draws every part with the panels, titles and type of the other side-panel pages', async () => {
+    const { container } = render(<StatisticSection />);
+    await waitFor(() => expect(screen.getByText('Beban per Ruangan')).toBeTruthy());
+
+    // The panel colours (title text, surface fill) are defined under .ct-v2-layout, as on Diagnosis.
+    expect(container.firstElementChild).toHaveClass('ct-v2-layout');
+    const headings = Array.from(container.querySelectorAll('h2, h3'));
+    expect(headings.length).toBeGreaterThan(5);
+    for (const heading of headings) {
+      expect(heading.className, heading.textContent ?? '').toContain('ttv-section-title');
+      expect(heading.closest('section')?.className ?? '', heading.textContent ?? '').toContain(
+        'ct-v2-panel'
+      );
+    }
+    // The surface's own type scale (18px titles, 28px values, blue gradients) is gone.
+    expect(container.querySelector('[class*="statistic-board"], [class*="statistic-card"]')).toBeNull();
+    for (const button of Array.from(container.querySelectorAll('button'))) {
+      expect(button.className, button.textContent ?? '').toMatch(
+        /\b(action-btn|diagnosis-text-button|statistic-accordion__trigger)\b/
+      );
+    }
+  });
+
+  it('opens the shift panels one at a time, Status Pelayanan first', async () => {
+    render(<StatisticSection />);
+    await waitFor(() => expect(screen.getByText('Menunggu')).toBeTruthy());
+
+    const ruangan = screen.getByRole('button', { name: 'Beban per Ruangan' });
+    expect(screen.getByRole('button', { name: 'Status Pelayanan' })).toHaveAttribute(
+      'aria-expanded',
+      'true'
+    );
+    expect(ruangan).toHaveAttribute('aria-expanded', 'false');
+
+    fireEvent.click(ruangan);
+
+    expect(ruangan).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.queryByText('Menunggu')).toBeNull();
+    expect(screen.getByText('Poli Umum')).toBeTruthy();
+  });
+
   it('refreshes statistics from runtime messaging', async () => {
     sendMessageMock.mockResolvedValueOnce({
       fetchedAt: '2026-06-26T11:00:00.000Z',
