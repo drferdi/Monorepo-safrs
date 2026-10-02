@@ -12,7 +12,10 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 ## Current state
 
 Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-30 (two entries) and
-2026-09-29 hold the details. `main` is at d2fa270a (Chief merged through the Tren TTV playground).
+2026-09-29 hold the details. `main` is at cd7b7795 (Chief merged through the Tren TTV text scale).
+Visit summary PDF (2026-10-03): design in `docs/specs/2026-10-03-visit-summary-pdf-design.md`
+(Chief approved it in chat: pdf-lib, one prop through `main.tsx`, logomark only); the written spec
+awaits Chief's review, then the plan; no code yet.
 Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/zz-verify-kb-rx.spec.ts` (lint red).
 
 - Statistik Harian (2026-10-02, Chief "konsentrasi halaman baru yaitu statistic"): first block of the
