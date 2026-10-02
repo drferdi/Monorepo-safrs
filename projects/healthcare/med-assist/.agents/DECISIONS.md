@@ -3,6 +3,20 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-02 — Terapi kronis leaves out medications only acute visits prescribed
+
+- Decision (Chief, looking at the side panel: "usulan 9 macam obat? sejak 2 kali modify ini obat jadi
+  aneh maleh"): since the visit therapy is read from the riwayat Resep tables, every medication of
+  the last five visits became a chronic card, the ISPA ones included (N-asetilsistein, CTM,
+  Parasetamol, Vitamin B Komplek with "Acute upper respiratory infections" as indikasi; seen on
+  Chief's screen, read-only). `buildChronicMedications` now drops a medication when every visit that
+  prescribed it has a diagnosis whose ICD root is not in `CHRONIC_ICD_ROOTS`
+  (`lib/clinical/recurrent-diagnosis.ts`, Chief's list, read not changed). A medication one chronic
+  visit prescribed stays (e.g. Parasetamol also given at a hypertension visit); a name no stored
+  visit shows is kept as before. Using that list as the definition of chronic therapy is my default.
+- Evidence: test red first (acute-only medications kept), then green; no existing assertion
+  changed; capsule test 1522 passed, e2e 18, `run build` last.
+
 ## 2026-10-02 — A medication the ePuskesmas catalogue does not offer is left out at once
 
 - Decision (Chief: "walah macet di vit b6", "bagaimana ya agar tidak stuck melulu kan stok obat bisa

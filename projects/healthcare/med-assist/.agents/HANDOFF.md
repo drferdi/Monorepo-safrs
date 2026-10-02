@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-10-02 (an out-of-stock medication is left out at once; header lights the page on screen, "Lanjutkan semua" for chronic therapy;
+Last updated: 2026-10-02 (Terapi kronis drops acute-only medications; an out-of-stock medication is left out at once; header lights the page on screen, "Lanjutkan semua" for chronic therapy;
 chronic doses from the riwayat Resep table, no triad warning; the RME resep picks each medication from its ePuskesmas suggestion and
 presses Tambah once per row; 2026-10-01: the signa chosen from its suggestion, "3x sehari" as 3x1;
 2026-09-30: the BP algorithm on the last visit; visit-form labels no longer chronic medications)
@@ -11,7 +11,7 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 ## Current state
 
 Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-30 (two entries) and
-2026-09-29 hold the details. `main` is at 555e538a (Chief merged the 2026-10-02 resep fix). In flight, not mine: another session's
+2026-09-29 hold the details. `main` is at 9caed53f (Chief merged through the out-of-stock fix).
 uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/zz-verify-kb-rx.spec.ts` (lint red).
 
 - Steps: Temuan 1/5 · Diagnosis 2/5 · **RME Diagnosa 3/5** (page 1) | Tatalaksana 4/5 | **RME Terapi
@@ -43,6 +43,9 @@ uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/zz-verify-kb-rx.spe
   screen. Terapi kronis has "Lanjutkan semua" (cards with a regimen).
 - Out of stock (2026-10-02, "macet di vit b6"): an empty catalogue answer fails that medication at
   once (`CATALOG_EMPTY_ERROR`), the rest are filled, the result is partial and names it.
+- Terapi kronis (2026-10-02, "masa 9 macam obat?"): a medication only acute visits prescribed (ICD
+  root not in `CHRONIC_ICD_ROOTS`) is no chronic card; the free-text "CTM" of an asthma visit can
+  still sit beside its full stock name (not merged).
 - E2E on a live-shaped resep page (`tests/e2e/epuskesmas-resep-page.ts`, 7f42f2d4): the J18 KB
   row lands in the table with obat_id 20012 and signa "3X1"; red before the fixes (old signa:
   "[SIGNA_INVALID]", partial; old filler: typed "3x1").
@@ -53,6 +56,7 @@ uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/zz-verify-kb-rx.spe
 
 ## Verification (final tree)
 
+2026-10-02 (chronic filter): typecheck 0 · test 0 (1522 passed, 17 skipped) · e2e 18 · `run build` 0, last.
 2026-10-02 (out of stock): typecheck 0 · test 0 (1521 passed, 17 skipped) · e2e 18 · `run build` 0, last.
 2026-10-02 (header/select-all): typecheck 0 · test 0 (1521 passed, 17 skipped) · e2e 17 · `run build` 0, last.
 2026-10-02 (dose fix): typecheck 0 · test 0 (187 files, 1516 passed, 17 skipped) · e2e 17 passed
