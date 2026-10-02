@@ -54,6 +54,29 @@ describe('buildChronicMedications', () => {
     ]);
   });
 
+  // Chief, 2026-10-02 ("usulan 9 macam obat? ... masa 9 macam obat?"): read from the riwayat Resep
+  // tables, every medication of the last visits became a chronic card, the ISPA ones included. A
+  // medication only acute visits prescribed (no ICD in CHRONIC_ICD_ROOTS) is not chronic therapy.
+  it('leaves out a medication only visits with an acute diagnosis prescribed', () => {
+    const ispa = (timestamp: string, terapi: string): VisitRecord => ({
+      ...visit(timestamp, terapi, 'ISPA'),
+      diagnosa: { icd_x: 'J06.9', nama: 'Acute upper respiratory infection, unspecified' },
+    });
+    const history = [
+      ispa('2026-09-20T08:00:00Z', 'N-asetilsistein kapsul 200 mg 2x1 Sesudah Makan; Parasetamol tablet 500 mg 3X1 Sesudah Makan'),
+      visit('2026-09-10T08:00:00Z', 'Amlodipin 1x10mg sesudah makan; Parasetamol tablet 500 mg 3X1 Sesudah Makan', 'Hipertensi esensial'),
+      ispa('2026-08-10T08:00:00Z', 'N-asetilsistein kapsul 200 mg 3x1 Sesudah Makan'),
+    ];
+
+    const chronic = buildChronicMedications(
+      ['N-Asetilsistein Kapsul 200 Mg', 'Parasetamol Tablet 500 Mg', 'Amlodipin'],
+      history
+    );
+
+    // Parasetamol stays: a hypertension visit prescribed it too.
+    expect(chronic.map((medication) => medication.name)).toEqual(['Parasetamol Tablet 500 Mg', 'Amlodipin']);
+  });
+
   // Chief, 2026-10-02 ("Pengisian dosis salah"): no signa in the history, no dose invented; the
   // card cannot be continued until a visit shows the regimen.
   it('keeps no regimen for a medication the history names without a signa', () => {

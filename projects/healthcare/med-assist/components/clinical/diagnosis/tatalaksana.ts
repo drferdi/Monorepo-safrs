@@ -2,6 +2,7 @@ import { diseaseNoteFor, type DiseaseNote } from './useDiseaseNotes';
 
 import { checkMockDDI } from '@/lib/api/mocks/ddi-mock';
 import { parseTherapyHistoryText } from '@/lib/clinical/chronic-therapy-history';
+import { CHRONIC_ICD_ROOTS } from '@/lib/clinical/recurrent-diagnosis';
 import type { VisitRecord } from '@/lib/iskandar-diagnosis-engine/visit-history-store';
 import { classifyRole, type TriadRole } from '@/lib/rme/payload-mapper';
 import stockDatabase from '@/public/data/stok_obat.json';
@@ -153,15 +154,21 @@ export function sameDrugIn(name: string, plan: string[], inPlan: boolean): strin
  * returns it. Nothing is inferred beyond those visits.
  */
 export function buildChronicMedications(names: string[], visits: VisitRecord[]): ChronicMedicationView[] {
-  return names.map((name) => {
+  return names.flatMap((name) => {
     const key = drugKey(name);
     let regimen: ChronicMedicationView['regimen'];
+    // Chief, 2026-10-02 ("masa 9 macam obat?"): a medication only acute visits prescribed (no ICD
+    // root in CHRONIC_ICD_ROOTS) is not chronic therapy. A name no visit shows is kept as before.
+    let prescribedForChronic = false;
     const seen = visits.flatMap((visit) => {
       const medication = parseTherapyHistoryText(visit.terapi_obat).medications.find(
         (entry) => drugKey(entry.displayName) === key
       );
       // The signa (times a day x units a take), as the RME resep takes it; the strength is in the
       // name. A dose written as a strength ("1x10mg") is one unit a take.
+      if (medication && CHRONIC_ICD_ROOTS.includes((visit.diagnosa?.icd_x ?? '').trim().toUpperCase().slice(0, 3))) {
+        prescribedForChronic = true;
+      }
       if (medication && medication.frequencyPerDay > 0 && !regimen) {
         const perTake = medication.strengthUnit ? 1 : medication.amountPerTake;
         regimen = { dosis: `${medication.frequencyPerDay}x${perTake}`, aturanPakai: medication.aturanPakai };
@@ -184,7 +191,8 @@ export function buildChronicMedications(names: string[], visits: VisitRecord[]):
       if (entry.diagnosis) counts.set(entry.diagnosis, (counts.get(entry.diagnosis) ?? 0) + 1);
     }
     const indication = [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? '';
-    return { key, name, doseLine: seen[0]?.dose ?? '', indication, visits: seen, ...(regimen ? { regimen } : {}) };
+    if (seen.length > 0 && !prescribedForChronic) return [];
+    return [{ key, name, doseLine: seen[0]?.dose ?? '', indication, visits: seen, ...(regimen ? { regimen } : {}) }];
   });
 }
 
