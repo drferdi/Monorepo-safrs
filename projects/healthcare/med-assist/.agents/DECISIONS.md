@@ -3,6 +3,29 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-03 — Tren Tanda Vital is the lab spring playground
+
+- Decision (Chief: "Sekarang bagian clinical trajectory gunakan design berikut
+  https://lab.xevrion.dev/lab/spring-playground"; picked: the Tren TTV tab, motion "Setia ke
+  referensi", limits "Export dari engine (Recommended): satu kata `export` di file R3 (perlu
+  persetujuan Chief — memilih ini = menyetujui)", controls "Slider kunjungan + Play"): the chart
+  of `TrajectoryVitalSignsPanel` is `VitalPlayground`, drawn to the lab card's measured sizes
+  (outer surface radius 20 / padding 8, stage and controls radius 12 / padding 14, 40px ball and
+  rings, 36px pills, 4px slider track with a 16px thumb, labels 12px in sentence case). The ball
+  goes to the picked visit's value on the lab's Snappy spring (stiffness 500, damping 45, mass 1,
+  critically damped); the two dashed rings and dashed chart lines are the normal limits; the
+  marker is the picked visit; Nilai / Selisih / Batas / Perilaku replace the lab's four figures;
+  the vital pills replace its presets, Sistolik / Diastolik its Physics / Perceptual toggle (spring
+  thumb), one visit slider its three sliders; Play walks K1 to the last visit. The spring and the
+  lab's press scale stay inside this card. Left out: dragging the ball (a dragged value means
+  nothing clinically) and the lab's code block. Limits: `NORMAL_RANGES` of
+  `lib/iskandar-diagnosis-engine/trajectory-analyzer.ts` exported (R3, the one word Chief
+  approved); SpO2 has no engine limit and says so.
+- Evidence: tests red first (module missing), then 8 green; the first cut used side-panel
+  classes and Chief answered "KOK DESIGN NYA BEDA", so the card was redrawn from the lab's
+  computed styles. Harness `traj.html`: ball and toggle thumb sampled per frame, monotonic,
+  overshoot 0, settled in about 0.5 s (the lab states 0.51 s). Not yet seen in Chief's Chrome.
+
 ## 2026-10-03 — The daily breakdown on STATS is one sidebar sub-menu
 
 - Decision (Chief: "Halaman statistik, gunakan design berikut di salah satu section",

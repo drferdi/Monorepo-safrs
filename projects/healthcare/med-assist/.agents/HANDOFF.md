@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-10-03 (STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
+Last updated: 2026-10-03 (Trajectory Tren TTV as the lab spring playground; STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
 identity-free, CSV for pandas; a resep step says what went wrong, out of stock is a note without Ulangi; Terapi kronis drops acute-only medications; an out-of-stock medication is left out at once; header lights the page on screen, "Lanjutkan semua" for chronic therapy;
 chronic doses from the riwayat Resep table, no triad warning; the RME resep picks each medication from its ePuskesmas suggestion and
 presses Tambah once per row; 2026-10-01: the signa chosen from its suggestion, "3x sehari" as 3x1;
@@ -31,6 +31,14 @@ Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/z
   open title, its rows on a border-drawn branch; DPJP without the meter bars; colour-only change.
   Harness of this session: launch `stats-harness` (port 5180), `stats.html`, Diagnosis frame.
 
+- Trajectory Tren TTV (2026-10-03, Chief: lab spring-playground; "KOK DESIGN NYA BEDA" on the
+  first cut, then redrawn to the lab's measured sizes): `v2/VitalPlayground.tsx` inside
+  `TrajectoryVitalSignsPanel` (outer CHART frame and Hasil kept). Track: ball 40px on the lab's
+  Snappy spring (500/45, no overshoot) to the picked visit's value, two dashed rings at the
+  normal limits; SVG chart (K1..Kn, dashed limits, visit marker); Nilai / Selisih / Batas /
+  Perilaku; pills Tensi / Nadi / SpO2 / Napas / Suhu, Sistolik / Diastolik segmented toggle
+  (spring thumb), visit slider + Play (700 ms a step). Limits from the engine's `NORMAL_RANGES`
+  (R3 export, Chief approved); SpO2 has none. Harness `traj.html` (worsening fixture).
 - Steps: Temuan 1/5 · Diagnosis 2/5 · **RME Diagnosa 3/5** (page 1) | Tatalaksana 4/5 | **RME Terapi
   5/5** (`steps/RmeDiagnosisStep.tsx`, `diagnosisSteps.ts`, `DiagnosisStepFlow.tsx`). "Isi otomatis
   RME" is gone: "Isi diagnosis ke RME" after the pick, "Isi resep ke RME" + "Isi anamnesa ke RME"
@@ -76,6 +84,13 @@ Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/z
   `bhcffleclpadneocndhembhjbemimhkm`.
 
 ## Verification (final tree)
+
+2026-10-03 (Tren TTV playground): lint 1 only from `zz-verify-kb-rx.spec.ts` (other session) and
+the old `platform-api-client.test.ts` warning · typecheck 0 · test 0 (1560 passed, 17 skipped) ·
+dev build 0 · e2e 20 · `run:check` 0 · `run build` 0, last · style.css 317 added / 0 deleted
+since main. Red first (module missing), 8 new tests. Harness: ball and toggle thumb sampled per
+frame, monotonic, overshoot 0, settle about 0.5 s (the lab's 0.51 s). token-guard: no colour
+literal; radii on `--radius-chip` / `--radius-container`, 12px literal (no token).
 
 2026-10-03 (sidebar sub-menu): lint 1 only from `zz-verify-kb-rx.spec.ts` (other session) and the
 old `platform-api-client.test.ts` warning · typecheck 0 · test 0 (1552 passed, 17 skipped) · dev
@@ -147,6 +162,8 @@ Screenshots failed (Claude window hidden); checks were read from the DOM.
 
 ## Next action
 
+Chief looks at TRAJECTORY → Tren Tanda Vital. Open: the outer CHART frame and Hasil are kept
+around the lab card (shared `TrajectorySimplePanel`); the ball drag of the lab is left out.
 Chief looks at the STATS sub-menu (harness or the extension): closed-title contrast
 (`--ct-v2-text-soft`) and the dropped DPJP bars are my calls.
 STATS → Statistik Harian → "Muat statistik harian" for today (an ePuskesmas tab signed in), then

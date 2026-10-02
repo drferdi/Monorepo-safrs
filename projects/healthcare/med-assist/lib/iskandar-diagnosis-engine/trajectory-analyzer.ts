@@ -257,7 +257,7 @@ export interface TrajectoryAnalysis {
   confirmed_chronic_diagnoses: ConfirmedChronicDiagnosis[];
 }
 
-const NORMAL_RANGES = {
+export const NORMAL_RANGES = {
   sbp: { min: 90, max: 139, label: 'Tekanan Darah Sistolik', unit: 'mmHg' },
   dbp: { min: 60, max: 89, label: 'Tekanan Darah Diastolik', unit: 'mmHg' },
   hr: { min: 60, max: 100, label: 'Denyut Nadi', unit: 'x/mnt' },

@@ -10785,3 +10785,320 @@ details[open] .ct-audit-timeline__event:nth-child(n + 6) { animation-delay: 200m
   left: -12px;
   border-left: 1px solid var(--ct-v2-surface-border);
 }
+
+/* Tren Tanda Vital as the lab spring playground, drawn to the lab's own measurements: an outer
+   surface card (radius 20, padding 8, gap 8) holding a stage (track with the ball and the two
+   limit rings, the per-visit chart, four figures) and the controls (vital pills, the Sistolik /
+   Diastolik segmented toggle, the visit slider), both radius 12, padding 14. The ball and the
+   toggle thumb move on the lab's critically damped spring (VitalPlayground.tsx); the press scale
+   is the lab's. Nothing outside this card moves. */
+.ct-v2-vital-lab {
+  --vital-lab-surface: color-mix(in oklch, var(--text-main) 6%, var(--bg-body));
+  --vital-lab-muted: var(--ct-v2-text-soft);
+  --vital-lab-border: var(--ct-v2-surface-border);
+  --vital-lab-raised: 0 0 0 1px var(--ct-v2-surface-border),
+    0 1px 2px color-mix(in oklch, var(--bg-body) 40%, transparent),
+    0 6px 16px -6px color-mix(in oklch, var(--bg-body) 60%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  border-radius: var(--radius-container);
+  background: var(--vital-lab-surface);
+  box-shadow: var(--vital-lab-raised);
+  color: var(--text-main);
+}
+
+.ct-v2-vital-lab__stage,
+.ct-v2-vital-lab__controls {
+  padding: 14px;
+  border-radius: 12px;
+  background: var(--bg-body);
+}
+
+.ct-v2-vital-lab__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.ct-v2-vital-lab__hint {
+  min-width: 0;
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--vital-lab-muted);
+}
+
+.ct-v2-vital-lab__play {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 16px 0 12px;
+  border-radius: var(--radius-chip);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: var(--bg-body);
+  background: var(--text-main);
+  cursor: pointer;
+  transition: scale 150ms ease-out;
+}
+
+.ct-v2-vital-lab__play svg {
+  width: 16px;
+  height: 16px;
+  translate: 1px 0;
+}
+
+.ct-v2-vital-lab__play:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.ct-v2-vital-lab__track {
+  padding: 4px;
+  border-radius: var(--radius-chip);
+  background: var(--vital-lab-surface);
+}
+
+.ct-v2-vital-lab__rail {
+  position: relative;
+  height: 40px;
+}
+
+.ct-v2-vital-lab__ball,
+.ct-v2-vital-lab__ring {
+  position: absolute;
+  top: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-chip);
+}
+
+.ct-v2-vital-lab__ring {
+  border: 1px dashed color-mix(in oklch, var(--vital-lab-muted) 50%, transparent);
+}
+
+.ct-v2-vital-lab__ball {
+  background: var(--text-main);
+  box-shadow: var(--vital-lab-raised);
+}
+
+.ct-v2-vital-lab__figure-chart {
+  margin: 12px 0 0;
+}
+
+.ct-v2-vital-lab__chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.ct-v2-vital-lab__grid {
+  stroke: var(--vital-lab-border);
+}
+
+.ct-v2-vital-lab__limit {
+  stroke: var(--vital-lab-muted);
+}
+
+.ct-v2-vital-lab__marker {
+  stroke: color-mix(in oklch, var(--text-main) 50%, transparent);
+}
+
+.ct-v2-vital-lab__line {
+  stroke: var(--text-main);
+  stroke-width: 2;
+}
+
+.ct-v2-vital-lab__tick {
+  fill: var(--vital-lab-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ct-v2-vital-lab__tick--halo {
+  stroke: var(--bg-body);
+}
+
+.ct-v2-vital-lab__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 12px 0 0;
+}
+
+.ct-v2-vital-lab__stats dt {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--vital-lab-muted);
+}
+
+.ct-v2-vital-lab__stats dd {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-main);
+}
+
+.ct-v2-vital-lab__control-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ct-v2-vital-lab__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.ct-v2-vital-lab__pill {
+  height: 36px;
+  padding: 0 12px;
+  border-radius: var(--radius-chip);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 19.5px;
+  color: var(--vital-lab-muted);
+  background: transparent;
+  cursor: pointer;
+  transition: scale 150ms ease-out, color 150ms ease-out, background-color 150ms ease-out;
+}
+
+.ct-v2-vital-lab__pill[aria-checked='true'] {
+  color: var(--text-main);
+  background: var(--vital-lab-surface);
+}
+
+.ct-v2-vital-lab__toggle {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 36px;
+  padding: 4px;
+  border-radius: var(--radius-chip);
+  background: var(--vital-lab-surface);
+}
+
+.ct-v2-vital-lab__toggle-thumb {
+  position: absolute;
+  inset: 4px auto 4px 4px;
+  width: calc(50% - 4px);
+  border-radius: var(--radius-chip);
+  background: var(--bg-body);
+  box-shadow: var(--vital-lab-raised);
+}
+
+.ct-v2-vital-lab__toggle-option {
+  position: relative;
+  padding: 0 14px;
+  border-radius: var(--radius-chip);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--vital-lab-muted);
+  background: transparent;
+  cursor: pointer;
+  transition: color 150ms ease-out;
+}
+
+.ct-v2-vital-lab__toggle-option[aria-checked='true'] {
+  color: var(--text-main);
+}
+
+.ct-v2-vital-lab__play:active,
+.ct-v2-vital-lab__pill:active {
+  scale: 0.96;
+}
+
+.ct-v2-vital-lab__play:focus-visible,
+.ct-v2-vital-lab__pill:focus-visible,
+.ct-v2-vital-lab__toggle-option:focus-visible,
+.ct-v2-vital-lab__slider input:focus-visible {
+  outline: 2px solid var(--text-main);
+  outline-offset: 2px;
+}
+
+.ct-v2-vital-lab__note {
+  min-height: 40px;
+  margin-top: 8px;
+  padding: 0 4px;
+}
+
+.ct-v2-vital-lab__slider {
+  margin-top: 12px;
+}
+
+.ct-v2-vital-lab__slider-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.ct-v2-vital-lab__slider-head label {
+  font-weight: 500;
+}
+
+.ct-v2-vital-lab__slider-head output {
+  font-variant-numeric: tabular-nums;
+}
+
+.ct-v2-vital-lab__slider input[type='range'] {
+  width: 100%;
+  height: 32px;
+  margin: 0;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.ct-v2-vital-lab__slider input[type='range']::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: var(--radius-chip);
+  background: linear-gradient(
+    to right,
+    var(--text-main) var(--fill),
+    var(--vital-lab-border) var(--fill)
+  );
+}
+
+.ct-v2-vital-lab__slider input[type='range']::-webkit-slider-thumb {
+  width: 16px;
+  height: 16px;
+  margin-top: -6px;
+  appearance: none;
+  border-radius: var(--radius-chip);
+  background: var(--bg-body);
+  box-shadow: var(--vital-lab-raised);
+}
+
+.ct-v2-vital-lab__slider-hint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--vital-lab-muted);
+}
+
+/* The pills, toggle options and Play are the lab's borderless pills, never the global bordered
+   chip: wins over `.sentra-card button` / `.sidepanel-shell button`, as
+   `.statistic-accordion__trigger` does. */
+.sentra-card .ct-v2-vital-lab button,
+.sentra-card .ct-v2-vital-lab button:not(:hover):not(:focus-visible):not(.active),
+.sidepanel-shell .ct-v2-vital-lab button,
+.sidepanel-shell .ct-v2-vital-lab button:not(:hover):not(:focus-visible):not(.active) {
+  border: 0 !important;
+}
