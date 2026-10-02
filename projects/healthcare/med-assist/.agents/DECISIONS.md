@@ -3,6 +3,25 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-02 — A resep step says what went wrong; out of stock is a note, not a failure
+
+- Decision (Chief, screenshot of RME Terapi: "Step gagal tanpa klasifikasi spesifik" after a
+  medication was out of stock, "we need to solve this once and forever"): the handler's row error
+  ("[STOCK_INSUFFICIENT] <nama>: Obat tidak ada di daftar stok ePuskesmas") matched nothing in the
+  orchestrator's `classifyFailure`, so the step got `UNKNOWN_STEP_FAILURE` and the page showed that
+  code's label. Now `RESEP_OBAT_TIDAK_TERSEDIA` (checked first, not retried) covers "tidak ada di
+  daftar stok" and "stok tidak mencukupi"; the step message names every medication left out, the
+  runtime code prefix stripped. The page shows the step's own message for that code and for
+  `UNKNOWN_STEP_FAILURE` (any other unclassified handler error reads as itself), and drops the
+  "tanpa klasifikasi" label from Alasan and Rincian. A stock-only gap is a warning-toned note
+  without Ulangi: the handler's duplicate guard covers only the last committed row, so a second run
+  would add the medications already in the resep again.
+- Evidence: tests red first (orchestrator: two out-of-stock names and an unclassified message;
+  panel: warning tone, no Ulangi; Diagnosis surface: the note shows the step message, no "tanpa
+  klasifikasi", Ulangi only for the unclassified case), then green; no existing assertion changed.
+  Which message Chief's run carried is inferred from the screenshot (generic label, partial, 26 s),
+  not read; the general rule covers either case.
+
 ## 2026-10-02 — Terapi kronis leaves out medications only acute visits prescribed
 
 - Decision (Chief, looking at the side panel: "usulan 9 macam obat? sejak 2 kali modify ini obat jadi
