@@ -316,6 +316,29 @@ describe('RMETransferOrchestrator', () => {
     );
   });
 
+  // A real failure beside a stock gap must not hide under the out-of-stock note.
+  it('names a stock gap and a real failure together and keeps the real one as the reason', async () => {
+    const orchestrator = new RMETransferOrchestrator();
+    const resep = vi.fn(async () => ({
+      success: [{ field: 'obat_nama', value: 'Ambroxol', method: 'autocomplete' }],
+      failed: [
+        { field: 'obat_nama', error: '[STOCK_INSUFFICIENT] Vitamin B6: Obat tidak ada di daftar stok ePuskesmas' },
+        { field: 'signa', error: '[SIGNA_INVALID] Signa 3x1 gagal dipilih' },
+      ],
+      skipped: [],
+    }));
+
+    const result = await orchestrator.run(
+      samplePayload({ options: { onlyStep: 'resep', requestId: 'mixed' } }),
+      resep
+    );
+
+    expect(result.steps.resep.reasonCode).toBe('UNKNOWN_STEP_FAILURE');
+    expect(result.steps.resep.message).toBe(
+      'Vitamin B6: Obat tidak ada di daftar stok ePuskesmas; Signa 3x1 gagal dipilih'
+    );
+  });
+
   it('keeps the message of a failure it cannot classify, without the runtime code', async () => {
     const orchestrator = new RMETransferOrchestrator();
     const resep = vi.fn(async () => ({

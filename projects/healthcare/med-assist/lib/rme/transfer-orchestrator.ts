@@ -287,13 +287,14 @@ function withoutRuntimeCode(message: string): string {
   return message.replace(/^\[[A-Z_]+\]\s*/, '');
 }
 
-// Every medication left out for stock is named, not only the first.
+// Every failure is named, each medication left out for stock included.
 function describeStepFailure(errors: string[], fallback: string): string {
-  const outOfStock = errors.filter(isOutOfStockMessage);
-  if (outOfStock.length > 0 && outOfStock.length === errors.length) {
-    return outOfStock.map(withoutRuntimeCode).join('; ');
-  }
-  return withoutRuntimeCode(errors[0] || fallback);
+  return errors.length > 0 ? errors.map(withoutRuntimeCode).join('; ') : fallback;
+}
+
+// A real failure beside a stock gap keeps its own reason (and Ulangi).
+function classifyStepFailure(errors: string[], fallback: string): ReturnType<typeof classifyFailure> {
+  return classifyFailure(errors.find((error) => !isOutOfStockMessage(error)) ?? errors[0] ?? fallback);
 }
 
 function classifyFailure(message: string): {
@@ -597,7 +598,7 @@ export class RMETransferOrchestrator {
 
           if (normalized.successCount > 0 && normalized.failedCount > 0) {
             const message = describeStepFailure(normalized.errors, 'Sebagian field gagal diisi');
-            const classified = classifyFailure(message);
+            const classified = classifyStepFailure(normalized.errors, message);
             stepResult = {
               step,
               state: 'partial',
@@ -636,7 +637,7 @@ export class RMETransferOrchestrator {
           }
 
           lastError = describeStepFailure(normalized.errors, 'Step gagal tanpa detail');
-          const classified = classifyFailure(lastError);
+          const classified = classifyStepFailure(normalized.errors, lastError);
           reasonCodes.add(classified.reasonCode);
           const exhausted = attempt > maxRetries;
           if (exhausted) {
