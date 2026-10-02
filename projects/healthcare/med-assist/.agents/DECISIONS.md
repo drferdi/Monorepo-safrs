@@ -3,6 +3,32 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-02 — Statistik Harian reads the ePuskesmas daily service report, identity-free
+
+- Decision (Chief: "konsentrasi halaman baru yaitu statistic ... daily statistic yang mengambil
+  data dari RME, buat agar mudah memprosesnya, misal menggunakan python"; source chosen:
+  "Halaman laporan ePuskesmas"; approach chosen: "A. TS + CSV"): the STATS page opens with
+  "Statistik Harian". "Muat statistik harian" opens `/laporanpelayananpasien` for the picked date in
+  a hidden tab (the full GET filter set the page's own "Tampilkan" submits; only the two date
+  fields gave "Data tidak ditemukan" live), the content script reads columns by header text (a
+  grid over colspan/rowspan, SOAP spans four) and keeps only tanggal, jenis kelamin, umur tahun,
+  jenis kunjungan, poli, asuransi, DPJP, diagnosa 1-5 with ICD and jenis kasus, and the three
+  service times in minutes. Name, NIK, KK, eRM, phone, address, parents, SOAP, complaint, therapy
+  and prescription never leave the page. A missing required header fails with its name. Counts are
+  made in TypeScript (`lib/statistics/daily-statistics.ts`): services, sex, new/old visits, new
+  cases of the primary diagnosis, the 10 largest ICD codes over all diagnoses, services per DPJP,
+  poli, payer, age band, median service times. Rows are kept per date (`sentra:statistic:daily`,
+  latest 31 days) for the change from the day before; "Unduh CSV" writes one wide row per service
+  for `pandas.read_csv`. Python stays Chief's tool, not a runtime dependency. The shift overview
+  below it is unchanged.
+- Evidence: the live report was read for structure only (headers, value shapes masked to a/9,
+  category labels, counts: 136 rows, 81 cells, one page). Tests red first (modules missing, the
+  section without the daily panel, the e2e scan "message port closed"), then green; the panel test
+  caught a race (the store read overwrote a just-loaded day). Playwright cannot route the first
+  navigation of a tab the extension creates (it reached the live login/Cloudflare page), so the e2e
+  scans the synthetic report in a page it opens; the hidden-tab path is the one the shift overview
+  already uses. Not yet seen: a live "Muat statistik harian" in Chief's Chrome.
+
 ## 2026-10-02 — A real failure beside a stock gap keeps its own reason
 
 - Decision: when a resep step has an out-of-stock medication and another failure (a signa not

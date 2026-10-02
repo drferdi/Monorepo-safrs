@@ -381,6 +381,7 @@ side panel ──getSuggestions──► background.ts:1728 ──► run-diagno
 | OpenAI key and settings                           | `sentra:openai:config`                                                                                                    | until changed                       |
 | Audit logs                                        | `local:sentra_audit_log` (1000 entries), `sentra:cdss:audit` (1000), `sentra:clinical-reasoning:workflow-audit` (100)     | rolling                             |
 | Caches                                            | `sentra:tenaga-medis-cache`, `sentra:statistic:shift-overview`, `das:cache:*`                                             | varies                              |
+| Daily statistic (service rows without identity)   | `sentra:statistic:daily` (sex, age, poli, payer, DPJP, diagnoses, service minutes)                                        | latest 31 days                      |
 | Panel preferences (page storage)                  | `med-assist:settings`, `med-assist:workspaceUrl`, `med-assist-theme`                                                      | permanent                           |
 | Local databases (IndexedDB)                       | `sentra-icd10-rag`, `DASLearningStore`, `sentra-visit-history`                                                            | permanent                           |
 

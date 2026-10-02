@@ -1,6 +1,7 @@
 # HANDOFF
 
-Last updated: 2026-10-02 (a resep step says what went wrong, out of stock is a note without Ulangi; Terapi kronis drops acute-only medications; an out-of-stock medication is left out at once; header lights the page on screen, "Lanjutkan semua" for chronic therapy;
+Last updated: 2026-10-02 (STATS opens with Statistik Harian from the ePuskesmas daily service report,
+identity-free, CSV for pandas; a resep step says what went wrong, out of stock is a note without Ulangi; Terapi kronis drops acute-only medications; an out-of-stock medication is left out at once; header lights the page on screen, "Lanjutkan semua" for chronic therapy;
 chronic doses from the riwayat Resep table, no triad warning; the RME resep picks each medication from its ePuskesmas suggestion and
 presses Tambah once per row; 2026-10-01: the signa chosen from its suggestion, "3x sehari" as 3x1;
 2026-09-30: the BP algorithm on the last visit; visit-form labels no longer chronic medications)
@@ -12,7 +13,15 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 
 Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-30 (two entries) and
 2026-09-29 hold the details. `main` is at f9af31e4 (Chief merged through the Terapi kronis filter).
-uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/zz-verify-kb-rx.spec.ts` (lint red).
+Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/zz-verify-kb-rx.spec.ts` (lint red).
+
+- Statistik Harian (2026-10-02, Chief "konsentrasi halaman baru yaitu statistic"): first block of the
+  STATS page (`DailyStatisticPanel.tsx` inside `StatisticSection.tsx`). Date picker + "Muat statistik
+  harian" → background `collectDailyStatistics` opens `/laporanpelayananpasien` (all GET filters,
+  `buildDailyReportUrl`) in a hidden tab; content `scanDailyServiceReport` reads by header text and
+  keeps only identity-free columns (`lib/statistics/daily-report.ts`); counts in
+  `daily-statistics.ts`; days in `sentra:statistic:daily` (31); "Unduh CSV" (`daily-csv.ts`) for
+  pandas. Harness: `stats.html` (two synthetic days, 136 and 121 rows).
 
 - Steps: Temuan 1/5 · Diagnosis 2/5 · **RME Diagnosa 3/5** (page 1) | Tatalaksana 4/5 | **RME Terapi
   5/5** (`steps/RmeDiagnosisStep.tsx`, `diagnosisSteps.ts`, `DiagnosisStepFlow.tsx`). "Isi otomatis
@@ -60,6 +69,11 @@ uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/zz-verify-kb-rx.spe
 
 ## Verification (final tree)
 
+2026-10-02 (Statistik Harian): typecheck 0 · test 0 (1545 passed, 17 skipped; contract list +2
+names) · dev build 0 · e2e 20 (incl. the daily report scan and the other session's
+`zz-verify-kb-rx.spec.ts`) · `run:check` 0 · `run build` 0, last · full lint 1 (only
+`zz-verify-kb-rx.spec.ts`; my files 0).
+
 2026-10-02 (transfer message, incl. mixed failures): eslint touched 0 · typecheck 0 · test 0 (1528
 passed, 17 skipped) · dev build 0 · e2e 19 (18 own + the other session's `zz-verify-kb-rx.spec.ts`) ·
 `run build` 0, last · `run:check` 0 · full lint 1 (only `zz-verify-kb-rx.spec.ts`).
@@ -80,6 +94,11 @@ RME Diagnosa → "terkirim" → Tatalaksana; Amlodipin continued; RME Terapi wit
 Screenshots failed (Claude window hidden); checks were read from the DOM.
 
 ## Open for Chief
+
+0. Statistik Harian live: "Muat statistik harian" in Chief's Chrome not yet seen (Playwright cannot
+   route the hidden tab's first navigation). Rows are services, not distinct patients (no identity
+   kept to deduplicate). Age bands 0-4/5-14/15-44/45-59/≥60 and "10 besar over all diagnoses" are
+   my defaults.
 
 1. Live ePuskesmas test of each fill on its own page. Claude in Chrome is connected but reaches
    only its own tab (Chief gave the resep URL once); a full fill was not run on his form.
@@ -107,6 +126,7 @@ Screenshots failed (Claude window hidden); checks were read from the DOM.
 
 ## Next action
 
-Chief reloads "Asisten Medis" and walks one case: pick diagnosis → Isi diagnosis ke RME (ePuskesmas
+STATS → Statistik Harian → "Muat statistik harian" for today (an ePuskesmas tab signed in), then
+"Unduh CSV". Still pending from before: Chief reloads "Asisten Medis" and walks one case: pick diagnosis → Isi diagnosis ke RME (ePuskesmas
 Diagnosa page open) → Tatalaksana, tick a chronic card → Selesai → Isi resep ke RME (Resep page) →
 Isi anamnesa ke RME (Anamnesa page).
