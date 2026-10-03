@@ -13,6 +13,9 @@ const createEmptyEncounter = vi.fn();
 const parseAnamnesaData = vi.fn();
 const syncPatientToDashboard = vi.fn();
 const requestBridgePoll = vi.fn();
+const tabsQuery = vi.fn();
+const tabsGet = vi.fn();
+const executeScript = vi.fn();
 
 vi.mock('@/lib/api/auth-store', () => ({
   AUTH_STORE_KEYS: {
@@ -170,9 +173,10 @@ describe('background pageReady execScrape relay', () => {
     syncPatientToDashboard.mockResolvedValue({ ok: true, id: 'sync-1' });
 
     vi.stubGlobal('defineBackground', (main: unknown) => main);
+    tabsQuery.mockResolvedValue([]);
     vi.stubGlobal('chrome', {
       scripting: {
-        executeScript: vi.fn(),
+        executeScript,
       },
     });
     vi.stubGlobal('browser', {
@@ -193,8 +197,8 @@ describe('background pageReady execScrape relay', () => {
         },
       },
       tabs: {
-        query: vi.fn().mockResolvedValue([]),
-        get: vi.fn(),
+        query: tabsQuery,
+        get: tabsGet,
       },
     });
   });
@@ -246,5 +250,50 @@ describe('background pageReady execScrape relay', () => {
         alergi: { obat: [], makanan: [], udara: [], lainnya: [] },
       },
     });
+  });
+
+  // A panel message sent through the typed layer ({ id, type, data, timestamp }) used to be answered
+  // by a second, raw listener too; whichever replied first won, and its reply had no { res } wrapper.
+  it.each(['scanFields', 'scanMedicalHistory', 'scanClinicalContext', 'fillAnamnesa'])(
+    'answers a typed %s message from its typed handler only',
+    async (type) => {
+      const backgroundMain = (await import('../../entrypoints/background'))
+        .default as unknown as () => void;
+      backgroundMain();
+
+      const rawListeners = vi
+        .mocked(browser.runtime.onMessage.addListener)
+        .mock.calls.map(([listener]) => listener);
+      const sendResponse = vi.fn();
+      const claimed = rawListeners.map((listener) =>
+        listener({ id: 1, type, data: undefined, timestamp: Date.now() }, {}, sendResponse)
+      );
+
+      expect(registeredHandlers.has(type)).toBe(true);
+      // A listener that returns true keeps the channel open to answer.
+      expect(claimed).not.toContain(true);
+      expect(sendResponse).not.toHaveBeenCalled();
+    }
+  );
+
+  // The content scripts read and fill patient records; a scan whose fallback picked another site's
+  // tab must not inject them there.
+  it.each([
+    ['https://example.org/news', 0],
+    ['https://kotakediri.epuskesmas.id/anamnesa/create/82594', 2],
+  ])('re-injects the content scripts only into ePuskesmas (%s)', async (url, injections) => {
+    const messaging = await import('~/utils/messaging');
+    vi.mocked(messaging.classifyTabMessageError).mockReturnValue('NO_RECEIVER');
+    sendMessageToTabWithTimeout.mockRejectedValue(new Error('Receiving end does not exist'));
+    const tab = { id: 9, active: true, url };
+    tabsQuery.mockResolvedValue([tab]);
+    tabsGet.mockResolvedValue(tab);
+    const backgroundMain = (await import('../../entrypoints/background'))
+      .default as unknown as () => void;
+    backgroundMain();
+
+    await registeredHandlers.get('scanMedicalHistory')!({ data: undefined });
+
+    expect(executeScript).toHaveBeenCalledTimes(injections);
   });
 });

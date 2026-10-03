@@ -724,6 +724,16 @@ function getSidePanel(): SidePanelAPI | undefined {
   return chromeGlobal?.sidePanel || browserGlobal?.sidePanel;
 }
 
+function isEpuskesmasTabUrl(url: string | undefined): boolean {
+  if (!url) return false;
+  try {
+    const { hostname } = new URL(url);
+    return hostname === 'epuskesmas.id' || hostname.endsWith('.epuskesmas.id');
+  } catch {
+    return false;
+  }
+}
+
 async function tryInjectContentScripts(
   tabId: number,
   diag?: (msg: string) => void
@@ -731,6 +741,13 @@ async function tryInjectContentScripts(
   const chromeGlobal = (globalThis as { chrome?: BrowserGlobalWithSidePanel }).chrome;
   if (!chromeGlobal?.scripting?.executeScript) {
     diag?.('INJECT_SKIP: chrome.scripting unavailable');
+    return false;
+  }
+  // The scripts read and fill patient records; they never go into a tab that is not ePuskesmas
+  // (the active-tab fallbacks can pick any tab the clinician is on).
+  const tab = await browser.tabs.get(tabId).catch(() => null);
+  if (!isEpuskesmasTabUrl(tab?.url)) {
+    diag?.('INJECT_SKIP: not an ePuskesmas tab');
     return false;
   }
 
@@ -2453,222 +2470,12 @@ export default defineBackground(() => {
   // NATIVE MESSAGE LISTENER (for sidepanel native chrome.runtime.sendMessage)
   // ========================================
   browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    const msg = message as { type?: string; data?: unknown };
+    const msg = message as { type?: string };
     bgLog.debug('Native message received:', msg.type, 'from:', sender.url);
 
-    // Handle scanFields
-    if (msg.type === 'scanFields') {
-      (async () => {
-        const tabs = await browser.tabs.query({ active: true, currentWindow: true });
-        const tabId = tabs[0]?.id;
-        if (!tabId) {
-          sendResponse({ success: false, error: 'No active tab', fields: [] });
-          return;
-        }
-        try {
-          const result = await sendMessageToTabWithTimeout<ScanFieldsResponse>(
-            tabId,
-            { type: 'scanFields' },
-            MESSAGE_TIMEOUTS.scrape
-          );
-          sendResponse(result);
-        } catch (error) {
-          sendResponse({
-            success: false,
-            error: toTabCommunicationError(
-              error,
-              error instanceof Error ? error.message : String(error)
-            ),
-            fields: [],
-          });
-        }
-      })();
-      return true; // Keep channel open for async
-    }
-
-    // Handle scanMedicalHistory
-    if (msg.type === 'scanMedicalHistory') {
-      (async () => {
-        bgLog.debug('scanMedicalHistory received');
-
-        // Try multiple strategies to find ePuskesmas tab
-        let tabId: number | undefined;
-
-        // Strategy 1: Active tab in current window
-        const activeTabs = await browser.tabs.query({ active: true, currentWindow: true });
-        if (activeTabs[0]?.url?.includes('epuskesmas.id')) {
-          tabId = activeTabs[0].id;
-          bgLog.debug('Found ePuskesmas in active tab:', tabId);
-        }
-
-        // Strategy 2: Search all tabs for ePuskesmas
-        if (!tabId) {
-          const allTabs = await browser.tabs.query({ url: '*://*.epuskesmas.id/*' });
-          if (allTabs[0]?.id) {
-            tabId = allTabs[0].id;
-            bgLog.debug('Found ePuskesmas tab by URL:', tabId);
-          }
-        }
-
-        // Strategy 3: Fall back to any active tab
-        if (!tabId && activeTabs[0]?.id) {
-          tabId = activeTabs[0].id;
-          bgLog.debug('Fallback to active tab:', tabId);
-        }
-
-        if (!tabId) {
-          bgLog.error('No ePuskesmas tab found');
-          sendResponse({ success: false, error: 'No ePuskesmas tab found', history: [] });
-          return;
-        }
-
-        try {
-          bgLog.debug('Sending scanMedicalHistory to tab:', tabId);
-          const result = await sendMessageToTabWithTimeout<ScanMedicalHistoryResponse>(
-            tabId,
-            { type: 'scanMedicalHistory', timestamp: Date.now() },
-            MESSAGE_TIMEOUTS.scrape
-          );
-          bgLog.debug('scanMedicalHistory result:', result);
-          sendResponse(result);
-        } catch (error) {
-          if (classifyTabMessageError(error) === 'NO_RECEIVER') {
-            const injected = await tryInjectContentScripts(tabId);
-            if (injected) {
-              try {
-                const retry = await sendMessageToTabWithTimeout<ScanMedicalHistoryResponse>(
-                  tabId,
-                  { type: 'scanMedicalHistory', timestamp: Date.now() },
-                  MESSAGE_TIMEOUTS.scrape
-                );
-                bgLog.debug('scanMedicalHistory retry result:', retry);
-                sendResponse(retry);
-                return;
-              } catch (retryError) {
-                bgLog.error('scanMedicalHistory retry failed:', retryError);
-              }
-            }
-          }
-
-          bgLog.error('scanMedicalHistory failed:', error);
-          sendResponse({
-            success: false,
-            error: toTabCommunicationError(
-              error,
-              error instanceof Error ? error.message : String(error)
-            ),
-            history: [],
-          });
-        }
-      })();
-      return true; // Keep channel open for async
-    }
-
-    // Handle scanClinicalContext
-    if (msg.type === 'scanClinicalContext') {
-      (async () => {
-        bgLog.debug('scanClinicalContext received');
-
-        let tabId: number | undefined;
-        const activeTabs = await browser.tabs.query({ active: true, currentWindow: true });
-
-        if (activeTabs[0]?.url?.includes('epuskesmas.id')) {
-          tabId = activeTabs[0].id;
-          bgLog.debug('Found ePuskesmas in active tab for clinical context:', tabId);
-        }
-
-        if (!tabId) {
-          const allTabs = await browser.tabs.query({ url: '*://*.epuskesmas.id/*' });
-          if (allTabs[0]?.id) {
-            tabId = allTabs[0].id;
-            bgLog.debug('Found ePuskesmas tab by URL for clinical context:', tabId);
-          }
-        }
-
-        if (!tabId && activeTabs[0]?.id) {
-          tabId = activeTabs[0].id;
-          bgLog.debug('Fallback to active tab for clinical context:', tabId);
-        }
-
-        if (!tabId) {
-          bgLog.error('No ePuskesmas tab found for clinical context');
-          sendResponse({ success: false, error: 'No ePuskesmas tab found', context: undefined });
-          return;
-        }
-
-        try {
-          bgLog.debug('Sending scanClinicalContext to tab:', tabId);
-          const result = await sendMessageToTabWithTimeout<ScanClinicalContextResponse>(
-            tabId,
-            { type: 'scanClinicalContext', timestamp: Date.now() },
-            MESSAGE_TIMEOUTS.scrape
-          );
-          bgLog.debug('scanClinicalContext result:', result);
-          sendResponse(result);
-        } catch (error) {
-          bgLog.error('scanClinicalContext failed:', error);
-          sendResponse({
-            success: false,
-            error: toTabCommunicationError(
-              error,
-              error instanceof Error ? error.message : String(error)
-            ),
-            context: undefined,
-          });
-        }
-      })();
-      return true; // Keep channel open for async
-    }
-
-    // Handle fillAnamnesa
-    if (msg.type === 'fillAnamnesa') {
-      (async () => {
-        bgLog.debug('Native fillAnamnesa request received');
-        bgLog.debug('Native fillAnamnesa request:', msg.data);
-        const tabs = await browser.tabs.query({ active: true, currentWindow: true });
-        const tabId = tabs[0]?.id;
-        bgLog.debug('Active tab ID:', tabId);
-        if (!tabId) {
-          bgLog.warn('No active tab found for native fillAnamnesa');
-          sendResponse({
-            success: [],
-            failed: [{ field: 'all', error: 'No active tab' }],
-            skipped: [],
-          });
-          return;
-        }
-        try {
-          bgLog.debug('Forwarding native execFill to tab', tabId);
-          const result = await sendMessageToTabWithTimeout<FillResult>(
-            tabId,
-            {
-              type: 'execFill',
-              data: { type: 'anamnesa', encounter: msg.data },
-            },
-            MESSAGE_TIMEOUTS.fill
-          );
-          bgLog.debug('Native content response:', result);
-          bgLog.debug('Native fillAnamnesa result:', result);
-          sendResponse(result);
-        } catch (error) {
-          bgLog.error('Native fillAnamnesa failed:', error);
-          sendResponse({
-            success: [],
-            failed: [
-              {
-                field: 'all',
-                error: toTabCommunicationError(
-                  error,
-                  error instanceof Error ? error.message : String(error)
-                ),
-              },
-            ],
-            skipped: [],
-          });
-        }
-      })();
-      return true; // Keep channel open for async
-    }
+    // scanFields, scanMedicalHistory, scanClinicalContext and fillAnamnesa are answered by their
+    // typed onMessage handlers only. A typed message carries `type` too, so a branch here answered
+    // it a second time, raced the typed reply and could hand the panel an unwrapped result.
 
     // Handle triggerRiwayatClick — calls showRiwayatPelayanan() in page's MAIN world
     // Content script cannot call page functions due to isolated world + CSP blocking
