@@ -5,6 +5,7 @@ import {
   buildChronicMedications,
   buildSafetyNet,
   chronicContinuation,
+  drugKey,
   explainInteraction,
   formatDose,
   interactionsFor,
@@ -18,6 +19,8 @@ import {
 import type { DiseaseNote } from './useDiseaseNotes';
 
 import type { VisitRecord } from '@/lib/iskandar-diagnosis-engine/visit-history-store';
+import { MEDICATION_NAME_SYNONYMS } from '@/lib/rme/payload-mapper';
+import stockDatabase from '@/public/data/stok_obat.json';
 import type { DrugInteraction } from '@/types/api';
 
 const visit = (timestamp: string, terapi: string, diagnosis: string): VisitRecord => ({
@@ -104,6 +107,48 @@ describe('buildChronicMedications', () => {
     expect(amlodipin.regimen).toEqual({ dosis: '1x1', aturanPakai: 'Sesudah makan' });
   });
 
+  // Chief, 2026-10-04 ("NAC dan CTM tidak ada dosis"): the asthma visit wrote "NAC, CTM" while the
+  // ISPA visits wrote "N-asetilsistein kapsul 200 mg 2x1"; the abbreviation was a card of its own.
+  it('reads an abbreviation and the full name as one medication, with the dose a visit wrote', () => {
+    const asma: VisitRecord = {
+      ...visit('2026-09-20T08:00:00Z', 'NAC, CTM', 'Asma'),
+      diagnosa: { icd_x: 'J45.9', nama: 'Asthma, unspecified' },
+    };
+    const ispa: VisitRecord = {
+      ...visit('2026-09-01T08:00:00Z', 'N-asetilsistein kapsul 200 mg 2x1 Sesudah Makan', 'ISPA'),
+      diagnosa: { icd_x: 'J06.9', nama: 'Acute upper respiratory infection, unspecified' },
+    };
+
+    const chronic = buildChronicMedications(
+      ['NAC', 'CTM', 'N-Asetilsistein Kapsul 200 Mg'],
+      [asma, ispa]
+    );
+
+    expect(chronic.map((medication) => medication.name)).toEqual([
+      'N-Asetilsistein Kapsul 200 Mg',
+      'CTM',
+    ]);
+    expect(chronic[0].doseLine).toBe('2x200mg · Sesudah makan');
+    expect(chronic[0].regimen).toEqual({ dosis: '2x1', aturanPakai: 'Sesudah makan' });
+    expect(chronic[0].visits).toHaveLength(2);
+  });
+
+  it('tells the strength the visit wrote when the card name has none', () => {
+    const [ctm] = buildChronicMedications(
+      ['CTM'],
+      [
+        visit(
+          '2026-09-10T08:00:00Z',
+          'Klorfeniramin Maleat ( CTM ) tablet 4 mg 3X1 Sesudah Makan',
+          'Hipertensi esensial'
+        ),
+      ]
+    );
+
+    expect(ctm.doseLine).toBe('3x4mg · Sesudah makan');
+    expect(ctm.regimen).toEqual({ dosis: '3x1', aturanPakai: 'Sesudah makan' });
+  });
+
   it('continues half a tablet as the visit wrote it', () => {
     const [captopril] = buildChronicMedications(
       ['Captopril'],
@@ -188,6 +233,24 @@ describe('reviewSafety', () => {
     expect(review(['Amlodipin tablet 10 mg', 'BLUD Amlodipin tablet 5 mg'])).toEqual(['Amlodipin tablet 10 mg + BLUD Amlodipin tablet 5 mg']);
     expect(review(['Paracetamol 500 mg', 'Parasetamol tablet 500 mg'])).toEqual(['Paracetamol 500 mg + Parasetamol tablet 500 mg']);
     expect(review(['Amoxicillin 500 mg', 'Amoksisilin kapsul 500 mg'])).toEqual(['Amoxicillin 500 mg + Amoksisilin kapsul 500 mg']);
+    expect(review(['NAC', 'N-asetilsistein kapsul 200 mg'])).toEqual([
+      'NAC + N-asetilsistein kapsul 200 mg',
+    ]);
+  });
+
+  // The names the RME resep already reads as one drug (its synonym table) are one drug here too:
+  // every abbreviation or English name there meets the Puskesmas stock medicine it stands for.
+  it('reads every name of the RME synonym table as the stock medicine it stands for', () => {
+    const stockNames = stockDatabase.stok_obat.map((item) => item.nama_obat);
+    const met = Object.entries(MEDICATION_NAME_SYNONYMS).flatMap(([alias, canonical]) => {
+      const medicine = stockNames.find((name) => drugKey(name) === drugKey(canonical));
+      return medicine ? [[alias, medicine]] : [];
+    });
+    expect(met.length).toBeGreaterThan(30);
+    expect(met.filter(([alias, medicine]) => drugKey(alias) !== drugKey(medicine))).toEqual([]);
+    expect(drugKey('CTM')).toBe(drugKey('Klorfeniramin Maleat ( CTM ) tablet 4 mg'));
+    expect(drugKey('NAC')).toBe(drugKey('N-asetilsistein kapsul 200 mg'));
+    expect(drugKey('PCT')).toBe(drugKey('Parasetamol tablet 500 mg'));
   });
 
   // Audit 2026-09-29: an allergy written the English way missed the Indonesian stock name.

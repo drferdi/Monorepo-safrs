@@ -103,7 +103,7 @@ const ATURAN_PAKAI_MAP: Record<string, AturanPakai> = {
   'saat makan': '5',
 };
 
-const MEDICATION_NAME_SYNONYMS: Record<string, string> = {
+export const MEDICATION_NAME_SYNONYMS: Record<string, string> = {
   amoxicillin: 'amoksisilin',
   amoksisilin: 'amoksisilin',
   ampicillin: 'ampisilin',

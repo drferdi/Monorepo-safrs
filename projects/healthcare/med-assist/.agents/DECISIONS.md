@@ -3,6 +3,23 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-04 — One drug, one chronic card: abbreviations read through the RME synonym table
+
+- Decision (Chief: "NAC dan CTM tidak ada dosis", "pastikan bukan hardcode"): `drugKey` reads a
+  name through the RME resep's own synonym table (`MEDICATION_NAME_SYNONYMS` in
+  `lib/rme/payload-mapper.ts`, now exported, behaviour unchanged) after dropping parentheses and
+  hyphens, so "NAC" = "N-asetilsistein kapsul 200 mg", "CTM" = "Klorfeniramin Maleat ( CTM )",
+  "PCT" = parasetamol, and no second alias list exists. `buildChronicMedications` merges names of
+  one drug into one card under the name that tells the strength, else the longest; its dose is the
+  latest visit's signa across every name. A card name without a strength takes it from the name the
+  visit wrote ("CTM" + "... tablet 4 mg 3X1" → 3x4mg). Duplicate checks see NAC + N-asetilsistein.
+- Still no dose when no visit, under any name, wrote a signa (the 2026-10-02 "Pengisian dosis
+  salah" rule stands). A reference standard dose for those cards waits for Chief: it would reverse
+  that rule and reach the resep.
+- Evidence: 3 tests red on the old code (merge, duplicate, synonym coverage), 1 more for the
+  strength; the coverage test walks every synonym pair whose drug is in stock (more than 30) and
+  finds no mismatch. Harness `tatalaksana.html`: one N-Asetilsistein card 2x200mg, CTM 3x4mg.
+
 ## 2026-10-04 — No "Signa tidak tercatat": every riwayat signa form is read; halves stay halves
 
 - Decision (Chief: "Saya gak mau ada signa tidak tercatat"): the history parser (`lib/clinical`,

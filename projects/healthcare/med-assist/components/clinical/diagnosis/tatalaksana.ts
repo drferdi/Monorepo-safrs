@@ -4,7 +4,7 @@ import { checkMockDDI } from '@/lib/api/mocks/ddi-mock';
 import { parseTherapyHistoryText } from '@/lib/clinical/chronic-therapy-history';
 import { CHRONIC_ICD_ROOTS } from '@/lib/clinical/recurrent-diagnosis';
 import type { VisitRecord } from '@/lib/iskandar-diagnosis-engine/visit-history-store';
-import { classifyRole, type TriadRole } from '@/lib/rme/payload-mapper';
+import { classifyRole, MEDICATION_NAME_SYNONYMS, type TriadRole } from '@/lib/rme/payload-mapper';
 import stockDatabase from '@/public/data/stok_obat.json';
 import type { AturanPakaiText, DrugInteraction, MedicationRecommendation } from '@/types/api';
 
@@ -122,13 +122,21 @@ const spell = (word: string): string =>
         .replace(/(.)\1+/g, '$1')
         .replace(/e$/, '');
 
+// The RME resep's own synonym table: abbreviations and English names to the stock name (NAC,
+// CTM, PCT, acetaminophen), so a drug is one drug on the card and in the resep alike.
+const SYNONYMS = Object.entries(MEDICATION_NAME_SYNONYMS).map(
+  ([alias, canonical]) => [new RegExp(`\\b${alias}\\b`, 'g'), canonical] as const
+);
+
 /**
  * The generic name: the words before the form or strength, spelled one way ("BLUD Amlodipin tablet
- * 5 mg" = "Amlodipine 10mg" = amlodipin; "Asam mefenamat" ≠ "Asam folat"). Audit 2026-09-29: the
- * first word alone made every "Asam …" and "Vitamin …" one drug.
+ * 5 mg" = "Amlodipine 10mg" = amlodipin; "Asam mefenamat" ≠ "Asam folat"; "NAC" = "N-asetilsistein").
+ * Audit 2026-09-29: the first word alone made every "Asam …" and "Vitamin …" one drug.
  */
 export function drugKey(name: string): string {
-  const words = name.toLowerCase().replace(/\(.*?\)/g, ' ').split(/[\s/]+/).filter(Boolean);
+  let text = name.toLowerCase().replace(/\(.*?\)/g, ' ').replace(/-/g, ' ');
+  for (const [alias, canonical] of SYNONYMS) text = text.replace(alias, canonical);
+  const words = text.split(/[\s/]+/).filter(Boolean);
   const generic: string[] = [];
   for (const word of words) {
     if (/^\d/.test(word)) break;
@@ -151,11 +159,23 @@ export function sameDrugIn(name: string, plan: string[], inPlan: boolean): strin
 /**
  * The chronic medications named by the visit history, each with its latest dose and the diagnosis
  * the visits that prescribed it recorded most often. `visits` is newest first, as the store
- * returns it. Nothing is inferred beyond those visits.
+ * returns it. Nothing is inferred beyond those visits. Names of one drug ("NAC", "N-Asetilsistein
+ * Kapsul 200 Mg") are one card, under the name that tells the strength, else the longest.
  */
 export function buildChronicMedications(names: string[], visits: VisitRecord[]): ChronicMedicationView[] {
-  return names.flatMap((name) => {
-    const key = drugKey(name);
+  const byKey = new Map<string, string>();
+  for (const name of names) {
+    const held = byKey.get(drugKey(name));
+    const tells = (value: string) => Number(Boolean(strengthOf(value)));
+    if (
+      !held ||
+      tells(name) - tells(held) > 0 ||
+      (tells(name) === tells(held) && name.length > held.length)
+    ) {
+      byKey.set(drugKey(name), name);
+    }
+  }
+  return [...byKey].flatMap(([key, name]) => {
     let regimen: ChronicMedicationView['regimen'];
     // Chief, 2026-10-02 ("masa 9 macam obat?"): a medication only acute visits prescribed (no ICD
     // root in CHRONIC_ICD_ROOTS) is not chronic therapy. A name no visit shows is kept as before.
@@ -181,8 +201,13 @@ export function buildChronicMedications(names: string[], visits: VisitRecord[]):
               date: visit.timestamp,
               // A visit without a signa tells only its date and diagnosis (Chief, 2026-10-04:
               // "Saya gak mau ada signa tidak tercatat").
+              // The strength from the card's name, else from the name the visit wrote ("CTM" and
+              // "Klorfeniramin Maleat ( CTM ) tablet 4 mg 3X1": 3x4mg).
               dose: medication.doseLabel
-                ? `${formatDose(name, medication.doseLabel)} · ${medication.aturanPakai}`
+                ? `${formatDose(
+                    strengthOf(name) ? name : medication.displayName,
+                    medication.doseLabel
+                  )} · ${medication.aturanPakai}`
                 : '',
               diagnosis: visit.diagnosa?.nama?.trim() ?? '',
             },
