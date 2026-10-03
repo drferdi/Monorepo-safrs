@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-10-03 (visit summary PDF on an Oxford band with red orange signals, Edukasi and Tindak lanjut; "Unduh PDF" on RME Terapi, Swiss grid, pdf-lib; Tren TTV text on the trajectory scale; Trajectory Tren TTV as the lab spring playground; STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
+Last updated: 2026-10-03 (visit summary PDF: 09 Verifikasi with DPJP and verifier from the signed-in user; on an Oxford band with red orange signals, Edukasi and Tindak lanjut; "Unduh PDF" on RME Terapi, Swiss grid, pdf-lib; Tren TTV text on the trajectory scale; Trajectory Tren TTV as the lab spring playground; STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
 identity-free, CSV for pandas; a resep step says what went wrong, out of stock is a note without Ulangi; Terapi kronis drops acute-only medications; an out-of-stock medication is left out at once; header lights the page on screen, "Lanjutkan semua" for chronic therapy;
 chronic doses from the riwayat Resep table, no triad warning; the RME resep picks each medication from its ePuskesmas suggestion and
 presses Tambah once per row; 2026-10-01: the signa chosen from its suggestion, "3x sehari" as 3x1;
@@ -18,7 +18,9 @@ Visit summary PDF (2026-10-03, spec `docs/specs/2026-10-03-visit-summary-pdf-des
 saves `ringkasan-kunjungan-<RM>-<date>.pdf`, A4, 12-column grid, Helvetica, no patient name. Since
 Chief's redesign: an Oxford blue band with the white logomark (`public/brand/`, cropped flush to the
 mark), red orange section numbers 01-08 and signals, Edukasi and Tindak lanjut added, Sistolik and
-Diastolik as separate trend rows, the trend limited to this RM's visits; usually two pages. `lib/report/*`: model →
+Diastolik as separate trend rows, the trend limited to this RM's visits; usually two pages.
+09 Verifikasi: DPJP and Verifikator from the signed-in user by profession (the RME's
+`resolveTenagaMedisNames`), read from the session at the click. `lib/report/*`: model →
 layout (draw ops) → pdf-lib renderer; `main.tsx` passes `visitSummaryContext` (facility, triage,
 SpO2, visit history). pdf-lib (1.17.1, Chief approved) loads on click in its own chunk.
 Harness: `pdf.html` (one page), `pdf.html?long` (45 medications, two pages), `?zoom=200`.
@@ -161,7 +163,8 @@ Screenshots failed (Claude window hidden); checks were read from the DOM.
 00. Visit summary PDF live: "Unduh PDF" on RME Terapi after a real case, then open the file. My
     calls: Tren TTV without SpO2 (visit history has none), last 8 visits, Tatalaksana prints the
     resep list then the CDSS alerts, triage as its bold word, the logomark only, red orange
-    #FF4500 and Oxford #002147, a typical visit on two pages. Deferred review minors (ledger):
+    #FF4500 and Oxford #002147, a typical visit on two pages; a signed-in doctor's PDF names the
+    default nurse as Verifikator (as the RME does). Deferred review minors (ledger):
     no double-click guard, no error log, trend x by index with dd-mm end labels.
 
 0. Statistik Harian live: "Muat statistik harian" in Chief's Chrome not yet seen (Playwright cannot

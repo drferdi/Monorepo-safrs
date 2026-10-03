@@ -47,7 +47,7 @@ describe('layoutVisitSummary', () => {
   it('numbers the sections in red orange in column 1 and labels them in Oxford blue', () => {
     const ops = layout(longVisitSummaryInput).pages.flatMap(texts).filter((op) => op.x < columnX(4));
     const numbers = ops.filter((op) => op.x === columnX(1));
-    expect(numbers.map((op) => op.text)).toEqual(['01', '02', '03', '04', '05', '05', '06', '07', '08']);
+    expect(numbers.map((op) => op.text)).toEqual(['01', '02', '03', '04', '05', '05', '06', '07', '08', '09']);
     expect(new Set(numbers.map((op) => op.tone))).toEqual(new Set(['signal']));
     const labels = ops.filter((op) => op.x === columnX(2) && op.weight === 'bold');
     expect(labels.map((op) => op.text)).toEqual([
@@ -60,6 +60,7 @@ describe('layoutVisitSummary', () => {
       'EDUKASI',
       'TINDAK LANJUT',
       'TREN TTV',
+      'VERIFIKASI',
     ]);
     expect(new Set(labels.map((op) => op.tone))).toEqual(new Set(['oxford']));
     const trend = ops.filter((op) => op.x === columnX(2) && op.weight === 'regular').map((op) => op.text);
@@ -93,6 +94,19 @@ describe('layoutVisitSummary', () => {
         'Nyeri kepala hebat mendadak',
         'Lemah separuh badan atau bicara pelo',
       ])
+    );
+  });
+
+  it('closes with the DPJP and the verifier in Oxford under their captions', () => {
+    const ops = layout().pages.flatMap(texts);
+    const at = (value: string) => ops.find((op) => op.text === value);
+    expect(at('DPJP')).toEqual(expect.objectContaining({ x: columnX(4), tone: 'muted' }));
+    expect(at('VERIFIKATOR')).toEqual(expect.objectContaining({ x: columnX(8), tone: 'muted' }));
+    expect(at('dr. Klinisi Sintetis')).toEqual(
+      expect.objectContaining({ x: columnX(4), weight: 'bold', tone: 'oxford', y: (at('DPJP')?.y ?? 0) + BASELINE })
+    );
+    expect(at('Ns. Verifikator Sintetis')).toEqual(
+      expect.objectContaining({ x: columnX(8), weight: 'bold', tone: 'oxford' })
     );
   });
 

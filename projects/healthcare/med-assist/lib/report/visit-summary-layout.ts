@@ -340,6 +340,17 @@ function sections(model: VisitSummaryModel, measure: Measure): Section[] {
       ]
     : paragraph('Riwayat kunjungan belum cukup untuk tren', measure, { tone: 'muted' });
 
+  // Chief, 2026-10-03: the DPJP and the verifier, named by the signed-in user's profession.
+  const signers: Row = {
+    lines: 2,
+    draw: (top) => [
+      text(columnX(4), top + BASELINE, 'DPJP', CAPTION),
+      text(columnX(4), top + BASELINE * 2, model.signers.dpjp, { weight: 'bold', tone: 'oxford' }),
+      text(columnX(8), top + BASELINE, 'VERIFIKATOR', CAPTION),
+      text(columnX(8), top + BASELINE * 2, model.signers.verifier, { weight: 'bold', tone: 'oxford' }),
+    ],
+  };
+
   return [
     { label: 'KELUHAN', rows: complaint, splits: false },
     { label: 'TTV / TRIASE', rows: vitals, splits: false },
@@ -349,6 +360,7 @@ function sections(model: VisitSummaryModel, measure: Measure): Section[] {
     { label: 'EDUKASI', rows: education, splits: false },
     { label: 'TINDAK LANJUT', rows: followUp, splits: false },
     { label: 'TREN TTV', rows: trendRows, splits: false },
+    { label: 'VERIFIKASI', rows: [signers], splits: false },
   ];
 }
 

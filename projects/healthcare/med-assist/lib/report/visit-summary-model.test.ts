@@ -52,6 +52,13 @@ describe('buildVisitSummaryModel', () => {
     expect(buildVisitSummaryModel({ ...input, followUp: '' }).followUp).toBe('');
   });
 
+  it('signs with the DPJP and the verifier the signed-in user resolves to', () => {
+    expect(buildVisitSummaryModel(input).signers).toEqual({
+      dpjp: 'dr. Klinisi Sintetis',
+      verifier: 'Ns. Verifikator Sintetis',
+    });
+  });
+
   it('marks the first diagnosis PRIMER and the others SEKUNDER', () => {
     expect(buildVisitSummaryModel(input).diagnoses.map((d) => d.role)).toEqual(['PRIMER', 'SEKUNDER']);
   });

@@ -7,6 +7,7 @@ import { SIDE_PANEL_TATALAKSANA_TRANSFER } from '../../tests/e2e/side-panel-tata
 import { ClinicalDifferential } from './ClinicalDifferential';
 import { resetDiseaseNotesCache } from './diagnosis/useDiseaseNotes';
 
+import { PERAWAT_NAMA } from '@/lib/clinical/tenaga-medis';
 import { syntheticVisit } from '@/lib/report/visit-summary.fixtures';
 
 /**
@@ -23,6 +24,24 @@ const { mockSendMessage, storedVisits } = vi.hoisted(() => ({
   mockSendMessage: vi.fn(),
   // The patient's stored visits (Tatalaksana's chronic cards); a test sets them, the rest have none.
   storedVisits: { visits: [] as unknown[] },
+}));
+
+// The signed-in Assist user (synthetic): a doctor, so the PDF's DPJP is this name.
+vi.mock('@/lib/api/auth-store', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/api/auth-store')>()),
+  getSession: vi.fn(async () => ({
+    user: {
+      id: 'crew-1',
+      username: 'login.sintetis',
+      name: 'dr. Login Sintetis',
+      role: 'doctor',
+      facilityId: 'f-1',
+      facilityName: 'Puskesmas Sintetis',
+      poli: 'Dokter',
+    },
+    tokens: { accessToken: 'token-sintetis', refreshToken: 'refresh-sintetis', expiresAt: 0 },
+    serverBaseUrl: 'http://127.0.0.1:0',
+  })),
 }));
 
 const { downloadMock } = vi.hoisted(() => ({ downloadMock: vi.fn(async (_model: unknown) => undefined) }));
@@ -259,6 +278,7 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
         trend: expect.objectContaining({ dates: [expect.any(String), expect.any(String)] }),
         followUp: 'Kontrol 3 hari',
         education: [],
+        signers: { dpjp: 'dr. Login Sintetis', verifier: PERAWAT_NAMA },
       })
     );
     expect(JSON.stringify(model)).not.toContain('Rahasia');

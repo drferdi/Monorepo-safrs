@@ -57,7 +57,10 @@ import {
   evaluateTriageReferralTree,
   type TriageDecisionResult,
 } from '@/lib/iskandar-diagnosis-engine/triage-referral-decision-tree';
+import { getSession } from '@/lib/api/auth-store';
+import { resolveTenagaMedisNames } from '@/lib/clinical/tenaga-medis';
 import { buildVisitSummaryModel, type VisitSummaryContext } from '@/lib/report/visit-summary-model';
+import { assistStaffFromSession } from '@/lib/rme/assist-staff';
 import { buildRMETransferPayload } from '@/lib/rme/payload-mapper';
 import type {
   BedsideFindingRecord,
@@ -1740,38 +1743,42 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
 
   const handleDownloadPdf = (): void => {
     setPdfError('');
-    const model = buildVisitSummaryModel({
-      rm: patientRM,
-      age: patientAge,
-      gender: patientGender,
-      keluhanUtama,
-      keluhanTambahan: keluhanTambahan ?? '',
-      allergies,
-      pregnant: confirmedPregnancyStatus ?? null,
-      vitals,
-      diagnoses: selectedDiagnoses.map((diagnosis) => ({ icd: diagnosis.icd_x, name: humanize(diagnosis.nama) })),
-      medications: selectedTransferMedications.map((medication) => {
-        const dose = formatDose(medication.nama_obat, medication.dosis);
-        return {
-          name: nameBesideDose(medication.nama_obat, dose),
-          dose,
-          use: medication.aturan_pakai,
-          duration: medication.durasi ?? '',
-        };
-      }),
-      alerts: therapyByDiagnosis.flatMap((result) => result.alerts),
-      education: educationItems
-        .filter((item) => selectedEducationKeys.includes(item.key))
-        .map((item) => item.text),
-      followUp: controlAfter,
-      safetyNet,
-      context: visitSummaryContext,
-      printedAt: new Date(),
-    });
-    // pdf-lib loads on the first click, not with the side panel.
-    void import('@/lib/report/download-visit-summary')
-      .then(({ downloadVisitSummaryPdf }) => downloadVisitSummaryPdf(model))
-      .catch(() => setPdfError('PDF gagal dibuat. Coba lagi.'));
+    void (async () => {
+      // The DPJP and the verifier follow the signed-in user, as in the RME (resolveTenagaMedisNames).
+      const staff = resolveTenagaMedisNames(assistStaffFromSession(await getSession()));
+      const model = buildVisitSummaryModel({
+        rm: patientRM,
+        age: patientAge,
+        gender: patientGender,
+        keluhanUtama,
+        keluhanTambahan: keluhanTambahan ?? '',
+        allergies,
+        pregnant: confirmedPregnancyStatus ?? null,
+        vitals,
+        diagnoses: selectedDiagnoses.map((diagnosis) => ({ icd: diagnosis.icd_x, name: humanize(diagnosis.nama) })),
+        medications: selectedTransferMedications.map((medication) => {
+          const dose = formatDose(medication.nama_obat, medication.dosis);
+          return {
+            name: nameBesideDose(medication.nama_obat, dose),
+            dose,
+            use: medication.aturan_pakai,
+            duration: medication.durasi ?? '',
+          };
+        }),
+        alerts: therapyByDiagnosis.flatMap((result) => result.alerts),
+        education: educationItems
+          .filter((item) => selectedEducationKeys.includes(item.key))
+          .map((item) => item.text),
+        followUp: controlAfter,
+        safetyNet,
+        staff,
+        context: visitSummaryContext,
+        printedAt: new Date(),
+      });
+      // pdf-lib loads on the first click, not with the side panel.
+      const { downloadVisitSummaryPdf } = await import('@/lib/report/download-visit-summary');
+      await downloadVisitSummaryPdf(model);
+    })().catch(() => setPdfError('PDF gagal dibuat. Coba lagi.'));
   };
 
   const transferEligibleDiagnosis = buildTransferEligibleDiagnosisInput(

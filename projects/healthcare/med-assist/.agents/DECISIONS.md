@@ -3,6 +3,20 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-03 — The visit summary closes with the DPJP and the verifier
+
+- Decision (Chief: "Lalu dokter penanggung jawab atau buatkan istilah lain ala sentra dan
+  verifikator saya. Nama seharusnya tergantung saat user login"; picked "DPJP", "Sesuai profesi
+  login", then "Setuju, kerjakan"): section 09 VERIFIKASI prints DPJP (columns 4-7) and
+  VERIFIKATOR (columns 8-12), names bold Oxford under muted captions. The names come from
+  `resolveTenagaMedisNames(assistStaffFromSession(await getSession()))`, the RME's rule: a signed-in
+  doctor is the DPJP and the verifier is the default nurse; a signed-in nurse, midwife, pharmacist
+  or triage officer is the verifier and the DPJP is the default doctor; a local account or no
+  profession gives both defaults. The session is read at the click, so a change of account shows
+  on the next PDF. The model is now built inside the async handler, so its failure also shows
+  "PDF gagal dibuat" (closes the deferred minor).
+- Evidence: model, layout and full-flow tests (a synthetic signed-in doctor becomes the DPJP).
+
 ## 2026-10-03 — The visit summary opens on an Oxford band, red orange signals
 
 - Decision (Chief: "Design ringkasan kunjungan : buat lebih komprehensif swiss style dan beri

@@ -47,6 +47,7 @@ export const syntheticVisitSummaryInput: VisitSummaryInput = {
   education: ['Minum obat tekanan darah setiap hari pada jam yang sama.', 'Batasi garam dan makanan asin.'],
   followUp: '1 minggu',
   safetyNet: ['Nyeri kepala hebat mendadak', 'Lemah separuh badan atau bicara pelo'],
+  staff: { dokter_nama: 'dr. Klinisi Sintetis', perawat_nama: 'Ns. Verifikator Sintetis' },
   context: {
     facilityName: 'Puskesmas Sintetis',
     triage: { zone: 'kuning', headline: 'Hipertensi derajat 2' },

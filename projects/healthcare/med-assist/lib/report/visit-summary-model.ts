@@ -1,3 +1,4 @@
+import type { TenagaMedisNames } from '@/lib/clinical/tenaga-medis';
 import type { TriageZone } from '@/lib/emergency-detector/triage-verdict';
 import { NORMAL_RANGES } from '@/lib/iskandar-diagnosis-engine/trajectory-analyzer';
 import type { VisitRecord } from '@/lib/iskandar-diagnosis-engine/visit-history-store';
@@ -32,6 +33,8 @@ export interface VisitSummaryInput {
   followUp: string;
   /** Red flags of the chosen diagnoses ("Segera kembali bila"). */
   safetyNet: string[];
+  /** The RME's names for the signed-in user (`resolveTenagaMedisNames`): DPJP and verifier. */
+  staff: TenagaMedisNames;
   context: VisitSummaryContext | undefined;
   printedAt: Date;
 }
@@ -56,6 +59,7 @@ export interface VisitSummaryModel {
   education: string[];
   followUp: string;
   safetyNet: string[];
+  signers: { dpjp: string; verifier: string };
   /** Null with fewer than two visits. */
   trend: { dates: string[]; rows: TrendRow[] } | null;
 }
@@ -124,6 +128,7 @@ export function buildVisitSummaryModel(input: VisitSummaryInput): VisitSummaryMo
     education: input.education,
     followUp: input.followUp ? `Kontrol ${input.followUp}` : '',
     safetyNet: input.safetyNet,
+    signers: { dpjp: input.staff.dokter_nama, verifier: input.staff.perawat_nama },
     // Only this patient's visits: a late or failed history scan must not print another RM's vitals.
     trend: buildTrend(
       (context?.visitHistory ?? []).filter((visit) => visit.patient_id === input.rm),
