@@ -457,8 +457,8 @@ Details:
   feature flags (AI diagnosis, AI prescription, drug checks, paediatric dose) and the OpenAI
   model.
 
-**Commands to avoid** (see [section 10](#10-fragile-undocumented-or-surprising)):
-`pnpm commit`, `commit:push`, `commit:watch`, `docs:auto*` and `docs:all`.
+`pnpm commit`, `commit:push`, `commit:watch`, `docs:auto*`, `docs:all` and `docs:serve` were
+removed on 2026-10-03 (see [section 10](#10-fragile-undocumented-or-surprising), item 1).
 
 ---
 
@@ -534,7 +534,7 @@ Details:
 
 Ranked by how likely each item is to hurt a new owner. All are **[Verified]** unless marked.
 
-1. **`pnpm commit` / `commit:push` / `commit:watch` act on the whole monorepo.**
+1. **Removed 2026-10-03:** `pnpm commit` / `commit:push` / `commit:watch` acted on the whole monorepo.
    - `scripts/dev/auto-commit.js:156` runs `git add -A` with no folder limit, then commits
      (`:164`) and can push (`:185`). The git root is `D:\DEV\monorepo`.
    - Running it would sweep up other projects' unfinished work, and in watch mode it keeps doing
@@ -587,11 +587,12 @@ Ranked by how likely each item is to hurt a new owner. All are **[Verified]** un
    - `tesseract.js` is a runtime dependency, but only the development ECG server uses it.
    - **[Inferred]** These may cause friction in a Chrome Web Store review.
 10. **Background timing risks** (all **[Inferred]**, from how Chrome runs background workers):
-    - The crew-poller alarm listener is registered only after two asynchronous checks
-      (`bridge-poller.ts:66-89`), so an alarm that wakes a sleeping worker may be missed.
+    - Fixed 2026-10-03: the crew-poller alarm listener was registered only after two
+      asynchronous checks, so an alarm that woke a sleeping worker could be missed. It is now
+      attached synchronously at worker start (`attachBridgeAlarmListener`).
     - The icon-click sound (`background.ts:1146`) may never play, because clicking opens the
       side panel instead.
-11. **Broken alternative test configurations.**
+11. **Removed 2026-10-03: broken alternative test configurations.**
     - `vitest.clinical.config.ts` hard-codes package paths that don't exist under the hoisted
       layout.
     - `vitest.unit.config.ts` runs browser-dependent tests without a browser environment.

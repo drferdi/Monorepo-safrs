@@ -17,9 +17,9 @@
     </td>
     <td width="70%" valign="top">
       <p><strong>Med Assist</strong> is a browser extension that embeds triage, clinical reasoning, and RME transfer tooling directly inside the active ePuskesmas workflow. The current runtime centers on a physician-facing sidepanel, a background worker for orchestration, and content/main-world bridges for scraping and auto-fill.</p>
-      <p>At its core, Med Assist is powered by the <strong>Iskandar Diagnosis Engine</strong>: a deterministic-first clinical pipeline that combines emergency gates, a 159-disease knowledge base, epidemiology weights from <strong>45,030 Indonesian clinical cases</strong>, a constrained DeepSeek-based reranker when configured, and escalation-first safety checks before suggestions are rendered.</p>
+      <p>At its core, Med Assist is powered by the <strong>Iskandar Diagnosis Engine</strong>: a deterministic-first clinical pipeline that combines emergency gates, a 159-disease knowledge base, epidemiology weights from <strong>45,030 Indonesian clinical cases</strong>, a constrained OpenAI-model reranker when the physician enters a key in Settings, and escalation-first safety checks before suggestions are rendered.</p>
       <p>Patient data is surfaced from the active ePuskesmas session via <strong>DAS (Data Ascension System)</strong>, which currently uses adaptive DOM scanning, a local semantic mapper, learning-store caching, and targeted content-script reinjection/main-world bridging where the host page requires it.</p>
-      <p>New features include <strong>SYMPHONY Safety Bridge</strong> (trajectory-to-alert mapping), <strong>Vital Guardrails</strong> (822-line input validation), <strong>Feature Flags</strong> (env-var-driven module gating), and <strong>Ollama LLM Gateway</strong> (local LLM fallback).</p>
+      <p>New features include <strong>SYMPHONY Safety Bridge</strong> (trajectory-to-alert mapping), <strong>Vital Guardrails</strong> (822-line input validation), and <strong>Feature Flags</strong> (env-var-driven module gating).</p>
     </td>
   </tr>
 </table>
@@ -47,18 +47,18 @@ _Designed and built by [Drferdi](https://github.com/drferdi) (dr. Ferdi Iskandar
 
 A generic CDSS treats every patient as a global baseline. Med Assist treats every patient as a member of a specific Indonesian primary healthcare population — with the disease priors, drug availability, and clinical context that actually exists at the puskesmas level.
 
-| Dimension                  | Generic CDSS                   | Med Assist                                                                                      |
-| -------------------------- | ------------------------------ | ----------------------------------------------------------------------------------------------- |
-| **Disease priors**         | Foreign textbook static values | Bayesian weights from 45,030 real Indonesian cases                                              |
-| **Emergency detection**    | Single threshold rules         | 4-gate protocol: TTV inference → HTN crisis → Glucose crisis → Occult shock                     |
-| **Drug interaction check** | Limited or cloud-only          | 173,071+ DDI entries (DDInter 2.0), runs offline                                                |
-| **Form automation**        | None                           | DAS adaptive extraction + local semantic mapping + page-specific auto-fill                      |
-| **RME integration**        | Manual double-entry            | Transfer orchestrator + dashboard bridge poller + session-backed sync                           |
-| **Safety architecture**    | Soft warnings                  | Traffic Light + presentation safety + emergency-first escalation                                |
-| **AI reasoning**           | Single model                   | DeepSeek-assisted reranking + Ollama local LLM + dashboard canonical engines + KB-only fallback |
-| **Trajectory safety**      | None                           | SYMPHONY bridge: trajectory analysis → CDSSAlert mapping                                        |
-| **Input validation**       | Basic range checks             | Vital Guardrails: hard stops, soft flags, code-red cues, auto-correction                        |
-| **Module control**         | All-or-nothing                 | Feature flags: env-var-driven gating per module                                                 |
+| Dimension                  | Generic CDSS                   | Med Assist                                                                                           |
+| -------------------------- | ------------------------------ | ---------------------------------------------------------------------------------------------------- |
+| **Disease priors**         | Foreign textbook static values | Bayesian weights from 45,030 real Indonesian cases                                                   |
+| **Emergency detection**    | Single threshold rules         | 4-gate protocol: TTV inference → HTN crisis → Glucose crisis → Occult shock                          |
+| **Drug interaction check** | Limited or cloud-only          | 173,071+ DDI entries (DDInter 2.0), runs offline                                                     |
+| **Form automation**        | None                           | DAS adaptive extraction + local semantic mapping + page-specific auto-fill                           |
+| **RME integration**        | Manual double-entry            | Transfer orchestrator + dashboard bridge poller + session-backed sync                                |
+| **Safety architecture**    | Soft warnings                  | Traffic Light + presentation safety + emergency-first escalation                                     |
+| **AI reasoning**           | Single model                   | Optional OpenAI reranking (key entered in Settings) + dashboard canonical engines + KB-only fallback |
+| **Trajectory safety**      | None                           | SYMPHONY bridge: trajectory analysis → CDSSAlert mapping                                             |
+| **Input validation**       | Basic range checks             | Vital Guardrails: hard stops, soft flags, code-red cues, auto-correction                             |
+| **Module control**         | All-or-nothing                 | Feature flags: env-var-driven gating per module                                                      |
 
 ---
 
@@ -109,7 +109,7 @@ A generic CDSS treats every patient as a global baseline. Med Assist treats ever
 | 7   | Red Flag Checker (sepsis, ACS, stroke, preeclampsia, anaphylaxis) | ✅ Live | Doctor       |
 | 8   | Symptom Matcher — 159-disease knowledge base                      | ✅ Live | Doctor       |
 | 9   | Epidemiology Weights — 45,030 Indonesian cases                    | ✅ Live | Doctor       |
-| 10  | Constrained LLM Reranker — DeepSeek/Ollama + KB fallback          | ✅ Live | Doctor       |
+| 10  | Constrained LLM Reranker — OpenAI key in Settings + KB fallback   | ✅ Live | Doctor       |
 | 11  | Traffic Light + Presentation Safety                               | ✅ Live | Doctor       |
 | 12  | ICD-10 RAG Search                                                 | ✅ Live | Doctor       |
 | 13  | Diagnosis Confidence Meter                                        | ✅ Live | Doctor       |
@@ -162,10 +162,9 @@ A generic CDSS treats every patient as a global baseline. Med Assist treats ever
 | --- | ----------------------------------------------------- | ------- | ------------ |
 | 36  | Dashboard Bridge — real-time polling                  | ✅ Live | System       |
 | 37  | RME Transfer Orchestrator + Intelligent Tab Targeting | ✅ Live | Doctor       |
-| 38  | Magic-Link Auth with Polling                          | ✅ Live | All          |
+| 38  | Crew Dashboard Login — password, passkey, Mode Lokal  | ✅ Live | All          |
 | 39  | PII Guard + SHA-256 patient hashing                   | ✅ Live | System       |
 | 40  | Audit Trail + shadow logging                          | ✅ Live | System       |
-| 41  | Ollama LLM Gateway — local fallback                   | ✅ Live | System       |
 
 ---
 
@@ -175,15 +174,15 @@ A generic CDSS treats every patient as a global baseline. Med Assist treats ever
 
 | Requirement              | Version | Notes                                               |
 | ------------------------ | ------- | --------------------------------------------------- |
-| Node.js                  | ≥ 22.x  | Required for WXT, Vitest, and local tooling         |
-| npm                      | ≥ 10.x  | Primary package manager in this repo                |
+| Node.js                  | 24.x    | `engines` in `package.json` (`>=24 <25`)            |
+| pnpm                     | 11.21.0 | Pinned; always run through `node scripts/pnpm.mjs`  |
 | Sentra Dashboard Account | —       | Required for auth, bridge polling, and patient sync |
 | Optional MedLens Harness | —       | Only for internal ECG dev/test flow                 |
 
 ### Installation
 
 ```bash
-npm install
+node scripts/pnpm.mjs install
 cp .env.example .env.local
 ```
 
@@ -200,7 +199,6 @@ VITE_FEATURE_PRESCRIPTION_AI=true
 VITE_FEATURE_DDI_CHECK=true
 VITE_FEATURE_PEDIATRIC_DOSE=true
 SENTRA_DIAGNOSIS_V2_SHADOW=false
-SENTRA_OPENAI_API_KEY=
 SENTRA_OPENAI_MODEL=gpt-4o-mini
 SENTRA_OPENAI_TIMEOUT_MS=30000
 SENTRA_DISABLE_TRAJECTORY_BRIDGE=false
@@ -213,41 +211,38 @@ SENTRA_DISABLE_THERAPY=false
 
 ```bash
 # Chrome (hot reload)
-npm run dev
+node scripts/pnpm.mjs run dev
 
 # Firefox
-npm run dev:firefox
+node scripts/pnpm.mjs run dev:firefox
 ```
 
 Load unpacked:
 
 - **Chrome:** `chrome://extensions` → Enable Developer Mode → Load Unpacked → `.output/chrome-mv3-dev/`
-- **Firefox:** `about:debugging` → Load Temporary Add-on → `.output/firefox-mv2-dev/manifest.json`
+- **Firefox:** `about:debugging` → Load Temporary Add-on → `.output/chrome-mv3-dev/manifest.json`
+
+Every build, Firefox and production included, writes to the one `.output/chrome-mv3-dev/` folder
+(`outDirTemplate` in `wxt.config.ts`).
 
 ### Production Build
 
 ```bash
-npm run build          # Chrome MV3
-npm run zip            # Chrome Web Store ZIP
-npm run build:firefox  # Firefox build
+node scripts/pnpm.mjs run build          # Chrome MV3
+node scripts/pnpm.mjs run zip            # Chrome Web Store ZIP
+node scripts/pnpm.mjs run build:firefox  # Firefox build
 ```
 
-## Monorepo-safe Commands (Recommended)
+## Running From the Monorepo
 
-Jika menjalankan dari root monorepo, gunakan filter package agar hanya memproses `sentra-assist`:
-
-```bash
-pnpm --filter @the-abyss/med-assist run typecheck
-pnpm --filter @the-abyss/med-assist run test
-pnpm --filter @the-abyss/med-assist run quality
-```
-
-Jika bekerja langsung di folder app, jalankan normal:
+This capsule is standalone: the root `pnpm-workspace.yaml` excludes `projects/healthcare/**`,
+so `pnpm --filter` from the root does not reach it. Run every command from the capsule folder:
 
 ```bash
-cd apps/healthcare/med-assist
-pnpm run typecheck
-pnpm run test
+cd projects/healthcare/med-assist
+node scripts/pnpm.mjs run typecheck
+node scripts/pnpm.mjs run test
+node scripts/pnpm.mjs run quality
 ```
 
 ---
@@ -435,14 +430,16 @@ flowchart LR
 
 All optional modules are gated by `SENTRA_*` environment variables. Default: KB-only, no LLM dependency.
 
-| Flag                               | Default       | Effect                                  |
-| ---------------------------------- | ------------- | --------------------------------------- |
-| `SENTRA_OPENAI_API_KEY`            | _(empty)_     | Enables LLM reasoning (DeepSeek/Ollama) |
-| `SENTRA_OPENAI_MODEL`              | `gpt-4o-mini` | Model for LLM reasoning                 |
-| `SENTRA_OPENAI_TIMEOUT_MS`         | `30000`       | LLM timeout in milliseconds             |
-| `SENTRA_DISABLE_TRAJECTORY_BRIDGE` | `false`       | Disables SYMPHONY bridge                |
-| `SENTRA_DISABLE_THERAPY`           | `false`       | Disables therapy module                 |
-| `SENTRA_DIAGNOSIS_V2_SHADOW`       | `false`       | Enables V2 shadow evaluation            |
+| Flag                               | Default       | Effect                       |
+| ---------------------------------- | ------------- | ---------------------------- |
+| `SENTRA_OPENAI_MODEL`              | `gpt-4o-mini` | Model for LLM reasoning      |
+| `SENTRA_OPENAI_TIMEOUT_MS`         | `12000`       | LLM timeout in milliseconds  |
+| `SENTRA_DISABLE_TRAJECTORY_BRIDGE` | `false`       | Disables SYMPHONY bridge     |
+| `SENTRA_DISABLE_THERAPY`           | `false`       | Disables therapy module      |
+| `SENTRA_DIAGNOSIS_V2_SHADOW`       | `false`       | Enables V2 shadow evaluation |
+
+The OpenAI key is not an environment variable: the physician enters it in Settings and it stays in
+`browser.storage.local` on that PC (`lib/iskandar-diagnosis-engine/openai-key-store.ts`).
 
 **Safety:** `fallbackToKBOnly` is always `true`. If LLM is unavailable, diagnosis falls back to deterministic KB mode.
 
@@ -464,7 +461,7 @@ All optional modules are gated by `SENTRA_*` environment variables. Default: KB-
 └──────────┬────────────────┬───────────────┬─────────────────┘
            │                │               │
 ┌──────────▼─────────┐  ┌─────────▼──────────┐  ┌────▼──────────────────────┐
-│ Dashboard / Crew   │  │ DeepSeek API       │  │ Content + Main-World      │
+│ Dashboard / Crew   │  │ OpenAI API         │  │ Content + Main-World      │
 │ Auth + Bridge +    │  │ (optional ranking) │  │ Bridge: scrape + auto-fill│
 │ canonical engines  │  │                    │  │ for ePuskesmas            │
 └────────────────────┘  └────────────────────┘  └───────────────────────────┘
@@ -477,7 +474,7 @@ med-assist/
 ├── entrypoints/
 │   ├── sidepanel/                 ← Main Assist UI + UI authority tests
 │   │   ├── main.tsx               ← App shell entry
-│   │   └── ApprovedSentraAssistPanel.tsx ← New panel wiring
+│   │   └── ApprovedSentraAssistApp.tsx ← Panel wiring
 │   ├── login/                     ← Login/dashboard launcher entrypoint
 │   ├── clinical-trajectory-preview/ ← Preview surface for trajectory UI
 │   ├── background.ts              ← Messaging, auth, bridge, orchestration
@@ -495,11 +492,11 @@ med-assist/
 │   ├── iskandar-diagnosis-engine/ ← Diagnosis, trajectory, safety, workflow
 │   │   ├── feature-flags.ts       ← SENTRA_* env var config
 │   │   ├── trajectory-safety-bridge.ts ← SYMPHONY safety alerts
-│   │   ├── llm-reasoner.ts        ← Ollama/DeepSeek LLM gateway
+│   │   ├── llm-reasoner.ts        ← Constrained OpenAI reranker
 │   │   └── diagnosis-v2.ts        ← Shadow differential ranking
 │   ├── emergency-detector/        ← TTV, HTN, glucose, occult shock gates
-│   ├── api/                       ← Auth (magic-link), bridge, audit clients
-│   │   ├── auth-client.ts         ← Magic-link auth + polling
+│   ├── api/                       ← Auth, bridge, audit clients
+│   │   ├── auth-client.ts         ← Crew login, passkey, Mode Lokal
 │   │   └── bridge-client.ts       ← Dashboard bridge
 │   ├── clinical/                  ← Vital guardrails, patient context, anamnesa
 │   │   ├── vital-guardrails.ts    ← 822-line vital validation
@@ -528,11 +525,11 @@ med-assist/
 ### Running Tests
 
 ```bash
-npm run test          # Vitest suite
-npm run test:contract # Bridge API contract checks
-npm run test:e2e      # Playwright browser flows
-npm run typecheck     # tsc --noEmit
-npm run lint          # ESLint
+node scripts/pnpm.mjs run test          # Vitest suite
+node scripts/pnpm.mjs run test:contract # Bridge API contract checks
+node scripts/pnpm.mjs run test:e2e      # Playwright, on the installed Google Chrome
+node scripts/pnpm.mjs run typecheck     # tsc --noEmit
+node scripts/pnpm.mjs run lint          # ESLint
 ```
 
 ### Required Before Merge
@@ -540,10 +537,10 @@ npm run lint          # ESLint
 Minimum gates before merge:
 
 ```
-✅ npm run typecheck
-✅ npm run lint
-✅ npm run test
-✅ npm run test:contract (when auth / bridge contracts change)
+✅ node scripts/pnpm.mjs run typecheck
+✅ node scripts/pnpm.mjs run lint
+✅ node scripts/pnpm.mjs run test
+✅ node scripts/pnpm.mjs run test:contract (when auth / bridge contracts change)
 ```
 
 ---
@@ -553,16 +550,16 @@ Minimum gates before merge:
 ### Chrome Web Store
 
 ```bash
-npm run build
-npm run zip
+node scripts/pnpm.mjs run build
+node scripts/pnpm.mjs run zip
 # Upload ZIP to Chrome Web Store Developer Dashboard
 ```
 
 ### Firefox Add-ons
 
 ```bash
-npm run build:firefox
-npm run zip:firefox
+node scripts/pnpm.mjs run build:firefox
+node scripts/pnpm.mjs run zip:firefox
 # Upload to Firefox Add-on Developer Hub
 ```
 
@@ -573,14 +570,14 @@ npm run zip:firefox
 | Issue                             | Solution                                                                                                                |
 | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | Extension not loading             | Enable Developer Mode at `chrome://extensions/`, load unpacked from `.output/chrome-mv3-dev/`                           |
-| `npm install` fails               | Verify Node.js ≥22 and npm ≥10 via `node -v` and `npm -v`                                                               |
-| Dashboard / Bridge auth errors    | Check Crew/Dashboard base URL in Settings, valid magic-link session, or automation token                                |
-| Sidepanel shows "Login required"  | Check Dashboard base URL in Settings — auth uses magic-link polling against the configured server                       |
+| Install fails                     | Verify Node.js 24 via `node -v`; install with `node scripts/pnpm.mjs install`, never plain `npm install`                |
+| Dashboard / Bridge auth errors    | Check Crew/Dashboard base URL in Settings, valid login session, or automation token                                     |
+| Sidepanel shows "Login required"  | Check Dashboard base URL in Settings — an empty base URL means Mode Lokal (device-local login)                          |
 | Form not auto-filling             | DAS may need a re-scan or content reinjection — click **Inisialisasi** in the header                                    |
 | Word / char limit error on submit | ePuskesmas rejects oversize keluhan — Sentra caps at **220 words** and **250 characters** (SSOT: `lib/rme/truncate.ts`) |
 | MedLens local unavailable         | The local ECG harness is internal-only; start `node services/medlens-local/server.mjs` only for dev/test                |
-| TypeScript errors                 | Run `npm run typecheck` for full output                                                                                 |
-| LLM reasoning not working         | Check `SENTRA_OPENAI_API_KEY` is set; without it, system falls back to KB-only deterministic mode                       |
+| TypeScript errors                 | Run `node scripts/pnpm.mjs run typecheck` for full output                                                               |
+| LLM reasoning not working         | Check an OpenAI key is entered in Settings; without it, the system falls back to KB-only deterministic mode             |
 | SYMPHONY alerts not appearing     | Check `SENTRA_DISABLE_TRAJECTORY_BRIDGE=false`; ensure trajectory analysis has `high`/`critical` severity               |
 | Vital guardrails not blocking     | Verify `vital-guardrails.ts` is imported in TTVInferenceUI; check field values are within hard-stop ranges              |
 
@@ -605,9 +602,9 @@ Commercial licensing: [sentrahai.com](https://sentrahai.com)
 This repo currently ships local repair commands for formatting and minor lint drift.
 If CI or local verification fails due to style-level issues:
 
-1. Run `npm run format`.
-2. Run `npm run lint:fix`.
-3. Re-run `npm run lint` and `npm run test`.
+1. Run `node scripts/pnpm.mjs run format`.
+2. Run `node scripts/pnpm.mjs run lint:fix`.
+3. Re-run `node scripts/pnpm.mjs run lint` and `node scripts/pnpm.mjs run test`.
 4. Review the diff before committing or opening a PR.
 
 ---
