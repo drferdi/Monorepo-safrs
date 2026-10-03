@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+
+import { assertNoPII, PIILeakError } from './pii-guard';
 import {
   buildPatientSyncPayload,
   inferStructuredSignsFromPatientSyncInput,
@@ -94,5 +96,37 @@ describe('patient-sync-payload', () => {
     });
 
     expect(payload).not.toHaveProperty('structuredSigns');
+  });
+
+  // Chief, 2026-10-03: the crew portal may receive the identity with parts of the name hidden.
+  describe('identity sent to the crew portal', () => {
+    const input = {
+      patient: {
+        name: 'Ferdi Iskandar',
+        age: 40,
+        gender: 'L' as const,
+        rm: '0012345',
+        noBpjs: '0001234567890',
+      },
+      vitals: { rr: 18 },
+      narrative: { keluhan_utama: 'Batuk tiga hari', keluhan_tambahan: '' },
+    };
+
+    it('masks the name and the BPJS number and keeps the RM readable', () => {
+      const payload = buildPatientSyncPayload(input);
+
+      expect(payload.patient).toEqual({
+        name: 'F**di I*****ar',
+        age: 40,
+        gender: 'L',
+        rm: '0012345',
+        noBpjs: '*********7890',
+      });
+    });
+
+    it('passes the outbound PII guard, which blocks the unmasked BPJS number', () => {
+      expect(() => assertNoPII(JSON.stringify(buildPatientSyncPayload(input)))).not.toThrow();
+      expect(() => assertNoPII(JSON.stringify(input))).toThrow(PIILeakError);
+    });
   });
 });

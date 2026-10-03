@@ -1,5 +1,7 @@
 // Designed and constructed by Drferdi.
 
+import { maskIdentifier, maskPatientName } from '~/utils/name-masking';
+
 export interface PatientSyncStructuredSigns {
   respiratoryDistress?: {
     accessoryMuscleUse?: boolean;
@@ -355,8 +357,16 @@ export function buildPatientSyncPayload(input: PatientSyncBuildInput): PatientSy
   const structuredSigns = mergeStructuredSigns(alertAwareStructuredSigns, input.structuredSigns);
 
   const { alertIds: _alertIds, ...payloadInput } = input;
+  // The crew portal receives the identity with parts of it hidden (Chief, 2026-10-03); the RM
+  // stays readable because the portal matches the patient by it.
+  const { noBpjs, ...patient } = payloadInput.patient;
   return {
     ...payloadInput,
+    patient: {
+      ...patient,
+      name: maskPatientName(patient.name),
+      ...(noBpjs ? { noBpjs: maskIdentifier(noBpjs) } : {}),
+    },
     ...(structuredSigns ? { structuredSigns } : {}),
   };
 }

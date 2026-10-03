@@ -2,52 +2,47 @@
 /**
  * Name Masking Utility
  *
- * Privacy-compliant name masking for patient data display
- * Masks 3-4 characters per word while preserving readability
+ * Masks a patient's identity before it leaves the extension (Chief, 2026-10-03: the crew portal
+ * may receive the patient's identity with parts of the name hidden, "Ferdi Iskandar" →
+ * "F**di I*****ar").
  *
  * @module utils/name-masking
  */
 
 /**
- * Mask a single word with asterisks - Maximum privacy (2-3 chars visible only)
- * - Words ≤3 chars: show first 2 chars (e.g., "Adi" → "Ad*")
- * - Words 4-6 chars: show first 2 chars, mask rest (e.g., "Ahmad" → "Ah***")
- * - Words ≥7 chars: show first 3 chars, mask rest (e.g., "Suryadi" → "Sur****")
- *
- * @param word - Word to mask
- * @returns Masked word
+ * Mask one word: its first letter and its last two letters stay, the letters between become
+ * asterisks ("Ferdi" → "F**di", "Iskandar" → "I*****ar"). A word of three letters or fewer keeps
+ * only its first letter ("Adi" → "A**").
  */
 function maskWord(word: string): string {
   if (word.length <= 3) {
-    // Very short word: show first 2 chars
-    return word.slice(0, 2) + '*'.repeat(Math.max(0, word.length - 2));
-  } else if (word.length <= 6) {
-    // Short-medium word: show first 2 chars, mask rest
-    const visible = word.slice(0, 2);
-    const masked = '*'.repeat(word.length - 2);
-    return visible + masked;
-  } else {
-    // Long word: show first 3 chars, mask rest
-    const visible = word.slice(0, 3);
-    const masked = '*'.repeat(word.length - 3);
-    return visible + masked;
+    return word.slice(0, 1) + '*'.repeat(word.length - 1);
   }
+  return word.slice(0, 1) + '*'.repeat(word.length - 3) + word.slice(-2);
 }
 
 /**
- * Mask patient name for privacy compliance (Maximum Privacy Mode)
- *
- * Examples:
- * - "Ahmad Suryadi" → "Ah*** Sur****"
- * - "Siti Nurhaliza" → "Si** Nur*******"
- * - "Adi Wijaya" → "Ad* Wi****"
+ * Mask every word of a patient's name ("Ferdi Iskandar" → "F**di I*****ar").
  *
  * @param fullName - Full patient name
  * @returns Masked name
  */
 export function maskPatientName(fullName: string): string {
-  const words = fullName.trim().split(/\s+/);
+  const words = fullName.trim().split(/\s+/).filter(Boolean);
   return words.map(maskWord).join(' ');
+}
+
+/**
+ * Mask an identifier number, keeping only its last four characters ("0001234567890" →
+ * "*********7890").
+ *
+ * @param value - Identifier such as a BPJS number
+ * @returns Masked identifier
+ */
+export function maskIdentifier(value: string): string {
+  const trimmed = value.trim();
+  if (trimmed.length <= 4) return '*'.repeat(trimmed.length);
+  return '*'.repeat(trimmed.length - 4) + trimmed.slice(-4);
 }
 
 /**
@@ -85,19 +80,3 @@ export function formatPatientName(
 
   return fullName;
 }
-
-// ============================================================================
-// EXAMPLES & TESTS
-// ============================================================================
-
-/**
- * Example usage (Maximum Privacy Mode):
- *
- * maskPatientName("Ahmad Suryadi") → "Ah*** Sur****"
- * maskPatientName("Siti Nurhaliza") → "Si** Nur*******"
- * maskPatientName("Adi") → "Ad*"
- * maskPatientName("Muhammad Abdullah") → "Muh***** Abd*****"
- *
- * getInitials("Ahmad Suryadi") → "AS"
- * getInitials("Siti Nurhaliza") → "SN"
- */
