@@ -1135,7 +1135,9 @@ function buildKeadaanFisikFromKeluhan(
   const hasNyeriKeluhan = /nyeri|sakit|pegal|linu|ngilu/.test(keluhan);
   const NYERI_PALPASI = 'Pasien teraba tegang dengan nyeri dirasakan oleh pasien';
 
-  const result: Partial<NonNullable<AnamnesaFillPayload['keadaan_fisik']>> = {};
+  const result: Partial<
+    Record<keyof NonNullable<AnamnesaFillPayload['keadaan_fisik']>, Record<string, string>>
+  > = {};
   for (const organ of activeOrgans) {
     const base = { ...(ORGAN_NORMAL_FINDINGS[organ] as Record<string, string>) };
     if (hasNyeriKeluhan) {
@@ -1151,8 +1153,7 @@ function buildKeadaanFisikFromKeluhan(
         base['palpasi'] = 'Terdapat nyeri tekan pada area keluhan';
       }
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (result as any)[organ] = base;
+    result[organ] = base;
   }
   return result as AnamnesaFillPayload['keadaan_fisik'];
 }

@@ -23,6 +23,43 @@ import { createLogger } from '@/utils/logger';
 
 const mainWorldLog = createLogger('SentraMainWorld', 'content');
 
+/** The members of the page's own jQuery and jQuery UI that this bridge calls. */
+interface PageJQueryCollection {
+  length: number;
+  val(): unknown;
+  val(value: unknown): PageJQueryCollection;
+  text(): string;
+  trigger(eventName: string): PageJQueryCollection;
+  find(selector: string): PageJQueryCollection;
+  first(): PageJQueryCollection;
+  eq(index: number): PageJQueryCollection;
+  toArray(): HTMLElement[];
+  each<E extends HTMLElement>(callback: (this: E) => boolean | void): PageJQueryCollection;
+  data(key: string): unknown;
+  one?(
+    eventName: string,
+    handler: (event: unknown, ui?: { content?: unknown[] }) => void
+  ): PageJQueryCollection;
+  autocomplete?(method: string, value: string): unknown;
+}
+
+interface PageJQuery {
+  (selector: string | Element): PageJQueryCollection;
+  ajax?(settings: {
+    url: string;
+    type: string;
+    data: Record<string, string>;
+    success: (data: unknown) => void;
+    error: (xhr: unknown, status: unknown, err: unknown) => void;
+  }): unknown;
+}
+
+/** ePuskesmas loads jQuery as a page global; the extension has no type for it. */
+function pageJQuery(): PageJQuery | undefined {
+  const pageGlobals = window as unknown as { $?: PageJQuery; jQuery?: PageJQuery };
+  return pageGlobals.$ || pageGlobals.jQuery;
+}
+
 export default defineContentScript({
   matches: ['*://*.epuskesmas.id/*'],
   world: 'MAIN',
@@ -279,21 +316,21 @@ export default defineContentScript({
         if (csrfToken) requestData._token = csrfToken;
 
         // Priority: jQuery AJAX to mirror host implementation, fallback native fetch.
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const $ = (win.$ || win.jQuery) as any;
+        const $ = pageJQuery();
         if ($ && typeof $.ajax === 'function') {
           $.ajax({
             url: targetUrl,
             type: 'GET',
             data: requestData,
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            success: (data: any) => {
+            success: (data: unknown) => {
               let content = '';
               if (typeof data === 'string') {
                 content = data;
               } else if (typeof data === 'object' && data) {
-                content =
-                  data.form || data.html || data.data || data.content || JSON.stringify(data);
+                const body = data as Record<string, unknown>;
+                content = String(
+                  body.form || body.html || body.data || body.content || JSON.stringify(data)
+                );
               }
 
               window.postMessage(
@@ -306,8 +343,7 @@ export default defineContentScript({
                 '*'
               );
             },
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            error: (_xhr: any, status: any, err: any) => {
+            error: (_xhr: unknown, status: unknown, err: unknown) => {
               window.postMessage(
                 {
                   type: 'sentra-native-fetch-response',
@@ -378,8 +414,7 @@ export default defineContentScript({
       error?: string;
       method: string;
     }> => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const $ = (window as any).$ || (window as any).jQuery;
+      const $ = pageJQuery();
       if (!$ || typeof $ !== 'function') {
         return {
           success: false,
@@ -470,7 +505,7 @@ export default defineContentScript({
               });
             }
             $el.val(searchValue);
-            $el.autocomplete('search', searchValue);
+            $el.autocomplete?.('search', searchValue);
 
             // Wait for dropdown to appear
             const result = await new Promise<{

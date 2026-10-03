@@ -13,10 +13,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('./authed-fetch', async (importOriginal) => {
-  // vi.mock factories are hoisted above the import block, so the module's type
-  // cannot be named through a top-level import here. Pre-existing; surfaced when
-  // this file was re-linted after the shared-types import was vendored out.
-  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
   const actual = await importOriginal<typeof import('./authed-fetch')>();
   return {
     ...actual,
