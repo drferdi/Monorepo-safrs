@@ -755,6 +755,7 @@ interface BlockedDrug {
     | 'allergy'
     | 'ddi_major'
     | 'ddi_contraindicated'
+    | 'ddi_unavailable'
     | 'vital_contraindication'
     | 'pregnancy_contraindication';
 }
@@ -867,8 +868,13 @@ async function prefilterCandidatesForSafety(
           continue;
         }
       } catch (error) {
-        // DDI check failed - log but don't block (fail-open for safety)
-        console.warn(`DDI check failed for ${medName}:`, error);
+        // Interactions that could not be checked are not "none": leave the candidate out.
+        blocked.push({
+          drug: candidate,
+          reason: `DDI tidak dapat diperiksa: ${error instanceof Error ? error.message : String(error)}`,
+          severity: 'ddi_unavailable',
+        });
+        continue;
       }
     }
 
@@ -915,6 +921,7 @@ async function findBestCandidateForIntent(
       allergy: 'high',
       ddi_contraindicated: 'emergency',
       ddi_major: 'high',
+      ddi_unavailable: 'high',
       vital_contraindication: 'high',
       pregnancy_contraindication: 'high',
     };
