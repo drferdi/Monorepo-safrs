@@ -28,6 +28,9 @@ import {
   validateMappings,
 } from './safety-validator';
 import type { MapperOptions, MappingContext, MappingResult, PageType } from './types';
+import { createLogger } from '@/utils/logger';
+
+const dasLog = createLogger('DAS:Mapper', 'content');
 
 // ============================================================================
 // DEFAULT OPTIONS
@@ -131,7 +134,7 @@ export async function mapPayloadToFields(
       const cached = await getCachedMapping(pageHash);
 
       if (cached) {
-        console.warn('[DAS:Mapper] Cache hit:', pageHash);
+        dasLog.debug('[DAS:Mapper] Cache hit:', pageHash);
 
         // Restore mappings from cache
         const restoredMappings = restoreMappingsFromCache(cached, fields);
@@ -164,13 +167,13 @@ export async function mapPayloadToFields(
     };
 
     // 5. Call the local semantic mapper for mapping
-    console.warn('[DAS:Mapper] Cache miss, calling local mapper...');
+    dasLog.debug('[DAS:Mapper] Cache miss, calling local mapper...');
     let result: MappingResult;
 
     try {
       result = await mapFieldsLocally(payload, fields, context);
     } catch {
-      console.warn('[DAS:Mapper] Local mapper failed, using heuristic fallback');
+      dasLog.debug('[DAS:Mapper] Local mapper failed, using heuristic fallback');
       result = mapFieldsHeuristic(payload, fields);
     }
 
@@ -178,7 +181,7 @@ export async function mapPayloadToFields(
     const safeMappings = enforceConfidenceThresholds(result.mappings);
     const validation = validateMappings(safeMappings);
 
-    console.warn('[DAS:Mapper] Validation:', generateValidationSummary(validation));
+    dasLog.debug('[DAS:Mapper] Validation:', generateValidationSummary(validation));
 
     // 7. Filter by confidence threshold
     const qualifiedMappings = safeMappings.filter((m) => m.confidence >= opts.minConfidence);
@@ -188,7 +191,7 @@ export async function mapPayloadToFields(
 
     if (cacheableMappings.length > 0 && !opts.bypassCache) {
       await setCachedMapping(pageHash, pageType, cacheableMappings);
-      console.warn('[DAS:Mapper] Cached', cacheableMappings.length, 'mappings');
+      dasLog.debug('[DAS:Mapper] Cached', cacheableMappings.length, 'mappings');
     }
 
     // 9. Combine warnings
@@ -202,7 +205,7 @@ export async function mapPayloadToFields(
       latencyMs: Date.now() - startTime,
     };
   } catch (error) {
-    console.error('[DAS:Mapper] Error:', error);
+    dasLog.error('[DAS:Mapper] Error:', error);
 
     return {
       mappings: [],

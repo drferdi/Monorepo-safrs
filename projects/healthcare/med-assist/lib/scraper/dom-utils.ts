@@ -4,6 +4,10 @@
  * Sentra Healthcare Artificial Intelligence
  */
 
+import { createLogger } from '@/utils/logger';
+
+const scraperLog = createLogger('DomUtils', 'content');
+
 /**
  * Utility untuk menunggu elemen DOM muncul (Anti-Flaky)
  * @param selector CSS Selector
@@ -29,7 +33,7 @@ export const waitForElement = (selector: string, timeout = 5000): Promise<Elemen
 
     setTimeout(() => {
       observer.disconnect();
-      console.warn(`[DOM] Timeout waiting for: ${selector}`);
+      scraperLog.debug(`[DOM] Timeout waiting for: ${selector}`);
       resolve(null);
     }, timeout);
   });

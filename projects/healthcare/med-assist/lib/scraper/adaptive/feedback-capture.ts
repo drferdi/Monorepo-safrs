@@ -17,6 +17,9 @@ import { scanPageFields } from './dom-scanner';
 import { recordLearning } from './learning-store';
 import { computePageHash } from './mapping-cache';
 import type { FieldMapping, FillOutcome, LearningEntry, PageType } from './types';
+import { createLogger } from '@/utils/logger';
+
+const dasLog = createLogger('DAS:Feedback', 'content');
 
 // ============================================================================
 // CONFIGURATION
@@ -63,7 +66,7 @@ let currentPageType: PageType = 'unknown';
 export function trackFilledField(mapping: FieldMapping, filledValue: string): void {
   // Limit tracked fields
   if (trackedFields.size >= FEEDBACK_CONFIG.maxTrackedFields) {
-    console.warn('[DAS:Feedback] Max tracked fields reached');
+    dasLog.debug('[DAS:Feedback] Max tracked fields reached');
     return;
   }
 
@@ -106,7 +109,7 @@ export function trackFilledField(mapping: FieldMapping, filledValue: string): vo
 
   trackedFields.set(trackingKey, tracked);
 
-  console.warn(`[DAS:Feedback] Tracking field: ${mapping.payloadKey}`);
+  dasLog.debug(`[DAS:Feedback] Tracking field: ${mapping.payloadKey}`);
 }
 
 /**
@@ -177,9 +180,9 @@ async function reportOutcome(
 
   try {
     await recordLearning(entry);
-    console.warn(`[DAS:Feedback] Recorded ${outcome} for ${tracked.mapping.payloadKey}`);
+    dasLog.debug(`[DAS:Feedback] Recorded ${outcome} for ${tracked.mapping.payloadKey}`);
   } catch (error) {
-    console.error('[DAS:Feedback] Failed to record learning:', error);
+    dasLog.error('[DAS:Feedback] Failed to record learning:', error);
   }
 }
 
@@ -242,7 +245,7 @@ export async function reportFillFailed(mapping: FieldMapping, reason?: string): 
   }
 
   await reportOutcome(trackingKey, 'failed');
-  console.warn(`[DAS:Feedback] Fill failed: ${reason || 'unknown'}`);
+  dasLog.debug(`[DAS:Feedback] Fill failed: ${reason || 'unknown'}`);
 }
 
 /**

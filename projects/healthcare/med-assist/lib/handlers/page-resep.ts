@@ -1085,7 +1085,7 @@ export async function fillResepForm(payload: ResepFillPayload): Promise<{
   failed: FillResult[];
   skipped: string[];
 }> {
-  console.warn('[ResepHandler] Starting fill cascade...');
+  resepLog.debug('[ResepHandler] Starting fill cascade...');
 
   const result = {
     success: [] as FillResult[],
@@ -1229,7 +1229,7 @@ export async function fillResepForm(payload: ResepFillPayload): Promise<{
       const rowNum = i + 1;
       let rowState: ResepRowState = 'init';
 
-      console.warn(`[ResepHandler] Processing row ${rowNum}/${totalRows}: ${med.nama_obat}`);
+      resepLog.debug(`[ResepHandler] Processing row ${rowNum}/${totalRows}: ${med.nama_obat}`);
 
       rowState = transitionRowState(runId, rowNum, rowState, 'row_ready', {
         message: `Row ${rowNum} started`,
@@ -1256,7 +1256,7 @@ export async function fillResepForm(payload: ResepFillPayload): Promise<{
 
           useSingleEntryFlow = true;
           sel = getResepRowSelectors(0);
-          console.warn(
+          resepLog.debug(
             '[ResepHandler] Switching to single-entry flow (row fields reused after Tambah)'
           );
         } else {
@@ -1400,7 +1400,7 @@ export async function fillResepForm(payload: ResepFillPayload): Promise<{
         const singleSel = getResepRowSelectors(0);
         useSingleEntryFlow = true;
         sel = singleSel;
-        console.warn(
+        resepLog.debug(
           '[ResepHandler] Row-index selector unavailable, fallback to single-entry selector'
         );
 
@@ -1428,7 +1428,7 @@ export async function fillResepForm(payload: ResepFillPayload): Promise<{
             : 'FORMULATION_MISMATCH'
         );
         pushFailedResult(rowNum, fallbackFailure, reasonCode);
-        console.warn(`[ResepHandler] Failed to fill nama_obat for row ${rowNum}`);
+        resepLog.debug(`[ResepHandler] Failed to fill nama_obat for row ${rowNum}`);
         // Nama Obat keeps no typed words of a medication left out. No events: a blur would close
         // the next medication's suggestions as they open.
         const leftNameInput = document.querySelector<HTMLInputElement>(sel.obat_nama);
@@ -1545,14 +1545,14 @@ export async function fillResepForm(payload: ResepFillPayload): Promise<{
     }
 
     const duration = Date.now() - startTime;
-    console.warn(`[ResepHandler] Fill cascade complete in ${duration}ms`);
-    console.warn(
+    resepLog.debug(`[ResepHandler] Fill cascade complete in ${duration}ms`);
+    resepLog.debug(
       `[ResepHandler] Results: ${result.success.length} success, ${result.failed.length} failed, ${result.skipped.length} skipped`
     );
 
     return result;
   } catch (error) {
-    console.error('[ResepHandler] Fill cascade error:', error);
+    resepLog.error('[ResepHandler] Fill cascade error:', error);
     result.failed.push({
       success: false,
       field: 'resep-cascade',
@@ -1577,20 +1577,20 @@ async function ensureRowExists(rowIndex: number): Promise<boolean> {
     return true;
   }
 
-  console.warn(`[ResepHandler] Adding new medication row ${rowIndex + 1}`);
+  resepLog.debug(`[ResepHandler] Adding new medication row ${rowIndex + 1}`);
   const clicked = await clickAddResepButton();
   if (!clicked) {
-    console.warn(`[ResepHandler] Could not add row ${rowIndex + 1} - add button not found`);
+    resepLog.debug(`[ResepHandler] Could not add row ${rowIndex + 1} - add button not found`);
     return false;
   }
 
   const newRow = document.querySelector(sel.obat_nama);
   if (newRow) {
-    console.warn(`[ResepHandler] Row ${rowIndex + 1} added successfully`);
+    resepLog.debug(`[ResepHandler] Row ${rowIndex + 1} added successfully`);
     return true;
   }
 
-  console.warn(`[ResepHandler] Row ${rowIndex + 1} not detected after click`);
+  resepLog.debug(`[ResepHandler] Row ${rowIndex + 1} not detected after click`);
   return false;
 }
 
@@ -1602,7 +1602,7 @@ async function ensureRowExists(rowIndex: number): Promise<boolean> {
  * Scrape current values from Resep form
  */
 export async function scrapeResepForm(): Promise<ScrapedResepData> {
-  console.warn('[ResepHandler] Scraping resep form...');
+  resepLog.debug('[ResepHandler] Scraping resep form...');
 
   await waitForElement(RESEP_FIELDS.alergi.selector, 3000);
 
@@ -1668,7 +1668,7 @@ export async function scrapeResepForm(): Promise<ScrapedResepData> {
     data.medications.push(med);
   }
 
-  console.warn(`[ResepHandler] Scraped ${data.medications.length} medication rows`);
+  resepLog.debug(`[ResepHandler] Scraped ${data.medications.length} medication rows`);
   return data;
 }
 
@@ -1680,7 +1680,7 @@ export async function scrapeResepForm(): Promise<ScrapedResepData> {
  * Called from content script when page is detected as resep
  */
 export function initResepPage(): void {
-  console.warn('[ResepHandler] Page handler initialized');
+  resepLog.debug('[ResepHandler] Page handler initialized');
 }
 
 export const __resepInternals = {

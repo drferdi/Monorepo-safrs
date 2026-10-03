@@ -5,6 +5,9 @@
  */
 
 import { getInputValue, getTextContent, waitForElement } from '@/lib/scraper/dom-utils.ts';
+import { createLogger } from '@/utils/logger';
+
+const scraperLog = createLogger('AnamnesaScraper', 'content');
 
 interface EncounterData {
   patientId: string;
@@ -77,7 +80,7 @@ export interface AnamnesaScrapeResult extends Partial<EncounterData> {
 }
 
 export const scrapeAnamnesa = async (): Promise<AnamnesaScrapeResult> => {
-  console.warn('[Scraper] Analyzing Anamnesa Page...');
+  scraperLog.debug('[Scraper] Analyzing Anamnesa Page...');
 
   await waitForElement('#form-anamnesa-container');
 
@@ -223,7 +226,7 @@ export const scrapeAnamnesa = async (): Promise<AnamnesaScrapeResult> => {
     },
   };
 
-  console.warn('[Scraper] Anamnesa scraped:', {
+  scraperLog.debug('[Scraper] Anamnesa scraped:', {
     hasVitals: !!vital_signs,
     hasDemographics: !!patient_demographics,
     hasKeluhan: !!keluhanUtama,

@@ -17,6 +17,9 @@ import { scanPageFields } from './dom-scanner';
 import { cleanupOldEntries, getLearningAnalytics, getPromotionCandidates } from './learning-store';
 import { clearCache, computePageHash, getCacheStats, setCachedMapping } from './mapping-cache';
 import type { FieldMapping, PageType, PromotionCriteria } from './types';
+import { createLogger } from '@/utils/logger';
+
+const dasLog = createLogger('DAS:Promoter', 'content');
 
 // ============================================================================
 // PROMOTION EXECUTION
@@ -66,11 +69,11 @@ export async function executePromotion(
     const candidates = await getPromotionCandidates(criteria);
 
     if (candidates.length === 0) {
-      console.warn('[DAS:Promoter] No candidates for promotion');
+      dasLog.debug('[DAS:Promoter] No candidates for promotion');
       return result;
     }
 
-    console.warn(`[DAS:Promoter] Found ${candidates.length} promotion candidates`);
+    dasLog.debug(`[DAS:Promoter] Found ${candidates.length} promotion candidates`);
 
     // Get current page fields for context
     const scanResult = scanPageFields();
@@ -85,7 +88,7 @@ export async function executePromotion(
       const matchingField = scanResult.fields.find((f) => f.selector === stats.fieldSelector);
 
       if (!matchingField) {
-        console.warn(`[DAS:Promoter] Field not found: ${stats.fieldSelector}`);
+        dasLog.debug(`[DAS:Promoter] Field not found: ${stats.fieldSelector}`);
         result.skipped++;
         continue;
       }
@@ -112,11 +115,11 @@ export async function executePromotion(
       await setCachedMapping(pageHash, pageType || 'unknown', mappingsToCache);
     }
 
-    console.warn(`[DAS:Promoter] Promoted ${result.promoted} mappings to cache`);
+    dasLog.debug(`[DAS:Promoter] Promoted ${result.promoted} mappings to cache`);
 
     return result;
   } catch (error) {
-    console.error('[DAS:Promoter] Promotion error:', error);
+    dasLog.error('[DAS:Promoter] Promotion error:', error);
     result.failed++;
     return result;
   }
@@ -224,7 +227,7 @@ export async function runMaintenance(): Promise<{
   cleanedEntries: number;
   promotionResult: PromotionResult;
 }> {
-  console.warn('[DAS:Promoter] Starting maintenance...');
+  dasLog.debug('[DAS:Promoter] Starting maintenance...');
 
   // Clean up old entries
   const cleanedEntries = await cleanupOldEntries();
@@ -232,7 +235,7 @@ export async function runMaintenance(): Promise<{
   // Run promotion
   const promotionResult = await executePromotion();
 
-  console.warn('[DAS:Promoter] Maintenance complete');
+  dasLog.debug('[DAS:Promoter] Maintenance complete');
 
   return {
     cleanedEntries,
@@ -246,12 +249,12 @@ export async function runMaintenance(): Promise<{
  * WARNING: This clears all learned mappings and cache
  */
 export async function resetDAS(): Promise<void> {
-  console.warn('[DAS:Promoter] Resetting entire DAS system...');
+  dasLog.debug('[DAS:Promoter] Resetting entire DAS system...');
 
   await clearCache();
   // Note: Learning store clear is called separately
 
-  console.warn('[DAS:Promoter] DAS system reset complete');
+  dasLog.debug('[DAS:Promoter] DAS system reset complete');
 }
 
 // ============================================================================
@@ -267,17 +270,17 @@ let maintenanceInterval: ReturnType<typeof setInterval> | null = null;
  */
 export function startScheduledMaintenance(intervalMs: number = 60 * 60 * 1000): void {
   if (maintenanceInterval) {
-    console.warn('[DAS:Promoter] Maintenance already scheduled');
+    dasLog.debug('[DAS:Promoter] Maintenance already scheduled');
     return;
   }
 
   maintenanceInterval = setInterval(() => {
     runMaintenance().catch((error) => {
-      console.error('[DAS:Promoter] Scheduled maintenance error:', error);
+      dasLog.error('[DAS:Promoter] Scheduled maintenance error:', error);
     });
   }, intervalMs);
 
-  console.warn(`[DAS:Promoter] Scheduled maintenance every ${intervalMs / 1000}s`);
+  dasLog.debug(`[DAS:Promoter] Scheduled maintenance every ${intervalMs / 1000}s`);
 }
 
 /**
@@ -287,6 +290,6 @@ export function stopScheduledMaintenance(): void {
   if (maintenanceInterval) {
     clearInterval(maintenanceInterval);
     maintenanceInterval = null;
-    console.warn('[DAS:Promoter] Scheduled maintenance stopped');
+    dasLog.debug('[DAS:Promoter] Scheduled maintenance stopped');
   }
 }

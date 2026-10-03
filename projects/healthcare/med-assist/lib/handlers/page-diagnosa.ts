@@ -538,7 +538,7 @@ function findSelectorByFallback(selectors: readonly string[]): string | null {
       // Skip hidden elements
       if (el instanceof HTMLElement) {
         if (isElementHiddenForFill(el)) {
-          console.warn('[Diagnosa Handler] Skipping hidden element:', sel);
+          diagnosaLog.debug('[Diagnosa Handler] Skipping hidden element:', sel);
           continue;
         }
       }
@@ -554,14 +554,14 @@ function findSelectorByFallback(selectors: readonly string[]): string | null {
       }
 
       if (el instanceof HTMLElement) {
-        console.warn('[Diagnosa Handler] ✅ Found VISIBLE element for:', sel, el);
+        diagnosaLog.debug('[Diagnosa Handler] ✅ Found VISIBLE element for:', sel, el);
         const token = `sentra-dx-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
         el.setAttribute('data-sentra-target', token);
         return `[data-sentra-target="${token}"]`;
       }
     }
   }
-  console.warn('[Diagnosa Handler] ❌ No visible element found for selectors:', selectors);
+  diagnosaLog.debug('[Diagnosa Handler] ❌ No visible element found for selectors:', selectors);
   return null;
 }
 
@@ -693,7 +693,7 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
     // SKIP DAS - Use direct fallback selectors only
     // DAS auth broken, causing fills to fail completely
     // ========================================
-    console.warn('[Diagnosa Handler] Skipping DAS, using direct fallback selectors');
+    diagnosaLog.debug('[Diagnosa Handler] Skipping DAS, using direct fallback selectors');
 
     const dasResult = {
       mappings: [],
@@ -702,7 +702,7 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
       latencyMs: 0,
     };
 
-    console.warn('[Diagnosa Handler] Using fallback for all fields:', dasResult.unmapped);
+    diagnosaLog.debug('[Diagnosa Handler] Using fallback for all fields:', dasResult.unmapped);
 
     // DAS is skipped, so no mappings to process from DAS result
     // All fields will be handled by fallback logic below
@@ -711,13 +711,16 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
     // STRATEGY 2: Fallback for unmapped fields
     // ========================================
     if (dasResult.unmapped.length > 0) {
-      console.warn('[Diagnosa Handler] Using fallback for unmapped fields:', dasResult.unmapped);
+      diagnosaLog.debug(
+        '[Diagnosa Handler] Using fallback for unmapped fields:',
+        dasResult.unmapped
+      );
 
       // ========================================
       // DOCTOR/NURSE NAMES - SCRAPE FROM RME + DIRECT FILL
       // ========================================
       const scrapedNames = scrapeDoctorNurseNames();
-      console.warn('[Diagnosa Handler] Scraped names from RME:', scrapedNames);
+      diagnosaLog.debug('[Diagnosa Handler] Scraped names from RME:', scrapedNames);
 
       // Doctor name — signed-in user or constant (DECISIONS 2026-09-27)
       const dokterName = payload.tenaga_medis?.dokter_nama || DOKTER_NAMA;
@@ -743,7 +746,7 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
                 }
               : undefined,
           });
-          console.warn(
+          diagnosaLog.debug(
             `[Diagnosa Handler] ✅ Will fill doctor name (${autocomplete ? 'autocomplete' : 'text'}):`,
             dokterName
           );
@@ -778,7 +781,7 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
                 }
               : undefined,
           });
-          console.warn(
+          diagnosaLog.debug(
             `[Diagnosa Handler] ✅ Will fill nurse name (${autocomplete ? 'autocomplete' : 'text'}):`,
             perawatName
           );
@@ -830,7 +833,7 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
           if (name.includes('jenis') || nearby.includes('Jenis')) {
             if (sel.offsetParent !== null && !sel.disabled) {
               jenisEl = sel;
-              console.warn('[Diagnosa Handler] ✅ Found Jenis dropdown:', sel.name);
+              diagnosaLog.debug('[Diagnosa Handler] ✅ Found Jenis dropdown:', sel.name);
               break;
             }
           }
@@ -848,9 +851,9 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
             value: jenisValue || '1',
             type: 'select',
           });
-          console.warn('[Diagnosa Handler] ✅ Will fill Jenis:', jenisValue);
+          diagnosaLog.debug('[Diagnosa Handler] ✅ Will fill Jenis:', jenisValue);
         } else {
-          console.warn('[Diagnosa Handler] ❌ Jenis dropdown not found');
+          diagnosaLog.debug('[Diagnosa Handler] ❌ Jenis dropdown not found');
           skipped.push('jenis: Element not found');
         }
       }
@@ -868,7 +871,7 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
           if (name.includes('kasus') || nearby.includes('Kasus')) {
             if (sel.offsetParent !== null && !sel.disabled) {
               kasusEl = sel;
-              console.warn('[Diagnosa Handler] ✅ Found Kasus dropdown:', sel.name);
+              diagnosaLog.debug('[Diagnosa Handler] ✅ Found Kasus dropdown:', sel.name);
               break;
             }
           }
@@ -886,9 +889,9 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
             value: kasusValue || '1',
             type: 'select',
           });
-          console.warn('[Diagnosa Handler] ✅ Will fill Kasus:', kasusValue);
+          diagnosaLog.debug('[Diagnosa Handler] ✅ Will fill Kasus:', kasusValue);
         } else {
-          console.warn('[Diagnosa Handler] ❌ Kasus dropdown not found');
+          diagnosaLog.debug('[Diagnosa Handler] ❌ Kasus dropdown not found');
           skipped.push('kasus: Element not found');
         }
       }
@@ -906,7 +909,7 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
             if (mappedValue) {
               prognosisValue =
                 findSelectValue(progEl, [mappedValue, payload.prognosa]) || payload.prognosa;
-              console.warn(
+              diagnosaLog.debug(
                 `[Diagnosa Handler] Mapped prognosis "${payload.prognosa}" → "${prognosisValue}"`
               );
             }
@@ -923,7 +926,10 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
 
       // Penyakit kronis checkboxes
       if (payload.penyakit_kronis && payload.penyakit_kronis.length > 0) {
-        console.warn('[Diagnosa Handler] Processing chronic diseases:', payload.penyakit_kronis);
+        diagnosaLog.debug(
+          '[Diagnosa Handler] Processing chronic diseases:',
+          payload.penyakit_kronis
+        );
         for (const diseaseName of payload.penyakit_kronis) {
           const checkbox = findChronicDiseaseCheckbox(diseaseName);
           if (checkbox) {
@@ -935,9 +941,9 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
               value: true,
               type: 'checkbox',
             });
-            console.warn(`[Diagnosa Handler] Found checkbox for "${diseaseName}"`);
+            diagnosaLog.debug(`[Diagnosa Handler] Found checkbox for "${diseaseName}"`);
           } else {
-            console.warn(
+            diagnosaLog.debug(
               `[Diagnosa Handler] Checkbox not found for chronic disease: "${diseaseName}"`
             );
             skipped.push(`penyakit_kronis[${diseaseName}]: Checkbox not found`);
@@ -946,10 +952,10 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
       }
     }
 
-    console.warn('[Diagnosa Handler] Final mappings:', mappings.length);
-    console.warn('[Diagnosa Handler] Skipped:', skipped);
+    diagnosaLog.debug('[Diagnosa Handler] Final mappings:', mappings.length);
+    diagnosaLog.debug('[Diagnosa Handler] Skipped:', skipped);
   } catch (error) {
-    console.error('[Diagnosa Handler] DAS error, using pure fallback:', error);
+    diagnosaLog.error('[Diagnosa Handler] DAS error, using pure fallback:', error);
 
     // Pure fallback mode
     if (payload.icd_x) {
@@ -1010,7 +1016,7 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
           if (mappedValue) {
             prognosisValue =
               findSelectValue(progEl, [mappedValue, payload.prognosa]) || payload.prognosa;
-            console.warn(
+            diagnosaLog.debug(
               `[Diagnosa Handler] Mapped prognosis "${payload.prognosa}" → "${prognosisValue}"`
             );
           }
@@ -1029,7 +1035,7 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
   // EXECUTE FILL
   // ========================================
   if (mappings.length === 0) {
-    console.warn('[Diagnosa Handler] No fields to fill');
+    diagnosaLog.debug('[Diagnosa Handler] No fields to fill');
     return {
       success: [],
       failed: [
@@ -1085,11 +1091,11 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
       await waitMs(500); // ensure primary fields settled
       const addButton = findAddDiagnosisButton();
       if (addButton) {
-        console.warn('[Diagnosa Handler] Auto-clicking "Tambah" button');
+        diagnosaLog.debug('[Diagnosa Handler] Auto-clicking "Tambah" button');
         addButton.click();
         await waitMs(700); // wait UI to commit row + refresh dependent fields
       } else {
-        console.warn('[Diagnosa Handler] "Tambah" button not found for auto-click');
+        diagnosaLog.debug('[Diagnosa Handler] "Tambah" button not found for auto-click');
       }
 
       const needPostApply = Boolean(payload.prognosa) || Boolean(payload.penyakit_kronis?.length);
@@ -1098,11 +1104,11 @@ export async function fillDiagnosaForm(payload: DiagnosaFillPayload): Promise<{
         success.push(...post.success);
         failed.push(...post.failed);
         if (post.success.length > 0) {
-          console.warn('[Diagnosa Handler] Post-add fields applied:', post.success.length);
+          diagnosaLog.debug('[Diagnosa Handler] Post-add fields applied:', post.success.length);
         }
       }
     } catch (error) {
-      console.error('[Diagnosa Handler] Auto-click/post-fill failed:', error);
+      diagnosaLog.error('[Diagnosa Handler] Auto-click/post-fill failed:', error);
     }
   }
 
@@ -1195,16 +1201,16 @@ function findAddDiagnosisButton(): HTMLButtonElement | HTMLAnchorElement | HTMLI
  * Called when content script detects diagnosa page
  */
 export function initDiagnosaPage(): void {
-  console.warn('[Diagnosa Handler] Page initialized with DAS integration');
+  diagnosaLog.debug('[Diagnosa Handler] Page initialized with DAS integration');
 
   // Pre-warm DAS cache by scanning fields
   setTimeout(async () => {
     try {
       const { scanPageFields } = await import('@/lib/scraper/adaptive');
       const result = scanPageFields({ includeHidden: false });
-      console.warn('[Diagnosa Handler] Pre-scan found', result.fields.length, 'fields');
+      diagnosaLog.debug('[Diagnosa Handler] Pre-scan found', result.fields.length, 'fields');
     } catch (error) {
-      console.warn('[Diagnosa Handler] Pre-scan failed:', error);
+      diagnosaLog.debug('[Diagnosa Handler] Pre-scan failed:', error);
     }
   }, 500);
 }
@@ -1338,14 +1344,14 @@ function scrapeDoctorNurseNames(): { dokter: string | null; perawat: string | nu
     const dokterMatch = text.match(/(?:Dokter|Dokter Pemeriksa)\s*:\s*([^\n,]+)/i);
     if (dokterMatch && dokterMatch[1]) {
       result.dokter = dokterMatch[1].trim();
-      console.warn('[Diagnosa Handler] Found doctor in header:', result.dokter);
+      diagnosaLog.debug('[Diagnosa Handler] Found doctor in header:', result.dokter);
     }
 
     // Match nurse name pattern: "Perawat: Name" or "Bidan: Name"
     const perawatMatch = text.match(/(?:Perawat|Bidan)\s*:\s*([^\n,]+)/i);
     if (perawatMatch && perawatMatch[1]) {
       result.perawat = perawatMatch[1].trim();
-      console.warn('[Diagnosa Handler] Found nurse in header:', result.perawat);
+      diagnosaLog.debug('[Diagnosa Handler] Found nurse in header:', result.perawat);
     }
   }
 
@@ -1359,7 +1365,7 @@ function scrapeDoctorNurseNames(): { dokter: string | null; perawat: string | nu
       if (sanitized) {
         result.dokter = sanitized;
       }
-      console.warn('[Diagnosa Handler] Found doctor in hidden field:', result.dokter);
+      diagnosaLog.debug('[Diagnosa Handler] Found doctor in hidden field:', result.dokter);
     }
   }
 
@@ -1372,7 +1378,7 @@ function scrapeDoctorNurseNames(): { dokter: string | null; perawat: string | nu
       if (sanitized) {
         result.perawat = sanitized;
       }
-      console.warn('[Diagnosa Handler] Found nurse in hidden field:', result.perawat);
+      diagnosaLog.debug('[Diagnosa Handler] Found nurse in hidden field:', result.perawat);
     }
   }
 
@@ -1386,7 +1392,7 @@ function scrapeDoctorNurseNames(): { dokter: string | null; perawat: string | nu
         const nameMatch = text.match(/(dr\.\s*[A-Za-z]+(?:\s+[A-Za-z]+)*)/i);
         if (nameMatch) {
           result.dokter = nameMatch[1].trim();
-          console.warn('[Diagnosa Handler] Found doctor in text element:', result.dokter);
+          diagnosaLog.debug('[Diagnosa Handler] Found doctor in text element:', result.dokter);
           break;
         }
       }
@@ -1402,10 +1408,10 @@ function scrapeDoctorNurseNames(): { dokter: string | null; perawat: string | nu
     const userName = userNameEl.textContent?.trim() || '';
     if (userName.toLowerCase().startsWith('dr.') && !result.dokter) {
       result.dokter = userName;
-      console.warn('[Diagnosa Handler] Found doctor from user name:', result.dokter);
+      diagnosaLog.debug('[Diagnosa Handler] Found doctor from user name:', result.dokter);
     } else if (!result.perawat && userName && !userName.toLowerCase().startsWith('dr.')) {
       result.perawat = userName;
-      console.warn('[Diagnosa Handler] Found nurse from user name:', result.perawat);
+      diagnosaLog.debug('[Diagnosa Handler] Found nurse from user name:', result.perawat);
     }
   }
 
@@ -1416,7 +1422,7 @@ function scrapeDoctorNurseNames(): { dokter: string | null; perawat: string | nu
       sessionStorage.getItem('epuskesmas_doctor_name');
     if (storedDoctor && !result.dokter) {
       result.dokter = storedDoctor;
-      console.warn('[Diagnosa Handler] Found doctor in storage:', result.dokter);
+      diagnosaLog.debug('[Diagnosa Handler] Found doctor in storage:', result.dokter);
     }
 
     const storedNurse =
@@ -1424,7 +1430,7 @@ function scrapeDoctorNurseNames(): { dokter: string | null; perawat: string | nu
       sessionStorage.getItem('epuskesmas_nurse_name');
     if (storedNurse && !result.perawat) {
       result.perawat = storedNurse;
-      console.warn('[Diagnosa Handler] Found nurse in storage:', result.perawat);
+      diagnosaLog.debug('[Diagnosa Handler] Found nurse in storage:', result.perawat);
     }
   } catch {
     // Storage access may fail in some contexts

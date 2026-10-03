@@ -23,6 +23,9 @@ import type {
   PromotionCriteria,
 } from './types';
 import { DEFAULT_LEARNING_CONFIG, DEFAULT_PROMOTION_CRITERIA } from './types';
+import { createLogger } from '@/utils/logger';
+
+const dasLog = createLogger('DAS:Learning', 'content');
 
 // ============================================================================
 // DATABASE INITIALIZATION
@@ -48,13 +51,13 @@ export async function initLearningStore(
     const request = indexedDB.open(config.dbName, config.dbVersion);
 
     request.onerror = () => {
-      console.error('[DAS:Learning] DB open error:', request.error);
+      dasLog.error('[DAS:Learning] DB open error:', request.error);
       reject(request.error);
     };
 
     request.onsuccess = () => {
       db = request.result;
-      console.warn('[DAS:Learning] Database initialized');
+      dasLog.debug('[DAS:Learning] Database initialized');
       resolve();
     };
 
@@ -79,7 +82,7 @@ export async function initLearningStore(
         statsStore.createIndex('successRate', 'successRate', { unique: false });
       }
 
-      console.warn('[DAS:Learning] Database schema created');
+      dasLog.debug('[DAS:Learning] Database schema created');
     };
   });
 }
@@ -150,7 +153,7 @@ export async function recordLearning(
     };
 
     request.onerror = () => {
-      console.error('[DAS:Learning] Record error:', request.error);
+      dasLog.error('[DAS:Learning] Record error:', request.error);
       reject(request.error);
     };
   });
@@ -474,7 +477,7 @@ export async function cleanupOldEntries(): Promise<number> {
         deletedCount++;
         cursor.continue();
       } else {
-        console.warn(`[DAS:Learning] Cleaned up ${deletedCount} old entries`);
+        dasLog.debug(`[DAS:Learning] Cleaned up ${deletedCount} old entries`);
         resolve(deletedCount);
       }
     };
@@ -496,7 +499,7 @@ export async function clearLearningStore(): Promise<void> {
     tx.objectStore(STATS_STORE).clear();
 
     tx.oncomplete = () => {
-      console.warn('[DAS:Learning] All learning data cleared');
+      dasLog.debug('[DAS:Learning] All learning data cleared');
       resolve();
     };
 

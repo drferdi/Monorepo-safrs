@@ -37,6 +37,19 @@ export default tseslint.config(
     rules: { 'no-console': 'off' },
   },
   {
+    // Code that runs in the ePuskesmas page prints into that page's console; it logs through
+    // utils/logger only (debug is off in production builds), never with raw patient values.
+    files: [
+      'entrypoints/content.ts',
+      'entrypoints/inject.content.ts',
+      'lib/handlers/**/*.ts',
+      'lib/filler/**/*.ts',
+      'lib/scraper/**/*.ts',
+    ],
+    ignores: ['**/*.test.ts'],
+    rules: { 'no-console': 'error' },
+  },
+  {
     ignores: [
       '.output/**',
       '.wxt/**',

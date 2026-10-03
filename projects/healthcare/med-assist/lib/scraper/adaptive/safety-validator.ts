@@ -19,6 +19,9 @@ import type {
   FieldSignature,
   ValidationResult,
 } from './types';
+import { createLogger } from '@/utils/logger';
+
+const dasLog = createLogger('DAS:Safety', 'content');
 
 // ============================================================================
 // CLINICAL FIELD PATTERNS
@@ -275,7 +278,7 @@ export function logSafetyDecision(
   };
 
   // Log to console (can be extended to send to analytics)
-  console.warn('[DAS:Safety] Decision:', logEntry);
+  dasLog.debug('[DAS:Safety] Decision:', logEntry);
 
   // Store in session for debugging (optional)
   try {

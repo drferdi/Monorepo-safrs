@@ -20,6 +20,9 @@ import type {
   MappingCacheEntry,
   PageType,
 } from './types';
+import { createLogger } from '@/utils/logger';
+
+const dasLog = createLogger('DAS:Cache', 'content');
 
 // ============================================================================
 // CONFIGURATION
@@ -105,7 +108,7 @@ export async function getCachedMapping(pageHash: string): Promise<MappingCacheEn
 
     return entry;
   } catch (error) {
-    console.error('[DAS:Cache] Get error:', error);
+    dasLog.error('[DAS:Cache] Get error:', error);
     return null;
   }
 }
@@ -147,7 +150,7 @@ export async function setCachedMapping(
     // Cleanup old entries if needed
     await cleanupOldEntries();
   } catch (error) {
-    console.error('[DAS:Cache] Set error:', error);
+    dasLog.error('[DAS:Cache] Set error:', error);
   }
 }
 
@@ -175,13 +178,13 @@ export async function updateCacheResult(pageHash: string, success: boolean): Pro
       entry.successRate < CACHE_CONFIG.minSuccessRate
     ) {
       await browser.storage.local.remove(key);
-      console.warn(`[DAS:Cache] Removed low-success entry: ${pageHash}`);
+      dasLog.debug(`[DAS:Cache] Removed low-success entry: ${pageHash}`);
       return;
     }
 
     await browser.storage.local.set({ [key]: entry });
   } catch (error) {
-    console.error('[DAS:Cache] Update error:', error);
+    dasLog.error('[DAS:Cache] Update error:', error);
   }
 }
 
@@ -197,9 +200,9 @@ export async function clearCache(): Promise<void> {
       await browser.storage.local.remove(keysToRemove);
     }
 
-    console.warn(`[DAS:Cache] Cleared ${keysToRemove.length} entries`);
+    dasLog.debug(`[DAS:Cache] Cleared ${keysToRemove.length} entries`);
   } catch (error) {
-    console.error('[DAS:Cache] Clear error:', error);
+    dasLog.error('[DAS:Cache] Clear error:', error);
   }
 }
 
@@ -234,7 +237,7 @@ export async function getCacheStats(): Promise<CacheStats> {
       storageUsed,
     };
   } catch (error) {
-    console.error('[DAS:Cache] Stats error:', error);
+    dasLog.error('[DAS:Cache] Stats error:', error);
     return {
       totalEntries: 0,
       hits: 0,
@@ -269,10 +272,10 @@ async function cleanupOldEntries(): Promise<void> {
     if (toRemove > 0) {
       const keysToRemove = entries.slice(0, toRemove).map((e) => e.key);
       await browser.storage.local.remove(keysToRemove);
-      console.warn(`[DAS:Cache] Cleaned up ${toRemove} old entries`);
+      dasLog.debug(`[DAS:Cache] Cleaned up ${toRemove} old entries`);
     }
   } catch (error) {
-    console.error('[DAS:Cache] Cleanup error:', error);
+    dasLog.error('[DAS:Cache] Cleanup error:', error);
   }
 }
 
