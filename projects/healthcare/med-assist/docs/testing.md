@@ -12,5 +12,6 @@ All commands run from the capsule root.
 - Build: `node scripts/pnpm.mjs run build`; load check: `node scripts/pnpm.mjs run run:check`.
 - Deploy dry-run: `node scripts/pnpm.mjs run deploy:dry-run` (`wxt zip`).
 - End-to-end: `node scripts/pnpm.mjs run test:e2e` (Playwright; needs installed browsers).
-- Known limitation: `vitest.clinical.config.ts` and `vitest.unit.config.ts` are broken since
-  legacy and are not used; the full suite covers their files.
+- `vitest.config.ts` is the only Vitest configuration. The broken, unused
+  `vitest.clinical.config.ts` and `vitest.unit.config.ts` were removed on 2026-10-03; the full
+  suite covers their files.

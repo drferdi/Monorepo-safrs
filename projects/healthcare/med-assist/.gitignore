@@ -12,6 +12,7 @@
 .mcp.json
 droid-wiki/
 .playwright-mcp/
+.superpowers/
 CLAUDE.md
 QWEN.md
 GEMINI.md
