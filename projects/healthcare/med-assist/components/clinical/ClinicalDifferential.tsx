@@ -416,6 +416,7 @@ const REASON_CODE_LABELS: Record<RMETransferReasonCode, string> = {
   DUPLICATE_SUPPRESSED: 'Transfer duplikat diblok dalam window idempotency.',
   USER_CANCELLED: 'Transfer dibatalkan oleh pengguna.',
   NO_ACTIVE_TAB: 'Tab ePuskesmas tidak ditemukan.',
+  PATIENT_MISMATCH: 'Halaman pasien entri ini tidak terbuka; tidak diisi ke pasien lain.',
   PAGE_NOT_READY: 'Halaman belum siap, coba reload halaman ePuskesmas.',
   STEP_TIMEOUT: 'Waktu eksekusi step habis.',
   FIELD_NOT_FOUND: 'Field target RME tidak ditemukan.',

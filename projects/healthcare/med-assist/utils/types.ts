@@ -451,6 +451,7 @@ export type RMETransferReasonCode =
   | 'DUPLICATE_SUPPRESSED'
   | 'USER_CANCELLED'
   | 'NO_ACTIVE_TAB'
+  | 'PATIENT_MISMATCH'
   | 'PAGE_NOT_READY'
   | 'STEP_TIMEOUT'
   | 'FIELD_NOT_FOUND'

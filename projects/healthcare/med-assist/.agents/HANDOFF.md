@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-10-03 (visit summary PDF in IBM Plex Sans; 09 Verifikasi with DPJP and verifier from the signed-in user; on an Oxford band with red orange signals, Edukasi and Tindak lanjut; "Unduh PDF" on RME Terapi, Swiss grid, pdf-lib; Tren TTV text on the trajectory scale; Trajectory Tren TTV as the lab spring playground; STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
+Last updated: 2026-10-03 (bridge entries fill only their own patient's tab; visit history in memory only; masked identity to the crew portal; audit `med-assist-audit-2026-10-03.md` given to Chief; visit summary PDF in IBM Plex Sans; 09 Verifikasi with DPJP and verifier from the signed-in user; on an Oxford band with red orange signals, Edukasi and Tindak lanjut; "Unduh PDF" on RME Terapi, Swiss grid, pdf-lib; Tren TTV text on the trajectory scale; Trajectory Tren TTV as the lab spring playground; STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
 identity-free, CSV for pandas; a resep step says what went wrong, out of stock is a note without Ulangi; Terapi kronis drops acute-only medications; an out-of-stock medication is left out at once; header lights the page on screen, "Lanjutkan semua" for chronic therapy;
 chronic doses from the riwayat Resep table, no triad warning; the RME resep picks each medication from its ePuskesmas suggestion and
 presses Tambah once per row; 2026-10-01: the signa chosen from its suggestion, "3x sehari" as 3x1;
@@ -10,6 +10,14 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 1k tokens. Durable decisions go to `DECISIONS.md`.
 
 ## Current state
+
+- Audit answers (2026-10-03, DECISIONS three entries): bridge entries are claimed only while their
+  `pelayananId` tab is open, fill that tab only (`PATIENT_MISMATCH`, no retry), poll on `pageReady`
+  and on a saved auth config, one poll at a time; the run id is base 36 (the 13-digit ms id tripped
+  the PII guard, so every bridge report failed). Visit history: in memory, one patient, legacy
+  IndexedDB deleted. Patient-sync: name `F**di I*****ar`, BPJS last four, RM readable.
+  Audit tasks not done yet: duplicate background listeners (A1), PHI in console (S5), DDI and
+  glucose tests, unused permissions, auto-commit scripts, README.
 
 Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-30 (two entries) and
 2026-09-29 hold the details. `main` is at cd7b7795 (Chief merged through the Tren TTV text scale).
@@ -99,6 +107,12 @@ Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/z
   `bhcffleclpadneocndhembhjbemimhkm`.
 
 ## Verification (final tree)
+
+2026-10-03 (bridge, retention, masking): typecheck 0 · test 0 (1622 passed, 17 skipped) · eslint on
+my files 0 (full lint 1: only `zz-verify-kb-rx.spec.ts` and the old `platform-api-client.test.ts`
+warning) · `run build` 0, last · `run:check` 0 · e2e 20 (synthetic, auth-bridge, smoke, trajectory
+preview; `zz-verify-kb-rx` not run). Prettier: touched files that drifted at HEAD were not
+reformatted; my blocks add no drift.
 
 2026-10-03 (PDF redesign + review fixes): lint 1 only from the two known files · typecheck 0 ·
 test 0 (1598 passed, 17 skipped) · e2e 20 · dev build 0 (pdf-lib only in its chunk) · `run:check` 0 ·
@@ -200,6 +214,10 @@ Screenshots failed (Claude window hidden); checks were read from the DOM.
 
 ## Next action
 
+Chief, bridge live: a dashboard entry for patient X stays pending until X's ePuskesmas page is open,
+then fills within seconds and reads "complete" on the dashboard; an entry for Y never fills X. The
+crew portal shows the masked name. `chrome://indexeddb-internals` lists no `sentra-visit-history`
+after one side-panel open.
 Chief opens a case to RME Terapi and presses "Unduh PDF" (harness `pdf.html` shows the synthetic one).
 Chief looks at TRAJECTORY → Tren Tanda Vital. Open: the outer CHART frame and Hasil are kept
 around the lab card (shared `TrajectorySimplePanel`); the ball drag of the lab is left out.

@@ -57,7 +57,7 @@ export interface AuthResponse {
 // CONFIG
 // ============================================================================
 
-const AUTH_CONFIG_KEY = 'sentra:auth-config';
+export const AUTH_CONFIG_KEY = 'sentra:auth-config';
 
 // No backend by default. Empty base URL = "Mode Lokal" — login is verified
 // device-local (lib/api/local-auth.ts) with no server. Set a real base URL via

@@ -24,11 +24,15 @@ import type { RMETransferPayload, RMETransferResult } from '~/utils/types';
 const log = createLogger('BridgePoller', 'background');
 
 const ALARM_NAME = 'sentra-bridge-poll';
-const POLL_STALE_MS = 60_000; // 60s — if poll flag is stuck longer, force reset
 const MAX_BACKOFF_MS = 5 * 60_000; // 5 minutes max backoff
-let isPolling = false;
-let pollStartedAt = 0;
+const PAGE_READY_POLL_DELAY_MS = 800;
+// One poll at a time. A transfer can run for minutes (three steps, each retried), so a second poll
+// waits for it instead of resetting a "stale" flag and filling the same tab twice.
+let inFlightPoll: Promise<void> | null = null;
+// A poll asked for while one runs (a page that loaded meanwhile) runs once more right after it.
+let pollRequestedDuringRun = false;
 let listenerRegistered = false;
+let pageReadyPollTimer: ReturnType<typeof setTimeout> | null = null;
 let consecutiveNetworkErrors = 0;
 let backoffUntilMs = 0;
 
@@ -46,15 +50,49 @@ export type BridgeTransferExecutor = (
   payload: RMETransferPayload
 ) => Promise<RMETransferResult>;
 
+/** Whether a tab of this pelayanan is open, so its entry can be filled now. */
+export type BridgeTargetProbe = (pelayananId: string) => Promise<boolean>;
+
 let registeredExecutor: BridgeTransferExecutor | null = null;
+let registeredTargetProbe: BridgeTargetProbe | null = null;
 
 /**
- * Register the transfer executor function.
- * Called from background.ts to wire up the RMETransferOrchestrator.
+ * Register the transfer executor function and the probe that says whether an entry's patient is
+ * open. Called from background.ts to wire up the RMETransferOrchestrator.
  */
-export function registerBridgeExecutor(executor: BridgeTransferExecutor): void {
+export function registerBridgeExecutor(
+  executor: BridgeTransferExecutor,
+  targetProbe: BridgeTargetProbe
+): void {
   registeredExecutor = executor;
+  registeredTargetProbe = targetProbe;
   log.debug('[BridgePoller] Transfer executor registered');
+}
+
+/**
+ * Listen for the poll alarm. Called synchronously while the service worker starts: an alarm that
+ * wakes a suspended worker is delivered only to listeners registered in that first turn.
+ */
+export function attachBridgeAlarmListener(): void {
+  if (listenerRegistered) return;
+  browser.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name === ALARM_NAME) {
+      pollOnce().catch((err) => log.error('[BridgePoller] Poll error:', err));
+    }
+  });
+  listenerRegistered = true;
+}
+
+/**
+ * Poll soon after an ePuskesmas page has loaded, so an entry waiting for that patient fills
+ * without waiting for the next alarm. Page loads close together cause one poll.
+ */
+export function requestBridgePoll(): void {
+  if (pageReadyPollTimer) clearTimeout(pageReadyPollTimer);
+  pageReadyPollTimer = setTimeout(() => {
+    pageReadyPollTimer = null;
+    pollOnce().catch((err) => log.error('[BridgePoller] Poll error:', err));
+  }, PAGE_READY_POLL_DELAY_MS);
 }
 
 /**
@@ -78,15 +116,6 @@ export async function startBridgePoller(): Promise<void> {
     periodInMinutes,
   });
 
-  if (!listenerRegistered) {
-    browser.alarms.onAlarm.addListener((alarm) => {
-      if (alarm.name === ALARM_NAME) {
-        pollOnce().catch((err) => log.error('[BridgePoller] Poll error:', err));
-      }
-    });
-    listenerRegistered = true;
-  }
-
   log.debug(`[BridgePoller] Started — polling every ${periodInMinutes} minutes`);
 }
 
@@ -99,30 +128,32 @@ export async function stopBridgePoller(): Promise<void> {
 }
 
 /**
- * Single poll cycle: fetch pending → claim → execute → report.
+ * Single poll cycle: fetch pending → keep the entries whose patient is open → claim → execute →
+ * report. An entry whose patient is not open stays pending until that page is opened.
  */
-async function pollOnce(): Promise<void> {
-  // Guard: if poll flag stuck (MV3 Service Worker suspend/resume), force reset after 60s
-  if (isPolling) {
-    if (Date.now() - pollStartedAt < POLL_STALE_MS) {
-      log.debug('[BridgePoller] Poll already in progress, skipping');
-      return;
+function pollOnce(): Promise<void> {
+  if (inFlightPoll) {
+    log.debug('[BridgePoller] Poll already in progress, polling again after it');
+    pollRequestedDuringRun = true;
+    return inFlightPoll;
+  }
+  inFlightPoll = runPoll().finally(() => {
+    inFlightPoll = null;
+    if (pollRequestedDuringRun) {
+      pollRequestedDuringRun = false;
+      pollOnce().catch((err) => log.error('[BridgePoller] Poll error:', err));
     }
-    log.warn('[BridgePoller] Stale poll flag detected, force resetting');
-  }
-  isPolling = true;
-  pollStartedAt = Date.now();
+  });
+  return inFlightPoll;
+}
 
+async function runPoll(): Promise<void> {
   const ready = await isBridgeReady();
-  if (!ready) {
-    isPolling = false;
-    return;
-  }
+  if (!ready) return;
   // Backoff: skip if we're in a cooldown window from repeated network errors
   if (backoffUntilMs > Date.now()) {
     const remaining = Math.ceil((backoffUntilMs - Date.now()) / 1000);
     log.debug(`[BridgePoller] Backoff active — skipping poll (${remaining}s remaining)`);
-    isPolling = false;
     return;
   }
 
@@ -131,11 +162,15 @@ async function pollOnce(): Promise<void> {
     consecutiveNetworkErrors = 0; // reset on success
     if (pending.length === 0) return;
 
-    log.debug(`[BridgePoller] Found ${pending.length} pending entries`);
+    const openEntries = await selectEntriesWithOpenPatient(pending);
+    log.debug(
+      `[BridgePoller] Found ${pending.length} pending entries, ${openEntries.length} with the patient open`
+    );
 
-    // Process one at a time to avoid overwhelming ePuskesmas
-    const entry = pending[0];
-    await processEntry(entry);
+    // One at a time to avoid overwhelming ePuskesmas
+    for (const entry of openEntries) {
+      await processEntry(entry);
+    }
   } catch (error) {
     const isAuthError =
       error instanceof AuthRequiredError ||
@@ -161,9 +196,17 @@ async function pollOnce(): Promise<void> {
         error
       );
     }
-  } finally {
-    isPolling = false;
   }
+}
+
+async function selectEntriesWithOpenPatient(entries: BridgeEntry[]): Promise<BridgeEntry[]> {
+  const probe = registeredTargetProbe;
+  if (!probe) return [];
+  const open: BridgeEntry[] = [];
+  for (const entry of entries) {
+    if (await probe(entry.pelayananId)) open.push(entry);
+  }
+  return open;
 }
 
 async function processEntry(entry: BridgeEntry): Promise<void> {
@@ -224,7 +267,9 @@ export async function triggerManualPoll(): Promise<{
     const pending = await fetchPendingEntries();
     if (pending.length === 0) return { found: 0, processed: false };
 
-    await processEntry(pending[0]);
+    const [entry] = await selectEntriesWithOpenPatient(pending);
+    if (!entry) return { found: pending.length, processed: false };
+    await processEntry(entry);
     return { found: pending.length, processed: true };
   } catch (error) {
     return {

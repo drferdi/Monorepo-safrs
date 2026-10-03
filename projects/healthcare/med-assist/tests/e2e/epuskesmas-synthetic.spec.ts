@@ -1,6 +1,7 @@
 import path from 'path';
 import { expect, test, type BrowserContext, type Page } from '@playwright/test';
 
+import { startMockCrewServer } from '../mock-crew-server';
 import { getExtensionId, launchExtensionContext } from './chrome-extension-launch';
 import {
   buildDailyReportPage,
@@ -743,6 +744,100 @@ test.describe.serial('Synthetic ePuskesmas integration', () => {
     await expect(epPage.locator('select[name="PeriksaFisik[kesadaran]"]')).toHaveValue(
       'COMPOS MENTIS'
     );
+  });
+
+  // Chief, 2026-10-03: the dashboard bridge auto-fill must be strong. An entry fills only the tab of
+  // its own pelayanan, as soon as that page loads, and never the patient who happens to be open.
+  test('fills a dashboard bridge entry only into the tab of its own patient', async () => {
+    test.setTimeout(60_000);
+    const anamnesa = (keluhan: string) => ({
+      anamnesa: {
+        keluhan_utama: keluhan,
+        keluhan_tambahan: 'Batuk pilek',
+        lama_sakit: { thn: 0, bln: 0, hr: 3 },
+        alergi: { obat: [], makanan: [], udara: [], lainnya: [] },
+        is_pregnant: false,
+      },
+    });
+    const server = await startMockCrewServer({
+      bridgeEntries: [
+        { id: 'entry-other', pelayananId: '90001', payload: anamnesa('Pasien lain') },
+        { id: 'entry-match', pelayananId: '82594', payload: anamnesa('Demam dari dashboard') },
+      ],
+    });
+    const entryRequests = (id: string, method: string) =>
+      server.requests.filter(
+        (request) => request.path === `/api/emr/bridge/${id}` && request.method === method
+      );
+
+    try {
+      await context.unrouteAll({ behavior: 'ignoreErrors' });
+      await context.route('https://kotakediri.epuskesmas.id/**', async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: 'text/html',
+          body: buildSyntheticAnamnesaPage(),
+        });
+      });
+
+      const extensionId = await getExtensionId(context);
+      const extensionPage = await openExtensionPage(context, extensionId, 'login.html');
+      await extensionPage.evaluate(
+        async (authConfig) => {
+          const chromeApi = (
+            window as unknown as {
+              chrome: {
+                storage: {
+                  local: { set(items: Record<string, unknown>, callback: () => void): void };
+                };
+              };
+            }
+          ).chrome;
+          await new Promise<void>((resolve) =>
+            chromeApi.storage.local.set({ 'sentra:auth-config': authConfig }, resolve)
+          );
+        },
+        { baseUrl: server.baseUrl, automationToken: 'local-automation-token' }
+      );
+      await extensionPage.close();
+
+      const epPage = await context.newPage();
+      await epPage.goto(
+        'https://kotakediri.epuskesmas.id/anamnesa/create/82594?from=pelayanan&action=edit'
+      );
+
+      await expect(epPage.locator('textarea[name="Anamnesa[keluhan_utama]"]')).toHaveValue(
+        'Demam dari dashboard',
+        { timeout: 30_000 }
+      );
+      const actions = () =>
+        entryRequests('entry-match', 'PATCH').map(
+          (request) => (request.jsonBody as { action?: string }).action
+        );
+      // The dashboard learns the fill succeeded (the report used to be blocked by the PII guard).
+      await expect.poll(actions).toEqual(['claim', 'processing', 'complete']);
+      expect(entryRequests('entry-other', 'PATCH')).toHaveLength(0);
+      expect(entryRequests('entry-other', 'GET')).toHaveLength(0);
+    } finally {
+      // The later tests run without a crew server.
+      const cleanupPage = await openExtensionPage(
+        context,
+        await getExtensionId(context),
+        'login.html'
+      );
+      await cleanupPage.evaluate(async () => {
+        const chromeApi = (
+          window as unknown as {
+            chrome: { storage: { local: { remove(key: string, callback: () => void): void } } };
+          }
+        ).chrome;
+        await new Promise<void>((resolve) =>
+          chromeApi.storage.local.remove('sentra:auth-config', resolve)
+        );
+      });
+      await cleanupPage.close();
+      await server.close();
+    }
   });
 
   test('fills synthetic diagnosa page through transferRME only-step flow', async () => {

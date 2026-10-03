@@ -165,3 +165,28 @@ export function selectBestTransferTab(
   const best = ranked[0];
   return best && best.score > 0 ? best.id : undefined;
 }
+
+/**
+ * The tab a dashboard bridge entry may fill: an ePuskesmas tab whose URL carries the entry's
+ * pelayanan id, the step's page first. Unlike `selectBestTransferTab` there is no fallback to
+ * another tab, so a bridge entry never lands in another patient's record.
+ */
+export function selectBridgeTransferTab(
+  candidates: TransferTabCandidate[],
+  options: {
+    pelayananId: string;
+    step?: RMETransferStepStatus;
+  }
+): number | undefined {
+  const pelayananId = options.pelayananId.trim();
+  if (!pelayananId) return undefined;
+
+  const matching = candidates.filter((candidate) => {
+    const url = normalizeUrl(candidate.url);
+    return isEpuskesmasUrl(url) && urlMatchesEncounter(url, pelayananId.toLowerCase());
+  });
+  return selectBestTransferTab(matching, {
+    encounterId: pelayananId.toLowerCase(),
+    step: options.step,
+  });
+}

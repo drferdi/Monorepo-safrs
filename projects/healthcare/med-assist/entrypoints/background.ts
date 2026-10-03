@@ -9,10 +9,13 @@
 // Handles: message routing, state management, side panel site-lock, CDSS API routing
 
 import { auditService } from '@/lib/api/audit-service';
+import { AUTH_CONFIG_KEY } from '@/lib/api/auth-client';
 import { AUTH_STORE_KEYS, getSession } from '@/lib/api/auth-store';
 import { syncPatientToDashboard } from '@/lib/api/bridge-client';
 import {
+  attachBridgeAlarmListener,
   registerBridgeExecutor,
+  requestBridgePoll,
   startBridgePoller,
   stopBridgePoller,
 } from '@/lib/api/bridge-poller';
@@ -27,7 +30,11 @@ import { getCDSSEngineStatus, initCDSSEngine } from '@/lib/iskandar-diagnosis-en
 import { getDiagnosisEngineConfig } from '@/lib/iskandar-diagnosis-engine/feature-flags';
 import { assistStaffFromSession, withResepStaff, withStaffNames } from '@/lib/rme/assist-staff';
 import { RMETransferOrchestrator, resepStepTimeoutMs } from '@/lib/rme/transfer-orchestrator';
-import { isStepUrl, selectBestTransferTab } from '@/lib/rme/transfer-targeting';
+import {
+  isStepUrl,
+  selectBestTransferTab,
+  selectBridgeTransferTab,
+} from '@/lib/rme/transfer-targeting';
 import { saveShiftOverviewCache } from '@/lib/statistics/cache';
 import { saveDailyReport } from '@/lib/statistics/daily-cache';
 import { buildDailyReportUrl, DAILY_REPORT_ROUTE } from '@/lib/statistics/daily-report';
@@ -459,6 +466,15 @@ async function resolveTransferTabId(step?: RMETransferStepStatus): Promise<numbe
   return activeTab?.id;
 }
 
+/** The tab of a dashboard bridge entry's pelayanan; no other tab, so never another patient. */
+async function resolveBridgeTabId(
+  pelayananId: string,
+  step?: RMETransferStepStatus
+): Promise<number | undefined> {
+  const epuskesmasTabs = await browser.tabs.query({ url: '*://*.epuskesmas.id/*' });
+  return selectBridgeTransferTab(epuskesmasTabs, { pelayananId, step });
+}
+
 const STEP_DOM_HINTS: Record<RMETransferStepStatus, string[]> = {
   anamnesa: [
     'anamnesa[',
@@ -623,14 +639,21 @@ async function ensureTransferStepPage(tabId: number, step: RMETransferStepStatus
 
 async function executeRMEFillStep<TStep extends RMETransferStepStatus>(
   step: TStep,
-  payload: RMETransferStepPayload[TStep]
+  payload: RMETransferStepPayload[TStep],
+  bridgePelayananId?: string
 ): Promise<unknown> {
   transferLog.debug('executeRMEFillStep called', { step });
 
-  const tabId = await resolveTransferTabId(step);
+  const tabId =
+    bridgePelayananId === undefined
+      ? await resolveTransferTabId(step)
+      : await resolveBridgeTabId(bridgePelayananId, step);
   transferLog.debug('transfer tab resolved', { hasTabId: Boolean(tabId) });
 
   if (!tabId) {
+    if (bridgePelayananId !== undefined) {
+      throw new Error(`PATIENT_MISMATCH: no ePuskesmas tab of pelayanan ${bridgePelayananId}`);
+    }
     throw new Error('No active tab');
   }
 
@@ -1208,14 +1231,23 @@ export default defineBackground(() => {
   // Bridge Poller — Dashboard ↔ Assist Transfer
   // ========================================
 
-  // Register RME transfer executor so bridge-poller can auto-fill ePuskesmas
-  registerBridgeExecutor(async (_entryId, _pelayananId, payload) => {
-    bgLog.debug(`Bridge transfer: ${_entryId} (pelayanan: ${_pelayananId})`);
-    return rmeTransferOrchestrator.run(payload, executeRMEFillStep, {
-      timeoutMs: { anamnesa: 45000, diagnosa: 18000, resep: 30000 },
-      retryByStep: { anamnesa: 1, diagnosa: 1, resep: 1 },
-    });
-  });
+  // Register RME transfer executor so bridge-poller can auto-fill ePuskesmas. Every step fills only
+  // the tab of the entry's own pelayanan, and an entry waits until that tab is open.
+  registerBridgeExecutor(
+    async (entryId, pelayananId, payload) => {
+      bgLog.debug(`Bridge transfer: ${entryId} (pelayanan: ${pelayananId})`);
+      return rmeTransferOrchestrator.run(
+        payload,
+        (step, stepPayload) => executeRMEFillStep(step, stepPayload, pelayananId),
+        {
+          timeoutMs: { anamnesa: 45000, diagnosa: 18000, resep: 30000 },
+          retryByStep: { anamnesa: 1, diagnosa: 1, resep: 1 },
+        }
+      );
+    },
+    async (pelayananId) => (await resolveBridgeTabId(pelayananId)) !== undefined
+  );
+  attachBridgeAlarmListener();
 
   // Start polling dashboard for pending transfers
   startBridgePoller()
@@ -1226,6 +1258,11 @@ export default defineBackground(() => {
   // Auth State Listener — auto-start/stop bridge on login/logout
   // ========================================
   browser.storage.onChanged.addListener((changes, area) => {
+    // A server address or automation token saved in Settings can make the bridge ready.
+    if (area === 'local' && AUTH_CONFIG_KEY in changes) {
+      startBridgePoller().catch((err) => bgLog.error('Bridge poller restart failed:', err));
+    }
+
     const sessionChanged =
       (area === 'session' && AUTH_STORE_KEYS.session in changes) ||
       (area === 'local' && AUTH_STORE_KEYS.persisted in changes);
@@ -1294,6 +1331,8 @@ export default defineBackground(() => {
 
     // Load or create encounter for this pelayanan_id
     if (info.pelayananId) {
+      // A dashboard entry waiting for this patient can fill now.
+      requestBridgePoll();
       let encounter = await getEncounter();
 
       // Create new encounter if pelayanan_id changed

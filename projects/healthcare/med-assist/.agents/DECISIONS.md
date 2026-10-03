@@ -3,6 +3,46 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-03 — A dashboard bridge entry fills only its own patient's tab
+
+- Decision (Chief, on the audit question whether the bridge auto-fill is used: "Ini justru harus
+  KUAT, karena sangat membantu nakes, jika memungkinkan improve, gunakan technology terbaru tanpa
+  API namun state of the art"): an entry is claimed only while an ePuskesmas tab whose URL carries
+  its `pelayananId` is open (`selectBridgeTransferTab`, no fallback to the active tab); otherwise it
+  stays pending. Every step fills that tab only; a vanished tab fails the step as
+  `PATIENT_MISMATCH` with no retry. A loaded ePuskesmas page polls within about a second
+  (`requestBridgePoll` from `pageReady`); a saved `sentra:auth-config` restarts the poller; the
+  alarm listener is registered synchronously; one poll at a time (an in-flight promise, not a
+  60 s stale flag), and a poll asked for meanwhile runs once after it. No external service added.
+- Fixed with it: the transfer `runId` was `rme-<13-digit ms>-…`, which the PII guard reads as a
+  BPJS number, so every bridge complete/fail report carrying the result was blocked; it is base 36.
+- Evidence: e2e "fills a dashboard bridge entry only into the tab of its own patient" (mock crew
+  server with two entries; the other patient's entry is never fetched or patched; reports read
+  claim, processing, complete); unit tests for the targeting, the poller and the orchestrator (the
+  PII test is red on the old run id).
+
+## 2026-10-03 — Assist keeps no visit history on the PC
+
+- Decision (Chief: "RME kan ada database untuk menyimpan data pasien? Assist hanya mengambil dari
+  rme lalu proses done"): the visit store is in memory, one patient at a time, for as long as the
+  side panel is open; another patient's visits replace it. The IndexedDB `sentra-visit-history`
+  of earlier versions is deleted once. `sentra:encounter` (the open visit, 24 h) is unchanged: not
+  asked about.
+- Evidence: `visit-history-store.test.ts` (the two earlier claims unchanged; patient switch; one
+  `deleteDatabase('sentra-visit-history')`).
+
+## 2026-10-03 — The crew portal receives the patient's identity masked
+
+- Decision (Chief: identity may go to the crew portal "dengan sensor pada beberapa bagian nama ...
+  Ferdi Iskandar, Jadi : F**di *I***ar"): each word keeps its first letter and its last two
+  letters, the rest are asterisks (`F**di I*****ar`; a word of three letters or fewer keeps only
+  its first letter). Chief's second word was taken by the first word's rule (the example has 7
+  characters for 8 letters). My defaults: the BPJS number keeps its last four digits (unmasked, the
+  PII guard blocked the whole sync); the RM stays readable (the portal matches by it). Applied in
+  `buildPatientSyncPayload`, the only patient-sync path.
+- Evidence: `name-masking.test.ts`, `patient-sync-payload.test.ts` (masked payload passes
+  `assertNoPII`; the unmasked one is blocked).
+
 ## 2026-10-03 — The visit summary is set in IBM Plex Sans
 
 - Decision (Chief: "Text gunakan IMB Plex Sans"; picked "Setuju" for the dependency and the

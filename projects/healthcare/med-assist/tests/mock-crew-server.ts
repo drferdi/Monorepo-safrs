@@ -27,6 +27,12 @@ export interface MockCrewServer {
   clearRequests(): void;
 }
 
+export interface MockBridgeEntry {
+  id: string;
+  pelayananId: string;
+  payload: Record<string, unknown>;
+}
+
 interface MockCrewServerOptions {
   doctors?: MockCrewDoctor[];
   loginUser?: {
@@ -38,6 +44,8 @@ interface MockCrewServerOptions {
   };
   automationToken?: string;
   medlensEcgEnabled?: boolean;
+  /** Dashboard bridge entries served as pending until Assist claims them. */
+  bridgeEntries?: MockBridgeEntry[];
 }
 
 function readRequestBody(req: IncomingMessage): Promise<string> {
@@ -94,6 +102,20 @@ export async function startMockCrewServer(
     profession: 'Umum',
   };
   const automationToken = options.automationToken ?? 'local-automation-token';
+  const bridgeEntries = (options.bridgeEntries ?? []).map((entry) => ({
+    ...entry,
+    status: 'pending',
+  }));
+  const describeEntry = (entry: (typeof bridgeEntries)[number]) => ({
+    id: entry.id,
+    status: entry.status,
+    createdAt: '2026-10-03T08:00:00Z',
+    createdBy: 'dashboard',
+    pelayananId: entry.pelayananId,
+    hasAnamnesa: 'anamnesa' in entry.payload,
+    hasDiagnosa: 'diagnosa' in entry.payload,
+    hasResep: 'resep' in entry.payload,
+  });
 
   const server = createServer(async (req, res) => {
     const method = (req.method || 'GET').toUpperCase();
@@ -182,6 +204,31 @@ export async function startMockCrewServer(
         consultId: 'consult-local-1',
         event_id: payload.event_id || 'event-local-missing',
       });
+      return;
+    }
+
+    if (url.pathname === '/api/emr/bridge' && method === 'GET') {
+      const items = bridgeEntries
+        .filter((entry) => entry.status === url.searchParams.get('status'))
+        .map(describeEntry);
+      sendJson(res, 200, { ok: true, items, count: items.length });
+      return;
+    }
+
+    const bridgeEntry = bridgeEntries.find(
+      (entry) => url.pathname === `/api/emr/bridge/${entry.id}`
+    );
+    if (bridgeEntry && method === 'GET') {
+      sendJson(res, 200, {
+        ok: true,
+        entry: { ...describeEntry(bridgeEntry), payload: bridgeEntry.payload },
+      });
+      return;
+    }
+    if (bridgeEntry && method === 'PATCH') {
+      const action = (jsonBody as { action?: string } | null)?.action;
+      bridgeEntry.status = action === 'claim' ? 'claimed' : String(action);
+      sendJson(res, 200, { ok: true });
       return;
     }
 

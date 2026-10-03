@@ -1,5 +1,6 @@
 // Designed and constructed by Drferdi.
 import { describe, expect, it, vi } from 'vitest';
+import { assertNoPII } from '@/lib/api/pii-guard';
 import { RMETransferOrchestrator } from '@/lib/rme/transfer-orchestrator';
 import type { RMETransferPayload } from '@/utils/types';
 
@@ -41,6 +42,37 @@ function samplePayload(overrides?: Partial<RMETransferPayload>): RMETransferPayl
 }
 
 describe('RMETransferOrchestrator', () => {
+  // The bridge reports this result to the dashboard through the outbound PII guard.
+  it('produces a result the bridge can report past the PII guard', async () => {
+    const orchestrator = new RMETransferOrchestrator();
+    const exec = vi.fn(async () => ({
+      success: [{ field: 'Anamnesa[keluhan_utama]', value: 'Demam', method: 'direct' }],
+      failed: [],
+      skipped: [],
+    }));
+
+    const result = await orchestrator.run(samplePayload(), exec);
+
+    expect(() => assertNoPII(JSON.stringify({ action: 'complete', result }))).not.toThrow();
+  });
+
+  // A bridge entry whose patient's tab is not open must not be retried into another tab.
+  it('fails a patient-mismatch step at once, without a retry', async () => {
+    const orchestrator = new RMETransferOrchestrator();
+    const exec = vi.fn(async () => {
+      throw new Error('PATIENT_MISMATCH: no ePuskesmas tab of pelayanan 83206');
+    });
+
+    const result = await orchestrator.run(samplePayload(), exec, {
+      retryByStep: { anamnesa: 1, diagnosa: 1, resep: 1 },
+    });
+
+    expect(result.state).toBe('failed');
+    expect(result.steps.anamnesa.reasonCode).toBe('PATIENT_MISMATCH');
+    expect(result.steps.anamnesa.attempt).toBe(1);
+    expect(result.reasonCodes).toContain('PATIENT_MISMATCH');
+  });
+
   it('accepts wrapped tab responses (res envelope) from messaging bridge', async () => {
     const orchestrator = new RMETransferOrchestrator();
     const exec = vi.fn(async () => ({

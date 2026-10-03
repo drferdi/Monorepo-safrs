@@ -12,6 +12,7 @@ const updateEncounter = vi.fn();
 const createEmptyEncounter = vi.fn();
 const parseAnamnesaData = vi.fn();
 const syncPatientToDashboard = vi.fn();
+const requestBridgePoll = vi.fn();
 
 vi.mock('@/lib/api/auth-store', () => ({
   AUTH_STORE_KEYS: {
@@ -25,7 +26,9 @@ vi.mock('@/lib/api/bridge-client', () => ({
 }));
 
 vi.mock('@/lib/api/bridge-poller', () => ({
+  attachBridgeAlarmListener: vi.fn(),
   registerBridgeExecutor: vi.fn(),
+  requestBridgePoll,
   startBridgePoller: vi.fn().mockResolvedValue(undefined),
   stopBridgePoller: vi.fn().mockResolvedValue(undefined),
 }));
@@ -223,6 +226,8 @@ describe('background pageReady execScrape relay', () => {
 
     expect(createEmptyEncounter).toHaveBeenCalledWith('82594', 'PATIENT_TBD');
     expect(saveEncounter).toHaveBeenCalledOnce();
+    // A dashboard entry waiting for this patient is polled for at once.
+    expect(requestBridgePoll).toHaveBeenCalledOnce();
     expect(sendMessageToTabWithTimeout).toHaveBeenCalledWith(
       77,
       {

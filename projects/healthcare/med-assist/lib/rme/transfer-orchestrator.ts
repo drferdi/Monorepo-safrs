@@ -319,6 +319,10 @@ function classifyFailure(message: string): {
   ) {
     return { reasonCode: 'PAGE_NOT_READY', recoverable: true };
   }
+  // A bridge entry whose patient's tab is gone is never retried into another tab.
+  if (normalized.includes('patient_mismatch')) {
+    return { reasonCode: 'PATIENT_MISMATCH', recoverable: false };
+  }
   if (normalized.includes('no active tab')) {
     return { reasonCode: 'NO_ACTIVE_TAB', recoverable: true };
   }
@@ -453,9 +457,11 @@ export class RMETransferOrchestrator {
           : null,
       })
     );
+    // Base 36: a 13-digit millisecond time reads as a BPJS number to the outbound PII guard, which
+    // then blocked every bridge report carrying this result.
     const runId =
       transferPayload.options?.requestId ||
-      `rme-${startedMs}-${Math.random().toString(36).slice(2, 8)}`;
+      `rme-${startedMs.toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
     const steps = createInitialSteps();
     const reasonCodes = new Set<RMETransferReasonCode>(transferPayload.meta?.reasonCodes || []);
 
