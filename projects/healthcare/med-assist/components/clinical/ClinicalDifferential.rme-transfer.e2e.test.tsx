@@ -7,6 +7,8 @@ import { SIDE_PANEL_TATALAKSANA_TRANSFER } from '../../tests/e2e/side-panel-tata
 import { ClinicalDifferential } from './ClinicalDifferential';
 import { resetDiseaseNotesCache } from './diagnosis/useDiseaseNotes';
 
+import { syntheticVisit } from '@/lib/report/visit-summary.fixtures';
+
 /**
  * Acceptance regression for Temuan #1 (audit E2E): the live Diagnosis surface
  * must let a physician send diagnosis + resep to RME. Drives the REAL
@@ -22,6 +24,9 @@ const { mockSendMessage, storedVisits } = vi.hoisted(() => ({
   // The patient's stored visits (Tatalaksana's chronic cards); a test sets them, the rest have none.
   storedVisits: { visits: [] as unknown[] },
 }));
+
+const { downloadMock } = vi.hoisted(() => ({ downloadMock: vi.fn(async (_model: unknown) => undefined) }));
+vi.mock('@/lib/report/download-visit-summary', () => ({ downloadVisitSummaryPdf: downloadMock }));
 
 vi.mock('@/lib/iskandar-diagnosis-engine/visit-history-store', async (importOriginal) => ({
   ...(await importOriginal<typeof import('@/lib/iskandar-diagnosis-engine/visit-history-store')>()),
@@ -201,6 +206,57 @@ function renderSurface(chronicTherapies: string[] = []) {
 }
 
 describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
+  it('saves the visit on screen as the PDF summary, without the history’s clinicians', async () => {
+    render(
+      <ClinicalDifferential
+        keluhanUtama="Nyeri tenggorokan dan demam"
+        patientAge={28}
+        patientGender="L"
+        patientRM="RM-J02"
+        allergies={[]}
+        confirmedPregnancyStatus={false}
+        vitals={{ sbp: 118, dbp: 76, hr: 88, rr: 18, temp: 38, glucose: 0 }}
+        hasVisitHistory
+        visitSummaryContext={{
+          facilityName: 'Puskesmas Sintetis',
+          triage: { zone: 'hijau', headline: null },
+          spo2: 98,
+          visitHistory: [syntheticVisit('2026-09-01', { sbp: 120, dbp: 80, hr: 84, rr: 18, temp: 37, glucose: 0 })],
+        }}
+        onBack={() => undefined}
+      />
+    );
+    const closestOrThrow = (element: HTMLElement, selector: string): Element => {
+      const found = element.closest(selector);
+      if (!found) throw new Error(`${selector} not found`);
+      return found;
+    };
+
+    fireEvent.click(closestOrThrow(await screen.findByText('J02 - Faringitis akut'), '[data-testid="dx-flow-card"]'));
+    fireEvent.click(await screen.findByRole('button', { name: 'Isi diagnosis ke RME' }));
+    await screen.findByRole('heading', { name: 'Tatalaksana' });
+    fireEvent.click(screen.getByRole('button', { name: 'Lanjut tanpa terapi tambahan' }));
+    fireEvent.click(screen.getByTestId('dx-tx-finish'));
+    fireEvent.click(await screen.findByRole('button', { name: 'ubah Tatalaksana' }));
+    fireEvent.click(closestOrThrow(await screen.findByText('Amoksisilin'), '[data-testid="dx-tx-visit-med"]'));
+    await waitFor(() => expect(screen.getByTestId('dx-tx-finish')).toBeEnabled());
+    fireEvent.click(screen.getByTestId('dx-tx-finish'));
+
+    fireEvent.click(await screen.findByRole('button', { name: 'Unduh PDF' }));
+
+    await waitFor(() => expect(downloadMock).toHaveBeenCalledTimes(1));
+    const model = downloadMock.mock.calls[0][0];
+    expect(model).toEqual(
+      expect.objectContaining({
+        head: expect.objectContaining({ rm: 'RM-J02', facility: 'Puskesmas Sintetis' }),
+        diagnoses: [expect.objectContaining({ icd: 'J02', role: 'PRIMER' })],
+        medications: [{ name: 'Amoksisilin', dose: '3x500mg', use: 'sesudah makan', duration: '5 hari' }],
+        trend: expect.objectContaining({ dates: [expect.any(String), expect.any(String)] }),
+      })
+    );
+    expect(JSON.stringify(model)).not.toContain('Rahasia');
+  });
+
   beforeEach(() => {
     primeMessaging();
     resetDiseaseNotesCache();

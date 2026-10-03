@@ -112,4 +112,8 @@ export interface DiagnosisPageProps {
   onTransferAnamnesa: () => void;
   onRetryTransfer: () => void;
   onCancelTransfer: () => void;
+  /** Saves the visit summary as a PDF ("Unduh PDF"). */
+  onDownloadPdf: () => void;
+  /** Why the last PDF could not be made, or ''. */
+  pdfError: string;
 }

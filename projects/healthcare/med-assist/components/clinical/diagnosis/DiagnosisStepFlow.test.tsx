@@ -174,6 +174,8 @@ function makeProps(overrides: Partial<DiagnosisPageProps> = {}): DiagnosisPagePr
     onTransferAnamnesa: vi.fn(),
     onRetryTransfer: vi.fn(),
     onCancelTransfer: vi.fn(),
+    onDownloadPdf: vi.fn(),
+    pdfError: '',
     ...overrides,
   };
 }

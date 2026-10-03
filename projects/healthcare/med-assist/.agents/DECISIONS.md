@@ -3,6 +3,26 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-03 — The visit summary is a Swiss Style PDF
+
+- Decision (Chief: "Build a system to format the output of the Assist result into a PDF document",
+  Swiss Style, Sentra logo; picked: "Ringkasan kunjungan", "Lengkap, ubah main.tsx", "A. pdf-lib",
+  "logomark saja"): "Unduh PDF" on the RME Terapi step saves an A4 PDF from `lib/report/*`
+  (model → layout → pdf-lib). 12 columns, 12 pt gutter, 12 pt baselines; labels in columns 1-3,
+  content from column 4; Helvetica / Helvetica-Bold at 24 / 9 / 7; red only for triage merah and
+  urgent CDSS alerts; the black logomark on page 1, cropped flush to the mark.
+- Approvals: `pdf-lib@1.17.1` as a new dependency; `main.tsx` (protected) passes one prop,
+  `visitSummaryContext`. No patient name, date of birth, kelurahan, BPJS status, or the history's
+  clinicians and therapy text in the file.
+- Deviations from the spec, found against the code: Tren TTV is Tensi, Nadi, Napas, Suhu (visit
+  history has no SpO2), the last 8 visits, the axis widened to every value; Tatalaksana prints the
+  resep list (not per diagnosis) then the alerts; the triage zone is its bold word, no square; the
+  button is enabled once a diagnosis is chosen; Chief's dose notation is applied in
+  `ClinicalDifferential` because `lib/**` does not import `components/**`.
+- Evidence: layout tests pin every text to a column edge and the baseline grid, 45 medications to
+  two numbered pages, Helvetica-encodable text; a full-flow test shows no history clinician in
+  the model; the harness renders both cases in Chrome's PDF viewer.
+
 ## 2026-10-03 — The Tren TTV card keeps the lab's shape, the trajectory's text
 
 - Decision (Chief: "Okay tapi text sizing keluar jauh dari design trajectory lain"): the spring

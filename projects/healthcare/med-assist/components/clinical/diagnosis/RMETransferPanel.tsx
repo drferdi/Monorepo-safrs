@@ -10,6 +10,8 @@ export function RMETransferPanel({
   onTransferAnamnesa,
   onRetryTransfer,
   onCancelTransfer,
+  onDownloadPdf,
+  pdfError,
 }: Pick<
   DiagnosisPageProps,
   | 'viewModel'
@@ -17,6 +19,8 @@ export function RMETransferPanel({
   | 'onTransferAnamnesa'
   | 'onRetryTransfer'
   | 'onCancelTransfer'
+  | 'onDownloadPdf'
+  | 'pdfError'
 >) {
   const transfer = viewModel.transfer;
   const canTransferClinicalPayload = !viewModel.primary.isInsufficient;
@@ -50,6 +54,7 @@ export function RMETransferPanel({
       {ownRun && transfer.resultSummary ? (
         <ReadOnlyPanel>{formatClinicalText(transfer.resultSummary)}</ReadOnlyPanel>
       ) : null}
+      {pdfError ? <ReadOnlyPanel tone="danger">{pdfError}</ReadOnlyPanel> : null}
 
       {/* Each button fills one ePuskesmas page; open that page first. */}
       <div className="diagnosis-transfer-primary">
@@ -70,6 +75,14 @@ export function RMETransferPanel({
           onClick={onTransferAnamnesa}
         >
           Isi anamnesa ke RME
+        </button>
+        <button
+          type="button"
+          className="action-btn action-btn--secondary"
+          disabled={!transfer.diagnosisReady}
+          onClick={onDownloadPdf}
+        >
+          Unduh PDF
         </button>
         {isRunning ? (
           <button type="button" className="action-btn action-btn--secondary" onClick={onCancelTransfer}>

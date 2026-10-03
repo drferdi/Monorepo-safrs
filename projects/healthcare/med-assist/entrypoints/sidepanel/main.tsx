@@ -1092,6 +1092,15 @@ export function SentraAssistSidepanelApp(): JSX.Element {
                             }}
                             hasVisitHistory={Boolean(prefetchedVisitHistory?.visits?.length)}
                             chronicTherapies={chronicTherapyNames}
+                            visitSummaryContext={{
+                              facilityName: clinicalContext.facilityName,
+                              triage: {
+                                zone: triageVerdict.zone,
+                                headline: triageVerdict.headlineAlert?.title ?? null,
+                              },
+                              spo2: parseIntOrUndefined(ttvState.spo2) ?? null,
+                              visitHistory: prefetchedVisitHistory?.visits ?? [],
+                            }}
                             onBack={() => setActiveInferenceSurface('workbench')}
                           />
                         )}

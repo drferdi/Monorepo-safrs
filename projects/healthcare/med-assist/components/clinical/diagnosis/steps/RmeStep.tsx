@@ -10,6 +10,8 @@ type Props = Pick<
   | 'onTransferAnamnesa'
   | 'onRetryTransfer'
   | 'onCancelTransfer'
+  | 'onDownloadPdf'
+  | 'pdfError'
 >;
 
 export function rmeSummary(viewModel: DiagnosisPageViewModel): string {
@@ -22,6 +24,8 @@ export function RmeStep({
   onTransferAnamnesa,
   onRetryTransfer,
   onCancelTransfer,
+  onDownloadPdf,
+  pdfError,
 }: Props) {
   return (
     // The last page fills the resep and the anamnesa (education, "Kontrol …", vital signs); the
@@ -37,6 +41,8 @@ export function RmeStep({
         onTransferAnamnesa={onTransferAnamnesa}
         onRetryTransfer={onRetryTransfer}
         onCancelTransfer={onCancelTransfer}
+        onDownloadPdf={onDownloadPdf}
+        pdfError={pdfError}
       />
     </section>
   );

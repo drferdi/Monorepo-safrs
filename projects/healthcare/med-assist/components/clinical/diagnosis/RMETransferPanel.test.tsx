@@ -89,6 +89,8 @@ function makeProps(
       | 'onTransferAnamnesa'
       | 'onRetryTransfer'
       | 'onCancelTransfer'
+      | 'onDownloadPdf'
+      | 'pdfError'
     >
   > = {},
   viewModel = makeViewModel()
@@ -99,6 +101,8 @@ function makeProps(
   | 'onTransferAnamnesa'
   | 'onRetryTransfer'
   | 'onCancelTransfer'
+  | 'onDownloadPdf'
+  | 'pdfError'
 > {
   return {
     viewModel,
@@ -106,6 +110,8 @@ function makeProps(
     onTransferAnamnesa: vi.fn(),
     onRetryTransfer: vi.fn(),
     onCancelTransfer: vi.fn(),
+    onDownloadPdf: vi.fn(),
+    pdfError: '',
     ...overrides,
   };
 }
@@ -115,6 +121,26 @@ function makeProps(
 // RME"), "Isi anamnesa ke RME" sits beside it (was "Anamnesis" in Rincian transfer), "Kirim resep"
 // is that primary, and "Kirim diagnosis" moved to the RME Diagnosa step.
 describe('RMETransferPanel', () => {
+  it('offers Unduh PDF once a diagnosis is chosen and calls it on click', () => {
+    const onDownloadPdf = vi.fn();
+    const { container: panel } = render(<RMETransferPanel {...makeProps({ onDownloadPdf })} />);
+    fireEvent.click(within(panel).getByRole('button', { name: 'Unduh PDF' }));
+    expect(onDownloadPdf).toHaveBeenCalledTimes(1);
+
+    const { container: early } = render(
+      <RMETransferPanel {...makeProps({}, makeViewModel({ diagnosisReady: false }))} />
+    );
+    expect(within(early).getByRole('button', { name: 'Unduh PDF' })).toBeDisabled();
+  });
+
+  it('says why the PDF could not be made and keeps the button usable', () => {
+    const { container: panel } = render(
+      <RMETransferPanel {...makeProps({ pdfError: 'PDF gagal dibuat. Coba lagi.' })} />
+    );
+    expect(within(panel).getByText('PDF gagal dibuat. Coba lagi.')).toBeInTheDocument();
+    expect(within(panel).getByRole('button', { name: 'Unduh PDF' })).toBeEnabled();
+  });
+
   it('while running shows only the morphing primary button and Batal', () => {
     const onCancelTransfer = vi.fn();
     const { container: panel } = render(<RMETransferPanel {...makeProps({ onCancelTransfer }, makeViewModel({ state: 'running' }))} />);

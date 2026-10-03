@@ -1,7 +1,8 @@
 # Visit summary PDF (2026-10-03) — Design
 
-Status: design approved by Chief in chat on 2026-10-03, section by section; this written spec
-awaits Chief's review. Branch `feat/sidepanel-ui-batch` (from `cd7b7795`).
+Status: approved by Chief on 2026-10-03 (chat, then the written spec); implemented on 2026-10-03.
+Branch `feat/sidepanel-ui-batch` (from `cd7b7795`). Deviations found against the code are listed
+in DECISIONS 2026-10-03 "The visit summary is a Swiss Style PDF".
 
 ## Intent
 

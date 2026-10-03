@@ -43,6 +43,7 @@
     "apexcharts": "^5.3.6",
     "framer-motion": "^12.38.0",
     "lucide-react": "^0.468.0",
+    "pdf-lib": "1.17.1",
     "react-apexcharts": "^1.9.0",
     "recharts": "^3.8.1",
     "tesseract.js": "^7.0.0",

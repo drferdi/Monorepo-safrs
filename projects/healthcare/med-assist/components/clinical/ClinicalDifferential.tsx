@@ -19,6 +19,7 @@ import {
   chronicContinuation,
   CONTROL_AFTER_OPTIONS,
   formatDose,
+  nameBesideDose,
   type InteractionCheckView,
 } from './diagnosis/tatalaksana';
 import { useDiseaseNotes } from './diagnosis/useDiseaseNotes';
@@ -56,6 +57,7 @@ import {
   evaluateTriageReferralTree,
   type TriageDecisionResult,
 } from '@/lib/iskandar-diagnosis-engine/triage-referral-decision-tree';
+import { buildVisitSummaryModel, type VisitSummaryContext } from '@/lib/report/visit-summary-model';
 import { buildRMETransferPayload } from '@/lib/rme/payload-mapper';
 import type {
   BedsideFindingRecord,
@@ -85,6 +87,8 @@ interface ClinicalDifferentialProps {
   canonicalOutput?: CanonicalClinicalEngineOutput | null;
   hasVisitHistory?: boolean;
   chronicTherapies?: string[];
+  /** Facility, triage, SpO2 and past visits for the PDF summary (from the side panel). */
+  visitSummaryContext?: VisitSummaryContext;
   onBack: () => void;
   onDiagnosisChange?: (diagnosis: { icd_x: string; nama: string } | null) => void;
   onMedicationsChange?: (medications: MedicationRecommendation[]) => void;
@@ -636,6 +640,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
   canonicalOutput,
   hasVisitHistory,
   chronicTherapies = EMPTY_CHRONIC_THERAPIES,
+  visitSummaryContext,
   onBack,
   onDiagnosisChange,
   onMedicationsChange,
@@ -695,6 +700,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     makeInitialTransferSteps()
   );
   const [transferError, setTransferError] = useState('');
+  const [pdfError, setPdfError] = useState('');
   const [transferResult, setTransferResult] = useState<RMETransferResult | null>(null);
   const [lastTriggeredStep, setLastTriggeredStep] = useState<RMETransferStepStatus>('anamnesa');
   const [tenagaMedis, setTenagaMedis] = useState<{
@@ -1732,6 +1738,37 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
   const selectedMedicationCount = selectedTransferMedications.length;
   const candidateMedicationCount = candidateTransferMedications.length;
 
+  const handleDownloadPdf = (): void => {
+    setPdfError('');
+    const model = buildVisitSummaryModel({
+      rm: patientRM,
+      age: patientAge,
+      gender: patientGender,
+      keluhanUtama,
+      keluhanTambahan: keluhanTambahan ?? '',
+      allergies,
+      pregnant: confirmedPregnancyStatus ?? null,
+      vitals,
+      diagnoses: selectedDiagnoses.map((diagnosis) => ({ icd: diagnosis.icd_x, name: humanize(diagnosis.nama) })),
+      medications: selectedTransferMedications.map((medication) => {
+        const dose = formatDose(medication.nama_obat, medication.dosis);
+        return {
+          name: nameBesideDose(medication.nama_obat, dose),
+          dose,
+          use: medication.aturan_pakai,
+          duration: medication.durasi ?? '',
+        };
+      }),
+      alerts: therapyByDiagnosis.flatMap((result) => result.alerts),
+      context: visitSummaryContext,
+      printedAt: new Date(),
+    });
+    // pdf-lib loads on the first click, not with the side panel.
+    void import('@/lib/report/download-visit-summary')
+      .then(({ downloadVisitSummaryPdf }) => downloadVisitSummaryPdf(model))
+      .catch(() => setPdfError('PDF gagal dibuat. Coba lagi.'));
+  };
+
   const transferEligibleDiagnosis = buildTransferEligibleDiagnosisInput(
     selectedDiagnosisForTransfer,
     'PRIMER'
@@ -2327,6 +2364,8 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         onCancelTransfer={() => {
           void handleCancelTransfer();
         }}
+        onDownloadPdf={handleDownloadPdf}
+        pdfError={pdfError}
       />
     </>
   );
