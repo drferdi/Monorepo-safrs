@@ -16,6 +16,7 @@ type ChromeRuntimeApi = {
       permissions?: string[];
       host_permissions?: string[];
       oauth2?: { client_id?: string; scopes?: string[] };
+      web_accessible_resources?: Array<{ resources: string[]; matches: string[] }>;
     };
     lastError?: { message?: string };
     sendMessage(payload: Record<string, unknown>, callback: (response: unknown) => void): void;
@@ -105,19 +106,18 @@ test.describe.serial('Sentra Assist extension smoke', () => {
     expect(manifest.background?.service_worker).toBe('background.js');
     expect(manifest.side_panel?.default_path).toBe('sidepanel.html');
     expect(manifest.permissions).toEqual(
-      expect.arrayContaining(['activeTab', 'storage', 'sidePanel', 'identity', 'scripting'])
+      expect.arrayContaining(['activeTab', 'storage', 'sidePanel', 'scripting'])
     );
+    // No code uses the Google identity, OAuth or googleapis grants (removed 2026-10-03).
+    expect(manifest.permissions).not.toContain('identity');
     expect(manifest.host_permissions).toEqual(
-      expect.arrayContaining([
-        'https://*.googleapis.com/*',
-        'https://crew.puskesmasbalowerti.com/*',
-        '*://*.epuskesmas.id/*',
-      ])
+      expect.arrayContaining(['https://crew.puskesmasbalowerti.com/*', '*://*.epuskesmas.id/*'])
     );
-    expect(manifest.oauth2?.client_id).toBeTruthy();
-    expect(manifest.oauth2?.scopes).toEqual(
-      expect.arrayContaining(['https://www.googleapis.com/auth/cloud-platform'])
-    );
+    expect(manifest.host_permissions).not.toContain('https://*.googleapis.com/*');
+    expect(manifest.oauth2).toBeUndefined();
+    expect(manifest.web_accessible_resources?.map((entry) => entry.matches)).toEqual([
+      ['*://*.epuskesmas.id/*'],
+    ]);
   });
 
   test('mounts sidepanel runtime without crashing', async () => {

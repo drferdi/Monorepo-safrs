@@ -22,14 +22,12 @@ export default defineConfig({
       'activeTab',
       'storage',
       'sidePanel',
-      'identity',
       'scripting',
       'alarms',
       'offscreen',
       'nativeMessaging',
     ],
     host_permissions: [
-      'https://*.googleapis.com/*',
       'http://localhost:*/*',
       'http://127.0.0.1:*/*',
       // Required so the extension can act as a WebAuthn client with rpID
@@ -52,14 +50,12 @@ export default defineConfig({
     content_security_policy: {
       extension_pages: "script-src 'self'; object-src 'self'; font-src 'self' data:;",
     },
-    oauth2: {
-      client_id: '822368940562-qis7fdf5ivccgeov04o75rtrf7ghc7u4.apps.googleusercontent.com',
-      scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-    },
     web_accessible_resources: [
       {
         resources: ['icon/*', 'assets/*', 'assets/sounds/*', 'data/*'],
-        matches: ['<all_urls>'],
+        // Only the ePuskesmas pages the content scripts run on; any other site could otherwise
+        // detect the extension and read the facility's drug stock list.
+        matches: ['*://*.epuskesmas.id/*'],
       },
     ],
   },
