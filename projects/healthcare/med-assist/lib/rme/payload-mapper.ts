@@ -430,9 +430,10 @@ function mapAturanPakai(value: string): AturanPakai {
 }
 
 function estimateQuantity(dosis: string, durasi?: string): number {
-  const doseMatch = dosis.match(/(\d+)\s*x\s*(\d+)?/i);
+  const doseMatch = dosis.match(/(\d+)\s*x\s*(\d+(?:[.,]\d+)?(?:\/\d+)?)?/i);
   const timesPerDay = doseMatch ? Math.max(1, Number(doseMatch[1])) : 2;
-  const unitPerDose = doseMatch?.[2] ? Math.max(1, Number(doseMatch[2])) : 1;
+  const [numerator, denominator] = (doseMatch?.[2] ?? '1').replace(',', '.').split('/').map(Number);
+  const unitPerDose = (denominator ? numerator / denominator : numerator) || 1;
 
   const durationMatch = (durasi || '').match(/(\d+)/i);
   const mappedDays = durationMatch
@@ -449,11 +450,15 @@ function estimateQuantity(dosis: string, durasi?: string): number {
 function normalizeSignaValue(rawDosis: string | undefined): string {
   const text = (rawDosis || '').trim();
   if (!text) return '1x1';
-  const compact = text.replace(/\s+/g, '').replace(/[xX×]/g, 'x');
-  const match = compact.match(/(\d+)\s*x\s*(\d+)/i);
+  const compact = text.replace(/\s+/g, '').replace(/[xX×]/g, 'x').replace('½', '1/2');
+  // Units a take keep their fraction or decimal ("3x1/2", "2x1,5"): rounding them up doubled a
+  // half-tablet dose.
+  const match = compact.match(/(\d+)x(\d+(?:[.,]\d+)?(?:\/\d+)?)/i);
   if (match) {
     const left = Math.max(1, Number(match[1]));
-    const right = Math.max(1, Number(match[2]));
+    const right = /[.,/]/.test(match[2])
+      ? match[2].replace('.', ',')
+      : String(Math.max(1, Number(match[2])));
     return `${left}x${right}`;
   }
   // A frequency alone ("3x sehari 5-7 hari", also after a strength) is one unit a take: the

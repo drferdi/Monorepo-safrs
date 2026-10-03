@@ -215,6 +215,32 @@ describe('RME payload mapper', () => {
     }
   );
 
+  // Half a tablet stayed a whole one: "3x1/2" went to the resep as "3x1".
+  it.each([
+    ['3x1/2', '3x1/2'],
+    ['3X½', '3x1/2'],
+    ['2x1,5', '2x1,5'],
+    ['2x1.5', '2x1,5'],
+  ])('keeps the units a take of "%s" as signa %s', (dosis, signa) => {
+    const mapped = buildRMETransferPayload({
+      keluhanUtama: 'Hipertensi',
+      patientGender: 'L',
+      diagnosis: { icd_x: 'I10', nama: 'Hipertensi esensial' },
+      medications: [
+        {
+          nama_obat: 'Captopril 25mg',
+          dosis,
+          aturan_pakai: 'Sesudah makan',
+          durasi: '30 hari',
+          rationale: 'Lanjutan terapi kronis.',
+          safety_check: 'safe',
+          contraindications: [],
+        },
+      ],
+    });
+    expect(mapped.payload.resep?.medications[0]?.signa).toBe(signa);
+  });
+
   it('makes the J18 knowledge-base therapy into the resep rows the ePuskesmas e2e sends', () => {
     const mapped = buildRMETransferPayload({
       keluhanUtama: 'Batuk berdahak dan demam',
