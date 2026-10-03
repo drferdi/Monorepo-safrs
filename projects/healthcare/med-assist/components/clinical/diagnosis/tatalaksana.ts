@@ -1,3 +1,4 @@
+import { standardDoseFor, type StandardDose } from './standardDose';
 import { diseaseNoteFor, type DiseaseNote } from './useDiseaseNotes';
 
 import { checkMockDDI } from '@/lib/api/mocks/ddi-mock';
@@ -25,6 +26,8 @@ export interface ChronicMedicationView {
   visits: ChronicVisitView[];
   /** The latest visit's regimen as a signa ("1x1"), for a continuation in this visit; absent when none. */
   regimen?: { dosis: string; aturanPakai: AturanPakaiText };
+  /** No visit wrote a signa: the regimen is the references' standard start (standardDose.ts). */
+  standard?: true;
 }
 
 export interface InteractionCheckView {
@@ -220,10 +223,50 @@ export function buildChronicMedications(names: string[], visits: VisitRecord[]):
     }
     const indication = [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? '';
     if (seen.length > 0 && !prescribedForChronic) return [];
+    if (!regimen) {
+      const start = standardStart(name, key);
+      if (start) {
+        return [
+          {
+            key,
+            // The stock medicine the dose is for, so the resep takes that strength.
+            name: start.name,
+            doseLine: `${formatDose(start.name, start.dosis)} · ${start.aturan_pakai} · dosis standar`,
+            indication,
+            visits: seen,
+            regimen: { dosis: start.dosis, aturanPakai: start.aturan_pakai },
+            standard: true,
+          },
+        ];
+      }
+    }
     // The latest visit that wrote a signa, the one the regimen comes from.
     const doseLine = seen.find((entry) => entry.dose)?.dose ?? '';
     return [{ key, name, doseLine, indication, visits: seen, ...(regimen ? { regimen } : {}) }];
   });
+}
+
+/**
+ * The references' standard start for a chronic medication no visit gave a signa (Chief,
+ * 2026-10-04, "Pilih 1"): for the name when it tells a strength, else for the stock medicine of
+ * the same drug, in stock first and the lowest strength first. A single dose (durasi) or a
+ * weight-based syrup (no dosis) is no continuation; null when the references give none.
+ */
+function standardStart(name: string, key: string): (StandardDose & { name: string }) | null {
+  const candidates = strengthOf(name)
+    ? [name]
+    : STOCK_MEDICINES.filter((medicine) => drugKey(medicine.name) === key)
+        .sort(
+          (a, b) =>
+            Number(b.available) - Number(a.available) ||
+            (strengthOf(a.name)?.value ?? 0) - (strengthOf(b.name)?.value ?? 0)
+        )
+        .map((medicine) => medicine.name);
+  for (const candidate of candidates) {
+    const dose = standardDoseFor(candidate);
+    if (dose?.dosis && !dose.durasi) return { ...dose, name: candidate };
+  }
+  return null;
 }
 
 /**
@@ -238,7 +281,9 @@ export function chronicContinuation(medication: ChronicMedicationView): Medicati
     dosis: medication.regimen.dosis,
     aturan_pakai: medication.regimen.aturanPakai,
     durasi: '30 hari',
-    rationale: 'Lanjutan terapi kronis.',
+    rationale: medication.standard
+      ? 'Lanjutan terapi kronis; dosis standar, riwayat tanpa signa.'
+      : 'Lanjutan terapi kronis.',
     safety_check: 'safe',
     isChronicContinuation: true,
   };

@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-10-04 (one chronic card per drug: NAC, CTM, PCT read through the RME synonym table; no "Signa tidak tercatat": every riwayat signa form read, halves kept to the resep; 2026-10-03: Gate 3 alerts GDS ≥200 without symptoms; DDI reads Indonesian and stock names and fails closed; audit tasks: typed messages answered once, reinjection only into ePuskesmas, Google grants removed, resources exposed to ePuskesmas only, auto-commit scripts removed, page-side logging through the logger, no production eslint-disable, glucose and DDI tests, README; bridge entries fill only their own patient's tab; visit history in memory only; masked identity to the crew portal; audit `med-assist-audit-2026-10-03.md` given to Chief; visit summary PDF in IBM Plex Sans; 09 Verifikasi with DPJP and verifier from the signed-in user; on an Oxford band with red orange signals, Edukasi and Tindak lanjut; "Unduh PDF" on RME Terapi, Swiss grid, pdf-lib; Tren TTV text on the trajectory scale; Trajectory Tren TTV as the lab spring playground; STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
+Last updated: 2026-10-04 (one chronic card per drug through the RME synonym table, a standard dose when no visit wrote a signa; no "Signa tidak tercatat": every riwayat signa form read, halves kept to the resep; 2026-10-03: Gate 3 alerts GDS ≥200 without symptoms; DDI reads Indonesian and stock names and fails closed; audit tasks: typed messages answered once, reinjection only into ePuskesmas, Google grants removed, resources exposed to ePuskesmas only, auto-commit scripts removed, page-side logging through the logger, no production eslint-disable, glucose and DDI tests, README; bridge entries fill only their own patient's tab; visit history in memory only; masked identity to the crew portal; audit `med-assist-audit-2026-10-03.md` given to Chief; visit summary PDF in IBM Plex Sans; 09 Verifikasi with DPJP and verifier from the signed-in user; on an Oxford band with red orange signals, Edukasi and Tindak lanjut; "Unduh PDF" on RME Terapi, Swiss grid, pdf-lib; Tren TTV text on the trajectory scale; Trajectory Tren TTV as the lab spring playground; STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
 identity-free, CSV for pandas; a resep step says what went wrong, out of stock is a note without Ulangi; Terapi kronis drops acute-only medications; an out-of-stock medication is left out at once; header lights the page on screen, "Lanjutkan semua" for chronic therapy;
 chronic doses from the riwayat Resep table, no triad warning; the RME resep picks each medication from its ePuskesmas suggestion and
 presses Tambah once per row; 2026-10-01: the signa chosen from its suggestion, "3x sehari" as 3x1;
@@ -11,11 +11,11 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 
 ## Current state
 
-- Chronic cards (2026-10-04, DECISIONS "One drug, one chronic card"): `drugKey` reads names
-  through the RME's `MEDICATION_NAME_SYNONYMS`; names of one drug are one card with the latest
-  signa any of them carried. Pending Chief: a medication no visit gave a signa still has no dose;
-  route (1) PPK/PIONAS standard dose from `standardDose.ts` labelled and continuable (reverses
-  2026-10-02), or (2) keep symptomatic drugs (CTM, NAC) out of Terapi kronis for asthma visits.
+- Chronic cards (2026-10-04, DECISIONS "One drug, one chronic card" and "standard start"):
+  `drugKey` reads names through the RME's `MEDICATION_NAME_SYNONYMS`; names of one drug are one
+  card with the latest signa any of them carried; with no signa anywhere the card takes the
+  PPK/PIONAS standard start of its stock medicine, marked "dosis standar". Open: standard rules
+  for vitamin B komplek, tiamin, zink, tambah darah, nistatin, griseofulvin (need references).
 - Audit answers (2026-10-03, DECISIONS three entries): bridge entries are claimed only while their
   `pelayananId` tab is open, fill that tab only (`PATIENT_MISMATCH`, no retry), poll on `pageReady`
   and on a saved auth config, one poll at a time; the run id is base 36 (the 13-digit ms id tripped

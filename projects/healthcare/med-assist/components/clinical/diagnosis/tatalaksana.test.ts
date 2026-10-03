@@ -80,16 +80,45 @@ describe('buildChronicMedications', () => {
     expect(chronic.map((medication) => medication.name)).toEqual(['Parasetamol Tablet 500 Mg', 'Amlodipin']);
   });
 
-  // Chief, 2026-10-02 ("Pengisian dosis salah"): no signa in the history, no dose invented; the
-  // card cannot be continued until a visit shows the regimen. Chief, 2026-10-04 ("Saya gak mau ada
-  // signa tidak tercatat"): it then has no dose line at all.
-  it('keeps no regimen and no dose line for a medication the history names without a signa', () => {
+  // Chief, 2026-10-04 ("NAC dan CTM tidak ada dosis", then "Pilih 1"): a medication no visit gave
+  // a signa takes the references' standard start for its stock medicine (standardDose.ts), marked
+  // as such, and can be continued. Supersedes 2026-10-02 ("Pengisian dosis salah": no dose at all).
+  it('takes the standard dose of its stock medicine when no visit wrote a signa', () => {
     const [ctm] = buildChronicMedications(['CTM'], [visit('2026-09-10T08:00:00Z', 'NAC, CTM', 'Rinitis')]);
 
-    expect(ctm.regimen).toBeUndefined();
-    expect(ctm.doseLine).toBe('');
+    expect(ctm.name).toBe('Klorfeniramin Maleat ( CTM ) tablet 4 mg');
+    expect(ctm.doseLine).toBe('3x4mg · Sesudah makan · dosis standar');
+    expect(ctm.regimen).toEqual({ dosis: '3x1', aturanPakai: 'Sesudah makan' });
+    expect(ctm.standard).toBe(true);
     expect(ctm.visits.map((entry) => entry.dose)).toEqual(['']);
-    expect(chronicContinuation(ctm)).toBeNull();
+    expect(chronicContinuation(ctm)).toMatchObject({
+      nama_obat: 'Klorfeniramin Maleat ( CTM ) tablet 4 mg',
+      dosis: '3x1',
+      durasi: '30 hari',
+      rationale: 'Lanjutan terapi kronis; dosis standar, riwayat tanpa signa.',
+    });
+  });
+
+  it('starts from the lowest standard strength the stock has', () => {
+    const [amlodipin] = buildChronicMedications(
+      ['Amlodipin'],
+      [visit('2026-09-10T08:00:00Z', 'Amlodipin', 'Hipertensi esensial')]
+    );
+
+    expect(amlodipin.name).toBe('Amlodipin tablet 5 mg');
+    expect(amlodipin.doseLine).toBe('1x5mg · Sesudah makan · dosis standar');
+  });
+
+  it('keeps no dose when the references give none for the medication', () => {
+    const [haloperidol] = buildChronicMedications(
+      ['Haloperidol'],
+      [visit('2026-09-10T08:00:00Z', 'Haloperidol', 'Hipertensi esensial')]
+    );
+
+    expect(haloperidol.regimen).toBeUndefined();
+    expect(haloperidol.doseLine).toBe('');
+    expect(haloperidol.standard).toBeUndefined();
+    expect(chronicContinuation(haloperidol)).toBeNull();
   });
 
   // The latest visit wrote no signa: the card read "Signa tidak tercatat" while an older visit's
@@ -126,7 +155,8 @@ describe('buildChronicMedications', () => {
 
     expect(chronic.map((medication) => medication.name)).toEqual([
       'N-Asetilsistein Kapsul 200 Mg',
-      'CTM',
+      // No visit wrote its signa: the stock medicine its standard dose is for.
+      'Klorfeniramin Maleat ( CTM ) tablet 4 mg',
     ]);
     expect(chronic[0].doseLine).toBe('2x200mg · Sesudah makan');
     expect(chronic[0].regimen).toEqual({ dosis: '2x1', aturanPakai: 'Sesudah makan' });
@@ -180,15 +210,17 @@ describe('buildChronicMedications', () => {
     });
   });
 
-  it('continues nothing when no visit shows the regimen', () => {
-    const [simvastatin] = buildChronicMedications(['Simvastatin'], visits);
-    expect(simvastatin.regimen).toBeUndefined();
-    expect(chronicContinuation(simvastatin)).toBeNull();
-  });
-
-  it('keeps a name the history text does not show, without dose or indication', () => {
+  it('keeps a name the history text does not show, with its standard dose and no indication', () => {
     expect(buildChronicMedications(['Simvastatin'], visits)).toEqual([
-      { key: 'simvastatin', name: 'Simvastatin', doseLine: '', indication: '', visits: [] },
+      {
+        key: 'simvastatin',
+        name: 'Simvastatin tablet 20 mg',
+        doseLine: '1x20mg · Sesudah makan · dosis standar',
+        indication: '',
+        visits: [],
+        regimen: { dosis: '1x1', aturanPakai: 'Sesudah makan' },
+        standard: true,
+      },
     ]);
   });
 });

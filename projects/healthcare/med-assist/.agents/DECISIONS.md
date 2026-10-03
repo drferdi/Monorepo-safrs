@@ -3,6 +3,25 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-04 — A chronic card no visit gave a signa takes the references' standard start
+
+- Decision (Chief "Pilih 1", after "NAC dan CTM tidak ada dosis"): when no visit, under any name
+  of the drug, wrote a signa, `buildChronicMedications` takes `standardDoseFor` (standardDose.ts,
+  PPK 2022 / PIONAS) for the card's name when it tells a strength, else for the stock medicine of
+  the same `drugKey`, in stock first and lowest strength first. The card then carries that stock
+  name (the resep takes the strength the dose is for), the dose line ends "· dosis standar", the
+  card can be continued, and the continuation's rationale reads "dosis standar, riwayat tanpa
+  signa". A single dose (durasi), a weight-based syrup (no dosis) or a drug the references leave
+  out (injections, TB/HIV/KB, specialist psychiatric) keeps no dose. Supersedes 2026-10-02
+  ("Pengisian dosis salah": no dose without a signa).
+- Coverage (stock, 2026-10-04): 157 drugs, 55 with a standard start. Without a rule but plausibly
+  daily: vitamin B komplek, tiamin, retinol, zink, tambah darah, nistatin, griseofulvin, kaolin
+  pektin; adding them needs referenced rules (R3). Stock spelling slips form their own drug
+  ("Amoksilin 125 Mg", "BLUD Setritizin").
+- Evidence: 3 tests red on the old code (standard start, lowest strength, name without visits),
+  the merge test updated for the stock name; harness: CTM 3x4mg and Simvastatin 1x20mg
+  "dosis standar", Haloperidol without a dose.
+
 ## 2026-10-04 — One drug, one chronic card: abbreviations read through the RME synonym table
 
 - Decision (Chief: "NAC dan CTM tidak ada dosis", "pastikan bukan hardcode"): `drugKey` reads a
