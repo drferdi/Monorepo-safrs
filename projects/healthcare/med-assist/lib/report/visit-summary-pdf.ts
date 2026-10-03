@@ -3,12 +3,16 @@ import { PDFDocument, StandardFonts, rgb, type PDFFont, type RGB } from 'pdf-lib
 import { PAGE, layoutVisitSummary, type FontWeight, type Measure, type Tone } from './visit-summary-layout';
 import type { VisitSummaryModel } from './visit-summary-model';
 
-// Black on white, 55 % grey for captions, one red accent (triage merah, urgent CDSS alerts).
+// Chief, 2026-10-03: Oxford blue (#002147) for structure, red orange (#FF4500) for numbers and
+// alarms, near-black text, white on the Oxford band.
 const TONES: Record<Tone, RGB> = {
-  ink: rgb(0, 0, 0),
+  ink: rgb(0.07, 0.07, 0.07),
   muted: rgb(0.45, 0.45, 0.45),
-  accent: rgb(0.85, 0.11, 0.11),
-  band: rgb(0.92, 0.92, 0.92),
+  oxford: rgb(0, 33 / 255, 71 / 255),
+  signal: rgb(1, 69 / 255, 0),
+  paper: rgb(1, 1, 1),
+  tint: rgb(0.78, 0.82, 0.88),
+  band: rgb(0.9, 0.91, 0.93),
 };
 const HAIRLINE = 0.5;
 const TREND_LINE = 0.75;
@@ -51,7 +55,7 @@ export async function renderVisitSummaryPdf(
             start: { x: op.x1, y: fromBottom(op.y) },
             end: { x: op.x2, y: fromBottom(op.y) },
             thickness: HAIRLINE,
-            color: TONES.ink,
+            color: TONES.oxford,
           });
           break;
         case 'rect':

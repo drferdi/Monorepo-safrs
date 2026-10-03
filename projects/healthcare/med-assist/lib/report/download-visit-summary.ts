@@ -1,8 +1,8 @@
 import type { VisitSummaryModel } from './visit-summary-model';
 import { renderVisitSummaryPdf } from './visit-summary-pdf';
 
-/** The logomark under `public/`; the side panel and the harness both serve it from the root. */
-export const LOGO_PATH = '/brand/sentra-logomark-black.png';
+/** The white logomark (on the Oxford band) under `public/`; the side panel and the harness serve it from the root. */
+export const LOGO_PATH = '/brand/sentra-logomark-white.png';
 
 export function visitSummaryFileName(model: VisitSummaryModel): string {
   const rm = model.head.rm.trim().replace(/[^A-Za-z0-9-]+/g, '-').replace(/^-+|-+$/g, '') || 'tanpa-rm';

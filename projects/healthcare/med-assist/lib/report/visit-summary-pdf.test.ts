@@ -10,17 +10,19 @@ import { renderVisitSummaryPdf } from './visit-summary-pdf';
 import { longVisitSummaryInput, syntheticVisitSummaryInput } from './visit-summary.fixtures';
 
 const logo = new Uint8Array(
-  readFileSync(fileURLToPath(new URL('../../public/brand/sentra-logomark-black.png', import.meta.url)))
+  readFileSync(fileURLToPath(new URL('../../public/brand/sentra-logomark-white.png', import.meta.url)))
 );
 const images = (page: PDFPage): number =>
   page.node.Resources()?.lookupMaybe(PDFName.of('XObject'), PDFDict)?.keys().length ?? 0;
 
 describe('renderVisitSummaryPdf', () => {
+  // Migrated (Chief 2026-10-03, "lebih komprehensif"): with Edukasi and Tindak lanjut the synthetic
+  // visit takes two pages (Tren TTV whole on page 2), so the count is 2, no longer 1.
   it('writes an A4 PDF titled for the visit, with the logo on page 1', async () => {
     const doc = await PDFDocument.load(
       await renderVisitSummaryPdf(buildVisitSummaryModel(syntheticVisitSummaryInput), logo)
     );
-    expect(doc.getPageCount()).toBe(1);
+    expect(doc.getPageCount()).toBe(2);
     expect(doc.getPage(0).getSize()).toEqual({ width: 595.28, height: 841.89 });
     expect(doc.getTitle()).toBe('Ringkasan Kunjungan');
     expect(doc.getCreator()).toBe('Sentra Med Assist');

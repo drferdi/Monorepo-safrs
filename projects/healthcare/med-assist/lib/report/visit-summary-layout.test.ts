@@ -7,6 +7,8 @@ import {
   CONTENT_BOTTOM,
   FOOTER_Y,
   MARGIN,
+  PAGE,
+  SIZE,
   columnRight,
   columnX,
   layoutVisitSummary,
@@ -39,26 +41,84 @@ describe('layoutVisitSummary', () => {
     }
   });
 
-  it('keeps columns 1-3 for labels and orders the sections', () => {
-    const page = layout().pages[0];
-    const labels = texts(page).filter((op) => op.x < columnX(4)).map((op) => op.text);
-    expect(labels).toEqual([
+  // Migrated (Chief 2026-10-03, "lebih komprehensif swiss style … red orange dan blue oxford"): the
+  // sections are numbered 01-08 in red orange in column 1, their labels Oxford blue in column 2;
+  // Edukasi and Tindak lanjut joined; the trend rows' labels moved to column 2.
+  it('numbers the sections in red orange in column 1 and labels them in Oxford blue', () => {
+    const ops = layout(longVisitSummaryInput).pages.flatMap(texts).filter((op) => op.x < columnX(4));
+    const numbers = ops.filter((op) => op.x === columnX(1));
+    expect(numbers.map((op) => op.text)).toEqual(['01', '02', '03', '04', '05', '05', '06', '07', '08']);
+    expect(new Set(numbers.map((op) => op.tone))).toEqual(new Set(['signal']));
+    const labels = ops.filter((op) => op.x === columnX(2) && op.weight === 'bold');
+    expect(labels.map((op) => op.text)).toEqual([
       'KELUHAN',
       'TTV / TRIASE',
       'ALERGI',
       'DIAGNOSIS',
       'TATALAKSANA',
+      'TATALAKSANA',
+      'EDUKASI',
+      'TINDAK LANJUT',
       'TREN TTV',
-      'Tensi',
-      'Nadi',
-      'Napas',
-      'Suhu',
     ]);
+    expect(new Set(labels.map((op) => op.tone))).toEqual(new Set(['oxford']));
+    const trend = ops.filter((op) => op.x === columnX(2) && op.weight === 'regular').map((op) => op.text);
+    expect(trend).toEqual(['Sistolik', 'Diastolik', 'Nadi', 'Napas', 'Suhu']);
   });
 
+  it('opens page 1 with a full-width Oxford band, the title in white, a red-orange rule beneath', () => {
+    const [first, second] = layout(longVisitSummaryInput).pages;
+    const band = first.find((op) => op.kind === 'rect' && op.tone === 'oxford');
+    expect(band).toEqual(expect.objectContaining({ x: 0, y: 0, width: PAGE.width }));
+    const rule = first.find((op) => op.kind === 'rect' && op.tone === 'signal');
+    expect(rule).toEqual(expect.objectContaining({ x: 0, width: PAGE.width, height: 3 }));
+    if (band?.kind !== 'rect' || rule?.kind !== 'rect') throw new Error('band or rule missing');
+    expect(rule.y).toBe(band.height);
+    const title = texts(first).filter((op) => op.size === SIZE.title);
+    expect(title.map((op) => [op.text, op.tone])).toEqual([
+      ['RINGKASAN', 'paper'],
+      ['KUNJUNGAN', 'paper'],
+    ]);
+    expect(second.some((op) => op.kind === 'rect' && op.tone === 'oxford' && op.width === PAGE.width)).toBe(false);
+  });
+
+  it('prints the education, the follow-up and the safety net', () => {
+    const all = layout().pages.flatMap(texts).map((op) => op.text);
+    expect(all).toEqual(
+      expect.arrayContaining([
+        'Minum obat tekanan darah setiap hari pada jam yang sama.',
+        'Batasi garam dan makanan asin.',
+        'Kontrol 1 minggu',
+        'SEGERA KEMBALI BILA',
+        'Nyeri kepala hebat mendadak',
+        'Lemah separuh badan atau bicara pelo',
+      ])
+    );
+  });
+
+  it('writes the vitals as large Oxford figures over their captions', () => {
+    const value = layout().pages[0].find((op) => op.kind === 'text' && op.text === '152/96 mmHg');
+    expect(value).toEqual(expect.objectContaining({ size: SIZE.figure, weight: 'bold', tone: 'oxford' }));
+  });
+
+  it('leaves one empty baseline between the vitals’ captions and the triage', () => {
+    const ops = texts(layout().pages[0]);
+    const caption = ops.find((op) => op.text === 'GDS');
+    const triage = ops.find((op) => op.text === 'KUNING');
+    if (!caption || !triage) throw new Error('caption or triage missing');
+    expect(triage.y - caption.y).toBe(BASELINE * 2);
+  });
+
+  it('marks each vital’s latest visit in red orange', () => {
+    const marks = layout().pages.flat().filter((op) => op.kind === 'rect' && op.tone === 'signal' && op.width === 3);
+    expect(marks).toHaveLength(5);
+  });
+
+  // Migrated (Chief 2026-10-03, Oxford band): the logomark is white on the band and spans the two
+  // title lines, so its size is no longer 28.
   it('draws the logo once, at column 1 of page 1', () => {
     const logos = layout(longVisitSummaryInput).pages.map((ops) => ops.filter((op) => op.kind === 'logo'));
-    expect(logos[0]).toEqual([expect.objectContaining({ x: columnX(1), size: 28 })]);
+    expect(logos[0]).toEqual([expect.objectContaining({ x: columnX(1) })]);
     expect(logos.slice(1).flat()).toEqual([]);
   });
 
@@ -76,6 +136,22 @@ describe('layoutVisitSummary', () => {
     expect(new Set(names).size).toBe(45);
   });
 
+  it('never sets a baseline below the content bottom, however long a complaint or an alert', () => {
+    const long = (word: string, count: number) => Array.from({ length: count }, () => word).join(' ');
+    const input = {
+      ...syntheticVisitSummaryInput,
+      keluhanUtama: long('nyeri', 1200),
+      alerts: [{ severity: 'high', title: 'Peringatan panjang', message: long('waspada', 1100) }],
+    };
+    const { pages } = layout(input);
+    for (const op of pages.flatMap(texts).filter((t) => t.y !== FOOTER_Y)) {
+      expect(op.y).toBeLessThanOrEqual(CONTENT_BOTTOM);
+    }
+    const words = pages.flatMap(texts).flatMap((op) => op.text.split(' '));
+    expect(words.filter((word) => word === 'nyeri')).toHaveLength(1200);
+    expect(words.filter((word) => word === 'waspada')).toHaveLength(1100);
+  });
+
   it('breaks a word wider than its columns inside them', () => {
     const word = 'Natriumdiklofenakkaliumhidroklorida'.repeat(3);
     const ops = layout({ ...syntheticVisitSummaryInput, keluhanUtama: word }).pages[0];
@@ -88,7 +164,7 @@ describe('layoutVisitSummary', () => {
     const input = { ...syntheticVisitSummaryInput, context: undefined };
     const all = layout(input).pages.flatMap(texts).map((op) => op.text);
     expect(all).toContain('Riwayat kunjungan belum cukup untuk tren');
-    expect(all).not.toContain('Tensi');
+    expect(all).not.toContain('Sistolik');
   });
 
   it('draws only text the standard Helvetica can encode, without a ?', () => {

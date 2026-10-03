@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-10-03 (visit summary PDF: "Unduh PDF" on RME Terapi, Swiss grid, pdf-lib; Tren TTV text on the trajectory scale; Trajectory Tren TTV as the lab spring playground; STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
+Last updated: 2026-10-03 (visit summary PDF on an Oxford band with red orange signals, Edukasi and Tindak lanjut; "Unduh PDF" on RME Terapi, Swiss grid, pdf-lib; Tren TTV text on the trajectory scale; Trajectory Tren TTV as the lab spring playground; STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
 identity-free, CSV for pandas; a resep step says what went wrong, out of stock is a note without Ulangi; Terapi kronis drops acute-only medications; an out-of-stock medication is left out at once; header lights the page on screen, "Lanjutkan semua" for chronic therapy;
 chronic doses from the riwayat Resep table, no triad warning; the RME resep picks each medication from its ePuskesmas suggestion and
 presses Tambah once per row; 2026-10-01: the signa chosen from its suggestion, "3x sehari" as 3x1;
@@ -15,8 +15,10 @@ Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-
 2026-09-29 hold the details. `main` is at cd7b7795 (Chief merged through the Tren TTV text scale).
 Visit summary PDF (2026-10-03, spec `docs/specs/2026-10-03-visit-summary-pdf-design.md`, plan
 `docs/plans/2026-10-03-visit-summary-pdf-plan.md`, DECISIONS): "Unduh PDF" on the RME Terapi step
-saves `ringkasan-kunjungan-<RM>-<date>.pdf`, A4, 12-column grid, Helvetica, black logomark
-(`public/brand/`, cropped flush to the mark) on page 1, no patient name. `lib/report/*`: model →
+saves `ringkasan-kunjungan-<RM>-<date>.pdf`, A4, 12-column grid, Helvetica, no patient name. Since
+Chief's redesign: an Oxford blue band with the white logomark (`public/brand/`, cropped flush to the
+mark), red orange section numbers 01-08 and signals, Edukasi and Tindak lanjut added, Sistolik and
+Diastolik as separate trend rows, the trend limited to this RM's visits; usually two pages. `lib/report/*`: model →
 layout (draw ops) → pdf-lib renderer; `main.tsx` passes `visitSummaryContext` (facility, triage,
 SpO2, visit history). pdf-lib (1.17.1, Chief approved) loads on click in its own chunk.
 Harness: `pdf.html` (one page), `pdf.html?long` (45 medications, two pages), `?zoom=200`.
@@ -95,6 +97,10 @@ Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/z
 
 ## Verification (final tree)
 
+2026-10-03 (PDF redesign + review fixes): lint 1 only from the two known files · typecheck 0 ·
+test 0 (1598 passed, 17 skipped) · e2e 20 · dev build 0 (pdf-lib only in its chunk) · `run:check` 0 ·
+style.css untouched. Root as below. `run build` 0, last.
+
 2026-10-03 (visit summary PDF): lint 1 only from the two known files · typecheck 0 · test 0 (1590
 passed, 17 skipped; 30 new) · e2e 20 · dev build 0 (pdf-lib only in `chunks/download-visit-summary`)
 · `run:check` 0 · style.css untouched since main. Harness: one and two pages render in Chrome's
@@ -154,7 +160,9 @@ Screenshots failed (Claude window hidden); checks were read from the DOM.
 
 00. Visit summary PDF live: "Unduh PDF" on RME Terapi after a real case, then open the file. My
     calls: Tren TTV without SpO2 (visit history has none), last 8 visits, Tatalaksana prints the
-    resep list then the CDSS alerts, triage as its bold word, the logomark only.
+    resep list then the CDSS alerts, triage as its bold word, the logomark only, red orange
+    #FF4500 and Oxford #002147, a typical visit on two pages. Deferred review minors (ledger):
+    no double-click guard, no error log, trend x by index with dd-mm end labels.
 
 0. Statistik Harian live: "Muat statistik harian" in Chief's Chrome not yet seen (Playwright cannot
    route the hidden tab's first navigation). Rows are services, not distinct patients (no identity

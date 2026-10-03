@@ -221,7 +221,12 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
           facilityName: 'Puskesmas Sintetis',
           triage: { zone: 'hijau', headline: null },
           spo2: 98,
-          visitHistory: [syntheticVisit('2026-09-01', { sbp: 120, dbp: 80, hr: 84, rr: 18, temp: 37, glucose: 0 })],
+          visitHistory: [
+            {
+              ...syntheticVisit('2026-09-01', { sbp: 120, dbp: 80, hr: 84, rr: 18, temp: 37, glucose: 0 }),
+              patient_id: 'RM-J02',
+            },
+          ],
         }}
         onBack={() => undefined}
       />
@@ -252,6 +257,8 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
         diagnoses: [expect.objectContaining({ icd: 'J02', role: 'PRIMER' })],
         medications: [{ name: 'Amoksisilin', dose: '3x500mg', use: 'sesudah makan', duration: '5 hari' }],
         trend: expect.objectContaining({ dates: [expect.any(String), expect.any(String)] }),
+        followUp: 'Kontrol 3 hari',
+        education: [],
       })
     );
     expect(JSON.stringify(model)).not.toContain('Rahasia');

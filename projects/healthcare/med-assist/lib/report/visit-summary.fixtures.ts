@@ -44,6 +44,9 @@ export const syntheticVisitSummaryInput: VisitSummaryInput = {
     },
     { severity: 'info', title: 'Edukasi garam', message: 'Batasi garam < 5 g/hari.' },
   ],
+  education: ['Minum obat tekanan darah setiap hari pada jam yang sama.', 'Batasi garam dan makanan asin.'],
+  followUp: '1 minggu',
+  safetyNet: ['Nyeri kepala hebat mendadak', 'Lemah separuh badan atau bicara pelo'],
   context: {
     facilityName: 'Puskesmas Sintetis',
     triage: { zone: 'kuning', headline: 'Hipertensi derajat 2' },

@@ -3,6 +3,26 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-03 — The visit summary opens on an Oxford band, red orange signals
+
+- Decision (Chief: "Design ringkasan kunjungan : buat lebih komprehensif swiss style dan beri
+  sentuhan warna red orange dan blue oxford"; picked "A. Pita Oxford", "Visual + isi"): page 1 opens
+  with a full-width Oxford blue (#002147) band, "RINGKASAN / KUNJUNGAN" white 36 pt, the white
+  logomark spanning both title lines, the meta line in a light tint, a 3 pt red orange (#FF4500)
+  rule under the band. Sections are numbered 01-08 in red orange (column 1) with Oxford labels
+  (column 2); vitals are 16 pt Oxford figures over captions; the PRIMER role, urgent alerts, triage
+  merah, list numbers and each vital's latest visit are red orange; rules, ICD codes, follow-up and
+  the page number are Oxford. New content from the Diagnosis page: 06 Edukasi (ticked points),
+  07 Tindak lanjut ("Kontrol …" and "Segera kembali bila" red flags). A typical visit is now two
+  pages, Tren TTV whole on page 2.
+- Same pass, from the whole-branch review: a long complaint or alert continues on the next page by
+  lines (was cut off), Tensi became Sistolik and Diastolik rows so each band is its own range (the
+  shared band made diastolic 94-100 look normal), and the trend keeps only visits whose
+  `patient_id` is this RM.
+- Evidence: layout tests for the band, the numbering and tones, the new sections, the figures,
+  the red-orange latest marks, the overflow and the triage spacing; model tests for the RM filter
+  and the new fields; the harness shows both pages in Chrome's viewer.
+
 ## 2026-10-03 — The visit summary is a Swiss Style PDF
 
 - Decision (Chief: "Build a system to format the output of the Assist result into a PDF document",

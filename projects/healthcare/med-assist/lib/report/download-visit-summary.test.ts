@@ -43,7 +43,7 @@ describe('downloadVisitSummaryPdf', () => {
   it('saves nothing when the logo cannot be read', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => new Response('', { status: 404 })));
     const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => undefined);
-    await expect(downloadVisitSummaryPdf(model)).rejects.toThrow('/brand/sentra-logomark-black.png');
+    await expect(downloadVisitSummaryPdf(model)).rejects.toThrow('/brand/sentra-logomark-white.png');
     expect(click).not.toHaveBeenCalled();
     expect(renderMock).not.toHaveBeenCalled();
   });

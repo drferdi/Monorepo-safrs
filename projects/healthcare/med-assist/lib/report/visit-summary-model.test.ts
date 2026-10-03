@@ -44,6 +44,14 @@ describe('buildVisitSummaryModel', () => {
     expect(buildVisitSummaryModel({ ...input, gender: 'L' }).pregnancy).toBeNull();
   });
 
+  it('carries the chosen education, the follow-up and the safety net', () => {
+    const model = buildVisitSummaryModel(input);
+    expect(model.education).toEqual(input.education);
+    expect(model.followUp).toBe('Kontrol 1 minggu');
+    expect(model.safetyNet).toEqual(input.safetyNet);
+    expect(buildVisitSummaryModel({ ...input, followUp: '' }).followUp).toBe('');
+  });
+
   it('marks the first diagnosis PRIMER and the others SEKUNDER', () => {
     expect(buildVisitSummaryModel(input).diagnoses.map((d) => d.role)).toEqual(['PRIMER', 'SEKUNDER']);
   });
@@ -56,9 +64,12 @@ describe('buildVisitSummaryModel', () => {
   it('trends the past visits then this one, with the normal limits', () => {
     const trend = buildVisitSummaryModel(input).trend;
     expect(trend?.dates).toEqual(['12-06', '10-07', '14-08', '11-09', '03-10']);
-    expect(trend?.rows.map((row) => row.label)).toEqual(['Tensi', 'Nadi', 'Napas', 'Suhu']);
+    // Review 2026-10-03: one measure per row, so each grey band is that measure's normal range.
+    expect(trend?.rows.map((row) => row.label)).toEqual(['Sistolik', 'Diastolik', 'Nadi', 'Napas', 'Suhu']);
+    expect(trend?.rows.map((row) => row.lines.length)).toEqual([1, 1, 1, 1, 1]);
     expect(trend?.rows[0].lines[0]).toEqual({ values: [148, 156, 150, 158, 152], range: { min: 90, max: 139 } });
-    expect(trend?.rows[0].last).toBe('152/96 mmHg');
+    expect(trend?.rows[1].lines[0]).toEqual({ values: [94, 98, 95, 100, 96], range: { min: 60, max: 89 } });
+    expect(trend?.rows.map((row) => row.last).slice(0, 2)).toEqual(['152 mmHg', '96 mmHg']);
   });
 
   it('keeps the last 8 visits and leaves a gap where a visit lacks a vital', () => {
@@ -76,7 +87,16 @@ describe('buildVisitSummaryModel', () => {
     const trend = buildVisitSummaryModel({ ...input, context: { ...input.context!, visitHistory: history } }).trend;
     expect(trend?.dates).toHaveLength(8);
     expect(trend?.dates[0]).toBe('15-04');
-    expect(trend?.rows[1].lines[0].values).toEqual([80, 80, 80, 80, 80, 80, null, 88]);
+    expect(trend?.rows[2].lines[0].values).toEqual([80, 80, 80, 80, 80, 80, null, 88]);
+  });
+
+  it('trends only this patient’s visits', () => {
+    const other = { ...syntheticVisit('2026-09-20', input.vitals), patient_id: 'RM-LAIN' };
+    const trend = buildVisitSummaryModel({
+      ...input,
+      context: { ...input.context!, visitHistory: [...input.context!.visitHistory, other] },
+    }).trend;
+    expect(trend?.dates).toEqual(['12-06', '10-07', '14-08', '11-09', '03-10']);
   });
 
   it('skips visits without a readable date', () => {

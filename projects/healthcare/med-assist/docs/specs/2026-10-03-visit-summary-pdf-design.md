@@ -2,7 +2,8 @@
 
 Status: approved by Chief on 2026-10-03 (chat, then the written spec); implemented on 2026-10-03.
 Branch `feat/sidepanel-ui-batch` (from `cd7b7795`). Deviations found against the code are listed
-in DECISIONS 2026-10-03 "The visit summary is a Swiss Style PDF".
+in DECISIONS 2026-10-03 "The visit summary is a Swiss Style PDF"; Chief's colour and content
+redesign (Oxford band, red orange signals, Edukasi, Tindak lanjut) in the entry above it.
 
 ## Intent
 

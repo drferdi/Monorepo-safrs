@@ -26,13 +26,19 @@ export interface VisitSummaryInput {
   /** The medications going to the resep, the dose already in Chief's notation ("1x10mg"). */
   medications: Array<{ name: string; dose: string; use: string; duration: string }>;
   alerts: Array<{ severity: string; title: string; message: string }>;
+  /** The education points the doctor ticked, verbatim. */
+  education: string[];
+  /** Tindak lanjut interval ("3 hari"), or '' for none. */
+  followUp: string;
+  /** Red flags of the chosen diagnoses ("Segera kembali bila"). */
+  safetyNet: string[];
   context: VisitSummaryContext | undefined;
   printedAt: Date;
 }
 
 export interface TrendRow {
   label: string;
-  /** One line per measure (Tensi draws sistolik and diastolik); null where a visit lacks it. */
+  /** The measure's values per visit, null where a visit lacks it, and its normal range. */
   lines: Array<{ values: Array<number | null>; range: { min: number; max: number } }>;
   last: string;
 }
@@ -47,6 +53,9 @@ export interface VisitSummaryModel {
   diagnoses: Array<{ icd: string; name: string; role: 'PRIMER' | 'SEKUNDER' }>;
   medications: VisitSummaryInput['medications'];
   alerts: Array<{ title: string; message: string; urgent: boolean }>;
+  education: string[];
+  followUp: string;
+  safetyNet: string[];
   /** Null with fewer than two visits. */
   trend: { dates: string[]; rows: TrendRow[] } | null;
 }
@@ -112,7 +121,15 @@ export function buildVisitSummaryModel(input: VisitSummaryInput): VisitSummaryMo
         message: alert.message,
         urgent: alert.severity === 'emergency' || alert.severity === 'high',
       })),
-    trend: buildTrend(context?.visitHistory ?? [], vitals, printedAt),
+    education: input.education,
+    followUp: input.followUp ? `Kontrol ${input.followUp}` : '',
+    safetyNet: input.safetyNet,
+    // Only this patient's visits: a late or failed history scan must not print another RM's vitals.
+    trend: buildTrend(
+      (context?.visitHistory ?? []).filter((visit) => visit.patient_id === input.rm),
+      vitals,
+      printedAt
+    ),
   };
 }
 
@@ -135,7 +152,9 @@ function buildTrend(history: VisitRecord[], current: Vitals, printedAt: Date): V
   return {
     dates: visits.map((visit) => `${pad(visit.at.getDate())}-${pad(visit.at.getMonth() + 1)}`),
     rows: [
-      { label: 'Tensi', lines: [line('sbp'), line('dbp')], last: pressure(current) },
+      // One measure per row, so each grey band is that measure's own normal range.
+      { label: 'Sistolik', lines: [line('sbp')], last: shown(current.sbp, 'mmHg') },
+      { label: 'Diastolik', lines: [line('dbp')], last: shown(current.dbp, 'mmHg') },
       { label: 'Nadi', lines: [line('hr')], last: shown(current.hr, 'x/mnt') },
       { label: 'Napas', lines: [line('rr')], last: shown(current.rr, 'x/mnt') },
       { label: 'Suhu', lines: [line('temp')], last: shown(current.temp, '°C') },

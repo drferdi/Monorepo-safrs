@@ -1760,6 +1760,11 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         };
       }),
       alerts: therapyByDiagnosis.flatMap((result) => result.alerts),
+      education: educationItems
+        .filter((item) => selectedEducationKeys.includes(item.key))
+        .map((item) => item.text),
+      followUp: controlAfter,
+      safetyNet,
       context: visitSummaryContext,
       printedAt: new Date(),
     });
