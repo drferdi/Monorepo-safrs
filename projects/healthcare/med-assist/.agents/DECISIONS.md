@@ -3,6 +3,24 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-03 — Audit follow-up: least privilege, one answer per message, logging rule
+
+- Decision (Chief: "Lanjutkan audit"): the manifest drops `identity`, the googleapis host
+  permission and `oauth2` (no code uses them), and web-accessible resources are matched to
+  `*://*.epuskesmas.id/*` only (any site could detect the extension and read the drug stock list).
+  The native `onMessage` listener no longer answers `scanFields`, `scanMedicalHistory`,
+  `scanClinicalContext` and `fillAnamnesa`; their typed handlers do. Content scripts are reinjected
+  only into a tab whose host is ePuskesmas. Code that runs in the ePuskesmas page (handlers,
+  scrapers, filler, content and main-world entries) logs through `utils/logger`; ESLint enforces
+  `no-console` there. `scripts/dev/auto-commit.js`, `auto-document.js`, `docs-all.js` and the
+  broken `vitest.clinical.config.ts` / `vitest.unit.config.ts` are removed.
+- Not done: gating `VITE_MIRA_DEV_TOKEN` to DEV builds would stop Chief's production MIRA; it waits
+  for a per-session token through the native host (MIRA repo). Clinical findings (Gate 3 glucose
+  without symptoms, DDI name matching, DDI failing open) are R3 and wait for Chief (HANDOFF).
+- Evidence: `background.exec-scrape.test.ts` (typed messages claimed by no raw branch; example.org
+  gets no injection, ePuskesmas two), red before the fix; `extension-smoke.spec.ts` asserts the
+  removed grants and the WAR matches on the built extension; full lint 0 warnings.
+
 ## 2026-10-03 — A dashboard bridge entry fills only its own patient's tab
 
 - Decision (Chief, on the audit question whether the bridge auto-fill is used: "Ini justru harus

@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-10-03 (bridge entries fill only their own patient's tab; visit history in memory only; masked identity to the crew portal; audit `med-assist-audit-2026-10-03.md` given to Chief; visit summary PDF in IBM Plex Sans; 09 Verifikasi with DPJP and verifier from the signed-in user; on an Oxford band with red orange signals, Edukasi and Tindak lanjut; "Unduh PDF" on RME Terapi, Swiss grid, pdf-lib; Tren TTV text on the trajectory scale; Trajectory Tren TTV as the lab spring playground; STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
+Last updated: 2026-10-03 (audit tasks: typed messages answered once, reinjection only into ePuskesmas, Google grants removed, resources exposed to ePuskesmas only, auto-commit scripts removed, page-side logging through the logger, no production eslint-disable, glucose and DDI tests, README; bridge entries fill only their own patient's tab; visit history in memory only; masked identity to the crew portal; audit `med-assist-audit-2026-10-03.md` given to Chief; visit summary PDF in IBM Plex Sans; 09 Verifikasi with DPJP and verifier from the signed-in user; on an Oxford band with red orange signals, Edukasi and Tindak lanjut; "Unduh PDF" on RME Terapi, Swiss grid, pdf-lib; Tren TTV text on the trajectory scale; Trajectory Tren TTV as the lab spring playground; STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
 identity-free, CSV for pandas; a resep step says what went wrong, out of stock is a note without Ulangi; Terapi kronis drops acute-only medications; an out-of-stock medication is left out at once; header lights the page on screen, "Lanjutkan semua" for chronic therapy;
 chronic doses from the riwayat Resep table, no triad warning; the RME resep picks each medication from its ePuskesmas suggestion and
 presses Tambah once per row; 2026-10-01: the signa chosen from its suggestion, "3x sehari" as 3x1;
@@ -16,8 +16,15 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
   and on a saved auth config, one poll at a time; the run id is base 36 (the 13-digit ms id tripped
   the PII guard, so every bridge report failed). Visit history: in memory, one patient, legacy
   IndexedDB deleted. Patient-sync: name `F**di I*****ar`, BPJS last four, RM readable.
-  Audit tasks not done yet: duplicate background listeners (A1), PHI in console (S5), DDI and
-  glucose tests, unused permissions, auto-commit scripts, README.
+  Audit tasks done after that (DECISIONS "Audit follow-up"): the native listener no longer answers
+  the four typed scrape/fill messages; reinjection checks the tab is ePuskesmas; `identity`,
+  googleapis and `oauth2` removed, web-accessible resources matched to ePuskesmas only; the
+  auto-commit/auto-document scripts and the two broken Vitest configs removed; handlers and
+  scrapers log through `createLogger` (`no-console` enforced there); `inject.content.ts` reads a
+  typed page jQuery; glucose (30) and DDI (6) tests; README matches the code.
+  Not done: T-10 (MIRA dev token gated to DEV would stop Chief's production MIRA; a per-session
+  token through the native host is a cross-repo design), dependency prune (lockfile change, tests
+  mock `react-apexcharts`), the `any` suppressions in MedLens tests.
 
 Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-30 (two entries) and
 2026-09-29 hold the details. `main` is at cd7b7795 (Chief merged through the Tren TTV text scale).
@@ -108,6 +115,12 @@ Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/z
 
 ## Verification (final tree)
 
+2026-10-03 (audit follow-up, 8 commits debfbbaf..54096c3d): typecheck 0 · test 0 (201 files,
+1664 passed, 17 skipped) · full lint 1, only `zz-verify-kb-rx.spec.ts` (other session), 0 warnings
+· `run build` 0, last; built manifest has no `identity`/googleapis/`oauth2`, WAR matches
+ePuskesmas only · `run:check` 0 · e2e 20 (synthetic, auth-bridge, smoke, trajectory preview).
+Red first: the listener and reinjection tests (5 failed before the fix). Prettier: no new drift.
+
 2026-10-03 (bridge, retention, masking): typecheck 0 · test 0 (1622 passed, 17 skipped) · eslint on
 my files 0 (full lint 1: only `zz-verify-kb-rx.spec.ts` and the old `platform-api-client.test.ts`
 warning) · `run build` 0, last · `run:check` 0 · e2e 20 (synthetic, auth-bridge, smoke, trajectory
@@ -174,6 +187,14 @@ RME Diagnosa → "terkirim" → Tatalaksana; Amlodipin continued; RME Terapi wit
 Screenshots failed (Claude window hidden); checks were read from the DOM.
 
 ## Open for Chief
+
+R3, waiting for Chief's approval (findings only, no logic changed):
+- Gate 3 glucose: `TTVInferenceUI` sends GDS with `has_classic_symptoms: false`, and the classifier
+  calls any GDS ≥ 70 without symptoms NORMAL, so GDS 200-400 gives no Gate 3 alert (CP-028 needs
+  metabolic signs, vital-guardrails flags only > 400).
+- DDI matching: real names miss (Aspirin+Warfarin, Asam asetilsalisilat, Paracetamol,
+  Spironolakton+Captopril, stock names with strength); the aliases' keys are not DDInter names.
+  The reasoner's DDI fails open on an error; the KB prescription path calls no DDI.
 
 00. Visit summary PDF live: "Unduh PDF" on RME Terapi after a real case, then open the file. My
     calls: Tren TTV without SpO2 (visit history has none), last 8 visits, Tatalaksana prints the
