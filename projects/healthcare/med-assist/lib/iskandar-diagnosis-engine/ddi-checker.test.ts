@@ -42,6 +42,20 @@ describe('resolveDDIDrugNames', () => {
       'amoxicillin',
       'clavulanicacid',
     ]);
+    expect(await resolveDDIDrugNames('Antasida Doen')).toEqual([
+      'aluminumhydroxide',
+      'magnesiumhydroxide',
+    ]);
+  });
+
+  it('reads an Indonesian "-ida" salt with and without it', async () => {
+    expect(await resolveDDIDrugNames('Ranitidin hidroklorida 150 mg')).toEqual(['ranitidine']);
+  });
+
+  it('reads manufacturer and form words as nothing', async () => {
+    for (const name of ['Hexpharm', 'Indofarma', 'Kombinasi', 'Dewasa', 'Steril', 'Larutan Oral']) {
+      expect(await resolveDDIDrugNames(name)).toEqual([]);
+    }
   });
 
   // The old matcher took the first table name containing the input.
@@ -76,6 +90,15 @@ describe('checkDrugInteractions', () => {
       { drug_a: drugA, drug_b: drugB, severity: 'major' },
     ]);
     expect(result.hasBlocking).toBe(true);
+  });
+
+  // Amlodipine + atorvastatin is a moderate pair in the table, and also one product.
+  it('checks the two drugs of one product against others, not against each other', async () => {
+    const separate = await checkDrugInteractions(['Amlodipin', 'Atorvastatin']);
+    const oneProduct = await checkDrugInteractions(['Amlodipin/Atorvastatin', 'Ambroxol']);
+
+    expect(separate.interactions.map((interaction) => interaction.severity)).toEqual(['moderate']);
+    expect(oneProduct.interactions).toEqual([]);
   });
 
   it('flags paracetamol with warfarin as a moderate pair', async () => {

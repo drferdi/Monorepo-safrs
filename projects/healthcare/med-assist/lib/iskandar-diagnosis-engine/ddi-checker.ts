@@ -321,9 +321,9 @@ const SALT_WORDS = new Set([
   'sodium',
   'potassium',
   'hcl',
-  'hidroklorid',
+  'hidroklorida',
   'hydrochloride',
-  'hidrobromid',
+  'hidrobromida',
   'hydrobromide',
   'maleat',
   'maleate',
@@ -352,14 +352,13 @@ const SALT_WORDS = new Set([
 
 const ALIAS_INDEX = new Map(Object.entries(DDI_DRUG_ALIASES));
 
-/** The words of one drug in a stock name, Indonesian "-ida" and "-osa" read as "-ide", "-ose". */
+/** The words of one drug in a stock name. */
 function drugNameWords(part: string): string[] {
   return part
     .replace(/[^a-z0-9]+/g, ' ')
     .trim()
     .split(' ')
-    .filter((word) => word && !FORM_WORDS.has(word))
-    .map((word) => word.replace(/ida$/, 'id').replace(/osa$/, 'os'));
+    .filter((word) => word && !FORM_WORDS.has(word));
 }
 
 function lookupWords(words: readonly string[]): readonly string[] {
@@ -371,7 +370,9 @@ function lookupWords(words: readonly string[]): readonly string[] {
     words.length === 2 && words[0] === 'asam' && words[1].endsWith('at')
       ? `${words[1].slice(0, -2)}icacid`
       : null;
-  const name = spellingIndex.get(spellingKey(acid ?? words.join('')));
+  // Indonesian "-ida" and "-osa" read as "-ide" and "-ose" (klorida, laktulosa).
+  const english = words.map((word) => word.replace(/ida$/, 'id').replace(/osa$/, 'os')).join('');
+  const name = spellingIndex.get(spellingKey(acid ?? english));
   return name ? [name] : [];
 }
 
