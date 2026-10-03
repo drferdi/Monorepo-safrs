@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-10-03 (visit summary PDF: 09 Verifikasi with DPJP and verifier from the signed-in user; on an Oxford band with red orange signals, Edukasi and Tindak lanjut; "Unduh PDF" on RME Terapi, Swiss grid, pdf-lib; Tren TTV text on the trajectory scale; Trajectory Tren TTV as the lab spring playground; STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
+Last updated: 2026-10-03 (visit summary PDF in IBM Plex Sans; 09 Verifikasi with DPJP and verifier from the signed-in user; on an Oxford band with red orange signals, Edukasi and Tindak lanjut; "Unduh PDF" on RME Terapi, Swiss grid, pdf-lib; Tren TTV text on the trajectory scale; Trajectory Tren TTV as the lab spring playground; STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
 identity-free, CSV for pandas; a resep step says what went wrong, out of stock is a note without Ulangi; Terapi kronis drops acute-only medications; an out-of-stock medication is left out at once; header lights the page on screen, "Lanjutkan semua" for chronic therapy;
 chronic doses from the riwayat Resep table, no triad warning; the RME resep picks each medication from its ePuskesmas suggestion and
 presses Tambah once per row; 2026-10-01: the signa chosen from its suggestion, "3x sehari" as 3x1;
@@ -20,7 +20,8 @@ Chief's redesign: an Oxford blue band with the white logomark (`public/brand/`, 
 mark), red orange section numbers 01-08 and signals, Edukasi and Tindak lanjut added, Sistolik and
 Diastolik as separate trend rows, the trend limited to this RM's visits; usually two pages.
 09 Verifikasi: DPJP and Verifikator from the signed-in user by profession (the RME's
-`resolveTenagaMedisNames`), read from the session at the click. `lib/report/*`: model →
+`resolveTenagaMedisNames`), read from the session at the click. Text in IBM Plex Sans Regular
+and Bold (`public/fonts/`, OFL, embedded as subsets through `@pdf-lib/fontkit`). `lib/report/*`: model →
 layout (draw ops) → pdf-lib renderer; `main.tsx` passes `visitSummaryContext` (facility, triage,
 SpO2, visit history). pdf-lib (1.17.1, Chief approved) loads on click in its own chunk.
 Harness: `pdf.html` (one page), `pdf.html?long` (45 medications, two pages), `?zoom=200`.

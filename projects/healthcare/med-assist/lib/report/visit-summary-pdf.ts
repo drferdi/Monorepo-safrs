@@ -1,4 +1,5 @@
-import { PDFDocument, StandardFonts, rgb, type PDFFont, type RGB } from 'pdf-lib';
+import fontkit from '@pdf-lib/fontkit';
+import { PDFDocument, rgb, type PDFFont, type RGB } from 'pdf-lib';
 
 import { PAGE, layoutVisitSummary, type FontWeight, type Measure, type Tone } from './visit-summary-layout';
 import type { VisitSummaryModel } from './visit-summary-model';
@@ -17,27 +18,36 @@ const TONES: Record<Tone, RGB> = {
 const HAIRLINE = 0.5;
 const TREND_LINE = 0.75;
 
-/** The two standard Helvetica weights, and widths measured with them. */
-export async function embedHelvetica(
-  doc: PDFDocument
+/** The white logomark and IBM Plex Sans (Chief, 2026-10-03), as files from `public/`. */
+export interface VisitSummaryAssets {
+  logo: Uint8Array;
+  regular: Uint8Array;
+  bold: Uint8Array;
+}
+
+/** IBM Plex Sans Regular and Bold, subset to the glyphs drawn, and widths measured with them. */
+export async function embedPlexSans(
+  doc: PDFDocument,
+  assets: Pick<VisitSummaryAssets, 'regular' | 'bold'>
 ): Promise<{ fonts: Record<FontWeight, PDFFont>; measure: Measure }> {
+  doc.registerFontkit(fontkit);
   const fonts: Record<FontWeight, PDFFont> = {
-    regular: await doc.embedFont(StandardFonts.Helvetica),
-    bold: await doc.embedFont(StandardFonts.HelveticaBold),
+    regular: await doc.embedFont(assets.regular, { subset: true }),
+    bold: await doc.embedFont(assets.bold, { subset: true }),
   };
   return { fonts, measure: (text, weight, size) => fonts[weight].widthOfTextAtSize(text, size) };
 }
 
 export async function renderVisitSummaryPdf(
   model: VisitSummaryModel,
-  logoPng: Uint8Array
+  assets: VisitSummaryAssets
 ): Promise<Uint8Array<ArrayBuffer>> {
   const doc = await PDFDocument.create();
   doc.setTitle('Ringkasan Kunjungan');
   doc.setCreator('Sentra Med Assist');
   doc.setProducer('Sentra Med Assist');
-  const { fonts, measure } = await embedHelvetica(doc);
-  const logo = await doc.embedPng(logoPng);
+  const { fonts, measure } = await embedPlexSans(doc, assets);
+  const logo = await doc.embedPng(assets.logo);
   const fromBottom = (top: number): number => PAGE.height - top;
 
   for (const ops of layoutVisitSummary(model, measure).pages) {

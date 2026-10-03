@@ -3,6 +3,18 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-03 — The visit summary is set in IBM Plex Sans
+
+- Decision (Chief: "Text gunakan IMB Plex Sans"; picked "Setuju" for the dependency and the
+  files): the PDF embeds IBM Plex Sans Regular and Bold (v3.005, SIL OFL 1.1, licence URL in the
+  font's name table), copied from Chief's installed fonts to `public/fonts/`, subset to the glyphs
+  drawn. New dependency `@pdf-lib/fontkit@1.1.1` (MIT, needs only `pako`, already present). The
+  logo's cap-height alignment uses Plex's 698/1000. The fonts load with the logo at the click
+  (`loadVisitSummaryAssets`); a missing file shows "PDF gagal dibuat".
+- Kept: the WinAnsi guard, so characters stay those every weight has (`≥` still prints `>=`).
+- Evidence: the renderer test finds only IBMPlexSans and IBMPlexSans-Bold in the file; the layout
+  test finds a Plex glyph for every character drawn; the harness shows the Plex letterforms.
+
 ## 2026-10-03 — The visit summary closes with the DPJP and the verifier
 
 - Decision (Chief: "Lalu dokter penanggung jawab atau buatkan istilah lain ala sentra dan

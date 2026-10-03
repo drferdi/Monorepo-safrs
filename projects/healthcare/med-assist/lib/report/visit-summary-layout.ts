@@ -15,7 +15,8 @@ export const SIZE = { title: 36, figure: 16, body: 9, label: 7 } as const;
 /** The lowest baseline content may use, and the footer's baseline. */
 export const CONTENT_BOTTOM = MARGIN.top + BASELINE * 61;
 export const FOOTER_Y = MARGIN.top + BASELINE * 64;
-const HELVETICA_CAP_HEIGHT = 0.718;
+/** IBM Plex Sans cap height: 698 of 1000 units. */
+const CAP_HEIGHT = 0.698;
 const TITLE_FIRST = MARGIN.top + BASELINE * 3;
 const TITLE_SECOND = TITLE_FIRST + SIZE.title;
 const LATER_PAGE_TOP = MARGIN.top + BASELINE * 3;
@@ -385,7 +386,7 @@ export function layoutVisitSummary(model: VisitSummaryModel, measure: Measure): 
   );
   const metaFirst = TITLE_SECOND + BASELINE * 2;
   const bandHeight = metaFirst + BASELINE * (meta.length - 1) + BASELINE * 2;
-  const capTop = TITLE_FIRST - SIZE.title * HELVETICA_CAP_HEIGHT;
+  const capTop = TITLE_FIRST - SIZE.title * CAP_HEIGHT;
   const first: DrawOp[] = [
     { kind: 'rect', x: 0, y: 0, width: PAGE.width, height: bandHeight, tone: 'oxford' },
     { kind: 'rect', x: 0, y: bandHeight, width: PAGE.width, height: SIGNAL_RULE, tone: 'signal' },

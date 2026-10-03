@@ -1,5 +1,6 @@
 // @vitest-environment node
-import { PDFDocument, type PDFFont } from 'pdf-lib';
+import fontkit from '@pdf-lib/fontkit';
+import { PDFDocument } from 'pdf-lib';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import {
@@ -17,15 +18,20 @@ import {
   type Measure,
 } from './visit-summary-layout';
 import { buildVisitSummaryModel } from './visit-summary-model';
-import { embedHelvetica } from './visit-summary-pdf';
+import { embedPlexSans } from './visit-summary-pdf';
 import { longVisitSummaryInput, syntheticVisitSummaryInput } from './visit-summary.fixtures';
+import { readVisitSummaryAssets } from './visit-summary.test-assets';
 
 type TextOp = Extract<DrawOp, { kind: 'text' }>;
 
+const assets = readVisitSummaryAssets();
+const plex: Record<FontWeight, ReturnType<typeof fontkit.create>> = {
+  regular: fontkit.create(assets.regular),
+  bold: fontkit.create(assets.bold),
+};
 let measure: Measure;
-let fonts: Record<FontWeight, PDFFont>;
 beforeAll(async () => {
-  ({ measure, fonts } = await embedHelvetica(await PDFDocument.create()));
+  ({ measure } = await embedPlexSans(await PDFDocument.create(), assets));
 });
 
 const texts = (ops: DrawOp[]): TextOp[] => ops.filter((op): op is TextOp => op.kind === 'text');
@@ -181,10 +187,14 @@ describe('layoutVisitSummary', () => {
     expect(all).not.toContain('Sistolik');
   });
 
-  it('draws only text the standard Helvetica can encode, without a ?', () => {
+  // Migrated (Chief 2026-10-03, "Text gunakan IBM Plex Sans"): was "draws only text the standard
+  // Helvetica can encode"; the claim is now that IBM Plex Sans has a glyph for every character drawn.
+  it('draws only characters IBM Plex Sans has a glyph for, without a ?', () => {
     for (const op of layout().pages.flatMap(texts)) {
       expect(op.text).not.toContain('?');
-      expect(() => fonts[op.weight].encodeText(op.text)).not.toThrow();
+      for (const char of Array.from(op.text)) {
+        expect(plex[op.weight].hasGlyphForCodePoint(char.codePointAt(0) ?? 0)).toBe(true);
+      }
     }
   });
 
