@@ -1,9 +1,12 @@
 // Designed and constructed by Drferdi.
 /**
- * Visit History Store — IndexedDB persistence for encounter trajectory
+ * Visit History Store — the current patient's visits, kept in memory only
  *
- * Stores vital signs + diagnoses from each completed encounter.
- * Indexed by patient_id for fast retrieval of last N visits.
+ * ePuskesmas is the record of the patient's history; Assist reads the visits from the RME, uses
+ * them and keeps nothing (Chief, 2026-10-03: "RME kan ada database untuk menyimpan data pasien?
+ * Assist hanya mengambil dari rme lalu proses done"). The store therefore holds one patient's
+ * visits for as long as the side panel is open, drops them when another patient's visits arrive,
+ * and deletes the IndexedDB database earlier versions kept on the clinic PC.
  *
  * @module lib/iskandar-diagnosis-engine/visit-history-store
  */
@@ -47,62 +50,22 @@ export interface VisitRecord {
 }
 
 // ============================================================================
-// DATABASE
+// STORE
 // ============================================================================
 
-const DB_NAME = 'sentra-visit-history';
-const DB_VERSION = 1;
-const STORE_NAME = 'visits';
+/** The IndexedDB database earlier versions kept every patient's visits in. */
+const LEGACY_DB_NAME = 'sentra-visit-history';
 
-let db: IDBDatabase | null = null;
+let visits: VisitRecord[] = [];
+let nextId = 1;
+let legacyDropped = false;
 
-/**
- * initVisitHistoryStore
- *
- * @remarks
- * TODO: Add detailed description, parameters, and examples
- * Auto-generated on 2026-03-12
- */
-
-export async function initVisitHistoryStore(): Promise<void> {
-  if (db) return;
-
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-    request.onerror = () => {
-      console.error('[VisitHistory] DB open error:', request.error);
-      reject(request.error);
-    };
-
-    request.onsuccess = () => {
-      db = request.result;
-      console.warn('[VisitHistory] Database initialized');
-      resolve();
-    };
-
-    request.onupgradeneeded = (event) => {
-      const database = (event.target as IDBOpenDBRequest).result;
-
-      if (!database.objectStoreNames.contains(STORE_NAME)) {
-        const store = database.createObjectStore(STORE_NAME, {
-          keyPath: 'id',
-          autoIncrement: true,
-        });
-        store.createIndex('patient_id', 'patient_id', { unique: false });
-        store.createIndex('encounter_id', 'encounter_id', { unique: true });
-        store.createIndex('timestamp', 'timestamp', { unique: false });
-        store.createIndex('patient_timestamp', ['patient_id', 'timestamp'], {
-          unique: false,
-        });
-      }
-    };
-  });
-}
-
-function getDB(): IDBDatabase {
-  if (!db) throw new Error('[VisitHistory] Database not initialized');
-  return db;
+function dropLegacyDatabase(): void {
+  if (legacyDropped) return;
+  legacyDropped = true;
+  if (typeof indexedDB === 'undefined') return;
+  const request = indexedDB.deleteDatabase(LEGACY_DB_NAME);
+  request.onerror = () => console.error('[VisitHistory] Legacy database not deleted');
 }
 
 // ============================================================================
@@ -110,60 +73,30 @@ function getDB(): IDBDatabase {
 // ============================================================================
 
 /**
- * Save a visit record. An encounter already saved is kept, except a scanned one whose therapy a new
- * scan reads differently: the riwayat Resep table replaces the free-text therapy with its signa
- * (Chief, 2026-10-02: "Pengisian dosis salah").
+ * Save a visit record. Another patient's visits are dropped first. An encounter already saved is
+ * kept, except a scanned one whose therapy a new scan reads differently: the riwayat Resep table
+ * replaces the free-text therapy with its signa (Chief, 2026-10-02: "Pengisian dosis salah").
  */
 export async function saveVisit(record: Omit<VisitRecord, 'id'>): Promise<void> {
-  await initVisitHistoryStore();
-
-  // Check duplicate by encounter_id
-  const existing = await getVisitByEncounterId(record.encounter_id);
-  if (existing) {
-    const rescanned =
-      existing.source === 'scrape' &&
-      record.source === 'scrape' &&
-      existing.terapi_obat !== record.terapi_obat;
-    if (!rescanned) {
-      console.warn('[VisitHistory] Encounter already saved:', record.encounter_id);
-      return;
-    }
-    return new Promise((resolve, reject) => {
-      const request = getDB()
-        .transaction(STORE_NAME, 'readwrite')
-        .objectStore(STORE_NAME)
-        .put({ ...record, id: existing.id });
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(request.error);
-    });
+  dropLegacyDatabase();
+  if (visits.some((visit) => visit.patient_id !== record.patient_id)) {
+    visits = [];
   }
 
-  return new Promise((resolve, reject) => {
-    const tx = getDB().transaction(STORE_NAME, 'readwrite');
-    const store = tx.objectStore(STORE_NAME);
-    const request = store.add(record);
+  const index = visits.findIndex((visit) => visit.encounter_id === record.encounter_id);
+  if (index === -1) {
+    visits.push({ ...record, id: nextId++ });
+    return;
+  }
 
-    request.onsuccess = () => {
-      console.warn('[VisitHistory] Visit saved:', record.encounter_id);
-      resolve();
-    };
-    request.onerror = () => reject(request.error);
-  });
-}
-
-/**
- * Get visit by encounter_id
- */
-async function getVisitByEncounterId(encounterId: string): Promise<VisitRecord | null> {
-  return new Promise((resolve, reject) => {
-    const tx = getDB().transaction(STORE_NAME, 'readonly');
-    const store = tx.objectStore(STORE_NAME);
-    const index = store.index('encounter_id');
-    const request = index.get(encounterId);
-
-    request.onsuccess = () => resolve(request.result || null);
-    request.onerror = () => reject(request.error);
-  });
+  const existing = visits[index];
+  const rescanned =
+    existing.source === 'scrape' &&
+    record.source === 'scrape' &&
+    existing.terapi_obat !== record.terapi_obat;
+  if (rescanned) {
+    visits[index] = { ...record, id: existing.id };
+  }
 }
 
 /**
@@ -173,40 +106,19 @@ export async function getPatientVisits(
   patientId: string,
   limit: number = 3
 ): Promise<VisitRecord[]> {
-  await initVisitHistoryStore();
-
-  return new Promise((resolve, reject) => {
-    const tx = getDB().transaction(STORE_NAME, 'readonly');
-    const store = tx.objectStore(STORE_NAME);
-    const index = store.index('patient_id');
-    const request = index.getAll(patientId);
-
-    request.onsuccess = () => {
-      const results = (request.result as VisitRecord[])
-        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-        .slice(0, limit);
-      resolve(results);
-    };
-    request.onerror = () => reject(request.error);
-  });
+  dropLegacyDatabase();
+  return visits
+    .filter((visit) => visit.patient_id === patientId)
+    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+    .slice(0, limit);
 }
 
 /**
  * Save multiple visit records from scraping (batch insert).
  */
 export async function saveScrapedVisits(records: Omit<VisitRecord, 'id'>[]): Promise<number> {
-  await initVisitHistoryStore();
-  let saved = 0;
-
   for (const record of records) {
-    try {
-      await saveVisit(record);
-      saved++;
-    } catch {
-      // Skip duplicates silently
-    }
+    await saveVisit(record);
   }
-
-  console.warn(`[VisitHistory] Batch saved: ${saved}/${records.length}`);
-  return saved;
+  return records.length;
 }

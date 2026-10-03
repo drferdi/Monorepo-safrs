@@ -2,45 +2,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { VisitRecord } from './visit-history-store';
 
-// A minimal IndexedDB with what the store calls: one object store, its indexes, add/put/get/getAll.
-function installFakeIndexedDb(): void {
-  const rows: VisitRecord[] = [];
-  let nextId = 1;
-  const request = <T>(run: () => T) => {
-    const req: { result?: T; error?: unknown; onsuccess?: () => void; onerror?: () => void } = {};
-    queueMicrotask(() => {
-      req.result = run();
-      req.onsuccess?.();
-    });
-    return req;
-  };
-  const objectStore = {
-    add: (record: VisitRecord) => request(() => rows.push({ ...record, id: nextId++ })),
-    put: (record: VisitRecord) =>
-      request(() =>
-        rows.splice(
-          rows.findIndex((row) => row.id === record.id),
-          1,
-          { ...record }
-        )
-      ),
-    index: (name: keyof VisitRecord) => ({
-      get: (key: string) => request(() => rows.find((row) => row[name] === key)),
-      getAll: (key: string) => request(() => rows.filter((row) => row[name] === key)),
-    }),
-    createIndex: () => undefined,
-  };
-  const database = {
-    objectStoreNames: { contains: () => true },
-    createObjectStore: () => objectStore,
-    transaction: () => ({ objectStore: () => objectStore }),
-  };
-  vi.stubGlobal('indexedDB', { open: () => request(() => database) });
-}
+const deleteDatabase = vi.fn(() => ({}) as IDBOpenDBRequest);
 
-const scraped = (terapi: string): Omit<VisitRecord, 'id'> => ({
-  patient_id: 'RM-1',
-  encounter_id: 'E-1',
+const scraped = (terapi: string, patientId = 'RM-1'): Omit<VisitRecord, 'id'> => ({
+  patient_id: patientId,
+  encounter_id: `E-${patientId}`,
   timestamp: '2026-09-20T08:00:00Z',
   vitals: { sbp: 120, dbp: 80, hr: 80, rr: 18, temp: 36.5, glucose: 0 },
   keluhan_utama: 'batuk',
@@ -51,7 +17,8 @@ const scraped = (terapi: string): Omit<VisitRecord, 'id'> => ({
 describe('saveScrapedVisits', () => {
   beforeEach(() => {
     vi.resetModules();
-    installFakeIndexedDb();
+    deleteDatabase.mockClear();
+    vi.stubGlobal('indexedDB', { deleteDatabase });
   });
 
   // Chief, 2026-10-02 ("Pengisian dosis salah"): a visit stored before the riwayat Resep table was
@@ -75,5 +42,28 @@ describe('saveScrapedVisits', () => {
     await saveScrapedVisits([scraped('NAC, CTM')]);
 
     expect((await getPatientVisits('RM-1'))[0]?.terapi_obat).toBe('Amlodipin 1x10mg');
+  });
+
+  // Chief, 2026-10-03: "Assist hanya mengambil dari rme lalu proses done".
+  it("drops the previous patient's visits when another patient's visits arrive", async () => {
+    const { getPatientVisits, saveScrapedVisits } = await import('./visit-history-store');
+
+    await saveScrapedVisits([scraped('NAC, CTM', 'RM-1')]);
+    await saveScrapedVisits([scraped('Amlodipin 1x10mg', 'RM-2')]);
+
+    expect(await getPatientVisits('RM-1')).toEqual([]);
+    expect((await getPatientVisits('RM-2')).map((visit) => visit.terapi_obat)).toEqual([
+      'Amlodipin 1x10mg',
+    ]);
+  });
+
+  it('deletes the visit database earlier versions kept on the PC, once', async () => {
+    const { getPatientVisits, saveScrapedVisits } = await import('./visit-history-store');
+
+    await saveScrapedVisits([scraped('NAC, CTM')]);
+    await getPatientVisits('RM-1');
+
+    expect(deleteDatabase).toHaveBeenCalledTimes(1);
+    expect(deleteDatabase).toHaveBeenCalledWith('sentra-visit-history');
   });
 });
