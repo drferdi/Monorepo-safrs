@@ -115,7 +115,7 @@ Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/z
 
 ## Verification (final tree)
 
-2026-10-03 (Gate 3 + DDI, 669235ca, 6bb03da1): typecheck 0 · test 0 (202 files, 1700 passed, 17
+2026-10-03 (Gate 3 + DDI, 669235ca, 6bb03da1 + alias fix): typecheck 0 · test 0 (202 files, 1703 passed, 17
 skipped) · full lint 1, only `zz-verify-kb-rx.spec.ts` · eslint on touched 0 · `run build` 0, last ·
 `run:check` 0 · e2e 20. Red first: 34 failures on the old sources. Harness: alert text read from
 the DOM for GDS 320.
