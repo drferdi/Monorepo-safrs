@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-10-03 (audit tasks: typed messages answered once, reinjection only into ePuskesmas, Google grants removed, resources exposed to ePuskesmas only, auto-commit scripts removed, page-side logging through the logger, no production eslint-disable, glucose and DDI tests, README; bridge entries fill only their own patient's tab; visit history in memory only; masked identity to the crew portal; audit `med-assist-audit-2026-10-03.md` given to Chief; visit summary PDF in IBM Plex Sans; 09 Verifikasi with DPJP and verifier from the signed-in user; on an Oxford band with red orange signals, Edukasi and Tindak lanjut; "Unduh PDF" on RME Terapi, Swiss grid, pdf-lib; Tren TTV text on the trajectory scale; Trajectory Tren TTV as the lab spring playground; STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
+Last updated: 2026-10-03 (Gate 3 alerts GDS ≥200 without symptoms; DDI reads Indonesian and stock names and fails closed; audit tasks: typed messages answered once, reinjection only into ePuskesmas, Google grants removed, resources exposed to ePuskesmas only, auto-commit scripts removed, page-side logging through the logger, no production eslint-disable, glucose and DDI tests, README; bridge entries fill only their own patient's tab; visit history in memory only; masked identity to the crew portal; audit `med-assist-audit-2026-10-03.md` given to Chief; visit summary PDF in IBM Plex Sans; 09 Verifikasi with DPJP and verifier from the signed-in user; on an Oxford band with red orange signals, Edukasi and Tindak lanjut; "Unduh PDF" on RME Terapi, Swiss grid, pdf-lib; Tren TTV text on the trajectory scale; Trajectory Tren TTV as the lab spring playground; STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
 identity-free, CSV for pandas; a resep step says what went wrong, out of stock is a note without Ulangi; Terapi kronis drops acute-only medications; an out-of-stock medication is left out at once; header lights the page on screen, "Lanjutkan semua" for chronic therapy;
 chronic doses from the riwayat Resep table, no triad warning; the RME resep picks each medication from its ePuskesmas suggestion and
 presses Tambah once per row; 2026-10-01: the signa chosen from its suggestion, "3x sehari" as 3x1;
@@ -115,6 +115,11 @@ Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/z
 
 ## Verification (final tree)
 
+2026-10-03 (Gate 3 + DDI, 669235ca, 6bb03da1): typecheck 0 · test 0 (202 files, 1700 passed, 17
+skipped) · full lint 1, only `zz-verify-kb-rx.spec.ts` · eslint on touched 0 · `run build` 0, last ·
+`run:check` 0 · e2e 20. Red first: 34 failures on the old sources. Harness: alert text read from
+the DOM for GDS 320.
+
 2026-10-03 (audit follow-up, 8 commits debfbbaf..54096c3d): typecheck 0 · test 0 (201 files,
 1664 passed, 17 skipped) · full lint 1, only `zz-verify-kb-rx.spec.ts` (other session), 0 warnings
 · `run build` 0, last; built manifest has no `identity`/googleapis/`oauth2`, WAR matches
@@ -188,13 +193,11 @@ Screenshots failed (Claude window hidden); checks were read from the DOM.
 
 ## Open for Chief
 
-R3, waiting for Chief's approval (findings only, no logic changed):
-- Gate 3 glucose: `TTVInferenceUI` sends GDS with `has_classic_symptoms: false`, and the classifier
-  calls any GDS ≥ 70 without symptoms NORMAL, so GDS 200-400 gives no Gate 3 alert (CP-028 needs
-  metabolic signs, vital-guardrails flags only > 400).
-- DDI matching: real names miss (Aspirin+Warfarin, Asam asetilsalisilat, Paracetamol,
-  Spironolakton+Captopril, stock names with strength); the aliases' keys are not DDInter names.
-  The reasoner's DDI fails open on an error; the KB prescription path calls no DDI.
+R3 fixed with Chief's "Agree" (DECISIONS, 669235ca and 6bb03da1): Gate 3 alerts GDS ≥200 without
+symptoms ("DM belum tegak", confirm with GDP/OGTT/HbA1c); the DDI check reads Indonesian and stock
+names exactly and fails closed. Still open: the KB prescription path in another session's
+uncommitted `lib/api/sentra-api.ts` calls no DDI, and that file falls back to the 30-pair mock
+when the table throws. Harness `gate3-harness` (port 5181): TTV with GDS 320 shows the alert.
 
 00. Visit summary PDF live: "Unduh PDF" on RME Terapi after a real case, then open the file. My
     calls: Tren TTV without SpO2 (visit history has none), last 8 visits, Tatalaksana prints the

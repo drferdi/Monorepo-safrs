@@ -3,6 +3,28 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-03 — Gate 3 raises GDS ≥200 without symptoms; the DDI check reads real names, fails closed
+
+- Decision (Chief "Agree, Lanjutkan" on the R3 findings and on page-side warnings moving to debug):
+  - Gate 3: a random glucose of 200 or more is reported in the diabetes category even without
+    classic symptoms (the TTV form has no symptom input). Without symptoms or another confirming
+    test the reasoning reads "hiperglikemia, DM belum tegak" and asks for GDP, OGTT or HbA1c; the
+    UI shows its existing "Hiperglikemia berat — evaluasi DM" alert. `TTVInferenceUI.tsx` untouched.
+  - DDI names: strengths and forms dropped, an Indonesian/English spelling key matches exact table
+    names, salts tried with and without, "asam X-at" as X-ic acid, two-drug products as both,
+    aliases target table names; no substring matching (it could pick methylprednisolone for
+    "Prednisolon"). An unreadable table throws; the reasoner then leaves the candidate out
+    ("DDI tidak dapat diperiksa").
+  - Page-side `console.warn` stays at debug (off in production): failures reach the side panel
+    through return values.
+- Not done: the KB prescription path that calls no DDI is in another session's uncommitted
+  `lib/api/sentra-api.ts`; it is left to that session. `sentra-api.ts` still falls back to the
+  30-pair mock when the table throws.
+- Evidence: red on the old code (34 failures, incl. Aspirin+Warfarin, Spironolakton+Kaptopril and
+  the fail-closed tests), green now; two old tests that pinned "no alert for GDS 320" replaced (the
+  hyperglycaemia preset itself fills glucose "agar gate glukosa aktif"); harness `gate3-harness`
+  (port 5181) shows the alert for GDS 320.
+
 ## 2026-10-03 — Audit follow-up: least privilege, one answer per message, logging rule
 
 - Decision (Chief: "Lanjutkan audit"): the manifest drops `identity`, the googleapis host
