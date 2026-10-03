@@ -3,6 +3,21 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-04 — No "Signa tidak tercatat": every riwayat signa form is read; halves stay halves
+
+- Decision (Chief: "Saya gak mau ada signa tidak tercatat"): the history parser (`lib/clinical`,
+  R3, covered by that instruction) reads 3X1/2, 2x1.5 (the scraper's point for 2x1,5), 3x½,
+  3 dd 1, 3×1, "3x sehari" and "3 kali sehari"; `amountText` keeps the units a take as written
+  ("1/2", "1,5") for the regimen and the dose line. A chronic card's dose comes from the latest
+  visit that wrote a signa. A medication no visit gives a signa shows no Dosis row and no tick
+  (supersedes the 2026-10-02 "Signa tidak tercatat" card). The RME resep keeps "3x1/2" and
+  "2x1,5" (it sent "3x1": a whole tablet for a half).
+- Assumption: the ePuskesmas signa list writes a decimal with a comma ("3X1,5", as its riwayat
+  table does); "3X1/2" is in the list (noted live 2026-10-01).
+- Evidence: 14 tests red on the old code, 1 UI test red on the old card; harness
+  `tatalaksana.html` (port 5181): Amlodipin 1x1 from the older visit, Captopril 3x1/2,
+  Metformin 2x1,5, CTM without a Dosis row, no "tidak tercatat" on the page.
+
 ## 2026-10-03 — Gate 3 raises GDS ≥200 without symptoms; the DDI check reads real names, fails closed
 
 - Decision (Chief "Agree, Lanjutkan" on the R3 findings and on page-side warnings moving to debug):

@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-10-03 (Gate 3 alerts GDS ≥200 without symptoms; DDI reads Indonesian and stock names and fails closed; audit tasks: typed messages answered once, reinjection only into ePuskesmas, Google grants removed, resources exposed to ePuskesmas only, auto-commit scripts removed, page-side logging through the logger, no production eslint-disable, glucose and DDI tests, README; bridge entries fill only their own patient's tab; visit history in memory only; masked identity to the crew portal; audit `med-assist-audit-2026-10-03.md` given to Chief; visit summary PDF in IBM Plex Sans; 09 Verifikasi with DPJP and verifier from the signed-in user; on an Oxford band with red orange signals, Edukasi and Tindak lanjut; "Unduh PDF" on RME Terapi, Swiss grid, pdf-lib; Tren TTV text on the trajectory scale; Trajectory Tren TTV as the lab spring playground; STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
+Last updated: 2026-10-04 (no "Signa tidak tercatat": every riwayat signa form read, halves kept to the resep; 2026-10-03: Gate 3 alerts GDS ≥200 without symptoms; DDI reads Indonesian and stock names and fails closed; audit tasks: typed messages answered once, reinjection only into ePuskesmas, Google grants removed, resources exposed to ePuskesmas only, auto-commit scripts removed, page-side logging through the logger, no production eslint-disable, glucose and DDI tests, README; bridge entries fill only their own patient's tab; visit history in memory only; masked identity to the crew portal; audit `med-assist-audit-2026-10-03.md` given to Chief; visit summary PDF in IBM Plex Sans; 09 Verifikasi with DPJP and verifier from the signed-in user; on an Oxford band with red orange signals, Edukasi and Tindak lanjut; "Unduh PDF" on RME Terapi, Swiss grid, pdf-lib; Tren TTV text on the trajectory scale; Trajectory Tren TTV as the lab spring playground; STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
 identity-free, CSV for pandas; a resep step says what went wrong, out of stock is a note without Ulangi; Terapi kronis drops acute-only medications; an out-of-stock medication is left out at once; header lights the page on screen, "Lanjutkan semua" for chronic therapy;
 chronic doses from the riwayat Resep table, no triad warning; the RME resep picks each medication from its ePuskesmas suggestion and
 presses Tambah once per row; 2026-10-01: the signa chosen from its suggestion, "3x sehari" as 3x1;
@@ -114,6 +114,10 @@ Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/z
   `bhcffleclpadneocndhembhjbemimhkm`.
 
 ## Verification (final tree)
+
+2026-10-04 (signa, a9946f09, e4153992): typecheck 0 · test 0 (202 files, 1717 passed + 1 UI test,
+17 skipped) · lint 1, only `zz-verify-kb-rx.spec.ts` · eslint touched 0 · e2e 20 · `run build` 0,
+last · `run:check` 0. Harness `tatalaksana.html` read from the DOM.
 
 2026-10-03 (Gate 3 + DDI, 669235ca, 6bb03da1 + alias fix): typecheck 0 · test 0 (202 files, 1703 passed, 17
 skipped) · full lint 1, only `zz-verify-kb-rx.spec.ts` · eslint on touched 0 · `run build` 0, last ·
