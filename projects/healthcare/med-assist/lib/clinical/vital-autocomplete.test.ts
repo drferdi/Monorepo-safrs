@@ -139,7 +139,8 @@ describe('buildVitalAutofill', () => {
     expect(autofill.reasoning.join(' ')).toContain(profile.geriatricOrthostaticNote);
   });
 
-  it('keeps hyperglycemia preset in severe range without auto-firing glucose alert', () => {
+  // The preset fills glucose "agar gate glukosa aktif"; the gate now does.
+  it('fills the hyperglycemia preset in the severe range, which activates the glucose gate', () => {
     const autofill = buildVitalAutofill('hyperglycemia', 42);
     const alerts = buildAlerts(
       makeState({
@@ -150,7 +151,7 @@ describe('buildVitalAutofill', () => {
     );
 
     expect(Number(autofill.vitals.glucose)).toBeGreaterThanOrEqual(300);
-    expect(alerts.some((alert) => alert.type === 'hyperglycemia')).toBe(false);
+    expect(alerts.some((alert) => alert.type === 'hyperglycemia')).toBe(true);
   });
 
   it('activates glucose gate for hypoglycemia preset', () => {

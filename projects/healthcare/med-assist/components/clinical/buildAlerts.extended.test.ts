@@ -159,8 +159,19 @@ describe('buildAlerts — glucose', () => {
     expect(a!.gate).toBe('GATE_3_GLUCOSE');
   });
 
-  it('glucose ≥ 300 without classic symptom input → no hyperglycemia alert', () => {
+  // The TTV form records no classic symptoms; a GDS of 200 or more still raises Gate 3.
+  it('glucose ≥ 200 without classic symptom input → high hyperglycemia alert to confirm DM', () => {
     const alerts = buildAlerts(makeState({ glucose: '320' }), ADULT);
+    const a = alerts.find((alert) => alert.type === 'hyperglycemia');
+    expect(a).toBeDefined();
+    expect(a!.severity).toBe('high');
+    expect(a!.gate).toBe('GATE_3_GLUCOSE');
+    expect(a!.title).toBe('Hiperglikemia berat — evaluasi DM (GDS 320 mg/dL)');
+    expect(a!.reasoning).toContain('DM belum tegak');
+  });
+
+  it('glucose 199 → no hyperglycemia alert', () => {
+    const alerts = buildAlerts(makeState({ glucose: '199' }), ADULT);
     expect(alerts.some((a) => a.type === 'hyperglycemia')).toBe(false);
   });
 

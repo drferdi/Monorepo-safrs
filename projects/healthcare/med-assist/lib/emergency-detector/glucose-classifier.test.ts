@@ -6,6 +6,7 @@ import {
   classifyBloodGlucose,
   classifyGlucose,
   type DKAHHSRedFlags,
+  getGlucoseRecommendations,
   GLUCOSE_THRESHOLDS,
   HYPOGLYCEMIA_15_15_RULE,
   treatHypoglycemia,
@@ -62,6 +63,13 @@ describe('classifyGlucose', () => {
     expect(classifyGlucose({ ...capillary, hba1c: 6.5 })).toBe('DIABETES_CONFIRMED');
   });
 
+  // The TTV form records no symptoms, so this is the reading Gate 3 gets for every GDS.
+  it('never calls a random glucose of 200 mg/dL or more normal, symptoms or not', () => {
+    expect(classifyGlucose({ ...capillary, gds: 199 })).toBe('NORMAL');
+    expect(classifyGlucose({ ...capillary, gds: 200 })).toBe('DIABETES_CONFIRMED');
+    expect(classifyGlucose({ ...capillary, gds: 400 })).toBe('DIABETES_CONFIRMED');
+  });
+
   it('puts a hypoglycaemic random glucose before any other measurement', () => {
     expect(classifyGlucose({ ...capillary, gds: 55, gdp: 130 })).toBe('HYPOGLYCEMIA_CRISIS');
   });
@@ -86,6 +94,25 @@ describe('classifyBloodGlucose', () => {
   it('marks confirmed diabetes high and prediabetes moderate', () => {
     expect(classifyBloodGlucose({ ...capillary, gdp: 126 }).severity).toBe('high');
     expect(classifyBloodGlucose({ ...capillary, gdp: 110 }).severity).toBe('moderate');
+  });
+
+  it('says a random glucose of 200 without symptoms is not yet diabetes and asks for confirmation', () => {
+    const result = classifyBloodGlucose({ ...capillary, gds: 250 });
+
+    expect(result).toMatchObject({ category: 'DIABETES_CONFIRMED', severity: 'high', value: 250 });
+    expect(result.reasoning).toBe(
+      'GDS 250 ≥200 tanpa gejala klasik tercatat: hiperglikemia, DM belum tegak. Konfirmasi dengan GDP, TTGO 2 jam, atau HbA1c.'
+    );
+    expect(result.recommendations).toContain('Periksa GDP, TTGO 2 jam, atau HbA1c');
+  });
+
+  it('keeps the confirmed wording when symptoms or a fasting glucose confirm it', () => {
+    expect(
+      classifyBloodGlucose({ ...capillary, gds: 250, has_classic_symptoms: true }).reasoning
+    ).toBe('GDS 250 ≥200 + gejala klasik = Diabetes Melitus TEGAK (tidak perlu tes ulang).');
+    const byFasting = classifyBloodGlucose({ ...capillary, gds: 250, gdp: 130 });
+    expect(byFasting.reasoning).not.toContain('belum tegak');
+    expect(byFasting.recommendations).toEqual(getGlucoseRecommendations('DIABETES_CONFIRMED', 250));
   });
 
   it('refuses a request without any glucose value', () => {

@@ -47,7 +47,7 @@ export type GlucoseCategory =
   | 'HYPOGLYCEMIA_CRISIS' // <70 mg/dL
   | 'NORMAL' // Normal ranges
   | 'PREDIABETES' // GDPT/TGT
-  | 'DIABETES_CONFIRMED' // Meets criteria
+  | 'DIABETES_CONFIRMED' // Meets criteria, or GDS ≥200 without symptoms awaiting confirmation
   | 'HYPERGLYCEMIA_CRISIS'; // ≥200 + crisis signs
 
 /**
@@ -192,6 +192,13 @@ export function classifyGlucose(data: GlucoseData): GlucoseCategory {
 
   if (data.hba1c && data.hba1c >= GLUCOSE_THRESHOLDS.DIABETES.HbA1c) {
     // Note: HbA1c alone needs confirmation
+    return 'DIABETES_CONFIRMED';
+  }
+
+  // A random glucose of 200 or more without classic symptoms does not yet make the diagnosis, but
+  // it is never normal: it is reported in the diabetes category, and classifyBloodGlucose says the
+  // diagnosis still needs a confirming test.
+  if (data.gds && data.gds >= GLUCOSE_THRESHOLDS.DIABETES.GDS) {
     return 'DIABETES_CONFIRMED';
   }
 
@@ -481,6 +488,15 @@ export function getGlucoseReasoning(
 // MAIN CLASSIFICATION FUNCTION
 // ============================================================================
 
+/** For a random glucose of 200 or more that no symptom or other test confirms (PERKENI 2024). */
+const UNCONFIRMED_GDS_RECOMMENDATIONS = [
+  '📋 Konfirmasi diagnosis DM:',
+  'Tanyakan gejala klasik (poliuria, polidipsia, polifagia, berat badan turun)',
+  'Periksa GDP, TTGO 2 jam, atau HbA1c',
+  'Cari tanda krisis (dehidrasi, muntah, napas Kussmaul, penurunan kesadaran)',
+  'Follow-up dengan hasil pemeriksaan konfirmasi',
+];
+
 /**
  * Complete glucose classification workflow
  *
@@ -522,8 +538,18 @@ export function classifyBloodGlucose(data: GlucoseData): GlucoseClassification {
     severity = 'normal';
   }
 
-  const recommendations = getGlucoseRecommendations(category, value);
-  const reasoning = getGlucoseReasoning(category, value, measurementType);
+  const unconfirmedGds =
+    category === 'DIABETES_CONFIRMED' &&
+    measurementType === 'GDS' &&
+    !data.has_classic_symptoms &&
+    classifyGlucose({ ...data, gds: undefined }) !== 'DIABETES_CONFIRMED';
+
+  const recommendations = unconfirmedGds
+    ? UNCONFIRMED_GDS_RECOMMENDATIONS
+    : getGlucoseRecommendations(category, value);
+  const reasoning = unconfirmedGds
+    ? `GDS ${value} ≥${GLUCOSE_THRESHOLDS.DIABETES.GDS} tanpa gejala klasik tercatat: hiperglikemia, DM belum tegak. Konfirmasi dengan GDP, TTGO 2 jam, atau HbA1c.`
+    : getGlucoseReasoning(category, value, measurementType);
 
   return {
     category,
