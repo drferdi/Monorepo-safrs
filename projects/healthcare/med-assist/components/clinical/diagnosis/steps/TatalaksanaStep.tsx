@@ -303,7 +303,11 @@ function ChronicCard({
               </div>
             ),
           },
-          { key: 'dosis', label: 'Dosis', value: medication.doseLine || 'tidak tercatat' },
+          // No visit wrote its signa: the row is left out rather than "tidak tercatat" (Chief,
+          // 2026-10-04); the card then has no tick to continue it.
+          ...(medication.doseLine
+            ? [{ key: 'dosis', label: 'Dosis', value: medication.doseLine } satisfies TherapyStepRow]
+            : []),
           { key: 'indikasi', label: 'Indikasi', value: medication.indication || 'tidak tercatat' },
           {
             key: 'ddi',

@@ -52,6 +52,34 @@ describe('chronic-therapy-history', () => {
     ).toBe(false);
   });
 
+  // Chief, 2026-10-04 ("Saya gak mau ada signa tidak tercatat"): these signa forms fell to a
+  // medication without a dose.
+  it.each([
+    ['Captopril tablet 25 mg 3X1/2 Sesudah Makan', 3, '1/2', 0.5, 'Sesudah makan'],
+    ['Ambroxol tablet 30 mg 2x1.5 Sesudah Makan', 2, '1,5', 1.5, 'Sesudah makan'],
+    ['CTM 3x½', 3, '1/2', 0.5, 'Sesudah makan'],
+    ['Metformin 3 dd 1 sebelum makan', 3, '1', 1, 'Sebelum makan'],
+    ['Antasida 3×1', 3, '1', 1, 'Sesudah makan'],
+    ['Parasetamol 3x sehari', 3, '1', 1, 'Sesudah makan'],
+    ['Parasetamol 3 kali sehari sesudah makan', 3, '1', 1, 'Sesudah makan'],
+  ])('reads the signa of "%s"', (line, frequency, amountText, amount, aturanPakai) => {
+    const [medication] = parseTherapyHistoryText(line).medications;
+
+    expect(medication).toMatchObject({
+      frequencyPerDay: frequency,
+      amountText,
+      amountPerTake: amount,
+      aturanPakai,
+      doseLabel: `${frequency}x${amountText}`,
+    });
+  });
+
+  it('reads no signa from a frequency without units or a day', () => {
+    const [medication] = parseTherapyHistoryText('Parasetamol 3x').medications;
+
+    expect(medication).toMatchObject({ frequencyPerDay: 0, doseLabel: '' });
+  });
+
   it('keeps wound care and education out of chronic medications', () => {
     const parsed = parseTherapyHistoryText(
       'Rawat luka; Perawatan luka setiap 2 hari; Edukasi kontrol 3 hari; Paracetamol 3x1 sesudah makan'

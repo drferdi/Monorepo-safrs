@@ -6,6 +6,8 @@ export interface ParsedHistoryMedication {
   displayName: string;
   frequencyPerDay: number;
   amountPerTake: number;
+  /** The units a take as the visit wrote them: "1", "1/2", "1,5"; empty without a signa. */
+  amountText: string;
   strengthValue: number;
   strengthUnit: 'mg' | 'g' | 'mcg' | 'ml' | '';
   aturanPakai: MedicationRecommendation['aturan_pakai'];
@@ -95,11 +97,21 @@ function parseMedicationLine(line: string): ParsedHistoryMedication | null {
   const normalized = normalizeWhitespace(line);
   if (!normalized) return null;
 
+  // The signa as the riwayat writes it: "3x1", "3X1/2", "2x1.5" (the scraper's point for "2x1,5"),
+  // "3x½", "3 dd 1", "3×1", and a frequency alone, "3x sehari" or "3 kali sehari", one unit a take.
   const match = normalized.match(
-    /^(?<name>.+?)\s+(?<freq>\d+)\s*x\s*(?<amount>\d+)(?:\s*x\s*(?<strength>\d+(?:[.,]\d+)?))?\s*(?<unit>mg|g|mcg|ml)?(?:\s+(?<suffix>.*))?$/i
+    /^(?<name>.+?)\s+(?<freq>\d+)\s*(?:x|×|dd|kali)\s*(?<amount>\d+(?:[.,]\d+)?(?:\/\d+)?|½|¼)?(?:\s*x\s*(?<strength>\d+(?:[.,]\d+)?))?\s*(?<unit>mg|g|mcg|ml)?(?:\s+(?<suffix>.*))?$/i
   );
 
   if (!match?.groups?.name || !match.groups.freq) {
+    return null;
+  }
+  // Without units a take, the signa is only a frequency when a day follows ("3x sehari").
+  if (
+    !match.groups.amount &&
+    !match.groups.unit &&
+    !/^(sehari|\/\s*hari|per\s*hari|perhari|hari)\b/i.test(match.groups.suffix ?? '')
+  ) {
     return null;
   }
 
@@ -108,7 +120,12 @@ function parseMedicationLine(line: string): ParsedHistoryMedication | null {
     return null;
   }
   const frequencyPerDay = Number.parseInt(match.groups.freq, 10) || 1;
-  const amountPerTake = Number.parseInt(match.groups.amount || '1', 10) || 1;
+  const amountText = (match.groups.amount || '1')
+    .replace('½', '1/2')
+    .replace('¼', '1/4')
+    .replace('.', ',');
+  const [numerator, denominator] = amountText.replace(',', '.').split('/').map(Number);
+  const amountPerTake = (denominator ? numerator / denominator : numerator) || 1;
   const strengthValue = Number.parseFloat((match.groups.strength || '0').replace(',', '.')) || 0;
   const strengthUnit =
     ((match.groups.unit || '').toLowerCase() as ParsedHistoryMedication['strengthUnit']) || '';
@@ -118,12 +135,13 @@ function parseMedicationLine(line: string): ParsedHistoryMedication | null {
     displayName: normalizeMedicationDisplayName(rawName),
     frequencyPerDay,
     amountPerTake,
+    amountText,
     strengthValue,
     strengthUnit,
     aturanPakai: inferAturanPakai(suffix),
     raw: normalized,
     doseLabel:
-      `${frequencyPerDay}x${strengthValue > 0 ? strengthValue : amountPerTake}${strengthUnit}`.replace(
+      `${frequencyPerDay}x${strengthValue > 0 ? strengthValue : amountText}${strengthUnit}`.replace(
         /\.0(?=[a-z])/i,
         ''
       ),
@@ -189,6 +207,7 @@ export function parseTherapyHistoryText(input: string | undefined): ParsedChroni
         displayName: normalizeMedicationDisplayName(line),
         frequencyPerDay: 0,
         amountPerTake: 0,
+        amountText: '',
         strengthValue: 0,
         strengthUnit: '',
         aturanPakai: 'Sesudah makan',

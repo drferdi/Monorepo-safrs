@@ -181,6 +181,25 @@ describe('TatalaksanaStep', () => {
     expect(screen.queryByTestId('dx-tx-chronic-pick')).toBeNull();
   });
 
+  // Chief, 2026-10-04: "Saya gak mau ada signa tidak tercatat".
+  it('leaves the dose row out of a chronic card whose signa no visit wrote', () => {
+    const ctm: ChronicMedicationView = {
+      key: 'ctm',
+      name: 'CTM',
+      doseLine: '',
+      indication: 'Rinitis',
+      visits: [{ date: '2026-09-01T08:00:00Z', dose: '', diagnosis: 'Rinitis' }],
+    };
+    render(<TatalaksanaStep {...props({ chronicMedications: [ctm] })} />);
+    const card = screen.getByTestId('dx-tx-chronic');
+    const steps = [...card.querySelectorAll('.dx-tx-timeline > li')].map((li) => li.getAttribute('data-step'));
+
+    expect(steps).toEqual(['obat', 'indikasi', 'ddi', 'kontra']);
+    expect(card).not.toHaveTextContent(/tidak tercatat/i);
+    fireEvent.click(within(card).getByRole('button', { name: /Review/ }));
+    expect(screen.getByTestId('dx-tx-chronic-review')).not.toHaveTextContent(/tidak tercatat/i);
+  });
+
   it('says so when the visit history holds no chronic medication', () => {
     render(<TatalaksanaStep {...props({ chronicMedications: [] })} />);
     expect(screen.getByText('Tidak ada terapi kronis dalam riwayat kunjungan.')).toBeInTheDocument();

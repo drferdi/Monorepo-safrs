@@ -170,17 +170,20 @@ export function buildChronicMedications(names: string[], visits: VisitRecord[]):
         prescribedForChronic = true;
       }
       if (medication && medication.frequencyPerDay > 0 && !regimen) {
-        const perTake = medication.strengthUnit ? 1 : medication.amountPerTake;
+        // The units a take as the visit wrote them ("1/2", "1,5"), the form the ePuskesmas signa
+        // list uses.
+        const perTake = medication.strengthUnit ? '1' : medication.amountText;
         regimen = { dosis: `${medication.frequencyPerDay}x${perTake}`, aturanPakai: medication.aturanPakai };
       }
       return medication
         ? [
             {
               date: visit.timestamp,
-              // No signa in that visit's history: nothing to tell, and nothing to continue.
+              // A visit without a signa tells only its date and diagnosis (Chief, 2026-10-04:
+              // "Saya gak mau ada signa tidak tercatat").
               dose: medication.doseLabel
                 ? `${formatDose(name, medication.doseLabel)} · ${medication.aturanPakai}`
-                : 'Signa tidak tercatat',
+                : '',
               diagnosis: visit.diagnosa?.nama?.trim() ?? '',
             },
           ]
@@ -192,7 +195,9 @@ export function buildChronicMedications(names: string[], visits: VisitRecord[]):
     }
     const indication = [...counts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? '';
     if (seen.length > 0 && !prescribedForChronic) return [];
-    return [{ key, name, doseLine: seen[0]?.dose ?? '', indication, visits: seen, ...(regimen ? { regimen } : {}) }];
+    // The latest visit that wrote a signa, the one the regimen comes from.
+    const doseLine = seen.find((entry) => entry.dose)?.dose ?? '';
+    return [{ key, name, doseLine, indication, visits: seen, ...(regimen ? { regimen } : {}) }];
   });
 }
 

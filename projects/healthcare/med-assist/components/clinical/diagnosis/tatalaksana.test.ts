@@ -78,13 +78,45 @@ describe('buildChronicMedications', () => {
   });
 
   // Chief, 2026-10-02 ("Pengisian dosis salah"): no signa in the history, no dose invented; the
-  // card cannot be continued until a visit shows the regimen.
-  it('keeps no regimen for a medication the history names without a signa', () => {
+  // card cannot be continued until a visit shows the regimen. Chief, 2026-10-04 ("Saya gak mau ada
+  // signa tidak tercatat"): it then has no dose line at all.
+  it('keeps no regimen and no dose line for a medication the history names without a signa', () => {
     const [ctm] = buildChronicMedications(['CTM'], [visit('2026-09-10T08:00:00Z', 'NAC, CTM', 'Rinitis')]);
 
     expect(ctm.regimen).toBeUndefined();
-    expect(ctm.doseLine).toBe('Signa tidak tercatat');
+    expect(ctm.doseLine).toBe('');
+    expect(ctm.visits.map((entry) => entry.dose)).toEqual(['']);
     expect(chronicContinuation(ctm)).toBeNull();
+  });
+
+  // The latest visit wrote no signa: the card read "Signa tidak tercatat" while an older visit's
+  // regimen was there to continue.
+  it('takes the dose line from the latest visit that wrote a signa', () => {
+    const [amlodipin] = buildChronicMedications(
+      ['Amlodipin'],
+      [
+        visit('2026-09-10T08:00:00Z', 'Amlodipin', 'Hipertensi esensial'),
+        visit('2026-08-10T08:00:00Z', 'Amlodipin 1x10mg sesudah makan', 'Hipertensi esensial'),
+      ]
+    );
+
+    expect(amlodipin.doseLine).toBe('1x10mg · Sesudah makan');
+    expect(amlodipin.regimen).toEqual({ dosis: '1x1', aturanPakai: 'Sesudah makan' });
+  });
+
+  it('continues half a tablet as the visit wrote it', () => {
+    const [captopril] = buildChronicMedications(
+      ['Captopril'],
+      [
+        visit(
+          '2026-09-10T08:00:00Z',
+          'Captopril tablet 25 mg 3X1/2 Sesudah Makan',
+          'Hipertensi esensial'
+        ),
+      ]
+    );
+
+    expect(captopril.regimen).toEqual({ dosis: '3x1/2', aturanPakai: 'Sesudah makan' });
   });
 
   // Chief, 2026-09-29: a chronic card can be continued in this visit, so the latest regimen is kept whole.
