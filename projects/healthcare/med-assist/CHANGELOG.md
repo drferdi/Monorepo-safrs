@@ -12,6 +12,7 @@ version (`wxt.config.ts`); the reasoning behind each change is in `.agents/DECIS
   stock medicine, marked "dosis standar", and can be continued.
 - Standard repository files: `LICENSE`, `SECURITY.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`
   and this changelog.
+- The README follows Chief's AsistenMedis design, with the Asisten Medis CDSS logo.
 
 ### Changed
 
@@ -19,11 +20,18 @@ version (`wxt.config.ts`); the reasoning behind each change is in `.agents/DECIS
   synonym table, so one drug is one chronic card with the latest signa any of its names carried.
 - `docs/` file names are lowercase; finished and superseded documents moved to the local
   `archieved/` folder.
+- The visit summary PDF follows the approved Clinical Visit Summary template: one A4 page, ten
+  numbered blocks, IBM Plex Sans Bold, the Sentra logomark in the title block.
+- The visit summary's DPJP follows the login; dr. Ferdi Iskandar verifies, and when he is the
+  DPJP, dr. Dibya Arfianda, Sp.OG or dr. Boyong Baskoro, Sp.OG verifies, alternating by RM and day.
+- The header reads "Prototype" under the credit line, in place of the Latin motto.
 
 ### Removed
 
 - Code no production entry reached (unmounted clinical components, the trajectory chart set,
   the platform and ECG API clients and their tests), moved to `archieved/`.
+- The sign-in sound before the sponsor page; one welcome sound plays when the main UI opens.
+- The IBM Plex Sans Regular file and the white logomark, no longer used by the PDF.
 
 ### Fixed
 

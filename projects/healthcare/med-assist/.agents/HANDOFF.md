@@ -1,262 +1,49 @@
 # HANDOFF
 
-Last updated: 2026-10-04 (one chronic card per drug through the RME synonym table, a standard dose when no visit wrote a signa; no "Signa tidak tercatat": every riwayat signa form read, halves kept to the resep; 2026-10-03: Gate 3 alerts GDS ≥200 without symptoms; DDI reads Indonesian and stock names and fails closed; audit tasks: typed messages answered once, reinjection only into ePuskesmas, Google grants removed, resources exposed to ePuskesmas only, auto-commit scripts removed, page-side logging through the logger, no production eslint-disable, glucose and DDI tests, README; bridge entries fill only their own patient's tab; visit history in memory only; masked identity to the crew portal; audit `med-assist-audit-2026-10-03.md` given to Chief; visit summary PDF in IBM Plex Sans; 09 Verifikasi with DPJP and verifier from the signed-in user; on an Oxford band with red orange signals, Edukasi and Tindak lanjut; "Unduh PDF" on RME Terapi, Swiss grid, pdf-lib; Tren TTV text on the trajectory scale; Trajectory Tren TTV as the lab spring playground; STATS: the daily breakdown as one sidebar sub-menu; STATS drawn in the side-panel design system; 2026-10-02: STATS opens with Statistik Harian from the ePuskesmas daily service report,
-identity-free, CSV for pandas; a resep step says what went wrong, out of stock is a note without Ulangi; Terapi kronis drops acute-only medications; an out-of-stock medication is left out at once; header lights the page on screen, "Lanjutkan semua" for chronic therapy;
-chronic doses from the riwayat Resep table, no triad warning; the RME resep picks each medication from its ePuskesmas suggestion and
-presses Tambah once per row; 2026-10-01: the signa chosen from its suggestion, "3x sehari" as 3x1;
-2026-09-30: the BP algorithm on the last visit; visit-form labels no longer chronic medications)
+Last updated: 2026-10-04 (visit summary on Chief's approved template in IBM Plex Sans Bold; signers
+rule; one welcome sound; header "Prototype"; archive of unreachable code and finished docs;
+lowercase docs; standard repository files; README on Chief's AsistenMedis design. Earlier the same
+day: one chronic card per drug through the RME synonym table, standard start without a signa,
+every riwayat signa form read, halves kept to the resep).
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
-1k tokens. Durable decisions go to `DECISIONS.md`.
+1k tokens. Durable decisions go to `DECISIONS.md` (the 2026-10-04 entries hold the details).
 
 ## Current state
 
-- Chronic cards (2026-10-04, DECISIONS "One drug, one chronic card" and "standard start"):
-  `drugKey` reads names through the RME's `MEDICATION_NAME_SYNONYMS`; names of one drug are one
-  card with the latest signa any of them carried; with no signa anywhere the card takes the
-  PPK/PIONAS standard start of its stock medicine, marked "dosis standar". Open: standard rules
-  for vitamin B komplek, tiamin, zink, tambah darah, nistatin, griseofulvin (need references).
-- Audit answers (2026-10-03, DECISIONS three entries): bridge entries are claimed only while their
-  `pelayananId` tab is open, fill that tab only (`PATIENT_MISMATCH`, no retry), poll on `pageReady`
-  and on a saved auth config, one poll at a time; the run id is base 36 (the 13-digit ms id tripped
-  the PII guard, so every bridge report failed). Visit history: in memory, one patient, legacy
-  IndexedDB deleted. Patient-sync: name `F**di I*****ar`, BPJS last four, RM readable.
-  Audit tasks done after that (DECISIONS "Audit follow-up"): the native listener no longer answers
-  the four typed scrape/fill messages; reinjection checks the tab is ePuskesmas; `identity`,
-  googleapis and `oauth2` removed, web-accessible resources matched to ePuskesmas only; the
-  auto-commit/auto-document scripts and the two broken Vitest configs removed; handlers and
-  scrapers log through `createLogger` (`no-console` enforced there); `inject.content.ts` reads a
-  typed page jQuery; glucose (30) and DDI (6) tests; README matches the code.
-  Not done: T-10 (MIRA dev token gated to DEV would stop Chief's production MIRA; a per-session
-  token through the native host is a cross-repo design), dependency prune (lockfile change, tests
-  mock `react-apexcharts`), the `any` suppressions in MedLens tests.
+- Visit summary PDF (`lib/report/*`, model → layout draw ops → pdf-lib renderer): the template
+  `Clinical_Visit_Summary_Template.docx` (A4, ten numbered blocks, ink logomark in the title cell),
+  IBM Plex Sans Bold (`public/fonts/`, subset through `@pdf-lib/fontkit`). DPJP = signed-in
+  `dokter_nama` (a non-doctor gives dr. Ferdi); verifier = dr. Ferdi, or when he is DPJP one of
+  `FERDI_VERIFIERS` by `RM|date`. The RME nurse field is unchanged. Not done: the medication table
+  header is not repeated on page 2.
+- Sound: only `opening.mp3` from `runLaunchSequence`; `ConsoleLogin` plays none.
+- Header: "Prototype" under "Architected by dr Ferdi Iskandar" (`SidePanelHeader.tsx`).
+- `archieved/` (gitignored, on disk): unreachable components, lib clients, the trajectory chart set,
+  finished docs, Plex Regular, the white logomark. Held for Chief (R3, look unused):
+  `lib/emergency-detector/index.ts`, `gate2-workflow.ts`, `ttv-inference.ts`,
+  `lib/clinical/dosage-database.ts`. Kept though doubtful: the vital-sign set, features-
+  comprehensive, `med-assist-system-architecture`, dashboard-migration and trajectory-endpoint
+  blueprints, five unexecuted refactor specs, `refactor-message-contract-map`, `gate-2-vital-sign-brief`.
+- `LICENSE` is a proprietary placeholder; the terms are Chief's call.
+- Open: standard-start rules for vitamin B komplek, tiamin, zink, tambah darah, nistatin,
+  griseofulvin (need references); T-10 MIRA per-session token; dependency prune; MedLens `any`
+  suppressions; chronic quantity rule; Dependabot 2 high on AsistenMedis, unchecked.
 
-Branch `feat/sidepanel-ui-batch`, not pushed to the monorepo. The capsule alone is on the private `drferdi/AsistenMedis` main (e3e5c6e3 = capsule at 23f45639 merged with Chief's README and logo PRs; Chief pushed 2026-10-04); Dependabot reports 2 high there, unchecked. DECISIONS 2026-09-30 (two entries) and
-2026-09-29 hold the details. `main` is at cd7b7795 (Chief merged through the Tren TTV text scale).
-Visit summary PDF (2026-10-03, spec `docs/specs/2026-10-03-visit-summary-pdf-design.md`, plan
-`docs/plans/2026-10-03-visit-summary-pdf-plan.md`, DECISIONS): "Unduh PDF" on the RME Terapi step
-saves `ringkasan-kunjungan-<RM>-<date>.pdf`, A4, 12-column grid, Helvetica, no patient name. Since
-Chief's redesign: an Oxford blue band with the white logomark (`public/brand/`, cropped flush to the
-mark), red orange section numbers 01-08 and signals, Edukasi and Tindak lanjut added, Sistolik and
-Diastolik as separate trend rows, the trend limited to this RM's visits; usually two pages.
-09 Verifikasi: DPJP and Verifikator from the signed-in user by profession (the RME's
-`resolveTenagaMedisNames`), read from the session at the click. Text in IBM Plex Sans Regular
-and Bold (`public/fonts/`, OFL, embedded as subsets through `@pdf-lib/fontkit`). `lib/report/*`: model →
-layout (draw ops) → pdf-lib renderer; `main.tsx` passes `visitSummaryContext` (facility, triage,
-SpO2, visit history). pdf-lib (1.17.1, Chief approved) loads on click in its own chunk.
-Harness: `pdf.html` (one page), `pdf.html?long` (45 medications, two pages), `?zoom=200`.
-Another session's uncommitted `lib/api/sentra-api.ts`, its test and `tests/e2e/zz-verify-kb-rx.spec.ts` (lint red).
+Branch `feat/sidepanel-ui-batch`, not pushed to the monorepo. AsistenMedis main is at e3e5c6e3
+(capsule at 23f45639); the commits since are not pushed, a push is Chief's call (same merge
+procedure: merge `asistenmedis/main`, push the capsule subtree). Another session's uncommitted
+`lib/api/sentra-api.ts`, its test, `tests/e2e/zz-verify-kb-rx.spec.ts` (lint red), `docs/brand/`
+and root `.agents/HANDOFF.md` are not this session's.
 
-- Statistik Harian (2026-10-02, Chief "konsentrasi halaman baru yaitu statistic"): first block of the
-  STATS page (`DailyStatisticPanel.tsx` inside `StatisticSection.tsx`). Date picker + "Muat statistik
-  harian" → background `collectDailyStatistics` opens `/laporanpelayananpasien` (all GET filters,
-  `buildDailyReportUrl`) in a hidden tab; content `scanDailyServiceReport` reads by header text and
-  keeps only identity-free columns (`lib/statistics/daily-report.ts`); counts in
-  `daily-statistics.ts`; days in `sentra:statistic:daily` (31); "Unduh CSV" (`daily-csv.ts`) for
-  pandas. Harness: `stats.html` (two synthetic days, 136 and 121 rows).
-  Live (read-only): the built URL gives today's 136 rows, the header grid finds all 15 columns.
-  Since 2026-10-03 the page uses `ct-v2-layout` / `ct-v2-panel` / `ttv-*` / `action-btn`; 10 Besar
-  Penyakit opens from 5 to 10 in place, the panels below are accordions (DECISIONS).
-  Since the second 2026-10-03 entry (Chief: lab sidebar-submenu "di salah satu section") DPJP,
-  Poli / Ruangan, Asuransi, Kelompok Umur and Waktu Layanan are one `ct-v2-panel` sub-menu
-  (`StatisticSubmenu`, `shareRows` in `StatisticCharts.tsx`): one rail, a 3px accent tick at the
-  open title, its rows on a border-drawn branch; DPJP without the meter bars; colour-only change.
-  Harness of this session: launch `stats-harness` (port 5180), `stats.html`, Diagnosis frame.
+Harness (scratchpad, launch `gate3-harness`, port 5181): `header.html`, `summary.html`
+(`?dpjp=ferdi`), `tatalaksana.html`; `@/utils/messaging` is stubbed there.
 
-- Trajectory Tren TTV (2026-10-03, Chief: lab spring-playground; "KOK DESIGN NYA BEDA" on the
-  first cut, then redrawn to the lab's measured sizes): `v2/VitalPlayground.tsx` inside
-  `TrajectoryVitalSignsPanel` (outer CHART frame and Hasil kept). Track: ball 40px on the lab's
-  Snappy spring (500/45, no overshoot) to the picked visit's value, two dashed rings at the
-  normal limits; SVG chart (K1..Kn, dashed limits, visit marker); Nilai / Selisih / Batas /
-  Perilaku; pills Tensi / Nadi / SpO2 / Napas / Suhu, Sistolik / Diastolik segmented toggle
-  (spring thumb), visit slider + Play (700 ms a step). Limits from the engine's `NORMAL_RANGES`
-  (R3 export, Chief approved); SpO2 has none. Harness `traj.html` (all six chart tabs, worsening
-  fixture). Since Chief's "text sizing keluar jauh dari design trajectory lain" the card's text is
-  on the trajectory scale (appended overrides): labels 10px/700 uppercase, values 12px/650, body
-  12px, dates 10px, pills and Play as the chart tabs (28px), chart ticks read 11px.
-- Steps: Temuan 1/5 · Diagnosis 2/5 · **RME Diagnosa 3/5** (page 1) | Tatalaksana 4/5 | **RME Terapi
-  5/5** (`steps/RmeDiagnosisStep.tsx`, `diagnosisSteps.ts`, `DiagnosisStepFlow.tsx`). "Isi otomatis
-  RME" is gone: "Isi diagnosis ke RME" after the pick, "Isi resep ke RME" + "Isi anamnesa ke RME"
-  at the end (`RMETransferPanel.tsx`); `handleAutoFillAll` removed. Both pages share one transfer
-  state; `transfer.lastStep` keeps a run's state, error, Ulangi, result and reasons on its own page
-  (cc67c33b + fixup). Harness: after the diagnosa fill, RME Terapi's resep button reads `idle`.
-- Tatalaksana: a chronic card's tick (or a tap on the card) continues it (`chronicContinuation` in
-  `tatalaksana.ts`, wired in `ClinicalDifferential.tsx` as a prescription candidate shown only on
-  its card); "Lanjut tanpa terapi tambahan" breathes until decided (`.dx-tx-breathe`, appended);
-  since 2026-10-01 a green ring orbits the medication proposals until decided (`.dx-tx-orbit`).
-- No tensi today: the diagnosis request carries the last visit's BP (`previous_blood_pressure`,
-  from `useRecurrentDiagnoses`); `encounterToCaseState` sends it as a results row flagged by
-  `getHTNSeverity`, never as today's vitals (9b8dddd9).
-- Resep fill (2026-10-01, read live on the ePuskesmas resep page): Signa is chosen from the
-  "Cari Resep Signa" autocomplete with an exact match (`fillSignaField`, `pickExactSuggestion`,
-  bridge `matchMode: 'exact'`); `normalizeSignaValue` turns "3x sehari" into `3x1` (b562f747,
-  bf5b1c3d). Tambah needs the hidden `obat_id` and `obat_signa`, both written only by the
-  autocompletes' select.
-- Resep fill (2026-10-02, Chief "lagi lagi stuck" on the 2nd drug): Nama Obat is chosen in the
-  main world (`pickMedicationInPage`: leading words searched, the item that is the medication
-  clicked, hidden `obat_id` confirmed); the live entry-row layout is single-entry from row 1; one
-  Tambah press per row; resep step time +15 s per further medication (`resepStepTimeoutMs`).
-- Chronic doses (2026-10-02, Chief "Pengisian dosis salah"): the visit therapy is the riwayat Resep
-  table (name, signa, aturan pakai); a name without a signa gets no dose ("Signa tidak tercatat",
-  not continuable); the store replaces a rescanned visit's therapy. No triad warning any more.
-- Header (2026-10-02): `activeSurface` lights START / TRAJECTORY / DIAGNOSIS / STATS for the page on
-  screen. Terapi kronis has "Lanjutkan semua" (cards with a regimen).
-- Out of stock (2026-10-02, "macet di vit b6"): an empty catalogue answer fails that medication at
-  once (`CATALOG_EMPTY_ERROR`), the rest are filled, the result is partial and names it.
-- Terapi kronis (2026-10-02, "masa 9 macam obat?"): a medication only acute visits prescribed (ICD
-  root not in `CHRONIC_ICD_ROOTS`) is no chronic card; the free-text "CTM" of an asthma visit can
-  still sit beside its full stock name (not merged).
-- Transfer message (2026-10-02, "Step gagal tanpa klasifikasi spesifik"): out of stock is
-  `RESEP_OBAT_TIDAK_TERSEDIA` (all such medications named, no retry, warning note, no Ulangi) only
-  when every failure is a stock gap; a real failure beside it keeps its own reason and Ulangi, and
-  the message names all of them. Any unclassified step error shows its own message. Harness `transfer.html` shows the out-of-stock note.
-- E2E on a live-shaped resep page (`tests/e2e/epuskesmas-resep-page.ts`, 7f42f2d4): the J18 KB
-  row lands in the table with obat_id 20012 and signa "3X1"; red before the fixes (old signa:
-  "[SIGNA_INVALID]", partial; old filler: typed "3x1").
-- History parser drops form labels and the advice placeholder (`lib/clinical`, R3, approved).
-- The build in `.output\chrome-mv3-dev` is the production build (`run build`, MIRA engine), last.
-  MIRA on 127.0.0.1:8787 answers `/healthz` 200. Native host registered for
-  `bhcffleclpadneocndhembhjbemimhkm`.
+## Verification (final tree, 2026-10-04)
 
-## Verification (final tree)
-
-2026-10-04 (signa, a9946f09, e4153992): typecheck 0 · test 0 (202 files, 1717 passed + 1 UI test,
-17 skipped) · lint 1, only `zz-verify-kb-rx.spec.ts` · eslint touched 0 · e2e 20 · `run build` 0,
-last · `run:check` 0. Harness `tatalaksana.html` read from the DOM.
-
-2026-10-03 (Gate 3 + DDI, 669235ca, 6bb03da1 + alias fix): typecheck 0 · test 0 (202 files, 1703 passed, 17
-skipped) · full lint 1, only `zz-verify-kb-rx.spec.ts` · eslint on touched 0 · `run build` 0, last ·
-`run:check` 0 · e2e 20. Red first: 34 failures on the old sources. Harness: alert text read from
-the DOM for GDS 320.
-
-2026-10-03 (audit follow-up, 8 commits debfbbaf..54096c3d): typecheck 0 · test 0 (201 files,
-1664 passed, 17 skipped) · full lint 1, only `zz-verify-kb-rx.spec.ts` (other session), 0 warnings
-· `run build` 0, last; built manifest has no `identity`/googleapis/`oauth2`, WAR matches
-ePuskesmas only · `run:check` 0 · e2e 20 (synthetic, auth-bridge, smoke, trajectory preview).
-Red first: the listener and reinjection tests (5 failed before the fix). Prettier: no new drift.
-
-2026-10-03 (bridge, retention, masking): typecheck 0 · test 0 (1622 passed, 17 skipped) · eslint on
-my files 0 (full lint 1: only `zz-verify-kb-rx.spec.ts` and the old `platform-api-client.test.ts`
-warning) · `run build` 0, last · `run:check` 0 · e2e 20 (synthetic, auth-bridge, smoke, trajectory
-preview; `zz-verify-kb-rx` not run). Prettier: touched files that drifted at HEAD were not
-reformatted; my blocks add no drift.
-
-2026-10-03 (PDF redesign + review fixes): lint 1 only from the two known files · typecheck 0 ·
-test 0 (1598 passed, 17 skipped) · e2e 20 · dev build 0 (pdf-lib only in its chunk) · `run:check` 0 ·
-style.css untouched. Root as below. `run build` 0, last.
-
-2026-10-03 (visit summary PDF): lint 1 only from the two known files · typecheck 0 · test 0 (1590
-passed, 17 skipped; 30 new) · e2e 20 · dev build 0 (pdf-lib only in `chunks/download-visit-summary`)
-· `run:check` 0 · style.css untouched since main. Harness: one and two pages render in Chrome's
-viewer; logo on column 1 at the title's cap height. Root: governance 1 (root HANDOFF owner, other
-session) · check:tokens 0 · lint 1 (`tools/automation/**/gaffer` only) · typecheck 0 · test 1
-(PostgreSQL 127.0.0.1:54329 down) · build 0. `run build` 0, last.
-
-2026-10-03 (Tren TTV text scale, CSS only): lint 1 only from the two known files · typecheck 0 ·
-test 0 (1560 passed, 17 skipped) · dev build 0 · e2e 20 · `run:check` 0 · `run build` 0, last ·
-style.css 92 added / 0 deleted since main. Harness: computed sizes match the Linimasa and
-Perburukan tabs (eyebrow 10/700, title 12/650, meta 10, chart tab 10/700 at 28px, tick 11px).
-
-2026-10-03 (Tren TTV playground): lint 1 only from `zz-verify-kb-rx.spec.ts` (other session) and
-the old `platform-api-client.test.ts` warning · typecheck 0 · test 0 (1560 passed, 17 skipped) ·
-dev build 0 · e2e 20 · `run:check` 0 · `run build` 0, last · style.css 317 added / 0 deleted
-since main. Red first (module missing), 8 new tests. Harness: ball and toggle thumb sampled per
-frame, monotonic, overshoot 0, settle about 0.5 s (the lab's 0.51 s). token-guard: no colour
-literal; radii on `--radius-chip` / `--radius-container`, 12px literal (no token).
-
-2026-10-03 (sidebar sub-menu): lint 1 only from `zz-verify-kb-rx.spec.ts` (other session) and the
-old `platform-api-client.test.ts` warning · typecheck 0 · test 0 (1552 passed, 17 skipped) · dev
-build 0 · e2e 20 · `run:check` 0 · `run build` 0, last · style.css 85 added / 0 deleted. Red first
-(5 panels, not 1; subtitle on a closed section). Harness `stats.html`: tick 16px = title line,
-elbow on the first label line, closed titles `--ct-v2-text-soft`. Code review: ready with fixes,
-fixed (empty-state spacing, elbow on wrapped labels). token gate passed.
-
-2026-10-03 (STATS design, dropdown + accordion): eslint touched 0 · typecheck 0 · test 0 (1551
-passed, 17 skipped) · dev build 0 · e2e 20 · `run:check` 0 · `run build` 0, last. Root: governance 1
-only from another session's uncommitted root `.agents/HANDOFF.md` (Gaffer, melindaOs, no owner);
-lint 1 (`tools/*`), test 1 (PostgreSQL 54329) as before.
-
-2026-10-02 (Statistik Harian): typecheck 0 · test 0 (1546 passed, 17 skipped; contract list +2
-names) · dev build 0 · e2e 20 (incl. the daily report scan and the other session's
-`zz-verify-kb-rx.spec.ts`) · `run:check` 0 · `run build` 0, last · full lint 1 (only
-`zz-verify-kb-rx.spec.ts`; my files 0).
-
-2026-10-02 (transfer message, incl. mixed failures): eslint touched 0 · typecheck 0 · test 0 (1528
-passed, 17 skipped) · dev build 0 · e2e 19 (18 own + the other session's `zz-verify-kb-rx.spec.ts`) ·
-`run build` 0, last · `run:check` 0 · full lint 1 (only `zz-verify-kb-rx.spec.ts`).
-
-2026-10-02 (chronic filter): typecheck 0 · test 0 (1522 passed, 17 skipped) · e2e 18 · `run build` 0, last.
-2026-10-02 (out of stock): typecheck 0 · test 0 (1521 passed, 17 skipped) · e2e 18 · `run build` 0, last.
-2026-10-02 (header/select-all): typecheck 0 · test 0 (1521 passed, 17 skipped) · e2e 17 · `run build` 0, last.
-2026-10-02 (dose fix): typecheck 0 · test 0 (187 files, 1516 passed, 17 skipped) · e2e 17 passed
-· `run build` 0, last. Earlier 2026-10-02: test 0 (185 files, 1510 passed, 17 skipped) · eslint on the touched
-files 0 (full lint 1: only the other session's untracked `zz-verify-kb-rx.spec.ts`, console.log) ·
-`run:check` 0 · e2e 17 passed (7 synthetic incl. three medications on the live-shaped page, 10 others)
-· `run build` 0, last. 2026-10-01: `test:e2e` 17 passed incl. the live-shaped resep. Earlier: `test:e2e` 15 passed
-(on the dev build, no MIRA calls).
-Red first for every new test; mutations: a skip that clears continuations, and the fixture set to
-"Kontrol 1 minggu", each turn a test red. token-guard PASS (its a11y note - a button inside a
-`role="button"` card - fixed: the tick is a real button). Harness `?triage=none&dx=3-J20.9&rmedx=idle`:
-RME Diagnosa → "terkirim" → Tatalaksana; Amlodipin continued; RME Terapi with the two buttons.
-Screenshots failed (Claude window hidden); checks were read from the DOM.
-
-## Open for Chief
-
-R3 fixed with Chief's "Agree" (DECISIONS, 669235ca and 6bb03da1): Gate 3 alerts GDS ≥200 without
-symptoms ("DM belum tegak", confirm with GDP/OGTT/HbA1c); the DDI check reads Indonesian and stock
-names exactly and fails closed. Still open: the KB prescription path in another session's
-uncommitted `lib/api/sentra-api.ts` calls no DDI, and that file falls back to the 30-pair mock
-when the table throws. Harness `gate3-harness` (port 5181): TTV with GDS 320 shows the alert.
-
-00. Visit summary PDF live: "Unduh PDF" on RME Terapi after a real case, then open the file. My
-    calls: Tren TTV without SpO2 (visit history has none), last 8 visits, Tatalaksana prints the
-    resep list then the CDSS alerts, triage as its bold word, the logomark only, red orange
-    #FF4500 and Oxford #002147, a typical visit on two pages; a signed-in doctor's PDF names the
-    default nurse as Verifikator (as the RME does). Deferred review minors (ledger):
-    no double-click guard, no error log, trend x by index with dd-mm end labels.
-
-0. Statistik Harian live: "Muat statistik harian" in Chief's Chrome not yet seen (Playwright cannot
-   route the hidden tab's first navigation). Rows are services, not distinct patients (no identity
-   kept to deduplicate). Age bands 0-4/5-14/15-44/45-59/≥60 and "10 besar over all diagnoses" are
-   my defaults.
-
-1. Live ePuskesmas test of each fill on its own page. Claude in Chrome is connected but reaches
-   only its own tab (Chief gave the resep URL once); a full fill was not run on his form.
-   Uncommitted work from another session (`lib/api/sentra-api.ts`, `tests/e2e/zz-verify-kb-rx.spec.ts`,
-   the latter fails lint with console.log) is in the working tree and in the build.
-2. Continued chronic quantity: the RME mapper caps days at 3 and rounds to 10 (Amlodipin 1x1 → 10),
-   not 30 days; a PRB-style 30-day quantity is Chief's call. Signa rule "1x10mg = one unit a take"
-   is my assumption.
-3. The ePuskesmas Diagnosa screenshot had two empty rows under J45 with other staff names; not
-   investigated yet (maybe earlier fills adding rows).
-4. "harus on the same side with RME page": still my reading; the page-by-page fill may be what
-   Chief meant.
-5. Stock names vs the ePuskesmas autocomplete: since 2026-10-01 (Chief) NAC/NASETIL/PCT resolve to
-   the full stock names and "tab" no longer matches a wrong drug (Metildopa); see DECISIONS. Still
-   open: NAC tablet is filled as kapsul 200 mg; live ePuskesmas acceptance not yet seen; any other
-   name the autocomplete does not offer falls to the typed candidate loop (slow); since 2026-10-02
-   the step has 15 s more per further medication, but the orchestrator still retries a timed-out
-   resep while the first fill may run on (two fills over one form).
-6. Dead CSS (append-only file): `.dx-tx-safety-list`, `.diagnosis-transfer-secondary`, and the old
-   statistic surface classes (list in DECISIONS 2026-10-03).
-7. MIRA's use of the earlier-BP row is not verified live (no model call without Chief's
-   "jalankan"). The scraper origin of the form labels is inferred, not patched.
-8. Earlier items: proposals remote-only (R3), DDI table ~20 pairs, J20 red_flags (R3), R3 sign-off
-   recurrent-diagnosis, dose table sign-off, class allergies (R3), Kontrol intervals assumption,
-   `DiseaseNote.followUp` unused, host does not stop MIRA when Chrome closes (MIRA repo).
-
-## Next action
-
-Chief, bridge live: a dashboard entry for patient X stays pending until X's ePuskesmas page is open,
-then fills within seconds and reads "complete" on the dashboard; an entry for Y never fills X. The
-crew portal shows the masked name. `chrome://indexeddb-internals` lists no `sentra-visit-history`
-after one side-panel open.
-Chief opens a case to RME Terapi and presses "Unduh PDF" (harness `pdf.html` shows the synthetic one).
-Chief looks at TRAJECTORY → Tren Tanda Vital. Open: the outer CHART frame and Hasil are kept
-around the lab card (shared `TrajectorySimplePanel`); the ball drag of the lab is left out.
-Chief looks at the STATS sub-menu (harness or the extension): closed-title contrast
-(`--ct-v2-text-soft`) and the dropped DPJP bars are my calls.
-STATS → Statistik Harian → "Muat statistik harian" for today (an ePuskesmas tab signed in), then
-"Unduh CSV". Still pending from before: Chief reloads "Asisten Medis" and walks one case: pick diagnosis → Isi diagnosis ke RME (ePuskesmas
-Diagnosa page open) → Tatalaksana, tick a chronic card → Selesai → Isi resep ke RME (Resep page) →
-Isi anamnesa ke RME (Anamnesa page).
+`run build` 0 · typecheck 0 · vitest 0 (198 files, 1699 passed, 17 skipped; fewer than 2026-10-03
+because archived tests left with their code) · eslint `components lib entrypoints utils types` 0 ·
+full lint 1, only `zz-verify-kb-rx.spec.ts` (4 `no-console`) · `run:check` 0 · e2e 21 passed ·
+governance 1, only root `.agents/HANDOFF.md` task ownership (other session). Red first: font test
+(Helvetica-Bold), sound test, header test. Not shown red first: the signer model tests. Production
+build in `.output\chrome-mv3-dev`, last.

@@ -3,6 +3,65 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-04 — The header reads "Prototype" under the credit line
+
+- Decision (Chief: the Latin text after "...built by dr Ferdi Iskandar" becomes "Prototype"):
+  `SidePanelHeader` prints "Prototype" in the motto line, same class (serif italic from the
+  frozen `style.css`). The frozen, unmounted `SentraAssistPanel.tsx` keeps its old motto.
+- Evidence: header test red on the old code, 22/22 green; harness `header.html` reads
+  "Architected by dr Ferdi Iskandar" / "Prototype".
+
+## 2026-10-04 — One welcome sound, none on the way to the sponsor page
+
+- Decision (Chief: "hapus sound nya, sehingga hanya satu welcome sound saat masuk ke UI utama"):
+  `ConsoleLogin` plays no sound; the only sound is `opening.mp3` from `runLaunchSequence` when the
+  main UI opens. The background `action.onClicked` sound never fires (`openPanelOnActionClick`),
+  and `entrypoints/login` is an unused popup; both left as they are.
+- Evidence: `ConsoleLogin.test.tsx` (no `play` on sign-in) red on the old code; the controller
+  test sees exactly `['opening.mp3']` from the sponsor page to the main UI.
+
+## 2026-10-04 — The visit summary's signers: DPJP from the login, dr. Ferdi verifies
+
+- Decision (Chief: "Pada output pdf — DPJP tergantung isian dan login. Verifikator selalu saya:
+  dr Ferdi Iskandar. Jika DPJP saya, maka verifikator: dr Dibya Arfianda SPOG atau dr Boyong
+  Baskoro SPOG (bergantian/ random)"): DPJP is `dokter_nama` from `resolveTenagaMedisNames` (a
+  signed-in non-doctor gives dr. Ferdi). The verifier is `DOKTER_NAMA`; when the DPJP is dr. Ferdi
+  it is one of `FERDI_VERIFIERS`, picked by the code-point sum of `RM|date` modulo 2, so a
+  reprint of the same visit keeps its verifier. Supersedes the verifier half of 2026-10-03 "closes
+  with the DPJP and the verifier" (default nurse as verifier). The RME's nurse field is unchanged.
+- Evidence: model tests for all three cases; harness `summary.html`: RM-00-12-34 → dr. Dibya,
+  RM-00-12-35 → dr. Boyong, another DPJP → dr. Ferdi.
+
+## 2026-10-04 — The visit summary follows the approved template
+
+- Decision (Chief: `Clinical_Visit_Summary_Template.docx` is the approved template; only add the
+  Sentra logo, structure and placement unchanged): the layout is redrawn from the template's XML
+  (A4, its margins, red tab, two-line title, ten numbered blocks, five-column medication table,
+  footer). The template is bold throughout; the text is IBM Plex Sans Bold (Chief, same day:
+  "Text summary gunakan IBM Plex Sans"), embedded as a subset through `@pdf-lib/fontkit`; the
+  regular weight and the white logomark moved to `archieved/`. Plex is wider than the template's
+  Arial, so "TANGGAL & WAKTU" wraps the time under the date inside its cell. The ink logomark sits
+  at the right end of the title cell. Alerts print in block 01's "Temuan penting" slot. Supersedes
+  2026-10-03 "opens on an Oxford band" and the Swiss grid of "a Swiss Style PDF"; of "set in IBM
+  Plex Sans" only the bold weight stays. The medication table header is not repeated on a second
+  page.
+- Evidence: 39 report tests; the font test (only `IBMPlexSans-Bold`) red on the Helvetica code;
+  the synthetic visit renders one page, 45 medications two ("2/2"), checked as rendered PNGs and in
+  the harness `summary.html`.
+
+## 2026-10-04 — Unreachable code and finished docs move to `archieved/`
+
+- Decision (Chief: "pindahkan files dan folder yg tidak digunakan langsung ke folder ...
+  archieved"; "samakan penulisan huruf kecil"): files no production entry reaches (traced from
+  entrypoints, configs, services, scripts and WXT auto-imports) move with their tests to the
+  gitignored `archieved/` (on disk, out of git); vitest and eslint ignore it. R3 code that looks
+  unused is held for Chief: `lib/emergency-detector/index.ts`, `gate2-workflow.ts`,
+  `ttv-inference.ts`, `lib/clinical/dosage-database.ts`. Finished plans and audits moved too;
+  `docs/` names are lowercase (`docs/architecture.md`, `docs/adr/adr-00N-*.md`, `readme.md`).
+  Standard files added: `LICENSE` (proprietary, all rights reserved; the terms are Chief's
+  call), `SECURITY.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `CHANGELOG.md`.
+- Evidence: build, tsc, vitest and eslint green after the move; links rewritten and checked.
+
 ## 2026-10-04 — A chronic card no visit gave a signa takes the references' standard start
 
 - Decision (Chief "Pilih 1", after "NAC dan CTM tidak ada dosis"): when no visit, under any name

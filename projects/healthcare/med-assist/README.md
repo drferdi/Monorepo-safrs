@@ -1,619 +1,616 @@
-<div align="center">
+<table width="100%">
+<tr>
+<td width="34%" align="center" valign="top">
 
-# Med Assist
+<a href="https://github.com/drferdi/AsistenMedis">
+  <img
+    src="./public/brand/asisten-medis-cdss-white.png"
+    alt="Asisten Medis CDSS official logo"
+    width="220"
+  />
+</a>
 
-**The Intelligent Connector Between ePuskesmas and AI-Powered Clinical Decision Support**
+<br />
 
-</div>
+<img src="https://img.shields.io/badge/PACKAGE-%40the--abyss%2Fmed--assist-0D1117?style=flat-square" alt="Package @the-abyss/med-assist" />
+<img src="https://img.shields.io/badge/VERSION-1.0.1-8B5CF6?style=flat-square" alt="Package version 1.0.1" /><br />
+<img src="https://img.shields.io/badge/MANIFEST-2.1.0-5B8CFF?style=flat-square" alt="Extension manifest version 2.1.0" />
+<img src="https://img.shields.io/badge/RISK-R2%20%7C%20CLINICAL%20R3-F59E0B?style=flat-square" alt="Risk R2; clinical logic R3" /><br />
+<img src="https://img.shields.io/badge/WXT-CHROME%20MV3-22D3EE?style=flat-square" alt="WXT Chrome Manifest V3" />
+<img src="https://img.shields.io/badge/REPO-PRIVATE-14B8A6?style=flat-square" alt="Private repository" />
 
-## Overview
+<br /><br />
 
-<table>
-  <tr>
-    <td width="30%" align="center" valign="middle">
-      <img src="https://github.com/drferdi/Medassist/blob/main/public/assist.png?raw=true" alt="Med Assist" width="200"/>
-      <br/><br/>
-      <strong>SENTRA ASSIST</strong>
-    </td>
-    <td width="70%" valign="top">
-      <p><strong>Med Assist</strong> is a browser extension that embeds triage, clinical reasoning, and RME transfer tooling directly inside the active ePuskesmas workflow. The current runtime centers on a physician-facing sidepanel, a background worker for orchestration, and content/main-world bridges for scraping and auto-fill.</p>
-      <p>At its core, Med Assist is powered by the <strong>Iskandar Diagnosis Engine</strong>: a deterministic-first clinical pipeline that combines emergency gates, a 159-disease knowledge base, epidemiology weights from <strong>45,030 Indonesian clinical cases</strong>, a constrained OpenAI-model reranker when the physician enters a key in Settings, and escalation-first safety checks before suggestions are rendered.</p>
-      <p>Patient data is surfaced from the active ePuskesmas session via <strong>DAS (Data Ascension System)</strong>, which currently uses adaptive DOM scanning, a local semantic mapper, learning-store caching, and targeted content-script reinjection/main-world bridging where the host page requires it.</p>
-      <p>New features include <strong>SYMPHONY Safety Bridge</strong> (trajectory-to-alert mapping), <strong>Vital Guardrails</strong> (822-line input validation), and <strong>Feature Flags</strong> (env-var-driven module gating).</p>
-    </td>
-  </tr>
+<sub><code>FKTP · ePUSKESMAS · CLINICAL DECISION SUPPORT</code></sub>
+
+</td>
+<td width="66%" valign="top">
+
+SENTRA / CLINICAL INTELLIGENCE
+
+<a href="https://github.com/drferdi/AsistenMedis">
+  <img
+    src="https://readme-typing-svg.demolab.com?font=Archivo&amp;weight=600&amp;size=29&amp;duration=3400&amp;pause=1500&amp;color=EB5939&amp;vCenter=true&amp;width=720&amp;height=74&amp;lines=TRIAGE+%E2%86%92+DIFFERENTIAL+%E2%86%92+SAFETY+%E2%86%92+RME;DETERMINISTIC+FIRST+%C2%B7+CLINICIAN+FINAL+AUTHORITY"
+    alt="Triage to differential to safety to RME. Deterministic first, clinician final authority."
+  />
+</a>
+
+<b>Asisten Medis</b> is a clinician-facing browser extension for Indonesian primary healthcare. It embeds triage, differential-support, medication safety, longitudinal review, and governed RME transfer directly into the ePuskesmas workflow.
+
+<br /><br />
+
+<b>Operating position:</b> the extension assists clinical work; it does not replace clinical authority. Deterministic safety logic and the local clinical knowledge base remain the primary capsule truth, while model-assisted reasoning is optional and subordinate to review.
+
+<p>
+  <a href="#03--identity--naming"><b>Identity</b></a>&nbsp;&nbsp;
+  <a href="#05--capability-map"><b>Capabilities</b></a>&nbsp;&nbsp;
+  <a href="#07--clinical-intelligence-stack"><b>Clinical Engine</b></a>&nbsp;&nbsp;
+  <a href="#12--build--verification"><b>Verification</b></a>&nbsp;&nbsp;
+  <a href="./docs/clinical-rules.md"><b>Clinical Rules</b></a>
+</p>
+
+<sub><code>OBSERVE → NORMALIZE → GATE → REASON → REVIEW → TRANSFER → AUDIT</code></sub>
+
+<br /><br />
+
+<sub><b>Technology</b> · <code>Sentra Artificial Intelligence · Healthcare Technology</code></sub>
+
+</td>
+</tr>
 </table>
 
-<div align="center">
+---
 
-<sub><i>Clinical sidepanel companion — embedded decision intelligence at the point of care</i></sub>
+## 01 / ORIGIN SIGNAL
 
-[![Version](https://img.shields.io/badge/version-1.0.1-blue?style=for-the-badge)](package.json)
-[![License](https://img.shields.io/badge/License-Community%20%2F%20Enterprise-orange?style=for-the-badge)](LICENSE)
-[![CI](https://img.shields.io/github/actions/workflow/status/drferdi/Medassist/ci.yml?label=CI&logo=github&style=for-the-badge)](https://github.com/drferdi/Medassist/actions)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Built with WXT](https://img.shields.io/badge/Built%20with-WXT-7C3AED?style=for-the-badge)](https://wxt.dev/)
-[![Platform](https://img.shields.io/badge/Platform-Sentra%20AI-FE4900?style=for-the-badge)](https://sentrahai.com)
+Clinical software at the point of care fails when it asks clinicians to leave the record, retype data, trust an opaque model, or accept an automation that cannot explain what it changed. Asisten Medis is built around the opposite operating model: **stay inside the workflow, make safety gates explicit, preserve clinician control, and make automation observable**.
 
-_Designed and built by [Drferdi](https://github.com/drferdi) (dr. Ferdi Iskandar)_
+The current capsule is a **WXT browser extension** for ePuskesmas. It combines local deterministic clinical logic, a structured disease knowledge base, adaptive DOM extraction, governed form filling, longitudinal visit analysis, medication-safety checks, and optional model-assisted reranking.
 
-> **"Diagnosis bukan tebakan — setiap keputusan klinis harus bisa dipertanggungjawabkan."** — dr. Ferdi Iskandar, Founder
-
-</div>
+> [!IMPORTANT]
+> **This is clinical decision support.** Suggestions, classifications, alerts, and transfer automation remain subordinate to the clinician. R3 clinical logic requires explicit Chief approval before modification.
 
 ---
 
-## Why a Locally-Calibrated Decision Support Layer
+## 02 / DOCTRINE
 
-A generic CDSS treats every patient as a global baseline. Med Assist treats every patient as a member of a specific Indonesian primary healthcare population — with the disease priors, drug availability, and clinical context that actually exists at the puskesmas level.
-
-| Dimension                  | Generic CDSS                   | Med Assist                                                                                           |
-| -------------------------- | ------------------------------ | ---------------------------------------------------------------------------------------------------- |
-| **Disease priors**         | Foreign textbook static values | Bayesian weights from 45,030 real Indonesian cases                                                   |
-| **Emergency detection**    | Single threshold rules         | 4-gate protocol: TTV inference → HTN crisis → Glucose crisis → Occult shock                          |
-| **Drug interaction check** | Limited or cloud-only          | 173,071+ DDI entries (DDInter 2.0), runs offline                                                     |
-| **Form automation**        | None                           | DAS adaptive extraction + local semantic mapping + page-specific auto-fill                           |
-| **RME integration**        | Manual double-entry            | Transfer orchestrator + dashboard bridge poller + session-backed sync                                |
-| **Safety architecture**    | Soft warnings                  | Traffic Light + presentation safety + emergency-first escalation                                     |
-| **AI reasoning**           | Single model                   | Optional OpenAI reranking (key entered in Settings) + dashboard canonical engines + KB-only fallback |
-| **Trajectory safety**      | None                           | SYMPHONY bridge: trajectory analysis → CDSSAlert mapping                                             |
-| **Input validation**       | Basic range checks             | Vital Guardrails: hard stops, soft flags, code-red cues, auto-correction                             |
-| **Module control**         | All-or-nothing                 | Feature flags: env-var-driven gating per module                                                      |
-
----
-
-## Executive Summary
-
-**Med Assist** is a browser extension built for Indonesian primary healthcare clinicians working inside ePuskesmas. It delivers four core capabilities in a single non-intrusive sidepanel: emergency detection, AI diagnosis support, drug safety, and documentation automation — without replacing the existing EMR workflow.
-
-**Target Users:**
-
-| Persona                | Role                            | Pain Point Solved                                          |
-| ---------------------- | ------------------------------- | ---------------------------------------------------------- |
-| General Practitioner   | Patient encounters, diagnosis   | Diagnostic uncertainty, ICD-10 coding, prescription safety |
-| Nurse / Perawat        | Vital sign recording, anamnesis | Form double-entry, TTV completeness                        |
-| Clinical Administrator | Referral coordination           | RME transfer errors, incomplete referral data              |
-
----
-
-## Table of Contents
-
-- [Features Overview](#features-overview)
-- [Quickstart](#quickstart)
-- [Detailed Features](#detailed-features)
-- [Architecture](#architecture)
-- [Testing and Quality Gates](#testing-and-quality-gates)
-- [Deployment](#deployment)
-- [Troubleshooting](#troubleshooting)
-- [License](#license)
+<table width="100%">
+<tr>
+<td width="50%" valign="top">
+<sub>
+<b><code>DETERMINISTIC FIRST</code></b><br /><br />
+The local knowledge base and deterministic clinical criteria are the primary capsule truth. Model-assisted output may enrich ranking or presentation, but it does not silently replace safety logic.
+</sub>
+</td>
+<td width="50%" valign="top">
+<sub>
+<b><code>CLINICIAN FINAL AUTHORITY</code></b><br /><br />
+The system may collect, structure, score, warn, draft, and fill. The clinician remains the terminal authority for diagnosis, treatment, referral, and final RME submission.
+</sub>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<sub>
+<b><code>FAIL CLOSED</code></b><br /><br />
+Invalid, ambiguous, missing, mismatched, or unsafe input should move toward warning, referral, insufficient-data handling, or explicit failure rather than quiet success.
+</sub>
+</td>
+<td valign="top">
+<sub>
+<b><code>NO DOUBLE ENTRY BY DEFAULT</code></b><br /><br />
+The extension reads the active ePuskesmas context, keeps the clinician in the existing record, and uses controlled transfer paths to reduce retyping without hiding the write path.
+</sub>
+</td>
+</tr>
+</table>
 
 ---
 
-## Features Overview
+## 03 / IDENTITY & NAMING
 
-### Emergency Detection
+The repository contains several related names from the product's evolution. Current product identity and package identity should stay distinguishable.
 
-| #   | Feature                                | Status  | Primary User  |
-| --- | -------------------------------------- | ------- | ------------- |
-| 1   | TTV Inference — Gate 1                 | ✅ Live | Doctor, Nurse |
-| 2   | Hypertension Crisis Triage — Gate 2    | ✅ Live | Doctor        |
-| 3   | Glucose Crisis Management — Gate 3     | ✅ Live | Doctor        |
-| 4   | Occult Shock Detector — Gate 4         | ✅ Live | Doctor        |
-| 5   | Hypoglycemia 15-15 Interactive Timer   | ✅ Live | Doctor, Nurse |
-| 6   | Vital Guardrails (822-line validation) | ✅ Live | System        |
+<table width="100%">
+<tr><td width="31%"><sub><b>GitHub repository</b></sub></td><td><sub><code>drferdi/AsistenMedis</code></sub></td></tr>
+<tr><td><sub><b>Current product display</b></sub></td><td><sub><b>Asisten Medis</b> — current WXT manifest name.</sub></td></tr>
+<tr><td><sub><b>Capsule / engineering name</b></sub></td><td><sub><b>Med Assist</b> — used in project contracts and architecture documents.</sub></td></tr>
+<tr><td><sub><b>Historical product name</b></sub></td><td><sub><b>Sentra Assist</b> — retained in older architecture and UI references.</sub></td></tr>
+<tr><td><sub><b>Package</b></sub></td><td><sub><code>@the-abyss/med-assist</code> · version <b>1.0.1</b>.</sub></td></tr>
+<tr><td><sub><b>Extension manifest</b></sub></td><td><sub>Version <b>2.1.0</b> · version name <b>Prototype 0.7</b>.</sub></td></tr>
+<tr><td><sub><b>Human owner</b></sub></td><td><sub><b>Chief · dr. Ferdi Iskandar</b>.</sub></td></tr>
+<tr><td><sub><b>Technology organization</b></sub></td><td><sub><b>Sentra Artificial Intelligence</b>.</sub></td></tr>
+<tr><td><sub><b>Default risk</b></sub></td><td><sub><b>R2</b>; protected clinical logic is <b>R3</b>.</sub></td></tr>
+<tr><td><sub><b>Repository visibility</b></sub></td><td><sub><b>Private</b>.</sub></td></tr>
+</table>
+
+---
+
+## 04 / SYSTEM CONSTELLATION
+
+<details open>
+<summary><b><code>CLINICIAN ↔ SIDEPANEL ↔ BACKGROUND ↔ ePUSKESMAS ↔ CLINICAL ENGINES</code></b></summary>
+
+~~~mermaid
+%%{init: {"flowchart": {"htmlLabels": false, "padding": 20}, "themeVariables": {"fontFamily": "monospace", "fontSize": "10px"}}}%%
+flowchart TB
+  HUMAN["CLINICIAN<br/>terminal authority"]
+  UI["ASISTEN MEDIS SIDEPANEL<br/>React · WXT MV3"]
+  BG["BACKGROUND SERVICE WORKER<br/>orchestration · auth · bridge"]
+  CS["CONTENT + MAIN-WORLD BRIDGE<br/>scrape · fill · page helpers"]
+  EMR["ePUSKESMAS<br/>active clinical record"]
+  SAFE["CLINICAL SAFETY LAYER<br/>Emergency gates · Pattern Engine · guardrails"]
+  DX["DIAGNOSIS LAYER<br/>Iskandar Engine · KB · ICD-10 · reranking"]
+  DATA["LOCAL / GOVERNED DATA<br/>159-disease KB · epidemiology · DDI · stock"]
+  DASH["SENTRA / CREW SERVICES<br/>auth · bridge · canonical endpoints"]
+  MODEL["OPTIONAL MODEL PATH<br/>configured reranking / MIRA service"]
+
+  HUMAN --> UI
+  UI --> BG
+  BG --> CS
+  CS <--> EMR
+  BG --> SAFE
+  BG --> DX
+  SAFE --> DX
+  DATA --> SAFE
+  DATA --> DX
+  BG <--> DASH
+  DX -. optional .-> MODEL
+  DX --> UI
+  UI --> HUMAN
+
+  classDef authority fill:#0D1117,stroke:#F59E0B,color:#ffffff,stroke-width:2px;
+  classDef core fill:#0D1117,stroke:#5B8CFF,color:#ffffff,stroke-width:2px;
+  classDef control fill:#0D1117,stroke:#14B8A6,color:#ffffff,stroke-width:2px;
+  classDef agent fill:#0D1117,stroke:#8B5CF6,color:#ffffff,stroke-width:2px;
+  classDef surface fill:#0D1117,stroke:#22D3EE,color:#ffffff,stroke-width:1.5px;
+  classDef critical fill:#0D1117,stroke:#F43F5E,color:#ffffff,stroke-width:2px;
+  classDef shared fill:#0D1117,stroke:#64748B,color:#ffffff,stroke-width:1.5px;
+
+  class HUMAN authority;
+  class UI,BG core;
+  class CS,EMR surface;
+  class SAFE control;
+  class DX agent;
+  class DATA shared;
+  class DASH shared;
+  class MODEL critical;
+~~~
+
+</details>
+
+The capsule is intentionally **standalone**. Its own workspace, lockfile, scripts, WXT configuration, and project contract define its lifecycle; it does not require a parent monorepo to build or verify.
+
+---
+
+## 05 / CAPABILITY MAP
+
+<table width="100%">
+<tr><td width="25%"><sub><b><code>TRIAGE</code></b></sub></td><td width="34%"><sub>TTV inference · HTN crisis · glucose crisis · occult shock · Pattern Engine v2.</sub></td><td><sub>Emergency-first safety screening before diagnostic presentation.</sub></td></tr>
+<tr><td><sub><b><code>DIAGNOSIS</code></b></sub></td><td><sub>Iskandar Diagnosis Engine · 159-disease KB · ICD-10 · epidemiology weighting.</sub></td><td><sub>Deterministic-first differential support with optional constrained reranking.</sub></td></tr>
+<tr><td><sub><b><code>MEDICATION</code></b></sub></td><td><sub>DDI (fails closed) · therapy reasoning · pediatric/geriatric dose support · stock-aware prescription fill · one chronic card per drug through the RME synonym table · PPK/PIONAS standard start when no visit wrote a signa.</sub></td><td><sub>Medication safety and prescription workflow support.</sub></td></tr>
+<tr><td><sub><b><code>DAS</code></b></sub></td><td><sub>Adaptive scanning · semantic mapping · cache · page bridge.</sub></td><td><sub>Reads active ePuskesmas clinical context without depending only on brittle selectors.</sub></td></tr>
+<tr><td><sub><b><code>RME TRANSFER</code></b></sub></td><td><sub>Anamnesa → Diagnosa → Resep · tab targeting · retries · result classification.</sub></td><td><sub>Governed form filling back into the correct encounter tab.</sub></td></tr>
+<tr><td><sub><b><code>TRAJECTORY</code></b></sub></td><td><sub>Longitudinal visits · TTV trends · deterioration signals · SYMPHONY alert bridge.</sub></td><td><sub>Turns visit history into reviewable trend context.</sub></td></tr>
+<tr><td><sub><b><code>STATS</code></b></sub></td><td><sub>Daily statistics · diagnosis ranking · DPJP / room / insurance / age / service-time views.</sub></td><td><sub>Identity-free operational summaries from the ePuskesmas daily report.</sub></td></tr>
+<tr><td><sub><b><code>MEDLENS + REPORT</code></b></sub></td><td><sub>ECG-oriented development harness · visit-summary PDF · verification block.</sub></td><td><sub>Supporting clinical review and export surfaces.</sub></td></tr>
+<tr><td><sub><b><code>AUTH + AUDIT</code></b></sub></td><td><sub>Crew login · passkey path · Mode Lokal · bridge audit · masked identity handling.</sub></td><td><sub>Controlled session, synchronization, and accountability boundaries.</sub></td></tr>
+</table>
+
+---
+
+## 06 / EMERGENCY & TRIAGE LAYERS
+
+The clinical safety architecture intentionally keeps multiple layers rather than collapsing them into one generalized model.
+
+<table width="100%">
+<tr><td width="22%"><sub><b><code>GATE 1</code></b></sub></td><td width="28%"><sub><b>TTV / vital context</b></sub></td><td><sub>Normalizes and interprets available vital-sign context and surfaces missing or unsafe measurements.</sub></td></tr>
+<tr><td><sub><b><code>GATE 2</code></b></sub></td><td><sub><b>Hypertension</b></sub></td><td><sub>Separates hypertensive urgency/emergency context and organ-damage warning paths.</sub></td></tr>
+<tr><td><sub><b><code>GATE 3</code></b></sub></td><td><sub><b>Glucose</b></sub></td><td><sub>Handles hypoglycemia and high-glucose alert paths; recent project work explicitly tightened the GDS alert path.</sub></td></tr>
+<tr><td><sub><b><code>GATE 4</code></b></sub></td><td><sub><b>Occult shock</b></sub></td><td><sub>Uses absolute and relative hemodynamic context rather than a single universal threshold.</sub></td></tr>
+<tr><td><sub><b><code>PATTERN V2</code></b></sub></td><td><sub><b>Extended emergency patterns</b></sub></td><td><sub>Architecture documentation records 70 patterns across 11 extended clinical gates.</sub></td></tr>
+<tr><td><sub><b><code>TRIAGE TREE</code></b></sub></td><td><sub><b>Referral decision</b></sub></td><td><sub>Emergency → urgent review → refer → insufficient → treat locally, with fail-closed ordering.</sub></td></tr>
+</table>
+
+The active deterministic triage/referral specification is [docs/clinical-rules.md](./docs/clinical-rules.md). It explicitly preserves clinician authority and does not reorder the diagnosis shown to clinicians without separate sign-off.
+
+---
+
+## 07 / CLINICAL INTELLIGENCE STACK
 
 ### Iskandar Diagnosis Engine
 
-| #   | Feature                                                           | Status  | Primary User |
-| --- | ----------------------------------------------------------------- | ------- | ------------ |
-| 7   | Red Flag Checker (sepsis, ACS, stroke, preeclampsia, anaphylaxis) | ✅ Live | Doctor       |
-| 8   | Symptom Matcher — 159-disease knowledge base                      | ✅ Live | Doctor       |
-| 9   | Epidemiology Weights — 45,030 Indonesian cases                    | ✅ Live | Doctor       |
-| 10  | Constrained LLM Reranker — OpenAI key in Settings + KB fallback   | ✅ Live | Doctor       |
-| 11  | Traffic Light + Presentation Safety                               | ✅ Live | Doctor       |
-| 12  | ICD-10 RAG Search                                                 | ✅ Live | Doctor       |
-| 13  | Diagnosis Confidence Meter                                        | ✅ Live | Doctor       |
-| 14  | Clinical Differential + Workbench Review Surface                  | ✅ Live | Doctor       |
-| 15  | Feature Flags — env-var-driven module gating                      | ✅ Live | System       |
-| 16  | Diagnosis V2 Shadow Mode (optional)                               | 🔲 Beta | Doctor       |
+The current capsule documents an eight-stage decision-support path:
 
-### Clinical Safety
+~~~mermaid
+%%{init: {"flowchart": {"htmlLabels": false, "padding": 18}, "themeVariables": {"fontFamily": "monospace", "fontSize": "10px"}}}%%
+flowchart TB
+  A["CLINICAL INPUT"]
+  B["01 · PII / PAYLOAD NORMALIZATION"]
+  C["02 · EMERGENCY + RED-FLAG CHECKS"]
+  D["03 · SYMPTOM MATCHER<br/>159-disease local KB"]
+  E["04 · EPIDEMIOLOGY WEIGHTS<br/>45,030 documented cases"]
+  F["05 · OPTIONAL RERANKER / KB FALLBACK"]
+  G["06 · TRAFFIC-LIGHT + PRESENTATION SAFETY"]
+  H["07 · ICD-10 + MEDICATION ENRICHMENT"]
+  I["08 · AUDIT / SHADOW COMPARISON"]
+  J["CLINICIAN REVIEW SURFACE"]
 
-| #   | Feature                                             | Status  | Primary User |
-| --- | --------------------------------------------------- | ------- | ------------ |
-| 17  | SYMPHONY Safety Bridge — trajectory → alert mapping | ✅ Live | Doctor       |
-| 18  | Patient Context Profile — age-band + consciousness  | ✅ Live | System       |
-| 19  | Anamnesa Composer — template-based draft generation | ✅ Live | Doctor       |
+  A --> B --> C --> D --> E --> F --> G --> H --> I --> J
 
-### Drug Safety
+  classDef critical fill:#0D1117,stroke:#F43F5E,color:#ffffff,stroke-width:2px;
+  classDef control fill:#0D1117,stroke:#14B8A6,color:#ffffff,stroke-width:2px;
+  classDef core fill:#0D1117,stroke:#5B8CFF,color:#ffffff,stroke-width:2px;
+  classDef agent fill:#0D1117,stroke:#8B5CF6,color:#ffffff,stroke-width:2px;
+  classDef authority fill:#0D1117,stroke:#F59E0B,color:#ffffff,stroke-width:2px;
 
-| #   | Feature                                           | Status  | Primary User |
-| --- | ------------------------------------------------- | ------- | ------------ |
-| 20  | DDI Checker — 173,071+ interactions (DDInter 2.0) | ✅ Live | Doctor       |
-| 21  | Pharmacotherapy Reasoner                          | ✅ Live | Doctor       |
-| 22  | Dosage Calculator — Pediatric + Geriatric         | ✅ Live | Doctor       |
-| 23  | Prescription Form Auto-fill (ResepForm)           | ✅ Live | Doctor       |
+  class C critical;
+  class B,G,I control;
+  class D,E,H core;
+  class F agent;
+  class A,J authority;
+~~~
 
-### Clinical Analytics
+The capsule rule is explicit: **the local clinical knowledge base wins; an LLM is a reranker only**. Optional remote/canonical engine paths may enrich the workbench, but they do not erase the local safety boundary.
 
-| #   | Feature                                        | Status  | Primary User  |
-| --- | ---------------------------------------------- | ------- | ------------- |
-| 24  | Clinical Trajectory Analyzer — 5-visit trend   | ✅ Live | Doctor        |
-| 25  | Mortality / deterioration proxy visualization  | ✅ Live | Doctor        |
-| 26  | Chronic Disease Classifier + context profiling | ✅ Live | Doctor        |
-| 27  | Vital Sign Screening Profiles (age-stratified) | ✅ Live | Doctor, Nurse |
+### Clinical data surfaces
 
-### DAS — Form Automation
-
-| #   | Feature                                   | Status  | Primary User  |
-| --- | ----------------------------------------- | ------- | ------------- |
-| 28  | DAS Scanner — adaptive field discovery    | ✅ Live | System        |
-| 29  | Local Semantic Mapper                     | ✅ Live | System        |
-| 30  | Confidence-Scored Field Mapping           | ✅ Live | System        |
-| 31  | Mapping Cache + Content-Script Self-Heal  | ✅ Live | System        |
-| 32  | Learning Store — per-facility persistence | ✅ Live | System        |
-| 33  | Anamnesa Page Auto-fill                   | ✅ Live | Doctor, Nurse |
-| 34  | Diagnosa Page Auto-fill                   | ✅ Live | Doctor        |
-| 35  | Resep Page Auto-fill                      | ✅ Live | Doctor        |
-
-### Integration & Security
-
-| #   | Feature                                               | Status  | Primary User |
-| --- | ----------------------------------------------------- | ------- | ------------ |
-| 36  | Dashboard Bridge — real-time polling                  | ✅ Live | System       |
-| 37  | RME Transfer Orchestrator + Intelligent Tab Targeting | ✅ Live | Doctor       |
-| 38  | Crew Dashboard Login — password, passkey, Mode Lokal  | ✅ Live | All          |
-| 39  | PII Guard + SHA-256 patient hashing                   | ✅ Live | System       |
-| 40  | Audit Trail + shadow logging                          | ✅ Live | System       |
+<table width="100%">
+<tr><td width="31%"><sub><b><code>public/data/penyakit.json</code></b></sub></td><td><sub>Primary disease knowledge base used by the diagnosis engine and deterministic triage/referral logic.</sub></td></tr>
+<tr><td><sub><b><code>epidemiology_weights_v2.json</code></b></sub></td><td><sub>Local epidemiology weighting surface documented against 45,030 Indonesian clinical cases.</sub></td></tr>
+<tr><td><sub><b>DDI data</b></sub></td><td><sub>Project documentation describes a 173,071+ interaction corpus used for drug-interaction checking.</sub></td></tr>
+<tr><td><sub><b>Drug stock</b></sub></td><td><sub>Local medication stock data is used to make prescription suggestions aware of availability.</sub></td></tr>
+</table>
 
 ---
 
-## Quickstart
+## 08 / DAS · DATA ASCENSION SYSTEM
 
-### Prerequisites
+DAS surfaces the active clinical context from ePuskesmas into the intelligence pipeline.
 
-| Requirement              | Version | Notes                                               |
-| ------------------------ | ------- | --------------------------------------------------- |
-| Node.js                  | 24.x    | `engines` in `package.json` (`>=24 <25`)            |
-| pnpm                     | 11.21.0 | Pinned; always run through `node scripts/pnpm.mjs`  |
-| Sentra Dashboard Account | —       | Required for auth, bridge polling, and patient sync |
-| Optional MedLens Harness | —       | Only for internal ECG dev/test flow                 |
+<details open>
+<summary><b><code>ACTIVE PAGE → SCAN → CLASSIFY → MAP → CACHE → NORMALIZE</code></b></summary>
 
-### Installation
+~~~mermaid
+sequenceDiagram
+    participant Page as ePuskesmas
+    participant CS as Content Script
+    participant Scan as Adaptive Scanner
+    participant Map as Local Mapper
+    participant Cache as Mapping Store
+    participant BG as Background
+    participant UI as Sidepanel
 
-```bash
-node scripts/pnpm.mjs install
-cp .env.example .env.local
-```
+    Page->>CS: active record / DOM
+    CS->>Scan: enumerate fields + page context
+    Scan->>Map: classify uncertain fields
+    Map-->>Scan: candidate mapping
+    Scan->>Cache: persist accepted mapping
+    Scan->>BG: normalized encounter context
+    BG-->>UI: clinical payload
+~~~
 
-### Environment Variables
+</details>
 
-```env
-VITE_SENTRA_API_URL=https://api.sentra.local
-VITE_SENTRA_API_KEY=sk_dev_your_api_key_here
-VITE_FACILITY_ID=PUSKESMAS_BALOWERTI
-VITE_USE_MOCK=true
-VITE_API_TIMEOUT=10000
-VITE_FEATURE_DIAGNOSIS_AI=true
-VITE_FEATURE_PRESCRIPTION_AI=true
-VITE_FEATURE_DDI_CHECK=true
-VITE_FEATURE_PEDIATRIC_DOSE=true
-SENTRA_DIAGNOSIS_V2_SHADOW=false
-SENTRA_OPENAI_MODEL=gpt-4o-mini
-SENTRA_OPENAI_TIMEOUT_MS=30000
-SENTRA_DISABLE_TRAJECTORY_BRIDGE=false
-SENTRA_DISABLE_THERAPY=false
-```
+<table width="100%">
+<tr><td width="27%"><sub><b>Anamnesa</b></sub></td><td><sub>Complaint context, TTV, physical-exam elements, pain-scale and related encounter data.</sub></td></tr>
+<tr><td><sub><b>Diagnosa</b></sub></td><td><sub>ICD-10 diagnosis context, case type and visit context.</sub></td></tr>
+<tr><td><sub><b>Resep</b></sub></td><td><sub>Medication, signa, dosage, duration and autocomplete-bound page state.</sub></td></tr>
+<tr><td><sub><b>Visit history</b></sub></td><td><sub>Longitudinal visit context retained for the active patient workflow; recent governance work moved retention to memory-only handling.</sub></td></tr>
+</table>
 
-> See [.env.example](.env.example) for the full set of debug and timeout flags. Never commit `.env.local` or any file containing credentials, API keys, or patient data.
+---
+
+## 09 / RME TRANSFER & FORM FILLING
+
+The transfer path is ordered and encounter-aware:
+
+<sub><code>ANAMNESA → DIAGNOSA → RESEP</code></sub>
+
+<table width="100%">
+<tr><td width="28%"><sub><b><code>TAB TARGETING</code></b></sub></td><td><sub>URL patterns, page signals and encounter identifiers are used to select the intended RME tab.</sub></td></tr>
+<tr><td><sub><b><code>PATIENT MATCH</code></b></sub></td><td><sub>Recent bridge hardening records patient-tab mismatch as an explicit failure rather than filling another patient's tab.</sub></td></tr>
+<tr><td><sub><b><code>AUTOCOMPLETE</code></b></sub></td><td><sub>Medication and signa filling follows the page's own suggestion flow so hidden IDs are populated correctly.</sub></td></tr>
+<tr><td><sub><b><code>SIGNA</code></b></sub></td><td><sub>Every riwayat signa form is read (<code>3x sehari</code> becomes <code>3x1</code>); half and decimal units a take are kept into the resep.</sub></td></tr>
+<tr><td><sub><b><code>PARTIAL SUCCESS</code></b></sub></td><td><sub>Out-of-stock medications may be reported without blocking unrelated medications; real failures retain their own retry reason.</sub></td></tr>
+<tr><td><sub><b><code>AUDIT</code></b></sub></td><td><sub>Transfer steps report state and result rather than silently writing into the record.</sub></td></tr>
+</table>
+
+> [!CAUTION]
+> Auto-fill is workflow assistance, not autonomous RME authorship. The clinician must remain able to inspect and confirm what is being entered.
+
+---
+
+## 10 / TRAJECTORY · STATS · REPORTING
+
+### Clinical Trajectory
+
+The project includes longitudinal vital-sign and visit-history visualization, deterioration cues, and a SYMPHONY bridge that converts high-severity trajectory findings into the alert surface.
+
+### STATS
+
+The current statistics surface reads the ePuskesmas daily service report in a hidden tab and keeps **identity-free columns** for local aggregation. Current documented views include daily volume, diagnosis ranking, DPJP, poli/ruangan, insurance, age group, and service-time breakdown.
+
+### Visit Summary PDF
+
+"Unduh PDF" on the RME Terapi step saves a one-page A4 summary drawn to Chief's approved <i>Clinical Visit Summary</i> template:
+
+<table width="100%">
+<tr><td width="31%"><sub><b>Identity posture</b></sub></td><td><sub>No patient name; report is scoped to the active RM and visit context.</sub></td></tr>
+<tr><td><sub><b>Clinical content</b></sub></td><td><sub>Ten numbered blocks: complaint and key findings, vitals and triage, allergy, diagnosis (ICD), medications, education, follow-up, vital trend against the last visit, return-if signs, verification.</sub></td></tr>
+<tr><td><sub><b>Verification</b></sub></td><td><sub>DPJP follows the signed-in user and the form. The verifier is dr. Ferdi Iskandar; when he is the DPJP, the verifier is dr. Dibya Arfianda, Sp.OG or dr. Boyong Baskoro, Sp.OG, alternating by RM and day.</sub></td></tr>
+<tr><td><sub><b>Rendering</b></sub></td><td><sub>pdf-lib + fontkit, IBM Plex Sans Bold embedded as a subset (the template's weight), the Sentra logomark in the title block; a long prescription continues on a second page.</sub></td></tr>
+</table>
+
+---
+
+## 11 / HUMAN AUTHORITY · SAFETY · PRIVACY
+
+<table width="100%">
+<tr>
+<td width="50%" valign="top">
+<sub>
+<b><code>THE SYSTEM MAY</code></b><br /><br />
+Read governed page context.<br />
+Run deterministic safety logic.<br />
+Rank and present differential suggestions.<br />
+Check medication interactions and availability.<br />
+Draft and transfer bounded RME fields.<br />
+Show longitudinal trends and operational statistics.
+</sub>
+</td>
+<td width="50%" valign="top">
+<sub>
+<b><code>THE SYSTEM MAY NOT</code></b><br /><br />
+Replace clinician judgment.<br />
+Silently invent missing clinical facts.<br />
+Write to another patient's encounter.<br />
+Treat model output as higher authority than clinical safety rules.<br />
+Commit patient data, production credentials, or secrets into source control.<br />
+Modify protected R3 logic without required approval.
+</sub>
+</td>
+</tr>
+</table>
+
+### Privacy and security posture
+
+<table width="100%">
+<tr><td width="29%"><sub><b><code>REPOSITORY</code></b></sub></td><td><sub>Private GitHub repository.</sub></td></tr>
+<tr><td><sub><b><code>PII / PHI</code></b></sub></td><td><sub>Project rules prohibit patient data in fixtures, tests, commits, and source-controlled secrets.</sub></td></tr>
+<tr><td><sub><b><code>WEB ACCESS</code></b></sub></td><td><sub>Current WXT configuration restricts web-accessible extension resources to ePuskesmas pages.</sub></td></tr>
+<tr><td><sub><b><code>REINJECTION</code></b></sub></td><td><sub>Recent audit hardening restricts reinjection to ePuskesmas tabs.</sub></td></tr>
+<tr><td><sub><b><code>IDENTITY SYNC</code></b></sub></td><td><sub>Recent governance work masks patient identity sent to the crew portal rather than forwarding the full name.</sub></td></tr>
+<tr><td><sub><b><code>SECRETS</code></b></sub></td><td><sub><code>.env.local</code>, API keys, production credentials and patient data must never be committed.</sub></td></tr>
+</table>
+
+---
+
+## 12 / BUILD & VERIFICATION
+
+### Runtime contract
+
+<table width="100%">
+<tr><td width="28%"><sub><b>Node.js</b></sub></td><td><sub><b>24.x</b> · package engine <code>&gt;=24 &lt;25</code>.</sub></td></tr>
+<tr><td><sub><b>Package manager</b></sub></td><td><sub><b>pnpm 11.21.0</b> through <code>node scripts/pnpm.mjs</code>.</sub></td></tr>
+<tr><td><sub><b>Extension framework</b></sub></td><td><sub><b>WXT 0.20.x</b> · Manifest V3.</sub></td></tr>
+<tr><td><sub><b>UI</b></sub></td><td><sub>React 18 · TypeScript · Sentra design-token constrained sidepanel.</sub></td></tr>
+<tr><td><sub><b>Primary output</b></sub></td><td><sub><code>.output/chrome-mv3-dev/manifest.json</code>.</sub></td></tr>
+</table>
+
+### Install
+
+~~~bash
+node scripts/pnpm.mjs install --frozen-lockfile
+~~~
 
 ### Development
 
-```bash
-# Chrome (hot reload)
+~~~bash
 node scripts/pnpm.mjs run dev
-
-# Firefox
 node scripts/pnpm.mjs run dev:firefox
-```
+~~~
 
-Load unpacked:
+### Required engineering checks
 
-- **Chrome:** `chrome://extensions` → Enable Developer Mode → Load Unpacked → `.output/chrome-mv3-dev/`
-- **Firefox:** `about:debugging` → Load Temporary Add-on → `.output/chrome-mv3-dev/manifest.json`
-
-Every build, Firefox and production included, writes to the one `.output/chrome-mv3-dev/` folder
-(`outDirTemplate` in `wxt.config.ts`).
-
-### Production Build
-
-```bash
-node scripts/pnpm.mjs run build          # Chrome MV3
-node scripts/pnpm.mjs run zip            # Chrome Web Store ZIP
-node scripts/pnpm.mjs run build:firefox  # Firefox build
-```
-
-## Running From the Monorepo
-
-This capsule is standalone: the root `pnpm-workspace.yaml` excludes `projects/healthcare/**`,
-so `pnpm --filter` from the root does not reach it. Run every command from the capsule folder:
-
-```bash
-cd projects/healthcare/med-assist
+~~~bash
 node scripts/pnpm.mjs run typecheck
+node scripts/pnpm.mjs run lint
 node scripts/pnpm.mjs run test
-node scripts/pnpm.mjs run quality
-```
-
----
-
-## Detailed Features
-
-### 1. TTV Inference — Gate 1
-
-Infers unmeasured vital signs (pulse, respiratory rate, temperature ranges) from patient complaints using evidence-based pattern matching. The form is pre-filled before the doctor opens the encounter, reducing documentation time and ensuring vital sign completeness.
-
-**Flow:**
-
-```mermaid
-flowchart LR
-    A[Patient complaint text] --> B[TTV Inference Engine]
-    B --> C{Vitals present?}
-    C -- Missing --> D[Infer from complaint patterns]
-    C -- Present --> E[Validate against age thresholds]
-    D --> E
-    E --> F[Pre-fill vital sign fields]
-    F --> G[Flag anomalies for Gate 2-4]
-```
-
----
-
-### 2. Hypertension Crisis Triage — Gate 2
-
-Classifies 8 HTN types per FKTP 2024 guidelines, detects Hypertensive Mediated Organ Damage (HMOD) red flags, and guides the Captopril SL protocol when HTN Emergency is confirmed.
-
-**Classification Matrix:**
-
-| Type           | Criteria                          | Action                            |
-| -------------- | --------------------------------- | --------------------------------- |
-| HTN Urgency    | SBP ≥180, no organ damage         | Oral antihypertensive, 1h recheck |
-| HTN Emergency  | SBP ≥180 + organ damage signs     | Captopril SL, immediate referral  |
-| Resistant HTN  | BP uncontrolled on 3+ drugs       | Specialist referral               |
-| White-coat HTN | High in-clinic, normal ambulatory | Ambulatory monitoring             |
-| Masked HTN     | Normal in-clinic, high ambulatory | 24h monitoring                    |
-
----
-
-### 3. Glucose Crisis Management — Gate 3
-
-Screens glucose values (GDS, GDP, 2JTTGO, HbA1c) against PERKENI 2024 thresholds. Identifies DKA/HHS red flags and activates the 15-15 interactive timer for active hypoglycemia management.
-
-**API (internal):**
-
-```typescript
-glucoseClassifier.classify({
-  gds: 42, // mg/dL
-  symptoms: ['tremor', 'sweating', 'confusion'],
-  weight: 65,
-});
-// → { crisis: 'HYPOGLYCEMIA', rule: '15-15', activateTimer: true }
-```
-
----
-
-### 4. Iskandar Diagnosis Engine — 8-Step Pipeline
-
-The current repo runs a hybrid decision-support path: the extension executes deterministic and KB-backed reasoning locally, while authenticated Dashboard bridge endpoints can enrich the workbench with canonical clinical engine and differential outputs. No AI-assisted suggestion is meant to bypass the safety layers.
-
-```mermaid
-flowchart TD
-    A[Clinical Input] --> B[1. PII Guard / payload normalization]
-    B --> C[2. Emergency gates + red flag checker]
-    C --> D{Critical flag?}
-    D -- Yes --> E[Immediate alert / referral cue]
-    D -- No --> F[3. Symptom Matcher — 159 diseases]
-    F --> G[4. Epidemiology Weights — 45,030 cases]
-    G --> H[5. Constrained LLM reranker / KB fallback]
-    H --> I[6. Traffic Light + presentation safety]
-    I --> J[7. ICD-10 hydration + medication enrichment]
-    J --> K[8. Audit logger + shadow comparison]
-    K --> L[Suggestions and workbench payload delivered to UI]
-```
-
-When bridge auth is available, the workbench can also call canonical Dashboard endpoints for clinical engine evaluation, differential review, and anamnesis extraction.
-
----
-
-### 5. DAS — Data Ascension System
-
-DAS surfaces clinical data from the active ePuskesmas session into the intelligence pipeline. Instead of relying only on brittle fixed selectors, DAS combines adaptive page scanning, a local semantic mapper, mapping caches, and host-page bridge helpers when ePuskesmas requires main-world execution.
-
-```mermaid
-sequenceDiagram
-    participant Page as ePuskesmas Page
-    participant Scanner as DAS Scanner
-    participant Classifier as Field Classifier
-    participant Mapper as Local Semantic Mapper
-    participant Store as Learning Store
-    participant Engine as Iskandar Engine
-
-    Page->>Scanner: Page load event
-    Scanner->>Classifier: Enumerate all inputs
-    Classifier->>Classifier: Score against clinical schema
-    alt Confidence >= 0.85
-        Classifier->>Store: Confirm and cache mapping
-    else Confidence < 0.85
-        Classifier->>Mapper: Run local heuristic / semantic match
-        Mapper-->>Classifier: Candidate field mappings
-        Classifier->>Store: Save learned mapping
-    end
-    Store->>Engine: Deliver normalized clinical payload
-    Engine->>Page: Trigger auto-fill
-```
-
-**Auto-fill coverage:**
-
-| Page     | Fields                                                                                              |
-| -------- | --------------------------------------------------------------------------------------------------- |
-| Anamnesa | Keluhan utama, keluhan tambahan, duration, TTV fields, physical exam checkboxes, skala nyeri slider |
-| Diagnosa | ICD-10 primary + secondary, jenis kasus, kunjungan type                                             |
-| Resep    | Medication name, dosage, aturan pakai, duration, signa (with autocomplete)                          |
-
----
-
-### 6. RME Transfer Orchestrator
-
-Manages multi-step referral data transfer to ePuskesmas: anamnesa → diagnosa → resep, with per-step retry logic, deduplication, and Dashboard bridge synchronization.
-
-```mermaid
-sequenceDiagram
-    actor Doctor
-    participant Sidepanel
-    participant Orchestrator as Transfer Orchestrator
-    participant Bridge as Dashboard Bridge
-    participant ePuskesmas
-
-    Doctor->>Sidepanel: Confirm referral data
-    Sidepanel->>Orchestrator: initiateTransfer(payload)
-    Orchestrator->>Bridge: Register transfer request
-    Bridge-->>Orchestrator: ack + transfer_id
-    Orchestrator->>ePuskesmas: Fill anamnesa page
-    Orchestrator->>ePuskesmas: Fill diagnosa page
-    Orchestrator->>ePuskesmas: Fill resep page
-    ePuskesmas-->>Orchestrator: Submit confirmation
-    Orchestrator->>Bridge: POST /api/bridge/complete
-    Bridge-->>Sidepanel: Transfer complete
-```
-
-**Tab Targeting:** `lib/rme/transfer-targeting.ts` uses URL patterns, DOM hints, and encounter ID matching to intelligently select the correct RME tab for each transfer step.
-
----
-
-### 7. SYMPHONY Safety Bridge
-
-Bridges trajectory analysis results into the CDSS alert system. When trajectory analysis produces `high` or `critical` severity flags, SYMPHONY converts them into `CDSSAlert[]` objects that appear in the Emergency Dashboard.
-
-```mermaid
-flowchart LR
-    TRAJ["HybridTrajectoryResult"] --> EXTRACT["extractSafetyAlertsFromTrajectory()"]
-    EXTRACT --> CRITICAL{severity == critical?}
-    CRITICAL -- Yes --> RED["type: red_flag, severity: emergency"]
-    CRITICAL -- No --> HIGH{severity == high?}
-    HIGH -- Yes --> VITAL["type: vital_sign, severity: high"]
-    HIGH -- No --> SKIP["[] (no alert)"]
-    RED --> MERGE["Merge into ScreeningAlert[]"]
-    VITAL --> MERGE
-```
-
-**Config:** Controlled by `SENTRA_DISABLE_TRAJECTORY_BRIDGE` env var.
-
----
-
-### 8. Vital Guardrails
-
-822-line validation module that enforces clinical safety constraints on vital sign input before it reaches the engine stack.
-
-| Feature             | Description                                                                    |
-| ------------------- | ------------------------------------------------------------------------------ |
-| **Normalizer**      | Converts commas to dots, auto-corrects 3-digit temps (250-450 → ÷10)           |
-| **Hard Stops**      | Blocks input that is clinically invalid (e.g., SBP < 60, SpO2 < 50)            |
-| **Soft Flags**      | Warns on marginal values (e.g., SBP 90-100, HR 100-120)                        |
-| **Code Red Cues**   | Detects critical symptom phrases: nyeri dada, tidak sadar, kejang, sesak berat |
-| **UI Locks**        | Context-aware field locking based on patient profile                           |
-| **Patient Context** | Different behavior for infant, child, geriatric, reproductive female           |
-
-**Config:** No env var needed — always active when imported.
-
----
-
-### 9. Feature Flags
-
-All optional modules are gated by `SENTRA_*` environment variables. Default: KB-only, no LLM dependency.
-
-| Flag                               | Default       | Effect                       |
-| ---------------------------------- | ------------- | ---------------------------- |
-| `SENTRA_OPENAI_MODEL`              | `gpt-4o-mini` | Model for LLM reasoning      |
-| `SENTRA_OPENAI_TIMEOUT_MS`         | `12000`       | LLM timeout in milliseconds  |
-| `SENTRA_DISABLE_TRAJECTORY_BRIDGE` | `false`       | Disables SYMPHONY bridge     |
-| `SENTRA_DISABLE_THERAPY`           | `false`       | Disables therapy module      |
-| `SENTRA_DIAGNOSIS_V2_SHADOW`       | `false`       | Enables V2 shadow evaluation |
-
-The OpenAI key is not an environment variable: the physician enters it in Settings and it stays in
-`browser.storage.local` on that PC (`lib/iskandar-diagnosis-engine/openai-key-store.ts`).
-
-**Safety:** `fallbackToKBOnly` is always `true`. If LLM is unavailable, diagnosis falls back to deterministic KB mode.
-
----
-
-## Architecture
-
-### Extension Layers
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│      Sidepanel UI (React + CSS/Tailwind utilities)          │
-│ DashboardView · TTVInferenceUI · Workbench · MedLens        │
-└──────────────────────────┬──────────────────────────────────┘
-                           │
-┌──────────────────────────▼──────────────────────────────────┐
-│              Background Script (WXT MV3)                    │
-│ Bridge polling · Auth/session · CDSS orchestration          │
-└──────────┬────────────────┬───────────────┬─────────────────┘
-           │                │               │
-┌──────────▼─────────┐  ┌─────────▼──────────┐  ┌────▼──────────────────────┐
-│ Dashboard / Crew   │  │ OpenAI API         │  │ Content + Main-World      │
-│ Auth + Bridge +    │  │ (optional ranking) │  │ Bridge: scrape + auto-fill│
-│ canonical engines  │  │                    │  │ for ePuskesmas            │
-└────────────────────┘  └────────────────────┘  └───────────────────────────┘
-```
-
-### Project Structure
-
-```
-med-assist/
-├── entrypoints/
-│   ├── sidepanel/                 ← Main Assist UI + UI authority tests
-│   │   ├── main.tsx               ← App shell entry
-│   │   └── ApprovedSentraAssistApp.tsx ← Panel wiring
-│   ├── login/                     ← Login/dashboard launcher entrypoint
-│   ├── clinical-trajectory-preview/ ← Preview surface for trajectory UI
-│   ├── background.ts              ← Messaging, auth, bridge, orchestration
-│   ├── content.ts                 ← ePuskesmas DOM bridge + DAS runtime
-│   └── inject.content.ts          ← Main-world helper injection entry
-├── components/
-│   ├── clinical/                  ← TTV, trajectory V2, MedLens, settings, tests
-│   │   ├── TTVInferenceUI.tsx     ← Vital signs + triage (3300+ lines)
-│   │   ├── OperationalSettingsConsole.tsx ← Settings UI
-│   │   └── ClinicalTrajectory.tsx ← Trajectory dashboard
-│   ├── sidepanel/                 ← Dashboard, header/footer, workbench, credits
-│   ├── providers/                 ← ThemeProvider
-│   └── ui/                        ← Shared presentation utilities
-├── lib/
-│   ├── iskandar-diagnosis-engine/ ← Diagnosis, trajectory, safety, workflow
-│   │   ├── feature-flags.ts       ← SENTRA_* env var config
-│   │   ├── trajectory-safety-bridge.ts ← SYMPHONY safety alerts
-│   │   ├── llm-reasoner.ts        ← Constrained OpenAI reranker
-│   │   └── diagnosis-v2.ts        ← Shadow differential ranking
-│   ├── emergency-detector/        ← TTV, HTN, glucose, occult shock gates
-│   ├── api/                       ← Auth, bridge, audit clients
-│   │   ├── auth-client.ts         ← Crew login, passkey, Mode Lokal
-│   │   └── bridge-client.ts       ← Dashboard bridge
-│   ├── clinical/                  ← Vital guardrails, patient context, anamnesa
-│   │   ├── vital-guardrails.ts    ← 822-line vital validation
-│   │   ├── patient-context-profile.ts ← Age-band + consciousness
-│   │   └── anamnesa-composer.ts   ← Anamnesa draft composer
-│   ├── scraper/
-│   │   └── adaptive/              ← DAS local mapper, caches, safety validator
-│   ├── rag/                       ← ICD-10 search/load pipeline
-│   ├── handlers/                  ← Page fill/scrape handlers
-│   ├── rme/                       ← Transfer targeting, payload/prognosis mapping
-│   └── filler/                    ← Content/main-world fill core
-├── services/
-│   └── medlens-local/             ← Internal ECG OCR/analyzer harness for dev/test
-├── utils/                         ← Audio, logger, messaging, storage, types
-├── data/                          ← DDI, field mappings, anamnesa templates
-├── public/                        ← Extension assets and static JSON datasets
-├── scripts/                       ← Docs/data/dev utilities
-├── tests/                         ← Runtime, e2e, and local harness tests
-└── types/                         ← Shared API and runtime types
-```
-
----
-
-## Testing and Quality Gates
-
-### Running Tests
-
-```bash
-node scripts/pnpm.mjs run test          # Vitest suite
-node scripts/pnpm.mjs run test:contract # Bridge API contract checks
-node scripts/pnpm.mjs run test:e2e      # Playwright, on the installed Google Chrome
-node scripts/pnpm.mjs run typecheck     # tsc --noEmit
-node scripts/pnpm.mjs run lint          # ESLint
-```
-
-### Required Before Merge
-
-Minimum gates before merge:
-
-```
-✅ node scripts/pnpm.mjs run typecheck
-✅ node scripts/pnpm.mjs run lint
-✅ node scripts/pnpm.mjs run test
-✅ node scripts/pnpm.mjs run test:contract (when auth / bridge contracts change)
-```
-
----
-
-## Deployment
-
-### Chrome Web Store
-
-```bash
+node scripts/pnpm.mjs run test:contract
 node scripts/pnpm.mjs run build
-node scripts/pnpm.mjs run zip
-# Upload ZIP to Chrome Web Store Developer Dashboard
-```
+node scripts/pnpm.mjs run run:check
+node scripts/pnpm.mjs run test:e2e
+~~~
 
-### Firefox Add-ons
+### Latest documented verification snapshot
 
-```bash
-node scripts/pnpm.mjs run build:firefox
-node scripts/pnpm.mjs run zip:firefox
-# Upload to Firefox Add-on Developer Hub
-```
+<sub><code>2026-10-04 · RE-RUN WITH THIS README EDIT</code></sub>
 
----
-
-## Troubleshooting
-
-| Issue                             | Solution                                                                                                                |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Extension not loading             | Enable Developer Mode at `chrome://extensions/`, load unpacked from `.output/chrome-mv3-dev/`                           |
-| Install fails                     | Verify Node.js 24 via `node -v`; install with `node scripts/pnpm.mjs install`, never plain `npm install`                |
-| Dashboard / Bridge auth errors    | Check Crew/Dashboard base URL in Settings, valid login session, or automation token                                     |
-| Sidepanel shows "Login required"  | Check Dashboard base URL in Settings — an empty base URL means Mode Lokal (device-local login)                          |
-| Form not auto-filling             | DAS may need a re-scan or content reinjection — click **Inisialisasi** in the header                                    |
-| Word / char limit error on submit | ePuskesmas rejects oversize keluhan — Sentra caps at **220 words** and **250 characters** (SSOT: `lib/rme/truncate.ts`) |
-| MedLens local unavailable         | The local ECG harness is internal-only; start `node services/medlens-local/server.mjs` only for dev/test                |
-| TypeScript errors                 | Run `node scripts/pnpm.mjs run typecheck` for full output                                                               |
-| LLM reasoning not working         | Check an OpenAI key is entered in Settings; without it, the system falls back to KB-only deterministic mode             |
-| SYMPHONY alerts not appearing     | Check `SENTRA_DISABLE_TRAJECTORY_BRIDGE=false`; ensure trajectory analysis has `high`/`critical` severity               |
-| Vital guardrails not blocking     | Verify `vital-guardrails.ts` is imported in TTVInferenceUI; check field values are within hard-stop ranges              |
+<table width="100%">
+<tr><td width="30%"><sub><b>Build</b></sub></td><td><sub><b>PASS</b> · exit 0.</sub></td></tr>
+<tr><td><sub><b>Typecheck</b></sub></td><td><sub><b>PASS</b> · exit 0.</sub></td></tr>
+<tr><td><sub><b>Vitest</b></sub></td><td><sub><b>PASS</b> · 198 files · <b>1699 passed</b> · 17 skipped. Fewer than 2026-10-03 because tests of archived, unreachable code moved out with it.</sub></td></tr>
+<tr><td><sub><b>ESLint on source</b></sub></td><td><sub><b>PASS</b> · <code>components lib entrypoints utils types</code> exit 0.</sub></td></tr>
+<tr><td><sub><b>Full lint</b></sub></td><td><sub><b>KNOWN FAILURE</b> · four <code>no-console</code> errors in <code>tests/e2e/zz-verify-kb-rx.spec.ts</code>, an uncommitted file of another session.</sub></td></tr>
+<tr><td><sub><b>Run check</b></sub></td><td><sub><b>PASS</b> · extension reference check exit 0.</sub></td></tr>
+<tr><td><sub><b>E2E</b></sub></td><td><sub><b>PASS</b> · 21 passed (Playwright, installed Chrome).</sub></td></tr>
+</table>
 
 ---
 
-## License
+## 13 / OPERATING STANDARD
 
-Med Assist is dual-licensed. See [LICENSE](LICENSE) for full terms.
-
-| Use Case                                    | License                     |
-| ------------------------------------------- | --------------------------- |
-| Individual clinician / researcher / student | Free — Apache 2.0           |
-| Puskesmas / clinic / hospital deployment    | Enterprise license required |
-| Vendor / integrator / government program    | Enterprise license required |
-
-Commercial licensing: [sentrahai.com](https://sentrahai.com)
-
----
-
-## 🤖 Self-Healing CI
-
-This repo currently ships local repair commands for formatting and minor lint drift.
-If CI or local verification fails due to style-level issues:
-
-1. Run `node scripts/pnpm.mjs run format`.
-2. Run `node scripts/pnpm.mjs run lint:fix`.
-3. Re-run `node scripts/pnpm.mjs run lint` and `node scripts/pnpm.mjs run test`.
-4. Review the diff before committing or opening a PR.
+1. **Clinical logic stays reviewable.** R3 changes require explicit approval.
+2. **The local KB is the clinical source of truth.** Model output is subordinate.
+3. **Missing input is not permission to guess.**
+4. **Emergency signals outrank workflow convenience.**
+5. **A fill operation must target the correct encounter.**
+6. **Out-of-stock is a clinical-operational state, not a generic retry error.**
+7. **Visit history is patient-scoped and current-session oriented.**
+8. **UI authority is preserved.** Protected sidepanel files are not refactored without written approval.
+9. **Every release path is capsule-local.** No hidden monorepo dependency.
+10. **Verification is evidence, not decoration.** A passing test suite does not erase a known lint, live-integration, or governance gap.
+11. **Secrets and patient data stay out of Git.**
+12. **Automation remains visible to the clinician.**
 
 ---
 
-<div align="center">
+## 14 / PROJECT STRUCTURE
 
-Designed and built by **[Drferdi](https://github.com/drferdi)** (dr. Ferdi Iskandar)
-Maintained by **Sentra Artificial Intelligence**
+<table width="100%">
+<tr><td width="31%"><sub><b><code>entrypoints/</code></b></sub></td><td><sub>Sidepanel, background service worker, login, content scripts and main-world helper entrypoints.</sub></td></tr>
+<tr><td><sub><b><code>components/clinical/</code></b></sub></td><td><sub>TTV, trajectory, MedLens, settings and clinician-facing clinical components.</sub></td></tr>
+<tr><td><sub><b><code>components/sidepanel/</code></b></sub></td><td><sub>Dashboard, header/footer, workbench and sidepanel presentation components.</sub></td></tr>
+<tr><td><sub><b><code>lib/iskandar-diagnosis-engine/</code></b></sub></td><td><sub>Diagnosis, red-flag, trajectory-safety, workflow and optional reranking logic.</sub></td></tr>
+<tr><td><sub><b><code>lib/emergency-detector/</code></b></sub></td><td><sub>TTV, hypertension, glucose, shock and emergency-detection layers.</sub></td></tr>
+<tr><td><sub><b><code>lib/clinical/</code></b></sub></td><td><sub>Guardrails, patient context, anamnesis composition, staff resolution and clinical helpers.</sub></td></tr>
+<tr><td><sub><b><code>lib/rme/</code></b></sub></td><td><sub>Transfer orchestration, targeting, mapping, truncation and RME workflow support.</sub></td></tr>
+<tr><td><sub><b><code>lib/scraper/</code></b></sub></td><td><sub>DAS adaptive scanner, mapper, caches and extraction safety.</sub></td></tr>
+<tr><td><sub><b><code>lib/api/</code></b></sub></td><td><sub>Auth, bridge, audit and Sentra service clients.</sub></td></tr>
+<tr><td><sub><b><code>public/data/</code></b></sub></td><td><sub>Clinical knowledge, epidemiology, medication stock and other static data surfaces.</sub></td></tr>
+<tr><td><sub><b><code>services/medlens-local/</code></b></sub></td><td><sub>Internal ECG OCR/analyzer development harness.</sub></td></tr>
+<tr><td><sub><b><code>tests/</code></b></sub></td><td><sub>Runtime and end-to-end verification surfaces; repository tree currently contains more than 200 test/spec paths.</sub></td></tr>
+</table>
 
-</div>
+---
 
-<!-- Test autofix: Thu Apr 16 12:50:45 SEAST 2026 -->
+## 15 / SOURCE-OF-TRUTH MAP
+
+<table width="100%">
+<tr><td width="34%"><sub><b>Capsule authority</b></sub></td><td><sub><a href="./AGENTS.md"><code>AGENTS.md</code></a> · risk, ownership, lifecycle and protected clinical areas.</sub></td></tr>
+<tr><td><sub><b>Project contract</b></sub></td><td><sub><a href="./project.contract.json"><code>project.contract.json</code></a> · runtime, package manager, commands, artifacts and external dependencies.</sub></td></tr>
+<tr><td><sub><b>Current work state</b></sub></td><td><sub><a href="./.agents/HANDOFF.md"><code>.agents/HANDOFF.md</code></a> · latest operational state, verification and open items.</sub></td></tr>
+<tr><td><sub><b>Durable decisions</b></sub></td><td><sub><a href="./.agents/DECISIONS.md"><code>.agents/DECISIONS.md</code></a> · accepted project decisions.</sub></td></tr>
+<tr><td><sub><b>System architecture</b></sub></td><td><sub><a href="./docs/architecture.md"><code>docs/architecture.md</code></a> · canonical architecture; ADRs in <a href="./docs/adr/readme.md"><code>docs/adr/</code></a>.</sub></td></tr>
+<tr><td><sub><b>Clinical rules</b></sub></td><td><sub><a href="./docs/clinical-rules.md"><code>docs/clinical-rules.md</code></a> · deterministic triage/referral SSOT.</sub></td></tr>
+<tr><td><sub><b>Testing</b></sub></td><td><sub><a href="./docs/testing.md"><code>docs/testing.md</code></a> · test and verification commands.</sub></td></tr>
+<tr><td><sub><b>Data reference</b></sub></td><td><sub><a href="./docs/data.md"><code>docs/data.md</code></a> · data surfaces and project data notes.</sub></td></tr>
+<tr><td><sub><b>UI authority</b></sub></td><td><sub><a href="./entrypoints/sidepanel/AGENTS.md">Sidepanel UI Authority</a> · protected design and refactor freeze.</sub></td></tr>
+<tr><td><sub><b>Repository standards</b></sub></td><td><sub><a href="./LICENSE"><code>LICENSE</code></a> · <a href="./CHANGELOG.md"><code>CHANGELOG.md</code></a> · <a href="./CONTRIBUTING.md"><code>CONTRIBUTING.md</code></a> · <a href="./SECURITY.md"><code>SECURITY.md</code></a> · <a href="./CODE_OF_CONDUCT.md"><code>CODE_OF_CONDUCT.md</code></a>.</sub></td></tr>
+</table>
+
+---
+
+## 16 / KNOWN OPEN WORK
+
+The README should not hide current project limitations.
+
+<table width="100%">
+<tr><td width="10%"><sub><b>01</b></sub></td><td width="31%"><sub><b>Full lint</b></sub></td><td><sub>Latest handoff still records a full-lint failure in <code>zz-verify-kb-rx.spec.ts</code>.</sub></td></tr>
+<tr><td><sub><b>02</b></sub></td><td><sub><b>KB prescription DDI path</b></sub></td><td><sub>Latest handoff records an open prescription path that does not yet call DDI and can fall back to a small mock set when its table throws.</sub></td></tr>
+<tr><td><sub><b>03</b></sub></td><td><sub><b>MIRA token design</b></sub></td><td><sub>A safer per-session token design remains open because simply gating the current dev token would stop the production MIRA path.</sub></td></tr>
+<tr><td><sub><b>04</b></sub></td><td><sub><b>Dependency prune</b></sub></td><td><sub>Deferred because it changes the lockfile and some tests mock <code>react-apexcharts</code>.</sub></td></tr>
+<tr><td><sub><b>05</b></sub></td><td><sub><b>MedLens test typing</b></sub></td><td><sub>Known <code>any</code> suppressions remain in MedLens tests.</sub></td></tr>
+<tr><td><sub><b>06</b></sub></td><td><sub><b>Live ePuskesmas fill</b></sub></td><td><sub>A complete live fill of every step on Chief's actual form is still recorded as pending.</sub></td></tr>
+<tr><td><sub><b>07</b></sub></td><td><sub><b>Chronic quantity rule</b></sub></td><td><sub>Current mapper behavior can produce a 10-unit quantity where a 30-day PRB-style quantity may be desired; decision remains open.</sub></td></tr>
+<tr><td><sub><b>08</b></sub></td><td><sub><b>Standard-start references</b></sub></td><td><sub>Vitamin B complex, thiamine, zinc, iron supplement, nystatin and griseofulvin have no standard-start rule yet; they need references.</sub></td></tr>
+<tr><td><sub><b>09</b></sub></td><td><sub><b>Dependabot</b></sub></td><td><sub>GitHub reports two high-severity dependency alerts on this repository; not yet reviewed.</sub></td></tr>
+</table>
+
+---
+
+## 17 / LICENSE & GOVERNANCE NOTE
+
+<code>package.json</code> says <code>SEE LICENSE IN LICENSE</code>, and the root <a href="./LICENSE"><code>LICENSE</code></a> now states the terms: proprietary, all rights reserved by dr. Ferdi Iskandar, with a clinical decision-support disclaimer. The previous README's Community / Enterprise licensing table is not repeated here.
+
+> [!NOTE]
+> Any other distribution or commercial-use terms are Chief's decision and belong in <code>LICENSE</code>, not in this README.
+
+---
+
+## 18 / ACTIVE STACK
+
+<table width="100%">
+<tr>
+<td width="50%" valign="top">
+<sub>
+<b><code>WXT + WEBEXTENSION</code></b><br /><br />
+WXT 0.20.x · Chrome Manifest V3 · Firefox build path · sidePanel · storage · scripting · alarms · offscreen · nativeMessaging.
+</sub>
+</td>
+<td width="50%" valign="top">
+<sub>
+<b><code>REACT + TYPESCRIPT</code></b><br /><br />
+React 18 · React DOM 18 · TypeScript 5.8 · strict typecheck path · clinician-facing sidepanel surfaces.
+</sub>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<sub>
+<b><code>TESTING</code></b><br /><br />
+Vitest 4 · Playwright · Testing Library · contract tests · runtime checks · local harnesses.
+</sub>
+</td>
+<td valign="top">
+<sub>
+<b><code>VISUALIZATION</code></b><br /><br />
+Recharts · ApexCharts · Framer Motion · trajectory, TTV and statistics visual surfaces.
+</sub>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<sub>
+<b><code>DOCUMENT / VISION</code></b><br /><br />
+pdf-lib · fontkit · IBM Plex Sans · Tesseract.js · internal MedLens OCR/analyzer harness.
+</sub>
+</td>
+<td valign="top">
+<sub>
+<b><code>STATE + MESSAGING</code></b><br /><br />
+Zustand · WebExtension messaging · WXT storage · browser local/session state.
+</sub>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<sub>
+<b><code>CLINICAL DATA</code></b><br /><br />
+Local disease KB · epidemiology weights · medication stock · DDI corpus · ICD-10/RAG support.
+</sub>
+</td>
+<td valign="top">
+<sub>
+<b><code>EXTERNAL SERVICES</code></b><br /><br />
+ePuskesmas · Sentra / Crew endpoints · optional configured model services. Availability is not inferred from static configuration.
+</sub>
+</td>
+</tr>
+</table>
+
+---
+
+## 19 / TROUBLESHOOTING
+
+<table width="100%">
+<tr><td width="33%"><sub><b>Extension does not load</b></sub></td><td><sub>Enable Developer Mode and load <code>.output/chrome-mv3-dev/</code> after a successful build.</sub></td></tr>
+<tr><td><sub><b>Install fails</b></sub></td><td><sub>Confirm Node 24 and use <code>node scripts/pnpm.mjs install --frozen-lockfile</code>, not plain npm.</sub></td></tr>
+<tr><td><sub><b>Auth / bridge failure</b></sub></td><td><sub>Check configured Crew/Dashboard base URL, session state and required auth path.</sub></td></tr>
+<tr><td><sub><b>Mode Lokal expected</b></sub></td><td><sub>An empty Dashboard base URL is the documented device-local path.</sub></td></tr>
+<tr><td><sub><b>Page not filling</b></sub></td><td><sub>Confirm the intended ePuskesmas tab is active and matched; reinjection is intentionally limited to ePuskesmas.</sub></td></tr>
+<tr><td><sub><b>Medication not added</b></sub></td><td><sub>The page autocomplete must resolve both medication and signa so hidden IDs are populated.</sub></td></tr>
+<tr><td><sub><b>Out of stock</b></sub></td><td><sub>The transfer layer may continue other medications and report the unavailable item rather than retrying indefinitely.</sub></td></tr>
+<tr><td><sub><b>TypeScript error</b></sub></td><td><sub>Run <code>node scripts/pnpm.mjs run typecheck</code>.</sub></td></tr>
+<tr><td><sub><b>Clinical tests</b></sub></td><td><sub>Run the full Vitest suite; protected clinical logic is intentionally covered by capsule-local tests.</sub></td></tr>
+</table>
+
+---
+
+## 20 / LET'S CONNECT
+
+<p align="center">
+  <a href="https://ferdiiskandar.com" title="Website"><img src="https://cdn.simpleicons.org/vercel/8B949E" width="22" height="22" alt="ferdiiskandar.com" /></a>&nbsp;&nbsp;
+  <a href="https://github.com/drferdi" title="GitHub"><img src="https://cdn.simpleicons.org/github/8B949E" width="22" height="22" alt="GitHub" /></a>&nbsp;&nbsp;
+  <a href="https://orcid.org/my-orcid?orcid=0009-0003-3788-1307" title="ORCID"><img src="https://cdn.simpleicons.org/orcid/8B949E" width="22" height="22" alt="ORCID" /></a>&nbsp;&nbsp;
+  <a href="https://linkedin.com/in/dr-ferdi-iskandar-1b620a3b5" title="LinkedIn"><img src="https://upload.wikimedia.org/wikipedia/commons/8/81/LinkedIn_icon.svg" width="22" height="22" alt="LinkedIn" /></a>
+</p>
+
+---
+
+<p align="center">
+  <b>Designed and built by Drferdi · Maintained by Sentra Artificial Intelligence</b><br />
+  <sub><code>clinical intelligence should assist the clinician — never erase the clinician</code></sub><br /><br />
+  <b>Dedicated to Aldebaran, Aimee, Audrey, and Del — &amp; the Indonesia Healthcare Ecosystem.</b>
+</p>
