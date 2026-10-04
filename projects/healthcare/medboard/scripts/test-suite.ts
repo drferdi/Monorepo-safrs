@@ -25,6 +25,21 @@ const suites: Suite[] = [
     ],
   },
   {
+    name: 'assist-acceptance',
+    aliases: ['assist', 'consult-events', 'anamnesis-extract'],
+    command: process.execPath,
+    // react-server condition: these modules import server-only.
+    args: [
+      '--conditions',
+      'react-server',
+      '--import',
+      'tsx',
+      '--test',
+      'src/lib/telemedicine/consult-intelligence-events.test.ts',
+      'src/app/api/clinical/anamnesis/extract/route.post.test.ts',
+    ],
+  },
+  {
     name: 'auth-hardening',
     aliases: ['auth', 'security'],
     command: process.execPath,
@@ -64,6 +79,7 @@ const suites: Suite[] = [
       'src/lib/telemedicine/consult-to-bridge.test.ts',
       'src/lib/telemedicine/consult-accepted.test.ts',
       'src/lib/telemedicine/consult-api-validation.test.ts',
+      'src/lib/telemedicine/consult-vital-signs.test.ts',
       'src/lib/audit/screening-audit-service.test.ts',
       'src/lib/server/doctor-contacts.test.ts',
       'src/app/api/clinical/anamnesis/extract/route.test.ts',

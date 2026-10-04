@@ -9,8 +9,9 @@ export const runtime = 'nodejs'
 
 const CORS_METHODS = ['POST', 'OPTIONS'] as const
 
+// Assist sends the whole symptom text uncapped; the extractor is a local heuristic.
 const ExtractAnamnesisRequestSchema = z.object({
-  text: z.string().trim().min(3).max(2000),
+  text: z.string().trim().min(3).max(10000),
 })
 
 export async function OPTIONS(request: NextRequest) {

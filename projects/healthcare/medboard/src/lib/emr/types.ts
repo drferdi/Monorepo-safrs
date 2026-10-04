@@ -234,6 +234,7 @@ export type RMETransferReasonCode =
   | 'DUPLICATE_SUPPRESSED'
   | 'USER_CANCELLED'
   | 'NO_ACTIVE_TAB'
+  | 'PATIENT_MISMATCH'
   | 'PAGE_NOT_READY'
   | 'STEP_TIMEOUT'
   | 'FIELD_NOT_FOUND'
@@ -244,6 +245,7 @@ export type RMETransferReasonCode =
   | 'RESEP_EMPTY_AFTER_SAFETY'
   | 'RESEP_TRIAD_INCOMPLETE'
   | 'PREGNANCY_UNKNOWN_DEFAULT_FALSE'
+  | 'RESEP_OBAT_TIDAK_TERSEDIA'
   | 'UNKNOWN_STEP_FAILURE'
 
 export interface RMETransferStepResult {

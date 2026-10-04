@@ -12,76 +12,25 @@ import {
 import { ghostToDashboardSuggestions } from '@/lib/cdss/format-adapter'
 import { parseDiagnoseRequestBody } from '@/lib/cdss/diagnose-parser'
 import { runDiagnosisEngine } from '@/lib/cdss/engine'
-import type { CDSSEngineResult, CDSSAlert, VitalSigns } from '@/lib/cdss/types'
-import {
-  emitCdssSuggestionReady,
-  emitCriticalAlert,
-  emitEncounterUpdated,
-} from '@/lib/intelligence/socket-bridge'
+import type { CDSSEngineResult, CDSSAlert } from '@/lib/cdss/types'
 import { createScreeningAuditLog } from '@/lib/audit/screening-audit-service'
 import { prisma } from '@/lib/prisma'
 import { handleCorsPreflight, jsonWithCors } from '@/lib/server/api-cors'
 import { getCrewSessionFromRequest, isCrewAuthorizedRequest } from '@/lib/server/crew-access-auth'
+import { emitIntelligenceConsultEvents } from '@/lib/telemedicine/consult-intelligence-events'
+import {
+  buildConsultVitalSigns,
+  parseNumber,
+  pickString,
+} from '@/lib/telemedicine/consult-vital-signs'
 import { emitAssistConsult } from '@/lib/telemedicine/socket-bridge'
 
 export const runtime = 'nodejs'
 
 const CORS_METHODS = ['POST', 'OPTIONS'] as const
 
-function buildPatientLabel(consultId: string): string {
-  return `Pasien #${consultId.slice(-6).toUpperCase()}`
-}
-
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === 'object' && Array.isArray(value) === false
-}
-
-function parseNumber(value: unknown): number | undefined {
-  if (typeof value === 'number' && Number.isFinite(value)) {
-    return value
-  }
-
-  if (typeof value !== 'string') {
-    return undefined
-  }
-
-  const normalized = value.trim().replace(',', '.')
-  if (!normalized) {
-    return undefined
-  }
-
-  const parsed = Number(normalized)
-  return Number.isFinite(parsed) ? parsed : undefined
-}
-
-function pickNumber(record: Record<string, unknown> | null, keys: string[]): number | undefined {
-  if (!record) {
-    return undefined
-  }
-
-  for (const key of keys) {
-    const parsed = parseNumber(record[key])
-    if (parsed !== undefined) {
-      return parsed
-    }
-  }
-
-  return undefined
-}
-
-function pickString(record: Record<string, unknown> | null, keys: string[]): string | undefined {
-  if (!record) {
-    return undefined
-  }
-
-  for (const key of keys) {
-    const value = record[key]
-    if (typeof value === 'string' && value.trim()) {
-      return value.trim()
-    }
-  }
-
-  return undefined
 }
 
 function pickStringFromRecords(
@@ -303,21 +252,7 @@ async function buildConsultDiagnosisResponse(
     assessment_conclusion: assessmentConclusion,
     usia: age,
     jenis_kelamin: gender,
-    vital_signs: {
-      systolic: pickNumber(vitalsRecord, ['sistolik', 'systolic', 'sbp']),
-      diastolic: pickNumber(vitalsRecord, ['diastolik', 'diastolic', 'dbp']),
-      heart_rate: pickNumber(vitalsRecord, ['nadi', 'heart_rate', 'hr', 'pulse']),
-      spo2: pickNumber(vitalsRecord, ['spo2', 'oxygen_saturation']),
-      temperature: pickNumber(vitalsRecord, ['suhu', 'temperature', 'temp']),
-      respiratory_rate: pickNumber(vitalsRecord, ['rr', 'respiratory_rate', 'frekuensi_napas']),
-      weight_kg: pickNumber(anthropometricsRecord, ['weight_kg', 'weight', 'berat_badan']),
-      height_cm: pickNumber(anthropometricsRecord, ['height_cm', 'height', 'tinggi_badan']),
-      pain_score: pickNumber(vitalsRecord, ['pain_score', 'skala_nyeri']),
-      avpu: pickString(vitalsRecord, ['avpu']) as VitalSigns['avpu'] | undefined,
-      supplemental_o2:
-        typeof vitalsRecord?.supplemental_o2 === 'boolean' ? vitalsRecord.supplemental_o2 : undefined,
-      has_copd: typeof vitalsRecord?.has_copd === 'boolean' ? vitalsRecord.has_copd : undefined,
-    },
+    vital_signs: buildConsultVitalSigns(vitalsRecord, anthropometricsRecord),
     allergies: input.allergies,
     chronic_diseases: input.chronicDiseases,
     is_pregnant: input.statusKehamilan === 'hamil',
@@ -345,173 +280,6 @@ async function buildConsultDiagnosisResponse(
     console.error('[Consult] Diagnosis engine failed for consultId:', input.consultId, error)
     return null
   }
-}
-
-function mapRiskLevelToTriageLevel(
-  riskLevel: 'low' | 'medium' | 'high' | 'critical' | undefined
-): 1 | 2 | 3 | 4 | 5 | undefined {
-  switch (riskLevel) {
-    case 'critical':
-      return 1
-    case 'high':
-      return 2
-    case 'medium':
-      return 3
-    case 'low':
-      return 4
-    default:
-      return undefined
-  }
-}
-
-function emitIntelligenceConsultEvents(input: {
-  consultId: string
-  keluhanUtama: string
-  receivedAt: string
-  screeningResult?:
-    | {
-        status?: 'positive' | 'negative' | 'inconclusive'
-        score?: number
-        risk_level?: 'low' | 'medium' | 'high' | 'critical'
-        summary?: string
-      }
-    | undefined
-  diagnosisResponse?: CDSSResponse | null
-  canonicalClinical?: Record<string, unknown> | null
-}): void {
-  const note =
-    input.screeningResult?.summary?.trim() ||
-    input.keluhanUtama.trim() ||
-    'Consult baru dari Assist menunggu tindak lanjut.'
-  const patientLabel = buildPatientLabel(input.consultId)
-
-  emitEncounterUpdated({
-    encounterId: input.consultId,
-    status: 'waiting',
-    timestamp: input.receivedAt,
-    data: {
-      patientLabel,
-      note,
-      source: 'assist-consult',
-    },
-  })
-
-  const news2 = input.canonicalClinical?.news2
-  const trajectory = input.canonicalClinical?.trajectory
-  const news2Risk =
-    news2 && typeof news2 === 'object' && !Array.isArray(news2)
-      ? String((news2 as Record<string, unknown>).risk_level ?? '')
-      : ''
-  const diagnosisCriticalAlert = input.diagnosisResponse?.alerts.find(
-    alert => alert.severity === 'critical'
-  )
-  const shouldEmitCriticalAlert =
-    input.screeningResult?.risk_level === 'critical' ||
-    news2Risk === 'high' ||
-    Boolean(diagnosisCriticalAlert)
-
-  const momentumLevel =
-    trajectory && typeof trajectory === 'object' && !Array.isArray(trajectory)
-      ? String((trajectory as Record<string, unknown>).overall_risk ?? '')
-      : undefined
-  const convergencePattern =
-    trajectory && typeof trajectory === 'object' && !Array.isArray(trajectory)
-      ? String((trajectory as Record<string, unknown>).deterioration_state ?? '')
-      : undefined
-  const immediateActions = Array.isArray(input.canonicalClinical?.immediate_actions)
-    ? input.canonicalClinical.immediate_actions
-    : []
-  const recommendedAction =
-    typeof immediateActions[0] === 'string' ? String(immediateActions[0]) : undefined
-  const riskLevel = input.screeningResult?.risk_level ?? (
-    news2Risk === 'high' ? 'high' : undefined
-  )
-  const trajectoryNarrative =
-    trajectory && typeof trajectory === 'object' && !Array.isArray(trajectory)
-      ? String((trajectory as Record<string, unknown>).narrative ?? '')
-      : ''
-  const cdssResponse =
-    input.diagnosisResponse ??
-    (input.screeningResult?.summary || recommendedAction || trajectoryNarrative || riskLevel
-      ? {
-          requestId: `assist-${input.consultId}`,
-          engineVersion: 'assist-screening-v1',
-          processedAt: input.receivedAt,
-          latencyMs: 0,
-          triageLevel: mapRiskLevelToTriageLevel(riskLevel),
-          suggestions: [],
-          alerts: [
-            {
-              id: `assist-screening-${input.consultId}`,
-              type: 'guideline' as const,
-              severity: shouldEmitCriticalAlert ? 'critical' as const : 'warning' as const,
-              message: note,
-              source: 'assist-screening',
-              actionRequired: shouldEmitCriticalAlert,
-            },
-            ...(recommendedAction
-              ? [
-                  {
-                    id: `assist-action-${input.consultId}`,
-                    type: 'guideline' as const,
-                    severity: shouldEmitCriticalAlert ? 'critical' as const : 'warning' as const,
-                    message: recommendedAction,
-                    source: 'assist-screening',
-                    actionRequired: shouldEmitCriticalAlert,
-                  },
-                ]
-              : []),
-            ...(trajectoryNarrative
-              ? [
-                  {
-                    id: `assist-trajectory-${input.consultId}`,
-                    type: 'guideline' as const,
-                    severity: 'warning' as const,
-                    message: trajectoryNarrative,
-                    source: 'assist-screening',
-                    actionRequired: false,
-                  },
-                ]
-              : []),
-          ],
-        }
-      : null)
-
-  if (cdssResponse) {
-    emitCdssSuggestionReady({
-      encounterId: input.consultId,
-      status: 'cdss_pending',
-      timestamp: input.receivedAt,
-      data: {
-        patientLabel,
-        note,
-        source: input.diagnosisResponse ? 'iskandar-engine' : 'assist-screening',
-        response: cdssResponse,
-      },
-    })
-  }
-
-  if (!shouldEmitCriticalAlert) {
-    return
-  }
-
-  emitCriticalAlert({
-    encounterId: input.consultId,
-    status: 'waiting',
-    timestamp: input.receivedAt,
-    data: {
-      message:
-        diagnosisCriticalAlert?.message ||
-        input.screeningResult?.summary?.trim() ||
-        `Assist menandai risiko kritis untuk keluhan ${input.keluhanUtama.trim()}.`,
-      momentumLevel,
-      convergencePattern,
-      recommendedAction:
-        diagnosisCriticalAlert?.message || recommendedAction,
-      patientLabel,
-      source: input.diagnosisResponse ? 'iskandar-engine' : 'assist-screening',
-    },
-  })
 }
 
 export async function OPTIONS(request: NextRequest) {
