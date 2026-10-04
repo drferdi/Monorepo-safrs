@@ -185,7 +185,7 @@ function field(
 
 /** Cells side by side, each wrapped in its own width; the row is as tall as its tallest cell. */
 function tableRow(
-  cells: Array<{ value: string; width: number; style: Style; fill?: string; arrow?: TrendRow['direction'] }>,
+  cells: Array<{ value: string; width: number; style: Style; fill?: string; trend?: TrendRow }>,
   measure: Measure,
   separator: string | null
 ): Block {
@@ -199,9 +199,9 @@ function tableRow(
       let left = x;
       for (const cell of wrapped) {
         if (cell.fill) ops.push({ kind: 'rect', x: left, y: top, width: cell.width, height, color: cell.fill });
-        if (cell.arrow) ops.push(...arrow(left + cell.width / 2, top + height / 2, cell.arrow));
+        if (cell.trend) ops.push(...trendGraph(left, top + height / 2, cell.width, cell.trend));
         cell.lines.forEach((line, i) => {
-          if (cell.arrow) return;
+          if (!line) return;
           const baseline = top + pt(30) + i * lineHeight(cell.style.size) + cell.style.size * ASCENT;
           ops.push(text(left + CELL_PAD, baseline, line, cell.style));
         });
@@ -236,6 +236,36 @@ function arrow(cx: number, cy: number, direction: Exclude<TrendRow['direction'],
     line(cx - head, tip - sign * head, cx, tip),
     line(cx + head, tip - sign * head, cx, tip),
   ];
+}
+
+/** A trend row draws a line or an arrow when it has two figures or a direction; else it prints -. */
+const hasGraph = (row: TrendRow): boolean =>
+  row.direction !== null || (row.series ?? []).filter((n) => n !== null).length >= 2;
+
+/**
+ * The TREND cell (Chief, 2026-10-04): a sparkline through the visits, then the template's arrow
+ * for the latest earlier visit against today. The line is 0.5 pt grey, the arrow 0.8 pt.
+ */
+function trendGraph(left: number, cy: number, width: number, row: TrendRow): DrawOp[] {
+  const series = row.series ?? [];
+  const arrowX = left + width - CELL_PAD - 4;
+  const ops: DrawOp[] = row.direction ? arrow(arrowX, cy, row.direction) : [];
+  const points = series.flatMap((n, i) => (n === null ? [] : [{ i, n }]));
+  if (points.length < 2) return ops;
+  const x0 = left + CELL_PAD;
+  const x1 = row.direction ? arrowX - 7 : left + width - CELL_PAD;
+  const low = Math.min(...points.map((p) => p.n));
+  const high = Math.max(...points.map((p) => p.n));
+  const at = ({ i, n }: { i: number; n: number }) => ({
+    x: x0 + ((x1 - x0) * i) / (series.length - 1),
+    y: high > low ? cy + 3 - ((n - low) / (high - low)) * 6 : cy,
+  });
+  for (let k = 1; k < points.length; k += 1) {
+    const from = at(points[k - 1]);
+    const to = at(points[k]);
+    ops.push({ kind: 'line', x1: from.x, y1: from.y, x2: to.x, y2: to.y, width: 0.5, color: COLOR.label });
+  }
+  return ops;
 }
 
 const spacer = (height: number): Block => ({ height, draw: () => [] });
@@ -380,11 +410,17 @@ function bands(model: VisitSummaryModel, measure: Measure): Band[] {
       : paragraph('Belum ada diagnosis terpilih', inner(diagnosisWidth), { size: 10.5, color: COLOR.label }, measure)),
   ];
 
-  // 05 Tatalaksana / obat: the template's five columns, one row per medication.
-  const medWidths = [567, 4989, 1701, 2268, 1247].map(pt);
+  // 05 Tatalaksana / obat: the template's columns, one row per medication. Chief, 2026-10-04
+  // ("tambahkan kolom di isinya"): STATUS and INTERAKSI, their width taken from OBAT, DOSIS,
+  // ATURAN PAKAI and DURASI; the table ends with the interaction check.
+  const medWidths = [567, 3288, 1134, 1474, 1814, 1020, 1475].map(pt);
   const headStyle: Style = { size: 5.5, color: COLOR.label, spacing: pt(12) };
   const medHead = tableRow(
-    ['NO', 'OBAT', 'DOSIS', 'ATURAN PAKAI', 'DURASI'].map((value, i) => ({ value, width: medWidths[i], style: headStyle })),
+    ['NO', 'OBAT', 'STATUS', 'DOSIS', 'ATURAN PAKAI', 'DURASI', 'INTERAKSI'].map((value, i) => ({
+      value,
+      width: medWidths[i],
+      style: headStyle,
+    })),
     measure,
     COLOR.rule
   );
@@ -392,17 +428,31 @@ function bands(model: VisitSummaryModel, measure: Measure): Band[] {
     model.medications.length > 0
       ? model.medications.map((medication, index) =>
           tableRow(
-            [String(index + 1), medication.name, medication.dose, medication.use, medication.duration].map((value, i) => ({
+            [
+              String(index + 1),
+              medication.name,
+              medication.status,
+              medication.dose,
+              medication.use,
+              medication.duration,
+              medication.safety,
+            ].map((value, i) => ({
               value,
               width: medWidths[i],
-              style: { size: 6.5 },
+              style: { size: 6.5, color: i === 6 && medication.alert ? COLOR.red : COLOR.ink },
             })),
             measure,
             COLOR.row
           )
         )
       : paragraph('Belum ada obat terpilih untuk resep', CONTENT_WIDTH, { size: 6.5, color: COLOR.label }, measure, 3);
-  const therapy = [sectionHead(5, 'TATALAKSANA / OBAT'), medHead, ...medRows];
+  const drugSafety = [
+    ...(model.drugSafety.summary
+      ? paragraph(model.drugSafety.summary, CONTENT_WIDTH, { size: 6.5, color: COLOR.label }, measure, 3)
+      : []),
+    ...model.drugSafety.notes.flatMap((note) => paragraph(note, CONTENT_WIDTH, { size: 6.5, color: COLOR.red }, measure)),
+  ];
+  const therapy = [sectionHead(5, 'TATALAKSANA / OBAT'), medHead, ...medRows, ...drugSafety];
 
   // 06 Edukasi · 07 Tindak lanjut.
   const educationWidth = pt(5839);
@@ -421,22 +471,35 @@ function bands(model: VisitSummaryModel, measure: Measure): Band[] {
   // 08 Tren tanda vital · 09 Segera kembali bila · 10 Verifikasi.
   const trendWidth = pt(5896);
   const alarmWidth = pt(4876);
-  const trendWidths = [1814, 1134, 1134, 1814].map(pt);
+  // Chief, 2026-10-04: up to four earlier visits as dated columns before HARI INI (each fits
+  // "28-08-26" in Plex Bold, 27.4 pt); TREND takes what is left.
+  const parameterWidth = pt(860);
+  const visitWidth = pt(700);
+  const trendCell = trendWidth - parameterWidth - visitWidth * (model.trend.visits.length + 1);
   const trendHeadStyle: Style = { size: 5.5, color: COLOR.label, spacing: pt(8) };
   const trend = [
     sectionHead(8, 'TREN TANDA VITAL'),
     tableRow(
-      ['PARAMETER', 'SEBELUM', 'HARI INI', 'TREND'].map((value, i) => ({ value, width: trendWidths[i], style: trendHeadStyle })),
+      [
+        { value: 'PARAMETER', width: parameterWidth, style: trendHeadStyle },
+        ...[...model.trend.visits, 'HARI INI'].map((value) => ({ value, width: visitWidth, style: trendHeadStyle })),
+        { value: 'TREND', width: trendCell, style: trendHeadStyle },
+      ],
       measure,
       COLOR.rule
     ),
-    ...model.trend.map((row) =>
+    ...model.trend.rows.map((row) =>
       tableRow(
         [
-          { value: row.label, width: trendWidths[0], style: { size: 6 } },
-          { value: row.before, width: trendWidths[1], style: { size: 6 } },
-          { value: row.today, width: trendWidths[2], style: { size: 6 } },
-          { value: row.direction ? '' : '-', width: trendWidths[3], style: { size: 6 }, fill: COLOR.trendFill, arrow: row.direction },
+          { value: row.label, width: parameterWidth, style: { size: 6 } },
+          ...[...row.values, row.today].map((value) => ({ value, width: visitWidth, style: { size: 6 } })),
+          {
+            value: row.series === null || hasGraph(row) ? '' : '-',
+            width: trendCell,
+            style: { size: 6 },
+            fill: COLOR.trendFill,
+            trend: row,
+          },
         ],
         measure,
         COLOR.row

@@ -260,8 +260,28 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
       expect.objectContaining({
         head: expect.objectContaining({ rm: 'RM-J02' }),
         diagnoses: [expect.objectContaining({ icd: 'J02', role: 'PRIMER' })],
-        medications: [{ name: 'Amoksisilin', dose: '3x500mg', use: 'sesudah makan', duration: '5 hari' }],
-        trend: expect.arrayContaining([expect.objectContaining({ label: 'Sistolik' })]),
+        // Chief, 2026-10-04: STATUS and INTERAKSI in Tatalaksana, the earlier visits in the trend.
+        medications: [
+          {
+            name: 'Amoksisilin',
+            dose: '3x500mg',
+            use: 'sesudah makan',
+            duration: '5 hari',
+            status: 'Baru',
+            safety: '-',
+            alert: false,
+          },
+        ],
+        drugSafety: {
+          summary: 'Cek interaksi (DDInter): tidak ada interaksi antar obat resep ini.',
+          notes: [],
+        },
+        trend: expect.objectContaining({
+          visits: ['01-09-26'],
+          rows: expect.arrayContaining([
+            expect.objectContaining({ label: 'Sistolik', values: ['120'], today: '118' }),
+          ]),
+        }),
         followUp: 'Kontrol 3 hari',
         education: [],
         // Chief, 2026-10-04: another doctor's visit is verified by dr. Ferdi.

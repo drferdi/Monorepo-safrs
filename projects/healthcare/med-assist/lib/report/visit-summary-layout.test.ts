@@ -93,14 +93,54 @@ describe('layoutVisitSummary', () => {
     expect(find(page, 'SEKUNDER')).toMatchObject({ color: COLOR.label });
   });
 
-  it('lists the medications in the template’s five columns', () => {
+  // Chief, 2026-10-04: STATUS and INTERAKSI added inside the template's medication table.
+  it('lists the medications in the template’s columns with STATUS and INTERAKSI', () => {
     const [page] = layout();
-    for (const caption of ['NO', 'OBAT', 'DOSIS', 'ATURAN PAKAI', 'DURASI']) {
+    for (const caption of [
+      'NO',
+      'OBAT',
+      'STATUS',
+      'DOSIS',
+      'ATURAN PAKAI',
+      'DURASI',
+      'INTERAKSI',
+    ]) {
       expect(find(page, caption)).toMatchObject({ size: 5.5, color: COLOR.label });
     }
     const amlodipin = find(page, 'Amlodipin')!;
-    const row = texts(page).filter((op) => op.y === amlodipin.y).map((op) => op.text);
-    expect(row).toEqual(['1', 'Amlodipin', '1x10mg', 'Sesudah makan', '30 hari']);
+    const row = texts(page)
+      .filter((op) => op.y === amlodipin.y)
+      .map((op) => op.text);
+    expect(row).toEqual([
+      '1',
+      'Amlodipin',
+      'Lanjutan',
+      '1x10mg',
+      'Sesudah makan',
+      '30 hari',
+      'Simvastatin (mayor)',
+    ]);
+    expect(find(page, 'Simvastatin (mayor)')).toMatchObject({ color: COLOR.red });
+    const parasetamol = find(page, 'Parasetamol')!;
+    expect(texts(page).find((op) => op.y === parasetamol.y && op.text === '-')).toMatchObject({
+      color: COLOR.ink,
+    });
+  });
+
+  it('closes the table with the interaction check, a serious pair’s advice in red', () => {
+    const [page] = layout();
+    expect(
+      find(page, 'Cek interaksi (DDInter): 1 interaksi antar obat resep ini, 1 serius.')
+    ).toMatchObject({
+      size: 6.5,
+      color: COLOR.label,
+    });
+    expect(
+      find(page, 'Amlodipin + Simvastatin (mayor): Batasi dosis simvastatin maksimal 20mg/hari.')
+    ).toMatchObject({
+      size: 6.5,
+      color: COLOR.red,
+    });
   });
 
   it('prints the education, the follow-up, the safety net and the alerts under Temuan', () => {
@@ -112,11 +152,46 @@ describe('layoutVisitSummary', () => {
     expect(texts(page).some((op) => op.text.startsWith('Tekanan darah tinggi: TD >= 140/90'))).toBe(true);
   });
 
-  it('draws a trend arrow for each vital with an earlier value, and - without', () => {
-    const lines = (page: DrawOp[]) => page.filter((op) => op.kind === 'line' && op.width === 0.8);
-    expect(lines(layout()[0])).toHaveLength(5 * 3);
+  // Chief, 2026-10-04: the earlier visits as dated columns, the diagnosis and GDS as rows, a
+  // sparkline before the template's arrow.
+  it('sets the earlier visits as dated columns before HARI INI, with the diagnosis row', () => {
+    const [page] = layout();
+    for (const caption of [
+      'PARAMETER',
+      '12-06-26',
+      '10-07-26',
+      '14-08-26',
+      '11-09-26',
+      'HARI INI',
+      'TREND',
+    ]) {
+      expect(find(page, caption)).toMatchObject({ size: 5.5, color: COLOR.label });
+    }
+    const diagnosis = find(page, 'Diagnosis')!;
+    expect(
+      texts(page)
+        .filter((op) => op.y === diagnosis.y)
+        .map((op) => op.text)
+    ).toEqual(['Diagnosis', 'I10', 'I10', 'R51', 'I10', 'I10']);
+    // The trend row, not block 02's grey GDS caption.
+    const gds = texts(page).find((op) => op.text === 'GDS' && op.color === COLOR.ink)!;
+    expect(
+      texts(page)
+        .filter((op) => op.y === gds.y)
+        .map((op) => op.text)
+    ).toEqual(['GDS', '130', '150', '138', '160', '142']);
+  });
+
+  it('draws a sparkline and the arrow for each vital with earlier values, neither without', () => {
+    const arrows = (page: DrawOp[]) => page.filter((op) => op.kind === 'line' && op.width === 0.8);
+    const sparks = (page: DrawOp[]) =>
+      page.filter((op) => op.kind === 'line' && op.width === 0.5 && op.color === COLOR.label);
+    // Six vitals, three strokes an arrow; five points, four segments a sparkline.
+    expect(arrows(layout()[0])).toHaveLength(6 * 3);
+    expect(sparks(layout()[0])).toHaveLength(6 * 4);
     const lonely = layout({ context: { ...input.context!, visitHistory: [] } })[0];
-    expect(lines(lonely)).toHaveLength(0);
+    expect(arrows(lonely)).toHaveLength(0);
+    expect(sparks(lonely)).toHaveLength(0);
   });
 
   it('closes with the DPJP and the verifier under their captions', () => {

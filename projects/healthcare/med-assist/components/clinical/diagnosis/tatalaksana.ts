@@ -313,6 +313,30 @@ export function explainInteraction(interaction: DrugInteraction): InteractionRea
   return { reason: null, advice: interaction.recommendation ?? '' };
 }
 
+/**
+ * The visit summary's interaction check: the pairs whose two drugs are both in the resep, named as
+ * the PDF prints them. `key` is the name the check was asked with (`nama_obat`), `name` the printed one.
+ */
+export function resepDrugSafety(
+  resep: Array<{ key: string; name: string }>,
+  check: InteractionCheckView
+): {
+  state: InteractionCheckView['state'];
+  pairs: Array<{ a: string; b: string; severity: DrugInteraction['severity']; advice: string }>;
+} {
+  const printed = new Map(resep.map((medication) => [medication.key, medication.name]));
+  return {
+    state: check.state,
+    pairs: check.interactions.flatMap((interaction) => {
+      const a = printed.get(interaction.drug_a);
+      const b = printed.get(interaction.drug_b);
+      return a && b
+        ? [{ a, b, severity: interaction.severity, advice: explainInteraction(interaction).advice }]
+        : [];
+    }),
+  };
+}
+
 /** The interactions one medication takes part in. */
 export function interactionsFor(name: string, interactions: DrugInteraction[]): DrugInteraction[] {
   return interactions.filter((interaction) => interaction.drug_a === name || interaction.drug_b === name);

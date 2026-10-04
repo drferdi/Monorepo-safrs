@@ -18,8 +18,10 @@ import {
   buildSafetyNet,
   chronicContinuation,
   CONTROL_AFTER_OPTIONS,
+  allergyMatches,
   formatDose,
   nameBesideDose,
+  resepDrugSafety,
   type InteractionCheckView,
 } from './diagnosis/tatalaksana';
 import { useDiseaseNotes } from './diagnosis/useDiseaseNotes';
@@ -1747,6 +1749,15 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
     void (async () => {
       // The DPJP follows the signed-in user, as in the RME (resolveTenagaMedisNames); the model picks the verifier.
       const staff = resolveTenagaMedisNames(assistStaffFromSession(await getSession()));
+      const resep = selectedTransferMedications.map((medication) => {
+        const dose = formatDose(medication.nama_obat, medication.dosis);
+        return {
+          medication,
+          key: medication.nama_obat,
+          name: nameBesideDose(medication.nama_obat, dose),
+          dose,
+        };
+      });
       const model = buildVisitSummaryModel({
         rm: patientRM,
         age: patientAge,
@@ -1757,15 +1768,16 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
         pregnant: confirmedPregnancyStatus ?? null,
         vitals,
         diagnoses: selectedDiagnoses.map((diagnosis) => ({ icd: diagnosis.icd_x, name: humanize(diagnosis.nama) })),
-        medications: selectedTransferMedications.map((medication) => {
-          const dose = formatDose(medication.nama_obat, medication.dosis);
-          return {
-            name: nameBesideDose(medication.nama_obat, dose),
-            dose,
-            use: medication.aturan_pakai,
-            duration: medication.durasi ?? '',
-          };
-        }),
+        medications: resep.map(({ medication, name, dose }) => ({
+          name,
+          dose,
+          use: medication.aturan_pakai,
+          duration: medication.durasi ?? '',
+          continued: Boolean(medication.isChronicContinuation),
+          allergies: allergyMatches(medication.nama_obat, allergies),
+        })),
+        // The interaction check ran on `nama_obat`; the PDF names the pairs as it prints them.
+        drugSafety: resepDrugSafety(resep, interactionCheck),
         alerts: therapyByDiagnosis.flatMap((result) => result.alerts),
         education: educationItems
           .filter((item) => selectedEducationKeys.includes(item.key))

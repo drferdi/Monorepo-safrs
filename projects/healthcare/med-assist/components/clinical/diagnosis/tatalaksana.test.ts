@@ -10,6 +10,7 @@ import {
   formatDose,
   interactionsFor,
   nameBesideDose,
+  resepDrugSafety,
   reviewSafety,
   roleOf,
   sameDrugIn,
@@ -369,6 +370,50 @@ describe('explainInteraction', () => {
 
   it('names no mechanism the sources do not give, and keeps DDInter\'s advice', () => {
     expect(explainInteraction(pair('Amlodipin 10 mg', 'Kandesartan 8 mg'))).toEqual({ reason: null, advice: 'Evaluasi kebutuhan terapi.' });
+  });
+});
+
+// Chief, 2026-10-04: the PDF's INTERAKSI column and check line read the DDInter pairs within the resep.
+describe('resepDrugSafety', () => {
+  const major = (drug_a: string, drug_b: string): DrugInteraction => ({
+    drug_a,
+    drug_b,
+    severity: 'major',
+    description: 'Interaksi signifikan.',
+    recommendation: 'Evaluasi kebutuhan terapi.',
+  });
+  const resep = [
+    { key: 'Amlodipin tablet 10 mg', name: 'Amlodipin' },
+    { key: 'Simvastatin tablet 20 mg', name: 'Simvastatin' },
+  ];
+
+  it('keeps the pairs whose two drugs are in the resep, by printed name, with the curated advice', () => {
+    const interactions = [
+      major('Amlodipin tablet 10 mg', 'Simvastatin tablet 20 mg'),
+      major('Simvastatin tablet 20 mg', 'Klaritromisin 500 mg'),
+    ];
+    expect(resepDrugSafety(resep, { state: 'done', interactions })).toEqual({
+      state: 'done',
+      pairs: [
+        {
+          a: 'Amlodipin',
+          b: 'Simvastatin',
+          severity: 'major',
+          advice: 'Batasi dosis simvastatin maksimal 20mg/hari.',
+        },
+      ],
+    });
+  });
+
+  it('passes on a check that has not finished or could not run, without pairs', () => {
+    expect(resepDrugSafety(resep, { state: 'checking', interactions: [] })).toEqual({
+      state: 'checking',
+      pairs: [],
+    });
+    expect(resepDrugSafety(resep, { state: 'unavailable', interactions: [] })).toEqual({
+      state: 'unavailable',
+      pairs: [],
+    });
   });
 });
 
