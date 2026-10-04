@@ -205,8 +205,8 @@ export const triageVitalSignsSchema = z.object({
   temp: z.number().min(PLAUSIBILITY_BOUNDS.temp.min).max(PLAUSIBILITY_BOUNDS.temp.max),
   spo2: z.number().min(PLAUSIBILITY_BOUNDS.spo2.min).max(PLAUSIBILITY_BOUNDS.spo2.max),
 
-  // Consciousness — default to Alert for backward compat with old Assist
-  avpu: z.enum(AVPU_VALUES).default('A'),
+  // Consciousness — a missing AVPU stays missing; scoring it Alert would hide a drop.
+  avpu: z.enum(AVPU_VALUES).optional(),
   supplementalO2: z.boolean().default(false),
 
   // Detail

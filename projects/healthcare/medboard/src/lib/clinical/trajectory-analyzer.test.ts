@@ -113,3 +113,26 @@ test('trajectory weights severe worsening vitals above mild improvements', () =>
   )
   assert.ok(analysis.acute_attack_risk_24h.glycemic_crisis_risk >= 75)
 })
+
+function sbpRisk(lastSbp: number) {
+  const normal = { dbp: 70, hr: 80, rr: 16, temp: 36.8, glucose: 110, spo2: 98 }
+  const analysis = analyzeTrajectory([
+    createVisit('enc-sbp-1', '2026-03-10T08:00:00.000Z', { sbp: 120, ...normal }),
+    createVisit('enc-sbp-2', '2026-03-11T08:00:00.000Z', { sbp: lastSbp, ...normal }),
+  ])
+  return analysis.vitalTrends.find(trend => trend.parameter === 'sbp')?.risk
+}
+
+test('trajectory SBP risk follows the NEWS2 low bands', () => {
+  assert.equal(sbpRisk(90), 'critical')
+  assert.equal(sbpRisk(85), 'critical')
+  assert.equal(sbpRisk(96), 'high')
+  assert.equal(sbpRisk(106), 'moderate')
+  assert.equal(sbpRisk(118), 'low')
+})
+
+test('trajectory SBP risk keeps the hypertension bands', () => {
+  assert.equal(sbpRisk(182), 'critical')
+  assert.equal(sbpRisk(165), 'high')
+  assert.equal(sbpRisk(145), 'moderate')
+})

@@ -166,7 +166,18 @@ test('defaults supplementalO2 to false', () => {
     spo2: 98,
   })
   assert.equal(result.supplementalO2, false)
-  assert.equal(result.avpu, 'A')
+})
+
+test('leaves a missing AVPU as missing instead of scoring it Alert', () => {
+  const result = triageVitalSignsSchema.parse({
+    sbp: 120,
+    dbp: 80,
+    hr: 72,
+    rr: 16,
+    temp: 36.8,
+    spo2: 98,
+  })
+  assert.equal(result.avpu, undefined)
 })
 
 // ── AVPU ↔ GCS Mapping ─────────────────────────────────────────────────────

@@ -310,9 +310,10 @@ function assessRisk(key: VitalKey, value: number): RiskLevel {
 
   switch (key) {
     case 'sbp':
-      if (value >= 180) return 'critical'
-      if (value >= 160 || value < 90) return 'high'
-      if (value >= 140) return 'moderate'
+      // Low bands follow NEWS2 (<=90 / 91-100 / 101-110 score 3 / 2 / 1).
+      if (value >= 180 || value <= 90) return 'critical'
+      if (value >= 160 || value <= 100) return 'high'
+      if (value >= 140 || value <= 110) return 'moderate'
       return 'low'
     case 'dbp':
       if (value >= 120) return 'critical'

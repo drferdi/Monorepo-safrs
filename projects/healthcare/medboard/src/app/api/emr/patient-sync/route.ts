@@ -292,7 +292,7 @@ function normalizeTriageVitals(
     rr: toFiniteNumber(vitals.rr),
     temp: toFiniteNumber(vitals.temp),
     spo2: toFiniteNumber(vitals.spo2),
-    avpu: normalizeAVPU(vitals.avpu) ?? 'A',
+    avpu: normalizeAVPU(vitals.avpu),
     supplementalO2: Boolean(vitals.supplementalO2),
     painScore: toFiniteNumber(vitals.painScore),
     glucose:
