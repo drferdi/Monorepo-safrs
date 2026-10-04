@@ -17,6 +17,7 @@ import { createScreeningAuditLog } from '@/lib/audit/screening-audit-service'
 import { prisma } from '@/lib/prisma'
 import { handleCorsPreflight, jsonWithCors } from '@/lib/server/api-cors'
 import { getCrewSessionFromRequest, isCrewAuthorizedRequest } from '@/lib/server/crew-access-auth'
+import { isLegacyCdssEngineEnabled } from '@/lib/server/legacy-cdss'
 import { claimConsultEvent, releaseConsultEvent } from '@/lib/telemedicine/consult-dedupe'
 import { emitIntelligenceConsultEvents } from '@/lib/telemedicine/consult-intelligence-events'
 import {
@@ -24,6 +25,7 @@ import {
   parseNumber,
   pickString,
 } from '@/lib/telemedicine/consult-vital-signs'
+import { parseMiraDifferential } from '@/lib/telemedicine/mira-differential'
 import { emitAssistConsult } from '@/lib/telemedicine/socket-bridge'
 
 export const runtime = 'nodejs'
@@ -315,6 +317,8 @@ export async function POST(req: NextRequest) {
       target_doctor_id,
       sent_at,
     } = body
+    // MIRA's differential from Assist; a malformed one is dropped, the consult still goes through.
+    const miraDifferential = parseMiraDifferential(body.mira_differential)
 
     const {
       event_id,
@@ -406,6 +410,7 @@ export async function POST(req: NextRequest) {
           ? canonical_clinical
           : undefined,
       visit_history: Array.isArray(visit_history) ? visit_history : undefined,
+      mira_differential: miraDifferential ?? undefined,
     })
 
     if (!socketDelivered) {
@@ -491,25 +496,28 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    const diagnosisResponse = await buildConsultDiagnosisResponse({
-      consultId,
-      patient: isRecord(patient) ? patient : {},
-      ttv,
-      anthropometrics,
-      keluhanUtama: String(keluhan_utama),
-      keluhanTambahan: typeof keluhan_tambahan === 'string' ? keluhan_tambahan : undefined,
-      chronicDiseases: Array.isArray(penyakit_kronis) ? penyakit_kronis : [],
-      allergies: Array.isArray(alergi) ? alergi : [],
-      statusKehamilan:
-        status_kehamilan === 'hamil' ||
-        status_kehamilan === 'tidak_hamil' ||
-        status_kehamilan === 'tidak_diisi'
-          ? status_kehamilan
-          : undefined,
-      screeningSummary: screening_result?.summary,
-      clinicalContext: clinicalCtx,
-      canonicalClinical: canonicalClinicalCtx,
-    })
+    // The legacy engine is retired for MIRA; it only runs when LEGACY_CDSS_ENGINE_ENABLED is on.
+    const diagnosisResponse = isLegacyCdssEngineEnabled()
+      ? await buildConsultDiagnosisResponse({
+          consultId,
+          patient: isRecord(patient) ? patient : {},
+          ttv,
+          anthropometrics,
+          keluhanUtama: String(keluhan_utama),
+          keluhanTambahan: typeof keluhan_tambahan === 'string' ? keluhan_tambahan : undefined,
+          chronicDiseases: Array.isArray(penyakit_kronis) ? penyakit_kronis : [],
+          allergies: Array.isArray(alergi) ? alergi : [],
+          statusKehamilan:
+            status_kehamilan === 'hamil' ||
+            status_kehamilan === 'tidak_hamil' ||
+            status_kehamilan === 'tidak_diisi'
+              ? status_kehamilan
+              : undefined,
+          screeningSummary: screening_result?.summary,
+          clinicalContext: clinicalCtx,
+          canonicalClinical: canonicalClinicalCtx,
+        })
+      : null
 
     emitIntelligenceConsultEvents({
       consultId,
@@ -517,6 +525,7 @@ export async function POST(req: NextRequest) {
       receivedAt,
       screeningResult: screening_result,
       diagnosisResponse,
+      miraDifferential,
       canonicalClinical: intelligenceClinicalCtx,
     })
 

@@ -3,7 +3,7 @@ import test from 'node:test'
 
 import type { IntelligenceEventPayload } from '@/lib/intelligence/types'
 
-import { emitIntelligenceConsultEvents } from './consult-intelligence-events'
+import { emitIntelligenceConsultEvents, toMiraDashboardSuggestion } from './consult-intelligence-events'
 
 type EmittedEvent = { event: string; payload: IntelligenceEventPayload }
 
@@ -59,4 +59,56 @@ test('the Assist trajectory narrative still reaches the dashboard as a CDSS aler
   const suggestion = emitted.find(({ event }) => event === 'cdss:suggestion-ready')
   assert.ok(suggestion, 'an Assist consult with a trajectory must emit cdss:suggestion-ready')
   assert.match(JSON.stringify(suggestion.payload.data), /Tekanan darah turun pada tiga kunjungan terakhir/)
+})
+
+const MIRA = {
+  engine: 'MIRA' as const,
+  generated_at: '2026-10-04T00:00:00.000Z',
+  items: [
+    { rank: 1, icd10: 'J18.9', nama: 'Pneumonia', confidence: 0.7, cannot_miss: false, rationale: 'Demam; ronki' },
+    { rank: 2, icd10: 'I26.9', nama: 'Emboli paru', confidence: 0.2, cannot_miss: true, rationale: 'Takikardia' },
+  ],
+  next_best_actions: [{ kind: 'exam' as const, item: 'Auskultasi paru', reason: 'Cari ronki fokal' }],
+  missing_information: ['Riwayat perjalanan'],
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+}
+
+test('the MIRA differential maps to one dashboard suggestion with every item and its flags', () => {
+  assert.deepEqual(toMiraDashboardSuggestion(MIRA), {
+    engineVersion: 'MIRA',
+    confidence: 0.7,
+    reasoning: 'Diferensial MIRA dari Assist (dihasilkan 2026-10-04T00:00:00.000Z).',
+    supportingEvidence: [
+      'Pemeriksaan: Auskultasi paru — Cari ronki fokal',
+      'Data yang belum ada: Riwayat perjalanan',
+    ],
+    differentialDiagnoses: [
+      { icd10Code: 'J18.9', description: 'Pneumonia — Demam; ronki', confidence: 0.7 },
+      { icd10Code: 'I26.9', description: 'Emboli paru (jangan terlewat) — Takikardia', confidence: 0.2 },
+    ],
+    suggestedAt: '2026-10-04T00:00:00.000Z',
+  })
+})
+
+test('with the engine retired, the MIRA differential reaches the dashboard as MIRA output', () => {
+  const emitted = captureIntelligenceEvents()
+
+  emitIntelligenceConsultEvents({
+    consultId: 'consult-test-0003',
+    keluhanUtama: 'Demam dan batuk',
+    receivedAt: '2026-10-04T00:00:00.000Z',
+    diagnosisResponse: null,
+    miraDifferential: MIRA,
+  })
+
+  const ready = emitted.find(({ event }) => event === 'cdss:suggestion-ready')
+  assert.ok(ready, 'a consult with a MIRA differential must emit cdss:suggestion-ready')
+  assert.equal(ready.payload.data.source, 'mira')
+  const response = ready.payload.data.response
+  assert.ok(isRecord(response))
+  assert.equal(response.engineVersion, 'MIRA')
+  assert.deepEqual(response.suggestions, [toMiraDashboardSuggestion(MIRA)])
 })

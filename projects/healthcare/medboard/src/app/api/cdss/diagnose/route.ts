@@ -8,6 +8,11 @@ import {
   isClinicalCrewRole,
 } from '@/lib/server/crew-access-auth'
 import { getRequestIp, writeSecurityAuditLog } from '@/lib/server/security-audit'
+import { isLegacyCdssEngineEnabled } from '@/lib/server/legacy-cdss'
+import {
+  LEGACY_CDSS_RETIRED_MESSAGE,
+  LEGACY_CDSS_RETIRED_REASON,
+} from '@/lib/legacy-cdss-retirement'
 
 export const runtime = 'nodejs'
 
@@ -78,6 +83,25 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Akses ditolak' }, { status: 403 })
   }
 
+  if (!isLegacyCdssEngineEnabled()) {
+    await writeSecurityAuditLog({
+      endpoint: '/api/cdss/diagnose',
+      action: 'CDSS_DIAGNOSE',
+      result: 'failure',
+      userId: session.username,
+      role: session.role,
+      ip,
+      metadata: {
+        authorizationMode,
+        reason: LEGACY_CDSS_RETIRED_REASON,
+      },
+    })
+    return NextResponse.json(
+      { error: LEGACY_CDSS_RETIRED_MESSAGE, retired: true },
+      { status: 503 }
+    )
+  }
+
   let body: unknown
   try {
     body = await request.json()
@@ -145,4 +169,13 @@ export async function POST(request: Request) {
     })
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
+}
+
+/** Whether the retired engine is switched on, so the EMR page can disable its CDSS button. */
+export async function GET(request: Request) {
+  if (!getCrewSessionFromRequest(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+  const enabled = isLegacyCdssEngineEnabled()
+  return NextResponse.json({ enabled, message: enabled ? null : LEGACY_CDSS_RETIRED_MESSAGE })
 }

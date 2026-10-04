@@ -273,3 +273,44 @@ test('canonical differential route maps glucose and writes both clinical plus se
   assert.equal(body.data.meta.model_version, 'TEST-MODEL')
   assert.equal(body.data.diagnosis_suggestions[0]?.icd10_code, 'E11.65')
 })
+
+test('canonical differential route answers 503 once the legacy engine is retired, after auth', async () => {
+  const { createCanonicalDifferentialPostHandler } = await loadCanonicalDifferentialRouteModule()
+  const auditCalls: Array<Record<string, unknown>> = []
+  let engineCalls = 0
+
+  const handler = createCanonicalDifferentialPostHandler({
+    getIp: () => null,
+    getSession: () => ({ username: 'dokter-a', role: 'DOKTER', profession: 'Dokter' }),
+    getAuthorizationMode: () => 'session',
+    isClinicalRole: () => true,
+    isLegacyEngineEnabled: () => false,
+    runDiagnosis: async () => {
+      engineCalls += 1
+      throw new Error('should not be called')
+    },
+    writeClinicalAudit: async () => undefined,
+    writeSecurityAudit: async (input) => {
+      auditCalls.push(input)
+    },
+  })
+
+  const response = await handler(
+    new Request('http://localhost/api/clinical/differential/evaluate', {
+      method: 'POST',
+      body: JSON.stringify({}),
+      headers: { 'content-type': 'application/json' },
+    })
+  )
+  const body = await response.json()
+
+  assert.equal(response.status, 503)
+  assert.equal(body.ok, false)
+  assert.equal(body.retired, true)
+  assert.equal(engineCalls, 0)
+  assert.equal(auditCalls[0]?.result, 'failure')
+  assert.deepEqual(auditCalls[0]?.metadata, {
+    authorizationMode: 'session',
+    reason: 'legacy_cdss_retired_for_mira',
+  })
+})

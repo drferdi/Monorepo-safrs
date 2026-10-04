@@ -86,6 +86,8 @@ const suites: Suite[] = [
       'src/lib/telemedicine/consult-api-validation.test.ts',
       'src/lib/telemedicine/consult-vital-signs.test.ts',
       'src/lib/telemedicine/consult-dedupe.test.ts',
+      'src/lib/telemedicine/mira-differential.test.ts',
+      'src/app/telemedicine/MiraDifferentialCard.test.tsx',
       'src/lib/audit/screening-audit-service.test.ts',
       'src/lib/server/doctor-contacts.test.ts',
       'src/app/api/clinical/anamnesis/extract/route.test.ts',

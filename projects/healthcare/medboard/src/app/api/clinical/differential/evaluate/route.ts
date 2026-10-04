@@ -1,5 +1,9 @@
 import { NextResponse, type NextRequest } from 'next/server'
 
+import {
+  LEGACY_CDSS_RETIRED_MESSAGE,
+  LEGACY_CDSS_RETIRED_REASON,
+} from '@/lib/legacy-cdss-retirement'
 import type { CDSSEngineInput } from '@/lib/cdss/types'
 
 export const runtime = 'nodejs'
@@ -125,6 +129,8 @@ type CanonicalDifferentialHandlerDependencies = {
     request: Request
   ) => MaybePromise<'session' | 'automation-token' | 'none'>
   isClinicalRole: (role: string | null | undefined) => MaybePromise<boolean>
+  /** False once the legacy engine is retired for MIRA; the engine runs when not given. */
+  isLegacyEngineEnabled?: () => MaybePromise<boolean>
   runDiagnosis: (input: CDSSEngineInput) => Promise<CanonicalDifferentialResult>
   writeClinicalAudit: (input: CDSSAuditEntryInput) => Promise<void>
   writeSecurityAudit: (input: SecurityAuditInput) => Promise<void>
@@ -296,6 +302,27 @@ export function createCanonicalDifferentialPostHandler(
       )
     }
 
+    if (deps.isLegacyEngineEnabled && !(await deps.isLegacyEngineEnabled())) {
+      await deps.writeSecurityAudit({
+        endpoint: '/api/clinical/differential/evaluate',
+        action: 'CLINICAL_DIFFERENTIAL_EVALUATE',
+        result: 'failure',
+        userId: session.username,
+        role: session.role,
+        ip,
+        metadata: {
+          authorizationMode,
+          reason: LEGACY_CDSS_RETIRED_REASON,
+        },
+      })
+      return jsonWithCanonicalCors(
+        request,
+        CORS_METHODS,
+        { ok: false, error: LEGACY_CDSS_RETIRED_MESSAGE, retired: true },
+        { status: 503 }
+      )
+    }
+
     let body: CanonicalDifferentialRequest
     try {
       body = (await request.json()) as CanonicalDifferentialRequest
@@ -459,6 +486,10 @@ export const POST = createCanonicalDifferentialPostHandler({
   isClinicalRole: async role => {
     const { isClinicalCrewRole } = await import('@/lib/server/crew-access-auth')
     return isClinicalCrewRole(role)
+  },
+  isLegacyEngineEnabled: async () => {
+    const { isLegacyCdssEngineEnabled } = await import('@/lib/server/legacy-cdss')
+    return isLegacyCdssEngineEnabled()
   },
   runDiagnosis: async input => {
     const { runDiagnosisEngine } = await import('@/lib/cdss/engine')

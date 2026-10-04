@@ -24,6 +24,7 @@ import {
   normalizeScrapedVisitHistory,
   type ScrapedVisit,
 } from '@/lib/emr/visit-history'
+import { LEGACY_CDSS_RETIRED_MESSAGE } from '@/lib/legacy-cdss-retirement'
 import { generateNarrative } from '@/lib/narrative-generator'
 import {
   hasRespiratoryComplaint,
@@ -1557,6 +1558,24 @@ export default function EMRPage() {
   const [cdssResult, setCdssResult] = useState<CDSSResult | null>(null)
   const [cdssLoading, setCdssLoading] = useState(false)
   const [cdssError, setCdssError] = useState('')
+  // Set when MedBoard's own diagnosis engine is retired for MIRA; the CDSS button is then disabled.
+  const [cdssRetiredMessage, setCdssRetiredMessage] = useState<string | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    void fetch('/api/cdss/diagnose')
+      .then(res => (res.ok ? res.json() : null))
+      .then((status: unknown) => {
+        if (cancelled || typeof status !== 'object' || status === null) return
+        if (!('enabled' in status) || status.enabled !== false) return
+        const message = 'message' in status ? status.message : null
+        setCdssRetiredMessage(typeof message === 'string' ? message : LEGACY_CDSS_RETIRED_MESSAGE)
+      })
+      .catch(() => undefined)
+    return () => {
+      cancelled = true
+    }
+  }, [])
   const [cdssBranchRunId, setCdssBranchRunId] = useState(0)
   const [selectedSuggestionKey, setSelectedSuggestionKey] = useState<string | null>(null)
   const [selectionSavingKey, setSelectionSavingKey] = useState<string | null>(null)
@@ -3309,6 +3328,9 @@ export default function EMRPage() {
           .json()
           .catch(() => ({ error: 'Gagal memproses diagnosis' }))) as {
           error?: string
+        }
+        if (res.status === 503) {
+          setCdssRetiredMessage(errorPayload.error ?? LEGACY_CDSS_RETIRED_MESSAGE)
         }
         throw new Error(errorPayload.error ?? `HTTP ${res.status}`)
       }
@@ -7979,19 +8001,32 @@ export default function EMRPage() {
                             </div>
                           )}
 
+                        {cdssRetiredMessage && (
+                          <div className="assessment-synthesis-chip" role="status">
+                            {cdssRetiredMessage}
+                          </div>
+                        )}
+
                         <div className="emr-action-bar assessment-action-bar">
                           <button
                             onClick={() => void runCDSS()}
-                            disabled={cdssLoading || !keluhanUtama.trim()}
+                            disabled={cdssLoading || !keluhanUtama.trim() || Boolean(cdssRetiredMessage)}
+                            title={cdssRetiredMessage ?? undefined}
                             className="assessment-run-button"
                             style={{
                               flex: 1,
                               cursor:
-                                cdssLoading || !keluhanUtama.trim() ? 'not-allowed' : 'pointer',
-                              opacity: !keluhanUtama.trim() ? 0.4 : 1,
+                                cdssLoading || !keluhanUtama.trim() || cdssRetiredMessage
+                                  ? 'not-allowed'
+                                  : 'pointer',
+                              opacity: !keluhanUtama.trim() || cdssRetiredMessage ? 0.4 : 1,
                             }}
                           >
-                            {cdssLoading ? '⏳ MEMPROSES CDSS...' : '▶ JALANKAN CDSS ENGINE'}
+                            {cdssRetiredMessage
+                              ? '⏸ CDSS DIISTIRAHATKAN — PAKAI MIRA'
+                              : cdssLoading
+                                ? '⏳ MEMPROSES CDSS...'
+                                : '▶ JALANKAN CDSS ENGINE'}
                           </button>
                           <button
                             onClick={resetEmrDraft}

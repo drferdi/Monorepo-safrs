@@ -1,10 +1,37 @@
-import type { CDSSResponse } from '@abyss/types'
+import type { CDSSResponse, IskandarSuggestion } from '@abyss/types'
 
 import {
   emitCdssSuggestionReady,
   emitCriticalAlert,
   emitEncounterUpdated,
 } from '@/lib/intelligence/socket-bridge'
+
+import type { MiraDifferential } from './mira-differential'
+
+const NEXT_ACTION_LABEL = { question: 'Tanyakan', exam: 'Pemeriksaan', test: 'Penunjang' } as const
+
+/** MIRA's differential as one dashboard suggestion, labelled as MIRA output with its time. */
+export function toMiraDashboardSuggestion(mira: MiraDifferential): IskandarSuggestion {
+  return {
+    engineVersion: 'MIRA',
+    confidence: mira.items[0].confidence,
+    reasoning: `Diferensial MIRA dari Assist (dihasilkan ${mira.generated_at}).`,
+    supportingEvidence: [
+      ...mira.next_best_actions.map(
+        action => `${NEXT_ACTION_LABEL[action.kind]}: ${action.item} — ${action.reason}`
+      ),
+      ...mira.missing_information.map(item => `Data yang belum ada: ${item}`),
+    ],
+    differentialDiagnoses: mira.items.map(item => ({
+      icd10Code: item.icd10,
+      description: `${item.nama}${item.cannot_miss ? ' (jangan terlewat)' : ''}${
+        item.rationale ? ` — ${item.rationale}` : ''
+      }`,
+      confidence: item.confidence,
+    })),
+    suggestedAt: mira.generated_at,
+  }
+}
 
 function buildPatientLabel(consultId: string): string {
   return `Pasien #${consultId.slice(-6).toUpperCase()}`
@@ -40,6 +67,7 @@ export function emitIntelligenceConsultEvents(input: {
       }
     | undefined
   diagnosisResponse?: CDSSResponse | null
+  miraDifferential?: MiraDifferential | null
   canonicalClinical?: Record<string, unknown> | null
 }): void {
   const note =
@@ -85,16 +113,28 @@ export function emitIntelligenceConsultEvents(input: {
     trajectory && typeof trajectory === 'object' && !Array.isArray(trajectory)
       ? String((trajectory as Record<string, unknown>).narrative ?? '')
       : ''
+  const miraSuggestions = input.miraDifferential
+    ? [toMiraDashboardSuggestion(input.miraDifferential)]
+    : []
+  const source = input.diagnosisResponse
+    ? 'iskandar-engine'
+    : miraSuggestions.length > 0
+      ? 'mira'
+      : 'assist-screening'
   const cdssResponse =
     input.diagnosisResponse ??
-    (input.screeningResult?.summary || recommendedAction || trajectoryNarrative || riskLevel
+    (miraSuggestions.length > 0 ||
+    input.screeningResult?.summary ||
+    recommendedAction ||
+    trajectoryNarrative ||
+    riskLevel
       ? {
           requestId: `assist-${input.consultId}`,
-          engineVersion: 'assist-screening-v1',
+          engineVersion: miraSuggestions.length > 0 ? 'MIRA' : 'assist-screening-v1',
           processedAt: input.receivedAt,
           latencyMs: 0,
           triageLevel: mapRiskLevelToTriageLevel(riskLevel),
-          suggestions: [],
+          suggestions: miraSuggestions,
           alerts: [
             {
               id: `assist-screening-${input.consultId}`,
@@ -140,7 +180,7 @@ export function emitIntelligenceConsultEvents(input: {
       data: {
         patientLabel,
         note,
-        source: input.diagnosisResponse ? 'iskandar-engine' : 'assist-screening',
+        source,
         response: cdssResponse,
       },
     })
@@ -162,7 +202,7 @@ export function emitIntelligenceConsultEvents(input: {
       recommendedAction:
         diagnosisCriticalAlert?.message || recommendedAction,
       patientLabel,
-      source: input.diagnosisResponse ? 'iskandar-engine' : 'assist-screening',
+      source,
     },
   })
 }

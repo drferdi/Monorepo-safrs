@@ -21,7 +21,8 @@
 
 | Method | Endpoint | Deskripsi |
 |--------|----------|-----------|
-| POST | `/api/cdss/diagnose` | Submit kasus ke Iskandar Engine V2 → differential diagnosis |
+| POST | `/api/cdss/diagnose` | Submit kasus ke Iskandar Engine V2 → differential diagnosis. **Diistirahatkan**: 503 `{ error, retired: true }` kecuali `LEGACY_CDSS_ENGINE_ENABLED=true` |
+| GET | `/api/cdss/diagnose` | Status engine untuk halaman EMR: `{ enabled, message }` |
 | GET | `/api/cdss/symptoms` | Autocomplete gejala |
 | POST | `/api/cdss/autocomplete` | Autocomplete diagnosis/gejala |
 | POST | `/api/cdss/red-flag-ack` | Acknowledge red flag alert |
@@ -107,7 +108,7 @@
 | POST | `/api/telemedicine/request/[id]/handled` | Tandai request handled |
 | POST | `/api/telemedicine/token` | Generate LiveKit room token |
 | GET | `/api/telemedicine/join/[token]` | Join room via token |
-| POST | `/api/consult` | Submit konsultasi (dari pasien) |
+| POST | `/api/consult` | Submit konsultasi dari Assist. `mira_differential` (opsional) diteruskan ke dokter lewat socket dan dashboard; engine lama hanya jalan bila `LEGACY_CDSS_ENGINE_ENABLED=true` |
 | POST | `/api/consult/accept` | Terima konsultasi |
 | POST | `/api/consult/transfer-to-emr` | Transfer hasil konsultasi ke EMR |
 

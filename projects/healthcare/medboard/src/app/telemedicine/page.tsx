@@ -22,8 +22,10 @@ import { useTheme } from '@/components/ThemeProvider'
 import { AppointmentBooking } from '@/components/telemedicine/AppointmentBooking'
 import { isDoctorProfession } from '@/lib/crew-access'
 import { buildEmrSourceHref, EMR_SOURCE_ORIGINS } from '@/lib/emr/source-trace'
+import type { MiraDifferential } from '@/lib/telemedicine/mira-differential'
 import type { AppointmentStatus, AppointmentWithDetails } from '@/types/telemedicine.types'
 
+import { MiraDifferentialCard } from './MiraDifferentialCard'
 import styles from './telemedicine.module.css'
 
 interface TeleRequest {
@@ -86,6 +88,8 @@ interface AssistConsult {
     }
     immediate_actions?: string[]
   }
+  /** MIRA's differential, when Assist had one for this encounter */
+  mira_differential?: MiraDifferential
 }
 
 /* ── Design tokens — EMR Clinical Flow Style ── */
@@ -1463,6 +1467,10 @@ export default function TelemedicinePage(): React.JSX.Element {
                   </span>
                 ))}
               </div>
+            )}
+
+            {activeConsult.mira_differential && (
+              <MiraDifferentialCard differential={activeConsult.mira_differential} />
             )}
 
             {activeConsult.canonical_clinical && (

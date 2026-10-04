@@ -86,6 +86,8 @@ async function main(): Promise<void> {
   process.env.CREW_ACCESS_USERS_JSON = ''
   process.env.CREW_ACCESS_AUTOMATION_TOKEN = 'test-automation-token'
   process.env.DATABASE_URL = 'postgresql://test:test@localhost:5432/puskesmas_test'
+  // The engine is retired by default; these tests exercise it, so it is switched back on.
+  process.env.LEGACY_CDSS_ENGINE_ENABLED = 'true'
 
   const securityAuditEntries: SecurityAuditEntry[] = []
   const cdssAuditEntries: CDSSAuditEntry[] = []
@@ -423,6 +425,9 @@ async function main(): Promise<void> {
     )
     const autocompleteRoute = await import('../src/app/api/cdss/autocomplete/route')
     const diagnoseRoute = await import('../src/app/api/cdss/diagnose/route')
+    const { LEGACY_CDSS_RETIRED_MESSAGE, LEGACY_CDSS_RETIRED_REASON } = await import(
+      '../src/lib/legacy-cdss-retirement'
+    )
     const suggestionSelectedRoute = await import('../src/app/api/cdss/suggestion-selected/route')
     const outcomeFeedbackRoute = await import('../src/app/api/cdss/outcome-feedback/route')
     const redFlagAckRoute = await import('../src/app/api/cdss/red-flag-ack/route')
@@ -653,6 +658,68 @@ async function main(): Promise<void> {
         assert.equal(response.status, 200, role)
         assert.equal(diagnosisEngineCalls.length, 1, role)
       }
+    })
+
+    const withLegacyEngine = async (enabled: boolean, run: () => Promise<void>) => {
+      process.env.LEGACY_CDSS_ENGINE_ENABLED = enabled ? 'true' : 'false'
+      try {
+        await run()
+      } finally {
+        process.env.LEGACY_CDSS_ENGINE_ENABLED = 'true'
+      }
+    }
+
+    test('Retired CDSS diagnose: engine mati secara default, dokter mendapat 503 tanpa engine berjalan', async () => {
+      await withLegacyEngine(false, async () => {
+        diagnosisEngineCalls.length = 0
+        securityAuditEntries.length = 0
+
+        const response = await postDiagnoseAs('DOKTER', 'Dokter')
+
+        assert.equal(response.status, 503)
+        assert.deepEqual(await response.json(), {
+          error: LEGACY_CDSS_RETIRED_MESSAGE,
+          retired: true,
+        })
+        assert.equal(diagnosisEngineCalls.length, 0)
+        assert.equal(securityAuditEntries[0]?.result, 'failure')
+        assert.equal(securityAuditEntries[0]?.metadata?.reason, LEGACY_CDSS_RETIRED_REASON)
+      })
+    })
+
+    test('Retired CDSS diagnose: GET memberi tahu halaman EMR apakah engine aktif', async () => {
+      const statusRequest = () =>
+        diagnoseRoute.GET(
+          new Request('http://localhost/api/cdss/diagnose', {
+            headers: {
+              cookie: `${cookieName}=${
+                createCrewSession({
+                  username: 'dokter.status',
+                  displayName: 'Dokter Status',
+                  email: 'dokter.status@example.com',
+                  institution: 'Puskesmas Balowerti Kota Kediri',
+                  profession: 'Dokter',
+                  role: 'DOKTER',
+                }).token
+              }`,
+            },
+          })
+        )
+
+      await withLegacyEngine(false, async () => {
+        const response = await statusRequest()
+        assert.equal(response.status, 200)
+        assert.deepEqual(await response.json(), {
+          enabled: false,
+          message: LEGACY_CDSS_RETIRED_MESSAGE,
+        })
+      })
+      await withLegacyEngine(true, async () => {
+        assert.deepEqual(await (await statusRequest()).json(), { enabled: true, message: null })
+      })
+
+      const anonymous = await diagnoseRoute.GET(new Request('http://localhost/api/cdss/diagnose'))
+      assert.equal(anonymous.status, 401)
     })
 
     test('Synthesia narrative: input dengan spasi tersembunyi tetap tersanitasi dan stabil', () => {
