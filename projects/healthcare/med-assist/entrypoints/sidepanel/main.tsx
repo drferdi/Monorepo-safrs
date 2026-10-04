@@ -1028,6 +1028,8 @@ export function SentraAssistSidepanelApp(): JSX.Element {
                                 temp: ttvState.temp,
                                 spo2: ttvState.spo2,
                                 glucose: ttvState.glucose,
+                                avpu: ttvState.avpu,
+                                supplemental_o2: ttvState.supplemental_o2,
                               }}
                               symptomText={ttvState.symptomText}
                               allergies={ttvState.allergies}

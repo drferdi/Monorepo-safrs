@@ -231,14 +231,27 @@ function scoreTemperature(temp: number | undefined): ClinicalNEWS2ParameterScore
 function scoreConsciousness(
   consciousness: SymphonyVitalsInput['consciousness']
 ): ClinicalNEWS2ParameterScore {
-  if (consciousness === undefined) {
-    return { parameter: 'consciousness', value: undefined, score: 0, unit: 'AVPU' };
+  // Unknown consciousness is missing data, not a normal finding.
+  if (consciousness === undefined || consciousness === 'unknown') {
+    return { parameter: 'consciousness', value: undefined, score: 0, unit: 'ACVPU' };
   }
   return {
     parameter: 'consciousness',
     value: consciousness,
-    score: consciousness === 'alert' || consciousness === 'unknown' ? 0 : 3,
-    unit: 'AVPU',
+    score: consciousness === 'alert' ? 0 : 3,
+    unit: 'ACVPU',
+  };
+}
+
+function scoreSupplementalO2(onO2: boolean | undefined): ClinicalNEWS2ParameterScore {
+  if (onO2 === undefined) {
+    return { parameter: 'supplementalO2', value: undefined, score: 0, unit: '' };
+  }
+  return {
+    parameter: 'supplementalO2',
+    value: onO2 ? 'ya' : 'tidak',
+    score: onO2 ? 2 : 0,
+    unit: '',
   };
 }
 
@@ -301,6 +314,7 @@ export function calculateClinicalNEWS2(
     scoreHeartRate(vitals.heartRate),
     scoreTemperature(vitals.temperatureC),
     scoreConsciousness(vitals.consciousness),
+    scoreSupplementalO2(vitals.supplementalO2),
   ];
   const scoreableParameters = parameterScores.filter((parameter) => parameter.value !== undefined);
   const aggregateScore = parameterScores.reduce((sum, parameter) => sum + parameter.score, 0);

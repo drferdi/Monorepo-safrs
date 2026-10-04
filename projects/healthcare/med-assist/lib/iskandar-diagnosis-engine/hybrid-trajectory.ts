@@ -103,8 +103,22 @@ export interface HybridTrajectoryInput {
     keluhanTambahan?: string;
     spo2?: number;
     consciousness?: SymphonyConsciousnessLevel;
+    supplementalO2?: boolean;
     ageYears?: number;
   };
+}
+
+const AVPU_TO_CONSCIOUSNESS: Record<'A' | 'C' | 'V' | 'P' | 'U', SymphonyConsciousnessLevel> = {
+  A: 'alert',
+  C: 'confusion',
+  V: 'voice',
+  P: 'pain',
+  U: 'unresponsive',
+};
+
+/** Observed ACVPU letter from the TTV form to the Symphony consciousness level. */
+export function avpuToConsciousness(avpu: 'A' | 'C' | 'V' | 'P' | 'U'): SymphonyConsciousnessLevel {
+  return AVPU_TO_CONSCIOUSNESS[avpu];
 }
 
 export interface ComplaintSignal {
@@ -338,6 +352,7 @@ export function adaptVisitRecordsToSymphonyVitals(
       glucoseMgDl: visit.vitals.glucose > 0 ? visit.vitals.glucose : undefined,
       spo2: isLatest ? currentEncounter?.spo2 || visitSpo2 : visitSpo2,
       consciousness: isLatest ? currentEncounter?.consciousness : undefined,
+      supplementalO2: isLatest ? currentEncounter?.supplementalO2 : undefined,
     };
   });
 }

@@ -13,7 +13,8 @@ export type SymphonyMomentumLevel =
   'INSUFFICIENT_DATA' | 'STABLE' | 'DRIFTING' | 'ACCELERATING' | 'CONVERGING' | 'CRITICAL_MOMENTUM';
 export type SymphonyConvergencePattern =
   'cardiovascular' | 'shock' | 'sepsis_like' | 'respiratory' | 'multi_system' | 'none';
-export type SymphonyConsciousnessLevel = 'alert' | 'voice' | 'pain' | 'unresponsive' | 'unknown';
+export type SymphonyConsciousnessLevel =
+  'alert' | 'confusion' | 'voice' | 'pain' | 'unresponsive' | 'unknown';
 export type SymphonyTrajectoryDirection = 'worsening' | 'improving' | 'stable' | 'unknown';
 
 import { clamp, round } from './math-utils';
@@ -38,6 +39,8 @@ export interface SymphonyVitalsInput {
   glucoseMgDl?: number;
   spo2?: number;
   consciousness?: SymphonyConsciousnessLevel;
+  /** On supplemental oxygen at the observation (NEWS2 +2). Undefined when not recorded. */
+  supplementalO2?: boolean;
 }
 
 export interface SymphonyVitalTrend {

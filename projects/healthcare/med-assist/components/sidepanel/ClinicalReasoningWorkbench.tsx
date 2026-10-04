@@ -24,6 +24,9 @@ export interface ClinicalReasoningWorkbenchVitals {
   temp: string;
   spo2: string;
   glucose: string;
+  /** Observed ACVPU and oxygen from the TTV form; absent on surfaces that do not record them. */
+  avpu?: 'A' | 'C' | 'V' | 'P' | 'U';
+  supplemental_o2?: boolean;
 }
 
 export interface ClinicalReasoningWorkbenchPatient {
@@ -99,7 +102,7 @@ export function ClinicalReasoningWorkbench({
   const durationLabel = anamnesaDraft?.metadata.durationLabel || '';
   // The trajectory reloads whenever this object changes identity, and the side panel
   // re-renders on every storage write, so it must change only when a vital changes.
-  const { sbp, dbp, hr, rr, temp, spo2, glucose } = vitals;
+  const { sbp, dbp, hr, rr, temp, spo2, glucose, avpu, supplemental_o2 } = vitals;
   const trajectoryVitals = useMemo(
     () => ({
       sbp: toInt(sbp),
@@ -109,8 +112,10 @@ export function ClinicalReasoningWorkbench({
       temp: toFloat(temp),
       spo2: toInt(spo2),
       glucose: toInt(glucose),
+      avpu,
+      supplementalO2: supplemental_o2,
     }),
-    [sbp, dbp, hr, rr, temp, spo2, glucose]
+    [sbp, dbp, hr, rr, temp, spo2, glucose, avpu, supplemental_o2]
   );
   // The scanned rows go into the visit store the recurrent-diagnosis read (here and on the
   // diagnosis page) uses. Written once per patient and scan result, not on every render.

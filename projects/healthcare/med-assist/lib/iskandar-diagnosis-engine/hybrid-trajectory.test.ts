@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   adaptVisitRecordsToSymphonyVitals,
   analyzeHybridTrajectory,
+  avpuToConsciousness,
   compareTrajectoryEngines,
   mapHybridTrajectoryToLegacyAnalysis,
 } from './hybrid-trajectory';
@@ -990,5 +991,31 @@ describe('hybrid-trajectory', () => {
 
     expect(comparison.upgrades.length).toBeGreaterThan(0);
     expect(comparison.evaluationReport.some((line) => line.startsWith('UPGRADE: '))).toBe(true);
+  });
+});
+
+describe('hybrid-trajectory current-encounter NEWS2 inputs', () => {
+  it('maps the observed ACVPU letter to the Symphony consciousness level', () => {
+    expect(avpuToConsciousness('A')).toBe('alert');
+    expect(avpuToConsciousness('C')).toBe('confusion');
+    expect(avpuToConsciousness('V')).toBe('voice');
+    expect(avpuToConsciousness('P')).toBe('pain');
+    expect(avpuToConsciousness('U')).toBe('unresponsive');
+  });
+
+  it('carries consciousness and supplemental oxygen into the latest visit only', () => {
+    const visits: VisitRecord[] = [
+      makeVisit(1, { sbp: 126, dbp: 80, hr: 78, rr: 18, temp: 36.7, glucose: 128 }),
+      makeVisit(2, { sbp: 128, dbp: 82, hr: 80, rr: 18, temp: 36.8, glucose: 130 }),
+    ];
+
+    const adapted = adaptVisitRecordsToSymphonyVitals(visits, {
+      consciousness: 'confusion',
+      supplementalO2: true,
+    });
+
+    expect(adapted[0].supplementalO2).toBeUndefined();
+    expect(adapted[1].consciousness).toBe('confusion');
+    expect(adapted[1].supplementalO2).toBe(true);
   });
 });

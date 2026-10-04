@@ -49,6 +49,7 @@ vi.mock('@/lib/api/bridge-client', () => ({
 
 vi.mock('@/lib/iskandar-diagnosis-engine/hybrid-trajectory', () => ({
   analyzeHybridTrajectory: mocks.analyzeHybridTrajectory,
+  avpuToConsciousness: (avpu: string) => (avpu === 'C' ? 'confusion' : 'alert'),
   compareTrajectoryEngines: vi.fn(),
   isTrajectoryCompareModeEnabled: vi.fn(() => false),
   mapHybridTrajectoryToLegacyAnalysis: mocks.mapHybridTrajectoryToLegacyAnalysis,
@@ -123,7 +124,10 @@ const PREFETCHED_VISITS = [
   },
 ];
 
-function renderTrajectory(shellMode: 'standalone' | 'embedded') {
+function renderTrajectory(
+  shellMode: 'standalone' | 'embedded',
+  observed: { avpu?: 'A' | 'C' | 'V' | 'P' | 'U'; supplementalO2?: boolean } = {}
+) {
   return render(
     <ClinicalTrajectory
       shellMode={shellMode}
@@ -135,6 +139,7 @@ function renderTrajectory(shellMode: 'standalone' | 'embedded') {
         temp: 38.2,
         spo2: 92,
         glucose: 286,
+        ...observed,
       }}
       keluhanUtama="Nyeri dada"
       keluhanTambahan="Sesak"
@@ -189,5 +194,19 @@ describe('ClinicalTrajectory embedded patient context boundary', () => {
     const marker = await screen.findByTestId('mock-trajectory-v2');
     expect(marker).toHaveAttribute('data-has-patient-context', 'yes');
     expect(marker).toHaveAttribute('data-patient-name', 'Tn. Sentra');
+  });
+
+  it('passes the observed ACVPU and supplemental oxygen into the trajectory NEWS2 input', async () => {
+    renderTrajectory('embedded', { avpu: 'C', supplementalO2: true });
+
+    await screen.findByTestId('mock-trajectory-v2');
+    expect(mocks.analyzeHybridTrajectory).toHaveBeenCalledWith(
+      expect.objectContaining({
+        currentEncounter: expect.objectContaining({
+          consciousness: 'confusion',
+          supplementalO2: true,
+        }),
+      })
+    );
   });
 });

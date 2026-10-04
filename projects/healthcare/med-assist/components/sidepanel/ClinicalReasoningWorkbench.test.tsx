@@ -8,7 +8,7 @@ import {
 
 import type { VisitRecord } from '@/lib/iskandar-diagnosis-engine/visit-history-store';
 
-const { mockSaveScrapedVisits, mockSendMessage, mockUseRecurrentDiagnoses } = vi.hoisted(() => {
+const { mockSaveScrapedVisits, mockSendMessage, mockUseRecurrentDiagnoses, mockTrajectory } = vi.hoisted(() => {
   // One object, so the workbench's memos stay stable across renders.
   const noHistory = { candidates: [], loaded: true };
   return {
@@ -17,6 +17,7 @@ const { mockSaveScrapedVisits, mockSendMessage, mockUseRecurrentDiagnoses } = vi
       async () => ({ started: true, hash: 'k' })
     ),
     mockUseRecurrentDiagnoses: vi.fn((_rm: string) => noHistory),
+    mockTrajectory: vi.fn((_props: { vitals: Record<string, unknown> }) => null),
   };
 });
 
@@ -27,7 +28,7 @@ vi.mock('@/utils/messaging', () => ({ sendMessage: mockSendMessage }));
 vi.mock('@/components/clinical/diagnosis/useRecurrentDiagnoses', () => ({
   useRecurrentDiagnoses: mockUseRecurrentDiagnoses,
 }));
-vi.mock('@/components/clinical/ClinicalTrajectory', () => ({ ClinicalTrajectory: () => null }));
+vi.mock('@/components/clinical/ClinicalTrajectory', () => ({ ClinicalTrajectory: mockTrajectory }));
 
 function visit(index: number): VisitRecord {
   return {
@@ -165,5 +166,17 @@ describe('ClinicalReasoningWorkbench visit persistence', () => {
     );
     expect(mockSaveScrapedVisits).toHaveBeenCalledTimes(2);
     expect(mockSaveScrapedVisits).toHaveBeenLastCalledWith(next);
+  });
+
+  it('hands the observed ACVPU and supplemental oxygen to the trajectory', () => {
+    render(
+      <ClinicalReasoningWorkbench
+        {...props({ vitals: { ...props().vitals, avpu: 'C', supplemental_o2: true } })}
+      />
+    );
+    expect(mockTrajectory.mock.lastCall?.[0].vitals).toMatchObject({
+      avpu: 'C',
+      supplementalO2: true,
+    });
   });
 });

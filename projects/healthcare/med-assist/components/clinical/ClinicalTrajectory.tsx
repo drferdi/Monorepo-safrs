@@ -21,6 +21,7 @@ import {
 } from '@/lib/clinical/canonical-triage-builder';
 import {
   analyzeHybridTrajectory,
+  avpuToConsciousness,
   compareTrajectoryEngines,
   type HybridTrajectoryResult,
   isTrajectoryCompareModeEnabled,
@@ -54,6 +55,9 @@ export interface ClinicalTrajectoryProps {
     temp: number;
     spo2: number;
     glucose: number;
+    /** Observed ACVPU from the TTV form, for NEWS2. */
+    avpu?: 'A' | 'C' | 'V' | 'P' | 'U';
+    supplementalO2?: boolean;
   };
   keluhanUtama: string;
   keluhanTambahan?: string;
@@ -355,6 +359,8 @@ export const ClinicalTrajectory: React.FC<ClinicalTrajectoryProps> = ({
             keluhanUtama,
             keluhanTambahan,
             spo2: vitals.spo2,
+            consciousness: vitals.avpu ? avpuToConsciousness(vitals.avpu) : undefined,
+            supplementalO2: vitals.supplementalO2,
             ageYears: patientAge,
           },
         };
