@@ -17,6 +17,7 @@ import { createScreeningAuditLog } from '@/lib/audit/screening-audit-service'
 import { prisma } from '@/lib/prisma'
 import { handleCorsPreflight, jsonWithCors } from '@/lib/server/api-cors'
 import { getCrewSessionFromRequest, isCrewAuthorizedRequest } from '@/lib/server/crew-access-auth'
+import { claimConsultEvent, releaseConsultEvent } from '@/lib/telemedicine/consult-dedupe'
 import { emitIntelligenceConsultEvents } from '@/lib/telemedicine/consult-intelligence-events'
 import {
   buildConsultVitalSigns,
@@ -292,6 +293,7 @@ export async function POST(req: NextRequest) {
   }
 
   const session = getCrewSessionFromRequest(req)
+  let claimedEventId: string | undefined
 
   try {
     const body = await req.json()
@@ -365,6 +367,14 @@ export async function POST(req: NextRequest) {
 
     const consultId = `consult-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`
     const receivedAt = new Date().toISOString()
+
+    if (event_id) {
+      const earlierConsultId = claimConsultEvent(String(event_id), consultId)
+      if (earlierConsultId) {
+        return jsonWithCors(req, CORS_METHODS, { ok: true, consultId: earlierConsultId, event_id })
+      }
+      claimedEventId = String(event_id)
+    }
 
     const socketDelivered = emitAssistConsult({
       consultId,
@@ -516,6 +526,7 @@ export async function POST(req: NextRequest) {
       event_id: event_id ?? null,
     })
   } catch (err) {
+    if (claimedEventId) releaseConsultEvent(claimedEventId)
     console.error('[Consult] POST error:', err)
     return jsonWithCors(req, CORS_METHODS, { ok: false, error: 'Server error' }, { status: 500 })
   }
