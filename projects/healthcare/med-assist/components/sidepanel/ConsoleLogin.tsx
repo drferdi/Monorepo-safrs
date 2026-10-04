@@ -1,11 +1,8 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { browser } from 'wxt/browser';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import ThemeToggle from '@/components/ui/ThemeToggle';
 import type { AuthUser } from '@/lib/api/auth-store';
-
-const LOGIN_SOUND = '/assets/sounds/hello.mp3';
 
 type LoginStage = 'idle' | 'loading' | 'error';
 
@@ -27,7 +24,6 @@ export const ConsoleLogin: React.FC<{ onLoginSuccess: (user: AuthUser) => void }
   // browser supports WebAuthn AND a backend base URL is configured — in Mode
   // Lokal (no backend) it is hidden and password login is the only path.
   const [passkeyAvailable, setPasskeyAvailable] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -47,26 +43,8 @@ export const ConsoleLogin: React.FC<{ onLoginSuccess: (user: AuthUser) => void }
     };
   }, []);
 
-  useEffect(() => {
-    audioRef.current = new Audio(browser.runtime.getURL(LOGIN_SOUND));
-    audioRef.current.preload = 'auto';
-    audioRef.current.volume = 0.7;
-
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
-  }, []);
-
-  const playSound = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = 0;
-      audioRef.current.play().catch(() => {});
-    }
-  }, []);
-
+  // Chief, 2026-10-04: no sound on the way to the sponsor page; the one welcome sound plays
+  // when the main UI opens (runLaunchSequence in the side panel).
   const handleLogin = useCallback(async () => {
     if (!username.trim() || !password) return;
     setStage('loading');
@@ -82,13 +60,12 @@ export const ConsoleLogin: React.FC<{ onLoginSuccess: (user: AuthUser) => void }
         return;
       }
 
-      playSound();
       setTimeout(() => onLoginSuccess(result.session!.user), 400);
     } catch {
       setLoginError('Tidak dapat menghubungi server. Coba lagi nanti.');
       setStage('error');
     }
-  }, [username, password, onLoginSuccess, playSound]);
+  }, [username, password, onLoginSuccess]);
 
   const handlePasskeyLogin = useCallback(async () => {
     setStage('loading');
@@ -107,12 +84,11 @@ export const ConsoleLogin: React.FC<{ onLoginSuccess: (user: AuthUser) => void }
         return;
       }
 
-      playSound();
       setTimeout(() => onLoginSuccess(result.session!.user), 400);
     } catch {
       setStage('idle');
     }
-  }, [onLoginSuccess, playSound]);
+  }, [onLoginSuccess]);
 
   const reduceMotion = useReducedMotion();
   const easeNeu = [0.19, 1, 0.22, 1] as const;

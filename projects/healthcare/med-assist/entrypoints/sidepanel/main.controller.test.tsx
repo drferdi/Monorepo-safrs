@@ -269,6 +269,23 @@ describe('Sentra Assist sidepanel latest design route', () => {
     expect(screen.getByRole('tab', { name: 'START' })).toBeTruthy();
   });
 
+  // Chief, 2026-10-04: one welcome sound, when the main UI opens; none on the sponsor page.
+  it('plays one welcome sound, on entering the main UI from the sponsor page', async () => {
+    mockPlaySound.mockClear();
+    render(<SentraAssistSidepanelApp />);
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(500);
+    });
+    await act(async () => undefined);
+
+    expect(mockPlaySound).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: /Masuk ke ASSIST/i }));
+    await act(async () => undefined);
+
+    expect(mockPlaySound.mock.calls.map(([sound]) => sound)).toEqual(['opening.mp3']);
+  });
+
   it('plays the button sound when the button is pressed, once per mouse click, and primes it on launch', async () => {
     render(<SentraAssistSidepanelApp />);
 
