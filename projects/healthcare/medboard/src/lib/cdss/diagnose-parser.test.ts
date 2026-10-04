@@ -102,3 +102,34 @@ test('parseDiagnoseRequestBody maps composite_deterioration object into deterior
   assert.match(parsed.input.deterioration_summary_text ?? '', /SUSPECTED SEPSIS \/ SHOCK/i)
   assert.match(parsed.input.deterioration_summary_text ?? '', /Composite watchers/i)
 })
+
+test('parseDiagnoseRequestBody turns the Assist trajectory summary into trajectory_summary_text, not a momentum context', () => {
+  const parsed = parseDiagnoseRequestBody({
+    keluhan_utama: 'Lemas',
+    usia: 58,
+    jenis_kelamin: 'P',
+    // Shape Med-Assist sends in canonical_clinical.trajectory (bridge-client.ts ConsultPayload).
+    trajectory_context: {
+      overall_trend: 'declining',
+      overall_risk: 'high',
+      deterioration_state: 'deteriorating',
+      narrative: 'Tekanan darah turun pada tiga kunjungan terakhir.',
+    },
+  })
+
+  assert.equal(parsed.ok, true)
+  if (!parsed.ok) {
+    assert.fail('expected parser success')
+  }
+
+  assert.equal(parsed.input.trajectory_context, undefined)
+  assert.equal(
+    parsed.input.trajectory_summary_text,
+    [
+      '- Trend keseluruhan: declining',
+      '- Risiko: high',
+      '- Status perburukan: deteriorating',
+      '- Narasi: Tekanan darah turun pada tiga kunjungan terakhir.',
+    ].join('\n')
+  )
+})

@@ -30,6 +30,23 @@ function parseTrajectoryContext(value: unknown): CDSSTrajectoryContext | undefin
   }
 }
 
+// Assist sends a trajectory summary without momentum fields; keep it as text instead of
+// filling CDSSTrajectoryContext with values it does not carry.
+function parseTrajectorySummaryText(value: unknown): string | undefined {
+  if (!value || typeof value !== 'object' || parseTrajectoryContext(value)) return undefined
+  const summary = value as Record<string, unknown>
+  const fields: Array<[string, unknown]> = [
+    ['Trend keseluruhan', summary.overall_trend],
+    ['Risiko', summary.overall_risk],
+    ['Status perburukan', summary.deterioration_state],
+    ['Narasi', summary.narrative],
+  ]
+  const lines = fields
+    .filter((field): field is [string, string] => typeof field[1] === 'string' && field[1].trim() !== '')
+    .map(([label, text]) => `- ${label}: ${text.trim()}`)
+  return lines.length > 0 ? lines.join('\n') : undefined
+}
+
 function parseStructuredSignsText(value: unknown): string | undefined {
   if (typeof value === 'string' && value.trim()) return value.trim()
   if (!value || typeof value !== 'object') return undefined
@@ -170,6 +187,7 @@ export function parseDiagnoseRequestBody(body: unknown): DiagnoseRequestParseRes
       current_drugs: Array.isArray(b.current_drugs) ? (b.current_drugs as string[]) : undefined,
       session_id: typeof b.session_id === 'string' ? b.session_id : undefined,
       trajectory_context: parseTrajectoryContext(b.trajectory_context),
+      trajectory_summary_text: parseTrajectorySummaryText(b.trajectory_context),
       structured_signs_text: parseStructuredSignsText(b.structured_signs ?? b.structured_signs_text),
       deterioration_summary_text: parseCompositeDeteriorationText(
         b.composite_deterioration ?? b.deterioration_summary_text

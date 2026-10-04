@@ -390,7 +390,7 @@ const DIAGNOSIS_SCHEMA: Schema = {
 
 // ── Prompt Builder ────────────────────────────────────────────────────────────
 
-function buildPrompt(
+export function buildPrompt(
   input: CDSSEngineInput,
   kbContext: string,
   problemRepresentation: string
@@ -440,6 +440,14 @@ INSTRUKSI TAMBAHAN: Gunakan ringkasan deteriorasi komposit ini sebagai sinyal es
 INSTRUKSI TAMBAHAN: Pertimbangkan trajectory klinis di atas dalam asesmen urgency dan rekomendasi. Jika momentum menunjukkan akselerasi atau konvergensi, tingkatkan urgency rekomendasi sesuai.`
     : ''
 
+  const assistTrajectoryBlock = input.trajectory_summary_text
+    ? `
+## Ringkasan Trajectory dari Assist
+${input.trajectory_summary_text}
+
+INSTRUKSI TAMBAHAN: Ringkasan ini dihitung oleh Assist dan tidak memuat momentum, pola konvergensi, atau parameter yang memburuk; jangan menyimpulkan hal-hal itu darinya. Pertimbangkan trend dan status perburukan di atas dalam asesmen urgency.`
+    : ''
+
   return `Kamu adalah Iskandar Engine V2 — sistem Clinical Decision Support untuk dokter umum di Puskesmas Indonesia.
 
 ## Data Pasien
@@ -454,7 +462,7 @@ INSTRUKSI TAMBAHAN: Pertimbangkan trajectory klinis di atas dalam asesmen urgenc
 - Alergi: ${allergies}
 - Hamil: ${pregnant}
 - Obat saat ini: ${drugs}
-${structuredSignsBlock}${deteriorationBlock}${trajectoryBlock}
+${structuredSignsBlock}${deteriorationBlock}${trajectoryBlock}${assistTrajectoryBlock}
 ## Database Penyakit KKI — Pre-filtered berdasarkan keluhan (Format: ICD10 | Nama | Definisi singkat | Gejala | Red flags | Banding)
 ${kbContext}
 

@@ -57,6 +57,8 @@ export interface CDSSEngineInput {
   session_id?: string
   // Phase 3: Optional trajectory context from momentum engine
   trajectory_context?: CDSSTrajectoryContext
+  // Assist trajectory summary (trend, risk, deterioration state, narrative); carries no momentum data
+  trajectory_summary_text?: string
   // Phase 3: Structured bedside triage signs from Assist/bedside (text summary — avoids cross-module coupling)
   structured_signs_text?: string
   // Phase 4: Composite deterioration summary from multi-syndrome bedside/trend orchestrator
