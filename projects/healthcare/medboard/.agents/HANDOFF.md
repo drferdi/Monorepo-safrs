@@ -1,24 +1,22 @@
 # HANDOFF
 
-Last updated: 2026-09-27
+Last updated: 2026-10-04
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
 
 ## Current state
 
-Migrated from abyss-monorepo on 2026-09-27 (see `DECISIONS.md`). Install, typecheck, the
-capsule test set, build, `start:local`, and the deploy dry run work from the capsule root with
-pnpm 11.21.0 and Node 24. CDSS diagnosis access comes from the clinical role only (Chief,
-option A). `scripts/test-cdss.ts` reports `PASS: 27 | FAIL: 0`, and any failure sets exit
-code 1.
+Install, typecheck, `test:capsule`, build and `start:local` are green (Node 24, pnpm 11.21.0).
+This session aligned MedBoard with Med-Assist so Assist payloads are accepted; Chief's direction is
+"accept payloads first", the dashboard stays the authoritative engine for now.
 
-Added `GET /api/doctors/contacts` (crew-authorised, CORS via `handleCorsPreflight`/`jsonWithCors`
-like `/api/doctors/online`): lists active doctors (`Dokter`/`Dokter Gigi`, status `ACTIVE`) whose
-crew profile has a WhatsApp number, digits normalised (`toWhatsappDigits` — leading `0` becomes
-`62`), sorted by username. Backs Assist's "Send to Doctors". A doctor only appears once their
-crew profile's WhatsApp number field is filled in. Its test is registered in
-`scripts/test-suite.ts` under `intelligence-route`; `pnpm run test` and `pnpm run lint` are green.
+Commits on `feat/sidepanel-ui-batch` (not pushed): `73be4057` consult reads glucose, the consult
+critical alert stops mislabelling Assist risk as momentum, anamnesis extract takes up to 10000
+characters, two RME reason codes; `320ac1af` repo tidy (TASK_CHECKLIST removed, README named
+MedBoard with target-design note, testing.md gaps); `ff303c12` untracks the test-run reports
+(320ac1af re-recorded them by mistake); `b03a3e41` (R3) the Assist trajectory summary reaches the
+CDSS prompt as its own block. New suite `assist-acceptance` runs with `--conditions react-server`.
 
 ## Work in flight
 
@@ -30,6 +28,23 @@ None.
 
 ## Next action
 
-1. `auth-hardening` is skipped when `DATABASE_URL` is unset (legacy behaviour); running it needs
-   a disposable PostgreSQL with migrations applied.
-2. Test runs overwrite the tracked `runtime/test-*.txt` reports; move them to an ignored path.
+Decisions for Chief, from the 2026-10-04 Med-Assist contract audit:
+
+1. Clinical rule divergence (R3, row by row): NEWS2 O2 points, consciousness scale, deterioration
+   cutoffs 80/55 vs 70/50, momentum per day vs per hour, adult vital red flags, PE and anaphylaxis
+   gates, two different `penyakit.json`.
+2. Infants: `parseDiagnoseRequestBody` and `/api/clinical/engine/evaluate` reject age 0; accepting
+   them means adult NEWS2 runs on infants.
+3. Auth-gated: no `POST /api/medlens/ecg/analyze`; no CORS on login/session/passkey routes;
+   `CORS_ALLOWED_EXTENSION_IDS` empty and no stable extension key; role values (`DOKTER`, `BIDAN`,
+   `CEO`) unknown to Med-Assist (`normalizeRole`); no `/api/auth/refresh`; cookie mode from
+   `chrome-extension://` unverified.
+4. Bridge queue has no state-transition guard; consult retries are not deduplicated by `event_id`.
+   Med-Assist patient-sync sends no SpO2, AVPU or O2 (Med-Assist side).
+5. `next.config.ts` traces from the monorepo root (`outputFileTracingRoot` = `D:\DEV\monorepo`);
+   `railway.toml` pins Node 22 with npm; CI pins pnpm 9.
+6. Publish: no MedBoard remote; `src/lib/cdss/symphony` forbids a public repository; README clone
+   URL still points at the legacy `drferdii/intelligenceBoard`.
+7. `auth-hardening` is still skipped without `DATABASE_URL`; Docker is available, a disposable
+   Postgres run needs `prisma migrate deploy` on it (Chief's yes).
+8. `ClinicalTrajectoryV1` panel fetches `/api/patients/[id]/trajectory`, which does not exist.

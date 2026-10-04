@@ -3,6 +3,23 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-04 — MedBoard accepts Med-Assist payloads; the dashboard stays authoritative for now
+
+- Decision (Chief): align MedBoard with Med-Assist by accepting Assist payloads first. The shipped
+  contract (`authoritative_engine: 'dashboard'` in Med-Assist `bridge-client.ts`) stays; flipping
+  authority and the clinical rule differences between the two engines are separate decisions.
+- Both engines descend from the Jewel/Sentra Nada trajectory engine (Med-Assist
+  `symphony-trajectory-core.ts` header); the upstream package no longer exists in the repository.
+- Assist's trajectory summary carries no momentum data, so it reaches the CDSS prompt as its own
+  "Ringkasan Trajectory dari Assist" block instead of filling `CDSSTrajectoryContext` (Chief chose
+  the separate block, R3).
+- The reports a test run writes are git-ignored and listed as mutable state; the committed
+  safety-net report was still the legacy 21/25 run.
+- Evidence: `assist-acceptance` suite (consult events, anamnesis extract, engine prompt) and
+  `diagnose-parser.test.ts` failed before the changes and pass after; `test:capsule`, typecheck
+  and build exit 0; a 2600-character extract against `start:local` returns 200 with a token and
+  401 without.
+
 ## 2026-09-27 — Autocomplete tests send a clinician session
 
 - The three "Autocomplete klinis" tests failed with 401, not with a wrong chain:
