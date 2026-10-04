@@ -54,7 +54,7 @@ export interface ConvergenceResult {
 }
 
 // ── Danger Direction per Parameter ──────────────────────────────────────────
-// Defines which direction is "worsening" for each parameter.
+// Default direction that is "worsening" when the current value is unknown.
 // SpO2 is INVERTED — lower is worse.
 
 const DANGER_DIRECTION: Record<ConvergenceParam, 'up' | 'down'> = {
@@ -67,33 +67,49 @@ const DANGER_DIRECTION: Record<ConvergenceParam, 'up' | 'down'> = {
   spo2: 'down', // desaturation — lower is worse
 }
 
+// Parameters that are dangerous on both sides (shock, hypothermia, hypoglycaemia). With the
+// current value known, worsening means moving away from the midpoint of the normal range —
+// the same rule detectTrend uses (NORMAL_RANGES in trajectory-analyzer.ts).
+const NORMAL_MIDPOINT: Partial<Record<ConvergenceParam, number>> = {
+  sbp: (90 + 139) / 2,
+  dbp: (60 + 89) / 2,
+  temp: (36.1 + 37.5) / 2,
+  glucose: (70 + 199) / 2,
+}
+
 // ── Pattern Recognition ──────────────────────────────────────────────────────
 
-function detectPattern(worsening: Set<ConvergenceParam>): ConvergencePattern {
+function detectPattern(
+  worsening: Set<ConvergenceParam>,
+  falling: Set<ConvergenceParam>
+): ConvergencePattern {
   if (worsening.size >= 4) return 'multi_system'
 
+  const rising = (param: ConvergenceParam) => worsening.has(param) && !falling.has(param)
+  const dropping = (param: ConvergenceParam) => worsening.has(param) && falling.has(param)
+
   // Cardiovascular: SBP↑ + HR↑ + SpO2↓
-  if (worsening.has('sbp') && worsening.has('hr') && worsening.has('spo2')) {
+  if (rising('sbp') && worsening.has('hr') && worsening.has('spo2')) {
     return 'cardiovascular'
   }
 
-  // Shock: SBP↓ (going LOW = improving in "up" direction means worsening when going down)
-  // For shock: SBP is worsening when going DOWN. But our system marks SBP worsening = UP.
-  // We need to handle "hypo" convergence differently via velocity sign.
-  // Handled via the specialized shock check in buildConvergenceResult.
+  // Shock: SBP↓ + HR↑ + RR↑
+  if (dropping('sbp') && worsening.has('hr') && worsening.has('rr')) {
+    return 'shock'
+  }
 
-  // Sepsis-like: Temp↑ + HR↑ + RR↑
+  // Sepsis-like: Temp away from normal (fever or hypothermia) + HR↑ + RR↑
   if (worsening.has('temp') && worsening.has('hr') && worsening.has('rr')) {
     return 'sepsis_like'
   }
 
   // Hypertensive crisis: SBP↑ + DBP↑
-  if (worsening.has('sbp') && worsening.has('dbp')) {
+  if (rising('sbp') && rising('dbp')) {
     return 'hypertensive_crisis'
   }
 
   // Metabolic: Glucose↑ + HR↑
-  if (worsening.has('glucose') && worsening.has('hr')) {
+  if (rising('glucose') && worsening.has('hr')) {
     return 'metabolic_crisis'
   }
 
@@ -117,8 +133,10 @@ function buildNarrative(
   switch (pattern) {
     case 'cardiovascular':
       return `Konvergensi kardiovaskular: SBP↑ + HR↑ + SpO2↓ — risiko kegagalan sirkulasi.`
+    case 'shock':
+      return `Pola syok: SBP↓ + HR↑ + RR↑ — risiko hipoperfusi, nilai ulang segera.`
     case 'sepsis_like':
-      return `Pola sepsis-like: Suhu↑ + HR↑ + RR↑ — pertimbangkan infeksi sistemik.`
+      return `Pola sepsis-like: Suhu menjauh dari normal + HR↑ + RR↑ — pertimbangkan infeksi sistemik.`
     case 'hypertensive_crisis':
       return `Konvergensi hipertensi: SBP↑ + DBP↑ — waspadai krisis hipertensif.`
     case 'metabolic_crisis':
@@ -146,18 +164,20 @@ export function detectConvergence(trends: ParamTrend[]): ConvergenceResult {
   const worseningParams: ConvergenceParam[] = []
   const improvingParams: ConvergenceParam[] = []
   const worseningSet = new Set<ConvergenceParam>()
+  const fallingSet = new Set<ConvergenceParam>()
 
   for (const trend of trends) {
     if (trend.direction === 'worsening') {
       worseningParams.push(trend.param)
       worseningSet.add(trend.param)
+      if (trend.velocity < 0) fallingSet.add(trend.param)
     } else if (trend.direction === 'improving') {
       improvingParams.push(trend.param)
     }
   }
 
   const score = worseningParams.length
-  const pattern = detectPattern(worseningSet)
+  const pattern = detectPattern(worseningSet, fallingSet)
   const narrative = buildNarrative(pattern, worseningParams, score)
 
   // Alert threshold: 2+ params converging on a recognized pattern,
@@ -176,17 +196,26 @@ export function detectConvergence(trends: ParamTrend[]): ConvergenceResult {
 
 /**
  * Determine if a velocity is "worsening" for a given parameter.
- * Takes into account the danger direction (SpO2 going down = worsening).
+ * SpO2 going down is worsening. For SBP, DBP, temperature and glucose, when the current
+ * value is given, worsening is moving away from the normal midpoint in either direction.
  */
 export function isWorsening(
   param: ConvergenceParam,
   velocity: number,
-  threshold = 0.1
+  threshold = 0.1,
+  currentValue?: number
 ): ConvergenceDirection {
-  const dangerDir = DANGER_DIRECTION[param]
   const absV = Math.abs(velocity)
 
   if (absV < threshold) return 'stable'
+
+  const midpoint = NORMAL_MIDPOINT[param]
+  const dangerDir =
+    midpoint !== undefined && currentValue !== undefined && currentValue > 0
+      ? currentValue < midpoint
+        ? 'down'
+        : 'up'
+      : DANGER_DIRECTION[param]
 
   if (dangerDir === 'up') {
     return velocity > 0 ? 'worsening' : 'improving'

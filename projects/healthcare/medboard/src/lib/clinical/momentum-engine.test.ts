@@ -234,3 +234,60 @@ test('analyzeTrajectory includes momentum field', async () => {
   assert.ok(typeof result.momentum.level === 'string')
   assert.ok(typeof result.momentum.score === 'number')
 })
+
+// ── Direction away from the normal range (both ways) ─────────────────────────
+
+test('isWorsening: SBP falling below the normal midpoint is worsening (shock side)', () => {
+  assert.equal(isWorsening('sbp', -2.0, 0.1, 88), 'worsening')
+  assert.equal(isWorsening('sbp', 2.0, 0.1, 88), 'improving')
+  assert.equal(isWorsening('sbp', 2.0, 0.1, 150), 'worsening')
+  assert.equal(isWorsening('sbp', -2.0, 0.1, 150), 'improving')
+})
+
+test('isWorsening: falling temperature and glucose are worsening below normal', () => {
+  assert.equal(isWorsening('temp', -0.3, 0.1, 35.4), 'worsening')
+  assert.equal(isWorsening('glucose', -5, 0.1, 62), 'worsening')
+  assert.equal(isWorsening('dbp', -2, 0.1, 52), 'worsening')
+})
+
+test('detectConvergence: SBP↓ + HR↑ + RR↑ is the shock pattern', () => {
+  const result = detectConvergence([
+    { param: 'sbp', direction: 'worsening', velocity: -3 },
+    { param: 'hr', direction: 'worsening', velocity: 3 },
+    { param: 'rr', direction: 'worsening', velocity: 1 },
+  ])
+  assert.equal(result.pattern, 'shock')
+  assert.equal(result.shouldAlert, true)
+})
+
+test('detectConvergence: SBP↓ + DBP↓ is not a hypertensive crisis', () => {
+  const result = detectConvergence([
+    { param: 'sbp', direction: 'worsening', velocity: -3 },
+    { param: 'dbp', direction: 'worsening', velocity: -2 },
+  ])
+  assert.notEqual(result.pattern, 'hypertensive_crisis')
+})
+
+test('computeMomentum: falling BP with rising HR and RR is seen as shock', () => {
+  const visits = [
+    makeVisit('e1', W0, { sbp: 128, hr: 80, rr: 16 }),
+    makeVisit('e2', W1, { sbp: 116, hr: 92, rr: 19 }),
+    makeVisit('e3', W2, { sbp: 104, hr: 104, rr: 22 }),
+    makeVisit('e4', W3, { sbp: 94, hr: 116, rr: 25 }),
+    makeVisit('e5', W4, { sbp: 86, hr: 126, rr: 28 }),
+  ]
+  const result = computeMomentum(visits)
+  const sbpParam = result.params.find(p => p.param === 'sbp')
+  assert.equal(sbpParam?.direction, 'worsening')
+  assert.equal(result.convergence.pattern, 'shock')
+})
+
+test('computeMomentum: falling temperature into hypothermia is worsening', () => {
+  const visits = [
+    makeVisit('e1', W0, { temp: 36.6 }),
+    makeVisit('e2', W1, { temp: 36.2 }),
+    makeVisit('e3', W2, { temp: 35.8 }),
+  ]
+  const result = computeMomentum(visits)
+  assert.equal(result.params.find(p => p.param === 'temp')?.direction, 'worsening')
+})

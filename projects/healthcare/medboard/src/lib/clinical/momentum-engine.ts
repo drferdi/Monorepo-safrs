@@ -324,11 +324,15 @@ export function computeMomentum(visits: VisitRecord[]): MomentumAnalysis {
     // Acceleration from velocity trend
     const acceleration = computeAcceleration(velocities)
 
-    // Direction: is the current velocity worsening for this param?
+    // Extract values for display
+    const values = sorted.map(v => v.vitals[param] as number).filter(v => v > 0)
+
+    // Direction: is the current velocity worsening for this param, given where it is now?
     const direction = isWorsening(
       param as ConvergenceParam,
       currentVelocity,
-      0.05 // threshold: < 0.05 units/day = stable
+      0.05, // threshold: < 0.05 units/day = stable
+      values[values.length - 1]
     )
 
     // Is it accelerating in the worsening direction?
@@ -337,9 +341,6 @@ export function computeMomentum(visits: VisitRecord[]): MomentumAnalysis {
       Math.abs(acceleration) > 0.01 &&
       direction === 'worsening' &&
       acceleration * Math.sign(currentVelocity) > 0
-
-    // Extract values for display
-    const values = sorted.map(v => v.vitals[param] as number).filter(v => v > 0)
 
     paramMomentums.push({
       param,
