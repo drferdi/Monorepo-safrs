@@ -91,7 +91,11 @@ export function createBridgeEntry(
   return entry
 }
 
+// Ids come from the URL; only ids shaped like generateId() may become a file path.
+const ENTRY_ID_PATTERN = /^brg_[a-z0-9]+_[0-9a-f]{8}$/
+
 export function getBridgeEntry(id: string): BridgeQueueEntry | null {
+  if (!ENTRY_ID_PATTERN.test(id)) return null
   const fp = entryPath(id)
   if (!fs.existsSync(fp)) return null
   return readEntry(fp)
@@ -156,6 +160,8 @@ export function updateBridgeEntryStatus(
 ): BridgeQueueEntry | null {
   const entry = getBridgeEntry(id)
   if (!entry) return null
+  // Only a claimed entry can progress; finished, expired or unclaimed entries stay as they are.
+  if (entry.status !== 'claimed' && entry.status !== 'processing') return null
 
   entry.status = status
   if (result) entry.result = result

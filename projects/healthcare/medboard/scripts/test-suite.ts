@@ -38,6 +38,7 @@ const suites: Suite[] = [
       'src/lib/telemedicine/consult-intelligence-events.test.ts',
       'src/app/api/clinical/anamnesis/extract/route.post.test.ts',
       'src/lib/cdss/engine-prompt.test.ts',
+      'src/lib/emr/bridge-queue.test.ts',
     ],
   },
   {

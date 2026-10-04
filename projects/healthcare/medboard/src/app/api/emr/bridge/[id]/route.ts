@@ -34,6 +34,20 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   return jsonWithCors(request, CORS_METHODS, { ok: true, entry })
 }
 
+// A missing entry is 404; an entry whose status does not allow the action (unclaimed, finished,
+// expired) is 409, so a late or duplicate report never overwrites it.
+function rejectedTransition(request: Request, id: string) {
+  if (!getBridgeEntry(id)) {
+    return jsonWithCors(request, CORS_METHODS, { ok: false, error: 'Entry tidak ditemukan.' }, { status: 404 })
+  }
+  return jsonWithCors(
+    request,
+    CORS_METHODS,
+    { ok: false, error: 'Status entry tidak mengizinkan aksi ini.' },
+    { status: 409 }
+  )
+}
+
 /**
  * PATCH /api/emr/bridge/[id] — Update entry status
  * Used by Assist to:
@@ -99,7 +113,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       case 'processing': {
         entry = updateBridgeEntryStatus(id, 'processing')
         if (!entry) {
-          return jsonWithCors(request, CORS_METHODS, { ok: false, error: 'Entry tidak ditemukan.' }, { status: 404 })
+          return rejectedTransition(request, id)
         }
         emitEMRProgress({
           transferId: id,
@@ -114,7 +128,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       case 'complete': {
         entry = updateBridgeEntryStatus(id, 'completed', body.result)
         if (!entry) {
-          return jsonWithCors(request, CORS_METHODS, { ok: false, error: 'Entry tidak ditemukan.' }, { status: 404 })
+          return rejectedTransition(request, id)
         }
         emitEMRProgress({
           transferId: id,
@@ -129,7 +143,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       case 'fail': {
         entry = updateBridgeEntryStatus(id, 'failed', body.result, body.error)
         if (!entry) {
-          return jsonWithCors(request, CORS_METHODS, { ok: false, error: 'Entry tidak ditemukan.' }, { status: 404 })
+          return rejectedTransition(request, id)
         }
         emitEMRProgress({
           transferId: id,
