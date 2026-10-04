@@ -26,6 +26,9 @@ const contentSecurityPolicy = [
 ].join('; ')
 
 const nextConfig: NextConfig = {
+  // Trace and bundle from this capsule, not from the lockfile of an enclosing repository.
+  outputFileTracingRoot: __dirname,
+  turbopack: { root: __dirname },
   reactStrictMode: false,
   // No @sentra/* here: the safety-gate detectors are vendored at
   // src/lib/cdss/symphony and @sentra/sandi was never a dependency of this app.
