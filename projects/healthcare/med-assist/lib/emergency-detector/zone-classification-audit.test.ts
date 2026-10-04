@@ -162,11 +162,8 @@ describe('zone-classification audit — legacy buildAlerts() entities — MERAH'
     ).toBe('merah');
   });
 
-  it('avpu_abnormal (AVPU=V, SBP 85) resolves to merah', () => {
-    // GATE_AVPU only runs when both sbp>0 and spo2>0 are present.
-    expect(
-      zoneForLegacyType('avpu_abnormal', makeState({ sbp: '85', spo2: '97', hr: '80', rr: '18' }))
-    ).toBe('merah');
+  it('avpu_abnormal (observed AVPU=V) resolves to merah', () => {
+    expect(zoneForLegacyType('avpu_abnormal', makeState({ avpu: 'V' }))).toBe('merah');
   });
 
   it('hypertensive_crisis pediatric-severe-threshold resolves to merah', () => {

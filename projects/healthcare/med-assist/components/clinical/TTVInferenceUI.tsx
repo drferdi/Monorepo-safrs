@@ -23,7 +23,6 @@ import {
   type OnlineDoctor,
 } from '@/lib/api/bridge-client';
 import { APP_ASSIST_ID } from '@/lib/app-identity';
-import { determineAVPU, type AvpuResult } from '@/lib/clinical/aassist-v2/avpu-engine';
 import { makeFieldMeta, type FieldMeta } from '@/lib/clinical/aassist-v2/field-priority';
 import {
   buildAnamnesisShadowSuggestion,
@@ -954,51 +953,43 @@ export const buildAlerts = (
     });
   }
 
-  // ── GATE_AVPU: Consciousness level — via avpu-engine.ts ─────────────────────
-  if (sbp > 0 && spo2 > 0) {
-    const glucoseSafe = glucose > 0 ? glucose : -1;
-    const avpuResult = determineAVPU({ sbp, spo2, rr, hr, glucose: glucoseSafe });
-    if (avpuResult.avpu !== 'A') {
-      const avpuSeverityMap: Record<string, ScreeningAlert['severity']> = {
-        V: 'critical',
-        P: 'critical',
-        U: 'critical',
-      };
-      const avpuTitleMap: Record<string, string> = {
-        V: `Penurunan respons — AVPU: VERBAL (${sbp} mmHg / SpO2 ${spo2}%)`,
-        P: `Penurunan kesadaran berat — AVPU: PAIN (SBP ${sbp} / SpO2 ${spo2}%)`,
-        U: `TIDAK RESPONSIF — AVPU: UNRESPONSIVE — AKTIFKAN EMERGENCY`,
-      };
-      alerts.push({
-        id: 'avpu-alert',
-        type: 'avpu_abnormal',
-        severity: avpuSeverityMap[avpuResult.avpu] ?? 'high',
-        title: avpuTitleMap[avpuResult.avpu] ?? `AVPU: ${avpuResult.avpu}`,
-        gate: 'GATE_0_AVPU',
-        reasoning: avpuResult.reason.join(' | '),
-        recommendations:
-          avpuResult.avpu === 'U'
+  // ── GATE_AVPU: observed consciousness only (ACVPU entry or GCS). Vitals do not imply it. ──
+  if (state.avpu !== 'A') {
+    const avpuTitleMap: Record<Exclude<TTVStateShape['avpu'], 'A'>, string> = {
+      C: 'Kebingungan baru — ACVPU: CONFUSION',
+      V: 'Penurunan respons — AVPU: VERBAL',
+      P: 'Penurunan kesadaran berat — AVPU: PAIN',
+      U: 'TIDAK RESPONSIF — AVPU: UNRESPONSIVE — AKTIFKAN EMERGENCY',
+    };
+    alerts.push({
+      id: 'avpu-alert',
+      type: 'avpu_abnormal',
+      severity: 'critical',
+      title: avpuTitleMap[state.avpu],
+      gate: 'GATE_0_AVPU',
+      reasoning: `Tingkat kesadaran teramati ${state.avpu} (NEWS2: skor 3 untuk C, V, P, atau U).`,
+      recommendations:
+        state.avpu === 'U'
+          ? [
+              'Aktifkan respons emergensi segera — panggil bantuan.',
+              'Evaluasi ABC: airway, breathing, circulation.',
+              'Posisikan pasien aman — recovery position jika napas ada.',
+              'Siapkan AED dan pastikan akses IV.',
+            ]
+          : state.avpu === 'P'
             ? [
-                'Aktifkan respons emergensi segera — panggil bantuan.',
-                'Evaluasi ABC: airway, breathing, circulation.',
-                'Posisikan pasien aman — recovery position jika napas ada.',
-                'Siapkan AED dan pastikan akses IV.',
+                'Evaluasi tingkat kesadaran dengan GCS segera.',
+                'Nilai ABC dan pertahankan airway.',
+                'Monitor serial tanda vital setiap 5 menit.',
+                'Eskalasi segera ke dokter penanggung jawab.',
               ]
-            : avpuResult.avpu === 'P'
-              ? [
-                  'Evaluasi tingkat kesadaran dengan GCS segera.',
-                  'Nilai ABC dan pertahankan airway.',
-                  'Monitor serial tanda vital setiap 5 menit.',
-                  'Eskalasi segera ke dokter penanggung jawab.',
-                ]
-              : [
-                  'Monitor ketat — nilai ulang AVPU setiap 15 menit.',
-                  'Korelasikan dengan BP, SpO2, dan status mental.',
-                  'Eskalasi jika AVPU memburuk ke P atau U.',
-                ],
-        clinicalData: { sbp, spo2, hr, rr },
-      });
-    }
+            : [
+                'Cek gula darah, SpO2, dan tanda vital segera.',
+                'Monitor ketat — nilai ulang kesadaran setiap 15 menit.',
+                'Eskalasi ke dokter penanggung jawab.',
+              ],
+      clinicalData: { sbp, spo2, hr, rr },
+    });
   }
 
   // ── GATE_1B: Occult shock — via detectOccultShock() (MSF Guidelines) ────────
@@ -1629,18 +1620,11 @@ export const TTVInferenceUI = forwardRef<TTVInferenceUIHandle, TTVInferenceUIPro
     const [bridgeSyncError, setBridgeSyncError] = useState('');
     const [uplinkError, setUplinkError] = useState<string | null>(null);
     const [sendDoctorError, setSendDoctorError] = useState<string | null>(null);
-    const [, setAvpuSuggestion] = useState<AvpuResult | null>(null);
-    const [avpuLocked, setAvpuLocked] = useState(false);
-    // Ref mirrors avpuLocked for use inside setTimeout callbacks (avoid stale closure)
-    const avpuLockedRef = useRef(false);
     // Per-field source tracking for autocomplete override protection
     const [fieldMeta, setFieldMeta] = useState<Partial<Record<VitalFieldKey, FieldMeta>>>({});
     const fieldMetaRef = useRef<Partial<Record<VitalFieldKey, FieldMeta>>>({});
 
     // Keep refs in sync with state (prevents stale closure bugs in setTimeout/setInterval)
-    useEffect(() => {
-      avpuLockedRef.current = avpuLocked;
-    }, [avpuLocked]);
     useEffect(() => {
       fieldMetaRef.current = fieldMeta;
     }, [fieldMeta]);
@@ -1701,7 +1685,7 @@ export const TTVInferenceUI = forwardRef<TTVInferenceUIHandle, TTVInferenceUIPro
       return () => window.clearInterval(intervalId);
     }, [uplinkState]);
 
-    // Reset uplink + AVPU + field meta when patient changes
+    // Reset uplink + field meta when patient changes
     useEffect(() => {
       setUplinkState('idle');
       setUplinkError(null);
@@ -1709,8 +1693,6 @@ export const TTVInferenceUI = forwardRef<TTVInferenceUIHandle, TTVInferenceUIPro
       setSendDoctorError(null);
       setDoctorPickerNotice('');
       setDoctorPickerError('');
-      setAvpuSuggestion(null);
-      setAvpuLocked(false);
       setFieldMeta({});
     }, [patientRM]);
 
@@ -2518,7 +2500,6 @@ export const TTVInferenceUI = forwardRef<TTVInferenceUIHandle, TTVInferenceUIPro
         gcs: nextGcs,
         ...(nextAvpu ? { avpu: nextAvpu } : {}),
       }));
-      if (nextAvpu) setAvpuLocked(true);
     };
 
     const handleGcsBlur = () => {
@@ -2919,23 +2900,6 @@ export const TTVInferenceUI = forwardRef<TTVInferenceUIHandle, TTVInferenceUIPro
               setGhostActiveLane(null);
               setGhostCompletedLanes([]);
               setGhostVisibleValues({});
-
-              // Auto-determine AVPU from filled vital values
-              const sbp = Number(nextState.sbp);
-              const spo2 = Number(nextState.spo2);
-              const rr = Number(nextState.rr);
-              const hr = Number(nextState.hr);
-              const glucose = Number(nextState.glucose);
-              if (sbp > 0 && spo2 > 0) {
-                // Use -1 for unknown/empty glucose — avpu-engine skips glucose checks when < 0
-                const glucoseSafe = glucose > 0 ? glucose : -1;
-                const avpuResult = determineAVPU({ sbp, spo2, rr, hr, glucose: glucoseSafe });
-                setAvpuSuggestion(avpuResult);
-                // Use ref (not state) to avoid stale closure — user may have locked between call and execution
-                if (!avpuLockedRef.current) {
-                  commitState((prev) => ({ ...prev, avpu: avpuResult.avpu }));
-                }
-              }
             }, 96);
             ghostAnimationTimeoutsRef.current.push(settleGhostId);
 

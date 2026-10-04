@@ -16,6 +16,7 @@ function makeState(
     spo2: string;
     glucose: string;
     symptomText: string;
+    avpu: 'A' | 'C' | 'V' | 'P' | 'U';
   }> = {}
 ) {
   return {
@@ -268,5 +269,29 @@ describe('buildAlerts — all-normal vitals', () => {
       ].includes(a.type)
     );
     expect(clinicalAlerts.length).toBe(0);
+  });
+});
+
+describe('buildAlerts — consciousness (observed AVPU only)', () => {
+  it('does not infer a consciousness alert from low SpO2 when the patient is observed alert', () => {
+    const alerts = buildAlerts(makeState({ sbp: '120', dbp: '80', spo2: '92' }), ADULT);
+    expect(alerts.find((a) => a.id === 'avpu-alert')).toBeUndefined();
+  });
+
+  it('does not infer a consciousness alert from low SBP when the patient is observed alert', () => {
+    const alerts = buildAlerts(makeState({ sbp: '85', dbp: '55', spo2: '97' }), ADULT);
+    expect(alerts.find((a) => a.id === 'avpu-alert')).toBeUndefined();
+  });
+
+  it.each(['C', 'V', 'P', 'U'] as const)('observed AVPU %s raises a critical alert', (avpu) => {
+    const alerts = buildAlerts(makeState({ avpu }), ADULT);
+    const alert = alerts.find((a) => a.id === 'avpu-alert');
+    expect(alert?.severity).toBe('critical');
+    expect(alert?.type).toBe('avpu_abnormal');
+  });
+
+  it('new confusion is named in the alert title', () => {
+    const alerts = buildAlerts(makeState({ avpu: 'C' }), ADULT);
+    expect(alerts.find((a) => a.id === 'avpu-alert')?.title).toContain('CONFUSION');
   });
 });
