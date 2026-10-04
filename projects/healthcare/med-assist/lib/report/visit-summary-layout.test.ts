@@ -16,6 +16,7 @@ import {
 import { buildVisitSummaryModel } from './visit-summary-model';
 import { embedTemplateFont } from './visit-summary-pdf';
 import { longVisitSummaryInput, syntheticVisitSummaryInput as input } from './visit-summary.fixtures';
+import { readVisitSummaryAssets } from './visit-summary.test-assets';
 
 let measure: Measure;
 type TextOp = Extract<DrawOp, { kind: 'text' }>;
@@ -25,7 +26,7 @@ const layout = (overrides: Partial<typeof input> = {}) =>
 const find = (ops: DrawOp[], value: string): TextOp | undefined => texts(ops).find((op) => op.text === value);
 
 beforeAll(async () => {
-  ({ measure } = await embedTemplateFont(await PDFDocument.create()));
+  ({ measure } = await embedTemplateFont(await PDFDocument.create(), readVisitSummaryAssets().font));
 });
 
 // The approved template, Clinical_Visit_Summary_Template.docx (Chief, 2026-10-04).
@@ -63,7 +64,11 @@ describe('layoutVisitSummary', () => {
     const [page] = layout();
     expect(find(page, 'NO. REKAM MEDIS')).toMatchObject({ size: 6, color: COLOR.label });
     expect(find(page, 'RM RM-00-12-34')).toMatchObject({ size: 12 });
-    for (const value of ['54 tahun', 'P', '03-10-2026 14:20']) expect(find(page, value)).toMatchObject({ size: 8.5 });
+    for (const value of ['54 tahun', 'P']) expect(find(page, value)).toMatchObject({ size: 8.5 });
+    // IBM Plex Sans is wider than the template's Arial: the time wraps under the date, in its cell.
+    const date = find(page, '03-10-2026')!;
+    expect(find(page, '14:20')).toMatchObject({ size: 8.5, x: date.x });
+    expect(find(page, '14:20')!.y).toBeGreaterThan(date.y);
   });
 
   it('writes each vital as a 16 pt figure over its unit, the triage in its zone colour', () => {

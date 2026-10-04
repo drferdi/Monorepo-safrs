@@ -1,11 +1,16 @@
-import { PDFDocument, StandardFonts, rgb, setCharacterSpacing, type PDFFont, type RGB } from 'pdf-lib';
+import fontkit from '@pdf-lib/fontkit';
+import { PDFDocument, rgb, setCharacterSpacing, type PDFFont, type RGB } from 'pdf-lib';
 
 import { PAGE, layoutVisitSummary, type Measure } from './visit-summary-layout';
 import type { VisitSummaryModel } from './visit-summary-model';
 
-/** The ink Sentra logomark (Chief, 2026-10-04: "tambahkan logo Sentra"), as a file from `public/`. */
+/**
+ * The ink Sentra logomark (Chief, 2026-10-04: "tambahkan logo Sentra") and IBM Plex Sans Bold
+ * (Chief, 2026-10-04: "Text summary gunakan IBM Plex Sans"), as files from `public/`.
+ */
 export interface VisitSummaryAssets {
   logo: Uint8Array;
+  font: Uint8Array;
 }
 
 const color = (hex: string): RGB =>
@@ -16,11 +21,15 @@ const color = (hex: string): RGB =>
   );
 
 /**
- * The template is Arial bold throughout; the standard Helvetica Bold has Arial's widths and needs
- * no embedding. Letter spacing adds after every character, as PDF's Tc does.
+ * The template is bold throughout, so the text is IBM Plex Sans Bold, subset to the glyphs drawn.
+ * Letter spacing adds after every character, as PDF's Tc does.
  */
-export async function embedTemplateFont(doc: PDFDocument): Promise<{ font: PDFFont; measure: Measure }> {
-  const font = await doc.embedFont(StandardFonts.HelveticaBold);
+export async function embedTemplateFont(
+  doc: PDFDocument,
+  bytes: Uint8Array
+): Promise<{ font: PDFFont; measure: Measure }> {
+  doc.registerFontkit(fontkit);
+  const font = await doc.embedFont(bytes, { subset: true });
   return {
     font,
     measure: (text, size, spacing = 0) => font.widthOfTextAtSize(text, size) + spacing * text.length,
@@ -35,7 +44,7 @@ export async function renderVisitSummaryPdf(
   doc.setTitle('Clinical Visit Summary');
   doc.setCreator('Sentra Asisten Medis');
   doc.setProducer('Sentra Asisten Medis');
-  const { font, measure } = await embedTemplateFont(doc);
+  const { font, measure } = await embedTemplateFont(doc, assets.font);
   const logo = await doc.embedPng(assets.logo);
   const fromBottom = (top: number): number => PAGE.height - top;
 

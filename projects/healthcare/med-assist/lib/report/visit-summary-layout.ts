@@ -213,7 +213,7 @@ function tableRow(
   };
 }
 
-/** The template's trend arrow (→, ↑, ↓): Helvetica has no arrow glyph, so it is drawn. */
+/** The template's trend arrow (→, ↑, ↓): the text stays in WinAnsi, which has no arrow, so it is drawn. */
 function arrow(cx: number, cy: number, direction: Exclude<TrendRow['direction'], null>): DrawOp[] {
   const half = 3.5;
   const head = 2;

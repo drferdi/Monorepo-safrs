@@ -8,14 +8,14 @@ import { longVisitSummaryInput, syntheticVisitSummaryInput } from './visit-summa
 import { readVisitSummaryAssets } from './visit-summary.test-assets';
 
 const assets = readVisitSummaryAssets();
-/** The BaseFont names of the fonts the document uses. */
+/** The BaseFont names of the fonts the document uses, without pdf-lib's subset tag ("-205"). */
 const baseFonts = (doc: PDFDocument): string[] =>
   doc.context
     .enumerateIndirectObjects()
     .map(([, object]) => object)
     .filter((object): object is PDFDict => object instanceof PDFDict)
     .filter((dict) => dict.get(PDFName.of('Type')) === PDFName.of('Font'))
-    .map((dict) => dict.lookupMaybe(PDFName.of('BaseFont'), PDFName)?.decodeText())
+    .map((dict) => dict.lookupMaybe(PDFName.of('BaseFont'), PDFName)?.decodeText().replace(/-\d+$/, ''))
     .filter((name): name is string => Boolean(name));
 const images = (page: PDFPage): number =>
   page.node.Resources()?.lookupMaybe(PDFName.of('XObject'), PDFDict)?.keys().length ?? 0;
@@ -34,11 +34,12 @@ describe('renderVisitSummaryPdf', () => {
     expect(images(doc.getPage(0))).toBe(1);
   });
 
-  it('sets the text in Helvetica Bold, the template’s Arial bold by its metrics', async () => {
+  // Chief, 2026-10-04: "Text summary gunakan IBM Plex Sans", in the template's bold weight.
+  it('sets the text in IBM Plex Sans Bold, embedded, and no standard font', async () => {
     const doc = await PDFDocument.load(
       await renderVisitSummaryPdf(buildVisitSummaryModel(syntheticVisitSummaryInput), assets)
     );
-    expect(new Set(baseFonts(doc))).toEqual(new Set(['Helvetica-Bold']));
+    expect(new Set(baseFonts(doc))).toEqual(new Set(['IBMPlexSans-Bold']));
   });
 
   it('continues a long prescription on a second page without the logo', async () => {
