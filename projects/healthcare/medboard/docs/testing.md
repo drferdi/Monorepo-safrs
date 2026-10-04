@@ -146,12 +146,14 @@ The monorepo `--filter` commands above are legacy. From this capsule root:
   `test:cdss:engine`, `test:news2`, and `test:symphony:safety-gates`.
 - `node scripts/pnpm.mjs run lint` is the TypeScript check.
 
-## Known gaps (left as in legacy, Chief 2026-09-27)
+## Known gaps
 
-- `test:cdss` (safety-net) reports `PASS: 21 | FAIL: 4` but exits 0, because
-  `process.exitCode = 1` is commented out in `scripts/test-cdss.ts`. The failures: one access
-  case (ADMIN with profession Perawat gets 200, the test expects 403) and three clinical
-  autocomplete cases for "nyeri pinggang" and "nyeri punggung". Fix with Chief's approval (R3),
-  then restore the exit code.
-- `auth-hardening` is skipped when `DATABASE_URL` is unset; it needs a disposable PostgreSQL.
-- Test runs overwrite the tracked `runtime/test-*.txt` reports.
+- `auth-hardening` is skipped when `DATABASE_URL` is unset (`scripts/test-suite.ts` sets
+  `SKIP_AUTH_HARDENING=1`), so a green `test:capsule` without a database runs no auth-hardening
+  assertion. Running it needs a disposable PostgreSQL with migrations applied.
+- The safety-net gaps recorded at migration (21/25, exit code ignored) were fixed on 2026-09-27:
+  `scripts/test-cdss.ts` reports 27/27 and any failure sets exit code 1 (see `.agents/DECISIONS.md`).
+- The reports a test run writes (`runtime/test-*.txt`, `runtime/symphony-safety-gates.md`) are
+  git-ignored and listed as mutable state in `project.contract.json`; read them locally after a run.
+- The `assist-acceptance` suite runs with `--conditions react-server`, because the modules it
+  tests import `server-only`.

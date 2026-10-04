@@ -1,5 +1,5 @@
 ═══ NEWS2 & Early Warning Pattern Tests ═══
-Generated: 2026-04-19T13:19:42.572Z
+Generated: 2026-10-04T04:07:18.499Z
 Total: 28 | PASS: 28 | FAIL: 0
 
 [PASS] NEWS2: normal vitals → score 0

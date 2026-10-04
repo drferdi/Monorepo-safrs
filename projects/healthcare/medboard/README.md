@@ -1,8 +1,10 @@
 <div align="center">
 
-# IntelligenceBoard
+# MedBoard
 
 **Indonesia Calibrated Clinical Intelligence Platform**
+
+<sub>Formerly IntelligenceBoard</sub>
 
 </div>
 
@@ -11,12 +13,12 @@
 <table>
   <tr>
     <td width="30%" align="center" valign="middle">
-      <img src="public/intelligenceboard.png" alt="IntelligenceBoard" width="220"/>
+      <img src="public/intelligenceboard.png" alt="MedBoard" width="220"/>
       <br/><br/>
-      <strong>INTELLIGENCEBOARD</strong>
+      <strong>MEDBOARD</strong>
     </td>
     <td width="70%" valign="top">
-      <p><strong>IntelligenceBoard</strong> is a full-stack clinical operations platform that unifies clinical workflows, regulatory reporting, diagnostic Artificial Intelligence, and real-time communication into a single decision surface — engineered to think with the clinician, not behind them.</p>
+      <p><strong>MedBoard</strong> is a full-stack clinical operations platform that unifies clinical workflows, regulatory reporting, diagnostic Artificial Intelligence, and real-time communication into a single decision surface — engineered to think with the clinician, not behind them.</p>
       <p>Unlike generic Electronic Medical Records, this platform is calibrated against the <strong>local epidemiological signatures of Indonesian primary healthcare</strong>: dengue seasonality patterns tied to regional geography and rainfall cycles, recurrent ISPA waves across musim pancaroba, hypertension prevalence in productive-age cohorts, maternal-risk patterns specific to PONED case mix, and tuberculosis clusters mapped to population-density kelurahan. Every alert, prediction, and triage suggestion is weighted by <strong>what actually happens in the Indonesian catchment context</strong> — not by foreign baseline assumptions.</p>
       <p>The system continuously learns from incoming kunjungan data, surfaces early-outbreak signals before they appear in weekly SKDR reports, and gives kepala puskesmas, dokter umum, bidan, and perawat a shared, real-time operational picture — auditable, FHIR-native, and aligned with Kementerian Kesehatan reporting standards.</p>
     </td>
@@ -27,11 +29,9 @@
 
 <sub><i>Clinical Cockpit — unified real-time patient intelligence surface</i></sub>
 
-[![Status](https://img.shields.io/badge/Status-Production-brightgreen?style=for-the-badge)](https://github.com/drferdii)
 [![Next.js](https://img.shields.io/badge/Next.js-16.x-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Strict-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20.9.0-339933?style=for-the-badge&logo=node.js)](https://nodejs.org/)
-[![FHIR](https://img.shields.io/badge/FHIR-R4-red?style=for-the-badge)](https://hl7.org/fhir/)
+[![Node.js](https://img.shields.io/badge/Node.js-24-339933?style=for-the-badge&logo=node.js)](https://nodejs.org/)
 [![License](https://img.shields.io/badge/License-Dual%20License-blue?style=for-the-badge)](./LICENSE)
 
 _Architect & Built by [Drferdi](https://github.com/drferdii)_
@@ -46,7 +46,7 @@ _Architect & Built by [Drferdi](https://github.com/drferdii)_
 
 A generic clinical dashboard treats every patient as a global baseline. A **locally-calibrated intelligence dashboard** treats every patient as a member of a specific population with specific risks. For Indonesian primary healthcare facilities, this distinction is operationally decisive.
 
-| Dimension | Generic EMR | IntelligenceBoard |
+| Dimension | Generic EMR | MedBoard |
 |---|---|---|
 | **Disease prior probabilities** | Static, foreign textbook values | Bayesian priors recomputed from rolling 90-day local kunjungan data |
 | **Outbreak detection** | Manual, weekly SKDR submission | Real-time anomaly detection on syndromic clusters (panas + nyeri sendi → DBD watch) |
@@ -55,11 +55,13 @@ A generic clinical dashboard treats every patient as a global baseline. A **loca
 | **Seasonal awareness** | None | Embedded musim hujan / kemarau / pancaroba models for ISPA, DBD, diare |
 | **Reporting** | Manual SP2TP / SIMPUS export | Auto-generated, audit-trailed, ready for Dinkes reporting |
 
+> **Target design, not yet in the code (checked 2026-10-04).** This capsule does not implement Bayesian priors from local visit data, outbreak or syndromic-cluster detection, kelurahan heatmaps or case clustering, seasonal models, a FHIR interface, or end-to-end encryption. Where this README mentions them, it describes where MedBoard is heading.
+
 ---
 
 ## Executive Summary
 
-**IntelligenceBoard** is a full-stack clinical operations platform for Indonesian primary healthcare facilities (Puskesmas, FKTP, PONED). It unifies clinical workflows, regulatory reporting, diagnostic Artificial Intelligence, and real-time communication into one interface.
+**MedBoard** is a full-stack clinical operations platform for Indonesian primary healthcare facilities (Puskesmas, FKTP, PONED). It unifies clinical workflows, regulatory reporting, diagnostic Artificial Intelligence, and real-time communication into one interface.
 
 - Reduces clinician admin burden via intelligent EMR automation and Artificial Intelligence-assisted documentation
 - Improves maternal outcomes with real-time clinical decision support and ANC tracking
@@ -1609,7 +1611,7 @@ flowchart TD
 
 Copyright 2024–2026 **Drferdi** — dr. Ferdi Iskandar
 
-IntelligenceBoard is dual-licensed:
+MedBoard is dual-licensed:
 
 | Who You Are | License |
 |---|---|

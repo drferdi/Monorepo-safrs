@@ -1,5 +1,5 @@
 Symphony Safety Gate Integration Tests
-Generated: 2026-04-19T17:37:16.615Z
+Generated: 2026-10-04T04:07:19.149Z
 Total: 6 | PASS: 6 | FAIL: 0
 
 [PASS] PE: classic triad (tachycardia + hypoxia + dyspnea) surfaces PE red flag

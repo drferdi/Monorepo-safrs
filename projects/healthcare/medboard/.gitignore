@@ -91,6 +91,11 @@ coverage/
 .nyc_output/
 playwright-report/
 test-results/
+# Reports rewritten by every test run (test:capsule)
+runtime/test-cdss-engine.txt
+runtime/test-cdss-report.txt
+runtime/test-news2-early-warning.txt
+runtime/symphony-safety-gates.md
 .pytest_cache/
 __pycache__/
 *.py[cod]

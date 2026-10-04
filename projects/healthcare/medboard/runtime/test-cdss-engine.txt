@@ -1,5 +1,5 @@
 ═══ CDSS Engine Unit Tests ═══
-Generated: 2026-04-19T17:44:03.225Z
+Generated: 2026-10-04T04:07:17.848Z
 Total: 26 | PASS: 26 | FAIL: 0
 
 [PASS] KB loads with > 0 diseases

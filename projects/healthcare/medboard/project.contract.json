@@ -50,5 +50,5 @@
     { "kind": "service", "name": "WhatsApp Cloud API", "locator": "WHATSAPP_CLOUD_API_TOKEN", "required": false },
     { "kind": "service", "name": "Sentry error reporting", "locator": "SENTRY_DSN", "required": false }
   ],
-  "mutableStatePaths": ["node_modules", ".next", "next-env.d.ts", "tsconfig.tsbuildinfo", "test-results", "output/playwright", "runtime/bridge-queue"]
+  "mutableStatePaths": ["node_modules", ".next", "next-env.d.ts", "tsconfig.tsbuildinfo", "test-results", "output/playwright", "runtime/bridge-queue", "runtime/test-cdss-engine.txt", "runtime/test-cdss-report.txt", "runtime/test-news2-early-warning.txt", "runtime/symphony-safety-gates.md"]
 }
