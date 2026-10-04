@@ -212,6 +212,38 @@ describe('login (crew cookie-based auth)', () => {
     expect(storeSessionMock).toHaveBeenCalledTimes(1);
   });
 
+  // MedBoard crew roles (crew-access-auth CLINICAL_CREW_ROLES, intelligence/server MANAGEMENT_ROLES).
+  it.each([
+    ['DOKTER', 'doctor'],
+    ['DOKTER_GIGI', 'doctor'],
+    ['PERAWAT', 'nurse'],
+    ['BIDAN', 'nurse'],
+    ['TRIAGE_OFFICER', 'nurse'],
+    ['APOTEKER', 'nurse'],
+    ['ADMIN', 'admin'],
+    ['ADMINISTRATOR', 'admin'],
+    ['CEO', 'admin'],
+    ['CHIEF_EXECUTIVE_OFFICER', 'admin'],
+    ['KEPALA_PUSKESMAS', 'admin'],
+    ['CEO_SENTRA', 'admin'],
+  ])('maps the MedBoard role %s to the Assist role %s', async (serverRole, assistRole) => {
+    fetchMock.mockResolvedValue({
+      ok: true,
+      status: 200,
+      text: vi.fn().mockResolvedValue(
+        JSON.stringify({
+          ok: true,
+          user: { username: 'crew.test', displayName: 'Crew Test', role: serverRole },
+          expiresAt: Date.now() + 60 * 60 * 1000,
+        })
+      ),
+    });
+
+    const result = await login({ username: 'crew.test', password: 'synthetic-pass' });
+
+    expect(result.session?.user.role).toBe(assistRole);
+  });
+
   it('returns a failure AuthResponse (not a thrown error) on invalid credentials', async () => {
     fetchMock.mockResolvedValue({
       ok: false,

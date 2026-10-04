@@ -318,12 +318,23 @@ async function authFetch<T>(
   }
 }
 
+// MedBoard sends its crew roles (DOKTER, BIDAN, CEO, ...); Assist knows doctor, nurse and admin.
+const ADMIN_ROLES = new Set([
+  'admin',
+  'administrator',
+  'ceo',
+  'chief_executive_officer',
+  'kepala_puskesmas',
+  'ceo_sentra',
+]);
+const NURSE_ROLES = new Set(['nurse', 'perawat', 'bidan', 'triage_officer', 'apoteker']);
+
 function normalizeRole(role: unknown): AuthUser['role'] {
   const normalized = String(role ?? '')
     .trim()
     .toLowerCase();
-  if (normalized === 'admin') return 'admin';
-  if (normalized === 'nurse' || normalized === 'perawat') return 'nurse';
+  if (ADMIN_ROLES.has(normalized)) return 'admin';
+  if (NURSE_ROLES.has(normalized)) return 'nurse';
   return 'doctor';
 }
 

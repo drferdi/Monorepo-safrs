@@ -97,7 +97,7 @@ export async function startMockCrewServer(
   const loginUser = options.loginUser ?? {
     username: 'drferdi',
     displayName: 'dr. Ferdi Iskandar',
-    role: 'doctor',
+    role: 'DOKTER',
     institution: 'Puskesmas Balowerti',
     profession: 'Umum',
   };
