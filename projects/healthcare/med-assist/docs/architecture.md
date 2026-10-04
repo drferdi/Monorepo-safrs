@@ -9,8 +9,8 @@ product owners who don't write code. The later sections add the detail a maintai
   build and test, and conventions. Each finding was checked against source code and cited by
   file and line. I re-read the highest-impact findings myself. **No code was run.** Test counts
   quoted here come from `.agents/HANDOFF.md`; I did not re-run them.
-- **More detail:** [`architecture/`](./architecture/README.md) holds design documents and
-  [`adr/`](./adr/README.md) holds decision records. Several of them are out of date; see
+- **More detail:** [`architecture/`](./architecture/readme.md) holds design documents and
+  [`adr/`](./adr/readme.md) holds decision records. Several of them are out of date; see
   [section 11](#11-where-the-existing-documentation-is-wrong).
 
 ## How to read the evidence labels
@@ -311,7 +311,7 @@ The panel shows the tree's result for the active diagnosis but doesn't re-order 
 The diagnosis step can now be served by more than one engine. By default physicians see only the
 legacy engine; the `mira` flag value (development, added 2026-09-27) shows MIRA's list instead.
 The decision to use MIRA for physicians is proposed in
-[ADR-005](adr/ADR-005-pluggable-diagnosis-engine-mira-candidate.md) and has not been accepted.
+[ADR-005](adr/adr-005-pluggable-diagnosis-engine-mira-candidate.md) and has not been accepted.
 
 **[Verified]** How the parts fit:
 
@@ -576,10 +576,9 @@ Ranked by how likely each item is to hurt a new owner. All are **[Verified]** un
 8. **Frozen but unused UI.** `ApprovedSentraAssistApp.tsx` and
    `components/SentraAssistPanel.tsx` are protected by the freeze, but nothing mounts them, so
    editing them changes nothing on screen. Other files with no importers:
-   - `lib/store.ts`
    - `utils/name-masking.ts`
-   - `lib/api/platform-api-client.ts`
-   - several `components/clinical/*` files
+   - `lib/store.ts`, `lib/api/platform-api-client.ts` and the unmounted `components/clinical/*`
+     files were moved to the gitignored `archieved/` on 2026-10-04
 9. **Over-broad permissions and unused packages.**
    - The `identity` permission, the Google `oauth2` block and `*.googleapis.com` access are
      never used in code.
@@ -623,10 +622,8 @@ Ranked by how likely each item is to hurt a new owner. All are **[Verified]** un
 | `AGENTS.md` (capsule)                                                        | the trajectory works from one visit; V1/V2 are intentional layers; browser code never reads `process.env` | it needs at least two visits; V1 can't run; `hybrid-trajectory.ts` and `diagnosis-v2.ts` read `process.env` via `globalThis` |
 | `entrypoints/sidepanel/AGENTS.md`                                            | recovery from `42be8f0` / `stash@{0}`                                                                     | the commit does not exist; the stash is unrelated                                                                            |
 | `docs/architecture/refactor-message-contract-map.md`                         | message list                                                                                              | 5 typed and 4 plain messages are missing; 2 listed as live have no sender; the duplicate listeners go unmentioned            |
-| `docs/architecture/refactor-storage-key-map.md`                              | `sentra-assist:*` keys, `lib/settings-store.ts`                                                           | the keys are now `med-assist:*`; that file doesn't exist; audit, OpenAI and IndexedDB keys are missing                       |
 | `docs/architecture/canonical-clinical-contract.md`                           | `app: 'sentra-assist'`; "no request client yet"                                                           | `APP_SLUG='med-assist'`; the client exists (`bridge-client.ts:1188`)                                                         |
 | `docs/architecture/refactor-*-spec.md`                                       | a split-up background                                                                                     | these describe a target state; `background.ts` is still one file                                                             |
-| `docs/CRITICAL_DEIGN_LOCK.md`, `docs/SENTRA ASSIST — END-TO-END FACTORY.txt` | a "golden build" and `_recovery/` folders                                                                 | these are AI-agent prompts from an older setup, and none of the paths they name exist                                        |
 | `README.md`                                                                  | see item 6 in section 10                                                                                  |                                                                                                                              |
 
 ---

@@ -284,7 +284,7 @@ Field berikut tidak boleh menjadi semantics final lokal:
 
 - `docs/architecture/assist-ui-dashboard-engine-architecture.md`
 - `docs/architecture/assist-dashboard-migration-blueprint.md`
-- `docs/adr/ADR-004-dashboard-canonical-clinical-engine.md`
+- `docs/adr/adr-004-dashboard-canonical-clinical-engine.md`
 
 ## Runtime Contract Guards (2026-04-08)
 

@@ -39,9 +39,6 @@ Dokumen di folder ini menjadi pegangan arsitektur formal untuk Med Assist.
 - `clinical-trajectory-endpoint-blueprint.md`
   - blueprint endpoint canonical untuk trajectory dan engine evaluate
   - HTTP semantics, latency target, dan behavior UI
-- `phase-1-implementation-task-breakdown.md`
-  - breakdown sprint fase 1
-  - workstream Assist, Dashboard, test, dan governance
 
 ## Prinsip
 

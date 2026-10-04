@@ -232,4 +232,4 @@ Jika response gagal:
 
 - `docs/architecture/canonical-clinical-contract.md`
 - `docs/architecture/assist-dashboard-migration-blueprint.md`
-- `docs/adr/ADR-004-dashboard-canonical-clinical-engine.md`
+- `docs/adr/adr-004-dashboard-canonical-clinical-engine.md`
