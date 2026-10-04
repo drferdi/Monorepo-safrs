@@ -19,6 +19,7 @@ import {
   getOnlineDoctors,
   sendConsultToDoctor,
   type CanonicalClinicalEngineOutput,
+  type ConsultMiraDifferential,
   type ConsultPayload,
   type OnlineDoctor,
 } from '@/lib/api/bridge-client';
@@ -281,6 +282,8 @@ interface TTVInferenceUIProps {
   onRefreshPatient?: () => void | Promise<void>;
   isLoadingPatient?: boolean;
   onNavigateToTrajectory?: () => void;
+  /** The MIRA differential of the active encounter, sent with the consult when there is one. */
+  getMiraDifferential?: () => Promise<ConsultMiraDifferential | null>;
   onChronicHistoryChange?: (summary: string) => void;
   prefilledHistoryFlags?: Record<string, boolean>;
   extractedSpecialConditions?: string[];
@@ -1572,6 +1575,7 @@ export const TTVInferenceUI = forwardRef<TTVInferenceUIHandle, TTVInferenceUIPro
       ttvState,
       onTTVStateChange,
       onNavigateToTrajectory,
+      getMiraDifferential,
       onChronicHistoryChange,
       prefilledHistoryFlags,
       extractedSpecialConditions = [],
@@ -2638,7 +2642,10 @@ export const TTVInferenceUI = forwardRef<TTVInferenceUIHandle, TTVInferenceUIPro
       }
     };
 
-    const buildDoctorConsultPayload = (targetDoctorId: string): ConsultPayload => {
+    const buildDoctorConsultPayload = (
+      targetDoctorId: string,
+      miraDifferential: ConsultMiraDifferential | null
+    ): ConsultPayload => {
       const chiefComplaint =
         state.symptomText.trim() ||
         anamnesaDraft.payload.keluhan_utama.trim() ||
@@ -2703,6 +2710,7 @@ export const TTVInferenceUI = forwardRef<TTVInferenceUIHandle, TTVInferenceUIPro
         sent_at: new Date().toISOString(),
         app_version: browser.runtime.getManifest().version,
         assist_id: APP_ASSIST_ID,
+        ...(miraDifferential ? { mira_differential: miraDifferential } : {}),
       };
     };
 
@@ -2730,7 +2738,11 @@ export const TTVInferenceUI = forwardRef<TTVInferenceUIHandle, TTVInferenceUIPro
           throw new Error('Tidak ada dokter online untuk menerima consult.');
         }
 
-        await sendConsultToDoctor(buildDoctorConsultPayload(targetDoctor.id));
+        // The consult goes out even when the background has no MIRA result to give.
+        const miraDifferential = getMiraDifferential
+          ? await getMiraDifferential().catch(() => null)
+          : null;
+        await sendConsultToDoctor(buildDoctorConsultPayload(targetDoctor.id, miraDifferential));
         setDoctorPickerNotice(`Consult terkirim ke ${targetDoctor.name}.`);
         setSendDoctorState('completed');
         playSound('notif1.wav');

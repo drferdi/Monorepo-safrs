@@ -1072,6 +1072,25 @@ export interface ConsultPayload {
   facility_id?: string;
   app_version?: string;
   assist_id?: string;
+  /** MIRA differential for this encounter, if MIRA produced one; never the legacy engine's list */
+  mira_differential?: ConsultMiraDifferential;
+}
+
+/** The MIRA differential as MedBoard receives it with a consult. */
+export interface ConsultMiraDifferential {
+  engine: 'MIRA';
+  /** When the side panel received this differential; MedBoard shows it so staleness is visible */
+  generated_at: string;
+  items: Array<{
+    rank: number;
+    icd10: string;
+    nama: string;
+    confidence: number;
+    cannot_miss: boolean;
+    rationale: string;
+  }>;
+  next_best_actions: Array<{ kind: 'question' | 'exam' | 'test'; item: string; reason: string }>;
+  missing_information: string[];
 }
 
 interface ConsultResponse {

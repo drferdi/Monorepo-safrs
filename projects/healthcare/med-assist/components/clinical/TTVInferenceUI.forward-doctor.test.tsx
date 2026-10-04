@@ -165,7 +165,9 @@ describe('TTVInferenceUI forward consult', () => {
 
     const css = readFileSync(resolve(process.cwd(), 'entrypoints/sidepanel/style.css'), 'utf8');
     expect(css).toMatch(/\.form-group-header--wrap\s*\{[^}]*flex-wrap:\s*wrap/);
-    expect(css).toMatch(/\.form-group-header--wrap\s+\.field-extracted-indicator[^{]*\{[^}]*flex-shrink:\s*0/);
+    expect(css).toMatch(
+      /\.form-group-header--wrap\s+\.field-extracted-indicator[^{]*\{[^}]*flex-shrink:\s*0/
+    );
     expect(css).toMatch(/\.form-group--inline\s+\.form-group-header--wrap\s*\{[^}]*row-gap:\s*2px/);
   });
 
@@ -708,5 +710,78 @@ describe('TTVInferenceUI forward consult', () => {
     await waitFor(() =>
       expect(screen.getByRole('button', { name: 'Uplink' })).toHaveTextContent('UPLINKED')
     );
+  });
+
+  describe('MIRA differential on the consult', () => {
+    const MIRA_DIFFERENTIAL = {
+      engine: 'MIRA' as const,
+      generated_at: '2026-10-04T08:00:00.000Z',
+      items: [
+        {
+          rank: 1,
+          icd10: 'J18.9',
+          nama: 'Pneumonia',
+          confidence: 0.7,
+          cannot_miss: false,
+          rationale: 'Demam; ronki',
+        },
+      ],
+      next_best_actions: [],
+      missing_information: [],
+    };
+
+    async function sendConsult(
+      getMiraDifferential: () => Promise<typeof MIRA_DIFFERENTIAL | null>
+    ) {
+      mockGetOnlineDoctors.mockResolvedValue([
+        {
+          id: 'doctor-1',
+          name: 'dr. Sentra Satu',
+          role: 'dokter',
+          poli: 'Poli Umum',
+          availability_status: 'online',
+        },
+      ]);
+      mockSendConsultToDoctor.mockResolvedValue({ consultId: 'consult-1', eventId: 'event-1' });
+      render(
+        <TTVInferenceUI
+          patientName="Tn. Budi"
+          patientGender="L"
+          patientAge={45}
+          patientRM="RM-001"
+          patientBPJSStatus="aktif"
+          extractedSpecialConditions={[]}
+          extractedPregnancyRisk=""
+          extractedAllergies={[]}
+          getMiraDifferential={getMiraDifferential}
+        />
+      );
+      fireEvent.change(screen.getByLabelText('Keluhan utama pasien'), {
+        target: { value: 'Demam' },
+      });
+      fireEvent.click(screen.getByRole('button', { name: 'Doctor' }));
+      await waitFor(() => expect(mockSendConsultToDoctor).toHaveBeenCalledTimes(1));
+      return mockSendConsultToDoctor.mock.calls[0][0];
+    }
+
+    it('sends the MIRA differential of the active encounter with the consult', async () => {
+      mockSendConsultToDoctor.mockClear();
+      const getMiraDifferential = vi.fn(async () => MIRA_DIFFERENTIAL);
+
+      const payload = await sendConsult(getMiraDifferential);
+
+      expect(getMiraDifferential).toHaveBeenCalledTimes(1);
+      expect(payload.mira_differential).toEqual(MIRA_DIFFERENTIAL);
+    });
+
+    it('still sends the consult, without a differential, when the background cannot answer', async () => {
+      mockSendConsultToDoctor.mockClear();
+
+      const payload = await sendConsult(async () => {
+        throw new Error('no receiver');
+      });
+
+      expect(payload).not.toHaveProperty('mira_differential');
+    });
   });
 });

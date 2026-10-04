@@ -24,6 +24,7 @@ import type {
   ScrapeRequest,
 } from './types';
 
+import type { ConsultMiraDifferential } from '@/lib/api/bridge-client';
 import type { MiraStatus } from '@/lib/diagnosis-engine/mira-supervisor';
 import type { CDSSEngineStatus } from '@/lib/iskandar-diagnosis-engine/engine';
 import type {
@@ -218,6 +219,8 @@ interface ProtocolMap {
   initializeCDSS(data: undefined): Promise<boolean>;
   miraEnsure(data: undefined): Promise<MiraStatus>;
   prefetchDiagnosis(context: DiagnosisRequestContext): Promise<{ started: boolean; hash: string }>;
+  /** The latest MIRA differential for the active encounter, to send with a consult. */
+  getConsultMiraDifferential(data: undefined): Promise<ConsultMiraDifferential | null>;
 
   // ========================================
   // Panel → Worker → Content (Diagnostic)
@@ -361,6 +364,7 @@ export const PROTOCOL_MESSAGE_NAMES = [
   'initializeCDSS',
   'miraEnsure',
   'prefetchDiagnosis',
+  'getConsultMiraDifferential',
   'scanFields',
   'scanMedicalHistory',
   'scanVisitHistory',

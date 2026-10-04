@@ -22,6 +22,11 @@ import {
 import { buildPatientSyncPayload } from '@/lib/api/patient-sync-payload';
 import { SentraAPI } from '@/lib/api/sentra-api';
 import { migrateLegacyAppStorageKeys } from '@/lib/app-identity';
+import {
+  getConsultMiraDifferential,
+  rememberConsultMiraDifferential,
+  toConsultMiraDifferential,
+} from '@/lib/diagnosis-engine/consult-mira-differential';
 import { runMiraPrefetch } from '@/lib/diagnosis-engine/mira-prefetch';
 import { ensureMira } from '@/lib/diagnosis-engine/mira-supervisor';
 import { hashDiagnosisContext } from '@/lib/diagnosis-engine/request-context';
@@ -1821,7 +1826,14 @@ export default defineBackground(() => {
 
       // Run REAL CDSS Engine (via the engine registry; physician output is the legacy flow's)
       bgLog.debug('Running CDSS Engine for encounter:', encounter.id);
-      return await runDiagnosisSuggestions(encounter, context);
+      const suggestions = await runDiagnosisSuggestions(encounter, context);
+      if (suggestions.success && suggestions.data) {
+        rememberConsultMiraDifferential(
+          encounter.id,
+          toConsultMiraDifferential(suggestions.data, new Date().toISOString())
+        );
+      }
+      return suggestions;
     } catch (error) {
       bgLog.error('CDSS Engine failed:', error);
       return {
@@ -2456,6 +2468,12 @@ export default defineBackground(() => {
     });
     void ensureMira().catch(() => undefined);
   }
+
+  // Panel (TTV "Doctor") → Worker: the MIRA differential to send with the consult
+  onMessage('getConsultMiraDifferential', async () => {
+    const encounter = await getEncounter().catch(() => null);
+    return encounter ? getConsultMiraDifferential(encounter.id) : null;
+  });
 
   // Panel (Trajectory stage) → Worker: run the MIRA step ahead of the diagnosis page
   onMessage('prefetchDiagnosis', async (message) => {

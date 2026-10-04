@@ -1016,6 +1016,9 @@ export function SentraAssistSidepanelApp(): JSX.Element {
                             bootSequenceActive={bootSequenceActive}
                             onSentraUplink={handleSentraUplink}
                             onNavigateToTrajectory={() => setActiveInferenceSurface('workbench')}
+                            getMiraDifferential={async () =>
+                              sendMessage('getConsultMiraDifferential', undefined)
+                            }
                           />
                         ) : activeInferenceSurface === 'workbench' ? (
                           <div data-testid="sentra-approved-workbench-slot">
