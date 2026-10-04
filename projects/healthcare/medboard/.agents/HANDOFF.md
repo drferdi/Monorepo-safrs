@@ -1,22 +1,26 @@
 # HANDOFF
 
-Last updated: 2026-10-04
+Last updated: 2026-10-04 (second session of the day)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
 
 ## Current state
 
-Install, typecheck, `test:capsule`, build and `start:local` are green (Node 24, pnpm 11.21.0).
-This session aligned MedBoard with Med-Assist so Assist payloads are accepted; Chief's direction is
-"accept payloads first", the dashboard stays the authoritative engine for now.
+`lint` (tsc), `test:capsule` (intelligence-route 228, safety-net 29/29, CDSS 26/26, NEWS2 28/28,
+Symphony 6/6), `build` and `deploy:dry-run` are green. Branch `feat/sidepanel-ui-batch`, not pushed;
+MedBoard has no remote.
 
-Commits on `feat/sidepanel-ui-batch` (not pushed): `73be4057` consult reads glucose, the consult
-critical alert stops mislabelling Assist risk as momentum, anamnesis extract takes up to 10000
-characters, two RME reason codes; `320ac1af` repo tidy (TASK_CHECKLIST removed, README named
-MedBoard with target-design note, testing.md gaps); `ff303c12` untracks the test-run reports
-(320ac1af re-recorded them by mistake); `b03a3e41` (R3) the Assist trajectory summary reaches the
-CDSS prompt as its own block. New suite `assist-acceptance` runs with `--conditions react-server`.
+Chief's direction (2026-10-04): MedBoard's own diagnosis engine is retired; MIRA in Med-Assist
+provides the differential. `LEGACY_CDSS_ENGINE_ENABLED` (off when unset) brings it back.
+
+This session (MedBoard commits): `de22eb08` build traces from the capsule, CI uses the pinned
+pnpm; `3279be63` bridge entry status guard and path-like ids rejected; `79ed70ae` consult retry
+dedupe by `event_id` (per process); `8bdbec0c` SBP trajectory bands follow NEWS2, missing AVPU stays
+missing, three unwired tests now run; `e9d5beed` momentum sees falling BP/temperature/glucose and the
+shock pattern; `6eb89e69` (R3) engine retired behind the flag, `mira_differential` accepted and
+shown (telemedicine card, dashboard 'mira' source, EMR button disabled); `ddf8706d` card tokens.
+Med-Assist side: see its `DECISIONS.md` 2026-10-04 "MedBoard session" entry.
 
 ## Work in flight
 
@@ -24,27 +28,22 @@ None.
 
 ## Blockers
 
-None.
+- `railway.toml` change was refused by auto mode (production deploy): builder RAILPACK, drop the
+  `nodejs_22` Nixpacks pin, `buildCommand = "pnpm run build:railway"`, `startCommand = "pnpm exec
+  prisma migrate deploy && pnpm run start"`. Chief applies it; watch the first Railpack deploy.
+- Browser-pane demo of the EMR button and a live consult needs a local server entry in
+  `.claude/launch.json`; auto mode refused that edit. Only a static render of the MIRA card was shown.
 
 ## Next action
 
-Decisions for Chief, from the 2026-10-04 Med-Assist contract audit:
-
-1. Clinical rule divergence (R3, row by row): NEWS2 O2 points, consciousness scale, deterioration
-   cutoffs 80/55 vs 70/50, momentum per day vs per hour, adult vital red flags, PE and anaphylaxis
-   gates, two different `penyakit.json`.
-2. Infants: `parseDiagnoseRequestBody` and `/api/clinical/engine/evaluate` reject age 0; accepting
-   them means adult NEWS2 runs on infants.
-3. Auth-gated: no `POST /api/medlens/ecg/analyze`; no CORS on login/session/passkey routes;
-   `CORS_ALLOWED_EXTENSION_IDS` empty and no stable extension key; role values (`DOKTER`, `BIDAN`,
-   `CEO`) unknown to Med-Assist (`normalizeRole`); no `/api/auth/refresh`; cookie mode from
-   `chrome-extension://` unverified.
-4. Bridge queue has no state-transition guard; consult retries are not deduplicated by `event_id`.
-   Med-Assist patient-sync sends no SpO2, AVPU or O2 (Med-Assist side).
-5. `next.config.ts` traces from the monorepo root (`outputFileTracingRoot` = `D:\DEV\monorepo`);
-   `railway.toml` pins Node 22 with npm; CI pins pnpm 9.
-6. Publish: no MedBoard remote; `src/lib/cdss/symphony` forbids a public repository; README clone
-   URL still points at the legacy `drferdii/intelligenceBoard`.
-7. `auth-hardening` is still skipped without `DATABASE_URL`; Docker is available, a disposable
-   Postgres run needs `prisma migrate deploy` on it (Chief's yes).
-8. `ClinicalTrajectoryV1` panel fetches `/api/patients/[id]/trajectory`, which does not exist.
+1. Chief: `railway.toml` (above); push (`CHIEF_PUSH_OK`); whether to squash `320ac1af` (wrong
+   message, fixed by `ff303c12`).
+2. Open clinical items (R3, Chief's call): ePuskesmas kesadaran → ACVPU mapping; Med-Assist TTV
+   state defaults AVPU to 'A' (unrecorded = alert); Med-Assist CORE deterioration score still
+   averages over all seven vitals (absent = 0.1), which moves its 70/50 cutoffs; sepsis, PE (Wells)
+   and momentum unit fixes from the rule research are not done.
+3. MIRA follow-ups: `ConsultLog` has no column, so a consult loaded from `/api/consult/pending`
+   carries no differential (needs a migration — Chief's approval); MIRA cannot be called from the
+   MedBoard server (production mode, shared token, loopback).
+4. Pre-existing: telemedicine page uses `--text-primary` and `--border-subtle`, which no stylesheet
+   defines; `consult-dedupe` is per process.

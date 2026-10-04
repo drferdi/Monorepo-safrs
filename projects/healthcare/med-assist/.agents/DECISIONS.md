@@ -3,6 +3,29 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-04 — MedBoard session: safety rules follow the guidelines; MIRA reaches MedBoard
+
+Made from the MedBoard session (Chief chose the rule-research recommendations and MIRA as the only
+diagnosis engine). Commits on `feat/sidepanel-ui-batch`, all red-then-green:
+- `d82906c4` MedBoard roles map to Med-Assist roles (`APOTEKER` → nurse is an assumption).
+- `471173d5` the bridge poller skips an entry it could not claim; `9b37ea68` patient-sync sends the
+  anamnesa page SpO2.
+- `9f2e2ff7` (R3) the anaphylaxis red flag follows the two WAO 2020 criteria (it fired an
+  epinephrine alert on "mual muntah" + "pusing"); CP-025 yields to CP-024 (`supersededBy` now also
+  matches earlier patterns); qSOFA codes R65.1 (WHO), not the US-only R65.20.
+- `9bc9d777` (R3) the consciousness alert comes from the observed ACVPU only; vitals no longer imply
+  an AVPU, and autocomplete no longer writes one into the form.
+- `42a08095` (R3) SBP below the age floor alerts without a DBP; a temperature below 35 C is a
+  'high' hypothermia alert.
+- `774a25ec` (R3) trajectory NEWS2 scores new confusion (3) and supplemental oxygen (+2), treats
+  'unknown' as missing, and receives ACVPU and O2 from the TTV form.
+- `b2592f0b` + `df286fdd` the MIRA differential of the active encounter goes with the consult as
+  `mira_differential` (legacy suggestions never; the consult still goes out without it).
+- Not done (Chief's call): TTV state still defaults AVPU to 'A'; CORE deterioration averages over
+  seven vitals (absent = 0.1); sepsis consolidation, Wells PE, momentum acceleration units.
+- Evidence: full Vitest 1762 passed / 17 skipped, `tsc` 0, ESLint 0 apart from the other session's
+  untracked `tests/e2e/zz-verify-kb-rx.spec.ts` (4 `no-console`).
+
 ## 2026-10-04 — The visit summary gains columns inside its blocks, not new blocks
 
 - Decision (Chief: "pdf kurang penuh"; then "hanya tambahkan kolom di isinya saja ya, struktur

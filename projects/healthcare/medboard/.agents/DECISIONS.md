@@ -3,6 +3,30 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-04 — MedBoard's diagnosis engine is retired for MIRA; clinical rules realigned
+
+- Decision (Chief): "diagnosis system medsmartboard ini istirahatkan, fully using diagnostic engine
+  MIRA". Chosen shape: Assist forwards its MIRA differential with the consult; MedBoard shows it.
+  The engine is gated at the route level by `LEGACY_CDSS_ENGINE_ENABLED` (off when unset):
+  `/api/cdss/diagnose` and `/api/clinical/differential/evaluate` answer 503 `{ retired: true }`
+  after auth with a 'failure' audit; `/api/consult` skips the engine; `GET /api/cdss/diagnose`
+  tells the EMR page to disable its CDSS button. The engine code and its tests stay.
+- Consequence accepted by Chief: MedBoard's PE/anaphylaxis Symphony gates and adult vital red flags
+  no longer run on consults; safety alerts come from Med-Assist.
+- `mira_differential` is validated (zod) and dropped when malformed; it travels on the doctor
+  socket and to the intelligence dashboard (source 'mira'). No schema change, so the pending-list
+  path does not carry it.
+- Clinical rules (Chief chose the research recommendations, 2026-10-04): trajectory SBP low bands
+  follow NEWS2 (<=90 critical, <=100 high, <=110 moderate; Med-Assist core uses < 90); a missing
+  AVPU is no longer scored as 'A' (schema and patient-sync); momentum worsening for SBP, DBP,
+  temperature and glucose means moving away from the normal-range midpoint, so 'shock' (SBP down,
+  HR and RR up) is reachable. The deterioration denominator was already present-only here.
+- Evidence: red-then-green tests in `momentum-engine.test.ts`, `trajectory-analyzer.test.ts`,
+  `unified-vitals.test.ts`, `mira-differential.test.ts`, `consult-intelligence-events.test.ts`,
+  `MiraDifferentialCard.test.tsx`, the differential route test and two safety-net cases;
+  `test:capsule`, lint, build exit 0. `momentum-engine`, `prediction-engine` and `unified-vitals`
+  tests existed but ran in no suite; they now run in intelligence-route.
+
 ## 2026-10-04 — MedBoard accepts Med-Assist payloads; the dashboard stays authoritative for now
 
 - Decision (Chief): align MedBoard with Med-Assist by accepting Assist payloads first. The shipped

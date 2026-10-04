@@ -11,6 +11,9 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
 
 ## Current state
 
+- Also 2026-10-04, from the MedBoard session: anaphylaxis (WAO 2020), observed-only AVPU,
+  SBP-only hypotension, hypothermia alert, NEWS2 confusion and O2, and the MIRA differential on the
+  consult. See DECISIONS "MedBoard session".
 - Visit summary PDF (`lib/report/*`, model → layout draw ops → pdf-lib renderer): the template
   `Clinical_Visit_Summary_Template.docx` (A4, ten numbered blocks, ink logomark in the title cell),
   IBM Plex Sans Bold (`public/fonts/`, subset through `@pdf-lib/fontkit`). DPJP = signed-in
