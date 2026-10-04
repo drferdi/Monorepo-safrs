@@ -18,7 +18,7 @@ export function MiraDifferentialCard({ differential }: { differential: MiraDiffe
         borderRadius: 8,
         padding: '10px 14px',
         marginBottom: 12,
-        border: '1px solid var(--border-subtle)',
+        border: '1px solid var(--line-base)',
         background: 'rgba(255,255,255,0.03)',
       }}
     >
@@ -52,7 +52,7 @@ export function MiraDifferentialCard({ differential }: { differential: MiraDiffe
 
       <ol style={{ margin: 0, paddingLeft: 18, display: 'grid', gap: 6 }}>
         {differential.items.map(item => (
-          <li key={`${item.rank}-${item.icd10}`} style={{ fontSize: 12, color: 'var(--text-primary)' }}>
+          <li key={`${item.rank}-${item.icd10}`} style={{ fontSize: 12, color: 'var(--text-main)' }}>
             <span style={{ fontWeight: 600 }}>{item.nama}</span>{' '}
             <span style={{ color: 'var(--text-muted)' }}>
               ({item.icd10}) · {Math.round(item.confidence * 100)}%
@@ -65,7 +65,7 @@ export function MiraDifferentialCard({ differential }: { differential: MiraDiffe
                   fontWeight: 700,
                   padding: '2px 6px',
                   borderRadius: 999,
-                  border: '1px solid var(--border-subtle)',
+                  border: '1px solid var(--line-base)',
                 }}
               >
                 Jangan terlewat
@@ -83,7 +83,7 @@ export function MiraDifferentialCard({ differential }: { differential: MiraDiffe
           <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 2 }}>
             Langkah berikutnya
           </div>
-          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 11, color: 'var(--text-primary)' }}>
+          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 11, color: 'var(--text-main)' }}>
             {differential.next_best_actions.map(action => (
               <li key={`${action.kind}-${action.item}`}>
                 {NEXT_ACTION_LABEL[action.kind]}: {action.item} — {action.reason}
@@ -98,7 +98,7 @@ export function MiraDifferentialCard({ differential }: { differential: MiraDiffe
           <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 2 }}>
             Data yang belum ada
           </div>
-          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 11, color: 'var(--text-primary)' }}>
+          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 11, color: 'var(--text-main)' }}>
             {differential.missing_information.map(item => (
               <li key={item}>{item}</li>
             ))}
