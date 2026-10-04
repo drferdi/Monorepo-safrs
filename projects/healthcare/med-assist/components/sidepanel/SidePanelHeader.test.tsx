@@ -42,6 +42,16 @@ describe('SidePanelHeader patient strip', () => {
     expect(screen.queryByRole('tab', { name: 'SETTING' })).not.toBeInTheDocument();
   });
 
+  // Chief, 2026-10-04: after "Architected by dr Ferdi Iskandar" the header reads "Prototype",
+  // not the Latin motto.
+  it('reads "Prototype" under the credit line, without the Latin motto', () => {
+    render(<SidePanelHeader activeEngine="vs" onEngineChange={vi.fn()} />);
+
+    const credit = screen.getByText('Architected by dr Ferdi Iskandar');
+    expect(credit.nextElementSibling).toHaveTextContent(/^Prototype$/);
+    expect(screen.queryByText('Primum non nocere')).not.toBeInTheDocument();
+  });
+
   it('renders TRIAGE instead of CODE RED as the emergency tab label', () => {
     render(
       <SidePanelHeader

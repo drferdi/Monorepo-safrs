@@ -213,9 +213,8 @@ export const SidePanelHeader: React.FC<SidePanelHeaderProps> = ({
         <div className="title-group text-center">
           <h1 className="card-title-main">Sentra Assist</h1>
           <p className="card-title-sub">Architected by dr Ferdi Iskandar</p>
-          <p className="card-title-sub card-title-sub--motto" lang="la">
-            <em>Primum non nocere</em>
-          </p>
+          {/* Chief, 2026-10-04: "Prototype" in place of the Latin motto. */}
+          <p className="card-title-sub card-title-sub--motto">Prototype</p>
         </div>
       </div>
 
