@@ -889,6 +889,23 @@ export const buildAlerts = (
       });
     }
 
+    if (flag.field === 'temp' && flag.title === 'Hipotermia') {
+      alerts.push({
+        id: 'hypothermia-alert',
+        type: 'hypothermia',
+        severity: 'high',
+        title: 'Hipotermia',
+        gate: 'GATE_7_TEMPERATURE',
+        reasoning: flag.message,
+        recommendations: [
+          'Ulangi pengukuran suhu dengan termometer yang sesuai.',
+          'Hangatkan pasien dan cari penyebab (sepsis, hipoglikemia, paparan dingin).',
+          'Eskalasi ke dokter penanggung jawab.',
+        ],
+        clinicalData: { temp },
+      });
+    }
+
     if (flag.field === 'pain') {
       alerts.push({
         id: 'urgent-pain-alert',
@@ -918,14 +935,16 @@ export const buildAlerts = (
     });
   }
 
+  const bloodPressureLabel = dbp > 0 ? `${sbp}/${dbp}` : `sistolik ${sbp}`;
+
   const hasOrthostaticCue =
     physiology.isOlderAdult && hasKeywordSignal(symptomText, GERIATRIC_ORTHOSTATIC_KEYWORDS);
   const hasAtypicalInfectionCue =
     physiology.isOlderAdult && hasKeywordSignal(symptomText, GERIATRIC_ATYPICAL_INFECTION_KEYWORDS);
 
+  // SBP alone is enough: a missing diastolic value must not hide hypotension.
   const hasHypotension =
     sbp > 0 &&
-    dbp > 0 &&
     (physiology.isPediatric
       ? sbp < physiology.hypotensionSbpFloor
       : Boolean((map && map < 65) || sbp < physiology.hypotensionSbpFloor));
@@ -940,8 +959,8 @@ export const buildAlerts = (
         : 'Perfusi rendah terdeteksi',
       gate: 'GATE_1_HEMODYNAMIC',
       reasoning: physiology.isPediatric
-        ? `Tekanan darah ${sbp}/${dbp} mmHg berada di bawah ambang hipotensi untuk ${ageContext} (SBP < ${physiology.hypotensionSbpFloor} mmHg).`
-        : `Tekanan darah ${sbp}/${dbp} mmHg${
+        ? `Tekanan darah ${bloodPressureLabel} mmHg berada di bawah ambang hipotensi untuk ${ageContext} (SBP < ${physiology.hypotensionSbpFloor} mmHg).`
+        : `Tekanan darah ${bloodPressureLabel} mmHg${
             map ? ` dengan MAP ${map} mmHg` : ''
           } mengarah ke perfusi organ yang tidak adekuat.`,
       recommendations: [

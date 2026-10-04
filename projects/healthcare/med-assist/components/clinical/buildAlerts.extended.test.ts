@@ -295,3 +295,38 @@ describe('buildAlerts — consciousness (observed AVPU only)', () => {
     expect(alerts.find((a) => a.id === 'avpu-alert')?.title).toContain('CONFUSION');
   });
 });
+
+describe('buildAlerts — hypotension without a diastolic value', () => {
+  it('adult: SBP 85 with DBP not entered still raises the hypotension alert', () => {
+    const alert = buildAlerts(makeState({ sbp: '85' }), ADULT).find(
+      (a) => a.type === 'hypotension'
+    );
+    expect(alert?.severity).toBe('critical');
+    expect(alert?.reasoning).not.toContain('/0');
+  });
+
+  it('child 6 years: SBP 75 with DBP not entered raises the hypotension alert (floor 82)', () => {
+    const alerts = buildAlerts(makeState({ sbp: '75' }), CHILD_6);
+    expect(alerts.some((a) => a.type === 'hypotension')).toBe(true);
+  });
+
+  it('adult: SBP 110 with DBP not entered raises no hypotension alert', () => {
+    const alerts = buildAlerts(makeState({ sbp: '110' }), ADULT);
+    expect(alerts.some((a) => a.type === 'hypotension')).toBe(false);
+  });
+});
+
+describe('buildAlerts — hypothermia', () => {
+  it('temperature below 35 C raises a hypothermia alert', () => {
+    const alert = buildAlerts(makeState({ temp: '34.5' }), ADULT).find(
+      (a) => a.id === 'hypothermia-alert'
+    );
+    expect(alert?.severity).toBe('high');
+    expect(alert?.type).toBe('hypothermia');
+  });
+
+  it('temperature of 35.5 C raises no hypothermia alert', () => {
+    const alerts = buildAlerts(makeState({ temp: '35.5' }), ADULT);
+    expect(alerts.some((a) => a.id === 'hypothermia-alert')).toBe(false);
+  });
+});
