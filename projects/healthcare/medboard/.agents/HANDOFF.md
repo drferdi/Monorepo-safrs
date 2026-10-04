@@ -45,5 +45,11 @@ None.
 3. MIRA follow-ups: `ConsultLog` has no column, so a consult loaded from `/api/consult/pending`
    carries no differential (needs a migration — Chief's approval); MIRA cannot be called from the
    MedBoard server (production mode, shared token, loopback).
-4. Pre-existing: telemedicine page uses `--text-primary` and `--border-subtle`, which no stylesheet
+4. The MIRA card is only on `/telemedicine`; the `/emr` consult banner (`IncomingConsult`) does
+   not show it, while `/emr` now has its CDSS button disabled. Ask Chief whether to add it there.
+5. Deploy order: release the Med-Assist build with `b2592f0b` before MedBoard `6eb89e69` reaches
+   Railway, or set `LEGACY_CDSS_ENGINE_ENABLED=true` there until it is out; older Assist builds send
+   no `mira_differential`. `deploy:dry-run` re-run after the last commit: passes.
+6. Docs still describing the engine as live: `README.md`, `SECURITY.md`, `docs/AI_GOVERNANCE.md`.
+7. Pre-existing: telemedicine page uses `--text-primary` and `--border-subtle`, which no stylesheet
    defines; `consult-dedupe` is per process.
