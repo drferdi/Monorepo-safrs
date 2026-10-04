@@ -31,7 +31,7 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
   token through the native host is a cross-repo design), dependency prune (lockfile change, tests
   mock `react-apexcharts`), the `any` suppressions in MedLens tests.
 
-Branch `feat/sidepanel-ui-batch`, local only, no push, no PR. DECISIONS 2026-09-30 (two entries) and
+Branch `feat/sidepanel-ui-batch`, not pushed to the monorepo. The capsule alone is on the private `drferdi/AsistenMedis` main (e3e5c6e3 = capsule at 23f45639 merged with Chief's README and logo PRs; Chief pushed 2026-10-04); Dependabot reports 2 high there, unchecked. DECISIONS 2026-09-30 (two entries) and
 2026-09-29 hold the details. `main` is at cd7b7795 (Chief merged through the Tren TTV text scale).
 Visit summary PDF (2026-10-03, spec `docs/specs/2026-10-03-visit-summary-pdf-design.md`, plan
 `docs/plans/2026-10-03-visit-summary-pdf-plan.md`, DECISIONS): "Unduh PDF" on the RME Terapi step
