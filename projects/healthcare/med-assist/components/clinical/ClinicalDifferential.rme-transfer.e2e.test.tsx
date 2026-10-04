@@ -7,7 +7,7 @@ import { SIDE_PANEL_TATALAKSANA_TRANSFER } from '../../tests/e2e/side-panel-tata
 import { ClinicalDifferential } from './ClinicalDifferential';
 import { resetDiseaseNotesCache } from './diagnosis/useDiseaseNotes';
 
-import { PERAWAT_NAMA } from '@/lib/clinical/tenaga-medis';
+import { DOKTER_NAMA } from '@/lib/clinical/tenaga-medis';
 import { syntheticVisit } from '@/lib/report/visit-summary.fixtures';
 
 /**
@@ -258,13 +258,14 @@ describe('ClinicalDifferential live RME transfer (Diagnosis surface)', () => {
     const model = downloadMock.mock.calls[0][0];
     expect(model).toEqual(
       expect.objectContaining({
-        head: expect.objectContaining({ rm: 'RM-J02', facility: 'Puskesmas Sintetis' }),
+        head: expect.objectContaining({ rm: 'RM-J02' }),
         diagnoses: [expect.objectContaining({ icd: 'J02', role: 'PRIMER' })],
         medications: [{ name: 'Amoksisilin', dose: '3x500mg', use: 'sesudah makan', duration: '5 hari' }],
-        trend: expect.objectContaining({ dates: [expect.any(String), expect.any(String)] }),
+        trend: expect.arrayContaining([expect.objectContaining({ label: 'Sistolik' })]),
         followUp: 'Kontrol 3 hari',
         education: [],
-        signers: { dpjp: 'dr. Login Sintetis', verifier: PERAWAT_NAMA },
+        // Chief, 2026-10-04: another doctor's visit is verified by dr. Ferdi.
+        signers: { dpjp: 'dr. Login Sintetis', verifier: DOKTER_NAMA },
       })
     );
     expect(JSON.stringify(model)).not.toContain('Rahasia');

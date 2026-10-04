@@ -1,15 +1,20 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildVisitSummaryModel } from './visit-summary-model';
+import { buildVisitSummaryModel, FERDI_VERIFIERS } from './visit-summary-model';
 import { syntheticVisit, syntheticVisitSummaryInput as input } from './visit-summary.fixtures';
 
+import { DOKTER_NAMA } from '@/lib/clinical/tenaga-medis';
+
 describe('buildVisitSummaryModel', () => {
-  it('heads the summary with identity-free fields only', () => {
+  // The approved template (Chief, 2026-10-04): RM, USIA "[__] tahun", JENIS KELAMIN "[L/P]",
+  // TANGGAL & WAKTU; no facility line.
+  it('heads the summary with identity-free fields only, as the template asks', () => {
     expect(buildVisitSummaryModel(input).head).toEqual({
       rm: 'RM-00-12-34',
-      age: '54 th',
-      sex: 'Perempuan',
-      facility: 'Puskesmas Sintetis',
+      age: '54 tahun',
+      sex: 'P',
+      day: '03-10-2026',
+      time: '14:20',
       printedAt: '03-10-2026 14:20',
       date: '2026-10-03',
     });
@@ -20,15 +25,15 @@ describe('buildVisitSummaryModel', () => {
     expect(text).not.toContain('Rahasia');
   });
 
-  it('writes the vitals with units, a missing one as -, SpO2 from the context', () => {
+  it('writes each vital as a figure and its unit, a missing one as -, SpO2 from the context', () => {
     const model = buildVisitSummaryModel({ ...input, vitals: { ...input.vitals, glucose: 0 } });
     expect(model.vitals).toEqual([
-      { label: 'TD', value: '152/96 mmHg' },
-      { label: 'Nadi', value: '88 x/mnt' },
-      { label: 'Napas', value: '20 x/mnt' },
-      { label: 'Suhu', value: '37,2 °C' },
-      { label: 'SpO2', value: '98 %' },
-      { label: 'GDS', value: '-' },
+      { label: 'TD', value: '152/96', unit: 'mmHg' },
+      { label: 'NADI', value: '88', unit: 'x/menit' },
+      { label: 'NAPAS', value: '20', unit: 'x/menit' },
+      { label: 'SUHU', value: '37,2', unit: '°C' },
+      { label: 'SpO2', value: '98', unit: '%' },
+      { label: 'GDS', value: '-', unit: 'mg/dL' },
     ]);
   });
 
@@ -52,10 +57,38 @@ describe('buildVisitSummaryModel', () => {
     expect(buildVisitSummaryModel({ ...input, followUp: '' }).followUp).toBe('');
   });
 
-  it('signs with the DPJP and the verifier the signed-in user resolves to', () => {
-    expect(buildVisitSummaryModel(input).signers).toEqual({
-      dpjp: 'dr. Klinisi Sintetis',
-      verifier: 'Ns. Verifikator Sintetis',
+  // Chief, 2026-10-04 ("Pada output pdf"): the DPJP follows the login (a nakes login gives
+  // dr. Ferdi, as the RME does); the verifier is always dr. Ferdi, and when dr. Ferdi is the
+  // DPJP, dr. Dibya Arfianda or dr. Boyong Baskoro, Sp.OG, in turn.
+  describe('signers', () => {
+    const signers = (dokter: string, rm = input.rm, printedAt = input.printedAt) =>
+      buildVisitSummaryModel({
+        ...input,
+        rm,
+        printedAt,
+        staff: { dokter_nama: dokter, perawat_nama: 'Ns. Perawat Sintetis' },
+      }).signers;
+
+    it('verifies another doctor’s visit by dr. Ferdi', () => {
+      expect(signers('dr. Klinisi Sintetis')).toEqual({ dpjp: 'dr. Klinisi Sintetis', verifier: DOKTER_NAMA });
+    });
+
+    it('verifies dr. Ferdi’s visit by one of the two Sp.OG, never by himself', () => {
+      for (const dpjp of [DOKTER_NAMA, 'dr. Ferdi Iskandar']) {
+        const { verifier } = signers(dpjp);
+        expect(FERDI_VERIFIERS).toContain(verifier);
+      }
+    });
+
+    it('takes turns between the two Sp.OG, the same one again for the same visit', () => {
+      const rms = ['RM-1', 'RM-2', 'RM-3', 'RM-4', 'RM-5', 'RM-6'];
+      const chosen = rms.map((rm) => signers(DOKTER_NAMA, rm).verifier);
+      expect(new Set(chosen)).toEqual(new Set(FERDI_VERIFIERS));
+      expect(rms.map((rm) => signers(DOKTER_NAMA, rm).verifier)).toEqual(chosen);
+    });
+
+    it('never prints the nurse of the RME', () => {
+      expect(JSON.stringify(signers('dr. Klinisi Sintetis'))).not.toContain('Perawat');
     });
   });
 
@@ -68,56 +101,33 @@ describe('buildVisitSummaryModel', () => {
     expect(buildVisitSummaryModel({ ...input, alerts: repeated }).alerts.map((a) => a.urgent)).toEqual([true, false]);
   });
 
-  it('trends the past visits then this one, with the normal limits', () => {
-    const trend = buildVisitSummaryModel(input).trend;
-    expect(trend?.dates).toEqual(['12-06', '10-07', '14-08', '11-09', '03-10']);
-    // Review 2026-10-03: one measure per row, so each grey band is that measure's normal range.
-    expect(trend?.rows.map((row) => row.label)).toEqual(['Sistolik', 'Diastolik', 'Nadi', 'Napas', 'Suhu']);
-    expect(trend?.rows.map((row) => row.lines.length)).toEqual([1, 1, 1, 1, 1]);
-    expect(trend?.rows[0].lines[0]).toEqual({ values: [148, 156, 150, 158, 152], range: { min: 90, max: 139 } });
-    expect(trend?.rows[1].lines[0]).toEqual({ values: [94, 98, 95, 100, 96], range: { min: 60, max: 89 } });
-    expect(trend?.rows.map((row) => row.last).slice(0, 2)).toEqual(['152 mmHg', '96 mmHg']);
+  // The template's Tren Tanda Vital: PARAMETER, SEBELUM (the latest earlier visit), HARI INI, TREND.
+  it('sets each vital of the latest earlier visit beside today’s, with the direction', () => {
+    expect(buildVisitSummaryModel(input).trend).toEqual([
+      { label: 'Sistolik', before: '158', today: '152', direction: 'down' },
+      { label: 'Diastolik', before: '100', today: '96', direction: 'down' },
+      { label: 'Nadi', before: '92', today: '88', direction: 'down' },
+      { label: 'Napas', before: '20', today: '20', direction: 'flat' },
+      { label: 'Suhu', before: '37,1', today: '37,2', direction: 'up' },
+    ]);
   });
 
-  it('keeps the last 8 visits and leaves a gap where a visit lacks a vital', () => {
-    // Ten monthly visits in 2025; the latest past one has no pulse.
-    const history = Array.from({ length: 10 }, (_, i) =>
-      syntheticVisit(`2025-${String(i + 1).padStart(2, '0')}-15`, {
-        sbp: 140,
-        dbp: 90,
-        hr: i === 9 ? 0 : 80,
-        rr: 18,
-        temp: 36.8,
-        glucose: 120,
-      })
-    );
-    const trend = buildVisitSummaryModel({ ...input, context: { ...input.context!, visitHistory: history } }).trend;
-    expect(trend?.dates).toHaveLength(8);
-    expect(trend?.dates[0]).toBe('15-04');
-    expect(trend?.rows[2].lines[0].values).toEqual([80, 80, 80, 80, 80, 80, null, 88]);
-  });
-
-  it('trends only this patient’s visits', () => {
-    const other = { ...syntheticVisit('2026-09-20', input.vitals), patient_id: 'RM-LAIN' };
+  it('compares with this patient’s visits only, and only those with a readable date', () => {
+    const other = { ...syntheticVisit('2026-09-30', { ...input.vitals, sbp: 200 }), patient_id: 'RM-LAIN' };
+    const bad = { ...syntheticVisit('2026-09-29', { ...input.vitals, sbp: 190 }), timestamp: 'bukan tanggal' };
     const trend = buildVisitSummaryModel({
       ...input,
-      context: { ...input.context!, visitHistory: [...input.context!.visitHistory, other] },
+      context: { ...input.context!, visitHistory: [...input.context!.visitHistory, other, bad] },
     }).trend;
-    expect(trend?.dates).toEqual(['12-06', '10-07', '14-08', '11-09', '03-10']);
+    expect(trend[0]).toEqual({ label: 'Sistolik', before: '158', today: '152', direction: 'down' });
   });
 
-  it('skips visits without a readable date', () => {
-    const bad = { ...syntheticVisit('2026-05-01', input.vitals), timestamp: 'bukan tanggal' };
-    const trend = buildVisitSummaryModel({
-      ...input,
-      context: { ...input.context!, visitHistory: [bad, ...input.context!.visitHistory] },
-    }).trend;
-    expect(trend?.dates).toHaveLength(5);
-    expect(JSON.stringify(trend)).not.toContain('NaN');
-  });
-
-  it('has no trend with fewer than two visits', () => {
-    expect(buildVisitSummaryModel({ ...input, context: { ...input.context!, visitHistory: [] } }).trend).toBeNull();
-    expect(buildVisitSummaryModel({ ...input, context: undefined }).trend).toBeNull();
+  it('leaves SEBELUM as - and no direction without an earlier visit or value', () => {
+    const lonely = buildVisitSummaryModel({ ...input, context: { ...input.context!, visitHistory: [] } }).trend;
+    expect(lonely.map((row) => [row.before, row.direction])).toEqual(Array(5).fill(['-', null]));
+    const noPulse = [syntheticVisit('2026-09-11', { ...input.vitals, hr: 0 })];
+    const trend = buildVisitSummaryModel({ ...input, context: { ...input.context!, visitHistory: noPulse } }).trend;
+    expect(trend[2]).toEqual({ label: 'Nadi', before: '-', today: '88', direction: null });
+    expect(buildVisitSummaryModel({ ...input, context: undefined }).trend).toHaveLength(5);
   });
 });

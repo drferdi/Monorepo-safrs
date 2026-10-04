@@ -1745,7 +1745,7 @@ export const ClinicalDifferential: React.FC<ClinicalDifferentialProps> = ({
   const handleDownloadPdf = (): void => {
     setPdfError('');
     void (async () => {
-      // The DPJP and the verifier follow the signed-in user, as in the RME (resolveTenagaMedisNames).
+      // The DPJP follows the signed-in user, as in the RME (resolveTenagaMedisNames); the model picks the verifier.
       const staff = resolveTenagaMedisNames(assistStaffFromSession(await getSession()));
       const model = buildVisitSummaryModel({
         rm: patientRM,

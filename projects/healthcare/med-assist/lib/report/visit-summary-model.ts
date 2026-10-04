@@ -1,6 +1,5 @@
-import type { TenagaMedisNames } from '@/lib/clinical/tenaga-medis';
+import { DOKTER_NAMA, type TenagaMedisNames } from '@/lib/clinical/tenaga-medis';
 import type { TriageZone } from '@/lib/emergency-detector/triage-verdict';
-import { NORMAL_RANGES } from '@/lib/iskandar-diagnosis-engine/trajectory-analyzer';
 import type { VisitRecord } from '@/lib/iskandar-diagnosis-engine/visit-history-store';
 
 /** What the side panel adds beyond the Diagnosis page's own props (set in main.tsx). */
@@ -33,23 +32,25 @@ export interface VisitSummaryInput {
   followUp: string;
   /** Red flags of the chosen diagnoses ("Segera kembali bila"). */
   safetyNet: string[];
-  /** The RME's names for the signed-in user (`resolveTenagaMedisNames`): DPJP and verifier. */
+  /** The RME's names for the signed-in user (`resolveTenagaMedisNames`); the DPJP is its doctor. */
   staff: TenagaMedisNames;
   context: VisitSummaryContext | undefined;
   printedAt: Date;
 }
 
+/** One vital of the latest earlier visit beside today's, as the template's Tren Tanda Vital row. */
 export interface TrendRow {
   label: string;
-  /** The measure's values per visit, null where a visit lacks it, and its normal range. */
-  lines: Array<{ values: Array<number | null>; range: { min: number; max: number } }>;
-  last: string;
+  before: string;
+  today: string;
+  /** Null when either value is missing. */
+  direction: 'up' | 'down' | 'flat' | null;
 }
 
 export interface VisitSummaryModel {
-  head: { rm: string; age: string; sex: string; facility: string; printedAt: string; date: string };
+  head: { rm: string; age: string; sex: 'L' | 'P'; day: string; time: string; printedAt: string; date: string };
   complaint: { main: string; extra: string };
-  vitals: Array<{ label: string; value: string }>;
+  vitals: Array<{ label: string; value: string; unit: string }>;
   triage: { zone: TriageZone; headline: string | null } | null;
   allergies: string;
   pregnancy: string | null;
@@ -60,41 +61,53 @@ export interface VisitSummaryModel {
   followUp: string;
   safetyNet: string[];
   signers: { dpjp: string; verifier: string };
-  /** Null with fewer than two visits. */
-  trend: { dates: string[]; rows: TrendRow[] } | null;
+  trend: TrendRow[];
 }
 
-const MAX_TREND_VISITS = 8;
+/** Who verifies dr. Ferdi's own visits (Chief, 2026-10-04), in turn. */
+export const FERDI_VERIFIERS = ['dr. Dibya Arfianda, Sp.OG', 'dr. Boyong Baskoro, Sp.OG'] as const;
 
 const pad = (n: number): string => String(n).padStart(2, '0');
 const present = (n: number | null | undefined): n is number =>
   typeof n === 'number' && Number.isFinite(n) && n > 0;
-const shown = (n: number | null | undefined, unit: string): string =>
-  present(n) ? `${String(n).replace('.', ',')} ${unit}` : '-';
+const figure = (n: number | null | undefined): string => (present(n) ? String(n).replace('.', ',') : '-');
 const pressure = (vitals: Vitals): string =>
-  present(vitals.sbp) && present(vitals.dbp) ? `${vitals.sbp}/${vitals.dbp} mmHg` : '-';
+  present(vitals.sbp) && present(vitals.dbp) ? `${vitals.sbp}/${vitals.dbp}` : '-';
+
+/**
+ * Chief, 2026-10-04: the verifier is always dr. Ferdi; when he is the DPJP, one of the two Sp.OG,
+ * chosen by the visit (RM and day), so they take turns and a second download prints the same one.
+ */
+function verifierFor(dpjp: string, visitKey: string): string {
+  if (dpjp !== DOKTER_NAMA && !/ferdi iskandar/i.test(dpjp)) return DOKTER_NAMA;
+  const sum = Array.from(visitKey).reduce((total, char) => total + (char.codePointAt(0) ?? 0), 0);
+  return FERDI_VERIFIERS[sum % FERDI_VERIFIERS.length];
+}
 
 export function buildVisitSummaryModel(input: VisitSummaryInput): VisitSummaryModel {
   const { vitals, context, printedAt } = input;
   const day = `${pad(printedAt.getDate())}-${pad(printedAt.getMonth() + 1)}-${printedAt.getFullYear()}`;
+  const time = `${pad(printedAt.getHours())}:${pad(printedAt.getMinutes())}`;
+  const date = `${printedAt.getFullYear()}-${pad(printedAt.getMonth() + 1)}-${pad(printedAt.getDate())}`;
   const seenAlerts = new Set<string>();
   return {
     head: {
       rm: input.rm,
-      age: `${input.age} th`,
-      sex: input.gender === 'L' ? 'Laki-laki' : 'Perempuan',
-      facility: context?.facilityName ?? '',
-      printedAt: `${day} ${pad(printedAt.getHours())}:${pad(printedAt.getMinutes())}`,
-      date: `${printedAt.getFullYear()}-${pad(printedAt.getMonth() + 1)}-${pad(printedAt.getDate())}`,
+      age: `${input.age} tahun`,
+      sex: input.gender,
+      day,
+      time,
+      printedAt: `${day} ${time}`,
+      date,
     },
     complaint: { main: input.keluhanUtama, extra: input.keluhanTambahan },
     vitals: [
-      { label: 'TD', value: pressure(vitals) },
-      { label: 'Nadi', value: shown(vitals.hr, 'x/mnt') },
-      { label: 'Napas', value: shown(vitals.rr, 'x/mnt') },
-      { label: 'Suhu', value: shown(vitals.temp, '°C') },
-      { label: 'SpO2', value: shown(context?.spo2, '%') },
-      { label: 'GDS', value: shown(vitals.glucose, 'mg/dL') },
+      { label: 'TD', value: pressure(vitals), unit: 'mmHg' },
+      { label: 'NADI', value: figure(vitals.hr), unit: 'x/menit' },
+      { label: 'NAPAS', value: figure(vitals.rr), unit: 'x/menit' },
+      { label: 'SUHU', value: figure(vitals.temp), unit: '°C' },
+      { label: 'SpO2', value: figure(context?.spo2), unit: '%' },
+      { label: 'GDS', value: figure(vitals.glucose), unit: 'mg/dL' },
     ],
     triage: context && context.triage.zone !== 'standby' ? context.triage : null,
     allergies: input.allergies.length > 0 ? input.allergies.join(', ') : 'Tidak ada alergi tercatat',
@@ -128,7 +141,7 @@ export function buildVisitSummaryModel(input: VisitSummaryInput): VisitSummaryMo
     education: input.education,
     followUp: input.followUp ? `Kontrol ${input.followUp}` : '',
     safetyNet: input.safetyNet,
-    signers: { dpjp: input.staff.dokter_nama, verifier: input.staff.perawat_nama },
+    signers: { dpjp: input.staff.dokter_nama, verifier: verifierFor(input.staff.dokter_nama, `${input.rm}|${date}`) },
     // Only this patient's visits: a late or failed history scan must not print another RM's vitals.
     trend: buildTrend(
       (context?.visitHistory ?? []).filter((visit) => visit.patient_id === input.rm),
@@ -138,31 +151,28 @@ export function buildVisitSummaryModel(input: VisitSummaryInput): VisitSummaryMo
   };
 }
 
-function buildTrend(history: VisitRecord[], current: Vitals, printedAt: Date): VisitSummaryModel['trend'] {
-  const visits = history
-    .filter((visit) => !Number.isNaN(Date.parse(visit.timestamp)))
-    .sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp))
-    .map((visit) => ({ at: new Date(visit.timestamp), vitals: visit.vitals }))
-    .concat({ at: printedAt, vitals: current })
-    .slice(-MAX_TREND_VISITS);
-  if (visits.length < 2) return null;
-
-  const series = (key: keyof Vitals): Array<number | null> =>
-    visits.map((visit) => (present(visit.vitals[key]) ? visit.vitals[key] : null));
-  const line = (key: keyof typeof NORMAL_RANGES): TrendRow['lines'][number] => ({
-    values: series(key),
-    range: { min: NORMAL_RANGES[key].min, max: NORMAL_RANGES[key].max },
-  });
-
-  return {
-    dates: visits.map((visit) => `${pad(visit.at.getDate())}-${pad(visit.at.getMonth() + 1)}`),
-    rows: [
-      // One measure per row, so each grey band is that measure's own normal range.
-      { label: 'Sistolik', lines: [line('sbp')], last: shown(current.sbp, 'mmHg') },
-      { label: 'Diastolik', lines: [line('dbp')], last: shown(current.dbp, 'mmHg') },
-      { label: 'Nadi', lines: [line('hr')], last: shown(current.hr, 'x/mnt') },
-      { label: 'Napas', lines: [line('rr')], last: shown(current.rr, 'x/mnt') },
-      { label: 'Suhu', lines: [line('temp')], last: shown(current.temp, '°C') },
-    ],
+function buildTrend(history: VisitRecord[], current: Vitals, printedAt: Date): TrendRow[] {
+  const before = history
+    .filter((visit) => {
+      const at = Date.parse(visit.timestamp);
+      return !Number.isNaN(at) && at < printedAt.getTime();
+    })
+    .sort((a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp))[0]?.vitals;
+  const row = (label: string, key: keyof Vitals): TrendRow => {
+    const was = before?.[key];
+    const now = current[key];
+    return {
+      label,
+      before: figure(was),
+      today: figure(now),
+      direction: present(was) && present(now) ? (now > was ? 'up' : now < was ? 'down' : 'flat') : null,
+    };
   };
+  return [
+    row('Sistolik', 'sbp'),
+    row('Diastolik', 'dbp'),
+    row('Nadi', 'hr'),
+    row('Napas', 'rr'),
+    row('Suhu', 'temp'),
+  ];
 }

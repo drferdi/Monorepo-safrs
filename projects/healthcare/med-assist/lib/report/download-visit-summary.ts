@@ -3,9 +3,7 @@ import { renderVisitSummaryPdf, type VisitSummaryAssets } from './visit-summary-
 
 /** Files under `public/`; the side panel and the harness serve them from the root. */
 export const ASSET_PATHS: Record<keyof VisitSummaryAssets, string> = {
-  logo: '/brand/sentra-logomark-white.png',
-  regular: '/fonts/IBMPlexSans-Regular.ttf',
-  bold: '/fonts/IBMPlexSans-Bold.ttf',
+  logo: '/brand/sentra-logomark-ink.png',
 };
 
 async function fetchBytes(path: string): Promise<Uint8Array> {
@@ -14,14 +12,9 @@ async function fetchBytes(path: string): Promise<Uint8Array> {
   return new Uint8Array(await response.arrayBuffer());
 }
 
-/** The logomark and the two IBM Plex Sans weights the PDF embeds. */
+/** The logomark the PDF embeds; the type is the standard Helvetica Bold. */
 export async function loadVisitSummaryAssets(): Promise<VisitSummaryAssets> {
-  const [logo, regular, bold] = await Promise.all([
-    fetchBytes(ASSET_PATHS.logo),
-    fetchBytes(ASSET_PATHS.regular),
-    fetchBytes(ASSET_PATHS.bold),
-  ]);
-  return { logo, regular, bold };
+  return { logo: await fetchBytes(ASSET_PATHS.logo) };
 }
 
 export function visitSummaryFileName(model: VisitSummaryModel): string {

@@ -1,41 +1,30 @@
-import fontkit from '@pdf-lib/fontkit';
-import { PDFDocument, rgb, type PDFFont, type RGB } from 'pdf-lib';
+import { PDFDocument, StandardFonts, rgb, setCharacterSpacing, type PDFFont, type RGB } from 'pdf-lib';
 
-import { PAGE, layoutVisitSummary, type FontWeight, type Measure, type Tone } from './visit-summary-layout';
+import { PAGE, layoutVisitSummary, type Measure } from './visit-summary-layout';
 import type { VisitSummaryModel } from './visit-summary-model';
 
-// Chief, 2026-10-03: Oxford blue (#002147) for structure, red orange (#FF4500) for numbers and
-// alarms, near-black text, white on the Oxford band.
-const TONES: Record<Tone, RGB> = {
-  ink: rgb(0.07, 0.07, 0.07),
-  muted: rgb(0.45, 0.45, 0.45),
-  oxford: rgb(0, 33 / 255, 71 / 255),
-  signal: rgb(1, 69 / 255, 0),
-  paper: rgb(1, 1, 1),
-  tint: rgb(0.78, 0.82, 0.88),
-  band: rgb(0.9, 0.91, 0.93),
-};
-const HAIRLINE = 0.5;
-const TREND_LINE = 0.75;
-
-/** The white logomark and IBM Plex Sans (Chief, 2026-10-03), as files from `public/`. */
+/** The ink Sentra logomark (Chief, 2026-10-04: "tambahkan logo Sentra"), as a file from `public/`. */
 export interface VisitSummaryAssets {
   logo: Uint8Array;
-  regular: Uint8Array;
-  bold: Uint8Array;
 }
 
-/** IBM Plex Sans Regular and Bold, subset to the glyphs drawn, and widths measured with them. */
-export async function embedPlexSans(
-  doc: PDFDocument,
-  assets: Pick<VisitSummaryAssets, 'regular' | 'bold'>
-): Promise<{ fonts: Record<FontWeight, PDFFont>; measure: Measure }> {
-  doc.registerFontkit(fontkit);
-  const fonts: Record<FontWeight, PDFFont> = {
-    regular: await doc.embedFont(assets.regular, { subset: true }),
-    bold: await doc.embedFont(assets.bold, { subset: true }),
+const color = (hex: string): RGB =>
+  rgb(
+    Number.parseInt(hex.slice(1, 3), 16) / 255,
+    Number.parseInt(hex.slice(3, 5), 16) / 255,
+    Number.parseInt(hex.slice(5, 7), 16) / 255
+  );
+
+/**
+ * The template is Arial bold throughout; the standard Helvetica Bold has Arial's widths and needs
+ * no embedding. Letter spacing adds after every character, as PDF's Tc does.
+ */
+export async function embedTemplateFont(doc: PDFDocument): Promise<{ font: PDFFont; measure: Measure }> {
+  const font = await doc.embedFont(StandardFonts.HelveticaBold);
+  return {
+    font,
+    measure: (text, size, spacing = 0) => font.widthOfTextAtSize(text, size) + spacing * text.length,
   };
-  return { fonts, measure: (text, weight, size) => fonts[weight].widthOfTextAtSize(text, size) };
 }
 
 export async function renderVisitSummaryPdf(
@@ -43,10 +32,10 @@ export async function renderVisitSummaryPdf(
   assets: VisitSummaryAssets
 ): Promise<Uint8Array<ArrayBuffer>> {
   const doc = await PDFDocument.create();
-  doc.setTitle('Ringkasan Kunjungan');
-  doc.setCreator('Sentra Med Assist');
-  doc.setProducer('Sentra Med Assist');
-  const { fonts, measure } = await embedPlexSans(doc, assets);
+  doc.setTitle('Clinical Visit Summary');
+  doc.setCreator('Sentra Asisten Medis');
+  doc.setProducer('Sentra Asisten Medis');
+  const { font, measure } = await embedTemplateFont(doc);
   const logo = await doc.embedPng(assets.logo);
   const fromBottom = (top: number): number => PAGE.height - top;
 
@@ -55,17 +44,19 @@ export async function renderVisitSummaryPdf(
     for (const op of ops) {
       switch (op.kind) {
         case 'text': {
-          const font = fonts[op.weight];
-          const x = op.align === 'right' ? op.x - font.widthOfTextAtSize(op.text, op.size) : op.x;
-          page.drawText(op.text, { x, y: fromBottom(op.y), size: op.size, font, color: TONES[op.tone] });
+          const width = measure(op.text, op.size, op.spacing);
+          const x = op.align === 'right' ? op.x - width : op.align === 'center' ? op.x - width / 2 : op.x;
+          if (op.spacing) page.pushOperators(setCharacterSpacing(op.spacing));
+          page.drawText(op.text, { x, y: fromBottom(op.y), size: op.size, font, color: color(op.color) });
+          if (op.spacing) page.pushOperators(setCharacterSpacing(0));
           break;
         }
-        case 'rule':
+        case 'line':
           page.drawLine({
-            start: { x: op.x1, y: fromBottom(op.y) },
-            end: { x: op.x2, y: fromBottom(op.y) },
-            thickness: HAIRLINE,
-            color: TONES.oxford,
+            start: { x: op.x1, y: fromBottom(op.y1) },
+            end: { x: op.x2, y: fromBottom(op.y2) },
+            thickness: op.width,
+            color: color(op.color),
           });
           break;
         case 'rect':
@@ -74,18 +65,7 @@ export async function renderVisitSummaryPdf(
             y: fromBottom(op.y + op.height),
             width: op.width,
             height: op.height,
-            color: TONES[op.tone],
-          });
-          break;
-        case 'polyline':
-          op.points.slice(1).forEach(([x, y], i) => {
-            const [fromX, fromY] = op.points[i];
-            page.drawLine({
-              start: { x: fromX, y: fromBottom(fromY) },
-              end: { x, y: fromBottom(y) },
-              thickness: TREND_LINE,
-              color: TONES[op.tone],
-            });
+            color: color(op.color),
           });
           break;
         case 'logo':

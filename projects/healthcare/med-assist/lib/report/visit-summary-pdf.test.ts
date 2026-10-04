@@ -8,41 +8,40 @@ import { longVisitSummaryInput, syntheticVisitSummaryInput } from './visit-summa
 import { readVisitSummaryAssets } from './visit-summary.test-assets';
 
 const assets = readVisitSummaryAssets();
-/** The BaseFont names of the fonts the document embeds, without pdf-lib's subset tag ("-4801"). */
+/** The BaseFont names of the fonts the document uses. */
 const baseFonts = (doc: PDFDocument): string[] =>
   doc.context
     .enumerateIndirectObjects()
     .map(([, object]) => object)
     .filter((object): object is PDFDict => object instanceof PDFDict)
     .filter((dict) => dict.get(PDFName.of('Type')) === PDFName.of('Font'))
-    .map((dict) => dict.lookupMaybe(PDFName.of('BaseFont'), PDFName)?.decodeText().replace(/-\d{4}$/, ''))
+    .map((dict) => dict.lookupMaybe(PDFName.of('BaseFont'), PDFName)?.decodeText())
     .filter((name): name is string => Boolean(name));
 const images = (page: PDFPage): number =>
   page.node.Resources()?.lookupMaybe(PDFName.of('XObject'), PDFDict)?.keys().length ?? 0;
 
 describe('renderVisitSummaryPdf', () => {
-  // Migrated (Chief 2026-10-03, "lebih komprehensif"): with Edukasi and Tindak lanjut the synthetic
-  // visit takes two pages (Tren TTV whole on page 2), so the count is 2, no longer 1.
-  it('writes an A4 PDF titled for the visit, with the logo on page 1', async () => {
+  // The approved template (Chief, 2026-10-04) is one A4 page.
+  it('writes the synthetic visit on one A4 page titled for the summary, with the logo', async () => {
     const doc = await PDFDocument.load(
       await renderVisitSummaryPdf(buildVisitSummaryModel(syntheticVisitSummaryInput), assets)
     );
-    expect(doc.getPageCount()).toBe(2);
+    expect(doc.getPageCount()).toBe(1);
     expect(doc.getPage(0).getSize()).toEqual({ width: 595.28, height: 841.89 });
-    expect(doc.getTitle()).toBe('Ringkasan Kunjungan');
-    expect(doc.getCreator()).toBe('Sentra Med Assist');
+    expect(doc.getTitle()).toBe('Clinical Visit Summary');
+    expect(doc.getCreator()).toBe('Sentra Asisten Medis');
     expect(doc.getAuthor()).toBeUndefined();
     expect(images(doc.getPage(0))).toBe(1);
   });
 
-  it('sets the text in IBM Plex Sans, regular and bold, and no standard font', async () => {
+  it('sets the text in Helvetica Bold, the template’s Arial bold by its metrics', async () => {
     const doc = await PDFDocument.load(
       await renderVisitSummaryPdf(buildVisitSummaryModel(syntheticVisitSummaryInput), assets)
     );
-    expect(new Set(baseFonts(doc))).toEqual(new Set(['IBMPlexSans', 'IBMPlexSans-Bold']));
+    expect(new Set(baseFonts(doc))).toEqual(new Set(['Helvetica-Bold']));
   });
 
-  it('keeps the logo off the later pages', async () => {
+  it('continues a long prescription on a second page without the logo', async () => {
     const doc = await PDFDocument.load(
       await renderVisitSummaryPdf(buildVisitSummaryModel(longVisitSummaryInput), assets)
     );

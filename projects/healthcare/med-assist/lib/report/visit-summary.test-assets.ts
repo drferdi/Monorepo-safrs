@@ -6,11 +6,7 @@ import type { VisitSummaryAssets } from './visit-summary-pdf';
 const read = (path: string): Uint8Array =>
   new Uint8Array(readFileSync(fileURLToPath(new URL(`../../public${path}`, import.meta.url))));
 
-/** The logomark and the IBM Plex Sans files as the side panel serves them, read from `public/` (tests only). */
+/** The logomark as the side panel serves it, read from `public/` (tests only). */
 export function readVisitSummaryAssets(): VisitSummaryAssets {
-  return {
-    logo: read('/brand/sentra-logomark-white.png'),
-    regular: read('/fonts/IBMPlexSans-Regular.ttf'),
-    bold: read('/fonts/IBMPlexSans-Bold.ttf'),
-  };
+  return { logo: read('/brand/sentra-logomark-ink.png') };
 }

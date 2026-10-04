@@ -1,204 +1,166 @@
 // @vitest-environment node
-import fontkit from '@pdf-lib/fontkit';
 import { PDFDocument } from 'pdf-lib';
 import { beforeAll, describe, expect, it } from 'vitest';
 
 import {
-  BASELINE,
+  COLOR,
   CONTENT_BOTTOM,
+  CONTENT_WIDTH,
   FOOTER_Y,
   MARGIN,
-  PAGE,
-  SIZE,
-  columnRight,
-  columnX,
+  TRIAGE_FILL,
   layoutVisitSummary,
   type DrawOp,
-  type FontWeight,
   type Measure,
 } from './visit-summary-layout';
 import { buildVisitSummaryModel } from './visit-summary-model';
-import { embedPlexSans } from './visit-summary-pdf';
-import { longVisitSummaryInput, syntheticVisitSummaryInput } from './visit-summary.fixtures';
-import { readVisitSummaryAssets } from './visit-summary.test-assets';
+import { embedTemplateFont } from './visit-summary-pdf';
+import { longVisitSummaryInput, syntheticVisitSummaryInput as input } from './visit-summary.fixtures';
 
-type TextOp = Extract<DrawOp, { kind: 'text' }>;
-
-const assets = readVisitSummaryAssets();
-const plex: Record<FontWeight, ReturnType<typeof fontkit.create>> = {
-  regular: fontkit.create(assets.regular),
-  bold: fontkit.create(assets.bold),
-};
 let measure: Measure;
+type TextOp = Extract<DrawOp, { kind: 'text' }>;
+const texts = (ops: DrawOp[]): TextOp[] => ops.filter((op): op is TextOp => op.kind === 'text');
+const layout = (overrides: Partial<typeof input> = {}) =>
+  layoutVisitSummary(buildVisitSummaryModel({ ...input, ...overrides }), measure).pages;
+const find = (ops: DrawOp[], value: string): TextOp | undefined => texts(ops).find((op) => op.text === value);
+
 beforeAll(async () => {
-  ({ measure } = await embedPlexSans(await PDFDocument.create(), assets));
+  ({ measure } = await embedTemplateFont(await PDFDocument.create()));
 });
 
-const texts = (ops: DrawOp[]): TextOp[] => ops.filter((op): op is TextOp => op.kind === 'text');
-const lefts = Array.from({ length: 12 }, (_, i) => columnX(i + 1));
-const rights = Array.from({ length: 12 }, (_, i) => columnRight(i + 1));
-const layout = (input = syntheticVisitSummaryInput) => layoutVisitSummary(buildVisitSummaryModel(input), measure);
-
+// The approved template, Clinical_Visit_Summary_Template.docx (Chief, 2026-10-04).
 describe('layoutVisitSummary', () => {
-  it('sets every text on a column edge and on the 12 pt baseline grid', () => {
-    for (const op of layout().pages.flatMap(texts)) {
-      expect(op.align === 'left' ? lefts : rights).toContain(op.x);
-      expect((op.y - MARGIN.top) % BASELINE).toBe(0);
-    }
+  it('opens with the red tab, the two-line title, the brand line and "Prototype" in red', () => {
+    const [page] = layout();
+    expect(page[0]).toEqual({ kind: 'rect', x: MARGIN.left, y: MARGIN.top, width: 45.35, height: 4.55, color: COLOR.red });
+    expect(find(page, 'Clinical')).toMatchObject({ size: 34, color: COLOR.ink });
+    expect(find(page, 'Visit Summary')).toMatchObject({ size: 34, color: COLOR.ink });
+    expect(find(page, 'Sentra Asisten Medis')).toMatchObject({ size: 13 });
+    expect(find(page, 'Prototype')).toMatchObject({ size: 9, color: COLOR.red });
   });
 
-  // Migrated (Chief 2026-10-03, "lebih komprehensif swiss style … red orange dan blue oxford"): the
-  // sections are numbered 01-08 in red orange in column 1, their labels Oxford blue in column 2;
-  // Edukasi and Tindak lanjut joined; the trend rows' labels moved to column 2.
-  it('numbers the sections in red orange in column 1 and labels them in Oxford blue', () => {
-    const ops = layout(longVisitSummaryInput).pages.flatMap(texts).filter((op) => op.x < columnX(4));
-    const numbers = ops.filter((op) => op.x === columnX(1));
-    expect(numbers.map((op) => op.text)).toEqual(['01', '02', '03', '04', '05', '05', '06', '07', '08', '09']);
-    expect(new Set(numbers.map((op) => op.tone))).toEqual(new Set(['signal']));
-    const labels = ops.filter((op) => op.x === columnX(2) && op.weight === 'bold');
-    expect(labels.map((op) => op.text)).toEqual([
-      'KELUHAN',
-      'TTV / TRIASE',
+  it('numbers the ten blocks in red at 15 pt with their tracked 7 pt captions', () => {
+    const [page] = layout();
+    const numbers = texts(page).filter((op) => op.size === 15);
+    expect(numbers.map((op) => op.text)).toEqual(['01', '02', '03', '04', '05', '06', '07', '08', '09', '10']);
+    expect(new Set(numbers.map((op) => op.color))).toEqual(new Set([COLOR.red]));
+    const captions = texts(page).filter((op) => op.size === 7 && op.spacing === 1.75);
+    expect(captions.map((op) => op.text)).toEqual([
+      'KELUHAN UTAMA & RINGKASAN KLINIS',
+      'TANDA VITAL / TRIASE',
       'ALERGI',
       'DIAGNOSIS',
-      'TATALAKSANA',
-      'TATALAKSANA',
+      'TATALAKSANA / OBAT',
       'EDUKASI',
       'TINDAK LANJUT',
-      'TREN TTV',
+      'TREN TANDA VITAL',
+      'SEGERA KEMBALI BILA',
       'VERIFIKASI',
     ]);
-    expect(new Set(labels.map((op) => op.tone))).toEqual(new Set(['oxford']));
-    const trend = ops.filter((op) => op.x === columnX(2) && op.weight === 'regular').map((op) => op.text);
-    expect(trend).toEqual(['Sistolik', 'Diastolik', 'Nadi', 'Napas', 'Suhu']);
   });
 
-  it('opens page 1 with a full-width Oxford band, the title in white, a red-orange rule beneath', () => {
-    const [first, second] = layout(longVisitSummaryInput).pages;
-    const band = first.find((op) => op.kind === 'rect' && op.tone === 'oxford');
-    expect(band).toEqual(expect.objectContaining({ x: 0, y: 0, width: PAGE.width }));
-    const rule = first.find((op) => op.kind === 'rect' && op.tone === 'signal');
-    expect(rule).toEqual(expect.objectContaining({ x: 0, width: PAGE.width, height: 3 }));
-    if (band?.kind !== 'rect' || rule?.kind !== 'rect') throw new Error('band or rule missing');
-    expect(rule.y).toBe(band.height);
-    const title = texts(first).filter((op) => op.size === SIZE.title);
-    expect(title.map((op) => [op.text, op.tone])).toEqual([
-      ['RINGKASAN', 'paper'],
-      ['KUNJUNGAN', 'paper'],
-    ]);
-    expect(second.some((op) => op.kind === 'rect' && op.tone === 'oxford' && op.width === PAGE.width)).toBe(false);
+  it('heads the page with the RM, age, sex and time under their captions', () => {
+    const [page] = layout();
+    expect(find(page, 'NO. REKAM MEDIS')).toMatchObject({ size: 6, color: COLOR.label });
+    expect(find(page, 'RM RM-00-12-34')).toMatchObject({ size: 12 });
+    for (const value of ['54 tahun', 'P', '03-10-2026 14:20']) expect(find(page, value)).toMatchObject({ size: 8.5 });
   });
 
-  it('prints the education, the follow-up and the safety net', () => {
-    const all = layout().pages.flatMap(texts).map((op) => op.text);
-    expect(all).toEqual(
-      expect.arrayContaining([
-        'Minum obat tekanan darah setiap hari pada jam yang sama.',
-        'Batasi garam dan makanan asin.',
-        'Kontrol 1 minggu',
-        'SEGERA KEMBALI BILA',
-        'Nyeri kepala hebat mendadak',
-        'Lemah separuh badan atau bicara pelo',
-      ])
-    );
+  it('writes each vital as a 16 pt figure over its unit, the triage in its zone colour', () => {
+    const [page] = layout();
+    expect(find(page, '152/96')).toMatchObject({ size: 16 });
+    expect(find(page, 'mmHg')).toMatchObject({ size: 6.5 });
+    expect(page).toContainEqual(expect.objectContaining({ kind: 'rect', color: TRIAGE_FILL.kuning }));
+    expect(find(page, 'KUNING')).toMatchObject({ size: 8.5 });
+    expect(find(page, 'Hipertensi derajat 2')).toMatchObject({ size: 6.5 });
   });
 
-  it('closes with the DPJP and the verifier in Oxford under their captions', () => {
-    const ops = layout().pages.flatMap(texts);
-    const at = (value: string) => ops.find((op) => op.text === value);
-    expect(at('DPJP')).toEqual(expect.objectContaining({ x: columnX(4), tone: 'muted' }));
-    expect(at('VERIFIKATOR')).toEqual(expect.objectContaining({ x: columnX(8), tone: 'muted' }));
-    expect(at('dr. Klinisi Sintetis')).toEqual(
-      expect.objectContaining({ x: columnX(4), weight: 'bold', tone: 'oxford', y: (at('DPJP')?.y ?? 0) + BASELINE })
-    );
-    expect(at('Ns. Verifikator Sintetis')).toEqual(
-      expect.objectContaining({ x: columnX(8), weight: 'bold', tone: 'oxford' })
-    );
+  it('keeps the triage box with - when the triage is standby', () => {
+    const [page] = layout({ context: { ...input.context!, triage: { zone: 'standby', headline: null } } });
+    expect(find(page, 'TRIASE')).toBeDefined();
+    expect(find(page, '-')).toBeDefined();
   });
 
-  it('writes the vitals as large Oxford figures over their captions', () => {
-    const value = layout().pages[0].find((op) => op.kind === 'text' && op.text === '152/96 mmHg');
-    expect(value).toEqual(expect.objectContaining({ size: SIZE.figure, weight: 'bold', tone: 'oxford' }));
+  it('prints the primary ICD at 22 pt marked PRIMER in red, a secondary one SEKUNDER', () => {
+    const [page] = layout();
+    expect(find(page, 'I10')).toMatchObject({ size: 22 });
+    expect(find(page, 'PRIMER')).toMatchObject({ color: COLOR.red, align: 'right' });
+    expect(find(page, 'SEKUNDER')).toMatchObject({ color: COLOR.label });
   });
 
-  it('leaves one empty baseline between the vitals’ captions and the triage', () => {
-    const ops = texts(layout().pages[0]);
-    const caption = ops.find((op) => op.text === 'GDS');
-    const triage = ops.find((op) => op.text === 'KUNING');
-    if (!caption || !triage) throw new Error('caption or triage missing');
-    expect(triage.y - caption.y).toBe(BASELINE * 2);
-  });
-
-  it('marks each vital’s latest visit in red orange', () => {
-    const marks = layout().pages.flat().filter((op) => op.kind === 'rect' && op.tone === 'signal' && op.width === 3);
-    expect(marks).toHaveLength(5);
-  });
-
-  // Migrated (Chief 2026-10-03, Oxford band): the logomark is white on the band and spans the two
-  // title lines, so its size is no longer 28.
-  it('draws the logo once, at column 1 of page 1', () => {
-    const logos = layout(longVisitSummaryInput).pages.map((ops) => ops.filter((op) => op.kind === 'logo'));
-    expect(logos[0]).toEqual([expect.objectContaining({ x: columnX(1) })]);
-    expect(logos.slice(1).flat()).toEqual([]);
-  });
-
-  it('continues Tatalaksana on the next page by medication rows and numbers the pages', () => {
-    const { pages } = layout(longVisitSummaryInput);
-    expect(pages).toHaveLength(2);
-    const footers = pages.map((ops) => texts(ops).find((op) => op.text.startsWith('Halaman'))?.text);
-    expect(footers).toEqual(['Halaman 1/2', 'Halaman 2/2']);
-    for (const ops of pages) {
-      expect(texts(ops).some((op) => op.text === 'TATALAKSANA')).toBe(true);
-      for (const op of texts(ops).filter((t) => t.y !== FOOTER_Y)) expect(op.y).toBeLessThanOrEqual(CONTENT_BOTTOM);
+  it('lists the medications in the template’s five columns', () => {
+    const [page] = layout();
+    for (const caption of ['NO', 'OBAT', 'DOSIS', 'ATURAN PAKAI', 'DURASI']) {
+      expect(find(page, caption)).toMatchObject({ size: 5.5, color: COLOR.label });
     }
-    const names = pages.flatMap(texts).map((op) => op.text).filter((text) => text.startsWith('Obat Sintetis'));
-    expect(names).toHaveLength(45);
-    expect(new Set(names).size).toBe(45);
+    const amlodipin = find(page, 'Amlodipin')!;
+    const row = texts(page).filter((op) => op.y === amlodipin.y).map((op) => op.text);
+    expect(row).toEqual(['1', 'Amlodipin', '1x10mg', 'Sesudah makan', '30 hari']);
   });
 
-  it('never sets a baseline below the content bottom, however long a complaint or an alert', () => {
-    const long = (word: string, count: number) => Array.from({ length: count }, () => word).join(' ');
-    const input = {
-      ...syntheticVisitSummaryInput,
-      keluhanUtama: long('nyeri', 1200),
-      alerts: [{ severity: 'high', title: 'Peringatan panjang', message: long('waspada', 1100) }],
-    };
-    const { pages } = layout(input);
-    for (const op of pages.flatMap(texts).filter((t) => t.y !== FOOTER_Y)) {
+  it('prints the education, the follow-up, the safety net and the alerts under Temuan', () => {
+    const [page] = layout();
+    expect(find(page, '1. Minum obat tekanan darah setiap hari pada jam yang sama.')).toBeDefined();
+    expect(find(page, 'Kontrol 1 minggu')).toMatchObject({ size: 9.5 });
+    expect(find(page, 'Nyeri kepala hebat mendadak')).toMatchObject({ size: 6.5 });
+    expect(find(page, '!')).toMatchObject({ size: 19, color: COLOR.red });
+    expect(texts(page).some((op) => op.text.startsWith('Tekanan darah tinggi: TD >= 140/90'))).toBe(true);
+  });
+
+  it('draws a trend arrow for each vital with an earlier value, and - without', () => {
+    const lines = (page: DrawOp[]) => page.filter((op) => op.kind === 'line' && op.width === 0.8);
+    expect(lines(layout()[0])).toHaveLength(5 * 3);
+    const lonely = layout({ context: { ...input.context!, visitHistory: [] } })[0];
+    expect(lines(lonely)).toHaveLength(0);
+  });
+
+  it('closes with the DPJP and the verifier under their captions', () => {
+    const [page] = layout();
+    expect(find(page, 'DPJP')).toMatchObject({ size: 5, color: COLOR.label });
+    expect(find(page, 'VERIFIKATOR')).toMatchObject({ size: 5, color: COLOR.label });
+    expect(find(page, 'dr. Klinisi Sintetis')).toMatchObject({ size: 6 });
+  });
+
+  it('draws the logomark once, on page 1, inside the title block', () => {
+    const pages = layoutVisitSummary(buildVisitSummaryModel(longVisitSummaryInput), measure).pages;
+    const logos = pages.map((page) => page.filter((op) => op.kind === 'logo'));
+    expect(logos.map((ops) => ops.length)).toEqual([1, 0]);
+    const [logo] = logos[0];
+    expect(logo.kind === 'logo' && logo.x + logo.size).toBeLessThanOrEqual(MARGIN.left + 311.8);
+  });
+
+  it('writes the template’s footer, numbering the pages only when there are two', () => {
+    const [single] = layout();
+    expect(find(single, 'Sentra Asisten Medis  ·  Clinical Visit Summary (Prototype)')).toMatchObject({ y: FOOTER_Y, size: 5.5 });
+    expect(find(single, 'RM RM-00-12-34  ·  dicetak 03-10-2026 14:20')).toMatchObject({ align: 'right' });
+    const pages = layoutVisitSummary(buildVisitSummaryModel(longVisitSummaryInput), measure).pages;
+    expect(find(pages[1], 'RM RM-00-12-34  ·  dicetak 03-10-2026 14:20  ·  2/2')).toBeDefined();
+  });
+
+  it('keeps every text inside the margins and above the footer, however long the content', () => {
+    const long = 'Keluhan sangat panjang '.repeat(300);
+    const pages = layoutVisitSummary(
+      buildVisitSummaryModel({ ...longVisitSummaryInput, keluhanUtama: long }),
+      measure
+    ).pages;
+    for (const op of pages.flatMap(texts)) {
+      if (op.y === FOOTER_Y) continue;
       expect(op.y).toBeLessThanOrEqual(CONTENT_BOTTOM);
+      const width = measure(op.text, op.size, op.spacing);
+      const left = op.align === 'right' ? op.x - width : op.align === 'center' ? op.x - width / 2 : op.x;
+      expect(left).toBeGreaterThanOrEqual(MARGIN.left - 0.01);
+      expect(left + width).toBeLessThanOrEqual(MARGIN.left + CONTENT_WIDTH + 0.01);
     }
     const words = pages.flatMap(texts).flatMap((op) => op.text.split(' '));
-    expect(words.filter((word) => word === 'nyeri')).toHaveLength(1200);
-    expect(words.filter((word) => word === 'waspada')).toHaveLength(1100);
+    expect(words.filter((word) => word === 'panjang')).toHaveLength(300);
   });
 
-  it('breaks a word wider than its columns inside them', () => {
-    const word = 'Natriumdiklofenakkaliumhidroklorida'.repeat(3);
-    const ops = layout({ ...syntheticVisitSummaryInput, keluhanUtama: word }).pages[0];
-    const complaint = texts(ops).filter((op) => op.x === columnX(4) && op.text.length > 3 && word.includes(op.text));
-    expect(complaint.length).toBeGreaterThan(1);
-    for (const op of complaint) expect(op.x + measure(op.text, op.weight, op.size)).toBeLessThanOrEqual(columnRight(12));
-  });
-
-  it('writes one line instead of a trend with fewer than two visits', () => {
-    const input = { ...syntheticVisitSummaryInput, context: undefined };
-    const all = layout(input).pages.flatMap(texts).map((op) => op.text);
-    expect(all).toContain('Riwayat kunjungan belum cukup untuk tren');
-    expect(all).not.toContain('Sistolik');
-  });
-
-  // Migrated (Chief 2026-10-03, "Text gunakan IBM Plex Sans"): was "draws only text the standard
-  // Helvetica can encode"; the claim is now that IBM Plex Sans has a glyph for every character drawn.
-  it('draws only characters IBM Plex Sans has a glyph for, without a ?', () => {
-    for (const op of layout().pages.flatMap(texts)) {
-      expect(op.text).not.toContain('?');
-      for (const char of Array.from(op.text)) {
-        expect(plex[op.weight].hasGlyphForCodePoint(char.codePointAt(0) ?? 0)).toBe(true);
-      }
-    }
+  it('draws only WinAnsi characters, without a ?', () => {
+    const [page] = layout({ keluhanUtama: 'Nyeri ≥ 3 hari → memberat' });
+    expect(texts(page).some((op) => op.text.includes('?'))).toBe(false);
   });
 
   it('never prints a name from the visit history', () => {
-    expect(layout().pages.flatMap(texts).map((op) => op.text).join(' ')).not.toContain('Rahasia');
+    expect(JSON.stringify(layout())).not.toContain('Rahasia');
   });
 });

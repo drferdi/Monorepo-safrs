@@ -23,12 +23,8 @@ describe('downloadVisitSummaryPdf', () => {
     );
   });
 
-  it('saves the rendered PDF with the logo and the IBM Plex Sans files it fetched', async () => {
-    const bytes: Record<string, number> = {
-      '/brand/sentra-logomark-white.png': 1,
-      '/fonts/IBMPlexSans-Regular.ttf': 2,
-      '/fonts/IBMPlexSans-Bold.ttf': 3,
-    };
+  it('saves the rendered PDF with the ink logomark it fetched', async () => {
+    const bytes: Record<string, number> = { '/brand/sentra-logomark-ink.png': 1 };
     vi.stubGlobal('fetch', vi.fn(async (path: string) => new Response(new Uint8Array([bytes[path]]))));
     renderMock.mockResolvedValue(new Uint8Array([37, 80, 68, 70]));
     const createObjectURL = vi.fn((_blob: Blob) => 'blob:pdf');
@@ -40,24 +36,15 @@ describe('downloadVisitSummaryPdf', () => {
 
     await downloadVisitSummaryPdf(model);
 
-    expect(renderMock).toHaveBeenCalledWith(model, {
-      logo: new Uint8Array([1]),
-      regular: new Uint8Array([2]),
-      bold: new Uint8Array([3]),
-    });
+    expect(renderMock).toHaveBeenCalledWith(model, { logo: new Uint8Array([1]) });
     expect(saved).toEqual(['ringkasan-kunjungan-RM-00-12-34-2026-10-03.pdf']);
     expect(createObjectURL.mock.calls[0][0].type).toBe('application/pdf');
   });
 
-  it('saves nothing when a font cannot be read', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(async (path: string) =>
-        path.endsWith('Bold.ttf') ? new Response('', { status: 404 }) : new Response(new Uint8Array([1]))
-      )
-    );
+  it('saves nothing when the logomark cannot be read', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => new Response('', { status: 404 })));
     const click = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => undefined);
-    await expect(downloadVisitSummaryPdf(model)).rejects.toThrow('/fonts/IBMPlexSans-Bold.ttf');
+    await expect(downloadVisitSummaryPdf(model)).rejects.toThrow('/brand/sentra-logomark-ink.png');
     expect(click).not.toHaveBeenCalled();
     expect(renderMock).not.toHaveBeenCalled();
   });
