@@ -108,24 +108,6 @@ vi.mock('@/components/ui/AssistShell', () => ({
   ),
 }));
 
-vi.mock('@/components/ui/ConsoleFrame', () => ({
-  ConsoleFrame: ({ children, ariaLabel }: { children: React.ReactNode; ariaLabel?: string }) => (
-    <section aria-label={ariaLabel}>{children}</section>
-  ),
-}));
-
-vi.mock('@/components/clinical/CTHeader', () => ({
-  CTHeader: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-}));
-
-vi.mock('@/components/clinical/ClinicalScreenTabs', () => ({
-  ClinicalScreenTabs: () => <div data-testid="trajectory-tabs" />,
-}));
-
-vi.mock('@/components/clinical/DosageCalculator', () => ({
-  DosageCalculator: () => <div data-testid="dose-calc" />,
-}));
-
 vi.mock('framer-motion', async () => {
   const ReactModule = await import('react');
 

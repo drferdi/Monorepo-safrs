@@ -45,10 +45,6 @@ vi.mock('@/lib/rme/payload-mapper', async (importOriginal) => ({
   buildRMETransferPayload: mockBuildRMETransferPayload,
 }));
 
-vi.mock('./ClinicalScreenTabs', () => ({
-  ClinicalScreenTabs: () => <nav data-testid="clinical-screen-tabs" />,
-}));
-
 function makeSuggestion(overrides: Partial<DiagnosisSuggestion>): DiagnosisSuggestion {
   return {
     rank: 1,

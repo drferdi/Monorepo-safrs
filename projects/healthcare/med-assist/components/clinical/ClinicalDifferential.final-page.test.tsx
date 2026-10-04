@@ -53,46 +53,6 @@ vi.mock('@/components/ui/AssistShell', () => ({
   ),
 }));
 
-vi.mock('@/components/ui/ConsoleFrame', () => ({
-  ConsoleFrame: ({ children, ariaLabel }: { children: React.ReactNode; ariaLabel?: string }) => (
-    <section className="console-frame" data-testid="console-frame-wrapper" aria-label={ariaLabel}>
-      {children}
-    </section>
-  ),
-}));
-
-vi.mock('./CTHeader', () => ({
-  CTHeader: ({
-    title,
-    subtitle,
-    meta,
-    onBack,
-    children,
-  }: {
-    title: string;
-    subtitle: string;
-    meta?: string;
-    onBack?: () => void;
-    children?: React.ReactNode;
-  }) => (
-    <header>
-      {onBack ? (
-        <button type="button" aria-label="Back" onClick={onBack}>
-          Back
-        </button>
-      ) : null}
-      <h1>{title}</h1>
-      <p>{subtitle}</p>
-      {meta ? <span>{meta}</span> : null}
-      {children}
-    </header>
-  ),
-}));
-
-vi.mock('./ClinicalScreenTabs', () => ({
-  ClinicalScreenTabs: () => <div data-testid="clinical-screen-tabs" />,
-}));
-
 beforeEach(() => {
   clearMatcherCache();
   vi.stubGlobal('fetch', async (url: string | URL | Request) => {

@@ -60,6 +60,7 @@ export default tseslint.config(
       'prototype/**',
       'postcss.config.js',
       'docs/**',
+      'archieved/**',
     ],
   },
   {

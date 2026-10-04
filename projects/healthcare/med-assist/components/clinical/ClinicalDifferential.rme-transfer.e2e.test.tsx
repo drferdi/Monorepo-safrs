@@ -113,20 +113,6 @@ vi.mock('@/components/ui/AssistShell', () => ({
   ),
 }));
 
-vi.mock('@/components/ui/ConsoleFrame', () => ({
-  ConsoleFrame: ({ children, ariaLabel }: { children: React.ReactNode; ariaLabel?: string }) => (
-    <section aria-label={ariaLabel}>{children}</section>
-  ),
-}));
-
-vi.mock('./CTHeader', () => ({
-  CTHeader: ({ children }: { children?: React.ReactNode }) => <header>{children}</header>,
-}));
-
-vi.mock('./ClinicalScreenTabs', () => ({
-  ClinicalScreenTabs: () => <div data-testid="clinical-screen-tabs" />,
-}));
-
 vi.mock('./ClinicalImpressionPanel', () => ({
   ClinicalImpressionPanel: () => <div data-testid="clinical-impression-panel" />,
 }));
