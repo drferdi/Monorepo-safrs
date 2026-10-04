@@ -3,6 +3,30 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-04 — The visit summary gains columns inside its blocks, not new blocks
+
+- Decision (Chief: "pdf kurang penuh"; then "hanya tambahkan kolom di isinya saja ya, struktur
+  prinsipnya dipertahankan", picking the visit history, the interaction check, the trend line and
+  the continued chronic therapy): the ten blocks stay. 05 TATALAKSANA adds STATUS (Lanjutan for
+  `isChronicContinuation`, else Baru; the resep's order kept, so NO matches the RME) and INTERAKSI
+  (the DDInter partners within this resep with the severity in Indonesian, a matched allergy; red
+  when major, contraindicated or allergic), then a line saying what the check found, had not
+  finished or could not run, and the curated advice of each serious pair. Pairs with a chronic
+  drug not continued are left out. 08 TREN TANDA VITAL takes up to four earlier visits as dated
+  columns (dd-mm-yy) before HARI INI, a Diagnosis (ICD) row and a GDS row; TREND is a sparkline
+  (0.5 pt grey) before the template's arrow, which still compares the latest earlier visit with
+  today. A visit dated the day of printing is left out (it is this visit's own record once
+  ePuskesmas saves it).
+- Departure from the template, the one this asks for: block 05's column widths (twips 567, 3288,
+  1134, 1474, 1814, 1020, 1475 in place of 567, 4989, 1701, 2268, 1247) and block 08's (860, 700
+  per visit, the rest for TREND, measured so "28-08-26" fits at 27.4 pt).
+- The component matches the check on `nama_obat` (what `checkInteractions` was asked) and names
+  the pairs as printed (`resepDrugSafety` in `tatalaksana.ts`); `lib/report` imports nothing from
+  `components/`.
+- Evidence: model 8, layout 17, helper 2 tests red first, and the PDF-flow test red on the old
+  component; the synthetic visit stays one page (Amlodipin + Simvastatin, DDInter major, the
+  advice "Batasi dosis simvastatin maksimal 20mg/hari."); harness `summary.html`.
+
 ## 2026-10-04 — The header reads "Prototype" under the credit line
 
 - Decision (Chief: the Latin text after "...built by dr Ferdi Iskandar" becomes "Prototype"):

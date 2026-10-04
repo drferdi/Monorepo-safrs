@@ -15,8 +15,10 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
   `Clinical_Visit_Summary_Template.docx` (A4, ten numbered blocks, ink logomark in the title cell),
   IBM Plex Sans Bold (`public/fonts/`, subset through `@pdf-lib/fontkit`). DPJP = signed-in
   `dokter_nama` (a non-doctor gives dr. Ferdi); verifier = dr. Ferdi, or when he is DPJP one of
-  `FERDI_VERIFIERS` by `RM|date`. The RME nurse field is unchanged. Not done: the medication table
-  header is not repeated on page 2.
+  `FERDI_VERIFIERS` by `RM|date`. The RME nurse field is unchanged. Columns inside the blocks
+  (DECISIONS "gains columns"): 05 STATUS + INTERAKSI + the DDInter check line; 08 up to four dated
+  earlier visits, Diagnosis and GDS rows, sparkline + arrow; same-day visits left out. Not done:
+  the medication table header is not repeated on page 2.
 - Sound: only `opening.mp3` from `runLaunchSequence`; `ConsoleLogin` plays none.
 - Header: "Prototype" under "Architected by dr Ferdi Iskandar" (`SidePanelHeader.tsx`).
 - `archieved/` (gitignored, on disk): unreachable components, lib clients, the trajectory chart set,
@@ -41,9 +43,9 @@ Harness (scratchpad, launch `gate3-harness`, port 5181): `header.html`, `summary
 
 ## Verification (final tree, 2026-10-04)
 
-`run build` 0 · typecheck 0 · vitest 0 (198 files, 1699 passed, 17 skipped; fewer than 2026-10-03
+`run build` 0 · typecheck 0 · vitest 0 (198 files, 1708 passed, 17 skipped; fewer than 2026-10-03
 because archived tests left with their code) · eslint `components lib entrypoints utils types` 0 ·
 full lint 1, only `zz-verify-kb-rx.spec.ts` (4 `no-console`) · `run:check` 0 · e2e 21 passed ·
 governance 1, only root `.agents/HANDOFF.md` task ownership (other session). Red first: font test
-(Helvetica-Bold), sound test, header test. Not shown red first: the signer model tests. Production
+(Helvetica-Bold), sound test, header test, the PDF column tests (model, layout, helper, PDF flow). Not shown red first: the signer model tests. Production
 build in `.output\chrome-mv3-dev`, last.

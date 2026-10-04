@@ -13,6 +13,9 @@ version (`wxt.config.ts`); the reasoning behind each change is in `.agents/DECIS
 - Standard repository files: `LICENSE`, `SECURITY.md`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`
   and this changelog.
 - The README follows Chief's AsistenMedis design, with the Asisten Medis CDSS logo.
+- Visit summary: Tatalaksana shows STATUS (Lanjutan / Baru) and INTERAKSI (DDInter partners
+  within the resep, a matched allergy) with the check's result under the table; Tren Tanda Vital
+  shows up to four earlier visits, the diagnosis and GDS, and a sparkline before the arrow.
 
 ### Changed
 

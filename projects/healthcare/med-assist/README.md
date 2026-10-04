@@ -337,7 +337,7 @@ The current statistics surface reads the ePuskesmas daily service report in a hi
 
 <table width="100%">
 <tr><td width="31%"><sub><b>Identity posture</b></sub></td><td><sub>No patient name; report is scoped to the active RM and visit context.</sub></td></tr>
-<tr><td><sub><b>Clinical content</b></sub></td><td><sub>Ten numbered blocks: complaint and key findings, vitals and triage, allergy, diagnosis (ICD), medications, education, follow-up, vital trend against the last visit, return-if signs, verification.</sub></td></tr>
+<tr><td><sub><b>Clinical content</b></sub></td><td><sub>Ten numbered blocks: complaint and key findings, vitals and triage, allergy, diagnosis (ICD), medications with STATUS (continued / new) and INTERAKSI (DDInter pairs within the resep, matched allergy) plus the check's result, education, follow-up, the last four visits' diagnosis and vitals with a sparkline and arrow, return-if signs, verification.</sub></td></tr>
 <tr><td><sub><b>Verification</b></sub></td><td><sub>DPJP follows the signed-in user and the form. The verifier is dr. Ferdi Iskandar; when he is the DPJP, the verifier is dr. Dibya Arfianda, Sp.OG or dr. Boyong Baskoro, Sp.OG, alternating by RM and day.</sub></td></tr>
 <tr><td><sub><b>Rendering</b></sub></td><td><sub>pdf-lib + fontkit, IBM Plex Sans Bold embedded as a subset (the template's weight), the Sentra logomark in the title block; a long prescription continues on a second page.</sub></td></tr>
 </table>
@@ -430,7 +430,7 @@ node scripts/pnpm.mjs run test:e2e
 <table width="100%">
 <tr><td width="30%"><sub><b>Build</b></sub></td><td><sub><b>PASS</b> · exit 0.</sub></td></tr>
 <tr><td><sub><b>Typecheck</b></sub></td><td><sub><b>PASS</b> · exit 0.</sub></td></tr>
-<tr><td><sub><b>Vitest</b></sub></td><td><sub><b>PASS</b> · 198 files · <b>1699 passed</b> · 17 skipped. Fewer than 2026-10-03 because tests of archived, unreachable code moved out with it.</sub></td></tr>
+<tr><td><sub><b>Vitest</b></sub></td><td><sub><b>PASS</b> · 198 files · <b>1708 passed</b> · 17 skipped. Fewer than 2026-10-03 because tests of archived, unreachable code moved out with it.</sub></td></tr>
 <tr><td><sub><b>ESLint on source</b></sub></td><td><sub><b>PASS</b> · <code>components lib entrypoints utils types</code> exit 0.</sub></td></tr>
 <tr><td><sub><b>Full lint</b></sub></td><td><sub><b>KNOWN FAILURE</b> · four <code>no-console</code> errors in <code>tests/e2e/zz-verify-kb-rx.spec.ts</code>, an uncommitted file of another session.</sub></td></tr>
 <tr><td><sub><b>Run check</b></sub></td><td><sub><b>PASS</b> · extension reference check exit 0.</sub></td></tr>
