@@ -107,6 +107,23 @@ describe('bridge poller', () => {
     expect(executor.mock.calls).toEqual([['e2', '83206', { id: 'e2' }]]);
   });
 
+  // A 409 on claim means another Assist owns the entry; reporting a failure would mark its work failed.
+  it('does not report a failure for an entry it could not claim', async () => {
+    const { attachBridgeAlarmListener, registerBridgeExecutor } = await loadPoller();
+    const executor = vi.fn().mockResolvedValue(success);
+    registerBridgeExecutor(executor, async () => true);
+    client.fetchPendingEntries.mockResolvedValue([entry('e1', '83206')]);
+    client.claimEntry.mockRejectedValue(new Error('Entry tidak tersedia untuk diklaim.'));
+    attachBridgeAlarmListener();
+
+    fireAlarm();
+    await vi.waitFor(() => expect(client.claimEntry).toHaveBeenCalledWith('e1'));
+    await new Promise((resolve) => setTimeout(resolve, 0));
+
+    expect(client.reportFailed).not.toHaveBeenCalled();
+    expect(executor).not.toHaveBeenCalled();
+  });
+
   it('leaves every entry pending when no patient of theirs is open', async () => {
     const { attachBridgeAlarmListener, registerBridgeExecutor } = await loadPoller();
     const executor = vi.fn().mockResolvedValue(success);

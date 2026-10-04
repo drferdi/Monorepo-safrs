@@ -215,13 +215,18 @@ async function processEntry(entry: BridgeEntry): Promise<void> {
     return;
   }
 
+  // Step 1: Claim the entry. Only the claimant reports on it: when the claim fails (another
+  // Assist took it, or it expired), skip the entry instead of reporting a failure.
   try {
-    // Step 1: Claim the entry
     await claimEntry(entry.id);
-    log.debug(
-      `[BridgePoller] Claimed entry ${entry.id} (${entry.patientName || entry.pelayananId})`
-    );
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    log.warn(`[BridgePoller] Entry ${entry.id} not claimed: ${errorMsg}`);
+    return;
+  }
+  log.debug(`[BridgePoller] Claimed entry ${entry.id} (${entry.patientName || entry.pelayananId})`);
 
+  try {
     // Step 2: Fetch full payload
     const detail = await fetchEntryDetail(entry.id);
 
