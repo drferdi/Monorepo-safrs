@@ -1140,6 +1140,7 @@ async function applyScrapeResult(scrapeData: ScrapePayload): Promise<void> {
           hr: scrapedVitals?.nadi,
           rr: scrapedVitals?.respirasi,
           temp: scrapedVitals?.suhu,
+          spo2: scrapedVitals?.saturasi,
           glucose: scrapedVitals?.gula_darah,
         },
         narrative: {

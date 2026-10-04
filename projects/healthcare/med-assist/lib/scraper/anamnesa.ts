@@ -55,6 +55,7 @@ export interface AnamnesaScrapeResult extends Partial<EncounterData> {
     respirasi?: number;
     suhu?: number;
     gula_darah?: number;
+    saturasi?: number;
   };
   /** Patient demographics scraped from page header / hidden fields */
   patient_demographics?: {
@@ -98,6 +99,9 @@ export const scrapeAnamnesa = async (): Promise<AnamnesaScrapeResult> => {
   const glucose = getNumericValue(
     'input#gula-darah, input[name="PeriksaFisik[gula_darah]"], input[name="gula_darah"]'
   );
+  const spo2 = getNumericValue(
+    'input[name="PeriksaFisik[saturasi]"], input#saturasi, input[name="PeriksaFisik[spo2]"]'
+  );
 
   const hasVitals = sbp !== undefined || dbp !== undefined || hr !== undefined;
   const vital_signs = hasVitals
@@ -108,6 +112,7 @@ export const scrapeAnamnesa = async (): Promise<AnamnesaScrapeResult> => {
         respirasi: rr,
         suhu: temp,
         gula_darah: glucose,
+        saturasi: spo2,
       }
     : undefined;
 
