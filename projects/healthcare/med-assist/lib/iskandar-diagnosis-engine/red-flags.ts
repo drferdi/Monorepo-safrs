@@ -128,7 +128,7 @@ export function checkSepsis(vitals: VitalSigns | undefined): RedFlag | null {
       condition: `SUSPEK SEPSIS - qSOFA Score ${score}/3`,
       action:
         'RUJUK SEGERA ke IGD RS. Pasang IV line, ambil kultur darah, berikan antibiotik empiris.',
-      icd_codes: ['A41.9', 'R65.20'],
+      icd_codes: ['A41.9', 'R65.1'],
       criteria_met: criteria,
       source: 'qSOFA (JAMA 2016)',
     };
@@ -421,66 +421,135 @@ export function checkHypoglycemia(
 // ANAPHYLAXIS CHECK
 // =============================================================================
 
-/**
- * Anaphylaxis warning signs
- */
-const ANAPHYLAXIS_KEYWORDS = [
-  'sesak napas berat',
-  'tidak bisa bernapas',
-  'bengkak wajah',
+// WAO Anaphylaxis Guidance 2020 (Cardona V, et al. World Allergy Organ J 2020;13:100472).
+const ANAPHYLAXIS_SKIN_MUCOSA = [
+  'biduran',
+  'urtikaria',
+  'kaligata',
+  'angioedema',
   'bengkak bibir',
+  'bengkak wajah',
   'bengkak lidah',
-  'biduran seluruh tubuh',
-  'gatal seluruh badan',
-  'mual muntah',
-  'pusing',
+  'bengkak kelopak mata',
+  'gatal seluruh',
+  'ruam seluruh',
+  'kemerahan seluruh',
 ];
 
+const ANAPHYLAXIS_RESPIRATORY = [
+  'sesak',
+  'mengi',
+  'wheezing',
+  'stridor',
+  'suara serak',
+  'tercekik',
+  'tidak bisa bernapas',
+];
+
+/** Bronchospasm or laryngeal involvement (WAO criterion 2): plain "sesak" is not enough. */
+const ANAPHYLAXIS_BRONCHOSPASM_LARYNGEAL = [
+  'mengi',
+  'wheezing',
+  'stridor',
+  'suara serak',
+  'tercekik',
+  'sulit menelan',
+  'tidak bisa bernapas',
+];
+
+/** Severe gastrointestinal symptoms only: plain "muntah" or "mual" is not a WAO criterion. */
+const ANAPHYLAXIS_SEVERE_GI = [
+  'muntah berulang',
+  'muntah terus',
+  'nyeri perut hebat',
+  'kram perut hebat',
+];
+
+const ANAPHYLAXIS_END_ORGAN = ['pingsan', 'sinkop', 'tidak sadar', 'inkontinensia'];
+
+const ALLERGEN_EXPOSURE = [
+  'setelah makan',
+  'setelah minum obat',
+  'setelah disuntik',
+  'setelah suntik',
+  'setelah imunisasi',
+  'disengat',
+  'sengatan',
+];
+
+function findKeywords(text: string, keywords: readonly string[]): string[] {
+  return keywords.filter((keyword) => text.includes(keyword));
+}
+
+/** PALS hypotension: < 70 mmHg under 1 year, < 70 + 2 x age to 10 years, < 90 from 11 years. */
+function hypotensionFloor(age: number | undefined): number {
+  if (age === undefined || age > 10) return 90;
+  if (age < 1) return 70;
+  return 70 + 2 * Math.floor(age);
+}
+
 /**
- * Check for Anaphylaxis
+ * Check for anaphylaxis with the two WAO 2020 criteria.
+ * 1. Skin or mucosa involvement plus respiratory compromise, reduced blood pressure or end-organ
+ *    dysfunction, or severe gastrointestinal symptoms.
+ * 2. Exposure to a probable allergen plus hypotension, bronchospasm or laryngeal involvement,
+ *    even without skin signs.
+ * Acute onset cannot be read from free text; the clinician confirms it.
  */
 export function checkAnaphylaxis(
   keluhan: string,
   vitals: VitalSigns | undefined,
-  allergies: string[] | undefined
+  allergies: string[] | undefined,
+  age?: number
 ): RedFlag | null {
   const keluhanLower = keluhan.toLowerCase();
-  const criteria: string[] = [];
+  const floor = hypotensionFloor(age);
+  const hypotension =
+    vitals?.systolic !== undefined && vitals.systolic > 0 && vitals.systolic < floor;
+  const lowSpo2 = vitals?.spo2 !== undefined && vitals.spo2 > 0 && vitals.spo2 < 94;
 
-  // Check if has known allergies
+  const skin = findKeywords(keluhanLower, ANAPHYLAXIS_SKIN_MUCOSA);
+  const respiratory = findKeywords(keluhanLower, ANAPHYLAXIS_RESPIRATORY);
+  const airway = findKeywords(keluhanLower, ANAPHYLAXIS_BRONCHOSPASM_LARYNGEAL);
+  const severeGi = findKeywords(keluhanLower, ANAPHYLAXIS_SEVERE_GI);
+  const endOrgan = findKeywords(keluhanLower, ANAPHYLAXIS_END_ORGAN);
+  const exposure = findKeywords(keluhanLower, ALLERGEN_EXPOSURE);
+
+  const criteria: string[] = [];
+  const hypotensionLabel = `Hipotensi (TD sistolik ${vitals?.systolic} mmHg, ambang < ${floor})`;
+
+  if (
+    skin.length > 0 &&
+    (respiratory.length > 0 || lowSpo2 || hypotension || endOrgan.length > 0 || severeGi.length > 0)
+  ) {
+    criteria.push(`Kriteria 1 WAO: kulit/mukosa (${skin.join(', ')})`);
+    if (respiratory.length > 0) criteria.push(`Respirasi: ${respiratory.join(', ')}`);
+    if (lowSpo2) criteria.push(`SpO2 ${vitals?.spo2}% (< 94)`);
+    if (hypotension) criteria.push(hypotensionLabel);
+    if (endOrgan.length > 0) criteria.push(`Disfungsi organ: ${endOrgan.join(', ')}`);
+    if (severeGi.length > 0) criteria.push(`Gastrointestinal berat: ${severeGi.join(', ')}`);
+  } else if (exposure.length > 0 && (hypotension || airway.length > 0)) {
+    criteria.push(`Kriteria 2 WAO: paparan alergen (${exposure.join(', ')})`);
+    if (airway.length > 0) criteria.push(`Bronkospasme/laring: ${airway.join(', ')}`);
+    if (hypotension) criteria.push(hypotensionLabel);
+  } else {
+    return null;
+  }
+
   if (allergies && allergies.length > 0) {
     criteria.push(`Riwayat alergi: ${allergies.slice(0, 3).join(', ')}`);
   }
 
-  // Check for anaphylaxis symptoms
-  const matchedSymptoms = ANAPHYLAXIS_KEYWORDS.filter((k) => keluhanLower.includes(k));
-
-  if (matchedSymptoms.length >= 2) {
-    matchedSymptoms.forEach((s) => criteria.push(`Gejala: ${s}`));
-
-    // Check vital signs for shock
-    if (vitals) {
-      if (vitals.systolic && vitals.systolic < 90) {
-        criteria.push(`Hipotensi (TD ${vitals.systolic} mmHg)`);
-      }
-      if (vitals.heart_rate && vitals.heart_rate > 120) {
-        criteria.push(`Takikardia (HR ${vitals.heart_rate} bpm)`);
-      }
-    }
-
-    return {
-      id: 'RF-ANAPHYLAXIS',
-      severity: 'emergency',
-      condition: 'SUSPEK REAKSI ANAFILAKSIS',
-      action:
-        'Epinefrin 0.3-0.5mg IM (paha lateral) SEGERA. Posisi trendelenburg. Oksigen. Pasang IV line. Siapkan resusitasi.',
-      icd_codes: ['T78.2', 'T88.6'],
-      criteria_met: criteria,
-      source: 'EAACI Anaphylaxis Guidelines 2021',
-    };
-  }
-
-  return null;
+  return {
+    id: 'RF-ANAPHYLAXIS',
+    severity: 'emergency',
+    condition: 'SUSPEK REAKSI ANAFILAKSIS',
+    action:
+      'Epinefrin 0.3-0.5mg IM (paha lateral) SEGERA. Posisi trendelenburg. Oksigen. Pasang IV line. Siapkan resusitasi.',
+    icd_codes: ['T78.2', 'T88.6'],
+    criteria_met: criteria,
+    source: 'WAO 2020 Anaphylaxis Guidance (Cardona et al.)',
+  };
 }
 
 // =============================================================================
@@ -514,7 +583,12 @@ export function runRedFlagChecks(context: RedFlagContext): RedFlag[] {
   const hypoglycemia = checkHypoglycemia(context.keluhan, context.chronic_diseases);
   if (hypoglycemia) flags.push(hypoglycemia);
 
-  const anaphylaxis = checkAnaphylaxis(context.keluhan, context.vitals, context.allergies);
+  const anaphylaxis = checkAnaphylaxis(
+    context.keluhan,
+    context.vitals,
+    context.allergies,
+    context.age
+  );
   if (anaphylaxis) flags.push(anaphylaxis);
 
   // Sort by severity (emergency first)

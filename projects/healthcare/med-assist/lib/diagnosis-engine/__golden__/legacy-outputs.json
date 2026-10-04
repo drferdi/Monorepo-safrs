@@ -2076,7 +2076,7 @@
           "severity": "emergency",
           "title": "SUSPEK SEPSIS - qSOFA Score 3/3",
           "message": "RR 30 x/menit (>=22); Sistolik 85 mmHg (<=100); GCS 14 (<15)",
-          "icd_codes": ["A41.9", "R65.20"],
+          "icd_codes": ["A41.9", "R65.1"],
           "action": "RUJUK SEGERA ke IGD RS. Pasang IV line, ambil kultur darah, berikan antibiotik empiris."
         },
         {

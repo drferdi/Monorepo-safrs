@@ -113,9 +113,10 @@ export interface ClinicalPattern {
   tier: PatternTier;
 
   /**
-   * IDs of existing buildAlerts() alerts that already cover this pattern.
-   * If any of these IDs exist in the current alert set, this pattern match
-   * is suppressed to prevent duplicate alerts.
+   * IDs of existing buildAlerts() alerts, or of patterns listed earlier in the
+   * pattern array, that already cover this pattern. If any of these IDs exist
+   * in the current alert set or among earlier matches, this pattern match is
+   * suppressed to prevent duplicate or contradictory alerts.
    */
   supersededBy?: string[];
 

@@ -247,7 +247,7 @@ export function generateSepsisAlert(vitals: VitalSigns): CDSSAlert | null {
       'Peringatan Sepsis',
       `PERINGATAN SEPSIS: qSOFA Score ${qsofaScore}/3 - evaluasi infeksi dan pertimbangkan rujukan`,
       'Kultur darah, antibiotik empiris, rujuk RS',
-      ['A41.9', 'R65.20']
+      ['A41.9', 'R65.1']
     );
   }
 

@@ -241,8 +241,13 @@ export function evaluatePatterns(
     // 1. Tier filter
     if (tierFilter && !tierFilter.includes(pattern.tier)) continue;
 
-    // 2. Deduplication — skip if superseded by existing alert
-    if (pattern.supersededBy?.some((id) => existingAlertIds.includes(id))) continue;
+    // 2. Deduplication — skip if superseded by an existing alert or an earlier matched pattern
+    if (
+      pattern.supersededBy?.some(
+        (id) => existingAlertIds.includes(id) || matches.some((m) => m.pattern.id === id)
+      )
+    )
+      continue;
 
     // 3. Required vitals check
     if (!hasRequiredVitals(snapshot, pattern)) continue;

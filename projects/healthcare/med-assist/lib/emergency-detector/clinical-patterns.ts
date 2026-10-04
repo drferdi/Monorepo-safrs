@@ -735,6 +735,7 @@ export const CLINICAL_PATTERNS: readonly ClinicalPattern[] = [
     requiresVitals: [],
     source: 'WHO, EAACI 2021',
     confidenceWeight: 0.65,
+    supersededBy: ['CP-024'],
   },
 
   // ═══════════════════════════════════════════════════════════════════════════
