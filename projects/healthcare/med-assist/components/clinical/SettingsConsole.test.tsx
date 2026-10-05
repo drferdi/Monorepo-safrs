@@ -18,7 +18,7 @@ const {
 }));
 
 vi.mock('@/lib/api/auth-client', () => ({
-  DEFAULT_AUTH_BASE_URL: 'https://crew.puskesmasbalowerti.com',
+  DEFAULT_AUTH_BASE_URL: 'https://medboard.sentrahai.com',
   getAuthConfig: getAuthConfigMock,
   probeApiBaseUrl: probeApiBaseUrlMock,
   saveAuthConfig: saveAuthConfigMock,
@@ -54,7 +54,7 @@ describe('SettingsConsole legacy surface replacement', () => {
     saveBridgeConfigMock.mockReset();
 
     getAuthConfigMock.mockResolvedValue({
-      baseUrl: 'https://crew.puskesmasbalowerti.com',
+      baseUrl: 'https://medboard.sentrahai.com',
       automationToken: '',
     });
     getBridgeConfigMock.mockResolvedValue({ enabled: true, pollIntervalMinutes: 0.5 });

@@ -588,7 +588,7 @@ ePuskesmas · Sentra / Crew endpoints · optional configured model services. Ava
 <tr><td width="33%"><sub><b>Extension does not load</b></sub></td><td><sub>Enable Developer Mode and load <code>.output/chrome-mv3-dev/</code> after a successful build.</sub></td></tr>
 <tr><td><sub><b>Install fails</b></sub></td><td><sub>Confirm Node 24 and use <code>node scripts/pnpm.mjs install --frozen-lockfile</code>, not plain npm.</sub></td></tr>
 <tr><td><sub><b>Auth / bridge failure</b></sub></td><td><sub>Check configured Crew/Dashboard base URL, session state and required auth path.</sub></td></tr>
-<tr><td><sub><b>Mode Lokal expected</b></sub></td><td><sub>A fresh install signs in against MedBoard (<code>crew.puskesmasbalowerti.com</code>). Mode Lokal is chosen by saving an empty Crew API Base URL in Settings.</sub></td></tr>
+<tr><td><sub><b>Mode Lokal expected</b></sub></td><td><sub>A fresh install signs in against MedBoard (<code>medboard.sentrahai.com</code>). Mode Lokal is chosen by saving an empty Crew API Base URL in Settings.</sub></td></tr>
 <tr><td><sub><b>Page not filling</b></sub></td><td><sub>Confirm the intended ePuskesmas tab is active and matched; reinjection is intentionally limited to ePuskesmas.</sub></td></tr>
 <tr><td><sub><b>Medication not added</b></sub></td><td><sub>The page autocomplete must resolve both medication and signa so hidden IDs are populated.</sub></td></tr>
 <tr><td><sub><b>Out of stock</b></sub></td><td><sub>The transfer layer may continue other medications and report the unavailable item rather than retrying indefinitely.</sub></td></tr>

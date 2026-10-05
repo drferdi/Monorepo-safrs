@@ -110,7 +110,7 @@ const mockAuthSession = {
     facilityName: 'Puskesmas Balowerti',
   },
   tokens: { accessToken: 'test-token', refreshToken: 'test-refresh', expiresAt: Date.now() + 1e9 },
-  serverBaseUrl: 'https://crew.puskesmasbalowerti.com',
+  serverBaseUrl: 'https://medboard.sentrahai.com',
 };
 
 const { mockGetStoredSession } = vi.hoisted(() => ({

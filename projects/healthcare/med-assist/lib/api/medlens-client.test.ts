@@ -64,7 +64,7 @@ describe('medlens-client', () => {
     authedUploadMock.mockReset();
     getAuthConfigMock.mockReset();
     getAuthConfigMock.mockResolvedValue({
-      baseUrl: 'https://crew.puskesmasbalowerti.com',
+      baseUrl: 'https://medboard.sentrahai.com',
       automationToken: '',
     });
   });
@@ -214,7 +214,7 @@ describe('medlens-client', () => {
 
   it('keeps using local MedLens even when an automation token is configured', async () => {
     getAuthConfigMock.mockResolvedValueOnce({
-      baseUrl: 'https://crew.puskesmasbalowerti.com',
+      baseUrl: 'https://medboard.sentrahai.com',
       automationToken: 'dev-token',
     });
     const fetchMock = vi.fn().mockResolvedValueOnce(

@@ -43,7 +43,7 @@ graph TB
 
     subgraph EXTERNAL["External Systems"]
         EMR["ePuskesmas EMR<br/><small>DOM · Web Page</small>"]
-        API["Sentra Dashboard API<br/><small>crew.puskesmasbalowerti.com</small>"]
+        API["Sentra Dashboard API<br/><small>medboard.sentrahai.com</small>"]
         AI["AI Services<br/><small>Local-first · DeepSeek fallback</small>"]
     end
 

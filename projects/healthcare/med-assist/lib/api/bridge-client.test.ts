@@ -260,7 +260,7 @@ describe('bridge readiness guard', () => {
       if (key === 'sentra:auth-config') {
         return {
           'sentra:auth-config': {
-            baseUrl: 'https://crew.puskesmasbalowerti.com',
+            baseUrl: 'https://medboard.sentrahai.com',
             automationToken: '',
           },
         };
@@ -280,7 +280,7 @@ describe('bridge readiness guard', () => {
       if (key === 'sentra:auth-config') {
         return {
           'sentra:auth-config': {
-            baseUrl: 'https://crew.puskesmasbalowerti.com',
+            baseUrl: 'https://medboard.sentrahai.com',
             automationToken: '',
           },
         };
@@ -302,7 +302,7 @@ describe('bridge readiness guard', () => {
               refreshToken: 'cookie-session',
               expiresAt: Date.now() + 10 * 60_000,
             },
-            serverBaseUrl: 'https://crew.puskesmasbalowerti.com',
+            serverBaseUrl: 'https://medboard.sentrahai.com',
           },
         };
       }
@@ -335,7 +335,7 @@ describe('bridge readiness guard', () => {
       if (key === 'sentra:auth-config') {
         return {
           'sentra:auth-config': {
-            baseUrl: 'https://crew.puskesmasbalowerti.com',
+            baseUrl: 'https://medboard.sentrahai.com',
             automationToken: 'token-crew-valid',
           },
         };
@@ -360,7 +360,7 @@ describe('bridge readiness guard', () => {
       if (key === 'sentra:auth-config') {
         return {
           'sentra:auth-config': {
-            baseUrl: 'https://crew.puskesmasbalowerti.com',
+            baseUrl: 'https://medboard.sentrahai.com',
             automationToken: 'token-crew-valid',
           },
         };
@@ -384,7 +384,7 @@ describe('bridge runtime status', () => {
       if (key === 'sentra:auth-config') {
         return {
           'sentra:auth-config': {
-            baseUrl: 'https://crew.puskesmasbalowerti.com',
+            baseUrl: 'https://medboard.sentrahai.com',
             automationToken: '',
           },
         };
@@ -409,7 +409,7 @@ describe('bridge runtime status', () => {
       if (key === 'sentra:auth-config') {
         return {
           'sentra:auth-config': {
-            baseUrl: 'https://crew.puskesmasbalowerti.com',
+            baseUrl: 'https://medboard.sentrahai.com',
             automationToken: 'token-crew-valid',
           },
         };
@@ -435,7 +435,7 @@ describe('doctor loading must be server-backed', () => {
       if (key === 'sentra:auth-config') {
         return {
           'sentra:auth-config': {
-            baseUrl: 'https://crew.puskesmasbalowerti.com',
+            baseUrl: 'https://medboard.sentrahai.com',
             automationToken: '',
           },
         };
@@ -518,7 +518,7 @@ describe('bridge outbound actions', () => {
       if (key === 'sentra:auth-config') {
         return {
           'sentra:auth-config': {
-            baseUrl: 'https://crew.puskesmasbalowerti.com',
+            baseUrl: 'https://medboard.sentrahai.com',
             automationToken: 'token-crew-valid',
           },
         };
@@ -563,7 +563,7 @@ describe('bridge outbound actions', () => {
       if (key === 'sentra:auth-config') {
         return {
           'sentra:auth-config': {
-            baseUrl: 'https://crew.puskesmasbalowerti.com',
+            baseUrl: 'https://medboard.sentrahai.com',
             automationToken: 'token-crew-valid',
           },
         };
@@ -605,7 +605,7 @@ describe('bridge outbound actions', () => {
       if (key === 'sentra:auth-config') {
         return {
           'sentra:auth-config': {
-            baseUrl: 'https://crew.puskesmasbalowerti.com',
+            baseUrl: 'https://medboard.sentrahai.com',
             automationToken: 'token-crew-valid',
           },
         };
@@ -638,7 +638,7 @@ describe('bridge outbound actions', () => {
       if (key === 'sentra:auth-config') {
         return {
           'sentra:auth-config': {
-            baseUrl: 'https://crew.puskesmasbalowerti.com',
+            baseUrl: 'https://medboard.sentrahai.com',
             automationToken: 'token-crew-valid',
           },
         };
@@ -672,7 +672,7 @@ describe('bridge outbound actions', () => {
       if (key === 'sentra:auth-config') {
         return {
           'sentra:auth-config': {
-            baseUrl: 'https://crew.puskesmasbalowerti.com',
+            baseUrl: 'https://medboard.sentrahai.com',
             automationToken: 'token-crew-valid',
           },
         };

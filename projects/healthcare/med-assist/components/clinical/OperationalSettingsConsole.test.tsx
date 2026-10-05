@@ -24,7 +24,7 @@ const {
 }));
 
 vi.mock('@/lib/api/auth-client', () => ({
-  DEFAULT_AUTH_BASE_URL: 'https://crew.puskesmasbalowerti.com',
+  DEFAULT_AUTH_BASE_URL: 'https://medboard.sentrahai.com',
   getAuthConfig: getAuthConfigMock,
   probeApiBaseUrl: probeApiBaseUrlMock,
   saveAuthConfig: saveAuthConfigMock,
@@ -71,7 +71,7 @@ describe('OperationalSettingsConsole', () => {
     saveBridgeConfigMock.mockReset();
 
     getAuthConfigMock.mockResolvedValue({
-      baseUrl: 'https://crew.puskesmasbalowerti.com',
+      baseUrl: 'https://medboard.sentrahai.com',
       automationToken: '',
     });
     getBridgeConfigMock.mockResolvedValue({ enabled: true, pollIntervalMinutes: 0.5 });
@@ -146,7 +146,7 @@ describe('OperationalSettingsConsole', () => {
     render(<OperationalSettingsConsole />);
 
     const workspaceInput = await screen.findByDisplayValue('https://kotakediri.epuskesmas.id');
-    const apiInput = screen.getByDisplayValue('https://crew.puskesmasbalowerti.com');
+    const apiInput = screen.getByDisplayValue('https://medboard.sentrahai.com');
     const tokenInput = screen.getByPlaceholderText(
       /CREW_ACCESS_AUTOMATION_TOKEN/i
     ) as HTMLInputElement;
@@ -178,7 +178,7 @@ describe('OperationalSettingsConsole', () => {
   it('probes API base URL and surfaces probe result to the operator', async () => {
     render(<OperationalSettingsConsole />);
 
-    const apiInput = await screen.findByDisplayValue('https://crew.puskesmasbalowerti.com');
+    const apiInput = await screen.findByDisplayValue('https://medboard.sentrahai.com');
     fireEvent.change(apiInput, { target: { value: 'https://crew.probe.id' } });
     fireEvent.click(screen.getByRole('button', { name: /Test API/i }));
 
@@ -247,7 +247,7 @@ describe('OperationalSettingsConsole', () => {
 
   it('saving an empty address keeps Mode Lokal instead of switching to MedBoard', async () => {
     render(<OperationalSettingsConsole />);
-    const field = await screen.findByDisplayValue('https://crew.puskesmasbalowerti.com');
+    const field = await screen.findByDisplayValue('https://medboard.sentrahai.com');
 
     fireEvent.change(field, { target: { value: '   ' } });
     fireEvent.click(screen.getByRole('button', { name: /Save Settings/i }));

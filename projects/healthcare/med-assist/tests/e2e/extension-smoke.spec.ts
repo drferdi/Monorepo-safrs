@@ -111,8 +111,10 @@ test.describe.serial('Sentra Assist extension smoke', () => {
     // No code uses the Google identity, OAuth or googleapis grants (removed 2026-10-03).
     expect(manifest.permissions).not.toContain('identity');
     expect(manifest.host_permissions).toEqual(
-      expect.arrayContaining(['https://crew.puskesmasbalowerti.com/*', '*://*.epuskesmas.id/*'])
+      expect.arrayContaining(['https://medboard.sentrahai.com/*', '*://*.epuskesmas.id/*'])
     );
+    // MedBoard moved to medboard.sentrahai.com (Chief, 2026-10-05); the old crew host is gone.
+    expect(manifest.host_permissions).not.toContain('https://crew.puskesmasbalowerti.com/*');
     expect(manifest.host_permissions).not.toContain('https://*.googleapis.com/*');
     expect(manifest.oauth2).toBeUndefined();
     expect(manifest.web_accessible_resources?.map((entry) => entry.matches)).toEqual([

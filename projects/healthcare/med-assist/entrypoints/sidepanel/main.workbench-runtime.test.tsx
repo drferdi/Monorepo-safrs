@@ -62,7 +62,7 @@ vi.mock('@/lib/api/auth-client', () => ({
       refreshToken: 'test-refresh',
       expiresAt: Date.now() + 1e9,
     },
-    serverBaseUrl: 'https://crew.puskesmasbalowerti.com',
+    serverBaseUrl: 'https://medboard.sentrahai.com',
   })),
   logout: vi.fn(async () => undefined),
 }));

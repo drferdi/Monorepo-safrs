@@ -58,7 +58,7 @@ to re-order its diagnosis suggestions.
 | **TTV**                         | _Tanda-Tanda Vital_: vital signs (blood pressure, pulse, breathing rate, temperature, oxygen, glucose).                                                             |
 | **KB**                          | Knowledge base: the disease library in `public/data/penyakit.json`.                                                                                                 |
 | **ICD-10**                      | The international code for each diagnosis.                                                                                                                          |
-| **Crew dashboard / bridge**     | Chief's own server (`crew.puskesmasbalowerti.com`). It handles login and receives patient syncs, and it can send fill jobs back to the extension.                   |
+| **Crew dashboard / bridge**     | Chief's own server (`medboard.sentrahai.com`). It handles login and receives patient syncs, and it can send fill jobs back to the extension.                   |
 | **R2 / R3**                     | Risk tiers from the repository rules. R3 means "clinical logic": changes need Chief's approval.                                                                     |
 | **Capsule**                     | This project folder. It must build and run on its own, without the surrounding monorepo.                                                                            |
 

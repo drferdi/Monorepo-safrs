@@ -31,8 +31,8 @@ export default defineConfig({
       'http://localhost:*/*',
       'http://127.0.0.1:*/*',
       // Required so the extension can act as a WebAuthn client with rpID
-      // crew.puskesmasbalowerti.com for passkey login (lib/api/auth-client.ts).
-      'https://crew.puskesmasbalowerti.com/*',
+      // medboard.sentrahai.com for passkey login (lib/api/auth-client.ts).
+      'https://medboard.sentrahai.com/*',
       // ePuskesmas RME surfaces (content scripts + tabs.query URL visibility).
       '*://*.epuskesmas.id/*',
     ],

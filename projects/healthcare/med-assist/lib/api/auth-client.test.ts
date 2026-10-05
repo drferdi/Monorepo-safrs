@@ -79,11 +79,11 @@ describe('getStoredSession bootstrap hardening', () => {
         refreshToken: 'fallback-refresh-1',
         expiresAt: Date.now() + 60 * 60 * 1000,
       },
-      serverBaseUrl: 'https://crew.puskesmasbalowerti.com',
+      serverBaseUrl: 'https://medboard.sentrahai.com',
     });
     browserStorageGet.mockResolvedValue({
       'sentra:auth-config': {
-        baseUrl: 'https://crew.puskesmasbalowerti.com',
+        baseUrl: 'https://medboard.sentrahai.com',
         automationToken: '',
       },
     });
@@ -109,7 +109,7 @@ describe('getStoredSession bootstrap hardening', () => {
         refreshToken: 'cookie-session',
         expiresAt: Date.now() + 60 * 60 * 1000,
       },
-      serverBaseUrl: 'https://crew.puskesmasbalowerti.com',
+      serverBaseUrl: 'https://medboard.sentrahai.com',
     });
 
     await expect(getStoredSession()).resolves.toMatchObject({
@@ -136,7 +136,7 @@ describe('getStoredSession bootstrap hardening', () => {
         refreshToken: 'cookie-session',
         expiresAt: Date.now() - 1000,
       },
-      serverBaseUrl: 'https://crew.puskesmasbalowerti.com',
+      serverBaseUrl: 'https://medboard.sentrahai.com',
     });
 
     await expect(getStoredSession()).resolves.toBeNull();
@@ -163,7 +163,7 @@ describe('getStoredSession bootstrap hardening', () => {
           refreshToken: 'cookie-session',
           expiresAt: Date.now() + 60 * 60 * 1000,
         },
-        serverBaseUrl: 'https://crew.puskesmasbalowerti.com',
+        serverBaseUrl: 'https://medboard.sentrahai.com',
       });
 
     await expect(getStoredSessionWithRetry({ attempts: 3, intervalMs: 0 })).resolves.toMatchObject({
@@ -177,7 +177,7 @@ describe('getStoredSession bootstrap hardening', () => {
 describe('login (crew cookie-based auth)', () => {
   beforeEach(() => {
     browserStorageGet.mockResolvedValue({
-      'sentra:auth-config': { baseUrl: 'https://crew.puskesmasbalowerti.com', automationToken: '' },
+      'sentra:auth-config': { baseUrl: 'https://medboard.sentrahai.com', automationToken: '' },
     });
   });
 
@@ -203,7 +203,7 @@ describe('login (crew cookie-based auth)', () => {
     const result = await login({ username: 'dr.ferdi', password: 'secret-crew' });
 
     expect(fetchMock).toHaveBeenCalledWith(
-      'https://crew.puskesmasbalowerti.com/api/auth/login',
+      'https://medboard.sentrahai.com/api/auth/login',
       expect.objectContaining({
         method: 'POST',
         credentials: 'include',
@@ -284,7 +284,7 @@ describe('passkey (WebAuthn)', () => {
 
   beforeEach(() => {
     browserStorageGet.mockResolvedValue({
-      'sentra:auth-config': { baseUrl: 'https://crew.puskesmasbalowerti.com', automationToken: '' },
+      'sentra:auth-config': { baseUrl: 'https://medboard.sentrahai.com', automationToken: '' },
     });
   });
 
@@ -330,7 +330,7 @@ describe('passkey (WebAuthn)', () => {
             JSON.stringify({
               options: {
                 challenge: 'Y2hhbGxlbmdl',
-                rp: { name: 'Sentra Crew', id: 'crew.puskesmasbalowerti.com' },
+                rp: { name: 'Sentra Crew', id: 'medboard.sentrahai.com' },
                 user: { id: 'dXNlci0x', name: 'dr.ferdi', displayName: 'dr. Ferdi' },
                 pubKeyCredParams: [{ type: 'public-key', alg: -7 }],
               },
@@ -375,7 +375,7 @@ describe('passkey (WebAuthn)', () => {
       ok: true,
       text: async () =>
         JSON.stringify({
-          options: { challenge: 'Y2hhbGxlbmdl', rpId: 'crew.puskesmasbalowerti.com' },
+          options: { challenge: 'Y2hhbGxlbmdl', rpId: 'medboard.sentrahai.com' },
         }),
     });
     credentials.get.mockRejectedValue(
@@ -398,7 +398,7 @@ describe('passkey (WebAuthn)', () => {
           ok: true,
           text: async () =>
             JSON.stringify({
-              options: { challenge: 'Y2hhbGxlbmdl', rpId: 'crew.puskesmasbalowerti.com' },
+              options: { challenge: 'Y2hhbGxlbmdl', rpId: 'medboard.sentrahai.com' },
             }),
         };
       }
@@ -461,7 +461,7 @@ describe('probeApiBaseUrl diagnostics', () => {
       ),
     });
 
-    await expect(probeApiBaseUrl('https://crew.puskesmasbalowerti.com')).resolves.toEqual({
+    await expect(probeApiBaseUrl('https://medboard.sentrahai.com')).resolves.toEqual({
       ok: false,
       status: 404,
       message:
@@ -495,7 +495,7 @@ describe('probeApiBaseUrl diagnostics', () => {
   it('mentions TLS/domain mapping when Crew host is unreachable', async () => {
     fetchMock.mockRejectedValue(new TypeError('Failed to fetch'));
 
-    await expect(probeApiBaseUrl('https://crew.puskesmasbalowerti.com')).resolves.toEqual({
+    await expect(probeApiBaseUrl('https://medboard.sentrahai.com')).resolves.toEqual({
       ok: false,
       status: 0,
       message:
@@ -593,7 +593,7 @@ describe('server address (a MedBoard account signs in to Asisten Medis)', () => 
 
   it('a fresh install points at MedBoard, so a MedBoard account signs in without Settings', async () => {
     await expect(getAuthConfig()).resolves.toEqual({
-      baseUrl: 'https://crew.puskesmasbalowerti.com',
+      baseUrl: 'https://medboard.sentrahai.com',
       automationToken: '',
     });
   });

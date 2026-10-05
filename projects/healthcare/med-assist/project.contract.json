@@ -33,7 +33,7 @@
     { "kind": "service", "name": "Facility identifier for the platform API", "locator": "VITE_FACILITY_ID", "required": false },
     { "kind": "service", "name": "OpenAI-compatible model for diagnosis reranking", "locator": "SENTRA_OPENAI_MODEL", "required": false },
     { "kind": "service", "name": "ePuskesmas web RME (content scripts run on *.epuskesmas.id)", "locator": "https://epuskesmas.id", "required": false },
-    { "kind": "service", "name": "Sentra crew portal for passkey sign-in and doctor contacts (Send to Doctors)", "locator": "https://crew.puskesmasbalowerti.com", "required": false },
+    { "kind": "service", "name": "Sentra crew portal for passkey sign-in and doctor contacts (Send to Doctors)", "locator": "https://medboard.sentrahai.com", "required": false },
     { "kind": "service", "name": "Sentra reasoning service for the MIRA diagnosis engine (off by default)", "locator": "VITE_MIRA_SERVICE_URL", "required": false }
   ],
   "mutableStatePaths": ["node_modules", ".output", ".wxt", "test-results", "playwright-report"]

@@ -62,7 +62,7 @@ export const AUTH_CONFIG_KEY = 'sentra:auth-config';
 // MedBoard by default, so a MedBoard account (registered, then approved) signs in here as is.
 // An empty base URL saved in Settings = "Mode Lokal": login is verified device-local
 // (lib/api/local-auth.ts) with no server.
-export const DEFAULT_AUTH_BASE_URL = 'https://crew.puskesmasbalowerti.com';
+export const DEFAULT_AUTH_BASE_URL = 'https://medboard.sentrahai.com';
 const COOKIE_SESSION_ACCESS_TOKEN = 'cookie-session';
 const COOKIE_SESSION_REFRESH_TOKEN = 'cookie-session';
 
@@ -97,7 +97,7 @@ const DEFAULT_CONFIG: AuthConfig = {
 function isCrewDomain(baseUrl: string): boolean {
   try {
     const hostname = new URL(baseUrl).hostname.toLowerCase();
-    return hostname === 'crew.puskesmasbalowerti.com';
+    return hostname === 'medboard.sentrahai.com';
   } catch {
     return false;
   }
