@@ -26,6 +26,13 @@ import {
   getCrewSessionFromCookieHeader,
 } from './src/lib/server/crew-access-auth'
 import { listAllCrewProfiles } from './src/lib/server/crew-access-profile'
+import {
+  joinWebPresence,
+  leaveWebPresence,
+  listOnlineUsers,
+  pruneAssistPresence,
+  webSocketIds,
+} from './src/lib/server/crew-presence'
 import { trackUserLoginToday } from './src/lib/server/online-today-tracker'
 import { setTeleSocketIO } from './src/lib/telemedicine/socket-bridge'
 import { evaluateScreeningAlertsFromEmrPayload } from './src/lib/vitals/instant-red-alerts'
@@ -80,17 +87,8 @@ function getAllowedSocketOrigins(): Array<string | RegExp> {
   ]
 }
 
-type UserPresence = {
-  userId: string
-  name: string
-  role: string
-  profession: string
-  institution: string
-  socketId: string
-  joinedAt: number
-}
-
-const onlineUsers = new Map<string, UserPresence>()
+/** How often expired Asisten Medis heartbeats are swept from the online list. */
+const PRESENCE_SWEEP_MS = 30_000
 
 app.prepare().then(async () => {
   assertCrewAccessConfigOnStartup()
@@ -167,16 +165,17 @@ app.prepare().then(async () => {
       // Track unique user login for today
       trackUserLoginToday(session.username)
 
-      onlineUsers.set(session.username, {
-        userId: session.username,
-        name: displayName,
-        role: session.role,
-        profession: session.profession,
-        institution: session.institution,
-        socketId: socket.id,
-        joinedAt: Date.now(),
-      })
-      io.to('crew').emit('users:online', Array.from(onlineUsers.values()))
+      joinWebPresence(
+        {
+          userId: session.username,
+          name: displayName,
+          role: session.role,
+          profession: session.profession,
+          institution: session.institution,
+        },
+        socket.id
+      )
+      io.to('crew').emit('users:online', listOnlineUsers())
     })
 
     // EMR triage → doctor relay (validate payload + stamp sender identity)
@@ -185,13 +184,13 @@ app.prepare().then(async () => {
       const raw = payload as Record<string, unknown>
       const targetUserId = typeof raw.targetUserId === 'string' ? raw.targetUserId.trim() : ''
       if (!targetUserId || !raw.data || typeof raw.data !== 'object') return
-      const target = onlineUsers.get(targetUserId)
-      if (target) {
+      const targetSockets = webSocketIds(targetUserId)
+      if (targetSockets.length > 0) {
         const triageData = raw.data as Record<string, unknown>
         const screeningAlerts = Array.isArray(triageData.screeningAlerts)
           ? triageData.screeningAlerts
           : evaluateScreeningAlertsFromEmrPayload(triageData)
-        io.to(target.socketId).emit('emr:triage-receive', {
+        io.to(targetSockets).emit('emr:triage-receive', {
           ...triageData,
           screeningAlerts,
           _senderId: session.username,
@@ -282,11 +281,18 @@ app.prepare().then(async () => {
     })
 
     // Disconnect — use server-verified session, scope broadcast to crew room
+    // Another open tab keeps the user online.
     socket.on('disconnect', () => {
-      onlineUsers.delete(session.username)
-      io.to('crew').emit('users:online', Array.from(onlineUsers.values()))
+      if (leaveWebPresence(session.username, socket.id)) {
+        io.to('crew').emit('users:online', listOnlineUsers())
+      }
     })
   })
+
+  // Asisten Medis users drop off when their heartbeats stop.
+  setInterval(() => {
+    if (pruneAssistPresence()) io.to('crew').emit('users:online', listOnlineUsers())
+  }, PRESENCE_SWEEP_MS).unref()
 
   function startListening(port: number) {
     httpServer.listen(port, host, () => {

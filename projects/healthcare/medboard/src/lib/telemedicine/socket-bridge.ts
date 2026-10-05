@@ -54,6 +54,14 @@ export function emitTeleRequest(request: unknown): void {
   io.to('crew').emit('telemedicine:new-request', request)
 }
 
+/** Broadcasts the merged web + Asisten Medis online list to the crew room. */
+export function emitCrewOnlineUsers(users: unknown[]): boolean {
+  const io = getIO()
+  if (!io) return false
+  io.to('crew').emit('users:online', users)
+  return true
+}
+
 export function emitAssistConsult(payload: AssistConsultPayload): boolean {
   const io = getIO()
   if (!io) return false

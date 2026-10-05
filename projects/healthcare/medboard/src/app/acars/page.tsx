@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
+import { type OnlineSource, onlineSourceLabel } from '@/lib/crew-online'
 
 const ACARS_PAGE_WIDTH = 1200
 const ACARS_PANEL_STYLE = {
@@ -55,8 +56,8 @@ type OnlineUser = {
   role: string
   profession: string
   institution: string
-  socketId: string
   joinedAt?: number
+  source?: OnlineSource
 }
 
 type SessionUser = {
@@ -619,6 +620,9 @@ export default function AcarsPage() {
                   }}
                 >
                   ONLINE
+                </span>
+                <span style={{ fontSize: 12, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                  {onlineSourceLabel(user.source)}
                 </span>
               </div>
 

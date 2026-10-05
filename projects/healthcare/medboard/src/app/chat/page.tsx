@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
+import type { OnlineSource } from '@/lib/crew-online'
 
 /* ── Types ── */
 
@@ -20,8 +21,8 @@ type OnlineUser = {
   role: string
   profession: string
   institution: string
-  socketId: string
   joinedAt?: number
+  source?: OnlineSource
 }
 
 type ChatMessage = {

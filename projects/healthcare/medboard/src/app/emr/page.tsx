@@ -12,6 +12,7 @@ import {
   type ManualMedicationSuggestion,
   searchManualMedicationSuggestions,
 } from '@/lib/clinical/manual-medication-suggestions'
+import { canReceiveTriage, type OnlineSource } from '@/lib/crew-online'
 import { type DashboardEncounterData, mapDashboardToTransferPayload } from '@/lib/emr/bridge-mapper'
 import {
   type EmrBridgeStatus,
@@ -1710,7 +1711,7 @@ export default function EMRPage() {
     userId: string
     name: string
     role: string
-    socketId: string
+    source?: OnlineSource
   }
   const socketRef = useRef<Socket | null>(null)
   const [onlineDoctors, setOnlineDoctors] = useState<OnlineUser[]>([])
@@ -2632,7 +2633,10 @@ export default function EMRPage() {
           if (!mounted) return
           setOnlineDoctors(
             users.filter(
-              (x) => (x.role === 'DOCTOR' || x.role === 'DOKTER') && x.userId !== u.username
+              (x) =>
+                (x.role === 'DOCTOR' || x.role === 'DOKTER') &&
+                x.userId !== u.username &&
+                canReceiveTriage(x)
             )
           )
         })

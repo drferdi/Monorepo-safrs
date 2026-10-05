@@ -42,8 +42,8 @@ const suites: Suite[] = [
     ],
   },
   {
-    name: 'crew-registration',
-    aliases: ['registration', 'presence'],
+    name: 'crew-access',
+    aliases: ['registration', 'presence', 'acars'],
     command: process.execPath,
     // react-server condition: these modules import server-only.
     args: [
@@ -53,6 +53,9 @@ const suites: Suite[] = [
       'tsx',
       '--test',
       'src/lib/server/crew-access-registration.test.ts',
+      'src/lib/server/crew-presence.test.ts',
+      'src/app/api/presence/route.test.ts',
+      'src/lib/crew-online.test.ts',
     ],
   },
   {
