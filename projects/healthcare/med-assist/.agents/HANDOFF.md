@@ -1,54 +1,46 @@
 # HANDOFF
 
-Last updated: 2026-10-04 (visit summary on Chief's approved template in IBM Plex Sans Bold; signers
-rule; one welcome sound; header "Prototype"; archive of unreachable code and finished docs;
-lowercase docs; standard repository files; README on Chief's AsistenMedis design. Earlier the same
-day: one chronic card per drug through the RME synonym table, standard start without a signa,
-every riwayat signa form read, halves kept to the resep).
+Last updated: 2026-10-05 (MedBoard is the default sign-in; presence heartbeat for ACARS; "Asisten
+Medis" name. Earlier, 2026-10-04: visit summary template, signers, one welcome sound, archive.)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
-1k tokens. Durable decisions go to `DECISIONS.md` (the 2026-10-04 entries hold the details).
+1k tokens. Durable decisions go to `DECISIONS.md`.
 
 ## Current state
 
-- Also 2026-10-04, from the MedBoard session: anaphylaxis (WAO 2020), observed-only AVPU,
-  SBP-only hypotension, hypothermia alert, NEWS2 confusion and O2, and the MIRA differential on the
-  consult. See DECISIONS "MedBoard session".
-- Visit summary PDF (`lib/report/*`, model → layout draw ops → pdf-lib renderer): the template
-  `Clinical_Visit_Summary_Template.docx` (A4, ten numbered blocks, ink logomark in the title cell),
-  IBM Plex Sans Bold (`public/fonts/`, subset through `@pdf-lib/fontkit`). DPJP = signed-in
-  `dokter_nama` (a non-doctor gives dr. Ferdi); verifier = dr. Ferdi, or when he is DPJP one of
-  `FERDI_VERIFIERS` by `RM|date`. The RME nurse field is unchanged. Columns inside the blocks
-  (DECISIONS "gains columns"): 05 STATUS + INTERAKSI + the DDInter check line; 08 up to four dated
-  earlier visits, Diagnosis and GDS rows, sparkline + arrow; same-day visits left out. Not done:
-  the medication table header is not repeated on page 2.
-- Sound: only `opening.mp3` from `runLaunchSequence`; `ConsoleLogin` plays none.
-- Header: "Prototype" under "Architected by dr Ferdi Iskandar" (`SidePanelHeader.tsx`).
-- `archieved/` (gitignored, on disk): unreachable components, lib clients, the trajectory chart set,
-  finished docs, Plex Regular, the white logomark. Held for Chief (R3, look unused):
-  `lib/emergency-detector/index.ts`, `gate2-workflow.ts`, `ttv-inference.ts`,
-  `lib/clinical/dosage-database.ts`. Kept though doubtful: the vital-sign set, features-
-  comprehensive, `med-assist-system-architecture`, dashboard-migration and trajectory-endpoint
-  blueprints, five unexecuted refactor specs, `refactor-message-contract-map`, `gate-2-vital-sign-brief`.
-- `LICENSE` is a proprietary placeholder; the terms are Chief's call.
-- Open: standard-start rules for vitamin B komplek, tiamin, zink, tambah darah, nistatin,
-  griseofulvin (need references); T-10 MIRA per-session token; dependency prune; MedLens `any`
-  suppressions; chronic quantity rule; Dependabot 2 high on AsistenMedis, unchecked.
+- 2026-10-05 commits: `2e682e22` "Ghost Protocols" → "Asisten Medis" in comments and the
+  `login.html` title; `65f715c1` presence: `sendPresence` (cookie session only), alarm
+  `sentra-presence` every 30 s from `background.ts`, offline call on logout, the side panel's
+  online-doctor count from `getOnlineDoctors` (60 s); `0b5cd564` (auth, Chief approved)
+  `DEFAULT_AUTH_BASE_URL` = MedBoard crew address; an empty address saved in Settings = Mode
+  Lokal; a local session stored earlier stays local until logout.
+- The real sign-in is `ConsoleLogin` in the side panel (new test: it shows MedBoard's refusal).
+  `entrypoints/login` is the unused legacy popup ("Sentra Assist" logo); only e2e opens it, and its
+  windows on Chief's screen looked like an older design. Left as is.
+- Visit summary PDF, signers, sound, header, `archieved/`: see DECISIONS 2026-10-04.
+- Open: in `login.html` the stored session is empty right after sign-in, so its logout never calls
+  the server (dugaan whether older than today; the side panel path not checked); production cookie
+  forwarding to MedBoard (`SameSite=None; Secure`) not checked, localhost only. Earlier open items:
+  standard-start rules for vitamin B komplek, tiamin, zink, tambah darah, nistatin, griseofulvin;
+  T-10 MIRA per-session token; dependency prune; MedLens `any` suppressions; chronic quantity rule;
+  Dependabot 2 high on AsistenMedis; R3 held files (`lib/emergency-detector/index.ts`,
+  `gate2-workflow.ts`, `ttv-inference.ts`, `lib/clinical/dosage-database.ts`); `LICENSE` terms.
 
-Branch `feat/sidepanel-ui-batch`, not pushed to the monorepo. AsistenMedis main is at e3e5c6e3
-(capsule at 23f45639); the commits since are not pushed, a push is Chief's call (same merge
-procedure: merge `asistenmedis/main`, push the capsule subtree). Another session's uncommitted
-`lib/api/sentra-api.ts`, its test, `tests/e2e/zz-verify-kb-rx.spec.ts` (lint red), `docs/brand/`
-and root `.agents/HANDOFF.md` are not this session's.
+Branch `feat/sidepanel-ui-batch`, not pushed; a push is Chief's call (merge `asistenmedis/main`,
+push the capsule subtree). Another session's uncommitted `lib/api/sentra-api.ts`, its test,
+`tests/e2e/zz-verify-kb-rx.spec.ts` (lint red), `docs/brand/` and root `.agents/HANDOFF.md` are not
+this session's.
 
-Harness (scratchpad, launch `gate3-harness`, port 5181): `header.html`, `summary.html`
-(`?dpjp=ferdi`), `tatalaksana.html`; `@/utils/messaging` is stubbed there.
+## Verification (final tree, 2026-10-05, after `0b5cd564`)
 
-## Verification (final tree, 2026-10-04)
+tsc 0 · vitest 0 (203 files, 1779 passed, 17 skipped) · eslint 0 without
+`zz-verify-kb-rx.spec.ts` (full lint 1, its 4 `no-console`) · e2e 20 passed (auth-bridge-local,
+extension-smoke, clinical-trajectory-preview, epuskesmas-synthetic) · production
+`node scripts/pnpm.mjs run build` into `.output\chrome-mv3-dev`, last. Red first: auth-client
+default-address tests, Settings tests, presence heartbeat tests.
 
-`run build` 0 · typecheck 0 · vitest 0 (198 files, 1708 passed, 17 skipped; fewer than 2026-10-03
-because archived tests left with their code) · eslint `components lib entrypoints utils types` 0 ·
-full lint 1, only `zz-verify-kb-rx.spec.ts` (4 `no-console`) · `run:check` 0 · e2e 21 passed ·
-governance 1, only root `.agents/HANDOFF.md` task ownership (other session). Red first: font test
-(Helvetica-Bold), sound test, header test, the PDF column tests (model, layout, helper, PDF flow). Not shown red first: the signer model tests. Production
-build in `.output\chrome-mv3-dev`, last.
+## Next action
+
+1. Chief reloads the extension from `.output\chrome-mv3-dev` and signs in with an approved
+   MedBoard account; checks ACARS on MedBoard.
+2. Deploy order with MedBoard: this build (has `b2592f0b`) before MedBoard `6eb89e69`.

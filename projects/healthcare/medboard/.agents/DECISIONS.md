@@ -3,6 +3,22 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-05 — "Asisten Medis" name; registration survives retries; ACARS lists Assist users
+
+- Decision (Chief: "ganti semua istilah ghost protocol menjadi Asisten Medis"): copy and code
+  identifiers say Asisten Medis; stored values (`sourceOrigin: 'ghost-protocols'`,
+  `engineVersion 'ghost-iskandar-v1'`) stay, because saved records and the extension send them.
+- Decision (Chief chose "Approve atomik, Ditolak boleh daftar ulang, Pendaftaran tak hilang saat
+  redeploy"): only a `PENDING_REVIEW` request blocks a new one; approval skips creating a user that
+  already exists; the request and profile files go on the Railway volume through
+  `CREW_ACCESS_REGISTRATION_REQUESTS_FILE` and `CREW_ACCESS_PROFILE_FILE` (Chief sets them).
+- Decision (Chief chose "Heartbeat + ACARS"): one presence store on `globalThis` (server.ts and
+  route bundles do not share module state) merges dashboard sockets and Asisten Medis heartbeats
+  (`/api/presence`, crew cookie, TTL 90 s, pruned every 30 s). ACARS shows the source. Triage goes
+  only to dashboard users, because an Assist-only user has no socket to receive it.
+- Evidence: `crew-access` suite (registration 3, presence 9, route 4, client 3) red first; Browser
+  pane demo with synthetic users. Commits `98cd6fec`, `083e20c6`, `9c08db4b`.
+
 ## 2026-10-05 — IBM Plex Sans on the Carbon type scale; alerts without colour blocks
 
 - Decision: Chief asked for IBM Plex Sans across the whole dashboard with professional sizing, and

@@ -3,6 +3,21 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-05 — MedBoard is the default sign-in; Asisten Medis reports who is online
+
+- Decision (Chief chose "Default ke MedBoard", auth change approved): reverses the earlier Mode
+  Lokal default. A fresh install signs in at `DEFAULT_AUTH_BASE_URL` (MedBoard crew), so an account
+  registered and approved on MedBoard works here unchanged. Mode Lokal = an empty Crew API Base URL
+  saved in Settings. A local session stored before stays local until logout.
+- Decision (Chief chose "Heartbeat + ACARS"): while signed in with a MedBoard cookie session the
+  background sends `POST /api/presence` at once and every 30 s (shortest Chrome alarm; MedBoard
+  TTL 90 s) and `DELETE` on logout; no presence call in Mode Lokal.
+- Decision: "Ghost Protocols" is called "Asisten Medis" in copy and comments.
+- Note: `entrypoints/login` stays the unused legacy popup; user-facing sign-in changes go to
+  `ConsoleLogin`.
+- Evidence: auth-client, Settings and heartbeat tests red first; e2e proves the heartbeat carries
+  the cookie. Commits `2e682e22`, `65f715c1`, `0b5cd564`.
+
 ## 2026-10-04 — MedBoard session: safety rules follow the guidelines; MIRA reaches MedBoard
 
 Made from the MedBoard session (Chief chose the rule-research recommendations and MIRA as the only
