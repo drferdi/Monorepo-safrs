@@ -64,7 +64,7 @@ Production whitelist:
 ```
 https://puskesmasbalowerti.com
 https://www.puskesmasbalowerti.com
-https://crew.puskesmasbalowerti.com
+https://medboard.sentrahai.com
 https://intelligenceboard-production.up.railway.app
 ```
 

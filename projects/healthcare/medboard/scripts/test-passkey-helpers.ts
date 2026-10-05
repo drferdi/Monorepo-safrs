@@ -27,12 +27,24 @@ async function main(): Promise<void> {
     const previous = process.env.NEXT_PUBLIC_BASE_URL
     const previousOverride = process.env.CREW_ACCESS_WEBAUTHN_RP_ID
     delete process.env.CREW_ACCESS_WEBAUTHN_RP_ID
-    process.env.NEXT_PUBLIC_BASE_URL = 'https://crew.puskesmasbalowerti.com'
+    process.env.NEXT_PUBLIC_BASE_URL = 'https://medboard.sentrahai.com'
 
-    assert.equal(authModule.getWebAuthnRpID(), 'crew.puskesmasbalowerti.com')
+    assert.equal(authModule.getWebAuthnRpID(), 'medboard.sentrahai.com')
 
     if (previous === undefined) delete process.env.NEXT_PUBLIC_BASE_URL
     else process.env.NEXT_PUBLIC_BASE_URL = previous
+    if (previousOverride !== undefined) process.env.CREW_ACCESS_WEBAUTHN_RP_ID = previousOverride
+  })
+
+  test('getWebAuthnRpID defaults to the MedBoard host when no base URL is set', () => {
+    const previous = process.env.NEXT_PUBLIC_BASE_URL
+    const previousOverride = process.env.CREW_ACCESS_WEBAUTHN_RP_ID
+    delete process.env.NEXT_PUBLIC_BASE_URL
+    delete process.env.CREW_ACCESS_WEBAUTHN_RP_ID
+
+    assert.equal(authModule.getWebAuthnRpID(), 'medboard.sentrahai.com')
+
+    if (previous !== undefined) process.env.NEXT_PUBLIC_BASE_URL = previous
     if (previousOverride !== undefined) process.env.CREW_ACCESS_WEBAUTHN_RP_ID = previousOverride
   })
 
@@ -49,10 +61,10 @@ async function main(): Promise<void> {
   test('getWebAuthnAllowedOrigins splits a comma-separated override (needed for the chrome-extension:// origin)', () => {
     const previous = process.env.CREW_ACCESS_WEBAUTHN_ORIGINS
     process.env.CREW_ACCESS_WEBAUTHN_ORIGINS =
-      'https://crew.puskesmasbalowerti.com, chrome-extension://abcdefg'
+      'https://medboard.sentrahai.com, chrome-extension://abcdefg'
 
     assert.deepEqual(authModule.getWebAuthnAllowedOrigins(), [
-      'https://crew.puskesmasbalowerti.com',
+      'https://medboard.sentrahai.com',
       'chrome-extension://abcdefg',
     ])
 

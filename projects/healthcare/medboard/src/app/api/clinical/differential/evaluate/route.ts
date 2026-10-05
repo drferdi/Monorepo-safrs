@@ -13,7 +13,7 @@ type MaybePromise<T> = T | Promise<T>
 const DEFAULT_ALLOWED_ORIGINS = [
   'https://puskesmasbalowerti.com',
   'https://www.puskesmasbalowerti.com',
-  'https://crew.puskesmasbalowerti.com',
+  'https://medboard.sentrahai.com',
   'https://primary-healthcare-production.up.railway.app',
 ]
 const DEFAULT_ALLOWED_HEADERS = [

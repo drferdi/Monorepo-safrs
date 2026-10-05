@@ -58,7 +58,7 @@ HOST=127.0.0.1
 PORT=3000
 TRUST_PROXY_HEADERS=true
 DATABASE_URL=postgresql://medboard:<password>@127.0.0.1:5432/medboard
-NEXT_PUBLIC_BASE_URL=https://crew.puskesmasbalowerti.com
+NEXT_PUBLIC_BASE_URL=https://medboard.sentrahai.com
 PLAYWRIGHT_BROWSERS_PATH=/opt/medboard/browsers
 ```
 
@@ -91,13 +91,13 @@ WantedBy=multi-user.target
 ### Caddy (`/etc/caddy/Caddyfile`)
 
 ```
-crew.puskesmasbalowerti.com {
+medboard.sentrahai.com {
 	reverse_proxy 127.0.0.1:3000
 }
 ```
 
-Tambahkan domain lain yang sekarang mengarah ke Railway (misalnya `puskesmasbalowerti.com`) di
-baris pertama, dipisah koma. Lalu `systemctl reload caddy && systemctl enable medboard`.
+Domain lama `crew.puskesmasbalowerti.com` tidak dipakai lagi (Chief, 2026-10-05). Domain lain
+untuk MedBoard, kalau ada, ditambahkan di baris pertama, dipisah koma. Lalu `systemctl reload caddy && systemctl enable medboard`.
 
 ## 2. Deploy (setiap rilis)
 
@@ -133,16 +133,17 @@ Log: `journalctl -u medboard -f`.
 
 ## 3. Pindah dari Railway (sekali, oleh Chief)
 
-1. Turunkan TTL DNS `crew` (misalnya 300 detik) sehari sebelumnya.
+1. Turunkan TTL DNS `medboard.sentrahai.com` (misalnya 300 detik) sehari sebelumnya.
 2. Tunggu bridge-queue kosong (tidak ada entri pending), lalu hentikan layanan Railway sebentar.
 3. Pindahkan database (`pg_dump` versi klien ≥ versi server Railway):
    `pg_dump -Fc "<DATABASE_URL publik Railway>" -f medboard.dump`, salin ke server, lalu
    `sudo -u postgres pg_restore --no-owner --role=medboard -d medboard medboard.dump`.
 4. Berkas pendaftaran dan profil crew di Railway ada di luar volume. Kalau masih ada dan
    dibutuhkan, salin `runtime/crew-access-*.json` ke `/var/lib/medboard/runtime/`.
-5. Ubah A record `crew.puskesmasbalowerti.com` ke IP VPS. Caddy mengambil sertifikat sendiri
+5. `medboard.sentrahai.com` sekarang mengarah ke Vercel (tanpa deployment). Lepas domain itu
+   dari project Vercel, lalu ganti record-nya menjadi A record ke IP VPS. Caddy mengambil sertifikat sendiri
    begitu DNS mengarah.
-6. Cek `https://crew.puskesmasbalowerti.com/api/health`, login dari Asisten Medis, lalu lihat ACARS.
+6. Cek `https://medboard.sentrahai.com/api/health`, login dari Asisten Medis, lalu lihat ACARS.
 7. Matikan Railway setelah satu sampai dua hari stabil.
 
 ## 4. Backup harian (`/etc/cron.d/medboard-backup`)

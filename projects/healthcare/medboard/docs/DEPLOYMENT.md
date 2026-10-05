@@ -104,7 +104,7 @@ RAILWAY_GIT_COMMIT_SHA=              # Auto-set bila tersedia
 ### Sangat dianjurkan untuk operasi utama
 
 ```
-NEXT_PUBLIC_BASE_URL=https://crew.puskesmasbalowerti.com
+NEXT_PUBLIC_BASE_URL=https://medboard.sentrahai.com
 SENTRY_DSN=
 ```
 

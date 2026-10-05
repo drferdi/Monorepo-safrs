@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server'
 const DEFAULT_ALLOWED_ORIGINS = [
   'https://puskesmasbalowerti.com',
   'https://www.puskesmasbalowerti.com',
-  'https://crew.puskesmasbalowerti.com',
+  'https://medboard.sentrahai.com',
   'https://primary-healthcare-production.up.railway.app',
 ]
 

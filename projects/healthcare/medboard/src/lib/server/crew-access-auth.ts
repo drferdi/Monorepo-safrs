@@ -593,7 +593,7 @@ export function getWebAuthnRpID(): string {
   }
 }
 
-const DEFAULT_APP_BASE_URL = 'https://crew.puskesmasbalowerti.com'
+const DEFAULT_APP_BASE_URL = 'https://medboard.sentrahai.com'
 
 /**
  * Origins allowed to complete a WebAuthn ceremony against this RP. Must

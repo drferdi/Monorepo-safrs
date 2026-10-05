@@ -66,7 +66,7 @@ function getAllowedSocketOrigins(): Array<string | RegExp> {
   const baseOrigins = [
     'https://puskesmasbalowerti.com',
     'https://www.puskesmasbalowerti.com',
-    'https://crew.puskesmasbalowerti.com',
+    'https://medboard.sentrahai.com',
     'https://primary-healthcare-production.up.railway.app',
     ...parseEnvList('CORS_ALLOWED_ORIGINS'),
     ...parseEnvList('CORS_ALLOWED_EXTENSION_IDS').map(

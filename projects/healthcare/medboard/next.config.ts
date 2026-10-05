@@ -17,7 +17,7 @@ const contentSecurityPolicy = [
     "connect-src 'self'",
     'https://puskesmasbalowerti.com',
     'https://www.puskesmasbalowerti.com',
-    'https://crew.puskesmasbalowerti.com',
+    'https://medboard.sentrahai.com',
     'https://primary-healthcare-production.up.railway.app',
     'ws:',
     'wss:',
