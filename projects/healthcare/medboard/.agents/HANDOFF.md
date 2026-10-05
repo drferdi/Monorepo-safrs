@@ -33,9 +33,10 @@ secrets, `git restore next-env.d.ts`, delete `runtime/consult-accepted.jsonl`.
 
 ## Next action
 
-1. Chief: Railway env `CREW_ACCESS_REGISTRATION_REQUESTS_FILE` and `CREW_ACCESS_PROFILE_FILE`
-   under `/app/runtime/bridge-queue/` (else registrations are lost on redeploy); `railway.toml`
-   (RAILPACK, `pnpm run build:railway`, `prisma migrate deploy && pnpm run start`); push
+1. Chief chose to leave Railway (cost) for an Indonesian VPS: runbook `docs/deploy-vps.md`
+   (Ubuntu 24.04, Caddy, systemd, local PostgreSQL, whole `runtime/` persistent, daily backup).
+   Not run on a real server yet; the `railway.toml` change and the Railway registration env vars
+   are moot once moved. Chief: order the VPS, data move and DNS (runbook §3); push
    (`CHIEF_PUSH_OK`); squash of `320ac1af`.
 2. Deploy order: Med-Assist with `b2592f0b` before MedBoard `6eb89e69`, or
    `LEGACY_CDSS_ENGINE_ENABLED=true` until it is out.

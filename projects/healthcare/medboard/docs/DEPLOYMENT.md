@@ -14,6 +14,8 @@
 | Production    | Railway        | https://intelligenceboard-production.up.railway.app | Manual / Gate 5 |
 | Domain custom | Railway        | https://puskesmasbalowerti.com                       | DNS → Railway   |
 
+Pindah ke VPS (Chief, 2026-10-05: Railway terlalu mahal): lihat [`deploy-vps.md`](./deploy-vps.md).
+
 ---
 
 ## Railway Configuration
