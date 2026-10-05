@@ -19,7 +19,10 @@ pnpm; `3279be63` bridge entry status guard and path-like ids rejected; `79ed70ae
 dedupe by `event_id` (per process); `8bdbec0c` SBP trajectory bands follow NEWS2, missing AVPU stays
 missing, three unwired tests now run; `e9d5beed` momentum sees falling BP/temperature/glucose and the
 shock pattern; `6eb89e69` (R3) engine retired behind the flag, `mira_differential` accepted and
-shown (telemedicine card, dashboard 'mira' source, EMR button disabled); `ddf8706d` card tokens.
+shown (telemedicine card, dashboard 'mira' source, EMR button disabled); `ddf8706d` card tokens;
+`5e9053da` MIRA card on `/emr` (incoming banner and accepted-consult panel), card moved to
+`src/components/telemedicine`. Browser pane check (2026-10-05, local dev server, no database,
+synthetic consult): button disabled with the notice, card on both pages.
 Med-Assist side: see its `DECISIONS.md` 2026-10-04 "MedBoard session" entry.
 
 ## Work in flight
@@ -31,8 +34,6 @@ None.
 - `railway.toml` change was refused by auto mode (production deploy): builder RAILPACK, drop the
   `nodejs_22` Nixpacks pin, `buildCommand = "pnpm run build:railway"`, `startCommand = "pnpm exec
   prisma migrate deploy && pnpm run start"`. Chief applies it; watch the first Railpack deploy.
-- Browser-pane demo of the EMR button and a live consult needs a local server entry in
-  `.claude/launch.json`; auto mode refused that edit. Only a static render of the MIRA card was shown.
 
 ## Next action
 
@@ -45,8 +46,8 @@ None.
 3. MIRA follow-ups: `ConsultLog` has no column, so a consult loaded from `/api/consult/pending`
    carries no differential (needs a migration — Chief's approval); MIRA cannot be called from the
    MedBoard server (production mode, shared token, loopback).
-4. The MIRA card is only on `/telemedicine`; the `/emr` consult banner (`IncomingConsult`) does
-   not show it, while `/emr` now has its CDSS button disabled. Ask Chief whether to add it there.
+4. The `/emr` assessment workspace copy still says "jalankan Iskandar"; the accepted-consult grid
+   overflows a pane narrower than about 1050 px (pre-existing, not caused by the card).
 5. Deploy order: release the Med-Assist build with `b2592f0b` before MedBoard `6eb89e69` reaches
    Railway, or set `LEGACY_CDSS_ENGINE_ENABLED=true` there until it is out; older Assist builds send
    no `mira_differential`. `deploy:dry-run` re-run after the last commit: passes.
