@@ -1,4 +1,4 @@
-// Sentra Assist — Ghost Protocols Bridge
+// Sentra Assist — Asisten Medis Bridge
 // POST /api/consult — receive clinical consult from Assist, route to target doctor
 // Called by Assist (Chrome Extension) after perawat selects a doctor
 
@@ -9,7 +9,7 @@ import {
   appendClinicalCaseAuditEvent,
   CLINICAL_CASE_AUDIT_EVENTS,
 } from '@/lib/audit/clinical-case-audit'
-import { ghostToDashboardSuggestions } from '@/lib/cdss/format-adapter'
+import { assistToDashboardSuggestions } from '@/lib/cdss/format-adapter'
 import { parseDiagnoseRequestBody } from '@/lib/cdss/diagnose-parser'
 import { runDiagnosisEngine } from '@/lib/cdss/engine'
 import type { CDSSEngineResult, CDSSAlert } from '@/lib/cdss/types'
@@ -160,7 +160,7 @@ function mapDiagnosisResultToDashboardResponse(
   consultId: string,
   receivedAt: string
 ): CDSSResponse {
-  const suggestions = ghostToDashboardSuggestions(
+  const suggestions = assistToDashboardSuggestions(
     result.suggestions.map(suggestion => ({
       rank: suggestion.rank,
       icd_x: suggestion.icd10_code,

@@ -1076,7 +1076,7 @@ export default function TelemedicinePage(): React.JSX.Element {
 
     socket.on('assist:consult', (payload: AssistConsult) => {
       // CONTRACT: targetDoctorId harus sama persis dengan session.displayName
-      // (EMR/Ghost Protocols mengirim displayName dokter yang ditarget)
+      // (EMR/Asisten Medis mengirim displayName dokter yang ditarget)
       setDoctorName(currentName => {
         if (payload.targetDoctorId === currentName) {
           setConsults(prev =>
@@ -1295,7 +1295,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                     marginBottom: 4,
                   }}
                 >
-                  Ghost Protocols — Assist Consult
+                  Asisten Medis — Konsultasi
                 </div>
                 <div
                   style={{

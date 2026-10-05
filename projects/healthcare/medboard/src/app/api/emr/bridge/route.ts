@@ -24,7 +24,7 @@ export async function OPTIONS(request: Request) {
  *
  * Auth: Session cookie only (NOT automation token).
  * Design decision: Only logged-in Dashboard users create transfers.
- * Ghost Protocols extension uses GET/PATCH with token auth to poll & process.
+ * Asisten Medis extension uses GET/PATCH with token auth to poll & process.
  */
 export async function POST(request: Request) {
   const session = getCrewSessionFromRequest(request)

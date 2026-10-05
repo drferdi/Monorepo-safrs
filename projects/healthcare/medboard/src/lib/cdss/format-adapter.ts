@@ -1,13 +1,13 @@
 /**
- * CDSS Format Adapter — converts between Ghost Protocol and Dashboard suggestion formats.
- * Ghost Protocol: DiagnosisSuggestion (api.ts) — icd_x, nama, confidence, rationale
+ * CDSS Format Adapter — converts between Asisten Medis and Dashboard suggestion formats.
+ * Asisten Medis: DiagnosisSuggestion (api.ts) — icd_x, nama, confidence, rationale
  * Dashboard: IskandarSuggestion (clinical.ts) — icd10Code, reasoning, differentialDiagnoses
  */
 
 import type { IskandarSuggestion } from '@/types/abyss/clinical'
 
-/** Ghost Protocol's DiagnosisSuggestion shape (from types/api.ts) */
-export interface GhostDiagnosisSuggestion {
+/** Asisten Medis' DiagnosisSuggestion shape (from types/api.ts) */
+export interface AssistDiagnosisSuggestion {
   rank: number
   icd_x: string
   nama: string
@@ -18,40 +18,40 @@ export interface GhostDiagnosisSuggestion {
   red_flags?: string[]
 }
 
-/** Convert Ghost Protocol DiagnosisSuggestion[] → Dashboard IskandarSuggestion */
-export function ghostToDashboardSuggestion(
-  ghost: GhostDiagnosisSuggestion,
+/** Convert Asisten Medis DiagnosisSuggestion[] → Dashboard IskandarSuggestion */
+export function assistToDashboardSuggestion(
+  assist: AssistDiagnosisSuggestion,
   engineVersion: string
 ): IskandarSuggestion {
   return {
     engineVersion,
-    confidence: ghost.confidence,
-    reasoning: ghost.rationale,
-    supportingEvidence: ghost.red_flags ?? [],
+    confidence: assist.confidence,
+    reasoning: assist.rationale,
+    supportingEvidence: assist.red_flags ?? [],
     differentialDiagnoses: [
       {
-        icd10Code: ghost.icd_x,
-        description: ghost.diagnosis_name ?? ghost.nama,
-        confidence: ghost.confidence,
+        icd10Code: assist.icd_x,
+        description: assist.diagnosis_name ?? assist.nama,
+        confidence: assist.confidence,
       },
     ],
     suggestedAt: new Date().toISOString(),
   }
 }
 
-/** Convert array of Ghost suggestions → Dashboard format */
-export function ghostToDashboardSuggestions(
-  suggestions: GhostDiagnosisSuggestion[],
+/** Convert array of Asisten Medis suggestions → Dashboard format */
+export function assistToDashboardSuggestions(
+  suggestions: AssistDiagnosisSuggestion[],
   engineVersion = 'ghost-iskandar-v1'
 ): IskandarSuggestion[] {
-  return suggestions.map(s => ghostToDashboardSuggestion(s, engineVersion))
+  return suggestions.map(s => assistToDashboardSuggestion(s, engineVersion))
 }
 
-/** Convert Dashboard IskandarSuggestion → Ghost Protocol format */
-export function dashboardToGhostSuggestion(
+/** Convert Dashboard IskandarSuggestion → Asisten Medis format */
+export function dashboardToAssistSuggestion(
   dashboard: IskandarSuggestion,
   rank: number
-): GhostDiagnosisSuggestion {
+): AssistDiagnosisSuggestion {
   const primary = dashboard.differentialDiagnoses[0]
   return {
     rank,
@@ -63,9 +63,9 @@ export function dashboardToGhostSuggestion(
   }
 }
 
-/** Convert array of Dashboard suggestions → Ghost format */
-export function dashboardToGhostSuggestions(
+/** Convert array of Dashboard suggestions → Asisten Medis format */
+export function dashboardToAssistSuggestions(
   suggestions: IskandarSuggestion[]
-): GhostDiagnosisSuggestion[] {
-  return suggestions.map((s, i) => dashboardToGhostSuggestion(s, i + 1))
+): AssistDiagnosisSuggestion[] {
+  return suggestions.map((s, i) => dashboardToAssistSuggestion(s, i + 1))
 }

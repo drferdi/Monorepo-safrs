@@ -1489,7 +1489,7 @@ export default function EMRPage() {
     }
   }
 
-  // ── Doctor Online Status (Ghost Protocols) ────────────────────────────────
+  // ── Doctor Online Status (Asisten Medis) ────────────────────────────────
   const [isDoctor, setIsDoctor] = useState(false)
   const [isOnline, setIsOnline] = useState(false)
   const [togglingOnline, setTogglingOnline] = useState(false)

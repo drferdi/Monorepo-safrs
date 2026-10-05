@@ -1,4 +1,4 @@
-// Sentra Assist — Ghost Protocols Bridge
+// Sentra Assist — Asisten Medis Bridge
 // GET /api/consult/pending — DB fallback for consult delivery
 // Returns recent unaccepted consults for the logged-in doctor.
 // Used by dashboard telemedicine page as fallback when Socket.IO misses events.

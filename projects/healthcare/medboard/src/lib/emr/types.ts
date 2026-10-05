@@ -2,7 +2,7 @@
 /**
  * Sentra EMR Auto-Fill Engine — Type Definitions
  * @canonical-source — This is the SINGLE SOURCE OF TRUTH for EMR bridge types.
- * Ghost Protocol (app/ghost-protocols/utils/types.ts) must mirror shared types.
+ * Asisten Medis (med-assist types/api.ts) must mirror shared types.
  * Run `node scripts/verify-emr-types-sync.js` to validate sync.
  */
 
