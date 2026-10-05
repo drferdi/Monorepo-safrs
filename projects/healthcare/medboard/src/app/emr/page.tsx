@@ -25,6 +25,8 @@ import {
   type ScrapedVisit,
 } from '@/lib/emr/visit-history'
 import { LEGACY_CDSS_RETIRED_MESSAGE } from '@/lib/legacy-cdss-retirement'
+import { MiraDifferentialCard } from '@/components/telemedicine/MiraDifferentialCard'
+import type { MiraDifferential } from '@/lib/telemedicine/mira-differential'
 import { generateNarrative } from '@/lib/narrative-generator'
 import {
   hasRespiratoryComplaint,
@@ -1436,6 +1438,8 @@ export default function EMRPage() {
       }
       immediate_actions?: string[]
     }
+    /** MIRA's differential, when Assist had one for this encounter */
+    mira_differential?: MiraDifferential
     physical_exam_context?: Record<string, string>
     visit_history?: Array<{
       encounter_id: string
@@ -4973,6 +4977,11 @@ export default function EMRPage() {
               <div style={{ color: '#b7ab98', fontSize: 13, marginTop: 2 }}>
                 {incomingConsult.keluhan_utama}
               </div>
+              {incomingConsult.mira_differential && (
+                <div style={{ marginTop: 10 }}>
+                  <MiraDifferentialCard differential={incomingConsult.mira_differential} />
+                </div>
+              )}
             </div>
             <div style={{ display: 'flex', gap: 8 }}>
               <button
@@ -5455,6 +5464,9 @@ export default function EMRPage() {
                           ))}
                         </div>
                       </>
+                    )}
+                    {ac.mira_differential && (
+                      <MiraDifferentialCard differential={ac.mira_differential} />
                     )}
                     {immediateActions.length > 0 && (
                       <>

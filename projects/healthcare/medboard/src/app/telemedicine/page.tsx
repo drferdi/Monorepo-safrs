@@ -20,12 +20,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { io as socketIO } from 'socket.io-client'
 import { useTheme } from '@/components/ThemeProvider'
 import { AppointmentBooking } from '@/components/telemedicine/AppointmentBooking'
+import { MiraDifferentialCard } from '@/components/telemedicine/MiraDifferentialCard'
 import { isDoctorProfession } from '@/lib/crew-access'
 import { buildEmrSourceHref, EMR_SOURCE_ORIGINS } from '@/lib/emr/source-trace'
 import type { MiraDifferential } from '@/lib/telemedicine/mira-differential'
 import type { AppointmentStatus, AppointmentWithDetails } from '@/types/telemedicine.types'
 
-import { MiraDifferentialCard } from './MiraDifferentialCard'
 import styles from './telemedicine.module.css'
 
 interface TeleRequest {
