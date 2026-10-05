@@ -1,4 +1,4 @@
-// Ghost Protocols — Secure Login Entry
+// Asisten Medis — Secure Login Entry
 // Integrates design from page1-login.html + page2-dashboard.html
 // Backend Auth Integration
 

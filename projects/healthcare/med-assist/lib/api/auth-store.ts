@@ -1,4 +1,4 @@
-// Ghost Protocols — Unified Auth Store
+// Asisten Medis — Unified Auth Store
 // Single source of truth for auth session across all extension contexts.
 // Dual-layer: chrome.storage.session (RAM, secure) + chrome.storage.local (persist across browser restart).
 

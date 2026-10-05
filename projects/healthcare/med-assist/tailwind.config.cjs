@@ -8,7 +8,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Carbon Surface Theme — Ghost Protocols
+        // Carbon Surface Theme — Asisten Medis
         carbon: {
           50: '#f0f0f0',
           100: '#d9d9d9',

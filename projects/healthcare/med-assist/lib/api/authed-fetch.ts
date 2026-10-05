@@ -1,4 +1,4 @@
-// Ghost Protocols — Authenticated Fetch
+// Asisten Medis — Authenticated Fetch
 // Single wrapper for ALL API calls to Crew Dashboard.
 // Reads token from auth-store, handles refresh at point-of-use.
 

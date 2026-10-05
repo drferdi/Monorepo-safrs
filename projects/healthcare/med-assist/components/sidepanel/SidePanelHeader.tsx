@@ -1,4 +1,4 @@
-// Ghost Protocols — Iskandar Diagnosis Engine V1
+// Asisten Medis — Iskandar Diagnosis Engine V1
 // Ported 1:1 from console-boot-demo.html reference design
 
 import { ChevronDown } from 'lucide-react';

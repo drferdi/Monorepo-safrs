@@ -1,4 +1,4 @@
-// Ghost Protocols — Auth Client
+// Asisten Medis — Auth Client
 // Backend authentication integration for Sentra Assist
 // Uses unified auth-store as single source of truth for session.
 
