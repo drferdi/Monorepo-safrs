@@ -42,6 +42,20 @@ const suites: Suite[] = [
     ],
   },
   {
+    name: 'crew-registration',
+    aliases: ['registration', 'presence'],
+    command: process.execPath,
+    // react-server condition: these modules import server-only.
+    args: [
+      '--conditions',
+      'react-server',
+      '--import',
+      'tsx',
+      '--test',
+      'src/lib/server/crew-access-registration.test.ts',
+    ],
+  },
+  {
     name: 'auth-hardening',
     aliases: ['auth', 'security'],
     command: process.execPath,

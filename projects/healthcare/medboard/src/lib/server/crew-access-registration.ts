@@ -348,12 +348,28 @@ function validateRegistrationPayload(raw: unknown): CrewAccessRegistrationPayloa
   }
 }
 
-export async function createCrewAccessRegistration(raw: unknown): Promise<{
+/** Database and profile-store calls, injectable so tests run without a database. */
+export interface CrewAccessRegistrationDeps {
+  listUsers: () => Promise<{ username: string; email?: string }[]>
+  createUser: typeof appendCrewAccessUserToFile
+  writeProfile: typeof upsertCrewProfile
+}
+
+const defaultDeps: CrewAccessRegistrationDeps = {
+  listUsers: listCrewAccessUsers,
+  createUser: appendCrewAccessUserToFile,
+  writeProfile: upsertCrewProfile,
+}
+
+export async function createCrewAccessRegistration(
+  raw: unknown,
+  deps: CrewAccessRegistrationDeps = defaultDeps
+): Promise<{
   request: Omit<CrewAccessRegistrationRecord, 'passwordHash'>
 }> {
   const payload = validateRegistrationPayload(raw)
   return withRegistrationLock(async () => {
-    const activeUsers = await listCrewAccessUsers()
+    const activeUsers = await deps.listUsers()
     const existingActive = activeUsers.find(
       user => user.username === payload.username || user.email === payload.email
     )
@@ -362,8 +378,11 @@ export async function createCrewAccessRegistration(raw: unknown): Promise<{
     }
 
     const pendingRequests = loadRegistrationRequests()
+    // Only a request still under review blocks a new one; a rejected applicant may apply again.
     const existingPending = pendingRequests.find(
-      request => request.username === payload.username || request.email === payload.email
+      request =>
+        request.status === 'PENDING_REVIEW' &&
+        (request.username === payload.username || request.email === payload.email)
     )
     if (existingPending) {
       throw new Error('Pendaftaran dengan email atau username ini sudah menunggu review.')
@@ -415,7 +434,8 @@ export function listPendingRegistrations(): Omit<CrewAccessRegistrationRecord, '
 
 export async function approveRegistration(
   id: string,
-  reviewerUsername: string
+  reviewerUsername: string,
+  deps: CrewAccessRegistrationDeps = defaultDeps
 ): Promise<{ username: string }> {
   return withRegistrationLock(async () => {
     const requests = loadRegistrationRequests()
@@ -429,19 +449,23 @@ export async function approveRegistration(
       )
     }
 
-    // Append to active users file
-    await appendCrewAccessUserToFile({
-      username: record.username,
-      displayName: record.displayName,
-      email: record.email,
-      institution: record.institution,
-      profession: record.profession,
-      role: record.role,
-      passwordHash: record.passwordHash,
-    })
+    // Create the user unless an earlier approval already did: the database write and the profile
+    // file cannot share a transaction, so a retry after a failed profile write must not create twice.
+    const existingUsers = await deps.listUsers()
+    if (!existingUsers.some(user => user.username === record.username)) {
+      await deps.createUser({
+        username: record.username,
+        displayName: record.displayName,
+        email: record.email,
+        institution: record.institution,
+        profession: record.profession,
+        role: record.role,
+        passwordHash: record.passwordHash,
+      })
+    }
 
     // Write profile
-    await upsertCrewProfile(record.username, {
+    await deps.writeProfile(record.username, {
       fullName: record.profile.fullName,
       birthPlace: record.profile.birthPlace,
       birthDate: record.profile.birthDate,
