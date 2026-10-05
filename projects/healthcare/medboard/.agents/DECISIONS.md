@@ -3,6 +3,20 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-05 — Leave Railway for an Indonesian VPS
+
+- Decision (Chief: Railway "terlalu mahal"; chose "VPS Indonesia"): MedBoard is to run on an
+  Ubuntu VPS in Indonesia (4 GB RAM) behind Caddy, with local PostgreSQL and a systemd unit;
+  runbook `docs/deploy-vps.md`. Railway bills about $10 per GB RAM per month; a 2–4 GB VPS in
+  Indonesia costs about Rp 87–160 ribu per month (prices from provider listings, 2026-10).
+- Rationale: MedBoard needs an always-on process (Socket.IO, presence timer) and Chromium, so
+  serverless does not fit; data stays in Indonesia (PP 71/2019 for public-scope systems is an
+  assumption to be confirmed by Chief); the whole `runtime/` folder now persists, not only the
+  bridge queue.
+- Evidence: no code change needed (`TRUST_PROXY_HEADERS`, `HOST`, `PORT`; CORS already lists the
+  crew domain); runbook bash snippets pass `bash -n`; `git archive` package checked (6.8 MB, no
+  `node_modules`, only `.env.example`). Not yet run on a real server.
+
 ## 2026-10-05 — "Asisten Medis" name; registration survives retries; ACARS lists Assist users
 
 - Decision (Chief: "ganti semua istilah ghost protocol menjadi Asisten Medis"): copy and code
