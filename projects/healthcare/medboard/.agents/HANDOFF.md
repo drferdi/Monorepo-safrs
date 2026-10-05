@@ -33,6 +33,10 @@ secrets, `git restore next-env.d.ts`, delete `runtime/consult-accepted.jsonl`.
 
 ## Next action
 
+0. Host is now `medboard.sentrahai.com` (`4362337a`; crew.puskesmasbalowerti.com retired, and
+   it plus the Railway app no longer answer). The new host points at Vercel with no deployment;
+   Chief moves its DNS to the VPS (runbook §3.5). Biznet Gio NEO Lite MS 4.2 (2 vCPU, 4 GB,
+   Rp 139.000/month) was the suggested VPS.
 1. Chief chose to leave Railway (cost) for an Indonesian VPS: runbook `docs/deploy-vps.md`
    (Ubuntu 24.04, Caddy, systemd, local PostgreSQL, whole `runtime/` persistent, daily backup).
    Not run on a real server yet; the `railway.toml` change and the Railway registration env vars

@@ -12,8 +12,11 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
   `login.html` title; `65f715c1` presence: `sendPresence` (cookie session only), alarm
   `sentra-presence` every 30 s from `background.ts`, offline call on logout, the side panel's
   online-doctor count from `getOnlineDoctors` (60 s); `0b5cd564` (auth, Chief approved)
-  `DEFAULT_AUTH_BASE_URL` = MedBoard crew address; an empty address saved in Settings = Mode
-  Lokal; a local session stored earlier stays local until logout.
+  `DEFAULT_AUTH_BASE_URL` = MedBoard; an empty address saved in Settings = Mode Lokal; a local
+  session stored earlier stays local until logout; `99bfcca1` MedBoard host is
+  `medboard.sentrahai.com` (crew.puskesmasbalowerti.com retired), manifest host permission too.
+  That host serves no MedBoard yet (Vercel "DEPLOYMENT_NOT_FOUND", 2026-10-05), so sign-in fails
+  until the VPS is live; do not release this build before then.
 - The real sign-in is `ConsoleLogin` in the side panel (new test: it shows MedBoard's refusal).
   `entrypoints/login` is the unused legacy popup ("Sentra Assist" logo); only e2e opens it, and its
   windows on Chief's screen looked like an older design. Left as is.

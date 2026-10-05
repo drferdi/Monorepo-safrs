@@ -3,6 +3,14 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-05 — MedBoard host is medboard.sentrahai.com
+
+- Decision (Chief): `crew.puskesmasbalowerti.com` is retired; MedBoard is
+  `medboard.sentrahai.com`. Default app base URL (WebAuthn rpID), CORS, Socket.IO origins, CSP
+  `connect-src`, `.env.example` and the VPS runbook follow. Other legacy origins
+  (`puskesmasbalowerti.com`, the Railway app) were left in the lists; Chief did not ask.
+- Evidence: passkey helper test for the default rpID red first; commit `4362337a`.
+
 ## 2026-10-05 — Leave Railway for an Indonesian VPS
 
 - Decision (Chief: Railway "terlalu mahal"; chose "VPS Indonesia"): MedBoard is to run on an

@@ -3,6 +3,13 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-05 — MedBoard host is medboard.sentrahai.com
+
+- Decision (Chief: "crew.puskesmasbalowerti.com -> sudah tidak digunakan", then
+  "medboard.sentrahai.com"): default sign-in address, passkey crew-domain check and manifest host
+  permission use the new host. Passkeys made on the old host do not carry over.
+- Evidence: auth-client default test and the manifest e2e red first; commit `99bfcca1`.
+
 ## 2026-10-05 — MedBoard is the default sign-in; Asisten Medis reports who is online
 
 - Decision (Chief chose "Default ke MedBoard", auth change approved): reverses the earlier Mode
