@@ -412,7 +412,7 @@ const inputSm: React.CSSProperties = {
   borderRadius: 6,
   padding: '8px 10px',
   color: 'var(--text-main)',
-  fontSize: 13,
+  fontSize: 14,
   outline: 'none',
   boxSizing: 'border-box',
 }

@@ -161,7 +161,7 @@ export default function ReportPage() {
   )
 
   const reportActionButtonStyle = {
-    fontSize: 13,
+    fontSize: 14,
     letterSpacing: '0.1em',
     padding: '8px 16px',
     background: REPORT_ACTION_TONE,
@@ -174,7 +174,7 @@ export default function ReportPage() {
   }
 
   const reportActionChipStyle = {
-    fontSize: 13,
+    fontSize: 14,
     letterSpacing: '0.1em',
     padding: '3px 10px',
     background: REPORT_ACTION_SOFT,
@@ -209,7 +209,7 @@ export default function ReportPage() {
         </div>
         <div
           style={{
-            fontSize: 13,
+            fontSize: 14,
             color: 'var(--text-muted)',
             letterSpacing: '0.1em',
             textAlign: 'right',
@@ -236,7 +236,7 @@ export default function ReportPage() {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 8,
-            fontSize: 13,
+            fontSize: 14,
             letterSpacing: '0.1em',
             padding: '8px 16px',
             background: '#101012',
@@ -298,7 +298,7 @@ export default function ReportPage() {
           >
             <span
               style={{
-                fontSize: 13,
+                fontSize: 14,
                 letterSpacing: '0.12em',
                 color: 'var(--text-muted)',
               }}
@@ -347,7 +347,7 @@ export default function ReportPage() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                   <span
                     style={{
-                      fontSize: 13,
+                      fontSize: 14,
                       color: 'var(--c-asesmen)',
                       letterSpacing: '0.04em',
                     }}
@@ -356,7 +356,7 @@ export default function ReportPage() {
                   </span>
                   <span
                     style={{
-                      fontSize: 13,
+                      fontSize: 14,
                       color: 'var(--text-muted)',
                     }}
                   >
@@ -366,7 +366,7 @@ export default function ReportPage() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <span
                     style={{
-                      fontSize: 13,
+                      fontSize: 14,
                       color: 'var(--text-muted)',
                     }}
                   >
@@ -392,7 +392,7 @@ export default function ReportPage() {
           <div
             style={{
               marginTop: 6,
-              fontSize: 13,
+              fontSize: 14,
               color: 'var(--text-muted)',
               opacity: 0.5,
               letterSpacing: '0.08em',
@@ -450,7 +450,7 @@ export default function ReportPage() {
             key={f}
             onClick={() => setFilter(f)}
             style={{
-              fontSize: 13,
+              fontSize: 14,
               letterSpacing: '0.1em',
               padding: '5px 14px',
               background: 'none',
@@ -465,7 +465,7 @@ export default function ReportPage() {
               style={{
                 marginLeft: 6,
                 opacity: 0.6,
-                fontSize: 13,
+                fontSize: 14,
               }}
             >
               {counts[f]}
@@ -500,7 +500,7 @@ export default function ReportPage() {
             style={{
               padding: '48px 0',
               textAlign: 'center',
-              fontSize: 13,
+              fontSize: 14,
               color: 'var(--text-muted)',
               letterSpacing: '0.15em',
               opacity: 0.5,
@@ -529,7 +529,7 @@ export default function ReportPage() {
           >
             <span
               style={{
-                fontSize: 13,
+                fontSize: 14,
                 color: 'var(--c-asesmen)',
                 letterSpacing: '0.05em',
               }}
@@ -539,7 +539,7 @@ export default function ReportPage() {
 
             <span
               style={{
-                fontSize: 15,
+                fontSize: 14,
                 color: 'var(--text-main)',
               }}
             >
@@ -548,7 +548,7 @@ export default function ReportPage() {
 
             <span
               style={{
-                fontSize: 13,
+                fontSize: 14,
                 color: 'var(--text-muted)',
               }}
             >
@@ -557,7 +557,7 @@ export default function ReportPage() {
 
             <span
               style={{
-                fontSize: 15,
+                fontSize: 14,
                 color: 'var(--text-main)',
               }}
             >
@@ -566,7 +566,7 @@ export default function ReportPage() {
 
             <span
               style={{
-                fontSize: 13,
+                fontSize: 14,
                 color: 'var(--text-muted)',
                 letterSpacing: '0.05em',
               }}
@@ -602,7 +602,7 @@ export default function ReportPage() {
         <div
           style={{
             marginTop: 24,
-            fontSize: 13,
+            fontSize: 14,
             color: 'var(--text-muted)',
             letterSpacing: '0.1em',
             opacity: 0.5,

@@ -313,7 +313,7 @@ export default function ChatPage() {
             <span>Channel</span>
             <span
               style={{
-                fontSize: 11,
+                fontSize: 12,
                 color: 'var(--text-muted)',
                 opacity: 0.6,
               }}
@@ -351,7 +351,7 @@ export default function ChatPage() {
             <div
               style={{
                 padding: '12px 24px 8px',
-                fontSize: 10,
+                fontSize: 12,
                 fontFamily: 'var(--font-mono)',
                 letterSpacing: '0.2em',
                 color: 'var(--text-muted)',
@@ -409,7 +409,7 @@ export default function ChatPage() {
               style={{
                 padding: '32px 24px',
                 textAlign: 'center',
-                fontSize: 13,
+                fontSize: 14,
                 color: 'var(--text-muted)',
                 opacity: 0.5,
                 fontStyle: 'italic',
@@ -550,7 +550,7 @@ function UnreadBadge({ count }: { count: number }) {
         borderRadius: 9,
         background: 'var(--c-asesmen)',
         color: '#fff',
-        fontSize: 10,
+        fontSize: 12,
         fontFamily: 'var(--font-mono)',
         fontWeight: 600,
         display: 'flex',

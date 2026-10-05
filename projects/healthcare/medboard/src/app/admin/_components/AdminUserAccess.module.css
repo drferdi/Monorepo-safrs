@@ -4,7 +4,7 @@
 
 .loadingMessage {
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: 14px;
   letter-spacing: 0.1em;
 }
 
@@ -51,7 +51,7 @@
 .roleLabel,
 .kpiLabel {
   margin-bottom: 6px;
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.12em;
 }
 
@@ -63,7 +63,7 @@
 }
 
 .roleValue {
-  font-size: 22px;
+  font-size: 20px;
 }
 
 .roleValueMuted {
@@ -94,7 +94,7 @@
 
 .kpiValue {
   margin-bottom: 4px;
-  font-size: 26px;
+  font-size: 28px;
 }
 
 .kpiValueAccent {
@@ -106,14 +106,14 @@
   padding: 1px 6px;
   background: var(--c-asesmen-soft);
   color: var(--c-asesmen);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
 }
 
 .kpiSub {
   color: var(--text-muted);
   opacity: 0.7;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .pendingPanel {
@@ -134,13 +134,13 @@
 
 .pendingTitle {
   margin: 0;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.2em;
 }
 
 .pendingCountText {
   color: var(--c-asesmen);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -180,12 +180,12 @@
   border-radius: var(--radius-lg);
   padding: 8px 10px;
   background: var(--bg-nav);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .resultCount {
   margin: 0 0 14px;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.1em;
 }
 
@@ -222,7 +222,7 @@
 .thRight {
   padding: 10px 14px;
   color: var(--text-muted);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-align: left;
@@ -266,13 +266,13 @@
 
 .userFullName {
   color: var(--text-main);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
 }
 
 .userHandle {
   color: var(--text-muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .primaryTextCell {
@@ -282,14 +282,14 @@
 
 .secondaryTextCell {
   color: var(--text-muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .statusBadge {
   display: inline-block;
   border-radius: var(--radius-md);
   padding: 2px 8px;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.08em;
 }
@@ -340,7 +340,7 @@
 .pendingMeta,
 .pendingDetails {
   color: var(--text-muted);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .pendingDetails {
@@ -365,7 +365,7 @@
   background: var(--c-asesmen);
   color: var(--text-on-accent);
   cursor: pointer;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.08em;
 }
@@ -400,7 +400,7 @@
   padding: 7px 14px;
   color: var(--text-muted);
   cursor: pointer;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
 }
 
@@ -473,20 +473,20 @@
 .logbookTitle,
 .selectorGroupTitle {
   letter-spacing: 0.15em;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .panelUsername {
   margin-left: 12px;
   color: var(--text-main);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
 }
 
 .closeButton {
   padding: 0 4px;
   color: var(--text-muted);
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .editPanelGrid {
@@ -509,7 +509,7 @@
   display: block;
   margin-bottom: 4px;
   color: var(--text-muted);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.1em;
 }
@@ -542,7 +542,7 @@
 .outlineButtonCompact {
   color: var(--text-main);
   cursor: pointer;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.08em;
 }
@@ -555,7 +555,7 @@
 .outlineButtonCompact {
   border-radius: var(--radius-lg);
   padding: 7px 14px;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .outlineButtonMuted {
@@ -580,7 +580,7 @@
 
 .inlineMessage {
   margin: 0;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .inlineMessageSuccess {
@@ -625,7 +625,7 @@
   padding: 3px 8px;
   background: rgba(230, 126, 34, 0.12);
   color: var(--c-asesmen);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -649,7 +649,7 @@
 .selectorGroupTitle {
   margin: 0 0 4px;
   color: var(--text-muted);
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 0.12em;
 }
 
@@ -686,7 +686,7 @@
 .logbookTable {
   border: 1px solid var(--line-base);
   border-radius: var(--radius-lg);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .logbookHeaderRow {
@@ -697,7 +697,7 @@
 .thLeft,
 .thRight {
   padding: 6px 8px;
-  font-size: 9px;
+  font-size: 12px;
 }
 
 .thCenter {
@@ -729,20 +729,20 @@
 
 .tdRightMuted {
   text-align: right;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .tdEndpoint {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .resultBadge {
   display: inline-block;
   border-radius: 3px;
   padding: 1px 6px;
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.05em;
 }
@@ -771,7 +771,7 @@
 
 .paginationInfo {
   color: var(--text-muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .paginationActions {
@@ -785,7 +785,7 @@
   background: rgba(230, 126, 34, 0.08);
   color: var(--c-asesmen);
   cursor: pointer;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 600;
 }
 
@@ -801,7 +801,7 @@
   padding: 3px 8px;
   color: var(--text-muted);
   cursor: pointer;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.04em;
 }

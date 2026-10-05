@@ -40,10 +40,10 @@ export function BaselineDeviationGauge({ baseline, className }: BaselineDeviatio
           padding: '16px 20px',
         }}
       >
-        <div style={{ fontSize: 10, fontFamily: 'var(--font-mono)', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 6 }}>
+        <div style={{ fontSize: 12, fontFamily: 'var(--font-mono)', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 6 }}>
           Deviasi Baseline Personal
         </div>
-        <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+        <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>
           Baseline belum terhitung — data kunjungan tidak cukup.
         </div>
       </div>
@@ -62,7 +62,7 @@ export function BaselineDeviationGauge({ baseline, className }: BaselineDeviatio
     >
       <div
         style={{
-          fontSize: 10,
+          fontSize: 12,
           fontFamily: 'var(--font-mono)',
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
@@ -94,17 +94,17 @@ export function BaselineDeviationGauge({ baseline, className }: BaselineDeviatio
               >
                 <div style={{ display: 'flex', gap: 8, alignItems: 'baseline' }}>
                   <span style={{ fontSize: 12, color: 'var(--text-main)' }}>{vitLabel}</span>
-                  <span style={{ fontSize: 10, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                  <span style={{ fontSize: 12, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
                     μ={stat.mean.toFixed(1)} {vitUnit}
                   </span>
                 </div>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                  <span style={{ fontSize: 10, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
+                  <span style={{ fontSize: 12, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>
                     {zLabel}
                   </span>
                   <span
                     style={{
-                      fontSize: 10,
+                      fontSize: 12,
                       fontFamily: 'var(--font-mono)',
                       color: cfg.color,
                       border: `1px solid color-mix(in srgb, ${cfg.color} 35%, transparent)`,
@@ -143,7 +143,7 @@ export function BaselineDeviationGauge({ baseline, className }: BaselineDeviatio
       <div
         style={{
           marginTop: 10,
-          fontSize: 10,
+          fontSize: 12,
           color: 'var(--text-muted)',
           fontFamily: 'var(--font-mono)',
         }}

@@ -284,7 +284,7 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
         style={{
           padding: '40px 0',
           color: 'var(--text-muted)',
-          fontSize: 13,
+          fontSize: 14,
           letterSpacing: '0.1em',
         }}
       >
@@ -398,14 +398,14 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
             <p
               style={{
                 margin: 0,
-                fontSize: 11,
+                fontSize: 12,
                 letterSpacing: '0.2em',
                 color: 'var(--text-muted)',
               }}
             >
               PENDAFTARAN MENUNGGU
             </p>
-            <span style={{ fontSize: 11, color: '#E67E22', fontWeight: 600 }}>
+            <span style={{ fontSize: 12, color: '#E67E22', fontWeight: 600 }}>
               {pendingCount} menunggu review
             </span>
           </div>
@@ -479,7 +479,7 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
           <p
             style={{
               margin: '0 0 14px',
-              fontSize: 11,
+              fontSize: 12,
               letterSpacing: '0.15em',
               color: 'var(--text-muted)',
             }}
@@ -506,7 +506,7 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
           <p
             style={{
               margin: '0 0 14px',
-              fontSize: 11,
+              fontSize: 12,
               letterSpacing: '0.15em',
               color: 'var(--text-muted)',
             }}
@@ -543,7 +543,7 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
           <p
             style={{
               margin: '0 0 14px',
-              fontSize: 11,
+              fontSize: 12,
               letterSpacing: '0.15em',
               color: 'var(--text-muted)',
             }}
@@ -581,7 +581,7 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
                 >
                   <span
                     style={{
-                      fontSize: 9,
+                      fontSize: 12,
                       fontWeight: 600,
                       letterSpacing: '0.08em',
                       padding: '2px 6px',
@@ -607,7 +607,7 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
                   </span>
                   <span
                     style={{
-                      fontSize: 10,
+                      fontSize: 12,
                       color: 'var(--text-muted)',
                       opacity: 0.6,
                       flexShrink: 0,
@@ -634,7 +634,7 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
           <p
             style={{
               margin: '0 0 14px',
-              fontSize: 11,
+              fontSize: 12,
               letterSpacing: '0.15em',
               color: 'var(--text-muted)',
             }}
@@ -686,21 +686,21 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div
                       style={{
-                        fontSize: 13,
+                        fontSize: 14,
                         fontWeight: 500,
                         color: 'var(--text-main)',
                       }}
                     >
                       {m.displayName}
                     </div>
-                    <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
                       {m.profession} · {formatRole(m.role)}
                     </div>
                   </div>
                   {isOnline && (
                     <span
                       style={{
-                        fontSize: 9,
+                        fontSize: 12,
                         letterSpacing: '0.08em',
                         color: '#4CAF50',
                         fontWeight: 600,
@@ -783,7 +783,7 @@ function KPICard({
             right: 10,
             background: '#E67E22',
             color: '#fff',
-            fontSize: 10,
+            fontSize: 12,
             fontWeight: 700,
             borderRadius: 99,
             minWidth: 20,
@@ -800,7 +800,7 @@ function KPICard({
       <p
         style={{
           margin: 0,
-          fontSize: 10,
+          fontSize: 12,
           letterSpacing: '0.15em',
           color: 'var(--text-muted)',
         }}
@@ -821,7 +821,7 @@ function KPICard({
       <p
         style={{
           margin: 0,
-          fontSize: 11,
+          fontSize: 12,
           color: 'var(--text-muted)',
           opacity: 0.7,
         }}
@@ -845,7 +845,7 @@ function StatusDot({ label, value, ok }: { label: string; value: string; ok: boo
       />
       <span
         style={{
-          fontSize: 10,
+          fontSize: 12,
           letterSpacing: '0.1em',
           color: 'var(--text-muted)',
           fontWeight: 600,
@@ -853,7 +853,7 @@ function StatusDot({ label, value, ok }: { label: string; value: string; ok: boo
       >
         {label}
       </span>
-      <span style={{ fontSize: 11, color: 'var(--text-main)' }}>{value}</span>
+      <span style={{ fontSize: 12, color: 'var(--text-main)' }}>{value}</span>
     </div>
   )
 }
@@ -931,7 +931,7 @@ function PendingCard({
           <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-main)' }}>
             {reg.profile.fullName || reg.displayName}
           </div>
-          <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
             {reg.profession} &middot; {formatRole(reg.role)}
           </div>
         </div>
@@ -941,7 +941,7 @@ function PendingCard({
         style={{
           display: 'grid',
           gap: 4,
-          fontSize: 11,
+          fontSize: 12,
           color: 'var(--text-muted)',
         }}
       >
@@ -967,7 +967,7 @@ function PendingCard({
             borderRadius: 6,
             background: busy ? 'rgba(230,126,34,0.3)' : '#E67E22',
             color: '#fff',
-            fontSize: 11,
+            fontSize: 12,
             fontWeight: 600,
             letterSpacing: '0.08em',
             cursor: busy ? 'not-allowed' : 'pointer',
@@ -984,7 +984,7 @@ function PendingCard({
             borderRadius: 6,
             background: 'transparent',
             color: 'var(--text-muted)',
-            fontSize: 11,
+            fontSize: 12,
             fontWeight: 500,
             cursor: busy ? 'not-allowed' : 'pointer',
           }}

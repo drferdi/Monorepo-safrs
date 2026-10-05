@@ -77,7 +77,7 @@ export default function PatientQueuePanel(): React.JSX.Element {
             borderRadius: 4,
             border: '1px dashed var(--c-critical)',
             padding: '12px 16px',
-            fontSize: 13,
+            fontSize: 14,
             color: 'var(--c-critical)',
           }}
         >
@@ -91,7 +91,7 @@ export default function PatientQueuePanel(): React.JSX.Element {
             borderRadius: 4,
             border: '1px solid var(--line-base)',
             padding: '6px 12px',
-            fontSize: 13,
+            fontSize: 14,
             color: 'var(--text-muted)',
             background: 'transparent',
             cursor: 'pointer',
@@ -147,7 +147,7 @@ export default function PatientQueuePanel(): React.JSX.Element {
             borderRadius: 4,
             border: '1px dashed var(--line-base)',
             padding: '8px 12px',
-            fontSize: 11,
+            fontSize: 12,
             fontFamily: 'var(--font-mono)',
             color: 'var(--text-muted)',
             letterSpacing: '0.05em',
@@ -182,7 +182,7 @@ export default function PatientQueuePanel(): React.JSX.Element {
               <div style={{ minWidth: 0 }}>
                 <div
                   style={{
-                    fontSize: 10,
+                    fontSize: 12,
                     fontFamily: 'var(--font-mono)',
                     letterSpacing: '0.18em',
                     textTransform: 'uppercase',
@@ -220,7 +220,7 @@ export default function PatientQueuePanel(): React.JSX.Element {
                   borderRadius: 20,
                   border: `1px solid ${cfg.color}`,
                   padding: '4px 10px',
-                  fontSize: 10,
+                  fontSize: 12,
                   fontFamily: 'var(--font-mono)',
                   fontWeight: 500,
                   letterSpacing: '0.12em',
@@ -250,7 +250,7 @@ export default function PatientQueuePanel(): React.JSX.Element {
             {/* Timestamp */}
             <div
               style={{
-                fontSize: 10,
+                fontSize: 12,
                 fontFamily: 'var(--font-mono)',
                 color: 'var(--text-muted)',
                 opacity: 0.5,

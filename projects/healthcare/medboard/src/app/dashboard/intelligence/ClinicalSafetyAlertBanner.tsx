@@ -25,7 +25,7 @@ function QuiescentBanner(): React.JSX.Element {
       <div>
         <div
           style={{
-            fontSize: 10,
+            fontSize: 12,
             fontFamily: 'var(--font-mono)',
             letterSpacing: '0.2em',
             textTransform: 'uppercase',
@@ -98,7 +98,7 @@ function ActiveAlertBanner({
         <div style={{ minWidth: 0 }}>
           <div
             style={{
-              fontSize: 10,
+              fontSize: 12,
               fontFamily: 'var(--font-mono)',
               letterSpacing: '0.2em',
               textTransform: 'uppercase',
@@ -110,7 +110,7 @@ function ActiveAlertBanner({
           </div>
           <div
             style={{
-              fontSize: 10,
+              fontSize: 12,
               fontFamily: 'var(--font-mono)',
               letterSpacing: '0.14em',
               textTransform: 'uppercase',
@@ -132,7 +132,7 @@ function ActiveAlertBanner({
               {cmeContext.momentumLevel && (
                 <span
                   style={{
-                    fontSize: 10,
+                    fontSize: 12,
                     fontFamily: 'var(--font-mono)',
                     letterSpacing: '0.1em',
                     color: 'var(--c-critical)',
@@ -148,7 +148,7 @@ function ActiveAlertBanner({
               {cmeContext.convergencePattern && cmeContext.convergencePattern !== 'none' && (
                 <span
                   style={{
-                    fontSize: 10,
+                    fontSize: 12,
                     fontFamily: 'var(--font-mono)',
                     letterSpacing: '0.1em',
                     color: 'var(--c-critical)',
@@ -164,7 +164,7 @@ function ActiveAlertBanner({
               {cmeContext.recommendedAction && (
                 <span
                   style={{
-                    fontSize: 10,
+                    fontSize: 12,
                     color: 'var(--text-muted)',
                     fontStyle: 'italic',
                     padding: '2px 0',
@@ -187,7 +187,7 @@ function ActiveAlertBanner({
           borderRadius: 4,
           border: '1px solid var(--c-critical)',
           padding: '8px 16px',
-          fontSize: 13,
+          fontSize: 14,
           fontFamily: 'var(--font-mono)',
           fontWeight: 500,
           color: 'var(--c-critical)',
@@ -227,7 +227,7 @@ function AcknowledgedBanner({ acknowledgedAt }: { acknowledgedAt: string }): Rea
       <span aria-hidden="true" style={{ fontSize: 16, color: 'var(--text-muted)' }}>
         ✓
       </span>
-      <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+      <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>
         Alert kritis telah di-acknowledge pada {time}.
       </span>
     </section>

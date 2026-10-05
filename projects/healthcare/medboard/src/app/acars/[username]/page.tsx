@@ -293,7 +293,7 @@ export default function AcarsRosterPage() {
             alignItems: 'center',
             gap: 8,
             color: 'var(--c-asesmen)',
-            fontSize: 13,
+            fontSize: 14,
             textDecoration: 'none',
           }}
         >
@@ -321,7 +321,7 @@ export default function AcarsRosterPage() {
           />
           <span
             style={{
-              fontSize: 11,
+              fontSize: 12,
               letterSpacing: '0.1em',
               color: connected ? 'var(--c-ok)' : 'var(--text-muted)',
             }}
@@ -370,7 +370,7 @@ export default function AcarsRosterPage() {
           <div>
             <div
               style={{
-                fontSize: 22,
+                fontSize: 20,
                 fontWeight: 600,
                 color: 'var(--text-main)',
                 letterSpacing: '0.02em',
@@ -380,7 +380,7 @@ export default function AcarsRosterPage() {
             </div>
             <div
               style={{
-                fontSize: 13,
+                fontSize: 14,
                 color: 'var(--text-muted)',
                 marginTop: 4,
               }}
@@ -389,7 +389,7 @@ export default function AcarsRosterPage() {
             </div>
             <div
               style={{
-                fontSize: 13,
+                fontSize: 14,
                 color: targetColor,
                 marginTop: 4,
                 letterSpacing: '0.05em',
@@ -471,7 +471,7 @@ export default function AcarsRosterPage() {
                 >
                   <div
                     style={{
-                      fontSize: 11,
+                      fontSize: 12,
                       color: isMe ? myColor : 'var(--text-muted)',
                       marginBottom: 4,
                     }}
@@ -482,7 +482,7 @@ export default function AcarsRosterPage() {
                       minute: '2-digit',
                     })}
                   </div>
-                  <div style={{ fontSize: 13, color: 'var(--text-main)' }}>{msg.text}</div>
+                  <div style={{ fontSize: 14, color: 'var(--text-main)' }}>{msg.text}</div>
                 </div>
               )
             })}
@@ -503,7 +503,7 @@ export default function AcarsRosterPage() {
                 border: '1px solid var(--line-base)',
                 borderRadius: 8,
                 color: 'var(--text-main)',
-                fontSize: 15,
+                fontSize: 14,
                 outline: 'none',
               }}
             />

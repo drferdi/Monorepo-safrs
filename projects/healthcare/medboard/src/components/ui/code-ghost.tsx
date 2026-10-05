@@ -171,7 +171,7 @@ export function CodeGhost() {
     >
       <pre
         style={{
-          fontSize: '13px',
+          fontSize: '14px',
           userSelect: 'none',
           textAlign: 'left',
           whiteSpace: 'pre',

@@ -73,7 +73,7 @@ function PanelError({ message }: { message: string }) {
     >
       <div
         style={{
-          fontSize: 10,
+          fontSize: 12,
           fontFamily: 'var(--font-mono)',
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
@@ -83,7 +83,7 @@ function PanelError({ message }: { message: string }) {
       >
         Trajectory Unavailable
       </div>
-      <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0 }}>{message}</p>
+      <p style={{ fontSize: 14, color: 'var(--text-muted)', margin: 0 }}>{message}</p>
     </div>
   )
 }
@@ -101,7 +101,7 @@ function PanelEmpty() {
         textAlign: 'center',
       }}
     >
-      <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+      <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>
         Pilih pasien untuk melihat analisis trajectory.
       </div>
     </div>
@@ -140,7 +140,7 @@ export function TrajectoryIntelligencePanel({
       {/* Header: section label */}
       <div
         style={{
-          fontSize: 10,
+          fontSize: 12,
           fontFamily: 'var(--font-mono)',
           letterSpacing: '0.2em',
           textTransform: 'uppercase',
@@ -205,7 +205,7 @@ export function TrajectoryIntelligencePanel({
         >
           <div
             style={{
-              fontSize: 10,
+              fontSize: 12,
               fontFamily: 'var(--font-mono)',
               letterSpacing: '0.18em',
               textTransform: 'uppercase',
@@ -215,13 +215,13 @@ export function TrajectoryIntelligencePanel({
           >
             Rekomendasi Tindakan
           </div>
-          <p style={{ fontSize: 13, color: 'var(--text-main)', margin: 0, lineHeight: 1.5 }}>
+          <p style={{ fontSize: 14, color: 'var(--text-main)', margin: 0, lineHeight: 1.5 }}>
             {data.clinical_safe_output.recommended_action}
           </p>
           <div
             style={{
               marginTop: 6,
-              fontSize: 10,
+              fontSize: 12,
               fontFamily: 'var(--font-mono)',
               color: 'var(--text-muted)',
             }}
@@ -232,7 +232,7 @@ export function TrajectoryIntelligencePanel({
           <div
             style={{
               marginTop: 8,
-              fontSize: 10,
+              fontSize: 12,
               color: 'var(--text-muted)',
               opacity: 0.6,
               fontStyle: 'italic',
@@ -246,7 +246,7 @@ export function TrajectoryIntelligencePanel({
       {/* Footer: summary */}
       <div
         style={{
-          fontSize: 11,
+          fontSize: 12,
           color: 'var(--text-muted)',
           lineHeight: 1.55,
           borderTop: '1px solid var(--line-base)',

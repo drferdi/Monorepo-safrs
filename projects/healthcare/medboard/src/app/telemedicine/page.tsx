@@ -366,7 +366,7 @@ function PatientFlowDiagram({ L }: { L: LTokens }) {
         }}
       >
         <SectionEyebrow L={L}>Pathway Pasien</SectionEyebrow>
-        <div style={{ fontSize: 13, color: L.muted }}>
+        <div style={{ fontSize: 14, color: L.muted }}>
           Tahapan praktis dari pembuatan appointment sampai pasien masuk ke room konsultasi.
         </div>
       </div>
@@ -441,7 +441,7 @@ function PatientFlowDiagram({ L }: { L: LTokens }) {
                 >
                   {step.label}
                 </div>
-                <div style={{ fontSize: 13, color: L.muted }}>{step.sub}</div>
+                <div style={{ fontSize: 14, color: L.muted }}>{step.sub}</div>
               </div>
             </div>
           </div>
@@ -522,7 +522,7 @@ function AppointmentRow({ L, appointment, onJoin }: AppointmentCardProps) {
         >
           <span
             style={{
-              fontSize: 13,
+              fontSize: 14,
               color: L.accent,
               letterSpacing: '0.05em',
               fontFamily: L.mono,
@@ -561,7 +561,7 @@ function AppointmentRow({ L, appointment, onJoin }: AppointmentCardProps) {
             {appointmentType}
           </span>
         </div>
-        <div style={{ fontSize: 18, color: L.text, marginBottom: 6 }}>
+        <div style={{ fontSize: 16, color: L.text, marginBottom: 6 }}>
           Pasien {appointment.patientId}
         </div>
         <div
@@ -572,26 +572,26 @@ function AppointmentRow({ L, appointment, onJoin }: AppointmentCardProps) {
             gap: 12,
           }}
         >
-          <span style={{ fontSize: 13, color: L.muted, fontFamily: L.mono }}>
+          <span style={{ fontSize: 14, color: L.muted, fontFamily: L.mono }}>
             {scheduledAt.toLocaleString('id-ID', {
               dateStyle: 'medium',
               timeStyle: 'short',
             })}
           </span>
           <span style={{ color: L.border }}>·</span>
-          <span style={{ fontSize: 13, color: L.muted }}>{appointment.durationMinutes}m</span>
+          <span style={{ fontSize: 14, color: L.muted }}>{appointment.durationMinutes}m</span>
           <span style={{ color: L.border }}>·</span>
-          <span style={{ fontSize: 13, color: L.muted }}>{appointment.doctorId}</span>
+          <span style={{ fontSize: 14, color: L.muted }}>{appointment.doctorId}</span>
           {appointment.patientPhone && (
             <>
               <span style={{ color: L.border }}>·</span>
-              <span style={{ fontSize: 13, color: L.muted }}>{appointment.patientPhone}</span>
+              <span style={{ fontSize: 14, color: L.muted }}>{appointment.patientPhone}</span>
             </>
           )}
           {appointment.keluhanUtama && (
             <>
               <span style={{ color: L.border }}>·</span>
-              <span style={{ fontSize: 13, color: L.muted, fontStyle: 'italic' }}>
+              <span style={{ fontSize: 14, color: L.muted, fontStyle: 'italic' }}>
                 {appointment.keluhanUtama.slice(0, 35)}
                 {appointment.keluhanUtama.length > 35 ? '…' : ''}
               </span>
@@ -686,7 +686,7 @@ function RequestInbox({
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           <SectionEyebrow L={L}>Triage Request</SectionEyebrow>
-          <div style={{ fontSize: 13, color: L.muted }}>
+          <div style={{ fontSize: 14, color: L.muted }}>
             Request masuk dari website untuk dipilah, ditindaklanjuti, atau diarsipkan.
           </div>
         </div>
@@ -719,7 +719,7 @@ function RequestInbox({
           }}
         >
           <Inbox size={24} style={{ opacity: 0.3 }} />
-          <div style={{ fontSize: 13 }}>belum ada request</div>
+          <div style={{ fontSize: 14 }}>belum ada request</div>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
@@ -895,7 +895,7 @@ function RequestInbox({
                 }}
               >
                 <Phone size={10} style={{ color: L.muted }} />
-                <span style={{ fontSize: 13, color: L.muted }}>{req.hp}</span>
+                <span style={{ fontSize: 14, color: L.muted }}>{req.hp}</span>
                 <span style={{ fontSize: 12, color: L.accent, fontFamily: L.mono }}>
                   {req.poli}
                 </span>
@@ -914,7 +914,7 @@ function RequestInbox({
               )}
               <div
                 style={{
-                  fontSize: 13,
+                  fontSize: 14,
                   color: L.muted,
                   fontStyle: 'italic',
                   marginBottom: req.status === 'PENDING' ? 8 : 0,
@@ -931,7 +931,7 @@ function RequestInbox({
                     border: `1px solid ${L.accent}`,
                     borderRadius: 3,
                     color: L.accent,
-                    fontSize: 11,
+                    fontSize: 12,
                     cursor: 'pointer',
                     fontFamily: L.mono,
                     letterSpacing: '0.05em',
@@ -1288,7 +1288,7 @@ export default function TelemedicinePage(): React.JSX.Element {
               <div>
                 <div
                   style={{
-                    fontSize: 11,
+                    fontSize: 12,
                     color: 'var(--text-muted)',
                     letterSpacing: '0.12em',
                     textTransform: 'uppercase',
@@ -1299,7 +1299,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                 </div>
                 <div
                   style={{
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: 700,
                     color: 'var(--text-primary)',
                   }}
@@ -1337,7 +1337,7 @@ export default function TelemedicinePage(): React.JSX.Element {
             >
               <div
                 style={{
-                  fontSize: 10,
+                  fontSize: 12,
                   color: 'var(--text-muted)',
                   textTransform: 'uppercase',
                   letterSpacing: '0.1em',
@@ -1346,7 +1346,7 @@ export default function TelemedicinePage(): React.JSX.Element {
               >
                 Keluhan Utama
               </div>
-              <div style={{ fontSize: 13, color: 'var(--text-primary)' }}>
+              <div style={{ fontSize: 14, color: 'var(--text-primary)' }}>
                 {activeConsult.keluhan_utama}
               </div>
             </div>
@@ -1385,7 +1385,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                     textAlign: 'center',
                   }}
                 >
-                  <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>{v.label}</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{v.label}</div>
                   <div
                     style={{
                       fontSize: 14,
@@ -1395,7 +1395,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                   >
                     {v.value}
                   </div>
-                  <div style={{ fontSize: 9, color: 'var(--text-muted)' }}>{v.unit}</div>
+                  <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{v.unit}</div>
                 </div>
               ))}
             </div>
@@ -1411,7 +1411,7 @@ export default function TelemedicinePage(): React.JSX.Element {
             >
               <div
                 style={{
-                  fontSize: 10,
+                  fontSize: 12,
                   color: 'var(--text-muted)',
                   textTransform: 'uppercase',
                   letterSpacing: '0.1em',
@@ -1455,7 +1455,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                   <span
                     key={`risk-${i}-${String(r).slice(0, 24)}`}
                     style={{
-                      fontSize: 10,
+                      fontSize: 12,
                       padding: '3px 8px',
                       borderRadius: 4,
                       background: 'rgba(239,68,68,0.15)',
@@ -1495,7 +1495,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                 >
                   <div
                     style={{
-                      fontSize: 10,
+                      fontSize: 12,
                       color: 'var(--text-muted)',
                       textTransform: 'uppercase',
                       letterSpacing: '0.1em',
@@ -1505,7 +1505,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                   </div>
                   <span
                     style={{
-                      fontSize: 10,
+                      fontSize: 12,
                       fontWeight: 700,
                       padding: '4px 8px',
                       borderRadius: 999,
@@ -1548,7 +1548,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                       background: 'rgba(255,255,255,0.03)',
                     }}
                   >
-                    <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 2 }}>
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 2 }}>
                       Canonical NEWS2
                     </div>
                     <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>
@@ -1567,7 +1567,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                       background: 'rgba(255,255,255,0.03)',
                     }}
                   >
-                    <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 2 }}>
+                    <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 2 }}>
                       Canonical Trajectory
                     </div>
                     <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>
@@ -1601,7 +1601,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                     <div
                       style={{
-                        fontSize: 10,
+                        fontSize: 12,
                         color: 'var(--text-muted)',
                         textTransform: 'uppercase',
                         letterSpacing: '0.1em',
@@ -1614,7 +1614,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                         <span
                           key={`canonical-action-${index}-${action.slice(0, 24)}`}
                           style={{
-                            fontSize: 10,
+                            fontSize: 12,
                             padding: '4px 8px',
                             borderRadius: 999,
                             background: canonicalSnapshotTone.pillBackground,
@@ -1672,7 +1672,7 @@ export default function TelemedicinePage(): React.JSX.Element {
         >
           <div
             style={{
-              fontSize: 11,
+              fontSize: 12,
               color: 'var(--text-muted)',
               textTransform: 'uppercase',
               letterSpacing: '0.1em',
@@ -1683,7 +1683,7 @@ export default function TelemedicinePage(): React.JSX.Element {
           </div>
           <div
             style={{
-              fontSize: 13,
+              fontSize: 14,
               fontWeight: 600,
               color: 'var(--text-primary)',
               marginBottom: 10,
@@ -1708,7 +1708,7 @@ export default function TelemedicinePage(): React.JSX.Element {
               borderRadius: 8,
               background: 'var(--bg-canvas)',
               color: 'var(--text-primary)',
-              fontSize: 13,
+              fontSize: 14,
             }}
           />
           {transferError && (
@@ -1819,7 +1819,7 @@ export default function TelemedicinePage(): React.JSX.Element {
             padding: '10px 18px',
             cursor: 'pointer',
             fontWeight: 600,
-            fontSize: 13,
+            fontSize: 14,
             boxShadow:
               topConsultTone.label === 'Risiko Tinggi'
                 ? '0 4px 20px rgba(239,68,68,0.5)'
@@ -1969,7 +1969,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                 <SectionEyebrow L={L}>Clinical Command Desk</SectionEyebrow>
                 <div
                   style={{
-                    fontSize: 26,
+                    fontSize: 28,
                     color: L.text,
                     marginTop: 8,
                     marginBottom: 8,
@@ -2099,8 +2099,8 @@ export default function TelemedicinePage(): React.JSX.Element {
                   <SectionEyebrow L={L} muted>
                     {item.label}
                   </SectionEyebrow>
-                  <div style={{ fontSize: 22, color: L.text }}>{item.value}</div>
-                  <div style={{ fontSize: 13, color: L.muted }}>{item.hint}</div>
+                  <div style={{ fontSize: 20, color: L.text }}>{item.value}</div>
+                  <div style={{ fontSize: 14, color: L.muted }}>{item.hint}</div>
                 </div>
               ))}
             </div>
@@ -2168,7 +2168,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                     {latestActive ? `Pasien ${latestActive.patientId}` : 'Belum ada pasien aktif'}
                   </div>
                 </div>
-                <div style={{ fontSize: 13, color: L.muted, lineHeight: 1.65 }}>
+                <div style={{ fontSize: 14, color: L.muted, lineHeight: 1.65 }}>
                   {latestActive
                     ? `Sesi terdekat dijadwalkan ${new Date(latestActive.scheduledAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}.`
                     : 'Buka form pembuatan konsultasi untuk mulai mengisi jalur timeline.'}
@@ -2213,7 +2213,7 @@ export default function TelemedicinePage(): React.JSX.Element {
             ) : appointments.length === 0 ? (
               <div style={{ padding: '56px 24px', textAlign: 'center' }}>
                 <Video size={36} style={{ opacity: 0.15, marginBottom: 16, color: L.muted }} />
-                <div style={{ fontSize: 15, color: L.text, marginBottom: 8 }}>
+                <div style={{ fontSize: 14, color: L.text, marginBottom: 8 }}>
                   timeline masih kosong
                 </div>
                 <div
@@ -2239,7 +2239,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                     borderRadius: 3,
                     color: '#ffffff',
                     boxShadow: L.actionNeumorph,
-                    fontSize: 13,
+                    fontSize: 14,
                     cursor: 'pointer',
                     fontFamily: L.mono,
                     letterSpacing: '0.05em',
@@ -2361,7 +2361,7 @@ export default function TelemedicinePage(): React.JSX.Element {
             <span
               style={{
                 fontFamily: L.mono,
-                fontSize: 11,
+                fontSize: 12,
                 letterSpacing: '0.15em',
                 color: L.muted,
                 textTransform: 'uppercase',
@@ -2396,7 +2396,7 @@ export default function TelemedicinePage(): React.JSX.Element {
             <span
               style={{
                 fontFamily: L.mono,
-                fontSize: 11,
+                fontSize: 12,
                 letterSpacing: '0.15em',
                 color: L.muted,
                 textTransform: 'uppercase',
@@ -2429,7 +2429,7 @@ export default function TelemedicinePage(): React.JSX.Element {
           <span
             style={{
               fontFamily: L.mono,
-              fontSize: 10,
+              fontSize: 12,
               letterSpacing: '0.1em',
               color: L.muted,
               opacity: 0.6,
@@ -2440,7 +2440,7 @@ export default function TelemedicinePage(): React.JSX.Element {
           <span
             style={{
               fontFamily: L.mono,
-              fontSize: 10,
+              fontSize: 12,
               letterSpacing: '0.1em',
               color: L.muted,
               opacity: 0.6,

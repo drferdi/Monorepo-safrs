@@ -51,7 +51,7 @@ function VitalLineChart({
 
   if (pts.length < 2) {
     return (
-      <div style={{ padding: '8px 0', color: 'var(--text-muted)', fontSize: 10 }}>
+      <div style={{ padding: '8px 0', color: 'var(--text-muted)', fontSize: 12 }}>
         {meta.label} — data tidak cukup
       </div>
     )
@@ -99,7 +99,7 @@ function VitalLineChart({
 
   return (
     <div style={{ marginBottom: 4 }}>
-      <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 2, fontFamily: 'var(--font-mono)' }}>
+      <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 2, fontFamily: 'var(--font-mono)' }}>
         {meta.label} <span style={{ opacity: 0.6 }}>({meta.unit})</span>
       </div>
       <svg width="100%" viewBox={`0 0 ${CHART_W} ${CHART_H}`} style={{ display: 'block' }}>
@@ -146,7 +146,7 @@ function VitalLineChart({
           y={toY(lastVal, yMin, yMax).toFixed(1)}
           textAnchor="end"
           dominantBaseline="middle"
-          fontSize={7.5}
+          fontSize={12}
           fill={lineColor}
           fontFamily="var(--font-mono)"
         >
@@ -154,10 +154,10 @@ function VitalLineChart({
         </text>
 
         {/* X axis date labels */}
-        <text x={PAD.left} y={CHART_H - 2} textAnchor="start" fontSize={7} fill="var(--text-muted)" fontFamily="var(--font-mono)">
+        <text x={PAD.left} y={CHART_H - 2} textAnchor="start" fontSize={12} fill="var(--text-muted)" fontFamily="var(--font-mono)">
           {xLabel0}
         </text>
-        <text x={PAD.left + INNER_W} y={CHART_H - 2} textAnchor="end" fontSize={7} fill="var(--text-muted)" fontFamily="var(--font-mono)">
+        <text x={PAD.left + INNER_W} y={CHART_H - 2} textAnchor="end" fontSize={12} fill="var(--text-muted)" fontFamily="var(--font-mono)">
           {xLabel1}
         </text>
       </svg>
@@ -189,7 +189,7 @@ export function VitalTrendChart({ snapshots, baseline }: VitalTrendChartProps) {
     >
       <div
         style={{
-          fontSize: 10,
+          fontSize: 12,
           fontFamily: 'var(--font-mono)',
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
@@ -210,7 +210,7 @@ export function VitalTrendChart({ snapshots, baseline }: VitalTrendChartProps) {
               key={k}
               onClick={() => setActiveKey(k)}
               style={{
-                fontSize: 9,
+                fontSize: 12,
                 fontFamily: 'var(--font-mono)',
                 padding: '2px 8px',
                 borderRadius: 4,
@@ -232,15 +232,15 @@ export function VitalTrendChart({ snapshots, baseline }: VitalTrendChartProps) {
       <div style={{ display: 'flex', gap: 12, marginTop: 6, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           <div style={{ width: 16, height: 2, background: 'var(--c-asesmen)', opacity: 0.5 }} />
-          <span style={{ fontSize: 8, color: 'var(--text-muted)' }}>Baseline ±1SD</span>
+          <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Baseline ±1SD</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           <div style={{ width: 16, height: 2, background: 'var(--c-ok)' }} />
-          <span style={{ fontSize: 8, color: 'var(--text-muted)' }}>Dalam baseline</span>
+          <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Dalam baseline</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           <div style={{ width: 16, height: 2, background: 'var(--c-critical)' }} />
-          <span style={{ fontSize: 8, color: 'var(--text-muted)' }}>Di luar baseline</span>
+          <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Di luar baseline</span>
         </div>
       </div>
     </div>

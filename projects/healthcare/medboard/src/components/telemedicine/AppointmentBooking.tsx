@@ -64,7 +64,7 @@ function getNext7Days(): string[] {
 const FieldLabel = ({ children }: { children: React.ReactNode }) => (
   <div
     style={{
-      fontSize: 13,
+      fontSize: 14,
       color: L.muted,
       letterSpacing: '0.12em',
       textTransform: 'uppercase',
@@ -171,14 +171,14 @@ export function AppointmentBooking({
             <div key={num} style={{ display: 'flex', alignItems: 'center' }}>
               <span
                 style={{
-                  fontSize: 13,
+                  fontSize: 14,
                   letterSpacing: '0.08em',
                   color: isDone ? L.accent : isActive ? L.accent : L.muted,
                 }}
               >
                 {isDone ? '✓' : `0${num}`} {label.toUpperCase()}
               </span>
-              {i < 2 && <span style={{ color: L.border, margin: '0 10px', fontSize: 13 }}>›</span>}
+              {i < 2 && <span style={{ color: L.border, margin: '0 10px', fontSize: 14 }}>›</span>}
             </div>
           )
         })}
@@ -243,7 +243,7 @@ export function AppointmentBooking({
                       <div style={{ display: 'grid', gap: 3 }}>
                         <div
                           style={{
-                            fontSize: 15,
+                            fontSize: 14,
                             color: sel ? '#ffffff' : L.text,
                           }}
                         >
@@ -251,7 +251,7 @@ export function AppointmentBooking({
                         </div>
                         <div
                           style={{
-                            fontSize: 13,
+                            fontSize: 14,
                             color: L.muted,
                             letterSpacing: '0.08em',
                           }}
@@ -316,7 +316,7 @@ export function AppointmentBooking({
                         border: `1px solid ${sel ? 'rgba(255,255,255,0.06)' : L.border}`,
                         borderRadius: 2,
                         color: sel ? '#f1ece3' : L.muted,
-                        fontSize: 13,
+                        fontSize: 14,
                         cursor: 'pointer',
                         boxShadow: sel ? L.actionNeumorph : 'none',
                         transition: 'all 0.15s ease',
@@ -350,7 +350,7 @@ export function AppointmentBooking({
                         border: `1px solid ${isSel ? L.accent : L.border}`,
                         borderRadius: 2,
                         color: isSel ? L.accent : L.muted,
-                        fontSize: 13,
+                        fontSize: 14,
                         letterSpacing: '0.05em',
                         cursor: 'pointer',
                       }}
@@ -390,7 +390,7 @@ export function AppointmentBooking({
             ) : slots.length === 0 ? (
               <div
                 style={{
-                  fontSize: 13,
+                  fontSize: 14,
                   color: L.muted,
                   textAlign: 'center',
                   padding: '20px 0',
@@ -427,7 +427,7 @@ export function AppointmentBooking({
                             : isSel
                               ? L.accent
                               : L.muted,
-                          fontSize: 13,
+                          fontSize: 14,
                           cursor: slot.isAvailable ? 'pointer' : 'not-allowed',
                         }}
                       >
@@ -476,7 +476,7 @@ export function AppointmentBooking({
             >
               <div
                 style={{
-                  fontSize: 13,
+                  fontSize: 14,
                   color: L.muted,
                   letterSpacing: '0.12em',
                   marginBottom: 8,
@@ -509,8 +509,8 @@ export function AppointmentBooking({
                     borderBottom: `1px solid ${L.border}`,
                   }}
                 >
-                  <span style={{ fontSize: 13, color: L.muted }}>{k}</span>
-                  <span style={{ fontSize: 13, color: L.text }}>{v}</span>
+                  <span style={{ fontSize: 14, color: L.muted }}>{k}</span>
+                  <span style={{ fontSize: 14, color: L.text }}>{v}</span>
                 </div>
               ))}
             </div>
@@ -518,7 +518,7 @@ export function AppointmentBooking({
             {error && (
               <div
                 style={{
-                  fontSize: 13,
+                  fontSize: 14,
                   color: '#f87171',
                   background: 'rgba(239,68,68,0.08)',
                   border: '1px solid rgba(239,68,68,0.2)',
@@ -545,7 +545,7 @@ export function AppointmentBooking({
           <button
             onClick={step === 1 ? onCancel : () => setStep(s => (s - 1) as 1 | 2)}
             style={{
-              fontSize: 13,
+              fontSize: 14,
               color: L.muted,
               background: 'none',
               border: 'none',
@@ -571,7 +571,7 @@ export function AppointmentBooking({
                 border: `1px solid ${(step === 1 ? !canNext1 : !canNext2) ? L.border : L.accent}`,
                 borderRadius: 2,
                 color: (step === 1 ? !canNext1 : !canNext2) ? L.muted : L.accent,
-                fontSize: 13,
+                fontSize: 14,
                 cursor: (step === 1 ? !canNext1 : !canNext2) ? 'not-allowed' : 'pointer',
               }}
             >
@@ -590,7 +590,7 @@ export function AppointmentBooking({
                 border: `1px solid ${L.accent}`,
                 borderRadius: 2,
                 color: L.accent,
-                fontSize: 13,
+                fontSize: 14,
                 cursor: isSaving ? 'not-allowed' : 'pointer',
                 opacity: isSaving ? 0.6 : 1,
               }}

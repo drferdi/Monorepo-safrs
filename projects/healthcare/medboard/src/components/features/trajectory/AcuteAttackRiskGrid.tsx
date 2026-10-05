@@ -63,7 +63,7 @@ export function AcuteAttackRiskGrid({ risks, className }: AcuteAttackRiskGridPro
       >
         <div
           style={{
-            fontSize: 10,
+            fontSize: 12,
             fontFamily: 'var(--font-mono)',
             letterSpacing: '0.18em',
             textTransform: 'uppercase',
@@ -76,7 +76,7 @@ export function AcuteAttackRiskGrid({ risks, className }: AcuteAttackRiskGridPro
           onClick={() => setShowRadar((v) => !v)}
           aria-label={showRadar ? 'Tampilkan grid' : 'Tampilkan radar'}
           style={{
-            fontSize: 9,
+            fontSize: 12,
             fontFamily: 'var(--font-mono)',
             letterSpacing: '0.1em',
             textTransform: 'uppercase',
@@ -121,7 +121,7 @@ export function AcuteAttackRiskGrid({ risks, className }: AcuteAttackRiskGridPro
             >
               <div
                 style={{
-                  fontSize: 10,
+                  fontSize: 12,
                   color: 'var(--text-muted)',
                   lineHeight: 1.3,
                   marginBottom: 6,
@@ -141,7 +141,7 @@ export function AcuteAttackRiskGrid({ risks, className }: AcuteAttackRiskGridPro
                 >
                   {score}
                 </span>
-                <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>/100</span>
+                <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>/100</span>
               </div>
               {/* Mini bar */}
               <div

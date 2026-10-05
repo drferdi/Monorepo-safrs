@@ -43,7 +43,7 @@ export default function IntelligenceDashboardLiveStatus(): React.JSX.Element {
         />
         <div
           style={{
-            fontSize: 13,
+            fontSize: 14,
             fontFamily: 'var(--font-mono)',
             letterSpacing: '0.1em',
             color: isLive ? 'var(--c-ok)' : 'var(--text-muted)',

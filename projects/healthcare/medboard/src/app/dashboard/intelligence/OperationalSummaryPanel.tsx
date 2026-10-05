@@ -68,7 +68,7 @@ export function OperationalSummaryPanelContent({
         >
           <div
             style={{
-              fontSize: 10,
+              fontSize: 12,
               fontFamily: 'var(--font-mono)',
               letterSpacing: '0.18em',
               textTransform: 'uppercase',

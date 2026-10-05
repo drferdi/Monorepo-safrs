@@ -68,7 +68,7 @@ export default function TypewriterText() {
     >
       <span
         style={{
-          fontSize: 13,
+          fontSize: 14,
           color: 'var(--c-asesmen)',
           letterSpacing: '0.02em',
         }}

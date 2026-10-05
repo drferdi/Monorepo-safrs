@@ -165,7 +165,7 @@ export default function PatientJoinPage(): React.JSX.Element {
     return (
       <div style={fullCenter}>
         <AlertCircle size={48} style={{ color: '#f87171', marginBottom: 16 }} />
-        <h2 style={{ color: '#fff', fontSize: 18, marginBottom: 8 }}>Link Tidak Valid</h2>
+        <h2 style={{ color: '#fff', fontSize: 16, marginBottom: 8 }}>Link Tidak Valid</h2>
         <p
           style={{
             color: 'rgba(255,255,255,0.5)',
@@ -255,7 +255,7 @@ export default function PatientJoinPage(): React.JSX.Element {
             <p
               style={{
                 color: 'rgba(255,255,255,0.5)',
-                fontSize: 13,
+                fontSize: 14,
                 fontWeight: 600,
                 textTransform: 'uppercase',
                 letterSpacing: '0.08em',
@@ -268,7 +268,7 @@ export default function PatientJoinPage(): React.JSX.Element {
             <p
               style={{
                 color: 'rgba(255,255,255,0.5)',
-                fontSize: 13,
+                fontSize: 14,
                 margin: '4px 0 0',
               }}
             >
@@ -321,7 +321,7 @@ export default function PatientJoinPage(): React.JSX.Element {
               border: 'none',
               borderRadius: 12,
               color: '#fff',
-              fontSize: 15,
+              fontSize: 14,
               fontWeight: 700,
               cursor: displayName.trim() ? 'pointer' : 'not-allowed',
               transition: 'background 0.2s',
@@ -333,7 +333,7 @@ export default function PatientJoinPage(): React.JSX.Element {
           <p
             style={{
               color: 'rgba(255,255,255,0.3)',
-              fontSize: 13,
+              fontSize: 14,
               textAlign: 'center',
               marginTop: 16,
             }}

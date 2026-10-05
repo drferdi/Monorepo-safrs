@@ -257,7 +257,7 @@ export default function HubProfileDetailPage() {
           <p
             style={{
               margin: 0,
-              fontSize: 11,
+              fontSize: 12,
               letterSpacing: '0.18em',
               color: 'var(--text-muted)',
             }}
@@ -441,7 +441,7 @@ export default function HubProfileDetailPage() {
                         <span
                           key={item}
                           style={{
-                            fontSize: 11,
+                            fontSize: 12,
                             color: 'var(--text-muted)',
                             padding: '5px 10px',
                             borderRadius: 999,
@@ -455,7 +455,7 @@ export default function HubProfileDetailPage() {
                     ) : (
                       <span
                         style={{
-                          fontSize: 11,
+                          fontSize: 12,
                           color: 'var(--text-muted)',
                           padding: '5px 10px',
                           borderRadius: 999,
@@ -471,7 +471,7 @@ export default function HubProfileDetailPage() {
                   {/* Ringkasan profile — humanized */}
                   <div
                     style={{
-                      fontSize: 12.5,
+                      fontSize: 14,
                       color: 'var(--text-muted)',
                       lineHeight: 1.65,
                       marginTop: 4,
@@ -494,7 +494,7 @@ export default function HubProfileDetailPage() {
                   <div style={{ marginTop: 6 }}>
                     <div
                       style={{
-                        fontSize: 11,
+                        fontSize: 12,
                         color: 'var(--text-muted)',
                         letterSpacing: '0.12em',
                         textTransform: 'uppercase',
@@ -607,7 +607,7 @@ export default function HubProfileDetailPage() {
                   >
                     <span
                       style={{
-                        fontSize: 10,
+                        fontSize: 12,
                         color: 'var(--text-muted)',
                         textTransform: 'uppercase',
                         letterSpacing: '0.1em',
@@ -618,7 +618,7 @@ export default function HubProfileDetailPage() {
                     </span>
                     <span
                       style={{
-                        fontSize: 13,
+                        fontSize: 14,
                         color: 'var(--text-main)',
                         lineHeight: 1.45,
                       }}

@@ -100,7 +100,7 @@ export function AcuteAttackRiskRadar({ risks }: AcuteAttackRiskRadarProps) {
     >
       <div
         style={{
-          fontSize: 10,
+          fontSize: 12,
           fontFamily: 'var(--font-mono)',
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
@@ -173,7 +173,7 @@ export function AcuteAttackRiskRadar({ risks }: AcuteAttackRiskRadarProps) {
             y={lp.y.toFixed(2)}
             textAnchor={textAnchor(AXIS_ANGLES[i])}
             dominantBaseline="middle"
-            fontSize={8.5}
+            fontSize={12}
             fill="var(--text-muted)"
             fontFamily="var(--font-sans)"
           >
@@ -186,7 +186,7 @@ export function AcuteAttackRiskRadar({ risks }: AcuteAttackRiskRadarProps) {
           x={CX} y={CY}
           textAnchor="middle"
           dominantBaseline="middle"
-          fontSize={11}
+          fontSize={12}
           fontWeight={700}
           fill={strokeColor}
           fontFamily="var(--font-mono)"

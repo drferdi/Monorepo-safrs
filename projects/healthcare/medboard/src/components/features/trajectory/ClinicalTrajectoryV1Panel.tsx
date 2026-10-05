@@ -112,7 +112,7 @@ export function ClinicalTrajectoryV1Panel({ trajectory, className }: Props) {
           <div style={{ flex: '1 1 240px' }}>
             <div
               style={{
-                fontSize: 10,
+                fontSize: 12,
                 textTransform: 'uppercase',
                 letterSpacing: '0.18em',
                 color: 'var(--text-muted)',
@@ -121,7 +121,7 @@ export function ClinicalTrajectoryV1Panel({ trajectory, className }: Props) {
             >
               ClinicalTrajectory v1
             </div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: 'var(--text-main)' }}>
+            <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-main)' }}>
               {formatValue(trajectory.response.direction)}
             </div>
             <div style={{ color: 'var(--text-muted)', marginTop: 4, lineHeight: 1.5 }}>
@@ -242,7 +242,7 @@ function MiniStat({ label, value }: { label: string; value: string }) {
     >
       <div
         style={{
-          fontSize: 10,
+          fontSize: 12,
           textTransform: 'uppercase',
           letterSpacing: '0.16em',
           color: 'var(--text-muted)',
@@ -268,7 +268,7 @@ function PanelBlock({ title, children }: { title: string; children: ReactNode })
     >
       <div
         style={{
-          fontSize: 10,
+          fontSize: 12,
           textTransform: 'uppercase',
           letterSpacing: '0.16em',
           color: 'var(--text-muted)',

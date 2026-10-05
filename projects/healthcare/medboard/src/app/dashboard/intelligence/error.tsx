@@ -27,7 +27,7 @@ export default function IntelligenceDashboardError({
       >
         <div
           style={{
-            fontSize: 10,
+            fontSize: 12,
             fontFamily: 'var(--font-mono)',
             letterSpacing: '0.2em',
             textTransform: 'uppercase',
@@ -71,7 +71,7 @@ export default function IntelligenceDashboardError({
             borderRadius: 4,
             border: '1px solid var(--line-base)',
             padding: '8px 16px',
-            fontSize: 13,
+            fontSize: 14,
             fontFamily: 'var(--font-mono)',
             color: 'var(--text-main)',
             background: 'transparent',

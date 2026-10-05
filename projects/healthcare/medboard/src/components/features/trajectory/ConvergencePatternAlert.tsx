@@ -51,7 +51,7 @@ export function ConvergencePatternAlert({ convergence, className }: ConvergenceP
         <div style={{ flex: 1 }}>
           <div
             style={{
-              fontSize: 10,
+              fontSize: 12,
               fontFamily: 'var(--font-mono)',
               letterSpacing: '0.18em',
               textTransform: 'uppercase',
@@ -67,7 +67,7 @@ export function ConvergencePatternAlert({ convergence, className }: ConvergenceP
         </div>
         <div
           style={{
-            fontSize: 11,
+            fontSize: 12,
             fontFamily: 'var(--font-mono)',
             color: severityColor,
             border: `1px solid color-mix(in srgb, ${severityColor} 35%, transparent)`,
@@ -80,7 +80,7 @@ export function ConvergencePatternAlert({ convergence, className }: ConvergenceP
       </div>
 
       {/* Narrative */}
-      <p style={{ fontSize: 13, color: 'var(--text-main)', lineHeight: 1.55, margin: '0 0 10px' }}>
+      <p style={{ fontSize: 14, color: 'var(--text-main)', lineHeight: 1.55, margin: '0 0 10px' }}>
         {convergence.narrative}
       </p>
 
@@ -91,7 +91,7 @@ export function ConvergencePatternAlert({ convergence, className }: ConvergenceP
             <span
               key={param}
               style={{
-                fontSize: 11,
+                fontSize: 12,
                 fontFamily: 'var(--font-mono)',
                 color: severityColor,
                 background: `color-mix(in srgb, ${severityColor} 15%, transparent)`,

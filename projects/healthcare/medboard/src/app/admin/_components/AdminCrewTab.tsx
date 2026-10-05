@@ -141,7 +141,7 @@ export default function AdminCrewTab() {
         style={{
           padding: '40px 0',
           color: 'var(--text-muted)',
-          fontSize: 13,
+          fontSize: 14,
           letterSpacing: '0.1em',
         }}
       >
@@ -218,7 +218,7 @@ export default function AdminCrewTab() {
       <p
         style={{
           margin: '0 0 14px',
-          fontSize: 11,
+          fontSize: 12,
           color: 'var(--text-muted)',
           letterSpacing: '0.1em',
         }}
@@ -257,7 +257,7 @@ export default function AdminCrewTab() {
                     key={h}
                     style={{
                       padding: '10px 14px',
-                      fontSize: 10,
+                      fontSize: 12,
                       letterSpacing: '0.12em',
                       color: 'var(--text-muted)',
                       fontWeight: 600,
@@ -310,7 +310,7 @@ export default function AdminCrewTab() {
                         <div>
                           <div
                             style={{
-                              fontSize: 13,
+                              fontSize: 14,
                               fontWeight: 500,
                               color: 'var(--text-main)',
                             }}
@@ -318,7 +318,7 @@ export default function AdminCrewTab() {
                             {u.profile?.fullName || u.displayName}
                             {degrees}
                           </div>
-                          <div style={{ fontSize: 10, color: 'var(--text-muted)' }}>
+                          <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
                             @{u.username}
                           </div>
                         </div>
@@ -345,7 +345,7 @@ export default function AdminCrewTab() {
                     <td
                       style={{
                         padding: '10px 14px',
-                        fontSize: 11,
+                        fontSize: 12,
                         color: 'var(--text-muted)',
                       }}
                     >
@@ -354,7 +354,7 @@ export default function AdminCrewTab() {
                     <td style={{ padding: '10px 14px' }}>
                       <span
                         style={{
-                          fontSize: 10,
+                          fontSize: 12,
                           fontWeight: 600,
                           letterSpacing: '0.08em',
                           padding: '2px 8px',
@@ -397,7 +397,7 @@ const selectStyle: React.CSSProperties = {
   border: '1px solid var(--line-base)',
   background: 'var(--bg-nav)',
   color: 'var(--text-main)',
-  fontSize: 11,
+  fontSize: 12,
   outline: 'none',
   cursor: 'pointer',
 }
@@ -415,7 +415,7 @@ const inputStyle: React.CSSProperties = {
 
 const labelStyle: React.CSSProperties = {
   display: 'block',
-  fontSize: 10,
+  fontSize: 12,
   letterSpacing: '0.1em',
   color: 'var(--text-muted)',
   marginBottom: 4,
@@ -711,7 +711,7 @@ function UserEditPanel({
         <div>
           <span
             style={{
-              fontSize: 11,
+              fontSize: 12,
               letterSpacing: '0.15em',
               color: 'var(--text-muted)',
               fontWeight: 600,
@@ -721,7 +721,7 @@ function UserEditPanel({
           </span>
           <span
             style={{
-              fontSize: 13,
+              fontSize: 14,
               color: 'var(--text-main)',
               marginLeft: 12,
               fontWeight: 500,
@@ -736,7 +736,7 @@ function UserEditPanel({
             border: 'none',
             background: 'transparent',
             color: 'var(--text-muted)',
-            fontSize: 18,
+            fontSize: 16,
             cursor: 'pointer',
             padding: '0 4px',
             lineHeight: 1,
@@ -759,7 +759,7 @@ function UserEditPanel({
           <p
             style={{
               margin: '0 0 14px',
-              fontSize: 10,
+              fontSize: 12,
               letterSpacing: '0.15em',
               color: 'var(--text-muted)',
               fontWeight: 600,
@@ -841,7 +841,7 @@ function UserEditPanel({
                 border: 'none',
                 background: saving ? 'rgba(230,126,34,0.3)' : '#E67E22',
                 color: '#fff',
-                fontSize: 11,
+                fontSize: 12,
                 fontWeight: 600,
                 letterSpacing: '0.08em',
                 cursor: saving ? 'not-allowed' : 'pointer',
@@ -856,7 +856,7 @@ function UserEditPanel({
             <p
               style={{
                 margin: '0 0 6px',
-                fontSize: 10,
+                fontSize: 12,
                 letterSpacing: '0.15em',
                 color: 'var(--text-muted)',
                 fontWeight: 600,
@@ -884,7 +884,7 @@ function UserEditPanel({
                   style={{
                     ...actionBtnStyle,
                     padding: '7px 14px',
-                    fontSize: 10,
+                    fontSize: 12,
                   }}
                 >
                   SET
@@ -897,7 +897,7 @@ function UserEditPanel({
                   style={{
                     ...actionBtnStyle,
                     padding: '7px 10px',
-                    fontSize: 10,
+                    fontSize: 12,
                     color: 'var(--text-muted)',
                   }}
                 >
@@ -909,7 +909,7 @@ function UserEditPanel({
               <p
                 style={{
                   margin: 0,
-                  fontSize: 11,
+                  fontSize: 12,
                   color: pwMsg.includes('berhasil') ? '#4CAF50' : 'var(--c-critical)',
                 }}
               >
@@ -941,7 +941,7 @@ function UserEditPanel({
           <p
             style={{
               margin: '0 0 14px',
-              fontSize: 10,
+              fontSize: 12,
               letterSpacing: '0.15em',
               color: 'var(--text-muted)',
               fontWeight: 600,
@@ -1069,7 +1069,7 @@ function UserEditPanel({
                         background: 'rgba(230,126,34,0.12)',
                         border: '1px solid rgba(230,126,34,0.3)',
                         color: 'var(--c-asesmen)',
-                        fontSize: 10,
+                        fontSize: 12,
                         fontWeight: 600,
                         display: 'inline-flex',
                         alignItems: 'center',
@@ -1111,7 +1111,7 @@ function UserEditPanel({
                   <p
                     style={{
                       margin: '0 0 4px',
-                      fontSize: 9,
+                      fontSize: 12,
                       letterSpacing: '0.12em',
                       color: 'var(--text-muted)',
                       fontWeight: 600,
@@ -1139,7 +1139,7 @@ function UserEditPanel({
                   <p
                     style={{
                       margin: '0 0 4px',
-                      fontSize: 9,
+                      fontSize: 12,
                       letterSpacing: '0.12em',
                       color: 'var(--text-muted)',
                       fontWeight: 600,
@@ -1241,7 +1241,7 @@ function UserEditPanel({
                 border: 'none',
                 background: saving ? 'rgba(230,126,34,0.3)' : '#E67E22',
                 color: '#fff',
-                fontSize: 11,
+                fontSize: 12,
                 fontWeight: 600,
                 letterSpacing: '0.08em',
                 cursor: saving ? 'not-allowed' : 'pointer',
@@ -1264,7 +1264,7 @@ const actionBtnStyle: React.CSSProperties = {
   border: '1px solid var(--line-base)',
   background: 'transparent',
   color: 'var(--text-main)',
-  fontSize: 11,
+  fontSize: 12,
   fontWeight: 600,
   letterSpacing: '0.08em',
   cursor: 'pointer',
@@ -1293,7 +1293,7 @@ function ChipToggle({
         border: active ? '1px solid rgba(230,126,34,0.4)' : '1px solid var(--line-base)',
         background: active ? 'rgba(230,126,34,0.1)' : 'transparent',
         color: active ? 'var(--c-asesmen)' : disabled ? 'var(--text-muted)' : 'var(--text-muted)',
-        fontSize: 10,
+        fontSize: 12,
         fontWeight: active ? 600 : 400,
         cursor: disabled ? 'not-allowed' : 'pointer',
         letterSpacing: '0.04em',

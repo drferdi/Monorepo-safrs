@@ -190,7 +190,7 @@ export default function EMRTransferPanel() {
         }}
       >
         <span>SENTRA / EMR AUTO-FILL ENGINE</span>
-        <span style={{ fontSize: 10 }}>{stateLabels[transferState]}</span>
+        <span style={{ fontSize: 12 }}>{stateLabels[transferState]}</span>
       </div>
 
       {/* Form */}
@@ -224,7 +224,7 @@ export default function EMRTransferPanel() {
                 border: '1px solid var(--line-base, #2a2a2a)',
                 color: 'var(--text-base, #ccc)',
                 padding: '4px 8px',
-                fontSize: 11,
+                fontSize: 12,
               }}
             />
           </div>
@@ -245,7 +245,7 @@ export default function EMRTransferPanel() {
                 setDiagnosisNama(name)
               }}
               placeholder="Cari penyakit atau kode ICD-10..."
-              fontSize={11}
+              fontSize={12}
             />
           </div>
         </div>
@@ -271,7 +271,7 @@ export default function EMRTransferPanel() {
               border: '1px solid var(--line-base, #2a2a2a)',
               color: 'var(--text-base, #ccc)',
               padding: '4px 8px',
-              fontSize: 11,
+              fontSize: 12,
               resize: 'vertical',
             }}
           />
@@ -299,7 +299,7 @@ export default function EMRTransferPanel() {
                 border: '1px solid var(--line-base, #2a2a2a)',
                 color: 'var(--text-base, #ccc)',
                 padding: '4px 8px',
-                fontSize: 11,
+                fontSize: 12,
               }}
             />
           </div>
@@ -318,7 +318,7 @@ export default function EMRTransferPanel() {
                 ? 'var(--c-asesmen, #a855f7)'
                 : 'var(--text-muted)',
             padding: '6px 12px',
-            fontSize: 11,
+            fontSize: 12,
             cursor: keluhanUtama.trim() && transferState !== 'running' ? 'pointer' : 'default',
             letterSpacing: 1,
           }}
@@ -384,14 +384,14 @@ export default function EMRTransferPanel() {
               border: 'none',
               color: 'var(--text-muted)',
               cursor: 'pointer',
-              fontSize: 11,
+              fontSize: 12,
             }}
           >
             {historyLoading ? '...' : '↺ REFRESH'}
           </button>
         </div>
         {history.length === 0 ? (
-          <div style={{ color: 'var(--text-muted)', opacity: 0.4, fontSize: 11 }}>
+          <div style={{ color: 'var(--text-muted)', opacity: 0.4, fontSize: 12 }}>
             Belum ada riwayat.
           </div>
         ) : (
@@ -409,7 +409,7 @@ export default function EMRTransferPanel() {
                     : entry.state === 'partial'
                       ? '#f59e0b'
                       : '#ef4444',
-                fontSize: 11,
+                fontSize: 12,
               }}
             >
               <span>{new Date(entry.timestamp).toLocaleString('id-ID')}</span>
@@ -425,7 +425,7 @@ export default function EMRTransferPanel() {
           style={{
             padding: '4px 12px',
             color: '#ef4444',
-            fontSize: 10,
+            fontSize: 12,
             borderTop: '1px solid var(--line-base)',
           }}
         >

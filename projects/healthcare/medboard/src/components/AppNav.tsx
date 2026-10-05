@@ -182,7 +182,7 @@ export default function AppNav() {
               <div>
                 <div
                   style={{
-                    fontSize: 11,
+                    fontSize: 12,
                     fontWeight: 400,
                     color: '#8a8278',
                     letterSpacing: '0.12em',
@@ -194,7 +194,7 @@ export default function AppNav() {
                 <div
                   className="nav-dashboard-title"
                   style={{
-                    fontSize: 15,
+                    fontSize: 14,
                     fontWeight: 700,
                     letterSpacing: '0.06em',
                     lineHeight: 1.2,
@@ -282,7 +282,7 @@ export default function AppNav() {
               style={{
                 marginBottom: 8,
                 color: '#f87171',
-                fontSize: 11,
+                fontSize: 12,
                 lineHeight: 1.3,
               }}
             >
@@ -337,7 +337,7 @@ export default function AppNav() {
                 {/* Crew Label */}
                 <span
                   style={{
-                    fontSize: 10,
+                    fontSize: 12,
                     letterSpacing: '0.2em',
                     color: '#666',
                     textTransform: 'uppercase',

@@ -77,7 +77,7 @@ export default function TrajectoryMonitorPanel(): React.JSX.Element {
       >
         <div
           style={{
-            fontSize: 10,
+            fontSize: 12,
             fontFamily: 'var(--font-mono)',
             letterSpacing: '0.18em',
             textTransform: 'uppercase',
@@ -87,7 +87,7 @@ export default function TrajectoryMonitorPanel(): React.JSX.Element {
         >
           Clinical Momentum Engine
         </div>
-        <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: '0 0 14px' }}>
+        <p style={{ fontSize: 14, color: 'var(--text-muted)', margin: '0 0 14px' }}>
           Tempel 64-char patient identifier hash untuk membuka trajectory analysis tanpa perlu
           mengubah URL manual.
         </p>
@@ -152,7 +152,7 @@ export default function TrajectoryMonitorPanel(): React.JSX.Element {
         )}
         <div
           style={{
-            fontSize: 10,
+            fontSize: 12,
             fontFamily: 'var(--font-mono)',
             color: 'var(--text-muted)',
             opacity: 0.5,

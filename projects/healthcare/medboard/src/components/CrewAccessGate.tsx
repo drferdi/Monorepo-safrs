@@ -78,7 +78,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
     border: '1px solid var(--line-base)',
     background: 'var(--bg-canvas)',
     color: 'var(--text-main)',
-    fontSize: 15,
+    fontSize: 14,
     padding: '0 14px',
     outline: 'none',
   }
@@ -348,7 +348,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
           background: 'var(--bg-canvas)',
           color: 'var(--text-muted)',
           letterSpacing: '0.08em',
-          fontSize: 13,
+          fontSize: 14,
         }}
       >
         VERIFYING CREW ACCESS...
@@ -385,7 +385,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
             <p
               style={{
                 margin: 0,
-                fontSize: 13,
+                fontSize: 14,
                 letterSpacing: '0.16em',
                 color: 'var(--c-asesmen)',
               }}
@@ -456,7 +456,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
               style={{
                 margin: '10px 0 4px',
                 fontWeight: 600,
-                fontSize: 26,
+                fontSize: 28,
                 color: 'var(--text-main)',
               }}
             >
@@ -493,7 +493,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                     border: '1px solid var(--line-base)',
                     background: 'var(--bg-canvas)',
                     color: 'var(--text-main)',
-                    fontSize: 15,
+                    fontSize: 14,
                     padding: '0 14px',
                     outline: 'none',
                   }}
@@ -514,7 +514,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                     border: '1px solid var(--line-base)',
                     background: 'var(--bg-canvas)',
                     color: 'var(--text-main)',
-                    fontSize: 15,
+                    fontSize: 14,
                     padding: '0 14px',
                     outline: 'none',
                   }}
@@ -557,7 +557,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                 <p
                   style={{
                     margin: 0,
-                    fontSize: 13,
+                    fontSize: 14,
                     color: 'var(--text-muted)',
                     letterSpacing: '0.04em',
                   }}
@@ -669,7 +669,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                       <div style={{ display: 'grid', gap: 2 }}>
                         <span
                           style={{
-                            fontSize: 13,
+                            fontSize: 14,
                             color: 'var(--text-main)',
                             letterSpacing: '0.04em',
                           }}
@@ -776,7 +776,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                                   ? 'rgba(212,122,87,0.16)'
                                   : 'var(--bg-canvas)',
                                 color: isSelected ? 'var(--text-main)' : 'var(--text-muted)',
-                                fontSize: 13,
+                                fontSize: 14,
                                 cursor: 'pointer',
                               }}
                             >
@@ -823,7 +823,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                                 : '1px solid var(--line-base)',
                               background: isSelected ? 'rgba(212,122,87,0.16)' : 'var(--bg-canvas)',
                               color: isSelected ? 'var(--text-main)' : 'var(--text-muted)',
-                              fontSize: 13,
+                              fontSize: 14,
                               cursor: isDisabled ? 'not-allowed' : 'pointer',
                               opacity: isDisabled ? 0.45 : 1,
                               textAlign: 'left',
@@ -837,7 +837,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                     <p
                       style={{
                         margin: 0,
-                        fontSize: 13,
+                        fontSize: 14,
                         color: 'var(--text-muted)',
                       }}
                     >
@@ -909,7 +909,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                                 : '1px solid var(--line-base)',
                               background: isSelected ? 'rgba(212,122,87,0.16)' : 'var(--bg-canvas)',
                               color: isSelected ? 'var(--text-main)' : 'var(--text-muted)',
-                              fontSize: 13,
+                              fontSize: 14,
                               cursor: 'pointer',
                             }}
                           >
@@ -922,7 +922,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                       <p
                         style={{
                           margin: 0,
-                          fontSize: 13,
+                          fontSize: 14,
                           color: 'var(--text-muted)',
                         }}
                       >
@@ -1015,7 +1015,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
               border: '1px solid var(--c-asesmen)',
               background: 'var(--c-asesmen)',
               color: '#F0E8DC',
-              fontSize: 15,
+              fontSize: 14,
               fontWeight: 600,
               cursor: isSubmitting ? 'wait' : 'pointer',
               opacity: isSubmitting ? 0.8 : 1,

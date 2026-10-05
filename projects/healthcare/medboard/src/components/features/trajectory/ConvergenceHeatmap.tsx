@@ -65,7 +65,7 @@ export function ConvergenceHeatmap({ convergence }: ConvergenceHeatmapProps) {
       >
         <div
           style={{
-            fontSize: 10,
+            fontSize: 12,
             fontFamily: 'var(--font-mono)',
             letterSpacing: '0.18em',
             textTransform: 'uppercase',
@@ -76,7 +76,7 @@ export function ConvergenceHeatmap({ convergence }: ConvergenceHeatmapProps) {
         </div>
         <span
           style={{
-            fontSize: 10,
+            fontSize: 12,
             fontFamily: 'var(--font-mono)',
             color: 'var(--text-muted)',
             opacity: 0.7,
@@ -100,7 +100,7 @@ export function ConvergenceHeatmap({ convergence }: ConvergenceHeatmapProps) {
           <div
             key={col.key}
             style={{
-              fontSize: 9,
+              fontSize: 12,
               fontFamily: 'var(--font-mono)',
               letterSpacing: '0.1em',
               textTransform: 'uppercase',
@@ -132,7 +132,7 @@ export function ConvergenceHeatmap({ convergence }: ConvergenceHeatmapProps) {
               {/* Label */}
               <span
                 style={{
-                  fontSize: 11,
+                  fontSize: 12,
                   color: 'var(--text-muted)',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
@@ -162,7 +162,7 @@ export function ConvergenceHeatmap({ convergence }: ConvergenceHeatmapProps) {
                     aria-label={active ? `${meta.label}: ${col.label}` : undefined}
                   >
                     {active && (
-                      <span style={{ fontSize: 9, color: col.color, fontWeight: 600 }}>
+                      <span style={{ fontSize: 12, color: col.color, fontWeight: 600 }}>
                         ●
                       </span>
                     )}

@@ -54,10 +54,10 @@ export function TimeToCriticalTimeline({ timeToCritical, className }: TimeToCrit
           padding: '16px 20px',
         }}
       >
-        <div style={{ fontSize: 10, fontFamily: 'var(--font-mono)', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 6 }}>
+        <div style={{ fontSize: 12, fontFamily: 'var(--font-mono)', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 6 }}>
           Estimasi Waktu ke Kritis
         </div>
-        <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+        <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>
           Tidak ada vital yang mendekati ambang kritis.
         </div>
       </div>
@@ -76,7 +76,7 @@ export function TimeToCriticalTimeline({ timeToCritical, className }: TimeToCrit
     >
       <div
         style={{
-          fontSize: 10,
+          fontSize: 12,
           fontFamily: 'var(--font-mono)',
           letterSpacing: '0.18em',
           textTransform: 'uppercase',

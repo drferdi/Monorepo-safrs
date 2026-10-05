@@ -40,13 +40,13 @@ export function MortalityRiskIndicator({ mortalityProxy, className }: MortalityR
     >
       {/* Icon + label */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 160 }}>
-        <span aria-hidden="true" style={{ fontSize: 18, color: tierCfg.color }}>
+        <span aria-hidden="true" style={{ fontSize: 16, color: tierCfg.color }}>
           {score >= 70 ? '🔴' : score >= 40 ? '🟠' : '🟢'}
         </span>
         <div>
           <div
             style={{
-              fontSize: 10,
+              fontSize: 12,
               fontFamily: 'var(--font-mono)',
               letterSpacing: '0.16em',
               textTransform: 'uppercase',
@@ -73,7 +73,7 @@ export function MortalityRiskIndicator({ mortalityProxy, className }: MortalityR
         >
           {score}
         </div>
-        <div style={{ fontSize: 9, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+        <div style={{ fontSize: 12, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
           /100
         </div>
       </div>
@@ -90,7 +90,7 @@ export function MortalityRiskIndicator({ mortalityProxy, className }: MortalityR
       >
         <div
           style={{
-            fontSize: 10,
+            fontSize: 12,
             fontFamily: 'var(--font-mono)',
             letterSpacing: '0.12em',
             textTransform: 'uppercase',

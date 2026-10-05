@@ -71,7 +71,7 @@ function IntelligencePanel({
       >
         <div
           style={{
-            fontSize: 10,
+            fontSize: 12,
             fontFamily: 'var(--font-mono)',
             letterSpacing: '0.2em',
             textTransform: 'uppercase',
@@ -84,7 +84,7 @@ function IntelligencePanel({
         </div>
         <h2
           style={{
-            fontSize: 17,
+            fontSize: 16,
             fontWeight: 500,
             color: 'var(--text-main)',
             letterSpacing: '0.01em',
@@ -110,13 +110,13 @@ function AccessNotice({ title, message }: { title: string; message: string }): R
         borderRadius: 6,
         border: '1px dashed var(--line-base)',
         padding: '16px 20px',
-        fontSize: 13,
+        fontSize: 14,
         color: 'var(--text-muted)',
       }}
     >
       <div
         style={{
-          fontSize: 10,
+          fontSize: 12,
           fontFamily: 'var(--font-mono)',
           letterSpacing: '0.18em',
           textTransform: 'uppercase',

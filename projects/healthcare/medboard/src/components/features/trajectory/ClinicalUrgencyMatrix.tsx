@@ -76,7 +76,7 @@ export function ClinicalUrgencyMatrix({ momentumLevel, mortalityTier }: Clinical
       {/* Header */}
       <div
         style={{
-          fontSize: 10,
+          fontSize: 12,
           fontFamily: 'var(--font-mono)',
           letterSpacing: '0.18em',
           textTransform: 'uppercase',
@@ -90,7 +90,7 @@ export function ClinicalUrgencyMatrix({ momentumLevel, mortalityTier }: Clinical
       {/* X axis label */}
       <div
         style={{
-          fontSize: 9,
+          fontSize: 12,
           color: 'var(--text-muted)',
           textAlign: 'center',
           marginBottom: 4,
@@ -116,7 +116,7 @@ export function ClinicalUrgencyMatrix({ momentumLevel, mortalityTier }: Clinical
           <div
             key={tier}
             style={{
-              fontSize: 8,
+              fontSize: 12,
               fontFamily: 'var(--font-mono)',
               color: MORTALITY_TIER_CONFIG[tier].color,
               textAlign: 'center',
@@ -149,7 +149,7 @@ export function ClinicalUrgencyMatrix({ momentumLevel, mortalityTier }: Clinical
               {/* Y label */}
               <div
                 style={{
-                  fontSize: 8,
+                  fontSize: 12,
                   color: lCfg.color,
                   fontFamily: 'var(--font-mono)',
                   overflow: 'hidden',
@@ -185,7 +185,7 @@ export function ClinicalUrgencyMatrix({ momentumLevel, mortalityTier }: Clinical
                   >
                     {/* Corner labels */}
                     {cornerLabel && !isActive && (
-                      <span style={{ fontSize: 7, color: 'var(--text-muted)', opacity: 0.5, fontFamily: 'var(--font-mono)' }}>
+                      <span style={{ fontSize: 12, color: 'var(--text-muted)', opacity: 0.5, fontFamily: 'var(--font-mono)' }}>
                         {cornerLabel}
                       </span>
                     )}
@@ -234,12 +234,12 @@ export function ClinicalUrgencyMatrix({ momentumLevel, mortalityTier }: Clinical
               boxShadow: `0 0 0 2px ${mCfg.color}40`,
             }}
           />
-          <span style={{ fontSize: 10, color: mCfg.color, fontFamily: 'var(--font-mono)' }}>
+          <span style={{ fontSize: 12, color: mCfg.color, fontFamily: 'var(--font-mono)' }}>
             {mCfg.label}
           </span>
         </div>
-        <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>·</span>
-        <span style={{ fontSize: 10, color: tCfg.color, fontFamily: 'var(--font-mono)' }}>
+        <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>·</span>
+        <span style={{ fontSize: 12, color: tCfg.color, fontFamily: 'var(--font-mono)' }}>
           {tCfg.label}
         </span>
       </div>

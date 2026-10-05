@@ -219,7 +219,7 @@ export default function ClinicalReportPage() {
     fontFamily: 'inherit',
   }
   const sectionTitleStyle: React.CSSProperties = {
-    fontSize: 13,
+    fontSize: 14,
     letterSpacing: '0.15em',
     color: 'var(--c-asesmen)',
     borderBottom: '1px solid var(--line-base)',
@@ -228,7 +228,7 @@ export default function ClinicalReportPage() {
     marginTop: 32,
   }
   const btnStyle: React.CSSProperties = {
-    fontSize: 13,
+    fontSize: 14,
     letterSpacing: '0.1em',
     padding: '8px 20px',
     background: '#101012',
@@ -330,7 +330,7 @@ export default function ClinicalReportPage() {
               style={{
                 padding: '48px 0',
                 textAlign: 'center',
-                fontSize: 13,
+                fontSize: 14,
                 color: 'var(--text-muted)',
                 letterSpacing: '0.15em',
               }}
@@ -341,7 +341,7 @@ export default function ClinicalReportPage() {
             <div style={{ padding: '48px 0', textAlign: 'center' }}>
               <div
                 style={{
-                  fontSize: 13,
+                  fontSize: 14,
                   color: 'var(--text-muted)',
                   letterSpacing: '0.15em',
                   marginBottom: 16,
@@ -407,12 +407,12 @@ export default function ClinicalReportPage() {
                   onMouseEnter={e => (e.currentTarget.style.background = 'rgba(239,236,230,0.02)')}
                   onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                 >
-                  <span style={{ fontSize: 13, color: 'var(--c-asesmen)' }}>
+                  <span style={{ fontSize: 14, color: 'var(--c-asesmen)' }}>
                     {String(r.nomor).padStart(3, '0')}
                   </span>
                   <span
                     style={{
-                      fontSize: 13,
+                      fontSize: 14,
                       color: 'var(--text-muted)',
                       letterSpacing: '0.04em',
                     }}
@@ -436,7 +436,7 @@ export default function ClinicalReportPage() {
                   <span style={{ fontSize: 14, color: 'var(--text-main)' }}>
                     {r.asesmen.diagnosisKerja || '—'}
                   </span>
-                  <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+                  <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>
                     {r.penutup.dokter || '—'}
                   </span>
                   <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
@@ -450,7 +450,7 @@ export default function ClinicalReportPage() {
                     style={{
                       ...btnStyle,
                       padding: '4px 8px',
-                      fontSize: 10,
+                      fontSize: 12,
                       color: 'var(--text-muted)',
                       borderColor: 'rgba(255,255,255,0.06)',
                     }}
@@ -1001,7 +1001,7 @@ export default function ClinicalReportPage() {
               <div>
                 <div
                   style={{
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: 600,
                     color: 'var(--text-main)',
                     letterSpacing: '0.04em',
@@ -1011,14 +1011,14 @@ export default function ClinicalReportPage() {
                 </div>
                 <div
                   style={{
-                    fontSize: 13,
+                    fontSize: 14,
                     color: 'var(--text-muted)',
                     marginTop: 2,
                   }}
                 >
                   Jl. Balowerti No. 2, Kota Kediri, Jawa Timur
                 </div>
-                <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+                <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>
                   Kepala: drg. Endah Retno W.
                 </div>
               </div>
@@ -1073,7 +1073,7 @@ export default function ClinicalReportPage() {
                   <div
                     className="print-label"
                     style={{
-                      fontSize: 10,
+                      fontSize: 12,
                       letterSpacing: '0.12em',
                       color: 'var(--text-muted)',
                       marginBottom: 2,
@@ -1081,7 +1081,7 @@ export default function ClinicalReportPage() {
                   >
                     {l}
                   </div>
-                  <div style={{ fontSize: 13, color: 'var(--text-main)' }}>{v}</div>
+                  <div style={{ fontSize: 14, color: 'var(--text-main)' }}>{v}</div>
                 </div>
               ))}
             </div>
@@ -1318,7 +1318,7 @@ export default function ClinicalReportPage() {
                 borderTop: '1px dashed var(--line-base)',
                 display: 'flex',
                 justifyContent: 'space-between',
-                fontSize: 11,
+                fontSize: 12,
                 color: 'var(--text-muted)',
                 letterSpacing: '0.08em',
               }}
@@ -1368,7 +1368,7 @@ function ReportField({ label, value }: { label: string; value: string }) {
       <div
         className="print-label"
         style={{
-          fontSize: 10,
+          fontSize: 12,
           letterSpacing: '0.1em',
           color: 'var(--text-muted)',
           marginBottom: 2,
@@ -1378,7 +1378,7 @@ function ReportField({ label, value }: { label: string; value: string }) {
       </div>
       <div
         style={{
-          fontSize: 13,
+          fontSize: 14,
           color: 'var(--text-main)',
           whiteSpace: 'pre-wrap',
           lineHeight: 1.5,

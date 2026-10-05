@@ -72,7 +72,7 @@ const cardStyle: React.CSSProperties = {
 
 const sectionTitleStyle: React.CSSProperties = {
   margin: '0 0 14px',
-  fontSize: 10,
+  fontSize: 12,
   letterSpacing: '0.2em',
   fontWeight: 600,
   color: 'var(--text-muted)',
@@ -80,7 +80,7 @@ const sectionTitleStyle: React.CSSProperties = {
 
 const thStyle: React.CSSProperties = {
   padding: '8px 10px',
-  fontSize: 10,
+  fontSize: 12,
   fontWeight: 600,
   letterSpacing: '0.12em',
   color: 'var(--text-muted)',
@@ -114,7 +114,7 @@ function KPICard({
       <p
         style={{
           margin: 0,
-          fontSize: 10,
+          fontSize: 12,
           letterSpacing: '0.15em',
           fontWeight: 600,
           color: 'var(--text-muted)',
@@ -137,7 +137,7 @@ function KPICard({
         <p
           style={{
             margin: '6px 0 0',
-            fontSize: 11,
+            fontSize: 12,
             color: 'var(--text-muted)',
             opacity: 0.7,
           }}
@@ -157,7 +157,7 @@ function StatusBadge({ status }: { status: string }) {
         display: 'inline-block',
         padding: '3px 10px',
         borderRadius: 12,
-        fontSize: 10,
+        fontSize: 12,
         fontWeight: 600,
         letterSpacing: '0.08em',
         background: isSuccess ? 'rgba(76,175,80,0.12)' : 'rgba(231,76,60,0.12)',
@@ -229,7 +229,7 @@ export default function AdminRpaMonitoring() {
         style={{
           padding: '40px 0',
           color: 'var(--c-critical, #e74c3c)',
-          fontSize: 13,
+          fontSize: 14,
         }}
       >
         {error}
@@ -366,7 +366,7 @@ export default function AdminRpaMonitoring() {
                   }}
                 >
                   <StatusBadge status={entry.status} />
-                  <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                  <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
                     {formatTimestamp(entry.timestamp)}
                   </span>
                 </div>

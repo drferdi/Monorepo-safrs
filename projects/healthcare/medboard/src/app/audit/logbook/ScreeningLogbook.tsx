@@ -44,7 +44,7 @@ function statusBadge(s: string) {
 const RISK_COLOR: Record<string, string>     = { critical: '#FC8181', high: '#F6AD55', medium: '#63B3ED', low: '#68D391' }
 const DELIVERY_COLOR: Record<string, string> = { sent: '#63B3ED', delivered: '#68D391', failed: '#FC8181', pending: 'var(--text-muted)' }
 
-const FONT = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+const FONT = 'var(--font-base)'
 
 // ── Component ─────────────────────────────────────────────────────────────────
 
@@ -98,7 +98,7 @@ export function ScreeningLogbook() {
     border:      '1px solid var(--line-base)',
     borderRadius: '4px',
     color:       'var(--text-main)',
-    fontSize:    '13px',
+    fontSize:    '14px',
     fontFamily:  FONT,
     padding:     '7px 12px',
     outline:     'none',
@@ -154,7 +154,7 @@ export function ScreeningLogbook() {
             background:    '#FFFFFF',
             color:         '#000000',
             border:        'none',
-            fontSize:      '11px',
+            fontSize:      '12px',
             fontWeight:    600,
             letterSpacing: '0.06em',
             textTransform: 'uppercase',
@@ -174,7 +174,7 @@ export function ScreeningLogbook() {
       {error && (
         <div role="alert" style={{
           background: 'rgba(252,129,129,0.10)', border: '1px solid rgba(252,129,129,0.20)',
-          borderRadius: '6px', color: '#FC8181', fontSize: '13px', padding: '12px 16px',
+          borderRadius: '6px', color: '#FC8181', fontSize: '14px', padding: '12px 16px',
         }}>
           {error}
         </div>
@@ -193,7 +193,7 @@ export function ScreeningLogbook() {
                 {COLS.map((h) => (
                   <th key={h} scope="col" style={{
                     padding: '10px 14px', textAlign: 'left',
-                    fontSize: '11px', fontWeight: 600,
+                    fontSize: '12px', fontWeight: 600,
                     letterSpacing: '0.08em', color: 'var(--text-muted)',
                     textTransform: 'uppercase', whiteSpace: 'nowrap',
                   }}>
@@ -205,9 +205,9 @@ export function ScreeningLogbook() {
 
             <tbody>
               {loading && entries.length === 0 ? (
-                <tr><td colSpan={8} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '13px', letterSpacing: '0.1em' }}>MEMUAT…</td></tr>
+                <tr><td colSpan={8} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '14px', letterSpacing: '0.1em' }}>MEMUAT…</td></tr>
               ) : entries.length === 0 ? (
-                <tr><td colSpan={8} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '13px', letterSpacing: '0.1em' }}>BELUM ADA DATA AUDIT LOG</td></tr>
+                <tr><td colSpan={8} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '14px', letterSpacing: '0.1em' }}>BELUM ADA DATA AUDIT LOG</td></tr>
               ) : entries.map((entry) => {
                 const badge = statusBadge(entry.screeningStatus)
                 return (
@@ -221,7 +221,7 @@ export function ScreeningLogbook() {
                     onMouseEnter={(e) => { (e.currentTarget as HTMLTableRowElement).style.background = 'rgba(239,236,230,0.02)' }}
                     onMouseLeave={(e) => { (e.currentTarget as HTMLTableRowElement).style.background = 'transparent' }}
                   >
-                    <td style={{ padding: '10px 14px', fontSize: '13px', whiteSpace: 'nowrap' }}>
+                    <td style={{ padding: '10px 14px', fontSize: '14px', whiteSpace: 'nowrap' }}>
                       <Link
                         href={`/audit/logbook/${encodeURIComponent(entry.eventId)}`}
                         style={{ color: 'var(--c-asesmen)', textDecoration: 'none', display: 'block' }}
@@ -232,13 +232,13 @@ export function ScreeningLogbook() {
                     <td title={entry.assistId} style={{ padding: '10px 14px', color: 'var(--text-muted)', fontSize: '12px', fontFamily: 'monospace', maxWidth: '130px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {entry.assistId.length > 22 ? `${entry.assistId.slice(0, 22)}…` : entry.assistId}
                     </td>
-                    <td style={{ padding: '10px 14px', color: 'var(--text-muted)', fontSize: '13px' }}>{entry.facilityId}</td>
-                    <td style={{ padding: '10px 14px', color: 'var(--text-main)', fontSize: '13px' }}>{entry.doctorId}</td>
+                    <td style={{ padding: '10px 14px', color: 'var(--text-muted)', fontSize: '14px' }}>{entry.facilityId}</td>
+                    <td style={{ padding: '10px 14px', color: 'var(--text-main)', fontSize: '14px' }}>{entry.doctorId}</td>
 
                     <td style={{ padding: '10px 14px' }}>
                       <span style={{
                         display: 'inline-block', padding: '2px 8px',
-                        borderRadius: '9999px', fontSize: '11px', fontWeight: 600,
+                        borderRadius: '9999px', fontSize: '12px', fontWeight: 600,
                         letterSpacing: '0.06em', textTransform: 'uppercase',
                         color: badge.color, background: badge.bg, border: `1px solid ${badge.border}`,
                       }}>
@@ -246,14 +246,14 @@ export function ScreeningLogbook() {
                       </span>
                     </td>
 
-                    <td style={{ padding: '10px 14px', fontSize: '13px', fontWeight: 500, color: RISK_COLOR[entry.riskLevel ?? ''] ?? 'var(--text-muted)' }}>
+                    <td style={{ padding: '10px 14px', fontSize: '14px', fontWeight: 500, color: RISK_COLOR[entry.riskLevel ?? ''] ?? 'var(--text-muted)' }}>
                       {entry.riskLevel ?? '—'}
                       {entry.score !== null && (
                         <span style={{ color: 'var(--text-muted)', fontWeight: 400, marginLeft: '4px' }}>({entry.score})</span>
                       )}
                     </td>
 
-                    <td style={{ padding: '10px 14px', fontSize: '13px', fontWeight: 500, color: DELIVERY_COLOR[entry.deliveryStatus] ?? 'var(--text-muted)' }}>
+                    <td style={{ padding: '10px 14px', fontSize: '14px', fontWeight: 500, color: DELIVERY_COLOR[entry.deliveryStatus] ?? 'var(--text-muted)' }}>
                       {entry.deliveryStatus}
                     </td>
 

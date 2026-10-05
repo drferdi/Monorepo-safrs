@@ -249,7 +249,7 @@ export function MedicalKnowledgeSearch(): React.JSX.Element {
         }
 
         .medical-knowledge-search .mk-label {
-          font-size: 10px;
+          font-size: 12px;
           font-family: var(--font-mono);
           letter-spacing: 0.18em;
           text-transform: uppercase;
@@ -259,7 +259,7 @@ export function MedicalKnowledgeSearch(): React.JSX.Element {
 
         .medical-knowledge-search .mk-title {
           margin: 8px 0 0;
-          font-size: 17px;
+          font-size: 16px;
           font-weight: 500;
           color: var(--text-main);
           letter-spacing: 0.01em;
@@ -359,7 +359,7 @@ export function MedicalKnowledgeSearch(): React.JSX.Element {
           border: none;
           border-radius: 8px;
           padding: 10px 16px;
-          font-size: 13px;
+          font-size: 14px;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.2s ease;
@@ -386,7 +386,7 @@ export function MedicalKnowledgeSearch(): React.JSX.Element {
         .medical-knowledge-search .mk-alert-text {
           margin-top: 6px;
           color: var(--text-main);
-          font-size: 13px;
+          font-size: 14px;
           line-height: 1.4;
         }
 
@@ -419,7 +419,7 @@ export function MedicalKnowledgeSearch(): React.JSX.Element {
         .medical-knowledge-search .mk-answer-body {
           margin-top: 6px;
           white-space: pre-wrap;
-          font-size: 13px;
+          font-size: 14px;
           line-height: 1.5;
           color: var(--text-main);
         }
@@ -445,7 +445,7 @@ export function MedicalKnowledgeSearch(): React.JSX.Element {
         }
 
         .medical-knowledge-search .mk-th {
-          font-size: 10px;
+          font-size: 12px;
           font-family: var(--font-mono);
           letter-spacing: 0.18em;
           text-transform: uppercase;
@@ -457,7 +457,7 @@ export function MedicalKnowledgeSearch(): React.JSX.Element {
         }
 
         .medical-knowledge-search .mk-cell-title {
-          font-size: 13px;
+          font-size: 14px;
           font-weight: 600;
           color: var(--text-main);
           overflow: hidden;
@@ -466,7 +466,7 @@ export function MedicalKnowledgeSearch(): React.JSX.Element {
         }
 
         .medical-knowledge-search .mk-cell-snippet {
-          font-size: 13px;
+          font-size: 14px;
           color: var(--text-main);
           line-height: 1.45;
           white-space: pre-wrap;
@@ -477,7 +477,7 @@ export function MedicalKnowledgeSearch(): React.JSX.Element {
         }
 
         .medical-knowledge-search .mk-link {
-          font-size: 13px;
+          font-size: 14px;
           color: var(--text-main);
           text-decoration: none;
           border: 1px solid var(--line-base);

@@ -106,7 +106,7 @@ function createAvatarIcon(isOnline: boolean, avatarUrl: string, name: string) {
         ">
           <span style="
             font-family: var(--font-mono), monospace;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 600;
             letter-spacing: 0.05em;
             color: ${isOnline ? '#4ADE80' : '#888'};
@@ -163,7 +163,7 @@ export default function StaffMap({
           justifyContent: 'center',
           color: '#666',
           fontFamily: 'var(--font-mono)',
-          fontSize: 13,
+          fontSize: 14,
         }}
       >
         LOADING MAP...
@@ -404,7 +404,7 @@ export default function StaffMap({
                     <div>
                       <div
                         style={{
-                          fontSize: 15,
+                          fontSize: 14,
                           fontWeight: 700,
                           color: '#fafafa',
                           fontStyle: 'italic',
@@ -415,7 +415,7 @@ export default function StaffMap({
                       </div>
                       <div
                         style={{
-                          fontSize: 11,
+                          fontSize: 12,
                           color: '#d4d4d4',
                           letterSpacing: '0.08em',
                           marginTop: 2,
@@ -438,11 +438,11 @@ export default function StaffMap({
                       alignItems: 'center',
                     }}
                   >
-                    <span style={{ fontSize: 11, color: '#a3a3a3' }}>{person.location.label}</span>
+                    <span style={{ fontSize: 12, color: '#a3a3a3' }}>{person.location.label}</span>
                     {person.isOnline && (
                       <span
                         style={{
-                          fontSize: 10,
+                          fontSize: 12,
                           fontWeight: 600,
                           letterSpacing: '0.1em',
                           color: '#4ADE80',

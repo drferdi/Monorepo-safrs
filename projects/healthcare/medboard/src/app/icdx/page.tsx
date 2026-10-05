@@ -309,7 +309,7 @@ export default function ICDXPage() {
               <div
                 style={{
                   fontFamily: L.mono,
-                  fontSize: 13,
+                  fontSize: 14,
                   color: L.accent,
                   letterSpacing: '0.12em',
                   textTransform: 'uppercase',
@@ -332,7 +332,7 @@ export default function ICDXPage() {
                   border: `1px solid ${L.border}`,
                   borderRadius: 3,
                   color: L.text,
-                  fontSize: 15,
+                  fontSize: 14,
                   padding: '0 16px',
                   outline: 'none',
                   fontFamily: L.sans,
@@ -343,7 +343,7 @@ export default function ICDXPage() {
                 <div
                   style={{
                     marginTop: 10,
-                    fontSize: 13,
+                    fontSize: 14,
                     letterSpacing: '0.04em',
                     color: L.muted,
                     fontFamily: L.mono,
@@ -378,7 +378,7 @@ export default function ICDXPage() {
                   marginBottom: 16,
                   padding: '12px 16px',
                   color: L.critical,
-                  fontSize: 13,
+                  fontSize: 14,
                   border: `1px solid ${L.critical}`,
                   borderRadius: 3,
                   background: `${L.critical}10`,
@@ -394,7 +394,7 @@ export default function ICDXPage() {
                 <div
                   style={{
                     fontFamily: L.mono,
-                    fontSize: 13,
+                    fontSize: 14,
                     color: L.accent,
                     letterSpacing: '0.12em',
                     textTransform: 'uppercase',
@@ -420,7 +420,7 @@ export default function ICDXPage() {
                       background: L.bgHover,
                       borderBottom: `1px solid ${L.border}`,
                       fontFamily: L.mono,
-                      fontSize: 11,
+                      fontSize: 12,
                       letterSpacing: '0.1em',
                       color: L.muted,
                       textTransform: 'uppercase',
@@ -435,7 +435,7 @@ export default function ICDXPage() {
                       borderBottom: `1px solid ${L.border}`,
                       borderLeft: `1px solid ${L.border}`,
                       fontFamily: L.mono,
-                      fontSize: 11,
+                      fontSize: 12,
                       letterSpacing: '0.1em',
                       color: L.muted,
                       textTransform: 'uppercase',
@@ -462,7 +462,7 @@ export default function ICDXPage() {
                           <span
                             style={{
                               marginLeft: 8,
-                              fontSize: 13,
+                              fontSize: 14,
                               color: L.muted,
                               fontFamily: L.sans,
                             }}
@@ -488,7 +488,7 @@ export default function ICDXPage() {
                             <span
                               style={{
                                 marginLeft: 10,
-                                fontSize: 11,
+                                fontSize: 12,
                                 background: L.accent,
                                 color: '#000',
                                 padding: '2px 8px',
@@ -503,7 +503,7 @@ export default function ICDXPage() {
                               <span
                                 style={{
                                   marginLeft: 10,
-                                  fontSize: 13,
+                                  fontSize: 14,
                                   color: L.muted,
                                   fontFamily: L.sans,
                                 }}
@@ -518,7 +518,7 @@ export default function ICDXPage() {
                             <span
                               style={{
                                 marginLeft: 10,
-                                fontSize: 11,
+                                fontSize: 12,
                                 border: `1px solid ${L.critical}`,
                                 color: L.critical,
                                 padding: '2px 8px',
@@ -553,7 +553,7 @@ export default function ICDXPage() {
               <div
                 style={{
                   fontFamily: L.mono,
-                  fontSize: 13,
+                  fontSize: 14,
                   color: L.accent,
                   letterSpacing: '0.12em',
                   textTransform: 'uppercase',
@@ -602,7 +602,7 @@ export default function ICDXPage() {
                     >
                       <span
                         style={{
-                          fontSize: 15,
+                          fontSize: 14,
                           color: L.accent,
                           fontFamily: L.mono,
                           fontWeight: 500,
@@ -612,12 +612,12 @@ export default function ICDXPage() {
                       >
                         {item.code}
                       </span>
-                      <span style={{ fontSize: 15, color: L.text, flex: 1 }}>
+                      <span style={{ fontSize: 14, color: L.text, flex: 1 }}>
                         {highlight(item.name, query)}
                       </span>
                       <span
                         style={{
-                          fontSize: 11,
+                          fontSize: 12,
                           color: L.muted,
                           letterSpacing: '0.08em',
                           textTransform: 'uppercase',
@@ -632,7 +632,7 @@ export default function ICDXPage() {
                 {!loading && results.length === 0 && query && (
                   <div
                     style={{
-                      fontSize: 15,
+                      fontSize: 14,
                       color: L.muted,
                       padding: '24px 16px',
                       fontStyle: 'italic',
@@ -647,7 +647,7 @@ export default function ICDXPage() {
                 {!loading && results.length === 0 && !query && (
                   <div
                     style={{
-                      fontSize: 15,
+                      fontSize: 14,
                       color: L.muted,
                       padding: '24px 16px',
                       fontStyle: 'italic',
@@ -712,7 +712,7 @@ export default function ICDXPage() {
                         </span>
                         <span
                           style={{
-                            fontSize: 22,
+                            fontSize: 20,
                             color: L.accent,
                             fontFamily: L.mono,
                             fontWeight: 500,
@@ -748,13 +748,13 @@ export default function ICDXPage() {
                         >
                           Kategori
                         </span>
-                        <span style={{ fontSize: 15, color: L.text }}>{selected.category}</span>
+                        <span style={{ fontSize: 14, color: L.text }}>{selected.category}</span>
                       </div>
                     </div>
 
                     <div
                       style={{
-                        fontSize: 18,
+                        fontSize: 16,
                         fontWeight: 400,
                         color: L.text,
                         marginBottom: 20,
@@ -782,7 +782,7 @@ export default function ICDXPage() {
                             <div
                               style={{
                                 fontFamily: L.mono,
-                                fontSize: 11,
+                                fontSize: 12,
                                 color: L.accent,
                                 marginBottom: 8,
                                 letterSpacing: '0.1em',
@@ -806,7 +806,7 @@ export default function ICDXPage() {
                               <span
                                 style={{
                                   marginLeft: 14,
-                                  fontSize: 15,
+                                  fontSize: 14,
                                   color: L.muted,
                                 }}
                               >
@@ -819,7 +819,7 @@ export default function ICDXPage() {
                             <div
                               style={{
                                 fontFamily: L.mono,
-                                fontSize: 11,
+                                fontSize: 12,
                                 color: L.critical,
                                 marginBottom: 8,
                                 letterSpacing: '0.1em',
@@ -828,7 +828,7 @@ export default function ICDXPage() {
                             >
                               ⚠ Kode tidak tersedia
                             </div>
-                            <div style={{ fontSize: 15, color: L.critical }}>
+                            <div style={{ fontSize: 14, color: L.critical }}>
                               Kode ini tidak ada di ICD-10 2010 — tidak dapat diinput ke
                               PCare/ePuskesmas
                             </div>
@@ -909,7 +909,7 @@ export default function ICDXPage() {
                   <div style={{ flex: 1 }}>
                     <span
                       style={{
-                        fontSize: 15,
+                        fontSize: 14,
                         color: v.active ? L.text : L.muted,
                         fontWeight: v.active ? 500 : 400,
                         display: 'block',
@@ -920,7 +920,7 @@ export default function ICDXPage() {
                     </span>
                     <span
                       style={{
-                        fontSize: 13,
+                        fontSize: 14,
                         color: L.muted,
                         lineHeight: 1.5,
                       }}
@@ -931,7 +931,7 @@ export default function ICDXPage() {
                   {v.active && (
                     <span
                       style={{
-                        fontSize: 11,
+                        fontSize: 12,
                         color: L.accent,
                         letterSpacing: '0.06em',
                         textTransform: 'uppercase',
@@ -953,7 +953,7 @@ export default function ICDXPage() {
                 marginTop: 16,
                 paddingTop: 16,
                 borderTop: `1px solid ${L.border}`,
-                fontSize: 13,
+                fontSize: 14,
                 color: L.muted,
                 fontFamily: L.mono,
                 letterSpacing: '0.04em',
@@ -983,7 +983,7 @@ export default function ICDXPage() {
             <div
               style={{
                 fontFamily: L.mono,
-                fontSize: 13,
+                fontSize: 14,
                 color: L.accent,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
@@ -1015,7 +1015,7 @@ export default function ICDXPage() {
                   border: `1px solid ${L.border}`,
                   borderRadius: 3,
                   color: L.text,
-                  fontSize: 15,
+                  fontSize: 14,
                   fontFamily: L.sans,
                   cursor: 'pointer',
                 }}
@@ -1043,7 +1043,7 @@ export default function ICDXPage() {
                   border: `1px solid ${L.border}`,
                   borderRadius: 3,
                   color: L.text,
-                  fontSize: 15,
+                  fontSize: 14,
                   fontFamily: L.sans,
                   cursor: 'pointer',
                 }}
@@ -1066,7 +1066,7 @@ export default function ICDXPage() {
                   border: lb1Running ? `1px solid ${L.border}` : 'none',
                   borderRadius: 3,
                   color: lb1Running ? L.muted : '#000',
-                  fontSize: 13,
+                  fontSize: 14,
                   fontWeight: 600,
                   letterSpacing: '0.1em',
                   cursor: lb1Running ? 'not-allowed' : 'pointer',
@@ -1077,7 +1077,7 @@ export default function ICDXPage() {
                 {lb1Running ? '● GENERATING...' : 'RUN LB1'}
               </button>
 
-              <span style={{ fontSize: 13, color: L.muted }}>
+              <span style={{ fontSize: 14, color: L.muted }}>
                 mode: full-cycle (RPA + generate)
               </span>
             </div>
@@ -1096,7 +1096,7 @@ export default function ICDXPage() {
                 <div
                   style={{
                     fontFamily: L.mono,
-                    fontSize: 11,
+                    fontSize: 12,
                     color: L.accent,
                     letterSpacing: '0.1em',
                     textTransform: 'uppercase',
@@ -1108,26 +1108,26 @@ export default function ICDXPage() {
                 </div>
                 <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
                   <div>
-                    <div style={{ fontSize: 13, color: L.muted }}>Total Kunjungan</div>
-                    <div style={{ fontSize: 22, fontWeight: 600, color: L.accent }}>
+                    <div style={{ fontSize: 14, color: L.muted }}>Total Kunjungan</div>
+                    <div style={{ fontSize: 20, fontWeight: 600, color: L.accent }}>
                       {lb1Result.totalKunjungan?.toLocaleString()}
                     </div>
                   </div>
                   <div>
-                    <div style={{ fontSize: 13, color: L.muted }}>Rawat Jalan</div>
-                    <div style={{ fontSize: 22, fontWeight: 500, color: L.text }}>
+                    <div style={{ fontSize: 14, color: L.muted }}>Rawat Jalan</div>
+                    <div style={{ fontSize: 20, fontWeight: 500, color: L.text }}>
                       {lb1Result.rawatJalan?.toLocaleString()}
                     </div>
                   </div>
                   <div>
-                    <div style={{ fontSize: 13, color: L.muted }}>Rawat Inap</div>
-                    <div style={{ fontSize: 22, fontWeight: 500, color: L.text }}>
+                    <div style={{ fontSize: 14, color: L.muted }}>Rawat Inap</div>
+                    <div style={{ fontSize: 20, fontWeight: 500, color: L.text }}>
                       {lb1Result.rawatInap?.toLocaleString()}
                     </div>
                   </div>
                   <div>
-                    <div style={{ fontSize: 13, color: L.muted }}>Rujukan</div>
-                    <div style={{ fontSize: 22, fontWeight: 500, color: L.text }}>
+                    <div style={{ fontSize: 14, color: L.muted }}>Rujukan</div>
+                    <div style={{ fontSize: 20, fontWeight: 500, color: L.text }}>
                       {lb1Result.rujukan?.toLocaleString()}
                     </div>
                   </div>
@@ -1141,7 +1141,7 @@ export default function ICDXPage() {
                 style={{
                   padding: '12px 16px',
                   color: L.critical,
-                  fontSize: 15,
+                  fontSize: 14,
                   border: `1px solid ${L.critical}`,
                   borderRadius: 3,
                   background: `${L.critical}10`,
@@ -1156,7 +1156,7 @@ export default function ICDXPage() {
             <div
               style={{
                 fontFamily: L.mono,
-                fontSize: 13,
+                fontSize: 14,
                 color: L.accent,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
@@ -1190,7 +1190,7 @@ export default function ICDXPage() {
                       style={{
                         padding: '8px 12px',
                         fontFamily: L.mono,
-                        fontSize: 11,
+                        fontSize: 12,
                         letterSpacing: '0.1em',
                         color: L.muted,
                         textTransform: 'uppercase',
@@ -1236,7 +1236,7 @@ export default function ICDXPage() {
                       <div style={{ padding: '10px 12px' }}>
                         <span
                           style={{
-                            fontSize: 11,
+                            fontSize: 12,
                             fontFamily: L.mono,
                             letterSpacing: '0.06em',
                             padding: '2px 8px',
@@ -1277,7 +1277,7 @@ export default function ICDXPage() {
             ) : (
               <div
                 style={{
-                  fontSize: 15,
+                  fontSize: 14,
                   color: L.muted,
                   padding: '24px 16px',
                   fontStyle: 'italic',

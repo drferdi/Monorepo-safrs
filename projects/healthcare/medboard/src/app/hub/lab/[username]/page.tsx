@@ -238,7 +238,7 @@ export default function HubProfileLabPage() {
           <p
             style={{
               margin: 0,
-              fontSize: 11,
+              fontSize: 12,
               letterSpacing: '0.18em',
               color: 'var(--text-muted)',
             }}
@@ -352,7 +352,7 @@ export default function HubProfileLabPage() {
             >
               <div
                 style={{
-                  fontSize: 11,
+                  fontSize: 12,
                   color: 'rgba(194, 210, 203, 0.65)',
                   letterSpacing: '0.18em',
                   textTransform: 'uppercase',
@@ -379,7 +379,7 @@ export default function HubProfileLabPage() {
                 right: 10,
                 writingMode: 'vertical-rl',
                 textOrientation: 'mixed',
-                fontSize: 10,
+                fontSize: 12,
                 color: 'rgba(186, 200, 194, 0.34)',
                 letterSpacing: '0.16em',
                 textTransform: 'uppercase',
@@ -395,7 +395,7 @@ export default function HubProfileLabPage() {
                 bottom: 160,
                 writingMode: 'vertical-rl',
                 textOrientation: 'mixed',
-                fontSize: 10,
+                fontSize: 12,
                 color: 'rgba(186, 200, 194, 0.34)',
                 letterSpacing: '0.18em',
                 textTransform: 'uppercase',
@@ -461,7 +461,7 @@ export default function HubProfileLabPage() {
                   lineHeight: 1.02,
                   color: '#f2f3ed',
                   letterSpacing: '-0.04em',
-                  fontFamily: "Georgia, 'Times New Roman', serif",
+                  fontFamily: 'var(--font-base)',
                   textTransform: 'lowercase',
                   marginBottom: 4,
                 }}
@@ -471,7 +471,7 @@ export default function HubProfileLabPage() {
               {degreesLabel && (
                 <div
                   style={{
-                    fontSize: 11,
+                    fontSize: 12,
                     color: 'rgba(209, 214, 208, 0.48)',
                     letterSpacing: '0.04em',
                     marginBottom: 2,
@@ -483,7 +483,7 @@ export default function HubProfileLabPage() {
 
               <div
                 style={{
-                  fontSize: 13,
+                  fontSize: 14,
                   color: 'rgba(209, 214, 208, 0.58)',
                   letterSpacing: '0.01em',
                   marginBottom: 22,
@@ -519,7 +519,7 @@ export default function HubProfileLabPage() {
               <div
                 style={{
                   marginBottom: 12,
-                  fontSize: 10,
+                  fontSize: 12,
                   letterSpacing: '0.2em',
                   color: 'rgba(188, 205, 197, 0.38)',
                   textTransform: 'uppercase',
@@ -556,7 +556,7 @@ export default function HubProfileLabPage() {
                     >
                       <span
                         style={{
-                          fontSize: 17,
+                          fontSize: 16,
                           fontWeight: 600,
                           color: '#e6e8df',
                           letterSpacing: '-0.04em',
@@ -566,7 +566,7 @@ export default function HubProfileLabPage() {
                       </span>
                       <span
                         style={{
-                          fontSize: 10,
+                          fontSize: 12,
                           color: 'rgba(214, 220, 214, 0.6)',
                           letterSpacing: '0.14em',
                           textTransform: 'uppercase',
@@ -577,7 +577,7 @@ export default function HubProfileLabPage() {
                     </div>
                     <div
                       style={{
-                        fontSize: 11,
+                        fontSize: 12,
                         color: row.accentColor,
                         letterSpacing: '0.1em',
                         textTransform: 'uppercase',
@@ -602,7 +602,7 @@ export default function HubProfileLabPage() {
                   <div
                     key={item}
                     style={{
-                      fontSize: 11,
+                      fontSize: 12,
                       color: 'rgba(208, 214, 208, 0.54)',
                       letterSpacing: '0.04em',
                       lineHeight: 1.45,

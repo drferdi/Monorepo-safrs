@@ -22,7 +22,7 @@ export default function AdminPlaceholder({
       <p
         style={{
           margin: 0,
-          fontSize: 10,
+          fontSize: 12,
           letterSpacing: '0.2em',
           color: 'rgba(230,126,34,0.5)',
           fontWeight: 600,
@@ -65,7 +65,7 @@ export default function AdminPlaceholder({
           <p
             style={{
               margin: '0 0 8px',
-              fontSize: 9,
+              fontSize: 12,
               letterSpacing: '0.15em',
               color: 'var(--text-muted)',
               fontWeight: 600,
@@ -78,7 +78,7 @@ export default function AdminPlaceholder({
               key={i}
               style={{
                 margin: '4px 0',
-                fontSize: 11,
+                fontSize: 12,
                 color: 'var(--text-muted)',
                 opacity: 0.7,
               }}

@@ -201,7 +201,7 @@ export default function TrajectoryPanel({
           <span
             style={{
               ...mono,
-              fontSize: 10,
+              fontSize: 12,
               letterSpacing: '0.14em',
               color: 'var(--text-muted)',
             }}
@@ -212,7 +212,7 @@ export default function TrajectoryPanel({
           <span
             style={{
               ...mono,
-              fontSize: 8,
+              fontSize: 12,
               fontWeight: 700,
               letterSpacing: '0.1em',
               padding: '2px 6px',
@@ -228,7 +228,7 @@ export default function TrajectoryPanel({
           <span
             style={{
               ...mono,
-              fontSize: 8,
+              fontSize: 12,
               fontWeight: 700,
               letterSpacing: '0.1em',
               padding: '2px 6px',
@@ -245,7 +245,7 @@ export default function TrajectoryPanel({
           onClick={onClose}
           style={{
             ...mono,
-            fontSize: 9,
+            fontSize: 12,
             letterSpacing: '0.1em',
             background: 'transparent',
             border: 'none',
@@ -271,7 +271,7 @@ export default function TrajectoryPanel({
             <span
               style={{
                 ...mono,
-                fontSize: 8,
+                fontSize: 12,
                 letterSpacing: '0.12em',
                 color: 'var(--text-muted)',
               }}
@@ -302,7 +302,7 @@ export default function TrajectoryPanel({
                 <span
                   style={{
                     ...mono,
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: 700,
                     color:
                       a.severity === 'critical'
@@ -324,7 +324,7 @@ export default function TrajectoryPanel({
           <span
             style={{
               ...mono,
-              fontSize: 8,
+              fontSize: 12,
               letterSpacing: '0.12em',
               color: 'var(--text-muted)',
             }}
@@ -360,7 +360,7 @@ export default function TrajectoryPanel({
                   <span
                     style={{
                       ...mono,
-                      fontSize: 8,
+                      fontSize: 12,
                       color: 'var(--text-muted)',
                       letterSpacing: '0.08em',
                     }}
@@ -370,7 +370,7 @@ export default function TrajectoryPanel({
                   <span
                     style={{
                       ...mono,
-                      fontSize: 7,
+                      fontSize: 12,
                       fontWeight: 700,
                       letterSpacing: '0.08em',
                       padding: '1px 4px',
@@ -386,21 +386,21 @@ export default function TrajectoryPanel({
                   <span
                     style={{
                       ...mono,
-                      fontSize: 22,
+                      fontSize: 20,
                       fontWeight: 300,
                       color: RISK_COLOR[vt.risk],
                     }}
                   >
                     {vt.values[vt.values.length - 1] ?? '—'}
                   </span>
-                  <span style={{ ...mono, fontSize: 8, color: 'var(--text-muted)' }}>
+                  <span style={{ ...mono, fontSize: 12, color: 'var(--text-muted)' }}>
                     {vt.unit}
                   </span>
                 </div>
                 <div
                   style={{
                     ...sans,
-                    fontSize: 9,
+                    fontSize: 12,
                     color: 'var(--text-muted)',
                     marginTop: 3,
                     fontStyle: 'italic',
@@ -433,7 +433,7 @@ export default function TrajectoryPanel({
             <span
               style={{
                 ...mono,
-                fontSize: 9,
+                fontSize: 12,
                 letterSpacing: '0.1em',
                 color: deterioration.color,
                 fontWeight: 700,
@@ -441,9 +441,9 @@ export default function TrajectoryPanel({
             >
               GLOBAL DETERIORATION — {deterioration.label}
             </span>
-            <span style={{ ...mono, fontSize: 11, color: deterioration.color }}>
+            <span style={{ ...mono, fontSize: 12, color: deterioration.color }}>
               {analysis.global_deterioration.deterioration_score.toFixed(0)}
-              <span style={{ fontSize: 8 }}>/100</span>
+              <span style={{ fontSize: 12 }}>/100</span>
             </span>
           </div>
           {/* Score bar */}
@@ -465,7 +465,7 @@ export default function TrajectoryPanel({
               }}
             />
           </div>
-          <div style={{ ...sans, fontSize: 10, color: 'var(--text-main)' }}>
+          <div style={{ ...sans, fontSize: 12, color: 'var(--text-main)' }}>
             {analysis.clinical_safe_output.recommended_action}
           </div>
         </div>
@@ -475,7 +475,7 @@ export default function TrajectoryPanel({
           <span
             style={{
               ...mono,
-              fontSize: 8,
+              fontSize: 12,
               letterSpacing: '0.12em',
               color: 'var(--text-muted)',
             }}
@@ -495,7 +495,7 @@ export default function TrajectoryPanel({
                 <span
                   style={{
                     ...mono,
-                    fontSize: 9,
+                    fontSize: 12,
                     color: 'var(--text-muted)',
                     minWidth: 140,
                   }}
@@ -523,7 +523,7 @@ export default function TrajectoryPanel({
                 <span
                   style={{
                     ...mono,
-                    fontSize: 9,
+                    fontSize: 12,
                     fontWeight: 700,
                     minWidth: 32,
                     textAlign: 'right',
@@ -550,7 +550,7 @@ export default function TrajectoryPanel({
             <span
               style={{
                 ...mono,
-                fontSize: 8,
+                fontSize: 12,
                 letterSpacing: '0.12em',
                 color: '#f97316',
                 display: 'block',
@@ -565,7 +565,7 @@ export default function TrajectoryPanel({
                   key={e.label}
                   style={{
                     ...mono,
-                    fontSize: 9,
+                    fontSize: 12,
                     padding: '2px 8px',
                     borderRadius: 3,
                     border: '1px solid #f9731640',
@@ -584,7 +584,7 @@ export default function TrajectoryPanel({
           <span
             style={{
               ...mono,
-              fontSize: 8,
+              fontSize: 12,
               letterSpacing: '0.12em',
               color: 'var(--text-muted)',
             }}
@@ -604,14 +604,14 @@ export default function TrajectoryPanel({
                 <span
                   style={{
                     ...mono,
-                    fontSize: 9,
+                    fontSize: 12,
                     color: 'var(--c-asesmen)',
                     marginTop: 1,
                   }}
                 >
                   ▸
                 </span>
-                <span style={{ ...sans, fontSize: 10, color: 'var(--text-main)' }}>{d}</span>
+                <span style={{ ...sans, fontSize: 12, color: 'var(--text-main)' }}>{d}</span>
               </div>
             ))}
           </div>
@@ -622,7 +622,7 @@ export default function TrajectoryPanel({
           <span
             style={{
               ...mono,
-              fontSize: 8,
+              fontSize: 12,
               letterSpacing: '0.12em',
               color: 'var(--text-muted)',
             }}
@@ -657,7 +657,7 @@ export default function TrajectoryPanel({
                   <span
                     style={{
                       ...mono,
-                      fontSize: 7,
+                      fontSize: 12,
                       fontWeight: 700,
                       letterSpacing: '0.1em',
                       color: borderColor,
@@ -666,7 +666,7 @@ export default function TrajectoryPanel({
                   >
                     {rec.priority.toUpperCase()}
                   </span>
-                  <span style={{ ...sans, fontSize: 10, color: 'var(--text-main)' }}>
+                  <span style={{ ...sans, fontSize: 12, color: 'var(--text-main)' }}>
                     {rec.text}
                   </span>
                 </div>
@@ -687,7 +687,7 @@ export default function TrajectoryPanel({
           <span
             style={{
               ...mono,
-              fontSize: 8,
+              fontSize: 12,
               letterSpacing: '0.1em',
               color: 'var(--text-muted)',
               display: 'block',
@@ -699,7 +699,7 @@ export default function TrajectoryPanel({
           <p
             style={{
               ...sans,
-              fontSize: 10,
+              fontSize: 12,
               color: 'var(--text-muted)',
               margin: 0,
               fontStyle: 'italic',
@@ -722,7 +722,7 @@ export default function TrajectoryPanel({
             <span
               style={{
                 ...mono,
-                fontSize: 7,
+                fontSize: 12,
                 color: 'var(--text-muted)',
                 letterSpacing: '0.1em',
                 display: 'block',
@@ -753,7 +753,7 @@ export default function TrajectoryPanel({
             <span
               style={{
                 ...mono,
-                fontSize: 7,
+                fontSize: 12,
                 color: 'var(--text-muted)',
                 letterSpacing: '0.1em',
                 display: 'block',
@@ -784,7 +784,7 @@ export default function TrajectoryPanel({
             <span
               style={{
                 ...mono,
-                fontSize: 7,
+                fontSize: 12,
                 color: 'var(--text-muted)',
                 letterSpacing: '0.1em',
                 display: 'block',
@@ -793,7 +793,7 @@ export default function TrajectoryPanel({
             >
               STABILITY
             </span>
-            <span style={{ ...mono, fontSize: 11, color: 'var(--text-main)' }}>
+            <span style={{ ...mono, fontSize: 12, color: 'var(--text-main)' }}>
               {analysis.trajectory_volatility.stability_label.replace(/_/g, ' ').toUpperCase()}
             </span>
           </div>
@@ -804,7 +804,7 @@ export default function TrajectoryPanel({
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, paddingTop: 4 }}>
             <span
               style={{
-                fontSize: 8,
+                fontSize: 12,
                 fontFamily: 'var(--font-mono)',
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',

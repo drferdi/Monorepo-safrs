@@ -44,7 +44,7 @@ function Paragraph({ children }: { children: React.ReactNode }) {
   return (
     <p
       style={{
-        fontSize: 15,
+        fontSize: 14,
         lineHeight: 1.75,
         color: 'var(--text-main)',
         margin: '0 0 14px',
@@ -68,7 +68,7 @@ function BulletList({ items }: { items: string[] }) {
         <li
           key={i}
           style={{
-            fontSize: 15,
+            fontSize: 14,
             lineHeight: 1.75,
             color: 'var(--text-main)',
             marginBottom: 4,
@@ -94,7 +94,7 @@ function AlertBox({ children }: { children: React.ReactNode }) {
     >
       <p
         style={{
-          fontSize: 15,
+          fontSize: 14,
           lineHeight: 1.75,
           color: 'var(--text-main)',
           margin: 0,
@@ -397,7 +397,7 @@ function SecurityTab() {
               <th
                 style={{
                   padding: '10px 16px',
-                  fontSize: 15,
+                  fontSize: 14,
                   fontWeight: 600,
                   textAlign: 'left',
                   color: ACCENT,
@@ -409,7 +409,7 @@ function SecurityTab() {
               <th
                 style={{
                   padding: '10px 16px',
-                  fontSize: 15,
+                  fontSize: 14,
                   fontWeight: 600,
                   textAlign: 'left',
                   color: ACCENT,
@@ -444,7 +444,7 @@ function SecurityTab() {
                 <td
                   style={{
                     padding: '10px 16px',
-                    fontSize: 15,
+                    fontSize: 14,
                     fontWeight: 600,
                     color: 'var(--text-main)',
                   }}
@@ -454,7 +454,7 @@ function SecurityTab() {
                 <td
                   style={{
                     padding: '10px 16px',
-                    fontSize: 15,
+                    fontSize: 14,
                     color: 'var(--text-main)',
                   }}
                 >
@@ -553,7 +553,7 @@ export default function LegalPage() {
         <p
           style={{
             margin: 0,
-            fontSize: 11,
+            fontSize: 12,
             letterSpacing: '0.2em',
             color: 'var(--text-muted)',
           }}
@@ -563,7 +563,7 @@ export default function LegalPage() {
         <h1
           style={{
             margin: '6px 0 0',
-            fontSize: 26,
+            fontSize: 28,
             fontWeight: 600,
             color: 'var(--text-main)',
           }}
@@ -573,7 +573,7 @@ export default function LegalPage() {
         <p
           style={{
             margin: '8px 0 0',
-            fontSize: 15,
+            fontSize: 14,
             color: 'var(--text-muted)',
           }}
         >
@@ -610,7 +610,7 @@ export default function LegalPage() {
                   ? 'color-mix(in srgb, var(--c-asesmen) 8%, transparent)'
                   : 'transparent',
                 color: isActive ? ACCENT : 'var(--text-muted)',
-                fontSize: 11,
+                fontSize: 12,
                 fontWeight: 600,
                 letterSpacing: '0.1em',
                 cursor: 'pointer',
@@ -644,7 +644,7 @@ export default function LegalPage() {
         <p
           style={{
             margin: 0,
-            fontSize: 15,
+            fontSize: 14,
             color: 'var(--text-muted)',
           }}
         >
@@ -653,7 +653,7 @@ export default function LegalPage() {
         <p
           style={{
             margin: 0,
-            fontSize: 15,
+            fontSize: 14,
             color: 'var(--text-muted)',
           }}
         >

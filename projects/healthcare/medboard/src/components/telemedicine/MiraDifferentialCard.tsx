@@ -34,7 +34,7 @@ export function MiraDifferentialCard({ differential }: { differential: MiraDiffe
       >
         <div
           style={{
-            fontSize: 10,
+            fontSize: 12,
             color: 'var(--text-muted)',
             textTransform: 'uppercase',
             letterSpacing: '0.1em',
@@ -42,11 +42,11 @@ export function MiraDifferentialCard({ differential }: { differential: MiraDiffe
         >
           Diferensial MIRA
         </div>
-        <span style={{ fontSize: 10, color: 'var(--text-muted)' }}>
+        <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
           dari Assist · {formatGeneratedAt(differential.generated_at)}
         </span>
       </div>
-      <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 8 }}>
+      <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 8 }}>
         Saran pendukung keputusan dari MIRA; keputusan klinis tetap pada dokter.
       </div>
 
@@ -61,7 +61,7 @@ export function MiraDifferentialCard({ differential }: { differential: MiraDiffe
               <span
                 style={{
                   marginLeft: 6,
-                  fontSize: 10,
+                  fontSize: 12,
                   fontWeight: 700,
                   padding: '2px 6px',
                   borderRadius: 999,
@@ -72,7 +72,7 @@ export function MiraDifferentialCard({ differential }: { differential: MiraDiffe
               </span>
             )}
             {item.rationale && (
-              <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>{item.rationale}</div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{item.rationale}</div>
             )}
           </li>
         ))}
@@ -80,10 +80,10 @@ export function MiraDifferentialCard({ differential }: { differential: MiraDiffe
 
       {differential.next_best_actions.length > 0 && (
         <div style={{ marginTop: 10 }}>
-          <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 2 }}>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 2 }}>
             Langkah berikutnya
           </div>
-          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 11, color: 'var(--text-main)' }}>
+          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 12, color: 'var(--text-main)' }}>
             {differential.next_best_actions.map(action => (
               <li key={`${action.kind}-${action.item}`}>
                 {NEXT_ACTION_LABEL[action.kind]}: {action.item} — {action.reason}
@@ -95,10 +95,10 @@ export function MiraDifferentialCard({ differential }: { differential: MiraDiffe
 
       {differential.missing_information.length > 0 && (
         <div style={{ marginTop: 8 }}>
-          <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 2 }}>
+          <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 2 }}>
             Data yang belum ada
           </div>
-          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 11, color: 'var(--text-main)' }}>
+          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 12, color: 'var(--text-main)' }}>
             {differential.missing_information.map(item => (
               <li key={item}>{item}</li>
             ))}

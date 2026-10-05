@@ -59,7 +59,7 @@ const inputStyle: React.CSSProperties = {
   border: '1px solid var(--line-base)',
   background: 'transparent',
   padding: '8px 12px',
-  fontSize: 13,
+  fontSize: 14,
   color: 'var(--text-main)',
   outline: 'none',
   fontFamily: 'var(--font-sans)',
@@ -68,7 +68,7 @@ const inputStyle: React.CSSProperties = {
 const actionBtnBase: React.CSSProperties = {
   borderRadius: 4,
   padding: '8px 14px',
-  fontSize: 13,
+  fontSize: 14,
   fontFamily: 'var(--font-mono)',
   letterSpacing: '0.05em',
   cursor: 'pointer',
@@ -136,7 +136,7 @@ export function AIInsightsPanelContent({
         >
           <div
             style={{
-              fontSize: 10,
+              fontSize: 12,
               fontFamily: 'var(--font-mono)',
               letterSpacing: '0.18em',
               textTransform: 'uppercase',
@@ -166,7 +166,7 @@ export function AIInsightsPanelContent({
           >
             <div
               style={{
-                fontSize: 10,
+                fontSize: 12,
                 fontFamily: 'var(--font-mono)',
                 letterSpacing: '0.18em',
                 textTransform: 'uppercase',
@@ -190,7 +190,7 @@ export function AIInsightsPanelContent({
                 <li
                   key={violation.code}
                   style={{
-                    fontSize: 13,
+                    fontSize: 14,
                     lineHeight: 1.6,
                     color: 'var(--text-muted)',
                   }}
@@ -225,7 +225,7 @@ export function AIInsightsPanelContent({
         <AIDisclosureBadge />
         <span
           style={{
-            fontSize: 11,
+            fontSize: 12,
             fontFamily: 'var(--font-mono)',
             letterSpacing: '0.14em',
             textTransform: 'uppercase',
@@ -256,7 +256,7 @@ export function AIInsightsPanelContent({
         >
           <div
             style={{
-              fontSize: 10,
+              fontSize: 12,
               fontFamily: 'var(--font-mono)',
               letterSpacing: '0.18em',
               textTransform: 'uppercase',
@@ -303,7 +303,7 @@ export function AIInsightsPanelContent({
         >
           <div
             style={{
-              fontSize: 10,
+              fontSize: 12,
               fontFamily: 'var(--font-mono)',
               letterSpacing: '0.18em',
               textTransform: 'uppercase',
@@ -327,7 +327,7 @@ export function AIInsightsPanelContent({
               <li
                 key={warning.code}
                 style={{
-                  fontSize: 13,
+                  fontSize: 14,
                   lineHeight: 1.6,
                   color: 'var(--text-muted)',
                 }}
@@ -368,7 +368,7 @@ export function AIInsightsPanelContent({
                   borderRadius: 20,
                   border: '1px solid var(--line-base)',
                   padding: '3px 10px',
-                  fontSize: 10,
+                  fontSize: 12,
                   fontFamily: 'var(--font-mono)',
                   letterSpacing: '0.14em',
                   textTransform: 'uppercase',
@@ -382,7 +382,7 @@ export function AIInsightsPanelContent({
                   borderRadius: 20,
                   border: '1px solid var(--c-asesmen)',
                   padding: '3px 10px',
-                  fontSize: 10,
+                  fontSize: 12,
                   fontFamily: 'var(--font-mono)',
                   letterSpacing: '0.14em',
                   textTransform: 'uppercase',
@@ -393,7 +393,7 @@ export function AIInsightsPanelContent({
               </span>
               <span
                 style={{
-                  fontSize: 11,
+                  fontSize: 12,
                   fontFamily: 'var(--font-mono)',
                   letterSpacing: '0.12em',
                   textTransform: 'uppercase',
@@ -418,7 +418,7 @@ export function AIInsightsPanelContent({
             </h3>
             <p
               style={{
-                fontSize: 13,
+                fontSize: 14,
                 lineHeight: 1.6,
                 color: 'var(--text-muted)',
                 marginBottom: 12,
@@ -443,7 +443,7 @@ export function AIInsightsPanelContent({
                   <li
                     key={item}
                     style={{
-                      fontSize: 13,
+                      fontSize: 14,
                       lineHeight: 1.6,
                       color: 'var(--text-muted)',
                     }}
@@ -466,7 +466,7 @@ export function AIInsightsPanelContent({
               <div>
                 <div
                   style={{
-                    fontSize: 10,
+                    fontSize: 12,
                     fontFamily: 'var(--font-mono)',
                     letterSpacing: '0.14em',
                     textTransform: 'uppercase',
@@ -490,7 +490,7 @@ export function AIInsightsPanelContent({
               <div>
                 <div
                   style={{
-                    fontSize: 10,
+                    fontSize: 12,
                     fontFamily: 'var(--font-mono)',
                     letterSpacing: '0.14em',
                     textTransform: 'uppercase',
@@ -568,7 +568,7 @@ export function AIInsightsPanelContent({
               <p
                 style={{
                   marginTop: 12,
-                  fontSize: 13,
+                  fontSize: 14,
                   color: draftState.status === 'error' ? 'var(--c-critical)' : 'var(--text-muted)',
                 }}
               >

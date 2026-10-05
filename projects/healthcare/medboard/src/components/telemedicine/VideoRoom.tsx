@@ -97,7 +97,7 @@ export function VideoRoom({
         }}
       >
         <div style={{ fontSize: 48, marginBottom: 16 }}>⚠️</div>
-        <h3 style={{ color: 'var(--text-main)', fontSize: 18, marginBottom: 8 }}>
+        <h3 style={{ color: 'var(--text-main)', fontSize: 16, marginBottom: 8 }}>
           Gagal Terhubung
         </h3>
         <p
@@ -191,14 +191,14 @@ export function VideoRoom({
               animation: 'pulse 2s infinite',
             }}
           />
-          <span style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>
+          <span style={{ color: '#fff', fontSize: 14, fontWeight: 600 }}>
             Konsultasi Telemedicine
           </span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <NetworkQualityBadge quality={sessionState.networkQuality} />
           <ConsultationTimer elapsedSeconds={sessionState.elapsedSeconds} />
-          <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>
+          <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14 }}>
             {sessionState.participantCount} peserta
           </span>
         </div>
@@ -225,7 +225,7 @@ export function VideoRoom({
               justifyContent: 'center',
               height: '100%',
               color: 'rgba(255,255,255,0.3)',
-              fontSize: 13,
+              fontSize: 14,
             }}
           >
             Menunggu koneksi...

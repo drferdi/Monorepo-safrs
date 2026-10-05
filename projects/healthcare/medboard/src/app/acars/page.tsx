@@ -29,7 +29,7 @@ const StaffMap = dynamic(() => import('@/components/map/StaffMap'), {
         justifyContent: 'center',
         gap: 12,
         color: 'var(--text-muted)',
-        fontSize: 13,
+        fontSize: 14,
         letterSpacing: '0.1em',
       }}
     >
@@ -335,7 +335,7 @@ export default function AcarsPage() {
             <OnlineIndicator isOnline={connected} />
             <span
               style={{
-                fontSize: 11,
+                fontSize: 12,
                 letterSpacing: '0.1em',
                 color: connected ? 'var(--c-ok)' : 'var(--text-muted)',
               }}
@@ -369,7 +369,7 @@ export default function AcarsPage() {
               <div style={{ textAlign: 'right' }}>
                 <div
                   style={{
-                    fontSize: 15,
+                    fontSize: 14,
                     fontWeight: 600,
                     color: 'var(--text-main)',
                   }}
@@ -378,7 +378,7 @@ export default function AcarsPage() {
                 </div>
                 <div
                   style={{
-                    fontSize: 11,
+                    fontSize: 12,
                     color: 'var(--text-muted)',
                     letterSpacing: '0.1em',
                   }}
@@ -413,7 +413,7 @@ export default function AcarsPage() {
               justifyContent: 'center',
               background: 'rgba(0,0,0,0.4)',
               color: 'var(--text-muted)',
-              fontSize: 13,
+              fontSize: 14,
               letterSpacing: '0.08em',
             }}
           >
@@ -454,7 +454,7 @@ export default function AcarsPage() {
           </div>
           <div
             style={{
-              fontSize: 11,
+              fontSize: 12,
               color: 'var(--text-muted)',
               letterSpacing: '0.08em',
             }}
@@ -483,7 +483,7 @@ export default function AcarsPage() {
             <span
               key={h}
               style={{
-                fontSize: 10,
+                fontSize: 12,
                 letterSpacing: '0.1em',
                 color: 'var(--text-muted)',
                 textTransform: 'uppercase',
@@ -542,7 +542,7 @@ export default function AcarsPage() {
                 <div>
                   <div
                     style={{
-                      fontSize: 15,
+                      fontSize: 14,
                       fontWeight: 600,
                       color: 'var(--text-main)',
                       letterSpacing: '0.02em',
@@ -550,12 +550,12 @@ export default function AcarsPage() {
                   >
                     {user.name}{' '}
                     {isMe && (
-                      <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>(you)</span>
+                      <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>(you)</span>
                     )}
                   </div>
                   <div
                     style={{
-                      fontSize: 11,
+                      fontSize: 12,
                       color: 'var(--text-muted)',
                       letterSpacing: '0.05em',
                       marginTop: 2,
@@ -569,7 +569,7 @@ export default function AcarsPage() {
               {/* Profesi */}
               <div
                 style={{
-                  fontSize: 13,
+                  fontSize: 14,
                   color: 'var(--text-main)',
                   letterSpacing: '0.03em',
                 }}
@@ -612,7 +612,7 @@ export default function AcarsPage() {
                 />
                 <span
                   style={{
-                    fontSize: 10,
+                    fontSize: 12,
                     fontWeight: 600,
                     letterSpacing: '0.1em',
                     color: 'var(--c-ok)',
@@ -685,7 +685,7 @@ export default function AcarsPage() {
                 padding: '2px 8px',
                 background: myColor,
                 borderRadius: 10,
-                fontSize: 11,
+                fontSize: 12,
                 color: '#fff',
               }}
             >
@@ -712,7 +712,7 @@ export default function AcarsPage() {
               style={{
                 textAlign: 'center',
                 color: 'var(--text-muted)',
-                fontSize: 15,
+                fontSize: 14,
                 padding: '40px 0',
               }}
             >
@@ -734,14 +734,14 @@ export default function AcarsPage() {
               >
                 <div
                   style={{
-                    fontSize: 11,
+                    fontSize: 12,
                     color: isMe ? myColor : 'var(--text-muted)',
                     marginBottom: 4,
                   }}
                 >
                   {isMe ? 'You' : msg.senderName} · {msg.time}
                 </div>
-                <div style={{ fontSize: 13, color: 'var(--text-main)' }}>{msg.text}</div>
+                <div style={{ fontSize: 14, color: 'var(--text-main)' }}>{msg.text}</div>
               </div>
             )
           })}
@@ -763,7 +763,7 @@ export default function AcarsPage() {
               border: '1px solid var(--line-base)',
               borderRadius: 8,
               color: 'var(--text-main)',
-              fontSize: 15,
+              fontSize: 14,
               outline: 'none',
             }}
           />

@@ -103,14 +103,14 @@ export default function AuditEventDetailPage({
   }
   const monoStyle: React.CSSProperties = {
     ...inputStyle,
-    fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+    fontFamily: 'var(--font-base)',
     fontSize: 12,
     color: 'var(--text-muted)',
     letterSpacing: '0.04em',
     wordBreak: 'break-all',
   }
   const sectionTitleStyle: React.CSSProperties = {
-    fontSize: 13,
+    fontSize: 14,
     letterSpacing: '0.15em',
     color: 'var(--c-asesmen)',
     borderBottom: '1px solid var(--line-base)',
@@ -119,7 +119,7 @@ export default function AuditEventDetailPage({
     marginTop: 32,
   }
   const btnStyle: React.CSSProperties = {
-    fontSize: 13,
+    fontSize: 14,
     letterSpacing: '0.1em',
     padding: '8px 20px',
     background: '#101012',
@@ -136,14 +136,14 @@ export default function AuditEventDetailPage({
 
   /* ── Loading / error states ── */
   if (loading) return (
-    <div style={{ maxWidth: PAGE_W, margin: '0 auto', padding: '48px 24px', textAlign: 'center', fontSize: 13, color: 'var(--text-muted)', letterSpacing: '0.15em' }}>
+    <div style={{ maxWidth: PAGE_W, margin: '0 auto', padding: '48px 24px', textAlign: 'center', fontSize: 14, color: 'var(--text-muted)', letterSpacing: '0.15em' }}>
       MEMUAT DATA...
     </div>
   )
 
   if (error || !data) return (
     <div style={{ maxWidth: PAGE_W, margin: '0 auto', padding: '48px 24px' }}>
-      <div style={{ color: 'var(--c-asesmen)', fontSize: 13, marginBottom: 16 }}>{error ?? 'Event tidak ditemukan'}</div>
+      <div style={{ color: 'var(--c-asesmen)', fontSize: 14, marginBottom: 16 }}>{error ?? 'Event tidak ditemukan'}</div>
       <Link href="/audit/logbook" style={btnStyle}>← KEMBALI</Link>
     </div>
   )

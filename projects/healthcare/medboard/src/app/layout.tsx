@@ -1,18 +1,11 @@
 // Drferdi — vision, brought to life.
 import type { Metadata } from 'next'
+import '@fontsource-variable/ibm-plex-sans'
 import './globals.css'
-import { Poppins } from 'next/font/google'
 import AppFooter from '@/components/AppFooter'
 import AppNav from '@/components/AppNav'
 import CrewAccessGate from '@/components/CrewAccessGate'
 import ThemeProvider from '@/components/ThemeProvider'
-
-const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-sans',
-  display: 'swap',
-})
 
 export const metadata: Metadata = {
   title: 'Sentra — Puskesmas Dashboard',
@@ -30,8 +23,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="id" data-theme="dark" className={poppins.variable}>
-      <body className={poppins.className}>
+    <html lang="id" data-theme="dark">
+      <body>
         <ThemeProvider>
           <CrewAccessGate>
             <div className="app-shell">

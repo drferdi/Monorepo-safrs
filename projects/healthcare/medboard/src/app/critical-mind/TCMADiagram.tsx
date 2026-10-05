@@ -53,13 +53,13 @@ export default function TCMADiagram() {
         borderRadius: 2,
         border: '1px solid var(--line-base)',
         background: 'transparent',
-        fontFamily: "'Georgia', 'Times New Roman', serif",
+        fontFamily: 'var(--font-base)',
       }}
     >
       {/* Title — hand-written feel */}
       <div
         style={{
-          fontSize: 11,
+          fontSize: 12,
           letterSpacing: '0.2em',
           textTransform: 'uppercase',
           color: 'var(--text-muted)',
@@ -117,7 +117,7 @@ export default function TCMADiagram() {
             {/* Number */}
             <div
               style={{
-                fontSize: 22,
+                fontSize: 20,
                 fontWeight: 400,
                 color: 'var(--text-muted)',
                 opacity: 0.35,
@@ -233,7 +233,7 @@ export default function TCMADiagram() {
         </div>
         <div
           style={{
-            fontSize: 11,
+            fontSize: 12,
             color: 'var(--text-muted)',
             opacity: 0.5,
             letterSpacing: '0.04em',

@@ -11,7 +11,7 @@
 /* ─── Header ─────────────────────────────────────────────── */
 
 .eyebrow {
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.22em;
   color: var(--c-asesmen);
@@ -76,7 +76,7 @@
 }
 
 .kpiLabel {
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--text-muted);
@@ -97,7 +97,7 @@
 }
 
 .listHeaderLabel {
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.18em;
   color: var(--text-muted);
@@ -169,7 +169,7 @@
 /* ─── Checked At ──────────────────────────────────────────── */
 
 .checkedAt {
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   color: var(--text-muted);
   white-space: nowrap;
   flex-shrink: 0;
@@ -178,7 +178,7 @@
 /* ─── Status Badge ────────────────────────────────────────── */
 
 .statusBadge {
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--text-muted);
@@ -192,7 +192,7 @@
 /* ─── Readiness Badge ─────────────────────────────────────── */
 
 .readinessBadge {
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -266,7 +266,7 @@
 }
 
 .issueCode {
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -291,7 +291,7 @@
 /* ─── States ──────────────────────────────────────────────── */
 
 .statusState {
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.18em;
   color: var(--text-muted);

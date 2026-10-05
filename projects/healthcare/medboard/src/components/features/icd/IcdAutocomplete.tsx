@@ -189,7 +189,7 @@ export function IcdAutocomplete({
             right: 8,
             top: '50%',
             transform: 'translateY(-50%)',
-            fontSize: 10,
+            fontSize: 12,
             color: isLoading
               ? 'var(--text-muted)'
               : isValidCode
@@ -246,7 +246,7 @@ export function IcdAutocomplete({
               {/* Code badge */}
               <span
                 style={{
-                  fontSize: 10,
+                  fontSize: 12,
                   fontFamily: 'var(--font-mono)',
                   color: '#eb5939',
                   minWidth: 52,
@@ -258,7 +258,7 @@ export function IcdAutocomplete({
               {/* Name */}
               <span
                 style={{
-                  fontSize: 11,
+                  fontSize: 12,
                   color: 'var(--text-base, #ccc)',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',

@@ -697,7 +697,7 @@ export default function ClinicalTrajectoryChart({
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           <span
             style={{
-              fontSize: 11,
+              fontSize: 12,
               color: '#FFCC8C',
               letterSpacing: '0.16em',
               textTransform: 'uppercase',
@@ -705,7 +705,7 @@ export default function ClinicalTrajectoryChart({
           >
             Clinical Trajectory Chart
           </span>
-          <span style={{ fontSize: 13, color: CHART_TEXT_SOFT, lineHeight: 1.6 }}>
+          <span style={{ fontSize: 14, color: CHART_TEXT_SOFT, lineHeight: 1.6 }}>
             {hasVisitHistory
               ? `Vital trend dari ${trajectoryHistory.length} kunjungan historis terbaru + kunjungan hari ini. SBP/DBP/HR ditampilkan lintas waktu.`
               : 'Snapshot v1 untuk membaca beban klinis historis pasien sebelum masuk ke tahap vital sign dan assessment dokter.'}
@@ -713,7 +713,7 @@ export default function ClinicalTrajectoryChart({
         </div>
         <span
           style={{
-            fontSize: 11,
+            fontSize: 12,
             color: CHART_TEXT_MUTED,
             letterSpacing: '0.1em',
             textTransform: 'uppercase',
@@ -753,7 +753,7 @@ export default function ClinicalTrajectoryChart({
               >
                 <div
                   style={{
-                    fontSize: 10,
+                    fontSize: 12,
                     color: p.label === 'HARI INI' ? '#FFCC8C' : CHART_TEXT_MUTED,
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',
@@ -764,7 +764,7 @@ export default function ClinicalTrajectoryChart({
                 </div>
                 <div
                   style={{
-                    fontSize: 18,
+                    fontSize: 16,
                     color: CHART_TEXT_SOFT,
                     fontWeight: 300,
                     marginBottom: 2,
@@ -772,18 +772,18 @@ export default function ClinicalTrajectoryChart({
                 >
                   {p.vitals.sbp}/{p.vitals.dbp}
                 </div>
-                <div style={{ fontSize: 10, color: CHART_TEXT_DIM }}>
+                <div style={{ fontSize: 12, color: CHART_TEXT_DIM }}>
                   HR {p.vitals.hr} · Suhu {p.vitals.temp} · GDS {p.vitals.glucose || '-'}
                 </div>
                 {p.diagnosa && (
-                  <div style={{ fontSize: 10, color: '#FFCC8C', marginTop: 3 }}>
+                  <div style={{ fontSize: 12, color: '#FFCC8C', marginTop: 3 }}>
                     {p.diagnosa.icd_x} {p.diagnosa.nama}
                   </div>
                 )}
                 {p.keluhan && (
                   <div
                     style={{
-                      fontSize: 10,
+                      fontSize: 12,
                       color: CHART_TEXT_DIM,
                       marginTop: 2,
                       fontStyle: 'italic',
@@ -870,7 +870,7 @@ export default function ClinicalTrajectoryChart({
               >
                 <div
                   style={{
-                    fontSize: 11,
+                    fontSize: 12,
                     color: CHART_TEXT_MUTED,
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',
@@ -879,7 +879,7 @@ export default function ClinicalTrajectoryChart({
                 >
                   {item.label}
                 </div>
-                <div style={{ fontSize: 13, color: '#E5DDD4', lineHeight: 1.6 }}>
+                <div style={{ fontSize: 14, color: '#E5DDD4', lineHeight: 1.6 }}>
                   {item.values.length > 0 ? item.values.join(', ') : 'Belum ada data.'}
                 </div>
               </div>
@@ -914,7 +914,7 @@ export default function ClinicalTrajectoryChart({
             >
               <div
                 style={{
-                  fontSize: 11,
+                  fontSize: 12,
                   color: CHART_TEXT_MUTED,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
@@ -937,7 +937,7 @@ export default function ClinicalTrajectoryChart({
             >
               <div
                 style={{
-                  fontSize: 11,
+                  fontSize: 12,
                   color: CHART_TEXT_MUTED,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',

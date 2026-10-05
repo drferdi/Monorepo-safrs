@@ -74,7 +74,7 @@ export function MomentumHistoryChart({ history }: MomentumHistoryChartProps) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
         <div
           style={{
-            fontSize: 10,
+            fontSize: 12,
             fontFamily: 'var(--font-mono)',
             letterSpacing: '0.18em',
             textTransform: 'uppercase',
@@ -85,7 +85,7 @@ export function MomentumHistoryChart({ history }: MomentumHistoryChartProps) {
         </div>
         <span
           style={{
-            fontSize: 10,
+            fontSize: 12,
             fontFamily: 'var(--font-mono)',
             color: levelCfg.color,
             fontWeight: 600,
@@ -131,16 +131,16 @@ export function MomentumHistoryChart({ history }: MomentumHistoryChartProps) {
 
         {/* Y labels */}
         {[0, 50, 100].map((v) => (
-          <text key={v} x={PAD.left - 3} y={toY(v).toFixed(1)} textAnchor="end" dominantBaseline="middle" fontSize={7} fill="var(--text-muted)" fontFamily="var(--font-mono)">
+          <text key={v} x={PAD.left - 3} y={toY(v).toFixed(1)} textAnchor="end" dominantBaseline="middle" fontSize={12} fill="var(--text-muted)" fontFamily="var(--font-mono)">
             {v}
           </text>
         ))}
 
         {/* X date labels: first + last */}
-        <text x={PAD.left} y={CHART_H - 1} textAnchor="start" fontSize={7} fill="var(--text-muted)" fontFamily="var(--font-mono)">
+        <text x={PAD.left} y={CHART_H - 1} textAnchor="start" fontSize={12} fill="var(--text-muted)" fontFamily="var(--font-mono)">
           {formatDateDM(history[0].visitDate)}
         </text>
-        <text x={PAD.left + INNER_W} y={CHART_H - 1} textAnchor="end" fontSize={7} fill="var(--text-muted)" fontFamily="var(--font-mono)">
+        <text x={PAD.left + INNER_W} y={CHART_H - 1} textAnchor="end" fontSize={12} fill="var(--text-muted)" fontFamily="var(--font-mono)">
           {formatDateDM(history[history.length - 1].visitDate)}
         </text>
       </svg>
