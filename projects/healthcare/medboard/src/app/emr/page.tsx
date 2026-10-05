@@ -7509,58 +7509,46 @@ export default function EMRPage() {
                     marginTop: '16px',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '10px',
+                    gap: '16px',
                   }}
                 >
                   {screeningAlerts.map((alert) => {
                     const isCrit = alert.severity === 'critical'
                     const isHigh = alert.severity === 'high'
+                    const accent = isCrit ? '#ef4444' : isHigh ? '#f97316' : '#eab308'
                     return (
                       <div
                         key={alert.id}
                         style={{
-                          padding: '12px 16px',
-                          borderRadius: '8px',
-                          border: `1px solid ${isCrit ? '#ef4444' : isHigh ? '#f97316' : '#eab308'}`,
-                          background: isCrit
-                            ? 'linear-gradient(135deg, rgba(220,38,38,0.15), rgba(153,27,27,0.15))'
-                            : isHigh
-                              ? 'rgba(249,115,22,0.10)'
-                              : 'rgba(234,179,8,0.08)',
-                          animation: isCrit ? 'pulse-border 2s infinite' : undefined,
+                          padding: '2px 0 2px 14px',
+                          borderLeft: `2px solid ${accent}`,
                         }}
                       >
                         <div
                           style={{
                             display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                            marginBottom: '6px',
+                            alignItems: 'baseline',
+                            gap: '10px',
+                            flexWrap: 'wrap',
+                            marginBottom: '4px',
                           }}
                         >
-                          <span style={{ fontSize: '16px' }}>
-                            {isCrit ? '🚑' : isHigh ? '🚨' : '⚠️'}
-                          </span>
-                          {isCrit && (
-                            <span
-                              style={{
-                                background: '#ef4444',
-                                color: 'white',
-                                fontSize: '13px',
-                                fontWeight: 700,
-                                letterSpacing: '0.5px',
-                                padding: '2px 6px',
-                                borderRadius: '3px',
-                              }}
-                            >
-                              EMERGENCY
-                            </span>
-                          )}
                           <span
                             style={{
-                              fontWeight: 700,
-                              fontSize: '13px',
-                              color: isCrit ? '#ef4444' : isHigh ? '#f97316' : '#eab308',
+                              fontSize: 12,
+                              fontWeight: 600,
+                              letterSpacing: '0.08em',
+                              textTransform: 'uppercase',
+                              color: accent,
+                            }}
+                          >
+                            {isCrit ? 'Emergency' : isHigh ? 'Tinggi' : 'Waspada'}
+                          </span>
+                          <span
+                            style={{
+                              fontSize: 14,
+                              fontWeight: 600,
+                              color: 'var(--text-main)',
                             }}
                           >
                             {alert.title}
@@ -7568,32 +7556,41 @@ export default function EMRPage() {
                         </div>
                         <div
                           style={{
-                            fontSize: '13px',
+                            fontSize: 14,
                             color: 'var(--text-muted)',
                             marginBottom: '6px',
                           }}
                         >
                           {alert.reasoning}
                         </div>
-                        <div
+                        <ul
                           style={{
+                            listStyle: 'none',
                             display: 'flex',
                             flexDirection: 'column',
                             gap: '2px',
                           }}
                         >
                           {alert.recommendations.slice(0, 3).map((r, i) => (
-                            <div
+                            <li
                               key={i}
                               style={{
-                                fontSize: '13px',
-                                color: 'var(--text-base)',
+                                fontSize: 14,
+                                color: 'var(--text-main)',
+                                position: 'relative',
+                                paddingLeft: '14px',
                               }}
                             >
-                              ⚡ {r}
-                            </div>
+                              <span
+                                aria-hidden="true"
+                                style={{ position: 'absolute', left: 0, color: accent }}
+                              >
+                                –
+                              </span>
+                              {r}
+                            </li>
                           ))}
-                        </div>
+                        </ul>
                       </div>
                     )
                   })}
@@ -7608,7 +7605,7 @@ export default function EMRPage() {
                       marginTop: '16px',
                       display: 'flex',
                       flexDirection: 'column',
-                      gap: '10px',
+                      gap: '16px',
                     }}
                   >
                     <div
@@ -7653,43 +7650,36 @@ export default function EMRPage() {
                         <div
                           key={alert.id}
                           style={{
-                            padding: '12px 16px',
-                            borderRadius: '8px',
-                            border: `1px solid ${accent}`,
-                            background:
-                              alert.severity === 'critical'
-                                ? 'linear-gradient(135deg, rgba(220,38,38,0.12), rgba(153,27,27,0.12))'
-                                : alert.severity === 'high'
-                                  ? 'rgba(249,115,22,0.08)'
-                                  : 'rgba(234,179,8,0.08)',
+                            padding: '2px 0 2px 14px',
+                            borderLeft: `2px solid ${accent}`,
                           }}
                         >
                           <div
                             style={{
                               display: 'flex',
-                              alignItems: 'center',
+                              alignItems: 'baseline',
                               justifyContent: 'space-between',
                               gap: 8,
-                              marginBottom: 6,
+                              marginBottom: 4,
                               flexWrap: 'wrap',
                             }}
                           >
                             <span
                               style={{
-                                fontWeight: 700,
-                                fontSize: '13px',
-                                color: accent,
+                                fontWeight: 600,
+                                fontSize: 14,
+                                color: 'var(--text-main)',
                               }}
                             >
                               {alert.title}
                             </span>
                             <span
                               style={{
-                                border: `1px solid ${accent}`,
                                 color: accent,
-                                fontSize: 11,
-                                padding: '2px 6px',
-                                borderRadius: 999,
+                                fontSize: 12,
+                                fontWeight: 600,
+                                letterSpacing: '0.08em',
+                                textTransform: 'uppercase',
                               }}
                             >
                               {getCompositeConfidenceLabel(alert.confidence)}
@@ -7697,7 +7687,7 @@ export default function EMRPage() {
                           </div>
                           <div
                             style={{
-                              fontSize: '13px',
+                              fontSize: 14,
                               color: 'var(--text-muted)',
                               marginBottom: '6px',
                             }}
@@ -7708,7 +7698,7 @@ export default function EMRPage() {
                             style={{
                               display: 'flex',
                               flexDirection: 'column',
-                              gap: 3,
+                              gap: 2,
                               marginBottom: 6,
                             }}
                           >
@@ -7716,8 +7706,8 @@ export default function EMRPage() {
                               <div
                                 key={`${alert.id}-evidence-${index}`}
                                 style={{
-                                  fontSize: '12px',
-                                  color: 'var(--text-base)',
+                                  fontSize: 14,
+                                  color: 'var(--text-main)',
                                 }}
                               >
                                 {evidence}
@@ -7735,10 +7725,18 @@ export default function EMRPage() {
                               <div
                                 key={`${alert.id}-action-${index}`}
                                 style={{
-                                  fontSize: '12px',
-                                  color: 'var(--text-soft)',
+                                  fontSize: 14,
+                                  color: 'var(--text-main)',
+                                  position: 'relative',
+                                  paddingLeft: '14px',
                                 }}
                               >
+                                <span
+                                  aria-hidden="true"
+                                  style={{ position: 'absolute', left: 0, color: accent }}
+                                >
+                                  –
+                                </span>
                                 {action}
                               </div>
                             ))}
@@ -7750,10 +7748,8 @@ export default function EMRPage() {
                     {compositeDeterioration.watchers.length > 0 && (
                       <div
                         style={{
-                          border: '1px solid rgba(234,179,8,0.35)',
-                          background: 'rgba(234,179,8,0.06)',
-                          borderRadius: 8,
-                          padding: '10px 12px',
+                          borderLeft: '2px solid #eab308',
+                          padding: '2px 0 2px 14px',
                         }}
                       >
                         <div
