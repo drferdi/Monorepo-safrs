@@ -59,10 +59,10 @@ export interface AuthResponse {
 
 export const AUTH_CONFIG_KEY = 'sentra:auth-config';
 
-// No backend by default. Empty base URL = "Mode Lokal" — login is verified
-// device-local (lib/api/local-auth.ts) with no server. Set a real base URL via
-// the Settings UI once a backend exists; server login then takes over.
-const DEFAULT_AUTH_BASE_URL = '';
+// MedBoard by default, so a MedBoard account (registered, then approved) signs in here as is.
+// An empty base URL saved in Settings = "Mode Lokal": login is verified device-local
+// (lib/api/local-auth.ts) with no server.
+export const DEFAULT_AUTH_BASE_URL = 'https://crew.puskesmasbalowerti.com';
 const COOKIE_SESSION_ACCESS_TOKEN = 'cookie-session';
 const COOKIE_SESSION_REFRESH_TOKEN = 'cookie-session';
 
@@ -123,7 +123,8 @@ export async function getAuthConfig(): Promise<AuthConfig> {
     if (!stored) return DEFAULT_CONFIG;
 
     return {
-      baseUrl: stored.baseUrl?.trim() || DEFAULT_CONFIG.baseUrl,
+      // An address saved as empty is Mode Lokal; only a never-saved address takes the default.
+      baseUrl: typeof stored.baseUrl === 'string' ? stored.baseUrl.trim() : DEFAULT_CONFIG.baseUrl,
       automationToken: stored.automationToken?.trim() || DEFAULT_CONFIG.automationToken,
     };
   } catch (e) {
@@ -145,7 +146,7 @@ export async function saveAuthConfig(config: Partial<AuthConfig>): Promise<AuthC
   const updated = {
     ...current,
     ...config,
-    baseUrl: config.baseUrl?.trim() || current.baseUrl,
+    baseUrl: config.baseUrl !== undefined ? config.baseUrl.trim() : current.baseUrl,
     automationToken: config.automationToken?.trim() || '',
   };
   await browser.storage.local.set({ [AUTH_CONFIG_KEY]: updated });

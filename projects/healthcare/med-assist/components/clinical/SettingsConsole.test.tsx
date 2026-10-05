@@ -18,6 +18,7 @@ const {
 }));
 
 vi.mock('@/lib/api/auth-client', () => ({
+  DEFAULT_AUTH_BASE_URL: 'https://crew.puskesmasbalowerti.com',
   getAuthConfig: getAuthConfigMock,
   probeApiBaseUrl: probeApiBaseUrlMock,
   saveAuthConfig: saveAuthConfigMock,

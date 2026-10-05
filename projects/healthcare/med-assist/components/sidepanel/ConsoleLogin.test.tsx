@@ -38,4 +38,23 @@ describe('ConsoleLogin', () => {
     expect(onLoginSuccess).toHaveBeenCalledWith(user);
     expect(play).not.toHaveBeenCalled();
   });
+
+  // A MedBoard account that is not yet approved is refused; the user must read MedBoard's reason.
+  it('shows the reason MedBoard refused the sign-in', async () => {
+    mockLogin.mockResolvedValue({
+      success: false,
+      error: { code: 'UNAUTHORIZED', message: 'Username/email atau password salah.' },
+    });
+    const onLoginSuccess = vi.fn();
+    render(<ConsoleLogin onLoginSuccess={onLoginSuccess} />);
+
+    fireEvent.change(screen.getByLabelText('Nama pengguna'), { target: { value: 'sintetis' } });
+    fireEvent.change(screen.getByLabelText('Kata sandi'), { target: { value: 'salah-uji' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Masuk' }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Username/email atau password salah.'
+    );
+    expect(onLoginSuccess).not.toHaveBeenCalled();
+  });
 });

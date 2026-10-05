@@ -24,6 +24,7 @@ const {
 }));
 
 vi.mock('@/lib/api/auth-client', () => ({
+  DEFAULT_AUTH_BASE_URL: 'https://crew.puskesmasbalowerti.com',
   getAuthConfig: getAuthConfigMock,
   probeApiBaseUrl: probeApiBaseUrlMock,
   saveAuthConfig: saveAuthConfigMock,
@@ -234,5 +235,25 @@ describe('OperationalSettingsConsole', () => {
     });
     expect(isOpenAIAvailableMock).toHaveBeenCalled();
     expect(await screen.findByText('Terhubung ✓')).toBeInTheDocument();
+  });
+  it('shows a saved Mode Lokal as an empty address instead of the MedBoard default', async () => {
+    getAuthConfigMock.mockResolvedValue({ baseUrl: '', automationToken: '' });
+
+    render(<OperationalSettingsConsole />);
+
+    const field = await screen.findByPlaceholderText(/Mode Lokal/i);
+    await waitFor(() => expect(field).toHaveValue(''));
+  });
+
+  it('saving an empty address keeps Mode Lokal instead of switching to MedBoard', async () => {
+    render(<OperationalSettingsConsole />);
+    const field = await screen.findByDisplayValue('https://crew.puskesmasbalowerti.com');
+
+    fireEvent.change(field, { target: { value: '   ' } });
+    fireEvent.click(screen.getByRole('button', { name: /Save Settings/i }));
+
+    await waitFor(() =>
+      expect(saveAuthConfigMock).toHaveBeenCalledWith({ baseUrl: '', automationToken: '' })
+    );
   });
 });

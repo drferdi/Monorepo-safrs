@@ -16,7 +16,12 @@ import {
 import React, { useEffect, useState } from 'react';
 import { browser } from 'wxt/browser';
 
-import { getAuthConfig, probeApiBaseUrl, saveAuthConfig } from '@/lib/api/auth-client';
+import {
+  DEFAULT_AUTH_BASE_URL,
+  getAuthConfig,
+  probeApiBaseUrl,
+  saveAuthConfig,
+} from '@/lib/api/auth-client';
 import {
   getBridgeConfig,
   getBridgeRuntimeStatus,
@@ -39,7 +44,6 @@ interface SettingItem {
 
 const STORAGE_KEY = SETTINGS_STORAGE_KEY;
 const DEFAULT_WORKSPACE_URL = 'https://kotakediri.epuskesmas.id';
-const DEFAULT_API_BASE_URL = 'https://crew.puskesmasbalowerti.com';
 
 const DEFAULT_SETTINGS: SettingItem[] = [
   {
@@ -125,7 +129,7 @@ export function OperationalSettingsConsole(): JSX.Element {
   const [workspaceUrl, setWorkspaceUrl] = useState<string>(() => {
     return loadPersistedSettings()?.workspaceUrl ?? DEFAULT_WORKSPACE_URL;
   });
-  const [authBaseUrl, setAuthBaseUrl] = useState(DEFAULT_API_BASE_URL);
+  const [authBaseUrl, setAuthBaseUrl] = useState(DEFAULT_AUTH_BASE_URL);
   const [automationToken, setAutomationToken] = useState('');
 
   const [saved, setSaved] = useState(false);
@@ -184,10 +188,10 @@ export function OperationalSettingsConsole(): JSX.Element {
     const syncAuthConfig = async (): Promise<void> => {
       try {
         const authConfig = await getAuthConfig();
-        setAuthBaseUrl(authConfig.baseUrl || DEFAULT_API_BASE_URL);
+        setAuthBaseUrl(authConfig.baseUrl);
         setAutomationToken(authConfig.automationToken || '');
       } catch {
-        setAuthBaseUrl(DEFAULT_API_BASE_URL);
+        setAuthBaseUrl(DEFAULT_AUTH_BASE_URL);
         setAutomationToken('');
       }
     };
@@ -226,7 +230,8 @@ export function OperationalSettingsConsole(): JSX.Element {
     const bridgeEnabled = settings.find((item) => item.id === 'bridge')?.enabled ?? true;
     try {
       await saveAuthConfig({
-        baseUrl: authBaseUrl.trim() || DEFAULT_API_BASE_URL,
+        // Empty = Mode Lokal: sign-in stays on this device, no MedBoard.
+        baseUrl: authBaseUrl.trim(),
         automationToken,
       });
       await saveBridgeConfig({ enabled: bridgeEnabled });
@@ -256,11 +261,11 @@ export function OperationalSettingsConsole(): JSX.Element {
   const handleReset = async () => {
     setSettings(DEFAULT_SETTINGS);
     setWorkspaceUrl(DEFAULT_WORKSPACE_URL);
-    setAuthBaseUrl(DEFAULT_API_BASE_URL);
+    setAuthBaseUrl(DEFAULT_AUTH_BASE_URL);
     setAutomationToken('');
     localStorage.removeItem(STORAGE_KEY);
     try {
-      await saveAuthConfig({ baseUrl: DEFAULT_API_BASE_URL, automationToken: '' });
+      await saveAuthConfig({ baseUrl: DEFAULT_AUTH_BASE_URL, automationToken: '' });
       const bridgeEnabled = DEFAULT_SETTINGS.find((item) => item.id === 'bridge')?.enabled ?? true;
       await saveBridgeConfig({ enabled: bridgeEnabled });
       const runtimeStatus = await getBridgeRuntimeStatus();
@@ -420,7 +425,7 @@ export function OperationalSettingsConsole(): JSX.Element {
               value={authBaseUrl}
               onChange={(e) => setAuthBaseUrl(e.target.value)}
               className={inputClass}
-              placeholder="https://crew.example.com"
+              placeholder="Kosongkan untuk Mode Lokal (tanpa MedBoard)"
             />
           </label>
 

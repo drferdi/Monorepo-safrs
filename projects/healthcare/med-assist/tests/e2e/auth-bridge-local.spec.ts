@@ -128,6 +128,16 @@ test.describe.serial('Sentra Assist auth + bridge local mock', () => {
     await expect(page.getByText('dr. Ferdi Iskandar • Puskesmas Balowerti')).toBeVisible();
     expect(server.requests.some((request) => request.path === '/api/auth/login')).toBe(true);
 
+    // ACARS presence: the heartbeat carries the session cookie (logout's offline call: unit test).
+    const presenceWithCookie = (method: string) =>
+      server.requests.some(
+        (request) =>
+          request.path === '/api/presence' &&
+          request.method === method &&
+          String(request.headers.cookie ?? '').includes('crew_session=active')
+      );
+    await expect.poll(() => presenceWithCookie('POST')).toBe(true);
+
     await page.getByRole('button', { name: /Logout System/i }).click();
     await expect(page.getByPlaceholder('USERNAME')).toBeVisible();
     await expect(page.getByPlaceholder('PASSWORD')).toBeVisible();

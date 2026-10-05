@@ -17,6 +17,7 @@ vi.mock('./auth-store', () => ({
 }));
 
 import {
+  getAuthConfig,
   getStoredSession,
   getStoredSessionWithRetry,
   login,
@@ -24,6 +25,7 @@ import {
   logout,
   probeApiBaseUrl,
   registerPasskey,
+  saveAuthConfig,
   sendPresence,
 } from './auth-client';
 
@@ -563,5 +565,60 @@ describe('presence (ACARS shows who is online in Asisten Medis)', () => {
       ['https://medboard.example.test/api/presence', 'DELETE'],
       ['https://medboard.example.test/api/auth/logout', 'POST'],
     ]);
+  });
+});
+
+describe('server address (a MedBoard account signs in to Asisten Medis)', () => {
+  const browserStorageSet = vi.fn();
+  let stored: Record<string, unknown> = {};
+
+  beforeEach(() => {
+    stored = {};
+    browserStorageSet.mockReset();
+    browserStorageGet.mockImplementation(async (key: string) =>
+      key in stored ? { [key]: stored[key] } : {}
+    );
+    browserStorageSet.mockImplementation(async (items: Record<string, unknown>) => {
+      stored = { ...stored, ...items };
+    });
+    (
+      globalThis as typeof globalThis & {
+        browser?: {
+          storage: { local: { get: typeof browserStorageGet; set: typeof browserStorageSet } };
+        };
+      }
+    ).browser = { storage: { local: { get: browserStorageGet, set: browserStorageSet } } };
+    getSessionMock.mockResolvedValue(null);
+  });
+
+  it('a fresh install points at MedBoard, so a MedBoard account signs in without Settings', async () => {
+    await expect(getAuthConfig()).resolves.toEqual({
+      baseUrl: 'https://crew.puskesmasbalowerti.com',
+      automationToken: '',
+    });
+  });
+
+  it('Mode Lokal stays reachable: an empty address saved in Settings is kept, not replaced', async () => {
+    await saveAuthConfig({ baseUrl: '' });
+
+    await expect(getAuthConfig()).resolves.toMatchObject({ baseUrl: '' });
+  });
+
+  it('saving only a token keeps the address already chosen', async () => {
+    await saveAuthConfig({ baseUrl: 'https://medboard.example.test' });
+    await saveAuthConfig({ automationToken: 'synthetic-token' });
+
+    await expect(getAuthConfig()).resolves.toEqual({
+      baseUrl: 'https://medboard.example.test',
+      automationToken: 'synthetic-token',
+    });
+  });
+
+  it('with Mode Lokal chosen, login stays on the device and never calls MedBoard', async () => {
+    await saveAuthConfig({ baseUrl: '' });
+
+    await login({ username: 'perawat.uji', password: 'synthetic-password-0001' });
+
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });
