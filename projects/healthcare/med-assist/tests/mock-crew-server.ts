@@ -154,6 +154,17 @@ export async function startMockCrewServer(
       return;
     }
 
+    // ACARS presence (MedBoard src/app/api/presence/route.ts): identity from the session cookie only.
+    if (url.pathname === '/api/presence' && (method === 'POST' || method === 'DELETE')) {
+      const cookie = String(req.headers.cookie || '');
+      if (!cookie.includes('crew_session=active')) {
+        sendJson(res, 401, { ok: false, error: 'Status online butuh sesi login crew.' });
+        return;
+      }
+      sendJson(res, 200, { ok: true });
+      return;
+    }
+
     if (url.pathname === '/api/auth/session' && method === 'GET') {
       const cookie = String(req.headers.cookie || '');
       if (!cookie.includes('crew_session=active')) {

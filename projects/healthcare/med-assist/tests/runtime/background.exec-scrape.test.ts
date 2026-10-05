@@ -36,6 +36,12 @@ vi.mock('@/lib/api/bridge-poller', () => ({
   stopBridgePoller: vi.fn().mockResolvedValue(undefined),
 }));
 
+vi.mock('@/lib/api/presence-heartbeat', () => ({
+  attachPresenceAlarmListener: vi.fn(),
+  startPresenceHeartbeat: vi.fn().mockResolvedValue(undefined),
+  stopPresenceHeartbeat: vi.fn().mockResolvedValue(undefined),
+}));
+
 vi.mock('@/lib/api/patient-sync-payload', () => ({
   buildPatientSyncPayload: vi.fn((input: unknown) => input),
 }));

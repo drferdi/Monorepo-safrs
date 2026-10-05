@@ -21,8 +21,10 @@ import {
   getStoredSessionWithRetry,
   login,
   loginWithPasskey,
+  logout,
   probeApiBaseUrl,
   registerPasskey,
+  sendPresence,
 } from './auth-client';
 
 const browserStorageGet = vi.fn();
@@ -497,5 +499,69 @@ describe('probeApiBaseUrl diagnostics', () => {
       message:
         'Tidak dapat menjangkau host Crew API. Periksa sertifikat TLS, mapping domain, dan jaringan.',
     });
+  });
+});
+
+describe('presence (ACARS shows who is online in Asisten Medis)', () => {
+  const serverSession = {
+    user: {
+      id: 'perawat-uji',
+      username: 'perawat.uji',
+      name: 'Perawat Uji',
+      role: 'nurse',
+      facilityId: 'PUSKESMAS_UJI',
+      facilityName: 'Puskesmas Uji',
+      poli: 'Umum',
+    },
+    tokens: {
+      accessToken: 'cookie-session',
+      refreshToken: 'cookie-session',
+      expiresAt: Date.now() + 60 * 60 * 1000,
+    },
+    serverBaseUrl: 'https://medboard.example.test/',
+  };
+
+  it('a heartbeat posts to MedBoard with the session cookie', async () => {
+    getSessionMock.mockResolvedValue(serverSession);
+    fetchMock.mockResolvedValue(new Response(JSON.stringify({ ok: true }), { status: 200 }));
+
+    await expect(sendPresence('POST')).resolves.toBe(true);
+
+    expect(fetchMock).toHaveBeenCalledWith('https://medboard.example.test/api/presence', {
+      method: 'POST',
+      credentials: 'include',
+    });
+  });
+
+  it('a Mode Lokal session has no MedBoard user, so no heartbeat is sent', async () => {
+    getSessionMock.mockResolvedValue({
+      ...serverSession,
+      tokens: { ...serverSession.tokens, accessToken: 'local-session' },
+      serverBaseUrl: '',
+    });
+    browserStorageGet.mockResolvedValue({ 'sentra:local-account': { username: 'perawat.uji' } });
+
+    await expect(sendPresence('POST')).resolves.toBe(false);
+
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('a heartbeat that cannot reach MedBoard reports false instead of throwing', async () => {
+    getSessionMock.mockResolvedValue(serverSession);
+    fetchMock.mockRejectedValue(new TypeError('Failed to fetch'));
+
+    await expect(sendPresence('POST')).resolves.toBe(false);
+  });
+
+  it('logout tells MedBoard the user went offline before the session cookie is cleared', async () => {
+    getSessionMock.mockResolvedValue(serverSession);
+    fetchMock.mockResolvedValue(new Response(JSON.stringify({ ok: true }), { status: 200 }));
+
+    await logout();
+
+    expect(fetchMock.mock.calls.map(([url, init]) => [url, (init as RequestInit).method])).toEqual([
+      ['https://medboard.example.test/api/presence', 'DELETE'],
+      ['https://medboard.example.test/api/auth/logout', 'POST'],
+    ]);
   });
 });

@@ -14,7 +14,9 @@ import { DashboardView } from '@/components/sidepanel/DashboardView';
 import { SidePanelFooter } from '@/components/sidepanel/SidePanelFooter';
 import { SidePanelHeader } from '@/components/sidepanel/SidePanelHeader';
 import { StatisticSection } from '@/components/sidepanel/statistics/StatisticSection';
+import { useOnlineDoctorCount } from '@/components/sidepanel/useOnlineDoctorCount';
 import type { AuthUser } from '@/lib/api/auth-store';
+import { getOnlineDoctors } from '@/lib/api/bridge-client';
 import { migrateLegacyAppStorageKeys } from '@/lib/app-identity';
 import type { ComposedAnamnesaDraft } from '@/lib/clinical/anamnesa-composer';
 import type {
@@ -413,6 +415,7 @@ export function SentraAssistSidepanelApp(): JSX.Element {
   const [encounterComplaint, setEncounterComplaint] =
     useState<EncounterComplaintSnapshot>(emptyEncounterComplaint);
   const [emergencyAlerts, setEmergencyAlerts] = useState<ScreeningAlert[]>([]);
+  const doctorOnlineCount = useOnlineDoctorCount(getOnlineDoctors);
   const [triageVerdict, setTriageVerdict] =
     useState<TriageVerdict<ScreeningAlert>>(STANDBY_TRIAGE_VERDICT);
 
@@ -931,7 +934,7 @@ export function SentraAssistSidepanelApp(): JSX.Element {
                   isLoadingPatient={isLoadingPatient}
                   demographicStatus={demographicStatus}
                   historyStatus={historyStatus}
-                  doctorOnlineCount={0}
+                  doctorOnlineCount={doctorOnlineCount}
                   alertCount={emergencyAlerts.length}
                   triageZone={triageVerdict.zone}
                   previousVisitSections={headerVisitHistorySections}

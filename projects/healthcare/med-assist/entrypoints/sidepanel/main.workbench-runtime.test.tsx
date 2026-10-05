@@ -69,6 +69,7 @@ vi.mock('@/lib/api/auth-client', () => ({
 
 vi.mock('@/lib/api/bridge-client', () => ({
   evaluateCanonicalClinicalEngine: mockEvaluateCanonicalClinicalEngine,
+  getOnlineDoctors: vi.fn(async () => []),
 }));
 
 vi.mock('wxt/browser', () => ({

@@ -827,10 +827,31 @@ export async function loginWithPasskey(): Promise<AuthResponse> {
 /**
  * Logout - clear session and optionally invalidate token on server
  */
+/**
+ * Tells MedBoard this user is online in Asisten Medis (POST, every 30 s) or has left (DELETE),
+ * so ACARS lists them. Only a MedBoard cookie session names a user; Mode Lokal and the shared
+ * automation token do not, so nothing is sent for them. Never throws.
+ */
+export async function sendPresence(method: 'POST' | 'DELETE'): Promise<boolean> {
+  const session = await getStoredSession();
+  if (!session || session.tokens.accessToken !== COOKIE_SESSION_ACCESS_TOKEN) return false;
+  const baseUrl = session.serverBaseUrl.replace(/\/$/, '');
+  if (!baseUrl) return false;
+
+  try {
+    const response = await fetch(`${baseUrl}/api/presence`, { method, credentials: 'include' });
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
 export async function logout(): Promise<void> {
   const session = await getStoredSession();
 
   if (session) {
+    // Before the cookie is cleared: the offline call needs the session to name the user.
+    await sendPresence('DELETE');
     try {
       await fetch(`${session.serverBaseUrl.replace(/\/$/, '')}/api/auth/logout`, {
         method: 'POST',

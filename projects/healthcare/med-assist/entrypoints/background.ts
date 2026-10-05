@@ -20,6 +20,11 @@ import {
   stopBridgePoller,
 } from '@/lib/api/bridge-poller';
 import { buildPatientSyncPayload } from '@/lib/api/patient-sync-payload';
+import {
+  attachPresenceAlarmListener,
+  startPresenceHeartbeat,
+  stopPresenceHeartbeat,
+} from '@/lib/api/presence-heartbeat';
 import { SentraAPI } from '@/lib/api/sentra-api';
 import { migrateLegacyAppStorageKeys } from '@/lib/app-identity';
 import {
@@ -1271,11 +1276,14 @@ export default defineBackground(() => {
     async (pelayananId) => (await resolveBridgeTabId(pelayananId)) !== undefined
   );
   attachBridgeAlarmListener();
+  attachPresenceAlarmListener();
 
   // Start polling dashboard for pending transfers
   startBridgePoller()
     .then(() => bgLog.debug('Bridge poller started'))
     .catch((err) => bgLog.error('Bridge poller failed to start:', err));
+  // ACARS online status; sends nothing unless a MedBoard session is signed in
+  startPresenceHeartbeat().catch((err) => bgLog.error('Presence heartbeat failed to start:', err));
 
   // ========================================
   // Auth State Listener — auto-start/stop bridge on login/logout
@@ -1298,9 +1306,11 @@ export default defineBackground(() => {
     if (newValue?.tokens?.accessToken) {
       bgLog.debug('Auth session detected — starting bridge poller');
       startBridgePoller().catch((err) => bgLog.error('Bridge poller restart failed:', err));
+      startPresenceHeartbeat().catch((err) => bgLog.error('Presence heartbeat start failed:', err));
     } else {
       bgLog.debug('Auth session cleared — stopping bridge poller');
       stopBridgePoller().catch((err) => bgLog.error('Bridge poller stop failed:', err));
+      stopPresenceHeartbeat().catch((err) => bgLog.error('Presence heartbeat stop failed:', err));
     }
   });
 
@@ -1309,6 +1319,7 @@ export default defineBackground(() => {
     if (message?.type === 'AUTH_STATE_CHANGED') {
       bgLog.debug('AUTH_STATE_CHANGED received — restarting bridge poller');
       startBridgePoller().catch((err) => bgLog.error('Bridge poller restart failed:', err));
+      startPresenceHeartbeat().catch((err) => bgLog.error('Presence heartbeat start failed:', err));
     }
   });
 
