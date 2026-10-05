@@ -1,6 +1,6 @@
 # HANDOFF
 
-Last updated: 2026-10-04 (second session of the day)
+Last updated: 2026-10-05
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
@@ -25,18 +25,20 @@ shown (telemedicine card, dashboard 'mira' source, EMR button disabled); `ddf870
 synthetic consult): button disabled with the notice, card on both pages.
 Med-Assist side: see its `DECISIONS.md` 2026-10-04 "MedBoard session" entry.
 
-`/verify` (2026-10-05, after `6e9be024`): capsule gates green (MedBoard lint, test:capsule, build,
-deploy:dry-run; Med-Assist tsc, Vitest 1762, build, e2e 20/20 without the other session's
-`zz-verify-kb-rx.spec.ts`). Root: tokens, typecheck, build green. Red but not from these commits:
-`pnpm governance` (ownership and handoff read the other session's uncommitted root `HANDOFF.md` and
-Med-Assist `sentra-api.ts`; integrity review required by `med-assist/AGENTS.md` from `9918e69d`,
-stale evidence bound to `52750786`), `pnpm lint` (Biome in `tools/automation/**`, same as `main`),
-`pnpm test` (no PostgreSQL on 127.0.0.1:54329), Med-Assist ESLint (4 `no-console` in
-`zz-verify-kb-rx.spec.ts`).
+2026-10-05 styling (Chief): `ef28a942` EMR alerts lose the colour blocks (2px severity rule,
+severity word, dash list); `5d0259fe` IBM Plex Sans everywhere on the Carbon scale (see
+DECISIONS). Gates after `5d0259fe`: lint, test:capsule, build, deploy:dry-run green.
+
+`/verify` (after `6e9be024`): red but not from these commits: `pnpm governance` (other session's
+uncommitted root `HANDOFF.md` and Med-Assist `sentra-api.ts`; integrity review required by
+`med-assist/AGENTS.md` from `9918e69d`), `pnpm lint` (Biome in `tools/automation/**`, same as
+`main`), `pnpm test` (no PostgreSQL on 127.0.0.1:54329).
 
 ## Work in flight
 
-None.
+Local demo server (`medboard-demo`, 127.0.0.1:4345, dev, no database) is running for Chief. On
+stop: remove the entry from `med-assist/.claude/launch.json`, delete scratchpad `mb-demo/`
+secrets, `git restore next-env.d.ts`, delete `runtime/consult-accepted.jsonl`.
 
 ## Blockers
 
@@ -63,3 +65,5 @@ None.
 6. Docs still describing the engine as live: `README.md`, `SECURITY.md`, `docs/AI_GOVERNANCE.md`.
 7. Pre-existing: telemedicine page uses `--text-primary` and `--border-subtle`, which no stylesheet
    defines; `consult-dedupe` is per process.
+8. Typography leftovers: inline `letterSpacing` literals (up to 0.22em) were not normalised, only
+   the `--ls-*` tokens; `src/lib/report` (print) and email templates keep their own sizes.

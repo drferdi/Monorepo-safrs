@@ -3,6 +3,22 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-05 — IBM Plex Sans on the Carbon type scale; alerts without colour blocks
+
+- Decision: Chief asked for IBM Plex Sans across the whole dashboard with professional sizing, and
+  for alerts without filled colour blocks. The font is the self-hosted variable IBM Plex Sans
+  (`@fontsource-variable/ibm-plex-sans`, already a dependency), replacing Poppins. Sizes follow
+  IBM Carbon's productive scale: 12 / 14 / 16 / 20 / 24 / 28 / 32 only (display 36+ kept), body
+  14px at line-height 1.43, uppercase tracking at most 0.1em. Alerts carry severity with a 2px
+  left rule and a severity word, never a background fill, gradient, pulse or emoji.
+- Rationale: Carbon is the system Plex was drawn for. The floor is 12px, not 14px: the old
+  "minimum 14px (WCAG best practice 2026)" comment had no decision behind it and is not a WCAG
+  rule, and over 200 inline sizes were 7–10px. No monospace still holds (2026-03-06).
+- Evidence: `5d0259fe` (1,029 sizes mapped by script, excluding `src/lib/cdss`, `src/lib/report`,
+  email templates, tests) and `ef28a942`; Browser pane check on a local dev server, with no page
+  overflow or clipped text on five pages at 1563px and on two pages at 1100px; lint,
+  test:capsule, build, deploy:dry-run green.
+
 ## 2026-10-04 — MedBoard's diagnosis engine is retired for MIRA; clinical rules realigned
 
 - Decision (Chief): "diagnosis system medsmartboard ini istirahatkan, fully using diagnostic engine
