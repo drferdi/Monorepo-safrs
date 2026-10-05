@@ -25,6 +25,15 @@ shown (telemedicine card, dashboard 'mira' source, EMR button disabled); `ddf870
 synthetic consult): button disabled with the notice, card on both pages.
 Med-Assist side: see its `DECISIONS.md` 2026-10-04 "MedBoard session" entry.
 
+`/verify` (2026-10-05, after `6e9be024`): capsule gates green (MedBoard lint, test:capsule, build,
+deploy:dry-run; Med-Assist tsc, Vitest 1762, build, e2e 20/20 without the other session's
+`zz-verify-kb-rx.spec.ts`). Root: tokens, typecheck, build green. Red but not from these commits:
+`pnpm governance` (ownership and handoff read the other session's uncommitted root `HANDOFF.md` and
+Med-Assist `sentra-api.ts`; integrity review required by `med-assist/AGENTS.md` from `9918e69d`,
+stale evidence bound to `52750786`), `pnpm lint` (Biome in `tools/automation/**`, same as `main`),
+`pnpm test` (no PostgreSQL on 127.0.0.1:54329), Med-Assist ESLint (4 `no-console` in
+`zz-verify-kb-rx.spec.ts`).
+
 ## Work in flight
 
 None.
