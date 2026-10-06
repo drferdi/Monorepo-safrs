@@ -18,6 +18,10 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
   + `915e588c` NEWS2 Scale 2 scores >=93 % on air as 0 (was 1-3 for COPD), `892db79a` KB ratchet
   (75 without diagnosis_banding, 107 without structured_criteria), `992286c7` CDSS audit log only
   after anonymisation passed.
+- `06981fa6` (Chief's screenshot): an empty KSPR card ("Data tidak ditemukan.") is no pregnancy
+  risk; "risiko terdeteksi" header line removed (protected `TTVInferenceUI.tsx`, Chief's request),
+  a real risk shows only in the note below the select; columns measured equal in the harness
+  (`.superpowers/harness`, launch "stats-harness", port 5180).
 - Why no medication: therapy comes only from the KB (2026-10-01); 34 of its 130 ICD codes have no
   therapy (e.g. J45, A15, G43, J01, J44, N12, I21, H52) and diagnoses outside the KB get none.
   Filling them is Chief's clinical content (R3 `penyakit.json`).
