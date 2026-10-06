@@ -131,9 +131,15 @@ yang sama:
 3. **Hiasan dibuang**: garis timeline dan titik-titiknya, label "Row n /" dan nomor urut "01.",
    garis pemisah dekoratif, gradasi, glow, bayangan neumorfik, grid latar, animasi orbit/denyut,
    blok hitam. Penanda yang bermakna (status, wajib isi, peringatan) tetap.
-4. **Isian kotak**: semua input, select dan textarea berbentuk `.ui-input` (tepi 1 px, sudut 6 px,
-   tinggi 36–40 px, teks 14 px); tidak ada garis bawah putus-putus atau placeholder raksasa.
-   Label di atas isian 13–14 px/500.
+4. **Isian bergaris bawah** (Chief 2026-10-06, menggantikan "isian kotak"): input, select dan
+   textarea memakai `.ui-input` atau blok isian bersama di `globals.css` — tanpa kotak, garis bawah
+   tipis `--border`; saat fokus garis Oxford 2 px memanjang mulus dari kiri (220 ms ease-out, mati
+   bila reduced motion). Tinggi 36–40 px, teks 14 px; tidak ada placeholder raksasa. Label di atas
+   isian 13–14 px/500.
+9. **Focus mode** (progressive disclosure) pada formulir panjang: kartu yang sedang diisi tetap
+   terang, kartu di bawahnya meredup ke 40 % dan menerang saat di-hover; sorotan pindah mengikuti
+   kartu yang diisi (`src/app/emr/focus-spotlight.ts`). Dipakai di EMR; formulir panjang lain boleh
+   memakainya.
 5. **Tombol dan chip**: utama = isi Oxford; kedua = putih bertepi; pilihan (mis. Laki-laki /
    Perempuan) = chip pil; tidak ada tombol hitam.
 6. **Status**: tint lembut + kata status + garis kiri 2 px untuk peringatan; tidak ada blok warna
