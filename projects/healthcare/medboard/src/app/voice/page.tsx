@@ -1,11 +1,14 @@
 // Drferdi — vision, brought to life.
 'use client'
 
+import { Activity, CircleCheck, Cross, FlaskConical, Mic, RotateCcw, ShieldCheck, Sparkles, Square, Zap } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
 
+import { cx } from '@/components/ui/cx'
+
+import { audreyStage, type SessionState } from './audrey-stage'
 import styles from './voice.module.css'
-import { FlaskConical } from 'lucide-react'
 
 type Message = {
   id: number
@@ -13,50 +16,6 @@ type Message = {
   text: string
   time: string
 }
-
-type SessionState =
-  | 'idle'
-  | 'connecting'
-  | 'ready'
-  | 'recording'
-  | 'processing'
-  | 'speaking'
-  | 'error'
-
-const PIPELINE_STEPS = [
-  { n: 'Real Clinical Data', sub: 'IGD · Poli · Puskesmas', connector: true },
-  {
-    n: 'Data curation',
-    sub: 'dr. Ferdi review & annotation\nPHI scrubbing · Quality gate',
-    connector: true,
-  },
-  {
-    n: 'Domain corpus',
-    sub: 'SOAP notes · Discharge summaries\nClinical Q&A · Protocol texts',
-    connector: true,
-  },
-  {
-    n: 'MedGemma grounding',
-    sub: 'Local medical grounding\nMedical concept alignment\nICD-10 · SNOMED · BPJS coding',
-    connector: true,
-  },
-  {
-    n: 'Local SFT',
-    sub: 'Local training pipeline\nPEFT / LoRA · Indonesian medical',
-    connector: true,
-  },
-  {
-    n: 'RLHF alignment',
-    sub: 'Human: dr. Ferdi (clinical steward)\nReward model on clinical accuracy',
-    connector: true,
-  },
-  {
-    n: 'Evaluation & safety',
-    sub: 'Clinical accuracy benchmarking\nPHI leak detection · Hallucination rate',
-    connector: true,
-  },
-  { n: 'Audrey production model', sub: '', connector: false, highlight: true },
-] as const
 
 function nowTime() {
   const d = new Date()
@@ -88,7 +47,7 @@ export default function VoicePage() {
   const [sessionState, setSession] = useState<SessionState>('idle')
   const [error, setError] = useState('')
   const [liveText, setLiveText] = useState('')
-  const [visiblePipeline, setVisiblePipeline] = useState(0)
+  const [reducedMotion, setReducedMotion] = useState(false)
   const socketRef = useRef<Socket | null>(null)
   const recordCtxRef = useRef<AudioContext | null>(null)
   const playbackCtxRef = useRef<AudioContext | null>(null)
@@ -104,15 +63,6 @@ export default function VoicePage() {
     displayName?: string
     profession?: string
   }
-
-  // Pipeline reveal — tiru pola PatientFlowDiagram di telemedicine
-  useEffect(() => {
-    setVisiblePipeline(0)
-    const timer = setInterval(() => {
-      setVisiblePipeline((prev) => (prev >= PIPELINE_STEPS.length ? prev : prev + 1))
-    }, 180)
-    return () => clearInterval(timer)
-  }, [])
 
   useEffect(() => {
     return () => {
@@ -327,263 +277,215 @@ export default function VoicePage() {
   }, [pttStart, pttEnd])
 
   const isConnected = !['idle', 'error', 'connecting'].includes(sessionState)
-
-  /* ─────────── STATUS HELPERS ─────────── */
-  const statusColor =
-    sessionState === 'recording' || sessionState === 'error'
-      ? 'var(--critical)'
-      : sessionState === 'speaking'
-        ? 'var(--primary)'
-        : 'var(--text-secondary)'
-
-  const dotColor =
-    sessionState === 'recording' || sessionState === 'error'
-      ? 'var(--critical)'
-      : sessionState === 'speaking'
-        ? 'var(--primary)'
-        : sessionState === 'ready'
-          ? 'var(--success)'
-          : 'var(--text-secondary)'
-
-  const statusLabel =
-    sessionState === 'ready'
-      ? 'Siap — tahan tombol atau [Spasi] untuk bicara'
-      : sessionState === 'recording'
-        ? 'Merekam — lepas untuk kirim ke Audrey'
-        : sessionState === 'processing'
-          ? 'Mengirim ke Audrey...'
-          : sessionState === 'speaking'
-            ? 'Audrey sedang berbicara'
-            : ''
+  const stage = audreyStage(sessionState)
+  const toneDot = cx(styles.dot, stage.tone !== 'neutral' && styles[`tone-${stage.tone}`])
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
-        <div>
-          <h1 className={styles.title}>Consult Audrey</h1>
-          <p className={styles.subtitle}>
-            Clinical AI · voice consultation · Sentra healthcare solutions
-          </p>
+      <header className={styles.header}>
+        <div className={styles.brand}>
+          <div className={styles.emblem}>
+            <Cross size={20} />
+          </div>
+          <div>
+            <div className={styles.titleRow}>
+              <h1 className={styles.title}>Audrey</h1>
+              <span className="ui-badge ui-badge--neutral">AI companion</span>
+            </div>
+            <p className={styles.tagline}>Intelligence for brighter care</p>
+          </div>
         </div>
+
         <div className={styles.actions}>
+          <button
+            type="button"
+            className="ui-btn ui-btn--secondary ui-btn--sm"
+            aria-pressed={reducedMotion}
+            onClick={() => setReducedMotion((value) => !value)}
+          >
+            <Zap size={14} /> {reducedMotion ? 'Gerak: dijeda' : 'Gerak: aktif'}
+          </button>
           {isConnected && (
-            <button
-              onClick={() => void disconnect()}
-              className={`ui-btn ui-btn--secondary ${styles.disconnect}`}
-            >
+            <button type="button" onClick={() => void disconnect()} className="ui-btn ui-btn--secondary ui-btn--sm">
               Putus sesi
             </button>
           )}
-          <button onClick={() => setMessages([])} className="ui-btn ui-btn--secondary">
-            Reset
-          </button>
+          <span className={styles.separator} aria-hidden="true" />
+          <span className={styles.statusBadge} role="status">
+            <span className={toneDot} />
+            {stage.badgeLabel}
+          </span>
         </div>
-      </div>
+      </header>
 
-      {/* Error banner */}
       {error && (
         <div className="ui-alert ui-alert--critical" role="alert">
           {error}
         </div>
       )}
 
-      <section className={styles.card}>
-        {/* ── IDLE / ERROR — Connect zone ── */}
-        {(sessionState === 'idle' || sessionState === 'error') && (
-          <div className={styles.intro}>
-            <div className={styles.introHead}>
-              <img src="/avatar/podcast.png" alt="Audrey" className={styles.avatarImg} />
-              <h2 className={styles.cardTitle}>Audrey siap mendampingi</h2>
-            </div>
-            <p className={styles.text}>
-              Clinical AI real-time untuk konsultasi dokter — diferensial diagnosis, dosis, tata
-              laksana, dan kriteria rujukan dalam konteks Puskesmas PONED Balowerti.
-            </p>
-
-            <button onClick={() => void connect()} className="ui-btn ui-btn--primary ui-btn--lg">
-              Mulai sesi Audrey
-            </button>
-
-            <ul className={styles.steps}>
-              <li>Klik tombol untuk memulai sesi</li>
-              <li>
-                <span className={styles.strong}>Tahan</span> tombol mikrofon atau [space] saat ingin
-                bicara
-              </li>
-              <li>
-                <span className={styles.strong}>Lepas</span> saat selesai — Audrey akan merespons
-                secara otomatis
-              </li>
-            </ul>
-          </div>
-        )}
-
-        {/* ── CONNECTING ── */}
-        {sessionState === 'connecting' && (
-          <div className={styles.connecting}>
-            <div className={styles.spinner} />
-            Mempersiapkan sesi klinis dengan Audrey...
-          </div>
-        )}
-
-        {/* ── ACTIVE SESSION ── */}
-        {isConnected && (
-          <div className={styles.session}>
-            {/* Status indicator */}
-            <div className={styles.status} style={{ color: statusColor }}>
-              <span className={styles.dot} style={{ background: dotColor }} />
-              {statusLabel}
-            </div>
-
-            {/* PTT Button */}
-            <button
-              onMouseDown={pttStart}
-              onMouseUp={pttEnd}
-              onMouseLeave={pttEnd}
-              onTouchStart={(e) => {
-                e.preventDefault()
-                pttStart()
-              }}
-              onTouchEnd={pttEnd}
-              disabled={sessionState === 'processing'}
-              className={`ui-btn ${sessionState === 'recording' ? 'ui-btn--secondary' : 'ui-btn--primary'} ${styles.ptt} ${sessionState === 'recording' ? styles.pttRecording : ''}`}
-            >
-              {sessionState === 'recording'
-                ? 'Merekam — Lepas untuk kirim'
-                : sessionState === 'processing'
-                  ? 'Memproses...'
-                  : 'Tahan untuk bicara'}
-            </button>
-
-            {/* Interrupt */}
-            {sessionState === 'speaking' && (
-              <button
-                onClick={() => socketRef.current?.emit('voice:interrupt')}
-                className="ui-btn ui-btn--secondary ui-btn--sm"
-              >
-                Interupsi
-              </button>
-            )}
-
-            {/* Live transcript */}
-            {liveText && <p className={styles.live}>{liveText}</p>}
-          </div>
-        )}
-
-        <hr className={styles.divider} />
-
-        {/* ── CHAT TRANSCRIPT ── */}
-        <div className={styles.transcript}>
-          {messages.length === 0 ? (
-            <div className={styles.empty}>
-              <div className={styles.emptyText}>
-                — Belum ada percakapan —
-                <div className={styles.emptyHint}>
-                  Hubungkan sesi, lalu bicara langsung dengan Audrey
-                </div>
-              </div>
-
-              {/* TENTANG AUDREY — muncul saat chat kosong */}
-              <div className={styles.about}>
-                <span className="ui-badge ui-badge--neutral">Tentang Audrey</span>
-                <div className={styles.aboutName}>
-                  Augmented Universal Diagnostic Reasoning Engine for You
-                </div>
-                <p className={styles.text}>
-                  Clinical AI oleh <span className={styles.strong}>dr. Ferdi Iskandar</span> —
-                  bagian dari ekosistem <span className={styles.strong}>AADI</span> Sentra
-                  Healthcare Solutions. Mendampingi dokter secara real-time selama encounter
-                  klinis.
-                </p>
-                <p className={styles.quote}>&ldquo;Technology enables, but humans decide.&rdquo;</p>
-              </div>
-            </div>
-          ) : (
-            messages.map((msg, i) => {
-              const isUser = msg.role === 'user'
-              const prevSame = i > 0 && messages[i - 1].role === msg.role
-              return (
-                <div
-                  key={msg.id}
-                  className={`${styles.msg} ${isUser ? styles.msgUser : ''}`}
-                  style={{ paddingTop: prevSame ? 4 : 20 }}
-                >
-                  <div
-                    className={`${styles.avatar} ${isUser ? styles.avatarUser : ''}`}
-                    style={{ visibility: prevSame ? 'hidden' : 'visible' }}
-                  >
-                    {isUser ? 'DR' : 'AI'}
-                  </div>
-                  <div className={`${styles.msgBody} ${isUser ? styles.msgBodyUser : ''}`}>
-                    <div className={`${styles.bubble} ${isUser ? styles.bubbleUser : ''}`}>
-                      {msg.text}
-                    </div>
-                    {(i === messages.length - 1 || messages[i + 1]?.role !== msg.role) && (
-                      <div className={styles.time}>
-                        {isUser ? 'Dokter' : 'Audrey'} · {msg.time}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )
-            })
-          )}
-        </div>
-      </section>
-
-      {/* Fine-tuning pipeline */}
-      <section className={styles.card}>
-        <h2 className={styles.cardTitle}>Fine-tuning pipeline</h2>
-        <ol className={styles.pipeline}>
-          {PIPELINE_STEPS.map((step, i) => (
-            <li key={i} className={styles.step} style={{ opacity: i < visiblePipeline ? 1 : 0 }}>
-              <div
-                className={`${styles.stepName} ${'highlight' in step ? styles.stepHighlight : ''}`}
-              >
-                {'link' in step ? (
-                  <a
-                    href={typeof step.link === 'string' ? step.link : undefined}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      color: 'inherit',
-                      textDecoration: 'underline',
-                      textUnderlineOffset: 3,
-                    }}
-                  >
-                    {step.n}
-                  </a>
-                ) : (
-                  step.n
-                )}
-              </div>
-              {step.sub && <div className={styles.stepSub}>{step.sub}</div>}
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      {/* Disclaimer + alpha notice */}
-      <section className={styles.card}>
-        <div className={styles.notes}>
-          <div className={styles.note}>
-            <div className={styles.text}>
-              <span className={styles.strong}>Audrey bukan pengganti keputusan klinis dokter.</span>{' '}
-              Seluruh keputusan klinis tetap menjadi tanggung jawab penuh dokter yang bertugas.
-            </div>
-            <div className={styles.noteMeta}>Sentra healthcare solutions</div>
-          </div>
-          <div className={styles.noteRow}>
+      <div className={styles.layout}>
+        {/* Audrey on her stage */}
+        <section className={cx(styles.card, styles.stage)}>
+          <div className={styles.stageTop}>
+            <span className={styles.stageState}>
+              <span className={toneDot} />
+              {stage.stageLabel}
+            </span>
             <span className="ui-badge ui-badge--accent">
               <FlaskConical size={12} /> Alpha
             </span>
-            <span className={styles.text}>
-              Fitur ini masih dalam tahap pengembangan aktif. Performa, akurasi, dan stabilitas
-              dapat berubah sewaktu-waktu.
+          </div>
+
+          <div className={cx(styles.motionStage, styles[`motion-${stage.motion}`], reducedMotion && styles.still)}>
+            <div className={styles.glow} />
+            <div className={styles.floatBadge}>
+              <Sparkles size={16} /> Pendamping klinis AI Anda
+            </div>
+            <div className={styles.figure}>
+              <img src="/audrey.png" alt="Audrey, pendamping klinis AI" className={styles.audrey} draggable={false} />
+            </div>
+            <div className={styles.ring} />
+            <div className={styles.ringInner} />
+            <div className={styles.bubble}>
+              <Activity size={14} /> {stage.bubbleLabel}
+            </div>
+          </div>
+        </section>
+
+        {/* Consultation stream */}
+        <section className={cx(styles.card, styles.consult)}>
+          <div className={styles.consultHead}>
+            <div>
+              <h2 className={styles.consultTitle}>Konsultasi klinis</h2>
+              <p className={styles.consultSub}>
+                Diferensial diagnosis, dosis, tata laksana, dan kriteria rujukan secara real-time
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setMessages([])}
+              className={cx('ui-btn ui-btn--ghost ui-btn--sm', styles.iconBtn)}
+              aria-label="Bersihkan percakapan"
+              title="Bersihkan percakapan"
+            >
+              <RotateCcw size={16} />
+            </button>
+          </div>
+
+          <div className={styles.history}>
+            <div className={styles.msg}>
+              <div className={styles.avatar}>A</div>
+              <div className={styles.audreyBubble}>
+                <div className={styles.bubbleHead}>
+                  <span className={styles.bubbleName}>Audrey</span>
+                </div>
+                <p className={styles.bubbleText}>
+                  Halo, Dokter. Saya Audrey, pendamping klinis Anda. Mulai sesi, lalu tahan tombol bicara atau
+                  [Spasi] selama Anda berbicara.
+                </p>
+                <div className={styles.bubbleFoot}>
+                  <ShieldCheck size={14} /> Keputusan klinis tetap di tangan dokter
+                </div>
+              </div>
+            </div>
+
+            {messages.map((msg) =>
+              msg.role === 'user' ? (
+                <div key={msg.id} className={cx(styles.msg, styles.msgUser)}>
+                  <div className={styles.userBubble}>
+                    {msg.text}
+                    <span className={styles.userMeta}>Dokter · {msg.time}</span>
+                  </div>
+                </div>
+              ) : (
+                <div key={msg.id} className={styles.msg}>
+                  <div className={styles.avatar}>A</div>
+                  <div className={styles.audreyBubble}>
+                    <div className={styles.bubbleHead}>
+                      <span className={styles.bubbleName}>Audrey</span>
+                      <span className={styles.bubbleTime}>{msg.time}</span>
+                    </div>
+                    <p className={styles.bubbleText}>{msg.text}</p>
+                  </div>
+                </div>
+              )
+            )}
+
+            {(sessionState === 'processing' || liveText) && (
+              <div className={styles.msg}>
+                <div className={styles.avatar}>A</div>
+                <div className={styles.audreyBubble}>
+                  {liveText ? (
+                    <p className={styles.bubbleText}>{liveText}</p>
+                  ) : (
+                    <span className={styles.pending}>
+                      <span className={cx(styles.dot, styles['tone-primary'])} />
+                      Audrey sedang meninjau pedoman dan rekam medis...
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className={styles.talk}>
+            {isConnected ? (
+              <>
+                <button
+                  type="button"
+                  onMouseDown={pttStart}
+                  onMouseUp={pttEnd}
+                  onMouseLeave={pttEnd}
+                  onTouchStart={(e) => {
+                    e.preventDefault()
+                    pttStart()
+                  }}
+                  onTouchEnd={pttEnd}
+                  disabled={sessionState === 'processing'}
+                  className={cx(
+                    'ui-btn ui-btn--primary ui-btn--lg',
+                    styles.talkMain,
+                    sessionState === 'recording' && styles.recording
+                  )}
+                >
+                  <Mic size={16} />
+                  {sessionState === 'recording'
+                    ? 'Merekam — lepas untuk kirim'
+                    : sessionState === 'processing'
+                      ? 'Memproses...'
+                      : 'Tahan untuk bicara'}
+                </button>
+                {sessionState === 'speaking' && (
+                  <button
+                    type="button"
+                    onClick={() => socketRef.current?.emit('voice:interrupt')}
+                    className="ui-btn ui-btn--secondary ui-btn--lg"
+                  >
+                    <Square size={14} /> Interupsi
+                  </button>
+                )}
+              </>
+            ) : (
+              <button
+                type="button"
+                onClick={() => void connect()}
+                disabled={sessionState === 'connecting'}
+                className={cx('ui-btn ui-btn--primary ui-btn--lg', styles.talkMain)}
+              >
+                <Mic size={16} />
+                {sessionState === 'connecting' ? 'Menghubungkan...' : 'Mulai sesi Audrey'}
+              </button>
+            )}
+          </div>
+
+          <div className={styles.trust}>
+            <span className={styles.trustItem}>
+              <CircleCheck size={12} /> Audrey bukan pengganti keputusan klinis dokter
             </span>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
   )
 }

@@ -63,23 +63,22 @@ export default function SentrapediaPage() {
       {/* Hero */}
       <section className={styles.hero}>
         <div className={styles.container}>
-          <p className={styles.eyebrow}>Referensi Klinis Puskesmas Indonesia</p>
-          <h1 className={styles.title}>Sentrapedia</h1>
-
-          <div className={styles.divider} aria-hidden="true">
-            <span className={styles.dividerLine} />
-            <span className={styles.dividerDot} />
-            <span className={styles.dividerLine} />
+          <div className="ui-page-header" style={{ marginBottom: 0 }}>
+            <div>
+              <h1 className={styles.title}>Sentrapedia</h1>
+              <p className="ui-page-header__description">
+                Intisari diagnostik dan terapi 144 penyakit puskesmas. Kami menyuling ribuan halaman
+                Permenkes No. 5/2014 menjadi panduan yang langsung bisa Anda pakai di depan pasien.
+              </p>
+              <p className={cx('ui-page-header__description', styles.curator)}>
+                Dikurasi oleh dr. Ferdi Iskandar. Tidak ada teks bertele-tele, hanya referensi taktis
+                dan cepat untuk layanan primer yang sibuk.
+              </p>
+              <div className={styles.headerBadges}>
+                <span className="ui-badge ui-badge--primary">Referensi Klinis Puskesmas Indonesia</span>
+              </div>
+            </div>
           </div>
-
-          <p className={styles.body}>
-            Intisari diagnostik dan terapi 144 penyakit puskesmas. Kami menyuling ribuan halaman
-            Permenkes No. 5/2014 menjadi panduan yang langsung bisa Anda pakai di depan pasien.
-          </p>
-          <p className={cx(styles.bodySm, styles.curator)}>
-            Dikurasi oleh dr. Ferdi Iskandar. Tidak ada teks bertele-tele, hanya referensi taktis
-            dan cepat untuk layanan primer yang sibuk.
-          </p>
           <div className={styles.stats}>
             {stats.map((s) => (
               <div key={s.label} className={styles.stat}>
