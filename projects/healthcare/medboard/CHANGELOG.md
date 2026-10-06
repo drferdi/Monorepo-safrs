@@ -41,6 +41,6 @@ All notable changes to MedBoard are recorded here. The format follows
   including a duplicate ICD-10 file and an unused vector file), stale reference files in
   `database/`, and leftover tool configuration.
 
-## [0.1.0]
+## [0.1.0] - 2026-10-07
 
 - First standalone release of MedBoard (formerly IntelligenceBoard).
