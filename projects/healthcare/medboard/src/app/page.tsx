@@ -52,116 +52,46 @@ const QUICK_LINKS = [
   },
 ]
 
-/* ── Letta design tokens — theme-aware via CSS variables ── */
+/* ── Palette: tokens from globals.css (docs/redesign-glass.md §3) ── */
 function useL() {
   return {
-    bg: 'var(--bg-canvas)',
-    bgPanel: 'var(--bg-card, #EDE4D9)',
-    bgHero: 'linear-gradient(135deg, var(--bg-card, #EDE4D9) 0%, rgba(250,243,235,0.96) 100%)',
-    bgHover: 'rgba(201,168,124,0.06)',
-    border: 'var(--line-base)',
-    borderAcc: 'rgba(201,168,124,0.5)',
-    text: 'var(--text-main)',
-    muted: 'var(--text-muted)',
-    accent: 'var(--c-asesmen)',
-    statusTone: '#101012',
-    statusToneSoft: 'rgba(16,16,18,0.18)',
-    signal: '#B89470',
-    signalSoft: 'rgba(184,148,112,0.14)',
-    mono: 'var(--font-mono)',
-    sans: 'var(--font-sans)',
+    border: 'var(--border)',
+    text: 'var(--text)',
+    muted: 'var(--text-secondary)',
   }
 }
 
-type LTokens = ReturnType<typeof useL>
-
 const Row = ({
-  L,
   label,
   val,
-  mono = false,
   accent = false,
 }: {
-  L: LTokens
   label: string
   val: string
-  mono?: boolean
   accent?: boolean
 }) => (
-  <div
-    style={{
-      display: 'grid',
-      gridTemplateColumns: '108px 1fr',
-      gap: 10,
-      padding: '6px 0',
-      borderBottom: `1px solid ${L.border}`,
-      alignItems: 'baseline',
-    }}
-  >
-    <span style={{ fontSize: 14, color: L.muted, letterSpacing: '0.02em' }}>{label}</span>
+  <div className="home-row">
+    <span className="home-row__label">{label}</span>
     <span
-      style={{
-        fontSize: 14,
-        color: accent ? L.accent : L.text,
-        letterSpacing: mono ? '0.02em' : 0,
-      }}
+      className={`home-row__value${val === 'Belum diisi' ? ' home-row__value--empty' : ''}${
+        accent ? ' home-row__value--accent' : ''
+      }`}
     >
       {val}
     </span>
   </div>
 )
 
-const SectionLabel = ({ L, children }: { L: LTokens; children: React.ReactNode }) => (
-  <div
-    style={{
-      fontSize: 12,
-      color: L.muted,
-      marginBottom: 8,
-    }}
-  >
-    {children}
-  </div>
+const SectionLabel = ({ children }: { children: React.ReactNode }) => (
+  <h2 className="home-card__title">{children}</h2>
 )
 
-const Panel = ({
-  L,
-  children,
-  style,
-}: {
-  L: LTokens
-  children: React.ReactNode
-  style?: React.CSSProperties
-}) => (
-  <div
-    style={{
-      background: L.bgPanel,
-      border: `1px solid ${L.border}`,
-      borderRadius: 4,
-      overflow: 'hidden',
-      ...style,
-    }}
-  >
-    {children}
-  </div>
+const Panel = ({ children }: { children: React.ReactNode }) => (
+  <div className="home-card">{children}</div>
 )
 
-const PanelSection = ({
-  L,
-  children,
-  last = false,
-}: {
-  L: LTokens
-  children: React.ReactNode
-  last?: boolean
-}) => (
-  <div
-    style={{
-      padding: '12px 16px',
-      borderBottom: last ? 'none' : `1px solid ${L.border}`,
-    }}
-  >
-    {children}
-  </div>
+const PanelSection = ({ children }: { children: React.ReactNode }) => (
+  <div className="home-card__section">{children}</div>
 )
 
 function getGreetingWord() {
@@ -175,26 +105,6 @@ function getGreetingWord() {
 function getDisplayName(raw: string): string {
   if (!raw) return 'dokter'
   return raw
-}
-
-function useTypingEffect(text: string, speed = 40) {
-  const [displayed, setDisplayed] = useState('')
-
-  useEffect(() => {
-    setDisplayed('')
-    if (!text) return
-    let i = 0
-    let timer: ReturnType<typeof setTimeout>
-    const tick = () => {
-      i++
-      setDisplayed(text.slice(0, i))
-      if (i < text.length) timer = setTimeout(tick, speed)
-    }
-    timer = setTimeout(tick, 300)
-    return () => clearTimeout(timer)
-  }, [text, speed])
-
-  return displayed
 }
 
 const HERO_TABS = [
@@ -334,15 +244,6 @@ function normalizeWhatsappHref(value: string): string {
 
 export default function ProfilUserPage() {
   const L = useL()
-  const solidStatusBadgeStyle: React.CSSProperties = {
-    fontSize: 14,
-    color: '#ffffff',
-    background: L.statusTone,
-    border: '1px solid rgba(255,255,255,0.06)',
-    borderRadius: 3,
-    padding: '6px 12px',
-    boxShadow: '3px 3px 10px rgba(0,0,0,0.24), inset 1px 1px 0 rgba(255,255,255,0.04)',
-  }
 
   const [absenApel, setAbsenApel] = useState(false)
   const [absenSiparwa, setAbsenSiparwa] = useState(false)
@@ -793,7 +694,6 @@ export default function ProfilUserPage() {
   const greetWord = getGreetingWord()
   const displayName = getDisplayName(crewName || sessionUser?.displayName || '')
   const fullGreet = `${greetWord}, ${displayName}`
-  const typedGreet = useTypingEffect(fullGreet, 38)
   const age = profile.birthDate ? calcAge(profile.birthDate) : null
   const profileName = profile.fullName || sessionUser?.displayName || 'Crew User'
   const degreeBadges = formatBadgeList(profile.degrees)
@@ -909,88 +809,42 @@ export default function ProfilUserPage() {
     },
   ]
   const statusHariIniSection = (
-    <div style={{ width: '100%', marginTop: 12 }}>
-      <SectionLabel L={L}>Status Hari Ini</SectionLabel>
-      <div
-        style={{
-          border: `1px solid ${L.border}`,
-          borderRadius: 8,
-          background: L.bgPanel,
-          overflow: 'hidden',
-        }}
-      >
-        {statusSnapshot.map((statusItem, index) => (
-          <div
-            key={statusItem.label}
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'minmax(110px, 148px) minmax(0, 1fr) auto',
-              alignItems: 'center',
-              gap: 12,
-              padding: '11px 16px',
-              minHeight: 48,
-              borderBottom: index === statusSnapshot.length - 1 ? 'none' : `1px solid ${L.border}`,
-            }}
-          >
+    <Panel>
+      <PanelSection>
+        <SectionLabel>Status Hari Ini</SectionLabel>
+        {statusSnapshot.map((statusItem) => (
+          <div key={statusItem.label} className="home-list-row">
+            <span style={{ color: L.muted }}>{statusItem.label}</span>
             <span
               style={{
-                fontSize: 12,
-                color: L.muted,
-              }}
-            >
-              {statusItem.label}
-            </span>
-            <span
-              style={{
-                fontSize: 14,
-                color: L.text,
-                lineHeight: 1.35,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
                 textAlign: 'right',
-                overflowWrap: 'anywhere',
+                color: statusItem.isActive ? 'var(--success)' : 'var(--warning)',
               }}
             >
+              <span
+                aria-hidden
+                className="home-status-dot"
+                style={{
+                  background: statusItem.isActive ? 'var(--success)' : 'var(--warning)',
+                }}
+              />
               {statusItem.value}
             </span>
-            <span
-              style={{
-                width: 8,
-                height: 8,
-                borderRadius: '50%',
-                background: statusItem.isActive ? L.statusTone : 'var(--c-warning)',
-                boxShadow: 'none',
-                display: 'inline-block',
-                flexShrink: 0,
-              }}
-            />
           </div>
         ))}
-      </div>
-    </div>
+      </PanelSection>
+    </Panel>
   )
 
   const logbookKlinisSection = (
-    <div style={{ width: '100%', marginTop: 12 }}>
-      <SectionLabel L={L}>Logbook Klinis</SectionLabel>
-      <div
-        style={{
-          border: `1px solid ${L.border}`,
-          borderRadius: 8,
-          background: L.bgPanel,
-          overflow: 'hidden',
-        }}
-      >
+    <Panel>
+      <PanelSection>
+        <SectionLabel>Logbook Klinis</SectionLabel>
         {logbookRows.length === 0 ? (
-          <div
-            style={{
-              padding: '18px 16px',
-              fontSize: 14,
-              color: L.muted,
-              letterSpacing: '0.04em',
-              textAlign: 'center',
-            }}
-          >
-            Belum ada laporan klinis
-          </div>
+          <div className="home-empty">Belum ada laporan klinis</div>
         ) : (
           <>
             <div
@@ -998,18 +852,12 @@ export default function ProfilUserPage() {
                 display: 'grid',
                 gridTemplateColumns: '36px minmax(0,1fr) minmax(0,1.2fr) 90px',
                 gap: 8,
-                padding: '8px 16px',
+                padding: '8px 0',
                 borderBottom: `1px solid ${L.border}`,
               }}
             >
               {['No', 'Pasien', 'Diagnosis', 'Tanggal'].map((h) => (
-                <span
-                  key={h}
-                  style={{
-                    fontSize: 12,
-                    color: L.muted,
-                  }}
-                >
+                <span key={h} style={{ fontSize: 12, fontWeight: 500, color: L.muted }}>
                   {h}
                 </span>
               ))}
@@ -1026,48 +874,21 @@ export default function ProfilUserPage() {
                 <a
                   key={row.id}
                   href={`/report/clinical?id=${row.id}`}
+                  className="home-list-row"
                   style={{
                     display: 'grid',
                     gridTemplateColumns: '36px minmax(0,1fr) minmax(0,1.2fr) 90px',
                     gap: 8,
-                    padding: '10px 16px',
-                    borderBottom: idx === logbookRows.length - 1 ? 'none' : `1px solid ${L.border}`,
-                    textDecoration: 'none',
-                    color: L.text,
-                    cursor: 'pointer',
-                    transition: 'background 0.15s',
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = L.bgHover)}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                 >
-                  <span style={{ fontSize: 14, color: L.muted }}>{idx + 1}</span>
-                  <span
-                    style={{
-                      fontSize: 14,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
+                  <span style={{ color: L.muted }}>{idx + 1}</span>
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {row.pasien}
                   </span>
-                  <span
-                    style={{
-                      fontSize: 14,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                    }}
-                  >
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {row.diagnosis}
                   </span>
-                  <span
-                    style={{
-                      fontSize: 14,
-                      color: L.muted,
-                      fontVariantNumeric: 'tabular-nums',
-                    }}
-                  >
+                  <span style={{ color: L.muted, fontVariantNumeric: 'tabular-nums' }}>
                     {row.tanggal}
                   </span>
                 </a>
@@ -1075,770 +896,318 @@ export default function ProfilUserPage() {
             </div>
           </>
         )}
+      </PanelSection>
+    </Panel>
+  )
+
+  const boardTone = (key: string): { rule: string; badge: string } => {
+    switch (key) {
+      case 'release':
+        return { rule: 'var(--primary)', badge: 'ui-badge--primary' }
+      case 'maintenance':
+        return { rule: 'var(--success)', badge: 'ui-badge--success' }
+      case 'urgent':
+        return { rule: 'var(--critical)', badge: 'ui-badge--critical' }
+      case 'warning':
+        return { rule: 'var(--warning)', badge: 'ui-badge--warning' }
+      default:
+        return { rule: 'var(--border)', badge: 'ui-badge--neutral' }
+    }
+  }
+
+  const boardItemBody = (
+    item: { id: string; title: string; body: string; createdAt: string },
+    toneKey: string,
+    label: string
+  ) => {
+    const isExpanded = expandedBoardItems.has(item.id)
+    const canExpand = shouldShowBoardExpand(item.body)
+    const tone = boardTone(toneKey)
+
+    return (
+      <div
+        key={item.id}
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '2px minmax(0, 1fr)',
+          gap: 12,
+          alignItems: 'stretch',
+        }}
+      >
+        <span style={{ borderRadius: 999, background: tone.rule }} />
+        <div style={{ display: 'grid', gap: 6 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+            <span className={`ui-badge ${tone.badge}`}>{label}</span>
+            <span style={{ fontSize: 12, color: L.muted }}>{formatBoardDateTime(item.createdAt)}</span>
+          </div>
+          <div style={{ fontSize: 14, fontWeight: 500, color: L.text, lineHeight: 1.4 }}>
+            {item.title}
+          </div>
+          <div
+            style={{
+              fontSize: 14,
+              lineHeight: 1.55,
+              color: L.muted,
+              display: isExpanded ? 'block' : '-webkit-box',
+              WebkitLineClamp: isExpanded ? 'unset' : 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+            }}
+          >
+            {item.body}
+          </div>
+          {canExpand && (
+            <button
+              type="button"
+              onClick={() => toggleBoardItem(item.id)}
+              style={{
+                padding: 0,
+                border: 'none',
+                background: 'transparent',
+                color: 'var(--primary)',
+                fontSize: 14,
+                textAlign: 'left',
+                cursor: 'pointer',
+              }}
+            >
+              {isExpanded ? '-- tutup' : '-- baca selengkapnya'}
+            </button>
+          )}
+        </div>
       </div>
+    )
+  }
+
+  const sidebarBlock = (title: string, text: string, cta: React.ReactNode) => (
+    <div className="home-split__side">
+      <div>
+        <h2 className="home-card__title">{title}</h2>
+        <p className="home-card__text">{text}</p>
+      </div>
+      <div>{cta}</div>
     </div>
   )
 
+  type EditorTextKey =
+    | 'fullName'
+    | 'birthPlace'
+    | 'domicile'
+    | 'whatsappNumber'
+    | 'githubUrl'
+    | 'linkedinUrl'
+    | 'gravatarUrl'
+    | 'blogUrl'
+    | 'instagramUrl'
+    | 'tiktokUrl'
+    | 'youtubeUrl'
+    | 'employeeId'
+    | 'strNumber'
+    | 'sipNumber'
+
+  const editorTextField = (
+    field: EditorTextKey,
+    label: string,
+    placeholder?: string,
+    fullWidth = false
+  ) => (
+    <label className="ui-field" style={fullWidth ? { gridColumn: '1 / -1' } : undefined}>
+      <span className="ui-field__label">{label}</span>
+      <input
+        className="ui-input"
+        value={profileDraft[field]}
+        onChange={(event) =>
+          setProfileDraft((current) => ({
+            ...current,
+            [field]: event.target.value,
+          }))
+        }
+        placeholder={placeholder}
+      />
+    </label>
+  )
+
+  const openProfileEditor = () => {
+    setProfileDraft(profile)
+    setProfileSaveMessage('')
+    setProfileError('')
+    resetProfileSelectionInputs()
+    setIsProfileEditorOpen(true)
+  }
+
+  const removablePillStyle: React.CSSProperties = {
+    minHeight: 32,
+    padding: '0 12px',
+    borderRadius: 999,
+    border: '1px solid var(--primary)',
+    background: 'var(--primary-tint)',
+    color: 'var(--primary)',
+    fontSize: 14,
+    cursor: 'pointer',
+    textAlign: 'left',
+  }
+
   return (
-    <div
-      style={{
-        width: '100%',
-        maxWidth: 1200,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'stretch',
-      }}
-    >
+    <div className="home-page">
       {profileLoading ? (
-        <div
-          style={{
-            marginBottom: 16,
-            fontSize: 14,
-            color: L.muted,
-            letterSpacing: '0.04em',
-          }}
-        >
-          MEMUAT PROFIL USER...
-        </div>
+        <div style={{ fontSize: 14, color: L.muted }}>MEMUAT PROFIL USER...</div>
       ) : null}
 
       {!profileLoading && profileError && !isProfileEditorOpen ? (
-        <div style={{ marginBottom: 16, fontSize: 14, color: 'var(--c-critical)' }}>
-          {profileError}
-        </div>
+        <div className="ui-alert ui-alert--critical">{profileError}</div>
       ) : null}
 
       {profileSaveMessage && !isProfileEditorOpen ? (
-        <div style={{ marginBottom: 16, fontSize: 14, color: L.accent }}>{profileSaveMessage}</div>
+        <div className="ui-alert ui-alert--success">{profileSaveMessage}</div>
       ) : null}
 
-      {/* ── SVG Frame — pojok kanan atas ── */}
-      <style>{`
-        .svg-frame {
-          position: fixed;
-          top: 12px;
-          right: 20px;
-          width: 80px;
-          height: 80px;
-          transform-style: preserve-3d;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          z-index: 50;
-          cursor: pointer;
-        }
-        .svg-frame svg {
-          position: absolute;
-          transition: .5s;
-          z-index: calc(1 - (0.2 * var(--j)));
-          transform-origin: center;
-          width: 92px;
-          height: 92px;
-          fill: none;
-        }
-        .svg-frame:hover svg {
-          transform: rotate(-80deg) skew(30deg) translateX(calc(12px * var(--i))) translateY(calc(-9px * var(--i)));
-        }
-        .svg-frame svg #center { transition: .5s; transform-origin: center; }
-        .svg-frame:hover svg #center { transform: rotate(-30deg) translateX(12px) translateY(-1px); }
-        #out2  { animation: svgRotate 7s ease-in-out infinite alternate; transform-origin: center; }
-        #out3  { animation: svgRotate 3s ease-in-out infinite alternate; transform-origin: center; stroke: ${L.signal}; }
-        #inner3, #inner1 { animation: svgRotate 4s ease-in-out infinite alternate; transform-origin: center; }
-        #center1 { fill: ${L.signal}; animation: svgRotate 2s ease-in-out infinite alternate; transform-origin: center; }
-        @keyframes svgRotate { to { transform: rotate(360deg); } }
-      `}</style>
-
-      <div className="svg-frame">
-        <svg style={{ ['--i' as string]: 0, ['--j' as string]: 0 }}>
-          <g id="out1">
-            <path d="M72 172C72 116.772 116.772 72 172 72C227.228 72 272 116.772 272 172C272 227.228 227.228 272 172 272C116.772 272 72 227.228 72 172ZM197.322 172C197.322 158.015 185.985 146.678 172 146.678C158.015 146.678 146.678 158.015 146.678 172C146.678 185.985 158.015 197.322 172 197.322C185.985 197.322 197.322 185.985 197.322 172Z"></path>
-            <path
-              strokeMiterlimit="16"
-              strokeWidth="2"
-              stroke={L.signal}
-              d="M72 172C72 116.772 116.772 72 172 72C227.228 72 272 116.772 272 172C272 227.228 227.228 272 172 272C116.772 272 72 227.228 72 172ZM197.322 172C197.322 158.015 185.985 146.678 172 146.678C158.015 146.678 146.678 158.015 146.678 172C146.678 185.985 158.015 197.322 172 197.322C185.985 197.322 197.322 185.985 197.322 172Z"
-            ></path>
-          </g>
-        </svg>
-
-        <svg style={{ ['--i' as string]: 1, ['--j' as string]: 1 }}>
-          <g id="out2">
-            <path
-              fill={L.signal}
-              d="M102.892 127.966L105.579 123.75L101.362 121.063L98.6752 125.28L102.892 127.966ZM90.2897 178.19L85.304 178.567L85.6817 183.553L90.6674 183.175L90.2897 178.19ZM94.3752 177.88L94.7529 182.866L99.7386 182.488L99.3609 177.503L94.3752 177.88ZM106.347 130.168L110.564 132.855L113.251 128.638L109.034 125.951L106.347 130.168ZM93.3401 194.968L91.9387 190.168L87.1391 191.569L88.5405 196.369L93.3401 194.968ZM122.814 237.541L119.813 241.54L123.812 244.541L126.813 240.542L122.814 237.541ZM125.273 234.264L129.272 237.265L132.273 233.266L128.274 230.265L125.273 234.264ZM97.2731 193.819L102.073 192.418L100.671 187.618L95.8717 189.02L97.2731 193.819ZM152.707 92.3592L157.567 91.182L156.389 86.3226L151.53 87.4998L152.707 92.3592ZM119.097 109.421L115.869 105.603L112.05 108.831L115.278 112.649L119.097 109.421ZM121.742 112.55L117.924 115.778L121.152 119.596L124.97 116.368L121.742 112.55ZM153.672 96.3413L154.849 101.201L159.708 100.023L158.531 95.1641L153.672 96.3413ZM253.294 161.699L258.255 161.07L257.626 156.11L252.666 156.738L253.294 161.699ZM247.59 203.639L245.66 208.251L250.272 210.182L252.203 205.569L247.59 203.639ZM243.811 202.057L239.198 200.126L237.268 204.739L241.88 206.669L243.811 202.057ZM249.23 162.214L248.601 157.253L243.641 157.882L244.269 162.842L249.23 162.214ZM172 90.0557V85.0557H167V90.0557H172ZM208.528 98.6474L206.299 103.123L206.299 103.123L208.528 98.6474ZM237.396 122.621L240.409 126.611L244.399 123.598L241.386 119.608L237.396 122.621ZM234.126 125.09L230.136 128.103L233.149 132.093L237.139 129.08L234.126 125.09ZM206.701 102.315L204.473 106.791L204.473 106.791L206.701 102.315ZM172 94.1529H167V99.1529H172V94.1529ZM244.195 133.235L248.601 130.87L246.235 126.465L241.83 128.83L244.195 133.235ZM250.83 149.623L252.195 154.433L257.005 153.067L255.64 148.257L250.83 149.623ZM246.888 150.742L242.078 152.107L243.444 156.917L248.254 155.552L246.888 150.742ZM240.586 135.174L238.22 130.768L233.815 133.134L236.181 137.539L240.586 135.174ZM234.238 225.304L238.036 228.556L241.288 224.759L237.491 221.506L234.238 225.304ZM195.159 250.604L196.572 255.4L196.572 255.4L195.159 250.604ZM148.606 250.534L143.814 249.107L142.386 253.899L147.178 255.326L148.606 250.534ZM149.775 246.607L151.203 241.816L146.411 240.388L144.983 245.18L149.775 246.607ZM194.001 246.674L195.415 251.47L195.415 251.47L194.001 246.674ZM231.126 222.639L234.379 218.841L230.581 215.589L227.329 219.386L231.126 222.639Z"
-            ></path>
-          </g>
-        </svg>
-
-        <svg style={{ ['--i' as string]: 0, ['--j' as string]: 2 }}>
-          <g id="inner3">
-            <path
-              fill={L.signal}
-              d="M195.351 135.352C188.265 130.836 180.022 128.473 171.62 128.546L171.627 129.346C179.874 129.274 187.966 131.594 194.921 136.026L195.351 135.352ZM171.62 128.546C163.218 128.619 155.018 131.127 148.011 135.765L148.453 136.432C155.33 131.88 163.38 129.418 171.627 129.346L171.62 128.546ZM147.899 136.32L148.086 136.603L148.753 136.161L148.566 135.878L147.899 136.32ZM194.921 207.974C187.966 212.406 179.874 214.726 171.627 214.654L171.62 215.454C180.022 215.527 188.265 213.163 195.351 208.648L194.921 207.974ZM171.627 214.654C163.38 214.582 155.33 212.12 148.453 207.567L148.011 208.234C155.018 212.873 163.218 215.38 171.62 215.454L171.627 214.654ZM148.566 208.122L148.753 207.838L148.086 207.397L147.899 207.68L148.566 208.122Z"
-            ></path>
-          </g>
-          <path
-            stroke={L.signal}
-            d="M240.944 172C240.944 187.951 235.414 203.408 225.295 215.738C215.176 228.068 201.095 236.508 185.45 239.62C169.806 242.732 153.567 240.323 139.5 232.804C125.433 225.285 114.408 213.12 108.304 198.384C102.2 183.648 101.394 167.25 106.024 151.987C110.654 136.723 120.434 123.537 133.696 114.675C146.959 105.813 162.884 101.824 178.758 103.388C194.632 104.951 209.472 111.97 220.751 123.249"
-            id="out3"
-          ></path>
-        </svg>
-
-        <svg style={{ ['--i' as string]: 1, ['--j' as string]: 3 }}>
-          <g id="inner1">
-            <path
-              fill={L.signal}
-              d="M145.949 124.51L148.554 129.259C156.575 124.859 165.672 122.804 174.806 123.331C183.94 123.858 192.741 126.944 200.203 132.236C207.665 137.529 213.488 144.815 217.004 153.261C220.521 161.707 221.59 170.972 220.09 179.997L229.537 181.607C230.521 175.715 230.594 169.708 229.753 163.795L225.628 164.381C224.987 159.867 223.775 155.429 222.005 151.179C218.097 141.795 211.628 133.699 203.337 127.818C195.045 121.937 185.266 118.508 175.118 117.923C165.302 117.357 155.525 119.474 146.83 124.037C146.535 124.192 146.241 124.349 145.949 124.51Z"
-              clipRule="evenodd"
-              fillRule="evenodd"
-            ></path>
-            <path
-              fill={L.signal}
-              d="M139.91 220.713C134.922 217.428 130.469 213.395 126.705 208.758L134.148 202.721C141.342 211.584 151.417 217.642 162.619 219.839C173.821 222.036 185.438 220.232 195.446 214.742L198.051 219.491C186.252 225.693 173.696 227.531 161.577 225.154C154.613 223.789 148.041 221.08 142.202 217.234L139.91 220.713Z"
-              clipRule="evenodd"
-              fillRule="evenodd"
-            ></path>
-          </g>
-        </svg>
-
-        <svg style={{ ['--i' as string]: 2, ['--j' as string]: 4 }}>
-          <path
-            fill={L.signal}
-            d="M180.956 186.056C183.849 184.212 186.103 181.521 187.41 178.349C188.717 175.177 189.013 171.679 188.258 168.332C187.503 164.986 185.734 161.954 183.192 159.65C180.649 157.346 177.458 155.883 174.054 155.46C170.649 155.038 167.197 155.676 164.169 157.288C161.14 158.9 158.683 161.407 157.133 164.468C155.582 167.528 155.014 170.992 155.505 174.388C155.997 177.783 157.524 180.944 159.879 183.439L161.129 182.259C159.018 180.021 157.648 177.186 157.207 174.141C156.766 171.096 157.276 167.989 158.667 165.245C160.057 162.5 162.261 160.252 164.977 158.806C167.693 157.36 170.788 156.788 173.842 157.167C176.895 157.546 179.757 158.858 182.037 160.924C184.317 162.99 185.904 165.709 186.581 168.711C187.258 171.712 186.992 174.849 185.82 177.694C184.648 180.539 182.627 182.952 180.032 184.606L180.956 186.056Z"
-            id="center1"
-          ></path>
-          <path
-            fill={L.signal}
-            d="M172 166.445C175.068 166.445 177.556 168.932 177.556 172C177.556 175.068 175.068 177.556 172 177.556C168.932 177.556 166.444 175.068 166.444 172C166.444 168.932 168.932 166.445 172 166.445ZM172 177.021C174.773 177.021 177.021 174.773 177.021 172C177.021 169.227 174.773 166.979 172 166.979C169.227 166.979 166.979 169.227 166.979 172C166.979 174.773 169.227 177.021 172 177.021Z"
-            id="center"
-          ></path>
-        </svg>
-      </div>
-
-      {/* ══════════════════════════════════════════
-          ROW 1 — HERO GREETING (Letta style)
-      ══════════════════════════════════════════ */}
-      <div
-        style={{
-          width: '100%',
-          maxWidth: 1200,
-          border: `1px solid ${L.border}`,
-          borderRadius: 6,
-          overflow: 'hidden',
-          marginBottom: 20,
-          background: L.bgPanel,
-        }}
-      >
-        {/* Greeting */}
-        <div style={{ padding: '16px 20px 0' }}>
-          <div
-            style={{
-              fontSize: 20,
-              fontWeight: 400,
-              color: L.text,
-              marginBottom: 4,
-              minHeight: 32,
-            }}
+      {/* ── Page header (pola Detail) ── */}
+      <header className="ui-page-header">
+        <div>
+          <h1 className="home-title" suppressHydrationWarning>
+            {fullGreet}
+          </h1>
+          <p className="ui-page-header__description">
+            {professionLabel} · {sessionUser?.institution || 'Institusi belum diatur'}
+          </p>
+        </div>
+        <div className="ui-page-header__actions" style={{ alignItems: 'center' }}>
+          {profile.sipNumber ? (
+            <span className="ui-badge ui-badge--neutral">
+              SIP: {maskCredential(profile.sipNumber)}
+            </span>
+          ) : (
+            <span className="ui-badge ui-badge--warning">SIP belum diisi</span>
+          )}
+          <button
+            type="button"
+            className="ui-btn ui-btn--secondary ui-btn--sm"
+            onClick={openProfileEditor}
           >
-            {typedGreet}
+            Edit Profil
+          </button>
+        </div>
+      </header>
+
+      {/* ── Tabs + isi ── */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <div className="ui-tabs" role="tablist" style={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          {HERO_TABS.map((t, i) => {
+            const isActive = i === activeTab && heroExpanded
+            return (
+              <button
+                key={t}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                className="ui-tab"
+                onClick={() => {
+                  setActiveTab(i)
+                  if (!heroExpanded) setHeroExpanded(true)
+                }}
+              >
+                {t}
+              </button>
+            )
+          })}
+          <button
+            type="button"
+            className="ui-btn ui-btn--ghost ui-btn--sm"
+            onClick={() => setHeroExpanded((v) => !v)}
+            title={heroExpanded ? 'Ciutkan' : 'Perluas'}
+            style={{ marginLeft: 'auto' }}
+          >
             <span
               style={{
                 display: 'inline-block',
-                width: 2,
-                height: 20,
-                background: L.accent,
-                marginLeft: 2,
-                verticalAlign: 'middle',
-                animation: typedGreet === fullGreet ? 'cursorBlink 0.8s step-end infinite' : 'none',
-              }}
-            />
-          </div>
-        </div>
-        <style>{`
-          @keyframes cursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }
-          @keyframes flow-down { 0%{top:-60%} 100%{top:100%} }
-          @media (max-width: 920px) {
-            .summary-tab-grid {
-              grid-template-columns: 1fr !important;
-            }
-            .summary-tab-sidebar {
-              border-right: none !important;
-              border-bottom: 1px solid var(--line-base) !important;
-            }
-          }
-          @media (max-width: 640px) {
-            .summary-board-columns {
-              grid-template-columns: 1fr !important;
-            }
-            .summary-board-secondary {
-              border-left: none !important;
-              border-top: 1px solid var(--line-base) !important;
-              margin-top: 10px;
-              padding-top: 12px !important;
-            }
-          }
-          .who-online-scroll {
-            scrollbar-width: thin;
-            scrollbar-color: ${L.borderAcc} transparent;
-          }
-          .who-online-scroll::-webkit-scrollbar {
-            width: 4px;
-          }
-          .who-online-scroll::-webkit-scrollbar-track {
-            background: transparent;
-          }
-          .who-online-scroll::-webkit-scrollbar-thumb {
-            background: ${L.borderAcc};
-            border-radius: 999px;
-          }
-        `}</style>
-
-        {/* Tabs + controls */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            borderBottom: heroExpanded ? `1px solid ${L.border}` : 'none',
-            padding: '0 16px',
-            marginTop: 8,
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 18,
-              flexWrap: 'wrap',
-              rowGap: 8,
-            }}
-          >
-            {HERO_TABS.map((t, i) => {
-              const isActive = i === activeTab && heroExpanded
-              return (
-                <div
-                  key={t}
-                  onClick={() => {
-                    setActiveTab(i)
-                    if (!heroExpanded) setHeroExpanded(true)
-                  }}
-                  style={{
-                    padding: '7px 0',
-                    fontSize: 14,
-                    color: isActive ? L.text : L.muted,
-                    letterSpacing: '0em',
-                    cursor: 'pointer',
-                    marginBottom: -1,
-                    userSelect: 'none' as const,
-                    transition: 'color 0.15s',
-                    borderBottom: isActive ? `2px solid ${L.text}` : '2px solid transparent',
-                  }}
-                >
-                  {t}
-                </div>
-              )
-            })}
-            <button
-              type="button"
-              onClick={() => {
-                setProfileDraft(profile)
-                setProfileSaveMessage('')
-                setProfileError('')
-                resetProfileSelectionInputs()
-                setIsProfileEditorOpen(true)
-              }}
-              style={{
-                height: 30,
-                padding: '0 12px',
-                borderRadius: 999,
-                border: `1px solid ${L.border}`,
-                background: 'transparent',
-                color: L.text,
-                fontSize: 14,
-                letterSpacing: '0.04em',
-                cursor: 'pointer',
-                flexShrink: 0,
+                transform: heroExpanded ? 'rotate(0deg)' : 'rotate(180deg)',
               }}
             >
-              Edit Profil
-            </button>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div
-              style={{
-                ...solidStatusBadgeStyle,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-              }}
-            >
-              <span style={{ color: 'rgba(255,255,255,0.72)' }}>SIP:</span>
-              <span>{maskCredential(profile.sipNumber)}</span>
-            </div>
-            {/* Toggle expand/collapse */}
-            <button
-              type="button"
-              onClick={() => setHeroExpanded((v) => !v)}
-              title={heroExpanded ? 'Ciutkan' : 'Perluas'}
-              style={{
-                background: 'none',
-                border: `1px solid ${L.border}`,
-                borderRadius: 4,
-                width: 28,
-                height: 28,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-                color: '#002147',
-                fontSize: 14,
-                transition: 'border-color 0.15s, color 0.15s',
-                flexShrink: 0,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = L.accent
-                e.currentTarget.style.color = '#F28B54'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = L.border
-                e.currentTarget.style.color = '#002147'
-              }}
-            >
-              <span
-                style={{
-                  display: 'inline-block',
-                  transition: 'transform 0.25s',
-                  transform: heroExpanded ? 'rotate(0deg)' : 'rotate(180deg)',
-                }}
-              >
-                ⌃
-              </span>
-            </button>
-          </div>
+              ⌃
+            </span>
+          </button>
         </div>
 
-        {/* Content — collapse wrapper */}
-        <div
-          style={{
-            overflow: 'hidden',
-            maxHeight: heroExpanded ? chatHeight + 120 : 0,
-            transition: 'max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          }}
-        >
+        <div style={{ display: heroExpanded ? 'block' : 'none' }}>
           {/* TAB 0 — Ringkasan Hari Ini */}
           {activeTab === 0 && (
-            <div
-              className="summary-tab-grid"
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '232px minmax(0, 1fr)',
-                minHeight: 144,
-              }}
-            >
-              <div
-                className="summary-tab-sidebar"
-                style={{
-                  padding: '16px 18px',
-                  borderRight: `1px solid ${L.border}`,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <div>
-                  <div
-                    style={{
-                      fontSize: 14,
-                      fontWeight: 500,
-                      color: L.text,
-                      marginBottom: 6,
-                    }}
-                  >
-                    SenAuto — Clinical AI
-                  </div>
-                  <div style={{ fontSize: 14, color: L.muted, lineHeight: 1.5 }}>
-                    Ringkasan operasional pagi ini, update deployment terbaru, dan NOTAM aktif untuk
-                    crew.
-                  </div>
-                </div>
-                <a
-                  href="/emr"
-                  className="summary-sidebar-cta"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 6,
-                    color: '#ffffff',
-                    background: L.statusTone,
-                    border: `1px solid ${L.statusTone}`,
-                    borderRadius: 3,
-                    padding: '6px 12px',
-                    textDecoration: 'none',
-                    marginTop: 16,
-                    transition: 'opacity 0.15s',
-                    fontSize: 14,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.opacity = '0.8'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.opacity = '1'
-                  }}
-                >
+            <div className="home-card home-split">
+              {sidebarBlock(
+                'SenAuto — Clinical AI',
+                'Ringkasan operasional pagi ini, update deployment terbaru, dan NOTAM aktif untuk crew.',
+                <a href="/emr" className="ui-btn ui-btn--primary ui-btn--sm">
                   Buka EMR Klinis ↗
                 </a>
-              </div>
-              <div style={{ background: L.bgPanel, padding: '10px 0 12px' }}>
-                <div
-                  className="summary-board-columns"
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-                    gap: 0,
-                  }}
-                >
-                  <div style={{ padding: '0 14px 0 16px' }}>
+              )}
+              <div>
+                <div className="home-board">
+                  <div className="home-board__col">
                     <div
                       style={{
                         display: 'flex',
                         alignItems: 'baseline',
                         justifyContent: 'space-between',
-                        gap: 10,
-                        padding: '0 0 10px',
+                        gap: 12,
+                        marginBottom: 12,
                       }}
                     >
                       <div>
-                        <div
-                          style={{
-                            fontSize: 12,
-                            color: L.muted,
-                          }}
-                        >
+                        <h2 className="home-card__title" style={{ marginBottom: 4 }}>
                           Update Dev
-                        </div>
-                        <div
-                          style={{
-                            fontSize: 14,
-                            color: L.signal,
-                            marginTop: 4,
-                            lineHeight: 1.5,
-                          }}
-                        >
-                          Deployment, patch, dan perubahan terkini.
-                        </div>
+                        </h2>
+                        <p className="home-card__text">Deployment, patch, dan perubahan terkini.</p>
                       </div>
                       <span style={{ fontSize: 12, color: L.muted }}>
                         {visibleDevUpdates.length}
                       </span>
                     </div>
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 8,
-                      }}
-                    >
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       {boardLoading ? (
-                        <div
-                          style={{
-                            padding: '10px 0',
-                            fontSize: 14,
-                            color: L.muted,
-                          }}
-                        >
-                          Memuat update dev...
-                        </div>
+                        <div className="home-empty">Memuat update dev...</div>
                       ) : visibleDevUpdates.length > 0 ? (
-                        visibleDevUpdates.map((item) => {
-                          const isExpanded = expandedBoardItems.has(item.id)
-                          const canExpand = shouldShowBoardExpand(item.body)
-
-                          return (
-                            <div
-                              key={item.id}
-                              style={{
-                                display: 'grid',
-                                gridTemplateColumns: '2px minmax(0, 1fr)',
-                                gap: 10,
-                                alignItems: 'start',
-                              }}
-                            >
-                              <span
-                                style={{
-                                  width: 2,
-                                  minHeight: 58,
-                                  borderRadius: 999,
-                                  background:
-                                    item.category === 'release'
-                                      ? L.accent
-                                      : item.category === 'maintenance'
-                                        ? '#8FA184'
-                                        : 'rgba(255,255,255,0.18)',
-                                  marginTop: 2,
-                                }}
-                              />
-                              <div
-                                style={{
-                                  display: 'grid',
-                                  gap: 5,
-                                  paddingBottom: 8,
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 8,
-                                    flexWrap: 'wrap',
-                                  }}
-                                >
-                                  <span
-                                    style={{
-                                      fontSize: 12,
-                                      color:
-                                        item.category === 'release'
-                                          ? L.accent
-                                          : item.category === 'maintenance'
-                                            ? '#8FA184'
-                                            : L.muted,
-                                    }}
-                                  >
-                                    {getDevUpdateCategoryLabel(item.category)}
-                                  </span>
-                                  <span style={{ fontSize: 12, color: L.muted }}>
-                                    {formatBoardDateTime(item.createdAt)}
-                                  </span>
-                                </div>
-                                <div
-                                  style={{
-                                    fontSize: 14,
-                                    fontWeight: 500,
-                                    color: L.text,
-                                    lineHeight: 1.4,
-                                  }}
-                                >
-                                  {item.title}
-                                </div>
-                                <div
-                                  style={{
-                                    fontSize: 14,
-                                    lineHeight: 1.55,
-                                    color: '#C8BDAF',
-                                    display: isExpanded ? 'block' : '-webkit-box',
-                                    WebkitLineClamp: isExpanded ? 'unset' : 2,
-                                    WebkitBoxOrient: 'vertical',
-                                    overflow: 'hidden',
-                                  }}
-                                >
-                                  {item.body}
-                                </div>
-                                {canExpand && (
-                                  <button
-                                    type="button"
-                                    onClick={() => toggleBoardItem(item.id)}
-                                    style={{
-                                      padding: 0,
-                                      border: 'none',
-                                      background: 'transparent',
-                                      color: L.signal,
-                                      fontSize: 14,
-                                      letterSpacing: '0.04em',
-                                      textAlign: 'left',
-                                      cursor: 'pointer',
-                                    }}
-                                  >
-                                    {isExpanded ? '-- tutup' : '-- baca selengkapnya'}
-                                  </button>
-                                )}
-                              </div>
-                            </div>
+                        visibleDevUpdates.map((item) =>
+                          boardItemBody(
+                            item,
+                            item.category,
+                            getDevUpdateCategoryLabel(item.category)
                           )
-                        })
+                        )
                       ) : (
-                        <div
-                          style={{
-                            padding: '10px 0',
-                            fontSize: 14,
-                            color: L.muted,
-                            lineHeight: 1.6,
-                          }}
-                        >
+                        <div className="home-empty">
                           Belum ada update dev aktif. Tulis dari panel admin agar muncul di sini.
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <div
-                    className="summary-board-secondary"
-                    style={{
-                      padding: '0 14px 0 16px',
-                      borderLeft: `1px solid ${L.border}`,
-                    }}
-                  >
+                  <div className="home-board__col">
                     <div
                       style={{
                         display: 'flex',
                         alignItems: 'baseline',
                         justifyContent: 'space-between',
-                        gap: 10,
-                        padding: '0 0 10px',
+                        gap: 12,
+                        marginBottom: 12,
                       }}
                     >
                       <div>
-                        <div
-                          style={{
-                            fontSize: 12,
-                            color: L.muted,
-                          }}
-                        >
+                        <h2 className="home-card__title" style={{ marginBottom: 4 }}>
                           NOTAM
-                        </div>
-                        <div
-                          style={{
-                            fontSize: 14,
-                            color: L.signal,
-                            marginTop: 4,
-                            lineHeight: 1.5,
-                          }}
-                        >
+                        </h2>
+                        <p className="home-card__text">
                           Pengumuman operasional penting untuk seluruh crew.
-                        </div>
+                        </p>
                       </div>
                       <span style={{ fontSize: 12, color: L.muted }}>{visibleNotams.length}</span>
                     </div>
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 8,
-                      }}
-                    >
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                       {boardLoading ? (
-                        <div
-                          style={{
-                            padding: '10px 0',
-                            fontSize: 14,
-                            color: L.muted,
-                          }}
-                        >
-                          Memuat NOTAM...
-                        </div>
+                        <div className="home-empty">Memuat NOTAM...</div>
                       ) : visibleNotams.length > 0 ? (
-                        visibleNotams.map((item) => {
-                          const isExpanded = expandedBoardItems.has(item.id)
-                          const canExpand = shouldShowBoardExpand(item.body)
-
-                          return (
-                            <div
-                              key={item.id}
-                              style={{
-                                display: 'grid',
-                                gridTemplateColumns: '2px minmax(0, 1fr)',
-                                gap: 10,
-                                alignItems: 'start',
-                              }}
-                            >
-                              <span
-                                style={{
-                                  width: 2,
-                                  minHeight: 58,
-                                  borderRadius: 999,
-                                  background:
-                                    item.priority === 'urgent'
-                                      ? '#F28B82'
-                                      : item.priority === 'warning'
-                                        ? L.accent
-                                        : 'rgba(255,255,255,0.18)',
-                                  marginTop: 2,
-                                }}
-                              />
-                              <div
-                                style={{
-                                  display: 'grid',
-                                  gap: 5,
-                                  paddingBottom: 8,
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 8,
-                                    flexWrap: 'wrap',
-                                  }}
-                                >
-                                  <span
-                                    style={{
-                                      fontSize: 12,
-                                      color:
-                                        item.priority === 'urgent'
-                                          ? '#F28B82'
-                                          : item.priority === 'warning'
-                                            ? L.accent
-                                            : L.muted,
-                                    }}
-                                  >
-                                    {getNotamPriorityLabel(item.priority)}
-                                  </span>
-                                  <span style={{ fontSize: 12, color: L.muted }}>
-                                    {formatBoardDateTime(item.createdAt)}
-                                  </span>
-                                </div>
-                                <div
-                                  style={{
-                                    fontSize: 14,
-                                    fontWeight: 500,
-                                    color: L.text,
-                                    lineHeight: 1.4,
-                                  }}
-                                >
-                                  {item.title}
-                                </div>
-                                <div
-                                  style={{
-                                    fontSize: 14,
-                                    lineHeight: 1.55,
-                                    color: '#C8BDAF',
-                                    display: isExpanded ? 'block' : '-webkit-box',
-                                    WebkitLineClamp: isExpanded ? 'unset' : 2,
-                                    WebkitBoxOrient: 'vertical',
-                                    overflow: 'hidden',
-                                  }}
-                                >
-                                  {item.body}
-                                </div>
-                                {canExpand && (
-                                  <button
-                                    type="button"
-                                    onClick={() => toggleBoardItem(item.id)}
-                                    style={{
-                                      padding: 0,
-                                      border: 'none',
-                                      background: 'transparent',
-                                      color: L.signal,
-                                      fontSize: 14,
-                                      letterSpacing: '0.04em',
-                                      textAlign: 'left',
-                                      cursor: 'pointer',
-                                    }}
-                                  >
-                                    {isExpanded ? '-- tutup' : '-- baca selengkapnya'}
-                                  </button>
-                                )}
-                              </div>
-                            </div>
-                          )
-                        })
+                        visibleNotams.map((item) =>
+                          boardItemBody(item, item.priority, getNotamPriorityLabel(item.priority))
+                        )
                       ) : (
-                        <div
-                          style={{
-                            padding: '10px 0',
-                            fontSize: 14,
-                            color: L.muted,
-                            lineHeight: 1.6,
-                          }}
-                        >
+                        <div className="home-empty">
                           Belum ada NOTAM aktif. Pengumuman baru akan tampil di panel ini.
                         </div>
                       )}
@@ -1846,14 +1215,7 @@ export default function ProfilUserPage() {
                   </div>
                 </div>
                 {boardError && (
-                  <div
-                    style={{
-                      marginTop: 10,
-                      paddingLeft: 16,
-                      fontSize: 14,
-                      color: '#C8BDAF',
-                    }}
-                  >
+                  <div style={{ padding: '0 24px 24px', fontSize: 14, color: L.muted }}>
                     {boardError}
                   </div>
                 )}
@@ -1861,36 +1223,28 @@ export default function ProfilUserPage() {
             </div>
           )}
 
-          {/* TAB 1 — Agent Sentra: Chat Perplexity */}
+          {/* TAB 1 — Agent Sentra: Chat */}
           {activeTab === 1 && (
             <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                height: chatHeight,
-              }}
+              className="home-card"
+              style={{ display: 'flex', flexDirection: 'column', height: chatHeight }}
             >
-              {/* Header bar */}
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  padding: '10px 20px',
+                  gap: 12,
+                  padding: '12px 24px',
                   borderBottom: `1px solid ${L.border}`,
                   flexShrink: 0,
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <span
-                    style={{
-                      width: 6,
-                      height: 6,
-                      borderRadius: '50%',
-                      background: L.statusTone,
-                      boxShadow: 'none',
-                      display: 'inline-block',
-                    }}
+                    aria-hidden
+                    className="home-status-dot"
+                    style={{ background: 'var(--success)' }}
                   />
                   <span style={{ fontSize: 14, fontWeight: 500, color: L.text }}>
                     Audrey — Clinical Consultation AI · Sentra Healthcare Solutions
@@ -1899,18 +1253,10 @@ export default function ProfilUserPage() {
                 {chatMessages.length > 0 && (
                   <button
                     type="button"
+                    className="ui-btn ui-btn--ghost ui-btn--sm"
                     onClick={() => {
                       setChatMessages([])
                       setChatError('')
-                    }}
-                    style={{
-                      background: 'none',
-                      border: `1px solid ${L.border}`,
-                      borderRadius: 3,
-                      padding: '3px 10px',
-                      fontSize: 14,
-                      color: L.muted,
-                      cursor: 'pointer',
                     }}
                   >
                     CLEAR
@@ -1918,16 +1264,15 @@ export default function ProfilUserPage() {
                 )}
               </div>
 
-              {/* Pesan */}
               <div
                 ref={chatScrollRef}
                 style={{
                   flex: 1,
                   overflowY: 'auto',
-                  padding: '12px 20px',
+                  padding: '16px 24px',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: 10,
+                  gap: 12,
                 }}
               >
                 {chatMessages.length === 0 && !chatLoading && (
@@ -1936,12 +1281,7 @@ export default function ProfilUserPage() {
                       Tanyakan apa saja — klinis, farmakologi, diagnosis banding
                     </div>
                     <div
-                      style={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        gap: 8,
-                        justifyContent: 'center',
-                      }}
+                      style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center' }}
                     >
                       {[
                         'Dosis amoksisilin untuk anak 10kg?',
@@ -1951,27 +1291,9 @@ export default function ProfilUserPage() {
                         <button
                           type="button"
                           key={s}
+                          className="ui-chip"
                           onClick={() => {
                             setChatInput(s)
-                          }}
-                          style={{
-                            background: 'none',
-                            border: `1px solid ${L.border}`,
-                            borderRadius: 3,
-                            padding: '5px 12px',
-                            fontSize: 14,
-                            color: L.muted,
-                            cursor: 'pointer',
-                            letterSpacing: '0.04em',
-                            transition: 'border-color 0.15s, color 0.15s',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.borderColor = L.accent
-                            e.currentTarget.style.color = L.accent
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.borderColor = L.border
-                            e.currentTarget.style.color = L.muted
                           }}
                         >
                           {s}
@@ -1987,7 +1309,7 @@ export default function ProfilUserPage() {
                     style={{
                       display: 'flex',
                       flexDirection: msg.role === 'user' ? 'row-reverse' : 'row',
-                      gap: 10,
+                      gap: 12,
                       alignItems: 'flex-start',
                     }}
                   >
@@ -1998,9 +1320,7 @@ export default function ProfilUserPage() {
                         height: 28,
                         borderRadius: '50%',
                         overflow: 'hidden',
-                        border: `1px solid ${msg.role === 'user' ? L.borderAcc : L.border}`,
-                        background: msg.role === 'user' ? 'rgba(255,255,255,0.06)' : L.bgPanel,
-                        boxShadow: '0 8px 20px rgba(0,0,0,0.18)',
+                        border: `1px solid ${L.border}`,
                       }}
                     >
                       <img
@@ -2015,32 +1335,10 @@ export default function ProfilUserPage() {
                       />
                     </div>
                     {msg.role === 'user' ? (
-                      <div
-                        style={{
-                          maxWidth: '78%',
-                          background: '#ffffff',
-                          border: '1px solid rgba(255,255,255,0.92)',
-                          borderRadius: 4,
-                          padding: '8px 12px',
-                          fontSize: 14,
-                          color: '#101012',
-                          whiteSpace: 'pre-wrap',
-                          boxShadow: '0 10px 24px rgba(0,0,0,0.18)',
-                        }}
-                      >
-                        {msg.content}
-                      </div>
+                      <div className="home-bubble home-bubble--user">{msg.content}</div>
                     ) : (
                       <div
-                        style={{
-                          maxWidth: '78%',
-                          background: L.bgPanel,
-                          border: `1px solid ${L.border}`,
-                          borderRadius: 4,
-                          padding: '8px 12px',
-                          fontSize: 14,
-                          color: L.text,
-                        }}
+                        className="home-bubble home-bubble--assistant"
                         dangerouslySetInnerHTML={{
                           __html: sanitizeRenderedMarkdown(renderMarkdown(msg.content)),
                         }}
@@ -2050,13 +1348,7 @@ export default function ProfilUserPage() {
                 ))}
 
                 {chatLoading && (
-                  <div
-                    style={{
-                      display: 'flex',
-                      gap: 10,
-                      alignItems: 'flex-start',
-                    }}
-                  >
+                  <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
                     <div
                       style={{
                         flexShrink: 0,
@@ -2065,8 +1357,6 @@ export default function ProfilUserPage() {
                         borderRadius: '50%',
                         overflow: 'hidden',
                         border: `1px solid ${L.border}`,
-                        background: L.bgPanel,
-                        boxShadow: '0 8px 20px rgba(0,0,0,0.18)',
                       }}
                     >
                       <img
@@ -2081,12 +1371,7 @@ export default function ProfilUserPage() {
                       />
                     </div>
                     <div
-                      style={{
-                        display: 'flex',
-                        gap: 4,
-                        alignItems: 'center',
-                        padding: '10px 0',
-                      }}
+                      style={{ display: 'flex', gap: 4, alignItems: 'center', padding: '10px 0' }}
                     >
                       {[0, 1, 2].map((d) => (
                         <span
@@ -2106,31 +1391,21 @@ export default function ProfilUserPage() {
                   </div>
                 )}
 
-                {chatError && (
-                  <div
-                    style={{
-                      fontSize: 14,
-                      color: 'var(--c-critical)',
-                      padding: '4px 0',
-                    }}
-                  >
-                    ⚠ {chatError}
-                  </div>
-                )}
+                {chatError && <div className="ui-alert ui-alert--critical">⚠ {chatError}</div>}
               </div>
 
-              {/* Input */}
               <div
                 style={{
                   display: 'flex',
-                  gap: 8,
-                  padding: '10px 16px',
+                  alignItems: 'center',
+                  gap: 12,
+                  padding: '12px 24px',
                   borderTop: `1px solid ${L.border}`,
                   flexShrink: 0,
-                  background: L.bgPanel,
                 }}
               >
                 <input
+                  className="ui-input"
                   value={chatInput}
                   onChange={(e) => setChatInput(e.target.value)}
                   onKeyDown={(e) => {
@@ -2141,48 +1416,25 @@ export default function ProfilUserPage() {
                   }}
                   placeholder="Ketik pertanyaan klinis..."
                   disabled={chatLoading}
-                  style={{
-                    flex: 1,
-                    height: 36,
-                    borderRadius: 4,
-                    border: `1px solid ${L.border}`,
-                    background: L.bgPanel,
-                    color: L.text,
-                    fontSize: 14,
-                    padding: '0 12px',
-                    outline: 'none',
-                  }}
+                  style={{ flex: 1 }}
                 />
                 <button
                   type="button"
+                  className="ui-btn ui-btn--primary ui-btn--sm"
                   onClick={() => {
                     void sendChat()
                   }}
                   disabled={chatLoading || !chatInput.trim()}
-                  style={{
-                    height: 36,
-                    padding: '0 16px',
-                    borderRadius: 4,
-                    border: `1px solid ${L.borderAcc}`,
-                    background:
-                      chatLoading || !chatInput.trim() ? 'transparent' : 'rgba(0, 33, 71, 0.1)',
-                    color: chatLoading || !chatInput.trim() ? L.muted : L.accent,
-                    fontSize: 14,
-                    cursor: chatLoading || !chatInput.trim() ? 'not-allowed' : 'pointer',
-                    transition: 'background 0.15s, color 0.15s',
-                  }}
                 >
                   KIRIM
                 </button>
               </div>
 
-              {/* Resize handle */}
               <div
                 onMouseDown={onResizeMouseDown}
                 style={{
                   height: 18,
                   cursor: 'ns-resize',
-                  background: 'transparent',
                   borderTop: `1px solid ${L.border}`,
                   display: 'flex',
                   alignItems: 'center',
@@ -2190,14 +1442,7 @@ export default function ProfilUserPage() {
                   flexShrink: 0,
                   userSelect: 'none',
                 }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'rgba(255,255,255,0.06)'
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'transparent'
-                }}
               >
-                {/* grip dots */}
                 <div style={{ display: 'flex', gap: 3 }}>
                   {[0, 1, 2, 3, 4].map((i) => (
                     <span
@@ -2216,305 +1461,157 @@ export default function ProfilUserPage() {
               </div>
             </div>
           )}
+
           {/* TAB 2 — Berita Kesehatan */}
           {activeTab === 2 && (
-            <div style={{ padding: '16px 24px', minHeight: 132 }}>
-              {newsLoading ? (
-                <div style={{ fontSize: 14, color: L.muted, padding: '20px 0' }}>
-                  Memuat berita...
-                </div>
-              ) : news.length === 0 ? (
-                <div style={{ fontSize: 14, color: L.muted, padding: '20px 0' }}>
-                  Tidak ada berita tersedia.
-                </div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  {visibleNews.map((item, i) => (
-                    <a
-                      key={i}
-                      href={safeHref(item.link)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 4,
-                        padding: '11px 8px',
-                        borderBottom: i < news.length - 1 ? `1px solid ${L.border}` : 'none',
-                        textDecoration: 'none',
-                        borderRadius: 3,
-                        transition: 'background 0.15s',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = L.bgHover
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'transparent'
-                      }}
-                    >
-                      {/* title + tanggal */}
-                      <div
+            <div className="home-card">
+              <PanelSection>
+                {newsLoading ? (
+                  <div className="home-empty">Memuat berita...</div>
+                ) : news.length === 0 ? (
+                  <div className="home-empty">Tidak ada berita tersedia.</div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    {visibleNews.map((item, i) => (
+                      <a
+                        key={i}
+                        href={safeHref(item.link)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="home-list-row"
                         style={{
                           display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'flex-start',
-                          gap: 16,
+                          flexDirection: 'column',
+                          alignItems: 'stretch',
+                          gap: 4,
                         }}
                       >
-                        <div style={{ fontSize: 14, color: L.text }}>{item.title}</div>
-                        <span
+                        <div
                           style={{
-                            fontSize: 14,
-                            color: L.muted,
-                            whiteSpace: 'nowrap',
-                            flexShrink: 0,
-                            marginTop: 2,
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'flex-start',
+                            gap: 16,
                           }}
                         >
-                          {item.pubDate
-                            ? new Date(item.pubDate).toLocaleDateString('id-ID', {
-                                day: 'numeric',
-                                month: 'short',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                              })
-                            : ''}
-                        </span>
-                      </div>
-                      {/* description + source badge */}
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          gap: 12,
-                        }}
-                      >
-                        {item.description && (
-                          <div style={{ fontSize: 14, color: L.muted, flex: 1 }}>
-                            {item.description}
+                          <div style={{ fontSize: 14, fontWeight: 500, color: L.text }}>
+                            {item.title}
                           </div>
-                        )}
-                        <span
+                          <span
+                            style={{
+                              fontSize: 12,
+                              color: L.muted,
+                              whiteSpace: 'nowrap',
+                              flexShrink: 0,
+                              marginTop: 2,
+                            }}
+                          >
+                            {item.pubDate
+                              ? new Date(item.pubDate).toLocaleDateString('id-ID', {
+                                  day: 'numeric',
+                                  month: 'short',
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                })
+                              : ''}
+                          </span>
+                        </div>
+                        <div
                           style={{
-                            fontSize: 14,
-                            color: L.muted,
-                            border: `1px solid ${L.border}`,
-                            borderRadius: 2,
-                            padding: '1px 6px',
-                            whiteSpace: 'nowrap',
-                            flexShrink: 0,
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            gap: 12,
                           }}
                         >
-                          {item.source}
-                        </span>
-                      </div>
-                    </a>
-                  ))}
-                </div>
-              )}
+                          {item.description && (
+                            <div style={{ fontSize: 14, color: L.muted, flex: 1 }}>
+                              {item.description}
+                            </div>
+                          )}
+                          <span className="ui-badge ui-badge--neutral">{item.source}</span>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </PanelSection>
             </div>
           )}
+
           {/* TAB 3 — Assist Download */}
           {activeTab === 3 && (
-            <div
-              className="summary-tab-grid"
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '232px minmax(0, 1fr)',
-                minHeight: 144,
-              }}
-            >
-              <div
-                className="summary-tab-sidebar"
-                style={{
-                  padding: '16px 18px',
-                  borderRight: `1px solid ${L.border}`,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <div>
-                  <div
-                    style={{
-                      fontSize: 14,
-                      fontWeight: 500,
-                      color: L.text,
-                      marginBottom: 6,
-                    }}
-                  >
-                    Sentra Assist
-                  </div>
-                  <div style={{ fontSize: 14, color: L.muted, lineHeight: 1.5 }}>
-                    Ekstensi Chrome yang menghubungkan sistem RME (ePuskesmas) dengan Sentra
-                    Intelligence Dashboard secara otomatis.
-                  </div>
-                </div>
+            <div className="home-card home-split">
+              {sidebarBlock(
+                'Sentra Assist',
+                'Ekstensi Chrome yang menghubungkan sistem RME (ePuskesmas) dengan Sentra Intelligence Dashboard secara otomatis.',
                 <a
                   href="/downloads/sentra-assist-chrome.zip"
                   download
-                  className="summary-sidebar-cta"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 6,
-                    color: '#ffffff',
-                    background: L.statusTone,
-                    border: `1px solid ${L.statusTone}`,
-                    borderRadius: 3,
-                    padding: '6px 12px',
-                    textDecoration: 'none',
-                    marginTop: 16,
-                    transition: 'opacity 0.15s',
-                    fontSize: 14,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.opacity = '0.8'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.opacity = '1'
-                  }}
+                  className="ui-btn ui-btn--primary ui-btn--sm"
                 >
                   Download Assist
                 </a>
-              </div>
+              )}
               <div>
-                <PanelSection L={L}>
-                  <div style={{ fontSize: 14, fontWeight: 500, color: L.text, marginBottom: 4 }}>
-                    Apa itu Sentra Assist?
-                  </div>
-                  <div style={{ fontSize: 14, color: L.muted, lineHeight: 1.6 }}>
+                <PanelSection>
+                  <h3 className="home-card__title">Apa itu Sentra Assist?</h3>
+                  <p className="home-card__text">
                     Sentra Assist adalah ekstensi Chrome yang menjadi bridge otomatis antara sistem
                     RME (ePuskesmas) dengan Sentra Intelligence Dashboard. Memungkinkan transfer
                     data anamnesis, diagnosis, dan resep langsung ke formulir RME — tanpa input
                     ulang manual.
-                  </div>
+                  </p>
                 </PanelSection>
-                <PanelSection L={L}>
-                  <div style={{ fontSize: 14, fontWeight: 500, color: L.text, marginBottom: 12 }}>
-                    Cara Kerja
-                  </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-                    {[
-                      {
-                        step: '01',
-                        label: 'Dashboard CDSS',
-                        desc: 'Keluhan, diagnosis ICD-10, terapi tersusun',
-                      },
-                      {
-                        step: '02',
-                        label: 'Sentra Assist',
-                        desc: 'Ekstensi Chrome mendeteksi sesi RME aktif',
-                      },
-                      {
-                        step: '03',
-                        label: 'Bridge Engine',
-                        desc: 'Transfer otomatis via socket, progress real-time',
-                      },
-                      {
-                        step: '04',
-                        label: 'Form ePuskesmas',
-                        desc: 'Data masuk tanpa input ulang manual',
-                      },
-                    ].map((item, i, arr) => (
-                      <div key={item.step} style={{ display: 'flex', gap: 12 }}>
-                        {/* connector column */}
-                        <div
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            width: 28,
-                            flexShrink: 0,
-                          }}
-                        >
-                          <div
-                            style={{
-                              width: 24,
-                              height: 24,
-                              borderRadius: '50%',
-                              border: `1px solid ${L.statusTone}`,
-                              background: `color-mix(in srgb, ${L.statusTone} 12%, transparent)`,
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontSize: 12,
-                              fontWeight: 600,
-                              color: L.statusTone,
-                              flexShrink: 0,
-                              letterSpacing: '0.04em',
-                            }}
-                          >
-                            {item.step}
-                          </div>
-                          {i < arr.length - 1 && (
-                            <div
-                              style={{
-                                width: '2px',
-                                flex: 1,
-                                minHeight: 20,
-                                position: 'relative',
-                                overflow: 'hidden',
-                                background: 'rgba(255,255,255,0.08)',
-                              }}
-                            >
-                              <div
-                                style={{
-                                  position: 'absolute',
-                                  left: 0,
-                                  right: 0,
-                                  height: '60%',
-                                  background: `linear-gradient(to bottom, transparent, ${L.statusTone}, transparent)`,
-                                  animation: 'flow-down 1.4s linear infinite',
-                                }}
-                              />
-                            </div>
-                          )}
-                        </div>
-                        {/* content */}
-                        <div style={{ paddingBottom: i < arr.length - 1 ? 12 : 0 }}>
-                          <div
-                            style={{
-                              fontSize: 12,
-                              fontWeight: 600,
-                              color: L.text,
-                              lineHeight: 1.4,
-                            }}
-                          >
-                            {item.label}
-                          </div>
-                          <div
-                            style={{ fontSize: 12, color: L.muted, lineHeight: 1.5, marginTop: 2 }}
-                          >
-                            {item.desc}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                <PanelSection>
+                  <h3 className="home-card__title">Cara Kerja</h3>
+                  {[
+                    {
+                      step: '01',
+                      label: 'Dashboard CDSS',
+                      desc: 'Keluhan, diagnosis ICD-10, terapi tersusun',
+                    },
+                    {
+                      step: '02',
+                      label: 'Sentra Assist',
+                      desc: 'Ekstensi Chrome mendeteksi sesi RME aktif',
+                    },
+                    {
+                      step: '03',
+                      label: 'Bridge Engine',
+                      desc: 'Transfer otomatis via socket, progress real-time',
+                    },
+                    {
+                      step: '04',
+                      label: 'Form ePuskesmas',
+                      desc: 'Data masuk tanpa input ulang manual',
+                    },
+                  ].map((item) => (
+                    <div
+                      key={item.step}
+                      className="home-list-row"
+                      style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 2 }}
+                    >
+                      <span style={{ fontWeight: 500, color: L.text }}>{item.label}</span>
+                      <span style={{ color: L.muted }}>{item.desc}</span>
+                    </div>
+                  ))}
                 </PanelSection>
-                <PanelSection L={L} last>
-                  <div style={{ fontSize: 14, fontWeight: 500, color: L.text, marginBottom: 4 }}>
-                    Status Koneksi
-                  </div>
+                <PanelSection>
+                  <h3 className="home-card__title">Status Koneksi</h3>
                   <div
                     style={{
                       display: 'flex',
                       alignItems: 'center',
                       gap: 8,
-                      fontSize: 12,
+                      fontSize: 14,
                       color: L.muted,
                     }}
                   >
                     <span
-                      style={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: 99,
-                        background: '#27ae60',
-                        flexShrink: 0,
-                      }}
+                      aria-hidden
+                      className="home-status-dot"
+                      style={{ background: 'var(--success)' }}
                     />
                     Assist Bridge tersedia — siap digunakan dari halaman EMR Console
                   </div>
@@ -2525,396 +1622,217 @@ export default function ProfilUserPage() {
 
           {/* TAB 4 — Critical Mind Algorithm */}
           {activeTab === 4 && (
-            <div
-              className="summary-tab-grid"
-              style={{
-                display: 'grid',
-                gridTemplateColumns: '232px minmax(0, 1fr)',
-                minHeight: 144,
-              }}
-            >
-              <div
-                className="summary-tab-sidebar"
-                style={{
-                  padding: '16px 18px',
-                  borderRight: `1px solid ${L.border}`,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <div>
-                  <div
-                    style={{
-                      fontSize: 14,
-                      fontWeight: 500,
-                      color: L.text,
-                      marginBottom: 6,
-                    }}
-                  >
-                    Critical Mind Algorithm
-                  </div>
-                  <div style={{ fontSize: 14, color: L.muted, lineHeight: 1.5 }}>
-                    Iskandar Engine — kerangka reasoning klinis yang mendasari seluruh proses
-                    diagnosis AI di Sentra.
-                  </div>
-                </div>
-                <a
-                  href="/critical-mind"
-                  className="summary-sidebar-cta"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 6,
-                    color: '#ffffff',
-                    background: L.statusTone,
-                    border: `1px solid ${L.statusTone}`,
-                    borderRadius: 3,
-                    padding: '6px 12px',
-                    textDecoration: 'none',
-                    marginTop: 16,
-                    transition: 'opacity 0.15s',
-                    fontSize: 14,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.opacity = '0.8'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.opacity = '1'
-                  }}
-                >
+            <div className="home-card home-split">
+              {sidebarBlock(
+                'Critical Mind Algorithm',
+                'Iskandar Engine — kerangka reasoning klinis yang mendasari seluruh proses diagnosis AI di Sentra.',
+                <a href="/critical-mind" className="ui-btn ui-btn--primary ui-btn--sm">
                   Lihat Detail →
                 </a>
-              </div>
+              )}
               <div>
-                <PanelSection L={L}>
-                  <div style={{ fontSize: 14, fontWeight: 500, color: L.text, marginBottom: 4 }}>
-                    Iskandar Diagnosis Engine V2
-                  </div>
-                  <div style={{ fontSize: 14, color: L.muted, lineHeight: 1.6 }}>
+                <PanelSection>
+                  <h3 className="home-card__title">Iskandar Diagnosis Engine V2</h3>
+                  <p className="home-card__text">
                     LLM-first architecture dengan knowledge base grounding — 172 penyakit KKI,
                     hybrid retrieval (BM25 + semantic embedding), dan multi-layer validation.
-                  </div>
+                  </p>
                 </PanelSection>
-                <PanelSection L={L}>
-                  <div style={{ fontSize: 14, fontWeight: 500, color: L.text, marginBottom: 4 }}>
-                    NEWS2 Early Warning System
-                  </div>
-                  <div style={{ fontSize: 14, color: L.muted, lineHeight: 1.6 }}>
+                <PanelSection>
+                  <h3 className="home-card__title">NEWS2 Early Warning System</h3>
+                  <p className="home-card__text">
                     Graduated vital signs scoring (5 parameter, skor 0-3) untuk deteksi dini
                     deteriorasi fisiologis. Terintegrasi dengan 7 pola penyakit spesifik: DHF,
                     sepsis (SIRS/qSOFA), gagal napas, ACS, syok hemoragik, preeklampsia, dan malaria
                     berat.
-                  </div>
+                  </p>
                 </PanelSection>
-                <PanelSection L={L}>
-                  <div style={{ fontSize: 14, fontWeight: 500, color: L.text, marginBottom: 4 }}>
-                    Safety Layers
-                  </div>
-                  <div style={{ fontSize: 14, color: L.muted, lineHeight: 1.6 }}>
+                <PanelSection>
+                  <h3 className="home-card__title">Safety Layers</h3>
+                  <p className="home-card__text">
                     5 lapis keamanan klinis: vital signs red flags (hardcoded), NEWS2 composite
                     scoring, disease-specific early warning, KB grounding validation (ICD-10 +
                     sex/age/pregnancy plausibility + drug-allergy cross-reference), dan hybrid
                     decisioning deterministik.
-                  </div>
+                  </p>
                 </PanelSection>
-                <PanelSection L={L} last>
-                  <div style={{ fontSize: 14, fontWeight: 500, color: L.text, marginBottom: 4 }}>
-                    Retrieval Pipeline
-                  </div>
-                  <div style={{ fontSize: 14, color: L.muted, lineHeight: 1.6 }}>
+                <PanelSection>
+                  <h3 className="home-card__title">Retrieval Pipeline</h3>
+                  <p className="home-card__text">
                     BM25 keyword scoring → lexical disease ranking lokal → Reciprocal Rank Fusion
                     merge → DeepSeek Reasoner (primary) dengan circuit breaker. Alias expansion 350+
                     sinonim bahasa Indonesia awam → klinis.
-                  </div>
+                  </p>
                 </PanelSection>
               </div>
             </div>
           )}
         </div>
-        {/* end collapse wrapper */}
       </div>
-      <style>{`@keyframes dotPulse { 0%,80%,100%{opacity:0.2} 40%{opacity:1} }`}</style>
 
-      {/* ── 2-col grid ── */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: 12,
-          maxWidth: 1200,
-          width: '100%',
-          alignItems: 'start',
-        }}
-      >
+      {/* ── 2 kolom kartu ── */}
+      <div className="home-grid">
         {/* ══ KOLOM KIRI — IDENTITAS + AKSES LAYANAN ══ */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-          <Panel L={L}>
-            {/* Avatar block */}
-            <PanelSection L={L}>
-              <div style={{ display: 'grid', gap: 18 }}>
+        <div className="home-stack">
+          <Panel>
+            <PanelSection>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 16, width: '100%' }}>
                 <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                    gap: 18,
-                    position: 'relative',
-                    zIndex: 1,
-                    width: '100%',
-                  }}
+                  style={{ display: 'flex', alignItems: 'center', gap: 16, minWidth: 0, flex: 1 }}
                 >
                   <div
                     style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 16,
-                      minWidth: 0,
-                      flex: 1,
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: 84,
-                        height: 84,
-                        border: `1px solid ${L.borderAcc}`,
-                        borderRadius: '50%',
-                        overflow: 'hidden',
-                        position: 'relative',
-                        flexShrink: 0,
-                      }}
-                    >
-                      <img
-                        src={safeUrl(profile.avatarUrl, '/avatar.png')}
-                        alt={profileName}
-                        style={{
-                          position: 'absolute',
-                          top: '-8%',
-                          left: '-5%',
-                          width: '110%',
-                          height: '110%',
-                          objectFit: 'cover',
-                          objectPosition: 'center 15%',
-                        }}
-                      />
-                    </div>
-                    <div style={{ minWidth: 0 }}>
-                      <div
-                        style={{
-                          fontSize: 14,
-                          color: L.muted,
-                          marginBottom: 6,
-                        }}
-                      >
-                        Crew Sentra
-                      </div>
-                      <div
-                        style={{
-                          fontSize: 24,
-                          fontWeight: 500,
-                          color: L.text,
-                          marginBottom: 4,
-                          letterSpacing: '-0.03em',
-                        }}
-                      >
-                        {profileName}
-                      </div>
-                      <div
-                        style={{
-                          fontSize: 14,
-                          color: L.muted,
-                          marginBottom: 10,
-                        }}
-                      >
-                        {sentraTitle} · {professionLabel}
-                      </div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                        <span
-                          style={{
-                            ...solidStatusBadgeStyle,
-                            padding: '4px 10px',
-                            fontSize: 12,
-                          }}
-                        >
-                          {roleLabel}
-                        </span>
-                        {(degreeBadges.length > 0 ? degreeBadges : ['Belum diisi']).map((g) => (
-                          <span
-                            key={g}
-                            style={{
-                              ...solidStatusBadgeStyle,
-                              padding: '4px 10px',
-                              fontSize: 12,
-                            }}
-                          >
-                            {g}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  {rankBadgeSrc ? (
-                    <div
-                      style={{
-                        width: 'clamp(74px, 18vw, 116px)',
-                        minWidth: 74,
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        alignItems: 'center',
-                        alignSelf: 'stretch',
-                        flexShrink: 0,
-                        overflow: 'hidden',
-                      }}
-                    >
-                      <img
-                        src={rankBadgeSrc}
-                        alt={`Rank ${roleLabel}`}
-                        style={{
-                          display: 'block',
-                          maxWidth: '100%',
-                          maxHeight: 62,
-                          width: 'auto',
-                          height: 'auto',
-                          objectFit: 'contain',
-                        }}
-                      />
-                    </div>
-                  ) : null}
-                </div>
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-                    gap: 10,
-                  }}
-                >
-                  {profileHeroStats.map((item) => (
-                    <div
-                      key={item.label}
-                      style={{
-                        border: `1px solid ${L.border}`,
-                        borderRadius: 8,
-                        padding: '12px 14px',
-                        background: L.bg,
-                        display: 'grid',
-                        gap: 4,
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontSize: 12,
-                          color: L.muted,
-                        }}
-                      >
-                        {item.label}
-                      </div>
-                      <div
-                        style={{
-                          fontSize: 14,
-                          color: L.text,
-                          lineHeight: 1.45,
-                        }}
-                      >
-                        {item.value}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr',
-                    gap: 10,
-                  }}
-                >
-                  <div
-                    style={{
+                      width: 72,
+                      height: 72,
                       border: `1px solid ${L.border}`,
-                      borderRadius: 8,
-                      padding: '12px 14px',
-                      background: L.bg,
-                      display: 'grid',
-                      gap: 10,
+                      borderRadius: '50%',
+                      overflow: 'hidden',
+                      position: 'relative',
+                      flexShrink: 0,
                     }}
                   >
+                    <img
+                      src={safeUrl(profile.avatarUrl, '/avatar.png')}
+                      alt={profileName}
+                      style={{
+                        position: 'absolute',
+                        top: '-8%',
+                        left: '-5%',
+                        width: '110%',
+                        height: '110%',
+                        objectFit: 'cover',
+                        objectPosition: 'center 15%',
+                      }}
+                    />
+                  </div>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontSize: 12, color: L.muted, marginBottom: 4 }}>Crew Sentra</div>
                     <div
                       style={{
-                        fontSize: 12,
-                        color: L.muted,
+                        fontSize: 20,
+                        fontWeight: 600,
+                        lineHeight: 1.3,
+                        color: L.text,
+                        marginBottom: 4,
                       }}
                     >
-                      Link Resmi
+                      {profileName}
                     </div>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
-                      {officialLinkLogos.map((item) => {
-                        const content = (
-                          <span
-                            aria-hidden="true"
-                            style={{
-                              display: 'inline-block',
-                              width: 26,
-                              height: 26,
-                              flexShrink: 0,
-                              background: item.href ? L.signal : L.muted,
-                              opacity: item.href ? 1 : 0.55,
-                              WebkitMaskImage: `url(${item.iconSrc})`,
-                              maskImage: `url(${item.iconSrc})`,
-                              WebkitMaskRepeat: 'no-repeat',
-                              maskRepeat: 'no-repeat',
-                              WebkitMaskPosition: 'center',
-                              maskPosition: 'center',
-                              WebkitMaskSize: 'contain',
-                              maskSize: 'contain',
-                            }}
-                          />
-                        )
-
-                        const sharedStyle: React.CSSProperties = {
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: 28,
-                          height: 28,
-                          textDecoration: 'none',
-                        }
-
-                        if (!item.href) {
-                          return (
-                            <div
-                              key={item.label}
-                              title={item.label}
-                              aria-label={item.label}
-                              style={sharedStyle}
-                            >
-                              {content}
-                            </div>
-                          )
-                        }
-
-                        return (
-                          <a
-                            key={item.label}
-                            href={safeHref(item.href)}
-                            target="_blank"
-                            rel="noreferrer"
-                            title={item.label}
-                            aria-label={item.label}
-                            style={sharedStyle}
-                          >
-                            {content}
-                          </a>
-                        )
-                      })}
+                    <div style={{ fontSize: 14, color: L.muted, marginBottom: 12 }}>
+                      {sentraTitle} · {professionLabel}
+                    </div>
+                    <div className="home-badges">
+                      <span className="ui-badge ui-badge--primary">{roleLabel}</span>
+                      {(degreeBadges.length > 0 ? degreeBadges : ['Belum diisi']).map((g) => (
+                        <span key={g} className="ui-badge ui-badge--neutral">
+                          {g}
+                        </span>
+                      ))}
                     </div>
                   </div>
                 </div>
+                {rankBadgeSrc ? (
+                  <div
+                    style={{
+                      width: 'clamp(74px, 18vw, 116px)',
+                      minWidth: 74,
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                      alignItems: 'center',
+                      alignSelf: 'stretch',
+                      flexShrink: 0,
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <img
+                      src={rankBadgeSrc}
+                      alt={`Rank ${roleLabel}`}
+                      style={{
+                        display: 'block',
+                        maxWidth: '100%',
+                        maxHeight: 62,
+                        width: 'auto',
+                        height: 'auto',
+                        objectFit: 'contain',
+                      }}
+                    />
+                  </div>
+                ) : null}
+              </div>
+            </PanelSection>
+
+            {/* Profesi */}
+            <PanelSection>
+              {profileHeroStats.map((item) => (
+                <Row key={item.label} label={item.label} val={item.value} />
+              ))}
+            </PanelSection>
+
+            {/* Link Resmi */}
+            <PanelSection>
+              <SectionLabel>Link Resmi</SectionLabel>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, paddingTop: 4 }}>
+                {officialLinkLogos.map((item) => {
+                  const content = (
+                    <span
+                      aria-hidden="true"
+                      className={`home-link-icon${item.href ? '' : ' home-link-icon--off'}`}
+                      style={{
+                        WebkitMaskImage: `url(${item.iconSrc})`,
+                        maskImage: `url(${item.iconSrc})`,
+                        WebkitMaskRepeat: 'no-repeat',
+                        maskRepeat: 'no-repeat',
+                        WebkitMaskPosition: 'center',
+                        maskPosition: 'center',
+                        WebkitMaskSize: 'contain',
+                        maskSize: 'contain',
+                      }}
+                    />
+                  )
+
+                  const sharedStyle: React.CSSProperties = {
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 28,
+                    height: 28,
+                    textDecoration: 'none',
+                  }
+
+                  if (!item.href) {
+                    return (
+                      <div
+                        key={item.label}
+                        title={item.label}
+                        aria-label={item.label}
+                        style={sharedStyle}
+                      >
+                        {content}
+                      </div>
+                    )
+                  }
+
+                  return (
+                    <a
+                      key={item.label}
+                      href={safeHref(item.href)}
+                      target="_blank"
+                      rel="noreferrer"
+                      title={item.label}
+                      aria-label={item.label}
+                      style={sharedStyle}
+                    >
+                      {content}
+                    </a>
+                  )
+                })}
               </div>
             </PanelSection>
 
             {/* Data Pribadi */}
-            <PanelSection L={L} last>
-              <SectionLabel L={L}>Data Pribadi</SectionLabel>
+            <PanelSection>
+              <SectionLabel>Data Pribadi</SectionLabel>
               <Row
-                L={L}
                 label="TTL"
                 val={
                   profile.birthPlace && profile.birthDate
@@ -2922,291 +1840,118 @@ export default function ProfilUserPage() {
                     : 'Belum diisi'
                 }
               />
-              <Row L={L} label="Usia" val={age !== null ? `${age} tahun` : 'Belum diisi'} />
-              <Row L={L} label="Jenis Kel." val={profile.gender || 'Belum diisi'} />
-              <Row L={L} label="WhatsApp" val={profile.whatsappNumber || 'Belum diisi'} />
-              <Row L={L} label="Domisili" val={profile.domicile || 'Belum diisi'} />
-              <Row L={L} label="Email" val={sessionUser?.email || 'Belum diisi'} />
+              <Row label="Usia" val={age !== null ? `${age} tahun` : 'Belum diisi'} />
+              <Row label="Jenis Kel." val={profile.gender || 'Belum diisi'} />
+              <Row label="WhatsApp" val={profile.whatsappNumber || 'Belum diisi'} />
+              <Row label="Domisili" val={profile.domicile || 'Belum diisi'} />
+              <Row label="Email" val={sessionUser?.email || 'Belum diisi'} />
             </PanelSection>
           </Panel>
 
-          {/* ── Akses Layanan (di bawah identitas, lebar sama) ── */}
-          <div>
-            <div
-              style={{
-                fontSize: 14,
-                color: L.muted,
-                marginBottom: 12,
-              }}
-            >
-              Akses Layanan
-            </div>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                gap: 10,
-              }}
-            >
-              {QUICK_LINKS.map((link, i) => {
-                const wrapStyle: React.CSSProperties = {
-                  border: `1px solid ${L.border}`,
-                  borderRadius: 8,
-                  background: 'transparent',
-                  transition: 'background 0.15s',
-                  overflow: 'hidden',
-                }
+          {/* ── Akses Layanan ── */}
+          <Panel>
+            <PanelSection>
+              <SectionLabel>Akses Layanan</SectionLabel>
+              {QUICK_LINKS.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target={link.href.startsWith('http') ? '_blank' : undefined}
+                  rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  className="home-list-row"
+                >
+                  <span>
+                    {link.label}
+                    <span style={{ color: L.muted }}> · {link.desc}</span>
+                  </span>
+                  <span className="ui-badge ui-badge--neutral">{link.badge}</span>
+                </a>
+              ))}
+            </PanelSection>
+          </Panel>
 
-                const innerStyle: React.CSSProperties = {
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 4,
-                  padding: '11px 14px',
-                  width: '100%',
-                  height: '100%',
-                  textDecoration: 'none',
-                  cursor: 'pointer',
-                }
+          {/* ── Whos online ── */}
+          <Panel>
+            <PanelSection>
+              <SectionLabel>WHOS ONLINE</SectionLabel>
+              {onlineRoster.length > 0 ? (
+                <div
+                  className={hasScrollableOnlineRoster ? 'who-online-scroll' : undefined}
+                  style={{
+                    maxHeight: hasScrollableOnlineRoster ? 286 : undefined,
+                    overflowY: hasScrollableOnlineRoster ? 'auto' : 'visible',
+                    paddingRight: hasScrollableOnlineRoster ? 4 : 0,
+                  }}
+                >
+                  {onlineRoster.map((user) => {
+                    const subtitle = user.profession || formatRoleLabel(user.role)
+                    const isCurrentUser = user.userId === sessionUser?.username
 
-                const content = (
-                  <>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <span
-                        style={{
-                          fontSize: 14,
-                          color: L.text,
-                          transition: 'color 0.2s',
-                        }}
-                      >
-                        {link.label}
-                      </span>
-                    </div>
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        gap: 6,
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontSize: 14,
-                          color: L.muted,
-                          letterSpacing: '0.02em',
-                        }}
-                      >
-                        {link.desc}
-                      </div>
-                      <span
-                        style={{
-                          fontSize: 14,
-                          color: L.muted,
-                          padding: '1px 5px',
-                          borderRadius: 2,
-                          border: `1px solid ${L.border}`,
-                          flexShrink: 0,
-                          transition: 'all 0.2s',
-                        }}
-                      >
-                        {link.badge}
-                      </span>
-                    </div>
-                  </>
-                )
-
-                return (
-                  <div key={i} style={wrapStyle}>
-                    <a
-                      href={link.href}
-                      target={link.href.startsWith('http') ? '_blank' : undefined}
-                      rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                      style={innerStyle}
-                      onMouseEnter={(e) => {
-                        const parent = e.currentTarget.parentElement
-                        if (parent) parent.style.background = L.bgHover
-                      }}
-                      onMouseLeave={(e) => {
-                        const parent = e.currentTarget.parentElement
-                        if (parent) parent.style.background = 'transparent'
-                      }}
-                    >
-                      {content}
-                    </a>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-
-          <div style={{ marginTop: 12 }}>
-            <SectionLabel L={L}>WHOS ONLINE</SectionLabel>
-            <Panel L={L}>
-              <PanelSection L={L} last>
-                {onlineRoster.length > 0 ? (
-                  <div
-                    className={hasScrollableOnlineRoster ? 'who-online-scroll' : undefined}
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: 10,
-                      maxHeight: hasScrollableOnlineRoster ? 286 : undefined,
-                      overflowY: hasScrollableOnlineRoster ? 'auto' : 'visible',
-                      paddingRight: hasScrollableOnlineRoster ? 4 : 0,
-                    }}
-                  >
-                    {onlineRoster.map((user, index) => {
-                      const subtitle = user.profession || formatRoleLabel(user.role)
-                      const isCurrentUser = user.userId === sessionUser?.username
-
-                      return (
+                    return (
+                      <div key={user.userId} className="home-list-row">
                         <div
-                          key={user.userId}
-                          style={{
-                            display: 'grid',
-                            gridTemplateColumns: 'minmax(0, 1fr) auto',
-                            alignItems: 'center',
-                            gap: 10,
-                            paddingBottom: 10,
-                            borderBottom:
-                              index === onlineRoster.length - 1 ? 'none' : `1px solid ${L.border}`,
-                          }}
+                          style={{ minWidth: 0, display: 'flex', flexDirection: 'column', gap: 2 }}
                         >
                           <div
                             style={{
-                              minWidth: 0,
                               display: 'flex',
-                              flexDirection: 'column',
-                              gap: 2,
-                            }}
-                          >
-                            <div
-                              style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 6,
-                                flexWrap: 'wrap',
-                              }}
-                            >
-                              <span
-                                style={{
-                                  fontSize: 14,
-                                  color: L.text,
-                                  lineHeight: 1.35,
-                                }}
-                              >
-                                {user.name}
-                              </span>
-                              {isCurrentUser ? (
-                                <span
-                                  style={{
-                                    fontSize: 12,
-                                    color: L.accent,
-                                  }}
-                                >
-                                  ANDA
-                                </span>
-                              ) : null}
-                            </div>
-                            <span
-                              style={{
-                                fontSize: 14,
-                                color: L.muted,
-                                lineHeight: 1.4,
-                              }}
-                            >
-                              {subtitle}
-                              {user.institution ? ` • ${user.institution}` : ''}
-                            </span>
-                          </div>
-                          <span
-                            style={{
-                              fontSize: 12,
-                              color: '#4CAF50',
-                              display: 'inline-flex',
                               alignItems: 'center',
-                              gap: 6,
-                              whiteSpace: 'nowrap',
+                              gap: 8,
+                              flexWrap: 'wrap',
                             }}
                           >
-                            <span
-                              aria-hidden
-                              style={{
-                                width: 8,
-                                height: 8,
-                                borderRadius: '50%',
-                                background: '#4CAF50',
-                                boxShadow: '0 0 8px rgba(76,175,80,0.45)',
-                                display: 'inline-block',
-                              }}
-                            />
-                            ONLINE
+                            <span style={{ color: L.text }}>{user.name}</span>
+                            {isCurrentUser ? (
+                              <span className="ui-badge ui-badge--primary">ANDA</span>
+                            ) : null}
+                          </div>
+                          <span style={{ color: L.muted }}>
+                            {subtitle}
+                            {user.institution ? ` • ${user.institution}` : ''}
                           </span>
                         </div>
-                      )
-                    })}
-                  </div>
-                ) : (
-                  <div
-                    style={{
-                      fontSize: 14,
-                      color: L.muted,
-                      lineHeight: 1.5,
-                    }}
-                  >
-                    Belum ada crew yang sedang online.
-                  </div>
-                )}
-              </PanelSection>
-            </Panel>
-          </div>
+                        <span className="ui-badge ui-badge--success">ONLINE</span>
+                      </div>
+                    )
+                  })}
+                </div>
+              ) : (
+                <div className="home-empty">Belum ada crew yang sedang online.</div>
+              )}
+            </PanelSection>
+          </Panel>
         </div>
-        {/* ── end kolom kiri ── */}
 
-        {/* ══ PANEL KANAN — PEKERJAAN ══ */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-          <Panel L={L}>
+        {/* ══ KOLOM KANAN — PEKERJAAN ══ */}
+        <div className="home-stack">
+          <Panel>
             {/* Posisi */}
-            <PanelSection L={L}>
-              <SectionLabel L={L}>Posisi</SectionLabel>
-              <div
-                style={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  gap: 6,
-                  marginBottom: 6,
-                }}
-              >
+            <PanelSection>
+              <SectionLabel>Posisi</SectionLabel>
+              <div className="home-badges" style={{ marginBottom: 8 }}>
                 {(visiblePositionBadges.length > 0
                   ? visiblePositionBadges
                   : [sessionUser?.profession || 'Belum diisi']
                 ).map((jobTitle) => (
-                  <span key={jobTitle} style={{ ...solidStatusBadgeStyle, padding: '4px 10px' }}>
+                  <span key={jobTitle} className="ui-badge ui-badge--primary">
                     {jobTitle}
                   </span>
                 ))}
               </div>
-              <div
-                style={{
-                  fontSize: 14,
-                  color: L.muted,
-                  letterSpacing: '0.02em',
-                }}
-              >
+              <div style={{ fontSize: 14, color: L.muted }}>
                 {sessionUser?.institution || 'Institusi belum diatur'}
               </div>
             </PanelSection>
 
             {/* Institusi */}
-            <PanelSection L={L}>
-              <SectionLabel L={L}>Institusi</SectionLabel>
-              <Row L={L} label="Institusi" val={sessionUser?.institution || 'Belum diisi'} />
-              <Row L={L} label="Profesi" val={sessionUser?.profession || 'Belum diisi'} />
+            <PanelSection>
+              <SectionLabel>Institusi</SectionLabel>
+              <Row label="Institusi" val={sessionUser?.institution || 'Belum diisi'} />
+              <Row label="Profesi" val={sessionUser?.profession || 'Belum diisi'} />
               {isAdminDashboardUser ? (
                 <>
-                  <Row L={L} label="Role" val={sessionUser?.role || 'Belum diisi'} accent />
+                  <Row label="Role" val={sessionUser?.role || 'Belum diisi'} accent />
                   <Row
-                    L={L}
                     label="Role Sentra"
                     val={
                       visiblePositionBadges.length > 0
@@ -3219,37 +1964,23 @@ export default function ProfilUserPage() {
             </PanelSection>
 
             {/* Kredensial */}
-            <PanelSection L={L} last>
-              <SectionLabel L={L}>Kredensial &amp; Lisensi</SectionLabel>
-              <Row L={L} label="NIP" val={profile.employeeId || 'Belum diisi'} mono />
-              <Row L={L} label="STR" val={profile.strNumber || 'Belum diisi'} mono />
-              <Row L={L} label="SIP" val={profile.sipNumber || 'Belum diisi'} mono />
-              <div
-                style={{
-                  marginTop: 10,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                }}
-              >
+            <PanelSection>
+              <SectionLabel>Kredensial &amp; Lisensi</SectionLabel>
+              <Row label="NIP" val={profile.employeeId || 'Belum diisi'} />
+              <Row label="STR" val={profile.strNumber || 'Belum diisi'} />
+              <Row label="SIP" val={profile.sipNumber || 'Belum diisi'} />
+              <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span
+                  aria-hidden
+                  className="home-status-dot"
                   style={{
-                    width: 5,
-                    height: 5,
-                    borderRadius: '50%',
-                    background: L.statusTone,
-                    boxShadow: 'none',
-                    display: 'inline-block',
-                    flexShrink: 0,
+                    background:
+                      profile.strNumber || profile.sipNumber
+                        ? 'var(--success)'
+                        : 'var(--text-secondary)',
                   }}
                 />
-                <span
-                  style={{
-                    fontSize: 14,
-                    color: L.muted,
-                    letterSpacing: '0.04em',
-                  }}
-                >
+                <span style={{ fontSize: 14, color: L.muted }}>
                   {profile.strNumber || profile.sipNumber
                     ? 'Kredensial profesi tersimpan'
                     : 'Lengkapi kredensial profesi bila tersedia'}
@@ -3263,65 +1994,19 @@ export default function ProfilUserPage() {
       </div>
 
       {isProfileEditorOpen ? (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.52)',
-            display: 'grid',
-            placeItems: 'center',
-            padding: 24,
-            zIndex: 100,
-          }}
-        >
-          <style>{`
-            .profile-editor-modal {
-              scrollbar-width: thin;
-              scrollbar-color: ${L.statusTone} transparent;
-            }
-            .profile-editor-modal::-webkit-scrollbar {
-              width: 6px;
-            }
-            .profile-editor-modal::-webkit-scrollbar-track {
-              background: transparent;
-            }
-            .profile-editor-modal::-webkit-scrollbar-thumb {
-              background: ${L.statusTone};
-              border-radius: 999px;
-            }
-          `}</style>
-          <div
-            className="profile-editor-modal"
-            style={{
-              width: '100%',
-              maxWidth: 1100,
-              maxHeight: '90vh',
-              overflowY: 'auto',
-              background: L.bgPanel,
-              border: `1px solid ${L.border}`,
-              borderRadius: 8,
-              padding: 24,
-              display: 'grid',
-              gap: 18,
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                gap: 16,
-              }}
-            >
+        <div className="ui-dialog-backdrop">
+          <div className="ui-dialog profile-editor-modal" style={{ maxWidth: 960 }}>
+            <div className="ui-dialog__header" style={{ alignItems: 'flex-start' }}>
               <div>
-                <div style={{ fontSize: 20, color: L.text, marginBottom: 6 }}>Edit Profil</div>
-                <div style={{ fontSize: 14, color: L.muted }}>
+                <h2 className="ui-dialog__title">Edit Profil</h2>
+                <p className="home-card__text" style={{ marginTop: 4 }}>
                   Lengkapi data personal dan kredensial yang akan tampil di halaman profile. Avatar
                   dipilih otomatis sesuai profesi dan jenis kelamin.
-                </div>
+                </p>
               </div>
               <button
                 type="button"
+                className="ui-btn ui-btn--ghost ui-btn--sm"
                 onClick={() => {
                   setProfileDraft(profile)
                   setProfileError('')
@@ -3329,761 +2014,294 @@ export default function ProfilUserPage() {
                   resetProfileSelectionInputs()
                   setIsProfileEditorOpen(false)
                 }}
-                style={{
-                  height: 36,
-                  padding: '0 14px',
-                  borderRadius: 3,
-                  border: `1px solid ${L.border}`,
-                  background: 'transparent',
-                  color: L.text,
-                  fontSize: 14,
-                  cursor: 'pointer',
-                }}
               >
                 Tutup
               </button>
             </div>
 
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-                gap: 16,
-              }}
-            >
-              <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 14, color: L.muted }}>Nama lengkap</span>
-                <input
-                  value={profileDraft.fullName}
-                  onChange={(event) =>
-                    setProfileDraft((current) => ({
-                      ...current,
-                      fullName: event.target.value,
-                    }))
-                  }
-                  style={{
-                    height: 42,
-                    borderRadius: 6,
-                    border: `1px solid ${L.border}`,
-                    background: L.bg,
-                    color: L.text,
-                    fontSize: 14,
-                    padding: '0 12px',
-                    outline: 'none',
-                  }}
-                />
-              </label>
-
+            <div className="ui-dialog__body" style={{ display: 'grid', gap: 24 }}>
               <div
-                className="gelar-section"
-                style={{ display: 'grid', gap: 6, gridColumn: '1 / -1' }}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                  gap: 16,
+                }}
               >
-                <span style={{ fontSize: 14, color: L.muted }}>Gelar</span>
+                {editorTextField('fullName', 'Nama lengkap')}
+
                 <div
-                  style={{
-                    display: 'grid',
-                    gap: 10,
-                    gridTemplateColumns: 'minmax(0, 1fr)',
-                  }}
+                  className="gelar-section ui-field"
+                  style={{ gridColumn: '1 / -1' }}
                 >
+                  <span className="ui-field__label">Gelar</span>
+                  <div style={{ display: 'grid', gap: 12, gridTemplateColumns: 'minmax(0, 1fr)' }}>
+                    <select
+                      className="ui-input"
+                      value={selectedDegreeOption}
+                      onChange={(event) => {
+                        const nextDegree = event.target.value as CrewProfileDegree
+                        if (!nextDegree) return
+                        addProfileDegree(nextDegree)
+                        setSelectedDegreeOption('')
+                      }}
+                    >
+                      <option value="">Pilih gelar</option>
+                      {CREW_PROFILE_DEGREES.map((degree) => (
+                        <option
+                          key={degree}
+                          value={degree}
+                          disabled={profileDraft.degrees.includes(degree)}
+                        >
+                          {degree}
+                        </option>
+                      ))}
+                    </select>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                      {profileDraft.degrees.length > 0 ? (
+                        profileDraft.degrees.map((degree) => (
+                          <button
+                            key={degree}
+                            type="button"
+                            onClick={() => removeProfileDegree(degree)}
+                            style={removablePillStyle}
+                          >
+                            {degree} ×
+                          </button>
+                        ))
+                      ) : (
+                        <span style={{ fontSize: 14, color: L.muted }}>
+                          Belum ada gelar dipilih.
+                        </span>
+                      )}
+                    </div>
+                    <div className="ui-field__hint">
+                      Pilih sampai {CREW_PROFILE_MAX_DEGREES} gelar.
+                    </div>
+                  </div>
+                </div>
+
+                {editorTextField('birthPlace', 'Tempat lahir')}
+
+                <label className="ui-field">
+                  <span className="ui-field__label">Tanggal lahir</span>
+                  <input
+                    className="ui-input"
+                    type="date"
+                    value={profileDraft.birthDate}
+                    onChange={(event) =>
+                      setProfileDraft((current) => ({
+                        ...current,
+                        birthDate: event.target.value,
+                      }))
+                    }
+                  />
+                </label>
+
+                <label className="ui-field">
+                  <span className="ui-field__label">Jenis kelamin</span>
                   <select
-                    value={selectedDegreeOption}
-                    onChange={(event) => {
-                      const nextDegree = event.target.value as CrewProfileDegree
-                      if (!nextDegree) return
-                      addProfileDegree(nextDegree)
-                      setSelectedDegreeOption('')
-                    }}
-                    style={{
-                      height: 42,
-                      borderRadius: 6,
-                      border: `1px solid ${L.border}`,
-                      background: L.bg,
-                      color: L.text,
-                      fontSize: 14,
-                      padding: '0 12px',
-                      outline: 'none',
-                    }}
+                    className="ui-input"
+                    value={profileDraft.gender}
+                    onChange={(event) =>
+                      setProfileDraft((current) => ({
+                        ...current,
+                        gender: event.target.value as CrewAccessGender | '',
+                      }))
+                    }
                   >
-                    <option value="">Pilih gelar</option>
-                    {CREW_PROFILE_DEGREES.map((degree) => (
-                      <option
-                        key={degree}
-                        value={degree}
-                        disabled={profileDraft.degrees.includes(degree)}
-                      >
-                        {degree}
+                    <option value="">Pilih</option>
+                    {CREW_ACCESS_GENDERS.map((gender) => (
+                      <option key={gender} value={gender}>
+                        {gender}
                       </option>
                     ))}
                   </select>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                    {profileDraft.degrees.length > 0 ? (
-                      profileDraft.degrees.map((degree) => (
-                        <button
-                          key={degree}
-                          type="button"
-                          onClick={() => removeProfileDegree(degree)}
-                          style={{
-                            minHeight: 34,
-                            padding: '0 12px',
-                            borderRadius: 999,
-                            border: `1px solid ${L.statusTone}`,
-                            background: L.statusToneSoft,
-                            color: L.text,
-                            fontSize: 14,
-                            boxShadow:
-                              '3px 3px 10px rgba(0,0,0,0.12), inset 1px 1px 0 rgba(255,255,255,0.03)',
-                            cursor: 'pointer',
-                          }}
-                        >
-                          {degree} ×
-                        </button>
-                      ))
-                    ) : (
-                      <span style={{ fontSize: 14, color: L.muted }}>Belum ada gelar dipilih.</span>
-                    )}
+                </label>
+
+                <label className="ui-field">
+                  <span className="ui-field__label">Golongan darah</span>
+                  <select
+                    className="ui-input"
+                    value={profileDraft.bloodType}
+                    onChange={(event) =>
+                      setProfileDraft((current) => ({
+                        ...current,
+                        bloodType: event.target.value as CrewProfileData['bloodType'],
+                      }))
+                    }
+                  >
+                    <option value="">Pilih</option>
+                    {CREW_PROFILE_BLOOD_TYPES.map((bloodType) => (
+                      <option key={bloodType} value={bloodType}>
+                        {bloodType}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                {editorTextField('domicile', 'Domisili', undefined, true)}
+
+                <label className="ui-field">
+                  <span className="ui-field__label">Institusi utama</span>
+                  <input
+                    className="ui-input"
+                    value={sessionUser?.institution || 'Belum diisi'}
+                    disabled
+                    style={{ opacity: 0.82 }}
+                  />
+                </label>
+
+                <div className="ui-field" style={{ gap: 12, gridColumn: '1 / -1' }}>
+                  <span className="ui-field__label">Role Sentra dan posisi</span>
+                  <div style={{ display: 'grid', gap: 16 }}>
+                    <div style={{ display: 'grid', gap: 8 }}>
+                      <span style={{ fontSize: 14, color: L.muted }}>Role Sentra</span>
+                      <select
+                        className="ui-input"
+                        value={selectedSentraRoleOption}
+                        onChange={(event) => {
+                          const nextRole = event.target.value as CrewProfilePosition
+                          if (!nextRole) return
+                          addProfileJobTitle(nextRole)
+                          setSelectedSentraRoleOption('')
+                        }}
+                      >
+                        <option value="">Pilih role sentra</option>
+                        {CREW_PROFILE_SENTRA_ROLES.map((jobTitle) => (
+                          <option
+                            key={jobTitle}
+                            value={jobTitle}
+                            disabled={
+                              profileDraft.jobTitles.includes(jobTitle) ||
+                              profileDraft.jobTitles.length >= CREW_PROFILE_MAX_POSITIONS
+                            }
+                          >
+                            {jobTitle}
+                          </option>
+                        ))}
+                      </select>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                        {selectedSentraRoles.length > 0 ? (
+                          selectedSentraRoles.map((jobTitle) => (
+                            <button
+                              key={jobTitle}
+                              type="button"
+                              onClick={() => removeProfileJobTitle(jobTitle)}
+                              style={removablePillStyle}
+                            >
+                              {jobTitle} ×
+                            </button>
+                          ))
+                        ) : (
+                          <span style={{ fontSize: 14, color: L.muted }}>
+                            Belum ada role sentra dipilih.
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gap: 8 }}>
+                      <span style={{ fontSize: 14, color: L.muted }}>Posisi</span>
+                      <select
+                        className="ui-input"
+                        value={selectedStructuralPositionOption}
+                        onChange={(event) => {
+                          const nextPosition = event.target.value as CrewProfilePosition
+                          if (!nextPosition) return
+                          addProfileJobTitle(nextPosition)
+                          setSelectedStructuralPositionOption('')
+                        }}
+                      >
+                        <option value="">Pilih posisi</option>
+                        {CREW_PROFILE_STRUCTURAL_POSITIONS.map((jobTitle) => (
+                          <option
+                            key={jobTitle}
+                            value={jobTitle}
+                            disabled={
+                              profileDraft.jobTitles.includes(jobTitle) ||
+                              profileDraft.jobTitles.length >= CREW_PROFILE_MAX_POSITIONS
+                            }
+                          >
+                            {jobTitle}
+                          </option>
+                        ))}
+                      </select>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                        {selectedStructuralPositions.length > 0 ? (
+                          selectedStructuralPositions.map((jobTitle) => (
+                            <button
+                              key={jobTitle}
+                              type="button"
+                              onClick={() => removeProfileJobTitle(jobTitle)}
+                              style={removablePillStyle}
+                            >
+                              {jobTitle} ×
+                            </button>
+                          ))
+                        ) : (
+                          <span style={{ fontSize: 14, color: L.muted }}>
+                            Belum ada posisi dipilih.
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
+                  <div className="ui-field__hint">
+                    Pilih sampai {CREW_PROFILE_MAX_POSITIONS} item gabungan untuk role sentra dan
+                    posisi.
+                  </div>
+                </div>
+
+                {editorTextField('whatsappNumber', 'WhatsApp aktif', '+62 8xx xxxx xxxx')}
+                {editorTextField('githubUrl', 'GitHub', 'github.com/username')}
+                {editorTextField('linkedinUrl', 'LinkedIn', 'linkedin.com/in/username')}
+                {editorTextField('gravatarUrl', 'Gravatar', 'gravatar.com/username')}
+                {editorTextField('blogUrl', 'Blog', 'blog.drferdi.id')}
+                {editorTextField('instagramUrl', 'Instagram', 'instagram.com/username')}
+                {editorTextField('tiktokUrl', 'TikTok', 'tiktok.com/@username')}
+                {editorTextField('youtubeUrl', 'YouTube', 'youtube.com/@channel')}
+                {editorTextField('employeeId', 'NIP')}
+                {editorTextField('strNumber', 'STR')}
+                {editorTextField('sipNumber', 'SIP')}
+
+                <div className="ui-field" style={{ gridColumn: '1 / -1' }}>
+                  <span className="ui-field__label">Avatar</span>
                   <div style={{ fontSize: 14, color: L.muted }}>
-                    Pilih sampai {CREW_PROFILE_MAX_DEGREES} gelar.
+                    Avatar dipilih otomatis berdasarkan profesi, jenis kelamin, dan konteks layanan.
                   </div>
                 </div>
               </div>
 
-              <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 14, color: L.muted }}>Tempat lahir</span>
-                <input
-                  value={profileDraft.birthPlace}
-                  onChange={(event) =>
-                    setProfileDraft((current) => ({
-                      ...current,
-                      birthPlace: event.target.value,
-                    }))
-                  }
-                  style={{
-                    height: 42,
-                    borderRadius: 6,
-                    border: `1px solid ${L.border}`,
-                    background: L.bg,
-                    color: L.text,
-                    fontSize: 14,
-                    padding: '0 12px',
-                    outline: 'none',
-                  }}
-                />
-              </label>
+              {profileError ? (
+                <div className="ui-alert ui-alert--critical">{profileError}</div>
+              ) : null}
 
-              <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 14, color: L.muted }}>Tanggal lahir</span>
-                <input
-                  type="date"
-                  value={profileDraft.birthDate}
-                  onChange={(event) =>
-                    setProfileDraft((current) => ({
-                      ...current,
-                      birthDate: event.target.value,
-                    }))
-                  }
-                  style={{
-                    height: 42,
-                    borderRadius: 6,
-                    border: `1px solid ${L.border}`,
-                    background: L.bg,
-                    color: L.text,
-                    fontSize: 14,
-                    padding: '0 12px',
-                    outline: 'none',
-                  }}
-                />
-              </label>
-
-              <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 14, color: L.muted }}>Jenis kelamin</span>
-                <select
-                  value={profileDraft.gender}
-                  onChange={(event) =>
-                    setProfileDraft((current) => ({
-                      ...current,
-                      gender: event.target.value as CrewAccessGender | '',
-                    }))
-                  }
-                  style={{
-                    height: 42,
-                    borderRadius: 6,
-                    border: `1px solid ${L.border}`,
-                    background: L.bg,
-                    color: L.text,
-                    fontSize: 14,
-                    padding: '0 12px',
-                    outline: 'none',
-                  }}
-                >
-                  <option value="">Pilih</option>
-                  {CREW_ACCESS_GENDERS.map((gender) => (
-                    <option key={gender} value={gender}>
-                      {gender}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 14, color: L.muted }}>Golongan darah</span>
-                <select
-                  value={profileDraft.bloodType}
-                  onChange={(event) =>
-                    setProfileDraft((current) => ({
-                      ...current,
-                      bloodType: event.target.value as CrewProfileData['bloodType'],
-                    }))
-                  }
-                  style={{
-                    height: 42,
-                    borderRadius: 6,
-                    border: `1px solid ${L.border}`,
-                    background: L.bg,
-                    color: L.text,
-                    fontSize: 14,
-                    padding: '0 12px',
-                    outline: 'none',
-                  }}
-                >
-                  <option value="">Pilih</option>
-                  {CREW_PROFILE_BLOOD_TYPES.map((bloodType) => (
-                    <option key={bloodType} value={bloodType}>
-                      {bloodType}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label style={{ display: 'grid', gap: 6, gridColumn: '1 / -1' }}>
-                <span style={{ fontSize: 14, color: L.muted }}>Domisili</span>
-                <input
-                  value={profileDraft.domicile}
-                  onChange={(event) =>
-                    setProfileDraft((current) => ({
-                      ...current,
-                      domicile: event.target.value,
-                    }))
-                  }
-                  style={{
-                    height: 42,
-                    borderRadius: 6,
-                    border: `1px solid ${L.border}`,
-                    background: L.bg,
-                    color: L.text,
-                    fontSize: 14,
-                    padding: '0 12px',
-                    outline: 'none',
-                  }}
-                />
-              </label>
-
-              <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 14, color: L.muted }}>Institusi utama</span>
-                <input
-                  value={sessionUser?.institution || 'Belum diisi'}
-                  disabled
-                  style={{
-                    height: 42,
-                    borderRadius: 6,
-                    border: `1px solid ${L.border}`,
-                    background: L.bgHover,
-                    color: L.text,
-                    fontSize: 14,
-                    padding: '0 12px',
-                    outline: 'none',
-                    opacity: 0.82,
-                  }}
-                />
-              </label>
-
-              <div style={{ display: 'grid', gap: 14, gridColumn: '1 / -1' }}>
-                <span style={{ fontSize: 14, color: L.muted }}>Role Sentra dan posisi</span>
-                <div style={{ display: 'grid', gap: 10 }}>
-                  <div style={{ display: 'grid', gap: 8 }}>
-                    <span
-                      style={{
-                        fontSize: 14,
-                        color: L.muted,
-                      }}
-                    >
-                      Role Sentra
-                    </span>
-                    <select
-                      value={selectedSentraRoleOption}
-                      onChange={(event) => {
-                        const nextRole = event.target.value as CrewProfilePosition
-                        if (!nextRole) return
-                        addProfileJobTitle(nextRole)
-                        setSelectedSentraRoleOption('')
-                      }}
-                      style={{
-                        height: 42,
-                        borderRadius: 6,
-                        border: `1px solid ${L.border}`,
-                        background: L.bg,
-                        color: L.text,
-                        fontSize: 14,
-                        padding: '0 12px',
-                        outline: 'none',
-                      }}
-                    >
-                      <option value="">Pilih role sentra</option>
-                      {CREW_PROFILE_SENTRA_ROLES.map((jobTitle) => (
-                        <option
-                          key={jobTitle}
-                          value={jobTitle}
-                          disabled={
-                            profileDraft.jobTitles.includes(jobTitle) ||
-                            profileDraft.jobTitles.length >= CREW_PROFILE_MAX_POSITIONS
-                          }
-                        >
-                          {jobTitle}
-                        </option>
-                      ))}
-                    </select>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                      {selectedSentraRoles.length > 0 ? (
-                        selectedSentraRoles.map((jobTitle) => (
-                          <button
-                            key={jobTitle}
-                            type="button"
-                            onClick={() => removeProfileJobTitle(jobTitle)}
-                            style={{
-                              minHeight: 34,
-                              padding: '0 12px',
-                              borderRadius: 999,
-                              border: `1px solid ${L.statusTone}`,
-                              background: L.statusToneSoft,
-                              color: L.text,
-                              fontSize: 14,
-                              boxShadow:
-                                '3px 3px 10px rgba(0,0,0,0.12), inset 1px 1px 0 rgba(255,255,255,0.03)',
-                              cursor: 'pointer',
-                              textAlign: 'left',
-                            }}
-                          >
-                            {jobTitle} ×
-                          </button>
-                        ))
-                      ) : (
-                        <span style={{ fontSize: 14, color: L.muted }}>
-                          Belum ada role sentra dipilih.
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'grid', gap: 8 }}>
-                    <span
-                      style={{
-                        fontSize: 14,
-                        color: L.muted,
-                      }}
-                    >
-                      Posisi
-                    </span>
-                    <select
-                      value={selectedStructuralPositionOption}
-                      onChange={(event) => {
-                        const nextPosition = event.target.value as CrewProfilePosition
-                        if (!nextPosition) return
-                        addProfileJobTitle(nextPosition)
-                        setSelectedStructuralPositionOption('')
-                      }}
-                      style={{
-                        height: 42,
-                        borderRadius: 6,
-                        border: `1px solid ${L.border}`,
-                        background: L.bg,
-                        color: L.text,
-                        fontSize: 14,
-                        padding: '0 12px',
-                        outline: 'none',
-                      }}
-                    >
-                      <option value="">Pilih posisi</option>
-                      {CREW_PROFILE_STRUCTURAL_POSITIONS.map((jobTitle) => (
-                        <option
-                          key={jobTitle}
-                          value={jobTitle}
-                          disabled={
-                            profileDraft.jobTitles.includes(jobTitle) ||
-                            profileDraft.jobTitles.length >= CREW_PROFILE_MAX_POSITIONS
-                          }
-                        >
-                          {jobTitle}
-                        </option>
-                      ))}
-                    </select>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                      {selectedStructuralPositions.length > 0 ? (
-                        selectedStructuralPositions.map((jobTitle) => (
-                          <button
-                            key={jobTitle}
-                            type="button"
-                            onClick={() => removeProfileJobTitle(jobTitle)}
-                            style={{
-                              minHeight: 34,
-                              padding: '0 12px',
-                              borderRadius: 999,
-                              border: `1px solid ${L.statusTone}`,
-                              background: L.statusToneSoft,
-                              color: L.text,
-                              fontSize: 14,
-                              boxShadow:
-                                '3px 3px 10px rgba(0,0,0,0.12), inset 1px 1px 0 rgba(255,255,255,0.03)',
-                              cursor: 'pointer',
-                              textAlign: 'left',
-                            }}
-                          >
-                            {jobTitle} ×
-                          </button>
-                        ))
-                      ) : (
-                        <span style={{ fontSize: 14, color: L.muted }}>
-                          Belum ada posisi dipilih.
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <div style={{ fontSize: 14, color: L.muted }}>
-                  Pilih sampai {CREW_PROFILE_MAX_POSITIONS} item gabungan untuk role sentra dan
-                  posisi.
-                </div>
-              </div>
-
-              <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 14, color: L.muted }}>WhatsApp aktif</span>
-                <input
-                  value={profileDraft.whatsappNumber}
-                  onChange={(event) =>
-                    setProfileDraft((current) => ({
-                      ...current,
-                      whatsappNumber: event.target.value,
-                    }))
-                  }
-                  placeholder="+62 8xx xxxx xxxx"
-                  style={{
-                    height: 42,
-                    borderRadius: 6,
-                    border: `1px solid ${L.border}`,
-                    background: L.bg,
-                    color: L.text,
-                    fontSize: 14,
-                    padding: '0 12px',
-                    outline: 'none',
-                  }}
-                />
-              </label>
-
-              <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 14, color: L.muted }}>GitHub</span>
-                <input
-                  value={profileDraft.githubUrl}
-                  onChange={(event) =>
-                    setProfileDraft((current) => ({
-                      ...current,
-                      githubUrl: event.target.value,
-                    }))
-                  }
-                  placeholder="github.com/username"
-                  style={{
-                    height: 42,
-                    borderRadius: 6,
-                    border: `1px solid ${L.border}`,
-                    background: L.bg,
-                    color: L.text,
-                    fontSize: 14,
-                    padding: '0 12px',
-                    outline: 'none',
-                  }}
-                />
-              </label>
-
-              <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 14, color: L.muted }}>LinkedIn</span>
-                <input
-                  value={profileDraft.linkedinUrl}
-                  onChange={(event) =>
-                    setProfileDraft((current) => ({
-                      ...current,
-                      linkedinUrl: event.target.value,
-                    }))
-                  }
-                  placeholder="linkedin.com/in/username"
-                  style={{
-                    height: 42,
-                    borderRadius: 6,
-                    border: `1px solid ${L.border}`,
-                    background: L.bg,
-                    color: L.text,
-                    fontSize: 14,
-                    padding: '0 12px',
-                    outline: 'none',
-                  }}
-                />
-              </label>
-
-              <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 14, color: L.muted }}>Gravatar</span>
-                <input
-                  value={profileDraft.gravatarUrl}
-                  onChange={(event) =>
-                    setProfileDraft((current) => ({
-                      ...current,
-                      gravatarUrl: event.target.value,
-                    }))
-                  }
-                  placeholder="gravatar.com/username"
-                  style={{
-                    height: 42,
-                    borderRadius: 6,
-                    border: `1px solid ${L.border}`,
-                    background: L.bg,
-                    color: L.text,
-                    fontSize: 14,
-                    padding: '0 12px',
-                    outline: 'none',
-                  }}
-                />
-              </label>
-
-              <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 14, color: L.muted }}>Blog</span>
-                <input
-                  value={profileDraft.blogUrl}
-                  onChange={(event) =>
-                    setProfileDraft((current) => ({
-                      ...current,
-                      blogUrl: event.target.value,
-                    }))
-                  }
-                  placeholder="blog.drferdi.id"
-                  style={{
-                    height: 42,
-                    borderRadius: 6,
-                    border: `1px solid ${L.border}`,
-                    background: L.bg,
-                    color: L.text,
-                    fontSize: 14,
-                    padding: '0 12px',
-                    outline: 'none',
-                  }}
-                />
-              </label>
-
-              <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 14, color: L.muted }}>Instagram</span>
-                <input
-                  value={profileDraft.instagramUrl}
-                  onChange={(event) =>
-                    setProfileDraft((current) => ({
-                      ...current,
-                      instagramUrl: event.target.value,
-                    }))
-                  }
-                  placeholder="instagram.com/username"
-                  style={{
-                    height: 42,
-                    borderRadius: 6,
-                    border: `1px solid ${L.border}`,
-                    background: L.bg,
-                    color: L.text,
-                    fontSize: 14,
-                    padding: '0 12px',
-                    outline: 'none',
-                  }}
-                />
-              </label>
-
-              <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 14, color: L.muted }}>TikTok</span>
-                <input
-                  value={profileDraft.tiktokUrl}
-                  onChange={(event) =>
-                    setProfileDraft((current) => ({
-                      ...current,
-                      tiktokUrl: event.target.value,
-                    }))
-                  }
-                  placeholder="tiktok.com/@username"
-                  style={{
-                    height: 42,
-                    borderRadius: 6,
-                    border: `1px solid ${L.border}`,
-                    background: L.bg,
-                    color: L.text,
-                    fontSize: 14,
-                    padding: '0 12px',
-                    outline: 'none',
-                  }}
-                />
-              </label>
-
-              <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 14, color: L.muted }}>YouTube</span>
-                <input
-                  value={profileDraft.youtubeUrl}
-                  onChange={(event) =>
-                    setProfileDraft((current) => ({
-                      ...current,
-                      youtubeUrl: event.target.value,
-                    }))
-                  }
-                  placeholder="youtube.com/@channel"
-                  style={{
-                    height: 42,
-                    borderRadius: 6,
-                    border: `1px solid ${L.border}`,
-                    background: L.bg,
-                    color: L.text,
-                    fontSize: 14,
-                    padding: '0 12px',
-                    outline: 'none',
-                  }}
-                />
-              </label>
-
-              <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 14, color: L.muted }}>NIP</span>
-                <input
-                  value={profileDraft.employeeId}
-                  onChange={(event) =>
-                    setProfileDraft((current) => ({
-                      ...current,
-                      employeeId: event.target.value,
-                    }))
-                  }
-                  style={{
-                    height: 42,
-                    borderRadius: 6,
-                    border: `1px solid ${L.border}`,
-                    background: L.bg,
-                    color: L.text,
-                    fontSize: 14,
-                    padding: '0 12px',
-                    outline: 'none',
-                  }}
-                />
-              </label>
-
-              <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 14, color: L.muted }}>STR</span>
-                <input
-                  value={profileDraft.strNumber}
-                  onChange={(event) =>
-                    setProfileDraft((current) => ({
-                      ...current,
-                      strNumber: event.target.value,
-                    }))
-                  }
-                  style={{
-                    height: 42,
-                    borderRadius: 6,
-                    border: `1px solid ${L.border}`,
-                    background: L.bg,
-                    color: L.text,
-                    fontSize: 14,
-                    padding: '0 12px',
-                    outline: 'none',
-                  }}
-                />
-              </label>
-
-              <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 14, color: L.muted }}>SIP</span>
-                <input
-                  value={profileDraft.sipNumber}
-                  onChange={(event) =>
-                    setProfileDraft((current) => ({
-                      ...current,
-                      sipNumber: event.target.value,
-                    }))
-                  }
-                  style={{
-                    height: 42,
-                    borderRadius: 6,
-                    border: `1px solid ${L.border}`,
-                    background: L.bg,
-                    color: L.text,
-                    fontSize: 14,
-                    padding: '0 12px',
-                    outline: 'none',
-                  }}
-                />
-              </label>
-
-              <div style={{ display: 'grid', gap: 6, gridColumn: '1 / -1' }}>
-                <span style={{ fontSize: 14, color: L.muted }}>Avatar</span>
-                <div
-                  style={{
-                    minHeight: 42,
-                    borderRadius: 6,
-                    border: `1px solid ${L.border}`,
-                    background: L.bgHover,
-                    color: L.text,
-                    padding: '10px 12px',
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
-                >
-                  Avatar dipilih otomatis berdasarkan profesi, jenis kelamin, dan konteks layanan.
-                </div>
-              </div>
+              {profileSaveMessage ? (
+                <div className="ui-alert ui-alert--success">{profileSaveMessage}</div>
+              ) : null}
             </div>
 
-            {profileError ? (
-              <div style={{ fontSize: 14, color: 'var(--c-critical)' }}>{profileError}</div>
-            ) : null}
-
-            {profileSaveMessage ? (
-              <div style={{ fontSize: 14, color: L.accent }}>{profileSaveMessage}</div>
-            ) : null}
-
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
+            <div className="ui-dialog__footer">
               <button
                 type="button"
+                className="ui-btn ui-btn--secondary"
                 onClick={() => {
                   setProfileDraft(profile)
                   setProfileError('')
                   setProfileSaveMessage('')
                   setIsProfileEditorOpen(false)
                 }}
-                style={{
-                  height: 40,
-                  padding: '0 16px',
-                  borderRadius: 6,
-                  border: `1px solid ${L.border}`,
-                  background: 'transparent',
-                  color: L.text,
-                  fontSize: 14,
-                  cursor: 'pointer',
-                }}
               >
                 Batal
               </button>
               <button
                 type="button"
+                className="ui-btn ui-btn--primary"
                 onClick={() => {
                   void saveProfile()
                 }}
                 disabled={profileSaving}
-                style={{
-                  height: 40,
-                  padding: '0 18px',
-                  borderRadius: 6,
-                  border: '1px solid rgba(255,255,255,0.06)',
-                  background: L.statusTone,
-                  color: '#ffffff',
-                  fontSize: 14,
-                  cursor: profileSaving ? 'wait' : 'pointer',
-                  opacity: profileSaving ? 0.8 : 1,
-                  boxShadow:
-                    '3px 3px 10px rgba(0,0,0,0.24), inset 1px 1px 0 rgba(255,255,255,0.04)',
-                }}
+                style={{ cursor: profileSaving ? 'wait' : 'pointer' }}
               >
                 {profileSaving ? 'Menyimpan...' : 'Simpan Profil'}
               </button>
