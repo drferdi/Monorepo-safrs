@@ -77,6 +77,17 @@ test('the root keeps the browser 16 px, so 1rem is 16 px and the 14 px body real
   assert.deepEqual(shrinking, [])
 })
 
+test('html and body never become scroll boxes, so the sticky rail and header stay in view', () => {
+  const css = read('src/app/globals.css')
+  const rootRules = [...css.matchAll(/(?:^|\n)([^{}\n]*(?:,\s*\n)?[^{}\n]*)\{([^}]*)\}/g)].filter((rule) =>
+    rule[1].split(',').some((selector) => ['html', 'body'].includes(selector.trim()))
+  )
+  const scrollBoxes = rootRules
+    .filter((rule) => /overflow(-x|-y)?:\s*(hidden|auto|scroll)/.test(rule[2]))
+    .map((rule) => rule[1].trim())
+  assert.deepEqual(scrollBoxes, [])
+})
+
 const OLD_LITERALS: Array<[string, RegExp]> = [
   ['gold #E67E22', /#e67e22/i],
   ['gold rgba(230,126,34)', /rgba\(\s*230\s*,\s*126\s*,\s*34\s*,/],

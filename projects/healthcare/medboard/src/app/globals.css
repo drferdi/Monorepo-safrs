@@ -456,7 +456,7 @@ body {
   font-weight: 400;
   line-height: var(--lh-base);
   min-height: 100vh;
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: subpixel-antialiased;
   -moz-osx-font-smoothing: auto;
   font-feature-settings:
