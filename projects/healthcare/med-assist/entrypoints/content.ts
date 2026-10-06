@@ -22,7 +22,7 @@ import {
   scrapeDiagnosaForm,
 } from '@/lib/handlers/page-diagnosa';
 import { fillResepForm, initResepPage, scrapeResepForm } from '@/lib/handlers/page-resep';
-import { detectEpuskesmasPageType } from '@/lib/rme/transfer-targeting';
+import { detectEpuskesmasPageType, pelayananIdFromUrl } from '@/lib/rme/transfer-targeting';
 import type { MapperOptions, ScanOptions } from '@/lib/scraper/adaptive/types';
 import { scrapeAnamnesa } from '@/lib/scraper/anamnesa';
 import { scanMedicalHistoryFromRoot } from '@/lib/scraper/medical-history';
@@ -101,10 +101,7 @@ export default defineContentScript({
       }
 
       // Extract pelayananId from URL if present
-      const getPelayananId = (): string | null => {
-        const match = window.location.href.match(/\/(\d+)(?:\/|$)/);
-        return match ? match[1] : null;
-      };
+      const getPelayananId = (): string | null => pelayananIdFromUrl(window.location.href);
 
       // Notify background script that we're ready
       sendMessage('pageReady', {

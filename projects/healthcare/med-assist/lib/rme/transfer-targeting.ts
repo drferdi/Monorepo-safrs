@@ -191,6 +191,21 @@ export function selectBridgeTransferTab(
   });
 }
 
+/** The pelayanan id in an ePuskesmas URL path (`/anamnesa/create/83206?from=pelayanan`), or null. */
+export function pelayananIdFromUrl(url: string): string | null {
+  const match = url.match(/\/(\d+)(?:[/?#]|$)/);
+  return match ? match[1] : null;
+}
+
+/**
+ * An encounter id that names an ePuskesmas pelayanan (the digits from its URL). An id the
+ * background generated (`alpha-v3-<ts>`) names none and binds to no tab.
+ */
+export function boundPelayananId(encounterId: string | undefined): string | undefined {
+  const id = encounterId?.trim();
+  return id && /^\d+$/.test(id) ? id : undefined;
+}
+
 /**
  * The tab the side panel's transfer may fill. With an encounter, only its pelayanan's ePuskesmas
  * tab, as for a bridge entry, so another patient's active tab is never filled (audit 2026-10-06).
@@ -200,11 +215,9 @@ export function selectPanelTransferTab(
   candidates: TransferTabCandidate[],
   options: { encounterId?: string; step?: RMETransferStepStatus; activeTabId?: number }
 ): number | undefined {
-  if (options.encounterId?.trim()) {
-    return selectBridgeTransferTab(candidates, {
-      pelayananId: options.encounterId,
-      step: options.step,
-    });
+  const pelayananId = boundPelayananId(options.encounterId);
+  if (pelayananId) {
+    return selectBridgeTransferTab(candidates, { pelayananId, step: options.step });
   }
   return selectBestTransferTab(candidates, { step: options.step }) ?? options.activeTabId;
 }

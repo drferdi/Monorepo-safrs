@@ -41,6 +41,7 @@ import { getDiagnosisEngineConfig } from '@/lib/iskandar-diagnosis-engine/featur
 import { assistStaffFromSession, withResepStaff, withStaffNames } from '@/lib/rme/assist-staff';
 import { RMETransferOrchestrator, resepStepTimeoutMs } from '@/lib/rme/transfer-orchestrator';
 import {
+  boundPelayananId,
   isStepUrl,
   selectBridgeTransferTab,
   selectPanelTransferTab,
@@ -653,7 +654,7 @@ async function executeRMEFillStep<TStep extends RMETransferStepStatus>(
   if (!tabId) {
     // A bridge entry, or the panel's encounter, names its patient: never fill another tab.
     const pelayananId =
-      bridgePelayananId ?? ((await getEncounter().catch(() => null))?.id || undefined);
+      bridgePelayananId ?? boundPelayananId((await getEncounter().catch(() => null))?.id);
     if (pelayananId !== undefined) {
       throw new Error(`PATIENT_MISMATCH: no ePuskesmas tab of pelayanan ${pelayananId}`);
     }

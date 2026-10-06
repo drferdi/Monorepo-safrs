@@ -4,6 +4,7 @@ import {
   detectEpuskesmasPageType,
   selectBestTransferTab,
   selectBridgeTransferTab,
+  pelayananIdFromUrl,
   selectPanelTransferTab,
 } from '@/lib/rme/transfer-targeting';
 
@@ -144,5 +145,25 @@ describe('panel transfer targeting', () => {
         activeTabId: 91,
       })
     ).toBe(91);
+  });
+
+  // getSuggestions makes `alpha-v3-<ts>` when no page named a pelayanan: it binds to no tab.
+  it('keeps the old choice for a generated encounter id', () => {
+    const candidates = [{ id: 82, active: true, url: `${host}/anamnesa/create/90001` }];
+    expect(
+      selectPanelTransferTab(candidates, { encounterId: 'alpha-v3-1759700000000', activeTabId: 82 })
+    ).toBe(82);
+  });
+});
+
+// The live ePuskesmas pages carry a query after the id (`?from=pelayanan&action=edit`).
+describe('pelayananIdFromUrl', () => {
+  it.each([
+    ['https://kotakediri.epuskesmas.id/anamnesa/create/83206?from=pelayanan&action=edit', '83206'],
+    ['https://kotakediri.epuskesmas.id/resep/create/83206', '83206'],
+    ['https://kotakediri.epuskesmas.id/diagnosa/create/83206#top', '83206'],
+    ['https://kotakediri.epuskesmas.id/pelayanan', null],
+  ])('%s -> %s', (url, id) => {
+    expect(pelayananIdFromUrl(url)).toBe(id);
   });
 });
