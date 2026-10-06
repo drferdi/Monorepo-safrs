@@ -1,12 +1,26 @@
 # HANDOFF
 
-Last updated: 2026-10-05 (MedBoard is the default sign-in; presence heartbeat for ACARS; "Asisten
-Medis" name. Earlier, 2026-10-04: visit summary template, signers, one welcome sound, archive.)
+Last updated: 2026-10-06 (audit remediation. Earlier, 2026-10-05: MedBoard default sign-in,
+presence heartbeat, "Asisten Medis" name.)
 
 Overwrite this file at the end of every capsule-scoped session; never append. Keep it under about
 1k tokens. Durable decisions go to `DECISIONS.md`.
 
 ## Current state
+
+- 2026-10-06 audit remediation (Cursor audit, verified; plan
+  `docs/plans/2026-10-06-audit-remediation-plan.md`). Commits: `8d0ecec7` + `5d1784c8` panel RME
+  transfer binds to the pelayanan the page names (live URLs end in `?from=pelayanan&action=edit`,
+  which `content.ts` did not read before), refuses with PATIENT_MISMATCH otherwise; `c9c5c280` +
+  `016e2ae1` `release:check` (refuses while VITE_MIRA_DEV_TOKEN is in the bundle; today's build:
+  yes, 2 files; `--allow-dev-token` for Chief's own build); `fb6973aa` docs; `17102c3d`
+  Tatalaksana says why no medication shows; R3 with Chief's go: `68769af4` qSOFA edges, `fa4cf4d0`
+  + `915e588c` NEWS2 Scale 2 scores >=93 % on air as 0 (was 1-3 for COPD), `892db79a` KB ratchet
+  (75 without diagnosis_banding, 107 without structured_criteria), `992286c7` CDSS audit log only
+  after anonymisation passed.
+- Why no medication: therapy comes only from the KB (2026-10-01); 34 of its 130 ICD codes have no
+  therapy (e.g. J45, A15, G43, J01, J44, N12, I21, H52) and diagnoses outside the KB get none.
+  Filling them is Chief's clinical content (R3 `penyakit.json`).
 
 - 2026-10-05 commits: `2e682e22` "Ghost Protocols" → "Asisten Medis" in comments and the
   `login.html` title; `65f715c1` presence: `sendPresence` (cookie session only), alarm
@@ -16,7 +30,7 @@ Overwrite this file at the end of every capsule-scoped session; never append. Ke
   session stored earlier stays local until logout; `99bfcca1` MedBoard host is
   `medboard.sentrahai.com` (crew.puskesmasbalowerti.com retired), manifest host permission too.
   That host serves no MedBoard yet (Vercel "DEPLOYMENT_NOT_FOUND", 2026-10-05), so sign-in fails
-  until the VPS is live; do not release this build before then.
+  until the VPS is live; do not release this build before then (`release:check` must pass).
 - The real sign-in is `ConsoleLogin` in the side panel (new test: it shows MedBoard's refusal).
   `entrypoints/login` is the unused legacy popup ("Sentra Assist" logo); only e2e opens it, and its
   windows on Chief's screen looked like an older design. Left as is.
@@ -34,16 +48,16 @@ push the capsule subtree). Another session's uncommitted `lib/api/sentra-api.ts`
 `tests/e2e/zz-verify-kb-rx.spec.ts` (lint red), `docs/brand/` and root `.agents/HANDOFF.md` are not
 this session's.
 
-## Verification (final tree, 2026-10-05, after `0b5cd564`)
+## Verification (2026-10-06, audit remediation, after `915e588c`)
 
-tsc 0 · vitest 0 (203 files, 1779 passed, 17 skipped) · eslint 0 without
-`zz-verify-kb-rx.spec.ts` (full lint 1, its 4 `no-console`) · e2e 20 passed (auth-bridge-local,
-extension-smoke, clinical-trajectory-preview, epuskesmas-synthetic) · production
-`node scripts/pnpm.mjs run build` into `.output\chrome-mv3-dev`, last. Red first: auth-client
-default-address tests, Settings tests, presence heartbeat tests.
+tsc 0 · vitest 0 (1862 passed, 17 skipped) · e2e 21 passed · dev build 0 · run:check 0 ·
+production build 0, last · eslint: only the 4 `no-console` in another session's
+`zz-verify-kb-rx.spec.ts`. Red first for every change (mutation for the qSOFA and KB pins).
 
 ## Next action
 
-1. Chief reloads the extension from `.output\chrome-mv3-dev` and signs in with an approved
-   MedBoard account; checks ACARS on MedBoard.
-2. Deploy order with MedBoard: this build (has `b2592f0b`) before MedBoard `6eb89e69`.
+1. Chief reloads `.output\chrome-mv3-dev` and transfers one synthetic visit to RME; with that
+   patient's tab closed the panel must say "Halaman pasien entri ini tidak terbuka".
+2. Chief's decisions, plan Part C: engine authority text, PHI in storage.local, CI location,
+   trajectory from one visit, dependency prune, `calculateDosage`, KB confidence tier, version.
+3. Deploy order with MedBoard: this build (has `b2592f0b`) before MedBoard `6eb89e69`.

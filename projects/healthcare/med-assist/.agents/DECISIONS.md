@@ -3,6 +3,20 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-06 — Audit remediation (Cursor audit, verified)
+
+- Decision (Chief: "Saya ikut pendapat dan expertise Claude"): plan parts A and B carried out; part C
+  waits for Chief. The panel's RME transfer fills only the tab of the pelayanan the page named; a
+  generated encounter id keeps the old choice. `release:check` gates a build that leaves Chief's
+  machines. NEWS2 SpO2 Scale 2 follows RCP 2017 (>=93 % on air = 0; unrecorded oxygen = air, as
+  the oxygen parameter reads it). The CDSS audit log is written only after anonymisation passed.
+  Empty Tatalaksana says the KB has no medication, or that loading failed.
+- Not done: `format:check` gate (140 files unformatted, incl. frozen ones); ESLint `--ext` (valid
+  in 9.39); localhost host permissions (MIRA at 127.0.0.1:8787).
+- Evidence: every change red first (qSOFA and KB pins by mutation); final whole-branch review by a
+  fresh reviewer found the live-URL query bug and two more, fixed in `5d1784c8`, `016e2ae1`,
+  `915e588c`; gates in HANDOFF.
+
 ## 2026-10-05 — MedBoard host is medboard.sentrahai.com
 
 - Decision (Chief: "crew.puskesmasbalowerti.com -> sudah tidak digunakan", then
