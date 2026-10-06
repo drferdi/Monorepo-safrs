@@ -28,7 +28,6 @@ interface Props {
 
 type Target = { index: number; x: number; y: number; left: number; right: number; top: number; bottom: number }
 
-const STAGE_COLOR = '#f2f4f6'
 /** Below this stage width the page stacks its cards (atlas.module.css, container atlas-stage). */
 const NARROW = 900
 
@@ -64,13 +63,14 @@ export default function AtlasScene({ atlas, state, reducedMotion, nameOf, hoverC
 
     let renderer: T.WebGLRenderer
     try {
-      renderer = new T.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' })
+      renderer = new T.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' })
     } catch {
       report.current.onError('Peramban ini tidak bisa menjalankan tampilan 3D. Gunakan peramban dengan WebGL aktif.')
       return undefined
     }
     renderer.setPixelRatio(Math.min(devicePixelRatio, el.clientWidth < 768 ? 1.5 : 2))
-    renderer.setClearColor(STAGE_COLOR)
+    // Transparent stage: the page's white shows through (Chief 2026-10-07).
+    renderer.setClearColor(0x000000, 0)
     renderer.outputColorSpace = T.SRGBColorSpace
     renderer.toneMapping = T.ACESFilmicToneMapping
     renderer.toneMappingExposure = 1.12
@@ -108,10 +108,6 @@ export default function AtlasScene({ atlas, state, reducedMotion, nameOf, hoverC
     rim.position.set(2, 2, -3)
     scene.add(rim)
 
-    const ground = new T.Mesh(new T.CircleGeometry(30, 96), new T.MeshStandardMaterial({ color: 0xdadfe3, roughness: 1 }))
-    ground.rotation.x = -Math.PI / 2
-    ground.position.y = -0.019
-    scene.add(ground)
     const platform = new T.Mesh(
       new T.CylinderGeometry(0.68, 0.7, 0.028, 100),
       new T.MeshStandardMaterial({ color: 0xf1f2f2, metalness: 0.12, roughness: 0.67 })
@@ -507,7 +503,7 @@ export default function AtlasScene({ atlas, state, reducedMotion, nameOf, hoverC
       controls.enableRotate = amount < 0.8
       controls.mouseButtons.LEFT = amount < 0.8 ? T.MOUSE.ROTATE : T.MOUSE.PAN
       controls.touches.ONE = amount < 0.8 ? T.TOUCH.ROTATE : T.TOUCH.PAN
-      ground.visible = platform.visible = ring.visible = innerRing.visible = amount < 0.5 && !s.isolate
+      platform.visible = ring.visible = innerRing.visible = amount < 0.5 && !s.isolate
       markers.visible = amount > 0.75
       controls.autoRotate = s.rotate && !s.isolate && amount < 0.4
       controls.autoRotateSpeed = 0.65

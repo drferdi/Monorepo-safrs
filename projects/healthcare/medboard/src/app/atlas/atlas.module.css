@@ -27,7 +27,7 @@
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  background: #f2f4f6;
+  background: transparent;
   container: atlas-stage / inline-size;
 }
 .canvas { position: absolute; inset: 0; }
