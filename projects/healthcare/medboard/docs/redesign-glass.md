@@ -119,6 +119,29 @@ Tiap komponen satu file kecil, gaya dari token, tanpa logika domain.
 | Formulir tengah | kartu dialog 16 px di tengah | `CrewAccessGate` (Masuk, Daftar Akses), `/join/[token]` |
 | Dokumen | kolom baca | `/legal`, `/report/clinical` (ukuran cetak tetap, keputusan `e836d56e`) |
 
+### Aturan "Simplified" untuk setiap halaman (Chief 2026-10-06 sore)
+
+Tiap halaman dipelajari sendiri (di Browser pane dan di kode), lalu disederhanakan dengan aturan
+yang sama:
+
+1. **Satu kepala halaman**: judul 24 px/600, satu baris keterangan 14 px `--text-secondary`, aksi
+   di kanan. Baris status/teknis (mis. status mesin) menjadi satu baris meta 12 px yang tenang.
+2. **Bagian = kartu**: putih, tepi 1 px `--border`, sudut 12 px (panel) / 8 px (kartu), isi 24 px,
+   jarak antar kartu 24 px, antar bagian 32 px. Judul kartu 16 px/600, huruf biasa.
+3. **Hiasan dibuang**: garis timeline dan titik-titiknya, label "Row n /" dan nomor urut "01.",
+   garis pemisah dekoratif, gradasi, glow, bayangan neumorfik, grid latar, animasi orbit/denyut,
+   blok hitam. Penanda yang bermakna (status, wajib isi, peringatan) tetap.
+4. **Isian kotak**: semua input, select dan textarea berbentuk `.ui-input` (tepi 1 px, sudut 6 px,
+   tinggi 36–40 px, teks 14 px); tidak ada garis bawah putus-putus atau placeholder raksasa.
+   Label di atas isian 13–14 px/500.
+5. **Tombol dan chip**: utama = isi Oxford; kedua = putih bertepi; pilihan (mis. Laki-laki /
+   Perempuan) = chip pil; tidak ada tombol hitam.
+6. **Status**: tint lembut + kata status + garis kiri 2 px untuk peringatan; tidak ada blok warna
+   penuh.
+7. **Yang tidak berubah**: handler, state, kondisi tampil, urutan isian, perhitungan, panggilan
+   API, data, dan teks isi (kecuali nomor/label hiasan pada butir 3). `src/lib/**` tidak disentuh.
+8. Setiap halaman ditunjukkan ke Chief di Browser pane; EMR disetujui Chief sebelum di-commit.
+
 ### EMR Console
 
 - Bar konteks pasien menjadi baris tipis di atas (gaya "Jane Doe · Encounter 1").
