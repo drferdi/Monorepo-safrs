@@ -114,11 +114,20 @@ Di PC Chief (PowerShell), kemas kode dari commit yang sudah di-commit:
 git -C D:\DEV\monorepo archive --format=tar.gz -o $env:TEMP\medboard.tar.gz HEAD:projects/healthcare/medboard; scp $env:TEMP\medboard.tar.gz root@IP_VPS:/tmp/
 ```
 
+`git archive` hanya membawa pointer Git LFS untuk `*.png` (`.gitattributes` root), bukan gambarnya.
+Gambar asli di `public/` dikemas terpisah dari working tree, yang harus sama dengan `HEAD`:
+
+```powershell
+$m='D:\DEV\monorepo\projects\healthcare\medboard'; git -C $m diff --quiet HEAD -- public; if ($LASTEXITCODE) { throw 'public/ berbeda dari HEAD' }; [IO.File]::WriteAllText("$env:TEMP\medboard-lfs.txt", ((git -C $m lfs ls-files -n -I 'projects/healthcare/medboard/public/**') -replace '^projects/healthcare/medboard/','' -join "`n") + "`n"); tar.exe -czf $env:TEMP\medboard-lfs.tar.gz -C $m -T $env:TEMP\medboard-lfs.txt; scp $env:TEMP\medboard-lfs.tar.gz root@IP_VPS:/tmp/
+```
+
 Di server (root):
 
 ```bash
 set -euo pipefail
 cd /opt/medboard && rm -rf app.new && mkdir app.new && tar -xzf /tmp/medboard.tar.gz -C app.new
+tar -xzf /tmp/medboard-lfs.tar.gz -C app.new
+! grep -rlq '^version https://git-lfs' app.new/public || { echo 'Masih ada pointer LFS di public/'; exit 1; }
 cp -rn app.new/runtime/. /var/lib/medboard/runtime/
 chown -R medboard:medboard app.new /var/lib/medboard/runtime
 cd app.new
