@@ -5,14 +5,7 @@ import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
-
-const ACARS_PAGE_WIDTH = 1200
-const ACARS_PANEL_STYLE = {
-  background: 'transparent',
-  border: '1px solid var(--line-base)',
-  borderRadius: 12,
-  boxShadow: 'none',
-} as const
+import styles from '../acars.module.css'
 
 type CrewInfo = {
   username: string
@@ -205,318 +198,97 @@ export default function AcarsRosterPage() {
   }
 
   if (loading) {
-    return (
-      <div
-        style={{
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          minHeight: 300,
-          color: 'var(--text-muted)',
-          fontSize: 14,
-        }}
-      >
-        Memuat roster...
-      </div>
-    )
+    return <div className={styles.loading}>Memuat roster...</div>
   }
 
   if (error || !targetCrew) {
     return (
-      <div
-        style={{
-          maxWidth: ACARS_PAGE_WIDTH,
-          width: '100%',
-          margin: '0 auto',
-          padding: 24,
-        }}
-      >
-        <Link
-          href="/acars"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            color: 'var(--c-asesmen)',
-            fontSize: 14,
-            textDecoration: 'none',
-            marginBottom: 16,
-          }}
-        >
+      <div className={styles.page}>
+        <Link href="/acars" className={styles.back}>
           <ArrowLeft size={18} />
           Kembali ke Sentra Network
         </Link>
-        <div
-          style={{
-            padding: 24,
-            background: 'var(--bg-card)',
-            border: '1px solid var(--line-base)',
-            borderRadius: 12,
-            color: 'var(--text-muted)',
-          }}
-        >
+        <div className={`${styles.card} ${styles.errorCard}`}>
           {error || 'Crew tidak ditemukan.'}
         </div>
       </div>
     )
   }
 
-  const myColor = currentUser ? getUserColor(currentUser.role) : '#002147'
   const targetColor = getUserColor(targetCrew.role)
   const targetAvatar = getAvatarUrl(targetCrew.profession, targetCrew.role)
 
   return (
-    <div
-      style={{
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: 20,
-      }}
-    >
+    <div className={styles.page}>
       {/* Header */}
-      <div
-        style={{
-          maxWidth: ACARS_PAGE_WIDTH,
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Link
-          href="/acars"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            color: 'var(--c-asesmen)',
-            fontSize: 14,
-            textDecoration: 'none',
-          }}
-        >
+      <div className={styles.topbar}>
+        <Link href="/acars" className={styles.back}>
           <ArrowLeft size={18} />
           Kembali ke Sentra Network
         </Link>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '6px 12px',
-            background: 'rgba(255,255,255,0.02)',
-            borderRadius: 6,
-            border: '1px solid var(--line-base)',
-          }}
-        >
-          <div
-            style={{
-              width: 8,
-              height: 8,
-              borderRadius: '50%',
-              background: connected ? 'var(--c-ok)' : 'var(--text-muted)',
-            }}
-          />
-          <span
-            style={{
-              fontSize: 12,
-              color: connected ? 'var(--c-ok)' : 'var(--text-muted)',
-            }}
-          >
-            {connected ? 'LIVE' : 'OFFLINE'}
-          </span>
-        </div>
+        <span className={`ui-badge ${connected ? 'ui-badge--success' : 'ui-badge--neutral'}`}>
+          {connected ? 'LIVE' : 'OFFLINE'}
+        </span>
       </div>
 
       {/* Roster Detail Card */}
-      <div
-        style={{
-          maxWidth: ACARS_PAGE_WIDTH,
-          width: '100%',
-          ...ACARS_PANEL_STYLE,
-          padding: 24,
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 20,
-            paddingBottom: 20,
-            borderBottom: '1px solid var(--line-base)',
-          }}
-        >
-          <div
-            style={{
-              width: 80,
-              height: 80,
-              borderRadius: '50%',
-              overflow: 'hidden',
-              border: `3px solid ${targetColor}`,
-              flexShrink: 0,
-            }}
-          >
-            <img
-              src={targetAvatar}
-              alt=""
-              width={80}
-              height={80}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
+      <div className={`${styles.card} ${styles.detail}`}>
+        <div className={styles.detailHead}>
+          <div className={styles.detailAvatar} style={{ boxShadow: `0 0 0 3px ${targetColor}` }}>
+            <img src={targetAvatar} alt="" width={80} height={80} />
           </div>
           <div>
-            <div
-              style={{
-                fontSize: 20,
-                fontWeight: 600,
-                color: 'var(--text-main)',
-                letterSpacing: '0.02em',
-              }}
-            >
-              {targetCrew.fullName}
-            </div>
-            <div
-              style={{
-                fontSize: 14,
-                color: 'var(--text-muted)',
-                marginTop: 4,
-              }}
-            >
-              @{targetCrew.username}
-            </div>
-            <div
-              style={{
-                fontSize: 14,
-                color: targetColor,
-                marginTop: 4,
-              }}
-            >
+            <div className={styles.detailName}>{targetCrew.fullName}</div>
+            <div className={styles.detailLine}>@{targetCrew.username}</div>
+            <div className={styles.detailLine} style={{ color: targetColor }}>
               {targetCrew.profession || targetCrew.role}
             </div>
             {targetCrew.institution && (
-              <div
-                style={{
-                  fontSize: 12,
-                  color: 'var(--text-muted)',
-                  marginTop: 2,
-                }}
-              >
-                {targetCrew.institution}
-              </div>
+              <div className={styles.cellMuted}>{targetCrew.institution}</div>
             )}
           </div>
         </div>
 
         {/* DM Chat */}
-        <div
-          style={{
-            marginTop: 20,
-            display: 'flex',
-            flexDirection: 'column',
-            minHeight: 320,
-          }}
-        >
-          <div
-            style={{
-              fontSize: 12,
-              fontWeight: 600,
-              color: 'var(--text-muted)',
-              marginBottom: 12,
-            }}
-          >
-            PESAN LANGSUNG
-          </div>
-          <div
-            ref={messagesListRef}
-            style={{
-              flex: 1,
-              overflowY: 'auto',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 8,
-              marginBottom: 12,
-              paddingRight: 4,
-              minHeight: 180,
-            }}
-          >
+        <div className={styles.dm}>
+          <div className={styles.dmTitle}>PESAN LANGSUNG</div>
+          <div ref={messagesListRef} className={styles.messages}>
             {messages.length === 0 && (
-              <div
-                style={{
-                  textAlign: 'center',
-                  color: 'var(--text-muted)',
-                  fontSize: 14,
-                  padding: '40px 0',
-                }}
-              >
+              <div className={styles.empty}>
                 Belum ada pesan. Mulai percakapan dengan {targetCrew.fullName}.
               </div>
             )}
             {messages.map(msg => {
               const isMe = currentUser && msg.senderId === currentUser.username
               return (
-                <div
-                  key={msg.id}
-                  style={{
-                    padding: '10px 14px',
-                    background: isMe ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.01)',
-                    borderRadius: 8,
-                    borderLeft: isMe ? `2px solid ${myColor}` : '2px solid transparent',
-                    border: '1px solid var(--line-base)',
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: isMe ? myColor : 'var(--text-muted)',
-                      marginBottom: 4,
-                    }}
-                  >
+                <div key={msg.id} className={`${styles.msg}${isMe ? ` ${styles.msgMine}` : ''}`}>
+                  <div className={styles.msgMeta}>
                     {isMe ? 'Anda' : msg.senderName} ·{' '}
                     {new Date(msg.time).toLocaleTimeString('id-ID', {
                       hour: '2-digit',
                       minute: '2-digit',
                     })}
                   </div>
-                  <div style={{ fontSize: 14, color: 'var(--text-main)' }}>{msg.text}</div>
+                  <div className={styles.msgText}>{msg.text}</div>
                 </div>
               )
             })}
           </div>
 
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div className={styles.composer}>
             <input
               type="text"
+              className="ui-input"
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={`Kirim pesan ke ${targetCrew.fullName}...`}
               disabled={!connected}
-              style={{
-                flex: 1,
-                padding: '12px 16px',
-                background: 'rgba(255,255,255,0.02)',
-                border: '1px solid var(--line-base)',
-                borderRadius: 8,
-                color: 'var(--text-main)',
-                fontSize: 14,
-                outline: 'none',
-              }}
             />
             <button
+              className="ui-btn ui-btn--primary"
               onClick={sendMessage}
               disabled={!input.trim() || !connected}
-              style={{
-                padding: '12px 24px',
-                background: input.trim() ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.01)',
-                border: `1px solid ${input.trim() ? myColor : 'var(--line-base)'}`,
-                borderRadius: 8,
-                color: input.trim() ? myColor : 'var(--text-muted)',
-                fontSize: 12,
-                cursor: input.trim() ? 'pointer' : 'not-allowed',
-                opacity: input.trim() ? 1 : 0.5,
-              }}
             >
               KIRIM
             </button>

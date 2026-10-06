@@ -42,7 +42,6 @@ function createAvatarIcon(isOnline: boolean, avatarUrl: string, name: string) {
         align-items: center;
         gap: 6px;
       ">
-        <!-- Avatar Container -->
         <div style="
           width: ${size}px;
           height: ${size}px;
@@ -50,13 +49,10 @@ function createAvatarIcon(isOnline: boolean, avatarUrl: string, name: string) {
           border-radius: 50%;
           overflow: hidden;
           padding: 3px;
-          background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-          box-shadow:
-            4px 4px 10px rgba(0,0,0,0.5),
-            -2px -2px 6px rgba(255,255,255,0.08);
-          border: 2px solid ${isOnline ? '#3B82F6' : '#555'};
+          background: var(--surface);
+          box-shadow: var(--shadow-card);
+          border: 2px solid ${isOnline ? 'var(--primary)' : 'var(--border)'};
         ">
-          <!-- Avatar Image -->
           <img
             src="${avatarUrl}"
             width="${size - 6}"
@@ -72,8 +68,6 @@ function createAvatarIcon(isOnline: boolean, avatarUrl: string, name: string) {
             "
             alt="${name}"
           />
-          
-          <!-- Online indicator dot -->
           ${
             isOnline
               ? `
@@ -83,32 +77,28 @@ function createAvatarIcon(isOnline: boolean, avatarUrl: string, name: string) {
               right: 2px;
               width: 14px;
               height: 14px;
-              background: #3B82F6;
+              background: var(--success);
               border-radius: 50%;
-              border: 2px solid #1a1a1a;
-              box-shadow: 0 0 8px #4ADE80;
-              animation: pulse-dot 2s infinite;
+              border: 2px solid var(--surface);
               z-index: 10;
             "></div>
           `
               : ''
           }
         </div>
-        
-        <!-- Name Label -->
         <div style="
-          background: rgba(26,26,26,0.95);
+          background: var(--surface);
           padding: 4px 10px;
           border-radius: 12px;
-          border: 1px solid ${isOnline ? 'rgba(74,222,128,0.3)' : 'rgba(255,255,255,0.1)'};
-          box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+          border: 1px solid var(--border);
+          box-shadow: var(--shadow-card);
           white-space: nowrap;
         ">
           <span style="
             font-variant-numeric: tabular-nums;
             font-size: 12px;
             font-weight: 600;
-            color: ${isOnline ? '#4ADE80' : '#888'};
+            color: ${isOnline ? 'var(--success)' : 'var(--text-secondary)'};
           ">${initials}</span>
         </div>
       </div>
@@ -155,12 +145,11 @@ export default function StaffMap({
         style={{
           width: '100%',
           height: '100%',
-          background: '#1a1a1a',
+          background: 'var(--surface-subtle)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          color: '#666',
-          fontFamily: 'var(--font-mono)',
+          color: 'var(--text-secondary)',
           fontSize: 14,
         }}
       >
@@ -173,29 +162,12 @@ export default function StaffMap({
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-      {/* Custom CSS */}
       <style>{`
-        @keyframes pulse-dot {
-          0%, 100% { box-shadow: 0 0 8px #3B82F6; }
-          50% { box-shadow: 0 0 12px #3B82F6, 0 0 20px #3B82F6aa; }
-        }
-        @keyframes orb-drift-1 {
-          0%, 100% { transform: scale(1) translate(0, 0); }
-          50% { transform: scale(1.4) translate(8px, 6px); }
-        }
-        @keyframes orb-drift-2 {
-          0%, 100% { transform: scale(1) translate(0, 0); }
-          50% { transform: scale(1.3) translate(-6px, -8px); }
-        }
-        @keyframes orb-drift-3 {
-          0%, 100% { transform: scale(1) translate(0, 0); }
-          50% { transform: scale(1.5) translate(4px, -4px); }
-        }
         .leaflet-popup-content-wrapper {
-          background: transparent !important;
-          border: none !important;
-          border-radius: 16px !important;
-          box-shadow: none !important;
+          background: var(--surface) !important;
+          border: 1px solid var(--border) !important;
+          border-radius: 12px !important;
+          box-shadow: var(--shadow-dialog) !important;
           padding: 0 !important;
         }
         .leaflet-popup-content {
@@ -203,7 +175,7 @@ export default function StaffMap({
           width: auto !important;
         }
         .leaflet-popup-tip {
-          background: #262626 !important;
+          background: var(--surface) !important;
           border: none !important;
           box-shadow: none !important;
         }
@@ -222,31 +194,29 @@ export default function StaffMap({
       >
         <div
           style={{
-            background: 'rgba(26,26,26,0.95)',
-            border: '1px solid rgba(255,255,255,0.1)',
+            background: 'var(--surface)',
+            border: '1px solid var(--border)',
             borderRadius: 8,
             padding: '8px 14px',
             display: 'flex',
             alignItems: 'center',
             gap: 8,
-            boxShadow: '4px 4px 12px rgba(0,0,0,0.4)',
+            boxShadow: 'var(--shadow-card)',
           }}
         >
           <div
             style={{
-              width: 10,
-              height: 10,
+              width: 8,
+              height: 8,
               borderRadius: '50%',
-              background: '#3B82F6',
-              boxShadow: '0 0 8px #3B82F6',
+              background: 'var(--success)',
             }}
           />
           <span
             style={{
-              fontFamily: 'var(--font-mono)',
               fontSize: 12,
               fontWeight: 600,
-              color: '#3B82F6',
+              color: 'var(--text)',
             }}
           >
             {onlineCount} ONLINE
@@ -258,13 +228,13 @@ export default function StaffMap({
       <MapContainer
         center={center}
         zoom={zoom}
-        style={{ width: '100%', height: '100%', background: '#1a1a1a' }}
+        style={{ width: '100%', height: '100%', background: 'var(--surface-subtle)' }}
         zoomControl={false}
       >
-        {/* Dark Theme Tiles - CartoDB Dark Matter */}
+        {/* Light tiles - CARTO Positron (no API key) */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           subdomains="abcd"
           maxZoom={20}
         />
@@ -288,167 +258,69 @@ export default function StaffMap({
             <Popup closeButton={false}>
               <div
                 style={{
-                  overflow: 'hidden',
-                  padding: 20,
-                  position: 'relative',
                   width: 240,
-                  background: '#262626',
-                  borderRadius: 16,
+                  padding: 16,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 10,
+                  background: 'var(--surface)',
+                  borderRadius: 12,
                 }}
               >
-                {/* Animated orbs */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: -12,
-                    left: -12,
-                    width: 96,
-                    height: 96,
-                    borderRadius: '50%',
-                    background: 'transparent',
-                    boxShadow: `inset 0 0 30px ${person.color}60`,
-                    animation: 'orb-drift-1 6s ease-in-out infinite',
-                  }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: 140,
-                    left: 56,
-                    width: 96,
-                    height: 96,
-                    borderRadius: '50%',
-                    background: 'transparent',
-                    boxShadow: 'inset 0 0 30px rgba(59,130,246,0.35)',
-                    animation: 'orb-drift-2 7s ease-in-out infinite',
-                  }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: 60,
-                    left: 180,
-                    width: 96,
-                    height: 96,
-                    borderRadius: '50%',
-                    background: 'transparent',
-                    boxShadow: `inset 0 0 30px ${person.color}40`,
-                    animation: 'orb-drift-3 8s ease-in-out infinite',
-                  }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: 20,
-                    left: 20,
-                    width: 48,
-                    height: 48,
-                    borderRadius: '50%',
-                    background: 'transparent',
-                    boxShadow: 'inset 0 0 20px rgba(74,222,128,0.3)',
-                    animation: 'orb-drift-2 5s ease-in-out infinite',
-                  }}
-                />
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: -24,
-                    left: -12,
-                    width: 200,
-                    height: 200,
-                    borderRadius: '50%',
-                    background: 'transparent',
-                    boxShadow: 'inset 0 0 40px rgba(59,130,246,0.15)',
-                    animation: 'orb-drift-3 10s ease-in-out infinite',
-                  }}
-                />
-
-                {/* Content overlay */}
-                <div
-                  style={{
-                    position: 'relative',
-                    zIndex: 1,
-                    background: 'rgba(64,64,64,0.45)',
-                    borderRadius: 12,
-                    padding: 16,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 10,
-                    backdropFilter: 'blur(4px)',
-                  }}
-                >
-                  {/* Avatar + status */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div
-                      style={{
-                        width: 48,
-                        height: 48,
-                        borderRadius: '50%',
-                        overflow: 'hidden',
-                        flexShrink: 0,
-                        border: `2px solid ${person.color}`,
-                        boxShadow: `0 0 10px ${person.color}40`,
-                      }}
-                    >
-                      <img
-                        src={person.avatarUrl || '/avatar/doctor-m.png'}
-                        width={48}
-                        height={48}
-                        style={{ objectFit: 'cover', display: 'block' }}
-                        alt=""
-                      />
-                    </div>
-                    <div>
-                      <div
-                        style={{
-                          fontSize: 14,
-                          fontWeight: 600,
-                          color: '#fafafa',
-                          fontStyle: 'italic',
-                          lineHeight: 1.2,
-                        }}
-                      >
-                        {person.name}
-                      </div>
-                      <div
-                        style={{
-                          fontSize: 12,
-                          color: '#d4d4d4',
-                          marginTop: 2,
-                        }}
-                      >
-                        {person.role}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Info */}
-                  <div style={{ fontSize: 12, color: '#d4d4d4', lineHeight: 1.5 }}>
-                    {person.institution || 'Puskesmas Balowerti'}
-                  </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div
                     style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
+                      width: 48,
+                      height: 48,
+                      borderRadius: '50%',
+                      overflow: 'hidden',
+                      flexShrink: 0,
+                      border: `2px solid ${person.color}`,
                     }}
                   >
-                    <span style={{ fontSize: 12, color: '#a3a3a3' }}>{person.location.label}</span>
-                    {person.isOnline && (
-                      <span
-                        style={{
-                          fontSize: 12,
-                          fontWeight: 600,
-                          color: '#4ADE80',
-                          padding: '2px 8px',
-                          borderRadius: 4,
-                          border: '1px solid rgba(74,222,128,0.3)',
-                        }}
-                      >
-                        LIVE
-                      </span>
-                    )}
+                    <img
+                      src={person.avatarUrl || '/avatar/doctor-m.png'}
+                      width={48}
+                      height={48}
+                      style={{ objectFit: 'cover', display: 'block' }}
+                      alt=""
+                    />
                   </div>
+                  <div>
+                    <div
+                      style={{
+                        fontSize: 14,
+                        fontWeight: 600,
+                        color: 'var(--text)',
+                        lineHeight: 1.3,
+                      }}
+                    >
+                      {person.name}
+                    </div>
+                    <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 2 }}>
+                      {person.role}
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+                  {person.institution || 'Puskesmas Balowerti'}
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    paddingTop: 10,
+                    borderTop: '1px solid var(--border)',
+                  }}
+                >
+                  <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
+                    {person.location.label}
+                  </span>
+                  {person.isOnline && (
+                    <span className="ui-badge ui-badge--success">LIVE</span>
+                  )}
                 </div>
               </div>
             </Popup>

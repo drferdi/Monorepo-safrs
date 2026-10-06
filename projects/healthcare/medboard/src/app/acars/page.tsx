@@ -5,47 +5,13 @@ import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
 import { type OnlineSource, onlineSourceLabel } from '@/lib/crew-online'
-
-const ACARS_PAGE_WIDTH = 1200
-const ACARS_PANEL_STYLE = {
-  background: 'transparent',
-  border: '1px solid var(--line-base)',
-  borderRadius: 12,
-  boxShadow: 'none',
-} as const
+import styles from './acars.module.css'
 
 const DEFAULT_CENTER: [number, number] = [-7.8166, 112.0116] // Puskesmas Balowerti
 
 const StaffMap = dynamic(() => import('@/components/map/StaffMap'), {
   ssr: false,
-  loading: () => (
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        background: 'var(--bg-canvas-v2)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 12,
-        color: 'var(--text-muted)',
-        fontSize: 14,
-      }}
-    >
-      <div
-        style={{
-          width: 40,
-          height: 40,
-          border: '2px solid var(--c-asesmen)',
-          borderTopColor: 'transparent',
-          borderRadius: '50%',
-          animation: 'spin 1s linear infinite',
-        }}
-      />
-      <span>Memuat peta...</span>
-    </div>
-  ),
+  loading: () => <div className={styles.mapLoading}>Memuat peta...</div>,
 })
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -118,23 +84,6 @@ function getUserColor(role: string): string {
     default:
       return '#888'
   }
-}
-
-// ─── Components ───────────────────────────────────────────────────────────────
-function OnlineIndicator({ isOnline }: { isOnline: boolean }) {
-  return (
-    <div
-      style={{
-        width: 10,
-        height: 10,
-        borderRadius: '50%',
-        background: isOnline ? 'var(--c-ok)' : 'var(--text-muted)',
-        boxShadow: isOnline ? '0 0 8px var(--c-ok)' : 'none',
-        animation: isOnline ? 'pulse 2s infinite' : 'none',
-        border: '2px solid var(--bg-canvas)',
-      }}
-    />
-  )
 }
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
@@ -273,116 +222,37 @@ export default function AcarsPage() {
     }
   })
 
-  const myColor = currentUser ? getUserColor(currentUser.role) : '#002147'
   const myAvatar = currentUser
     ? getAvatarUrl(currentUser.profession, currentUser.role)
     : '/avatar/adm-m.png'
 
   return (
-    <div
-      style={{
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: 20,
-      }}
-    >
-      {/* Global CSS */}
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.6; }
-        }
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
-
+    <div className={styles.page}>
       {/* Header */}
-      <div
-        className="page-header"
-        style={{
-          maxWidth: ACARS_PAGE_WIDTH,
-          width: '100%',
-          display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
-        }}
-      >
+      <div className="ui-page-header" style={{ marginBottom: 0 }}>
         <div>
-          <div className="page-title">Sentra Network</div>
-          <div className="page-subtitle">
+          <h1 className={styles.title}>Sentra Network</h1>
+          <p className="ui-page-header__description">
             ACARS — Active communication and coordination radar system untuk kolaborasi klinis
             internal.
-          </div>
-          <div className="page-header-divider" />
+          </p>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+        <div className={styles.actions}>
           {/* Connection Status */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              padding: '6px 12px',
-              background: 'rgba(255,255,255,0.02)',
-              borderRadius: 6,
-              border: '1px solid var(--line-base)',
-            }}
-          >
-            <OnlineIndicator isOnline={connected} />
-            <span
-              style={{
-                fontSize: 12,
-                color: connected ? 'var(--c-ok)' : 'var(--text-muted)',
-              }}
-            >
-              {connected ? 'LIVE' : 'OFFLINE'}
-            </span>
-          </div>
+          <span className={`ui-badge ${connected ? 'ui-badge--success' : 'ui-badge--neutral'}`}>
+            {connected ? 'LIVE' : 'OFFLINE'}
+          </span>
 
           {/* User Info */}
           {currentUser && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: '50%',
-                  overflow: 'hidden',
-                  flexShrink: 0,
-                  border: `2px solid ${myColor}`,
-                  background: 'var(--bg-nav)',
-                }}
-              >
-                <img
-                  src={myAvatar}
-                  alt=""
-                  width={40}
-                  height={40}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
+            <div className={styles.me}>
+              <div className={styles.meAvatar}>
+                <img src={myAvatar} alt="" width={36} height={36} />
               </div>
-              <div style={{ textAlign: 'right' }}>
-                <div
-                  style={{
-                    fontSize: 14,
-                    fontWeight: 600,
-                    color: 'var(--text-main)',
-                  }}
-                >
-                  {currentUser.fullName}
-                </div>
-                <div
-                  style={{
-                    fontSize: 12,
-                    color: 'var(--text-muted)',
-                  }}
-                >
-                  {currentUser.profession || currentUser.role}
-                </div>
+              <div className={styles.meText}>
+                <div className={styles.meName}>{currentUser.fullName}</div>
+                <div className={styles.meRole}>{currentUser.profession || currentUser.role}</div>
               </div>
             </div>
           )}
@@ -390,69 +260,18 @@ export default function AcarsPage() {
       </div>
 
       {/* Map Section — no fake markers until GPS data available */}
-      <div
-        style={{
-          maxWidth: ACARS_PAGE_WIDTH,
-          width: '100%',
-          height: 450,
-          overflow: 'hidden',
-          position: 'relative',
-          ...ACARS_PANEL_STYLE,
-        }}
-      >
+      <div className={`${styles.card} ${styles.map}`}>
         <StaffMap staff={staffLocations} center={DEFAULT_CENTER} zoom={19} />
         {staffLocations.length === 0 && (
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: 'rgba(0,0,0,0.4)',
-              color: 'var(--text-muted)',
-              fontSize: 14,
-            }}
-          >
-            Tidak ada crew online saat ini.
-          </div>
+          <div className={styles.mapEmpty}>Tidak ada crew online saat ini.</div>
         )}
       </div>
 
       {/* User List / SCARS Directory */}
-      <div
-        style={{
-          maxWidth: ACARS_PAGE_WIDTH,
-          width: '100%',
-          ...ACARS_PANEL_STYLE,
-          overflow: 'hidden',
-        }}
-      >
-        {/* Header */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            padding: '16px 20px',
-            borderBottom: '1px solid var(--line-base)',
-          }}
-        >
-          <div
-            style={{
-              fontSize: 12,
-              fontWeight: 600,
-              color: 'var(--text-muted)',
-            }}
-          >
-            SCARS DIRECTORY // {onlineUsers.length} ONLINE
-          </div>
-          <div
-            style={{
-              fontSize: 12,
-              color: 'var(--text-muted)',
-            }}
-          >
+      <div className={styles.card}>
+        <div className={styles.cardHead}>
+          <div className={styles.cardTitle}>SCARS DIRECTORY // {onlineUsers.length} ONLINE</div>
+          <div className={styles.cardMeta}>
             {new Date()
               .toLocaleDateString('id-ID', {
                 day: '2-digit',
@@ -464,174 +283,60 @@ export default function AcarsPage() {
         </div>
 
         {/* Table Header */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '280px 1fr 200px 150px 120px',
-            gap: 16,
-            padding: '12px 20px',
-            borderBottom: '1px solid var(--line-base)',
-          }}
-        >
+        <div className={`${styles.row} ${styles.rowHead}`}>
           {['Name', 'Profesi', 'Institusi', 'Status', 'Jam Online'].map((h, i) => (
-            <span
-              key={h}
-              style={{
-                fontSize: 12,
-                color: 'var(--text-muted)',
-                textAlign: i === 4 ? 'right' : undefined,
-              }}
-            >
+            <span key={h} className={i === 4 ? styles.right : undefined}>
               {h}
             </span>
           ))}
         </div>
 
         {/* User Rows */}
-        {onlineUsers.length === 0 && (
-          <div
-            style={{
-              padding: '32px 20px',
-              textAlign: 'center',
-              color: 'var(--text-muted)',
-              fontSize: 14,
-            }}
-          >
-            Belum ada crew online
-          </div>
-        )}
+        {onlineUsers.length === 0 && <div className={styles.empty}>Belum ada crew online</div>}
         {onlineUsers.map(user => {
           const color = getUserColor(user.role)
           const avatar = getAvatarUrl(user.profession, user.role)
           const isMe = currentUser?.username === user.userId
-          const rowStyle = {
-            display: 'grid',
-            gridTemplateColumns: '280px 1fr 200px 150px 120px',
-            gap: 16,
-            padding: '16px 20px',
-            alignItems: 'center',
-            background: isMe ? 'rgba(255,255,255,0.03)' : 'transparent',
-            borderLeft: `2px solid ${isMe ? 'var(--c-asesmen)' : 'transparent'}`,
-            borderBottom: '1px solid rgba(255,255,255,0.03)',
-            ...(isMe ? {} : { cursor: 'pointer', textDecoration: 'none' }),
-          } as React.CSSProperties
+          const rowClass = `${styles.row} ${isMe ? styles.rowMe : styles.rowLink}`
           const rowContent = (
             <>
               {/* Name */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div
-                  style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: '50%',
-                    overflow: 'hidden',
-                    border: `2px solid ${color}`,
-                    flexShrink: 0,
-                  }}
-                >
-                  <img src={avatar} width={44} height={44} style={{ objectFit: 'cover' }} alt="" />
+              <div className={styles.person}>
+                <div className={styles.personAvatar} style={{ boxShadow: `0 0 0 2px ${color}` }}>
+                  <img src={avatar} width={40} height={40} alt="" />
                 </div>
                 <div>
-                  <div
-                    style={{
-                      fontSize: 14,
-                      fontWeight: 600,
-                      color: 'var(--text-main)',
-                      letterSpacing: '0.02em',
-                    }}
-                  >
-                    {user.name}{' '}
-                    {isMe && (
-                      <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>(you)</span>
-                    )}
+                  <div className={styles.personName}>
+                    {user.name} {isMe && <span className={styles.cellMuted}>(you)</span>}
                   </div>
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: 'var(--text-muted)',
-                      marginTop: 2,
-                    }}
-                  >
-                    @{user.userId}
-                  </div>
+                  <div className={styles.personHandle}>@{user.userId}</div>
                 </div>
               </div>
 
               {/* Profesi */}
-              <div
-                style={{
-                  fontSize: 14,
-                  color: 'var(--text-main)',
-                  letterSpacing: '0.03em',
-                }}
-              >
-                {user.profession || user.role}
-              </div>
+              <div className={styles.cell}>{user.profession || user.role}</div>
 
               {/* Institusi */}
-              <div
-                style={{
-                  fontSize: 12,
-                  color: 'var(--text-muted)',
-                }}
-              >
-                {user.institution || '—'}
-              </div>
+              <div className={styles.cellMuted}>{user.institution || '—'}</div>
 
               {/* Status */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  padding: '4px 10px',
-                  background: 'var(--c-ok-soft)',
-                  borderRadius: 4,
-                  border: '1px solid var(--c-ok-border)',
-                  width: 'fit-content',
-                }}
-              >
-                <div
-                  style={{
-                    width: 6,
-                    height: 6,
-                    borderRadius: '50%',
-                    background: 'var(--c-ok)',
-                    boxShadow: '0 0 6px var(--c-ok)',
-                  }}
-                />
-                <span
-                  style={{
-                    fontSize: 12,
-                    fontWeight: 600,
-                    color: 'var(--c-ok)',
-                  }}
-                >
-                  ONLINE
-                </span>
-                <span style={{ fontSize: 12, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
-                  {onlineSourceLabel(user.source)}
-                </span>
+              <div className={styles.statusCell}>
+                <span className="ui-badge ui-badge--success">ONLINE</span>
+                <span className={styles.cellMuted}>{onlineSourceLabel(user.source)}</span>
               </div>
 
               {/* Jam Online */}
-              <div
-                style={{
-                  fontSize: 12,
-                  color: 'var(--c-ok)',
-                  textAlign: 'right',
-                }}
-              >
+              <div className={`${styles.joined} ${styles.right}`}>
                 {formatJoinedAt(user.joinedAt)}
               </div>
             </>
           )
           return isMe ? (
-            <div key={user.userId} style={rowStyle}>
+            <div key={user.userId} className={rowClass}>
               {rowContent}
             </div>
           ) : (
-            <Link key={user.userId} href={`/acars/${user.userId}`} style={rowStyle}>
+            <Link key={user.userId} href={`/acars/${user.userId}`} className={rowClass}>
               {rowContent}
             </Link>
           )
@@ -639,140 +344,48 @@ export default function AcarsPage() {
       </div>
 
       {/* Broadcast Chat Section */}
-      <div
-        style={{
-          maxWidth: ACARS_PAGE_WIDTH,
-          width: '100%',
-          ...ACARS_PANEL_STYLE,
-          padding: '16px',
-          display: 'flex',
-          flexDirection: 'column',
-          minHeight: 280,
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginBottom: 12,
-            paddingBottom: 12,
-            borderBottom: '1px solid var(--line-base)',
-          }}
-        >
-          <span
-            style={{
-              fontSize: 12,
-              fontWeight: 600,
-              color: 'var(--text-muted)',
-            }}
-          >
-            BROADCAST
-          </span>
-          {unreadCount > 0 && (
-            <span
-              style={{
-                padding: '2px 8px',
-                background: myColor,
-                borderRadius: 10,
-                fontSize: 12,
-                color: '#fff',
-              }}
-            >
-              {unreadCount}
-            </span>
-          )}
+      <div className={`${styles.card} ${styles.chat}`}>
+        <div className={styles.cardHead}>
+          <span className={styles.cardTitle}>BROADCAST</span>
+          {unreadCount > 0 && <span className="ui-badge ui-badge--accent">{unreadCount}</span>}
         </div>
 
-        {/* Messages */}
-        <div
-          ref={messagesListRef}
-          style={{
-            flex: 1,
-            overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 8,
-            marginBottom: 12,
-            paddingRight: 4,
-          }}
-        >
-          {messages.length === 0 && (
-            <div
-              style={{
-                textAlign: 'center',
-                color: 'var(--text-muted)',
-                fontSize: 14,
-                padding: '40px 0',
-              }}
-            >
-              Belum ada pesan broadcast
-            </div>
-          )}
-          {messages.map(msg => {
-            const isMe = currentUser && msg.senderId === currentUser.username
-            return (
-              <div
-                key={msg.id}
-                style={{
-                  padding: '10px 14px',
-                  background: isMe ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.01)',
-                  borderRadius: 8,
-                  borderLeft: isMe ? `2px solid ${myColor}` : '2px solid transparent',
-                  border: '1px solid var(--line-base)',
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 12,
-                    color: isMe ? myColor : 'var(--text-muted)',
-                    marginBottom: 4,
-                  }}
-                >
-                  {isMe ? 'You' : msg.senderName} · {msg.time}
+        <div className={styles.chatBody}>
+          {/* Messages */}
+          <div ref={messagesListRef} className={styles.messages}>
+            {messages.length === 0 && <div className={styles.empty}>Belum ada pesan broadcast</div>}
+            {messages.map(msg => {
+              const isMe = currentUser && msg.senderId === currentUser.username
+              return (
+                <div key={msg.id} className={`${styles.msg}${isMe ? ` ${styles.msgMine}` : ''}`}>
+                  <div className={styles.msgMeta}>
+                    {isMe ? 'You' : msg.senderName} · {msg.time}
+                  </div>
+                  <div className={styles.msgText}>{msg.text}</div>
                 </div>
-                <div style={{ fontSize: 14, color: 'var(--text-main)' }}>{msg.text}</div>
-              </div>
-            )
-          })}
-        </div>
+              )
+            })}
+          </div>
 
-        {/* Input */}
-        <div style={{ display: 'flex', gap: 8 }}>
-          <input
-            type="text"
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={currentUser ? 'Kirim broadcast...' : 'Login dulu...'}
-            disabled={!currentUser}
-            style={{
-              flex: 1,
-              padding: '12px 16px',
-              background: 'rgba(255,255,255,0.02)',
-              border: '1px solid var(--line-base)',
-              borderRadius: 8,
-              color: 'var(--text-main)',
-              fontSize: 14,
-              outline: 'none',
-            }}
-          />
-          <button
-            onClick={sendMessage}
-            disabled={!input.trim() || !currentUser}
-            style={{
-              padding: '12px 24px',
-              background: input.trim() ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.01)',
-              border: `1px solid ${input.trim() ? myColor : 'var(--line-base)'}`,
-              borderRadius: 8,
-              color: input.trim() ? myColor : 'var(--text-muted)',
-              fontSize: 12,
-              cursor: input.trim() ? 'pointer' : 'not-allowed',
-              opacity: input.trim() ? 1 : 0.5,
-            }}
-          >
-            KIRIM
-          </button>
+          {/* Input */}
+          <div className={styles.composer}>
+            <input
+              type="text"
+              className="ui-input"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder={currentUser ? 'Kirim broadcast...' : 'Login dulu...'}
+              disabled={!currentUser}
+            />
+            <button
+              className="ui-btn ui-btn--primary"
+              onClick={sendMessage}
+              disabled={!input.trim() || !currentUser}
+            >
+              KIRIM
+            </button>
+          </div>
         </div>
       </div>
     </div>
