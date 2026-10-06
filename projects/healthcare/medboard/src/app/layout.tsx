@@ -3,7 +3,9 @@ import type { Metadata } from 'next'
 import '@fontsource-variable/inter'
 import './globals.css'
 import './ui.css'
+import './shell.css'
 import AppFooter from '@/components/AppFooter'
+import AppHeader from '@/components/AppHeader'
 import AppNav from '@/components/AppNav'
 import CrewAccessGate from '@/components/CrewAccessGate'
 
@@ -28,12 +30,13 @@ export default function RootLayout({
         <CrewAccessGate>
           <div className="app-shell">
             <AppNav />
-            <main className="app-content">
-              <div className="app-page-stack">
-                {children}
-                <AppFooter />
-              </div>
-            </main>
+            <div className="app-main">
+              <AppHeader />
+              <main className="app-content">
+                <div className="app-page-stack">{children}</div>
+              </main>
+              <AppFooter />
+            </div>
           </div>
         </CrewAccessGate>
       </body>
