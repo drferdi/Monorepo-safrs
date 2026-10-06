@@ -15,9 +15,5 @@ export default async function CalculatorDetailPage({ params }: PageProps) {
     notFound()
   }
 
-  return (
-    <div style={{ width: '100%', padding: '0 32px 72px' }}>
-      <CalculatorWorkspace slug={calculator.slug} />
-    </div>
-  )
+  return <CalculatorWorkspace slug={calculator.slug} />
 }

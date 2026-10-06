@@ -1,8 +1,9 @@
 'use client'
 
-import { AlertTriangle, ArrowLeft, Calculator, HeartPulse, Info, ShieldAlert } from 'lucide-react'
+import { AlertTriangle, ArrowLeft, HeartPulse, Info, ShieldAlert } from 'lucide-react'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
+import styles from '@/app/calculator/calculator.module.css'
 import {
   type CalculatorField,
   type CalculatorResult,
@@ -13,15 +14,15 @@ type Props = {
   slug: string
 }
 
-const TONE_COLOR: Record<CalculatorResult['tone'], string> = {
-  normal: 'var(--c-asesmen)',
-  warning: 'var(--c-warning)',
-  critical: 'var(--c-critical)',
+const TONE_CLASS: Record<CalculatorResult['tone'], string> = {
+  normal: styles.toneNormal,
+  warning: styles.toneWarning,
+  critical: styles.toneCritical,
 }
 
 function renderSuffix(field: CalculatorField) {
   return 'suffix' in field && field.suffix ? (
-    <span className="calculator-field-suffix">{field.suffix}</span>
+    <span className={styles.suffix}>{field.suffix}</span>
   ) : null
 }
 
@@ -43,39 +44,36 @@ export default function CalculatorWorkspace({ slug }: Props) {
   }
 
   return (
-    <div className="calculator-page-shell">
-      <div className="page-header" style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <div className="page-header-block">
-          <div className="page-title-row" style={{ alignItems: 'center', gap: 12 }}>
-            <Link href="/calculator" className="calculator-back-link" title="Kembali ke katalog">
-              <ArrowLeft size={14} />
-            </Link>
-            <div>
-              <h1 className="page-title">{calculator.title}</h1>
-              <p className="page-subtitle">
-                {calculator.summary}{' '}
-                <span style={{ color: 'var(--text-main)' }}>{calculator.clinicalUse}</span>
-              </p>
-            </div>
+    <div className={styles.page}>
+      <div className="ui-page-header" style={{ marginBottom: 0 }}>
+        <div className={styles.titleRow}>
+          <Link href="/calculator" className={styles.back} title="Kembali ke katalog">
+            <ArrowLeft size={14} />
+          </Link>
+          <div>
+            <h1 className={styles.title}>{calculator.title}</h1>
+            <p className="ui-page-header__description">
+              {calculator.summary}{' '}
+              <span className={styles.clinicalUse}>{calculator.clinicalUse}</span>
+            </p>
           </div>
         </div>
-        <div className="page-header-divider" />
       </div>
 
-      <div className="calculator-detail-grid">
-        <section className="calculator-panel">
-          <div className="calculator-panel-header">
-            <span className="calculator-panel-kicker">Parameter</span>
-            <span className="calculator-panel-meta">{calculator.category}</span>
+      <div className={styles.detail}>
+        <section className={styles.panel}>
+          <div className={styles.panelHead}>
+            <h2 className={styles.panelTitle}>Parameter</h2>
+            <span className={styles.panelMeta}>{calculator.category}</span>
           </div>
 
-          <div className="calculator-form-grid">
+          <div className={styles.form}>
             {calculator.fields.map(field => {
               if (field.type === 'number') {
                 return (
-                  <label key={field.id} className="calculator-field">
-                    <span className="calculator-field-label">{field.label}</span>
-                    <div className="calculator-field-input-wrap">
+                  <label key={field.id} className={styles.field}>
+                    <span className={styles.fieldLabel}>{field.label}</span>
+                    <div className={styles.inputWrap}>
                       <input
                         type="number"
                         min={field.min}
@@ -83,7 +81,7 @@ export default function CalculatorWorkspace({ slug }: Props) {
                         value={values[field.id] ?? ''}
                         placeholder={field.placeholder}
                         onChange={event => updateValue(field.id, event.target.value)}
-                        className="calculator-field-input"
+                        className={`calculator-field-input ${styles.input}`}
                       />
                       {renderSuffix(field)}
                     </div>
@@ -93,14 +91,14 @@ export default function CalculatorWorkspace({ slug }: Props) {
 
               if (field.type === 'date') {
                 return (
-                  <label key={field.id} className="calculator-field">
-                    <span className="calculator-field-label">{field.label}</span>
-                    <div className="calculator-field-input-wrap">
+                  <label key={field.id} className={styles.field}>
+                    <span className={styles.fieldLabel}>{field.label}</span>
+                    <div className={styles.inputWrap}>
                       <input
                         type="date"
                         value={values[field.id] ?? ''}
                         onChange={event => updateValue(field.id, event.target.value)}
-                        className="calculator-field-input"
+                        className={`calculator-field-input ${styles.input}`}
                       />
                     </div>
                   </label>
@@ -108,9 +106,9 @@ export default function CalculatorWorkspace({ slug }: Props) {
               }
 
               return (
-                <div key={field.id} className="calculator-field">
-                  <span className="calculator-field-label">{field.label}</span>
-                  <div className="calculator-toggle-grid">
+                <div key={field.id} className={styles.field}>
+                  <span className={styles.fieldLabel}>{field.label}</span>
+                  <div className={styles.options}>
                     {field.options.map(option => {
                       const active = values[field.id] === option.value
                       return (
@@ -118,7 +116,8 @@ export default function CalculatorWorkspace({ slug }: Props) {
                           key={option.value}
                           type="button"
                           onClick={() => updateValue(field.id, option.value)}
-                          className={`calculator-toggle-btn${active ? ' active' : ''}`}
+                          aria-pressed={active}
+                          className="ui-chip"
                         >
                           {option.label}
                         </button>
@@ -130,55 +129,50 @@ export default function CalculatorWorkspace({ slug }: Props) {
             })}
           </div>
 
-          <div className="calculator-source-note">
+          <div className={styles.sourceNote}>
             <Info size={14} />
             <div>
               <strong>Sumber logika:</strong> adaptasi dari repo Medlink.
-              <div className="calculator-source-path">{calculator.sourcePath}</div>
+              <div className={styles.sourcePath}>{calculator.sourcePath}</div>
             </div>
           </div>
         </section>
 
-        <section className="calculator-panel calculator-panel-result">
-          <div className="calculator-panel-header">
-            <span className="calculator-panel-kicker">Hasil</span>
-            <span className="calculator-panel-meta">Realtime</span>
+        <section className={styles.panel}>
+          <div className={styles.panelHead}>
+            <h2 className={styles.panelTitle}>Hasil</h2>
+            <span className={styles.panelMeta}>Realtime</span>
           </div>
 
           {result ? (
             <>
-              <div
-                className="calculator-primary-result"
-                style={{ borderColor: TONE_COLOR[result.tone] }}
-              >
-                <div className="calculator-primary-value-row">
-                  <span className="calculator-primary-value">{result.primaryValue}</span>
+              <div className={TONE_CLASS[result.tone]}>
+                <div className={styles.value}>
+                  <span className={styles.valueNumber}>{result.primaryValue}</span>
                   {result.primaryUnit ? (
-                    <span className="calculator-primary-unit">{result.primaryUnit}</span>
+                    <span className={styles.valueUnit}>{result.primaryUnit}</span>
                   ) : null}
                 </div>
                 {result.secondaryValue ? (
-                  <div className="calculator-secondary-value">
+                  <div className={styles.secondary}>
                     <span>{result.secondaryLabel}:</span>
                     <strong>{result.secondaryValue}</strong>
                   </div>
                 ) : null}
-                <p className="calculator-interpretation" style={{ color: TONE_COLOR[result.tone] }}>
-                  {result.interpretation}
-                </p>
+                <p className={styles.interpretation}>{result.interpretation}</p>
               </div>
 
-              <div className="calculator-summary-grid">
+              <div className={styles.details}>
                 {result.detailItems.map(item => (
-                  <div key={item.label} className="calculator-summary-item">
-                    <span className="calculator-summary-label">{item.label}</span>
-                    <strong className="calculator-summary-value">{item.value}</strong>
+                  <div key={item.label} className={styles.detailRow}>
+                    <span className={styles.detailLabel}>{item.label}</span>
+                    <strong className={styles.detailValue}>{item.value}</strong>
                   </div>
                 ))}
               </div>
 
-              <div className="calculator-note-box">
-                <div className="calculator-note-title">
+              <div className={styles.notes}>
+                <div className={styles.notesTitle}>
                   {result.tone === 'critical' ? (
                     <ShieldAlert size={14} />
                   ) : (
@@ -186,7 +180,7 @@ export default function CalculatorWorkspace({ slug }: Props) {
                   )}
                   <span>Catatan klinis</span>
                 </div>
-                <ul className="calculator-note-list">
+                <ul className={styles.noteList}>
                   {result.notes.map(note => (
                     <li key={note}>{note}</li>
                   ))}
@@ -194,13 +188,12 @@ export default function CalculatorWorkspace({ slug }: Props) {
               </div>
             </>
           ) : (
-            <div className="calculator-empty-state">
-              <Calculator size={32} />
+            <div className={styles.empty}>
               <p>Lengkapi parameter untuk menampilkan hasil kalkulator.</p>
             </div>
           )}
 
-          <div className="calculator-warning-strip">
+          <div className={styles.warning}>
             <AlertTriangle size={14} />
             Kalkulator ini untuk referensi klinis. Verifikasi akhir tetap mengikuti protokol lokal.
           </div>
