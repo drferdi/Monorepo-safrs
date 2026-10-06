@@ -11,8 +11,10 @@ import { ArrowLeft, Check } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 
+import { TranscriptPanel } from '@/components/telemedicine/TranscriptPanel'
 import { VideoRoom } from '@/components/telemedicine/VideoRoom'
 import { buildEmrSourceHref, EMR_SOURCE_ORIGINS } from '@/lib/emr/source-trace'
+import type { TranscriptLine } from '@/lib/telemedicine/epuskesmas-summary'
 import type { AppointmentWithDetails, SessionParticipantRole } from '@/types/telemedicine.types'
 
 import styles from '../telemedicine.module.css'
@@ -56,6 +58,13 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
   const [error, setError] = useState<string | null>(null)
   const [sessionComplete, setSessionComplete] = useState(false)
   const [sessionCompleteError, setSessionCompleteError] = useState<string | null>(null)
+  const [transcript, setTranscript] = useState<TranscriptLine[]>([])
+  const [transcribing, setTranscribing] = useState(false)
+  const [transcriptError, setTranscriptError] = useState('')
+  const addUtterance = useCallback((line: TranscriptLine) => {
+    setTranscriptError('')
+    setTranscript(current => [...current, line])
+  }, [])
 
   const participantRole = deriveParticipantRole(session, appointment)
 
@@ -230,8 +239,19 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
             appointment={appointment}
             participantRole={participantRole}
             onSessionComplete={(apptId) => void handleSessionComplete(apptId)}
+            transcribing={transcribing}
+            onUtterance={addUtterance}
+            onTranscriptError={setTranscriptError}
           />
         </div>
+        {participantRole === 'DOCTOR' && (
+          <TranscriptPanel
+            lines={transcript}
+            capturing={transcribing}
+            onCapturingChange={setTranscribing}
+            error={transcriptError}
+          />
+        )}
       </div>
     </div>
   )

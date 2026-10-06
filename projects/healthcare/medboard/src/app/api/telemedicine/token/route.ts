@@ -33,12 +33,12 @@ export async function POST(request: Request): Promise<NextResponse> {
   }
 
   if (!isLiveKitConfigured()) {
+    console.error('[MedLink] LIVEKIT_URL, LIVEKIT_API_KEY or LIVEKIT_API_SECRET is not set')
     return NextResponse.json<ApiResponse<null>>(
       {
         success: false,
         data: null,
-        message:
-          'LiveKit belum dikonfigurasi. Isi LIVEKIT_URL, LIVEKIT_API_KEY, dan LIVEKIT_API_SECRET.',
+        message: 'Video belum bisa dimulai. Hubungi admin MedBoard.',
         timestamp: new Date().toISOString(),
       },
       { status: 503 }

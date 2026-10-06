@@ -1,21 +1,11 @@
 'use client'
 
 import {
-  AlertCircle,
-  CheckCircle,
   Check,
-  Clock,
-  Inbox,
-  Phone,
-  Plus,
   RefreshCw,
   Trash2,
-  User,
   Video,
-  Wifi,
-  WifiOff,
   X,
-  XCircle,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import type React from 'react'
@@ -29,6 +19,7 @@ import type { MiraDifferential } from '@/lib/telemedicine/mira-differential'
 import { tidyCase } from '@/lib/text/tidy-case'
 import type { AppointmentStatus, AppointmentWithDetails } from '@/types/telemedicine.types'
 
+import { MedLinkStudio } from './MedLinkStudio'
 import styles from './telemedicine.module.css'
 
 interface TeleRequest {
@@ -185,373 +176,106 @@ function sortAssistConsults(consults: AssistConsult[]): AssistConsult[] {
   })
 }
 
-type OverviewMetricTone = 'green' | 'muted' | 'accent' | 'gold'
-
-const METRIC_BADGE_CLASS: Record<OverviewMetricTone, string> = {
-  green: 'ui-badge ui-badge--success',
-  accent: 'ui-badge ui-badge--accent',
-  gold: 'ui-badge ui-badge--primary',
-  muted: 'ui-badge ui-badge--neutral',
-}
-
-function OverviewMetric({
-  label,
-  value,
-  hint,
-  toneVariant,
-  statusWord,
-}: {
-  label: string
-  value: string
-  hint: string
-  toneVariant: OverviewMetricTone
-  statusWord: string
-}) {
-  return (
-    <div className={styles.kpi}>
-      <div className={styles.kpiHeader}>
-        <span className={styles.kpiLabel}>{label}</span>
-        <span className={METRIC_BADGE_CLASS[toneVariant]}>{statusWord}</span>
-      </div>
-      <div className={styles.kpiValue}>{value}</div>
-      <div className={styles.kpiHint}>{hint}</div>
-    </div>
-  )
-}
-
 /* ── Status config ── */
 type StatusTone = 'warning' | 'primary' | 'success' | 'neutral' | 'critical'
 
-const STATUS_CONFIG: Record<
-  AppointmentStatus,
-  { label: string; tone: StatusTone; icon: React.ReactNode }
-> = {
-  PENDING: { label: 'Menunggu', tone: 'warning', icon: <Clock size={12} /> },
-  CONFIRMED: {
-    label: 'Dikonfirmasi',
-    tone: 'primary',
-    icon: <CheckCircle size={12} />,
-  },
-  IN_PROGRESS: {
-    label: 'Berlangsung',
-    tone: 'success',
-    icon: <Video size={12} />,
-  },
-  COMPLETED: {
-    label: 'Selesai',
-    tone: 'neutral',
-    icon: <CheckCircle size={12} />,
-  },
-  CANCELLED: {
-    label: 'Dibatalkan',
-    tone: 'critical',
-    icon: <XCircle size={12} />,
-  },
-  NO_SHOW: {
-    label: 'Tidak Hadir',
-    tone: 'warning',
-    icon: <AlertCircle size={12} />,
-  },
+const STATUS_CONFIG: Record<AppointmentStatus, { label: string; tone: StatusTone }> = {
+  PENDING: { label: 'Menunggu', tone: 'warning' },
+  CONFIRMED: { label: 'Dikonfirmasi', tone: 'primary' },
+  IN_PROGRESS: { label: 'Berlangsung', tone: 'success' },
+  COMPLETED: { label: 'Selesai', tone: 'neutral' },
+  CANCELLED: { label: 'Dibatalkan', tone: 'critical' },
+  NO_SHOW: { label: 'Tidak hadir', tone: 'warning' },
 }
 
 const ACTIVE_APPOINTMENT_STATUSES: AppointmentStatus[] = ['PENDING', 'CONFIRMED', 'IN_PROGRESS']
 const PAST_APPOINTMENT_STATUSES: AppointmentStatus[] = ['COMPLETED', 'CANCELLED', 'NO_SHOW']
 
-/* ── Patient pathway ── */
-const FLOW_STEPS = [
-  {
-    code: 'Petugas',
-    label: 'Isi No. HP Pasien',
-    sub: 'saat buat appointment',
-  },
-  {
-    code: 'Sistem',
-    label: 'Generate Token Unik',
-    sub: 'disimpan ke database',
-  },
-  {
-    code: 'WhatsApp',
-    label: 'Kirim Link via WhatsApp',
-    sub: '/join/[token]',
-  },
-  {
-    code: 'Pasien',
-    label: 'Klik Link → Buka Browser',
-    sub: 'tanpa install / login',
-  },
-  {
-    code: 'Input',
-    label: 'Masukkan Nama',
-    sub: 'klik Masuk Konsultasi',
-  },
-  {
-    code: 'LiveKit',
-    label: 'Connect ke Video Room',
-    sub: 'sebagai pasien',
-  },
-  {
-    code: 'Selesai',
-    label: 'Dokter & Pasien Terhubung',
-    sub: 'konsultasi berlangsung',
-  },
-]
+const clock = (iso: string) => new Date(iso).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })
 
-function PatientFlowDiagram() {
-  const [visibleItems, setVisibleItems] = useState(0)
+/* ── The work under the studio, in the order it happens (Chief 2026-10-07) ── */
+const TABS = [
+  { id: 'requests', label: 'Permintaan' },
+  { id: 'schedule', label: 'Jadwal' },
+  { id: 'consult', label: 'Konsultasi' },
+  { id: 'history', label: 'Riwayat' },
+] as const
 
-  useEffect(() => {
-    setVisibleItems(0)
-    const timer = setInterval(() => {
-      setVisibleItems(prev => (prev >= FLOW_STEPS.length ? prev : prev + 1))
-    }, 180)
-    return () => clearInterval(timer)
-  }, [])
+type TabId = (typeof TABS)[number]['id']
 
-  return (
-    <div className={styles.card}>
-      <div className={styles.cardHead}>
-        <div>
-          <h2 className={styles.cardTitle}>Pathway Pasien</h2>
-          <p className={styles.cardText}>
-            Tahapan praktis dari pembuatan appointment sampai pasien masuk ke room konsultasi.
-          </p>
-        </div>
-      </div>
-
-      <div>
-        {FLOW_STEPS.map((step, i) => {
-          const isFinal = i === 6
-          return (
-            <div key={step.code} className={styles.step} style={{ opacity: i < visibleItems ? 1 : 0 }}>
-              <div className={isFinal ? `${styles.stepCode} ${styles.stepCodeFinal}` : styles.stepCode}>
-                {step.code}
-              </div>
-              <div
-                className={isFinal ? `${styles.stepLabel} ${styles.stepLabelFinal}` : styles.stepLabel}
-              >
-                {step.label}
-              </div>
-              <div className={styles.stepSub}>{step.sub}</div>
-            </div>
-          )
-        })}
-      </div>
-    </div>
-  )
-}
-
-/* ── AppointmentRow ── */
-interface AppointmentCardProps {
-  appointment: AppointmentWithDetails
-  onJoin?: () => void
-}
-
-function AppointmentRow({ appointment, onJoin }: AppointmentCardProps) {
+/* ── One consultation session ── */
+function AppointmentRow({ appointment, onJoin }: { appointment: AppointmentWithDetails; onJoin?: () => void }) {
   const status = STATUS_CONFIG[appointment.status]
-  const isActive = ACTIVE_APPOINTMENT_STATUSES.includes(appointment.status)
-  const scheduledAt = new Date(appointment.scheduledAt)
-  const isInProgress = appointment.status === 'IN_PROGRESS'
-  const appointmentType =
-    appointment.consultationType === 'VIDEO'
-      ? 'Video'
-      : appointment.consultationType === 'AUDIO'
-        ? 'Audio'
-        : 'Chat'
+  const type =
+    appointment.consultationType === 'VIDEO' ? 'Video' : appointment.consultationType === 'AUDIO' ? 'Audio' : 'Chat'
+  const when = new Date(appointment.scheduledAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })
 
   return (
-    <div
-      className={styles.row}
-      onMouseEnter={e => {
-        ;(e.currentTarget as HTMLDivElement).style.background = 'var(--surface-subtle)'
-      }}
-      onMouseLeave={e => {
-        ;(e.currentTarget as HTMLDivElement).style.background = 'transparent'
-      }}
-    >
+    <li className={styles.row}>
       <div className={styles.rowMain}>
-        <div className={styles.rowTop}>
-          <span className={styles.rowId}>#{appointment.id.slice(-8).toUpperCase()}</span>
-          <span className={`ui-badge ui-badge--${status.tone}`}>
-            {status.icon}&nbsp;{status.label}
-          </span>
-          <span className="ui-badge ui-badge--neutral">{appointmentType}</span>
-        </div>
-        <div className={styles.rowName}>Pasien {appointment.patientId}</div>
-        <div className={styles.rowMeta}>
-          <span>
-            {scheduledAt.toLocaleString('id-ID', {
-              dateStyle: 'medium',
-              timeStyle: 'short',
-            })}
-          </span>
-          <span className={styles.sep}>·</span>
-          <span>{appointment.durationMinutes}m</span>
-          <span className={styles.sep}>·</span>
-          <span>{appointment.doctorId}</span>
-          {appointment.patientPhone && (
-            <>
-              <span className={styles.sep}>·</span>
-              <span>{appointment.patientPhone}</span>
-            </>
-          )}
-          {appointment.keluhanUtama && (
-            <>
-              <span className={styles.sep}>·</span>
-              <span>
-                {appointment.keluhanUtama.slice(0, 35)}
-                {appointment.keluhanUtama.length > 35 ? '…' : ''}
-              </span>
-            </>
-          )}
-        </div>
+        <span className={styles.rowName}>Pasien {appointment.patientId}</span>
+        <span className={styles.rowMeta}>
+          {when} · {type} · {appointment.durationMinutes} menit
+          {appointment.keluhanUtama ? ` · ${tidyCase(appointment.keluhanUtama)}` : ''}
+        </span>
       </div>
-      {isActive && onJoin && (
-        <button onClick={onJoin} className="ui-btn ui-btn--primary ui-btn--sm">
-          <Video size={12} />
-          {isInProgress ? 'Masuk' : 'Join'}
-        </button>
-      )}
-    </div>
-  )
-}
-
-/* ── RequestInbox ── */
-function RequestInbox({
-  requests,
-  onMarkHandled,
-  onDeleteRequest,
-}: {
-  requests: TeleRequest[]
-  onMarkHandled: (id: string) => void
-  onDeleteRequest: (id: string) => void
-}) {
-  const pending = requests.filter(r => r.status === 'PENDING')
-  const handled = requests.filter(r => r.status === 'HANDLED')
-  const [visibleItems, setVisibleItems] = useState(0)
-  const [deletingId, setDeletingId] = useState<string | null>(null)
-  const allRequests = [...pending, ...handled]
-
-  useEffect(() => {
-    setVisibleItems(0)
-    if (allRequests.length > 0) {
-      const timer = setInterval(() => {
-        setVisibleItems(prev => (prev >= allRequests.length ? prev : prev + 1))
-      }, 180)
-      return () => clearInterval(timer)
-    }
-  }, [requests.length])
-
-  const formatTime = (iso: string) => {
-    const d = new Date(iso)
-    return d.toLocaleTimeString('id-ID', {
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-  }
-
-  const handleDelete = (id: string) => {
-    if (confirm('Hapus request ini?')) {
-      setDeletingId(id)
-      onDeleteRequest(id)
-      setTimeout(() => setDeletingId(null), 300)
-    }
-  }
-
-  return (
-    <div className={styles.card}>
-      <div className={styles.cardHead}>
-        <div>
-          <h2 className={styles.cardTitle}>Triage Request</h2>
-          <p className={styles.cardText}>
-            Request masuk dari website untuk dipilah, ditindaklanjuti, atau diarsipkan.
-          </p>
-        </div>
-        {pending.length > 0 && (
-          <span className="ui-badge ui-badge--accent">{pending.length} baru</span>
+      <div className={styles.rowActions}>
+        <span className={`ui-badge ui-badge--${status.tone}`}>{status.label}</span>
+        {onJoin && (
+          <button type="button" onClick={onJoin} className="ui-btn ui-btn--primary ui-btn--sm">
+            <Video size={14} aria-hidden="true" />
+            Masuk
+          </button>
         )}
       </div>
+    </li>
+  )
+}
 
-      {requests.length === 0 ? (
-        <div className={styles.emptyBlock}>
-          <Inbox size={24} />
-          <div>belum ada request</div>
-        </div>
-      ) : (
-        <div>
-          {allRequests.map((req, i) => (
-            <div
-              key={req.id}
-              className={
-                req.status === 'PENDING'
-                  ? `${styles.request} ${styles.requestPending}`
-                  : styles.request
-              }
-              style={{ opacity: i < visibleItems ? 1 : 0 }}
-            >
-              <div className={styles.requestTop}>
-                <div className={styles.requestWho}>
-                  {/* Silhouette Wajah */}
-                  <div
-                    className={
-                      req.status === 'PENDING'
-                        ? `${styles.avatar} ${styles.avatarPending}`
-                        : styles.avatar
-                    }
-                  >
-                    <User size={20} />
-                  </div>
-                  <span
-                    className={styles.rowName}
-                    style={{
-                      color: req.status === 'PENDING' ? 'var(--text)' : 'var(--text-secondary)',
-                      fontWeight: req.status === 'PENDING' ? 500 : 400,
-                    }}
-                  >
-                    {req.nama}
-                  </span>
-                  <span className={styles.requestSmall}>{req.usia}th</span>
-                </div>
-                <div className={styles.requestWho}>
-                  <span className={styles.requestSmall}>{formatTime(req.createdAt)}</span>
-                  <button
-                    onClick={() => handleDelete(req.id)}
-                    disabled={deletingId === req.id}
-                    title="Hapus request"
-                    className={styles.iconButton}
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              </div>
-              <div className={styles.requestMeta}>
-                <Phone size={12} />
-                <span>{req.hp}</span>
-                <span className="ui-badge ui-badge--primary">{req.poli}</span>
-              </div>
-              {req.bpjs && <div className={styles.requestSmall}>BPJS: {req.bpjs}</div>}
-              <div className={styles.requestComplaint}>
-                {req.keluhan.length > 60 ? req.keluhan.slice(0, 60) + '…' : req.keluhan}
-              </div>
-              {req.status === 'PENDING' && (
-                <div>
-                  <button
-                    onClick={() => onMarkHandled(req.id)}
-                    className="ui-btn ui-btn--secondary ui-btn--sm"
-                  >
-                    Tandai handled
-                  </button>
-                </div>
-              )}
-              {req.status === 'HANDLED' && (
-                <span className={styles.requestSmall}>
-                  <Check size={12} /> handled
-                </span>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
+/* ── One request from the website ── */
+function RequestRow({
+  request,
+  onMarkHandled,
+  onDelete,
+}: {
+  request: TeleRequest
+  onMarkHandled: (id: string) => void
+  onDelete: (id: string) => void
+}) {
+  const handled = request.status === 'HANDLED'
+  return (
+    <li className={handled ? `${styles.row} ${styles.rowMuted}` : styles.row}>
+      <div className={styles.rowMain}>
+        <span className={styles.rowName}>
+          {tidyCase(request.nama, 'name')}, {request.usia} th · {request.poli}
+        </span>
+        <span className={styles.rowMeta}>
+          {clock(request.createdAt)} · {request.hp}
+          {request.bpjs ? ` · BPJS ${request.bpjs}` : ''} · {tidyCase(request.keluhan)}
+        </span>
+      </div>
+      <div className={styles.rowActions}>
+        {handled ? (
+          <span className={styles.rowMeta}>
+            <Check size={14} aria-hidden="true" /> Ditangani
+          </span>
+        ) : (
+          <button type="button" onClick={() => onMarkHandled(request.id)} className="ui-btn ui-btn--secondary ui-btn--sm">
+            Ditangani
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={() => {
+            if (confirm('Hapus permintaan ini?')) onDelete(request.id)
+          }}
+          aria-label={`Hapus permintaan ${request.nama}`}
+          className="ui-btn ui-btn--ghost ui-btn--sm"
+        >
+          <Trash2 size={14} aria-hidden="true" />
+        </button>
+      </div>
+    </li>
   )
 }
 
@@ -560,7 +284,7 @@ export default function TelemedicinePage(): React.JSX.Element {
   const router = useRouter()
   const [appointments, setAppointments] = useState<AppointmentWithDetails[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [showBooking, setShowBooking] = useState(false)
+  const [tab, setTab] = useState<TabId>('requests')
   const [isOnline, setIsOnline] = useState(false)
   const [isDoctor, setIsDoctor] = useState(false)
   const [togglingStatus, setTogglingStatus] = useState(false)
@@ -581,10 +305,6 @@ export default function TelemedicinePage(): React.JSX.Element {
     [activeConsult]
   )
   const sortedConsults = useMemo(() => sortAssistConsults(consults), [consults])
-  const topConsultTone = useMemo(
-    () => resolveCanonicalSnapshotTone(sortedConsults[0]?.canonical_clinical),
-    [sortedConsults]
-  )
 
   const loadAppointments = useCallback(async () => {
     setIsLoading(true)
@@ -801,7 +521,6 @@ export default function TelemedicinePage(): React.JSX.Element {
 
   const handleBookingSuccess = useCallback(
     (appointmentId: string) => {
-      setShowBooking(false)
       void loadAppointments()
       router.push(`/telemedicine/${appointmentId}`)
     },
@@ -842,7 +561,11 @@ export default function TelemedicinePage(): React.JSX.Element {
   )
   const pastAppointments = appointments.filter(a => PAST_APPOINTMENT_STATUSES.includes(a.status))
   const pendingRequests = requests.filter(request => request.status === 'PENDING')
-  const latestActive = activeAppointments[0]
+  const counts: Partial<Record<TabId, number>> = {
+    requests: pendingRequests.length + sortedConsults.length,
+    consult: activeAppointments.length,
+    history: pastAppointments.length,
+  }
 
   return (
     <div className={styles.page}>
@@ -1146,254 +869,123 @@ export default function TelemedicinePage(): React.JSX.Element {
         </div>
       )}
 
-      {/* ── ASSIST CONSULT BADGE (jika ada yg belum di-ack) ── */}
-      {sortedConsults.length > 0 && !activeConsult && (
-        <div
-          className={styles.consultBadge}
-          onClick={() => setActiveConsult(sortedConsults[0])}
-          style={{
-            background: topConsultTone.pillBackground,
-            borderLeftColor: topConsultTone.border,
-            color: topConsultTone.pillColor,
-          }}
-        >
-          {sortedConsults.length} Consult dari Assist · {topConsultTone.label}
-        </div>
-      )}
+      <header className={styles.header}>
+        <h1 className={styles.title}>MedLink</h1>
+        <p className={styles.subtitle}>Konsultasi video jarak jauh, dari permintaan sampai selesai.</p>
+      </header>
 
-      <div className="ui-page-header" style={{ marginBottom: 0 }}>
-        <div>
-          <h1 className={styles.title}>MedLink</h1>
-          <p className="ui-page-header__description">
-            Clinical Command Desk untuk konsultasi video, triase masuk, dan timeline layanan jarak
-            jauh
-          </p>
-          <div className={styles.meta}>
-            <span className="ui-badge ui-badge--primary">Video consultation</span>
-            {activeAppointments.length > 0 && (
-              <span className="ui-badge ui-badge--success">{activeAppointments.length} Aktif</span>
-            )}
-            <span className="ui-badge ui-badge--neutral">Command desk</span>
-          </div>
-        </div>
-        <div className="ui-page-header__actions">
-          {isDoctor && (
+      <MedLinkStudio
+        doctorName={doctorName}
+        isDoctor={isDoctor}
+        isOnline={isOnline}
+        toggling={togglingStatus}
+        onToggleOnline={() => void handleToggleOnline()}
+      />
+
+      <div className={styles.work}>
+        <div className="ui-tabs" role="tablist" aria-label="Pekerjaan MedLink">
+          {TABS.map(item => (
             <button
-              onClick={() => void handleToggleOnline()}
-              disabled={togglingStatus}
-              className={
-                isOnline
-                  ? `ui-btn ui-btn--secondary ${styles.onlineOn}`
-                  : 'ui-btn ui-btn--secondary'
-              }
+              key={item.id}
+              type="button"
+              role="tab"
+              id={`medlink-tab-${item.id}`}
+              aria-selected={tab === item.id}
+              aria-controls="medlink-panel"
+              onClick={() => setTab(item.id)}
+              className="ui-tab"
             >
-              {isOnline ? <Wifi size={14} /> : <WifiOff size={14} />}
-              {isOnline ? 'Dokter online' : 'Dokter offline'}
+              {item.label}
+              {counts[item.id] !== undefined && <span className={styles.tabCount}>{counts[item.id]}</span>}
             </button>
+          ))}
+        </div>
+
+        <div className={styles.panel} role="tabpanel" id="medlink-panel" aria-labelledby={`medlink-tab-${tab}`}>
+          {tab === 'requests' &&
+            (requests.length === 0 && sortedConsults.length === 0 ? (
+              <p className={styles.note}>Belum ada permintaan.</p>
+            ) : (
+              <ul className={styles.list}>
+                {sortedConsults.map(consult => (
+                  <li key={consult.consultId} className={styles.row}>
+                    <div className={styles.rowMain}>
+                      <span className={styles.rowName}>
+                        {tidyCase(consult.patient.name, 'name')}, {consult.patient.age} th · Asisten Medis
+                      </span>
+                      <span className={styles.rowMeta}>
+                        {clock(consult.sentAt)} · {resolveCanonicalSnapshotTone(consult.canonical_clinical).label} ·{' '}
+                        {tidyCase(consult.keluhan_utama ?? '')}
+                      </span>
+                    </div>
+                    <div className={styles.rowActions}>
+                      <button
+                        type="button"
+                        onClick={() => setActiveConsult(consult)}
+                        className="ui-btn ui-btn--secondary ui-btn--sm"
+                      >
+                        Buka
+                      </button>
+                    </div>
+                  </li>
+                ))}
+                {[...pendingRequests, ...requests.filter(r => r.status !== 'PENDING')].map(request => (
+                  <RequestRow
+                    key={request.id}
+                    request={request}
+                    onMarkHandled={id => void handleMarkHandled(id)}
+                    onDelete={id => void handleDeleteRequest(id)}
+                  />
+                ))}
+              </ul>
+            ))}
+
+          {tab === 'schedule' && (
+            <AppointmentBooking onSuccess={handleBookingSuccess} onCancel={() => setTab('consult')} />
           )}
-          <button onClick={() => void loadAppointments()} className="ui-btn ui-btn--secondary">
-            <RefreshCw size={14} />
-            Refresh
-          </button>
-          <button
-            onClick={() => setShowBooking(current => !current)}
-            className="ui-btn ui-btn--primary"
-          >
-            <Plus size={14} />
-            {showBooking ? 'Tutup form' : 'Buat sesi'}
-          </button>
-        </div>
-      </div>
 
-      <div className={styles.kpiRow}>
-        <OverviewMetric
-          label="Dokter"
-          value={isDoctor ? (isOnline ? 'Online' : 'Offline') : 'Standby'}
-          hint={
-            isDoctor
-              ? 'Status kesiapan dokter pada jalur konsultasi.'
-              : 'Masuk sebagai staf non-dokter.'
-          }
-          toneVariant={isDoctor && isOnline ? 'green' : 'muted'}
-          statusWord={!isDoctor ? 'Staf' : isOnline ? 'Aktif' : 'Tidak aktif'}
-        />
-        <OverviewMetric
-          label="Queue"
-          value={`${pendingRequests.length}`}
-          hint={
-            pendingRequests.length > 0
-              ? 'Request masuk menunggu tindak lanjut.'
-              : 'Tidak ada triase baru saat ini.'
-          }
-          toneVariant={pendingRequests.length > 0 ? 'accent' : 'muted'}
-          statusWord={pendingRequests.length > 0 ? 'Menunggu' : 'Bersih'}
-        />
-        <OverviewMetric
-          label="Sesi Aktif"
-          value={`${activeAppointments.length}`}
-          hint={
-            latestActive
-              ? `Terdekat ${new Date(latestActive.scheduledAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}`
-              : 'Belum ada sesi aktif.'
-          }
-          toneVariant={activeAppointments.length > 0 ? 'green' : 'muted'}
-          statusWord={activeAppointments.length > 0 ? 'Terjadwal' : 'Kosong'}
-        />
-        <OverviewMetric
-          label="Arsip"
-          value={`${pastAppointments.length}`}
-          hint="Riwayat sesi selesai, batal, atau no-show."
-          toneVariant={pastAppointments.length > 0 ? 'gold' : 'muted'}
-          statusWord={pastAppointments.length > 0 ? 'Tersimpan' : 'Kosong'}
-        />
-      </div>
-
-      <div className={styles.columns}>
-        <div className={styles.stack}>
-          <div className={styles.card}>
-            <h2 className={styles.cardTitle}>Clinical Command Desk</h2>
-            <p className={styles.cardIntro}>
-              Satu panel kerja untuk triase masuk, kontrol kesiapan dokter, dan aktivasi sesi.
-            </p>
-            <div className={`${styles.statGrid} ${styles.divided}`}>
-              {[
-                {
-                  label: 'Mode Desk',
-                  value: isDoctor ? 'Dokter' : 'Staf',
-                  hint: isDoctor
-                    ? 'Jalur klinis siap menerima pasien.'
-                    : 'Mode observasi & administrasi.',
-                },
-                {
-                  label: 'Request Baru',
-                  value: `${pendingRequests.length}`,
-                  hint:
-                    pendingRequests.length > 0
-                      ? 'Perlu verifikasi dan follow-up.'
-                      : 'Inbox sedang bersih.',
-                },
-                {
-                  label: 'Slot Aktif',
-                  value: `${activeAppointments.length}`,
-                  hint:
-                    activeAppointments.length > 0
-                      ? 'Ada sesi yang dapat langsung dibuka.'
-                      : 'Belum ada sesi aktif.',
-                },
-              ].map(item => (
-                <div key={item.label} className={styles.stat}>
-                  <div className={styles.statLabel}>{item.label}</div>
-                  <div className={styles.statValue}>{item.value}</div>
-                  <div className={styles.statHint}>{item.hint}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <RequestInbox
-            requests={requests}
-            onMarkHandled={handleMarkHandled}
-            onDeleteRequest={handleDeleteRequest}
-          />
-          <PatientFlowDiagram />
-        </div>
-
-        <div className={styles.stack}>
-          <div className={styles.card}>
-            <h2 className={styles.cardTitle}>Consultation Timeline</h2>
-            <p className={styles.cardIntro}>
-              Timeline konsultasi dari antrean aktif sampai arsip layanan.
-            </p>
-            <div className={`${styles.stat} ${styles.divided}`} style={{ marginBottom: 'var(--gap-xl)' }}>
-              <div className={styles.statLabel}>Focus Saat Ini</div>
-              <div className={styles.focusValue}>
-                {latestActive ? `Pasien ${latestActive.patientId}` : 'Belum ada pasien aktif'}
-              </div>
-              <div className={styles.statHint}>
-                {latestActive
-                  ? `Sesi terdekat dijadwalkan ${new Date(latestActive.scheduledAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}.`
-                  : 'Buka form pembuatan konsultasi untuk mulai mengisi jalur timeline.'}
-              </div>
-            </div>
-
-            {showBooking && (
-              <div className={styles.booking}>
-                <h3 className={styles.bookingTitle}>Buat Konsultasi Baru</h3>
-                <AppointmentBooking
-                  onSuccess={handleBookingSuccess}
-                  onCancel={() => setShowBooking(false)}
-                />
-              </div>
-            )}
-
-            {isLoading ? (
-              <div className={styles.emptyBlock}>
-                <div className={styles.spinner} style={{ animation: 'spin 1s linear infinite' }} />
-                <div>memuat timeline konsultasi...</div>
-              </div>
-            ) : appointments.length === 0 ? (
-              <div className={styles.emptyBlock}>
-                <div className="ui-empty__title">timeline masih kosong</div>
-                <div>
-                  Belum ada appointment yang masuk. Mulai dari form konsultasi baru untuk
-                  menghidupkan jalur telemedicine.
-                </div>
-                <button onClick={() => setShowBooking(true)} className="ui-btn ui-btn--primary">
-                  <Plus size={14} /> Buat konsultasi
+          {tab === 'consult' && (
+            <>
+              <div className={styles.panelHead}>
+                <p className={styles.note}>Pasien masuk lewat tautan WhatsApp, tanpa memasang aplikasi.</p>
+                <button
+                  type="button"
+                  onClick={() => void loadAppointments()}
+                  aria-label="Muat ulang sesi"
+                  className="ui-btn ui-btn--secondary ui-btn--sm"
+                >
+                  <RefreshCw size={14} aria-hidden="true" />
                 </button>
               </div>
+              {isLoading ? (
+                <p className={styles.note}>Memuat sesi…</p>
+              ) : activeAppointments.length === 0 ? (
+                <p className={styles.note}>Belum ada sesi aktif.</p>
+              ) : (
+                <ul className={styles.list}>
+                  {activeAppointments.map(appt => (
+                    <AppointmentRow
+                      key={appt.id}
+                      appointment={appt}
+                      onJoin={() => router.push(`/telemedicine/${appt.id}`)}
+                    />
+                  ))}
+                </ul>
+              )}
+            </>
+          )}
+
+          {tab === 'history' &&
+            (pastAppointments.length === 0 ? (
+              <p className={styles.note}>Belum ada sesi yang selesai.</p>
             ) : (
-              <div className={styles.listGroups}>
-                <div>
-                  <h3 className={styles.listHead}>Sesi Aktif ({activeAppointments.length})</h3>
-                  {activeAppointments.length > 0 ? (
-                    <div className={styles.list}>
-                      {activeAppointments.map(appt => (
-                        <AppointmentRow
-                          key={appt.id}
-                          appointment={appt}
-                          onJoin={() => router.push(`/telemedicine/${appt.id}`)}
-                        />
-                      ))}
-                    </div>
-                  ) : (
-                    <div className={styles.empty}>
-                      Belum ada sesi aktif. Timeline operasional akan muncul di sini begitu
-                      appointment dibuat atau dikonfirmasi.
-                    </div>
-                  )}
-                </div>
-
-                <div>
-                  <h3 className={`${styles.listHead} ${styles.listHeadMuted}`}>
-                    Riwayat ({pastAppointments.length})
-                  </h3>
-                  {pastAppointments.length > 0 ? (
-                    <div className={styles.list}>
-                      {pastAppointments.map(appt => (
-                        <AppointmentRow key={appt.id} appointment={appt} />
-                      ))}
-                    </div>
-                  ) : (
-                    <div className={styles.empty}>Arsip sesi belum tersedia.</div>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
+              <ul className={styles.list}>
+                {pastAppointments.map(appt => (
+                  <AppointmentRow key={appt.id} appointment={appt} />
+                ))}
+              </ul>
+            ))}
         </div>
-      </div>
-
-      {/* Powered By - Technical Credit */}
-      <div className={styles.credit}>
-        <span>
-          Infrastructure by <span className={styles.creditStrong}>LiveKit</span>
-        </span>
-        <span>
-          Powered by <span className={styles.creditStrong}>Sentra engine</span>
-        </span>
-        <span>Video SDK v2.0</span>
-        <span>RFC 4566</span>
       </div>
     </div>
   )

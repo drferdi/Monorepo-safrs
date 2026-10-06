@@ -19,7 +19,9 @@ import '@livekit/components-styles'
 import { Track } from 'livekit-client'
 
 import { useLiveKitSession } from '@/hooks/useLiveKitSession'
+import type { TranscriptLine } from '@/lib/telemedicine/epuskesmas-summary'
 import type { AppointmentWithDetails, SessionParticipantRole } from '@/types/telemedicine.types'
+import { ConsultCapture } from './ConsultCapture'
 import { ConsultationControls } from './ConsultationControls'
 import { ConsultationTimer } from './ConsultationTimer'
 import { NetworkQualityBadge } from './NetworkQualityBadge'
@@ -28,6 +30,10 @@ interface VideoRoomProps {
   appointment: AppointmentWithDetails
   participantRole: SessionParticipantRole
   onSessionComplete: (appointmentId: string) => void
+  /** Doctor only: record both microphones for the transcript while true. */
+  transcribing?: boolean
+  onUtterance?: (line: TranscriptLine) => void
+  onTranscriptError?: (message: string) => void
 }
 
 // ── TrackGrid: komponen internal agar useTracks dipanggil di level komponen ──
@@ -47,6 +53,9 @@ export function VideoRoom({
   appointment,
   participantRole,
   onSessionComplete,
+  transcribing = false,
+  onUtterance,
+  onTranscriptError,
 }: VideoRoomProps): React.JSX.Element {
   const {
     room,
@@ -194,6 +203,13 @@ export function VideoRoom({
                 <div style={{ height: '100%' }}>
                   <TrackGrid />
                   <RoomAudioRenderer />
+                  {participantRole === 'DOCTOR' && onUtterance && (
+                    <ConsultCapture
+                      capturing={transcribing}
+                      onUtterance={onUtterance}
+                      onError={message => onTranscriptError?.(message)}
+                    />
+                  )}
                 </div>
               </LayoutContextProvider>
             </div>
