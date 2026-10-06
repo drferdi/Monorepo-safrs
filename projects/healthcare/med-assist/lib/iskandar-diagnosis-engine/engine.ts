@@ -248,14 +248,6 @@ export async function runDiagnosisEngine(
   const anonymizedContext = anonymize(encounter);
   const effectiveContext = mergeRequestContext(anonymizedContext, requestContext);
 
-  if (config.enableAudit) {
-    logDiagnosisRequest({
-      session_id: sessionId,
-      input_context: JSON.stringify(effectiveContext),
-      model_version: 'IDE-V1',
-    }).catch(console.error);
-  }
-
   const anonValidation = validateAnonymization(effectiveContext);
   if (!anonValidation.valid) {
     console.error(
@@ -263,6 +255,14 @@ export async function runDiagnosisEngine(
       anonValidation.violations
     );
     throw new Error(`PII leak detected: ${anonValidation.violations.join(', ')}`);
+  }
+
+  if (config.enableAudit) {
+    logDiagnosisRequest({
+      session_id: sessionId,
+      input_context: JSON.stringify(effectiveContext),
+      model_version: 'IDE-V1',
+    }).catch(console.error);
   }
 
   // =========================================================================
