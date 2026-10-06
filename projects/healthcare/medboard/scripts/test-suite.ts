@@ -63,7 +63,7 @@ const suites: Suite[] = [
     name: 'design',
     aliases: ['redesign', 'shell', 'tokens'],
     command: process.execPath,
-    args: ['./node_modules/tsx/dist/cli.mjs', '--test', 'src/app/design-tokens.test.ts'],
+    args: ['./node_modules/tsx/dist/cli.mjs', '--test', 'src/app/design-tokens.test.ts', 'src/components/ui/ui.test.tsx'],
   },
   {
     name: 'auth-hardening',

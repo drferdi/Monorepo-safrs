@@ -2,6 +2,7 @@
 import type { Metadata } from 'next'
 import '@fontsource-variable/inter'
 import './globals.css'
+import './ui.css'
 import AppFooter from '@/components/AppFooter'
 import AppNav from '@/components/AppNav'
 import CrewAccessGate from '@/components/CrewAccessGate'
