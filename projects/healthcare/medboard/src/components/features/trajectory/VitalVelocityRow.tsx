@@ -65,7 +65,7 @@ function VelocityArrow({ direction, isAccelerating }: Pick<ParamMomentum, 'direc
     return (
       <span
         style={{
-          fontSize: 13,
+          fontSize: 14,
           fontWeight: 600,
           color: isAccelerating ? 'var(--c-critical)' : 'var(--c-asesmen)',
           lineHeight: 1,
@@ -80,7 +80,7 @@ function VelocityArrow({ direction, isAccelerating }: Pick<ParamMomentum, 'direc
     return (
       <span
         style={{
-          fontSize: 13,
+          fontSize: 14,
           fontWeight: 600,
           color: isAccelerating ? 'var(--c-ok)' : 'var(--c-ok)',
           lineHeight: 1,
@@ -92,7 +92,7 @@ function VelocityArrow({ direction, isAccelerating }: Pick<ParamMomentum, 'direc
     )
   }
   return (
-    <span style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1 }} aria-label="Stabil">
+    <span style={{ fontSize: 14, color: 'var(--text-muted)', lineHeight: 1 }} aria-label="Stabil">
       →
     </span>
   )
@@ -131,7 +131,7 @@ export function VitalVelocityRow({ param }: VitalVelocityRowProps) {
         padding: '4px 0',
       }}
     >
-      <span style={{ fontSize: 11, color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+      <span style={{ fontSize: 12, color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
         {meta.label}
       </span>
 
@@ -139,7 +139,7 @@ export function VitalVelocityRow({ param }: VitalVelocityRowProps) {
 
       <VelocityArrow direction={param.direction} isAccelerating={param.isAccelerating} />
 
-      <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: velColor, whiteSpace: 'nowrap', minWidth: 80, textAlign: 'right' }}>
+      <span style={{ fontSize: 12, fontFamily: 'var(--font-mono)', color: velColor, whiteSpace: 'nowrap', minWidth: 80, textAlign: 'right' }}>
         {velocityText}
       </span>
     </div>

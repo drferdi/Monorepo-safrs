@@ -41,7 +41,7 @@ export function NetworkQualityBadge({ quality }: NetworkQualityBadgeProps): Reac
           />
         ))}
       </div>
-      <span style={{ fontSize: 13, color: cfg.color }}>{cfg.label}</span>
+      <span style={{ fontSize: 14, color: cfg.color }}>{cfg.label}</span>
     </div>
   )
 }

@@ -59,7 +59,7 @@ const inputStyle: React.CSSProperties = {
   border: '1px solid var(--line-base)',
   background: 'transparent',
   padding: '8px 12px',
-  fontSize: 13,
+  fontSize: 14,
   color: 'var(--text-main)',
   outline: 'none',
   fontFamily: 'var(--font-sans)',
@@ -68,7 +68,7 @@ const inputStyle: React.CSSProperties = {
 const actionBtnBase: React.CSSProperties = {
   borderRadius: 4,
   padding: '8px 14px',
-  fontSize: 13,
+  fontSize: 14,
   fontFamily: 'var(--font-mono)',
   cursor: 'pointer',
   background: 'transparent',
@@ -108,10 +108,10 @@ export function AIInsightsPanelContent({
         >
           ◇
         </div>
-        <div style={{ fontSize: 13, marginBottom: 4 }}>Menunggu event CDSS pertama</div>
+        <div style={{ fontSize: 14, marginBottom: 4 }}>Menunggu event CDSS pertama</div>
         <div
           style={{
-            fontSize: 11,
+            fontSize: 12,
             fontFamily: 'var(--font-mono)',
             opacity: 0.5,
           }}
@@ -134,7 +134,7 @@ export function AIInsightsPanelContent({
         >
           <div
             style={{
-              fontSize: 11,
+              fontSize: 12,
               fontFamily: 'var(--font-mono)',
               color: 'var(--c-critical)',
               marginBottom: 8,
@@ -144,7 +144,7 @@ export function AIInsightsPanelContent({
           </div>
           <p
             style={{
-              fontSize: 13,
+              fontSize: 14,
               lineHeight: 1.6,
               color: 'var(--text-main)',
             }}
@@ -162,7 +162,7 @@ export function AIInsightsPanelContent({
           >
             <div
               style={{
-                fontSize: 11,
+                fontSize: 12,
                 fontFamily: 'var(--font-mono)',
                 color: 'var(--text-muted)',
                 marginBottom: 12,
@@ -184,7 +184,7 @@ export function AIInsightsPanelContent({
                 <li
                   key={violation.code}
                   style={{
-                    fontSize: 13,
+                    fontSize: 14,
                     lineHeight: 1.6,
                     color: 'var(--text-muted)',
                   }}
@@ -219,7 +219,7 @@ export function AIInsightsPanelContent({
         <AIDisclosureBadge />
         <span
           style={{
-            fontSize: 11,
+            fontSize: 12,
             fontFamily: 'var(--font-mono)',
             color: 'var(--text-muted)',
           }}
@@ -228,7 +228,7 @@ export function AIInsightsPanelContent({
         </span>
         <span
           style={{
-            fontSize: 11,
+            fontSize: 12,
             color: 'var(--text-muted)',
             marginLeft: 'auto',
           }}
@@ -248,7 +248,7 @@ export function AIInsightsPanelContent({
         >
           <div
             style={{
-              fontSize: 11,
+              fontSize: 12,
               fontFamily: 'var(--font-mono)',
               color: 'var(--c-critical)',
               marginBottom: 12,
@@ -270,7 +270,7 @@ export function AIInsightsPanelContent({
               <li
                 key={alert.id}
                 style={{
-                  fontSize: 13,
+                  fontSize: 14,
                   lineHeight: 1.6,
                   color: 'var(--text-main)',
                 }}
@@ -293,7 +293,7 @@ export function AIInsightsPanelContent({
         >
           <div
             style={{
-              fontSize: 11,
+              fontSize: 12,
               fontFamily: 'var(--font-mono)',
               color: 'var(--text-muted)',
               marginBottom: 12,
@@ -315,7 +315,7 @@ export function AIInsightsPanelContent({
               <li
                 key={warning.code}
                 style={{
-                  fontSize: 13,
+                  fontSize: 14,
                   lineHeight: 1.6,
                   color: 'var(--text-muted)',
                 }}
@@ -356,7 +356,7 @@ export function AIInsightsPanelContent({
                   borderRadius: 20,
                   border: '1px solid var(--line-base)',
                   padding: '3px 10px',
-                  fontSize: 11,
+                  fontSize: 12,
                   fontFamily: 'var(--font-mono)',
                   color: 'var(--text-muted)',
                 }}
@@ -368,7 +368,7 @@ export function AIInsightsPanelContent({
                   borderRadius: 20,
                   border: '1px solid var(--c-asesmen)',
                   padding: '3px 10px',
-                  fontSize: 11,
+                  fontSize: 12,
                   fontFamily: 'var(--font-mono)',
                   color: 'var(--c-asesmen)',
                 }}
@@ -377,7 +377,7 @@ export function AIInsightsPanelContent({
               </span>
               <span
                 style={{
-                  fontSize: 11,
+                  fontSize: 12,
                   fontFamily: 'var(--font-mono)',
                   color: 'var(--text-muted)',
                   opacity: 0.6,
@@ -390,7 +390,7 @@ export function AIInsightsPanelContent({
             {/* Diagnosis name + reasoning */}
             <h3
               style={{
-                fontSize: 15,
+                fontSize: 16,
                 fontWeight: 500,
                 color: 'var(--text-main)',
                 marginBottom: 8,
@@ -400,7 +400,7 @@ export function AIInsightsPanelContent({
             </h3>
             <p
               style={{
-                fontSize: 13,
+                fontSize: 14,
                 lineHeight: 1.6,
                 color: 'var(--text-muted)',
                 marginBottom: 12,
@@ -425,7 +425,7 @@ export function AIInsightsPanelContent({
                   <li
                     key={item}
                     style={{
-                      fontSize: 13,
+                      fontSize: 14,
                       lineHeight: 1.6,
                       color: 'var(--text-muted)',
                     }}
@@ -448,7 +448,7 @@ export function AIInsightsPanelContent({
               <div>
                 <div
                   style={{
-                    fontSize: 11,
+                    fontSize: 12,
                     fontFamily: 'var(--font-mono)',
                     color: 'var(--text-muted)',
                     marginBottom: 6,
@@ -470,7 +470,7 @@ export function AIInsightsPanelContent({
               <div>
                 <div
                   style={{
-                    fontSize: 11,
+                    fontSize: 12,
                     fontFamily: 'var(--font-mono)',
                     color: 'var(--text-muted)',
                     marginBottom: 6,
@@ -546,7 +546,7 @@ export function AIInsightsPanelContent({
               <p
                 style={{
                   marginTop: 12,
-                  fontSize: 13,
+                  fontSize: 14,
                   color: draftState.status === 'error' ? 'var(--c-critical)' : 'var(--text-muted)',
                 }}
               >

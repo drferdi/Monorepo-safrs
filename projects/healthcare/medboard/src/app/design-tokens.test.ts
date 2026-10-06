@@ -114,8 +114,8 @@ test('page text is sentence case, without wide tracking, heavy weights or monosp
   assert.deepEqual(offenders, [])
 })
 
-test('every literal text size on a page sits on the Glass scale 11/13/15/17/20/24/30', () => {
-  const scale = new Set([11, 13, 15, 17, 20, 24, 30])
+test('every literal text size on a page sits on the 2026 scale 12/14/16/18/20/24/30', () => {
+  const scale = new Set([12, 14, 16, 18, 20, 24, 30])
   const offScale: string[] = []
   for (const file of typePassFiles()) {
     const source = read(file)

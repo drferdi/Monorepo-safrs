@@ -40,13 +40,13 @@ export function MortalityRiskIndicator({ mortalityProxy, className }: MortalityR
     >
       {/* Icon + label */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 160 }}>
-        <span aria-hidden="true" style={{ fontSize: 15, color: tierCfg.color }}>
+        <span aria-hidden="true" style={{ fontSize: 16, color: tierCfg.color }}>
           {score >= 70 ? '🔴' : score >= 40 ? '🟠' : '🟢'}
         </span>
         <div>
           <div
             style={{
-              fontSize: 11,
+              fontSize: 12,
               fontFamily: 'var(--font-mono)',
               color: 'var(--text-muted)',
               marginBottom: 2,
@@ -54,7 +54,7 @@ export function MortalityRiskIndicator({ mortalityProxy, className }: MortalityR
           >
             Proxy Mortalitas
           </div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: tierCfg.color }}>{tierCfg.label}</div>
+          <div style={{ fontSize: 14, fontWeight: 600, color: tierCfg.color }}>{tierCfg.label}</div>
         </div>
       </div>
 
@@ -71,7 +71,7 @@ export function MortalityRiskIndicator({ mortalityProxy, className }: MortalityR
         >
           {score}
         </div>
-        <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+        <div style={{ fontSize: 12, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
           /100
         </div>
       </div>
@@ -88,7 +88,7 @@ export function MortalityRiskIndicator({ mortalityProxy, className }: MortalityR
       >
         <div
           style={{
-            fontSize: 11,
+            fontSize: 12,
             fontFamily: 'var(--font-mono)',
             color: 'var(--text-muted)',
             marginBottom: 2,
@@ -98,7 +98,7 @@ export function MortalityRiskIndicator({ mortalityProxy, className }: MortalityR
         </div>
         <div
           style={{
-            fontSize: 11,
+            fontSize: 12,
             fontWeight: 600,
             fontFamily: 'var(--font-mono)',
             color: urgencyCfg.color,

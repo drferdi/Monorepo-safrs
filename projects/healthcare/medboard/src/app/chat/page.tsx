@@ -286,7 +286,7 @@ export default function ChatPage() {
               display: 'flex',
               alignItems: 'center',
               gap: 6,
-              fontSize: 11,
+              fontSize: 12,
               fontFamily: 'var(--font-mono)',
               color: connected ? 'var(--c-ok, #4ade80)' : 'var(--text-muted)',
             }}
@@ -313,7 +313,7 @@ export default function ChatPage() {
             <span>Channel</span>
             <span
               style={{
-                fontSize: 11,
+                fontSize: 12,
                 color: 'var(--text-muted)',
                 opacity: 0.6,
               }}
@@ -332,7 +332,7 @@ export default function ChatPage() {
               style={{
                 background:
                   activeChannel.roomId === 'broadcast' ? 'rgba(212, 122, 87, 0.1)' : 'transparent',
-                fontSize: 11,
+                fontSize: 12,
               }}
             >
               #
@@ -351,7 +351,7 @@ export default function ChatPage() {
             <div
               style={{
                 padding: '12px 24px 8px',
-                fontSize: 11,
+                fontSize: 12,
                 fontFamily: 'var(--font-mono)',
                 color: 'var(--text-muted)',
                 opacity: 0.5,
@@ -407,7 +407,7 @@ export default function ChatPage() {
               style={{
                 padding: '32px 24px',
                 textAlign: 'center',
-                fontSize: 13,
+                fontSize: 14,
                 color: 'var(--text-muted)',
                 opacity: 0.5,
                 fontStyle: 'italic',
@@ -439,7 +439,7 @@ export default function ChatPage() {
             </div>
             <div
               style={{
-                fontSize: 11,
+                fontSize: 12,
                 fontFamily: 'var(--font-mono)',
                 color: 'var(--text-muted)',
                 opacity: 0.5,
@@ -473,14 +473,14 @@ export default function ChatPage() {
                 >
                   {activeChannel.type === 'broadcast' ? '#' : '→'}
                 </div>
-                <div style={{ fontSize: 13 }}>
+                <div style={{ fontSize: 14 }}>
                   {activeChannel.type === 'broadcast'
                     ? 'Broadcast channel — pesan ke seluruh crew'
                     : `Mulai percakapan dengan ${activeChannel.label}`}
                 </div>
                 <div
                   style={{
-                    fontSize: 11,
+                    fontSize: 12,
                     fontFamily: 'var(--font-mono)',
                   }}
                 >
@@ -546,7 +546,7 @@ function UnreadBadge({ count }: { count: number }) {
         borderRadius: 9,
         background: 'var(--c-asesmen)',
         color: '#fff',
-        fontSize: 11,
+        fontSize: 12,
         fontFamily: 'var(--font-mono)',
         fontWeight: 600,
         display: 'flex',

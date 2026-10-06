@@ -100,7 +100,7 @@ export function AcuteAttackRiskRadar({ risks }: AcuteAttackRiskRadarProps) {
     >
       <div
         style={{
-          fontSize: 11,
+          fontSize: 12,
           fontFamily: 'var(--font-mono)',
           color: 'var(--text-muted)',
           marginBottom: 10,

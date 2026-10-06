@@ -98,10 +98,10 @@ const Row = ({
       alignItems: 'baseline',
     }}
   >
-    <span style={{ fontSize: 13, color: L.muted, letterSpacing: '0.02em' }}>{label}</span>
+    <span style={{ fontSize: 14, color: L.muted, letterSpacing: '0.02em' }}>{label}</span>
     <span
       style={{
-        fontSize: 13,
+        fontSize: 14,
         color: accent ? L.accent : L.text,
         letterSpacing: mono ? '0.02em' : 0,
       }}
@@ -114,7 +114,7 @@ const Row = ({
 const SectionLabel = ({ L, children }: { L: LTokens; children: React.ReactNode }) => (
   <div
     style={{
-      fontSize: 11,
+      fontSize: 12,
       color: L.muted,
       marginBottom: 8,
     }}
@@ -335,7 +335,7 @@ function normalizeWhatsappHref(value: string): string {
 export default function ProfilUserPage() {
   const L = useL()
   const solidStatusBadgeStyle: React.CSSProperties = {
-    fontSize: 13,
+    fontSize: 14,
     color: '#ffffff',
     background: L.statusTone,
     border: '1px solid rgba(255,255,255,0.06)',
@@ -776,7 +776,7 @@ export default function ProfilUserPage() {
         // inline code `text`
         .replace(
           /`([^`]+)`/g,
-          '<code style="font-family:var(--font-mono);background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:3px;font-size: 13px">$1</code>'
+          '<code style="font-family:var(--font-mono);background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:3px;font-size: 14px">$1</code>'
         )
         // newline → <br>
         .replace(/\n/g, '<br>')
@@ -934,7 +934,7 @@ export default function ProfilUserPage() {
           >
             <span
               style={{
-                fontSize: 11,
+                fontSize: 12,
                 color: L.muted,
               }}
             >
@@ -942,7 +942,7 @@ export default function ProfilUserPage() {
             </span>
             <span
               style={{
-                fontSize: 13,
+                fontSize: 14,
                 color: L.text,
                 lineHeight: 1.35,
                 textAlign: 'right',
@@ -983,7 +983,7 @@ export default function ProfilUserPage() {
           <div
             style={{
               padding: '18px 16px',
-              fontSize: 13,
+              fontSize: 14,
               color: L.muted,
               letterSpacing: '0.04em',
               textAlign: 'center',
@@ -1006,7 +1006,7 @@ export default function ProfilUserPage() {
                 <span
                   key={h}
                   style={{
-                    fontSize: 11,
+                    fontSize: 12,
                     color: L.muted,
                   }}
                 >
@@ -1040,10 +1040,10 @@ export default function ProfilUserPage() {
                   onMouseEnter={(e) => (e.currentTarget.style.background = L.bgHover)}
                   onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                 >
-                  <span style={{ fontSize: 13, color: L.muted }}>{idx + 1}</span>
+                  <span style={{ fontSize: 14, color: L.muted }}>{idx + 1}</span>
                   <span
                     style={{
-                      fontSize: 13,
+                      fontSize: 14,
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                       whiteSpace: 'nowrap',
@@ -1053,7 +1053,7 @@ export default function ProfilUserPage() {
                   </span>
                   <span
                     style={{
-                      fontSize: 13,
+                      fontSize: 14,
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
                       whiteSpace: 'nowrap',
@@ -1063,7 +1063,7 @@ export default function ProfilUserPage() {
                   </span>
                   <span
                     style={{
-                      fontSize: 13,
+                      fontSize: 14,
                       color: L.muted,
                       fontVariantNumeric: 'tabular-nums',
                     }}
@@ -1093,7 +1093,7 @@ export default function ProfilUserPage() {
         <div
           style={{
             marginBottom: 16,
-            fontSize: 13,
+            fontSize: 14,
             color: L.muted,
             letterSpacing: '0.04em',
           }}
@@ -1103,13 +1103,13 @@ export default function ProfilUserPage() {
       ) : null}
 
       {!profileLoading && profileError && !isProfileEditorOpen ? (
-        <div style={{ marginBottom: 16, fontSize: 13, color: 'var(--c-critical)' }}>
+        <div style={{ marginBottom: 16, fontSize: 14, color: 'var(--c-critical)' }}>
           {profileError}
         </div>
       ) : null}
 
       {profileSaveMessage && !isProfileEditorOpen ? (
-        <div style={{ marginBottom: 16, fontSize: 13, color: L.accent }}>{profileSaveMessage}</div>
+        <div style={{ marginBottom: 16, fontSize: 14, color: L.accent }}>{profileSaveMessage}</div>
       ) : null}
 
       {/* ── SVG Frame — pojok kanan atas ── */}
@@ -1324,7 +1324,7 @@ export default function ProfilUserPage() {
                   }}
                   style={{
                     padding: '7px 0',
-                    fontSize: 13,
+                    fontSize: 14,
                     color: isActive ? L.text : L.muted,
                     letterSpacing: '0em',
                     cursor: 'pointer',
@@ -1354,7 +1354,7 @@ export default function ProfilUserPage() {
                 border: `1px solid ${L.border}`,
                 background: 'transparent',
                 color: L.text,
-                fontSize: 13,
+                fontSize: 14,
                 letterSpacing: '0.04em',
                 cursor: 'pointer',
                 flexShrink: 0,
@@ -1391,7 +1391,7 @@ export default function ProfilUserPage() {
                 justifyContent: 'center',
                 cursor: 'pointer',
                 color: '#002147',
-                fontSize: 13,
+                fontSize: 14,
                 transition: 'border-color 0.15s, color 0.15s',
                 flexShrink: 0,
               }}
@@ -1448,7 +1448,7 @@ export default function ProfilUserPage() {
                 <div>
                   <div
                     style={{
-                      fontSize: 13,
+                      fontSize: 14,
                       fontWeight: 500,
                       color: L.text,
                       marginBottom: 6,
@@ -1456,7 +1456,7 @@ export default function ProfilUserPage() {
                   >
                     SenAuto — Clinical AI
                   </div>
-                  <div style={{ fontSize: 13, color: L.muted, lineHeight: 1.5 }}>
+                  <div style={{ fontSize: 14, color: L.muted, lineHeight: 1.5 }}>
                     Ringkasan operasional pagi ini, update deployment terbaru, dan NOTAM aktif untuk
                     crew.
                   </div>
@@ -1476,7 +1476,7 @@ export default function ProfilUserPage() {
                     textDecoration: 'none',
                     marginTop: 16,
                     transition: 'opacity 0.15s',
-                    fontSize: 13,
+                    fontSize: 14,
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.opacity = '0.8'
@@ -1510,7 +1510,7 @@ export default function ProfilUserPage() {
                       <div>
                         <div
                           style={{
-                            fontSize: 11,
+                            fontSize: 12,
                             color: L.muted,
                           }}
                         >
@@ -1518,7 +1518,7 @@ export default function ProfilUserPage() {
                         </div>
                         <div
                           style={{
-                            fontSize: 13,
+                            fontSize: 14,
                             color: L.signal,
                             marginTop: 4,
                             lineHeight: 1.5,
@@ -1527,7 +1527,7 @@ export default function ProfilUserPage() {
                           Deployment, patch, dan perubahan terkini.
                         </div>
                       </div>
-                      <span style={{ fontSize: 11, color: L.muted }}>
+                      <span style={{ fontSize: 12, color: L.muted }}>
                         {visibleDevUpdates.length}
                       </span>
                     </div>
@@ -1542,7 +1542,7 @@ export default function ProfilUserPage() {
                         <div
                           style={{
                             padding: '10px 0',
-                            fontSize: 13,
+                            fontSize: 14,
                             color: L.muted,
                           }}
                         >
@@ -1594,7 +1594,7 @@ export default function ProfilUserPage() {
                                 >
                                   <span
                                     style={{
-                                      fontSize: 11,
+                                      fontSize: 12,
                                       color:
                                         item.category === 'release'
                                           ? L.accent
@@ -1605,13 +1605,13 @@ export default function ProfilUserPage() {
                                   >
                                     {getDevUpdateCategoryLabel(item.category)}
                                   </span>
-                                  <span style={{ fontSize: 11, color: L.muted }}>
+                                  <span style={{ fontSize: 12, color: L.muted }}>
                                     {formatBoardDateTime(item.createdAt)}
                                   </span>
                                 </div>
                                 <div
                                   style={{
-                                    fontSize: 13,
+                                    fontSize: 14,
                                     fontWeight: 500,
                                     color: L.text,
                                     lineHeight: 1.4,
@@ -1621,7 +1621,7 @@ export default function ProfilUserPage() {
                                 </div>
                                 <div
                                   style={{
-                                    fontSize: 13,
+                                    fontSize: 14,
                                     lineHeight: 1.55,
                                     color: '#C8BDAF',
                                     display: isExpanded ? 'block' : '-webkit-box',
@@ -1641,7 +1641,7 @@ export default function ProfilUserPage() {
                                       border: 'none',
                                       background: 'transparent',
                                       color: L.signal,
-                                      fontSize: 13,
+                                      fontSize: 14,
                                       letterSpacing: '0.04em',
                                       textAlign: 'left',
                                       cursor: 'pointer',
@@ -1658,7 +1658,7 @@ export default function ProfilUserPage() {
                         <div
                           style={{
                             padding: '10px 0',
-                            fontSize: 13,
+                            fontSize: 14,
                             color: L.muted,
                             lineHeight: 1.6,
                           }}
@@ -1688,7 +1688,7 @@ export default function ProfilUserPage() {
                       <div>
                         <div
                           style={{
-                            fontSize: 11,
+                            fontSize: 12,
                             color: L.muted,
                           }}
                         >
@@ -1696,7 +1696,7 @@ export default function ProfilUserPage() {
                         </div>
                         <div
                           style={{
-                            fontSize: 13,
+                            fontSize: 14,
                             color: L.signal,
                             marginTop: 4,
                             lineHeight: 1.5,
@@ -1705,7 +1705,7 @@ export default function ProfilUserPage() {
                           Pengumuman operasional penting untuk seluruh crew.
                         </div>
                       </div>
-                      <span style={{ fontSize: 11, color: L.muted }}>{visibleNotams.length}</span>
+                      <span style={{ fontSize: 12, color: L.muted }}>{visibleNotams.length}</span>
                     </div>
                     <div
                       style={{
@@ -1718,7 +1718,7 @@ export default function ProfilUserPage() {
                         <div
                           style={{
                             padding: '10px 0',
-                            fontSize: 13,
+                            fontSize: 14,
                             color: L.muted,
                           }}
                         >
@@ -1770,7 +1770,7 @@ export default function ProfilUserPage() {
                                 >
                                   <span
                                     style={{
-                                      fontSize: 11,
+                                      fontSize: 12,
                                       color:
                                         item.priority === 'urgent'
                                           ? '#F28B82'
@@ -1781,13 +1781,13 @@ export default function ProfilUserPage() {
                                   >
                                     {getNotamPriorityLabel(item.priority)}
                                   </span>
-                                  <span style={{ fontSize: 11, color: L.muted }}>
+                                  <span style={{ fontSize: 12, color: L.muted }}>
                                     {formatBoardDateTime(item.createdAt)}
                                   </span>
                                 </div>
                                 <div
                                   style={{
-                                    fontSize: 13,
+                                    fontSize: 14,
                                     fontWeight: 500,
                                     color: L.text,
                                     lineHeight: 1.4,
@@ -1797,7 +1797,7 @@ export default function ProfilUserPage() {
                                 </div>
                                 <div
                                   style={{
-                                    fontSize: 13,
+                                    fontSize: 14,
                                     lineHeight: 1.55,
                                     color: '#C8BDAF',
                                     display: isExpanded ? 'block' : '-webkit-box',
@@ -1817,7 +1817,7 @@ export default function ProfilUserPage() {
                                       border: 'none',
                                       background: 'transparent',
                                       color: L.signal,
-                                      fontSize: 13,
+                                      fontSize: 14,
                                       letterSpacing: '0.04em',
                                       textAlign: 'left',
                                       cursor: 'pointer',
@@ -1834,7 +1834,7 @@ export default function ProfilUserPage() {
                         <div
                           style={{
                             padding: '10px 0',
-                            fontSize: 13,
+                            fontSize: 14,
                             color: L.muted,
                             lineHeight: 1.6,
                           }}
@@ -1850,7 +1850,7 @@ export default function ProfilUserPage() {
                     style={{
                       marginTop: 10,
                       paddingLeft: 16,
-                      fontSize: 13,
+                      fontSize: 14,
                       color: '#C8BDAF',
                     }}
                   >
@@ -1892,7 +1892,7 @@ export default function ProfilUserPage() {
                       display: 'inline-block',
                     }}
                   />
-                  <span style={{ fontSize: 13, fontWeight: 500, color: L.text }}>
+                  <span style={{ fontSize: 14, fontWeight: 500, color: L.text }}>
                     Audrey — Clinical Consultation AI · Sentra Healthcare Solutions
                   </span>
                 </div>
@@ -1908,7 +1908,7 @@ export default function ProfilUserPage() {
                       border: `1px solid ${L.border}`,
                       borderRadius: 3,
                       padding: '3px 10px',
-                      fontSize: 13,
+                      fontSize: 14,
                       color: L.muted,
                       cursor: 'pointer',
                     }}
@@ -1932,7 +1932,7 @@ export default function ProfilUserPage() {
               >
                 {chatMessages.length === 0 && !chatLoading && (
                   <div style={{ margin: 'auto', textAlign: 'center' }}>
-                    <div style={{ fontSize: 13, color: L.muted, marginBottom: 16 }}>
+                    <div style={{ fontSize: 14, color: L.muted, marginBottom: 16 }}>
                       Tanyakan apa saja — klinis, farmakologi, diagnosis banding
                     </div>
                     <div
@@ -1959,7 +1959,7 @@ export default function ProfilUserPage() {
                             border: `1px solid ${L.border}`,
                             borderRadius: 3,
                             padding: '5px 12px',
-                            fontSize: 13,
+                            fontSize: 14,
                             color: L.muted,
                             cursor: 'pointer',
                             letterSpacing: '0.04em',
@@ -2022,7 +2022,7 @@ export default function ProfilUserPage() {
                           border: '1px solid rgba(255,255,255,0.92)',
                           borderRadius: 4,
                           padding: '8px 12px',
-                          fontSize: 13,
+                          fontSize: 14,
                           color: '#101012',
                           whiteSpace: 'pre-wrap',
                           boxShadow: '0 10px 24px rgba(0,0,0,0.18)',
@@ -2038,7 +2038,7 @@ export default function ProfilUserPage() {
                           border: `1px solid ${L.border}`,
                           borderRadius: 4,
                           padding: '8px 12px',
-                          fontSize: 13,
+                          fontSize: 14,
                           color: L.text,
                         }}
                         dangerouslySetInnerHTML={{
@@ -2109,7 +2109,7 @@ export default function ProfilUserPage() {
                 {chatError && (
                   <div
                     style={{
-                      fontSize: 13,
+                      fontSize: 14,
                       color: 'var(--c-critical)',
                       padding: '4px 0',
                     }}
@@ -2148,7 +2148,7 @@ export default function ProfilUserPage() {
                     border: `1px solid ${L.border}`,
                     background: L.bgPanel,
                     color: L.text,
-                    fontSize: 13,
+                    fontSize: 14,
                     padding: '0 12px',
                     outline: 'none',
                   }}
@@ -2167,7 +2167,7 @@ export default function ProfilUserPage() {
                     background:
                       chatLoading || !chatInput.trim() ? 'transparent' : 'rgba(0, 33, 71, 0.1)',
                     color: chatLoading || !chatInput.trim() ? L.muted : L.accent,
-                    fontSize: 13,
+                    fontSize: 14,
                     cursor: chatLoading || !chatInput.trim() ? 'not-allowed' : 'pointer',
                     transition: 'background 0.15s, color 0.15s',
                   }}
@@ -2220,11 +2220,11 @@ export default function ProfilUserPage() {
           {activeTab === 2 && (
             <div style={{ padding: '16px 24px', minHeight: 132 }}>
               {newsLoading ? (
-                <div style={{ fontSize: 13, color: L.muted, padding: '20px 0' }}>
+                <div style={{ fontSize: 14, color: L.muted, padding: '20px 0' }}>
                   Memuat berita...
                 </div>
               ) : news.length === 0 ? (
-                <div style={{ fontSize: 13, color: L.muted, padding: '20px 0' }}>
+                <div style={{ fontSize: 14, color: L.muted, padding: '20px 0' }}>
                   Tidak ada berita tersedia.
                 </div>
               ) : (
@@ -2261,10 +2261,10 @@ export default function ProfilUserPage() {
                           gap: 16,
                         }}
                       >
-                        <div style={{ fontSize: 13, color: L.text }}>{item.title}</div>
+                        <div style={{ fontSize: 14, color: L.text }}>{item.title}</div>
                         <span
                           style={{
-                            fontSize: 13,
+                            fontSize: 14,
                             color: L.muted,
                             whiteSpace: 'nowrap',
                             flexShrink: 0,
@@ -2291,13 +2291,13 @@ export default function ProfilUserPage() {
                         }}
                       >
                         {item.description && (
-                          <div style={{ fontSize: 13, color: L.muted, flex: 1 }}>
+                          <div style={{ fontSize: 14, color: L.muted, flex: 1 }}>
                             {item.description}
                           </div>
                         )}
                         <span
                           style={{
-                            fontSize: 13,
+                            fontSize: 14,
                             color: L.muted,
                             border: `1px solid ${L.border}`,
                             borderRadius: 2,
@@ -2338,7 +2338,7 @@ export default function ProfilUserPage() {
                 <div>
                   <div
                     style={{
-                      fontSize: 13,
+                      fontSize: 14,
                       fontWeight: 500,
                       color: L.text,
                       marginBottom: 6,
@@ -2346,7 +2346,7 @@ export default function ProfilUserPage() {
                   >
                     Sentra Assist
                   </div>
-                  <div style={{ fontSize: 13, color: L.muted, lineHeight: 1.5 }}>
+                  <div style={{ fontSize: 14, color: L.muted, lineHeight: 1.5 }}>
                     Ekstensi Chrome yang menghubungkan sistem RME (ePuskesmas) dengan Sentra
                     Intelligence Dashboard secara otomatis.
                   </div>
@@ -2367,7 +2367,7 @@ export default function ProfilUserPage() {
                     textDecoration: 'none',
                     marginTop: 16,
                     transition: 'opacity 0.15s',
-                    fontSize: 13,
+                    fontSize: 14,
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.opacity = '0.8'
@@ -2381,10 +2381,10 @@ export default function ProfilUserPage() {
               </div>
               <div>
                 <PanelSection L={L}>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: L.text, marginBottom: 4 }}>
+                  <div style={{ fontSize: 14, fontWeight: 500, color: L.text, marginBottom: 4 }}>
                     Apa itu Sentra Assist?
                   </div>
-                  <div style={{ fontSize: 13, color: L.muted, lineHeight: 1.6 }}>
+                  <div style={{ fontSize: 14, color: L.muted, lineHeight: 1.6 }}>
                     Sentra Assist adalah ekstensi Chrome yang menjadi bridge otomatis antara sistem
                     RME (ePuskesmas) dengan Sentra Intelligence Dashboard. Memungkinkan transfer
                     data anamnesis, diagnosis, dan resep langsung ke formulir RME — tanpa input
@@ -2392,7 +2392,7 @@ export default function ProfilUserPage() {
                   </div>
                 </PanelSection>
                 <PanelSection L={L}>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: L.text, marginBottom: 12 }}>
+                  <div style={{ fontSize: 14, fontWeight: 500, color: L.text, marginBottom: 12 }}>
                     Cara Kerja
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
@@ -2439,7 +2439,7 @@ export default function ProfilUserPage() {
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              fontSize: 11,
+                              fontSize: 12,
                               fontWeight: 600,
                               color: L.statusTone,
                               flexShrink: 0,
@@ -2476,7 +2476,7 @@ export default function ProfilUserPage() {
                         <div style={{ paddingBottom: i < arr.length - 1 ? 12 : 0 }}>
                           <div
                             style={{
-                              fontSize: 11,
+                              fontSize: 12,
                               fontWeight: 600,
                               color: L.text,
                               lineHeight: 1.4,
@@ -2485,7 +2485,7 @@ export default function ProfilUserPage() {
                             {item.label}
                           </div>
                           <div
-                            style={{ fontSize: 11, color: L.muted, lineHeight: 1.5, marginTop: 2 }}
+                            style={{ fontSize: 12, color: L.muted, lineHeight: 1.5, marginTop: 2 }}
                           >
                             {item.desc}
                           </div>
@@ -2495,7 +2495,7 @@ export default function ProfilUserPage() {
                   </div>
                 </PanelSection>
                 <PanelSection L={L} last>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: L.text, marginBottom: 4 }}>
+                  <div style={{ fontSize: 14, fontWeight: 500, color: L.text, marginBottom: 4 }}>
                     Status Koneksi
                   </div>
                   <div
@@ -2503,7 +2503,7 @@ export default function ProfilUserPage() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: 8,
-                      fontSize: 11,
+                      fontSize: 12,
                       color: L.muted,
                     }}
                   >
@@ -2546,7 +2546,7 @@ export default function ProfilUserPage() {
                 <div>
                   <div
                     style={{
-                      fontSize: 13,
+                      fontSize: 14,
                       fontWeight: 500,
                       color: L.text,
                       marginBottom: 6,
@@ -2554,7 +2554,7 @@ export default function ProfilUserPage() {
                   >
                     Critical Mind Algorithm
                   </div>
-                  <div style={{ fontSize: 13, color: L.muted, lineHeight: 1.5 }}>
+                  <div style={{ fontSize: 14, color: L.muted, lineHeight: 1.5 }}>
                     Iskandar Engine — kerangka reasoning klinis yang mendasari seluruh proses
                     diagnosis AI di Sentra.
                   </div>
@@ -2574,7 +2574,7 @@ export default function ProfilUserPage() {
                     textDecoration: 'none',
                     marginTop: 16,
                     transition: 'opacity 0.15s',
-                    fontSize: 13,
+                    fontSize: 14,
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.opacity = '0.8'
@@ -2588,19 +2588,19 @@ export default function ProfilUserPage() {
               </div>
               <div>
                 <PanelSection L={L}>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: L.text, marginBottom: 4 }}>
+                  <div style={{ fontSize: 14, fontWeight: 500, color: L.text, marginBottom: 4 }}>
                     Iskandar Diagnosis Engine V2
                   </div>
-                  <div style={{ fontSize: 13, color: L.muted, lineHeight: 1.6 }}>
+                  <div style={{ fontSize: 14, color: L.muted, lineHeight: 1.6 }}>
                     LLM-first architecture dengan knowledge base grounding — 172 penyakit KKI,
                     hybrid retrieval (BM25 + semantic embedding), dan multi-layer validation.
                   </div>
                 </PanelSection>
                 <PanelSection L={L}>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: L.text, marginBottom: 4 }}>
+                  <div style={{ fontSize: 14, fontWeight: 500, color: L.text, marginBottom: 4 }}>
                     NEWS2 Early Warning System
                   </div>
-                  <div style={{ fontSize: 13, color: L.muted, lineHeight: 1.6 }}>
+                  <div style={{ fontSize: 14, color: L.muted, lineHeight: 1.6 }}>
                     Graduated vital signs scoring (5 parameter, skor 0-3) untuk deteksi dini
                     deteriorasi fisiologis. Terintegrasi dengan 7 pola penyakit spesifik: DHF,
                     sepsis (SIRS/qSOFA), gagal napas, ACS, syok hemoragik, preeklampsia, dan malaria
@@ -2608,10 +2608,10 @@ export default function ProfilUserPage() {
                   </div>
                 </PanelSection>
                 <PanelSection L={L}>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: L.text, marginBottom: 4 }}>
+                  <div style={{ fontSize: 14, fontWeight: 500, color: L.text, marginBottom: 4 }}>
                     Safety Layers
                   </div>
-                  <div style={{ fontSize: 13, color: L.muted, lineHeight: 1.6 }}>
+                  <div style={{ fontSize: 14, color: L.muted, lineHeight: 1.6 }}>
                     5 lapis keamanan klinis: vital signs red flags (hardcoded), NEWS2 composite
                     scoring, disease-specific early warning, KB grounding validation (ICD-10 +
                     sex/age/pregnancy plausibility + drug-allergy cross-reference), dan hybrid
@@ -2619,10 +2619,10 @@ export default function ProfilUserPage() {
                   </div>
                 </PanelSection>
                 <PanelSection L={L} last>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: L.text, marginBottom: 4 }}>
+                  <div style={{ fontSize: 14, fontWeight: 500, color: L.text, marginBottom: 4 }}>
                     Retrieval Pipeline
                   </div>
-                  <div style={{ fontSize: 13, color: L.muted, lineHeight: 1.6 }}>
+                  <div style={{ fontSize: 14, color: L.muted, lineHeight: 1.6 }}>
                     BM25 keyword scoring → lexical disease ranking lokal → Reciprocal Rank Fusion
                     merge → DeepSeek Reasoner (primary) dengan circuit breaker. Alias expansion 350+
                     sinonim bahasa Indonesia awam → klinis.
@@ -2700,7 +2700,7 @@ export default function ProfilUserPage() {
                     <div style={{ minWidth: 0 }}>
                       <div
                         style={{
-                          fontSize: 13,
+                          fontSize: 14,
                           color: L.muted,
                           marginBottom: 6,
                         }}
@@ -2720,7 +2720,7 @@ export default function ProfilUserPage() {
                       </div>
                       <div
                         style={{
-                          fontSize: 13,
+                          fontSize: 14,
                           color: L.muted,
                           marginBottom: 10,
                         }}
@@ -2732,7 +2732,7 @@ export default function ProfilUserPage() {
                           style={{
                             ...solidStatusBadgeStyle,
                             padding: '4px 10px',
-                            fontSize: 11,
+                            fontSize: 12,
                           }}
                         >
                           {roleLabel}
@@ -2743,7 +2743,7 @@ export default function ProfilUserPage() {
                             style={{
                               ...solidStatusBadgeStyle,
                               padding: '4px 10px',
-                              fontSize: 11,
+                              fontSize: 12,
                             }}
                           >
                             {g}
@@ -2801,7 +2801,7 @@ export default function ProfilUserPage() {
                     >
                       <div
                         style={{
-                          fontSize: 11,
+                          fontSize: 12,
                           color: L.muted,
                         }}
                       >
@@ -2809,7 +2809,7 @@ export default function ProfilUserPage() {
                       </div>
                       <div
                         style={{
-                          fontSize: 13,
+                          fontSize: 14,
                           color: L.text,
                           lineHeight: 1.45,
                         }}
@@ -2838,7 +2838,7 @@ export default function ProfilUserPage() {
                   >
                     <div
                       style={{
-                        fontSize: 11,
+                        fontSize: 12,
                         color: L.muted,
                       }}
                     >
@@ -2934,7 +2934,7 @@ export default function ProfilUserPage() {
           <div>
             <div
               style={{
-                fontSize: 13,
+                fontSize: 14,
                 color: L.muted,
                 marginBottom: 12,
               }}
@@ -2973,7 +2973,7 @@ export default function ProfilUserPage() {
                     <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                       <span
                         style={{
-                          fontSize: 13,
+                          fontSize: 14,
                           color: L.text,
                           transition: 'color 0.2s',
                         }}
@@ -2991,7 +2991,7 @@ export default function ProfilUserPage() {
                     >
                       <div
                         style={{
-                          fontSize: 13,
+                          fontSize: 14,
                           color: L.muted,
                           letterSpacing: '0.02em',
                         }}
@@ -3000,7 +3000,7 @@ export default function ProfilUserPage() {
                       </div>
                       <span
                         style={{
-                          fontSize: 13,
+                          fontSize: 14,
                           color: L.muted,
                           padding: '1px 5px',
                           borderRadius: 2,
@@ -3090,7 +3090,7 @@ export default function ProfilUserPage() {
                             >
                               <span
                                 style={{
-                                  fontSize: 13,
+                                  fontSize: 14,
                                   color: L.text,
                                   lineHeight: 1.35,
                                 }}
@@ -3100,7 +3100,7 @@ export default function ProfilUserPage() {
                               {isCurrentUser ? (
                                 <span
                                   style={{
-                                    fontSize: 11,
+                                    fontSize: 12,
                                     color: L.accent,
                                   }}
                                 >
@@ -3110,7 +3110,7 @@ export default function ProfilUserPage() {
                             </div>
                             <span
                               style={{
-                                fontSize: 13,
+                                fontSize: 14,
                                 color: L.muted,
                                 lineHeight: 1.4,
                               }}
@@ -3121,7 +3121,7 @@ export default function ProfilUserPage() {
                           </div>
                           <span
                             style={{
-                              fontSize: 11,
+                              fontSize: 12,
                               color: '#4CAF50',
                               display: 'inline-flex',
                               alignItems: 'center',
@@ -3149,7 +3149,7 @@ export default function ProfilUserPage() {
                 ) : (
                   <div
                     style={{
-                      fontSize: 13,
+                      fontSize: 14,
                       color: L.muted,
                       lineHeight: 1.5,
                     }}
@@ -3188,7 +3188,7 @@ export default function ProfilUserPage() {
               </div>
               <div
                 style={{
-                  fontSize: 13,
+                  fontSize: 14,
                   color: L.muted,
                   letterSpacing: '0.02em',
                 }}
@@ -3245,7 +3245,7 @@ export default function ProfilUserPage() {
                 />
                 <span
                   style={{
-                    fontSize: 13,
+                    fontSize: 14,
                     color: L.muted,
                     letterSpacing: '0.04em',
                   }}
@@ -3315,7 +3315,7 @@ export default function ProfilUserPage() {
             >
               <div>
                 <div style={{ fontSize: 20, color: L.text, marginBottom: 6 }}>Edit Profil</div>
-                <div style={{ fontSize: 13, color: L.muted }}>
+                <div style={{ fontSize: 14, color: L.muted }}>
                   Lengkapi data personal dan kredensial yang akan tampil di halaman profile. Avatar
                   dipilih otomatis sesuai profesi dan jenis kelamin.
                 </div>
@@ -3336,7 +3336,7 @@ export default function ProfilUserPage() {
                   border: `1px solid ${L.border}`,
                   background: 'transparent',
                   color: L.text,
-                  fontSize: 13,
+                  fontSize: 14,
                   cursor: 'pointer',
                 }}
               >
@@ -3352,7 +3352,7 @@ export default function ProfilUserPage() {
               }}
             >
               <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 13, color: L.muted }}>Nama lengkap</span>
+                <span style={{ fontSize: 14, color: L.muted }}>Nama lengkap</span>
                 <input
                   value={profileDraft.fullName}
                   onChange={(event) =>
@@ -3367,7 +3367,7 @@ export default function ProfilUserPage() {
                     border: `1px solid ${L.border}`,
                     background: L.bg,
                     color: L.text,
-                    fontSize: 13,
+                    fontSize: 14,
                     padding: '0 12px',
                     outline: 'none',
                   }}
@@ -3378,7 +3378,7 @@ export default function ProfilUserPage() {
                 className="gelar-section"
                 style={{ display: 'grid', gap: 6, gridColumn: '1 / -1' }}
               >
-                <span style={{ fontSize: 13, color: L.muted }}>Gelar</span>
+                <span style={{ fontSize: 14, color: L.muted }}>Gelar</span>
                 <div
                   style={{
                     display: 'grid',
@@ -3400,7 +3400,7 @@ export default function ProfilUserPage() {
                       border: `1px solid ${L.border}`,
                       background: L.bg,
                       color: L.text,
-                      fontSize: 13,
+                      fontSize: 14,
                       padding: '0 12px',
                       outline: 'none',
                     }}
@@ -3430,7 +3430,7 @@ export default function ProfilUserPage() {
                             border: `1px solid ${L.statusTone}`,
                             background: L.statusToneSoft,
                             color: L.text,
-                            fontSize: 13,
+                            fontSize: 14,
                             boxShadow:
                               '3px 3px 10px rgba(0,0,0,0.12), inset 1px 1px 0 rgba(255,255,255,0.03)',
                             cursor: 'pointer',
@@ -3440,17 +3440,17 @@ export default function ProfilUserPage() {
                         </button>
                       ))
                     ) : (
-                      <span style={{ fontSize: 13, color: L.muted }}>Belum ada gelar dipilih.</span>
+                      <span style={{ fontSize: 14, color: L.muted }}>Belum ada gelar dipilih.</span>
                     )}
                   </div>
-                  <div style={{ fontSize: 13, color: L.muted }}>
+                  <div style={{ fontSize: 14, color: L.muted }}>
                     Pilih sampai {CREW_PROFILE_MAX_DEGREES} gelar.
                   </div>
                 </div>
               </div>
 
               <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 13, color: L.muted }}>Tempat lahir</span>
+                <span style={{ fontSize: 14, color: L.muted }}>Tempat lahir</span>
                 <input
                   value={profileDraft.birthPlace}
                   onChange={(event) =>
@@ -3465,7 +3465,7 @@ export default function ProfilUserPage() {
                     border: `1px solid ${L.border}`,
                     background: L.bg,
                     color: L.text,
-                    fontSize: 13,
+                    fontSize: 14,
                     padding: '0 12px',
                     outline: 'none',
                   }}
@@ -3473,7 +3473,7 @@ export default function ProfilUserPage() {
               </label>
 
               <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 13, color: L.muted }}>Tanggal lahir</span>
+                <span style={{ fontSize: 14, color: L.muted }}>Tanggal lahir</span>
                 <input
                   type="date"
                   value={profileDraft.birthDate}
@@ -3489,7 +3489,7 @@ export default function ProfilUserPage() {
                     border: `1px solid ${L.border}`,
                     background: L.bg,
                     color: L.text,
-                    fontSize: 13,
+                    fontSize: 14,
                     padding: '0 12px',
                     outline: 'none',
                   }}
@@ -3497,7 +3497,7 @@ export default function ProfilUserPage() {
               </label>
 
               <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 13, color: L.muted }}>Jenis kelamin</span>
+                <span style={{ fontSize: 14, color: L.muted }}>Jenis kelamin</span>
                 <select
                   value={profileDraft.gender}
                   onChange={(event) =>
@@ -3512,7 +3512,7 @@ export default function ProfilUserPage() {
                     border: `1px solid ${L.border}`,
                     background: L.bg,
                     color: L.text,
-                    fontSize: 13,
+                    fontSize: 14,
                     padding: '0 12px',
                     outline: 'none',
                   }}
@@ -3527,7 +3527,7 @@ export default function ProfilUserPage() {
               </label>
 
               <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 13, color: L.muted }}>Golongan darah</span>
+                <span style={{ fontSize: 14, color: L.muted }}>Golongan darah</span>
                 <select
                   value={profileDraft.bloodType}
                   onChange={(event) =>
@@ -3542,7 +3542,7 @@ export default function ProfilUserPage() {
                     border: `1px solid ${L.border}`,
                     background: L.bg,
                     color: L.text,
-                    fontSize: 13,
+                    fontSize: 14,
                     padding: '0 12px',
                     outline: 'none',
                   }}
@@ -3557,7 +3557,7 @@ export default function ProfilUserPage() {
               </label>
 
               <label style={{ display: 'grid', gap: 6, gridColumn: '1 / -1' }}>
-                <span style={{ fontSize: 13, color: L.muted }}>Domisili</span>
+                <span style={{ fontSize: 14, color: L.muted }}>Domisili</span>
                 <input
                   value={profileDraft.domicile}
                   onChange={(event) =>
@@ -3572,7 +3572,7 @@ export default function ProfilUserPage() {
                     border: `1px solid ${L.border}`,
                     background: L.bg,
                     color: L.text,
-                    fontSize: 13,
+                    fontSize: 14,
                     padding: '0 12px',
                     outline: 'none',
                   }}
@@ -3580,7 +3580,7 @@ export default function ProfilUserPage() {
               </label>
 
               <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 13, color: L.muted }}>Institusi utama</span>
+                <span style={{ fontSize: 14, color: L.muted }}>Institusi utama</span>
                 <input
                   value={sessionUser?.institution || 'Belum diisi'}
                   disabled
@@ -3590,7 +3590,7 @@ export default function ProfilUserPage() {
                     border: `1px solid ${L.border}`,
                     background: L.bgHover,
                     color: L.text,
-                    fontSize: 13,
+                    fontSize: 14,
                     padding: '0 12px',
                     outline: 'none',
                     opacity: 0.82,
@@ -3599,12 +3599,12 @@ export default function ProfilUserPage() {
               </label>
 
               <div style={{ display: 'grid', gap: 14, gridColumn: '1 / -1' }}>
-                <span style={{ fontSize: 13, color: L.muted }}>Role Sentra dan posisi</span>
+                <span style={{ fontSize: 14, color: L.muted }}>Role Sentra dan posisi</span>
                 <div style={{ display: 'grid', gap: 10 }}>
                   <div style={{ display: 'grid', gap: 8 }}>
                     <span
                       style={{
-                        fontSize: 13,
+                        fontSize: 14,
                         color: L.muted,
                       }}
                     >
@@ -3624,7 +3624,7 @@ export default function ProfilUserPage() {
                         border: `1px solid ${L.border}`,
                         background: L.bg,
                         color: L.text,
-                        fontSize: 13,
+                        fontSize: 14,
                         padding: '0 12px',
                         outline: 'none',
                       }}
@@ -3657,7 +3657,7 @@ export default function ProfilUserPage() {
                               border: `1px solid ${L.statusTone}`,
                               background: L.statusToneSoft,
                               color: L.text,
-                              fontSize: 13,
+                              fontSize: 14,
                               boxShadow:
                                 '3px 3px 10px rgba(0,0,0,0.12), inset 1px 1px 0 rgba(255,255,255,0.03)',
                               cursor: 'pointer',
@@ -3668,7 +3668,7 @@ export default function ProfilUserPage() {
                           </button>
                         ))
                       ) : (
-                        <span style={{ fontSize: 13, color: L.muted }}>
+                        <span style={{ fontSize: 14, color: L.muted }}>
                           Belum ada role sentra dipilih.
                         </span>
                       )}
@@ -3678,7 +3678,7 @@ export default function ProfilUserPage() {
                   <div style={{ display: 'grid', gap: 8 }}>
                     <span
                       style={{
-                        fontSize: 13,
+                        fontSize: 14,
                         color: L.muted,
                       }}
                     >
@@ -3698,7 +3698,7 @@ export default function ProfilUserPage() {
                         border: `1px solid ${L.border}`,
                         background: L.bg,
                         color: L.text,
-                        fontSize: 13,
+                        fontSize: 14,
                         padding: '0 12px',
                         outline: 'none',
                       }}
@@ -3731,7 +3731,7 @@ export default function ProfilUserPage() {
                               border: `1px solid ${L.statusTone}`,
                               background: L.statusToneSoft,
                               color: L.text,
-                              fontSize: 13,
+                              fontSize: 14,
                               boxShadow:
                                 '3px 3px 10px rgba(0,0,0,0.12), inset 1px 1px 0 rgba(255,255,255,0.03)',
                               cursor: 'pointer',
@@ -3742,21 +3742,21 @@ export default function ProfilUserPage() {
                           </button>
                         ))
                       ) : (
-                        <span style={{ fontSize: 13, color: L.muted }}>
+                        <span style={{ fontSize: 14, color: L.muted }}>
                           Belum ada posisi dipilih.
                         </span>
                       )}
                     </div>
                   </div>
                 </div>
-                <div style={{ fontSize: 13, color: L.muted }}>
+                <div style={{ fontSize: 14, color: L.muted }}>
                   Pilih sampai {CREW_PROFILE_MAX_POSITIONS} item gabungan untuk role sentra dan
                   posisi.
                 </div>
               </div>
 
               <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 13, color: L.muted }}>WhatsApp aktif</span>
+                <span style={{ fontSize: 14, color: L.muted }}>WhatsApp aktif</span>
                 <input
                   value={profileDraft.whatsappNumber}
                   onChange={(event) =>
@@ -3772,7 +3772,7 @@ export default function ProfilUserPage() {
                     border: `1px solid ${L.border}`,
                     background: L.bg,
                     color: L.text,
-                    fontSize: 13,
+                    fontSize: 14,
                     padding: '0 12px',
                     outline: 'none',
                   }}
@@ -3780,7 +3780,7 @@ export default function ProfilUserPage() {
               </label>
 
               <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 13, color: L.muted }}>GitHub</span>
+                <span style={{ fontSize: 14, color: L.muted }}>GitHub</span>
                 <input
                   value={profileDraft.githubUrl}
                   onChange={(event) =>
@@ -3796,7 +3796,7 @@ export default function ProfilUserPage() {
                     border: `1px solid ${L.border}`,
                     background: L.bg,
                     color: L.text,
-                    fontSize: 13,
+                    fontSize: 14,
                     padding: '0 12px',
                     outline: 'none',
                   }}
@@ -3804,7 +3804,7 @@ export default function ProfilUserPage() {
               </label>
 
               <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 13, color: L.muted }}>LinkedIn</span>
+                <span style={{ fontSize: 14, color: L.muted }}>LinkedIn</span>
                 <input
                   value={profileDraft.linkedinUrl}
                   onChange={(event) =>
@@ -3820,7 +3820,7 @@ export default function ProfilUserPage() {
                     border: `1px solid ${L.border}`,
                     background: L.bg,
                     color: L.text,
-                    fontSize: 13,
+                    fontSize: 14,
                     padding: '0 12px',
                     outline: 'none',
                   }}
@@ -3828,7 +3828,7 @@ export default function ProfilUserPage() {
               </label>
 
               <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 13, color: L.muted }}>Gravatar</span>
+                <span style={{ fontSize: 14, color: L.muted }}>Gravatar</span>
                 <input
                   value={profileDraft.gravatarUrl}
                   onChange={(event) =>
@@ -3844,7 +3844,7 @@ export default function ProfilUserPage() {
                     border: `1px solid ${L.border}`,
                     background: L.bg,
                     color: L.text,
-                    fontSize: 13,
+                    fontSize: 14,
                     padding: '0 12px',
                     outline: 'none',
                   }}
@@ -3852,7 +3852,7 @@ export default function ProfilUserPage() {
               </label>
 
               <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 13, color: L.muted }}>Blog</span>
+                <span style={{ fontSize: 14, color: L.muted }}>Blog</span>
                 <input
                   value={profileDraft.blogUrl}
                   onChange={(event) =>
@@ -3868,7 +3868,7 @@ export default function ProfilUserPage() {
                     border: `1px solid ${L.border}`,
                     background: L.bg,
                     color: L.text,
-                    fontSize: 13,
+                    fontSize: 14,
                     padding: '0 12px',
                     outline: 'none',
                   }}
@@ -3876,7 +3876,7 @@ export default function ProfilUserPage() {
               </label>
 
               <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 13, color: L.muted }}>Instagram</span>
+                <span style={{ fontSize: 14, color: L.muted }}>Instagram</span>
                 <input
                   value={profileDraft.instagramUrl}
                   onChange={(event) =>
@@ -3892,7 +3892,7 @@ export default function ProfilUserPage() {
                     border: `1px solid ${L.border}`,
                     background: L.bg,
                     color: L.text,
-                    fontSize: 13,
+                    fontSize: 14,
                     padding: '0 12px',
                     outline: 'none',
                   }}
@@ -3900,7 +3900,7 @@ export default function ProfilUserPage() {
               </label>
 
               <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 13, color: L.muted }}>TikTok</span>
+                <span style={{ fontSize: 14, color: L.muted }}>TikTok</span>
                 <input
                   value={profileDraft.tiktokUrl}
                   onChange={(event) =>
@@ -3916,7 +3916,7 @@ export default function ProfilUserPage() {
                     border: `1px solid ${L.border}`,
                     background: L.bg,
                     color: L.text,
-                    fontSize: 13,
+                    fontSize: 14,
                     padding: '0 12px',
                     outline: 'none',
                   }}
@@ -3924,7 +3924,7 @@ export default function ProfilUserPage() {
               </label>
 
               <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 13, color: L.muted }}>YouTube</span>
+                <span style={{ fontSize: 14, color: L.muted }}>YouTube</span>
                 <input
                   value={profileDraft.youtubeUrl}
                   onChange={(event) =>
@@ -3940,7 +3940,7 @@ export default function ProfilUserPage() {
                     border: `1px solid ${L.border}`,
                     background: L.bg,
                     color: L.text,
-                    fontSize: 13,
+                    fontSize: 14,
                     padding: '0 12px',
                     outline: 'none',
                   }}
@@ -3948,7 +3948,7 @@ export default function ProfilUserPage() {
               </label>
 
               <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 13, color: L.muted }}>NIP</span>
+                <span style={{ fontSize: 14, color: L.muted }}>NIP</span>
                 <input
                   value={profileDraft.employeeId}
                   onChange={(event) =>
@@ -3963,7 +3963,7 @@ export default function ProfilUserPage() {
                     border: `1px solid ${L.border}`,
                     background: L.bg,
                     color: L.text,
-                    fontSize: 13,
+                    fontSize: 14,
                     padding: '0 12px',
                     outline: 'none',
                   }}
@@ -3971,7 +3971,7 @@ export default function ProfilUserPage() {
               </label>
 
               <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 13, color: L.muted }}>STR</span>
+                <span style={{ fontSize: 14, color: L.muted }}>STR</span>
                 <input
                   value={profileDraft.strNumber}
                   onChange={(event) =>
@@ -3986,7 +3986,7 @@ export default function ProfilUserPage() {
                     border: `1px solid ${L.border}`,
                     background: L.bg,
                     color: L.text,
-                    fontSize: 13,
+                    fontSize: 14,
                     padding: '0 12px',
                     outline: 'none',
                   }}
@@ -3994,7 +3994,7 @@ export default function ProfilUserPage() {
               </label>
 
               <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 13, color: L.muted }}>SIP</span>
+                <span style={{ fontSize: 14, color: L.muted }}>SIP</span>
                 <input
                   value={profileDraft.sipNumber}
                   onChange={(event) =>
@@ -4009,7 +4009,7 @@ export default function ProfilUserPage() {
                     border: `1px solid ${L.border}`,
                     background: L.bg,
                     color: L.text,
-                    fontSize: 13,
+                    fontSize: 14,
                     padding: '0 12px',
                     outline: 'none',
                   }}
@@ -4017,7 +4017,7 @@ export default function ProfilUserPage() {
               </label>
 
               <div style={{ display: 'grid', gap: 6, gridColumn: '1 / -1' }}>
-                <span style={{ fontSize: 13, color: L.muted }}>Avatar</span>
+                <span style={{ fontSize: 14, color: L.muted }}>Avatar</span>
                 <div
                   style={{
                     minHeight: 42,
@@ -4036,11 +4036,11 @@ export default function ProfilUserPage() {
             </div>
 
             {profileError ? (
-              <div style={{ fontSize: 13, color: 'var(--c-critical)' }}>{profileError}</div>
+              <div style={{ fontSize: 14, color: 'var(--c-critical)' }}>{profileError}</div>
             ) : null}
 
             {profileSaveMessage ? (
-              <div style={{ fontSize: 13, color: L.accent }}>{profileSaveMessage}</div>
+              <div style={{ fontSize: 14, color: L.accent }}>{profileSaveMessage}</div>
             ) : null}
 
             <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
@@ -4059,7 +4059,7 @@ export default function ProfilUserPage() {
                   border: `1px solid ${L.border}`,
                   background: 'transparent',
                   color: L.text,
-                  fontSize: 13,
+                  fontSize: 14,
                   cursor: 'pointer',
                 }}
               >
@@ -4078,7 +4078,7 @@ export default function ProfilUserPage() {
                   border: '1px solid rgba(255,255,255,0.06)',
                   background: L.statusTone,
                   color: '#ffffff',
-                  fontSize: 13,
+                  fontSize: 14,
                   cursor: profileSaving ? 'wait' : 'pointer',
                   opacity: profileSaving ? 0.8 : 1,
                   boxShadow:

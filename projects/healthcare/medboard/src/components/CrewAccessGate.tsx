@@ -336,7 +336,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
           placeItems: 'center',
           background: 'var(--surface-subtle)',
           color: 'var(--text-secondary)',
-          fontSize: 13,
+          fontSize: 14,
         }}
       >
         Memeriksa akses crew…
@@ -379,7 +379,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
               />
               <span
                 style={{
-                  fontSize: 13,
+                  fontSize: 14,
                   fontWeight: 600,
                   color: 'var(--text)',
                 }}
@@ -432,7 +432,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
             <p
               style={{
                 margin: 0,
-                fontSize: 13,
+                fontSize: 14,
                 color: 'var(--text-secondary)',
               }}
             >
@@ -475,7 +475,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                   style={{
                     margin: 0,
                     color: 'var(--critical)',
-                    fontSize: 13,
+                    fontSize: 14,
                   }}
                 >
                   {errorMessage}
@@ -506,7 +506,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                 <p
                   style={{
                     margin: 0,
-                    fontSize: 13,
+                    fontSize: 14,
                     color: 'var(--text-muted)',
                     letterSpacing: '0.04em',
                   }}
@@ -615,14 +615,14 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                       <div style={{ display: 'grid', gap: 2 }}>
                         <span
                           style={{
-                            fontSize: 13,
+                            fontSize: 14,
                             color: 'var(--text-main)',
                             letterSpacing: '0.04em',
                           }}
                         >
                           Organisasi profesi terdeteksi
                         </span>
-                        <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                        <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
                           {registerProfession}
                         </span>
                       </div>
@@ -722,7 +722,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                                   ? 'var(--primary-tint)'
                                   : 'var(--bg-canvas)',
                                 color: isSelected ? 'var(--text-main)' : 'var(--text-muted)',
-                                fontSize: 13,
+                                fontSize: 14,
                                 cursor: 'pointer',
                               }}
                             >
@@ -769,7 +769,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                                 : '1px solid var(--line-base)',
                               background: isSelected ? 'var(--primary-tint)' : 'var(--bg-canvas)',
                               color: isSelected ? 'var(--text-main)' : 'var(--text-muted)',
-                              fontSize: 13,
+                              fontSize: 14,
                               cursor: isDisabled ? 'not-allowed' : 'pointer',
                               opacity: isDisabled ? 0.45 : 1,
                               textAlign: 'left',
@@ -783,7 +783,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                     <p
                       style={{
                         margin: 0,
-                        fontSize: 13,
+                        fontSize: 14,
                         color: 'var(--text-muted)',
                       }}
                     >
@@ -855,7 +855,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                                 : '1px solid var(--line-base)',
                               background: isSelected ? 'var(--primary-tint)' : 'var(--bg-canvas)',
                               color: isSelected ? 'var(--text-main)' : 'var(--text-muted)',
-                              fontSize: 13,
+                              fontSize: 14,
                               cursor: 'pointer',
                             }}
                           >
@@ -868,7 +868,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                       <p
                         style={{
                           margin: 0,
-                          fontSize: 13,
+                          fontSize: 14,
                           color: 'var(--text-muted)',
                         }}
                       >
@@ -899,7 +899,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                   style={{
                     margin: 0,
                     color: 'var(--c-critical)',
-                    fontSize: 13,
+                    fontSize: 14,
                   }}
                 >
                   {registerErrorMessage}
@@ -911,7 +911,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                   style={{
                     margin: 0,
                     color: 'var(--c-asesmen)',
-                    fontSize: 13,
+                    fontSize: 14,
                   }}
                 >
                   {registerSuccessMessage}
@@ -940,7 +940,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                       border: '1px solid var(--line-base)',
                       background: 'transparent',
                       color: 'var(--text-main)',
-                      fontSize: 13,
+                      fontSize: 14,
                       cursor: 'pointer',
                     }}
                   >
@@ -973,7 +973,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
               borderTop: '1px solid var(--line-base)',
             }}
           >
-            <p style={{ margin: 0, fontSize: 13, color: 'var(--text-muted)' }}>
+            <p style={{ margin: 0, fontSize: 14, color: 'var(--text-muted)' }}>
               {authMode === 'signin'
                 ? 'Kredensial aktif dikonfigurasi di server, tidak ditampilkan di UI.'
                 : 'Best practice saat ini: password minimal 15 karakter, akun baru berstatus pending review, dan data klinis dipisah dari hak akses sistem.'}

@@ -77,7 +77,7 @@ export default function PatientQueuePanel(): React.JSX.Element {
             borderRadius: 4,
             border: '1px dashed var(--c-critical)',
             padding: '12px 16px',
-            fontSize: 13,
+            fontSize: 14,
             color: 'var(--c-critical)',
           }}
         >
@@ -91,7 +91,7 @@ export default function PatientQueuePanel(): React.JSX.Element {
             borderRadius: 4,
             border: '1px solid var(--line-base)',
             padding: '6px 12px',
-            fontSize: 13,
+            fontSize: 14,
             color: 'var(--text-muted)',
             background: 'transparent',
             cursor: 'pointer',
@@ -122,10 +122,10 @@ export default function PatientQueuePanel(): React.JSX.Element {
         >
           ○
         </div>
-        <div style={{ fontSize: 13, marginBottom: 4 }}>Tidak ada encounter aktif saat ini</div>
+        <div style={{ fontSize: 14, marginBottom: 4 }}>Tidak ada encounter aktif saat ini</div>
         <div
           style={{
-            fontSize: 11,
+            fontSize: 12,
             fontFamily: 'var(--font-mono)',
             opacity: 0.5,
           }}
@@ -146,7 +146,7 @@ export default function PatientQueuePanel(): React.JSX.Element {
             borderRadius: 4,
             border: '1px dashed var(--line-base)',
             padding: '8px 12px',
-            fontSize: 11,
+            fontSize: 12,
             fontFamily: 'var(--font-mono)',
             color: 'var(--text-muted)',
           }}
@@ -180,7 +180,7 @@ export default function PatientQueuePanel(): React.JSX.Element {
               <div style={{ minWidth: 0 }}>
                 <div
                   style={{
-                    fontSize: 11,
+                    fontSize: 12,
                     fontFamily: 'var(--font-mono)',
                     color: 'var(--text-muted)',
                     opacity: 0.6,
@@ -193,7 +193,7 @@ export default function PatientQueuePanel(): React.JSX.Element {
                 </div>
                 <h3
                   style={{
-                    fontSize: 13,
+                    fontSize: 14,
                     fontWeight: 500,
                     color: 'var(--text-main)',
                     marginTop: 4,
@@ -216,7 +216,7 @@ export default function PatientQueuePanel(): React.JSX.Element {
                   borderRadius: 20,
                   border: `1px solid ${cfg.color}`,
                   padding: '4px 10px',
-                  fontSize: 11,
+                  fontSize: 12,
                   fontFamily: 'var(--font-mono)',
                   fontWeight: 500,
                   color: cfg.color,
@@ -231,7 +231,7 @@ export default function PatientQueuePanel(): React.JSX.Element {
             {item.note && (
               <p
                 style={{
-                  fontSize: 11,
+                  fontSize: 12,
                   lineHeight: 1.6,
                   color: 'var(--text-muted)',
                   marginTop: 8,
@@ -244,7 +244,7 @@ export default function PatientQueuePanel(): React.JSX.Element {
             {/* Timestamp */}
             <div
               style={{
-                fontSize: 11,
+                fontSize: 12,
                 fontFamily: 'var(--font-mono)',
                 color: 'var(--text-muted)',
                 opacity: 0.5,

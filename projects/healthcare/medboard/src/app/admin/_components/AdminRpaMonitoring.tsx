@@ -72,14 +72,14 @@ const cardStyle: React.CSSProperties = {
 
 const sectionTitleStyle: React.CSSProperties = {
   margin: '0 0 14px',
-  fontSize: 11,
+  fontSize: 12,
   fontWeight: 600,
   color: 'var(--text-muted)',
 }
 
 const thStyle: React.CSSProperties = {
   padding: '8px 10px',
-  fontSize: 11,
+  fontSize: 12,
   fontWeight: 600,
   color: 'var(--text-muted)',
   textAlign: 'left',
@@ -88,7 +88,7 @@ const thStyle: React.CSSProperties = {
 
 const tdStyle: React.CSSProperties = {
   padding: '10px 10px',
-  fontSize: 11,
+  fontSize: 12,
   color: 'var(--text-main)',
   borderBottom: '1px solid rgba(255,255,255,0.04)',
 }
@@ -111,7 +111,7 @@ function KPICard({
       <p
         style={{
           margin: 0,
-          fontSize: 11,
+          fontSize: 12,
           fontWeight: 600,
           color: 'var(--text-muted)',
         }}
@@ -133,7 +133,7 @@ function KPICard({
         <p
           style={{
             margin: '6px 0 0',
-            fontSize: 11,
+            fontSize: 12,
             color: 'var(--text-muted)',
             opacity: 0.7,
           }}
@@ -153,7 +153,7 @@ function StatusBadge({ status }: { status: string }) {
         display: 'inline-block',
         padding: '3px 10px',
         borderRadius: 12,
-        fontSize: 11,
+        fontSize: 12,
         fontWeight: 600,
         background: isSuccess ? 'rgba(76,175,80,0.12)' : 'rgba(231,76,60,0.12)',
         color: isSuccess ? '#4CAF50' : 'var(--c-critical, #e74c3c)',
@@ -209,7 +209,7 @@ export default function AdminRpaMonitoring() {
         style={{
           padding: '40px 0',
           color: 'var(--text-muted)',
-          fontSize: 11,
+          fontSize: 12,
         }}
       >
         LOADING RPA DATA...
@@ -223,7 +223,7 @@ export default function AdminRpaMonitoring() {
         style={{
           padding: '40px 0',
           color: 'var(--c-critical, #e74c3c)',
-          fontSize: 13,
+          fontSize: 14,
         }}
       >
         {error}
@@ -360,11 +360,11 @@ export default function AdminRpaMonitoring() {
                   }}
                 >
                   <StatusBadge status={entry.status} />
-                  <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                  <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
                     {formatTimestamp(entry.timestamp)}
                   </span>
                 </div>
-                <p style={{ margin: 0, fontSize: 11, color: 'var(--text-main)' }}>
+                <p style={{ margin: 0, fontSize: 12, color: 'var(--text-main)' }}>
                   Periode {formatPeriode(entry.month, entry.year)}
                   {' — '}
                   Valid: {entry.validRows}, Invalid: {entry.invalidRows}

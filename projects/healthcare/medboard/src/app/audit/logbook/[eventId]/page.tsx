@@ -84,7 +84,7 @@ export default function AuditEventDetailPage({
 
   /* ── Shared styles — identical to clinical report ── */
   const labelStyle: React.CSSProperties = {
-    fontSize: 11,
+    fontSize: 12,
     color: 'var(--text-muted)',
     marginBottom: 4,
     display: 'block',
@@ -92,7 +92,7 @@ export default function AuditEventDetailPage({
   const inputStyle: React.CSSProperties = {
     width: '100%',
     padding: '8px 10px',
-    fontSize: 13,
+    fontSize: 14,
     background: 'var(--bg-card)',
     color: 'var(--text-main)',
     border: '1px solid var(--line-base)',
@@ -102,13 +102,13 @@ export default function AuditEventDetailPage({
   const monoStyle: React.CSSProperties = {
     ...inputStyle,
     fontFamily: 'var(--font-base)',
-    fontSize: 11,
+    fontSize: 12,
     color: 'var(--text-muted)',
     letterSpacing: '0.04em',
     wordBreak: 'break-all',
   }
   const sectionTitleStyle: React.CSSProperties = {
-    fontSize: 13,
+    fontSize: 14,
     color: 'var(--c-asesmen)',
     borderBottom: '1px solid var(--line-base)',
     paddingBottom: 6,
@@ -116,7 +116,7 @@ export default function AuditEventDetailPage({
     marginTop: 32,
   }
   const btnStyle: React.CSSProperties = {
-    fontSize: 13,
+    fontSize: 14,
     padding: '8px 20px',
     background: '#101012',
     border: '1px solid rgba(255,255,255,0.12)',
@@ -132,14 +132,14 @@ export default function AuditEventDetailPage({
 
   /* ── Loading / error states ── */
   if (loading) return (
-    <div style={{ maxWidth: PAGE_W, margin: '0 auto', padding: '48px 24px', textAlign: 'center', fontSize: 13, color: 'var(--text-muted)' }}>
+    <div style={{ maxWidth: PAGE_W, margin: '0 auto', padding: '48px 24px', textAlign: 'center', fontSize: 14, color: 'var(--text-muted)' }}>
       MEMUAT DATA...
     </div>
   )
 
   if (error || !data) return (
     <div style={{ maxWidth: PAGE_W, margin: '0 auto', padding: '48px 24px' }}>
-      <div style={{ color: 'var(--c-asesmen)', fontSize: 13, marginBottom: 16 }}>{error ?? 'Event tidak ditemukan'}</div>
+      <div style={{ color: 'var(--c-asesmen)', fontSize: 14, marginBottom: 16 }}>{error ?? 'Event tidak ditemukan'}</div>
       <Link href="/audit/logbook" style={btnStyle}>← KEMBALI</Link>
     </div>
   )
@@ -294,7 +294,7 @@ export default function AuditEventDetailPage({
           <label style={labelStyle}>Immutable Hash (SHA-256)</label>
           <input style={monoStyle} value={data.immutableHash ?? '—'} readOnly />
         </div>
-        <div style={{ fontSize: 11, color: 'var(--text-muted)', lineHeight: 1.7, marginTop: 8, marginBottom: 40 }}>
+        <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.7, marginTop: 8, marginBottom: 40 }}>
           Hash dihitung saat event dibuat dan tidak dapat dimodifikasi.
           Setiap perubahan status dicatat sebagai event terpisah.
           Record ini bersifat <span style={{ color: 'var(--text-main)' }}>immutable</span>.

@@ -156,7 +156,7 @@ export function DiagnosisModal({
             <h2
               style={{
                 color: 'var(--text-main)',
-                fontSize: 15,
+                fontSize: 16,
                 fontWeight: 600,
                 margin: 0,
               }}
@@ -166,7 +166,7 @@ export function DiagnosisModal({
             <p
               style={{
                 color: 'var(--text-muted)',
-                fontSize: 13,
+                fontSize: 14,
                 margin: '4px 0 0',
               }}
             >
@@ -249,7 +249,7 @@ export function DiagnosisModal({
                     border: 'none',
                     outline: 'none',
                     color: 'var(--text-main)',
-                    fontSize: 13,
+                    fontSize: 14,
                     padding: '10px 0',
                   }}
                 />
@@ -300,7 +300,7 @@ export function DiagnosisModal({
                       <span
                         style={{
                           color: 'var(--c-asesmen)',
-                          fontSize: 13,
+                          fontSize: 14,
                           fontWeight: 600,
                         }}
                       >
@@ -309,7 +309,7 @@ export function DiagnosisModal({
                       <span
                         style={{
                           color: 'var(--text-main)',
-                          fontSize: 13,
+                          fontSize: 14,
                           marginLeft: 8,
                         }}
                       >
@@ -319,7 +319,7 @@ export function DiagnosisModal({
                         <span
                           style={{
                             color: 'var(--text-muted)',
-                            fontSize: 13,
+                            fontSize: 14,
                             marginLeft: 8,
                           }}
                         >
@@ -351,7 +351,7 @@ export function DiagnosisModal({
               onChange={e => setForm(p => ({ ...p, rujukan: e.target.checked }))}
               style={{ width: 16, height: 16, accentColor: 'var(--c-asesmen)' }}
             />
-            <label htmlFor="rujukan" style={{ color: 'var(--text-muted)', fontSize: 13 }}>
+            <label htmlFor="rujukan" style={{ color: 'var(--text-muted)', fontSize: 14 }}>
               Perlu rujukan ke fasilitas lanjutan
             </label>
           </div>
@@ -386,7 +386,7 @@ export function DiagnosisModal({
               background: 'none',
               border: 'none',
               cursor: 'pointer',
-              fontSize: 13,
+              fontSize: 14,
               padding: '8px 16px',
             }}
           >
@@ -404,7 +404,7 @@ export function DiagnosisModal({
               color: '#fff',
               border: 'none',
               borderRadius: 8,
-              fontSize: 13,
+              fontSize: 14,
               fontWeight: 600,
               cursor: isSaving || saved ? 'not-allowed' : 'pointer',
               opacity: isSaving || saved ? 0.85 : 1,
@@ -447,7 +447,7 @@ const inputStyle: React.CSSProperties = {
   borderRadius: 8,
   padding: '10px 12px',
   color: 'var(--text-main)',
-  fontSize: 13,
+  fontSize: 14,
   outline: 'none',
   boxSizing: 'border-box',
 }
@@ -471,7 +471,7 @@ function FormField({
       <label
         style={{
           color: 'var(--text-muted)',
-          fontSize: 13,
+          fontSize: 14,
           fontWeight: 600,
           display: 'block',
           marginBottom: 6,
@@ -487,7 +487,7 @@ function FormField({
             alignItems: 'center',
             gap: 4,
             color: '#f87171',
-            fontSize: 13,
+            fontSize: 14,
             marginTop: 4,
           }}
         >
