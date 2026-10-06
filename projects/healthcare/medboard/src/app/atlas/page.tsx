@@ -18,7 +18,7 @@ import {
   X,
 } from 'lucide-react'
 import dynamic from 'next/dynamic'
-import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
+import { useCallback, useEffect, useMemo, useState, type KeyboardEvent } from 'react'
 import { flushSync } from 'react-dom'
 
 import { useReducedMotion } from '@/components/shell/use-reduced-motion'
@@ -235,7 +235,7 @@ export default function AtlasPage() {
         <div className={styles.heading}>
           <h1 className={styles.title}>Atlas Anatomi</h1>
           <p className={styles.subtitle}>
-            {atlas ? count(atlas.parts.length) : '—'} struktur 3D · {source.dataset}
+            {atlas ? count(atlas.parts.length) : '—'} bagian 3D · {source.dataset}
           </p>
         </div>
         <div className={styles.headerActions}>
