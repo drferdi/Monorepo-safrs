@@ -1495,7 +1495,6 @@ export default function EMRPage() {
   // ── Doctor Online Status (Asisten Medis) ────────────────────────────────
   const [isDoctor, setIsDoctor] = useState(false)
   const [isOnline, setIsOnline] = useState(false)
-  const [togglingOnline, setTogglingOnline] = useState(false)
 
   useEffect(() => {
     void (async () => {
@@ -1520,22 +1519,6 @@ export default function EMRPage() {
     })()
   }, [])
 
-  const handleToggleDoctorOnline = async () => {
-    setTogglingOnline(true)
-    try {
-      const res = await fetch('/api/telemedicine/doctor-status', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ isOnline: !isOnline }),
-      })
-      const data = (await res.json()) as { ok: boolean; isOnline?: boolean }
-      if (data.ok) setIsOnline(data.isOnline ?? false)
-    } catch {
-      /* silent */
-    } finally {
-      setTogglingOnline(false)
-    }
-  }
   const row1SectionRef = useRef<HTMLElement | null>(null)
   const row2SectionRef = useRef<HTMLElement | null>(null)
   const row3SectionRef = useRef<HTMLElement | null>(null)
@@ -5579,32 +5562,12 @@ export default function EMRPage() {
           })()}
 
         <div className="page-header">
-          <div className="meta-header" style={{ color: headerColor }}>
-            {headerText}
-          </div>
           <div className="emr-page-head-row">
             <div>
               <div className="page-title">EMR Klinis</div>
               <div className="page-subtitle">
                 Workflow klinis terintegrasi untuk Retrieval-Augmented Generation Based
               </div>
-            </div>
-            <div className="emr-page-head-actions">
-              {isDoctor && (
-                <button
-                  onClick={() => void handleToggleDoctorOnline()}
-                  disabled={togglingOnline}
-                  aria-pressed={isOnline}
-                  className="ui-chip"
-                  style={{ opacity: togglingOnline ? 0.6 : 1 }}
-                >
-                  <span className={`emr-online-dot${isOnline ? ' is-online' : ''}`} />
-                  {togglingOnline ? '...' : isOnline ? 'ONLINE' : 'OFFLINE'}
-                </button>
-              )}
-              <span className="ui-btn ui-btn--secondary ui-btn--sm" style={{ cursor: 'default' }}>
-                ✧ Synthesia Engine
-              </span>
             </div>
           </div>
         </div>

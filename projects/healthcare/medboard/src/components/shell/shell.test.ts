@@ -19,16 +19,21 @@ test('every rail item opens a page that exists', () => {
 
 test('pages that were only in the old footer stay reachable from the rail', () => {
   const formerFooterAndNav = [
-    '/emr', '/hub', '/voice', '/acars', '/icdx', '/calculator', '/critical-mind', '/report',
+    '/emr', '/hub', '/voice', '/acars', '/icdx', '/calculator', '/critical-mind',
     '/chat', '/telemedicine', '/dashboard/intelligence', '/audit/logbook', '/admin',
   ]
   assert.deepEqual(formerFooterAndNav.filter((href) => !hrefs.includes(href)), [])
 })
 
+test('the Report list page is gone (Chief 2026-10-06): no page and no rail item', () => {
+  assert.equal(hrefs.includes('/report'), false)
+  assert.equal(existsSync(path.join(process.cwd(), 'src/app/report/page.tsx')), false)
+})
+
 test('a nested page lights up its parent menu item, a look-alike path does not', () => {
   assert.equal(isNavActive('/hub', '/hub'), true)
   assert.equal(isNavActive('/hub/dr-ani', '/hub'), true)
-  assert.equal(isNavActive('/report/clinical', '/report'), true)
+  assert.equal(isNavActive('/audit/logbook/evt-1', '/audit/logbook'), true)
   assert.equal(isNavActive('/hubx', '/hub'), false)
   assert.equal(isNavActive('/', '/hub'), false)
 })

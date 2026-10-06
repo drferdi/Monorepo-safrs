@@ -4,7 +4,6 @@ import {
   Brain,
   Calculator,
   FileSearch,
-  FileText,
   MessageSquare,
   Mic,
   RadioTower,
@@ -49,7 +48,6 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     label: 'Laporan',
     items: [
-      { href: '/report', label: 'Report', icon: FileText },
       { href: '/dashboard/intelligence', label: 'Intelligence Monitor', icon: Activity },
       { href: '/audit/logbook', label: 'Audit Log', icon: ScrollText },
       { href: '/admin', label: 'Admin', icon: Shield },
