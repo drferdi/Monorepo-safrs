@@ -71,6 +71,7 @@
     "server-only": "^0.0.1",
     "socket.io": "^4.8.3",
     "socket.io-client": "^4.8.3",
+    "three": "0.159.0",
     "tweakpane": "^4.0.5",
     "zod": "^4.3.6"
   },
@@ -81,6 +82,7 @@
     "@types/pg": "^8.15.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "0.159.0",
     "playwright": "^1.40.0",
     "prisma": "6.19.2",
     "tailwindcss": "^4.2.1",

@@ -3,6 +3,8 @@
 
 # Binary files: never convert or diff as text. PNG images are stored in Git LFS.
 *.png filter=lfs diff=lfs merge=lfs -text
+# Atlas anatomy geometry (gzip chunks, about 70 MB) is stored in Git LFS too.
+public/atlas/models/*.gz filter=lfs diff=lfs merge=lfs -text
 *.jpg binary
 *.jpeg binary
 *.gif binary

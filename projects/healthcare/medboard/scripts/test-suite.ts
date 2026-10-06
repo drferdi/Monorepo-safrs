@@ -98,6 +98,12 @@ const suites: Suite[] = [
       'src/lib/icd/who-blocks.test.ts'],
   },
   {
+    name: 'atlas',
+    aliases: ['anatomy'],
+    command: process.execPath,
+    args: ['./node_modules/tsx/dist/cli.mjs', '--test', 'src/lib/atlas/atlas.test.ts', 'src/app/atlas/atlas-page.test.ts'],
+  },
+  {
     name: 'auth-hardening',
     aliases: ['auth', 'security'],
     command: process.execPath,

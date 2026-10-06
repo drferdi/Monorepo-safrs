@@ -6,6 +6,7 @@ import {
   FileSearch,
   MessageSquare,
   Mic,
+  PersonStanding,
   RadioTower,
   ScrollText,
   Shield,
@@ -37,6 +38,7 @@ export const NAV_GROUPS: NavGroup[] = [
       { href: '/icdx', label: 'ICD Coding', icon: FileSearch },
       { href: '/calculator', label: 'Algorithma Calculator', icon: Calculator },
       { href: '/sentrapedia', label: 'Sentrapedia', icon: BookOpen },
+      { href: '/atlas', label: 'Atlas Anatomi', icon: PersonStanding },
     ],
   },
   {
