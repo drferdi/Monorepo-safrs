@@ -33,6 +33,11 @@ secrets, `git restore next-env.d.ts`, delete `runtime/consult-accepted.jsonl`.
 
 ## Next action
 
+00. 2026-10-06 server: Biznet Gio NEO Lite MS 4.2 `medboard`, IP 103.89.2.92, Ubuntu 24.04.4,
+   user `gaffer` (sudo). Runbook §1 done, `0a66f2cf` built and in `/opt/medboard/app`, 14
+   migrations applied to the empty production DB (Chief approved). Service stops until the first
+   admin exists: Chief runs `ssh -t gaffer@103.89.2.92 sudo medboard-seed-admin`. DNS
+   `medboard` (Vercel DNS for sentrahai.com) still points at Vercel: Chief sets an A record to the IP.
 0. Host is now `medboard.sentrahai.com` (`4362337a`; crew.puskesmasbalowerti.com retired, and
    it plus the Railway app no longer answer). The new host points at Vercel with no deployment;
    Chief moves its DNS to the VPS (runbook §3.5). Biznet Gio NEO Lite MS 4.2 (2 vCPU, 4 GB,

@@ -22,6 +22,9 @@ Alur: internet → Caddy (:443, HTTPS otomatis, WebSocket ikut diteruskan) → `
 
 ## 1. Siapkan server (sekali, sebagai root)
 
+Penyedia seperti Biznet Gio membuat user biasa dengan sudo (misalnya `gaffer`); masuk dengan
+`ssh gaffer@IP_VPS`, lalu `sudo -i` untuk menjadi root.
+
 ```bash
 apt update && apt -y upgrade
 apt -y install postgresql caddy ufw curl
@@ -41,29 +44,33 @@ install -m 640 -o root -g medboard /dev/null /etc/medboard/medboard.env
 
 sudo -u postgres createuser medboard
 sudo -u postgres createdb -O medboard medboard
-sudo -u postgres psql -c '\password medboard'   # simpan password ini untuk DATABASE_URL
+# Tanpa password: user Linux medboard masuk ke database medboard lewat socket lokal (peer auth).
 ```
 
 ### Environment (`/etc/medboard/medboard.env`)
 
-Salin semua variabel dari Railway (Variables → Raw Editor), lalu sesuaikan:
-
-- Hapus semua `RAILWAY_*`, `CREW_ACCESS_REGISTRATION_REQUESTS_FILE`, dan
-  `CREW_ACCESS_PROFILE_FILE`. Default-nya sudah di `runtime/`, yang bertahan di VPS.
-- Tambah atau ubah:
+Isi minimal yang dipakai di server Biznet Gio (2026-10-06). `CREW_ACCESS_REGISTRATION_REQUESTS_FILE`
+dan `CREW_ACCESS_PROFILE_FILE` tidak perlu: default-nya di `runtime/`, yang bertahan di VPS.
 
 ```
 NODE_ENV=production
 HOST=127.0.0.1
 PORT=3000
 TRUST_PROXY_HEADERS=true
-DATABASE_URL=postgresql://medboard:<password>@127.0.0.1:5432/medboard
+DATABASE_URL=postgresql://medboard@localhost/medboard?host=/var/run/postgresql
 NEXT_PUBLIC_BASE_URL=https://medboard.sentrahai.com
 PLAYWRIGHT_BROWSERS_PATH=/opt/medboard/browsers
 ```
 
-Variabel wajib lain tetap sama seperti di `docs/DEPLOYMENT.md` (`CREW_ACCESS_SECRET`,
-`CREW_ACCESS_USERS_JSON`, `CREW_ACCESS_AUTOMATION_TOKEN`, `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY`).
+Dua secret dibuat acak langsung di server, tanpa pernah ditampilkan:
+
+```bash
+echo "CREW_ACCESS_SECRET=$(openssl rand -hex 32)" >> /etc/medboard/medboard.env
+echo "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY=$(openssl rand -base64 32)" >> /etc/medboard/medboard.env
+```
+
+Akun crew disimpan di database (tabel `User`), bukan di `CREW_ACCESS_USERS_JSON`. Variabel
+opsional lain (LiveKit, Resend, Sentry, dan sebagainya) ada di `docs/DEPLOYMENT.md`.
 `TRUST_PROXY_HEADERS=true` wajib: tanpa Railway, kode tidak lagi menebak bahwa ia di belakang proxy.
 
 ### Service (`/etc/systemd/system/medboard.service`)
@@ -112,19 +119,34 @@ Di server (root):
 ```bash
 set -euo pipefail
 cd /opt/medboard && rm -rf app.new && mkdir app.new && tar -xzf /tmp/medboard.tar.gz -C app.new
-cp -rn app.new/runtime/. /var/lib/medboard/runtime/ && rm -rf app.new/runtime
-ln -s /var/lib/medboard/runtime app.new/runtime
+cp -rn app.new/runtime/. /var/lib/medboard/runtime/
 chown -R medboard:medboard app.new /var/lib/medboard/runtime
-set -a; . /etc/medboard/medboard.env; set +a
-cd app.new && sudo -E -u medboard pnpm install --frozen-lockfile
-PLAYWRIGHT_BROWSERS_PATH=/opt/medboard/browsers pnpm exec playwright install-deps chromium
-sudo -E -u medboard pnpm exec playwright install chromium
-sudo -E -u medboard pnpm run build
+cd app.new
+# Tanpa NODE_ENV=production, supaya devDependencies untuk build ikut terpasang.
+sudo -u medboard env -u NODE_ENV HOME=/opt/medboard COREPACK_ENABLE_DOWNLOAD_PROMPT=0 pnpm install --frozen-lockfile
+PLAYWRIGHT_BROWSERS_PATH=/opt/medboard/browsers ./node_modules/.bin/playwright install-deps chromium
+sudo -u medboard env HOME=/opt/medboard PLAYWRIGHT_BROWSERS_PATH=/opt/medboard/browsers ./node_modules/.bin/playwright install chromium
+# Build dengan runtime/ sebagai folder biasa: Turbopack menolak symlink yang keluar dari proyek,
+# dan cache .next dari build yang gagal menyimpan path lama, jadi .next dihapus dulu.
+rm -rf .next
+sudo -u medboard bash -c 'set -a; . /etc/medboard/medboard.env; set +a; export HOME=/opt/medboard; pnpm run build'
+rm -rf runtime && ln -s /var/lib/medboard/runtime runtime && chown -h medboard:medboard runtime
 cd /opt/medboard && rm -rf app.old && { [ -d app ] && mv app app.old || true; } && mv app.new app
-systemctl restart medboard && sleep 5 && curl -fsS http://127.0.0.1:3000/api/health
+systemctl restart medboard && sleep 15 && curl -fsS http://127.0.0.1:3000/api/health
 ```
 
 Build dijalankan dengan env dimuat karena `NEXT_PUBLIC_*` dibakukan saat build.
+
+### Akun admin pertama
+
+MedBoard berhenti saat start kalau belum ada user aktif. Akun `sentraone` dibuat dengan
+`prisma/seed.ts`; password diketik Chief sendiri. Di server dipasang `/usr/local/bin/medboard-seed-admin`
+(membaca password tanpa ditampilkan, mengirimnya lewat stdin ke `pnpm seed`, lalu restart service).
+Dari PowerShell:
+
+```powershell
+ssh -t gaffer@IP_VPS sudo medboard-seed-admin
+```
 
 Rollback: `cd /opt/medboard && mv app app.bad && mv app.old app && systemctl restart medboard`.
 Rollback kode tidak membatalkan migrasi database.
