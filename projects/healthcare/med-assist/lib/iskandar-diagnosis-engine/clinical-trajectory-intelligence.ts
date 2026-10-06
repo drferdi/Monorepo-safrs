@@ -181,7 +181,7 @@ function scoreSpo2Scale1(spo2: number | undefined): ClinicalNEWS2ParameterScore 
 
 /**
  * RCP NEWS2 (2017) Scale 2: 93 % and above scores only on oxygen (93-94: 1, 95-96: 2, >=97: 3);
- * on air it scores 0. Oxygen not recorded keeps the oxygen bands, the safer miss.
+ * on air it scores 0. Oxygen not recorded counts as air, as `scoreSupplementalO2` reads it (0).
  */
 function scoreSpo2Scale2(
   spo2: number | undefined,
@@ -193,7 +193,7 @@ function scoreSpo2Scale2(
   if (spo2 <= 83) score = 3;
   else if (spo2 <= 85) score = 2;
   else if (spo2 <= 87) score = 1;
-  else if (spo2 <= 92 || onO2 === false) score = 0;
+  else if (spo2 <= 92 || onO2 !== true) score = 0;
   else if (spo2 <= 94) score = 1;
   else if (spo2 <= 96) score = 2;
   else score = 3;

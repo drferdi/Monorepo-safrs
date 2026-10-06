@@ -69,8 +69,8 @@ describe('calculateClinicalNEWS2 band edges', () => {
   ])('SpO2 Scale 2 %d (on oxygen: %s) scores %d', (spo2, supplementalO2, score) =>
     expect(scoreOf({ spo2, supplementalO2 }, 'spo2_scale2', true)).toBe(score)
   );
-  // Oxygen not recorded keeps the oxygen bands: scoring higher is the safer miss.
-  it('scores Scale 2 by the oxygen bands when oxygen was not recorded', () => {
-    expect(scoreOf({ spo2: 95 }, 'spo2_scale2', true)).toBe(2);
+  // Oxygen not recorded is "not on oxygen", as the supplementalO2 parameter itself reads it (0).
+  it('scores Scale 2 by the air bands when oxygen was not recorded', () => {
+    expect(scoreOf({ spo2: 95 }, 'spo2_scale2', true)).toBe(0);
   });
 });
