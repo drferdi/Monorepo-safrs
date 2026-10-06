@@ -21,11 +21,11 @@ export function ConsultationTimer({ elapsedSeconds }: ConsultationTimerProps): R
     <span
       style={{
         fontSize: 14,
-        color: 'var(--text-muted)',
+        color: 'var(--text-secondary)',
         padding: '2px 8px',
-        borderRadius: 6,
-        background: 'rgba(255,255,255,0.05)',
-        border: '1px solid var(--line-base)',
+        borderRadius: 'var(--radius-full)',
+        background: 'var(--surface-subtle)',
+        fontVariantNumeric: 'tabular-nums',
       }}
     >
       {formatTime(elapsedSeconds)}

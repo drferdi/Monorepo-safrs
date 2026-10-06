@@ -15,11 +15,8 @@ export function MiraDifferentialCard({ differential }: { differential: MiraDiffe
   return (
     <div
       style={{
-        borderRadius: 8,
-        padding: '10px 14px',
-        marginBottom: 12,
-        border: '1px solid var(--line-base)',
-        background: 'rgba(255,255,255,0.03)',
+        padding: 'var(--gap-lg) 0 0',
+        borderTop: '1px solid var(--border)',
       }}
     >
       <div
@@ -35,24 +32,24 @@ export function MiraDifferentialCard({ differential }: { differential: MiraDiffe
         <div
           style={{
             fontSize: 12,
-            color: 'var(--text-muted)',
+            color: 'var(--text-secondary)',
           }}
         >
           Diferensial MIRA
         </div>
-        <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+        <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
           dari Assist · {formatGeneratedAt(differential.generated_at)}
         </span>
       </div>
-      <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 8 }}>
+      <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 8 }}>
         Saran pendukung keputusan dari MIRA; keputusan klinis tetap pada dokter.
       </div>
 
       <ol style={{ margin: 0, paddingLeft: 18, display: 'grid', gap: 6 }}>
         {differential.items.map(item => (
-          <li key={`${item.rank}-${item.icd10}`} style={{ fontSize: 12, color: 'var(--text-main)' }}>
+          <li key={`${item.rank}-${item.icd10}`} style={{ fontSize: 14, color: 'var(--text)' }}>
             <span style={{ fontWeight: 600 }}>{item.nama}</span>{' '}
-            <span style={{ color: 'var(--text-muted)' }}>
+            <span style={{ color: 'var(--text-secondary)' }}>
               ({item.icd10}) · {Math.round(item.confidence * 100)}%
             </span>
             {item.cannot_miss && (
@@ -61,16 +58,17 @@ export function MiraDifferentialCard({ differential }: { differential: MiraDiffe
                   marginLeft: 6,
                   fontSize: 12,
                   fontWeight: 600,
-                  padding: '2px 6px',
+                  padding: '2px 8px',
                   borderRadius: 999,
-                  border: '1px solid var(--line-base)',
+                  background: 'var(--critical-tint)',
+                  color: 'var(--critical)',
                 }}
               >
                 Jangan terlewat
               </span>
             )}
             {item.rationale && (
-              <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{item.rationale}</div>
+              <div style={{ fontSize: 14, color: 'var(--text-secondary)' }}>{item.rationale}</div>
             )}
           </li>
         ))}
@@ -78,10 +76,10 @@ export function MiraDifferentialCard({ differential }: { differential: MiraDiffe
 
       {differential.next_best_actions.length > 0 && (
         <div style={{ marginTop: 10 }}>
-          <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 2 }}>
+          <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 2 }}>
             Langkah berikutnya
           </div>
-          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 12, color: 'var(--text-main)' }}>
+          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 14, color: 'var(--text)' }}>
             {differential.next_best_actions.map(action => (
               <li key={`${action.kind}-${action.item}`}>
                 {NEXT_ACTION_LABEL[action.kind]}: {action.item} — {action.reason}
@@ -93,10 +91,10 @@ export function MiraDifferentialCard({ differential }: { differential: MiraDiffe
 
       {differential.missing_information.length > 0 && (
         <div style={{ marginTop: 8 }}>
-          <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 2 }}>
+          <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 2 }}>
             Data yang belum ada
           </div>
-          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 12, color: 'var(--text-main)' }}>
+          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 14, color: 'var(--text)' }}>
             {differential.missing_information.map(item => (
               <li key={item}>{item}</li>
             ))}

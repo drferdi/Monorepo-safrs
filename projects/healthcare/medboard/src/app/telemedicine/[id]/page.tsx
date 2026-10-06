@@ -7,13 +7,15 @@ import type React from 'react'
 // Route: /telemedicine/[id]
 // ============================================================
 
-import { AlertCircle, ArrowLeft, Video } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 
 import { VideoRoom } from '@/components/telemedicine/VideoRoom'
 import { buildEmrSourceHref, EMR_SOURCE_ORIGINS } from '@/lib/emr/source-trace'
 import type { AppointmentWithDetails, SessionParticipantRole } from '@/types/telemedicine.types'
+
+import styles from '../telemedicine.module.css'
 
 interface CrewSession {
   username: string
@@ -123,20 +125,12 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
   // ── Loading ──
   if (isLoading) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100vh',
-          background: 'var(--bg-canvas)',
-        }}
-      >
+      <div className={styles.roomLoading}>
         <div
           style={{
-            width: 48,
-            height: 48,
-            border: '4px solid var(--c-asesmen)',
+            width: 32,
+            height: 32,
+            border: '2px solid var(--primary)',
             borderTopColor: 'transparent',
             borderRadius: '50%',
             animation: 'spin 1s linear infinite',
@@ -149,37 +143,16 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
   // ── Error ──
   if (error || !appointment) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100vh',
-          background: 'var(--bg-canvas)',
-          padding: 32,
-        }}
-      >
-        <AlertCircle size={48} style={{ color: '#f87171', marginBottom: 16 }} />
-        <h2 style={{ color: 'var(--text-main)', fontSize: 20, marginBottom: 8 }}>
-          Appointment Tidak Ditemukan
-        </h2>
-        <p style={{ color: 'var(--text-muted)', marginBottom: 24 }}>{error}</p>
-        <button
-          onClick={() => router.push('/telemedicine')}
-          style={{
-            padding: '8px 20px',
-            background: 'var(--c-asesmen)',
-            border: 'none',
-            borderRadius: 8,
-            color: '#fff',
-            cursor: 'pointer',
-            fontSize: 14,
-            fontWeight: 600,
-          }}
-        >
-          ← Kembali ke Telemedicine
-        </button>
+      <div className={styles.roomCenter}>
+        <h2 className={styles.cardTitle}>Appointment Tidak Ditemukan</h2>
+        <div className="ui-alert ui-alert--critical" role="alert">
+          {error}
+        </div>
+        <div className={styles.roomCenterActions}>
+          <button onClick={() => router.push('/telemedicine')} className="ui-btn ui-btn--primary">
+            ← Kembali ke Telemedicine
+          </button>
+        </div>
       </div>
     )
   }
@@ -187,30 +160,18 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
   // ── Session Complete ──
   if (sessionComplete) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100vh',
-          background: 'var(--bg-canvas)',
-          padding: 32,
-        }}
-      >
-        <div style={{ fontSize: 64, marginBottom: 16 }}>✓</div>
-        <h2 style={{ color: 'var(--text-main)', fontSize: 20, marginBottom: 8 }}>
-          Konsultasi Selesai
-        </h2>
-        <p style={{ color: 'var(--text-muted)', marginBottom: 8 }}>
+      <div className={styles.roomCenter}>
+        <span className="ui-badge ui-badge--success">✓</span>
+        <h2 className={styles.cardTitle}>Konsultasi Selesai</h2>
+        <p className={styles.cardText} style={{ margin: 0 }}>
           Appointment #{appointment.id.slice(-6)} telah direkam
         </p>
         {appointment.diagnosis && (
-          <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>
+          <p className={styles.cardText} style={{ margin: 0 }}>
             Diagnosis: {appointment.diagnosis}
           </p>
         )}
-        <div style={{ display: 'flex', gap: 12, marginTop: 28 }}>
+        <div className={styles.roomCenterActions}>
           <button
             onClick={() =>
               router.push(
@@ -220,32 +181,11 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
                 })
               )
             }
-            style={{
-              padding: '8px 20px',
-              background: 'transparent',
-              border: '1px solid var(--c-asesmen)',
-              borderRadius: 8,
-              color: 'var(--text-main)',
-              cursor: 'pointer',
-              fontSize: 14,
-              fontWeight: 600,
-            }}
+            className="ui-btn ui-btn--secondary"
           >
             Lanjut ke EMR
           </button>
-          <button
-            onClick={() => router.push('/telemedicine')}
-            style={{
-              padding: '8px 20px',
-              background: 'var(--c-asesmen)',
-              border: 'none',
-              borderRadius: 8,
-              color: '#fff',
-              cursor: 'pointer',
-              fontSize: 14,
-              fontWeight: 600,
-            }}
-          >
+          <button onClick={() => router.push('/telemedicine')} className="ui-btn ui-btn--primary">
             ← Daftar Konsultasi
           </button>
         </div>
@@ -255,81 +195,65 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
 
   // ── Room View ──
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100vh',
-        background: '#0a0a0a',
-      }}
-    >
-      {/* Top bar */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 16,
-          padding: '12px 24px',
-          background: 'rgba(0,0,0,0.6)',
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
-          flexShrink: 0,
-        }}
-      >
-        <button
-          onClick={() => router.push('/telemedicine')}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-            color: 'rgba(255,255,255,0.5)',
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: 14,
-            padding: 4,
-          }}
-        >
-          <ArrowLeft size={16} /> Kembali
-        </button>
-        <div style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.1)' }} />
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Video size={15} style={{ color: 'var(--c-asesmen)' }} />
-          <span style={{ color: '#fff', fontSize: 14, fontWeight: 600 }}>
-            Telemedicine · #{appointment.id.slice(-6)}
-          </span>
-          <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14 }}>
-            ·{' '}
+    <div className={styles.roomPage}>
+      <div className="ui-page-header" style={{ marginBottom: 0 }}>
+        <div>
+          <button
+            onClick={() => router.push('/telemedicine')}
+            className={`ui-btn ui-btn--ghost ui-btn--sm ${styles.roomBack}`}
+          >
+            <ArrowLeft size={16} /> Kembali
+          </button>
+          <h1 className={styles.title}>Telemedicine · #{appointment.id.slice(-6)}</h1>
+          <p className="ui-page-header__description">
             {new Date(appointment.scheduledAt).toLocaleString('id-ID', {
               dateStyle: 'short',
               timeStyle: 'short',
             })}
-          </span>
+          </p>
         </div>
       </div>
       {sessionCompleteError && (
-        <div
-          role="alert"
-          style={{
-            margin: '12px 24px 0',
-            padding: '10px 12px',
-            borderRadius: 8,
-            border: '1px solid rgba(248,113,113,0.35)',
-            background: 'rgba(127,29,29,0.2)',
-            color: '#fecaca',
-            fontSize: 14,
-          }}
-        >
+        <div className="ui-alert ui-alert--critical" role="alert">
           {sessionCompleteError}
         </div>
       )}
 
-      {/* VideoRoom — takes remaining height */}
-      <div style={{ flex: 1, overflow: 'hidden' }}>
-        <VideoRoom
-          appointment={appointment}
-          participantRole={participantRole}
-          onSessionComplete={(apptId) => void handleSessionComplete(apptId)}
-        />
+      <div className={styles.roomSplit}>
+        {/* VideoRoom — left column of the workspace */}
+        <div className={styles.roomStage}>
+          <VideoRoom
+            appointment={appointment}
+            participantRole={participantRole}
+            onSessionComplete={(apptId) => void handleSessionComplete(apptId)}
+          />
+        </div>
+
+        <div className={styles.roomSide}>
+          <h2 className={styles.cardTitle} style={{ marginBottom: 'var(--gap-md)' }}>
+            Detail konsultasi
+          </h2>
+          {[
+            ['Pasien', appointment.patientId],
+            ['Dokter', appointment.doctorId],
+            [
+              'Jadwal',
+              new Date(appointment.scheduledAt).toLocaleString('id-ID', {
+                dateStyle: 'medium',
+                timeStyle: 'short',
+              }),
+            ],
+            ['Durasi', `${appointment.durationMinutes} menit`],
+            ['Tipe', appointment.consultationType],
+            ['Status', appointment.status],
+            ['Keluhan', appointment.keluhanUtama ?? '-'],
+          ].map(([label, value]) => (
+            <div key={label} className={styles.roomRow}>
+              <span className={styles.roomRowLabel}>{label}</span>
+              <span className={styles.roomRowValue}>{value}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )

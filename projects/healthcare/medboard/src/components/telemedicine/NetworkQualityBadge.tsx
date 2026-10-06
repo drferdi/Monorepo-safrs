@@ -7,10 +7,10 @@ interface NetworkQualityBadgeProps {
 }
 
 const QUALITY_CONFIG = {
-  excellent: { label: 'Excellent', color: '#4ade80', bars: 3 },
-  good: { label: 'Good', color: '#facc15', bars: 2 },
-  poor: { label: 'Lemah', color: '#f87171', bars: 1 },
-  unknown: { label: '—', color: 'var(--text-muted)', bars: 0 },
+  excellent: { label: 'Excellent', color: 'var(--success)', bars: 3 },
+  good: { label: 'Good', color: 'var(--warning)', bars: 2 },
+  poor: { label: 'Lemah', color: 'var(--critical)', bars: 1 },
+  unknown: { label: '—', color: 'var(--text-secondary)', bars: 0 },
 }
 
 export function NetworkQualityBadge({ quality }: NetworkQualityBadgeProps): React.JSX.Element {
@@ -22,9 +22,8 @@ export function NetworkQualityBadge({ quality }: NetworkQualityBadgeProps): Reac
         alignItems: 'center',
         gap: 5,
         padding: '2px 8px',
-        borderRadius: 6,
-        background: 'rgba(255,255,255,0.05)',
-        border: '1px solid var(--line-base)',
+        borderRadius: 'var(--radius-full)',
+        background: 'var(--surface-subtle)',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2, height: 12 }}>
@@ -35,7 +34,7 @@ export function NetworkQualityBadge({ quality }: NetworkQualityBadgeProps): Reac
               width: 3,
               height: bar === 1 ? 4 : bar === 2 ? 8 : 12,
               borderRadius: 1,
-              background: bar <= cfg.bars ? cfg.color : 'rgba(255,255,255,0.15)',
+              background: bar <= cfg.bars ? cfg.color : 'var(--border)',
               transition: 'background 0.3s',
             }}
           />

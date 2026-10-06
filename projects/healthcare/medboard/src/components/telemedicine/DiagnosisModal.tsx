@@ -126,15 +126,14 @@ export function DiagnosisModal({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'rgba(0,0,0,0.75)',
-        backdropFilter: 'blur(4px)',
+        background: 'rgba(15, 23, 42, 0.32)',
       }}
     >
       <div
         style={{
-          background: 'var(--bg-nav)',
+          background: 'var(--surface)',
           borderRadius: 16,
-          boxShadow: '0 24px 80px rgba(0,0,0,0.5)',
+          boxShadow: 'var(--shadow-dialog)',
           width: '100%',
           maxWidth: 640,
           maxHeight: '90vh',
@@ -201,7 +200,7 @@ export function DiagnosisModal({
               placeholder="Keluhan utama, riwayat penyakit sekarang..."
               value={form.anamnesis ?? ''}
               onChange={e => setForm(p => ({ ...p, anamnesis: e.target.value }))}
-              style={textareaStyle}
+              className="ui-input" style={{ resize: 'none' }}
             />
           </FormField>
 
@@ -211,7 +210,7 @@ export function DiagnosisModal({
               placeholder="TD: 120/80 mmHg, Nadi: 80x/mnt, RR: 20x/mnt..."
               value={form.pemeriksaan ?? ''}
               onChange={e => setForm(p => ({ ...p, pemeriksaan: e.target.value }))}
-              style={textareaStyle}
+              className="ui-input" style={{ resize: 'none' }}
             />
           </FormField>
 
@@ -221,10 +220,8 @@ export function DiagnosisModal({
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid var(--line-base)',
-                  borderRadius: 8,
-                  padding: '0 12px',
+                  borderBottom: '1px solid var(--border)',
+                  padding: '0 2px',
                 }}
               >
                 <Search
@@ -258,7 +255,7 @@ export function DiagnosisModal({
                     style={{
                       width: 14,
                       height: 14,
-                      border: '2px solid var(--c-asesmen)',
+                      border: '2px solid var(--primary)',
                       borderTopColor: 'transparent',
                       borderRadius: '50%',
                       animation: 'spin 1s linear infinite',
@@ -274,10 +271,10 @@ export function DiagnosisModal({
                     left: 0,
                     right: 0,
                     marginTop: 4,
-                    background: 'var(--bg-nav)',
-                    border: '1px solid var(--line-base)',
+                    background: 'var(--surface)',
+                    border: '1px solid var(--border)',
                     borderRadius: 8,
-                    boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+                    boxShadow: 'var(--shadow-dialog)',
                     zIndex: 10,
                     overflow: 'hidden',
                   }}
@@ -299,7 +296,7 @@ export function DiagnosisModal({
                     >
                       <span
                         style={{
-                          color: 'var(--c-asesmen)',
+                          color: 'var(--primary)',
                           fontSize: 14,
                           fontWeight: 600,
                         }}
@@ -339,7 +336,7 @@ export function DiagnosisModal({
               placeholder="Terapi farmakologi dan non-farmakologi..."
               value={form.tatalaksana ?? ''}
               onChange={e => setForm(p => ({ ...p, tatalaksana: e.target.value }))}
-              style={textareaStyle}
+              className="ui-input" style={{ resize: 'none' }}
             />
           </FormField>
 
@@ -349,7 +346,7 @@ export function DiagnosisModal({
               type="checkbox"
               checked={form.rujukan}
               onChange={e => setForm(p => ({ ...p, rujukan: e.target.checked }))}
-              style={{ width: 16, height: 16, accentColor: 'var(--c-asesmen)' }}
+              style={{ width: 16, height: 16, accentColor: 'var(--primary)' }}
             />
             <label htmlFor="rujukan" style={{ color: 'var(--text-muted)', fontSize: 14 }}>
               Perlu rujukan ke fasilitas lanjutan
@@ -362,7 +359,7 @@ export function DiagnosisModal({
                 placeholder="RSUD, Poli Spesialis..."
                 value={form.rujukanTujuan ?? ''}
                 onChange={e => setForm(p => ({ ...p, rujukanTujuan: e.target.value }))}
-                style={inputStyle}
+                className="ui-input"
               />
             </FormField>
           )}
@@ -400,8 +397,8 @@ export function DiagnosisModal({
               alignItems: 'center',
               gap: 8,
               padding: '8px 20px',
-              background: saved ? 'rgba(16,185,129,0.8)' : 'rgba(59,130,246,0.85)',
-              color: '#fff',
+              background: saved ? 'var(--success)' : 'var(--primary)',
+              color: 'var(--text-on-accent)',
               border: 'none',
               borderRadius: 8,
               fontSize: 14,
@@ -420,7 +417,7 @@ export function DiagnosisModal({
                   style={{
                     width: 14,
                     height: 14,
-                    border: '2px solid #fff',
+                    border: '2px solid var(--text-on-accent)',
                     borderTopColor: 'transparent',
                     borderRadius: '50%',
                     animation: 'spin 1s linear infinite',
@@ -439,23 +436,6 @@ export function DiagnosisModal({
 }
 
 // ─── HELPERS ──────────────────────────────────────────────────
-
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  background: 'rgba(255,255,255,0.04)',
-  border: '1px solid var(--line-base)',
-  borderRadius: 8,
-  padding: '10px 12px',
-  color: 'var(--text-main)',
-  fontSize: 14,
-  outline: 'none',
-  boxSizing: 'border-box',
-}
-
-const textareaStyle: React.CSSProperties = {
-  ...inputStyle,
-  resize: 'none',
-}
 
 function FormField({
   label,
@@ -486,7 +466,7 @@ function FormField({
             display: 'flex',
             alignItems: 'center',
             gap: 4,
-            color: '#f87171',
+            color: 'var(--critical)',
             fontSize: 14,
             marginTop: 4,
           }}

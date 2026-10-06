@@ -69,13 +69,15 @@ export function ConsultationControls({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '12px 24px',
-          background: 'rgba(0,0,0,0.7)',
-          borderTop: '1px solid rgba(255,255,255,0.08)',
+          gap: 16,
+          flexWrap: 'wrap',
+          padding: '16px 24px',
+          background: 'var(--surface)',
+          borderTop: '1px solid var(--border)',
         }}
       >
         {/* Left: Media controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <ControlButton
             onClick={onToggleMic}
             active={sessionState.isMicEnabled}
@@ -83,8 +85,6 @@ export function ConsultationControls({
             inactiveIcon={<MicOff size={18} />}
             activeLabel="Mic On"
             inactiveLabel="Mic Off"
-            activeBg="rgba(255,255,255,0.1)"
-            inactiveBg="rgba(255,255,255,0.06)"
           />
           <ControlButton
             onClick={onToggleCamera}
@@ -93,8 +93,6 @@ export function ConsultationControls({
             inactiveIcon={<VideoOff size={18} />}
             activeLabel="Kamera On"
             inactiveLabel="Kamera Off"
-            activeBg="rgba(255,255,255,0.1)"
-            inactiveBg="rgba(255,255,255,0.06)"
           />
           {!isPatient && (
             <ControlButton
@@ -104,8 +102,6 @@ export function ConsultationControls({
               inactiveIcon={<MonitorOff size={18} />}
               activeLabel="Bagikan Layar"
               inactiveLabel="Stop Share"
-              activeBg="rgba(255,255,255,0.1)"
-              inactiveBg="rgba(255,255,255,0.06)"
             />
           )}
         </div>
@@ -114,18 +110,14 @@ export function ConsultationControls({
         {isDoctor && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <ClinicalButton
-              icon={<FileText size={15} />}
+              icon={<FileText size={16} />}
               label="Diagnosis"
               onClick={() => setShowDiagnosis(true)}
-              bg="rgba(0, 33, 71, 0.15)"
-              border="rgba(0, 33, 71, 0.4)"
             />
             <ClinicalButton
-              icon={<Pill size={15} />}
+              icon={<Pill size={16} />}
               label="Resep"
               onClick={() => setShowPrescription(true)}
-              bg="rgba(0, 33, 71, 0.15)"
-              border="rgba(0, 33, 71, 0.4)"
             />
           </div>
         )}
@@ -134,21 +126,8 @@ export function ConsultationControls({
         <button
           onClick={() => void handleEndCall()}
           disabled={isEndingCall}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            padding: '8px 20px',
-            background: 'rgba(239,68,68,0.85)',
-            color: '#fff',
-            border: 'none',
-            borderRadius: 10,
-            fontSize: 14,
-            fontWeight: 600,
-            cursor: isEndingCall ? 'not-allowed' : 'pointer',
-            opacity: isEndingCall ? 0.6 : 1,
-            transition: 'background 0.2s',
-          }}
+          className="ui-btn ui-btn--secondary"
+          style={{ color: 'var(--critical)', borderColor: 'var(--critical)' }}
         >
           <PhoneOff size={16} />
           {isEndingCall ? 'Mengakhiri...' : 'Akhiri Konsultasi'}
@@ -183,8 +162,6 @@ interface ControlButtonProps {
   inactiveIcon: React.ReactNode
   activeLabel: string
   inactiveLabel: string
-  activeBg: string
-  inactiveBg: string
 }
 
 function ControlButton({
@@ -194,25 +171,19 @@ function ControlButton({
   inactiveIcon,
   activeLabel,
   inactiveLabel,
-  activeBg,
-  inactiveBg,
 }: ControlButtonProps): React.JSX.Element {
   return (
     <button
       onClick={() => void onClick()}
       title={active ? activeLabel : inactiveLabel}
+      aria-pressed={!active}
+      className="ui-btn ui-btn--secondary"
       style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         width: 44,
         height: 44,
-        borderRadius: 10,
-        background: active ? activeBg : inactiveBg,
-        color: '#fff',
-        border: '1px solid rgba(255,255,255,0.1)',
-        cursor: 'pointer',
-        transition: 'background 0.2s',
+        padding: 0,
+        color: active ? 'var(--text)' : 'var(--text-secondary)',
+        background: active ? 'var(--surface)' : 'var(--surface-subtle)',
       }}
     >
       {active ? activeIcon : inactiveIcon}
@@ -224,35 +195,11 @@ interface ClinicalButtonProps {
   icon: React.ReactNode
   label: string
   onClick: () => void
-  bg: string
-  border: string
 }
 
-function ClinicalButton({
-  icon,
-  label,
-  onClick,
-  bg,
-  border,
-}: ClinicalButtonProps): React.JSX.Element {
+function ClinicalButton({ icon, label, onClick }: ClinicalButtonProps): React.JSX.Element {
   return (
-    <button
-      onClick={onClick}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 6,
-        padding: '7px 14px',
-        background: bg,
-        color: '#002147',
-        border: `1px solid ${border}`,
-        borderRadius: 8,
-        fontSize: 14,
-        fontWeight: 600,
-        cursor: 'pointer',
-        transition: 'background 0.2s',
-      }}
-    >
+    <button onClick={onClick} className="ui-btn ui-btn--secondary">
       {icon}
       {label}
     </button>

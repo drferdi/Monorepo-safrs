@@ -91,29 +91,6 @@ interface AssistConsult {
   mira_differential?: MiraDifferential
 }
 
-/* ── Design tokens — EMR Clinical Flow Style ── */
-function useL() {
-  return {
-    bg: 'var(--bg-canvas)',
-    bgPanel: 'var(--bg-card, #EDE4D9)',
-    bgHover: 'rgba(0, 33, 71, 0.06)',
-    border: 'var(--line-base)',
-    borderAcc: 'rgba(211,84,0,0.5)',
-    text: 'var(--text-main)',
-    muted: 'var(--text-muted)',
-    accent: '#D35400',
-    actionTone: '#101012',
-    actionToneSoft: 'rgba(16,16,18,0.10)',
-    actionToneBorder: 'rgba(16,16,18,0.22)',
-    actionNeumorph: '3px 3px 10px rgba(0,0,0,0.22), inset 1px 1px 0 rgba(255,255,255,0.04)',
-    green: '#4ADE80',
-    mono: 'var(--font-mono)',
-    sans: 'var(--font-sans)',
-  }
-}
-
-type LTokens = ReturnType<typeof useL>
-
 function humanizeCanonicalValue(value: string | undefined): string {
   return String(value || '')
     .replace(/_/g, ' ')
@@ -153,10 +130,10 @@ function resolveCanonicalSnapshotTone(consult: AssistConsult['canonical_clinical
     return {
       label: 'Risiko Tinggi',
       emphasis: 'Perlu tindakan segera',
-      background: 'rgba(239,68,68,0.10)',
-      border: 'rgba(239,68,68,0.22)',
-      pillBackground: 'rgba(239,68,68,0.16)',
-      pillColor: '#f87171',
+      background: 'var(--critical-tint)',
+      border: 'var(--critical)',
+      pillBackground: 'var(--critical-tint)',
+      pillColor: 'var(--critical)',
     }
   }
 
@@ -164,20 +141,20 @@ function resolveCanonicalSnapshotTone(consult: AssistConsult['canonical_clinical
     return {
       label: 'Risiko Sedang',
       emphasis: 'Perlu monitoring ketat',
-      background: 'rgba(245,158,11,0.10)',
-      border: 'rgba(245,158,11,0.20)',
-      pillBackground: 'rgba(245,158,11,0.16)',
-      pillColor: '#fbbf24',
+      background: 'var(--warning-tint)',
+      border: 'var(--warning)',
+      pillBackground: 'var(--warning-tint)',
+      pillColor: 'var(--warning)',
     }
   }
 
   return {
     label: 'Risiko Rendah',
     emphasis: 'Tetap perlu review klinis',
-    background: 'rgba(74,222,128,0.10)',
-    border: 'rgba(74,222,128,0.18)',
-    pillBackground: 'rgba(74,222,128,0.16)',
-    pillColor: '#4ADE80',
+    background: 'var(--success-tint)',
+    border: 'var(--success)',
+    pillBackground: 'var(--success-tint)',
+    pillColor: 'var(--success)',
   }
 }
 
@@ -204,144 +181,118 @@ function sortAssistConsults(consults: AssistConsult[]): AssistConsult[] {
   })
 }
 
-function SectionEyebrow({
-  children,
-  muted = false,
-}: {
-  L: LTokens
-  children: React.ReactNode
-  muted?: boolean
-}) {
-  return (
-    <div
-      className={
-        muted ? `${styles.sectionEyebrow} ${styles.sectionEyebrowMuted}` : styles.sectionEyebrow
-      }
-    >
-      {children}
-    </div>
-  )
-}
-
 type OverviewMetricTone = 'green' | 'muted' | 'accent' | 'gold'
+
+const METRIC_BADGE_CLASS: Record<OverviewMetricTone, string> = {
+  green: 'ui-badge ui-badge--success',
+  accent: 'ui-badge ui-badge--accent',
+  gold: 'ui-badge ui-badge--primary',
+  muted: 'ui-badge ui-badge--neutral',
+}
 
 function OverviewMetric({
   label,
   value,
   hint,
   toneVariant,
+  statusWord,
 }: {
-  L: LTokens
   label: string
   value: string
   hint: string
   toneVariant: OverviewMetricTone
+  statusWord: string
 }) {
-  const toneClass =
-    toneVariant === 'green'
-      ? styles.overviewMetricToneDotGreen
-      : toneVariant === 'accent'
-        ? styles.overviewMetricToneDotAccent
-        : toneVariant === 'gold'
-          ? styles.overviewMetricToneDotGold
-          : styles.overviewMetricToneDotMuted
   return (
-    <div className={styles.overviewMetric}>
-      <div className={styles.overviewMetricHeader}>
-        <span className={styles.overviewMetricLabel}>{label}</span>
-        <span className={`${styles.overviewMetricToneDot} ${toneClass}`} />
+    <div className={styles.kpi}>
+      <div className={styles.kpiHeader}>
+        <span className={styles.kpiLabel}>{label}</span>
+        <span className={METRIC_BADGE_CLASS[toneVariant]}>{statusWord}</span>
       </div>
-      <div>
-        <div className={styles.overviewMetricValue}>{value}</div>
-        <div className={styles.overviewMetricHint}>{hint}</div>
-      </div>
+      <div className={styles.kpiValue}>{value}</div>
+      <div className={styles.kpiHint}>{hint}</div>
     </div>
   )
 }
 
 /* ── Status config ── */
+type StatusTone = 'warning' | 'primary' | 'success' | 'neutral' | 'critical'
+
 const STATUS_CONFIG: Record<
   AppointmentStatus,
-  { label: string; color: string; icon: React.ReactNode }
+  { label: string; tone: StatusTone; icon: React.ReactNode }
 > = {
-  PENDING: { label: 'Menunggu', color: '#facc15', icon: <Clock size={11} /> },
+  PENDING: { label: 'Menunggu', tone: 'warning', icon: <Clock size={12} /> },
   CONFIRMED: {
     label: 'Dikonfirmasi',
-    color: '#60a5fa',
-    icon: <CheckCircle size={11} />,
+    tone: 'primary',
+    icon: <CheckCircle size={12} />,
   },
   IN_PROGRESS: {
     label: 'Berlangsung',
-    color: '#4ADE80',
-    icon: <Video size={11} />,
+    tone: 'success',
+    icon: <Video size={12} />,
   },
   COMPLETED: {
     label: 'Selesai',
-    color: '#777777',
-    icon: <CheckCircle size={11} />,
+    tone: 'neutral',
+    icon: <CheckCircle size={12} />,
   },
   CANCELLED: {
     label: 'Dibatalkan',
-    color: '#f87171',
-    icon: <XCircle size={11} />,
+    tone: 'critical',
+    icon: <XCircle size={12} />,
   },
   NO_SHOW: {
     label: 'Tidak Hadir',
-    color: '#fb923c',
-    icon: <AlertCircle size={11} />,
+    tone: 'warning',
+    icon: <AlertCircle size={12} />,
   },
 }
 
 const ACTIVE_APPOINTMENT_STATUSES: AppointmentStatus[] = ['PENDING', 'CONFIRMED', 'IN_PROGRESS']
 const PAST_APPOINTMENT_STATUSES: AppointmentStatus[] = ['COMPLETED', 'CANCELLED', 'NO_SHOW']
 
-/* ── PatientFlowDiagram with motion typing animation ── */
+/* ── Patient pathway ── */
 const FLOW_STEPS = [
   {
-    num: '01',
     code: 'PETUGAS',
     label: 'Isi No. HP Pasien',
     sub: 'saat buat appointment',
   },
   {
-    num: '02',
     code: 'SISTEM',
     label: 'Generate Token Unik',
     sub: 'disimpan ke database',
   },
   {
-    num: '03',
     code: 'WHATSAPP',
     label: 'Kirim Link via WhatsApp',
     sub: '/join/[token]',
   },
   {
-    num: '04',
     code: 'PASIEN',
     label: 'Klik Link → Buka Browser',
     sub: 'tanpa install / login',
   },
   {
-    num: '05',
     code: 'INPUT',
     label: 'Masukkan Nama',
     sub: 'klik Masuk Konsultasi',
   },
   {
-    num: '06',
     code: 'LIVEKIT',
     label: 'Connect ke Video Room',
     sub: 'role: PATIENT',
   },
   {
-    num: '07',
     code: 'SELESAI',
     label: 'Dokter & Pasien Terhubung',
     sub: 'konsultasi berlangsung',
   },
 ]
 
-function PatientFlowDiagram({ L }: { L: LTokens }) {
+function PatientFlowDiagram() {
   const [visibleItems, setVisibleItems] = useState(0)
 
   useEffect(() => {
@@ -353,95 +304,33 @@ function PatientFlowDiagram({ L }: { L: LTokens }) {
   }, [])
 
   return (
-    <div className={`blueprint-wrapper ${styles.flowDiagramWrapper}`}>
-      <div
-        style={{
-          marginBottom: 16,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 6,
-        }}
-      >
-        <SectionEyebrow L={L}>Pathway Pasien</SectionEyebrow>
-        <div style={{ fontSize: 14, color: L.muted }}>
-          Tahapan praktis dari pembuatan appointment sampai pasien masuk ke room konsultasi.
+    <div className={styles.card}>
+      <div className={styles.cardHead}>
+        <div>
+          <h2 className={styles.cardTitle}>Pathway Pasien</h2>
+          <p className={styles.cardText}>
+            Tahapan praktis dari pembuatan appointment sampai pasien masuk ke room konsultasi.
+          </p>
         </div>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-        {FLOW_STEPS.map((step, i) => (
-          <div
-            key={step.code}
-            style={{
-              opacity: i < visibleItems ? 1 : 0,
-              transform: i < visibleItems ? 'translateY(0)' : 'translateY(8px)',
-              transition: `all 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${i * 60}ms`,
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: 12,
-                padding: '8px 0',
-              }}
-            >
+      <div>
+        {FLOW_STEPS.map((step, i) => {
+          const isFinal = i === 6
+          return (
+            <div key={step.code} className={styles.step} style={{ opacity: i < visibleItems ? 1 : 0 }}>
+              <div className={isFinal ? `${styles.stepCode} ${styles.stepCodeFinal}` : styles.stepCode}>
+                {step.code}
+              </div>
               <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  flexShrink: 0,
-                  width: 28,
-                }}
+                className={isFinal ? `${styles.stepLabel} ${styles.stepLabelFinal}` : styles.stepLabel}
               >
-                <div
-                  className={styles.flowStepNumber}
-                  style={{
-                    borderColor: i === 6 ? L.accent : L.border,
-                    background: i === 6 ? `${L.accent}15` : 'transparent',
-                    color: i === 6 ? L.accent : L.muted,
-                  }}
-                >
-                  {step.num}
-                </div>
-                {i < FLOW_STEPS.length - 1 && (
-                  <div
-                    style={{
-                      width: 1,
-                      height: 20,
-                      background: L.border,
-                      marginTop: 3,
-                    }}
-                  />
-                )}
+                {step.label}
               </div>
-              <div style={{ paddingTop: 4 }}>
-                <div
-                  style={{
-                    fontSize: 12,
-                    color: L.accent,
-                    marginBottom: 2,
-                    fontFamily: L.mono,
-                  }}
-                >
-                  {step.code}
-                </div>
-                <div
-                  style={{
-                    fontSize: 14,
-                    color: i === 6 ? L.text : L.muted,
-                    fontWeight: i === 6 ? 500 : 400,
-                    marginBottom: 1,
-                  }}
-                >
-                  {step.label}
-                </div>
-                <div style={{ fontSize: 14, color: L.muted }}>{step.sub}</div>
-              </div>
+              <div className={styles.stepSub}>{step.sub}</div>
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </div>
   )
@@ -449,12 +338,11 @@ function PatientFlowDiagram({ L }: { L: LTokens }) {
 
 /* ── AppointmentRow ── */
 interface AppointmentCardProps {
-  L: LTokens
   appointment: AppointmentWithDetails
   onJoin?: () => void
 }
 
-function AppointmentRow({ L, appointment, onJoin }: AppointmentCardProps) {
+function AppointmentRow({ appointment, onJoin }: AppointmentCardProps) {
   const status = STATUS_CONFIG[appointment.status]
   const isActive = ACTIVE_APPOINTMENT_STATUSES.includes(appointment.status)
   const scheduledAt = new Date(appointment.scheduledAt)
@@ -468,167 +356,67 @@ function AppointmentRow({ L, appointment, onJoin }: AppointmentCardProps) {
 
   return (
     <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: 'auto minmax(0, 1fr)',
-        alignItems: 'stretch',
-        gap: 16,
-        padding: '16px 18px',
-        borderBottom: `1px solid ${L.border}`,
-        background: 'transparent',
-        transition: 'background 0.15s',
-      }}
+      className={styles.row}
       onMouseEnter={e => {
-        ;(e.currentTarget as HTMLDivElement).style.background = L.bgHover
+        ;(e.currentTarget as HTMLDivElement).style.background = 'var(--surface-subtle)'
       }}
       onMouseLeave={e => {
         ;(e.currentTarget as HTMLDivElement).style.background = 'transparent'
       }}
     >
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: 8,
-        }}
-      >
-        <div
-          style={{
-            width: 12,
-            height: 12,
-            borderRadius: '50%',
-            background: status.color,
-            boxShadow: `0 0 0 4px ${status.color}18`,
-            marginTop: 4,
-          }}
-        />
-        <div style={{ width: 1, flex: 1, minHeight: 42, background: L.border }} />
-      </div>
-
-      <div>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: 8,
-            marginBottom: 8,
-          }}
-        >
-          <span
-            style={{
-              fontSize: 14,
-              color: L.accent,
-              fontFamily: L.mono,
-            }}
-          >
-            #{appointment.id.slice(-8).toUpperCase()}
-          </span>
-          <span
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 3,
-              padding: '2px 8px',
-              borderRadius: 2,
-              background: `${status.color}18`,
-              color: status.color,
-              fontSize: 12,
-              fontFamily: L.mono,
-            }}
-          >
+      <div className={styles.rowMain}>
+        <div className={styles.rowTop}>
+          <span className={styles.rowId}>#{appointment.id.slice(-8).toUpperCase()}</span>
+          <span className={`ui-badge ui-badge--${status.tone}`}>
             {status.icon}&nbsp;{status.label}
           </span>
-          <span
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              padding: '2px 8px',
-              border: `1px solid ${L.border}`,
-              color: L.muted,
-              fontSize: 12,
-              fontFamily: L.mono,
-            }}
-          >
-            {appointmentType}
-          </span>
+          <span className="ui-badge ui-badge--neutral">{appointmentType}</span>
         </div>
-        <div style={{ fontSize: 16, color: L.text, marginBottom: 6 }}>
-          Pasien {appointment.patientId}
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            flexWrap: 'wrap',
-            gap: 12,
-          }}
-        >
-          <span style={{ fontSize: 14, color: L.muted, fontFamily: L.mono }}>
+        <div className={styles.rowName}>Pasien {appointment.patientId}</div>
+        <div className={styles.rowMeta}>
+          <span>
             {scheduledAt.toLocaleString('id-ID', {
               dateStyle: 'medium',
               timeStyle: 'short',
             })}
           </span>
-          <span style={{ color: L.border }}>·</span>
-          <span style={{ fontSize: 14, color: L.muted }}>{appointment.durationMinutes}m</span>
-          <span style={{ color: L.border }}>·</span>
-          <span style={{ fontSize: 14, color: L.muted }}>{appointment.doctorId}</span>
+          <span className={styles.sep}>·</span>
+          <span>{appointment.durationMinutes}m</span>
+          <span className={styles.sep}>·</span>
+          <span>{appointment.doctorId}</span>
           {appointment.patientPhone && (
             <>
-              <span style={{ color: L.border }}>·</span>
-              <span style={{ fontSize: 14, color: L.muted }}>{appointment.patientPhone}</span>
+              <span className={styles.sep}>·</span>
+              <span>{appointment.patientPhone}</span>
             </>
           )}
           {appointment.keluhanUtama && (
             <>
-              <span style={{ color: L.border }}>·</span>
-              <span style={{ fontSize: 14, color: L.muted, fontStyle: 'italic' }}>
+              <span className={styles.sep}>·</span>
+              <span>
                 {appointment.keluhanUtama.slice(0, 35)}
                 {appointment.keluhanUtama.length > 35 ? '…' : ''}
               </span>
             </>
           )}
         </div>
-        {isActive && onJoin && (
-          <button
-            onClick={onJoin}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 6,
-              padding: '10px 14px',
-              background: isInProgress ? 'rgba(74,222,128,0.15)' : `${L.accent}15`,
-              border: `1px solid ${isInProgress ? L.green : L.accent}`,
-              borderRadius: 3,
-              color: isInProgress ? L.green : L.accent,
-              fontSize: 12,
-              fontFamily: L.mono,
-              cursor: 'pointer',
-              transition: 'all 0.15s ease',
-              marginTop: 14,
-              justifyContent: 'center',
-              minWidth: 92,
-            }}
-          >
-            <Video size={12} />
-            {isInProgress ? 'MASUK' : 'JOIN'}
-          </button>
-        )}
       </div>
+      {isActive && onJoin && (
+        <button onClick={onJoin} className="ui-btn ui-btn--primary ui-btn--sm">
+          <Video size={12} />
+          {isInProgress ? 'MASUK' : 'JOIN'}
+        </button>
+      )}
     </div>
   )
 }
 
-/* ── RequestInbox with motion typing animation ── */
+/* ── RequestInbox ── */
 function RequestInbox({
-  L,
   requests,
   onMarkHandled,
   onDeleteRequest,
 }: {
-  L: LTokens
   requests: TeleRequest[]
   onMarkHandled: (id: string) => void
   onDeleteRequest: (id: string) => void
@@ -666,93 +454,45 @@ function RequestInbox({
   }
 
   return (
-    <div className="blueprint-wrapper" style={{ padding: '20px 24px' }}>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
-          gap: 12,
-          marginBottom: 12,
-        }}
-      >
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-          <SectionEyebrow L={L}>Triage Request</SectionEyebrow>
-          <div style={{ fontSize: 14, color: L.muted }}>
+    <div className={styles.card}>
+      <div className={styles.cardHead}>
+        <div>
+          <h2 className={styles.cardTitle}>Triage Request</h2>
+          <p className={styles.cardText}>
             Request masuk dari website untuk dipilah, ditindaklanjuti, atau diarsipkan.
-          </div>
+          </p>
         </div>
         {pending.length > 0 && (
-          <span
-            style={{
-              background: `${L.accent}20`,
-              color: L.accent,
-              fontSize: 12,
-              padding: '2px 8px',
-              borderRadius: 2,
-              fontFamily: L.mono,
-            }}
-          >
-            {pending.length} baru
-          </span>
+          <span className="ui-badge ui-badge--accent">{pending.length} baru</span>
         )}
       </div>
 
       {requests.length === 0 ? (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            padding: '32px 0',
-            gap: 8,
-            color: L.muted,
-          }}
-        >
-          <Inbox size={24} style={{ opacity: 0.3 }} />
-          <div style={{ fontSize: 14 }}>belum ada request</div>
+        <div className={styles.emptyBlock}>
+          <Inbox size={24} />
+          <div>belum ada request</div>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+        <div>
           {allRequests.map((req, i) => (
             <div
               key={req.id}
-              style={{
-                padding: '12px 0',
-                borderBottom: i < allRequests.length - 1 ? `1px solid ${L.border}` : 'none',
-                background: req.status === 'PENDING' ? `${L.accent}06` : 'transparent',
-                margin: '0 -8px',
-                paddingLeft: 8,
-                paddingRight: 8,
-                borderRadius: req.status === 'PENDING' ? 3 : 0,
-                opacity: i < visibleItems ? 1 : 0,
-                transform: i < visibleItems ? 'translateY(0)' : 'translateY(6px)',
-                transition: `all 0.4s cubic-bezier(0.16, 1, 0.3, 1) ${i * 60}ms`,
-              }}
+              className={
+                req.status === 'PENDING'
+                  ? `${styles.request} ${styles.requestPending}`
+                  : styles.request
+              }
+              style={{ opacity: i < visibleItems ? 1 : 0 }}
             >
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: 4,
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div className={styles.requestTop}>
+                <div className={styles.requestWho}>
                   {/* Silhouette Wajah */}
                   <div
-                    style={{
-                      width: 40,
-                      height: 40,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderRadius: '50%',
-                      background:
-                        req.status === 'PENDING' ? `${L.accent}15` : 'rgba(255,255,255,0.03)',
-                      border: `1px solid ${req.status === 'PENDING' ? L.accent : L.border}`,
-                      flexShrink: 0,
-                    }}
+                    className={
+                      req.status === 'PENDING'
+                        ? `${styles.avatar} ${styles.avatarPending}`
+                        : styles.avatar
+                    }
                   >
                     {req.nama.toLowerCase().includes('ibu') ||
                     req.nama.toLowerCase().includes('ny') ||
@@ -761,13 +501,7 @@ function RequestInbox({
                     req.nama.toLowerCase().includes('wi') ||
                     req.nama.toLowerCase().includes('ma') ? (
                       /* Silhouette Wajah Perempuan */
-                      <svg
-                        width="28"
-                        height="28"
-                        viewBox="0 0 48 48"
-                        fill="currentColor"
-                        style={{ color: L.muted }}
-                      >
+                      <svg width="28" height="28" viewBox="0 0 48 48" fill="currentColor">
                         {/* Kepala */}
                         <ellipse cx="24" cy="20" rx="10" ry="12" opacity="0.9" />
                         {/* Rambut - model perempuan */}
@@ -790,13 +524,7 @@ function RequestInbox({
                       </svg>
                     ) : (
                       /* Silhouette Wajah Laki-laki */
-                      <svg
-                        width="28"
-                        height="28"
-                        viewBox="0 0 48 48"
-                        fill="currentColor"
-                        style={{ color: L.muted }}
-                      >
+                      <svg width="28" height="28" viewBox="0 0 48 48" fill="currentColor">
                         {/* Kepala */}
                         <ellipse cx="24" cy="21" rx="10" ry="11" opacity="0.9" />
                         {/* Rambut - model laki-laki pendek */}
@@ -830,118 +558,48 @@ function RequestInbox({
                     )}
                   </div>
                   <span
+                    className={styles.rowName}
                     style={{
-                      fontSize: 14,
-                      color: req.status === 'PENDING' ? L.text : L.muted,
+                      color: req.status === 'PENDING' ? 'var(--text)' : 'var(--text-secondary)',
                       fontWeight: req.status === 'PENDING' ? 500 : 400,
                     }}
                   >
                     {req.nama}
                   </span>
-                  <span style={{ fontSize: 12, color: L.muted, fontFamily: L.mono }}>
-                    {req.usia}th
-                  </span>
+                  <span className={styles.requestSmall}>{req.usia}th</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: 12, color: L.muted, fontFamily: L.mono }}>
-                    {formatTime(req.createdAt)}
-                  </span>
+                <div className={styles.requestWho}>
+                  <span className={styles.requestSmall}>{formatTime(req.createdAt)}</span>
                   <button
                     onClick={() => handleDelete(req.id)}
                     disabled={deletingId === req.id}
                     title="Hapus request"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: 22,
-                      height: 22,
-                      background: 'transparent',
-                      border: 'none',
-                      color: L.muted,
-                      cursor: 'pointer',
-                      opacity: deletingId === req.id ? 0.5 : 0.6,
-                      transition: 'all 0.15s ease',
-                      borderRadius: 3,
-                    }}
-                    onMouseEnter={e => {
-                      ;(e.currentTarget as HTMLButtonElement).style.color = '#E74C3C'
-                      ;(e.currentTarget as HTMLButtonElement).style.opacity = '1'
-                    }}
-                    onMouseLeave={e => {
-                      ;(e.currentTarget as HTMLButtonElement).style.color = L.muted
-                      ;(e.currentTarget as HTMLButtonElement).style.opacity = '0.6'
-                    }}
+                    className={styles.iconButton}
                   >
-                    <Trash2 size={12} />
+                    <Trash2 size={14} />
                   </button>
                 </div>
               </div>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  marginBottom: 4,
-                }}
-              >
-                <Phone size={10} style={{ color: L.muted }} />
-                <span style={{ fontSize: 14, color: L.muted }}>{req.hp}</span>
-                <span style={{ fontSize: 12, color: L.accent, fontFamily: L.mono }}>
-                  {req.poli}
-                </span>
+              <div className={styles.requestMeta}>
+                <Phone size={12} />
+                <span>{req.hp}</span>
+                <span className="ui-badge ui-badge--primary">{req.poli}</span>
               </div>
-              {req.bpjs && (
-                <div
-                  style={{
-                    fontSize: 12,
-                    color: L.muted,
-                    marginBottom: 4,
-                    fontFamily: L.mono,
-                  }}
-                >
-                  BPJS: {req.bpjs}
-                </div>
-              )}
-              <div
-                style={{
-                  fontSize: 14,
-                  color: L.muted,
-                  fontStyle: 'italic',
-                  marginBottom: req.status === 'PENDING' ? 8 : 0,
-                }}
-              >
+              {req.bpjs && <div className={styles.requestSmall}>BPJS: {req.bpjs}</div>}
+              <div className={styles.requestComplaint}>
                 {req.keluhan.length > 60 ? req.keluhan.slice(0, 60) + '…' : req.keluhan}
               </div>
               {req.status === 'PENDING' && (
-                <button
-                  onClick={() => onMarkHandled(req.id)}
-                  style={{
-                    padding: '4px 10px',
-                    background: `${L.accent}12`,
-                    border: `1px solid ${L.accent}`,
-                    borderRadius: 3,
-                    color: L.accent,
-                    fontSize: 12,
-                    cursor: 'pointer',
-                    fontFamily: L.mono,
-                  }}
-                >
-                  TANDAI HANDLED
-                </button>
+                <div>
+                  <button
+                    onClick={() => onMarkHandled(req.id)}
+                    className="ui-btn ui-btn--secondary ui-btn--sm"
+                  >
+                    TANDAI HANDLED
+                  </button>
+                </div>
               )}
-              {req.status === 'HANDLED' && (
-                <span
-                  style={{
-                    fontSize: 12,
-                    color: L.muted,
-                    opacity: 0.5,
-                    fontFamily: L.mono,
-                  }}
-                >
-                  ✓ handled
-                </span>
-              )}
+              {req.status === 'HANDLED' && <span className={styles.requestSmall}>✓ handled</span>}
             </div>
           ))}
         </div>
@@ -952,7 +610,6 @@ function RequestInbox({
 
 /* ── Main Page ── */
 export default function TelemedicinePage(): React.JSX.Element {
-  const L = useL()
   const router = useRouter()
   const [appointments, setAppointments] = useState<AppointmentWithDetails[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -1241,436 +898,224 @@ export default function TelemedicinePage(): React.JSX.Element {
   const latestActive = activeAppointments[0]
 
   return (
-    <div style={{ width: '100%', maxWidth: 1400 }}>
+    <div className={styles.page}>
       {/* ── ASSIST CONSULT MODAL ── */}
       {activeConsult && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 9999,
-            background: 'rgba(0,0,0,0.7)',
-            backdropFilter: 'blur(4px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <div
-            style={{
-              background: 'var(--bg-surface)',
-              border: '1px solid var(--border-subtle)',
-              borderRadius: 12,
-              padding: 28,
-              width: 480,
-              maxWidth: '90vw',
-              boxShadow: '0 24px 64px rgba(0,0,0,0.5)',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'flex-start',
-                marginBottom: 16,
-              }}
-            >
-              <div>
-                <div
-                  style={{
-                    fontSize: 12,
-                    color: 'var(--text-muted)',
-                    marginBottom: 4,
-                  }}
-                >
-                  Asisten Medis — Konsultasi
-                </div>
-                <div
-                  style={{
-                    fontSize: 16,
-                    fontWeight: 600,
-                    color: 'var(--text-primary)',
-                  }}
-                >
-                  {activeConsult.patient.name}
-                </div>
-                <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>
-                  {activeConsult.patient.age} thn ·{' '}
-                  {activeConsult.patient.gender === 'L' ? 'Laki-laki' : 'Perempuan'} · RM{' '}
-                  {activeConsult.patient.rm}
+        <div className="ui-dialog-backdrop" style={{ zIndex: 9999 }}>
+          <div className="ui-dialog" style={{ maxWidth: 480 }}>
+            <div className="ui-dialog__header">
+              <div className={styles.dialogHead}>
+                <div>
+                  <div className={styles.dialogLabel}>Asisten Medis — Konsultasi</div>
+                  <h2 className="ui-dialog__title">{activeConsult.patient.name}</h2>
+                  <div className={styles.kpiHint}>
+                    {activeConsult.patient.age} thn ·{' '}
+                    {activeConsult.patient.gender === 'L' ? 'Laki-laki' : 'Perempuan'} · RM{' '}
+                    {activeConsult.patient.rm}
+                  </div>
                 </div>
               </div>
               <button
                 onClick={() => setActiveConsult(null)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  color: 'var(--text-muted)',
-                  fontSize: 20,
-                }}
+                className="ui-btn ui-btn--ghost ui-btn--sm"
               >
                 ✕
               </button>
             </div>
 
-            {/* Keluhan */}
-            <div
-              style={{
-                background: 'var(--bg-canvas)',
-                borderRadius: 8,
-                padding: '10px 14px',
-                marginBottom: 12,
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 12,
-                  color: 'var(--text-muted)',
-                  marginBottom: 4,
-                }}
-              >
-                Keluhan Utama
+            <div className={styles.dialogBody}>
+              {/* Keluhan */}
+              <div className={styles.dialogSection}>
+                <div className={styles.dialogLabel}>Keluhan Utama</div>
+                <div className={styles.dialogText}>{activeConsult.keluhan_utama}</div>
               </div>
-              <div style={{ fontSize: 14, color: 'var(--text-primary)' }}>
-                {activeConsult.keluhan_utama}
-              </div>
-            </div>
 
-            {/* TTV Grid */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
-                gap: 8,
-                marginBottom: 12,
-              }}
-            >
-              {[
-                {
-                  label: 'TD',
-                  value: `${activeConsult.ttv.sbp}/${activeConsult.ttv.dbp}`,
-                  unit: 'mmHg',
-                },
-                { label: 'Nadi', value: activeConsult.ttv.hr, unit: 'x/mnt' },
-                { label: 'RR', value: activeConsult.ttv.rr, unit: 'x/mnt' },
-                { label: 'Suhu', value: activeConsult.ttv.temp, unit: '°C' },
-                { label: 'SpO2', value: activeConsult.ttv.spo2, unit: '%' },
-                {
-                  label: 'GDS',
-                  value: activeConsult.ttv.glucose,
-                  unit: 'mg/dL',
-                },
-              ].map(v => (
-                <div
-                  key={v.label}
-                  style={{
-                    background: 'var(--bg-canvas)',
-                    borderRadius: 6,
-                    padding: '6px 10px',
-                    textAlign: 'center',
-                  }}
-                >
-                  <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{v.label}</div>
-                  <div
-                    style={{
-                      fontSize: 14,
-                      fontWeight: 600,
-                      color: 'var(--text-primary)',
-                    }}
-                  >
-                    {v.value}
+              {/* TTV Grid */}
+              <div className={`${styles.dialogSection} ${styles.ttvGrid}`}>
+                {[
+                  {
+                    label: 'TD',
+                    value: `${activeConsult.ttv.sbp}/${activeConsult.ttv.dbp}`,
+                    unit: 'mmHg',
+                  },
+                  { label: 'Nadi', value: activeConsult.ttv.hr, unit: 'x/mnt' },
+                  { label: 'RR', value: activeConsult.ttv.rr, unit: 'x/mnt' },
+                  { label: 'Suhu', value: activeConsult.ttv.temp, unit: '°C' },
+                  { label: 'SpO2', value: activeConsult.ttv.spo2, unit: '%' },
+                  {
+                    label: 'GDS',
+                    value: activeConsult.ttv.glucose,
+                    unit: 'mg/dL',
+                  },
+                ].map(v => (
+                  <div key={v.label} className={styles.ttvCell}>
+                    <div className={styles.dialogLabel}>{v.label}</div>
+                    <div className={styles.ttvValue}>{v.value}</div>
+                    <div className={styles.kpiLabel}>{v.unit}</div>
                   </div>
-                  <div style={{ fontSize: 12, color: 'var(--text-muted)' }}>{v.unit}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Anthropometrics */}
-            <div
-              style={{
-                background: 'var(--bg-canvas)',
-                borderRadius: 8,
-                padding: '10px 14px',
-                marginBottom: 12,
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 12,
-                  color: 'var(--text-muted)',
-                  marginBottom: 6,
-                }}
-              >
-                Antropometri
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  gap: 16,
-                  fontSize: 12,
-                  color: 'var(--text-primary)',
-                }}
-              >
-                <span>
-                  TB: <b>{activeConsult.anthropometrics.tinggi} cm</b>
-                </span>
-                <span>
-                  BB: <b>{activeConsult.anthropometrics.berat} kg</b>
-                </span>
-                <span>
-                  IMT: <b>{activeConsult.anthropometrics.imt}</b> (
-                  {activeConsult.anthropometrics.hasil_imt})
-                </span>
-              </div>
-            </div>
-
-            {/* Risk factors */}
-            {activeConsult.risk_factors.length > 0 && (
-              <div
-                style={{
-                  display: 'flex',
-                  gap: 6,
-                  flexWrap: 'wrap',
-                  marginBottom: 12,
-                }}
-              >
-                {activeConsult.risk_factors.map((r, i) => (
-                  <span
-                    key={`risk-${i}-${String(r).slice(0, 24)}`}
-                    style={{
-                      fontSize: 12,
-                      padding: '3px 8px',
-                      borderRadius: 4,
-                      background: 'rgba(239,68,68,0.15)',
-                      color: '#f87171',
-                      border: '1px solid rgba(239,68,68,0.3)',
-                    }}
-                  >
-                    {r}
-                  </span>
                 ))}
               </div>
-            )}
 
-            {activeConsult.mira_differential && (
-              <MiraDifferentialCard differential={activeConsult.mira_differential} />
-            )}
-
-            {activeConsult.canonical_clinical && (
-              <div
-                style={{
-                  background: canonicalSnapshotTone.background,
-                  borderRadius: 8,
-                  padding: '10px 14px',
-                  marginBottom: 12,
-                  border: `1px solid ${canonicalSnapshotTone.border}`,
-                }}
-              >
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: 10,
-                    marginBottom: 8,
-                    flexWrap: 'wrap',
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: 'var(--text-muted)',
-                    }}
-                  >
-                    Canonical Clinical Snapshot
-                  </div>
-                  <span
-                    style={{
-                      fontSize: 12,
-                      fontWeight: 600,
-                      padding: '4px 8px',
-                      borderRadius: 999,
-                      background: canonicalSnapshotTone.pillBackground,
-                      color: canonicalSnapshotTone.pillColor,
-                      border: `1px solid ${canonicalSnapshotTone.border}`,
-                    }}
-                  >
-                    {canonicalSnapshotTone.label}
+              {/* Anthropometrics */}
+              <div className={styles.dialogSection}>
+                <div className={styles.dialogLabel}>Antropometri</div>
+                <div className={`${styles.chips} ${styles.dialogText}`} style={{ gap: 16 }}>
+                  <span>
+                    TB: <b>{activeConsult.anthropometrics.tinggi} cm</b>
+                  </span>
+                  <span>
+                    BB: <b>{activeConsult.anthropometrics.berat} kg</b>
+                  </span>
+                  <span>
+                    IMT: <b>{activeConsult.anthropometrics.imt}</b> (
+                    {activeConsult.anthropometrics.hasil_imt})
                   </span>
                 </div>
+              </div>
 
+              {/* Risk factors */}
+              {activeConsult.risk_factors.length > 0 && (
+                <div className={`${styles.dialogSection} ${styles.chips}`}>
+                  {activeConsult.risk_factors.map((r, i) => (
+                    <span
+                      key={`risk-${i}-${String(r).slice(0, 24)}`}
+                      className="ui-badge ui-badge--critical"
+                    >
+                      {r}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {activeConsult.mira_differential && (
+                <MiraDifferentialCard differential={activeConsult.mira_differential} />
+              )}
+
+              {activeConsult.canonical_clinical && (
                 <div
                   style={{
-                    fontSize: 12,
-                    color: 'var(--text-primary)',
-                    fontWeight: 600,
-                    marginBottom: 8,
+                    background: canonicalSnapshotTone.background,
+                    borderLeft: `2px solid ${canonicalSnapshotTone.border}`,
+                    borderRadius: '0 var(--radius-sm) var(--radius-sm) 0',
+                    padding: 'var(--gap-md) var(--gap-lg)',
                   }}
                 >
-                  {canonicalSnapshotTone.emphasis}
-                </div>
-
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
-                    gap: 8,
-                    marginBottom:
-                      activeConsult.canonical_clinical.immediate_actions?.length ||
-                      activeConsult.canonical_clinical.trajectory?.narrative
-                        ? 10
-                        : 0,
-                  }}
-                >
-                  <div
-                    style={{
-                      borderRadius: 6,
-                      padding: '8px 10px',
-                      background: 'rgba(255,255,255,0.03)',
-                    }}
-                  >
-                    <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 2 }}>
-                      Canonical NEWS2
+                  <div className={styles.snapshotTop}>
+                    <div className={styles.dialogLabel} style={{ marginBottom: 0 }}>
+                      Canonical Clinical Snapshot
                     </div>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
-                      {activeConsult.canonical_clinical.news2
-                        ? `${activeConsult.canonical_clinical.news2.score} · ${humanizeCanonicalValue(
-                            activeConsult.canonical_clinical.news2.risk_level
-                          )}`
-                        : 'Tidak tersedia'}
-                    </div>
-                  </div>
-
-                  <div
-                    style={{
-                      borderRadius: 6,
-                      padding: '8px 10px',
-                      background: 'rgba(255,255,255,0.03)',
-                    }}
-                  >
-                    <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 2 }}>
-                      Canonical Trajectory
-                    </div>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
-                      {activeConsult.canonical_clinical.trajectory?.overall_trend
-                        ? `${humanizeCanonicalValue(
-                            activeConsult.canonical_clinical.trajectory.overall_trend
-                          )} · ${humanizeCanonicalValue(
-                            activeConsult.canonical_clinical.trajectory.overall_risk
-                          )}`
-                        : 'Tidak tersedia'}
-                    </div>
-                  </div>
-                </div>
-
-                {activeConsult.canonical_clinical.trajectory?.narrative && (
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: 'var(--text-primary)',
-                      lineHeight: 1.55,
-                      marginBottom: activeConsult.canonical_clinical.immediate_actions?.length
-                        ? 8
-                        : 0,
-                    }}
-                  >
-                    {activeConsult.canonical_clinical.trajectory.narrative}
-                  </div>
-                )}
-
-                {!!activeConsult.canonical_clinical.immediate_actions?.length && (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                    <div
+                    <span
+                      className="ui-badge"
                       style={{
-                        fontSize: 12,
-                        color: 'var(--text-muted)',
+                        background: canonicalSnapshotTone.pillBackground,
+                        color: canonicalSnapshotTone.pillColor,
                       }}
                     >
-                      Immediate Actions
+                      {canonicalSnapshotTone.label}
+                    </span>
+                  </div>
+
+                  <div className={styles.snapshotValue} style={{ marginBottom: 'var(--gap-md)' }}>
+                    {canonicalSnapshotTone.emphasis}
+                  </div>
+
+                  <div
+                    className={styles.snapshotGrid}
+                    style={{
+                      marginBottom:
+                        activeConsult.canonical_clinical.immediate_actions?.length ||
+                        activeConsult.canonical_clinical.trajectory?.narrative
+                          ? 12
+                          : 0,
+                    }}
+                  >
+                    <div>
+                      <div className={styles.dialogLabel}>Canonical NEWS2</div>
+                      <div className={styles.snapshotValue}>
+                        {activeConsult.canonical_clinical.news2
+                          ? `${activeConsult.canonical_clinical.news2.score} · ${humanizeCanonicalValue(
+                              activeConsult.canonical_clinical.news2.risk_level
+                            )}`
+                          : 'Tidak tersedia'}
+                      </div>
                     </div>
-                    <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                      {activeConsult.canonical_clinical.immediate_actions.map((action, index) => (
-                        <span
-                          key={`canonical-action-${index}-${action.slice(0, 24)}`}
-                          style={{
-                            fontSize: 12,
-                            padding: '4px 8px',
-                            borderRadius: 999,
-                            background: canonicalSnapshotTone.pillBackground,
-                            color: 'var(--text-primary)',
-                            border: `1px solid ${canonicalSnapshotTone.border}`,
-                          }}
-                        >
-                          {action}
-                        </span>
-                      ))}
+
+                    <div>
+                      <div className={styles.dialogLabel}>Canonical Trajectory</div>
+                      <div className={styles.snapshotValue}>
+                        {activeConsult.canonical_clinical.trajectory?.overall_trend
+                          ? `${humanizeCanonicalValue(
+                              activeConsult.canonical_clinical.trajectory.overall_trend
+                            )} · ${humanizeCanonicalValue(
+                              activeConsult.canonical_clinical.trajectory.overall_risk
+                            )}`
+                          : 'Tidak tersedia'}
+                      </div>
                     </div>
                   </div>
-                )}
-              </div>
-            )}
 
-            <button
-              disabled={acceptingConsult}
-              onClick={() => void handleAcceptConsult()}
-              style={{
-                width: '100%',
-                padding: '12px 0',
-                borderRadius: 8,
-                border: 'none',
-                background: 'var(--accent, #002147)',
-                color: '#fff',
-                fontWeight: 600,
-                fontSize: 14,
-                cursor: acceptingConsult ? 'wait' : 'pointer',
-                opacity: acceptingConsult ? 0.8 : 1,
-              }}
-            >
-              {acceptingConsult ? 'Menyimpan…' : 'Ambil kasus'}
-            </button>
+                  {activeConsult.canonical_clinical.trajectory?.narrative && (
+                    <div
+                      className={styles.dialogText}
+                      style={{
+                        marginBottom: activeConsult.canonical_clinical.immediate_actions?.length
+                          ? 8
+                          : 0,
+                      }}
+                    >
+                      {activeConsult.canonical_clinical.trajectory.narrative}
+                    </div>
+                  )}
+
+                  {!!activeConsult.canonical_clinical.immediate_actions?.length && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                      <div className={styles.dialogLabel} style={{ marginBottom: 0 }}>
+                        Immediate Actions
+                      </div>
+                      <div className={styles.chips}>
+                        {activeConsult.canonical_clinical.immediate_actions.map((action, index) => (
+                          <span
+                            key={`canonical-action-${index}-${action.slice(0, 24)}`}
+                            className="ui-badge"
+                            style={{
+                              background: canonicalSnapshotTone.pillBackground,
+                              color: 'var(--text)',
+                            }}
+                          >
+                            {action}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div className="ui-dialog__footer">
+              <button
+                disabled={acceptingConsult}
+                onClick={() => void handleAcceptConsult()}
+                className="ui-btn ui-btn--primary"
+                style={{ width: '100%', cursor: acceptingConsult ? 'wait' : undefined }}
+              >
+                {acceptingConsult ? 'Menyimpan…' : 'Ambil kasus'}
+              </button>
+            </div>
           </div>
         </div>
       )}
 
       {/* ── TRANSFER KE EMR (setelah Ambil kasus) ── */}
       {acceptedForTransfer && (
-        <div
-          style={{
-            position: 'fixed',
-            bottom: 24,
-            right: 24,
-            zIndex: 999,
-            background: 'var(--bg-surface)',
-            border: '1px solid var(--border-subtle)',
-            borderRadius: 12,
-            padding: 16,
-            width: 320,
-            maxWidth: '90vw',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-          }}
-        >
-          <div
-            style={{
-              fontSize: 12,
-              color: 'var(--text-muted)',
-              marginBottom: 4,
-            }}
-          >
-            Transfer ke ePuskesmas
-          </div>
-          <div
-            style={{
-              fontSize: 14,
-              fontWeight: 600,
-              color: 'var(--text-primary)',
-              marginBottom: 10,
-            }}
-          >
+        <div className={styles.toast}>
+          <div className={styles.dialogLabel}>Transfer ke ePuskesmas</div>
+          <div className={styles.rowName} style={{ marginBottom: 'var(--gap-md)' }}>
             {acceptedForTransfer.patientName}
           </div>
           <input
             type="text"
+            className="ui-input"
             placeholder="No. pelayanan (ID pelayanan)"
             value={transferPelayananId}
             onChange={e => {
@@ -1678,31 +1123,20 @@ export default function TelemedicinePage(): React.JSX.Element {
               if (transferError) setTransferError(null)
             }}
             disabled={transferLoading}
-            style={{
-              width: '100%',
-              padding: '8px 12px',
-              marginBottom: 10,
-              border: '1px solid var(--border-subtle)',
-              borderRadius: 8,
-              background: 'var(--bg-canvas)',
-              color: 'var(--text-primary)',
-              fontSize: 14,
-            }}
           />
           {transferError && (
             <div
-              style={{
-                marginBottom: 10,
-                fontSize: 12,
-                color: '#ff9f7a',
-              }}
+              className="ui-alert ui-alert--critical"
+              role="alert"
+              style={{ marginTop: 'var(--gap-md)' }}
             >
               {transferError}
             </div>
           )}
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div className={styles.toastActions}>
             <button
               type="button"
+              className="ui-btn ui-btn--primary ui-btn--sm"
               disabled={transferLoading || !transferPelayananId.trim()}
               onClick={async () => {
                 if (!acceptedForTransfer || !transferPelayananId.trim()) return
@@ -1745,35 +1179,17 @@ export default function TelemedicinePage(): React.JSX.Element {
                   setTransferLoading(false)
                 }
               }}
-              style={{
-                flex: 1,
-                padding: '8px 12px',
-                borderRadius: 8,
-                border: 'none',
-                background: 'var(--accent, #002147)',
-                color: '#fff',
-                fontWeight: 600,
-                fontSize: 12,
-                cursor: transferLoading ? 'wait' : 'pointer',
-              }}
+              style={{ flex: 1, cursor: transferLoading ? 'wait' : undefined }}
             >
               {transferLoading ? 'Mengirim…' : 'Kirim & buka EMR'}
             </button>
             <button
               type="button"
+              className="ui-btn ui-btn--secondary ui-btn--sm"
               onClick={() => {
                 setAcceptedForTransfer(null)
                 setTransferPelayananId('')
                 setTransferError(null)
-              }}
-              style={{
-                padding: '8px 12px',
-                borderRadius: 8,
-                border: '1px solid var(--border-subtle)',
-                background: 'transparent',
-                color: 'var(--text-muted)',
-                fontSize: 12,
-                cursor: 'pointer',
               }}
             >
               Nanti
@@ -1785,263 +1201,118 @@ export default function TelemedicinePage(): React.JSX.Element {
       {/* ── ASSIST CONSULT BADGE (jika ada yg belum di-ack) ── */}
       {sortedConsults.length > 0 && !activeConsult && (
         <div
+          className={styles.consultBadge}
           onClick={() => setActiveConsult(sortedConsults[0])}
           style={{
-            position: 'fixed',
-            bottom: 24,
-            right: 24,
-            zIndex: 999,
-            background: topConsultTone.pillColor,
-            color: '#fff',
-            borderRadius: 10,
-            padding: '10px 18px',
-            cursor: 'pointer',
-            fontWeight: 600,
-            fontSize: 14,
-            boxShadow:
-              topConsultTone.label === 'Risiko Tinggi'
-                ? '0 4px 20px rgba(239,68,68,0.5)'
-                : topConsultTone.label === 'Risiko Sedang'
-                  ? '0 4px 20px rgba(245,158,11,0.4)'
-                  : '0 4px 20px rgba(74,222,128,0.35)',
-            animation: 'pulse 1.5s infinite',
+            background: topConsultTone.pillBackground,
+            borderLeftColor: topConsultTone.border,
+            color: topConsultTone.pillColor,
           }}
         >
-          📋 {sortedConsults.length} Consult dari Assist · {topConsultTone.label}
+          {sortedConsults.length} Consult dari Assist · {topConsultTone.label}
         </div>
       )}
 
-      <div className="page-header" style={{ maxWidth: '100%', marginBottom: 24 }}>
-        <div className="page-title">Telemedicine</div>
-        <div className="page-subtitle">
-          Clinical Command Desk untuk konsultasi video, triase masuk, dan timeline layanan jarak
-          jauh
+      <div className="ui-page-header" style={{ marginBottom: 0 }}>
+        <div>
+          <h1 className={styles.title}>Telemedicine</h1>
+          <p className="ui-page-header__description">
+            Clinical Command Desk untuk konsultasi video, triase masuk, dan timeline layanan jarak
+            jauh
+          </p>
+          <div className={styles.meta}>
+            <span className="ui-badge ui-badge--primary">VIDEO CONSULTATION</span>
+            {activeAppointments.length > 0 && (
+              <span className="ui-badge ui-badge--success">{activeAppointments.length} AKTIF</span>
+            )}
+            <span className="ui-badge ui-badge--neutral">COMMAND DESK</span>
+          </div>
         </div>
-        <div className="page-header-divider" />
-        <div className="page-header-badges">
-          <span
-            style={{
-              fontSize: 12,
-              color: '#fff',
-              background: L.actionTone,
-              border: '1px solid rgba(255,255,255,0.06)',
-              boxShadow: L.actionNeumorph,
-              padding: '2px 10px',
-              borderRadius: 2,
-              fontFamily: L.mono,
-            }}
-          >
-            VIDEO CONSULTATION
-          </span>
-          {activeAppointments.length > 0 && (
-            <span
-              style={{
-                fontSize: 12,
-                color: L.green,
-                border: `1px solid ${L.green}`,
-                padding: '2px 10px',
-                borderRadius: 2,
-                fontFamily: L.mono,
-              }}
+        <div className="ui-page-header__actions">
+          {isDoctor && (
+            <button
+              onClick={() => void handleToggleOnline()}
+              disabled={togglingStatus}
+              className={
+                isOnline
+                  ? `ui-btn ui-btn--secondary ${styles.onlineOn}`
+                  : 'ui-btn ui-btn--secondary'
+              }
             >
-              {activeAppointments.length} AKTIF
-            </span>
+              {isOnline ? <Wifi size={14} /> : <WifiOff size={14} />}
+              {isOnline ? 'DOKTER ONLINE' : 'DOKTER OFFLINE'}
+            </button>
           )}
-          <span
-            style={{
-              fontSize: 12,
-              color: L.muted,
-              border: `1px solid ${L.border}`,
-              padding: '2px 10px',
-              borderRadius: 2,
-              fontFamily: L.mono,
-            }}
+          <button onClick={() => void loadAppointments()} className="ui-btn ui-btn--secondary">
+            <RefreshCw size={14} />
+            REFRESH
+          </button>
+          <button
+            onClick={() => setShowBooking(current => !current)}
+            className="ui-btn ui-btn--primary"
           >
-            COMMAND DESK
-          </span>
+            <Plus size={14} />
+            {showBooking ? 'TUTUP FORM' : 'BUAT SESI'}
+          </button>
         </div>
       </div>
 
-      <div className="blueprint-wrapper" style={{ padding: '20px 24px', marginBottom: 18 }}>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
-            gap: 12,
-          }}
-        >
-          <OverviewMetric
-            L={L}
-            label="Dokter"
-            value={isDoctor ? (isOnline ? 'Online' : 'Offline') : 'Standby'}
-            hint={
-              isDoctor
-                ? 'Status kesiapan dokter pada jalur konsultasi.'
-                : 'Masuk sebagai staf non-dokter.'
-            }
-            toneVariant={isDoctor && isOnline ? 'green' : 'muted'}
-          />
-          <OverviewMetric
-            L={L}
-            label="Queue"
-            value={`${pendingRequests.length}`}
-            hint={
-              pendingRequests.length > 0
-                ? 'Request masuk menunggu tindak lanjut.'
-                : 'Tidak ada triase baru saat ini.'
-            }
-            toneVariant={pendingRequests.length > 0 ? 'accent' : 'muted'}
-          />
-          <OverviewMetric
-            L={L}
-            label="Sesi Aktif"
-            value={`${activeAppointments.length}`}
-            hint={
-              latestActive
-                ? `Terdekat ${new Date(latestActive.scheduledAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}`
-                : 'Belum ada sesi aktif.'
-            }
-            toneVariant={activeAppointments.length > 0 ? 'green' : 'muted'}
-          />
-          <OverviewMetric
-            L={L}
-            label="Arsip"
-            value={`${pastAppointments.length}`}
-            hint="Riwayat sesi selesai, batal, atau no-show."
-            toneVariant={pastAppointments.length > 0 ? 'gold' : 'muted'}
-          />
-        </div>
+      <div className={styles.kpiRow}>
+        <OverviewMetric
+          label="Dokter"
+          value={isDoctor ? (isOnline ? 'Online' : 'Offline') : 'Standby'}
+          hint={
+            isDoctor
+              ? 'Status kesiapan dokter pada jalur konsultasi.'
+              : 'Masuk sebagai staf non-dokter.'
+          }
+          toneVariant={isDoctor && isOnline ? 'green' : 'muted'}
+          statusWord={isDoctor && isOnline ? 'Aktif' : 'Tidak aktif'}
+        />
+        <OverviewMetric
+          label="Queue"
+          value={`${pendingRequests.length}`}
+          hint={
+            pendingRequests.length > 0
+              ? 'Request masuk menunggu tindak lanjut.'
+              : 'Tidak ada triase baru saat ini.'
+          }
+          toneVariant={pendingRequests.length > 0 ? 'accent' : 'muted'}
+          statusWord={pendingRequests.length > 0 ? 'Menunggu' : 'Bersih'}
+        />
+        <OverviewMetric
+          label="Sesi Aktif"
+          value={`${activeAppointments.length}`}
+          hint={
+            latestActive
+              ? `Terdekat ${new Date(latestActive.scheduledAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}`
+              : 'Belum ada sesi aktif.'
+          }
+          toneVariant={activeAppointments.length > 0 ? 'green' : 'muted'}
+          statusWord={activeAppointments.length > 0 ? 'Berjalan' : 'Kosong'}
+        />
+        <OverviewMetric
+          label="Arsip"
+          value={`${pastAppointments.length}`}
+          hint="Riwayat sesi selesai, batal, atau no-show."
+          toneVariant={pastAppointments.length > 0 ? 'gold' : 'muted'}
+          statusWord={pastAppointments.length > 0 ? 'Tersimpan' : 'Kosong'}
+        />
       </div>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: 14,
-          width: '100%',
-        }}
-      >
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 12,
-            minWidth: 0,
-          }}
-        >
-          <div className="blueprint-wrapper" style={{ padding: '20px 24px' }}>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                gap: 14,
-                marginBottom: 18,
-              }}
-            >
-              <div style={{ maxWidth: 420 }}>
-                <SectionEyebrow L={L}>Clinical Command Desk</SectionEyebrow>
-                <div
-                  style={{
-                    fontSize: 30,
-                    color: L.text,
-                    marginTop: 8,
-                    marginBottom: 8,
-                  }}
-                >
-                  Satu panel kerja untuk triase masuk, kontrol kesiapan dokter, dan aktivasi sesi.
-                </div>
-                <div style={{ fontSize: 14, color: L.muted, lineHeight: 1.65 }}>
-                  Fokus kiri disiapkan untuk operasional langsung: cek request baru, ubah status
-                  dokter, refresh antrean, lalu buka konsultasi tanpa perlu pindah konteks.
-                </div>
-              </div>
+      <div className={styles.columns}>
+        <div className={styles.stack}>
+          <div className={styles.card}>
+            <h2 className={styles.cardTitle}>Clinical Command Desk</h2>
+            <p className={styles.cardIntro}>
+              Satu panel kerja untuk triase masuk, kontrol kesiapan dokter, dan aktivasi sesi.
+            </p>
+            <p className={styles.cardText}>
+              Fokus kiri disiapkan untuk operasional langsung: cek request baru, ubah status dokter,
+              refresh antrean, lalu buka konsultasi tanpa perlu pindah konteks.
+            </p>
 
-              <div
-                style={{
-                  display: 'flex',
-                  gap: 8,
-                  alignItems: 'center',
-                  flexWrap: 'wrap',
-                }}
-              >
-                {isDoctor && (
-                  <button
-                    onClick={() => void handleToggleOnline()}
-                    disabled={togglingStatus}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 6,
-                      padding: '9px 14px',
-                      background: isOnline ? 'rgba(74,222,128,0.12)' : L.bgHover,
-                      border: `1px solid ${isOnline ? L.green : L.border}`,
-                      borderRadius: 3,
-                      color: isOnline ? L.green : L.muted,
-                      fontSize: 12,
-                      fontFamily: L.mono,
-                      cursor: togglingStatus ? 'not-allowed' : 'pointer',
-                      opacity: togglingStatus ? 0.6 : 1,
-                      transition: 'all 0.2s',
-                    }}
-                  >
-                    {isOnline ? <Wifi size={12} /> : <WifiOff size={12} />}
-                    {isOnline ? 'DOKTER ONLINE' : 'DOKTER OFFLINE'}
-                  </button>
-                )}
-                <button
-                  onClick={() => void loadAppointments()}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 6,
-                    padding: '9px 12px',
-                    background: 'transparent',
-                    border: `1px solid ${L.border}`,
-                    borderRadius: 3,
-                    color: L.muted,
-                    fontSize: 12,
-                    cursor: 'pointer',
-                    fontFamily: L.mono,
-                  }}
-                >
-                  <RefreshCw size={12} />
-                  REFRESH
-                </button>
-                <button
-                  onClick={() => setShowBooking(current => !current)}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 6,
-                    padding: '9px 14px',
-                    background: L.actionTone,
-                    border: '1px solid rgba(255,255,255,0.06)',
-                    borderRadius: 3,
-                    color: '#ffffff',
-                    boxShadow: L.actionNeumorph,
-                    fontSize: 12,
-                    fontFamily: L.mono,
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease',
-                  }}
-                >
-                  <Plus size={12} />
-                  {showBooking ? 'TUTUP FORM' : 'BUAT SESI'}
-                </button>
-              </div>
-            </div>
-
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-                gap: 10,
-                paddingTop: 16,
-                borderTop: `1px solid ${L.border}`,
-              }}
-            >
+            <div className={`${styles.statGrid} ${styles.divided}`}>
               {[
                 {
                   label: 'Mode Desk',
@@ -2067,99 +1338,49 @@ export default function TelemedicinePage(): React.JSX.Element {
                       : 'Belum ada sesi aktif.',
                 },
               ].map(item => (
-                <div key={item.label} style={{ display: 'grid', gap: 6 }}>
-                  <SectionEyebrow L={L} muted>
-                    {item.label}
-                  </SectionEyebrow>
-                  <div style={{ fontSize: 20, color: L.text }}>{item.value}</div>
-                  <div style={{ fontSize: 14, color: L.muted }}>{item.hint}</div>
+                <div key={item.label} className={styles.stat}>
+                  <div className={styles.statLabel}>{item.label}</div>
+                  <div className={styles.statValue}>{item.value}</div>
+                  <div className={styles.statHint}>{item.hint}</div>
                 </div>
               ))}
             </div>
           </div>
 
           <RequestInbox
-            L={L}
             requests={requests}
             onMarkHandled={handleMarkHandled}
             onDeleteRequest={handleDeleteRequest}
           />
-          <PatientFlowDiagram L={L} />
+          <PatientFlowDiagram />
         </div>
 
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 12,
-            minWidth: 0,
-          }}
-        >
-          <div className="blueprint-wrapper" style={{ padding: '20px 24px' }}>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                gap: 14,
-                marginBottom: 18,
-              }}
-            >
-              <div style={{ maxWidth: 520 }}>
-                <SectionEyebrow L={L}>Consultation Timeline</SectionEyebrow>
-                <div
-                  style={{
-                    fontSize: 30,
-                    color: L.text,
-                    marginTop: 8,
-                    marginBottom: 8,
-                  }}
-                >
-                  Timeline konsultasi dari antrean aktif sampai arsip layanan.
-                </div>
-                <div style={{ fontSize: 14, color: L.muted, lineHeight: 1.65 }}>
-                  Sisi kanan dibentuk sebagai alur kerja yang mudah dipindai: sesi aktif di atas
-                  untuk tindakan cepat, lalu histori di bawah untuk audit dan penelusuran kasus.
-                </div>
+        <div className={styles.stack}>
+          <div className={styles.card}>
+            <h2 className={styles.cardTitle}>Consultation Timeline</h2>
+            <p className={styles.cardIntro}>
+              Timeline konsultasi dari antrean aktif sampai arsip layanan.
+            </p>
+            <p className={styles.cardText}>
+              Sisi kanan dibentuk sebagai alur kerja yang mudah dipindai: sesi aktif di atas untuk
+              tindakan cepat, lalu histori di bawah untuk audit dan penelusuran kasus.
+            </p>
+
+            <div className={`${styles.stat} ${styles.divided}`} style={{ marginBottom: 'var(--gap-xl)' }}>
+              <div className={styles.statLabel}>Focus Saat Ini</div>
+              <div className={styles.focusValue}>
+                {latestActive ? `Pasien ${latestActive.patientId}` : 'Belum ada pasien aktif'}
               </div>
-              <div
-                style={{
-                  minWidth: 220,
-                  paddingLeft: 16,
-                  borderLeft: `1px solid ${L.border}`,
-                  display: 'grid',
-                  gap: 10,
-                }}
-              >
-                <div>
-                  <SectionEyebrow L={L} muted>
-                    Focus Saat Ini
-                  </SectionEyebrow>
-                  <div style={{ fontSize: 20, color: L.text, marginTop: 6 }}>
-                    {latestActive ? `Pasien ${latestActive.patientId}` : 'Belum ada pasien aktif'}
-                  </div>
-                </div>
-                <div style={{ fontSize: 14, color: L.muted, lineHeight: 1.65 }}>
-                  {latestActive
-                    ? `Sesi terdekat dijadwalkan ${new Date(latestActive.scheduledAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}.`
-                    : 'Buka form pembuatan konsultasi untuk mulai mengisi jalur timeline.'}
-                </div>
+              <div className={styles.statHint}>
+                {latestActive
+                  ? `Sesi terdekat dijadwalkan ${new Date(latestActive.scheduledAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}.`
+                  : 'Buka form pembuatan konsultasi untuk mulai mengisi jalur timeline.'}
               </div>
             </div>
 
             {showBooking && (
-              <div
-                style={{
-                  marginBottom: 20,
-                  padding: '18px 18px 6px',
-                  border: `1px solid ${L.border}`,
-                  background: 'rgba(255,255,255,0.015)',
-                }}
-              >
-                <div style={{ marginBottom: 16 }}>
-                  <SectionEyebrow L={L}>Buat Konsultasi Baru</SectionEyebrow>
-                </div>
+              <div className={styles.booking}>
+                <h3 className={styles.bookingTitle}>Buat Konsultasi Baru</h3>
                 <AppointmentBooking
                   onSuccess={handleBookingSuccess}
                   onCancel={() => setShowBooking(false)}
@@ -2168,74 +1389,29 @@ export default function TelemedicinePage(): React.JSX.Element {
             )}
 
             {isLoading ? (
-              <div style={{ padding: '52px 24px', textAlign: 'center' }}>
-                <div
-                  style={{
-                    width: 32,
-                    height: 32,
-                    border: `2px solid ${L.accent}`,
-                    borderTopColor: 'transparent',
-                    borderRadius: '50%',
-                    animation: 'spin 1s linear infinite',
-                    margin: '0 auto 12px',
-                  }}
-                />
-                <div style={{ fontSize: 14, color: L.muted }}>memuat timeline konsultasi...</div>
+              <div className={styles.emptyBlock}>
+                <div className={styles.spinner} style={{ animation: 'spin 1s linear infinite' }} />
+                <div>memuat timeline konsultasi...</div>
               </div>
             ) : appointments.length === 0 ? (
-              <div style={{ padding: '56px 24px', textAlign: 'center' }}>
-                <Video size={36} style={{ opacity: 0.15, marginBottom: 16, color: L.muted }} />
-                <div style={{ fontSize: 14, color: L.text, marginBottom: 8 }}>
-                  timeline masih kosong
-                </div>
-                <div
-                  style={{
-                    fontSize: 14,
-                    color: L.muted,
-                    marginBottom: 20,
-                    opacity: 0.8,
-                  }}
-                >
+              <div className={styles.emptyBlock}>
+                <div className="ui-empty__title">timeline masih kosong</div>
+                <div>
                   Belum ada appointment yang masuk. Mulai dari form konsultasi baru untuk
                   menghidupkan jalur telemedicine.
                 </div>
-                <button
-                  onClick={() => setShowBooking(true)}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 6,
-                    padding: '8px 16px',
-                    background: L.actionTone,
-                    border: '1px solid rgba(255,255,255,0.06)',
-                    borderRadius: 3,
-                    color: '#ffffff',
-                    boxShadow: L.actionNeumorph,
-                    fontSize: 14,
-                    cursor: 'pointer',
-                    fontFamily: L.mono,
-                  }}
-                >
-                  <Plus size={12} /> BUAT KONSULTASI
+                <button onClick={() => setShowBooking(true)} className="ui-btn ui-btn--primary">
+                  <Plus size={14} /> BUAT KONSULTASI
                 </button>
               </div>
             ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
+              <div className={styles.listGroups}>
                 <div>
-                  <div style={{ marginBottom: 10 }}>
-                    <SectionEyebrow L={L}>Sesi Aktif ({activeAppointments.length})</SectionEyebrow>
-                  </div>
+                  <h3 className={styles.listHead}>Sesi Aktif ({activeAppointments.length})</h3>
                   {activeAppointments.length > 0 ? (
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        borderTop: `1px solid ${L.border}`,
-                      }}
-                    >
+                    <div className={styles.list}>
                       {activeAppointments.map(appt => (
                         <AppointmentRow
-                          L={L}
                           key={appt.id}
                           appointment={appt}
                           onJoin={() => router.push(`/telemedicine/${appt.id}`)}
@@ -2243,14 +1419,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                       ))}
                     </div>
                   ) : (
-                    <div
-                      style={{
-                        padding: '18px 0 4px',
-                        borderTop: `1px solid ${L.border}`,
-                        fontSize: 14,
-                        color: L.muted,
-                      }}
-                    >
+                    <div className={styles.empty}>
                       Belum ada sesi aktif. Timeline operasional akan muncul di sini begitu
                       appointment dibuat atau dikonfirmasi.
                     </div>
@@ -2258,34 +1427,17 @@ export default function TelemedicinePage(): React.JSX.Element {
                 </div>
 
                 <div>
-                  <div style={{ marginBottom: 10 }}>
-                    <SectionEyebrow L={L} muted>
-                      Riwayat ({pastAppointments.length})
-                    </SectionEyebrow>
-                  </div>
+                  <h3 className={`${styles.listHead} ${styles.listHeadMuted}`}>
+                    Riwayat ({pastAppointments.length})
+                  </h3>
                   {pastAppointments.length > 0 ? (
-                    <div
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        borderTop: `1px solid ${L.border}`,
-                      }}
-                    >
+                    <div className={styles.list}>
                       {pastAppointments.map(appt => (
-                        <AppointmentRow L={L} key={appt.id} appointment={appt} />
+                        <AppointmentRow key={appt.id} appointment={appt} />
                       ))}
                     </div>
                   ) : (
-                    <div
-                      style={{
-                        padding: '18px 0 4px',
-                        borderTop: `1px solid ${L.border}`,
-                        fontSize: 14,
-                        color: L.muted,
-                      }}
-                    >
-                      Arsip sesi belum tersedia.
-                    </div>
+                    <div className={styles.empty}>Arsip sesi belum tersedia.</div>
                   )}
                 </div>
               </div>
@@ -2295,123 +1447,15 @@ export default function TelemedicinePage(): React.JSX.Element {
       </div>
 
       {/* Powered By - Technical Credit */}
-      <div
-        style={{
-          marginTop: 32,
-          padding: '16px 20px',
-          borderTop: `1px solid ${L.border}`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: 12,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          {/* LiveKit Badge */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              padding: '6px 12px',
-              background: 'rgba(121,85,72,0.08)',
-              border: `1px solid ${L.border}`,
-              borderRadius: 3,
-            }}
-          >
-            <div
-              style={{
-                width: 8,
-                height: 8,
-                borderRadius: '50%',
-                background: '#4ADE80',
-                animation: 'pulse 2s infinite',
-              }}
-            />
-            <span
-              style={{
-                fontFamily: L.mono,
-                fontSize: 12,
-                color: L.muted,
-              }}
-            >
-              Infrastructure by
-            </span>
-            <span
-              style={{
-                fontFamily: L.mono,
-                fontSize: 12,
-                fontWeight: 600,
-                color: L.text,
-              }}
-            >
-              LIVEKIT
-            </span>
-          </div>
-
-          {/* Separator */}
-          <div style={{ width: 1, height: 20, background: L.border }} />
-
-          {/* Sentra Engine Badge */}
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-            }}
-          >
-            <span
-              style={{
-                fontFamily: L.mono,
-                fontSize: 12,
-                color: L.muted,
-              }}
-            >
-              Powered by
-            </span>
-            <span
-              style={{
-                fontFamily: L.mono,
-                fontSize: 12,
-                fontWeight: 600,
-                color: L.accent,
-              }}
-            >
-              SENTRA ENGINE
-            </span>
-          </div>
-        </div>
-
-        {/* Version & License */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 12,
-          }}
-        >
-          <span
-            style={{
-              fontFamily: L.mono,
-              fontSize: 12,
-              color: L.muted,
-              opacity: 0.6,
-            }}
-          >
-            VIDEO SDK v2.0
-          </span>
-          <span
-            style={{
-              fontFamily: L.mono,
-              fontSize: 12,
-              color: L.muted,
-              opacity: 0.6,
-            }}
-          >
-            RFC 4566
-          </span>
-        </div>
+      <div className={styles.credit}>
+        <span>
+          Infrastructure by <span className={styles.creditStrong}>LIVEKIT</span>
+        </span>
+        <span>
+          Powered by <span className={styles.creditStrong}>SENTRA ENGINE</span>
+        </span>
+        <span>VIDEO SDK v2.0</span>
+        <span>RFC 4566</span>
       </div>
     </div>
   )

@@ -102,15 +102,14 @@ export function EPrescriptionModal({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'rgba(0,0,0,0.75)',
-        backdropFilter: 'blur(4px)',
+        background: 'rgba(15, 23, 42, 0.32)',
       }}
     >
       <div
         style={{
-          background: 'var(--bg-nav)',
+          background: 'var(--surface)',
           borderRadius: 16,
-          boxShadow: '0 24px 80px rgba(0,0,0,0.5)',
+          boxShadow: 'var(--shadow-dialog)',
           width: '100%',
           maxWidth: 720,
           maxHeight: '90vh',
@@ -175,10 +174,8 @@ export function EPrescriptionModal({
             <div
               key={index}
               style={{
-                background: 'rgba(255,255,255,0.03)',
-                borderRadius: 12,
-                padding: 16,
-                border: '1px solid var(--line-base)',
+                borderBottom: '1px solid var(--border)',
+                paddingBottom: 16,
               }}
             >
               <div
@@ -202,7 +199,7 @@ export function EPrescriptionModal({
                   <button
                     onClick={() => handleRemoveItem(index)}
                     style={{
-                      color: '#f87171',
+                      color: 'var(--critical)',
                       background: 'none',
                       border: 'none',
                       cursor: 'pointer',
@@ -228,7 +225,7 @@ export function EPrescriptionModal({
                     placeholder="Paracetamol, Amoxicillin..."
                     value={item.namaObat}
                     onChange={e => handleUpdateItem(index, 'namaObat', e.target.value)}
-                    style={inputSm}
+                    className="ui-input"
                   />
                 </div>
 
@@ -238,7 +235,7 @@ export function EPrescriptionModal({
                   <select
                     value={item.bentukSediaan}
                     onChange={e => handleUpdateItem(index, 'bentukSediaan', e.target.value)}
-                    style={inputSm}
+                    className="ui-input"
                   >
                     {BENTUK_SEDIAAN.map(s => (
                       <option key={s}>{s}</option>
@@ -253,7 +250,7 @@ export function EPrescriptionModal({
                     placeholder="500mg, 250mg/5ml..."
                     value={item.dosis}
                     onChange={e => handleUpdateItem(index, 'dosis', e.target.value)}
-                    style={inputSm}
+                    className="ui-input"
                   />
                 </div>
 
@@ -262,7 +259,7 @@ export function EPrescriptionModal({
                   <FieldLabel>Aturan Minum *</FieldLabel>
                   <div style={{ display: 'flex', gap: 6 }}>
                     <select
-                      style={{ ...inputSm, flex: 1 }}
+                      className="ui-input" style={{ flex: 1 }}
                       value={ATURAN_MINUM_PRESET.includes(item.aturanMinum) ? item.aturanMinum : ''}
                       onChange={e => {
                         if (e.target.value) handleUpdateItem(index, 'aturanMinum', e.target.value)
@@ -277,7 +274,7 @@ export function EPrescriptionModal({
                       placeholder="custom"
                       value={item.aturanMinum}
                       onChange={e => handleUpdateItem(index, 'aturanMinum', e.target.value)}
-                      style={{ ...inputSm, width: 70 }}
+                      className="ui-input" style={{ width: 70 }}
                     />
                   </div>
                 </div>
@@ -293,7 +290,7 @@ export function EPrescriptionModal({
                     onChange={e =>
                       handleUpdateItem(index, 'jumlah', Number.parseInt(e.target.value) || 1)
                     }
-                    style={inputSm}
+                    className="ui-input"
                   />
                 </div>
 
@@ -304,7 +301,7 @@ export function EPrescriptionModal({
                     placeholder="Diminum sesudah makan..."
                     value={item.catatan ?? ''}
                     onChange={e => handleUpdateItem(index, 'catatan', e.target.value)}
-                    style={inputSm}
+                    className="ui-input"
                   />
                 </div>
               </div>
@@ -365,8 +362,8 @@ export function EPrescriptionModal({
               alignItems: 'center',
               gap: 8,
               padding: '8px 20px',
-              background: saved ? 'rgba(16,185,129,0.85)' : 'rgba(16,185,129,0.7)',
-              color: '#fff',
+              background: saved ? 'var(--success)' : 'var(--primary)',
+              color: 'var(--text-on-accent)',
               border: 'none',
               borderRadius: 8,
               fontSize: 14,
@@ -385,7 +382,7 @@ export function EPrescriptionModal({
                   style={{
                     width: 14,
                     height: 14,
-                    border: '2px solid #fff',
+                    border: '2px solid var(--text-on-accent)',
                     borderTopColor: 'transparent',
                     borderRadius: '50%',
                     animation: 'spin 1s linear infinite',
@@ -403,18 +400,6 @@ export function EPrescriptionModal({
       </div>
     </div>
   )
-}
-
-const inputSm: React.CSSProperties = {
-  width: '100%',
-  background: 'rgba(255,255,255,0.05)',
-  border: '1px solid var(--line-base)',
-  borderRadius: 6,
-  padding: '8px 10px',
-  color: 'var(--text-main)',
-  fontSize: 14,
-  outline: 'none',
-  boxSizing: 'border-box',
 }
 
 function FieldLabel({ children }: { children: React.ReactNode }): React.JSX.Element {

@@ -7,19 +7,12 @@ import { useCallback, useEffect, useState } from 'react'
 
 import type { ConsultationType, CreateAppointmentInput } from '@/types/telemedicine.types'
 
-/* ── Design tokens (theme-aware via CSS vars) ── */
+/* ── Design tokens (white theme, docs/redesign-glass.md §3) ── */
 const L = {
-  bgPanel: 'var(--bg-card, #141414)',
-  border: 'var(--line-base, rgba(255,255,255,0.08))',
-  text: 'var(--text-main, #d4d4d4)',
-  muted: 'var(--text-muted, #666666)',
-  accent: 'var(--c-asesmen, #002147)',
-  actionTone: '#101012',
-  actionToneSoft: 'rgba(16,16,18,0.10)',
-  actionToneBorder: 'rgba(16,16,18,0.22)',
-  actionNeumorph: '1px 1px 4px rgba(0,0,0,0.14), inset 1px 1px 0 rgba(255,255,255,0.03)',
-  mono: 'var(--font-mono)',
-  sans: 'var(--font-sans)',
+  border: 'var(--border)',
+  text: 'var(--text)',
+  muted: 'var(--text-secondary)',
+  accent: 'var(--primary)',
 }
 
 interface DoctorOption {
@@ -43,9 +36,9 @@ const CONSULTATION_TYPES: Array<{
   label: string
   icon: React.ReactNode
 }> = [
-  { value: 'VIDEO', label: 'Video', icon: <Video size={13} /> },
-  { value: 'AUDIO', label: 'Telepon', icon: <Phone size={13} /> },
-  { value: 'CHAT', label: 'Chat', icon: <MessageSquare size={13} /> },
+  { value: 'VIDEO', label: 'Video', icon: <Video size={14} /> },
+  { value: 'AUDIO', label: 'Telepon', icon: <Phone size={14} /> },
+  { value: 'CHAT', label: 'Chat', icon: <MessageSquare size={14} /> },
 ]
 
 const DOCTORS: DoctorOption[] = [
@@ -62,28 +55,10 @@ function getNext7Days(): string[] {
 
 /* ── Shared field components ── */
 const FieldLabel = ({ children }: { children: React.ReactNode }) => (
-  <div
-    style={{
-      fontSize: 14,
-      color: L.muted,
-      marginBottom: 8,
-    }}
-  >
+  <div className="ui-field__label" style={{ marginBottom: 8 }}>
     {children}
   </div>
 )
-
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  boxSizing: 'border-box',
-  background: 'var(--bg-canvas)',
-  border: `1px solid ${L.border}`,
-  borderRadius: 2,
-  padding: '8px 10px',
-  color: L.text,
-  fontSize: 14,
-  outline: 'none',
-}
 
 export function AppointmentBooking({
   onSuccess,
@@ -157,8 +132,7 @@ export function AppointmentBooking({
           display: 'flex',
           alignItems: 'center',
           gap: 0,
-          padding: '10px 18px',
-          borderBottom: `1px solid ${L.border}`,
+          paddingBottom: 16,
         }}
       >
         {STEPS.map((label, i) => {
@@ -170,10 +144,11 @@ export function AppointmentBooking({
               <span
                 style={{
                   fontSize: 14,
-                  color: isDone ? L.accent : isActive ? L.accent : L.muted,
+                  fontWeight: isActive ? 600 : 400,
+                  color: isDone || isActive ? L.accent : L.muted,
                 }}
               >
-                {isDone ? '✓' : `0${num}`} {label.toUpperCase()}
+                {isDone ? '✓' : null} {label}
               </span>
               {i < 2 && <span style={{ color: L.border, margin: '0 10px', fontSize: 14 }}>›</span>}
             </div>
@@ -183,7 +158,6 @@ export function AppointmentBooking({
 
       <div
         style={{
-          padding: '16px 18px',
           display: 'flex',
           flexDirection: 'column',
           gap: 16,
@@ -200,6 +174,7 @@ export function AppointmentBooking({
                   return (
                     <button
                       key={doc.id}
+                      aria-pressed={sel}
                       onClick={() =>
                         setForm(p => ({
                           ...p,
@@ -212,36 +187,31 @@ export function AppointmentBooking({
                         alignItems: 'center',
                         gap: 12,
                         padding: '12px 14px',
-                        background: sel ? L.actionToneSoft : 'transparent',
-                        border: `1px solid ${sel ? L.actionTone : L.border}`,
-                        borderRadius: 4,
-                        boxShadow: sel ? L.actionNeumorph : 'none',
+                        background: sel ? 'var(--primary-tint)' : 'var(--surface)',
+                        border: `1px solid ${sel ? L.accent : L.border}`,
+                        borderRadius: 8,
                         cursor: 'pointer',
                         textAlign: 'left',
-                        transition: 'all 0.15s ease',
+                        transition: 'background-color 0.15s ease, border-color 0.15s ease',
                       }}
                     >
                       <div
                         style={{
-                          width: 28,
-                          height: 28,
-                          borderRadius: 4,
-                          border: `1px solid ${sel ? L.actionTone : L.border}`,
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          color: sel ? '#ffffff' : L.muted,
+                          color: sel ? L.accent : L.muted,
                           flexShrink: 0,
-                          background: 'transparent',
                         }}
                       >
-                        <User size={14} />
+                        <User size={16} />
                       </div>
                       <div style={{ display: 'grid', gap: 3 }}>
                         <div
                           style={{
                             fontSize: 14,
-                            color: sel ? '#ffffff' : L.text,
+                            fontWeight: 500,
+                            color: L.text,
                           }}
                         >
                           {doc.name}
@@ -252,7 +222,7 @@ export function AppointmentBooking({
                             color: L.muted,
                           }}
                         >
-                          {doc.spesialisasi.toUpperCase()}
+                          {doc.spesialisasi}
                         </div>
                       </div>
                     </button>
@@ -261,10 +231,11 @@ export function AppointmentBooking({
               </div>
             </div>
 
-            <div>
+            <div className="ui-field">
               <FieldLabel>Nama / No. RM Pasien *</FieldLabel>
               {/* patientId bisa berisi nama lengkap atau nomor RM — dipakai untuk DB dan display */}
               <input
+                className="ui-input"
                 placeholder="nama lengkap atau nomor rekam medis..."
                 value={form.patientId ?? ''}
                 onChange={e =>
@@ -274,49 +245,32 @@ export function AppointmentBooking({
                     patientName: e.target.value,
                   }))
                 }
-                style={inputStyle}
               />
             </div>
 
-            <div>
+            <div className="ui-field">
               <FieldLabel>No. HP Pasien (WhatsApp)</FieldLabel>
               <input
+                className="ui-input"
                 placeholder="08xx atau +628xx..."
                 value={form.patientPhone ?? ''}
                 onChange={e => setForm(p => ({ ...p, patientPhone: e.target.value }))}
-                style={inputStyle}
                 type="tel"
               />
-              <div style={{ fontSize: 14, color: L.muted, marginTop: 5 }}>
-                pasien akan menerima link join via whatsapp
-              </div>
+              <div className="ui-field__hint">pasien akan menerima link join via whatsapp</div>
             </div>
 
             <div>
               <FieldLabel>Tipe Konsultasi</FieldLabel>
-              <div style={{ display: 'flex', gap: 6 }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                 {CONSULTATION_TYPES.map(opt => {
                   const sel = form.consultationType === opt.value
                   return (
                     <button
                       key={opt.value}
+                      className="ui-chip"
+                      aria-pressed={sel}
                       onClick={() => setForm(p => ({ ...p, consultationType: opt.value }))}
-                      style={{
-                        flex: 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: 6,
-                        padding: '7px 0',
-                        background: sel ? L.actionTone : 'transparent',
-                        border: `1px solid ${sel ? 'rgba(255,255,255,0.06)' : L.border}`,
-                        borderRadius: 2,
-                        color: sel ? '#f1ece3' : L.muted,
-                        fontSize: 14,
-                        cursor: 'pointer',
-                        boxShadow: sel ? L.actionNeumorph : 'none',
-                        transition: 'all 0.15s ease',
-                      }}
                     >
                       {opt.icon} {opt.label}
                     </button>
@@ -332,31 +286,22 @@ export function AppointmentBooking({
           <>
             <div>
               <FieldLabel>Tanggal</FieldLabel>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                 {days.map(d => {
                   const dateObj = new Date(d + 'T00:00:00')
                   const isSel = selectedDate === d
                   return (
                     <button
                       key={d}
+                      className="ui-chip"
+                      aria-pressed={isSel}
                       onClick={() => setSelectedDate(d)}
-                      style={{
-                        padding: '5px 10px',
-                        background: isSel ? 'rgba(0, 33, 71, 0.1)' : 'transparent',
-                        border: `1px solid ${isSel ? L.accent : L.border}`,
-                        borderRadius: 2,
-                        color: isSel ? L.accent : L.muted,
-                        fontSize: 14,
-                        cursor: 'pointer',
-                      }}
                     >
-                      {dateObj
-                        .toLocaleDateString('id-ID', {
-                          weekday: 'short',
-                          day: 'numeric',
-                          month: 'short',
-                        })
-                        .toUpperCase()}
+                      {dateObj.toLocaleDateString('id-ID', {
+                        weekday: 'short',
+                        day: 'numeric',
+                        month: 'short',
+                      })}
                     </button>
                   )
                 })}
@@ -396,37 +341,23 @@ export function AppointmentBooking({
             ) : (
               <div>
                 <FieldLabel>Jam</FieldLabel>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 5 }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                   {slots.map(slot => {
                     const slotIso = `${selectedDate}T${slot.startTime}:00+07:00`
                     const isSel = form.scheduledAt === slotIso
                     return (
                       <button
                         key={slot.startTime}
+                        className="ui-chip"
+                        aria-pressed={isSel}
                         disabled={!slot.isAvailable}
                         onClick={() => setForm(p => ({ ...p, scheduledAt: slotIso }))}
                         style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 4,
-                          padding: '5px 10px',
-                          background: !slot.isAvailable
-                            ? 'transparent'
-                            : isSel
-                              ? 'rgba(0, 33, 71, 0.1)'
-                              : 'transparent',
-                          border: `1px solid ${!slot.isAvailable ? 'rgba(255,255,255,0.04)' : isSel ? L.accent : L.border}`,
-                          borderRadius: 2,
-                          color: !slot.isAvailable
-                            ? 'rgba(255,255,255,0.15)'
-                            : isSel
-                              ? L.accent
-                              : L.muted,
-                          fontSize: 14,
+                          opacity: slot.isAvailable ? 1 : 0.4,
                           cursor: slot.isAvailable ? 'pointer' : 'not-allowed',
                         }}
                       >
-                        <Clock size={10} />
+                        <Clock size={12} />
                         {slot.startTime}
                       </button>
                     )
@@ -440,42 +371,29 @@ export function AppointmentBooking({
         {/* ── STEP 3 ── */}
         {step === 3 && (
           <>
-            <div>
+            <div className="ui-field">
               <FieldLabel>Keluhan Utama</FieldLabel>
               <textarea
+                className="ui-input"
                 rows={3}
                 placeholder="keluhan yang ingin dikonsultasikan..."
                 value={form.keluhanUtama ?? ''}
                 onChange={e => setForm(p => ({ ...p, keluhanUtama: e.target.value }))}
-                style={{ ...inputStyle, resize: 'none' }}
               />
             </div>
-            <div>
+            <div className="ui-field">
               <FieldLabel>No. SEP BPJS (opsional)</FieldLabel>
               <input
+                className="ui-input"
                 placeholder="nomor sep peserta bpjs..."
                 value={form.bpjsNomorSEP ?? ''}
                 onChange={e => setForm(p => ({ ...p, bpjsNomorSEP: e.target.value }))}
-                style={inputStyle}
               />
             </div>
 
             {/* Summary */}
-            <div
-              style={{
-                background: 'rgba(0, 33, 71, 0.06)',
-                border: `1px solid rgba(0, 33, 71, 0.2)`,
-                borderRadius: 2,
-                padding: '10px 14px',
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 14,
-                  color: L.muted,
-                  marginBottom: 8,
-                }}
-              >
+            <div>
+              <div className="ui-field__label" style={{ marginBottom: 4 }}>
                 RINGKASAN
               </div>
               {[
@@ -497,9 +415,9 @@ export function AppointmentBooking({
                   key={k}
                   style={{
                     display: 'grid',
-                    gridTemplateColumns: '70px 1fr',
+                    gridTemplateColumns: '90px 1fr',
                     gap: 8,
-                    padding: '3px 0',
+                    padding: '8px 0',
                     borderBottom: `1px solid ${L.border}`,
                   }}
                 >
@@ -510,16 +428,7 @@ export function AppointmentBooking({
             </div>
 
             {error && (
-              <div
-                style={{
-                  fontSize: 14,
-                  color: '#f87171',
-                  background: 'rgba(239,68,68,0.08)',
-                  border: '1px solid rgba(239,68,68,0.2)',
-                  borderRadius: 2,
-                  padding: '8px 12px',
-                }}
-              >
+              <div className="ui-alert ui-alert--critical" role="alert">
                 {error}
               </div>
             )}
@@ -532,62 +441,30 @@ export function AppointmentBooking({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            paddingTop: 4,
+            paddingTop: 16,
             borderTop: `1px solid ${L.border}`,
           }}
         >
           <button
+            className="ui-btn ui-btn--ghost"
             onClick={step === 1 ? onCancel : () => setStep(s => (s - 1) as 1 | 2)}
-            style={{
-              fontSize: 14,
-              color: L.muted,
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '6px 0',
-            }}
           >
             {step === 1 ? 'BATAL' : '← KEMBALI'}
           </button>
 
           {step < 3 ? (
             <button
+              className="ui-btn ui-btn--primary"
               onClick={() => setStep(s => (s + 1) as 2 | 3)}
               disabled={step === 1 ? !canNext1 : !canNext2}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                padding: '6px 16px',
-                background: (step === 1 ? !canNext1 : !canNext2)
-                  ? 'transparent'
-                  : 'rgba(0, 33, 71, 0.15)',
-                border: `1px solid ${(step === 1 ? !canNext1 : !canNext2) ? L.border : L.accent}`,
-                borderRadius: 2,
-                color: (step === 1 ? !canNext1 : !canNext2) ? L.muted : L.accent,
-                fontSize: 14,
-                cursor: (step === 1 ? !canNext1 : !canNext2) ? 'not-allowed' : 'pointer',
-              }}
             >
               LANJUT →
             </button>
           ) : (
             <button
+              className="ui-btn ui-btn--primary"
               onClick={() => void handleSubmit()}
               disabled={isSaving}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                padding: '6px 16px',
-                background: 'rgba(0, 33, 71, 0.15)',
-                border: `1px solid ${L.accent}`,
-                borderRadius: 2,
-                color: L.accent,
-                fontSize: 14,
-                cursor: isSaving ? 'not-allowed' : 'pointer',
-                opacity: isSaving ? 0.6 : 1,
-              }}
             >
               {isSaving ? (
                 <>
@@ -595,7 +472,7 @@ export function AppointmentBooking({
                     style={{
                       width: 12,
                       height: 12,
-                      border: `2px solid ${L.accent}`,
+                      border: '2px solid var(--text-on-accent)',
                       borderTopColor: 'transparent',
                       borderRadius: '50%',
                       animation: 'spin 1s linear infinite',

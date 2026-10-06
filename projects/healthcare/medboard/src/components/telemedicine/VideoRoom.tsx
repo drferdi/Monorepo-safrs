@@ -90,37 +90,18 @@ export function VideoRoom({
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          gap: 16,
           height: '100%',
-          background: 'var(--bg-canvas)',
+          background: 'var(--surface)',
           padding: 32,
-          borderRadius: 12,
+          textAlign: 'center',
         }}
       >
-        <div style={{ fontSize: 48, marginBottom: 16 }}>⚠️</div>
-        <h3 style={{ color: 'var(--text-main)', fontSize: 16, marginBottom: 8 }}>
+        <h3 style={{ color: 'var(--text)', fontSize: 16, fontWeight: 600, margin: 0 }}>
           Gagal Terhubung
         </h3>
-        <p
-          style={{
-            color: 'var(--text-muted)',
-            textAlign: 'center',
-            marginBottom: 24,
-          }}
-        >
-          {error}
-        </p>
-        <button
-          onClick={() => void connect()}
-          style={{
-            padding: '8px 24px',
-            background: 'var(--c-asesmen)',
-            color: '#fff',
-            border: 'none',
-            borderRadius: 8,
-            fontSize: 14,
-            cursor: 'pointer',
-          }}
-        >
+        <p style={{ color: 'var(--text-secondary)', fontSize: 14, margin: 0 }}>{error}</p>
+        <button onClick={() => void connect()} className="ui-btn ui-btn--primary">
           Coba Lagi
         </button>
       </div>
@@ -137,22 +118,24 @@ export function VideoRoom({
           alignItems: 'center',
           justifyContent: 'center',
           height: '100%',
-          background: 'var(--bg-canvas)',
-          color: 'var(--text-main)',
+          background: 'var(--surface)',
+          color: 'var(--text)',
         }}
       >
         <div
           style={{
-            width: 48,
-            height: 48,
-            border: '4px solid var(--c-asesmen)',
+            width: 32,
+            height: 32,
+            border: '2px solid var(--primary)',
             borderTopColor: 'transparent',
             borderRadius: '50%',
             animation: 'spin 1s linear infinite',
             marginBottom: 16,
           }}
         />
-        <p style={{ color: 'var(--text-muted)' }}>Menghubungkan ke ruang konsultasi...</p>
+        <p style={{ color: 'var(--text-secondary)', fontSize: 14, margin: 0 }}>
+          Menghubungkan ke ruang konsultasi...
+        </p>
       </div>
     )
   }
@@ -164,8 +147,7 @@ export function VideoRoom({
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        background: '#0d0d0d',
-        borderRadius: 12,
+        background: 'var(--surface)',
         overflow: 'hidden',
       }}
     >
@@ -175,9 +157,9 @@ export function VideoRoom({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '10px 16px',
-          background: 'rgba(0,0,0,0.6)',
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          padding: '12px 24px',
+          background: 'var(--surface)',
+          borderBottom: '1px solid var(--border)',
           zIndex: 10,
         }}
       >
@@ -187,25 +169,24 @@ export function VideoRoom({
               width: 8,
               height: 8,
               borderRadius: '50%',
-              background: '#4ade80',
-              animation: 'pulse 2s infinite',
+              background: 'var(--success)',
             }}
           />
-          <span style={{ color: '#fff', fontSize: 14, fontWeight: 600 }}>
+          <span style={{ color: 'var(--text)', fontSize: 16, fontWeight: 600 }}>
             Konsultasi Telemedicine
           </span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <NetworkQualityBadge quality={sessionState.networkQuality} />
           <ConsultationTimer elapsedSeconds={sessionState.elapsedSeconds} />
-          <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14 }}>
+          <span style={{ color: 'var(--text-secondary)', fontSize: 14 }}>
             {sessionState.participantCount} peserta
           </span>
         </div>
       </div>
 
       {/* Video Grid */}
-      <div style={{ flex: 1, position: 'relative' }}>
+      <div style={{ flex: 1, position: 'relative', background: 'var(--surface-subtle)' }}>
         {room && sessionState.isConnected ? (
           <RoomContext.Provider value={room}>
             <div data-lk-theme="default" style={{ height: '100%' }}>
@@ -224,7 +205,7 @@ export function VideoRoom({
               alignItems: 'center',
               justifyContent: 'center',
               height: '100%',
-              color: 'rgba(255,255,255,0.3)',
+              color: 'var(--text-secondary)',
               fontSize: 14,
             }}
           >
