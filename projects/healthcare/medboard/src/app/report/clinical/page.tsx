@@ -3,6 +3,7 @@
 import { useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { ClinicalReport } from '@/lib/report/clinical-report'
+import { sentenceCase } from '@/lib/text/sentence-case'
 
 type Mode = 'list' | 'form' | 'preview'
 type ClinicalReportFormState = Omit<
@@ -335,7 +336,7 @@ export default function ClinicalReportPage() {
                 letterSpacing: '0.15em',
               }}
             >
-              MEMUAT DATA...
+              Memuat data...
             </div>
           ) : reports.length === 0 ? (
             <div style={{ padding: '48px 0', textAlign: 'center' }}>
@@ -347,7 +348,7 @@ export default function ClinicalReportPage() {
                   marginBottom: 16,
                 }}
               >
-                BELUM ADA LAPORAN KLINIS
+                Belum ada laporan klinis
               </div>
               <button
                 style={{
@@ -370,7 +371,7 @@ export default function ClinicalReportPage() {
                   marginBottom: 12,
                 }}
               >
-                {reports.length} LAPORAN TERSIMPAN
+                {reports.length} Laporan tersimpan
               </div>
 
               {/* Table header */}
@@ -469,7 +470,7 @@ export default function ClinicalReportPage() {
       {mode === 'form' && (
         <div style={{ maxWidth: PAGE_W, width: '100%' }}>
           {/* ── 1. IDENTITAS PASIEN ── */}
-          <div style={sectionTitleStyle}>01 — IDENTITAS PASIEN</div>
+          <div style={sectionTitleStyle}>01 — identitas pasien</div>
           <div
             style={{
               display: 'grid',
@@ -478,7 +479,7 @@ export default function ClinicalReportPage() {
             }}
           >
             <div>
-              <label style={labelStyle}>NO. REKAM MEDIS</label>
+              <label style={labelStyle}>NO. rekam medis</label>
               <input
                 style={{ ...inputStyle, color: 'var(--c-asesmen)' }}
                 value={form.pasien.noRM}
@@ -486,11 +487,11 @@ export default function ClinicalReportPage() {
               />
             </div>
             <div>
-              <label style={labelStyle}>NAMA PASIEN</label>
+              <label style={labelStyle}>Nama pasien</label>
               <input style={inputStyle} value={form.pasien.nama} readOnly />
             </div>
             <div>
-              <label style={labelStyle}>UMUR</label>
+              <label style={labelStyle}>Umur</label>
               <input
                 style={inputStyle}
                 value={form.pasien.umur}
@@ -508,7 +509,7 @@ export default function ClinicalReportPage() {
             }}
           >
             <div>
-              <label style={labelStyle}>JENIS KELAMIN</label>
+              <label style={labelStyle}>Jenis kelamin</label>
               <div style={{ display: 'flex', gap: 16, marginTop: 4 }}>
                 {(['L', 'P'] as const).map(g => (
                   <label
@@ -535,7 +536,7 @@ export default function ClinicalReportPage() {
               </div>
             </div>
             <div>
-              <label style={labelStyle}>ALAMAT</label>
+              <label style={labelStyle}>Alamat</label>
               <input
                 style={inputStyle}
                 value={form.pasien.alamat}
@@ -546,10 +547,10 @@ export default function ClinicalReportPage() {
           </div>
 
           {/* ── 2. ANAMNESA (S) ── */}
-          <div style={sectionTitleStyle}>02 — ANAMNESA (SUBJEKTIF)</div>
+          <div style={sectionTitleStyle}>02 — anamnesa (subjektif)</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <div>
-              <label style={labelStyle}>KELUHAN UTAMA</label>
+              <label style={labelStyle}>Keluhan utama</label>
               <textarea
                 style={textareaStyle}
                 value={form.anamnesa.keluhanUtama}
@@ -558,7 +559,7 @@ export default function ClinicalReportPage() {
               />
             </div>
             <div>
-              <label style={labelStyle}>RIWAYAT PENYAKIT SEKARANG (RPS)</label>
+              <label style={labelStyle}>Riwayat penyakit sekarang (RPS)</label>
               <textarea
                 style={{ ...textareaStyle, minHeight: 80 }}
                 value={form.anamnesa.rps}
@@ -574,7 +575,7 @@ export default function ClinicalReportPage() {
               }}
             >
               <div>
-                <label style={labelStyle}>RPD (RIWAYAT PENYAKIT DAHULU)</label>
+                <label style={labelStyle}>RPD (riwayat penyakit dahulu)</label>
                 <textarea
                   style={textareaStyle}
                   value={form.anamnesa.rpd}
@@ -583,7 +584,7 @@ export default function ClinicalReportPage() {
                 />
               </div>
               <div>
-                <label style={labelStyle}>RPK (RIWAYAT PENYAKIT KELUARGA)</label>
+                <label style={labelStyle}>RPK (riwayat penyakit keluarga)</label>
                 <textarea
                   style={textareaStyle}
                   value={form.anamnesa.rpk}
@@ -592,7 +593,7 @@ export default function ClinicalReportPage() {
                 />
               </div>
               <div>
-                <label style={labelStyle}>ALERGI</label>
+                <label style={labelStyle}>Alergi</label>
                 <textarea
                   style={textareaStyle}
                   value={form.anamnesa.alergi}
@@ -604,7 +605,7 @@ export default function ClinicalReportPage() {
           </div>
 
           {/* ── 3. PEMERIKSAAN FISIK (O) ── */}
-          <div style={sectionTitleStyle}>03 — PEMERIKSAAN FISIK (OBJEKTIF)</div>
+          <div style={sectionTitleStyle}>03 — pemeriksaan fisik (objektif)</div>
           <div
             style={{
               display: 'grid',
@@ -613,7 +614,7 @@ export default function ClinicalReportPage() {
             }}
           >
             <div>
-              <label style={labelStyle}>TD SISTOLIK (mmHg)</label>
+              <label style={labelStyle}>TD sistolik (mmHg)</label>
               <input
                 style={inputStyle}
                 type="number"
@@ -623,7 +624,7 @@ export default function ClinicalReportPage() {
               />
             </div>
             <div>
-              <label style={labelStyle}>TD DIASTOLIK (mmHg)</label>
+              <label style={labelStyle}>TD diastolik (mmHg)</label>
               <input
                 style={inputStyle}
                 type="number"
@@ -633,7 +634,7 @@ export default function ClinicalReportPage() {
               />
             </div>
             <div>
-              <label style={labelStyle}>NADI (x/mnt)</label>
+              <label style={labelStyle}>Nadi (x/mnt)</label>
               <input
                 style={inputStyle}
                 type="number"
@@ -643,7 +644,7 @@ export default function ClinicalReportPage() {
               />
             </div>
             <div>
-              <label style={labelStyle}>NAPAS (x/mnt)</label>
+              <label style={labelStyle}>Napas (x/mnt)</label>
               <input
                 style={inputStyle}
                 type="number"
@@ -662,7 +663,7 @@ export default function ClinicalReportPage() {
             }}
           >
             <div>
-              <label style={labelStyle}>SUHU (°C)</label>
+              <label style={labelStyle}>Suhu (°C)</label>
               <input
                 style={inputStyle}
                 type="number"
@@ -712,7 +713,7 @@ export default function ClinicalReportPage() {
             }}
           >
             <div>
-              <label style={labelStyle}>KEADAAN UMUM</label>
+              <label style={labelStyle}>Keadaan umum</label>
               <select
                 style={inputStyle}
                 value={form.pemeriksaanFisik.keadaanUmum}
@@ -724,7 +725,7 @@ export default function ClinicalReportPage() {
               </select>
             </div>
             <div>
-              <label style={labelStyle}>KESADARAN</label>
+              <label style={labelStyle}>Kesadaran</label>
               <select
                 style={inputStyle}
                 value={form.pemeriksaanFisik.kesadaran}
@@ -739,7 +740,7 @@ export default function ClinicalReportPage() {
             </div>
           </div>
           <div style={{ marginTop: 12 }}>
-            <label style={labelStyle}>PEMERIKSAAN FISIK LAIN</label>
+            <label style={labelStyle}>Pemeriksaan fisik lain</label>
             <textarea
               style={{ ...textareaStyle, minHeight: 80 }}
               value={form.pemeriksaanFisik.pemeriksaanLain}
@@ -749,7 +750,7 @@ export default function ClinicalReportPage() {
           </div>
 
           {/* ── 4. ASESMEN (A) ── */}
-          <div style={sectionTitleStyle}>04 — ASESMEN</div>
+          <div style={sectionTitleStyle}>04 — asesmen</div>
           <div
             style={{
               display: 'grid',
@@ -758,7 +759,7 @@ export default function ClinicalReportPage() {
             }}
           >
             <div>
-              <label style={labelStyle}>DIAGNOSIS KERJA</label>
+              <label style={labelStyle}>Diagnosis kerja</label>
               <input
                 style={inputStyle}
                 value={form.asesmen.diagnosisKerja}
@@ -767,7 +768,7 @@ export default function ClinicalReportPage() {
               />
             </div>
             <div>
-              <label style={labelStyle}>KODE ICD-10</label>
+              <label style={labelStyle}>Kode ICD-10</label>
               <input
                 style={inputStyle}
                 value={form.asesmen.icd10}
@@ -785,7 +786,7 @@ export default function ClinicalReportPage() {
             }}
           >
             <div>
-              <label style={labelStyle}>DIAGNOSIS BANDING</label>
+              <label style={labelStyle}>Diagnosis banding</label>
               <textarea
                 style={textareaStyle}
                 value={form.asesmen.diagnosisBanding}
@@ -794,7 +795,7 @@ export default function ClinicalReportPage() {
               />
             </div>
             <div>
-              <label style={labelStyle}>PROGNOSIS</label>
+              <label style={labelStyle}>Prognosis</label>
               <select
                 style={inputStyle}
                 value={form.asesmen.prognosis}
@@ -809,10 +810,10 @@ export default function ClinicalReportPage() {
           </div>
 
           {/* ── 5. TATA LAKSANA (P) ── */}
-          <div style={sectionTitleStyle}>05 — TATA LAKSANA (PLAN)</div>
+          <div style={sectionTitleStyle}>05 — tata laksana (plan)</div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
             <div>
-              <label style={labelStyle}>TERAPI / RESEP</label>
+              <label style={labelStyle}>Terapi / resep</label>
               <textarea
                 style={{ ...textareaStyle, minHeight: 80 }}
                 value={form.tataLaksana.terapi}
@@ -821,7 +822,7 @@ export default function ClinicalReportPage() {
               />
             </div>
             <div>
-              <label style={labelStyle}>TINDAKAN</label>
+              <label style={labelStyle}>Tindakan</label>
               <textarea
                 style={{ ...textareaStyle, minHeight: 80 }}
                 value={form.tataLaksana.tindakan}
@@ -839,7 +840,7 @@ export default function ClinicalReportPage() {
             }}
           >
             <div>
-              <label style={labelStyle}>EDUKASI</label>
+              <label style={labelStyle}>Edukasi</label>
               <textarea
                 style={textareaStyle}
                 value={form.tataLaksana.edukasi}
@@ -848,7 +849,7 @@ export default function ClinicalReportPage() {
               />
             </div>
             <div>
-              <label style={labelStyle}>RENCANA TINDAK LANJUT</label>
+              <label style={labelStyle}>Rencana tindak lanjut</label>
               <textarea
                 style={textareaStyle}
                 value={form.tataLaksana.tindakLanjut}
@@ -859,7 +860,7 @@ export default function ClinicalReportPage() {
           </div>
 
           {/* ── 6. PENUTUP ── */}
-          <div style={sectionTitleStyle}>06 — PENUTUP</div>
+          <div style={sectionTitleStyle}>06 — penutup</div>
           <div
             style={{
               display: 'grid',
@@ -868,7 +869,7 @@ export default function ClinicalReportPage() {
             }}
           >
             <div>
-              <label style={labelStyle}>DOKTER PEMERIKSA</label>
+              <label style={labelStyle}>Dokter pemeriksa</label>
               <input
                 style={inputStyle}
                 value={form.penutup.dokter}
@@ -877,7 +878,7 @@ export default function ClinicalReportPage() {
               />
             </div>
             <div>
-              <label style={labelStyle}>PERAWAT</label>
+              <label style={labelStyle}>Perawat</label>
               <input
                 style={inputStyle}
                 value={form.penutup.perawat}
@@ -886,7 +887,7 @@ export default function ClinicalReportPage() {
               />
             </div>
             <div>
-              <label style={labelStyle}>TANGGAL PEMERIKSAAN</label>
+              <label style={labelStyle}>Tanggal pemeriksaan</label>
               <input
                 style={inputStyle}
                 type="date"
@@ -895,7 +896,7 @@ export default function ClinicalReportPage() {
               />
             </div>
             <div>
-              <label style={labelStyle}>JAM</label>
+              <label style={labelStyle}>Jam</label>
               <input
                 style={inputStyle}
                 value={form.penutup.jamPemeriksaan}
@@ -1007,7 +1008,7 @@ export default function ClinicalReportPage() {
                     letterSpacing: '0.04em',
                   }}
                 >
-                  UPTD PUSKESMAS PONED BALOWERTI
+                  UPTD Puskesmas PONED Balowerti
                 </div>
                 <div
                   style={{
@@ -1031,7 +1032,7 @@ export default function ClinicalReportPage() {
                     letterSpacing: '0.08em',
                   }}
                 >
-                  REKAM MEDIS KUNJUNGAN
+                  Rekam medis kunjungan
                 </div>
                 <div
                   style={{
@@ -1087,7 +1088,7 @@ export default function ClinicalReportPage() {
             </div>
 
             {/* S — Subjektif */}
-            <ReportSection title="SUBJEKTIF (S) — ANAMNESA">
+            <ReportSection title="Subjektif (S) — anamnesa">
               <ReportField label="Keluhan Utama" value={selected.anamnesa.keluhanUtama} />
               <ReportField label="Riwayat Penyakit Sekarang" value={selected.anamnesa.rps} />
               <div
@@ -1104,7 +1105,7 @@ export default function ClinicalReportPage() {
             </ReportSection>
 
             {/* O — Objektif */}
-            <ReportSection title="OBJEKTIF (O) — PEMERIKSAAN FISIK">
+            <ReportSection title="Objektif (O) — pemeriksaan fisik">
               <div
                 style={{
                   display: 'grid',
@@ -1195,7 +1196,7 @@ export default function ClinicalReportPage() {
             </ReportSection>
 
             {/* A — Asesmen */}
-            <ReportSection title="ASESMEN (A)">
+            <ReportSection title="Asesmen (A)">
               <div
                 style={{
                   display: 'grid',
@@ -1220,7 +1221,7 @@ export default function ClinicalReportPage() {
             </ReportSection>
 
             {/* P — Plan */}
-            <ReportSection title="TATA LAKSANA (P)">
+            <ReportSection title="Tata laksana (P)">
               <div
                 style={{
                   display: 'grid',
@@ -1267,7 +1268,7 @@ export default function ClinicalReportPage() {
                     letterSpacing: '0.1em',
                   }}
                 >
-                  DOKTER PEMERIKSA
+                  Dokter pemeriksa
                 </div>
                 <div style={{ height: 60 }} />
                 <div
@@ -1292,7 +1293,7 @@ export default function ClinicalReportPage() {
                     letterSpacing: '0.1em',
                   }}
                 >
-                  PERAWAT
+                  Perawat
                 </div>
                 <div style={{ height: 60 }} />
                 <div
@@ -1374,7 +1375,7 @@ function ReportField({ label, value }: { label: string; value: string }) {
           marginBottom: 2,
         }}
       >
-        {label.toUpperCase()}
+        {sentenceCase(label)}
       </div>
       <div
         style={{

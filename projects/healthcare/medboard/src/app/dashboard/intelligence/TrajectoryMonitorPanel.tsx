@@ -156,7 +156,7 @@ export default function TrajectoryMonitorPanel(): React.JSX.Element {
             opacity: 0.5,
           }}
         >
-          Format: SHA-256 hash dari identifier pasien. URL `?patient=` tetap akan disinkronkan
+          Format: sha-256 hash dari identifier pasien. URL `?patient=` tetap akan disinkronkan
           otomatis untuk dibagikan.
         </div>
       </div>

@@ -478,7 +478,7 @@ export default function AdminCommandCenter({ session }: { session: AdminSession 
   if (loading) {
     return (
       <div className={`${styles.statusMessage} ${styles.loadingMessage}`}>
-        LOADING COMMAND CENTER...
+        Loading command center...
       </div>
     )
   }
@@ -661,20 +661,20 @@ export default function AdminCommandCenter({ session }: { session: AdminSession 
       {/* ── KPI Cards Row ── */}
       <div className={styles.kpiGrid}>
         <KPICard
-          label="TOTAL CREW"
+          label="Total crew"
           value={kpi.totalCrew}
           sub={`${pendingCount > 0 ? `+${pendingCount} pending` : 'terdaftar'}`}
           accent
           badge={pendingCount > 0 ? pendingCount : undefined}
         />
         <KPICard
-          label="ONLINE NOW"
+          label="Online now"
           value={onlineCount}
           sub={socketConnected ? 'realtime' : 'disconnected'}
         />
-        <KPICard label="ONLINE TODAY" value={kpi.onlineToday} sub="user yang login hari ini" />
+        <KPICard label="Online today" value={kpi.onlineToday} sub="user yang login hari ini" />
         <KPICard
-          label="PENDING REGISTRATION"
+          label="Pending registration"
           value={pendingCount}
           sub={pendingCount > 0 ? 'menunggu approval' : 'tidak ada'}
         />
@@ -684,7 +684,7 @@ export default function AdminCommandCenter({ session }: { session: AdminSession 
       <div className={styles.chartGrid}>
         {/* Chart: Aktivitas Penggunaan */}
         <div className={styles.chartCard}>
-          <p className={styles.chartTitle}>AKTIVITAS DASHBOARD</p>
+          <p className={styles.chartTitle}>Aktivitas dashboard</p>
           <div className={styles.chartCanvas}>
             {usageToday && usageToday.hours.length > 0 ? (
               <Line data={activityChartData} options={activityChartOptions} />
@@ -697,9 +697,9 @@ export default function AdminCommandCenter({ session }: { session: AdminSession 
         {/* Chart: Performa Server (real-time memory) */}
         <div className={styles.chartCard}>
           <div className={styles.chartHeader}>
-            <p className={styles.chartTitleCompact}>PERFORMA SERVER</p>
+            <p className={styles.chartTitleCompact}>Performa server</p>
             <div className={styles.chartMeta}>
-              {isRailway && <span className={styles.railwayBadge}>RAILWAY</span>}
+              {isRailway && <span className={styles.railwayBadge}>Railway</span>}
               {serverMetrics && (
                 <span className={styles.chartMetaText}>
                   {serverMetrics.nodeVersion} · {serverMetrics.platform}
@@ -722,7 +722,7 @@ export default function AdminCommandCenter({ session }: { session: AdminSession 
         {/* User Dashboard */}
         <div className={styles.chartCard}>
           <div className={styles.chartHeader}>
-            <p className={styles.chartTitleCompact}>USER DASHBOARD</p>
+            <p className={styles.chartTitleCompact}>User dashboard</p>
           </div>
 
           {/* User Statistics */}
@@ -822,7 +822,7 @@ export default function AdminCommandCenter({ session }: { session: AdminSession 
         {/* Alert Feed */}
         <div className={styles.chartCard}>
           <div className={styles.chartHeader}>
-            <p className={styles.chartTitleCompact}>ALERT FEED</p>
+            <p className={styles.chartTitleCompact}>Alert feed</p>
             {alerts.length > 0 && (
               <span className={styles.alertCountBadge}>
                 {alerts.length} alert{alerts.length > 1 ? 's' : ''}

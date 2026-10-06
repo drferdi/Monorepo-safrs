@@ -287,7 +287,7 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
           fontSize: 14,
         }}
       >
-        LOADING OVERVIEW...
+        Loading overview...
       </div>
     )
   }
@@ -401,7 +401,7 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
                 color: 'var(--text-muted)',
               }}
             >
-              PENDAFTARAN MENUNGGU
+              Pendaftaran menunggu
             </p>
             <span style={{ fontSize: 12, color: '#002147', fontWeight: 600 }}>
               {pendingCount} menunggu review
@@ -438,20 +438,20 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
         }}
       >
         <KPICard
-          label="TOTAL CREW"
+          label="Total crew"
           value={kpi.totalCrew}
           sub={`${onlineCount} online`}
           accent
           badge={pendingCount > 0 ? pendingCount : undefined}
         />
         <KPICard
-          label="LB1 RUNS"
+          label="LB1 runs"
           value={kpi.lb1Runs}
           sub={`${kpi.lb1SuccessRuns} sukses · ${kpi.lb1FailedRuns} gagal`}
         />
-        <KPICard label="TOTAL KUNJUNGAN" value={kpi.lb1TotalVisits} sub="dari LB1" />
+        <KPICard label="Total kunjungan" value={kpi.lb1TotalVisits} sub="dari LB1" />
         <KPICard
-          label="EMR TRANSFER"
+          label="EMR transfer"
           value={kpi.emrTransfers}
           sub={`avg ${formatLatency(kpi.emrAvgLatencyMs)}`}
         />
@@ -481,7 +481,7 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
               color: 'var(--text-muted)',
             }}
           >
-            KUNJUNGAN PER PERIODE
+            Kunjungan per periode
           </p>
           <div style={{ height: 220 }}>
             {lb1SuccessEntries.length > 0 ? (
@@ -507,7 +507,7 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
               color: 'var(--text-muted)',
             }}
           >
-            EMR TRANSFER HEALTH
+            EMR transfer health
           </p>
           <div style={{ height: 220 }}>
             {kpi.emrTransfers > 0 ? (
@@ -543,7 +543,7 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
               color: 'var(--text-muted)',
             }}
           >
-            AKTIVITAS TERAKHIR
+            Aktivitas terakhir
           </p>
           <div style={{ display: 'grid', gap: 8 }}>
             {[
@@ -632,7 +632,7 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
               color: 'var(--text-muted)',
             }}
           >
-            CREW STATUS
+            Crew status
           </p>
           <div style={{ display: 'grid', gap: 6 }}>
             {crew.map(m => {
@@ -698,7 +698,7 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
                         fontWeight: 600,
                       }}
                     >
-                      LIVE
+                      Live
                     </span>
                   )}
                 </div>
@@ -721,8 +721,8 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
           flexWrap: 'wrap',
         }}
       >
-        <StatusDot label="SERVER" value={`Uptime ${formatUptime(kpi.serverUptimeSeconds)}`} ok />
-        <StatusDot label="CREW" value={`${kpi.totalCrew} terdaftar`} ok={kpi.totalCrew > 0} />
+        <StatusDot label="Server" value={`Uptime ${formatUptime(kpi.serverUptimeSeconds)}`} ok />
+        <StatusDot label="Crew" value={`${kpi.totalCrew} terdaftar`} ok={kpi.totalCrew > 0} />
         <StatusDot
           label="LB1"
           value={kpi.lb1Runs > 0 ? `${kpi.lb1SuccessRuns}/${kpi.lb1Runs} sukses` : 'Belum ada run'}

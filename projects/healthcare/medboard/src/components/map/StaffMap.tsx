@@ -153,7 +153,7 @@ export default function StaffMap({
           fontSize: 14,
         }}
       >
-        LOADING MAP...
+        Loading MAP...
       </div>
     )
   }
@@ -219,7 +219,7 @@ export default function StaffMap({
               color: 'var(--text)',
             }}
           >
-            {onlineCount} ONLINE
+            {onlineCount} Online
           </span>
         </div>
       </div>
@@ -319,7 +319,7 @@ export default function StaffMap({
                     {person.location.label}
                   </span>
                   {person.isOnline && (
-                    <span className="ui-badge ui-badge--success">LIVE</span>
+                    <span className="ui-badge ui-badge--success">Live</span>
                   )}
                 </div>
               </div>

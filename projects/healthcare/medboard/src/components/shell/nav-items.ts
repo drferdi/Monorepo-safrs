@@ -40,7 +40,7 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     label: 'Tim',
     items: [
-      { href: '/hub', label: 'Sentra HUB', icon: Users },
+      { href: '/hub', label: 'Sentra Hub', icon: Users },
       { href: '/acars', label: 'Sentra Network', icon: RadioTower },
       { href: '/chat', label: 'Team Chat', icon: MessageSquare },
     ],

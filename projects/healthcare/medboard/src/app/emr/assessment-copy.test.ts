@@ -14,3 +14,8 @@ test('the assessment workspace shows no engine-retirement notice and no engine e
   assert.doesNotMatch(emr, /Review dokter selesai/)
   assert.doesNotMatch(emr, /Data triase awal sudah terkumpul/)
 })
+
+test('gender is chosen by symbol, and each symbol keeps its spoken name (Chief 2026-10-06)', () => {
+  assert.match(emr, /\{g === 'L' \? '♂' : '♀'\}/)
+  assert.match(emr, /aria-label=\{g === 'L' \? 'Laki-laki' : 'Perempuan'\}/)
+})

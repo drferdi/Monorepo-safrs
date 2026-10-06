@@ -339,7 +339,7 @@ export default function HubPage() {
     <div className={styles.page}>
       {/* Header */}
       <div className={styles.head}>
-        <p className={styles.meta}>CREW HUB</p>
+        <p className={styles.meta}>Crew Hub</p>
         <h1 className={styles.title}>{activeTab === 'roster' ? 'Roster' : 'Sentra Organisation'}</h1>
 
         {/* Tab navigation */}

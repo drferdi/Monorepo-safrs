@@ -16,6 +16,7 @@ import {
 } from '@/components/features/trajectory'
 import { getTrajectoryHistoryWindow, type ScrapedVisit } from '@/lib/emr/visit-history'
 import type { ScreeningAlert } from '@/lib/vitals/instant-red-alerts'
+import { sentenceCase } from '@/lib/text/sentence-case'
 
 interface TrajectoryPanelProps {
   vitals: {
@@ -39,25 +40,25 @@ const URGENCY_CONFIG: Record<
   { label: string; color: string; bg: string; border: string }
 > = {
   low: {
-    label: 'ROUTINE 24H',
+    label: 'Routine 24H',
     color: '#10b981',
     bg: 'rgba(16,185,129,0.1)',
     border: '#10b981',
   },
   moderate: {
-    label: 'REVIEW SAME DAY',
+    label: 'Review same day',
     color: '#eab308',
     bg: 'rgba(234,179,8,0.1)',
     border: '#eab308',
   },
   high: {
-    label: 'URGENT <6H',
+    label: 'Urgent <6H',
     color: '#f97316',
     bg: 'rgba(249,115,22,0.1)',
     border: '#f97316',
   },
   immediate: {
-    label: 'EMERGENCY NOW',
+    label: 'Emergency now',
     color: '#ef4444',
     bg: 'rgba(239,68,68,0.15)',
     border: '#ef4444',
@@ -65,10 +66,10 @@ const URGENCY_CONFIG: Record<
 }
 
 const DETERIORATION_CONFIG: Record<GlobalDeteriorationState, { label: string; color: string }> = {
-  improving: { label: 'MEMBAIK', color: '#10b981' },
-  stable: { label: 'STABIL', color: '#06b6d4' },
-  deteriorating: { label: 'MEMBURUK', color: '#f97316' },
-  critical: { label: 'KRITIS', color: '#ef4444' },
+  improving: { label: 'Membaik', color: '#10b981' },
+  stable: { label: 'Stabil', color: '#06b6d4' },
+  deteriorating: { label: 'Memburuk', color: '#f97316' },
+  critical: { label: 'Kritis', color: '#ef4444' },
 }
 
 const RISK_COLOR: Record<RiskLevel, string> = {
@@ -205,7 +206,7 @@ export default function TrajectoryPanel({
               color: 'var(--text-muted)',
             }}
           >
-            ◈ CLINICAL TRAJECTORY
+            ◈ Clinical trajectory
           </span>
           {/* Urgency badge */}
           <span
@@ -271,7 +272,7 @@ export default function TrajectoryPanel({
                 color: 'var(--text-muted)',
               }}
             >
-              ACTIVE SCREENING ALERTS
+              Active screening alerts
             </span>
             {screeningAlerts.slice(0, 3).map(a => (
               <div
@@ -323,7 +324,7 @@ export default function TrajectoryPanel({
               color: 'var(--text-muted)',
             }}
           >
-            CLINICAL INTELLIGENCE — VITAL PARAMETERS
+            Clinical intelligence — vital parameters
           </span>
           <div
             style={{
@@ -358,7 +359,7 @@ export default function TrajectoryPanel({
                       color: 'var(--text-muted)',
                     }}
                   >
-                    {vt.label.toUpperCase()}
+                    {sentenceCase(vt.label)}
                   </span>
                   <span
                     style={{
@@ -371,7 +372,7 @@ export default function TrajectoryPanel({
                       border: `1px solid ${RISK_COLOR[vt.risk]}60`,
                     }}
                   >
-                    {vt.risk.toUpperCase()}
+                    {sentenceCase(vt.risk)}
                   </span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 3 }}>
@@ -430,7 +431,7 @@ export default function TrajectoryPanel({
                 fontWeight: 600,
               }}
             >
-              GLOBAL DETERIORATION — {deterioration.label}
+              Global deterioration — {deterioration.label}
             </span>
             <span style={{ ...mono, fontSize: 12, color: deterioration.color }}>
               {analysis.global_deterioration.deterioration_score.toFixed(0)}
@@ -470,7 +471,7 @@ export default function TrajectoryPanel({
               color: 'var(--text-muted)',
             }}
           >
-            ACUTE ATTACK RISK 24H
+            Acute attack risk 24H
           </span>
           <div
             style={{
@@ -546,7 +547,7 @@ export default function TrajectoryPanel({
                 marginBottom: 6,
               }}
             >
-              ⏱ TIME TO CRITICAL ESTIMATE
+              ⏱ Time TO critical estimate
             </span>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
               {ttcEntries.map(e => (
@@ -577,7 +578,7 @@ export default function TrajectoryPanel({
               color: 'var(--text-muted)',
             }}
           >
-            CLINICAL RISK DRIVERS
+            Clinical risk drivers
           </span>
           <div
             style={{
@@ -614,7 +615,7 @@ export default function TrajectoryPanel({
               color: 'var(--text-muted)',
             }}
           >
-            REKOMENDASI KLINIS
+            Rekomendasi klinis
           </span>
           <div
             style={{
@@ -650,7 +651,7 @@ export default function TrajectoryPanel({
                       marginRight: 6,
                     }}
                   >
-                    {rec.priority.toUpperCase()}
+                    {sentenceCase(rec.priority)}
                   </span>
                   <span style={{ ...sans, fontSize: 12, color: 'var(--text-main)' }}>
                     {rec.text}
@@ -679,7 +680,7 @@ export default function TrajectoryPanel({
               marginBottom: 4,
             }}
           >
-            TRAJECTORY SUMMARY
+            Trajectory summary
           </span>
           <p
             style={{
@@ -713,7 +714,7 @@ export default function TrajectoryPanel({
                 marginBottom: 2,
               }}
             >
-              CONFIDENCE
+              Confidence
             </span>
             <span
               style={{
@@ -743,7 +744,7 @@ export default function TrajectoryPanel({
                 marginBottom: 2,
               }}
             >
-              VOLATILITY
+              Volatility
             </span>
             <span
               style={{
@@ -773,10 +774,10 @@ export default function TrajectoryPanel({
                 marginBottom: 2,
               }}
             >
-              STABILITY
+              Stability
             </span>
             <span style={{ ...mono, fontSize: 12, color: 'var(--text-main)' }}>
-              {analysis.trajectory_volatility.stability_label.replace(/_/g, ' ').toUpperCase()}
+              {sentenceCase(analysis.trajectory_volatility.stability_label.replace(/_/g, ' '))}
             </span>
           </div>
         </div>

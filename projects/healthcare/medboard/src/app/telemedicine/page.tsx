@@ -256,37 +256,37 @@ const PAST_APPOINTMENT_STATUSES: AppointmentStatus[] = ['COMPLETED', 'CANCELLED'
 /* ── Patient pathway ── */
 const FLOW_STEPS = [
   {
-    code: 'PETUGAS',
+    code: 'Petugas',
     label: 'Isi No. HP Pasien',
     sub: 'saat buat appointment',
   },
   {
-    code: 'SISTEM',
+    code: 'Sistem',
     label: 'Generate Token Unik',
     sub: 'disimpan ke database',
   },
   {
-    code: 'WHATSAPP',
+    code: 'WhatsApp',
     label: 'Kirim Link via WhatsApp',
     sub: '/join/[token]',
   },
   {
-    code: 'PASIEN',
+    code: 'Pasien',
     label: 'Klik Link → Buka Browser',
     sub: 'tanpa install / login',
   },
   {
-    code: 'INPUT',
+    code: 'Input',
     label: 'Masukkan Nama',
     sub: 'klik Masuk Konsultasi',
   },
   {
-    code: 'LIVEKIT',
+    code: 'LiveKit',
     label: 'Connect ke Video Room',
-    sub: 'role: PATIENT',
+    sub: 'sebagai pasien',
   },
   {
-    code: 'SELESAI',
+    code: 'Selesai',
     label: 'Dokter & Pasien Terhubung',
     sub: 'konsultasi berlangsung',
   },
@@ -1221,11 +1221,11 @@ export default function TelemedicinePage(): React.JSX.Element {
             jauh
           </p>
           <div className={styles.meta}>
-            <span className="ui-badge ui-badge--primary">VIDEO CONSULTATION</span>
+            <span className="ui-badge ui-badge--primary">Video consultation</span>
             {activeAppointments.length > 0 && (
-              <span className="ui-badge ui-badge--success">{activeAppointments.length} AKTIF</span>
+              <span className="ui-badge ui-badge--success">{activeAppointments.length} Aktif</span>
             )}
-            <span className="ui-badge ui-badge--neutral">COMMAND DESK</span>
+            <span className="ui-badge ui-badge--neutral">Command desk</span>
           </div>
         </div>
         <div className="ui-page-header__actions">
@@ -1439,12 +1439,12 @@ export default function TelemedicinePage(): React.JSX.Element {
       {/* Powered By - Technical Credit */}
       <div className={styles.credit}>
         <span>
-          Infrastructure by <span className={styles.creditStrong}>LIVEKIT</span>
+          Infrastructure by <span className={styles.creditStrong}>LiveKit</span>
         </span>
         <span>
-          Powered by <span className={styles.creditStrong}>SENTRA ENGINE</span>
+          Powered by <span className={styles.creditStrong}>Sentra engine</span>
         </span>
-        <span>VIDEO SDK v2.0</span>
+        <span>Video SDK v2.0</span>
         <span>RFC 4566</span>
       </div>
     </div>

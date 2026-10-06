@@ -142,7 +142,7 @@ export default function AdminOperationalSummary() {
   }, [socketState.lastEncounterUpdate, fetchMetrics])
 
   if (loading) {
-    return <div className={cx(styles.statusMessage, styles.loadingMessage)}>LOADING METRICS...</div>
+    return <div className={cx(styles.statusMessage, styles.loadingMessage)}>Loading metrics...</div>
   }
 
   if (error) {
@@ -178,12 +178,12 @@ export default function AdminOperationalSummary() {
         <span className={liveIndicatorClassName} />
         <span>
           {socketState.isReconnecting
-            ? 'MEMPERBARUI...'
+            ? 'Memperbarui...'
             : socketState.isConnected
-              ? 'LIVE'
-              : 'OFFLINE'}
+              ? 'Live'
+              : 'Offline'}
         </span>
-        <span className={styles.liveStatusMeta}>DATA: {fmtGeneratedAt(metrics.generatedAt)}</span>
+        <span className={styles.liveStatusMeta}>Data: {fmtGeneratedAt(metrics.generatedAt)}</span>
       </div>
 
       {/* ── KPI Grid ── */}
@@ -223,7 +223,7 @@ export default function AdminOperationalSummary() {
       <div className={styles.breakdownCard}>
         <div className={styles.breakdownHeader}>
           <span className={styles.breakdownTitle}>
-            SEBARAN STATUS ENCOUNTER ({metrics.totalEncounters})
+            Sebaran status encounter ({metrics.totalEncounters})
           </span>
         </div>
         <div className={styles.breakdownBody}>

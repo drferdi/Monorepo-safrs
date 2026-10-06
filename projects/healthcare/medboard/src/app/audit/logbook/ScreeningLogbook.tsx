@@ -203,9 +203,9 @@ export function ScreeningLogbook() {
 
             <tbody>
               {loading && entries.length === 0 ? (
-                <tr><td colSpan={8} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '14px' }}>MEMUAT…</td></tr>
+                <tr><td colSpan={8} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '14px' }}>Memuat…</td></tr>
               ) : entries.length === 0 ? (
-                <tr><td colSpan={8} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '14px' }}>BELUM ADA DATA AUDIT LOG</td></tr>
+                <tr><td colSpan={8} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '14px' }}>Belum ada data audit log</td></tr>
               ) : entries.map((entry) => {
                 const badge = statusBadge(entry.screeningStatus)
                 return (

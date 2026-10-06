@@ -203,7 +203,7 @@ export default function AdminEklaimReadiness() {
   }
 
   if (loading) {
-    return <div className={styles.statusState}>LOADING E-KLAIM DATA...</div>
+    return <div className={styles.statusState}>Loading e-klaim data...</div>
   }
 
   if (error) {
@@ -257,7 +257,7 @@ export default function AdminEklaimReadiness() {
           {/* List header row */}
           <div className={styles.listHeader}>
             <span className={styles.listHeaderLabel}>
-              ENCOUNTER — BPJS E-KLAIM READINESS ({encounters.length})
+              Encounter — BPJS e-klaim readiness ({encounters.length})
             </span>
           </div>
 

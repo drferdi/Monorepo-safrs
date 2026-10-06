@@ -23,11 +23,11 @@ interface NOTAMRecord {
 function priorityLabel(p: string): string {
   switch (p) {
     case 'urgent':
-      return 'URGENT'
+      return 'Urgent'
     case 'warning':
-      return 'WARNING'
+      return 'Warning'
     default:
-      return 'INFO'
+      return 'Info'
   }
 }
 
@@ -176,7 +176,7 @@ export default function AdminNotam() {
 
       {/* ── Create Form ── */}
       <div className={styles.panel}>
-        <p className={styles.sectionKick}>BUAT NOTAM BARU</p>
+        <p className={styles.sectionKick}>Buat NOTAM baru</p>
 
         <form onSubmit={handleCreate} className={styles.formStack}>
           {/* Title */}
@@ -248,7 +248,7 @@ export default function AdminNotam() {
 
       {/* ── Active NOTAMs ── */}
       <div>
-        <p className={styles.sectionKick}>NOTAM AKTIF ({activeNotams.length})</p>
+        <p className={styles.sectionKick}>NOTAM aktif ({activeNotams.length})</p>
 
         {activeNotams.length === 0 ? (
           <div className={styles.emptyState}>Tidak ada NOTAM aktif saat ini.</div>
@@ -285,7 +285,7 @@ export default function AdminNotam() {
       {inactiveNotams.length > 0 && (
         <div>
           <p className={`${styles.sectionKick} ${styles.sectionKickMuted}`}>
-            RIWAYAT ({inactiveNotams.length})
+            Riwayat ({inactiveNotams.length})
           </p>
           <div className={styles.historyList}>
             {inactiveNotams.map(n => (
@@ -296,7 +296,7 @@ export default function AdminNotam() {
                   </span>
                   <span className={styles.historyTitle}>{n.title}</span>
                   <span className={styles.historyBadge}>
-                    {!n.active ? 'NONAKTIF' : 'KEDALUWARSA'}
+                    {!n.active ? 'Nonaktif' : 'Kedaluwarsa'}
                   </span>
                 </div>
                 <p className={styles.historyText}>{n.body}</p>

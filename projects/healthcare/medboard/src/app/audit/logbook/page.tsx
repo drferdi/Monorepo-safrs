@@ -18,7 +18,7 @@ export default function AuditLogbookPage() {
           Logbook Audit Skrining
         </h1>
         <p style={{ fontSize: '14px', color: '#737373', marginTop: '6px', marginBottom: 0 }}>
-          Setiap pengiriman hasil skrining ASSIST ke dokter dicatat di sini secara real-time.
+          Setiap pengiriman hasil skrining assist ke dokter dicatat di sini secara real-time.
         </p>
       </div>
       <ScreeningLogbook />

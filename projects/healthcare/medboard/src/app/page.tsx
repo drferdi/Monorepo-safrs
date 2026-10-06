@@ -36,7 +36,7 @@ const QUICK_LINKS = [
     label: 'Satu Sehat',
     desc: 'Kemenkes',
     href: 'https://satusehat.kemkes.go.id/sdmk/dashboard',
-    badge: 'KEMENKES',
+    badge: 'Kemenkes',
   },
   {
     label: 'E-Rekam Medis',
@@ -183,7 +183,9 @@ function formatBadgeList(values: string[]): string[] {
 }
 
 function formatRoleLabel(value: string | undefined): string {
-  return value ? value.replace(/_/g, ' ') : 'Belum diatur'
+  if (!value) return 'Belum diatur'
+  const words = value.replace(/_/g, ' ').toLowerCase()
+  return words.charAt(0).toUpperCase() + words.slice(1)
 }
 
 function formatBoardDateTime(value: string): string {
@@ -1049,7 +1051,7 @@ export default function ProfilUserPage() {
   return (
     <div className="home-page">
       {profileLoading ? (
-        <div style={{ fontSize: 14, color: L.muted }}>MEMUAT PROFIL USER...</div>
+        <div style={{ fontSize: 14, color: L.muted }}>Memuat profil user...</div>
       ) : null}
 
       {!profileLoading && profileError && !isProfileEditorOpen ? (
@@ -1873,7 +1875,7 @@ export default function ProfilUserPage() {
           {/* ── Whos online ── */}
           <Panel>
             <PanelSection>
-              <SectionLabel>WHOS ONLINE</SectionLabel>
+              <SectionLabel>Sedang online</SectionLabel>
               {onlineRoster.length > 0 ? (
                 <div
                   className={hasScrollableOnlineRoster ? 'who-online-scroll' : undefined}
@@ -1902,7 +1904,7 @@ export default function ProfilUserPage() {
                           >
                             <span style={{ color: L.text }}>{user.name}</span>
                             {isCurrentUser ? (
-                              <span className="ui-badge ui-badge--primary">ANDA</span>
+                              <span className="ui-badge ui-badge--primary">Anda</span>
                             ) : null}
                           </div>
                           <span style={{ color: L.muted }}>
@@ -1910,7 +1912,7 @@ export default function ProfilUserPage() {
                             {user.institution ? ` • ${user.institution}` : ''}
                           </span>
                         </div>
-                        <span className="ui-badge ui-badge--success">ONLINE</span>
+                        <span className="ui-badge ui-badge--success">Online</span>
                       </div>
                     )
                   })}
@@ -1950,7 +1952,11 @@ export default function ProfilUserPage() {
               <Row label="Profesi" val={sessionUser?.profession || 'Belum diisi'} />
               {isAdminDashboardUser ? (
                 <>
-                  <Row label="Role" val={sessionUser?.role || 'Belum diisi'} accent />
+                  <Row
+                    label="Role"
+                    val={sessionUser?.role ? formatRoleLabel(sessionUser.role) : 'Belum diisi'}
+                    accent
+                  />
                   <Row
                     label="Role Sentra"
                     val={

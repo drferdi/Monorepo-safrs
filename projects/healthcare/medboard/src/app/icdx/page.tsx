@@ -286,7 +286,7 @@ export default function ICDXPage() {
               fontFamily: L.mono,
             }}
           >
-            DYNAMIC DATABASE
+            Dynamic database
           </span>
         </div>
       </div>
@@ -360,7 +360,7 @@ export default function ICDXPage() {
                 >
                   DB: 2010={dbInfo['2010']} | 2016={dbInfo['2016']} | 2019=
                   {dbInfo['2019']}
-                  {extensionSource && ` | EXT: ${extensionSource}`}
+                  {extensionSource && ` | Ext: ${extensionSource}`}
                 </div>
               )}
             </div>
@@ -1203,7 +1203,7 @@ export default function ICDXPage() {
                             color: entry.status === 'success' ? '#4CAF50' : '#E74C3C',
                           }}
                         >
-                          {entry.status === 'success' ? 'OK' : 'FAIL'}
+                          {entry.status === 'success' ? 'OK' : 'Fail'}
                         </span>
                       </div>
                       <div

@@ -278,7 +278,7 @@ export default function ChatPage() {
             <h1 className={styles.title}>Chatbox</h1>
             <div className={`${styles.status}${connected ? ` ${styles.statusOn}` : ''}`}>
               <div className={styles.statusDot} />
-              {connected ? 'CONNECTED' : 'DISCONNECTED'}
+              {connected ? 'Connected' : 'Disconnected'}
             </div>
           </div>
           <p className="ui-page-header__description">
@@ -307,7 +307,7 @@ export default function ChatPage() {
             </div>
             <div className={styles.contactText}>
               <div className={styles.contactName}>Broadcast</div>
-              <div className={styles.contactRole}>ALL CREW</div>
+              <div className={styles.contactRole}>All crew</div>
             </div>
             {(unreadByRoom['broadcast'] || 0) > 0 && (
               <UnreadBadge count={unreadByRoom['broadcast']} />
@@ -366,14 +366,14 @@ export default function ChatPage() {
               </div>
               <div className={styles.headerMeta}>
                 {activeChannel.type === 'broadcast'
-                  ? `${onlineUsers.length} CREW ONLINE`
+                  ? `${onlineUsers.length} crew online`
                   : activeChannel.role}
                 {typingUser && activeChannel.roomId && (
                   <span className={styles.typing}>{typingUser} sedang mengetik...</span>
                 )}
               </div>
             </div>
-            <div className={styles.headerTag}>SENTRA INTERNAL</div>
+            <div className={styles.headerTag}>Sentra internal</div>
           </div>
 
           {/* Messages */}

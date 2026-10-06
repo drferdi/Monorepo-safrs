@@ -27,7 +27,7 @@ export default function AdminPlaceholder({
           fontWeight: 600,
         }}
       >
-        COMING SOON
+        Coming soon
       </p>
       <h2
         style={{
@@ -69,7 +69,7 @@ export default function AdminPlaceholder({
               fontWeight: 600,
             }}
           >
-            PREREQUISITES
+            Prerequisites
           </p>
           {prerequisites.map((p, i) => (
             <p

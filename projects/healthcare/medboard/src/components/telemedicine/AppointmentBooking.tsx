@@ -394,7 +394,7 @@ export function AppointmentBooking({
             {/* Summary */}
             <div>
               <div className="ui-field__label" style={{ marginBottom: 4 }}>
-                RINGKASAN
+                Ringkasan
               </div>
               {[
                 ['DOKTER', form.doctorName ?? form.doctorId ?? '-'],

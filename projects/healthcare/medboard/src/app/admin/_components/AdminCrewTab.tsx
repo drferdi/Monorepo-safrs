@@ -144,7 +144,7 @@ export default function AdminCrewTab() {
           fontSize: 14,
         }}
       >
-        LOADING CREW...
+        Loading crew...
       </div>
     )
   }
@@ -221,7 +221,7 @@ export default function AdminCrewTab() {
           color: 'var(--text-muted)',
         }}
       >
-        {filtered.length} USER{filtered.length !== 1 ? 'S' : ''} DITEMUKAN
+        {filtered.length} User{filtered.length !== 1 ? 'S' : ''} Ditemukan
       </p>
 
       {/* ── User Table ── */}
@@ -359,7 +359,7 @@ export default function AdminCrewTab() {
                           color: isActive ? '#4CAF50' : 'var(--c-critical)',
                         }}
                       >
-                        {isActive ? 'AKTIF' : 'NONAKTIF'}
+                        {isActive ? 'Aktif' : 'Nonaktif'}
                       </span>
                     </td>
                   </tr>
@@ -711,7 +711,7 @@ function UserEditPanel({
               fontWeight: 600,
             }}
           >
-            EDIT USER
+            Edit user
           </span>
           <span
             style={{
@@ -758,12 +758,12 @@ function UserEditPanel({
               fontWeight: 600,
             }}
           >
-            DATA AKUN
+            Data akun
           </p>
 
           <div style={{ display: 'grid', gap: 10 }}>
             <div>
-              <label style={labelStyle}>DISPLAY NAME</label>
+              <label style={labelStyle}>Display name</label>
               <input
                 style={inputStyle}
                 value={displayName}
@@ -771,7 +771,7 @@ function UserEditPanel({
               />
             </div>
             <div>
-              <label style={labelStyle}>EMAIL</label>
+              <label style={labelStyle}>Email</label>
               <input
                 style={inputStyle}
                 type="email"
@@ -780,7 +780,7 @@ function UserEditPanel({
               />
             </div>
             <div>
-              <label style={labelStyle}>INSTITUSI</label>
+              <label style={labelStyle}>Institusi</label>
               <select
                 style={{ ...inputStyle, cursor: 'pointer' }}
                 value={institution}
@@ -795,7 +795,7 @@ function UserEditPanel({
               </select>
             </div>
             <div>
-              <label style={labelStyle}>PROFESI</label>
+              <label style={labelStyle}>Profesi</label>
               <select
                 style={{ ...inputStyle, cursor: 'pointer' }}
                 value={profession}
@@ -810,7 +810,7 @@ function UserEditPanel({
               </select>
             </div>
             <div>
-              <label style={labelStyle}>ROLE</label>
+              <label style={labelStyle}>Role</label>
               <select
                 style={{ ...inputStyle, cursor: 'pointer' }}
                 value={role}
@@ -853,7 +853,7 @@ function UserEditPanel({
                 fontWeight: 600,
               }}
             >
-              AKSI
+              Aksi
             </p>
 
             {!resetPwMode ? (
@@ -937,12 +937,12 @@ function UserEditPanel({
               fontWeight: 600,
             }}
           >
-            DATA PROFIL
+            Data profil
           </p>
 
           <div style={{ display: 'grid', gap: 10 }}>
             <div>
-              <label style={labelStyle}>NAMA LENGKAP</label>
+              <label style={labelStyle}>Nama lengkap</label>
               <input
                 style={inputStyle}
                 value={fullName}
@@ -958,7 +958,7 @@ function UserEditPanel({
               }}
             >
               <div>
-                <label style={labelStyle}>TEMPAT LAHIR</label>
+                <label style={labelStyle}>Tempat lahir</label>
                 <input
                   style={inputStyle}
                   value={birthPlace}
@@ -966,7 +966,7 @@ function UserEditPanel({
                 />
               </div>
               <div>
-                <label style={labelStyle}>TANGGAL LAHIR</label>
+                <label style={labelStyle}>Tanggal lahir</label>
                 <input
                   style={inputStyle}
                   type="date"
@@ -984,7 +984,7 @@ function UserEditPanel({
               }}
             >
               <div>
-                <label style={labelStyle}>GENDER</label>
+                <label style={labelStyle}>Gender</label>
                 <select
                   style={{ ...inputStyle, cursor: 'pointer' }}
                   value={gender}
@@ -996,7 +996,7 @@ function UserEditPanel({
                 </select>
               </div>
               <div>
-                <label style={labelStyle}>GOLONGAN DARAH</label>
+                <label style={labelStyle}>Golongan darah</label>
                 <select
                   style={{ ...inputStyle, cursor: 'pointer' }}
                   value={bloodType}
@@ -1013,7 +1013,7 @@ function UserEditPanel({
             </div>
 
             <div>
-              <label style={labelStyle}>DOMISILI</label>
+              <label style={labelStyle}>Domisili</label>
               <input
                 style={inputStyle}
                 value={domicile}
@@ -1023,7 +1023,7 @@ function UserEditPanel({
 
             {/* Degrees — chip toggle */}
             <div>
-              <label style={labelStyle}>GELAR (maks {CREW_PROFILE_MAX_DEGREES})</label>
+              <label style={labelStyle}>Gelar (maks {CREW_PROFILE_MAX_DEGREES})</label>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                 {CREW_PROFILE_DEGREES.map(d => (
                   <ChipToggle
@@ -1040,7 +1040,7 @@ function UserEditPanel({
 
             {/* Job Titles — grouped chip toggle */}
             <div>
-              <label style={labelStyle}>JABATAN (maks {CREW_PROFILE_MAX_POSITIONS})</label>
+              <label style={labelStyle}>Jabatan (maks {CREW_PROFILE_MAX_POSITIONS})</label>
               {jobTitles.length > 0 && (
                 <div
                   style={{
@@ -1106,7 +1106,7 @@ function UserEditPanel({
                       fontWeight: 600,
                     }}
                   >
-                    SENTRA
+                    Sentra
                   </p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                     {CREW_PROFILE_POSITIONS.filter((_, i) => i < 7).map(jt => (
@@ -1133,7 +1133,7 @@ function UserEditPanel({
                       fontWeight: 600,
                     }}
                   >
-                    PUSKESMAS
+                    Puskesmas
                   </p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                     {CREW_PROFILE_POSITIONS.filter((_, i) => i >= 7).map(jt => (
@@ -1189,7 +1189,7 @@ function UserEditPanel({
 
             {/* Service Areas — chip toggle */}
             <div>
-              <label style={labelStyle}>AREA LAYANAN</label>
+              <label style={labelStyle}>Area layanan</label>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                 {CREW_ACCESS_SERVICE_AREAS.map(sa => (
                   <ChipToggle
@@ -1211,7 +1211,7 @@ function UserEditPanel({
             </div>
 
             <div>
-              <label style={labelStyle}>INSTITUSI TAMBAHAN</label>
+              <label style={labelStyle}>Institusi tambahan</label>
               <input
                 style={inputStyle}
                 value={institutionAdditional}

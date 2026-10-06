@@ -141,7 +141,7 @@ export default function AdminAnalytics() {
 
   if (loading) {
     return (
-      <div className={`${styles.statusMessage} ${styles.loadingMessage}`}>LOADING ANALYTICS...</div>
+      <div className={`${styles.statusMessage} ${styles.loadingMessage}`}>Loading analytics...</div>
     )
   }
 

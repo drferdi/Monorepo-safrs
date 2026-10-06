@@ -18,6 +18,7 @@ import {
   resolveCrewProfileAvatarUrl,
 } from '@/lib/crew-profile'
 import { safeUrl } from '@/lib/sanitize-url'
+import { sentenceCase } from '@/lib/text/sentence-case'
 
 /* ── Types ── */
 
@@ -451,7 +452,7 @@ export default function AdminUserAccess() {
   if (loading) {
     return (
       <div className={`${styles.statusMessage} ${styles.loadingMessage}`}>
-        LOADING USER ACCESS...
+        Loading user access...
       </div>
     )
   }
@@ -484,7 +485,7 @@ export default function AdminUserAccess() {
       <div className={styles.summaryGrid}>
         {/* Total Terdaftar */}
         <div className={styles.kpiCard}>
-          <div className={styles.kpiLabel}>TOTAL TERDAFTAR</div>
+          <div className={styles.kpiLabel}>Total terdaftar</div>
           <div className={styles.kpiValueRow}>
             <span className={styles.kpiValue}>{users.length}</span>
             {pendingCount > 0 && <span className={styles.kpiBadge}>+{pendingCount}</span>}
@@ -494,21 +495,21 @@ export default function AdminUserAccess() {
 
         {/* Login Hari Ini */}
         <div className={styles.kpiCard}>
-          <div className={styles.kpiLabel}>LOGIN HARI INI</div>
+          <div className={styles.kpiLabel}>Login hari ini</div>
           <div className={styles.kpiValue}>{onlineToday}</div>
           <div className={styles.kpiSub}>user yang login hari ini</div>
         </div>
 
         {/* Online Sekarang */}
         <div className={styles.kpiCard}>
-          <div className={styles.kpiLabel}>ONLINE SEKARANG</div>
+          <div className={styles.kpiLabel}>Online sekarang</div>
           <div className={styles.kpiValue}>{onlineNow}</div>
           <div className={styles.kpiSub}>user sedang online</div>
         </div>
 
         {/* Pending Registrasi */}
         <div className={cx(styles.kpiCard, pendingCount > 0 && styles.kpiCardPending)}>
-          <div className={styles.kpiLabel}>PENDING REGISTRASI</div>
+          <div className={styles.kpiLabel}>Pending registrasi</div>
           <div className={cx(styles.kpiValue, pendingCount > 0 && styles.kpiValueAccent)}>
             {pendingCount}
           </div>
@@ -522,7 +523,7 @@ export default function AdminUserAccess() {
       {pendingCount > 0 && (
         <div className={styles.pendingPanel}>
           <div className={styles.pendingHeader}>
-            <p className={styles.pendingTitle}>PENDAFTARAN MENUNGGU</p>
+            <p className={styles.pendingTitle}>Pendaftaran menunggu</p>
             <span className={styles.pendingCountText}>{pendingCount} menunggu review</span>
           </div>
 
@@ -594,7 +595,7 @@ export default function AdminUserAccess() {
 
       {/* ── Count ── */}
       <p className={styles.resultCount}>
-        {filtered.length} USER{filtered.length !== 1 ? 'S' : ''} DITEMUKAN
+        {filtered.length} User{filtered.length !== 1 ? 'S' : ''} Ditemukan
       </p>
 
       {/* ══════════════════════════════════════════════════════
@@ -661,7 +662,7 @@ export default function AdminUserAccess() {
                           isActive ? styles.statusBadgeActive : styles.statusBadgeInactive
                         )}
                       >
-                        {isActive ? 'AKTIF' : 'NONAKTIF'}
+                        {isActive ? 'Aktif' : 'Nonaktif'}
                       </span>
                     </td>
                   </tr>
@@ -1047,7 +1048,7 @@ function UserEditPanel({
       {/* Panel Header */}
       <div className={styles.editPanelHeader}>
         <div>
-          <span className={styles.panelSectionLabel}>EDIT USER</span>
+          <span className={styles.panelSectionLabel}>Edit user</span>
           <span className={styles.panelUsername}>@{user.username}</span>
         </div>
         <button onClick={onClose} className={styles.closeButton}>
@@ -1058,11 +1059,11 @@ function UserEditPanel({
       <div className={styles.editPanelGrid}>
         {/* ── Left Column: Auth Fields ── */}
         <div>
-          <p className={styles.panelSectionLabelBlock}>DATA AKUN</p>
+          <p className={styles.panelSectionLabelBlock}>Data akun</p>
 
           <div className={styles.formGrid}>
             <div>
-              <label className={styles.fieldLabel}>DISPLAY NAME</label>
+              <label className={styles.fieldLabel}>Display name</label>
               <input
                 className={styles.fieldInput}
                 value={displayName}
@@ -1072,7 +1073,7 @@ function UserEditPanel({
               />
             </div>
             <div>
-              <label className={styles.fieldLabel}>EMAIL</label>
+              <label className={styles.fieldLabel}>Email</label>
               <input
                 className={styles.fieldInput}
                 type="email"
@@ -1083,7 +1084,7 @@ function UserEditPanel({
               />
             </div>
             <div>
-              <label className={styles.fieldLabel}>INSTITUSI</label>
+              <label className={styles.fieldLabel}>Institusi</label>
               <select
                 className={styles.fieldSelect}
                 value={institution}
@@ -1100,7 +1101,7 @@ function UserEditPanel({
               </select>
             </div>
             <div>
-              <label className={styles.fieldLabel}>PROFESI</label>
+              <label className={styles.fieldLabel}>Profesi</label>
               <select
                 className={styles.fieldSelect}
                 value={profession}
@@ -1117,7 +1118,7 @@ function UserEditPanel({
               </select>
             </div>
             <div>
-              <label className={styles.fieldLabel}>ROLE</label>
+              <label className={styles.fieldLabel}>Role</label>
               <select
                 className={styles.fieldSelect}
                 value={role}
@@ -1140,7 +1141,7 @@ function UserEditPanel({
 
           {/* ── Actions ── */}
           <div className={styles.actionsSection}>
-            <p className={styles.panelSectionLabelTight}>AKSI</p>
+            <p className={styles.panelSectionLabelTight}>Aksi</p>
 
             {!resetPwMode ? (
               <button onClick={() => setResetPwMode(true)} className={styles.outlineButton}>
@@ -1211,11 +1212,11 @@ function UserEditPanel({
 
         {/* ── Right Column: Profile Fields ── */}
         <div>
-          <p className={styles.panelSectionLabelBlock}>DATA PROFIL</p>
+          <p className={styles.panelSectionLabelBlock}>Data profil</p>
 
           <div className={styles.formGrid}>
             <div>
-              <label className={styles.fieldLabel}>NAMA LENGKAP</label>
+              <label className={styles.fieldLabel}>Nama lengkap</label>
               <input
                 className={styles.fieldInput}
                 value={fullName}
@@ -1227,7 +1228,7 @@ function UserEditPanel({
 
             <div className={styles.twoColumnGrid}>
               <div>
-                <label className={styles.fieldLabel}>TEMPAT LAHIR</label>
+                <label className={styles.fieldLabel}>Tempat lahir</label>
                 <input
                   className={styles.fieldInput}
                   value={birthPlace}
@@ -1237,7 +1238,7 @@ function UserEditPanel({
                 />
               </div>
               <div>
-                <label className={styles.fieldLabel}>TANGGAL LAHIR</label>
+                <label className={styles.fieldLabel}>Tanggal lahir</label>
                 <input
                   className={styles.fieldInput}
                   type="date"
@@ -1251,7 +1252,7 @@ function UserEditPanel({
 
             <div className={styles.twoColumnGrid}>
               <div>
-                <label className={styles.fieldLabel}>GENDER</label>
+                <label className={styles.fieldLabel}>Gender</label>
                 <select
                   className={styles.fieldSelect}
                   value={gender}
@@ -1265,7 +1266,7 @@ function UserEditPanel({
                 </select>
               </div>
               <div>
-                <label className={styles.fieldLabel}>GOLONGAN DARAH</label>
+                <label className={styles.fieldLabel}>Golongan darah</label>
                 <select
                   className={styles.fieldSelect}
                   value={bloodType}
@@ -1284,7 +1285,7 @@ function UserEditPanel({
             </div>
 
             <div>
-              <label className={styles.fieldLabel}>DOMISILI</label>
+              <label className={styles.fieldLabel}>Domisili</label>
               <input
                 className={styles.fieldInput}
                 value={domicile}
@@ -1296,7 +1297,7 @@ function UserEditPanel({
 
             {/* Degrees -- chip toggle */}
             <div>
-              <label className={styles.fieldLabel}>GELAR (maks {CREW_PROFILE_MAX_DEGREES})</label>
+              <label className={styles.fieldLabel}>Gelar (maks {CREW_PROFILE_MAX_DEGREES})</label>
               <div className={styles.chipRow}>
                 {CREW_PROFILE_DEGREES.map((d) => (
                   <ChipToggle
@@ -1314,7 +1315,7 @@ function UserEditPanel({
             {/* Job Titles -- grouped chip toggle */}
             <div>
               <label className={styles.fieldLabel}>
-                JABATAN (maks {CREW_PROFILE_MAX_POSITIONS})
+                Jabatan (maks {CREW_PROFILE_MAX_POSITIONS})
               </label>
               {jobTitles.length > 0 && (
                 <div className={styles.selectedChips}>
@@ -1333,7 +1334,7 @@ function UserEditPanel({
               )}
               <div className={styles.selectorPanel}>
                 <div>
-                  <p className={styles.selectorGroupTitle}>SENTRA</p>
+                  <p className={styles.selectorGroupTitle}>Sentra</p>
                   <div className={styles.chipRow}>
                     {CREW_PROFILE_POSITIONS.filter((_, i) => i < 7).map((jt) => (
                       <ChipToggle
@@ -1351,7 +1352,7 @@ function UserEditPanel({
                   </div>
                 </div>
                 <div>
-                  <p className={styles.selectorGroupTitle}>PUSKESMAS</p>
+                  <p className={styles.selectorGroupTitle}>Puskesmas</p>
                   <div className={styles.chipRow}>
                     {CREW_PROFILE_POSITIONS.filter((_, i) => i >= 7).map((jt) => (
                       <ChipToggle
@@ -1406,7 +1407,7 @@ function UserEditPanel({
 
             {/* Service Areas -- chip toggle */}
             <div>
-              <label className={styles.fieldLabel}>AREA LAYANAN</label>
+              <label className={styles.fieldLabel}>Area layanan</label>
               <div className={styles.chipRow}>
                 {CREW_ACCESS_SERVICE_AREAS.map((sa) => (
                   <ChipToggle
@@ -1428,7 +1429,7 @@ function UserEditPanel({
             </div>
 
             <div>
-              <label className={styles.fieldLabel}>INSTITUSI TAMBAHAN</label>
+              <label className={styles.fieldLabel}>Institusi tambahan</label>
               <input
                 className={styles.fieldInput}
                 value={institutionAdditional}
@@ -1439,7 +1440,7 @@ function UserEditPanel({
             </div>
 
             <div>
-              <label className={styles.fieldLabel}>WHATSAPP AKTIF</label>
+              <label className={styles.fieldLabel}>WhatsApp aktif</label>
               <input
                 className={styles.fieldInput}
                 value={whatsappNumber}
@@ -1450,7 +1451,7 @@ function UserEditPanel({
 
             <div className={styles.twoColumnGrid}>
               <div>
-                <label className={styles.fieldLabel}>GITHUB</label>
+                <label className={styles.fieldLabel}>GitHub</label>
                 <input
                   className={styles.fieldInput}
                   value={githubUrl}
@@ -1459,7 +1460,7 @@ function UserEditPanel({
                 />
               </div>
               <div>
-                <label className={styles.fieldLabel}>LINKEDIN</label>
+                <label className={styles.fieldLabel}>LinkedIn</label>
                 <input
                   className={styles.fieldInput}
                   value={linkedinUrl}
@@ -1471,7 +1472,7 @@ function UserEditPanel({
 
             <div className={styles.twoColumnGrid}>
               <div>
-                <label className={styles.fieldLabel}>GRAVATAR</label>
+                <label className={styles.fieldLabel}>Gravatar</label>
                 <input
                   className={styles.fieldInput}
                   value={gravatarUrl}
@@ -1480,7 +1481,7 @@ function UserEditPanel({
                 />
               </div>
               <div>
-                <label className={styles.fieldLabel}>BLOG</label>
+                <label className={styles.fieldLabel}>Blog</label>
                 <input
                   className={styles.fieldInput}
                   value={blogUrl}
@@ -1492,7 +1493,7 @@ function UserEditPanel({
 
             <div className={styles.twoColumnGrid}>
               <div>
-                <label className={styles.fieldLabel}>INSTAGRAM</label>
+                <label className={styles.fieldLabel}>Instagram</label>
                 <input
                   className={styles.fieldInput}
                   value={instagramUrl}
@@ -1501,7 +1502,7 @@ function UserEditPanel({
                 />
               </div>
               <div>
-                <label className={styles.fieldLabel}>TIKTOK</label>
+                <label className={styles.fieldLabel}>TikTok</label>
                 <input
                   className={styles.fieldInput}
                   value={tiktokUrl}
@@ -1512,7 +1513,7 @@ function UserEditPanel({
             </div>
 
             <div>
-              <label className={styles.fieldLabel}>YOUTUBE</label>
+              <label className={styles.fieldLabel}>YouTube</label>
               <input
                 className={styles.fieldInput}
                 value={youtubeUrl}
@@ -1611,7 +1612,7 @@ function LogbookSection({ username }: { username: string }) {
 
   return (
     <div className={styles.logbookSection}>
-      <p className={styles.logbookTitle}>LOGBOOK KLINIS</p>
+      <p className={styles.logbookTitle}>Logbook klinis</p>
 
       {loading ? (
         <div className={styles.logbookLoading}>Memuat logbook...</div>
@@ -1636,7 +1637,7 @@ function LogbookSection({ username }: { username: string }) {
                   <td className={styles.tdDefault}>{e.action}</td>
                   <td className={styles.tdEndpoint}>{e.endpoint}</td>
                   <td className={styles.tdCenter}>
-                    <span className={resultBadgeClassName(e.result)}>{e.result.toUpperCase()}</span>
+                    <span className={resultBadgeClassName(e.result)}>{sentenceCase(e.result)}</span>
                   </td>
                   <td className={styles.tdRightMuted}>{formatTime(e.timestamp)}</td>
                 </tr>

@@ -246,7 +246,7 @@ export default function HubProfileDetailPage() {
     <div className={styles.page}>
       <div className="ui-page-header" style={{ marginBottom: 0 }}>
         <div>
-          <p className={styles.meta}>CREW PROFILE</p>
+          <p className={styles.meta}>Crew profile</p>
           <h1 className={styles.title}>Detail Roster</h1>
         </div>
         <div className="ui-page-header__actions">

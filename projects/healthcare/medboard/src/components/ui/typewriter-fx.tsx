@@ -164,13 +164,11 @@ export function TypewriterFX(): React.ReactElement {
           top: 8,
           left: 12,
           fontSize: 14,
-          letterSpacing: '0.15em',
           color: '#00ff88',
           opacity: 0.6,
-          textTransform: 'uppercase',
         }}
       >
-        ● SYSTEM_LOG
+        ● System log
       </div>
 
       {lines.map((line, index) => (

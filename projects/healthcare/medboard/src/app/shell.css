@@ -78,8 +78,6 @@
   color: var(--text);
   font-size: var(--text-sm);
   font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   text-decoration: none;
 }
 .app-header__end { display: flex; align-items: center; justify-content: flex-end; gap: var(--gap-lg); }

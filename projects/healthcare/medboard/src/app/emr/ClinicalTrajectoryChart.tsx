@@ -201,7 +201,7 @@ export default function ClinicalTrajectoryChart({
 
     if (currentVitals && currentVitals.sbp > 0) {
       points.push({
-        label: 'HARI INI',
+        label: 'Hari ini',
         vitals: currentVitals,
         keluhan: keluhanUtama,
         diagnosa: null,
@@ -742,14 +742,14 @@ export default function ClinicalTrajectoryChart({
                 style={{
                   padding: '8px 10px',
                   border: '1px solid var(--border)',
-                  background: p.label === 'HARI INI' ? 'var(--primary-tint)' : 'var(--surface-subtle)',
+                  background: p.label === 'Hari ini' ? 'var(--primary-tint)' : 'var(--surface-subtle)',
                   borderRadius: 'var(--radius-sm)',
                 }}
               >
                 <div
                   style={{
                     fontSize: 12,
-                    color: p.label === 'HARI INI' ? 'var(--primary)' : 'var(--text-secondary)',
+                    color: p.label === 'Hari ini' ? 'var(--primary)' : 'var(--text-secondary)',
                     marginBottom: 4,
                   }}
                 >

@@ -12,10 +12,10 @@ interface TabDef {
 }
 
 const TABS: TabDef[] = [
-  { key: 'disclaimer', label: 'DISCLAIMER AI' },
-  { key: 'privacy', label: 'PRIVASI DATA' },
-  { key: 'terms', label: 'KETENTUAN' },
-  { key: 'security', label: 'KEAMANAN' },
+  { key: 'disclaimer', label: 'Disclaimer AI' },
+  { key: 'privacy', label: 'Privasi data' },
+  { key: 'terms', label: 'Ketentuan' },
+  { key: 'security', label: 'Keamanan' },
 ]
 
 const ACCENT = 'var(--c-asesmen)'
@@ -131,18 +131,18 @@ function DisclaimerTab() {
 
       <SectionHeading>Batasan Penting</SectionHeading>
       <AlertBox>
-        Seluruh output AI bersifat INFORMATIF dan SUGESTIF semata — BUKAN merupakan diagnosis medis,
-        BUKAN resep pengobatan, dan BUKAN pengganti penilaian klinis (clinical judgment) tenaga
+        Seluruh output AI bersifat informatif dan sugestif semata — bukan merupakan diagnosis medis,
+        bukan resep pengobatan, dan bukan pengganti penilaian klinis (clinical judgment) tenaga
         kesehatan.
       </AlertBox>
 
       <BulletList
         items={[
-          'AI TIDAK menggantikan penilaian klinis dokter — tenaga kesehatan yang merawat pasien tetap bertanggung jawab penuh atas semua keputusan medis',
+          'AI tidak menggantikan penilaian klinis dokter — tenaga kesehatan yang merawat pasien tetap bertanggung jawab penuh atas semua keputusan medis',
           'AI dapat menghasilkan kesalahan (error), halusinasi (hallucination), atau informasi yang sudah tidak relevan (outdated)',
           'Skor kepercayaan (confidence score) bersifat probabilistik, bukan diagnosis definitif',
-          'Klinisi WAJIB memverifikasi secara independen semua saran AI sebelum mengambil tindakan klinis apa pun',
-          'Fitur AI TIDAK divalidasi untuk keputusan klinis darurat atau kondisi yang mengancam jiwa',
+          'Klinisi wajib memverifikasi secara independen semua saran AI sebelum mengambil tindakan klinis apa pun',
+          'Fitur AI tidak divalidasi untuk keputusan klinis darurat atau kondisi yang mengancam jiwa',
           'Akurasi AI bergantung pada kualitas dan kelengkapan data input — data yang tidak lengkap atau tidak akurat akan menghasilkan output yang tidak dapat diandalkan',
         ]}
       />
@@ -190,7 +190,7 @@ function PrivacyTab() {
       <BulletList
         items={[
           'UU No. 27/2022 tentang Perlindungan Data Pribadi (UU PDP) — Pasal 20: pemrosesan untuk kepentingan kesehatan yang sah',
-          'UU No. 17/2023 tentang Kesehatan — kewajiban EMR dan integrasi SATUSEHAT',
+          'UU No. 17/2023 tentang Kesehatan — kewajiban EMR dan integrasi SatuSehat',
           'Permenkes No. 24/2022 — standar rekam medis elektronik, keamanan dan kerahasiaan data',
           'PP No. 28/2024 — peraturan pelaksanaan UU Kesehatan tentang tata kelola teknologi kesehatan',
         ]}
@@ -228,9 +228,9 @@ function PrivacyTab() {
       </Paragraph>
       <BulletList
         items={[
-          'SATUSEHAT (Kementerian Kesehatan) — integrasi data kesehatan nasional',
+          'SatuSehat (Kementerian Kesehatan) — integrasi data kesehatan nasional',
           'Dinas Kesehatan Kota Kediri — pelaporan rutin (LB1/SP3)',
-          'TIDAK ADA pembagian data ke pihak ketiga komersial',
+          'Tidak ada pembagian data ke pihak ketiga komersial',
         ]}
       />
 
@@ -303,7 +303,7 @@ function TermsTab() {
       <BulletList
         items={[
           'Pengguna harus merupakan tenaga kesehatan terdaftar dengan STR/SIP aktif yang berlaku',
-          'Akun bersifat personal dan TIDAK BOLEH dipindahtangankan atau digunakan bersama',
+          'Akun bersifat personal dan tidak boleh dipindahtangankan atau digunakan bersama',
           'Pendaftaran memerlukan persetujuan dari Administrator atau CEO',
           'Akses fitur disesuaikan berdasarkan profesi dan peran (RBAC)',
         ]}
@@ -312,7 +312,7 @@ function TermsTab() {
       <SectionHeading>Kewajiban Pengguna</SectionHeading>
       <BulletList
         items={[
-          'Menjaga kerahasiaan kredensial akun (username dan password) — TIDAK berbagi dengan pihak lain',
+          'Menjaga kerahasiaan kredensial akun (username dan password) — tidak berbagi dengan pihak lain',
           'Memasukkan data klinis secara akurat, lengkap, dan tepat waktu',
           'Melaporkan segera setiap insiden keamanan, akses tidak sah, atau dugaan penyalahgunaan sistem',
           'Menggunakan sistem sesuai standar operasional prosedur (SOP) yang berlaku',
@@ -402,7 +402,7 @@ function SecurityTab() {
                   color: ACCENT,
                 }}
               >
-                PERAN
+                Peran
               </th>
               <th
                 style={{
@@ -413,7 +413,7 @@ function SecurityTab() {
                   color: ACCENT,
                 }}
               >
-                AKSES
+                Akses
               </th>
             </tr>
           </thead>
@@ -424,13 +424,13 @@ function SecurityTab() {
                 'Akses penuh ke seluruh modul, manajemen pengguna, persetujuan registrasi, konfigurasi sistem',
               ],
               [
-                'ADMINISTRATOR',
+                'Administrator',
                 'Manajemen pengguna, monitoring operasional, persetujuan registrasi, konfigurasi',
               ],
-              ['DOKTER', 'EMR, CDSS, ICD-10, konsultasi AI, laporan klinis'],
-              ['PERAWAT', 'Triase, pengkajian awal, tanda vital, dokumentasi keperawatan'],
-              ['BIDAN', 'Dokumentasi kebidanan, pelayanan KIA'],
-              ['APOTEKER', 'Data resep, interaksi obat, farmasi klinis'],
+              ['Dokter', 'EMR, CDSS, ICD-10, konsultasi AI, laporan klinis'],
+              ['Perawat', 'Triase, pengkajian awal, tanda vital, dokumentasi keperawatan'],
+              ['Bidan', 'Dokumentasi kebidanan, pelayanan KIA'],
+              ['Apoteker', 'Data resep, interaksi obat, farmasi klinis'],
             ].map(([role, access], i) => (
               <tr
                 key={i}
@@ -554,7 +554,7 @@ export default function LegalPage() {
             color: 'var(--text-muted)',
           }}
         >
-          LEGAL & GOVERNANCE
+          Legal & governance
         </p>
         <h1
           style={{

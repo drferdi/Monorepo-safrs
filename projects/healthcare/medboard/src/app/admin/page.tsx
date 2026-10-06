@@ -48,39 +48,39 @@ function cx(...classes: Array<string | false | null | undefined>) {
 const TAB_GROUPS: TabGroup[] = [
   {
     key: 'operations',
-    label: 'OPERATIONS',
+    label: 'Operations',
     sections: [
-      { key: 'command-center', label: 'COMMAND CENTER' },
-      { key: 'rpa', label: 'RPA & LAPORAN' },
+      { key: 'command-center', label: 'Command center' },
+      { key: 'rpa', label: 'RPA & laporan' },
     ],
   },
   {
     key: 'users',
-    label: 'USERS',
+    label: 'Users',
     sections: [
-      { key: 'user-access', label: 'USER & AKSES' },
-      { key: 'dev-updates', label: 'UPDATE DEV' },
+      { key: 'user-access', label: 'User & akses' },
+      { key: 'dev-updates', label: 'Update dev' },
       { key: 'notam', label: 'NOTAM' },
-      { key: 'institutions', label: 'INSTITUSI' },
+      { key: 'institutions', label: 'Institusi' },
     ],
   },
   {
     key: 'system',
-    label: 'SYSTEM',
+    label: 'System',
     sections: [
-      { key: 'integrations', label: 'INTEGRASI' },
+      { key: 'integrations', label: 'Integrasi' },
       { key: 'icdx', label: 'ICD-X' },
       { key: 'acars', label: 'ACARS' },
     ],
   },
   {
     key: 'insight',
-    label: 'INSIGHT',
+    label: 'Insight',
     sections: [
-      { key: 'audit', label: 'AUDIT' },
-      { key: 'analytics', label: 'ANALITIK' },
-      { key: 'eklaim', label: 'E-KLAIM' },
-      { key: 'ops-summary', label: 'OPS SUMMARY' },
+      { key: 'audit', label: 'Audit' },
+      { key: 'analytics', label: 'Analitik' },
+      { key: 'eklaim', label: 'E-klaim' },
+      { key: 'ops-summary', label: 'Ops summary' },
     ],
   },
 ]
@@ -95,7 +95,7 @@ function getGroupForSection(section: AdminSection): string {
 /* ── Tab Loading Fallback ── */
 
 function TabLoader() {
-  return <div className={styles.tabLoader}>LOADING...</div>
+  return <div className={styles.tabLoader}>Loading...</div>
 }
 
 /* ── Component ── */
@@ -140,7 +140,7 @@ export default function AdminPage() {
   }, [])
 
   if (loading) {
-    return <div className={styles.pageState}>LOADING ADMIN...</div>
+    return <div className={styles.pageState}>Loading admin...</div>
   }
 
   if (error) {
@@ -223,7 +223,7 @@ export default function AdminPage() {
           {activeSection === 'integrations' && (
             <AdminPlaceholder
               section="Integrasi Eksternal"
-              description="Monitoring koneksi ke SATUSEHAT, P-Care BPJS, SIK Dinkes, dan e-Puskesmas."
+              description="Monitoring koneksi ke SatuSehat, P-Care BPJS, SIK Dinkes, dan e-Puskesmas."
               prerequisites={[
                 'API client untuk SATUSEHAT',
                 'API client untuk P-Care BPJS',

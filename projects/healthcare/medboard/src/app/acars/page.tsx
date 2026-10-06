@@ -241,7 +241,7 @@ export default function AcarsPage() {
         <div className={styles.actions}>
           {/* Connection Status */}
           <span className={`ui-badge ${connected ? 'ui-badge--success' : 'ui-badge--neutral'}`}>
-            {connected ? 'LIVE' : 'OFFLINE'}
+            {connected ? 'Live' : 'Offline'}
           </span>
 
           {/* User Info */}
@@ -270,15 +270,14 @@ export default function AcarsPage() {
       {/* User List / SCARS Directory */}
       <div className={styles.card}>
         <div className={styles.cardHead}>
-          <div className={styles.cardTitle}>SCARS DIRECTORY // {onlineUsers.length} ONLINE</div>
+          <div className={styles.cardTitle}>SCARS directory // {onlineUsers.length} Online</div>
           <div className={styles.cardMeta}>
             {new Date()
               .toLocaleDateString('id-ID', {
                 day: '2-digit',
                 month: 'short',
                 year: 'numeric',
-              })
-              .toUpperCase()}
+              })}
           </div>
         </div>
 
@@ -321,7 +320,7 @@ export default function AcarsPage() {
 
               {/* Status */}
               <div className={styles.statusCell}>
-                <span className="ui-badge ui-badge--success">ONLINE</span>
+                <span className="ui-badge ui-badge--success">Online</span>
                 <span className={styles.cellMuted}>{onlineSourceLabel(user.source)}</span>
               </div>
 
@@ -346,7 +345,7 @@ export default function AcarsPage() {
       {/* Broadcast Chat Section */}
       <div className={`${styles.card} ${styles.chat}`}>
         <div className={styles.cardHead}>
-          <span className={styles.cardTitle}>BROADCAST</span>
+          <span className={styles.cardTitle}>Broadcast</span>
           {unreadCount > 0 && <span className="ui-badge ui-badge--accent">{unreadCount}</span>}
         </div>
 

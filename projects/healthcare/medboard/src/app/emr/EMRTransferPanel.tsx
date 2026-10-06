@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import type { Socket } from 'socket.io-client'
 import type { EMRProgressEvent } from '@/lib/emr/types'
 import { IcdAutocomplete } from '@/components/features/icd/IcdAutocomplete'
+import { sentenceCase } from '@/lib/text/sentence-case'
 
 // ============================================================================
 // TYPES
@@ -189,7 +190,7 @@ export default function EMRTransferPanel() {
           color: stateColors[transferState],
         }}
       >
-        <span>SENTRA / EMR AUTO-FILL ENGINE</span>
+        <span>Sentra / EMR auto-fill engine</span>
         <span style={{ fontSize: 12 }}>{stateLabels[transferState]}</span>
       </div>
 
@@ -211,7 +212,7 @@ export default function EMRTransferPanel() {
                 marginBottom: 4,
               }}
             >
-              PELAYANAN ID (opsional)
+              Pelayanan ID (opsional)
             </label>
             <input
               type="text"
@@ -258,7 +259,7 @@ export default function EMRTransferPanel() {
               marginBottom: 4,
             }}
           >
-            KELUHAN UTAMA *
+            Keluhan utama *
           </label>
           <textarea
             value={keluhanUtama}
@@ -286,7 +287,7 @@ export default function EMRTransferPanel() {
                 marginBottom: 4,
               }}
             >
-              NAMA DIAGNOSA
+              Nama diagnosa
             </label>
             <input
               type="text"
@@ -351,7 +352,7 @@ export default function EMRTransferPanel() {
                 marginBottom: 2,
               }}
             >
-              <span style={{ minWidth: 80, opacity: 0.5 }}>{item.step.toUpperCase()}</span>
+              <span style={{ minWidth: 80, opacity: 0.5 }}>{sentenceCase(item.step)}</span>
               <span>{item.message}</span>
             </div>
           ))}
@@ -373,7 +374,7 @@ export default function EMRTransferPanel() {
             color: 'var(--text-muted)',
           }}
         >
-          <span>RIWAYAT TRANSFER</span>
+          <span>Riwayat transfer</span>
           <button
             onClick={() => {
               void loadHistory()
@@ -413,7 +414,7 @@ export default function EMRTransferPanel() {
             >
               <span>{new Date(entry.timestamp).toLocaleString('id-ID')}</span>
               <span>
-                {entry.state.toUpperCase()} · {entry.totalLatencyMs}ms
+                {sentenceCase(entry.state)} · {entry.totalLatencyMs}ms
               </span>
             </div>
           ))

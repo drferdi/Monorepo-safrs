@@ -57,6 +57,7 @@ import TrajectoryPanel from './TrajectoryPanel'
 import TrustLayerGhost, { PROCESSING_SCRIPT } from './TrustLayerGhost'
 import { useFocusSpotlight } from './focus-spotlight'
 import { buildEmergencyOverrideFlags, deriveEmergencyOverrideState } from './emergency-override'
+import { sentenceCase } from '@/lib/text/sentence-case'
 
 // Iskandar Engine V1 response types
 interface CDSSSuggestion {
@@ -831,7 +832,7 @@ function renderImportantBestQuestionVisual(visual: ImportantBestQuestionVisual) 
         />
         <circle cx="146" cy="92" r="2.5" fill="rgba(232, 168, 56, 1)" />
         <text x="128" y="20" fill="rgba(240, 232, 220, 0.44)" fontSize="12" letterSpacing="0.14em">
-          ABDOMEN
+          Abdomen
         </text>
         <text x="154" y="60" fill="rgba(232, 168, 56, 0.92)" fontSize="12" letterSpacing="0.08em">
           McBurney
@@ -2328,9 +2329,9 @@ export default function EMRPage() {
       // Format medications from therapy plan
       const terapiLines: string[] = []
       const slotConfig = [
-        { key: 'utama', label: 'R/ 1. OBAT UTAMA' },
-        { key: 'adjuvant', label: 'R/ 2. OBAT ADJUVANT' },
-        { key: 'vitamin', label: 'R/ 3. VITAMIN' },
+        { key: 'utama', label: 'R/ 1. obat utama' },
+        { key: 'adjuvant', label: 'R/ 2. obat adjuvant' },
+        { key: 'vitamin', label: 'R/ 3. vitamin' },
       ] as const
       slotConfig.forEach(({ key, label }) => {
         const slotMeds = selectedFinalizationMedications.filter((m) => m.prescriptionSlot === key)
@@ -3703,18 +3704,18 @@ export default function EMRPage() {
   const showCdssAnimatedBranch = cdssLoading
   const cdssBranchFlowKey = `cdss-branch-${cdssBranchRunId}-${cdssResult?.processing_time_ms ?? 'loading'}-${cdssResult?.validation_summary.total_validated ?? 0}-${cdssResult?.validation_summary.must_not_miss_count ?? 0}`
   const assessmentStageBadge = cdssLoading
-    ? 'ENGINE BERJALAN'
+    ? 'Engine berjalan'
     : selectedDiagnosisDraft
-      ? 'DIAGNOSIS KERJA TERPILIH'
+      ? 'Diagnosis kerja terpilih'
       : hasConsideredMustNotMissOnly
-        ? 'RISIKO TINGGI SUDAH DITANDAI'
+        ? 'Risiko tinggi sudah ditandai'
         : cdssResult
           ? hasOnlyMustNotMissResults
-            ? 'TINJAU MUST-NOT-MISS'
-            : 'HASIL SIAP DIREVIEW'
+            ? 'Tinjau must-not-miss'
+            : 'Hasil siap direview'
           : assessmentConclusion.trim()
-            ? 'SIAP MENJALANKAN ENGINE'
-            : 'MENUNGGU ASSESSMENT'
+            ? 'Siap menjalankan engine'
+            : 'Menunggu assessment'
   const readinessComplaintHeadline = useMemo(() => {
     const parts = [keluhanUtama.trim(), keluhanTambahan.trim()]
       .filter(Boolean)
@@ -4170,7 +4171,7 @@ export default function EMRPage() {
                   marginBottom: 4,
                 }}
               >
-                CATATAN VALIDASI
+                Catatan validasi
               </div>
               {s.validation_flags.slice(0, 3).map((flag, idx) => (
                 <div
@@ -4190,7 +4191,7 @@ export default function EMRPage() {
                   color: 'var(--text-muted)',
                 }}
               >
-                TOP-3 ALASAN
+                Top-3 alasan
               </div>
               {s.key_reasons.slice(0, 3).map((reason, idx) => (
                 <div
@@ -4210,7 +4211,7 @@ export default function EMRPage() {
                   color: 'var(--text-muted)',
                 }}
               >
-                DATA TAMBAHAN DIBUTUHKAN
+                Data tambahan dibutuhkan
               </div>
               {s.missing_information.slice(0, 2).map((info, idx) => (
                 <div
@@ -4263,14 +4264,14 @@ export default function EMRPage() {
   function renderCdssBranchFlow() {
     const processingAgents = {
       left: [
-        { key: 'intake', title: 'THE', subtitle: 'INTAKE AGENT' },
-        { key: 'reasoning', title: 'THE', subtitle: 'REASONING AGENT' },
-        { key: 'output', title: 'THE', subtitle: 'OUTPUT AGENT' },
+        { key: 'intake', title: 'The', subtitle: 'Intake agent' },
+        { key: 'reasoning', title: 'The', subtitle: 'Reasoning agent' },
+        { key: 'output', title: 'The', subtitle: 'Output agent' },
       ],
       right: [
-        { key: 'mapping', title: 'ICD-10', subtitle: 'SEMANTIC MAPPING' },
-        { key: 'path', title: 'CLINICAL PATH', subtitle: 'INTELLIGENCE' },
-        { key: 'resource', title: 'RESOURCE-AWARE', subtitle: 'DIAGNOSTICS' },
+        { key: 'mapping', title: 'ICD-10', subtitle: 'Semantic mapping' },
+        { key: 'path', title: 'Clinical path', subtitle: 'Intelligence' },
+        { key: 'resource', title: 'Resource-aware', subtitle: 'Diagnostics' },
       ],
     }
 
@@ -4296,7 +4297,7 @@ export default function EMRPage() {
         {showResultScanner && (
           <>
             <div className="cdss-branch-scanner" aria-hidden="true">
-              <div className="cdss-branch-scanner-title">TRUST LAYER</div>
+              <div className="cdss-branch-scanner-title">Trust layer</div>
               <TrustLayerGhost />
             </div>
           </>
@@ -4338,7 +4339,7 @@ export default function EMRPage() {
           <div className="cdss-branch-core-face">
             {cdssLoading || cdssResult ? <CdssCoreLoader /> : null}
           </div>
-          <div className="cdss-branch-core-label">ISKANDAR CORE</div>
+          <div className="cdss-branch-core-label">Iskandar core</div>
         </div>
         {showProcessingGhost && (
           <div className="cdss-branch-processing-status" aria-hidden="true">
@@ -4924,7 +4925,7 @@ export default function EMRPage() {
                   marginBottom: 4,
                 }}
               >
-                ● KONSULT MASUK DARI ASSIST
+                ● Konsult masuk dari assist
               </div>
               <div style={{ color: 'var(--text)', fontWeight: 600, fontSize: 14 }}>
                 {incomingConsult.patient.name}
@@ -5063,7 +5064,7 @@ export default function EMRPage() {
                         marginBottom: 2,
                       }}
                     >
-                      ✓ DATA RME PASIEN — DARI ASSIST
+                      ✓ Data RME pasien — dari assist
                     </div>
                     <div style={{ color: 'var(--text)', fontWeight: 600, fontSize: 16 }}>
                       {ac.patient.name}
@@ -5114,7 +5115,7 @@ export default function EMRPage() {
                           NEWS2
                         </div>
                         <div style={{ color: news2Color, fontSize: 12 }}>
-                          {news2.risk_level.toUpperCase()}
+                          {sentenceCase(news2.risk_level)}
                         </div>
                       </div>
                     )}
@@ -5341,7 +5342,7 @@ export default function EMRPage() {
                           <div style={{ display: 'flex', gap: 8, marginBottom: 6 }}>
                             {trajectory.overall_risk && (
                               <span style={{ color: trajColor, fontWeight: 600, fontSize: 12 }}>
-                                {trajectory.overall_risk.toUpperCase()}
+                                {sentenceCase(trajectory.overall_risk)}
                               </span>
                             )}
                             {trajectory.deterioration_state && (
@@ -5648,7 +5649,7 @@ export default function EMRPage() {
             {/* Patient Profile Context Bar */}
             <div className="emr-context-bar">
               <div className="emr-context-segment">
-                <span className="emr-context-label">UMUR</span>
+                <span className="emr-context-label">Umur</span>
                 <input
                   id="patient-age"
                   name="patient-age"
@@ -5661,7 +5662,7 @@ export default function EMRPage() {
                 <span style={{ fontSize: 14, color: 'var(--text-secondary)' }}>thn</span>
               </div>
               <div className="emr-context-segment">
-                <span className="emr-context-label">GENDER</span>
+                <span className="emr-context-label">Gender</span>
                 <div style={{ display: 'flex', gap: 8 }}>
                   {(['L', 'P'] as const).map((g) => (
                     <button
@@ -5671,15 +5672,17 @@ export default function EMRPage() {
                         if (g === 'L') setIsPregnant(false)
                       }}
                       aria-pressed={patientGender === g}
+                      aria-label={g === 'L' ? 'Laki-laki' : 'Perempuan'}
+                      title={g === 'L' ? 'Laki-laki' : 'Perempuan'}
                       className="ui-chip"
                     >
-                      {g === 'L' ? 'Laki-laki' : 'Perempuan'}
+                      {g === 'L' ? '♂' : '♀'}
                     </button>
                   ))}
                 </div>
               </div>
               <div className="emr-context-segment">
-                <span className="emr-context-label">HAMIL</span>
+                <span className="emr-context-label">Hamil</span>
                 <label
                   style={{
                     display: 'flex',
@@ -6112,7 +6115,7 @@ export default function EMRPage() {
                             e.currentTarget.style.opacity = '1'
                           }}
                         >
-                          ✧ AUTO SENTRA
+                          ✧ Auto Sentra
                         </div>
                       </div>
                     )}
@@ -6214,12 +6217,12 @@ export default function EMRPage() {
                   <div className={`emr-assist-note${rpsDraftState.stale ? ' is-warning' : ''}`}>
                     <span>
                       {rpsDraftState.stale
-                        ? 'RPS belum sinkron dengan keluhan utama terbaru. Perbarui narasi atau jalankan AUTO SENTRA lagi.'
+                        ? 'RPS belum sinkron dengan keluhan utama terbaru. Perbarui narasi atau jalankan Auto Sentra lagi.'
                         : rpsDraftState.mode === 'auto'
                           ? `Narasi dibentuk AI dari keluhan utama: ${rpsDraftState.sourceKeluhan || '-'}`
                           : rpsDraftState.mode === 'edited'
                             ? 'RPS sedang dalam mode edit dokter. AI assist tetap bisa dipakai tanpa mengunci isi narasi.'
-                            : 'Gunakan AUTO SENTRA untuk membentuk narasi awal, lalu edit seperlunya.'}
+                            : 'Gunakan Auto Sentra untuk membentuk narasi awal, lalu edit seperlunya.'}
                     </span>
                     {keluhanUtama.trim() && (
                       <button
@@ -6600,7 +6603,7 @@ export default function EMRPage() {
               }}
             >
               <div className="section-title">Riwayat Dahulu, Keluarga &amp; Alergi</div>
-              {showEmrLoader && <div className="emr-loader">[SYSTEM: RETRIEVING EMR DATA...]</div>}
+              {showEmrLoader && <div className="emr-loader">[System: retrieving EMR data...]</div>}
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 {/* RPD — chip selector */}
@@ -6752,7 +6755,7 @@ export default function EMRPage() {
                   color: 'var(--text-secondary)',
                 }}
               >
-                AUTO SENTRA akan mengisi template pemeriksaan 04 dengan format normal
+                Auto Sentra akan mengisi template pemeriksaan 04 dengan format normal
                 audit-friendly, lalu menambahkan fokus klinis yang relevan terhadap keluhan.
               </div>
               {examOpen && (
@@ -6882,7 +6885,7 @@ export default function EMRPage() {
                 </div>
               </div>
               <div className="vitals-assist-note">
-                AUTO TTV memberi estimasi awal untuk nadi, napas, suhu, serta default GCS dan SpO2
+                Auto TTV memberi estimasi awal untuk nadi, napas, suhu, serta default GCS dan SpO2
                 pada poli umum dewasa. Tekanan darah dan MAP tetap wajib diukur manual. Jika keluhan
                 mengarah ke sesak, SpO2 kembali wajib diukur manual.
               </div>
@@ -7694,7 +7697,7 @@ export default function EMRPage() {
                               color: 'var(--text-muted)',
                             }}
                           >
-                            {cdssResult.processing_time_ms}ms · {cdssResult.source.toUpperCase()}
+                            {cdssResult.processing_time_ms}ms · {sentenceCase(cdssResult.source)}
                           </span>
                         </div>
                       )}
@@ -7707,7 +7710,7 @@ export default function EMRPage() {
                             color: 'var(--text-secondary)',
                           }}
                         >
-                          MENJALANKAN ISKANDAR DIAGNOSIS ENGINE V2...
+                          Memproses...
                         </div>
                       )}
 
@@ -7771,7 +7774,7 @@ export default function EMRPage() {
                                       marginBottom: 8,
                                     }}
                                   >
-                                    PROTOKOL EMERGENCY: ACK WAJIB
+                                    Protokol emergency: ACK wajib
                                   </div>
                                   {Object.keys(safetyChecklist).map((item, idx) => (
                                     <label
@@ -7846,7 +7849,7 @@ export default function EMRPage() {
                                       marginBottom: 4,
                                     }}
                                   >
-                                    ⚠ {rf.severity.toUpperCase()} — {rf.condition}
+                                    ⚠ {sentenceCase(rf.severity)} — {rf.condition}
                                   </div>
                                   <div
                                     style={{
@@ -7881,7 +7884,7 @@ export default function EMRPage() {
                                         marginRight: 6,
                                       }}
                                     >
-                                      ● {a.severity.toUpperCase()}
+                                      ● {sentenceCase(a.severity)}
                                     </span>
                                     <span style={{ color: 'var(--text-muted)' }}>
                                       {a.title} — {a.message}
@@ -8018,7 +8021,7 @@ export default function EMRPage() {
                                       marginBottom: 6,
                                     }}
                                   >
-                                    RECOMMENDED
+                                    Recommended
                                   </div>
                                   {recommendedSuggestions.length > 0 ? (
                                     recommendedSuggestions.map(renderSuggestionCard)
@@ -8041,7 +8044,7 @@ export default function EMRPage() {
                                       marginBottom: 6,
                                     }}
                                   >
-                                    REVIEW DOKTER
+                                    Review dokter
                                   </div>
                                   {reviewSuggestions.length > 0 ? (
                                     reviewSuggestions.map(renderSuggestionCard)
@@ -8064,7 +8067,7 @@ export default function EMRPage() {
                                       marginBottom: 6,
                                     }}
                                   >
-                                    MUST-NOT-MISS
+                                    Must-not-miss
                                   </div>
                                   {mustNotMissSuggestions.length > 0 ? (
                                     mustNotMissSuggestions.map(renderSuggestionCard)
@@ -8091,7 +8094,7 @@ export default function EMRPage() {
                             >
                               <div className="cdss-selected-panel-head">
                                 <div className="cdss-selected-kicker">
-                                  KONFIRMASI KLINIS PENTING
+                                  Konfirmasi klinis penting
                                 </div>
                                 <div className="cdss-selected-diagnosis">
                                   {selectedDiagnosisDraft.diagnosis_name}
@@ -8185,7 +8188,7 @@ export default function EMRPage() {
                               ref={prognosisStageRef}
                               className={`cdss-prognosis-stage emr-row3-spotlight${row3Spotlight === 'entry' ? ' is-shadowed' : ''}`}
                             >
-                              <div className="cdss-prognosis-stage-label">PROGNOSIS LANJUTAN</div>
+                              <div className="cdss-prognosis-stage-label">Prognosis lanjutan</div>
                               <ClinicalPrognosisChart
                                 vitals={prognosisVitals}
                                 keluhanUtama={keluhanUtama}
@@ -8245,7 +8248,7 @@ export default function EMRPage() {
                               opacity: 0.3,
                             }}
                           />
-                          AI TRAJECTORY INSIGHT
+                          AI trajectory insight
                         </span>
                       </div>
                       <div
@@ -8266,7 +8269,7 @@ export default function EMRPage() {
               {isFinalizeTab && selectedDiagnosisDraft && (
                 <div ref={finalizeAnchorRef} className="blueprint-wrapper finalize-assist-panel">
                   <div className="finalize-assist-header">
-                    <span className="finalize-assist-kicker">FINALISASI</span>
+                    <span className="finalize-assist-kicker">Finalisasi</span>
                     <span className="finalize-assist-title">
                       Therapy Engine &amp; Sign-Off Plan
                     </span>
@@ -8334,8 +8337,8 @@ export default function EMRPage() {
                           }}
                         >
                           {manualDiagnosis
-                            ? 'DIAGNOSIS MANUAL AKTIF'
-                            : 'ATAU TULIS DIAGNOSIS MANUAL'}
+                            ? 'Diagnosis manual aktif'
+                            : 'Atau tulis diagnosis manual'}
                         </div>
                         <div
                           style={{
@@ -8557,10 +8560,10 @@ export default function EMRPage() {
                                 sorted[index - 1].prescriptionSlot !== item.prescriptionSlot
                               const slotLabel =
                                 item.prescriptionSlot === 'utama'
-                                  ? 'R/ 1. OBAT UTAMA'
+                                  ? 'R/ 1. obat utama'
                                   : item.prescriptionSlot === 'adjuvant'
-                                    ? 'R/ 2. OBAT ADJUVANT'
-                                    : 'R/ 3. VITAMIN'
+                                    ? 'R/ 2. obat adjuvant'
+                                    : 'R/ 3. vitamin'
                               const rxLabel =
                                 item.prescriptionSlot === 'utama'
                                   ? 'R/1'
@@ -8758,7 +8761,7 @@ export default function EMRPage() {
                         className={`finalize-pharmacology-manual-card${manualMedications.length > 0 ? ' is-active' : ''}`}
                       >
                         <div className="finalize-pharmacology-manual-kicker">
-                          RESEP DOKTER{' '}
+                          Resep dokter{' '}
                           {manualMedications.length > 0 && `(${manualMedications.length}/4)`}
                         </div>
                         <div className="finalize-pharmacology-manual-copy">
@@ -8967,7 +8970,7 @@ export default function EMRPage() {
               {isFinalizeTab && !selectedDiagnosisDraft && (
                 <div ref={finalizeAnchorRef} className="blueprint-wrapper finalize-assist-panel">
                   <div className="finalize-assist-header">
-                    <span className="finalize-assist-kicker">FINALISASI</span>
+                    <span className="finalize-assist-kicker">Finalisasi</span>
                     <span className="finalize-assist-title">
                       {hasConsideredMustNotMissOnly
                         ? 'Risiko Tinggi Sudah Ditandai'
@@ -8998,10 +9001,10 @@ export default function EMRPage() {
                           className={`emr-signoff-panel-status is-${finalizationReadiness.tone}`}
                         >
                           {finalizationReadiness.tone === 'ready'
-                            ? 'READY'
+                            ? 'Ready'
                             : finalizationReadiness.tone === 'review'
-                              ? 'REVIEW'
-                              : 'PENDING'}
+                              ? 'Review'
+                              : 'Pending'}
                         </div>
                       </div>
                       <div className="emr-signoff-panel-copy">{finalizationReadiness.note}</div>

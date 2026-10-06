@@ -133,14 +133,14 @@ export default function AuditEventDetailPage({
   /* ── Loading / error states ── */
   if (loading) return (
     <div style={{ maxWidth: PAGE_W, margin: '0 auto', padding: '48px 24px', textAlign: 'center', fontSize: 14, color: 'var(--text-muted)' }}>
-      MEMUAT DATA...
+      Memuat data...
     </div>
   )
 
   if (error || !data) return (
     <div style={{ maxWidth: PAGE_W, margin: '0 auto', padding: '48px 24px' }}>
       <div style={{ color: 'var(--c-asesmen)', fontSize: 14, marginBottom: 16 }}>{error ?? 'Event tidak ditemukan'}</div>
-      <Link href="/audit/logbook" style={btnStyle}>← KEMBALI</Link>
+      <Link href="/audit/logbook" style={btnStyle}>← Kembali</Link>
     </div>
   )
 
@@ -154,10 +154,10 @@ export default function AuditEventDetailPage({
       >
         <div>
           <div className="page-title">Detail Audit Skrining</div>
-          <div className="page-subtitle">Rekam pengiriman hasil skrining ASSIST — {data.facilityId}</div>
+          <div className="page-subtitle">Rekam pengiriman hasil skrining assist — {data.facilityId}</div>
         </div>
         <div style={{ display: 'flex', gap: 8, paddingTop: 4 }}>
-          <Link href="/audit/logbook" style={btnStyle}>KEMBALI</Link>
+          <Link href="/audit/logbook" style={btnStyle}>Kembali</Link>
           {!data.acknowledgedByDoctor && (
             <button
               style={{ ...btnStyle, borderColor: 'var(--c-asesmen)', color: 'var(--c-asesmen)', cursor: acking ? 'not-allowed' : 'pointer', opacity: acking ? 0.6 : 1 }}
@@ -174,7 +174,7 @@ export default function AuditEventDetailPage({
       <div style={{ maxWidth: PAGE_W, width: '100%' }}>
 
         {/* 01 — IDENTITAS EVENT */}
-        <div style={sectionTitleStyle}>01 — IDENTITAS EVENT</div>
+        <div style={sectionTitleStyle}>01 — identitas event</div>
         <div style={grid3}>
           <div>
             <label style={labelStyle}>Dokter ID</label>
@@ -215,7 +215,7 @@ export default function AuditEventDetailPage({
         </div>
 
         {/* 02 — HASIL SKRINING */}
-        <div style={sectionTitleStyle}>02 — HASIL SKRINING</div>
+        <div style={sectionTitleStyle}>02 — hasil skrining</div>
         <div style={grid3}>
           <div>
             <label style={labelStyle}>Status Skrining</label>
@@ -250,7 +250,7 @@ export default function AuditEventDetailPage({
         )}
 
         {/* 03 — PENGIRIMAN */}
-        <div style={sectionTitleStyle}>03 — STATUS PENGIRIMAN</div>
+        <div style={sectionTitleStyle}>03 — status pengiriman</div>
         <div style={grid3}>
           <div>
             <label style={labelStyle}>Status Kirim</label>
@@ -289,9 +289,9 @@ export default function AuditEventDetailPage({
         </div>
 
         {/* 04 — INTEGRITAS */}
-        <div style={sectionTitleStyle}>04 — INTEGRITAS & AUDIT TRAIL</div>
+        <div style={sectionTitleStyle}>04 — integritas & audit trail</div>
         <div style={field}>
-          <label style={labelStyle}>Immutable Hash (SHA-256)</label>
+          <label style={labelStyle}>Immutable Hash (sha-256)</label>
           <input style={monoStyle} value={data.immutableHash ?? '—'} readOnly />
         </div>
         <div style={{ fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.7, marginTop: 8, marginBottom: 40 }}>

@@ -25,36 +25,36 @@ type SessionState =
 const PIPELINE_STEPS = [
   { n: 'Real Clinical Data', sub: 'IGD · Poli · Puskesmas', connector: true },
   {
-    n: 'DATA CURATION',
+    n: 'Data curation',
     sub: 'dr. Ferdi review & annotation\nPHI scrubbing · Quality gate',
     connector: true,
   },
   {
-    n: 'DOMAIN CORPUS',
+    n: 'Domain corpus',
     sub: 'SOAP notes · Discharge summaries\nClinical Q&A · Protocol texts',
     connector: true,
   },
   {
-    n: 'MEDGEMMA GROUNDING',
+    n: 'MedGemma grounding',
     sub: 'Local medical grounding\nMedical concept alignment\nICD-10 · SNOMED · BPJS coding',
     connector: true,
   },
   {
-    n: 'LOCAL SFT',
+    n: 'Local SFT',
     sub: 'Local training pipeline\nPEFT / LoRA · Indonesian medical',
     connector: true,
   },
   {
-    n: 'RLHF ALIGNMENT',
+    n: 'RLHF alignment',
     sub: 'Human: dr. Ferdi (clinical steward)\nReward model on clinical accuracy',
     connector: true,
   },
   {
-    n: 'EVALUATION & SAFETY',
+    n: 'Evaluation & safety',
     sub: 'Clinical accuracy benchmarking\nPHI leak detection · Hallucination rate',
     connector: true,
   },
-  { n: 'Audrey PRODUCTION MODEL', sub: '', connector: false, highlight: true },
+  { n: 'Audrey production model', sub: '', connector: false, highlight: true },
 ] as const
 
 function nowTime() {
@@ -346,7 +346,7 @@ export default function VoicePage() {
 
   const statusLabel =
     sessionState === 'ready'
-      ? 'Siap — tahan tombol atau [SPACE] untuk bicara'
+      ? 'Siap — tahan tombol atau [Spasi] untuk bicara'
       : sessionState === 'recording'
         ? 'Merekam — lepas untuk kirim ke Audrey'
         : sessionState === 'processing'
@@ -406,7 +406,7 @@ export default function VoicePage() {
             <ul className={styles.steps}>
               <li>Klik tombol untuk memulai sesi</li>
               <li>
-                <span className={styles.strong}>Tahan</span> tombol mikrofon atau [SPACE] saat ingin
+                <span className={styles.strong}>Tahan</span> tombol mikrofon atau [space] saat ingin
                 bicara
               </li>
               <li>
@@ -476,7 +476,7 @@ export default function VoicePage() {
           {messages.length === 0 ? (
             <div className={styles.empty}>
               <div className={styles.emptyText}>
-                — BELUM ADA PERCAKAPAN —
+                — Belum ada percakapan —
                 <div className={styles.emptyHint}>
                   Hubungkan sesi, lalu bicara langsung dengan Audrey
                 </div>
@@ -484,7 +484,7 @@ export default function VoicePage() {
 
               {/* TENTANG AUDREY — muncul saat chat kosong */}
               <div className={styles.about}>
-                <span className="ui-badge ui-badge--neutral">TENTANG AUDREY</span>
+                <span className="ui-badge ui-badge--neutral">Tentang Audrey</span>
                 <div className={styles.aboutName}>
                   Augmented Universal Diagnostic Reasoning Engine for You
                 </div>
@@ -532,7 +532,7 @@ export default function VoicePage() {
 
       {/* Fine-tuning pipeline */}
       <section className={styles.card}>
-        <h2 className={styles.cardTitle}>FINE-TUNING PIPELINE</h2>
+        <h2 className={styles.cardTitle}>Fine-tuning pipeline</h2>
         <ol className={styles.pipeline}>
           {PIPELINE_STEPS.map((step, i) => (
             <li key={i} className={styles.step} style={{ opacity: i < visiblePipeline ? 1 : 0 }}>
@@ -570,10 +570,10 @@ export default function VoicePage() {
               <span className={styles.strong}>Audrey bukan pengganti keputusan klinis dokter.</span>{' '}
               Seluruh keputusan klinis tetap menjadi tanggung jawab penuh dokter yang bertugas.
             </div>
-            <div className={styles.noteMeta}>SENTRA HEALTHCARE SOLUTIONS</div>
+            <div className={styles.noteMeta}>Sentra healthcare solutions</div>
           </div>
           <div className={styles.noteRow}>
-            <span className="ui-badge ui-badge--accent">◈ ALPHA</span>
+            <span className="ui-badge ui-badge--accent">◈ Alpha</span>
             <span className={styles.text}>
               Fitur ini masih dalam tahap pengembangan aktif. Performa, akurasi, dan stabilitas
               dapat berubah sewaktu-waktu.

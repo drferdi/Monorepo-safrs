@@ -227,7 +227,7 @@ export default function AcarsRosterPage() {
           Kembali ke Sentra Network
         </Link>
         <span className={`ui-badge ${connected ? 'ui-badge--success' : 'ui-badge--neutral'}`}>
-          {connected ? 'LIVE' : 'OFFLINE'}
+          {connected ? 'Live' : 'Offline'}
         </span>
       </div>
 
@@ -251,7 +251,7 @@ export default function AcarsRosterPage() {
 
         {/* DM Chat */}
         <div className={styles.dm}>
-          <div className={styles.dmTitle}>PESAN LANGSUNG</div>
+          <div className={styles.dmTitle}>Pesan langsung</div>
           <div ref={messagesListRef} className={styles.messages}>
             {messages.length === 0 && (
               <div className={styles.empty}>

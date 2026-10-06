@@ -1238,7 +1238,7 @@ export default function ClinicalPrognosisChart({
               marginBottom: 3,
             }}
           >
-            PROGNOSIS LANJUTAN
+            Prognosis lanjutan
           </div>
           <div style={{ fontSize: 14, color: 'var(--text-main)', fontWeight: 600 }}>
             Review prognosis setelah diagnosis dipilih
@@ -1263,7 +1263,7 @@ export default function ClinicalPrognosisChart({
               color: 'var(--text-muted)',
             }}
           >
-            DIAGNOSIS TERPILIH
+            Diagnosis terpilih
           </div>
           <div
             style={{
@@ -1295,7 +1295,7 @@ export default function ClinicalPrognosisChart({
               color: 'var(--text-muted)',
             }}
           >
-            URGENSI KLINIS
+            Urgensi klinis
           </div>
           <div
             style={{
@@ -1323,7 +1323,7 @@ export default function ClinicalPrognosisChart({
               color: 'var(--text-muted)',
             }}
           >
-            MORTALITAS PROXY
+            Mortalitas proxy
           </div>
           <div
             style={{
@@ -1351,7 +1351,7 @@ export default function ClinicalPrognosisChart({
               color: 'var(--text-muted)',
             }}
           >
-            CONFIDENCE
+            Confidence
           </div>
           <div
             style={{
@@ -1372,7 +1372,7 @@ export default function ClinicalPrognosisChart({
               color: 'var(--text-muted)',
             }}
           >
-            TIER REVIEW
+            Tier review
           </div>
           <div
             style={{
@@ -1404,7 +1404,7 @@ export default function ClinicalPrognosisChart({
               marginBottom: 9,
             }}
           >
-            POLI UMUM // EARLY DETECTION &amp; RISK STRATIFICATION
+            Poli umum // early detection &amp; risk stratification
           </div>
           <div
             style={{
@@ -1427,7 +1427,7 @@ export default function ClinicalPrognosisChart({
                   color: 'var(--text-muted)',
                 }}
               >
-                RISIKO 10 TAHUN
+                Risiko 10 tahun
               </div>
               <div
                 style={{
@@ -1453,7 +1453,7 @@ export default function ClinicalPrognosisChart({
                   color: 'var(--text-muted)',
                 }}
               >
-                MODEL
+                Model
               </div>
               <div
                 style={{
@@ -1480,7 +1480,7 @@ export default function ClinicalPrognosisChart({
                   color: 'var(--text-muted)',
                 }}
               >
-                CONFIDENCE
+                Confidence
               </div>
               <div
                 style={{
@@ -1506,7 +1506,7 @@ export default function ClinicalPrognosisChart({
                   color: 'var(--text-muted)',
                 }}
               >
-                PROGNOSA
+                Prognosa
               </div>
               <div
                 style={{
@@ -1546,7 +1546,7 @@ export default function ClinicalPrognosisChart({
               marginBottom: 9,
             }}
           >
-            INPUT &amp; TOOL PENDUKUNG
+            Input &amp; tool pendukung
           </div>
           <div style={{ display: 'grid', gap: 14 }}>
             <div>
@@ -1557,7 +1557,7 @@ export default function ClinicalPrognosisChart({
                   marginBottom: 8,
                 }}
               >
-                INPUT YANG SUDAH MASUK
+                Input yang sudah masuk
               </div>
               <div style={{ display: 'grid', gap: 0 }}>
                 {outpatientRiskPreview.inputsUsed.map((item, index) => (
@@ -1584,7 +1584,7 @@ export default function ClinicalPrognosisChart({
                   marginBottom: 8,
                 }}
               >
-                DATA YANG MASIH DIBUTUHKAN
+                Data yang masih dibutuhkan
               </div>
               <div style={{ display: 'grid', gap: 0 }}>
                 {outpatientRiskPreview.missingInputs.map((item, index) => (
@@ -1611,7 +1611,7 @@ export default function ClinicalPrognosisChart({
                   marginBottom: 8,
                 }}
               >
-                TOOL PENDUKUNG
+                Tool pendukung
               </div>
               <div style={{ display: 'grid', gap: 0 }}>
                 {outpatientRiskPreview.supportTools.map(tool => (
@@ -1682,7 +1682,7 @@ export default function ClinicalPrognosisChart({
               marginBottom: 9,
             }}
           >
-            SNAPSHOT PROGNOSIS
+            Snapshot prognosis
           </div>
           <div
             style={{
@@ -1719,7 +1719,7 @@ export default function ClinicalPrognosisChart({
                       color: 'var(--text-muted)',
                     }}
                   >
-                    7 HARI
+                    7 hari
                   </div>
                   <div
                     style={{
@@ -1820,7 +1820,7 @@ export default function ClinicalPrognosisChart({
               marginBottom: 9,
             }}
           >
-            RADAR PROGNOSIS MULTI-FAKTOR
+            Radar prognosis multi-faktor
           </div>
           <div style={{ height: 260 }}>
             <canvas ref={radarCanvasRef} />
@@ -1855,7 +1855,7 @@ export default function ClinicalPrognosisChart({
               marginBottom: 9,
             }}
           >
-            KURVA KELANGSUNGAN HIDUP PROBABILISTIK
+            Kurva kelangsungan hidup probabilistik
           </div>
           <div
             style={{
@@ -1867,25 +1867,25 @@ export default function ClinicalPrognosisChart({
           >
             {[
               {
-                label: '24 JAM',
+                label: '24 jam',
                 value: `${survivalLead?.probability ?? 0}%`,
                 note: getSurvivalStateLabel(survivalLead?.probability ?? 0),
                 color: getSurvivalProbabilityColor(survivalLead?.probability ?? 0),
               },
               {
-                label: '7 HARI',
+                label: '7 hari',
                 value: `${survivalWeek?.probability ?? 0}%`,
                 note: 'Titik review utama',
                 color: getSurvivalProbabilityColor(survivalWeek?.probability ?? 0),
               },
               {
-                label: '30 HARI',
+                label: '30 hari',
                 value: `${survivalMonth?.probability ?? 0}%`,
                 note: 'Arah prognosis lanjut',
                 color: getSurvivalProbabilityColor(survivalMonth?.probability ?? 0),
               },
               {
-                label: 'BAND',
+                label: 'Band',
                 value: `±${survivalBandHalfWidth}%`,
                 note: 'Ketidakpastian internal',
                 color: 'rgba(181, 71, 8, 0.86)',
@@ -1960,7 +1960,7 @@ export default function ClinicalPrognosisChart({
               marginBottom: 9,
             }}
           >
-            PATIENT JOURNEY &amp; AI MILESTONES
+            Patient journey &amp; AI milestones
           </div>
           <div style={{ display: 'grid', gap: 12 }}>
             {prognosis.journeyMilestones.map((milestone, index) => (
@@ -2043,7 +2043,7 @@ export default function ClinicalPrognosisChart({
               marginBottom: 9,
             }}
           >
-            PETA PANAS RISIKO
+            Peta panas risiko
           </div>
           <div style={{ display: 'grid', gap: 0 }}>
             {prognosis.heatmap.map(item => (
@@ -2116,7 +2116,7 @@ export default function ClinicalPrognosisChart({
               marginBottom: 9,
             }}
           >
-            SIGNAL PROGNOSIS
+            Signal prognosis
           </div>
           <div style={{ height: 260 }}>
             <canvas ref={signalCanvasRef} />
@@ -2140,7 +2140,7 @@ export default function ClinicalPrognosisChart({
               marginBottom: 9,
             }}
           >
-            PENJABARAN ORANYE &amp; MERAH
+            Penjabaran oranye &amp; merah
           </div>
           {prognosis.highlightedSignals.length === 0 ? (
             <div
@@ -2179,7 +2179,7 @@ export default function ClinicalPrognosisChart({
                         color: signal.severity === 'red' ? 'var(--c-critical)' : 'var(--warning)',
                       }}
                     >
-                      {signal.severity === 'red' ? 'MERAH' : 'ORANYE'} · {Math.round(signal.value)}
+                      {signal.severity === 'red' ? 'Merah' : 'Oranye'} · {Math.round(signal.value)}
                       /100
                     </div>
                   </div>
@@ -2216,7 +2216,7 @@ export default function ClinicalPrognosisChart({
                 marginBottom: 8,
               }}
             >
-              DRIVER DOMINAN
+              Driver dominan
             </div>
             <div style={{ display: 'grid', gap: 8 }}>
               {prognosis.dominantDrivers.length === 0 ? (
@@ -2248,7 +2248,7 @@ export default function ClinicalPrognosisChart({
                 marginBottom: 8,
               }}
             >
-              DATA YANG MASIH PERLU
+              Data yang masih perlu
             </div>
             <div style={{ display: 'grid', gap: 8 }}>
               {prognosis.missingData.length === 0 ? (

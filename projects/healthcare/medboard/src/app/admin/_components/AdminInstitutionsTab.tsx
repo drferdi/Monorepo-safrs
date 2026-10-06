@@ -123,7 +123,7 @@ export default function AdminInstitutionsTab() {
   if (loading) {
     return (
       <div className={`${styles.statusMessage} ${styles.loadingMessage}`}>
-        LOADING INSTITUTIONS...
+        Loading institutions...
       </div>
     )
   }
@@ -142,13 +142,13 @@ export default function AdminInstitutionsTab() {
       {/* ── Summary ── */}
       <div className={styles.summaryRow}>
         <div className={styles.summaryCard}>
-          <p className={styles.summaryLabel}>TOTAL INSTITUSI</p>
+          <p className={styles.summaryLabel}>Total institusi</p>
           <p className={`${styles.summaryValue} ${styles.summaryValueAccent}`}>
             {institutions.length}
           </p>
         </div>
         <div className={styles.summaryCard}>
-          <p className={styles.summaryLabel}>TOTAL CREW</p>
+          <p className={styles.summaryLabel}>Total crew</p>
           <p className={styles.summaryValue}>{totalCrew}</p>
         </div>
       </div>

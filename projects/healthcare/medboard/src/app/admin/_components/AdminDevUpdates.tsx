@@ -8,11 +8,11 @@ import styles from './AdminDevUpdates.module.css'
 function categoryLabel(category: DevUpdateCategory): string {
   switch (category) {
     case 'release':
-      return 'RELEASE'
+      return 'Release'
     case 'maintenance':
-      return 'MAINTENANCE'
+      return 'Maintenance'
     default:
-      return 'IMPROVEMENT'
+      return 'Improvement'
   }
 }
 
@@ -164,7 +164,7 @@ export default function AdminDevUpdates() {
       {success && <div className={successClassName}>{success}</div>}
 
       <div className={styles.panel}>
-        <p className={styles.sectionKick}>TULIS UPDATE DEV</p>
+        <p className={styles.sectionKick}>Tulis update dev</p>
 
         <form onSubmit={handleCreate} className={styles.formStack}>
           <div>
@@ -232,7 +232,7 @@ export default function AdminDevUpdates() {
       </div>
 
       <div>
-        <p className={styles.sectionKick}>UPDATE AKTIF ({activeUpdates.length})</p>
+        <p className={styles.sectionKick}>Update aktif ({activeUpdates.length})</p>
 
         {activeUpdates.length === 0 ? (
           <div className={styles.emptyState}>Belum ada update dev aktif saat ini.</div>
@@ -275,7 +275,7 @@ export default function AdminDevUpdates() {
       {inactiveUpdates.length > 0 && (
         <div>
           <p className={`${styles.sectionKick} ${styles.sectionKickMuted}`}>
-            RIWAYAT ({inactiveUpdates.length})
+            Riwayat ({inactiveUpdates.length})
           </p>
           <div className={styles.historyList}>
             {inactiveUpdates.map(update => (
@@ -286,7 +286,7 @@ export default function AdminDevUpdates() {
                   </span>
                   <span className={styles.historyTitle}>{update.title}</span>
                   <span className={styles.historyBadge}>
-                    {!update.active ? 'NONAKTIF' : 'KEDALUWARSA'}
+                    {!update.active ? 'Nonaktif' : 'Kedaluwarsa'}
                   </span>
                 </div>
                 <p className={styles.historyText}>{update.body}</p>

@@ -220,7 +220,7 @@ export default function HubProfileLabPage() {
     <div className={styles.labPage}>
       <div className={styles.labBar}>
         <div>
-          <p className={styles.meta}>CREW PROFILE LAB</p>
+          <p className={styles.meta}>Crew profile lab</p>
           <h1 className={styles.title}>Preview Card</h1>
         </div>
         <Link href={`/hub/${encodeURIComponent(username)}`} className="ui-btn ui-btn--ghost">

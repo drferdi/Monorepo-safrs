@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { sentenceCase } from '@/lib/text/sentence-case'
 
 /* ── Types ── */
 
@@ -159,7 +160,7 @@ function StatusBadge({ status }: { status: string }) {
         color: isSuccess ? '#4CAF50' : 'var(--c-critical, #e74c3c)',
       }}
     >
-      {status.toUpperCase()}
+      {sentenceCase(status)}
     </span>
   )
 }
@@ -212,7 +213,7 @@ export default function AdminRpaMonitoring() {
           fontSize: 12,
         }}
       >
-        LOADING RPA DATA...
+        Loading RPA data...
       </div>
     )
   }
@@ -244,7 +245,7 @@ export default function AdminRpaMonitoring() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
       {/* ── KPI Cards ── */}
       <div>
-        <p style={sectionTitleStyle}>RPA OVERVIEW</p>
+        <p style={sectionTitleStyle}>RPA overview</p>
         <div
           style={{
             display: 'grid',
@@ -252,19 +253,19 @@ export default function AdminRpaMonitoring() {
             gap: 12,
           }}
         >
-          <KPICard label="TOTAL RUNS" value={kpi?.lb1Runs ?? 0} />
+          <KPICard label="Total runs" value={kpi?.lb1Runs ?? 0} />
           <KPICard
-            label="SUCCESS RATE"
+            label="Success rate"
             value={`${successRate}%`}
             sub={`${kpi?.lb1SuccessRuns ?? 0} dari ${kpi?.lb1Runs ?? 0} runs`}
           />
           <KPICard
-            label="TOTAL KUNJUNGAN"
+            label="Total kunjungan"
             value={kpi?.lb1TotalVisits ?? 0}
             sub="rawat jalan + rawat inap"
           />
           <KPICard
-            label="FAILED RUNS"
+            label="Failed runs"
             value={kpi?.lb1FailedRuns ?? 0}
             alert={(kpi?.lb1FailedRuns ?? 0) > 0}
           />
@@ -273,7 +274,7 @@ export default function AdminRpaMonitoring() {
 
       {/* ── Run History Table ── */}
       <div>
-        <p style={sectionTitleStyle}>RUN HISTORY</p>
+        <p style={sectionTitleStyle}>Run history</p>
         <div
           style={{
             borderRadius: 10,
@@ -340,7 +341,7 @@ export default function AdminRpaMonitoring() {
       {/* ── Failure Alert Cards ── */}
       {failedEntries.length > 0 && (
         <div>
-          <p style={sectionTitleStyle}>RECENT FAILURES</p>
+          <p style={sectionTitleStyle}>Recent failures</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {failedEntries.map(entry => (
               <div
