@@ -390,7 +390,10 @@ export default function VoicePage() {
         {/* ── IDLE / ERROR — Connect zone ── */}
         {(sessionState === 'idle' || sessionState === 'error') && (
           <div className={styles.intro}>
-            <h2 className={styles.cardTitle}>Audrey siap mendampingi</h2>
+            <div className={styles.introHead}>
+              <img src="/avatar/podcast.png" alt="Audrey" className={styles.avatarImg} />
+              <h2 className={styles.cardTitle}>Audrey siap mendampingi</h2>
+            </div>
             <p className={styles.text}>
               Clinical AI real-time untuk konsultasi dokter — diferensial diagnosis, dosis, tata
               laksana, dan kriteria rujukan dalam konteks Puskesmas PONED Balowerti.
