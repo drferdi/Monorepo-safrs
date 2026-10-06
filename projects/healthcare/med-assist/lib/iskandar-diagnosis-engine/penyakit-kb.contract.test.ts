@@ -9,6 +9,8 @@ type PenyakitRecord = {
   icd10: string;
   source: string;
   gejala_klinis?: string[];
+  diagnosis_banding?: unknown;
+  structured_criteria?: unknown;
 };
 
 type PenyakitKb = {
@@ -160,4 +162,31 @@ describe('penyakit.json contract', () => {
 
     expect(duplicates, JSON.stringify(duplicates, null, 2)).toEqual([]);
   });
+});
+
+// AGENTS.md domain rules: every rule needs differential exclusions and input criteria. Today's
+// gaps are listed in penyakit-kb.gaps.json and the list may only shrink (audit 2026-10-06): a
+// new entry without them fails, and a filled gap must leave the list.
+describe('penyakit.json completeness ratchet', () => {
+  const gaps = JSON.parse(
+    readFileSync(
+      path.resolve(process.cwd(), 'lib/iskandar-diagnosis-engine/penyakit-kb.gaps.json'),
+      'utf8'
+    )
+  ) as Record<'diagnosis_banding' | 'structured_criteria', string[]>;
+  const filled = (value: unknown): boolean =>
+    Array.isArray(value)
+      ? value.length > 0
+      : typeof value === 'object' && value !== null && Object.keys(value).length > 0;
+
+  it.each(['diagnosis_banding', 'structured_criteria'] as const)(
+    'lists exactly the entries without %s',
+    (field) => {
+      const open = (loadKb().penyakit ?? [])
+        .filter((item) => !filled(item[field]))
+        .map((item) => item.id)
+        .sort();
+      expect(open).toEqual([...gaps[field]].sort());
+    }
+  );
 });
