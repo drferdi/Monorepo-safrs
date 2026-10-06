@@ -361,7 +361,7 @@ export default function HubProfileLabPage() {
                 sentra
               </div>
               <img
-                src="/sentralogo.png"
+                src="/sentra-mark.png"
                 alt="Sentra"
                 style={{
                   width: 28,

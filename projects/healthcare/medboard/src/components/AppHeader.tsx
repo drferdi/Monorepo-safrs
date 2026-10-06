@@ -79,7 +79,7 @@ export default function AppHeader() {
     <header className="app-header">
       <span aria-hidden />
       <a className="app-header__brand" href="https://sentrahai.com/" target="_blank" rel="noopener noreferrer">
-        <img src="/sentradash.png" alt="" width={22} height={22} />
+        <img src="/sentra-mark.png" alt="" width={22} height={22} />
         <span>MedBoard</span>
       </a>
       <div className="app-header__end">

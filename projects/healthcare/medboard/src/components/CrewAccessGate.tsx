@@ -372,11 +372,10 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
           <div style={{ marginBottom: 4 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <img
-                src="/sentradash.png"
+                src="/sentra-mark.png"
                 alt=""
                 width={22}
                 height={22}
-                style={{ filter: 'brightness(0)' }}
               />
               <span
                 style={{

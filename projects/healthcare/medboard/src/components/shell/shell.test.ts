@@ -1,7 +1,9 @@
 import assert from 'node:assert/strict'
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import test from 'node:test'
+
+import sharp from 'sharp'
 
 import { initials } from './initials'
 import { isNavActive, NAV_GROUPS, readNavCollapsed } from './nav-items'
@@ -35,6 +37,31 @@ test('a new user starts with the narrow rail; a returning user keeps their choic
   assert.equal(readNavCollapsed(null), true)
   assert.equal(readNavCollapsed('true'), true)
   assert.equal(readNavCollapsed('false'), false)
+})
+
+test('every Sentra logo is the dark mark on a transparent background', async () => {
+  const screens = [
+    'src/components/AppHeader.tsx',
+    'src/components/CrewAccessGate.tsx',
+    'src/app/hub/lab/[username]/page.tsx',
+    'src/app/layout.tsx',
+  ]
+  const offBrand = screens.filter((file) => {
+    const source = readFileSync(path.join(process.cwd(), file), 'utf-8')
+    return !source.includes('/sentra-mark.png') || /sentradash\.png|sentralogo\.png|favicon\.svg/.test(source)
+  })
+  assert.deepEqual(offBrand, [])
+
+  const { data, info } = await sharp(path.join(process.cwd(), 'public/sentra-mark.png'))
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true })
+  assert.equal(data[3], 0, 'top-left corner is transparent')
+  let brightestInk = 0
+  for (let i = 0; i < info.width * info.height * 4; i += 4) {
+    if (data[i + 3] > 200) brightestInk = Math.max(brightestInk, data[i], data[i + 1], data[i + 2])
+  }
+  assert.ok(brightestInk < 80, `ink is dark (brightest channel ${brightestInk})`)
 })
 
 test('the avatar shows name initials without titles or degrees', () => {
