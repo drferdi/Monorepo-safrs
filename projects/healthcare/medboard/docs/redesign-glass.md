@@ -60,7 +60,8 @@ bentuk, tata letak); kode, logo, gambar dan teks Glass tidak disalin.
 
 ### Jarak, bentuk, bayangan
 
-- Jarak kelipatan 4 px: `--space-1` 4 … `--space-6` 24, `--space-8` 32.
+- Jarak kelipatan 4 px memakai token yang sudah ada: `--gap-xs` 4, `--gap-sm` 8, `--gap-md` 12,
+  `--gap-lg` 16, `--gap-xl` 24, `--gap-2xl` 32 (skalanya sudah sama dengan Glass).
 - Sudut: `--radius-sm` 6 px (input, tombol), `--radius-md` 8 px (kartu), `--radius-lg` 12 px
   (panel), `--radius-xl` 16 px (dialog), pil 9999 px (chip).
 - Bayangan: kartu `0 1px 2px rgba(15,23,42,.05)`; dialog `0 8px 24px rgba(15,23,42,.08)`.
@@ -94,7 +95,8 @@ warna penuh, gradasi, denyut atau emoji (aturan 2026-10-05 tetap).
   Hak tampil tiap menu mengikuti perilaku sekarang.
 - **Header** 56 px: logo + "MedBoard" di tengah; kanan: tanggal hari ini dan avatar inisial yang
   membuka menu (nama, profesi, Profil User, Keluar + pesan error logout).
-- **Footer** satu baris tengah, 13 px `--text-secondary`: Legal · Disclaimer AI · versi.
+- **Footer** satu baris tengah, 13 px `--text-secondary`: Legal · Disclaimer AI · © tahun Sentra
+  Healthcare Solutions.
 - **Area isi**: padding 24 px (16 px di bawah 768 px). Kepala halaman = judul 20 px + keterangan
   13 px; tombol aksi halaman di kanan.
 
