@@ -661,9 +661,6 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                           width: 34,
                           height: 34,
                           objectFit: 'contain',
-                          borderRadius: 6,
-                          background: '#ffffff',
-                          padding: 4,
                         }}
                       />
                       <div style={{ display: 'grid', gap: 2 }}>

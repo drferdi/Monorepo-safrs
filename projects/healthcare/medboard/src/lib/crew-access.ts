@@ -88,9 +88,9 @@ export function getCrewProfessionLogo(profession: CrewAccessProfession | string)
     case 'Bidan':
       return '/profesi/ibi.png'
     case 'Perawat':
-      return '/profesi/ppni.jpg'
+      return '/profesi/ppni.png'
     case 'Apoteker':
-      return '/profesi/iai.jpg'
+      return '/profesi/iai.png'
     case 'Triage Officer':
       return null
     default:

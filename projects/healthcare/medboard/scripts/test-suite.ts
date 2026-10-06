@@ -56,6 +56,7 @@ const suites: Suite[] = [
       'src/lib/server/crew-presence.test.ts',
       'src/app/api/presence/route.test.ts',
       'src/lib/crew-online.test.ts',
+      'src/lib/crew-access.test.ts',
     ],
   },
   {
