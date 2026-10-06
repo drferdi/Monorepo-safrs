@@ -22,12 +22,7 @@ export const runtime = 'nodejs'
  *   "q": "Demam berdarah",
  *   "results": [
  *     { "code": "A91", "name": "Dengue haemorrhagic fever", "category": "CHAPTER A" }
- *   ],
- *   "loadedFrom": {
- *     "2010": "PCare Mapping (local)",
- *     "2016": "penyakit.json (171 KKI)",
- *     "2019": "NLM ICD-10-CM (online)"
- *   }
+ *   ]
  * }
  */
 export async function GET(request: Request) {

@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
 
+import { AsistenMedisFlow } from '@/components/home/AsistenMedisFlow'
+import { ContributionHeatmap, HeatmapLegend } from '@/components/home/ContributionHeatmap'
 import { CREW_ACCESS_GENDERS, type CrewAccessGender } from '@/lib/crew-access'
 import {
   CREW_PROFILE_BLOOD_TYPES,
@@ -19,8 +21,11 @@ import {
   resolveCrewSentraTitle,
   resolveCrewSentraTitles,
 } from '@/lib/crew-profile'
+import { CRITICAL_MIND_LIBRARY, MY_MIND_MEMORY_URL } from '@/lib/critical-mind/library'
 import type { DevUpdateRecord } from '@/lib/dev-updates'
+import { buildActivityDays, type ActivityDay } from '@/lib/report/clinical-activity'
 import { safeHref, safeUrl } from '@/lib/sanitize-url'
+import { tidyCase } from '@/lib/text/tidy-case'
 import { ArrowUpRight, ChevronUp, TriangleAlert } from 'lucide-react'
 
 function calcAge(birthDate: string): number {
@@ -112,22 +117,9 @@ const HERO_TABS = [
   'Ringkasan Hari Ini',
   'Agent Sentra',
   'Berita Kesehatan',
-  'Assist Download',
+  'Asisten Medis',
   'Critical Mind',
 ]
-
-function todayKey() {
-  return new Date().toISOString().slice(0, 10) // "2026-03-02"
-}
-
-function loadAbsen(key: string): boolean {
-  if (typeof window === 'undefined') return false
-  try {
-    return localStorage.getItem(`absen_${key}_${todayKey()}`) === '1'
-  } catch {
-    return false
-  }
-}
 
 type ProfileUser = {
   username: string
@@ -154,14 +146,6 @@ type NotamBoardRecord = {
 }
 
 const PROFILE_LOAD_ERROR = 'Profil user belum dapat dimuat.'
-type OnlineUser = {
-  userId: string
-  name: string
-  role: string
-  profession: string
-  institution: string
-}
-
 function formatBirthDate(value: string): string {
   if (!value) return 'Belum diisi'
   const parsed = new Date(`${value}T00:00:00`)
@@ -248,14 +232,6 @@ function normalizeWhatsappHref(value: string): string {
 export default function ProfilUserPage() {
   const L = useL()
 
-  const [absenApel, setAbsenApel] = useState(false)
-  const [absenSiparwa, setAbsenSiparwa] = useState(false)
-
-  useEffect(() => {
-    setAbsenApel(loadAbsen('apel'))
-    setAbsenSiparwa(loadAbsen('siparwa'))
-  }, [])
-
   const [crewName, setCrewName] = useState('')
   const [sessionUser, setSessionUser] = useState<ProfileUser | null>(null)
   const [profile, setProfile] = useState<CrewProfileData>(createEmptyCrewProfile())
@@ -285,7 +261,10 @@ export default function ProfilUserPage() {
   const [newsLoading, setNewsLoading] = useState(false)
   const [devUpdates, setDevUpdates] = useState<DevUpdateBoardRecord[]>([])
   const [notams, setNotams] = useState<NotamBoardRecord[]>([])
-  const [onlineUsers, setOnlineUsers] = useState<OnlineUser[]>([])
+  const [activityDays, setActivityDays] = useState<ActivityDay[] | null>(null)
+  const [activityFailed, setActivityFailed] = useState(false)
+  // Shown while the year loads or when it cannot be loaded: the empty grid keeps its shape.
+  const [emptyActivity] = useState(() => buildActivityDays([], new Date()))
   const [boardLoading, setBoardLoading] = useState(true)
   const [boardError, setBoardError] = useState('')
   const [expandedBoardItems, setExpandedBoardItems] = useState<Set<string>>(() => new Set())
@@ -334,6 +313,18 @@ export default function ProfilUserPage() {
       alive = false
     }
   }, [])
+
+  // Daily clinical-report counts for the activity heatmap
+  useEffect(() => {
+    if (!crewName) return
+    fetch(`/api/report/clinical/activity?dokter=${encodeURIComponent(crewName)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: { ok?: boolean; days?: ActivityDay[] } | null) => {
+        if (d?.ok && d.days) setActivityDays(d.days)
+        else setActivityFailed(true)
+      })
+      .catch(() => setActivityFailed(true))
+  }, [crewName])
 
   // Fetch logbook klinis after crewName is set
   useEffect(() => {
@@ -487,10 +478,6 @@ export default function ProfilUserPage() {
         profession: sessionUser.profession,
         institution: sessionUser.institution,
       })
-    })
-
-    socket.on('users:online', (users: OnlineUser[]) => {
-      setOnlineUsers(users)
     })
 
     return () => {
@@ -714,7 +701,6 @@ export default function ProfilUserPage() {
   const sentraTitle = resolveCrewSentraTitle(profile.jobTitles, sessionUser?.role)
   const chatUserAvatarSrc = profile.avatarUrl || '/avatar.png'
   const chatAssistantAvatarSrc = '/audrey.png'
-  const statusOperasionalActive = absenApel || absenSiparwa
   const visiblePositionBadges = isAdminDashboardUser ? positionSectionBadges : []
   const profileHeroStats = isAdminDashboardUser
     ? [
@@ -774,14 +760,6 @@ export default function ProfilUserPage() {
   const visibleDevUpdates = sortBoardByLatest(devUpdates).slice(0, 1)
   const visibleNotams = sortBoardByLatest(notams).slice(0, 1)
   const visibleNews = news.slice(0, 1)
-  const uniqueOnlineUsers = onlineUsers.filter(
-    (user, index, array) => array.findIndex((item) => item.userId === user.userId) === index
-  )
-  const onlineRoster = [...uniqueOnlineUsers].sort((left, right) => {
-    if (left.userId === sessionUser?.username) return -1
-    if (right.userId === sessionUser?.username) return 1
-    return left.name.localeCompare(right.name, 'id-ID')
-  })
   const selectedSentraRoles = profileDraft.jobTitles.filter(
     (jobTitle): jobTitle is (typeof CREW_PROFILE_SENTRA_ROLES)[number] =>
       CREW_PROFILE_SENTRA_ROLES.includes(jobTitle as (typeof CREW_PROFILE_SENTRA_ROLES)[number])
@@ -792,56 +770,7 @@ export default function ProfilUserPage() {
         jobTitle as (typeof CREW_PROFILE_STRUCTURAL_POSITIONS)[number]
       )
   )
-  const hasScrollableOnlineRoster = onlineRoster.length > 5
   const hasScrollableLogbook = logbookRows.length > 5
-  const statusSnapshot = [
-    {
-      label: 'Status Operasional Sentra',
-      value: statusOperasionalActive ? 'Siap operasional' : 'Menunggu aktivasi operasional',
-      isActive: statusOperasionalActive,
-    },
-    {
-      label: 'SenAuto Session',
-      value: heroExpanded ? 'Aktif di dashboard' : 'Standby',
-      isActive: heroExpanded,
-    },
-    {
-      label: 'Akses EMR',
-      value: sessionUser?.institution ? 'Siap dibuka' : 'Perlu verifikasi akun',
-      isActive: Boolean(sessionUser?.institution),
-    },
-  ]
-  const statusHariIniSection = (
-    <Panel>
-      <PanelSection>
-        <SectionLabel>Status Hari Ini</SectionLabel>
-        {statusSnapshot.map((statusItem) => (
-          <div key={statusItem.label} className="home-list-row">
-            <span style={{ color: L.muted }}>{statusItem.label}</span>
-            <span
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 8,
-                textAlign: 'right',
-                color: statusItem.isActive ? 'var(--success)' : 'var(--warning)',
-              }}
-            >
-              <span
-                aria-hidden
-                className="home-status-dot"
-                style={{
-                  background: statusItem.isActive ? 'var(--success)' : 'var(--warning)',
-                }}
-              />
-              {statusItem.value}
-            </span>
-          </div>
-        ))}
-      </PanelSection>
-    </Panel>
-  )
-
   const logbookKlinisSection = (
     <Panel>
       <PanelSection>
@@ -886,10 +815,10 @@ export default function ProfilUserPage() {
                 >
                   <span style={{ color: L.muted }}>{idx + 1}</span>
                   <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {row.pasien}
+                    {tidyCase(row.pasien, 'name')}
                   </span>
                   <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {row.diagnosis}
+                    {tidyCase(row.diagnosis)}
                   </span>
                   <span style={{ color: L.muted, fontVariantNumeric: 'tabular-nums' }}>
                     {row.tanggal}
@@ -1017,6 +946,7 @@ export default function ProfilUserPage() {
       <span className="ui-field__label">{label}</span>
       <input
         className="ui-input"
+        name={field}
         value={profileDraft[field]}
         onChange={(event) =>
           setProfileDraft((current) => ({
@@ -1546,25 +1476,25 @@ export default function ProfilUserPage() {
             </div>
           )}
 
-          {/* TAB 3 — Assist Download */}
+          {/* TAB 3 — Asisten Medis */}
           {activeTab === 3 && (
             <div className="home-card home-split">
               {sidebarBlock(
-                'Sentra Assist',
+                'Asisten Medis',
                 'Ekstensi Chrome yang menghubungkan sistem RME (ePuskesmas) dengan Sentra Intelligence Dashboard secara otomatis.',
                 <a
                   href="/downloads/sentra-assist-chrome.zip"
                   download
                   className="ui-btn ui-btn--primary ui-btn--sm"
                 >
-                  Download Assist
+                  Unduh Asisten Medis
                 </a>
               )}
               <div>
                 <PanelSection>
-                  <h3 className="home-card__title">Apa itu Sentra Assist?</h3>
+                  <h3 className="home-card__title">Apa itu Asisten Medis?</h3>
                   <p className="home-card__text">
-                    Sentra Assist adalah ekstensi Chrome yang menjadi bridge otomatis antara sistem
+                    Asisten Medis adalah ekstensi Chrome yang menjadi bridge otomatis antara sistem
                     RME (ePuskesmas) dengan Sentra Intelligence Dashboard. Memungkinkan transfer
                     data anamnesis, diagnosis, dan resep langsung ke formulir RME — tanpa input
                     ulang manual.
@@ -1572,37 +1502,7 @@ export default function ProfilUserPage() {
                 </PanelSection>
                 <PanelSection>
                   <h3 className="home-card__title">Cara Kerja</h3>
-                  {[
-                    {
-                      step: '01',
-                      label: 'Dashboard CDSS',
-                      desc: 'Keluhan, diagnosis ICD-10, terapi tersusun',
-                    },
-                    {
-                      step: '02',
-                      label: 'Sentra Assist',
-                      desc: 'Ekstensi Chrome mendeteksi sesi RME aktif',
-                    },
-                    {
-                      step: '03',
-                      label: 'Bridge Engine',
-                      desc: 'Transfer otomatis via socket, progress real-time',
-                    },
-                    {
-                      step: '04',
-                      label: 'Form ePuskesmas',
-                      desc: 'Data masuk tanpa input ulang manual',
-                    },
-                  ].map((item) => (
-                    <div
-                      key={item.step}
-                      className="home-list-row"
-                      style={{ flexDirection: 'column', alignItems: 'flex-start', gap: 2 }}
-                    >
-                      <span style={{ fontWeight: 500, color: L.text }}>{item.label}</span>
-                      <span style={{ color: L.muted }}>{item.desc}</span>
-                    </div>
-                  ))}
+                  <AsistenMedisFlow />
                 </PanelSection>
                 <PanelSection>
                   <h3 className="home-card__title">Status Koneksi</h3>
@@ -1620,57 +1520,62 @@ export default function ProfilUserPage() {
                       className="home-status-dot"
                       style={{ background: 'var(--success)' }}
                     />
-                    Assist Bridge tersedia — siap digunakan dari halaman Intelligence EMR
+                    Bridge Asisten Medis tersedia — siap digunakan dari halaman Intelligence EMR
                   </div>
                 </PanelSection>
               </div>
             </div>
           )}
 
-          {/* TAB 4 — Critical Mind Algorithm */}
+          {/* TAB 4 — Critical Mind: library of dr. Ferdi Iskandar's thinking */}
           {activeTab === 4 && (
             <div className="home-card home-split">
               {sidebarBlock(
-                'Critical Mind Algorithm',
-                'Iskandar Engine — kerangka reasoning klinis yang mendasari seluruh proses diagnosis AI di Sentra.',
-                <a href="/critical-mind" className="ui-btn ui-btn--primary ui-btn--sm">
-                  Lihat Detail →
+                'Critical Mind',
+                'Pusat library pemikiran dr. Ferdi Iskandar: hipotesis, kerangka, dan tulisan yang tercatat di MyMindMemory.',
+                <a
+                  href={MY_MIND_MEMORY_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ui-btn ui-btn--primary ui-btn--sm"
+                >
+                  Buka MyMindMemory
                 </a>
               )}
               <div>
-                <PanelSection>
-                  <h3 className="home-card__title">Iskandar Diagnosis Engine V2</h3>
-                  <p className="home-card__text">
-                    LLM-first architecture dengan knowledge base grounding — 172 penyakit KKI,
-                    hybrid retrieval (BM25 + semantic embedding), dan multi-layer validation.
-                  </p>
-                </PanelSection>
-                <PanelSection>
-                  <h3 className="home-card__title">NEWS2 Early Warning System</h3>
-                  <p className="home-card__text">
-                    Graduated vital signs scoring (5 parameter, skor 0-3) untuk deteksi dini
-                    deteriorasi fisiologis. Terintegrasi dengan 7 pola penyakit spesifik: DHF,
-                    sepsis (SIRS/qSOFA), gagal napas, ACS, syok hemoragik, preeklampsia, dan malaria
-                    berat.
-                  </p>
-                </PanelSection>
-                <PanelSection>
-                  <h3 className="home-card__title">Safety Layers</h3>
-                  <p className="home-card__text">
-                    5 lapis keamanan klinis: vital signs red flags (hardcoded), NEWS2 composite
-                    scoring, disease-specific early warning, KB grounding validation (ICD-10 +
-                    sex/age/pregnancy plausibility + drug-allergy cross-reference), dan hybrid
-                    decisioning deterministik.
-                  </p>
-                </PanelSection>
-                <PanelSection>
-                  <h3 className="home-card__title">Retrieval Pipeline</h3>
-                  <p className="home-card__text">
-                    BM25 keyword scoring → lexical disease ranking lokal → Reciprocal Rank Fusion
-                    merge → DeepSeek Reasoner (primary) dengan circuit breaker. Alias expansion 350+
-                    sinonim bahasa Indonesia awam → klinis.
-                  </p>
-                </PanelSection>
+                {CRITICAL_MIND_LIBRARY.map((entry) => (
+                  <PanelSection key={entry.doi}>
+                    <div className="home-badges" style={{ marginBottom: 8 }}>
+                      <span className="ui-badge ui-badge--primary">{entry.kind}</span>
+                      <span className="ui-badge ui-badge--neutral">{entry.type}</span>
+                      <span style={{ fontSize: 12, color: L.muted }}>{entry.published}</span>
+                    </div>
+                    <h3 className="home-card__title">{entry.title}</h3>
+                    <p className="home-card__text">{entry.description}</p>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        gap: 12,
+                        marginTop: 8,
+                        fontSize: 12,
+                        color: L.muted,
+                      }}
+                    >
+                      <span>{entry.topics.join(' · ')}</span>
+                      <a
+                        href={`https://doi.org/${entry.doi}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: L.text }}
+                      >
+                        DOI {entry.doi}
+                        <ArrowUpRight size={14} strokeWidth={1.75} aria-hidden />
+                      </a>
+                    </div>
+                  </PanelSection>
+                ))}
               </div>
             </div>
           )}
@@ -1729,7 +1634,7 @@ export default function ProfilUserPage() {
                       {sentraTitle} · {professionLabel}
                     </div>
                     <div className="home-badges">
-                      <span className="ui-badge ui-badge--primary">{roleLabel}</span>
+                      <span className="ui-badge ui-badge--neu">{roleLabel}</span>
                       {(degreeBadges.length > 0 ? degreeBadges : ['Belum diisi']).map((g) => (
                         <span key={g} className="ui-badge ui-badge--neutral">
                           {g}
@@ -1778,12 +1683,12 @@ export default function ProfilUserPage() {
             {/* Link Resmi */}
             <PanelSection>
               <SectionLabel>Link Resmi</SectionLabel>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, paddingTop: 4 }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, paddingTop: 4 }}>
                 {officialLinkLogos.map((item) => {
                   const content = (
                     <span
                       aria-hidden="true"
-                      className={`home-link-icon${item.href ? '' : ' home-link-icon--off'}`}
+                      className="home-link-icon"
                       style={{
                         WebkitMaskImage: `url(${item.iconSrc})`,
                         maskImage: `url(${item.iconSrc})`,
@@ -1797,22 +1702,13 @@ export default function ProfilUserPage() {
                     />
                   )
 
-                  const sharedStyle: React.CSSProperties = {
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: 28,
-                    height: 28,
-                    textDecoration: 'none',
-                  }
-
                   if (!item.href) {
                     return (
                       <div
                         key={item.label}
                         title={item.label}
                         aria-label={item.label}
-                        style={sharedStyle}
+                        className="home-link-tile home-link-tile--off"
                       >
                         {content}
                       </div>
@@ -1827,7 +1723,7 @@ export default function ProfilUserPage() {
                       rel="noreferrer"
                       title={item.label}
                       aria-label={item.label}
-                      style={sharedStyle}
+                      className="home-link-tile"
                     >
                       {content}
                     </a>
@@ -1871,62 +1767,12 @@ export default function ProfilUserPage() {
                     {link.label}
                     <span style={{ color: L.muted }}> · {link.desc}</span>
                   </span>
-                  <span className="ui-badge ui-badge--neutral">{link.badge}</span>
+                  <span className="ui-badge ui-badge--neu">{link.badge}</span>
                 </a>
               ))}
             </PanelSection>
           </Panel>
 
-          {/* ── Whos online ── */}
-          <Panel>
-            <PanelSection>
-              <SectionLabel>Sedang online</SectionLabel>
-              {onlineRoster.length > 0 ? (
-                <div
-                  className={hasScrollableOnlineRoster ? 'who-online-scroll' : undefined}
-                  style={{
-                    maxHeight: hasScrollableOnlineRoster ? 286 : undefined,
-                    overflowY: hasScrollableOnlineRoster ? 'auto' : 'visible',
-                    paddingRight: hasScrollableOnlineRoster ? 4 : 0,
-                  }}
-                >
-                  {onlineRoster.map((user) => {
-                    const subtitle = user.profession || formatRoleLabel(user.role)
-                    const isCurrentUser = user.userId === sessionUser?.username
-
-                    return (
-                      <div key={user.userId} className="home-list-row">
-                        <div
-                          style={{ minWidth: 0, display: 'flex', flexDirection: 'column', gap: 2 }}
-                        >
-                          <div
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: 8,
-                              flexWrap: 'wrap',
-                            }}
-                          >
-                            <span style={{ color: L.text }}>{user.name}</span>
-                            {isCurrentUser ? (
-                              <span className="ui-badge ui-badge--primary">Anda</span>
-                            ) : null}
-                          </div>
-                          <span style={{ color: L.muted }}>
-                            {subtitle}
-                            {user.institution ? ` • ${user.institution}` : ''}
-                          </span>
-                        </div>
-                        <span className="ui-badge ui-badge--success">Online</span>
-                      </div>
-                    )
-                  })}
-                </div>
-              ) : (
-                <div className="home-empty">Belum ada crew yang sedang online.</div>
-              )}
-            </PanelSection>
-          </Panel>
         </div>
 
         {/* ══ KOLOM KANAN — PEKERJAAN ══ */}
@@ -1940,7 +1786,7 @@ export default function ProfilUserPage() {
                   ? visiblePositionBadges
                   : [sessionUser?.profession || 'Belum diisi']
                 ).map((jobTitle) => (
-                  <span key={jobTitle} className="ui-badge ui-badge--primary">
+                  <span key={jobTitle} className="ui-badge ui-badge--neu">
                     {jobTitle}
                   </span>
                 ))}
@@ -1999,8 +1845,36 @@ export default function ProfilUserPage() {
               </div>
             </PanelSection>
           </Panel>
-          {statusHariIniSection}
           {logbookKlinisSection}
+        </div>
+
+        {/* ── Aktivitas klinis ── */}
+        <div style={{ gridColumn: '1 / -1' }}>
+          <Panel>
+            <PanelSection>
+              <SectionLabel>Aktivitas klinis</SectionLabel>
+              <div
+                style={{ display: 'flex', flexDirection: 'column', gap: 12, width: 'fit-content', maxWidth: '100%' }}
+              >
+                <span style={{ fontSize: 14, color: L.muted }}>
+                  {activityFailed ? (
+                    'Aktivitas belum bisa dimuat.'
+                  ) : (
+                    <>
+                      <span style={{ fontWeight: 600, color: L.text }}>
+                        {(activityDays ?? []).reduce((sum, day) => sum + day.count, 0).toLocaleString('id-ID')}
+                      </span>{' '}
+                      laporan klinis dalam setahun terakhir
+                    </>
+                  )}
+                </span>
+                <ContributionHeatmap data={activityDays ?? emptyActivity} />
+                <div style={{ alignSelf: 'flex-end' }}>
+                  <HeatmapLegend />
+                </div>
+              </div>
+            </PanelSection>
+          </Panel>
         </div>
       </div>
 

@@ -20,6 +20,7 @@
   --warning: #b54708;
   --warning-tint: #fffaeb;
   --success: #067647;
+  --tosca: #0f766e; /* Chief 2026-10-07: tosca for informational labels (ICD systems) */
   --success-tint: #ecfdf3;
   --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.05);
   --shadow-dialog: 0 8px 24px rgba(15, 23, 42, 0.08);
@@ -5087,7 +5088,7 @@ a {
 }
 
 /* ─── Typing fields app-wide (Chief 2026-10-06): a hairline underline, not a box;
-       focus draws a 2 px Oxford line along it from the left. ─── */
+       focus draws a 1 px Oxford line over it from the left, slowly (Chief 2026-10-07). ─── */
 .input-draft,
 .omni-input,
 .calculator-field-input,
@@ -5096,15 +5097,18 @@ a {
 .vitals-context-input,
 .vitals-context-select {
   border: 0;
-  border-bottom: 1px solid var(--border);
   border-radius: 0;
-  background: linear-gradient(var(--primary), var(--primary)) no-repeat left bottom;
+  background-image:
+    linear-gradient(var(--primary), var(--primary)),
+    linear-gradient(var(--border), var(--border));
+  background-position: left bottom, left bottom;
+  background-repeat: no-repeat;
   background-color: transparent;
-  background-size: 0% 2px;
+  background-size: 0% 1px, 100% 1px;
   box-shadow: none;
   padding-left: 2px;
   padding-right: 2px;
-  transition: background-size 220ms ease-out, border-color 220ms ease-out;
+  transition: background-size 600ms cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 .input-draft:hover,
 .omni-input:hover,
@@ -5113,7 +5117,9 @@ a {
 .finalize-pharmacology-manual-input:hover,
 .vitals-context-input:hover,
 .vitals-context-select:hover {
-  border-bottom-color: var(--text-secondary);
+  background-image:
+    linear-gradient(var(--primary), var(--primary)),
+    linear-gradient(var(--text-secondary), var(--text-secondary));
 }
 .input-draft:focus-within,
 .omni-input:focus,
@@ -5123,9 +5129,8 @@ a {
 .vitals-context-input:focus,
 .vitals-context-select:focus {
   outline: none;
-  border-color: var(--border);
   box-shadow: none;
-  background-size: 100% 2px;
+  background-size: 100% 1px, 100% 1px;
 }
 
 /* ─── Focus mode (EMR): the card being filled stays clear, cards below fade back. ─── */
@@ -5240,12 +5245,25 @@ a.home-list-row:hover { color: var(--primary); }
 }
 .home-link-icon {
   display: inline-block;
-  width: 20px;
-  height: 20px;
-  background: var(--text-secondary);
+  width: 16px;
+  height: 16px;
+  background: var(--neu-text);
 }
-a:hover > .home-link-icon { background: var(--text); }
-.home-link-icon--off { opacity: 0.4; }
+/* Official links are black neumorphic tiles; a link not filled in yet sits flat and dim. */
+.home-link-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--neu-surface);
+  box-shadow: var(--neu-raised);
+  text-decoration: none;
+}
+a.home-link-tile:hover { background: var(--neu-surface-hover); }
+a.home-link-tile:active { box-shadow: var(--neu-pressed); }
+.home-link-tile--off { box-shadow: none; opacity: 0.4; }
 .home-status-dot {
   display: inline-block;
   width: 8px;

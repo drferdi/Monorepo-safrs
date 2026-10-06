@@ -1,13 +1,16 @@
 // Drferdi — vision, brought to life.
 'use client'
 
-import { Activity, CircleCheck, Cross, FlaskConical, Mic, RotateCcw, ShieldCheck, Sparkles, Square, Zap } from 'lucide-react'
+import { Mic, RotateCcw, SendHorizontal, ShieldCheck, Square, Zap } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
 
 import { cx } from '@/components/ui/cx'
 
+import { AUDREY_NAME, AUDREY_PILLARS, audreyExpansion } from './audrey-identity'
 import { audreyStage, type SessionState } from './audrey-stage'
+import { AudreyOrb } from './AudreyOrb'
+import { AUDREY_TEMPLATES, firstSlot } from './audrey-templates'
 import styles from './voice.module.css'
 
 type Message = {
@@ -48,6 +51,12 @@ export default function VoicePage() {
   const [error, setError] = useState('')
   const [liveText, setLiveText] = useState('')
   const [reducedMotion, setReducedMotion] = useState(false)
+  const [chat, setChat] = useState<Message[]>([])
+  const [chatInput, setChatInput] = useState('')
+  const [chatLoading, setChatLoading] = useState(false)
+  const [chatError, setChatError] = useState('')
+  const chatInputRef = useRef<HTMLTextAreaElement>(null)
+  const [pendingSelection, setPendingSelection] = useState<{ start: number; end: number } | null>(null)
   const socketRef = useRef<Socket | null>(null)
   const recordCtxRef = useRef<AudioContext | null>(null)
   const playbackCtxRef = useRef<AudioContext | null>(null)
@@ -256,9 +265,11 @@ export default function VoicePage() {
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.code !== 'Space' || e.repeat) return
+      // Space types in the chat and presses a focused button; it is push-to-talk everywhere else.
       if (
-        (e.target as HTMLElement).tagName === 'INPUT' ||
-        (e.target as HTMLElement).tagName === 'TEXTAREA'
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement ||
+        e.target instanceof HTMLButtonElement
       )
         return
       e.preventDefault()
@@ -276,6 +287,46 @@ export default function VoicePage() {
     }
   }, [pttStart, pttEnd])
 
+  async function sendChat() {
+    const text = chatInput.trim()
+    if (!text || chatLoading) return
+    const userMsg: Message = { id: Date.now(), role: 'user', text, time: nowTime() }
+    const next = [...chat, userMsg]
+    setChat(next)
+    setChatInput('')
+    setChatError('')
+    setChatLoading(true)
+    try {
+      const res = await fetch('/api/perplexity', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: next.map((msg) => ({ role: msg.role, content: msg.text })) }),
+      })
+      const data = (await res.json()) as { ok: boolean; reply?: string; error?: string }
+      if (!data.ok) setChatError(data.error ?? 'Gagal mendapat respons.')
+      else setChat([...next, { id: Date.now() + 1, role: 'assistant', text: data.reply ?? '', time: nowTime() }])
+    } catch {
+      setChatError('Tidak dapat terhubung ke server.')
+    } finally {
+      setChatLoading(false)
+    }
+  }
+
+  function applyTemplate(text: string) {
+    setChatInput(text)
+    setPendingSelection(firstSlot(text) ?? { start: text.length, end: text.length })
+  }
+
+  // Once the template is in the field, select its first slot so the doctor types over it.
+  useEffect(() => {
+    if (!pendingSelection) return
+    const input = chatInputRef.current
+    input?.focus()
+    input?.setSelectionRange(pendingSelection.start, pendingSelection.end)
+    setPendingSelection(null)
+  }, [pendingSelection])
+
   const isConnected = !['idle', 'error', 'connecting'].includes(sessionState)
   const stage = audreyStage(sessionState)
   const toneDot = cx(styles.dot, stage.tone !== 'neutral' && styles[`tone-${stage.tone}`])
@@ -283,19 +334,16 @@ export default function VoicePage() {
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <div className={styles.brand}>
-          <div className={styles.emblem}>
-            <Cross size={20} />
-          </div>
+        <div className={styles.identity}>
+          <img src="/audrey.png" alt="" className={styles.avatarImg} draggable={false} />
           <div>
-            <div className={styles.titleRow}>
-              <h1 className={styles.title}>Audrey</h1>
-              <span className="ui-badge ui-badge--neutral">AI companion</span>
-            </div>
-            <p className={styles.tagline}>Intelligence for brighter care</p>
+            <h1 className={styles.title}>Audrey</h1>
+            <span className={styles.status} role="status">
+              <span className={toneDot} />
+              {stage.badgeLabel}
+            </span>
           </div>
         </div>
-
         <div className={styles.actions}>
           <button
             type="button"
@@ -310,121 +358,161 @@ export default function VoicePage() {
               Putus sesi
             </button>
           )}
-          <span className={styles.separator} aria-hidden="true" />
-          <span className={styles.statusBadge} role="status">
-            <span className={toneDot} />
-            {stage.badgeLabel}
-          </span>
         </div>
       </header>
 
-      {error && (
-        <div className="ui-alert ui-alert--critical" role="alert">
-          {error}
+      {/* Who Audrey is, in Swiss style: one rule, an asymmetric grid, type only */}
+      <section className={styles.intro} aria-label="Tentang Audrey">
+        <div className={styles.introName}>
+          <p className={styles.wordmark}>AUDREY</p>
+          <p className={styles.acronym} role="img" aria-label={audreyExpansion()}>
+            {AUDREY_NAME.map((part) => (
+              <span key={part.word} className={styles.part}>
+                {part.before ? `${part.before} ` : null}
+                <span className={styles.initial}>{part.word[0]}</span>
+                {part.word.slice(1)}
+              </span>
+            ))}
+          </p>
         </div>
-      )}
+        <div className={styles.introBody}>
+          <p className={styles.about}>
+            AUDREY adalah entitas kecerdasan augmented tingkat klinis yang di design dan di kembangkan oleh{' '}
+            <a className={styles.aboutLink} href="https://ferdiiskandar.com" target="_blank" rel="noopener noreferrer">
+              dr Ferdi Iskandar
+            </a>
+            ,
+            memadukan penalaran medis berbasis bukti (evidence-based) dengan dukungan diagnostik real-time, menghadirkan
+            wawasan setara dokter, terskala secara universal, dan terkalibrasi secara budaya untuk Indonesia.
+          </p>
+        </div>
+        <ol className={styles.pillars}>
+          {AUDREY_PILLARS.map((pillar, i) => (
+            <li key={pillar}>
+              <span className={styles.pillarIndex}>{String(i + 1).padStart(2, '0')}</span>
+              {pillar}
+            </li>
+          ))}
+        </ol>
+      </section>
 
       <div className={styles.layout}>
-        {/* Audrey on her stage */}
-        <section className={cx(styles.card, styles.stage)}>
-          <div className={styles.stageTop}>
-            <span className={styles.stageState}>
-              <span className={toneDot} />
-              {stage.stageLabel}
-            </span>
-            <span className="ui-badge ui-badge--accent">
-              <FlaskConical size={12} /> Alpha
-            </span>
-          </div>
-
-          <div className={cx(styles.motionStage, styles[`motion-${stage.motion}`], reducedMotion && styles.still)}>
-            <div className={styles.glow} />
-            <div className={styles.floatBadge}>
-              <Sparkles size={16} /> Pendamping klinis AI Anda
-            </div>
-            <div className={styles.figure}>
-              <img src="/audrey.png" alt="Audrey, pendamping klinis AI" className={styles.audrey} draggable={false} />
-            </div>
-            <div className={styles.ring} />
-            <div className={styles.ringInner} />
-            <div className={styles.bubble}>
-              <Activity size={14} /> {stage.bubbleLabel}
-            </div>
-          </div>
-        </section>
-
-        {/* Consultation stream */}
-        <section className={cx(styles.card, styles.consult)}>
-          <div className={styles.consultHead}>
-            <div>
-              <h2 className={styles.consultTitle}>Konsultasi klinis</h2>
-              <p className={styles.consultSub}>
-                Diferensial diagnosis, dosis, tata laksana, dan kriteria rujukan secara real-time
-              </p>
-            </div>
+        {/* Chat: typed questions, with templates for the common ones */}
+        <section className={cx(styles.card, styles.chat)}>
+          <div className={styles.cardHead}>
+            <h2 className={styles.cardTitle}>Chat</h2>
             <button
               type="button"
-              onClick={() => setMessages([])}
+              onClick={() => {
+                setChat([])
+                setChatError('')
+              }}
               className={cx('ui-btn ui-btn--ghost ui-btn--sm', styles.iconBtn)}
-              aria-label="Bersihkan percakapan"
-              title="Bersihkan percakapan"
+              aria-label="Bersihkan chat"
+              title="Bersihkan chat"
             >
               <RotateCcw size={16} />
             </button>
           </div>
 
           <div className={styles.history}>
-            <div className={styles.msg}>
-              <div className={styles.avatar}>A</div>
-              <div className={styles.audreyBubble}>
-                <div className={styles.bubbleHead}>
-                  <span className={styles.bubbleName}>Audrey</span>
-                </div>
-                <p className={styles.bubbleText}>
-                  Halo, Dokter. Saya Audrey, pendamping klinis Anda. Mulai sesi, lalu tahan tombol bicara atau
-                  [Spasi] selama Anda berbicara.
-                </p>
-                <div className={styles.bubbleFoot}>
-                  <ShieldCheck size={14} /> Keputusan klinis tetap di tangan dokter
-                </div>
+            {chat.length === 0 && !chatLoading ? (
+              <p className={styles.empty}>
+                Tanyakan dosis obat, penyakit, diagnosis banding, atau kriteria rujukan. Pilih template di bawah untuk
+                mulai lebih cepat.
+              </p>
+            ) : null}
+            {chat.map((msg) => (
+              <MessageRow key={msg.id} msg={msg} />
+            ))}
+            {chatLoading ? (
+              <div className={styles.msg}>
+                <span className={styles.pending}>
+                  <span className={cx(styles.dot, styles['tone-primary'])} />
+                  Audrey sedang menyusun jawaban...
+                </span>
               </div>
+            ) : null}
+          </div>
+
+          {chatError ? (
+            <div className="ui-alert ui-alert--critical" role="alert">
+              {chatError}
             </div>
+          ) : null}
 
-            {messages.map((msg) =>
-              msg.role === 'user' ? (
-                <div key={msg.id} className={cx(styles.msg, styles.msgUser)}>
-                  <div className={styles.userBubble}>
-                    {msg.text}
-                    <span className={styles.userMeta}>Dokter · {msg.time}</span>
-                  </div>
-                </div>
-              ) : (
-                <div key={msg.id} className={styles.msg}>
-                  <div className={styles.avatar}>A</div>
-                  <div className={styles.audreyBubble}>
-                    <div className={styles.bubbleHead}>
-                      <span className={styles.bubbleName}>Audrey</span>
-                      <span className={styles.bubbleTime}>{msg.time}</span>
-                    </div>
-                    <p className={styles.bubbleText}>{msg.text}</p>
-                  </div>
-                </div>
-              )
-            )}
+          <div className={styles.templates} aria-label="Template pertanyaan">
+            {AUDREY_TEMPLATES.map((template) => (
+              <button
+                key={template.label}
+                type="button"
+                className="ui-chip"
+                onClick={() => applyTemplate(template.text)}
+              >
+                {template.label}
+              </button>
+            ))}
+          </div>
 
+          <form
+            className={styles.composer}
+            onSubmit={(event) => {
+              event.preventDefault()
+              void sendChat()
+            }}
+          >
+            <textarea
+              ref={chatInputRef}
+              className="ui-input"
+              rows={2}
+              value={chatInput}
+              onChange={(event) => setChatInput(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                  event.preventDefault()
+                  void sendChat()
+                }
+              }}
+              placeholder="Tulis pertanyaan klinis, Enter untuk kirim"
+              aria-label="Pertanyaan untuk Audrey"
+            />
+            <button type="submit" className="ui-btn ui-btn--primary ui-btn--sm" disabled={!chatInput.trim() || chatLoading}>
+              <SendHorizontal size={14} /> Kirim
+            </button>
+          </form>
+        </section>
+
+        {/* Voice: Audrey listens while the doctor holds the talk button or Space */}
+        <section className={cx(styles.card, styles.voice)}>
+          <div className={styles.cardHead}>
+            <h2 className={styles.cardTitle}>Voice</h2>
+          </div>
+
+          <AudreyOrb motion={stage.motion} still={reducedMotion} label={stage.stageLabel} />
+
+          {error && (
+            <div className="ui-alert ui-alert--critical" role="alert">
+              {error}
+            </div>
+          )}
+
+          <div className={styles.history}>
+            {messages.length === 0 && !liveText && sessionState !== 'processing' ? (
+              <p className={styles.empty}>{stage.bubbleLabel}. Percakapan suara tampil di sini.</p>
+            ) : null}
+            {messages.map((msg) => (
+              <MessageRow key={msg.id} msg={msg} />
+            ))}
             {(sessionState === 'processing' || liveText) && (
               <div className={styles.msg}>
-                <div className={styles.avatar}>A</div>
-                <div className={styles.audreyBubble}>
-                  {liveText ? (
-                    <p className={styles.bubbleText}>{liveText}</p>
-                  ) : (
-                    <span className={styles.pending}>
-                      <span className={cx(styles.dot, styles['tone-primary'])} />
-                      Audrey sedang meninjau pedoman dan rekam medis...
-                    </span>
-                  )}
-                </div>
+                {liveText ? (
+                  <p className={styles.audreyText}>{liveText}</p>
+                ) : (
+                  <span className={styles.pending}>
+                    <span className={cx(styles.dot, styles['tone-primary'])} />
+                    Audrey sedang meninjau pedoman dan rekam medis...
+                  </span>
+                )}
               </div>
             )}
           </div>
@@ -443,15 +531,11 @@ export default function VoicePage() {
                   }}
                   onTouchEnd={pttEnd}
                   disabled={sessionState === 'processing'}
-                  className={cx(
-                    'ui-btn ui-btn--primary ui-btn--lg',
-                    styles.talkMain,
-                    sessionState === 'recording' && styles.recording
-                  )}
+                  className={cx('ui-btn ui-btn--primary ui-btn--lg', styles.talkMain, sessionState === 'recording' && styles.recording)}
                 >
                   <Mic size={16} />
                   {sessionState === 'recording'
-                    ? 'Merekam — lepas untuk kirim'
+                    ? 'Merekam, lepas untuk kirim'
                     : sessionState === 'processing'
                       ? 'Memproses...'
                       : 'Tahan untuk bicara'}
@@ -474,17 +558,34 @@ export default function VoicePage() {
                 className={cx('ui-btn ui-btn--primary ui-btn--lg', styles.talkMain)}
               >
                 <Mic size={16} />
-                {sessionState === 'connecting' ? 'Menghubungkan...' : 'Mulai sesi Audrey'}
+                {sessionState === 'connecting' ? 'Menghubungkan...' : 'Mulai sesi suara'}
               </button>
             )}
           </div>
-
-          <div className={styles.trust}>
-            <span className={styles.trustItem}>
-              <CircleCheck size={12} /> Audrey bukan pengganti keputusan klinis dokter
-            </span>
-          </div>
+          <p className={styles.hint}>Tahan tombol atau Spasi selama berbicara.</p>
         </section>
+      </div>
+
+      <p className={styles.trust}>
+        <ShieldCheck size={14} /> Audrey bukan pengganti keputusan klinis dokter.
+      </p>
+    </div>
+  )
+}
+
+function MessageRow({ msg }: { msg: Message }) {
+  return msg.role === 'user' ? (
+    <div className={cx(styles.msg, styles.msgUser)}>
+      <div className={styles.userText}>
+        {msg.text}
+        <span className={styles.meta}>Dokter · {msg.time}</span>
+      </div>
+    </div>
+  ) : (
+    <div className={styles.msg}>
+      <div className={styles.audreyText}>
+        {msg.text}
+        <span className={styles.meta}>Audrey · {msg.time}</span>
       </div>
     </div>
   )

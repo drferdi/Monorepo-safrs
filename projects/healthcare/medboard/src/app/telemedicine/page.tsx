@@ -26,6 +26,7 @@ import { MiraDifferentialCard } from '@/components/telemedicine/MiraDifferential
 import { isDoctorProfession } from '@/lib/crew-access'
 import { buildEmrSourceHref, EMR_SOURCE_ORIGINS } from '@/lib/emr/source-trace'
 import type { MiraDifferential } from '@/lib/telemedicine/mira-differential'
+import { tidyCase } from '@/lib/text/tidy-case'
 import type { AppointmentStatus, AppointmentWithDetails } from '@/types/telemedicine.types'
 
 import styles from './telemedicine.module.css'
@@ -874,7 +875,7 @@ export default function TelemedicinePage(): React.JSX.Element {
               {/* Keluhan */}
               <div className={styles.dialogSection}>
                 <div className={styles.dialogLabel}>Keluhan Utama</div>
-                <div className={styles.dialogText}>{activeConsult.keluhan_utama}</div>
+                <div className={styles.dialogText}>{tidyCase(activeConsult.keluhan_utama ?? '')}</div>
               </div>
 
               {/* TTV Grid */}
@@ -1058,7 +1059,7 @@ export default function TelemedicinePage(): React.JSX.Element {
         <div className={styles.toast}>
           <div className={styles.dialogLabel}>Transfer ke ePuskesmas</div>
           <div className={styles.rowName} style={{ marginBottom: 'var(--gap-md)' }}>
-            {acceptedForTransfer.patientName}
+            {tidyCase(acceptedForTransfer.patientName ?? '', 'name')}
           </div>
           <input
             type="text"

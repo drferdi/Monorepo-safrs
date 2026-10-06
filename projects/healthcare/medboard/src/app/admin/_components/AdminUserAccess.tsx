@@ -1221,6 +1221,7 @@ function UserEditPanel({
               <input
                 className={styles.fieldInput}
                 value={fullName}
+                data-tidy="name"
                 onChange={(e) => setFullName(e.target.value)}
                 title="Nama lengkap user"
                 aria-label="Nama lengkap user"

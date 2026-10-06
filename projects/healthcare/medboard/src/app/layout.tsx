@@ -1,6 +1,7 @@
 // Drferdi — vision, brought to life.
 import type { Metadata } from 'next'
 import '@fontsource-variable/ibm-plex-sans'
+import 'lenis/dist/lenis.css'
 import './globals.css'
 import './ui.css'
 import './shell.css'
@@ -8,6 +9,8 @@ import AppFooter from '@/components/AppFooter'
 import AppHeader from '@/components/AppHeader'
 import AppNav from '@/components/AppNav'
 import CrewAccessGate from '@/components/CrewAccessGate'
+import SmoothScroll from '@/components/SmoothScroll'
+import TidyCaseOnBlur from '@/components/TidyCaseOnBlur'
 
 export const metadata: Metadata = {
   title: 'Sentra — Puskesmas Dashboard',
@@ -27,6 +30,8 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body>
+        <SmoothScroll />
+        <TidyCaseOnBlur />
         <CrewAccessGate>
           <div className="app-shell">
             <AppNav />

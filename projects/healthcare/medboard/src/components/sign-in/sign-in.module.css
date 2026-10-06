@@ -1,0 +1,561 @@
+/*
+  Sign-in: a dark intelligence field (about 60%) meets the white MedBoard column (about 40%)
+  along one ruled seam. The field stays dark (Chief 2026-10-07); the column follows the
+  MedBoard tokens, kit fields and black neumorphic buttons.
+*/
+.screen {
+  --field-base: #06080c;
+  --field-highlight: #0d1828;
+  --field-shade: rgb(3 5 10);
+  --calm: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background: var(--surface);
+  color: var(--text);
+}
+.screen[data-intro='true'] {
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* ─── Intelligence field ─── */
+.field {
+  position: relative;
+  isolation: isolate;
+  flex-shrink: 0;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--field-base);
+  color: #fff;
+  transition: height 1150ms var(--calm);
+}
+.field[data-docked='true'] { height: 300px; }
+
+.stage {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(120% 90% at 78% 18%, var(--field-highlight) 0%, transparent 62%),
+    var(--field-base);
+}
+.canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.lens { pointer-events: none; }
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 42%, rgb(2 4 9 / 0.6) 100%);
+}
+.cornerShade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(85% 62% at 0% 100%, rgb(3 5 10 / 0.94) 18%, transparent 72%),
+    radial-gradient(52% 32% at 0% 0%, rgb(3 5 10 / 0.8), transparent 72%);
+}
+.seam {
+  position: absolute;
+  inset-block: 0;
+  right: 0;
+  display: none;
+  width: 12px;
+  opacity: 0.2;
+  background:
+    repeating-linear-gradient(180deg, #fff 0 1px, transparent 1px 60px) right / 12px 100% no-repeat,
+    repeating-linear-gradient(180deg, #fff 0 1px, transparent 1px 12px) right / 5px 100% no-repeat;
+}
+
+.fieldContent {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 24px;
+}
+.fieldFoot {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.tagline {
+  max-width: 22ch;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.2;
+  text-wrap: balance;
+  color: #fff;
+  text-shadow: 0 1px 20px rgb(3 5 10 / 0.95);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.brandMark {
+  width: auto;
+  height: 28px;
+  flex-shrink: 0;
+}
+.brandText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  line-height: 1;
+}
+.brandName {
+  font-size: 16px;
+  font-weight: 600;
+}
+.brandProduct {
+  font-size: 12px;
+  color: rgb(255 255 255 / 0.6);
+}
+
+.status {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgb(255 255 255 / 0.55);
+}
+.statusDot {
+  position: relative;
+  display: flex;
+  width: 6px;
+  height: 6px;
+}
+.statusDot::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 25%, transparent);
+  animation: breathe 3.6s ease-in-out infinite;
+}
+.statusDot::after {
+  content: '';
+  position: relative;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+.statusRule {
+  width: 20px;
+  height: 1px;
+  background: rgb(255 255 255 / 0.25);
+}
+.statusState { color: rgb(255 255 255 / 0.85); }
+
+.fieldMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.credit {
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  line-height: 1.5;
+  color: rgb(255 255 255 / 0.6);
+}
+.creditLink {
+  color: rgb(255 255 255 / 0.9);
+  text-decoration: underline;
+  text-decoration-color: rgb(255 255 255 / 0.3);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s ease;
+}
+.creditLink:hover { text-decoration-color: currentColor; }
+.creditLink:focus-visible {
+  outline: 2px solid rgb(255 255 255 / 0.8);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ─── Opening lockup ─── */
+.lockup {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition: opacity 700ms var(--calm), filter 700ms var(--calm);
+}
+.lockup[data-leaving='true'] {
+  opacity: 0;
+  filter: blur(2px);
+}
+.lockupInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(420px, 78vw);
+}
+.lockupMark {
+  width: auto;
+  height: 84px;
+  overflow: visible;
+}
+.lockupWord {
+  width: 100%;
+  margin-top: 20px;
+  overflow: visible;
+}
+.lockupRule {
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin-top: 8px;
+  background: rgb(255 255 255 / 0.3);
+  transform: scaleX(0);
+  animation: introRule 900ms var(--calm) forwards;
+}
+.lockupDescriptor {
+  margin-top: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: rgb(255 255 255 / 0.75);
+}
+.lockupCredit {
+  margin-top: 28px;
+  font-size: 14px;
+  text-align: center;
+  color: rgb(255 255 255 / 0.6);
+}
+/* A quiet control on the dark field: the neumorphic kit button glows on dark backgrounds. */
+.skip {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 12px 0 16px;
+  border: 1px solid rgb(255 255 255 / 0.18);
+  border-radius: 999px;
+  background: rgb(6 8 12 / 0.35);
+  backdrop-filter: blur(6px);
+  color: rgb(255 255 255 / 0.7);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+.skip:hover {
+  border-color: rgb(255 255 255 / 0.45);
+  background: rgb(6 8 12 / 0.55);
+  color: #fff;
+}
+.skip:focus-visible {
+  outline: 2px solid rgb(255 255 255 / 0.8);
+  outline-offset: 3px;
+}
+.skipIcon { transition: transform 0.2s ease; }
+.skip:hover .skipIcon { transform: translateX(2px); }
+
+.introStroke {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: introDraw 1400ms var(--calm) forwards;
+}
+.introGuide {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: introGuide 1900ms var(--calm) forwards;
+}
+.introWord {
+  stroke-dasharray: 320;
+  stroke-dashoffset: 320;
+  fill-opacity: 0;
+  animation:
+    introDraw 1400ms var(--calm) forwards,
+    introFill 800ms ease forwards;
+}
+.introFade {
+  opacity: 0;
+  animation: introFade 800ms ease forwards;
+}
+
+/* ─── Sign-in column ─── */
+.panel {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  overflow-x: hidden;
+  background: var(--surface);
+  transition: width 1150ms var(--calm);
+}
+.panelShade {
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  display: none;
+  width: 80px;
+  pointer-events: none;
+  background: linear-gradient(to right, rgb(6 8 12 / 0.07), transparent);
+}
+.panelInner {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 40px;
+  min-height: 100%;
+  padding: 32px 24px;
+}
+.panelHeader {
+  display: none;
+  align-items: center;
+}
+
+/* ─── Sentra Artificial Intelligence lockup (SentraLockup.tsx) ─── */
+.panelHeader :global(.sentra-lockup) {
+  display: block;
+  width: min(404px, 100%);
+  height: auto;
+  overflow: visible;
+  color: var(--text);
+}
+.panelHeader :global(.sentra-lockup__type) {
+  font-family: Archivo, Inter, Arial, sans-serif;
+  font-weight: 600;
+  letter-spacing: -1.4px;
+}
+.panelHeader :global(.sentra-lockup__mark) {
+  animation: lockupMark 700ms var(--calm) 300ms both;
+}
+.panelHeader :global(.sentra-lockup__word) {
+  clip-path: inset(0 100% 0 0);
+  animation: lockupReveal 1100ms var(--calm) 550ms forwards;
+}
+.panelHeader :global(.sentra-lockup__sheen) {
+  animation: lockupSheen 8s var(--calm) 2400ms infinite both;
+}
+
+/* ─── Typing fields in the sign-in column: a 1 px hairline, and focus draws a 1 px Oxford line
+   along it from the left, slowly. Scoped here; the kit underline elsewhere stays as it is. ─── */
+.panel :global(.ui-input) {
+  border-bottom: 0;
+  background-image:
+    linear-gradient(var(--primary), var(--primary)),
+    linear-gradient(var(--border), var(--border));
+  background-position: left bottom, left bottom;
+  background-repeat: no-repeat;
+  background-size: 0% 1px, 100% 1px;
+  transition: background-size 700ms var(--calm);
+}
+.panel :global(.ui-input):hover {
+  background-image:
+    linear-gradient(var(--primary), var(--primary)),
+    linear-gradient(var(--text-secondary), var(--text-secondary));
+}
+.panel :global(.ui-input):focus {
+  background-size: 100% 1px, 100% 1px;
+}
+.content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: 32px;
+  width: 100%;
+  max-width: 400px;
+}
+.panel[data-wide='true'] .content { max-width: 560px; }
+
+.rise { animation: rise 800ms var(--calm) both; }
+
+/* Every text block of the form reveals in turn, again after each tab switch (the form remounts). */
+.content :global(form) > :first-child > *,
+.content :global(form) > :not(:first-child) { animation: rise 640ms var(--calm) both; }
+.content :global(form) > :first-child > :nth-child(1) { animation-delay: 80ms; }
+.content :global(form) > :first-child > :nth-child(2) { animation-delay: 150ms; }
+.content :global(form) > :first-child > :nth-child(3) { animation-delay: 220ms; }
+.content :global(form) > :nth-child(2) { animation-delay: 290ms; }
+.content :global(form) > :nth-child(3) { animation-delay: 360ms; }
+.content :global(form) > :nth-child(4) { animation-delay: 430ms; }
+.content :global(form) > :nth-child(5) { animation-delay: 500ms; }
+.content :global(form) > :nth-child(6) { animation-delay: 570ms; }
+.content :global(form) > :nth-child(7) { animation-delay: 640ms; }
+.content :global(form) > :nth-child(8) { animation-delay: 710ms; }
+.content :global(form) > :nth-child(9) { animation-delay: 780ms; }
+.content :global(form) > :nth-child(10) { animation-delay: 850ms; }
+.content :global(form) > :nth-child(n + 11) { animation-delay: 920ms; }
+
+/* ─── Access notice: Swiss style — heavy rule, flush-left type, numbered grid, no ornament ─── */
+.notice {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+  padding-top: var(--gap-md);
+  border-top: 2px solid var(--text);
+}
+.noticeHead {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.noticeTitle {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.noticeLead {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+.roles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(4, auto);
+  grid-auto-flow: column;
+  column-gap: var(--gap-xl);
+  list-style: none;
+  font-size: 12px;
+  line-height: 1.4;
+  border-top: 1px solid var(--border);
+}
+.role {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  align-items: baseline;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  transition: color 700ms var(--calm);
+}
+.role[data-active='true'] { color: var(--text); }
+.roleIndex {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+  transition: color 700ms var(--calm);
+}
+.role[data-active='true'] .roleIndex { color: var(--accent); }
+
+/* ─── Legal notice: three short lines ─── */
+.legal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+.legalTitle {
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ─── Breakpoints ─── */
+@media (min-width: 768px) {
+  .screen {
+    flex-direction: row;
+    height: 100dvh;
+    overflow: hidden;
+  }
+  .field,
+  .field[data-docked='true'] {
+    flex: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    height: auto;
+  }
+  .seam { display: block; }
+  .fieldContent { padding: 40px; }
+  .fieldFoot { gap: 40px; }
+  .tagline { font-size: 30px; }
+  .status { display: flex; }
+  .skip { right: 40px; bottom: 40px; }
+  .lockupMark { height: 100px; }
+  .panel {
+    flex: none;
+    width: 0;
+    overflow-y: auto;
+  }
+  .panel[data-docked='true'] { width: 45%; }
+  .panelShade { display: block; }
+  .panelInner { padding: 40px 48px; }
+  .panelHeader { display: flex; }
+}
+@media (min-width: 1024px) {
+  .panel[data-docked='true'] { width: 40%; }
+  .panel[data-docked='true'][data-wide='true'] { width: 50%; }
+  .panelInner { padding: 40px 64px; }
+}
+@media (min-width: 1280px) {
+  .fieldContent { padding: 56px; }
+  .tagline { font-size: 36px; }
+  .panelInner { padding: 56px 96px; }
+  .panel[data-wide='true'] .panelInner { padding: 56px 64px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .field,
+  .panel,
+  .lockup,
+  .role,
+  .roleDot { transition: none; }
+  .rise,
+  .introFade,
+  .introStroke,
+  .introGuide,
+  .introWord,
+  .lockupRule,
+  .statusDot::before { animation: none; opacity: 1; transform: none; }
+  .panelHeader :global(.sentra-lockup__mark),
+  .panelHeader :global(.sentra-lockup__word) { animation: none; clip-path: none; }
+  .panelHeader :global(.sentra-lockup__sheen) { display: none; }
+  .panel :global(.ui-input) { transition: none; }
+  .content :global(form) > :first-child > *,
+  .content :global(form) > :not(:first-child) { animation: none; }
+}
+
+/* Reveal: the block rises a little while it opens from the top down. Negative insets at rest keep
+   shadows and focus rings visible. */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(10px); clip-path: inset(-24px -24px 100% -24px); }
+  to { opacity: 1; transform: translateY(0); clip-path: inset(-24px); }
+}
+@keyframes breathe {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}
+@keyframes introDraw { to { stroke-dashoffset: 0; } }
+@keyframes introGuide {
+  0% { stroke-dashoffset: 1; opacity: 0.9; }
+  55% { stroke-dashoffset: 0; opacity: 0.55; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+@keyframes introFill { to { fill-opacity: 1; stroke-opacity: 0; } }
+@keyframes introFade { to { opacity: 1; } }
+@keyframes introRule { to { transform: scaleX(1); } }
+@keyframes lockupMark {
+  from { opacity: 0; transform: translateX(-24px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes lockupReveal { to { clip-path: inset(0 0 0 0); } }
+@keyframes lockupSheen {
+  0% { transform: translateX(-600px); }
+  24%, 100% { transform: translateX(2300px); }
+}

@@ -3,6 +3,9 @@ import path from 'node:path'
 import { normalizeIcd10Code, transformToIcd10_2010 } from '@/lib/lb1/icd10-2010'
 import { resolveAppRootFile } from '@/lib/server/app-root-file'
 
+import { buildFuzzyIndex, type FuzzyIndex, fuzzySearch } from './fuzzy'
+import { type ReferralAdvice, type ReferralData, referralAdvice } from './referral'
+
 type IcdVersionKey = '2010' | '2016' | '2019'
 
 interface ParsedIcdEntry {
@@ -59,8 +62,8 @@ export interface IcdLookupResponse {
   normalizedPrimary: string
   rows: IcdConversionItem[]
   results: IcdSearchItem[]
-  loadedFrom: Record<IcdVersionKey, string>
-  extensionSource: string
+  /** Set when a misspelt query was redirected, e.g. "pnemonia" → "pneumonia". */
+  correctedQuery?: string
 }
 
 interface ExtensionRow {
@@ -118,8 +121,8 @@ const XML_ENTITY_MAP: Record<string, string> = {
 }
 
 let cachedDb: DynamicIcdDb | null = null
-let cachedPaths: Record<IcdVersionKey, string> | null = null
-let cachedExtensionPath = ''
+let cachedFuzzy: FuzzyIndex | null = null
+let cachedReferral: Omit<ReferralData, 'known' | 'categories'> | null = null
 
 // Simple LRU cache for ICD lookup results to improve performance
 const LOOKUP_CACHE_LIMIT = 200
@@ -288,9 +291,7 @@ function loadDynamicIcdDb(): DynamicIcdDb {
     '2019': resolveXmlPath('2019'),
   }
 
-  cachedPaths = resolvedPaths
   const extensions = loadExtensionCatalog()
-  cachedExtensionPath = extensions.sourcePath
 
   const v2010 = icd10JsonPath
     ? buildVersionCatalogFromJson('2010', icd10JsonPath)
@@ -401,6 +402,115 @@ function findBestMatch(version: VersionCatalog, rawCode: string): ParsedIcdEntry
   return lookupByCode(version, rawCode, { allowHeadFallback: true })
 }
 
+// Indonesian names of the KKI diseases (public/data/penyakit.json), so "hipertensi" finds I10.
+function loadKkiNames(): Array<{ code: string; name: string }> {
+  try {
+    const raw = JSON.parse(fs.readFileSync(resolveAppRootFile('public/data/penyakit.json'), 'utf-8')) as {
+      penyakit?: Array<{ nama?: unknown; icd10?: unknown }>
+    }
+    return (raw.penyakit ?? []).flatMap((item) =>
+      typeof item.nama === 'string' && typeof item.icd10 === 'string'
+        ? [{ code: item.icd10.trim().toUpperCase(), name: item.nama }]
+        : []
+    )
+  } catch {
+    return []
+  }
+}
+
+function fuzzyIndexFor(catalog: VersionCatalog): FuzzyIndex {
+  if (!cachedFuzzy) cachedFuzzy = buildFuzzyIndex(catalog.entries, loadKkiNames())
+  return cachedFuzzy
+}
+
+/** Catalogue names for the given codes, in the given order; unknown codes are left out. */
+export function icdCandidates(codes: ReadonlyArray<string>): Array<{ code: string; name: string }> {
+  const v2010 = loadDynamicIcdDb().versions['2010']
+  return codes.flatMap((code) => {
+    const entry = v2010.byCode.get(code.trim().toUpperCase())
+    return entry ? [{ code: entry.code, name: entry.title }] : []
+  })
+}
+
+export interface IcdCodeDetail {
+  code: string
+  name: string
+  category: string
+  /** In the ICD-10 2010 catalogue, the version PCare and ePuskesmas accept. */
+  in2010: boolean
+  parent: { code: string; name: string } | null
+  children: Array<{ code: string; name: string }>
+  /** The code in WHO ICD-10 2019; the 2010 code itself when the 2019 catalogue is not on this server. */
+  worldwideCode: string | null
+  referral: ReferralAdvice
+}
+
+function readJson(relative: string): unknown {
+  try {
+    return JSON.parse(fs.readFileSync(resolveAppRootFile(relative), 'utf-8'))
+  } catch {
+    return null
+  }
+}
+
+const text = (value: unknown): string => (typeof value === 'string' ? value.trim() : '')
+
+// The 144 FKTP diagnoses and the SKDI competence list, read once.
+function referralSources(): Omit<ReferralData, 'known' | 'categories'> {
+  if (cachedReferral) return cachedReferral
+  const fktpRaw = readJson('public/data/144_penyakit_puskesmas.json')
+  const skdiRaw = readJson('public/data/penyakit.json')
+  const list = (raw: unknown, key: string): unknown[] =>
+    raw && typeof raw === 'object' && key in raw && Array.isArray((raw as Record<string, unknown>)[key])
+      ? ((raw as Record<string, unknown>)[key] as unknown[])
+      : []
+  const field = (item: unknown, key: string): string =>
+    item && typeof item === 'object' && key in item ? text((item as Record<string, unknown>)[key]) : ''
+  cachedReferral = {
+    fktp: list(fktpRaw, 'diseases')
+      .map(item => ({ code: field(item, 'icd10').toUpperCase(), name: field(item, 'name'), system: field(item, 'system') }))
+      .filter(item => item.code),
+    skdi: list(skdiRaw, 'penyakit')
+      .map(item => ({
+        code: field(item, 'icd10').toUpperCase(),
+        name: field(item, 'nama'),
+        competence: field(item, 'kompetensi'),
+        system: field(item, 'body_system'),
+      }))
+      .filter(item => item.code),
+  }
+  return cachedReferral
+}
+
+/** One code from the 2010 catalogue with its parent category and subcodes; null when unknown. */
+export function icdCodeDetail(rawCode: string): IcdCodeDetail | null {
+  const { versions } = loadDynamicIcdDb()
+  const v2010 = versions['2010']
+  const v2019 = versions['2019']
+  const entry = v2010.byCode.get(rawCode.trim().toUpperCase())
+  if (!entry) return null
+  const head = entry.code.split('.')[0]
+  const parentEntry = head !== entry.code ? v2010.byCode.get(head) : undefined
+  const children = v2010.entries
+    .filter(child => child.code.startsWith(`${entry.code}.`))
+    .map(child => ({ code: child.code, name: child.title }))
+    .sort((a, b) => a.code.localeCompare(b.code))
+  return {
+    code: entry.code,
+    name: entry.title,
+    category: inferCategoryLabel(entry.code),
+    in2010: true,
+    parent: parentEntry ? { code: parentEntry.code, name: parentEntry.title } : null,
+    children,
+    worldwideCode: v2019.entries.length > 0 ? (v2019.byCode.get(entry.code)?.code ?? null) : entry.code,
+    referral: referralAdvice(entry.code, {
+      ...referralSources(),
+      known: code => v2010.byCode.has(code),
+      categories: v2010.entries.filter(item => !item.code.includes('.')).map(item => ({ code: item.code, name: item.title })),
+    }),
+  }
+}
+
 export function lookupIcdDynamically(query: string): IcdLookupResponse {
   const normalizedQuery = (query || '').trim().toUpperCase()
 
@@ -435,7 +545,8 @@ export function lookupIcdDynamically(query: string): IcdLookupResponse {
   ) {
     modernCodes = transformed.candidateCodes.map(code => code.toUpperCase())
   }
-  if (modernCodes.length === 0 && transformed.primaryCode) {
+  // In text mode the "primary code" is only the typed words (e.g. PNEUMONIA), not a code to convert.
+  if (modernCodes.length === 0 && transformed.primaryCode && transformed.mode !== 'text') {
     modernCodes = [transformed.primaryCode.toUpperCase()]
   }
 
@@ -499,6 +610,16 @@ export function lookupIcdDynamically(query: string): IcdLookupResponse {
           return tokenList.some(token => code.includes(token) || title.includes(token))
         })
 
+  // Words, not codes: typo-tolerant ranking first (plainest name on top), then plain substring hits.
+  let correctedQuery: string | undefined
+  if (transformed.mode === 'text' && normalizedQuery) {
+    const fuzzy = fuzzySearch(fuzzyIndexFor(searchCatalog), normalizedQuery, 80)
+    const ranked = new Map(fuzzy.matches.map(({ code, title }) => [code, { code, title }]))
+    for (const entry of baseResults) if (!ranked.has(entry.code)) ranked.set(entry.code, entry)
+    baseResults = Array.from(ranked.values())
+    correctedQuery = fuzzy.corrected ?? undefined
+  }
+
   if (baseResults.length === 0 && rows.length > 0) {
     const fallback = new Map<string, ParsedIcdEntry>()
     for (const row of rows) {
@@ -546,12 +667,7 @@ export function lookupIcdDynamically(query: string): IcdLookupResponse {
     normalizedPrimary: transformed.primaryCode,
     rows,
     results,
-    loadedFrom: {
-      '2010': cachedPaths?.['2010'] ?? '',
-      '2016': cachedPaths?.['2016'] ?? '',
-      '2019': cachedPaths?.['2019'] ?? '',
-    },
-    extensionSource: cachedExtensionPath,
+    ...(correctedQuery ? { correctedQuery } : {}),
   }
 
   // ⚡ Optimization: Add to cache with LRU eviction

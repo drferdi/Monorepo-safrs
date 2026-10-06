@@ -1,16 +1,17 @@
-/* Consult Audrey — layout from Chief's attachment (audrey_clinical_ai_consultation.html,
-   2026-10-06): a header, Audrey on a stage, and the consultation stream beside her.
-   Colours, type and buttons stay MedBoard's: white, Oxford Blue, red-orange, IBM Plex Sans,
-   black neumorphic buttons, no capitals. Module-scoped: no other page uses these classes. */
+/* Consult Audrey (Chief 2026-10-07: "simplified namun lengkap"): one identity row, a chat column
+   with question templates, and a voice column with Audrey's portrait and the talk button.
+   MedBoard colours and type, black neumorphic buttons, no capitals. Audrey is a neural network
+   drawn as a dot-matrix orb in MedBoard's accent, straight on the card (Chief 2026-10-07).
+   Module-scoped. */
 
 .page {
   display: flex;
   flex-direction: column;
-  gap: var(--gap-xl);
+  gap: var(--gap-lg);
   width: 100%;
 }
 
-/* Header */
+/* Identity row */
 .header {
   display: flex;
   flex-wrap: wrap;
@@ -18,72 +19,18 @@
   justify-content: space-between;
   gap: var(--gap-lg);
 }
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.emblem {
-  display: flex;
-  width: 40px;
-  height: 40px;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-lg);
-  background: var(--primary);
-  color: var(--text-on-accent);
-}
-
-.titleRow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.title {
-  margin: 0;
-  font-size: var(--text-xl);
-  font-weight: 600;
-  line-height: var(--lh-tight);
-  color: var(--text);
-}
-
-.tagline {
-  margin: 2px 0 0;
-  font-size: var(--text-xs);
-  font-weight: 500;
-  color: var(--text-secondary);
-}
-
-.actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--gap-sm);
-}
-
-.separator {
-  width: 1px;
-  height: 24px;
-  margin: 0 4px;
-  background: var(--border);
-}
-
-.statusBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
+.identity { display: flex; align-items: center; gap: var(--gap-md); }
+.avatarImg {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  object-position: center 20%;
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--surface-subtle);
-  font-size: var(--text-xs);
-  font-weight: 600;
-  color: var(--text);
 }
+.title { margin: 0; font-size: var(--text-xl); font-weight: 600; line-height: 1.2; color: var(--text); }
+.status { display: inline-flex; align-items: center; gap: 6px; font-size: var(--text-xs); color: var(--text-secondary); }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--gap-sm); }
 
 .dot {
   width: 8px;
@@ -92,436 +39,137 @@
   border-radius: var(--radius-full);
   background: var(--text-secondary);
 }
-
 .tone-success { background: var(--success); }
 .tone-critical { background: var(--critical); }
 .tone-warning { background: var(--warning); }
 .tone-primary { background: var(--primary); }
 
-/* Two columns: stage 5/12, consultation 7/12 */
+/* About Audrey in Swiss style (Chief 2026-10-07): one black hairline, an asymmetric 4/8 grid,
+   flush-left type, one accent for the initials and indices; no box, tint or icon. */
+.intro {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--gap-lg);
+  padding-top: var(--gap-md);
+  border-top: 1px solid var(--text);
+}
+@media (min-width: 1024px) {
+  .intro { grid-template-columns: 4fr 8fr; gap: var(--gap-xl); }
+}
+.introName { display: flex; flex-direction: column; gap: var(--gap-md); }
+.wordmark { margin: 0; font-size: 3.5rem; font-weight: 600; line-height: 0.9; letter-spacing: -0.03em; color: var(--text); }
+.acronym { display: flex; flex-wrap: wrap; gap: 0 0.35em; margin: 0; font-size: var(--text-sm); line-height: var(--lh-tight); color: var(--text-secondary); }
+.initial { font-weight: 600; color: var(--accent); }
+.introBody { display: flex; flex-direction: column; gap: var(--gap-lg); }
+.about { margin: 0; max-width: 72ch; font-size: var(--text-sm); line-height: var(--lh-base); color: var(--text); }
+.aboutLink { color: inherit; font-weight: 500; text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.aboutLink:hover { color: var(--accent); }
+.pillars {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: 1fr;
+  gap: var(--gap-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 640px) {
+  .pillars { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.pillars li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: var(--gap-sm);
+  border-top: 1px solid var(--border);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text);
+}
+.pillarIndex { font-size: var(--text-xs); color: var(--accent); }
+
+/* Chat 3/5, voice 2/5 */
 .layout {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--gap-xl);
+  gap: var(--gap-lg);
   align-items: stretch;
 }
-
 @media (min-width: 1024px) {
-  .layout {
-    grid-template-columns: 5fr 7fr;
-  }
+  .layout { grid-template-columns: 3fr 2fr; }
 }
 
 .card {
   display: flex;
   min-width: 0;
   flex-direction: column;
-  padding: var(--gap-xl);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  background: var(--surface);
-  box-shadow: var(--shadow-dialog);
-}
-
-/* Stage */
-.stage {
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-  overflow: hidden;
-}
-
-.stageTop {
-  z-index: 2;
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--gap-sm);
-}
-
-.stageState {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: var(--text-xs);
-  font-weight: 600;
-  color: var(--primary);
-}
-
-.motionStage {
-  position: relative;
-  display: flex;
-  width: 100%;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: var(--gap-lg) 0;
-  padding-bottom: 48px;
-}
-
-.glow {
-  position: absolute;
-  top: -40px;
-  width: 420px;
-  height: 520px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    color-mix(in srgb, var(--primary) 16%, transparent) 0%,
-    color-mix(in srgb, var(--primary) 6%, transparent) 45%,
-    transparent 70%
-  );
-  pointer-events: none;
-  transition: transform 0.6s ease, background 0.6s ease;
-}
-
-.motion-thinking .glow {
-  background: radial-gradient(
-    circle,
-    color-mix(in srgb, var(--primary) 24%, transparent) 0%,
-    color-mix(in srgb, var(--primary) 10%, transparent) 55%,
-    transparent 75%
-  );
-  transform: scale(1.18);
-}
-
-.motion-responding .glow {
-  background: radial-gradient(
-    circle,
-    color-mix(in srgb, var(--accent) 18%, transparent) 0%,
-    color-mix(in srgb, var(--primary) 10%, transparent) 50%,
-    transparent 75%
-  );
-  transform: scale(1.12);
-}
-
-.floatBadge {
-  position: absolute;
-  top: 16px;
-  left: 12px;
-  z-index: 3;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  box-shadow: var(--shadow-dialog);
-  font-size: var(--text-xs);
-  font-weight: 600;
-  color: var(--text);
-  transform: rotate(-1deg);
-}
-
-.floatBadge svg {
-  color: var(--primary);
-}
-
-.figure {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  width: 100%;
-  max-width: 370px;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-}
-
-.audrey {
-  width: 100%;
-  height: auto;
-  max-height: 520px;
-  object-fit: contain;
-  border-radius: var(--radius-xl);
-  box-shadow: 0 24px 48px -12px rgba(15, 23, 42, 0.25);
-  transform-origin: bottom center;
-}
-
-.ring,
-.ringInner {
-  position: absolute;
-  z-index: 0;
-  border-radius: 50%;
-  pointer-events: none;
-  transform: rotateX(74deg);
-}
-
-.ring {
-  bottom: 8px;
-  width: 288px;
-  height: 144px;
-  border: 2px solid color-mix(in srgb, var(--primary) 45%, transparent);
-  box-shadow: 0 0 35px color-mix(in srgb, var(--primary) 30%, transparent);
-}
-
-.ringInner {
-  bottom: 20px;
-  width: 208px;
-  height: 96px;
-  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
-}
-
-.bubble {
-  position: absolute;
-  bottom: 40px;
-  z-index: 3;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-full);
-  background: var(--surface);
-  box-shadow: var(--shadow-dialog);
-  font-size: var(--text-xs);
-  font-weight: 600;
-  color: var(--primary);
-}
-
-/* Audrey 2D motion: idle breathing, thinking, responding */
-@keyframes audreyIdle {
-  0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
-  50% { transform: translateY(-6px) scale(1.008) rotate(0.35deg); }
-}
-
-@keyframes audreyThinking {
-  0%, 100% { transform: translateY(-2px) scale(1.01) rotate(-0.5deg); }
-  50% { transform: translateY(-10px) scale(1.02) rotate(0.6deg); }
-}
-
-@keyframes audreyResponding {
-  0%, 100% { transform: translateY(-4px) scale(1.015) rotate(0.4deg); }
-  25% { transform: translateY(-8px) scale(1.02) rotate(-0.3deg); }
-  75% { transform: translateY(-5px) scale(1.018) rotate(0.2deg); }
-}
-
-@keyframes ringIdle {
-  0%, 100% { transform: scale(1) rotateX(74deg); opacity: 0.55; }
-  50% { transform: scale(1.07) rotateX(74deg); opacity: 0.85; }
-}
-
-@keyframes ringThinking {
-  0%, 100% { transform: scale(0.96) rotateX(74deg); opacity: 0.4; }
-  50% { transform: scale(1.15) rotateX(74deg); opacity: 1; }
-}
-
-@keyframes ringResponding {
-  0%, 100% { transform: scale(1.02) rotateX(74deg); opacity: 0.7; }
-  50% { transform: scale(1.12) rotateX(74deg); opacity: 0.95; }
-}
-
-.motion-idle .audrey { animation: audreyIdle 5.8s ease-in-out infinite; }
-.motion-idle .ring,
-.motion-idle .ringInner { animation: ringIdle 5.8s ease-in-out infinite; }
-.motion-thinking .audrey { animation: audreyThinking 2.4s ease-in-out infinite; }
-.motion-thinking .ring,
-.motion-thinking .ringInner { animation: ringThinking 2.4s ease-in-out infinite; }
-.motion-responding .audrey { animation: audreyResponding 2.8s ease-in-out infinite; }
-.motion-responding .ring,
-.motion-responding .ringInner { animation: ringResponding 2.8s ease-in-out infinite; }
-
-.still .audrey,
-.still .ring,
-.still .ringInner,
-.still .glow {
-  animation: none;
-  transition: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .audrey,
-  .ring,
-  .ringInner,
-  .glow {
-    animation: none !important;
-    transition: none !important;
-  }
-}
-
-/* Consultation stream */
-.consult {
-  overflow: hidden;
-}
-
-.consultHead {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   gap: var(--gap-md);
-  margin-bottom: var(--gap-lg);
-  padding-bottom: var(--gap-lg);
-  border-bottom: 1px solid var(--border);
-}
-
-.consultTitle {
-  margin: 0;
-  font-size: var(--text-lg);
-  font-weight: 600;
-  color: var(--text);
-}
-
-.consultSub {
-  margin: 2px 0 0;
-  font-size: var(--text-xs);
-  color: var(--text-secondary);
-}
-
-.iconBtn {
-  width: 32px;
-  padding: 0;
-}
-
-.history {
-  display: flex;
-  min-height: 300px;
-  max-height: 420px;
-  flex: 1;
-  flex-direction: column;
-  gap: var(--gap-lg);
-  margin-bottom: var(--gap-lg);
-  padding-right: 4px;
-  overflow-y: auto;
-}
-
-.msg {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-}
-
-.msgUser {
-  justify-content: flex-end;
-}
-
-.avatar {
-  display: flex;
-  width: 32px;
-  height: 32px;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-full);
-  background: var(--primary);
-  font-size: var(--text-xs);
-  font-weight: 600;
-  color: var(--text-on-accent);
-}
-
-.audreyBubble {
-  flex: 1;
-  min-width: 0;
   padding: var(--gap-lg);
   border: 1px solid var(--border);
-  border-radius: 0 var(--radius-xl) var(--radius-xl) var(--radius-xl);
+  border-radius: var(--radius-lg);
   background: var(--surface);
-  box-shadow: var(--shadow-card);
 }
+.cardHead { display: flex; align-items: center; justify-content: space-between; gap: var(--gap-sm); }
+.cardTitle { margin: 0; font-size: var(--text-base); font-weight: 600; color: var(--text); }
+.iconBtn { width: 32px; padding: 0; }
 
-.bubbleHead {
+/* Conversation, shared by both columns */
+.history {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--gap-sm);
-  margin-bottom: 4px;
-}
-
-.bubbleName {
-  font-size: var(--text-xs);
-  font-weight: 600;
-  color: var(--primary);
-}
-
-.bubbleTime {
-  font-size: var(--text-xs);
-  color: var(--text-secondary);
-}
-
-.bubbleText {
-  margin: 0;
-  font-size: var(--text-sm);
-  line-height: var(--lh-base);
-  color: var(--text);
-  white-space: pre-wrap;
-}
-
-.bubbleFoot {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 12px;
-  padding-top: 8px;
-  border-top: 1px solid var(--border);
-  font-size: var(--text-xs);
-  color: var(--primary);
-}
-
-.pending {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: var(--text-xs);
-  font-weight: 600;
-  color: var(--primary);
-}
-
-.userBubble {
-  max-width: 85%;
-  padding: 12px var(--gap-lg);
-  border-radius: var(--radius-xl) 0 var(--radius-xl) var(--radius-xl);
-  background: var(--primary);
-  box-shadow: var(--shadow-dialog);
-  font-size: var(--text-sm);
-  line-height: var(--lh-base);
-  color: var(--text-on-accent);
-  white-space: pre-wrap;
-}
-
-.userMeta {
-  display: block;
-  margin-top: 4px;
-  text-align: right;
-  font-size: var(--text-xs);
-  color: color-mix(in srgb, var(--text-on-accent) 75%, transparent);
-}
-
-/* Talk bar, where the attachment has its text field */
-.talk {
-  display: flex;
-  align-items: center;
-  gap: var(--gap-sm);
-}
-
-.talkMain {
   flex: 1;
-  height: 48px;
+  flex-direction: column;
+  gap: var(--gap-md);
+  min-height: 240px;
+  max-height: 52vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
+.chat .history { min-height: 320px; }
+.empty { margin: auto 0; font-size: var(--text-sm); line-height: var(--lh-base); color: var(--text-secondary); }
+.msg { display: flex; }
+.msgUser { justify-content: flex-end; }
+.userText,
+.audreyText {
+  max-width: 88%;
+  margin: 0;
+  padding: 10px var(--gap-md);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-sm);
+  line-height: var(--lh-base);
+  white-space: pre-wrap;
+}
+.userText { background: var(--primary); color: var(--text-on-accent); }
+.audreyText { background: var(--surface-subtle); color: var(--text); }
+.meta { display: block; margin-top: 4px; font-size: var(--text-xs); opacity: 0.7; }
+.pending { display: inline-flex; align-items: center; gap: var(--gap-sm); font-size: var(--text-sm); color: var(--text-secondary); }
 
-.recording {
-  box-shadow: var(--neu-pressed);
+/* Chat: templates and composer */
+.templates { display: flex; flex-wrap: wrap; gap: var(--gap-sm); }
+.composer { display: flex; align-items: flex-end; gap: var(--gap-sm); }
+.composer textarea { flex: 1; resize: none; }
+
+/* Voice: Audrey as a dot-matrix orb */
+.orb {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-sm);
+  padding: var(--gap-md) 0;
 }
+.orbCanvas { display: block; width: 100%; max-width: 220px; aspect-ratio: 1 / 1; color: var(--accent); }
+.orbLabel { font-size: var(--text-xs); color: var(--text-secondary); }
+
+.talk { display: flex; align-items: center; gap: var(--gap-sm); }
+.talkMain { flex: 1; height: 48px; }
+.recording { box-shadow: var(--neu-pressed); }
+.hint { margin: 0; font-size: var(--text-xs); color: var(--text-secondary); }
 
 .trust {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--gap-sm);
-  margin-top: 12px;
-  padding: 0 4px;
-  font-size: var(--text-xs);
-  color: var(--text-secondary);
-}
-
-.trustItem {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  margin: 0;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
 }
-
-.trustItem svg {
-  color: var(--primary);
-}
+.trust svg { color: var(--primary); }

@@ -153,12 +153,6 @@ function buildEmptyLookupResponse(): IcdLookupResponse {
     normalizedPrimary: '',
     results: [],
     rows: [],
-    loadedFrom: {
-      '2010': 'PCare Mapping (local)',
-      '2016': 'online',
-      '2019': 'NLM ICD-10-CM (online)',
-    },
-    extensionSource: 'https://clinicaltables.nlm.nih.gov',
   }
 }
 
@@ -192,12 +186,6 @@ async function lookupIcdFromLegacySources(query: string): Promise<IcdLookupRespo
       category: inferCategory(code),
     })),
     rows: buildConversionRows(query, allResults),
-    loadedFrom: {
-      '2010': 'PCare Mapping (local)',
-      '2016': 'penyakit.json (171 KKI)',
-      '2019': 'NLM ICD-10-CM (online)',
-    },
-    extensionSource: 'https://clinicaltables.nlm.nih.gov',
   }
 }
 

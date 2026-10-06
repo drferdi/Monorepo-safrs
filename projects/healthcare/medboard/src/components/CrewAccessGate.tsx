@@ -22,6 +22,7 @@ import {
   type CrewProfileDegree,
   type CrewProfilePosition,
 } from '@/lib/crew-profile'
+import SignInScreen from '@/components/sign-in/SignInScreen'
 import { safeUrl } from '@/lib/sanitize-url'
 
 // Route publik yang tidak memerlukan autentikasi crew
@@ -346,48 +347,18 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
 
   if (!isAuthenticated) {
     return (
-      <div
-        style={{
-          minHeight: '100vh',
-          display: 'grid',
-          placeItems: 'center',
-          background: 'var(--surface-subtle)',
-          padding: 24,
-        }}
-      >
+      <SignInScreen focusId="crew-username" wide={authMode === 'register'}>
         <form
+          key={authMode}
           onSubmit={authMode === 'signin' ? handleSubmit : handleRegister}
           style={{
             width: '100%',
-            maxWidth: authMode === 'register' ? 560 : 420,
-            background: 'var(--surface)',
-            border: '1px solid var(--border)',
-            boxShadow: 'var(--shadow-dialog)',
-            borderRadius: 16,
-            padding: 32,
             display: 'grid',
             gap: 16,
           }}
         >
           <div style={{ marginBottom: 4 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <img
-                src="/sentra-mark.png"
-                alt=""
-                width={22}
-                height={22}
-              />
-              <span
-                style={{
-                  fontSize: 14,
-                  fontWeight: 600,
-                  color: 'var(--text)',
-                }}
-              >
-                MedBoard
-              </span>
-            </div>
-            <div className="ui-tabs" role="tablist" aria-label="Mode akses" style={{ marginTop: 16 }}>
+            <div className="ui-tabs" role="tablist" aria-label="Mode akses">
               <button
                 type="button"
                 onClick={() => {
@@ -427,7 +398,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                 color: 'var(--text)',
               }}
             >
-              {authMode === 'signin' ? 'Sign In' : 'Request Access'}
+              {authMode === 'signin' ? 'Selamat datang kembali' : 'Minta akses'}
             </h1>
             <p
               style={{
@@ -437,7 +408,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
               }}
             >
               {authMode === 'signin'
-                ? 'Gunakan username atau email crew yang sudah aktif.'
+                ? 'Masuk ke MedBoard dengan username atau email crew yang sudah aktif.'
                 : 'Form dibuat bertahap agar data akun, profil, dan kredensial tetap rapi untuk review admin.'}
             </p>
           </div>
@@ -449,6 +420,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                   Username atau email
                 </span>
                 <input
+                  id="crew-username"
                   type="text"
                   value={usernameInput}
                   onChange={(event) => setUsernameInput(event.target.value)}
@@ -471,13 +443,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
               </label>
 
               {errorMessage ? (
-                <p
-                  style={{
-                    margin: 0,
-                    color: 'var(--critical)',
-                    fontSize: 14,
-                  }}
-                >
+                <p role="alert" className="ui-alert ui-alert--critical">
                   {errorMessage}
                 </p>
               ) : null}
@@ -638,6 +604,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                     <input
                       type="text"
                       value={registerFullName}
+                      data-tidy="name"
                       onChange={(event) => setRegisterFullName(event.target.value)}
                       placeholder="contoh: dr. Ferdi Iskandar"
                       className="ui-input"
@@ -966,21 +933,13 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                   : 'Kirim Permohonan'}
           </button>
 
-          <div
-            style={{
-              marginTop: 8,
-              paddingTop: 16,
-              borderTop: '1px solid var(--line-base)',
-            }}
-          >
+          {authMode === 'register' ? (
             <p style={{ margin: 0, fontSize: 14, color: 'var(--text-muted)' }}>
-              {authMode === 'signin'
-                ? 'Kredensial aktif dikonfigurasi di server, tidak ditampilkan di UI.'
-                : 'Best practice saat ini: password minimal 15 karakter, akun baru berstatus pending review, dan data klinis dipisah dari hak akses sistem.'}
+              Best practice saat ini: password minimal 15 karakter, akun baru berstatus pending review, dan data klinis dipisah dari hak akses sistem.
             </p>
-          </div>
+          ) : null}
         </form>
-      </div>
+      </SignInScreen>
     )
   }
 

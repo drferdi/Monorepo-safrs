@@ -22,12 +22,14 @@ export interface NavItem {
 
 export interface NavGroup {
   label: string
+  tone: 'accent' | 'primary' | 'success'
   items: NavItem[]
 }
 
 export const NAV_GROUPS: NavGroup[] = [
   {
     label: 'Klinis',
+    tone: 'accent',
     items: [
       { href: '/emr', label: 'Intelligence EMR', icon: Stethoscope },
       { href: '/telemedicine', label: 'MedLink', icon: Video },
@@ -38,7 +40,8 @@ export const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
-    label: 'Tim',
+    label: 'Sentra HQ',
+    tone: 'primary',
     items: [
       { href: '/hub', label: 'Sentra Hub', icon: Users },
       { href: '/acars', label: 'Sentra Network', icon: RadioTower },
@@ -47,6 +50,7 @@ export const NAV_GROUPS: NavGroup[] = [
   },
   {
     label: 'Laporan',
+    tone: 'success',
     items: [
       { href: '/dashboard/intelligence', label: 'Intelligence Monitor', icon: Activity },
       { href: '/audit/logbook', label: 'Audit Log', icon: ScrollText },
@@ -57,6 +61,19 @@ export const NAV_GROUPS: NavGroup[] = [
 
 export function isNavActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`)
+}
+
+export interface NavSpot {
+  section: number
+  item: number
+}
+
+export function findNavSpot(pathname: string): NavSpot | null {
+  for (const [section, group] of NAV_GROUPS.entries()) {
+    const item = group.items.findIndex(({ href }) => isNavActive(pathname, href))
+    if (item !== -1) return { section, item }
+  }
+  return null
 }
 
 export const NAV_COLLAPSED_KEY = 'puskesmas:nav-collapsed'

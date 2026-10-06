@@ -88,16 +88,18 @@ test('html and body never become scroll boxes, so the sticky rail and header sta
   assert.deepEqual(scrollBoxes, [])
 })
 
+// Chief 2026-10-07: the underline is thinner and smoother: a 1 px base and a 1 px focus line, both
+// backgrounds so they never stack, drawn from the left over 600 ms on the sign-in curve.
 test('typing fields are an underline, not a box, and focus draws an Oxford line along it smoothly', () => {
   const css = read('src/app/ui.css')
   const rule = (selector: string) => css.match(new RegExp(`\\n${selector.replace(/[.:]/g, '\\$&')}\\s*\\{([^}]*)\\}`))?.[1] ?? ''
   const field = rule('.ui-input')
   assert.match(field, /border:\s*0;/)
-  assert.match(field, /border-bottom:\s*1px solid var\(--border\);/)
+  assert.doesNotMatch(field, /border-bottom/)
   assert.match(field, /border-radius:\s*0;/)
-  assert.match(field, /background-size:\s*0% 2px;/)
-  assert.match(field, /transition:\s*background-size 220ms ease-out/)
-  assert.match(rule('.ui-input:focus'), /background-size:\s*100% 2px;/)
+  assert.match(field, /background-size:\s*0% 1px, 100% 1px;/)
+  assert.match(field, /transition:\s*background-size 600ms cubic-bezier\(0\.22, 0\.61, 0\.36, 1\)/)
+  assert.match(rule('.ui-input:focus'), /background-size:\s*100% 1px, 100% 1px;/)
   assert.match(css, /prefers-reduced-motion:\s*reduce\)\s*\{[^}]*\.ui-input\s*\{\s*transition:\s*none;/)
 })
 
@@ -117,13 +119,13 @@ test('page typing fields share the same underline, not a box', () => {
     selectors: rule[1].split(',').map((selector) => selector.trim()),
     body: rule[2],
   }))
-  const underline = rules.find((rule) => /border:\s*0;/.test(rule.body) && /background-size:\s*0% 2px;/.test(rule.body))
+  const underline = rules.find((rule) => /border:\s*0;/.test(rule.body) && /background-size:\s*0% 1px, 100% 1px;/.test(rule.body))
   assert.deepEqual(typingFields.filter((field) => !underline?.selectors.includes(field)), [])
   const boxedLater = rules.filter(
     (rule) =>
       rule.at > (underline?.at ?? Infinity) &&
       rule.selectors.some((selector) => typingFields.includes(selector)) &&
-      /border(-top)?:\s*[1-9]/.test(rule.body)
+      /border(-top|-bottom)?:\s*[1-9]/.test(rule.body)
   )
   assert.deepEqual(boxedLater, [], 'no later rule boxes a typing field again')
 })

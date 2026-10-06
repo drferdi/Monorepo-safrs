@@ -70,6 +70,14 @@ export async function listClinicalReports(options: {
   }
 }
 
+export async function listClinicalReportDates(dokter: string, since: Date): Promise<Date[]> {
+  const rows = await prisma.clinicalReport.findMany({
+    where: { doctorName: dokter, createdAt: { gte: since } },
+    select: { createdAt: true },
+  })
+  return rows.map((row) => row.createdAt)
+}
+
 export async function saveClinicalReport(
   input: ClinicalReportDraftInput
 ): Promise<ClinicalReport> {

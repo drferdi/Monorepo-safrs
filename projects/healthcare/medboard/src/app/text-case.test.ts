@@ -7,16 +7,16 @@ import ts from 'typescript'
 
 // Chief 2026-10-06: no ALL-CAPS text on screen — buttons, labels, badges, headings; acronyms stay.
 const ACRONYMS = new Set([
-  'AADI', 'ACARS', 'ACK', 'ACS', 'AI', 'ANC', 'API', 'AVPU', 'BB', 'BMI', 'BPJS', 'CDS',
+  'AADI', 'ACARS', 'ACK', 'ACS', 'AI', 'ANC', 'API', 'AUDREY', 'AVPU', 'BB', 'BMI', 'BPJS', 'CDS',
   'CDSS', 'CEO', 'CISS', 'CLM', 'CMDC', 'CME', 'CRT', 'CSV', 'CT', 'DBP', 'DBS', 'DHF',
-  'DKA', 'DM', 'DMF', 'DTB', 'DTI', 'ECG', 'EEG', 'EKG', 'EMR', 'GCS', 'GDP', 'GDS',
+  'DHAI', 'DKA', 'DM', 'DMF', 'DOI', 'DTB', 'DTI', 'FKTP', 'ECG', 'EEG', 'EKG', 'EMR', 'GCS', 'GDP', 'GDS',
   'GERD', 'GPU', 'HHS', 'HIM', 'HIV', 'HMOD', 'HPHT', 'HT', 'HTML', 'HTN', 'ICD', 'ICDX',
   'ICU', 'ID', 'IGD', 'IMT', 'INA', 'ISPA', 'JPP', 'JSON', 'KB', 'KIA', 'KKI', 'KODEKI',
   'LB', 'LLM', 'MAP', 'MIRA', 'MKN', 'MRI', 'NEWS', 'NIK', 'NIP', 'NOTAM', 'NSAID', 'OK',
   'PAPDI', 'PDF', 'PDP', 'PHI', 'PHQ', 'PII', 'PMC', 'PNG', 'PNPK', 'PONED', 'PPK', 'PPOK', 'QR', 'RAG',
-  'RBAC', 'RCT', 'RFC', 'RM', 'RME', 'RPA', 'RPD', 'RPK', 'RPS', 'RSUD', 'SBP', 'SCARS',
+  'RBAC', 'RCT', 'RFC', 'RM', 'RME', 'RPA', 'RPD', 'RPK', 'RPS', 'RSIA', 'RSUD', 'SBP', 'SCARS',
   'SDK', 'SEP', 'SHA', 'SIK', 'SIP', 'SIRS', 'SKDI', 'SMS', 'SNN', 'SOAP', 'SOP', 'SPO',
-  'STR', 'TAN', 'TB', 'TBC', 'TCMA', 'TD', 'TMS', 'TTL', 'TTV', 'UGD', 'UPTD', 'URL',
+  'STR', 'TACC', 'TAN', 'TB', 'TBC', 'TCMA', 'TD', 'TMS', 'TTL', 'TTV', 'UGD', 'UPTD', 'URL',
   'USG', 'WBC', 'WHO', 'WIB',
 ])
 

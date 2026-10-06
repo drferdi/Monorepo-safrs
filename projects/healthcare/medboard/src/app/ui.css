@@ -113,28 +113,36 @@
   background: var(--primary);
 }
 
-/* Typing fields: a hairline underline; focus draws a 2 px Oxford line along it from the left. */
+/* Typing fields: a 1 px hairline; focus draws a 1 px Oxford line over it from the left, slowly
+   (Chief 2026-10-07: thinner and smoother). Both lines are backgrounds so they never stack. */
 .ui-input {
   width: 100%;
   height: 36px;
   padding: 0 2px;
   border: 0;
-  border-bottom: 1px solid var(--border);
   border-radius: 0;
-  background: linear-gradient(var(--primary), var(--primary)) no-repeat left bottom;
+  background-image:
+    linear-gradient(var(--primary), var(--primary)),
+    linear-gradient(var(--border), var(--border));
+  background-position: left bottom, left bottom;
+  background-repeat: no-repeat;
   background-color: transparent;
-  background-size: 0% 2px;
-  transition: background-size 220ms ease-out, border-color 220ms ease-out;
+  background-size: 0% 1px, 100% 1px;
+  transition: background-size 600ms cubic-bezier(0.22, 0.61, 0.36, 1);
   color: var(--text);
   font: inherit;
   font-size: var(--text-sm);
 }
 textarea.ui-input { height: auto; min-height: 72px; padding: var(--gap-sm) 2px; resize: vertical; }
 .ui-input::placeholder { color: var(--text-secondary); }
-.ui-input:hover { border-bottom-color: var(--text-secondary); }
+.ui-input:hover {
+  background-image:
+    linear-gradient(var(--primary), var(--primary)),
+    linear-gradient(var(--text-secondary), var(--text-secondary));
+}
 .ui-input:focus {
   outline: none;
-  background-size: 100% 2px;
+  background-size: 100% 1px, 100% 1px;
 }
 .ui-input:focus-visible { outline: none; }
 @media (prefers-reduced-motion: reduce) {
@@ -199,6 +207,8 @@ textarea.ui-input { height: auto; min-height: 72px; padding: var(--gap-sm) 2px; 
 .ui-badge--critical { background: var(--critical-tint); color: var(--critical); }
 .ui-badge--warning { background: var(--warning-tint); color: var(--warning); }
 .ui-badge--success { background: var(--success-tint); color: var(--success); }
+/* Profile role and position read as the black neumorphic family (Chief 2026-10-07). */
+.ui-badge--neu { background: var(--neu-surface); color: var(--neu-text); box-shadow: var(--neu-raised); }
 
 .ui-alert {
   display: grid;

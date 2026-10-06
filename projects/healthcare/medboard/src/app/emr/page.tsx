@@ -58,6 +58,7 @@ import TrustLayerGhost, { PROCESSING_SCRIPT } from './TrustLayerGhost'
 import { useFocusSpotlight } from './focus-spotlight'
 import { buildEmergencyOverrideFlags, deriveEmergencyOverrideState } from './emergency-override'
 import { sentenceCase } from '@/lib/text/sentence-case'
+import { tidyCase } from '@/lib/text/tidy-case'
 import {
   Check,
   ChevronDown,
@@ -4929,7 +4930,7 @@ export default function EMRPage() {
                 {incomingConsult.patient.age ? ` · ${incomingConsult.patient.age} thn` : ''}
               </div>
               <div style={{ color: 'var(--text-secondary)', fontSize: 14, marginTop: 2 }}>
-                {incomingConsult.keluhan_utama}
+                {tidyCase(incomingConsult.keluhan_utama ?? '')}
               </div>
               {incomingConsult.mira_differential && (
                 <div style={{ marginTop: 10 }}>
@@ -5212,7 +5213,7 @@ export default function EMRPage() {
                         lineHeight: 1.5,
                       }}
                     >
-                      {ac.keluhan_utama}
+                      {tidyCase(ac.keluhan_utama ?? '')}
                     </div>
                     {ac.keluhan_tambahan && (
                       <>

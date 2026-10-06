@@ -6,7 +6,7 @@ import test from 'node:test'
 import sharp from 'sharp'
 
 import { initials } from './initials'
-import { isNavActive, NAV_GROUPS, readNavCollapsed } from './nav-items'
+import { findNavSpot, isNavActive, NAV_GROUPS, readNavCollapsed } from './nav-items'
 
 const hrefs = NAV_GROUPS.flatMap((group) => group.items.map((item) => item.href))
 
@@ -46,6 +46,15 @@ test('a nested page lights up its parent menu item, a look-alike path does not',
   assert.equal(isNavActive('/', '/hub'), false)
 })
 
+test('the open rail section and its lit item follow the page, and pages outside the rail open none', () => {
+  assert.deepEqual(findNavSpot('/emr'), { section: 0, item: 0 })
+  assert.deepEqual(findNavSpot('/hub/dr-ani'), { section: 1, item: 0 })
+  assert.deepEqual(findNavSpot('/audit/logbook/evt-1'), { section: 2, item: 1 })
+  assert.equal(findNavSpot('/'), null)
+  assert.equal(findNavSpot('/hubx'), null)
+  assert.equal(findNavSpot('/report/clinical'), null)
+})
+
 test('a new user starts with the narrow rail; a returning user keeps their choice', () => {
   assert.equal(readNavCollapsed(null), true)
   assert.equal(readNavCollapsed('true'), true)
@@ -55,7 +64,6 @@ test('a new user starts with the narrow rail; a returning user keeps their choic
 test('every Sentra logo is the dark mark on a transparent background', async () => {
   const screens = [
     'src/components/AppHeader.tsx',
-    'src/components/CrewAccessGate.tsx',
     'src/app/hub/lab/[username]/page.tsx',
     'src/app/layout.tsx',
   ]
@@ -91,4 +99,8 @@ test('the rail uses the product names Chief chose (2026-10-06)', () => {
   assert.equal(labels['/calculator'], 'Algorithma Calculator')
   assert.equal(labels['/sentrapedia'], 'Sentrapedia')
   assert.equal(labels['/chat'], 'Sentra Social')
+})
+
+test('the team section of the rail is called Sentra HQ (Chief 2026-10-07)', () => {
+  assert.deepEqual(NAV_GROUPS.map((group) => group.label), ['Klinis', 'Sentra HQ', 'Laporan'])
 })

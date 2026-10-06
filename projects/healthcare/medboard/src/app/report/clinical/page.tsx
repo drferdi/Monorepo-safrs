@@ -4,6 +4,7 @@ import { useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { ClinicalReport } from '@/lib/report/clinical-report'
 import { sentenceCase } from '@/lib/text/sentence-case'
+import { tidyCase } from '@/lib/text/tidy-case'
 
 type Mode = 'list' | 'form' | 'preview'
 type ClinicalReportFormState = Omit<
@@ -873,6 +874,7 @@ export default function ClinicalReportPage() {
               <input
                 style={inputStyle}
                 value={form.penutup.dokter}
+                data-tidy="name"
                 onChange={e => up('penutup', 'dokter', e.target.value)}
                 placeholder="dr. ..."
               />
@@ -1089,7 +1091,7 @@ export default function ClinicalReportPage() {
 
             {/* S — Subjektif */}
             <ReportSection title="Subjektif (S) — anamnesa">
-              <ReportField label="Keluhan Utama" value={selected.anamnesa.keluhanUtama} />
+              <ReportField label="Keluhan Utama" value={tidyCase(selected.anamnesa.keluhanUtama ?? '')} />
               <ReportField label="Riwayat Penyakit Sekarang" value={selected.anamnesa.rps} />
               <div
                 style={{
@@ -1204,7 +1206,7 @@ export default function ClinicalReportPage() {
                   gap: 16,
                 }}
               >
-                <ReportField label="Diagnosis Kerja" value={selected.asesmen.diagnosisKerja} />
+                <ReportField label="Diagnosis Kerja" value={tidyCase(selected.asesmen.diagnosisKerja ?? '')} />
                 <ReportField label="ICD-10" value={selected.asesmen.icd10} />
               </div>
               <div

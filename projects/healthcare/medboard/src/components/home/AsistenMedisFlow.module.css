@@ -1,0 +1,42 @@
+.flow {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  gap: var(--gap-lg);
+  align-items: start;
+}
+
+.steps { margin: 0; padding: 0; list-style: none; }
+
+/* Each step after the first hangs below a 1px connector; the path already travelled is green. */
+.step { position: relative; padding-left: 0; }
+.step + .step { padding-top: 20px; }
+.step + .step::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20px;
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  transition: background-color 0.15s linear;
+}
+.step[data-reached='true'] + .step[data-reached='true']::before { background: var(--success); }
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--gap-xs);
+  min-height: 100%;
+  padding: var(--gap-md) var(--gap-lg);
+  border-left: 1px solid var(--border);
+}
+.count { font-size: var(--text-xs); color: var(--text-secondary); }
+.label { font-size: var(--text-base); font-weight: 500; color: var(--text); }
+.desc { margin: 0; font-size: var(--text-sm); color: var(--text-secondary); }
+.route { margin-bottom: var(--gap-sm); font-size: var(--text-xs); color: var(--text-secondary); }
+
+@media (max-width: 640px) {
+  .flow { grid-template-columns: minmax(0, 1fr); }
+  .detail { padding: var(--gap-md) 0 0; border-top: 1px solid var(--border); border-left: 0; }
+}
