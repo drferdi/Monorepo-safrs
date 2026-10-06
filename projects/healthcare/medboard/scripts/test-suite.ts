@@ -60,6 +60,21 @@ const suites: Suite[] = [
     ],
   },
   {
+    name: 'sentrapedia-contributions',
+    aliases: ['sentrapedia', 'contributions'],
+    command: process.execPath,
+    // react-server condition: the routes import server-only.
+    args: [
+      '--conditions',
+      'react-server',
+      '--import',
+      'tsx',
+      '--test',
+      'src/lib/server/sentrapedia-contributions.test.ts',
+      'src/app/api/sentrapedia/contributions/route.test.ts',
+    ],
+  },
+  {
     name: 'design',
     aliases: ['redesign', 'shell', 'tokens'],
     command: process.execPath,

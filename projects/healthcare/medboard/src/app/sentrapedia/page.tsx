@@ -1,8 +1,11 @@
 // Copied from sentraverse app/sentrapedia/page.tsx (sentrahai.com/sentrapedia), Chief 2026-10-06.
 'use client'
 
-import { ChevronRight, Search, X } from 'lucide-react'
+import { ChevronRight, PenLine, Search, X } from 'lucide-react'
+import Link from 'next/link'
 import { useEffect, useMemo, useState } from 'react'
+
+import { applyApprovedContributions, type Contribution } from '@/lib/sentrapedia/contribution'
 
 import {
   CATEGORIES,
@@ -23,6 +26,16 @@ export default function SentrapediaPage() {
   const [activeCat, setActiveCat] = useState<string | null>(null)
   const [selectedDisease, setSelectedDisease] = useState<Disease | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [approved, setApproved] = useState<Contribution[]>([])
+
+  // Contributions Chief approved replace the original text of their section.
+  useEffect(() => {
+    fetch('/api/sentrapedia/contributions?status=approved')
+      .then((response) => (response.ok ? response.json() : { contributions: [] }))
+      .then((json: { contributions?: Contribution[] }) => setApproved(json.contributions ?? []))
+      .catch(() => setApproved([]))
+  }, [])
+  const detail = selectedDisease ? applyApprovedContributions(selectedDisease, approved) : null
 
   const filtered = useMemo(() => {
     let r: Disease[] = DISEASES
@@ -77,6 +90,11 @@ export default function SentrapediaPage() {
               <div className={styles.headerBadges}>
                 <span className="ui-badge ui-badge--primary">Referensi Klinis Puskesmas Indonesia</span>
               </div>
+            </div>
+            <div className="ui-page-header__actions">
+              <Link href="/sentrapedia/kontribusi" className="ui-btn ui-btn--primary">
+                <PenLine size={14} /> Berkontribusi
+              </Link>
             </div>
           </div>
           <div className={styles.stats}>
@@ -246,15 +264,15 @@ export default function SentrapediaPage() {
       {/* Detail drawer */}
       <div className={cx(styles.overlay, sidebarOpen && styles.overlayOpen)} onClick={closeSidebar} />
       <aside className={cx(styles.drawer, sidebarOpen && styles.drawerOpen)} aria-hidden={!sidebarOpen}>
-        {selectedDisease && (
+        {detail && (
           <>
             <div className={styles.drawerHead}>
               <div>
                 <div className={cx(styles.meta, styles.drawerMeta)}>
-                  {selectedDisease.kode} —{' '}
-                  {CATEGORIES.find((c) => c.id === selectedDisease.kategori)?.name || selectedDisease.kategori}
+                  {detail.kode} —{' '}
+                  {CATEGORIES.find((c) => c.id === detail.kategori)?.name || detail.kategori}
                 </div>
-                <div className={styles.drawerTitle}>{selectedDisease.nama}</div>
+                <div className={styles.drawerTitle}>{detail.nama}</div>
               </div>
               <button
                 type="button"
@@ -268,13 +286,13 @@ export default function SentrapediaPage() {
             <div className={styles.drawerBody}>
               <div>
                 <div className={cx(styles.meta, styles.fieldHead)}>Definisi</div>
-                <p className={styles.bodySm}>{selectedDisease.definisi}</p>
+                <p className={styles.bodySm}>{detail.definisi}</p>
               </div>
-              {selectedDisease.gejala && selectedDisease.gejala.length > 0 && (
+              {detail.gejala && detail.gejala.length > 0 && (
                 <div>
                   <div className={cx(styles.meta, styles.fieldHead)}>Gejala Klinis</div>
                   <ul className={styles.symptoms}>
-                    {selectedDisease.gejala.map((g, i) => (
+                    {detail.gejala.map((g, i) => (
                       <li key={i} className={cx(styles.bodySm, styles.symptom)}>
                         <ChevronRight size={14} className={styles.symptomMark} aria-hidden="true" />
                         {g}
@@ -285,15 +303,15 @@ export default function SentrapediaPage() {
               )}
               <div>
                 <div className={cx(styles.meta, styles.fieldHead)}>Diagnosis</div>
-                <p className={styles.bodySm}>{selectedDisease.diagnosis}</p>
+                <p className={styles.bodySm}>{detail.diagnosis}</p>
               </div>
               <div>
                 <div className={cx(styles.meta, styles.fieldHead)}>Terapi</div>
-                <p className={styles.bodySm}>{selectedDisease.terapi}</p>
+                <p className={styles.bodySm}>{detail.terapi}</p>
               </div>
               <div>
                 <div className={cx(styles.meta, styles.fieldHead)}>Kriteria Rujukan</div>
-                <p className={styles.bodySm}>{selectedDisease.rujukan}</p>
+                <p className={styles.bodySm}>{detail.rujukan}</p>
               </div>
               <div className={styles.refs}>
                 <div className={cx(styles.meta, styles.refHead)}>Referensi</div>
@@ -305,6 +323,9 @@ export default function SentrapediaPage() {
                   ))}
                 </div>
               </div>
+              <Link href={`/sentrapedia/kontribusi?penyakit=${detail.id}`} className="ui-btn ui-btn--secondary">
+                <PenLine size={14} /> Usulkan perubahan
+              </Link>
             </div>
           </>
         )}

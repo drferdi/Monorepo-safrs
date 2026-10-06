@@ -13,7 +13,7 @@ const ACRONYMS = new Set([
   'GERD', 'GPU', 'HHS', 'HIM', 'HIV', 'HMOD', 'HPHT', 'HT', 'HTML', 'HTN', 'ICD', 'ICDX',
   'ICU', 'ID', 'IGD', 'IMT', 'INA', 'ISPA', 'JPP', 'JSON', 'KB', 'KIA', 'KKI', 'KODEKI',
   'LB', 'LLM', 'MAP', 'MIRA', 'MKN', 'MRI', 'NEWS', 'NIK', 'NIP', 'NOTAM', 'NSAID', 'OK',
-  'PDF', 'PDP', 'PHI', 'PHQ', 'PII', 'PMC', 'PNG', 'PONED', 'PPK', 'PPOK', 'QR', 'RAG',
+  'PAPDI', 'PDF', 'PDP', 'PHI', 'PHQ', 'PII', 'PMC', 'PNG', 'PNPK', 'PONED', 'PPK', 'PPOK', 'QR', 'RAG',
   'RBAC', 'RCT', 'RFC', 'RM', 'RME', 'RPA', 'RPD', 'RPK', 'RPS', 'RSUD', 'SBP', 'SCARS',
   'SDK', 'SEP', 'SHA', 'SIK', 'SIP', 'SIRS', 'SKDI', 'SMS', 'SNN', 'SOAP', 'SOP', 'SPO',
   'STR', 'TAN', 'TB', 'TBC', 'TCMA', 'TD', 'TMS', 'TTL', 'TTV', 'UGD', 'UPTD', 'URL',

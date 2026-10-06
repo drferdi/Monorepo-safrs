@@ -17,12 +17,14 @@ const AdminAnalytics = lazy(() => import('./_components/AdminAnalytics'))
 const AdminEklaimReadiness = lazy(() => import('./_components/AdminEklaimReadiness'))
 const AdminOperationalSummary = lazy(() => import('./_components/AdminOperationalSummary'))
 const AdminPlaceholder = lazy(() => import('./_components/AdminPlaceholder'))
+const AdminSentrapediaReview = lazy(() => import('./_components/AdminSentrapediaReview'))
 
 /* ── Types ── */
 
 type AdminSection =
   | 'command-center'
   | 'rpa'
+  | 'sentrapedia'
   | 'user-access'
   | 'dev-updates'
   | 'notam'
@@ -52,6 +54,7 @@ const TAB_GROUPS: TabGroup[] = [
     sections: [
       { key: 'command-center', label: 'Command center' },
       { key: 'rpa', label: 'RPA & laporan' },
+      { key: 'sentrapedia', label: 'Kontribusi Sentrapedia' },
     ],
   },
   {
@@ -216,6 +219,7 @@ export default function AdminPage() {
         <Suspense fallback={<TabLoader />}>
           {activeSection === 'command-center' && <AdminCommandCenter session={session} />}
           {activeSection === 'rpa' && <AdminRpaMonitoring />}
+          {activeSection === 'sentrapedia' && <AdminSentrapediaReview />}
           {activeSection === 'user-access' && <AdminUserAccess />}
           {activeSection === 'dev-updates' && <AdminDevUpdates />}
           {activeSection === 'notam' && <AdminNotam />}
