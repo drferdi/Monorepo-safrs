@@ -8,7 +8,7 @@ MedBoard (dashboard web medboard.sentrahai.com) memakai bahasa visual Glass Heal
 jarak yang baik, satu tema putih. Warna aksen milik Sentra: Biru Oxford dan Merah-oranye.
 Asisten Medis (ekstensi) tidak termasuk.
 
-Berhasil bila: semua 23 halaman tampil putih dengan huruf Inter dan skala Glass, kerangka aplikasi
+Berhasil bila: semua 23 halaman tampil putih, sederhana, dengan huruf IBM Plex Sans dan skala 2026 di §3, kerangka aplikasi
 memakai rel ikon kiri dan header tipis, setiap halaman mengikuti salah satu dari enam pola di §5,
 dan tidak ada perilaku klinis atau alur data yang berubah.
 
@@ -23,7 +23,9 @@ dan tidak ada perilaku klinis atau alur data yang berubah.
 | Mode gelap | Dihapus; satu tema putih |
 | Merah-oranye vs kritis | Merah-oranye = aksen kedua; kritis tetap merah tua + kata status |
 | Pendekatan | Token → komponen dasar → kerangka → halaman satu per satu |
-| Font | Inter, paket `@fontsource-variable/inter` disetujui (pengganti IBM Plex Sans) |
+| Font | ~~Inter~~ → **IBM Plex Sans** (`@fontsource-variable/ibm-plex-sans`, paket lama yang dipulihkan), keputusan Chief 2026-10-06 sore |
+| Kesan | "Simplified": tiap halaman dipelajari satu per satu, hiasan dibuang, isi dan alur tetap (Chief 2026-10-06 sore) |
+| Ukuran teks dan jarak | Ukuran mengikuti praktik aplikasi web 2026 (dasar 14 px, minimum 12 px); jarak lega (Chief 2026-10-06 sore) |
 
 Sumber pengamatan: salinan aplikasi Glass Health di `D:\DEV\gafferverse\prototype\Glass\glass.health`
 (CSS `index-W48QqGoJ.css` dan 8 video tutorial). Yang ditiru hanya bahasa visual (warna, jarak,
@@ -51,17 +53,19 @@ bentuk, tata letak); kode, logo, gambar dan teks Glass tidak disalin.
 
 ### Huruf
 
-- Inter Variable untuk semua teks; tidak ada monospace (keputusan 2026-03-06 tetap). Angka klinis
+- IBM Plex Sans Variable untuk semua teks; tidak ada monospace (keputusan 2026-03-06 tetap). Angka klinis
   memakai `font-variant-numeric: tabular-nums`.
-- Skala (nama mengikuti Glass/Tailwind): `--text-xs` 11, `--text-sm` 13, `--text-base` 15,
-  `--text-lg` 17, `--text-xl` 20, `--text-2xl` 24, `--text-3xl` 30 px. Isi 13 px, tinggi baris 1,4.
-  Tebal 400 / 500 / 600. Judul halaman 20 px/600; judul kartu 15 px/600. `--text-xs` yang sudah
-  dipakai 79 kali berubah dari 12 ke 11 px.
+- Skala aplikasi web 2026: `--text-xs` 12, `--text-sm` 14, `--text-base` 16, `--text-lg` 18,
+  `--text-xl` 20, `--text-2xl` 24, `--text-3xl` 30 px. Isi aplikasi 14 px, teks baca panjang 16 px,
+  tidak ada teks di bawah 12 px. Tinggi baris: isi 1,6; judul 1,3. Tebal 400 / 500 / 600.
+  Judul halaman 24 px/600; judul kartu 16 px/600; label 12–14 px/500, huruf biasa (bukan kapital),
+  tanpa jarak huruf lebar.
 
 ### Jarak, bentuk, bayangan
 
 - Jarak kelipatan 4 px memakai token yang sudah ada: `--gap-xs` 4, `--gap-sm` 8, `--gap-md` 12,
-  `--gap-lg` 16, `--gap-xl` 24, `--gap-2xl` 32 (skalanya sudah sama dengan Glass).
+  `--gap-lg` 16, `--gap-xl` 24, `--gap-2xl` 32. Jarak lega: area isi 32 px (16 px di bawah 768 px),
+  isi kartu 24 px, jarak antar kartu 24 px, jarak antar bagian halaman 32 px.
 - Sudut: `--radius-sm` 6 px (input, tombol), `--radius-md` 8 px (kartu), `--radius-lg` 12 px
   (panel), `--radius-xl` 16 px (dialog), pil 9999 px (chip).
 - Bayangan: kartu `0 1px 2px rgba(15,23,42,.05)`; dialog `0 8px 24px rgba(15,23,42,.08)`.
@@ -95,10 +99,10 @@ warna penuh, gradasi, denyut atau emoji (aturan 2026-10-05 tetap).
   Hak tampil tiap menu mengikuti perilaku sekarang.
 - **Header** 56 px: logo + "MedBoard" di tengah; kanan: tanggal hari ini dan avatar inisial yang
   membuka menu (nama, profesi, Profil User, Keluar + pesan error logout).
-- **Footer** satu baris tengah, 13 px `--text-secondary`: Legal · Disclaimer AI · © tahun Sentra
+- **Footer** satu baris tengah, 12 px `--text-secondary`: Legal · Disclaimer AI · © tahun Sentra
   Healthcare Solutions.
-- **Area isi**: padding 24 px (16 px di bawah 768 px). Kepala halaman = judul 20 px + keterangan
-  13 px; tombol aksi halaman di kanan.
+- **Area isi**: padding 32 px (16 px di bawah 768 px). Kepala halaman = judul 24 px + keterangan
+  14 px; tombol aksi halaman di kanan.
 
 ## 5. Komponen dasar dan pola halaman
 
