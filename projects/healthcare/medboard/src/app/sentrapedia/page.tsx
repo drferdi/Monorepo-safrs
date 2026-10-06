@@ -71,8 +71,8 @@ export default function SentrapediaPage() {
                 Permenkes No. 5/2014 menjadi panduan yang langsung bisa Anda pakai di depan pasien.
               </p>
               <p className={cx('ui-page-header__description', styles.curator)}>
-                Dikurasi oleh dr. Ferdi Iskandar. Tidak ada teks bertele-tele, hanya referensi taktis
-                dan cepat untuk layanan primer yang sibuk.
+                Dikurasi oleh dr. Ferdi Iskandar. Anda dapat berkontribusi dengan melengkapi dan
+                memperbarui isi halaman ini sesuai pedoman klinis dan bukti ilmiah terkini.
               </p>
               <div className={styles.headerBadges}>
                 <span className="ui-badge ui-badge--primary">Referensi Klinis Puskesmas Indonesia</span>
