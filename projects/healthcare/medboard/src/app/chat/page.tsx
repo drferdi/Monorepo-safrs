@@ -426,7 +426,7 @@ export default function ChatPage() {
               onClick={sendMessage}
               disabled={!connected || !input.trim()}
             >
-              KIRIM
+              Kirim
             </button>
           </div>
         </div>

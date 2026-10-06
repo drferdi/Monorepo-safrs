@@ -290,7 +290,7 @@ export default function AcarsRosterPage() {
               onClick={sendMessage}
               disabled={!input.trim() || !connected}
             >
-              KIRIM
+              Kirim
             </button>
           </div>
         </div>

@@ -449,7 +449,7 @@ export function AppointmentBooking({
             className="ui-btn ui-btn--ghost"
             onClick={step === 1 ? onCancel : () => setStep(s => (s - 1) as 1 | 2)}
           >
-            {step === 1 ? 'BATAL' : '← KEMBALI'}
+            {step === 1 ? 'Batal' : 'Kembali'}
           </button>
 
           {step < 3 ? (
@@ -458,7 +458,7 @@ export function AppointmentBooking({
               onClick={() => setStep(s => (s + 1) as 2 | 3)}
               disabled={step === 1 ? !canNext1 : !canNext2}
             >
-              LANJUT →
+              Lanjut
             </button>
           ) : (
             <button
@@ -478,10 +478,10 @@ export function AppointmentBooking({
                       animation: 'spin 1s linear infinite',
                     }}
                   />{' '}
-                  MENYIMPAN...
+                  Menyimpan...
                 </>
               ) : (
-                '✓ BUAT APPOINTMENT'
+                'Buat appointment'
               )}
             </button>
           )}

@@ -50,23 +50,16 @@ export function AudreyMicButton({ state, onPress, disabled, className }: AudreyM
   const isError = state === 'error'
   const isDisabled = disabled || isProcessing
 
-  const bgColor = isListening
-    ? 'var(--audrey-amber, #C4956A)'
-    : isError
-      ? '#ef4444'
-      : 'var(--bg-card, #1a1a1a)'
+  // Black neumorphism like every other button (Chief 2026-10-06); recording shows pressed with an amber ring.
+  const bgColor = isError ? '#ef4444' : 'var(--neu-surface)'
 
   const borderColor = isListening
     ? 'var(--audrey-amber, #C4956A)'
     : isError
       ? '#ef4444'
-      : 'var(--line-base, #333)'
+      : 'transparent'
 
-  const iconColor = isListening
-    ? '#fff'
-    : isError
-      ? '#fff'
-      : 'var(--text-muted, #888)'
+  const iconColor = isError ? '#fff' : 'var(--neu-text)'
 
   return (
     <button
@@ -81,6 +74,7 @@ export function AudreyMicButton({ state, onPress, disabled, className }: AudreyM
         borderRadius: '50%',
         border: `2px solid ${borderColor}`,
         background: bgColor,
+        boxShadow: isError ? 'none' : isListening ? 'var(--neu-pressed)' : 'var(--neu-raised)',
         display: 'inline-flex',
         alignItems: 'center',
         justifyContent: 'center',

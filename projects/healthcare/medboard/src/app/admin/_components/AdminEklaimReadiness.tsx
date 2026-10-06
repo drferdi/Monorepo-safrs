@@ -122,7 +122,7 @@ function EncounterRow({ encounter, expanded, onToggle }: EncounterRowProps) {
             isReady ? styles.readinessBadgeReady : styles.readinessBadgeProblem
           )}
         >
-          {isReady ? 'SIAP' : `${allIssues.length} MASALAH`}
+          {isReady ? 'Siap' : `${allIssues.length} masalah`}
         </span>
 
         {/* Expand arrow — only shown when there are issues */}

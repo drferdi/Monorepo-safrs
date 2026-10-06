@@ -170,7 +170,7 @@ export default function AdminInstitutionsTab() {
           disabled={adding || !addName.trim()}
           className={styles.primaryButton}
         >
-          {adding ? '...' : 'TAMBAH'}
+          {adding ? '...' : 'Tambah'}
         </button>
         {addMsg && <span className={addMessageClassName}>{addMsg}</span>}
       </div>
@@ -234,13 +234,13 @@ export default function AdminInstitutionsTab() {
                               disabled={saving}
                               className={styles.tableButton}
                             >
-                              SIMPAN
+                              Simpan
                             </button>
                             <button
                               onClick={() => setEditId(null)}
                               className={`${styles.tableButton} ${styles.tableButtonMuted}`}
                             >
-                              BATAL
+                              Batal
                             </button>
                           </>
                         ) : (
@@ -252,14 +252,14 @@ export default function AdminInstitutionsTab() {
                               }}
                               className={styles.tableButton}
                             >
-                              EDIT
+                              Edit
                             </button>
                             <button
                               onClick={() => void handleDelete(inst)}
                               className={deleteButtonClassName}
                               disabled={inst.crewCount > 0}
                             >
-                              HAPUS
+                              Hapus
                             </button>
                           </>
                         )}

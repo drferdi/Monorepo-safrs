@@ -258,3 +258,39 @@ test('a selected chip is pressed in and marked with a check, not only recoloured
   assert.ok(rulesFor(ui, '.ui-chip[aria-pressed="true"]::before').some((body) => /content:\s*"✓"/.test(body)))
   assert.ok(rulesFor(globals, '.vitals-chip.is-active').some((body) => /box-shadow:\s*var\(--neu-pressed\)/.test(body)))
 })
+
+test('every button shares one type style: 13 px, weight 500, no capitals or tracking (Chief 2026-10-06)', () => {
+  const globals = read('src/app/globals.css')
+  const ui = read('src/app/ui.css')
+  assert.equal(rootTokens(globals).get('--text-button'), '0.8125rem')
+  const declares = (css: string, selector: string, pattern: RegExp): boolean =>
+    rulesFor(css, selector).some((body) => pattern.test(body))
+  // The size that wins is the last one declared for the selector.
+  const lastFontSize = (css: string, selector: string): string | undefined =>
+    rulesFor(css, selector)
+      .map((body) => body.match(/font-size:\s*([^;]+);/)?.[1].trim())
+      .filter((size) => size !== undefined)
+      .at(-1)
+  for (const [css, selector] of [
+    [ui, '.ui-btn'],
+    [ui, '.ui-chip'],
+    [globals, '.emr-neu-nav-btn-label'],
+    [globals, '.finalize-neu-btn-label'],
+    ...NEU_EMR_BUTTONS.map((selector) => [globals, selector] as const),
+  ] as const) {
+    assert.equal(lastFontSize(css, selector), 'var(--text-button)', `${selector} font-size`)
+  }
+  assert.equal(lastFontSize(ui, '.ui-btn--sm'), undefined, 'size variants keep the one text size')
+  assert.equal(lastFontSize(ui, '.ui-btn--lg'), undefined, 'size variants keep the one text size')
+  for (const [css, selector] of [
+    [ui, '.ui-btn'],
+    [ui, '.ui-chip'],
+    [globals, NEU_EMR_BUTTONS[0]],
+  ] as const) {
+    assert.ok(declares(css, selector, /font-weight:\s*500/), `${selector} font-weight`)
+  }
+  for (const selector of NEU_EMR_BUTTONS) {
+    assert.ok(declares(globals, selector, /text-transform:\s*none/), `${selector} text-transform`)
+    assert.ok(declares(globals, selector, /letter-spacing:\s*normal/), `${selector} letter-spacing`)
+  }
+})

@@ -1259,7 +1259,7 @@ export default function ProfilUserPage() {
                       setChatError('')
                     }}
                   >
-                    CLEAR
+                    Clear
                   </button>
                 )}
               </div>
@@ -1426,7 +1426,7 @@ export default function ProfilUserPage() {
                   }}
                   disabled={chatLoading || !chatInput.trim()}
                 >
-                  KIRIM
+                  Kirim
                 </button>
               </div>
 

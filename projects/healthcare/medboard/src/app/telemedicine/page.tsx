@@ -404,7 +404,7 @@ function AppointmentRow({ appointment, onJoin }: AppointmentCardProps) {
       {isActive && onJoin && (
         <button onClick={onJoin} className="ui-btn ui-btn--primary ui-btn--sm">
           <Video size={12} />
-          {isInProgress ? 'MASUK' : 'JOIN'}
+          {isInProgress ? 'Masuk' : 'Join'}
         </button>
       )}
     </div>
@@ -595,7 +595,7 @@ function RequestInbox({
                     onClick={() => onMarkHandled(req.id)}
                     className="ui-btn ui-btn--secondary ui-btn--sm"
                   >
-                    TANDAI HANDLED
+                    Tandai handled
                   </button>
                 </div>
               )}
@@ -1240,19 +1240,19 @@ export default function TelemedicinePage(): React.JSX.Element {
               }
             >
               {isOnline ? <Wifi size={14} /> : <WifiOff size={14} />}
-              {isOnline ? 'DOKTER ONLINE' : 'DOKTER OFFLINE'}
+              {isOnline ? 'Dokter online' : 'Dokter offline'}
             </button>
           )}
           <button onClick={() => void loadAppointments()} className="ui-btn ui-btn--secondary">
             <RefreshCw size={14} />
-            REFRESH
+            Refresh
           </button>
           <button
             onClick={() => setShowBooking(current => !current)}
             className="ui-btn ui-btn--primary"
           >
             <Plus size={14} />
-            {showBooking ? 'TUTUP FORM' : 'BUAT SESI'}
+            {showBooking ? 'Tutup form' : 'Buat sesi'}
           </button>
         </div>
       </div>
@@ -1391,7 +1391,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                   menghidupkan jalur telemedicine.
                 </div>
                 <button onClick={() => setShowBooking(true)} className="ui-btn ui-btn--primary">
-                  <Plus size={14} /> BUAT KONSULTASI
+                  <Plus size={14} /> Buat konsultasi
                 </button>
               </div>
             ) : (

@@ -1036,7 +1036,7 @@ export default function ICDXPage() {
                   transition: 'all 0.2s',
                 }}
               >
-                {lb1Running ? '● GENERATING...' : 'RUN LB1'}
+                {lb1Running ? 'Generating...' : 'Run LB1'}
               </button>
 
               <span style={{ fontSize: 14, color: L.muted }}>

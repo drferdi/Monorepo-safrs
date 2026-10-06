@@ -962,7 +962,7 @@ function PendingCard({
             cursor: busy ? 'not-allowed' : 'pointer',
           }}
         >
-          {busy ? '...' : 'TERIMA'}
+          {busy ? '...' : 'Terima'}
         </button>
         <button
           onClick={onReject}
@@ -978,7 +978,7 @@ function PendingCard({
             cursor: busy ? 'not-allowed' : 'pointer',
           }}
         >
-          TOLAK
+          Tolak
         </button>
       </div>
     </div>

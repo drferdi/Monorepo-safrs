@@ -322,7 +322,7 @@ export default function EMRTransferPanel() {
             cursor: keluhanUtama.trim() && transferState !== 'running' ? 'pointer' : 'default',
           }}
         >
-          {transferState === 'running' ? '► TRANSFER BERJALAN...' : '► EKSEKUSI EMR TRANSFER'}
+          {transferState === 'running' ? 'Transfer berjalan...' : 'Eksekusi EMR transfer'}
         </button>
       </div>
 
@@ -386,7 +386,7 @@ export default function EMRTransferPanel() {
               fontSize: 12,
             }}
           >
-            {historyLoading ? '...' : '↺ REFRESH'}
+            {historyLoading ? '...' : 'Refresh'}
           </button>
         </div>
         {history.length === 0 ? (

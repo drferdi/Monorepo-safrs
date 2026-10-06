@@ -839,7 +839,7 @@ function UserEditPanel({
                 cursor: saving ? 'not-allowed' : 'pointer',
               }}
             >
-              {saving ? 'MENYIMPAN...' : 'SIMPAN AKUN'}
+              {saving ? 'Menyimpan...' : 'Simpan akun'}
             </button>
           </div>
 
@@ -858,7 +858,7 @@ function UserEditPanel({
 
             {!resetPwMode ? (
               <button onClick={() => setResetPwMode(true)} style={actionBtnStyle}>
-                RESET PASSWORD
+                Reset password
               </button>
             ) : (
               <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
@@ -878,7 +878,7 @@ function UserEditPanel({
                     fontSize: 12,
                   }}
                 >
-                  SET
+                  Set
                 </button>
                 <button
                   onClick={() => {
@@ -892,7 +892,7 @@ function UserEditPanel({
                     color: 'var(--text-muted)',
                   }}
                 >
-                  BATAL
+                  Batal
                 </button>
               </div>
             )}
@@ -917,7 +917,7 @@ function UserEditPanel({
                 borderColor: isInactive ? 'rgba(76,175,80,0.3)' : 'rgba(231,76,60,0.3)',
               }}
             >
-              {isInactive ? 'AKTIFKAN USER' : 'NONAKTIFKAN USER'}
+              {isInactive ? 'Aktifkan user' : 'Nonaktifkan user'}
             </button>
           </div>
 
@@ -1234,7 +1234,7 @@ function UserEditPanel({
                 cursor: saving ? 'not-allowed' : 'pointer',
               }}
             >
-              {saving ? 'MENYIMPAN...' : 'SIMPAN PROFIL'}
+              {saving ? 'Menyimpan...' : 'Simpan profil'}
             </button>
           </div>
         </div>

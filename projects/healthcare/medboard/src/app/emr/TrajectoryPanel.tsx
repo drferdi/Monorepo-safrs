@@ -249,7 +249,7 @@ export default function TrajectoryPanel({
             color: 'var(--text-muted)',
           }}
         >
-          [X] TUTUP
+          Tutup
         </button>
       </div>
 

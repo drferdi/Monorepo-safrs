@@ -734,10 +734,10 @@ function PendingCard({
 
       <div className={styles.pendingActions}>
         <button onClick={onApprove} disabled={busy} className={styles.primaryButtonBlock}>
-          {busy ? '...' : 'TERIMA'}
+          {busy ? '...' : 'Terima'}
         </button>
         <button onClick={onReject} disabled={busy} className={styles.secondaryButton}>
-          TOLAK
+          Tolak
         </button>
       </div>
     </div>
@@ -1134,7 +1134,7 @@ function UserEditPanel({
             </div>
 
             <button onClick={handleSaveAuth} disabled={saving} className={styles.primaryButtonWide}>
-              {saving ? 'MENYIMPAN...' : 'SIMPAN AKUN'}
+              {saving ? 'Menyimpan...' : 'Simpan akun'}
             </button>
           </div>
 
@@ -1144,7 +1144,7 @@ function UserEditPanel({
 
             {!resetPwMode ? (
               <button onClick={() => setResetPwMode(true)} className={styles.outlineButton}>
-                RESET PASSWORD
+                Reset password
               </button>
             ) : (
               <div className={styles.passwordRow}>
@@ -1160,7 +1160,7 @@ function UserEditPanel({
                   disabled={saving}
                   className={styles.outlineButtonCompact}
                 >
-                  SET
+                  Set
                 </button>
                 <button
                   onClick={() => {
@@ -1169,7 +1169,7 @@ function UserEditPanel({
                   }}
                   className={cx(styles.outlineButtonCompact, styles.outlineButtonMuted)}
                 >
-                  BATAL
+                  Batal
                 </button>
               </div>
             )}
@@ -1194,7 +1194,7 @@ function UserEditPanel({
                 isInactive ? styles.outlineButtonSuccess : styles.outlineButtonDanger
               )}
             >
-              {isInactive ? 'AKTIFKAN USER' : 'NONAKTIFKAN USER'}
+              {isInactive ? 'Aktifkan user' : 'Nonaktifkan user'}
             </button>
 
             <button
@@ -1204,7 +1204,7 @@ function UserEditPanel({
               style={{ marginTop: 4, opacity: 0.75 }}
               title="Hapus user secara permanen dari sistem"
             >
-              HAPUS USER PERMANEN
+              Hapus user permanen
             </button>
           </div>
         </div>
@@ -1526,7 +1526,7 @@ function UserEditPanel({
               disabled={saving}
               className={styles.primaryButtonWide}
             >
-              {saving ? 'MENYIMPAN...' : 'SIMPAN PROFIL'}
+              {saving ? 'Menyimpan...' : 'Simpan profil'}
             </button>
           </div>
         </div>

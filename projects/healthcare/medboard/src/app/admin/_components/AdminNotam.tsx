@@ -272,7 +272,7 @@ export default function AdminNotam() {
                     </div>
                   </div>
                   <button onClick={() => handleDeactivate(n.id)} className={styles.dangerButton}>
-                    NONAKTIFKAN
+                    Nonaktifkan
                   </button>
                 </div>
               </div>

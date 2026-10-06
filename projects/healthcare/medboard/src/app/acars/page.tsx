@@ -383,7 +383,7 @@ export default function AcarsPage() {
               onClick={sendMessage}
               disabled={!input.trim() || !currentUser}
             >
-              KIRIM
+              Kirim
             </button>
           </div>
         </div>

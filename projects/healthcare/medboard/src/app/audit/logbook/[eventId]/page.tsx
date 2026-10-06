@@ -164,7 +164,7 @@ export default function AuditEventDetailPage({
               onClick={() => void handleAck()}
               disabled={acking}
             >
-              {acking ? 'MENYIMPAN…' : 'TANDAI ACK DOKTER'}
+              {acking ? 'Menyimpan…' : 'Tandai ACK dokter'}
             </button>
           )}
         </div>

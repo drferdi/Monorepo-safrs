@@ -4242,18 +4242,18 @@ export default function EMRPage() {
             style={{ alignSelf: 'flex-start', marginTop: 4 }}
           >
             {requiresEmergencyAck
-              ? 'WAJIB ACK EMERGENCY'
+              ? 'Wajib ACK emergency'
               : selectionSavingKey === suggestionKey
-                ? 'MENYIMPAN...'
+                ? 'Menyimpan...'
                 : isMustNotMiss
                   ? isSelected
-                    ? 'TERPILIH ✓'
-                    : 'PILIH DIAGNOSIS KRITIS'
+                    ? 'Terpilih'
+                    : 'Pilih diagnosis kritis'
                   : isSelected
-                    ? 'TERPILIH ✓'
+                    ? 'Terpilih'
                     : isReview
-                      ? 'PILIH DENGAN ALASAN'
-                      : 'PILIH DIAGNOSIS'}
+                      ? 'Pilih dengan alasan'
+                      : 'Pilih diagnosis'}
           </button>
         </div>
       </details>
@@ -4690,7 +4690,7 @@ export default function EMRPage() {
   // ── Auto-generate skenario klinis ────────────────────────────────────────
   const AUTOGEN_SCENARIOS = {
     hipertensi: {
-      label: 'HIPERTENSI',
+      label: 'Hipertensi',
       keluhan_utama: 'nyeri kepala bagian belakang, tengkuk terasa berat',
       keluhan_tambahan: 'pandangan kadang kabur, riwayat hipertensi sejak 3 tahun',
       vitals: {
@@ -4704,7 +4704,7 @@ export default function EMRPage() {
       },
     },
     hiperglikemi: {
-      label: 'HIPERGLIKEMIA',
+      label: 'Hiperglikemia',
       keluhan_utama: 'sering buang air kecil, haus terus, badan lemas',
       keluhan_tambahan: 'penurunan berat badan 5 kg dalam 1 bulan, riwayat DM tipe 2',
       vitals: {
@@ -4718,7 +4718,7 @@ export default function EMRPage() {
       },
     },
     hipoglikemi: {
-      label: 'HIPOGLIKEMIA',
+      label: 'Hipoglikemia',
       keluhan_utama: 'tangan gemetar, keringat dingin, pusing mendadak',
       keluhan_tambahan: 'pasien DM pengguna insulin, telat makan siang, sempat lemas',
       vitals: {
@@ -4754,7 +4754,7 @@ export default function EMRPage() {
     const s = AUTOGEN_SCENARIOS[key]
     // Hanya set skenario aktif — vitals diisi oleh Auto TTV
     setActiveScenario(key)
-    setHeaderText(`SENTRA // RM-BARU // AUTOGEN: SKENARIO ${s.label} AKTIF — JALANKAN AUTO TTV`)
+    setHeaderText(`SENTRA // RM-BARU // AUTOGEN: SKENARIO ${s.label.toUpperCase()} AKTIF — JALANKAN AUTO TTV`)
     setHeaderColor('var(--c-asesmen)')
   }
 
@@ -4974,7 +4974,7 @@ export default function EMRPage() {
                 }}
                 className="ui-btn ui-btn--primary ui-btn--sm"
               >
-                ✓ ACCEPT
+                Accept
               </button>
               <button
                 onClick={async () => {
@@ -4988,7 +4988,7 @@ export default function EMRPage() {
                 }}
                 className="ui-btn ui-btn--secondary ui-btn--sm"
               >
-                ✕ REJECT
+                Reject
               </button>
             </div>
           </div>
@@ -6732,7 +6732,7 @@ export default function EMRPage() {
                     disabled={!canAutoAssistExam}
                     className="ui-btn ui-btn--secondary ui-btn--sm"
                   >
-                    AUTO SENTRA
+                    Auto Sentra
                   </button>
                   <button
                     type="button"
@@ -6741,7 +6741,7 @@ export default function EMRPage() {
                     aria-controls="exam-head-to-toe-panel"
                     className="ui-btn ui-btn--ghost ui-btn--sm"
                   >
-                    {examOpen ? '[ TUTUP ▲ ]' : '[ BUKA ▼ ]'}
+                    {examOpen ? 'Tutup' : 'Buka'}
                   </button>
                 </span>
               </div>
@@ -6807,7 +6807,7 @@ export default function EMRPage() {
                       opacity: keluhanUtama.trim() ? 1 : 0.35,
                     }}
                   >
-                    ✧ AUTO TTV
+                    Auto TTV
                   </button>
                   {/* Skenario presets */}
                   {(['hipertensi', 'hiperglikemi', 'hipoglikemi'] as const).map((key) => (
@@ -7576,7 +7576,7 @@ export default function EMRPage() {
                                 opacity: !keluhanUtama.trim() ? 0.4 : 1,
                               }}
                             >
-                              {cdssLoading ? '⏳ MEMPROSES CDSS...' : '▶ JALANKAN CDSS ENGINE'}
+                              {cdssLoading ? 'Memproses CDSS...' : 'Jalankan CDSS engine'}
                             </button>
                           )}
                           <button
@@ -7587,7 +7587,7 @@ export default function EMRPage() {
                               whiteSpace: 'nowrap',
                             }}
                           >
-                            ↺ RESET
+                            Reset
                           </button>
                         </div>
                       </div>
@@ -7639,7 +7639,7 @@ export default function EMRPage() {
                                   className="assessment-readiness-cta"
                                   onClick={() => assessmentConclusionInputRef.current?.focus()}
                                 >
-                                  FOKUS KE INPUT
+                                  Fokus ke input
                                 </button>
                               )}
                             </div>
@@ -7815,7 +7815,7 @@ export default function EMRPage() {
                                           : 'pointer',
                                     }}
                                   >
-                                    {ackSaving ? 'MENYIMPAN ACK...' : 'ACK PROTOKOL EMERGENCY'}
+                                    {ackSaving ? 'Menyimpan ACK...' : 'ACK protokol emergency'}
                                   </button>
                                 </div>
                               )}
@@ -8173,8 +8173,8 @@ export default function EMRPage() {
                                   className="cdss-selected-save-btn"
                                 >
                                   {feedbackSaving
-                                    ? 'MENYIMPAN FEEDBACK...'
-                                    : 'SIMPAN FEEDBACK OUTCOME'}
+                                    ? 'Menyimpan feedback...'
+                                    : 'Simpan feedback outcome'}
                                 </button>
                               </div>
                             </div>

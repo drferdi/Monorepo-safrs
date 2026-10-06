@@ -263,7 +263,7 @@ export default function AdminDevUpdates() {
                     disabled={deactivatingId === update.id}
                     className={styles.dangerButton}
                   >
-                    {deactivatingId === update.id ? 'MEMPROSES...' : 'NONAKTIFKAN'}
+                    {deactivatingId === update.id ? 'Memproses...' : 'Nonaktifkan'}
                   </button>
                 </div>
               </div>

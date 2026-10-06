@@ -25,6 +25,9 @@
   --shadow-dialog: 0 8px 24px rgba(15, 23, 42, 0.08);
   --text-on-accent: #ffffff;
 
+  /* Button text is one size everywhere: 13 px (Chief 2026-10-06). */
+  --text-button: 0.8125rem;
+
   /* Clickable buttons: black neumorphism (Chief 2026-10-06). Raised at rest, pressed in when selected. */
   --neu-surface: linear-gradient(145deg, #2a2e35, #0f1115);
   --neu-surface-hover: linear-gradient(145deg, #353a42, #16191e);
@@ -535,7 +538,7 @@ a {
 .emr-neu-nav-btn-label {
   display: inline-block;
   white-space: nowrap;
-  font-size: var(--text-sm);
+  font-size: var(--text-button);
   font-weight: 500;
   color: var(--text-on-accent);
 }
@@ -1059,7 +1062,7 @@ a {
 }
 
 .finalize-neu-btn-label {
-  font-size: var(--text-sm);
+  font-size: var(--text-button);
   font-weight: 500;
   color: var(--text);
 }
@@ -5303,6 +5306,11 @@ a:hover > .home-link-icon { background: var(--text); }
   background: var(--neu-surface);
   color: var(--neu-text);
   box-shadow: var(--neu-raised);
+  font-family: inherit;
+  font-size: var(--text-button);
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: normal;
   transition: box-shadow 150ms ease-out;
 }
 

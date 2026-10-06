@@ -292,7 +292,7 @@ export default function ClinicalReportPage() {
         <div style={{ display: 'flex', gap: 8, paddingTop: 4 }}>
           {mode !== 'list' && (
             <button style={btnStyle} onClick={() => setMode('list')}>
-              KEMBALI
+              Kembali
             </button>
           )}
           {mode === 'list' && (
@@ -304,7 +304,7 @@ export default function ClinicalReportPage() {
               }}
               onClick={startNew}
             >
-              BUAT LAPORAN BARU
+              Buat laporan baru
             </button>
           )}
           {mode === 'preview' && (
@@ -316,7 +316,7 @@ export default function ClinicalReportPage() {
               }}
               onClick={handlePrint}
             >
-              CETAK / PDF
+              Cetak / PDF
             </button>
           )}
         </div>
@@ -357,7 +357,7 @@ export default function ClinicalReportPage() {
                 }}
                 onClick={startNew}
               >
-                BUAT LAPORAN PERTAMA
+                Buat laporan pertama
               </button>
             </div>
           ) : (
@@ -456,7 +456,7 @@ export default function ClinicalReportPage() {
                     }}
                     title="Hapus laporan"
                   >
-                    HAPUS
+                    Hapus
                   </button>
                 </div>
               ))}
@@ -926,10 +926,10 @@ export default function ClinicalReportPage() {
                 opacity: saving ? 0.5 : 1,
               }}
             >
-              {saving ? 'MENYIMPAN...' : 'SIMPAN & LIHAT LAPORAN'}
+              {saving ? 'Menyimpan...' : 'Simpan & lihat laporan'}
             </button>
             <button style={btnStyle} onClick={() => setMode('list')}>
-              BATAL
+              Batal
             </button>
           </div>
         </div>
@@ -957,10 +957,10 @@ export default function ClinicalReportPage() {
               }}
               onClick={handlePrint}
             >
-              CETAK / PDF
+              Cetak / PDF
             </button>
             <button style={btnStyle} onClick={startNew}>
-              BUAT BARU
+              Buat baru
             </button>
             <button
               style={{
@@ -970,7 +970,7 @@ export default function ClinicalReportPage() {
               }}
               onClick={() => void handleDelete(selected.id)}
             >
-              HAPUS
+              Hapus
             </button>
           </div>
 

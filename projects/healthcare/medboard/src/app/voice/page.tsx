@@ -370,11 +370,11 @@ export default function VoicePage() {
               onClick={() => void disconnect()}
               className={`ui-btn ui-btn--secondary ${styles.disconnect}`}
             >
-              PUTUS SESI
+              Putus sesi
             </button>
           )}
           <button onClick={() => setMessages([])} className="ui-btn ui-btn--secondary">
-            RESET
+            Reset
           </button>
         </div>
       </div>
@@ -400,7 +400,7 @@ export default function VoicePage() {
             </p>
 
             <button onClick={() => void connect()} className="ui-btn ui-btn--primary ui-btn--lg">
-              ▶ MULAI SESI AUDREY
+              Mulai sesi Audrey
             </button>
 
             <ul className={styles.steps}>
@@ -448,10 +448,10 @@ export default function VoicePage() {
               className={`ui-btn ${sessionState === 'recording' ? 'ui-btn--secondary' : 'ui-btn--primary'} ${styles.ptt} ${sessionState === 'recording' ? styles.pttRecording : ''}`}
             >
               {sessionState === 'recording'
-                ? 'MEREKAM — Lepas untuk kirim'
+                ? 'Merekam — Lepas untuk kirim'
                 : sessionState === 'processing'
-                  ? 'MEMPROSES...'
-                  : 'TAHAN UNTUK BICARA'}
+                  ? 'Memproses...'
+                  : 'Tahan untuk bicara'}
             </button>
 
             {/* Interrupt */}
@@ -460,7 +460,7 @@ export default function VoicePage() {
                 onClick={() => socketRef.current?.emit('voice:interrupt')}
                 className="ui-btn ui-btn--secondary ui-btn--sm"
               >
-                INTERUPSI
+                Interupsi
               </button>
             )}
 
