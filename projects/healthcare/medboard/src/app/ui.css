@@ -97,19 +97,33 @@
   background: var(--primary);
 }
 
+/* Typing fields: a hairline underline; focus draws a 2 px Oxford line along it from the left. */
 .ui-input {
   width: 100%;
   height: 36px;
-  padding: 0 var(--gap-md);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  background: var(--surface);
+  padding: 0 2px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  background: linear-gradient(var(--primary), var(--primary)) no-repeat left bottom;
+  background-color: transparent;
+  background-size: 0% 2px;
+  transition: background-size 220ms ease-out, border-color 220ms ease-out;
   color: var(--text);
   font: inherit;
   font-size: var(--text-sm);
 }
+textarea.ui-input { height: auto; min-height: 72px; padding: var(--gap-sm) 2px; resize: vertical; }
 .ui-input::placeholder { color: var(--text-secondary); }
-.ui-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-tint); }
+.ui-input:hover { border-bottom-color: var(--text-secondary); }
+.ui-input:focus {
+  outline: none;
+  background-size: 100% 2px;
+}
+.ui-input:focus-visible { outline: none; }
+@media (prefers-reduced-motion: reduce) {
+  .ui-input { transition: none; }
+}
 .ui-search { position: relative; display: block; }
 .ui-search__icon { position: absolute; left: var(--gap-md); top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
 .ui-search__input { padding-left: 36px; }

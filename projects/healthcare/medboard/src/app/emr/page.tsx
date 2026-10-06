@@ -55,6 +55,7 @@ import ClinicalPrognosisChart from './ClinicalPrognosisChart'
 import ClinicalTrajectoryChart from './ClinicalTrajectoryChart'
 import TrajectoryPanel from './TrajectoryPanel'
 import TrustLayerGhost, { PROCESSING_SCRIPT } from './TrustLayerGhost'
+import { useFocusSpotlight } from './focus-spotlight'
 import { buildEmergencyOverrideFlags, deriveEmergencyOverrideState } from './emergency-override'
 
 // Iskandar Engine V1 response types
@@ -1538,6 +1539,8 @@ export default function EMRPage() {
   const row1SectionRef = useRef<HTMLElement | null>(null)
   const row2SectionRef = useRef<HTMLElement | null>(null)
   const row3SectionRef = useRef<HTMLElement | null>(null)
+  const clinicalStreamRef = useRef<HTMLDivElement | null>(null)
+  useFocusSpotlight(clinicalStreamRef, '.stream-section')
   const redFlagsRef = useRef<HTMLDivElement | null>(null)
   const [redFlagsInView, setRedFlagsInView] = useState(false)
   const assessmentEntryPanelRef = useRef<HTMLDivElement | null>(null)
@@ -3854,18 +3857,6 @@ export default function EMRPage() {
       : topSuggestion
         ? `Top suggestion: ${topSuggestion.diagnosis_name} (${topSuggestion.icd10_code}) · ${Math.round(topSuggestion.confidence * 100)}% confidence. Klik untuk review.`
         : 'Jalankan CDSS untuk mendapatkan differential dan lane keputusan.'
-  const audreyStateLabel = showEmrLoader
-    ? 'EXTRACTING...'
-    : isTyping
-      ? 'SYNTHESIZING...'
-      : historyLoaded
-        ? 'READY'
-        : keluhanUtama.trim()
-          ? 'STANDBY'
-          : 'IDLE'
-  const audreyStateColor =
-    showEmrLoader || isTyping ? 'var(--primary)' : historyLoaded ? 'var(--text-main)' : 'var(--text-muted)'
-  const audreyIsThinking = showEmrLoader || isTyping
   useEffect(() => {
     if (workflowTab !== 'assessment') return
     if (selectedDiagnosisDraft) return
@@ -5680,7 +5671,7 @@ export default function EMRPage() {
         </div>
 
         {/* ─── Left: Clinical Stream ─── */}
-        <div className="clinical-stream" style={{ maxWidth: '100%' }}>
+        <div ref={clinicalStreamRef} className="clinical-stream" style={{ maxWidth: '100%' }}>
 
           <section
             ref={row1SectionRef}

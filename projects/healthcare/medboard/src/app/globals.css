@@ -5714,3 +5714,69 @@ a {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* ─── Typing fields app-wide (Chief 2026-10-06): a hairline underline, not a box;
+       focus draws a 2 px Oxford line along it from the left. ─── */
+.input-draft,
+.omni-input,
+.calculator-field-input,
+.chat-input,
+.finalize-pharmacology-manual-input,
+.vitals-context-input,
+.vitals-context-select {
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  background: linear-gradient(var(--primary), var(--primary)) no-repeat left bottom;
+  background-color: transparent;
+  background-size: 0% 2px;
+  box-shadow: none;
+  padding-left: 2px;
+  padding-right: 2px;
+  transition: background-size 220ms ease-out, border-color 220ms ease-out;
+}
+.input-draft:hover,
+.omni-input:hover,
+.calculator-field-input:hover,
+.chat-input:hover,
+.finalize-pharmacology-manual-input:hover,
+.vitals-context-input:hover,
+.vitals-context-select:hover {
+  border-bottom-color: var(--text-secondary);
+}
+.input-draft:focus-within,
+.omni-input:focus,
+.calculator-field-input:focus,
+.chat-input:focus,
+.finalize-pharmacology-manual-input:focus,
+.vitals-context-input:focus,
+.vitals-context-select:focus {
+  outline: none;
+  border-color: var(--border);
+  box-shadow: none;
+  background-size: 100% 2px;
+}
+
+/* ─── Focus mode (EMR): the card being filled stays clear, cards below fade back. ─── */
+.clinical-stream .stream-section {
+  transition: opacity 160ms ease-out;
+}
+.clinical-stream .stream-section[data-spotlight-dim] {
+  opacity: 0.4;
+}
+.clinical-stream .stream-section[data-spotlight-dim]:hover {
+  opacity: 0.75;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .input-draft,
+  .omni-input,
+  .calculator-field-input,
+  .chat-input,
+  .finalize-pharmacology-manual-input,
+  .vitals-context-input,
+  .vitals-context-select,
+  .clinical-stream .stream-section {
+    transition: none;
+  }
+}
