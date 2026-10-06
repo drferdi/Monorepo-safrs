@@ -179,14 +179,21 @@ function scoreSpo2Scale1(spo2: number | undefined): ClinicalNEWS2ParameterScore 
   return { parameter: 'spo2', value: spo2, score, unit: '%' };
 }
 
-function scoreSpo2Scale2(spo2: number | undefined): ClinicalNEWS2ParameterScore {
+/**
+ * RCP NEWS2 (2017) Scale 2: 93 % and above scores only on oxygen (93-94: 1, 95-96: 2, >=97: 3);
+ * on air it scores 0. Oxygen not recorded keeps the oxygen bands, the safer miss.
+ */
+function scoreSpo2Scale2(
+  spo2: number | undefined,
+  onO2: boolean | undefined
+): ClinicalNEWS2ParameterScore {
   if (spo2 === undefined)
     return { parameter: 'spo2_scale2', value: undefined, score: 0, unit: '%' };
   let score = 0;
   if (spo2 <= 83) score = 3;
   else if (spo2 <= 85) score = 2;
   else if (spo2 <= 87) score = 1;
-  else if (spo2 <= 92) score = 0;
+  else if (spo2 <= 92 || onO2 === false) score = 0;
   else if (spo2 <= 94) score = 1;
   else if (spo2 <= 96) score = 2;
   else score = 3;
@@ -309,7 +316,9 @@ export function calculateClinicalNEWS2(
 
   const parameterScores = [
     scoreRespiratoryRate(vitals.respiratoryRate),
-    hasCOPD ? scoreSpo2Scale2(vitals.spo2) : scoreSpo2Scale1(vitals.spo2),
+    hasCOPD
+      ? scoreSpo2Scale2(vitals.spo2, vitals.supplementalO2)
+      : scoreSpo2Scale1(vitals.spo2),
     scoreSystolic(vitals.systolicBp),
     scoreHeartRate(vitals.heartRate),
     scoreTemperature(vitals.temperatureC),
