@@ -342,7 +342,7 @@ export default function HubPage() {
         <p
           style={{
             margin: 0,
-            fontSize: 12,
+            fontSize: 11,
             color: 'var(--text-muted)',
           }}
         >
@@ -351,7 +351,7 @@ export default function HubPage() {
         <h1
           style={{
             margin: '8px 0 0',
-            fontSize: 28,
+            fontSize: 30,
             fontWeight: 600,
             color: 'var(--text-main)',
             letterSpacing: '-0.01em',
@@ -377,7 +377,7 @@ export default function HubPage() {
                 onClick={() => setActiveTab(tab.key)}
                 style={{
                   padding: '7px 18px',
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: isActive ? 600 : 400,
                   color: isActive ? HUB_ACCENT : 'var(--text-muted)',
                   background: isActive ? 'rgba(0, 33, 71, 0.08)' : 'transparent',
@@ -404,7 +404,7 @@ export default function HubPage() {
               gap: 16,
             }}
           >
-            <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>
+            <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
               {loading ? 'Memuat...' : `${roster.length} anggota terdaftar`}
             </span>
             {!loading && totalOnline > 0 && (
@@ -413,7 +413,7 @@ export default function HubPage() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: 6,
-                  fontSize: 12,
+                  fontSize: 11,
                   color: 'var(--text-muted)',
                   padding: '3px 10px',
                   borderRadius: 99,
@@ -462,7 +462,7 @@ export default function HubPage() {
               >
                 <span
                   style={{
-                    fontSize: 12,
+                    fontSize: 11,
                     color: 'var(--text-muted)',
                   }}
                 >
@@ -470,7 +470,7 @@ export default function HubPage() {
                 </span>
                 <span
                   style={{
-                    fontSize: 28,
+                    fontSize: 30,
                     fontWeight: 600,
                     color: 'var(--text-main)',
                     letterSpacing: '-0.03em',
@@ -495,14 +495,14 @@ export default function HubPage() {
             >
               <div
                 style={{
-                  fontSize: 12,
+                  fontSize: 11,
                   color: 'var(--text-muted)',
                   marginBottom: 8,
                 }}
               >
                 Status Roster
               </div>
-              <div style={{ fontSize: 16, lineHeight: 1.6 }}>{loadError}</div>
+              <div style={{ fontSize: 15, lineHeight: 1.6 }}>{loadError}</div>
             </div>
           ) : !loading && roster.length === 0 ? (
             <div
@@ -516,14 +516,14 @@ export default function HubPage() {
             >
               <div
                 style={{
-                  fontSize: 12,
+                  fontSize: 11,
                   color: 'var(--text-muted)',
                   marginBottom: 8,
                 }}
               >
                 Status Roster
               </div>
-              <div style={{ fontSize: 16, lineHeight: 1.6 }}>
+              <div style={{ fontSize: 15, lineHeight: 1.6 }}>
                 Belum ada anggota roster yang tampil saat ini.
               </div>
             </div>
@@ -642,7 +642,7 @@ export default function HubPage() {
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div
                             style={{
-                              fontSize: 14,
+                              fontSize: 13,
                               fontWeight: 600,
                               color: 'var(--text-main)',
                               lineHeight: 1.25,
@@ -657,7 +657,7 @@ export default function HubPage() {
                           {degreesLabel && (
                             <div
                               style={{
-                                fontSize: 12,
+                                fontSize: 11,
                                 color: 'var(--text-muted)',
                                 lineHeight: 1.3,
                                 marginTop: 2,
@@ -685,7 +685,7 @@ export default function HubPage() {
                             >
                               <span
                                 style={{
-                                  fontSize: 12,
+                                  fontSize: 11,
                                   color: 'var(--text-muted)',
                                   lineHeight: 1.4,
                                 }}
@@ -694,7 +694,7 @@ export default function HubPage() {
                               </span>
                               <span
                                 style={{
-                                  fontSize: 12,
+                                  fontSize: 11,
                                   color: 'var(--text-main)',
                                   lineHeight: 1.35,
                                   display: '-webkit-box',
@@ -718,7 +718,7 @@ export default function HubPage() {
                             >
                               <span
                                 style={{
-                                  fontSize: 12,
+                                  fontSize: 11,
                                   color: 'var(--text-muted)',
                                   lineHeight: 1.4,
                                 }}
@@ -727,7 +727,7 @@ export default function HubPage() {
                               </span>
                               <span
                                 style={{
-                                  fontSize: 12,
+                                  fontSize: 11,
                                   color: 'var(--text-muted)',
                                   lineHeight: 1.35,
                                   display: '-webkit-box',
@@ -752,7 +752,7 @@ export default function HubPage() {
                           >
                             <span
                               style={{
-                                fontSize: 12,
+                                fontSize: 11,
                                 color: isOnline ? '#7fd38a' : 'var(--text-muted)',
                                 padding: '4px 8px',
                                 borderRadius: 999,
@@ -769,7 +769,7 @@ export default function HubPage() {
                             {hasEmployeeId ? (
                               <span
                                 style={{
-                                  fontSize: 12,
+                                  fontSize: 11,
                                   color: 'var(--text-muted)',
                                   padding: '4px 8px',
                                   borderRadius: 999,
@@ -839,7 +839,7 @@ export default function HubPage() {
                               background: 'rgba(0, 33, 71, 0.1)',
                               border: '1px solid rgba(0, 33, 71, 0.18)',
                               color: '#f0b264',
-                              fontSize: 12,
+                              fontSize: 11,
                               fontWeight: 600,
                               flexShrink: 0,
                             }}
@@ -848,7 +848,7 @@ export default function HubPage() {
                           </span>
                           <span
                             style={{
-                              fontSize: 12,
+                              fontSize: 11,
                               color: 'var(--text-muted)',
                               padding: '3px 8px',
                               borderRadius: 999,
@@ -863,7 +863,7 @@ export default function HubPage() {
                           {hasCredentials && (
                             <span
                               style={{
-                                fontSize: 12,
+                                fontSize: 11,
                                 color: 'var(--text-muted)',
                                 padding: '2px 7px',
                                 borderRadius: 4,
@@ -897,7 +897,7 @@ export default function HubPage() {
                             >
                               <span
                                 style={{
-                                  fontSize: 12,
+                                  fontSize: 11,
                                   color: 'var(--text-muted)',
                                 }}
                               >
@@ -905,7 +905,7 @@ export default function HubPage() {
                               </span>
                               <span
                                 style={{
-                                  fontSize: 12,
+                                  fontSize: 11,
                                   color: 'var(--text-main)',
                                   lineHeight: 1.35,
                                 }}
@@ -925,7 +925,7 @@ export default function HubPage() {
                         >
                           <span
                             style={{
-                              fontSize: 12,
+                              fontSize: 11,
                               color: 'var(--text-muted)',
                             }}
                           >
@@ -981,7 +981,7 @@ export default function HubPage() {
                         >
                           <span
                             style={{
-                              fontSize: 12,
+                              fontSize: 11,
                               color: 'var(--text-muted)',
                             }}
                           >
@@ -989,7 +989,7 @@ export default function HubPage() {
                           </span>
                           <span
                             style={{
-                              fontSize: 14,
+                              fontSize: 13,
                               lineHeight: 1,
                               color: 'rgba(240, 178, 100, 0.92)',
                             }}
@@ -1031,7 +1031,7 @@ export default function HubPage() {
               <div style={{ display: 'grid', gap: 10 }}>
                 <div
                   style={{
-                    fontSize: 12,
+                    fontSize: 11,
                     color: HUB_ACCENT,
                   }}
                 >
@@ -1052,7 +1052,7 @@ export default function HubPage() {
                 </div>
                 <div
                   style={{
-                    fontSize: 14,
+                    fontSize: 13,
                     lineHeight: 1.75,
                     color: 'var(--text-muted)',
                     maxWidth: 720,
@@ -1093,7 +1093,7 @@ export default function HubPage() {
                   <div key={item.label} style={{ display: 'grid', gap: 6 }}>
                     <span
                       style={{
-                        fontSize: 12,
+                        fontSize: 11,
                         color: 'var(--text-muted)',
                       }}
                     >
@@ -1101,7 +1101,7 @@ export default function HubPage() {
                     </span>
                     <span
                       style={{
-                        fontSize: 28,
+                        fontSize: 30,
                         lineHeight: 1,
                         color: 'var(--text-main)',
                         letterSpacing: '-0.04em',
@@ -1111,7 +1111,7 @@ export default function HubPage() {
                     </span>
                     <span
                       style={{
-                        fontSize: 12,
+                        fontSize: 11,
                         color: 'var(--text-muted)',
                         lineHeight: 1.55,
                       }}
@@ -1138,7 +1138,7 @@ export default function HubPage() {
               <div style={{ display: 'grid', gap: 6 }}>
                 <div
                   style={{
-                    fontSize: 12,
+                    fontSize: 11,
                     color: 'var(--text-muted)',
                   }}
                 >
@@ -1146,7 +1146,7 @@ export default function HubPage() {
                 </div>
                 <div
                   style={{
-                    fontSize: 14,
+                    fontSize: 13,
                     color: 'var(--text-main)',
                     lineHeight: 1.6,
                   }}
@@ -1218,7 +1218,7 @@ export default function HubPage() {
                       background: 'rgba(0, 33, 71, 0.08)',
                       border: '1px solid rgba(0, 33, 71, 0.2)',
                       color: '#002147',
-                      fontSize: 12,
+                      fontSize: 11,
                       fontWeight: 600,
                     }}
                   >
@@ -1226,7 +1226,7 @@ export default function HubPage() {
                   </span>
                   <span
                     style={{
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: 600,
                       color: 'var(--text-main)',
                     }}
@@ -1237,7 +1237,7 @@ export default function HubPage() {
                 <p
                   style={{
                     margin: 0,
-                    fontSize: 14,
+                    fontSize: 13,
                     color: 'var(--text-muted)',
                     lineHeight: 1.6,
                   }}
@@ -1276,7 +1276,7 @@ export default function HubPage() {
                   <div style={{ display: 'grid', gap: 6 }}>
                     <span
                       style={{
-                        fontSize: 12,
+                        fontSize: 11,
                         fontWeight: 600,
                         color: HUB_ACCENT,
                       }}
@@ -1285,7 +1285,7 @@ export default function HubPage() {
                     </span>
                     <span
                       style={{
-                        fontSize: 16,
+                        fontSize: 15,
                         fontWeight: 600,
                         letterSpacing: '-0.01em',
                         color: 'var(--text-main)',
@@ -1296,7 +1296,7 @@ export default function HubPage() {
                   </div>
                   <span
                     style={{
-                      fontSize: 12,
+                      fontSize: 11,
                       color: 'var(--text-muted)',
                       padding: '5px 10px',
                       borderRadius: 999,
@@ -1366,7 +1366,7 @@ export default function HubPage() {
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
-                                fontSize: 14,
+                                fontSize: 13,
                                 fontWeight: 600,
                                 color: isCEO ? HUB_ACCENT : 'var(--text-muted)',
                                 flexShrink: 0,
@@ -1377,7 +1377,7 @@ export default function HubPage() {
                             <div style={{ minWidth: 0, flex: 1 }}>
                               <div
                                 style={{
-                                  fontSize: 14,
+                                  fontSize: 13,
                                   fontWeight: 600,
                                   color: 'var(--text-main)',
                                   lineHeight: 1.35,
@@ -1387,7 +1387,7 @@ export default function HubPage() {
                               </div>
                               <div
                                 style={{
-                                  fontSize: 14,
+                                  fontSize: 13,
                                   color: isCEO ? HUB_ACCENT : '#D9C8B1',
                                   marginTop: 4,
                                   lineHeight: 1.45,
@@ -1400,7 +1400,7 @@ export default function HubPage() {
                           {isCEO && (
                             <span
                               style={{
-                                fontSize: 12,
+                                fontSize: 11,
                                 color: HUB_ACCENT,
                                 padding: '5px 9px',
                                 borderRadius: 999,
@@ -1424,7 +1424,7 @@ export default function HubPage() {
                           >
                             <span
                               style={{
-                                fontSize: 12,
+                                fontSize: 11,
                                 color: HUB_ACCENT,
                               }}
                             >
@@ -1432,7 +1432,7 @@ export default function HubPage() {
                             </span>
                             <div
                               style={{
-                                fontSize: 12,
+                                fontSize: 11,
                                 color: 'var(--text-muted)',
                                 lineHeight: 1.68,
                                 padding: '10px 12px',
@@ -1458,7 +1458,7 @@ export default function HubPage() {
             style={{
               textAlign: 'center',
               padding: '12px 0 4px',
-              fontSize: 12,
+              fontSize: 11,
               color: 'var(--text-muted)',
             }}
           >

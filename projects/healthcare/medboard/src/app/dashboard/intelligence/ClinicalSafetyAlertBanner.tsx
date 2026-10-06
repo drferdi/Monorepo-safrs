@@ -25,7 +25,7 @@ function QuiescentBanner(): React.JSX.Element {
       <div>
         <div
           style={{
-            fontSize: 12,
+            fontSize: 11,
             fontFamily: 'var(--font-mono)',
             color: 'var(--c-critical)',
             marginBottom: 8,
@@ -33,14 +33,14 @@ function QuiescentBanner(): React.JSX.Element {
         >
           Clinical Safety Alert
         </div>
-        <div style={{ fontSize: 14, color: 'var(--text-main)' }}>Belum ada alert kritis aktif.</div>
+        <div style={{ fontSize: 13, color: 'var(--text-main)' }}>Belum ada alert kritis aktif.</div>
       </div>
       <div
         style={{
           borderRadius: 4,
           border: '1px dashed var(--line-base)',
           padding: '8px 14px',
-          fontSize: 12,
+          fontSize: 11,
           fontFamily: 'var(--font-mono)',
           color: 'var(--text-muted)',
         }}
@@ -95,7 +95,7 @@ function ActiveAlertBanner({
         <div style={{ minWidth: 0 }}>
           <div
             style={{
-              fontSize: 12,
+              fontSize: 11,
               fontFamily: 'var(--font-mono)',
               color: 'var(--c-critical)',
               marginBottom: 4,
@@ -105,7 +105,7 @@ function ActiveAlertBanner({
           </div>
           <div
             style={{
-              fontSize: 12,
+              fontSize: 11,
               fontFamily: 'var(--font-mono)',
               color: 'var(--text-muted)',
               opacity: 0.6,
@@ -117,7 +117,7 @@ function ActiveAlertBanner({
           >
             {encounterId}
           </div>
-          <p style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--text-main)' }}>{message}</p>
+          <p style={{ fontSize: 13, lineHeight: 1.6, color: 'var(--text-main)' }}>{message}</p>
 
           {/* CME context chips — rendered when trajectory alert payload includes momentum data */}
           {(cmeContext?.momentumLevel || cmeContext?.convergencePattern || cmeContext?.recommendedAction) && (
@@ -125,7 +125,7 @@ function ActiveAlertBanner({
               {cmeContext.momentumLevel && (
                 <span
                   style={{
-                    fontSize: 12,
+                    fontSize: 11,
                     fontFamily: 'var(--font-mono)',
                     color: 'var(--c-critical)',
                     border: '1px solid var(--c-critical)',
@@ -140,7 +140,7 @@ function ActiveAlertBanner({
               {cmeContext.convergencePattern && cmeContext.convergencePattern !== 'none' && (
                 <span
                   style={{
-                    fontSize: 12,
+                    fontSize: 11,
                     fontFamily: 'var(--font-mono)',
                     color: 'var(--c-critical)',
                     border: '1px solid var(--c-critical)',
@@ -155,7 +155,7 @@ function ActiveAlertBanner({
               {cmeContext.recommendedAction && (
                 <span
                   style={{
-                    fontSize: 12,
+                    fontSize: 11,
                     color: 'var(--text-muted)',
                     fontStyle: 'italic',
                     padding: '2px 0',
@@ -178,7 +178,7 @@ function ActiveAlertBanner({
           borderRadius: 4,
           border: '1px solid var(--c-critical)',
           padding: '8px 16px',
-          fontSize: 14,
+          fontSize: 13,
           fontFamily: 'var(--font-mono)',
           fontWeight: 500,
           color: 'var(--c-critical)',
@@ -214,10 +214,10 @@ function AcknowledgedBanner({ acknowledgedAt }: { acknowledgedAt: string }): Rea
         gap: 12,
       }}
     >
-      <span aria-hidden="true" style={{ fontSize: 16, color: 'var(--text-muted)' }}>
+      <span aria-hidden="true" style={{ fontSize: 15, color: 'var(--text-muted)' }}>
         ✓
       </span>
-      <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>
+      <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>
         Alert kritis telah di-acknowledge pada {time}.
       </span>
     </section>

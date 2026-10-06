@@ -112,14 +112,14 @@ export function ClinicalTrajectoryV1Panel({ trajectory, className }: Props) {
           <div style={{ flex: '1 1 240px' }}>
             <div
               style={{
-                fontSize: 12,
+                fontSize: 11,
                 color: 'var(--text-muted)',
                 marginBottom: 4,
               }}
             >
               ClinicalTrajectory v1
             </div>
-            <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-main)' }}>
+            <div style={{ fontSize: 15, fontWeight: 600, color: 'var(--text-main)' }}>
               {formatValue(trajectory.response.direction)}
             </div>
             <div style={{ color: 'var(--text-muted)', marginTop: 4, lineHeight: 1.5 }}>
@@ -133,7 +133,7 @@ export function ClinicalTrajectoryV1Panel({ trajectory, className }: Props) {
               ...chipStyle(directionStyle),
               borderRadius: 999,
               padding: '8px 12px',
-              fontSize: 12,
+              fontSize: 11,
             }}
           >
             {trajectory.response.direction}
@@ -144,7 +144,7 @@ export function ClinicalTrajectoryV1Panel({ trajectory, className }: Props) {
               ...chipStyle(severityStyle),
               borderRadius: 999,
               padding: '8px 12px',
-              fontSize: 12,
+              fontSize: 11,
             }}
           >
             {trajectory.response.severityBand}
@@ -181,7 +181,7 @@ export function ClinicalTrajectoryV1Panel({ trajectory, className }: Props) {
                     ...chipStyle(RISK_STYLES.stable),
                     borderRadius: 999,
                     padding: '6px 10px',
-                    fontSize: 12,
+                    fontSize: 11,
                   }}
                 >
                   {ref}
@@ -236,14 +236,14 @@ function MiniStat({ label, value }: { label: string; value: string }) {
     >
       <div
         style={{
-          fontSize: 12,
+          fontSize: 11,
           color: 'var(--text-muted)',
           marginBottom: 6,
         }}
       >
         {label}
       </div>
-      <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-main)' }}>{value}</div>
+      <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-main)' }}>{value}</div>
     </div>
   )
 }
@@ -260,7 +260,7 @@ function PanelBlock({ title, children }: { title: string; children: ReactNode })
     >
       <div
         style={{
-          fontSize: 12,
+          fontSize: 11,
           color: 'var(--text-muted)',
           marginBottom: 8,
         }}

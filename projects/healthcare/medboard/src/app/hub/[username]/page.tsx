@@ -257,7 +257,7 @@ export default function HubProfileDetailPage() {
           <p
             style={{
               margin: 0,
-              fontSize: 12,
+              fontSize: 11,
               color: 'var(--text-muted)',
             }}
           >
@@ -266,7 +266,7 @@ export default function HubProfileDetailPage() {
           <h1
             style={{
               margin: '8px 0 0',
-              fontSize: 28,
+              fontSize: 30,
               fontWeight: 600,
               color: 'var(--text-main)',
               letterSpacing: '-0.02em',
@@ -296,7 +296,7 @@ export default function HubProfileDetailPage() {
               background: 'rgba(240, 178, 100, 0.08)',
               color: '#f0b264',
               textDecoration: 'none',
-              fontSize: 12,
+              fontSize: 11,
             }}
           >
             Buka Lab Preview
@@ -313,7 +313,7 @@ export default function HubProfileDetailPage() {
               background: 'var(--bg-canvas-v3)',
               color: 'var(--text-main)',
               textDecoration: 'none',
-              fontSize: 12,
+              fontSize: 11,
             }}
           >
             ← Kembali ke Hub
@@ -397,7 +397,7 @@ export default function HubProfileDetailPage() {
                   <div>
                     <div
                       style={{
-                        fontSize: 12,
+                        fontSize: 11,
                         color: 'var(--text-muted)',
                         marginBottom: 6,
                       }}
@@ -418,7 +418,7 @@ export default function HubProfileDetailPage() {
                     {degreesLabel && (
                       <div
                         style={{
-                          fontSize: 12,
+                          fontSize: 11,
                           color: 'var(--text-muted)',
                           marginTop: 4,
                         }}
@@ -434,7 +434,7 @@ export default function HubProfileDetailPage() {
                         <span
                           key={item}
                           style={{
-                            fontSize: 12,
+                            fontSize: 11,
                             color: 'var(--text-muted)',
                             padding: '5px 10px',
                             borderRadius: 999,
@@ -448,7 +448,7 @@ export default function HubProfileDetailPage() {
                     ) : (
                       <span
                         style={{
-                          fontSize: 12,
+                          fontSize: 11,
                           color: 'var(--text-muted)',
                           padding: '5px 10px',
                           borderRadius: 999,
@@ -464,7 +464,7 @@ export default function HubProfileDetailPage() {
                   {/* Ringkasan profile — humanized */}
                   <div
                     style={{
-                      fontSize: 14,
+                      fontSize: 13,
                       color: 'var(--text-muted)',
                       lineHeight: 1.65,
                       marginTop: 4,
@@ -487,7 +487,7 @@ export default function HubProfileDetailPage() {
                   <div style={{ marginTop: 6 }}>
                     <div
                       style={{
-                        fontSize: 12,
+                        fontSize: 11,
                         color: 'var(--text-muted)',
                         marginBottom: 8,
                       }}
@@ -598,7 +598,7 @@ export default function HubProfileDetailPage() {
                   >
                     <span
                       style={{
-                        fontSize: 12,
+                        fontSize: 11,
                         color: 'var(--text-muted)',
                         lineHeight: 1.5,
                       }}
@@ -607,7 +607,7 @@ export default function HubProfileDetailPage() {
                     </span>
                     <span
                       style={{
-                        fontSize: 14,
+                        fontSize: 13,
                         color: 'var(--text-main)',
                         lineHeight: 1.45,
                       }}

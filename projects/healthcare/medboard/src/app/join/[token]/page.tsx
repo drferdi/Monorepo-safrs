@@ -152,7 +152,7 @@ export default function PatientJoinPage(): React.JSX.Element {
           style={{
             color: 'rgba(255,255,255,0.5)',
             marginTop: 16,
-            fontSize: 14,
+            fontSize: 13,
           }}
         >
           Memuat informasi konsultasi...
@@ -165,11 +165,11 @@ export default function PatientJoinPage(): React.JSX.Element {
     return (
       <div style={fullCenter}>
         <AlertCircle size={48} style={{ color: '#f87171', marginBottom: 16 }} />
-        <h2 style={{ color: '#fff', fontSize: 16, marginBottom: 8 }}>Link Tidak Valid</h2>
+        <h2 style={{ color: '#fff', fontSize: 15, marginBottom: 8 }}>Link Tidak Valid</h2>
         <p
           style={{
             color: 'rgba(255,255,255,0.5)',
-            fontSize: 14,
+            fontSize: 13,
             textAlign: 'center',
             maxWidth: 300,
           }}
@@ -185,7 +185,7 @@ export default function PatientJoinPage(): React.JSX.Element {
       <div style={fullCenter}>
         <div style={{ fontSize: 56, marginBottom: 16 }}>✓</div>
         <h2 style={{ color: '#fff', fontSize: 20, marginBottom: 8 }}>Konsultasi Selesai</h2>
-        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14 }}>
+        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 13 }}>
           Terima kasih telah menggunakan layanan telemedicine Puskesmas.
         </p>
       </div>
@@ -234,7 +234,7 @@ export default function PatientJoinPage(): React.JSX.Element {
             <p
               style={{
                 color: 'rgba(255,255,255,0.4)',
-                fontSize: 14,
+                fontSize: 13,
                 marginTop: 4,
               }}
             >
@@ -255,18 +255,18 @@ export default function PatientJoinPage(): React.JSX.Element {
             <p
               style={{
                 color: 'rgba(255,255,255,0.5)',
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: 600,
                 margin: '0 0 6px',
               }}
             >
               Jadwal Konsultasi
             </p>
-            <p style={{ color: '#fff', fontSize: 14, margin: 0 }}>{scheduledDate}</p>
+            <p style={{ color: '#fff', fontSize: 13, margin: 0 }}>{scheduledDate}</p>
             <p
               style={{
                 color: 'rgba(255,255,255,0.5)',
-                fontSize: 14,
+                fontSize: 13,
                 margin: '4px 0 0',
               }}
             >
@@ -279,7 +279,7 @@ export default function PatientJoinPage(): React.JSX.Element {
             <label
               style={{
                 color: 'rgba(255,255,255,0.6)',
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: 600,
                 display: 'block',
                 marginBottom: 8,
@@ -302,7 +302,7 @@ export default function PatientJoinPage(): React.JSX.Element {
                 borderRadius: 10,
                 padding: '12px 14px',
                 color: '#fff',
-                fontSize: 14,
+                fontSize: 13,
                 outline: 'none',
               }}
               autoFocus
@@ -319,7 +319,7 @@ export default function PatientJoinPage(): React.JSX.Element {
               border: 'none',
               borderRadius: 12,
               color: '#fff',
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: 600,
               cursor: displayName.trim() ? 'pointer' : 'not-allowed',
               transition: 'background 0.2s',
@@ -331,7 +331,7 @@ export default function PatientJoinPage(): React.JSX.Element {
           <p
             style={{
               color: 'rgba(255,255,255,0.3)',
-              fontSize: 14,
+              fontSize: 13,
               textAlign: 'center',
               marginTop: 16,
             }}
@@ -351,7 +351,7 @@ export default function PatientJoinPage(): React.JSX.Element {
           style={{
             color: 'rgba(255,255,255,0.5)',
             marginTop: 16,
-            fontSize: 14,
+            fontSize: 13,
           }}
         >
           Menghubungkan ke ruang konsultasi...
@@ -384,11 +384,11 @@ export default function PatientJoinPage(): React.JSX.Element {
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Video size={14} style={{ color: '#D47A57' }} />
-          <span style={{ color: '#fff', fontSize: 14, fontWeight: 600 }}>
+          <span style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>
             Konsultasi Berlangsung
           </span>
         </div>
-        <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14 }}>Puskesmas Balowerti</span>
+        <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>Puskesmas Balowerti</span>
       </div>
 
       {/* Video area */}

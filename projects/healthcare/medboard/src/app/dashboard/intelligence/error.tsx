@@ -27,7 +27,7 @@ export default function IntelligenceDashboardError({
       >
         <div
           style={{
-            fontSize: 12,
+            fontSize: 11,
             fontFamily: 'var(--font-mono)',
             color: 'var(--c-critical)',
             marginBottom: 12,
@@ -37,7 +37,7 @@ export default function IntelligenceDashboardError({
         </div>
         <p
           style={{
-            fontSize: 14,
+            fontSize: 13,
             lineHeight: 1.6,
             color: 'var(--text-muted)',
             marginBottom: 16,
@@ -52,7 +52,7 @@ export default function IntelligenceDashboardError({
             borderRadius: 4,
             border: '1px dashed var(--line-base)',
             padding: '8px 14px',
-            fontSize: 12,
+            fontSize: 11,
             fontFamily: 'var(--font-mono)',
             color: 'var(--text-muted)',
             marginBottom: 20,
@@ -69,7 +69,7 @@ export default function IntelligenceDashboardError({
             borderRadius: 4,
             border: '1px solid var(--line-base)',
             padding: '8px 16px',
-            fontSize: 14,
+            fontSize: 13,
             fontFamily: 'var(--font-mono)',
             color: 'var(--text-main)',
             background: 'transparent',

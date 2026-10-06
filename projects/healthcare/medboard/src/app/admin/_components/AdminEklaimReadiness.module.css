@@ -11,20 +11,20 @@
 /* ─── Header ─────────────────────────────────────────────── */
 
 .eyebrow {
-  font-size: 0.75rem;
+  font-size: 11px;
   color: var(--c-asesmen);
   margin: 0 0 0.25rem;
 }
 
 .title {
-  font-size: 1.25rem;
+  font-size: 20px;
   font-weight: 500;
   color: var(--text-main);
   margin: 0 0 0.5rem;
 }
 
 .description {
-  font-size: 0.875rem;
+  font-size: 13px;
   line-height: 1.6;
   color: var(--text-muted);
   margin: 0;
@@ -55,7 +55,7 @@
 }
 
 .kpiValue {
-  font-size: 1.5rem;
+  font-size: 24px;
   font-weight: 600;
   color: var(--text-main);
   line-height: 1;
@@ -74,7 +74,7 @@
 }
 
 .kpiLabel {
-  font-size: 0.75rem;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
@@ -93,7 +93,7 @@
 }
 
 .listHeaderLabel {
-  font-size: 0.75rem;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
@@ -152,7 +152,7 @@
 .patientLabel {
   flex: 1;
   min-width: 0;
-  font-size: 0.875rem;
+  font-size: 13px;
   font-weight: 500;
   color: var(--text-main);
   white-space: nowrap;
@@ -163,7 +163,7 @@
 /* ─── Checked At ──────────────────────────────────────────── */
 
 .checkedAt {
-  font-size: 0.75rem;
+  font-size: 11px;
   color: var(--text-muted);
   white-space: nowrap;
   flex-shrink: 0;
@@ -172,7 +172,7 @@
 /* ─── Status Badge ────────────────────────────────────────── */
 
 .statusBadge {
-  font-size: 0.75rem;
+  font-size: 11px;
   color: var(--text-muted);
   border: 1px solid var(--line-base);
   border-radius: 9999px;
@@ -184,7 +184,7 @@
 /* ─── Readiness Badge ─────────────────────────────────────── */
 
 .readinessBadge {
-  font-size: 0.75rem;
+  font-size: 11px;
   font-weight: 600;
   border-radius: 9999px;
   padding: 0.125rem 0.5rem;
@@ -207,7 +207,7 @@
 /* ─── Expand Arrow ────────────────────────────────────────── */
 
 .expandArrow {
-  font-size: 0.875rem;
+  font-size: 13px;
   color: var(--text-muted);
   flex-shrink: 0;
   transition: transform 0.15s ease;
@@ -229,7 +229,7 @@
 }
 
 .emptyIssues {
-  font-size: 0.75rem;
+  font-size: 11px;
   color: var(--text-muted);
   font-style: italic;
 }
@@ -256,7 +256,7 @@
 }
 
 .issueCode {
-  font-size: 0.75rem;
+  font-size: 11px;
   font-weight: 600;
   white-space: nowrap;
   flex-shrink: 0;
@@ -271,7 +271,7 @@
 }
 
 .issueMessage {
-  font-size: 0.75rem;
+  font-size: 11px;
   line-height: 1.4;
   color: var(--text-muted);
 }
@@ -279,7 +279,7 @@
 /* ─── States ──────────────────────────────────────────────── */
 
 .statusState {
-  font-size: 0.75rem;
+  font-size: 11px;
   color: var(--text-muted);
   padding: 2rem;
   text-align: center;
@@ -290,7 +290,7 @@
 }
 
 .emptyState {
-  font-size: 0.875rem;
+  font-size: 13px;
   color: var(--text-muted);
   padding: 2rem;
   text-align: center;

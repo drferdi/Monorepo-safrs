@@ -132,7 +132,7 @@ export function EPrescriptionModal({
             <h2
               style={{
                 color: 'var(--text-main)',
-                fontSize: 16,
+                fontSize: 15,
                 fontWeight: 600,
                 margin: 0,
               }}
@@ -142,7 +142,7 @@ export function EPrescriptionModal({
             <p
               style={{
                 color: 'var(--text-muted)',
-                fontSize: 14,
+                fontSize: 13,
                 margin: '4px 0 0',
               }}
             >
@@ -192,7 +192,7 @@ export function EPrescriptionModal({
                 <span
                   style={{
                     color: 'var(--text-muted)',
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: 600,
                   }}
                 >
@@ -324,7 +324,7 @@ export function EPrescriptionModal({
               background: 'none',
               borderRadius: 10,
               color: 'var(--text-muted)',
-              fontSize: 14,
+              fontSize: 13,
               cursor: 'pointer',
               transition: 'color 0.2s',
             }}
@@ -351,7 +351,7 @@ export function EPrescriptionModal({
               background: 'none',
               border: 'none',
               cursor: 'pointer',
-              fontSize: 14,
+              fontSize: 13,
               padding: '8px 16px',
             }}
           >
@@ -369,7 +369,7 @@ export function EPrescriptionModal({
               color: '#fff',
               border: 'none',
               borderRadius: 8,
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: 600,
               cursor: isSaving || saved ? 'not-allowed' : 'pointer',
               opacity: isSaving || saved ? 0.85 : 1,
@@ -412,7 +412,7 @@ const inputSm: React.CSSProperties = {
   borderRadius: 6,
   padding: '8px 10px',
   color: 'var(--text-main)',
-  fontSize: 14,
+  fontSize: 13,
   outline: 'none',
   boxSizing: 'border-box',
 }
@@ -422,7 +422,7 @@ function FieldLabel({ children }: { children: React.ReactNode }): React.JSX.Elem
     <label
       style={{
         color: 'var(--text-muted)',
-        fontSize: 14,
+        fontSize: 13,
         fontWeight: 600,
         display: 'block',
         marginBottom: 4,

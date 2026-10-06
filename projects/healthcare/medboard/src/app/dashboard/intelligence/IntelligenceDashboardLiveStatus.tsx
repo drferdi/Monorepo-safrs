@@ -43,7 +43,7 @@ export default function IntelligenceDashboardLiveStatus(): React.JSX.Element {
         />
         <div
           style={{
-            fontSize: 14,
+            fontSize: 13,
             fontFamily: 'var(--font-mono)',
             color: isLive ? 'var(--c-ok)' : 'var(--text-muted)',
           }}
@@ -55,7 +55,7 @@ export default function IntelligenceDashboardLiveStatus(): React.JSX.Element {
       {/* Data source */}
       <div
         style={{
-          fontSize: 12,
+          fontSize: 11,
           fontFamily: 'var(--font-mono)',
           color: 'var(--text-muted)',
           opacity: 0.6,
@@ -69,7 +69,7 @@ export default function IntelligenceDashboardLiveStatus(): React.JSX.Element {
       {/* Latest event */}
       <div
         style={{
-          fontSize: 12,
+          fontSize: 11,
           color: 'var(--text-muted)',
           textAlign: 'right',
           overflow: 'hidden',

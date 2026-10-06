@@ -59,7 +59,7 @@ export default function TCMADiagram() {
       {/* Title — hand-written feel */}
       <div
         style={{
-          fontSize: 12,
+          fontSize: 11,
           color: 'var(--text-muted)',
           marginBottom: 6,
           opacity: 0.6,
@@ -69,7 +69,7 @@ export default function TCMADiagram() {
       </div>
       <div
         style={{
-          fontSize: 16,
+          fontSize: 15,
           color: 'var(--text-main)',
           fontStyle: 'italic',
           marginBottom: 24,
@@ -132,7 +132,7 @@ export default function TCMADiagram() {
             <div>
               <div
                 style={{
-                  fontSize: 14,
+                  fontSize: 13,
                   color: 'var(--text-main)',
                   marginBottom: 2,
                   opacity: 0.9,
@@ -142,7 +142,7 @@ export default function TCMADiagram() {
               </div>
               <div
                 style={{
-                  fontSize: 12,
+                  fontSize: 11,
                   color: 'var(--text-muted)',
                   fontStyle: 'italic',
                   marginBottom: 8,
@@ -163,7 +163,7 @@ export default function TCMADiagram() {
                 {layer.items.map((item, i) => (
                   <span
                     key={item}
-                    style={{ fontSize: 12, color: 'var(--text-muted)', opacity: 0.7 }}
+                    style={{ fontSize: 11, color: 'var(--text-muted)', opacity: 0.7 }}
                   >
                     {item}
                     {i < layer.items.length - 1 ? ' ·' : ''}
@@ -188,7 +188,7 @@ export default function TCMADiagram() {
       >
         <div
           style={{
-            fontSize: 12,
+            fontSize: 11,
             color: 'var(--text-muted)',
             fontStyle: 'italic',
             opacity: 0.5,
@@ -198,7 +198,7 @@ export default function TCMADiagram() {
         </div>
         <div
           style={{
-            fontSize: 12,
+            fontSize: 11,
             color: 'var(--text-main)',
             fontStyle: 'italic',
             opacity: 0.65,
@@ -231,7 +231,7 @@ export default function TCMADiagram() {
         </div>
         <div
           style={{
-            fontSize: 12,
+            fontSize: 11,
             color: 'var(--text-muted)',
             opacity: 0.5,
             letterSpacing: '0.04em',

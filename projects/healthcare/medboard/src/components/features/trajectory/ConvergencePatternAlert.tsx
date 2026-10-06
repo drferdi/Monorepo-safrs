@@ -47,11 +47,11 @@ export function ConvergencePatternAlert({ convergence, className }: ConvergenceP
     >
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-        <span aria-hidden="true" style={{ fontSize: 16, color: severityColor }}>⚡</span>
+        <span aria-hidden="true" style={{ fontSize: 15, color: severityColor }}>⚡</span>
         <div style={{ flex: 1 }}>
           <div
             style={{
-              fontSize: 12,
+              fontSize: 11,
               fontFamily: 'var(--font-mono)',
               color: 'var(--text-muted)',
               marginBottom: 2,
@@ -59,13 +59,13 @@ export function ConvergencePatternAlert({ convergence, className }: ConvergenceP
           >
             Pola Konvergensi Terdeteksi
           </div>
-          <div style={{ fontSize: 14, fontWeight: 600, color: severityColor }}>
+          <div style={{ fontSize: 13, fontWeight: 600, color: severityColor }}>
             {label}
           </div>
         </div>
         <div
           style={{
-            fontSize: 12,
+            fontSize: 11,
             fontFamily: 'var(--font-mono)',
             color: severityColor,
             border: `1px solid color-mix(in srgb, ${severityColor} 35%, transparent)`,
@@ -78,7 +78,7 @@ export function ConvergencePatternAlert({ convergence, className }: ConvergenceP
       </div>
 
       {/* Narrative */}
-      <p style={{ fontSize: 14, color: 'var(--text-main)', lineHeight: 1.55, margin: '0 0 10px' }}>
+      <p style={{ fontSize: 13, color: 'var(--text-main)', lineHeight: 1.55, margin: '0 0 10px' }}>
         {convergence.narrative}
       </p>
 
@@ -89,7 +89,7 @@ export function ConvergencePatternAlert({ convergence, className }: ConvergenceP
             <span
               key={param}
               style={{
-                fontSize: 12,
+                fontSize: 11,
                 fontFamily: 'var(--font-mono)',
                 color: severityColor,
                 background: `color-mix(in srgb, ${severityColor} 15%, transparent)`,

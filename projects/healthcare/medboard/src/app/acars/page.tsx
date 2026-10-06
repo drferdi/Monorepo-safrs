@@ -30,7 +30,7 @@ const StaffMap = dynamic(() => import('@/components/map/StaffMap'), {
         justifyContent: 'center',
         gap: 12,
         color: 'var(--text-muted)',
-        fontSize: 14,
+        fontSize: 13,
       }}
     >
       <div
@@ -335,7 +335,7 @@ export default function AcarsPage() {
             <OnlineIndicator isOnline={connected} />
             <span
               style={{
-                fontSize: 12,
+                fontSize: 11,
                 color: connected ? 'var(--c-ok)' : 'var(--text-muted)',
               }}
             >
@@ -368,7 +368,7 @@ export default function AcarsPage() {
               <div style={{ textAlign: 'right' }}>
                 <div
                   style={{
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: 600,
                     color: 'var(--text-main)',
                   }}
@@ -377,7 +377,7 @@ export default function AcarsPage() {
                 </div>
                 <div
                   style={{
-                    fontSize: 12,
+                    fontSize: 11,
                     color: 'var(--text-muted)',
                   }}
                 >
@@ -411,7 +411,7 @@ export default function AcarsPage() {
               justifyContent: 'center',
               background: 'rgba(0,0,0,0.4)',
               color: 'var(--text-muted)',
-              fontSize: 14,
+              fontSize: 13,
             }}
           >
             Tidak ada crew online saat ini.
@@ -440,7 +440,7 @@ export default function AcarsPage() {
         >
           <div
             style={{
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: 600,
               color: 'var(--text-muted)',
             }}
@@ -449,7 +449,7 @@ export default function AcarsPage() {
           </div>
           <div
             style={{
-              fontSize: 12,
+              fontSize: 11,
               color: 'var(--text-muted)',
             }}
           >
@@ -477,7 +477,7 @@ export default function AcarsPage() {
             <span
               key={h}
               style={{
-                fontSize: 12,
+                fontSize: 11,
                 color: 'var(--text-muted)',
                 textAlign: i === 4 ? 'right' : undefined,
               }}
@@ -494,7 +494,7 @@ export default function AcarsPage() {
               padding: '32px 20px',
               textAlign: 'center',
               color: 'var(--text-muted)',
-              fontSize: 14,
+              fontSize: 13,
             }}
           >
             Belum ada crew online
@@ -534,7 +534,7 @@ export default function AcarsPage() {
                 <div>
                   <div
                     style={{
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: 600,
                       color: 'var(--text-main)',
                       letterSpacing: '0.02em',
@@ -542,12 +542,12 @@ export default function AcarsPage() {
                   >
                     {user.name}{' '}
                     {isMe && (
-                      <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>(you)</span>
+                      <span style={{ fontSize: 11, color: 'var(--text-muted)' }}>(you)</span>
                     )}
                   </div>
                   <div
                     style={{
-                      fontSize: 12,
+                      fontSize: 11,
                       color: 'var(--text-muted)',
                       marginTop: 2,
                     }}
@@ -560,7 +560,7 @@ export default function AcarsPage() {
               {/* Profesi */}
               <div
                 style={{
-                  fontSize: 14,
+                  fontSize: 13,
                   color: 'var(--text-main)',
                   letterSpacing: '0.03em',
                 }}
@@ -571,7 +571,7 @@ export default function AcarsPage() {
               {/* Institusi */}
               <div
                 style={{
-                  fontSize: 12,
+                  fontSize: 11,
                   color: 'var(--text-muted)',
                 }}
               >
@@ -602,14 +602,14 @@ export default function AcarsPage() {
                 />
                 <span
                   style={{
-                    fontSize: 12,
+                    fontSize: 11,
                     fontWeight: 600,
                     color: 'var(--c-ok)',
                   }}
                 >
                   ONLINE
                 </span>
-                <span style={{ fontSize: 12, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                <span style={{ fontSize: 11, color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
                   {onlineSourceLabel(user.source)}
                 </span>
               </div>
@@ -617,7 +617,7 @@ export default function AcarsPage() {
               {/* Jam Online */}
               <div
                 style={{
-                  fontSize: 12,
+                  fontSize: 11,
                   color: 'var(--c-ok)',
                   textAlign: 'right',
                 }}
@@ -662,7 +662,7 @@ export default function AcarsPage() {
         >
           <span
             style={{
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: 600,
               color: 'var(--text-muted)',
             }}
@@ -675,7 +675,7 @@ export default function AcarsPage() {
                 padding: '2px 8px',
                 background: myColor,
                 borderRadius: 10,
-                fontSize: 12,
+                fontSize: 11,
                 color: '#fff',
               }}
             >
@@ -702,7 +702,7 @@ export default function AcarsPage() {
               style={{
                 textAlign: 'center',
                 color: 'var(--text-muted)',
-                fontSize: 14,
+                fontSize: 13,
                 padding: '40px 0',
               }}
             >
@@ -724,14 +724,14 @@ export default function AcarsPage() {
               >
                 <div
                   style={{
-                    fontSize: 12,
+                    fontSize: 11,
                     color: isMe ? myColor : 'var(--text-muted)',
                     marginBottom: 4,
                   }}
                 >
                   {isMe ? 'You' : msg.senderName} · {msg.time}
                 </div>
-                <div style={{ fontSize: 14, color: 'var(--text-main)' }}>{msg.text}</div>
+                <div style={{ fontSize: 13, color: 'var(--text-main)' }}>{msg.text}</div>
               </div>
             )
           })}
@@ -753,7 +753,7 @@ export default function AcarsPage() {
               border: '1px solid var(--line-base)',
               borderRadius: 8,
               color: 'var(--text-main)',
-              fontSize: 14,
+              fontSize: 13,
               outline: 'none',
             }}
           />
@@ -766,7 +766,7 @@ export default function AcarsPage() {
               border: `1px solid ${input.trim() ? myColor : 'var(--line-base)'}`,
               borderRadius: 8,
               color: input.trim() ? myColor : 'var(--text-muted)',
-              fontSize: 12,
+              fontSize: 11,
               cursor: input.trim() ? 'pointer' : 'not-allowed',
               opacity: input.trim() ? 1 : 0.5,
             }}

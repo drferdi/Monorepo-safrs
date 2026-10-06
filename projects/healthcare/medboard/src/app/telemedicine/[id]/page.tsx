@@ -174,7 +174,7 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
             borderRadius: 8,
             color: '#fff',
             cursor: 'pointer',
-            fontSize: 14,
+            fontSize: 13,
             fontWeight: 600,
           }}
         >
@@ -206,7 +206,7 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
           Appointment #{appointment.id.slice(-6)} telah direkam
         </p>
         {appointment.diagnosis && (
-          <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>
             Diagnosis: {appointment.diagnosis}
           </p>
         )}
@@ -227,7 +227,7 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
               borderRadius: 8,
               color: 'var(--text-main)',
               cursor: 'pointer',
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: 600,
             }}
           >
@@ -242,7 +242,7 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
               borderRadius: 8,
               color: '#fff',
               cursor: 'pointer',
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: 600,
             }}
           >
@@ -285,7 +285,7 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
             background: 'none',
             border: 'none',
             cursor: 'pointer',
-            fontSize: 14,
+            fontSize: 13,
             padding: 4,
           }}
         >
@@ -294,10 +294,10 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
         <div style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.1)' }} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Video size={15} style={{ color: 'var(--c-asesmen)' }} />
-          <span style={{ color: '#fff', fontSize: 14, fontWeight: 600 }}>
+          <span style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>
             Telemedicine · #{appointment.id.slice(-6)}
           </span>
-          <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14 }}>
+          <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: 13 }}>
             ·{' '}
             {new Date(appointment.scheduledAt).toLocaleString('id-ID', {
               dateStyle: 'short',
@@ -316,7 +316,7 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
             border: '1px solid rgba(248,113,113,0.35)',
             background: 'rgba(127,29,29,0.2)',
             color: '#fecaca',
-            fontSize: 14,
+            fontSize: 13,
           }}
         >
           {sessionCompleteError}

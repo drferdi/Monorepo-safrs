@@ -68,7 +68,7 @@ export function OperationalSummaryPanelContent({
         >
           <div
             style={{
-              fontSize: 12,
+              fontSize: 11,
               fontFamily: 'var(--font-mono)',
               color: 'var(--text-muted)',
               marginBottom: 10,
@@ -89,7 +89,7 @@ export function OperationalSummaryPanelContent({
           </div>
           <div
             style={{
-              fontSize: 12,
+              fontSize: 11,
               color: 'var(--text-muted)',
               opacity: 0.7,
             }}
@@ -141,7 +141,7 @@ export default function OperationalSummaryPanel(): React.JSX.Element {
       >
         <div
           style={{
-            fontSize: 28,
+            fontSize: 30,
             fontFamily: 'var(--font-mono)',
             opacity: 0.2,
             marginBottom: 12,
@@ -149,12 +149,12 @@ export default function OperationalSummaryPanel(): React.JSX.Element {
         >
           ≡
         </div>
-        <div style={{ fontSize: 14, marginBottom: 4 }}>
+        <div style={{ fontSize: 13, marginBottom: 4 }}>
           {error ?? 'Ringkasan operasional belum tersedia'}
         </div>
         <div
           style={{
-            fontSize: 12,
+            fontSize: 11,
             fontFamily: 'var(--font-mono)',
             opacity: 0.5,
           }}

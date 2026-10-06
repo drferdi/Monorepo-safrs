@@ -71,7 +71,7 @@ function IntelligencePanel({
       >
         <div
           style={{
-            fontSize: 12,
+            fontSize: 11,
             fontFamily: 'var(--font-mono)',
             color: 'var(--text-muted)',
             opacity: 0.5,
@@ -82,7 +82,7 @@ function IntelligencePanel({
         </div>
         <h2
           style={{
-            fontSize: 16,
+            fontSize: 15,
             fontWeight: 500,
             color: 'var(--text-main)',
             letterSpacing: '0.01em',
@@ -108,13 +108,13 @@ function AccessNotice({ title, message }: { title: string; message: string }): R
         borderRadius: 6,
         border: '1px dashed var(--line-base)',
         padding: '16px 20px',
-        fontSize: 14,
+        fontSize: 13,
         color: 'var(--text-muted)',
       }}
     >
       <div
         style={{
-          fontSize: 12,
+          fontSize: 11,
           fontFamily: 'var(--font-mono)',
           color: 'var(--c-asesmen)',
           marginBottom: 8,
@@ -145,7 +145,7 @@ export default function IntelligenceDashboardScaffold({
             padding: '32px 24px',
             textAlign: 'center',
             color: 'var(--text-muted)',
-            fontSize: 14,
+            fontSize: 13,
           }}
         >
           Role saat ini belum memiliki izin untuk membuka panel intelligence.

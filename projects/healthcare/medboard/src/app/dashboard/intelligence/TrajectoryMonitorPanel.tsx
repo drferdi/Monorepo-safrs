@@ -77,7 +77,7 @@ export default function TrajectoryMonitorPanel(): React.JSX.Element {
       >
         <div
           style={{
-            fontSize: 12,
+            fontSize: 11,
             fontFamily: 'var(--font-mono)',
             color: 'var(--text-muted)',
             marginBottom: 8,
@@ -85,7 +85,7 @@ export default function TrajectoryMonitorPanel(): React.JSX.Element {
         >
           Clinical Momentum Engine
         </div>
-        <p style={{ fontSize: 14, color: 'var(--text-muted)', margin: '0 0 14px' }}>
+        <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: '0 0 14px' }}>
           Tempel 64-char patient identifier hash untuk membuka trajectory analysis tanpa perlu
           mengubah URL manual.
         </p>
@@ -120,7 +120,7 @@ export default function TrajectoryMonitorPanel(): React.JSX.Element {
               border: '1px solid var(--line-base)',
               background: 'transparent',
               padding: '10px 12px',
-              fontSize: 12,
+              fontSize: 11,
               color: 'var(--text-main)',
               outline: 'none',
               fontFamily: 'var(--font-mono)',
@@ -134,7 +134,7 @@ export default function TrajectoryMonitorPanel(): React.JSX.Element {
               border: '1px solid var(--line-base)',
               background: 'transparent',
               padding: '10px 14px',
-              fontSize: 12,
+              fontSize: 11,
               color: 'var(--text-main)',
               fontFamily: 'var(--font-mono)',
               cursor: 'pointer',
@@ -144,13 +144,13 @@ export default function TrajectoryMonitorPanel(): React.JSX.Element {
           </button>
         </div>
         {validationError && (
-          <p style={{ fontSize: 12, color: 'var(--c-critical)', margin: '0 0 12px' }}>
+          <p style={{ fontSize: 11, color: 'var(--c-critical)', margin: '0 0 12px' }}>
             {validationError}
           </p>
         )}
         <div
           style={{
-            fontSize: 12,
+            fontSize: 11,
             fontFamily: 'var(--font-mono)',
             color: 'var(--text-muted)',
             opacity: 0.5,

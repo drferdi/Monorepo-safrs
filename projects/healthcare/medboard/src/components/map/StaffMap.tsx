@@ -106,7 +106,7 @@ function createAvatarIcon(isOnline: boolean, avatarUrl: string, name: string) {
         ">
           <span style="
             font-variant-numeric: tabular-nums;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             color: ${isOnline ? '#4ADE80' : '#888'};
           ">${initials}</span>
@@ -161,7 +161,7 @@ export default function StaffMap({
           justifyContent: 'center',
           color: '#666',
           fontFamily: 'var(--font-mono)',
-          fontSize: 14,
+          fontSize: 13,
         }}
       >
         LOADING MAP...
@@ -244,7 +244,7 @@ export default function StaffMap({
           <span
             style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: 600,
               color: '#3B82F6',
             }}
@@ -401,7 +401,7 @@ export default function StaffMap({
                     <div>
                       <div
                         style={{
-                          fontSize: 14,
+                          fontSize: 13,
                           fontWeight: 600,
                           color: '#fafafa',
                           fontStyle: 'italic',
@@ -412,7 +412,7 @@ export default function StaffMap({
                       </div>
                       <div
                         style={{
-                          fontSize: 12,
+                          fontSize: 11,
                           color: '#d4d4d4',
                           marginTop: 2,
                         }}
@@ -423,7 +423,7 @@ export default function StaffMap({
                   </div>
 
                   {/* Info */}
-                  <div style={{ fontSize: 12, color: '#d4d4d4', lineHeight: 1.5 }}>
+                  <div style={{ fontSize: 11, color: '#d4d4d4', lineHeight: 1.5 }}>
                     {person.institution || 'Puskesmas Balowerti'}
                   </div>
                   <div
@@ -433,11 +433,11 @@ export default function StaffMap({
                       alignItems: 'center',
                     }}
                   >
-                    <span style={{ fontSize: 12, color: '#a3a3a3' }}>{person.location.label}</span>
+                    <span style={{ fontSize: 11, color: '#a3a3a3' }}>{person.location.label}</span>
                     {person.isOnline && (
                       <span
                         style={{
-                          fontSize: 12,
+                          fontSize: 11,
                           fontWeight: 600,
                           color: '#4ADE80',
                           padding: '2px 8px',

@@ -697,13 +697,13 @@ export default function ClinicalTrajectoryChart({
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           <span
             style={{
-              fontSize: 12,
+              fontSize: 11,
               color: '#FFCC8C',
             }}
           >
             Clinical Trajectory Chart
           </span>
-          <span style={{ fontSize: 14, color: CHART_TEXT_SOFT, lineHeight: 1.6 }}>
+          <span style={{ fontSize: 13, color: CHART_TEXT_SOFT, lineHeight: 1.6 }}>
             {hasVisitHistory
               ? `Vital trend dari ${trajectoryHistory.length} kunjungan historis terbaru + kunjungan hari ini. SBP/DBP/HR ditampilkan lintas waktu.`
               : 'Snapshot v1 untuk membaca beban klinis historis pasien sebelum masuk ke tahap vital sign dan assessment dokter.'}
@@ -711,7 +711,7 @@ export default function ClinicalTrajectoryChart({
         </div>
         <span
           style={{
-            fontSize: 12,
+            fontSize: 11,
             color: CHART_TEXT_MUTED,
           }}
         >
@@ -749,7 +749,7 @@ export default function ClinicalTrajectoryChart({
               >
                 <div
                   style={{
-                    fontSize: 12,
+                    fontSize: 11,
                     color: p.label === 'HARI INI' ? '#FFCC8C' : CHART_TEXT_MUTED,
                     marginBottom: 4,
                   }}
@@ -758,7 +758,7 @@ export default function ClinicalTrajectoryChart({
                 </div>
                 <div
                   style={{
-                    fontSize: 16,
+                    fontSize: 15,
                     color: CHART_TEXT_SOFT,
                     fontWeight: 300,
                     marginBottom: 2,
@@ -766,18 +766,18 @@ export default function ClinicalTrajectoryChart({
                 >
                   {p.vitals.sbp}/{p.vitals.dbp}
                 </div>
-                <div style={{ fontSize: 12, color: CHART_TEXT_DIM }}>
+                <div style={{ fontSize: 11, color: CHART_TEXT_DIM }}>
                   HR {p.vitals.hr} · Suhu {p.vitals.temp} · GDS {p.vitals.glucose || '-'}
                 </div>
                 {p.diagnosa && (
-                  <div style={{ fontSize: 12, color: '#FFCC8C', marginTop: 3 }}>
+                  <div style={{ fontSize: 11, color: '#FFCC8C', marginTop: 3 }}>
                     {p.diagnosa.icd_x} {p.diagnosa.nama}
                   </div>
                 )}
                 {p.keluhan && (
                   <div
                     style={{
-                      fontSize: 12,
+                      fontSize: 11,
                       color: CHART_TEXT_DIM,
                       marginTop: 2,
                       fontStyle: 'italic',
@@ -798,7 +798,7 @@ export default function ClinicalTrajectoryChart({
               gap: 16,
               flexWrap: 'wrap',
               marginTop: 10,
-              fontSize: 12,
+              fontSize: 11,
               color: CHART_TEXT_DIM,
             }}
           >
@@ -864,14 +864,14 @@ export default function ClinicalTrajectoryChart({
               >
                 <div
                   style={{
-                    fontSize: 12,
+                    fontSize: 11,
                     color: CHART_TEXT_MUTED,
                     marginBottom: 6,
                   }}
                 >
                   {item.label}
                 </div>
-                <div style={{ fontSize: 14, color: '#E5DDD4', lineHeight: 1.6 }}>
+                <div style={{ fontSize: 13, color: '#E5DDD4', lineHeight: 1.6 }}>
                   {item.values.length > 0 ? item.values.join(', ') : 'Belum ada data.'}
                 </div>
               </div>
@@ -889,7 +889,7 @@ export default function ClinicalTrajectoryChart({
               alignItems: 'start',
             }}
           >
-            <div style={{ fontSize: 12, color: '#D2C6B8', lineHeight: 1.7 }}>
+            <div style={{ fontSize: 11, color: '#D2C6B8', lineHeight: 1.7 }}>
               Perhitungan ringkas: <span style={{ color: CHART_TEXT_SOFT }}>Historis</span> dibentuk
               dari bobot komorbid + riwayat keluarga, sedangkan{' '}
               <span style={{ color: CHART_TEXT_SOFT }}>Akut</span> dibentuk dari bobot alergi aktif
@@ -906,14 +906,14 @@ export default function ClinicalTrajectoryChart({
             >
               <div
                 style={{
-                  fontSize: 12,
+                  fontSize: 11,
                   color: CHART_TEXT_MUTED,
                   marginBottom: 6,
                 }}
               >
                 Beban Historis
               </div>
-              <div style={{ fontSize: 12, color: CHART_TEXT_MUTED }}>
+              <div style={{ fontSize: 11, color: CHART_TEXT_MUTED }}>
                 Snapshot: <span style={{ color: '#FFCC8C' }}>{snapshotModel.staticLoad}</span>
               </div>
             </div>
@@ -927,14 +927,14 @@ export default function ClinicalTrajectoryChart({
             >
               <div
                 style={{
-                  fontSize: 12,
+                  fontSize: 11,
                   color: CHART_TEXT_MUTED,
                   marginBottom: 6,
                 }}
               >
                 Kedaruratan Dinamis
               </div>
-              <div style={{ fontSize: 12, color: CHART_TEXT_MUTED }}>
+              <div style={{ fontSize: 11, color: CHART_TEXT_MUTED }}>
                 Snapshot: <span style={{ color: '#FF8D81' }}>{snapshotModel.acuteLoad}</span>
               </div>
             </div>
@@ -946,7 +946,7 @@ export default function ClinicalTrajectoryChart({
               gap: 16,
               flexWrap: 'wrap',
               marginTop: 10,
-              fontSize: 12,
+              fontSize: 11,
               color: CHART_TEXT_DIM,
             }}
           >

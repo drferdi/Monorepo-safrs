@@ -98,7 +98,7 @@ export function ScreeningLogbook() {
     border:      '1px solid var(--line-base)',
     borderRadius: '4px',
     color:       'var(--text-main)',
-    fontSize:    '14px',
+    fontSize: '13px',
     fontFamily:  FONT,
     padding:     '7px 12px',
     outline:     'none',
@@ -154,7 +154,7 @@ export function ScreeningLogbook() {
             background:    '#FFFFFF',
             color:         '#000000',
             border:        'none',
-            fontSize:      '12px',
+            fontSize: '11px',
             fontWeight:    600,
             cursor:        'pointer',
             boxShadow:     '0 0 15px rgba(255,255,255,0.15)',
@@ -163,7 +163,7 @@ export function ScreeningLogbook() {
           Refresh
         </button>
 
-        <span style={{ marginLeft: 'auto', fontSize: '12px', color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
+        <span style={{ marginLeft: 'auto', fontSize: '11px', color: 'var(--text-muted)', letterSpacing: '0.04em' }}>
           {pagination.total} total event
         </span>
       </div>
@@ -172,7 +172,7 @@ export function ScreeningLogbook() {
       {error && (
         <div role="alert" style={{
           background: 'rgba(252,129,129,0.10)', border: '1px solid rgba(252,129,129,0.20)',
-          borderRadius: '6px', color: '#FC8181', fontSize: '14px', padding: '12px 16px',
+          borderRadius: '6px', color: '#FC8181', fontSize: '13px', padding: '12px 16px',
         }}>
           {error}
         </div>
@@ -191,7 +191,7 @@ export function ScreeningLogbook() {
                 {COLS.map((h) => (
                   <th key={h} scope="col" style={{
                     padding: '10px 14px', textAlign: 'left',
-                    fontSize: '12px', fontWeight: 600,
+                    fontSize: '11px', fontWeight: 600,
                     color: 'var(--text-muted)',
                     whiteSpace: 'nowrap',
                   }}>
@@ -203,9 +203,9 @@ export function ScreeningLogbook() {
 
             <tbody>
               {loading && entries.length === 0 ? (
-                <tr><td colSpan={8} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '14px' }}>MEMUAT…</td></tr>
+                <tr><td colSpan={8} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '13px' }}>MEMUAT…</td></tr>
               ) : entries.length === 0 ? (
-                <tr><td colSpan={8} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '14px' }}>BELUM ADA DATA AUDIT LOG</td></tr>
+                <tr><td colSpan={8} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '13px' }}>BELUM ADA DATA AUDIT LOG</td></tr>
               ) : entries.map((entry) => {
                 const badge = statusBadge(entry.screeningStatus)
                 return (
@@ -219,7 +219,7 @@ export function ScreeningLogbook() {
                     onMouseEnter={(e) => { (e.currentTarget as HTMLTableRowElement).style.background = 'rgba(239,236,230,0.02)' }}
                     onMouseLeave={(e) => { (e.currentTarget as HTMLTableRowElement).style.background = 'transparent' }}
                   >
-                    <td style={{ padding: '10px 14px', fontSize: '14px', whiteSpace: 'nowrap' }}>
+                    <td style={{ padding: '10px 14px', fontSize: '13px', whiteSpace: 'nowrap' }}>
                       <Link
                         href={`/audit/logbook/${encodeURIComponent(entry.eventId)}`}
                         style={{ color: 'var(--c-asesmen)', textDecoration: 'none', display: 'block' }}
@@ -227,34 +227,34 @@ export function ScreeningLogbook() {
                         {new Date(entry.createdAt).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' })}
                       </Link>
                     </td>
-                    <td title={entry.assistId} style={{ padding: '10px 14px', color: 'var(--text-muted)', fontSize: '12px', fontVariantNumeric: 'tabular-nums', maxWidth: '130px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <td title={entry.assistId} style={{ padding: '10px 14px', color: 'var(--text-muted)', fontSize: '11px', fontVariantNumeric: 'tabular-nums', maxWidth: '130px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {entry.assistId.length > 22 ? `${entry.assistId.slice(0, 22)}…` : entry.assistId}
                     </td>
-                    <td style={{ padding: '10px 14px', color: 'var(--text-muted)', fontSize: '14px' }}>{entry.facilityId}</td>
-                    <td style={{ padding: '10px 14px', color: 'var(--text-main)', fontSize: '14px' }}>{entry.doctorId}</td>
+                    <td style={{ padding: '10px 14px', color: 'var(--text-muted)', fontSize: '13px' }}>{entry.facilityId}</td>
+                    <td style={{ padding: '10px 14px', color: 'var(--text-main)', fontSize: '13px' }}>{entry.doctorId}</td>
 
                     <td style={{ padding: '10px 14px' }}>
                       <span style={{
                         display: 'inline-block', padding: '2px 8px',
-                        borderRadius: '9999px', fontSize: '12px', fontWeight: 600,
+                        borderRadius: '9999px', fontSize: '11px', fontWeight: 600,
                         color: badge.color, background: badge.bg, border: `1px solid ${badge.border}`,
                       }}>
                         {badge.label}
                       </span>
                     </td>
 
-                    <td style={{ padding: '10px 14px', fontSize: '14px', fontWeight: 500, color: RISK_COLOR[entry.riskLevel ?? ''] ?? 'var(--text-muted)' }}>
+                    <td style={{ padding: '10px 14px', fontSize: '13px', fontWeight: 500, color: RISK_COLOR[entry.riskLevel ?? ''] ?? 'var(--text-muted)' }}>
                       {entry.riskLevel ?? '—'}
                       {entry.score !== null && (
                         <span style={{ color: 'var(--text-muted)', fontWeight: 400, marginLeft: '4px' }}>({entry.score})</span>
                       )}
                     </td>
 
-                    <td style={{ padding: '10px 14px', fontSize: '14px', fontWeight: 500, color: DELIVERY_COLOR[entry.deliveryStatus] ?? 'var(--text-muted)' }}>
+                    <td style={{ padding: '10px 14px', fontSize: '13px', fontWeight: 500, color: DELIVERY_COLOR[entry.deliveryStatus] ?? 'var(--text-muted)' }}>
                       {entry.deliveryStatus}
                     </td>
 
-                    <td style={{ padding: '10px 14px', fontSize: '14px', textAlign: 'center' }}>
+                    <td style={{ padding: '10px 14px', fontSize: '13px', textAlign: 'center' }}>
                       {entry.acknowledgedByDoctor
                         ? <span style={{ color: '#68D391' }} aria-label="Sudah di-ack">✓</span>
                         : <span style={{ color: 'var(--text-muted)' }} aria-label="Belum di-ack">—</span>
@@ -285,7 +285,7 @@ export function ScreeningLogbook() {
                 border:       '1px solid var(--line-base)',
                 borderRadius: '4px',
                 color:        disabled ? 'var(--text-muted)' : 'var(--text-main)',
-                fontSize:     '12px',
+                fontSize: '11px',
                 fontFamily:   FONT,
                 padding:      '6px 12px',
                 cursor:       disabled ? 'not-allowed' : 'pointer',
@@ -296,7 +296,7 @@ export function ScreeningLogbook() {
               {label}
             </button>
           ))}
-          <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{page} / {pagination.totalPages}</span>
+          <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{page} / {pagination.totalPages}</span>
         </div>
       )}
     </div>

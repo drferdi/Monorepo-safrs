@@ -403,7 +403,7 @@ export default function VoicePage() {
                 <button
                   onClick={() => void disconnect()}
                   style={{
-                    fontSize: 12,
+                    fontSize: 11,
                     padding: '6px 14px',
                     background: 'none',
                     border: '1px solid var(--c-critical)',
@@ -417,7 +417,7 @@ export default function VoicePage() {
               <button
                 onClick={() => setMessages([])}
                 style={{
-                  fontSize: 12,
+                  fontSize: 11,
                   padding: '6px 14px',
                   background: 'none',
                   border: '1px solid var(--line-base)',
@@ -437,7 +437,7 @@ export default function VoicePage() {
                 marginBottom: 20,
                 padding: '10px 14px',
                 border: '1px solid var(--c-critical)',
-                fontSize: 14,
+                fontSize: 13,
                 color: 'var(--c-critical)',
                 display: 'flex',
                 alignItems: 'center',
@@ -489,7 +489,7 @@ export default function VoicePage() {
                   </div>
                   <div
                     style={{
-                      fontSize: 14,
+                      fontSize: 13,
                       color: 'var(--text-muted)',
                       lineHeight: 1.7,
                       maxWidth: 420,
@@ -508,7 +508,7 @@ export default function VoicePage() {
                     background: accentTone,
                     border: '1px solid rgba(255,255,255,0.06)',
                     color: '#fff',
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: 600,
                     cursor: 'pointer',
                     boxShadow: accentNeumorph,
@@ -525,7 +525,7 @@ export default function VoicePage() {
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 5,
-                    fontSize: 14,
+                    fontSize: 13,
                     color: 'var(--text-muted)',
                     lineHeight: 1.7,
                   }}
@@ -553,7 +553,7 @@ export default function VoicePage() {
                 gap: 12,
                 marginBottom: 32,
                 color: 'var(--text-muted)',
-                fontSize: 14,
+                fontSize: 13,
               }}
             >
               <div
@@ -587,7 +587,7 @@ export default function VoicePage() {
                   display: 'flex',
                   alignItems: 'center',
                   gap: 10,
-                  fontSize: 14,
+                  fontSize: 13,
                   color: statusColor,
                 }}
               >
@@ -628,7 +628,7 @@ export default function VoicePage() {
                   border: `2px solid ${sessionState === 'recording' ? 'rgba(220,38,38,0.75)' : accentTone}`,
                   color: sessionState === 'recording' ? 'rgba(220,38,38,0.9)' : accentTone,
                   cursor: sessionState === 'processing' ? 'wait' : 'pointer',
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: 600,
                   userSelect: 'none',
                   WebkitUserSelect: 'none',
@@ -658,7 +658,7 @@ export default function VoicePage() {
                   onClick={() => socketRef.current?.emit('voice:interrupt')}
                   style={{
                     alignSelf: 'flex-start',
-                    fontSize: 12,
+                    fontSize: 11,
                     padding: '5px 12px',
                     background: 'none',
                     cursor: 'pointer',
@@ -677,7 +677,7 @@ export default function VoicePage() {
                     maxWidth: 500,
                     padding: '10px 14px',
                     border: `1px solid ${accentTone}`,
-                    fontSize: 14,
+                    fontSize: 13,
                     color: 'var(--text-main)',
                     fontStyle: 'italic',
                     opacity: 0.88,
@@ -708,13 +708,13 @@ export default function VoicePage() {
                   style={{
                     padding: '40px 0',
                     textAlign: 'center',
-                    fontSize: 14,
+                    fontSize: 13,
                     color: 'var(--text-muted)',
                     opacity: 0.38,
                   }}
                 >
                   — BELUM ADA PERCAKAPAN —
-                  <div style={{ marginTop: 6, fontSize: 14, opacity: 0.85 }}>
+                  <div style={{ marginTop: 6, fontSize: 13, opacity: 0.85 }}>
                     Hubungkan sesi, lalu bicara langsung dengan Audrey
                   </div>
                 </div>
@@ -736,7 +736,7 @@ export default function VoicePage() {
                         display: 'inline-flex',
                         alignItems: 'center',
                         padding: '5px 10px',
-                        fontSize: 12,
+                        fontSize: 11,
                         color: '#f1ece3',
                         background: accentTone,
                         border: '1px solid rgba(255,255,255,0.06)',
@@ -749,7 +749,7 @@ export default function VoicePage() {
                   </div>
                   <div
                     style={{
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: 600,
                       color: 'var(--text-main)',
                       lineHeight: 1.4,
@@ -759,7 +759,7 @@ export default function VoicePage() {
                   </div>
                   <div
                     style={{
-                      fontSize: 14,
+                      fontSize: 13,
                       color: 'var(--text-muted)',
                       lineHeight: 1.7,
                     }}
@@ -774,7 +774,7 @@ export default function VoicePage() {
                       padding: '7px 12px',
                       background: accentToneSoft,
                       borderLeft: `2px solid ${accentTone}`,
-                      fontSize: 14,
+                      fontSize: 13,
                       color: '#ffffff',
                       lineHeight: 1.5,
                       fontStyle: 'italic',
@@ -818,7 +818,7 @@ export default function VoicePage() {
                           alignItems: 'center',
                           justifyContent: 'center',
                           background: isUser ? accentTone : 'var(--line-base)',
-                          fontSize: 12,
+                          fontSize: 11,
                           letterSpacing: '0.04em',
                           color: isUser ? '#fff' : 'var(--text-muted)',
                         }}
@@ -841,7 +841,7 @@ export default function VoicePage() {
                           background: isUser ? accentTone : 'var(--bg-nav)',
                           border: isUser ? 'none' : '1px solid var(--line-base)',
                           color: isUser ? '#fff' : 'var(--text-main)',
-                          fontSize: 14,
+                          fontSize: 13,
                           lineHeight: 1.7,
                           whiteSpace: 'pre-wrap',
                           borderRadius: isUser ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
@@ -852,7 +852,7 @@ export default function VoicePage() {
                       {(i === messages.length - 1 || messages[i + 1]?.role !== msg.role) && (
                         <div
                           style={{
-                            fontSize: 12,
+                            fontSize: 11,
                             color: 'var(--text-muted)',
                             letterSpacing: '0.04em',
                             opacity: 0.55,
@@ -877,7 +877,7 @@ export default function VoicePage() {
               padding: '10px 16px',
               border: '1px solid var(--line-base)',
               borderLeft: `3px solid ${accentTone}`,
-              fontSize: 14,
+              fontSize: 13,
               color: 'var(--text-muted)',
               lineHeight: 1.6,
             }}
@@ -890,7 +890,7 @@ export default function VoicePage() {
               style={{
                 display: 'block',
                 marginTop: 4,
-                fontSize: 12,
+                fontSize: 11,
                 color: '#ffffff',
               }}
             >
@@ -911,7 +911,7 @@ export default function VoicePage() {
           >
             <span
               style={{
-                fontSize: 12,
+                fontSize: 11,
                 color: '#f1ece3',
                 flexShrink: 0,
                 padding: '5px 10px',
@@ -925,7 +925,7 @@ export default function VoicePage() {
             </span>
             <span
               style={{
-                fontSize: 14,
+                fontSize: 13,
                 color: 'var(--text-muted)',
                 lineHeight: 1.6,
               }}
@@ -957,7 +957,7 @@ export default function VoicePage() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   padding: '6px 12px',
-                  fontSize: 14,
+                  fontSize: 13,
                   color: '#f1ece3',
                   background: accentTone,
                   border: '1px solid rgba(255,255,255,0.06)',
@@ -988,7 +988,7 @@ export default function VoicePage() {
                 >
                   <div
                     style={{
-                      fontSize: 14,
+                      fontSize: 13,
                       color: 'var(--text-main)',
                       fontWeight: 400,
                       marginBottom: step.sub ? 3 : 0,
@@ -1014,7 +1014,7 @@ export default function VoicePage() {
                   {step.sub && (
                     <div
                       style={{
-                        fontSize: 14,
+                        fontSize: 13,
                         color: 'var(--text-muted)',
                         whiteSpace: 'pre-line',
                         lineHeight: 1.5,

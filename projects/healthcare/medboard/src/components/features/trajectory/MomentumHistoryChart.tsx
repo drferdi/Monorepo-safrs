@@ -74,7 +74,7 @@ export function MomentumHistoryChart({ history }: MomentumHistoryChartProps) {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
         <div
           style={{
-            fontSize: 12,
+            fontSize: 11,
             fontFamily: 'var(--font-mono)',
             color: 'var(--text-muted)',
           }}
@@ -83,7 +83,7 @@ export function MomentumHistoryChart({ history }: MomentumHistoryChartProps) {
         </div>
         <span
           style={{
-            fontSize: 12,
+            fontSize: 11,
             fontFamily: 'var(--font-mono)',
             color: levelCfg.color,
             fontWeight: 600,

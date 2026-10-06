@@ -4,12 +4,12 @@
 
 .loadingMessage {
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .errorMessage {
   color: var(--c-critical);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .roleCardsRow {
@@ -50,7 +50,7 @@
 .roleLabel,
 .kpiLabel {
   margin-bottom: 6px;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .roleValue,
@@ -92,7 +92,7 @@
 
 .kpiValue {
   margin-bottom: 4px;
-  font-size: 28px;
+  font-size: 30px;
 }
 
 .kpiValueAccent {
@@ -104,14 +104,14 @@
   padding: 1px 6px;
   background: var(--c-asesmen-soft);
   color: var(--c-asesmen);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
 }
 
 .kpiSub {
   color: var(--text-muted);
   opacity: 0.7;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .pendingPanel {
@@ -132,12 +132,12 @@
 
 .pendingTitle {
   margin: 0;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .pendingCountText {
   color: var(--c-asesmen);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
 }
 
@@ -169,7 +169,7 @@
   border-radius: var(--radius-lg);
   padding: 8px 12px;
   background: var(--bg-nav);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .filterSelect {
@@ -177,12 +177,12 @@
   border-radius: var(--radius-lg);
   padding: 8px 10px;
   background: var(--bg-nav);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .resultCount {
   margin: 0 0 14px;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .tablePanel {
@@ -198,7 +198,7 @@
   color: var(--text-muted);
   opacity: 0.5;
   text-align: center;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .table,
@@ -218,7 +218,7 @@
 .thRight {
   padding: 10px 14px;
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   text-align: left;
 }
@@ -261,30 +261,30 @@
 
 .userFullName {
   color: var(--text-main);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
 }
 
 .userHandle {
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .primaryTextCell {
   color: var(--text-main);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .secondaryTextCell {
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .statusBadge {
   display: inline-block;
   border-radius: var(--radius-md);
   padding: 2px 8px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
 }
 
@@ -327,14 +327,14 @@
 
 .pendingName {
   color: var(--text-main);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
 }
 
 .pendingMeta,
 .pendingDetails {
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .pendingDetails {
@@ -359,7 +359,7 @@
   background: var(--c-asesmen);
   color: var(--text-on-accent);
   cursor: pointer;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
 }
 
@@ -393,7 +393,7 @@
   padding: 7px 14px;
   color: var(--text-muted);
   cursor: pointer;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
 }
 
@@ -425,7 +425,7 @@
 }
 
 .toastMessage {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
 }
 
@@ -449,7 +449,7 @@
 .iconButton {
   padding: 0 4px;
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .editPanelHeader {
@@ -465,20 +465,20 @@
 .panelSectionLabelTight,
 .logbookTitle,
 .selectorGroupTitle {
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .panelUsername {
   margin-left: 12px;
   color: var(--text-main);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
 }
 
 .closeButton {
   padding: 0 4px;
   color: var(--text-muted);
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .editPanelGrid {
@@ -501,7 +501,7 @@
   display: block;
   margin-bottom: 4px;
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
 }
 
@@ -512,7 +512,7 @@
   border-radius: 5px;
   padding: 7px 10px;
   background: var(--bg-canvas);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .fieldSelect {
@@ -533,7 +533,7 @@
 .outlineButtonCompact {
   color: var(--text-main);
   cursor: pointer;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
 }
 
@@ -545,7 +545,7 @@
 .outlineButtonCompact {
   border-radius: var(--radius-lg);
   padding: 7px 14px;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .outlineButtonMuted {
@@ -570,7 +570,7 @@
 
 .inlineMessage {
   margin: 0;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .inlineMessageSuccess {
@@ -615,14 +615,14 @@
   padding: 3px 8px;
   background: rgba(0, 33, 71, 0.12);
   color: var(--c-asesmen);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
 }
 
 .selectedChipButton {
   padding: 0;
   color: var(--c-asesmen);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .selectorPanel {
@@ -639,7 +639,7 @@
 .selectorGroupTitle {
   margin: 0 0 4px;
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .topSpacing {
@@ -659,7 +659,7 @@
 .logbookEmpty {
   color: var(--text-muted);
   text-align: center;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .logbookLoading {
@@ -675,7 +675,7 @@
 .logbookTable {
   border: 1px solid var(--line-base);
   border-radius: var(--radius-lg);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .logbookHeaderRow {
@@ -686,7 +686,7 @@
 .thLeft,
 .thRight {
   padding: 6px 8px;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .thCenter {
@@ -718,20 +718,20 @@
 
 .tdRightMuted {
   text-align: right;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .tdEndpoint {
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .resultBadge {
   display: inline-block;
   border-radius: 3px;
   padding: 1px 6px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
 }
 
@@ -759,7 +759,7 @@
 
 .paginationInfo {
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .paginationActions {
@@ -773,7 +773,7 @@
   background: rgba(0, 33, 71, 0.08);
   color: var(--c-asesmen);
   cursor: pointer;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
 }
 
@@ -789,7 +789,7 @@
   padding: 3px 8px;
   color: var(--text-muted);
   cursor: pointer;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 400;
   letter-spacing: 0.04em;
 }

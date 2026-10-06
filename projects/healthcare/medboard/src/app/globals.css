@@ -71,7 +71,7 @@
 }
 
 .calculator-catalog-kicker {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--c-asesmen);
 }
 
@@ -102,13 +102,13 @@
 }
 
 .calculator-category-title-row h2 {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: inherit;
 }
 
 .calculator-category-header span {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
@@ -135,7 +135,7 @@
 }
 
 .calculator-catalog-card h3 {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   color: var(--text-main);
 }
@@ -151,7 +151,7 @@
   padding: 4px 9px;
   border: 1px solid var(--line-base);
   color: var(--c-asesmen);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .calculator-catalog-card-footer {
@@ -166,13 +166,13 @@
 .calculator-catalog-card-footer span {
   max-width: 70%;
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.5;
 }
 
 .calculator-catalog-card-footer strong {
   color: var(--text-main);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .calculator-detail-grid {
@@ -205,7 +205,7 @@
 
 .calculator-panel-kicker,
 .calculator-panel-meta {
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .calculator-panel-kicker {
@@ -229,7 +229,7 @@
 }
 
 .calculator-field-label {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
@@ -258,7 +258,7 @@
   top: 50%;
   transform: translateY(-50%);
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .calculator-toggle-grid {
@@ -297,13 +297,13 @@
   padding: 12px 14px;
   border: 1px dashed rgba(255, 255, 255, 0.08);
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.6;
 }
 
 .calculator-source-path {
   margin-top: 4px;
-  font-size: 12px;
+  font-size: 11px;
   word-break: break-all;
   color: rgba(255, 255, 255, 0.45);
 }
@@ -331,7 +331,7 @@
 
 .calculator-primary-unit {
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .calculator-secondary-value {
@@ -345,7 +345,7 @@
 }
 
 .calculator-interpretation {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
 }
 
@@ -364,7 +364,7 @@
 }
 
 .calculator-summary-label {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
@@ -386,7 +386,7 @@
   align-items: center;
   gap: 8px;
   color: var(--text-main);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .calculator-note-list {
@@ -593,7 +593,7 @@ a {
 
 .page-subtitle {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-muted);
   margin-top: 8px;
 }
@@ -628,7 +628,7 @@ a {
   top: -40px;
   left: 0;
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-muted);
   transition: color 0.8s ease;
 }
@@ -722,7 +722,7 @@ a {
 
 .emr-emergency-override-kicker {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--c-critical);
 }
 
@@ -755,7 +755,7 @@ a {
   margin-top: 8px;
   margin-bottom: -8px;
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--c-asesmen);
 }
 
@@ -786,7 +786,7 @@ a {
 
 .emr-context-label {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--c-asesmen);
 }
 
@@ -805,7 +805,7 @@ a {
   border-bottom: 2px solid transparent;
   margin-bottom: -1px;
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   text-align: left;
   cursor: pointer;
@@ -842,7 +842,7 @@ a {
   margin-top: 4px;
   padding-top: 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.04);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
   opacity: 0.7;
 }
@@ -859,7 +859,7 @@ a {
 
 .emr-phase-footer-copy {
   max-width: 760px;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.7;
   color: var(--text-muted);
 }
@@ -909,7 +909,7 @@ a {
   display: inline-block;
   white-space: nowrap;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   color: var(--text-muted);
   transition: color 0.15s ease;
@@ -982,19 +982,19 @@ a {
 .emr-signoff-panel-kicker {
   margin-bottom: 4px;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
 .emr-signoff-panel-title {
-  font-size: 16px;
+  font-size: 15px;
   letter-spacing: 0.04em;
   color: var(--text-main);
 }
 
 .emr-signoff-panel-copy {
   margin-top: 8px;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.7;
   color: var(--text-muted);
   max-width: 74ch;
@@ -1006,7 +1006,7 @@ a {
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.03);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .emr-signoff-panel-status.is-ready {
@@ -1054,12 +1054,12 @@ a {
 
 .emr-signoff-check-label {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
 .emr-signoff-check strong {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 400;
   line-height: 1.6;
   color: var(--text-main);
@@ -1078,7 +1078,7 @@ a {
   border: 1px solid rgba(231, 76, 60, 0.26);
   color: rgba(240, 232, 220, 0.78);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   background: rgba(231, 76, 60, 0.06);
 }
 
@@ -1098,12 +1098,12 @@ a {
 
 .finalize-assist-kicker {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: rgba(231, 76, 60, 0.82);
 }
 
 .finalize-assist-title {
-  font-size: 16px;
+  font-size: 15px;
   color: var(--text-main);
 }
 
@@ -1127,7 +1127,7 @@ a {
 .finalize-assist-hero-label {
   margin-bottom: 8px;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
@@ -1140,7 +1140,7 @@ a {
 
 .finalize-assist-hero-copy {
   max-width: 72ch;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.7;
   color: var(--text-muted);
 }
@@ -1181,7 +1181,7 @@ a {
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: transparent;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
@@ -1198,13 +1198,13 @@ a {
 .finalize-diagnosis-summary-label {
   margin-bottom: 6px;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
 .finalize-diagnosis-summary {
   max-width: 72ch;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.65;
   color: var(--text-main);
   opacity: 0.84;
@@ -1220,18 +1220,18 @@ a {
 
 .finalize-assist-care-mode-label {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
 .finalize-assist-care-mode strong {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.3;
   font-weight: 500;
 }
 
 .finalize-assist-care-mode small {
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.6;
   color: var(--text-muted);
 }
@@ -1266,12 +1266,12 @@ a {
 
 .finalize-assist-label {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
 .finalize-assist-summary-item strong {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
   color: var(--text-main);
   line-height: 1.6;
@@ -1283,7 +1283,7 @@ a {
 
 .finalize-assist-assessment-copy {
   max-width: 82ch;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.72;
   color: var(--text-main);
   opacity: 0.88;
@@ -1314,12 +1314,12 @@ a {
 
 .finalize-assist-meta-key {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
 .finalize-assist-meta-row strong {
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.55;
 }
 
@@ -1373,7 +1373,7 @@ a {
 
 .finalize-assist-card-title {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--c-asesmen);
 }
 
@@ -1387,13 +1387,13 @@ a {
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.03);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
 .finalize-assist-card-subtitle {
   margin-bottom: 12px;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.65;
   color: var(--text-muted);
 }
@@ -1447,7 +1447,7 @@ a {
 
 .finalize-neu-btn-label {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   color: var(--text-muted);
 }
@@ -1456,7 +1456,7 @@ a {
 }
 
 .finalize-assist-bullet {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-main);
   line-height: 1.7;
 }
@@ -1464,7 +1464,7 @@ a {
 .finalize-assist-section-kicker {
   margin-bottom: 6px;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: rgba(255, 255, 255, 0.46);
 }
 
@@ -1520,7 +1520,7 @@ a {
 .finalize-pharmacology-subtitle {
   margin-top: 6px;
   max-width: 60ch;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.72;
   color: var(--pharm-muted);
 }
@@ -1537,7 +1537,7 @@ a {
   border: 1px solid rgba(246, 208, 134, 0.26);
   background: rgba(246, 208, 134, 0.08);
   color: var(--pharm-available);
-  font-size: 12px;
+  font-size: 11px;
   cursor: pointer;
 }
 
@@ -1603,7 +1603,7 @@ a {
 }
 
 .finalize-clinical-table-section .finalize-assist-bullet {
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.65;
 }
 
@@ -1614,7 +1614,7 @@ a {
 .finalize-pharmacology-slot-label {
   padding: 12px 16px 4px;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--pharm-kicker);
   border-top: 1px solid rgba(255, 216, 173, 0.08);
@@ -1643,7 +1643,7 @@ a {
   border: 1px dashed rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.02);
   color: var(--pharm-muted);
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.7;
 }
 
@@ -1685,7 +1685,7 @@ a {
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.04);
   color: var(--pharm-muted);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .finalize-pharmacology-selection-status.is-selected {
@@ -1718,12 +1718,12 @@ a {
 
 .finalize-pharmacology-prescription-label {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--pharm-muted);
 }
 
 .finalize-pharmacology-prescription-item strong {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   line-height: 1.4;
   color: var(--pharm-text);
@@ -1740,7 +1740,7 @@ a {
   border-bottom: 1px dashed var(--pharm-border-strong);
   background: transparent;
   padding: 0 0 4px;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.5;
   color: var(--pharm-text);
   outline: none;
@@ -1763,13 +1763,13 @@ a {
 }
 
 .finalize-pharmacology-empty-title {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--pharm-text);
 }
 
 .finalize-pharmacology-empty-copy,
 .finalize-pharmacology-footnote {
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.65;
   color: var(--pharm-muted);
 }
@@ -1788,12 +1788,12 @@ a {
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.03);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
 .drug-status-badge small {
-  font-size: 12px;
+  font-size: 11px;
   letter-spacing: 0.04em;
   color: inherit;
   opacity: 0.78;
@@ -1839,7 +1839,7 @@ a {
 }
 
 .finalize-assist-medication-head strong {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--text-main);
 }
@@ -1848,7 +1848,7 @@ a {
   display: flex;
   flex-wrap: wrap;
   gap: 8px 12px;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
@@ -1867,7 +1867,7 @@ a {
 }
 
 .finalize-pharmacology-card .finalize-assist-medication-head strong {
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1.35;
   letter-spacing: 0.01em;
   color: var(--pharm-50);
@@ -1879,7 +1879,7 @@ a {
 }
 
 .finalize-pharmacology-card .finalize-assist-medication-meta {
-  font-size: 12px;
+  font-size: 11px;
   letter-spacing: 0.02em;
 }
 
@@ -1896,12 +1896,12 @@ a {
 .finalize-pharmacology-contra-label {
   margin-bottom: 8px;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--pharm-unavailable);
 }
 
 .finalize-pharmacology-contra-item {
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.6;
   color: rgba(248, 231, 203, 0.78);
 }
@@ -1952,14 +1952,14 @@ a {
 .finalize-pharmacology-manual-kicker {
   margin-bottom: 10px;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: var(--pharm-muted);
 }
 
 .finalize-pharmacology-manual-copy {
   margin-bottom: 12px;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.7;
   color: var(--pharm-muted);
 }
@@ -1985,7 +1985,7 @@ a {
   border: 1px solid rgba(240, 164, 91, 0.26);
   border-radius: 4px;
   background: rgba(240, 164, 91, 0.04);
-  font-size: 12px;
+  font-size: 11px;
   letter-spacing: 0.01em;
 }
 
@@ -1997,13 +1997,13 @@ a {
 }
 
 .finalize-pharmacology-manual-chip-title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--pharm-text);
 }
 
 .finalize-pharmacology-manual-chip-meta {
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.55;
   color: var(--pharm-muted);
 }
@@ -2012,7 +2012,7 @@ a {
   border: none;
   background: transparent;
   color: var(--pharm-kicker);
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1;
   cursor: pointer;
   padding: 0;
@@ -2032,7 +2032,7 @@ a {
   border: 1px solid var(--pharm-border-soft);
   background: rgba(9, 9, 10, 0.72);
   color: var(--pharm-text);
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.45;
   outline: none;
 }
@@ -2079,7 +2079,7 @@ a {
 
 .finalize-pharmacology-manual-limit {
   margin-top: 8px;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--pharm-muted);
 }
 
@@ -2125,14 +2125,14 @@ a {
 }
 
 .finalize-pharmacology-manual-suggestion-main strong {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--pharm-text);
 }
 
 .finalize-pharmacology-manual-suggestion-main span,
 .finalize-pharmacology-manual-suggestion-side span {
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.55;
 }
 
@@ -2149,7 +2149,7 @@ a {
   align-items: center;
   padding: 3px 7px;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -2173,7 +2173,7 @@ a {
 
 .finalize-assist-note {
   margin-top: 12px;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
   letter-spacing: 0.04em;
   line-height: 1.6;
@@ -2241,14 +2241,14 @@ a {
 }
 
 .assessment-command-kicker {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--c-asesmen);
   margin-bottom: 6px;
 }
 
 .assessment-command-title {
   max-width: 52ch;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.6;
   color: var(--text-main);
   overflow-wrap: anywhere;
@@ -2266,7 +2266,7 @@ a {
   border-radius: 4px;
   color: rgba(240, 232, 220, 0.68);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   background: rgba(255, 255, 255, 0.01);
   box-shadow: none;
 }
@@ -2399,7 +2399,7 @@ a {
 .assessment-command-note {
   padding: 0 0 0 14px;
   border-left: 2px solid rgba(240, 181, 106, 0.22);
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.72;
   letter-spacing: 0.01em;
   color: var(--text-muted);
@@ -2417,7 +2417,7 @@ a {
   background: rgba(15, 15, 17, 0.96);
   box-shadow: none;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .assessment-action-bar {
@@ -2432,7 +2432,7 @@ a {
 
 .assessment-side-title {
   margin-bottom: 12px;
-  font-size: 12px;
+  font-size: 11px;
   color: rgba(240, 232, 220, 0.56);
 }
 
@@ -2457,14 +2457,14 @@ a {
 
 .assessment-readiness-label {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   color: rgba(240, 232, 220, 0.48);
 }
 
 .assessment-readiness-item strong {
   font-family: inherit;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--text-main);
   line-height: 1.5;
@@ -2472,7 +2472,7 @@ a {
 
 .assessment-readiness-item small {
   font-family: inherit;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.55;
   color: rgba(240, 232, 220, 0.62);
 }
@@ -2503,7 +2503,7 @@ a {
   background: rgba(240, 181, 106, 0.03);
   color: #f0b264;
   font-family: inherit;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   letter-spacing: normal;
   text-transform: none;
@@ -2535,7 +2535,7 @@ a {
 .assessment-reset-button {
   min-height: 50px;
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   transition:
     transform 0.2s ease,
@@ -2604,7 +2604,7 @@ a {
   padding-top: 10px;
   border-top: 1px dashed rgba(255, 255, 255, 0.08);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   letter-spacing: 0.04em;
   color: var(--text-muted);
 }
@@ -2619,7 +2619,7 @@ a {
   background: transparent;
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   padding: 4px 8px;
   border-radius: 3px;
   cursor: pointer;
@@ -2656,7 +2656,7 @@ a {
 
 .cdss-summary-label {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
@@ -2745,7 +2745,7 @@ a {
   background: linear-gradient(180deg, rgba(25, 24, 24, 0.9), rgba(31, 29, 28, 0.78));
   color: rgba(234, 227, 215, 0.84);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   flex: 0 0 auto;
 }
 
@@ -2759,7 +2759,7 @@ a {
 
 .cdss-branch-agent-copy span,
 .cdss-branch-agent-copy strong {
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .cdss-branch-agent-copy span {
@@ -2956,7 +2956,7 @@ a {
   bottom: 0;
   transform: translateX(-50%);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: rgba(240, 232, 220, 0.48);
   white-space: nowrap;
 }
@@ -2985,7 +2985,7 @@ a {
 
 .cdss-branch-processing-ghost .cdss-trust-ghost-pre {
   min-height: 20px;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.42;
   text-align: center;
 }
@@ -3147,7 +3147,7 @@ a {
 
 .cdss-branch-scanner-title {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: rgba(236, 228, 216, 0.36);
   opacity: 0.66;
 }
@@ -3173,7 +3173,7 @@ a {
   margin: 0;
   min-height: 86px;
   font-family: var(--font-base);
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.64;
   white-space: pre;
   text-align: left;
@@ -3351,12 +3351,12 @@ a {
 }
 
 .cdss-dropbar-icd {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--cdss-accent);
 }
 
 .cdss-dropbar-bucket {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--cdss-accent);
   border: 1px solid var(--cdss-accent);
   background: color-mix(in srgb, var(--cdss-accent) 8%, transparent);
@@ -3364,13 +3364,13 @@ a {
 }
 
 .cdss-dropbar-title {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-main);
   font-weight: 500;
 }
 
 .cdss-dropbar-reason {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
   line-height: 1.55;
 }
@@ -3384,20 +3384,20 @@ a {
 
 .cdss-dropbar-score {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
 .cdss-dropbar-expand-hint {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
   opacity: 0.7;
 }
 
 .cdss-dropbar-chevron {
   color: var(--cdss-accent);
-  font-size: 14px;
+  font-size: 13px;
   transition:
     transform 0.28s ease,
     opacity 0.28s ease;
@@ -3436,12 +3436,12 @@ a {
 }
 
 .cdss-disposition-label {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-main);
 }
 
 .cdss-disposition-note {
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.5;
   color: var(--text-muted);
 }
@@ -3461,12 +3461,12 @@ a {
 }
 
 .cdss-selected-kicker {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--c-asesmen);
 }
 
 .cdss-selected-diagnosis {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-main);
   font-weight: 600;
   line-height: 1.35;
@@ -3479,7 +3479,7 @@ a {
 }
 
 .cdss-selected-review-reason {
-  font-size: 12px;
+  font-size: 11px;
   color: #e8a838;
 }
 
@@ -3495,7 +3495,7 @@ a {
   flex-wrap: wrap;
   gap: 8px 12px;
   align-items: center;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
@@ -3504,7 +3504,7 @@ a {
   border: 1px solid var(--c-asesmen);
   background: var(--c-asesmen);
   color: #fff;
-  font-size: 12px;
+  font-size: 11px;
   padding: 7px 10px;
   cursor: pointer;
 }
@@ -3536,7 +3536,7 @@ a {
 .cdss-prognosis-stage-label {
   margin-bottom: 4px;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
   opacity: 0.84;
 }
@@ -3575,7 +3575,7 @@ a {
 
 .prognosis-tooltip-note {
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 11px;
   letter-spacing: 0.04em;
   margin-top: 6px;
 }
@@ -3688,7 +3688,7 @@ a {
 .cdss-validation-questions-title {
   margin-bottom: 8px;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: #e8a838;
 }
 
@@ -3706,12 +3706,12 @@ a {
 .cdss-validation-question-label {
   margin-bottom: 4px;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: rgba(232, 168, 56, 0.92);
 }
 
 .cdss-validation-question-prompt {
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.6;
   color: var(--text-main);
 }
@@ -3724,7 +3724,7 @@ a {
 .cdss-validation-vitals-title {
   margin-bottom: 8px;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
@@ -3733,7 +3733,7 @@ a {
   justify-content: space-between;
   gap: 12px;
   padding: 4px 0;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .cdss-validation-vital-label {
@@ -3747,7 +3747,7 @@ a {
 }
 
 .cdss-validation-vitals-empty {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
   font-style: italic;
 }
@@ -3757,19 +3757,19 @@ a {
   flex-wrap: wrap;
   gap: 6px 10px;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
   opacity: 0.82;
 }
 
 .audrey-section-title {
-  font-size: 14px;
+  font-size: 13px;
   color: rgba(160, 160, 160, 0.88);
   text-shadow: 0 1px 10px rgba(0, 0, 0, 0.12);
 }
 
 .audrey-extraction-header {
-  font-size: 12px;
+  font-size: 11px;
   color: rgba(91, 141, 184, 0.88);
   text-shadow: 0 1px 10px rgba(0, 0, 0, 0.14);
 }
@@ -3781,7 +3781,7 @@ a {
 
 .audrey-heading-text,
 .audrey-heading-state {
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .audrey-trace-line {
@@ -3822,7 +3822,7 @@ a {
 }
 
 .audrey-entity-label {
-  font-size: 12px;
+  font-size: 11px;
   color: rgba(160, 160, 160, 0.88);
   font-style: italic;
   text-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
@@ -3913,7 +3913,7 @@ a {
 
 .section-title {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--text-muted);
   margin-bottom: 24px;
@@ -3940,7 +3940,7 @@ a {
 
 .data-label {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--c-asesmen);
   margin-bottom: 8px;
   display: flex;
@@ -3994,7 +3994,7 @@ a {
   left: 0;
   font-family: var(--font-sans);
   font-style: italic;
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-muted);
   cursor: pointer;
   white-space: nowrap;
@@ -4029,7 +4029,7 @@ a {
 /* Riwayat & Alergi */
 .emr-loader {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--c-asesmen);
   animation: pulse 2s infinite;
   margin-bottom: 16px;
@@ -4074,7 +4074,7 @@ a {
 .suggestion-chip {
   display: inline-flex;
   align-items: center;
-  font-size: 12px;
+  font-size: 11px;
   border-radius: 3px;
   padding: 3px 9px;
   border: 1px solid var(--line-base);
@@ -4131,7 +4131,7 @@ a {
 }
 
 .history-item-title {
-  font-size: 14px;
+  font-size: 13px;
   font-family: var(--font-mono);
   font-weight: 600;
   color: var(--text-muted);
@@ -4140,14 +4140,14 @@ a {
 
 .history-item-val {
   font-family: var(--font-sans);
-  font-size: 16px;
+  font-size: 15px;
   color: var(--text-main);
 }
 
 .chronic-tag {
   display: inline-block;
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--bg-canvas);
   background: var(--c-warning);
   padding: 2px 8px;
@@ -4178,7 +4178,7 @@ a {
   display: flex;
   justify-content: space-between;
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   margin-bottom: 12px;
   border-bottom: 1px dashed var(--line-base);
   padding-bottom: 4px;
@@ -4223,7 +4223,7 @@ a {
 }
 
 .vitals-context-label {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
 }
 
@@ -4234,7 +4234,7 @@ a {
   border: 1px solid var(--line-base);
   color: var(--text-main);
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 13px;
   padding: 8px 10px;
   outline: none;
   color-scheme: dark;
@@ -4263,7 +4263,7 @@ a {
   border: 1px solid var(--line-base);
   background: transparent;
   color: var(--text-muted);
-  font-size: 12px;
+  font-size: 11px;
   letter-spacing: 0.04em;
   padding: 6px 10px;
   cursor: pointer;
@@ -4277,7 +4277,7 @@ a {
 
 .vitals-assist-note {
   margin-bottom: 16px;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
   letter-spacing: 0.03em;
 }
@@ -4291,13 +4291,13 @@ a {
 
 .v-label {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-muted);
 }
 
 .v-value {
   font-family: var(--font-mono);
-  font-size: 32px;
+  font-size: 30px;
   font-weight: 400;
   color: var(--text-main);
 
@@ -4305,7 +4305,7 @@ a {
 }
 
 .v-unit {
-  font-size: 14px;
+  font-size: 13px;
   font-family: var(--font-mono);
   color: var(--text-muted);
   font-weight: 400;
@@ -4320,7 +4320,7 @@ a {
   border: 1px solid var(--line-base);
   color: var(--text-muted);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   padding: 2px 6px;
 }
 
@@ -4341,7 +4341,7 @@ a {
 
 .v-meta-note {
   min-height: 30px;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
   line-height: 1.45;
 }
@@ -4428,7 +4428,7 @@ a {
 
   .emr-workflow-tab {
     padding: 9px 16px;
-    font-size: 14px;
+    font-size: 13px;
   }
 
   .vitals-context-strip {
@@ -4451,7 +4451,7 @@ a {
 .lab-ghost-btn {
   font-family: var(--font-sans);
   font-style: italic;
-  font-size: 16px;
+  font-size: 15px;
   color: var(--text-muted);
   cursor: pointer;
   transition: all 0.3s ease;
@@ -4490,7 +4490,7 @@ a {
 
 .lab-item {
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-muted);
 
   display: flex;
@@ -4515,7 +4515,7 @@ a {
   content: "[]";
   font-family: var(--font-mono);
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 13px;
 }
 .lab-item.selected {
   color: var(--text-main);
@@ -4528,7 +4528,7 @@ a {
 
 .lab-status {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--c-warning);
   opacity: 0;
   transform: translateX(10px);
@@ -4562,7 +4562,7 @@ a {
 
 .traj-header {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--c-warning);
   margin-bottom: 24px;
   display: flex;
@@ -4575,7 +4575,7 @@ a {
   background: none;
   border: none;
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .traj-close:hover {
@@ -4633,12 +4633,12 @@ a {
 }
 .chart-label {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   fill: var(--text-muted);
 }
 .chart-val {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   fill: var(--text-main);
   font-weight: 600;
 }
@@ -4672,14 +4672,14 @@ a {
 
 .exam-organ {
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
   color: var(--text-muted);
   letter-spacing: 0.04em;
 }
 .exam-result {
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-main);
 }
 .exam-result.critical {
@@ -4739,7 +4739,7 @@ a {
 
 .extraction-header {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--text-muted);
   border-bottom: 1px solid var(--line-base);
@@ -4761,7 +4761,7 @@ a {
   align-items: center;
   gap: 12px;
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-main);
 
   opacity: 0;
@@ -4846,7 +4846,7 @@ a {
 
 .best-question-heading {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: #e8a838;
   margin-bottom: 12px;
 }
@@ -4882,18 +4882,18 @@ a {
 
 .best-question-title {
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-main);
 }
 
 .best-question-prompt {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-main);
   line-height: 1.55;
 }
 
 .best-question-cue {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
   line-height: 1.5;
 }
@@ -4942,7 +4942,7 @@ a {
 }
 
 .tag-meta {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
   margin-left: auto;
   padding: 0;
@@ -4958,7 +4958,7 @@ a {
 
 .insight-text-sidebar {
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
 
   color: var(--text-main);
@@ -4968,7 +4968,7 @@ a {
   color: var(--c-warning);
   font-family: var(--font-sans);
   font-weight: 500;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .ai-pulse-dot {
@@ -5110,13 +5110,13 @@ a {
 
 .profil-name {
   font-family: var(--font-sans);
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 400;
   color: var(--text-main);
 }
 .profil-rm {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--c-asesmen);
 }
 
@@ -5130,12 +5130,12 @@ a {
 }
 .profil-field-label {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-muted);
 }
 .profil-field-val {
   font-family: var(--font-sans);
-  font-size: 16px;
+  font-size: 15px;
   color: var(--text-main);
 }
 
@@ -5155,17 +5155,17 @@ a {
 }
 .visit-date {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-muted);
 }
 .visit-dx {
   font-family: var(--font-sans);
-  font-size: 16px;
+  font-size: 15px;
   color: var(--text-main);
 }
 .visit-badge {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   border: 1px solid var(--line-base);
   padding: 2px 6px;
   border-radius: 2px;
@@ -5190,7 +5190,7 @@ a {
   border: none;
   border-bottom: 1px solid var(--line-base);
   font-family: var(--font-sans);
-  font-size: 32px;
+  font-size: 30px;
   font-weight: 400;
   color: var(--text-main);
   outline: none;
@@ -5212,7 +5212,7 @@ a {
   top: -20px;
   left: 0;
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--c-asesmen);
 }
 
@@ -5243,12 +5243,12 @@ a {
 
 .icd-code {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--c-asesmen);
 }
 .icd-name {
   font-family: var(--font-sans);
-  font-size: 16px;
+  font-size: 15px;
   color: var(--text-main);
 }
 .icd-name em {
@@ -5257,7 +5257,7 @@ a {
 }
 .icd-category {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-muted);
   border: 1px solid var(--line-base);
   padding: 2px 6px;
@@ -5312,7 +5312,7 @@ a {
   padding: 20px 24px;
   border-bottom: 1px solid var(--line-base);
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-muted);
   display: flex;
   align-items: center;
@@ -5346,7 +5346,7 @@ a {
   align-items: center;
   justify-content: center;
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-muted);
   flex-shrink: 0;
 }
@@ -5357,12 +5357,12 @@ a {
 }
 .chat-contact-name {
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-main);
 }
 .chat-contact-role {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-muted);
 }
 .online-dot {
@@ -5396,7 +5396,7 @@ a {
 }
 .chat-header-meta {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-muted);
 }
 
@@ -5431,13 +5431,13 @@ a {
 }
 .chat-msg-meta {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-muted);
 }
 
 .chat-bubble {
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
   color: var(--text-main);
   padding: 12px 16px;
@@ -5463,7 +5463,7 @@ a {
   background: var(--bg-canvas);
   color: var(--text-main);
   font-family: var(--font-sans);
-  font-size: 14px;
+  font-size: 13px;
 
   padding: 12px 16px;
   min-height: 48px;
@@ -5481,7 +5481,7 @@ a {
   border: 1px solid var(--c-asesmen);
   color: var(--c-asesmen);
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -5505,7 +5505,7 @@ a {
 
 .report-filter-btn {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
   padding: 5px 14px;
   background: none;
   border: 1px solid var(--line-base);
@@ -5526,7 +5526,7 @@ a {
 /* ─── Typewriter FX ───────────────────────────── */
 .typewriter-fx {
   font-family: var(--font-mono);
-  font-size: 14px;
+  font-size: 13px;
 
   text-align: right;
 }

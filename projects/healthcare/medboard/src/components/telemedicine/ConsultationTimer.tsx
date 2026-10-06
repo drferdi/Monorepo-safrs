@@ -20,7 +20,7 @@ export function ConsultationTimer({ elapsedSeconds }: ConsultationTimerProps): R
   return (
     <span
       style={{
-        fontSize: 14,
+        fontSize: 13,
         color: 'var(--text-muted)',
         padding: '2px 8px',
         borderRadius: 6,

@@ -14,10 +14,10 @@ export default function AuditLogbookPage() {
       fontFamily: 'var(--font-base)',
     }}>
       <div>
-        <h1 style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-0.01em', color: '#EDEDED', margin: 0 }}>
+        <h1 style={{ fontSize: '15px', fontWeight: 600, letterSpacing: '-0.01em', color: '#EDEDED', margin: 0 }}>
           Logbook Audit Skrining
         </h1>
-        <p style={{ fontSize: '14px', color: '#737373', marginTop: '6px', marginBottom: 0 }}>
+        <p style={{ fontSize: '13px', color: '#737373', marginTop: '6px', marginBottom: 0 }}>
           Setiap pengiriman hasil skrining ASSIST ke dokter dicatat di sini secara real-time.
         </p>
       </div>
