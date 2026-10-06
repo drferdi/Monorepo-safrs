@@ -248,8 +248,9 @@
 .hint {
   position: absolute;
   left: var(--gap-lg);
-  bottom: var(--gap-sm);
+  bottom: var(--gap-lg);
   z-index: 5;
+  max-width: calc(50% - 260px - 2 * var(--gap-lg));
   margin: 0;
   font-size: var(--text-xs);
   color: var(--text-secondary);
