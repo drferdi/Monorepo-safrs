@@ -21,8 +21,8 @@ Presence route live: `POST /api/presence` without a session → 401.
   tree + a guard that stops the deploy if a pointer is left in `public/`.
 - `842461d5` profession logos (IDI, PDGI, IBI, PPNI, IAI) never came over in the migration
   (`fbe291bf`); now grey 128×128 PNGs on transparent background in `public/profesi/`; PPNI/IAI
-  paths `.jpg` → `.png`; white box behind the logo removed. Sources: Commons/seeklogo/perawat.org/
-  iai.id (Chief approved each download). Test `src/lib/crew-access.test.ts` red first (ENOENT
+  paths `.jpg` → `.png`; white box behind the logo removed. Sources: seeklogo (IDI, PDGI, IBI),
+  perawat.org (PPNI), iai.id banner (IAI); Chief approved each download. Test `src/lib/crew-access.test.ts` red first (ENOENT
   `ppni.jpg`), now in the `crew-access` group.
 
 Gates: `tsc --noEmit` 0 (capsule `lint` = tsc); `pnpm run test crew-access` 228 pass 0 fail;
