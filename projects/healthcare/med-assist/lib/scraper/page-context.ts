@@ -203,6 +203,8 @@ function cleanCandidateValue(rawValue: string, labels: string[]): string {
   );
 }
 
+const EMPTY_RECORD_TEXT = /data tidak ditemukan|tidak ada data/i;
+
 function readLabeledValue(root: Document, labelInput: string | string[]): string {
   const labels = Array.isArray(labelInput) ? labelInput : [labelInput];
   const allElements = Array.from(root.querySelectorAll<HTMLElement>('body *'));
@@ -260,6 +262,10 @@ function readLabeledValue(root: Document, labelInput: string | string[]): string
       candidates.add(match[1].trim());
     }
   });
+
+  // A card whose table says it has no record ("Data tidak ditemukan.") has no value; its headers
+  // (Warna, Skor Ibu (KSPR), Status) must not be read as one.
+  if (Array.from(candidates).some((candidate) => EMPTY_RECORD_TEXT.test(candidate))) return '';
 
   return (
     Array.from(candidates)

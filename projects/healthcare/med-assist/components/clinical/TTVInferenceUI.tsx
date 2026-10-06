@@ -3157,8 +3157,6 @@ export const TTVInferenceUI = forwardRef<TTVInferenceUIHandle, TTVInferenceUIPro
               <div className="console-label console-label-prominent">Status Kehamilan</div>
               {isFemalePatient && !extractedPregnancyRisk && state.pregnancyStatus === null ? (
                 <span className="field-placeholder-hint">Mohon diisi</span>
-              ) : isFemalePatient && extractedPregnancyRisk ? (
-                <span className="field-extracted-indicator">risiko terdeteksi</span>
               ) : null}
             </div>
             {isFemalePatient ? (

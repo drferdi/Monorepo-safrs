@@ -103,6 +103,22 @@ describe('page context extractors', () => {
     });
   });
 
+  // ePuskesmas shows the KSPR card as a table; with no record its only row says "Data tidak
+  // ditemukan." and the panel read the headers plus that line as a detected risk (Chief, 2026-10-06).
+  it('reads no pregnancy risk from an empty KSPR table', () => {
+    document.body.innerHTML = `
+      <div>
+        <h5>Risiko Kehamilan</h5>
+        <table>
+          <thead><tr><th>Warna</th><th>Skor Ibu (KSPR)</th><th>Status</th></tr></thead>
+          <tbody><tr><td colspan="3">Data tidak ditemukan.</td></tr></tbody>
+        </table>
+      </div>
+    `;
+
+    expect(extractClinicalContextFromDocument(document).pregnancyRisk).toBe('');
+  });
+
   it('does not treat table headers as special clinical conditions', () => {
     document.body.innerHTML = `
       <table>

@@ -144,7 +144,9 @@ describe('TTVInferenceUI forward consult', () => {
     expect(pregnancyGroup?.querySelector('.field-context-note')?.textContent).not.toContain('RME:');
   });
 
-  it('lets the pregnancy risk indicator wrap below the label instead of overlapping it', () => {
+  // Chief, 2026-10-06: a "risiko terdeteksi" line under the label made this column taller than its
+  // neighbour; the risk shows only in the note below the select, as the allergy note does.
+  it('keeps the Status Kehamilan header to its label; the risk shows only in the note below', () => {
     render(
       <TTVInferenceUI
         patientName="Ny. Sari"
@@ -161,7 +163,8 @@ describe('TTVInferenceUI forward consult', () => {
     const label = screen.getByText('Status Kehamilan');
     const header = label.closest('.form-group-header');
     expect(header).toHaveClass('form-group-header--wrap');
-    expect(within(header as HTMLElement).getByText('risiko terdeteksi')).toBeInTheDocument();
+    expect(within(header as HTMLElement).queryByText('risiko terdeteksi')).toBeNull();
+    expect(header).toHaveTextContent(/^Status Kehamilan$/);
 
     const css = readFileSync(resolve(process.cwd(), 'entrypoints/sidepanel/style.css'), 'utf8');
     expect(css).toMatch(/\.form-group-header--wrap\s*\{[^}]*flex-wrap:\s*wrap/);
