@@ -4,6 +4,7 @@ import { useCriticalAlertBanner } from '@/hooks/useCriticalAlertBanner'
 import type { IntelligenceEventPayload } from '@/lib/intelligence/types'
 
 import { useSharedIntelligenceSocket } from './IntelligenceSocketProvider'
+import { Check, TriangleAlert } from 'lucide-react'
 
 // ── Sub-states ────────────────────────────────────────────────────────────────
 
@@ -90,7 +91,7 @@ function ActiveAlertBanner({
           aria-hidden="true"
           style={{ fontSize: 20, color: 'var(--c-critical)', lineHeight: 1, flexShrink: 0 }}
         >
-          ⚠
+          <TriangleAlert size={20} />
         </span>
         <div style={{ minWidth: 0 }}>
           <div
@@ -214,9 +215,7 @@ function AcknowledgedBanner({ acknowledgedAt }: { acknowledgedAt: string }): Rea
         gap: 12,
       }}
     >
-      <span aria-hidden="true" style={{ fontSize: 16, color: 'var(--text-muted)' }}>
-        ✓
-      </span>
+      <Check size={16} color="var(--text-muted)" />
       <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>
         Alert kritis telah di-acknowledge pada {time}.
       </span>

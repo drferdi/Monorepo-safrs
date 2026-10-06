@@ -21,6 +21,7 @@ import {
 } from '@/lib/crew-profile'
 import type { DevUpdateRecord } from '@/lib/dev-updates'
 import { safeHref, safeUrl } from '@/lib/sanitize-url'
+import { ArrowUpRight, ChevronUp, TriangleAlert } from 'lucide-react'
 
 function calcAge(birthDate: string): number {
   const today = new Date()
@@ -1124,7 +1125,7 @@ export default function ProfilUserPage() {
                 transform: heroExpanded ? 'rotate(0deg)' : 'rotate(180deg)',
               }}
             >
-              ⌃
+              <ChevronUp size={16} />
             </span>
           </button>
         </div>
@@ -1137,7 +1138,7 @@ export default function ProfilUserPage() {
                 'SenAuto — Clinical AI',
                 'Ringkasan operasional pagi ini, update deployment terbaru, dan NOTAM aktif untuk crew.',
                 <a href="/emr" className="ui-btn ui-btn--primary ui-btn--sm">
-                  Buka EMR Klinis ↗
+                  Buka EMR Klinis <ArrowUpRight size={14} />
                 </a>
               )}
               <div>
@@ -1393,7 +1394,11 @@ export default function ProfilUserPage() {
                   </div>
                 )}
 
-                {chatError && <div className="ui-alert ui-alert--critical">⚠ {chatError}</div>}
+                {chatError && (
+                  <div className="ui-alert ui-alert--critical">
+                    <TriangleAlert size={14} /> {chatError}
+                  </div>
+                )}
               </div>
 
               <div

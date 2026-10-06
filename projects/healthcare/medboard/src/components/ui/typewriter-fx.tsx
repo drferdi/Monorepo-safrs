@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { Circle } from 'lucide-react'
 
 const NEON_COLORS = [
   '#00ff88', // neon green
@@ -28,7 +29,7 @@ const CODE_SNIPPETS = [
   '>>> e-Puskesmas gateway: Connected [SECURE]',
   '>>> LB1 reporting engine: Ready for monthly export',
   '>>> Backup system: Last snapshot 2 hours ago',
-  '>>> System health: All services operational ✓',
+  '>>> System health: All services operational',
   '>>> Waiting for incoming patient data stream...',
   '>>> Auto-scribe: Dictation mode available',
   '>>> Drug interaction checker: Database v2024.3',
@@ -168,7 +169,7 @@ export function TypewriterFX(): React.ReactElement {
           opacity: 0.6,
         }}
       >
-        ● System log
+        <Circle size={8} fill="currentColor" /> System log
       </div>
 
       {lines.map((line, index) => (

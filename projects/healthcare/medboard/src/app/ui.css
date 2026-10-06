@@ -61,7 +61,13 @@
 }
 .ui-chip:hover { background: var(--neu-surface-hover); }
 .ui-chip[aria-pressed="true"] { box-shadow: var(--neu-pressed); }
-.ui-chip[aria-pressed="true"]::before { content: "✓"; font-size: var(--text-xs); }
+.ui-chip[aria-pressed="true"]::before {
+  content: "";
+  width: 12px;
+  height: 12px;
+  background-color: currentColor;
+  mask: var(--icon-check) center / contain no-repeat;
+}
 .ui-chip:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
 
 .ui-card {

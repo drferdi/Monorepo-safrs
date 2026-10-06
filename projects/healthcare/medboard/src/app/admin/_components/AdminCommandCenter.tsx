@@ -16,6 +16,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Line } from 'react-chartjs-2'
 import { io, type Socket } from 'socket.io-client'
 import styles from './AdminCommandCenter.module.css'
+import { Circle, TriangleAlert } from 'lucide-react'
 
 ChartJS.register(
   CategoryScale,
@@ -844,8 +845,8 @@ export default function AdminCommandCenter({ session }: { session: AdminSession 
                   </span>
                   <div className={styles.alertBody}>
                     <div className={styles.alertMessage}>
-                      {alert.priority === 'critical' && '🔴 '}
-                      {alert.priority === 'high' && '⚠️ '}
+                      {alert.priority === 'critical' && <Circle size={10} fill="currentColor" />}{' '}
+                      {alert.priority === 'high' && <TriangleAlert size={14} />}{' '}
                       {alert.message}
                     </div>
                   </div>

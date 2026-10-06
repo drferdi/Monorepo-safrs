@@ -3,6 +3,7 @@
 
 import type { ParamMomentum } from '@/lib/clinical/momentum-engine'
 import { VITAL_PARAM_LABELS } from '@/types/abyss/trajectory'
+import { ArrowDown, ArrowUp, ChevronsDown, ChevronsUp } from 'lucide-react'
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -72,7 +73,7 @@ function VelocityArrow({ direction, isAccelerating }: Pick<ParamMomentum, 'direc
         }}
         aria-label={isAccelerating ? 'Memburuk cepat' : 'Memburuk'}
       >
-        {isAccelerating ? '↑↑' : '↑'}
+        {isAccelerating ? <ChevronsUp size={14} /> : <ArrowUp size={14} />}
       </span>
     )
   }
@@ -87,7 +88,7 @@ function VelocityArrow({ direction, isAccelerating }: Pick<ParamMomentum, 'direc
         }}
         aria-label={isAccelerating ? 'Membaik cepat' : 'Membaik'}
       >
-        {isAccelerating ? '↓↓' : '↓'}
+        {isAccelerating ? <ChevronsDown size={14} /> : <ArrowDown size={14} />}
       </span>
     )
   }

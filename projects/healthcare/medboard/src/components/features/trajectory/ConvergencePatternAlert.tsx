@@ -11,6 +11,7 @@
 
 import type { ConvergenceResult } from '@/types/abyss/trajectory'
 import { CONVERGENCE_PATTERN_LABELS, VITAL_PARAM_LABELS } from '@/types/abyss/trajectory'
+import { ArrowUp, Zap } from 'lucide-react'
 
 interface ConvergencePatternAlertProps {
   convergence: ConvergenceResult
@@ -47,7 +48,7 @@ export function ConvergencePatternAlert({ convergence, className }: ConvergenceP
     >
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-        <span aria-hidden="true" style={{ fontSize: 16, color: severityColor }}>⚡</span>
+        <Zap size={16} color={severityColor} />
         <div style={{ flex: 1 }}>
           <div
             style={{
@@ -98,7 +99,7 @@ export function ConvergencePatternAlert({ convergence, className }: ConvergenceP
                 padding: '2px 8px',
               }}
             >
-              {VITAL_PARAM_LABELS[param]?.label ?? param} ↑
+              {VITAL_PARAM_LABELS[param]?.label ?? param} <ArrowUp size={12} />
             </span>
           ))}
         </div>

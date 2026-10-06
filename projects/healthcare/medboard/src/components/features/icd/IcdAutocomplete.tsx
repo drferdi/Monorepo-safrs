@@ -17,6 +17,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { Check, LoaderCircle, Search } from 'lucide-react'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -199,7 +200,13 @@ export function IcdAutocomplete({
           }}
           aria-hidden
         >
-          {isLoading ? '⟳' : isValidCode ? '✓' : '⌕'}
+          {isLoading ? (
+            <LoaderCircle size={14} className="animate-spin" />
+          ) : isValidCode ? (
+            <Check size={14} />
+          ) : (
+            <Search size={14} />
+          )}
         </span>
       </div>
 

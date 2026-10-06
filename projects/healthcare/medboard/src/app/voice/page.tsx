@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
 
 import styles from './voice.module.css'
+import { FlaskConical } from 'lucide-react'
 
 type Message = {
   id: number
@@ -573,7 +574,9 @@ export default function VoicePage() {
             <div className={styles.noteMeta}>Sentra healthcare solutions</div>
           </div>
           <div className={styles.noteRow}>
-            <span className="ui-badge ui-badge--accent">◈ Alpha</span>
+            <span className="ui-badge ui-badge--accent">
+              <FlaskConical size={12} /> Alpha
+            </span>
             <span className={styles.text}>
               Fitur ini masih dalam tahap pengembangan aktif. Performa, akurasi, dan stabilitas
               dapat berubah sewaktu-waktu.

@@ -3,15 +3,18 @@
 import {
   AlertCircle,
   CheckCircle,
+  Check,
   Clock,
   Inbox,
   Phone,
   Plus,
   RefreshCw,
   Trash2,
+  User,
   Video,
   Wifi,
   WifiOff,
+  X,
   XCircle,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -494,68 +497,7 @@ function RequestInbox({
                         : styles.avatar
                     }
                   >
-                    {req.nama.toLowerCase().includes('ibu') ||
-                    req.nama.toLowerCase().includes('ny') ||
-                    req.nama.toLowerCase().includes('siti') ||
-                    req.nama.toLowerCase().includes('ani') ||
-                    req.nama.toLowerCase().includes('wi') ||
-                    req.nama.toLowerCase().includes('ma') ? (
-                      /* Silhouette Wajah Perempuan */
-                      <svg width="28" height="28" viewBox="0 0 48 48" fill="currentColor">
-                        {/* Kepala */}
-                        <ellipse cx="24" cy="20" rx="10" ry="12" opacity="0.9" />
-                        {/* Rambut - model perempuan */}
-                        <path
-                          d="M14 16c0-6 4.5-11 10-11s10 5 10 11c0 3-1 6-3 8-1-3-3.5-5-7-5s-6 2-7 5c-2-2-3-5-3-8z"
-                          opacity="0.7"
-                        />
-                        {/* Leher */}
-                        <rect x="20" y="30" width="8" height="6" rx="2" opacity="0.9" />
-                        {/* Bahu */}
-                        <path d="M12 38c0-3 3-5 6-5h12c3 0 6 2 6 5v2H12v-2z" opacity="0.8" />
-                        {/* Poni rambut */}
-                        <path
-                          d="M16 14c2-2 5-3 8-3s6 1 8 3"
-                          stroke="currentColor"
-                          strokeWidth="1.5"
-                          fill="none"
-                          opacity="0.5"
-                        />
-                      </svg>
-                    ) : (
-                      /* Silhouette Wajah Laki-laki */
-                      <svg width="28" height="28" viewBox="0 0 48 48" fill="currentColor">
-                        {/* Kepala */}
-                        <ellipse cx="24" cy="21" rx="10" ry="11" opacity="0.9" />
-                        {/* Rambut - model laki-laki pendek */}
-                        <path
-                          d="M14 18c0-5.5 4.5-10 10-10s10 4.5 10 10c0 1.5-.3 3-1 4-.5-2-2-3.5-4-3.5s-3.5 1.5-5 1.5-3-1.5-5-1.5-3.5 1.5-4 3.5c-.7-1-1-2.5-1-4z"
-                          opacity="0.7"
-                        />
-                        {/* Leher */}
-                        <rect x="20" y="31" width="8" height="5" rx="1" opacity="0.9" />
-                        {/* Bahu/leher atas */}
-                        <path
-                          d="M14 38c0-2.5 2.5-4.5 5-4.5h10c2.5 0 5 2 5 4.5v2H14v-2z"
-                          opacity="0.8"
-                        />
-                        {/* Garis rambut samping */}
-                        <path
-                          d="M14 20c0-4 2-7 5-8"
-                          stroke="currentColor"
-                          strokeWidth="1"
-                          fill="none"
-                          opacity="0.4"
-                        />
-                        <path
-                          d="M34 20c0-4-2-7-5-8"
-                          stroke="currentColor"
-                          strokeWidth="1"
-                          fill="none"
-                          opacity="0.4"
-                        />
-                      </svg>
-                    )}
+                    <User size={20} />
                   </div>
                   <span
                     className={styles.rowName}
@@ -599,7 +541,11 @@ function RequestInbox({
                   </button>
                 </div>
               )}
-              {req.status === 'HANDLED' && <span className={styles.requestSmall}>✓ handled</span>}
+              {req.status === 'HANDLED' && (
+                <span className={styles.requestSmall}>
+                  <Check size={12} /> handled
+                </span>
+              )}
             </div>
           ))}
         </div>
@@ -918,8 +864,9 @@ export default function TelemedicinePage(): React.JSX.Element {
               <button
                 onClick={() => setActiveConsult(null)}
                 className="ui-btn ui-btn--ghost ui-btn--sm"
+                aria-label="Tutup"
               >
-                ✕
+                <X size={14} />
               </button>
             </div>
 

@@ -58,6 +58,17 @@ import TrustLayerGhost, { PROCESSING_SCRIPT } from './TrustLayerGhost'
 import { useFocusSpotlight } from './focus-spotlight'
 import { buildEmergencyOverrideFlags, deriveEmergencyOverrideState } from './emergency-override'
 import { sentenceCase } from '@/lib/text/sentence-case'
+import {
+  Check,
+  ChevronDown,
+  ChevronRight,
+  Circle,
+  Mars,
+  Sparkles,
+  TriangleAlert,
+  Venus,
+  X,
+} from 'lucide-react'
 
 // Iskandar Engine V1 response types
 interface CDSSSuggestion {
@@ -1276,25 +1287,10 @@ function CustomSelect({
         aria-expanded={open}
       >
         <span>{selected?.label ?? value}</span>
-        <svg
-          width="10"
-          height="6"
-          viewBox="0 0 10 6"
-          fill="none"
-          style={{
-            flexShrink: 0,
-            transform: open ? 'rotate(180deg)' : 'none',
-            transition: 'transform 0.2s ease',
-          }}
-        >
-          <path
-            d="M1 1l4 4 4-4"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <ChevronDown
+          size={14}
+          style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }}
+        />
       </button>
       {open && (
         <ul
@@ -4121,7 +4117,7 @@ export default function EMRPage() {
             <div className="cdss-dropbar-meta-row">
               <span className="cdss-dropbar-icd">
                 {s.icd10_code}
-                {s.rag_verified && <span style={{ marginLeft: 4, opacity: 0.6 }}>✓</span>}
+                {s.rag_verified && <Check size={12} style={{ marginLeft: 4, opacity: 0.6 }} />}
               </span>
               <span className="cdss-dropbar-bucket">
                 {getDecisionBucketLabel(s.decision_status)}
@@ -4137,7 +4133,7 @@ export default function EMRPage() {
                 ` · H${Math.round(s.deterministic_score * 100)}`}
             </span>
             <span className="cdss-dropbar-expand-hint">click</span>
-            <span className="cdss-dropbar-chevron">▾</span>
+            <ChevronDown size={14} className="cdss-dropbar-chevron" />
           </div>
         </summary>
         <div className="cdss-dropbar-body">
@@ -4218,7 +4214,7 @@ export default function EMRPage() {
                   key={`${s.icd10_code}-missing-${idx}`}
                   style={{ fontSize: 14, color: 'var(--text-muted)' }}
                 >
-                  ▸ {info}
+                  <ChevronRight size={14} /> {info}
                 </div>
               ))}
             </div>
@@ -4925,7 +4921,7 @@ export default function EMRPage() {
                   marginBottom: 4,
                 }}
               >
-                ● Konsult masuk dari assist
+                <Circle size={8} fill="currentColor" /> Konsult masuk dari assist
               </div>
               <div style={{ color: 'var(--text)', fontWeight: 600, fontSize: 14 }}>
                 {incomingConsult.patient.name}
@@ -5064,7 +5060,7 @@ export default function EMRPage() {
                         marginBottom: 2,
                       }}
                     >
-                      ✓ Data RME pasien — dari assist
+                      <Check size={14} /> Data RME pasien — dari assist
                     </div>
                     <div style={{ color: 'var(--text)', fontWeight: 600, fontSize: 16 }}>
                       {ac.patient.name}
@@ -5138,7 +5134,7 @@ export default function EMRPage() {
                       onClick={() => setAcceptedConsult(null)}
                       className="ui-btn ui-btn--ghost ui-btn--sm"
                     >
-                      ✕ Dismiss
+                      <X size={14} /> Dismiss
                     </button>
                   </div>
                 </div>
@@ -5676,7 +5672,7 @@ export default function EMRPage() {
                       title={g === 'L' ? 'Laki-laki' : 'Perempuan'}
                       className="ui-chip"
                     >
-                      {g === 'L' ? '♂' : '♀'}
+                      {g === 'L' ? <Mars size={16} /> : <Venus size={16} />}
                     </button>
                   ))}
                 </div>
@@ -5824,7 +5820,7 @@ export default function EMRPage() {
                                       color: 'var(--text-muted)',
                                     }}
                                   >
-                                    {sifatOpen ? '▼' : '▶'}
+                                    {sifatOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
                                   </span>
                                   <span
                                     style={{
@@ -5927,7 +5923,7 @@ export default function EMRPage() {
                                       color: 'var(--text-muted)',
                                     }}
                                   >
-                                    {lokasiOpen ? '▼' : '▶'}
+                                    {lokasiOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
                                   </span>
                                   <span
                                     style={{
@@ -5991,12 +5987,12 @@ export default function EMRPage() {
                                       color: 'var(--text-muted)',
                                     }}
                                   >
-                                    {penyertaOpen ? '▼' : '▶'}
+                                    {penyertaOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
                                   </span>
                                   <div style={{ display: 'flex', gap: 2 }}>
                                     {(['penyerta', 'bahaya'] as const).map((tab) => {
                                       const isActive = activeChainTab === tab
-                                      const label = tab === 'penyerta' ? 'Penyerta' : '⚠ Bahaya'
+                                      const label = tab === 'penyerta' ? 'Penyerta' : 'Bahaya'
                                       const activeColor =
                                         tab === 'bahaya' ? 'var(--c-critical)' : 'var(--c-asesmen)'
                                       return (
@@ -6019,7 +6015,7 @@ export default function EMRPage() {
                                             transition: 'background 0.2s, color 0.2s',
                                           }}
                                         >
-                                          {label}
+                                          {tab === 'bahaya' && <TriangleAlert size={12} />} {label}
                                         </button>
                                       )
                                     })}
@@ -6115,7 +6111,7 @@ export default function EMRPage() {
                             e.currentTarget.style.opacity = '1'
                           }}
                         >
-                          ✧ Auto Sentra
+                          <Sparkles size={14} /> Auto Sentra
                         </div>
                       </div>
                     )}
@@ -6456,7 +6452,7 @@ export default function EMRPage() {
                                           color: 'var(--text-muted)',
                                         }}
                                       >
-                                        {isOpen ? '▼' : '▶'}
+                                        {isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
                                       </span>
                                       <span
                                         style={{
@@ -6516,7 +6512,7 @@ export default function EMRPage() {
                                                         padding: '0 2px',
                                                       }}
                                                     >
-                                                      ▶
+                                                      <ChevronRight size={14} />
                                                     </span>
                                                   )}
                                                   <span
@@ -6668,7 +6664,7 @@ export default function EMRPage() {
                           color: 'var(--c-critical)',
                         }}
                       >
-                        ⚠ {alergiSelected.size} alergi
+                        <TriangleAlert size={14} /> {alergiSelected.size} alergi
                       </span>
                     )}
                   </div>
@@ -7849,7 +7845,7 @@ export default function EMRPage() {
                                       marginBottom: 4,
                                     }}
                                   >
-                                    ⚠ {sentenceCase(rf.severity)} — {rf.condition}
+                                    <TriangleAlert size={14} /> {sentenceCase(rf.severity)} — {rf.condition}
                                   </div>
                                   <div
                                     style={{
@@ -7884,7 +7880,7 @@ export default function EMRPage() {
                                         marginRight: 6,
                                       }}
                                     >
-                                      ● {sentenceCase(a.severity)}
+                                      <Circle size={8} fill="currentColor" /> {sentenceCase(a.severity)}
                                     </span>
                                     <span style={{ color: 'var(--text-muted)' }}>
                                       {a.title} — {a.message}

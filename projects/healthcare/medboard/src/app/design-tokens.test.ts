@@ -255,7 +255,7 @@ test('a selected chip is pressed in and marked with a check, not only recoloured
   const ui = read('src/app/ui.css')
   const globals = read('src/app/globals.css')
   assert.ok(rulesFor(ui, '.ui-chip[aria-pressed="true"]').some((body) => /box-shadow:\s*var\(--neu-pressed\)/.test(body)))
-  assert.ok(rulesFor(ui, '.ui-chip[aria-pressed="true"]::before').some((body) => /content:\s*"✓"/.test(body)))
+  assert.ok(rulesFor(ui, '.ui-chip[aria-pressed="true"]::before').some((body) => /mask:\s*var\(--icon-check\)/.test(body)))
   assert.ok(rulesFor(globals, '.vitals-chip.is-active').some((body) => /box-shadow:\s*var\(--neu-pressed\)/.test(body)))
 })
 

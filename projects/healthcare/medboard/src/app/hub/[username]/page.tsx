@@ -7,6 +7,7 @@ import { isDoctorProfession } from '@/lib/crew-access'
 import { resolveCrewRankBadgeSrc, resolveCrewSentraTitle } from '@/lib/crew-profile'
 import { safeHref, safeUrl } from '@/lib/sanitize-url'
 import styles from '../hub.module.css'
+import { ArrowLeft } from 'lucide-react'
 
 interface RosterMemberDetail {
   username: string
@@ -257,7 +258,7 @@ export default function HubProfileDetailPage() {
             Buka Lab Preview
           </Link>
           <Link href="/hub" className="ui-btn ui-btn--ghost">
-            ← Kembali ke Hub
+            <ArrowLeft size={14} /> Kembali ke Hub
           </Link>
         </div>
       </div>

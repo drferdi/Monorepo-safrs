@@ -28,6 +28,12 @@
   /* Button text is one size everywhere: 13 px (Chief 2026-10-06). */
   --text-button: 0.8125rem;
 
+  /* Icons drawn by CSS are Lucide paths used as masks (Chief 2026-10-06: every icon from Lucide). */
+  --icon-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  --icon-check-on-accent: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E");
+  --icon-square: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='3' rx='2'/%3E%3C/svg%3E");
+  --icon-square-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='18' height='18' x='3' y='3' rx='2'/%3E%3Cpath d='m9 12 2 2 4-4'/%3E%3C/svg%3E");
+
   /* Clickable buttons: black neumorphism (Chief 2026-10-06). Raised at rest, pressed in when selected. */
   --neu-surface: linear-gradient(145deg, #2a2e35, #0f1115);
   --neu-surface-hover: linear-gradient(145deg, #353a42, #16191e);
@@ -659,10 +665,8 @@ a {
 }
 
 .emr-signoff-check.is-ready::before {
-  content: "✓";
   border-color: var(--success);
-  background: var(--success);
-  color: var(--text-on-accent);
+  background: var(--success) var(--icon-check-on-accent) center / 12px no-repeat;
 }
 
 .emr-signoff-check.is-review::before {
@@ -3856,17 +3860,19 @@ a {
   gap: 12px;
 }
 .lab-item-left::before {
-  content: "[]";
-  font-family: var(--font-mono);
-  color: var(--text-muted);
-  font-size: 14px;
+  content: "";
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  background-color: var(--text-muted);
+  mask: var(--icon-square) center / contain no-repeat;
 }
 .lab-item.selected {
   color: var(--text-main);
 }
 .lab-item.selected .lab-item-left::before {
-  color: var(--c-asesmen);
-  content: "[x]";
+  background-color: var(--c-asesmen);
+  mask-image: var(--icon-square-check);
 }
 
 .lab-status {
@@ -5371,9 +5377,12 @@ a:hover > .home-link-icon { background: var(--text); }
 
 .vitals-chip.is-active::before,
 .finalize-pharmacology-selection-button.is-active::before {
-  content: "✓";
+  content: "";
+  width: 12px;
+  height: 12px;
   margin-right: 6px;
-  font-size: var(--text-xs);
+  background-color: currentColor;
+  mask: var(--icon-check) center / contain no-repeat;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -5389,4 +5398,12 @@ a:hover > .home-link-icon { background: var(--text); }
   .vitals-chip {
     transition: none;
   }
+}
+
+/* ─── Icons: every icon is Lucide (Chief 2026-10-06) ───
+   lucide-react tags each icon with .lucide; keep it on the text baseline and never squeezed. */
+.lucide {
+  display: inline-block;
+  flex-shrink: 0;
+  vertical-align: -0.125em;
 }

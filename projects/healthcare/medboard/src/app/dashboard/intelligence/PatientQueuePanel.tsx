@@ -7,38 +7,39 @@ import {
 } from '@/lib/intelligence/socket-payload'
 
 import { useSharedIntelligenceSocket } from './IntelligenceSocketProvider'
+import { Check, Circle, CircleDashed, CircleDot, Inbox, TriangleAlert, type LucideIcon } from 'lucide-react'
 
 // ── Status config ────────────────────────────────────────────────────────────
 
 interface StatusConfig {
-  indicator: string
+  indicator: LucideIcon
   color: string
   borderColor: string
 }
 
 const STATUS_CONFIG: Record<IntelligenceEventStatus, StatusConfig> = {
   in_consultation: {
-    indicator: '●',
+    indicator: Circle,
     color: 'var(--c-asesmen)',
     borderColor: 'var(--c-asesmen)',
   },
   cdss_pending: {
-    indicator: '◐',
+    indicator: CircleDashed,
     color: 'var(--c-asesmen)',
     borderColor: 'var(--c-asesmen)',
   },
   documentation_incomplete: {
-    indicator: '⚠',
+    indicator: TriangleAlert,
     color: 'var(--c-critical)',
     borderColor: 'var(--c-critical)',
   },
   waiting: {
-    indicator: '○',
+    indicator: CircleDot,
     color: 'var(--text-muted)',
     borderColor: 'var(--line-base)',
   },
   completed: {
-    indicator: '✓',
+    indicator: Check,
     color: 'var(--text-muted)',
     borderColor: 'transparent',
   },
@@ -120,7 +121,7 @@ export default function PatientQueuePanel(): React.JSX.Element {
             marginBottom: 12,
           }}
         >
-          ○
+          <Inbox size={24} />
         </div>
         <div style={{ fontSize: 14, marginBottom: 4 }}>Tidak ada encounter aktif saat ini</div>
         <div
@@ -151,7 +152,7 @@ export default function PatientQueuePanel(): React.JSX.Element {
             color: 'var(--text-muted)',
           }}
         >
-          ⚠ Koneksi terputus — data mungkin tidak terbaru.
+          <TriangleAlert size={14} /> Koneksi terputus — data mungkin tidak terbaru.
         </div>
       )}
 
@@ -222,7 +223,7 @@ export default function PatientQueuePanel(): React.JSX.Element {
                   color: cfg.color,
                 }}
               >
-                <span aria-hidden="true">{cfg.indicator}</span>
+                <cfg.indicator size={12} />
                 {getIntelligenceEventStatusLabel(item.status)}
               </span>
             </div>

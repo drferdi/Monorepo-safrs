@@ -3,6 +3,7 @@
 import type { ApiResponse, DashboardComplianceIssue, DashboardEncounterSummary } from '@abyss/types'
 import { useEffect, useState } from 'react'
 import styles from './AdminEklaimReadiness.module.css'
+import { ChevronDown } from 'lucide-react'
 
 // ─── TYPES ────────────────────────────────────────────────────────
 
@@ -127,7 +128,7 @@ function EncounterRow({ encounter, expanded, onToggle }: EncounterRowProps) {
 
         {/* Expand arrow — only shown when there are issues */}
         {!isReady && (
-          <span className={cx(styles.expandArrow, expanded && styles.expandArrowExpanded)}>▾</span>
+          <ChevronDown size={14} className={cx(styles.expandArrow, expanded && styles.expandArrowExpanded)} />
         )}
       </button>
 

@@ -16,6 +16,6 @@ test('the assessment workspace shows no engine-retirement notice and no engine e
 })
 
 test('gender is chosen by symbol, and each symbol keeps its spoken name (Chief 2026-10-06)', () => {
-  assert.match(emr, /\{g === 'L' \? '♂' : '♀'\}/)
+  assert.match(emr, /\{g === 'L' \? <Mars size=\{16\} \/> : <Venus size=\{16\} \/>\}/)
   assert.match(emr, /aria-label=\{g === 'L' \? 'Laki-laki' : 'Perempuan'\}/)
 })

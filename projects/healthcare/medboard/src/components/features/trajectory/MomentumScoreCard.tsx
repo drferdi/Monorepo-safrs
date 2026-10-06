@@ -11,6 +11,7 @@
 
 import type { MomentumAnalysis } from '@/types/abyss/trajectory'
 import { MOMENTUM_LEVEL_CONFIG } from '@/types/abyss/trajectory'
+import { TriangleAlert } from 'lucide-react'
 
 interface MomentumScoreCardProps {
   momentum: MomentumAnalysis
@@ -137,7 +138,7 @@ export function MomentumScoreCard({ momentum, className }: MomentumScoreCardProp
               fontFamily: 'var(--font-mono)',
             }}
           >
-            ⚠ Data terbatas — {momentum.visitCount} kunjungan
+            <TriangleAlert size={14} /> Data terbatas — {momentum.visitCount} kunjungan
           </div>
         )}
       </div>

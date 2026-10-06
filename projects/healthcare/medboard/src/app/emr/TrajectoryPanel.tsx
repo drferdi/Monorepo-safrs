@@ -17,6 +17,7 @@ import {
 import { getTrajectoryHistoryWindow, type ScrapedVisit } from '@/lib/emr/visit-history'
 import type { ScreeningAlert } from '@/lib/vitals/instant-red-alerts'
 import { sentenceCase } from '@/lib/text/sentence-case'
+import { Activity, Ambulance, ChevronRight, Siren, Timer, TriangleAlert } from 'lucide-react'
 
 interface TrajectoryPanelProps {
   vitals: {
@@ -206,7 +207,7 @@ export default function TrajectoryPanel({
               color: 'var(--text-muted)',
             }}
           >
-            ◈ Clinical trajectory
+            <Activity size={14} /> Clinical trajectory
           </span>
           {/* Urgency badge */}
           <span
@@ -292,9 +293,13 @@ export default function TrajectoryPanel({
                         : 'rgba(234,179,8,0.06)',
                 }}
               >
-                <span style={{ fontSize: 12 }}>
-                  {a.severity === 'critical' ? '🚑' : a.severity === 'high' ? '🚨' : '⚠️'}
-                </span>
+                {a.severity === 'critical' ? (
+                  <Ambulance size={14} />
+                ) : a.severity === 'high' ? (
+                  <Siren size={14} />
+                ) : (
+                  <TriangleAlert size={14} />
+                )}
                 <span
                   style={{
                     ...mono,
@@ -547,7 +552,7 @@ export default function TrajectoryPanel({
                 marginBottom: 6,
               }}
             >
-              ⏱ Time TO critical estimate
+              <Timer size={14} /> Time TO critical estimate
             </span>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
               {ttcEntries.map(e => (
@@ -598,7 +603,7 @@ export default function TrajectoryPanel({
                     marginTop: 1,
                   }}
                 >
-                  ▸
+                  <ChevronRight size={14} />
                 </span>
                 <span style={{ ...sans, fontSize: 12, color: 'var(--text-main)' }}>{d}</span>
               </div>

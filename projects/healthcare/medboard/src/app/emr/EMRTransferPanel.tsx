@@ -5,6 +5,7 @@ import type { Socket } from 'socket.io-client'
 import type { EMRProgressEvent } from '@/lib/emr/types'
 import { IcdAutocomplete } from '@/components/features/icd/IcdAutocomplete'
 import { sentenceCase } from '@/lib/text/sentence-case'
+import { TriangleAlert } from 'lucide-react'
 
 // ============================================================================
 // TYPES
@@ -429,7 +430,7 @@ export default function EMRTransferPanel() {
             borderTop: '1px solid var(--line-base)',
           }}
         >
-          ⚠ Socket.IO tidak terhubung — progress realtime tidak tersedia
+          <TriangleAlert size={14} /> Socket.IO tidak terhubung — progress realtime tidak tersedia
         </div>
       )}
     </div>

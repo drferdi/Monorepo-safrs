@@ -16,6 +16,7 @@ import {
 import { AIDisclosureBadge } from './AIDisclosureBadge'
 import { useSharedIntelligenceSocket } from './IntelligenceSocketProvider'
 import { MedicalKnowledgeSearch } from '@/components/clinical/MedicalKnowledgeSearch'
+import { Lightbulb } from 'lucide-react'
 
 type OverrideAction = 'accept' | 'modify' | 'reject'
 
@@ -106,7 +107,7 @@ export function AIInsightsPanelContent({
             marginBottom: 12,
           }}
         >
-          ◇
+          <Lightbulb size={24} />
         </div>
         <div style={{ fontSize: 14, marginBottom: 4 }}>Menunggu event CDSS pertama</div>
         <div

@@ -19,7 +19,7 @@ import { useParams } from 'next/navigation'
 import type React from 'react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import '@livekit/components-styles'
-import { AlertCircle, Loader2, Mic, MicOff, Phone, Video, VideoOff } from 'lucide-react'
+import { AlertCircle, CircleCheck, Loader2, Mic, MicOff, Phone, Video, VideoOff } from 'lucide-react'
 
 // ── Internal: Grid video untuk pasien ──
 function PatientTrackGrid(): React.JSX.Element {
@@ -183,7 +183,7 @@ export default function PatientJoinPage(): React.JSX.Element {
   if (state === 'ended') {
     return (
       <div style={fullCenter}>
-        <div style={{ fontSize: 56, marginBottom: 16 }}>✓</div>
+        <CircleCheck size={56} style={{ marginBottom: 16 }} />
         <h2 style={{ color: '#fff', fontSize: 20, marginBottom: 8 }}>Konsultasi Selesai</h2>
         <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14 }}>
           Terima kasih telah menggunakan layanan telemedicine Puskesmas.

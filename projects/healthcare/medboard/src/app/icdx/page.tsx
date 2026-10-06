@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useMemo, useState } from 'react'
+import { Check, TriangleAlert, X } from 'lucide-react'
 
 interface IcdSearchItem {
   code: string
@@ -483,7 +484,7 @@ export default function ICDXPage() {
                                 borderRadius: 2,
                               }}
                             >
-                              ✓ Valid
+                              <Check size={14} /> Valid
                             </span>
                             {row.legacyName && (
                               <span
@@ -511,7 +512,7 @@ export default function ICDXPage() {
                                 borderRadius: 2,
                               }}
                             >
-                              ✗ Tidak tersedia
+                              <X size={14} /> Tidak tersedia
                             </span>
                             <div
                               style={{
@@ -763,7 +764,7 @@ export default function ICDXPage() {
                                 marginBottom: 8,
                               }}
                             >
-                              ✓ Gunakan kode ini di PCare / ePuskesmas
+                              <Check size={14} /> Gunakan kode ini di PCare / ePuskesmas
                             </div>
                             <span
                               style={{
@@ -798,7 +799,7 @@ export default function ICDXPage() {
                                 marginBottom: 8,
                               }}
                             >
-                              ⚠ Kode tidak tersedia
+                              <TriangleAlert size={14} /> Kode tidak tersedia
                             </div>
                             <div style={{ fontSize: 14, color: L.critical }}>
                               Kode ini tidak ada di ICD-10 2010 — tidak dapat diinput ke
@@ -1063,7 +1064,7 @@ export default function ICDXPage() {
                     marginBottom: 10,
                   }}
                 >
-                  ✓ Generate selesai — {lb1Result.durationMs?.toLocaleString()}
+                  <Check size={14} /> Generate selesai — {lb1Result.durationMs?.toLocaleString()}
                   ms
                 </div>
                 <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>

@@ -1,7 +1,7 @@
 // Drferdi — vision, brought to life.
 'use client'
 
-import { Clock, MessageSquare, Phone, User, Video } from 'lucide-react'
+import { Check, Clock, MessageSquare, Phone, User, Video } from 'lucide-react'
 import type React from 'react'
 import { useCallback, useEffect, useState } from 'react'
 
@@ -148,7 +148,7 @@ export function AppointmentBooking({
                   color: isDone || isActive ? L.accent : L.muted,
                 }}
               >
-                {isDone ? '✓' : null} {label}
+                {isDone ? <Check size={14} /> : null} {label}
               </span>
               {i < 2 && <span style={{ color: L.border, margin: '0 10px', fontSize: 14 }}>›</span>}
             </div>

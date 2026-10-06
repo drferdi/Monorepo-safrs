@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { ArrowLeft, ArrowRight, Check } from 'lucide-react'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -256,7 +257,7 @@ export function ScreeningLogbook() {
 
                     <td style={{ padding: '10px 14px', fontSize: '14px', textAlign: 'center' }}>
                       {entry.acknowledgedByDoctor
-                        ? <span style={{ color: '#68D391' }} aria-label="Sudah di-ack">✓</span>
+                        ? <Check size={14} color="var(--success)" aria-label="Sudah di-ack" />
                         : <span style={{ color: 'var(--text-muted)' }} aria-label="Belum di-ack">—</span>
                       }
                     </td>
@@ -271,31 +272,22 @@ export function ScreeningLogbook() {
       {/* ── Pagination ── */}
       {pagination.totalPages > 1 && (
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', justifyContent: 'flex-end' }}>
-          {[
-            { label: '← Sebelumnya', disabled: page <= 1,                    onClick: () => setPage((p) => p - 1) },
-            { label: 'Berikutnya →', disabled: page >= pagination.totalPages, onClick: () => setPage((p) => p + 1) },
-          ].map(({ label, disabled, onClick }, i) => (
-            <button
-              key={i}
-              type="button"
-              disabled={disabled}
-              onClick={onClick}
-              style={{
-                background:   'var(--bg-card)',
-                border:       '1px solid var(--line-base)',
-                borderRadius: '4px',
-                color:        disabled ? 'var(--text-muted)' : 'var(--text-main)',
-                fontSize: '12px',
-                fontFamily:   FONT,
-                padding:      '6px 12px',
-                cursor:       disabled ? 'not-allowed' : 'pointer',
-                opacity:      disabled ? 0.4 : 1,
-                transition:   'opacity 0.15s',
-              }}
-            >
-              {label}
-            </button>
-          ))}
+          <button
+            type="button"
+            className="ui-btn ui-btn--secondary ui-btn--sm"
+            disabled={page <= 1}
+            onClick={() => setPage((p) => p - 1)}
+          >
+            <ArrowLeft size={14} /> Sebelumnya
+          </button>
+          <button
+            type="button"
+            className="ui-btn ui-btn--secondary ui-btn--sm"
+            disabled={page >= pagination.totalPages}
+            onClick={() => setPage((p) => p + 1)}
+          >
+            Berikutnya <ArrowRight size={14} />
+          </button>
           <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{page} / {pagination.totalPages}</span>
         </div>
       )}

@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { isDoctorProfession } from '@/lib/crew-access'
 import styles from '../../hub.module.css'
+import { ArrowLeft } from 'lucide-react'
 
 interface RosterMemberDetail {
   username: string
@@ -224,7 +225,7 @@ export default function HubProfileLabPage() {
           <h1 className={styles.title}>Preview Card</h1>
         </div>
         <Link href={`/hub/${encodeURIComponent(username)}`} className="ui-btn ui-btn--ghost">
-          ← Kembali ke Profile
+          <ArrowLeft size={14} /> Kembali ke Profile
         </Link>
       </div>
 

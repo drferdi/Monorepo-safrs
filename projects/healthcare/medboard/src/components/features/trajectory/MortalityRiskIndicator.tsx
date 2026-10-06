@@ -10,6 +10,7 @@
 
 import type { MortalityProxyRisk } from '@/types/abyss/trajectory'
 import { MORTALITY_TIER_CONFIG, URGENCY_TIER_CONFIG } from '@/types/abyss/trajectory'
+import { Circle } from 'lucide-react'
 
 interface MortalityRiskIndicatorProps {
   mortalityProxy: MortalityProxyRisk
@@ -40,9 +41,7 @@ export function MortalityRiskIndicator({ mortalityProxy, className }: MortalityR
     >
       {/* Icon + label */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 160 }}>
-        <span aria-hidden="true" style={{ fontSize: 16, color: tierCfg.color }}>
-          {score >= 70 ? '🔴' : score >= 40 ? '🟠' : '🟢'}
-        </span>
+        <Circle size={14} fill="currentColor" color={tierCfg.color} />
         <div>
           <div
             style={{

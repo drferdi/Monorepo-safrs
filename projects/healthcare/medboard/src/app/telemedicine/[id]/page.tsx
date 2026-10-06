@@ -7,7 +7,7 @@ import type React from 'react'
 // Route: /telemedicine/[id]
 // ============================================================
 
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Check } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 
@@ -152,7 +152,7 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
         )}
         <div className={styles.roomCenterActions}>
           <button onClick={() => router.push('/telemedicine')} className="ui-btn ui-btn--primary">
-            ← Kembali ke Telemedicine
+            <ArrowLeft size={14} /> Kembali ke Telemedicine
           </button>
         </div>
       </div>
@@ -163,7 +163,9 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
   if (sessionComplete) {
     return (
       <div className={styles.roomCenter}>
-        <span className="ui-badge ui-badge--success">✓</span>
+        <span className="ui-badge ui-badge--success">
+          <Check size={12} />
+        </span>
         <h2 className={styles.cardTitle}>Konsultasi Selesai</h2>
         <p className={styles.cardText} style={{ margin: 0 }}>
           Appointment #{appointment.id.slice(-6)} telah direkam
@@ -188,7 +190,7 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
             Lanjut ke EMR
           </button>
           <button onClick={() => router.push('/telemedicine')} className="ui-btn ui-btn--primary">
-            ← Daftar Konsultasi
+            <ArrowLeft size={14} /> Daftar Konsultasi
           </button>
         </div>
       </div>

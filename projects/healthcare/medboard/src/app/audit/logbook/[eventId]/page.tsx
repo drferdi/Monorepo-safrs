@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { use, useEffect, useState } from 'react'
+import { ArrowLeft } from 'lucide-react'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -140,7 +141,9 @@ export default function AuditEventDetailPage({
   if (error || !data) return (
     <div style={{ maxWidth: PAGE_W, margin: '0 auto', padding: '48px 24px' }}>
       <div style={{ color: 'var(--c-asesmen)', fontSize: 14, marginBottom: 16 }}>{error ?? 'Event tidak ditemukan'}</div>
-      <Link href="/audit/logbook" style={btnStyle}>← Kembali</Link>
+      <Link href="/audit/logbook" style={btnStyle}>
+          <ArrowLeft size={14} /> Kembali
+        </Link>
     </div>
   )
 

@@ -11,6 +11,7 @@ import {
   CREW_PROFILE_POSITIONS,
   type CrewProfileData,
 } from '@/lib/crew-profile'
+import { Check, X } from 'lucide-react'
 
 /* ── Types ── */
 
@@ -674,7 +675,7 @@ function UserEditPanel({
               color: saveMsgOk ? '#4CAF50' : 'var(--c-critical)',
             }}
           >
-            {saveMsgOk ? '\u2713' : '\u2717'} {saveMsg}
+            {saveMsgOk ? <Check size={14} /> : <X size={14} />} {saveMsg}
           </span>
           <button
             onClick={() => setSaveMsg('')}

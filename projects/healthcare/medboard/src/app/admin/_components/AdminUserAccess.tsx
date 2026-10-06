@@ -19,6 +19,7 @@ import {
 } from '@/lib/crew-profile'
 import { safeUrl } from '@/lib/sanitize-url'
 import { sentenceCase } from '@/lib/text/sentence-case'
+import { Check, X } from 'lucide-react'
 
 /* ── Types ── */
 
@@ -1037,7 +1038,7 @@ function UserEditPanel({
               saveMsgOk ? styles.toastMessageSuccess : styles.toastMessageError
             )}
           >
-            {saveMsgOk ? '\u2713' : '\u2717'} {saveMsg}
+            {saveMsgOk ? <Check size={14} /> : <X size={14} />} {saveMsg}
           </span>
           <button onClick={() => setSaveMsg('')} className={styles.iconButton}>
             &times;

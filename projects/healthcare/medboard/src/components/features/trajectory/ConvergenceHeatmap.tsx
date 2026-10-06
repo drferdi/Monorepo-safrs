@@ -3,6 +3,7 @@
 
 import type { ConvergenceParam, ConvergenceResult } from '@/lib/clinical/convergence-detector'
 import { VITAL_PARAM_LABELS } from '@/types/abyss/trajectory'
+import { Circle } from 'lucide-react'
 
 // ── Params ────────────────────────────────────────────────────────────────────
 
@@ -158,9 +159,7 @@ export function ConvergenceHeatmap({ convergence }: ConvergenceHeatmapProps) {
                     aria-label={active ? `${meta.label}: ${col.label}` : undefined}
                   >
                     {active && (
-                      <span style={{ fontSize: 12, color: col.color, fontWeight: 600 }}>
-                        ●
-                      </span>
+                      <Circle size={10} fill="currentColor" color={col.color} />
                     )}
                   </div>
                 )
