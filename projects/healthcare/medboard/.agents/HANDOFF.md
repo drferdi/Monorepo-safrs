@@ -30,9 +30,9 @@ crew-access group alone 20/20. Browser pane (demo :4345): all five logos load, 1
 
 ## Next action
 
-1. Production image hotfix (Chief approved; agent remote writes are blocked): Chief runs the
-   PowerShell line from the session report (scp the 17-image tarball, `sudo tar` into
-   `/opt/medboard/app`, chown `medboard`). Then check `/avatar.png` size ≠ 131 bytes.
+1. Done 2026-10-06: Chief ran the image hotfix (17-image tarball into `/opt/medboard/app`,
+   no restart). Live check: all 17 return their local byte sizes and decode in the browser
+   (`/audrey.png` is a JPEG named .png, same as the repo file).
 2. Redeploy `842461d5` for the logos (runbook §2 with the new LFS tarball): R3, Chief's call.
 3. End-to-end with Chief: log in as `sentraone`, reload extension from
    `med-assist\.output\chrome-mv3-dev`, sign in to Asisten Medis, ACARS shows "Asisten Medis";
