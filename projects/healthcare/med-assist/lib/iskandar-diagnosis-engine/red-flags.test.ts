@@ -85,3 +85,18 @@ describe('checkSepsis ICD-10 codes', () => {
     expect(flag?.icd_codes).toEqual(['A41.9', 'R65.1']);
   });
 });
+
+// qSOFA (Singer 2016): each criterion on both sides of its line. One other criterion is held met,
+// so the criterion under test decides whether the flag appears.
+describe('checkSepsis qSOFA boundaries', () => {
+  it.each([
+    ['RR 22 counts', { respiratory_rate: 22, gcs: 14 }, true],
+    ['RR 21 does not', { respiratory_rate: 21, gcs: 14 }, false],
+    ['systolic 100 counts', { systolic: 100, gcs: 14 }, true],
+    ['systolic 101 does not', { systolic: 101, gcs: 14 }, false],
+    ['GCS 14 counts', { gcs: 14, respiratory_rate: 22 }, true],
+    ['GCS 15 does not', { gcs: 15, respiratory_rate: 22 }, false],
+  ])('%s', (_label, vitals, flagged) => {
+    expect(checkSepsis(vitals) !== null).toBe(flagged);
+  });
+});
