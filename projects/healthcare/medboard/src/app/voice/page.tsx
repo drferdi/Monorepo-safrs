@@ -4,6 +4,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
 
+import styles from './voice.module.css'
+
 type Message = {
   id: number
   role: 'user' | 'assistant'
@@ -81,10 +83,6 @@ function scheduleChunk(base64: string, ctx: AudioContext, nextStartRef: { t: num
 }
 
 export default function VoicePage() {
-  const accentTone = '#101012'
-  const accentToneSoft = 'rgba(16,16,18,0.08)'
-  const accentToneBorder = 'rgba(16,16,18,0.22)'
-  const accentNeumorph = '3px 3px 10px rgba(0,0,0,0.24), inset 1px 1px 0 rgba(255,255,255,0.04)'
   const [messages, setMessages] = useState<Message[]>([])
   const [sessionState, setSession] = useState<SessionState>('idle')
   const [error, setError] = useState('')
@@ -331,24 +329,20 @@ export default function VoicePage() {
 
   /* ─────────── STATUS HELPERS ─────────── */
   const statusColor =
-    sessionState === 'recording'
-      ? 'rgba(220,38,38,0.9)'
+    sessionState === 'recording' || sessionState === 'error'
+      ? 'var(--critical)'
       : sessionState === 'speaking'
-        ? accentTone
-        : sessionState === 'error'
-          ? 'var(--c-critical)'
-          : 'var(--text-muted)'
+        ? 'var(--primary)'
+        : 'var(--text-secondary)'
 
   const dotColor =
-    sessionState === 'recording'
-      ? 'rgba(220,38,38,0.9)'
+    sessionState === 'recording' || sessionState === 'error'
+      ? 'var(--critical)'
       : sessionState === 'speaking'
-        ? accentTone
+        ? 'var(--primary)'
         : sessionState === 'ready'
-          ? 'rgba(74,222,128,0.85)'
-          : sessionState === 'error'
-            ? 'var(--c-critical)'
-            : 'var(--text-muted)'
+          ? 'var(--success)'
+          : 'var(--text-secondary)'
 
   const statusLabel =
     sessionState === 'ready'
@@ -362,705 +356,228 @@ export default function VoicePage() {
             : ''
 
   return (
-    <div style={{ width: '100%', maxWidth: 1240 }}>
-      {/* ── Animations ── */}
-      <style>{`
-        @keyframes v-spin    { to { transform: rotate(360deg); } }
-        @keyframes v-dot     { 0%,100% { opacity: 1; } 50% { opacity: 0.25; } }
-        @keyframes v-rec-btn { 0%,100% { box-shadow: 0 0 0 0 rgba(220,38,38,0.35); }
-                               50%  { box-shadow: 0 0 0 18px rgba(220,38,38,0); } }
-        @keyframes v-speak   { 0%,100% { box-shadow: 0 0 0 0 rgba(16,16,18,0.28); }
-                               50%  { box-shadow: 0 0 0 14px rgba(16,16,18,0); } }
-        @keyframes v-msg-in  { from { opacity: 0; transform: translateY(5px); }
-                               to   { opacity: 1; transform: translateY(0); } }
-        .v-msg-in { animation: v-msg-in 0.22s ease forwards; }
-      `}</style>
-
-      <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start' }}>
-        {/* ════════════ LEFT COLUMN ════════════ */}
-        <div
-          style={{
-            flex: '1 1 0',
-            minWidth: 0,
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          <div
-            className="page-header"
-            style={{ maxWidth: '100%', width: '100%', marginBottom: 28 }}
-          >
-            <div className="page-title">Consult Audrey</div>
-            <div className="page-subtitle">
-              Clinical AI · voice consultation · Sentra healthcare solutions
-            </div>
-            <div className="page-header-divider" />
-            <div
-              className="page-header-badges"
-              style={{ justifyContent: 'flex-end', marginTop: 14 }}
-            >
-              {isConnected && (
-                <button
-                  onClick={() => void disconnect()}
-                  style={{
-                    fontSize: 12,
-                    padding: '6px 14px',
-                    background: 'none',
-                    border: '1px solid var(--c-critical)',
-                    color: 'var(--c-critical)',
-                    cursor: 'pointer',
-                  }}
-                >
-                  PUTUS SESI
-                </button>
-              )}
-              <button
-                onClick={() => setMessages([])}
-                style={{
-                  fontSize: 12,
-                  padding: '6px 14px',
-                  background: 'none',
-                  border: '1px solid var(--line-base)',
-                  color: 'var(--text-muted)',
-                  cursor: 'pointer',
-                }}
-              >
-                RESET
-              </button>
-            </div>
-          </div>
-
-          {/* Error banner */}
-          {error && (
-            <div
-              style={{
-                marginBottom: 20,
-                padding: '10px 14px',
-                border: '1px solid var(--c-critical)',
-                fontSize: 14,
-                color: 'var(--c-critical)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-              }}
-            >
-              <span>⚠</span> {error}
-            </div>
-          )}
-
-          {/* ── IDLE / ERROR — Connect zone ── */}
-          {(sessionState === 'idle' || sessionState === 'error') && (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: 32,
-                marginBottom: 32,
-              }}
-            >
-              {/* Podcast avatar */}
-              <div style={{ flexShrink: 0 }}>
-                <img
-                  src="/avatar/podcast.png"
-                  alt="Audrey"
-                  style={{
-                    display: 'block',
-                    width: 150,
-                    height: 'auto',
-                    mixBlendMode: 'screen',
-                    opacity: 0.88,
-                  }}
-                />
-              </div>
-
-              {/* Right: text + CTA + instructions */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <div>
-                  <div
-                    style={{
-                      fontSize: 20,
-                      fontWeight: 600,
-                      color: 'var(--text-main)',
-                      marginBottom: 6,
-                      lineHeight: 1.3,
-                    }}
-                  >
-                    Audrey siap mendampingi
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 14,
-                      color: 'var(--text-muted)',
-                      lineHeight: 1.7,
-                      maxWidth: 420,
-                    }}
-                  >
-                    Clinical AI real-time untuk konsultasi dokter — diferensial diagnosis, dosis,
-                    tata laksana, dan kriteria rujukan dalam konteks Puskesmas PONED Balowerti.
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => void connect()}
-                  style={{
-                    alignSelf: 'flex-start',
-                    padding: '13px 32px',
-                    background: accentTone,
-                    border: '1px solid rgba(255,255,255,0.06)',
-                    color: '#fff',
-                    fontSize: 14,
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    boxShadow: accentNeumorph,
-                    transition: 'opacity 0.15s',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
-                  onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-                >
-                  ▶ MULAI SESI AUDREY
-                </button>
-
-                <div
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 5,
-                    fontSize: 14,
-                    color: 'var(--text-muted)',
-                    lineHeight: 1.7,
-                  }}
-                >
-                  <div>Klik tombol untuk memulai sesi</div>
-                  <div>
-                    <strong style={{ color: 'var(--text-main)' }}>Tahan</strong> tombol mikrofon
-                    atau [SPACE] saat ingin bicara
-                  </div>
-                  <div>
-                    <strong style={{ color: 'var(--text-main)' }}>Lepas</strong> saat selesai —
-                    Audrey akan merespons secara otomatis
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* ── CONNECTING ── */}
-          {sessionState === 'connecting' && (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 12,
-                marginBottom: 32,
-                color: 'var(--text-muted)',
-                fontSize: 14,
-              }}
-            >
-              <div
-                style={{
-                  width: 18,
-                  height: 18,
-                  flexShrink: 0,
-                  border: `2px solid ${accentToneBorder}`,
-                  borderTop: `2px solid ${accentTone}`,
-                  borderRadius: '50%',
-                  animation: 'v-spin 0.85s linear infinite',
-                }}
-              />
-              Mempersiapkan sesi klinis dengan Audrey...
-            </div>
-          )}
-
-          {/* ── ACTIVE SESSION ── */}
+    <div className={styles.page}>
+      <div className={styles.header}>
+        <div>
+          <h1 className={styles.title}>Consult Audrey</h1>
+          <p className={styles.subtitle}>
+            Clinical AI · voice consultation · Sentra healthcare solutions
+          </p>
+        </div>
+        <div className={styles.actions}>
           {isConnected && (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 16,
-                marginBottom: 28,
-              }}
+            <button
+              onClick={() => void disconnect()}
+              className={`ui-btn ui-btn--secondary ${styles.disconnect}`}
             >
-              {/* Status indicator */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 10,
-                  fontSize: 14,
-                  color: statusColor,
-                }}
-              >
-                <span
-                  style={{
-                    width: 8,
-                    height: 8,
-                    borderRadius: '50%',
-                    flexShrink: 0,
-                    background: dotColor,
-                    animation: ['recording', 'speaking'].includes(sessionState)
-                      ? 'v-dot 0.9s ease-in-out infinite'
-                      : 'none',
-                  }}
-                />
-                {statusLabel}
-              </div>
-
-              {/* PTT Button */}
-              <button
-                onMouseDown={pttStart}
-                onMouseUp={pttEnd}
-                onMouseLeave={pttEnd}
-                onTouchStart={(e) => {
-                  e.preventDefault()
-                  pttStart()
-                }}
-                onTouchEnd={pttEnd}
-                disabled={sessionState === 'processing'}
-                style={{
-                  maxWidth: 500,
-                  padding: '20px 28px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 16,
-                  background: sessionState === 'recording' ? 'rgba(220,38,38,0.09)' : 'transparent',
-                  border: `2px solid ${sessionState === 'recording' ? 'rgba(220,38,38,0.75)' : accentTone}`,
-                  color: sessionState === 'recording' ? 'rgba(220,38,38,0.9)' : accentTone,
-                  cursor: sessionState === 'processing' ? 'wait' : 'pointer',
-                  fontSize: 14,
-                  fontWeight: 600,
-                  userSelect: 'none',
-                  WebkitUserSelect: 'none',
-                  transition: 'all 0.12s ease',
-                  opacity: sessionState === 'processing' ? 0.4 : 1,
-                  animation:
-                    sessionState === 'recording'
-                      ? 'v-rec-btn 0.85s ease-in-out infinite'
-                      : sessionState === 'speaking'
-                        ? 'v-speak 1.4s ease-in-out infinite'
-                        : 'none',
-                }}
-              >
-                <span style={{ fontSize: 20, lineHeight: 1 }}>
-                  {sessionState === 'recording' ? '🔴' : '🎙'}
-                </span>
-                {sessionState === 'recording'
-                  ? 'MEREKAM — Lepas untuk kirim'
-                  : sessionState === 'processing'
-                    ? 'MEMPROSES...'
-                    : 'TAHAN UNTUK BICARA'}
-              </button>
-
-              {/* Interrupt */}
-              {sessionState === 'speaking' && (
-                <button
-                  onClick={() => socketRef.current?.emit('voice:interrupt')}
-                  style={{
-                    alignSelf: 'flex-start',
-                    fontSize: 12,
-                    padding: '5px 12px',
-                    background: 'none',
-                    cursor: 'pointer',
-                    border: '1px solid var(--text-muted)',
-                    color: 'var(--text-muted)',
-                  }}
-                >
-                  INTERUPSI
-                </button>
-              )}
-
-              {/* Live transcript */}
-              {liveText && (
-                <div
-                  style={{
-                    maxWidth: 500,
-                    padding: '10px 14px',
-                    border: `1px solid ${accentTone}`,
-                    fontSize: 14,
-                    color: 'var(--text-main)',
-                    fontStyle: 'italic',
-                    opacity: 0.88,
-                    lineHeight: 1.7,
-                  }}
-                >
-                  {liveText}
-                </div>
-              )}
-            </div>
+              PUTUS SESI
+            </button>
           )}
+          <button onClick={() => setMessages([])} className="ui-btn ui-btn--secondary">
+            RESET
+          </button>
+        </div>
+      </div>
 
-          {/* ── CHAT TRANSCRIPT ── */}
-          <div
-            style={{
-              borderTop: '1px solid var(--line-base)',
-              paddingTop: 16,
-              marginBottom: 20,
-              maxHeight: 420,
-              overflowY: 'auto',
-              display: 'flex',
-              flexDirection: 'column',
-            }}
-          >
-            {messages.length === 0 ? (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-                <div
-                  style={{
-                    padding: '40px 0',
-                    textAlign: 'center',
-                    fontSize: 14,
-                    color: 'var(--text-muted)',
-                    opacity: 0.38,
-                  }}
-                >
-                  — BELUM ADA PERCAKAPAN —
-                  <div style={{ marginTop: 6, fontSize: 14, opacity: 0.85 }}>
-                    Hubungkan sesi, lalu bicara langsung dengan Audrey
-                  </div>
-                </div>
+      {/* Error banner */}
+      {error && (
+        <div className="ui-alert ui-alert--critical" role="alert">
+          {error}
+        </div>
+      )}
 
-                {/* TENTANG AUDREY — muncul saat chat kosong */}
-                <div
-                  style={{
-                    padding: '16px 20px',
-                    border: '1px solid var(--line-base)',
-                    borderLeft: `2px solid ${accentTone}`,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 10,
-                  }}
-                >
-                  <div>
-                    <span
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        padding: '5px 10px',
-                        fontSize: 12,
-                        color: '#f1ece3',
-                        background: accentTone,
-                        border: '1px solid rgba(255,255,255,0.06)',
-                        boxShadow: accentNeumorph,
-                        borderRadius: 999,
-                      }}
-                    >
-                      TENTANG AUDREY
-                    </span>
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 14,
-                      fontWeight: 600,
-                      color: 'var(--text-main)',
-                      lineHeight: 1.4,
-                    }}
-                  >
-                    Augmented Universal Diagnostic Reasoning Engine for You
-                  </div>
-                  <div
-                    style={{
-                      fontSize: 14,
-                      color: 'var(--text-muted)',
-                      lineHeight: 1.7,
-                    }}
-                  >
-                    Clinical AI oleh{' '}
-                    <strong style={{ color: 'var(--text-main)' }}>dr. Ferdi Iskandar</strong> —
-                    bagian dari ekosistem <strong>AADI</strong> Sentra Healthcare Solutions.
-                    Mendampingi dokter secara real-time selama encounter klinis.
-                  </div>
-                  <div
-                    style={{
-                      padding: '7px 12px',
-                      background: accentToneSoft,
-                      borderLeft: `2px solid ${accentTone}`,
-                      fontSize: 14,
-                      color: '#ffffff',
-                      lineHeight: 1.5,
-                      fontStyle: 'italic',
-                    }}
-                  >
-                    &ldquo;Technology enables, but humans decide.&rdquo;
-                  </div>
+      <section className={styles.card}>
+        {/* ── IDLE / ERROR — Connect zone ── */}
+        {(sessionState === 'idle' || sessionState === 'error') && (
+          <div className={styles.intro}>
+            <h2 className={styles.cardTitle}>Audrey siap mendampingi</h2>
+            <p className={styles.text}>
+              Clinical AI real-time untuk konsultasi dokter — diferensial diagnosis, dosis, tata
+              laksana, dan kriteria rujukan dalam konteks Puskesmas PONED Balowerti.
+            </p>
+
+            <button onClick={() => void connect()} className="ui-btn ui-btn--primary ui-btn--lg">
+              ▶ MULAI SESI AUDREY
+            </button>
+
+            <ul className={styles.steps}>
+              <li>Klik tombol untuk memulai sesi</li>
+              <li>
+                <span className={styles.strong}>Tahan</span> tombol mikrofon atau [SPACE] saat ingin
+                bicara
+              </li>
+              <li>
+                <span className={styles.strong}>Lepas</span> saat selesai — Audrey akan merespons
+                secara otomatis
+              </li>
+            </ul>
+          </div>
+        )}
+
+        {/* ── CONNECTING ── */}
+        {sessionState === 'connecting' && (
+          <div className={styles.connecting}>
+            <div className={styles.spinner} />
+            Mempersiapkan sesi klinis dengan Audrey...
+          </div>
+        )}
+
+        {/* ── ACTIVE SESSION ── */}
+        {isConnected && (
+          <div className={styles.session}>
+            {/* Status indicator */}
+            <div className={styles.status} style={{ color: statusColor }}>
+              <span className={styles.dot} style={{ background: dotColor }} />
+              {statusLabel}
+            </div>
+
+            {/* PTT Button */}
+            <button
+              onMouseDown={pttStart}
+              onMouseUp={pttEnd}
+              onMouseLeave={pttEnd}
+              onTouchStart={(e) => {
+                e.preventDefault()
+                pttStart()
+              }}
+              onTouchEnd={pttEnd}
+              disabled={sessionState === 'processing'}
+              className={`ui-btn ${sessionState === 'recording' ? 'ui-btn--secondary' : 'ui-btn--primary'} ${styles.ptt} ${sessionState === 'recording' ? styles.pttRecording : ''}`}
+            >
+              {sessionState === 'recording'
+                ? 'MEREKAM — Lepas untuk kirim'
+                : sessionState === 'processing'
+                  ? 'MEMPROSES...'
+                  : 'TAHAN UNTUK BICARA'}
+            </button>
+
+            {/* Interrupt */}
+            {sessionState === 'speaking' && (
+              <button
+                onClick={() => socketRef.current?.emit('voice:interrupt')}
+                className="ui-btn ui-btn--secondary ui-btn--sm"
+              >
+                INTERUPSI
+              </button>
+            )}
+
+            {/* Live transcript */}
+            {liveText && <p className={styles.live}>{liveText}</p>}
+          </div>
+        )}
+
+        <hr className={styles.divider} />
+
+        {/* ── CHAT TRANSCRIPT ── */}
+        <div className={styles.transcript}>
+          {messages.length === 0 ? (
+            <div className={styles.empty}>
+              <div className={styles.emptyText}>
+                — BELUM ADA PERCAKAPAN —
+                <div className={styles.emptyHint}>
+                  Hubungkan sesi, lalu bicara langsung dengan Audrey
                 </div>
               </div>
-            ) : (
-              messages.map((msg, i) => {
-                const isUser = msg.role === 'user'
-                const prevSame = i > 0 && messages[i - 1].role === msg.role
-                return (
+
+              {/* TENTANG AUDREY — muncul saat chat kosong */}
+              <div className={styles.about}>
+                <span className="ui-badge ui-badge--neutral">TENTANG AUDREY</span>
+                <div className={styles.aboutName}>
+                  Augmented Universal Diagnostic Reasoning Engine for You
+                </div>
+                <p className={styles.text}>
+                  Clinical AI oleh <span className={styles.strong}>dr. Ferdi Iskandar</span> —
+                  bagian dari ekosistem <span className={styles.strong}>AADI</span> Sentra
+                  Healthcare Solutions. Mendampingi dokter secara real-time selama encounter
+                  klinis.
+                </p>
+                <p className={styles.quote}>&ldquo;Technology enables, but humans decide.&rdquo;</p>
+              </div>
+            </div>
+          ) : (
+            messages.map((msg, i) => {
+              const isUser = msg.role === 'user'
+              const prevSame = i > 0 && messages[i - 1].role === msg.role
+              return (
+                <div
+                  key={msg.id}
+                  className={`${styles.msg} ${isUser ? styles.msgUser : ''}`}
+                  style={{ paddingTop: prevSame ? 4 : 20 }}
+                >
                   <div
-                    key={msg.id}
-                    className="v-msg-in"
+                    className={`${styles.avatar} ${isUser ? styles.avatarUser : ''}`}
+                    style={{ visibility: prevSame ? 'hidden' : 'visible' }}
+                  >
+                    {isUser ? 'DR' : 'AI'}
+                  </div>
+                  <div className={`${styles.msgBody} ${isUser ? styles.msgBodyUser : ''}`}>
+                    <div className={`${styles.bubble} ${isUser ? styles.bubbleUser : ''}`}>
+                      {msg.text}
+                    </div>
+                    {(i === messages.length - 1 || messages[i + 1]?.role !== msg.role) && (
+                      <div className={styles.time}>
+                        {isUser ? 'Dokter' : 'Audrey'} · {msg.time}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )
+            })
+          )}
+        </div>
+      </section>
+
+      {/* Fine-tuning pipeline */}
+      <section className={styles.card}>
+        <h2 className={styles.cardTitle}>FINE-TUNING PIPELINE</h2>
+        <ol className={styles.pipeline}>
+          {PIPELINE_STEPS.map((step, i) => (
+            <li key={i} className={styles.step} style={{ opacity: i < visiblePipeline ? 1 : 0 }}>
+              <div
+                className={`${styles.stepName} ${'highlight' in step ? styles.stepHighlight : ''}`}
+              >
+                {'link' in step ? (
+                  <a
+                    href={typeof step.link === 'string' ? step.link : undefined}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     style={{
-                      display: 'flex',
-                      flexDirection: isUser ? 'row-reverse' : 'row',
-                      alignItems: 'flex-end',
-                      gap: 10,
-                      paddingTop: prevSame ? 4 : 20,
-                      paddingBottom: 4,
+                      color: 'inherit',
+                      textDecoration: 'underline',
+                      textUnderlineOffset: 3,
                     }}
                   >
-                    <div
-                      style={{
-                        width: 26,
-                        flexShrink: 0,
-                        display: 'flex',
-                        justifyContent: 'center',
-                        visibility: prevSame ? 'hidden' : 'visible',
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: 26,
-                          height: 26,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          background: isUser ? accentTone : 'var(--line-base)',
-                          fontSize: 12,
-                          letterSpacing: '0.04em',
-                          color: isUser ? '#fff' : 'var(--text-muted)',
-                        }}
-                      >
-                        {isUser ? 'DR' : 'AI'}
-                      </div>
-                    </div>
-                    <div
-                      style={{
-                        maxWidth: '72%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 3,
-                        alignItems: isUser ? 'flex-end' : 'flex-start',
-                      }}
-                    >
-                      <div
-                        style={{
-                          padding: '10px 14px',
-                          background: isUser ? accentTone : 'var(--bg-nav)',
-                          border: isUser ? 'none' : '1px solid var(--line-base)',
-                          color: isUser ? '#fff' : 'var(--text-main)',
-                          fontSize: 14,
-                          lineHeight: 1.7,
-                          whiteSpace: 'pre-wrap',
-                          borderRadius: isUser ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
-                        }}
-                      >
-                        {msg.text}
-                      </div>
-                      {(i === messages.length - 1 || messages[i + 1]?.role !== msg.role) && (
-                        <div
-                          style={{
-                            fontSize: 12,
-                            color: 'var(--text-muted)',
-                            letterSpacing: '0.04em',
-                            opacity: 0.55,
-                            paddingLeft: isUser ? 0 : 2,
-                            paddingRight: isUser ? 2 : 0,
-                          }}
-                        >
-                          {isUser ? 'Dokter' : 'Audrey'} · {msg.time}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )
-              })
-            )}
-          </div>
+                    {step.n}
+                  </a>
+                ) : (
+                  step.n
+                )}
+              </div>
+              {step.sub && <div className={styles.stepSub}>{step.sub}</div>}
+            </li>
+          ))}
+        </ol>
+      </section>
 
-          {/* Disclaimer */}
-          <div
-            style={{
-              marginBottom: 10,
-              padding: '10px 16px',
-              border: '1px solid var(--line-base)',
-              borderLeft: `3px solid ${accentTone}`,
-              fontSize: 14,
-              color: 'var(--text-muted)',
-              lineHeight: 1.6,
-            }}
-          >
-            <span style={{ color: 'var(--text-main)', fontWeight: 500 }}>
-              Audrey bukan pengganti keputusan klinis dokter.
-            </span>{' '}
-            Seluruh keputusan klinis tetap menjadi tanggung jawab penuh dokter yang bertugas.
-            <span
-              style={{
-                display: 'block',
-                marginTop: 4,
-                fontSize: 12,
-                color: '#ffffff',
-              }}
-            >
-              SENTRA HEALTHCARE SOLUTIONS
-            </span>
+      {/* Disclaimer + alpha notice */}
+      <section className={styles.card}>
+        <div className={styles.notes}>
+          <div className={styles.note}>
+            <div className={styles.text}>
+              <span className={styles.strong}>Audrey bukan pengganti keputusan klinis dokter.</span>{' '}
+              Seluruh keputusan klinis tetap menjadi tanggung jawab penuh dokter yang bertugas.
+            </div>
+            <div className={styles.noteMeta}>SENTRA HEALTHCARE SOLUTIONS</div>
           </div>
-
-          {/* Alpha badge */}
-          <div
-            style={{
-              padding: '8px 14px',
-              background: accentToneSoft,
-              border: `1px solid ${accentToneBorder}`,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 10,
-            }}
-          >
-            <span
-              style={{
-                fontSize: 12,
-                color: '#f1ece3',
-                flexShrink: 0,
-                padding: '5px 10px',
-                background: accentTone,
-                border: '1px solid rgba(255,255,255,0.06)',
-                boxShadow: accentNeumorph,
-                borderRadius: 999,
-              }}
-            >
-              ◈ ALPHA
-            </span>
-            <span
-              style={{
-                fontSize: 14,
-                color: 'var(--text-muted)',
-                lineHeight: 1.6,
-              }}
-            >
+          <div className={styles.noteRow}>
+            <span className="ui-badge ui-badge--accent">◈ ALPHA</span>
+            <span className={styles.text}>
               Fitur ini masih dalam tahap pengembangan aktif. Performa, akurasi, dan stabilitas
               dapat berubah sewaktu-waktu.
             </span>
           </div>
         </div>
-        {/* end left column */}
-
-        {/* ════════════ RIGHT COLUMN ════════════ */}
-        <div
-          style={{
-            width: 256,
-            flexShrink: 0,
-            borderLeft: '1px solid var(--line-base)',
-            paddingLeft: 20,
-            display: 'flex',
-            flexDirection: 'column',
-          }}
-        >
-          {/* Fine-tuning pipeline */}
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ marginBottom: 12, textAlign: 'center' }}>
-              <span
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '6px 12px',
-                  fontSize: 14,
-                  color: '#f1ece3',
-                  background: accentTone,
-                  border: '1px solid rgba(255,255,255,0.06)',
-                  boxShadow: accentNeumorph,
-                  borderRadius: 999,
-                }}
-              >
-                FINE-TUNING PIPELINE
-              </span>
-            </div>
-
-            {PIPELINE_STEPS.map((step, i) => (
-              <div
-                key={i}
-                style={{
-                  opacity: i < visiblePipeline ? 1 : 0,
-                  transform: i < visiblePipeline ? 'translateY(0)' : 'translateY(8px)',
-                  transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-                }}
-              >
-                <div
-                  style={{
-                    padding: '7px 10px',
-                    border: '1px dashed var(--line-base)',
-                    background: 'transparent',
-                    textAlign: 'center',
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: 14,
-                      color: 'var(--text-main)',
-                      fontWeight: 400,
-                      marginBottom: step.sub ? 3 : 0,
-                    }}
-                  >
-                    {'link' in step ? (
-                      <a
-                        href={typeof step.link === 'string' ? step.link : undefined}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          color: 'inherit',
-                          textDecoration: 'underline',
-                          textUnderlineOffset: 3,
-                        }}
-                      >
-                        {step.n}
-                      </a>
-                    ) : (
-                      step.n
-                    )}
-                  </div>
-                  {step.sub && (
-                    <div
-                      style={{
-                        fontSize: 14,
-                        color: 'var(--text-muted)',
-                        whiteSpace: 'pre-line',
-                        lineHeight: 1.5,
-                        opacity: 0.8,
-                        textAlign: 'center',
-                      }}
-                    >
-                      {step.sub}
-                    </div>
-                  )}
-                </div>
-
-                {step.connector && (
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      height: 14,
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: 1,
-                        height: 8,
-                        background: 'var(--line-base)',
-                      }}
-                    />
-                    <div
-                      style={{
-                        width: 0,
-                        height: 0,
-                        borderLeft: '3px solid transparent',
-                        borderRight: '3px solid transparent',
-                        borderTop: '4px solid var(--line-base)',
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-        {/* end right column */}
-      </div>
+      </section>
     </div>
   )
 }

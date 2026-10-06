@@ -1,0 +1,367 @@
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Consult Audrey — Simplified (docs/redesign-glass.md §5, pattern "Percakapan").
+   Module-scoped: none of these classes is used by another page. */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-2xl);
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gap-lg);
+}
+
+.title {
+  margin: 0;
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  line-height: var(--lh-tight);
+  color: var(--text);
+}
+
+.subtitle {
+  margin: var(--gap-xs) 0 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-sm);
+}
+
+.disconnect {
+  color: var(--critical);
+  border-color: var(--critical);
+}
+
+.disconnect:hover:not(:disabled) {
+  background: var(--critical-tint);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xl);
+  padding: var(--gap-xl);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: var(--text-base);
+  font-weight: 600;
+  line-height: var(--lh-tight);
+  color: var(--text);
+}
+
+.text {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: var(--lh-base);
+  color: var(--text-secondary);
+}
+
+.strong {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+  align-items: flex-start;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+  line-height: var(--lh-base);
+  color: var(--text-secondary);
+}
+
+.session {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+  align-items: flex-start;
+}
+
+.connecting {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  border: 2px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.85s linear infinite;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-sm);
+  font-size: var(--text-sm);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.ptt {
+  width: 100%;
+  height: 56px;
+  font-size: var(--text-sm);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.ptt[disabled] {
+  cursor: wait;
+}
+
+.pttRecording {
+  background: var(--critical-tint);
+  border-color: var(--critical);
+  color: var(--critical);
+}
+
+.pttRecording:hover:not(:disabled) {
+  background: var(--critical-tint);
+}
+
+.live {
+  width: 100%;
+  margin: 0;
+  padding-left: var(--gap-md);
+  border-left: 2px solid var(--primary);
+  font-size: var(--text-sm);
+  font-style: italic;
+  line-height: var(--lh-base);
+  color: var(--text);
+}
+
+.divider {
+  height: 1px;
+  margin: 0;
+  border: 0;
+  background: var(--border);
+}
+
+.transcript {
+  display: flex;
+  flex-direction: column;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xl);
+}
+
+.emptyText {
+  padding: var(--gap-xl) 0;
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.emptyHint {
+  margin-top: var(--gap-xs);
+}
+
+.about {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-sm);
+  align-items: flex-start;
+  padding-top: var(--gap-xl);
+  border-top: 1px solid var(--border);
+}
+
+.aboutName {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: var(--lh-tight);
+  color: var(--text);
+}
+
+.quote {
+  margin: 0;
+  padding-left: var(--gap-md);
+  border-left: 2px solid var(--primary);
+  font-size: var(--text-sm);
+  font-style: italic;
+  color: var(--text);
+}
+
+.msg {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--gap-sm);
+  padding-bottom: var(--gap-xs);
+}
+
+.msgUser {
+  flex-direction: row-reverse;
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--surface-subtle);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.avatarUser {
+  background: var(--primary-tint);
+  color: var(--primary);
+}
+
+.msgBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  max-width: 72%;
+  align-items: flex-start;
+}
+
+.msgBodyUser {
+  align-items: flex-end;
+}
+
+.bubble {
+  padding: var(--gap-sm) var(--gap-lg);
+  border-radius: var(--radius-lg);
+  background: var(--surface-subtle);
+  color: var(--text);
+  font-size: var(--text-sm);
+  line-height: var(--lh-base);
+  white-space: pre-wrap;
+}
+
+.bubbleUser {
+  background: var(--primary-tint);
+}
+
+.time {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+.notes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-lg);
+}
+
+.note {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding-left: var(--gap-md);
+  border-left: 2px solid var(--border);
+}
+
+.noteRow {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--gap-md);
+}
+
+.noteMeta {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+.pipeline {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xs);
+  padding: var(--gap-md) 0;
+  border-bottom: 1px solid var(--border);
+  transition: opacity 0.3s ease;
+}
+
+.step:first-child {
+  padding-top: 0;
+}
+
+.step:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.stepName {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text);
+}
+
+.stepHighlight {
+  color: var(--primary);
+}
+
+.stepSub {
+  font-size: var(--text-sm);
+  line-height: var(--lh-base);
+  color: var(--text-secondary);
+  white-space: pre-line;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+}
