@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
 import type { OnlineSource } from '@/lib/crew-online'
+import styles from './chat.module.css'
 
 /* ── Types ── */
 
@@ -270,76 +271,43 @@ export default function ChatPage() {
   const otherOnlineCount = onlineUsers.filter(u => u.userId !== currentUser?.username).length
 
   return (
-    <div
-      style={{
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-start',
-      }}
-    >
-      <div className="page-header" style={{ maxWidth: 1400, width: '100%' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div className="page-title">Chatbox</div>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 6,
-              fontSize: 12,
-              fontFamily: 'var(--font-mono)',
-              color: connected ? 'var(--c-ok, #4ade80)' : 'var(--text-muted)',
-            }}
-          >
-            <div
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: '50%',
-                background: connected ? '#4ade80' : 'var(--text-muted)',
-                boxShadow: connected ? '0 0 8px #4ade80' : 'none',
-              }}
-            />
-            {connected ? 'CONNECTED' : 'DISCONNECTED'}
+    <div className={styles.page}>
+      <div className="ui-page-header" style={{ marginBottom: 0 }}>
+        <div>
+          <div className={styles.titleRow}>
+            <h1 className={styles.title}>Chatbox</h1>
+            <div className={`${styles.status}${connected ? ` ${styles.statusOn}` : ''}`}>
+              <div className={styles.statusDot} />
+              {connected ? 'CONNECTED' : 'DISCONNECTED'}
+            </div>
           </div>
+          <p className="ui-page-header__description">
+            Komunikasi Internal Antar Tenaga Kesehatan
+          </p>
         </div>
-        <div className="page-subtitle">Komunikasi Internal Antar Tenaga Kesehatan</div>
       </div>
 
-      <div className="chat-layout">
+      <div className={styles.layout}>
         {/* ── Sidebar: Channels ── */}
-        <div className="chat-sidebar">
-          <div className="chat-sidebar-header">
+        <div className={`${styles.pane} ${styles.sidebar}`}>
+          <div className={styles.sidebarHeader}>
             <span>Channel</span>
-            <span
-              style={{
-                fontSize: 12,
-                color: 'var(--text-muted)',
-                opacity: 0.6,
-              }}
-            >
-              {otherOnlineCount} online
-            </span>
+            <span className={styles.sidebarCount}>{otherOnlineCount} online</span>
           </div>
 
           {/* Broadcast Channel */}
           <div
-            className={`chat-contact${activeChannel.roomId === 'broadcast' ? ' active' : ''}`}
+            className={`${styles.contact}${activeChannel.roomId === 'broadcast' ? ` ${styles.contactActive}` : ''}`}
             onClick={() => switchChannel(BROADCAST_CHANNEL)}
           >
             <div
-              className="chat-contact-avatar"
-              style={{
-                background:
-                  activeChannel.roomId === 'broadcast' ? 'rgba(212, 122, 87, 0.1)' : 'transparent',
-                fontSize: 12,
-              }}
+              className={`${styles.avatar}${activeChannel.roomId === 'broadcast' ? ` ${styles.avatarActive}` : ''}`}
             >
               #
             </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div className="chat-contact-name">Broadcast</div>
-              <div className="chat-contact-role">ALL CREW</div>
+            <div className={styles.contactText}>
+              <div className={styles.contactName}>Broadcast</div>
+              <div className={styles.contactRole}>ALL CREW</div>
             </div>
             {(unreadByRoom['broadcast'] || 0) > 0 && (
               <UnreadBadge count={unreadByRoom['broadcast']} />
@@ -347,19 +315,7 @@ export default function ChatPage() {
           </div>
 
           {/* DM Separator */}
-          {dmChannels.length > 0 && (
-            <div
-              style={{
-                padding: '12px 24px 8px',
-                fontSize: 12,
-                fontFamily: 'var(--font-mono)',
-                color: 'var(--text-muted)',
-                opacity: 0.5,
-              }}
-            >
-              Direct Message
-            </div>
-          )}
+          {dmChannels.length > 0 && <div className={styles.sectionLabel}>Direct Message</div>}
 
           {/* DM Channels — online users */}
           {dmChannels.map(ch => {
@@ -367,11 +323,11 @@ export default function ChatPage() {
             return (
               <div
                 key={ch.roomId}
-                className={`chat-contact${activeChannel.roomId === ch.roomId ? ' active' : ''}`}
+                className={`${styles.contact}${activeChannel.roomId === ch.roomId ? ` ${styles.contactActive}` : ''}`}
                 onClick={() => switchChannel(ch)}
               >
                 <div
-                  className="chat-contact-avatar"
+                  className={styles.avatar}
                   style={{
                     color: getUserColor(ch.role || ''),
                     borderColor:
@@ -380,22 +336,13 @@ export default function ChatPage() {
                 >
                   {getInitials(ch.label)}
                 </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div
-                    className="chat-contact-name"
-                    style={{
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                    }}
-                  >
-                    {ch.label}
-                  </div>
-                  <div className="chat-contact-role">{ch.role}</div>
+                <div className={styles.contactText}>
+                  <div className={styles.contactName}>{ch.label}</div>
+                  <div className={styles.contactRole}>{ch.role}</div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div className={styles.contactEnd}>
                   {unread > 0 && <UnreadBadge count={unread} />}
-                  <div className="online-dot" />
+                  <div className={styles.onlineDot} />
                 </div>
               </div>
             )
@@ -403,100 +350,56 @@ export default function ChatPage() {
 
           {/* Empty state — no one online */}
           {dmChannels.length === 0 && (
-            <div
-              style={{
-                padding: '32px 24px',
-                textAlign: 'center',
-                fontSize: 14,
-                color: 'var(--text-muted)',
-                opacity: 0.5,
-                fontStyle: 'italic',
-              }}
-            >
+            <div className={styles.sidebarEmpty}>
               {connected ? 'Belum ada crew lain yang online' : 'Menghubungkan...'}
             </div>
           )}
         </div>
 
         {/* ── Main Chat Area ── */}
-        <div className="chat-main">
+        <div className={styles.pane}>
           {/* Header */}
-          <div className="chat-header">
+          <div className={styles.header}>
             <div>
-              <div className="chat-header-name">
+              <div className={styles.headerName}>
                 {activeChannel.type === 'broadcast' ? '# Broadcast' : activeChannel.label}
               </div>
-              <div className="chat-header-meta">
+              <div className={styles.headerMeta}>
                 {activeChannel.type === 'broadcast'
                   ? `${onlineUsers.length} CREW ONLINE`
                   : activeChannel.role}
                 {typingUser && activeChannel.roomId && (
-                  <span style={{ color: 'var(--c-asesmen)', marginLeft: 12 }}>
-                    {typingUser} sedang mengetik...
-                  </span>
+                  <span className={styles.typing}>{typingUser} sedang mengetik...</span>
                 )}
               </div>
             </div>
-            <div
-              style={{
-                fontSize: 12,
-                fontFamily: 'var(--font-mono)',
-                color: 'var(--text-muted)',
-                opacity: 0.5,
-              }}
-            >
-              SENTRA INTERNAL
-            </div>
+            <div className={styles.headerTag}>SENTRA INTERNAL</div>
           </div>
 
           {/* Messages */}
-          <div className="chat-messages">
+          <div className={styles.messages}>
             {currentMessages.length === 0 && (
-              <div
-                style={{
-                  flex: 1,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 8,
-                  color: 'var(--text-muted)',
-                  opacity: 0.4,
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: 30,
-                    fontFamily: 'var(--font-mono)',
-                    opacity: 0.3,
-                  }}
-                >
-                  {activeChannel.type === 'broadcast' ? '#' : '→'}
-                </div>
-                <div style={{ fontSize: 14 }}>
+              <div className={styles.empty}>
+                <div>
                   {activeChannel.type === 'broadcast'
                     ? 'Broadcast channel — pesan ke seluruh crew'
                     : `Mulai percakapan dengan ${activeChannel.label}`}
                 </div>
-                <div
-                  style={{
-                    fontSize: 12,
-                    fontFamily: 'var(--font-mono)',
-                  }}
-                >
-                  Pesan tidak disimpan di server
-                </div>
+                <div className={styles.emptyNote}>Pesan tidak disimpan di server</div>
               </div>
             )}
 
             {currentMessages.map(msg => {
               const isMe = msg.senderId === currentUser?.username
               return (
-                <div key={msg.id} className={`chat-msg ${isMe ? 'outgoing' : 'incoming'}`}>
-                  <div className="chat-msg-meta">
+                <div
+                  key={msg.id}
+                  className={`${styles.msg} ${isMe ? styles.msgOut : styles.msgIn}`}
+                >
+                  <div className={styles.msgMeta}>
                     {isMe ? 'Saya' : msg.senderName} · {formatISOTime(msg.time)}
                   </div>
-                  <div className="chat-bubble">{msg.text}</div>
+                  <div className={styles.bubble}>{msg.text}</div>
                 </div>
               )
             })}
@@ -504,9 +407,9 @@ export default function ChatPage() {
           </div>
 
           {/* Input */}
-          <div className="chat-input-wrap">
+          <div className={styles.composer}>
             <textarea
-              className="chat-input"
+              className={`chat-input ${styles.input}`}
               placeholder={
                 connected
                   ? `Pesan ke ${activeChannel.type === 'broadcast' ? 'broadcast' : activeChannel.label}...`
@@ -519,13 +422,9 @@ export default function ChatPage() {
               disabled={!connected}
             />
             <button
-              className="chat-send-btn"
+              className="ui-btn ui-btn--primary"
               onClick={sendMessage}
               disabled={!connected || !input.trim()}
-              style={{
-                opacity: !connected || !input.trim() ? 0.4 : 1,
-                cursor: !connected || !input.trim() ? 'not-allowed' : 'pointer',
-              }}
             >
               KIRIM
             </button>
@@ -538,25 +437,5 @@ export default function ChatPage() {
 
 /* ── Unread Badge ── */
 function UnreadBadge({ count }: { count: number }) {
-  return (
-    <div
-      style={{
-        minWidth: 18,
-        height: 18,
-        borderRadius: 9,
-        background: 'var(--c-asesmen)',
-        color: '#fff',
-        fontSize: 12,
-        fontFamily: 'var(--font-mono)',
-        fontWeight: 600,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '0 5px',
-        flexShrink: 0,
-      }}
-    >
-      {count > 99 ? '99+' : count}
-    </div>
-  )
+  return <div className={styles.badge}>{count > 99 ? '99+' : count}</div>
 }
