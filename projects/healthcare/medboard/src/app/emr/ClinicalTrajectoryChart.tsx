@@ -74,13 +74,12 @@ const TEMPORARY_THRESHOLDS = [
   { label: '__threshold-oranye', value: 50, color: 'rgba(249, 115, 22, 0.7)' },
   { label: '__threshold-merah', value: 75, color: 'rgba(239, 68, 68, 0.72)' },
 ] as const
-const CHART_PANEL_BG =
-  'linear-gradient(180deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.022) 100%)'
-const CHART_SURFACE_BG = 'rgba(255,255,255,0.038)'
-const CHART_SURFACE_BORDER = 'rgba(255,255,255,0.11)'
-const CHART_TEXT_SOFT = '#D8D0C7'
-const CHART_TEXT_MUTED = '#C7BAAD'
-const CHART_TEXT_DIM = '#B3A697'
+// Canvas colours: Chart.js cannot read CSS variables, so these mirror the --text,
+// --text-secondary and --border tokens.
+const CHART_TEXT_SOFT = '#0f172a'
+const CHART_TEXT_MUTED = '#64748b'
+const CHART_GRID = 'rgba(15, 23, 42, 0.06)'
+const CHART_AXIS = 'rgba(15, 23, 42, 0.12)'
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value))
@@ -349,8 +348,8 @@ export default function ClinicalTrajectoryChart({
               type: 'bar',
               label: 'Vital Abnormal',
               data: visitModel.abnormals,
-              backgroundColor: 'rgba(231, 76, 60, 0.28)',
-              borderColor: 'rgba(255, 151, 141, 0.6)',
+              backgroundColor: 'rgba(180, 35, 24, 0.18)',
+              borderColor: 'rgba(180, 35, 24, 0.6)',
               borderWidth: 1.2,
               borderRadius: 4,
               yAxisID: 'yCount',
@@ -360,16 +359,16 @@ export default function ClinicalTrajectoryChart({
               type: 'line',
               label: 'Sistolik (mmHg)',
               data: visitModel.sbp,
-              borderColor: '#FFCC8C',
-              backgroundColor: 'rgba(255, 204, 140, 0.12)',
+              borderColor: '#002147',
+              backgroundColor: 'rgba(0, 33, 71, 0.12)',
               fill: false,
               borderWidth: 2.4,
               tension: 0.3,
               pointRadius: 5,
               pointHoverRadius: 7,
               pointBorderWidth: 2,
-              pointBackgroundColor: '#0F1012',
-              pointBorderColor: '#FFCC8C',
+              pointBackgroundColor: '#ffffff',
+              pointBorderColor: '#002147',
               yAxisID: 'yVital',
             },
             // DBP line
@@ -377,7 +376,7 @@ export default function ClinicalTrajectoryChart({
               type: 'line',
               label: 'Diastolik (mmHg)',
               data: visitModel.dbp,
-              borderColor: 'rgba(255,204,140,0.45)',
+              borderColor: 'rgba(0, 33, 71, 0.45)',
               fill: false,
               borderWidth: 1.6,
               borderDash: [4, 3],
@@ -385,8 +384,8 @@ export default function ClinicalTrajectoryChart({
               pointRadius: 3.5,
               pointHoverRadius: 5,
               pointBorderWidth: 1.5,
-              pointBackgroundColor: '#0F1012',
-              pointBorderColor: 'rgba(255,204,140,0.6)',
+              pointBackgroundColor: '#ffffff',
+              pointBorderColor: 'rgba(0, 33, 71, 0.6)',
               yAxisID: 'yVital',
             },
             // HR line
@@ -401,7 +400,7 @@ export default function ClinicalTrajectoryChart({
               pointRadius: 3.5,
               pointHoverRadius: 5,
               pointBorderWidth: 1.5,
-              pointBackgroundColor: '#0F1012',
+              pointBackgroundColor: '#ffffff',
               pointBorderColor: 'rgba(96, 165, 250, 0.8)',
               yAxisID: 'yVital',
             },
@@ -428,11 +427,11 @@ export default function ClinicalTrajectoryChart({
               },
             },
             tooltip: {
-              backgroundColor: 'rgba(33, 33, 33, 0.96)',
-              borderColor: 'rgba(255, 198, 134, 0.34)',
+              backgroundColor: '#0f172a',
+              borderColor: '#0f172a',
               borderWidth: 1,
-              titleColor: '#FFF6EA',
-              bodyColor: '#F6EBDD',
+              titleColor: '#ffffff',
+              bodyColor: '#ffffff',
               displayColors: true,
               padding: 12,
               filter(tooltipItem) {
@@ -452,24 +451,24 @@ export default function ClinicalTrajectoryChart({
           },
           scales: {
             x: {
-              grid: { color: 'rgba(255,255,255,0.09)', tickLength: 0 },
+              grid: { color: CHART_GRID, tickLength: 0 },
               ticks: {
                 color: CHART_TEXT_SOFT,
                 font: { size: 11, weight: 600 },
               },
-              border: { color: 'rgba(255,255,255,0.16)' },
+              border: { color: CHART_AXIS },
             },
             yVital: {
               position: 'left',
               beginAtZero: false,
               suggestedMin: 50,
               suggestedMax: 200,
-              grid: { color: 'rgba(255,255,255,0.08)' },
+              grid: { color: CHART_GRID },
               ticks: {
                 color: CHART_TEXT_MUTED,
                 font: { size: 10, weight: 600 },
               },
-              border: { color: 'rgba(255,255,255,0.16)' },
+              border: { color: CHART_AXIS },
               title: {
                 display: true,
                 text: 'mmHg / bpm',
@@ -484,14 +483,14 @@ export default function ClinicalTrajectoryChart({
               grid: { drawOnChartArea: false },
               ticks: {
                 precision: 0,
-                color: '#FF8D81',
+                color: '#b42318',
                 font: { size: 10, weight: 600 },
               },
-              border: { color: 'rgba(255,255,255,0.16)' },
+              border: { color: CHART_AXIS },
               title: {
                 display: true,
                 text: 'Abnormal',
-                color: '#FF8D81',
+                color: '#b42318',
                 font: { size: 10, weight: 700 },
               },
             },
@@ -522,8 +521,8 @@ export default function ClinicalTrajectoryChart({
               type: 'bar' as const,
               label: 'Jumlah Faktor',
               data: snapshotModel.factorCounts,
-              backgroundColor: 'rgba(0, 33, 71, 0.34)',
-              borderColor: 'rgba(255, 194, 126, 0.78)',
+              backgroundColor: 'rgba(0, 33, 71, 0.18)',
+              borderColor: 'rgba(0, 33, 71, 0.6)',
               borderWidth: 1.2,
               borderRadius: 6,
               yAxisID: 'yCount',
@@ -532,8 +531,8 @@ export default function ClinicalTrajectoryChart({
               type: 'bar' as const,
               label: 'Faktor Prioritas',
               data: snapshotModel.priorityCounts,
-              backgroundColor: 'rgba(231, 76, 60, 0.24)',
-              borderColor: 'rgba(255, 151, 141, 0.68)',
+              backgroundColor: 'rgba(180, 35, 24, 0.18)',
+              borderColor: 'rgba(180, 35, 24, 0.6)',
               borderWidth: 1.2,
               borderRadius: 6,
               yAxisID: 'yCount',
@@ -542,16 +541,16 @@ export default function ClinicalTrajectoryChart({
               type: 'line' as const,
               label: 'Skor Trajektori Klinis',
               data: snapshotModel.riskScores,
-              borderColor: '#FFF5E7',
-              backgroundColor: 'rgba(255, 245, 231, 0.16)',
+              borderColor: '#002147',
+              backgroundColor: 'rgba(0, 33, 71, 0.12)',
               fill: false,
               borderWidth: 2.4,
               tension: 0.36,
               pointRadius: 4.5,
               pointHoverRadius: 6,
               pointBorderWidth: 2,
-              pointBackgroundColor: '#0F1012',
-              pointBorderColor: '#FFF5E7',
+              pointBackgroundColor: '#ffffff',
+              pointBorderColor: '#002147',
               yAxisID: 'yRisk',
             },
           ],
@@ -578,11 +577,11 @@ export default function ClinicalTrajectoryChart({
               },
             },
             tooltip: {
-              backgroundColor: 'rgba(33, 33, 33, 0.96)',
-              borderColor: 'rgba(255, 198, 134, 0.34)',
+              backgroundColor: '#0f172a',
+              borderColor: '#0f172a',
               borderWidth: 1,
-              titleColor: '#FFF6EA',
-              bodyColor: '#F6EBDD',
+              titleColor: '#ffffff',
+              bodyColor: '#ffffff',
               displayColors: true,
               padding: 12,
               filter(tooltipItem) {
@@ -609,24 +608,24 @@ export default function ClinicalTrajectoryChart({
           },
           scales: {
             x: {
-              grid: { color: 'rgba(255, 255, 255, 0.09)', tickLength: 0 },
+              grid: { color: CHART_GRID, tickLength: 0 },
               ticks: {
                 color: CHART_TEXT_SOFT,
                 font: { size: 11, weight: 600 },
               },
-              border: { color: 'rgba(255, 255, 255, 0.16)' },
+              border: { color: CHART_AXIS },
             },
             yCount: {
               position: 'left',
               beginAtZero: true,
               suggestedMax: Math.max(...snapshotModel.factorCounts, 4) + 1,
-              grid: { color: 'rgba(255, 255, 255, 0.1)' },
+              grid: { color: CHART_GRID },
               ticks: {
                 precision: 0,
                 color: CHART_TEXT_MUTED,
                 font: { size: 10, weight: 600 },
               },
-              border: { color: 'rgba(255, 255, 255, 0.16)' },
+              border: { color: CHART_AXIS },
               title: {
                 display: true,
                 text: 'Jumlah faktor',
@@ -640,17 +639,17 @@ export default function ClinicalTrajectoryChart({
               max: 100,
               grid: { drawOnChartArea: false },
               ticks: {
-                color: '#FFF2E1',
+                color: '#0f172a',
                 font: { size: 10, weight: 700 },
                 callback(value) {
                   return `${value}`
                 },
               },
-              border: { color: 'rgba(255, 255, 255, 0.16)' },
+              border: { color: CHART_AXIS },
               title: {
                 display: true,
                 text: 'Skor klinis',
-                color: '#FFF2E1',
+                color: '#0f172a',
                 font: { size: 10, weight: 700 },
               },
             },
@@ -675,12 +674,11 @@ export default function ClinicalTrajectoryChart({
   return (
     <div
       style={{
-        marginTop: 18,
-        padding: '16px 18px 18px',
-        border: '1px solid rgba(255,255,255,0.12)',
-        borderRadius: 8,
-        background: CHART_PANEL_BG,
-        boxShadow: '0 18px 40px rgba(0,0,0,0.16), inset 0 1px 0 rgba(255,255,255,0.02)',
+        marginTop: 24,
+        padding: 16,
+        border: '1px solid var(--border)',
+        borderRadius: 'var(--radius-md)',
+        background: 'var(--surface)',
       }}
     >
       {/* Header */}
@@ -697,13 +695,14 @@ export default function ClinicalTrajectoryChart({
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           <span
             style={{
-              fontSize: 12,
-              color: '#FFCC8C',
+              fontSize: 14,
+              fontWeight: 600,
+              color: 'var(--text)',
             }}
           >
             Clinical Trajectory Chart
           </span>
-          <span style={{ fontSize: 14, color: CHART_TEXT_SOFT, lineHeight: 1.6 }}>
+          <span style={{ fontSize: 14, color: 'var(--text)', lineHeight: 1.6 }}>
             {hasVisitHistory
               ? `Vital trend dari ${trajectoryHistory.length} kunjungan historis terbaru + kunjungan hari ini. SBP/DBP/HR ditampilkan lintas waktu.`
               : 'Snapshot v1 untuk membaca beban klinis historis pasien sebelum masuk ke tahap vital sign dan assessment dokter.'}
@@ -712,7 +711,7 @@ export default function ClinicalTrajectoryChart({
         <span
           style={{
             fontSize: 12,
-            color: CHART_TEXT_MUTED,
+            color: 'var(--text-secondary)',
           }}
         >
           {hasVisitHistory
@@ -742,15 +741,15 @@ export default function ClinicalTrajectoryChart({
                 key={i}
                 style={{
                   padding: '8px 10px',
-                  border: `1px solid ${CHART_SURFACE_BORDER}`,
-                  background: p.label === 'HARI INI' ? 'rgba(0, 33, 71, 0.06)' : CHART_SURFACE_BG,
-                  borderRadius: 6,
+                  border: '1px solid var(--border)',
+                  background: p.label === 'HARI INI' ? 'var(--primary-tint)' : 'var(--surface-subtle)',
+                  borderRadius: 'var(--radius-sm)',
                 }}
               >
                 <div
                   style={{
                     fontSize: 12,
-                    color: p.label === 'HARI INI' ? '#FFCC8C' : CHART_TEXT_MUTED,
+                    color: p.label === 'HARI INI' ? 'var(--primary)' : 'var(--text-secondary)',
                     marginBottom: 4,
                   }}
                 >
@@ -759,18 +758,18 @@ export default function ClinicalTrajectoryChart({
                 <div
                   style={{
                     fontSize: 16,
-                    color: CHART_TEXT_SOFT,
-                    fontWeight: 300,
+                    color: 'var(--text)',
+                    fontWeight: 500,
                     marginBottom: 2,
                   }}
                 >
                   {p.vitals.sbp}/{p.vitals.dbp}
                 </div>
-                <div style={{ fontSize: 12, color: CHART_TEXT_DIM }}>
+                <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
                   HR {p.vitals.hr} · Suhu {p.vitals.temp} · GDS {p.vitals.glucose || '-'}
                 </div>
                 {p.diagnosa && (
-                  <div style={{ fontSize: 12, color: '#FFCC8C', marginTop: 3 }}>
+                  <div style={{ fontSize: 12, color: 'var(--primary)', marginTop: 3 }}>
                     {p.diagnosa.icd_x} {p.diagnosa.nama}
                   </div>
                 )}
@@ -778,7 +777,7 @@ export default function ClinicalTrajectoryChart({
                   <div
                     style={{
                       fontSize: 12,
-                      color: CHART_TEXT_DIM,
+                      color: 'var(--text-secondary)',
                       marginTop: 2,
                       fontStyle: 'italic',
                     }}
@@ -799,7 +798,7 @@ export default function ClinicalTrajectoryChart({
               flexWrap: 'wrap',
               marginTop: 10,
               fontSize: 12,
-              color: CHART_TEXT_DIM,
+              color: 'var(--text-secondary)',
             }}
           >
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
@@ -857,21 +856,21 @@ export default function ClinicalTrajectoryChart({
                 key={item.label}
                 style={{
                   padding: '10px 12px',
-                  border: `1px solid ${CHART_SURFACE_BORDER}`,
-                  background: CHART_SURFACE_BG,
-                  borderRadius: 6,
+                  border: '1px solid var(--border)',
+                  background: 'var(--surface-subtle)',
+                  borderRadius: 'var(--radius-sm)',
                 }}
               >
                 <div
                   style={{
                     fontSize: 12,
-                    color: CHART_TEXT_MUTED,
+                    color: 'var(--text-secondary)',
                     marginBottom: 6,
                   }}
                 >
                   {item.label}
                 </div>
-                <div style={{ fontSize: 14, color: '#E5DDD4', lineHeight: 1.6 }}>
+                <div style={{ fontSize: 14, color: 'var(--text)', lineHeight: 1.6 }}>
                   {item.values.length > 0 ? item.values.join(', ') : 'Belum ada data.'}
                 </div>
               </div>
@@ -882,60 +881,60 @@ export default function ClinicalTrajectoryChart({
             style={{
               marginTop: 12,
               paddingTop: 12,
-              borderTop: '1px dashed rgba(255,255,255,0.14)',
+              borderTop: '1px solid var(--border)',
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
               gap: 12,
               alignItems: 'start',
             }}
           >
-            <div style={{ fontSize: 12, color: '#D2C6B8', lineHeight: 1.7 }}>
-              Perhitungan ringkas: <span style={{ color: CHART_TEXT_SOFT }}>Historis</span> dibentuk
+            <div style={{ fontSize: 12, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+              Perhitungan ringkas: <span style={{ color: 'var(--text)' }}>Historis</span> dibentuk
               dari bobot komorbid + riwayat keluarga, sedangkan{' '}
-              <span style={{ color: CHART_TEXT_SOFT }}>Akut</span> dibentuk dari bobot alergi aktif
+              <span style={{ color: 'var(--text)' }}>Akut</span> dibentuk dari bobot alergi aktif
               + konteks hari ini. Visual ini membantu prioritas review klinis, bukan skor diagnosis
               baku.
             </div>
             <div
               style={{
                 padding: '10px 12px',
-                border: `1px solid ${CHART_SURFACE_BORDER}`,
-                background: CHART_SURFACE_BG,
-                borderRadius: 6,
+                border: '1px solid var(--border)',
+                background: 'var(--surface-subtle)',
+                borderRadius: 'var(--radius-sm)',
               }}
             >
               <div
                 style={{
                   fontSize: 12,
-                  color: CHART_TEXT_MUTED,
+                  color: 'var(--text-secondary)',
                   marginBottom: 6,
                 }}
               >
                 Beban Historis
               </div>
-              <div style={{ fontSize: 12, color: CHART_TEXT_MUTED }}>
-                Snapshot: <span style={{ color: '#FFCC8C' }}>{snapshotModel.staticLoad}</span>
+              <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
+                Snapshot: <span style={{ color: 'var(--primary)' }}>{snapshotModel.staticLoad}</span>
               </div>
             </div>
             <div
               style={{
                 padding: '10px 12px',
-                border: `1px solid ${CHART_SURFACE_BORDER}`,
-                background: CHART_SURFACE_BG,
-                borderRadius: 6,
+                border: '1px solid var(--border)',
+                background: 'var(--surface-subtle)',
+                borderRadius: 'var(--radius-sm)',
               }}
             >
               <div
                 style={{
                   fontSize: 12,
-                  color: CHART_TEXT_MUTED,
+                  color: 'var(--text-secondary)',
                   marginBottom: 6,
                 }}
               >
                 Kedaruratan Dinamis
               </div>
-              <div style={{ fontSize: 12, color: CHART_TEXT_MUTED }}>
-                Snapshot: <span style={{ color: '#FF8D81' }}>{snapshotModel.acuteLoad}</span>
+              <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
+                Snapshot: <span style={{ color: 'var(--critical)' }}>{snapshotModel.acuteLoad}</span>
               </div>
             </div>
           </div>
@@ -947,7 +946,7 @@ export default function ClinicalTrajectoryChart({
               flexWrap: 'wrap',
               marginTop: 10,
               fontSize: 12,
-              color: CHART_TEXT_DIM,
+              color: 'var(--text-secondary)',
             }}
           >
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>

@@ -194,7 +194,7 @@ export default function TrajectoryPanel({
           justifyContent: 'space-between',
           padding: '10px 14px',
           borderBottom: '1px solid var(--line-base)',
-          background: 'rgba(255,255,255,0.02)',
+          background: 'var(--surface-subtle)',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -379,7 +379,7 @@ export default function TrajectoryPanel({
                     style={{
                       ...mono,
                       fontSize: 20,
-                      fontWeight: 300,
+                      fontWeight: 400,
                       color: RISK_COLOR[vt.risk],
                     }}
                   >
@@ -667,7 +667,7 @@ export default function TrajectoryPanel({
             padding: '8px 10px',
             borderRadius: 4,
             border: '1px solid var(--line-base)',
-            background: 'rgba(255,255,255,0.02)',
+            background: 'var(--surface-subtle)',
           }}
         >
           <span
@@ -719,7 +719,7 @@ export default function TrajectoryPanel({
               style={{
                 ...mono,
                 fontSize: 16,
-                fontWeight: 300,
+                fontWeight: 400,
                 color: 'var(--text-main)',
               }}
             >
@@ -749,7 +749,7 @@ export default function TrajectoryPanel({
               style={{
                 ...mono,
                 fontSize: 16,
-                fontWeight: 300,
+                fontWeight: 400,
                 color: 'var(--text-main)',
               }}
             >

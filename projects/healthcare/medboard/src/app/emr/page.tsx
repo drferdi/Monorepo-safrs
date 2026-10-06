@@ -319,7 +319,7 @@ function getDecisionAccent(status: CDSSSuggestion['decision_status']): string {
     case 'recommended':
       return 'var(--c-asesmen)'
     case 'review':
-      return '#E8A838'
+      return 'var(--warning)'
     case 'must_not_miss':
       return 'var(--c-critical)'
     default:
@@ -330,11 +330,11 @@ function getDecisionAccent(status: CDSSSuggestion['decision_status']): string {
 function getCompositeSeverityColor(severity: CompositeDeteriorationAlert['severity']): string {
   switch (severity) {
     case 'critical':
-      return '#ef4444'
+      return 'var(--critical)'
     case 'high':
-      return '#f97316'
+      return 'var(--warning)'
     default:
-      return '#eab308'
+      return 'var(--warning)'
   }
 }
 
@@ -1303,12 +1303,13 @@ function CustomSelect({
             left: 0,
             right: 0,
             zIndex: 200,
-            background: '#1e1e1e',
-            border: '1px solid rgba(255,255,255,0.1)',
+            background: 'var(--surface)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-md)',
             padding: '4px 0',
             margin: 0,
             listStyle: 'none',
-            boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+            boxShadow: 'var(--shadow-dialog)',
           }}
         >
           {options.map((opt) => (
@@ -1321,10 +1322,10 @@ function CustomSelect({
                 setOpen(false)
               }}
               style={{
-                padding: '9px 12px',
+                padding: '8px 12px',
                 fontSize: 14,
-                color: opt.value === value ? 'var(--c-asesmen)' : 'var(--text-main)',
-                background: opt.value === value ? 'rgba(0, 33, 71, 0.08)' : 'transparent',
+                color: opt.value === value ? 'var(--primary)' : 'var(--text)',
+                background: opt.value === value ? 'var(--primary-tint)' : 'transparent',
                 cursor: 'pointer',
                 transition: 'background 0.15s',
               }}
@@ -2027,16 +2028,17 @@ export default function EMRPage() {
       <div
         key={sectionKey}
         style={{
-          border: '1px solid rgba(255,255,255,0.08)',
-          background: 'rgba(255,255,255,0.03)',
-          borderRadius: 4,
-          padding: '10px 12px',
+          border: '1px solid var(--border)',
+          background: 'var(--surface-subtle)',
+          borderRadius: 'var(--radius-md)',
+          padding: '12px 16px',
         }}
       >
         <div
           style={{
-            fontSize: 12,
-            color: 'var(--text-main)',
+            fontSize: 14,
+            fontWeight: 500,
+            color: 'var(--text)',
             marginBottom: 8,
           }}
         >
@@ -2051,7 +2053,7 @@ export default function EMRPage() {
                 alignItems: 'center',
                 gap: 8,
                 fontSize: 12,
-                color: 'var(--text-soft)',
+                color: 'var(--text)',
                 cursor: 'pointer',
               }}
             >
@@ -2070,7 +2072,7 @@ export default function EMRPage() {
                 alignItems: 'center',
                 gap: 8,
                 fontSize: 12,
-                color: 'var(--text-soft)',
+                color: 'var(--text)',
                 marginTop: 4,
               }}
             >
@@ -2080,14 +2082,8 @@ export default function EMRPage() {
                 value={structuredSignsDraft.perfusionShock?.capillaryRefillSec ?? ''}
                 onChange={(e) => updateStructuredCapillaryRefill(e.target.value)}
                 placeholder="opsional"
-                style={{
-                  background: 'transparent',
-                  border: '1px solid var(--line-base)',
-                  color: 'var(--text-main)',
-                  borderRadius: 3,
-                  padding: '5px 8px',
-                  width: 90,
-                }}
+                className="ui-input"
+                style={{ width: 90, height: 32 }}
               />
             </label>
           )}
@@ -3751,7 +3747,7 @@ export default function EMRPage() {
     if (screeningAlerts.length === 0) return 'Hijau'
     return 'Kuning'
   }, [screeningAlerts.length])
-  const readinessTriageColor = readinessTriageLabel === 'Hijau' ? '#78A884' : '#E8A838'
+  const readinessTriageColor = readinessTriageLabel === 'Hijau' ? 'var(--success)' : 'var(--warning)'
   const assessmentAutoDraft = useMemo(() => {
     const complaint = summarizeClinicalSnippet(
       [keluhanUtama.trim(), keluhanTambahan.trim()].filter(Boolean).join(', '),
@@ -3868,7 +3864,7 @@ export default function EMRPage() {
           ? 'STANDBY'
           : 'IDLE'
   const audreyStateColor =
-    showEmrLoader || isTyping ? '#5B8DB8' : historyLoaded ? 'var(--text-main)' : 'var(--text-muted)'
+    showEmrLoader || isTyping ? 'var(--primary)' : historyLoaded ? 'var(--text-main)' : 'var(--text-muted)'
   const audreyIsThinking = showEmrLoader || isTyping
   useEffect(() => {
     if (workflowTab !== 'assessment') return
@@ -4187,15 +4183,16 @@ export default function EMRPage() {
               style={{
                 width: '100%',
                 marginTop: 4,
-                padding: '6px 8px',
-                borderLeft: '2px solid #E8A838',
-                background: 'rgba(232,168,56,0.06)',
+                padding: '8px 12px',
+                borderLeft: '2px solid var(--warning)',
+                background: 'var(--warning-tint)',
               }}
             >
               <div
                 style={{
                   fontSize: 12,
-                  color: '#E8A838',
+                  fontWeight: 600,
+                  color: 'var(--warning)',
                   marginBottom: 4,
                 }}
               >
@@ -4267,12 +4264,18 @@ export default function EMRPage() {
             onClick={() => void selectCdssSuggestion(s)}
             disabled={selectionSavingKey === suggestionKey || requiresEmergencyAck}
             style={{
+              alignSelf: 'flex-start',
               marginTop: 4,
-              border: `1px solid ${isSelected ? accent : 'var(--line-base)'}`,
-              background: isSelected ? 'rgba(212,122,87,0.14)' : 'transparent',
-              color: isSelected ? accent : 'var(--text-muted)',
+              height: 32,
+              borderRadius: 'var(--radius-sm)',
+              border: `1px solid ${isSelected ? accent : 'var(--border)'}`,
+              background: isSelected
+                ? `color-mix(in srgb, ${accent} 10%, var(--surface))`
+                : 'var(--surface)',
+              color: isSelected ? accent : 'var(--text)',
               fontSize: 14,
-              padding: '4px 8px',
+              fontWeight: 500,
+              padding: '0 12px',
               cursor:
                 selectionSavingKey === suggestionKey || requiresEmergencyAck
                   ? 'not-allowed'
@@ -4928,6 +4931,7 @@ export default function EMRPage() {
 
   return (
     <div
+      className="emr-page"
       style={{
         width: '100%',
         display: 'flex',
@@ -4937,28 +4941,26 @@ export default function EMRPage() {
     >
       <div
         className="architecture-grid"
-        style={{ gridTemplateColumns: '1fr', gap: 40, maxWidth: 1400 }}
+        style={{ gridTemplateColumns: '1fr', gap: 'var(--gap-xl)', maxWidth: 1400 }}
       >
         {/* ── Assist Incoming Consult Banner ── */}
         {incomingConsult && (
           <div
             style={{
               width: '100%',
-              marginBottom: 16,
-              padding: '14px 20px',
-              background: 'rgba(235,89,57,0.12)',
-              border: '1px solid rgba(235,89,57,0.5)',
-              borderRadius: 8,
+              padding: '16px 24px',
+              background: 'var(--accent-tint)',
+              borderLeft: '2px solid var(--accent)',
+              borderRadius: '0 var(--radius-md) var(--radius-md) 0',
               display: 'flex',
               alignItems: 'center',
               gap: 16,
-              animation: 'pulse 1.5s ease-in-out 3',
             }}
           >
             <div style={{ flex: 1 }}>
               <div
                 style={{
-                  color: '#eb5939',
+                  color: 'var(--accent)',
                   fontWeight: 600,
                   fontSize: 12,
                   marginBottom: 4,
@@ -4966,12 +4968,12 @@ export default function EMRPage() {
               >
                 ● KONSULT MASUK DARI ASSIST
               </div>
-              <div style={{ color: '#e8ddd0', fontWeight: 600, fontSize: 14 }}>
+              <div style={{ color: 'var(--text)', fontWeight: 600, fontSize: 14 }}>
                 {incomingConsult.patient.name}
                 {incomingConsult.patient.rm ? ` · RM ${incomingConsult.patient.rm}` : ''}
                 {incomingConsult.patient.age ? ` · ${incomingConsult.patient.age} thn` : ''}
               </div>
-              <div style={{ color: '#b7ab98', fontSize: 14, marginTop: 2 }}>
+              <div style={{ color: 'var(--text-secondary)', fontSize: 14, marginTop: 2 }}>
                 {incomingConsult.keluhan_utama}
               </div>
               {incomingConsult.mira_differential && (
@@ -5012,16 +5014,7 @@ export default function EMRPage() {
                     injectAssistConsultToTriage(snapshot, [])
                   }
                 }}
-                style={{
-                  background: 'rgba(74,222,128,0.15)',
-                  border: '1px solid rgba(74,222,128,0.5)',
-                  color: '#4ADE80',
-                  borderRadius: 6,
-                  padding: '6px 14px',
-                  fontSize: 12,
-                  cursor: 'pointer',
-                  fontWeight: 600,
-                }}
+                className="ui-btn ui-btn--primary ui-btn--sm"
               >
                 ✓ ACCEPT
               </button>
@@ -5035,16 +5028,7 @@ export default function EMRPage() {
                   }).catch(() => {})
                   setIncomingConsult(null)
                 }}
-                style={{
-                  background: 'transparent',
-                  border: '1px solid rgba(235,89,57,0.4)',
-                  color: '#eb5939',
-                  borderRadius: 6,
-                  padding: '6px 14px',
-                  fontSize: 12,
-                  cursor: 'pointer',
-                  fontWeight: 600,
-                }}
+                className="ui-btn ui-btn--secondary ui-btn--sm"
               >
                 ✕ REJECT
               </button>
@@ -5061,43 +5045,43 @@ export default function EMRPage() {
             const immediateActions = ac.canonical_clinical?.immediate_actions ?? []
             const antro = ac.anthropometrics ?? {}
             const news2Color = !news2
-              ? '#b7ab98'
+              ? 'var(--text-secondary)'
               : news2.risk_level === 'high'
-                ? '#eb5939'
+                ? 'var(--critical)'
                 : news2.risk_level === 'medium'
-                  ? '#f59e0b'
+                  ? 'var(--warning)'
                   : news2.risk_level === 'low-medium'
-                    ? '#facc15'
-                    : '#4ADE80'
+                    ? 'var(--warning)'
+                    : 'var(--success)'
             const trajColor = !trajectory?.overall_risk
-              ? '#b7ab98'
+              ? 'var(--text-secondary)'
               : trajectory.overall_risk === 'critical'
-                ? '#eb5939'
+                ? 'var(--critical)'
                 : trajectory.overall_risk === 'high'
-                  ? '#f59e0b'
+                  ? 'var(--warning)'
                   : trajectory.overall_risk === 'moderate'
-                    ? '#facc15'
-                    : '#4ADE80'
+                    ? 'var(--warning)'
+                    : 'var(--success)'
             const cell: React.CSSProperties = {
               padding: '6px 10px',
-              borderBottom: '1px solid rgba(183,171,152,0.08)',
+              borderBottom: '1px solid var(--border)',
               fontSize: 14,
             }
             const label: React.CSSProperties = {
-              color: '#b7ab98',
+              color: 'var(--text-secondary)',
               fontSize: 12,
-              fontWeight: 600,
+              fontWeight: 500,
             }
-            const value: React.CSSProperties = { color: '#e8ddd0', fontWeight: 600 }
+            const value: React.CSSProperties = { color: 'var(--text)', fontWeight: 600 }
 
             return (
               <div
                 style={{
                   width: '100%',
                   marginBottom: 24,
-                  background: 'rgba(20,20,20,0.95)',
-                  border: '1px solid rgba(74,222,128,0.3)',
-                  borderRadius: 10,
+                  background: 'var(--surface)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius-lg)',
                   overflow: 'hidden',
                 }}
               >
@@ -5105,8 +5089,8 @@ export default function EMRPage() {
                 <div
                   style={{
                     padding: '12px 20px',
-                    background: 'rgba(74,222,128,0.08)',
-                    borderBottom: '1px solid rgba(74,222,128,0.2)',
+                    background: 'var(--success-tint)',
+                    borderBottom: '1px solid var(--border)',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
@@ -5115,7 +5099,7 @@ export default function EMRPage() {
                   <div>
                     <div
                       style={{
-                        color: '#4ADE80',
+                        color: 'var(--success)',
                         fontWeight: 600,
                         fontSize: 12,
                         marginBottom: 2,
@@ -5123,34 +5107,34 @@ export default function EMRPage() {
                     >
                       ✓ DATA RME PASIEN — DARI ASSIST
                     </div>
-                    <div style={{ color: '#e8ddd0', fontWeight: 600, fontSize: 16 }}>
+                    <div style={{ color: 'var(--text)', fontWeight: 600, fontSize: 16 }}>
                       {ac.patient.name}
                       {ac.patient.rm ? (
-                        <span style={{ color: '#b7ab98', fontWeight: 400, fontSize: 14 }}>
+                        <span style={{ color: 'var(--text-secondary)', fontWeight: 400, fontSize: 14 }}>
                           {' '}
                           · RM {ac.patient.rm}
                         </span>
                       ) : null}
                       {ac.patient.age ? (
-                        <span style={{ color: '#b7ab98', fontWeight: 400, fontSize: 14 }}>
+                        <span style={{ color: 'var(--text-secondary)', fontWeight: 400, fontSize: 14 }}>
                           {' '}
                           · {ac.patient.age} thn
                         </span>
                       ) : null}
                       {ac.patient.gender ? (
-                        <span style={{ color: '#b7ab98', fontWeight: 400, fontSize: 14 }}>
+                        <span style={{ color: 'var(--text-secondary)', fontWeight: 400, fontSize: 14 }}>
                           {' '}
                           · {ac.patient.gender}
                         </span>
                       ) : null}
                     </div>
                     {ac.patient.bpjsStatus ? (
-                      <div style={{ color: '#b7ab98', fontSize: 12, marginTop: 2 }}>
+                      <div style={{ color: 'var(--text-secondary)', fontSize: 12, marginTop: 2 }}>
                         BPJS: {ac.patient.bpjsStatus}
                       </div>
                     ) : null}
                     {ac.clinical_context?.facility_name ? (
-                      <div style={{ color: '#b7ab98', fontSize: 12 }}>
+                      <div style={{ color: 'var(--text-secondary)', fontSize: 12 }}>
                         Faskes: {ac.clinical_context.facility_name}
                       </div>
                     ) : null}
@@ -5181,27 +5165,19 @@ export default function EMRPage() {
                         style={{
                           textAlign: 'center',
                           padding: '6px 12px',
-                          border: '1px solid rgba(183,171,152,0.3)',
+                          border: '1px solid var(--border)',
                           borderRadius: 6,
                         }}
                       >
-                        <div style={{ color: '#e8ddd0', fontWeight: 600, fontSize: 20 }}>
+                        <div style={{ color: 'var(--text)', fontWeight: 600, fontSize: 20 }}>
                           {ac.avpu}
                         </div>
-                        <div style={{ color: '#b7ab98', fontSize: 12 }}>AVPU</div>
+                        <div style={{ color: 'var(--text-secondary)', fontSize: 12 }}>AVPU</div>
                       </div>
                     )}
                     <button
                       onClick={() => setAcceptedConsult(null)}
-                      style={{
-                        background: 'transparent',
-                        border: '1px solid rgba(183,171,152,0.3)',
-                        color: '#b7ab98',
-                        borderRadius: 6,
-                        padding: '6px 12px',
-                        fontSize: 12,
-                        cursor: 'pointer',
-                      }}
+                      className="ui-btn ui-btn--ghost ui-btn--sm"
                     >
                       ✕ Dismiss
                     </button>
@@ -5211,7 +5187,7 @@ export default function EMRPage() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 0 }}>
                   {/* Kolom 1 — TTV */}
                   <div
-                    style={{ borderRight: '1px solid rgba(183,171,152,0.1)', padding: '12px 0' }}
+                    style={{ borderRight: '1px solid var(--border)', padding: '12px 0' }}
                   >
                     <div style={{ ...label, padding: '0 12px 8px' }}>Tanda Vital</div>
                     {[
@@ -5241,7 +5217,7 @@ export default function EMRPage() {
                           style={{
                             ...label,
                             padding: '10px 12px 6px',
-                            borderTop: '1px solid rgba(183,171,152,0.08)',
+                            borderTop: '1px solid var(--border)',
                           }}
                         >
                           Antropometrik
@@ -5270,11 +5246,11 @@ export default function EMRPage() {
                   </div>
 
                   {/* Kolom 2 — Klinis */}
-                  <div style={{ borderRight: '1px solid rgba(183,171,152,0.1)', padding: '12px' }}>
+                  <div style={{ borderRight: '1px solid var(--border)', padding: '12px' }}>
                     <div style={label}>Keluhan Utama</div>
                     <div
                       style={{
-                        color: '#e8ddd0',
+                        color: 'var(--text)',
                         fontSize: 14,
                         marginTop: 4,
                         marginBottom: 10,
@@ -5288,7 +5264,7 @@ export default function EMRPage() {
                         <div style={label}>Keluhan Tambahan</div>
                         <div
                           style={{
-                            color: '#e8ddd0',
+                            color: 'var(--text)',
                             fontSize: 14,
                             marginTop: 4,
                             marginBottom: 10,
@@ -5315,10 +5291,10 @@ export default function EMRPage() {
                             <span
                               key={i}
                               style={{
-                                background: 'rgba(235,89,57,0.12)',
-                                border: '1px solid rgba(235,89,57,0.3)',
-                                color: '#eb5939',
-                                borderRadius: 4,
+                                background: 'var(--critical-tint)',
+                                border: '1px solid transparent',
+                                color: 'var(--critical)',
+                                borderRadius: 'var(--radius-full)',
                                 padding: '2px 8px',
                                 fontSize: 12,
                               }}
@@ -5345,10 +5321,10 @@ export default function EMRPage() {
                             <span
                               key={i}
                               style={{
-                                background: 'rgba(245,158,11,0.1)',
-                                border: '1px solid rgba(245,158,11,0.3)',
-                                color: '#f59e0b',
-                                borderRadius: 4,
+                                background: 'var(--warning-tint)',
+                                border: '1px solid transparent',
+                                color: 'var(--warning)',
+                                borderRadius: 'var(--radius-full)',
                                 padding: '2px 8px',
                                 fontSize: 12,
                               }}
@@ -5363,7 +5339,7 @@ export default function EMRPage() {
                       <>
                         <div style={label}>Alergi</div>
                         <div
-                          style={{ color: '#eb5939', fontSize: 14, marginTop: 4, marginBottom: 10 }}
+                          style={{ color: 'var(--critical)', fontSize: 14, marginTop: 4, marginBottom: 10 }}
                         >
                           {(ac.alergi ?? []).join(', ')}
                         </div>
@@ -5374,10 +5350,10 @@ export default function EMRPage() {
                         style={{
                           marginTop: 4,
                           padding: '4px 8px',
-                          background: 'rgba(196,149,106,0.1)',
-                          border: '1px solid rgba(196,149,106,0.3)',
+                          background: 'var(--primary-tint)',
+                          border: '1px solid transparent',
                           borderRadius: 4,
-                          color: '#C4956A',
+                          color: 'var(--primary)',
                           fontSize: 12,
                         }}
                       >
@@ -5399,9 +5375,9 @@ export default function EMRPage() {
                             marginTop: 6,
                             marginBottom: 10,
                             padding: '8px 10px',
-                            background: 'rgba(183,171,152,0.05)',
+                            background: 'var(--surface-subtle)',
                             borderRadius: 6,
-                            border: `1px solid ${trajColor}30`,
+                            border: `1px solid color-mix(in srgb, ${trajColor} 19%, transparent)`,
                           }}
                         >
                           <div style={{ display: 'flex', gap: 8, marginBottom: 6 }}>
@@ -5411,18 +5387,18 @@ export default function EMRPage() {
                               </span>
                             )}
                             {trajectory.deterioration_state && (
-                              <span style={{ color: '#b7ab98', fontSize: 12 }}>
+                              <span style={{ color: 'var(--text-secondary)', fontSize: 12 }}>
                                 · {trajectory.deterioration_state}
                               </span>
                             )}
                             {trajectory.overall_trend && (
-                              <span style={{ color: '#b7ab98', fontSize: 12 }}>
+                              <span style={{ color: 'var(--text-secondary)', fontSize: 12 }}>
                                 · {trajectory.overall_trend}
                               </span>
                             )}
                           </div>
                           {trajectory.narrative && (
-                            <div style={{ color: '#b7ab98', fontSize: 12, lineHeight: 1.5 }}>
+                            <div style={{ color: 'var(--text-secondary)', fontSize: 12, lineHeight: 1.5 }}>
                               {trajectory.narrative}
                             </div>
                           )}
@@ -5445,10 +5421,10 @@ export default function EMRPage() {
                             <span
                               key={i}
                               style={{
-                                background: `${news2Color}15`,
-                                border: `1px solid ${news2Color}40`,
+                                background: `color-mix(in srgb, ${news2Color} 8%, transparent)`,
+                                border: `1px solid color-mix(in srgb, ${news2Color} 25%, transparent)`,
                                 color: news2Color,
-                                borderRadius: 4,
+                                borderRadius: 'var(--radius-full)',
                                 padding: '2px 8px',
                                 fontSize: 12,
                               }}
@@ -5467,7 +5443,7 @@ export default function EMRPage() {
                         <div style={label}>Tindakan Segera</div>
                         <ul style={{ marginTop: 4, marginBottom: 10, paddingLeft: 16 }}>
                           {immediateActions.map((a, i) => (
-                            <li key={i} style={{ color: '#f59e0b', fontSize: 12, marginBottom: 3 }}>
+                            <li key={i} style={{ color: 'var(--warning)', fontSize: 12, marginBottom: 3 }}>
                               {a}
                             </li>
                           ))}
@@ -5483,10 +5459,10 @@ export default function EMRPage() {
                               <span
                                 key={i}
                                 style={{
-                                  background: 'rgba(107,155,138,0.1)',
-                                  border: '1px solid rgba(107,155,138,0.3)',
-                                  color: '#6B9B8A',
-                                  borderRadius: 4,
+                                  background: 'var(--surface-subtle)',
+                                  border: '1px solid var(--border)',
+                                  color: 'var(--text-secondary)',
+                                  borderRadius: 'var(--radius-full)',
                                   padding: '2px 8px',
                                   fontSize: 12,
                                 }}
@@ -5497,7 +5473,7 @@ export default function EMRPage() {
                           </div>
                         </>
                       )}
-                    <div style={{ color: '#b7ab98', fontSize: 12, marginTop: 12 }}>
+                    <div style={{ color: 'var(--text-secondary)', fontSize: 12, marginTop: 12 }}>
                       Diterima:{' '}
                       {new Date(acceptedAt).toLocaleTimeString('id-ID', {
                         hour: '2-digit',
@@ -5510,7 +5486,7 @@ export default function EMRPage() {
                 {/* Riwayat Kunjungan Sebelumnya */}
                 {visitHistory.length > 0 && (
                   <div
-                    style={{ borderTop: '1px solid rgba(183,171,152,0.1)', padding: '12px 16px' }}
+                    style={{ borderTop: '1px solid var(--border)', padding: '12px 16px' }}
                   >
                     <div style={{ ...label, marginBottom: 8 }}>
                       Riwayat Kunjungan via Assist ({visitHistory.length} kunjungan terakhir)
@@ -5518,7 +5494,7 @@ export default function EMRPage() {
                     <div style={{ overflowX: 'auto' }}>
                       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
                         <thead>
-                          <tr style={{ borderBottom: '1px solid rgba(183,171,152,0.15)' }}>
+                          <tr style={{ borderBottom: '1px solid var(--border)' }}>
                             {[
                               'Tanggal',
                               'Keluhan',
@@ -5543,12 +5519,12 @@ export default function EMRPage() {
                             <tr
                               key={v.consultId}
                               style={{
-                                borderBottom: '1px solid rgba(183,171,152,0.06)',
-                                background: i % 2 === 0 ? 'transparent' : 'rgba(183,171,152,0.02)',
+                                borderBottom: '1px solid var(--border)',
+                                background: i % 2 === 0 ? 'transparent' : 'var(--surface-subtle)',
                               }}
                             >
                               <td
-                                style={{ ...cell, color: '#b7ab98', whiteSpace: 'nowrap' as const }}
+                                style={{ ...cell, color: 'var(--text-secondary)', whiteSpace: 'nowrap' as const }}
                               >
                                 {new Date(v.sentAt).toLocaleDateString('id-ID', {
                                   day: '2-digit',
@@ -5563,7 +5539,7 @@ export default function EMRPage() {
                                   overflow: 'hidden',
                                   textOverflow: 'ellipsis',
                                   whiteSpace: 'nowrap' as const,
-                                  color: '#e8ddd0',
+                                  color: 'var(--text)',
                                 }}
                               >
                                 {v.keluhanUtama || '—'}
@@ -5585,7 +5561,7 @@ export default function EMRPage() {
                               <td style={cell}>
                                 <span style={value}>{v.ttv.temp ? `${v.ttv.temp}°C` : '—'}</span>
                               </td>
-                              <td style={{ ...cell, color: '#eb5939', fontSize: 12 }}>
+                              <td style={{ ...cell, color: 'var(--critical)', fontSize: 12 }}>
                                 {v.penyakitKronis.join(', ') || '—'}
                               </td>
                             </tr>
@@ -5598,9 +5574,9 @@ export default function EMRPage() {
                 {visitHistory.length === 0 && ac.patient.rm && (
                   <div
                     style={{
-                      borderTop: '1px solid rgba(183,171,152,0.1)',
+                      borderTop: '1px solid var(--border)',
                       padding: '10px 16px',
-                      color: '#b7ab98',
+                      color: 'var(--text-secondary)',
                       fontSize: 12,
                     }}
                   >
@@ -5611,73 +5587,31 @@ export default function EMRPage() {
             )
           })()}
 
-        <div className="page-header" style={{ maxWidth: '100%', width: '100%', marginBottom: 24 }}>
-          <div className="page-title">EMR Klinis</div>
-          <div className="page-subtitle">
-            Workflow klinis terintegrasi untuk Retrieval-Augmented Generation Based
+        <div className="page-header">
+          <div className="meta-header" style={{ color: headerColor }}>
+            {headerText}
           </div>
-          <div className="page-header-divider" />
-          <div
-            className="page-header-badges"
-            style={{ marginTop: 14, justifyContent: 'space-between', gap: 16 }}
-          >
-            <div
-              className="meta-header"
-              style={{
-                color: headerColor,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 16,
-                margin: 0,
-              }}
-            >
-              {headerText}
+          <div className="emr-page-head-row">
+            <div>
+              <div className="page-title">EMR Klinis</div>
+              <div className="page-subtitle">
+                Workflow klinis terintegrasi untuk Retrieval-Augmented Generation Based
+              </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div className="emr-page-head-actions">
               {isDoctor && (
                 <button
                   onClick={() => void handleToggleDoctorOnline()}
                   disabled={togglingOnline}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 6,
-                    padding: '3px 12px',
-                    borderRadius: 2,
-                    cursor: 'pointer',
-                    fontSize: 12,
-                    fontWeight: 600,
-                    border: `1px solid ${isOnline ? '#4ADE80' : 'rgba(255,255,255,0.15)'}`,
-                    background: isOnline ? 'rgba(74,222,128,0.12)' : 'rgba(255,255,255,0.04)',
-                    color: isOnline ? '#4ADE80' : '#777',
-                    transition: 'all 0.2s',
-                    opacity: togglingOnline ? 0.6 : 1,
-                  }}
+                  aria-pressed={isOnline}
+                  className="ui-chip"
+                  style={{ opacity: togglingOnline ? 0.6 : 1 }}
                 >
-                  <span
-                    style={{
-                      width: 7,
-                      height: 7,
-                      borderRadius: '50%',
-                      background: isOnline ? '#4ADE80' : '#555',
-                      boxShadow: isOnline ? '0 0 0 3px rgba(74,222,128,0.25)' : 'none',
-                    }}
-                  />
+                  <span className={`emr-online-dot${isOnline ? ' is-online' : ''}`} />
                   {togglingOnline ? '...' : isOnline ? 'ONLINE' : 'OFFLINE'}
                 </button>
               )}
-              <span
-                style={{
-                  fontSize: 14,
-                  color: '#ffffff',
-                  border: '1px solid var(--c-asesmen)',
-                  padding: '1px 10px',
-                  borderRadius: 2,
-                  animation: 'smoothBlink 2s infinite',
-                  background: 'var(--c-asesmen)',
-                  flexShrink: 0,
-                }}
-              >
+              <span className="ui-btn ui-btn--secondary ui-btn--sm" style={{ cursor: 'default' }}>
                 ✧ Synthesia Engine
               </span>
             </div>
@@ -5688,18 +5622,17 @@ export default function EMRPage() {
           <div
             onClick={() => setTriageReceived(false)}
             style={{
-              background: 'rgba(0, 33, 71, 0.12)',
-              border: '1px solid #002147',
-              borderRadius: 4,
-              padding: '10px 16px',
-              marginBottom: 10,
+              background: 'var(--primary-tint)',
+              borderLeft: '2px solid var(--primary)',
+              borderRadius: '0 var(--radius-md) var(--radius-md) 0',
+              padding: '12px 16px',
               cursor: 'pointer',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
             }}
           >
-            <span style={{ fontSize: 14, color: '#002147', fontWeight: 600 }}>
+            <span style={{ fontSize: 14, color: 'var(--primary)', fontWeight: 600 }}>
               Data triase diterima dari perawat — keluhan & TTV sudah terisi otomatis
             </span>
             <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>klik untuk tutup</span>
@@ -5747,16 +5680,13 @@ export default function EMRPage() {
         </div>
 
         {/* ─── Left: Clinical Stream ─── */}
-        <div className="clinical-stream" style={{ maxWidth: '100%', paddingBottom: 40 }}>
-          <div className="stream-line" />
+        <div className="clinical-stream" style={{ maxWidth: '100%' }}>
 
           <section
             ref={row1SectionRef}
             className={emergencyOverride.phaseClassNames.row1}
             style={{ display: emergencyOverride.overrideActive || showIntakeSection ? undefined : 'none' }}
           >
-            <div className="emr-phase-label">Row 1 / Intake &amp; Synthesis</div>
-
             {emergencyOverride.overrideActive && (
               <div
                 className="emr-emergency-override-banner"
@@ -5787,22 +5717,14 @@ export default function EMRPage() {
                   type="number"
                   value={patientAge}
                   onChange={(e) => setPatientAge(Number.parseInt(e.target.value) || 0)}
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    borderBottom: '1px dashed var(--line-base)',
-                    color: 'var(--text-main)',
-                    width: '40px',
-                    fontSize: 14,
-                    outline: 'none',
-                    textAlign: 'center',
-                  }}
+                  className="ui-input"
+                  style={{ width: 72, height: 32, textAlign: 'center' }}
                 />
-                <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>thn</span>
+                <span style={{ fontSize: 14, color: 'var(--text-secondary)' }}>thn</span>
               </div>
               <div className="emr-context-segment">
                 <span className="emr-context-label">GENDER</span>
-                <div style={{ display: 'flex', gap: 4 }}>
+                <div style={{ display: 'flex', gap: 8 }}>
                   {(['L', 'P'] as const).map((g) => (
                     <button
                       key={g}
@@ -5810,15 +5732,8 @@ export default function EMRPage() {
                         setPatientGender(g)
                         if (g === 'L') setIsPregnant(false)
                       }}
-                      style={{
-                        background: patientGender === g ? 'var(--c-asesmen)' : 'transparent',
-                        border: `1px solid ${patientGender === g ? 'var(--c-asesmen)' : 'var(--line-base)'}`,
-                        color: patientGender === g ? 'white' : 'var(--text-muted)',
-                        fontSize: 14,
-                        padding: '2px 8px',
-                        borderRadius: 2,
-                        cursor: 'pointer',
-                      }}
+                      aria-pressed={patientGender === g}
+                      className="ui-chip"
                     >
                       {g === 'L' ? 'Laki-laki' : 'Perempuan'}
                     </button>
@@ -5844,15 +5759,15 @@ export default function EMRPage() {
                     disabled={patientGender !== 'P'}
                     onChange={(e) => setIsPregnant(e.target.checked)}
                   />
-                  <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>Sedang hamil</span>
+                  <span style={{ fontSize: 14, color: 'var(--text)' }}>Sedang hamil</span>
                 </label>
               </div>
             </div>
 
             {/* 01. Anamnesa */}
-            <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start' }}>
+            <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
               <div className="stream-section" style={{ flex: 1, minWidth: 0 }}>
-                <div className="section-title">01. Anamnesa</div>
+                <div className="section-title">Anamnesa</div>
                 <div className="blueprint-wrapper">
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <span className="data-label" style={{ flex: 1 }}>
@@ -5869,7 +5784,7 @@ export default function EMRPage() {
                     <span
                       className="input-draft"
                       style={{
-                        borderBottomColor: draftBorderColor,
+                        borderColor: draftBorderColor,
                         display: 'block',
                       }}
                     >
@@ -5911,7 +5826,7 @@ export default function EMRPage() {
                       <div
                         style={{
                           fontSize: 12,
-                          color: 'var(--audrey-amber, #C4956A)',
+                          color: 'var(--text-secondary)',
                           fontStyle: 'italic',
                           marginTop: 4,
                           opacity: 0.8,
@@ -5941,8 +5856,8 @@ export default function EMRPage() {
                                 gridTemplateColumns: '1fr 1fr 1fr',
                                 gap: 0,
                                 alignItems: 'start',
-                                border: '1px solid var(--line-base)',
-                                borderRadius: 3,
+                                border: '1px solid var(--border)',
+                                borderRadius: 'var(--radius-md)',
                               }}
                             >
                               {/* Kolom 1 — SIFAT */}
@@ -5997,14 +5912,14 @@ export default function EMRPage() {
                                           }}
                                           style={{
                                             fontSize: 12,
-                                            padding: '1px 7px',
+                                            padding: '2px 8px',
                                             border: 'none',
-                                            borderRadius: 2,
+                                            borderRadius: 'var(--radius-full)',
                                             cursor: isActive ? 'default' : 'pointer',
                                             background: isActive
-                                              ? 'var(--c-asesmen)'
+                                              ? 'var(--primary-tint)'
                                               : 'transparent',
-                                            color: isActive ? '#fff' : 'var(--text-muted)',
+                                            color: isActive ? 'var(--primary)' : 'var(--text-secondary)',
                                             transition: 'background 0.2s, color 0.2s',
                                           }}
                                         >
@@ -6152,11 +6067,13 @@ export default function EMRPage() {
                                           }}
                                           style={{
                                             fontSize: 12,
-                                            padding: '1px 7px',
+                                            padding: '2px 8px',
                                             border: 'none',
-                                            borderRadius: 2,
-                                            background: isActive ? activeColor : 'transparent',
-                                            color: isActive ? '#fff' : 'var(--text-muted)',
+                                            borderRadius: 'var(--radius-full)',
+                                            background: isActive
+                                              ? `color-mix(in srgb, ${activeColor} 10%, var(--surface))`
+                                              : 'transparent',
+                                            color: isActive ? activeColor : 'var(--text-secondary)',
                                             cursor: isActive ? 'default' : 'pointer',
                                             transition: 'background 0.2s, color 0.2s',
                                           }}
@@ -6221,8 +6138,7 @@ export default function EMRPage() {
                         <div
                           style={{
                             fontSize: 12,
-                            color: 'var(--c-asesmen)',
-                            animation: 'pulse 1.5s ease-in-out infinite',
+                            color: 'var(--text-secondary)',
                           }}
                         >
                           synthesizing...
@@ -6245,22 +6161,12 @@ export default function EMRPage() {
                         style={{
                           display: 'flex',
                           justifyContent: 'flex-end',
-                          marginTop: 6,
+                          marginTop: 8,
                         }}
                       >
                         <div
                           onClick={handleSenAutoClick}
-                          style={{
-                            background: 'var(--c-asesmen)',
-                            color: '#ffffff',
-                            fontSize: 12,
-                            fontWeight: 600,
-                            padding: '4px 12px',
-                            borderRadius: 3,
-                            cursor: 'pointer',
-                            transition: 'opacity 0.2s ease',
-                            whiteSpace: 'nowrap',
-                          }}
+                          className="ui-btn ui-btn--primary ui-btn--sm"
                           onMouseEnter={(e) => {
                             e.currentTarget.style.opacity = '0.85'
                           }}
@@ -6352,18 +6258,16 @@ export default function EMRPage() {
                           }}
                           placeholder="narasi keluhan sekarang, perjalanan penyakit, onset, progresivitas, faktor pencetus/peringan..."
                           style={{
+                            display: 'block',
                             background: 'transparent',
                             border: 'none',
-                            borderBottom: '1px dashed var(--line-base)',
                             outline: 'none',
                             resize: 'none',
                             overflow: 'hidden',
-                            fontSize: 16,
-                            fontWeight: 300,
-                            lineHeight: 1.7,
+                            font: 'inherit',
                             color: riwayat.rps ? 'var(--text-main)' : 'var(--text-muted)',
                             width: '100%',
-                            paddingBottom: 8,
+                            padding: 0,
                           }}
                         />
                       )}
@@ -6411,10 +6315,9 @@ export default function EMRPage() {
                           border: 'none',
                           outline: 'none',
                           fontSize: 'inherit',
-                          fontWeight: 300,
                           color: keluhanTambahan ? 'var(--text-main)' : 'var(--text-muted)',
                           width: '100%',
-                          paddingBottom: 4,
+                          padding: 0,
                         }}
                       />
                     </span>
@@ -6457,18 +6360,12 @@ export default function EMRPage() {
                                 t.style.height = t.scrollHeight + 'px'
                               }}
                               placeholder="auskultasi, palpasi..."
+                              className="ui-input"
                               style={{
-                                background: 'transparent',
-                                border: 'none',
-                                borderBottom: '1px dashed var(--line-base)',
-                                outline: 'none',
-                                fontSize: 14,
-                                fontWeight: 300,
                                 color: pemeriksaanFisikUsulan
                                   ? 'var(--text-main)'
                                   : 'var(--text-muted)',
                                 width: '100%',
-                                paddingBottom: 4,
                                 resize: 'none',
                                 overflow: 'hidden',
                               }}
@@ -6500,16 +6397,10 @@ export default function EMRPage() {
                                 t.style.height = t.scrollHeight + 'px'
                               }}
                               placeholder="Hb, WBC, HbA1c..."
+                              className="ui-input"
                               style={{
-                                background: 'transparent',
-                                border: 'none',
-                                borderBottom: '1px dashed var(--line-base)',
-                                outline: 'none',
-                                fontSize: 14,
-                                fontWeight: 300,
                                 color: hasilLab ? 'var(--text-main)' : 'var(--text-muted)',
                                 width: '100%',
-                                paddingBottom: 4,
                                 resize: 'none',
                                 overflow: 'hidden',
                               }}
@@ -6541,18 +6432,12 @@ export default function EMRPage() {
                                 t.style.height = t.scrollHeight + 'px'
                               }}
                               placeholder="EKG, Foto Thorax, USG..."
+                              className="ui-input"
                               style={{
-                                background: 'transparent',
-                                border: 'none',
-                                borderBottom: '1px dashed var(--line-base)',
-                                outline: 'none',
-                                fontSize: 14,
-                                fontWeight: 300,
                                 color: pemeriksaanPenunjang
                                   ? 'var(--text-main)'
                                   : 'var(--text-muted)',
                                 width: '100%',
-                                paddingBottom: 4,
                                 resize: 'none',
                                 overflow: 'hidden',
                               }}
@@ -6579,8 +6464,8 @@ export default function EMRPage() {
                                 gridTemplateColumns: '1fr 1fr 1fr',
                                 gap: 0,
                                 alignItems: 'start',
-                                border: '1px solid var(--line-base)',
-                                borderRadius: 3,
+                                border: '1px solid var(--border)',
+                                borderRadius: 'var(--radius-md)',
                               }}
                             >
                               {(['fisik', 'lab', 'penunjang'] as const).map((cat, ci) => {
@@ -6781,20 +6666,18 @@ export default function EMRPage() {
               >
                 {/* 01A. Audrey Synthesia */}
                 <div className="stream-section">
-                  <div className="section-title audrey-section-title">01A. Audrey Synthesia</div>
+                  <div className="section-title audrey-section-title">Audrey Synthesia</div>
                   <div
                     className={`blueprint-wrapper audrey-panel${audreyIsThinking ? ' is-thinking' : ''}`}
-                    style={{ paddingTop: 18, paddingBottom: 18 }}
                   >
                     <div
                       className="extraction-header audrey-extraction-header"
-                      style={{ color: '#5B8DB8', marginBottom: 14 }}
+                      style={{ color: 'var(--primary)', marginBottom: 16 }}
                     >
                       <span className="audrey-heading-text">Audrey Synthesia Algorithm</span>
                       <span
                         className="audrey-heading-state"
                         style={{
-                          animation: showEmrLoader || isTyping ? 'smoothBlink 2s infinite' : 'none',
                           color: audreyStateColor,
                           opacity: showEmrLoader || isTyping ? 0.9 : 0.65,
                         }}
@@ -6832,7 +6715,7 @@ export default function EMRPage() {
                           <span
                             className="tag-meta"
                             style={{
-                              color: item.meta !== 'PENDING' ? '#5B8DB8' : 'var(--text-muted)',
+                              color: item.meta !== 'PENDING' ? 'var(--primary)' : 'var(--text-muted)',
                               opacity: item.meta !== 'PENDING' ? 1 : 0.5,
                             }}
                           >
@@ -6853,10 +6736,10 @@ export default function EMRPage() {
                 display: isReviewTab ? undefined : 'none',
               }}
             >
-              <div className="section-title">02. Riwayat Dahulu, Keluarga &amp; Alergi</div>
+              <div className="section-title">Riwayat Dahulu, Keluarga &amp; Alergi</div>
               {showEmrLoader && <div className="emr-loader">[SYSTEM: RETRIEVING EMR DATA...]</div>}
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 {/* RPD — chip selector */}
                 <div className="history-item">
                   <div className="history-item-title" style={{ marginBottom: 8 }}>
@@ -6873,23 +6756,15 @@ export default function EMRPage() {
                       </span>
                     )}
                   </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                     {RPD_OPTIONS.map((opt) => {
                       const active = rpdSelected.has(opt)
                       return (
                         <button
                           key={opt}
                           onClick={() => toggleRpd(opt)}
-                          style={{
-                            fontSize: 14,
-                            padding: '4px 10px',
-                            cursor: 'pointer',
-                            border: `1px solid ${active ? 'var(--c-asesmen)' : 'var(--line-base)'}`,
-                            background: active ? 'rgba(212,122,87,0.12)' : 'transparent',
-                            color: active ? 'var(--c-asesmen)' : 'var(--text-muted)',
-                            borderRadius: 2,
-                            transition: 'all 0.15s',
-                          }}
+                          aria-pressed={active}
+                          className="ui-chip"
                         >
                           {opt}
                         </button>
@@ -6908,18 +6783,9 @@ export default function EMRPage() {
                     value={riwayat.rpk}
                     onChange={(e) => setRiwayat((p) => ({ ...p, rpk: e.target.value }))}
                     placeholder="DM, jantung, kanker, HT dalam keluarga..."
+                    className="ui-input"
                     style={{
-                      background: 'transparent',
-                      border: 'none',
-                      borderBottom: '1px dashed var(--line-base)',
-                      outline: 'none',
-                      fontSize: 14,
-                      fontWeight: 300,
                       color: riwayat.rpk ? 'var(--text-main)' : 'var(--text-muted)',
-                      fontStyle: riwayat.rpk ? 'normal' : 'italic',
-                      width: '100%',
-                      paddingBottom: 4,
-                      marginTop: 4,
                     }}
                   />
                 </div>
@@ -6940,23 +6806,24 @@ export default function EMRPage() {
                       </span>
                     )}
                   </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                     {ALERGI_OPTIONS.map((opt) => {
                       const active = alergiSelected.has(opt)
                       return (
                         <button
                           key={opt}
                           onClick={() => toggleAlergi(opt)}
-                          style={{
-                            fontSize: 14,
-                            padding: '4px 10px',
-                            cursor: 'pointer',
-                            border: `1px solid ${active ? 'var(--c-critical)' : 'var(--line-base)'}`,
-                            background: active ? 'rgba(220,53,69,0.1)' : 'transparent',
-                            color: active ? 'var(--c-critical)' : 'var(--text-muted)',
-                            borderRadius: 2,
-                            transition: 'all 0.15s',
-                          }}
+                          aria-pressed={active}
+                          className="ui-chip"
+                          style={
+                            active
+                              ? {
+                                  background: 'var(--critical-tint)',
+                                  borderColor: 'var(--critical)',
+                                  color: 'var(--critical)',
+                                }
+                              : undefined
+                          }
                         >
                           {opt}
                         </button>
@@ -6985,8 +6852,6 @@ export default function EMRPage() {
             className={emergencyOverride.phaseClassNames.row2}
             style={{ display: showWorkupSection ? undefined : 'none' }}
           >
-            <div className="emr-phase-label">Row 2 / Objective &amp; Clinical Workup</div>
-
             {/* 04. Pemeriksaan Fisik */}
             <div className="stream-section" style={{ display: isReviewTab ? undefined : 'none' }}>
               <div
@@ -7001,7 +6866,7 @@ export default function EMRPage() {
                 }}
               >
                 <span className="section-title" style={{ margin: 0 }}>
-                  04. Pemeriksaan Fisik Head-to-Toe
+                  Pemeriksaan Fisik Head-to-Toe
                 </span>
                 <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                   <button
@@ -7011,16 +6876,7 @@ export default function EMRPage() {
                       applyExamAutoSentra()
                     }}
                     disabled={!canAutoAssistExam}
-                    style={{
-                      fontSize: 12,
-                      padding: '5px 10px',
-                      background: 'transparent',
-                      border: '1px solid var(--c-asesmen)',
-                      color: 'var(--c-asesmen)',
-                      opacity: canAutoAssistExam ? 0.92 : 0.35,
-                      cursor: canAutoAssistExam ? 'pointer' : 'not-allowed',
-                      borderRadius: 3,
-                    }}
+                    className="ui-btn ui-btn--secondary ui-btn--sm"
                   >
                     AUTO SENTRA
                   </button>
@@ -7029,14 +6885,7 @@ export default function EMRPage() {
                     onClick={() => setExamOpen((o) => !o)}
                     aria-expanded={examOpen}
                     aria-controls="exam-head-to-toe-panel"
-                    style={{
-                      background: 'transparent',
-                      border: 'none',
-                      cursor: 'pointer',
-                      padding: 0,
-                      fontSize: 14,
-                      color: 'var(--text-muted)',
-                    }}
+                    className="ui-btn ui-btn--ghost ui-btn--sm"
                   >
                     {examOpen ? '[ TUTUP ▲ ]' : '[ BUKA ▼ ]'}
                   </button>
@@ -7044,17 +6893,16 @@ export default function EMRPage() {
               </div>
               <div
                 style={{
-                  marginTop: 6,
+                  marginTop: 8,
                   fontSize: 12,
-                  color: 'var(--text-muted)',
-                  opacity: 0.82,
+                  color: 'var(--text-secondary)',
                 }}
               >
                 AUTO SENTRA akan mengisi template pemeriksaan 04 dengan format normal
                 audit-friendly, lalu menambahkan fokus klinis yang relevan terhadap keluhan.
               </div>
               {examOpen && (
-                <div id="exam-head-to-toe-panel" className="exam-list" style={{ marginTop: 12 }}>
+                <div id="exam-head-to-toe-panel" className="exam-list" style={{ marginTop: 16 }}>
                   {examFields.map(({ key, label }, i) => (
                     <div
                       key={key}
@@ -7069,17 +6917,9 @@ export default function EMRPage() {
                         value={exam[key]}
                         onChange={(e) => setExam((p) => ({ ...p, [key]: e.target.value }))}
                         placeholder="—"
-                        className="exam-result"
+                        className="ui-input exam-result"
                         style={{
-                          background: 'transparent',
-                          border: 'none',
-                          borderBottom: '1px dashed var(--line-base)',
-                          outline: 'none',
                           color: exam[key] ? 'var(--text-main)' : 'var(--text-muted)',
-                          width: '100%',
-                          paddingBottom: 2,
-                          fontStyle: exam[key] ? 'normal' : 'italic',
-                          fontSize: 14,
                         }}
                       />
                     </div>
@@ -7092,53 +6932,36 @@ export default function EMRPage() {
             <div
               className={`stream-section${emergencyOverride.forcedActiveViewPhase === 'row2' ? ' stream-section-stagger-secondary' : ''}`}
             >
-              <div className="section-title">03. Tanda Vital &amp; Objektif</div>
+              <div className="section-title">Tanda Vital &amp; Objektif</div>
               <div
                 style={{
                   display: 'flex',
-                  gap: 6,
+                  gap: 8,
                   alignItems: 'center',
                   marginBottom: 16,
-                  marginTop: -16,
                 }}
               >
-                <span style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+                <span style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
                   {/* Auto TTV dari keluhan */}
                   <button
                     onClick={() => inferTTV()}
                     disabled={!keluhanUtama.trim()}
                     title="Buat saran TTV awal berdasarkan konteks klinis"
+                    className="ui-chip"
                     style={{
-                      fontSize: 14,
-                      padding: '5px 14px',
-                      background: 'var(--c-asesmen)',
-                      border: '1px solid var(--c-asesmen)',
-                      color: '#ffffff',
-                      fontWeight: 600,
                       cursor: keluhanUtama.trim() ? 'pointer' : 'not-allowed',
                       opacity: keluhanUtama.trim() ? 1 : 0.35,
-                      borderRadius: 3,
                     }}
                   >
                     ✧ AUTO TTV
                   </button>
-                  {/* Separator */}
-                  <span style={{ color: 'var(--line-base)', fontSize: 14 }}>|</span>
                   {/* Skenario presets */}
                   {(['hipertensi', 'hiperglikemi', 'hipoglikemi'] as const).map((key) => (
                     <button
                       key={key}
                       onClick={() => autoFillScenario(key)}
-                      style={{
-                        fontSize: 14,
-                        padding: '3px 8px',
-                        background:
-                          activeScenario === key ? 'rgba(212,122,87,0.12)' : 'transparent',
-                        border: `1px solid ${activeScenario === key ? 'var(--c-asesmen)' : 'var(--line-base)'}`,
-                        color: activeScenario === key ? 'var(--c-asesmen)' : 'var(--text-muted)',
-                        cursor: 'pointer',
-                        transition: 'all 0.15s',
-                      }}
+                      aria-pressed={activeScenario === key}
+                      className="ui-chip"
                     >
                       {AUTOGEN_SCENARIOS[key].label}
                     </button>
@@ -7217,8 +7040,8 @@ export default function EMRPage() {
                     style={
                       flashingVital === key
                         ? {
-                            boxShadow: '0 0 0 1.5px #22C55E, 0 0 14px 2px rgba(34,197,94,0.4)',
-                            borderRadius: 4,
+                            boxShadow: '0 0 0 2px var(--success)',
+                            borderRadius: 'var(--radius-sm)',
                             transition: 'box-shadow 0.1s',
                           }
                         : { transition: 'box-shadow 0.25s' }
@@ -7236,8 +7059,8 @@ export default function EMRPage() {
                       className="v-value"
                       style={{
                         display: 'flex',
-                        alignItems: 'baseline',
-                        gap: 2,
+                        alignItems: 'center',
+                        gap: 8,
                         animation: vitals[key]
                           ? 'vitalReveal 0.35s cubic-bezier(0.22,1,0.36,1) both'
                           : 'none',
@@ -7271,22 +7094,15 @@ export default function EMRPage() {
                           }))
                         }}
                         placeholder={vitalMeta[key].mode === 'manual_required' ? 'ukur' : '—'}
+                        className="ui-input"
                         style={{
-                          background: 'transparent',
-                          border: 'none',
-                          borderBottom: vitals[key] ? 'none' : '1px dashed var(--line-base)',
-                          outline: 'none',
-                          fontSize: 30,
-                          fontWeight: 300,
                           color: isCritical(vitals[key], key)
                             ? 'var(--c-critical)'
                             : vitals[key]
                               ? 'var(--text-main)'
                               : 'var(--text-muted)',
-                          width: vitals[key] ? `${vitals[key].length + 1}ch` : '3ch',
-                          minWidth: '2.5ch',
-                          letterSpacing: '-1px',
-                          padding: 0,
+                          minWidth: 0,
+                          fontVariantNumeric: 'tabular-nums',
                         }}
                       />
                       <span className="v-unit">{unit}</span>
@@ -7302,18 +7118,11 @@ export default function EMRPage() {
                 ))}
 
                 {/* Gula Darah — field terpisah dengan tipe selector */}
-                <div
-                  className="vital-item"
-                  style={{
-                    borderTop: '1px dashed var(--line-base)',
-                    paddingTop: 12,
-                    marginTop: 4,
-                  }}
-                >
+                <div className="vital-item">
                   <span className="v-label">Gula Darah</span>
                   <span
                     className="v-value"
-                    style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}
+                    style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 8 }}
                   >
                     <input
                       id="vital-gula-darah"
@@ -7322,56 +7131,41 @@ export default function EMRPage() {
                       value={gulaDarah.nilai}
                       onChange={(e) => setGulaDarah((p) => ({ ...p, nilai: e.target.value }))}
                       placeholder="—"
+                      className="ui-input"
                       style={{
-                        background: 'transparent',
-                        border: 'none',
-                        borderBottom: gulaDarah.nilai ? 'none' : '1px dashed var(--line-base)',
-                        outline: 'none',
-                        fontSize: 30,
-                        fontWeight: 300,
                         color: gulaDarah.nilai
                           ? Number.parseFloat(gulaDarah.nilai) < 70 ||
                             Number.parseFloat(gulaDarah.nilai) > 200
                             ? 'var(--c-critical)'
                             : 'var(--text-main)'
                           : 'var(--text-muted)',
-                        width: gulaDarah.nilai ? `${gulaDarah.nilai.length + 1}ch` : '3ch',
-                        minWidth: '2.5ch',
-                        letterSpacing: '-1px',
-                        padding: 0,
+                        width: 96,
+                        fontVariantNumeric: 'tabular-nums',
                       }}
                     />
                     <span
                       style={{
                         display: 'flex',
-                        flexDirection: 'column',
-                        gap: 2,
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        gap: 8,
                       }}
                     >
                       <span
                         style={{
-                          fontSize: 14,
-                          color: 'var(--text-muted)',
-                          marginBottom: 6,
+                          fontSize: 12,
+                          color: 'var(--text-secondary)',
                         }}
                       >
                         mg/dL
                       </span>
-                      <span style={{ display: 'flex', gap: 3 }}>
+                      <span style={{ display: 'flex', gap: 4 }}>
                         {(['GDS', 'GDP', '2JPP'] as const).map((t) => (
                           <button
                             key={t}
                             onClick={() => setGulaDarah((p) => ({ ...p, tipe: t }))}
-                            style={{
-                              fontSize: 14,
-                              padding: '5px 12px',
-                              cursor: 'pointer',
-                              border: `1px solid ${gulaDarah.tipe === t ? 'var(--c-asesmen)' : 'var(--line-base)'}`,
-                              background:
-                                gulaDarah.tipe === t ? 'rgba(212,122,87,0.12)' : 'transparent',
-                              color:
-                                gulaDarah.tipe === t ? 'var(--c-asesmen)' : 'var(--text-muted)',
-                            }}
+                            aria-pressed={gulaDarah.tipe === t}
+                            className="ui-chip"
                           >
                             {t}
                           </button>
@@ -7385,13 +7179,13 @@ export default function EMRPage() {
               <div
                 ref={redFlagsRef}
                 style={{
-                  marginTop: 18,
-                  padding: '14px 16px',
-                  border: '1px solid var(--line-base)',
-                  background: 'transparent',
-                  borderRadius: 6,
+                  marginTop: 24,
+                  padding: 16,
+                  border: '1px solid var(--border)',
+                  background: 'var(--surface)',
+                  borderRadius: 'var(--radius-md)',
                   display: 'grid',
-                  gap: 14,
+                  gap: 16,
                   opacity: redFlagsInView ? 1 : 0.35,
                   transition: 'opacity 0.4s ease',
                 }}
@@ -7408,8 +7202,9 @@ export default function EMRPage() {
                   <div>
                     <div
                       style={{
-                        fontSize: 12,
-                        color: 'var(--c-asesmen)',
+                        fontSize: 14,
+                        fontWeight: 600,
+                        color: 'var(--text)',
                       }}
                     >
                       Structured Red Flags
@@ -7422,15 +7217,7 @@ export default function EMRPage() {
                   <button
                     type="button"
                     onClick={() => setStructuredSignsDraft(createInitialStructuredSigns())}
-                    style={{
-                      fontSize: 12,
-                      padding: '6px 10px',
-                      border: '1px solid var(--line-base)',
-                      background: 'transparent',
-                      color: 'var(--text-muted)',
-                      cursor: 'pointer',
-                      borderRadius: 3,
-                    }}
+                    className="ui-btn ui-btn--secondary ui-btn--sm"
                   >
                     Reset Flags
                   </button>
@@ -7440,7 +7227,7 @@ export default function EMRPage() {
                   style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-                    gap: 14,
+                    gap: 12,
                   }}
                 >
                   {renderStructuredSection(
@@ -7479,13 +7266,15 @@ export default function EMRPage() {
                   {screeningAlerts.map((alert) => {
                     const isCrit = alert.severity === 'critical'
                     const isHigh = alert.severity === 'high'
-                    const accent = isCrit ? '#ef4444' : isHigh ? '#f97316' : '#eab308'
+                    const accent = isCrit ? 'var(--critical)' : 'var(--warning)'
                     return (
                       <div
                         key={alert.id}
                         style={{
-                          padding: '2px 0 2px 14px',
+                          padding: '12px 16px',
                           borderLeft: `2px solid ${accent}`,
+                          borderRadius: '0 var(--radius-sm) var(--radius-sm) 0',
+                          background: isCrit ? 'var(--critical-tint)' : 'var(--warning-tint)',
                         }}
                       >
                         <div
@@ -7610,8 +7399,10 @@ export default function EMRPage() {
                         <div
                           key={alert.id}
                           style={{
-                            padding: '2px 0 2px 14px',
+                            padding: '12px 16px',
                             borderLeft: `2px solid ${accent}`,
+                            borderRadius: '0 var(--radius-sm) var(--radius-sm) 0',
+                            background: `color-mix(in srgb, ${accent} 6%, var(--surface))`,
                           }}
                         >
                           <div
@@ -7706,14 +7497,17 @@ export default function EMRPage() {
                     {compositeDeterioration.watchers.length > 0 && (
                       <div
                         style={{
-                          borderLeft: '2px solid #eab308',
-                          padding: '2px 0 2px 14px',
+                          borderLeft: '2px solid var(--warning)',
+                          borderRadius: '0 var(--radius-sm) var(--radius-sm) 0',
+                          background: 'var(--warning-tint)',
+                          padding: '12px 16px',
                         }}
                       >
                         <div
                           style={{
                             fontSize: 12,
-                            color: '#eab308',
+                            fontWeight: 600,
+                            color: 'var(--warning)',
                             marginBottom: 6,
                           }}
                         >
@@ -7785,15 +7579,8 @@ export default function EMRPage() {
                       <select
                         value={selectedDoctor}
                         onChange={(e) => setSelectedDoctor(e.target.value)}
-                        style={{
-                          background: 'var(--bg-card)',
-                          color: 'var(--text-main)',
-                          border: '1px solid var(--line-base)',
-                          borderRadius: 3,
-                          padding: '6px 10px',
-                          fontSize: 14,
-                          flex: 1,
-                        }}
+                        className="ui-input"
+                        style={{ flex: 1, height: 40 }}
                       >
                         <option value="">Pilih Dokter Jaga...</option>
                         {onlineDoctors.map((d) => (
@@ -7888,11 +7675,7 @@ export default function EMRPage() {
             className={emergencyOverride.phaseClassNames.row3}
             style={{ display: showDecisionSection ? undefined : 'none' }}
           >
-            <div className="stream-section" style={{ maxWidth: '100%' }}>
-              <div className="emr-phase-label" style={{ marginBottom: 20 }}>
-                {isAssessmentTab ? 'Row 3 / Assessment & Decision' : 'Row 4 / Therapy & Sign-Off'}
-              </div>
-
+            <div className="stream-section emr-phase-body" style={{ maxWidth: '100%' }}>
               {isAssessmentTab && (
                 <>
                   <div
@@ -8117,8 +7900,7 @@ export default function EMRPage() {
                           style={{
                             padding: '12px 0',
                             fontSize: 14,
-                            color: 'var(--text-muted)',
-                            animation: 'smoothBlink 1s infinite',
+                            color: 'var(--text-secondary)',
                           }}
                         >
                           MENJALANKAN ISKANDAR DIAGNOSIS ENGINE V2...
@@ -8170,17 +7952,19 @@ export default function EMRPage() {
                               {requiresEmergencyAck && (
                                 <div
                                   style={{
-                                    padding: '10px 12px',
+                                    padding: '12px 16px',
                                     marginBottom: 8,
-                                    border: '1px solid var(--c-critical)',
-                                    background: 'transparent',
+                                    borderLeft: '2px solid var(--critical)',
+                                    borderRadius: '0 var(--radius-sm) var(--radius-sm) 0',
+                                    background: 'var(--critical-tint)',
                                   }}
                                 >
                                   <div
                                     style={{
                                       fontSize: 14,
-                                      color: 'var(--c-critical)',
-                                      marginBottom: 6,
+                                      fontWeight: 600,
+                                      color: 'var(--critical)',
+                                      marginBottom: 8,
                                     }}
                                   >
                                     PROTOKOL EMERGENCY: ACK WAJIB
@@ -8216,16 +8000,11 @@ export default function EMRPage() {
                                     type="button"
                                     onClick={() => void acknowledgeEmergencyProtocol()}
                                     disabled={!allSafetyChecklistChecked() || ackSaving}
+                                    className="ui-btn ui-btn--sm"
                                     style={{
-                                      marginTop: 6,
-                                      border: '1px solid var(--c-critical)',
-                                      color: '#fff',
-                                      background:
-                                        ackSaving || !allSafetyChecklistChecked()
-                                          ? 'rgba(220,53,69,0.5)'
-                                          : 'var(--c-critical)',
-                                      fontSize: 14,
-                                      padding: '4px 8px',
+                                      marginTop: 8,
+                                      color: 'var(--text-on-accent)',
+                                      background: 'var(--critical)',
                                       cursor:
                                         ackSaving || !allSafetyChecklistChecked()
                                           ? 'not-allowed'
@@ -8242,10 +8021,14 @@ export default function EMRPage() {
                                 <div
                                   key={i}
                                   style={{
-                                    padding: '8px 10px',
-                                    marginBottom: 6,
-                                    border: `1px solid ${rf.severity === 'emergency' ? 'var(--c-critical)' : '#E8A838'}`,
-                                    background: 'transparent',
+                                    padding: '12px 16px',
+                                    marginBottom: 8,
+                                    borderLeft: `2px solid ${rf.severity === 'emergency' ? 'var(--critical)' : 'var(--warning)'}`,
+                                    borderRadius: '0 var(--radius-sm) var(--radius-sm) 0',
+                                    background:
+                                      rf.severity === 'emergency'
+                                        ? 'var(--critical-tint)'
+                                        : 'var(--warning-tint)',
                                   }}
                                 >
                                   <div
@@ -8253,8 +8036,9 @@ export default function EMRPage() {
                                       fontSize: 14,
                                       color:
                                         rf.severity === 'emergency'
-                                          ? 'var(--c-critical)'
-                                          : '#E8A838',
+                                          ? 'var(--critical)'
+                                          : 'var(--warning)',
+                                      fontWeight: 600,
                                       marginBottom: 4,
                                     }}
                                   >
@@ -8289,7 +8073,7 @@ export default function EMRPage() {
                                         color:
                                           a.severity === 'high' || a.severity === 'emergency'
                                             ? 'var(--c-critical)'
-                                            : '#E8A838',
+                                            : 'var(--warning)',
                                         marginRight: 6,
                                       }}
                                     >
@@ -8325,7 +8109,7 @@ export default function EMRPage() {
                                         style={{
                                           marginTop: 6,
                                           fontSize: 12,
-                                          color: '#E8A838',
+                                          color: 'var(--warning)',
                                         }}
                                       >
                                         Engine masih butuh data tambahan sebelum diagnosis kerja
@@ -8449,7 +8233,7 @@ export default function EMRPage() {
                                   <div
                                     style={{
                                       fontSize: 12,
-                                      color: '#E8A838',
+                                      color: 'var(--warning)',
                                       marginBottom: 6,
                                     }}
                                   >
@@ -8523,13 +8307,7 @@ export default function EMRPage() {
                                   value={feedbackFinalIcd}
                                   onChange={(e) => setFeedbackFinalIcd(e.target.value)}
                                   placeholder="ICD final dokter"
-                                  style={{
-                                    border: '1px solid var(--line-base)',
-                                    background: 'transparent',
-                                    color: 'var(--text-main)',
-                                    fontSize: 14,
-                                    padding: '7px 8px',
-                                  }}
+                                  className="ui-input"
                                 />
                                 <input
                                   id="feedback-override-reason"
@@ -8538,13 +8316,7 @@ export default function EMRPage() {
                                   value={feedbackOverrideReason}
                                   onChange={(e) => setFeedbackOverrideReason(e.target.value)}
                                   placeholder="Alasan override final (opsional)"
-                                  style={{
-                                    border: '1px solid var(--line-base)',
-                                    background: 'transparent',
-                                    color: 'var(--text-main)',
-                                    fontSize: 14,
-                                    padding: '7px 8px',
-                                  }}
+                                  className="ui-input"
                                 />
                                 <input
                                   id="feedback-followup-note"
@@ -8553,14 +8325,8 @@ export default function EMRPage() {
                                   value={feedbackFollowUpNote}
                                   onChange={(e) => setFeedbackFollowUpNote(e.target.value)}
                                   placeholder="Catatan follow-up (opsional)"
-                                  style={{
-                                    gridColumn: '1 / -1',
-                                    border: '1px solid var(--line-base)',
-                                    background: 'transparent',
-                                    color: 'var(--text-main)',
-                                    fontSize: 14,
-                                    padding: '7px 8px',
-                                  }}
+                                  className="ui-input"
+                                  style={{ gridColumn: '1 / -1' }}
                                 />
                                 <div className="cdss-selected-outcome-row">
                                   <label
@@ -8746,21 +8512,19 @@ export default function EMRPage() {
                       {/* ── Manual Diagnosis Override ── */}
                       <div
                         style={{
-                          marginTop: 14,
-                          padding: '12px 14px',
-                          borderRadius: 6,
+                          marginTop: 16,
+                          padding: 16,
+                          borderRadius: 'var(--radius-md)',
                           border: manualDiagnosis
-                            ? '1px solid rgba(0, 33, 71, 0.4)'
-                            : '1px solid var(--line-base)',
-                          background: manualDiagnosis
-                            ? 'rgba(0, 33, 71, 0.04)'
-                            : 'rgba(255,255,255,0.02)',
+                            ? '1px solid var(--primary)'
+                            : '1px solid var(--border)',
+                          background: manualDiagnosis ? 'var(--primary-tint)' : 'var(--surface-subtle)',
                         }}
                       >
                         <div
                           style={{
                             fontSize: 12,
-                            color: manualDiagnosis ? '#002147' : 'var(--text-muted)',
+                            color: manualDiagnosis ? 'var(--primary)' : 'var(--text-muted)',
                             fontWeight: 600,
                             marginBottom: 8,
                           }}
@@ -8781,38 +8545,21 @@ export default function EMRPage() {
                             placeholder="Nama diagnosis..."
                             value={manualDiagnosis}
                             onChange={(e) => setManualDiagnosis(e.target.value)}
-                            style={{
-                              padding: '7px 10px',
-                              borderRadius: 4,
-                              fontSize: 14,
-                              border: '1px solid var(--line-base)',
-                              background: 'var(--bg-canvas)',
-                              color: 'var(--text-main)',
-                              outline: 'none',
-                            }}
+                            className="ui-input"
                           />
                           <input
                             type="text"
                             placeholder="ICD-10 (opsional)"
                             value={manualIcd10}
                             onChange={(e) => setManualIcd10(e.target.value)}
-                            style={{
-                              padding: '7px 10px',
-                              borderRadius: 4,
-                              fontSize: 14,
-                              border: '1px solid var(--line-base)',
-                              background: 'var(--bg-canvas)',
-                              color: 'var(--text-main)',
-                              outline: 'none',
-                              fontFamily: 'var(--font-geist-mono)',
-                            }}
+                            className="ui-input"
                           />
                         </div>
                         {manualDiagnosis && (
                           <div
                             style={{
                               fontSize: 12,
-                              color: '#002147',
+                              color: 'var(--primary)',
                               marginTop: 6,
                             }}
                           >
@@ -9509,7 +9256,7 @@ export default function EMRPage() {
                   {bridgeError && isFinalizeTab && (
                     <div
                       className="finalize-assist-bullet"
-                      style={{ color: 'var(--c-critical, #f06a6a)', fontSize: 12, marginTop: 6 }}
+                      style={{ color: 'var(--critical)', fontSize: 12, marginTop: 6 }}
                     >
                       {bridgeError}
                     </div>
@@ -9528,15 +9275,15 @@ export default function EMRPage() {
             position: 'fixed',
             left: medTooltip.x + 8,
             top: medTooltip.y - 8,
-            background: 'var(--bg-surface, #2a2926)',
-            border: '1px solid var(--c-asesmen)',
-            borderRadius: 4,
+            background: 'var(--surface)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-md)',
             padding: '8px 12px',
             fontSize: 14,
             color: 'var(--text-main)',
             maxWidth: 340,
             zIndex: 9999,
-            boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+            boxShadow: 'var(--shadow-dialog)',
             pointerEvents: 'none',
           }}
         >

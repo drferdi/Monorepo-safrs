@@ -1214,7 +1214,7 @@ export default function ClinicalPrognosisChart({
       style={{
         marginTop: 10,
         padding: '14px 16px',
-        border: '1px solid rgba(255,255,255,0.08)',
+        border: '1px solid var(--border)',
       }}
     >
       <div
@@ -1248,8 +1248,8 @@ export default function ClinicalPrognosisChart({
             alignItems: 'flex-end',
             gap: 4,
             padding: '8px 10px',
-            border: '1px solid rgba(255,255,255,0.08)',
-            background: 'rgba(255,255,255,0.02)',
+            border: '1px solid var(--border)',
+            background: 'var(--surface-subtle)',
             minWidth: 220,
           }}
         >
@@ -1308,7 +1308,7 @@ export default function ClinicalPrognosisChart({
         </div>
         <div
           style={{
-            border: '1px solid rgba(255,255,255,0.08)',
+            border: '1px solid var(--border)',
             padding: '10px 12px',
             background: 'transparent',
             minHeight: 82,
@@ -1336,7 +1336,7 @@ export default function ClinicalPrognosisChart({
         </div>
         <div
           style={{
-            border: '1px solid rgba(255,255,255,0.08)',
+            border: '1px solid var(--border)',
             padding: '10px 12px',
             background: 'transparent',
             minHeight: 82,
@@ -1413,7 +1413,7 @@ export default function ClinicalPrognosisChart({
           >
             <div
               style={{
-                border: '1px solid rgba(255,255,255,0.08)',
+                border: '1px solid var(--border)',
                 background: 'transparent',
                 padding: '10px 12px',
               }}
@@ -1439,7 +1439,7 @@ export default function ClinicalPrognosisChart({
             </div>
             <div
               style={{
-                border: '1px solid rgba(255,255,255,0.08)',
+                border: '1px solid var(--border)',
                 background: 'transparent',
                 padding: '10px 12px',
               }}
@@ -1466,7 +1466,7 @@ export default function ClinicalPrognosisChart({
             </div>
             <div
               style={{
-                border: '1px solid rgba(255,255,255,0.08)',
+                border: '1px solid var(--border)',
                 background: 'transparent',
                 padding: '10px 12px',
               }}
@@ -1492,7 +1492,7 @@ export default function ClinicalPrognosisChart({
             </div>
             <div
               style={{
-                border: '1px solid rgba(255,255,255,0.08)',
+                border: '1px solid var(--border)',
                 background: 'transparent',
                 padding: '10px 12px',
               }}
@@ -1565,7 +1565,7 @@ export default function ClinicalPrognosisChart({
                       color: 'var(--text-main)',
                       lineHeight: 1.6,
                       padding: '7px 0 0',
-                      borderTop: '1px solid rgba(255,255,255,0.06)',
+                      borderTop: '1px solid var(--border)',
                     }}
                   >
                     {item}
@@ -1592,7 +1592,7 @@ export default function ClinicalPrognosisChart({
                       color: 'var(--text-main)',
                       lineHeight: 1.6,
                       padding: '7px 0 0',
-                      borderTop: '1px solid rgba(255,255,255,0.06)',
+                      borderTop: '1px solid var(--border)',
                     }}
                   >
                     {item}
@@ -1615,7 +1615,7 @@ export default function ClinicalPrognosisChart({
                   <div
                     key={tool.label}
                     style={{
-                      borderTop: '1px solid rgba(255,255,255,0.06)',
+                      borderTop: '1px solid var(--border)',
                       background: 'transparent',
                       padding: '8px 0 0',
                     }}
@@ -1751,7 +1751,7 @@ export default function ClinicalPrognosisChart({
                     gap: 10,
                     alignItems: 'center',
                     padding: '9px 0',
-                    borderTop: '1px solid rgba(255,255,255,0.06)',
+                    borderTop: '1px solid var(--border)',
                     background: 'transparent',
                   }}
                 >
@@ -1769,7 +1769,7 @@ export default function ClinicalPrognosisChart({
                       style={{
                         marginTop: 6,
                         height: 5,
-                        background: 'rgba(255,255,255,0.06)',
+                        background: 'var(--surface-subtle)',
                         position: 'relative',
                       }}
                     >
@@ -1891,7 +1891,7 @@ export default function ClinicalPrognosisChart({
               <div
                 key={item.label}
                 style={{
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  border: '1px solid var(--border)',
                   background: 'transparent',
                   padding: '10px 11px',
                   minHeight: 72,
@@ -1981,7 +1981,7 @@ export default function ClinicalPrognosisChart({
                           ? 'var(--c-asesmen)'
                           : milestone.state === 'active'
                             ? '#E8A838'
-                            : 'rgba(255,255,255,0.18)',
+                            : 'var(--border)',
                       boxShadow:
                         milestone.state !== 'next' ? '0 0 0 4px rgba(0, 33, 71, 0.08)' : 'none',
                     }}
@@ -1992,7 +1992,7 @@ export default function ClinicalPrognosisChart({
                         flex: 1,
                         width: 1,
                         minHeight: 36,
-                        background: 'rgba(255,255,255,0.08)',
+                        background: 'var(--border)',
                       }}
                     />
                   )}
@@ -2068,7 +2068,7 @@ export default function ClinicalPrognosisChart({
                   <div
                     style={{
                       height: 6,
-                      background: 'rgba(255,255,255,0.06)',
+                      background: 'var(--surface-subtle)',
                       position: 'relative',
                     }}
                   >
@@ -2198,7 +2198,7 @@ export default function ClinicalPrognosisChart({
 
         <div
           style={{
-            border: '1px solid rgba(255,255,255,0.08)',
+            border: '1px solid var(--border)',
             padding: '14px 16px',
             background: 'transparent',
             display: 'grid',
@@ -2272,7 +2272,7 @@ export default function ClinicalPrognosisChart({
           <div
             style={{
               paddingTop: 10,
-              borderTop: '1px dashed rgba(255,255,255,0.08)',
+              borderTop: '1px solid var(--border)',
               fontSize: 12,
               color: 'var(--text-muted)',
               lineHeight: 1.7,
