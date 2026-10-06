@@ -1831,6 +1831,93 @@ git commit -m "feat(medboard): sign-in card in the Glass style, no logic change 
 
 ---
 
+### Task 7: Typography pass on every page (runs before Task 6)
+
+Added 2026-10-06 on Chief's message "Text masih cenderung ke arah original, besar kecil text etc". Spec §3 Huruf and the success line ("semua 23 halaman … huruf Inter dan skala Glass") are the authority. This task changes **text only** — size, case, weight, tracking, family. Layout per page (split workspace, card stacks, where headings sit) stays in Plans 2–5. Handlers, state, copy strings, fetch calls and Chart.js options (`font: { size }`) do not change.
+
+**Scope:** every `.tsx`, `.ts`, `.css` and `.module.css` under `src/app/**` and `src/components/**`, except:
+`src/app/report/clinical/**` (print sizes fixed, decision `e836d56e`), `src/components/ui/**`, `src/components/shell/**`, `src/app/ui.css`, `src/app/shell.css`, and test files. `src/lib/**` (reports, email in `src/lib/server/email.ts`) is out of scope by construction.
+
+**Rules** (literal values only; a value built from a variable, `var()`, ternary or expression stays and is counted in the report):
+- `textTransform: 'uppercase'` (with or without `as const`) and CSS `text-transform: uppercase` → removed. Strings authored in capitals stay as written.
+- `letterSpacing` / `letter-spacing` with a literal ≥ 0.05em, or ≥ 1px (string `'1px'` or number `1`) → removed. Negative or smaller values stay.
+- `fontWeight` / `font-weight` 700, 800, 900 or `bold` → `600`.
+- `fontFamily` / `font-family` that names `monospace`, `… Mono` or `Courier` → removed (text inherits Inter; numbers that need alignment keep or gain `fontVariantNumeric: 'tabular-nums'` only where the same element already had a monospace family).
+- `fontSize` number literal, `fontSize: 'Npx' | 'Nrem'`, CSS `font-size: Npx | Nrem` (rem × 16) → snapped onto 11/13/15/17/20/24/30: ≤ 12 → 11; 13–14 → 13; 15–16 → 15; 17–18 → 17; 19–22 → 20; 23–26 → 24; 27–35 → 30; ≥ 36 unchanged. TSX keeps a number (`fontSize: 13`); CSS writes `px`.
+- Removing a property removes the whole `prop: value` token and its comma, in both `{ prop: v, a }` and `{ a, prop: v }` positions; a `style={{}}` left empty is deleted; a CSS rule left empty is deleted.
+
+**Files:**
+- Modify: `src/app/design-tokens.test.ts` (two tests appended)
+- Modify: pages, components and CSS in scope (codemod; keep the script in the SDD workspace, do not commit it)
+
+**Interfaces:**
+- Consumes: `read`, `sourceFiles` in `src/app/design-tokens.test.ts` (Task 1); scale tokens `--text-xs … --text-3xl` (Task 1).
+- Produces: nothing new; later plans restyle layout on top of this text.
+
+- [ ] **Step 1: Write the two failing tests** — append to `src/app/design-tokens.test.ts`:
+
+```ts
+const TYPE_PASS_EXCLUDED = [
+  'src/app/report/clinical/',
+  'src/components/ui/',
+  'src/components/shell/',
+  'src/app/ui.css',
+  'src/app/shell.css',
+]
+
+function typePassFiles(): string[] {
+  return [...sourceFiles('src/app'), ...sourceFiles('src/components')]
+    .map((file) => file.split(path.sep).join('/'))
+    .filter((file) => !TYPE_PASS_EXCLUDED.some((prefix) => file.startsWith(prefix)))
+}
+
+test('page text is sentence case, without wide tracking, heavy weights or monospace', () => {
+  const legacy = [
+    /textTransform:\s*['"]uppercase['"]/,
+    /text-transform:\s*uppercase/,
+    /letterSpacing:\s*['"](0?\.(0[5-9]|[1-9])\d*|[1-9][\d.]*)em['"]/,
+    /letter-spacing:\s*(0?\.(0[5-9]|[1-9])\d*|[1-9][\d.]*)em/,
+    /letterSpacing:\s*(['"][1-9][\d.]*px['"]|[1-9][\d.]*\b)/,
+    /letter-spacing:\s*[1-9][\d.]*px/,
+    /fontWeight:\s*['"]?(bold|[7-9]00)\b/,
+    /font-weight:\s*(bold|[7-9]00)\b/,
+    /(font-family:[^;]*|fontFamily:[^,}\n]*)(monospace|Mono\b|Courier)/,
+  ]
+  const offenders = typePassFiles().filter((file) => legacy.some((pattern) => pattern.test(read(file))))
+  assert.deepEqual(offenders, [])
+})
+
+test('every literal text size on a page sits on the Glass scale 11/13/15/17/20/24/30', () => {
+  const scale = new Set([11, 13, 15, 17, 20, 24, 30])
+  const offScale: string[] = []
+  for (const file of typePassFiles()) {
+    const source = read(file)
+    const sizes = [
+      ...[...source.matchAll(/fontSize:\s*(\d+(?:\.\d+)?)(?=\s*[,}\n])/g)].map((m) => Number(m[1])),
+      ...[...source.matchAll(/(?:fontSize:\s*['"]|font-size:\s*)(\d*\.?\d+)(px|rem)\b/g)].map((m) =>
+        m[2] === 'rem' ? Number(m[1]) * 16 : Number(m[1])
+      ),
+    ]
+    for (const size of sizes) if (size < 36 && !scale.has(size)) offScale.push(`${file}: ${size}`)
+  }
+  assert.deepEqual(offScale, [])
+})
+```
+
+- [ ] **Step 2: Run them to see both fail**
+
+Run: `node scripts/pnpm.mjs run test -- --filter design`
+Expected: the two new tests FAIL listing many files / sizes; the other tests PASS.
+
+- [ ] **Step 3: Commit A — case, tracking, weight, family.** Apply those four rules with the codemod, run `npx tsc --noEmit` (exit 0) and the design suite (first new test PASS, size test still FAIL). Grep that no Chart.js `font:` object or `options`/`scales` block changed. Commit only the changed source files plus the test file:
+`feat(medboard): page text drops caps, wide tracking, heavy weights and monospace (R2)`
+
+- [ ] **Step 4: Commit B — sizes.** Apply the size rule, run `npx tsc --noEmit` (exit 0), the design suite (all PASS), and the full `node scripts/pnpm.mjs run test` once. Commit:
+`feat(medboard): page text sizes snap to the Glass scale (R2)`
+
+- [ ] **Step 5: Report** per file group the counts changed by each rule, and the count of non-literal values left untouched per rule.
+
+
 ### Task 6: Gates, Browser pane check, handoff
 
 **Files:**
