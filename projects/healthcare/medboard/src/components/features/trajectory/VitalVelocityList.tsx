@@ -25,8 +25,6 @@ export function VitalVelocityList({ params }: VitalVelocityListProps) {
         style={{
           fontSize: 12,
           fontFamily: 'var(--font-mono)',
-          letterSpacing: '0.18em',
-          textTransform: 'uppercase',
           color: 'var(--text-muted)',
           marginBottom: 10,
         }}

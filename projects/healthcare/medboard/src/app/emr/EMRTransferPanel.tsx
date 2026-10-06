@@ -320,7 +320,6 @@ export default function EMRTransferPanel() {
             padding: '6px 12px',
             fontSize: 12,
             cursor: keluhanUtama.trim() && transferState !== 'running' ? 'pointer' : 'default',
-            letterSpacing: 1,
           }}
         >
           {transferState === 'running' ? '► TRANSFER BERJALAN...' : '► EKSEKUSI EMR TRANSFER'}

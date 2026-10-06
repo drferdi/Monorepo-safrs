@@ -32,7 +32,6 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
         fontWeight: 600,
         color: ACCENT,
         margin: '32px 0 12px',
-        letterSpacing: '0.05em',
       }}
     >
       {children}
@@ -401,7 +400,6 @@ function SecurityTab() {
                   fontWeight: 600,
                   textAlign: 'left',
                   color: ACCENT,
-                  letterSpacing: '0.1em',
                 }}
               >
                 PERAN
@@ -413,7 +411,6 @@ function SecurityTab() {
                   fontWeight: 600,
                   textAlign: 'left',
                   color: ACCENT,
-                  letterSpacing: '0.1em',
                 }}
               >
                 AKSES
@@ -554,7 +551,6 @@ export default function LegalPage() {
           style={{
             margin: 0,
             fontSize: 12,
-            letterSpacing: '0.2em',
             color: 'var(--text-muted)',
           }}
         >
@@ -612,7 +608,6 @@ export default function LegalPage() {
                 color: isActive ? ACCENT : 'var(--text-muted)',
                 fontSize: 12,
                 fontWeight: 600,
-                letterSpacing: '0.1em',
                 cursor: 'pointer',
                 transition: 'all 0.15s',
               }}

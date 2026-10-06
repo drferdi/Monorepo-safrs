@@ -40,7 +40,7 @@ export function BaselineDeviationGauge({ baseline, className }: BaselineDeviatio
           padding: '16px 20px',
         }}
       >
-        <div style={{ fontSize: 12, fontFamily: 'var(--font-mono)', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 6 }}>
+        <div style={{ fontSize: 12, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', marginBottom: 6 }}>
           Deviasi Baseline Personal
         </div>
         <div style={{ fontSize: 14, color: 'var(--text-muted)' }}>
@@ -64,8 +64,6 @@ export function BaselineDeviationGauge({ baseline, className }: BaselineDeviatio
         style={{
           fontSize: 12,
           fontFamily: 'var(--font-mono)',
-          letterSpacing: '0.18em',
-          textTransform: 'uppercase',
           color: 'var(--text-muted)',
           marginBottom: 12,
         }}

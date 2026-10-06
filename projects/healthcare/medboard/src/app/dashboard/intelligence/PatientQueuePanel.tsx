@@ -127,7 +127,6 @@ export default function PatientQueuePanel(): React.JSX.Element {
           style={{
             fontSize: 12,
             fontFamily: 'var(--font-mono)',
-            letterSpacing: '0.05em',
             opacity: 0.5,
           }}
         >
@@ -150,7 +149,6 @@ export default function PatientQueuePanel(): React.JSX.Element {
             fontSize: 12,
             fontFamily: 'var(--font-mono)',
             color: 'var(--text-muted)',
-            letterSpacing: '0.05em',
           }}
         >
           ⚠ Koneksi terputus — data mungkin tidak terbaru.
@@ -184,8 +182,6 @@ export default function PatientQueuePanel(): React.JSX.Element {
                   style={{
                     fontSize: 12,
                     fontFamily: 'var(--font-mono)',
-                    letterSpacing: '0.18em',
-                    textTransform: 'uppercase',
                     color: 'var(--text-muted)',
                     opacity: 0.6,
                     overflow: 'hidden',
@@ -223,8 +219,6 @@ export default function PatientQueuePanel(): React.JSX.Element {
                   fontSize: 12,
                   fontFamily: 'var(--font-mono)',
                   fontWeight: 500,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
                   color: cfg.color,
                 }}
               >

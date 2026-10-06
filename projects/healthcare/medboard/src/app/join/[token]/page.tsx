@@ -225,7 +225,7 @@ export default function PatientJoinPage(): React.JSX.Element {
               style={{
                 color: '#fff',
                 fontSize: 20,
-                fontWeight: 700,
+                fontWeight: 600,
                 margin: 0,
               }}
             >
@@ -257,8 +257,6 @@ export default function PatientJoinPage(): React.JSX.Element {
                 color: 'rgba(255,255,255,0.5)',
                 fontSize: 14,
                 fontWeight: 600,
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
                 margin: '0 0 6px',
               }}
             >
@@ -322,7 +320,7 @@ export default function PatientJoinPage(): React.JSX.Element {
               borderRadius: 12,
               color: '#fff',
               fontSize: 14,
-              fontWeight: 700,
+              fontWeight: 600,
               cursor: displayName.trim() ? 'pointer' : 'not-allowed',
               transition: 'background 0.2s',
             }}

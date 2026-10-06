@@ -70,7 +70,6 @@ const actionBtnBase: React.CSSProperties = {
   padding: '8px 14px',
   fontSize: 14,
   fontFamily: 'var(--font-mono)',
-  letterSpacing: '0.05em',
   cursor: 'pointer',
   background: 'transparent',
   transition: 'opacity 0.2s',
@@ -114,7 +113,6 @@ export function AIInsightsPanelContent({
           style={{
             fontSize: 12,
             fontFamily: 'var(--font-mono)',
-            letterSpacing: '0.05em',
             opacity: 0.5,
           }}
         >
@@ -138,8 +136,6 @@ export function AIInsightsPanelContent({
             style={{
               fontSize: 12,
               fontFamily: 'var(--font-mono)',
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
               color: 'var(--c-critical)',
               marginBottom: 8,
             }}
@@ -168,8 +164,6 @@ export function AIInsightsPanelContent({
               style={{
                 fontSize: 12,
                 fontFamily: 'var(--font-mono)',
-                letterSpacing: '0.18em',
-                textTransform: 'uppercase',
                 color: 'var(--text-muted)',
                 marginBottom: 12,
               }}
@@ -227,8 +221,6 @@ export function AIInsightsPanelContent({
           style={{
             fontSize: 12,
             fontFamily: 'var(--font-mono)',
-            letterSpacing: '0.14em',
-            textTransform: 'uppercase',
             color: 'var(--text-muted)',
           }}
         >
@@ -258,8 +250,6 @@ export function AIInsightsPanelContent({
             style={{
               fontSize: 12,
               fontFamily: 'var(--font-mono)',
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
               color: 'var(--c-critical)',
               marginBottom: 12,
             }}
@@ -305,8 +295,6 @@ export function AIInsightsPanelContent({
             style={{
               fontSize: 12,
               fontFamily: 'var(--font-mono)',
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
               color: 'var(--text-muted)',
               marginBottom: 12,
             }}
@@ -370,8 +358,6 @@ export function AIInsightsPanelContent({
                   padding: '3px 10px',
                   fontSize: 12,
                   fontFamily: 'var(--font-mono)',
-                  letterSpacing: '0.14em',
-                  textTransform: 'uppercase',
                   color: 'var(--text-muted)',
                 }}
               >
@@ -384,8 +370,6 @@ export function AIInsightsPanelContent({
                   padding: '3px 10px',
                   fontSize: 12,
                   fontFamily: 'var(--font-mono)',
-                  letterSpacing: '0.14em',
-                  textTransform: 'uppercase',
                   color: 'var(--c-asesmen)',
                 }}
               >
@@ -395,8 +379,6 @@ export function AIInsightsPanelContent({
                 style={{
                   fontSize: 12,
                   fontFamily: 'var(--font-mono)',
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
                   color: 'var(--text-muted)',
                   opacity: 0.6,
                 }}
@@ -468,8 +450,6 @@ export function AIInsightsPanelContent({
                   style={{
                     fontSize: 12,
                     fontFamily: 'var(--font-mono)',
-                    letterSpacing: '0.14em',
-                    textTransform: 'uppercase',
                     color: 'var(--text-muted)',
                     marginBottom: 6,
                   }}
@@ -492,8 +472,6 @@ export function AIInsightsPanelContent({
                   style={{
                     fontSize: 12,
                     fontFamily: 'var(--font-mono)',
-                    letterSpacing: '0.14em',
-                    textTransform: 'uppercase',
                     color: 'var(--text-muted)',
                     marginBottom: 6,
                   }}

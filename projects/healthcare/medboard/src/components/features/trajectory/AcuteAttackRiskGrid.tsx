@@ -65,8 +65,6 @@ export function AcuteAttackRiskGrid({ risks, className }: AcuteAttackRiskGridPro
           style={{
             fontSize: 12,
             fontFamily: 'var(--font-mono)',
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
             color: 'var(--text-muted)',
           }}
         >
@@ -78,8 +76,6 @@ export function AcuteAttackRiskGrid({ risks, className }: AcuteAttackRiskGridPro
           style={{
             fontSize: 12,
             fontFamily: 'var(--font-mono)',
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
             color: 'var(--text-muted)',
             background: 'none',
             border: '1px solid var(--line-base)',
@@ -133,7 +129,7 @@ export function AcuteAttackRiskGrid({ risks, className }: AcuteAttackRiskGridPro
                 <span
                   style={{
                     fontSize: 20,
-                    fontWeight: 700,
+                    fontWeight: 600,
                     fontFamily: 'var(--font-mono)',
                     color,
                     lineHeight: 1,

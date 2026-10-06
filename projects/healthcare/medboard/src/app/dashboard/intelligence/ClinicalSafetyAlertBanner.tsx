@@ -27,8 +27,6 @@ function QuiescentBanner(): React.JSX.Element {
           style={{
             fontSize: 12,
             fontFamily: 'var(--font-mono)',
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
             color: 'var(--c-critical)',
             marginBottom: 8,
           }}
@@ -45,7 +43,6 @@ function QuiescentBanner(): React.JSX.Element {
           fontSize: 12,
           fontFamily: 'var(--font-mono)',
           color: 'var(--text-muted)',
-          letterSpacing: '0.05em',
         }}
       >
         Cross-panel visibility aktif
@@ -100,8 +97,6 @@ function ActiveAlertBanner({
             style={{
               fontSize: 12,
               fontFamily: 'var(--font-mono)',
-              letterSpacing: '0.2em',
-              textTransform: 'uppercase',
               color: 'var(--c-critical)',
               marginBottom: 4,
             }}
@@ -112,8 +107,6 @@ function ActiveAlertBanner({
             style={{
               fontSize: 12,
               fontFamily: 'var(--font-mono)',
-              letterSpacing: '0.14em',
-              textTransform: 'uppercase',
               color: 'var(--text-muted)',
               opacity: 0.6,
               marginBottom: 8,
@@ -134,7 +127,6 @@ function ActiveAlertBanner({
                   style={{
                     fontSize: 12,
                     fontFamily: 'var(--font-mono)',
-                    letterSpacing: '0.1em',
                     color: 'var(--c-critical)',
                     border: '1px solid var(--c-critical)',
                     borderRadius: 3,
@@ -150,7 +142,6 @@ function ActiveAlertBanner({
                   style={{
                     fontSize: 12,
                     fontFamily: 'var(--font-mono)',
-                    letterSpacing: '0.1em',
                     color: 'var(--c-critical)',
                     border: '1px solid var(--c-critical)',
                     borderRadius: 3,
@@ -193,7 +184,6 @@ function ActiveAlertBanner({
           color: 'var(--c-critical)',
           background: 'transparent',
           cursor: 'pointer',
-          letterSpacing: '0.05em',
           transition: 'opacity 0.2s',
         }}
       >

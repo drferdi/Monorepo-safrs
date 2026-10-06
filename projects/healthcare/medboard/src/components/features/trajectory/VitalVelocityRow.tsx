@@ -66,7 +66,7 @@ function VelocityArrow({ direction, isAccelerating }: Pick<ParamMomentum, 'direc
       <span
         style={{
           fontSize: 14,
-          fontWeight: 700,
+          fontWeight: 600,
           color: isAccelerating ? 'var(--c-critical)' : 'var(--c-asesmen)',
           lineHeight: 1,
         }}
@@ -81,7 +81,7 @@ function VelocityArrow({ direction, isAccelerating }: Pick<ParamMomentum, 'direc
       <span
         style={{
           fontSize: 14,
-          fontWeight: 700,
+          fontWeight: 600,
           color: isAccelerating ? 'var(--c-ok)' : 'var(--c-ok)',
           lineHeight: 1,
         }}

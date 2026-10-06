@@ -83,3 +83,49 @@ test('no old gold, cream or dark-canvas colour is left in pages and components',
   }
   assert.deepEqual(offenders, [])
 })
+
+const TYPE_PASS_EXCLUDED = [
+  'src/app/report/clinical/',
+  'src/components/ui/',
+  'src/components/shell/',
+  'src/app/ui.css',
+  'src/app/shell.css',
+]
+
+function typePassFiles(): string[] {
+  return [...sourceFiles('src/app'), ...sourceFiles('src/components')]
+    .map((file) => file.split(path.sep).join('/'))
+    .filter((file) => !TYPE_PASS_EXCLUDED.some((prefix) => file.startsWith(prefix)))
+}
+
+test('page text is sentence case, without wide tracking, heavy weights or monospace', () => {
+  const legacy = [
+    /textTransform:\s*['"]uppercase['"]/,
+    /text-transform:\s*uppercase/,
+    /letterSpacing:\s*['"](0?\.(0[5-9]|[1-9])\d*|[1-9][\d.]*)em['"]/,
+    /letter-spacing:\s*(0?\.(0[5-9]|[1-9])\d*|[1-9][\d.]*)em/,
+    /letterSpacing:\s*(['"][1-9][\d.]*px['"]|[1-9][\d.]*\b)/,
+    /letter-spacing:\s*[1-9][\d.]*px/,
+    /fontWeight:\s*['"]?(bold|[7-9]00)\b/,
+    /font-weight:\s*(bold|[7-9]00)\b/,
+    /(font-family:[^;]*|fontFamily:[^,}\n]*)(monospace|Mono\b|Courier)/,
+  ]
+  const offenders = typePassFiles().filter((file) => legacy.some((pattern) => pattern.test(read(file))))
+  assert.deepEqual(offenders, [])
+})
+
+test('every literal text size on a page sits on the Glass scale 11/13/15/17/20/24/30', () => {
+  const scale = new Set([11, 13, 15, 17, 20, 24, 30])
+  const offScale: string[] = []
+  for (const file of typePassFiles()) {
+    const source = read(file)
+    const sizes = [
+      ...[...source.matchAll(/fontSize:\s*(\d+(?:\.\d+)?)(?=\s*[,}\n])/g)].map((m) => Number(m[1])),
+      ...[...source.matchAll(/(?:fontSize:\s*['"]|font-size:\s*)(\d*\.?\d+)(px|rem)\b/g)].map((m) =>
+        m[2] === 'rem' ? Number(m[1]) * 16 : Number(m[1])
+      ),
+    ]
+    for (const size of sizes) if (size < 36 && !scale.has(size)) offScale.push(`${file}: ${size}`)
+  }
+  assert.deepEqual(offScale, [])
+})

@@ -66,8 +66,6 @@ const FieldLabel = ({ children }: { children: React.ReactNode }) => (
     style={{
       fontSize: 14,
       color: L.muted,
-      letterSpacing: '0.12em',
-      textTransform: 'uppercase',
       marginBottom: 8,
     }}
   >
@@ -152,7 +150,7 @@ export function AppointmentBooking({
   const canNext2 = !!form.scheduledAt
 
   return (
-    <div style={{}}>
+    <div>
       {/* Step indicator */}
       <div
         style={{
@@ -172,7 +170,6 @@ export function AppointmentBooking({
               <span
                 style={{
                   fontSize: 14,
-                  letterSpacing: '0.08em',
                   color: isDone ? L.accent : isActive ? L.accent : L.muted,
                 }}
               >
@@ -253,7 +250,6 @@ export function AppointmentBooking({
                           style={{
                             fontSize: 14,
                             color: L.muted,
-                            letterSpacing: '0.08em',
                           }}
                         >
                           {doc.spesialisasi.toUpperCase()}
@@ -351,7 +347,6 @@ export function AppointmentBooking({
                         borderRadius: 2,
                         color: isSel ? L.accent : L.muted,
                         fontSize: 14,
-                        letterSpacing: '0.05em',
                         cursor: 'pointer',
                       }}
                     >
@@ -478,7 +473,6 @@ export function AppointmentBooking({
                 style={{
                   fontSize: 14,
                   color: L.muted,
-                  letterSpacing: '0.12em',
                   marginBottom: 8,
                 }}
               >

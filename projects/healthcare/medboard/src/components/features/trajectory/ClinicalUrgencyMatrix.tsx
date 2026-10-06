@@ -78,8 +78,6 @@ export function ClinicalUrgencyMatrix({ momentumLevel, mortalityTier }: Clinical
         style={{
           fontSize: 12,
           fontFamily: 'var(--font-mono)',
-          letterSpacing: '0.18em',
-          textTransform: 'uppercase',
           color: 'var(--text-muted)',
           marginBottom: 12,
         }}
@@ -95,8 +93,6 @@ export function ClinicalUrgencyMatrix({ momentumLevel, mortalityTier }: Clinical
           textAlign: 'center',
           marginBottom: 4,
           fontFamily: 'var(--font-mono)',
-          letterSpacing: '0.1em',
-          textTransform: 'uppercase',
         }}
       >
         Tier Mortalitas →

@@ -34,7 +34,6 @@
   font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: var(--ls-wider);
-  text-transform: uppercase;
 }
 
 .lineChartPanel {
@@ -82,7 +81,7 @@
   margin-bottom: var(--gap-xs);
   color: var(--c-asesmen);
   font-size: var(--text-2xl);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .kpiValueHealthy {

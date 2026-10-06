@@ -322,7 +322,6 @@ export default function AcarsRosterPage() {
           <span
             style={{
               fontSize: 12,
-              letterSpacing: '0.1em',
               color: connected ? 'var(--c-ok)' : 'var(--text-muted)',
             }}
           >
@@ -392,7 +391,6 @@ export default function AcarsRosterPage() {
                 fontSize: 14,
                 color: targetColor,
                 marginTop: 4,
-                letterSpacing: '0.05em',
               }}
             >
               {targetCrew.profession || targetCrew.role}
@@ -424,7 +422,6 @@ export default function AcarsRosterPage() {
             style={{
               fontSize: 12,
               fontWeight: 600,
-              letterSpacing: '0.1em',
               color: 'var(--text-muted)',
               marginBottom: 12,
             }}
@@ -517,7 +514,6 @@ export default function AcarsRosterPage() {
                 borderRadius: 8,
                 color: input.trim() ? myColor : 'var(--text-muted)',
                 fontSize: 12,
-                letterSpacing: '0.08em',
                 cursor: input.trim() ? 'pointer' : 'not-allowed',
                 opacity: input.trim() ? 1 : 0.5,
               }}

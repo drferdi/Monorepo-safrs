@@ -22,7 +22,6 @@ export function ConsultationTimer({ elapsedSeconds }: ConsultationTimerProps): R
       style={{
         fontSize: 14,
         color: 'var(--text-muted)',
-        letterSpacing: '0.05em',
         padding: '2px 8px',
         borderRadius: 6,
         background: 'rgba(255,255,255,0.05)',

@@ -381,8 +381,6 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                 style={{
                   fontSize: 13,
                   fontWeight: 600,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
                   color: 'var(--text)',
                 }}
               >

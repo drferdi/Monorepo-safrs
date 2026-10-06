@@ -85,11 +85,9 @@ export default function AuditEventDetailPage({
   /* ── Shared styles — identical to clinical report ── */
   const labelStyle: React.CSSProperties = {
     fontSize: 12,
-    letterSpacing: '0.12em',
     color: 'var(--text-muted)',
     marginBottom: 4,
     display: 'block',
-    textTransform: 'uppercase',
   }
   const inputStyle: React.CSSProperties = {
     width: '100%',
@@ -111,7 +109,6 @@ export default function AuditEventDetailPage({
   }
   const sectionTitleStyle: React.CSSProperties = {
     fontSize: 14,
-    letterSpacing: '0.15em',
     color: 'var(--c-asesmen)',
     borderBottom: '1px solid var(--line-base)',
     paddingBottom: 6,
@@ -120,7 +117,6 @@ export default function AuditEventDetailPage({
   }
   const btnStyle: React.CSSProperties = {
     fontSize: 14,
-    letterSpacing: '0.1em',
     padding: '8px 20px',
     background: '#101012',
     border: '1px solid rgba(255,255,255,0.12)',
@@ -136,7 +132,7 @@ export default function AuditEventDetailPage({
 
   /* ── Loading / error states ── */
   if (loading) return (
-    <div style={{ maxWidth: PAGE_W, margin: '0 auto', padding: '48px 24px', textAlign: 'center', fontSize: 14, color: 'var(--text-muted)', letterSpacing: '0.15em' }}>
+    <div style={{ maxWidth: PAGE_W, margin: '0 auto', padding: '48px 24px', textAlign: 'center', fontSize: 14, color: 'var(--text-muted)' }}>
       MEMUAT DATA...
     </div>
   )

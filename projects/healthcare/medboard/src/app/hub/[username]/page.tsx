@@ -258,7 +258,6 @@ export default function HubProfileDetailPage() {
             style={{
               margin: 0,
               fontSize: 12,
-              letterSpacing: '0.18em',
               color: 'var(--text-muted)',
             }}
           >
@@ -298,8 +297,6 @@ export default function HubProfileDetailPage() {
               color: '#f0b264',
               textDecoration: 'none',
               fontSize: 12,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
             }}
           >
             Buka Lab Preview
@@ -317,8 +314,6 @@ export default function HubProfileDetailPage() {
               color: 'var(--text-main)',
               textDecoration: 'none',
               fontSize: 12,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
             }}
           >
             ← Kembali ke Hub
@@ -403,8 +398,6 @@ export default function HubProfileDetailPage() {
                     <div
                       style={{
                         fontSize: 12,
-                        letterSpacing: '0.16em',
-                        textTransform: 'uppercase',
                         color: 'var(--text-muted)',
                         marginBottom: 6,
                       }}
@@ -496,8 +489,6 @@ export default function HubProfileDetailPage() {
                       style={{
                         fontSize: 12,
                         color: 'var(--text-muted)',
-                        letterSpacing: '0.12em',
-                        textTransform: 'uppercase',
                         marginBottom: 8,
                       }}
                     >
@@ -609,8 +600,6 @@ export default function HubProfileDetailPage() {
                       style={{
                         fontSize: 12,
                         color: 'var(--text-muted)',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.1em',
                         lineHeight: 1.5,
                       }}
                     >

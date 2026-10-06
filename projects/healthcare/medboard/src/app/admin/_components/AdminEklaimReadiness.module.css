@@ -12,8 +12,6 @@
 
 .eyebrow {
   font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.22em;
   color: var(--c-asesmen);
   margin: 0 0 0.25rem;
 }
@@ -77,8 +75,6 @@
 
 .kpiLabel {
   font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
   color: var(--text-muted);
 }
 
@@ -98,8 +94,6 @@
 
 .listHeaderLabel {
   font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
   color: var(--text-muted);
 }
 
@@ -179,8 +173,6 @@
 
 .statusBadge {
   font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
   color: var(--text-muted);
   border: 1px solid var(--line-base);
   border-radius: 9999px;
@@ -194,8 +186,6 @@
 .readinessBadge {
   font-size: 0.75rem;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
   border-radius: 9999px;
   padding: 0.125rem 0.5rem;
   white-space: nowrap;
@@ -267,9 +257,7 @@
 
 .issueCode {
   font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  font-weight: 600;
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -292,8 +280,6 @@
 
 .statusState {
   font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
   color: var(--text-muted);
   padding: 2rem;
   text-align: center;

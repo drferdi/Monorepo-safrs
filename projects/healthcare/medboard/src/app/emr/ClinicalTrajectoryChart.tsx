@@ -699,8 +699,6 @@ export default function ClinicalTrajectoryChart({
             style={{
               fontSize: 12,
               color: '#FFCC8C',
-              letterSpacing: '0.16em',
-              textTransform: 'uppercase',
             }}
           >
             Clinical Trajectory Chart
@@ -715,8 +713,6 @@ export default function ClinicalTrajectoryChart({
           style={{
             fontSize: 12,
             color: CHART_TEXT_MUTED,
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
           }}
         >
           {hasVisitHistory
@@ -755,8 +751,6 @@ export default function ClinicalTrajectoryChart({
                   style={{
                     fontSize: 12,
                     color: p.label === 'HARI INI' ? '#FFCC8C' : CHART_TEXT_MUTED,
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
                     marginBottom: 4,
                   }}
                 >
@@ -872,8 +866,6 @@ export default function ClinicalTrajectoryChart({
                   style={{
                     fontSize: 12,
                     color: CHART_TEXT_MUTED,
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
                     marginBottom: 6,
                   }}
                 >
@@ -916,8 +908,6 @@ export default function ClinicalTrajectoryChart({
                 style={{
                   fontSize: 12,
                   color: CHART_TEXT_MUTED,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
                   marginBottom: 6,
                 }}
               >
@@ -939,8 +929,6 @@ export default function ClinicalTrajectoryChart({
                 style={{
                   fontSize: 12,
                   color: CHART_TEXT_MUTED,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
                   marginBottom: 6,
                 }}
               >

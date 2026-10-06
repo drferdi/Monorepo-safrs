@@ -75,8 +75,6 @@ function PanelError({ message }: { message: string }) {
         style={{
           fontSize: 12,
           fontFamily: 'var(--font-mono)',
-          letterSpacing: '0.18em',
-          textTransform: 'uppercase',
           color: 'var(--c-critical)',
           marginBottom: 6,
         }}
@@ -142,8 +140,6 @@ export function TrajectoryIntelligencePanel({
         style={{
           fontSize: 12,
           fontFamily: 'var(--font-mono)',
-          letterSpacing: '0.2em',
-          textTransform: 'uppercase',
           color: 'var(--text-muted)',
           paddingBottom: 4,
           borderBottom: '1px solid var(--line-base)',
@@ -207,8 +203,6 @@ export function TrajectoryIntelligencePanel({
             style={{
               fontSize: 12,
               fontFamily: 'var(--font-mono)',
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
               color: 'var(--text-muted)',
               marginBottom: 6,
             }}

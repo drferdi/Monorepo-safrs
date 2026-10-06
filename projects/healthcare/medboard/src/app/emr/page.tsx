@@ -2036,8 +2036,6 @@ export default function EMRPage() {
         <div
           style={{
             fontSize: 12,
-            letterSpacing: '0.1em',
-            textTransform: 'uppercase',
             color: 'var(--text-main)',
             marginBottom: 8,
           }}
@@ -4197,7 +4195,6 @@ export default function EMRPage() {
               <div
                 style={{
                   fontSize: 12,
-                  letterSpacing: '0.08em',
                   color: '#E8A838',
                   marginBottom: 4,
                 }}
@@ -4219,7 +4216,6 @@ export default function EMRPage() {
               <div
                 style={{
                   fontSize: 14,
-                  letterSpacing: '0.08em',
                   color: 'var(--text-muted)',
                 }}
               >
@@ -4240,7 +4236,6 @@ export default function EMRPage() {
               <div
                 style={{
                   fontSize: 14,
-                  letterSpacing: '0.08em',
                   color: 'var(--text-muted)',
                 }}
               >
@@ -4277,7 +4272,6 @@ export default function EMRPage() {
               background: isSelected ? 'rgba(212,122,87,0.14)' : 'transparent',
               color: isSelected ? accent : 'var(--text-muted)',
               fontSize: 14,
-              letterSpacing: '0.08em',
               padding: '4px 8px',
               cursor:
                 selectionSavingKey === suggestionKey || requiresEmergencyAck
@@ -4965,9 +4959,8 @@ export default function EMRPage() {
               <div
                 style={{
                   color: '#eb5939',
-                  fontWeight: 700,
+                  fontWeight: 600,
                   fontSize: 12,
-                  letterSpacing: '0.1em',
                   marginBottom: 4,
                 }}
               >
@@ -5027,7 +5020,7 @@ export default function EMRPage() {
                   padding: '6px 14px',
                   fontSize: 12,
                   cursor: 'pointer',
-                  fontWeight: 700,
+                  fontWeight: 600,
                 }}
               >
                 ✓ ACCEPT
@@ -5094,8 +5087,6 @@ export default function EMRPage() {
               color: '#b7ab98',
               fontSize: 12,
               fontWeight: 600,
-              letterSpacing: '0.06em',
-              textTransform: 'uppercase' as const,
             }
             const value: React.CSSProperties = { color: '#e8ddd0', fontWeight: 600 }
 
@@ -5125,15 +5116,14 @@ export default function EMRPage() {
                     <div
                       style={{
                         color: '#4ADE80',
-                        fontWeight: 700,
+                        fontWeight: 600,
                         fontSize: 12,
-                        letterSpacing: '0.1em',
                         marginBottom: 2,
                       }}
                     >
                       ✓ DATA RME PASIEN — DARI ASSIST
                     </div>
-                    <div style={{ color: '#e8ddd0', fontWeight: 700, fontSize: 16 }}>
+                    <div style={{ color: '#e8ddd0', fontWeight: 600, fontSize: 16 }}>
                       {ac.patient.name}
                       {ac.patient.rm ? (
                         <span style={{ color: '#b7ab98', fontWeight: 400, fontSize: 14 }}>
@@ -5175,7 +5165,7 @@ export default function EMRPage() {
                           borderRadius: 6,
                         }}
                       >
-                        <div style={{ color: news2Color, fontWeight: 800, fontSize: 20 }}>
+                        <div style={{ color: news2Color, fontWeight: 600, fontSize: 20 }}>
                           {news2.score}
                         </div>
                         <div style={{ color: news2Color, fontSize: 12, fontWeight: 600 }}>
@@ -5195,7 +5185,7 @@ export default function EMRPage() {
                           borderRadius: 6,
                         }}
                       >
-                        <div style={{ color: '#e8ddd0', fontWeight: 800, fontSize: 20 }}>
+                        <div style={{ color: '#e8ddd0', fontWeight: 600, fontSize: 20 }}>
                           {ac.avpu}
                         </div>
                         <div style={{ color: '#b7ab98', fontSize: 12 }}>AVPU</div>
@@ -5416,7 +5406,7 @@ export default function EMRPage() {
                         >
                           <div style={{ display: 'flex', gap: 8, marginBottom: 6 }}>
                             {trajectory.overall_risk && (
-                              <span style={{ color: trajColor, fontWeight: 700, fontSize: 12 }}>
+                              <span style={{ color: trajColor, fontWeight: 600, fontSize: 12 }}>
                                 {trajectory.overall_risk.toUpperCase()}
                               </span>
                             )}
@@ -5656,7 +5646,6 @@ export default function EMRPage() {
                     borderRadius: 2,
                     cursor: 'pointer',
                     fontSize: 12,
-                    letterSpacing: '0.08em',
                     fontWeight: 600,
                     border: `1px solid ${isOnline ? '#4ADE80' : 'rgba(255,255,255,0.15)'}`,
                     background: isOnline ? 'rgba(74,222,128,0.12)' : 'rgba(255,255,255,0.04)',
@@ -5686,7 +5675,6 @@ export default function EMRPage() {
                   borderRadius: 2,
                   animation: 'smoothBlink 2s infinite',
                   background: 'var(--c-asesmen)',
-                  letterSpacing: '0.05em',
                   flexShrink: 0,
                 }}
               >
@@ -5986,8 +5974,6 @@ export default function EMRPage() {
                                     style={{
                                       fontSize: 12,
                                       color: 'var(--text-muted)',
-                                      letterSpacing: '0.12em',
-                                      textTransform: 'uppercase',
                                       flexShrink: 0,
                                     }}
                                   >
@@ -6020,8 +6006,6 @@ export default function EMRPage() {
                                               : 'transparent',
                                             color: isActive ? '#fff' : 'var(--text-muted)',
                                             transition: 'background 0.2s, color 0.2s',
-                                            letterSpacing: '0.06em',
-                                            textTransform: 'uppercase',
                                           }}
                                         >
                                           {tab}
@@ -6093,8 +6077,6 @@ export default function EMRPage() {
                                     style={{
                                       fontSize: 12,
                                       color: 'var(--text-muted)',
-                                      letterSpacing: '0.12em',
-                                      textTransform: 'uppercase',
                                       flexShrink: 0,
                                     }}
                                   >
@@ -6176,8 +6158,6 @@ export default function EMRPage() {
                                             background: isActive ? activeColor : 'transparent',
                                             color: isActive ? '#fff' : 'var(--text-muted)',
                                             cursor: isActive ? 'default' : 'pointer',
-                                            letterSpacing: '0.06em',
-                                            textTransform: 'uppercase',
                                             transition: 'background 0.2s, color 0.2s',
                                           }}
                                         >
@@ -6242,7 +6222,6 @@ export default function EMRPage() {
                           style={{
                             fontSize: 12,
                             color: 'var(--c-asesmen)',
-                            letterSpacing: '0.1em',
                             animation: 'pulse 1.5s ease-in-out infinite',
                           }}
                         >
@@ -6254,7 +6233,6 @@ export default function EMRPage() {
                             fontSize: 12,
                             color: 'var(--text-muted)',
                             opacity: 0.35,
-                            letterSpacing: '0.05em',
                           }}
                         >
                           ketik keluhan untuk saran klinis
@@ -6280,8 +6258,6 @@ export default function EMRPage() {
                             padding: '4px 12px',
                             borderRadius: 3,
                             cursor: 'pointer',
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.08em',
                             transition: 'opacity 0.2s ease',
                             whiteSpace: 'nowrap',
                           }}
@@ -6660,8 +6636,6 @@ export default function EMRPage() {
                                         style={{
                                           fontSize: 12,
                                           color: 'var(--text-muted)',
-                                          letterSpacing: '0.12em',
-                                          textTransform: 'uppercase',
                                         }}
                                       >
                                         {cat === 'fisik'
@@ -6893,7 +6867,6 @@ export default function EMRPage() {
                           marginLeft: 8,
                           fontSize: 14,
                           color: 'var(--c-asesmen)',
-                          letterSpacing: '0.08em',
                         }}
                       >
                         {rpdSelected.size} dipilih
@@ -6961,7 +6934,6 @@ export default function EMRPage() {
                           marginLeft: 8,
                           fontSize: 14,
                           color: 'var(--c-critical)',
-                          letterSpacing: '0.08em',
                         }}
                       >
                         ⚠ {alergiSelected.size} alergi
@@ -7041,7 +7013,6 @@ export default function EMRPage() {
                     disabled={!canAutoAssistExam}
                     style={{
                       fontSize: 12,
-                      letterSpacing: '0.1em',
                       padding: '5px 10px',
                       background: 'transparent',
                       border: '1px solid var(--c-asesmen)',
@@ -7064,7 +7035,6 @@ export default function EMRPage() {
                       cursor: 'pointer',
                       padding: 0,
                       fontSize: 14,
-                      letterSpacing: '0.12em',
                       color: 'var(--text-muted)',
                     }}
                   >
@@ -7076,7 +7046,6 @@ export default function EMRPage() {
                 style={{
                   marginTop: 6,
                   fontSize: 12,
-                  letterSpacing: '0.05em',
                   color: 'var(--text-muted)',
                   opacity: 0.82,
                 }}
@@ -7122,7 +7091,6 @@ export default function EMRPage() {
             {/* 03. Tanda Vital */}
             <div
               className={`stream-section${emergencyOverride.forcedActiveViewPhase === 'row2' ? ' stream-section-stagger-secondary' : ''}`}
-              style={{}}
             >
               <div className="section-title">03. Tanda Vital &amp; Objektif</div>
               <div
@@ -7142,7 +7110,6 @@ export default function EMRPage() {
                     title="Buat saran TTV awal berdasarkan konteks klinis"
                     style={{
                       fontSize: 14,
-                      letterSpacing: '0.08em',
                       padding: '5px 14px',
                       background: 'var(--c-asesmen)',
                       border: '1px solid var(--c-asesmen)',
@@ -7150,7 +7117,6 @@ export default function EMRPage() {
                       fontWeight: 600,
                       cursor: keluhanUtama.trim() ? 'pointer' : 'not-allowed',
                       opacity: keluhanUtama.trim() ? 1 : 0.35,
-                      textTransform: 'uppercase',
                       borderRadius: 3,
                     }}
                   >
@@ -7165,14 +7131,12 @@ export default function EMRPage() {
                       onClick={() => autoFillScenario(key)}
                       style={{
                         fontSize: 14,
-                        letterSpacing: '0.1em',
                         padding: '3px 8px',
                         background:
                           activeScenario === key ? 'rgba(212,122,87,0.12)' : 'transparent',
                         border: `1px solid ${activeScenario === key ? 'var(--c-asesmen)' : 'var(--line-base)'}`,
                         color: activeScenario === key ? 'var(--c-asesmen)' : 'var(--text-muted)',
                         cursor: 'pointer',
-                        textTransform: 'uppercase',
                         transition: 'all 0.15s',
                       }}
                     >
@@ -7445,8 +7409,6 @@ export default function EMRPage() {
                     <div
                       style={{
                         fontSize: 12,
-                        letterSpacing: '0.12em',
-                        textTransform: 'uppercase',
                         color: 'var(--c-asesmen)',
                       }}
                     >
@@ -7462,8 +7424,6 @@ export default function EMRPage() {
                     onClick={() => setStructuredSignsDraft(createInitialStructuredSigns())}
                     style={{
                       fontSize: 12,
-                      letterSpacing: '0.08em',
-                      textTransform: 'uppercase',
                       padding: '6px 10px',
                       border: '1px solid var(--line-base)',
                       background: 'transparent',
@@ -7541,8 +7501,6 @@ export default function EMRPage() {
                             style={{
                               fontSize: 12,
                               fontWeight: 600,
-                              letterSpacing: '0.08em',
-                              textTransform: 'uppercase',
                               color: accent,
                             }}
                           >
@@ -7623,8 +7581,6 @@ export default function EMRPage() {
                       <div
                         style={{
                           fontSize: 12,
-                          letterSpacing: '0.1em',
-                          textTransform: 'uppercase',
                           color: 'var(--text-main)',
                         }}
                       >
@@ -7682,8 +7638,6 @@ export default function EMRPage() {
                                 color: accent,
                                 fontSize: 12,
                                 fontWeight: 600,
-                                letterSpacing: '0.08em',
-                                textTransform: 'uppercase',
                               }}
                             >
                               {getCompositeConfidenceLabel(alert.confidence)}
@@ -7759,8 +7713,6 @@ export default function EMRPage() {
                         <div
                           style={{
                             fontSize: 12,
-                            letterSpacing: '0.08em',
-                            textTransform: 'uppercase',
                             color: '#eab308',
                             marginBottom: 6,
                           }}
@@ -7779,7 +7731,7 @@ export default function EMRPage() {
                               <div
                                 style={{
                                   fontSize: '12px',
-                                  fontWeight: 700,
+                                  fontWeight: 600,
                                   color: 'var(--text-main)',
                                 }}
                               >
@@ -8152,7 +8104,6 @@ export default function EMRPage() {
                           <span
                             style={{
                               fontSize: 14,
-                              letterSpacing: '0.1em',
                               color: 'var(--text-muted)',
                             }}
                           >
@@ -8167,7 +8118,6 @@ export default function EMRPage() {
                             padding: '12px 0',
                             fontSize: 14,
                             color: 'var(--text-muted)',
-                            letterSpacing: '0.1em',
                             animation: 'smoothBlink 1s infinite',
                           }}
                         >
@@ -8229,7 +8179,6 @@ export default function EMRPage() {
                                   <div
                                     style={{
                                       fontSize: 14,
-                                      letterSpacing: '0.08em',
                                       color: 'var(--c-critical)',
                                       marginBottom: 6,
                                     }}
@@ -8276,7 +8225,6 @@ export default function EMRPage() {
                                           ? 'rgba(220,53,69,0.5)'
                                           : 'var(--c-critical)',
                                       fontSize: 14,
-                                      letterSpacing: '0.08em',
                                       padding: '4px 8px',
                                       cursor:
                                         ackSaving || !allSafetyChecklistChecked()
@@ -8303,7 +8251,6 @@ export default function EMRPage() {
                                   <div
                                     style={{
                                       fontSize: 14,
-                                      letterSpacing: '0.1em',
                                       color:
                                         rf.severity === 'emergency'
                                           ? 'var(--c-critical)'
@@ -8335,7 +8282,6 @@ export default function EMRPage() {
                                       padding: '6px 0',
                                       marginBottom: 8,
                                       fontSize: 14,
-                                      letterSpacing: '0.08em',
                                     }}
                                   >
                                     <span
@@ -8364,7 +8310,6 @@ export default function EMRPage() {
                                       style={{
                                         fontSize: 14,
                                         color: 'var(--text-muted)',
-                                        letterSpacing: '0.06em',
                                       }}
                                     >
                                       {cdssResult.validation_summary.total_validated}/
@@ -8481,7 +8426,6 @@ export default function EMRPage() {
                                   <div
                                     style={{
                                       fontSize: 12,
-                                      letterSpacing: '0.08em',
                                       color: 'var(--c-asesmen)',
                                       marginBottom: 6,
                                     }}
@@ -8505,7 +8449,6 @@ export default function EMRPage() {
                                   <div
                                     style={{
                                       fontSize: 12,
-                                      letterSpacing: '0.08em',
                                       color: '#E8A838',
                                       marginBottom: 6,
                                     }}
@@ -8529,7 +8472,6 @@ export default function EMRPage() {
                                   <div
                                     style={{
                                       fontSize: 12,
-                                      letterSpacing: '0.08em',
                                       color: 'var(--c-critical)',
                                       marginBottom: 6,
                                     }}
@@ -8818,7 +8760,6 @@ export default function EMRPage() {
                         <div
                           style={{
                             fontSize: 12,
-                            letterSpacing: '0.15em',
                             color: manualDiagnosis ? '#002147' : 'var(--text-muted)',
                             fontWeight: 600,
                             marginBottom: 8,

@@ -23,7 +23,6 @@ export default function AdminPlaceholder({
         style={{
           margin: 0,
           fontSize: 12,
-          letterSpacing: '0.2em',
           color: 'rgba(0, 33, 71, 0.5)',
           fontWeight: 600,
         }}
@@ -66,7 +65,6 @@ export default function AdminPlaceholder({
             style={{
               margin: '0 0 8px',
               fontSize: 12,
-              letterSpacing: '0.15em',
               color: 'var(--text-muted)',
               fontWeight: 600,
             }}

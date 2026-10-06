@@ -36,8 +36,6 @@ export function MiraDifferentialCard({ differential }: { differential: MiraDiffe
           style={{
             fontSize: 12,
             color: 'var(--text-muted)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.1em',
           }}
         >
           Diferensial MIRA
@@ -62,7 +60,7 @@ export function MiraDifferentialCard({ differential }: { differential: MiraDiffe
                 style={{
                   marginLeft: 6,
                   fontSize: 12,
-                  fontWeight: 700,
+                  fontWeight: 600,
                   padding: '2px 6px',
                   borderRadius: 999,
                   border: '1px solid var(--line-base)',

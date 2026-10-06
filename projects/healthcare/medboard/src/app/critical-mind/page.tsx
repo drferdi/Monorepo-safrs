@@ -22,8 +22,6 @@ const S = {
   tag: {
     display: 'inline-block',
     fontSize: 12,
-    letterSpacing: '0.18em',
-    textTransform: 'uppercase' as const,
     color: 'var(--c-asesmen)',
     border: '1px solid rgba(0, 33, 71, 0.22)',
     borderRadius: 999,

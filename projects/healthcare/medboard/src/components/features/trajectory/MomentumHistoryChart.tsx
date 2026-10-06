@@ -76,8 +76,6 @@ export function MomentumHistoryChart({ history }: MomentumHistoryChartProps) {
           style={{
             fontSize: 12,
             fontFamily: 'var(--font-mono)',
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
             color: 'var(--text-muted)',
           }}
         >

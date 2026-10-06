@@ -113,15 +113,13 @@ export function ClinicalTrajectoryV1Panel({ trajectory, className }: Props) {
             <div
               style={{
                 fontSize: 12,
-                textTransform: 'uppercase',
-                letterSpacing: '0.18em',
                 color: 'var(--text-muted)',
                 marginBottom: 4,
               }}
             >
               ClinicalTrajectory v1
             </div>
-            <div style={{ fontSize: 16, fontWeight: 700, color: 'var(--text-main)' }}>
+            <div style={{ fontSize: 16, fontWeight: 600, color: 'var(--text-main)' }}>
               {formatValue(trajectory.response.direction)}
             </div>
             <div style={{ color: 'var(--text-muted)', marginTop: 4, lineHeight: 1.5 }}>
@@ -136,8 +134,6 @@ export function ClinicalTrajectoryV1Panel({ trajectory, className }: Props) {
               borderRadius: 999,
               padding: '8px 12px',
               fontSize: 12,
-              textTransform: 'uppercase',
-              letterSpacing: '0.08em',
             }}
           >
             {trajectory.response.direction}
@@ -149,8 +145,6 @@ export function ClinicalTrajectoryV1Panel({ trajectory, className }: Props) {
               borderRadius: 999,
               padding: '8px 12px',
               fontSize: 12,
-              textTransform: 'uppercase',
-              letterSpacing: '0.08em',
             }}
           >
             {trajectory.response.severityBand}
@@ -243,8 +237,6 @@ function MiniStat({ label, value }: { label: string; value: string }) {
       <div
         style={{
           fontSize: 12,
-          textTransform: 'uppercase',
-          letterSpacing: '0.16em',
           color: 'var(--text-muted)',
           marginBottom: 6,
         }}
@@ -269,8 +261,6 @@ function PanelBlock({ title, children }: { title: string; children: ReactNode })
       <div
         style={{
           fontSize: 12,
-          textTransform: 'uppercase',
-          letterSpacing: '0.16em',
           color: 'var(--text-muted)',
           marginBottom: 8,
         }}

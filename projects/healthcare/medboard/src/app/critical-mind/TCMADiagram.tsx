@@ -60,8 +60,6 @@ export default function TCMADiagram() {
       <div
         style={{
           fontSize: 12,
-          letterSpacing: '0.2em',
-          textTransform: 'uppercase',
           color: 'var(--text-muted)',
           marginBottom: 6,
           opacity: 0.6,

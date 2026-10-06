@@ -48,8 +48,6 @@ export function MortalityRiskIndicator({ mortalityProxy, className }: MortalityR
             style={{
               fontSize: 12,
               fontFamily: 'var(--font-mono)',
-              letterSpacing: '0.16em',
-              textTransform: 'uppercase',
               color: 'var(--text-muted)',
               marginBottom: 2,
             }}
@@ -65,7 +63,7 @@ export function MortalityRiskIndicator({ mortalityProxy, className }: MortalityR
         <div
           style={{
             fontSize: 24,
-            fontWeight: 700,
+            fontWeight: 600,
             fontFamily: 'var(--font-mono)',
             color: tierCfg.color,
             lineHeight: 1,
@@ -92,8 +90,6 @@ export function MortalityRiskIndicator({ mortalityProxy, className }: MortalityR
           style={{
             fontSize: 12,
             fontFamily: 'var(--font-mono)',
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
             color: 'var(--text-muted)',
             marginBottom: 2,
           }}

@@ -289,7 +289,6 @@ export default function ChatPage() {
               fontSize: 12,
               fontFamily: 'var(--font-mono)',
               color: connected ? 'var(--c-ok, #4ade80)' : 'var(--text-muted)',
-              letterSpacing: '0.08em',
             }}
           >
             <div
@@ -354,9 +353,7 @@ export default function ChatPage() {
                 padding: '12px 24px 8px',
                 fontSize: 12,
                 fontFamily: 'var(--font-mono)',
-                letterSpacing: '0.2em',
                 color: 'var(--text-muted)',
-                textTransform: 'uppercase',
                 opacity: 0.5,
               }}
             >
@@ -445,7 +442,6 @@ export default function ChatPage() {
                 fontSize: 12,
                 fontFamily: 'var(--font-mono)',
                 color: 'var(--text-muted)',
-                letterSpacing: '0.1em',
                 opacity: 0.5,
               }}
             >
@@ -486,7 +482,6 @@ export default function ChatPage() {
                   style={{
                     fontSize: 12,
                     fontFamily: 'var(--font-mono)',
-                    letterSpacing: '0.05em',
                   }}
                 >
                   Pesan tidak disimpan di server

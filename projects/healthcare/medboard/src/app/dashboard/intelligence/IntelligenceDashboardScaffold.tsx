@@ -73,8 +73,6 @@ function IntelligencePanel({
           style={{
             fontSize: 12,
             fontFamily: 'var(--font-mono)',
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
             color: 'var(--text-muted)',
             opacity: 0.5,
             marginBottom: 8,
@@ -118,8 +116,6 @@ function AccessNotice({ title, message }: { title: string; message: string }): R
         style={{
           fontSize: 12,
           fontFamily: 'var(--font-mono)',
-          letterSpacing: '0.18em',
-          textTransform: 'uppercase',
           color: 'var(--c-asesmen)',
           marginBottom: 8,
         }}

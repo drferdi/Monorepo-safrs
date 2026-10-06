@@ -73,7 +73,6 @@ const cardStyle: React.CSSProperties = {
 const sectionTitleStyle: React.CSSProperties = {
   margin: '0 0 14px',
   fontSize: 12,
-  letterSpacing: '0.2em',
   fontWeight: 600,
   color: 'var(--text-muted)',
 }
@@ -82,10 +81,8 @@ const thStyle: React.CSSProperties = {
   padding: '8px 10px',
   fontSize: 12,
   fontWeight: 600,
-  letterSpacing: '0.12em',
   color: 'var(--text-muted)',
   textAlign: 'left',
-  textTransform: 'uppercase',
   borderBottom: '1px solid var(--line-base)',
 }
 
@@ -115,7 +112,6 @@ function KPICard({
         style={{
           margin: 0,
           fontSize: 12,
-          letterSpacing: '0.15em',
           fontWeight: 600,
           color: 'var(--text-muted)',
         }}
@@ -126,7 +122,7 @@ function KPICard({
         style={{
           margin: '6px 0 0',
           fontSize: 28,
-          fontWeight: 700,
+          fontWeight: 600,
           color: alert ? 'var(--c-critical, #e74c3c)' : 'var(--text-main)',
           lineHeight: 1,
         }}
@@ -159,7 +155,6 @@ function StatusBadge({ status }: { status: string }) {
         borderRadius: 12,
         fontSize: 12,
         fontWeight: 600,
-        letterSpacing: '0.08em',
         background: isSuccess ? 'rgba(76,175,80,0.12)' : 'rgba(231,76,60,0.12)',
         color: isSuccess ? '#4CAF50' : 'var(--c-critical, #e74c3c)',
       }}
@@ -215,7 +210,6 @@ export default function AdminRpaMonitoring() {
           padding: '40px 0',
           color: 'var(--text-muted)',
           fontSize: 12,
-          letterSpacing: '0.1em',
         }}
       >
         LOADING RPA DATA...

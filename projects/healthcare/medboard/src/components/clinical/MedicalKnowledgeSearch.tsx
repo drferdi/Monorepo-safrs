@@ -251,8 +251,6 @@ export function MedicalKnowledgeSearch(): React.JSX.Element {
         .medical-knowledge-search .mk-label {
           font-size: 12px;
           font-family: var(--font-mono);
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
           color: var(--text-muted);
           opacity: 0.7;
         }
@@ -447,8 +445,6 @@ export function MedicalKnowledgeSearch(): React.JSX.Element {
         .medical-knowledge-search .mk-th {
           font-size: 12px;
           font-family: var(--font-mono);
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
           color: var(--text-muted);
         }
 

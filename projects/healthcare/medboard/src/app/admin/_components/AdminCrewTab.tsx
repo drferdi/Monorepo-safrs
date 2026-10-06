@@ -142,7 +142,6 @@ export default function AdminCrewTab() {
           padding: '40px 0',
           color: 'var(--text-muted)',
           fontSize: 14,
-          letterSpacing: '0.1em',
         }}
       >
         LOADING CREW...
@@ -220,7 +219,6 @@ export default function AdminCrewTab() {
           margin: '0 0 14px',
           fontSize: 12,
           color: 'var(--text-muted)',
-          letterSpacing: '0.1em',
         }}
       >
         {filtered.length} USER{filtered.length !== 1 ? 'S' : ''} DITEMUKAN
@@ -258,7 +256,6 @@ export default function AdminCrewTab() {
                     style={{
                       padding: '10px 14px',
                       fontSize: 12,
-                      letterSpacing: '0.12em',
                       color: 'var(--text-muted)',
                       fontWeight: 600,
                       textAlign: 'left',
@@ -356,7 +353,6 @@ export default function AdminCrewTab() {
                         style={{
                           fontSize: 12,
                           fontWeight: 600,
-                          letterSpacing: '0.08em',
                           padding: '2px 8px',
                           borderRadius: 4,
                           background: isActive ? 'rgba(76,175,80,0.12)' : 'rgba(231,76,60,0.12)',
@@ -416,7 +412,6 @@ const inputStyle: React.CSSProperties = {
 const labelStyle: React.CSSProperties = {
   display: 'block',
   fontSize: 12,
-  letterSpacing: '0.1em',
   color: 'var(--text-muted)',
   marginBottom: 4,
   fontWeight: 600,
@@ -712,7 +707,6 @@ function UserEditPanel({
           <span
             style={{
               fontSize: 12,
-              letterSpacing: '0.15em',
               color: 'var(--text-muted)',
               fontWeight: 600,
             }}
@@ -760,7 +754,6 @@ function UserEditPanel({
             style={{
               margin: '0 0 14px',
               fontSize: 12,
-              letterSpacing: '0.15em',
               color: 'var(--text-muted)',
               fontWeight: 600,
             }}
@@ -843,7 +836,6 @@ function UserEditPanel({
                 color: '#fff',
                 fontSize: 12,
                 fontWeight: 600,
-                letterSpacing: '0.08em',
                 cursor: saving ? 'not-allowed' : 'pointer',
               }}
             >
@@ -857,7 +849,6 @@ function UserEditPanel({
               style={{
                 margin: '0 0 6px',
                 fontSize: 12,
-                letterSpacing: '0.15em',
                 color: 'var(--text-muted)',
                 fontWeight: 600,
               }}
@@ -942,7 +933,6 @@ function UserEditPanel({
             style={{
               margin: '0 0 14px',
               fontSize: 12,
-              letterSpacing: '0.15em',
               color: 'var(--text-muted)',
               fontWeight: 600,
             }}
@@ -1112,7 +1102,6 @@ function UserEditPanel({
                     style={{
                       margin: '0 0 4px',
                       fontSize: 12,
-                      letterSpacing: '0.12em',
                       color: 'var(--text-muted)',
                       fontWeight: 600,
                     }}
@@ -1140,7 +1129,6 @@ function UserEditPanel({
                     style={{
                       margin: '0 0 4px',
                       fontSize: 12,
-                      letterSpacing: '0.12em',
                       color: 'var(--text-muted)',
                       fontWeight: 600,
                     }}
@@ -1243,7 +1231,6 @@ function UserEditPanel({
                 color: '#fff',
                 fontSize: 12,
                 fontWeight: 600,
-                letterSpacing: '0.08em',
                 cursor: saving ? 'not-allowed' : 'pointer',
               }}
             >
@@ -1266,7 +1253,6 @@ const actionBtnStyle: React.CSSProperties = {
   color: 'var(--text-main)',
   fontSize: 12,
   fontWeight: 600,
-  letterSpacing: '0.08em',
   cursor: 'pointer',
 }
 

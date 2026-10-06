@@ -285,7 +285,6 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
           padding: '40px 0',
           color: 'var(--text-muted)',
           fontSize: 14,
-          letterSpacing: '0.1em',
         }}
       >
         LOADING OVERVIEW...
@@ -399,7 +398,6 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
               style={{
                 margin: 0,
                 fontSize: 12,
-                letterSpacing: '0.2em',
                 color: 'var(--text-muted)',
               }}
             >
@@ -480,7 +478,6 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
             style={{
               margin: '0 0 14px',
               fontSize: 12,
-              letterSpacing: '0.15em',
               color: 'var(--text-muted)',
             }}
           >
@@ -507,7 +504,6 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
             style={{
               margin: '0 0 14px',
               fontSize: 12,
-              letterSpacing: '0.15em',
               color: 'var(--text-muted)',
             }}
           >
@@ -544,7 +540,6 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
             style={{
               margin: '0 0 14px',
               fontSize: 12,
-              letterSpacing: '0.15em',
               color: 'var(--text-muted)',
             }}
           >
@@ -583,7 +578,6 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
                     style={{
                       fontSize: 12,
                       fontWeight: 600,
-                      letterSpacing: '0.08em',
                       padding: '2px 6px',
                       borderRadius: 3,
                       background:
@@ -635,7 +629,6 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
             style={{
               margin: '0 0 14px',
               fontSize: 12,
-              letterSpacing: '0.15em',
               color: 'var(--text-muted)',
             }}
           >
@@ -701,7 +694,6 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
                     <span
                       style={{
                         fontSize: 12,
-                        letterSpacing: '0.08em',
                         color: '#4CAF50',
                         fontWeight: 600,
                       }}
@@ -784,7 +776,7 @@ function KPICard({
             background: '#002147',
             color: '#fff',
             fontSize: 12,
-            fontWeight: 700,
+            fontWeight: 600,
             borderRadius: 99,
             minWidth: 20,
             height: 20,
@@ -801,7 +793,6 @@ function KPICard({
         style={{
           margin: 0,
           fontSize: 12,
-          letterSpacing: '0.15em',
           color: 'var(--text-muted)',
         }}
       >
@@ -846,7 +837,6 @@ function StatusDot({ label, value, ok }: { label: string; value: string; ok: boo
       <span
         style={{
           fontSize: 12,
-          letterSpacing: '0.1em',
           color: 'var(--text-muted)',
           fontWeight: 600,
         }}
@@ -969,7 +959,6 @@ function PendingCard({
             color: '#fff',
             fontSize: 12,
             fontWeight: 600,
-            letterSpacing: '0.08em',
             cursor: busy ? 'not-allowed' : 'pointer',
           }}
         >

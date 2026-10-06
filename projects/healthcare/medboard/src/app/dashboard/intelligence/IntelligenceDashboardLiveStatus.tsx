@@ -45,9 +45,7 @@ export default function IntelligenceDashboardLiveStatus(): React.JSX.Element {
           style={{
             fontSize: 14,
             fontFamily: 'var(--font-mono)',
-            letterSpacing: '0.1em',
             color: isLive ? 'var(--c-ok)' : 'var(--text-muted)',
-            textTransform: 'uppercase',
           }}
         >
           {connLabel}
@@ -60,7 +58,6 @@ export default function IntelligenceDashboardLiveStatus(): React.JSX.Element {
           fontSize: 12,
           fontFamily: 'var(--font-mono)',
           color: 'var(--text-muted)',
-          letterSpacing: '0.05em',
           opacity: 0.6,
           borderLeft: '1px solid var(--line-base)',
           paddingLeft: 16,

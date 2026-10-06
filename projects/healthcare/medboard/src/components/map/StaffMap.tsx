@@ -105,12 +105,10 @@ function createAvatarIcon(isOnline: boolean, avatarUrl: string, name: string) {
           white-space: nowrap;
         ">
           <span style="
-            font-family: var(--font-mono), monospace;
+            font-variant-numeric: tabular-nums;
             font-size: 12px;
             font-weight: 600;
-            letter-spacing: 0.05em;
             color: ${isOnline ? '#4ADE80' : '#888'};
-            text-transform: uppercase;
           ">${initials}</span>
         </div>
       </div>
@@ -248,7 +246,6 @@ export default function StaffMap({
               fontFamily: 'var(--font-mono)',
               fontSize: 12,
               fontWeight: 600,
-              letterSpacing: '0.1em',
               color: '#3B82F6',
             }}
           >
@@ -405,7 +402,7 @@ export default function StaffMap({
                       <div
                         style={{
                           fontSize: 14,
-                          fontWeight: 700,
+                          fontWeight: 600,
                           color: '#fafafa',
                           fontStyle: 'italic',
                           lineHeight: 1.2,
@@ -417,9 +414,7 @@ export default function StaffMap({
                         style={{
                           fontSize: 12,
                           color: '#d4d4d4',
-                          letterSpacing: '0.08em',
                           marginTop: 2,
-                          textTransform: 'uppercase',
                         }}
                       >
                         {person.role}
@@ -444,7 +439,6 @@ export default function StaffMap({
                         style={{
                           fontSize: 12,
                           fontWeight: 600,
-                          letterSpacing: '0.1em',
                           color: '#4ADE80',
                           padding: '2px 8px',
                           borderRadius: 4,

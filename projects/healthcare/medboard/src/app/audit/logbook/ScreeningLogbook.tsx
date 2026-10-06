@@ -156,8 +156,6 @@ export function ScreeningLogbook() {
             border:        'none',
             fontSize:      '12px',
             fontWeight:    600,
-            letterSpacing: '0.06em',
-            textTransform: 'uppercase',
             cursor:        'pointer',
             boxShadow:     '0 0 15px rgba(255,255,255,0.15)',
           }}
@@ -194,8 +192,8 @@ export function ScreeningLogbook() {
                   <th key={h} scope="col" style={{
                     padding: '10px 14px', textAlign: 'left',
                     fontSize: '12px', fontWeight: 600,
-                    letterSpacing: '0.08em', color: 'var(--text-muted)',
-                    textTransform: 'uppercase', whiteSpace: 'nowrap',
+                    color: 'var(--text-muted)',
+                    whiteSpace: 'nowrap',
                   }}>
                     {h}
                   </th>
@@ -205,9 +203,9 @@ export function ScreeningLogbook() {
 
             <tbody>
               {loading && entries.length === 0 ? (
-                <tr><td colSpan={8} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '14px', letterSpacing: '0.1em' }}>MEMUAT…</td></tr>
+                <tr><td colSpan={8} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '14px' }}>MEMUAT…</td></tr>
               ) : entries.length === 0 ? (
-                <tr><td colSpan={8} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '14px', letterSpacing: '0.1em' }}>BELUM ADA DATA AUDIT LOG</td></tr>
+                <tr><td colSpan={8} style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)', fontSize: '14px' }}>BELUM ADA DATA AUDIT LOG</td></tr>
               ) : entries.map((entry) => {
                 const badge = statusBadge(entry.screeningStatus)
                 return (
@@ -229,7 +227,7 @@ export function ScreeningLogbook() {
                         {new Date(entry.createdAt).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' })}
                       </Link>
                     </td>
-                    <td title={entry.assistId} style={{ padding: '10px 14px', color: 'var(--text-muted)', fontSize: '12px', fontFamily: 'monospace', maxWidth: '130px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <td title={entry.assistId} style={{ padding: '10px 14px', color: 'var(--text-muted)', fontSize: '12px', fontVariantNumeric: 'tabular-nums', maxWidth: '130px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {entry.assistId.length > 22 ? `${entry.assistId.slice(0, 22)}…` : entry.assistId}
                     </td>
                     <td style={{ padding: '10px 14px', color: 'var(--text-muted)', fontSize: '14px' }}>{entry.facilityId}</td>
@@ -239,7 +237,6 @@ export function ScreeningLogbook() {
                       <span style={{
                         display: 'inline-block', padding: '2px 8px',
                         borderRadius: '9999px', fontSize: '12px', fontWeight: 600,
-                        letterSpacing: '0.06em', textTransform: 'uppercase',
                         color: badge.color, background: badge.bg, border: `1px solid ${badge.border}`,
                       }}>
                         {badge.label}

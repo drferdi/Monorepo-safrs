@@ -70,8 +70,6 @@ export function OperationalSummaryPanelContent({
             style={{
               fontSize: 12,
               fontFamily: 'var(--font-mono)',
-              letterSpacing: '0.18em',
-              textTransform: 'uppercase',
               color: 'var(--text-muted)',
               marginBottom: 10,
             }}
@@ -158,7 +156,6 @@ export default function OperationalSummaryPanel(): React.JSX.Element {
           style={{
             fontSize: 12,
             fontFamily: 'var(--font-mono)',
-            letterSpacing: '0.05em',
             opacity: 0.5,
           }}
         >

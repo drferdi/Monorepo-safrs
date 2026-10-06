@@ -116,8 +116,6 @@ const SectionLabel = ({ L, children }: { L: LTokens; children: React.ReactNode }
     style={{
       fontSize: 12,
       color: L.muted,
-      letterSpacing: '0.15em',
-      textTransform: 'uppercase',
       marginBottom: 8,
     }}
   >
@@ -343,7 +341,6 @@ export default function ProfilUserPage() {
     border: '1px solid rgba(255,255,255,0.06)',
     borderRadius: 3,
     padding: '6px 12px',
-    letterSpacing: '0.06em',
     boxShadow: '3px 3px 10px rgba(0,0,0,0.24), inset 1px 1px 0 rgba(255,255,255,0.04)',
   }
 
@@ -939,8 +936,6 @@ export default function ProfilUserPage() {
               style={{
                 fontSize: 12,
                 color: L.muted,
-                letterSpacing: '0.14em',
-                textTransform: 'uppercase',
               }}
             >
               {statusItem.label}
@@ -1013,8 +1008,6 @@ export default function ProfilUserPage() {
                   style={{
                     fontSize: 12,
                     color: L.muted,
-                    letterSpacing: '0.14em',
-                    textTransform: 'uppercase',
                   }}
                 >
                   {h}
@@ -1518,8 +1511,6 @@ export default function ProfilUserPage() {
                         <div
                           style={{
                             fontSize: 12,
-                            letterSpacing: '0.14em',
-                            textTransform: 'uppercase',
                             color: L.muted,
                           }}
                         >
@@ -1604,8 +1595,6 @@ export default function ProfilUserPage() {
                                   <span
                                     style={{
                                       fontSize: 12,
-                                      letterSpacing: '0.08em',
-                                      textTransform: 'uppercase',
                                       color:
                                         item.category === 'release'
                                           ? L.accent
@@ -1700,8 +1689,6 @@ export default function ProfilUserPage() {
                         <div
                           style={{
                             fontSize: 12,
-                            letterSpacing: '0.14em',
-                            textTransform: 'uppercase',
                             color: L.muted,
                           }}
                         >
@@ -1784,8 +1771,6 @@ export default function ProfilUserPage() {
                                   <span
                                     style={{
                                       fontSize: 12,
-                                      letterSpacing: '0.08em',
-                                      textTransform: 'uppercase',
                                       color:
                                         item.priority === 'urgent'
                                           ? '#F28B82'
@@ -1926,7 +1911,6 @@ export default function ProfilUserPage() {
                       fontSize: 14,
                       color: L.muted,
                       cursor: 'pointer',
-                      letterSpacing: '0.06em',
                     }}
                   >
                     CLEAR
@@ -2184,7 +2168,6 @@ export default function ProfilUserPage() {
                       chatLoading || !chatInput.trim() ? 'transparent' : 'rgba(0, 33, 71, 0.1)',
                     color: chatLoading || !chatInput.trim() ? L.muted : L.accent,
                     fontSize: 14,
-                    letterSpacing: '0.06em',
                     cursor: chatLoading || !chatInput.trim() ? 'not-allowed' : 'pointer',
                     transition: 'background 0.15s, color 0.15s',
                   }}
@@ -2284,7 +2267,6 @@ export default function ProfilUserPage() {
                             fontSize: 14,
                             color: L.muted,
                             whiteSpace: 'nowrap',
-                            letterSpacing: '0.06em',
                             flexShrink: 0,
                             marginTop: 2,
                           }}
@@ -2317,7 +2299,6 @@ export default function ProfilUserPage() {
                           style={{
                             fontSize: 14,
                             color: L.muted,
-                            letterSpacing: '0.08em',
                             border: `1px solid ${L.border}`,
                             borderRadius: 2,
                             padding: '1px 6px',
@@ -2459,7 +2440,7 @@ export default function ProfilUserPage() {
                               alignItems: 'center',
                               justifyContent: 'center',
                               fontSize: 12,
-                              fontWeight: 700,
+                              fontWeight: 600,
                               color: L.statusTone,
                               flexShrink: 0,
                               letterSpacing: '0.04em',
@@ -2721,8 +2702,6 @@ export default function ProfilUserPage() {
                         style={{
                           fontSize: 14,
                           color: L.muted,
-                          letterSpacing: '0.16em',
-                          textTransform: 'uppercase',
                           marginBottom: 6,
                         }}
                       >
@@ -2824,8 +2803,6 @@ export default function ProfilUserPage() {
                         style={{
                           fontSize: 12,
                           color: L.muted,
-                          letterSpacing: '0.12em',
-                          textTransform: 'uppercase',
                         }}
                       >
                         {item.label}
@@ -2863,8 +2840,6 @@ export default function ProfilUserPage() {
                       style={{
                         fontSize: 12,
                         color: L.muted,
-                        letterSpacing: '0.12em',
-                        textTransform: 'uppercase',
                       }}
                     >
                       Link Resmi
@@ -2961,8 +2936,6 @@ export default function ProfilUserPage() {
               style={{
                 fontSize: 14,
                 color: L.muted,
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
                 marginBottom: 12,
               }}
             >
@@ -3029,7 +3002,6 @@ export default function ProfilUserPage() {
                         style={{
                           fontSize: 14,
                           color: L.muted,
-                          letterSpacing: '0.08em',
                           padding: '1px 5px',
                           borderRadius: 2,
                           border: `1px solid ${L.border}`,
@@ -3130,7 +3102,6 @@ export default function ProfilUserPage() {
                                   style={{
                                     fontSize: 12,
                                     color: L.accent,
-                                    letterSpacing: '0.12em',
                                   }}
                                 >
                                   ANDA
@@ -3152,7 +3123,6 @@ export default function ProfilUserPage() {
                             style={{
                               fontSize: 12,
                               color: '#4CAF50',
-                              letterSpacing: '0.14em',
                               display: 'inline-flex',
                               alignItems: 'center',
                               gap: 6,
@@ -3636,8 +3606,6 @@ export default function ProfilUserPage() {
                       style={{
                         fontSize: 14,
                         color: L.muted,
-                        letterSpacing: '0.1em',
-                        textTransform: 'uppercase',
                       }}
                     >
                       Role Sentra
@@ -3712,8 +3680,6 @@ export default function ProfilUserPage() {
                       style={{
                         fontSize: 14,
                         color: L.muted,
-                        letterSpacing: '0.1em',
-                        textTransform: 'uppercase',
                       }}
                     >
                       Posisi

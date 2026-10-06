@@ -29,8 +29,6 @@ export default function IntelligenceDashboardError({
           style={{
             fontSize: 12,
             fontFamily: 'var(--font-mono)',
-            letterSpacing: '0.2em',
-            textTransform: 'uppercase',
             color: 'var(--c-critical)',
             marginBottom: 12,
           }}
@@ -76,7 +74,6 @@ export default function IntelligenceDashboardError({
             color: 'var(--text-main)',
             background: 'transparent',
             cursor: 'pointer',
-            letterSpacing: '0.05em',
             transition: 'border-color 0.2s',
           }}
         >

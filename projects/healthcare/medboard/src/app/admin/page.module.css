@@ -48,7 +48,6 @@
   font-size: var(--text-xs);
   letter-spacing: var(--ls-3xl);
   color: var(--c-asesmen);
-  text-transform: uppercase;
 }
 
 .heroCopy {
@@ -92,7 +91,6 @@
   font-size: var(--text-xs);
   letter-spacing: var(--ls-2xl);
   color: var(--text-muted);
-  text-transform: uppercase;
 }
 
 .secureBadge {
@@ -102,9 +100,8 @@
   background: var(--c-asesmen-soft);
   color: var(--c-asesmen);
   font-size: var(--text-xs);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: var(--ls-wider);
-  text-transform: uppercase;
 }
 
 .sessionIdentity {
@@ -160,7 +157,6 @@
   font-size: var(--text-xs);
   font-weight: 600;
   letter-spacing: var(--ls-widest);
-  text-transform: uppercase;
   cursor: pointer;
   opacity: 0.72;
   transition: all 0.15s ease;

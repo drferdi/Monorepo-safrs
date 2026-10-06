@@ -78,7 +78,7 @@ export function MomentumScoreCard({ momentum, className }: MomentumScoreCardProp
           <span
             style={{
               fontSize: 20,
-              fontWeight: 700,
+              fontWeight: 600,
               fontFamily: 'var(--font-mono)',
               color: config.color,
               lineHeight: 1,
@@ -86,7 +86,7 @@ export function MomentumScoreCard({ momentum, className }: MomentumScoreCardProp
           >
             {score}
           </span>
-          <span style={{ fontSize: 12, color: 'var(--text-muted)', letterSpacing: '0.05em' }}>
+          <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
             /100
           </span>
         </div>
@@ -98,8 +98,6 @@ export function MomentumScoreCard({ momentum, className }: MomentumScoreCardProp
           style={{
             fontSize: 12,
             fontFamily: 'var(--font-mono)',
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
             color: 'var(--text-muted)',
             marginBottom: 4,
           }}

@@ -162,7 +162,6 @@ export default function ReportPage() {
 
   const reportActionButtonStyle = {
     fontSize: 14,
-    letterSpacing: '0.1em',
     padding: '8px 16px',
     background: REPORT_ACTION_TONE,
     border: `1px solid ${REPORT_ACTION_BORDER}`,
@@ -175,7 +174,6 @@ export default function ReportPage() {
 
   const reportActionChipStyle = {
     fontSize: 14,
-    letterSpacing: '0.1em',
     padding: '3px 10px',
     background: REPORT_ACTION_SOFT,
     border: `1px solid ${REPORT_ACTION_BORDER}`,
@@ -211,7 +209,6 @@ export default function ReportPage() {
           style={{
             fontSize: 14,
             color: 'var(--text-muted)',
-            letterSpacing: '0.1em',
             textAlign: 'right',
             paddingTop: 4,
           }}
@@ -237,7 +234,6 @@ export default function ReportPage() {
             alignItems: 'center',
             gap: 8,
             fontSize: 14,
-            letterSpacing: '0.1em',
             padding: '8px 16px',
             background: '#101012',
             border: '1px solid var(--c-asesmen)',
@@ -299,7 +295,6 @@ export default function ReportPage() {
             <span
               style={{
                 fontSize: 14,
-                letterSpacing: '0.12em',
                 color: 'var(--text-muted)',
               }}
             >
@@ -395,7 +390,6 @@ export default function ReportPage() {
               fontSize: 14,
               color: 'var(--text-muted)',
               opacity: 0.5,
-              letterSpacing: '0.08em',
             }}
           >
             Klik file untuk download langsung ke komputer
@@ -451,7 +445,6 @@ export default function ReportPage() {
             onClick={() => setFilter(f)}
             style={{
               fontSize: 14,
-              letterSpacing: '0.1em',
               padding: '5px 14px',
               background: 'none',
               border: `1px solid ${filter === f ? 'var(--c-asesmen)' : 'var(--line-base)'}`,
@@ -502,7 +495,6 @@ export default function ReportPage() {
               textAlign: 'center',
               fontSize: 14,
               color: 'var(--text-muted)',
-              letterSpacing: '0.15em',
               opacity: 0.5,
             }}
           >
@@ -531,7 +523,6 @@ export default function ReportPage() {
               style={{
                 fontSize: 14,
                 color: 'var(--c-asesmen)',
-                letterSpacing: '0.05em',
               }}
             >
               {row.rm}
@@ -568,7 +559,6 @@ export default function ReportPage() {
               style={{
                 fontSize: 14,
                 color: 'var(--text-muted)',
-                letterSpacing: '0.05em',
               }}
             >
               {row.icd}
@@ -604,7 +594,6 @@ export default function ReportPage() {
             marginTop: 24,
             fontSize: 14,
             color: 'var(--text-muted)',
-            letterSpacing: '0.1em',
             opacity: 0.5,
           }}
         >

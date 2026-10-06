@@ -5,7 +5,6 @@
 .loadingMessage {
   color: var(--text-muted);
   font-size: 14px;
-  letter-spacing: 0.1em;
 }
 
 .errorMessage {
@@ -52,13 +51,12 @@
 .kpiLabel {
   margin-bottom: 6px;
   font-size: 12px;
-  letter-spacing: 0.12em;
 }
 
 .roleValue,
 .kpiValue {
   color: var(--text-main);
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
 }
 
@@ -107,7 +105,7 @@
   background: var(--c-asesmen-soft);
   color: var(--c-asesmen);
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .kpiSub {
@@ -135,7 +133,6 @@
 .pendingTitle {
   margin: 0;
   font-size: 12px;
-  letter-spacing: 0.2em;
 }
 
 .pendingCountText {
@@ -186,7 +183,6 @@
 .resultCount {
   margin: 0 0 14px;
   font-size: 12px;
-  letter-spacing: 0.1em;
 }
 
 .tablePanel {
@@ -224,7 +220,6 @@
   color: var(--text-muted);
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.12em;
   text-align: left;
 }
 
@@ -291,7 +286,6 @@
   padding: 2px 8px;
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.08em;
 }
 
 .statusBadgeActive {
@@ -367,7 +361,6 @@
   cursor: pointer;
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.08em;
 }
 
 .primaryButtonBlock {
@@ -472,7 +465,6 @@
 .panelSectionLabelTight,
 .logbookTitle,
 .selectorGroupTitle {
-  letter-spacing: 0.15em;
   font-size: 12px;
 }
 
@@ -511,7 +503,6 @@
   color: var(--text-muted);
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.1em;
 }
 
 .fieldInput,
@@ -544,7 +535,6 @@
   cursor: pointer;
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.08em;
 }
 
 .outlineButton {
@@ -650,7 +640,6 @@
   margin: 0 0 4px;
   color: var(--text-muted);
   font-size: 12px;
-  letter-spacing: 0.12em;
 }
 
 .topSpacing {
@@ -744,7 +733,6 @@
   padding: 1px 6px;
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.05em;
 }
 
 .resultBadgeSuccess {

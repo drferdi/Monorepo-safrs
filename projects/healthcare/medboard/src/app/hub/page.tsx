@@ -343,7 +343,6 @@ export default function HubPage() {
           style={{
             margin: 0,
             fontSize: 12,
-            letterSpacing: '0.2em',
             color: 'var(--text-muted)',
           }}
         >
@@ -380,7 +379,6 @@ export default function HubPage() {
                   padding: '7px 18px',
                   fontSize: 12,
                   fontWeight: isActive ? 600 : 400,
-                  letterSpacing: '0.06em',
                   color: isActive ? HUB_ACCENT : 'var(--text-muted)',
                   background: isActive ? 'rgba(0, 33, 71, 0.08)' : 'transparent',
                   border: isActive
@@ -466,8 +464,6 @@ export default function HubPage() {
                   style={{
                     fontSize: 12,
                     color: 'var(--text-muted)',
-                    letterSpacing: '0.14em',
-                    textTransform: 'uppercase',
                   }}
                 >
                   {item.label}
@@ -501,8 +497,6 @@ export default function HubPage() {
                 style={{
                   fontSize: 12,
                   color: 'var(--text-muted)',
-                  letterSpacing: '0.14em',
-                  textTransform: 'uppercase',
                   marginBottom: 8,
                 }}
               >
@@ -524,8 +518,6 @@ export default function HubPage() {
                 style={{
                   fontSize: 12,
                   color: 'var(--text-muted)',
-                  letterSpacing: '0.14em',
-                  textTransform: 'uppercase',
                   marginBottom: 8,
                 }}
               >
@@ -695,8 +687,6 @@ export default function HubPage() {
                                 style={{
                                   fontSize: 12,
                                   color: 'var(--text-muted)',
-                                  letterSpacing: '0.08em',
-                                  textTransform: 'uppercase',
                                   lineHeight: 1.4,
                                 }}
                               >
@@ -730,8 +720,6 @@ export default function HubPage() {
                                 style={{
                                   fontSize: 12,
                                   color: 'var(--text-muted)',
-                                  letterSpacing: '0.08em',
-                                  textTransform: 'uppercase',
                                   lineHeight: 1.4,
                                 }}
                               >
@@ -765,8 +753,6 @@ export default function HubPage() {
                             <span
                               style={{
                                 fontSize: 12,
-                                letterSpacing: '0.08em',
-                                textTransform: 'uppercase',
                                 color: isOnline ? '#7fd38a' : 'var(--text-muted)',
                                 padding: '4px 8px',
                                 borderRadius: 999,
@@ -784,8 +770,6 @@ export default function HubPage() {
                               <span
                                 style={{
                                   fontSize: 12,
-                                  letterSpacing: '0.08em',
-                                  textTransform: 'uppercase',
                                   color: 'var(--text-muted)',
                                   padding: '4px 8px',
                                   borderRadius: 999,
@@ -856,8 +840,7 @@ export default function HubPage() {
                               border: '1px solid rgba(0, 33, 71, 0.18)',
                               color: '#f0b264',
                               fontSize: 12,
-                              fontWeight: 700,
-                              letterSpacing: '0.08em',
+                              fontWeight: 600,
                               flexShrink: 0,
                             }}
                           >
@@ -866,8 +849,6 @@ export default function HubPage() {
                           <span
                             style={{
                               fontSize: 12,
-                              letterSpacing: '0.08em',
-                              textTransform: 'uppercase',
                               color: 'var(--text-muted)',
                               padding: '3px 8px',
                               borderRadius: 999,
@@ -883,7 +864,6 @@ export default function HubPage() {
                             <span
                               style={{
                                 fontSize: 12,
-                                letterSpacing: '0.06em',
                                 color: 'var(--text-muted)',
                                 padding: '2px 7px',
                                 borderRadius: 4,
@@ -919,8 +899,6 @@ export default function HubPage() {
                                 style={{
                                   fontSize: 12,
                                   color: 'var(--text-muted)',
-                                  letterSpacing: '0.12em',
-                                  textTransform: 'uppercase',
                                 }}
                               >
                                 {item.label}
@@ -949,8 +927,6 @@ export default function HubPage() {
                             style={{
                               fontSize: 12,
                               color: 'var(--text-muted)',
-                              letterSpacing: '0.12em',
-                              textTransform: 'uppercase',
                             }}
                           >
                             Link
@@ -1007,8 +983,6 @@ export default function HubPage() {
                             style={{
                               fontSize: 12,
                               color: 'var(--text-muted)',
-                              letterSpacing: '0.08em',
-                              textTransform: 'uppercase',
                             }}
                           >
                             Buka Profile
@@ -1058,9 +1032,7 @@ export default function HubPage() {
                 <div
                   style={{
                     fontSize: 12,
-                    letterSpacing: '0.22em',
                     color: HUB_ACCENT,
-                    textTransform: 'uppercase',
                   }}
                 >
                   Governance Structure
@@ -1122,9 +1094,7 @@ export default function HubPage() {
                     <span
                       style={{
                         fontSize: 12,
-                        letterSpacing: '0.14em',
                         color: 'var(--text-muted)',
-                        textTransform: 'uppercase',
                       }}
                     >
                       {item.label}
@@ -1169,9 +1139,7 @@ export default function HubPage() {
                 <div
                   style={{
                     fontSize: 12,
-                    letterSpacing: '0.2em',
                     color: 'var(--text-muted)',
-                    textTransform: 'uppercase',
                   }}
                 >
                   Organisation Map
@@ -1251,7 +1219,7 @@ export default function HubPage() {
                       border: '1px solid rgba(0, 33, 71, 0.2)',
                       color: '#002147',
                       fontSize: 12,
-                      fontWeight: 700,
+                      fontWeight: 600,
                     }}
                   >
                     {i + 1}
@@ -1310,9 +1278,7 @@ export default function HubPage() {
                       style={{
                         fontSize: 12,
                         fontWeight: 600,
-                        letterSpacing: '0.16em',
                         color: HUB_ACCENT,
-                        textTransform: 'uppercase',
                       }}
                     >
                       Division {String(di + 1).padStart(2, '0')}
@@ -1331,9 +1297,7 @@ export default function HubPage() {
                   <span
                     style={{
                       fontSize: 12,
-                      letterSpacing: '0.12em',
                       color: 'var(--text-muted)',
-                      textTransform: 'uppercase',
                       padding: '5px 10px',
                       borderRadius: 999,
                       border: '1px solid var(--line-base)',
@@ -1403,7 +1367,7 @@ export default function HubPage() {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 fontSize: 14,
-                                fontWeight: 700,
+                                fontWeight: 600,
                                 color: isCEO ? HUB_ACCENT : 'var(--text-muted)',
                                 flexShrink: 0,
                               }}
@@ -1437,9 +1401,7 @@ export default function HubPage() {
                             <span
                               style={{
                                 fontSize: 12,
-                                letterSpacing: '0.14em',
                                 color: HUB_ACCENT,
-                                textTransform: 'uppercase',
                                 padding: '5px 9px',
                                 borderRadius: 999,
                                 border: '1px solid rgba(0, 33, 71, 0.2)',
@@ -1463,8 +1425,6 @@ export default function HubPage() {
                             <span
                               style={{
                                 fontSize: 12,
-                                letterSpacing: '0.14em',
-                                textTransform: 'uppercase',
                                 color: HUB_ACCENT,
                               }}
                             >
@@ -1500,7 +1460,6 @@ export default function HubPage() {
               padding: '12px 0 4px',
               fontSize: 12,
               color: 'var(--text-muted)',
-              letterSpacing: '0.06em',
             }}
           >
             Sentra Healthcare Solutions — Struktur Organisasi & Nomenklatur Profesional

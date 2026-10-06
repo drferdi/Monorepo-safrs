@@ -301,7 +301,7 @@ export function DiagnosisModal({
                         style={{
                           color: 'var(--c-asesmen)',
                           fontSize: 14,
-                          fontWeight: 700,
+                          fontWeight: 600,
                         }}
                       >
                         {r.code}

@@ -202,7 +202,6 @@ export default function TrajectoryPanel({
             style={{
               ...mono,
               fontSize: 12,
-              letterSpacing: '0.14em',
               color: 'var(--text-muted)',
             }}
           >
@@ -213,8 +212,7 @@ export default function TrajectoryPanel({
             style={{
               ...mono,
               fontSize: 12,
-              fontWeight: 700,
-              letterSpacing: '0.1em',
+              fontWeight: 600,
               padding: '2px 6px',
               borderRadius: 3,
               color: urgency.color,
@@ -229,8 +227,7 @@ export default function TrajectoryPanel({
             style={{
               ...mono,
               fontSize: 12,
-              fontWeight: 700,
-              letterSpacing: '0.1em',
+              fontWeight: 600,
               padding: '2px 6px',
               borderRadius: 3,
               color: deterioration.color,
@@ -246,7 +243,6 @@ export default function TrajectoryPanel({
           style={{
             ...mono,
             fontSize: 12,
-            letterSpacing: '0.1em',
             background: 'transparent',
             border: 'none',
             cursor: 'pointer',
@@ -272,7 +268,6 @@ export default function TrajectoryPanel({
               style={{
                 ...mono,
                 fontSize: 12,
-                letterSpacing: '0.12em',
                 color: 'var(--text-muted)',
               }}
             >
@@ -303,7 +298,7 @@ export default function TrajectoryPanel({
                   style={{
                     ...mono,
                     fontSize: 12,
-                    fontWeight: 700,
+                    fontWeight: 600,
                     color:
                       a.severity === 'critical'
                         ? '#ef4444'
@@ -325,7 +320,6 @@ export default function TrajectoryPanel({
             style={{
               ...mono,
               fontSize: 12,
-              letterSpacing: '0.12em',
               color: 'var(--text-muted)',
             }}
           >
@@ -362,7 +356,6 @@ export default function TrajectoryPanel({
                       ...mono,
                       fontSize: 12,
                       color: 'var(--text-muted)',
-                      letterSpacing: '0.08em',
                     }}
                   >
                     {vt.label.toUpperCase()}
@@ -371,8 +364,7 @@ export default function TrajectoryPanel({
                     style={{
                       ...mono,
                       fontSize: 12,
-                      fontWeight: 700,
-                      letterSpacing: '0.08em',
+                      fontWeight: 600,
                       padding: '1px 4px',
                       borderRadius: 2,
                       color: RISK_COLOR[vt.risk],
@@ -434,9 +426,8 @@ export default function TrajectoryPanel({
               style={{
                 ...mono,
                 fontSize: 12,
-                letterSpacing: '0.1em',
                 color: deterioration.color,
-                fontWeight: 700,
+                fontWeight: 600,
               }}
             >
               GLOBAL DETERIORATION — {deterioration.label}
@@ -476,7 +467,6 @@ export default function TrajectoryPanel({
             style={{
               ...mono,
               fontSize: 12,
-              letterSpacing: '0.12em',
               color: 'var(--text-muted)',
             }}
           >
@@ -524,7 +514,7 @@ export default function TrajectoryPanel({
                   style={{
                     ...mono,
                     fontSize: 12,
-                    fontWeight: 700,
+                    fontWeight: 600,
                     minWidth: 32,
                     textAlign: 'right',
                     color: riskBar(r.value),
@@ -551,7 +541,6 @@ export default function TrajectoryPanel({
               style={{
                 ...mono,
                 fontSize: 12,
-                letterSpacing: '0.12em',
                 color: '#f97316',
                 display: 'block',
                 marginBottom: 6,
@@ -585,7 +574,6 @@ export default function TrajectoryPanel({
             style={{
               ...mono,
               fontSize: 12,
-              letterSpacing: '0.12em',
               color: 'var(--text-muted)',
             }}
           >
@@ -623,7 +611,6 @@ export default function TrajectoryPanel({
             style={{
               ...mono,
               fontSize: 12,
-              letterSpacing: '0.12em',
               color: 'var(--text-muted)',
             }}
           >
@@ -658,8 +645,7 @@ export default function TrajectoryPanel({
                     style={{
                       ...mono,
                       fontSize: 12,
-                      fontWeight: 700,
-                      letterSpacing: '0.1em',
+                      fontWeight: 600,
                       color: borderColor,
                       marginRight: 6,
                     }}
@@ -688,7 +674,6 @@ export default function TrajectoryPanel({
             style={{
               ...mono,
               fontSize: 12,
-              letterSpacing: '0.1em',
               color: 'var(--text-muted)',
               display: 'block',
               marginBottom: 4,
@@ -724,7 +709,6 @@ export default function TrajectoryPanel({
                 ...mono,
                 fontSize: 12,
                 color: 'var(--text-muted)',
-                letterSpacing: '0.1em',
                 display: 'block',
                 marginBottom: 2,
               }}
@@ -755,7 +739,6 @@ export default function TrajectoryPanel({
                 ...mono,
                 fontSize: 12,
                 color: 'var(--text-muted)',
-                letterSpacing: '0.1em',
                 display: 'block',
                 marginBottom: 2,
               }}
@@ -786,7 +769,6 @@ export default function TrajectoryPanel({
                 ...mono,
                 fontSize: 12,
                 color: 'var(--text-muted)',
-                letterSpacing: '0.1em',
                 display: 'block',
                 marginBottom: 2,
               }}
@@ -806,8 +788,6 @@ export default function TrajectoryPanel({
               style={{
                 fontSize: 12,
                 fontFamily: 'var(--font-mono)',
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
                 color: 'var(--text-muted)',
               }}
             >

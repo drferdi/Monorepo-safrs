@@ -404,7 +404,6 @@ export default function VoicePage() {
                   onClick={() => void disconnect()}
                   style={{
                     fontSize: 12,
-                    letterSpacing: '0.07em',
                     padding: '6px 14px',
                     background: 'none',
                     border: '1px solid var(--c-critical)',
@@ -419,7 +418,6 @@ export default function VoicePage() {
                 onClick={() => setMessages([])}
                 style={{
                   fontSize: 12,
-                  letterSpacing: '0.07em',
                   padding: '6px 14px',
                   background: 'none',
                   border: '1px solid var(--line-base)',
@@ -481,7 +479,7 @@ export default function VoicePage() {
                   <div
                     style={{
                       fontSize: 20,
-                      fontWeight: 700,
+                      fontWeight: 600,
                       color: 'var(--text-main)',
                       marginBottom: 6,
                       lineHeight: 1.3,
@@ -511,7 +509,6 @@ export default function VoicePage() {
                     border: '1px solid rgba(255,255,255,0.06)',
                     color: '#fff',
                     fontSize: 14,
-                    letterSpacing: '0.08em',
                     fontWeight: 600,
                     cursor: 'pointer',
                     boxShadow: accentNeumorph,
@@ -632,7 +629,6 @@ export default function VoicePage() {
                   color: sessionState === 'recording' ? 'rgba(220,38,38,0.9)' : accentTone,
                   cursor: sessionState === 'processing' ? 'wait' : 'pointer',
                   fontSize: 14,
-                  letterSpacing: '0.1em',
                   fontWeight: 600,
                   userSelect: 'none',
                   WebkitUserSelect: 'none',
@@ -663,7 +659,6 @@ export default function VoicePage() {
                   style={{
                     alignSelf: 'flex-start',
                     fontSize: 12,
-                    letterSpacing: '0.07em',
                     padding: '5px 12px',
                     background: 'none',
                     cursor: 'pointer',
@@ -716,7 +711,6 @@ export default function VoicePage() {
                     fontSize: 14,
                     color: 'var(--text-muted)',
                     opacity: 0.38,
-                    letterSpacing: '0.08em',
                   }}
                 >
                   — BELUM ADA PERCAKAPAN —
@@ -743,7 +737,6 @@ export default function VoicePage() {
                         alignItems: 'center',
                         padding: '5px 10px',
                         fontSize: 12,
-                        letterSpacing: '0.15em',
                         color: '#f1ece3',
                         background: accentTone,
                         border: '1px solid rgba(255,255,255,0.06)',
@@ -899,7 +892,6 @@ export default function VoicePage() {
                 marginTop: 4,
                 fontSize: 12,
                 color: '#ffffff',
-                letterSpacing: '0.06em',
               }}
             >
               SENTRA HEALTHCARE SOLUTIONS
@@ -920,7 +912,6 @@ export default function VoicePage() {
             <span
               style={{
                 fontSize: 12,
-                letterSpacing: '0.1em',
                 color: '#f1ece3',
                 flexShrink: 0,
                 padding: '5px 10px',
@@ -967,7 +958,6 @@ export default function VoicePage() {
                   justifyContent: 'center',
                   padding: '6px 12px',
                   fontSize: 14,
-                  letterSpacing: '1px',
                   color: '#f1ece3',
                   background: accentTone,
                   border: '1px solid rgba(255,255,255,0.06)',
@@ -999,7 +989,6 @@ export default function VoicePage() {
                   <div
                     style={{
                       fontSize: 14,
-                      letterSpacing: '1px',
                       color: 'var(--text-main)',
                       fontWeight: 400,
                       marginBottom: step.sub ? 3 : 0,
@@ -1031,7 +1020,6 @@ export default function VoicePage() {
                         lineHeight: 1.5,
                         opacity: 0.8,
                         textAlign: 'center',
-                        letterSpacing: '1px',
                       }}
                     >
                       {step.sub}

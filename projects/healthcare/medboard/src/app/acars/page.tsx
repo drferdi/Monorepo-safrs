@@ -31,7 +31,6 @@ const StaffMap = dynamic(() => import('@/components/map/StaffMap'), {
         gap: 12,
         color: 'var(--text-muted)',
         fontSize: 14,
-        letterSpacing: '0.1em',
       }}
     >
       <div
@@ -337,7 +336,6 @@ export default function AcarsPage() {
             <span
               style={{
                 fontSize: 12,
-                letterSpacing: '0.1em',
                 color: connected ? 'var(--c-ok)' : 'var(--text-muted)',
               }}
             >
@@ -381,7 +379,6 @@ export default function AcarsPage() {
                   style={{
                     fontSize: 12,
                     color: 'var(--text-muted)',
-                    letterSpacing: '0.1em',
                   }}
                 >
                   {currentUser.profession || currentUser.role}
@@ -415,7 +412,6 @@ export default function AcarsPage() {
               background: 'rgba(0,0,0,0.4)',
               color: 'var(--text-muted)',
               fontSize: 14,
-              letterSpacing: '0.08em',
             }}
           >
             Tidak ada crew online saat ini.
@@ -446,9 +442,7 @@ export default function AcarsPage() {
             style={{
               fontSize: 12,
               fontWeight: 600,
-              letterSpacing: '0.12em',
               color: 'var(--text-muted)',
-              textTransform: 'uppercase',
             }}
           >
             SCARS DIRECTORY // {onlineUsers.length} ONLINE
@@ -457,7 +451,6 @@ export default function AcarsPage() {
             style={{
               fontSize: 12,
               color: 'var(--text-muted)',
-              letterSpacing: '0.08em',
             }}
           >
             {new Date()
@@ -485,9 +478,7 @@ export default function AcarsPage() {
               key={h}
               style={{
                 fontSize: 12,
-                letterSpacing: '0.1em',
                 color: 'var(--text-muted)',
-                textTransform: 'uppercase',
                 textAlign: i === 4 ? 'right' : undefined,
               }}
             >
@@ -558,7 +549,6 @@ export default function AcarsPage() {
                     style={{
                       fontSize: 12,
                       color: 'var(--text-muted)',
-                      letterSpacing: '0.05em',
                       marginTop: 2,
                     }}
                   >
@@ -582,7 +572,6 @@ export default function AcarsPage() {
               <div
                 style={{
                   fontSize: 12,
-                  letterSpacing: '0.08em',
                   color: 'var(--text-muted)',
                 }}
               >
@@ -615,7 +604,6 @@ export default function AcarsPage() {
                   style={{
                     fontSize: 12,
                     fontWeight: 600,
-                    letterSpacing: '0.1em',
                     color: 'var(--c-ok)',
                   }}
                 >
@@ -630,7 +618,6 @@ export default function AcarsPage() {
               <div
                 style={{
                   fontSize: 12,
-                  letterSpacing: '0.08em',
                   color: 'var(--c-ok)',
                   textAlign: 'right',
                 }}
@@ -677,7 +664,6 @@ export default function AcarsPage() {
             style={{
               fontSize: 12,
               fontWeight: 600,
-              letterSpacing: '0.1em',
               color: 'var(--text-muted)',
             }}
           >
@@ -781,7 +767,6 @@ export default function AcarsPage() {
               borderRadius: 8,
               color: input.trim() ? myColor : 'var(--text-muted)',
               fontSize: 12,
-              letterSpacing: '0.08em',
               cursor: input.trim() ? 'pointer' : 'not-allowed',
               opacity: input.trim() ? 1 : 0.5,
             }}

@@ -67,8 +67,6 @@ export function ConvergenceHeatmap({ convergence }: ConvergenceHeatmapProps) {
           style={{
             fontSize: 12,
             fontFamily: 'var(--font-mono)',
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
             color: 'var(--text-muted)',
           }}
         >
@@ -102,8 +100,6 @@ export function ConvergenceHeatmap({ convergence }: ConvergenceHeatmapProps) {
             style={{
               fontSize: 12,
               fontFamily: 'var(--font-mono)',
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
               color: col.color,
               textAlign: 'center',
             }}

@@ -1231,7 +1231,6 @@ export default function ClinicalPrognosisChart({
             style={{
               fontFamily: 'var(--font-mono)',
               fontSize: 12,
-              letterSpacing: '0.14em',
               color: 'var(--c-asesmen)',
               marginBottom: 3,
             }}
@@ -1258,7 +1257,6 @@ export default function ClinicalPrognosisChart({
             style={{
               fontFamily: 'var(--font-mono)',
               fontSize: 12,
-              letterSpacing: '0.12em',
               color: 'var(--text-muted)',
             }}
           >
@@ -1291,7 +1289,6 @@ export default function ClinicalPrognosisChart({
           <div
             style={{
               fontSize: 12,
-              letterSpacing: '0.12em',
               color: 'var(--text-muted)',
             }}
           >
@@ -1320,7 +1317,6 @@ export default function ClinicalPrognosisChart({
           <div
             style={{
               fontSize: 12,
-              letterSpacing: '0.12em',
               color: 'var(--text-muted)',
             }}
           >
@@ -1349,7 +1345,6 @@ export default function ClinicalPrognosisChart({
           <div
             style={{
               fontSize: 12,
-              letterSpacing: '0.12em',
               color: 'var(--text-muted)',
             }}
           >
@@ -1371,7 +1366,6 @@ export default function ClinicalPrognosisChart({
           <div
             style={{
               fontSize: 12,
-              letterSpacing: '0.12em',
               color: 'var(--text-muted)',
             }}
           >
@@ -1383,7 +1377,6 @@ export default function ClinicalPrognosisChart({
               fontSize: 16,
               fontWeight: 600,
               color: riskColor,
-              textTransform: 'uppercase',
               lineHeight: 1.2,
             }}
           >
@@ -1404,7 +1397,6 @@ export default function ClinicalPrognosisChart({
           <div
             style={{
               fontSize: 12,
-              letterSpacing: '0.14em',
               color: 'var(--c-asesmen)',
               marginBottom: 9,
             }}
@@ -1429,7 +1421,6 @@ export default function ClinicalPrognosisChart({
               <div
                 style={{
                   fontSize: 12,
-                  letterSpacing: '0.12em',
                   color: 'var(--text-muted)',
                 }}
               >
@@ -1439,7 +1430,7 @@ export default function ClinicalPrognosisChart({
                 style={{
                   marginTop: 6,
                   fontSize: 16,
-                  fontWeight: 700,
+                  fontWeight: 600,
                   color: getScoreStrokeColor(outpatientRiskPreview.tenYearRiskPercent * 2.2),
                 }}
               >
@@ -1456,7 +1447,6 @@ export default function ClinicalPrognosisChart({
               <div
                 style={{
                   fontSize: 12,
-                  letterSpacing: '0.12em',
                   color: 'var(--text-muted)',
                 }}
               >
@@ -1484,7 +1474,6 @@ export default function ClinicalPrognosisChart({
               <div
                 style={{
                   fontSize: 12,
-                  letterSpacing: '0.12em',
                   color: 'var(--text-muted)',
                 }}
               >
@@ -1494,7 +1483,7 @@ export default function ClinicalPrognosisChart({
                 style={{
                   marginTop: 6,
                   fontSize: 16,
-                  fontWeight: 700,
+                  fontWeight: 600,
                   color: 'var(--text-main)',
                 }}
               >
@@ -1511,7 +1500,6 @@ export default function ClinicalPrognosisChart({
               <div
                 style={{
                   fontSize: 12,
-                  letterSpacing: '0.12em',
                   color: 'var(--text-muted)',
                 }}
               >
@@ -1551,7 +1539,6 @@ export default function ClinicalPrognosisChart({
           <div
             style={{
               fontSize: 12,
-              letterSpacing: '0.14em',
               color: 'var(--c-asesmen)',
               marginBottom: 9,
             }}
@@ -1563,7 +1550,6 @@ export default function ClinicalPrognosisChart({
               <div
                 style={{
                   fontSize: 12,
-                  letterSpacing: '0.1em',
                   color: 'var(--text-muted)',
                   marginBottom: 8,
                 }}
@@ -1591,7 +1577,6 @@ export default function ClinicalPrognosisChart({
               <div
                 style={{
                   fontSize: 12,
-                  letterSpacing: '0.1em',
                   color: 'var(--text-muted)',
                   marginBottom: 8,
                 }}
@@ -1619,7 +1604,6 @@ export default function ClinicalPrognosisChart({
               <div
                 style={{
                   fontSize: 12,
-                  letterSpacing: '0.1em',
                   color: 'var(--text-muted)',
                   marginBottom: 8,
                 }}
@@ -1656,7 +1640,6 @@ export default function ClinicalPrognosisChart({
                         style={{
                           fontSize: 12,
                           color: 'var(--c-asesmen)',
-                          letterSpacing: '0.08em',
                         }}
                       >
                         {tool.status}
@@ -1692,7 +1675,6 @@ export default function ClinicalPrognosisChart({
           <div
             style={{
               fontSize: 12,
-              letterSpacing: '0.14em',
               color: 'var(--c-asesmen)',
               marginBottom: 9,
             }}
@@ -1731,7 +1713,6 @@ export default function ClinicalPrognosisChart({
                   <div
                     style={{
                       fontSize: 12,
-                      letterSpacing: '0.12em',
                       color: 'var(--text-muted)',
                     }}
                   >
@@ -1741,7 +1722,7 @@ export default function ClinicalPrognosisChart({
                     style={{
                       marginTop: 4,
                       fontSize: 20,
-                      fontWeight: 700,
+                      fontWeight: 600,
                       color: getSurvivalProbabilityColor(survivalWeek?.probability ?? 0),
                     }}
                   >
@@ -1832,7 +1813,6 @@ export default function ClinicalPrognosisChart({
           <div
             style={{
               fontSize: 12,
-              letterSpacing: '0.14em',
               color: 'var(--c-asesmen)',
               marginBottom: 9,
             }}
@@ -1868,7 +1848,6 @@ export default function ClinicalPrognosisChart({
           <div
             style={{
               fontSize: 12,
-              letterSpacing: '0.14em',
               color: 'var(--c-asesmen)',
               marginBottom: 9,
             }}
@@ -1921,7 +1900,6 @@ export default function ClinicalPrognosisChart({
                 <div
                   style={{
                     fontSize: 12,
-                    letterSpacing: '0.14em',
                     color: 'var(--text-muted)',
                   }}
                 >
@@ -1975,7 +1953,6 @@ export default function ClinicalPrognosisChart({
           <div
             style={{
               fontSize: 12,
-              letterSpacing: '0.14em',
               color: 'var(--c-asesmen)',
               marginBottom: 9,
             }}
@@ -2059,7 +2036,6 @@ export default function ClinicalPrognosisChart({
           <div
             style={{
               fontSize: 12,
-              letterSpacing: '0.14em',
               color: 'var(--c-asesmen)',
               marginBottom: 9,
             }}
@@ -2084,7 +2060,6 @@ export default function ClinicalPrognosisChart({
                   style={{
                     fontSize: 12,
                     color: 'var(--text-main)',
-                    letterSpacing: '0.06em',
                   }}
                 >
                   {item.label}
@@ -2134,7 +2109,6 @@ export default function ClinicalPrognosisChart({
           <div
             style={{
               fontSize: 12,
-              letterSpacing: '0.14em',
               color: 'var(--c-asesmen)',
               marginBottom: 9,
             }}
@@ -2159,7 +2133,6 @@ export default function ClinicalPrognosisChart({
           <div
             style={{
               fontSize: 12,
-              letterSpacing: '0.14em',
               color: 'var(--c-asesmen)',
               marginBottom: 9,
             }}
@@ -2200,7 +2173,6 @@ export default function ClinicalPrognosisChart({
                     <div
                       style={{
                         fontSize: 12,
-                        letterSpacing: '0.1em',
                         color: signal.severity === 'red' ? 'var(--c-critical)' : '#F97316',
                       }}
                     >
@@ -2237,7 +2209,6 @@ export default function ClinicalPrognosisChart({
             <div
               style={{
                 fontSize: 12,
-                letterSpacing: '0.14em',
                 color: 'var(--c-asesmen)',
                 marginBottom: 8,
               }}
@@ -2270,7 +2241,6 @@ export default function ClinicalPrognosisChart({
             <div
               style={{
                 fontSize: 12,
-                letterSpacing: '0.14em',
                 color: 'var(--c-asesmen)',
                 marginBottom: 8,
               }}

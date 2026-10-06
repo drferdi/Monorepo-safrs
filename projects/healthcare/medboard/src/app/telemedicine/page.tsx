@@ -421,7 +421,6 @@ function PatientFlowDiagram({ L }: { L: LTokens }) {
                   style={{
                     fontSize: 12,
                     color: L.accent,
-                    letterSpacing: '0.1em',
                     marginBottom: 2,
                     fontFamily: L.mono,
                   }}
@@ -521,7 +520,6 @@ function AppointmentRow({ L, appointment, onJoin }: AppointmentCardProps) {
             style={{
               fontSize: 14,
               color: L.accent,
-              letterSpacing: '0.05em',
               fontFamily: L.mono,
             }}
           >
@@ -537,7 +535,6 @@ function AppointmentRow({ L, appointment, onJoin }: AppointmentCardProps) {
               background: `${status.color}18`,
               color: status.color,
               fontSize: 12,
-              letterSpacing: '0.06em',
               fontFamily: L.mono,
             }}
           >
@@ -551,7 +548,6 @@ function AppointmentRow({ L, appointment, onJoin }: AppointmentCardProps) {
               border: `1px solid ${L.border}`,
               color: L.muted,
               fontSize: 12,
-              letterSpacing: '0.06em',
               fontFamily: L.mono,
             }}
           >
@@ -608,7 +604,6 @@ function AppointmentRow({ L, appointment, onJoin }: AppointmentCardProps) {
               borderRadius: 3,
               color: isInProgress ? L.green : L.accent,
               fontSize: 12,
-              letterSpacing: '0.08em',
               fontFamily: L.mono,
               cursor: 'pointer',
               transition: 'all 0.15s ease',
@@ -696,7 +691,6 @@ function RequestInbox({
               padding: '2px 8px',
               borderRadius: 2,
               fontFamily: L.mono,
-              letterSpacing: '0.05em',
             }}
           >
             {pending.length} baru
@@ -931,7 +925,6 @@ function RequestInbox({
                     fontSize: 12,
                     cursor: 'pointer',
                     fontFamily: L.mono,
-                    letterSpacing: '0.05em',
                   }}
                 >
                   TANDAI HANDLED
@@ -1287,8 +1280,6 @@ export default function TelemedicinePage(): React.JSX.Element {
                   style={{
                     fontSize: 12,
                     color: 'var(--text-muted)',
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
                     marginBottom: 4,
                   }}
                 >
@@ -1297,7 +1288,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                 <div
                   style={{
                     fontSize: 16,
-                    fontWeight: 700,
+                    fontWeight: 600,
                     color: 'var(--text-primary)',
                   }}
                 >
@@ -1336,8 +1327,6 @@ export default function TelemedicinePage(): React.JSX.Element {
                 style={{
                   fontSize: 12,
                   color: 'var(--text-muted)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
                   marginBottom: 4,
                 }}
               >
@@ -1386,7 +1375,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                   <div
                     style={{
                       fontSize: 14,
-                      fontWeight: 700,
+                      fontWeight: 600,
                       color: 'var(--text-primary)',
                     }}
                   >
@@ -1410,8 +1399,6 @@ export default function TelemedicinePage(): React.JSX.Element {
                 style={{
                   fontSize: 12,
                   color: 'var(--text-muted)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.1em',
                   marginBottom: 6,
                 }}
               >
@@ -1494,8 +1481,6 @@ export default function TelemedicinePage(): React.JSX.Element {
                     style={{
                       fontSize: 12,
                       color: 'var(--text-muted)',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.1em',
                     }}
                   >
                     Canonical Clinical Snapshot
@@ -1503,7 +1488,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                   <span
                     style={{
                       fontSize: 12,
-                      fontWeight: 700,
+                      fontWeight: 600,
                       padding: '4px 8px',
                       borderRadius: 999,
                       background: canonicalSnapshotTone.pillBackground,
@@ -1548,7 +1533,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                     <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 2 }}>
                       Canonical NEWS2
                     </div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
                       {activeConsult.canonical_clinical.news2
                         ? `${activeConsult.canonical_clinical.news2.score} · ${humanizeCanonicalValue(
                             activeConsult.canonical_clinical.news2.risk_level
@@ -1567,7 +1552,7 @@ export default function TelemedicinePage(): React.JSX.Element {
                     <div style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 2 }}>
                       Canonical Trajectory
                     </div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--text-primary)' }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)' }}>
                       {activeConsult.canonical_clinical.trajectory?.overall_trend
                         ? `${humanizeCanonicalValue(
                             activeConsult.canonical_clinical.trajectory.overall_trend
@@ -1600,8 +1585,6 @@ export default function TelemedicinePage(): React.JSX.Element {
                       style={{
                         fontSize: 12,
                         color: 'var(--text-muted)',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.1em',
                       }}
                     >
                       Immediate Actions
@@ -1671,8 +1654,6 @@ export default function TelemedicinePage(): React.JSX.Element {
             style={{
               fontSize: 12,
               color: 'var(--text-muted)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
               marginBottom: 4,
             }}
           >
@@ -1847,7 +1828,6 @@ export default function TelemedicinePage(): React.JSX.Element {
               boxShadow: L.actionNeumorph,
               padding: '2px 10px',
               borderRadius: 2,
-              letterSpacing: '0.05em',
               fontFamily: L.mono,
             }}
           >
@@ -1861,7 +1841,6 @@ export default function TelemedicinePage(): React.JSX.Element {
                 border: `1px solid ${L.green}`,
                 padding: '2px 10px',
                 borderRadius: 2,
-                letterSpacing: '0.05em',
                 fontFamily: L.mono,
               }}
             >
@@ -1875,7 +1854,6 @@ export default function TelemedicinePage(): React.JSX.Element {
               border: `1px solid ${L.border}`,
               padding: '2px 10px',
               borderRadius: 2,
-              letterSpacing: '0.05em',
               fontFamily: L.mono,
             }}
           >
@@ -2003,7 +1981,6 @@ export default function TelemedicinePage(): React.JSX.Element {
                       color: isOnline ? L.green : L.muted,
                       fontSize: 12,
                       fontFamily: L.mono,
-                      letterSpacing: '0.06em',
                       cursor: togglingStatus ? 'not-allowed' : 'pointer',
                       opacity: togglingStatus ? 0.6 : 1,
                       transition: 'all 0.2s',
@@ -2027,7 +2004,6 @@ export default function TelemedicinePage(): React.JSX.Element {
                     fontSize: 12,
                     cursor: 'pointer',
                     fontFamily: L.mono,
-                    letterSpacing: '0.06em',
                   }}
                 >
                   <RefreshCw size={12} />
@@ -2046,7 +2022,6 @@ export default function TelemedicinePage(): React.JSX.Element {
                     color: '#ffffff',
                     boxShadow: L.actionNeumorph,
                     fontSize: 12,
-                    letterSpacing: '0.08em',
                     fontFamily: L.mono,
                     cursor: 'pointer',
                     transition: 'all 0.15s ease',
@@ -2239,7 +2214,6 @@ export default function TelemedicinePage(): React.JSX.Element {
                     fontSize: 14,
                     cursor: 'pointer',
                     fontFamily: L.mono,
-                    letterSpacing: '0.05em',
                   }}
                 >
                   <Plus size={12} /> BUAT KONSULTASI
@@ -2359,9 +2333,7 @@ export default function TelemedicinePage(): React.JSX.Element {
               style={{
                 fontFamily: L.mono,
                 fontSize: 12,
-                letterSpacing: '0.15em',
                 color: L.muted,
-                textTransform: 'uppercase',
               }}
             >
               Infrastructure by
@@ -2371,7 +2343,6 @@ export default function TelemedicinePage(): React.JSX.Element {
                 fontFamily: L.mono,
                 fontSize: 12,
                 fontWeight: 600,
-                letterSpacing: '0.08em',
                 color: L.text,
               }}
             >
@@ -2394,9 +2365,7 @@ export default function TelemedicinePage(): React.JSX.Element {
               style={{
                 fontFamily: L.mono,
                 fontSize: 12,
-                letterSpacing: '0.15em',
                 color: L.muted,
-                textTransform: 'uppercase',
               }}
             >
               Powered by
@@ -2406,7 +2375,6 @@ export default function TelemedicinePage(): React.JSX.Element {
                 fontFamily: L.mono,
                 fontSize: 12,
                 fontWeight: 600,
-                letterSpacing: '0.1em',
                 color: L.accent,
               }}
             >
@@ -2427,7 +2395,6 @@ export default function TelemedicinePage(): React.JSX.Element {
             style={{
               fontFamily: L.mono,
               fontSize: 12,
-              letterSpacing: '0.1em',
               color: L.muted,
               opacity: 0.6,
             }}
@@ -2438,7 +2405,6 @@ export default function TelemedicinePage(): React.JSX.Element {
             style={{
               fontFamily: L.mono,
               fontSize: 12,
-              letterSpacing: '0.1em',
               color: L.muted,
               opacity: 0.6,
             }}

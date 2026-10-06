@@ -239,7 +239,6 @@ export default function HubProfileLabPage() {
             style={{
               margin: 0,
               fontSize: 12,
-              letterSpacing: '0.18em',
               color: 'var(--text-muted)',
             }}
           >
@@ -270,8 +269,6 @@ export default function HubProfileLabPage() {
             color: 'var(--text-main)',
             textDecoration: 'none',
             fontSize: 12,
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
           }}
         >
           ← Kembali ke Profile
@@ -354,8 +351,6 @@ export default function HubProfileLabPage() {
                 style={{
                   fontSize: 12,
                   color: 'rgba(194, 210, 203, 0.65)',
-                  letterSpacing: '0.18em',
-                  textTransform: 'uppercase',
                 }}
               >
                 sentra
@@ -381,8 +376,6 @@ export default function HubProfileLabPage() {
                 textOrientation: 'mixed',
                 fontSize: 12,
                 color: 'rgba(186, 200, 194, 0.34)',
-                letterSpacing: '0.16em',
-                textTransform: 'uppercase',
               }}
             >
               {sideCode}
@@ -397,8 +390,6 @@ export default function HubProfileLabPage() {
                 textOrientation: 'mixed',
                 fontSize: 12,
                 color: 'rgba(186, 200, 194, 0.34)',
-                letterSpacing: '0.18em',
-                textTransform: 'uppercase',
               }}
             >
               activity
@@ -520,9 +511,7 @@ export default function HubProfileLabPage() {
                 style={{
                   marginBottom: 12,
                   fontSize: 12,
-                  letterSpacing: '0.2em',
                   color: 'rgba(188, 205, 197, 0.38)',
-                  textTransform: 'uppercase',
                 }}
               >
                 {activityCount} sinyal aktivitas terdeteksi
@@ -568,8 +557,6 @@ export default function HubProfileLabPage() {
                         style={{
                           fontSize: 12,
                           color: 'rgba(214, 220, 214, 0.6)',
-                          letterSpacing: '0.14em',
-                          textTransform: 'uppercase',
                         }}
                       >
                         {row.label}
@@ -579,8 +566,6 @@ export default function HubProfileLabPage() {
                       style={{
                         fontSize: 12,
                         color: row.accentColor,
-                        letterSpacing: '0.1em',
-                        textTransform: 'uppercase',
                         textAlign: 'right',
                       }}
                     >

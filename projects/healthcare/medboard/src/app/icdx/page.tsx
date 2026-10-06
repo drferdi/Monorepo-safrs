@@ -283,7 +283,6 @@ export default function ICDXPage() {
               background: 'var(--c-asesmen)',
               padding: '2px 10px',
               borderRadius: 2,
-              letterSpacing: '0.05em',
               fontFamily: L.mono,
             }}
           >
@@ -308,8 +307,6 @@ export default function ICDXPage() {
                   fontFamily: L.mono,
                   fontSize: 14,
                   color: L.accent,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
                   marginBottom: 12,
                 }}
               >
@@ -393,8 +390,6 @@ export default function ICDXPage() {
                     fontFamily: L.mono,
                     fontSize: 14,
                     color: L.accent,
-                    letterSpacing: '0.12em',
-                    textTransform: 'uppercase',
                     marginBottom: 12,
                   }}
                 >
@@ -418,9 +413,7 @@ export default function ICDXPage() {
                       borderBottom: `1px solid ${L.border}`,
                       fontFamily: L.mono,
                       fontSize: 12,
-                      letterSpacing: '0.1em',
                       color: L.muted,
-                      textTransform: 'uppercase',
                     }}
                   >
                     Kode Input (WHO/Modern)
@@ -433,9 +426,7 @@ export default function ICDXPage() {
                       borderLeft: `1px solid ${L.border}`,
                       fontFamily: L.mono,
                       fontSize: 12,
-                      letterSpacing: '0.1em',
                       color: L.muted,
-                      textTransform: 'uppercase',
                     }}
                   >
                     Kode PCare / ePuskesmas
@@ -490,8 +481,6 @@ export default function ICDXPage() {
                                 color: '#000',
                                 padding: '2px 8px',
                                 borderRadius: 2,
-                                letterSpacing: '0.06em',
-                                textTransform: 'uppercase',
                               }}
                             >
                               ✓ Valid
@@ -520,8 +509,6 @@ export default function ICDXPage() {
                                 color: L.critical,
                                 padding: '2px 8px',
                                 borderRadius: 2,
-                                letterSpacing: '0.06em',
-                                textTransform: 'uppercase',
                               }}
                             >
                               ✗ Tidak tersedia
@@ -552,8 +539,6 @@ export default function ICDXPage() {
                   fontFamily: L.mono,
                   fontSize: 14,
                   color: L.accent,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
                   marginBottom: 12,
                 }}
               >
@@ -616,8 +601,6 @@ export default function ICDXPage() {
                         style={{
                           fontSize: 12,
                           color: L.muted,
-                          letterSpacing: '0.08em',
-                          textTransform: 'uppercase',
                           fontFamily: L.mono,
                         }}
                       >
@@ -701,8 +684,6 @@ export default function ICDXPage() {
                             fontFamily: L.mono,
                             fontSize: 12,
                             color: L.accent,
-                            letterSpacing: '0.1em',
-                            textTransform: 'uppercase',
                           }}
                         >
                           Kode
@@ -739,8 +720,6 @@ export default function ICDXPage() {
                             fontFamily: L.mono,
                             fontSize: 12,
                             color: L.accent,
-                            letterSpacing: '0.1em',
-                            textTransform: 'uppercase',
                           }}
                         >
                           Kategori
@@ -782,8 +761,6 @@ export default function ICDXPage() {
                                 fontSize: 12,
                                 color: L.accent,
                                 marginBottom: 8,
-                                letterSpacing: '0.1em',
-                                textTransform: 'uppercase',
                               }}
                             >
                               ✓ Gunakan kode ini di PCare / ePuskesmas
@@ -819,8 +796,6 @@ export default function ICDXPage() {
                                 fontSize: 12,
                                 color: L.critical,
                                 marginBottom: 8,
-                                letterSpacing: '0.1em',
-                                textTransform: 'uppercase',
                               }}
                             >
                               ⚠ Kode tidak tersedia
@@ -839,8 +814,6 @@ export default function ICDXPage() {
                         style={{
                           fontSize: 12,
                           color: L.muted,
-                          letterSpacing: '0.08em',
-                          textTransform: 'uppercase',
                           padding: '4px 12px',
                           border: `1px solid ${L.border}`,
                           borderRadius: 3,
@@ -853,8 +826,6 @@ export default function ICDXPage() {
                         style={{
                           fontSize: 12,
                           color: L.accent,
-                          letterSpacing: '0.08em',
-                          textTransform: 'uppercase',
                           padding: '4px 12px',
                           border: `1px solid ${L.accent}`,
                           borderRadius: 3,
@@ -896,7 +867,6 @@ export default function ICDXPage() {
                       fontFamily: L.mono,
                       fontSize: 12,
                       color: v.active ? L.accent : L.muted,
-                      letterSpacing: '0.08em',
                       minWidth: 50,
                       marginTop: 2,
                     }}
@@ -930,8 +900,6 @@ export default function ICDXPage() {
                       style={{
                         fontSize: 12,
                         color: L.accent,
-                        letterSpacing: '0.06em',
-                        textTransform: 'uppercase',
                         padding: '2px 8px',
                         border: `1px solid ${L.accent}`,
                         borderRadius: 3,
@@ -982,8 +950,6 @@ export default function ICDXPage() {
                 fontFamily: L.mono,
                 fontSize: 14,
                 color: L.accent,
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
                 marginBottom: 16,
               }}
             >
@@ -1065,7 +1031,6 @@ export default function ICDXPage() {
                   color: lb1Running ? L.muted : '#000',
                   fontSize: 14,
                   fontWeight: 600,
-                  letterSpacing: '0.1em',
                   cursor: lb1Running ? 'not-allowed' : 'pointer',
                   fontFamily: L.mono,
                   transition: 'all 0.2s',
@@ -1095,8 +1060,6 @@ export default function ICDXPage() {
                     fontFamily: L.mono,
                     fontSize: 12,
                     color: L.accent,
-                    letterSpacing: '0.1em',
-                    textTransform: 'uppercase',
                     marginBottom: 10,
                   }}
                 >
@@ -1155,8 +1118,6 @@ export default function ICDXPage() {
                 fontFamily: L.mono,
                 fontSize: 14,
                 color: L.accent,
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
                 marginBottom: 12,
               }}
             >
@@ -1188,9 +1149,7 @@ export default function ICDXPage() {
                         padding: '8px 12px',
                         fontFamily: L.mono,
                         fontSize: 12,
-                        letterSpacing: '0.1em',
                         color: L.muted,
-                        textTransform: 'uppercase',
                       }}
                     >
                       {h}
@@ -1235,7 +1194,6 @@ export default function ICDXPage() {
                           style={{
                             fontSize: 12,
                             fontFamily: L.mono,
-                            letterSpacing: '0.06em',
                             padding: '2px 8px',
                             borderRadius: 2,
                             background:
