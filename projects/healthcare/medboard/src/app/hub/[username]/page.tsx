@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { isDoctorProfession } from '@/lib/crew-access'
 import { resolveCrewRankBadgeSrc, resolveCrewSentraTitle } from '@/lib/crew-profile'
 import { safeHref, safeUrl } from '@/lib/sanitize-url'
+import styles from '../hub.module.css'
 
 interface RosterMemberDetail {
   username: string
@@ -242,388 +243,151 @@ export default function HubProfileDetailPage() {
   const visibleProfileLinks = profileLinks.filter(item => Boolean(item.href))
 
   return (
-    <div style={{ width: '100%', maxWidth: 1180 }}>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 16,
-          marginBottom: 24,
-          flexWrap: 'wrap',
-        }}
-      >
+    <div className={styles.page}>
+      <div className="ui-page-header" style={{ marginBottom: 0 }}>
         <div>
-          <p
-            style={{
-              margin: 0,
-              fontSize: 12,
-              color: 'var(--text-muted)',
-            }}
-          >
-            CREW PROFILE
-          </p>
-          <h1
-            style={{
-              margin: '8px 0 0',
-              fontSize: 30,
-              fontWeight: 600,
-              color: 'var(--text-main)',
-              letterSpacing: '-0.02em',
-            }}
-          >
-            Detail Roster
-          </h1>
+          <p className={styles.meta}>CREW PROFILE</p>
+          <h1 className={styles.title}>Detail Roster</h1>
         </div>
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 10,
-            flexWrap: 'wrap',
-            justifyContent: 'flex-end',
-          }}
-        >
+        <div className="ui-page-header__actions">
           <Link
             href={`/hub/lab/${encodeURIComponent(username)}`}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
-              padding: '10px 14px',
-              borderRadius: 999,
-              border: '1px solid rgba(240, 178, 100, 0.22)',
-              background: 'rgba(240, 178, 100, 0.08)',
-              color: '#f0b264',
-              textDecoration: 'none',
-              fontSize: 12,
-            }}
+            className="ui-btn ui-btn--secondary"
           >
             Buka Lab Preview
           </Link>
-          <Link
-            href="/hub"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
-              padding: '10px 14px',
-              borderRadius: 999,
-              border: '1px solid var(--line-base)',
-              background: 'var(--bg-canvas-v3)',
-              color: 'var(--text-main)',
-              textDecoration: 'none',
-              fontSize: 12,
-            }}
-          >
+          <Link href="/hub" className="ui-btn ui-btn--ghost">
             ← Kembali ke Hub
           </Link>
         </div>
       </div>
 
       {loading ? (
-        <div
-          style={{
-            borderRadius: 18,
-            border: '1px solid var(--line-base)',
-            background: 'linear-gradient(160deg, var(--bg-nav), var(--bg-card))',
-            padding: '24px 22px',
-            color: 'var(--text-muted)',
-          }}
-        >
-          Memuat detail profile crew...
-        </div>
+        <div className={`${styles.card} ${styles.muted}`}>Memuat detail profile crew...</div>
       ) : error ? (
-        <div
-          style={{
-            borderRadius: 18,
-            border: '1px solid rgba(231,76,60,0.22)',
-            background: 'linear-gradient(160deg, rgba(80,15,15,0.4), var(--bg-card))',
-            padding: '24px 22px',
-            color: 'var(--text-main)',
-          }}
-        >
+        <div className={`${styles.card} ${styles.status}`} style={{ borderLeftColor: 'var(--critical)' }}>
           {error}
         </div>
       ) : (
-        <>
-          <div
-            style={{
-              borderRadius: 22,
-              border: '1px solid var(--line-base)',
-              background: 'linear-gradient(160deg, var(--bg-nav), var(--bg-card))',
-              overflow: 'hidden',
-              marginBottom: 22,
-            }}
-          >
-            <div
-              style={{
-                height: 3,
-                background:
-                  'linear-gradient(90deg, rgba(240,178,100,0.92), rgba(240,178,100,0.12), transparent)',
-              }}
+        <div className={styles.card}>
+          <div className={styles.profileHead}>
+            <img
+              src={safeUrl(avatarUrl, '/avatar.png')}
+              alt={fullName}
+              className={styles.profileAvatar}
             />
-            <div
-              style={{
-                padding: '20px',
-                display: 'grid',
-                gap: 20,
-                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              }}
-            >
-              <div style={{ display: 'flex', gap: 16, minWidth: 0 }}>
-                <img
-                  src={safeUrl(avatarUrl, '/avatar.png')}
-                  alt={fullName}
-                  style={{
-                    width: 88,
-                    height: 88,
-                    borderRadius: 22,
-                    objectFit: 'cover',
-                    border: '1px solid var(--line-base)',
-                    background: 'var(--bg-canvas)',
-                    flexShrink: 0,
-                  }}
-                />
 
-                <div
-                  style={{
-                    minWidth: 0,
-                    display: 'grid',
-                    gap: 10,
-                    alignContent: 'start',
-                  }}
-                >
-                  <div>
-                    <div
-                      style={{
-                        fontSize: 12,
-                        color: 'var(--text-muted)',
-                        marginBottom: 6,
-                      }}
-                    >
-                      @{member?.username}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: 24,
-                        fontWeight: 600,
-                        color: 'var(--text-main)',
-                        lineHeight: 1.15,
-                        letterSpacing: '-0.03em',
-                      }}
-                    >
-                      {fullName}
-                    </div>
-                    {degreesLabel && (
-                      <div
-                        style={{
-                          fontSize: 12,
-                          color: 'var(--text-muted)',
-                          marginTop: 4,
-                        }}
-                      >
-                        {degreesLabel}
-                      </div>
-                    )}
-                  </div>
+            <div style={{ minWidth: 0, flex: 1, display: 'grid', gap: 'var(--gap-sm)' }}>
+              <div className={styles.small}>@{member?.username}</div>
+              <h2 className={styles.profileName}>{fullName}</h2>
+              {degreesLabel && <div className={styles.small}>{degreesLabel}</div>}
 
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                    {credentialChips.length > 0 ? (
-                      credentialChips.map(item => (
-                        <span
-                          key={item}
-                          style={{
-                            fontSize: 12,
-                            color: 'var(--text-muted)',
-                            padding: '5px 10px',
-                            borderRadius: 999,
-                            border: '1px solid var(--line-base)',
-                            background: 'var(--bg-canvas-v3)',
-                          }}
-                        >
-                          {item}
-                        </span>
-                      ))
-                    ) : (
-                      <span
-                        style={{
-                          fontSize: 12,
-                          color: 'var(--text-muted)',
-                          padding: '5px 10px',
-                          borderRadius: 999,
-                          border: '1px solid var(--line-base)',
-                          background: 'var(--bg-canvas-v3)',
-                        }}
-                      >
-                        Credential belum lengkap
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Ringkasan profile — humanized */}
-                  <div
-                    style={{
-                      fontSize: 14,
-                      color: 'var(--text-muted)',
-                      lineHeight: 1.65,
-                      marginTop: 4,
-                      borderTop: '1px solid var(--line-base)',
-                      paddingTop: 10,
-                    }}
-                  >
-                    {professionLabel} di{' '}
-                    <span style={{ color: 'var(--text-main)' }}>
-                      {member?.institution || 'institusi belum diisi'}
+              <div className={styles.badges}>
+                {credentialChips.length > 0 ? (
+                  credentialChips.map(item => (
+                    <span key={item} className="ui-badge ui-badge--neutral">
+                      {item}
                     </span>
-                    {jobTitle && jobTitle !== 'Belum ditentukan'
-                      ? `, menjabat sebagai ${jobTitle}`
-                      : ''}
-                    .{degreesLabel ? ` Menyandang gelar ${degreesLabel}.` : ''}
-                    {member?.email ? ` Dapat dihubungi melalui ${member.email}.` : ''}
-                  </div>
-
-                  {/* Link Resmi — desain identik dengan halaman profile user */}
-                  <div style={{ marginTop: 6 }}>
-                    <div
-                      style={{
-                        fontSize: 12,
-                        color: 'var(--text-muted)',
-                        marginBottom: 8,
-                      }}
-                    >
-                      Link Resmi
-                    </div>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16 }}>
-                      {profileLinks.map(item => {
-                        const hasLink = Boolean(item.href)
-                        const iconMask = (
-                          <span
-                            aria-hidden="true"
-                            style={{
-                              display: 'inline-block',
-                              width: 26,
-                              height: 26,
-                              flexShrink: 0,
-                              background: hasLink ? '#C8A57F' : 'var(--text-muted)',
-                              opacity: hasLink ? 1 : 0.55,
-                              WebkitMaskImage: `url(${item.iconSrc})`,
-                              maskImage: `url(${item.iconSrc})`,
-                              WebkitMaskRepeat: 'no-repeat',
-                              maskRepeat: 'no-repeat',
-                              WebkitMaskPosition: 'center',
-                              maskPosition: 'center',
-                              WebkitMaskSize: 'contain',
-                              maskSize: 'contain',
-                            }}
-                          />
-                        )
-                        const shared: React.CSSProperties = {
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: 28,
-                          height: 28,
-                          textDecoration: 'none',
-                        }
-                        if (!hasLink) {
-                          return (
-                            <div key={item.key} title={item.label} style={shared}>
-                              {iconMask}
-                            </div>
-                          )
-                        }
-                        return (
-                          <a
-                            key={item.key}
-                            href={safeHref(item.href)}
-                            target="_blank"
-                            rel="noreferrer"
-                            title={item.label}
-                            style={shared}
-                          >
-                            {iconMask}
-                          </a>
-                        )
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                style={{
-                  borderRadius: 18,
-                  border: '1px solid var(--line-base)',
-                  background: 'var(--bg-canvas-v3)',
-                  padding: '16px',
-                  display: 'grid',
-                  gap: 10,
-                  alignContent: 'start',
-                }}
-              >
-                {rankBadgeSrc ? (
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      marginBottom: 8,
-                      minHeight: 128,
-                      paddingBottom: 4,
-                    }}
-                  >
-                    <img
-                      src={rankBadgeSrc}
-                      alt={`Rank ${member?.role}`}
-                      style={{
-                        width: 'clamp(126px, 58%, 176px)',
-                        height: 'auto',
-                        maxHeight: 126,
-                        objectFit: 'contain',
-                        opacity: 0.99,
-                      }}
-                    />
-                  </div>
-                ) : null}
-                {[...identityCards, ...detailCards].map(item => (
-                  <div
-                    key={item.label}
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '110px minmax(0, 1fr)',
-                      gap: 10,
-                      alignItems: 'start',
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: 12,
-                        color: 'var(--text-muted)',
-                        lineHeight: 1.5,
-                      }}
-                    >
-                      {item.label}
-                    </span>
-                    <span
-                      style={{
-                        fontSize: 14,
-                        color: 'var(--text-main)',
-                        lineHeight: 1.45,
-                      }}
-                    >
-                      {item.value}
-                    </span>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <span className="ui-badge ui-badge--neutral">Credential belum lengkap</span>
+                )}
               </div>
             </div>
+
+            {rankBadgeSrc ? (
+              <img
+                src={rankBadgeSrc}
+                alt={`Rank ${member?.role}`}
+                style={{ width: 120, height: 'auto', maxHeight: 120, objectFit: 'contain' }}
+              />
+            ) : null}
           </div>
 
-          {/* Detail cards merged into rank card above */}
+          <hr className={styles.divider} />
 
-          {/* Link resmi + ringkasan sudah di-embed ke card utama di atas */}
-        </>
+          {/* Ringkasan profile — humanized */}
+          <div className={styles.muted} style={{ lineHeight: 1.65 }}>
+            {professionLabel} di{' '}
+            <span style={{ color: 'var(--text)' }}>
+              {member?.institution || 'institusi belum diisi'}
+            </span>
+            {jobTitle && jobTitle !== 'Belum ditentukan' ? `, menjabat sebagai ${jobTitle}` : ''}.
+            {degreesLabel ? ` Menyandang gelar ${degreesLabel}.` : ''}
+            {member?.email ? ` Dapat dihubungi melalui ${member.email}.` : ''}
+          </div>
+
+          <hr className={styles.divider} />
+
+          <div className={styles.fields}>
+            {[...identityCards, ...detailCards].map(item => (
+              <div key={item.label} className={styles.field}>
+                <span className={styles.fieldLabel}>{item.label}</span>
+                <span className={styles.fieldValue}>{item.value}</span>
+              </div>
+            ))}
+          </div>
+
+          <hr className={styles.divider} />
+
+          {/* Link Resmi — desain identik dengan halaman profile user */}
+          <div className={styles.field}>
+            <h3 className={styles.cardTitle}>Link Resmi</h3>
+            <div className={styles.links} style={{ marginTop: 'var(--gap-sm)' }}>
+              {profileLinks.map(item => {
+                const hasLink = Boolean(item.href)
+                const iconMask = (
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      display: 'inline-block',
+                      width: 24,
+                      height: 24,
+                      flexShrink: 0,
+                      background: hasLink ? 'var(--primary)' : 'var(--text-secondary)',
+                      opacity: hasLink ? 1 : 0.4,
+                      WebkitMaskImage: `url(${item.iconSrc})`,
+                      maskImage: `url(${item.iconSrc})`,
+                      WebkitMaskRepeat: 'no-repeat',
+                      maskRepeat: 'no-repeat',
+                      WebkitMaskPosition: 'center',
+                      maskPosition: 'center',
+                      WebkitMaskSize: 'contain',
+                      maskSize: 'contain',
+                    }}
+                  />
+                )
+                const shared: React.CSSProperties = {
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 28,
+                  height: 28,
+                  textDecoration: 'none',
+                }
+                if (!hasLink) {
+                  return (
+                    <div key={item.key} title={item.label} style={shared}>
+                      {iconMask}
+                    </div>
+                  )
+                }
+                return (
+                  <a
+                    key={item.key}
+                    href={safeHref(item.href)}
+                    target="_blank"
+                    rel="noreferrer"
+                    title={item.label}
+                    style={shared}
+                  >
+                    {iconMask}
+                  </a>
+                )
+              })}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   )
