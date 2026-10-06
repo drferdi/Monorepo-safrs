@@ -24,6 +24,11 @@ describe("releaseFailures", () => {
     expect(releaseFailures({}, files)).toEqual(["VITE_MIRA_DEV_TOKEN tertanam di background.js"]);
   });
 
+  it("finds a filled credential written with spaces, as an unminified bundle has it", () => {
+    const files = { "background.js": `const e = { VITE_MIRA_DEV_TOKEN : "${TOKEN}" };` };
+    expect(releaseFailures({}, files)).toEqual(["VITE_MIRA_DEV_TOKEN tertanam di background.js"]);
+  });
+
   it("does not match a short env value against unrelated code", () => {
     const files = { "background.js": "const a=1;" };
     expect(releaseFailures({ VITE_SENTRA_API_KEY: "1" }, files)).toEqual([]);

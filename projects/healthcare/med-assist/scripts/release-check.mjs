@@ -21,7 +21,7 @@ export function releaseFailures(env, files, { allowDevToken = false } = {}) {
     const value = env[name]?.trim() ?? "";
     // The whole env object is inlined (diagnosis-v2.ts, hybrid-trajectory.ts), so a filled key
     // shows up by name even when today's env no longer has the value.
-    const filledKey = new RegExp(`["']?${name}["']?\s*:\s*["'][^"']+["']`);
+    const filledKey = new RegExp(`["']?${name}["']?\\s*:\\s*["'][^"']+["']`);
     for (const [file, content] of Object.entries(files)) {
       const hasValue = value.length >= MIN_SECRET_LENGTH && content.includes(value);
       if (hasValue || filledKey.test(content)) failures.add(`${name} tertanam di ${file}`);
