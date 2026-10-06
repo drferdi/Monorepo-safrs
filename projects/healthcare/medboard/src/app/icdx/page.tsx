@@ -273,7 +273,7 @@ export default function ICDXPage() {
   return (
     <div style={{ width: '100%', maxWidth: 1400 }}>
       <div className="page-header" style={{ maxWidth: '100%', marginBottom: 24 }}>
-        <div className="page-title">Ascriva ICDX</div>
+        <div className="page-title">ICD Coding</div>
         <div className="page-subtitle">Pencarian kode diagnosis & konversi ICD lintas versi</div>
         <div className="page-header-divider" />
         <div className="page-header-badges">

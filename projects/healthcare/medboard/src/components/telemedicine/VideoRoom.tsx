@@ -173,7 +173,7 @@ export function VideoRoom({
             }}
           />
           <span style={{ color: 'var(--text)', fontSize: 16, fontWeight: 600 }}>
-            Konsultasi Telemedicine
+            Konsultasi MedLink
           </span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>

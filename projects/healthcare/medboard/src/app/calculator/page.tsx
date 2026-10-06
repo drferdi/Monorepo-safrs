@@ -19,7 +19,7 @@ export default function CalculatorPage() {
     <div className={styles.page}>
       <div className="ui-page-header" style={{ marginBottom: 0 }}>
         <div>
-          <h1 className={styles.title}>Calculator Medis</h1>
+          <h1 className={styles.title}>Algorithma Calculator</h1>
           <p className="ui-page-header__description">
             Adaptasi kalkulator klinis dari Medlink untuk kebutuhan cepat di dashboard Puskesmas.
           </p>

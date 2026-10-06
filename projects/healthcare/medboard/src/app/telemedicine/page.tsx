@@ -1162,7 +1162,7 @@ export default function TelemedicinePage(): React.JSX.Element {
 
       <div className="ui-page-header" style={{ marginBottom: 0 }}>
         <div>
-          <h1 className={styles.title}>Telemedicine</h1>
+          <h1 className={styles.title}>MedLink</h1>
           <p className="ui-page-header__description">
             Clinical Command Desk untuk konsultasi video, triase masuk, dan timeline layanan jarak
             jauh

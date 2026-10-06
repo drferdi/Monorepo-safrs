@@ -19,7 +19,7 @@ test('every rail item opens a page that exists', () => {
 
 test('pages that were only in the old footer stay reachable from the rail', () => {
   const formerFooterAndNav = [
-    '/emr', '/hub', '/voice', '/acars', '/icdx', '/calculator', '/critical-mind',
+    '/emr', '/hub', '/voice', '/acars', '/icdx', '/calculator', '/sentrapedia',
     '/chat', '/telemedicine', '/dashboard/intelligence', '/audit/logbook', '/admin',
   ]
   assert.deepEqual(formerFooterAndNav.filter((href) => !hrefs.includes(href)), [])
@@ -81,4 +81,14 @@ test('the avatar shows name initials without titles or degrees', () => {
   assert.equal(initials('dr. Budi Santoso, Sp.PD'), 'BS')
   assert.equal(initials('Ani'), 'A')
   assert.equal(initials('  '), '?')
+})
+
+test('the rail uses the product names Chief chose (2026-10-06)', () => {
+  const labels = Object.fromEntries(NAV_GROUPS.flatMap((group) => group.items.map((item) => [item.href, item.label])))
+  assert.equal(labels['/emr'], 'Intelligence EMR')
+  assert.equal(labels['/telemedicine'], 'MedLink')
+  assert.equal(labels['/icdx'], 'ICD Coding')
+  assert.equal(labels['/calculator'], 'Algorithma Calculator')
+  assert.equal(labels['/sentrapedia'], 'Sentrapedia')
+  assert.equal(labels['/chat'], 'Sentra Social')
 })

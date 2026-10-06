@@ -5545,7 +5545,7 @@ export default function EMRPage() {
         <div className="page-header">
           <div className="emr-page-head-row">
             <div>
-              <div className="page-title">EMR Klinis</div>
+              <div className="page-title">Intelligence EMR</div>
               <div className="page-subtitle">
                 Workflow klinis terintegrasi untuk Retrieval-Augmented Generation Based
               </div>
@@ -5574,7 +5574,7 @@ export default function EMRPage() {
           </div>
         )}
 
-        <div className="emr-workflow-tabs" role="tablist" aria-label="Workflow EMR Klinis">
+        <div className="emr-workflow-tabs" role="tablist" aria-label="Workflow Intelligence EMR">
           {workflowTabs.map((tab) => {
             const isActive = workflowTab === tab.id
             const isEmergencyLocked =

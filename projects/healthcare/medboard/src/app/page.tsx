@@ -1620,7 +1620,7 @@ export default function ProfilUserPage() {
                       className="home-status-dot"
                       style={{ background: 'var(--success)' }}
                     />
-                    Assist Bridge tersedia — siap digunakan dari halaman EMR Console
+                    Assist Bridge tersedia — siap digunakan dari halaman Intelligence EMR
                   </div>
                 </PanelSection>
               </div>

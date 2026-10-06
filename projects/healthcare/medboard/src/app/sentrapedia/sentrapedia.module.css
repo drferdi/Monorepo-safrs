@@ -1,0 +1,556 @@
+/* Sentrapedia, copied from sentrahai.com/sentrapedia (sentraverse): same content, layout and
+   spacing. Colours and type are MedBoard's (Chief 2026-10-06): white, Oxford Blue, red-orange,
+   IBM Plex Sans; no capitals or wide tracking, sizes on the 12/14/16/18/20/24/30 scale. */
+
+.page {
+  --sp-bg: var(--surface);
+  --sp-fg: var(--text);
+  --sp-title: var(--primary);
+  --sp-accent: var(--accent);
+  --sp-muted: var(--text-secondary);
+  --sp-muted-soft: var(--text-secondary);
+  --sp-line: var(--border);
+  --sp-line-strong: var(--border);
+  --sp-hover: var(--surface-subtle);
+  --sp-font-ui: var(--font-base);
+  --sp-font-body: var(--font-base);
+  --sp-font-editorial: var(--font-base);
+
+  background: var(--sp-bg);
+  color: var(--sp-fg);
+  font-family: var(--sp-font-ui);
+}
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Hero */
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--sp-line);
+  padding: 80px 0;
+}
+
+.eyebrow {
+  margin: 0;
+  font-family: var(--sp-font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sp-accent);
+}
+
+.title {
+  margin: 12px 0 0;
+  font-family: var(--sp-font-editorial);
+  font-size: 56px;
+  font-weight: 600;
+  line-height: 0.95;
+  color: var(--sp-title);
+}
+
+.divider {
+  margin-top: 24px;
+  display: flex;
+  max-width: 280px;
+  align-items: center;
+  gap: 16px;
+}
+
+.dividerLine {
+  height: 1px;
+  flex: 1;
+  background: var(--sp-accent);
+  opacity: 0.6;
+}
+
+.dividerDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--sp-accent);
+}
+
+.body {
+  margin: 24px 0 0;
+  max-width: 640px;
+  font-family: var(--sp-font-body);
+  font-size: 16px;
+  line-height: 1.625;
+  color: var(--sp-muted);
+}
+
+.bodySm {
+  margin: 0;
+  font-family: var(--sp-font-body);
+  font-size: 14px;
+  line-height: 1.625;
+  color: var(--sp-muted);
+}
+
+.curator {
+  margin-top: 12px;
+  max-width: 640px;
+  font-style: italic;
+}
+
+.stats {
+  margin-top: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.statValue {
+  font-family: var(--sp-font-editorial);
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--sp-accent);
+}
+
+.meta {
+  font-family: var(--sp-font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--sp-muted-soft);
+}
+
+/* Search and filters */
+.searchSection {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--sp-line-strong);
+  background: var(--sp-hover);
+  padding: 14px 20px;
+  color: var(--sp-muted);
+}
+
+.searchInput {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  font-family: var(--sp-font-ui);
+  font-size: 16px;
+  color: var(--sp-fg);
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: var(--sp-muted-soft);
+}
+
+.pills {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.pillCount {
+  opacity: 0.7;
+}
+
+.resultCount {
+  margin-left: 8px;
+}
+
+/* Sections */
+.section {
+  border-top: 1px solid var(--sp-line);
+  padding-top: 64px;
+  padding-bottom: 64px;
+}
+
+.sectionHead {
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--sp-line);
+  padding-bottom: 12px;
+}
+
+.listHead {
+  margin-bottom: 24px;
+}
+
+/* Category grid */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--sp-line);
+  background: transparent;
+  padding: 24px;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: border-color 300ms, background-color 300ms;
+}
+
+.card:hover {
+  border-color: var(--text-secondary);
+  background: var(--sp-hover);
+}
+
+.cardActive,
+.cardActive:hover {
+  border-color: var(--sp-accent);
+  background: var(--accent-tint);
+}
+
+.cardBar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 3px;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  background: var(--sp-accent);
+  transition: transform 300ms;
+}
+
+.card:hover .cardBar {
+  transform: scaleY(1);
+}
+
+.cardName {
+  margin-top: 12px;
+  font-family: var(--sp-font-editorial);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.55;
+  color: var(--sp-title);
+}
+
+.cardDesc {
+  margin-top: 8px;
+}
+
+.cardCount {
+  margin-top: 16px;
+}
+
+/* Disease list */
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  border: 0;
+  border-bottom: 1px solid var(--sp-line);
+  background: transparent;
+  padding: 16px 0;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+
+.row:hover {
+  background: var(--sp-hover);
+}
+
+.rowDot {
+  margin-top: 8px;
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: var(--sp-line);
+  transition: background-color 150ms;
+}
+
+.row:hover .rowDot {
+  background: var(--sp-accent);
+}
+
+.rowBody {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.rowText {
+  min-width: 0;
+  max-width: 560px;
+}
+
+.rowName {
+  font-family: var(--sp-font-ui);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--sp-fg);
+}
+
+.rowDefinition {
+  margin-top: 4px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.rowTags {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.empty {
+  padding: 64px 0;
+  text-align: center;
+}
+
+.emptyTitle {
+  font-family: var(--sp-font-ui);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.emptyHint {
+  margin-top: 4px;
+}
+
+/* Sources and methodology */
+.sources {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+
+.sourceHead {
+  margin-bottom: 20px;
+}
+
+.sourceList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.method {
+  margin-top: 64px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.methodCard {
+  border: 1px solid var(--sp-line);
+  padding: 24px;
+}
+
+.methodStep {
+  color: var(--sp-accent);
+}
+
+.methodTitle {
+  margin-top: 12px;
+  font-family: var(--sp-font-editorial);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--sp-title);
+}
+
+.methodDesc {
+  margin-top: 8px;
+}
+
+/* Detail drawer */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: rgba(15, 23, 42, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 300ms;
+}
+
+.overlayOpen {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.drawer {
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 100;
+  height: 100vh;
+  width: 100%;
+  max-width: 480px;
+  overflow-y: auto;
+  border-left: 1px solid var(--sp-line);
+  background: var(--sp-bg);
+  padding: 32px;
+  transform: translateX(100%);
+  transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.drawerOpen {
+  transform: translateX(0);
+}
+
+.drawerHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--sp-line);
+  padding-bottom: 20px;
+}
+
+.drawerMeta {
+  color: var(--sp-accent);
+}
+
+.drawerTitle {
+  margin-top: 8px;
+  font-family: var(--sp-font-editorial);
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.33;
+  color: var(--sp-title);
+}
+
+.close {
+  flex-shrink: 0;
+  width: 32px;
+  padding: 0;
+}
+
+.drawerBody {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.fieldHead {
+  margin-bottom: 8px;
+}
+
+.symptoms {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.symptom {
+  display: flex;
+  gap: 8px;
+}
+
+.symptomMark {
+  margin-top: 5px;
+  color: var(--sp-accent);
+}
+
+.refs {
+  border-top: 1px solid var(--sp-line);
+  padding-top: 20px;
+}
+
+.refHead {
+  margin-bottom: 12px;
+}
+
+.refList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.refTag {
+  border: 1px solid var(--sp-line-strong);
+  padding: 4px 10px;
+  font-family: var(--sp-font-ui);
+  font-size: 12px;
+  color: var(--sp-muted);
+}
+
+@media (min-width: 640px) {
+  .grid,
+  .method {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 48px;
+  }
+
+  .title {
+    font-size: 96px;
+  }
+
+  .body {
+    font-size: 18px;
+  }
+
+  .bodySm {
+    font-size: 16px;
+  }
+
+  .statValue {
+    font-size: 48px;
+    line-height: 1;
+  }
+
+  .sources {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .method {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

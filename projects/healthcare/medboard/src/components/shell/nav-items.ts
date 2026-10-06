@@ -1,7 +1,7 @@
 import type { LucideIcon } from 'lucide-react'
 import {
   Activity,
-  Brain,
+  BookOpen,
   Calculator,
   FileSearch,
   MessageSquare,
@@ -29,12 +29,12 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     label: 'Klinis',
     items: [
-      { href: '/emr', label: 'EMR Console', icon: Stethoscope },
-      { href: '/telemedicine', label: 'Telemedicine', icon: Video },
+      { href: '/emr', label: 'Intelligence EMR', icon: Stethoscope },
+      { href: '/telemedicine', label: 'MedLink', icon: Video },
       { href: '/voice', label: 'Consult Audrey', icon: Mic },
-      { href: '/icdx', label: 'Smart ICD-10', icon: FileSearch },
-      { href: '/calculator', label: 'SenCall', icon: Calculator },
-      { href: '/critical-mind', label: 'Critical Mind', icon: Brain },
+      { href: '/icdx', label: 'ICD Coding', icon: FileSearch },
+      { href: '/calculator', label: 'Algorithma Calculator', icon: Calculator },
+      { href: '/sentrapedia', label: 'Sentrapedia', icon: BookOpen },
     ],
   },
   {
@@ -42,7 +42,7 @@ export const NAV_GROUPS: NavGroup[] = [
     items: [
       { href: '/hub', label: 'Sentra Hub', icon: Users },
       { href: '/acars', label: 'Sentra Network', icon: RadioTower },
-      { href: '/chat', label: 'Team Chat', icon: MessageSquare },
+      { href: '/chat', label: 'Sentra Social', icon: MessageSquare },
     ],
   },
   {

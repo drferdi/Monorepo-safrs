@@ -275,7 +275,7 @@ export default function ChatPage() {
       <div className="ui-page-header" style={{ marginBottom: 0 }}>
         <div>
           <div className={styles.titleRow}>
-            <h1 className={styles.title}>Chatbox</h1>
+            <h1 className={styles.title}>Sentra Social</h1>
             <div className={`${styles.status}${connected ? ` ${styles.statusOn}` : ''}`}>
               <div className={styles.statusDot} />
               {connected ? 'Connected' : 'Disconnected'}

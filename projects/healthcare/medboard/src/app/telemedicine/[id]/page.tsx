@@ -152,7 +152,7 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
         )}
         <div className={styles.roomCenterActions}>
           <button onClick={() => router.push('/telemedicine')} className="ui-btn ui-btn--primary">
-            <ArrowLeft size={14} /> Kembali ke Telemedicine
+            <ArrowLeft size={14} /> Kembali ke MedLink
           </button>
         </div>
       </div>
@@ -208,7 +208,7 @@ export default function TelemedicineRoomPage(): React.JSX.Element {
           >
             <ArrowLeft size={16} /> Kembali
           </button>
-          <h1 className={styles.title}>Telemedicine · #{appointment.id.slice(-6)}</h1>
+          <h1 className={styles.title}>MedLink · #{appointment.id.slice(-6)}</h1>
           <p className="ui-page-header__description">
             {new Date(appointment.scheduledAt).toLocaleString('id-ID', {
               dateStyle: 'short',
