@@ -740,7 +740,13 @@ export function TatalaksanaStep({
             ))}
           </div>
         ) : null}
-        {noProposal ? <p className="diagnosis-row-meta">Tidak ada usulan obat dari layanan resep.</p> : null}
+        {noProposal ? (
+          <p className="diagnosis-row-meta">
+            {viewModel.therapy.state === 'error'
+              ? 'Usulan obat gagal dimuat.'
+              : 'Basis pengetahuan belum mencatat obat untuk diagnosis ini.'}
+          </p>
+        ) : null}
         <div>
           <button
             type="button"

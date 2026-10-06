@@ -409,13 +409,20 @@ describe('TatalaksanaStep', () => {
   });
 
   // Carries TherapyStep "says the prescription service proposed nothing" and "shows no such line".
-  it('says the prescription service proposed nothing instead of an empty list, and only then', () => {
-    const { rerender } = render(<TatalaksanaStep {...props({ viewModel: vm([med('manual-1', 'Vitamin B', false, 'MANUAL')], 'error') })} />);
-    expect(screen.getByText('Tidak ada usulan obat dari layanan resep.')).toBeInTheDocument();
+  // The proposals come from the knowledge base (Chief, 2026-10-01), so an empty list names it, and
+  // a failed fetch says so instead (audit 2026-10-06, "kenapa obat tidak keluar").
+  it('says why no medication is proposed instead of an empty list, and only then', () => {
+    const manualOnly = [med('manual-1', 'Vitamin B', false, 'MANUAL')];
+    const { rerender } = render(<TatalaksanaStep {...props({ viewModel: vm(manualOnly, 'ready') })} />);
+    expect(screen.getByText('Basis pengetahuan belum mencatat obat untuk diagnosis ini.')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Gunakan semua usulan' })).toBeNull();
     expect(screen.getByRole('button', { name: 'Lanjut tanpa terapi tambahan' })).toBeInTheDocument();
+    rerender(<TatalaksanaStep {...props({ viewModel: vm(manualOnly, 'error') })} />);
+    expect(screen.getByText('Usulan obat gagal dimuat.')).toBeInTheDocument();
+    expect(screen.queryByText('Basis pengetahuan belum mencatat obat untuk diagnosis ini.')).toBeNull();
     rerender(<TatalaksanaStep {...props()} />);
-    expect(screen.queryByText('Tidak ada usulan obat dari layanan resep.')).toBeNull();
+    expect(screen.queryByText('Basis pengetahuan belum mencatat obat untuk diagnosis ini.')).toBeNull();
+    expect(screen.queryByText('Usulan obat gagal dimuat.')).toBeNull();
   });
 
   // Migrated (Chief, 2026-09-29: "hilangkan Keamanan terapi"): the three ticked lines
