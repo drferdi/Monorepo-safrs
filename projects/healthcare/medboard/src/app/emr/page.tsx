@@ -48,7 +48,6 @@ import type {
   CompositeVitalSnapshot,
   CompositeDeteriorationResult as SharedCompositeDeteriorationResult,
 } from '@abyss/types'
-import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Socket } from 'socket.io-client'
@@ -5632,11 +5631,6 @@ export default function EMRPage() {
               : isAssessmentTab
                 ? 'Asesmen klinis (Objektif + Asesmen): pemeriksaan fisik, Iskandar CDSS, differential diagnosis, dan keputusan klinis.'
                 : 'Tata laksana (Plan): terapi, edukasi pasien, monitoring, dan rencana rujukan bila diperlukan.'}
-          {isFinalizeTab && (
-            <Link href="/report/clinical" className="ui-btn ui-btn--secondary ui-btn--sm emr-workflow-note-link">
-              Laporan klinis
-            </Link>
-          )}
         </div>
 
         {/* ─── Left: Clinical Stream ─── */}
@@ -7448,10 +7442,6 @@ export default function EMRPage() {
               )}
               {isTriageTab && (
                 <div className="emr-phase-footer">
-                  <div className="emr-phase-footer-copy">
-                    Data triase awal sudah terkumpul. Teruskan ke dokter setelah keluhan utama, TTV,
-                    dan objektif awal terasa cukup untuk review klinis.
-                  </div>
                   {onlineDoctors.length > 0 ? (
                     <div className="emr-phase-footer-actions">
                       <select
@@ -7528,10 +7518,6 @@ export default function EMRPage() {
 
             {isReviewTab && (
               <div className="emr-phase-footer">
-                <div className="emr-phase-footer-copy">
-                  Review dokter selesai. Lanjutkan ke assessment untuk menjalankan Iskandar, membaca
-                  differential, dan menetapkan keputusan klinis.
-                </div>
                 <EmrPhaseFooterButton
                   label="Proceed to Assessment"
                   tone="blue"
@@ -7558,10 +7544,6 @@ export default function EMRPage() {
                         <div className="assessment-command-header">
                           <div style={{ minWidth: 0 }}>
                             <div className="assessment-command-kicker">Assessment Workspace</div>
-                            <div className="assessment-command-title">
-                              Ringkas asesmen klinis, jalankan Iskandar, lalu putuskan diagnosis
-                              kerja tanpa bolak-balik scroll.
-                            </div>
                           </div>
                           <div
                             className={`assessment-command-badge${cdssLoading ? ' is-loading' : cdssResult ? ' is-ready' : assessmentConclusion.trim() ? ' is-armed' : ''}`}
@@ -7607,45 +7589,21 @@ export default function EMRPage() {
                           style={{ marginTop: 0, marginBottom: 0 }}
                         />
 
-                        <div className="assessment-command-note">
-                          Tulis problem representation singkat dulu. Setelah itu engine akan membaca
-                          konteks objektif, differential, dan guardrail sebelum hasil ditampilkan.
-                        </div>
-                        {assessmentConclusionMeta.mode === 'auto' &&
-                          assessmentConclusion.trim() && (
-                            <div className="assessment-synthesis-chip" aria-live="polite">
-                              Sintesis dokter aktif • engine membaca ringkasan klinis ini sebagai
-                              konteks prioritas
-                            </div>
-                          )}
-
-                        {cdssRetiredMessage && (
-                          <div className="assessment-synthesis-chip" role="status">
-                            {cdssRetiredMessage}
-                          </div>
-                        )}
-
                         <div className="emr-action-bar assessment-action-bar">
-                          <button
-                            onClick={() => void runCDSS()}
-                            disabled={cdssLoading || !keluhanUtama.trim() || Boolean(cdssRetiredMessage)}
-                            title={cdssRetiredMessage ?? undefined}
-                            className="assessment-run-button"
-                            style={{
-                              flex: 1,
-                              cursor:
-                                cdssLoading || !keluhanUtama.trim() || cdssRetiredMessage
-                                  ? 'not-allowed'
-                                  : 'pointer',
-                              opacity: !keluhanUtama.trim() || cdssRetiredMessage ? 0.4 : 1,
-                            }}
-                          >
-                            {cdssRetiredMessage
-                              ? '⏸ CDSS DIISTIRAHATKAN — PAKAI MIRA'
-                              : cdssLoading
-                                ? '⏳ MEMPROSES CDSS...'
-                                : '▶ JALANKAN CDSS ENGINE'}
-                          </button>
+                          {!cdssRetiredMessage && (
+                            <button
+                              onClick={() => void runCDSS()}
+                              disabled={cdssLoading || !keluhanUtama.trim()}
+                              className="assessment-run-button"
+                              style={{
+                                flex: 1,
+                                cursor: cdssLoading || !keluhanUtama.trim() ? 'not-allowed' : 'pointer',
+                                opacity: !keluhanUtama.trim() ? 0.4 : 1,
+                              }}
+                            >
+                              {cdssLoading ? '⏳ MEMPROSES CDSS...' : '▶ JALANKAN CDSS ENGINE'}
+                            </button>
+                          )}
                           <button
                             onClick={resetEmrDraft}
                             className="assessment-reset-button"

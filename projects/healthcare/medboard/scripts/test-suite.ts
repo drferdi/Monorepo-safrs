@@ -120,6 +120,7 @@ const suites: Suite[] = [
       'src/app/api/dashboard/intelligence/alerts/acknowledge/acknowledge-handler.test.ts',
       'src/app/emr/emergency-override.test.ts',
       'src/app/emr/focus-spotlight.test.ts',
+      'src/app/emr/assessment-copy.test.ts',
       'src/app/dashboard/intelligence/AIDisclosureBadge.test.tsx',
       'src/app/dashboard/intelligence/AIInsightsPanel.test.tsx',
       'src/app/dashboard/intelligence/ClinicalSafetyAlertBanner.test.tsx',

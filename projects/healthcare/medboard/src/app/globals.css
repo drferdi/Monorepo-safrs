@@ -475,14 +475,6 @@ a {
   border-top: 1px solid var(--border);
 }
 
-.emr-phase-footer-copy {
-  flex: 1 1 320px;
-  min-width: 0;
-  max-width: 760px;
-  font-size: var(--text-sm);
-  line-height: var(--lh-base);
-  color: var(--text-secondary);
-}
 
 .emr-phase-footer > .emr-neu-nav-btn {
   margin-left: auto;
@@ -1805,13 +1797,6 @@ a {
   color: var(--text);
 }
 
-.assessment-command-title {
-  max-width: 60ch;
-  font-size: var(--text-sm);
-  line-height: var(--lh-base);
-  color: var(--text-secondary);
-  overflow-wrap: anywhere;
-}
 
 .assessment-command-badge {
   flex-shrink: 0;
@@ -1861,25 +1846,7 @@ a {
   white-space: nowrap;
 }
 
-.assessment-command-note {
-  font-size: var(--text-sm);
-  line-height: var(--lh-base);
-  color: var(--text-secondary);
-}
 
-.assessment-synthesis-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  width: fit-content;
-  min-height: 28px;
-  padding: var(--gap-xs) var(--gap-md);
-  border-radius: var(--radius-full);
-  color: var(--primary);
-  background: var(--primary-tint);
-  font-size: var(--text-xs);
-  font-weight: 500;
-}
 
 .assessment-action-bar {
   margin-top: 0;
