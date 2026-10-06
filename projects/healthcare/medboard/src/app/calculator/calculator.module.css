@@ -54,18 +54,6 @@
 }
 
 /* Catalog */
-.intro {
-  max-width: 760px;
-  margin: 0;
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-}
-
-.introLead {
-  font-weight: 500;
-  color: var(--primary);
-}
-
 .category {
   display: flex;
   flex-direction: column;

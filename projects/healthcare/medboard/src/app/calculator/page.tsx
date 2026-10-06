@@ -26,14 +26,6 @@ export default function CalculatorPage() {
         </div>
       </div>
 
-      <p className={styles.intro}>
-        <span className={styles.introLead}>Batch pertama aktif</span>
-        {'. '}
-        Kalkulator berikut sudah diadaptasi ke bahasa visual dashboard saat ini. Source asli tetap
-        disalin ke folder
-        <strong> dashboard/calculator </strong> sebagai basis referensi.
-      </p>
-
       {CATEGORY_ORDER.map(category => {
         const items = MEDICAL_CALCULATORS.filter(item => item.category === category)
         if (!items.length) return null

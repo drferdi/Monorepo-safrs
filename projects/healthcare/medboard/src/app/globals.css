@@ -460,8 +460,18 @@ a {
 
 .emr-workflow-note {
   margin-top: calc(-1 * var(--gap-sm));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap-md);
   font-size: var(--text-sm);
   color: var(--text-secondary);
+}
+
+.emr-workflow-note-link {
+  flex-shrink: 0;
+  text-decoration: none;
 }
 
 .emr-phase-footer {

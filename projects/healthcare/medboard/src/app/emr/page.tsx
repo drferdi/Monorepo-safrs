@@ -48,6 +48,7 @@ import type {
   CompositeVitalSnapshot,
   CompositeDeteriorationResult as SharedCompositeDeteriorationResult,
 } from '@abyss/types'
+import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Socket } from 'socket.io-client'
@@ -5631,6 +5632,11 @@ export default function EMRPage() {
               : isAssessmentTab
                 ? 'Asesmen klinis (Objektif + Asesmen): pemeriksaan fisik, Iskandar CDSS, differential diagnosis, dan keputusan klinis.'
                 : 'Tata laksana (Plan): terapi, edukasi pasien, monitoring, dan rencana rujukan bila diperlukan.'}
+          {isFinalizeTab && (
+            <Link href="/report/clinical" className="ui-btn ui-btn--secondary ui-btn--sm emr-workflow-note-link">
+              Laporan klinis
+            </Link>
+          )}
         </div>
 
         {/* ─── Left: Clinical Stream ─── */}

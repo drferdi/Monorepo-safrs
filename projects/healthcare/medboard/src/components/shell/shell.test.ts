@@ -30,6 +30,12 @@ test('the Report list page is gone (Chief 2026-10-06): no page and no rail item'
   assert.equal(existsSync(path.join(process.cwd(), 'src/app/report/page.tsx')), false)
 })
 
+test('Laporan klinis stays reachable: the EMR Tata Laksana tab links to /report/clinical', () => {
+  assert.equal(existsSync(path.join(process.cwd(), 'src/app/report/clinical/page.tsx')), true)
+  const emr = readFileSync(path.join(process.cwd(), 'src/app/emr/page.tsx'), 'utf-8')
+  assert.match(emr, /isFinalizeTab && \(\s*<Link href="\/report\/clinical"/)
+})
+
 test('a nested page lights up its parent menu item, a look-alike path does not', () => {
   assert.equal(isNavActive('/hub', '/hub'), true)
   assert.equal(isNavActive('/hub/dr-ani', '/hub'), true)

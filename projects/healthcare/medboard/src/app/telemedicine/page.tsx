@@ -1307,11 +1307,6 @@ export default function TelemedicinePage(): React.JSX.Element {
             <p className={styles.cardIntro}>
               Satu panel kerja untuk triase masuk, kontrol kesiapan dokter, dan aktivasi sesi.
             </p>
-            <p className={styles.cardText}>
-              Fokus kiri disiapkan untuk operasional langsung: cek request baru, ubah status dokter,
-              refresh antrean, lalu buka konsultasi tanpa perlu pindah konteks.
-            </p>
-
             <div className={`${styles.statGrid} ${styles.divided}`}>
               {[
                 {
@@ -1361,11 +1356,6 @@ export default function TelemedicinePage(): React.JSX.Element {
             <p className={styles.cardIntro}>
               Timeline konsultasi dari antrean aktif sampai arsip layanan.
             </p>
-            <p className={styles.cardText}>
-              Sisi kanan dibentuk sebagai alur kerja yang mudah dipindai: sesi aktif di atas untuk
-              tindakan cepat, lalu histori di bawah untuk audit dan penelusuran kasus.
-            </p>
-
             <div className={`${styles.stat} ${styles.divided}`} style={{ marginBottom: 'var(--gap-xl)' }}>
               <div className={styles.statLabel}>Focus Saat Ini</div>
               <div className={styles.focusValue}>
