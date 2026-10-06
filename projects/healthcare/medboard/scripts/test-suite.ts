@@ -60,6 +60,12 @@ const suites: Suite[] = [
     ],
   },
   {
+    name: 'design',
+    aliases: ['redesign', 'shell', 'tokens'],
+    command: process.execPath,
+    args: ['./node_modules/tsx/dist/cli.mjs', '--test', 'src/app/design-tokens.test.ts'],
+  },
+  {
     name: 'auth-hardening',
     aliases: ['auth', 'security'],
     command: process.execPath,

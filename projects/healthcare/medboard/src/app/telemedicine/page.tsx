@@ -18,7 +18,6 @@ import { useRouter } from 'next/navigation'
 import type React from 'react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { io as socketIO } from 'socket.io-client'
-import { useTheme } from '@/components/ThemeProvider'
 import { AppointmentBooking } from '@/components/telemedicine/AppointmentBooking'
 import { MiraDifferentialCard } from '@/components/telemedicine/MiraDifferentialCard'
 import { isDoctorProfession } from '@/lib/crew-access'
@@ -94,17 +93,15 @@ interface AssistConsult {
 
 /* ── Design tokens — EMR Clinical Flow Style ── */
 function useL() {
-  const { theme } = useTheme()
-  const isDark = theme === 'dark'
   return {
-    bg: isDark ? 'var(--bg-canvas)' : 'var(--bg-canvas)',
-    bgPanel: isDark ? 'var(--bg-card, #212121)' : 'var(--bg-card, #EDE4D9)',
-    bgHover: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(230,126,34,0.06)',
-    border: isDark ? 'rgba(255,255,255,0.10)' : 'var(--line-base)',
-    borderAcc: isDark ? 'rgba(230,126,34,0.4)' : 'rgba(211,84,0,0.5)',
-    text: isDark ? '#d4d4d4' : 'var(--text-main)',
-    muted: isDark ? '#777777' : 'var(--text-muted)',
-    accent: isDark ? '#E67E22' : '#D35400',
+    bg: 'var(--bg-canvas)',
+    bgPanel: 'var(--bg-card, #EDE4D9)',
+    bgHover: 'rgba(230,126,34,0.06)',
+    border: 'var(--line-base)',
+    borderAcc: 'rgba(211,84,0,0.5)',
+    text: 'var(--text-main)',
+    muted: 'var(--text-muted)',
+    accent: '#D35400',
     actionTone: '#101012',
     actionToneSoft: 'rgba(16,16,18,0.10)',
     actionToneBorder: 'rgba(16,16,18,0.22)',

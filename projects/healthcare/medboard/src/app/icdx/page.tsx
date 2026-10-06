@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { useTheme } from '@/components/ThemeProvider'
 
 interface IcdSearchItem {
   code: string
@@ -36,18 +35,16 @@ interface LookupPayload {
 
 /* ── Design Tokens ────────────────────────────────────────────────────────── */
 function useL() {
-  const { theme } = useTheme()
-  const isDark = theme === 'dark'
   return {
-    bg: isDark ? 'var(--bg-canvas)' : 'var(--bg-canvas)',
-    bgPanel: isDark ? 'var(--bg-card, #212121)' : 'var(--bg-card, #EDE4D9)',
-    bgHover: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(201,168,124,0.06)',
-    border: isDark ? 'rgba(255,255,255,0.10)' : 'var(--line-base)',
-    borderAcc: isDark ? 'rgba(230,126,34,0.4)' : 'rgba(201,168,124,0.5)',
-    text: isDark ? '#d4d4d4' : 'var(--text-main)',
-    muted: isDark ? '#777777' : 'var(--text-muted)',
-    accent: isDark ? '#E67E22' : 'var(--c-asesmen)',
-    critical: isDark ? '#E74C3C' : '#C0392B',
+    bg: 'var(--bg-canvas)',
+    bgPanel: 'var(--bg-card, #EDE4D9)',
+    bgHover: 'rgba(201,168,124,0.06)',
+    border: 'var(--line-base)',
+    borderAcc: 'rgba(201,168,124,0.5)',
+    text: 'var(--text-main)',
+    muted: 'var(--text-muted)',
+    accent: 'var(--c-asesmen)',
+    critical: '#C0392B',
     mono: 'var(--font-mono)',
     sans: 'var(--font-sans)',
   }

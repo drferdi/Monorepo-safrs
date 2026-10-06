@@ -3,15 +3,12 @@
 import {
   ArrowRight,
   LogOutIcon,
-  MoonIcon,
   PanelLeftCloseIcon,
   PanelLeftOpenIcon,
-  SunIcon,
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { useTheme } from './ThemeProvider'
 
 const NAV_ITEMS: Array<{
   href: string
@@ -47,7 +44,6 @@ function formatSidebarDate(value: Date): string {
 
 export default function AppNav() {
   const pathname = usePathname()
-  const { theme, toggle } = useTheme()
   const [crewName, setCrewName] = useState('')
   const [collapsed, setCollapsed] = useState(false)
   const [hovered, setHovered] = useState<string | null>(null)
@@ -289,23 +285,6 @@ export default function AppNav() {
               {logoutError}
             </p>
           )}
-          <button
-            className="nav-ctrl-btn"
-            onClick={toggle}
-            title={theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
-            style={{ justifyContent: collapsed ? 'center' : 'space-between' }}
-          >
-            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              {theme === 'dark' ? <MoonIcon size={13} /> : <SunIcon size={13} />}
-              {!collapsed && <span>{theme === 'dark' ? 'Dark Mode' : 'Light Mode'}</span>}
-            </span>
-            {!collapsed && (
-              <div className={`theme-toggle-track ${theme}`}>
-                <div className="theme-toggle-thumb" />
-              </div>
-            )}
-          </button>
-
           <button
             className="nav-ctrl-btn nav-ctrl-btn--logout"
             onClick={handleLogout}

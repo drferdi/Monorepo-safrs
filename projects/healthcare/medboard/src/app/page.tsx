@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
 
-import { useTheme } from '@/components/ThemeProvider'
 import { CREW_ACCESS_GENDERS, type CrewAccessGender } from '@/lib/crew-access'
 import {
   CREW_PROFILE_BLOOD_TYPES,
@@ -55,24 +54,20 @@ const QUICK_LINKS = [
 
 /* ── Letta design tokens — theme-aware via CSS variables ── */
 function useL() {
-  const { theme } = useTheme()
-  const isDark = theme === 'dark'
   return {
     bg: 'var(--bg-canvas)',
-    bgPanel: isDark ? 'var(--bg-card)' : 'var(--bg-card, #EDE4D9)',
-    bgHero: isDark
-      ? 'linear-gradient(135deg, var(--bg-card) 0%, rgba(15,16,18,0.96) 100%)'
-      : 'linear-gradient(135deg, var(--bg-card, #EDE4D9) 0%, rgba(250,243,235,0.96) 100%)',
-    bgHover: isDark ? 'rgba(255,255,255,0.035)' : 'rgba(201,168,124,0.06)',
+    bgPanel: 'var(--bg-card, #EDE4D9)',
+    bgHero: 'linear-gradient(135deg, var(--bg-card, #EDE4D9) 0%, rgba(250,243,235,0.96) 100%)',
+    bgHover: 'rgba(201,168,124,0.06)',
     border: 'var(--line-base)',
-    borderAcc: isDark ? 'rgba(230,126,34,0.4)' : 'rgba(201,168,124,0.5)',
+    borderAcc: 'rgba(201,168,124,0.5)',
     text: 'var(--text-main)',
     muted: 'var(--text-muted)',
-    accent: isDark ? '#E67E22' : 'var(--c-asesmen)',
+    accent: 'var(--c-asesmen)',
     statusTone: '#101012',
     statusToneSoft: 'rgba(16,16,18,0.18)',
-    signal: isDark ? '#C8A57F' : '#B89470',
-    signalSoft: isDark ? 'rgba(200,165,127,0.14)' : 'rgba(184,148,112,0.14)',
+    signal: '#B89470',
+    signalSoft: 'rgba(184,148,112,0.14)',
     mono: 'var(--font-mono)',
     sans: 'var(--font-sans)',
   }
