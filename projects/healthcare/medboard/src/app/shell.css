@@ -82,6 +82,8 @@
   text-transform: uppercase;
   text-decoration: none;
 }
+/* sentradash.png is a white mark drawn for the old dark sidebar; render it as ink on white. */
+.app-header__brand img { filter: brightness(0); }
 .app-header__end { display: flex; align-items: center; justify-content: flex-end; gap: var(--gap-lg); }
 .app-header__date { font-size: var(--text-sm); color: var(--text-secondary); }
 .app-header__account { position: relative; }
