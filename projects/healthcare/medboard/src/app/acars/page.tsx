@@ -115,7 +115,7 @@ function getUserColor(role: string): string {
     case 'APOTEKER':
       return '#5B9E8F'
     case 'ADMINISTRATOR':
-      return '#E67E22'
+      return '#002147'
     default:
       return '#888'
   }
@@ -274,7 +274,7 @@ export default function AcarsPage() {
     }
   })
 
-  const myColor = currentUser ? getUserColor(currentUser.role) : '#E67E22'
+  const myColor = currentUser ? getUserColor(currentUser.role) : '#002147'
   const myAvatar = currentUser
     ? getAvatarUrl(currentUser.profession, currentUser.role)
     : '/avatar/adm-m.png'

@@ -94,7 +94,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #f0e8dc;
+  color: #0f172a;
   background: #101012;
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow:
@@ -135,7 +135,7 @@
 }
 
 .calculator-catalog-card:hover {
-  border-color: rgba(230, 126, 34, 0.45);
+  border-color: rgba(0, 33, 71, 0.45);
 }
 
 .calculator-catalog-card h3 {
@@ -261,7 +261,7 @@
 
 .calculator-field-input:focus {
   outline: none;
-  border-color: rgba(230, 126, 34, 0.5);
+  border-color: rgba(0, 33, 71, 0.5);
 }
 
 .calculator-field-suffix {
@@ -296,7 +296,7 @@
 
 .calculator-toggle-btn.active,
 .calculator-toggle-btn:hover {
-  border-color: rgba(230, 126, 34, 0.45);
+  border-color: rgba(0, 33, 71, 0.45);
   color: var(--text-main);
   background: rgba(255, 255, 255, 0.02);
 }
@@ -438,7 +438,7 @@
 }
 
 .calculator-back-link:hover {
-  border-color: rgba(230, 126, 34, 0.45);
+  border-color: rgba(0, 33, 71, 0.45);
   color: var(--text-main);
 }
 
@@ -591,9 +591,9 @@ a {
   --nav-border: rgba(255, 255, 255, 0.08);
   --nav-text: #ede0d0;
   --nav-muted: #a1a1aa;
-  --nav-accent: #e67e22;
-  --nav-hover-bg: rgba(230, 126, 34, 0.07);
-  --nav-active-bg: rgba(230, 126, 34, 0.12);
+  --nav-accent: #002147;
+  --nav-hover-bg: rgba(0, 33, 71, 0.07);
+  --nav-active-bg: rgba(0, 33, 71, 0.12);
   --nav-shadow: 4px 4px 10px #060504, -2px -2px 6px rgba(255, 255, 255, 0.018);
   --nav-inset: inset 2px 2px 5px rgba(0, 0, 0, 0.5), inset -1px -1px 3px rgba(255, 255, 255, 0.015);
 }
@@ -650,7 +650,7 @@ a {
   font-family: var(--font-mono);
   font-size: 14px;
   font-weight: 700;
-  color: #f0e8dc;
+  color: #ffffff;
   flex-shrink: 0;
   box-shadow: var(--nav-inset);
 }
@@ -705,7 +705,7 @@ a {
 .nav-collapse-btn:hover {
   color: var(--nav-accent);
   border-color: var(--nav-accent);
-  background: rgba(230, 126, 34, 0.08);
+  background: rgba(0, 33, 71, 0.08);
 }
 
 /* ── Nav menu (Aether MenuVertical style) ── */
@@ -1118,13 +1118,13 @@ a {
 .emr-phase.is-active .blueprint-wrapper,
 .emr-phase.is-active .emr-context-bar,
 .emr-phase.is-active .extraction-block {
-  box-shadow: 0 0 0 1px rgba(230, 126, 34, 0.08);
+  box-shadow: 0 0 0 1px rgba(0, 33, 71, 0.08);
   transition: box-shadow 0.72s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .emr-phase.is-active .stream-section::before {
   border-color: var(--c-asesmen);
-  box-shadow: 0 0 0 4px rgba(230, 126, 34, 0.08);
+  box-shadow: 0 0 0 4px rgba(0, 33, 71, 0.08);
 }
 
 .emr-phase.is-dimmed {
@@ -1216,7 +1216,7 @@ a {
   content: "";
   flex: 1;
   height: 1px;
-  background: linear-gradient(90deg, rgba(230, 126, 34, 0.28), rgba(230, 126, 34, 0));
+  background: linear-gradient(90deg, rgba(0, 33, 71, 0.28), rgba(0, 33, 71, 0));
 }
 
 .emr-context-bar {
@@ -1659,7 +1659,7 @@ a {
 }
 
 .finalize-diagnosis-chip-accent {
-  border-color: rgba(230, 126, 34, 0.24);
+  border-color: rgba(0, 33, 71, 0.24);
   color: var(--c-asesmen);
 }
 
@@ -1974,7 +1974,7 @@ a {
   --pharm-200: #ffd8ad;
   --pharm-300: #fbbf81;
   --pharm-400: #f0a45b;
-  --pharm-500: #e67e22;
+  --pharm-500: #002147;
   --pharm-600: #c8671a;
   --pharm-700: #9f5017;
   --pharm-800: #723a13;
@@ -1983,8 +1983,8 @@ a {
   --pharm-surface: transparent;
   --pharm-surface-soft: rgba(255, 255, 255, 0.018);
   --pharm-surface-strong: rgba(255, 255, 255, 0.026);
-  --pharm-border: rgba(230, 126, 34, 0.18);
-  --pharm-border-soft: rgba(230, 126, 34, 0.1);
+  --pharm-border: rgba(0, 33, 71, 0.18);
+  --pharm-border-soft: rgba(0, 33, 71, 0.1);
   --pharm-border-strong: rgba(255, 216, 173, 0.2);
   --pharm-text: var(--text-main);
   --pharm-muted: var(--text-muted);
@@ -3011,7 +3011,7 @@ a {
   align-self: flex-start;
   min-height: 30px;
   padding: 6px 10px;
-  border: 1px solid rgba(230, 126, 34, 0.18);
+  border: 1px solid rgba(0, 33, 71, 0.18);
   border-radius: 4px;
   background: rgba(240, 181, 106, 0.03);
   color: #f0b264;
@@ -4796,7 +4796,7 @@ a {
 
 .vitals-context-input:focus,
 .vitals-context-select:focus {
-  border-color: rgba(230, 126, 34, 0.45);
+  border-color: rgba(0, 33, 71, 0.45);
   background: rgba(255, 255, 255, 0.06);
 }
 
@@ -4823,7 +4823,7 @@ a {
 .vitals-chip.is-active {
   border-color: var(--c-asesmen);
   color: var(--c-asesmen);
-  background: rgba(230, 126, 34, 0.08);
+  background: rgba(0, 33, 71, 0.08);
 }
 
 .vitals-assist-note {
@@ -4885,7 +4885,7 @@ a {
 }
 
 .v-meta-badge.is-estimated {
-  border-color: rgba(230, 126, 34, 0.36);
+  border-color: rgba(0, 33, 71, 0.36);
   color: var(--c-asesmen);
 }
 
@@ -5246,7 +5246,7 @@ a {
 }
 
 .exam-row.is-autofilled {
-  border-bottom-color: rgba(230, 126, 34, 0.34);
+  border-bottom-color: rgba(0, 33, 71, 0.34);
   animation: examAutofillReveal 0.75s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -5577,12 +5577,12 @@ a {
   0%,
   100% {
     opacity: 0.32;
-    box-shadow: 0 0 4px rgba(230, 126, 34, 0.18);
+    box-shadow: 0 0 4px rgba(0, 33, 71, 0.18);
     transform: scale(1);
   }
   45% {
     opacity: 0.92;
-    box-shadow: 0 0 11px rgba(230, 126, 34, 0.42);
+    box-shadow: 0 0 11px rgba(0, 33, 71, 0.42);
     transform: scale(1.18);
   }
 }

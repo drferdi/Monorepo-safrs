@@ -686,10 +686,10 @@ export default function ClinicalPrognosisChart({
           },
           tooltip: {
             backgroundColor: 'rgba(33, 33, 33, 0.96)',
-            borderColor: 'rgba(230, 126, 34, 0.22)',
+            borderColor: 'rgba(0, 33, 71, 0.22)',
             borderWidth: 1,
-            titleColor: '#F0E8DC',
-            bodyColor: '#F0E8DC',
+            titleColor: '#FFFFFF',
+            bodyColor: '#FFFFFF',
             displayColors: false,
             padding: 12,
             filter(tooltipItem) {
@@ -709,18 +709,18 @@ export default function ClinicalPrognosisChart({
           x: {
             grid: { display: false },
             ticks: { color: '#A0A0A0', font: { size: 11 } },
-            border: { color: 'rgba(255, 255, 255, 0.08)' },
+            border: { color: 'rgba(15, 23, 42, 0.08)' },
           },
           y: {
             beginAtZero: true,
             max: 100,
-            grid: { color: 'rgba(255, 255, 255, 0.05)' },
-            ticks: { color: '#F0E8DC', font: { size: 10 } },
-            border: { color: 'rgba(255, 255, 255, 0.08)' },
+            grid: { color: 'rgba(15, 23, 42, 0.08)' },
+            ticks: { color: '#0F172A', font: { size: 10 } },
+            border: { color: 'rgba(15, 23, 42, 0.08)' },
             title: {
               display: true,
               text: 'Skor proxy (0-100)',
-              color: '#F0E8DC',
+              color: '#0F172A',
               font: { size: 10 },
             },
           },
@@ -839,10 +839,10 @@ export default function ClinicalPrognosisChart({
           },
           tooltip: {
             backgroundColor: 'rgba(33, 33, 33, 0.96)',
-            borderColor: 'rgba(230, 126, 34, 0.22)',
+            borderColor: 'rgba(0, 33, 71, 0.22)',
             borderWidth: 1,
-            titleColor: '#F0E8DC',
-            bodyColor: '#F0E8DC',
+            titleColor: '#FFFFFF',
+            bodyColor: '#FFFFFF',
             displayColors: false,
             padding: 12,
             filter(tooltipItem) {
@@ -877,24 +877,24 @@ export default function ClinicalPrognosisChart({
               color: '#B8B1A6',
               font: { size: 11 },
             },
-            border: { color: 'rgba(255,255,255,0.08)' },
+            border: { color: 'rgba(15, 23, 42, 0.08)' },
           },
           y: {
             min: 30,
             max: 100,
-            grid: { color: 'rgba(255,255,255,0.05)' },
+            grid: { color: 'rgba(15, 23, 42, 0.08)' },
             ticks: {
-              color: '#F0E8DC',
+              color: '#0F172A',
               font: { size: 10 },
               callback(value) {
                 return `${value}%`
               },
             },
-            border: { color: 'rgba(255,255,255,0.08)' },
+            border: { color: 'rgba(15, 23, 42, 0.08)' },
             title: {
               display: true,
               text: 'Peluang stabil (%)',
-              color: '#F0E8DC',
+              color: '#0F172A',
               font: { size: 10 },
             },
           },
@@ -947,10 +947,10 @@ export default function ClinicalPrognosisChart({
           legend: { display: false },
           tooltip: {
             backgroundColor: 'rgba(33, 33, 33, 0.96)',
-            borderColor: 'rgba(230, 126, 34, 0.22)',
+            borderColor: 'rgba(0, 33, 71, 0.22)',
             borderWidth: 1,
-            titleColor: '#F0E8DC',
-            bodyColor: '#F0E8DC',
+            titleColor: '#FFFFFF',
+            bodyColor: '#FFFFFF',
             displayColors: false,
             padding: 12,
             callbacks: {
@@ -1007,10 +1007,10 @@ export default function ClinicalPrognosisChart({
           legend: { display: false },
           tooltip: {
             backgroundColor: 'rgba(33, 33, 33, 0.96)',
-            borderColor: 'rgba(230, 126, 34, 0.22)',
+            borderColor: 'rgba(0, 33, 71, 0.22)',
             borderWidth: 1,
-            titleColor: '#F0E8DC',
-            bodyColor: '#F0E8DC',
+            titleColor: '#FFFFFF',
+            bodyColor: '#FFFFFF',
             displayColors: false,
             padding: 12,
             callbacks: {
@@ -1028,8 +1028,8 @@ export default function ClinicalPrognosisChart({
             min: 0,
             max: 100,
             beginAtZero: true,
-            angleLines: { color: 'rgba(255,255,255,0.08)' },
-            grid: { color: 'rgba(255,255,255,0.08)' },
+            angleLines: { color: 'rgba(15, 23, 42, 0.08)' },
+            grid: { color: 'rgba(15, 23, 42, 0.08)' },
             pointLabels: {
               color: '#C9C2B7',
               font: { size: 10, family: 'var(--font-mono)' },
@@ -1137,10 +1137,10 @@ export default function ClinicalPrognosisChart({
           },
           tooltip: {
             backgroundColor: 'rgba(33, 33, 33, 0.96)',
-            borderColor: 'rgba(230, 126, 34, 0.22)',
+            borderColor: 'rgba(0, 33, 71, 0.22)',
             borderWidth: 1,
-            titleColor: '#F0E8DC',
-            bodyColor: '#F0E8DC',
+            titleColor: '#FFFFFF',
+            bodyColor: '#FFFFFF',
             displayColors: false,
             padding: 12,
             filter(tooltipItem) {
@@ -1160,26 +1160,26 @@ export default function ClinicalPrognosisChart({
           x: {
             beginAtZero: true,
             max: 30,
-            grid: { color: 'rgba(255,255,255,0.05)' },
+            grid: { color: 'rgba(15, 23, 42, 0.08)' },
             ticks: {
-              color: '#F0E8DC',
+              color: '#0F172A',
               font: { size: 10 },
               callback(value) {
                 return `${value}%`
               },
             },
-            border: { color: 'rgba(255,255,255,0.08)' },
+            border: { color: 'rgba(15, 23, 42, 0.08)' },
             title: {
               display: true,
               text: 'Risiko event CV 10 tahun',
-              color: '#F0E8DC',
+              color: '#0F172A',
               font: { size: 10 },
             },
           },
           y: {
             grid: { display: false },
             ticks: { color: '#B8B1A6', font: { size: 11 } },
-            border: { color: 'rgba(255,255,255,0.08)' },
+            border: { color: 'rgba(15, 23, 42, 0.08)' },
           },
         },
       },
@@ -2006,7 +2006,7 @@ export default function ClinicalPrognosisChart({
                             ? '#E8A838'
                             : 'rgba(255,255,255,0.18)',
                       boxShadow:
-                        milestone.state !== 'next' ? '0 0 0 4px rgba(230, 126, 34, 0.08)' : 'none',
+                        milestone.state !== 'next' ? '0 0 0 4px rgba(0, 33, 71, 0.08)' : 'none',
                     }}
                   />
                   {index < prognosis.journeyMilestones.length - 1 && (

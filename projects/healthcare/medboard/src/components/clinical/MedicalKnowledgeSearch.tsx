@@ -355,7 +355,7 @@ export function MedicalKnowledgeSearch(): React.JSX.Element {
 
         .medical-knowledge-search .mk-cta {
           background: var(--c-asesmen);
-          color: #121214;
+          color: #ffffff;
           border: none;
           border-radius: 8px;
           padding: 10px 16px;

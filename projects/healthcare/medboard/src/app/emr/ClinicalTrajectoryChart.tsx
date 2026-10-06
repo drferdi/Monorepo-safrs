@@ -522,7 +522,7 @@ export default function ClinicalTrajectoryChart({
               type: 'bar' as const,
               label: 'Jumlah Faktor',
               data: snapshotModel.factorCounts,
-              backgroundColor: 'rgba(230, 126, 34, 0.34)',
+              backgroundColor: 'rgba(0, 33, 71, 0.34)',
               borderColor: 'rgba(255, 194, 126, 0.78)',
               borderWidth: 1.2,
               borderRadius: 6,
@@ -747,7 +747,7 @@ export default function ClinicalTrajectoryChart({
                 style={{
                   padding: '8px 10px',
                   border: `1px solid ${CHART_SURFACE_BORDER}`,
-                  background: p.label === 'HARI INI' ? 'rgba(230,126,34,0.06)' : CHART_SURFACE_BG,
+                  background: p.label === 'HARI INI' ? 'rgba(0, 33, 71, 0.06)' : CHART_SURFACE_BG,
                   borderRadius: 6,
                 }}
               >

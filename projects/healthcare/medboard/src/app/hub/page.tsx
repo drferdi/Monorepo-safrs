@@ -102,7 +102,7 @@ function getOrgInitials(name: string): string {
 }
 
 type HubTab = 'roster' | 'organisation'
-const HUB_ACCENT = '#E67E22'
+const HUB_ACCENT = '#002147'
 
 const HUB_TABS: { key: HubTab; label: string }[] = [
   { key: 'roster', label: 'Roster' },
@@ -382,9 +382,9 @@ export default function HubPage() {
                   fontWeight: isActive ? 600 : 400,
                   letterSpacing: '0.06em',
                   color: isActive ? HUB_ACCENT : 'var(--text-muted)',
-                  background: isActive ? 'rgba(230,126,34,0.08)' : 'transparent',
+                  background: isActive ? 'rgba(0, 33, 71, 0.08)' : 'transparent',
                   border: isActive
-                    ? '1px solid rgba(230,126,34,0.2)'
+                    ? '1px solid rgba(0, 33, 71, 0.2)'
                     : '1px solid var(--line-base)',
                   borderRadius: 99,
                   cursor: 'pointer',
@@ -605,7 +605,7 @@ export default function HubPage() {
                         style={{
                           height: 2,
                           background:
-                            'linear-gradient(90deg, rgba(230,126,34,0.96), rgba(230,126,34,0.16), transparent)',
+                            'linear-gradient(90deg, rgba(0, 33, 71, 0.96), rgba(0, 33, 71, 0.16), transparent)',
                           opacity: isOnline ? 1 : 0.78,
                         }}
                       />
@@ -852,8 +852,8 @@ export default function HubPage() {
                               alignItems: 'center',
                               justifyContent: 'center',
                               borderRadius: 999,
-                              background: 'rgba(230,126,34,0.1)',
-                              border: '1px solid rgba(230,126,34,0.18)',
+                              background: 'rgba(0, 33, 71, 0.1)',
+                              border: '1px solid rgba(0, 33, 71, 0.18)',
                               color: '#f0b264',
                               fontSize: 12,
                               fontWeight: 700,
@@ -1247,9 +1247,9 @@ export default function HubPage() {
                       alignItems: 'center',
                       justifyContent: 'center',
                       borderRadius: 99,
-                      background: 'rgba(230,126,34,0.08)',
-                      border: '1px solid rgba(230,126,34,0.2)',
-                      color: '#E67E22',
+                      background: 'rgba(0, 33, 71, 0.08)',
+                      border: '1px solid rgba(0, 33, 71, 0.2)',
+                      color: '#002147',
                       fontSize: 12,
                       fontWeight: 700,
                     }}
@@ -1366,9 +1366,9 @@ export default function HubPage() {
                           padding: '16px',
                           borderRadius: 16,
                           border: isCEO
-                            ? '1px solid rgba(230,126,34,0.2)'
+                            ? '1px solid rgba(0, 33, 71, 0.2)'
                             : '1px solid var(--line-base)',
-                          background: isCEO ? 'rgba(230,126,34,0.045)' : 'rgba(255,255,255,0.018)',
+                          background: isCEO ? 'rgba(0, 33, 71, 0.045)' : 'rgba(255,255,255,0.018)',
                         }}
                       >
                         <div
@@ -1394,10 +1394,10 @@ export default function HubPage() {
                                 height: 44,
                                 borderRadius: 14,
                                 background: isCEO
-                                  ? 'rgba(230,126,34,0.12)'
+                                  ? 'rgba(0, 33, 71, 0.12)'
                                   : 'rgba(255,255,255,0.04)',
                                 border: isCEO
-                                  ? '1px solid rgba(230,126,34,0.25)'
+                                  ? '1px solid rgba(0, 33, 71, 0.25)'
                                   : '1px solid var(--line-base)',
                                 display: 'flex',
                                 alignItems: 'center',
@@ -1442,8 +1442,8 @@ export default function HubPage() {
                                 textTransform: 'uppercase',
                                 padding: '5px 9px',
                                 borderRadius: 999,
-                                border: '1px solid rgba(230,126,34,0.2)',
-                                background: 'rgba(230,126,34,0.08)',
+                                border: '1px solid rgba(0, 33, 71, 0.2)',
+                                background: 'rgba(0, 33, 71, 0.08)',
                                 flexShrink: 0,
                               }}
                             >
@@ -1521,7 +1521,7 @@ export default function HubPage() {
           transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
         }
         .hub-card:hover {
-          border-color: rgba(230, 126, 34, 0.3);
+          border-color: rgba(0, 33, 71, 0.3);
           box-shadow: 0 18px 36px rgba(0,0,0,0.18);
           transform: translateY(-2px);
         }

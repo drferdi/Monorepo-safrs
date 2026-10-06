@@ -1397,7 +1397,7 @@ export default function ProfilUserPage() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                color: '#E67E22',
+                color: '#002147',
                 fontSize: 14,
                 transition: 'border-color 0.15s, color 0.15s',
                 flexShrink: 0,
@@ -1408,7 +1408,7 @@ export default function ProfilUserPage() {
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = L.border
-                e.currentTarget.style.color = '#E67E22'
+                e.currentTarget.style.color = '#002147'
               }}
             >
               <span
@@ -2181,7 +2181,7 @@ export default function ProfilUserPage() {
                     borderRadius: 4,
                     border: `1px solid ${L.borderAcc}`,
                     background:
-                      chatLoading || !chatInput.trim() ? 'transparent' : 'rgba(230,126,34,0.1)',
+                      chatLoading || !chatInput.trim() ? 'transparent' : 'rgba(0, 33, 71, 0.1)',
                     color: chatLoading || !chatInput.trim() ? L.muted : L.accent,
                     fontSize: 14,
                     letterSpacing: '0.06em',

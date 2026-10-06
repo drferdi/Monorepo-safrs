@@ -24,7 +24,7 @@ export default function AdminPlaceholder({
           margin: 0,
           fontSize: 12,
           letterSpacing: '0.2em',
-          color: 'rgba(230,126,34,0.5)',
+          color: 'rgba(0, 33, 71, 0.5)',
           fontWeight: 600,
         }}
       >

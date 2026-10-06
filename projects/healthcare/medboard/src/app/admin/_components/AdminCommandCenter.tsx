@@ -527,11 +527,11 @@ export default function AdminCommandCenter({ session }: { session: AdminSession 
       {
         label: 'Dashboard',
         data: usageToday?.dashboardCounts || [],
-        borderColor: '#E67E22',
-        backgroundColor: 'rgba(230,126,34,0.08)',
+        borderColor: '#002147',
+        backgroundColor: 'rgba(0, 33, 71, 0.08)',
         tension: 0.3,
         pointRadius: 3,
-        pointBackgroundColor: '#E67E22',
+        pointBackgroundColor: '#002147',
         fill: true,
       },
       {
@@ -560,11 +560,11 @@ export default function AdminCommandCenter({ session }: { session: AdminSession 
     scales: {
       x: {
         ticks: { color: '#777', font: { size: 10 } },
-        grid: { color: 'rgba(255,255,255,0.04)' },
+        grid: { color: 'rgba(15, 23, 42, 0.08)' },
       },
       y: {
         ticks: { color: '#777', font: { size: 10 } },
-        grid: { color: 'rgba(255,255,255,0.04)' },
+        grid: { color: 'rgba(15, 23, 42, 0.08)' },
         beginAtZero: true,
       },
     },
@@ -583,11 +583,11 @@ export default function AdminCommandCenter({ session }: { session: AdminSession 
       {
         label: 'Uptime (jam)',
         data: metricHistory.map(s => formatUptimeHours(s.uptimeSeconds)),
-        borderColor: '#E67E22',
-        backgroundColor: 'rgba(230,126,34,0.08)',
+        borderColor: '#002147',
+        backgroundColor: 'rgba(0, 33, 71, 0.08)',
         tension: 0.3,
         pointRadius: 3,
-        pointBackgroundColor: '#E67E22',
+        pointBackgroundColor: '#002147',
         fill: true,
       },
     ],
@@ -622,7 +622,7 @@ export default function AdminCommandCenter({ session }: { session: AdminSession 
     scales: {
       x: {
         ticks: { color: '#777', font: { size: 9 }, maxTicksLimit: 10 },
-        grid: { color: 'rgba(255,255,255,0.04)' },
+        grid: { color: 'rgba(15, 23, 42, 0.08)' },
       },
       y: {
         ticks: {
@@ -638,7 +638,7 @@ export default function AdminCommandCenter({ session }: { session: AdminSession 
             return `${remainingHours}h`
           },
         },
-        grid: { color: 'rgba(255,255,255,0.04)' },
+        grid: { color: 'rgba(15, 23, 42, 0.08)' },
         beginAtZero: true,
       },
     },

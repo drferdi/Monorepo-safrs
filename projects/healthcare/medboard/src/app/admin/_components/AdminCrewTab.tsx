@@ -283,7 +283,7 @@ export default function AdminCrewTab() {
                     style={{
                       borderBottom: '1px solid var(--line-base)',
                       cursor: 'pointer',
-                      background: isSelected ? 'rgba(230,126,34,0.06)' : 'transparent',
+                      background: isSelected ? 'rgba(0, 33, 71, 0.06)' : 'transparent',
                       opacity: isActive ? 1 : 0.5,
                     }}
                   >
@@ -653,7 +653,7 @@ function UserEditPanel({
     <div
       style={{
         borderRadius: 10,
-        border: '1px solid rgba(230,126,34,0.2)',
+        border: '1px solid rgba(0, 33, 71, 0.2)',
         background: 'var(--bg-nav)',
         overflow: 'hidden',
       }}
@@ -839,7 +839,7 @@ function UserEditPanel({
                 padding: '8px 0',
                 borderRadius: 6,
                 border: 'none',
-                background: saving ? 'rgba(230,126,34,0.3)' : '#E67E22',
+                background: saving ? 'rgba(0, 33, 71, 0.3)' : '#002147',
                 color: '#fff',
                 fontSize: 12,
                 fontWeight: 600,
@@ -1066,8 +1066,8 @@ function UserEditPanel({
                       style={{
                         padding: '3px 8px',
                         borderRadius: 4,
-                        background: 'rgba(230,126,34,0.12)',
-                        border: '1px solid rgba(230,126,34,0.3)',
+                        background: 'rgba(0, 33, 71, 0.12)',
+                        border: '1px solid rgba(0, 33, 71, 0.3)',
                         color: 'var(--c-asesmen)',
                         fontSize: 12,
                         fontWeight: 600,
@@ -1239,7 +1239,7 @@ function UserEditPanel({
                 padding: '8px 0',
                 borderRadius: 6,
                 border: 'none',
-                background: saving ? 'rgba(230,126,34,0.3)' : '#E67E22',
+                background: saving ? 'rgba(0, 33, 71, 0.3)' : '#002147',
                 color: '#fff',
                 fontSize: 12,
                 fontWeight: 600,
@@ -1290,8 +1290,8 @@ function ChipToggle({
       style={{
         padding: '3px 8px',
         borderRadius: 4,
-        border: active ? '1px solid rgba(230,126,34,0.4)' : '1px solid var(--line-base)',
-        background: active ? 'rgba(230,126,34,0.1)' : 'transparent',
+        border: active ? '1px solid rgba(0, 33, 71, 0.4)' : '1px solid var(--line-base)',
+        background: active ? 'rgba(0, 33, 71, 0.1)' : 'transparent',
         color: active ? 'var(--c-asesmen)' : disabled ? 'var(--text-muted)' : 'var(--text-muted)',
         fontSize: 12,
         fontWeight: active ? 600 : 400,

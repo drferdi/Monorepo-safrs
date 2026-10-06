@@ -170,8 +170,8 @@ export default function AdminAnalytics() {
       {
         label: 'Rawat Jalan',
         data: successEntries.map(e => e.rawatJalan),
-        borderColor: 'rgba(230,126,34,0.9)',
-        backgroundColor: 'rgba(230,126,34,0.1)',
+        borderColor: 'rgba(0, 33, 71, 0.9)',
+        backgroundColor: 'rgba(0, 33, 71, 0.1)',
         fill: true,
         tension: 0.3,
         pointRadius: 4,
@@ -223,7 +223,7 @@ export default function AdminAnalytics() {
     datasets: [
       {
         data: [kpi.emrSuccess, kpi.emrPartial, kpi.emrFailed],
-        backgroundColor: ['rgba(230,126,34,0.8)', 'rgba(160,160,160,0.6)', 'rgba(231,76,60,0.7)'],
+        backgroundColor: ['rgba(0, 33, 71, 0.8)', 'rgba(160,160,160,0.6)', 'rgba(231,76,60,0.7)'],
         borderWidth: 0,
       },
     ],
@@ -256,7 +256,7 @@ export default function AdminAnalytics() {
       {
         label: 'Aktivitas',
         data: peakHours,
-        backgroundColor: 'rgba(230,126,34,0.5)',
+        backgroundColor: 'rgba(0, 33, 71, 0.5)',
         borderRadius: 3,
       },
     ],

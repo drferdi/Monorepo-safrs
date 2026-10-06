@@ -1056,7 +1056,7 @@ export default function ClinicalReportPage() {
                 gap: 16,
                 padding: '12px 16px',
                 marginBottom: 24,
-                background: 'rgba(230,126,34,0.06)',
+                background: 'rgba(0, 33, 71, 0.06)',
                 border: '1px solid var(--line-base)',
               }}
             >

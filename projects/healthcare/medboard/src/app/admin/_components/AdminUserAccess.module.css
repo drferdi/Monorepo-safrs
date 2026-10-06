@@ -623,7 +623,7 @@
   border: 1px solid var(--c-asesmen-border);
   border-radius: var(--radius-md);
   padding: 3px 8px;
-  background: rgba(230, 126, 34, 0.12);
+  background: rgba(0, 33, 71, 0.12);
   color: var(--c-asesmen);
   font-size: 12px;
   font-weight: 600;
@@ -782,7 +782,7 @@
 .paginationButton {
   border-radius: var(--radius-md);
   padding: 4px 10px;
-  background: rgba(230, 126, 34, 0.08);
+  background: rgba(0, 33, 71, 0.08);
   color: var(--c-asesmen);
   cursor: pointer;
   font-size: 12px;
@@ -807,8 +807,8 @@
 }
 
 .chipToggleActive {
-  border-color: rgba(230, 126, 34, 0.4);
-  background: rgba(230, 126, 34, 0.1);
+  border-color: rgba(0, 33, 71, 0.4);
+  background: rgba(0, 33, 71, 0.1);
   color: var(--c-asesmen);
   font-weight: 600;
 }

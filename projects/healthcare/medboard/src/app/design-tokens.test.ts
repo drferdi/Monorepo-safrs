@@ -66,3 +66,20 @@ test('text follows Glass Health: Inter, 13 px body on the 11/13/15/17/20/24/30 s
   assert.match(css, /\nbody\s*\{[^}]*font-size:\s*var\(--text-sm\);/)
   assert.match(read('src/app/layout.tsx'), /import '@fontsource-variable\/inter'/)
 })
+
+const OLD_LITERALS: Array<[string, RegExp]> = [
+  ['gold #E67E22', /#e67e22/i],
+  ['gold rgba(230,126,34)', /rgba\(\s*230\s*,\s*126\s*,\s*34\s*,/],
+  ['dark canvas #121214', /#121214/i],
+  ['cream text #F0E8DC', /#f0e8dc/i],
+  ['IBM Plex', /IBM Plex/i],
+]
+
+test('no old gold, cream or dark-canvas colour is left in pages and components', () => {
+  const offenders: string[] = []
+  for (const file of [...sourceFiles('src/app'), ...sourceFiles('src/components')]) {
+    const text = read(file)
+    for (const [name, pattern] of OLD_LITERALS) if (pattern.test(text)) offenders.push(`${file}: ${name}`)
+  }
+  assert.deepEqual(offenders, [])
+})

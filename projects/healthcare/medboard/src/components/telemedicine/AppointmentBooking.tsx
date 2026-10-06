@@ -13,7 +13,7 @@ const L = {
   border: 'var(--line-base, rgba(255,255,255,0.08))',
   text: 'var(--text-main, #d4d4d4)',
   muted: 'var(--text-muted, #666666)',
-  accent: 'var(--c-asesmen, #E67E22)',
+  accent: 'var(--c-asesmen, #002147)',
   actionTone: '#101012',
   actionToneSoft: 'rgba(16,16,18,0.10)',
   actionToneBorder: 'rgba(16,16,18,0.22)',
@@ -346,7 +346,7 @@ export function AppointmentBooking({
                       onClick={() => setSelectedDate(d)}
                       style={{
                         padding: '5px 10px',
-                        background: isSel ? 'rgba(230,126,34,0.1)' : 'transparent',
+                        background: isSel ? 'rgba(0, 33, 71, 0.1)' : 'transparent',
                         border: `1px solid ${isSel ? L.accent : L.border}`,
                         borderRadius: 2,
                         color: isSel ? L.accent : L.muted,
@@ -418,7 +418,7 @@ export function AppointmentBooking({
                           background: !slot.isAvailable
                             ? 'transparent'
                             : isSel
-                              ? 'rgba(230,126,34,0.1)'
+                              ? 'rgba(0, 33, 71, 0.1)'
                               : 'transparent',
                           border: `1px solid ${!slot.isAvailable ? 'rgba(255,255,255,0.04)' : isSel ? L.accent : L.border}`,
                           borderRadius: 2,
@@ -468,8 +468,8 @@ export function AppointmentBooking({
             {/* Summary */}
             <div
               style={{
-                background: 'rgba(230,126,34,0.06)',
-                border: `1px solid rgba(230,126,34,0.2)`,
+                background: 'rgba(0, 33, 71, 0.06)',
+                border: `1px solid rgba(0, 33, 71, 0.2)`,
                 borderRadius: 2,
                 padding: '10px 14px',
               }}
@@ -567,7 +567,7 @@ export function AppointmentBooking({
                 padding: '6px 16px',
                 background: (step === 1 ? !canNext1 : !canNext2)
                   ? 'transparent'
-                  : 'rgba(230,126,34,0.15)',
+                  : 'rgba(0, 33, 71, 0.15)',
                 border: `1px solid ${(step === 1 ? !canNext1 : !canNext2) ? L.border : L.accent}`,
                 borderRadius: 2,
                 color: (step === 1 ? !canNext1 : !canNext2) ? L.muted : L.accent,
@@ -586,7 +586,7 @@ export function AppointmentBooking({
                 alignItems: 'center',
                 gap: 6,
                 padding: '6px 16px',
-                background: 'rgba(230,126,34,0.15)',
+                background: 'rgba(0, 33, 71, 0.15)',
                 border: `1px solid ${L.accent}`,
                 borderRadius: 2,
                 color: L.accent,

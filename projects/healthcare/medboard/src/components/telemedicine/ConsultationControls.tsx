@@ -117,15 +117,15 @@ export function ConsultationControls({
               icon={<FileText size={15} />}
               label="Diagnosis"
               onClick={() => setShowDiagnosis(true)}
-              bg="rgba(230,126,34,0.15)"
-              border="rgba(230,126,34,0.4)"
+              bg="rgba(0, 33, 71, 0.15)"
+              border="rgba(0, 33, 71, 0.4)"
             />
             <ClinicalButton
               icon={<Pill size={15} />}
               label="Resep"
               onClick={() => setShowPrescription(true)}
-              bg="rgba(230,126,34,0.15)"
-              border="rgba(230,126,34,0.4)"
+              bg="rgba(0, 33, 71, 0.15)"
+              border="rgba(0, 33, 71, 0.4)"
             />
           </div>
         )}
@@ -244,7 +244,7 @@ function ClinicalButton({
         gap: 6,
         padding: '7px 14px',
         background: bg,
-        color: '#E67E22',
+        color: '#002147',
         border: `1px solid ${border}`,
         borderRadius: 8,
         fontSize: 14,

@@ -55,7 +55,7 @@ export function GlassClock(): React.ReactElement {
       rootStyle.setProperty('--gc-hour-number-color', '#2D2420')
       rootStyle.setProperty('--gc-minute-marker-color', 'rgba(201, 168, 124, 0.5)')
       rootStyle.setProperty('--gc-hand-color', '#2D2420')
-      rootStyle.setProperty('--gc-second-hand-color', '#E67E22')
+      rootStyle.setProperty('--gc-second-hand-color', '#002147')
       rootStyle.setProperty('--gc-shadow-layer1-opacity', '0.1')
       rootStyle.setProperty('--gc-shadow-layer2-opacity', '0.1')
       rootStyle.setProperty('--gc-shadow-layer3-opacity', '0.1')

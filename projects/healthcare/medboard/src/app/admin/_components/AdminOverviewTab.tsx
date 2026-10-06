@@ -316,7 +316,7 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
       {
         label: 'Rawat Jalan',
         data: lb1SuccessEntries.map(r => r.rawatJalan),
-        backgroundColor: 'rgba(230,126,34,0.7)',
+        backgroundColor: 'rgba(0, 33, 71, 0.7)',
         borderRadius: 3,
       },
       {
@@ -354,7 +354,7 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
     datasets: [
       {
         data: [kpi.emrSuccess, kpi.emrPartial, kpi.emrFailed],
-        backgroundColor: ['rgba(230,126,34,0.8)', 'rgba(160,160,160,0.6)', 'rgba(231,76,60,0.7)'],
+        backgroundColor: ['rgba(0, 33, 71, 0.8)', 'rgba(160,160,160,0.6)', 'rgba(231,76,60,0.7)'],
         borderWidth: 0,
       },
     ],
@@ -382,8 +382,8 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
             marginBottom: 28,
             padding: '20px 24px',
             borderRadius: 10,
-            border: '1px solid rgba(230,126,34,0.25)',
-            borderLeft: '4px solid #E67E22',
+            border: '1px solid rgba(0, 33, 71, 0.25)',
+            borderLeft: '4px solid #002147',
             background: 'var(--bg-nav)',
           }}
         >
@@ -405,7 +405,7 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
             >
               PENDAFTARAN MENUNGGU
             </p>
-            <span style={{ fontSize: 12, color: '#E67E22', fontWeight: 600 }}>
+            <span style={{ fontSize: 12, color: '#002147', fontWeight: 600 }}>
               {pendingCount} menunggu review
             </span>
           </div>
@@ -587,7 +587,7 @@ export default function AdminOverviewTab({ session }: { session: AdminSession | 
                       padding: '2px 6px',
                       borderRadius: 3,
                       background:
-                        item.type === 'LB1' ? 'rgba(230,126,34,0.12)' : 'rgba(160,160,160,0.12)',
+                        item.type === 'LB1' ? 'rgba(0, 33, 71, 0.12)' : 'rgba(160,160,160,0.12)',
                       color: item.type === 'LB1' ? 'var(--c-asesmen)' : 'var(--text-muted)',
                     }}
                   >
@@ -770,7 +770,7 @@ function KPICard({
       style={{
         padding: '18px 20px',
         borderRadius: 10,
-        border: accent ? '1px solid rgba(230,126,34,0.25)' : '1px solid var(--line-base)',
+        border: accent ? '1px solid rgba(0, 33, 71, 0.25)' : '1px solid var(--line-base)',
         background: 'var(--bg-nav)',
         position: 'relative',
       }}
@@ -781,7 +781,7 @@ function KPICard({
             position: 'absolute',
             top: 10,
             right: 10,
-            background: '#E67E22',
+            background: '#002147',
             color: '#fff',
             fontSize: 12,
             fontWeight: 700,
@@ -965,7 +965,7 @@ function PendingCard({
             padding: '7px 0',
             border: 'none',
             borderRadius: 6,
-            background: busy ? 'rgba(230,126,34,0.3)' : '#E67E22',
+            background: busy ? 'rgba(0, 33, 71, 0.3)' : '#002147',
             color: '#fff',
             fontSize: 12,
             fontWeight: 600,

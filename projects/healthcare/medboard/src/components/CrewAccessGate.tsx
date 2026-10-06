@@ -1011,7 +1011,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
               borderRadius: 8,
               border: '1px solid var(--c-asesmen)',
               background: 'var(--c-asesmen)',
-              color: '#F0E8DC',
+              color: 'var(--text-on-accent)',
               fontSize: 14,
               fontWeight: 600,
               cursor: isSubmitting ? 'wait' : 'pointer',

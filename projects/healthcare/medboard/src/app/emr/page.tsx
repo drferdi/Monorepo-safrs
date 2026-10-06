@@ -1324,7 +1324,7 @@ function CustomSelect({
                 padding: '9px 12px',
                 fontSize: 14,
                 color: opt.value === value ? 'var(--c-asesmen)' : 'var(--text-main)',
-                background: opt.value === value ? 'rgba(230,126,34,0.08)' : 'transparent',
+                background: opt.value === value ? 'rgba(0, 33, 71, 0.08)' : 'transparent',
                 cursor: 'pointer',
                 transition: 'background 0.15s',
               }}
@@ -1334,7 +1334,7 @@ function CustomSelect({
               }}
               onMouseLeave={(e) => {
                 ;(e.currentTarget as HTMLElement).style.background =
-                  opt.value === value ? 'rgba(230,126,34,0.08)' : 'transparent'
+                  opt.value === value ? 'rgba(0, 33, 71, 0.08)' : 'transparent'
               }}
             >
               {opt.label}
@@ -5700,8 +5700,8 @@ export default function EMRPage() {
           <div
             onClick={() => setTriageReceived(false)}
             style={{
-              background: 'rgba(230,126,34,0.12)',
-              border: '1px solid #E67E22',
+              background: 'rgba(0, 33, 71, 0.12)',
+              border: '1px solid #002147',
               borderRadius: 4,
               padding: '10px 16px',
               marginBottom: 10,
@@ -5711,7 +5711,7 @@ export default function EMRPage() {
               alignItems: 'center',
             }}
           >
-            <span style={{ fontSize: 14, color: '#E67E22', fontWeight: 600 }}>
+            <span style={{ fontSize: 14, color: '#002147', fontWeight: 600 }}>
               Data triase diterima dari perawat — keluhan & TTV sudah terisi otomatis
             </span>
             <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>klik untuk tutup</span>
@@ -6319,7 +6319,7 @@ export default function EMRPage() {
                       marginTop: 20,
                       paddingTop: 8,
                       borderTop: highlightReviewHandoff
-                        ? '1px solid rgba(230, 126, 34, 0.22)'
+                        ? '1px solid rgba(0, 33, 71, 0.22)'
                         : '1px solid transparent',
                       transition: 'border-color 0.42s ease, opacity 0.42s ease',
                       opacity: highlightReviewHandoff ? 1 : 0.92,
@@ -8808,10 +8808,10 @@ export default function EMRPage() {
                           padding: '12px 14px',
                           borderRadius: 6,
                           border: manualDiagnosis
-                            ? '1px solid rgba(230,126,34,0.4)'
+                            ? '1px solid rgba(0, 33, 71, 0.4)'
                             : '1px solid var(--line-base)',
                           background: manualDiagnosis
-                            ? 'rgba(230,126,34,0.04)'
+                            ? 'rgba(0, 33, 71, 0.04)'
                             : 'rgba(255,255,255,0.02)',
                         }}
                       >
@@ -8819,7 +8819,7 @@ export default function EMRPage() {
                           style={{
                             fontSize: 12,
                             letterSpacing: '0.15em',
-                            color: manualDiagnosis ? '#E67E22' : 'var(--text-muted)',
+                            color: manualDiagnosis ? '#002147' : 'var(--text-muted)',
                             fontWeight: 600,
                             marginBottom: 8,
                           }}
@@ -8871,7 +8871,7 @@ export default function EMRPage() {
                           <div
                             style={{
                               fontSize: 12,
-                              color: '#E67E22',
+                              color: '#002147',
                               marginTop: 6,
                             }}
                           >

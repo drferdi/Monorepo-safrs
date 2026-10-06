@@ -32,7 +32,7 @@ const NAV_ITEMS: Array<{
   { href: '/report', label: 'Report' },
 ]
 
-const ACCENT = '#E67E22'
+const ACCENT = '#002147'
 
 function formatSidebarDate(value: Date): string {
   return value.toLocaleDateString('id-ID', {
