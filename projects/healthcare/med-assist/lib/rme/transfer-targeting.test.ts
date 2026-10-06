@@ -4,6 +4,7 @@ import {
   detectEpuskesmasPageType,
   selectBestTransferTab,
   selectBridgeTransferTab,
+  selectPanelTransferTab,
 } from '@/lib/rme/transfer-targeting';
 
 describe('transfer targeting', () => {
@@ -102,5 +103,46 @@ describe('bridge transfer targeting', () => {
     );
 
     expect(selected).toBeUndefined();
+  });
+});
+
+describe('panel transfer targeting', () => {
+  const host = 'https://kotakediri.epuskesmas.id';
+
+  it("fills the encounter's pelayanan tab, not the active tab of another patient", () => {
+    const selected = selectPanelTransferTab(
+      [
+        { id: 61, active: true, url: `${host}/resep/create/90001?from=pelayanan` },
+        { id: 62, active: false, url: `${host}/resep/create/83206?from=pelayanan` },
+      ],
+      { encounterId: '83206', step: 'resep', activeTabId: 61 }
+    );
+
+    expect(selected).toBe(62);
+  });
+
+  it("returns no tab when the encounter's page is closed, even with another patient active", () => {
+    const selected = selectPanelTransferTab(
+      [{ id: 71, active: true, url: `${host}/anamnesa/create/90001?from=pelayanan` }],
+      { encounterId: '83206', step: 'anamnesa', activeTabId: 71 }
+    );
+
+    expect(selected).toBeUndefined();
+  });
+
+  it('keeps the best ePuskesmas tab, then the active tab, without an encounter id', () => {
+    const candidates = [
+      { id: 81, active: true, url: 'chrome-extension://sentra/sidepanel.html' },
+      { id: 82, active: false, url: `${host}/anamnesa/create/90001` },
+    ];
+    expect(selectPanelTransferTab(candidates, { step: 'anamnesa', activeTabId: 81 })).toBe(82);
+    expect(
+      selectPanelTransferTab(candidates, { encounterId: ' ', step: 'anamnesa', activeTabId: 81 })
+    ).toBe(82);
+    expect(
+      selectPanelTransferTab([{ id: 91, active: true, url: 'https://example.org/' }], {
+        activeTabId: 91,
+      })
+    ).toBe(91);
   });
 });

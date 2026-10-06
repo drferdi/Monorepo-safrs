@@ -42,8 +42,8 @@ import { assistStaffFromSession, withResepStaff, withStaffNames } from '@/lib/rm
 import { RMETransferOrchestrator, resepStepTimeoutMs } from '@/lib/rme/transfer-orchestrator';
 import {
   isStepUrl,
-  selectBestTransferTab,
   selectBridgeTransferTab,
+  selectPanelTransferTab,
 } from '@/lib/rme/transfer-targeting';
 import { saveShiftOverviewCache } from '@/lib/statistics/cache';
 import { saveDailyReport } from '@/lib/statistics/daily-cache';
@@ -453,27 +453,17 @@ async function broadcastTransferProgress(event: RMETransferProgressEvent): Promi
 
 async function resolveTransferTabId(step?: RMETransferStepStatus): Promise<number | undefined> {
   const encounter = await getEncounter().catch(() => null);
-  const encounterId = encounter?.id || undefined;
   const activeTabs = await browser.tabs.query({ active: true, currentWindow: true });
   const activeTab = activeTabs[0];
   const epuskesmasTabs = await browser.tabs.query({ url: '*://*.epuskesmas.id/*' });
-  const selected = selectBestTransferTab(
+  return selectPanelTransferTab(
     [activeTab, ...epuskesmasTabs].filter(
       (candidate, index, list) =>
         typeof candidate?.id === 'number' &&
         list.findIndex((item) => item?.id === candidate.id) === index
     ),
-    {
-      encounterId,
-      step,
-    }
+    { encounterId: encounter?.id || undefined, step, activeTabId: activeTab?.id }
   );
-
-  if (selected) {
-    return selected;
-  }
-
-  return activeTab?.id;
 }
 
 /** The tab of a dashboard bridge entry's pelayanan; no other tab, so never another patient. */
@@ -661,8 +651,11 @@ async function executeRMEFillStep<TStep extends RMETransferStepStatus>(
   transferLog.debug('transfer tab resolved', { hasTabId: Boolean(tabId) });
 
   if (!tabId) {
-    if (bridgePelayananId !== undefined) {
-      throw new Error(`PATIENT_MISMATCH: no ePuskesmas tab of pelayanan ${bridgePelayananId}`);
+    // A bridge entry, or the panel's encounter, names its patient: never fill another tab.
+    const pelayananId =
+      bridgePelayananId ?? ((await getEncounter().catch(() => null))?.id || undefined);
+    if (pelayananId !== undefined) {
+      throw new Error(`PATIENT_MISMATCH: no ePuskesmas tab of pelayanan ${pelayananId}`);
     }
     throw new Error('No active tab');
   }

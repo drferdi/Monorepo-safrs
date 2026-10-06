@@ -190,3 +190,21 @@ export function selectBridgeTransferTab(
     step: options.step,
   });
 }
+
+/**
+ * The tab the side panel's transfer may fill. With an encounter, only its pelayanan's ePuskesmas
+ * tab, as for a bridge entry, so another patient's active tab is never filled (audit 2026-10-06).
+ * Without one, the best-scoring tab, then the active tab, as before.
+ */
+export function selectPanelTransferTab(
+  candidates: TransferTabCandidate[],
+  options: { encounterId?: string; step?: RMETransferStepStatus; activeTabId?: number }
+): number | undefined {
+  if (options.encounterId?.trim()) {
+    return selectBridgeTransferTab(candidates, {
+      pelayananId: options.encounterId,
+      step: options.step,
+    });
+  }
+  return selectBestTransferTab(candidates, { step: options.step }) ?? options.activeTabId;
+}

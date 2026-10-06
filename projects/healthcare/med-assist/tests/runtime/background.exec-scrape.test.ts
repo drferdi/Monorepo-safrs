@@ -16,6 +16,7 @@ const requestBridgePoll = vi.fn();
 const tabsQuery = vi.fn();
 const tabsGet = vi.fn();
 const executeScript = vi.fn();
+const transferRun = vi.fn();
 
 vi.mock('@/lib/api/auth-store', () => ({
   AUTH_STORE_KEYS: {
@@ -60,7 +61,9 @@ vi.mock('@/lib/iskandar-diagnosis-engine/get-suggestions-flow', () => ({
 }));
 
 vi.mock('@/lib/rme/transfer-orchestrator', () => ({
-  RMETransferOrchestrator: class {},
+  RMETransferOrchestrator: class {
+    run = transferRun;
+  },
 }));
 
 vi.mock('@/lib/api/audit-service', () => ({
@@ -301,5 +304,41 @@ describe('background pageReady execScrape relay', () => {
     await registeredHandlers.get('scanMedicalHistory')!({ data: undefined });
 
     expect(executeScript).toHaveBeenCalledTimes(injections);
+  });
+
+  // The panel's transfer fills the encounter's pelayanan only; with that page closed it refuses
+  // rather than fill the active tab, which may hold another patient (audit 2026-10-06).
+  it("refuses a panel transfer when only another patient's tab is open", async () => {
+    getEncounter.mockReset();
+    getEncounter.mockResolvedValue(buildEncounter('83206'));
+    const other = {
+      id: 31,
+      active: true,
+      url: 'https://kotakediri.epuskesmas.id/resep/create/90001',
+    };
+    tabsQuery.mockResolvedValue([other]);
+    tabsGet.mockResolvedValue(other);
+    let execute: ((step: 'resep', payload: unknown) => Promise<unknown>) | undefined;
+    transferRun.mockImplementation(async (_payload: unknown, executor: typeof execute) => {
+      execute = executor;
+      return {
+        runId: 'run-1',
+        fingerprint: 'fp',
+        state: 'failed',
+        steps: {},
+        reasonCodes: [],
+        totalLatencyMs: 0,
+      };
+    });
+    const backgroundMain = (await import('../../entrypoints/background'))
+      .default as unknown as () => void;
+    backgroundMain();
+
+    await registeredHandlers.get('transferRME')!({
+      data: { resep: {}, options: { onlyStep: 'resep' } },
+    });
+
+    await expect(execute?.('resep', {})).rejects.toThrow('PATIENT_MISMATCH');
+    expect(sendMessageToTabWithTimeout).not.toHaveBeenCalled();
   });
 });
