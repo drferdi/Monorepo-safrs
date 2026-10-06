@@ -2,7 +2,8 @@
  * The diagnosis step the background runs for the side panel's `getSuggestions` request, by the
  * `diagnosisEngine` flag (`feature-flags.ts`):
  *
- * - `legacy` (default): the legacy engine's response, unchanged.
+ * - `legacy` (default when `SENTRA_DIAGNOSIS_ENGINE` is unset in development; a production
+ *   build without it is built as `mira`, `wxt.config.ts`): the legacy engine's response, unchanged.
  * - `shadow`: the legacy response, returned without waiting for MIRA. MIRA runs in the background
  *   on the same de-identified case and only its outcome (status, ICD codes, latency; no clinical
  *   text) is written to the audit log.

@@ -447,9 +447,10 @@ Details:
 
 - **[Verified]** Requirements: Node 24 and pnpm 11.21.0 (`package.json:90-93`). This capsule is
   its own pnpm workspace with a "hoisted" install layout (`pnpm-workspace.yaml:2,6`).
-- **[Verified]** There are 140 test files: 82 in `lib/`, 38 in `components/`, 10 in `tests/`,
-  6 in `entrypoints/`, 3 in `utils/` and 1 in `data/`. Most sit next to the code they test.
-- **[Doc only]** Latest reported result: 961 passing, 16 skipped (`.agents/HANDOFF.md`).
+- **[Verified 2026-10-06]** There are 205 test files: 121 in `lib/`, 60 in `components/`,
+  10 in `tests/`, 7 in `entrypoints/`, 5 in `utils/`, 1 in `data/` and 1 in `scripts/`. Most sit
+  next to the code they test.
+- **[Doc only]** Latest reported result: see `.agents/HANDOFF.md`.
 - **[Verified]** There is **no CI** inside this capsule (no `.github/`). The monorepo's CI
   excludes it.
 - **[Verified]** Environment variables are listed by name in `.env.example`. Copy it to
