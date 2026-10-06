@@ -108,27 +108,6 @@ export default function AtlasScene({ atlas, state, reducedMotion, nameOf, hoverC
     rim.position.set(2, 2, -3)
     scene.add(rim)
 
-    const platform = new T.Mesh(
-      new T.CylinderGeometry(0.68, 0.7, 0.028, 100),
-      new T.MeshStandardMaterial({ color: 0xf1f2f2, metalness: 0.12, roughness: 0.67 })
-    )
-    platform.position.y = -0.016
-    scene.add(platform)
-    const ring = new T.Mesh(
-      new T.RingGeometry(0.63, 0.632, 128),
-      new T.MeshBasicMaterial({ color: 0x8c969f, transparent: true, opacity: 0.4, side: T.DoubleSide })
-    )
-    ring.rotation.x = -Math.PI / 2
-    ring.position.y = 0.001
-    scene.add(ring)
-    const innerRing = new T.Mesh(
-      new T.RingGeometry(0.55, 0.551, 128),
-      new T.MeshBasicMaterial({ color: 0xa4aeb8, transparent: true, opacity: 0.16, side: T.DoubleSide })
-    )
-    innerRing.rotation.x = -Math.PI / 2
-    innerRing.position.y = 0.001
-    scene.add(innerRing)
-
     const width = T.MathUtils.ceilPowerOfTwo(atlas.parts.length)
     const data = new Float32Array(width * 4)
     const partTexture = new T.DataTexture(data, width, 1, T.RGBAFormat, T.FloatType)
@@ -503,7 +482,6 @@ export default function AtlasScene({ atlas, state, reducedMotion, nameOf, hoverC
       controls.enableRotate = amount < 0.8
       controls.mouseButtons.LEFT = amount < 0.8 ? T.MOUSE.ROTATE : T.MOUSE.PAN
       controls.touches.ONE = amount < 0.8 ? T.TOUCH.ROTATE : T.TOUCH.PAN
-      platform.visible = ring.visible = innerRing.visible = amount < 0.5 && !s.isolate
       markers.visible = amount > 0.75
       controls.autoRotate = s.rotate && !s.isolate && amount < 0.4
       controls.autoRotateSpeed = 0.65
