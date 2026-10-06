@@ -3,6 +3,20 @@
 Append-only, newest first. Record only durable decisions that concern this capsule. Each entry
 has a dated heading, the decision, a short rationale, and its evidence.
 
+## 2026-10-06 — Deploys carry real LFS images; profession logos are grey on transparent
+
+- Decision: the VPS deploy packs Git LFS files of `public/` from the working tree in a second
+  tarball and refuses to continue if a pointer is left, because `git archive` writes pointers
+  (root `.gitattributes` puts `*.png` in LFS) and the live site served 130-byte avatars and logos.
+- Decision (Chief: "cari logo asli nya masing masing lalu reformat ke dalam design warna logo
+  grey", then "background di buat transparansi", "kualitas logo perhatikan"): profession logos
+  are muted grey emblems, 128×128 PNG, transparent outer background, made from sources of at
+  least 190 px. IBI and PPNI come from seeklogo and perawat.org because ibi.or.id shows a bot
+  check and ppni-inak.org did not open; Chief approved every download.
+- Evidence: live `/avatar.png` = 131 bytes vs 231,887 locally; guard red on 17 pointers, green
+  after overlay; `crew-access.test.ts` red first (ENOENT `ppni.jpg`); commits `7bc0895f`,
+  `842461d5`.
+
 ## 2026-10-05 — MedBoard host is medboard.sentrahai.com
 
 - Decision (Chief): `crew.puskesmasbalowerti.com` is retired; MedBoard is
