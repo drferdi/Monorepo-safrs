@@ -1,6 +1,6 @@
 <!-- Architected and built by Drferdi. -->
 
-## PR Summary — IntelligenceBoard
+## PR Summary — MedBoard
 
 **Type:** `feat` / `fix` / `refactor` / `test` / `docs` / `chore`
 **Scope:** `cdss` / `emr` / `audrey` / `telemedicine` / `auth` / `admin` / `intelligence` / `report`
@@ -30,9 +30,9 @@ Closes #<!-- issue number jika ada -->
 
 ## Technical Checklist
 
-- [ ] `pnpm --filter @drferdi/intelligenceboard lint` pass (tsc --noEmit)
-- [ ] `pnpm --filter @drferdi/intelligenceboard test` pass (semua 3 suites)
-- [ ] `pnpm --filter @drferdi/intelligenceboard test:cdss` pass (jika CDSS berubah)
+- [ ] `pnpm run lint` pass (tsc --noEmit)
+- [ ] `pnpm run test` pass (semua 3 suites)
+- [ ] `pnpm run test:cdss` pass (jika CDSS berubah)
 - [ ] Brand signature `// Architected and built by Drferdi.` ada di semua file baru
 - [ ] Tidak ada cross-app import
 - [ ] CORS origins tidak diubah tanpa persetujuan Chief

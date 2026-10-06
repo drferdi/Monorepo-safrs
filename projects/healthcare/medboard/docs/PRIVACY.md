@@ -1,7 +1,4 @@
-# File: docs/PRIVACY.md | App: intelligenceBoard | Repo: abyss-monorepo | Updated: 2026-03-16
-# Architected and built by Drferdi.
-
-# Privacy & Data Handling — IntelligenceBoard
+# Privacy & Data Handling — MedBoard
 
 ---
 
@@ -34,7 +31,7 @@ interface CDSSEngineInput {
 ### Security Audit Log — Hashed
 `writeSecurityAuditLog()` di `src/lib/server/security-audit.ts`:
 - `userId` di-hash SHA-256 sebelum disimpan
-- IP address: hanya dari `x-forwarded-for` (Railway proxy)
+- IP address: hanya dari `x-forwarded-for` (reverse proxy Caddy)
 - Tidak ada nama pasien di metadata
 
 ### Sentry PHI Scrubber

@@ -1,7 +1,4 @@
-# File: docs/SETUP.md | App: intelligenceBoard | Repo: abyss-monorepo | Updated: 2026-03-16
-# Architected and built by Drferdi.
-
-# Setup — IntelligenceBoard
+# Setup — MedBoard
 
 ---
 
@@ -9,8 +6,8 @@
 
 | Tool | Versi |
 |------|-------|
-| Node.js | ≥ 20.9.0 (Railway deploy: Node 22) |
-| pnpm | ≥ 9.x |
+| Node.js | 24 (lihat `.nvmrc`) |
+| pnpm | 11 (via `corepack enable`) |
 | PostgreSQL | ≥ 14 |
 
 ---
@@ -18,7 +15,6 @@
 ## Install & Run
 
 ```bash
-# Dari root monorepo
 pnpm install
 
 # Copy environment variables
@@ -26,16 +22,16 @@ cp .env.example .env.local
 # Edit .env.local — isi semua nilai yang diperlukan
 
 # Database setup
-pnpm --filter @drferdi/intelligenceboard db:migrate
-pnpm --filter @drferdi/intelligenceboard db:seed
+pnpm run db:migrate
+pnpm run db:seed
 
 # Dev server (custom server dengan Socket.IO)
-pnpm --filter @drferdi/intelligenceboard dev
-# → http://localhost:7000
+pnpm run dev
+# → http://localhost:3000
 ```
 
 **Catatan:** App ini menggunakan custom server (`server.ts`), bukan `next dev`.
-Dev server berjalan di port 7000 (default). Jika 7000 dipakai, otomatis fallback ke 7001.
+Dev server berjalan di port 3000 (default, bisa diganti dengan `PORT`). Jika 3000 dipakai, otomatis fallback ke 3001.
 
 ---
 
@@ -88,7 +84,7 @@ Script ini menginstall pre-push hooks sesuai SYNAPSE pipeline.
 
 Manual install:
 ```bash
-pnpm --filter @drferdi/intelligenceboard setup:git-guardrails
+pnpm run setup:git-guardrails
 ```
 
 ---
@@ -96,37 +92,25 @@ pnpm --filter @drferdi/intelligenceboard setup:git-guardrails
 ## Commands
 
 ```bash
-pnpm --filter @drferdi/intelligenceboard dev              # Dev server (port 7000)
-pnpm --filter @drferdi/intelligenceboard dev:clean        # Dev server + clear .next lock
-pnpm --filter @drferdi/intelligenceboard build            # Production build
-pnpm --filter @drferdi/intelligenceboard start            # Production server
-pnpm --filter @drferdi/intelligenceboard lint             # TypeScript check (tsc --noEmit)
-pnpm --filter @drferdi/intelligenceboard test             # Full test suite
-pnpm --filter @drferdi/intelligenceboard test:cdss        # CDSS engine tests saja
-pnpm --filter @drferdi/intelligenceboard test:auth-hardening  # Auth security tests
-pnpm --filter @drferdi/intelligenceboard db:migrate       # Prisma migrate
-pnpm --filter @drferdi/intelligenceboard db:studio        # Prisma Studio
-pnpm --filter @drferdi/intelligenceboard db:seed          # Seed database
+pnpm run dev              # Dev server (port 7000)
+pnpm run dev:clean        # Dev server + clear .next lock
+pnpm run build            # Production build
+pnpm run start            # Production server
+pnpm run lint             # TypeScript check (tsc --noEmit)
+pnpm run test             # Full test suite
+pnpm run test:cdss        # CDSS engine tests saja
+pnpm run test:auth-hardening  # Auth security tests
+pnpm run db:migrate       # Prisma migrate
+pnpm run db:studio        # Prisma Studio
+pnpm run db:seed          # Seed database
 ```
 
 ---
 
-## Deployment (Railway)
+## Deployment
 
-Config: `railway.toml`
-```toml
-[build]
-buildCommand = "npm run build"
-nixPkgs = ["nodejs_22"]
-
-[deploy]
-startCommand = "npm run start"
-restartPolicyType = "on_failure"
-restartPolicyMaxRetries = 3
-```
-
-Production URL: `https://intelligenceboard-production.up.railway.app`
-Domain custom: `https://puskesmasbalowerti.com`
+Production berjalan di VPS Biznet Gio: `https://medboard.sentrahai.com`.
+Lihat [`DEPLOYMENT.md`](./DEPLOYMENT.md) dan runbook [`deploy-vps.md`](./deploy-vps.md).
 
 ---
 

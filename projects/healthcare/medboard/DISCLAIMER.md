@@ -1,6 +1,6 @@
 # Disclaimer
 
-**IntelligenceBoard** (`@drferdi/intelligenceboard`) is software tooling for
+**MedBoard** (`@the-abyss/medboard`) is software tooling for
 primary healthcare operations. It is **not** a medical device, not a substitute
 for professional clinical judgment, and not a replacement for direct patient
 care.

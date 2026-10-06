@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Laporkan bug di AADI (IntelligenceBoard)
+about: Laporkan bug di AADI (MedBoard)
 title: "[BUG][AADI] "
 labels: bug, aadi, needs-triage
 assignees: ''
@@ -33,7 +33,7 @@ assignees: ''
 
 ## Environment
 - Versi / Commit: <!-- git rev-parse --short HEAD -->
-- Environment: Local / Production (Railway)
+- Environment: Local / Production (VPS)
 - Browser (jika UI bug):
 
 ## Error Log / Stack Trace

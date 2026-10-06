@@ -1,7 +1,4 @@
-# File: docs/DATA_MODEL.md | App: intelligenceBoard | Repo: abyss-monorepo | Updated: 2026-03-16
-# Architected and built by Drferdi.
-
-# Data Model — IntelligenceBoard
+# Data Model — MedBoard
 
 > ⚠️ PHI tidak pernah disimpan. Semua session bersifat ephemeral.
 

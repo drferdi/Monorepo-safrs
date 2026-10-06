@@ -1,7 +1,4 @@
-# File: docs/TESTING.md | App: intelligenceBoard | Repo: abyss-monorepo | Updated: 2026-03-16
-# Architected and built by Drferdi.
-
-# Testing Guide — IntelligenceBoard
+# Testing Guide — MedBoard
 
 ---
 
@@ -9,19 +6,19 @@
 
 ```bash
 # Semua test suites (dari root monorepo)
-pnpm --filter @drferdi/intelligenceboard test
+pnpm run test
 
 # CDSS engine saja
-pnpm --filter @drferdi/intelligenceboard test:cdss
+pnpm run test:cdss
 
 # Auth hardening saja
-pnpm --filter @drferdi/intelligenceboard test:auth-hardening
+pnpm run test:auth-hardening
 
 # CDSS protected route (Node module test)
-pnpm --filter @drferdi/intelligenceboard test:cdss:protected
+pnpm run test:cdss:protected
 
 # TypeScript check
-pnpm --filter @drferdi/intelligenceboard lint
+pnpm run lint
 ```
 
 ---
@@ -152,7 +149,7 @@ The monorepo `--filter` commands above are legacy. From this capsule root:
   `SKIP_AUTH_HARDENING=1`), so a green `test:capsule` without a database runs no auth-hardening
   assertion. Running it needs a disposable PostgreSQL with migrations applied.
 - The safety-net gaps recorded at migration (21/25, exit code ignored) were fixed on 2026-09-27:
-  `scripts/test-cdss.ts` reports 27/27 and any failure sets exit code 1 (see `.agents/DECISIONS.md`).
+  `scripts/test-cdss.ts` reports 27/27 and any failure sets exit code 1.
 - The reports a test run writes (`runtime/test-*.txt`, `runtime/symphony-safety-gates.md`) are
   git-ignored and listed as mutable state in `project.contract.json`; read them locally after a run.
 - The `assist-acceptance` suite runs with `--conditions react-server`, because the modules it

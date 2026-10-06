@@ -1,7 +1,4 @@
-# File: docs/TROUBLESHOOTING.md | App: intelligenceBoard | Repo: abyss-monorepo | Updated: 2026-03-16
-# Architected and built by Drferdi.
-
-# Troubleshooting — IntelligenceBoard
+# Troubleshooting — MedBoard
 
 ---
 
@@ -16,7 +13,7 @@ Atur manual: `PORT=7002 pnpm dev`
 
 ### `.next/dev/lock` conflict
 ```bash
-pnpm --filter @drferdi/intelligenceboard dev:clean
+pnpm run dev:clean
 # Ini otomatis hapus .next/dev/lock sebelum start
 ```
 
@@ -113,14 +110,14 @@ Pastikan `setIntelligenceNamespace(intelligenceNS)` sudah dipanggil di `server.t
 
 ### Migration error
 ```bash
-pnpm --filter @drferdi/intelligenceboard db:migrate
+pnpm run db:migrate
 # Jika schema conflict:
 npx prisma migrate reset  # ⚠️ HAPUS SEMUA DATA
 ```
 
 ### Prisma Studio tidak bisa akses
 ```bash
-pnpm --filter @drferdi/intelligenceboard db:studio
+pnpm run db:studio
 # Buka http://localhost:5555
 ```
 
@@ -130,7 +127,7 @@ pnpm --filter @drferdi/intelligenceboard db:studio
 
 ### TypeScript errors
 ```bash
-pnpm --filter @drferdi/intelligenceboard lint
+pnpm run lint
 # = tsc --noEmit --incremental false
 ```
 Semua errors harus fix sebelum commit. `strict: true` aktif.

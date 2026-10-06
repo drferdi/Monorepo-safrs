@@ -1,7 +1,4 @@
-# File: docs/AI_GOVERNANCE.md | App: intelligenceBoard | Repo: abyss-monorepo | Updated: 2026-03-16
-# Architected and built by Drferdi.
-
-# AI Governance — IntelligenceBoard
+# AI Governance — MedBoard
 
 > _"Technology enables, but humans decide."_ — Sentra Healthcare Solutions
 

@@ -1,4 +1,4 @@
-# Deploy MedBoard ke VPS (pengganti Railway)
+# Deploy MedBoard ke VPS
 
 Berlaku untuk VPS Ubuntu 24.04 mana pun (IDCloudHost, DomaiNesia, Biznet Gio, Hetzner).
 Spesifikasi minimal: 2 vCPU, 4 GB RAM, 40 GB disk. Chromium (PDF laporan, robot ePuskesmas,
@@ -12,7 +12,7 @@ pernah ditulis di sini; hanya nama variabelnya.
 | Path | Isi |
 | --- | --- |
 | `/opt/medboard/app` | Kode; diganti setiap deploy (versi sebelumnya disimpan di `app.old`) |
-| `/var/lib/medboard/runtime` | Semua data `runtime/` (bridge-queue, pendaftaran, profil crew, riwayat EMR, PDF laporan). `app/runtime` adalah symlink ke sini, jadi data bertahan saat deploy. Di Railway hanya `bridge-queue` yang bertahan. |
+| `/var/lib/medboard/runtime` | Semua data `runtime/` (bridge-queue, pendaftaran, profil crew, riwayat EMR, PDF laporan). `app/runtime` adalah symlink ke sini, jadi data bertahan saat deploy. |
 | `/opt/medboard/browsers` | Chromium untuk Playwright (`PLAYWRIGHT_BROWSERS_PATH`) |
 | `/etc/medboard/medboard.env` | Environment variables (dibaca systemd dan saat build) |
 | `/var/backups/medboard` | Backup harian database dan `runtime/` |
@@ -71,7 +71,7 @@ echo "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY=$(openssl rand -base64 32)" >> /etc/med
 
 Akun crew disimpan di database (tabel `User`), bukan di `CREW_ACCESS_USERS_JSON`. Variabel
 opsional lain (LiveKit, Resend, Sentry, dan sebagainya) ada di `docs/DEPLOYMENT.md`.
-`TRUST_PROXY_HEADERS=true` wajib: tanpa Railway, kode tidak lagi menebak bahwa ia di belakang proxy.
+`TRUST_PROXY_HEADERS=true` wajib karena aplikasi berjalan di belakang Caddy.
 
 ### Service (`/etc/systemd/system/medboard.service`)
 
@@ -93,7 +93,7 @@ RestartSec=5
 WantedBy=multi-user.target
 ```
 
-`prisma migrate deploy` saat start sama dengan `startCommand` di Railway.
+`prisma migrate deploy` berjalan setiap kali service start, sebelum server dinyalakan.
 
 ### Caddy (`/etc/caddy/Caddyfile`)
 
@@ -162,22 +162,7 @@ Rollback kode tidak membatalkan migrasi database.
 
 Log: `journalctl -u medboard -f`.
 
-## 3. Pindah dari Railway (sekali, oleh Chief)
-
-1. Turunkan TTL DNS `medboard.sentrahai.com` (misalnya 300 detik) sehari sebelumnya.
-2. Tunggu bridge-queue kosong (tidak ada entri pending), lalu hentikan layanan Railway sebentar.
-3. Pindahkan database (`pg_dump` versi klien ≥ versi server Railway):
-   `pg_dump -Fc "<DATABASE_URL publik Railway>" -f medboard.dump`, salin ke server, lalu
-   `sudo -u postgres pg_restore --no-owner --role=medboard -d medboard medboard.dump`.
-4. Berkas pendaftaran dan profil crew di Railway ada di luar volume. Kalau masih ada dan
-   dibutuhkan, salin `runtime/crew-access-*.json` ke `/var/lib/medboard/runtime/`.
-5. `medboard.sentrahai.com` sekarang mengarah ke Vercel (tanpa deployment). Lepas domain itu
-   dari project Vercel, lalu ganti record-nya menjadi A record ke IP VPS. Caddy mengambil sertifikat sendiri
-   begitu DNS mengarah.
-6. Cek `https://medboard.sentrahai.com/api/health`, login dari Asisten Medis, lalu lihat ACARS.
-7. Matikan Railway setelah satu sampai dua hari stabil.
-
-## 4. Backup harian (`/etc/cron.d/medboard-backup`)
+## 3. Backup harian (`/etc/cron.d/medboard-backup`)
 
 ```
 30 2 * * * postgres pg_dump -Fc medboard > /var/backups/medboard/db-$(date +\%F).dump

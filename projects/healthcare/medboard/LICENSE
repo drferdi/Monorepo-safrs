@@ -1,10 +1,10 @@
-INTELLIGENCEBOARD — DUAL LICENSE
+MEDBOARD — DUAL LICENSE
 
 Copyright (c) 2024–2026 Drferdi (dr. Ferdi Iskandar)
 All rights reserved.
 
 ================================================================================
-INTELLIGENCEBOARD IS DUAL-LICENSED:
+MEDBOARD IS DUAL-LICENSED:
 
   1. COMMUNITY LICENSE (Apache 2.0)   — for individual and non-commercial use
   2. ENTERPRISE LICENSE               — for commercial and organizational use
@@ -22,9 +22,9 @@ This license applies if ALL of the following are true:
   (a) You are an individual clinician, researcher, or student
   (b) Your use is non-commercial (no revenue, no client billing, no resale)
   (c) You are not deploying on behalf of a healthcare organization or facility
-  (d) You are not integrating IntelligenceBoard into a commercial product or service
+  (d) You are not integrating MedBoard into a commercial product or service
 
-If the above conditions apply, IntelligenceBoard is licensed to you under the
+If the above conditions apply, MedBoard is licensed to you under the
 Apache License, Version 2.0 (the "Apache License").
 
 You may obtain a copy of the Apache License at:
@@ -42,10 +42,10 @@ PART 2 — ENTERPRISE LICENSE (Proprietary Commercial)
 
 This license applies if ANY of the following are true:
 
-  (a) You are deploying IntelligenceBoard at or on behalf of a healthcare facility,
+  (a) You are deploying MedBoard at or on behalf of a healthcare facility,
       clinic, hospital, puskesmas, or any healthcare organization
-  (b) You are integrating IntelligenceBoard into a commercial product or service
-  (c) You are using IntelligenceBoard to generate revenue, directly or indirectly
+  (b) You are integrating MedBoard into a commercial product or service
+  (c) You are using MedBoard to generate revenue, directly or indirectly
   (d) You are a vendor, system integrator, or reseller
 
 Commercial use requires a separate written Enterprise License Agreement executed
@@ -77,7 +77,7 @@ ENTERPRISE LICENSE TERMS
 
 3. INTELLECTUAL PROPERTY
 
-   The IntelligenceBoard clinical analytics engine, epidemiology dashboards,
+   The MedBoard clinical analytics engine, epidemiology dashboards,
    population health metrics derived from Indonesian clinical case data, and
    the integrated Sentra Healthcare AI platform architecture are the exclusive
    proprietary intellectual property of the Licensor. No ownership is transferred.

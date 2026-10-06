@@ -29,7 +29,6 @@
     "test:cdss:protected": "tsx scripts/test-cdss.ts",
     "test:screening-audit": "node --import tsx --test src/lib/audit/screening-audit-service.test.ts",
     "build": "pnpm run prisma:generate && next build",
-    "build:railway": "pnpm run prisma:generate && next build",
     "start": "NODE_ENV=production tsx --conditions react-server server.ts",
     "seed": "tsx prisma/seed.ts",
     "db:seed": "npx prisma db seed",

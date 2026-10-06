@@ -1,13 +1,19 @@
-# File: SECURITY.md | App: intelligenceBoard | Repo: Drferdi-plus/intelligenceboard | Updated: 2026-04-15
-# Architected and built by Drferdi.
-
-# Security Policy — IntelligenceBoard
+# Security Policy — MedBoard
 
 ---
 
 ## Melaporkan Vulnerability
 
-Laporkan langsung ke Chief (Dr. Ferdi Iskandar). **Jangan buka GitHub issue publik** untuk celah keamanan.
+Laporkan secara privat kepada pemilik proyek, dr. Ferdi Iskandar, melalui https://ferdiiskandar.com.
+**Jangan buka GitHub issue publik** untuk celah keamanan, dan jangan sertakan data pasien,
+kredensial, atau tangkapan layar rekam medis dalam laporan.
+
+Sertakan apa yang ditemukan, lokasinya (file, halaman, atau endpoint), langkah reproduksi, dan
+dampak yang diperkirakan. Laporan akan dikonfirmasi dan ditangani secara rahasia.
+
+### Versi yang didukung
+
+Hanya versi terbaru di branch `main` yang menerima perbaikan keamanan.
 
 ---
 
@@ -70,19 +76,9 @@ https://intelligenceboard-production.up.railway.app
 
 ---
 
-## Versi yang Didukung
-
-| Versi | Didukung |
-|-------|---------|
-| 0.1.x | ✅ Ya   |
-| < 0.1 | ❌ Tidak |
-
----
-
 ## Known Issues / TODOs Security
 
 - Role-based authorization di `/api/cdss/diagnose`: implementasi dasar tersedia (`isClinicalCrewRole`); RBAC matrix produksi lengkap masih perlu audit terpisah
-- `RBAC_BACKEND` masih OPEN di `infra/ci/missing-inputs.md` (#3)
 - Dependency graph masih memiliki audit findings bawaan; triage dan remediation version upgrade perlu batch terpisah
 - Surface Prisma readiness untuk lint/CI sudah dipulihkan lewat explicit generate step; lint sekarang kembali hijau
 - Debt berikutnya berpindah ke hardening auth/RBAC dan audit package upgrades

@@ -1,7 +1,4 @@
-# File: ARCHITECTURE.md | App: intelligenceBoard | Repo: Drferdi-plus/intelligenceboard | Updated: 2026-04-15
-# Architected and built by Drferdi.
-
-# Architecture — IntelligenceBoard
+# Architecture — MedBoard
 
 > AADI — AI-Assisted Diagnosis Interface
 > Deployed live: UPTD Puskesmas PONED Balowerti, Kota Kediri
@@ -24,7 +21,7 @@
 | Voice AI | Disabled during Google exit | endpoints return 503 |
 | Video | LiveKit | livekit-client 2.17.2 |
 | Monitoring | Sentry | @sentry/nextjs 10.43.0 |
-| Deploy | Railway (Nixpacks, Node 22) | railway.toml |
+| Deploy | VPS Biznet Gio (Caddy, systemd, Node 24) | docs/deploy-vps.md |
 
 ---
 
@@ -59,7 +56,7 @@ Server custom menggabungkan:
 ## Application Structure
 
 ```
-intelligenceBoard/
+medboard/
 ├── server.ts                         Custom HTTP + Socket.IO server
 ├── src/
 │   ├── app/                          Next.js App Router pages

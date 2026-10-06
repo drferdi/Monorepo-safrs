@@ -27,7 +27,7 @@ jobs:
         env:
           POSTGRES_USER: test_user
           POSTGRES_PASSWORD: test_password
-          POSTGRES_DB: intelligenceboard_test
+          POSTGRES_DB: medboard_test
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -36,7 +36,7 @@ jobs:
         ports:
           - 5432:5432
     env:
-      DATABASE_URL: postgresql://test_user:test_password@localhost:5432/intelligenceboard_test?schema=public
+      DATABASE_URL: postgresql://test_user:test_password@localhost:5432/medboard_test?schema=public
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:

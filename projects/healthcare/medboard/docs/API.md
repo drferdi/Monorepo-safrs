@@ -1,7 +1,4 @@
-# File: docs/API.md | App: intelligenceBoard | Repo: abyss-monorepo | Updated: 2026-03-16
-# Architected and built by Drferdi.
-
-# API Reference — IntelligenceBoard
+# API Reference — MedBoard
 
 ---
 
