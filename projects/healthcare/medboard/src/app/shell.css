@@ -133,7 +133,7 @@
 .app-header__menu-item:hover { background: var(--surface-subtle); }
 .app-header__menu-error { margin: var(--gap-xs) var(--gap-md); font-size: var(--text-xs); color: var(--critical); }
 
-.app-content { flex: 1; padding: var(--gap-xl); }
+.app-content { flex: 1; padding: var(--gap-2xl); }
 .app-page-stack { width: 100%; max-width: var(--content-max-width); margin: 0 auto; }
 
 .app-footer {
@@ -143,7 +143,7 @@
   gap: var(--gap-sm);
   padding: var(--gap-md) var(--gap-xl);
   border-top: 1px solid var(--border);
-  font-size: var(--text-sm);
+  font-size: var(--text-xs);
   color: var(--text-secondary);
 }
 .app-footer__link { color: var(--text-secondary); text-decoration: none; }

@@ -1,6 +1,6 @@
 // Drferdi — vision, brought to life.
 import type { Metadata } from 'next'
-import '@fontsource-variable/inter'
+import '@fontsource-variable/ibm-plex-sans'
 import './globals.css'
 import './ui.css'
 import './shell.css'

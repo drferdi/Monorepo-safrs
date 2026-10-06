@@ -55,16 +55,26 @@ test('pages still on the old token names get the new palette', () => {
   assert.equal(tokens.get('--bg-surface-soft'), 'var(--surface-subtle)')
 })
 
-test('text follows Glass Health: Inter, 13 px body on the 11/13/15/17/20/24/30 scale', () => {
+test('text is IBM Plex Sans on the 2026 web-app scale: 14 px body, 12 px floor, roomy line height', () => {
   const css = read('src/app/globals.css')
   const tokens = rootTokens(css)
-  assert.match(tokens.get('--font-base') ?? '', /^"inter variable"/)
+  assert.match(tokens.get('--font-base') ?? '', /^"ibm plex sans variable"/)
   assert.deepEqual(
     ['--text-xs', '--text-sm', '--text-base', '--text-lg', '--text-xl', '--text-2xl', '--text-3xl'].map((name) => tokens.get(name)),
-    ['0.6875rem', '0.8125rem', '0.9375rem', '1.0625rem', '1.25rem', '1.5rem', '1.875rem']
+    ['0.75rem', '0.875rem', '1rem', '1.125rem', '1.25rem', '1.5rem', '1.875rem']
   )
+  assert.equal(tokens.get('--lh-base'), '1.6')
   assert.match(css, /\nbody\s*\{[^}]*font-size:\s*var\(--text-sm\);/)
-  assert.match(read('src/app/layout.tsx'), /import '@fontsource-variable\/inter'/)
+  assert.match(read('src/app/layout.tsx'), /import '@fontsource-variable\/ibm-plex-sans'/)
+})
+
+test('the root keeps the browser 16 px, so 1rem is 16 px and the 14 px body really is 14 px', () => {
+  const css = read('src/app/globals.css')
+  const htmlRules = [...css.matchAll(/(?:^|\n)([^{}\n]*(?:,\s*\n)?[^{}\n]*)\{([^}]*)\}/g)].filter((rule) =>
+    rule[1].split(',').some((selector) => selector.trim() === 'html')
+  )
+  const shrinking = htmlRules.filter((rule) => /font-size:\s*(?!100%)/.test(rule[2])).map((rule) => rule[1].trim())
+  assert.deepEqual(shrinking, [])
 })
 
 const OLD_LITERALS: Array<[string, RegExp]> = [
@@ -72,7 +82,7 @@ const OLD_LITERALS: Array<[string, RegExp]> = [
   ['gold rgba(230,126,34)', /rgba\(\s*230\s*,\s*126\s*,\s*34\s*,/],
   ['dark canvas #121214', /#121214/i],
   ['cream text #F0E8DC', /#f0e8dc/i],
-  ['IBM Plex', /IBM Plex/i],
+  ['IBM Plex Mono', /IBM Plex Mono/i],
 ]
 
 test('no old gold, cream or dark-canvas colour is left in pages and components', () => {

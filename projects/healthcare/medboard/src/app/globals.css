@@ -453,7 +453,6 @@ body {
   background: var(--bg-canvas);
   color: var(--text-main);
   font-family: var(--font-base);
-  font-size: var(--text-sm);
   font-weight: 400;
   line-height: var(--lh-base);
   min-height: 100vh;
@@ -463,6 +462,11 @@ body {
   font-feature-settings:
     "kern" 1,
     "liga" 1;
+}
+
+/* Size on body only: on html it would shrink 1rem and every rem token with it. */
+body {
+  font-size: var(--text-sm);
 }
 
 body *,
@@ -490,34 +494,35 @@ a {
   text-decoration: none;
 }
 
-/* ─── Font + Type Scale — Glass Health (Inter; 11/13/15/17/20/24/30) ─── */
+/* ─── Font + Type Scale — IBM Plex Sans, 2026 web-app scale (12/14/16/18/20/24/30) ─── */
 :root {
-  --font-base: "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-base: "IBM Plex Sans Variable", "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-sans: var(--font-base);
   /* --font-mono redirected to sans-serif — NO monospace anywhere (Chief directive 2026-03-06) */
   --font-mono: var(--font-base);
 
-  --text-xs: 0.6875rem; /* 11px — caption, secondary meta */
-  --text-sm: 0.8125rem; /* 13px — body, table data, controls */
-  --text-base: 0.9375rem; /* 15px — card title, comfortable body */
+  --text-xs: 0.75rem; /* 12px — floor: caption, meta, small labels */
+  --text-sm: 0.875rem; /* 14px — app body, table data, controls */
+  --text-base: 1rem; /* 16px — card title, long reading text */
   --text-md: var(--text-base);
-  --text-lg: 1.0625rem; /* 17px */
-  --text-xl: 1.25rem; /* 20px — page title */
-  --text-2xl: 1.5rem; /* 24px */
+  --text-lg: 1.125rem; /* 18px */
+  --text-xl: 1.25rem; /* 20px */
+  --text-2xl: 1.5rem; /* 24px — page title */
   --text-3xl: 1.875rem; /* 30px */
 
-  --lh-base: 1.4;
-  --lh-tight: 1.25;
-  --lh-normal: 1.4;
-  --lh-relaxed: 1.5;
+  --lh-base: 1.6;
+  --lh-tight: 1.3;
+  --lh-normal: 1.5;
+  --lh-relaxed: 1.7;
 
+  /* Plex needs no added tracking; wide-tracking names are kept as aliases and capped. */
   --ls-tight: -0.01em;
   --ls-normal: 0em;
-  --ls-wide: 0.02em;
-  --ls-wider: 0.04em;
-  --ls-widest: 0.06em;
-  --ls-2xl: 0.08em;
-  --ls-3xl: 0.1em;
+  --ls-wide: 0.01em;
+  --ls-wider: 0.02em;
+  --ls-widest: 0.02em;
+  --ls-2xl: 0.02em;
+  --ls-3xl: 0.02em;
 
   --gap-xs: 4px;
   --gap-sm: 8px;
