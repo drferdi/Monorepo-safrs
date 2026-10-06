@@ -1,7 +1,7 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { type CSSProperties, type FormEvent, type ReactNode, useEffect, useState } from 'react'
+import { type FormEvent, type ReactNode, useEffect, useState } from 'react'
 
 import {
   CREW_ACCESS_GENDERS,
@@ -71,17 +71,6 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
   const [registerErrorMessage, setRegisterErrorMessage] = useState('')
   const [registerSuccessMessage, setRegisterSuccessMessage] = useState('')
   const selectedProfessionLogo = getCrewProfessionLogo(registerProfession)
-
-  const inputStyle: CSSProperties = {
-    height: 44,
-    borderRadius: 8,
-    border: '1px solid var(--line-base)',
-    background: 'var(--bg-canvas)',
-    color: 'var(--text-main)',
-    fontSize: 14,
-    padding: '0 14px',
-    outline: 'none',
-  }
 
   function resetRegisterForm() {
     setRegisterStep(1)
@@ -345,13 +334,12 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
           minHeight: '100vh',
           display: 'grid',
           placeItems: 'center',
-          background: 'var(--bg-canvas)',
-          color: 'var(--text-muted)',
-          letterSpacing: '0.08em',
-          fontSize: 14,
+          background: 'var(--surface-subtle)',
+          color: 'var(--text-secondary)',
+          fontSize: 13,
         }}
       >
-        VERIFYING CREW ACCESS...
+        Memeriksa akses crew…
       </div>
     )
   }
@@ -363,7 +351,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
           minHeight: '100vh',
           display: 'grid',
           placeItems: 'center',
-          background: 'var(--bg-canvas)',
+          background: 'var(--surface-subtle)',
           padding: 24,
         }}
       >
@@ -372,34 +360,37 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
           style={{
             width: '100%',
             maxWidth: authMode === 'register' ? 560 : 420,
-            background: 'var(--bg-nav)',
-            border: '1px solid var(--line-base)',
-            boxShadow: '0 20px 45px rgba(0, 0, 0, 0.2)',
-            borderRadius: 12,
-            padding: 28,
+            background: 'var(--surface)',
+            border: '1px solid var(--border)',
+            boxShadow: 'var(--shadow-dialog)',
+            borderRadius: 16,
+            padding: 32,
             display: 'grid',
             gap: 16,
           }}
         >
           <div style={{ marginBottom: 4 }}>
-            <p
-              style={{
-                margin: 0,
-                fontSize: 14,
-                letterSpacing: '0.16em',
-                color: 'var(--c-asesmen)',
-              }}
-            >
-              CREW PORTAL
-            </p>
-            <div
-              style={{
-                marginTop: 12,
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: 8,
-              }}
-            >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <img
+                src="/sentradash.png"
+                alt=""
+                width={22}
+                height={22}
+                style={{ filter: 'brightness(0)' }}
+              />
+              <span
+                style={{
+                  fontSize: 13,
+                  fontWeight: 600,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  color: 'var(--text)',
+                }}
+              >
+                MedBoard
+              </span>
+            </div>
+            <div className="ui-tabs" role="tablist" aria-label="Mode akses" style={{ marginTop: 16 }}>
               <button
                 type="button"
                 onClick={() => {
@@ -409,19 +400,9 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                   setRegisterSuccessMessage('')
                   setRegisterStep(1)
                 }}
-                style={{
-                  height: 40,
-                  borderRadius: 8,
-                  border:
-                    authMode === 'signin'
-                      ? '1px solid var(--c-asesmen)'
-                      : '1px solid var(--line-base)',
-                  background: authMode === 'signin' ? 'rgba(212,122,87,0.16)' : 'var(--bg-canvas)',
-                  color: 'var(--text-main)',
-                  fontSize: 14,
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                }}
+                role="tab"
+                className="ui-tab"
+                aria-selected={authMode === 'signin'}
               >
                 Masuk
               </button>
@@ -434,30 +415,19 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                   setRegisterSuccessMessage('')
                   setRegisterStep(1)
                 }}
-                style={{
-                  height: 40,
-                  borderRadius: 8,
-                  border:
-                    authMode === 'register'
-                      ? '1px solid var(--c-asesmen)'
-                      : '1px solid var(--line-base)',
-                  background:
-                    authMode === 'register' ? 'rgba(212,122,87,0.16)' : 'var(--bg-canvas)',
-                  color: 'var(--text-main)',
-                  fontSize: 14,
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                }}
+                role="tab"
+                className="ui-tab"
+                aria-selected={authMode === 'register'}
               >
                 Daftar Akses
               </button>
             </div>
             <h1
               style={{
-                margin: '10px 0 4px',
+                margin: '20px 0 4px',
                 fontWeight: 600,
-                fontSize: 28,
-                color: 'var(--text-main)',
+                fontSize: 24,
+                color: 'var(--text)',
               }}
             >
               {authMode === 'signin' ? 'Sign In' : 'Request Access'}
@@ -465,8 +435,8 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
             <p
               style={{
                 margin: 0,
-                fontSize: 14,
-                color: 'var(--text-muted)',
+                fontSize: 13,
+                color: 'var(--text-secondary)',
               }}
             >
               {authMode === 'signin'
@@ -477,8 +447,8 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
 
           {authMode === 'signin' ? (
             <>
-              <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>
+              <label className="ui-field">
+                <span className="ui-field__label">
                   Username atau email
                 </span>
                 <input
@@ -487,37 +457,19 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                   onChange={(event) => setUsernameInput(event.target.value)}
                   autoComplete="username"
                   placeholder="contoh: drferdiplus atau drferdiplus.id@gmail.com"
-                  style={{
-                    height: 44,
-                    borderRadius: 8,
-                    border: '1px solid var(--line-base)',
-                    background: 'var(--bg-canvas)',
-                    color: 'var(--text-main)',
-                    fontSize: 14,
-                    padding: '0 14px',
-                    outline: 'none',
-                  }}
+                  className="ui-input"
                 />
               </label>
 
-              <label style={{ display: 'grid', gap: 6 }}>
-                <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>Password</span>
+              <label className="ui-field">
+                <span className="ui-field__label">Password</span>
                 <input
                   type="password"
                   value={passwordInput}
                   onChange={(event) => setPasswordInput(event.target.value)}
                   autoComplete="current-password"
                   placeholder="masukkan password"
-                  style={{
-                    height: 44,
-                    borderRadius: 8,
-                    border: '1px solid var(--line-base)',
-                    background: 'var(--bg-canvas)',
-                    color: 'var(--text-main)',
-                    fontSize: 14,
-                    padding: '0 14px',
-                    outline: 'none',
-                  }}
+                  className="ui-input"
                 />
               </label>
 
@@ -525,8 +477,8 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                 <p
                   style={{
                     margin: 0,
-                    color: 'var(--c-critical)',
-                    fontSize: 14,
+                    color: 'var(--critical)',
+                    fontSize: 13,
                   }}
                 >
                   {errorMessage}
@@ -572,50 +524,50 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
 
               {registerStep === 1 ? (
                 <>
-                  <label style={{ display: 'grid', gap: 6 }}>
-                    <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>Email</span>
+                  <label className="ui-field">
+                    <span className="ui-field__label">Email</span>
                     <input
                       type="email"
                       value={registerEmailInput}
                       onChange={(event) => setRegisterEmailInput(event.target.value)}
                       autoComplete="email"
                       placeholder="nama@institusi.go.id"
-                      style={inputStyle}
+                      className="ui-input"
                     />
                   </label>
 
-                  <label style={{ display: 'grid', gap: 6 }}>
-                    <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>Username</span>
+                  <label className="ui-field">
+                    <span className="ui-field__label">Username</span>
                     <input
                       type="text"
                       value={registerUsernameInput}
                       onChange={(event) => setRegisterUsernameInput(event.target.value)}
                       autoComplete="username"
                       placeholder="4-32 karakter, huruf kecil/angka"
-                      style={inputStyle}
+                      className="ui-input"
                     />
                   </label>
 
-                  <label style={{ display: 'grid', gap: 6 }}>
-                    <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>Password</span>
+                  <label className="ui-field">
+                    <span className="ui-field__label">Password</span>
                     <input
                       type="password"
                       value={registerPasswordInput}
                       onChange={(event) => setRegisterPasswordInput(event.target.value)}
                       autoComplete="new-password"
                       placeholder="minimal 15 karakter"
-                      style={inputStyle}
+                      className="ui-input"
                     />
                   </label>
 
-                  <label style={{ display: 'grid', gap: 6 }}>
-                    <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>Institusi</span>
+                  <label className="ui-field">
+                    <span className="ui-field__label">Institusi</span>
                     <select
                       value={registerInstitution}
                       onChange={(event) =>
                         setRegisterInstitution(event.target.value as CrewAccessInstitution)
                       }
-                      style={inputStyle}
+                      className="ui-input"
                     >
                       {institutionList.map((institution) => (
                         <option key={institution} value={institution}>
@@ -625,14 +577,14 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                     </select>
                   </label>
 
-                  <label style={{ display: 'grid', gap: 6 }}>
-                    <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>Profesi</span>
+                  <label className="ui-field">
+                    <span className="ui-field__label">Profesi</span>
                     <select
                       value={registerProfession}
                       onChange={(event) =>
                         setRegisterProfession(event.target.value as CrewAccessProfession)
                       }
-                      style={inputStyle}
+                      className="ui-input"
                     >
                       {CREW_ACCESS_PROFESSIONS.map((profession) => (
                         <option key={profession} value={profession}>
@@ -684,14 +636,14 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
 
               {registerStep === 2 ? (
                 <>
-                  <label style={{ display: 'grid', gap: 6 }}>
-                    <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>Nama lengkap</span>
+                  <label className="ui-field">
+                    <span className="ui-field__label">Nama lengkap</span>
                     <input
                       type="text"
                       value={registerFullName}
                       onChange={(event) => setRegisterFullName(event.target.value)}
                       placeholder="contoh: dr. Ferdi Iskandar"
-                      style={inputStyle}
+                      className="ui-input"
                     />
                   </label>
 
@@ -702,26 +654,26 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                       gap: 12,
                     }}
                   >
-                    <label style={{ display: 'grid', gap: 6 }}>
-                      <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>Tempat lahir</span>
+                    <label className="ui-field">
+                      <span className="ui-field__label">Tempat lahir</span>
                       <input
                         type="text"
                         value={registerBirthPlace}
                         onChange={(event) => setRegisterBirthPlace(event.target.value)}
                         placeholder="contoh: Kediri"
-                        style={inputStyle}
+                        className="ui-input"
                       />
                     </label>
 
-                    <label style={{ display: 'grid', gap: 6 }}>
-                      <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>
+                    <label className="ui-field">
+                      <span className="ui-field__label">
                         Tanggal lahir
                       </span>
                       <input
                         type="date"
                         value={registerBirthDate}
                         onChange={(event) => setRegisterBirthDate(event.target.value)}
-                        style={inputStyle}
+                        className="ui-input"
                       />
                     </label>
                   </div>
@@ -733,8 +685,8 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                       gap: 12,
                     }}
                   >
-                    <label style={{ display: 'grid', gap: 6 }}>
-                      <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>
+                    <label className="ui-field">
+                      <span className="ui-field__label">
                         Jenis kelamin
                       </span>
                       <select
@@ -742,7 +694,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                         onChange={(event) =>
                           setRegisterGender(event.target.value as CrewAccessGender)
                         }
-                        style={inputStyle}
+                        className="ui-input"
                       >
                         {CREW_ACCESS_GENDERS.map((gender) => (
                           <option key={gender} value={gender}>
@@ -753,7 +705,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                     </label>
 
                     <div className="gelar-section" style={{ display: 'grid', gap: 6 }}>
-                      <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>Gelar</span>
+                      <span className="ui-field__label">Gelar</span>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                         {CREW_PROFILE_DEGREES.map((degree) => {
                           const isSelected = registerDegrees.includes(degree)
@@ -770,7 +722,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                                   ? '1px solid var(--c-asesmen)'
                                   : '1px solid var(--line-base)',
                                 background: isSelected
-                                  ? 'rgba(212,122,87,0.16)'
+                                  ? 'var(--primary-tint)'
                                   : 'var(--bg-canvas)',
                                 color: isSelected ? 'var(--text-main)' : 'var(--text-muted)',
                                 fontSize: 14,
@@ -785,19 +737,19 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                     </div>
                   </div>
 
-                  <label style={{ display: 'grid', gap: 6 }}>
-                    <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>Domisili</span>
+                  <label className="ui-field">
+                    <span className="ui-field__label">Domisili</span>
                     <input
                       type="text"
                       value={registerDomicile}
                       onChange={(event) => setRegisterDomicile(event.target.value)}
                       placeholder="contoh: Kota Kediri"
-                      style={inputStyle}
+                      className="ui-input"
                     />
                   </label>
 
                   <div style={{ display: 'grid', gap: 8 }}>
-                    <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>
+                    <span className="ui-field__label">
                       Jabatan / posisi
                     </span>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
@@ -818,7 +770,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                               border: isSelected
                                 ? '1px solid var(--c-asesmen)'
                                 : '1px solid var(--line-base)',
-                              background: isSelected ? 'rgba(212,122,87,0.16)' : 'var(--bg-canvas)',
+                              background: isSelected ? 'var(--primary-tint)' : 'var(--bg-canvas)',
                               color: isSelected ? 'var(--text-main)' : 'var(--text-muted)',
                               fontSize: 14,
                               cursor: isDisabled ? 'not-allowed' : 'pointer',
@@ -853,42 +805,42 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                       gap: 12,
                     }}
                   >
-                    <label style={{ display: 'grid', gap: 6 }}>
-                      <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>NIP</span>
+                    <label className="ui-field">
+                      <span className="ui-field__label">NIP</span>
                       <input
                         type="text"
                         value={registerEmployeeId}
                         onChange={(event) => setRegisterEmployeeId(event.target.value)}
                         placeholder="opsional"
-                        style={inputStyle}
+                        className="ui-input"
                       />
                     </label>
 
-                    <label style={{ display: 'grid', gap: 6 }}>
-                      <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>STR</span>
+                    <label className="ui-field">
+                      <span className="ui-field__label">STR</span>
                       <input
                         type="text"
                         value={registerStrNumber}
                         onChange={(event) => setRegisterStrNumber(event.target.value)}
                         placeholder="opsional"
-                        style={inputStyle}
+                        className="ui-input"
                       />
                     </label>
                   </div>
 
-                  <label style={{ display: 'grid', gap: 6 }}>
-                    <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>SIP</span>
+                  <label className="ui-field">
+                    <span className="ui-field__label">SIP</span>
                     <input
                       type="text"
                       value={registerSipNumber}
                       onChange={(event) => setRegisterSipNumber(event.target.value)}
                       placeholder="opsional"
-                      style={inputStyle}
+                      className="ui-input"
                     />
                   </label>
 
                   <div style={{ display: 'grid', gap: 8 }}>
-                    <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>Bidang layanan</span>
+                    <span className="ui-field__label">Bidang layanan</span>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
                       {CREW_ACCESS_SERVICE_AREAS.map((area) => {
                         const isSelected = registerServiceAreas.includes(area)
@@ -904,7 +856,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                               border: isSelected
                                 ? '1px solid var(--c-asesmen)'
                                 : '1px solid var(--line-base)',
-                              background: isSelected ? 'rgba(212,122,87,0.16)' : 'var(--bg-canvas)',
+                              background: isSelected ? 'var(--primary-tint)' : 'var(--bg-canvas)',
                               color: isSelected ? 'var(--text-main)' : 'var(--text-muted)',
                               fontSize: 14,
                               cursor: 'pointer',
@@ -929,8 +881,8 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                   </div>
 
                   {registerServiceAreas.includes('Lainnya') ? (
-                    <label style={{ display: 'grid', gap: 6 }}>
-                      <span style={{ fontSize: 14, color: 'var(--text-muted)' }}>
+                    <label className="ui-field">
+                      <span className="ui-field__label">
                         Bidang layanan lain
                       </span>
                       <input
@@ -938,7 +890,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
                         value={registerServiceAreaOther}
                         onChange={(event) => setRegisterServiceAreaOther(event.target.value)}
                         placeholder="contoh: Farmakologi klinis"
-                        style={inputStyle}
+                        className="ui-input"
                       />
                     </label>
                   ) : null}
@@ -1005,18 +957,8 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
           <button
             type="submit"
             disabled={isSubmitting}
-            style={{
-              marginTop: 4,
-              height: 44,
-              borderRadius: 8,
-              border: '1px solid var(--c-asesmen)',
-              background: 'var(--c-asesmen)',
-              color: 'var(--text-on-accent)',
-              fontSize: 14,
-              fontWeight: 600,
-              cursor: isSubmitting ? 'wait' : 'pointer',
-              opacity: isSubmitting ? 0.8 : 1,
-            }}
+            className="ui-btn ui-btn--primary ui-btn--lg"
+            style={{ marginTop: 4, width: '100%' }}
           >
             {isSubmitting
               ? 'Memproses...'
@@ -1034,7 +976,7 @@ export default function CrewAccessGate({ children }: CrewAccessGateProps) {
               borderTop: '1px solid var(--line-base)',
             }}
           >
-            <p style={{ margin: 0, fontSize: 14, color: 'var(--text-muted)' }}>
+            <p style={{ margin: 0, fontSize: 13, color: 'var(--text-muted)' }}>
               {authMode === 'signin'
                 ? 'Kredensial aktif dikonfigurasi di server, tidak ditampilkan di UI.'
                 : 'Best practice saat ini: password minimal 15 karakter, akun baru berstatus pending review, dan data klinis dipisah dari hak akses sistem.'}
