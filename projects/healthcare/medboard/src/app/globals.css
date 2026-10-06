@@ -864,6 +864,7 @@ a {
 
 .emr-phase-footer {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--gap-lg);
@@ -873,10 +874,34 @@ a {
 }
 
 .emr-phase-footer-copy {
+  flex: 1 1 320px;
+  min-width: 0;
   max-width: 760px;
   font-size: var(--text-sm);
   line-height: var(--lh-base);
   color: var(--text-secondary);
+}
+
+.emr-phase-footer > .emr-neu-nav-btn {
+  margin-left: auto;
+}
+
+/* Status text and action on one row, kept to the right of the footer copy. */
+.emr-phase-footer-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--gap-lg);
+  margin-left: auto;
+}
+
+.emr-phase-footer-note {
+  min-width: 0;
+  font-size: var(--text-sm);
+  line-height: var(--lh-normal);
+  color: var(--text-secondary);
+  white-space: nowrap;
 }
 
 /* ── Phase navigation buttons (Send/Lanjut/Proceed/Finalize) — primary action look ── */
@@ -914,6 +939,7 @@ a {
 }
 
 .emr-phase-footer-finalize {
+  flex-wrap: nowrap;
   width: 100%;
   grid-column: 1 / -1;
   order: 99;
@@ -3548,84 +3574,6 @@ a {
   opacity: 0.82;
 }
 
-.audrey-section-title {
-  color: var(--text);
-}
-
-.audrey-extraction-header {
-  font-size: var(--text-xs);
-  color: var(--primary);
-}
-
-.audrey-panel {
-  position: relative;
-  overflow: hidden;
-}
-
-.audrey-heading-text,
-.audrey-heading-state {
-  font-size: 12px;
-}
-
-/* Decorative trace beam; the heading state label says when Audrey is thinking. */
-.audrey-trace-line {
-  display: none;
-}
-
-.audrey-trace-line.is-thinking {
-  opacity: 0.72;
-}
-
-.audrey-trace-beam {
-  position: absolute;
-  inset: 0 auto 0 -18%;
-  width: 18%;
-  background: linear-gradient(
-    90deg,
-    var(--primary-tint),
-    var(--primary-tint),
-    var(--primary-tint)
-  );
-  opacity: 0;
-}
-
-.audrey-trace-line.is-thinking .audrey-trace-beam {
-  opacity: 1;
-  animation: audreyTraceLine 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
-}
-
-.audrey-entity-label {
-  font-size: var(--text-xs);
-  color: var(--text-secondary);
-}
-
-.audrey-synth-item {
-  transition:
-    opacity 0.52s ease,
-    filter 0.52s ease;
-}
-
-.audrey-panel.is-thinking .audrey-synth-item {
-  filter: saturate(0.92);
-}
-
-.audrey-panel.is-thinking .audrey-synth-item::before {
-  animation: audreyPulseDot 1.9s ease-in-out infinite;
-  opacity: 0.7;
-}
-
-.audrey-panel.is-thinking .audrey-synth-item:nth-child(1)::before {
-  animation-delay: 0s;
-}
-
-.audrey-panel.is-thinking .audrey-synth-item:nth-child(2)::before {
-  animation-delay: 0.24s;
-}
-
-.audrey-panel.is-thinking .audrey-synth-item:nth-child(3)::before {
-  animation-delay: 0.48s;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .assessment-command-badge-radar-sweep,
   .assessment-command-badge-radar-track,
@@ -3637,9 +3585,7 @@ a {
   .cdss-core-loader-nucleus,
   .cdss-core-loader-nucleus::before,
   .cdss-core-loader-nucleus-dot,
-  .ai-pulse-dot,
-  .audrey-trace-line.is-thinking .audrey-trace-beam,
-  .audrey-panel.is-thinking .audrey-synth-item::before {
+  .ai-pulse-dot {
     animation: none !important;
   }
 
@@ -4143,18 +4089,13 @@ a {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .emr-phase-footer {
+  .emr-phase-footer-finalize {
     flex-direction: column;
     align-items: flex-start;
   }
 
   .emr-signoff-panel-grid {
     grid-template-columns: 1fr;
-  }
-
-  .emr-neu-nav-btn {
-    width: 100%;
-    min-width: 0;
   }
 
   .finalize-pharmacology-prescription-grid {
@@ -4203,6 +4144,26 @@ a {
     border-top: none;
   }
 
+}
+
+@media (max-width: 640px) {
+  .emr-phase-footer-actions {
+    flex: 1 1 100%;
+    justify-content: space-between;
+  }
+
+  .emr-phase-footer-note {
+    white-space: normal;
+  }
+
+  .emr-neu-nav-btn {
+    min-width: 0;
+  }
+
+  .emr-phase-footer.is-cta-only .emr-neu-nav-btn,
+  .emr-phase-footer-finalize .emr-neu-nav-btn {
+    width: 100%;
+  }
 }
 
 @media (max-width: 800px) {
@@ -4768,34 +4729,6 @@ a {
   }
   50% {
     opacity: 0.3;
-  }
-}
-
-@keyframes audreyTraceLine {
-  0% {
-    transform: translateX(0);
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(680%);
-    opacity: 0;
-  }
-}
-
-@keyframes audreyPulseDot {
-  0%,
-  100% {
-    opacity: 0.32;
-    box-shadow: 0 0 4px rgba(0, 33, 71, 0.18);
-    transform: scale(1);
-  }
-  45% {
-    opacity: 0.92;
-    box-shadow: 0 0 11px rgba(0, 33, 71, 0.42);
-    transform: scale(1.18);
   }
 }
 

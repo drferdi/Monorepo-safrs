@@ -6652,81 +6652,6 @@ export default function EMRPage() {
                   )}
                 </div>
               </div>
-
-              <div
-                style={{
-                  width: 280,
-                  flexShrink: 0,
-                  position: 'sticky',
-                  top: 80,
-                  display: isReviewTab ? 'flex' : 'none',
-                  flexDirection: 'column',
-                  gap: 24,
-                }}
-              >
-                {/* 01A. Audrey Synthesia */}
-                <div className="stream-section">
-                  <div className="section-title audrey-section-title">Audrey Synthesia</div>
-                  <div
-                    className={`blueprint-wrapper audrey-panel${audreyIsThinking ? ' is-thinking' : ''}`}
-                  >
-                    <div
-                      className="extraction-header audrey-extraction-header"
-                      style={{ color: 'var(--primary)', marginBottom: 16 }}
-                    >
-                      <span className="audrey-heading-text">Audrey Synthesia Algorithm</span>
-                      <span
-                        className="audrey-heading-state"
-                        style={{
-                          color: audreyStateColor,
-                          opacity: showEmrLoader || isTyping ? 0.9 : 0.65,
-                        }}
-                      >
-                        {audreyStateLabel}
-                      </span>
-                    </div>
-                    <div
-                      className={`audrey-trace-line${audreyIsThinking ? ' is-thinking' : ''}`}
-                      aria-hidden="true"
-                    >
-                      <span className="audrey-trace-beam" />
-                    </div>
-                    <div className="extracted-list">
-                      {[
-                        {
-                          label: 'Keluhan Utama',
-                          meta: anamnesaEntities.utama || 'PENDING',
-                        },
-                        {
-                          label: 'Onset / Durasi',
-                          meta: anamnesaEntities.onset || 'PENDING',
-                        },
-                        {
-                          label: 'Faktor Pemberatan',
-                          meta: anamnesaEntities.faktor || 'PENDING',
-                        },
-                      ].map((item, i) => (
-                        <div
-                          key={`audrey-synthesia-${i}`}
-                          className={`entity-tag-item audrey-synth-item${anamnesaVisible[i] ? ' visible' : ''}${audreyIsThinking ? ' is-thinking' : ''}`}
-                          style={anamnesaVisible[i] ? {} : { opacity: 0.2, transform: 'none' }}
-                        >
-                          <span className="audrey-entity-label">{item.label}</span>
-                          <span
-                            className="tag-meta"
-                            style={{
-                              color: item.meta !== 'PENDING' ? 'var(--primary)' : 'var(--text-muted)',
-                              opacity: item.meta !== 'PENDING' ? 1 : 0.5,
-                            }}
-                          >
-                            {item.meta}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* 02. Riwayat */}
@@ -7568,14 +7493,7 @@ export default function EMRPage() {
                     dan objektif awal terasa cukup untuk review klinis.
                   </div>
                   {onlineDoctors.length > 0 ? (
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 10,
-                        marginTop: 8,
-                      }}
-                    >
+                    <div className="emr-phase-footer-actions">
                       <select
                         value={selectedDoctor}
                         onChange={(e) => setSelectedDoctor(e.target.value)}
@@ -7621,15 +7539,8 @@ export default function EMRPage() {
                       />
                     </div>
                   ) : (
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 10,
-                        marginTop: 8,
-                      }}
-                    >
-                      <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>
+                    <div className="emr-phase-footer-actions">
+                      <span className="emr-phase-footer-note">
                         Tidak ada dokter online
                       </span>
                       <EmrPhaseFooterButton

@@ -109,23 +109,26 @@ interface OutpatientRiskPreview {
   supportTools: Array<{ label: string; status: string; note: string }>
 }
 
+// Chart.js draws on canvas and cannot read CSS variables, so the chart colours below are
+// literal copies of the tokens: --critical #B42318, --warning #B54708, --success #067647,
+// --primary #002147, --text-secondary #64748B, --border #E2E8F0.
 const GUIDE_DATASET_PREFIX = '__guide-threshold'
 const SURVIVAL_GUIDE_PREFIX = '__survival-band'
 const PROGNOSIS_GUIDE_THRESHOLDS = [
   {
     label: `${GUIDE_DATASET_PREFIX}-hijau`,
     value: 25,
-    color: 'rgba(16, 185, 129, 0.68)',
+    color: 'rgba(6, 118, 71, 0.68)',
   },
   {
     label: `${GUIDE_DATASET_PREFIX}-oranye`,
     value: 50,
-    color: 'rgba(249, 115, 22, 0.72)',
+    color: 'rgba(181, 71, 8, 0.72)',
   },
   {
     label: `${GUIDE_DATASET_PREFIX}-merah`,
     value: 75,
-    color: 'rgba(239, 68, 68, 0.76)',
+    color: 'rgba(180, 35, 24, 0.76)',
   },
 ] as const
 
@@ -135,9 +138,9 @@ const SURVIVAL_TIMELINE = [
   { label: '7 hari', decay: 0.42 },
   { label: '30 hari', decay: 0.62 },
 ] as const
-const SURVIVAL_NEON_PINK = 'rgba(255, 82, 190, 0.96)'
-const SURVIVAL_BAND_FILL = 'rgba(142, 156, 184, 0.14)'
-const SURVIVAL_BAND_STROKE = 'rgba(170, 184, 210, 0.24)'
+const SURVIVAL_NEON_PINK = 'rgba(0, 33, 71, 0.96)'
+const SURVIVAL_BAND_FILL = 'rgba(0, 33, 71, 0.08)'
+const SURVIVAL_BAND_STROKE = 'rgba(0, 33, 71, 0.2)'
 
 const URGENCY_LABEL: Record<ClinicalUrgencyTier, string> = {
   low: 'Observasi Rutin',
@@ -154,10 +157,10 @@ const MORTALITY_LABEL: Record<MortalityProxyTier, string> = {
 }
 
 const RISK_COLOR: Record<RiskLevel, string> = {
-  low: 'rgba(16, 185, 129, 0.8)',
-  moderate: 'rgba(234, 179, 8, 0.82)',
-  high: 'rgba(249, 115, 22, 0.88)',
-  critical: 'rgba(239, 68, 68, 0.92)',
+  low: 'rgba(6, 118, 71, 0.8)',
+  moderate: 'rgba(181, 71, 8, 0.82)',
+  high: 'rgba(181, 71, 8, 0.88)',
+  critical: 'rgba(180, 35, 24, 0.92)',
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -174,9 +177,9 @@ function getUrgencyColor(urgency: ClinicalUrgencyTier): string {
     case 'immediate':
       return 'var(--c-critical)'
     case 'high':
-      return '#F97316'
+      return 'var(--warning)'
     case 'moderate':
-      return '#E8A838'
+      return 'var(--warning)'
     default:
       return 'var(--c-asesmen)'
   }
@@ -187,40 +190,40 @@ function getMortalityColor(tier: MortalityProxyTier): string {
     case 'very_high':
       return 'var(--c-critical)'
     case 'high':
-      return '#F97316'
+      return 'var(--warning)'
     case 'moderate':
-      return '#E8A838'
+      return 'var(--warning)'
     default:
       return 'var(--c-asesmen)'
   }
 }
 
 function getScoreColor(value: number): string {
-  if (value >= 75) return 'rgba(239, 68, 68, 0.9)'
-  if (value >= 50) return 'rgba(249, 115, 22, 0.88)'
+  if (value >= 75) return 'rgba(180, 35, 24, 0.9)'
+  if (value >= 50) return 'rgba(181, 71, 8, 0.88)'
   if (value >= 25) return 'rgba(234, 179, 8, 0.84)'
-  return 'rgba(16, 185, 129, 0.84)'
+  return 'rgba(6, 118, 71, 0.84)'
 }
 
 function getScoreStrokeColor(value: number): string {
-  if (value >= 75) return 'rgba(239, 68, 68, 1)'
-  if (value >= 50) return 'rgba(249, 115, 22, 1)'
+  if (value >= 75) return 'rgba(180, 35, 24, 1)'
+  if (value >= 50) return 'rgba(181, 71, 8, 1)'
   if (value >= 25) return 'rgba(234, 179, 8, 1)'
-  return 'rgba(16, 185, 129, 1)'
+  return 'rgba(6, 118, 71, 1)'
 }
 
 function getHeatmapBorder(score: number): string {
-  if (score >= 75) return 'rgba(239, 68, 68, 0.4)'
-  if (score >= 50) return 'rgba(249, 115, 22, 0.4)'
+  if (score >= 75) return 'rgba(180, 35, 24, 0.4)'
+  if (score >= 50) return 'rgba(181, 71, 8, 0.4)'
   if (score >= 25) return 'rgba(234, 179, 8, 0.36)'
-  return 'rgba(16, 185, 129, 0.34)'
+  return 'rgba(6, 118, 71, 0.34)'
 }
 
 function getSurvivalProbabilityColor(probability: number): string {
-  if (probability <= 55) return 'rgba(239, 68, 68, 0.9)'
-  if (probability <= 72) return 'rgba(249, 115, 22, 0.88)'
-  if (probability <= 85) return 'rgba(234, 179, 8, 0.86)'
-  return 'rgba(120, 168, 132, 0.9)'
+  if (probability <= 55) return 'rgba(180, 35, 24, 0.9)'
+  if (probability <= 72) return 'rgba(181, 71, 8, 0.88)'
+  if (probability <= 85) return 'rgba(181, 71, 8, 0.86)'
+  return 'rgba(6, 118, 71, 0.9)'
 }
 
 function getSurvivalStateLabel(probability: number): string {
@@ -397,17 +400,17 @@ function buildOverviewBreakdown(
     {
       label: 'Cadangan stabil',
       value: stabilityReserve,
-      color: 'rgba(120, 168, 132, 0.88)',
+      color: 'rgba(6, 118, 71, 0.88)',
     },
     {
       label: 'Perlu review',
       value: bufferedObservation,
-      color: 'rgba(232, 168, 56, 0.9)',
+      color: 'rgba(181, 71, 8, 0.9)',
     },
     {
       label: 'Tekanan risiko',
       value: tightReview,
-      color: 'rgba(222, 130, 104, 0.92)',
+      color: 'rgba(180, 35, 24, 0.92)',
     },
   ]
 }
@@ -674,7 +677,7 @@ export default function ClinicalPrognosisChart({
             position: 'top',
             align: 'start',
             labels: {
-              color: '#A0A0A0',
+              color: '#64748B',
               boxWidth: 10,
               boxHeight: 10,
               padding: 14,
@@ -685,11 +688,11 @@ export default function ClinicalPrognosisChart({
             },
           },
           tooltip: {
-            backgroundColor: 'rgba(33, 33, 33, 0.96)',
-            borderColor: 'rgba(0, 33, 71, 0.22)',
+            backgroundColor: '#FFFFFF',
+            borderColor: '#E2E8F0',
             borderWidth: 1,
-            titleColor: '#FFFFFF',
-            bodyColor: '#FFFFFF',
+            titleColor: '#0F172A',
+            bodyColor: '#0F172A',
             displayColors: false,
             padding: 12,
             filter(tooltipItem) {
@@ -708,19 +711,19 @@ export default function ClinicalPrognosisChart({
         scales: {
           x: {
             grid: { display: false },
-            ticks: { color: '#A0A0A0', font: { size: 11 } },
+            ticks: { color: '#64748B', font: { size: 11 } },
             border: { color: 'rgba(15, 23, 42, 0.08)' },
           },
           y: {
             beginAtZero: true,
             max: 100,
             grid: { color: 'rgba(15, 23, 42, 0.08)' },
-            ticks: { color: '#0F172A', font: { size: 10 } },
+            ticks: { color: '#64748B', font: { size: 10 } },
             border: { color: 'rgba(15, 23, 42, 0.08)' },
             title: {
               display: true,
               text: 'Skor proxy (0-100)',
-              color: '#0F172A',
+              color: '#64748B',
               font: { size: 10 },
             },
           },
@@ -759,7 +762,7 @@ export default function ClinicalPrognosisChart({
           {
             label: `${SURVIVAL_GUIDE_PREFIX}-aman`,
             data: labels.map(() => 85),
-            borderColor: 'rgba(120, 168, 132, 0.45)',
+            borderColor: 'rgba(6, 118, 71, 0.45)',
             borderWidth: 1,
             borderDash: [4, 8],
             pointRadius: 0,
@@ -770,7 +773,7 @@ export default function ClinicalPrognosisChart({
           {
             label: `${SURVIVAL_GUIDE_PREFIX}-review`,
             data: labels.map(() => 70),
-            borderColor: 'rgba(166, 178, 198, 0.44)',
+            borderColor: 'rgba(100, 116, 139, 0.44)',
             borderWidth: 1,
             borderDash: [4, 8],
             pointRadius: 0,
@@ -781,7 +784,7 @@ export default function ClinicalPrognosisChart({
           {
             label: `${SURVIVAL_GUIDE_PREFIX}-ketat`,
             data: labels.map(() => 55),
-            borderColor: 'rgba(239, 68, 68, 0.5)',
+            borderColor: 'rgba(180, 35, 24, 0.5)',
             borderWidth: 1,
             borderDash: [4, 8],
             pointRadius: 0,
@@ -819,7 +822,7 @@ export default function ClinicalPrognosisChart({
             pointHoverRadius: 5.2,
             pointBorderWidth: 1.2,
             pointBorderColor: strokeColor,
-            pointBackgroundColor: '#15121A',
+            pointBackgroundColor: '#FFFFFF',
             fill: false,
             tension: 0.34,
           },
@@ -838,11 +841,11 @@ export default function ClinicalPrognosisChart({
             display: false,
           },
           tooltip: {
-            backgroundColor: 'rgba(33, 33, 33, 0.96)',
-            borderColor: 'rgba(0, 33, 71, 0.22)',
+            backgroundColor: '#FFFFFF',
+            borderColor: '#E2E8F0',
             borderWidth: 1,
-            titleColor: '#FFFFFF',
-            bodyColor: '#FFFFFF',
+            titleColor: '#0F172A',
+            bodyColor: '#0F172A',
             displayColors: false,
             padding: 12,
             filter(tooltipItem) {
@@ -874,7 +877,7 @@ export default function ClinicalPrognosisChart({
           x: {
             grid: { display: false },
             ticks: {
-              color: '#B8B1A6',
+              color: '#64748B',
               font: { size: 11 },
             },
             border: { color: 'rgba(15, 23, 42, 0.08)' },
@@ -884,7 +887,7 @@ export default function ClinicalPrognosisChart({
             max: 100,
             grid: { color: 'rgba(15, 23, 42, 0.08)' },
             ticks: {
-              color: '#0F172A',
+              color: '#64748B',
               font: { size: 10 },
               callback(value) {
                 return `${value}%`
@@ -894,7 +897,7 @@ export default function ClinicalPrognosisChart({
             title: {
               display: true,
               text: 'Peluang stabil (%)',
-              color: '#0F172A',
+              color: '#64748B',
               font: { size: 10 },
             },
           },
@@ -931,7 +934,7 @@ export default function ClinicalPrognosisChart({
           {
             data: breakdown.map(item => item.value),
             backgroundColor: breakdown.map(item => item.color),
-            borderColor: 'rgba(12, 16, 20, 0.78)',
+            borderColor: '#FFFFFF',
             borderWidth: 2,
             hoverOffset: 2,
             spacing: 2,
@@ -946,11 +949,11 @@ export default function ClinicalPrognosisChart({
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: 'rgba(33, 33, 33, 0.96)',
-            borderColor: 'rgba(0, 33, 71, 0.22)',
+            backgroundColor: '#FFFFFF',
+            borderColor: '#E2E8F0',
             borderWidth: 1,
-            titleColor: '#FFFFFF',
-            bodyColor: '#FFFFFF',
+            titleColor: '#0F172A',
+            bodyColor: '#0F172A',
             displayColors: false,
             padding: 12,
             callbacks: {
@@ -988,10 +991,10 @@ export default function ClinicalPrognosisChart({
           {
             label: 'Profil prognosis',
             data: prognosis.heatmap.map(item => round(item.score)),
-            borderColor: 'rgba(255, 82, 190, 0.96)',
-            backgroundColor: 'rgba(255, 82, 190, 0.12)',
+            borderColor: 'rgba(0, 33, 71, 0.96)',
+            backgroundColor: 'rgba(0, 33, 71, 0.12)',
             pointBackgroundColor: prognosis.heatmap.map(item => getScoreStrokeColor(item.score)),
-            pointBorderColor: 'rgba(12, 16, 20, 0.88)',
+            pointBorderColor: '#FFFFFF',
             pointBorderWidth: 1,
             pointRadius: 3,
             pointHoverRadius: 4.4,
@@ -1006,11 +1009,11 @@ export default function ClinicalPrognosisChart({
         plugins: {
           legend: { display: false },
           tooltip: {
-            backgroundColor: 'rgba(33, 33, 33, 0.96)',
-            borderColor: 'rgba(0, 33, 71, 0.22)',
+            backgroundColor: '#FFFFFF',
+            borderColor: '#E2E8F0',
             borderWidth: 1,
-            titleColor: '#FFFFFF',
-            bodyColor: '#FFFFFF',
+            titleColor: '#0F172A',
+            bodyColor: '#0F172A',
             displayColors: false,
             padding: 12,
             callbacks: {
@@ -1031,7 +1034,7 @@ export default function ClinicalPrognosisChart({
             angleLines: { color: 'rgba(15, 23, 42, 0.08)' },
             grid: { color: 'rgba(15, 23, 42, 0.08)' },
             pointLabels: {
-              color: '#C9C2B7',
+              color: '#64748B',
               font: { size: 10, family: 'var(--font-mono)' },
             },
             ticks: {
@@ -1071,7 +1074,7 @@ export default function ClinicalPrognosisChart({
             type: 'line' as const,
             label: `${GUIDE_DATASET_PREFIX}-rendah`,
             data: [5],
-            borderColor: 'rgba(120, 168, 132, 0.54)',
+            borderColor: 'rgba(6, 118, 71, 0.54)',
             borderWidth: 1,
             borderDash: [5, 5],
             pointRadius: 0,
@@ -1083,7 +1086,7 @@ export default function ClinicalPrognosisChart({
             type: 'line' as const,
             label: `${GUIDE_DATASET_PREFIX}-sedang`,
             data: [10],
-            borderColor: 'rgba(232, 168, 56, 0.56)',
+            borderColor: 'rgba(181, 71, 8, 0.56)',
             borderWidth: 1,
             borderDash: [5, 5],
             pointRadius: 0,
@@ -1095,7 +1098,7 @@ export default function ClinicalPrognosisChart({
             type: 'line' as const,
             label: `${GUIDE_DATASET_PREFIX}-tinggi`,
             data: [20],
-            borderColor: 'rgba(222, 130, 104, 0.62)',
+            borderColor: 'rgba(180, 35, 24, 0.62)',
             borderWidth: 1,
             borderDash: [5, 5],
             pointRadius: 0,
@@ -1125,7 +1128,7 @@ export default function ClinicalPrognosisChart({
             position: 'top',
             align: 'start',
             labels: {
-              color: '#A0A0A0',
+              color: '#64748B',
               boxWidth: 10,
               boxHeight: 10,
               padding: 14,
@@ -1136,11 +1139,11 @@ export default function ClinicalPrognosisChart({
             },
           },
           tooltip: {
-            backgroundColor: 'rgba(33, 33, 33, 0.96)',
-            borderColor: 'rgba(0, 33, 71, 0.22)',
+            backgroundColor: '#FFFFFF',
+            borderColor: '#E2E8F0',
             borderWidth: 1,
-            titleColor: '#FFFFFF',
-            bodyColor: '#FFFFFF',
+            titleColor: '#0F172A',
+            bodyColor: '#0F172A',
             displayColors: false,
             padding: 12,
             filter(tooltipItem) {
@@ -1162,7 +1165,7 @@ export default function ClinicalPrognosisChart({
             max: 30,
             grid: { color: 'rgba(15, 23, 42, 0.08)' },
             ticks: {
-              color: '#0F172A',
+              color: '#64748B',
               font: { size: 10 },
               callback(value) {
                 return `${value}%`
@@ -1172,13 +1175,13 @@ export default function ClinicalPrognosisChart({
             title: {
               display: true,
               text: 'Risiko event CV 10 tahun',
-              color: '#0F172A',
+              color: '#64748B',
               font: { size: 10 },
             },
           },
           y: {
             grid: { display: false },
-            ticks: { color: '#B8B1A6', font: { size: 11 } },
+            ticks: { color: '#64748B', font: { size: 11 } },
             border: { color: 'rgba(15, 23, 42, 0.08)' },
           },
         },
@@ -1885,7 +1888,7 @@ export default function ClinicalPrognosisChart({
                 label: 'BAND',
                 value: `±${survivalBandHalfWidth}%`,
                 note: 'Ketidakpastian internal',
-                color: 'rgba(232, 168, 56, 0.86)',
+                color: 'rgba(181, 71, 8, 0.86)',
               },
             ].map(item => (
               <div
@@ -1980,7 +1983,7 @@ export default function ClinicalPrognosisChart({
                         milestone.state === 'done'
                           ? 'var(--c-asesmen)'
                           : milestone.state === 'active'
-                            ? '#E8A838'
+                            ? 'var(--warning)'
                             : 'var(--border)',
                       boxShadow:
                         milestone.state !== 'next' ? '0 0 0 4px rgba(0, 33, 71, 0.08)' : 'none',
@@ -2173,7 +2176,7 @@ export default function ClinicalPrognosisChart({
                     <div
                       style={{
                         fontSize: 12,
-                        color: signal.severity === 'red' ? 'var(--c-critical)' : '#F97316',
+                        color: signal.severity === 'red' ? 'var(--c-critical)' : 'var(--warning)',
                       }}
                     >
                       {signal.severity === 'red' ? 'MERAH' : 'ORANYE'} · {Math.round(signal.value)}
